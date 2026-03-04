@@ -12,7 +12,7 @@ class Demo_Policy:
     
     def update_obs(self, obs):
         # Update your model's observation here if needed
-        print("[Model] Received observation:", obs)
+        print("[Model] Received observation:")
         pass
 
     def get_action(self):
