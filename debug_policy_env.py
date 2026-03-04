@@ -1,5 +1,6 @@
 import argparse
 from client_server.model_client import ModelClient
+import numpy as np
 
 class TestEnv:
     def __init__(self, deploy_cfg):
@@ -11,8 +12,82 @@ class TestEnv:
 
     def get_obs(self):
         # v1.0
-        demo_obs = {
-            
+        demo_obs = { # aloha
+            "vision": {
+                "cam_head": {
+                    "color": np.zeros((480, 640, 3), dtype=np.uint8),
+                    "depth": np.zeros((480, 640, 3), dtype=np.uint8),
+                    "intrinsic_matrix": [
+                        [615.0, 0.0, 320.0],
+                        [0.0, 615.0, 240.0],
+                        [0.0, 0.0, 1.0],
+                    ],
+                    "extrinsics_matrix": [
+                        [1.0, 0.0, 0.0, 0.10],
+                        [0.0, 1.0, 0.0, 1.20],
+                        [0.0, 0.0, 1.0, 1.50],
+                        [0.0, 0.0, 0.0, 1.0],
+                    ],
+                    "shape": (480, 640),
+                },
+                "cam_left_wrist": {
+                    "color": np.zeros((480, 640, 3), dtype=np.uint8),
+                    "depth": np.zeros((480, 640, 3), dtype=np.uint8),
+                    "intrinsic_matrix": [
+                        [615.0, 0.0, 320.0],
+                        [0.0, 615.0, 240.0],
+                        [0.0, 0.0, 1.0],
+                    ],
+                    "extrinsics_matrix": [
+                        [1.0, 0.0, 0.0, 0.10],
+                        [0.0, 1.0, 0.0, 1.20],
+                        [0.0, 0.0, 1.0, 1.50],
+                        [0.0, 0.0, 0.0, 1.0],
+                    ],
+                    "shape": (480, 640),
+                },
+                "cam_right_wrist": {
+                    "color": np.zeros((480, 640, 3), dtype=np.uint8),
+                    "depth": np.zeros((480, 640, 3), dtype=np.uint8),
+                    "intrinsic_matrix": [
+                        [615.0, 0.0, 320.0],
+                        [0.0, 615.0, 240.0],
+                        [0.0, 0.0, 1.0],
+                    ],
+                    "extrinsics_matrix": [
+                        [1.0, 0.0, 0.0, 0.10],
+                        [0.0, 1.0, 0.0, 1.20],
+                        [0.0, 0.0, 1.0, 1.50],
+                        [0.0, 0.0, 0.0, 1.0],
+                    ],
+                    "shape": (480, 640),
+                },
+            },
+
+            "state": {
+                "left_arm_joint_states": np.zeros((7), dtype=np.uint8), 
+                "left_ee_joint_states": np.zeros((1), dtype=np.uint8), 
+                "left_ee_poses": np.zeros((7), dtype=np.uint8), 
+                "left_tcp_poses": np.zeros((7), dtype=np.uint8), 
+                "left_delta_ee_poses": np.zeros((7), dtype=np.uint8), 
+
+                "right_arm_joint_states": np.zeros((7), dtype=np.uint8), 
+                "right_ee_joint_states": np.zeros((1), dtype=np.uint8), 
+                "right_ee_poses": np.zeros((7), dtype=np.uint8), 
+                "right_tcp_poses": np.zeros((7), dtype=np.uint8), 
+                "right_delta_ee_poses": np.zeros((7), dtype=np.uint8), 
+                
+                "mobile": {
+                    "base_pose": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],  # x,y,z + quat
+                    "base_twist": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],      # vx,vy,vz, wx,wy,wz
+                },
+            },
+
+            "additional_info": {
+                "frequency": 30,  # Hz
+            },
+
+            "data_format_version": "v1.0"
         }
         return demo_obs
 
