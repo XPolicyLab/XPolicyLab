@@ -58,7 +58,6 @@ class RobotWorkspace(BaseWorkspace):
     def run(self):
         cfg = copy.deepcopy(self.cfg)
         seed = cfg.training.seed
-        head_camera_type = cfg.head_camera_type
 
         # resume training
         if cfg.training.resume:
