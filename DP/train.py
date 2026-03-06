@@ -1,18 +1,12 @@
-"""
-Usage:
-Training:
-python train.py --config-name=train_diffusion_lowdim_workspace
-"""
-
 import sys
 
 # use line-buffering for both stdout and stderr
 sys.stdout = open(sys.stdout.fileno(), mode="w", buffering=1)
 sys.stderr = open(sys.stderr.fileno(), mode="w", buffering=1)
 
-import hydra, pdb
+import hydra
 from omegaconf import OmegaConf
-import pathlib, yaml
+import pathlib
 from diffusion_policy.workspace.base_workspace import BaseWorkspace
 
 import os
@@ -31,12 +25,12 @@ OmegaConf.register_new_resolver("eval", eval, replace=True)
 def main(cfg: OmegaConf):
     # resolve immediately so all the ${now:} resolvers
     # will use the same time.
-    img_shape = [3, 240, 320]
-    cfg.task.image_shape = img_shape
-    cfg.task.shape_meta.obs.head_cam.shape = img_shape
+    fixed_img_shape = [3, 240, 320]
+    cfg.task.image_shape = fixed_img_shape
+    cfg.task.shape_meta.obs.head_cam.shape = fixed_img_shape
     OmegaConf.resolve(cfg)
-    cfg.task.image_shape = img_shape
-    cfg.task.shape_meta.obs.head_cam.shape = img_shape
+    cfg.task.image_shape = fixed_img_shape
+    cfg.task.shape_meta.obs.head_cam.shape = fixed_img_shape
 
     cls = hydra.utils.get_class(cfg._target_)
     workspace: BaseWorkspace = cls(cfg)

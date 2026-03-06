@@ -37,7 +37,7 @@ export HYDRA_FULL_ERROR=1
 export CUDA_VISIBLE_DEVICES=${gpu_id}
 
 if [ ! -d  ]; then
-    bash process_data.sh ${task_name} ${env_cfg} ${expert_data_num}
+    bash process_data.sh ${task_name} ${env_cfg} ${expert_data_num} ${action_type}
 fi
 
 python train.py --config-name=${alg_name}.yaml \

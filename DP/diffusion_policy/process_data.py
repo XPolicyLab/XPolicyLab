@@ -78,12 +78,12 @@ def main():
                 ee_joint_states = data['state']["ee_joint_states"]
                 state = np.concatenate([joint_states, ee_joint_states], axis=-1)
             else:
-                assert "left_joint_states" in data['state'].keys() and "right_joint_states" in data['state'].keys(), "Expected joint states for both arms in the dataset."
-                left_joint_states = data['state']["left_joint_states"]
-                right_joint_states = data['state']["right_joint_states"]
+                assert "left_arm_joint_states" in data['state'].keys() and "right_arm_joint_states" in data['state'].keys(), "Expected joint states for both arms in the dataset."
+                left_arm_joint_states = data['state']["left_arm_joint_states"]
+                right_arm_joint_states = data['state']["right_arm_joint_states"]
                 left_ee_joint_states = data['state']["left_ee_joint_states"]
                 right_ee_joint_states = data['state']["right_ee_joint_states"]
-                state = np.concatenate([left_joint_states, left_ee_joint_states, right_joint_states, right_ee_joint_states], axis=-1)
+                state = np.concatenate([left_arm_joint_states, left_ee_joint_states, right_arm_joint_states, right_ee_joint_states], axis=-1)
 
         elif action_type == 'ee':
             if "ee_poses" in data['state'].keys(): # single arm

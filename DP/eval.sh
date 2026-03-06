@@ -1,45 +1,25 @@
 #!/bin/bash
-
-# == keep unchanged ==
-policy_name=DP
-task_name=${1}
-task_config=${2}
-ckpt_setting=${3}
-expert_data_num=${4}
-seed=${5}
-gpu_id=${6}
-DEBUG=False
-
-export CUDA_VISIBLE_DEVICES=${gpu_id}
-echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
-
-cd ../..
-
-PYTHONWARNINGS=ignore::UserWarning \
-python script/eval_policy.py --config policy/$policy_name/deploy_policy.yml \
-    --overrides \
-    --task_name ${task_name} \
-    --task_config ${task_config} \
-    --ckpt_setting ${ckpt_setting} \
-    --expert_data_num ${expert_data_num} \
-    --seed ${seed}
-
-
-#!/bin/bash
-set -e  # Quit when Meeting Error
+set -e  # 出错即退出
 
 # ==================== 参数定义 ====================
-policy_name=replay_policy
+policy_name=DP
 task_name=${1}
-base_cfg=${2}
-ckpt_setting=${3}
-gpu_id=${4}
-seed=${5}
-policy_conda_env=${6} # Conda
-sim_conda_env=${7} # Conda
+env_cfg=${2}
+expert_data_num=${3}
+action_type=${4}
+gpu_id=${5}
+seed=${6}
+policy_conda_env=${7} # Conda
+sim_conda_env=${8} # Conda
 
 export CUDA_VISIBLE_DEVICES=${gpu_id}
 echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+data_path="${SCRIPT_DIR}/data/${task_name}-${env_cfg}-${expert_data_num}-${action_type}.zarr"
+
+ZARR="${data_path}/data/action/.zarray"
+action_dim=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["chunks"][1])' "$ZARR")
 
 cd ../..
 
@@ -64,14 +44,16 @@ conda activate "${policy_conda_env}"
 echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
 PYTHONWARNINGS=ignore::UserWarning \
 python XPolicyLab/setup_policy_server.py \
-  --port "${FREE_PORT}" \
   --config_path "${yaml_file}" \
   --overrides \
+    port="${FREE_PORT}" \
     task_name="${task_name}" \
-    base_cfg="${base_cfg}" \
-    ckpt_setting="${ckpt_setting}" \
+    env_cfg="${env_cfg}" \
+    expert_data_num="${expert_data_num}" \
     seed="${seed}" \
     policy_name="${policy_name}" \
+    action_type="${action_type}" \
+    action_dim="${action_dim}" \
   &
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
@@ -86,10 +68,10 @@ echo -e "\033[34m[CLIENT] Activating Conda environment: ${sim_conda_env}\033[0m"
 echo -e "\033[34m[CLIENT] Connecting to server port ${FREE_PORT}...\033[0m"
 
 PYTHONWARNINGS=ignore::UserWarning \
-python pipeline/deploy.py \
+python XPolicyLab/debug_policy_env.py \
     --task_name "${task_name}" \
     --policy_name "${policy_name}" \
-    --base_cfg "${base_cfg}" \
+    --env_cfg "${env_cfg}" \
     --port ${FREE_PORT}
 
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

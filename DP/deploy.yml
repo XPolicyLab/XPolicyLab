@@ -1,11 +1,12 @@
 # Basic experiment configuration
 policy_name: DP
 task_name: null
-task_config: null
-ckpt_setting: null
+env_cfg: null
+expert_data_num: null
 seed: null
+action_dim: null
+expert_data_num: null
 instruction_type: unseen
 
-expert_data_num: null
 checkpoint_num: 600
 head_camera_type: D435

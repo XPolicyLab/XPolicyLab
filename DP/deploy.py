@@ -1,51 +1,35 @@
 import numpy as np
-from .dp_model import DP
+import os
+from .model import DP
 import yaml
 
-def encode_obs(observation):
-    head_cam = (np.moveaxis(observation["observation"]["head_camera"]["rgb"], -1, 0) / 255)
-    left_cam = (np.moveaxis(observation["observation"]["left_camera"]["rgb"], -1, 0) / 255)
-    right_cam = (np.moveaxis(observation["observation"]["right_camera"]["rgb"], -1, 0) / 255)
-    obs = dict(
-        head_cam=head_cam,
-        left_cam=left_cam,
-        right_cam=right_cam,
-    )
-    obs["agent_pos"] = observation["joint_action"]["vector"]
-    return obs
-
-
 def get_model(usr_args):
-    ckpt_file = f"./policy/DP/checkpoints/{usr_args['task_name']}-{usr_args['ckpt_setting']}-{usr_args['expert_data_num']}-{usr_args['seed']}/{usr_args['checkpoint_num']}.ckpt"
-    action_dim = usr_args['left_arm_dim'] + usr_args['right_arm_dim'] + 2 # 2 gripper
+    current_file_path = os.path.abspath(__file__)
+    parent_dir = os.path.dirname(current_file_path)
+    ckpt_file = os.path.join(parent_dir, f"checkpoints/{usr_args['task_name']}-{usr_args['env_cfg']}-{usr_args['expert_data_num']}-{usr_args['action_type']}-{usr_args['seed']}/{usr_args['checkpoint_num']}.ckpt")
     
-    load_config_path = f'./policy/DP/diffusion_policy/config/robot_dp_{action_dim}.yaml'
+    action_dim = usr_args['action_dim']
+    load_config_path = os.path.join(parent_dir, f'diffusion_policy/config/robot_dp_{action_dim}.yaml')
     with open(load_config_path, "r", encoding="utf-8") as f:
         model_training_config = yaml.safe_load(f)
     
     n_obs_steps = model_training_config['n_obs_steps']
     n_action_steps = model_training_config['n_action_steps']
+    action_type = usr_args['action_type']
     
-    return DP(ckpt_file, n_obs_steps=n_obs_steps, n_action_steps=n_action_steps)
+    model =  DP(ckpt_file, n_obs_steps=n_obs_steps, n_action_steps=n_action_steps, action_type=action_type)
+    return model
 
+def eval_one_episode(TASK_ENV, model_client):
 
-def eval(TASK_ENV, model, observation):
-    """
-    TASK_ENV: Task Environment Class, you can use this class to interact with the environment
-    model: The model from 'get_model()' function
-    observation: The observation about the environment
-    """
-    obs = encode_obs(observation)
-    instruction = TASK_ENV.get_instruction()
-
-    # ======== Get Action ========
-    actions = model.get_action(obs)
-
-    for action in actions:
-        TASK_ENV.take_action(action)
-        observation = TASK_ENV.get_obs()
-        obs = encode_obs(observation)
-        model.update_obs(obs)
-
-def reset_model(model):
-    model.reset_obs()
+    while not TASK_ENV.is_episode_end(): # Check whether the episode ends
+        obs = TASK_ENV.get_obs() # Get Observation
+        model_client.call(func_name="update_obs", obs=obs)  # Update Observation, `update_obs` here can be modified
+        actions = model_client.call(func_name="get_action") # Get Action according to observation chunk
+        
+        for action_idx, action in enumerate(actions):
+            TASK_ENV.take_action(action)
+            
+            if action_idx != len(actions) - 1:
+                obs = TASK_ENV.get_obs() # Get Observation
+                model_client.call(func_name="update_obs", obs=obs)

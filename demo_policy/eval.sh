@@ -4,7 +4,7 @@ set -e  # 出错即退出
 # ==================== 参数定义 ====================
 policy_name=demo_policy
 task_name=${1}
-base_cfg=${2}
+env_cfg=${2}
 ckpt_setting=${3}
 gpu_id=${4}
 seed=${5}
@@ -41,7 +41,7 @@ python XPolicyLab/setup_policy_server.py \
   --overrides \
     port="${FREE_PORT}" \
     task_name="${task_name}" \
-    base_cfg="${base_cfg}" \
+    env_cfg="${env_cfg}" \
     ckpt_setting="${ckpt_setting}" \
     seed="${seed}" \
     policy_name="${policy_name}" \
@@ -62,7 +62,7 @@ PYTHONWARNINGS=ignore::UserWarning \
 python XPolicyLab/debug_policy_env.py \
     --task_name "${task_name}" \
     --policy_name "${policy_name}" \
-    --base_cfg "${base_cfg}" \
+    --env_cfg "${env_cfg}" \
     --port ${FREE_PORT}
 
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

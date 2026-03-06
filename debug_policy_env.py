@@ -65,18 +65,18 @@ class TestEnv:
             },
 
             "state": {
-                "left_arm_joint_states": np.zeros((7), dtype=np.uint8), 
-                "left_ee_joint_states": np.zeros((1), dtype=np.uint8), 
-                "left_ee_poses": np.zeros((7), dtype=np.uint8), 
-                "left_tcp_poses": np.zeros((7), dtype=np.uint8), 
-                "left_delta_ee_poses": np.zeros((7), dtype=np.uint8), 
+                "left_arm_joint_state": np.zeros((7), dtype=np.uint8), 
+                "left_ee_joint_state": np.zeros((1), dtype=np.uint8), 
+                "left_ee_pose": np.zeros((7), dtype=np.uint8), 
+                "left_tcp_pose": np.zeros((7), dtype=np.uint8), 
+                "left_delta_ee_pose": np.zeros((7), dtype=np.uint8), 
 
-                "right_arm_joint_states": np.zeros((7), dtype=np.uint8), 
-                "right_ee_joint_states": np.zeros((1), dtype=np.uint8), 
-                "right_ee_poses": np.zeros((7), dtype=np.uint8), 
-                "right_tcp_poses": np.zeros((7), dtype=np.uint8), 
-                "right_delta_ee_poses": np.zeros((7), dtype=np.uint8), 
-                
+                "right_arm_joint_state": np.zeros((7), dtype=np.uint8), 
+                "right_ee_joint_state": np.zeros((1), dtype=np.uint8), 
+                "right_ee_pose": np.zeros((7), dtype=np.uint8), 
+                "right_tcp_pose": np.zeros((7), dtype=np.uint8), 
+                "right_delta_ee_pose": np.zeros((7), dtype=np.uint8), 
+
                 "mobile": {
                     "base_pose": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],  # x,y,z + quat
                     "base_twist": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],      # vx,vy,vz, wx,wy,wz
@@ -115,7 +115,7 @@ class TestEnv:
         return instruction
 
     def take_action(self, action):
-        print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)", end='\r')
+        print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
         self.episode_step += 1
         # check action validity here if needed
 
@@ -129,7 +129,7 @@ class TestEnv:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--task_name", required=True, type=str)
-    parser.add_argument("--base_cfg", type=str, required=True)
+    parser.add_argument("--env_cfg", type=str, required=True)
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
     parser.add_argument("--port", type=int, required=True, help="server port")
     parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")

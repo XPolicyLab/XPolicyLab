@@ -110,7 +110,7 @@ training:
   # training loop control
   # in epochs
   rollout_every: 50
-  checkpoint_every: 300
+  checkpoint_every: 600
   val_every: 1
   sample_every: 5
   # steps per epoch
