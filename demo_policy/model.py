@@ -20,20 +20,22 @@ class Model(ModelTemplate):
     def get_action(self):
         # Generate action according to your model and current observation
         # This is a dummy action for demonstration, replace it with your model's action
-        if self.action_type == 'joint':
-            action_dict = {
-                "left_arm_joint_state": np.array([0] * 7),
-                "left_ee_joint_state": np.array([0] * 1),
-                "right_arm_joint_state": np.array([0] * 7),
-                "right_ee_joint_state": np.array([0] * 1),
-            }
-        elif self.action_type == 'ee':
-            action_dict = {
-                "left_ee_pose": np.array([0] * 7),
-                "left_ee_joint_state": np.array([0] * 1),
-                "right_ee_pose": np.array([0] * 7),
-                "right_ee_joint_state": np.array([0] * 1),
-            }
+        if self.action_type == "joint":
+            left_key = "left_arm_joint_state"
+            right_key = "right_arm_joint_state"
+        elif self.action_type == "ee":
+            left_key = "left_ee_pose"
+            right_key = "right_ee_pose"
+        else:
+            raise ValueError(f"Unsupported action_type: {self.action_type}")
+
+        action_dict = {
+            left_key: np.zeros(7),
+            "left_ee_joint_state": np.zeros(1),
+            right_key: np.zeros(7),
+            "right_ee_joint_state": np.zeros(1),
+        }
+
         print("[Model] Generated action")
         return action_dict
 

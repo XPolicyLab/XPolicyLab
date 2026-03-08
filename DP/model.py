@@ -51,32 +51,37 @@ class Model(ModelTemplate):
         
         return policy
 
-    def update_obs(self, observation):
-        self.runner.update_obs(encode_obs(observation, self.action_type))
+    def update_obs(self, obs_list):
+        env_idx_list = [obs["env_idx"] for obs in obs_list]
+        obs_list = [encode_obs(obs, self.action_type) for obs in obs_list]
+        self.runner.update_obs(obs_list, env_idx_list)
     
     def reset(self):
         self.runner.reset_obs()
 
-    def get_action(self):
-        action = self.runner.get_action(self.model)
-        if self.action_type == 'joint': # TODO
-            action_dict = { 
-                "left_arm_joint_state": action[0:7],
-                "left_ee_joint_state": action[7:8],
-                "right_arm_joint_state": action[8:13],
-                "right_ee_joint_state": action[13:14]
-            }
-        elif self.action_type == 'ee':
-            action_dict = {
-                "left_ee_pose": action[0:7],
-                "left_ee_joint_state": action[7:8],
-                "right_ee_pose": action[8:13],
-                "right_ee_joint_state": action[13:14]
-            }
-        return action_dict
+    def get_action(self, env_idx_list):
+        actions = self.runner.get_action(self.model, env_idx_list)
+        action_dict_list = []
 
-    def get_last_obs(self):
-        return self.runner.obs[-1]
+        if self.action_type == "joint": # TODO
+            left_key = "left_arm_joint_state"
+            right_key = "right_arm_joint_state"
+        elif self.action_type == "ee":
+            left_key = "left_ee_pose"
+            right_key = "right_ee_pose"
+        else:
+            raise ValueError(f"Unsupported action_type: {self.action_type}")
+
+        for action in actions:
+            action_dict = {
+                left_key: action[0:7],
+                "left_ee_joint_state": action[7:8],
+                right_key: action[8:13],
+                "right_ee_joint_state": action[13:14],
+            }
+            action_dict_list.append(action_dict)
+
+        return action_dict_list
 
 def encode_obs(observation, action_type):
     head_img = (np.moveaxis(observation["vision"]["cam_head"]["color"], -1, 0) / 255)

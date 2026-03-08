@@ -68,7 +68,7 @@ echo -e "\033[34m[CLIENT] Activating Conda environment: ${sim_conda_env}\033[0m"
 echo -e "\033[34m[CLIENT] Connecting to server port ${FREE_PORT}...\033[0m"
 
 PYTHONWARNINGS=ignore::UserWarning \
-python XPolicyLab/debug_policy_env.py \
+python XPolicyLab/debug_policy_env_batch.py \
     --task_name "${task_name}" \
     --policy_name "${policy_name}" \
     --env_cfg "${env_cfg}" \

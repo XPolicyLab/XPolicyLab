@@ -9,7 +9,6 @@ try:
 except Exception:
     _HAS_TORCH = False
 
-
 def _to_numpy(obj: Any) -> Any:
     """递归将 torch.Tensor / numpy 转成可 JSON 序列化类型"""
     if _HAS_TORCH and isinstance(obj, torch.Tensor):
@@ -54,12 +53,10 @@ class NumpyEncoder(json.JSONEncoder):
             return bool(obj)
         return super().default(obj)
 
-
 def numpy_to_json(data: Any) -> str:
     """将任意嵌套结构转换为 JSON 字符串"""
     cleaned = _to_numpy(data)
     return json.dumps(cleaned, cls=NumpyEncoder, ensure_ascii=False)
-
 
 def json_to_numpy(json_str: str) -> Any:
     """从 JSON 字符串反序列化 numpy array 和 bytes"""

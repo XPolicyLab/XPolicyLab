@@ -7,7 +7,7 @@ def get_model(deploy_cfg):
 
 def eval_one_episode(TASK_ENV, model_client):
     instruction = TASK_ENV.get_instruction()
-    model_client.call(func_name="set_language", obs=instruction)
+    model_client.call(func_name="set_language", info=instruction)
 
     while not TASK_ENV.is_episode_end(): # Check whether the episode ends
 

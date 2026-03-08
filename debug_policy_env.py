@@ -87,7 +87,7 @@ class TestEnv:
                 "frequency": 30,  # Hz
             },
 
-            "data_format_version": "v1.0"
+            "data_format_version": "v1.0",
         }
         return demo_obs
 

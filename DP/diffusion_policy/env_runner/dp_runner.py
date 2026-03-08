@@ -1,18 +1,9 @@
 import torch
-import os
 import numpy as np
-import hydra
-from pathlib import Path
 from collections import deque
 
-import yaml
-from datetime import datetime
-import importlib
-import dill
-from argparse import ArgumentParser
 from diffusion_policy.common.pytorch_util import dict_apply
 from diffusion_policy.policy.base_image_policy import BaseImagePolicy
-
 
 class DPRunner:
 
@@ -36,7 +27,7 @@ class DPRunner:
         self.max_steps = max_steps
         self.tqdm_interval_sec = tqdm_interval_sec
 
-        self.obs = deque(maxlen=n_obs_steps + 1)
+        self.obs_list = [deque(maxlen=n_obs_steps + 1) for _ in range(100)] # TODO
 
     def stack_last_n_obs(self, all_obs, n_steps):
         assert len(all_obs) > 0
@@ -60,40 +51,45 @@ class DPRunner:
         return result
 
     def reset_obs(self):
-        self.obs.clear()
+        for q in self.obs_list:
+            q.clear()
 
-    def update_obs(self, current_obs):
-        self.obs.append(current_obs)
+    def update_obs(self, current_obs_list, env_idx_list):
+        for env_idx, current_obs in zip(env_idx_list, current_obs_list):
+            self.obs_list[env_idx].append(current_obs)
 
-    def get_n_steps_obs(self):
-        assert len(self.obs) > 0, "no observation is recorded, please update obs first"
+    def get_n_steps_obs(self, env_idx_list):
+        result_list = []
+        for env_idx in env_idx_list:
+            result = dict()
+            for key in self.obs_list[env_idx][0].keys():
+                result[key] = self.stack_last_n_obs([obs[key] for obs in self.obs_list[env_idx]], self.n_obs_steps)
+            result_list.append(result)
+        return result_list
 
-        result = dict()
-        for key in self.obs[0].keys():
-            result[key] = self.stack_last_n_obs([obs[key] for obs in self.obs], self.n_obs_steps)
-
-        return result
-
-    def get_action(self, policy: BaseImagePolicy):
+    def get_action(self, policy: BaseImagePolicy, env_idx_list):
         device = policy.device
-        obs = self.get_n_steps_obs()
+        obs_list = self.get_n_steps_obs(env_idx_list)
 
-        # create obs dict
-        np_obs_dict = dict(obs)
         # device transfer
-        obs_dict = dict_apply(np_obs_dict, lambda x: torch.from_numpy(x).to(device=device))
-        # run policy
-        with torch.no_grad(): # TODO: tianxing
-            obs_dict_input = {}  # flush unused keys
-            obs_dict_input["head_cam"] = obs_dict["head_cam"].unsqueeze(0)
-            # obs_dict_input['front_cam'] = obs_dict['front_cam'].unsqueeze(0)
-            # obs_dict_input["left_cam"] = obs_dict["left_cam"].unsqueeze(0)
-            # obs_dict_input["right_cam"] = obs_dict["right_cam"].unsqueeze(0)
-            obs_dict_input["agent_pos"] = obs_dict["agent_pos"].unsqueeze(0)
+
+        obs_list_numpy = [
+            dict_apply(obs, lambda x: torch.from_numpy(x).to(device=device))
+            for obs in obs_list
+        ]
+
+        with torch.no_grad():
+            obs_dict_input = {}
+            obs_dict_input["head_cam"] = torch.stack(
+                [obs_torch["head_cam"] for obs_torch in obs_list_numpy], dim=0
+            )
+            obs_dict_input["agent_pos"] = torch.stack(
+                [obs_torch["agent_pos"] for obs_torch in obs_list_numpy], dim=0
+            )
 
             action_dict = policy.predict_action(obs_dict_input)
 
-        # device_transfer
-        np_action_dict = dict_apply(action_dict, lambda x: x.detach().to("cpu").numpy())
-        action = np_action_dict["action"].squeeze(0)[:self.n_action_steps]
-        return action
+        np_action_dict = dict_apply(action_dict, lambda x: x.detach().cpu().numpy())
+        actions = np_action_dict["action"][:, :self.n_action_steps]
+
+        return actions

@@ -13,11 +13,9 @@ def dict_apply(x: Dict[str, torch.Tensor], func: Callable[[torch.Tensor], torch.
             result[key] = func(value)
     return result
 
-
 def pad_remaining_dims(x, target):
     assert x.shape == target.shape[:len(x.shape)]
     return x.reshape(x.shape + (1, ) * (len(target.shape) - len(x.shape)))
-
 
 def dict_apply_split(
     x: Dict[str, torch.Tensor],
