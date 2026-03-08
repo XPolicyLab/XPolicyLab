@@ -20,10 +20,13 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
         model_client.call(func_name="update_obs", obs=obs)  # Update Observation, `update_obs` here can be modified
         actions = model_client.call(func_name="get_action", obs=env_idx_list) # Get Action according to observation chunk
-        
-        for action_idx, action in enumerate(actions):
-            TASK_ENV.take_action(action)
+
+        for action_idx in range(len(actions[0])):
+            current_action_list = [env_actions[action_idx] for env_actions in actions]
+
+            TASK_ENV.take_action(current_action_list, env_idx_list)
             
             if action_idx != len(actions) - 1:
+                env_idx_list = TASK_ENV.get_running_env_idx_list()
                 obs = TASK_ENV.get_obs(env_idx_list) # Get Observation
                 model_client.call(func_name="update_obs", obs=obs)

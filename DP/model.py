@@ -72,15 +72,18 @@ class Model(ModelTemplate):
         else:
             raise ValueError(f"Unsupported action_type: {self.action_type}")
 
-        for action in actions:
-            action_dict = {
-                left_key: action[0:7],
-                "left_ee_joint_state": action[7:8],
-                right_key: action[8:13],
-                "right_ee_joint_state": action[13:14],
-            }
-            action_dict_list.append(action_dict)
-
+        for i in range(len(env_idx_list)):
+            env_action, current_env_list = actions[i], []
+            for action in actions:
+                action_dict = {
+                    left_key: action[0:7],
+                    "left_ee_joint_state": action[7:8],
+                    right_key: action[8:13],
+                    "right_ee_joint_state": action[13:14],
+                }
+                current_env_list.append(action_dict)
+            action_dict_list.append(current_env_list)
+            
         return action_dict_list
 
 def encode_obs(observation, action_type):
