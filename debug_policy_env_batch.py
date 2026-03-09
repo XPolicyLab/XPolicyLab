@@ -2,7 +2,7 @@ import argparse
 from client_server.model_client import ModelClient
 import numpy as np
 
-Batch_Size = 1
+Batch_Size = 10
 
 class TestEnv:
     def __init__(self, deploy_cfg):
@@ -121,7 +121,7 @@ class TestEnv:
         print("[TestEnv] Get Instruction:", instruction)
         return instruction
 
-    def take_action(self, action):
+    def take_action(self, action, env_idx_list):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
         self.episode_step += 1
         # check action validity here if needed

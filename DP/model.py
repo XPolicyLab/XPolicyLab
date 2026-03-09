@@ -74,7 +74,7 @@ class Model(ModelTemplate):
 
         for i in range(len(env_idx_list)):
             env_action, current_env_list = actions[i], []
-            for action in actions:
+            for action in env_action:
                 action_dict = {
                     left_key: action[0:7],
                     "left_ee_joint_state": action[7:8],
