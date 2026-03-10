@@ -67,7 +67,7 @@ class TestEnv:
                         "shape": (480, 640),
                     },
                 },
-
+                "instruction": "language instruction",
                 "state": {
                     "left_arm_joint_state": np.zeros((7), dtype=np.uint8), 
                     "left_ee_joint_state": np.zeros((1), dtype=np.uint8), 
@@ -86,7 +86,6 @@ class TestEnv:
                         "base_twist": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],      # vx,vy,vz, wx,wy,wz
                     },
                 },
-
                 "additional_info": {
                     "frequency": 30,  # Hz
                 },
@@ -115,11 +114,6 @@ class TestEnv:
     def reset(self):
         self.model_client.call(func_name="reset")
         self.episode_step = 0
-
-    def get_instruction(self):
-        instruction = "Language instruction for the task"  # Replace with actual instruction retrieval logic
-        print("[TestEnv] Get Instruction:", instruction)
-        return instruction
 
     def take_action(self, action, env_idx_list):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
