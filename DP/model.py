@@ -75,11 +75,11 @@ class Model(ModelTemplate):
         for i in range(len(env_idx_list)):
             env_action, current_env_list = actions[i], []
             for action in env_action:
-                action_dict = {
+                action_dict = { # TODO
                     left_key: action[0:7],
-                    "left_ee_joint_state": action[7:8],
-                    right_key: action[8:13],
-                    "right_ee_joint_state": action[13:14],
+                    "left_ee_joint_state": action[7:13],
+                    right_key: action[13:20],
+                    "right_ee_joint_state": action[20:26],
                 }
                 current_env_list.append(action_dict)
             action_dict_list.append(current_env_list)
