@@ -31,7 +31,6 @@ import IPython
 
 e = IPython.embed
 
-
 def main(args):
     set_seed(1)
     # command line parameters
@@ -45,15 +44,9 @@ def main(args):
     num_epochs = args["num_epochs"]
 
     # get task parameters
-    is_sim = task_name[:4] == "sim-"
-    if is_sim:
-        from constants import SIM_TASK_CONFIGS
+    from constants import SIM_TASK_CONFIGS
 
-        task_config = SIM_TASK_CONFIGS[task_name]
-    else:
-        from aloha_scripts.constants import TASK_CONFIGS
-
-        task_config = TASK_CONFIGS[task_name]
+    task_config = SIM_TASK_CONFIGS[task_name]
     dataset_dir = task_config["dataset_dir"]
     num_episodes = task_config["num_episodes"]
     episode_len = task_config["episode_len"]

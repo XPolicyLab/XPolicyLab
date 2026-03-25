@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - task: default_task_26
+  - task: default_task
 
 name: robot_${task.name}
 _target_: diffusion_policy.workspace.robotworkspace.RobotWorkspace

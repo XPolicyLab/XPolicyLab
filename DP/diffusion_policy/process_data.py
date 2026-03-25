@@ -1,39 +1,11 @@
 import os
-import h5py
 import numpy as np
 import zarr
 import shutil
 import argparse
 import cv2
-import h5py
-
-def load_hdf5(path: str) -> dict:
-
-    def _read(obj):
-        # Dataset -> numpy / scalar / bytes->str
-        if isinstance(obj, h5py.Dataset):
-            v = obj[()]
-            if isinstance(v, (bytes, bytearray)):
-                return v.decode("utf-8", errors="replace")
-            # numpy scalar -> python scalar
-            try:
-                return v.item()
-            except Exception:
-                return v
-
-        # Group -> dict
-        out = {}
-        for k, v in obj.items():
-            out[k] = _read(v)
-        return out
-
-    with h5py.File(path, "r") as f:
-        data = _read(f)
-
-        if len(f.attrs) > 0:
-            data["_attrs"] = {k: f.attrs[k] for k in f.attrs.keys()}
-
-        return data
+from XPolicyLab.utils.load_file import load_hdf5, load_yaml
+from XPolicyLab.utils.process_data import pack_robot_state, get_robot_action_dim_info, decode_image_bit
 
 def main():
     parser = argparse.ArgumentParser(description="Process some episodes.")
@@ -44,15 +16,18 @@ def main():
     args = parser.parse_args()
 
     task_name = args.task_name
-    env_cfg = args.env_cfg
+    env_cfg_name = args.env_cfg
     expert_data_num = args.expert_data_num
     action_type = args.action_type
+    load_data_dir = os.path.join("../../data", str(task_name), str(env_cfg_name))
+    env_cfg_file = os.path.join("../../env_cfg", f"{env_cfg_name}.yml")
+    env_cfg = load_yaml(env_cfg_file)
 
-    load_dir = os.path.join("../../data", str(task_name), str(env_cfg))
+    robot_action_dim_info = get_robot_action_dim_info(env_cfg)
 
     frame_count = 0
 
-    save_dir = f"./data/{task_name}-{env_cfg}-{expert_data_num}-{action_type}.zarr"
+    save_dir = f"./data/{task_name}-{env_cfg_name}-{expert_data_num}-{action_type}.zarr"
 
     if os.path.exists(save_dir):
         shutil.rmtree(save_dir)
@@ -63,60 +38,34 @@ def main():
     zarr_data = zarr_root.create_group("data")
     zarr_meta = zarr_root.create_group("meta")
 
-    head_camera_arrays, left_camera_arrays, right_camera_arrays = ([], [], [],)
+    head_camera_arrays = []
     episode_ends_arrays, action_arrays, state_arrays = ([], [], [],)
 
     while current_episode < expert_data_num:
-        print(f"Processing episode: {current_episode + 1} / {expert_data_num}", end="\r")
+        print(f"DP: processing episode: {current_episode + 1} / {expert_data_num}", end="\r")
 
-        load_path = os.path.join(load_dir, f"data/episode_{current_episode:07d}.hdf5")
+        load_path = os.path.join(load_data_dir, f"data/episode_{current_episode:07d}.hdf5")
         data = load_hdf5(load_path)
         
-        if action_type == 'joint':
-            if "joint_states" in data['state'].keys(): # single arm
-                joint_states = data['state']["joint_states"]
-                ee_joint_states = data['state']["ee_joint_states"]
-                state = np.concatenate([joint_states, ee_joint_states], axis=-1)
-            else:
-                assert "left_arm_joint_states" in data['state'].keys() and "right_arm_joint_states" in data['state'].keys(), "Expected joint states for both arms in the dataset."
-                left_arm_joint_states = data['state']["left_arm_joint_states"]
-                right_arm_joint_states = data['state']["right_arm_joint_states"]
-                left_ee_joint_states = data['state']["left_ee_joint_states"]
-                right_ee_joint_states = data['state']["right_ee_joint_states"]
-                state = np.concatenate([left_arm_joint_states, left_ee_joint_states, right_arm_joint_states, right_ee_joint_states], axis=-1)
+        state_all = pack_robot_state(data, action_type, robot_action_dim_info, source_type="dataset")
 
-        elif action_type == 'ee':
-            if "ee_poses" in data['state'].keys(): # single arm
-                ee_poses = data['state']["ee_poses"]
-                ee_joint_states = data['state']["ee_joint_states"]
-                state = np.concatenate([ee_poses, ee_joint_states], axis=-1)
-            else:
-                assert "left_ee_poses" in data['state'].keys() and "right_ee_poses" in data['state'].keys(), "Expected ee poses for both arms in the dataset."
-                left_ee_poses = data['state']["left_ee_poses"]
-                right_ee_poses = data['state']["right_ee_poses"]
-                left_ee_joint_states = data['state']["left_ee_joint_states"]
-                right_ee_joint_states = data['state']["right_ee_joint_states"]
-                state = np.concatenate([left_ee_poses, left_ee_joint_states, right_ee_poses, right_ee_joint_states], axis=-1)
-        else:
-            raise ValueError(f"Unsupported action type: {action_type}. Supported types are 'joint' and 'ee'.")
-
-        for j in range(0, state.shape[0]):
+        for j in range(0, state_all.shape[0]):
             head_img_bit = data['vision']['cam_head']['colors'][j]
 
-            if j != state.shape[0] - 1:
+            if j != state_all.shape[0] - 1:
 
-                head_img = cv2.imdecode(np.frombuffer(head_img_bit, np.uint8), cv2.IMREAD_COLOR)
+                head_img = decode_image_bit(head_img_bit)
                 assert head_img.ndim == 3 and head_img.shape[-1] == 3, f"Expected HxWx3, got {head_img.shape}"
                 head_img = cv2.resize(head_img, (320, 240), interpolation=cv2.INTER_AREA)  # (W, H)
                 assert head_img.shape == (240, 320, 3)
 
                 head_camera_arrays.append(head_img)
-                state_arrays.append(state[j])
+                state_arrays.append(state_all[j])
             if j != 0:
-                action_arrays.append(state[j])
+                action_arrays.append(state_all[j])
 
         current_episode += 1
-        frame_count += state.shape[0] - 1
+        frame_count += state_all.shape[0] - 1
         episode_ends_arrays.append(frame_count)
 
     print()

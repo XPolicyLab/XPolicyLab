@@ -17,10 +17,10 @@ shape_meta: &shape_meta
     #   shape: *image_shape
     #   type: rgb
     agent_pos:
-      shape: [16]
+      shape: null
       type: low_dim
   action:
-    shape: [16]
+    shape: null
 
 env_runner:
   _target_: diffusion_policy.env_runner.pusht_image_runner.PushTImageRunner
@@ -40,7 +40,7 @@ env_runner:
 
 dataset:
   _target_: diffusion_policy.dataset.robot_image_dataset.RobotImageDataset
-  zarr_path: data/useless.zarr
+  zarr_path: null
   batch_size: ${dataloader.batch_size}
   horizon: ${horizon}
   pad_before: ${eval:'${n_obs_steps}-1'}

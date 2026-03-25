@@ -18,8 +18,14 @@ echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 data_path="${SCRIPT_DIR}/data/${task_name}-${env_cfg}-${expert_data_num}-${action_type}.zarr"
 
-ZARR="${data_path}/data/action/.zarray"
-action_dim=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["chunks"][1])' "$ZARR")
+# Get Action Dimension from env_cfg
+action_dim=$(python3 -c '
+import sys, os, json, yaml
+env_cfg = yaml.safe_load(open(os.path.join("../../env_cfg", f"{sys.argv[1]}.yml"), "r", encoding="utf-8"))
+robot_name = env_cfg["config"]["robot"]
+robot_action_dim_info = json.load(open(os.path.join("../../env_cfg/robot", "_robot_info.json"), "r", encoding="utf-8"))[robot_name]
+print(sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"]))
+' "$env_cfg")
 
 cd ../..
 
@@ -70,8 +76,8 @@ echo -e "\033[34m[CLIENT] Connecting to server port ${FREE_PORT}...\033[0m"
 PYTHONWARNINGS=ignore::UserWarning \
 python XPolicyLab/debug_policy_env_batch.py \
     --task_name "${task_name}" \
-    --policy_name "${policy_name}" \
     --env_cfg "${env_cfg}" \
+    --policy_name "${policy_name}" \
     --port ${FREE_PORT}
 
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

@@ -34,7 +34,6 @@ def main(cfg: OmegaConf):
 
     cls = hydra.utils.get_class(cfg._target_)
     workspace: BaseWorkspace = cls(cfg)
-    print(cfg.task.dataset.zarr_path, cfg.task_name)
     workspace.run()
 
 

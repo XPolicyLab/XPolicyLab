@@ -16,12 +16,16 @@ run_dir="data/outputs/${exp_name}_seed${seed}"
 
 echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
 
-data_path="./data/${task_name}-${env_cfg}-${expert_data_num}-${action_type}.zarr"
+# Get Action Dimension from env_cfg
+action_dim=$(python3 -c '
+import sys, os, json, yaml
+env_cfg = yaml.safe_load(open(os.path.join("../../env_cfg", f"{sys.argv[1]}.yml"), "r", encoding="utf-8"))
+robot_name = env_cfg["config"]["robot"]
+robot_action_dim_info = json.load(open(os.path.join("../../env_cfg/robot", "_robot_info.json"), "r", encoding="utf-8"))[robot_name]
+print(sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"]))
+' "$env_cfg")
 
-ZARR="${data_path}/data/action/.zarray"
-action_dim=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["chunks"][1])' "$ZARR")
-
-alg_name=robot_dp_$action_dim
+alg_name=robot_dp
 
 if [ $DEBUG = True ]; then
     wandb_mode=offline
@@ -40,8 +44,10 @@ if [ ! -d  ]; then
     bash process_data.sh ${task_name} ${env_cfg} ${expert_data_num} ${action_type}
 fi
 
-python train.py --config-name=${alg_name}.yaml \
-                task.name=${task_name} \
+python train.py --config-name="${alg_name}.yaml" \
+                task.name="${task_name}" \
+                "task.shape_meta.action.shape=[${action_dim}]" \
+                "task.shape_meta.obs.agent_pos.shape=[${action_dim}]" \
                 task.dataset.zarr_path="data/${task_name}-${env_cfg}-${expert_data_num}-${action_type}.zarr" \
                 training.debug=$DEBUG \
                 training.seed=${seed} \
