@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import cv2
-from XPolicyLab.utils.load_file import load_json
+from XPolicyLab.utils.load_file import load_json, load_yaml
 
 def _validate_config(action_type: str, robot_action_dim_info: dict, source_type: str):
     """
@@ -115,7 +115,6 @@ def _ensure_valid_state_array(name: str, value, expected_last_dim: int) -> np.nd
         )
 
     return arr
-
 
 def pack_robot_state(
     obs: dict,
@@ -253,6 +252,19 @@ def get_robot_action_dim_info(env_cfg):
     get_robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
 
     return get_robot_action_dim_info
+
+def get_robot_action_dim_info(env_cfg_name):
+    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_name}.yml"))
+    robot_name = env_cfg['config']['robot']
+    robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
+
+    return robot_action_dim_info
+
+def get_action_dim(env_cfg_name):
+    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_name}.yml"))
+    robot_name = env_cfg['config']['robot']
+    robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
+    return sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"])
 
 def decode_image_bit(image_bit):
     return cv2.imdecode(np.frombuffer(image_bit, np.uint8), cv2.IMREAD_COLOR)

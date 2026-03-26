@@ -5,7 +5,7 @@ import cv2
 import argparse
 import json
 
-from XPolicyLab.utils.load_file import load_hdf5, load_yaml
+from XPolicyLab.utils.load_file import load_hdf5
 from XPolicyLab.utils.process_data import pack_robot_state, get_robot_action_dim_info, decode_image_bit
 
 def images_encoding(imgs):
@@ -34,18 +34,15 @@ def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_
     for current_episode in range(episode_num):
         load_path = os.path.join(load_data_dir, f"data/episode_{current_episode:07d}.hdf5")
         data = load_hdf5(load_path)
-        state_all = pack_robot_state(data, action_type, robot_action_dim_info)
+        state_all = pack_robot_state(data, action_type, robot_action_dim_info, "dataset")
         
         qpos = []
         actions = []
-        cam_head = []
-        cam_right_wrist = []
-        cam_left_wrist = []
-        left_arm_dim = []
-        right_arm_dim = []
+        cam_head_list = []
+        cam_left_wrist_list = []
+        cam_right_wrist_list = []
 
-        last_state = None
-        for j in range(0, state_all.shape[0]):
+        for j in range(state_all.shape[0]):
             
             state = state_all[j]
 
@@ -54,45 +51,38 @@ def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_
                 state = state.astype(np.float32)
                 qpos.append(state)
 
-                cam_head_bit = data['vision']["cam_head"]['color'][j]
+                cam_head_bit = data['vision']["cam_head"]['colors'][j]
                 cam_head = decode_image_bit(cam_head_bit)
                 cam_head_resized = cv2.resize(cam_head, (640, 480))
-                cam_head.append(cam_head_resized)
+                cam_head_list.append(cam_head_resized)
 
-                camera_right_wrist_bit = data['vision']["cam_head"]["right_camera"][j]
-                camera_right_wrist = cv2.imdecode(np.frombuffer(camera_right_wrist_bit, np.uint8), cv2.IMREAD_COLOR)
-                camera_right_wrist_resized = cv2.resize(camera_right_wrist, (640, 480))
-                cam_right_wrist.append(camera_right_wrist_resized)
+                cam_left_wrist_bit = data['vision']['cam_left_wrist']['colors'][j]
+                cam_left_wrist =decode_image_bit(cam_left_wrist_bit)
+                cam_left_wrist_resized = cv2.resize(cam_left_wrist, (640, 480))
+                cam_left_wrist_list.append(cam_left_wrist_resized)
 
-                camera_left_wrist_bit = image_dict["left_camera"][j]
-                camera_left_wrist = cv2.imdecode(np.frombuffer(camera_left_wrist_bit, np.uint8), cv2.IMREAD_COLOR)
-                camera_left_wrist_resized = cv2.resize(camera_left_wrist, (640, 480))
-                cam_left_wrist.append(camera_left_wrist_resized)
+                cam_right_wrist_bit = data['vision']['cam_right_wrist']['colors'][j]
+                cam_right_wrist = decode_image_bit(cam_right_wrist_bit)
+                cam_right_wrist_resized = cv2.resize(cam_right_wrist, (640, 480))
+                cam_right_wrist_list.append(cam_right_wrist_resized)
 
             if j != 0:
                 action = state
                 actions.append(action)
-                left_arm_dim.append(left_arm.shape[0])
-                right_arm_dim.append(right_arm.shape[0])
 
-        hdf5path = os.path.join(save_dir, f"episode_{i}.hdf5")
+        hdf5path = os.path.join(save_dir, f"episode_{current_episode}.hdf5")
 
         with h5py.File(hdf5path, "w") as f:
-            f.create_dataset("action", data=np.array(actions))
+            f.create_dataset("action", data=np.array(actions, dtype=np.float32))
             obs = f.create_group("observations")
-            obs.create_dataset("qpos", data=np.array(qpos))
-            obs.create_dataset("left_arm_dim", data=np.array(left_arm_dim))
-            obs.create_dataset("right_arm_dim", data=np.array(right_arm_dim))
+            obs.create_dataset("qpos", data=np.array(qpos, dtype=np.float32))
             image = obs.create_group("images")
-            # cam_head_enc, len_high = images_encoding(cam_head)
-            # cam_right_wrist_enc, len_right = images_encoding(cam_right_wrist)
-            # cam_left_wrist_enc, len_left = images_encoding(cam_left_wrist)
-            image.create_dataset("cam_head", data=np.stack(cam_head), dtype=np.uint8)
-            image.create_dataset("cam_right_wrist", data=np.stack(cam_right_wrist), dtype=np.uint8)
-            image.create_dataset("cam_left_wrist", data=np.stack(cam_left_wrist), dtype=np.uint8)
+            image.create_dataset("cam_head", data=np.stack(cam_head_list), dtype=np.uint8)
+            image.create_dataset("cam_left_wrist", data=np.stack(cam_left_wrist_list), dtype=np.uint8)
+            image.create_dataset("cam_right_wrist", data=np.stack(cam_right_wrist_list), dtype=np.uint8)
 
         begin += 1
-        print(f"ACT: proccess episode {i} success!", end='\r')
+        print(f"ACT: proccess episode {current_episode} success!", end='\r')
 
     return begin
 
@@ -112,10 +102,8 @@ if __name__ == "__main__":
     save_dir = f"processed_data/{task_name}/{env_cfg_name}-{expert_data_num}-{action_type}"
 
     load_data_dir = os.path.join("../../data", str(task_name), str(env_cfg_name))
-    env_cfg_file = os.path.join("../../env_cfg", f"{env_cfg_name}.yml")
-    env_cfg = load_yaml(env_cfg_file)
 
-    robot_action_dim_info = get_robot_action_dim_info(env_cfg)
+    robot_action_dim_info = get_robot_action_dim_info(env_cfg_name)
 
     begin = data_transform(os.path.join("../../data/", task_name, env_cfg_name, 'data'), expert_data_num, load_data_dir, save_dir, robot_action_dim_info)
 

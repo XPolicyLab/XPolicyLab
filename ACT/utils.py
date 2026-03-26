@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import os
 import h5py
-from torch.utils.data import TensorDataset, DataLoader
+from torch.utils.data import DataLoader
 
 import IPython
 
@@ -51,10 +51,10 @@ class EpisodicDataset(torch.utils.data.Dataset):
                 action_len = episode_len - max(0, start_ts - 1)  # hack, to make timesteps more aligned
 
         self.is_sim = is_sim
-        padded_action = np.zeros((self.max_action_len, action.shape[1]), dtype=np.float32)  # 根据max_action_len初始化
+        padded_action = np.zeros((self.max_action_len, action.shape[1]), dtype=np.float32)
         padded_action[:action_len] = action
-        is_pad = np.ones(self.max_action_len, dtype=bool)  # 初始化为全1（True）
-        is_pad[:action_len] = 0  # 前action_len个位置设置为0（False），表示非填充部分
+        is_pad = np.ones(self.max_action_len, dtype=bool) 
+        is_pad[:action_len] = 0
 
         # new axis for different cameras
         all_cam_images = []

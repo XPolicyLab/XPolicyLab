@@ -12,7 +12,7 @@ try:
         build_CNNMLP_model_and_optimizer,
     )
 except:
-    from .detr.main import (
+    from .main import (
         build_ACT_model_and_optimizer,
         build_CNNMLP_model_and_optimizer,
     )
@@ -23,9 +23,9 @@ e = IPython.embed
 
 class ACTPolicy(nn.Module):
 
-    def __init__(self, args_override, RoboTwin_Config=None):
+    def __init__(self, args_override, policy_cfg=None):
         super().__init__()
-        model, optimizer = build_ACT_model_and_optimizer(args_override, RoboTwin_Config)
+        model, optimizer = build_ACT_model_and_optimizer(args_override, policy_cfg)
         self.model = model  # CVAE decoder
         self.optimizer = optimizer
         self.kl_weight = args_override["kl_weight"]
@@ -38,7 +38,6 @@ class ACTPolicy(nn.Module):
         if actions is not None:  # training time
             actions = actions[:, :self.model.num_queries]
             is_pad = is_pad[:, :self.model.num_queries]
-
             a_hat, is_pad_hat, (mu, logvar) = self.model(qpos, image, env_state, actions, is_pad)
             total_kld, dim_wise_kld, mean_kld = kl_divergence(mu, logvar)
             loss_dict = dict()
@@ -102,13 +101,13 @@ def kl_divergence(mu, logvar):
 
 class ACT:
 
-    def __init__(self, args_override=None, RoboTwin_Config=None):
+    def __init__(self, args_override=None, policy_cfg=None):
         if args_override is None:
             args_override = {
                 "kl_weight": 0.1,  # Default value, can be overridden
                 "device": "cuda:0",
             }
-        self.policy = ACTPolicy(args_override, RoboTwin_Config)
+        self.policy = ACTPolicy(args_override, policy_cfg)
         self.device = torch.device(args_override["device"])
         self.policy.to(self.device)
         self.policy.eval()
@@ -116,8 +115,8 @@ class ACT:
         # Temporal aggregation settings
         self.temporal_agg = args_override.get("temporal_agg", False)
         self.num_queries = args_override["chunk_size"]
-        self.state_dim = RoboTwin_Config.action_dim  # Standard joint dimension for bimanual robot
-        self.max_timesteps = 3000  # Large enough for deployment
+        self.state_dim = policy_cfg.action_dim  # Standard joint dimension for bimanual robot
+        self.max_timesteps = 5000  # Large enough for deployment
 
         # Set query frequency based on temporal_agg - matching imitate_episodes.py logic
         self.query_frequency = self.num_queries
@@ -157,6 +156,8 @@ class ACT:
                 print(f"Warning: Could not find policy checkpoint at {ckpt_path}")
         else:
             self.stats = None
+        
+        self.obs_cache = None
 
     def pre_process(self, qpos):
         """Normalize input joint positions"""
@@ -170,9 +171,11 @@ class ACT:
             return action * self.stats["action_std"] + self.stats["action_mean"]
         return action
 
-    def get_action(self, obs=None):
-        if obs is None:
-            return None
+    def update_obs(self, obs):
+        self.obs_cache = obs
+
+    def get_action(self):
+        obs = self.obs_cache
 
         # Convert observations to tensors and normalize qpos - matching imitate_episodes.py
         qpos_numpy = np.array(obs["qpos"])

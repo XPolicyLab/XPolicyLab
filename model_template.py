@@ -52,6 +52,25 @@ class ModelTemplate:
         """
         raise NotImplementedError("update_obs() must be implemented by the user.")
 
+    def update_obs_batch(self, obs_list):
+        """
+        Update the current observation used by the model.
+        更新当前模型使用的观测。
+
+        Args / 参数:
+            observation:
+                The latest environment observation.
+                环境最新返回的观测。
+
+        Notes / 说明:
+        - Use this function to preprocess, store, or convert observations.
+          你可以在这个函数里对观测进行预处理、缓存或格式转换。
+        - For example, image resizing, normalization, stacking frames,
+          or extracting useful keys from a dictionary.
+          例如：图像 resize、归一化、帧堆叠，或者从字典中提取有用字段。
+        """
+        raise NotImplementedError("update_obs_batch() must be implemented by the user.")
+
     def get_action(self):
         """
         Predict or generate an action from the current observation/state.
@@ -69,6 +88,24 @@ class ModelTemplate:
           请确保返回的动作格式与环境要求一致。
         """
         raise NotImplementedError("get_action() must be implemented by the user.")
+
+    def get_action_batch(self):
+        """
+        Predict or generate an action from the current observation/state.
+        根据当前观测或内部状态预测/生成动作。
+
+        Returns / 返回:
+            action:
+                The action to be executed in the environment.
+                将要在环境中执行的动作。
+
+        Notes / 说明:
+        - This function usually performs model inference.
+          这个函数通常用于执行模型推理。
+        - Make sure the returned action matches the environment action format.
+          请确保返回的动作格式与环境要求一致。
+        """
+        raise NotImplementedError("get_action_batch() must be implemented by the user.")
 
     def reset(self):
         """

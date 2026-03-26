@@ -1,16 +1,21 @@
 import argparse
 from client_server.model_client import ModelClient
 import numpy as np
+from XPolicyLab.utils.process_data import get_robot_action_dim_info
+
+Batch_Size = 10
 
 class TestEnv:
     def __init__(self, deploy_cfg):
         self.success_num, self.episode_num = 0, 0
         self.deploy_cfg = deploy_cfg
         self.episode_step_limit = 5
-        
+        env_cfg_name = deploy_cfg['env_cfg']
+        self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_name)
+
         self.model_client = ModelClient(port=deploy_cfg['port'])
 
-    def get_obs(self):
+    def get_obs(self, env_idx=0):
         # v1.0
         demo_obs = { # aloha
             "vision": {
@@ -65,18 +70,6 @@ class TestEnv:
             },
             "instruction": "language instruction",
             "state": {
-                "left_arm_joint_state": np.zeros((7), dtype=np.uint8), 
-                "left_ee_joint_state": np.zeros((1), dtype=np.uint8), 
-                "left_ee_pose": np.zeros((7), dtype=np.uint8), 
-                "left_tcp_pose": np.zeros((7), dtype=np.uint8), 
-                "left_delta_ee_pose": np.zeros((7), dtype=np.uint8), 
-
-                "right_arm_joint_state": np.zeros((7), dtype=np.uint8), 
-                "right_ee_joint_state": np.zeros((1), dtype=np.uint8), 
-                "right_ee_pose": np.zeros((7), dtype=np.uint8), 
-                "right_tcp_pose": np.zeros((7), dtype=np.uint8), 
-                "right_delta_ee_pose": np.zeros((7), dtype=np.uint8), 
-
                 "mobile": {
                     "base_pose": [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],  # x,y,z + quat
                     "base_twist": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],      # vx,vy,vz, wx,wy,wz
@@ -88,8 +81,34 @@ class TestEnv:
             },
 
             "data_format_version": "v1.0",
+            
+            "env_idx": env_idx
         }
+
+        state = demo_obs.setdefault("state", {})
+
+        arm_dims = self.robot_action_dim_info["arm_dim"]
+        ee_dims = self.robot_action_dim_info["ee_dim"]
+
+        if len(arm_dims) == 1:
+            prefixes = [""]
+        elif len(arm_dims) == 2:
+            prefixes = ["left_", "right_"]
+        else:
+            raise ValueError(f"Unsupported arm count: {len(arm_dims)}")
+
+        for i, prefix in enumerate(prefixes):
+            state[f"{prefix}arm_joint_state"] = np.zeros(arm_dims[i], dtype=np.float32)
+            state[f"{prefix}ee_joint_state"] = np.zeros(ee_dims[i], dtype=np.float32)
+            state[f"{prefix}ee_pose"] = np.zeros(7, dtype=np.float32)
+            state[f"{prefix}tcp_pose"] = np.zeros(7, dtype=np.float32)
+            state[f"{prefix}delta_ee_pose"] = np.zeros(7, dtype=np.float32)
+
         return demo_obs
+    
+    def get_obs_batch(self, env_idx_list):
+        demo_obs_list = [self.get_obs(env_idx) for env_idx in env_idx_list] 
+        return demo_obs_list
 
     def eval_one_episode(self):
         policy_name = self.deploy_cfg['policy_name']
@@ -105,6 +124,20 @@ class TestEnv:
             
         eval_module.eval_one_episode(TASK_ENV=self, model_client=self.model_client)
 
+    def eval_one_episode_bnatch(self):
+        policy_name = self.deploy_cfg['policy_name']
+        try:
+            eval_module = __import__(f'XPolicyLab.{policy_name}.deploy', fromlist=['eval_one_episode_batch'])
+        except ImportError as e:
+            print("[TestEnv]", f"Failed to import policy module: XPolicyLab.{policy_name}.deploy. Error: {e}", "ERROR")
+            raise e
+            
+        if not hasattr(eval_module, 'eval_one_episode_batch'):
+            print("[TestEnv]", f"Module '.{policy_name}.deploy' does not have 'eval_one_episode_batch' function", "ERROR")
+            raise AttributeError(f"Missing eval_one_episode_batch in policy module")
+            
+        eval_module.eval_one_episode_batch(TASK_ENV=self, model_client=self.model_client)
+
     def reset(self):
         self.model_client.call(func_name="reset")
         self.episode_step = 0
@@ -112,7 +145,14 @@ class TestEnv:
     def take_action(self, action):
         print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
         self.episode_step += 1
-        # check action validity here if needed
+        validate_robot_state_dict(action, self.robot_action_dim_info)
+
+    def take_action_batch(self, action_list, env_idx_list):
+        print(f"[TestEnv] Action Step: {self.episode_step} / {self.episode_step_limit} (step_limit)")
+        self.episode_step += 1
+        assert len(action_list) == len(env_idx_list), f"action num != env num: {len(action_list)} != {len(env_idx_list)}"
+        for action in action_list:
+            validate_robot_state_dict(action, self.robot_action_dim_info)
 
     def is_episode_end(self):
         print("[TestEnv] Check Episode End:", self.episode_step >= self.episode_step_limit)
@@ -120,6 +160,102 @@ class TestEnv:
     
     def finish_episode(self):
         print("[TestEnv] Episode finished")
+
+    def get_running_env_idx_list(self):
+        # For demonstration, we assume all envs are running. Replace with actual logic if needed.
+        return list(range(Batch_Size))
+
+
+def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> None:
+    """
+    Validate whether the state_dict keys use the correct prefixes and dimensions.
+
+    Args:
+        state_dict: e.g. demo_obs["state"]
+        robot_action_dim_info: {
+            "arm_dim": [...],
+            "ee_dim": [...],
+        }
+
+    Raises:
+        KeyError: if required keys are missing
+        ValueError: if unexpected keys or wrong dimensions are found
+        TypeError: if values are not array-like
+    """
+    arm_dims = robot_action_dim_info["arm_dim"]
+    ee_dims = robot_action_dim_info["ee_dim"]
+
+    if len(arm_dims) != len(ee_dims):
+        raise ValueError(
+            f"robot_action_dim_info mismatch: len(arm_dim)={len(arm_dims)} "
+            f"!= len(ee_dim)={len(ee_dims)}"
+        )
+
+    arm_count = len(arm_dims)
+
+    if arm_count == 1:
+        expected = {
+            "arm_joint_state": arm_dims[0],
+            "ee_joint_state": ee_dims[0],
+            "ee_pose": 7,
+            "tcp_pose": 7,
+            "delta_ee_pose": 7,
+        }
+        forbidden_prefixes = ("left_", "right_")
+
+    elif arm_count == 2:
+        expected = {
+            "left_arm_joint_state": arm_dims[0],
+            "left_ee_joint_state": ee_dims[0],
+            "left_ee_pose": 7,
+            "left_tcp_pose": 7,
+            "left_delta_ee_pose": 7,
+            "right_arm_joint_state": arm_dims[1],
+            "right_ee_joint_state": ee_dims[1],
+            "right_ee_pose": 7,
+            "right_tcp_pose": 7,
+            "right_delta_ee_pose": 7,
+        }
+        forbidden_prefixes = ()
+    else:
+        raise ValueError(f"Unsupported arm count: {arm_count}")
+
+    if forbidden_prefixes:
+        bad_prefixed_keys = [
+            k for k in state_dict.keys()
+            if k.startswith(forbidden_prefixes)
+        ]
+        if bad_prefixed_keys:
+            raise ValueError(
+                f"Single-arm robot should not contain prefixed keys, "
+                f"but got: {bad_prefixed_keys}"
+            )
+    unexpected_keys = [k for k in state_dict if k not in expected]
+    if unexpected_keys:
+        raise ValueError(f"Unexpected state keys: {unexpected_keys}")
+
+    for key, expected_dim in expected.items():
+        if not key in state_dict.keys():
+            continue
+        value = state_dict[key]
+
+        if not isinstance(value, (np.ndarray, list, tuple)):
+            raise TypeError(
+                f"state_dict['{key}'] must be array-like, got {type(value)}"
+            )
+
+        arr = np.asarray(value)
+
+        if arr.ndim != 1:
+            raise ValueError(
+                f"state_dict['{key}'] must be 1D, got shape {arr.shape}"
+            )
+
+        if arr.shape[0] != expected_dim:
+            raise ValueError(
+                f"state_dict['{key}'] dim mismatch: expected {expected_dim}, "
+                f"got shape {arr.shape}"
+            )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

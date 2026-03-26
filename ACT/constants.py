@@ -39,7 +39,6 @@ START_ARM_POSE = [
 
 XML_DIR = (str(pathlib.Path(__file__).parent.resolve()) + "/assets/")  # note: absolute path
 
-# Left finger position limits (qpos[7]), right_finger = -1 * left_finger
 MASTER_GRIPPER_POSITION_OPEN = 0.02417
 MASTER_GRIPPER_POSITION_CLOSE = 0.01244
 PUPPET_GRIPPER_POSITION_OPEN = 0.05800

@@ -1,0 +1,32 @@
+{
+    "align_blocks-dual_x5-20-joint": {
+        "dataset_dir": "processed_data/align_blocks/dual_x5-20-joint",
+        "num_episodes": 20,
+        "episode_len": 5000,
+        "camera_names": [
+            "cam_head",
+            "cam_right_wrist",
+            "cam_left_wrist"
+        ]
+    },
+    "align_blocks-dual_x5-1-joint": {
+        "dataset_dir": "processed_data/align_blocks/dual_x5-1-joint",
+        "num_episodes": 1,
+        "episode_len": 5000,
+        "camera_names": [
+            "cam_head",
+            "cam_right_wrist",
+            "cam_left_wrist"
+        ]
+    },
+    "align_blocks-dual_x5-2-joint": {
+        "dataset_dir": "processed_data/align_blocks/dual_x5-2-joint",
+        "num_episodes": 2,
+        "episode_len": 5000,
+        "camera_names": [
+            "cam_head",
+            "cam_right_wrist",
+            "cam_left_wrist"
+        ]
+    }
+}

@@ -25,7 +25,7 @@ class Model(ModelTemplate):
             model_training_config = yaml.safe_load(f)
         
         model_training_config['action_dim'] = action_dim
-        model_training_config['task'] = model_cfg['task_name']  
+        model_training_config['task'] = model_cfg['task_name']
         n_obs_steps = model_training_config['n_obs_steps']
         n_action_steps = model_training_config['n_action_steps']
         self.action_type = model_cfg['action_type']
@@ -33,8 +33,7 @@ class Model(ModelTemplate):
         self.runner = DPRunner(n_obs_steps=n_obs_steps, n_action_steps=n_action_steps)
         self.model = self.get_model(model_cfg=model_cfg)
 
-        env_cfg = load_yaml(os.path.join(parent_dir, f"../../env_cfg/{model_cfg['env_cfg']}.yml"))
-        self.robot_action_dim_info = get_robot_action_dim_info(env_cfg)
+        self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg'])
 
     def get_model(self, model_cfg):
         ckpt_file = os.path.join(parent_dir, f"checkpoints/{model_cfg['task_name']}-{model_cfg['env_cfg']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}-{model_cfg['seed']}/{model_cfg['checkpoint_num']}.ckpt")
@@ -58,23 +57,31 @@ class Model(ModelTemplate):
         
         return policy
 
-    def update_obs(self, obs_list):
+    def update_obs(self, obs):
+        self.update_obs_batch([obs])
+
+    def update_obs_batch(self, obs_list):
         env_idx_list = [obs["env_idx"] for obs in obs_list]
         obs_list = [encode_obs(obs, self.action_type, self.robot_action_dim_info) for obs in obs_list]
         self.runner.update_obs(obs_list, env_idx_list)
-    
-    def reset(self):
-        self.runner.reset_obs()
 
-    def get_action(self, env_idx_list):
+    def get_action(self):
+        action_list = self.get_action_batch(env_idx_list=[0])
+            
+        return action_list[0]
+
+    def get_action_batch(self, env_idx_list):
         actions = self.runner.get_action(self.model, env_idx_list)
         action_dict_list = []
 
         for i in range(len(env_idx_list)):
-            current_env_list = unpack_robot_state(actions[i], self.action_type, self.robot_action_dim_info, source_type='obs')
-            action_dict_list.append(current_env_list)
+            current_env_action_list = unpack_robot_state(actions[i], self.action_type, self.robot_action_dim_info, source_type='obs')
+            action_dict_list.append(current_env_action_list)
             
         return action_dict_list
+
+    def reset(self):
+        self.runner.reset_obs()
 
 def encode_obs(observation, action_type, robot_action_dim_info):
     head_img = (np.moveaxis(observation["vision"]["cam_head"]["color"], -1, 0) / 255)

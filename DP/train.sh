@@ -8,7 +8,6 @@ seed=${5}
 gpu_id=${6}
 
 DEBUG=False
-save_ckpt=True
 
 addition_info=train
 exp_name=${task_name}-robot_dp-${addition_info}
@@ -56,5 +55,3 @@ python train.py --config-name="${alg_name}.yaml" \
                 logging.mode=${wandb_mode} \
                 setting=${env_cfg} \
                 expert_data_num=${expert_data_num}
-                # checkpoint.save_ckpt=${save_ckpt}
-                # hydra.run.dir=${run_dir} \

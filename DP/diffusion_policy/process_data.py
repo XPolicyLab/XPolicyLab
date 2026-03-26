@@ -20,10 +20,8 @@ def main():
     expert_data_num = args.expert_data_num
     action_type = args.action_type
     load_data_dir = os.path.join("../../data", str(task_name), str(env_cfg_name))
-    env_cfg_file = os.path.join("../../env_cfg", f"{env_cfg_name}.yml")
-    env_cfg = load_yaml(env_cfg_file)
 
-    robot_action_dim_info = get_robot_action_dim_info(env_cfg)
+    robot_action_dim_info = get_robot_action_dim_info(env_cfg_name)
 
     frame_count = 0
 

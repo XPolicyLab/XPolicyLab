@@ -11,6 +11,7 @@ from .transformer import build_transformer, TransformerEncoder, TransformerEncod
 import numpy as np
 
 import IPython
+import os
 
 e = IPython.embed
 
@@ -60,7 +61,6 @@ class DETRVAE(nn.Module):
             self.backbones = nn.ModuleList(backbones)
             self.input_proj_robot_state = nn.Linear(state_dim, hidden_dim)
         else:
-            # input_dim = 14 + 7 # robot_state + env_state
             self.input_proj_robot_state = nn.Linear(state_dim, hidden_dim)
             self.input_proj_env_state = nn.Linear(7, hidden_dim)
             self.pos = torch.nn.Embedding(2, hidden_dim)
@@ -170,7 +170,7 @@ class CNNMLP(nn.Module):
                 backbone_down_projs.append(down_proj)
             self.backbone_down_projs = nn.ModuleList(backbone_down_projs)
 
-            mlp_in_dim = 768 * len(backbones) + 14
+            mlp_in_dim = 768 * len(backbones) + int(os.environ.get("ACT_ACTION_DIM"))
             self.mlp = mlp(input_dim=mlp_in_dim, hidden_dim=1024, output_dim=state_dim, hidden_depth=2)
         else:
             raise NotImplementedError
@@ -196,7 +196,7 @@ class CNNMLP(nn.Module):
         for cam_feature in all_cam_features:
             flattened_features.append(cam_feature.reshape([bs, -1]))
         flattened_features = torch.cat(flattened_features, axis=1)  # 768 each
-        features = torch.cat([flattened_features, qpos], axis=1)  # qpos: 14
+        features = torch.cat([flattened_features, qpos], axis=1) 
         a_hat = self.mlp(features)
         return a_hat
 
@@ -230,7 +230,7 @@ def build_encoder(args):
 
 
 def build(args):
-    state_dim = 14  # TODO hardcode
+    state_dim = int(os.environ.get("ACT_ACTION_DIM"))
 
     # From state
     # backbone = None # from state for now, no need for conv nets
@@ -259,7 +259,7 @@ def build(args):
 
 
 def build_cnnmlp(args):
-    state_dim = 16  # TODO hardcode
+    state_dim = int(os.environ.get("ACT_ACTION_DIM"))
 
     # From state
     # backbone = None # from state for now, no need for conv nets

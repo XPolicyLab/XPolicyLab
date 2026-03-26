@@ -113,22 +113,19 @@ def get_args_parser():
     parser.add_argument("--kl_weight", action="store", type=int, help="KL Weight", required=False)
     parser.add_argument("--chunk_size", action="store", type=int, help="chunk_size", required=False)
     parser.add_argument("--temporal_agg", action="store_true")
-    parser.add_argument("--state_dim", action="store", type=int, help="state dim", required=True)
     parser.add_argument("--save_freq", action="store", type=int, help="save ckpt frequency", required=False, default=6000)
-    # parser.add_argument('--num_queries',type=int, required=True)
-    # parser.add_argument('--actionsByQuery',type=int, required=True)
 
     return parser
 
 
-def build_ACT_model_and_optimizer(args_override, RoboTwin_Config=None):
-    if RoboTwin_Config is None:
+def build_ACT_model_and_optimizer(args_override, policy_cfg=None):
+    if policy_cfg is None:
         parser = argparse.ArgumentParser("DETR training and evaluation script", parents=[get_args_parser()])
         args = parser.parse_args()
         for k, v in args_override.items():
             setattr(args, k, v)
     else:
-        args = RoboTwin_Config
+        args = policy_cfg
 
     print("build_ACT_model_and_optimizer", args)
 
