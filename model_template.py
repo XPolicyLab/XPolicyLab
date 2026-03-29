@@ -21,6 +21,9 @@ class ModelTemplate:
       `self.model` 可以是神经网络、规划器，或者任意策略对象。
     """
 
+    RED = "\033[31m"
+    RESET = "\033[0m"
+
     def __init__(self):
         """
         Initialize the template model.
@@ -33,89 +36,40 @@ class ModelTemplate:
         """
         self.model = None
 
+    def _error_msg(self, msg: str) -> str:
+        return f"{self.RED}[ERROR] {msg}{self.RESET}"
+
     def update_obs(self, obs):
         """
         Update the current observation used by the model.
         更新当前模型使用的观测。
-
-        Args / 参数:
-            observation:
-                The latest environment observation.
-                环境最新返回的观测。
-
-        Notes / 说明:
-        - Use this function to preprocess, store, or convert observations.
-          你可以在这个函数里对观测进行预处理、缓存或格式转换。
-        - For example, image resizing, normalization, stacking frames,
-          or extracting useful keys from a dictionary.
-          例如：图像 resize、归一化、帧堆叠，或者从字典中提取有用字段。
         """
-        raise NotImplementedError("update_obs() must be implemented by the user.")
+        raise NotImplementedError(self._error_msg("update_obs() must be implemented by the user."))
 
     def update_obs_batch(self, obs_list):
         """
         Update the current observation used by the model.
         更新当前模型使用的观测。
-
-        Args / 参数:
-            observation:
-                The latest environment observation.
-                环境最新返回的观测。
-
-        Notes / 说明:
-        - Use this function to preprocess, store, or convert observations.
-          你可以在这个函数里对观测进行预处理、缓存或格式转换。
-        - For example, image resizing, normalization, stacking frames,
-          or extracting useful keys from a dictionary.
-          例如：图像 resize、归一化、帧堆叠，或者从字典中提取有用字段。
         """
-        raise NotImplementedError("update_obs_batch() must be implemented by the user.")
+        raise NotImplementedError(self._error_msg("update_obs_batch() must be implemented by the user."))
 
     def get_action(self):
         """
         Predict or generate an action from the current observation/state.
         根据当前观测或内部状态预测/生成动作。
-
-        Returns / 返回:
-            action:
-                The action to be executed in the environment.
-                将要在环境中执行的动作。
-
-        Notes / 说明:
-        - This function usually performs model inference.
-          这个函数通常用于执行模型推理。
-        - Make sure the returned action matches the environment action format.
-          请确保返回的动作格式与环境要求一致。
         """
-        raise NotImplementedError("get_action() must be implemented by the user.")
+        raise NotImplementedError(self._error_msg("get_action() must be implemented by the user."))
 
     def get_action_batch(self):
         """
         Predict or generate an action from the current observation/state.
         根据当前观测或内部状态预测/生成动作。
-
-        Returns / 返回:
-            action:
-                The action to be executed in the environment.
-                将要在环境中执行的动作。
-
-        Notes / 说明:
-        - This function usually performs model inference.
-          这个函数通常用于执行模型推理。
-        - Make sure the returned action matches the environment action format.
-          请确保返回的动作格式与环境要求一致。
         """
-        raise NotImplementedError("get_action_batch() must be implemented by the user.")
+        raise NotImplementedError(self._error_msg("get_action_batch() must be implemented by the user."))
 
     def reset(self):
         """
         Reset the internal state of the model at the start of a new episode.
         在新 episode 开始时重置模型内部状态。
-
-        Notes / 说明:
-        - Useful for recurrent policies, history buffers, or task-specific memory.
-          对于循环策略、历史缓存、任务记忆等情况，这个函数很有用。
-        - If your model is stateless, you can simply keep this method empty.
-          如果你的模型没有内部状态，也可以把这个函数留空实现。
         """
         pass

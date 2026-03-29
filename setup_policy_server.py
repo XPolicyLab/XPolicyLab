@@ -4,6 +4,7 @@ import time
 import yaml
 import importlib
 import argparse
+import traceback
 from client_server.model_server import ModelServer
 
 def eval_function_decorator(policy_model_name, Func_and_Class_name):
@@ -21,9 +22,18 @@ def main(deploy_cfg):
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
     model = model_class_func(deploy_cfg)
 
+    # Wrap server.start so exceptions inside thread are fully printed
+    def run_server():
+        try:
+            server.start()
+        except Exception:
+            print("\033[31m[ERROR] Exception occurred inside server thread:\033[0m")
+            traceback.print_exc()
+            raise
+
     # Start server in background thread
     server = ModelServer(model, port=port)
-    thread = threading.Thread(target=server.start, daemon=True)
+    thread = threading.Thread(target=run_server, daemon=True)
     thread.start()
 
     # Keep main thread alive until KeyboardInterrupt

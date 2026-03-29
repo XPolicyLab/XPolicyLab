@@ -29,7 +29,6 @@ class ACTPolicy(nn.Module):
         self.model = model  # CVAE decoder
         self.optimizer = optimizer
         self.kl_weight = args_override["kl_weight"]
-        print(f"KL Weight {self.kl_weight}")
 
     def __call__(self, qpos, image, actions=None, is_pad=None):
         env_state = None
@@ -128,7 +127,6 @@ class ACT:
                 self.max_timesteps + self.num_queries,
                 self.state_dim,
             ]).to(self.device)
-            print(f"Temporal aggregation enabled with {self.num_queries} queries")
 
         self.t = 0  # Current timestep
 
@@ -140,18 +138,14 @@ class ACT:
             if os.path.exists(stats_path):
                 with open(stats_path, "rb") as f:
                     self.stats = pickle.load(f)
-                print(f"Loaded normalization stats from {stats_path}")
             else:
                 print(f"Warning: Could not find stats file at {stats_path}")
                 self.stats = None
 
             # Load policy weights
             ckpt_path = os.path.join(ckpt_dir, "policy_last.ckpt")
-            print("current pwd:", os.getcwd())
             if os.path.exists(ckpt_path):
                 loading_status = self.policy.load_state_dict(torch.load(ckpt_path))
-                print(f"Loaded policy weights from {ckpt_path}")
-                print(f"Loading status: {loading_status}")
             else:
                 print(f"Warning: Could not find policy checkpoint at {ckpt_path}")
         else:

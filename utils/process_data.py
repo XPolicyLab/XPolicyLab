@@ -247,12 +247,6 @@ def unpack_robot_state(
 
     return result
 
-def get_robot_action_dim_info(env_cfg):
-    robot_name = env_cfg['config']['robot']
-    get_robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
-
-    return get_robot_action_dim_info
-
 def get_robot_action_dim_info(env_cfg_name):
     env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_name}.yml"))
     robot_name = env_cfg['config']['robot']

@@ -41,7 +41,6 @@ class Model(ModelTemplate):
                 self.model.state_dim,
             ]).to(self.model.device)
             self.model.t = 0
-            print("Reset temporal aggregation state")
         else:
             self.model.t = 0
 
@@ -53,7 +52,7 @@ def encode_obs(observation, action_type, robot_action_dim_info):
     left_cam = np.moveaxis(left_cam, -1, 0) / 255.0
     right_cam = np.moveaxis(right_cam, -1, 0) / 255.0
     
-    qpos = pack_robot_state(observation, action_type, action_type, "obs")
+    qpos = pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs")
 
     return {
         "head_cam": head_cam,

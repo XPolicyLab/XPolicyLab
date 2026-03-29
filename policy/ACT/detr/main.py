@@ -127,9 +127,6 @@ def build_ACT_model_and_optimizer(args_override, policy_cfg=None):
     else:
         args = policy_cfg
 
-    print("build_ACT_model_and_optimizer", args)
-
-    print(args)
     model = build_ACT_model(args)
     model.cuda()
 

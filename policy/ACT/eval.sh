@@ -22,6 +22,8 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
 
+export ACT_ACTION_DIM=${action_dim}
+
 # 定义 cleanup 函数以确保脚本退出时能正确清理后台进程
 cleanup(){ [[ -n "${SERVER_PID:-}" ]] && echo -e "\033[31m[CLEANUP] Killing server PID=${SERVER_PID}\033[0m" && kill "${SERVER_PID}" 2>/dev/null || true; }
 trap cleanup EXIT

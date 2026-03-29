@@ -266,7 +266,7 @@ if __name__ == "__main__":
     parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")
 
     args_cli = parser.parse_args()
-    deploy_cfg = vars(args_cli)          # 或 args_cli.__dict__.copy()
+    deploy_cfg = vars(args_cli)
     test_env = TestEnv(deploy_cfg)
 
     # Load XPolicyLab
