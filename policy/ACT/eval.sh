@@ -1,34 +1,53 @@
 #!/bin/bash
+set -e
 
-# == keep unchanged ==
+# ==================== 参数定义 ====================
 policy_name=ACT
 task_name=${1}
 env_cfg=${2}
 expert_data_num=${3}
 action_type=${4}
-seed=${5}
-gpu_id=${6}
-DEBUG=False
+gpu_id=${5}
+seed=${6}
+policy_conda_env=${7}
+eval_env_conda_env=${8}
 
-export CUDA_VISIBLE_DEVICES=${gpu_id}
-echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
+export CUDA_VISIBLE_DEVICES="${gpu_id}"
+echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
 
-action_dim=$(python3 -c '
-import sys, os, json, yaml
-env_cfg = yaml.safe_load(open(os.path.join("../../../env_cfg", f"{sys.argv[1]}.yml"), "r", encoding="utf-8"))
-robot_name = env_cfg["config"]["robot"]
-robot_action_dim_info = json.load(open(os.path.join("../../../env_cfg/robot", "_robot_info.json"), "r", encoding="utf-8"))[robot_name]
-print(sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"]))
-' "$env_cfg")
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
-export ACT_ACTION_DIM=${action_dim}
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
+FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
 
-cd ../../..
+# 定义 cleanup 函数以确保脚本退出时能正确清理后台进程
+cleanup(){ [[ -n "${SERVER_PID:-}" ]] && echo -e "\033[31m[CLEANUP] Killing server PID=${SERVER_PID}\033[0m" && kill "${SERVER_PID}" 2>/dev/null || true; }
+trap cleanup EXIT
 
+# ==================== 启动 server ====================
+echo -e "\033[32m[SERVER] Activating Conda environment: ${policy_conda_env}\033[0m"
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate "${policy_conda_env}"
+
+echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
 PYTHONWARNINGS=ignore::UserWarning \
-python script/eval_policy.py --config policy/$policy_name/deploy_policy.yml \
+python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    --config_path "${yaml_file}" \
     --overrides \
-    --task_name ${task_name} \
-    --env_cfg ${env_cfg} \
-    --ckpt_dir policy/ACT/act_ckpt/act-${task_name}/${env_cfg}-${expert_data_num}-${action_type} \
-    --seed ${seed}
+        port="${FREE_PORT}" \
+        task_name="${task_name}" \
+        env_cfg="${env_cfg}" \
+        expert_data_num="${expert_data_num}" \
+        seed="${seed}" \
+        policy_name="${policy_name}" \
+        action_type="${action_type}" \
+        action_dim="${action_dim}" \
+    &
+SERVER_PID=$!
+echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
+
+# ==================== 启动 client 进行评测 ====================
+bash "${UTILS_DIR}/run_debug_policy_client.sh" "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg}" "${policy_name}" "${ROOT_DIR}"
+echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"
