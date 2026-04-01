@@ -9,7 +9,6 @@ def _has_valid_images(obs):
             return False
     return True
 
-
 def _get_valid_obs(task_env, timeout=2.0, interval=0.05):
     deadline = time.monotonic() + timeout
     last_obs = None

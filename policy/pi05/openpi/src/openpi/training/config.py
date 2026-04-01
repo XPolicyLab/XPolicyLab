@@ -611,7 +611,7 @@ _CONFIGS = [
         batch_size=32,  # the total batch_size not pre_gpu batch_size
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         num_train_steps=30000,
-        fsdp_devices=2,  # refer line 359
+        fsdp_devices=1,  # refer line 359
     ),
     # pi0_base by full
     TrainConfig(
