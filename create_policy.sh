@@ -1,3 +1,3 @@
 policy_name=${1}
 
-cp -r demo_policy ${policy_name}
+cp -r policy/demo_policy policy/${policy_name}

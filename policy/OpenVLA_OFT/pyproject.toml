@@ -58,6 +58,7 @@ dependencies = [
     "uvicorn",
     "fastapi",
     "json-numpy",
+    "diffusers==0.33.1"
 ]
 
 [project.optional-dependencies]

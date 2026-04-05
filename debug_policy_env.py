@@ -264,14 +264,19 @@ if __name__ == "__main__":
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
     parser.add_argument("--port", type=int, required=True, help="server port")
     parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")
+    parser.add_argument("--eval_type", type=str, default="eval_one_episode", help="type of evaluation to perform")
 
     args_cli = parser.parse_args()
     deploy_cfg = vars(args_cli)
     test_env = TestEnv(deploy_cfg)
+    eval_type = deploy_cfg['eval_type']
 
     # Load XPolicyLab
     for idx in range(10):
         print(f"\033[94m🚀 Running Episode {idx}\033[0m")
         test_env.reset() # reset model, robot, and environment
-        test_env.eval_one_episode()
+        if eval_type == "eval_one_episode":
+            test_env.eval_one_episode()
+        elif eval_type == "eval_one_episode_batch":
+            test_env.eval_one_episode_batch()
         test_env.finish_episode()

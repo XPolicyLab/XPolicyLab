@@ -260,5 +260,15 @@ def get_action_dim(env_cfg_name):
     robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
     return sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"])
 
-def decode_image_bit(image_bit):
-    return cv2.imdecode(np.frombuffer(image_bit, np.uint8), cv2.IMREAD_COLOR)
+def decode_image_bit(image_bits):
+    def _decode(single_image_bit):
+        return cv2.imdecode(
+            np.frombuffer(single_image_bit, np.uint8),
+            cv2.IMREAD_COLOR
+        )
+
+    if isinstance(image_bits, (list, tuple, np.ndarray)):
+        images = [_decode(x) for x in image_bits]
+        return np.array(images)
+    else:
+        return _decode(image_bits)

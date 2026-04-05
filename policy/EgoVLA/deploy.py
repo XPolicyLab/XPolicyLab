@@ -16,7 +16,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
     while not TASK_ENV.is_episode_end(): # Check whether the episode ends
         env_idx_list = TASK_ENV.get_running_env_idx_list()
-        obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Batch Observation
+        obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Observation
 
         model_client.call(func_name="update_obs_batch", obs=obs_list)  # Update Observation, `update_obs` here can be modified
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list) # Get Action according to observation chunk
@@ -28,5 +28,5 @@ def eval_one_episode_batch(TASK_ENV, model_client):
             
             if action_idx != len(actions) - 1:
                 env_idx_list = TASK_ENV.get_running_env_idx_list()
-                obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Batch Observation
+                obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Observation
                 model_client.call(func_name="update_obs_batch", obs=obs_list)

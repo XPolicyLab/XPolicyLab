@@ -4,7 +4,7 @@ import zarr
 import shutil
 import argparse
 import cv2
-from XPolicyLab.utils.load_file import load_hdf5, load_yaml
+from XPolicyLab.utils.load_file import load_hdf5
 from XPolicyLab.utils.process_data import pack_robot_state, get_robot_action_dim_info, decode_image_bit
 
 def main():
@@ -19,7 +19,7 @@ def main():
     env_cfg_name = args.env_cfg
     expert_data_num = args.expert_data_num
     action_type = args.action_type
-    load_data_dir = os.path.join("../../data", str(task_name), str(env_cfg_name))
+    load_data_dir = os.path.join("../../../data", str(task_name), str(env_cfg_name))
 
     robot_action_dim_info = get_robot_action_dim_info(env_cfg_name)
 

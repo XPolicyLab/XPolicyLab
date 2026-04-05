@@ -22,7 +22,6 @@ def images_encoding(imgs):
         padded_data.append(encode_data[i].ljust(max_len, b"\0"))
     return encode_data, max_len
 
-
 def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_info):
     begin = 0
     floders = os.listdir(path)
@@ -101,11 +100,11 @@ if __name__ == "__main__":
 
     save_dir = f"processed_data/{task_name}/{env_cfg_name}-{expert_data_num}-{action_type}"
 
-    load_data_dir = os.path.join("../../data", str(task_name), str(env_cfg_name))
+    load_data_dir = os.path.join("../../../data", str(task_name), str(env_cfg_name))
 
     robot_action_dim_info = get_robot_action_dim_info(env_cfg_name)
 
-    begin = data_transform(os.path.join("../../data/", task_name, env_cfg_name, 'data'), expert_data_num, load_data_dir, save_dir, robot_action_dim_info)
+    begin = data_transform(os.path.join("../../../data/", task_name, env_cfg_name, 'data'), expert_data_num, load_data_dir, save_dir, robot_action_dim_info)
 
     SIM_TASK_CONFIGS_PATH = "./SIM_TASK_CONFIGS.json"
 

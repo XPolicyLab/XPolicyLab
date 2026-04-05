@@ -7,6 +7,7 @@ task_name="$3"
 env_cfg="$4"
 policy_name="$5"
 root_dir="$6"
+eval_type="$7"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -20,4 +21,5 @@ python "${root_dir}/XPolicyLab/debug_policy_env.py" \
     --task_name "${task_name}" \
     --env_cfg "${env_cfg}" \
     --policy_name "${policy_name}" \
-    --port "${free_port}"
+    --port "${free_port}" \
+    --eval_type "${eval_type}"
