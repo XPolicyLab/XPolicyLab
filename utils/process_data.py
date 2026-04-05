@@ -247,15 +247,15 @@ def unpack_robot_state(
 
     return result
 
-def get_robot_action_dim_info(env_cfg_name):
-    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_name}.yml"))
+def get_robot_action_dim_info(env_cfg_type):
+    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_type}.yml"))
     robot_name = env_cfg['config']['robot']
     robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
 
     return robot_action_dim_info
 
-def get_action_dim(env_cfg_name):
-    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_name}.yml"))
+def get_action_dim(env_cfg_type):
+    env_cfg = load_yaml(os.path.join(os.path.dirname(__file__), "../../env_cfg", f"{env_cfg_type}.yml"))
     robot_name = env_cfg['config']['robot']
     robot_action_dim_info = load_json(os.path.join(os.path.dirname(__file__), "../../env_cfg/robot", "_robot_info.json"))[robot_name]
     return sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"])

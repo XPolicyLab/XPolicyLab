@@ -25,7 +25,7 @@ class Model(ModelTemplate):
         self.action_type = model_cfg.get("action_type", "joint")
         self.default_prompt = model_cfg.get("prompt", self.task_name)
         self.robot_action_dim_info = (
-            get_robot_action_dim_info(model_cfg["env_cfg"]) if model_cfg.get("env_cfg") is not None else None
+            get_robot_action_dim_info(model_cfg["env_cfg_type"]) if model_cfg.get("env_cfg_type") is not None else None
         )
         self.observation_window: dict[str, Any] | None = None
         self._latest_env_idx_list: list[int] = [0]
@@ -101,7 +101,7 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
         return {"state": state, "images": images, "prompt": prompt}
 
     if robot_action_dim_info is None:
-        raise ValueError("env_cfg is required when encoding raw environment observations.")
+        raise ValueError("env_cfg_type is required when encoding raw environment observations.")
 
     images = {
         "cam_high": ensure_chw_uint8(extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])),

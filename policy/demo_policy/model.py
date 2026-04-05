@@ -5,6 +5,7 @@ class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = model_cfg
         self.action_type = model_cfg["action_type"]
+        self.env_cfg_type = model_cfg["env_cfg_type"]
         # Initialize your policy model here according to model_cfg
     
     def update_obs(self, obs):

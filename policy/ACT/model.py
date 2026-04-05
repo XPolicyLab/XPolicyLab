@@ -11,7 +11,7 @@ class Model(ModelTemplate):
 
     def __init__(self, model_cfg):
         self.model = self.get_model(model_cfg=model_cfg)
-        self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg'])
+        self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
         self.action_type = model_cfg['action_type']
 
     def get_model(self, model_cfg):

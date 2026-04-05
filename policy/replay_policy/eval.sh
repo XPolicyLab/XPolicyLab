@@ -4,7 +4,7 @@ set -e  # Quit when Meeting Error
 # ==================== 参数定义 ====================
 policy_name=replay_policy
 task_name=${1}
-env_cfg=${2}
+env_cfg_type=${2}
 ckpt_setting=${3}
 gpu_id=${4}
 seed=${5}
@@ -41,7 +41,7 @@ python XPolicyLab/setup_policy_server.py \
   --config_path "${yaml_file}" \
   --overrides \
     task_name="${task_name}" \
-    env_cfg="${env_cfg}" \
+    env_cfg_type="${env_cfg_type}" \
     ckpt_setting="${ckpt_setting}" \
     seed="${seed}" \
     policy_name="${policy_name}" \
@@ -62,7 +62,7 @@ PYTHONWARNINGS=ignore::UserWarning \
 python pipeline/deploy.py \
     --task_name "${task_name}" \
     --policy_name "${policy_name}" \
-    --env_cfg "${env_cfg}" \
+    --env_cfg_type "${env_cfg_type}" \
     --port ${FREE_PORT}
 
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

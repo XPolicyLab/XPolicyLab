@@ -149,20 +149,20 @@ def load_data(ep_path) -> dict[str, Any]:
 def main():
     parser = argparse.ArgumentParser(description="Process some episodes.")
     parser.add_argument("task_name", type=str, help="The name of the task (e.g., beat_block_hammer)",)
-    parser.add_argument("env_cfg", type=str, help="The name of the environment config",)
+    parser.add_argument("env_cfg_type", type=str, help="The name of the environment config",)
     parser.add_argument("repo_id", type=str, help="The dataset repository ID",)
     parser.add_argument("mode", type=str, choices=["video", "image"], help="Whether to store images as videos or individual image files",)
     parser.add_argument("--instruction", type=str, default="Do your job.",help="The instruction for the task",)
     args = parser.parse_args()
 
     task_name = args.task_name
-    env_cfg_name = args.env_cfg
+    env_cfg_type = args.env_cfg_type
     repo_id = args.repo_id
     mode = args.mode
     instruction = args.instruction
-    load_data_dir = os.path.join(ROOT_PATH, "./data", str(task_name), str(env_cfg_name))
+    load_data_dir = os.path.join(ROOT_PATH, "./data", str(task_name), str(env_cfg_type))
 
-    env_cfg = load_yaml(os.path.join(ROOT_PATH, "./env_cfg", f"{env_cfg_name}.yml"))
+    env_cfg = load_yaml(os.path.join(ROOT_PATH, "./env_cfg", f"{env_cfg_type}.yml"))
     robot_type = env_cfg['config']['robot']
 
     robot_action_dim_info = robot_action_dim_info = load_json(os.path.join(ROOT_PATH, "env_cfg/robot", "_robot_info.json"))[robot_type]

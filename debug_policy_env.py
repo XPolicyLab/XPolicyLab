@@ -10,8 +10,8 @@ class TestEnv:
         self.success_num, self.episode_num = 0, 0
         self.deploy_cfg = deploy_cfg
         self.episode_step_limit = 5
-        env_cfg_name = deploy_cfg['env_cfg']
-        self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_name)
+        env_cfg_type = deploy_cfg['env_cfg_type']
+        self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
         self.model_client = ModelClient(port=deploy_cfg['port'])
 
@@ -260,7 +260,7 @@ def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--task_name", required=True, type=str)
-    parser.add_argument("--env_cfg", type=str, required=True)
+    parser.add_argument("--env_cfg_type", type=str, required=True)
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
     parser.add_argument("--port", type=int, required=True, help="server port")
     parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")

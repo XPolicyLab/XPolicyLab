@@ -1,5 +1,5 @@
 task_name: null
-env_cfg: null
+env_cfg_type: null
 expert_data_num: null
 action_type: null
 gpu_id: null

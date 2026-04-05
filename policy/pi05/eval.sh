@@ -4,7 +4,7 @@ set -e
 # ==================== 参数定义 ====================
 policy_name=pi05
 task_name=${1}
-env_cfg=${2}
+env_cfg_type=${2}
 expert_data_num=${3}
 action_type=${4}
 gpu_id=${5}
@@ -22,7 +22,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
 
 # 定义 cleanup 函数以确保脚本退出时能正确清理后台进程
@@ -41,7 +41,7 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --overrides \
         port="${FREE_PORT}" \
         task_name="${task_name}" \
-        env_cfg="${env_cfg}" \
+        env_cfg_type="${env_cfg_type}" \
         expert_data_num="${expert_data_num}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
@@ -55,5 +55,5 @@ SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
 # ==================== 启动 client 进行评测 ====================
-bash "${UTILS_DIR}/run_debug_policy_client.sh" "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg}" "${policy_name}" "${ROOT_DIR}"
+bash "${UTILS_DIR}/run_debug_policy_client.sh" "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

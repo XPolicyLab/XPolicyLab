@@ -4,7 +4,7 @@ set -e
 sim_conda_env="$1"
 free_port="$2"
 task_name="$3"
-env_cfg="$4"
+env_cfg_type="$4"
 policy_name="$5"
 root_dir="$6"
 
@@ -19,7 +19,7 @@ PYTHONWARNINGS=ignore::UserWarning \
 bash "${root_dir}/scripts/eval_policy.sh" \
     --root_dir "${root_dir}" \
     --task_name "${task_name}" \
-    --env_cfg "${env_cfg}" \
+    --env_cfg_type "${env_cfg_type}" \
     --policy_name "${policy_name}" \
     --port "${free_port}" \
     --device_id 0

@@ -66,7 +66,7 @@ class Your_Policy:
     def __init__(self, deploy_cfg=None):
         # Initialize your policy model here
         self.deploy_cfg = deploy_cfg
-        self.model = REPLAY(os.path.join('./data', deploy_cfg['task_name'], deploy_cfg['env_cfg'], f"{deploy_cfg['ckpt_setting']}.hdf5"))
+        self.model = REPLAY(os.path.join('./data', deploy_cfg['task_name'], deploy_cfg['env_cfg_type'], f"{deploy_cfg['ckpt_setting']}.hdf5"))
         
     def update_obs(self, obs):
         self.last_obs = obs

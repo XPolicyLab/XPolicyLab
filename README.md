@@ -133,11 +133,9 @@ demo_policy
 bash create_policy.sh ${policy_name}
 ```
 
-了解我们的数据结构
-
 了解几个常见参数:
 1. task_name: 任务名
-2. env_cfg: 代表采集/评测的环境配置，包括本体信息等，在`demo_env/env_cfg`中可以看到一些demo，在tutorial中使用的是`franka_`
+2. env_cfg_type: 代表采集/评测的环境配置，包括本体信息等，在`demo_env/env_cfg_type`中可以看到一些demo，在tutorial中使用的是给了两个示范数据，一个是`dual_franka_panda`，一个是`g1_inspire`，分别代表双臂gripper与人型灵巧手
 3. expert_data_num: 训练使用多少条轨迹
 4. action_type: 模型使用的数据类型，比如`ee`或者`joint`，这会影响到使用数据中什么数据，以及模型输入输出的维度
 
@@ -152,7 +150,6 @@ bash create_policy.sh ${policy_name}
 from XPolicyLab.utils.load_file import load_hdf5
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_image_bit
 ```
-
 
 `get_robot_action_dim_info`会从类似以下的字典中返回对应的内容，包含`arm_dim`列表以及`ee_dim`列表，当两者长度都是1的时候，代表单臂机器人，当两者长度都是2的时候，代表双臂机器人，写模型架构、模型输入输出定义，数据处理尽可能用上这个信息，未来可能会有单臂的任务，以及已经有不同自由度的末端执行器以及机械臂了。
 
@@ -203,7 +200,7 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --overrides \
         port="${FREE_PORT}" \
         task_name="${task_name}" \
-        env_cfg="${env_cfg}" \
+        env_cfg_type="${env_cfg_type}" \
         expert_data_num="${expert_data_num}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
@@ -218,5 +215,10 @@ SERVER_PID=$!
 1. TASK_ENV.is_episode_end()：告诉你当前环境是否全部结束
 2. model_client.call的func_name是str，obs传入obs，两者共同序列化并通过port进行通信，调用模型侧对应的函数并传入参数
 
+当一切调试完毕后，可以将`eval.sh`中最后一行的`run_debug_policy_client`换成`run_policy_client`，真正在仿真上进行部署
 
-当一切调试完毕后，可以将`eval.sh`中最后一行的`run_debug_policy_client`换成`run_policy_client`
+通过以下流程体验debuger
+```
+# 
+bash eval.sh 
+```

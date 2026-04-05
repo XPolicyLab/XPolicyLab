@@ -60,14 +60,14 @@ def process_one_episode(input_path, output_path, episode_idx, instruction_dir, r
 
 def main(args):
     task_name = args.task_name
-    env_cfg_name = args.env_cfg
+    env_cfg_type = args.env_cfg_type
     expert_data_num = args.expert_data_num
     action_type = args.action_type
     percent_val = args.percent_val
 
-    load_data_dir = os.path.join("../../../data", str(task_name), str(env_cfg_name), 'data')
+    load_data_dir = os.path.join("../../../data", str(task_name), str(env_cfg_type), 'data')
 
-    output_base = f"./processed_data/{task_name}-{env_cfg_name}-{action_type}-{expert_data_num}"
+    output_base = f"./processed_data/{task_name}-{env_cfg_type}-{action_type}-{expert_data_num}"
     resize_size = args.img_resize_size
     # instruction_dir = args.instruction_dir
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     #                     help="Final size for RGB images")
     parser.add_argument("--task_name", type=str, default="default_task",
                         help="Name of the task (used for directory naming)")
-    parser.add_argument("--env_cfg", type=str, required=True,
+    parser.add_argument("--env_cfg_type", type=str, required=True,
                         help="Environment configuration file")
     parser.add_argument("--expert_data_num", type=int, required=True,
                         help="Number of expert demonstration episodes")
