@@ -243,5 +243,5 @@ SERVER_PID=$!
 
 ```bash
 cd policy/demo_policy
-bash eval.sh align_blocks franka_panda 50 ee 0 0 
+bash eval.sh align_blocks dual_x5 50 ee 0 0 XPolicyLab XPolicyLab
 ```

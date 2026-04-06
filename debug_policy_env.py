@@ -231,6 +231,7 @@ def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> 
                 f"but got: {bad_prefixed_keys}"
             )
     unexpected_keys = [k for k in state_dict if k not in expected]
+
     if unexpected_keys:
         raise ValueError(f"Unexpected state keys: {unexpected_keys}")
 

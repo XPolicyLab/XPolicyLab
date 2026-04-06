@@ -4,7 +4,6 @@ def eval_one_episode(TASK_ENV, model_client):
         model_client.call(func_name="update_obs", obs=obs)  # Update Observation, `update_obs` here can be modified
         
         actions = model_client.call(func_name="get_action") # Get Action according to observation chunk
-        
         for action_idx, action in enumerate(actions):
             TASK_ENV.take_action(action)
             
