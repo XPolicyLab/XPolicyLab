@@ -13,7 +13,7 @@ mkdir demo_env
 cd demo_env
 git clone git@github.com:Luminis-Platform/XPolicyLab.git
 
-# 拉取演示数据及环境配置
+# 拉取演示数据及环境配置，数据集格式为`data/${task_name}/${env_cfg}`
 bash clone_demo_tutorial.sh
 ```
 
@@ -174,9 +174,9 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
         "arm_dim": [6],
         "ee_dim": [1]
     },
-    "aloha_agilex": {
-        "arm_dim": [6, 6],
-        "ee_dim": [1, 1]
+    "g1_inspire": {
+        "arm_dim": [7, 7],
+        "ee_dim": [12, 12]
     }
 }
 ```
@@ -243,5 +243,5 @@ SERVER_PID=$!
 
 ```bash
 cd policy/demo_policy
-bash eval.sh align_blocks dual_x5 50 ee 0 0 XPolicyLab XPolicyLab
+bash eval.sh handover_bottle_and_put_into_dustbin g1_inspire 50 ee 0 0 XPolicyLab XPolicyLab
 ```
