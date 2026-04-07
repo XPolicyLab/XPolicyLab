@@ -197,9 +197,7 @@ def unpack_robot_state(
         dual-arm:
             [arm_0, ee_0, arm_1, ee_1]
     """
-    arm_dims, ee_dims, num_arms = _validate_config(
-        action_type, robot_action_dim_info, source_type
-    )
+    arm_dims, ee_dims, num_arms = _validate_config(action_type, robot_action_dim_info, source_type)
     arm_keys, ee_keys = _get_state_keys(action_type, num_arms, source_type)
 
     packed = np.asarray(packed_state)

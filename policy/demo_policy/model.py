@@ -1,11 +1,14 @@
 import numpy as np
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
+        # Initialize your policy model here according to model_cfg
         self.model_cfg = model_cfg
         self.action_type = model_cfg["action_type"]
-        # Initialize your policy model here according to model_cfg
+        self.env_cfg_type = model_cfg["env_cfg_type"]
+        self.robot_action_dim_info = get_robot_action_dim_info(model_cfg["env_cfg_type"])
     
     def update_obs(self, obs):
         # Update your model's observation here if needed

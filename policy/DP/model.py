@@ -13,7 +13,6 @@ sys.path.append(parent_dir)
 from diffusion_policy.workspace.robotworkspace import RobotWorkspace
 from diffusion_policy.env_runner.dp_runner import DPRunner
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.load_file import load_yaml
 from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state, get_robot_action_dim_info
 
 class Model(ModelTemplate):
