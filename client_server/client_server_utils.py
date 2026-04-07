@@ -62,9 +62,12 @@ def json_to_numpy(json_str: str) -> Any:
     """从 JSON 字符串反序列化 numpy array 和 bytes"""
 
     def object_hook(dct):
+        if "__numpy__" in dct:
+            data = base64.b64decode(dct["__numpy__"])
+            return np.frombuffer(data, dtype=np.dtype(dct["dtype"])).reshape(dct["shape"])
         if "__numpy_array__" in dct:
             data = base64.b64decode(dct["data"])
-            return np.frombuffer(data, dtype=dct["dtype"]).reshape(dct["shape"])
+            return np.frombuffer(data, dtype=np.dtype(dct["dtype"])).reshape(dct["shape"])
         if "__bytes__" in dct:
             return base64.b64decode(dct["data"])
         return dct
