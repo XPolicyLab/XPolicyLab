@@ -128,7 +128,6 @@ def stack_obs(obs_list: list[dict[str, Any]]) -> dict[str, Any]:
         "prompt": [obs["prompt"] for obs in obs_list],
     }
 
-
 def extract_image(observation, candidate_names):
     vision = observation.get("vision", {})
     for candidate_name in candidate_names:

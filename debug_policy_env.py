@@ -238,7 +238,7 @@ def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> 
         if not key in state_dict.keys():
             continue
         value = state_dict[key]
-
+    
         if not isinstance(value, (np.ndarray, list, tuple)):
             raise TypeError(
                 f"state_dict['{key}'] must be array-like, got {type(value)}"
