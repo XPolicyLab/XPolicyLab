@@ -9,7 +9,6 @@ class Model(ModelTemplate):
         self.model_cfg = model_cfg
         self.action_type = model_cfg["action_type"]
         self.env_cfg_type = model_cfg["env_cfg_type"]
-        self.robot_action_dim_info = get_robot_action_dim_info(model_cfg["env_cfg_type"])
 
         # 获取机器人动作维度信息
         # 示例:
