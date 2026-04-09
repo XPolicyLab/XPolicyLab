@@ -11,7 +11,6 @@ gpu_id=${5}
 seed=${6}
 policy_conda_env=${7}
 eval_env_conda_env=${8}
-eval_type=eval_one_episode
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
@@ -50,5 +49,5 @@ SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
 # ==================== 启动 client 进行评测 ====================
-bash "${UTILS_DIR}/run_debug_policy_client.sh" "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}" "${eval_type}"
+bash "${UTILS_DIR}/run_eval_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

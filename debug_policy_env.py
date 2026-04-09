@@ -258,6 +258,15 @@ def validate_robot_state_dict(state_dict: dict, robot_action_dim_info: dict) -> 
                 f"got shape {arr.shape}"
             )
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ("yes", "true", "t", "1"):
+        return True
+    if v.lower() in ("no", "false", "f", "0"):
+        return False
+    raise argparse.ArgumentTypeError("Boolean value expected.")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--task_name", required=True, type=str)
@@ -265,19 +274,19 @@ if __name__ == "__main__":
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
     parser.add_argument("--port", type=int, required=True, help="server port")
     parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")
-    parser.add_argument("--eval_type", type=str, default="eval_one_episode", help="type of evaluation to perform")
+    parser.add_argument("--eval_batch", type=str2bool, default=False, help="whether to run batch evaluation")
 
     args_cli = parser.parse_args()
     deploy_cfg = vars(args_cli)
     test_env = TestEnv(deploy_cfg)
-    eval_type = deploy_cfg['eval_type']
+    eval_batch = deploy_cfg['eval_batch']
 
     # Load XPolicyLab
     for idx in range(10):
         print(f"\033[94m🚀 Running Episode {idx}\033[0m")
         test_env.reset() # reset model, robot, and environment
-        if eval_type == "eval_one_episode":
+        if not eval_batch:
             test_env.eval_one_episode()
-        elif eval_type == "eval_one_episode_batch":
+        else:
             test_env.eval_one_episode_batch()
         test_env.finish_episode()
