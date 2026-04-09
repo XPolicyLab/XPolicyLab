@@ -119,14 +119,14 @@ def get_args_parser():
     return parser
 
 
-def build_ACT_model_and_optimizer(args_override, policy_cfg=None):
-    if policy_cfg is None:
+def build_ACT_model_and_optimizer(args_override, model_cfg=None):
+    if model_cfg is None:
         parser = argparse.ArgumentParser("DETR training and evaluation script", parents=[get_args_parser()])
         args = parser.parse_args()
         for k, v in args_override.items():
             setattr(args, k, v)
     else:
-        args = policy_cfg
+        args = model_cfg
         
     model = build_ACT_model(args)
     model.cuda()

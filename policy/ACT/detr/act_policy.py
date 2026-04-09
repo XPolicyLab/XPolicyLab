@@ -23,9 +23,9 @@ e = IPython.embed
 
 class ACTPolicy(nn.Module):
 
-    def __init__(self, args_override, policy_cfg=None):
+    def __init__(self, args_override, model_cfg=None):
         super().__init__()
-        model, optimizer = build_ACT_model_and_optimizer(args_override, policy_cfg)
+        model, optimizer = build_ACT_model_and_optimizer(args_override, model_cfg)
         self.model = model  # CVAE decoder
         self.optimizer = optimizer
         self.kl_weight = args_override["kl_weight"]
@@ -100,16 +100,16 @@ def kl_divergence(mu, logvar):
 
 class ACT:
 
-    def __init__(self, args_override=None, policy_cfg=None):
+    def __init__(self, args_override=None, model_cfg=None):
         if args_override is None:
             args_override = {
                 "kl_weight": 0.1,  # Default value, can be overridden
                 "device": "cuda:0",
             }
 
-        self.camera_names = policy_cfg.camera_names
+        self.camera_names = model_cfg.camera_names
 
-        self.policy = ACTPolicy(args_override, policy_cfg)
+        self.policy = ACTPolicy(args_override, model_cfg)
         self.device = torch.device(args_override["device"])
         self.policy.to(self.device)
         self.policy.eval()
@@ -117,7 +117,7 @@ class ACT:
         # Temporal aggregation settings
         self.temporal_agg = args_override.get("temporal_agg", False)
         self.num_queries = args_override["chunk_size"]
-        self.state_dim = policy_cfg.action_dim  # Standard joint dimension for bimanual robot
+        self.state_dim = model_cfg.action_dim  # Standard joint dimension for bimanual robot
         self.max_timesteps = 5000  # Large enough for deployment
 
         # Set query frequency based on temporal_agg - matching imitate_episodes.py logic
