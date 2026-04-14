@@ -8,7 +8,7 @@ export HF_HOME="/path/to/.cache/huggingface" # set the Hugging Face cache direct
 export TRANSFORMERS_CACHE="${HF_HOME}/transformers"
 
 RUN_ROOT=${1} # path to the directory where the finetuning logs and checkpoints will be saved. Change this to your desired path.
-DATASET_NAME=aloha_${2} # the name of the dataset to finetune on. This should be the same as the dataset_name in build_tfds_aloha.sh. Change this if you are using a different dataset.
+DATASET_NAME=${2} # the name of the dataset to finetune on. This should be the same as the dataset_name in build_tfds_aloha.sh. Change this if you are using a different dataset.
 GPU_ID=${3} # the GPU ids to use for finetuning. This should be a comma-separated list of GPU ids. For example, "0,1,2,3" to use GPUs with ids 0, 1, 2, and 3. Change this according to your setup.
 
 if [[ "${DATASET_NAME,,}" == *"aloha"* || "${DATASET_NAME,,}" == *"robotwin"* ]]; then
