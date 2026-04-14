@@ -2,7 +2,7 @@
 set -e
 
 # ==================== 参数定义 ====================
-policy_name=LingBotVLA
+policy_name=LingBot_VLA
 task_name=${1}
 env_cfg=${2}
 expert_data_num=${3}

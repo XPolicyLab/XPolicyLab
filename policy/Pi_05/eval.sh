@@ -2,7 +2,7 @@
 set -e
 
 # ==================== 参数定义 ====================
-policy_name=pi05
+policy_name=Pi_05
 task_name=${1}
 env_cfg_type=${2}
 expert_data_num=${3}
