@@ -1,1 +1,0 @@
-bash eval.sh demo_task dual_y1 50 joint 0 0 openvla Xone /mnt/pfs/pg4hw0/niantian/openvla-oft/runs/robotwin4tasks/openvla-7b+robotwin4tasks+b4+lr-0.0005+lora-r32+dropout-0.0--image_aug--2gpu--cuda01--3img--proprio--film--100000_chkpt robotwin4tasks
