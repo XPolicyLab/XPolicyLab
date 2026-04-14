@@ -1,5 +1,5 @@
 ## 数据转化
-lerobot数据集
+使用默认的转化的lerobot数据集即可.
 
 
 ## 计算norm stat
@@ -11,7 +11,7 @@ fold_clothes.yaml
 data:
   datasets_type: vla
   train_path: /mnt/pfs/user/lerobot/fold_clothes
-  norm_path: assets/norm_stats/fold_clothes_0.json
+  norm_path: assets/norm_stats/fold_clothes_0_customized.json
 
 train:
   global_batch_size: 512
@@ -22,6 +22,11 @@ train:
 ```bash
 cd lingbot_vla
 bash compute_norm_stat.sh /path/to/*.yml
+```
+由于默认保存的norm stat不能直接用于训练, 训练需要使用另外格式, 可以使用脚本:
+```bash
+# 示例, 后四维度填的是arm, effort, arm,effort对应的维度
+python scripts/conver_norm_stat.py  assets/norm_stats/robotwin_5_customized.json assets/norm_stats/robotwin_5.json 6 1 6 1
 ```
 
 ## 训练
@@ -40,11 +45,11 @@ model:
 
 data:
   datasets_type: vla
-  data_name: fold_clothes_0
+  data_name: robotwin_fold_clothes_0
   train_path: /mnt/pfs/user/lerobot/fold_clothes
   num_workers: 8
   norm_type: bounds_99_woclip
-  norm_stats_file: /mnt/pfs/user/assets/norm_stats/fold_clothes_0.json
+  norm_stats_file: /mnt/pfs/user/assets/norm_stats/fold_clothes_0.json # 转化后的norm路径
 
 train:
   output_dir: /mnt/pfs/user/lingbot-vla/output/fold_clothes_01
@@ -81,5 +86,4 @@ bash finetune.sh /path/to/vla/train_config /path/to/lerobot/dataset_name /path/t
 ```
 
 ## 部署
-
-首先要在`/path/to/output/`
+首先要在`/path/to/output/`下面copy一份对应的`lingbotvla_cli.yaml`, 然后就能正常部署.

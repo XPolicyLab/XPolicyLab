@@ -1,0 +1,1 @@
+bash eval.sh demo_task dual_y1 50 joint 0 0 lingbot Xone /mnt/pfs/pg4hw0/niantian/lingbot-vla/output/robotwin_4tasks/checkpoints/global_step_4539/hf_ckpt/ /mnt/pfs/pg4hw0/niantian/model_weights/Qwen2.5-VL-3B-Instruct

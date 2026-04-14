@@ -1,0 +1,13 @@
+# Basic experiment configuration
+policy_name: lingbot-vla
+task_name: null
+env_cfg: null
+expert_data_num: null
+expert_data_num: null
+seed: null
+
+checkpoint_num: 600
+
+result_dir: "./results/lingbot-vla/"
+
+obs_transform_pipeline: "xspark-v1.0"

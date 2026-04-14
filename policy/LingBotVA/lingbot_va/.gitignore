@@ -1,0 +1,5 @@
+*.pyc
+wandb/
+train_out/
+lerobot/
+dataset/pick-n-place-sq-lerobot-v21/

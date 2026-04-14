@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "LingBot_VA"
+version = "0.0.0"
+description = "LingBot-VA: A Pragmatic VA Foundation Model"
+authors = [
+    { name = "Robbyant Team", email = "fengchang.ll@antgroup.com" }
+]
+license = { file = "LICENSE.txt" }
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "torch>=2.9.0",
+    "torchvision>=0.24.0",
+    "diffusers>=0.36.0",
+    "transformers>=4.55.4",
+    "tokenizers>=0.21.4",
+    "tqdm",
+    "imageio",
+    "easydict",
+    "flash_attn",
+    "numpy>=1.26.4,<2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8",
+    "isort",
+    "mypy",
+    "huggingface-hub[cli]"
+]
+
+[project.urls]
+homepage = "https://github.com/Robbyant"
+documentation = "https://github.com/Robbyant"
+repository = "https://github.com/Robbyant"
+huggingface = "https://github.com/Robbyant"
+modelscope = "https://github.com/Robbyant"
+discord = "https://github.com/Robbyant"
+
+[tool.setuptools]
+packages = ["lingbot_va"]
+
+[tool.setuptools.package-data]
+"lingbot_va" = ["**/*.py"]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+strict = true
+
+
