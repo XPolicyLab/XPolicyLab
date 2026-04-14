@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 eval_batch="$1"
 eval_env_conda_env="$2"
 free_port="$3"
@@ -9,10 +8,6 @@ task_name="$4"
 env_cfg_type="$5"
 policy_name="$6"
 root_dir="$7"
-
-echo $eval_batch
-echo $eval_env_conda_env
-
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true

@@ -2,7 +2,7 @@
 set -e
 
 # ==================== 参数定义 ====================
-policy_name=openvla-oft
+policy_name=OpenVLA_OFT
 task_name=${1}
 env_cfg=${2}
 expert_data_num=${3}
