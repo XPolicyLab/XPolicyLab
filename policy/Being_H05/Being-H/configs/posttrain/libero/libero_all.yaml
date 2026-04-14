@@ -1,0 +1,43 @@
+libero_posttrain:
+  dataset_names:
+  - libero_spatial
+  - libero_object
+  - libero_goal
+  - libero_10
+  data_config_names:
+  - "libero_nonorm"
+  - "libero_nonorm"
+  - "libero_nonorm"
+  - "libero_nonorm"
+  embodiment_tags: 
+  - "new_embodiment"
+  - "new_embodiment"
+  - "new_embodiment"
+  - "new_embodiment"
+  sampling_strategy: "step" # 'step' or 'trajectory'
+  video_backend: "torchvision_av"
+  vit_transform_args:
+    type: "beingh"
+    normalize_type: "imagenet"
+    use_color_jitter: true
+  frame_step_size: 
+  - 1
+  - 1
+  - 1
+  - 1
+  num_used_episodes_per_task:
+  - -1
+  - -1
+  - -1
+  - -1
+  num_used_episodes_per_dataset:
+  - -1
+  - -1
+  - -1
+  - -1
+  num_used_frames_per_dataset:
+  - -1
+  - -1
+  - -1
+  - -1
+  weight: 1
