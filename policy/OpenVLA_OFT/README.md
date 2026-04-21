@@ -1,25 +1,4 @@
-# 1. 环境配置
-```bash
-cd /path/to/XPolicyLab/policy/openvla-oft/openvla_oft/
-conda create -n openvla-oft python=3.10 -y
-conda activate openvla-oft
-
-# Install PyTorch
-# Use a command specific to your machine: https://pytorch.org/get-started/locally/
-pip3 install torch torchvision torchaudio
-
-cd openvla-oft
-pip install -e .
-
-# Install Flash Attention 2 for training (https://github.com/Dao-AILab/flash-attention)
-#   =>> If you run into difficulty, try `pip cache remove flash_attn` first
-pip install packaging ninja
-ninja --version; echo $?  # Verify Ninja --> should return exit code "0"
-mkdir -p .pip-tmp .pip-cache
-TMPDIR=$PWD/.pip-tmp PIP_CACHE_DIR=$PWD/.pip-cache MAX_JOBS=4 pip install "flash-attn==2.5.5" --no-build-isolation
-```
-
-# 2. 数据转化
+# 数据转化
 ## 转aloha格式
 #暂时只提供了Xspark v1.0格式数据转化为aloha hdf5的脚本.
 
@@ -34,7 +13,7 @@ python scripts/transform_aloha_hdf5_format.py  /path/to/xspark_data/  /path/to/o
 cd policy/openvla-oft/openvla_oft/
 bash scripts/build_tfds_aloha.sh data_sample /path/to/output_dir/ path/to/processed_dir/ 0.05 0
 ```
-# 3. 训练
+# 训练
 ```bash
 bash scripts/finetune.sh runs/model_sample/ data_sample 0,1,2,3
 # runs/model_sample/: 替换为保存模型的路径.
@@ -42,7 +21,7 @@ bash scripts/finetune.sh runs/model_sample/ data_sample 0,1,2,3
 # 0,1,2,3: 使用的GPU id.
 ```
 
-# 4. 评估
+# 评估
 ```bash
 bash eval.sh task_name env_cfg expert_data_num action_type gpu_id seed policy_conda_env eval_env_conda_env CHECKPOINT_PATH
 # task_name env_cfg expert_data_num seed 仿真中生效
