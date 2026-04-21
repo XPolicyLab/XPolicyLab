@@ -1,0 +1,29 @@
+# Basic experiment configuration
+policy_name: RDT_1b
+task_name: null
+env_cfg: null
+expert_data_num: null
+seed: null
+eval_batch: false
+
+checkpoint_num: null
+result_dir: "./results/RDT_1b/"
+obs_transform_pipeline: null
+
+# Model / action configuration
+action_type: joint
+prompt: null
+checkpoint_path: null
+model_path: null
+config_path: null
+text_encoder_path: null
+vision_encoder_path: null
+model_root: null
+ctrl_freq: 25
+chunk_size: 64
+image_size: [640, 480]
+device: cuda
+dtype: bfloat16
+
+# XPolicyLab model server port
+port: 6000
