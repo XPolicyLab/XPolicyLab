@@ -1,0 +1,24 @@
+# Basic experiment configuration
+policy_name: XVLA
+task_name: null
+env_cfg: null
+expert_data_num: null
+seed: null
+eval_batch: false
+
+checkpoint_num: null
+result_dir: "./results/XVLA/"
+obs_transform_pipeline: null
+
+# Model / action configuration
+action_type: ee
+prompt: null
+model_path: null
+processor_path: null
+lora_path: null
+domain_id: 6
+steps: 10
+device: cuda
+
+# XPolicyLab model server port
+port: 6000

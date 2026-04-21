@@ -5,7 +5,10 @@ import os
 va_robotwin30_cfg = EasyDict(__name__='Config: VA robotwin30')
 va_robotwin30_cfg.update(va_shared_cfg)
 
-va_robotwin30_cfg.wan22_pretrained_model_name_or_path = "/mnt/pfs/pg4hw0/niantian/model_weights/lingbot-va-base"
+va_robotwin30_cfg.infer_mode = "server"
+
+va_robotwin30_cfg.wan22_pretrained_model_name_or_path = "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
+# va_robotwin30_cfg.wan22_pretrained_model_name_or_path = "/mnt/pfs/pg4hw0/niantian/model_weights/lingbot-va-base"
 
 va_robotwin30_cfg.attn_window = 72
 va_robotwin30_cfg.frame_chunk_size = 2

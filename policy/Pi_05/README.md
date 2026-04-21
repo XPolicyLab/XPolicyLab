@@ -1,19 +1,4 @@
 # 使用方法
-## 环境配置
-```bash
-cd policy/pi05/openpi/
-
-GIT_LFS_SKIP_SMUDGE=1 uv sync
-GIT_LFS_SKIP_SMUDGE=1 uv pip install -e .
-
-cd ../../..
-uv pip install -e .
-
-cd ..
-uv pip install -e .
-cd third_party/y1_sdk_python/y1_sdk/ && uv pip install -e .
-```
-
 ## 训练
 
 ### step1 数据格式转化

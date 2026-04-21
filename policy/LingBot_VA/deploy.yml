@@ -1,13 +1,14 @@
 # Basic experiment configuration
-policy_name: lingbot-vla
+policy_name: LingBot_VA
 task_name: null
 env_cfg: null
 expert_data_num: null
-expert_data_num: null
-seed: null
+seed: 0
+eval_batch: false
 
-checkpoint_num: 600
+config_name: robotwin30_train
+checkpoint_path: "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
 
-result_dir: "./results/lingbot-vla/"
+result_dir: "./results/LingBot_VA/"
 
 obs_transform_pipeline: "xspark-v1.0"
