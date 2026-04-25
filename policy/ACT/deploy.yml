@@ -7,7 +7,7 @@ action_type: null
 ckpt_setting: null
 seed: 0
 eval_batch: false
-eval_env: debug # sim, real, debug
+eval_env: sim # sim, real, debug
 
 # ACT-specific arguments
 kl_weight: 10.0

@@ -33,7 +33,8 @@ def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_
     for current_episode in range(episode_num):
         load_path = os.path.join(load_data_dir, f"data/episode_{current_episode:07d}.hdf5")
         data = load_hdf5(load_path)
-        state_all = pack_robot_state(data, action_type, robot_action_dim_info, "dataset")
+        state_all = pack_robot_state(data, action_type, robot_action_dim_info, source_type="dataset", state_type="state")
+        action_all = pack_robot_state(data, action_type, robot_action_dim_info, source_type="dataset", state_type="action")
         
         qpos = []
         actions = []
@@ -43,31 +44,27 @@ def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_
 
         for j in range(state_all.shape[0]):
             
-            state = state_all[j]
+            state, action = state_all[j], action_all[j]
 
-            if j != state.shape[0] - 1:
+            state = state.astype(np.float32)
+            qpos.append(state)
 
-                state = state.astype(np.float32)
-                qpos.append(state)
+            cam_head_bit = data['vision']["cam_head"]['colors'][j]
+            cam_head = decode_image_bit(cam_head_bit)
+            cam_head_resized = cv2.resize(cam_head, (640, 480))
+            cam_head_list.append(cam_head_resized)
 
-                cam_head_bit = data['vision']["cam_head"]['colors'][j]
-                cam_head = decode_image_bit(cam_head_bit)
-                cam_head_resized = cv2.resize(cam_head, (640, 480))
-                cam_head_list.append(cam_head_resized)
+            cam_left_wrist_bit = data['vision']['cam_left_wrist']['colors'][j]
+            cam_left_wrist =decode_image_bit(cam_left_wrist_bit)
+            cam_left_wrist_resized = cv2.resize(cam_left_wrist, (640, 480))
+            cam_left_wrist_list.append(cam_left_wrist_resized)
 
-                cam_left_wrist_bit = data['vision']['cam_left_wrist']['colors'][j]
-                cam_left_wrist =decode_image_bit(cam_left_wrist_bit)
-                cam_left_wrist_resized = cv2.resize(cam_left_wrist, (640, 480))
-                cam_left_wrist_list.append(cam_left_wrist_resized)
+            cam_right_wrist_bit = data['vision']['cam_right_wrist']['colors'][j]
+            cam_right_wrist = decode_image_bit(cam_right_wrist_bit)
+            cam_right_wrist_resized = cv2.resize(cam_right_wrist, (640, 480))
+            cam_right_wrist_list.append(cam_right_wrist_resized)
 
-                cam_right_wrist_bit = data['vision']['cam_right_wrist']['colors'][j]
-                cam_right_wrist = decode_image_bit(cam_right_wrist_bit)
-                cam_right_wrist_resized = cv2.resize(cam_right_wrist, (640, 480))
-                cam_right_wrist_list.append(cam_right_wrist_resized)
-
-            if j != 0:
-                action = state
-                actions.append(action)
+            actions.append(action)
 
         hdf5path = os.path.join(save_dir, f"episode_{current_episode}.hdf5")
 

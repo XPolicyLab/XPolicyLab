@@ -17,7 +17,7 @@ echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\03
 echo -e "\033[34m[CLIENT] Connecting to server port ${free_port}...\033[0m"
 
 PYTHONWARNINGS=ignore::UserWarning \
-python "${root_dir}/scripts/eval_policy.sh" \
+bash "${root_dir}/scripts/eval_policy.sh" \
     --task_name "${task_name}" \
     --env_cfg_type "${env_cfg_type}" \
     --policy_name "${policy_name}" \

@@ -121,6 +121,7 @@ def pack_robot_state(
     action_type: str,
     robot_action_dim_info: dict,
     source_type: str = "obs",
+    state_type: str = "state",
 ) -> np.ndarray:
     """
     Pack robot state from obs['state'] into one vector along the last dimension.
@@ -131,14 +132,12 @@ def pack_robot_state(
         dual-arm:
             [arm_0, ee_0, arm_1, ee_1]
     """
-    if "state" not in obs:
-        raise KeyError("Input obs must contain a 'state' field.")
+    if state_type not in obs:
+        raise KeyError(f"Input obs must contain a '{state_type}' field.")
 
-    state_dict = obs["state"]
+    state_dict = obs[state_type]
 
-    arm_dims, ee_dims, num_arms = _validate_config(
-        action_type, robot_action_dim_info, source_type
-    )
+    arm_dims, ee_dims, num_arms = _validate_config(action_type, robot_action_dim_info, source_type)
     arm_keys, ee_keys = _get_state_keys(action_type, num_arms, source_type)
 
     parts = []

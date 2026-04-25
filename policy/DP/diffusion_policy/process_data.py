@@ -45,22 +45,22 @@ def main():
         load_path = os.path.join(load_data_dir, f"data/episode_{current_episode:07d}.hdf5")
         data = load_hdf5(load_path)
         
-        state_all = pack_robot_state(data, action_type, robot_action_dim_info, source_type="dataset")
+        state_all = pack_robot_state(data, action_type, robot_action_dim_info, source_type="dataset", state_type="state")
+        action_all = pack_robot_state(data, action_type, robot_action_dim_info, source_type="dataset", state_type="action")
 
         for j in range(0, state_all.shape[0]):
             head_img_bit = data['vision']['cam_head']['colors'][j]
 
-            if j != state_all.shape[0] - 1:
+            state, action = state_all[j], action_all[j]
 
-                head_img = decode_image_bit(head_img_bit)
-                assert head_img.ndim == 3 and head_img.shape[-1] == 3, f"Expected HxWx3, got {head_img.shape}"
-                head_img = cv2.resize(head_img, (320, 240), interpolation=cv2.INTER_AREA)  # (W, H)
-                assert head_img.shape == (240, 320, 3)
+            head_img = decode_image_bit(head_img_bit)
+            assert head_img.ndim == 3 and head_img.shape[-1] == 3, f"Expected HxWx3, got {head_img.shape}"
+            head_img = cv2.resize(head_img, (320, 240), interpolation=cv2.INTER_AREA)  # (W, H)
+            assert head_img.shape == (240, 320, 3)
 
-                head_camera_arrays.append(head_img)
-                state_arrays.append(state_all[j])
-            if j != 0:
-                action_arrays.append(state_all[j])
+            head_camera_arrays.append(head_img)
+            state_arrays.append(state)
+            action_arrays.append(action)
 
         current_episode += 1
         frame_count += state_all.shape[0] - 1
