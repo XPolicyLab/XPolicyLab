@@ -4,10 +4,11 @@ set -e
 eval_batch="$1"
 eval_env_conda_env="$2"
 free_port="$3"
-task_name="$4"
-env_cfg_type="$5"
-policy_name="$6"
-root_dir="$7"
+dataset_name="$4"
+task_name="$5"
+env_cfg_type="$6"
+policy_name="$7"
+root_dir="$8"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -18,6 +19,7 @@ echo -e "\033[34m[CLIENT] Connecting to server port ${free_port}...\033[0m"
 
 PYTHONWARNINGS=ignore::UserWarning \
 python "${root_dir}/XPolicyLab/debug_env_client.py" \
+    --dataset_name "${dataset_name}" \
     --task_name "${task_name}" \
     --env_cfg_type "${env_cfg_type}" \
     --policy_name "${policy_name}" \
