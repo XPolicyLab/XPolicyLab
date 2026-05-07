@@ -3,14 +3,15 @@ set -e
 
 # ==================== 参数定义 ====================
 policy_name=ACT
-task_name=${1}
-env_cfg_type=${2}
-expert_data_num=${3}
-action_type=${4}
-gpu_id=${5}
-seed=${6}
-policy_conda_env=${7}
-eval_env_conda_env=${8}
+dataset_name=${1}
+task_name=${2}
+env_cfg_type=${3}
+expert_data_num=${4}
+action_type=${5}
+gpu_id=${6}
+seed=${7}
+policy_conda_env=${8}
+eval_env_conda_env=${9}
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
@@ -39,6 +40,7 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
         port="${FREE_PORT}" \
+        dataset_name="${dataset_name}" \
         task_name="${task_name}" \
         env_cfg_type="${env_cfg_type}" \
         expert_data_num="${expert_data_num}" \
@@ -46,12 +48,12 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
         action_dim="${action_dim}" \
-        ckpt_dir="./act_ckpt/act-${task_name}/${env_cfg_type}-${expert_data_num}-${action_type}" \
-        ckpt_setting="${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}" \
+        ckpt_dir="./act_ckpt/act-${dataset_name}-${task_name}/${env_cfg_type}-${expert_data_num}-${action_type}" \
+        ckpt_setting="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}" \
     &
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
 # ==================== 启动 client 进行评测 ====================
-bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
+bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

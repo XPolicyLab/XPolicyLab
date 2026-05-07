@@ -1,11 +1,12 @@
 #!/bin/bash
 
-task_name=${1}
-env_cfg_type=${2}
-expert_data_num=${3}
-action_type=${4}
-seed=${5}
-gpu_id=${6}
+dataset_name=${1}
+task_name=${2}
+env_cfg_type=${3}
+expert_data_num=${4}
+action_type=${5}
+seed=${6}
+gpu_id=${7}
 
 DEBUG=False
 
@@ -19,14 +20,15 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type
 export ACT_ACTION_DIM=${action_dim}
 
 python3 imitate_episodes.py \
+    --dataset_name ${dataset_name} \
     --task_name ${task_name} \
-    --ckpt_setting ${task_name}-${env_cfg_type}-${expert_data_num}-${action_type} \
-    --ckpt_dir ./act_ckpt/act-${task_name}/${env_cfg_type}-${expert_data_num}-${action_type} \
+    --ckpt_setting ${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type} \
+    --ckpt_dir ./act_ckpt/act-${dataset_name}-${task_name}/${env_cfg_type}-${expert_data_num}-${action_type} \
     --policy_class ACT \
     --kl_weight 10 \
     --chunk_size 50 \
     --hidden_dim 512 \
-    --batch_size 8 \
+    --batch_size 16 \
     --dim_feedforward 3200 \
     --num_epochs 6000 \
     --lr 1e-5 \
