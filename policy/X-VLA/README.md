@@ -1,16 +1,5 @@
-# 数据转化
-## robotwin数据格式
-如果是robotwin格式数据, 直接修改对应路径即可.
-
-```bash
-python hdf5_add_language_instruction.py
-```
-
-## 其他数据格式
-TODO
-
 # 训练
-修改`meta.json`, 把所有要勇于训练的数据路径放入.
+修改`meta.json`, 把所有要用于训练的数据路径放入.
 然后修改`train.sh`, 设置三个参数:  
 **models**, **train_metas_path**, and **output_dir**
 

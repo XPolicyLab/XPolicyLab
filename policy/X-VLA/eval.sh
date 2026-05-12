@@ -2,16 +2,17 @@
 set -e
 
 policy_name=X-VLA
-task_name=${1}
-env_cfg=${2}
-expert_data_num=${3}
-action_type=${4:-ee}
-gpu_id=${5}
-seed=${6}
-policy_conda_env=${7}
-eval_env_conda_env=${8}
-MODEL_PATH=${9}
-PROCESSOR_PATH=${10}
+dataset_name=${1}
+task_name=${2}
+env_cfg=${3}
+expert_data_num=${4}
+action_type=${5:-ee}
+gpu_id=${6}
+seed=${7}
+policy_conda_env=${8}
+eval_env_conda_env=${9}
+MODEL_PATH=${10}
+PROCESSOR_PATH=${11}
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
@@ -49,5 +50,6 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
-bash "${UTILS_DIR}/run_debug_env_client.sh" false "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg}" "${policy_name}" "${ROOT_DIR}"
+# ==================== 启动 client 进行评测 ====================
+bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

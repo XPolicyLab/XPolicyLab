@@ -8,20 +8,21 @@ import cv2
 import numpy as np
 import torch
 from PIL import Image
+from scipy.spatial.transform import Rotation as R
 
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
 _XVLA_ROOT = _CUR_DIR / "xvla"
 
-for _path in (str(_REPO_ROOT), str(_XVLA_ROOT)):
+for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_XVLA_ROOT)):
     if _path not in sys.path:
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
-from models.modeling_xvla import XVLA
-from models.processing_xvla import XVLAProcessor
+from xvla.models.modeling_xvla import XVLA
+from xvla.models.processing_xvla import XVLAProcessor
 
 
 def extract_image(observation, candidate_names):
@@ -107,19 +108,19 @@ def resolve_prompt(observation: dict[str, Any], default_prompt: str) -> str:
 
 
 def quat_to_rotate6d(quat: np.ndarray) -> np.ndarray:
-    quat = np.asarray(quat)
-    rot = np.empty(quat.shape[:-1] + (3, 3), dtype=np.float32)
-    x, y, z, w = [quat[..., i] for i in range(4)]
-    rot[..., 0, 0] = 1 - 2 * (y * y + z * z)
-    rot[..., 0, 1] = 2 * (x * y - z * w)
-    rot[..., 0, 2] = 2 * (x * z + y * w)
-    rot[..., 1, 0] = 2 * (x * y + z * w)
-    rot[..., 1, 1] = 1 - 2 * (x * x + z * z)
-    rot[..., 1, 2] = 2 * (y * z - x * w)
-    rot[..., 2, 0] = 2 * (x * z - y * w)
-    rot[..., 2, 1] = 2 * (y * z + x * w)
-    rot[..., 2, 2] = 1 - 2 * (x * x + y * y)
-    return rot[..., :, :2].reshape(quat.shape[:-1] + (6,))
+    quat = np.asarray(quat, dtype=np.float32)
+    if quat.shape[-1] != 4:
+        raise ValueError(f"Expected quaternion with 4 dims, got shape {quat.shape}.")
+    quat = quat.copy()
+    norm = np.linalg.norm(quat, axis=-1, keepdims=True)
+    zero_norm_mask = norm.squeeze(-1) < 1e-8
+    if np.any(zero_norm_mask):
+        quat[zero_norm_mask] = np.array([1.0, 0.0, 0.0, 0.0], dtype=np.float32)
+        norm = np.linalg.norm(quat, axis=-1, keepdims=True)
+    quat = quat / np.clip(norm, 1e-8, None)
+    xyzw = np.concatenate([quat[..., 1:], quat[..., :1]], axis=-1)
+    rot = R.from_quat(xyzw).as_matrix()
+    return rot[..., :, :2].reshape(quat.shape[:-1] + (6,)).astype(np.float32)
 
 
 def rotate6d_to_quat(vec6: np.ndarray) -> np.ndarray:
@@ -129,10 +130,10 @@ def rotate6d_to_quat(vec6: np.ndarray) -> np.ndarray:
 
     a1 = vec6[..., 0:5:2]
     a2 = vec6[..., 1:6:2]
-    b1 = a1 / np.linalg.norm(a1, axis=-1, keepdims=True)
+    b1 = a1 / np.clip(np.linalg.norm(a1, axis=-1, keepdims=True), 1e-8, None)
     proj = np.sum(b1 * a2, axis=-1, keepdims=True) * b1
     b2 = a2 - proj
-    b2 = b2 / np.linalg.norm(b2, axis=-1, keepdims=True)
+    b2 = b2 / np.clip(np.linalg.norm(b2, axis=-1, keepdims=True), 1e-8, None)
     b3 = np.cross(b1, b2)
     rot = np.stack((b1, b2, b3), axis=-1)
 
@@ -171,7 +172,10 @@ def rotate6d_to_quat(vec6: np.ndarray) -> np.ndarray:
     quat[cond3, 1] = (m12[cond3] + m21[cond3]) / s
     quat[cond3, 2] = 0.25 * s
 
-    return quat
+    quat = quat / np.clip(np.linalg.norm(quat, axis=-1, keepdims=True), 1e-8, None)
+    return np.concatenate([quat[..., 3:4], quat[..., :3]], axis=-1).astype(np.float32)
+
+
 
 
 def build_xvla_proprio(observation: dict[str, Any]) -> np.ndarray:
@@ -188,10 +192,10 @@ def build_xvla_proprio(observation: dict[str, Any]) -> np.ndarray:
         [
             left_ee[:3],
             quat_to_rotate6d(left_ee[3:]),
-            np.array([left_grip], dtype=np.float32),
+            np.array([left_grip_joint], dtype=np.float32),
             right_ee[:3],
             quat_to_rotate6d(right_ee[3:]),
-            np.array([right_grip], dtype=np.float32),
+            np.array([right_grip_joint], dtype=np.float32),
         ],
         axis=-1,
     ).astype(np.float32)
@@ -200,25 +204,21 @@ def build_xvla_proprio(observation: dict[str, Any]) -> np.ndarray:
 def encode_obs(observation, default_prompt):
     if "images" in observation and "state" in observation:
         head = ensure_hwc_uint8(observation["images"]["cam_high"])
-        left = ensure_hwc_uint8(observation["images"]["cam_left_wrist"])
-        right = ensure_hwc_uint8(observation["images"]["cam_right_wrist"])
         prompt = resolve_prompt(observation, default_prompt)
         return {
-            "images": [head, left, right],
+            "images": [head],
             "proprio": build_xvla_proprio(observation),
             "prompt": prompt,
+            "output_format": "xpolicylab",
         }
 
-    images = [
-        ensure_hwc_uint8(extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])),
-        ensure_hwc_uint8(extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"])),
-        ensure_hwc_uint8(extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"])),
-    ]
+    images = [ensure_hwc_uint8(extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"]))]
     prompt = resolve_prompt(observation, default_prompt)
     return {
         "images": images,
         "proprio": build_xvla_proprio(observation),
         "prompt": prompt,
+        "output_format": "xpolicylab",
     }
 
 
@@ -244,9 +244,9 @@ def action_chunk_to_ee_dict_list(action_chunk: np.ndarray):
         actions.append(
             {
                 "left_ee_pose": np.concatenate([left_xyz[idx], left_quat[idx]], axis=0).astype(np.float32),
-                "left_ee_joint_state": np.asarray([left_grip[idx, 0]], dtype=np.float32),
+                "left_ee_joint_state": np.asarray([left_gripper[idx, 0]], dtype=np.float32),
                 "right_ee_pose": np.concatenate([right_xyz[idx], right_quat[idx]], axis=0).astype(np.float32),
-                "right_ee_joint_state": np.asarray([right_grip[idx, 0]], dtype=np.float32),
+                "right_ee_joint_state": np.asarray([right_gripper[idx, 0]], dtype=np.float32),
             }
         )
     return actions
@@ -277,7 +277,26 @@ class Model(ModelTemplate):
         return torch.device(device_arg)
 
     def _load_processor(self, model_cfg):
-        processor_path = model_cfg.get("processor_path") or model_cfg.get("model_path") or model_cfg.get("checkpoint_path")
+        candidate_paths = []
+        configured_path = model_cfg.get("processor_path")
+        if configured_path:
+            candidate_paths.append(Path(configured_path))
+        for key in ("model_path", "checkpoint_path"):
+            value = model_cfg.get(key)
+            if value:
+                candidate_paths.append(Path(value))
+        
+        processor_path = None
+        for candidate in candidate_paths:
+            if (candidate / "preprocessor_config.json").exists():
+                processor_path = str(candidate)
+                break
+        if processor_path is None:
+            searched = ", ".join(str(path) for path in candidate_paths)
+            raise FileNotFoundError(
+                "Could not find XVLA processor files. "
+                f"Searched: {searched}"
+            )
         return XVLAProcessor.from_pretrained(processor_path)
 
     def _load_model(self, model_cfg):
@@ -306,7 +325,10 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        self._latest_env_idx_list = [
+            obs.get("env_idx", index) if isinstance(obs, dict) else index
+            for index, obs in enumerate(obs_list)
+        ]
         self.observation_window = [encode_obs(obs, self.default_prompt) for obs in obs_list]
 
     def infer(self, observation: dict[str, Any], steps: int | None = None):
@@ -319,7 +341,7 @@ class Model(ModelTemplate):
                 f"Processor returned incomplete inputs: missing {sorted(missing_inputs)} for prompt={prompt!r}."
             )
         proprio = torch.as_tensor(observation["proprio"], dtype=torch.float32).unsqueeze(0)
-        domain_id = torch.tensor([int(self.model_cfg.get("domain_id", 6))], dtype=torch.long)
+        domain_id = torch.tensor([int(self.model_cfg.get("domain_id", 0))], dtype=torch.long)
 
         def to_model(tensor: torch.Tensor):
             if tensor.is_floating_point():
@@ -346,7 +368,8 @@ class Model(ModelTemplate):
         env_idx_list = env_idx_list or self._latest_env_idx_list
         action_list = []
         for batch_index, _ in enumerate(env_idx_list):
-            action_chunk = self.infer(self.observation_window[batch_index])
+            encoded_obs = self.observation_window[batch_index]
+            action_chunk = self.infer(encoded_obs)
             action_list.append(action_chunk_to_ee_dict_list(action_chunk))
         return action_list
 
