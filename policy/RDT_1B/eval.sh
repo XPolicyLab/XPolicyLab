@@ -1,25 +1,25 @@
 #!/bin/bash
 set -e
 
-policy_name=X-VLA
-dataset_name=${1}
-task_name=${2}
-env_cfg=${3}
-expert_data_num=${4}
-action_type=${5:-ee}
-gpu_id=${6}
-seed=${7}
-policy_conda_env=${8}
-eval_env_conda_env=${9}
-MODEL_PATH=${10}
-PROCESSOR_PATH=${11}
+policy_name=RDT_1B
+task_name=${1}
+env_cfg=${2}
+expert_data_num=${3}
+action_type=${4:-joint}
+gpu_id=${5}
+seed=${6}
+policy_conda_env=${7}
+eval_env_conda_env=${8}
+CHECKPOINT_PATH=${9}
+TEXT_ENCODER_PATH=${10}
+VISION_ENCODER_PATH=${11}
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/X-VLA/deploy.yml"
+yaml_file="${ROOT_DIR}/XPolicyLab/policy/RDT-1b/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
@@ -44,12 +44,12 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
         action_dim="${action_dim}" \
-        model_path="${MODEL_PATH}" \
-        processor_path="${PROCESSOR_PATH}" \
+        checkpoint_path="${CHECKPOINT_PATH}" \
+        text_encoder_path="${TEXT_ENCODER_PATH}" \
+        vision_encoder_path="${VISION_ENCODER_PATH}" \
     &
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
-# ==================== 启动 client 进行评测 ====================
-bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
+bash "${UTILS_DIR}/run_debug_env_client.sh" false "${eval_env_conda_env}" "${FREE_PORT}" "${task_name}" "${env_cfg}" "${policy_name}" "${ROOT_DIR}"
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"
