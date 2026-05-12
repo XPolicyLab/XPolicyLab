@@ -1,13 +1,17 @@
 #!/bin/bash
 set -e
 
-eval_batch="$1"
-eval_env_conda_env="$2"
-free_port="$3"
-task_name="$4"
-env_cfg_type="$5"
-policy_name="$6"
-root_dir="$7"
+eval_batch="${1}"
+eval_env_conda_env="${2}"
+free_port="${3}"
+dataset_name="${4}"
+task_name="${5}"
+env_cfg_type="${6}"
+policy_name="${7}"
+additional_info="${8}"
+root_dir="${9}"
+seed="${10}"
+env_gpu_id="${11}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -18,10 +22,13 @@ echo -e "\033[34m[CLIENT] Connecting to server port ${free_port}...\033[0m"
 
 PYTHONWARNINGS=ignore::UserWarning \
 bash "${root_dir}/scripts/eval_policy.sh" \
+    --dataset_name "${dataset_name}" \
     --task_name "${task_name}" \
     --env_cfg_type "${env_cfg_type}" \
     --policy_name "${policy_name}" \
     --port "${free_port}" \
     --eval_batch "${eval_batch}" \
     --root_dir "${root_dir}" \
-    --device_id 0 # TODO
+    --device_id "${env_gpu_id}" \
+    --additional_info "${additional_info}" \
+    --seed "${seed}"debug

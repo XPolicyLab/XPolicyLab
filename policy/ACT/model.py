@@ -23,7 +23,6 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
         self.action_type = model_cfg['action_type']
 
-
     def get_model(self, model_cfg):
         return ACT(model_cfg, Namespace(**model_cfg))
 

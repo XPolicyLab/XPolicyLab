@@ -11,7 +11,7 @@ eval_env: sim # sim, real, debug
 
 # ACT-specific arguments
 kl_weight: 10.0
-chunk_size: 50 
+chunk_size: 50
 hidden_dim: 512
 dim_feedforward: 3200
 temporal_agg: true

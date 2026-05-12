@@ -4,4 +4,4 @@ cd detr && pip install -e .
 
 cd ../../..
 
-pip install -e .
+pip install -e . --no-cache-dir

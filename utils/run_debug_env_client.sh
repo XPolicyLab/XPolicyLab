@@ -1,14 +1,17 @@
 #!/bin/bash
 set -e
 
-eval_batch="$1"
-eval_env_conda_env="$2"
-free_port="$3"
-dataset_name="$4"
-task_name="$5"
-env_cfg_type="$6"
-policy_name="$7"
-root_dir="$8"
+eval_batch="${1}"
+eval_env_conda_env="${2}"
+free_port="${3}"
+dataset_name="${4}"
+task_name="${5}"
+env_cfg_type="${6}"
+policy_name="${7}"
+additional_info="${8}"
+root_dir="${9}"
+seed="${10}"
+env_gpu_id="${11}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
