@@ -20,7 +20,7 @@ from typing import Optional, Tuple, Iterable, Sequence, Any
 import numpy as np
 import h5py
 
-from ..utils import euler_to_rotate6d, quat_to_rotate6d
+from ..utils import euler_to_rotate6d, quat_to_rotate6d, quat_wxyz_to_rotate6d
 from .base import BaseHDF5Handler
 
 
@@ -173,6 +173,86 @@ class RobotWin2Handler(BaseHDF5Handler):
     def index_candidates(self, T_left: int, training: bool) -> Iterable[int]:
         return range(0, max(0, T_left - 10))
 
+# ---------------------------- RoboDojo --------------------------------------
+class RoboDojoHandler(BaseHDF5Handler):
+    dataset_name = "RoboDojo-*"
+
+    def read_instruction(self, f: h5py.File) -> str:
+        candidate_keys = []
+        primary_key = self.meta.get("language_instruction_key")
+        if primary_key:
+            candidate_keys.append(primary_key)
+        candidate_keys.extend(self.meta.get("language_instruction_fallback_keys", []))
+
+        for key in candidate_keys:
+            if key not in f:
+                continue
+            value = f[key][()]
+            if isinstance(value, bytes):
+                text = value.decode().strip()
+            elif isinstance(value, np.ndarray):
+                if value.shape == ():
+                    item = value.item()
+                elif len(value) > 0:
+                    item = value[0]
+                else:
+                    item = None
+                if isinstance(item, bytes):
+                    text = item.decode().strip()
+                elif item is None:
+                    text = ""
+                else:
+                    text = str(item).strip()
+            else:
+                text = str(value).strip()
+
+            if text:
+                return text
+
+        default_instruction = self.meta.get("default_language_instruction", "")
+        if isinstance(default_instruction, str) and default_instruction.strip():
+            return default_instruction.strip()
+
+        raise KeyError(
+            f"No valid language instruction found for RoboDojo. Tried keys: {candidate_keys}"
+        )
+
+    def build_left_right(
+        self, f: h5py.File
+    ) -> Tuple[np.ndarray, np.ndarray, Optional[np.ndarray], Optional[np.ndarray], float, float]:
+        freq, qdur = 30.0, 1.0
+        l = f["state"]["left_ee_poses"][()]
+        lg = f["state"]["left_ee_joint_states"][()]
+        r = f["state"]["right_ee_poses"][()]
+        rg = f["state"]["right_ee_joint_states"][()]
+        left  = np.concatenate([l[:, :3], quat_wxyz_to_rotate6d(l[:, 3:]), lg], axis=-1)
+        right = np.concatenate([r[:, :3], quat_wxyz_to_rotate6d(r[:, 3:]), rg], axis=-1)
+
+        return left, right, None, None, freq, qdur
+
+    def index_candidates(self, T_left: int, training: bool) -> Iterable[int]:
+        return range(0, max(0, T_left - 5))
+
+class RawHandler(BaseHDF5Handler):
+    dataset_name = "raw-*"
+
+    def build_left_right(
+        self, f: h5py.File
+    ) -> Tuple[np.ndarray, np.ndarray, Optional[np.ndarray], Optional[np.ndarray], float, float]:
+        freq, qdur = 30.0, 1.0
+
+        l = f["left_arm"]["eef"][()]
+        lg = f["left_arm"]["gripper"][()][:, None]
+        r = f["right_arm"]["eef"][()]
+        rg = f["right_arm"]["gripper"][()][:, None]
+        
+        left  = np.concatenate([l[:, :3], euler_to_rotate6d(l[:, 3:]), lg], axis=-1)
+        right = np.concatenate([r[:, :3], euler_to_rotate6d(r[:, 3:]), rg], axis=-1)
+
+        return left, right, None, None, freq, qdur
+
+    def index_candidates(self, T_left: int, training: bool) -> Iterable[int]:
+        return range(0, max(0, T_left - 5))
 
 # ---------------------------- Robocasa-Human ---------------------------------
 class RobocasaHumanHandler(BaseHDF5Handler):

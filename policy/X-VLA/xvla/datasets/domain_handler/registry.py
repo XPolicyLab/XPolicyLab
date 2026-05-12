@@ -24,7 +24,9 @@ from .agiworld import AGIWolrdHandler
 from .robomind import RobomindHandler
 from .droid import DroidHandler
 from .real_world import AIRAgilexHandler, AIRAgilexHQHandler, AIRBotHandler, WidowxAirHandler
-from .simulations import BridgeHandler, LiberoHandler, VLABenchHandler, RobotWin2Handler, RobocasaHumanHandler, CalvinHandler, RT1Handler
+from .simulations import BridgeHandler, LiberoHandler, VLABenchHandler, \
+    RobotWin2Handler, RobocasaHumanHandler, CalvinHandler, RT1Handler, \
+    RoboDojoHandler, RawHandler
 
 # 1) Exact registry only (no heuristics)
 _REGISTRY: Dict[str, Type[DomainHandler]] = {
@@ -49,6 +51,10 @@ _REGISTRY: Dict[str, Type[DomainHandler]] = {
     "robotwin2_abs_ee": RobotWin2Handler,
     "robotwin2_clean": RobotWin2Handler,
     "robocasa-human": RobocasaHumanHandler,
+    
+    # Xspark
+    "RoboDojo_ee": RoboDojoHandler,
+    "raw_ee": RawHandler,
 
     # Robomind
     "robomind-franka": RobomindHandler,

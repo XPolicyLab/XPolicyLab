@@ -36,7 +36,22 @@ This will add the required target key to the dataset.
 
 ### 2️⃣ Modify 'meta.json' File
 
-Modify all file paths in the **datalist** to your target directory; no other changes are required.
+You can still list explicit files in **datalist**, but it now also supports automatic path expansion:
+
+- Set **data_dir** to a dataset directory and all `.hdf5` / `.h5` files under it will be discovered automatically.
+- Set **data_dirs** to multiple dataset directories if you want to merge several roots.
+- Put a directory path or glob pattern such as `/path/to/data/**/*.hdf5` directly inside **datalist** and it will be expanded automatically.
+
+Example:
+
+```json
+{
+	"dataset_name": "aloha_joint",
+	"language_instruction_key": "language_instruction",
+	"observation_key": ["observation/head_camera/rgb"],
+	"data_dir": "/path/to/your/data"
+}
+```
 
 ### 3️⃣ Start Training
 

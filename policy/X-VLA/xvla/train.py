@@ -93,7 +93,7 @@ def get_args_parser():
     parser.add_argument("--min_lr_ratio", type=float, default=0.1)
 
     # Logging / saving
-    parser.add_argument("--save_interval", type=int, default=50000)
+    parser.add_argument("--save_interval", type=int, default=1000)
     parser.add_argument("--log_interval", type=int, default=20)
 
     # System

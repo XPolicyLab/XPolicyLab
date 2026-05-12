@@ -9,7 +9,7 @@ except RuntimeError:
     pass
 
 # Add the absolute path of RoboTwin
-robowin_root = Path("/home/admin02/RMBench")
+robowin_root = Path("/mnt/pfs/pg4hw0/niantian/RoboTwin")
 # Ensure RoboTwin root is the first search in order to use envs
 if str(robowin_root) not in sys.path:
     sys.path.insert(0, str(robowin_root))
@@ -44,34 +44,18 @@ logger = logging.getLogger(__name__)
 torch.set_default_dtype(torch.float32)
 
 ALL_TASKS = [
-    "classify_blocks",
-    "place_object_box",
-    "storage_blocks",
-    "observe_and_pickup",
-    "rearrange_blocks",
-    "put_back_block",
-    "swap_blocks",
-    "swap_T",
-    "cover_blocks",
-    "blocks_ranking_try",
-    "press_button",
-    "battery_try"
+    "blocks_ranking_rgb",
+    "pick_dual_bottles",
+    "stack_blocks_two",
+    "stack_bowls_three",
 ]
 
 TASK_INSTRUCTIONS = {
     # please fill in the instructions for the following tasks
-    "classify_blocks": "There are two colors of blocks and two baskets on the table. Collect blocks of the same color into the same basket.",
-    "place_object_box": "",
-    "storage_blocks": "",
-    "observe_and_pickup": "",
-    "rearrange_blocks": "",
-    "put_back_block": "",
-    "swap_blocks": "",
-    "swap_T": "",
-    "cover_blocks": "On the table, red, green, and blue blocks are arranged randomly along with three lids. From the current viewpoint, cover the blocks from left to right using the lids, and then uncover them again in the sequence red, green, and blue.",
-    "blocks_ranking_try": "There is a button and three colored cubes arranged in a random row on the table. Each time the cubes are rearranged, the arm presses the button until the arrangement is successful.",
-    "press_button": "",
-    "battery_try": "",
+    "blocks_ranking_rgb": "Position red block first, green block second, and blue block third in a row from left to right.",
+    "pick_dual_bottles": "Grasp the red-capped bottle and the plastic bottle at the same time.",
+    "stack_blocks_two": "Bring red block to the center, then stack green block over it.",
+    "stack_bowls_three": "Take the ceramic bowl, stack them from bottom to top.",
 }
 
 print("Number of tasks evaluating:", len(ALL_TASKS))

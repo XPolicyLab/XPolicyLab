@@ -15,7 +15,7 @@
 # ------------------------------------------------------------------------------
 
 from __future__ import annotations
-import io, numpy as np, pyarrow.parquet as pq, av, cv2
+import io, numpy as np, pyarrow.parquet as pq, cv2
 from mmengine import fileio
 from PIL import Image
 from scipy.spatial.transform import Rotation as R
@@ -31,6 +31,17 @@ def open_h5(path: str) -> h5py.File:
     except OSError: return h5py.File(io.BytesIO(read_bytes(path)), "r")
 
 def read_video_to_frames(path: str) -> np.ndarray:
+    try:
+        import av
+    except ImportError as e:
+        raise ImportError(
+            "PyAV is required only for video-backed datasets such as AGIBOT. "
+            "Your current environment is missing FFmpeg runtime libraries, "
+            "for example libavformat.so.58. "
+            "Either install a compatible ffmpeg/PyAV stack in the XVLA conda env, "
+            "or avoid datasets that require mp4 decoding."
+        ) from e
+
     buf = io.BytesIO(read_bytes(path)); container = av.open(buf, options={'threads': '2'})
     frames = []
     for packet in container.demux(video=0):
@@ -52,6 +63,9 @@ def decode_image_from_bytes(x) -> Image.Image:
 
 def quat_to_rotate6d(q: np.ndarray, scalar_first = False) -> np.ndarray:
     return R.from_quat(q, scalar_first = scalar_first).as_matrix()[..., :, :2].reshape(q.shape[:-1] + (6,))
+
+def quat_wxyz_to_rotate6d(q: np.ndarray) -> np.ndarray:
+    return quat_to_rotate6d(q, scalar_first=True)
 
 def euler_to_rotate6d(q: np.ndarray, pattern: str = "xyz") -> np.ndarray:
     return R.from_euler(pattern, q, degrees=False).as_matrix()[..., :, :2].reshape(q.shape[:-1] + (6,))

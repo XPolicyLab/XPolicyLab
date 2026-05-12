@@ -16,7 +16,8 @@
 
 from __future__ import annotations
 from typing import Dict, Iterable, List
-import io, json, random, numpy as np, torch
+import glob
+import io, json, os, random, numpy as np, torch
 from torch.utils.data import IterableDataset
 from torchvision import transforms
 from torchvision.transforms import InterpolationMode
@@ -24,6 +25,54 @@ from mmengine import fileio
 from .utils import action_slice
 from .domain_config import DATA_WEIGHTS, DATA_DOMAIN_ID
 from .domain_handler.registry import get_handler_cls
+
+
+def _has_glob_pattern(path: str) -> bool:
+    return any(ch in path for ch in "*?[]")
+
+
+def _discover_local_files(path: str, recursive: bool = True, suffixes: tuple[str, ...] = (".hdf5", ".h5")) -> list[str]:
+    if _has_glob_pattern(path):
+        matches = [p for p in glob.glob(path, recursive=recursive) if os.path.isfile(p)]
+    elif os.path.isdir(path):
+        pattern = os.path.join(path, "**", "*") if recursive else os.path.join(path, "*")
+        matches = [p for p in glob.glob(pattern, recursive=recursive) if os.path.isfile(p)]
+    elif os.path.isfile(path):
+        matches = [path]
+    else:
+        matches = []
+
+    if suffixes:
+        matches = [p for p in matches if p.lower().endswith(tuple(s.lower() for s in suffixes))]
+    return sorted(dict.fromkeys(matches))
+
+
+def _expand_datalist(meta: dict) -> dict:
+    meta = dict(meta)
+    suffixes = tuple(meta.get("data_suffixes", [".hdf5", ".h5"]))
+    recursive = meta.get("data_recursive", True)
+
+    expanded = []
+    for item in meta.get("datalist", []):
+        if not isinstance(item, str):
+            expanded.append(item)
+            continue
+
+        if os.path.isdir(item) or _has_glob_pattern(item):
+            matches = _discover_local_files(item, recursive=recursive, suffixes=suffixes)
+            expanded.extend(matches if matches else [item])
+            continue
+
+        expanded.append(item)
+
+    for data_dir in meta.get("data_dirs", []):
+        expanded.extend(_discover_local_files(data_dir, recursive=recursive, suffixes=suffixes))
+
+    if "data_dir" in meta:
+        expanded.extend(_discover_local_files(meta["data_dir"], recursive=recursive, suffixes=suffixes))
+
+    meta["datalist"] = list(dict.fromkeys(expanded))
+    return meta
 
 class InfiniteDataReader(IterableDataset):
     """
@@ -56,7 +105,7 @@ class InfiniteDataReader(IterableDataset):
             root = metas_path
         else: meta_files, root = [metas_path], ""
         for file in meta_files:
-            with io.BytesIO(fileio.get(fileio.join_path(root, file))) as f: meta = json.load(f)
+            with io.BytesIO(fileio.get(fileio.join_path(root, file))) as f: meta = _expand_datalist(json.load(f))
             print(f"== dataset {meta['dataset_name']} with {len(meta['datalist'])} trajs")
             self.metas[meta["dataset_name"]] = meta
 
