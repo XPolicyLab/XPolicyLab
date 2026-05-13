@@ -4,6 +4,6 @@
     "language_instruction_fallback_keys": ["instruction", "language_instruction", "task_name", "task"],
     "observation_key": ["vision/cam_head/colors"],
     "datalist": [
-        "/vepfs-cnbje63de6fae220/niantian/RoboDojo_env/data/RoboDojo/stack_bowls/"
+        ""
     ]
 }
