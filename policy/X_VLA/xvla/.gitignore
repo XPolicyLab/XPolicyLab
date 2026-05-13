@@ -216,3 +216,6 @@ runnings/*
 .mp4
 logs/
 checkpoints/
+
+meta.json
+train.sh
