@@ -31,4 +31,4 @@ bash "${root_dir}/scripts/eval_policy.sh" \
     --root_dir "${root_dir}" \
     --device_id "${env_gpu_id}" \
     --additional_info "${additional_info}" \
-    --seed "${seed}"debug
+    --seed "${seed}"
