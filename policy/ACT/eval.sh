@@ -36,8 +36,7 @@ conda activate "${policy_conda_env}"
 
 echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
 PYTHONWARNINGS=ignore::UserWarning \
-CUDA_VISIBLE_DEVICES="${GPU_ID}" 
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
         port="${FREE_PORT}" \
@@ -49,7 +48,7 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
         action_dim="${action_dim}" \
-        ckpt_dir="./act_ckpt/act-${dataset_name}-${ckpt_name}/${env_cfg_type}-${expert_data_num}-${action_type}" \
+        ckpt_dir="./act_ckpt/act-${dataset_name}/${env_cfg_type}-${expert_data_num}-${action_type}" \
         ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}" \
     &
 SERVER_PID=$!
