@@ -3,7 +3,6 @@ set -e
 
 # ==================== 参数定义 ====================
 policy_name=ACT
-# fixed
 dataset_name=${1}
 task_name=${2}
 ckpt_name=${3}
@@ -48,8 +47,8 @@ CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_pol
         policy_name="${policy_name}" \
         action_type="${action_type}" \
         action_dim="${action_dim}" \
-        ckpt_dir="./act_ckpt/act-${dataset_name}/${env_cfg_type}-${expert_data_num}-${action_type}" \
-        ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}" \
+        ckpt_dir="./act_ckpt/act-${dataset_name}-${ckpt_name}/${env_cfg_type}-${expert_data_num}-${action_type}" \
+        ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type} \
     &
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"

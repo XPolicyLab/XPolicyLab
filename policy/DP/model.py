@@ -36,7 +36,7 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
 
     def get_model(self, model_cfg):
-        ckpt_file = os.path.join(parent_dir, f"checkpoints/{model_cfg['dataset_name']}-{model_cfg['task_name']}-{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}-{model_cfg['seed']}/{model_cfg['checkpoint_num']}.ckpt")
+        ckpt_file = os.path.join(parent_dir, f"checkpoints/{model_cfg['ckpt_setting']}/{model_cfg['checkpoint_num']}.ckpt")
 
         # load checkpoint and workspace
         payload = torch.load(open(ckpt_file, "rb"), pickle_module=dill)

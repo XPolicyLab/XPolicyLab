@@ -11,12 +11,7 @@ import os, json
 class Model(ModelTemplate):
 
     def __init__(self, model_cfg):
-        current_dir = os.path.dirname(__file__)
-        ### Task parameters
-        TASK_CONFIGS_PATH = os.path.join(current_dir, "./TASK_CONFIGS.json")
-        with open(TASK_CONFIGS_PATH, "r") as f:
-            TASK_CONFIGS = json.load(f)
-        self.camera_names = TASK_CONFIGS[model_cfg['ckpt_setting']]["camera_names"]
+        self.camera_names = model_cfg.get('camera_names', [])
         model_cfg['camera_names'] = self.camera_names
 
         self.model = self.get_model(model_cfg=model_cfg)
