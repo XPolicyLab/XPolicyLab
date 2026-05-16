@@ -13,15 +13,15 @@ action_type=${6}
 seed=${7}
 policy_gpu_id=${8}
 env_gpu_id=${9}
-policy_conda_env=${10}
+policy_uv_env_path=${10}
 eval_env_conda_env=${11}
 
 MODEL_PATH=${9}
 TRAIN_CONFIG_NAME=${10}
 REPO_ID=${11}
 
-export CUDA_VISIBLE_DEVICES="${gpu_id}"
-echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
+export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
+echo -e "\033[33m[INFO] GPU ID (to use): ${policy_gpu_id}\033[0m"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
