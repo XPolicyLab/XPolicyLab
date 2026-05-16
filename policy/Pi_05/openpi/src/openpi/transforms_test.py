@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import pytest
 
 import openpi.models.tokenizer as _tokenizer
@@ -119,3 +120,11 @@ def test_extract_prompt_from_task():
 
     with pytest.raises(ValueError, match="task_index=2 not found in task mapping"):
         transform({"task_index": 2})
+
+
+def test_extract_prompt_from_task_dataframe():
+    tasks = pd.DataFrame({"task_index": [0, 1]}, index=["Task zero", "Hello, world!"])
+    transform = _transforms.PromptFromLeRobotTask(tasks)
+
+    data = transform({"task_index": 1})
+    assert data["prompt"] == "Hello, world!"

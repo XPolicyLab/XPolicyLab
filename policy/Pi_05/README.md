@@ -16,8 +16,8 @@ python scripts/process_data.py ${task_name} ${env_cfg_type} ${repo_id} ${mode} $
 ### step2 计算norm stat
 ``` bash
 cd pi05/openpi/
-bash scripts/compute_norm_stats.py --config_name ${config_name} --repo_id ${repo_id}
-# bash scripts/compute_norm_stats.sh pi05_full_base fold_clothes_v1
+bash scripts/compute_norm_stats.py --config_name ${config_name} --max_frames ${max_frames}
+# bash scripts/compute_norm_stats.sh pi05_full_base 10000
 ```
 
 ### step3 训练

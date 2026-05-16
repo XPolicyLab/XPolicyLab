@@ -6,8 +6,7 @@ expert_data_num: null
 expert_data_num: null
 seed: null
 eval_batch: false
-
-checkpoint_num: 600
+eval_env: sim # sim, real, debug
 
 result_dir: "./results/pi05/"
 
