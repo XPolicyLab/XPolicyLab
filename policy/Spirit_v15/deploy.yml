@@ -1,0 +1,17 @@
+# Basic experiment configuration
+policy_name: Spirit_v15
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: null
+seed: 0
+eval_batch: false
+eval_env: sim
+
+# Spirit_v15-specific arguments
+checkpoint_path: null
+model_path: null
+prompt: null
+device: auto
+used_chunk_size: 60
+raw_embodiment_stats_json_path: null
