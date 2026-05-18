@@ -1,0 +1,8 @@
+requests
+numpy
+httpx
+loguru
+opencv-python
+fastapi
+pillow
+uvicorn

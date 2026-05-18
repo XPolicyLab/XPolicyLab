@@ -1,0 +1,153 @@
+# Fine-tune on Custom Embodiments ("NEW_EMBODIMENT")
+
+This guide demonstrates how to finetune GR00T on your own robot data and configuration. We provide a complete example for the Huggingface [SO-100](https://github.com/TheRobotStudio/SO-ARM100) robot under `examples/SO100`, which uses `demo_data/cube_to_bowl_5` as the demo dataset.
+
+## Step 1: Prepare Your Data
+
+Prepare your data in **GR00T-flavored LeRobot v2 format** by following the [data preparation guide](data_preparation.md). 
+
+## Step 2: Prepare Your Modality Configuration
+
+Define your own modality configuration by following the [modality config guide](data_config.md). Below is an example configuration that corresponds to the demo data:
+```python
+from gr00t.configs.data.embodiment_configs import register_modality_config
+from gr00t.data.embodiment_tags import EmbodimentTag
+from gr00t.data.types import (
+    ActionConfig,
+    ActionFormat,
+    ActionRepresentation,
+    ActionType,
+    ModalityConfig,
+)
+
+
+so100_config = {
+    # Video: use current frame only ([0]); list camera view names matching modality.json
+    "video": ModalityConfig(
+        delta_indices=[0],
+        modality_keys=[
+            "front",
+            "wrist",
+        ],
+    ),
+    # State: current proprioceptive reading; keys must match modality.json "state" entries
+    "state": ModalityConfig(
+        delta_indices=[0],
+        modality_keys=[
+            "single_arm",
+            "gripper",
+        ],
+    ),
+    # Action: 16-step prediction horizon; each key needs an ActionConfig
+    "action": ModalityConfig(
+        delta_indices=list(range(0, 16)),  # predict 16 future steps
+        modality_keys=[
+            "single_arm",
+            "gripper",
+        ],
+        action_configs=[
+            # single_arm: RELATIVE = delta from current state (better generalization)
+            ActionConfig(
+                rep=ActionRepresentation.RELATIVE,
+                type=ActionType.NON_EEF,       # joint-space, not end-effector
+                format=ActionFormat.DEFAULT,
+            ),
+            # gripper: ABSOLUTE = target position (binary open/close works better absolute)
+            ActionConfig(
+                rep=ActionRepresentation.ABSOLUTE,
+                type=ActionType.NON_EEF,
+                format=ActionFormat.DEFAULT,
+            ),
+        ],
+    ),
+    # Language: task instruction from annotation field in the dataset
+    "language": ModalityConfig(
+        delta_indices=[0],
+        modality_keys=["annotation.human.task_description"],
+    ),
+}
+
+# Important: always register under EmbodimentTag.NEW_EMBODIMENT for custom embodiments
+register_modality_config(so100_config, embodiment_tag=EmbodimentTag.NEW_EMBODIMENT)
+```
+
+## Step 3: Run Fine-tuning
+
+We'll use `gr00t/experiment/launch_finetune.py` as the entry point. Ensure that the uv environment is enabled before launching. You can do this by running the command `uv run bash <example_script_name>`.
+
+### View Available Arguments
+```bash
+# Display all available arguments
+uv run python gr00t/experiment/launch_finetune.py --help
+```
+
+### Execute Fine-tuning
+```bash
+# Configure for single GPU
+export NUM_GPUS=1
+CUDA_VISIBLE_DEVICES=0 uv run python \
+    gr00t/experiment/launch_finetune.py \
+    --base-model-path nvidia/GR00T-N1.7-3B \
+    --dataset-path ./demo_data/cube_to_bowl_5 \
+    --embodiment-tag NEW_EMBODIMENT \
+    --modality-config-path examples/SO100/so100_config.py \
+    --num-gpus $NUM_GPUS \
+    --output-dir /tmp/so100 \
+    --save-total-limit 5 \
+    --save-steps 2000 \
+    --max-steps 2000 \
+    --use-wandb \
+    --global-batch-size 32 \
+    --color-jitter-params brightness 0.3 contrast 0.4 saturation 0.5 hue 0.08 \
+    --dataloader-num-workers 4
+```
+
+### Key Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `--base-model-path` | Path to the pre-trained base model checkpoint |
+| `--dataset-path` | Path to your training dataset |
+| `--embodiment-tag` | Tag to identify your robot embodiment |
+| `--modality-config-path` | Path to user-specified modality config (required only for `NEW_EMBODIMENT` tag) |
+| `--output-dir` | Directory where checkpoints will be saved |
+| `--save-steps` | Save checkpoint every N steps |
+| `--max-steps` | Total number of training steps |
+| `--use-wandb` | Enable Weights & Biases logging for experiment tracking |
+
+> **Note:** Validation during fine-tuning is disabled by default (`eval_strategy="no"` in the training config). To enable periodic validation, pass `--eval-strategy steps --eval-steps 500` (runs validation every 500 steps) or `--eval-strategy epoch` (runs validation every epoch). You can also adjust `--eval-batch-size` (default: 2).
+
+## Step 4: Open Loop Evaluation
+
+After finetuning, evaluate the model's performance using open loop evaluation:
+```bash
+uv run python gr00t/eval/open_loop_eval.py \
+    --dataset-path ./demo_data/cube_to_bowl_5 \
+    --embodiment-tag NEW_EMBODIMENT \
+    --model-path /tmp/so100/checkpoint-2000 \
+    --traj-ids 0 \
+    --action-horizon 16 \
+    --steps 400 \
+    --modality-keys single_arm gripper
+```
+
+### `open_loop_eval.py` Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `--dataset-path` | `demo_data/cube_to_bowl_5/` | Path to LeRobot-format dataset |
+| `--embodiment-tag` | `new_embodiment` | Robot embodiment tag (case-insensitive) |
+| `--model-path` | `None` | Path to checkpoint. If omitted, connects to a running server via `--host`/`--port` |
+| `--traj-ids` | `[0]` | Episode indices to evaluate (space-separated, e.g., `0 1 2`) |
+| `--action-horizon` | `16` | Action steps predicted per inference call |
+| `--steps` | `200` | Max steps per trajectory (capped by actual trajectory length) |
+| `--denoising-steps` | `4` | Diffusion denoising iterations |
+| `--save-plot-path` | `None` | Directory to save GT-vs-predicted comparison plots |
+| `--modality-keys` | `None` | Action keys to plot. If omitted, plots all action dimensions |
+| `--host` / `--port` | `127.0.0.1` / `5555` | Server address when `--model-path` is omitted |
+
+### Example Evaluation Result
+
+The evaluation generates visualizations comparing predicted actions against ground truth trajectories:
+
+<img src="../media/open_loop_eval_so100.jpg" width="800" alt="Open loop evaluation results showing predicted vs ground truth trajectories" />

@@ -1,0 +1,16 @@
+<mujocoinclude>
+    <worldbody>
+    <!-- <camera name="top" pos="0 0 3" euler="0 0 -1.57" fovy="30" mode="fixed"/> -->
+    <!-- <camera name="right" pos="0.734 -0.874 1.465" xyaxes="0.759 0.651 0.000 -0.382 0.445 0.810"/> -->
+    <camera name="right" pos="0.775 -0.856 1.209" xyaxes="0.733 0.681 0.000 -0.134 0.144 0.981"/>
+    <camera name="left" pos="-0.775 -0.856 1.209" xyaxes="0.733 -0.681 0.000 0.134 0.144 0.981"/>
+    <!-- <camera name="left" pos="-0.734 -0.874 1.465" xyaxes="0.759 -0.651 0.000 0.382 0.445 0.810"/> -->
+    <!-- <camera name="right" pos="2 -2 2" euler="1. 0.7 0.4" fovy="15" mode="fixed"/> -->
+    <!-- <camera name="left" pos="-2. -2 2" euler="1 -0.7 -0.4" fovy="15" mode="fixed"/> -->
+   
+    <!-- <camera name="forward" pos="0 3 3" euler="-0.9 0 3.14159" fovy="15" mode="fixed"/> -->
+    <camera name="forward" pos="-0.016 1.223 1.644" xyaxes="-1.000 -0.015 -0.000 0.008 -0.551 0.834"/>
+
+    <!-- <camera name="back" pos="0 -3 3" euler="0.9 0 0" fovy="20" mode="fixed"/> -->
+    </worldbody>
+</mujocoinclude>
