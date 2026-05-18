@@ -1,0 +1,12 @@
+# Spirit-v1.5 Base Dependencies (Inference Only)
+# Compatible with Python 3.10+
+
+torch==2.8.0
+torchvision==0.23.0
+transformers==4.57.1
+diffusers==0.35.2
+safetensors==0.5.3
+numpy==2.2.6
+pillow==10.4.0
+requests==2.32.5
+scipy==1.15.2

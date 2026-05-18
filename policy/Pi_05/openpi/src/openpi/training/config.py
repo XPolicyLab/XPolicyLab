@@ -559,10 +559,50 @@ class TrainConfig:
 # Use `get_config` if you need to get a config by name in your code.
 _CONFIGS = [
     TrainConfig(
-        name="pi05_base_aloha_full",
+        name="pi05_base_aloha_full_real_piper_seed_0",
         model=pi0_config.Pi0Config(pi05=True),
         data=LeRobotAlohaDataConfig(
-            repo_id="your_repo_id",
+            repo_id="RoboDojo_real_piper_v30",
+            assets=AssetsConfig(
+                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_05/openpi/assets/RoboDojo_assets",
+                asset_id="piper_real",
+            ),
+            repack_transforms=_transforms.Group(
+                inputs=[
+                    _transforms.RepackTransform(
+                        {
+                            "images": {
+                                "cam_high": "observation.images.cam_high",
+                                "cam_left_wrist": "observation.images.cam_left_wrist",
+                                "cam_right_wrist": "observation.images.cam_right_wrist",
+                            },
+                            "state": "observation.state",
+                            "actions": "action",
+                            "prompt": "prompt",
+                        }
+                    )
+                ]
+            ),
+            base_config=DataConfig(
+                prompt_from_task=True,  # Set to True for prompt by task_name
+            ),
+
+        ),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
+        seed=0,
+        batch_size=64,
+        fsdp_devices=2,
+        num_train_steps=40000,
+    ),
+    TrainConfig(
+        name="pi05_base_aloha_full_sim_arx-x5_seed_0",
+        model=pi0_config.Pi0Config(pi05=True),
+        data=LeRobotAlohaDataConfig(
+            repo_id="RoboDojo_sim_arx-x5_v30",
+            assets=AssetsConfig(
+                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_05/openpi/assets/RoboDojo_assets",
+                asset_id="arx_x5_sim",
+            ),
             repack_transforms=_transforms.Group(
                 inputs=[
                     _transforms.RepackTransform(
@@ -583,149 +623,81 @@ _CONFIGS = [
                 prompt_from_task=True,  # Set to True for prompt by task_name
             ),
         ),
-    ),
-    TrainConfig(
-        name="pi05_base_aloha_lora",
-        model=pi0_config.Pi0Config(pi05=True,paligemma_variant="gemma_2b_lora", action_expert_variant="gemma_300m_lora",max_token_len=256),
-        data=LeRobotAlohaDataConfig(
-            repo_id="your_repo_id",  # your datasets repo_id
-            repack_transforms=_transforms.Group(inputs=[
-                _transforms.RepackTransform({
-                    "images": {
-                        "cam_high": "observation.images.cam_high",
-                        "cam_left_wrist": "observation.images.cam_left_wrist",
-                        "cam_right_wrist": "observation.images.cam_right_wrist",
-                    },
-                    "state": "observation.state",
-                    "actions": "action",
-                    "prompt": "prompt",
-                })
-            ]),
-            base_config=DataConfig(
-                # local_files_only=True,  # Set to True for local-only datasets.
-                prompt_from_task=True,  # Set to True for prompt by task_name
-            ),
-        ),
-        freeze_filter=pi0_config.Pi0Config(paligemma_variant="gemma_2b_lora",
-                                    action_expert_variant="gemma_300m_lora").get_freeze_filter(),
-        batch_size=32,  # the total batch_size not pre_gpu batch_size
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
-        num_train_steps=30000,
-        fsdp_devices=1,  # refer line 359
+        seed=0,
+        batch_size=256,
+        fsdp_devices=2,
+        num_train_steps=40000,
     ),
-    # pi0_base by full
     TrainConfig(
-        name="pi0_base_aloha_full",
-        model=pi0_config.Pi0Config(),
+        name="pi05_base_aloha_full_sim_arx-x5_seed_1",
+        model=pi0_config.Pi0Config(pi05=True),
         data=LeRobotAlohaDataConfig(
-            repo_id="your_repo_id",  # your datasets repo_id
-            repack_transforms=_transforms.Group(inputs=[
-                _transforms.RepackTransform({
-                    "images": {
-                        "cam_high": "observation.images.cam_high",
-                        "cam_left_wrist": "observation.images.cam_left_wrist",
-                        "cam_right_wrist": "observation.images.cam_right_wrist",
-                    },
-                    "state": "observation.state",
-                    "actions": "action",
-                    "prompt": "prompt",
-                })
-            ]),
+            repo_id="RoboDojo_sim_arx-x5_v30",
+            assets=AssetsConfig(
+                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_05/openpi/assets/RoboDojo_assets",
+                asset_id="arx_x5_sim",
+            ),
+            repack_transforms=_transforms.Group(
+                inputs=[
+                    _transforms.RepackTransform(
+                        {
+                            "images": {
+                                "cam_high": "observation.images.cam_high",
+                                "cam_left_wrist": "observation.images.cam_left_wrist",
+                                "cam_right_wrist": "observation.images.cam_right_wrist",
+                            },
+                            "state": "observation.state",
+                            "actions": "action",
+                            "prompt": "prompt",
+                        }
+                    )
+                ]
+            ),
             base_config=DataConfig(
                 prompt_from_task=True,  # Set to True for prompt by task_name
             ),
         ),
-        freeze_filter=pi0_config.Pi0Config().get_freeze_filter(),
-        batch_size=32,  # the total batch_size not pre_gpu batch_size
-        weight_loader=weight_loaders.CheckpointWeightLoader("s3://openpi-assets/checkpoints/pi0_base/params"),
-        num_train_steps=30000,
-        fsdp_devices=4,  # refer line 359
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
+        seed=1,
+        batch_size=64,
+        fsdp_devices=2,
+        num_train_steps=40000,
     ),
     TrainConfig(
-        name="pi0_base_aloha_lora",
-        model=pi0_config.Pi0Config(paligemma_variant="gemma_2b_lora", action_expert_variant="gemma_300m_lora"),
+        name="pi05_base_aloha_full_sim_arx-x5_seed_2",
+        model=pi0_config.Pi0Config(pi05=True),
         data=LeRobotAlohaDataConfig(
-            repo_id="your_repo_id",  # your datasets repo_id
-            repack_transforms=_transforms.Group(inputs=[
-                _transforms.RepackTransform({
-                    "images": {
-                        "cam_high": "observation.images.cam_high",
-                        "cam_left_wrist": "observation.images.cam_left_wrist",
-                        "cam_right_wrist": "observation.images.cam_right_wrist",
-                    },
-                    "state": "observation.state",
-                    "actions": "action",
-                    "prompt": "prompt",
-                })
-            ]),
+            repo_id="RoboDojo_sim_arx-x5_v30",
+            assets=AssetsConfig(
+                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_05/openpi/assets/RoboDojo_assets",
+                asset_id="arx_x5_sim",
+            ),
+            repack_transforms=_transforms.Group(
+                inputs=[
+                    _transforms.RepackTransform(
+                        {
+                            "images": {
+                                "cam_high": "observation.images.cam_high",
+                                "cam_left_wrist": "observation.images.cam_left_wrist",
+                                "cam_right_wrist": "observation.images.cam_right_wrist",
+                            },
+                            "state": "observation.state",
+                            "actions": "action",
+                            "prompt": "prompt",
+                        }
+                    )
+                ]
+            ),
             base_config=DataConfig(
                 prompt_from_task=True,  # Set to True for prompt by task_name
             ),
         ),
-        freeze_filter=pi0_config.Pi0Config(paligemma_variant="gemma_2b_lora",
-                                    action_expert_variant="gemma_300m_lora").get_freeze_filter(),
-        batch_size=32,  # the total batch_size not pre_gpu batch_size
-        weight_loader=weight_loaders.CheckpointWeightLoader("s3://openpi-assets/checkpoints/pi0_base/params"),
-        num_train_steps=30000,
-        fsdp_devices=1,  # refer line 359
-    ),
-    # pi0_fast_base by full
-    TrainConfig(
-        name="pi0_fast_aloha_full",
-        model=pi0_fast.Pi0FASTConfig(),
-        data=LeRobotAlohaDataConfig(
-            repo_id="your_repo_id",  # your datasets repo_id
-            repack_transforms=_transforms.Group(inputs=[
-                _transforms.RepackTransform({
-                    "images": {
-                        "cam_high": "observation.images.cam_high",
-                        "cam_left_wrist": "observation.images.cam_left_wrist",
-                        "cam_right_wrist": "observation.images.cam_right_wrist",
-                    },
-                    "state": "observation.state",
-                    "actions": "action",
-                    "prompt": "prompt",
-                })
-            ]),
-            base_config=DataConfig(
-                prompt_from_task=True,
-            ),
-        ),
-        freeze_filter=pi0_fast.Pi0FASTConfig().get_freeze_filter(),
-        batch_size=32,
-        weight_loader=weight_loaders.CheckpointWeightLoader("s3://openpi-assets/checkpoints/pi0_fast_base/params"),
-        num_train_steps=30000,
-        fsdp_devices=1,  # refer line 359
-    ),
-    # pi0_fast_base by lora
-    TrainConfig(
-        name="pi0_fast_aloha_lora",
-        model=pi0_fast.Pi0FASTConfig(paligemma_variant="gemma_2b_lora"),
-        data=LeRobotAlohaDataConfig(
-            repo_id="your_repo_id",  # your datasets repo_id
-            repack_transforms=_transforms.Group(inputs=[
-                _transforms.RepackTransform({
-                    "images": {
-                        "cam_high": "observation.images.cam_high",
-                        "cam_left_wrist": "observation.images.cam_left_wrist",
-                        "cam_right_wrist": "observation.images.cam_right_wrist",
-                    },
-                    "state": "observation.state",
-                    "actions": "action",
-                    "prompt": "prompt",
-                })
-            ]),
-            base_config=DataConfig(
-                prompt_from_task=True,
-            ),
-        ),
-        freeze_filter=pi0_fast.Pi0FASTConfig(
-            paligemma_variant="gemma_2b_lora",
-        ).get_freeze_filter(),
-        batch_size=32,
-        weight_loader=weight_loaders.CheckpointWeightLoader("s3://openpi-assets/checkpoints/pi0_fast_base/params"),
-        num_train_steps=30000,
-        fsdp_devices=2,  # refer line 359
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
+        seed=2,
+        batch_size=64,
+        fsdp_devices=2,
+        num_train_steps=40000,
     ),
 ]
 

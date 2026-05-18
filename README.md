@@ -258,13 +258,12 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 #### 配置 `deploy.yml` 与 `eval.sh`
 
 - **`deploy.yml`**: 指定模型部署所需的参数。部分参数可定义为 `null`，随后在 `eval.sh` 中进行覆盖。
-- **`eval.sh`**: 部署时分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`。两者通过 `FREE_PORT` 进行通信，从而隔离环境配置。对`policy_conda_env`的实现可参考 DP ,对 `policy_uv_env_path`的实现可参考 PI_05。
-
+- **`eval.sh`**: 部署时分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`。两者通过 `FREE_PORT` 进行通信，从而隔离环境配置。对`policy_conda_env`的实现可参考 DP ,对 `policy_uv_env_path`的实现可参考 PI_05。分别使用 `policy_gpu_id` 和 `env_gpu_id` 来分配仿真和模型部署的gpu占用，可参考DP脚本来实现不同程序使用不同GPU的方法，而不是全局`export CUDA_VISIBLE_DEVICES`。
 您只需修改脚本开头的参数定义，并在启动 Server 部分添加 `overrides` 参数以覆盖 `deploy.yml` 中的配置：
 
 ```bash
 PYTHONWARNINGS=ignore::UserWarning \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
         port="${FREE_PORT}" \
