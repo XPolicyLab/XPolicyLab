@@ -6,7 +6,7 @@ import argparse
 import cv2
 from XPolicyLab.utils.load_file import load_hdf5
 from XPolicyLab.utils.process_data import pack_robot_state, get_robot_action_dim_info, decode_image_bit
-
+ 
 def main():
     parser = argparse.ArgumentParser(description="Process some episodes.")
     parser.add_argument("dataset_name", type=str, help="The name of the benchmark (e.g., RoboDojo)",)
@@ -54,7 +54,7 @@ def main():
             head_img_bit = data['vision']['cam_head']['colors'][j]
             left_img_bit = data['vision']['cam_left_wrist']['colors'][j]
             right_img_bit = data['vision']['cam_right_wrist']['colors'][j]
-
+ 
             state, action = state_all[j], action_all[j]
 
             head_img = decode_image_bit(head_img_bit)

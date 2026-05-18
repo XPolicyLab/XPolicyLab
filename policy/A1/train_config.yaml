@@ -1,0 +1,91 @@
+# Default A1 training configuration.
+#
+# Edit this file for common local defaults, or point A1_TRAIN_CONFIG to another
+# YAML file before running train.sh.
+#
+# Environment variables already set in the shell take precedence over this file.
+#
+# Tunable policy:
+# - Commonly tune: training, checkpoint, model, optimizer.learning_rates, scheduler warmup/decay, wandb.
+# - Usually keep fixed unless you know the model internals: fixed_action_dim, action head architecture,
+#   FSDP wrapping, precision, tokenizer, crop_mode.
+# - For public repos, keep wandb.api_key empty in committed config files.
+#   If you want one-command W&B logging, put your key in a private/local config file.
+
+paths:
+  # data_dir: "${SCRIPT_DIR}/models"
+  data_dir: "/mnt/pfs/pg4hw0/qiwei/models"
+  pretrain_checkpoint: "${DATA_DIR}/a1-pretrain"
+  hf_home: "${SCRIPT_DIR}/.cache/huggingface"
+  xdg_cache_home: "${SCRIPT_DIR}/.cache"
+  hf_hub_offline: false
+
+training:
+  train_steps: 20000
+  global_batch_size: 64
+  device_train_microbatch_size: 1
+  max_crops: 6
+  num_workers: auto
+  log_interval: 10
+
+checkpoint:
+  save_interval: 4000
+  save_interval_unsharded: 4000
+  save_num_checkpoints_to_keep: 0
+  save_num_unsharded_checkpoints_to_keep: 1
+
+model:
+  # Enable AffordVLAEarlyExit instead of the regular AffordVLA model.
+  early_exit: false
+  # When early_exit is enabled, train exits from a synchronized random layer.
+  train_exit_random_layer: false
+
+  # Fine-tuning switches. false means the corresponding pretrained module is frozen.
+  ft_connector: false
+  ft_vit: false
+  ft_llm: false
+  # ft_connector: true
+  # ft_vit: true
+  # ft_llm: true
+  # One of: all, lm_head, ln_f, wte. This follows A1 TrainConfig semantics.
+  ft_embedding: lm_head
+
+optimizer:
+  # AdamW learning rates for each parameter group.
+  connector_lr: 2e-4
+  vit_lr: 6e-6
+  llm_lr: 5e-5
+  action_head_lr: 5e-5
+  # AdamW regularization. A1 finetuning currently defaults these to 0.0.
+  connector_weight_decay: 0.0
+  vit_weight_decay: 0.0
+  llm_weight_decay: 0.0
+  action_head_weight_decay: 0.0
+  beta1: 0.9
+  beta2: 0.95
+
+scheduler:
+  # A1 uses a multimodal scheduler: each parameter group has linear warmup
+  # followed by cosine decay.
+  warmup_steps: 2000
+  freeze_steps: 0
+  # Final LR fraction after cosine decay. 0.1 means final_lr = initial_lr * 0.1.
+  alpha_f: 0.1
+  # Warmup starts from this absolute LR. null means 10% of each group's LR.
+  warmup_min_lr: null
+
+distributed:
+  torch_distributed_timeout: 1800
+  torch_nccl_trace_buffer_size: 1048576
+  torch_nccl_dump_on_timeout: true
+
+wandb:
+  enable: true
+  # Optional. If set, train.sh exports it as WANDB_API_KEY so users do not need
+  # to run `wandb login`. Do not commit real API keys to public repos.
+  api_key: "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"
+  project: a1-xpolicylab
+  entity: "kola337599-shenzhen"
+  run_name: "a1"
+  mode: online
+  required: null

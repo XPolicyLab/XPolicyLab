@@ -1,0 +1,987 @@
+_attn_implementation_autoset:
+    value: true
+_attn_implementation_internal:
+    value: null
+_commit_hash:
+    value: null
+_name_or_path:
+    value: /mnt/pfs/pg4hw0/qiwei/models/GO-1
+_wandb:
+    value:
+        cli_version: 0.26.1
+        e:
+            kwx0optf32gfcjggv3cpmb0zph32x2n4:
+                args:
+                    - --cfg_path
+                    - go1/configs/go1_sft_xpolicylab.py
+                codePath: policy/GO1/AgiBot-World/go1/internvl/train/go1_train.py
+                codePathLocal: go1/internvl/train/go1_train.py
+                cpu_count: 64
+                cpu_count_logical: 128
+                cudaVersion: "12.6"
+                disk:
+                    /:
+                        total: "105089261568"
+                        used: "99131297792"
+                email: kola337599@gmail.com
+                executable: /mnt/pfs/pg4hw0/conda_envs/lqw/bin/python3.10
+                git:
+                    commit: 6f1f42311d28c8bd204257a04b3fd85d7c3abd8a
+                    remote: https://github.com/Luminis-Platform/XPolicyLab.git
+                gpu: NVIDIA A800-SXM4-80GB
+                gpu_count: 8
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-f20e5ef9-581b-2c9d-8d23-9ebba130664a
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-dffa8eeb-8873-4709-c748-96a1ffab5988
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-beda61e5-193e-9b06-ae77-2de76cebfba1
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-33729210-d218-b70b-e2c7-d106a1d363e1
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-fbf2172e-646e-6d0c-b2b1-8fa7e78994b1
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-dfca4eb7-7d53-9f8e-d6ae-d25069a73fae
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-d5d3c50c-bc58-7672-4c5e-423ec27573ca
+                    - architecture: Ampere
+                      cudaCores: 6912
+                      memoryTotal: "85899345920"
+                      name: NVIDIA A800-SXM4-80GB
+                      uuid: GPU-6a6d0d86-f417-7c4f-ac93-e78ef5785d33
+                host: aibox-rc47eb8e0ea3-79f9b5d7b4-sqqcv
+                memory:
+                    total: "1079938797568"
+                os: Linux-5.15.0-72-generic-x86_64-with-glibc2.35
+                program: /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/GO1/AgiBot-World/go1/internvl/train/go1_train.py
+                python: CPython 3.10.20
+                root: /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/GO1/AgiBot-World
+                startedAt: "2026-05-12T09:00:28.513635Z"
+                writerId: kwx0optf32gfcjggv3cpmb0zph32x2n4
+        m:
+            - "1": train/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.10.20
+        t:
+            "1":
+                - 1
+                - 5
+                - 11
+                - 41
+                - 49
+                - 51
+                - 53
+                - 63
+                - 71
+                - 83
+                - 98
+            "2":
+                - 1
+                - 5
+                - 11
+                - 41
+                - 49
+                - 51
+                - 53
+                - 63
+                - 71
+                - 83
+                - 98
+            "3":
+                - 7
+                - 13
+                - 19
+                - 66
+            "4": 3.10.20
+            "5": 0.26.1
+            "6": 4.46.3
+            "9":
+                "1": transformers_trainer
+            "12": 0.26.1
+            "13": linux-x86_64
+accelerator_config:
+    value:
+        dispatch_batches: null
+        even_batches: true
+        gradient_accumulation_kwargs: null
+        non_blocking: false
+        split_batches: false
+        use_seedable_sampler: true
+action_chunk_size:
+    value: 30
+action_config:
+    value:
+        _attn_implementation_autoset: true
+        _name_or_path: ""
+        action_chunk_size: 30
+        action_dim: 14
+        add_cross_attention: false
+        architectures:
+            - ActionExpertModel
+        attn_implementation: eager
+        auto_map:
+            AutoConfig: configuration_action_expert.ActionExpertConfig
+            AutoModel: modeling_action_expert.ActionExpertModel
+        bad_words_ids: null
+        begin_suppress_tokens: null
+        bias: false
+        bos_token_id: null
+        chunk_size_feed_forward: 0
+        cross_attention_hidden_size: null
+        decoder_start_token_id: null
+        diversity_penalty: 0
+        do_sample: false
+        early_stopping: false
+        encoder_no_repeat_ngram_size: 0
+        eos_token_id: null
+        exponential_decay_length_penalty: null
+        finetuning_task: null
+        forced_bos_token_id: null
+        forced_eos_token_id: null
+        head_dim: 64
+        hidden_act: silu
+        hidden_size: 1024
+        id2label:
+            "0": LABEL_0
+            "1": LABEL_1
+        initializer_range: 0.02
+        input_hidden_size: 2048
+        intermediate_size: 4096
+        is_decoder: false
+        is_encoder_decoder: false
+        label2id:
+            LABEL_0: 0
+            LABEL_1: 1
+        length_penalty: 1
+        max_length: 20
+        max_position_embeddings: 32768
+        min_length: 0
+        model_type: action_expert
+        no_repeat_ngram_size: 0
+        num_attention_heads: 16
+        num_beam_groups: 1
+        num_beams: 1
+        num_hidden_layers: 24
+        num_key_value_heads: 8
+        num_return_sequences: 1
+        output_attentions: false
+        output_hidden_states: false
+        output_scores: false
+        pad_token_id: 2
+        prefix: null
+        problem_type: null
+        remove_invalid_values: false
+        repetition_penalty: 1
+        return_dict: true
+        return_dict_in_generate: false
+        rms_norm_eps: 1e-05
+        rope_scaling:
+            factor: 2
+            type: dynamic
+        rope_theta: 1000000
+        sep_token_id: null
+        state_dim: 14
+        state_token_num: 3
+        suppress_tokens: null
+        task_specific_params: null
+        temperature: 1
+        tf_legacy_loss: false
+        tie_encoder_decoder: false
+        tie_word_embeddings: true
+        tokenizer_class: null
+        top_k: 50
+        top_p: 1
+        torch_dtype: bfloat16
+        torchscript: false
+        transformers_version: 4.46.3
+        typical_p: 1
+        use_bfloat16: true
+        use_cache: true
+        use_flash_attn: false
+adafactor:
+    value: false
+adam_beta1:
+    value: 0.9
+adam_beta2:
+    value: 0.999
+adam_epsilon:
+    value: 1e-08
+add_cross_attention:
+    value: false
+architectures:
+    value:
+        - GO1Model
+auto_find_batch_size:
+    value: false
+auto_map:
+    value:
+        AutoConfig: configuration_go1.GO1ModelConfig
+        AutoModel: modeling_go1.GO1Model
+        AutoModelForCausalLM: modeling_internlm2_go1.py.InternLM2ForCausalLMGO1
+average_tokens_across_devices:
+    value: false
+bad_words_ids:
+    value: null
+batch_eval_metrics:
+    value: false
+begin_suppress_tokens:
+    value: null
+bf16:
+    value: true
+bf16_full_eval:
+    value: false
+bos_token_id:
+    value: null
+chunk_size_feed_forward:
+    value: 0
+cross_attention_hidden_size:
+    value: null
+data_seed:
+    value: null
+dataloader_drop_last:
+    value: false
+dataloader_num_workers:
+    value: 0
+dataloader_persistent_workers:
+    value: false
+dataloader_pin_memory:
+    value: true
+dataloader_prefetch_factor:
+    value: null
+ddp_backend:
+    value: null
+ddp_broadcast_buffers:
+    value: null
+ddp_bucket_cap_mb:
+    value: null
+ddp_find_unused_parameters:
+    value: null
+ddp_timeout:
+    value: 1800
+debug:
+    value: []
+decoder_start_token_id:
+    value: null
+deepspeed:
+    value: go1/zero_stage1_config.json
+disable_tqdm:
+    value: false
+dispatch_batches:
+    value: null
+diversity_penalty:
+    value: 0
+do_eval:
+    value: false
+do_predict:
+    value: false
+do_sample:
+    value: false
+do_train:
+    value: true
+downsample_ratio:
+    value: 0.5
+dynamic_image_size:
+    value: false
+early_stopping:
+    value: false
+encoder_no_repeat_ngram_size:
+    value: 0
+eos_token_id:
+    value: null
+eval_accumulation_steps:
+    value: null
+eval_delay:
+    value: 0
+eval_do_concat_batches:
+    value: true
+eval_on_start:
+    value: false
+eval_steps:
+    value: null
+eval_strategy:
+    value: "no"
+eval_use_gather_object:
+    value: false
+evaluation_strategy:
+    value: null
+exponential_decay_length_penalty:
+    value: null
+finetuning_task:
+    value: null
+force_image_size:
+    value: 448
+forced_bos_token_id:
+    value: null
+forced_eos_token_id:
+    value: null
+fp16:
+    value: false
+fp16_backend:
+    value: auto
+fp16_full_eval:
+    value: false
+fp16_opt_level:
+    value: O1
+fsdp:
+    value: []
+fsdp_config:
+    value:
+        min_num_params: 0
+        xla: false
+        xla_fsdp_grad_ckpt: false
+        xla_fsdp_v2: false
+fsdp_min_num_params:
+    value: 0
+fsdp_transformer_layer_cls_to_wrap:
+    value: null
+full_determinism:
+    value: false
+gradient_accumulation_steps:
+    value: 2
+gradient_checkpointing:
+    value: false
+gradient_checkpointing_kwargs:
+    value: null
+greater_is_better:
+    value: null
+group_by_length:
+    value: false
+half_precision_backend:
+    value: auto
+hub_always_push:
+    value: false
+hub_model_id:
+    value: null
+hub_private_repo:
+    value: false
+hub_strategy:
+    value: every_save
+hub_token:
+    value: <HUB_TOKEN>
+id2label:
+    value:
+        "0": LABEL_0
+        "1": LABEL_1
+ignore_data_skip:
+    value: false
+img_context_token_id:
+    value: 92546
+include_for_metrics:
+    value: []
+include_inputs_for_metrics:
+    value: false
+include_num_input_tokens_seen:
+    value: false
+include_tokens_per_second:
+    value: false
+is_decoder:
+    value: false
+is_encoder_decoder:
+    value: false
+jit_mode_eval:
+    value: false
+label_names:
+    value: null
+label_smoothing_factor:
+    value: 0
+label2id:
+    value:
+        LABEL_0: 0
+        LABEL_1: 1
+latent_action_config:
+    value:
+        _attn_implementation_autoset: false
+        _name_or_path: ""
+        action_dim: 1
+        action_horizon: 30
+        add_cross_attention: false
+        architectures: null
+        attn_implementation: eager
+        bad_words_ids: null
+        begin_suppress_tokens: null
+        bias: false
+        bos_token_id: null
+        chunk_size_feed_forward: 0
+        cross_attention_hidden_size: null
+        decoder_start_token_id: null
+        diffusion: false
+        discrete: true
+        diversity_penalty: 0
+        do_sample: false
+        early_stopping: false
+        enable_act_training: true
+        enable_ntp_training: false
+        encoder_no_repeat_ngram_size: 0
+        eos_token_id: null
+        exponential_decay_length_penalty: null
+        final_use_diffusion: true
+        finetuning_task: null
+        forced_bos_token_id: null
+        forced_eos_token_id: null
+        head_dim: 64
+        hidden_act: silu
+        hidden_size: 1024
+        id2label:
+            "0": LABEL_0
+            "1": LABEL_1
+        img_context_token_id: 92546
+        initializer_range: 0.02
+        input_hidden_size: 2048
+        intermediate_size: 2048
+        is_decoder: false
+        is_encoder_decoder: false
+        label2id:
+            LABEL_0: 0
+            LABEL_1: 1
+        length_penalty: 1
+        llm_stop_token_ids: 92542
+        mask_vision_head_prob: 0
+        mask_vision_wrist_prob: 0
+        max_length: 20
+        max_position_embeddings: 2048
+        min_length: 0
+        model_type: intermidiate_action_expert
+        no_repeat_ngram_size: 0
+        ntp_loss_weight: 0.1
+        num_attention_heads: 16
+        num_beam_groups: 1
+        num_beams: 1
+        num_hidden_layers: 24
+        num_key_value_heads: 8
+        num_return_sequences: 1
+        output_attentions: false
+        output_hidden_states: false
+        output_scores: false
+        pad_token_id: null
+        prefix: null
+        problem_type: null
+        remove_invalid_values: false
+        repetition_penalty: 1
+        return_dict: true
+        return_dict_in_generate: false
+        rms_norm_eps: 1e-06
+        rope_scaling: null
+        rope_theta: 10000
+        sep_token_id: null
+        state_token_num: 0
+        suppress_tokens: null
+        task_specific_params: null
+        temperature: 1
+        tf_legacy_loss: false
+        tie_encoder_decoder: false
+        tie_word_embeddings: true
+        tokenizer_class: null
+        top_k: 50
+        top_p: 1
+        torch_dtype: null
+        torchscript: false
+        transformers_version: 4.46.3
+        typical_p: 1
+        use_bfloat16: false
+        use_cache: true
+        vocab_size: 32
+latent_planner_config:
+    value:
+        _attn_implementation_autoset: false
+        _name_or_path: ""
+        action_dim: 1
+        add_cross_attention: false
+        architectures: null
+        attn_implementation: eager
+        bad_words_ids: null
+        begin_suppress_tokens: null
+        bias: false
+        bos_token_id: null
+        chunk_size_feed_forward: 0
+        cross_attention_hidden_size: null
+        decoder_start_token_id: null
+        diversity_penalty: 0
+        do_sample: false
+        early_stopping: false
+        encoder_no_repeat_ngram_size: 0
+        eos_token_id: null
+        exponential_decay_length_penalty: null
+        finetuning_task: null
+        forced_bos_token_id: null
+        forced_eos_token_id: null
+        head_dim: 64
+        hidden_act: silu
+        hidden_size: 1024
+        id2label:
+            "0": LABEL_0
+            "1": LABEL_1
+        initializer_range: 0.02
+        input_hidden_size: 2048
+        intermediate_size: 2048
+        is_decoder: false
+        is_encoder_decoder: false
+        label2id:
+            LABEL_0: 0
+            LABEL_1: 1
+        length_penalty: 1
+        max_length: 20
+        max_position_embeddings: 2048
+        min_length: 0
+        model_type: intermidiate_action_expert
+        no_repeat_ngram_size: 0
+        num_attention_heads: 16
+        num_beam_groups: 1
+        num_beams: 1
+        num_hidden_layers: 24
+        num_key_value_heads: 8
+        num_return_sequences: 1
+        output_attentions: false
+        output_hidden_states: false
+        output_scores: false
+        pad_token_id: null
+        prefix: null
+        problem_type: null
+        remove_invalid_values: false
+        repetition_penalty: 1
+        return_dict: true
+        return_dict_in_generate: false
+        rms_norm_eps: 1e-06
+        rope_scaling: null
+        rope_theta: 10000
+        sep_token_id: null
+        state_token_num: 0
+        suppress_tokens: null
+        task_specific_params: null
+        temperature: 1
+        tf_legacy_loss: false
+        tie_encoder_decoder: false
+        tie_word_embeddings: true
+        tokenizer_class: null
+        top_k: 50
+        top_p: 1
+        torch_dtype: null
+        torchscript: false
+        transformers_version: 4.46.3
+        typical_p: 1
+        use_bfloat16: false
+        use_cache: true
+        vocab_size: 32
+latent_planning:
+    value: true
+learning_rate:
+    value: 2e-05
+length_column_name:
+    value: length
+length_penalty:
+    value: 1
+llm_config:
+    value:
+        _attn_implementation_autoset: true
+        _name_or_path: ""
+        add_cross_attention: false
+        architectures:
+            - InternLM2ForCausalLMGO1
+        attn_implementation: eager
+        auto_map:
+            AutoConfig: configuration_internlm2.InternLM2Config
+            AutoModel: modeling_internlm2_go1.InternLM2ForCausalLMGO1
+            AutoModelForCausalLM: modeling_internlm2_go1.py.InternLM2ForCausalLMGO1
+        bad_words_ids: null
+        begin_suppress_tokens: null
+        bias: false
+        bos_token_id: 1
+        chunk_size_feed_forward: 0
+        cross_attention_hidden_size: null
+        decoder_start_token_id: null
+        diversity_penalty: 0
+        do_sample: false
+        early_stopping: false
+        encoder_no_repeat_ngram_size: 0
+        eos_token_id: 2
+        exponential_decay_length_penalty: null
+        finetuning_task: null
+        forced_bos_token_id: null
+        forced_eos_token_id: null
+        hidden_act: silu
+        hidden_size: 2048
+        id2label:
+            "0": LABEL_0
+            "1": LABEL_1
+        initializer_range: 0.02
+        intermediate_size: 8192
+        is_decoder: false
+        is_encoder_decoder: false
+        label2id:
+            LABEL_0: 0
+            LABEL_1: 1
+        length_penalty: 1
+        max_length: 20
+        max_position_embeddings: 32768
+        min_length: 0
+        model_type: internlm2
+        no_repeat_ngram_size: 0
+        num_attention_heads: 16
+        num_beam_groups: 1
+        num_beams: 1
+        num_hidden_layers: 24
+        num_key_value_heads: 8
+        num_return_sequences: 1
+        output_attentions: false
+        output_hidden_states: false
+        output_scores: false
+        pad_token_id: 2
+        prefix: null
+        problem_type: null
+        remove_invalid_values: false
+        repetition_penalty: 1
+        return_dict: true
+        return_dict_in_generate: false
+        rms_norm_eps: 1e-05
+        rope_scaling:
+            factor: 2
+            type: dynamic
+        rope_theta: 1000000
+        sep_token_id: null
+        suppress_tokens: null
+        task_specific_params: null
+        temperature: 1
+        tf_legacy_loss: false
+        tie_encoder_decoder: false
+        tie_word_embeddings: false
+        tokenizer_class: null
+        top_k: 50
+        top_p: 1
+        torch_dtype: bfloat16
+        torchscript: false
+        transformers_version: 4.46.3
+        typical_p: 1
+        use_bfloat16: true
+        use_cache: true
+        vocab_size: 92553
+load_best_model_at_end:
+    value: false
+local_rank:
+    value: 0
+log_level:
+    value: passive
+log_level_replica:
+    value: warning
+log_on_each_node:
+    value: true
+logging_dir:
+    value: /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/GO1/AgiBot-World/go1/configs/../../../checkpoints/stack_bowls-go1-joint-3eps-seed42-20260512_165950/tb
+logging_first_step:
+    value: false
+logging_nan_inf_filter:
+    value: true
+logging_steps:
+    value: 10
+logging_strategy:
+    value: steps
+lr_scheduler_type:
+    value: cosine
+max_dynamic_patch:
+    value: 6
+max_grad_norm:
+    value: 1
+max_length:
+    value: 20
+max_steps:
+    value: -1
+metric_for_best_model:
+    value: null
+min_dynamic_patch:
+    value: 1
+min_length:
+    value: 0
+model/num_parameters:
+    value: 2821535759
+model_type:
+    value: go1
+mp_parameters:
+    value: ""
+neftune_noise_alpha:
+    value: null
+no_cuda:
+    value: false
+no_repeat_ngram_size:
+    value: 0
+noise_scheduler_config:
+    value:
+        beta_schedule: squaredcos_cap_v2
+        clip_sample: false
+        num_inference_timesteps: 5
+        num_train_timesteps: 1000
+        prediction_type: sample
+norm:
+    value: true
+num_beam_groups:
+    value: 1
+num_beams:
+    value: 1
+num_return_sequences:
+    value: 1
+num_train_epochs:
+    value: 100
+optim:
+    value: adamw_torch
+optim_args:
+    value: null
+optim_target_modules:
+    value: null
+output_attentions:
+    value: false
+output_dir:
+    value: /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/GO1/AgiBot-World/go1/configs/../../../checkpoints/stack_bowls-go1-joint-3eps-seed42-20260512_165950
+output_hidden_states:
+    value: false
+output_scores:
+    value: false
+overwrite_output_dir:
+    value: true
+pad_token_id:
+    value: 2
+pad2square:
+    value: false
+past_index:
+    value: -1
+per_device_eval_batch_size:
+    value: 8
+per_device_train_batch_size:
+    value: 1
+per_gpu_eval_batch_size:
+    value: null
+per_gpu_train_batch_size:
+    value: null
+prediction_loss_only:
+    value: false
+prefix:
+    value: null
+problem_type:
+    value: null
+ps_version:
+    value: v2
+push_to_hub:
+    value: false
+push_to_hub_model_id:
+    value: null
+push_to_hub_organization:
+    value: null
+push_to_hub_token:
+    value: <PUSH_TO_HUB_TOKEN>
+ray_scope:
+    value: last
+remove_invalid_values:
+    value: false
+remove_unused_columns:
+    value: true
+repetition_penalty:
+    value: 1
+report_to:
+    value:
+        - wandb
+restore_callback_states_from_checkpoint:
+    value: false
+resume_from_checkpoint:
+    value: null
+return_dict:
+    value: true
+return_dict_in_generate:
+    value: false
+run_name:
+    value: stack_bowls-go1-joint-3eps-seed42-20260512_165950
+save_on_each_node:
+    value: false
+save_only_model:
+    value: false
+save_safetensors:
+    value: true
+save_steps:
+    value: 1000
+save_strategy:
+    value: steps
+save_total_limit:
+    value: 100
+seed:
+    value: 42
+select_layer:
+    value: -1
+sep_token_id:
+    value: null
+skip_memory_metrics:
+    value: true
+split_batches:
+    value: null
+suppress_tokens:
+    value: null
+task_specific_params:
+    value: null
+temperature:
+    value: 1
+template:
+    value: internlm2-chat
+tf_legacy_loss:
+    value: false
+tf32:
+    value: null
+tie_encoder_decoder:
+    value: false
+tie_word_embeddings:
+    value: true
+tokenizer_class:
+    value: null
+top_k:
+    value: 50
+top_p:
+    value: 1
+torch_compile:
+    value: false
+torch_compile_backend:
+    value: null
+torch_compile_mode:
+    value: null
+torch_dtype:
+    value: torch.bfloat16
+torch_empty_cache_steps:
+    value: null
+torchdynamo:
+    value: null
+torchscript:
+    value: false
+tpu_metrics_debug:
+    value: false
+tpu_num_cores:
+    value: null
+transformers_version:
+    value: null
+typical_p:
+    value: 1
+use_backbone_lora:
+    value: 0
+use_bfloat16:
+    value: false
+use_cpu:
+    value: false
+use_ipex:
+    value: false
+use_legacy_prediction_loop:
+    value: false
+use_liger_kernel:
+    value: false
+use_llm_lora:
+    value: 0
+use_mps_device:
+    value: false
+use_thumbnail:
+    value: false
+vision_config:
+    value:
+        _attn_implementation_autoset: true
+        _name_or_path: ""
+        add_cross_attention: false
+        architectures:
+            - InternVisionModel
+        attention_dropout: 0
+        bad_words_ids: null
+        begin_suppress_tokens: null
+        bos_token_id: null
+        chunk_size_feed_forward: 0
+        cross_attention_hidden_size: null
+        decoder_start_token_id: null
+        diversity_penalty: 0
+        do_sample: false
+        drop_path_rate: 0.1
+        dropout: 0
+        early_stopping: false
+        encoder_no_repeat_ngram_size: 0
+        eos_token_id: null
+        exponential_decay_length_penalty: null
+        finetuning_task: null
+        forced_bos_token_id: null
+        forced_eos_token_id: null
+        hidden_act: gelu
+        hidden_size: 1024
+        id2label:
+            "0": LABEL_0
+            "1": LABEL_1
+        image_size: 448
+        initializer_factor: 1
+        initializer_range: 0.02
+        intermediate_size: 4096
+        is_decoder: false
+        is_encoder_decoder: false
+        label2id:
+            LABEL_0: 0
+            LABEL_1: 1
+        layer_norm_eps: 1e-06
+        length_penalty: 1
+        max_length: 20
+        min_length: 0
+        model_type: intern_vit_6b
+        no_repeat_ngram_size: 0
+        norm_type: layer_norm
+        num_attention_heads: 16
+        num_beam_groups: 1
+        num_beams: 1
+        num_channels: 3
+        num_hidden_layers: 24
+        num_return_sequences: 1
+        output_attentions: false
+        output_hidden_states: false
+        output_scores: false
+        pad_token_id: null
+        patch_size: 14
+        prefix: null
+        problem_type: null
+        qk_normalization: false
+        qkv_bias: true
+        remove_invalid_values: false
+        repetition_penalty: 1
+        return_dict: true
+        return_dict_in_generate: false
+        sep_token_id: null
+        suppress_tokens: null
+        task_specific_params: null
+        temperature: 1
+        tf_legacy_loss: false
+        tie_encoder_decoder: false
+        tie_word_embeddings: true
+        tokenizer_class: null
+        top_k: 50
+        top_p: 1
+        torch_dtype: bfloat16
+        torchscript: false
+        transformers_version: 4.46.3
+        typical_p: 1
+        use_bfloat16: true
+        use_flash_attn: true
+warmup_ratio:
+    value: 0
+warmup_steps:
+    value: 1000
+weight_decay:
+    value: 0.01

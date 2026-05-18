@@ -3,7 +3,7 @@ import h5py
 import numpy as np
 import cv2
 import argparse
-import json
+import json 
 
 from XPolicyLab.utils.load_file import load_hdf5
 from XPolicyLab.utils.process_data import pack_robot_state, get_robot_action_dim_info, decode_image_bit

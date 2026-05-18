@@ -20,6 +20,7 @@ from typing import Dict
 import numpy as np
 import torch
 import torch.distributed as dist
+import torch.nn as nn
 import transformers
 from accelerate import PartialState
 from PIL import Image, ImageFile, PngImagePlugin
@@ -291,6 +292,23 @@ def build_go1_model(dataset_args, model_args, training_args, space_args):
         ignore_mismatched_sizes=True,
     )
 
+    # Re-initialize mismatched adaptor layers that were left with default random
+    # init after from_pretrained skipped them (dimension mismatch).
+    # Use small normal init so pretrained downstream layers don't amplify to NaN.
+    _reinit_std = 0.02
+    if space_args.action_dim != 16 or space_args.state_dim != 16:
+        logger.info(
+            f"Re-initializing adaptor first layers for dim mismatch "
+            f"(state_dim={space_args.state_dim}, action_dim={space_args.action_dim}) with std={_reinit_std}"
+        )
+        for layer in [model.state_adaptor[0], model.action_adaptor[0]]:
+            nn.init.normal_(layer.weight, std=_reinit_std)
+            if layer.bias is not None:
+                nn.init.constant_(layer.bias, 0)
+        # final_layer output projection
+        nn.init.constant_(model.final_layer.ffn_final.fc2.weight, 0)
+        nn.init.constant_(model.final_layer.ffn_final.fc2.bias, 0)
+
     assert model.config.downsample_ratio == model_args.down_sample_ratio
     patch_size = model.config.vision_config.patch_size
     logger.info(f"model.config.force_image_size: {model.config.force_image_size}")
@@ -393,7 +411,7 @@ def main(
     logger.info(f"Training/evaluation parameters {training_args}")
 
     # Detecting last checkpoint and eventually continue from last checkpoint.
-    last_checkpoint = get_last_checkpoint(training_args.output_dir)
+    last_checkpoint = None if training_args.overwrite_output_dir else get_last_checkpoint(training_args.output_dir)
     if os.path.isdir(training_args.output_dir) and training_args.do_train and not training_args.overwrite_output_dir:
         if last_checkpoint is None and len(os.listdir(training_args.output_dir)) > 0:
             raise ValueError(
