@@ -14,10 +14,9 @@ env_gpu_id=${9}
 policy_conda_env=${10}
 eval_env_conda_env=${11}
 
-MODEL_PATH=${10}
-PROCESSOR_PATH=${11}
+MODEL_PATH=${12}
+PROCESSOR_PATH=${13}
 
-export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
 echo -e "\033[33m[INFO] GPU ID (to use): ${policy_gpu_id}\033[0m"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
@@ -35,7 +34,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
 echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
-PYTHONWARNINGS=ignore::UserWarning \
+CUDA_VISIBLE_DEVICES="${policy_gpu_id}" PYTHONWARNINGS=ignore::UserWarning \
 python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
