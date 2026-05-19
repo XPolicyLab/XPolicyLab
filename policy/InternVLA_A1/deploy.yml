@@ -1,0 +1,28 @@
+# Basic experiment configuration
+policy_name: InternVLA-A1
+task_name: null
+env_cfg: null
+expert_data_num: null
+seed: null
+eval_batch: false
+
+checkpoint_num: null
+result_dir: "./results/InternVLA-A1/"
+obs_transform_pipeline: null
+
+# Model / action configuration
+action_type: joint
+prompt: null
+ckpt_path: "InternRobotics/InternVLA-A1-3B-RoboTwin"
+stats_key: "aloha"
+resize_size: 224
+image_history_interval: 15
+infer_horizon: 30
+action_horizon_size: 50
+action_mode: delta
+device: cuda
+dtype: float32
+decode_image_flag: false
+
+# XPolicyLab model server port
+port: 6000
