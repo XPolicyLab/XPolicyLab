@@ -10,7 +10,7 @@ import torch
 
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
-_SMOVLA_ROOT = _REPO_ROOT.parent / "smo_vla"
+_SMOVLA_ROOT = _REPO_ROOT.parent / "smovla"
 _LEROBOT_SRC = _SMOVLA_ROOT / "lerobot" / "src"
 _LEROBOT_ROOT = _SMOVLA_ROOT / "lerobot"
 
@@ -21,10 +21,9 @@ for _path in (str(_REPO_ROOT), str(_LEROBOT_SRC), str(_LEROBOT_ROOT)):
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
-from lerobot.policies import get_policy_class, make_pre_post_processors
+from lerobot.policies.factory import get_policy_class, make_pre_post_processors
 from lerobot.utils.constants import OBS_IMAGES, OBS_STATE, OBS_STR
-from lerobot.utils.feature_utils import build_dataset_frame
-
+from lerobot.datasets.utils import build_dataset_frame
 
 def extract_image(observation, candidate_names):
     vision = observation.get("vision", {})
@@ -94,7 +93,6 @@ def _normalize_prompt_value(value: Any) -> str | None:
         return value or None
     return str(value)
 
-
 def resolve_prompt(observation: dict[str, Any], default_prompt: str) -> str:
     for key in ("prompt", "instruction", "task", "language_instruction"):
         prompt = _normalize_prompt_value(observation.get(key))
@@ -105,7 +103,6 @@ def resolve_prompt(observation: dict[str, Any], default_prompt: str) -> str:
     if fallback is None:
         raise ValueError("No valid prompt found in observation or model config.")
     return fallback
-
 
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
@@ -135,7 +132,6 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
         payload[f"state_{idx}"] = value
     return payload
 
-
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = dict(model_cfg)
@@ -150,12 +146,7 @@ class Model(ModelTemplate):
         self.device = self._get_device(self.model_cfg.get("device", "cuda"))
         self.pretrained_path = self._resolve_pretrained_path(self.model_cfg.get("pretrained_path") or self.model_cfg.get("model_path"))
         self.policy = self._load_policy()
-        self.actions_per_chunk = int(
-            self.model_cfg.get(
-                "actions_per_chunk",
-                getattr(self.policy.config, "n_action_steps", getattr(self.policy.config, "chunk_size", 1)),
-            )
-        )
+        self.actions_per_chunk = self._resolve_actions_per_chunk()
         self.preprocessor, self.postprocessor = self._build_processors()
         self._latest_env_idx_list = [0]
         self._latest_payload = None
@@ -169,6 +160,22 @@ class Model(ModelTemplate):
         if requested.type == "cuda" and not torch.cuda.is_available():
             return torch.device("cpu")
         return requested
+
+    def _resolve_actions_per_chunk(self) -> int:
+        candidates = (
+            self.model_cfg.get("actions_per_chunk"),
+            getattr(self.policy.config, "n_action_steps", None),
+            getattr(self.policy.config, "chunk_size", None),
+            1,
+        )
+        for value in candidates:
+            if value is None:
+                continue
+            resolved = int(value)
+            if resolved <= 0:
+                raise ValueError(f"actions_per_chunk must be positive, got {resolved}")
+            return resolved
+        raise ValueError("Failed to resolve actions_per_chunk from model config or policy config.")
 
     def _resolve_pretrained_path(self, pretrained_path):
         if pretrained_path is None:
