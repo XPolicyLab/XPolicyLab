@@ -18,7 +18,7 @@ read eval_batch eval_env < <(python - <<PY
 import yaml
 with open("${yaml_file}", "r") as f:
     data = yaml.safe_load(f)
-print(str(data.get("eval_batch", False)).lower(), data.get("eval_env", "debug"))
+print(str(data.get("eval_batch", False)).lower(), data.get("eval_env"))
 PY
 )
 

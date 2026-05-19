@@ -4,3 +4,5 @@ expert_data_num: null
 action_type: null
 gpu_id: null
 seed: null
+
+eval_env: debug # sim, real, debug
