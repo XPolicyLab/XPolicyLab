@@ -17,6 +17,7 @@ def main(deploy_cfg):
     # Extract basic arguments
     policy_name = deploy_cfg.get("policy_name")
     port = deploy_cfg.get("port")
+    host = deploy_cfg.get("host", "localhost")
 
     # Instantiate model
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
@@ -32,7 +33,7 @@ def main(deploy_cfg):
             raise
 
     # Start server in background thread
-    server = ModelServer(model, port=port)
+    server = ModelServer(model, host=host, port=port)
     thread = threading.Thread(target=run_server, daemon=True)
     thread.start()
 

@@ -12,13 +12,14 @@ additional_info="${8}"
 root_dir="${9}"
 seed="${10}"
 env_gpu_id="${11}"
+policy_server_ip="${12:-localhost}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
 conda activate "${eval_env_conda_env}"
 
 echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
-echo -e "\033[34m[CLIENT] Connecting to server port ${free_port}...\033[0m"
+echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port}...\033[0m"
 
 PYTHONWARNINGS=ignore::UserWarning \
 bash "${root_dir}/scripts/eval_policy.sh" \
@@ -26,6 +27,7 @@ bash "${root_dir}/scripts/eval_policy.sh" \
     --task_name "${task_name}" \
     --env_cfg_type "${env_cfg_type}" \
     --policy_name "${policy_name}" \
+    --host "${policy_server_ip}" \
     --port "${free_port}" \
     --eval_batch "${eval_batch}" \
     --root_dir "${root_dir}" \

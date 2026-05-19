@@ -13,6 +13,7 @@ additional_info="${9}"
 ROOT_DIR="${10}"
 seed="${11}"
 env_gpu_id="${12}"
+policy_server_ip="${13:-localhost}"
 
 read eval_batch eval_env < <(python - <<PY
 import yaml
@@ -23,11 +24,11 @@ PY
 )
 
 if [[ "${eval_env}" == "debug" ]]; then
-    bash "${UTILS_DIR}/run_debug_env_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}"
+    bash "${UTILS_DIR}/run_debug_env_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}" "${policy_server_ip}"
 elif [[ "${eval_env}" == "sim" ]]; then
-    bash "${UTILS_DIR}/run_sim_env_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}"
+    bash "${UTILS_DIR}/run_sim_env_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}" "${policy_server_ip}"
 elif [[ "${eval_env}" == "real" ]]; then
-    bash "${UTILS_DIR}/run_real_policy_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}"
+    bash "${UTILS_DIR}/run_real_policy_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}" "${policy_server_ip}"
 else
     echo "[ERROR] Unknown eval_env: ${eval_env}"
     exit 1
