@@ -10,7 +10,8 @@ action_type=$6
 seed=$7
 policy_gpu_id=$8
 policy_conda_env=$9
-port=${10}
+policy_server_port=${10}
+policy_server_host=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -21,7 +22,7 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${port}, action_dim=${action_dim}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
@@ -32,7 +33,8 @@ exec env \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            port="${port}" \
+            policy_server_port="${policy_server_port}" \
+            policy_server_host="${policy_server_host}" \
             dataset_name="${dataset_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \

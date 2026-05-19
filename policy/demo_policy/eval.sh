@@ -20,7 +20,7 @@ UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
-port=$(bash "${UTILS_DIR}/get_free_port.sh")
+policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
 
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
@@ -33,7 +33,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "[MAIN] start server, port=${port}"
+echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 
 bash "${SERVER_SCRIPT}" \
     "${dataset_name}" \
@@ -45,13 +45,13 @@ bash "${SERVER_SCRIPT}" \
     "${seed}" \
     "${policy_gpu_id}" \
     "${policy_conda_env}" \
-    "${port}" &
+    "${policy_server_port}" &
 
 SERVER_PID=$!
 
 sleep 3
 
-echo "[MAIN] start client, server=${policy_server_ip}:${port}"
+echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
     "${dataset_name}" \
@@ -63,7 +63,7 @@ bash "${CLIENT_SCRIPT}" \
     "${env_gpu_id}" \
     "${eval_env_conda_env}" \
     "${additional_info}" \
-    "${port}" \
+    "${policy_server_port}" \
     "${policy_server_ip}"
 
 echo "[MAIN] eval finished"
