@@ -699,6 +699,41 @@ _CONFIGS = [
         fsdp_devices=2,
         num_train_steps=40000,
     ),
+    TrainConfig(
+        name="pi0_base_aloha_full_sim_arx-x5_seed_0",
+        model=pi0_config.Pi0Config(),
+        data=LeRobotAlohaDataConfig(
+            repo_id="RoboDojo_sim_arx-x5_v30",
+            assets=AssetsConfig(
+                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_05/openpi/assets/RoboDojo_assets",
+                asset_id="arx_x5_sim",
+            ),
+            repack_transforms=_transforms.Group(
+                inputs=[
+                    _transforms.RepackTransform(
+                        {
+                            "images": {
+                                "cam_high": "observation.images.cam_high",
+                                "cam_left_wrist": "observation.images.cam_left_wrist",
+                                "cam_right_wrist": "observation.images.cam_right_wrist",
+                            },
+                            "state": "observation.state",
+                            "actions": "action",
+                            "prompt": "prompt",
+                        }
+                    )
+                ]
+            ),
+            base_config=DataConfig(
+                prompt_from_task=True,  # Set to True for prompt by task_name
+            ),
+        ),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_base/params"),
+        seed=2,
+        batch_size=64,
+        fsdp_devices=2,
+        num_train_steps=40000,
+    ),
 ]
 
 if len({config.name for config in _CONFIGS}) != len(_CONFIGS):
