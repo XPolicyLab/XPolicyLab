@@ -1,29 +1,37 @@
 #!/bin/bash
 set -e
 
-# ==================== 参数定义 ====================
-policy_name=GO1
 dataset_name=${1}
 task_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
 action_type=${5}
-gpu_id=${6}
+policy_gpu_id=${6}
 seed=${7}
-policy_conda_env=${8}
-eval_env_conda_env=${9}
+default_conda_env="${CONDA_DEFAULT_ENV:-}"
+policy_conda_env=${8:-${default_conda_env}}
+eval_env_conda_env=${9:-${policy_conda_env}}
 MODEL_PATH=${10:-""}
+env_gpu_id=${11:-${policy_gpu_id}}
 
-export CUDA_VISIBLE_DEVICES="${gpu_id}"
-echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
+if [[ -z "${policy_conda_env}" ]]; then
+    echo -e "\033[31m[ERROR] policy_conda_env is empty. Pass it explicitly or run inside an activated conda env.\033[0m"
+    exit 1
+fi
+
+if [[ -z "${eval_env_conda_env}" ]]; then
+    echo -e "\033[31m[ERROR] eval_env_conda_env is empty. Pass it explicitly or run inside an activated conda env.\033[0m"
+    exit 1
+fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}"); echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
-FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
+policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
+policy_server_ip="localhost"
 
 # Auto-detect model_path if not provided
 RUN_BASENAME="${task_name}-go1-${action_type}-${expert_data_num}eps-seed${seed}"
@@ -63,37 +71,47 @@ else
     echo -e "\033[33m[INFO] Using data_stats_path: ${DATA_STATS_PATH}\033[0m"
 fi
 
-# 定义 cleanup 函数以确保脚本退出时能正确清理后台进程
-cleanup(){ [[ -n "${SERVER_PID:-}" ]] && echo -e "\033[31m[CLEANUP] Killing server PID=${SERVER_PID}\033[0m" && kill "${SERVER_PID}" 2>/dev/null || true; }
+additional_info="model_path=${MODEL_PATH},data_stats_path=${DATA_STATS_PATH},action_type=${action_type}"
+
+cleanup() {
+    if [[ -n "${SERVER_PID:-}" ]]; then
+        echo "[MAIN] kill server ${SERVER_PID}"
+        kill "${SERVER_PID}" 2>/dev/null || true
+    fi
+}
 trap cleanup EXIT
 
-# ==================== 启动 server ====================
-echo -e "\033[32m[SERVER] Activating Conda environment: ${policy_conda_env}\033[0m"
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate "${policy_conda_env}"
+echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 
-# Add AgiBot-World to PYTHONPATH for GO1 model imports
-export PYTHONPATH="${SCRIPT_DIR}/AgiBot-World:${PYTHONPATH}"
+bash "${SERVER_SCRIPT}" \
+    "${dataset_name}" \
+    "${task_name}" \
+    "${env_cfg_type}" \
+    "${expert_data_num}" \
+    "${action_type}" \
+    "${seed}" \
+    "${policy_gpu_id}" \
+    "${policy_conda_env}" \
+    "${policy_server_port}" \
+    "${MODEL_PATH}" \
+    "${DATA_STATS_PATH}" &
 
-echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
-PYTHONWARNINGS=ignore::UserWarning \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
-    --config_path "${yaml_file}" \
-    --overrides \
-        port="${FREE_PORT}" \
-        dataset_name="${dataset_name}" \
-        task_name="${task_name}" \
-        env_cfg_type="${env_cfg_type}" \
-        expert_data_num="${expert_data_num}" \
-        seed="${seed}" \
-        policy_name="${policy_name}" \
-        action_type="${action_type}" \
-        action_dim="${action_dim}" \
-        model_path="${MODEL_PATH}" \
-        data_stats_path="${DATA_STATS_PATH}" \
-    &
 SERVER_PID=$!
-echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
-bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${ROOT_DIR}"
-echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"
+sleep 3
+
+echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
+
+bash "${CLIENT_SCRIPT}" \
+    "${dataset_name}" \
+    "${task_name}" \
+    "${env_cfg_type}" \
+    "${action_type}" \
+    "${seed}" \
+    "${env_gpu_id}" \
+    "${eval_env_conda_env}" \
+    "${additional_info}" \
+    "${policy_server_port}" \
+    "${policy_server_ip}"
+
+echo "[MAIN] eval finished"

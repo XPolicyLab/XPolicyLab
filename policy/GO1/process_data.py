@@ -80,18 +80,19 @@ def _prepare_ee_data_schema(data: dict) -> dict:
             action[action_ee_key] = state[action_ee_key]
 
     return data
-
-
 @dataclass(frozen=True)
 class DatasetConfig:
     use_videos: bool = False
     tolerance_s: float = 0.0001
-    image_writer_processes: int = 0
-    image_writer_threads: int = 1
+    image_writer_processes: int = 4
+    image_writer_threads: int = 4
     video_backend: str | None = None
 
 
-DEFAULT_DATASET_CONFIG = DatasetConfig()
+DEFAULT_DATASET_CONFIG = DatasetConfig(
+    image_writer_processes=max(1, min(8, (os.cpu_count() or 4) // 2)),
+    image_writer_threads=max(2, min(8, os.cpu_count() or 4)),
+)
 
 
 def create_empty_dataset(
@@ -195,6 +196,8 @@ def load_data(ep_path: str | Path, action_type: str, robot_action_dim_info: dict
             processed = []
             for img in raw_imgs:
                 img = cv2.resize(img, (320, 240), interpolation=cv2.INTER_AREA)  # -> (240, 320, 3)
+                # Training and inference both convert arrays to PIL/ImageNet-style RGB tensors.
+                # Keeping BGR here would silently corrupt channel semantics.
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 processed.append(img)
             images[output_name] = np.asarray(processed)
@@ -227,7 +230,10 @@ def main():
     args = parser.parse_args()
 
     if args.repo_id is None:
-        args.repo_id = f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}"
+        args.repo_id = (
+            f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}-"
+            f"{args.expert_data_num}-{args.action_type}"
+        )
 
     load_data_dir = os.path.join(ROOT_PATH, "data", args.dataset_name, args.task_name, args.env_cfg_type)
     if not os.path.isdir(load_data_dir):
@@ -247,6 +253,11 @@ def main():
     print(f"[GO1 process_data] Dataset: {args.dataset_name}, Task: {args.task_name}")
     print(f"[GO1 process_data] Robot: {robot_type}, Action dim info: {robot_action_dim_info}")
     print(f"[GO1 process_data] Output repo_id: {args.repo_id}, FPS: {args.fps}")
+    print(
+        "[GO1 process_data] Image writer config: "
+        f"{DEFAULT_DATASET_CONFIG.image_writer_processes} processes / "
+        f"{DEFAULT_DATASET_CONFIG.image_writer_threads} threads"
+    )
 
     dataset = create_empty_dataset(
         repo_id=args.repo_id,
@@ -281,7 +292,6 @@ def main():
                 dataset.add_frame(frame, task=task_str)
 
             dataset.save_episode()
-            dataset.hf_dataset = dataset.create_hf_dataset()
             tqdm.write(f"Finished {ep_file.name} with {num_frames} frames")
         except Exception as e:
             tqdm.write(f"Error processing episode {ep_file}: {e}")

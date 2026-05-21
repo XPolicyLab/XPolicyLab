@@ -24,8 +24,9 @@ echo -e "\033[33m[INFO] CUDA_HOME: ${CUDA_HOME}\033[0m"
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 
-# LeRobot repo_id for the converted dataset
-repo_id="${dataset_name}-${task_name}-${env_cfg_type}"
+# LeRobot repo_id for the converted dataset.
+# Include expert_data_num/action_type so `joint` and `ee` runs never reuse the wrong conversion.
+repo_id="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 
 # Persistent storage directory for converted LeRobot datasets
 LEROBOT_OUTPUT_DIR="${SCRIPT_DIR}/data"

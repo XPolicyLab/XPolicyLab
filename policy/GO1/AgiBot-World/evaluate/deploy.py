@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 
 import draccus
-import json_numpy
 import numpy as np
 import torch
 import uvicorn
@@ -17,7 +16,13 @@ from go1.internvl.model.go1 import GO1Model, GO1ModelConfig
 from go1.internvl.train.constants import IMG_END_TOKEN
 from go1.internvl.train.dataset import build_transform, dynamic_preprocess, preprocess_internvl2_5
 
-json_numpy.patch()
+try:
+    import json_numpy
+except ModuleNotFoundError:
+    json_numpy = None
+
+if json_numpy is not None:
+    json_numpy.patch()
 
 
 def normalize(data, stats):
