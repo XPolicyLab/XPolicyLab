@@ -1,6 +1,6 @@
 import numpy as np
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info
+from XPolicyLab.utils.process_data import get_robot_action_dim_info, get_batch_size
 
 
 class Model(ModelTemplate):
@@ -17,6 +17,7 @@ class Model(ModelTemplate):
         #     "ee_dim": [1] 或 [1, 1]
         # }
         self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
+        self.batch_size = get_batch_size(self.env_cfg_type)
 
         # arm 和 ee 的数量应一致，例如双臂时都应为 2
         assert len(self.robot_action_dim_info["arm_dim"]) == len(self.robot_action_dim_info["ee_dim"]), \
@@ -43,7 +44,7 @@ class Model(ModelTemplate):
             ee_keys = ["ee_joint_state"]
 
         elif num_arms == 2:  # 双臂
-            arm_keys = ["left_aQrm_joint_state", "right_arm_joint_state"] if self.action_type == "joint" else ["left_ee_pose", "right_ee_pose"]
+            arm_keys = ["left_arm_joint_state", "right_arm_joint_state"] if self.action_type == "joint" else ["left_ee_pose", "right_ee_pose"]
             ee_keys = ["left_ee_joint_state", "right_ee_joint_state"]
 
         else:
@@ -81,7 +82,7 @@ class Model(ModelTemplate):
     def get_action_batch(self):
         # 当前示例 batch 大小固定为 4
         # 如果后续有真实 batch 输入，建议改为根据输入动态决定
-        batch_size = 4
+        batch_size = self.batch_size
         action_batch = [self.get_action() for _ in range(batch_size)]
 
         print(f"[Model] Generated action batch of size: {batch_size}")
