@@ -1,0 +1,257 @@
+!!python/object:gr00t.configs.base_config.Config
+data: !!python/object:gr00t.configs.data.data_config.DataConfig
+  allow_padding: false
+  datasets:
+  - !!python/object:gr00t.configs.data.data_config.SingleDatasetConfig
+    dataset_paths:
+    - /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/GR00T-N1.6/data/RoboDojo-stack_bowls-arx_x5-5-joint
+    dataset_type: physical_embodiment
+    embodiment_tag: new_embodiment
+    mix_ratio: 1.0
+    val_dataset_path: null
+  download_cache: false
+  episode_sampling_rate: 0.1
+  image_crop_size:
+  - 244
+  - 244
+  image_target_size:
+  - 224
+  - 224
+  mock_dataset_mode: false
+  modality_configs:
+    new_embodiment:
+      action: !!python/object:gr00t.data.types.ModalityConfig
+        action_configs:
+        - !!python/object:gr00t.data.types.ActionConfig
+          format: &id001 !!python/object/apply:gr00t.data.types.ActionFormat
+          - default
+          rep: &id003 !!python/object/apply:gr00t.data.types.ActionRepresentation
+          - relative
+          state_key: null
+          type: &id002 !!python/object/apply:gr00t.data.types.ActionType
+          - non_eef
+        - !!python/object:gr00t.data.types.ActionConfig
+          format: *id001
+          rep: &id004 !!python/object/apply:gr00t.data.types.ActionRepresentation
+          - absolute
+          state_key: null
+          type: *id002
+        - !!python/object:gr00t.data.types.ActionConfig
+          format: *id001
+          rep: *id003
+          state_key: null
+          type: *id002
+        - !!python/object:gr00t.data.types.ActionConfig
+          format: *id001
+          rep: *id004
+          state_key: null
+          type: *id002
+        delta_indices:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+        - 15
+        mean_std_embedding_keys: null
+        modality_keys:
+        - left_arm
+        - left_gripper
+        - right_arm
+        - right_gripper
+        sin_cos_embedding_keys: null
+      language: !!python/object:gr00t.data.types.ModalityConfig
+        action_configs: null
+        delta_indices:
+        - 0
+        mean_std_embedding_keys: null
+        modality_keys:
+        - annotation.human.task_description
+        sin_cos_embedding_keys: null
+      state: !!python/object:gr00t.data.types.ModalityConfig
+        action_configs: null
+        delta_indices:
+        - 0
+        mean_std_embedding_keys: null
+        modality_keys:
+        - left_arm
+        - left_gripper
+        - right_arm
+        - right_gripper
+        sin_cos_embedding_keys: null
+      video: !!python/object:gr00t.data.types.ModalityConfig
+        action_configs: null
+        delta_indices:
+        - 0
+        mean_std_embedding_keys: null
+        modality_keys:
+        - cam_head
+        - cam_left_wrist
+        - cam_right_wrist
+        sin_cos_embedding_keys: null
+  mode: single_turn
+  multiprocessing_context: fork
+  num_shards_per_epoch: 100000
+  override_pretraining_statistics: true
+  random_chop: 0.0
+  seed: 42
+  shard_size: 1024
+  shuffle: true
+  subsample_ratio: 1.0
+  video_backend: torchcodec
+load_config_path: null
+model: !!python/object:gr00t.configs.model.gr00t_n1d7.Gr00tN1d7Config
+  _attn_implementation_internal: null
+  _commit_hash: null
+  _name_or_path: ''
+  _output_attentions: false
+  add_cross_attention: false
+  architectures: null
+  backbone_trainable_params_fp32: true
+  bad_words_ids: null
+  begin_suppress_tokens: null
+  bos_token_id: null
+  chunk_size_feed_forward: 0
+  color_jitter_params:
+    brightness: 0.3
+    contrast: 0.4
+    hue: 0.08
+    saturation: 0.5
+  cross_attention_hidden_size: null
+  decoder_start_token_id: null
+  diffusion_model_cfg:
+    attention_head_dim: 48
+    dropout: 0.2
+    final_dropout: true
+    interleave_self_attention: true
+    norm_type: ada_norm
+    num_attention_heads: 32
+    num_layers: 16
+    output_dim: 1024
+    positional_embeddings: null
+  diversity_penalty: 0.0
+  do_sample: false
+  dtype: null
+  early_stopping: false
+  encoder_no_repeat_ngram_size: 0
+  eos_token_id: null
+  exponential_decay_length_penalty: null
+  extra_augmentation_config: null
+  finetuning_task: null
+  forced_bos_token_id: null
+  forced_eos_token_id: null
+  id2label:
+    0: LABEL_0
+    1: LABEL_1
+  is_decoder: false
+  is_encoder_decoder: false
+  label2id:
+    LABEL_0: 0
+    LABEL_1: 1
+  length_penalty: 1.0
+  load_bf16: false
+  max_length: 20
+  min_length: 0
+  model_name: nvidia/Cosmos-Reason2-2B
+  no_repeat_ngram_size: 0
+  num_beam_groups: 1
+  num_beams: 1
+  num_return_sequences: 1
+  output_hidden_states: false
+  output_scores: false
+  pad_token_id: null
+  prefix: null
+  problem_type: null
+  pruned_heads: {}
+  remove_invalid_values: false
+  repetition_penalty: 1.0
+  reproject_vision: false
+  return_dict: true
+  return_dict_in_generate: false
+  sep_token_id: null
+  state_dropout_prob: 0.2
+  suppress_tokens: null
+  task_specific_params: null
+  temperature: 1.0
+  tf_legacy_loss: false
+  tie_encoder_decoder: false
+  tie_word_embeddings: true
+  tokenizer_class: null
+  top_k: 50
+  top_p: 1.0
+  torchscript: false
+  transformers_version: null
+  tune_diffusion_model: true
+  tune_llm: false
+  tune_projector: true
+  tune_visual: false
+  typical_p: 1.0
+  use_bfloat16: false
+  use_relative_action: true
+training: !!python/object:gr00t.configs.training.training_config.TrainingConfig
+  add_rl_callback: false
+  assert_loss_less_than: null
+  batch_size: null
+  bf16: true
+  dataloader_num_workers: 4
+  ddp_bucket_cap_mb: 100
+  deepspeed_stage: 2
+  enable_open_loop_eval: false
+  enable_profiling: false
+  eval_batch_size: 2
+  eval_bf16: true
+  eval_set_split_ratio: 0.1
+  eval_steps: 500
+  eval_strategy: 'no'
+  experiment_name: stack_bowls-gr00t-joint-5eps-seed42-20260519_152050
+  fp16: false
+  global_batch_size: 32
+  gradient_accumulation_steps: 1
+  gradient_checkpointing: false
+  learning_rate: 0.0001
+  logging_steps: 10
+  lr_scheduler_type: cosine
+  max_concurrent_uploads: 2
+  max_grad_norm: 1.0
+  max_retries: 3
+  max_steps: 10000
+  num_gpus: 1
+  open_loop_eval_plot_indices: null
+  open_loop_eval_steps_per_traj: 100
+  open_loop_eval_traj_ids:
+  - 0
+  optim: adamw_torch
+  output_dir: /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/GR00T-N1.6/checkpoints
+  remove_unused_columns: false
+  save_best_eval_metric_greater_is_better: true
+  save_best_eval_metric_name: ''
+  save_only_model: false
+  save_steps: 1000
+  save_total_limit: 5
+  save_vl_model: false
+  skip_weight_loading: false
+  start_from_checkpoint: /mnt/pfs/pg4hw0/qiwei/models/GR00T-N1.6-3B
+  tf32: true
+  transformers_access_token: null
+  transformers_cache_dir: null
+  transformers_local_files_only: false
+  transformers_trust_remote_code: true
+  upload_checkpoints: false
+  upload_every: 1000
+  upload_last_n_checkpoints: 5
+  use_ddp: false
+  use_wandb: false
+  wandb_project: gr00t-xpolicylab
+  warmup_ratio: 0.05
+  warmup_steps: 0
+  weight_decay: 1.0e-05

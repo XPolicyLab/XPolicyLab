@@ -1,18 +1,3 @@
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from concurrent.futures import Future, ThreadPoolExecutor
 import time
 
@@ -57,19 +42,13 @@ def merge_statistics(
     # Initialize overall statistics dict
     overall_stats: dict[str, dict[str, list[float]]] = {}
 
-    # Process each modality (e.g., "state", "action"). An entry is treated as
-    # an action key iff it carries a "mean" field; anything else is sidecar
-    # metadata that producers may co-locate at the top level (e.g. the
-    # __fingerprints__ cache map written by generate_rel_stats) and must be
-    # skipped rather than merged.
-    for modality, modality_stats in per_dataset_stats[0].items():
-        if not isinstance(modality_stats, dict) or "mean" not in modality_stats:
-            continue
+    # Process each modality (e.g., "state", "action")
+    for modality in per_dataset_stats[0]:
         # Get dimensionality from first dataset (assumed consistent)
         dim = (
-            [len(modality_stats["mean"])]
+            [len(per_dataset_stats[0][modality]["mean"])]
             if not is_relative_stats
-            else np.array(modality_stats["mean"]).shape
+            else np.array(per_dataset_stats[0][modality]["mean"]).shape
         )
 
         # Initialize accumulators for weighted mean and variance computation

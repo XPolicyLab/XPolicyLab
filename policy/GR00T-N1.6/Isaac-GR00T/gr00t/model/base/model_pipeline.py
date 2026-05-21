@@ -1,18 +1,3 @@
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import json
 import logging
 from pathlib import Path
@@ -21,7 +6,6 @@ from gr00t.configs.base_config import Config
 from gr00t.data.collator import BasicDataCollator
 from gr00t.data.dataset.factory import DatasetFactory
 from gr00t.data.interfaces import BaseProcessor
-from gr00t.experiment.dist_utils import get_rank
 import numpy as np
 import torch
 from transformers import PreTrainedModel
@@ -84,8 +68,7 @@ class BasicPipeline(ModelPipeline):
     def _create_model(self):
         # Load model
         model = self.model_class(self.config.model)
-        if get_rank() == 0:
-            print("Model Config: ", model.config)
+        print("Model Config: ", model.config)
 
         # unfreeze the model first
         for name, param in model.named_parameters():
@@ -110,13 +93,13 @@ class BasicPipeline(ModelPipeline):
         dataset_factory = DatasetFactory(self.config)
         train_dataset, eval_dataset = dataset_factory.build(self.processor)
 
-        # Rank-guarded to avoid a multi-rank truncate-and-write race.
-        if get_rank() == 0:
-            stats = train_dataset.get_dataset_statistics()
-            stats_dict = convert_tensors_to_lists(stats)
-            with open(save_cfg_dir / "dataset_statistics.json", "w") as f:
-                json.dump(stats_dict, f, indent=2)
-            logging.info("Saved dataset statistics for inference")
+        # Save dataset statistics for inference
+        stats = train_dataset.get_dataset_statistics()
+        stats_dict = convert_tensors_to_lists(stats)
+        # Save statistics
+        with open(save_cfg_dir / "dataset_statistics.json", "w") as f:
+            json.dump(stats_dict, f, indent=2)
+        logging.info("Saved dataset statistics for inference")
 
         return train_dataset, eval_dataset
 

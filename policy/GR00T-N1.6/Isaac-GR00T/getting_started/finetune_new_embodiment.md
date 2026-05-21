@@ -12,17 +12,10 @@ Define your own modality configuration by following the [modality config guide](
 ```python
 from gr00t.configs.data.embodiment_configs import register_modality_config
 from gr00t.data.embodiment_tags import EmbodimentTag
-from gr00t.data.types import (
-    ActionConfig,
-    ActionFormat,
-    ActionRepresentation,
-    ActionType,
-    ModalityConfig,
-)
+from gr00t.data.types import ActionConfig, ActionFormat, ActionRepresentation, ActionType, ModalityConfig
 
 
 so100_config = {
-    # Video: use current frame only ([0]); list camera view names matching modality.json
     "video": ModalityConfig(
         delta_indices=[0],
         modality_keys=[
@@ -30,7 +23,6 @@ so100_config = {
             "wrist",
         ],
     ),
-    # State: current proprioceptive reading; keys must match modality.json "state" entries
     "state": ModalityConfig(
         delta_indices=[0],
         modality_keys=[
@@ -38,21 +30,20 @@ so100_config = {
             "gripper",
         ],
     ),
-    # Action: 16-step prediction horizon; each key needs an ActionConfig
     "action": ModalityConfig(
-        delta_indices=list(range(0, 16)),  # predict 16 future steps
+        delta_indices=list(range(0, 16)),
         modality_keys=[
             "single_arm",
             "gripper",
         ],
         action_configs=[
-            # single_arm: RELATIVE = delta from current state (better generalization)
+            # single_arm
             ActionConfig(
                 rep=ActionRepresentation.RELATIVE,
-                type=ActionType.NON_EEF,       # joint-space, not end-effector
+                type=ActionType.NON_EEF,
                 format=ActionFormat.DEFAULT,
             ),
-            # gripper: ABSOLUTE = target position (binary open/close works better absolute)
+            # gripper
             ActionConfig(
                 rep=ActionRepresentation.ABSOLUTE,
                 type=ActionType.NON_EEF,
@@ -60,10 +51,9 @@ so100_config = {
             ),
         ],
     ),
-    # Language: task instruction from annotation field in the dataset
     "language": ModalityConfig(
         delta_indices=[0],
-        modality_keys=["annotation.human.task_description"],
+        modality_keys=["annotation.human.action.task_description"],
     ),
 }
 
@@ -87,7 +77,7 @@ uv run python gr00t/experiment/launch_finetune.py --help
 export NUM_GPUS=1
 CUDA_VISIBLE_DEVICES=0 uv run python \
     gr00t/experiment/launch_finetune.py \
-    --base-model-path nvidia/GR00T-N1.7-3B \
+    --base-model-path nvidia/GR00T-N1.6-3B \
     --dataset-path ./demo_data/cube_to_bowl_5 \
     --embodiment-tag NEW_EMBODIMENT \
     --modality-config-path examples/SO100/so100_config.py \
@@ -115,8 +105,6 @@ CUDA_VISIBLE_DEVICES=0 uv run python \
 | `--max-steps` | Total number of training steps |
 | `--use-wandb` | Enable Weights & Biases logging for experiment tracking |
 
-> **Note:** Validation during fine-tuning is disabled by default (`eval_strategy="no"` in the training config). To enable periodic validation, pass `--eval-strategy steps --eval-steps 500` (runs validation every 500 steps) or `--eval-strategy epoch` (runs validation every epoch). You can also adjust `--eval-batch-size` (default: 2).
-
 ## Step 4: Open Loop Evaluation
 
 After finetuning, evaluate the model's performance using open loop evaluation:
@@ -131,23 +119,8 @@ uv run python gr00t/eval/open_loop_eval.py \
     --modality-keys single_arm gripper
 ```
 
-### `open_loop_eval.py` Parameters
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `--dataset-path` | `demo_data/cube_to_bowl_5/` | Path to LeRobot-format dataset |
-| `--embodiment-tag` | `new_embodiment` | Robot embodiment tag (case-insensitive) |
-| `--model-path` | `None` | Path to checkpoint. If omitted, connects to a running server via `--host`/`--port` |
-| `--traj-ids` | `[0]` | Episode indices to evaluate (space-separated, e.g., `0 1 2`) |
-| `--action-horizon` | `16` | Action steps predicted per inference call |
-| `--steps` | `200` | Max steps per trajectory (capped by actual trajectory length) |
-| `--denoising-steps` | `4` | Diffusion denoising iterations |
-| `--save-plot-path` | `None` | Directory to save GT-vs-predicted comparison plots |
-| `--modality-keys` | `None` | Action keys to plot. If omitted, plots all action dimensions |
-| `--host` / `--port` | `127.0.0.1` / `5555` | Server address when `--model-path` is omitted |
-
 ### Example Evaluation Result
 
 The evaluation generates visualizations comparing predicted actions against ground truth trajectories:
 
-<img src="../media/open_loop_eval_so100.jpg" width="800" alt="Open loop evaluation results showing predicted vs ground truth trajectories" />
+<img src="../media/open_loop_eval_so100.jpeg" width="800" alt="Open loop evaluation results showing predicted vs ground truth trajectories" />

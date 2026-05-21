@@ -1,22 +1,9 @@
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from dataclasses import dataclass
+import io
 from typing import Any, Callable
 
-import msgpack_numpy as mnp
+import msgpack
+import numpy as np
 import zmq
 
 from gr00t.data.types import ModalityConfig
@@ -28,27 +15,34 @@ from .policy import BasePolicy
 class MsgSerializer:
     @staticmethod
     def to_bytes(data: Any) -> bytes:
-        return mnp.packb(data, default=MsgSerializer._encode_custom)
+        return msgpack.packb(data, default=MsgSerializer.encode_custom_classes)
 
     @staticmethod
     def from_bytes(data: bytes) -> Any:
-        return mnp.unpackb(data, object_hook=MsgSerializer._decode_custom, raw=False)
+        return msgpack.unpackb(data, object_hook=MsgSerializer.decode_custom_classes)
 
     @staticmethod
-    def _encode_custom(obj):
-        if isinstance(obj, ModalityConfig):
-            return {"__ModalityConfig__": True, "as_json": to_json_serializable(obj)}
-        return mnp.encode(obj)
-
-    @staticmethod
-    def _decode_custom(obj):
+    def decode_custom_classes(obj):
         if not isinstance(obj, dict):
             return obj
-        if "__ModalityConfig__" in obj or b"__ModalityConfig__" in obj:
-            key = "as_json" if "as_json" in obj else (b"as_json" if b"as_json" in obj else None)
-            if key is not None:
-                return ModalityConfig(**obj[key])
-        return mnp.decode(obj)
+        if "__ModalityConfig_class__" in obj:
+            return ModalityConfig(**obj["as_json"])
+        if "__ndarray_class__" in obj:
+            return np.load(io.BytesIO(obj["as_npy"]), allow_pickle=False)
+        return obj
+
+    @staticmethod
+    def encode_custom_classes(obj):
+        if isinstance(obj, ModalityConfig):
+            return {
+                "__ModalityConfig_class__": True,
+                "as_json": to_json_serializable(obj),
+            }
+        if isinstance(obj, np.ndarray):
+            output = io.BytesIO()
+            np.save(output, obj, allow_pickle=False)
+            return {"__ndarray_class__": True, "as_npy": output.getvalue()}
+        return obj
 
 
 @dataclass
@@ -180,8 +174,6 @@ class PolicyClient(BasePolicy):
     def _init_socket(self):
         """Initialize or reinitialize the socket with current settings"""
         self.socket = self.context.socket(zmq.REQ)
-        self.socket.setsockopt(zmq.RCVTIMEO, self.timeout_ms)
-        self.socket.setsockopt(zmq.SNDTIMEO, self.timeout_ms)
         self.socket.connect(f"tcp://{self.host}:{self.port}")
 
     def ping(self) -> bool:
@@ -215,15 +207,8 @@ class PolicyClient(BasePolicy):
         if self.api_token:
             request["api_token"] = self.api_token
 
-        try:
-            self.socket.send(MsgSerializer.to_bytes(request))
-            message = self.socket.recv()
-        except zmq.error.Again:
-            # Timeout — REQ socket is now in an invalid state (waiting for a
-            # reply that will never arrive).  Recreate it so the next call can
-            # send again, then re-raise so the caller knows this request failed.
-            self._init_socket()
-            raise
+        self.socket.send(MsgSerializer.to_bytes(request))
+        message = self.socket.recv()
         if message == b"ERROR":
             raise RuntimeError("Server error. Make sure we are running the correct policy server.")
         response = MsgSerializer.from_bytes(message)

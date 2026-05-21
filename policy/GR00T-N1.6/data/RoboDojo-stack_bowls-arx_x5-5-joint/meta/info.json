@@ -1,0 +1,180 @@
+{
+    "codebase_version": "v2.1",
+    "robot_type": "dual_x5",
+    "total_episodes": 5,
+    "total_frames": 1597,
+    "total_tasks": 1,
+    "chunks_size": 1000,
+    "fps": 30,
+    "splits": {
+        "train": "0:5"
+    },
+    "data_path": "data/chunk-{episode_chunk:03d}/episode_{episode_index:06d}.parquet",
+    "video_path": "videos/chunk-{episode_chunk:03d}/{video_key}/episode_{episode_index:06d}.mp4",
+    "features": {
+        "action": {
+            "dtype": "float32",
+            "shape": [
+                14
+            ],
+            "names": [
+                "action_0",
+                "action_1",
+                "action_2",
+                "action_3",
+                "action_4",
+                "action_5",
+                "action_6",
+                "action_7",
+                "action_8",
+                "action_9",
+                "action_10",
+                "action_11",
+                "action_12",
+                "action_13"
+            ]
+        },
+        "observation.state": {
+            "dtype": "float32",
+            "shape": [
+                14
+            ],
+            "names": [
+                "state_0",
+                "state_1",
+                "state_2",
+                "state_3",
+                "state_4",
+                "state_5",
+                "state_6",
+                "state_7",
+                "state_8",
+                "state_9",
+                "state_10",
+                "state_11",
+                "state_12",
+                "state_13"
+            ]
+        },
+        "timestamp": {
+            "dtype": "float32",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "frame_index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "episode_index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "task_index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "next.reward": {
+            "dtype": "float32",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "next.done": {
+            "dtype": "bool",
+            "shape": [
+                1
+            ],
+            "names": null
+        },
+        "observation.images.cam_head": {
+            "dtype": "video",
+            "shape": [
+                240,
+                320,
+                3
+            ],
+            "names": [
+                "height",
+                "width",
+                "channels"
+            ],
+            "info": {
+                "video.height": 240,
+                "video.width": 320,
+                "video.codec": "mp4v",
+                "video.pix_fmt": "yuv420p",
+                "video.is_depth_map": false,
+                "video.fps": 30,
+                "video.channels": 3,
+                "has_audio": false
+            }
+        },
+        "observation.images.cam_left_wrist": {
+            "dtype": "video",
+            "shape": [
+                240,
+                320,
+                3
+            ],
+            "names": [
+                "height",
+                "width",
+                "channels"
+            ],
+            "info": {
+                "video.height": 240,
+                "video.width": 320,
+                "video.codec": "mp4v",
+                "video.pix_fmt": "yuv420p",
+                "video.is_depth_map": false,
+                "video.fps": 30,
+                "video.channels": 3,
+                "has_audio": false
+            }
+        },
+        "observation.images.cam_right_wrist": {
+            "dtype": "video",
+            "shape": [
+                240,
+                320,
+                3
+            ],
+            "names": [
+                "height",
+                "width",
+                "channels"
+            ],
+            "info": {
+                "video.height": 240,
+                "video.width": 320,
+                "video.codec": "mp4v",
+                "video.pix_fmt": "yuv420p",
+                "video.is_depth_map": false,
+                "video.fps": 30,
+                "video.channels": 3,
+                "has_audio": false
+            }
+        }
+    },
+    "total_chunks": 1,
+    "total_videos": 15
+}

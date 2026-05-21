@@ -1,0 +1,26 @@
+GR00T-N1.6 XPolicyLab quick commands
+
+Install:
+  cd XPolicyLab/policy/GR00T-N1.6
+  bash install.sh
+
+Install in Isaac-GR00T uv env:
+  cd XPolicyLab/policy/GR00T-N1.6/Isaac-GR00T
+  uv sync
+  uv pip install -e ../../..
+  uv pip install PyYAML h5py pyarrow pandas opencv-python tqdm
+  source .venv/bin/activate
+  cd ..
+
+Convert data:
+  bash process_data.sh RoboDojo stack_bowls arx_x5 50 joint
+
+Train:
+  # BASE_MODEL_PATH is optional when the checkpoint is at ../../../../models/GR00T-N1.6-3B
+  bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 42
+
+Evaluate latest checkpoint:
+  bash eval.sh RoboDojo stack_bowls arx_x5 50 joint 0 42 gr00t_env XPolicyLab 0
+
+Evaluate specific checkpoint:
+  bash eval.sh RoboDojo stack_bowls arx_x5 50 joint 0 42 gr00t_env XPolicyLab 0 /path/to/checkpoint

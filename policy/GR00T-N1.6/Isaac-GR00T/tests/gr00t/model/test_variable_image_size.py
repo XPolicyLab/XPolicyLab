@@ -1,18 +1,3 @@
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """
 Test that GR00T inference can handle variable input image sizes.
 
@@ -23,7 +8,7 @@ when different camera views have different aspect ratios.
 
 from pathlib import Path
 
-from gr00t.model.gr00t_n1d7.image_augmentations import (
+from gr00t.model.gr00t_n1d6.image_augmentations import (
     build_image_transformations,
     build_image_transformations_albumentations,
 )
@@ -128,19 +113,9 @@ class TestAlbumentationsTransforms:
 
 @pytest.fixture
 def processor():
-    from unittest.mock import MagicMock, patch
+    from gr00t.model.gr00t_n1d6.processing_gr00t_n1d6 import Gr00tN1d6Processor
 
-    from gr00t.model.gr00t_n1d7.processing_gr00t_n1d7 import Gr00tN1d7Processor
-
-    mock_vlm = MagicMock()
-    mock_vlm.apply_chat_template.return_value = "mock text"
-    mock_vlm.tokenizer.padding_side = "left"
-
-    with patch(
-        "gr00t.model.gr00t_n1d7.processing_gr00t_n1d7.build_processor",
-        return_value=mock_vlm,
-    ):
-        proc = Gr00tN1d7Processor.from_pretrained(FIXTURE_DIR)
+    proc = Gr00tN1d6Processor.from_pretrained(FIXTURE_DIR)
     proc.eval()
     return proc
 
@@ -150,7 +125,7 @@ class TestProcessorVariableImageSize:
 
     def test_variable_size_vlm_inputs(self, processor):
         """Test _get_vlm_inputs with different aspect ratio images across views."""
-        embodiment_tag = "libero_sim"
+        embodiment_tag = "libero_panda"
         image_keys = processor.modality_configs[embodiment_tag]["video"].modality_keys
 
         # Create mock images with different sizes per view
@@ -178,7 +153,7 @@ class TestProcessorVariableImageSize:
 
     def test_same_size_vlm_inputs(self, processor):
         """Test _get_vlm_inputs with same size images (regression test)."""
-        embodiment_tag = "libero_sim"
+        embodiment_tag = "libero_panda"
         image_keys = processor.modality_configs[embodiment_tag]["video"].modality_keys
 
         mock_images = {}

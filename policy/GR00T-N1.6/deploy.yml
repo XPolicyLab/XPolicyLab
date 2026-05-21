@@ -1,6 +1,23 @@
+policy_name: GR00T_N1_6
+dataset_name: null
 task_name: null
 env_cfg_type: null
 expert_data_num: null
 action_type: null
+action_dim: null
 gpu_id: null
 seed: null
+port: null
+
+model_path: null
+pretrained_model_path: null
+embodiment_tag: NEW_EMBODIMENT
+device: cuda:0
+strict: true
+dummy_policy: false
+action_chunk_size: 16
+execution_horizon: 16
+prompt: Do your job.
+
+eval_env: debug
+eval_batch: false

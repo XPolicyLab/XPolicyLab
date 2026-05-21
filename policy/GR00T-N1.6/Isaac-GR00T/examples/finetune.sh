@@ -32,7 +32,6 @@ Usage: bash examples/finetune.sh \
   --output-dir <path> \
   [--modality-config-path <path>] \
   [--state-dropout-prob <value>] \
-  [--save-only-model] \
   [-- <extra launch_finetune.py args>...]
 EOF
 }
@@ -70,10 +69,6 @@ while [ "$#" -gt 0 ]; do
         --state-dropout-prob)
             STATE_DROPOUT_PROB="$2"
             shift 2
-            ;;
-        --save-only-model)
-            SAVE_ONLY_MODEL=1
-            shift
             ;;
         --help|-h)
             usage
@@ -140,18 +135,12 @@ fi
 if [ -n "$STATE_DROPOUT_PROB" ]; then
     LAUNCH_CMD+=(--state_dropout_prob "$STATE_DROPOUT_PROB")
 fi
-if [ -n "${SAVE_ONLY_MODEL:-}" ]; then
-    LAUNCH_CMD+=(--save_only_model)
-fi
 
 if [ "${#EXTRA_ARGS[@]}" -gt 0 ]; then
     LAUNCH_CMD+=("${EXTRA_ARGS[@]}")
 fi
 
 if [ "$NUM_GPUS" = "1" ]; then
-    # Restrict to a single GPU so HF Trainer doesn't wrap the model in DataParallel,
-    # which crashes with a StopIteration error in the model's device property.
-    export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
     exec python "${LAUNCH_CMD[@]}"
 fi
 
