@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import sys
 from collections import deque
 from pathlib import Path
@@ -12,12 +13,16 @@ from huggingface_hub import snapshot_download
 
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
-_INTERNVLA_ROOT = _REPO_ROOT.parent / "InternVLA-A1"
+_INTERNVLA_ROOT = _CUR_DIR / "internvla_a1"
 _INTERNVLA_SRC = _INTERNVLA_ROOT / "src"
+_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
 
 for _path in (str(_REPO_ROOT), str(_INTERNVLA_SRC)):
     if _path not in sys.path:
         sys.path.insert(0, _path)
+
+os.environ.setdefault("COSMOS_PATH", str((_CHECKPOINTS_DIR / "shared" / "Cosmos-Tokenizer-CI8x8").resolve()))
+os.environ.setdefault("QWEN3_2B_PATH", str((_CHECKPOINTS_DIR / "shared" / "Qwen3-VL-2B-Instruct").resolve()))
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
@@ -142,8 +147,70 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     return {"images": images, "state": state, "prompt": prompt}
 
 
+def _extract_step_number(value: Any) -> int | None:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _resolve_policy_path(value: str | None) -> Path | None:
+    if not value:
+        return None
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = (_CUR_DIR / path).resolve()
+    else:
+        path = path.resolve()
+    return path
+
+
+def _resolve_internvla_ckpt_dir(model_cfg: dict[str, Any]) -> Path:
+    ckpt_path = model_cfg.get("ckpt_path")
+    if ckpt_path:
+        return resolve_ckpt_dir(ckpt_path)
+
+    ckpt_name = model_cfg.get("ckpt_name")
+    if not ckpt_name:
+        raise ValueError("ckpt_name or ckpt_path is required for InternVLA_A1.")
+
+    checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+    if not checkpoint_root.is_dir():
+        raise FileNotFoundError(f"Checkpoint root not found: {checkpoint_root}")
+
+    candidate_dirs = []
+    if (checkpoint_root / "pretrained_model").is_dir():
+        candidate_dirs.append(checkpoint_root)
+    candidate_dirs.extend(
+        child
+        for child in sorted(checkpoint_root.iterdir())
+        if child.is_dir() and (child / "pretrained_model").is_dir()
+    )
+    if not candidate_dirs:
+        raise FileNotFoundError(f"No pretrained_model checkpoint found under {checkpoint_root}")
+
+    checkpoint_num = model_cfg.get("checkpoint_num")
+    desired_step = _extract_step_number(checkpoint_num)
+    if desired_step is not None:
+        for candidate in candidate_dirs:
+            candidate_step = _extract_step_number(candidate.name)
+            if candidate_step is None:
+                continue
+            scaled_step = desired_step
+            while len(str(scaled_step)) < len(str(candidate_step)):
+                scaled_step *= 10
+            if candidate_step in {desired_step, scaled_step}:
+                return (candidate / "pretrained_model").resolve()
+
+    numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+    if numeric_dirs:
+        selected = max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+        return (selected / "pretrained_model").resolve()
+    return (candidate_dirs[0] / "pretrained_model").resolve()
+
+
 def resolve_ckpt_dir(ckpt_path):
     ckpt = Path(str(ckpt_path)).expanduser()
+    if not ckpt.is_absolute():
+        ckpt = (_CUR_DIR / ckpt).resolve()
     if ckpt.exists():
         return ckpt.resolve()
     return Path(snapshot_download(repo_id=str(ckpt_path)))
@@ -165,7 +232,15 @@ class Model(ModelTemplate):
         if self.device.type != "cuda":
             self.dtype = torch.float32
 
-        self.ckpt_dir = resolve_ckpt_dir(self.model_cfg.get("ckpt_path"))
+        for env_key, cfg_key in (
+            ("COSMOS_PATH", "cosmos_path"),
+            ("QWEN3_2B_PATH", "qwen3_2b_path"),
+        ):
+            value = _resolve_policy_path(self.model_cfg.get(cfg_key))
+            if value is not None:
+                os.environ[env_key] = str(value)
+
+        self.ckpt_dir = _resolve_internvla_ckpt_dir(self.model_cfg)
         self.policy, self.input_transforms, self.unnormalize_fn = self._build_policy_and_transforms()
         self.image_history_interval = int(self.model_cfg.get("image_history_interval", 15))
         self.infer_horizon = int(self.model_cfg.get("infer_horizon", 30))

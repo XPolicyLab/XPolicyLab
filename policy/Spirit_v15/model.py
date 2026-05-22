@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, Optional
@@ -13,6 +14,9 @@ from scipy.spatial.transform import Rotation
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.policy.Spirit_v15.spirit_v15.model import SpiritVLAPolicy
+
+_POLICY_DIR = Path(__file__).resolve().parent
+_CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
 
 _TASK_INFO_MODULE_PATH = (
     Path(__file__).resolve().parent
@@ -145,6 +149,65 @@ def _to_scalar_gripper(value: Any) -> float:
     return float(array[0])
 
 
+def _extract_step_number(value: Any) -> int | None:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _resolve_spirit_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
+    ckpt_name = model_cfg.get("ckpt_name")
+    if not ckpt_name:
+        checkpoint_path = model_cfg.get("checkpoint_path") or model_cfg.get("model_path")
+        if checkpoint_path is None:
+            raise ValueError("ckpt_name, checkpoint_path, or model_path is required for Spirit_v15.")
+        checkpoint_path = Path(checkpoint_path).expanduser()
+        if not checkpoint_path.is_absolute():
+            checkpoint_path = (_POLICY_DIR / checkpoint_path).resolve()
+        return checkpoint_path.resolve()
+
+    checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+    if not checkpoint_root.is_dir():
+        return checkpoint_root
+
+    candidate_dirs = []
+    if (checkpoint_root / "config.json").exists() or (checkpoint_root / "model.safetensors").exists():
+        candidate_dirs.append(checkpoint_root)
+    candidate_dirs.extend(
+        child
+        for child in sorted(checkpoint_root.iterdir())
+        if child.is_dir() and ((child / "config.json").exists() or (child / "model.safetensors").exists())
+    )
+    if not candidate_dirs:
+        return checkpoint_root
+
+    checkpoint_num = model_cfg.get("checkpoint_num")
+    desired_step = _extract_step_number(checkpoint_num)
+    if desired_step is not None:
+        for candidate in candidate_dirs:
+            candidate_step = _extract_step_number(candidate.name)
+            if candidate_step is None:
+                continue
+            scaled_step = desired_step
+            while len(str(scaled_step)) < len(str(candidate_step)):
+                scaled_step *= 10
+            if candidate_step in {desired_step, scaled_step}:
+                return candidate
+
+    numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+    if numeric_dirs:
+        return max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+    return candidate_dirs[0]
+
+
+def _resolve_policy_path(value: str | None) -> Path | None:
+    if not value:
+        return None
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = (_POLICY_DIR / path).resolve()
+    return path.resolve()
+
+
 def _post_process_action(
     action_np: np.ndarray,
     state_np: np.ndarray,
@@ -241,14 +304,72 @@ def _post_process_action(
     return result_list
 
 
+def _is_complete_hf_snapshot(path: Path) -> bool:
+    if (path / "model.safetensors").exists():
+        return True
+    index_path = path / "model.safetensors.index.json"
+    if not index_path.exists():
+        return False
+    index_data = json.loads(index_path.read_text(encoding="utf-8"))
+    weight_map = index_data.get("weight_map", {})
+    shard_names = sorted(set(weight_map.values()))
+    return bool(shard_names) and all((path / shard_name).exists() for shard_name in shard_names)
+
+
+def _resolve_hf_local_path(model_id: str) -> str | None:
+    candidate = Path(model_id).expanduser()
+    if candidate.exists() and _is_complete_hf_snapshot(candidate):
+        return str(candidate.resolve())
+
+    cache_roots = []
+    if os.environ.get("HF_HOME"):
+        cache_roots.append(Path(os.environ["HF_HOME"]) / "hub")
+    cache_roots.extend(
+        (
+            Path.home() / ".cache/huggingface/hub",
+            Path("/xspark-cache/.cache/huggingface/hub"),
+        )
+    )
+    repo_cache_name = f"models--{model_id.replace('/', '--')}"
+    for cache_root in cache_roots:
+        snapshots = cache_root / repo_cache_name / "snapshots"
+        if not snapshots.is_dir():
+            continue
+        candidates = sorted(path for path in snapshots.iterdir() if path.is_dir())
+        for candidate_dir in reversed(candidates):
+            if _is_complete_hf_snapshot(candidate_dir):
+                return str(candidate_dir.resolve())
+    return None
+
+
+def _patch_spirit_backbone_config(config_path: Path, backbone_override: str | None) -> str | None:
+    if not config_path.exists():
+        return None
+
+    original = config_path.read_text(encoding="utf-8")
+    cfg_data = json.loads(original)
+    backbone = backbone_override or cfg_data.get("backbone")
+    local_backbone = _resolve_hf_local_path(str(backbone)) if backbone else None
+    if not local_backbone or cfg_data.get("backbone") == local_backbone:
+        return None
+
+    cfg_data["backbone"] = local_backbone
+    config_path.write_text(json.dumps(cfg_data, indent=2), encoding="utf-8")
+    return original
+
+
 class Model(ModelTemplate):
     def __init__(self, model_cfg: dict[str, Any]):
         self.model_cfg = dict(model_cfg)
         self.device = self._get_device(self.model_cfg.get("device", "auto"))
 
-        checkpoint_path = self.model_cfg.get("checkpoint_path") or self.model_cfg.get("model_path")
-        if checkpoint_path is None:
-            raise ValueError("checkpoint_path or model_path is required for Spirit_v15.")
+        checkpoint_path = _resolve_spirit_checkpoint_dir(self.model_cfg)
+        spirit_base_weights = _resolve_policy_path(self.model_cfg.get("spirit_base_weights"))
+        if spirit_base_weights and not (checkpoint_path / "config.json").exists():
+            base_config = spirit_base_weights / "config.json"
+            if base_config.exists():
+                (checkpoint_path / "config.json").symlink_to(base_config)
+        checkpoint_path = str(checkpoint_path)
 
         self.default_task_name = None
         self.fallback_task_name = self._resolve_known_task_name(
@@ -261,12 +382,21 @@ class Model(ModelTemplate):
         self.used_chunk_size = int(self.model_cfg.get("used_chunk_size", 60))
         self.raw_embodiment_stats = None
 
-        raw_stats_path = self.model_cfg.get("raw_embodiment_stats_json_path")
+        raw_stats_path = self._resolve_raw_stats_path(Path(checkpoint_path))
         if raw_stats_path:
             with open(raw_stats_path, "r", encoding="utf-8") as file:
                 self.raw_embodiment_stats = json.load(file)
 
-        self.policy = SpiritVLAPolicy.from_pretrained(checkpoint_path)
+        config_path = Path(checkpoint_path) / "config.json"
+        config_backup = _patch_spirit_backbone_config(
+            config_path,
+            str(_resolve_policy_path(self.model_cfg.get("spirit_backbone_path")) or ""),
+        )
+        try:
+            self.policy = SpiritVLAPolicy.from_pretrained(checkpoint_path)
+        finally:
+            if config_backup is not None:
+                config_path.write_text(config_backup, encoding="utf-8")
         self._assert_norm_stats_loaded()
         self.policy.to(self.device)
         self.policy.eval()
@@ -282,6 +412,27 @@ class Model(ModelTemplate):
         if requested.type == "cuda" and not torch.cuda.is_available():
             return torch.device("cpu")
         return requested
+
+    def _resolve_raw_stats_path(self, checkpoint_dir: Path) -> str | None:
+        configured_path = self.model_cfg.get("raw_embodiment_stats_json_path")
+        if configured_path:
+            return str(Path(configured_path).expanduser().resolve())
+
+        checkpoint_root = (_CHECKPOINTS_DIR / str(self.model_cfg.get("ckpt_name"))).expanduser().resolve() if self.model_cfg.get("ckpt_name") else checkpoint_dir
+        candidates = [
+            checkpoint_dir / "raw_embodiment_stats.json",
+            checkpoint_dir / "embodiment_stats.json",
+            checkpoint_dir / "stats" / "raw_embodiment_stats.json",
+            checkpoint_dir / "assets" / "raw_embodiment_stats.json",
+            checkpoint_root / "raw_embodiment_stats.json",
+            checkpoint_root / "embodiment_stats.json",
+            checkpoint_root / "stats" / "raw_embodiment_stats.json",
+            checkpoint_root / "assets" / "raw_embodiment_stats.json",
+        ]
+        for candidate in candidates:
+            if candidate.is_file():
+                return str(candidate)
+        return None
 
     def _assert_norm_stats_loaded(self):
         required_buffers = {

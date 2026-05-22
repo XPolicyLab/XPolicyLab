@@ -10,9 +10,10 @@ import torch
 
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
-_SMOVLA_ROOT = _REPO_ROOT.parent / "smovla"
-_LEROBOT_SRC = _SMOVLA_ROOT / "lerobot" / "src"
-_LEROBOT_ROOT = _SMOVLA_ROOT / "lerobot"
+_SMOVLA_ROOT = _CUR_DIR / "smovla"
+_LEROBOT_SRC = _SMOVLA_ROOT / "src"
+_LEROBOT_ROOT = _SMOVLA_ROOT
+_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
 
 for _path in (str(_REPO_ROOT), str(_LEROBOT_SRC), str(_LEROBOT_ROOT)):
     if _path not in sys.path:
@@ -104,6 +105,23 @@ def resolve_prompt(observation: dict[str, Any], default_prompt: str) -> str:
         raise ValueError("No valid prompt found in observation or model config.")
     return fallback
 
+
+def _extract_step_number(value: Any) -> int | None:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
+    ckpt_name = model_cfg.get("ckpt_name")
+    if ckpt_name:
+        return (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+
+    for key in ("pretrained_path", "model_path", "checkpoint_path"):
+        value = model_cfg.get(key)
+        if value:
+            return Path(value).expanduser().resolve()
+    return None
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
         images = {
@@ -144,7 +162,7 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg) if env_cfg is not None else None
         self.default_prompt = self.model_cfg.get("prompt", self.task_name)
         self.device = self._get_device(self.model_cfg.get("device", "cuda"))
-        self.pretrained_path = self._resolve_pretrained_path(self.model_cfg.get("pretrained_path") or self.model_cfg.get("model_path"))
+        self.pretrained_path = self._resolve_pretrained_path(_resolve_checkpoint_root(self.model_cfg))
         self.policy = self._load_policy()
         self.actions_per_chunk = self._resolve_actions_per_chunk()
         self.preprocessor, self.postprocessor = self._build_processors()
@@ -177,27 +195,79 @@ class Model(ModelTemplate):
             return resolved
         raise ValueError("Failed to resolve actions_per_chunk from model config or policy config.")
 
-    def _resolve_pretrained_path(self, pretrained_path):
-        if pretrained_path is None:
-            raise ValueError("pretrained_path or model_path is required for SmoVLA.")
-        root = Path(pretrained_path).expanduser().resolve()
+    def _resolve_pretrained_path(self, checkpoint_root: Path | None):
+        if checkpoint_root is None:
+            raise ValueError("ckpt_name, pretrained_path, or model_path is required for SmoVLA.")
+
+        artifact_root = checkpoint_root
+        if checkpoint_root.is_dir():
+            candidate_dirs = []
+            if (checkpoint_root / "model.safetensors").exists() or (checkpoint_root / "pretrained_model").is_dir():
+                candidate_dirs.append(checkpoint_root)
+            candidate_dirs.extend(
+                child
+                for child in sorted(checkpoint_root.iterdir())
+                if child.is_dir() and ((child / "model.safetensors").exists() or (child / "pretrained_model").is_dir())
+            )
+            checkpoint_num = self.model_cfg.get("checkpoint_num")
+            desired_step = _extract_step_number(checkpoint_num)
+            if desired_step is not None:
+                for candidate in candidate_dirs:
+                    candidate_step = _extract_step_number(candidate.name)
+                    if candidate_step is None:
+                        continue
+                    scaled_step = desired_step
+                    while len(str(scaled_step)) < len(str(candidate_step)):
+                        scaled_step *= 10
+                    if candidate_step in {desired_step, scaled_step}:
+                        artifact_root = candidate
+                        break
+                else:
+                    numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+                    if numeric_dirs:
+                        artifact_root = max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+            elif candidate_dirs:
+                numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+                artifact_root = (
+                    max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+                    if numeric_dirs
+                    else candidate_dirs[0]
+                )
+
         candidates = [
-            root,
-            root / "pretrained_model",
-            root / "checkpoints" / "last" / "pretrained_model",
+            artifact_root,
+            artifact_root / "pretrained_model",
+            artifact_root / "checkpoints" / "last" / "pretrained_model",
         ]
         for candidate in candidates:
             if (candidate / "model.safetensors").is_file():
                 return str(candidate)
         raise FileNotFoundError(
-            f"Could not find a LeRobot pretrained policy under `{pretrained_path}`. "
+            f"Could not find a LeRobot pretrained policy under `{artifact_root}`. "
             "Expected `model.safetensors` in the path itself, `pretrained_model/`, "
             "or `checkpoints/last/pretrained_model/`."
         )
 
+    def _load_smovla_config(self):
+        from lerobot.configs.policies import PreTrainedConfig
+
+        config = PreTrainedConfig.from_pretrained(self.pretrained_path)
+        vlm_path = self.model_cfg.get("smovla_vlm_path")
+        if vlm_path:
+            resolved_vlm = Path(vlm_path).expanduser()
+            if not resolved_vlm.is_absolute():
+                resolved_vlm = (_CUR_DIR / resolved_vlm).resolve()
+            else:
+                resolved_vlm = resolved_vlm.resolve()
+            if resolved_vlm.is_dir():
+                config.vlm_model_name = str(resolved_vlm)
+                config.load_vlm_weights = False
+        return config
+
     def _load_policy(self):
         policy_class = get_policy_class("smolvla")
-        policy = policy_class.from_pretrained(self.pretrained_path)
+        config = self._load_smovla_config()
+        policy = policy_class.from_pretrained(self.pretrained_path, config=config)
         policy.to(self.device)
         return policy
 

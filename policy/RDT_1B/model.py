@@ -15,6 +15,7 @@ from PIL import Image as PImage
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
 _RDT_ROOT = _CUR_DIR / "rdt"
+_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
 
 for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_RDT_ROOT), str(_RDT_ROOT / "models")):
     if _path not in sys.path:
@@ -25,6 +26,22 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, unpack_robo
 
 from .rdt.scripts.agilex_model import create_model
 from .rdt.models.multimodal_encoder.t5_encoder import T5Embedder
+
+
+def _resolve_path(value: str | None) -> Path | None:
+    if not value:
+        return None
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = (_CUR_DIR / path).resolve()
+    else:
+        path = path.resolve()
+    return path
+
+
+def _extract_step_number(value: Any) -> int | None:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    return int(digits) if digits else None
 
 
 def extract_image(observation, candidate_names):
@@ -152,23 +169,112 @@ class Model(ModelTemplate):
             "camera_names": ["cam_high", "cam_right_wrist", "cam_left_wrist"],
         }
 
+    def _resolve_checkpoint_root(self) -> Path | None:
+        ckpt_name = self.model_cfg.get("ckpt_name")
+        if ckpt_name:
+            checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+            if not checkpoint_root.is_dir():
+                return checkpoint_root
+
+            candidate_dirs = []
+            if any((checkpoint_root / marker).exists() for marker in ("config.json", "pytorch_model.bin", "pytorch_model")):
+                candidate_dirs.append(checkpoint_root)
+            candidate_dirs.extend(
+                child
+                for child in sorted(checkpoint_root.iterdir())
+                if child.is_dir() and any((child / marker).exists() for marker in ("config.json", "pytorch_model.bin", "pytorch_model"))
+            )
+            if not candidate_dirs:
+                return checkpoint_root
+
+            checkpoint_num = self.model_cfg.get("checkpoint_num")
+            desired_step = _extract_step_number(checkpoint_num)
+            if desired_step is not None:
+                for candidate in candidate_dirs:
+                    candidate_step = _extract_step_number(candidate.name)
+                    if candidate_step is None:
+                        continue
+                    scaled_step = desired_step
+                    while len(str(scaled_step)) < len(str(candidate_step)):
+                        scaled_step *= 10
+                    if candidate_step in {desired_step, scaled_step}:
+                        return candidate
+
+            numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+            if numeric_dirs:
+                return max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+            return candidate_dirs[0]
+
+        for key in ("checkpoint_path", "model_path", "model_root"):
+            resolved = _resolve_path(self.model_cfg.get(key))
+            if resolved is not None:
+                return resolved
+        return None
+
+    def _resolve_indexed_path(self, base_dir: Path | None, explicit_value: str | None, candidate_relpaths: list[str]) -> str | None:
+        explicit_path = _resolve_path(explicit_value)
+        if explicit_path is not None:
+            return str(explicit_path)
+        search_roots = []
+        for root in (base_dir, _CHECKPOINTS_DIR):
+            if root is not None and root not in search_roots:
+                search_roots.append(root)
+        if not search_roots:
+            return None
+
+        for root in search_roots:
+            fallback_path = root
+            for relative_path in candidate_relpaths:
+                candidate = root / relative_path if relative_path else root
+                fallback_path = candidate
+                if candidate.exists():
+                    return str(candidate)
+            if root is base_dir:
+                return str(fallback_path)
+        return str(fallback_path)
+
     def _default_model_paths(self):
-        model_root = self.model_cfg.get("model_root") or str(_RDT_ROOT)
-        default_config_path = os.path.join(model_root, "configs/base.yaml")
-        default_text_encoder_path = os.path.join(model_root, "weights/RDT/t5-v1_1-xxl")
-        default_vision_encoder_path = os.path.join(model_root, "weights/RDT/siglip-so400m-patch14-384")
+        checkpoint_root = self._resolve_checkpoint_root()
+        model_root = _resolve_path(self.model_cfg.get("model_root")) or checkpoint_root or _RDT_ROOT
+        default_config_path = model_root / "configs" / "base.yaml"
+        if not default_config_path.exists():
+            default_config_path = _RDT_ROOT / "configs" / "base.yaml"
 
         return {
-            "config_path": self.model_cfg.get("config_path") or default_config_path,
-            "text_encoder_path": self.model_cfg.get("text_encoder_path") or default_text_encoder_path,
-            "vision_encoder_path": self.model_cfg.get("vision_encoder_path") or default_vision_encoder_path,
-            "checkpoint_path": self.model_cfg.get("checkpoint_path") or self.model_cfg.get("model_path"),
+            "config_path": self.model_cfg.get("config_path") or str(default_config_path),
+            "text_encoder_path": self._resolve_indexed_path(
+                model_root,
+                self.model_cfg.get("text_encoder_path"),
+                [
+                    "shared/t5-v1_1-xxl",
+                    "text_encoder",
+                    "weights/RDT/t5-v1_1-xxl",
+                    "google/t5-v1_1-xxl",
+                    "t5-v1_1-xxl",
+                ],
+            ),
+            "vision_encoder_path": self._resolve_indexed_path(
+                model_root,
+                self.model_cfg.get("vision_encoder_path"),
+                [
+                    "shared/siglip-so400m-patch14-384",
+                    "vision_encoder",
+                    "weights/RDT/siglip-so400m-patch14-384",
+                    "google/siglip-so400m-patch14-384",
+                    "siglip-so400m-patch14-384",
+                ],
+            ),
+            "checkpoint_path": self._resolve_indexed_path(
+                checkpoint_root,
+                self.model_cfg.get("checkpoint_path") or self.model_cfg.get("model_path"),
+                ["", "checkpoint", "model", "pretrained_model"],
+            ),
         }
 
     def _build_model_args(self):
         paths = self._default_model_paths()
         if paths["checkpoint_path"] is None:
-            raise ValueError("checkpoint_path or model_path is required for RDT-1b.")
+            raise ValueError("ckpt_name, checkpoint_path, or model_path is required for RDT-1b.")
 
         return {
             "max_publish_step": int(self.model_cfg.get("max_publish_step", 10000)),

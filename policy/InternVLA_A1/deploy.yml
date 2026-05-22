@@ -1,20 +1,23 @@
 # Basic experiment configuration
-policy_name: InternVLA-A1
+policy_name: InternVLA_A1
 task_name: null
 env_cfg: null
+env_cfg_type: null
 expert_data_num: null
 seed: null
 eval_batch: false
+eval_env: debug
 
-checkpoint_num: null
+checkpoint_num: 60000
 result_dir: "./results/InternVLA-A1/"
 obs_transform_pipeline: null
 
 # Model / action configuration
 action_type: joint
 prompt: null
-ckpt_path: "InternRobotics/InternVLA-A1-3B-RoboTwin"
-stats_key: "aloha"
+stats_key: unified_robot
+cosmos_path: checkpoints/shared/Cosmos-Tokenizer-CI8x8
+qwen3_2b_path: checkpoints/shared/Qwen3-VL-2B-Instruct
 resize_size: 224
 image_history_interval: 15
 infer_horizon: 30
@@ -24,5 +27,4 @@ device: cuda
 dtype: float32
 decode_image_flag: false
 
-# XPolicyLab model server port
 port: 6000

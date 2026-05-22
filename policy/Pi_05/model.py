@@ -19,6 +19,66 @@ from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
 
+_POLICY_DIR = Path(__file__).resolve().parent
+_CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
+
+
+def _extract_step_number(value: Any) -> int | None:
+    matches = [part for part in str(value).split("/") if part]
+    if not matches:
+        return None
+    digits = "".join(ch for ch in matches[-1] if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _resolve_pi05_model_root(model_cfg: dict[str, Any]) -> Path:
+    ckpt_name = model_cfg.get("ckpt_name")
+    if not ckpt_name:
+        model_path = model_cfg.get("model_path") or model_cfg.get("checkpoint_path")
+        if model_path is None:
+            raise ValueError("ckpt_name or model_path is required for Pi_05.")
+        return Path(model_path).expanduser().resolve()
+
+    checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+    if not checkpoint_root.is_dir():
+        return checkpoint_root
+
+    candidate_dirs = []
+    if (checkpoint_root / "params").exists() or (checkpoint_root / "assets").exists():
+        candidate_dirs.append(checkpoint_root)
+    candidate_dirs.extend(
+        child
+        for child in sorted(checkpoint_root.iterdir())
+        if child.is_dir() and ((child / "params").exists() or (child / "assets").exists())
+    )
+    if not candidate_dirs:
+        return checkpoint_root
+
+    checkpoint_num = model_cfg.get("checkpoint_num")
+    desired_step = _extract_step_number(checkpoint_num)
+    if desired_step is not None:
+        normalized = str(desired_step)
+        for candidate in candidate_dirs:
+            name = candidate.name.lstrip("0") or "0"
+            if name == normalized:
+                return candidate
+
+        for candidate in candidate_dirs:
+            candidate_step = _extract_step_number(candidate.name)
+            if candidate_step is None:
+                continue
+            scaled_step = desired_step
+            while len(str(scaled_step)) < len(str(candidate_step)):
+                scaled_step *= 10
+            if candidate_step in {desired_step, scaled_step}:
+                return candidate
+
+    numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+    if numeric_dirs:
+        return max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+    return candidate_dirs[0]
+
+
 class Model(ModelTemplate):
     def __init__(self, model_cfg: dict[str, Any]):
         self.task_name = model_cfg["task_name"]
@@ -36,13 +96,14 @@ class Model(ModelTemplate):
     def get_model(self, model_cfg: dict[str, Any]):
         train_config_name = model_cfg.get("train_config_name", "pi05_aloha")
         repo_id = model_cfg.get("repo_id", "1118")
+        model_root = _resolve_pi05_model_root(model_cfg)
 
         config = _config.get_config(train_config_name)
         norm_stats = None
         if repo_id is not None:
-            norm_stats = _normalize.load(Path(model_cfg["model_path"]) / "assets" / str(repo_id))
+            norm_stats = _normalize.load(model_root / "assets" / str(repo_id))
 
-        return _policy_config.create_trained_policy(config, model_cfg["model_path"], norm_stats=norm_stats)
+        return _policy_config.create_trained_policy(config, str(model_root), norm_stats=norm_stats)
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
