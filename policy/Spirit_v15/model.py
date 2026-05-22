@@ -392,13 +392,19 @@ class Model(ModelTemplate):
             config_path,
             str(_resolve_policy_path(self.model_cfg.get("spirit_backbone_path")) or ""),
         )
+        qwen_device_map = "auto" if self.device.type == "cuda" and torch.cuda.device_count() > 1 else None
+        if qwen_device_map is not None:
+            print(f"[Spirit_v15] Using multi-GPU Qwen device_map={qwen_device_map} across {torch.cuda.device_count()} visible GPUs.")
         try:
-            self.policy = SpiritVLAPolicy.from_pretrained(checkpoint_path)
+            self.policy = SpiritVLAPolicy.from_pretrained(
+                checkpoint_path,
+                qwen_device_map=qwen_device_map,
+            )
         finally:
             if config_backup is not None:
                 config_path.write_text(config_backup, encoding="utf-8")
         self._assert_norm_stats_loaded()
-        self.policy.to(self.device)
+        self._move_policy_to_device()
         self.policy.eval()
         self.model = self.policy
 
@@ -412,6 +418,14 @@ class Model(ModelTemplate):
         if requested.type == "cuda" and not torch.cuda.is_available():
             return torch.device("cpu")
         return requested
+
+    def _move_policy_to_device(self) -> None:
+        if getattr(getattr(self.policy, "qwen", None), "hf_device_map", None):
+            for name, module in self.policy.named_children():
+                if name != "qwen":
+                    module.to(self.device)
+            return
+        self.policy.to(self.device)
 
     def _resolve_raw_stats_path(self, checkpoint_dir: Path) -> str | None:
         configured_path = self.model_cfg.get("raw_embodiment_stats_json_path")
@@ -471,7 +485,7 @@ class Model(ModelTemplate):
                 instruction=resolve_prompt(observation, self.default_prompt),
                 task_name=observation.get("task_name"),
             )
-            print(f"Infer result: {result}")
+            
             action_list.append(
                 self._decode_action_chunk(
                     result["actions"],
@@ -503,12 +517,7 @@ class Model(ModelTemplate):
             used_chunk_size = 40
 
         binarization_threshold = TASTS_APPLY_GRIPPER_BINARIZATION.get(resolved_task_name)
-        with (
-            torch.inference_mode(),
-            torch.autocast(device_type=self.device.type, dtype=torch.bfloat16)
-            if self.device.type == "cuda"
-            else nullcontext(),
-        ):
+        with torch.inference_mode():
             action_tensor = self.policy.select_action(batch).cpu()
 
         actions = _post_process_action(
