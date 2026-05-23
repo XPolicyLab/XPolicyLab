@@ -14,6 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 AGIBOT_DIR="${SCRIPT_DIR}/AgiBot-World"
+DEFAULT_GO1_MODEL_PATH="$(cd "${ROOT_DIR}/.." && pwd)/models/GO-1"
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export CUDA_HOME="${CUDA_HOME:-/usr/local/cuda-12}"
@@ -55,7 +56,7 @@ export ACTION_DIM="${action_dim}"
 export STATE_DIM="${action_dim}"
 export CTRL_FREQ=30
 export ACTION_CHUNK_SIZE=30
-export MODEL_NAME_OR_PATH="/mnt/pfs/pg4hw0/qiwei/models/GO-1"
+export MODEL_NAME_OR_PATH="${MODEL_NAME_OR_PATH:-${DEFAULT_GO1_MODEL_PATH}}"
 export DEFAULT_PROMPT="Do your job."
 export TRAIN_SEED="${seed}"
 

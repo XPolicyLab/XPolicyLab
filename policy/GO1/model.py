@@ -7,6 +7,7 @@ import numpy as np
 # Add AgiBot-World to sys.path for imports
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _AGIBOT_DIR = os.path.join(_SCRIPT_DIR, "AgiBot-World")
+_DEFAULT_GO1_MODEL_PATH = os.path.abspath(os.path.join(_SCRIPT_DIR, "../../../../models/GO-1"))
 if _AGIBOT_DIR not in sys.path:
     sys.path.insert(0, _AGIBOT_DIR)
 
@@ -29,6 +30,105 @@ def _find_latest_checkpoint(run_dir):
         return None
     ckpts.sort(key=lambda x: int(x.split("-")[-1]))
     return os.path.join(run_dir, ckpts[-1])
+
+
+def _find_latest_run_dir(checkpoints_dir, run_basename):
+    latest_file = os.path.join(checkpoints_dir, f"{run_basename}.latest")
+    if os.path.isfile(latest_file):
+        with open(latest_file, "r", encoding="utf-8") as f:
+            latest_dir = f.read().strip()
+        if os.path.isdir(latest_dir):
+            return latest_dir
+
+    preferred_dir = os.path.join(checkpoints_dir, run_basename)
+    if os.path.isdir(preferred_dir):
+        return preferred_dir
+
+    candidates = []
+    prefix = f"{run_basename}-"
+    if os.path.isdir(checkpoints_dir):
+        for entry in os.listdir(checkpoints_dir):
+            path = os.path.join(checkpoints_dir, entry)
+            if entry.startswith(prefix) and os.path.isdir(path):
+                candidates.append(path)
+    if not candidates:
+        return None
+    candidates.sort(key=os.path.getmtime, reverse=True)
+    return candidates[0]
+
+
+def _list_candidate_run_dirs(checkpoints_dir, run_basename):
+    candidates = []
+    latest_file = os.path.join(checkpoints_dir, f"{run_basename}.latest")
+    if os.path.isfile(latest_file):
+        with open(latest_file, "r", encoding="utf-8") as f:
+            latest_dir = f.read().strip()
+        if os.path.isdir(latest_dir):
+            candidates.append(latest_dir)
+
+    preferred_dir = os.path.join(checkpoints_dir, run_basename)
+    if os.path.isdir(preferred_dir) and preferred_dir not in candidates:
+        candidates.append(preferred_dir)
+
+    prefix = f"{run_basename}-"
+    if os.path.isdir(checkpoints_dir):
+        run_dirs = []
+        for entry in os.listdir(checkpoints_dir):
+            path = os.path.join(checkpoints_dir, entry)
+            if entry.startswith(prefix) and os.path.isdir(path):
+                run_dirs.append(path)
+        run_dirs.sort(key=os.path.getmtime, reverse=True)
+        for path in run_dirs:
+            if path not in candidates:
+                candidates.append(path)
+
+    return candidates
+
+
+def _resolve_model_assets(model_cfg):
+    checkpoints_dir = os.path.join(_SCRIPT_DIR, "checkpoints")
+    model_path = model_cfg.get("model_path") or None
+    data_stats_path = model_cfg.get("data_stats_path") or None
+    run_dir = None
+
+    if model_path:
+        model_path = os.path.abspath(model_path)
+        latest_ckpt = _find_latest_checkpoint(model_path)
+        if latest_ckpt is not None:
+            run_dir = model_path
+            model_path = latest_ckpt
+        elif os.path.basename(model_path).startswith("checkpoint-"):
+            run_dir = os.path.dirname(model_path)
+    else:
+        task_name = model_cfg.get("task_name", "")
+        action_type = model_cfg.get("action_type", "")
+        expert_data_num = model_cfg.get("expert_data_num", "")
+        seed = model_cfg.get("seed", "0")
+        run_basename = f"{task_name}-go1-{action_type}-{expert_data_num}eps-seed{seed}"
+        for candidate_run_dir in _list_candidate_run_dirs(checkpoints_dir, run_basename):
+            candidate_model_path = _find_latest_checkpoint(candidate_run_dir)
+            if candidate_model_path is not None:
+                run_dir = candidate_run_dir
+                model_path = candidate_model_path
+                break
+
+    if data_stats_path:
+        data_stats_path = os.path.abspath(data_stats_path)
+    else:
+        for candidate_dir in (run_dir, model_path):
+            if not candidate_dir:
+                continue
+            candidate = os.path.join(candidate_dir, "dataset_stats.json")
+            if os.path.isfile(candidate):
+                data_stats_path = candidate
+                break
+
+    if model_path is None:
+        model_path = os.path.join(_SCRIPT_DIR, "AgiBot-World", "go1", "models", "GO-1")
+        if not os.path.isdir(model_path):
+            model_path = _DEFAULT_GO1_MODEL_PATH
+
+    return model_path, data_stats_path
 
 
 class Model(ModelTemplate):
@@ -56,38 +156,7 @@ class Model(ModelTemplate):
               f"action_chunk_size={self.action_chunk_size} | ctrl_freq={self.ctrl_freq}")
 
     def _load_model(self, model_cfg):
-        model_path = model_cfg.get("model_path", None) or None
-        run_dir = None
-
-        if model_path is None:
-            # Try trained checkpoint first, then fall back to pretrained model
-            task_name = model_cfg.get("task_name", "")
-            seed = model_cfg.get("seed", "0")
-            runname = f"{task_name}-go1-seed{seed}"
-            run_dir = os.path.join(_SCRIPT_DIR, "checkpoints", runname)
-            if os.path.isdir(run_dir):
-                model_path = _find_latest_checkpoint(run_dir)
-            if model_path is None:
-                model_path = os.path.join(_SCRIPT_DIR, "AgiBot-World", "go1", "models", "GO-1")
-                if not os.path.isdir(model_path):
-                    model_path = "/mnt/pfs/pg4hw0/qiwei/models/GO-1"
-        else:
-            # If model_path points to a run dir (not a checkpoint subdir), find latest
-            latest = _find_latest_checkpoint(model_path)
-            if latest is not None:
-                run_dir = model_path
-                model_path = latest
-
-        data_stats_path = model_cfg.get("data_stats_path", None) or None
-        if data_stats_path is None:
-            # Look for dataset_stats.json in run dir, then in model_path
-            for candidate_dir in [run_dir, model_path]:
-                if candidate_dir is None:
-                    continue
-                candidate = os.path.join(candidate_dir, "dataset_stats.json")
-                if os.path.exists(candidate):
-                    data_stats_path = candidate
-                    break
+        model_path, data_stats_path = _resolve_model_assets(model_cfg)
 
         print(f"[GO1 Model] Loading model from: {model_path}")
         if data_stats_path:

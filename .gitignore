@@ -9,6 +9,8 @@ policy/A1/data_ee
 policy/A1/lqw.txt
 policy/GO1/__pycache__
 policy/GO1/.cache
+policy/GO1/tmp
 policy/GO1/checkpoints
 policy/GO1/data
 policy/GO1/lqw.txt
+policy/GO1/AgiBot-World/wandb

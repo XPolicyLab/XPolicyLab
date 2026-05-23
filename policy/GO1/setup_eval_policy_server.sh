@@ -11,8 +11,7 @@ policy_gpu_id=$7
 policy_conda_env=$8
 policy_server_port=$9
 model_path=${10}
-data_stats_path=${11}
-policy_server_host=${12:-"localhost"}
+policy_server_host=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -25,7 +24,6 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 echo "[SERVER] model_path=${model_path}"
-echo "[SERVER] data_stats_path=${data_stats_path}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
@@ -48,5 +46,4 @@ exec env \
             policy_name="${policy_name}" \
             action_type="${action_type}" \
             action_dim="${action_dim}" \
-            model_path="${model_path}" \
-            data_stats_path="${data_stats_path}"
+            model_path="${model_path}"
