@@ -31,6 +31,21 @@ demo_env/
 ├── env_cfg
 └── XPolicyLab
 ```
+将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
+```text
+demo_env/
+├── data
+│   └── {dataset_name}
+│       └── {task_name}
+│            └── {env_cfg}
+│                 ├── data
+│                 ├── preview_video
+│                 ├── scene_layout
+│                 ├── seed.txt
+│                 └── traj_data
+├── env_cfg
+└── XPolicyLab
+```
 
 接着，创建并激活 Conda 环境，安装项目依赖：
 
@@ -137,14 +152,16 @@ Trajectory Data Format v1.0
 
 ```text
 demo_policy
-├── deploy.py       # 部署模型的流程（含串行与并行两种层级方案）
-├── deploy.yml      # 部署参数配置，参数将传入 model.Model 中，辅助用户定义模型参数并加载模型
-├── eval.sh         # 评测启动脚本
+├── deploy.py                       # 部署模型的流程（含串行与并行两种层级方案）
+├── deploy.yml                      # 部署参数配置，参数将传入 model.Model 中，辅助用户定义模型参数并加载模型
+├── eval.sh                         # 评测入口：编排 server + client（同机一键启动）
+├── setup_eval_policy_server.sh     # 在 policy 环境中启动模型服务端，绑定 policy_server_port
+├── setup_eval_env_client.sh        # 在 eval_env 环境中启动环境客户端，按 deploy.yml 的 eval_env 选择 debug/sim/real
 ├── __init__.py
-├── install.sh      # 环境安装脚本 
-├── model.py        # 模型类，定义了模型导入、观测更新、动作获取以及重置逻辑
-├── process_data.sh # 数据处理脚本，将 RoboDojo 数据转换为模型训练所需的格式
-└── train.sh        # 训练启动脚本  
+├── install.sh                      # 环境安装脚本
+├── model.py                        # 模型类，定义了模型导入、观测更新、动作获取以及重置逻辑
+├── process_data.sh                 # 数据处理脚本，将 RoboDojo 数据转换为模型训练所需的格式
+└── train.sh                        # 训练启动脚本
 ```
 
 ## 接入自定义策略 (Policy)
@@ -164,12 +181,19 @@ bash create_policy.sh ${policy_name}
 
 **常见参数说明：**
 - `dataset_name`: 数据集名称，目的是在data目录下区分不同项目的数据集，例如RoboTwin和RoboDojo。
-- `task_name`: 任务名称。
+- `task_name`: 任务名称。`train.sh` / `process_data.sh` 中代表训练任务（多任务可由各 policy 自行扩展为逗号分隔）；`eval.sh` 中代表仿真器中要跑的任务，传给环境客户端。
+- `ckpt_name`: checkpoint 标识，用来唯一定位训练产物所在的子目录。常见做法是与 `task_name` 同名，**cotrain** 场景可置为 `cotrain` 等任意字符串，以便同一份权重在多个 `task_name` 上评测。
 - `env_cfg_type`: 采集或评测的环境配置（包含本体信息等）。在 `demo_env/env_cfg_type` 中可以查看示例。教程中提供了两个示范数据：`dual_franka_panda`（双臂夹爪）和 `g1_inspire`（人形灵巧手）。
 - `expert_data_num`: 训练使用的轨迹数量。
 - `action_type`: 模型使用的数据类型（如 `ee` 或 `joint`）。这会影响使用的数据内容以及模型输入输出的维度。
+- `seed`: 随机种子，便于多种子复现与对比。
 
-> **建议：** 模型的 Checkpoint 命名应包含上述所有参数，以便后续唯一指定加载。当然，也支持用户自定义命名。
+> **命名约定（参考 LDA_1B 现行格式）：**
+> - **数据集子目录**（`process_data.sh` 输出）固定为 5 元组：
+>   `<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>`，落在 `policy/<policy_name>/data/` 下。
+> - **训练产物子目录**（`train.sh` 输出，对应 DP 的 `ckpt_setting`）固定为 6 元组：
+>   `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`，落在 `policy/<policy_name>/checkpoints/` 下。
+>   `train.sh` 没有独立的 `ckpt_name` 时（如 LDA_1B 的 7 参数版本），用 `task_name` 占位即可；`eval.sh` 总是以 `ckpt_name` 反查，所以二者一致才能默认命中。
 
 #### 完善 install.sh
 策略创建后，在根据原项目进行环境配置的同时完善install.sh
@@ -223,21 +247,48 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 }
 ```
 
-转换后数据默认保存在 `XPolicyLab/policy/${policy_name}/data`下。
+转换后数据默认保存在 `XPolicyLab/policy/${policy_name}/data` 下。
+
+`demo_policy/process_data.sh` 的输入参数（5 个，与 LDA_1B / DP 对齐）：
+
+| 序号 | 参数 | 含义 |
+|---|---|---|
+| 1 | `dataset_name` | 数据集名称（如 `RoboDojo`） |
+| 2 | `task_name` | 任务名（单任务；如需多任务 cotrain，可由各 policy 自行扩展为逗号分隔） |
+| 3 | `env_cfg_type` | 环境配置 / 本体类型（如 `g1_inspire`、`arx_x5`） |
+| 4 | `expert_data_num` | 训练使用的轨迹数量 |
+| 5 | `action_type` | 动作类型，`ee` / `joint` 等 |
+
+输出目录名固定为 `<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>`。数据处理是确定性 CPU 任务，所以不接 `gpu_id` / `seed`。
 
 ### 3. 训练模型
 
 完善 `train.sh` 脚本。我们提供了一些演示参数。
 
-`train.sh`中包含`seed`参数，后续会进行不同`seed`的训练及测评，部分`policy`的源代码可能会把`seed`写死，需要注意且进行适配。
+`train.sh` 中包含 `seed` 参数，后续会进行不同 `seed` 的训练及测评，部分 `policy` 的源代码可能会把 `seed` 写死，需要注意且进行适配。
 
-训练权重默认保存在 `XPolicyLab/policy/${policy_name}/checkpoints`下。
+训练权重默认保存在 `XPolicyLab/policy/${policy_name}/checkpoints` 下；子目录名采用上文“命名约定”中的 6 元组 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`（与 DP 的 `ckpt_setting`、LDA_1B 现行格式一致），方便 `eval.sh` 按 `ckpt_name` 直接定位。
+
+`demo_policy/train.sh` 的输入参数（8 个）：
+
+| 序号 | 参数 | 含义 |
+|---|---|---|
+| 1 | `dataset_name` | 数据集名称，与 `process_data.sh` 保持一致 |
+| 2 | `task_name` | 训练任务名（单任务；多任务可扩展为逗号分隔） |
+| 3 | `ckpt_name` | checkpoint 标识，决定输出子目录名；常规训练令其等于 `task_name`，cotrain 训练可设为 `cotrain` 等 |
+| 4 | `env_cfg_type` | 环境配置 / 本体类型 |
+| 5 | `expert_data_num` | 训练使用的轨迹数量 |
+| 6 | `action_type` | 动作类型 |
+| 7 | `seed` | 随机种子 |
+| 8 | `gpu_id` | 训练所用 GPU id（多卡可写 `0,1,2,3`，由各 policy 自行处理） |
+
+> 若策略上游不支持显式 `ckpt_name`（典型如 LDA_1B 的 7 参数 `train.sh`），在 `train.sh` 内部把 `task_name` 透传到 `ckpt_name` 位即可——只要 `eval.sh` 用同一个名字反查，默认路径就能命中。
 
 ### 4. 评测与部署
 
 要支持评测，需要完善两个核心部分：模型推理支持 (`model.py`) 和控制流程 (`deploy.py`)。
 
-我们提供了一个离线调试方案，默认环境为 `debug_policy_env.py`。该调试器会提供尺寸正确的观测数据（Observation），并根据返回的动作（Action）进行检查和模拟交互。调试通过后，即可尝试在仿真环境中运行。这个离线环境可通过将`deploy.yml`的`eval_env`设为`debug`来启动。具体实现可参考`XPolicyLab/policy/DP/eval.sh`及其 Python 文件。
+我们提供了一个离线调试方案，默认环境为 `debug_policy_env.py`。该调试器会提供尺寸正确的观测数据（Observation），并根据返回的动作（Action）进行检查和模拟交互。调试通过后，即可尝试在仿真环境中运行。这个离线环境可通过将 `deploy.yml` 的 `eval_env` 设为 `debug` 来启动；切换到 `sim` 或 `real` 不需要修改 `eval.sh`。具体实现可参考 `XPolicyLab/policy/demo_policy/eval.sh` 及其 Python 文件。
 
 #### 完善 `model.Model`
 
@@ -255,21 +306,50 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 对`update_obs`和`update_obs_batch`的实现。若已实现了`update_obs_batch`，可以参考`DP`的形式直接实现`update_obs`。如果`update_obs_batch`在某个`policy`较难实现，可直接使用`for`循环`update_obs`。
 
 
-#### 配置 `deploy.yml` 与 `eval.sh`
+#### 配置 `deploy.yml` 与三件套评测脚本
 
-- **`deploy.yml`**: 指定模型部署所需的参数。部分参数可定义为 `null`，随后在 `eval.sh` 中进行覆盖。
-- **`eval.sh`**: 部署时分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`。两者通过 `FREE_PORT` 进行通信，从而隔离环境配置。对`policy_conda_env`的实现可参考 DP ,对 `policy_uv_env_path`的实现可参考 PI_05。分别使用 `policy_gpu_id` 和 `env_gpu_id` 来分配仿真和模型部署的gpu占用，可参考DP脚本来实现不同程序使用不同GPU的方法，而不是全局`export CUDA_VISIBLE_DEVICES`。
-您只需修改脚本开头的参数定义，并在启动 Server 部分添加 `overrides` 参数以覆盖 `deploy.yml` 中的配置：
+- **`deploy.yml`**: 指定模型部署所需的参数。部分参数可定义为 `null`，随后在 `setup_eval_policy_server.sh` 中通过 `--overrides` 覆盖。`eval_env` 字段（`debug` / `sim` / `real`）决定客户端走哪个 runner，无需改 `eval.sh`。`eval_batch` 控制是否走批量推理路径。
+- **`eval.sh`**: 编排入口。分配一个空闲 `policy_server_port`，然后顺序拉起 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`，并负责退出时清理 server。
+- **`setup_eval_policy_server.sh`**: 在 `policy_conda_env` 中启动 `setup_policy_server.py`，绑定 `policy_server_port`（与 `policy_server_host`，默认 `localhost`，便于跨机部署）。
+- **`setup_eval_env_client.sh`**: 在 `eval_env_conda_env` 中调用 `XPolicyLab/utils/setup_env_client.sh`，根据 `deploy.yml` 的 `eval_env` 转发到 `run_debug_env_client.sh` / `run_sim_env_client.sh` / `run_real_policy_client.sh`。
+
+部署分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`，通过 `policy_server_port` 通信，从而隔离环境配置。`policy_conda_env` 的实现可参考 DP，`policy_uv_env_path` 的实现可参考 PI_05。分别用 `policy_gpu_id` 和 `env_gpu_id` 分配模型和仿真的 GPU 占用，可参考 DP/demo_policy 脚本中只在子脚本内 `CUDA_VISIBLE_DEVICES="${policy_gpu_id}"` 的写法，而不是全局 `export CUDA_VISIBLE_DEVICES`。
+
+`demo_policy/eval.sh` 的输入参数（11 个，默认顺序如下）：
+
+| 序号 | 参数 | 含义 |
+|---|---|---|
+| 1 | `dataset_name` | 数据集名称，与训练时一致 |
+| 2 | `task_name` | 仿真器中要跑的任务名，传给环境客户端 |
+| 3 | `ckpt_name` | 用来反查 checkpoint 子目录的标识；可与 `task_name` 不同（例如 `ckpt_name=cotrain` 同时在多个 `task_name` 上评测） |
+| 4 | `env_cfg_type` | 环境配置 / 本体类型 |
+| 5 | `expert_data_num` | 训练使用的轨迹数量（参与 6 元组反查） |
+| 6 | `action_type` | 动作类型 |
+| 7 | `seed` | 随机种子（参与 6 元组反查） |
+| 8 | `policy_gpu_id` | 模型推理服务端使用的 GPU id |
+| 9 | `env_gpu_id` | 环境客户端（仿真）使用的 GPU id |
+| 10 | `policy_conda_env` | 模型服务端激活的 conda 环境名（PI_05 这类基于 uv 的策略可在脚本内改用 `policy_uv_env_path`） |
+| 11 | `eval_env_conda_env` | 环境客户端激活的 conda 环境名 |
+
+`eval.sh` 默认按 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>` 在 `policy/<policy_name>/checkpoints/` 下找训练产物，因此上面 6 元组与 `train.sh` 输出目录一致即可零配置评测。
+
+新建 policy 时通常只需要：
+
+1. 在 `eval.sh` 开头按需调整上面 11 个参数（顺序对齐 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`）。
+2. 在 `setup_eval_policy_server.sh` 的 `--overrides` 中追加该 policy 需要的字段（如 `checkpoint_path`、`model_path` 等），其余字段已经由模板透传：
 
 ```bash
 PYTHONWARNINGS=ignore::UserWarning \
-CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
+python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
-        port="${FREE_PORT}" \
+        policy_server_port="${policy_server_port}" \
+        policy_server_host="${policy_server_host}" \
+        dataset_name="${dataset_name}" \
         task_name="${task_name}" \
+        ckpt_name="${ckpt_name}" \
         env_cfg_type="${env_cfg_type}" \
-        expert_data_num="${expert_data_num}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
@@ -277,6 +357,10 @@ CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_pol
     &
 SERVER_PID=$!
 ```
+
+> **task_name vs ckpt_name**：`task_name` 是仿真器中要跑的任务名，传给环境客户端；`ckpt_name` 是定位 checkpoint 子目录所用的标识（仅占 6 元组中的第 2 段），二者可以不同。例如训练时令 `ckpt_name=cotrain`，评测时即可以同一份 ckpt 在多个 `task_name` 上跑：`bash eval.sh RoboDojo handover_bottle... cotrain g1_inspire 50 ee 0 ...`。
+
+> **跨机部署**：把 `setup_eval_policy_server.sh` 放在带 GPU 的机器上后台运行，再在仿真机调用 `setup_eval_env_client.sh ... <policy_server_port> <policy_server_ip>` 即可。两侧只需指向同一个 `policy_server_ip:policy_server_port`，不必同机。
 
 #### 部署逻辑 (`deploy.py`)
 
@@ -287,11 +371,12 @@ SERVER_PID=$!
 
 ### 5. 仿真部署与调试体验
 
-当一切调试完毕后，将 `eval.sh` 最后一行的 `run_debug_env_client` 替换为 `run_policy_client`，即可真正在仿真环境中进行部署。
+当一切调试完毕后，把 `deploy.yml` 里的 `eval_env` 从 `debug` 改为 `sim`（或 `real`）即可在仿真/真机环境中部署，无需改动 `eval.sh`、`setup_eval_policy_server.sh`、`setup_eval_env_client.sh`。`setup_env_client.sh` 会根据该字段自动转发到对应的 runner（`run_sim_env_client.sh` / `run_real_policy_client.sh`）。
 
 您可以通过以下流程体验调试器：
 
 ```bash
 cd policy/demo_policy
-bash eval.sh handover_bottle_and_put_into_dustbin g1_inspire 50 ee 0 0 XPolicyLab XPolicyLab
+# dataset_name task_name ckpt_name env_cfg_type expert_data_num action_type seed policy_gpu_id env_gpu_id policy_conda_env eval_env_conda_env
+bash eval.sh RoboDojo handover_bottle_and_put_into_dustbin demo_ckpt g1_inspire 50 ee 0 0 0 XPolicyLab XPolicyLab
 ```
