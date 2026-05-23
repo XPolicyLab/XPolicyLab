@@ -16,3 +16,4 @@ policy/GO1/checkpoints
 policy/GO1/data
 policy/GO1/lqw.txt
 policy/GO1/AgiBot-World/wandb
+policy/.cache
