@@ -124,16 +124,18 @@ class Model(ModelTemplate):
             raise AssertionError("update_obs or update_obs_batch first!")
 
         env_idx_list = env_idx_list or self._latest_env_idx_list
-        actions = self.policy.infer(self.observation_window, **kwargs)["actions"]
+        # actions = self.policy.infer(self.observation_window, **kwargs)["actions"]
         action_list = []
 
         for batch_index, _ in enumerate(env_idx_list):
+            single_observation = slice_stacked_obs(self.observation_window, batch_index)
+            actions = self.policy.infer(single_observation, **kwargs)["actions"]
             if self.robot_action_dim_info is None:
-                action_list.append(actions[batch_index])
+                action_list.append(actions)
             else:
                 action_list.append(
                     unpack_robot_state(
-                        actions[batch_index],
+                        actions,
                         self.action_type,
                         self.robot_action_dim_info,
                         source_type="obs",
@@ -188,6 +190,19 @@ def stack_obs(obs_list: list[dict[str, Any]]) -> dict[str, Any]:
         },
         "prompt": [obs["prompt"] for obs in obs_list],
     }
+
+
+def slice_stacked_obs(obs: dict[str, Any], batch_index: int) -> dict[str, Any]:
+    return {
+        "state": obs["state"][batch_index],
+        "images": {
+            "cam_high": obs["images"]["cam_high"][batch_index],
+            "cam_left_wrist": obs["images"]["cam_left_wrist"][batch_index],
+            "cam_right_wrist": obs["images"]["cam_right_wrist"][batch_index],
+        },
+        "prompt": obs["prompt"][batch_index],
+    }
+
 
 def extract_image(observation, candidate_names):
     vision = observation.get("vision", {})
