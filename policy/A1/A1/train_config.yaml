@@ -1,0 +1,61 @@
+# Default A1 training configuration.
+paths:
+  data_dir: "${A1_DIR}/../../../../models"
+  pretrain_checkpoint: "${DATA_DIR}/a1-pretrain"
+  hf_home: "${SCRIPT_DIR}/../.cache/huggingface"
+  xdg_cache_home: "${SCRIPT_DIR}/../.cache"
+  hf_hub_offline: false
+
+training:
+  train_steps: 60000
+  global_batch_size: 64
+  device_train_microbatch_size: 16
+  max_crops: 6
+  num_workers: auto
+  log_interval: 10
+
+checkpoint:
+  save_interval: 10
+  save_interval_unsharded: 10
+  save_num_checkpoints_to_keep: 0
+  save_num_unsharded_checkpoints_to_keep: 1
+
+model:
+  early_exit: false
+  train_exit_random_layer: false
+  ft_connector: true
+  ft_vit: false
+  ft_llm: true
+  ft_embedding: lm_head
+
+optimizer:
+  connector_lr: 5e-4
+  vit_lr: 6e-6
+  llm_lr: 5e-5
+  action_head_lr: 5e-4
+  connector_weight_decay: 0.0
+  vit_weight_decay: 0.0
+  llm_weight_decay: 0.0
+  action_head_weight_decay: 0.0
+  beta1: 0.9
+  beta2: 0.95
+
+scheduler:
+  warmup_steps: 1000
+  freeze_steps: 1000
+  alpha_f: 0.1
+  warmup_min_lr: null
+
+distributed:
+  torch_distributed_timeout: 1800
+  torch_nccl_trace_buffer_size: 1048576
+  torch_nccl_dump_on_timeout: true
+
+wandb:
+  enable: false
+  api_key: ""
+  project: a1-xpolicylab
+  entity: ""
+  run_name: ""
+  mode: online
+  required: null

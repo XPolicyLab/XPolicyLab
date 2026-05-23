@@ -82,9 +82,15 @@ def _prepare_ee_data_schema(data: dict) -> dict:
 class DatasetConfig:
     use_videos: bool = False
     tolerance_s: float = 0.0001
-    image_writer_processes: int = 0
-    image_writer_threads: int = 1
+    image_writer_processes: int = 4
+    image_writer_threads: int = 4
     video_backend: str | None = None
+
+
+DEFAULT_DATASET_CONFIG = DatasetConfig(
+    image_writer_processes=max(1, min(8, (os.cpu_count() or 4) // 2)),
+    image_writer_threads=max(2, min(8, os.cpu_count() or 4)),
+)
 
 
 def create_empty_dataset(
@@ -93,7 +99,7 @@ def create_empty_dataset(
     fps: int,
     mode: Literal["video", "image"] = "image",
     *,
-    dataset_config: DatasetConfig = DatasetConfig(),
+    dataset_config: DatasetConfig = DEFAULT_DATASET_CONFIG,
     robot_action_dim_info: dict = None,
     root: str = None,
 ) -> LeRobotDataset:

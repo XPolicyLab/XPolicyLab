@@ -1,12 +1,14 @@
 **/__pycache__/**
 **/*.egg-info/
 policy/A1/train_config.local.yaml
+policy/A1/A1/train_config.local.yaml
 policy/A1/__pycache__
 policy/A1/.cache
 policy/A1/checkpoints
 policy/A1/data
 policy/A1/data_ee
 policy/A1/lqw.txt
+policy/A1/A1/wandb
 policy/GO1/__pycache__
 policy/GO1/.cache
 policy/GO1/tmp

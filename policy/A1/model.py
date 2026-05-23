@@ -34,7 +34,7 @@ from XPolicyLab.utils.process_data import (
 )
 
 
-DEFAULT_MODEL_PATH = "/mnt/pfs/pg4hw0/qiwei/models/a1-pretrain"
+DEFAULT_MODEL_PATH = str((_SCRIPT_DIR / "../../../../models/a1-pretrain").resolve())
 
 
 def _quat_wxyz_to_rpy(quat: np.ndarray) -> np.ndarray:

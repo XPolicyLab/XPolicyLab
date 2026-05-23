@@ -5,12 +5,6 @@ usage() {
     cat <<'EOF'
 Usage:
   bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <gpu_id> <seed>
-
-Example:
-  bash train.sh RoboDojo stack_bowls arx_x5 103 ee 0,1,2,3 42
-
-Defaults are read from train_config.local.yaml if it exists, otherwise train_config.yaml.
-Use A1_TRAIN_CONFIG=/path/to/config.yaml to force a different config.
 EOF
 }
 
@@ -31,15 +25,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 A1_DIR="${SCRIPT_DIR}/A1"
+DEFAULT_DATA_DIR="$(cd "${ROOT_DIR}/.." && pwd)/models"
+DEFAULT_PRETRAIN_CHECKPOINT="${DEFAULT_DATA_DIR}/a1-pretrain"
 
 export SCRIPT_DIR ROOT_DIR A1_DIR
 
 if [ -n "${A1_TRAIN_CONFIG:-}" ]; then
     CONFIG_FILE="${A1_TRAIN_CONFIG}"
-elif [ -f "${SCRIPT_DIR}/train_config.local.yaml" ]; then
-    CONFIG_FILE="${SCRIPT_DIR}/train_config.local.yaml"
+elif [ -f "${A1_DIR}/train_config.local.yaml" ]; then
+    CONFIG_FILE="${A1_DIR}/train_config.local.yaml"
 else
-    CONFIG_FILE="${SCRIPT_DIR}/train_config.yaml"
+    CONFIG_FILE="${A1_DIR}/train_config.yaml"
 fi
 if [ -f "${CONFIG_FILE}" ]; then
     eval "$(
@@ -125,13 +121,10 @@ for env_name, path in mapping.items():
     print(f"{env_name}={shlex.quote(value)}")
 PY
     )"
-else
-    echo "[WARN] Config file not found: ${CONFIG_FILE}. Using built-in fallback defaults."
 fi
 
-# Fallbacks keep train.sh usable even if a custom config omits some fields.
-DATA_DIR="${DATA_DIR:-${SCRIPT_DIR}/models}"
-PRETRAIN_CHECKPOINT="${PRETRAIN_CHECKPOINT:-${DATA_DIR}/a1-pretrain}"
+DATA_DIR="${DATA_DIR:-${DEFAULT_DATA_DIR}}"
+PRETRAIN_CHECKPOINT="${PRETRAIN_CHECKPOINT:-${DEFAULT_PRETRAIN_CHECKPOINT}}"
 HF_HOME="${HF_HOME:-${SCRIPT_DIR}/.cache/huggingface}"
 XDG_CACHE_HOME="${XDG_CACHE_HOME:-${SCRIPT_DIR}/.cache}"
 HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-0}"
@@ -176,6 +169,11 @@ WANDB_RUN_NAME="${WANDB_RUN_NAME:-}"
 WANDB_MODE="${WANDB_MODE:-online}"
 WANDB_REQUIRED="${WANDB_REQUIRED:-${ENABLE_WANDB}}"
 
+DATA_DIR="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${DATA_DIR}")"
+PRETRAIN_CHECKPOINT="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${PRETRAIN_CHECKPOINT}")"
+HF_HOME="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${HF_HOME}")"
+XDG_CACHE_HOME="$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${XDG_CACHE_HOME}")"
+
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export DATA_DIR PRETRAIN_CHECKPOINT HF_HOME HF_HUB_OFFLINE XDG_CACHE_HOME
 export TORCH_DISTRIBUTED_TIMEOUT TORCH_NCCL_TRACE_BUFFER_SIZE TORCH_NCCL_DUMP_ON_TIMEOUT
@@ -195,9 +193,15 @@ if [ "${NUM_WORKERS}" = "auto" ]; then
 fi
 
 if [ ! -d "${PRETRAIN_CHECKPOINT}" ]; then
-    echo "[ERROR] PRETRAIN_CHECKPOINT does not exist: ${PRETRAIN_CHECKPOINT}" >&2
-    echo "        Set PRETRAIN_CHECKPOINT=/path/to/a1-pretrain or DATA_DIR=/path/containing/a1-pretrain." >&2
-    exit 1
+    if [ -d "${DEFAULT_PRETRAIN_CHECKPOINT}" ]; then
+        echo "[WARN] PRETRAIN_CHECKPOINT does not exist: ${PRETRAIN_CHECKPOINT}" >&2
+        echo "[WARN] Falling back to default pretrain checkpoint: ${DEFAULT_PRETRAIN_CHECKPOINT}" >&2
+        PRETRAIN_CHECKPOINT="${DEFAULT_PRETRAIN_CHECKPOINT}"
+        export PRETRAIN_CHECKPOINT
+    else
+        echo "[ERROR] PRETRAIN_CHECKPOINT does not exist: ${PRETRAIN_CHECKPOINT}" >&2
+        exit 1
+    fi
 fi
 
 echo "[INFO] GPU ID (to use): ${gpu_id}"
@@ -207,7 +211,7 @@ echo "[INFO] XPolicyLab action dim: ${action_dim}"
 repo_id="${dataset_name}-${task_name}-${env_cfg_type}"
 LEROBOT_OUTPUT_DIR="${SCRIPT_DIR}/data"
 LEROBOT_DATA_PATH="${LEROBOT_OUTPUT_DIR}/${repo_id}"
-
+echo "[INFO] Checking if LeRobot dataset exists at: ${LEROBOT_DATA_PATH}"
 if [ -d "${LEROBOT_DATA_PATH}" ]; then
     echo "[INFO] LeRobot dataset '${repo_id}' already exists, skipping conversion."
 else
@@ -252,11 +256,6 @@ if [ "${ENABLE_WANDB}" = "true" ]; then
     fi
     if [ -z "${WANDB_API_KEY:-}" ]; then
         echo "[ERROR] ENABLE_WANDB=true but WANDB_API_KEY is empty." >&2
-        echo "        Set wandb.api_key in a private config file, or export WANDB_API_KEY." >&2
-        exit 1
-    fi
-    if [[ "${WANDB_API_KEY}" == sk-* ]]; then
-        echo "[ERROR] WANDB_API_KEY looks like an OpenAI/API proxy key ('sk-*'), not a W&B API key." >&2
         exit 1
     fi
 fi
@@ -269,47 +268,15 @@ is_true() {
         *) return 1 ;;
     esac
 }
-if [ -n "${WARMUP_MIN_LR}" ]; then
-    EXTRA_TRAIN_ARGS+=(--warmup_min_lr "${WARMUP_MIN_LR}")
-fi
-if is_true "${EARLY_EXIT}"; then
-    EXTRA_TRAIN_ARGS+=(--early_exit)
-fi
-if is_true "${TRAIN_EXIT_RANDOM_LAYER}"; then
-    EXTRA_TRAIN_ARGS+=(--train_exit_random_layer)
-fi
-if is_true "${FT_CONNECTOR}"; then
-    EXTRA_TRAIN_ARGS+=(--ft_connector)
-fi
-if is_true "${FT_VIT}"; then
-    EXTRA_TRAIN_ARGS+=(--ft_vit)
-fi
-if is_true "${FT_LLM}"; then
-    EXTRA_TRAIN_ARGS+=(--ft_llm)
-fi
-if [ -n "${FT_EMBEDDING}" ]; then
-    EXTRA_TRAIN_ARGS+=(--ft_embedding "${FT_EMBEDDING}")
-fi
-
-echo "[INFO] Starting A1 training"
-echo "[INFO] RUNNAME=${RUNNAME}"
-echo "[INFO] CONFIG_FILE=${CONFIG_FILE}"
-echo "[INFO] NPROC=${NPROC}, MASTER_PORT=${MASTER_PORT}"
-echo "[INFO] PRETRAIN_CHECKPOINT=${PRETRAIN_CHECKPOINT}"
-echo "[INFO] train_steps=${TRAIN_STEPS}, global_batch=${GLOBAL_BATCH_SIZE}, microbatch=${DEVICE_TRAIN_MICROBATCH_SIZE}"
-echo "[INFO] save_interval=${SAVE_INTERVAL}, save_interval_unsharded=${SAVE_INTERVAL_UNSHARDED}"
-echo "[INFO] keep checkpoints: sharded=${SAVE_NUM_CHECKPOINTS_TO_KEEP}, unsharded=${SAVE_NUM_UNSHARDED_CHECKPOINTS_TO_KEEP}"
-echo "[INFO] early_exit=${EARLY_EXIT}, train_exit_random_layer=${TRAIN_EXIT_RANDOM_LAYER}"
-echo "[INFO] finetune: connector=${FT_CONNECTOR}, vit=${FT_VIT}, llm=${FT_LLM}, embedding=${FT_EMBEDDING}"
-echo "[INFO] lr: connector=${CONNECTOR_LR}, vit=${VIT_LR}, llm=${LLM_LR}, action_head=${ACTION_HEAD_LR}"
-echo "[INFO] weight_decay: connector=${CONNECTOR_WEIGHT_DECAY}, vit=${VIT_WEIGHT_DECAY}, llm=${LLM_WEIGHT_DECAY}, action_head=${ACTION_HEAD_WEIGHT_DECAY}"
-echo "[INFO] scheduler=multimodal cosine_with_warmup, warmup_steps=${WARMUP_STEPS}, freeze_steps=${FREEZE_STEPS}, alpha_f=${SCHEDULER_ALPHA_F}, warmup_min_lr=${WARMUP_MIN_LR:-auto}"
-echo "[INFO] adam_betas=(${ADAM_BETA1}, ${ADAM_BETA2}), num_workers=${NUM_WORKERS}, max_crops=${MAX_CROPS}"
-echo "[INFO] W&B enabled=${ENABLE_WANDB}, project=${WANDB_PROJECT}, mode=${WANDB_MODE}, required=${WANDB_REQUIRED}"
-echo "[INFO] HF_HOME=${HF_HOME}, HF_HUB_OFFLINE=${HF_HUB_OFFLINE}"
+if [ -n "${WARMUP_MIN_LR}" ]; then EXTRA_TRAIN_ARGS+=(--warmup_min_lr "${WARMUP_MIN_LR}"); fi
+if is_true "${EARLY_EXIT}"; then EXTRA_TRAIN_ARGS+=(--early_exit); fi
+if is_true "${TRAIN_EXIT_RANDOM_LAYER}"; then EXTRA_TRAIN_ARGS+=(--train_exit_random_layer); fi
+if is_true "${FT_CONNECTOR}"; then EXTRA_TRAIN_ARGS+=(--ft_connector); fi
+if is_true "${FT_VIT}"; then EXTRA_TRAIN_ARGS+=(--ft_vit); fi
+if is_true "${FT_LLM}"; then EXTRA_TRAIN_ARGS+=(--ft_llm); fi
+if [ -n "${FT_EMBEDDING}" ]; then EXTRA_TRAIN_ARGS+=(--ft_embedding "${FT_EMBEDDING}"); fi
 
 cd "${A1_DIR}"
-
 torchrun \
     --nnodes=1 \
     --node-rank=0 \

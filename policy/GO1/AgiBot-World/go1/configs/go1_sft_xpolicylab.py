@@ -25,7 +25,7 @@ if MODEL_NAME_OR_PATH == "/mnt/pfs/pg4hw0/qiwei/models/GO-1":
     )
 DEFAULT_PROMPT = os.environ.get("DEFAULT_PROMPT", "Do your job.")
 SEED = int(os.environ.get("TRAIN_SEED", "42"))
-NUM_EPOCHS = int(os.environ.get("NUM_EPOCHS", "100"))
+NUM_EPOCHS = int(os.environ.get("NUM_EPOCHS", "5"))
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", "8" if not DEBUG_MODE else "1"))
 NPROC_PER_NODE = int(os.environ.get("NPROC_PER_NODE", "1"))
 REPORT_TO = os.environ.get("REPORT_TO", "tensorboard")

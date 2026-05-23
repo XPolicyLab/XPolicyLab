@@ -11,7 +11,7 @@ eval_batch: false
 eval_env: debug # sim, real, debug
 
 # A1-specific parameters
-model_path: /mnt/pfs/pg4hw0/qiwei/models/a1-pretrain
+model_path: null
 norm_stats_json_path: null
 normalization_type: bounds
 no_norm: true
