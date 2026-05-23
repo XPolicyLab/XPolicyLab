@@ -4,11 +4,12 @@ set -o pipefail
 
 dataset_name=$1
 task_name=$2
-env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-gpu_id=$6
+ckpt_name=$3
+env_cfg_type=$4
+expert_data_num=$5
+action_type=$6
 seed=$7
+gpu_id=$8
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -35,7 +36,7 @@ else
     bash "${SCRIPT_DIR}/process_data.sh" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" 30 "${lerobot_output_dir}"
 fi
 
-RUN_BASENAME="${task_name}-go1-${action_type}-${expert_data_num}eps-seed${seed}"
+RUN_BASENAME="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 RUN_TIMESTAMP="${RUN_TIMESTAMP:-$(date +"%Y%m%d_%H%M%S")}"
 RUNNAME="${RUNNAME:-${RUN_BASENAME}-${RUN_TIMESTAMP}}"
 export RUN_BASENAME RUNNAME

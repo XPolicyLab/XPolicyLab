@@ -100,11 +100,13 @@ def _resolve_model_assets(model_cfg):
         elif os.path.basename(model_path).startswith("checkpoint-"):
             run_dir = os.path.dirname(model_path)
     else:
-        task_name = model_cfg.get("task_name", "")
+        dataset_name = model_cfg.get("dataset_name", "")
+        ckpt_name = model_cfg.get("ckpt_name") or model_cfg.get("task_name", "")
         action_type = model_cfg.get("action_type", "")
+        env_cfg_type = model_cfg.get("env_cfg_type", "")
         expert_data_num = model_cfg.get("expert_data_num", "")
         seed = model_cfg.get("seed", "0")
-        run_basename = f"{task_name}-go1-{action_type}-{expert_data_num}eps-seed{seed}"
+        run_basename = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
         for candidate_run_dir in _list_candidate_run_dirs(checkpoints_dir, run_basename):
             candidate_model_path = _find_latest_checkpoint(candidate_run_dir)
             if candidate_model_path is not None:

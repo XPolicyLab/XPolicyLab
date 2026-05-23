@@ -3,15 +3,16 @@ set -e
 
 dataset_name=$1
 task_name=$2
-env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-policy_gpu_id=$7
-policy_conda_env=$8
-policy_server_port=$9
-model_path=${10:-""}
-policy_server_host=${11:-"localhost"}
+ckpt_name=$3
+env_cfg_type=$4
+expert_data_num=$5
+action_type=$6
+seed=$7
+policy_gpu_id=$8
+policy_conda_env=$9
+policy_server_port=${10}
+model_path=${11:-""}
+policy_server_host=${12:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -42,6 +43,7 @@ exec env \
             policy_server_host="${policy_server_host}" \
             dataset_name="${dataset_name}" \
             task_name="${task_name}" \
+            ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
             expert_data_num="${expert_data_num}" \
             seed="${seed}" \

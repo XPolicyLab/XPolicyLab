@@ -71,7 +71,7 @@ class GOTrainingArguments(TrainingArguments):
     seed: int = field(default=SEED)
 
     save_strategy: str = field(default="steps")
-    save_steps: int = field(default=1000)
+    save_steps: int = field(default=10000)
     save_total_limit: int = field(default=100)
     logging_steps: int = field(default=10)
     logging_dir: str = field(default=LOGGING_DIR)

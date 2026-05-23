@@ -4,22 +4,23 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <gpu_id> <seed>
+  bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 EOF
 }
 
-if [ "$#" -ne 7 ]; then
+if [ "$#" -ne 8 ]; then
     usage >&2
     exit 1
 fi
 
 dataset_name="$1"
 task_name="$2"
-env_cfg_type="$3"
-expert_data_num="$4"
-action_type="$5"
-gpu_id="$6"
+ckpt_name="$3"
+env_cfg_type="$4"
+expert_data_num="$5"
+action_type="$6"
 seed="$7"
+gpu_id="$8"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -208,7 +209,7 @@ echo "[INFO] GPU ID (to use): ${gpu_id}"
 action_dim="$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")"
 echo "[INFO] XPolicyLab action dim: ${action_dim}"
 
-repo_id="${dataset_name}-${task_name}-${env_cfg_type}"
+repo_id="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 LEROBOT_OUTPUT_DIR="${SCRIPT_DIR}/data"
 LEROBOT_DATA_PATH="${LEROBOT_OUTPUT_DIR}/${repo_id}"
 echo "[INFO] Checking if LeRobot dataset exists at: ${LEROBOT_DATA_PATH}"
@@ -218,7 +219,7 @@ else
     bash "${SCRIPT_DIR}/process_data.sh" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" 30 "${LEROBOT_OUTPUT_DIR}"
 fi
 
-RUN_BASENAME="${task_name}-a1-${action_type}-${expert_data_num}eps-seed${seed}"
+RUN_BASENAME="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 RUN_TIMESTAMP="${RUN_TIMESTAMP:-$(date +"%Y%m%d_%H%M%S")}"
 RUNNAME="${RUNNAME:-${RUN_BASENAME}-${RUN_TIMESTAMP}}"
 WANDB_RUN_NAME="${WANDB_RUN_NAME:-${RUNNAME}}"

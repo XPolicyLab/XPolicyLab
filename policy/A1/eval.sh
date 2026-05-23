@@ -3,16 +3,17 @@ set -e
 
 dataset_name=$1
 task_name=$2
-env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-policy_gpu_id=$6
+ckpt_name=$3
+env_cfg_type=$4
+expert_data_num=$5
+action_type=$6
 seed=$7
+policy_gpu_id=$8
 default_conda_env="${CONDA_DEFAULT_ENV:-}"
-policy_conda_env=${8:-${default_conda_env}}
-eval_env_conda_env=${9:-${policy_conda_env}}
-MODEL_PATH=${10:-""}
-env_gpu_id=${11:-${policy_gpu_id}}
+policy_conda_env=${9:-${default_conda_env}}
+eval_env_conda_env=${10:-${policy_conda_env}}
+MODEL_PATH=${11:-""}
+env_gpu_id=${12:-${policy_gpu_id}}
 
 if [[ -z "${policy_conda_env}" ]]; then
     echo -e "\033[31m[ERROR] policy_conda_env is empty. Pass it explicitly or run inside an activated conda env.\033[0m"
@@ -47,6 +48,7 @@ echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 bash "${SERVER_SCRIPT}" \
     "${dataset_name}" \
     "${task_name}" \
+    "${ckpt_name}" \
     "${env_cfg_type}" \
     "${expert_data_num}" \
     "${action_type}" \
@@ -65,6 +67,7 @@ echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 bash "${CLIENT_SCRIPT}" \
     "${dataset_name}" \
     "${task_name}" \
+    "${ckpt_name}" \
     "${env_cfg_type}" \
     "${action_type}" \
     "${seed}" \

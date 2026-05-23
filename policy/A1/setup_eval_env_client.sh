@@ -3,14 +3,15 @@ set -e
 
 dataset_name=$1
 task_name=$2
-env_cfg_type=$3
-action_type=$4
-seed=$5
-env_gpu_id=$6
-eval_env_conda_env=$7
-additional_info=$8
-policy_server_port=$9
-policy_server_ip=${10:-"localhost"}
+ckpt_name=$3
+env_cfg_type=$4
+action_type=$5
+seed=$6
+env_gpu_id=$7
+eval_env_conda_env=$8
+additional_info=$9
+policy_server_port=${10}
+policy_server_ip=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
