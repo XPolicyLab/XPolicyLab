@@ -13,3 +13,8 @@ py-modules = ["XPolicyLab"]
 where = ["."]
 include = ["*"]
 exclude = ["__pycache__*"]
+
+[tool.uv.workspace]
+members = [
+    "policy/TinyVLA",
+]

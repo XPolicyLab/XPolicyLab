@@ -1,0 +1,6 @@
+[project]
+name = "tinyvla"
+version = "0.1.0"
+description = "TinyVLA for XPolicyLab"
+requires-python = ">=3.10"
+dependencies = []
