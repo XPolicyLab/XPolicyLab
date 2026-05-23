@@ -188,12 +188,12 @@ bash create_policy.sh ${policy_name}
 - `action_type`: 模型使用的数据类型（如 `ee` 或 `joint`）。这会影响使用的数据内容以及模型输入输出的维度。
 - `seed`: 随机种子，便于多种子复现与对比。
 
-> **命名约定（参考 LDA_1B 现行格式）：**
+> **命名约定：**
 > - **数据集子目录**（`process_data.sh` 输出）固定为 5 元组：
 >   `<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>`，落在 `policy/<policy_name>/data/` 下。
 > - **训练产物子目录**（`train.sh` 输出，对应 DP 的 `ckpt_setting`）固定为 6 元组：
 >   `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`，落在 `policy/<policy_name>/checkpoints/` 下。
->   `train.sh` 没有独立的 `ckpt_name` 时（如 LDA_1B 的 7 参数版本），用 `task_name` 占位即可；`eval.sh` 总是以 `ckpt_name` 反查，所以二者一致才能默认命中。
+>   `train.sh` 没有独立的 `ckpt_name` 时，用 `task_name` 占位即可；
 
 #### 完善 install.sh
 策略创建后，在根据原项目进行环境配置的同时完善install.sh
@@ -259,7 +259,7 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 | 4 | `expert_data_num` | 训练使用的轨迹数量 |
 | 5 | `action_type` | 动作类型，`ee` / `joint` 等 |
 
-输出目录名固定为 `<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>`。数据处理是确定性 CPU 任务，所以不接 `gpu_id` / `seed`。
+输出目录名约定为 `<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>`。
 
 ### 3. 训练模型
 
@@ -267,22 +267,20 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 
 `train.sh` 中包含 `seed` 参数，后续会进行不同 `seed` 的训练及测评，部分 `policy` 的源代码可能会把 `seed` 写死，需要注意且进行适配。
 
-训练权重默认保存在 `XPolicyLab/policy/${policy_name}/checkpoints` 下；子目录名采用上文“命名约定”中的 6 元组 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`（与 DP 的 `ckpt_setting`、LDA_1B 现行格式一致），方便 `eval.sh` 按 `ckpt_name` 直接定位。
+训练权重默认保存在 `XPolicyLab/policy/${policy_name}/checkpoints` 下；子目录名采用上文“命名约定”中的 6 元组 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`。
 
 `demo_policy/train.sh` 的输入参数（8 个）：
 
 | 序号 | 参数 | 含义 |
 |---|---|---|
 | 1 | `dataset_name` | 数据集名称，与 `process_data.sh` 保持一致 |
-| 2 | `task_name` | 训练任务名（单任务；多任务可扩展为逗号分隔） |
+| 2 | `task_name` | 训练任务名 |
 | 3 | `ckpt_name` | checkpoint 标识，决定输出子目录名；常规训练令其等于 `task_name`，cotrain 训练可设为 `cotrain` 等 |
 | 4 | `env_cfg_type` | 环境配置 / 本体类型 |
 | 5 | `expert_data_num` | 训练使用的轨迹数量 |
 | 6 | `action_type` | 动作类型 |
 | 7 | `seed` | 随机种子 |
 | 8 | `gpu_id` | 训练所用 GPU id（多卡可写 `0,1,2,3`，由各 policy 自行处理） |
-
-> 若策略上游不支持显式 `ckpt_name`（典型如 LDA_1B 的 7 参数 `train.sh`），在 `train.sh` 内部把 `task_name` 透传到 `ckpt_name` 位即可——只要 `eval.sh` 用同一个名字反查，默认路径就能命中。
 
 ### 4. 评测与部署
 
@@ -322,21 +320,16 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 | 1 | `dataset_name` | 数据集名称，与训练时一致 |
 | 2 | `task_name` | 仿真器中要跑的任务名，传给环境客户端 |
 | 3 | `ckpt_name` | 用来反查 checkpoint 子目录的标识；可与 `task_name` 不同（例如 `ckpt_name=cotrain` 同时在多个 `task_name` 上评测） |
-| 4 | `env_cfg_type` | 环境配置 / 本体类型 |
-| 5 | `expert_data_num` | 训练使用的轨迹数量（参与 6 元组反查） |
+| 4 | `env_cfg_type` | 本体类型 |
+| 5 | `expert_data_num` | 训练使用的轨迹数量|
 | 6 | `action_type` | 动作类型 |
-| 7 | `seed` | 随机种子（参与 6 元组反查） |
+| 7 | `seed` | 随机种子 |
 | 8 | `policy_gpu_id` | 模型推理服务端使用的 GPU id |
 | 9 | `env_gpu_id` | 环境客户端（仿真）使用的 GPU id |
 | 10 | `policy_conda_env` | 模型服务端激活的 conda 环境名（PI_05 这类基于 uv 的策略可在脚本内改用 `policy_uv_env_path`） |
 | 11 | `eval_env_conda_env` | 环境客户端激活的 conda 环境名 |
 
-`eval.sh` 默认按 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>` 在 `policy/<policy_name>/checkpoints/` 下找训练产物，因此上面 6 元组与 `train.sh` 输出目录一致即可零配置评测。
-
-新建 policy 时通常只需要：
-
-1. 在 `eval.sh` 开头按需调整上面 11 个参数（顺序对齐 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`）。
-2. 在 `setup_eval_policy_server.sh` 的 `--overrides` 中追加该 policy 需要的字段（如 `checkpoint_path`、`model_path` 等），其余字段已经由模板透传：
+`eval.sh` 默认按 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>` 在 `policy/<policy_name>/checkpoints/` 下找训练产物。
 
 ```bash
 PYTHONWARNINGS=ignore::UserWarning \
@@ -358,7 +351,6 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
 SERVER_PID=$!
 ```
 
-> **task_name vs ckpt_name**：`task_name` 是仿真器中要跑的任务名，传给环境客户端；`ckpt_name` 是定位 checkpoint 子目录所用的标识（仅占 6 元组中的第 2 段），二者可以不同。例如训练时令 `ckpt_name=cotrain`，评测时即可以同一份 ckpt 在多个 `task_name` 上跑：`bash eval.sh RoboDojo handover_bottle... cotrain g1_inspire 50 ee 0 ...`。
 
 > **跨机部署**：把 `setup_eval_policy_server.sh` 放在带 GPU 的机器上后台运行，再在仿真机调用 `setup_eval_env_client.sh ... <policy_server_port> <policy_server_ip>` 即可。两侧只需指向同一个 `policy_server_ip:policy_server_port`，不必同机。
 
