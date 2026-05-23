@@ -313,7 +313,7 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        self._latest_env_idx_list = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
         encoded_obs_list = [
             encode_obs(obs, self.action_type, self.robot_action_dim_info, self.default_prompt) for obs in obs_list
         ]
@@ -323,42 +323,84 @@ class Model(ModelTemplate):
             env_idx: payload for env_idx, payload in zip(self._latest_env_idx_list, encoded_obs_list)
         }
 
-    @torch.inference_mode()
-    def infer(self, payload=None):
-        payload = payload or self._latest_payload
-        if payload is None:
-            raise AssertionError("update_obs must be called before get_action.")
-
-        observation = raw_observation_to_observation(
-            self._latest_payload,
-            self._lerobot_features,
-            self.policy.config.image_features,
-        )
-        observation = self.preprocessor(observation)
-        action_tensor = self.policy.predict_action_chunk(observation)
+    def _postprocess_action_chunk(self, action_tensor: torch.Tensor) -> np.ndarray:
         if action_tensor.ndim != 3:
             action_tensor = action_tensor.unsqueeze(0)
         action_tensor = action_tensor[:, : self.actions_per_chunk, :]
+        batch_size, chunk_size, action_dim = action_tensor.shape
+        flat_actions = action_tensor.reshape(batch_size * chunk_size, action_dim)
+        processed_actions = self.postprocessor(flat_actions)
+        return (
+            processed_actions.reshape(batch_size, chunk_size, -1)
+            .detach()
+            .cpu()
+            .float()
+            .numpy()
+        )
 
-        processed_actions = []
-        for idx in range(action_tensor.shape[1]):
-            single_action = action_tensor[:, idx, :]
-            processed_actions.append(self.postprocessor(single_action))
+    def _stack_observations(self, observations: list[dict[str, Any]]) -> dict[str, Any]:
+        if len(observations) == 1:
+            return observations[0]
 
-        action_tensor = torch.stack(processed_actions, dim=1).squeeze(0).detach().cpu().float().numpy()
-        return action_tensor
+        stacked = {"task": [observation["task"] for observation in observations]}
+        for key in observations[0]:
+            if key == "task":
+                continue
+            values = [observation[key] for observation in observations]
+            if all(isinstance(value, torch.Tensor) for value in values):
+                stacked[key] = torch.cat(values, dim=0)
+            else:
+                stacked[key] = values
+        return stacked
+
+    @torch.inference_mode()
+    def infer_batch_payloads(self, payloads: list[dict[str, Any]]) -> np.ndarray:
+        if not payloads:
+            raise ValueError("infer_batch_payloads requires at least one payload.")
+        if self._lerobot_features is None:
+            self._ensure_lerobot_features(payloads[0])
+
+        observations = [
+            raw_observation_to_observation(
+                payload,
+                self._lerobot_features,
+                self.policy.config.image_features,
+            )
+            for payload in payloads
+        ]
+        observation = self._stack_observations(observations)
+        observation = self.preprocessor(observation)
+        action_tensor = self.policy.predict_action_chunk(observation)
+        return self._postprocess_action_chunk(action_tensor)
+
+    @torch.inference_mode()
+    def infer(self, payload=None):
+        if payload is None:
+            payload = self._latest_payload
+        if payload is None:
+            raise AssertionError("update_obs must be called before get_action.")
+        return self.infer_batch_payloads([payload])[0]
 
     def get_action(self, **kwargs):
         action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)
         return action_list[0]
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
-        action_list = []
-        for env_idx in env_idx_list:
-            raw_actions = self.infer(self._latest_payloads[env_idx])
-            action_list.append(unpack_robot_state(raw_actions, self.action_type, self.robot_action_dim_info, source_type="obs"))
-        return action_list
+        if env_idx_list is None:
+            env_idx_list = self._latest_env_idx_list
+        else:
+            env_idx_list = [int(env_idx) for env_idx in env_idx_list]
+
+        missing_envs = [env_idx for env_idx in env_idx_list if env_idx not in self._latest_payloads]
+        if missing_envs:
+            raise KeyError(f"Missing observations for env_idx: {missing_envs}")
+
+        payloads = [self._latest_payloads[env_idx] for env_idx in env_idx_list]
+        raw_action_batch = self.infer_batch_payloads(payloads)
+        return [
+            unpack_robot_state(raw_actions, self.action_type, self.robot_action_dim_info, source_type="obs")
+            for raw_actions in raw_action_batch
+        ]
 
     def reset(self):
         if self.policy is not None:
