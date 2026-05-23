@@ -508,6 +508,7 @@ class SpiritVLAPolicy(nn.Module):
         self.normalize_targets = Normalize(config.output_features, config.normalization_mapping, None)
         self.unnormalize_outputs = Unnormalize(config.output_features, config.normalization_mapping, None)
         assert self.config.backbone is not None, "Specify a backbone."
+        qwen_device_map = getattr(config, "_qwen_device_map", None)
         self.language_tokenizer = AutoTokenizer.from_pretrained(
             self.config.backbone,
             add_eos_token=False,
@@ -515,11 +516,13 @@ class SpiritVLAPolicy(nn.Module):
             use_fast=False,
         )
         # Backbone + DiT head (flattened; state_dict prefix: model.*)
-        self.qwen = Qwen3VLForConditionalGeneration.from_pretrained(
-            config.backbone,
-            attn_implementation=config.attention_implementation,
-            dtype=torch.float32,
-        )
+        qwen_kwargs = {
+            "attn_implementation": config.attention_implementation,
+            "dtype": torch.float32,
+        }
+        if qwen_device_map is not None:
+            qwen_kwargs["device_map"] = qwen_device_map
+        self.qwen = Qwen3VLForConditionalGeneration.from_pretrained(config.backbone, **qwen_kwargs)
         self.image_processor = AutoProcessor.from_pretrained(self.config.backbone).image_processor
 
         dit_config = BaseDiTConfig(
@@ -635,6 +638,7 @@ class SpiritVLAPolicy(nn.Module):
         if noise is None:
             actions_shape = (bsize, self.config.n_action_steps, self.config.max_action_dim)
             noise = sample_noise(actions_shape, device)
+        vlm_last_embed = vlm_last_embed.to(device)
         vlm_last_embed = self.proj_vlm_output(vlm_last_embed)
         dt = -1.0 / self.config.num_steps
         dt = torch.tensor(dt, dtype=torch.float32, device=device)
@@ -836,7 +840,13 @@ class SpiritVLAPolicy(nn.Module):
     # Checkpoint loading
     # ------------------------------------------------------------------------------------------------------------------
     @classmethod
-    def from_pretrained(cls, ckpt_path: str, strict: bool = True, train: bool = False):
+    def from_pretrained(
+        cls,
+        ckpt_path: str,
+        strict: bool = True,
+        train: bool = False,
+        qwen_device_map: str | dict | None = None,
+    ):
         config_path = os.path.join(ckpt_path, "config.json")
         if os.path.exists(config_path):
             with open(config_path, "r") as f:
@@ -850,18 +860,13 @@ class SpiritVLAPolicy(nn.Module):
 
         filtered_cfg = _filter(SpiritVLAConfig, cfg_dict)
         config = SpiritVLAConfig(**filtered_cfg)
+        config._qwen_device_map = None if train else qwen_device_map
         model = cls(config)
         weight_path = os.path.join(ckpt_path, "model.safetensors")
         if not os.path.exists(weight_path):
             raise FileNotFoundError(f"model.safetensors not found in {ckpt_path}")
-        # If user requests CUDA and it's available, load weights directly on GPU to avoid an extra copy.
+        # Load on CPU first to avoid a temporary full checkpoint allocation on one GPU.
         load_device = "cpu"
-        if not train:
-            try:
-                if isinstance(config.device, str) and config.device.startswith("cuda") and torch.cuda.is_available():
-                    load_device = config.device
-            except Exception:
-                load_device = "cpu"
         # Auto-enable FA2 if available for better memory efficiency and training speed
         if train:
             try:

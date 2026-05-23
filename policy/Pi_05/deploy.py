@@ -30,7 +30,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
             TASK_ENV.take_action_batch(current_action_list, env_idx_list)
 
-            if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions):
+            if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions[0]):
                 break
             
             env_idx_list = TASK_ENV.get_running_env_idx_list()

@@ -10,9 +10,10 @@ import torch
 
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
-_SMOVLA_ROOT = _REPO_ROOT.parent / "smovla"
-_LEROBOT_SRC = _SMOVLA_ROOT / "lerobot" / "src"
-_LEROBOT_ROOT = _SMOVLA_ROOT / "lerobot"
+_SMOVLA_ROOT = _CUR_DIR / "smovla"
+_LEROBOT_SRC = _SMOVLA_ROOT / "src"
+_LEROBOT_ROOT = _SMOVLA_ROOT
+_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
 
 for _path in (str(_REPO_ROOT), str(_LEROBOT_SRC), str(_LEROBOT_ROOT)):
     if _path not in sys.path:
@@ -104,6 +105,23 @@ def resolve_prompt(observation: dict[str, Any], default_prompt: str) -> str:
         raise ValueError("No valid prompt found in observation or model config.")
     return fallback
 
+
+def _extract_step_number(value: Any) -> int | None:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
+    ckpt_name = model_cfg.get("ckpt_name")
+    if ckpt_name:
+        return (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+
+    for key in ("pretrained_path", "model_path", "checkpoint_path"):
+        value = model_cfg.get(key)
+        if value:
+            return Path(value).expanduser().resolve()
+    return None
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
         images = {
@@ -144,12 +162,13 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg) if env_cfg is not None else None
         self.default_prompt = self.model_cfg.get("prompt", self.task_name)
         self.device = self._get_device(self.model_cfg.get("device", "cuda"))
-        self.pretrained_path = self._resolve_pretrained_path(self.model_cfg.get("pretrained_path") or self.model_cfg.get("model_path"))
+        self.pretrained_path = self._resolve_pretrained_path(_resolve_checkpoint_root(self.model_cfg))
         self.policy = self._load_policy()
         self.actions_per_chunk = self._resolve_actions_per_chunk()
         self.preprocessor, self.postprocessor = self._build_processors()
         self._latest_env_idx_list = [0]
         self._latest_payload = None
+        self._latest_payloads: dict[int, dict[str, Any]] = {}
         self._lerobot_features = None
         self.model = self.policy
 
@@ -177,27 +196,79 @@ class Model(ModelTemplate):
             return resolved
         raise ValueError("Failed to resolve actions_per_chunk from model config or policy config.")
 
-    def _resolve_pretrained_path(self, pretrained_path):
-        if pretrained_path is None:
-            raise ValueError("pretrained_path or model_path is required for SmoVLA.")
-        root = Path(pretrained_path).expanduser().resolve()
+    def _resolve_pretrained_path(self, checkpoint_root: Path | None):
+        if checkpoint_root is None:
+            raise ValueError("ckpt_name, pretrained_path, or model_path is required for SmoVLA.")
+
+        artifact_root = checkpoint_root
+        if checkpoint_root.is_dir():
+            candidate_dirs = []
+            if (checkpoint_root / "model.safetensors").exists() or (checkpoint_root / "pretrained_model").is_dir():
+                candidate_dirs.append(checkpoint_root)
+            candidate_dirs.extend(
+                child
+                for child in sorted(checkpoint_root.iterdir())
+                if child.is_dir() and ((child / "model.safetensors").exists() or (child / "pretrained_model").is_dir())
+            )
+            checkpoint_num = self.model_cfg.get("checkpoint_num")
+            desired_step = _extract_step_number(checkpoint_num)
+            if desired_step is not None:
+                for candidate in candidate_dirs:
+                    candidate_step = _extract_step_number(candidate.name)
+                    if candidate_step is None:
+                        continue
+                    scaled_step = desired_step
+                    while len(str(scaled_step)) < len(str(candidate_step)):
+                        scaled_step *= 10
+                    if candidate_step in {desired_step, scaled_step}:
+                        artifact_root = candidate
+                        break
+                else:
+                    numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+                    if numeric_dirs:
+                        artifact_root = max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+            elif candidate_dirs:
+                numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+                artifact_root = (
+                    max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+                    if numeric_dirs
+                    else candidate_dirs[0]
+                )
+
         candidates = [
-            root,
-            root / "pretrained_model",
-            root / "checkpoints" / "last" / "pretrained_model",
+            artifact_root,
+            artifact_root / "pretrained_model",
+            artifact_root / "checkpoints" / "last" / "pretrained_model",
         ]
         for candidate in candidates:
             if (candidate / "model.safetensors").is_file():
                 return str(candidate)
         raise FileNotFoundError(
-            f"Could not find a LeRobot pretrained policy under `{pretrained_path}`. "
+            f"Could not find a LeRobot pretrained policy under `{artifact_root}`. "
             "Expected `model.safetensors` in the path itself, `pretrained_model/`, "
             "or `checkpoints/last/pretrained_model/`."
         )
 
+    def _load_smovla_config(self):
+        from lerobot.configs.policies import PreTrainedConfig
+
+        config = PreTrainedConfig.from_pretrained(self.pretrained_path)
+        vlm_path = self.model_cfg.get("smovla_vlm_path")
+        if vlm_path:
+            resolved_vlm = Path(vlm_path).expanduser()
+            if not resolved_vlm.is_absolute():
+                resolved_vlm = (_CUR_DIR / resolved_vlm).resolve()
+            else:
+                resolved_vlm = resolved_vlm.resolve()
+            if resolved_vlm.is_dir():
+                config.vlm_model_name = str(resolved_vlm)
+                config.load_vlm_weights = False
+        return config
+
     def _load_policy(self):
         policy_class = get_policy_class("smolvla")
-        policy = policy_class.from_pretrained(self.pretrained_path)
+        config = self._load_smovla_config()
+        policy = policy_class.from_pretrained(self.pretrained_path, config=config)
         policy.to(self.device)
         return policy
 
@@ -242,56 +313,101 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        self._latest_env_idx_list = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
         encoded_obs_list = [
             encode_obs(obs, self.action_type, self.robot_action_dim_info, self.default_prompt) for obs in obs_list
         ]
-        if len(encoded_obs_list) != 1:
-            raise NotImplementedError("SmoVLA currently supports single-env inference in XPolicyLab.")
         self._latest_payload = encoded_obs_list[0]
         self._ensure_lerobot_features(self._latest_payload)
+        self._latest_payloads = {
+            env_idx: payload for env_idx, payload in zip(self._latest_env_idx_list, encoded_obs_list)
+        }
 
-    @torch.inference_mode()
-    def infer(self):
-        if self._latest_payload is None:
-            raise AssertionError("update_obs must be called before get_action.")
-
-        observation = raw_observation_to_observation(
-            self._latest_payload,
-            self._lerobot_features,
-            self.policy.config.image_features,
-        )
-        observation = self.preprocessor(observation)
-        action_tensor = self.policy.predict_action_chunk(observation)
+    def _postprocess_action_chunk(self, action_tensor: torch.Tensor) -> np.ndarray:
         if action_tensor.ndim != 3:
             action_tensor = action_tensor.unsqueeze(0)
         action_tensor = action_tensor[:, : self.actions_per_chunk, :]
+        batch_size, chunk_size, action_dim = action_tensor.shape
+        flat_actions = action_tensor.reshape(batch_size * chunk_size, action_dim)
+        processed_actions = self.postprocessor(flat_actions)
+        return (
+            processed_actions.reshape(batch_size, chunk_size, -1)
+            .detach()
+            .cpu()
+            .float()
+            .numpy()
+        )
 
-        processed_actions = []
-        for idx in range(action_tensor.shape[1]):
-            single_action = action_tensor[:, idx, :]
-            processed_actions.append(self.postprocessor(single_action))
+    def _stack_observations(self, observations: list[dict[str, Any]]) -> dict[str, Any]:
+        if len(observations) == 1:
+            return observations[0]
 
-        action_tensor = torch.stack(processed_actions, dim=1).squeeze(0).detach().cpu().float().numpy()
-        return action_tensor
+        stacked = {"task": [observation["task"] for observation in observations]}
+        for key in observations[0]:
+            if key == "task":
+                continue
+            values = [observation[key] for observation in observations]
+            if all(isinstance(value, torch.Tensor) for value in values):
+                stacked[key] = torch.cat(values, dim=0)
+            else:
+                stacked[key] = values
+        return stacked
+
+    @torch.inference_mode()
+    def infer_batch_payloads(self, payloads: list[dict[str, Any]]) -> np.ndarray:
+        if not payloads:
+            raise ValueError("infer_batch_payloads requires at least one payload.")
+        if self._lerobot_features is None:
+            self._ensure_lerobot_features(payloads[0])
+
+        observations = [
+            raw_observation_to_observation(
+                payload,
+                self._lerobot_features,
+                self.policy.config.image_features,
+            )
+            for payload in payloads
+        ]
+        observation = self._stack_observations(observations)
+        observation = self.preprocessor(observation)
+        action_tensor = self.policy.predict_action_chunk(observation)
+        return self._postprocess_action_chunk(action_tensor)
+
+    @torch.inference_mode()
+    def infer(self, payload=None):
+        if payload is None:
+            payload = self._latest_payload
+        if payload is None:
+            raise AssertionError("update_obs must be called before get_action.")
+        return self.infer_batch_payloads([payload])[0]
 
     def get_action(self, **kwargs):
         action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)
         return action_list[0]
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
-        if len(env_idx_list) != 1:
-            raise NotImplementedError("SmoVLA currently supports single-env inference in XPolicyLab.")
+        if env_idx_list is None:
+            env_idx_list = self._latest_env_idx_list
+        else:
+            env_idx_list = [int(env_idx) for env_idx in env_idx_list]
 
-        raw_actions = self.infer()
-        return [unpack_robot_state(raw_actions, self.action_type, self.robot_action_dim_info, source_type="obs")]
+        missing_envs = [env_idx for env_idx in env_idx_list if env_idx not in self._latest_payloads]
+        if missing_envs:
+            raise KeyError(f"Missing observations for env_idx: {missing_envs}")
+
+        payloads = [self._latest_payloads[env_idx] for env_idx in env_idx_list]
+        raw_action_batch = self.infer_batch_payloads(payloads)
+        return [
+            unpack_robot_state(raw_actions, self.action_type, self.robot_action_dim_info, source_type="obs")
+            for raw_actions in raw_action_batch
+        ]
 
     def reset(self):
         if self.policy is not None:
             self.policy.reset()
         self._latest_env_idx_list = [0]
         self._latest_payload = None
+        self._latest_payloads = {}
         self._lerobot_features = None
 
 

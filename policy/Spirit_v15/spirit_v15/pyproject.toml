@@ -15,6 +15,7 @@ dependencies = [
     "pillow==10.4.0",
     "requests==2.32.5",
     "scipy==1.15.2",
+    "accelerate>=1.13.0",
 ]
 
 [project.optional-dependencies]

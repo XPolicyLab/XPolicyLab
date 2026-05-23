@@ -13,6 +13,7 @@ from scipy.spatial.transform import Rotation as R
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
 _XVLA_ROOT = _CUR_DIR / "xvla"
+_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
 
 for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_XVLA_ROOT)):
     if _path not in sys.path:
@@ -105,6 +106,86 @@ def resolve_prompt(observation: dict[str, Any], default_prompt: str) -> str:
     if fallback is None:
         raise ValueError("No valid prompt found in observation or model config.")
     return fallback
+
+
+def _extract_step_number(value: Any) -> int | None:
+    digits = "".join(ch for ch in str(value) if ch.isdigit())
+    return int(digits) if digits else None
+
+
+def _resolve_path(value: str | None) -> Path | None:
+    if not value:
+        return None
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = (_CUR_DIR / path).resolve()
+    else:
+        path = path.resolve()
+    return path
+
+
+def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
+    ckpt_name = model_cfg.get("ckpt_name")
+    if ckpt_name:
+        checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+        if not checkpoint_root.is_dir():
+            return checkpoint_root
+
+        candidate_dirs = []
+        if any((checkpoint_root / marker).exists() for marker in ("config.json", "model.safetensors", "preprocessor_config.json")):
+            candidate_dirs.append(checkpoint_root)
+        candidate_dirs.extend(
+            child
+            for child in sorted(checkpoint_root.iterdir())
+            if child.is_dir() and any((child / marker).exists() for marker in ("config.json", "model.safetensors", "preprocessor_config.json"))
+        )
+        if not candidate_dirs:
+            return checkpoint_root
+
+        checkpoint_num = model_cfg.get("checkpoint_num")
+        desired_step = _extract_step_number(checkpoint_num)
+        if desired_step is not None:
+            for candidate in candidate_dirs:
+                candidate_step = _extract_step_number(candidate.name)
+                if candidate_step is None:
+                    continue
+                scaled_step = desired_step
+                while len(str(scaled_step)) < len(str(candidate_step)):
+                    scaled_step *= 10
+                if candidate_step in {desired_step, scaled_step}:
+                    return candidate
+
+        numeric_dirs = [candidate for candidate in candidate_dirs if _extract_step_number(candidate.name) is not None]
+        if numeric_dirs:
+            return max(numeric_dirs, key=lambda candidate: _extract_step_number(candidate.name) or -1)
+        return candidate_dirs[0]
+
+    for key in ("model_path", "checkpoint_path", "processor_path"):
+        resolved = _resolve_path(model_cfg.get(key))
+        if resolved is not None:
+            return resolved
+    return None
+
+
+def _build_candidate_dirs(checkpoint_root: Path | None, *explicit_paths: str | None) -> list[Path]:
+    candidates: list[Path] = []
+    for explicit_path in explicit_paths:
+        resolved = _resolve_path(explicit_path)
+        if resolved is not None and resolved not in candidates:
+            candidates.append(resolved)
+
+    if checkpoint_root is not None:
+        for candidate in (
+            checkpoint_root,
+            checkpoint_root / "processor",
+            checkpoint_root / "model",
+            checkpoint_root / "base",
+            checkpoint_root / "base_model",
+            checkpoint_root / "checkpoint",
+        ):
+            if candidate not in candidates:
+                candidates.append(candidate)
+    return candidates
 
 
 def quat_to_rotate6d(quat: np.ndarray) -> np.ndarray:
@@ -277,14 +358,13 @@ class Model(ModelTemplate):
         return torch.device(device_arg)
 
     def _load_processor(self, model_cfg):
-        candidate_paths = []
-        configured_path = model_cfg.get("processor_path")
-        if configured_path:
-            candidate_paths.append(Path(configured_path))
-        for key in ("model_path", "checkpoint_path"):
-            value = model_cfg.get(key)
-            if value:
-                candidate_paths.append(Path(value))
+        checkpoint_root = _resolve_checkpoint_root(model_cfg)
+        candidate_paths = _build_candidate_dirs(
+            checkpoint_root,
+            model_cfg.get("processor_path"),
+            model_cfg.get("model_path"),
+            model_cfg.get("checkpoint_path"),
+        )
         
         processor_path = None
         for candidate in candidate_paths:
@@ -300,9 +380,19 @@ class Model(ModelTemplate):
         return XVLAProcessor.from_pretrained(processor_path)
 
     def _load_model(self, model_cfg):
-        model_path = model_cfg.get("model_path") or model_cfg.get("checkpoint_path")
+        checkpoint_root = _resolve_checkpoint_root(model_cfg)
+        candidate_paths = _build_candidate_dirs(
+            checkpoint_root,
+            model_cfg.get("model_path"),
+            model_cfg.get("checkpoint_path"),
+        )
+        model_path = None
+        for candidate in candidate_paths:
+            if (candidate / "config.json").exists():
+                model_path = str(candidate)
+                break
         if model_path is None:
-            raise ValueError("model_path or checkpoint_path is required for X-VLA.")
+            raise ValueError("ckpt_name, model_path, or checkpoint_path is required for X-VLA.")
 
         model = XVLA.from_pretrained(
             model_path,
@@ -311,6 +401,8 @@ class Model(ModelTemplate):
         ).to(self.device).to(torch.float32)
 
         lora_path = model_cfg.get("lora_path") or model_cfg.get("LoRA_path")
+        if not lora_path and checkpoint_root is not None and (checkpoint_root / "adapter_config.json").exists():
+            lora_path = str(checkpoint_root)
         if lora_path:
             from peft import PeftModel
 
