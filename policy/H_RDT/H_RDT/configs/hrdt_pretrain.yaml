@@ -1,0 +1,89 @@
+common:
+  # The number of historical images
+  img_history_size: 1
+  # The number of historical point clouds
+  pcd_history_size: 1
+  # The number of future actions to predict
+  action_chunk_size: 16
+  # The number of cameras to be used in the model
+  num_cameras: 1
+  # Dimension for state
+  state_dim: 48
+  # Dimension for action
+  action_dim: 48
+  # The number of patches in the image
+  num_patches: 196
+
+
+dataset:
+  # We will extract the data from raw dataset
+  # and store them in the disk buffer by producer
+  # When training, we will read the data
+  # randomly from the buffer by consumer
+  # The producer will replace the data which has been
+  # read by the consumer with new data
+
+  # The path to the buffer (at least 400GB)
+  buf_path: /ssd/lingxuan/data/buffer
+  # The number of chunks in the buffer
+  buf_num_chunks: 512
+  # The number of samples (step rather than episode) in each chunk
+  buf_chunk_size: 512
+
+  # We will filter the episodes with length less than `epsd_len_thresh_low`
+  epsd_len_thresh_low: 32
+  # For those more than `epsd_len_thresh_high`,
+  # we will randomly sample `epsd_len_thresh_high` steps each time we load the episode
+  # to better balance the training datasets
+  epsd_len_thresh_high: 2048
+  # How to fit the image size
+  image_aspect_ratio: pad
+  # Maximum number of language tokens
+  tokenizer_max_length: 1024
+
+model:
+  # Config for condition adpators
+  act_adaptor: mlp3x_silu
+  st_adaptor: mlp3x_silu
+  img_adapter: mlp2x_silu
+  lang_adapter: mlp2x_silu
+  
+  # Config for H-RDT structure
+  hrdt:
+    hidden_size: 2176
+    depth: 16
+    num_heads: 16
+    norm_eps: 0.00001
+    # make SwiGLU hidden layer size multiple of large power of 2
+    multiple_of: 256
+    ffn_dim_multiplier: null
+    # Grouped Query Attention
+    num_kv_heads: 8
+    # output_size: ${...common.action_dim} # i.e., action dimension (TODO)
+    output_size: 48
+    use_flash_attn: true
+  # For noise scheduler (flow matching)
+  noise_scheduler:
+    num_inference_timesteps: 5
+    timestep_max: 0.999
+    sampler_type: uniform
+  time_noise:
+    a: 5
+    beta_m: 100
+  # For EMA (params averaging)
+  # We do not use EMA currently
+  ema:
+    update_after_step: 0
+    inv_gamma: 1.0
+    power: 0.75
+    min_value: 0.0
+    max_value: 0.9999
+
+  # Encoder configurations
+  vision:
+    feature_dim: 2176
+
+  text:
+    feature_dim: 4096
+    # feature_dim: 768   # DistilBERT output dimension
+    # model_name: distilbert-base-uncased

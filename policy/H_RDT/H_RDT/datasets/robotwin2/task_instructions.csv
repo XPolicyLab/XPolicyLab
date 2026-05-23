@@ -1,0 +1,52 @@
+task_name,instruction
+adjust_bottle,Pick up the bottle on the table headup with the correct arm
+beat_block_hammer,"there is a hammer and a block on the table, use the arm to <grab the hammer> and <beat the block>"
+blocks_ranking_rgb,"<Place> the red block, green block, and blue block <in the order> of red, green, and blue from left to right, <placing in a row>."
+blocks_ranking_size,"there are three blocks on the table, the color of the blocks is random, move the blocks to the center of the table, and arrange them from largest to smallest, from left to right"
+click_alarmclock,click the alarm clock's center of the top side button on the table
+click_bell,click the <bell's top center> on the table
+dump_bin_bigbin,Grab the small bin and pour the balls into the big bin
+grab_roller,use both arms to grab the roller on the table
+handover_block,"use the left arm to grasp the red block on the table, handover it to the right arm and place it on the blue pad"
+handover_mic,Use one arm to grasp the microphone on the table and handover it to the other arm
+hanging_mug,"Use left arm to pick the mug on the table, rotate the mug and put the mug down in the middle of the table, use the right arm to pick the mug and hang it onto the rack."
+lift_pot,use BOTH!!! arms to lift the pot
+move_can_pot,"there is a can and a pot on the table, use one arm to <pick up the can> and <move it to beside the pot>"
+move_pillbottle_pad,Use one arm to pick the pillbottle and place it onto the pad.
+move_playingcard_away,"use the arm to <pick up the playing card> and <move it away from the table>.For example, if the playing card is on the outward side of the table, you should move it further outward side of the table."
+move_stapler_pad,use appropriate arm to move the stapler to a colored mat
+open_laptop,use one arm to open the laptop
+open_microwave,Use one arm to open the microwave.
+pick_diverse_bottles,"pick up one bottle with one arm, and pick up another bottle with the other arm"
+pick_dual_bottles,"pick up one bottle with one arm, and pick up another bottle with the other arm"
+place_a2b_left,use appropriate arm to place object A on the left of object B
+place_a2b_right,use appropriate arm to place object A on the right of object B
+place_bread_basket,"if there is one bread on the table, use one arm to grab the bread and put it in the basket, if there are two breads on the table, use two arms to simultaneously!!! grab up two breads and put them in the basket"
+place_bread_skillet,"if there is one bread on the table, use one arm to grab the bread and put it into the skillet"
+place_burger_fries,Use dual arm to pick the hamburg and frenchfries and put them onto the tray.
+place_can_basket,use one arm to pick up the can and another arm place it in the basket
+place_cans_plasticbox,Use dual arm to pick and place cans into plasticbox
+place_container_plate,place the container onto the plate
+place_dual_shoes,"use both arms to pick up the two shoes on the table and put them in the shoebox, with the shoe tip pointing to the left"
+place_empty_cup,use an arm to place the empty cup on the coaster
+place_fan,"grab the fan and place it on a colored mat, <make sure the fan is facing the robot!(THIS MUST BE REFERRED TO>"
+place_mouse_pad,grab the mouse and place it on a colored mat
+place_object_basket,"use one arm to grab the target object and put it in the basket, then use the other arm to grab the basket, and finally move the basket slightly away"
+place_object_scale,use one arm to grab the object and put it on the scale
+place_object_stand,use appropriate arm to place the object on the stand
+place_phone_stand,pick up the phone and put it on the phone stand
+place_shoe,use one arm to grab the shoe from the table and place it on the mat
+press_stapler,Use one arm to press the stapler.
+put_bottles_dustbin,use arms to grab the bottles and put them into the dustbin to the left of the table
+put_object_cabinet,"use {a} to open the cabinet's drawer, and use another arm to put the object on the table to the drawer."
+rotate_qrcode,"Use arm to catch the qrcode board on the table, pick it up and rotate to let the qrcode face towards you"
+scan_object,"Use one arm to pick the scanner and use the other arm to pick the object, and use the scanner to scan the object"
+shake_bottle,Shake the bottle with proper arm
+shake_bottle_horizontally,Shake the bottle horizontally with proper arm
+stack_blocks_three,"there are three blocks on the table, the color of the blocks is <red, green and blue>, <move the blocks to the center of the table>, and <stack the blue block on the green block, and the green block on the red block>"
+stack_blocks_two,"there are two blocks on the table, the color of the blocks is <red, green>, <move the blocks to the center of the table>, and <stack the geen block on the red block>"
+stack_bowls,Stack the three bowls together.
+stack_bowls_three,stack the three bowls on top of each other
+stack_bowls_two,stack the two bowls on top of each other
+stamp_seal,Grab the stamp and stamp onto the specific color mat
+turn_switch,use the robotic arm to click the switch
