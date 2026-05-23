@@ -137,14 +137,16 @@ Trajectory Data Format v1.0
 
 ```text
 demo_policy
-├── deploy.py       # 部署模型的流程（含串行与并行两种层级方案）
-├── deploy.yml      # 部署参数配置，参数将传入 model.Model 中，辅助用户定义模型参数并加载模型
-├── eval.sh         # 评测启动脚本
+├── deploy.py                       # 部署模型的流程（含串行与并行两种层级方案）
+├── deploy.yml                      # 部署参数配置，参数将传入 model.Model 中，辅助用户定义模型参数并加载模型
+├── eval.sh                         # 评测入口：编排 server + client（同机一键启动）
+├── setup_eval_policy_server.sh     # 在 policy 环境中启动模型服务端，绑定 policy_server_port
+├── setup_eval_env_client.sh        # 在 eval_env 环境中启动环境客户端，按 deploy.yml 的 eval_env 选择 debug/sim/real
 ├── __init__.py
-├── install.sh      # 环境安装脚本 
-├── model.py        # 模型类，定义了模型导入、观测更新、动作获取以及重置逻辑
-├── process_data.sh # 数据处理脚本，将 RoboDojo 数据转换为模型训练所需的格式
-└── train.sh        # 训练启动脚本  
+├── install.sh                      # 环境安装脚本
+├── model.py                        # 模型类，定义了模型导入、观测更新、动作获取以及重置逻辑
+├── process_data.sh                 # 数据处理脚本，将 RoboDojo 数据转换为模型训练所需的格式
+└── train.sh                        # 训练启动脚本
 ```
 
 ## 接入自定义策略 (Policy)
@@ -237,7 +239,7 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 
 要支持评测，需要完善两个核心部分：模型推理支持 (`model.py`) 和控制流程 (`deploy.py`)。
 
-我们提供了一个离线调试方案，默认环境为 `debug_policy_env.py`。该调试器会提供尺寸正确的观测数据（Observation），并根据返回的动作（Action）进行检查和模拟交互。调试通过后，即可尝试在仿真环境中运行。这个离线环境可通过将`deploy.yml`的`eval_env`设为`debug`来启动。具体实现可参考`XPolicyLab/policy/DP/eval.sh`及其 Python 文件。
+我们提供了一个离线调试方案，默认环境为 `debug_policy_env.py`。该调试器会提供尺寸正确的观测数据（Observation），并根据返回的动作（Action）进行检查和模拟交互。调试通过后，即可尝试在仿真环境中运行。这个离线环境可通过将 `deploy.yml` 的 `eval_env` 设为 `debug` 来启动；切换到 `sim` 或 `real` 不需要修改 `eval.sh`。具体实现可参考 `XPolicyLab/policy/demo_policy/eval.sh` 及其 Python 文件。
 
 #### 完善 `model.Model`
 
@@ -255,21 +257,32 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 对`update_obs`和`update_obs_batch`的实现。若已实现了`update_obs_batch`，可以参考`DP`的形式直接实现`update_obs`。如果`update_obs_batch`在某个`policy`较难实现，可直接使用`for`循环`update_obs`。
 
 
-#### 配置 `deploy.yml` 与 `eval.sh`
+#### 配置 `deploy.yml` 与三件套评测脚本
 
-- **`deploy.yml`**: 指定模型部署所需的参数。部分参数可定义为 `null`，随后在 `eval.sh` 中进行覆盖。
-- **`eval.sh`**: 部署时分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`。两者通过 `FREE_PORT` 进行通信，从而隔离环境配置。对`policy_conda_env`的实现可参考 DP ,对 `policy_uv_env_path`的实现可参考 PI_05。分别使用 `policy_gpu_id` 和 `env_gpu_id` 来分配仿真和模型部署的gpu占用，可参考DP脚本来实现不同程序使用不同GPU的方法，而不是全局`export CUDA_VISIBLE_DEVICES`。
-您只需修改脚本开头的参数定义，并在启动 Server 部分添加 `overrides` 参数以覆盖 `deploy.yml` 中的配置：
+- **`deploy.yml`**: 指定模型部署所需的参数。部分参数可定义为 `null`，随后在 `setup_eval_policy_server.sh` 中通过 `--overrides` 覆盖。`eval_env` 字段（`debug` / `sim` / `real`）决定客户端走哪个 runner，无需改 `eval.sh`。`eval_batch` 控制是否走批量推理路径。
+- **`eval.sh`**: 编排入口。分配一个空闲 `policy_server_port`，然后顺序拉起 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`，并负责退出时清理 server。
+- **`setup_eval_policy_server.sh`**: 在 `policy_conda_env` 中启动 `setup_policy_server.py`，绑定 `policy_server_port`（与 `policy_server_host`，默认 `localhost`，便于跨机部署）。
+- **`setup_eval_env_client.sh`**: 在 `eval_env_conda_env` 中调用 `XPolicyLab/utils/setup_env_client.sh`，根据 `deploy.yml` 的 `eval_env` 转发到 `run_debug_env_client.sh` / `run_sim_env_client.sh` / `run_real_policy_client.sh`。
+
+部署分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`，通过 `policy_server_port` 通信，从而隔离环境配置。`policy_conda_env` 的实现可参考 DP，`policy_uv_env_path` 的实现可参考 PI_05。分别用 `policy_gpu_id` 和 `env_gpu_id` 分配模型和仿真的 GPU 占用，可参考 DP/demo_policy 脚本中只在子脚本内 `CUDA_VISIBLE_DEVICES="${policy_gpu_id}"` 的写法，而不是全局 `export CUDA_VISIBLE_DEVICES`。
+
+新建 policy 时通常只需要：
+
+1. 在 `eval.sh` 开头按需调整参数列表（默认 11 个：`dataset_name task_name ckpt_name env_cfg_type expert_data_num action_type seed policy_gpu_id env_gpu_id policy_conda_env eval_env_conda_env`）。
+2. 在 `setup_eval_policy_server.sh` 的 `--overrides` 中追加该 policy 需要的字段（如 `checkpoint_path`、`model_path` 等），其余字段已经由模板透传：
 
 ```bash
 PYTHONWARNINGS=ignore::UserWarning \
-CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
+python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
-        port="${FREE_PORT}" \
+        policy_server_port="${policy_server_port}" \
+        policy_server_host="${policy_server_host}" \
+        dataset_name="${dataset_name}" \
         task_name="${task_name}" \
+        ckpt_name="${ckpt_name}" \
         env_cfg_type="${env_cfg_type}" \
-        expert_data_num="${expert_data_num}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
@@ -277,6 +290,10 @@ CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_pol
     &
 SERVER_PID=$!
 ```
+
+> **task_name vs ckpt_name**：`task_name` 是仿真器中要跑的任务名，传给环境客户端；`ckpt_name` 用来定位 checkpoint 目录/文件，二者可以不同（例如 `ckpt_name=cotrain` 同时在多个 `task_name` 上评测）。
+
+> **跨机部署**：把 `setup_eval_policy_server.sh` 放在带 GPU 的机器上后台运行，再在仿真机调用 `setup_eval_env_client.sh ... <policy_server_port> <policy_server_ip>` 即可。两侧只需指向同一个 `policy_server_ip:policy_server_port`，不必同机。
 
 #### 部署逻辑 (`deploy.py`)
 
@@ -287,11 +304,12 @@ SERVER_PID=$!
 
 ### 5. 仿真部署与调试体验
 
-当一切调试完毕后，将 `eval.sh` 最后一行的 `run_debug_env_client` 替换为 `run_policy_client`，即可真正在仿真环境中进行部署。
+当一切调试完毕后，把 `deploy.yml` 里的 `eval_env` 从 `debug` 改为 `sim`（或 `real`）即可在仿真/真机环境中部署，无需改动 `eval.sh`、`setup_eval_policy_server.sh`、`setup_eval_env_client.sh`。`setup_env_client.sh` 会根据该字段自动转发到对应的 runner（`run_sim_env_client.sh` / `run_real_policy_client.sh`）。
 
 您可以通过以下流程体验调试器：
 
 ```bash
 cd policy/demo_policy
-bash eval.sh handover_bottle_and_put_into_dustbin g1_inspire 50 ee 0 0 XPolicyLab XPolicyLab
+# dataset_name task_name ckpt_name env_cfg_type expert_data_num action_type seed policy_gpu_id env_gpu_id policy_conda_env eval_env_conda_env
+bash eval.sh RoboDojo handover_bottle_and_put_into_dustbin demo_ckpt g1_inspire 50 ee 0 0 0 XPolicyLab XPolicyLab
 ```
