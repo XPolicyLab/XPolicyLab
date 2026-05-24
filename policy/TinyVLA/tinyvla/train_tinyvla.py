@@ -254,7 +254,8 @@ def main(config=None, llava_pythia_config=None):
     config['camera_names'] = camera_names
     config['episode_len'] = episode_len
 
-    if 'pythia' in config['model_args'].model_name_or_path.lower():
+    # gate on the loaded model's config rather than path-name substrings.
+    if getattr(llava_pythia_config, 'model_type', '') == 'llava_pythia':
         tokenizer = transformers.AutoTokenizer.from_pretrained(
             config['model_args'].model_name_or_path,
             cache_dir=config['training_args'].cache_dir,

@@ -42,11 +42,27 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
     else:
         kwargs['torch_dtype'] = torch.float16
 
-    if 'pythia' in model_name.lower():
-        # Load LLaVA-Phi model
-        if 'lora' in model_name.lower() and model_base is None:
-            warnings.warn('There is `lora` in model name but no `model_base` is provided. If you are loading a LoRA model, please provide the `model_base` argument.')
-        if 'lora' in model_name.lower() and model_base is not None:
+
+    # check model type (lora or pythia)
+    is_lora = os.path.exists(os.path.join(model_path, 'adapter_config.json'))
+    is_pythia = False
+    _cfg_search_dirs = [model_path]
+    if os.path.basename(model_path.rstrip('/')).startswith('checkpoint-'):
+        _cfg_search_dirs.append(os.path.dirname(model_path.rstrip('/')))
+    for _d in _cfg_search_dirs:
+        if os.path.exists(os.path.join(_d, 'config.json')):
+            try:
+                _cfg = AutoConfig.from_pretrained(_d, trust_remote_code=True)
+                is_pythia = getattr(_cfg, 'model_type', '') == 'llava_pythia'
+            except Exception:
+                pass
+            break
+
+    if is_pythia:
+        # Load LLaVA-Pythia model
+        if is_lora and model_base is None:
+            warnings.warn('Loading a LoRA model but no `model_base` is provided. Please provide the `model_base` argument.')
+        if is_lora and model_base is not None:
             
             path = model_path.split('/')[0:-1]
             root_path = '/'.join(path)
@@ -62,8 +78,13 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             #     model.model.embed_tokens.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
             
             print('Loading additional LLaVA-Pythia weights...')
-            if os.path.exists(os.path.join(model_path, 'non_lora_trainables.bin')):
-                non_lora_trainables = torch.load(os.path.join(model_path, 'non_lora_trainables.bin'), map_location='cpu')
+            # train_bc() saves non_lora_trainables.bin to the run's output_dir,
+            # which is the parent of each `checkpoint-*` subdir; also look there.
+            non_lora_path = os.path.join(model_path, 'non_lora_trainables.bin')
+            if not os.path.exists(non_lora_path):
+                non_lora_path = os.path.join(os.path.dirname(model_path.rstrip('/')), 'non_lora_trainables.bin')
+            if os.path.exists(non_lora_path):
+                non_lora_trainables = torch.load(non_lora_path, map_location='cpu')
             else:
                 # this is probably from HF Hub
                 from huggingface_hub import hf_hub_download
@@ -137,7 +158,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         return NotImplementedError
     # image_processor = CLIPImageProcessor.from_pretrained(model_path)
 
-    if 'pythia' in model_name.lower():
+    if is_pythia:
         mm_use_im_start_end = getattr(model.config, "mm_use_im_start_end", False)
         mm_use_im_patch_token = getattr(model.config, "mm_use_im_patch_token", True)
 
