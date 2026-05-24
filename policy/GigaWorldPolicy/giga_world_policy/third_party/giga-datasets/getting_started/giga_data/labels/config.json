@@ -1,0 +1,8 @@
+{
+    "_class_name": "PklDataset",
+    "_key_names": [
+        "data_index",
+        "prompt"
+    ],
+    "data_size": 5
+}
