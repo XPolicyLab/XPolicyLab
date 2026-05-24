@@ -25,7 +25,7 @@ local_rank = None
 #  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>parameters<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 @dataclass
 class ActionArguments:
-    action_head_type: str = field(default="droid_diffusion") # action head type, 'act', 'droid_diffusion'
+    action_head_type: str = field(default="act")
     action_dim: int = field(default=10)
     state_dim: int = field(default=7)
     chunk_size: int = field(default=16) # size of action chunk, same as mobile aloha
@@ -136,6 +136,7 @@ def parse_pythia():
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments, ActionArguments))
     model_args, data_args, training_args, action_args = parser.parse_args_into_dataclasses()
+    action_args.action_head_type = "act"
 
     local_rank = training_args.local_rank
     compute_dtype = (torch.float16 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
@@ -274,7 +275,7 @@ def main(config=None, llava_pythia_config=None):
                                                            config['training_args'].per_device_eval_batch_size, config['action_args'].chunk_size,
                                                            skip_mirrored_data=config['data_args'].skip_mirrored_data,
                                                            config=config,
-                                                           policy_class=config['action_args'].action_head_type, stats_dir_l=stats_dir,
+                                                           policy_class="act", stats_dir_l=stats_dir,
                                                            sample_weights=sample_weights, train_ratio=train_ratio, return_dataset=True, llava_pythia_process=llava_pythia_process)
 
     best_ckpt_info = train_bc(train_dataset=train_dataset, model=model, val_dataset=val_dataset, config=config, sampler_params=sampler_params, tokenizer=tokenizer)
