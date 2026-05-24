@@ -22,15 +22,26 @@ def eval_one_episode_batch(TASK_ENV, model_client):
 
         model_client.call(func_name="update_obs_batch", obs=obs_list)  # Update Observation, `update_obs` here can be modified
         actions = model_client.call(func_name="get_action_batch", obs=env_idx_list) # Get Action according to observation chunk
+        env_to_action_idx = {env_idx: i for i, env_idx in enumerate(env_idx_list)}
 
         for action_idx in range(len(actions[0])):
-            current_action_list = [env_actions[action_idx] for env_actions in actions]
+            running_env_idx_set = set(TASK_ENV.get_running_env_idx_list())
+            current_env_idx_list = [env_idx for env_idx in env_idx_list if env_idx in running_env_idx_set]
+            if not current_env_idx_list:
+                break
 
-            TASK_ENV.take_action_batch(current_action_list, env_idx_list)
+            current_action_list = [
+                actions[env_to_action_idx[env_idx]][action_idx]
+                for env_idx in current_env_idx_list
+            ]
+
+            TASK_ENV.take_action_batch(current_action_list, current_env_idx_list)
             
             if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions[0]):
                 break
             
-            env_idx_list = TASK_ENV.get_running_env_idx_list()
+            env_idx_list = [env_idx for env_idx in env_idx_list if env_idx in running_env_idx_set]
+            if not env_idx_list:
+                break
             obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Observation
             model_client.call(func_name="update_obs_batch", obs=obs_list)

@@ -1,8 +1,10 @@
-# RDT配置
-## 环境配置
-``` bash
-# Make sure python version == 3.10
-conda activate RoboTwin
+# RDT_1B 环境配置
+
+## 1. 创建环境
+
+```bash
+conda create -n rdt_1b python=3.10 -y
+conda activate rdt_1b
 
 # Install pytorch
 # Look up https://pytorch.org/get-started/previous-versions/ with your cuda version for a correct command
@@ -15,6 +17,12 @@ pip install ninja
 ninja --version; echo $?
 # Install flash-attn
 pip install flash-attn==2.7.2.post1 --no-build-isolation
+```
+
+## 2. 安装 RDT 源码
+
+```bash
+cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/RDT_1B/rdt
 
 # Install other prequisites
 pip install -r requirements.txt
@@ -24,7 +32,15 @@ pip install -r requirements.txt
 # pip install tensorflow==2.15.0.post1 -i  https://pypi.org/simple
 ```
 
-## 模型下载
+## 3. 安装 XPolicyLab
+
+```bash
+cd /mnt/nfs/niantian/robodojo_test/XPolicyLab
+pip install -e .
+```
+
+## 4. 模型下载
+
 ``` bash
 mkdir weights
 cd weights
@@ -34,3 +50,5 @@ huggingface-cli download google/t5-v1_1-xxl --local-dir t5-v1_1-xxl
 huggingface-cli download google/siglip-so400m-patch14-384 --local-dir siglip-so400m-patch14-384
 huggingface-cli download robotics-diffusion-transformer/rdt-1b --local-dir rdt-1b
 ```
+
+训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。

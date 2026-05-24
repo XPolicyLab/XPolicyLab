@@ -1,15 +1,33 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ $# -lt 8 ]]; then
+  echo "Usage: $0 <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+  exit 1
+fi
 
-REPO_ID=${1}
-OUTPUT_DIR=${2}
-JOB_NAME=${3}
-SEED=${4}
-GPU_ID=${5}
-VIDEO_BACKEND=${VIDEO_BACKEND:-pyav}
+dataset_name=$1
+task_name=$2
+ckpt_name=$3
+env_cfg_type=$4
+expert_data_num=$5
+action_type=$6
+seed=$7
+gpu_id=$8
 
-export CUDA_VISIBLE_DEVICES=${GPU_ID}
+POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+data_setting="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+REPO_ID="${SMOVLA_REPO_ID:-${data_setting}}"
+OUTPUT_DIR="${POLICY_DIR}/checkpoints/${ckpt_setting}"
+JOB_NAME="${SMOVLA_JOB_NAME:-${ckpt_setting}}"
+VIDEO_BACKEND="${VIDEO_BACKEND:-pyav}"
+
+mkdir -p "${OUTPUT_DIR}"
+export CUDA_VISIBLE_DEVICES="${gpu_id}"
+
+echo "[SmoVLA] repo_id=${REPO_ID}"
+echo "[SmoVLA] checkpoint_dir=${OUTPUT_DIR}"
 
 lerobot-train \
   --policy.path=lerobot/smolvla_base \
@@ -28,4 +46,4 @@ lerobot-train \
   --wandb.enable=false \
   --policy.adapt_to_pi_aloha=false \
   --rename_map='{"observation.images.cam_high": "observation.images.camera1","observation.images.cam_left_wrist": "observation.images.camera2","observation.images.cam_right_wrist": "observation.images.camera3"}' \
-  --seed=${SEED} \
+  --seed=${seed}
