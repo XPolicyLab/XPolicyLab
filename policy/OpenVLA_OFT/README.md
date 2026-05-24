@@ -18,7 +18,7 @@ TFDS_DATA_DIR=<tensorflow_datasets_dir> \
 `train.sh` 默认使用的 TFDS 名称为：
 
 ```text
-aloha_<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+aloha_<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 如需使用已有 TFDS 名称，可设置 `OPENVLA_TFDS_DATASET_NAME`。
@@ -26,13 +26,13 @@ aloha_<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3
 ```
 
 训练产物默认保存到：

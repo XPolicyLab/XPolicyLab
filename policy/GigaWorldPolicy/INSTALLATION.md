@@ -41,5 +41,5 @@ python -c "import giga_train; print('giga_train ok')"
 训练入口见 `README.md`，统一使用：
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```

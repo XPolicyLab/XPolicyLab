@@ -28,14 +28,14 @@ python scripts/conver_norm_stat.py <customized_json> <output_json> <left_arm_dim
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 默认配置：
 
 ```text
 LINGBOT_VLA_CONFIG_PATH=configs/vla/robodojo_sim_arx_x5.yaml
-LINGBOT_VLA_DATA_PATH=<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+LINGBOT_VLA_DATA_PATH=<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 可按需覆盖：
@@ -43,7 +43,7 @@ LINGBOT_VLA_DATA_PATH=<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num
 ```bash
 LINGBOT_VLA_CONFIG_PATH=configs/vla/my_task.yaml \
 LINGBOT_VLA_DATA_PATH=/path/to/lerobot/dataset \
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0,1
+bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1
 ```
 
 训练输出固定保存到：

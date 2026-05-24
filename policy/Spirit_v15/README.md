@@ -30,25 +30,25 @@ Spirit_v15 当前训练数据格式是 Spirit 自有目录结构，而不是 LeR
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 ee 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 50 ee 0 0,1,2,3
 ```
 
 默认匹配 pattern：
 
 ```text
-<dataset_name>.<task_name>.<env_cfg_type>
+<dataset_name>.<ckpt_name>.<env_cfg_type>
 ```
 
 默认转换输出：
 
 ```text
-policy/Spirit_v15/data/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+policy/Spirit_v15/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 默认 checkpoint 输出：

@@ -21,7 +21,7 @@ giga_world_policy/norm_stats_delta.json
 默认训练数据路径为：
 
 ```text
-policy/GigaWorldPolicy/data/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+policy/GigaWorldPolicy/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 如需使用已有 LeRobot 数据目录，可覆盖：
@@ -32,16 +32,16 @@ GIGAWORLD_DATA_DIR=/path/to/lerobot/data bash train.sh ...
 
 ## 训练
 
-训练入口遵循 XPolicyLab 统一的 8 参数约定：
+训练入口遵循 XPolicyLab 统一的 7 参数约定：
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 ee 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 50 ee 0 0,1,2,3
 ```
 
 训练产物默认保存到：
@@ -63,7 +63,7 @@ policy/GigaWorldPolicy/checkpoints/<6元组>/xpolicylab_train_config.json
 - `dataloaders.train.transform.norm_path`: 指向 norm stats。
 - `models.pretrained`: 指向 Wan2.2 预训练权重。
 - `models.view_dir`: 指向 checkpoint 目录。
-- `launch.gpu_ids`: 来自第 8 个参数 `gpu_id`。
+- `launch.gpu_ids`: 来自第 7 个参数 `gpu_id`。
 
 常用覆盖变量：
 
@@ -79,7 +79,7 @@ GIGAWORLD_BASE_CONFIG=/path/to/base_config.json
 不启动训练、只生成并校验 config：
 
 ```bash
-GIGAWORLD_DRY_RUN=1 bash train.sh RoboDojo stack_bowls debug arx_x5 1 ee 0 0
+GIGAWORLD_DRY_RUN=1 bash train.sh RoboDojo debug arx_x5 1 ee 0 0
 ```
 
 ## Eval Debug

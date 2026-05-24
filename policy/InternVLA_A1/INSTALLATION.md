@@ -28,4 +28,4 @@ python -c "import XPolicyLab; print('XPolicyLab ok')"
 python -c "import lerobot; print('lerobot ok')"
 ```
 
-训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。
+训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。

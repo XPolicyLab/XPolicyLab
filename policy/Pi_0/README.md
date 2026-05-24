@@ -14,16 +14,16 @@ bash scripts/compute_norm_stats.sh <config_name> <max_frames>
 
 ## 训练
 
-训练入口遵循 XPolicyLab 统一 8 参数：
+训练入口遵循 XPolicyLab 统一 7 参数：
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0
+bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0
 ```
 
 默认 checkpoint 保存到：

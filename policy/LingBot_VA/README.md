@@ -18,7 +18,7 @@ python scripts/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --out
 默认训练脚本会把数据路径设为：
 
 ```text
-policy/LingBot_VA/data/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+policy/LingBot_VA/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 可通过 `LINGBOT_VA_DATASET_PATH` 覆盖。
@@ -26,13 +26,13 @@ policy/LingBot_VA/data/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_nu
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3
 ```
 
 训练输出固定保存到：
