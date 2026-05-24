@@ -277,7 +277,14 @@ class ConditionalUnet1D(nn.Module):
         # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
         timesteps = timesteps.expand(sample.shape[0])
 
-        global_feature = self.diffusion_step_encoder(timesteps)
+        # SinusoidalPosEmb hardcodes bf16 output
+        # cast to the next Linear's dtype so eval with torch_dtype=float16 doesn't crash on matmul.
+        step_encoder_layers = list(self.diffusion_step_encoder)
+        global_feature = step_encoder_layers[0](timesteps)
+        if len(step_encoder_layers) > 1:
+            global_feature = global_feature.to(step_encoder_layers[1].weight.dtype)
+        for layer in step_encoder_layers[1:]:
+            global_feature = layer(global_feature)
 
         if global_cond is not None:
             global_feature = torch.cat([
