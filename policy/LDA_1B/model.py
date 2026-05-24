@@ -49,7 +49,63 @@ def _extract_camera(observation: dict[str, Any], camera_name: str) -> np.ndarray
     return _standardize_rgb_image(camera_obs)
 
 
+# Match gr00t_lerobot/datasets.py:IMG_MEAN — used for the square padding color so
+# the padded border lands on the ImageNet mean tone the DINOv3/QwenVL backbones
+# were pretrained on (otherwise zero/black borders themselves are OOD).
+_GR00T_IMG_MEAN_U8 = (
+    int(0.485 * 255),
+    int(0.456 * 255),
+    int(0.406 * 255),
+)
+# Final square side fed to the model. Must match the size the dataloader resizes
+# to AFTER expand2square (gr00t_lerobot/datasets.py: image.resize((224, 224))).
+_MODEL_INPUT_SIZE = 224
+# Native simulator/dataset frame size before square-padding. Cosmetic only — we
+# resize-then-pad, so any landscape resolution would work, but matching the
+# parquet/MP4 size (process_data.py: 240x320) keeps the resize step a no-op for
+# pixels coming straight out of the simulator.
+_NATIVE_HEIGHT = 240
+_NATIVE_WIDTH = 320
+
+
+def _expand2square_uint8(image: np.ndarray, background: tuple[int, int, int]) -> np.ndarray:
+    """Center-pad an HWC uint8 image to a square with `background` color.
+
+    Mirrors `lda.dataloader.gr00t_lerobot.datasets.expand2square` (which uses
+    PIL.Image.new + paste). Implemented in numpy to avoid an extra PIL round-trip.
+    """
+    h, w = image.shape[:2]
+    if h == w:
+        return image
+    side = max(h, w)
+    canvas = np.empty((side, side, 3), dtype=np.uint8)
+    canvas[..., 0] = background[0]
+    canvas[..., 1] = background[1]
+    canvas[..., 2] = background[2]
+    top = (side - h) // 2
+    left = (side - w) // 2
+    canvas[top : top + h, left : left + w, :] = image
+    return canvas
+
+
 def _standardize_rgb_image(image: Any) -> np.ndarray:
+    """Reproduce the training-time visual preprocessing exactly.
+
+    Training pipeline (see `gr00t_lerobot/datasets.py:962-966` /
+    `:2122-2125`) for every video frame is:
+
+        frame_240x320 -> Image.fromarray
+                      -> expand2square(mean_color)   # 320x320 with mean borders
+                      -> resize((224, 224))           # final input to model
+
+    The previous implementation skipped expand2square and only resized to
+    (240, 320). The downstream DINOv3/QwenVL processors then resized to
+    (224, 224) by *stretching* the aspect ratio, which is a different image
+    distribution than training and pushed the diffusion head into an OOD
+    regime where it collapses to ~mean output (visible as the arm "twitching
+    in place"). We now match training byte-for-byte: square-pad with the
+    ImageNet mean color, then bilinear-resize to 224x224.
+    """
     import cv2
 
     image = np.asarray(image)
@@ -67,34 +123,68 @@ def _standardize_rgb_image(image: Any) -> np.ndarray:
     elif image.dtype != np.uint8:
         image = image.astype(np.uint8)
 
-    image = cv2.resize(image, (320, 240), interpolation=cv2.INTER_AREA)
-    if image.shape != (240, 320, 3):
-        raise ValueError(f"Expected RGB image shape (240, 320, 3), got {image.shape}.")
+    # Step 1: align to the native simulator/dataset size (cv2 resize is (W, H)).
+    image = cv2.resize(image, (_NATIVE_WIDTH, _NATIVE_HEIGHT), interpolation=cv2.INTER_AREA)
+
+    # Step 2: square-pad with mean color (PIL Image.new + paste-equivalent).
+    image = _expand2square_uint8(image, _GR00T_IMG_MEAN_U8)
+
+    # Step 3: resize to the model's expected input. PIL's default Image.resize
+    # uses bilinear interpolation; cv2.INTER_LINEAR matches that.
+    image = cv2.resize(image, (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE), interpolation=cv2.INTER_LINEAR)
+    if image.shape != (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE, 3):
+        raise ValueError(
+            f"Expected RGB image shape ({_MODEL_INPUT_SIZE}, {_MODEL_INPUT_SIZE}, 3), got {image.shape}."
+        )
     return image
 
 
 def _normalize_actions(normalized_actions: np.ndarray, action_stats: dict[str, Any] | None) -> np.ndarray:
     """Map model-space normalized actions in [-1, 1] back to robot-space actions.
 
-    Mirrors the upstream LDA `PolicyWarper.unnormalize_actions` (which uses min/max
-    quantiles, not q01/q99). The optional `mask` field disables unnormalization on
-    pad/zero dims.
+    The XPolicyLab arx_x5 path trains with `q99` mode in
+    `lda.dataloader.gr00t_lerobot.transform.state_action.Normalizer` (see
+    `ArxX5DataConfig.transform`):
+
+        forward (training):
+            norm = clamp(2*(x - q01)/(q99 - q01) - 1, -1, 1)   if q01 != q99
+            norm = x (passthrough)                              if q01 == q99
+        inverse (deployment, this function):
+            x = (norm + 1)/2 * (q99 - q01) + q01                if q01 != q99
+            x = norm (passthrough)                              if q01 == q99
+
+    Earlier this function preferred `min`/`max` (the inverse for `min_max` mode,
+    used by Robocasa's PolicyWarper) which is wrong for arx_x5 — the min/max
+    range is ~2x wider than q01/q99, so unnormalized arm joints over-extended
+    by up to ~70 degrees and grippers came out outside [0, 1]. We now prefer
+    q01/q99 to match arx_x5 training, falling back to min/max only when q01/q99
+    are unavailable (e.g. checkpoints from min_max-mode configs).
+
+    The `mask` field that LDA writes into dataset_statistics.json is generated
+    from key names ("gripper" -> False) by `generate_action_mask_for_used_keys`,
+    NOT from the per-element `q01 != q99` check the Normalizer actually uses at
+    training time. For arx_x5 the gripper has q01=0, q99=1, so it IS q99-
+    normalized at training and must be inverted here (norm in [-1, 1] -> raw
+    in [0, 1]). We therefore IGNORE the saved mask and replicate the
+    Normalizer's internal `mask = q01 != q99` so the inverse exactly mirrors
+    the training-time forward.
     """
     if action_stats is None:
         return normalized_actions
 
-    if "min" in action_stats and "max" in action_stats:
-        low = np.asarray(action_stats["min"])
-        high = np.asarray(action_stats["max"])
-    elif "q01" in action_stats and "q99" in action_stats:
-        low = np.asarray(action_stats["q01"])
-        high = np.asarray(action_stats["q99"])
+    if "q01" in action_stats and "q99" in action_stats:
+        low = np.asarray(action_stats["q01"], dtype=np.float64)
+        high = np.asarray(action_stats["q99"], dtype=np.float64)
+    elif "min" in action_stats and "max" in action_stats:
+        low = np.asarray(action_stats["min"], dtype=np.float64)
+        high = np.asarray(action_stats["max"], dtype=np.float64)
     else:
         return normalized_actions
 
-    mask = np.asarray(action_stats.get("mask", np.ones_like(low, dtype=bool)))
-    clipped = np.clip(normalized_actions, -1, 1)
-    return np.where(mask, 0.5 * (clipped + 1.0) * (high - low) + low, clipped)
+    clipped = np.clip(normalized_actions, -1.0, 1.0).astype(np.float64)
+    inv_mask = high != low
+    out = np.where(inv_mask, 0.5 * (clipped + 1.0) * (high - low) + low, clipped)
+    return out.astype(normalized_actions.dtype, copy=False)
 
 
 class Model(ModelTemplate):

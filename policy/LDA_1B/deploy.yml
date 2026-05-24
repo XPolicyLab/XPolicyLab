@@ -8,8 +8,8 @@ gpu_id: null
 seed: null
 action_dim: null
 port: null
-eval_batch: false
-eval_env: debug # debug, sim, real
+eval_batch: true
+eval_env: sim # debug, sim, real
 
 checkpoint_path: null
 model_path: null
