@@ -54,14 +54,22 @@ class LlavaPythiaForCausalLM(GPTNeoXPreTrainedModel, LlavaMetaForCausalLM):
             from diffusers.schedulers.scheduling_ddim import DDIMScheduler
             from policy_heads.models import ConditionalUnet1D
             self.proj_to_action = nn.Identity()
-            self.noise_scheduler = DDIMScheduler(
-                num_train_timesteps=100,
-                beta_schedule='squaredcos_cap_v2',
-                clip_sample=True,
-                set_alpha_to_one=True,
-                steps_offset=0,
-                prediction_type='epsilon'
-            )
+            
+            # pytorch 2.6.0 change the default dtype to float16, so we need to set it back to float32
+            _prev_dtype = torch.get_default_dtype()
+            torch.set_default_dtype(torch.float32)
+            try:
+                self.noise_scheduler = DDIMScheduler(
+                    num_train_timesteps=100,
+                    beta_schedule='squaredcos_cap_v2',
+                    clip_sample=True,
+                    set_alpha_to_one=True,
+                    steps_offset=0,
+                    prediction_type='epsilon'
+                )
+            # restore the previous dtype
+            finally:
+                torch.set_default_dtype(_prev_dtype)
             self.embed_out = ConditionalUnet1D(
                 input_dim=config.action_dim,
                 global_cond_dim=config.hidden_size,
