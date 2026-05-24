@@ -27,13 +27,13 @@ XVLA_META_PATH=/path/to/meta.json bash train.sh ...
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 ee 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 50 ee 0 0,1,2,3
 ```
 
 训练输出固定保存到：

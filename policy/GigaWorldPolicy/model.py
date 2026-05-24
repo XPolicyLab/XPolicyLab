@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import sys
 import importlib
+import json
+import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -42,6 +44,134 @@ def _resolve_path(value: str | None, base_dir: Path = _CUR_DIR) -> Path | None:
     if not path.is_absolute():
         path = (base_dir / path).resolve()
     return path.resolve()
+
+
+def _ensure_stats_compatible(stats_path: Path) -> Path:
+    with open(stats_path, "r", encoding="utf-8") as f:
+        stats = json.load(f)
+
+    changed = False
+    for key in ("observation.state", "action"):
+        entry = stats.get("norm_stats", {}).get(key, {})
+        if "min" not in entry and "q01" in entry:
+            entry["min"] = entry["q01"]
+            changed = True
+        if "max" not in entry and "q99" in entry:
+            entry["max"] = entry["q99"]
+            changed = True
+
+    if not changed:
+        return stats_path
+
+    output_path = Path(tempfile.gettempdir()) / f"{stats_path.stem}_gigaworld_compatible.json"
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(stats, f)
+    return output_path.resolve()
+
+
+def _pad_or_trim_np(value: np.ndarray, dim: int) -> np.ndarray:
+    if value.shape[-1] == dim:
+        return value
+    if value.shape[-1] > dim:
+        return value[..., :dim]
+    pad_width = [(0, 0)] * value.ndim
+    pad_width[-1] = (0, dim - value.shape[-1])
+    return np.pad(value, pad_width, mode="constant").astype(np.float32)
+
+
+def _config_value(config: Any, key: str) -> Any:
+    if isinstance(config, dict):
+        return config[key]
+    return getattr(config, key)
+
+
+def _patch_transformer_loader(inference_server_module: Any, action_dim: int) -> None:
+    transformer_cls = inference_server_module.CasualWorldActionTransformer
+    if getattr(transformer_cls, "_xpolicylab_action_dim", None) == action_dim:
+        return
+
+    original_from_pretrained = getattr(
+        transformer_cls,
+        "_xpolicylab_original_from_pretrained",
+        transformer_cls.from_pretrained,
+    )
+    transformer_cls._xpolicylab_original_from_pretrained = original_from_pretrained
+
+    def _from_pretrained_with_action_dim(cls, pretrained_model_name_or_path, *args, **kwargs):
+        import torch
+        import torch.nn as nn
+        from world_action_model.models.transformer_wa_casual import WanRotaryPosEmbed1D
+
+        checkpoint_dir = Path(pretrained_model_name_or_path)
+        weight_path = checkpoint_dir / "diffusion_pytorch_model.bin"
+        if not weight_path.is_file():
+            return original_from_pretrained(pretrained_model_name_or_path, *args, **kwargs)
+
+        torch_dtype = kwargs.pop("torch_dtype", None)
+        transformer = cls.from_config(pretrained_model_name_or_path)
+        inner_dim = _config_value(transformer.config, "num_attention_heads") * _config_value(
+            transformer.config, "attention_head_dim"
+        )
+        transformer.action_encoder = nn.Sequential(
+            nn.Linear(action_dim, 128),
+            nn.GELU(),
+            nn.Linear(128, 256),
+            nn.GELU(),
+            nn.Linear(256, inner_dim),
+        )
+        transformer.action_decoder = nn.Sequential(
+            nn.Linear(inner_dim, 256),
+            nn.GELU(),
+            nn.Linear(256, 128),
+            nn.GELU(),
+            nn.Linear(128, action_dim),
+        )
+        transformer.action_rope = WanRotaryPosEmbed1D(
+            _config_value(transformer.config, "attention_head_dim"),
+            _config_value(transformer.config, "rope_max_seq_len"),
+        )
+
+        state_dict = torch.load(weight_path, map_location="cpu")
+        if isinstance(state_dict, dict) and "state_dict" in state_dict:
+            state_dict = state_dict["state_dict"]
+        transformer.load_state_dict(state_dict, strict=True)
+        if torch_dtype is not None:
+            transformer = transformer.to(torch_dtype)
+        return transformer.eval()
+
+    transformer_cls.from_pretrained = classmethod(_from_pretrained_with_action_dim)
+    transformer_cls._xpolicylab_action_dim = action_dim
+
+
+def _patch_pipeline_action_dim(inference_server_module: Any, action_dim: int) -> None:
+    pipeline_cls = inference_server_module.WAPipeline
+    if getattr(pipeline_cls, "_xpolicylab_action_dim", None) == action_dim:
+        return
+
+    original_prepare_latents = getattr(
+        pipeline_cls,
+        "_xpolicylab_original_prepare_latents",
+        pipeline_cls.prepare_latents,
+    )
+    original_call = getattr(
+        pipeline_cls,
+        "_xpolicylab_original_call",
+        pipeline_cls.__call__,
+    )
+    pipeline_cls._xpolicylab_original_prepare_latents = original_prepare_latents
+    pipeline_cls._xpolicylab_original_call = original_call
+
+    def _prepare_latents_with_action_dim(self, *args, **kwargs):
+        kwargs.setdefault("action_dim", action_dim)
+        return original_prepare_latents(self, *args, **kwargs)
+
+    def _call_with_expand_timesteps(self, *args, **kwargs):
+        self.register_to_config(expand_timesteps=True)
+        return original_call(self, *args, **kwargs)
+
+    pipeline_cls.prepare_latents = _prepare_latents_with_action_dim
+    pipeline_cls.__call__ = _call_with_expand_timesteps
+    pipeline_cls._xpolicylab_action_dim = action_dim
 
 
 def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path:
@@ -113,6 +243,9 @@ class Model(ModelTemplate):
         self.env_cfg_type = self.model_cfg.get("env_cfg_type")
         self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
         self.action_chunk = int(self.model_cfg.get("action_chunk") or 1)
+        self.xpolicylab_action_dim = self._packed_dim()
+        self.model_state_dim = int(self.model_cfg.get("model_state_dim") or self.xpolicylab_action_dim)
+        self.model_action_dim = int(self.model_cfg.get("model_action_dim") or self.xpolicylab_action_dim)
         self.load_model = _parse_bool(self.model_cfg.get("load_model", False))
         self.device = self.model_cfg.get("device", "cuda")
         self.dtype = self.model_cfg.get("dtype", "bf16")
@@ -123,7 +256,9 @@ class Model(ModelTemplate):
         self.base_model_path = _resolve_path(self.model_cfg.get("base_model_path")) or Path(
             "/mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B-Diffusers/"
         )
-        self.stats_path = _resolve_path(self.model_cfg.get("stats_path")) or (_GIGAWORLD_ROOT / "norm_stats_delta.json")
+        self.stats_path = _ensure_stats_compatible(
+            _resolve_path(self.model_cfg.get("stats_path")) or (_GIGAWORLD_ROOT / "norm_stats_delta.json")
+        )
         self.t5_embedding_pkl = _resolve_path(self.model_cfg.get("t5_embedding_pkl"))
 
         self._latest_env_idx_list = [0]
@@ -134,6 +269,9 @@ class Model(ModelTemplate):
         print(
             "[GigaWorldPolicy] initialized",
             f"load_model={self.load_model}",
+            f"xpolicylab_action_dim={self.xpolicylab_action_dim}",
+            f"model_state_dim={self.model_state_dim}",
+            f"model_action_dim={self.model_action_dim}",
             f"checkpoint_root={self.checkpoint_root}",
             f"checkpoint_dir={self.checkpoint_dir}",
             f"transformer_path={self.transformer_path}",
@@ -181,7 +319,10 @@ class Model(ModelTemplate):
         if self.t5_embedding_pkl is None:
             raise ValueError("t5_embedding_pkl is required when load_model=true.")
 
-        get_policy = importlib.import_module("scripts.inference_server").get_policy
+        inference_server = importlib.import_module("giga_world_policy.scripts.inference_server")
+        _patch_transformer_loader(inference_server, self.model_action_dim)
+        _patch_pipeline_action_dim(inference_server, self.model_action_dim)
+        get_policy = inference_server.get_policy
 
         args = SimpleNamespace(
             model_id=str(self.base_model_path),
@@ -202,9 +343,9 @@ class Model(ModelTemplate):
             return_images=False,
             vis_dir=self.model_cfg.get("vis_dir", "./vis"),
             vis_fps=int(self.model_cfg.get("vis_fps", 5)),
-            state_dim=int(self.model_cfg.get("state_dim") or self._packed_dim()),
-            action_dim=int(self.model_cfg.get("action_dim") or self._packed_dim()),
-            delta_mask=self.model_cfg.get("delta_mask") or self._default_delta_mask(),
+            state_dim=self.model_state_dim,
+            action_dim=self.model_action_dim,
+            delta_mask=self.model_cfg.get("model_delta_mask") or self.model_cfg.get("delta_mask") or self._default_delta_mask(),
         )
         return get_policy(args)
 
@@ -216,12 +357,20 @@ class Model(ModelTemplate):
     def _default_delta_mask(self) -> str:
         dim = self._packed_dim()
         if self.action_type == "joint":
-            return ",".join(["1"] * dim)
+            if dim == 14:
+                mask = ["1", "1", "1", "1", "1", "1", "0", "1", "1", "1", "1", "1", "1", "0"]
+            else:
+                mask = ["1"] * dim
+            if self.model_action_dim > len(mask):
+                mask.extend(["0"] * (self.model_action_dim - len(mask)))
+            return ",".join(mask[: self.model_action_dim])
         mask: list[str] = []
         for ee_dim in self.robot_action_dim_info["ee_dim"]:
             mask.extend(["1", "1", "1", "1", "1", "1", "0"])
             mask.extend(["1"] * ee_dim)
-        return ",".join(mask)
+        if self.model_action_dim > len(mask):
+            mask.extend(["0"] * (self.model_action_dim - len(mask)))
+        return ",".join(mask[: self.model_action_dim])
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
@@ -255,6 +404,7 @@ class Model(ModelTemplate):
 
     def _encode_observation(self, observation: dict[str, Any]) -> dict[str, Any]:
         state = pack_robot_state(observation, self.action_type, self.robot_action_dim_info, source_type="obs").astype(np.float32)
+        state = _pad_or_trim_np(state, self.model_state_dim)
         return {
             "observation.state": state,
             "observation.images.cam_high": _ensure_chw01(
@@ -270,7 +420,7 @@ class Model(ModelTemplate):
 
     def _predict_action_sequence(self, encoded_obs: dict[str, Any]) -> list[dict[str, np.ndarray]]:
         if self.policy is None:
-            packed_actions = np.zeros((1, self._packed_dim()), dtype=np.float32)
+            packed_actions = np.zeros((1, self.model_action_dim), dtype=np.float32)
         else:
             pred = self.policy.inference(encoded_obs)
             if hasattr(pred, "detach"):
@@ -281,6 +431,7 @@ class Model(ModelTemplate):
 
         action_list = []
         for packed_action in packed_actions:
+            packed_action = packed_action[: self.xpolicylab_action_dim]
             if self.action_type == "ee":
                 action_list.append(_manual_unpack_ee(packed_action, self.robot_action_dim_info))
             else:

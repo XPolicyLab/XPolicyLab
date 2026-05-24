@@ -14,16 +14,18 @@ checkpoint_num: checkpoint_epoch_4_step_100000
 transformer_subdir: transformer_ema
 base_model_path: /mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B-Diffusers/
 stats_path: giga_world_policy/norm_stats_delta.json
-t5_embedding_pkl: null
+t5_embedding_pkl: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21/t5_embedding/episode_000000.pt
+norm_mode: zscore
 device: cuda
 dtype: bf16
 action_chunk: 48
 state_dim: null
 action_dim: null
 delta_mask: null
+model_state_dim: 16
+model_action_dim: 16
+model_delta_mask: 1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0
 
-# In debug mode this validates checkpoint paths and returns shape-correct zero
-# actions. Set load_model=true for full GigaWorld inference.
-load_model: false
+load_model: true
 
 port: 6000

@@ -50,4 +50,4 @@ python -c "from lerobot.policies.factory import get_policy_class; print(get_poli
 python -c "import XPolicyLab, av, transformers, safetensors, h5py; print('deps ok')"
 ```
 
-训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。
+训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。

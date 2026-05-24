@@ -179,7 +179,7 @@ bash create_policy.sh ${policy_name}
 
 - `dataset_name`: 数据集名称，目的是在 `data` 目录下区分不同项目的数据集，例如 RoboTwin 和 RoboDojo。
 - `env_cfg_type`: 采集或评测的环境配置（包含本体信息等）。在 `demo_env/env_cfg_type` 中可以查看示例。教程中提供了两个示范数据：`dual_franka_panda`（双臂夹爪）和 `g1_inspire`（人形灵巧手）。
-- `expert_data_num`: 训练使用的轨迹数量。
+- `expert_data_num`: 训练使用的轨迹数量，参与 checkpoint 6 元组命名，为 `train.sh` 必填参数。
 - `action_type`: 模型使用的数据类型（如 `ee` 或 `joint`）。这会影响使用的数据内容以及模型输入输出的维度。
 - `seed`: 随机种子，便于多种子复现与对比。
 

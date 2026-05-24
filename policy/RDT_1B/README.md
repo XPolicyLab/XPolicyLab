@@ -7,7 +7,7 @@ RDT_1B 已按 XPolicyLab policy 方式封装，训练入口会把 checkpoint 保
 默认训练脚本会把数据目录设为：
 
 ```text
-policy/RDT_1B/data/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+policy/RDT_1B/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 如需使用已有 hdf5/tfrecord 数据目录，可通过环境变量覆盖：
@@ -19,13 +19,13 @@ RDT_HDF5_DIR=<path_to_training_data> bash train.sh ...
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0,1,2,3,4,5,6,7
+bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3,4,5,6,7
 ```
 
 训练输出固定保存到：

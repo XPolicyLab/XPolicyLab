@@ -4,16 +4,16 @@ InternVLA_A1 已接入 XPolicyLab 的本地 policy server，用于 joint action 
 
 ## 训练
 
-训练入口遵循 XPolicyLab 统一的 8 参数约定：
+训练入口遵循 XPolicyLab 统一的 7 参数约定：
 
 ```bash
-bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3
 ```
 
 `train.sh` 会将训练输出固定保存到：
@@ -25,7 +25,7 @@ policy/InternVLA_A1/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<exper
 底层训练使用 `internvla_a1/launch/internvla_a1_3b_finetune.sh`。默认会将数据集 repo id 设为：
 
 ```text
-<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 如需覆盖底层数据集名称，可设置：

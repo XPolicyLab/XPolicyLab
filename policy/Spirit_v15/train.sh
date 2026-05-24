@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 8 ]]; then
-  echo "Usage: $0 <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+if [[ $# -lt 7 ]]; then
+  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
 dataset_name=$1
-task_name=$2
-ckpt_name=$3
-env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-gpu_id=$8
+ckpt_name=$2
+env_cfg_type=$3
+expert_data_num=$4
+action_type=$5
+seed=$6
+gpu_id=$7
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
-data_setting="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 converted_data_root="${SPIRIT_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${SPIRIT_RAW_DATA_ROOT:-${ROOT_DIR}/data}"
-patterns_csv="${SPIRIT_PATTERNS_CSV:-${dataset_name}.${task_name}.${env_cfg_type}}"
+patterns_csv="${SPIRIT_PATTERNS_CSV:-${dataset_name}.${ckpt_name}.${env_cfg_type}}"
 pretrained_path="${SPIRIT_PRETRAINED_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Spirit-v1.5}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 num_gpus="$(tr ',' '\n' <<< "${gpu_id}" | sed '/^$/d' | wc -l | xargs)"
@@ -48,7 +47,7 @@ bash "${POLICY_DIR}/spirit_v15/scripts/train_xpolicylab_from_raw.sh" \
   "${SPIRIT_NUM_WORKERS:-4}" \
   "${SPIRIT_PREFETCH_FACTOR:-8}" \
   "${SPIRIT_WANDB_MODE:-disabled}" \
-  "${task_name}" \
+  "${ckpt_name}" \
   "${SPIRIT_TASK_PROMPT:-Perform the instructed bimanual manipulation task.}" \
   "${SPIRIT_FPS:-auto}" \
   "${SPIRIT_OVERWRITE_DATASET:-0}" \
