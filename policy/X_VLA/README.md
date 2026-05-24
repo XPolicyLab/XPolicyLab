@@ -1,12 +1,53 @@
-# 训练
-修改`meta.json`, 把所有要用于训练的数据路径放入.
-然后修改`train.sh`, 设置三个参数:  
-**models**, **train_metas_path**, and **output_dir**
+# X_VLA
 
-# XPolicyLab 推理封装
-`policy/X-VLA` 已经按 `Pi_05` 风格接入 `XPolicyLab`，但内部不再额外启动 X-VLA 自己的 HTTP server，而是直接在 `Model` 进程内加载权重并推理。
+X_VLA 已按 XPolicyLab policy 方式封装，训练时通过 `xvla/train.py --output_dir` 保存 checkpoint。
 
-注意：
-- 在 `XPolicyLab` 中实际使用的策略名是 `XVLA`，这是为了绕开 `X-VLA` 目录名中的 `-` 无法被 Python import 的限制。
-- `action_type` 当前固定使用 `ee`。
-- 如果 checkpoint 不包含 processor 文件，请额外传入 `processor_path` 指向 base checkpoint。
+## 数据准备
+
+编辑或生成训练 metadata：
+
+```text
+policy/X_VLA/xvla/meta.json
+```
+
+如果 metadata 不在默认位置，可设置：
+
+```bash
+XVLA_META_PATH=/path/to/meta.json bash train.sh ...
+```
+
+预训练模型默认路径：
+
+```text
+/mnt/xspark-data/xspark_shared/model_weights/X-VLA-Pt
+```
+
+可通过 `XVLA_MODEL_PATH` 覆盖。
+
+## 训练
+
+```bash
+bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+```
+
+示例：
+
+```bash
+bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 50 ee 0 0,1,2,3
+```
+
+训练输出固定保存到：
+
+```text
+policy/X_VLA/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
+```
+
+X-VLA checkpoint 可能只保存 `config.json`、`model.safetensors`、`state.json`。如果部署需要 processor/tokenizer 等文件，请从 base checkpoint 目录复制缺失文件，不要覆盖训练产生的权重文件。
+
+## 评估
+
+```bash
+bash eval.sh <task_name> <env_cfg> <expert_data_num> ee <gpu_id> <seed> <policy_conda_env> <eval_env_conda_env> <checkpoint_path>
+```
+
+当前封装默认使用 `ee` 动作类型。

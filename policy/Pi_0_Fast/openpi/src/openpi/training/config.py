@@ -502,6 +502,9 @@ class TrainConfig:
     assets_base_dir: str = "./assets"
     # Base directory for checkpoints.
     checkpoint_base_dir: str = "./checkpoints"
+    # Optional exact checkpoint directory. XPolicyLab train.sh uses this to
+    # keep policy checkpoints under policy/<name>/checkpoints/<6-tuple>.
+    checkpoint_dir_override: str | None = None
 
     # Random seed that will be used by random generators during training.
     seed: int = 42
@@ -547,6 +550,8 @@ class TrainConfig:
         """Get the checkpoint directory for this config."""
         if not self.exp_name:
             raise ValueError("--exp_name must be set")
+        if self.checkpoint_dir_override:
+            return pathlib.Path(self.checkpoint_dir_override).resolve()
         return (pathlib.Path(self.checkpoint_base_dir) / self.name / self.exp_name).resolve()
 
     @property
