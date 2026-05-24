@@ -166,7 +166,13 @@ def load_episode(path, action_type, robot_action_dim_info):
             source_type="dataset",
             state_type="action",
         ).astype(np.float32)
-        raw_lang = json.loads(root["instructions"][()].decode("utf-8"))[0]
+        if "instructions" in root:
+            raw_lang = json.loads(root["instructions"][()].decode("utf-8"))[0]
+        elif "instruction" in root:
+            raw = root["instruction"][()]
+            raw_lang = raw.decode("utf-8") if isinstance(raw, bytes) else str(raw)
+        else:
+            raise KeyError(f"{path} does not contain instructions")
     return state, action, raw_lang
 
 
@@ -298,13 +304,14 @@ def patch_tinyvla(wrapper_args):
 
     def parse_pythia_with_xpolicylab_dims():
         model_args, data_args, training_args, action_args, config, bnb = original_parse()
+        # We found that action_head_type="act" conflicts with the released pre-trained Llava-Pythia VLM configs
+        # lock the action head type to droid_diffusion
+        action_args.action_head_type = "droid_diffusion"
+        config.action_head_type = "droid_diffusion"
         action_args.action_dim = action_dim
         action_args.state_dim = action_dim
         config.action_dim = action_dim
         config.state_dim = action_dim
-        config.act["act"]["action_dim"] = action_dim
-        config.act["act"]["camera_names"] = list(CAMERA_KEYS)
-        config.act["act"]["chunk_size"] = action_args.chunk_size
         return model_args, data_args, training_args, action_args, config, bnb
 
     train_tinyvla.parse_pythia = parse_pythia_with_xpolicylab_dims

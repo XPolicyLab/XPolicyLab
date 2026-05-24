@@ -14,28 +14,7 @@ model_path: null
 model_base: null
 stats_path: null
 
-# --------------------------------------------------------------------------
-# TinyVLA inference settings.
-# These must match the training recipe in policy/TinyVLA/train.sh, which uses
-# the llava_pythia variant under policy/TinyVLA/tinyvla/ (NOT the InternVL3
-# DexVLA variant under policy/TinyVLA/robotwin_implement/).
-# --------------------------------------------------------------------------
 
-# train.sh enables LoRA on `vit llm`, so the saved checkpoint is a LoRA
-# delta and the wrapper must merge it onto `model_base` at load time.
 enable_lora: true
-
-# Conversation template used by tinyvla/eval_real_franka.py at inference
-# time (see the __main__ block at line 391).
 conv_mode: pythia
-
-# Cameras to feed the model, in the same order the training pipeline used.
-# llava_pythia's process_batch_to_llava only supports exactly 2 cameras
-# (it does `torch.chunk(curr_image, 2, dim=0)`), so we list two.
-camera_keys: [cam_left_wrist, cam_right_wrist]
-
-# When `temporal_agg: true` (the official recipe) the model returns 1
-# temporally-aggregated action per call, so `steps_per_chunk` is effectively
-# 1. We keep it explicit for the (debug-only) `temporal_agg: false` path.
-temporal_agg: true
-steps_per_chunk: 1
+camera_keys: [cam_left_wrist, cam_right_wrist] # no need to change

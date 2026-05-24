@@ -36,8 +36,9 @@ else
    mkdir -p "$OUTPUT"
 fi
 
-# backup the train scripts
+# backup the train/eval recipe
 cp "${POLICY_DIR}/train.sh" "$OUTPUT"
+cp "${POLICY_DIR}/deploy.yml" "$OUTPUT"
 
 
 # download pretrained VLM
@@ -139,7 +140,7 @@ deepspeed --master_port 29600 --num_gpus="${num_gpus}" --num_nodes=1 "${POLICY_D
   --gradient_checkpointing True \
   --dataloader_num_workers 8 \
   --lazy_preprocess True \
-  --action_head_type act \
+  --action_head_type droid_diffusion \
   --use_state True \
   --concat "token_cat" \
   --window_size 6 \
