@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - _self_  # all below configs will override this file
+  - /model/dreamzero/backbone: identity
+  - /model/dreamzero/action_head: wan_flow_matching_action_tf
+  - /model/dreamzero/transform: dreamzero_cotrain
+
+model:
+  _target_: groot.vla.model.dreamzero.base_vla.VLA
+  _convert_: object
+  config:
+    _target_: groot.vla.model.dreamzero.base_vla.VLAConfig
+    _recursive_: false  # avoid instantiating backbone_cfg and action_head_cfg
+    model_dtype: float32
+    hidden_size: ${backbone_hidden_size}  # this is defined in the backbone's yaml
+    action_horizon: ${action_head_cfg.config.action_horizon}  # this is defined in the action_head's yaml
+    action_dim: ${action_head_cfg.config.action_dim}  # this is defined in the action_head's yaml
+    backbone_cfg: ${backbone_cfg}  # this is defined in the backbone's yaml
+    action_head_cfg: ${action_head_cfg}  # this is defined in the action_head's yaml

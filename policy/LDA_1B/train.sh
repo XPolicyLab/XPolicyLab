@@ -2,7 +2,7 @@
 set -euo pipefail
 
 dataset_name=${1}
-task_name=${2}
+ckpt_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
 action_type=${5}
@@ -26,9 +26,9 @@ ckpt_root_dir="${LDA_CKPT_ROOT:-${POLICY_DIR}/checkpoints}"
 # Feed the 5 CLI args into the generic `xpolicylab` mixture entry registered in
 # upstream lda/dataloader/gr00t_lerobot/mixtures.py. The folder name must match
 # what LDA-1B/xpolicylab_adapter/process_data.py wrote out (same 5-tuple, hyphen-joined).
-export XPOLICYLAB_DATASET_ID="${XPOLICYLAB_DATASET_ID:-${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}}"
+export XPOLICYLAB_DATASET_ID="${XPOLICYLAB_DATASET_ID:-${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}}"
 export XPOLICYLAB_ROBOT_TYPE="${XPOLICYLAB_ROBOT_TYPE:-${env_cfg_type}}"
-ckpt_setting="${LDA_CKPT_SETTING:-${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+ckpt_setting="${LDA_CKPT_SETTING:-${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
 pretrained_checkpoint="${LDA_PRETRAINED_CHECKPOINT:-null}"
 max_train_steps="${LDA_MAX_TRAIN_STEPS:-200000}"
 per_device_batch_size="${LDA_PER_DEVICE_BATCH_SIZE:-64}"

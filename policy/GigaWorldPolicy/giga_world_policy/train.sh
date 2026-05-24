@@ -1,0 +1,1 @@
+python -m scripts.train --config world_action_model.configs.example.config

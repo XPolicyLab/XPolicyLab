@@ -75,10 +75,11 @@ USE_EXTERNAL_STATS=${3:-true}  # true | false
 EXTERNAL_STATS_PATH="${HF_LEROBOT_HOME}/stats/${ACTION_TYPE}/${DATASET_REPO_ID}/stats.json"
 
 # 3. output config
-BASE_OUTPUT_DIR="outputs/${POLICY}"
+BASE_OUTPUT_DIR="${BASE_OUTPUT_DIR:-outputs/${POLICY}}"
 PRETRAINED_DETAIL="a1_agibotworld_700k"
-JOB_NAME="$(date +'%Y_%m_%d_%H_%M_%S')-${POLICY}-${DATASET_REPO_ID//[\/ ]/_}-${ACTION_TYPE}-${PRETRAINED_DETAIL}-finetune"
-OUTPUT_DIR="${BASE_OUTPUT_DIR}/${JOB_NAME}"
+JOB_NAME="${JOB_NAME:-$(date +'%Y_%m_%d_%H_%M_%S')-${POLICY}-${DATASET_REPO_ID//[\/ ]/_}-${ACTION_TYPE}-${PRETRAINED_DETAIL}-finetune}"
+OUTPUT_DIR="${4:-${OUTPUT_DIR:-${BASE_OUTPUT_DIR}/${JOB_NAME}}}"
+TRAIN_SEED="${5:-${TRAIN_SEED:-0}}"
 
 ARGS=(
     --multi_gpu
@@ -119,7 +120,7 @@ ARGS=(
     --dataset.video_backend=pyav
 
     # ---- Training ----
-    --seed=0
+    --seed="${TRAIN_SEED}"
     --batch_size=8
     --steps=60000
     # --eval_freq=60000

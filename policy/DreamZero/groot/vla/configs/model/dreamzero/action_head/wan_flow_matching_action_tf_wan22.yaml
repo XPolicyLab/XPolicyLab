@@ -1,0 +1,38 @@
+# @package _global_
+# Wan2.2-TI2V-5B backbone config for DreamZero DROID training
+# Uses CausalWanModel with Wan2.2 architecture (dim=3072, 48-channel VAE)
+# Override base config with: model/dreamzero/action_head=wan_flow_matching_action_tf_wan22
+
+defaults:
+  - wan_flow_matching_action_tf
+
+# Wan2.2-TI2V-5B specific overrides
+# frame_seqlen must match DiT patch_embedding output per frame: (H//2)*(W//2) for stride (1,2,2).
+# WanVideoVAE38 has 16x spatial downscale. For even latent H,W (no crop in dynamics loss) use video
+# resolution with H,W divisible by 32: 160x320 -> latent 10x20 -> patch 5x10=50. Else 176x320 -> 11x20 (odd H).
+# Same as 5B pretrained: latent only (in_dim=48), first-frame via CLIP; no [x;y] concat.
+# Action/state invariant: need (noisy_frames-1)//num_frame_per_block >= 1, so min 3 frames per half.
+frame_seqlen: 50
+
+action_head_cfg:
+  config:
+    # 160x320 gives latent 10x20 (even); avoids dynamics-loss crop. Match data=dreamzero/droid_relative_wan22.
+    target_video_height: 160
+    target_video_width: 320
+    diffusion_model_cfg:
+      model_type: "ti2v"
+      dim: 3072
+      in_dim: 48
+      concat_first_frame_latent: false
+      ffn_dim: 14336
+      out_dim: 48
+      freq_dim: 256
+      eps: 1e-6
+      num_heads: 24
+      num_layers: 30
+    vae_cfg:
+      _target_: groot.vla.model.dreamzero.modules.wan_video_vae.WanVideoVAE38
+      _convert_: object
+      z_dim: 48
+      dim: 160
+      vae_pretrained_path: ${vae_pretrained_path}

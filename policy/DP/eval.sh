@@ -4,7 +4,7 @@ set -e
 # ==================== 参数定义 ====================
 policy_name=DP
 dataset_name=${1}
-task_name=${2}
+ckpt_name=${2}  # task_name
 ckpt_name=${3}
 env_cfg_type=${4}
 expert_data_num=${5}
@@ -38,7 +38,7 @@ CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python "${ROOT_DIR}/XPolicyLab/setup_pol
     --overrides \
         port="${FREE_PORT}" \
         dataset_name="${dataset_name}" \
-        task_name="${task_name}" \
+        task_name="${ckpt_name}" \
         ckpt_name="${ckpt_name}" \
         env_cfg_type="${env_cfg_type}" \
         expert_data_num="${expert_data_num}" \
@@ -53,5 +53,5 @@ echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
 # ==================== 启动 client 进行评测 ====================
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
-bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}"
+bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}"
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

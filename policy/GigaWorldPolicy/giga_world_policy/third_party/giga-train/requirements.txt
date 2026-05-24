@@ -1,0 +1,8 @@
+accelerate
+deepspeed
+diffusers
+nvidia-ml-py
+paramiko
+torch
+transformers
+tyro

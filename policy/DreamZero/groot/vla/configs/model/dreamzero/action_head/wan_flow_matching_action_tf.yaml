@@ -1,0 +1,108 @@
+# @package _global_
+add_pos_embed: true
+hidden_size: 64
+attn_dropout: 0.2
+repa_layer: 8
+repa_coeff: 1.0
+load_pretrained_det_decode_layer_path: null
+expand_batch: null
+dit_version: null
+text_encoder_pretrained_path: null
+image_encoder_pretrained_path: null
+vae_pretrained_path: null
+train_architecture: "lora"
+num_frame_per_block: 1
+num_action_per_block: 32
+num_state_per_block: 1
+frame_seqlen: 880
+action_head_cfg:
+  _target_: groot.vla.model.dreamzero.action_head.wan_flow_matching_action_tf.WANPolicyHead
+  _convert_: object  # to convert to a dict so that it can save the config to json
+  config:
+    _target_: groot.vla.model.dreamzero.action_head.wan_flow_matching_action_tf.WANPolicyHeadConfig
+    _recursive_: false  # avoid instantiating noise_scheduler_cfg and obs_encoder_cfg
+    tiled: false
+    tile_size_height: 34
+    tile_size_width: 34
+    tile_stride_height: 18
+    tile_stride_width: 16
+    lora_rank: 4
+    lora_alpha: 4
+    num_frames: ${num_frames}
+    num_frame_per_block: ${num_frame_per_block}
+    lora_target_modules: "q,k,v,o,ffn.0,ffn.2"
+    init_lora_weights: "kaiming"
+    train_architecture: ${train_architecture}
+    use_gradient_checkpointing: true
+    add_pos_embed: ${add_pos_embed}
+    model_dtype: float32
+    max_state_dim: ${max_state_dim}
+    max_action_dim: ${max_action_dim}
+    action_loss_embodiment_ids: [26, 17, 32]
+    hidden_size: ${hidden_size}
+    input_embedding_dim: 1536
+    backbone_embedding_dim: ${backbone_hidden_size}
+    repa_layer: ${repa_layer}
+    repa_coeff: ${repa_coeff}
+    load_pretrained_det_decode_layer_path: ${load_pretrained_det_decode_layer_path}
+    freeze_decode_layer: false
+    expand_batch: ${expand_batch}
+    use_vlln: true
+    vl_self_attention_cfg:
+      _target_: groot.vla.model.n1_5.modules.cross_attention_dit.SelfAttentionTransformer
+      positional_embeddings: null
+      num_layers: 4
+      num_attention_heads: 24
+      attention_head_dim: 64
+      dropout: ${attn_dropout}
+      final_dropout: true
+    diffusion_model_cfg:
+      _target_: groot.vla.model.dreamzero.modules.wan_video_dit_action_casual_chunk.CausalWanModel
+      _convert_: object
+      diffusion_model_pretrained_path: ${dit_version}
+      model_type: "i2v"
+      frame_seqlen: ${frame_seqlen}
+      dim: 5120
+      in_dim: 36
+      ffn_dim: 13824
+      out_dim: 16
+      freq_dim: 256
+      eps: 1e-6
+      num_heads: 40
+      num_layers: 40
+      max_chunk_size: ${max_chunk_size}
+      num_frame_per_block: ${num_frame_per_block}
+      num_action_per_block: ${num_action_per_block}
+      num_state_per_block: ${num_state_per_block}
+    text_encoder_cfg:
+      _target_: groot.vla.model.dreamzero.modules.wan_video_text_encoder.WanTextEncoder
+      _convert_: object
+      text_encoder_pretrained_path: ${text_encoder_pretrained_path}
+    image_encoder_cfg:
+      _target_: groot.vla.model.dreamzero.modules.wan_video_image_encoder.WanImageEncoder
+      _convert_: object
+      image_encoder_pretrained_path: ${image_encoder_pretrained_path}
+    vae_cfg:
+      _target_: groot.vla.model.dreamzero.modules.wan_video_vae.WanVideoVAE
+      _convert_: object
+      vae_pretrained_path: ${vae_pretrained_path}
+
+    action_dim: ${max_action_dim}
+    action_horizon: ${action_horizon}
+    num_inference_timesteps: 4  # not used during training
+    noise_beta_alpha: 1.5
+    noise_beta_beta: 1.0
+    noise_s: 0.999
+    num_timestep_buckets: 1000
+
+    # ========== DECOUPLED NOISE SAMPLING CONFIG ==========
+    # When true: video uses Beta(alpha,beta) biased high, action uses independent uniform
+    # When false (default): original behavior - video and action share same timestep
+    decouple_video_action_noise: false
+    # Beta params (only used when decouple_video_action_noise=true)
+    # Beta(3,1): mean=0.75, Beta(5,1): mean=0.83 (higher alpha = more bias to high noise)
+    video_noise_beta_alpha: 3.0
+    video_noise_beta_beta: 1.0
+
+    tune_projector: true
+    tune_diffusion_model: true

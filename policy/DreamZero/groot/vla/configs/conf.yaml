@@ -1,0 +1,135 @@
+defaults:
+  - _self_  # all below configs will override this conf.yaml
+  - model: dreamzero/vla
+  - data: dreamzero/droid_horizon_relative
+  - override hydra/hydra_logging: disabled  # disable hydra logging
+  - override hydra/job_logging: disabled  # disable hydra job logging
+
+
+# === Model Arguments ===
+model: ???
+
+# === Data Arguments ===
+train_dataset: ???
+
+# ======== Trainer ========
+trainer:
+  _target_: groot.vla.experiment.VLATrainer
+  _partial_: true
+  _recursive_: false
+  callbacks:
+  model: ???                                  # model
+  train_dataset: ???                          # train_dataset
+  compute_dtype: ???                          # dtype_from_string(model.config.model_dtype)
+  benchmark_time: false                       # whether or not to benchmark time for training
+  # Legacy per-step profiling (profiles every N steps)
+  enable_profiling: false                     # (legacy) enable per-step profiling in training_step
+  profiling_steps: 5                          # (legacy) profile every N steps
+  # ProfCallback: window-based profiling
+  enable_prof_callback: false                 # enable ProfCallback for window-based profiling
+  profile_start_step: 50                      # session step to start profiling
+  profile_warmup_steps: 1                     # warmup steps for profiler
+  profile_active_steps: 3                     # active profiling steps
+  profile_record_shapes: false                # record tensor shapes (adds overhead)
+  profile_with_stack: false                   # record Python stack traces
+  profile_memory: false                       # record memory allocation
+
+# === Training Arguments ===
+
+wandb_project: ???  # needs to be specified by user
+output_dir: ???  # need to be specified by user
+load_from_yaml:  # need to be specified by user, will override the current config
+gear_credentials: null
+upload_checkpoints: false
+upload_every: 1000
+upload_last_n_checkpoints: 5
+remove_unused_columns: false
+bf16: false
+tf32: false
+global_batch_size: null
+raise_error_if_global_batch_size_not_set: false
+per_device_train_batch_size: 256
+per_device_eval_batch_size: 64
+gradient_accumulation_steps: 1
+dataloader_num_workers: 10
+dataloader_pin_memory: true
+dataloader_persistent_workers: true
+optim: adamw_torch
+learning_rate: 1e-4
+adam_beta1: 0.95
+adam_beta2: 0.999
+adam_epsilon: 1e-8
+weight_decay: 1e-6
+lr_scheduler_type: cosine
+warmup_ratio: 0.05
+logging_steps: 10.0
+num_train_epochs: 1000
+max_steps: -1
+save_strategy: steps
+save_steps: 500
+eval_strategy: "no"  # there has to be a double quote; otherwise a bare `no` will be interpreted as False
+save_total_limit: 8
+report_to: wandb
+seed: 42
+do_eval: false
+gradient_checkpointing: false
+ddp_find_unused_parameters: false
+ddp_bucket_cap_mb: 100
+ray_num_workers: ???
+eval_bf16: true
+torch_compile_mode: null
+
+pretrained_model_path: null
+only_tune_projectors: false
+
+save_llm: false
+save_lora_only: false
+save_value_model: false
+save_q_model: false
+
+download_cache: false
+
+training_args:
+  _target_: transformers.TrainingArguments
+  output_dir: ${output_dir}
+  run_name: ???                                # training_args.output_dir.split("/")[-1]
+  remove_unused_columns: ${remove_unused_columns}
+  deepspeed: ""
+  gradient_checkpointing: ${gradient_checkpointing}
+  bf16: ${bf16}
+  tf32: ${tf32}
+  per_device_train_batch_size: ${per_device_train_batch_size}
+  per_device_eval_batch_size: ${per_device_eval_batch_size}
+  gradient_accumulation_steps: ${gradient_accumulation_steps}
+  dataloader_num_workers: ${dataloader_num_workers}
+  dataloader_pin_memory: ${dataloader_pin_memory}
+  dataloader_persistent_workers: ${dataloader_persistent_workers}
+  optim: ${optim}
+  adam_beta1: ${adam_beta1}
+  adam_beta2: ${adam_beta2}
+  adam_epsilon: ${adam_epsilon}
+  learning_rate: ${learning_rate}
+  weight_decay: ${weight_decay}
+  warmup_ratio: ${warmup_ratio}
+  lr_scheduler_type: ${lr_scheduler_type}
+  logging_steps: ${logging_steps}
+  num_train_epochs: ${num_train_epochs}
+  max_steps: ${max_steps}
+  save_strategy: ${save_strategy}
+  save_steps: ${save_steps}
+  save_total_limit: ${save_total_limit}
+  report_to: ${report_to}
+  seed: ${seed}
+  do_eval: ${do_eval}
+  ddp_find_unused_parameters: ${ddp_find_unused_parameters}
+  ddp_bucket_cap_mb: ${ddp_bucket_cap_mb}
+  torch_compile_mode: ${torch_compile_mode}
+
+# === Profiling Arguments ===
+profile_dir: null
+
+# === Disable Hydra Config ===
+hydra:
+  output_subdir: null
+  run:
+    dir: .

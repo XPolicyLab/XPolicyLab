@@ -1,0 +1,9 @@
+{
+    "_class_name": "LmdbDataset",
+    "_key_names": [
+        "image"
+    ],
+    "data_size": 5,
+    "data_type": "image",
+    "data_name": "image"
+}
