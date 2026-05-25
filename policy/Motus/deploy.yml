@@ -1,0 +1,18 @@
+# Basic experiment configuration
+policy_name: Motus
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: joint
+seed: 0
+eval_batch: false
+eval_env: sim
+
+# Motus-specific arguments
+ckpt_setting: null
+checkpoint_path: null
+model_path: null
+prompt: null
+wan_path: null
+vlm_path: null
+log_dir: null

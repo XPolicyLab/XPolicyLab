@@ -1,0 +1,57 @@
+# Configuration for Motus
+
+common:
+  # Robot dimensions
+  action_dim: 14         # Robot action dimension
+  state_dim: 14          # Robot state dimension
+  
+  # Video settings  
+  num_video_frames: 8    # Number of video frames to predict
+  video_height: 384      # Video frame height
+  video_width: 320       # Video frame width
+  
+  # Sampling strategy parameters
+  global_downsample_rate: 3     # Global downsampling (e.g., 30Hz -> 20Hz)
+  video_action_freq_ratio: 2    # Video:Action frequency ratio
+
+# Model configuration
+model:
+  # Action Expert configuration
+  action_expert:
+    # Architecture parameters (configurable)
+    hidden_size: 1024       # Hidden dimension (must be multiple of 128 for head_dim=128)
+    ffn_dim_multiplier: 4   # FFN = hidden_size * multiplier
+    
+    # Normalization and regularization
+    norm_eps: 1e-5         # Layer norm epsilon
+  
+  # Understanding Expert configuration
+  und_expert:
+    # Architecture parameters (configurable)
+    hidden_size: 512        # Hidden dimension for understanding expert
+    ffn_dim_multiplier: 4   # FFN = hidden_size * multiplier
+    
+    # Normalization and regularization
+    norm_eps: 1e-5         # Layer norm epsilon
+    
+    # VLM adapter settings
+    vlm:
+      input_dim: 2048       # VLM feature dimension (input)
+      # input_dim: 2048       # VLM feature dimension (input)
+      projector_type: "mlp3x_silu"  # Adapter type
+    
+  # Time distribution settings
+  time_distribution:
+    timestep_sample_method: "logi_normal"    # "logit_normal" or "uniform"
+    sigmoid_scale: 1.0                        # Controls distribution shape (higher = more concentrated around 0.5)
+    min_t: 0.0                               # Minimum time value for training
+    max_t: 1.0                               # Maximum time value for training
+    
+  # Inference settings
+  inference:
+    num_inference_timesteps: 10               # Number of denoising steps during inference
+
+  # Loss weights
+  loss_weights:
+    video_loss_weight: 1.0       # Weight for video reconstruction loss
+    action_loss_weight: 1.0     # Weight for action prediction loss
