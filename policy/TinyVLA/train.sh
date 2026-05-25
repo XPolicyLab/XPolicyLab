@@ -12,17 +12,7 @@ seed=$7
 gpu_id=$8
 
 
-gpu_id="${gpu_id//[[:space:]]/}"
-if [[ -z "${gpu_id}" ]]; then
-   echo "gpu_id is required, e.g. 0 or 0,1,2,3"
-   exit 1
-fi
-IFS=',' read -r -a GPU_IDS <<< "${gpu_id}"
-num_gpus="${#GPU_IDS[@]}"
-
-export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
-
 
 # define OUTPUT path
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -98,7 +88,7 @@ fi
 
 
 
-deepspeed --master_port 29600 --num_gpus="${num_gpus}" --num_nodes=1 "${POLICY_DIR}/train.py" \
+deepspeed --master_port 29600 --include "localhost:${gpu_id}" "${POLICY_DIR}/train.py" \
   --xpl_dataset_name "${dataset_name}" \
   --xpl_task_name "${task_name}" \
   --xpl_env_cfg_type "${env_cfg_type}" \
