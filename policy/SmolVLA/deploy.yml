@@ -1,0 +1,23 @@
+# Basic experiment configuration
+policy_name: SmolVLA
+task_name: null
+env_cfg: null
+env_cfg_type: null
+expert_data_num: null
+seed: null
+eval_batch: true
+eval_env: debug
+
+checkpoint_num: null
+result_dir: "./results/SmolVLA/"
+obs_transform_pipeline: null
+
+# Model / action configuration
+action_type: joint
+prompt: null
+pretrained_path: null
+smovla_vlm_path: checkpoints/shared/SmolVLM2-500M-Video-Instruct
+device: cuda
+actions_per_chunk: null
+
+port: 6000
