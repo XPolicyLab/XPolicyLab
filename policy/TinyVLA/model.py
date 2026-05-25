@@ -21,8 +21,6 @@ if str(TINYVLA_DIR) not in sys.path:
 from eval_real_franka import llava_pythia_act_policy
 
 
-TARGET_SIZE = (320, 240)
-
 
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
@@ -98,7 +96,7 @@ class Model(ModelTemplate):
         for cam_key in self.camera_keys:
             bgr = np.asarray(obs["vision"][cam_key]["color"])
             rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-            rgb = cv2.resize(rgb, TARGET_SIZE, interpolation=cv2.INTER_AREA)
+            rgb = cv2.resize(rgb, (640, 480), interpolation=cv2.INTER_AREA)
             cam_chws.append(np.transpose(rgb, (2, 0, 1)))
 
         stacked = np.stack(cam_chws, axis=0).astype(np.float32) / 255.0
@@ -113,8 +111,12 @@ class Model(ModelTemplate):
         state_vec = (state_vec - self.stats["qpos_mean"]) / self.stats["qpos_std"]
         robot_state = torch.from_numpy(state_vec).cuda().unsqueeze(0)
 
-        instructions = obs.get("instruction") or obs["instructions"]
-        raw_lang = instructions if isinstance(instructions, str) else str(instructions[0])
+        raw = obs.get("instruction") or obs["instructions"]
+        if isinstance(raw, (list, tuple, np.ndarray)):
+            raw = raw[0]
+        if isinstance(raw, (bytes, bytearray, np.bytes_)):
+            raw = raw.decode("utf-8")
+        raw_lang = str(raw)
 
         return curr_image, robot_state, raw_lang
 

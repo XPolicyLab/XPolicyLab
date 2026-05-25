@@ -1,145 +1,83 @@
 #!/bin/bash
 set -e
 
-# ==================== 参数定义 ====================
+
 dataset_name=$1
-task_name=$2
-ckpt_name=$3
-env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-gpu_id=$8
+ckpt_name=$2
+env_cfg_type=$3
+expert_data_num=$4
+action_type=$5
+seed=$6
+gpu_id=$7
 
-
+POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
 
-# define OUTPUT path
-POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-OUTPUT="${POLICY_DIR}/checkpoints/${ckpt_setting}"
+output_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
+pretrained_vlm_dir="${output_dir}/pretrained_vlm"
 
-if [ -d "$OUTPUT" ]; then
-   echo '---------output exists---------'
-else
-   echo '---------output not exists, create directory---------'
-   mkdir -p "$OUTPUT"
-fi
-
-# backup the train/eval recipe
-cp "${POLICY_DIR}/train.sh" "$OUTPUT"
-cp "${POLICY_DIR}/deploy.yml" "$OUTPUT"
+mkdir -p "${output_dir}"
 
 
-# download pretrained VLM
-pretrained_vlm_path="${OUTPUT}/pretrained_vlm"
-has_pretrained_vlm_ckpt() {
-  [ -f "${pretrained_vlm_path}/config.json" ] && {
-    compgen -G "${pretrained_vlm_path}/*.safetensors" > /dev/null || \
-    compgen -G "${pretrained_vlm_path}/pytorch_model*.bin" > /dev/null || \
-    compgen -G "${pretrained_vlm_path}/model*.bin" > /dev/null
+# trainning recipe snapshot
+cp "${POLICY_DIR}/train.sh"   "${output_dir}/train.sh"
+cp "${POLICY_DIR}/deploy.yml" "${output_dir}/deploy.yml"
+
+
+# prepare pretrained VLM
+has_pretrained_vlm() {
+  [ -f "${pretrained_vlm_dir}/config.json" ] && {
+    compgen -G "${pretrained_vlm_dir}/*.safetensors"   > /dev/null || \
+    compgen -G "${pretrained_vlm_dir}/pytorch_model*.bin" > /dev/null || \
+    compgen -G "${pretrained_vlm_dir}/model*.bin"      > /dev/null
   }
 }
 
-if has_pretrained_vlm_ckpt; then
-  echo "Using existing pretrained VLM: ${pretrained_vlm_path}"
+if has_pretrained_vlm; then
+  echo "[TinyVLA] Using existing pretrained VLM: ${pretrained_vlm_dir}"
 else
-  echo "No pretrained VLM checkpoint found in ${pretrained_vlm_path}"
+  echo "[TinyVLA] No pretrained VLM in ${pretrained_vlm_dir}"
   echo "Select pretrained VLM to download:"
-  echo "  1) Llava-Pythia(~400M)  For TinyVLA-S  https://huggingface.co/lesjie/Llava-Pythia-400M"
-  echo "  2) Llava-Pythia(~700M)  For TinyVLA-B  https://huggingface.co/lesjie/Llava-Pythia-700M"
-  echo "  3) Llava-Pythia(~1.3B)  For TinyVLA-H  https://huggingface.co/lesjie/Llava-Pythia-1.3B"
+  echo "  1) Llava-Pythia(~400M)  TinyVLA-S  https://huggingface.co/lesjie/Llava-Pythia-400M"
+  echo "  2) Llava-Pythia(~700M)  TinyVLA-B  https://huggingface.co/lesjie/Llava-Pythia-700M"
+  echo "  3) Llava-Pythia(~1.3B)  TinyVLA-H  https://huggingface.co/lesjie/Llava-Pythia-1.3B"
   read -r -p "Enter choice [1-3]: " vlm_choice
-
   case "${vlm_choice}" in
-    1)
-      pretrained_vlm_repo="lesjie/Llava-Pythia-400M"
-      ;;
-    2)
-      pretrained_vlm_repo="lesjie/Llava-Pythia-700M"
-      ;;
-    3)
-      pretrained_vlm_repo="lesjie/Llava-Pythia-1.3B"
-      ;;
-    *)
-      echo "Invalid pretrained VLM choice: ${vlm_choice}"
-      exit 1
-      ;;
+    1) vlm_repo="lesjie/Llava-Pythia-400M" ;;
+    2) vlm_repo="lesjie/Llava-Pythia-700M" ;;
+    3) vlm_repo="lesjie/Llava-Pythia-1.3B" ;;
+    *) echo "Invalid choice: ${vlm_choice}" >&2; exit 1 ;;
   esac
-
-  echo "Downloading ${pretrained_vlm_repo} to ${pretrained_vlm_path}"
-  mkdir -p "${pretrained_vlm_path}"
-  python - "${pretrained_vlm_repo}" "${pretrained_vlm_path}" <<'PY'
-import sys
-from huggingface_hub import snapshot_download
-
-snapshot_download(
-    repo_id=sys.argv[1],
-    local_dir=sys.argv[2],
-    resume_download=True,
-)
-PY
-
-  if ! has_pretrained_vlm_ckpt; then
-    echo "Failed to find pretrained VLM checkpoint after download: ${pretrained_vlm_path}"
-    exit 1
-  fi
+  mkdir -p "${pretrained_vlm_dir}"
+  hf download "${vlm_repo}" --local-dir "${pretrained_vlm_dir}"
 fi
 
 
 
+
+# effective_batch_size = per_device_train_batch_size × gradient_accumulation_steps × num_gpus
+
 deepspeed --master_port 29600 --include "localhost:${gpu_id}" "${POLICY_DIR}/train.py" \
-  --xpl_dataset_name "${dataset_name}" \
-  --xpl_task_name "${task_name}" \
-  --xpl_env_cfg_type "${env_cfg_type}" \
-  --xpl_expert_data_num "${expert_data_num}" \
-  --xpl_action_type "${action_type}" \
-  --deepspeed "${POLICY_DIR}/tinyvla/llava-pythia/scripts/zero2.json" \
-  --lora_enable True \
-  --lora_module 'vit llm' \
-  --load_pretrain False \
-  --pretrain_image_size 320 \
-  --lora_r 64 \
-  --lora_alpha 256 \
-  --non_lora_lr 2e-5 \
-  --task_name "${task_name}" \
-  --model_name_or_path "${pretrained_vlm_path}" \
-  --version v0 \
-  --tune_mm_mlp_adapter True \
-  --freeze_vision_tower True \
-  --freeze_backbone True \
-  --mm_use_im_start_end False \
-  --mm_use_im_patch_token False \
-  --image_aspect_ratio pad \
-  --group_by_modality_length False \
-  --bf16 True \
-  --output_dir "$OUTPUT" \
-  --max_steps 10000 \
-  --per_device_train_batch_size 32 \
-  --gradient_accumulation_steps 1 \
-  --save_strategy "steps" \
-  --save_steps 1000 \
-  --save_total_limit 50 \
-  --learning_rate 2e-4 \
-  --weight_decay 0. \
-  --warmup_ratio 0.005 \
-  --lr_scheduler_type "cosine" \
-  --logging_steps 10 \
-  --tf32 True \
-  --model_max_length 2048 \
-  --gradient_checkpointing True \
-  --dataloader_num_workers 8 \
-  --lazy_preprocess True \
-  --action_head_type droid_diffusion \
-  --use_state True \
-  --concat "token_cat" \
-  --window_size 6 \
-  --report_to tensorboard \
-  --logging_dir "$OUTPUT/log"
+  --xpl_dataset_name                "${dataset_name}" \
+  --xpl_ckpt_name                   "${ckpt_name}" \
+  --xpl_env_cfg_type                "${env_cfg_type}" \
+  --xpl_expert_data_num             "${expert_data_num}" \
+  --xpl_action_type                 "${action_type}" \
+  --xpl_seed                        "${seed}" \
+  --max_steps                       10000 \
+  --per_device_train_batch_size     32 \
+  --save_steps                      1000 \
+  --save_total_limit                50 \
+  --logging_steps                   10 \
+  --gradient_accumulation_steps     1
 
-for dir in "$OUTPUT"/*/ ; do
-    if [[ "$(basename "$dir")" == *"checkpoint"* ]]; then
-        cp "${POLICY_DIR}/tinyvla/llava-pythia/preprocessor_config.json" "$dir"
-    fi
+
+# post-training processing
+# deploy side (model.py) reads preprocessor_config.json from each checkpoint-*,
+# HF Trainer doesn't put it inside by default, so we manually copy it here.
+for ckpt_dir in "${output_dir}"/checkpoint-*/ ; do
+  [ -d "${ckpt_dir}" ] || continue
+  cp "${POLICY_DIR}/tinyvla/llava-pythia/preprocessor_config.json" "${ckpt_dir}"
 done
-

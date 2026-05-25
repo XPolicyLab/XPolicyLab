@@ -1,15 +1,7 @@
-"""XPolicyLab → TinyVLA training adapter.
-
-The official entrypoint is ``policy/TinyVLA/tinyvla/train_tinyvla.py``. We do
-not modify it; instead this wrapper:
-
-  1. Reads the XPolicyLab v1.0 hdf5 episodes directly (no ACT-style conversion).
-  2. Patches ``train_tinyvla.TASK_CONFIGS`` / ``load_data`` / ``parse_pythia``
-     to redirect data loading and propagate the env-cfg-derived action_dim.
-  3. Hands control to ``train_tinyvla.main``.
-"""
+"""XPolicyLab -> TinyVLA training adapter."""
 import argparse
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -25,19 +17,48 @@ from XPolicyLab.utils.process_data import (
 )
 
 
-sys.stdout = open(sys.stdout.fileno(), mode="w", buffering=1)
-sys.stderr = open(sys.stderr.fileno(), mode="w", buffering=1)
-
 POLICY_DIR = Path(__file__).resolve().parent
-TINYVLA_DIR = POLICY_DIR / "tinyvla"
-if str(TINYVLA_DIR) not in sys.path:
-    sys.path.append(str(TINYVLA_DIR))
+if str(POLICY_DIR / "tinyvla") not in sys.path:
+    sys.path.append(str(POLICY_DIR / "tinyvla"))
 
 
-# llava_pythia.process_batch_to_llava splits the camera dim with
-# ``torch.chunk(curr_image, 2, dim=0)``, so exactly two cameras are required.
-CAMERA_KEYS = ("cam_left_wrist", "cam_right_wrist")
-TARGET_SIZE = (320, 240)
+CAMERA_KEYS = ("cam_left_wrist", "cam_right_wrist")  # no need to change
+TARGET_SIZE = (640, 480)  # (W, H) for cv2.resize, per XPolicyLab README 640x480 约定
+
+
+SENIOR_TRAIN_ARGS = {
+    # optimizer / LoRA / data loading
+    "learning_rate":             "2e-4",
+    "non_lora_lr":               "2e-5",
+    "lr_scheduler_type":         "cosine",
+    "warmup_ratio":              "0.005",
+    "weight_decay":              "0.",
+    "lora_enable":               "True",
+    "lora_module":               "vit llm",
+    "lora_r":                    "64",
+    "lora_alpha":                "256",
+    "dataloader_num_workers":    "8",
+    "gradient_checkpointing":    "True",
+    # model architecture / framework constants
+    "save_strategy":             "steps",
+    "bf16":                      "True",
+    "tf32":                      "True",
+    "model_max_length":          "2048",
+    "lazy_preprocess":           "True",
+    "action_head_type":          "droid_diffusion",
+    "concat":                    "token_cat",
+    "pretrain_image_size":       "320",
+    "load_pretrain":             "False",
+    "tune_mm_mlp_adapter":       "True",
+    "freeze_vision_tower":       "True",
+    "freeze_backbone":           "True",
+    "mm_use_im_start_end":       "False",
+    "mm_use_im_patch_token":     "False",
+    "image_aspect_ratio":        "pad",
+    "group_by_modality_length":  "False",
+    "version":                   "v0",
+    "report_to":                 "tensorboard",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -51,7 +72,7 @@ class XPolicyLabTinyVLADataset(torch.utils.data.Dataset):
         episode_lens,
         states,
         actions,
-        raw_langs,
+        instructions,
         norm_stats,
         chunk_size,
         llava_pythia_process,
@@ -64,7 +85,7 @@ class XPolicyLabTinyVLADataset(torch.utils.data.Dataset):
         self.max_episode_len = max(self.episode_lens)
         self.states = states
         self.actions = actions
-        self.raw_langs = raw_langs
+        self.instructions = instructions
         self.norm_stats = norm_stats
         self.chunk_size = chunk_size
         self.llava_pythia_process = llava_pythia_process
@@ -107,7 +128,7 @@ class XPolicyLabTinyVLADataset(torch.utils.data.Dataset):
             "state": torch.from_numpy(qpos).float(),
             "action": torch.from_numpy(padded_action[: self.chunk_size]).float(),
             "is_pad": torch.from_numpy(is_pad[: self.chunk_size]),
-            "raw_lang": self.raw_langs[episode_id],
+            "raw_lang": random.choice(self.instructions[episode_id]),
         }
         return self.llava_pythia_process.forward_process(sample)
 
@@ -116,34 +137,51 @@ class XPolicyLabTinyVLADataset(torch.utils.data.Dataset):
 # Data loading helpers
 # ---------------------------------------------------------------------------
 def parse_wrapper_args(argv):
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("--xpl_dataset_name", required=True)
-    parser.add_argument("--xpl_task_name", required=True)
-    parser.add_argument("--xpl_env_cfg_type", required=True)
-    parser.add_argument("--xpl_expert_data_num", required=True, type=int)
-    parser.add_argument("--xpl_action_type", required=True, choices=["joint", "ee"])
-    # Forwarded by train.sh but not declared in TinyVLA's HfArgumentParser.
-    parser.add_argument("--use_state")
-    parser.add_argument("--window_size")
-    wrapper_args, remaining = parser.parse_known_args(argv[1:])
-    sys.argv = [argv[0], *remaining]
-    return wrapper_args
+    p = argparse.ArgumentParser(add_help=False)
+
+    # XPolicyLab entry-point args
+    p.add_argument("--xpl_dataset_name",    required=True)
+    p.add_argument("--xpl_ckpt_name",       required=True,
+                   help="Reused as the TinyVLA TASK_CONFIGS key (cotrain-friendly).")
+    p.add_argument("--xpl_env_cfg_type",    required=True)
+    p.add_argument("--xpl_expert_data_num", required=True, type=int)
+    p.add_argument("--xpl_action_type",     required=True, choices=["joint", "ee"])
+    p.add_argument("--xpl_seed",            required=True, type=int)
+
+    # training schedule 
+    p.add_argument("--max_steps",                   required=True)
+    p.add_argument("--per_device_train_batch_size", required=True)
+    p.add_argument("--gradient_accumulation_steps", required=True)
+    p.add_argument("--save_steps",                  required=True)
+    p.add_argument("--save_total_limit",            required=True)
+    p.add_argument("--logging_steps",               required=True)
+
+    args, _ = p.parse_known_args(argv[1:])
+    return args
 
 
-def raw_data_dir(args):
-    return (
-        POLICY_DIR.parents[2]
-        / "data"
-        / args.xpl_dataset_name
-        / args.xpl_task_name
-        / args.xpl_env_cfg_type
-        / "data"
+def processed_dataset_dir(args):
+    ckpt_setting = (
+        f"{args.xpl_dataset_name}-{args.xpl_ckpt_name}-{args.xpl_env_cfg_type}"
+        f"-{args.xpl_expert_data_num}-{args.xpl_action_type}"
     )
+    return POLICY_DIR / "data" / ckpt_setting
 
 
 def list_episode_paths(args):
-    data_dir = raw_data_dir(args)
-    return [data_dir / f"episode_{i:07d}.hdf5" for i in range(args.xpl_expert_data_num)]
+    data_dir = processed_dataset_dir(args)
+    if not data_dir.is_dir():
+        raise FileNotFoundError(
+            f"Processed data dir not found: {data_dir}. "
+            "Run process_data.sh before training."
+        )
+    paths = sorted(data_dir.glob("episode_*.hdf5"))
+    if not paths:
+        raise FileNotFoundError(
+            f"No episode_*.hdf5 found under {data_dir}. "
+            "Did process_data.sh complete successfully?"
+        )
+    return paths
 
 
 def load_episode(path, action_type, robot_action_dim_info):
@@ -166,14 +204,15 @@ def load_episode(path, action_type, robot_action_dim_info):
             source_type="dataset",
             state_type="action",
         ).astype(np.float32)
+
         if "instructions" in root:
-            raw_lang = json.loads(root["instructions"][()].decode("utf-8"))[0]
-        elif "instruction" in root:
-            raw = root["instruction"][()]
-            raw_lang = raw.decode("utf-8") if isinstance(raw, bytes) else str(raw)
+            instructions = json.loads(root["instructions"][()].decode("utf-8"))
         else:
-            raise KeyError(f"{path} does not contain instructions")
-    return state, action, raw_lang
+            raw = root["instruction"][()]
+            text = raw.decode("utf-8") if isinstance(raw, (bytes, bytearray)) else str(raw)
+            instructions = [text]
+            
+    return state, action, instructions
 
 
 def load_images(path, start_ts):
@@ -189,13 +228,15 @@ def load_images(path, start_ts):
 
 
 def load_all_episodes(episode_paths, action_type, robot_action_dim_info):
-    """Single pass over disk: returns per-episode state/action/lang and norm stats."""
-    states, actions, raw_langs, episode_lens = {}, {}, {}, []
+    """Single pass over disk: returns per-episode state/action/instructions and norm stats."""
+    states, actions, instructions, episode_lens = {}, {}, {}, []
     for ep_id, path in enumerate(episode_paths):
-        state, action, raw_lang = load_episode(path, action_type, robot_action_dim_info)
+        state, action, ep_instructions = load_episode(
+            path, action_type, robot_action_dim_info
+        )
         states[ep_id] = state
         actions[ep_id] = action
-        raw_langs[ep_id] = raw_lang
+        instructions[ep_id] = ep_instructions
         episode_lens.append(len(state))
 
     all_qpos = np.concatenate([states[i] for i in range(len(episode_paths))], axis=0)
@@ -210,13 +251,13 @@ def load_all_episodes(episode_paths, action_type, robot_action_dim_info):
         "action_max": (all_actions.max(axis=0) + eps).astype(np.float32),
         "example_qpos": all_qpos[-1],
     }
-    return states, actions, raw_langs, episode_lens, norm_stats
+    return states, actions, instructions, episode_lens, norm_stats
 
 
 # ---------------------------------------------------------------------------
 # Patching
 # ---------------------------------------------------------------------------
-def make_load_data(episode_paths, states, actions, raw_langs, episode_lens, norm_stats, action_dim):
+def make_load_data(episode_paths, states, actions, instructions, episode_lens, norm_stats, action_dim):
     def load_xpolicylab_data(
         dataset_dir_l, name_filter, camera_names,
         batch_size_train, batch_size_val, chunk_size,
@@ -236,7 +277,7 @@ def make_load_data(episode_paths, states, actions, raw_langs, episode_lens, norm
                 episode_lens=[episode_lens[i] for i in ids],
                 states=states,
                 actions=actions,
-                raw_langs=raw_langs,
+                instructions=instructions,
                 norm_stats=norm_stats,
                 chunk_size=chunk_size,
                 llava_pythia_process=llava_pythia_process,
@@ -283,18 +324,18 @@ def patch_tinyvla(wrapper_args):
     action_dim = sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"])
 
     episode_paths = list_episode_paths(wrapper_args)
-    states, actions, raw_langs, episode_lens, norm_stats = load_all_episodes(
+    states, actions, instructions, episode_lens, norm_stats = load_all_episodes(
         episode_paths, wrapper_args.xpl_action_type, robot_action_dim_info
     )
 
     task_name = get_forwarded_arg("--task_name")
     train_tinyvla.TASK_CONFIGS[task_name] = {
-        "dataset_dir": [str(raw_data_dir(wrapper_args))],
+        "dataset_dir": [str(processed_dataset_dir(wrapper_args))],
         "episode_len": int(max(episode_lens)),
         "camera_names": list(CAMERA_KEYS),
     }
     train_tinyvla.load_data = make_load_data(
-        episode_paths, states, actions, raw_langs, episode_lens, norm_stats, action_dim
+        episode_paths, states, actions, instructions, episode_lens, norm_stats, action_dim
     )
     detr_vae.IN_DIM_STATE = action_dim
     detr_vae.IN_DIM_ACTION = action_dim
@@ -319,8 +360,37 @@ def patch_tinyvla(wrapper_args):
 
 
 def main():
-    wrapper_args = parse_wrapper_args(sys.argv)
-    train_tinyvla = patch_tinyvla(wrapper_args)
+    args = parse_wrapper_args(sys.argv)
+
+    # path: training output directory
+    output_dir = POLICY_DIR / "checkpoints" / (
+        f"{args.xpl_dataset_name}-{args.xpl_ckpt_name}-{args.xpl_env_cfg_type}"
+        f"-{args.xpl_expert_data_num}-{args.xpl_action_type}-{args.xpl_seed}"
+    )
+
+
+    train_args = {
+        **SENIOR_TRAIN_ARGS,
+        "max_steps":                   args.max_steps,
+        "per_device_train_batch_size": args.per_device_train_batch_size,
+        "gradient_accumulation_steps": args.gradient_accumulation_steps,
+        "save_steps":                  args.save_steps,
+        "save_total_limit":            args.save_total_limit,
+        "logging_steps":               args.logging_steps,
+        "output_dir":                  str(output_dir),
+        "logging_dir":                 str(output_dir / "log"),
+        "model_name_or_path":          str(output_dir / "pretrained_vlm"),
+        "deepspeed":                   str(POLICY_DIR / "tinyvla" / "llava-pythia" / "scripts" / "zero2.json"),
+        "task_name":                   args.xpl_ckpt_name,
+        "seed":                        str(args.xpl_seed),
+    }
+
+    # Flatten {"--key": "val", ...} into the sys.argv form HfArgumentParser expects.
+    sys.argv = [sys.argv[0]]
+    for key, val in train_args.items():
+        sys.argv += [f"--{key}", val]
+
+    train_tinyvla = patch_tinyvla(args)
     model_args, data_args, training_args, action_args, llava_pythia_config, bnb = (
         train_tinyvla.parse_pythia()
     )
