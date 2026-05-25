@@ -13,6 +13,9 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_
 
 _POLICY_DIR = Path(__file__).resolve().parent
 _MOTUS_ROOT = _POLICY_DIR / "motus" / "inference" / "robotwin" / "Motus"
+_CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
+_DEFAULT_WAN_PATH = "/mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B"
+_DEFAULT_VLM_PATH = "/mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct"
 if str(_MOTUS_ROOT) not in sys.path:
     sys.path.insert(0, str(_MOTUS_ROOT))
 
@@ -189,6 +192,40 @@ def patch_motus_qwen_rope_index(policy: Any) -> None:
     vlm_model._xpolicylab_rope_index_patched = True
 
 
+def _resolve_path(value: Any, base_dir: Path = _POLICY_DIR) -> Path | None:
+    if value is None or value == "":
+        return None
+
+    path = Path(str(value)).expanduser()
+    if not path.is_absolute():
+        path = (base_dir / path).resolve()
+    return path.resolve()
+
+
+def resolve_motus_checkpoint(model_cfg: dict[str, Any]) -> str:
+    for key in ("ckpt_setting", "checkpoint_path", "model_path"):
+        explicit_path = _resolve_path(model_cfg.get(key))
+        if explicit_path is not None:
+            return str(explicit_path)
+
+    ckpt_name = model_cfg.get("ckpt_name")
+    if ckpt_name:
+        raw_ckpt_name = Path(str(ckpt_name)).expanduser()
+        if raw_ckpt_name.is_absolute() or "/" in str(ckpt_name):
+            return str(_resolve_path(ckpt_name))
+
+        tuple_keys = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
+        if all(model_cfg.get(key) is not None for key in tuple_keys):
+            checkpoint_setting = "-".join(str(model_cfg[key]) for key in tuple_keys)
+            tuple_path = (_CHECKPOINTS_DIR / checkpoint_setting).resolve()
+            if tuple_path.exists():
+                return str(tuple_path)
+
+        return str((_CHECKPOINTS_DIR / str(ckpt_name)).resolve())
+
+    raise ValueError("ckpt_name, ckpt_setting, checkpoint_path, or model_path is required for Motus.")
+
+
 class Model(ModelTemplate):
     def __init__(self, model_cfg: dict[str, Any]):
         self.model_cfg = dict(model_cfg)
@@ -203,12 +240,13 @@ class Model(ModelTemplate):
         self._latest_env_idx_list: list[int] = [0]
         self.observation_window: list[dict[str, Any]] | None = None
 
-        ckpt_setting = self.model_cfg.get("ckpt_setting") or self.model_cfg.get("checkpoint_path") or self.model_cfg.get("model_path")
-        if not ckpt_setting:
-            raise ValueError("ckpt_setting, checkpoint_path, or model_path is required for Motus.")
+        ckpt_setting = resolve_motus_checkpoint(self.model_cfg)
 
         model_args = dict(self.model_cfg)
         model_args["ckpt_setting"] = ckpt_setting
+        model_args["wan_path"] = str(_resolve_path(model_args.get("wan_path")) or Path(_DEFAULT_WAN_PATH))
+        model_args["vlm_path"] = str(_resolve_path(model_args.get("vlm_path")) or Path(_DEFAULT_VLM_PATH))
+        model_args["prompt"] = model_args.get("prompt") or self.default_prompt
         patch_motus_runtime_config(model_args)
         self.policy = get_motus_model(model_args)
         patch_motus_qwen_rope_index(self.policy)
