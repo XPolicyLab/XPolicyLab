@@ -1,0 +1,7 @@
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include giga_datasets *
+global-exclude scripts
+global-exclude __pycache__
+global-exclude *.py[cod]

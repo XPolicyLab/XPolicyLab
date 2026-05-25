@@ -1,0 +1,377 @@
+# @package _global_
+
+# Assume `model_specific_transform` is defined in the model config file
+
+################################################################################
+# Normalization Statistics
+# By default, we compute the normalization statistics for the datasets actually
+# used in the mixture. If you want to use the global metadata, set this to true.
+################################################################################
+
+use_global_metadata: false
+
+################################################################################
+# Dimension Information
+################################################################################
+
+num_frames: 49
+action_horizon: 48
+state_horizon: 1
+
+# image_resolution_width: 832
+# image_resolution_height: 480
+
+image_resolution_width: 480
+image_resolution_height: 256
+
+image_resolution_width_single_frame: 256
+image_resolution_height_single_frame: 256
+
+################################################################################
+# Anchored Video Transforms
+################################################################################
+totensor_cfg: &totensor_cfg
+  _target_: groot.vla.data.transform.VideoToTensor
+  apply_to: ???
+
+crop_cfg: &crop_cfg
+  _target_: groot.vla.data.transform.VideoCrop
+  apply_to: ???
+  scale: 0.95
+  mode: random
+
+
+resize_cfg: &resize_cfg
+  _target_: groot.vla.data.transform.VideoResize
+  apply_to: ???
+  height: ${image_resolution_height}
+  width: ${image_resolution_width}
+  interpolation: linear
+
+resize_cfg_single_frame: &resize_cfg_single_frame
+  _target_: groot.vla.data.transform.VideoResize
+  apply_to: ???
+  height: ${image_resolution_height_single_frame}
+  width: ${image_resolution_width_single_frame}
+  interpolation: linear
+
+color_jitter_cfg: &color_jitter_cfg
+  _target_: groot.vla.data.transform.VideoColorJitter
+  apply_to: ???
+  brightness: 0.3
+  contrast: 0.4
+  saturation: 0.5
+  hue: 0.08
+
+random_grayscale_cfg: &random_grayscale_cfg
+  _target_: groot.vla.data.transform.VideoRandomGrayscale
+  apply_to: ???
+  p: 0.1
+
+random_posterize_cfg: &random_posterize_cfg
+  _target_: groot.vla.data.transform.VideoRandomPosterize
+  apply_to: ???
+  bits: 4
+  p: 0.1
+
+normalize_cfg: &normalize_cfg
+  _target_: groot.vla.data.transform.VideoNormalize
+  apply_to: ???
+  mean: [0.5, 0.5, 0.5]
+  std: [0.5, 0.5, 0.5]
+
+
+to_numpy_cfg: &to_numpy_cfg
+  _target_: groot.vla.data.transform.VideoToNumpy
+  apply_to: ???
+
+
+################################################################################
+# oxe_droid (OXE Droid)
+################################################################################
+
+# Modality Configs
+modality_config_oxe_droid:
+  video:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+    eval_delta_indices: [0]
+    modality_keys:
+      - video.exterior_image_1_left
+      - video.exterior_image_2_left
+      - video.wrist_image_left
+  state:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - state.joint_position
+      - state.gripper_position
+  action:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    modality_keys:
+      - action.joint_position
+      - action.gripper_position
+  language:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - annotation.language.language_instruction
+      - annotation.language.language_instruction_2
+      - annotation.language.language_instruction_3
+  lapa_action:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - lapa_action
+
+# Transforms
+transform_oxe_droid:
+  _target_: groot.vla.data.transform.ComposedModalityTransform
+  transforms:
+    # Video transforms
+    - <<: *totensor_cfg
+      apply_to: ${modality_config_oxe_droid.video.modality_keys}
+    - <<: *crop_cfg
+      apply_to: ${modality_config_oxe_droid.video.modality_keys}
+    - <<: *resize_cfg
+      apply_to: ${modality_config_oxe_droid.video.modality_keys}
+    - <<: *color_jitter_cfg
+      apply_to: ${modality_config_oxe_droid.video.modality_keys}
+    - <<: *to_numpy_cfg
+      apply_to: ${modality_config_oxe_droid.video.modality_keys}
+
+    # State transforms
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_oxe_droid.state.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_oxe_droid.state.modality_keys}
+      normalization_modes:
+        state.joint_position: q99
+        state.gripper_position: q99
+  
+    # Action transforms
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_oxe_droid.action.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_oxe_droid.action.modality_keys}
+      normalization_modes:
+        action.joint_position: q99
+        action.gripper_position: q99
+
+    # ConcatTransform
+    - _target_: groot.vla.data.transform.ConcatTransform
+      video_concat_order: ${modality_config_oxe_droid.video.modality_keys}
+      state_concat_order: ${modality_config_oxe_droid.state.modality_keys}
+      action_concat_order: ${modality_config_oxe_droid.action.modality_keys}
+
+    # Model-specific transform
+    - ${model_specific_transform}
+
+################################################################################
+# agibot (AGIbot: state 32, action 22, 3 views)
+################################################################################
+
+modality_config_agibot:
+  video:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+    eval_delta_indices: [-3, -2, -1, 0]
+    modality_keys:
+      - video.top_head
+      - video.hand_left
+      - video.hand_right
+  state:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - state.left_arm_joint_position
+      - state.right_arm_joint_position
+      - state.left_effector_position
+      - state.right_effector_position
+      - state.head_position
+      - state.waist_position
+  action:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    modality_keys:
+      - action.left_arm_joint_position
+      - action.right_arm_joint_position
+      - action.left_effector_position
+      - action.right_effector_position
+      - action.head_position
+      - action.waist_position
+      - action.robot_velocity
+  language:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - annotation.language.action_text
+
+transform_agibot:
+  _target_: groot.vla.data.transform.ComposedModalityTransform
+  transforms:
+    # Video transforms
+    - <<: *totensor_cfg
+      apply_to: ${modality_config_agibot.video.modality_keys}
+    - <<: *crop_cfg
+      apply_to: ${modality_config_agibot.video.modality_keys}
+    - <<: *resize_cfg
+      apply_to: ${modality_config_agibot.video.modality_keys}
+    - <<: *color_jitter_cfg
+      apply_to: ${modality_config_agibot.video.modality_keys}
+    - <<: *to_numpy_cfg
+      apply_to: ${modality_config_agibot.video.modality_keys}
+
+    # State transforms
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_agibot.state.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_agibot.state.modality_keys}
+      normalization_modes:
+        state.left_arm_joint_position: q99
+        state.right_arm_joint_position: q99
+        state.left_effector_position: q99
+        state.right_effector_position: q99
+        state.head_position: q99
+        state.waist_position: q99
+
+    # Action transforms
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_agibot.action.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_agibot.action.modality_keys}
+      normalization_modes:
+        action.left_arm_joint_position: q99
+        action.right_arm_joint_position: q99
+        action.left_effector_position: q99
+        action.right_effector_position: q99
+        action.head_position: q99
+        action.waist_position: q99
+        action.robot_velocity: q99
+
+    # ConcatTransform
+    - _target_: groot.vla.data.transform.ConcatTransform
+      video_concat_order: ${modality_config_agibot.video.modality_keys}
+      state_concat_order: ${modality_config_agibot.state.modality_keys}
+      action_concat_order: ${modality_config_agibot.action.modality_keys}
+
+    # Model-specific transform
+    - ${model_specific_transform}
+
+################################################################################
+# yam (YAM: joint+gripper only from Dataset/YAM_play_data/meta/modality.json;
+#       state 14 dims, action 14 dims, 3 views)
+################################################################################
+
+modality_config_yam:
+  video:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+    eval_delta_indices: [0]
+    modality_keys:
+      - video.top_camera-images-rgb
+      - video.left_camera-images-rgb
+      - video.right_camera-images-rgb
+  state:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - state.left_joint_pos
+      - state.left_gripper_pos
+      - state.right_joint_pos
+      - state.right_gripper_pos
+  action:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    modality_keys:
+      - action.left_joint_pos
+      - action.left_gripper_pos
+      - action.right_joint_pos
+      - action.right_gripper_pos
+  language:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - annotation.task
+
+transform_yam:
+  _target_: groot.vla.data.transform.ComposedModalityTransform
+  transforms:
+    # Video transforms
+    - <<: *totensor_cfg
+      apply_to: ${modality_config_yam.video.modality_keys}
+    - <<: *crop_cfg
+      apply_to: ${modality_config_yam.video.modality_keys}
+    - <<: *resize_cfg
+      apply_to: ${modality_config_yam.video.modality_keys}
+    - <<: *color_jitter_cfg
+      apply_to: ${modality_config_yam.video.modality_keys}
+    - <<: *to_numpy_cfg
+      apply_to: ${modality_config_yam.video.modality_keys}
+
+    # State transforms
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_yam.state.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_yam.state.modality_keys}
+      normalization_modes:
+        state.left_joint_pos: q99
+        state.left_gripper_pos: q99
+        state.right_joint_pos: q99
+        state.right_gripper_pos: q99
+
+    # Action transforms
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_yam.action.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_yam.action.modality_keys}
+      normalization_modes:
+        action.left_joint_pos: q99
+        action.left_gripper_pos: q99
+        action.right_joint_pos: q99
+        action.right_gripper_pos: q99
+
+    # ConcatTransform
+    - _target_: groot.vla.data.transform.ConcatTransform
+      video_concat_order: ${modality_config_yam.video.modality_keys}
+      state_concat_order: ${modality_config_yam.state.modality_keys}
+      action_concat_order: ${modality_config_yam.action.modality_keys}
+
+    # Model-specific transform
+    - ${model_specific_transform}
+
+
+################################################################################
+# Modality Configs
+################################################################################
+
+modality_configs:
+  oxe_droid: ${modality_config_oxe_droid}
+  agibot: ${modality_config_agibot}
+  yam: ${modality_config_yam}
+
+################################################################################
+# Transforms
+################################################################################
+
+transforms:
+  oxe_droid: ${transform_oxe_droid}
+  agibot: ${transform_agibot}
+  yam: ${transform_yam}
+
+################################################################################
+# Metadata Versions
+################################################################################
+
+metadata_versions:
+  oxe_droid: '0221'
+  agibot: '0221'
+  yam: '0221'
+
+################################################################################
+# FPS (per embodiment, null means use dataset default)
+################################################################################
+
+fps:
+  yam: 30

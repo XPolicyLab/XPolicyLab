@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=67", "wheel", "pip"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dreamzero"
+description = "DreamZero: World Action Models Are Zero-Shot Policies"
+version="1.0.0"
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+authors = [
+    {name = "NVIDIA Gear Lab"}
+]
+requires-python = "~=3.11,<3.13"
+dependencies = [
+    "av==15.0.0",
+    "torch==2.8.0",
+    "torchvision==0.23.0",
+    "torchaudio==2.8.0",
+    "pyttsx3==2.90",
+    "scipy==1.15.3",
+    "numpy==1.26.4",
+    "matplotlib",
+    "hydra-core",
+    "ray[default]==2.47.1",
+    "click",
+    "gymnasium",
+    "mujoco",
+    "termcolor",
+    "flask",
+    "python-socketio>=5.13.0",
+    "flask_socketio",
+    "loguru",
+    "lmdb",
+    "meshcat",
+    "meshcat-shapes",
+    "rerun-sdk==0.21.0",
+    "pygame",
+    "sshkeyboard",
+    "msgpack",
+    "msgpack-numpy",
+    "peft==0.5.0",
+    "pyzmq",
+    "PyQt6; platform_machine != 'aarch64'",
+    "pin",
+    "pin-pink",
+    "timm",
+    "tyro",
+    "redis", 
+    "lark",
+    "datasets==3.6.0",
+    "pandas",
+    "evdev; sys_platform == 'linux'",
+    "pybullet; sys_platform == 'linux'",
+    "gear",
+    # Pin the MSC dependency version to prevent potential issues caused by publishing new releases.
+    "multi-storage-client[boto3,msal,observability-otel]==0.33.0",
+    "dm_tree",
+    "openai",
+    "transformers==4.51.3",
+    "albumentations==1.4.18",
+    "einops==0.8.1",
+    "tyro",
+    "tianshou==0.5.1",
+    "imageio==2.34.2",
+    "imageio-ffmpeg",
+    "wandb",
+    "opencv-python==4.8.0.74",
+    "diffusers==0.30.2",
+    "ftfy",
+    "nvidia-modelopt",
+    "nvidia-modelopt-core",
+    "tensorrt",
+    "openpi-client==0.1.1",
+    "huggingface_hub",
+    "decord2",
+    "deepspeed",
+    "tiktoken",
+    "sentencepiece"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+]
+
+[project.scripts]
+dreamzero-server = "socket_test_optimized_AR:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["groot*"]
+
+[tool.setuptools]
+include-package-data = true

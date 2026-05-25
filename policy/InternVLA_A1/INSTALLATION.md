@@ -1,28 +1,31 @@
-# InternVLA-A1 In XPolicyLab
+# InternVLA_A1 环境配置
 
-This wrapper reuses the original `InternVLA-A1` codebase at:
-
-`/mnt/pfs/pg4hw0/niantian/InternVLA-A1`
-
-Recommended environment:
+## 1. 创建环境
 
 ```bash
+conda create -n internvla_a1 python=3.10 -y
 conda activate internvla_a1
 ```
 
-Start only the XPolicyLab policy server:
+## 2. 安装 policy 源码
 
 ```bash
-bash deploy.sh <gpu_id> <policy_conda_env> <ckpt_path> [port] [device] [stats_key] [dtype]
+cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/InternVLA_A1/internvla_a1
+pip install -e .
 ```
 
-Run full debug evaluation:
+## 3. 安装 XPolicyLab
 
 ```bash
-bash eval.sh <task_name> <env_cfg> <expert_data_num> joint <gpu_id> <seed> <policy_conda_env> <eval_env_conda_env> <ckpt_path> [stats_key] [dtype]
+cd /mnt/nfs/niantian/robodojo_test/XPolicyLab
+pip install -e .
 ```
 
-Notes:
+## 4. 自检
 
-- `action_type` is currently fixed to `joint`.
-- This integration follows the same observation/history logic as the RoboTwin adaptation, but runs inside XPolicyLab's local policy server.
+```bash
+python -c "import XPolicyLab; print('XPolicyLab ok')"
+python -c "import lerobot; print('lerobot ok')"
+```
+
+训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。

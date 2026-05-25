@@ -1,0 +1,9 @@
+# @package _global_
+
+backbone_hidden_size: 0
+backbone_cfg:
+  _target_: groot.vla.model.dreamzero.backbone.identity.IdentityBackbone
+
+action_head_cfg:
+  config:
+    backbone_features_projector_cfg: null  # no projection because no backbone features

@@ -1,0 +1,44 @@
+# @package _global_
+
+defaults:
+  - base
+  - _self_ # this file will override model/transform/base
+
+
+max_length: 512
+num_views: 1
+tokenizer_path: "google/umt5-xxl"
+################################################################################
+# Data Collator
+################################################################################
+
+data_collator:
+  _target_: groot.vla.model.dreamzero.transform.dreamzero_cotrain.DefaultDataCollator
+  tokenizer_path: ${tokenizer_path}
+  max_length : ${max_length}
+  num_views: ${num_views}
+  embodiment_tag_mapping: ${embodiment_tag_to_projector_index}
+
+################################################################################
+# Model-Specific Transform
+# Needs to change this model-specific transform for different models
+################################################################################
+
+num_visual_tokens_per_frame: 16
+max_state_dim: 44
+max_action_dim: 32
+language_dropout_prob: 0.0
+
+
+model_specific_transform:
+  _target_: groot.vla.model.dreamzero.transform.dreamzero_cotrain.DreamTransform
+  default_instruction: "Perform the default behavior."
+  language_dropout_prob: ${language_dropout_prob}
+  always_use_default_instruction: false
+  max_state_dim: ${max_state_dim}
+  max_action_dim: ${max_action_dim}
+  max_length: ${max_length}
+  state_horizon: ${state_horizon}
+  action_horizon: ${action_horizon}
+  embodiment_tag_mapping: ${embodiment_tag_to_projector_index}
+  tokenizer_path: ${tokenizer_path}
