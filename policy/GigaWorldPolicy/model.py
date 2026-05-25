@@ -14,6 +14,13 @@ _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
 _GIGAWORLD_ROOT = _CUR_DIR / "giga_world_policy"
 _CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
+_DEFAULT_LEROBOT_DATASET_ROOT = Path("/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21")
+_TASK_ALIASES = {
+    "debug_task": "stack_bowls",
+    "stack_bowls": "Stack the three bowls together.",
+    "stack_bowls_three": "Stack the three bowls together.",
+    "stack_bowls_two": "Stack the three bowls together.",
+}
 
 for _path in (
     str(_REPO_ROOT),
@@ -67,6 +74,69 @@ def _ensure_stats_compatible(stats_path: Path) -> Path:
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(stats, f)
     return output_path.resolve()
+
+
+def _canonical_task_name(task_name: str | None, fallback_task_name: str | None = None) -> str | None:
+    for candidate in (task_name, fallback_task_name):
+        if not candidate:
+            continue
+        candidate = str(candidate)
+        return _TASK_ALIASES.get(candidate, candidate)
+    return None
+
+
+def _resolve_task_t5_embedding(
+    t5_embedding_pkl: str | None,
+    dataset_root: str | None,
+    task_name: str | None,
+    fallback_task_name: str | None,
+) -> Path | None:
+    explicit_path = _resolve_path(t5_embedding_pkl)
+    if explicit_path is not None:
+        return explicit_path
+
+    root = _resolve_path(dataset_root) or _DEFAULT_LEROBOT_DATASET_ROOT
+    t5_dir = root / "t5_embedding"
+    tasks_path = root / "meta" / "tasks.jsonl"
+    episodes_path = root / "meta" / "episodes.jsonl"
+    if not tasks_path.is_file() or not episodes_path.is_file():
+        return None
+
+    target_task = _canonical_task_name(task_name, fallback_task_name)
+    if target_task is None:
+        return None
+
+    known_tasks: set[str] = set()
+    with open(tasks_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                known_tasks.add(json.loads(line)["task"])
+
+    if target_task not in known_tasks:
+        fallback_task = _canonical_task_name(fallback_task_name, None)
+        if fallback_task in known_tasks:
+            target_task = fallback_task
+        else:
+            raise KeyError(f"GigaWorld task {target_task!r} not found in {tasks_path}")
+
+    with open(episodes_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            episode = json.loads(line)
+            if target_task in episode.get("tasks", []):
+                episode_index = int(episode["episode_index"])
+                candidate = t5_dir / f"episode_{episode_index:06d}.pt"
+                if candidate.is_file():
+                    print(
+                        "[GigaWorldPolicy] using task t5 embedding",
+                        f"task={target_task!r}",
+                        f"path={candidate}",
+                    )
+                    return candidate.resolve()
+                raise FileNotFoundError(f"T5 embedding not found: {candidate}")
+
+    raise FileNotFoundError(f"No episode found for GigaWorld task {target_task!r} in {episodes_path}")
 
 
 def _pad_or_trim_np(value: np.ndarray, dim: int) -> np.ndarray:
@@ -259,7 +329,12 @@ class Model(ModelTemplate):
         self.stats_path = _ensure_stats_compatible(
             _resolve_path(self.model_cfg.get("stats_path")) or (_GIGAWORLD_ROOT / "norm_stats_delta.json")
         )
-        self.t5_embedding_pkl = _resolve_path(self.model_cfg.get("t5_embedding_pkl"))
+        self.t5_embedding_pkl = _resolve_task_t5_embedding(
+            self.model_cfg.get("t5_embedding_pkl"),
+            self.model_cfg.get("lerobot_dataset_root"),
+            self.task_name,
+            self.model_cfg.get("fallback_task_name", "stack_bowls"),
+        )
 
         self._latest_env_idx_list = [0]
         self._latest_observation: dict[str, Any] | None = None

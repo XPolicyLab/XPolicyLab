@@ -23,8 +23,7 @@ from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
 from lerobot.policies.factory import get_policy_class, make_pre_post_processors
-from lerobot.utils.constants import OBS_IMAGES, OBS_STATE, OBS_STR
-from lerobot.datasets.utils import build_dataset_frame
+from lerobot.utils.constants import OBS_STATE
 
 def extract_image(observation, candidate_names):
     vision = observation.get("vision", {})
@@ -48,7 +47,7 @@ def decode_compressed_image(image_buffer):
     return decoded
 
 
-def ensure_hwc_uint8(image):
+def ensure_chw_uint8(image):
     if isinstance(image, (bytes, bytearray, memoryview)):
         image = decode_compressed_image(np.frombuffer(bytes(image), dtype=np.uint8))
 
@@ -66,10 +65,13 @@ def ensure_hwc_uint8(image):
         image = image.astype(np.uint8)
 
     if image.shape[-1] in (1, 3):
-        return image
-    if image.shape[0] in (1, 3):
-        return np.transpose(image, (1, 2, 0))
-    raise ValueError(f"Unsupported image shape: {image.shape}")
+        image_hwc = image
+    elif image.shape[0] in (1, 3):
+        image_hwc = np.transpose(image, (1, 2, 0))
+    else:
+        raise ValueError(f"Unsupported image shape: {image.shape}")
+
+    return np.ascontiguousarray(np.transpose(image_hwc, (2, 0, 1)))
 
 
 def _normalize_prompt_value(value: Any) -> str | None:
@@ -114,7 +116,18 @@ def _extract_step_number(value: Any) -> int | None:
 def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
-        return (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+        direct_path = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+        if Path(str(ckpt_name)).expanduser().is_absolute() or "/" in str(ckpt_name):
+            return direct_path
+
+        tuple_keys = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
+        if all(model_cfg.get(key) is not None for key in tuple_keys):
+            checkpoint_setting = "-".join(str(model_cfg[key]) for key in tuple_keys)
+            tuple_path = (_CHECKPOINTS_DIR / checkpoint_setting).expanduser().resolve()
+            if tuple_path.exists():
+                return tuple_path
+
+        return direct_path
 
     for key in ("pretrained_path", "model_path", "checkpoint_path"):
         value = model_cfg.get(key)
@@ -125,30 +138,29 @@ def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
         images = {
-            "camera1": ensure_hwc_uint8(observation["images"]["cam_high"]),
-            "camera2": ensure_hwc_uint8(observation["images"]["cam_left_wrist"]),
-            "camera3": ensure_hwc_uint8(observation["images"]["cam_right_wrist"]),
+            "cam_high": ensure_chw_uint8(observation["images"]["cam_high"]),
+            "cam_left_wrist": ensure_chw_uint8(observation["images"]["cam_left_wrist"]),
+            "cam_right_wrist": ensure_chw_uint8(observation["images"]["cam_right_wrist"]),
         }
         state = np.asarray(observation["state"], dtype=np.float32)
         prompt = resolve_prompt(observation, default_prompt)
+        return {"state": state, "images": images, "prompt": prompt}
     else:
+        if robot_action_dim_info is None:
+            raise ValueError("env_cfg_type is required when encoding raw environment observations.")
+
         images = {
-            "camera1": ensure_hwc_uint8(extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])),
-            "camera2": ensure_hwc_uint8(
+            "cam_high": ensure_chw_uint8(extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])),
+            "cam_left_wrist": ensure_chw_uint8(
                 extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"])
             ),
-            "camera3": ensure_hwc_uint8(
+            "cam_right_wrist": ensure_chw_uint8(
                 extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"])
             ),
         }
         state = pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs").astype(np.float32)
         prompt = resolve_prompt(observation, default_prompt)
-
-    payload = {"task": prompt}
-    payload.update(images)
-    for idx, value in enumerate(state.tolist()):
-        payload[f"state_{idx}"] = value
-    return payload
+        return {"state": state, "images": images, "prompt": prompt}
 
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
@@ -160,7 +172,7 @@ class Model(ModelTemplate):
 
         env_cfg = self.model_cfg.get("env_cfg") or self.model_cfg.get("env_cfg_type")
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg) if env_cfg is not None else None
-        self.default_prompt = self.model_cfg.get("prompt", self.task_name)
+        self.default_prompt = self.model_cfg.get("prompt") or self.task_name
         self.device = self._get_device(self.model_cfg.get("device", "cuda"))
         self.pretrained_path = self._resolve_pretrained_path(_resolve_checkpoint_root(self.model_cfg))
         self.policy = self._load_policy()
@@ -287,25 +299,25 @@ class Model(ModelTemplate):
     def _ensure_lerobot_features(self, payload):
         if self._lerobot_features is not None:
             return
-        image_shape = payload["camera1"].shape
-        state_dim = len([key for key in payload.keys() if key.startswith("state_")])
+        image_shape = payload["images"]["cam_high"].shape
+        state_dim = int(np.asarray(payload["state"]).shape[-1])
         state_names = [f"state_{idx}" for idx in range(state_dim)]
         self._lerobot_features = {
             "observation.state": {"dtype": "float32", "shape": (state_dim,), "names": state_names},
             "observation.images.camera1": {
                 "dtype": "image",
                 "shape": image_shape,
-                "names": ["height", "width", "channels"],
+                "names": ["channels", "height", "width"],
             },
             "observation.images.camera2": {
                 "dtype": "image",
-                "shape": payload["camera2"].shape,
-                "names": ["height", "width", "channels"],
+                "shape": payload["images"]["cam_left_wrist"].shape,
+                "names": ["channels", "height", "width"],
             },
             "observation.images.camera3": {
                 "dtype": "image",
-                "shape": payload["camera3"].shape,
-                "names": ["height", "width", "channels"],
+                "shape": payload["images"]["cam_right_wrist"].shape,
+                "names": ["channels", "height", "width"],
             },
         }
 
@@ -364,7 +376,6 @@ class Model(ModelTemplate):
             raw_observation_to_observation(
                 payload,
                 self._lerobot_features,
-                self.policy.config.image_features,
             )
             for payload in payloads
         ]
@@ -411,52 +422,34 @@ class Model(ModelTemplate):
         self._lerobot_features = None
 
 
-def is_image_key(key: str) -> bool:
-    return key.startswith(OBS_IMAGES)
-
-
-def resize_robot_observation_image(image: torch.Tensor, resize_dims) -> torch.Tensor:
-    assert image.ndim == 3, f"Image must be (C, H, W)! Received {image.shape}"
-    image = image.permute(2, 0, 1)
-    dims = (resize_dims[1], resize_dims[2])
-    image_batched = image.unsqueeze(0)
-    resized = torch.nn.functional.interpolate(image_batched, size=dims, mode="bilinear", align_corners=False)
-    return resized.squeeze(0)
-
-
 def prepare_image(image: torch.Tensor) -> torch.Tensor:
     image = image.type(torch.float32) / 255
     image = image.contiguous()
     return image
 
 
-def extract_state_from_raw_observation(lerobot_obs):
-    state = torch.tensor(lerobot_obs[OBS_STATE])
+def extract_state_from_encoded_observation(encoded_obs):
+    state = torch.as_tensor(encoded_obs["state"], dtype=torch.float32)
     if state.ndim == 1:
         state = state.unsqueeze(0)
     return state
 
 
-def make_lerobot_observation(robot_obs, lerobot_features):
-    return build_dataset_frame(lerobot_features, robot_obs, prefix=OBS_STR)
-
-
-def prepare_raw_observation(robot_obs, lerobot_features, policy_image_features):
-    lerobot_obs = make_lerobot_observation(robot_obs, lerobot_features)
-    image_keys = list(filter(is_image_key, lerobot_obs))
-    state_dict = {OBS_STATE: extract_state_from_raw_observation(lerobot_obs)}
-    image_dict = {
-        key: resize_robot_observation_image(torch.tensor(lerobot_obs[key]), policy_image_features[key].shape)
-        for key in image_keys
+def make_lerobot_observation(encoded_obs):
+    images = encoded_obs["images"]
+    return {
+        OBS_STATE: extract_state_from_encoded_observation(encoded_obs),
+        "observation.images.camera1": prepare_image(torch.as_tensor(images["cam_high"])).unsqueeze(0),
+        "observation.images.camera2": prepare_image(torch.as_tensor(images["cam_left_wrist"])).unsqueeze(0),
+        "observation.images.camera3": prepare_image(torch.as_tensor(images["cam_right_wrist"])).unsqueeze(0),
+        "task": encoded_obs["prompt"],
     }
-    if "task" in robot_obs:
-        state_dict["task"] = robot_obs["task"]
-    return {**state_dict, **image_dict}
 
 
-def raw_observation_to_observation(raw_observation, lerobot_features, policy_image_features):
-    observation = prepare_raw_observation(raw_observation, lerobot_features, policy_image_features)
-    for key, value in observation.items():
-        if isinstance(value, torch.Tensor) and "image" in key:
-            observation[key] = prepare_image(value).unsqueeze(0)
+def prepare_raw_observation(encoded_obs, lerobot_features):
+    return make_lerobot_observation(encoded_obs)
+
+
+def raw_observation_to_observation(raw_observation, lerobot_features):
+    observation = prepare_raw_observation(raw_observation, lerobot_features)
     return observation

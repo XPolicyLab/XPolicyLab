@@ -1,0 +1,18 @@
+source_root: /vepfs-cnbje63de6fae220/xspark_shared/robotwin_data/raw
+target_root: /vepfs-cnbje63de6fae220/xspark_shared/robotwin_data/motus_processed
+fps: 30
+target_width: 320
+target_height: 360
+max_workers: 16
+skip_existing: true
+demo_type_mapping:
+  aloha-agilex_clean_50: clean
+  aloha-agilex_randomized_500: randomized
+enable_t5_embeddings: true
+wan_repo_path: /vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B
+t5_max_length: 512
+cuda_devices:
+- '0'
+log_level: INFO
+save_debug_frames: false
+debug_output_dir: /tmp/robotwin_debug

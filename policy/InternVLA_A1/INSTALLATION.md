@@ -5,27 +5,23 @@
 ```bash
 conda create -n internvla_a1 python=3.10 -y
 conda activate internvla_a1
-```
 
-## 2. 安装 policy 源码
+pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 \
+  --index-url https://download.pytorch.org/whl/cu128
 
-```bash
-cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/InternVLA_A1/internvla_a1
+pip install torchcodec numpy scipy transformers==4.57.1 mediapy loguru pytest omegaconf
 pip install -e .
+
+TRANSFORMERS_DIR=${CONDA_PREFIX}/lib/python3.10/site-packages/transformers/
+
+cp -r src/lerobot/policies/pi0/transformers_replace/models        ${TRANSFORMERS_DIR}
+cp -r src/lerobot/policies/InternVLA_A1_3B/transformers_replace/models  ${TRANSFORMERS_DIR}
+cp -r src/lerobot/policies/InternVLA_A1_2B/transformers_replace/models  ${TRANSFORMERS_DIR}
 ```
 
-## 3. 安装 XPolicyLab
+## 2. 安装 XPolicyLab
 
 ```bash
 cd /mnt/nfs/niantian/robodojo_test/XPolicyLab
 pip install -e .
 ```
-
-## 4. 自检
-
-```bash
-python -c "import XPolicyLab; print('XPolicyLab ok')"
-python -c "import lerobot; print('lerobot ok')"
-```
-
-训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。

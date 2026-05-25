@@ -1,0 +1,160 @@
+
+common:
+  # Latent Action dimensions
+  action_dim: 14
+  state_dim: 14
+  
+  # Video settings  
+  num_video_frames: 8
+  video_height: 384      # Video frame height
+  video_width: 320       # Video frame width
+  
+  # Sampling strategy parameters
+  global_downsample_rate: 6     # Global downsampling (e.g., 30Hz -> 5Hz)
+  video_action_freq_ratio: 1    # Video:Action frequency ratio
+
+# Dataset configuration
+dataset:
+  # Dataset type
+  type: "latent_action"
+
+  # Multiple data dirs supported (list)
+  dataset_dir:
+    - "/share/dataset/preprocess/pretrain"
+    - "/share/dataset/preprocess/egodexresized_human_1"
+    - "/share/dataset/preprocess/0710_aloha_3"
+    - "/share/dataset/preprocess/0902_aloha_3"
+    - "/share/dataset/preprocess/0820_aloha_3"
+    - "/share/dataset/preprocess/0910retry_aloha_3"
+    - "/share/dataset/preprocess/robotwin2_copy/clean"
+    - "/share/dataset/preprocess/robotwin2_copy/randomized"
+
+  # Data loading settings
+  max_episodes: null     # Maximum episodes for debugging (null = all)
+  
+  # Data augmentation
+  image_aug: false       # Whether to apply image augmentation
+
+# Training mode: pretrain or finetune
+training_mode: "pretrain"
+
+# Model configuration
+model:
+  # WAN Video Model settings
+  wan:
+    config_path: "/share/home/bhz/pretrained_models/Wan2.2-TI2V-5B"
+    # checkpoint_path: ".../model.safetensors"
+    checkpoint_path: "/share/home/bhz/pretrained_models/Wan2.2-TI2V-5B"
+    vae_path: "/share/home/bhz/pretrained_models/Wan2.2-TI2V-5B/Wan2.2_VAE.pth"
+    precision: "bfloat16"
+  
+  # VLM settings
+  vlm:
+    checkpoint_path: "/share/home/bhz/pretrained_models/Qwen3-VL-2B-Instruct"
+    precision: "bfloat16"
+    frozen: true              # Whether to freeze VLM parameters
+  
+  # Action Expert configuration
+  action_expert:
+    # Architecture parameters (configurable)
+    hidden_size: 1024       # Hidden dimension (must be multiple of 128 for head_dim=128)
+    ffn_dim_multiplier: 4   # FFN = hidden_size * multiplier
+    
+    # Normalization and regularization
+    norm_eps: 1e-5         # Layer norm epsilon
+  
+  # Understanding Expert configuration
+  und_expert:
+    # Architecture parameters (configurable)
+    hidden_size: 512        # Hidden dimension for understanding expert
+    ffn_dim_multiplier: 4   # FFN = hidden_size * multiplier
+    
+    # Normalization and regularization
+    norm_eps: 1e-5         # Layer norm epsilon
+    
+    # VLM adapter settings
+    vlm:
+      input_dim: 2048       # VLM feature dimension (input)
+      projector_type: "mlp3x_silu"  # Adapter type
+    
+  # Time distribution settings
+  time_distribution:
+    timestep_sample_method: "logit_normal"    # "logit_normal" or "uniform"
+    sigmoid_scale: 1.0                        # Controls distribution shape (higher = more concentrated around 0.5)
+    min_t: 0.0                               # Minimum time value for training
+    max_t: 1.0                               # Maximum time value for training
+    
+  # Inference settings
+  inference:
+    num_inference_timesteps: 10               # Number of denoising steps during inference
+    
+  # Loss weights
+  loss_weights:
+    video_loss_weight: 1.0       # Weight for video reconstruction loss
+    action_loss_weight: 1.0     # Weight for action prediction loss
+    
+  # EMA settings (not used currently)
+  ema:
+    enabled: false
+    update_after_step: 0
+    inv_gamma: 1.0
+    power: 0.75
+    min_value: 0.0
+    max_value: 0.9999
+
+# Training configuration
+training:
+  # Optimization settings
+  batch_size: 4
+  max_steps: 500000
+  learning_rate: 5.0e-5
+  weight_decay: 0.01
+  
+  # Scheduler settings
+  scheduler_type: "diffusers_cosine"
+  warmup_steps: 1000
+  lr_schedule_steps: 500000
+  min_lr: 1.0e-5
+  
+  # Gradient settings
+  grad_clip_norm: 0.5
+  
+  # Mixed precision
+  use_amp: true          # Use automatic mixed precision
+  
+  # Distributed training
+  find_unused_parameters: false
+
+# System settings
+system:
+  # Paths
+  checkpoint_dir: "./checkpoints"
+  log_level: "INFO"
+  
+  # Intervals
+  log_interval: 1       # Log every N steps
+  save_interval: 10000    # Save every N steps  
+  val_interval: 1000     # Validate every N steps
+  
+  # Hardware settings
+  num_workers: 16         # Number of dataloader workers
+  pin_memory: true       # Pin memory for faster GPU transfer
+
+# Logging settings  
+logging:
+  # Reporting - support multiple logging backends
+  report_to: "wandb"  # Options: "wandb", "tensorboard", "all", "none"
+  
+  # Weights & Biases settings
+  wandb_project: "motus"
+  
+  # TensorBoard settings
+  tensorboard_log_dir: "tensorboard_logs"
+  
+  # Run naming
+  run_name: null  # Optional run name (timestamp will be appended)
+
+# Resume training settings
+resume:
+  checkpoint_path: null  # Path to checkpoint to resume from
+  reset_scheduler: false

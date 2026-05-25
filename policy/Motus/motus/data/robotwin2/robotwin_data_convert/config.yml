@@ -1,0 +1,71 @@
+# RobotWin Data Converter Configuration
+# Configuration file for converting RobotWin datasets to Motus format
+
+# ============================================================================
+# Core Paths - MUST MODIFY THESE
+# ============================================================================
+source_root: "/path/to/robotwin_raw_dataset"     # Source RobotWin dataset root
+target_root: "/path/to/robotwin_dataset"        # Target output directory
+
+# ============================================================================
+# Processing Parameters
+# ============================================================================
+# Video parameters
+fps: 30                    # Frames per second for output videos
+target_width: 320          # Target video width
+target_height: 360         # Target video height
+
+# Processing options
+max_workers: 16             # Number of parallel workers
+skip_existing: true        # Skip already processed episodes
+
+# ============================================================================
+# Dataset Structure Options
+# ============================================================================
+# Expected source structure:
+# source_root/
+#   ├── {task_name}/
+#   │   ├── demo_clean/
+#   │   │   ├── data/episode*.hdf5
+#   │   │   └── instructions/episode*.json
+#   │   └── demo_randomized/
+#   │       ├── data/episode*.hdf5
+#   │       └── instructions/episode*.json
+#
+# Target structure:
+# target_root/
+#   ├── clean/
+#   │   └── {task_name}/
+#   │       ├── videos/{i}.mp4
+#   │       ├── qpos/{i}.pt
+#   │       └── metas/{i}.txt
+#   └── randomized/
+#       └── {task_name}/
+#           ├── videos/{i}.mp4
+#           ├── qpos/{i}.pt
+#           └── metas/{i}.txt
+
+# Demo type mapping
+# Maps source directory names to target subset names
+# RobotTwin2.0 dataset uses these specific directory names:
+demo_type_mapping:
+  aloha-agilex_clean_50: "clean"         # RobotTwin2.0 clean demos (50 episodes)
+  aloha-agilex_randomized_500: "randomized"  # RobotTwin2.0 randomized demos (500 episodes)
+
+# ============================================================================
+# Optional Features
+# ============================================================================
+# T5 embeddings (WAN)
+enable_t5_embeddings: false  # Whether to generate T5 embeddings
+wan_repo_path: "path/to/Wan2.2-TI2V-5B"  # WAN model directory (contains T5 models)
+t5_max_length: 512
+
+# GPU configuration for T5 processing
+cuda_devices: ["0", "1", "2", "3", "4", "5", "6", "7"]  # Available CUDA devices for T5
+
+# ============================================================================
+# Logging and Debug
+# ============================================================================
+log_level: "INFO"          # DEBUG, INFO, WARNING, ERROR
+save_debug_frames: false   # Save sample frames for debugging
+debug_output_dir: "/tmp/robotwin_debug"

@@ -1,0 +1,22 @@
+# Basic experiment configuration
+policy_name: Motus
+task_name: null
+ckpt_name: null
+dataset_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: joint
+seed: 0
+eval_batch: false
+eval_env: debug
+
+# Motus-specific arguments
+ckpt_setting: null
+checkpoint_path: null
+model_path: null
+prompt: null
+wan_path: /mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B
+vlm_path: /mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct
+log_dir: /tmp/motus_debug_logs
+global_downsample_rate: 1
+video_action_freq_ratio: 6

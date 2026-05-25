@@ -3,17 +3,16 @@
 InternVLA_A1 已接入 XPolicyLab 的本地 policy server，用于 joint action 推理与训练。
 
 ## 训练
+首先修改internvla_a1/launch/internvla_a1_3b_finetune.sh的`PRETRAINED_PATH`.  
 
 训练入口遵循 XPolicyLab 统一的 7 参数约定：
 
 ```bash
+# 计算norm stat
+bash compute_norm.sh <repo_id>
+
+# 开启训练
 bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
-```
-
-示例：
-
-```bash
-bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3
 ```
 
 `train.sh` 会将训练输出固定保存到：
