@@ -1,0 +1,7 @@
+*.egg-info/
+results/
+__pycache__/
+*.py[cod]
+checkpoints/
+
+vggt/
