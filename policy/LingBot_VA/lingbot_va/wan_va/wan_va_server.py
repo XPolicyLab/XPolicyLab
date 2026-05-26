@@ -77,9 +77,16 @@ class VA_Server:
             torch_device='cpu' if self.enable_offload else self.device,
         )
 
+        transformer_path = getattr(
+            job_config,
+            "transformer_pretrained_path",
+            None,
+        ) or os.path.join(
+            job_config.wan22_pretrained_model_name_or_path,
+            "transformer",
+        )
         self.transformer = load_transformer(
-            os.path.join(job_config.wan22_pretrained_model_name_or_path,
-                         'transformer'),
+            transformer_path,
             torch_dtype=self.dtype,
             torch_device=self.device,
             attn_mode="torch"
