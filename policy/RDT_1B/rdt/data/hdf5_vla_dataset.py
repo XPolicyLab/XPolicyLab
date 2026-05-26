@@ -1,6 +1,5 @@
 import os
 import fnmatch
-import json
 
 import h5py
 import yaml
@@ -15,17 +14,22 @@ class HDF5VLADataset:
     This class is used to sample episodes from the embododiment dataset
     stored in HDF5.
     """
-    def __init__(self) -> None:
-        # [Modify] The path to the HDF5 dataset directory
-        # Each HDF5 file contains one episode
-        HDF5_DIR = "data/datasets/agilex/rdt_data/"
-        self.DATASET_NAME = "agilex"
+    def __init__(self, use_precomp_lang_embed=False) -> None:
+        # Each HDF5 file contains one episode.
+        self.HDF5_DIR = os.environ.get(
+            "RDT_HDF5_DIR",
+            "/mnt/nfs/niantian/RoboDojo_env/aloha_data/RoboDojo",
+        )
+        self.DATASET_NAME = os.environ.get("RDT_DATASET_NAME", "robodojo_aloha_hdf5")
+        self.use_precomp_lang_embed = use_precomp_lang_embed
         
         self.file_paths = []
-        for root, _, files in os.walk(HDF5_DIR):
+        for root, _, files in os.walk(self.HDF5_DIR):
             for filename in fnmatch.filter(files, '*.hdf5'):
                 file_path = os.path.join(root, filename)
                 self.file_paths.append(file_path)
+        if not self.file_paths:
+            raise FileNotFoundError(f"No .hdf5 files found under {self.HDF5_DIR}")
                 
         # Load the config
         with open('configs/base.yaml', 'r') as file:
@@ -40,7 +44,10 @@ class HDF5VLADataset:
             valid, res = self.parse_hdf5_file_state_only(file_path)
             _len = res['state'].shape[0] if valid else 0
             episode_lens.append(_len)
-        self.episode_sample_weights = np.array(episode_lens) / np.sum(episode_lens)
+        total_len = np.sum(episode_lens)
+        if total_len <= 0:
+            raise RuntimeError(f"No valid HDF5 episodes found under {self.HDF5_DIR}")
+        self.episode_sample_weights = np.array(episode_lens) / total_len
     
     def __len__(self):
         return len(self.file_paths)
@@ -132,20 +139,8 @@ class HDF5VLADataset:
             # We randomly sample a timestep
             step_id = np.random.randint(first_idx-1, num_steps)
             
-            # Load the instruction
-            dir_path = os.path.dirname(file_path)
-            with open(os.path.join(dir_path, 'expanded_instruction_gpt-4-turbo.json'), 'r') as f_instr:
-                instruction_dict = json.load(f_instr)
-            # We have 1/3 prob to use original instruction,
-            # 1/3 to use simplified instruction,
-            # and 1/3 to use expanded instruction.
-            instruction_type = np.random.choice([
-                'instruction', 'simplified_instruction', 'expanded_instruction'])
-            instruction = instruction_dict[instruction_type]
-            if isinstance(instruction, list):
-                instruction = np.random.choice(instruction)
-            # You can also use precomputed language embeddings (recommended)
-            # instruction = "path/to/lang_embed.pt"
+            # One RoboDojo task/env group shares a single instruction embedding.
+            instruction = self._get_instruction(file_path, f)
             
             # Assemble the meta
             meta = {
@@ -155,13 +150,7 @@ class HDF5VLADataset:
                 "instruction": instruction
             }
             
-            # Rescale gripper to [0, 1]
-            qpos = qpos / np.array(
-               [[1, 1, 1, 1, 1, 1, 4.7908, 1, 1, 1, 1, 1, 1, 4.7888]] 
-            )
-            target_qpos = f['action'][step_id:step_id+self.CHUNK_SIZE] / np.array(
-               [[1, 1, 1, 1, 1, 1, 11.8997, 1, 1, 1, 1, 1, 1, 13.9231]] 
-            )
+            target_qpos = f['action'][step_id:step_id+self.CHUNK_SIZE]
             
             # Parse the state and action
             state = qpos[step_id:step_id+1]
@@ -177,21 +166,9 @@ class HDF5VLADataset:
                 ], axis=0)
             
             # Fill the state/action into the unified vector
+            left_arm_dim, right_arm_dim = self._get_arm_dims(f, qpos.shape[-1])
             def fill_in_state(values):
-                # Target indices corresponding to your state space
-                # In this example: 6 joints + 1 gripper for each arm
-                UNI_STATE_INDICES = [
-                    STATE_VEC_IDX_MAPPING[f"left_arm_joint_{i}_pos"] for i in range(6)
-                ] + [
-                    STATE_VEC_IDX_MAPPING["left_gripper_open"]
-                ] + [
-                    STATE_VEC_IDX_MAPPING[f"right_arm_joint_{i}_pos"] for i in range(6)
-                ] + [
-                    STATE_VEC_IDX_MAPPING["right_gripper_open"]
-                ]
-                uni_vec = np.zeros(values.shape[:-1] + (self.STATE_DIM,))
-                uni_vec[..., UNI_STATE_INDICES] = values
-                return uni_vec
+                return self._fill_in_bimanual_state(values, left_arm_dim, right_arm_dim)
             state = fill_in_state(state)
             state_indicator = fill_in_state(np.ones_like(state_std))
             state_std = fill_in_state(state_std)
@@ -203,10 +180,12 @@ class HDF5VLADataset:
             
             # Parse the images
             def parse_img(key):
+                if key not in f['observations']['images']:
+                    return np.zeros((self.IMG_HISORY_SIZE, 0, 0, 0), dtype=np.uint8)
                 imgs = []
                 for i in range(max(step_id-self.IMG_HISORY_SIZE+1, 0), step_id+1):
                     img = f['observations']['images'][key][i]
-                    imgs.append(cv2.imdecode(np.frombuffer(img, np.uint8), cv2.IMREAD_COLOR))
+                    imgs.append(self._decode_image(img))
                 imgs = np.stack(imgs)
                 if imgs.shape[0] < self.IMG_HISORY_SIZE:
                     # Pad the images using the first image
@@ -279,34 +258,16 @@ class HDF5VLADataset:
             else:
                 raise ValueError("Found no qpos that exceeds the threshold.")
             
-            # Rescale gripper to [0, 1]
-            qpos = qpos / np.array(
-               [[1, 1, 1, 1, 1, 1, 4.7908, 1, 1, 1, 1, 1, 1, 4.7888]] 
-            )
-            target_qpos = f['action'][:] / np.array(
-               [[1, 1, 1, 1, 1, 1, 11.8997, 1, 1, 1, 1, 1, 1, 13.9231]] 
-            )
+            target_qpos = f['action'][:]
             
             # Parse the state and action
             state = qpos[first_idx-1:]
             action = target_qpos[first_idx-1:]
             
             # Fill the state/action into the unified vector
+            left_arm_dim, right_arm_dim = self._get_arm_dims(f, qpos.shape[-1])
             def fill_in_state(values):
-                # Target indices corresponding to your state space
-                # In this example: 6 joints + 1 gripper for each arm
-                UNI_STATE_INDICES = [
-                    STATE_VEC_IDX_MAPPING[f"left_arm_joint_{i}_pos"] for i in range(6)
-                ] + [
-                    STATE_VEC_IDX_MAPPING["left_gripper_open"]
-                ] + [
-                    STATE_VEC_IDX_MAPPING[f"right_arm_joint_{i}_pos"] for i in range(6)
-                ] + [
-                    STATE_VEC_IDX_MAPPING["right_gripper_open"]
-                ]
-                uni_vec = np.zeros(values.shape[:-1] + (self.STATE_DIM,))
-                uni_vec[..., UNI_STATE_INDICES] = values
-                return uni_vec
+                return self._fill_in_bimanual_state(values, left_arm_dim, right_arm_dim)
             state = fill_in_state(state)
             action = fill_in_state(action)
             
@@ -315,6 +276,54 @@ class HDF5VLADataset:
                 "state": state,
                 "action": action
             }
+
+    def _get_instruction(self, file_path, h5_file):
+        embed_path = os.path.join(os.path.dirname(file_path), "lang_embed.pt")
+        if self.use_precomp_lang_embed and os.path.exists(embed_path):
+            return embed_path
+        instruction = h5_file.attrs.get("language_instruction", "")
+        if isinstance(instruction, bytes):
+            instruction = instruction.decode("utf-8")
+        if not instruction:
+            raise ValueError(f"No language_instruction attr or lang_embed.pt found for {file_path}")
+        return str(instruction)
+
+    def _get_arm_dims(self, h5_file, state_width):
+        obs = h5_file["observations"]
+        if "left_arm_dim" in obs and "right_arm_dim" in obs:
+            return int(obs["left_arm_dim"][()]), int(obs["right_arm_dim"][()])
+        left_arm_dim = state_width // 2
+        return left_arm_dim, state_width - left_arm_dim
+
+    def _fill_in_bimanual_state(self, values, left_arm_dim, right_arm_dim):
+        values = np.asarray(values, dtype=np.float32)
+        expected_dim = left_arm_dim + right_arm_dim
+        if values.shape[-1] != expected_dim:
+            raise ValueError(f"Expected state dim {expected_dim}, got {values.shape[-1]}")
+
+        uni_vec = np.zeros(values.shape[:-1] + (self.STATE_DIM,), dtype=np.float32)
+        left_values = values[..., :left_arm_dim]
+        right_values = values[..., left_arm_dim:]
+
+        self._fill_one_arm(uni_vec, left_values, "left")
+        self._fill_one_arm(uni_vec, right_values, "right")
+        return uni_vec
+
+    def _fill_one_arm(self, uni_vec, arm_values, side):
+        joint_dim = max(arm_values.shape[-1] - 1, 0)
+        for i in range(min(joint_dim, 10)):
+            uni_vec[..., STATE_VEC_IDX_MAPPING[f"{side}_arm_joint_{i}_pos"]] = arm_values[..., i]
+        if arm_values.shape[-1] > 0:
+            uni_vec[..., STATE_VEC_IDX_MAPPING[f"{side}_gripper_open"]] = arm_values[..., -1]
+
+    @staticmethod
+    def _decode_image(img):
+        if isinstance(img, np.ndarray) and img.ndim == 3:
+            return img.astype(np.uint8, copy=False)
+        decoded = cv2.imdecode(np.frombuffer(img, np.uint8), cv2.IMREAD_COLOR)
+        if decoded is None:
+            raise ValueError(f"Failed to decode image with shape {getattr(img, 'shape', None)}")
+        return decoded
 
 if __name__ == "__main__":
     ds = HDF5VLADataset()
