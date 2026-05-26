@@ -17,3 +17,8 @@ policy/GO1/data
 policy/GO1/lqw.txt
 policy/GO1/AgiBot-World/wandb
 policy/.cache
+policy/DreamZero/checkpoints
+policy/DreamZero/data
+policy/DreamZero/__pycache__
+policy/DreamZero/dreamzero/dreamzero.egg-info
+

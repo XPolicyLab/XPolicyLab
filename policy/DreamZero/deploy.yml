@@ -1,0 +1,24 @@
+# Basic experiment configuration
+policy_name: DreamZero
+port: null
+dataset_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: null
+action_dim: null
+seed: null
+eval_batch: false
+eval_env: debug # sim, real, debug
+
+# DreamZero-specific parameters
+model_path: null
+pretrained_model_path: /mnt/pfs/pg4hw0/qiwei/models/checkpoints/DreamZero-AgiBot
+tokenizer_path: null
+action_horizon: 24
+video_history: 4
+ctrl_freq: 30
+prompt: null
+inference_method: forward # forward, lazy_joint_forward, lazy_joint_forward_causal
+skip_img_transform: false
