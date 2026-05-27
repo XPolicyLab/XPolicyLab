@@ -17,7 +17,11 @@ XR0_ROOT="${POLICY_DIR}/xiaomi_robotics_0/xr0"
 TRANSFORM_SCRIPT="${POLICY_DIR}/scripts/transform_xr0_json_format.py"
 data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 converted_data_root="${XR0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
-raw_data_root="${XR0_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
+raw_data_root="${XR0_RAW_DATA_ROOT:-}"
+if [[ -z "${raw_data_root}" ]]; then
+  echo "Set XR0_RAW_DATA_ROOT to the RoboDojo HDF5 root (contains sim_cloud/)." >&2
+  exit 1
+fi
 data_config_name="${XR0_DATA_CONFIG_NAME:-${data_setting}}"
 
 resolve_single_input_dir() {

@@ -42,28 +42,55 @@ XR0_PROMPT_TEMPLATE = (
 )
 
 
-def _resolve_processor_path(model_cfg: dict[str, Any]) -> str | Path:
+def _resolve_relative_path(raw_path: str | Path, base_dir: Path) -> Path:
+    """Resolve a deploy.yml path relative to base_dir (policy or xr0 root)."""
+    path = Path(str(raw_path)).expanduser()
+    if path.is_absolute():
+        raise ValueError(
+            f"Absolute paths are not supported: {path}. "
+            f"Use a path relative to {base_dir} or set it in deploy.yml."
+        )
+    return (base_dir / path).resolve()
+
+
+DEFAULT_VLM_PROCESSOR_REPO = "XiaomiRobotics/Xiaomi-Robotics-0-Pretrain"
+
+
+def _is_hf_repo_id(value: str) -> bool:
+    """True for HuggingFace repo ids like org/model (not a filesystem path)."""
+    if value.startswith((".", "/")) or "://" in value:
+        return False
+    parts = value.split("/")
+    return len(parts) >= 2 and all(parts)
+
+
+def _resolve_processor_source(model_cfg: dict[str, Any]) -> str | Path:
+    """Return HF repo id (download on load) or a local path relative to xr0/."""
     raw_path = model_cfg.get("vlm_processor_path")
-    if raw_path:
-        path = Path(str(raw_path)).expanduser()
-        if not path.is_absolute():
-            path = (_XR0_ROOT / path).resolve()
-        if path.exists():
-            return path
+    if raw_path is None or raw_path == "":
+        return DEFAULT_VLM_PROCESSOR_REPO
 
-    for candidate in (
-        _XR0_ROOT / "hf_pretrain",
-        Path("/vepfs-cnbje63de6fae220/niantian/Xiaomi-Robotics-0/xr0/hf_pretrain"),
-    ):
-        if (candidate / "processor_config.json").is_file():
-            return candidate.resolve()
+    raw = str(raw_path)
+    if _is_hf_repo_id(raw):
+        local_dir = (_XR0_ROOT / raw).resolve()
+        if (local_dir / "processor_config.json").is_file():
+            return _resolve_relative_path(raw, _XR0_ROOT)
+        return raw
 
-    return raw_path or "Qwen/Qwen3-VL-4B-Instruct"
+    processor_dir = _resolve_relative_path(raw, _XR0_ROOT)
+    if (processor_dir / "processor_config.json").is_file():
+        return processor_dir
+
+    raise FileNotFoundError(
+        f"VLM processor not found: {processor_dir} (missing processor_config.json). "
+        f"Set vlm_processor_path in deploy.yml to a HuggingFace repo id "
+        f"(default: {DEFAULT_VLM_PROCESSOR_REPO}) or a directory under {_XR0_ROOT}."
+    )
 
 
 def _resolve_ckpt_dir(model_cfg: dict[str, Any]) -> Path:
     if model_cfg.get("model_dir"):
-        return Path(model_cfg["model_dir"]).expanduser().resolve()
+        return _resolve_relative_path(model_cfg["model_dir"], _POLICY_DIR)
 
     dataset_name = model_cfg["dataset_name"]
     ckpt_name = model_cfg["ckpt_name"]
@@ -320,10 +347,10 @@ class Model(ModelTemplate):
         self.std = torch.tensor(std, device=self.device, dtype=torch.bfloat16)
         self.action_mask = torch.from_numpy(action_mask).to(self.device, dtype=torch.bfloat16)
 
-        processor_path = _resolve_processor_path(model_cfg)
-        local_only = isinstance(processor_path, Path)
+        processor_source = _resolve_processor_source(model_cfg)
+        local_only = isinstance(processor_source, Path)
         self.processor = AutoProcessor.from_pretrained(
-            str(processor_path),
+            str(processor_source),
             trust_remote_code=True,
             use_fast=False,
             local_files_only=local_only,
@@ -334,6 +361,7 @@ class Model(ModelTemplate):
         self._latest_env_idx_list: list[int] = [0]
 
         print(f"[Xiaomi_Robotics_0] Loaded checkpoint from {model_dir} ({checkpoint_tag})")
+        print(f"[Xiaomi_Robotics_0] Loaded processor from {processor_source}")
 
     def _encode_observation(self, obs: dict[str, Any]) -> dict[str, Any]:
         images = [

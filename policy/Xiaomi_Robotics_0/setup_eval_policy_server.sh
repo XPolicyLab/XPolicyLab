@@ -29,8 +29,9 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
 export PYTHONPATH="${XR0_ROOT}:${PYTHONPATH:-}"
-export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
-export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
+# Allow HuggingFace download for vlm_processor_path; set HF_HUB_OFFLINE=1 for fully offline deploy
+export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-0}"
+export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-0}"
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \

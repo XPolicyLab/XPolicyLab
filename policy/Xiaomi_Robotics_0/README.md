@@ -55,10 +55,11 @@ cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/Xiaomi_Roboti
 bash process_data.sh RoboDojo sweep_blocks arx_x5 50 ee
 ```
 
-当 `dataset_name=RoboDojo` 时，默认从以下路径读取原始 HDF5：
+当 `dataset_name=RoboDojo` 时，需设置 `XR0_RAW_DATA_ROOT` 指向 RoboDojo HDF5 根目录：
 
-```text
-${XR0_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}/sim_cloud/<ckpt_name>/arx_x5/
+```bash
+export XR0_RAW_DATA_ROOT=/path/to/RoboDojo
+# 单任务: ${XR0_RAW_DATA_ROOT}/sim_cloud/<ckpt_name>/arx_x5/
 ```
 
 ### Co-train（35 任务联合训练）
@@ -136,18 +137,16 @@ checkpoints/RoboDojo-cotrain-arx_x5-100-ee-0/
 推荐使用 symlink，避免复制大体积 checkpoint：
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/Xiaomi_Robotics_0
+cd policy/Xiaomi_Robotics_0
 
-bash scripts/link_checkpoint.sh RoboDojo cotrain arx_x5 100 ee 0
-# 默认链接到 /vepfs-cnbje63de6fae220/xspark_shared/xiaomi_checkpoints/project_xr0/robodojo_sim
+bash scripts/link_checkpoint.sh RoboDojo cotrain arx_x5 100 ee 0 /path/to/finetuned_ckpt
 ```
 
-也可手动：
+也可手动（`source` 为含 `config.py` 与 `last.ckpt/` 的目录）：
 
 ```bash
 mkdir -p checkpoints
-ln -sfn /vepfs-cnbje63de6fae220/xspark_shared/xiaomi_checkpoints/project_xr0/robodojo_sim \
-  checkpoints/RoboDojo-cotrain-arx_x5-100-ee-0
+ln -sfn /path/to/finetuned_ckpt checkpoints/RoboDojo-cotrain-arx_x5-100-ee-0
 ```
 
 ### 2. 启动评测
@@ -169,10 +168,12 @@ bash eval.sh RoboDojo sweep_blocks cotrain arx_x5 100 ee 0 0 0 mibot mibot
 | `eval_env` | `debug` / `sim` / `real` |
 | `eval_batch` | 是否走 batch 推理 |
 | `checkpoint_tag` | 加载 `last.ckpt` 或 `epoch=0-step=30000.ckpt` 等 |
-| `model_dir` | 直接指定 checkpoint 目录（非空时跳过 6 元组路径） |
+| `model_dir` | 相对 policy 根目录的 checkpoint 路径；`null` 时用 `checkpoints/<6元组>/` |
 | `action_length` | 动作 chunk 长度（默认 30） |
-| `vlm_processor_path` | VLM processor 路径 |
+| `vlm_processor_path` | HuggingFace 仓库 id（默认 `XiaomiRobotics/Xiaomi-Robotics-0-Pretrain`，启动时自动下载）；离线可改为 `xr0/` 下相对路径 |
 | `default_prompt` | 观测无 instruction 时的默认语言指令 |
+
+部署时 checkpoint 路径相对 policy 根目录解析；VLM processor 默认从 HuggingFace 下载，无需本地 `hf_pretrain` 软链。
 
 ## 与 XPolicyLab 的参数约定
 
