@@ -224,6 +224,9 @@ policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
 训练完成后，可先用 GR00T 官方开环评测检查预测动作是否正常：
 
 ```bash
+cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17/gr00t_n17
+source .venv/bin/activate
+
 uv run python gr00t/eval/open_loop_eval.py \
   --dataset-path "${DATASET_PATH}" \
   --embodiment-tag NEW_EMBODIMENT \
@@ -235,6 +238,44 @@ uv run python gr00t/eval/open_loop_eval.py \
 ```
 
 如果保存步数不同，将 `checkpoint-10000` 替换为实际 checkpoint 目录。
+
+## XPolicyLab 闭环评测（debug / sim / real）
+
+与 `Xiaomi_Robotics_0`、`Pi_05` 一致，使用 `eval.sh` 拉起 policy server + env client：
+
+```bash
+cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17
+bash install.sh   # 首次：uv sync + 安装 XPolicyLab 到 gr00t .venv
+
+# debug 连通性测试（0 号卡，policy 用 gr00t uv 环境，client 用 mibot）
+bash eval.sh RoboDojo sweep_blocks cotrain arx_x5 3500 joint 0 0 0 uv mibot
+```
+
+参数说明：
+
+| 参数 | 含义 |
+|------|------|
+| `3500` | `expert_data_num`，与训练数据规模一致 |
+| `joint` | 当前 arx_x5 modality 为 joint 空间相对动作，需与训练 `action_type` 一致 |
+| `uv` | policy server 使用 `gr00t_n17/.venv`（见 `deploy.yml` 的 `policy_uv_env_path`） |
+| `mibot` | env client 使用的 conda 环境（需已 `pip install -e XPolicyLab`） |
+
+checkpoint 目录约定（6 元组）：
+
+```text
+checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/
+  └── RoboDojo-cotrain-arx_x5-3500-joint-0/
+        └── checkpoint-60000/
+```
+
+`deploy.yml` 中 `checkpoint_num: last` 会自动选最新 step；也可改为具体步数如 `60000`。
+
+软链接已有权重：
+
+```bash
+bash scripts/link_checkpoint.sh RoboDojo cotrain arx_x5 3500 joint 0 \
+  /path/to/experiment/output/RoboDojo-cotrain-arx_x5-3500-joint-0
+```
 
 ## 与 XPolicyLab 的参数约定
 

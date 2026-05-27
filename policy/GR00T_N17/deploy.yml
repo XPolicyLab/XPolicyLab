@@ -1,0 +1,20 @@
+# Basic experiment configuration
+policy_name: GR00T_N17
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+seed: null
+eval_batch: false
+eval_env: debug
+
+# Model / checkpoint configuration
+action_type: joint
+embodiment_tag: NEW_EMBODIMENT
+checkpoint_num: last
+model_dir: null
+default_prompt: Perform the robot manipulation task.
+
+# uv environment for policy server (use eval.sh policy_conda_env=uv)
+policy_uv_env_path: gr00t_n17
+
+port: 6000

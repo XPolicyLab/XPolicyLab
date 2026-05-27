@@ -122,6 +122,20 @@ uv run python gr00t/data/stats.py \
 ```bash
 uv run python -c "import torch; print(torch.cuda.is_available())"
 uv run python gr00t/experiment/launch_finetune.py --help
+uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
+```
+
+## 9. XPolicyLab 评测环境
+
+Policy server 使用 GR00T 的 `uv` 环境；env client 可使用任意已安装 XPolicyLab 的 conda 环境（如 `mibot`）：
+
+```bash
+cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17
+bash install.sh
+
+# client 侧（若使用 mibot）
+conda activate mibot
+pip install -e /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab
 ```
 
 环境配置完成后，训练与评测入口见 `README.md`。
