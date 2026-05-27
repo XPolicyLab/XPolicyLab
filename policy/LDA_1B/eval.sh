@@ -57,21 +57,6 @@ fi
 echo -e "\033[33m[INFO] Using checkpoint: ${LDA_CHECKPOINT_PATH}\033[0m"
 echo -e "\033[33m[INFO] task_name: ${task_name}; ckpt_name: ${ckpt_name}\033[0m"
 
-# Override the absolute base VLM / vision encoder paths baked into the run's
-# config.yaml at training time. Match the train.sh defaults so a checkpoint
-# trained and evaluated under POLICY_DIR/checkpoints/ works out of the box.
-base_vlm="${LDA_BASE_VLM:-${POLICY_DIR}/checkpoints/Qwen3-VL-4B-Instruct}"
-vision_encoder_path="${LDA_VISION_ENCODER:-${POLICY_DIR}/checkpoints/dinov3-vit-s}"
-for required_dir in "${base_vlm}" "${vision_encoder_path}"; do
-    if [[ ! -d "${required_dir}" ]]; then
-        echo -e "\033[31m[ERROR] Required model directory is missing: ${required_dir}\033[0m" >&2
-        echo -e "\033[31m        Download per INSTALLATION.md or set LDA_BASE_VLM / LDA_VISION_ENCODER.\033[0m" >&2
-        exit 1
-    fi
-done
-echo -e "\033[33m[INFO] base_vlm:             ${base_vlm}\033[0m"
-echo -e "\033[33m[INFO] vision_encoder_path:  ${vision_encoder_path}\033[0m"
-
 FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
 
 cleanup(){ [[ -n "${SERVER_PID:-}" ]] && echo -e "\033[31m[CLEANUP] Killing server PID=${SERVER_PID}\033[0m" && kill "${SERVER_PID}" 2>/dev/null || true; }
@@ -80,11 +65,6 @@ trap cleanup EXIT
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 cd "${POLICY_DIR}/LDA-1B"
-
-# gr00t canonical action_dim (per-key padded sum, arx_x5 = 16); needs the policy env
-# (lda import), so computed after conda activate. NOT the raw physical dim (14).
-action_dim=$(python "${POLICY_DIR}/LDA-1B/xpolicylab_adapter/gr00t_action_dim.py" "${env_cfg_type}")
-echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 
 echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
 PYTHONWARNINGS=ignore::UserWarning \
@@ -100,11 +80,8 @@ CUDA_VISIBLE_DEVICES="${policy_gpu_id}" python -u "${ROOT_DIR}/XPolicyLab/setup_
         seed="${seed}" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
-        action_dim="${action_dim}" \
         ckpt_name="${ckpt_name}" \
         checkpoint_path="${LDA_CHECKPOINT_PATH}" \
-        base_vlm="${base_vlm}" \
-        vision_encoder_path="${vision_encoder_path}" \
     &
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"

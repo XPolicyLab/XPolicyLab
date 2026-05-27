@@ -6,26 +6,12 @@ expert_data_num: null
 action_type: null
 gpu_id: null
 seed: null
-action_dim: null
 port: null
-eval_batch: true
-eval_env: sim # debug, sim, real
+eval_batch: false
+eval_env: debug # debug, sim, real
 
 checkpoint_path: null
-model_path: null
-# Override the absolute base VLM / vision encoder paths recorded in the run's
-# config.yaml at training time. Leave null to keep the training-time paths
-# (works when the checkpoint is deployed on the same host as training).
-base_vlm: null
-vision_encoder_path: null
 unnorm_key: null
-task_instruction: null
-camera_names: [cam_head, cam_left_wrist, cam_right_wrist]
-embodiment_id: 0
-state_encoding: raw
-action_horizon: 16
 device: cuda
-use_ddim: true
-num_ddim_steps: 10
 upstream_dir: LDA-1B
 sample_data_dir: data/RoboDojo/test_data/arx_x5

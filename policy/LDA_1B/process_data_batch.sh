@@ -12,7 +12,7 @@ dataset_id=${5:-}       # optional output folder name; default cotrain_dataset
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-DATASET_DIR="${ROOT_DIR}/final_data/${dataset_name}"
+DATASET_DIR="${ROOT_DIR}/data/${dataset_name}"
 
 # Collect task dirs that actually contain <task>/<env_cfg_type>/data/episode_*.hdf5.
 shopt -s nullglob

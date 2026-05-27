@@ -947,7 +947,13 @@ class ArxX5DataConfig:
         "action.right_gripper_close",
     ]
     language_keys = ["annotation.human.action.task_description"]
-    observation_indices = [0]
+    # Two-frame observation window (history + current) to match the released
+    # LDA-1B pretrain checkpoint, whose `action_model.obs_merger.weight` has
+    # input dim 1152 = 384 (DINOv3-ViT-S hidden) * 3 = num_chans * (obs_horizon + 1)
+    # with obs_horizon = 2. Single-frame `[0]` produces input dim 768 instead and
+    # makes `load_pretrained_backbones` fail with a shape-mismatch RuntimeError.
+    # Most other configs in this file use the same `[-5, 0]` two-frame window.
+    observation_indices = [-5, 0]
     future_observation_indices = [5]
     action_indices = list(range(0, 16))
 
