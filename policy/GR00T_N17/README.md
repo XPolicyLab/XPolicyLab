@@ -273,9 +273,21 @@ checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/
 软链接已有权重：
 
 ```bash
+cd policy/GR00T_N17
 bash scripts/link_checkpoint.sh RoboDojo cotrain arx_x5 3500 joint 0 \
-  /path/to/experiment/output/RoboDojo-cotrain-arx_x5-3500-joint-0
+  /path/to/upload_ckpts/policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/RoboDojo-cotrain-arx_x5-3500-joint-0
 ```
+
+`deploy.yml` 可配置项（部署相关）：
+
+| 字段 | 含义 |
+|------|------|
+| `model_dir` | 相对 policy 根目录；`null` 时用 `checkpoints/<6元组>/` |
+| `checkpoint_num` | `last` 或具体 step（如 `60000`） |
+| `cosmos_model_path` | 默认 `nvidia/Cosmos-Reason2-2B`（启动时自动下载），覆盖 checkpoint 内嵌的绝对路径 |
+| `embodiment_tag` | 与训练一致，RoboDojo 为 `NEW_EMBODIMENT` |
+
+部署时 checkpoint 与 Cosmos 均通过相对路径或 HuggingFace 仓库 id 配置，无需硬编码机器路径。
 
 ## 与 XPolicyLab 的参数约定
 

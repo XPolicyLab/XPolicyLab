@@ -18,15 +18,19 @@ gpu_id=$7
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GR00T_ROOT="${POLICY_DIR}/gr00t_n17"
-DATA_ROOT="${GR00T_LEROBOT_HOME:-/vepfs-cnbje63de6fae220/xspark_shared/lerobot}"
-WEIGHTS_ROOT="${GR00T_WEIGHTS_ROOT:-/vepfs-cnbje63de6fae220/xspark_shared/model_weights}"
+DATA_ROOT="${GR00T_LEROBOT_HOME:-}"
+if [[ -z "${DATA_ROOT}" ]]; then
+  echo "Set GR00T_LEROBOT_HOME to the LeRobot datasets root." >&2
+  exit 1
+fi
+
+base_model="${GR00T_BASE_MODEL:-nvidia/GR00T-N1.7-3B}"
+cosmos_model="${GR00T_COSMOS_MODEL:-nvidia/Cosmos-Reason2-2B}"
 
 data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 dataset_path="${DATA_ROOT}/${data_setting}"
 modality_config="${POLICY_DIR}/configs/${env_cfg_type}_config.py"
-base_model="${GR00T_BASE_MODEL:-${WEIGHTS_ROOT}/GR00T-N1.7-3B}"
-cosmos_model="${GR00T_COSMOS_MODEL:-${COSMOS_LOCAL:-${WEIGHTS_ROOT}/Cosmos-Reason2-2B}}"
 output_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
@@ -46,15 +50,19 @@ if [[ ! -f "${modality_config}" ]]; then
   exit 1
 fi
 
-if [[ ! -f "${base_model}/config.json" ]]; then
-  echo "GR00T base model not found: ${base_model}" >&2
-  echo "Download it to ${base_model} or set GR00T_BASE_MODEL." >&2
+if [[ -f "${base_model}/config.json" ]]; then
+  :
+elif [[ "${HF_HUB_OFFLINE:-0}" == "1" ]]; then
+  echo "GR00T base model not found locally: ${base_model}" >&2
+  echo "Unset HF_HUB_OFFLINE or set GR00T_BASE_MODEL to a local directory." >&2
   exit 1
 fi
 
-if [[ ! -f "${cosmos_model}/config.json" ]]; then
-  echo "Cosmos backbone not found: ${cosmos_model}" >&2
-  echo "Download it to ${cosmos_model} or set GR00T_COSMOS_MODEL." >&2
+if [[ -f "${cosmos_model}/config.json" ]]; then
+  :
+elif [[ "${HF_HUB_OFFLINE:-0}" == "1" ]]; then
+  echo "Cosmos backbone not found locally: ${cosmos_model}" >&2
+  echo "Unset HF_HUB_OFFLINE or set GR00T_COSMOS_MODEL to a local directory." >&2
   exit 1
 fi
 

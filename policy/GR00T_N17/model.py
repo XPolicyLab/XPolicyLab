@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 import cv2
 import numpy as np
@@ -45,9 +47,78 @@ def _extract_step_number(value: Any) -> int | None:
     return int(digits) if digits else None
 
 
+DEFAULT_COSMOS_MODEL_REPO = "nvidia/Cosmos-Reason2-2B"
+
+
+def _resolve_relative_path(raw_path: str | Path, base_dir: Path) -> Path:
+    """Resolve a deploy.yml path relative to base_dir."""
+    path = Path(str(raw_path)).expanduser()
+    if path.is_absolute():
+        raise ValueError(
+            f"Absolute paths are not supported: {path}. "
+            f"Use a path relative to {base_dir} or set it in deploy.yml."
+        )
+    return (base_dir / path).resolve()
+
+
+def _is_hf_repo_id(value: str) -> bool:
+    if value.startswith((".", "/")) or "://" in value:
+        return False
+    parts = value.split("/")
+    return len(parts) >= 2 and all(parts)
+
+
+def _resolve_cosmos_model(model_cfg: dict[str, Any]) -> str:
+    """Return HuggingFace repo id or a local path for Cosmos (processor backbone)."""
+    raw_path = model_cfg.get("cosmos_model_path")
+    if raw_path is None or raw_path == "":
+        return DEFAULT_COSMOS_MODEL_REPO
+
+    raw = str(raw_path)
+    if _is_hf_repo_id(raw):
+        local_dir = (_POLICY_DIR / raw).resolve()
+        if (local_dir / "config.json").is_file():
+            return str(_resolve_relative_path(raw, _POLICY_DIR))
+        return raw
+
+    return str(_resolve_relative_path(raw, _POLICY_DIR))
+
+
+@contextmanager
+def _override_processor_cosmos_model(checkpoint_dir: Path, cosmos_model: str) -> Iterator[None]:
+    """Replace baked-in absolute Cosmos paths in processor_config.json during load."""
+    config_path = checkpoint_dir / "processor_config.json"
+    if not config_path.is_file():
+        yield
+        return
+
+    with open(config_path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    processor_kwargs = data.setdefault("processor_kwargs", {})
+    previous = processor_kwargs.get("model_name")
+    if previous == cosmos_model:
+        yield
+        return
+
+    processor_kwargs["model_name"] = cosmos_model
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+    try:
+        yield
+    finally:
+        if previous is not None:
+            processor_kwargs["model_name"] = previous
+        else:
+            processor_kwargs.pop("model_name", None)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+
+
 def _resolve_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
     if model_cfg.get("model_dir"):
-        return Path(model_cfg["model_dir"]).expanduser().resolve()
+        return _resolve_relative_path(model_cfg["model_dir"], _POLICY_DIR)
 
     dataset_name = model_cfg["dataset_name"]
     ckpt_name = model_cfg["ckpt_name"]
@@ -256,13 +327,15 @@ class Model(ModelTemplate):
         _load_modality_config(self.env_cfg_type)
         checkpoint_dir = _resolve_checkpoint_dir(model_cfg)
         embodiment_tag = model_cfg.get("embodiment_tag", "NEW_EMBODIMENT")
+        cosmos_model = _resolve_cosmos_model(model_cfg)
 
-        self.policy = Gr00tPolicy(
-            model_path=str(checkpoint_dir),
-            embodiment_tag=embodiment_tag,
-            device=self.device,
-            strict=True,
-        )
+        with _override_processor_cosmos_model(checkpoint_dir, cosmos_model):
+            self.policy = Gr00tPolicy(
+                model_path=str(checkpoint_dir),
+                embodiment_tag=embodiment_tag,
+                device=self.device,
+                strict=True,
+            )
         self.model = self.policy
         self.action_horizon = len(self.policy.modality_configs["action"].delta_indices)
 
@@ -270,6 +343,7 @@ class Model(ModelTemplate):
         self._latest_env_idx_list: list[int] = [0]
 
         print(f"[GR00T_N17] Loaded checkpoint from {checkpoint_dir}")
+        print(f"[GR00T_N17] cosmos_model={cosmos_model}")
         print(f"[GR00T_N17] action_horizon={self.action_horizon}, embodiment_tag={embodiment_tag}")
 
     @staticmethod

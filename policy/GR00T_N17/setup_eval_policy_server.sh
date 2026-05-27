@@ -65,8 +65,9 @@ if [[ ! -x "${PYTHON_BIN}" ]]; then
 fi
 
 export PYTHONPATH="${GR00T_ROOT}:${PYTHONPATH:-}"
-export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
-export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
+# Allow HuggingFace download for cosmos_model_path; set HF_HUB_OFFLINE=1 for fully offline deploy
+export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-0}"
+export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-0}"
 export GR00T_VIDEO_BACKEND="${GR00T_VIDEO_BACKEND:-pyav}"
 
 exec env \

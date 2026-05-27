@@ -14,7 +14,11 @@ action_type=$5
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GR00T_ROOT="${POLICY_DIR}/gr00t_n17"
-DATA_ROOT="${GR00T_LEROBOT_HOME:-/vepfs-cnbje63de6fae220/xspark_shared/lerobot}"
+DATA_ROOT="${GR00T_LEROBOT_HOME:-}"
+if [[ -z "${DATA_ROOT}" ]]; then
+  echo "Set GR00T_LEROBOT_HOME to the LeRobot datasets root." >&2
+  exit 1
+fi
 data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 dataset_path="${DATA_ROOT}/${data_setting}"
 modality_config="${POLICY_DIR}/configs/${env_cfg_type}_config.py"
