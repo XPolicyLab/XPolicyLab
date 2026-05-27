@@ -1,5 +1,7 @@
-data/
+/data/
 checkpoints/
+__pycache__/
+*.py[cod]
 xiaomi_robotics_0/**/eval_logs/
 xiaomi_robotics_0/xr0/outputs/
 xiaomi_robotics_0/xr0/wandb/
