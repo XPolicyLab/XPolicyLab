@@ -140,7 +140,7 @@ class Model(ModelTemplate):
         self.model = self.policy
 
         self.max_img_cache_size = int(self.config["common"].get("img_history_size", 1))
-        self.obs_cache = []
+        self.obs_cache_by_env = {}
         self._latest_env_idx_list = [0]
 
         print(
@@ -291,14 +291,15 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        if len(obs_list) != 1:
-            raise NotImplementedError("H_RDT currently supports single-env inference in XPolicyLab.")
-
-        self._latest_env_idx_list = [obs_list[0].get("env_idx", 0)]
-        encoded_obs = self._encode_obs(obs_list[0])
-        self.obs_cache.append(encoded_obs)
-        if len(self.obs_cache) > self.max_img_cache_size:
-            self.obs_cache.pop(0)
+        self._latest_env_idx_list = []
+        for obs in obs_list:
+            env_idx = obs.get("env_idx", 0)
+            self._latest_env_idx_list.append(env_idx)
+            encoded_obs = self._encode_obs(obs)
+            obs_cache = self.obs_cache_by_env.setdefault(env_idx, [])
+            obs_cache.append(encoded_obs)
+            if len(obs_cache) > self.max_img_cache_size:
+                obs_cache.pop(0)
 
     def _build_image_tokens(self, current_obs):
         camera_images = [
@@ -322,11 +323,12 @@ class Model(ModelTemplate):
         return image_features.view(batch_size, -1, self.vision_encoder.embed_dim)
 
     @torch.inference_mode()
-    def _infer(self):
-        if not self.obs_cache:
+    def _infer(self, env_idx=0):
+        obs_cache = self.obs_cache_by_env.get(env_idx)
+        if not obs_cache:
             raise AssertionError("update_obs must be called before get_action.")
 
-        current_obs = self.obs_cache[-1]
+        current_obs = obs_cache[-1]
         state_tokens = torch.as_tensor(
             current_obs["agent_pos"],
             dtype=self.dtype,
@@ -346,19 +348,16 @@ class Model(ModelTemplate):
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
         env_idx_list = env_idx_list or self._latest_env_idx_list
-        if len(env_idx_list) != 1:
-            raise NotImplementedError("H_RDT currently supports single-env inference in XPolicyLab.")
-
-        raw_actions = self._infer()
         return [
             unpack_robot_state(
-                raw_actions,
+                self._infer(env_idx),
                 self.action_type,
                 self.robot_action_dim_info,
                 source_type="obs",
             )
+            for env_idx in env_idx_list
         ]
 
     def reset(self):
-        self.obs_cache = []
+        self.obs_cache_by_env = {}
         self._latest_env_idx_list = [0]

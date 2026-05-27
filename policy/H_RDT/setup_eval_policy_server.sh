@@ -12,7 +12,7 @@ policy_gpu_id=$8
 policy_conda_env=$9
 policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
-checkpoint_path=${12:-"${ckpt_name}"}
+checkpoint_path=${12:-""}
 config_path=${13:-""}
 lang_embedding_path=${14:-""}
 
@@ -24,6 +24,10 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+checkpoint_path="${checkpoint_path:-${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}}"
+config_path="${config_path:-${SCRIPT_DIR}/data/${processed_name}/hrdt_finetune_xpolicy.yaml}"
+lang_embedding_path="${lang_embedding_path:-${SCRIPT_DIR}/H_RDT/datasets/robotwin2/lang_embeddings/${task_name}.pt}"
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
 

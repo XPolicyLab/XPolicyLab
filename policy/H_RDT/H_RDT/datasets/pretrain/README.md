@@ -70,7 +70,7 @@ Each script also accepts command line arguments that override environment variab
 ```bash
 # Precompute 48D actions with custom settings
 python datasets/pretrain/precompute_48d_actions.py \
-    --data_root /path/to/egodex \
+    --data_root ./data/egodex \
     --num_processes 16 \
     --force_overwrite \
     --test_mode

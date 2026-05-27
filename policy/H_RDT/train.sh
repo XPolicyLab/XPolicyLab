@@ -2,13 +2,31 @@
 set -e
 
 dataset_name=${1}
-task_name=${2}
+ckpt_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
 action_type=${5}
 seed=${6}
 gpu_id=${7}
 pretrained_backbone_path=${8:-""}
+
+if [[ -z "${dataset_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" || -z "${action_type}" || -z "${seed}" || -z "${gpu_id}" ]]; then
+    usage
+    exit 1
+fi
+
+task_names_text="${XPOLICY_HRDT_TASKS:-${XPOLICY_HRDT_TASK_NAME:-${ckpt_name}}}"
+read -r -a task_names <<< "${task_names_text//,/ }"
+if [[ "${#task_names[@]}" -eq 0 ]]; then
+    echo "[H_RDT][ERROR] no task names provided. Set ckpt_name or XPOLICY_HRDT_TASKS."
+    exit 1
+fi
+task_name="${task_names[0]}"
+if [[ "${#task_names[@]}" -gt 1 ]]; then
+    dataset_mode="multi_task"
+else
+    dataset_mode="single_task"
+fi
 
 if [[ "${action_type}" != "joint" ]]; then
     echo "[H_RDT][ERROR] only action_type=joint is supported for training now."
@@ -20,25 +38,33 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 HRDT_ROOT="${SCRIPT_DIR}/H_RDT"
 
-processed_name="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 processed_root="${SCRIPT_DIR}/data/${processed_name}"
 stats_path="${processed_root}/stats.json"
 config_path="${processed_root}/hrdt_finetune_xpolicy.yaml"
-output_dir="${SCRIPT_DIR}/checkpoints/${processed_name}_seed${seed}"
-lang_embedding_path="${HRDT_ROOT}/datasets/robotwin2/lang_embeddings/${task_name}.pt"
+output_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 free_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 
-echo "[H_RDT] dataset=${dataset_name}, task=${task_name}, env_cfg=${env_cfg_type}"
+echo "[H_RDT] dataset=${dataset_name}, ckpt=${ckpt_name}, tasks=${task_names[*]}, mode=${dataset_mode}, env_cfg=${env_cfg_type}"
 echo "[H_RDT] action_type=${action_type}, action_dim=${action_dim}, seed=${seed}, gpu=${gpu_id}"
 
 cd "${SCRIPT_DIR}"
 
-if [[ ! -d "${processed_root}/${task_name}/demo_clean/data" ]]; then
+missing_processed=false
+for current_task_name in "${task_names[@]}"; do
+    if [[ ! -d "${processed_root}/${current_task_name}/demo_clean/data" ]]; then
+        missing_processed=true
+        break
+    fi
+done
+
+if [[ "${missing_processed}" == "true" ]]; then
+    export XPOLICY_HRDT_TASKS="${task_names[*]}"
     bash process_data.sh \
         "${dataset_name}" \
-        "${task_name}" \
+        "${ckpt_name}" \
         "${env_cfg_type}" \
         "${expert_data_num}" \
         "${action_type}"
@@ -60,31 +86,45 @@ with open(dst, "w", encoding="utf-8") as fp:
     yaml.safe_dump(cfg, fp, sort_keys=False)
 PY
 
-if [[ ! -f "${lang_embedding_path}" ]]; then
+missing_lang_embedding=false
+for current_task_name in "${task_names[@]}"; do
+    lang_embedding_path="${HRDT_ROOT}/datasets/robotwin2/lang_embeddings/${current_task_name}.pt"
+    if [[ ! -f "${lang_embedding_path}" ]]; then
+        missing_lang_embedding=true
+        break
+    fi
+done
+
+if [[ "${missing_lang_embedding}" == "true" ]]; then
     default_t5_path="${HRDT_ROOT}/t5-v1_1-xxl"
     export T5_MODEL_PATH="${T5_MODEL_PATH:-${default_t5_path}}"
     export HRDT_CONFIG_PATH="${config_path}"
     if [[ ! -d "${T5_MODEL_PATH}" ]]; then
-        echo "[H_RDT][ERROR] missing language embedding: ${lang_embedding_path}"
-        echo "[H_RDT][ERROR] set T5_MODEL_PATH to a local t5-v1_1-xxl directory, or place ${task_name}.pt under ${HRDT_ROOT}/datasets/robotwin2/lang_embeddings"
+        echo "[H_RDT][ERROR] missing one or more language embeddings for tasks: ${task_names[*]}"
+        echo "[H_RDT][ERROR] set T5_MODEL_PATH to a local t5-v1_1-xxl directory, or place each task .pt under ${HRDT_ROOT}/datasets/robotwin2/lang_embeddings"
         exit 1
     fi
     echo "[H_RDT] generating language embeddings with T5_MODEL_PATH=${T5_MODEL_PATH}"
     (cd "${HRDT_ROOT}" && python datasets/robotwin2/encode_lang_batch.py)
 fi
 
-if [[ ! -f "${lang_embedding_path}" ]]; then
-    echo "[H_RDT][ERROR] failed to create language embedding: ${lang_embedding_path}"
-    exit 1
-fi
+for current_task_name in "${task_names[@]}"; do
+    lang_embedding_path="${HRDT_ROOT}/datasets/robotwin2/lang_embeddings/${current_task_name}.pt"
+    if [[ ! -f "${lang_embedding_path}" ]]; then
+        echo "[H_RDT][ERROR] failed to create language embedding: ${lang_embedding_path}"
+        exit 1
+    fi
+done
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export XPOLICY_HRDT_DATA_ROOT="${processed_root}"
 export XPOLICY_HRDT_HDF5_FOLDER="demo_clean/data"
 export XPOLICY_HRDT_MAX_EPISODES="${expert_data_num}"
 export XPOLICY_HRDT_STAT_PATH="${stats_path}"
+export XPOLICY_HRDT_DATASET_MODE="${dataset_mode}"
+export XPOLICY_HRDT_TASKS="${task_names[*]}"
 export WANDB_PROJECT="${WANDB_PROJECT:-hrdt}"
-export HF_HOME="${HF_HOME:-/vepfs-cnbje63de6fae220/mobile/chengy/.cache/huggingface}"
+export HF_HOME="${HF_HOME:-${SCRIPT_DIR}/.cache/huggingface}"
 export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/transformers}"
 export HUGGINGFACE_HUB_CACHE="${HUGGINGFACE_HUB_CACHE:-${HF_HOME}/hub}"
 

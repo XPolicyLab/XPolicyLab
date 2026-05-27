@@ -24,7 +24,7 @@ dataset:
   # read by the consumer with new data
 
   # The path to the buffer (at least 400GB)
-  buf_path: /ssd/lingxuan/data/buffer
+  buf_path: ./buffer
   # The number of chunks in the buffer
   buf_num_chunks: 512
   # The number of samples (step rather than episode) in each chunk

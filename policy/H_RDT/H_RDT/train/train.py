@@ -291,7 +291,7 @@ def train(args, logger):
         collate_fn=data_collator,
         num_workers=args.dataloader_num_workers,
         pin_memory=True,
-        persistent_workers=True,
+        persistent_workers=args.dataloader_num_workers > 0,
     )
     
     val_dataloader = torch.utils.data.DataLoader(
@@ -334,7 +334,11 @@ def train(args, logger):
 
     # Initialize trackers
     if accelerator.is_main_process:
-        accelerator.init_trackers("hrdt", config=vars(args))
+        tracker_config = {
+            key: value if isinstance(value, (int, float, str, bool, torch.Tensor)) else str(value)
+            for key, value in vars(args).items()
+        }
+        accelerator.init_trackers("hrdt", config=tracker_config)
 
     if args.report_to == "tensorboard":
         from torch.utils.tensorboard import SummaryWriter

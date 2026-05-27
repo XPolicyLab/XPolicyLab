@@ -64,20 +64,35 @@ class VLAConsumerDataset(Dataset):
                 val=val,
                 use_precomp_lang_embed=use_precomp_lang_embed,
                 # Note: override default paths if needed
-                # data_root="/path/to/egodex",
-                # stat_path="/path/to/custom/egodex_stat.json",
+                # data_root="./data/egodex",
+                # stat_path="./data/egodex_stat.json",
             )
         elif self.dataset_name == "robotwin_agilex":
+            dataset_mode = os.environ.get("XPOLICY_HRDT_DATASET_MODE", "single_task")
+            if dataset_mode not in ("single_task", "multi_task"):
+                raise ValueError(f"Invalid XPOLICY_HRDT_DATASET_MODE: {dataset_mode}")
+
+            dataset_kwargs = {
+                "mode": dataset_mode,
+                "config": config,
+                "stat_path": os.environ.get("XPOLICY_HRDT_STAT_PATH"),
+            }
+            if dataset_mode == "single_task":
+                dataset_kwargs.update(
+                    {
+                        "task_name": task_name,
+                        "hdf5_folder": os.environ.get("XPOLICY_HRDT_HDF5_FOLDER", "demo_clean/data"),
+                        "max_episodes": int(os.environ["XPOLICY_HRDT_MAX_EPISODES"])
+                        if os.environ.get("XPOLICY_HRDT_MAX_EPISODES")
+                        else None,
+                        "single_task_root_dir": os.environ.get("XPOLICY_HRDT_DATA_ROOT"),
+                    }
+                )
+            else:
+                dataset_kwargs["multi_task_root_dir"] = os.environ.get("XPOLICY_HRDT_DATA_ROOT")
+
             self.hdf5_dataset = RobotwinAgilexDataset(
-                mode="single_task",
-                task_name=task_name,
-                hdf5_folder=os.environ.get("XPOLICY_HRDT_HDF5_FOLDER", "demo_clean/data"),
-                max_episodes=int(os.environ["XPOLICY_HRDT_MAX_EPISODES"])
-                if os.environ.get("XPOLICY_HRDT_MAX_EPISODES")
-                else None,
-                config=config,
-                single_task_root_dir=os.environ.get("XPOLICY_HRDT_DATA_ROOT"),
-                stat_path=os.environ.get("XPOLICY_HRDT_STAT_PATH"),
+                **dataset_kwargs,
             )
         else:
             raise ValueError(f"Unknown dataset_name: {self.dataset_name}")

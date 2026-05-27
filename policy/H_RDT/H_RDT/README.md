@@ -40,8 +40,8 @@ Before training, preprocess the EgoDx dataset:
    nano datasets/pretrain/setup_pretrain.sh
    
    # Set your EgoDx dataset and T5 model paths:
-   export EGODEX_DATA_ROOT="/path/to/your/egodx/dataset"
-   export T5_MODEL_PATH="/path/to/your/t5-v1_1-xxl"
+   export EGODEX_DATA_ROOT="./data/egodx"
+   export T5_MODEL_PATH="./weights/t5-v1_1-xxl"
    ```
 
 2. **Setup environment:**

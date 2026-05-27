@@ -232,8 +232,8 @@ class RobotwinAgilexDataset:
         start_i = max(idx - self.img_history_size * self.upsample_rate + 1, 0)
         num_frames = (idx - start_i) // self.upsample_rate + 1
 
-        # Use standard resolution for individual camera images
-        frames = np.zeros((num_frames, 240, 320, 3), dtype=np.uint8)  # Standard size: 320x240
+        # Use XPolicyLab's standard camera resolution: 640x480.
+        frames = np.zeros((num_frames, 480, 640, 3), dtype=np.uint8)
         
         try:
             for i, frame_idx in enumerate(range(start_i, idx + 1, self.upsample_rate)):
@@ -264,7 +264,7 @@ class RobotwinAgilexDataset:
             img_data (bytes): Binary image data
         
         Returns:
-            np.ndarray: Decoded image array, shape=(240, 320, 3), RGB format
+            np.ndarray: Decoded image array, shape=(480, 640, 3), RGB format
         """
         try:
             # Decode using OpenCV
@@ -278,9 +278,9 @@ class RobotwinAgilexDataset:
             # OpenCV uses BGR format by default, convert to RGB
             rgb_img = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
             
-            # Resize to expected standard size if needed (320x240)
-            if rgb_img.shape[:2] != (240, 320):
-                rgb_img = cv2.resize(rgb_img, (320, 240))
+            # Resize to expected standard size if needed (640x480).
+            if rgb_img.shape[:2] != (480, 640):
+                rgb_img = cv2.resize(rgb_img, (640, 480))
                 
             return rgb_img
             
@@ -300,8 +300,8 @@ class RobotwinAgilexDataset:
         """
         try:
             # Extract task name from HDF5 file path
-            # Example: HDF5 file: /path/to/dataset/adjust_bottle/demo_clean/data/episode0.hdf5
-            # Embedding file: /path/to/H_RDT/datasets/robotwin2/lang_embeddings/adjust_bottle.pt
+            # Example: HDF5 file: ./data/adjust_bottle/demo_clean/data/episode0.hdf5
+            # Embedding file: ./datasets/robotwin2/lang_embeddings/adjust_bottle.pt
             # -> task_name = "adjust_bottle"
             
             task_name = None
