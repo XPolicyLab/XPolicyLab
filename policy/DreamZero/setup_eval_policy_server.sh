@@ -29,6 +29,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
 exec env \
+    PYTHONUNBUFFERED=1 \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \

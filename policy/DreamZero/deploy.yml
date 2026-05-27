@@ -20,5 +20,5 @@ action_horizon: 24
 video_history: 4
 ctrl_freq: 30
 prompt: null
-inference_method: forward # forward, lazy_joint_forward, lazy_joint_forward_causal
+inference_method: lazy_joint_forward_causal # forward, lazy_joint_forward, lazy_joint_forward_causal
 skip_img_transform: false

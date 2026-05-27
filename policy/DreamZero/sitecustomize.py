@@ -1,0 +1,52 @@
+"""DreamZero evaluation client runtime patches.
+
+XPolicyLab's ModelClient defaults to a 30s socket timeout. DreamZero's first
+closed-loop inference can exceed that while Wan modules warm up/compile, so the
+client must wait longer without changing shared XPolicyLab code.
+"""
+
+from __future__ import annotations
+
+import builtins
+import os
+
+
+_TIMEOUT = float(os.environ.get("DREAMZERO_MODEL_CLIENT_TIMEOUT", "1800"))
+_ORIGINAL_IMPORT = builtins.__import__
+_PATCHED = False
+
+
+def _patch_model_client(module) -> None:
+    global _PATCHED
+    if _PATCHED:
+        return
+
+    model_client_cls = getattr(module, "ModelClient", None)
+    if model_client_cls is None or getattr(model_client_cls, "_dreamzero_timeout_patch", False):
+        return
+
+    original_init = model_client_cls.__init__
+
+    def patched_init(self, host="localhost", port=9999, timeout=30):
+        if timeout == 30:
+            timeout = _TIMEOUT
+        original_init(self, host=host, port=port, timeout=timeout)
+
+    model_client_cls.__init__ = patched_init
+    model_client_cls._dreamzero_timeout_patch = True
+    _PATCHED = True
+
+
+def _dreamzero_import(name, globals=None, locals=None, fromlist=(), level=0):
+    module = _ORIGINAL_IMPORT(name, globals, locals, fromlist, level)
+    if name == "client_server.model_client":
+        _patch_model_client(module)
+    elif name == "client_server" and fromlist and "model_client" in fromlist:
+        model_client_module = getattr(module, "model_client", None)
+        if model_client_module is not None:
+            _patch_model_client(model_client_module)
+    return module
+
+
+builtins.__import__ = _dreamzero_import
+

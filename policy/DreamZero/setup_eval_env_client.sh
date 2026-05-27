@@ -22,6 +22,8 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
+PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH:-}" \
+DREAMZERO_MODEL_CLIENT_TIMEOUT="${DREAMZERO_MODEL_CLIENT_TIMEOUT:-1800}" \
 bash "${UTILS_DIR}/setup_env_client.sh" \
     "${UTILS_DIR}" \
     "${yaml_file}" \

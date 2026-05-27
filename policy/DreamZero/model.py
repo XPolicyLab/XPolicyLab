@@ -35,6 +35,24 @@ AGIBOT_STATE_DIM = 20
 AGIBOT_ACTION_DIM = 22
 
 
+def _configure_torch_dynamo_for_eval() -> None:
+    """Match DreamZero's original serving defaults for autoregressive inference."""
+    try:
+        dynamo_cfg = torch._dynamo.config
+    except Exception:
+        return
+
+    settings = {
+        "cache_size_limit": int(os.environ.get("DREAMZERO_DYNAMO_CACHE_SIZE_LIMIT", "1000")),
+        "recompile_limit": int(os.environ.get("DREAMZERO_DYNAMO_RECOMPILE_LIMIT", "800")),
+        "accumulated_cache_size_limit": int(os.environ.get("DREAMZERO_DYNAMO_ACCUMULATED_CACHE_SIZE_LIMIT", "1000")),
+        "accumulated_recompile_limit": int(os.environ.get("DREAMZERO_DYNAMO_ACCUMULATED_RECOMPILE_LIMIT", "2000")),
+    }
+    for key, value in settings.items():
+        if hasattr(dynamo_cfg, key):
+            setattr(dynamo_cfg, key, value)
+
+
 def _as_bool(value: Any, default: bool = False) -> bool:
     if value is None:
         return default
@@ -70,9 +88,16 @@ def _extract_action_value(action: dict[str, Any], key: str, dim: int) -> np.ndar
 
 def _ensure_dist_initialized() -> None:
     if dist.is_available() and not dist.is_initialized():
-        os.environ.setdefault("MASTER_ADDR", "localhost")
-        os.environ.setdefault("MASTER_PORT", "29500")
-        dist.init_process_group(backend="gloo", world_size=1, rank=0)
+        rendezvous_file = Path(os.environ.get("DREAMZERO_DIST_INIT_FILE", f"/tmp/dreamzero_dist_{os.getpid()}"))
+        rendezvous_file.parent.mkdir(parents=True, exist_ok=True)
+        if rendezvous_file.exists():
+            rendezvous_file.unlink()
+        dist.init_process_group(
+            backend="gloo",
+            init_method=f"file://{rendezvous_file}",
+            world_size=1,
+            rank=0,
+        )
 
 
 def _latest_checkpoint(run_dir: Path) -> Path | None:
@@ -134,11 +159,12 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
         self.action_horizon = int(model_cfg.get("action_horizon", 24))
         self.video_history = int(model_cfg.get("video_history", 4))
-        self.inference_method = model_cfg.get("inference_method", "forward")
+        self.inference_method = model_cfg.get("inference_method", "lazy_joint_forward_causal")
         self.skip_img_transform = _as_bool(model_cfg.get("skip_img_transform"), False)
         self.tokenizer_path = _resolve_tokenizer_path(model_cfg)
 
         self.model_path = _resolve_model_path(model_cfg)
+        _configure_torch_dynamo_for_eval()
         _ensure_dist_initialized()
         print(f"[DreamZero Model] Loading model from: {self.model_path}")
         self.policy = GrootSimPolicy(

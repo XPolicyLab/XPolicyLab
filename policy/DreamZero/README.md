@@ -79,7 +79,7 @@ bash train.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 5 joint 42 0,1,2,3
+bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 5 joint 42 2,3,4,5
 ```
 
 训练产物输出到 6 元组目录：
@@ -91,10 +91,10 @@ policy/DreamZero/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expe
 常用可覆盖变量：
 
 ```bash
-export DREAMZERO_MAX_STEPS=5000
-export DREAMZERO_SAVE_STEPS=2500
+export DREAMZERO_MAX_STEPS=50000
+export DREAMZERO_SAVE_STEPS=20
 export DREAMZERO_NUM_GPUS=4
-export DREAMZERO_PER_DEVICE_BATCH_SIZE=1
+export DREAMZERO_PER_DEVICE_BATCH_SIZE=2
 export DREAMZERO_REPORT_TO=tensorboard
 export WANDB_PROJECT=dreamzero
 export WAN_CKPT_DIR=/mnt/pfs/pg4hw0/qiwei/models/checkpoints/checkpoints/Wan2.1-I2V-14B-480P
@@ -121,10 +121,12 @@ bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 42 0 0 dreamzero X
 
 ```bash
 bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 42 0 0 dreamzero XPolicyLab \
-  /mnt/pfs/pg4hw0/qiwei/models/checkpoints/DreamZero-AgiBot
+  /mnt/pfs/pg4hw0/qiwei/demo_env/XPolicyLab/policy/DreamZero/checkpoints/RoboDojo-stack_bowls-arx_x5-5-joint-42/checkpoint-60
 ```
 
 `deploy.yml` 中 `eval_env` 控制评测环境，支持 `debug`、`sim`、`real`，切换环境时不需要修改 `eval.sh`。
+DreamZero 首次推理会触发 Wan 模块 warmup/compile，耗时可能超过 XPolicyLab 默认 30 秒 client timeout；适配层默认将 client timeout 扩展到 1800 秒，可用 `DREAMZERO_MODEL_CLIENT_TIMEOUT` 覆盖。
+原项目推理服务会放宽 `torch._dynamo` 的 recompile/cache limit；XPolicyLab 适配层已同步该设置，默认 `DREAMZERO_DYNAMO_RECOMPILE_LIMIT=800`，用于避免 Wan 自回归推理中的 shape 变化触发默认 8 次重编译上限。
 
 ## 推理配置
 
@@ -136,10 +138,10 @@ pretrained_model_path: /mnt/pfs/pg4hw0/qiwei/models/checkpoints/DreamZero-AgiBot
 tokenizer_path: null
 action_horizon: 24
 video_history: 4
-inference_method: forward
+inference_method: lazy_joint_forward_causal
 ```
 
-`model_path` 优先级最高；可传具体 checkpoint 目录，也可传包含 `checkpoint-*` 的训练输出目录。为空时会先按 6 元组 checkpoint 查找训练产物，再回退到 `pretrained_model_path`。`tokenizer_path` 为空时会优先使用环境变量 `TOKENIZER_DIR`，其次尝试 `dreamzero/checkpoints/umt5-xxl`，用于覆盖预训练配置里的 tokenizer 路径。`inference_method` 可选 `forward`、`lazy_joint_forward`、`lazy_joint_forward_causal`，默认使用最通用的 `forward`。
+`model_path` 优先级最高；可传具体 checkpoint 目录，也可传包含 `checkpoint-*` 的训练输出目录。为空时会先按 6 元组 checkpoint 查找训练产物，再回退到 `pretrained_model_path`。`tokenizer_path` 为空时会优先使用环境变量 `TOKENIZER_DIR`，其次尝试 `dreamzero/checkpoints/umt5-xxl`，用于覆盖预训练配置里的 tokenizer 路径。`inference_method` 可选 `forward`、`lazy_joint_forward`、`lazy_joint_forward_causal`，默认使用原项目闭环评测路径 `lazy_joint_forward_causal`。
 
 ## 快速流程
 
