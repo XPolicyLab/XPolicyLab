@@ -8,9 +8,11 @@ import argparse
 import json
 import math
 import os
+import random
 import types
 from dataclasses import dataclass, fields
 
+import numpy as np
 import torch
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import LambdaLR
@@ -87,12 +89,28 @@ def parse_args():
     parser.add_argument("--prefetch_factor", type=int, default=8)
     parser.add_argument("--norm_num_samples", type=int, default=20000)
     parser.add_argument("--norm_batch_size", type=int, default=32)
+    parser.add_argument("--seed", type=int, default=0)
     return parser.parse_args()
+
+
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def _seed_worker(worker_id: int) -> None:
+    worker_seed = torch.initial_seed() % (2**32)
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
 
 
 def main():
     args = parse_args()
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    set_seed(args.seed)
 
     local_rank, global_rank, world_size, mesh = setup_distributed()
     device = torch.device("cuda", local_rank)
@@ -103,6 +121,7 @@ def main():
     )
     logger = Logger(logger_config, global_rank)
     logger.print(f"pretrained_path: {args.pretrained_path}")
+    logger.print(f"seed: {args.seed}")
 
     config_path = os.path.join(args.pretrained_path, "config.json")
     if os.path.exists(config_path):
@@ -128,7 +147,11 @@ def main():
         num_workers=args.num_workers,
     )
 
-    sampler = DistributedSampler(dataset, shuffle=True) if world_size > 1 else None
+    sampler = (
+        DistributedSampler(dataset, shuffle=True, seed=args.seed)
+        if world_size > 1
+        else None
+    )
     dataloader_kwargs = {
         "batch_size": args.batch_size,
         "sampler": sampler,
@@ -139,6 +162,11 @@ def main():
     }
     if args.num_workers > 0:
         dataloader_kwargs["prefetch_factor"] = args.prefetch_factor
+        dataloader_kwargs["worker_init_fn"] = _seed_worker
+
+    dataloader_generator = torch.Generator()
+    dataloader_generator.manual_seed(args.seed)
+    dataloader_kwargs["generator"] = dataloader_generator
 
     dataloader = DataLoader(
         dataset,

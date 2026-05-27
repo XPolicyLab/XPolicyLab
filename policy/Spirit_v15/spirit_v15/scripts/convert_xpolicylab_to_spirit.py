@@ -60,7 +60,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--data-type",
         type=str,
-        default="RoboDojo",
+        default="xspark",
         help="Dataset type passed into XPolicyLab.utils.data_loader.load.",
     )
     parser.add_argument(
@@ -215,10 +215,11 @@ def _ensure_utf8_strings(value) -> List[str]:
 
 
 def _choose_instruction(data: dict, fallback: str) -> str:
-    candidates = _ensure_utf8_strings(_get_nested(data, "instructions"))
-    candidates = [item for item in candidates if item]
-    if candidates:
-        return random.choice(candidates)
+    for key in ("instructions", "instruction"):
+        candidates = _ensure_utf8_strings(_get_nested(data, key))
+        candidates = [item for item in candidates if item]
+        if candidates:
+            return random.choice(candidates)
     return fallback
 
 

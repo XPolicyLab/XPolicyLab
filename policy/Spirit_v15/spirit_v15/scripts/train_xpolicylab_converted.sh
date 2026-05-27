@@ -17,8 +17,10 @@ SAVE_STEPS="${8:-2500}"
 NUM_WORKERS="${9:-4}"
 PREFETCH_FACTOR="${10:-8}"
 WANDB_MODE="${11:-disabled}"
+SEED="${12:-0}"
 
 export CUDA_VISIBLE_DEVICES="${GPU_ID}"
+export PYTHONHASHSEED="${SEED}"
 
 GPU_IDS="${GPU_ID// /}"
 if [[ -z "${GPU_IDS}" ]]; then
@@ -75,6 +77,7 @@ echo "[INFO] pretrained_path=${PRETRAINED_PATH}"
 echo "[INFO] output_dir=${OUTPUT_DIR}"
 echo "[INFO] gpu_ids=${GPU_IDS}"
 echo "[INFO] num_gpus=${NUM_GPUS}"
+echo "[INFO] seed=${SEED}"
 
 export CUDA_VISIBLE_DEVICES="${GPU_IDS}"
 
@@ -89,4 +92,5 @@ exec "${TORCHRUN_BIN}" --nproc_per_node="${NUM_GPUS}" \
   --save_steps "${SAVE_STEPS}" \
   --num_workers "${NUM_WORKERS}" \
   --prefetch_factor "${PREFETCH_FACTOR}" \
-  --wandb_mode "${WANDB_MODE}"
+  --wandb_mode "${WANDB_MODE}" \
+  --seed "${SEED}"
