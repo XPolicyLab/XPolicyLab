@@ -1,0 +1,24 @@
+policy_name: starVLA
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: joint
+gpu_id: null
+seed: null
+eval_batch: false
+eval_env: debug # debug, sim, real
+
+# XPolicyLab model server
+host: localhost
+port: 6000
+
+# Upstream StarVLA runtime
+starvla_root: source_starvla
+checkpoint_path: null
+starvla_server_host: 127.0.0.1
+starvla_server_port: 5694
+unnorm_key: new_embodiment
+use_ddim: true
+num_ddim_steps: 10
+image_size: [224, 224]
+input_color_order: bgr

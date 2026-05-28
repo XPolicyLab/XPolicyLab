@@ -1,0 +1,4 @@
+[submodule "policy/starVLA/source_starvla"]
+	path = policy/starVLA/source_starvla
+	url = https://github.com/starVLA/starVLA.git
+	branch = starVLA_dev
