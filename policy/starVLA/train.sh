@@ -13,6 +13,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 STARVLA_ROOT="${SCRIPT_DIR}/source_starvla"
+STARVLA_ADAPTER="${SCRIPT_DIR}/starvla_adapter"
 
 processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 data_root_dir="${SCRIPT_DIR}/data/${processed_name}"
@@ -30,6 +31,8 @@ echo "[starVLA] run_id=${run_id}"
 echo "[starVLA] action_dim=${action_dim}"
 
 cd "${STARVLA_ROOT}"
+STARVLA_EXTRA_DATA_REGISTRY="${STARVLA_ADAPTER}/data_registry" \
+PYTHONPATH="${STARVLA_ADAPTER}:${STARVLA_ROOT}:${PYTHONPATH:-}" \
 CUDA_VISIBLE_DEVICES="${gpu_id}" accelerate launch \
     --num_processes 1 \
     starVLA/training/train_starvla.py \

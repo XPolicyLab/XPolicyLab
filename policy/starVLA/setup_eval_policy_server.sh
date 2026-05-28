@@ -18,6 +18,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 STARVLA_ROOT="${SCRIPT_DIR}/source_starvla"
+STARVLA_ADAPTER="${SCRIPT_DIR}/starvla_adapter"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
@@ -57,7 +58,8 @@ conda activate "${policy_conda_env}"
 
 (
     cd "${STARVLA_ROOT}"
-    PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
+    STARVLA_EXTRA_DATA_REGISTRY="${STARVLA_ADAPTER}/data_registry" \
+    PYTHONPATH="${STARVLA_ADAPTER}:${STARVLA_ROOT}:${PYTHONPATH:-}" \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${STARVLA_ROOT}/deployment/model_server/server_policy.py" \
         --ckpt_path "${checkpoint_path}" \
@@ -68,7 +70,8 @@ STARVLA_SERVER_PID=$!
 
 sleep 6
 
-PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
+STARVLA_EXTRA_DATA_REGISTRY="${STARVLA_ADAPTER}/data_registry" \
+PYTHONPATH="${STARVLA_ADAPTER}:${STARVLA_ROOT}:${PYTHONPATH:-}" \
 PYTHONWARNINGS=ignore::UserWarning \
 CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
 python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
