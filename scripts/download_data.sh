@@ -9,10 +9,13 @@ REPO_ID="${HF_REPO_ID:-DaMiTian/RoboDojo_demo_data}"
 REMOTE_SUBDIR="${HF_REMOTE_SUBDIR:-archives/robodojo_tmp}"
 HF_REVISION="${HF_REVISION:-main}"
 
-TARGET_DATA_DIR="${PROJECT_ROOT}/data"
+DATA_ROOT="${PROJECT_ROOT}/data"
+DATASET_NAME="${ROBODOJO_DEMO_DATASET:-RoboDojo_demo}"
+TARGET_DATA_DIR="${DATA_ROOT}/${DATASET_NAME}"
 TARGET_ENV_CFG_DIR="${PROJECT_ROOT}/env_cfg"
 
-echo "==> TEST root: ${PROJECT_ROOT}"
+echo "==> Project root: ${PROJECT_ROOT}"
+echo "==> Demo data dir: data/${DATASET_NAME}"
 echo "==> Repo: ${REPO_ID}"
 echo "==> Remote subdir: ${REMOTE_SUBDIR}"
 
@@ -132,9 +135,21 @@ if [[ ! -d "${extract_root}/tmp/data" || ! -d "${extract_root}/tmp/env_cfg" ]]; 
 	exit 1
 fi
 
-echo "==> Restoring into ${PROJECT_ROOT}"
-rm -rf "${TARGET_DATA_DIR}" "${TARGET_ENV_CFG_DIR}"
-mv "${extract_root}/tmp/data" "${TARGET_DATA_DIR}"
+echo "==> Restoring demo data -> data/${DATASET_NAME} (not data/RoboDojo)"
+src_data="${extract_root}/tmp/data"
+mkdir -p "${DATA_ROOT}"
+rm -rf "${TARGET_DATA_DIR}"
+
+# 压缩包内常为 tmp/data/RoboDojo/...，统一安装到 data/RoboDojo_demo/，避免与完整 RoboDojo 数据集冲突
+if [[ -d "${src_data}/${DATASET_NAME}" ]]; then
+	mv "${src_data}/${DATASET_NAME}" "${TARGET_DATA_DIR}"
+elif [[ -d "${src_data}/RoboDojo" ]]; then
+	mv "${src_data}/RoboDojo" "${TARGET_DATA_DIR}"
+else
+	mv "${src_data}" "${TARGET_DATA_DIR}"
+fi
+
+rm -rf "${TARGET_ENV_CFG_DIR}"
 mv "${extract_root}/tmp/env_cfg" "${TARGET_ENV_CFG_DIR}"
 
 echo "==> Done"
