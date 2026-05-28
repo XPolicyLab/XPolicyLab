@@ -6,6 +6,7 @@ from pathlib import Path
 
 STAT_KEYS = ("mean", "std", "q01", "q99", "q02", "q98")
 SOURCE_KEYS = ("action", "observation.state")
+DEFAULT_DIMS = (6, 1, 6, 1)
 
 
 def parse_args() -> argparse.Namespace:
@@ -19,15 +20,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("output_path", help="Path to write the converted JSON file.")
     parser.add_argument(
         "dims",
-        nargs=4,
+        nargs="*",
         type=int,
         metavar="DIM",
         help=(
-            "Dimension layout of the original vector. Example: "
+            "Dimension layout of the original vector. Default: "
             "`6 1 6 1` means [joint(6), gripper(1), joint(6), gripper(1)]."
         ),
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if not args.dims:
+        args.dims = list(DEFAULT_DIMS)
+    elif len(args.dims) != 4:
+        parser.error(
+            f"expected 0 or 4 dimension values, got {len(args.dims)}: {args.dims}"
+        )
+    return args
 
 
 def validate_dims(dims: list[int]) -> None:

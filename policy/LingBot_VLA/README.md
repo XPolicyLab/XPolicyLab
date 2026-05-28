@@ -4,18 +4,15 @@ LingBot_VLA 使用 LeRobot 与 yaml 配置训练。安装见 [INSTALLATION.md](I
 
 ## Norm 统计
 
+默认 norm 配置：`lingbot_vla/configs/norm/robodojo_sim_arx_x5.yaml`（可按本机修改 `train_path` 等路径）。
+
 ```bash
 cd lingbot_vla
-bash compute_norm_stat.sh /path/to/norm_config.yml
-python scripts/conver_norm_stat.py <customized_json> <output_json> <left_arm_dim> <left_ee_dim> <right_arm_dim> <right_ee_dim>
-```
+export DATASET_NAME="RoboDojo_sample"
 
-配置示例（路径请按本机填写）：
+bash compute_norm_stat.sh configs/norm/${DATASET_NAME}_customized.yaml
 
-```yaml
-data:
-  train_path: <lerobot_dataset_dir>
-  norm_path: assets/norm_stats/example_customized.json
+python scripts/conver_norm_stat.py assets/norm_stats/${DATASET_NAME}_customized.json assets/norm_stats/${DATASET_NAME}.json
 ```
 
 ## 训练
