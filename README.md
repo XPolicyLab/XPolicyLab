@@ -13,8 +13,10 @@ mkdir demo_env
 cd demo_env
 git clone git@github.com:Luminis-Platform/XPolicyLab.git
 
-# 拉取演示数据及环境配置，数据集格式为`data/${dataset_name}/${task_name}/${env_cfg}`
-bbash scripts/download_data.sh
+# 拉取Demo演示数据及环境配置，数据集格式为`data/${dataset_name}/${task_name}/${env_cfg}`
+bash scripts/download_data.sh
+# 拉取RoboDojo数据
+bash scripts/download_robodojo_data.sh
 ```
 将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
 ```text
