@@ -1,0 +1,70 @@
+# Build:
+#   docker build -f dockerfiles/Dockerfile.RLinf -t dexbotic-rlinf:latest .
+# Run:
+#   docker run --gpus all --rm dexbotic-rlinf:latest \
+#     python -m dexbotic.rl.model_rl_libero_pi0 --suite=libero_goal
+
+FROM nvcr.io/nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
+
+RUN sed -i -e "s/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g" \
+           -e "s/security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g" \
+           /etc/apt/sources.list && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && apt-get update -y && \
+    apt-get install -y --fix-missing \
+        build-essential git curl wget vim tmux \
+        openssh-server \
+        libgl1-mesa-glx libegl-dev \
+        libegl1-mesa libegl1-mesa-dev libegl1 && \
+    rm -rf /var/lib/apt/lists/* && apt-get clean
+
+# EGL vendor config for NVIDIA headless rendering
+RUN mkdir -p /usr/share/glvnd/egl_vendor.d && \
+    printf '%s\n' \
+    '{' \
+    '    "file_format_version" : "1.0.0",' \
+    '    "ICD" : {' \
+    '        "library_path" : "/usr/lib/x86_64-linux-gnu/libEGL_nvidia.so.0"' \
+    '    }' \
+    '}' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install uv
+
+COPY . /opt/dexbotic
+# DEXBOTIC_PATH tells install.sh to reuse this directory instead of cloning from GitHub
+ENV DEXBOTIC_PATH=/opt/dexbotic
+
+# TODO: pin to a specific commit, e.g.: RUN cd /opt/rlinf && git checkout <commit-hash>
+RUN git clone https://github.com/RLinf/RLinf.git /opt/rlinf
+
+WORKDIR /opt/rlinf
+# --use-mirror: aliyun PyPI + ghfast.top GitHub proxy; remove if outside China
+RUN bash requirements/install.sh embodied \
+        --model dexbotic \
+        --env maniskill_libero \
+        --install-rlinf \
+        --venv /opt/rlinf/.venv \
+        --use-mirror
+
+# install.sh's install_dexbotic_model skips flash-attn; install explicitly
+RUN /opt/rlinf/.venv/bin/uv pip install ninja packaging && \
+    MAX_JOBS=32 /opt/rlinf/.venv/bin/uv pip install flash-attn --no-build-isolation
+
+ENV PATH=/opt/rlinf/.venv/bin:$PATH
+ENV VIRTUAL_ENV=/opt/rlinf/.venv
+
+# install.sh writes LIBERO's path to the venv activate script; set it explicitly here
+ENV PYTHONPATH=/opt/rlinf/.venv/libero
+
+ENV RLINF_EXT_MODULE=dexbotic.rl.rlinf_registry
+
+ENV NVIDIA_DRIVER_CAPABILITIES=all
+ENV VK_DRIVER_FILES=/etc/vulkan/icd.d/nvidia_icd.json
+ENV VK_ICD_FILENAMES=/etc/vulkan/icd.d/nvidia_icd.json
+
+WORKDIR /opt/dexbotic
+CMD ["bash"]
