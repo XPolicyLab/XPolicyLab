@@ -15,13 +15,13 @@ policy/GR00T_N17/gr00t_n17
 RoboDojo arx-x5 数据路径：
 
 ```text
-/vepfs-cnbje63de6fae220/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30
+${LEROBOT_DATA_ROOT}/RoboDojo_sim_arx-x5_v30
 ```
 
 该数据是 LeRobot v3.0。GR00T N1.7 当前训练入口要求 GR00T-flavored LeRobot v2.1，并需要额外的 `meta/modality.json`。请先按 `INSTALLATION.md` 转换并补充 metadata。推荐转换后的训练路径为：
 
 ```text
-/vepfs-cnbje63de6fae220/xspark_shared/lerobot/RoboDojo_sim_arx-x5_gr00t
+${LEROBOT_DATA_ROOT}/RoboDojo_sim_arx-x5_gr00t
 ```
 
 ## 项目结构
@@ -43,7 +43,7 @@ GR00T_N17
 ## 数据处理
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17
+# 在 policy/GR00T_N17 目录下
 bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 ```
 
@@ -56,7 +56,7 @@ bash process_data.sh RoboDojo cotrain arx_x5 3500 joint
 默认会从 `RoboDojo_sim_arx-x5_v30` 复制并转换为 GR00T 可用的 LeRobot v2.1，输出到：
 
 ```text
-/vepfs-cnbje63de6fae220/xspark_shared/lerobot/RoboDojo-cotrain-arx_x5-3500-joint
+${LEROBOT_DATA_ROOT}/RoboDojo-cotrain-arx_x5-3500-joint
 ```
 
 可通过环境变量覆盖源数据路径：
@@ -79,8 +79,8 @@ bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
 
 训练前请确保本地已有：
 
-- `GR00T-N1.7-3B`：`/vepfs-cnbje63de6fae220/xspark_shared/model_weights/GR00T-N1.7-3B`
-- `Cosmos-Reason2-2B`：`/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Cosmos-Reason2-2B`
+- `GR00T-N1.7-3B`：`GR00T_BASE_MODEL`（默认 HF id `nvidia/GR00T-N1.7-3B`）
+- `Cosmos-Reason2-2B`：`GR00T_COSMOS_MODEL`（默认 HF id `nvidia/Cosmos-Reason2-2B`）
 
 `train.sh` 会自动把 Cosmos 注册到 HF cache，并默认 `HF_HUB_OFFLINE=1` 走本地模型。
 
@@ -95,14 +95,14 @@ policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
 进入 GR00T 源码目录：
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17/gr00t_n17
+# 在 policy/GR00T_N17 目录下/gr00t_n17
 ```
 
 设置常用路径：
 
 ```bash
-export POLICY_ROOT=/vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17
-export DATASET_PATH=/vepfs-cnbje63de6fae220/xspark_shared/lerobot/RoboDojo_sim_arx-x5_gr00t
+export POLICY_ROOT="$(pwd)"
+export DATASET_PATH=${LEROBOT_DATA_ROOT}/RoboDojo_sim_arx-x5_gr00t
 export CKPT_NAME=RoboDojo-cotrain-arx_x5-3500-joint-0
 export OUTPUT_DIR="${POLICY_ROOT}/checkpoints/${CKPT_NAME}"
 mkdir -p "${OUTPUT_DIR}"
@@ -224,7 +224,7 @@ policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
 训练完成后，可先用 GR00T 官方开环评测检查预测动作是否正常：
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17/gr00t_n17
+# 在 policy/GR00T_N17 目录下/gr00t_n17
 source .venv/bin/activate
 
 uv run python gr00t/eval/open_loop_eval.py \
@@ -244,7 +244,7 @@ uv run python gr00t/eval/open_loop_eval.py \
 与 `Xiaomi_Robotics_0`、`Pi_05` 一致，使用 `eval.sh` 拉起 policy server + env client：
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17
+# 在 policy/GR00T_N17 目录下
 bash install.sh   # 首次：uv sync + 安装 XPolicyLab 到 gr00t .venv
 
 # debug 连通性测试（0 号卡，policy 用 gr00t uv 环境，client 用 mibot）

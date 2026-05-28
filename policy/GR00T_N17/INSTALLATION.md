@@ -1,16 +1,18 @@
 # GR00T_N17 环境配置
 
-本文档记录在 XPolicyLab 中使用 NVIDIA Isaac GR00T N1.7 的推荐安装方式。GR00T N1.7 默认使用 `uv` 管理环境，训练建议使用 Python 3.10 与 CUDA 12.8 的 dGPU 机器。
+NVIDIA Isaac GR00T N1.7 在 XPolicyLab 中的接入。上游源码位于 [gr00t_n17/](gr00t_n17/)，使用 `uv`（Python 3.10，建议 CUDA 12.8 dGPU）。
 
-## 1. 进入项目目录
+## 一键安装
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17/gr00t_n17
+bash install.sh
 ```
 
-## 2. 安装系统依赖
+## 手动安装
 
-`ffmpeg` 是 GR00T 读取视频数据的必要依赖；如果需要从 HuggingFace 下载模型或数据，也建议安装 `git-lfs`。
+### 1. 系统依赖
+
+`ffmpeg` 用于读取视频；从 HuggingFace 拉模型时建议安装 `git-lfs`：
 
 ```bash
 sudo apt-get update
@@ -18,72 +20,64 @@ sudo apt-get install -y ffmpeg git-lfs
 git lfs install
 ```
 
-## 3. 安装 uv
+### 2. 安装 uv
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"  # 若当前 shell 找不到 uv
 ```
 
-如果当前 shell 找不到 `uv`，重新打开终端，或执行：
+### 3. 创建 GR00T 环境
 
 ```bash
-source "$HOME/.local/bin/env"
-```
-
-## 4. 创建并安装 GR00T 环境
-
-```bash
+cd gr00t_n17
 uv sync --python 3.10
 uv run python -c "import gr00t; print('GR00T installed successfully')"
 ```
 
-如果训练时提示 `CUDA_HOME is unset`，先执行一次：
+若提示 `CUDA_HOME is unset`：
 
 ```bash
 uv run bash scripts/deployment/dgpu/install_deps.sh
 ```
 
-## 5. 安装 XPolicyLab
+### 4. 安装 XPolicyLab
 
-XPolicyLab 的 policy 需要同时能导入 GR00T 与 XPolicyLab 本体。保持在 `gr00t_n17` 目录下执行：
+在 `gr00t_n17` 目录下：
 
 ```bash
-uv pip install -e /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab
+uv pip install -e ../../..
 uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
 ```
 
-## 6. 准备 RoboDojo 数据
+## 准备 RoboDojo 数据
 
-当前数据路径为：
-
-```text
-/vepfs-cnbje63de6fae220/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30
-```
-
-该数据集的 `meta/info.json` 显示 `codebase_version` 为 `v3.0`，而 GR00T N1.7 当前训练入口要求 GR00T-flavored LeRobot v2.1，并额外需要 `meta/modality.json`。建议先复制一份数据再转换，避免改动原始共享数据：
+源数据集需为 LeRobot v3.0；GR00T 训练入口需要 GR00T-flavored LeRobot v2.1 及 `meta/modality.json`。
 
 ```bash
-export DATA_ROOT=/vepfs-cnbje63de6fae220/xspark_shared/lerobot
-export SRC_DATASET=RoboDojo_sim_arx-x5_v30
-export GR00T_DATASET=RoboDojo_sim_arx-x5_gr00t
+export LEROBOT_DATA_ROOT="${LEROBOT_DATA_ROOT:-$HF_LEROBOT_HOME}"
+export DATA_ROOT="${LEROBOT_DATA_ROOT}"
+export SRC_DATASET="${GR00T_SRC_DATASET:-RoboDojo_sim_arx-x5_v30}"
+export GR00T_DATASET="${GR00T_DATASET:-RoboDojo_sim_arx-x5_gr00t}"
 
 cp -a "${DATA_ROOT}/${SRC_DATASET}" "${DATA_ROOT}/${GR00T_DATASET}"
 
+cd gr00t_n17
 uv run --project scripts/lerobot_conversion \
   python scripts/lerobot_conversion/convert_v3_to_v2.py \
   --root "${DATA_ROOT}" \
   --repo-id "${GR00T_DATASET}"
 ```
 
-转换完成后，训练数据路径为：
+或使用 policy 封装脚本：
 
-```text
-/vepfs-cnbje63de6fae220/xspark_shared/lerobot/RoboDojo_sim_arx-x5_gr00t
+```bash
+bash process_data.sh RoboDojo cotrain arx_x5 3500 joint
 ```
 
-## 7. 补充 meta/modality.json
+### 补充 meta/modality.json
 
-GR00T 需要 `meta/modality.json` 描述状态、动作、图像和语言字段。RoboDojo arx-x5 数据中 `observation.state` 与 `action` 都是 14 维，前三路图像为 `cam_high`、`cam_left_wrist`、`cam_right_wrist`。可在转换后的数据目录中创建：
+在转换后的数据目录创建（RoboDojo arx-x5，14 维 state/action）：
 
 ```bash
 cat > "${DATA_ROOT}/${GR00T_DATASET}/meta/modality.json" <<'EOF'
@@ -108,34 +102,37 @@ cat > "${DATA_ROOT}/${GR00T_DATASET}/meta/modality.json" <<'EOF'
 EOF
 ```
 
-如果后续改动作预测 horizon 或 modality 切分，需要在准备好 `README.md` 中的 modality config 后重新生成统计信息：
+## 模型与数据路径
+
+| 变量 | 说明 |
+|------|------|
+| `LEROBOT_DATA_ROOT` | LeRobot 数据集根目录（默认 `$HF_LEROBOT_HOME`） |
+| `GR00T_SRC_DATASET` | 源 v3.0 数据集 repo id |
+| `GR00T_DATASET` | 转换后的 GR00T 数据集 repo id |
+| `GR00T_BASE_MODEL_PATH` | GR00T-N1.7-3B 本地目录或 HF id（见 `train.sh`） |
+| `GR00T_COSMOS_MODEL_PATH` | Cosmos-Reason2-2B 本地目录或 HF id |
+
+预训练权重也可预先 `huggingface-cli download` 到 `$HF_HOME`，`train.sh` 默认 `HF_HUB_OFFLINE=1` 走本地缓存。
+
+## 安装自检
 
 ```bash
-uv run python gr00t/data/stats.py \
-  --dataset-path "${DATA_ROOT}/${GR00T_DATASET}" \
-  --embodiment-tag NEW_EMBODIMENT \
-  --modality-config-path /tmp/robodojo_arx_x5_config.py
-```
-
-## 8. 安装自检
-
-```bash
+cd gr00t_n17
 uv run python -c "import torch; print(torch.cuda.is_available())"
 uv run python gr00t/experiment/launch_finetune.py --help
 uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
 ```
 
-## 9. XPolicyLab 评测环境
+## 评测环境
 
-Policy server 使用 GR00T 的 `uv` 环境；env client 可使用任意已安装 XPolicyLab 的 conda 环境（如 `mibot`）：
+Policy server 使用 `gr00t_n17/.venv`；env client 可使用任意已安装 XPolicyLab 的 conda 环境：
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/GR00T_N17
 bash install.sh
-
-# client 侧（若使用 mibot）
-conda activate mibot
-pip install -e /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab
+# client 侧示例
+conda activate <your_eval_env>
+cd ../../..
+pip install -e .
 ```
 
-环境配置完成后，训练与评测入口见 `README.md`。
+训练与评测入口见 [README.md](README.md)。

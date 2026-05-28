@@ -1,6 +1,6 @@
 # InternVLA_A1
 
-InternVLA_A1 已接入 XPolicyLab 的本地 policy server，用于 joint action 推理与训练。
+InternVLA_A1 已接入 XPolicyLab 的本地 policy server，用于 joint action 推理与训练。安装见 [INSTALLATION.md](INSTALLATION.md)。
 
 ## 训练
 首先修改internvla_a1/launch/internvla_a1_3b_finetune.sh的`PRETRAINED_PATH`.  
