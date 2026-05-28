@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=78.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "go1"
+description = "AgiBot World Colosseo: A Large-scale Manipulation Platform for Scalable and Intelligent Embodied Systems"
+version = "1.0.0"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "accelerate",
+    "bitsandbytes",
+    "datasets==3.6.0",
+    "decord",
+    "deepspeed==0.15.4",
+    "draccus",
+    "einops",
+    "einops-exts",
+    "fastapi",
+    "huggingface_hub",
+    "imageio",
+    "json_numpy",
+    "lerobot @ git+https://github.com/huggingface/lerobot.git@2b71789e15c35418b1ccecbceb81f4a598bfd883",
+    "matplotlib",
+    "numpy<2",
+    "opencv-python",
+    "peft",
+    "pyyaml",
+    "scikit-learn",
+    "scipy",
+    "sentencepiece",
+    "tensorboard",
+    "termcolor",
+    "timm",
+    "tokenizers==0.20.3",
+    "torch==2.6.0",
+    "torchvision==0.21.0",
+    "tqdm",
+    "transformers==4.46.3",
+    "tyro",
+    "uvicorn",
+    "wandb",
+    "yacs"
+]
+
+[project.optional-dependencies]
+libero_data = [
+    "tensorflow",
+    "tensorflow-datasets"
+]
+
+[project.urls]
+Homepage = "https://agibot-world.com/"
+Repository = "https://github.com/OpenDriveLab/Agibot-World"
+Issues = "https://github.com/OpenDriveLab/AgiBot-World/issues"
+
+[tool.setuptools.packages.find]
+exclude = ["data*", "benchmark*", "docs", "dist*", "playground*", "scripts*", "shell*", "*experiments*"]
+
+[tool.wheel]
+exclude = ["data*", "benchmark*", "docs", "dist*", "playground*", "scripts*", "shell*", "*experiments*"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.isort]
+profile = "black"
+line_length = 120
+py_version = 310
+order_by_type = true
+combine_as_imports = true
