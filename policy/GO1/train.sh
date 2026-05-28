@@ -27,13 +27,24 @@ echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 
 repo_id="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 lerobot_output_dir="${SCRIPT_DIR}/data"
-lerobot_data_path="${lerobot_output_dir}/${repo_id}"
-echo -e "\033[33m[INFO] Checking if LeRobot dataset exists at: ${lerobot_data_path}\033[0m"
-if [ -d "${lerobot_data_path}" ]; then
-    echo -e "\033[33m[INFO] LeRobot dataset '${repo_id}' already exists, skipping conversion.\033[0m"
+default_lerobot_data_path="${lerobot_output_dir}/${repo_id}"
+lerobot_data_path="${LEROBOT_DATA_PATH:-${default_lerobot_data_path}}"
+cfg_path="${GO1_CFG_PATH:-go1/configs/go1_sft_xpolicylab.py}"
+
+if [ -n "${LEROBOT_DATA_PATH:-}" ]; then
+    echo -e "\033[33m[INFO] Using external LeRobot dataset path: ${lerobot_data_path}\033[0m"
+    if [ ! -d "${lerobot_data_path}" ]; then
+        echo -e "\033[31m[ERROR] External LeRobot dataset path does not exist: ${lerobot_data_path}\033[0m"
+        exit 1
+    fi
 else
-    echo -e "\033[33m[INFO] Converting HDF5 data to LeRobot format...\033[0m"
-    bash "${SCRIPT_DIR}/process_data.sh" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" 30 "${lerobot_output_dir}"
+    echo -e "\033[33m[INFO] Checking if LeRobot dataset exists at: ${lerobot_data_path}\033[0m"
+    if [ -d "${lerobot_data_path}" ]; then
+        echo -e "\033[33m[INFO] LeRobot dataset '${repo_id}' already exists, skipping conversion.\033[0m"
+    else
+        echo -e "\033[33m[INFO] Converting HDF5 data to LeRobot format...\033[0m"
+        bash "${SCRIPT_DIR}/process_data.sh" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" 30 "${lerobot_output_dir}"
+    fi
 fi
 
 RUN_BASENAME="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
@@ -43,8 +54,8 @@ export RUN_BASENAME RUNNAME
 export DATA_ROOT_DIR="${lerobot_data_path}"
 export ACTION_DIM="${action_dim}"
 export STATE_DIM="${action_dim}"
-export CTRL_FREQ=30
-export ACTION_CHUNK_SIZE=30
+export CTRL_FREQ="${CTRL_FREQ:-30}"
+export ACTION_CHUNK_SIZE="${ACTION_CHUNK_SIZE:-30}"
 export MODEL_NAME_OR_PATH="${MODEL_NAME_OR_PATH:-${DEFAULT_GO1_MODEL_PATH}}"
 export DEFAULT_PROMPT="Do your job."
 export TRAIN_SEED="${seed}"
@@ -54,6 +65,9 @@ NPROC=${#GPU_ARRAY[@]}
 export NPROC_PER_NODE="${NPROC}"
 MASTER_PORT=$(python3 -c "import socket; s=socket.socket(); s.bind(('',0)); print(s.getsockname()[1]); s.close()")
 echo -e "\033[33m[INFO] Starting GO1 training with RUNNAME=${RUNNAME}, NPROC=${NPROC}, MASTER_PORT=${MASTER_PORT}\033[0m"
+echo -e "\033[33m[INFO] Training config path: ${cfg_path}\033[0m"
+echo -e "\033[33m[INFO] DATA_ROOT_DIR: ${DATA_ROOT_DIR}\033[0m"
+echo -e "\033[33m[INFO] CTRL_FREQ: ${CTRL_FREQ}, ACTION_CHUNK_SIZE: ${ACTION_CHUNK_SIZE}\033[0m"
 
 export PYTHONPATH="${AGIBOT_DIR}:${PYTHONPATH}"
 export WANDB_PROJECT="${WANDB_PROJECT:-go1}"
@@ -83,7 +97,7 @@ torchrun \
     --nproc-per-node="${NPROC}" \
     --master-port="${MASTER_PORT}" \
     go1/internvl/train/go1_train.py \
-    --cfg_path go1/configs/go1_sft_xpolicylab.py \
+    --cfg_path "${cfg_path}" \
     2>&1 | tee -a "${CKPT_DIR}/log/training_$(date +"%Y%m%d_%H%M").txt"
 
 echo -e "\033[33m[INFO] Training complete. Checkpoints saved to: ${CKPT_DIR}\033[0m"
