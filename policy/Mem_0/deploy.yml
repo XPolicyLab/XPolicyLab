@@ -1,19 +1,23 @@
 # Mem_0 deployment config.
 # policy_name MUST equal the policy folder/import name. Values set to null are
-# provided by eval.sh --overrides at launch time.
+# provided by setup_eval_policy_server.sh --overrides at launch time.
 policy_name: Mem_0
 
-# Overridden by eval.sh
+# Server transport (setup_policy_server.py reads port/host).
+port: null
+host: null
+
+# Overridden by eval scripts
 dataset_name: null
 task_name: null
+ckpt_name: null
 env_cfg_type: null
 expert_data_num: null
 action_type: null
 action_dim: null
 seed: null
-port: null
 
-# Client/debug routing
+# Client/debug routing — switch sim/debug/real here, not in eval.sh
 eval_env: debug   # debug, sim, real
 eval_batch: false # Mem_0 MemoryBank is per-episode stateful -> single-env only
 
@@ -22,20 +26,21 @@ device: cuda:0
 image_size: [224, 224]
 norm_way: minmax  # minmax | meanstd | quantile (must match the norm_stats file)
 
-# Checkpoints / stats (paths are relative to this policy folder; set real paths
-# via eval.sh --overrides or edit here). null -> random head / no normalization,
-# which still exercises the full server<->client wiring for the debug gate.
-execution_ckpt: null            # e.g. checkpoints/<run>/model.pt
-state_stats_path: null          # e.g. Mem_0/assets/<task>/norm_stats.json
+# Task type: M1 | Mn (auto-set from task_name via task_config.json when null)
+task_type: null
 
-# Multi-stage (Mn) planning. Only used when the upper-layer env injects planner
-# sub-task instructions; M1 tasks read `instruction` straight from the obs.
-global_task: null
+# Checkpoints / stats (paths relative to this policy folder unless absolute).
+execution_ckpt: null            # e.g. Mem_0/checkpoints/<run>/final_step*.pt
+state_stats_path: null          # e.g. Mem_0/assets/<ckpt_name>/norm_stats.json
+
+# Mn planning (execution server calls external vLLM)
+planning_module_config_path: Mem_0/source/config/planning_module_inference.yaml
 vllm_url: null
+global_task: null
+action_horizon: 30
+threshold: 2
 
 # Execution module (Qwen3-VL-2B + MemoryBank + flow-matching DiT + classifier).
-# Mirrors Mem_0/source/config/execution_module_train.yaml so the deployed model
-# matches the trained architecture. model_path is relative to this policy folder.
 execution_module:
   qwen_vl:
     model_path: Mem_0/checkpoints/Qwen3-VL-2B-Instruct

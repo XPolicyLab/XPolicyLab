@@ -1,9 +1,0 @@
-{
-  "global_task": "Swap the red and blue T-blocks: each T-block should end up in the initial pose of the other.",
-  "subtasks": [
-    "Pick up red T-blocks.",
-    "Pick up blue T-blocks.",
-    "Use the left arm to place the red T-block into the initial pose of the blue T-block.",
-    "Use the right arm to place the blue T-block into the initial pose of the red T-block."
-  ]
-}

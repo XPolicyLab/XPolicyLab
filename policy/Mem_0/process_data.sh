@@ -11,13 +11,11 @@ set -euo pipefail
 # Examples:
 #   bash process_data.sh RoboDojo test_data arx_x5 3 joint M1
 #   bash process_data.sh RoboDojo cover_blocks arx_x5 50 joint Mn
-# For Mn, first generate sub-task annotations with the VLM segmenter:
-#   bash segment_data.sh RoboDojo cover_blocks arx_x5 50   # -> language_annotation.json
 #
 # Optional:
 #   TASK_INSTRUCTION="..."   M1 instruction / Mn global task (default <task_name>)
-#   LANGUAGE_ANNOTATION=/path/to/language_annotation.json   (Mn; else auto-discovered
-#       at <Mem_0>/language_annotations/<dataset_name>/<task_name>/<env_cfg_type>/language_annotation.json)
+#   LANGUAGE_ANNOTATION=/path/to/language_annotation.json   (required for Mn unless
+#       an existing annotation is present at <Mem_0>/language_annotations/<dataset_name>/<task_name>/<env_cfg_type>/language_annotation.json)
 # Output: Mem_0/lerobot_datasets/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 
 dataset_name=${1}

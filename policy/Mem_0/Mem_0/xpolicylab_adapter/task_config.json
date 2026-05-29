@@ -1,0 +1,41 @@
+{
+  "M1": [
+    "arrange_largest_number",
+    "build_tower",
+    "classify_objects",
+    "deposit_coin",
+    "dlc",
+    "fasten_screws",
+    "fill_egg_holder",
+    "fill_pen_holder",
+    "fold_clothes",
+    "hang_mugs",
+    "insert_key",
+    "insert_tubes",
+    "make_kong",
+    "make_toast",
+    "match_and_pick_from_conveyor",
+    "organize_table",
+    "pack_objects_into_box",
+    "play_Xylophone",
+    "play_stacking_toy",
+    "play_tic_tac_toe",
+    "plug_in_charger",
+    "pour_balls_into_vase",
+    "pour_liquid_into_cup",
+    "push_T",
+    "put_bottles_into_dustbin",
+    "sort_nesting_dolls_by_size",
+    "stack_blocks",
+    "stack_bowls",
+    "store_laptop_and_headphones",
+    "swap_T",
+    "swap_blocks",
+    "sweep_blocks"
+  ],
+  "Mn": [
+    "cover_blocks",
+    "press_by_number",
+    "imitate_sorting_sequence"
+  ]
+}

@@ -18,6 +18,7 @@ Key Features:
 import os
 import sys
 import json
+from pathlib import Path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 from typing import List, Optional
 from datasets import load_dataset
@@ -31,6 +32,15 @@ import numpy as np
 from PIL import Image
 
 import source.utils.pil_tools as pil_tools
+
+
+def _resolve_dataset_fps(repo_id: str, fps: int) -> int:
+    """Use fps from dataset meta/info.json when available."""
+    info_path = Path(repo_id) / "meta" / "info.json"
+    if info_path.is_file():
+        with open(info_path) as f:
+            return int(json.load(f)["fps"])
+    return fps
 
 
 class LeRobot_Selective_Dataset(LeRobotDataset):
@@ -87,10 +97,10 @@ class LeRobot_Selective_Dataset(LeRobotDataset):
         # 所以先创建一个临时对象来获取 fps，或者使用传入的 fps
         # 如果 fps 未指定，我们会在 super().__init__ 后从 meta 获取并更新
         self._action_horizon = action_horizon
-        self._fps_param = fps
+        self._fps_param = _resolve_dataset_fps(repo_id, fps)
         
         # 计算 delta_timestamps
-        delta_seconds = [i / fps for i in range(action_horizon)]
+        delta_seconds = [i / self._fps_param for i in range(action_horizon)]
         self.delta_timestamps = {"action": delta_seconds}
         
         # setup image transforms

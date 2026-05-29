@@ -5,7 +5,7 @@ template, filling the fields the upstream README asks you to edit by hand
 batch_size, train_steps, seed). The committed template is never mutated; the
 resolved config is written next to the run's checkpoints.
 
-Used by ../train.sh; can also be run standalone.
+Used by ../../train.sh (train_module=execution|both); can also be run standalone.
 """
 
 import argparse
