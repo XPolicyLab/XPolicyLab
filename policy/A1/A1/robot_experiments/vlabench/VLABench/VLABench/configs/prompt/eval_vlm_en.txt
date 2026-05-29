@@ -1,0 +1,163 @@
+In Skill Lab, we provide a series of robot skills to support efficient automated operations for various tasks. Each skill has a specific call format, which includes the skill name and corresponding parameters.
+
+The available skills are as follows:
+
+1. **pick**: Used to grasp and pick up a target object.
+   - Call format:
+     ```json
+     {
+       "name": "pick",
+       "params": {
+         "target_entity_name": Target Number
+       }
+     }
+     ```
+
+2. **place**: Place an object in a specified location, suitable for vertical placement.
+   - Call format:
+     ```json
+     {
+       "name": "place",
+       "params": {
+         "target_container_name": Target Number
+       }
+     }
+     ```
+
+3. **press**: Press a specified location or button.
+   - Call format:
+     ```json
+     {
+       "name": "press",
+       "params": {
+         "target_entity_name": Target Number
+       }
+     }
+     ```
+
+4. **open_door**: Open a door.
+   - Call format:
+     ```json
+     {
+       "name": "open_door",
+       "params": {
+       }
+     }
+     ```
+
+5. **insert**: Insert an item into a target location.
+   - Call format:
+     ```json
+     {
+       "name": "insert",
+       "params": {
+         "target_container_name": Target Number
+       }
+     }
+     ```
+
+6. **pull**: Pull the robotic arm horizontally.
+   - Call format:
+     ```json
+     {
+       "name": "pull",
+       "params": {
+       }
+     }
+     ```
+
+7. **pour**: Pour a liquid or granular substance.
+   - Call format:
+     ```json
+     {
+       "name": "pour",
+       "params": {
+         "target_container_name": Target Number
+       }
+     }
+     ```
+
+8. **push**: Push a target object horizontally.
+   - Call format:
+     ```json
+     {
+       "name": "push",
+       "params": {
+         "target_container_name": Target Number
+       }
+     }
+     ```
+
+9. **lift**: Lift the robotic arm vertically.
+   - Call format:
+     ```json
+     {
+       "name": "lift",
+       "params": {
+       }
+     }
+     ```
+
+These call formats ensure that each skill operation has clearly defined parameters, allowing the system to accurately execute the specified automated tasks.
+
+---
+
+You will receive the following input:
+
+1. **Image input**: Two images
+   - The first image shows four different perspectives of objects (without labels).
+   - The second image contains the same four perspectives of objects, but each view is labeled with a number (representing each object's identifier).
+
+2. **Language input**: A task instruction describing the specific requirement. Based on this instruction, you need to generate a sequence of skill calls to fulfill the task. Note that all directional references in the language are relative to the robot arm as the central origin.
+
+---
+
+### Task Requirements:
+
+Based on the image and language inputs, generate a sequence of skill calls. Each skill call sequence should contain the skill name (extracted from the task instruction), the skill operation parameters (if the skill requires parameters), and the target entity or container number (obtained from the labeled image).
+
+---
+
+### Generation Steps:
+
+1. **Extract Task Instruction**: Identify operation requirements (e.g., adjust, inspect, move) and the target object number or view from the language input.
+
+2. **Combine with Image Information**: Using the labeled image, match the objects described in the task instruction with their corresponding identifiers to determine the target number.
+
+3. **Generate Skill Call Sequence**: Based on the task instruction, use the extracted operation requirements as skill names and assign them the appropriate number information.
+
+4. **Output Format**: Generate a skill call sequence in the following structure:
+```json
+[
+    {
+        "name": "Skill Name 1",
+        "params": {
+            "parameter": "value"
+        }
+    },
+    {
+        "name": "Skill Name 2",
+        "params": {
+            "parameter": "value"
+        }
+    }
+]
+```
+
+Since the evaluation process will extract patterns from the skill sequence to build an operation graph, the output skill call sequence should ideally match one or more of the following patterns to ensure correctness:
+
+Sub-skill sequence patterns:
+- ["pick", "place"]
+- ["pick", "insert"]
+- ["pick", "pour", "place"]
+- ["pick", "pour"]
+- ["pick", "pull"]
+- ["pick", "lift"]
+- ["pick", "push", "pull"]
+- ["pick", "push", "place"],
+- ["pick", "push"],
+- ["pick", "open_door"]
+- ["press"]
+
+For example, if the output only includes a single "pick" skill, it will be considered incorrect during the evaluation.
+Please pay close attention to spatial information and ensure accurate pattern selection. For example, if the object needs to be picked up and displayed, use the pattern `["pick", "lift"]`. If the object needs to be pulled out and displayed, use the pattern `["pick", "pull"]`. If `["pick", "place"]` is used incorrectly in place of these patterns, it will be considered an error.

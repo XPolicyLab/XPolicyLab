@@ -1,0 +1,1 @@
+/mnt/data2/zhangkaidong/datasets/vlabench/vlabench_primitive_ft_dataset/remote-home1/sdzhang/datasets/VLABench_release/primitive/add_condiment/add_condiment.py

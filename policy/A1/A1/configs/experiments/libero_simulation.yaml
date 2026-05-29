@@ -1,0 +1,6 @@
+# VLA Training Configuration for LIBERO Simulation
+# Combines model and dataset configs
+
+# Import model config (relative to configs/ directory)
+model_config: models/libero.yaml
+dataset_config: datasets/libero_4_tasks.yaml

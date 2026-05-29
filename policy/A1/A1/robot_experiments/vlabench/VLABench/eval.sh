@@ -1,0 +1,3 @@
+# python scripts/evaluate_policy.py --n-episode 20 --policy gea_policy --model_ckpt /mnt/data/zhangkaidong/VLABench/gea/exp_local/real_world_finetune_2025.04.30_11:17:48_2871954  --eval-track track_1_in_distribution
+export DISPLAY=:10.0
+python scripts/evaluate_policy.py --n-episode 20 --policy gea_policy --model_ckpt gea/exp_local/vlabench_2025.06.07_00:31:04_75685942  --tasks select_fruit --visulization

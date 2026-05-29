@@ -1,0 +1,5 @@
+# HF Datasets
+
+This repo contains HF dataset builders for a variety of academic datasets that do not 
+exist on huggingface. It is not always clear if it is permissible to re-host
+the images for these datasets, so for now we require that they be re-run locally.

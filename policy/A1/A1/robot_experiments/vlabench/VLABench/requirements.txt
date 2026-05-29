@@ -1,0 +1,20 @@
+mujoco == 3.2.2
+mujoco-mjx == 3.2.2
+dm_control == 1.0.22
+opencv-python
+gym == 0.26.2
+gymnasium == 0.29.1
+mediapy == 1.2.0
+open3d == 0.18.0
+h5py == 3.11.0
+ffmpeg
+dm_control == 1.0.22
+scipy == 1.14.0
+-e git+https://github.com/motion-planning/rrt-algorithms.git#egg=rrt-algorithms
+gdown
+notebook
+openai
+pynput
+colorlog
+colorama
+peft
