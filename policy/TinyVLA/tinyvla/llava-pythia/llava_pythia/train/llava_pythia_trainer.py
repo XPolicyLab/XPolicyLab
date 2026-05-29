@@ -349,5 +349,29 @@ class LLaVAPythiaTrainer(Trainer):
     def _save_checkpoint(self, model, trial, metrics=None):
         super(LLaVAPythiaTrainer, self)._save_checkpoint(model, trial, metrics)
 
+        if not getattr(self.args, "lora_enable", False):
+            return
+
+        from llava_pythia.llava_pythia_utils import get_peft_state_non_lora_maybe_zero_3
+        # Collective under ZeRO-3 -> must run on every rank before the rank-0 gate.
+        non_lora_state_dict = get_peft_state_non_lora_maybe_zero_3(
+            self.model.named_parameters(), require_grad_only=False
+        )
+        if self.args.local_rank not in (-1, 0):
+            return
+            
+        ckpt_dir = os.path.join(self.args.output_dir, f"checkpoint-{self.state.global_step}")
+        if not os.path.isdir(ckpt_dir):
+            return
+        self.model.config.save_pretrained(ckpt_dir)
+        base_model_path = getattr(self.model.config, "_name_or_path", None)
+        if base_model_path:
+            pp_src = os.path.join(base_model_path, "preprocessor_config.json")
+            pp_dst = os.path.join(ckpt_dir, "preprocessor_config.json")
+            if os.path.exists(pp_src) and not os.path.exists(pp_dst):
+                import shutil
+                shutil.copyfile(pp_src, pp_dst)
+        torch.save(non_lora_state_dict, os.path.join(ckpt_dir, "non_lora_trainables.bin"))
+
     def _save(self, output_dir: Optional[str] = None, state_dict=None):
         super(LLaVAPythiaTrainer, self)._save(output_dir, state_dict)

@@ -33,7 +33,6 @@ class Model(ModelTemplate):
             "model_base": model_cfg["model_base"],
             "enable_lora": model_cfg["enable_lora"],
             "conv_mode": model_cfg["conv_mode"],
-            "action_head": "act",
         })
         self.policy.policy.eval()
 

@@ -73,11 +73,3 @@ deepspeed --master_port 29600 --include "localhost:${gpu_id}" "${POLICY_DIR}/tra
   --logging_steps                   10 \
   --gradient_accumulation_steps     1
 
-
-# post-training processing
-# deploy side (model.py) reads preprocessor_config.json from each checkpoint-*,
-# HF Trainer doesn't put it inside by default, so we manually copy it here.
-for ckpt_dir in "${output_dir}"/checkpoint-*/ ; do
-  [ -d "${ckpt_dir}" ] || continue
-  cp "${POLICY_DIR}/tinyvla/llava-pythia/preprocessor_config.json" "${ckpt_dir}"
-done

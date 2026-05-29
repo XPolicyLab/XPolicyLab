@@ -123,7 +123,7 @@ class llava_pythia_act_policy:
         self.tokenizer, self.policy, self.image_processor, self.context_len = load_pretrained_model(model_path, model_base,
                                                                                                     model_name, False,
                                                                                                     False)
-        self.config = LlavaPythiaConfig.from_pretrained('/'.join(model_path.split('/')[:-1]), trust_remote_code=True)
+        self.config = self.policy.config
 
     def process_batch_to_llava(self, curr_image, robo_state, raw_lang):
         """

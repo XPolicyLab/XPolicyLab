@@ -207,21 +207,10 @@ def train_bc(train_dataset=None, val_dataset=None, model=None, config=None, samp
 
     model.config.use_cache = True
 
-    if config['training_args'].lora_enable:
-        state_dict = LlavaUtils.get_peft_state_maybe_zero_3(
-            model.named_parameters(), config['training_args'].lora_bias
+    if not config['training_args'].lora_enable:
+        LlavaUtils.safe_save_model_for_hf_trainer(
+            trainer=trainer, output_dir=config['training_args'].output_dir
         )
-        non_lora_state_dict = LlavaUtils.get_peft_state_non_lora_maybe_zero_3(
-            model.named_parameters(), require_grad_only=False
-        )
-        if config['training_args'].local_rank == 0 or config['training_args'].local_rank == -1:
-            model.config.save_pretrained(config['training_args'].output_dir)
-            model.save_pretrained(config['training_args'].output_dir, state_dict=state_dict)
-            torch.save(non_lora_state_dict,
-                       os.path.join(config['training_args'].output_dir, 'non_lora_trainables.bin'))
-    else:
-        LlavaUtils.safe_save_model_for_hf_trainer(trainer=trainer,
-                                                  output_dir=config['training_args'].output_dir)
 
 
 
@@ -278,11 +267,14 @@ def main(config=None, llava_pythia_config=None):
                                                            policy_class=config['action_args'].action_head_type, stats_dir_l=stats_dir,
                                                            sample_weights=sample_weights, train_ratio=train_ratio, return_dataset=True, llava_pythia_process=llava_pythia_process)
 
+    # Save normalization stats up-front
+    if config['training_args'].local_rank in (-1, 0):
+        os.makedirs(config['training_args'].output_dir, exist_ok=True)
+        stats_path = os.path.join(config['training_args'].output_dir, 'dataset_stats.pkl')
+        with open(stats_path, 'wb') as f:
+            pickle.dump(stats, f)
+
     best_ckpt_info = train_bc(train_dataset=train_dataset, model=model, val_dataset=val_dataset, config=config, sampler_params=sampler_params, tokenizer=tokenizer)
-    # save dataset stats
-    stats_path = os.path.join(config['training_args'].output_dir, f'dataset_stats.pkl')
-    with open(stats_path, 'wb') as f:
-        pickle.dump(stats, f)
 
 
 if __name__ == '__main__':

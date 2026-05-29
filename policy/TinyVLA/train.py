@@ -23,7 +23,7 @@ if str(POLICY_DIR / "tinyvla") not in sys.path:
 
 
 CAMERA_KEYS = ("cam_left_wrist", "cam_right_wrist")  # no need to change
-TARGET_SIZE = (640, 480)  # (W, H) for cv2.resize, per XPolicyLab README 640x480 约定
+TARGET_SIZE = (640, 480)  # (W, H) for cv2.resize
 
 
 SENIOR_TRAIN_ARGS = {

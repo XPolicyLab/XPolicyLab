@@ -63,10 +63,11 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         if is_lora and model_base is None:
             warnings.warn('Loading a LoRA model but no `model_base` is provided. Please provide the `model_base` argument.')
         if is_lora and model_base is not None:
-            
-            path = model_path.split('/')[0:-1]
-            root_path = '/'.join(path)
-            lora_cfg_pretrained = AutoConfig.from_pretrained(root_path)
+
+
+            cfg_dir = model_path if os.path.exists(os.path.join(model_path, 'config.json')) \
+                else os.path.dirname(model_path.rstrip('/'))
+            lora_cfg_pretrained = AutoConfig.from_pretrained(cfg_dir)
             config = lora_cfg_pretrained
             tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=True) # default use_fast=False
             print('Loading LLaVA-Pythia from base model...')
@@ -78,8 +79,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             #     model.model.embed_tokens.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
             
             print('Loading additional LLaVA-Pythia weights...')
-            # train_bc() saves non_lora_trainables.bin to the run's output_dir,
-            # which is the parent of each `checkpoint-*` subdir; also look there.
+
             non_lora_path = os.path.join(model_path, 'non_lora_trainables.bin')
             if not os.path.exists(non_lora_path):
                 non_lora_path = os.path.join(os.path.dirname(model_path.rstrip('/')), 'non_lora_trainables.bin')
@@ -118,7 +118,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         elif model_base is not None:
             # this may be mm projector only
             print('Loading LLaVA-Pythia from base model...')
-            tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False)
+            tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=True)  # GPTNeoX/Pythia has no slow tokenizer
             cfg_pretrained = AutoConfig.from_pretrained(model_path)
             model = LlavaPythiaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=cfg_pretrained, **kwargs)
 
@@ -139,7 +139,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         if model_base is not None:
             # PEFT model
             from peft import PeftModel
-            tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False)
+            tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=True)
             model = AutoModelForCausalLM.from_pretrained(model_base, torch_dtype=torch.float16, low_cpu_mem_usage=True, device_map="auto")
             print(f"Loading LoRA weights from {model_path}")
             model = PeftModel.from_pretrained(model, model_path)
@@ -148,7 +148,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             print('Convert to FP16...')
             model.to(torch.float16)
         else:
-            tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
+            tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
             model = AutoModelForCausalLM.from_pretrained(model_path, low_cpu_mem_usage=True, **kwargs)
     if "clip" in config.vision_config["vision_tower"]["vision_model_name_or_path"]:
         image_processor = CLIPImageProcessor.from_pretrained(model_path)
