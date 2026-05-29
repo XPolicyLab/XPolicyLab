@@ -12,7 +12,10 @@ conda activate "${policy_conda_env}"
 
 cd "${POLICY_DIR}/LDA-1B"
 pip install -r requirements.txt
-pip install flash-attn --no-build-isolation
+
+MAX_JOBS=8 FLASH_ATTENTION_FORCE_BUILD=TRUE \
+    pip install flash-attn --no-build-isolation --no-cache-dir
+
 pip install -e .
 
 # Make XPolicyLab importable in the policy env (required by model.py / process_data.py).

@@ -47,12 +47,17 @@ def _standardize_rgb(image: np.ndarray) -> np.ndarray:
 
 
 def _get_instruction(obs: dict, fallback: str) -> str:
-    value = obs.get("instruction", obs.get("instructions", fallback))
+    value = obs.get("task_instruction")
+    if value is None:
+        value = obs.get("instruction", obs.get("instructions"))
     if isinstance(value, (list, tuple)):
         return str(value[0]) if value else fallback
-    if value is None or str(value).strip() == "":
+    if value is None:
         return fallback
-    return str(value)
+    if hasattr(value, "item"):
+        value = value.item()
+    text = str(value).strip()
+    return text if text else fallback
 
 
 class Model(ModelTemplate):
@@ -60,8 +65,13 @@ class Model(ModelTemplate):
         self.model_cfg = dict(model_cfg)
         self.action_type = self.model_cfg["action_type"]
         self.env_cfg_type = self.model_cfg["env_cfg_type"]
-        self.action_horizon = int(self.model_cfg.get("action_horizon") or 1)
-        self.default_instruction = str(self.model_cfg.get("default_instruction") or self.model_cfg.get("task_name") or "follow the instruction")
+        self.action_horizon = 1
+        self.replan_steps = int(self.model_cfg.get("replan_steps") or 24)
+        self.default_instruction = str(
+            self.model_cfg.get("default_instruction")
+            or self.model_cfg.get("prompt")
+            or "follow the instruction"
+        )
         self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
         self.last_obs = None
         self.last_instruction = self.default_instruction
@@ -92,6 +102,8 @@ class Model(ModelTemplate):
         upstream_cfg.setdefault("sim_cfg_name", "sim_robotwin.yaml")
         upstream_cfg.setdefault("sim_task", "robotwin_uncond_3cam_384_1e-4")
         self.model = get_model(upstream_cfg)
+        self.action_horizon = int(self.model.action_horizon)
+        self.replan_steps = int(self.model.replan_steps)
 
     def _encode_obs_for_fastwam(self, obs: dict) -> dict:
         vision = obs["vision"]
@@ -129,7 +141,7 @@ class Model(ModelTemplate):
 
     def _zero_actions(self):
         dim = sum(self.robot_action_dim_info["arm_dim"]) + sum(self.robot_action_dim_info["ee_dim"])
-        zeros = np.zeros((self.action_horizon, dim), dtype=np.float32)
+        zeros = np.zeros((self.replan_steps, dim), dtype=np.float32)
         return unpack_robot_state(zeros, self.action_type, self.robot_action_dim_info, source_type="obs")
 
     def _infer_actions(self, obs, instruction):
@@ -141,6 +153,8 @@ class Model(ModelTemplate):
         action_chunk = np.asarray(action_chunk, dtype=np.float32)
         if action_chunk.ndim == 1:
             action_chunk = action_chunk[None, :]
+        n_exec = min(self.replan_steps, action_chunk.shape[0])
+        action_chunk = action_chunk[:n_exec]
         return unpack_robot_state(action_chunk, self.action_type, self.robot_action_dim_info, source_type="obs")
 
     def get_action(self):

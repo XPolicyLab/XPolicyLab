@@ -1,0 +1,80 @@
+# Mem_0 deployment config.
+# policy_name MUST equal the policy folder/import name. Values set to null are
+# provided by eval.sh --overrides at launch time.
+policy_name: Mem_0
+
+# Overridden by eval.sh
+dataset_name: null
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: null
+action_dim: null
+seed: null
+port: null
+
+# Client/debug routing
+eval_env: debug   # debug, sim, real
+eval_batch: false # Mem_0 MemoryBank is per-episode stateful -> single-env only
+
+# Runtime / inference settings
+device: cuda:0
+image_size: [224, 224]
+norm_way: minmax  # minmax | meanstd | quantile (must match the norm_stats file)
+
+# Checkpoints / stats (paths are relative to this policy folder; set real paths
+# via eval.sh --overrides or edit here). null -> random head / no normalization,
+# which still exercises the full server<->client wiring for the debug gate.
+execution_ckpt: null            # e.g. checkpoints/<run>/model.pt
+state_stats_path: null          # e.g. Mem_0/assets/<task>/norm_stats.json
+
+# Multi-stage (Mn) planning. Only used when the upper-layer env injects planner
+# sub-task instructions; M1 tasks read `instruction` straight from the obs.
+global_task: null
+vllm_url: null
+
+# Execution module (Qwen3-VL-2B + MemoryBank + flow-matching DiT + classifier).
+# Mirrors Mem_0/source/config/execution_module_train.yaml so the deployed model
+# matches the trained architecture. model_path is relative to this policy folder.
+execution_module:
+  qwen_vl:
+    model_path: Mem_0/checkpoints/Qwen3-VL-2B-Instruct
+    system_prompt: null
+  memory_bank:
+    window_size: 30
+    initial_anchor_size: 1
+    num_heads: 8
+    dropout: 0.1
+    memory_accumulation: 8
+  action_model:
+    action_model_type: DiT-B
+    hidden_size: 2048
+    add_pos_embed: True
+    max_seq_len: 1024
+    action_dim: 16
+    state_dim: 16
+    action_horizon: 30
+    repeated_diffusion_steps: 8
+    noise_beta_alpha: 1.5
+    noise_beta_beta: 1.0
+    noise_s: 0.999
+    num_timestep_buckets: 1000
+    num_inference_timesteps: 8
+    diffusion_model_cfg:
+      cross_attention_dim: 2048
+      dropout: 0.2
+      final_dropout: true
+      interleave_self_attention: true
+      norm_type: "ada_norm"
+      num_layers: 16
+      output_dim: 2048
+      positional_embeddings: null
+  classifier:
+    hidden_sizes: [6144, 2048, 512]
+    dropout: 0.1
+    pos_weight: 10.0
+    focal_gamma: 1.0
+    threshold: 0.5
+  loss_weights:
+    lambda_action: 1.0
+    lambda_classifier: 0.2

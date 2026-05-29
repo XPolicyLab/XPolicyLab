@@ -1,0 +1,11 @@
+{
+  "global_task": "On the table, red, green, and blue blocks are arranged randomly along with three lids. Cover the three blocks one by one using the lids from left to right, then uncover the blocks in the sequence red, green, and blue.",
+  "subtasks": [
+    "Cover the left block with the left cover.",
+    "Cover the middle block with the middle cover.",
+    "Cover the right block with the right cover.",
+    "Open the cover hiding the red block.",
+    "Open the cover hiding the green block.",
+    "Open the cover hiding the blue block."
+  ] 
+}

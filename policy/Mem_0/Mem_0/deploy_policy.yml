@@ -1,0 +1,69 @@
+# Basic experiment configuration (overridable via eval.sh --overrides)
+policy_name: Mem_0
+task_name: x # TODO
+task_config: demo_clean
+ckpt_setting: default
+seed: 0
+instruction_type: unseen
+
+# Runtime/inference settings
+device: cuda:0
+camera_key: head_camera
+image_size: [224, 224]
+execution_ckpt: ./policy/Mem_0/checkpoints/x.pt # TODO
+state_stats_path: ./policy/Mem_0/assets/x/norm_stats.json # TODO
+
+planning_module_config_path: ./policy/Mem_0/source/config/planning_module_inference.yaml
+vllm_url: http://localhost:8000 # TODO
+
+action_horizon: 30
+threshold: 2 # when subtask end signal count reaches this value, we consider the subtask ended and move to the next one
+global_task: null
+
+execution_module:
+  # Qwen Model
+  qwen_vl:
+    model_path: ./policy/Mem_0/checkpoints/Qwen3-VL-2B-Instruct
+    system_prompt: null
+  # Memory Bank
+  memory_bank:
+    window_size: 30
+    initial_anchor_size: 1
+    num_heads: 8
+    dropout: 0.1
+    memory_accumulation: 8
+  # DiT Action Model
+  action_model:
+    action_model_type: DiT-B
+    hidden_size: 2048
+    add_pos_embed: True
+    max_seq_len: 1024
+    action_dim: 16
+    state_dim: 16
+    action_horizon: 30
+    repeated_diffusion_steps: 8
+    noise_beta_alpha: 1.5
+    noise_beta_beta: 1.0
+    noise_s: 0.999
+    num_timestep_buckets: 1000
+    num_inference_timesteps: 8
+    diffusion_model_cfg:    # DiT transformer parameters
+      cross_attention_dim: 2048 # VLM hidden dim
+      dropout: 0.2
+      final_dropout: true
+      interleave_self_attention: true
+      norm_type: "ada_norm"
+      num_layers: 16
+      output_dim: 2048
+      positional_embeddings: null
+  # Subtask End Classifier
+  classifier:
+    hidden_sizes: [6144, 2048, 512]
+    dropout: 0.1
+    pos_weight: 10.0   # counter class imbalance (false-dominant)
+    focal_gamma: 1.0   # optional focal term; set 0.0 to disable
+    threshold: 0.5   # probability threshold for positive subtask prediction
+  # Loss Weights
+  loss_weights:
+    lambda_action: 1.0
+    lambda_classifier: 0.2

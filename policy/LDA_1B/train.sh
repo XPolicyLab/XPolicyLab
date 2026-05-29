@@ -19,14 +19,14 @@ ckpt_root_dir="${LDA_CKPT_ROOT:-${POLICY_DIR}/checkpoints}"
 # Training knobs. Keep robot/model shape contracts in the YAML; tune run-scale
 # hyperparameters here, matching the original LDA run scripts style.
 num_processes="${LDA_NUM_PROCESSES:-8}"
-per_device_batch_size="${LDA_PER_DEVICE_BATCH_SIZE:-120}"
-max_train_steps="${LDA_MAX_TRAIN_STEPS:-200000}"
-save_interval="${LDA_SAVE_INTERVAL:-10000}"
+per_device_batch_size="${LDA_PER_DEVICE_BATCH_SIZE:-16}"
+max_train_steps="${LDA_MAX_TRAIN_STEPS:-50000}"
+save_interval="${LDA_SAVE_INTERVAL:-5000}"
 eval_interval="${LDA_EVAL_INTERVAL:-1000}"
 logging_frequency="${LDA_LOGGING_FREQUENCY:-1000}"
 learning_rate="${LDA_LEARNING_RATE:-4e-5}"
 repeated_diffusion_steps="${LDA_REPEATED_DIFFUSION_STEPS:-1}"
-freeze_module_list="${LDA_FREEZE_MODULES:-qwen_vl_interface,action_model.vision_encoder}"
+freeze_module_list="${LDA_FREEZE_MODULES:-}"
 training_task_weights="${LDA_TRAINING_TASK_WEIGHTS:-[1,1,1,1]}"
 wandb_project="${LDA_WANDB_PROJECT:-lda}"
 wandb_entity="${LDA_WANDB_ENTITY:-}"
@@ -90,4 +90,5 @@ accelerate launch \
   --run_id "${ckpt_setting}" \
   --wandb_project "${wandb_project}" \
   --wandb_entity "${wandb_entity}" \
-  --is_debug "${is_debug}"
+  --is_debug "${is_debug}" \
+  --seed "${seed}"

@@ -1,0 +1,9 @@
+{
+  "global_task": "Press the two red buttons the required number of times according to the number cards, then press the blue button to confirm.",
+  "subtasks": [
+    "Use left arm to press the left red button the required number of times.",
+    "Use right arm to press the right blue confirm button once to confirm.",
+    "Use left arm to press the middle red button the required number of times.",
+    "Use right arm to press the right blue confirm button once to confirm."
+]
+}

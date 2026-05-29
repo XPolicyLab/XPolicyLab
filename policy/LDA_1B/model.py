@@ -226,6 +226,36 @@ def _normalize_state(state: np.ndarray, state_stats: dict[str, Any] | None) -> n
     return out.astype(state.dtype, copy=False)
 
 
+def _get_instruction(obs: dict[str, Any], fallback: str) -> str:
+    """Resolve the language prompt from a RoboDojo v1.0 observation.
+
+    Reference obs layout (``/mnt/xspark-data/zijian/test.pkl``):
+        {
+            "vision": {"cam_head": ..., "cam_left_wrist": ..., ...},
+            "state": {...},
+            "instruction": "Pick up two slices of bread, ...",  # full English
+            "env_idx": 0,
+            ...
+        }
+
+    Prefer the env-provided ``instruction`` string over the deploy ``task_name``
+    slug fallback so language matches training ``tasks.jsonl`` entries.
+    """
+    value = obs.get("instruction")
+    if value is None:
+        value = obs.get("task_instruction", obs.get("instructions"))
+    if isinstance(value, (list, tuple)):
+        return str(value[0]).strip() if value else fallback
+    if value is None:
+        return fallback
+    if hasattr(value, "item"):
+        value = value.item()
+    if isinstance(value, bytes):
+        value = value.decode("utf-8", errors="replace")
+    text = str(value).strip()
+    return text if text else fallback
+
+
 def _lookup_config(config: Any, path: tuple[str, ...], default: Any = None) -> Any:
     cursor = config
     for key in path:
@@ -525,11 +555,7 @@ class Model(ModelTemplate):
 
         example = {
             "image": flat_images,
-            "lang": (
-                observation.get("task_instruction")
-                or observation.get("instruction")
-                or self.task_instruction
-            ),
+            "lang": _get_instruction(observation, self.task_instruction),
             "embodiment_id": self.embodiment_id,
         }
 

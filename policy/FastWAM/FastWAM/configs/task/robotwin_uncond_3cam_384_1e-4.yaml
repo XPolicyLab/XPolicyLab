@@ -15,7 +15,7 @@ model:
 # scheduler
 lr_scheduler_type: "cosine"
 learning_rate: 1e-4
-num_epochs: 100
+num_epochs: 16
 max_steps: null
 log_every: 10
 save_every: 2500
