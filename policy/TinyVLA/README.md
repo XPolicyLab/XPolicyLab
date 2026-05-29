@@ -45,3 +45,4 @@ bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <actio
 ```bash
 bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 ```
+默认使用最新的checkpoint
