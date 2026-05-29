@@ -1,0 +1,22 @@
+# Basic experiment configuration
+policy_name: A1
+dataset_name: null
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: null
+action_dim: null
+seed: null
+eval_batch: false
+eval_env: sim # sim, real, debug
+
+# A1-specific parameters
+model_path: null
+data_stats_path: null
+norm_stats_json_path: null
+normalization_type: bounds
+no_norm: true
+action_chunk_size: 50
+sequence_length: 1024
+use_wrist_image: true
+prompt: null

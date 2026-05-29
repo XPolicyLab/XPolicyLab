@@ -1,0 +1,6 @@
+[submodule "robot_experiments/libero/LIBERO"]
+	path = robot_experiments/libero/LIBERO
+	url = https://github.com/Lifelong-Robot-Learning/LIBERO.git
+[submodule "robot_experiments/vlabench/VLABench"]
+	path = robot_experiments/vlabench/VLABench
+	url = git@github.com:abliao/VLABench.git

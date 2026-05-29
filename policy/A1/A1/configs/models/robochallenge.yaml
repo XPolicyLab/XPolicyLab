@@ -1,0 +1,3 @@
+action_head:
+  fixed_action_dim: 32
+  num_actions_chunk: 50

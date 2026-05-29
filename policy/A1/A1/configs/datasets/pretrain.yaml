@@ -1,0 +1,189 @@
+# Image augmentation configuration (optional)
+image_augmentation:
+  enable: true              # Whether to enable image augmentation
+  enable_random_erasing: true   # Whether to enable random erasing
+  enable_sharpening: true       # Whether to enable sharpening
+  augmentation_prob: 0.5        # Probability of applying augmentation
+
+robocoin:
+  - path: data/RoboCOIN
+    weight: 30.0
+droid:
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(0,10000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(10000,20000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(20000,30000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(30000,40000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(40000,50000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(50000,60000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(60000,70000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(70000,80000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(80000,90000)"
+  - path: data/droid_lerobot
+    weight: 3.0
+    num_episodes: "(90000,100000)"
+    
+robomind:
+  - path: data/RoboMIND/benchmark1_0_compressed
+    embodiment: h5_agilex_3rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_0_compressed
+    embodiment: h5_franka_1rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_0_compressed
+    embodiment: h5_franka_3rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_0_compressed
+    embodiment: h5_ur_1rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_1_compressed
+    embodiment: h5_franka_3rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_1_compressed
+    embodiment: h5_ur_1rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_1_compressed
+    embodiment: h5_agilex_3rgb
+    weight: 4.0
+  - path: data/RoboMIND/benchmark1_2_compressed
+    embodiment: h5_franka_3rgb
+    weight: 4.0
+    
+robochallenge: 
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: clean_dining_table
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: make_vegetarian_sandwich
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: plug_in_network_cable
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: pour_fries_into_plate
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: put_opener_in_drawer
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: put_pen_into_pencil_case
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: scan_QR_code
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: stack_bowls
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: stick_tape_to_box
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: sweep_the_rubbish
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ALOHA
+    task_name: turn_on_faucet
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: arrange_flowers
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: place_shoes_on_rack
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: turn_on_light_switch
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: arrange_paper_cups
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: put_cup_on_coaster
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: water_potted_plant
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: fold_dishcloth
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: search_green_boxes
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: wipe_the_table
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: open_the_drawer
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: sort_electronic_products
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: FRANKA
+    task_name: move_objects_into_box
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: FRANKA
+    task_name: press_three_buttons
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: UR5
+    task_name: arrange_fruits_in_basket
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: UR5
+    task_name: hang_toothbrush_cup
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: UR5
+    task_name: set_the_plates
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: UR5
+    task_name: shred_scrap_paper
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: UR5
+    task_name: sort_books
+    weight: 1.0
+  - path: data/RoboChallenge
+    embodiment: UR5
+    task_name: stack_color_blocks
+    weight: 1.0

@@ -1,0 +1,15 @@
+numpy==1.25.0
+pathspec==0.12.1
+omegaconf==2.3.0
+wandb==0.21.1
+timm==1.0.17
+nltk==3.9.1
+math-verify==0.7.0
+tensorboard==2.15.2
+tensorboard-data-server==0.7.2
+tensorflow==2.15.0
+tensorflow-addons==0.23.0
+tensorflow-datasets==4.9.9
+tensorflow-estimator==2.15.0
+tensorflow-graphics==2021.12.3
+lerobot==0.3.3
