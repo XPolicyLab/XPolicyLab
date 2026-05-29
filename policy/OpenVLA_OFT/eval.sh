@@ -17,7 +17,18 @@ eval_env_conda_env=${11}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+
+SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
+
+if [[ -z "${dataset_name}" || -z "${task_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" || -z "${action_type}" || -z "${seed}" || -z "${policy_gpu_id}" || -z "${env_gpu_id}" || -z "${policy_conda_env}" || -z "${eval_env_conda_env}" ]]; then
+    echo "Usage: bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
+    exit 1
+fi
+
+FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
+policy_server_ip="localhost"
+additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
 
 cleanup() {
     if [[ -n "${SERVER_PID:-}" ]]; then
@@ -27,63 +38,40 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo -e "\033[33m[INFO] GPU ID (to use): ${policy_gpu_id}\033[0m"
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
-echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
-FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
+echo -e "\033[33m[INFO] Policy GPU ID: ${policy_gpu_id}\033[0m"
+echo -e "\033[33m[INFO] Env GPU ID: ${env_gpu_id}\033[0m"
+echo -e "\033[32m[MAIN] start server, port=${FREE_PORT}\033[0m"
 
-source "$(conda info --base)/etc/profile.d/conda.sh"
-if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
-    if [[ "${policy_conda_env}" == "uv" ]]; then
-        policy_uv_env_path=$(python - <<PYENV
-import yaml
-from pathlib import Path
-script_dir = Path("${SCRIPT_DIR}")
-cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8"))
-path = Path(cfg["policy_uv_env_path"]).expanduser()
-if not path.is_absolute():
-    path = (script_dir / path).resolve()
-print(path)
-PYENV
-)
-    else
-        policy_uv_env_path=$(python - <<PYENV
-from pathlib import Path
-script_dir = Path("${SCRIPT_DIR}")
-path = Path("${policy_conda_env}").expanduser()
-if not path.is_absolute():
-    path = (script_dir / path).resolve()
-print(path)
-PYENV
-)
-    fi
-    echo -e "\033[32m[SERVER] Activating uv environment: ${policy_uv_env_path}\033[0m"
-    source "${policy_uv_env_path}/.venv/bin/activate"
-else
-    echo -e "\033[32m[SERVER] Activating Conda environment: ${policy_conda_env}\033[0m"
-    conda activate "${policy_conda_env}"
-fi
+bash "${SERVER_SCRIPT}" \
+    "${dataset_name}" \
+    "${task_name}" \
+    "${ckpt_name}" \
+    "${env_cfg_type}" \
+    "${expert_data_num}" \
+    "${action_type}" \
+    "${seed}" \
+    "${policy_gpu_id}" \
+    "${policy_conda_env}" \
+    "${FREE_PORT}" &
 
-echo -e "\033[32m[SERVER] Launching policy_model_server in background...\033[0m"
-PYTHONWARNINGS=ignore::UserWarning \
-CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
-    --config_path "${yaml_file}" \
-    --overrides \
-        port="${FREE_PORT}" \
-        dataset_name="${dataset_name}" \
-        task_name="${task_name}" \
-        ckpt_name="${ckpt_name}" \
-        env_cfg_type="${env_cfg_type}" \
-        expert_data_num="${expert_data_num}" \
-        seed="${seed}" \
-        policy_name="${policy_name}" \
-        action_type="${action_type}" \
-        action_dim="${action_dim}" \
-    &
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
-additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
-bash "${UTILS_DIR}/setup_env_client.sh" "${UTILS_DIR}" "${yaml_file}" "${eval_env_conda_env}" "${FREE_PORT}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}"
+sleep 3
+
+echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${FREE_PORT}\033[0m"
+
+bash "${CLIENT_SCRIPT}" \
+    "${dataset_name}" \
+    "${task_name}" \
+    "${ckpt_name}" \
+    "${env_cfg_type}" \
+    "${action_type}" \
+    "${seed}" \
+    "${env_gpu_id}" \
+    "${eval_env_conda_env}" \
+    "${additional_info}" \
+    "${FREE_PORT}" \
+    "${policy_server_ip}"
+
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

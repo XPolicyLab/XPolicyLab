@@ -3,3 +3,5 @@
 **/.venv/**
 **/checkpoints/**
 train_out/
+checkpoints/
+runs/

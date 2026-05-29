@@ -28,5 +28,7 @@ Checkpoint：`checkpoints/<6-tuple>/`
 ## 评估
 
 ```bash
-bash eval.sh <task_name> <env_cfg> <expert_data_num> joint <gpu_id> <seed> <policy_conda_env> <eval_env_conda_env> <checkpoint_path>
+bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 ```
+
+OpenVLA 专属参数（`use_film`、`use_proprio`、`num_images_in_input`、`center_crop`、`unnorm_key` 等）统一写在 `deploy.yml`；切换 `eval_env: debug/sim/real` 也只需改 `deploy.yml`。

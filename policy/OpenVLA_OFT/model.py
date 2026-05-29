@@ -1,4 +1,10 @@
 import os
+import sys
+
+# OpenVLA constants are selected from sys.argv at import time; force ALOHA for XPolicyLab eval.
+if "aloha" not in " ".join(sys.argv).lower():
+    sys.argv.append("--aloha")
+
 import numpy as np
 from dataclasses import dataclass
 from pathlib import Path
@@ -26,8 +32,61 @@ def _extract_step_number(value: Any) -> int | None:
     return int(digits) if digits else None
 
 
+def _build_ckpt_setting(model_cfg: dict[str, Any]) -> str | None:
+    if model_cfg.get("ckpt_setting"):
+        return str(model_cfg["ckpt_setting"])
+    required = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
+    if not all(model_cfg.get(key) is not None for key in required):
+        return None
+    return (
+        f"{model_cfg['dataset_name']}-{model_cfg['ckpt_name']}-"
+        f"{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-"
+        f"{model_cfg['action_type']}-{model_cfg['seed']}"
+    )
+
+
+def _build_tfds_dataset_name(model_cfg: dict[str, Any]) -> str | None:
+    if model_cfg.get("tfds_dataset_name"):
+        return str(model_cfg["tfds_dataset_name"])
+    required = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type")
+    if not all(model_cfg.get(key) is not None for key in required):
+        return None
+    data_setting = (
+        f"{model_cfg['dataset_name']}-{model_cfg['ckpt_name']}-"
+        f"{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}"
+    )
+    return f"aloha_{data_setting}"
+
+
+def _resolve_unnorm_key(model_cfg: dict[str, Any], norm_stats: dict | None = None) -> str:
+    explicit_key = model_cfg.get("unnorm_key")
+    if explicit_key:
+        return str(explicit_key)
+
+    candidates = []
+    tfds_dataset_name = _build_tfds_dataset_name(model_cfg)
+    if tfds_dataset_name:
+        candidates.append(tfds_dataset_name)
+
+    if norm_stats:
+        for key in candidates:
+            if key in norm_stats:
+                return key
+        if len(norm_stats) == 1:
+            return next(iter(norm_stats))
+        raise ValueError(
+            "Could not resolve unnorm_key. Set deploy.yml unnorm_key or tfds_dataset_name. "
+            f"Available keys: {list(norm_stats.keys())}"
+        )
+
+    if tfds_dataset_name:
+        return tfds_dataset_name
+    raise ValueError("unnorm_key or full 5-tuple dataset fields are required for OpenVLA_OFT eval.")
+
+
 def _resolve_finetune_dir(model_cfg: dict[str, Any]) -> Path | None:
-    ckpt_name = model_cfg.get("ckpt_name")
+    ckpt_setting = _build_ckpt_setting(model_cfg)
+    ckpt_name = ckpt_setting or model_cfg.get("ckpt_name")
     if not ckpt_name:
         return None
     checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
@@ -62,6 +121,11 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> str:
     resolved_base = _resolve_policy_path(base_model_path)
     if resolved_base is not None:
         return str(resolved_base)
+
+    ckpt_setting = _build_ckpt_setting(model_cfg)
+    if ckpt_setting:
+        checkpoint_root = (_CHECKPOINTS_DIR / ckpt_setting).expanduser().resolve()
+        return str(checkpoint_root)
 
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
@@ -134,6 +198,13 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self._finetune_dir = _resolve_finetune_dir(model_cfg)
+        self._dataset_stats: dict | None = None
+        if self._finetune_dir is not None and (self._finetune_dir / "dataset_statistics.json").exists():
+            import json
+
+            with open(self._finetune_dir / "dataset_statistics.json", "r", encoding="utf-8") as f:
+                self._dataset_stats = json.load(f)
+
         self.cfg = self.get_model(model_cfg)
 
         self.vla = get_vla(self.cfg)
@@ -226,6 +297,8 @@ class Model(ModelTemplate):
             use_l1_regression = False
             use_proprio = False
 
+        unnorm_key = _resolve_unnorm_key(model_cfg, self._dataset_stats)
+
         config_args = {
             "pretrained_checkpoint": _resolve_checkpoint_path(model_cfg),
             "use_l1_regression": use_l1_regression,
@@ -236,7 +309,7 @@ class Model(ModelTemplate):
             "load_in_4bit": model_cfg.get("load_in_4bit", False),
             "num_images_in_input": model_cfg.get("num_images_in_input", 3),
             "center_crop": model_cfg.get("center_crop", True),
-            "unnorm_key": model_cfg["unnorm_key"],
+            "unnorm_key": unnorm_key,
             "num_open_loop_steps": model_cfg.get("num_open_loop_steps", NUM_ACTIONS_CHUNK),
             "lora_rank": model_cfg.get("lora_rank", 32),
         }
