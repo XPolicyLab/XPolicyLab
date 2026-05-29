@@ -1,0 +1,2 @@
+model_config: models/robochallenge.yaml
+dataset_config: datasets/rc_open_the_drawer.yaml

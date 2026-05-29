@@ -1,0 +1,2 @@
+model_config: models/robochallenge.yaml
+dataset_config: datasets/rc_put_cup_on_coaster.yaml
