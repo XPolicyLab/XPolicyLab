@@ -15,7 +15,7 @@ FPS_RAW="${6:-auto}"
 OVERWRITE_FLAG="${7:-0}"
 MAX_EPISODES_PER_TARGET="${8:-}"
 ROBOT_TYPE="${9:-aloha}"
-DATA_TYPE="${10:-RoboDojo}"
+DATA_TYPE="${10:-xspark}"
 DATA_VERSION="${11:-v1.0}"
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then

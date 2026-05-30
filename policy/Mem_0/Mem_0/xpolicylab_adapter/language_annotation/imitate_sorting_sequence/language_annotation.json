@@ -1,0 +1,4202 @@
+{
+  "episode_0": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      120
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      107
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      165
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      173
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      200
+    ]
+  ],
+  "episode_3": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      96
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      146
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      96
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      210
+    ]
+  ],
+  "episode_1": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      79
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      109
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      175
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      87
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      210
+    ]
+  ],
+  "episode_2": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      69
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      121
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      117
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      115
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      72
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      209
+    ]
+  ],
+  "episode_4": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      100
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      104
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      174
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      76
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      209
+    ]
+  ],
+  "episode_5": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      121
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      195
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      101
+    ]
+  ],
+  "episode_6": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      110
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      117
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      107
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      141
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      197
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      175
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      107
+    ]
+  ],
+  "episode_7": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      125
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      113
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      94
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      199
+    ]
+  ],
+  "episode_9": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      117
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      113
+    ]
+  ],
+  "episode_8": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      100
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      91
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      70
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      194
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      94
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      211
+    ]
+  ],
+  "episode_10": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      92
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      108
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      97
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      91
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_11": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      102
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      173
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      78
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      76
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      209
+    ]
+  ],
+  "episode_13": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      135
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      97
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      97
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      213
+    ]
+  ],
+  "episode_14": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      115
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      214
+    ]
+  ],
+  "episode_15": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      104
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      172
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      248
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      27
+    ]
+  ],
+  "episode_12": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      101
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      98
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      70
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      108
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_16": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      69
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      109
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      96
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      95
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      160
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      113
+    ]
+  ],
+  "episode_17": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      100
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      95
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      173
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      80
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      102
+    ]
+  ],
+  "episode_18": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      129
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      169
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      76
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      211
+    ]
+  ],
+  "episode_19": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      114
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      136
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      163
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      106
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      108
+    ]
+  ],
+  "episode_20": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      123
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      88
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      209
+    ]
+  ],
+  "episode_21": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      111
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      83
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      210
+    ]
+  ],
+  "episode_22": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      117
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      120
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      88
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      197
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      194
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      74
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      199
+    ]
+  ],
+  "episode_25": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      93
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      172
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_23": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      117
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      113
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      78
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      197
+    ]
+  ],
+  "episode_24": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      103
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      91
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      200
+    ]
+  ],
+  "episode_26": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      104
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      160
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      108
+    ]
+  ],
+  "episode_27": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      154
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      65
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      94
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_28": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      92
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      87
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      205
+    ]
+  ],
+  "episode_29": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      53
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      95
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      101
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      197
+    ]
+  ],
+  "episode_31": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      107
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      208
+    ]
+  ],
+  "episode_30": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      105
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      112
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      191
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      204
+    ]
+  ],
+  "episode_33": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      94
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      88
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      187
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      77
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      187
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      203
+    ]
+  ],
+  "episode_32": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      102
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      170
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      209
+    ]
+  ],
+  "episode_34": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      133
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      185
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      93
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      212
+    ]
+  ],
+  "episode_35": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      103
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      130
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      99
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      204
+    ]
+  ],
+  "episode_36": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      92
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      111
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      139
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      170
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      102
+    ]
+  ],
+  "episode_37": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      69
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      112
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      128
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      91
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      187
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      95
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      198
+    ]
+  ],
+  "episode_38": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      69
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      102
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      192
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      100
+    ]
+  ],
+  "episode_39": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      70
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      109
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      101
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      74
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      216
+    ]
+  ],
+  "episode_40": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      64
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      100
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      85
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      93
+    ]
+  ],
+  "episode_41": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      105
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      143
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      72
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      203
+    ]
+  ],
+  "episode_43": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      103
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      124
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      135
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      189
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      96
+    ]
+  ],
+  "episode_44": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      99
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      122
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      88
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      87
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      210
+    ]
+  ],
+  "episode_45": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      95
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      92
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      93
+    ]
+  ],
+  "episode_42": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      104
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      101
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      113
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      128
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      97
+    ]
+  ],
+  "episode_46": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      84
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      88
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      205
+    ]
+  ],
+  "episode_47": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      95
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      90
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      101
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      192
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      77
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      107
+    ]
+  ],
+  "episode_48": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      107
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      111
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      137
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      75
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      80
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      109
+    ]
+  ],
+  "episode_50": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      113
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      118
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      125
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      93
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      81
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      189
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      103
+    ]
+  ],
+  "episode_49": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      141
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      95
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_51": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      91
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      72
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      205
+    ]
+  ],
+  "episode_52": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      99
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      104
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      104
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      83
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      78
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      218
+    ]
+  ],
+  "episode_53": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      100
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      107
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      105
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      103
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      187
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      203
+    ]
+  ],
+  "episode_54": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      94
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      175
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      210
+    ]
+  ],
+  "episode_56": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      95
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      190
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      99
+    ]
+  ],
+  "episode_55": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      110
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      100
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      189
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      200
+    ]
+  ],
+  "episode_57": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      97
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      78
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      204
+    ]
+  ],
+  "episode_58": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      106
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      90
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      87
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      73
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      200
+    ]
+  ],
+  "episode_59": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      71
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      118
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      121
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      101
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      103
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      203
+    ]
+  ],
+  "episode_61": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      92
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      115
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      86
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      192
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      196
+    ]
+  ],
+  "episode_60": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      122
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      115
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      102
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      158
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      81
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      205
+    ]
+  ],
+  "episode_63": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      108
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      112
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      89
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      189
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      210
+    ]
+  ],
+  "episode_62": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      127
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      95
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      207
+    ]
+  ],
+  "episode_64": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      69
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      101
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      96
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      187
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      104
+    ]
+  ],
+  "episode_65": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      70
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      108
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      81
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      101
+    ]
+  ],
+  "episode_66": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      69
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      97
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      83
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      199
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      99
+    ]
+  ],
+  "episode_67": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      96
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      108
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      117
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      109
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      196
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      169
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      107
+    ]
+  ],
+  "episode_69": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      80
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      193
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      191
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      113
+    ]
+  ],
+  "episode_68": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      102
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      72
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      196
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      111
+    ]
+  ],
+  "episode_70": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      64
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      121
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      100
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      118
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      83
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      201
+    ]
+  ],
+  "episode_71": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      103
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      105
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      110
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      111
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      86
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      89
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      193
+    ]
+  ],
+  "episode_72": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      108
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      125
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      195
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      72
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      100
+    ]
+  ],
+  "episode_73": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      95
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      75
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      198
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      119
+    ]
+  ],
+  "episode_75": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      117
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      101
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      97
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      118
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      80
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      206
+    ]
+  ],
+  "episode_74": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      99
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      91
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      201
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      200
+    ]
+  ],
+  "episode_76": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      107
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      79
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      196
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      87
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      76
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      207
+    ]
+  ],
+  "episode_77": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      89
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      84
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      198
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      173
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      206
+    ]
+  ],
+  "episode_78": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      94
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      99
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      91
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      201
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      173
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      91
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      208
+    ]
+  ],
+  "episode_79": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      115
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      97
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      97
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      65
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      108
+    ]
+  ],
+  "episode_80": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      100
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      101
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      114
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      84
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      175
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      204
+    ]
+  ],
+  "episode_81": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      98
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      104
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      192
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      85
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      75
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      208
+    ]
+  ],
+  "episode_82": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      102
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      95
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      214
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      69
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      86
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      160
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      211
+    ]
+  ],
+  "episode_83": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      104
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      103
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      97
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      209
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      107
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      88
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      97
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      192
+    ]
+  ],
+  "episode_84": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      101
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      102
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      188
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      168
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      91
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_85": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      114
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      237
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      76
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      194
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      99
+    ]
+  ],
+  "episode_86": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      93
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      73
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      103
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      78
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      175
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_87": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      137
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      110
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      111
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      65
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      108
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      95
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      171
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      206
+    ]
+  ],
+  "episode_88": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      91
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      85
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      115
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      77
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      196
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      185
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      87
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      213
+    ]
+  ],
+  "episode_89": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      104
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      92
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      82
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      194
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      90
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      189
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      79
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      209
+    ]
+  ],
+  "episode_90": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      90
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      114
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      105
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      179
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      189
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      213
+    ]
+  ],
+  "episode_91": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      88
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      73
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      92
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      198
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      181
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      73
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      198
+    ]
+  ],
+  "episode_92": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      79
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      107
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      83
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      75
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      197
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      175
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      82
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      113
+    ]
+  ],
+  "episode_93": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      78
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      102
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      77
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      102
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      182
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      77
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      206
+    ]
+  ],
+  "episode_94": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      76
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      81
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      80
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      107
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      72
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      176
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      200
+    ]
+  ],
+  "episode_95": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      72
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      82
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      95
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      115
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      92
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      186
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      94
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_96": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      95
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      77
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      131
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      131
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      93
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      72
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      202
+    ]
+  ],
+  "episode_97": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      87
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      115
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      106
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      126
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      211
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      184
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      178
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      100
+    ]
+  ],
+  "episode_98": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      86
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      84
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      97
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      83
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      102
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      183
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      83
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      180
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      207
+    ]
+  ],
+  "episode_99": [
+    [
+      "Observe the opposite robotic arm place the 1st object into the basket.",
+      74
+    ],
+    [
+      "Observe the opposite robotic arm place the 2nd object into the basket.",
+      75
+    ],
+    [
+      "Observe the opposite robotic arm place the 3rd object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 4th object into the basket.",
+      80
+    ],
+    [
+      "Observe the opposite robotic arm place the 5th object into the basket.",
+      131
+    ],
+    [
+      "Pick up and place the 1st object into the basket in the same order as observed.",
+      219
+    ],
+    [
+      "Pick up and place the 2nd object into the basket in the same order as observed.",
+      177
+    ],
+    [
+      "Pick up and place the 3rd object into the basket in the same order as observed.",
+      78
+    ],
+    [
+      "Pick up and place the 4th object into the basket in the same order as observed.",
+      86
+    ],
+    [
+      "Pick up and place the 5th object into the basket in the same order as observed.",
+      207
+    ]
+  ]
+}

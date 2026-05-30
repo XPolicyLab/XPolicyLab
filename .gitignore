@@ -1,2 +1,7 @@
 **/__pycache__/**
 **/*.egg-info/
+**/.venv/**
+**/checkpoints/**
+train_out/
+checkpoints/
+runs/

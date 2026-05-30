@@ -1,17 +1,24 @@
 # SmolVLA 环境配置
 
-SmolVLA 依赖 LeRobot v0.4.4 和 SmolVLA extra。只安装 LeRobot 基础包通常会缺少 `transformers`、`num2words`、`safetensors` 等依赖。
+SmolVLA 依赖 LeRobot v0.4.4 与 `smolvla` extra。使用 policy 目录下的 Python venv。
 
-## 1. 创建环境
+## 一键安装
 
 ```bash
-cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/SmolVLA
+bash install.sh
+```
+
+## 手动安装
+
+### 1. 创建 venv
+
+```bash
 python3.10 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-## 2. 系统依赖
+### 2. 系统依赖（视频编解码）
 
 ```bash
 sudo apt-get update
@@ -21,33 +28,29 @@ sudo apt-get install -y \
   libswscale-dev libswresample-dev libavfilter-dev
 ```
 
-## 3. 安装 SmolVLA / LeRobot 源码
+### 3. 安装 SmolVLA / LeRobot
 
 ```bash
-cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/SmolVLA/smovla
+cd smovla
 pip install -e ".[smolvla]"
+# 可选: pip install -e ".[smolvla,peft]"
 ```
 
-如需 PEFT：
+### 4. 安装 XPolicyLab
 
 ```bash
-pip install -e ".[smolvla,peft]"
-```
-
-## 4. 安装 XPolicyLab
-
-```bash
-cd /mnt/nfs/niantian/robodojo_test/XPolicyLab
+cd ../../..
 pip install -e .
 pip install h5py
 ```
 
-## 5. 自检
+## 模型与数据路径
 
-```bash
-python -c "import lerobot; print('lerobot ok')"
-python -c "from lerobot.policies.factory import get_policy_class; print(get_policy_class('smolvla'))"
-python -c "import XPolicyLab, av, transformers, safetensors, h5py; print('deps ok')"
-```
+| 变量 | 说明 |
+|------|------|
+| `SMOVLA_REPO_ID` | LeRobot 数据集 repo id（`train.sh` 可覆盖） |
+| 预训练 | LeRobot / HF 默认拉取 SmolVLA 基座权重 |
 
-训练入口见 `README.md`，统一使用 `bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>`。
+## 训练与评测
+
+详见 [README.md](README.md)。

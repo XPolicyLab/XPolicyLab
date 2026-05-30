@@ -11,10 +11,5 @@ py-modules = ["XPolicyLab"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["*"]
-exclude = ["__pycache__*"]
-
-[tool.uv.workspace]
-members = [
-    "policy/TinyVLA",
-]
+include = ["client_server*", "utils*"]
+exclude = ["policy*", "build*", "scripts*", "__pycache__*"]

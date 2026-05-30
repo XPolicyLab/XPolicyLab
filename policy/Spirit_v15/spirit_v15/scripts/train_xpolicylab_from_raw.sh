@@ -25,7 +25,7 @@ FPS_RAW="${16:-auto}"
 OVERWRITE_FLAG="${17:-0}"
 MAX_EPISODES_PER_TARGET="${18:-}"
 ROBOT_TYPE="${19:-aloha}"
-DATA_TYPE="${20:-RoboDojo}"
+DATA_TYPE="${20:-xspark}"
 DATA_VERSION="${21:-v1.0}"
 SKIP_CONVERT="${22:-0}"
 CONVERT_ONLY="${23:-0}"
@@ -80,6 +80,9 @@ echo "[INFO] data_root=${CONVERTED_DATA_ROOT}"
 echo "[INFO] pretrained_path=${PRETRAINED_PATH}"
 echo "[INFO] output_dir=${OUTPUT_DIR}"
 
+SEED="${SPIRIT_SEED:-0}"
+export PYTHONHASHSEED="${SEED}"
+
 exec "${TORCHRUN_BIN}" --nproc_per_node="${NUM_GPUS}" \
   "${REPO_ROOT}/train.py" \
   --data_root "${CONVERTED_DATA_ROOT}" \
@@ -91,4 +94,5 @@ exec "${TORCHRUN_BIN}" --nproc_per_node="${NUM_GPUS}" \
   --save_steps "${SAVE_STEPS}" \
   --num_workers "${NUM_WORKERS}" \
   --prefetch_factor "${PREFETCH_FACTOR}" \
-  --wandb_mode "${WANDB_MODE}"
+  --wandb_mode "${WANDB_MODE}" \
+  --seed "${SEED}"

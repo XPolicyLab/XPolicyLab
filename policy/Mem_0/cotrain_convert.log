@@ -1,0 +1,171 @@
+[batch] dataset_name=RoboDojo_first100 env_cfg_type=arx_x5 expert_data_num=100 action_type=joint
+[batch] task_config=/vepfs-cnbje63de6fae220/zijian/demo_env/XPolicyLab/policy/Mem_0/Mem_0/xpolicylab_adapter/task_config.json
+[batch] M1 tasks (32): arrange_largest_number build_tower classify_objects deposit_coin dlc fasten_screws fill_egg_holder fill_pen_holder fold_clothes hang_mugs insert_key insert_tubes make_kong make_toast match_and_pick_from_conveyor organize_table pack_objects_into_box play_Xylophone play_stacking_toy play_tic_tac_toe plug_in_charger pour_balls_into_vase pour_liquid_into_cup push_T put_bottles_into_dustbin sort_nesting_dolls_by_size stack_blocks stack_bowls store_laptop_and_headphones swap_T swap_blocks sweep_blocks
+[batch] Mn tasks (3): cover_blocks press_by_number imitate_sorting_sequence
+[batch] annotation_root=/vepfs-cnbje63de6fae220/zijian/demo_env/XPolicyLab/policy/Mem_0/Mem_0/xpolicylab_adapter/language_annotation
+[batch] output dataset_id=RoboDojo-arx_5-100-joint
+cotrain RoboDojo-arx_5-100-joint:   0%|          | 0/35 [00:00<?, ?task/s]
+  arrange_largest_number[M1]:   0%|          | 0/100 [00:00<?, ?ep/s][A
+
+Map:   0%|          | 0/579 [00:00<?, ? examples/s][A[A
+
+Map:  39%|███▉      | 227/579 [00:00<00:00, 2242.27 examples/s][A[A
+
+Map:  79%|███████▉  | 457/579 [00:00<00:00, 2269.10 examples/s][A[AMap: 100%|██████████| 579/579 [00:00<00:00, 2163.00 examples/s]
+
+
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][A[ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 455.70ba/s]
+[libx264 @ 0x56165f36fc40] frame I:290   Avg QP:30.46  size:  3273
+[libx264 @ 0x56165f36fc40] frame P:289   Avg QP:37.07  size:   169
+[libx264 @ 0x56165f36fc40] mb I  I16..4: 21.6% 47.5% 31.0%
+[libx264 @ 0x56165f36fc40] mb P  I16..4:  0.1%  0.3%  0.2%  P16..4: 11.4%  3.0%  0.7%  0.0%  0.0%    skip:84.3%
+[libx264 @ 0x56165f36fc40] 8x8 transform intra:47.5% inter:69.0%
+[libx264 @ 0x56165f36fc40] coded y,uvDC,uvAC intra: 67.5% 63.9% 24.6% inter: 1.2% 0.6% 0.0%
+[libx264 @ 0x56165f36fc40] i16 v,h,dc,p:  4% 83%  3% 10%
+[libx264 @ 0x56165f36fc40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  7% 41% 15%  7%  5%  4%  6%  5%  9%
+[libx264 @ 0x56165f36fc40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 17% 37% 15%  6%  6%  5%  6%  4%  4%
+[libx264 @ 0x56165f36fc40] i8c dc,h,v,p: 57% 29% 11%  3%
+[libx264 @ 0x56165f36fc40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x56165f36fc40] kb/s:413.78
+
+  arrange_largest_number[M1]:   0%|          | 0/100 [00:23<?, ?ep/s, frames=579, written=1][A
+  arrange_largest_number[M1]:   1%|          | 1/100 [00:23<38:27, 23.30s/ep, frames=579, written=1][A
+
+Map:   0%|          | 0/562 [00:00<?, ? examples/s][A[A
+
+Map:  41%|████      | 230/562 [00:00<00:00, 2278.01 examples/s][A[A
+
+Map:  82%|████████▏ | 461/562 [00:00<00:00, 2290.59 examples/s][A[AMap: 100%|██████████| 562/562 [00:00<00:00, 2191.47 examples/s]
+
+
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][A[ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 606.38ba/s]
+[libx264 @ 0x56165f521900] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2 AVX512
+[libx264 @ 0x56165f521900] profile High, level 1.3, 4:2:0, 8-bit
+[libx264 @ 0x56165f521900] 264 - core 165 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=3 lookahead_threads=3 sliced_threads=1 slices=3 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=1 b_pyramid=0 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=2 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=2 rc=crf mbtree=1 crf=30.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+[libx264 @ 0x56165f521900] frame I:281   Avg QP:30.42  size:  3337
+[libx264 @ 0x56165f521900] frame P:281   Avg QP:36.92  size:   170
+[libx264 @ 0x56165f521900] mb I  I16..4: 21.7% 48.1% 30.2%
+[libx264 @ 0x56165f521900] mb P  I16..4:  0.1%  0.3%  0.2%  P16..4: 11.7%  3.0%  0.6%  0.0%  0.0%    skip:84.1%
+[libx264 @ 0x56165f521900] 8x8 transform intra:48.1% inter:69.7%
+[libx264 @ 0x56165f521900] coded y,uvDC,uvAC intra: 67.4% 63.7% 25.0% inter: 1.2% 0.6% 0.0%
+[libx264 @ 0x56165f521900] i16 v,h,dc,p:  4% 83%  3% 10%
+[libx264 @ 0x56165f521900] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  7% 40% 15%  8%  6%  4%  6%  5%  9%
+[libx264 @ 0x56165f521900] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 16% 37% 15%  6%  6%  6%  6%  5%  4%
+[libx264 @ 0x56165f521900] i8c dc,h,v,p: 57% 29% 11%  3%
+[libx264 @ 0x56165f521900] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x56165f521900] kb/s:420.85
+
+  arrange_largest_number[M1]:   1%|          | 1/100 [00:45<38:27, 23.30s/ep, frames=1141, written=2][A
+  arrange_largest_number[M1]:   2%|▏         | 2/100 [00:45<37:22, 22.88s/ep, frames=1141, written=2][A
+
+Map:   0%|          | 0/651 [00:00<?, ? examples/s][A[A
+
+Map:  35%|███▌      | 231/651 [00:00<00:00, 2283.53 examples/s][A[A
+
+Map:  71%|███████   | 460/651 [00:00<00:00, 2282.11 examples/s][A[AMap: 100%|██████████| 651/651 [00:00<00:00, 2191.88 examples/s]
+
+
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][A[ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 460.00ba/s]
+[libx264 @ 0x56165f3c7bc0] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2 AVX512
+[libx264 @ 0x56165f3c7bc0] profile High, level 1.3, 4:2:0, 8-bit
+[libx264 @ 0x56165f3c7bc0] 264 - core 165 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=3 lookahead_threads=3 sliced_threads=1 slices=3 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=1 b_pyramid=0 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=2 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=2 rc=crf mbtree=1 crf=30.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+[libx264 @ 0x56165f3c7bc0] frame I:326   Avg QP:30.51  size:  3292
+[libx264 @ 0x56165f3c7bc0] frame P:325   Avg QP:36.93  size:   177
+[libx264 @ 0x56165f3c7bc0] mb I  I16..4: 21.3% 47.7% 31.0%
+[libx264 @ 0x56165f3c7bc0] mb P  I16..4:  0.1%  0.4%  0.2%  P16..4: 11.9%  3.2%  0.7%  0.0%  0.0%    skip:83.6%
+[libx264 @ 0x56165f3c7bc0] 8x8 transform intra:47.8% inter:69.0%
+[libx264 @ 0x56165f3c7bc0] coded y,uvDC,uvAC intra: 67.5% 62.8% 24.7% inter: 1.3% 0.8% 0.1%
+[libx264 @ 0x56165f3c7bc0] i16 v,h,dc,p:  4% 82%  3% 11%
+[libx264 @ 0x56165f3c7bc0] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  7% 41% 15%  8%  6%  4%  6%  5%  9%
+[libx264 @ 0x56165f3c7bc0] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 17% 36% 15%  6%  6%  5%  6%  5%  4%
+[libx264 @ 0x56165f3c7bc0] i8c dc,h,v,p: 58% 28% 11%  3%
+[libx264 @ 0x56165f3c7bc0] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x56165f3c7bc0] kb/s:416.79
+
+  arrange_largest_number[M1]:   2%|▏         | 2/100 [01:12<37:22, 22.88s/ep, frames=1792, written=3][A
+  arrange_largest_number[M1]:   3%|▎         | 3/100 [01:12<39:23, 24.36s/ep, frames=1792, written=3][A
+
+Map:   0%|          | 0/914 [00:00<?, ? examples/s][A[A
+
+Map:  25%|██▌       | 233/914 [00:00<00:00, 2307.77 examples/s][A[A
+
+Map:  51%|█████     | 465/914 [00:00<00:00, 2309.16 examples/s][A[A
+
+Map:  76%|███████▋  | 697/914 [00:00<00:00, 2308.64 examples/s][A[AMap: 100%|██████████| 914/914 [00:00<00:00, 2216.11 examples/s]
+
+
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][A[ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 365.29ba/s]
+[libx264 @ 0x56165f3a9900] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2 AVX512
+[libx264 @ 0x56165f3a9900] profile High, level 1.3, 4:2:0, 8-bit
+[libx264 @ 0x56165f3a9900] 264 - core 165 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=3 lookahead_threads=3 sliced_threads=1 slices=3 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=1 b_pyramid=0 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=2 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=2 rc=crf mbtree=1 crf=30.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+[libx264 @ 0x56165f3a9900] frame I:457   Avg QP:30.53  size:  3318
+[libx264 @ 0x56165f3a9900] frame P:457   Avg QP:36.94  size:   178
+[libx264 @ 0x56165f3a9900] mb I  I16..4: 20.6% 48.7% 30.7%
+[libx264 @ 0x56165f3a9900] mb P  I16..4:  0.1%  0.4%  0.2%  P16..4: 12.6%  3.2%  0.7%  0.0%  0.0%    skip:82.9%
+[libx264 @ 0x56165f3a9900] 8x8 transform intra:48.8% inter:66.8%
+[libx264 @ 0x56165f3a9900] coded y,uvDC,uvAC intra: 68.1% 63.6% 25.3% inter: 1.3% 0.7% 0.0%
+[libx264 @ 0x56165f3a9900] i16 v,h,dc,p:  4% 82%  3% 11%
+[libx264 @ 0x56165f3a9900] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  7% 40% 16%  8%  5%  4%  6%  5%  9%
+[libx264 @ 0x56165f3a9900] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 16% 36% 16%  6%  6%  5%  6%  4%  4%
+[libx264 @ 0x56165f3a9900] i8c dc,h,v,p: 58% 28% 11%  3%
+[libx264 @ 0x56165f3a9900] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x56165f3a9900] kb/s:419.47
+
+  arrange_largest_number[M1]:   3%|▎         | 3/100 [01:48<39:23, 24.36s/ep, frames=2706, written=4][A
+  arrange_largest_number[M1]:   4%|▍         | 4/100 [01:48<46:53, 29.31s/ep, frames=2706, written=4][A
+
+Map:   0%|          | 0/717 [00:00<?, ? examples/s][A[A
+
+Map:  32%|███▏      | 232/717 [00:00<00:00, 2296.76 examples/s][A[A
+
+Map:  65%|██████▍   | 463/717 [00:00<00:00, 2301.78 examples/s][A[A
+
+Map: 100%|██████████| 717/717 [00:00<00:00, 2189.10 examples/s][A[AMap: 100%|██████████| 717/717 [00:00<00:00, 2203.55 examples/s]
+
+
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][A[ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 375.30ba/s]
+[libx264 @ 0x5616601dc000] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2 AVX512
+[libx264 @ 0x5616601dc000] profile High, level 1.3, 4:2:0, 8-bit
+[libx264 @ 0x5616601dc000] 264 - core 165 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=3 lookahead_threads=3 sliced_threads=1 slices=3 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=1 b_pyramid=0 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=2 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=2 rc=crf mbtree=1 crf=30.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+[libx264 @ 0x5616601dc000] frame I:359   Avg QP:30.50  size:  3371
+[libx264 @ 0x5616601dc000] frame P:358   Avg QP:36.91  size:   153
+[libx264 @ 0x5616601dc000] mb I  I16..4: 20.1% 48.4% 31.5%
+[libx264 @ 0x5616601dc000] mb P  I16..4:  0.1%  0.3%  0.1%  P16..4: 10.6%  2.7%  0.6%  0.0%  0.0%    skip:85.6%
+[libx264 @ 0x5616601dc000] 8x8 transform intra:48.5% inter:69.6%
+[libx264 @ 0x5616601dc000] coded y,uvDC,uvAC intra: 68.3% 63.5% 25.3% inter: 1.0% 0.6% 0.0%
+[libx264 @ 0x5616601dc000] i16 v,h,dc,p:  4% 81%  3% 11%
+[libx264 @ 0x5616601dc000] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  7% 41% 15%  7%  6%  4%  6%  5%  9%
+[libx264 @ 0x5616601dc000] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 16% 38% 15%  6%  6%  5%  6%  4%  4%
+[libx264 @ 0x5616601dc000] i8c dc,h,v,p: 57% 28% 11%  3%
+[libx264 @ 0x5616601dc000] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x5616601dc000] kb/s:423.39
+
+  arrange_largest_number[M1]:   4%|▍         | 4/100 [02:17<46:53, 29.31s/ep, frames=3423, written=5][A
+  arrange_largest_number[M1]:   5%|▌         | 5/100 [02:17<46:01, 29.07s/ep, frames=3423, written=5][A
+
+Map:   0%|          | 0/556 [00:00<?, ? examples/s][A[A
+
+Map:  41%|████▏     | 230/556 [00:00<00:00, 2273.26 examples/s][A[A
+
+Map:  83%|████████▎ | 460/556 [00:00<00:00, 2283.30 examples/s][A[AMap: 100%|██████████| 556/556 [00:00<00:00, 2191.80 examples/s]
+
+
+Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s][A[ACreating parquet from Arrow format: 100%|██████████| 1/1 [00:00<00:00, 610.61ba/s]
+[libx264 @ 0x5616638e3940] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2 AVX512
+[libx264 @ 0x5616638e3940] profile High, level 1.3, 4:2:0, 8-bit
+[libx264 @ 0x5616638e3940] 264 - core 165 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=3 lookahead_threads=3 sliced_threads=1 slices=3 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=1 b_pyramid=0 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=2 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=2 rc=crf mbtree=1 crf=30.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+[libx264 @ 0x5616638e3940] frame I:278   Avg QP:30.40  size:  3258
+[libx264 @ 0x5616638e3940] frame P:278   Avg QP:36.99  size:   163
+[libx264 @ 0x5616638e3940] mb I  I16..4: 22.0% 48.6% 29.3%
+[libx264 @ 0x5616638e3940] mb P  I16..4:  0.1%  0.3%  0.2%  P16..4: 11.8%  2.9%  0.6%  0.0%  0.0%    skip:84.2%
+[libx264 @ 0x5616638e3940] 8x8 transform intra:48.6% inter:70.9%
+[libx264 @ 0x5616638e3940] coded y,uvDC,uvAC intra: 67.8% 63.8% 23.9% inter: 1.1% 0.6% 0.0%
+[libx264 @ 0x5616638e3940] i16 v,h,dc,p:  4% 83%  3% 11%
+[libx264 @ 0x5616638e3940] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  7% 41% 15%  8%  6%  4%  6%  5%  9%
+[libx264 @ 0x5616638e3940] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 16% 37% 15%  6%  6%  6%  6%  5%  4%
+[libx264 @ 0x5616638e3940] i8c dc,h,v,p: 57% 29% 10%  3%
+[libx264 @ 0x5616638e3940] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x5616638e3940] kb/s:410.45
+
+  arrange_largest_number[M1]:   5%|▌         | 5/100 [02:40<46:01, 29.07s/ep, frames=3979, written=6][A
+  arrange_largest_number[M1]:   6%|▌         | 6/100 [02:40<42:05, 26.87s/ep, frames=3979, written=6][A

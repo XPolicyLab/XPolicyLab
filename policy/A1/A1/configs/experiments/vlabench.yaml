@@ -1,0 +1,6 @@
+# VLA Training Configuration for VLAbench
+# Combines model and dataset configs
+
+# Import model config (relative to configs/ directory)
+model_config: models/vlabench.yaml
+dataset_config: datasets/vlabench.yaml

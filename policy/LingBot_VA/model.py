@@ -28,7 +28,43 @@ from .lingbot_va.wan_va.wan_va_server import VA_Server
 
 
 DEFAULT_CHECKPOINT_PATH = "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
+DEFAULT_BASE_MODEL_PATH = "/mnt/xspark-data/xspark_shared/model_weights/lingbot-va-base"
 DEFAULT_CONFIG_NAME = "robotwin30_train"
+
+
+def resolve_lingbot_wan_paths(
+    checkpoint_path: str,
+    base_model_path: str | None = None,
+) -> tuple[str, str]:
+    """Resolve base (vae/tokenizer/text_encoder) and finetuned transformer paths."""
+    ckpt_root = Path(checkpoint_path).expanduser().resolve()
+    if not ckpt_root.is_dir():
+        raise FileNotFoundError(f"Checkpoint directory not found: {ckpt_root}")
+
+    transformer_candidates = (
+        ckpt_root / "checkpoints" / "transformer",
+        ckpt_root / "transformer",
+    )
+    for transformer_path in transformer_candidates:
+        if (transformer_path / "config.json").exists():
+            base_root = Path(base_model_path or DEFAULT_BASE_MODEL_PATH).expanduser().resolve()
+            if not (base_root / "vae").is_dir():
+                raise FileNotFoundError(
+                    f"Base model directory missing vae/: {base_root}. "
+                    "Set base_model_path in deploy.yml."
+                )
+            return str(base_root), str(transformer_path)
+
+    if (ckpt_root / "vae").is_dir():
+        transformer_path = ckpt_root / "transformer"
+        if not (transformer_path / "config.json").exists():
+            raise FileNotFoundError(f"Transformer checkpoint not found under: {ckpt_root}")
+        return str(ckpt_root), str(transformer_path)
+
+    raise FileNotFoundError(
+        f"Unrecognized checkpoint layout under {ckpt_root}. "
+        "Expected checkpoints/transformer/ (SFT export) or vae/ + transformer/ (full bundle)."
+    )
 
 JOINT_CONTROL_INDICES = np.array([
     14, 15, 16, 17, 18, 19,
@@ -126,12 +162,18 @@ class Model(ModelTemplate):
             or getattr(job_config, "wan22_pretrained_model_name_or_path", None)
             or DEFAULT_CHECKPOINT_PATH
         )
-        checkpoint_path = str(Path(checkpoint_path).expanduser())
-        if not Path(checkpoint_path).is_dir():
-            raise FileNotFoundError(f"Checkpoint directory not found: {checkpoint_path}")
+        base_path, transformer_path = resolve_lingbot_wan_paths(
+            str(checkpoint_path),
+            model_cfg.get("base_model_path"),
+        )
 
-        model_cfg["checkpoint_path"] = checkpoint_path
-        job_config.wan22_pretrained_model_name_or_path = checkpoint_path
+        model_cfg["checkpoint_path"] = transformer_path
+        job_config.wan22_pretrained_model_name_or_path = base_path
+        job_config.transformer_pretrained_path = transformer_path
+        print(
+            f"[LingBot_VA] base_model={base_path}, transformer={transformer_path}",
+            flush=True,
+        )
         if hasattr(job_config, "infer_mode"):
             job_config.infer_mode = "server"
 

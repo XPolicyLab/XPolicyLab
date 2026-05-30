@@ -1,0 +1,41 @@
+policy_name: FastWAM
+eval_env: sim
+eval_batch: false
+
+# Server transport: overridden by setup_eval_policy_server.sh per launch.
+# Keys are `port` / `host` because XPolicyLab/setup_policy_server.py reads
+# those names (deploy_cfg.get("port") / deploy_cfg.get("host")).
+port: null
+host: null
+
+# Identifiers + per-launch wiring (set via --overrides from the eval scripts).
+dataset_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: null
+action_dim: null
+seed: null
+
+# Policy artefacts: resolved in setup_eval_policy_server.sh from ckpt_name.
+checkpoint_path: null
+dataset_stats_path: null
+
+# FastWAM upstream policy hyperparameters.
+sim_cfg_name: sim_robotwin.yaml
+sim_task: robotwin_uncond_3cam_384_1e-4
+device: cuda
+mixed_precision: bf16
+# null -> upstream default (num_frames - 1, typically 32 for robotwin).
+action_horizon: null
+replan_steps: 24
+num_inference_steps: 10
+sigma_shift: null
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false
+default_instruction: follow the instruction
+allow_dummy_policy: false

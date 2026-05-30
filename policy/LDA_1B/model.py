@@ -187,6 +187,87 @@ def _normalize_actions(normalized_actions: np.ndarray, action_stats: dict[str, A
     return out.astype(normalized_actions.dtype, copy=False)
 
 
+def _normalize_state(state: np.ndarray, state_stats: dict[str, Any] | None) -> np.ndarray:
+    """Apply the same forward normalization used by LDA's StateActionTransform."""
+    if state_stats is None:
+        return state
+
+    state_f64 = state.astype(np.float64, copy=False)
+    if "q01" in state_stats and "q99" in state_stats:
+        low = np.asarray(state_stats["q01"], dtype=np.float64)
+        high = np.asarray(state_stats["q99"], dtype=np.float64)
+        if low.shape[-1] != state_f64.shape[-1] or high.shape[-1] != state_f64.shape[-1]:
+            return state
+        mask = high != low
+        out = np.zeros_like(state_f64)
+        out[..., mask] = 2.0 * (state_f64[..., mask] - low[..., mask]) / (high[..., mask] - low[..., mask]) - 1.0
+        out[..., ~mask] = state_f64[..., ~mask]
+        out = np.clip(out, -1.0, 1.0)
+    elif "mean" in state_stats and "std" in state_stats:
+        mean = np.asarray(state_stats["mean"], dtype=np.float64)
+        std = np.asarray(state_stats["std"], dtype=np.float64)
+        if mean.shape[-1] != state_f64.shape[-1] or std.shape[-1] != state_f64.shape[-1]:
+            return state
+        mask = std != 0
+        out = np.zeros_like(state_f64)
+        out[..., mask] = (state_f64[..., mask] - mean[..., mask]) / std[..., mask]
+        out[..., ~mask] = state_f64[..., ~mask]
+    elif "min" in state_stats and "max" in state_stats:
+        low = np.asarray(state_stats["min"], dtype=np.float64)
+        high = np.asarray(state_stats["max"], dtype=np.float64)
+        if low.shape[-1] != state_f64.shape[-1] or high.shape[-1] != state_f64.shape[-1]:
+            return state
+        mask = high != low
+        out = np.zeros_like(state_f64)
+        out[..., mask] = 2.0 * (state_f64[..., mask] - low[..., mask]) / (high[..., mask] - low[..., mask]) - 1.0
+    else:
+        return state
+
+    return out.astype(state.dtype, copy=False)
+
+
+def _get_instruction(obs: dict[str, Any], fallback: str) -> str:
+    """Resolve the language prompt from a RoboDojo v1.0 observation.
+
+    Reference obs layout (``/mnt/xspark-data/zijian/test.pkl``):
+        {
+            "vision": {"cam_head": ..., "cam_left_wrist": ..., ...},
+            "state": {...},
+            "instruction": "Pick up two slices of bread, ...",  # full English
+            "env_idx": 0,
+            ...
+        }
+
+    Prefer the env-provided ``instruction`` string over the deploy ``task_name``
+    slug fallback so language matches training ``tasks.jsonl`` entries.
+    """
+    value = obs.get("instruction")
+    if value is None:
+        value = obs.get("task_instruction", obs.get("instructions"))
+    if isinstance(value, (list, tuple)):
+        return str(value[0]).strip() if value else fallback
+    if value is None:
+        return fallback
+    if hasattr(value, "item"):
+        value = value.item()
+    if isinstance(value, bytes):
+        value = value.decode("utf-8", errors="replace")
+    text = str(value).strip()
+    return text if text else fallback
+
+
+def _lookup_config(config: Any, path: tuple[str, ...], default: Any = None) -> Any:
+    cursor = config
+    for key in path:
+        if isinstance(cursor, dict):
+            cursor = cursor.get(key, default)
+        else:
+            cursor = getattr(cursor, key, default)
+        if cursor is default:
+            return default
+    return cursor
+
+
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = dict(model_cfg)
@@ -195,35 +276,38 @@ class Model(ModelTemplate):
         get_robot_action_dim_info, _, _ = _process_data_helpers()
         self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
         self.expected_action_dim = sum(self.robot_action_dim_info["arm_dim"]) + sum(self.robot_action_dim_info["ee_dim"])
-        # gr00t's mixture dataloader pads every action key to a per-key max width
-        # (arm->7, gripper_close->1, ...) and concatenates, so the model's
-        # action_dim (e.g. arx_x5 = 16) is wider than the robot's raw action
-        # (arx_x5 raw = 14). We need the per-key (raw_width, padded_width) layout
-        # to reverse that padding at deployment time, before `unpack_robot_state`.
+        # Older arx_x5 checkpoints were trained before the dataloader stopped
+        # padding 6-D arm keys to 7-D. Keep the layout only for compatibility
+        # with those 16-D checkpoints; new arx_x5 checkpoints emit raw 14-D actions.
         self.action_key_layout = self._build_action_key_layout()
 
-        self.camera_names = self.model_cfg.get("camera_names") or [
+        self.camera_names = [
             "cam_head",
             "cam_left_wrist",
             "cam_right_wrist",
         ]
         self.task_instruction = (
-            self.model_cfg.get("task_instruction")
-            or self.model_cfg.get("prompt")
+            self.model_cfg.get("prompt")
             or self.model_cfg.get("task_name")
             or "follow the robot instruction"
         )
-        self.embodiment_id = int(self.model_cfg.get("embodiment_id", 0))
-        self.state_encoding = self.model_cfg.get("state_encoding", "raw")
         self.device = self.model_cfg.get("device", "cuda")
 
         self.model = self.get_model(self.model_cfg)
+        self.robot_type = (
+            _lookup_config(self.model.config, ("datasets", "vla_data", "robot_type"))
+            or self.env_cfg_type
+        )
+        self.embodiment_id = self._resolve_embodiment_id()
+        self.state_encoding = self._resolve_state_encoding()
 
         # Pull the shape contract from the loaded checkpoint's config so encode_obs
         # matches what the checkpoint was actually trained on (e.g. num_views=1 means
         # send only one camera per example; state_dim=None means do not pack state).
         action_model_cfg = self.model.config.framework.action_model
         self.num_views = int(getattr(action_model_cfg, "num_views", 1))
+        self.model_state_dim = getattr(action_model_cfg, "state_dim", None)
+        self.model_state_dim = int(self.model_state_dim) if self.model_state_dim is not None else None
         if self.num_views > len(self.camera_names):
             raise ValueError(
                 f"LDA model expects num_views={self.num_views} cameras, but only "
@@ -234,23 +318,50 @@ class Model(ModelTemplate):
         # contract; passing extras would be silently reinterpreted as time steps by
         # the upstream `predict_action` rearrange and produce shape-mismatch errors.
         self.active_camera_names = self.camera_names[: self.num_views]
-        self.use_state = getattr(action_model_cfg, "state_dim", None) is not None
+        self.use_state = self.model_state_dim is not None
+
+        # === Observation horizon contract ===========================================
+        # The trained model stores its visual history length as `obs_horizon`. The
+        # `MMDiT_ActionHeader.obs_merger` linear is shaped (hidden, num_chans *
+        # (obs_horizon + 1)), so a deploy frame count != obs_horizon will silently
+        # send the wrong number of channels into obs_merger and the model collapses.
+        # We mirror the dataloader's `observation_indices` behavior here: maintain
+        # a per-env per-view rolling image buffer and pull frames at the same
+        # relative offsets the trainer used. ArxX5DataConfig uses `[-5, 0]` for
+        # obs_horizon=2. The offsets themselves come from the checkpoint robot's
+        # DataConfig, not from deploy-time overrides.
+        self.obs_horizon = int(getattr(action_model_cfg, "obs_horizon", 1))
+        if self.obs_horizon == 1:
+            self.obs_indices: list[int] = [0]
+        else:
+            self.obs_indices = self._resolve_observation_indices()
+        if len(self.obs_indices) != self.obs_horizon:
+            raise ValueError(
+                f"obs_indices {self.obs_indices} length must match obs_horizon={self.obs_horizon}. "
+                "Check the checkpoint config and robot DataConfig."
+            )
+        if self.obs_indices[-1] != 0:
+            raise ValueError(
+                f"obs_indices {self.obs_indices} must end with 0 (the current frame); "
+                "history offsets are negative."
+            )
+        self._obs_history_keep = abs(min(self.obs_indices)) + 1
+        # (env_idx, camera_name) -> list[np.ndarray HWC uint8] in time order, oldest first
+        self._image_history: dict[tuple[int, str], list[np.ndarray]] = {}
+        # env_idx -> list[np.ndarray raw state] in time order, oldest first
+        self._state_history: dict[int, list[np.ndarray]] = {}
 
         self.action_stats = self._get_action_stats()
+        self.state_stats = self._get_state_stats()
         self._last_example = None
         self._last_examples = None
 
     def get_model(self, model_cfg):
-        checkpoint_path = _require_path(model_cfg.get("checkpoint_path") or model_cfg.get("model_path"), "checkpoint_path")
+        checkpoint_path = _require_path(model_cfg.get("checkpoint_path"), "checkpoint_path")
 
-        # `baseframework.from_pretrained` reads `<run_dir>/config.yaml` which carries the
-        # training-time *absolute* paths for the base VLM / vision encoder. Those paths
-        # do not exist when the checkpoint is moved across machines (e.g. trained under
-        # `/mnt/xspark-data/...` and deployed under `/personal/...`). Re-implement the
-        # load here so we can patch those paths from `deploy.yml` / env-var overrides
-        # before `build_framework(...)` runs, while keeping the rest of the upstream
-        # loader behavior (config -> namespace -> build -> strict state_dict load ->
-        # attach norm_stats).
+        # Load exactly the checkpoint-side config.yaml and dataset_statistics.json.
+        # Deployment config must not override model shape, backbone paths, or
+        # preprocessing behavior.
         from pathlib import Path
 
         import torch as _torch
@@ -258,19 +369,6 @@ class Model(ModelTemplate):
         from lda.model.framework.share_tools import dict_to_namespace, read_mode_config
 
         config_dict, norm_stats = read_mode_config(Path(checkpoint_path))
-
-        path_overrides = {
-            ("framework", "qwenvl", "base_vlm"): model_cfg.get("base_vlm"),
-            ("framework", "action_model", "vision_encoder_path"): model_cfg.get("vision_encoder_path"),
-        }
-        for keys, value in path_overrides.items():
-            if not value:
-                continue
-            value = _require_path(value, ".".join(keys))
-            cursor = config_dict
-            for key in keys[:-1]:
-                cursor = cursor.setdefault(key, {})
-            cursor[keys[-1]] = value
 
         config_ns = dict_to_namespace(config_dict)
         config_ns.trainer.pretrained_checkpoint = None
@@ -283,6 +381,43 @@ class Model(ModelTemplate):
         policy.eval()
         policy.to(self.device)
         return policy
+
+    def _resolve_state_encoding(self) -> str:
+        from lda.dataloader.gr00t_lerobot.data_config import ROBOT_TYPE_CONFIG_MAP
+        from lda.dataloader.gr00t_lerobot.transform.state_action import StateActionSinCosTransform
+
+        data_config = ROBOT_TYPE_CONFIG_MAP.get(self.robot_type)
+        if data_config is None:
+            return "raw"
+
+        transforms = getattr(data_config.transform(), "transforms", [])
+        state_keys = set(getattr(data_config, "state_keys", []))
+        for transform in transforms:
+            if not isinstance(transform, StateActionSinCosTransform):
+                continue
+            apply_to = set(getattr(transform, "apply_to", []))
+            if not apply_to or apply_to & state_keys:
+                return "sin_cos"
+        return "raw"
+
+    def _resolve_observation_indices(self) -> list[int]:
+        from lda.dataloader.gr00t_lerobot.data_config import ROBOT_TYPE_CONFIG_MAP
+
+        data_config = ROBOT_TYPE_CONFIG_MAP.get(self.robot_type)
+        if data_config is None:
+            return [0] * self.obs_horizon
+        return [int(idx) for idx in getattr(data_config, "observation_indices", [0] * self.obs_horizon)]
+
+    def _resolve_embodiment_id(self) -> int:
+        from lda.dataloader.gr00t_lerobot.embodiment_tags import (
+            EMBODIMENT_TAG_MAPPING,
+            ROBOT_TYPE_TO_EMBODIMENT_TAG,
+        )
+
+        tag = ROBOT_TYPE_TO_EMBODIMENT_TAG.get(self.robot_type)
+        if tag is None:
+            return int(EMBODIMENT_TAG_MAPPING["new_embodiment"])
+        return int(EMBODIMENT_TAG_MAPPING[tag.value])
 
     def _build_action_key_layout(self):
         """Return [(action_key, raw_width, padded_width), ...] in gr00t concat order.
@@ -371,6 +506,23 @@ class Model(ModelTemplate):
             raise KeyError(f"unnorm_key {unnorm_key!r} not found in checkpoint stats.")
         return self.model.norm_stats[unnorm_key]["action"]
 
+    def _get_state_stats(self):
+        unnorm_key = self.model_cfg.get("unnorm_key")
+        if not hasattr(self.model, "norm_stats"):
+            return None
+
+        if unnorm_key is None:
+            if len(self.model.norm_stats) != 1:
+                raise ValueError(
+                    "unnorm_key is required because the LDA checkpoint contains "
+                    f"multiple normalization keys: {list(self.model.norm_stats.keys())}"
+                )
+            unnorm_key = next(iter(self.model.norm_stats.keys()))
+
+        if unnorm_key not in self.model.norm_stats:
+            raise KeyError(f"unnorm_key {unnorm_key!r} not found in checkpoint stats.")
+        return self.model.norm_stats[unnorm_key].get("state")
+
     def update_obs(self, obs):
         self._last_example = self.encode_obs(obs)
         self._last_examples = [self._last_example]
@@ -380,30 +532,74 @@ class Model(ModelTemplate):
         self._last_example = self._last_examples[0] if self._last_examples else None
 
     def encode_obs(self, observation):
-        images = [_extract_camera(observation, name) for name in self.active_camera_names]
+        env_idx = int(observation.get("env_idx", 0))
+        # Build the flat (V*T) image list in the order `predict_action` expects:
+        # `rearrange(curr_imgs, "b (v t) c h w -> b v t c h w", v=num_views)` consumes
+        # frames in (view-major, time-minor) order, i.e.
+        # [v0_t0, v0_t1, ..., v0_t(T-1), v1_t0, ..., v(V-1)_t(T-1)]. T==obs_horizon.
+        flat_images: list[np.ndarray] = []
+        for cam_name in self.active_camera_names:
+            buf = self._image_history.setdefault((env_idx, cam_name), [])
+            buf.append(_extract_camera(observation, cam_name))
+            # Bound the rolling buffer; older frames beyond what obs_indices needs are dropped.
+            if len(buf) > self._obs_history_keep:
+                del buf[: len(buf) - self._obs_history_keep]
+            cur_idx = len(buf) - 1
+            for offset in self.obs_indices:
+                # Clamp negative offsets to the first available frame, mirroring the
+                # gr00t dataloader's behavior at episode start when t + offset < 0.
+                target = cur_idx + offset
+                if target < 0:
+                    target = 0
+                flat_images.append(buf[target])
+
         example = {
-            "image": images,
-            "lang": (
-                observation.get("task_instruction")
-                or observation.get("instruction")
-                or self.task_instruction
-            ),
+            "image": flat_images,
+            "lang": _get_instruction(observation, self.task_instruction),
             "embodiment_id": self.embodiment_id,
         }
 
         if self.use_state:
             _, pack_robot_state, _ = _process_data_helpers()
-            state = pack_robot_state(
+            raw_state = pack_robot_state(
                 observation,
                 self.action_type,
                 self.robot_action_dim_info,
                 source_type="obs",
             ).astype(np.float32)
 
+            state_buf = self._state_history.setdefault(env_idx, [])
+            state_buf.append(raw_state)
+            if len(state_buf) > self._obs_history_keep:
+                del state_buf[: len(state_buf) - self._obs_history_keep]
+            cur_idx = len(state_buf) - 1
+
+            state_frames = []
+            for offset in self.obs_indices:
+                target = cur_idx + offset
+                if target < 0:
+                    target = 0
+                state_frames.append(state_buf[target])
+            state_sequence = np.stack(state_frames, axis=0).astype(np.float32)
+
             if self.state_encoding == "sin_cos":
-                state = np.concatenate([np.sin(state), np.cos(state)], axis=-1).astype(np.float32)
+                state_sequence = np.concatenate([np.sin(state_sequence), np.cos(state_sequence)], axis=-1).astype(np.float32)
             elif self.state_encoding != "raw":
                 raise ValueError("state_encoding must be either 'raw' or 'sin_cos'.")
+
+            state_sequence = _normalize_state(state_sequence, self.state_stats)
+            flat_state = state_sequence.reshape(-1)
+            if self.model_state_dim == state_sequence.shape[-1]:
+                state = state_sequence
+            elif self.model_state_dim == flat_state.shape[-1]:
+                state = flat_state[None, :]
+            else:
+                raise ValueError(
+                    "LDA state dimension mismatch: encoded current state has "
+                    f"{state_sequence.shape[-1]} dims and obs-history state has "
+                    f"{flat_state.shape[-1]} dims, but checkpoint expects "
+                    f"state_dim={self.model_state_dim}."
+                )
             example["state"] = state
 
         return example
@@ -415,17 +611,18 @@ class Model(ModelTemplate):
         output = self.model.predict_action(
             examples=examples,
             do_sample=False,
-            use_ddim=bool(self.model_cfg.get("use_ddim", True)),
-            num_ddim_steps=int(self.model_cfg.get("num_ddim_steps", 10)),
+            use_ddim=True,
+            num_ddim_steps=10,
         )
         normalized = output.get("normalized_actions") if isinstance(output, dict) else output
         normalized = np.asarray(normalized)
 
-        # Strip gr00t per-key padding so the action vector matches the robot's raw
-        # action layout and the normalization stats (both are at raw dim, e.g. 14
-        # for arx_x5, while the model emits 16).
-        normalized_unpadded = self._unpad_actions(normalized)
-        actions = _normalize_actions(normalized_unpadded, self.action_stats)
+        if normalized.shape[-1] == self.expected_action_dim:
+            normalized_robot = normalized
+        else:
+            # Compatibility path for older checkpoints trained with padded arm keys.
+            normalized_robot = self._unpad_actions(normalized)
+        actions = _normalize_actions(normalized_robot, self.action_stats)
         if actions.shape[-1] != self.expected_action_dim:
             raise ValueError(
                 "LDA action dimension mismatch: after unpadding got "
@@ -436,10 +633,9 @@ class Model(ModelTemplate):
 
     def get_action(self):
         actions = self._predict([self._last_example])[0]
-        horizon = int(self.model_cfg.get("action_horizon", actions.shape[0]))
         _, _, unpack_robot_state = _process_data_helpers()
         return unpack_robot_state(
-            actions[:horizon],
+            actions,
             self.action_type,
             self.robot_action_dim_info,
             source_type="obs",
@@ -450,13 +646,16 @@ class Model(ModelTemplate):
             raise RuntimeError("No batch observation has been provided. Call update_obs_batch() first.")
 
         actions = self._predict(self._last_examples)
-        horizon = int(self.model_cfg.get("action_horizon", actions.shape[1]))
         _, _, unpack_robot_state = _process_data_helpers()
         return [
-            unpack_robot_state(env_actions[:horizon], self.action_type, self.robot_action_dim_info, source_type="obs")
+            unpack_robot_state(env_actions, self.action_type, self.robot_action_dim_info, source_type="obs")
             for env_actions in actions
         ]
 
     def reset(self):
         self._last_example = None
         self._last_examples = None
+        # Drop the per-env image history so the next episode does not leak frames
+        # or states from the previous one through obs_indices=[-5, 0].
+        self._image_history.clear()
+        self._state_history.clear()

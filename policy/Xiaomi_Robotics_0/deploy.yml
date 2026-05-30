@@ -1,0 +1,22 @@
+# Basic experiment configuration
+policy_name: Xiaomi_Robotics_0
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+seed: null
+eval_batch: false
+eval_env: debug
+
+# Model / checkpoint configuration (paths are relative to policy/ or xr0/ roots)
+action_type: ee
+action_length: 30
+# Checkpoint tag directory name under model_dir, e.g. last -> last.ckpt/
+checkpoint_tag: last
+# Finetuned XR-0 weights; null = checkpoints/<dataset>-<ckpt>-<env>-<num>-<action>-<seed>/
+model_dir: null
+data_config_name: null
+# MiBotProcessor: HuggingFace repo id (auto-download) or relative path under xr0/ for offline
+vlm_processor_path: XiaomiRobotics/Xiaomi-Robotics-0-Pretrain
+default_prompt: Perform the instructed bimanual manipulation task.
+
+port: 6000
