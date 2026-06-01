@@ -23,8 +23,10 @@ bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <actio
 
 | 变量 | 说明 |
 |------|------|
+| `XPOLICYLAB_LEROBOT_DATA_ROOT` / `LEROBOT_DATA_ROOT` | LeRobot 根目录，默认 `<robodojo_test>/data` |
+| `LEROBOT_DATASET_REPO_ID` | 数据集 repo_id，默认 `RoboDojo_sim_arx-x5_v30`（`arx_x5`） |
 | `LINGBOT_VLA_CONFIG_PATH` | 默认 `configs/vla/robodojo_sim_arx_x5.yaml` |
-| `LINGBOT_VLA_DATA_PATH` | 数据集路径 |
+| `LINGBOT_VLA_DATA_PATH` | 数据集完整路径（默认 `${LEROBOT_DATA_ROOT}/${LEROBOT_DATASET_REPO_ID}`） |
 
 Checkpoint：`checkpoints/<6-tuple>/`
 

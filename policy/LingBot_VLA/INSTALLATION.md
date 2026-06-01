@@ -52,7 +52,9 @@ pip install -e .
 
 | 配置项 / 变量 | 说明 |
 |---------------|------|
-| `train_path` / `LINGBOT_VLA_DATA_PATH` | LeRobot 数据集路径 |
+| `XPOLICYLAB_LEROBOT_DATA_ROOT` / `LEROBOT_DATA_ROOT` | LeRobot 根目录，默认 `<robodojo_test>/data` |
+| `LEROBOT_DATASET_REPO_ID` | repo_id，默认 `RoboDojo_sim_arx-x5_v30`（`arx_x5`） |
+| `train_path` / `LINGBOT_VLA_DATA_PATH` | LeRobot 数据集完整路径 |
 | `model_path` | 基座权重（HF repo id 或本地目录） |
 | `tokenizer_path` | 分词器（如 `Qwen/Qwen2.5-VL-3B-Instruct`） |
 | `LINGBOT_VLA_CONFIG_PATH` | 训练 yaml，默认 `configs/vla/robodojo_sim_arx_x5.yaml` |
