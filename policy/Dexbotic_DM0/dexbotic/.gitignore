@@ -182,4 +182,9 @@ dexbotic/data/data_source/*.py
 !dexbotic/data/data_source/__init__.py
 !dexbotic/data/data_source/register.py
 !dexbotic/data/data_source/uninavid_official.py
-dexbotic/norm_assets
+!dexbotic/data/data_source/navila_official.py
+!dexbotic/data/data_source/robodojo_*.py
+dexbotic/norm_assets/**
+!dexbotic/norm_assets/
+!dexbotic/norm_assets/**/
+!dexbotic/norm_assets/**/norm_stats.json
