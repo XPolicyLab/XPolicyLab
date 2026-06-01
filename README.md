@@ -13,17 +13,20 @@ mkdir demo_env
 cd demo_env
 git clone git@github.com:Luminis-Platform/XPolicyLab.git
 
-# 拉取Demo演示数据及环境配置，数据集格式为`data/${dataset_name}/${task_name}/${env_cfg}`
+# 拉取 Demo 演示数据及环境配置（安装到 data/RoboDojo_demo/，避免与完整 RoboDojo 冲突）
+# 数据格式：data/${dataset_name}/${task_name}/${env_cfg}
 bash scripts/download_data.sh
-# 拉取RoboDojo数据
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0 # lerobot_v3.0数据
+# 拉取完整 RoboDojo / LeRobot v3.0 数据
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
 ```
 将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
 ```text
 demo_env/
 ├── data
-│   └── {dataset_name}
-│       └── {task_name}
+│   ├── RoboDojo_demo/         # scripts/download_data.sh
+│   ├── RoboDojo/              # scripts/RoboDojo/download_robodojo_data.sh
+│   └── {dataset_name}/
+│       └── {task_name}/
 │            └── {env_cfg}
 │                 ├── data
 │                 ├── preview_video
