@@ -4,9 +4,13 @@ ABot 上游安装与数据集准备详见 [abot_m0/INSTALLATION.md](abot_m0/INST
 
 ## 一键安装
 
+先按 [abot_m0/INSTALLATION.md](abot_m0/INSTALLATION.md) 创建 **ABot** conda 环境，再：
+
 ```bash
 bash install.sh
 ```
+
+`install.sh` 会在 `ABot` conda（可用 `ABOT_CONDA_ENV` 覆盖）中安装 XPolicyLab 与 `h5py` / `opencv-python` / `pyyaml`。
 
 ## 手动安装（XPolicyLab 集成）
 
@@ -14,11 +18,13 @@ bash install.sh
 
 按 [abot_m0/INSTALLATION.md](abot_m0/INSTALLATION.md) 创建 conda 环境并安装 `abot_m0`（需单独 clone `ABot-Manipulation` 与 `vggt`）。
 
-### 2. 安装 XPolicyLab
+### 2. 安装 XPolicyLab（须在 ABot conda 内）
 
 ```bash
+conda activate ABot
 cd ../..
 pip install -e .
+pip install h5py opencv-python pyyaml
 ```
 
 ## 模型与数据路径
