@@ -21,5 +21,3 @@ config_name: Policy_offline_release
 checkpoint_path: null
 default_prompt: null
 sample_data_dir: data/RoboDojo/test_data/arx_x5
-debug_zero_action: false
-debug_zero_action_chunk_size: 1

@@ -21,11 +21,13 @@ OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
-STANDARD_CKPT_DIR="${SCRIPT_DIR}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-STANDARD_POLICY_ROOT="${STANDARD_CKPT_DIR}/Policy_offline_release/Policy_offline_release"
+ckpt_run_id="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+ckpt_root_rel="checkpoints/${ckpt_run_id}"
+ckpt_root="${SCRIPT_DIR}/${ckpt_root_rel}"
+policy_root_rel="${ckpt_root_rel}/Policy_offline_release/Policy_offline_release"
+policy_root="${SCRIPT_DIR}/${policy_root_rel}"
 config_name="${RISE_CONFIG_NAME:-Policy_offline_release}"
 default_prompt="${RISE_DEFAULT_PROMPT:-stack the bowls}"
-debug_zero_action="${RISE_DEBUG_ZERO_ACTION:-false}"
 asset_id="${RISE_ASSET_ID:-}"
 model_action_dim="${RISE_MODEL_ACTION_DIM:-}"
 checkpoint_step="${RISE_CHECKPOINT_STEP:-}"
@@ -35,82 +37,47 @@ is_valid_checkpoint_dir() {
     [[ -f "${dir}/model.safetensors" || -f "${dir}/model.pt" || -d "${dir}/params" ]]
 }
 
-latest_valid_step_dir() {
-    local root="$1"
-    python - "${root}" <<'PY'
-import pathlib
-import sys
+checkpoint_path="${RISE_CHECKPOINT_PATH:-}"
+checkpoint_path_abs=""
 
-root = pathlib.Path(sys.argv[1])
-if not root.is_dir():
-    raise SystemExit(1)
-
-steps = sorted(
-    int(path.name)
-    for path in root.iterdir()
-    if path.is_dir()
-    and path.name.isdigit()
-    and (
-        (path / "model.safetensors").is_file()
-        or (path / "model.pt").is_file()
-        or (path / "params").is_dir()
-    )
-)
-if not steps:
-    raise SystemExit(1)
-print(root / str(steps[-1]))
-PY
-}
-
-resolve_checkpoint_path() {
-    local name="$1"
-
-    if [[ -n "${RISE_CHECKPOINT_PATH:-}" && "${RISE_CHECKPOINT_PATH}" != "null" ]]; then
-        echo "${RISE_CHECKPOINT_PATH}"
-        return 0
+if [[ -n "${checkpoint_path}" && "${checkpoint_path}" != "null" ]]; then
+    checkpoint_path_abs="${checkpoint_path}"
+    [[ "${checkpoint_path_abs}" = /* ]] || checkpoint_path_abs="${SCRIPT_DIR}/${checkpoint_path_abs}"
+elif is_valid_checkpoint_dir "${ckpt_root}"; then
+    checkpoint_path="${ckpt_root_rel}"
+    checkpoint_path_abs="${ckpt_root}"
+else
+    if [[ -n "${checkpoint_step}" ]]; then
+        step_dir="${policy_root}/${checkpoint_step}"
+    else
+        latest_step=""
+        for step_dir in "${policy_root}"/*; do
+            [[ -d "${step_dir}" ]] || continue
+            step="$(basename "${step_dir}")"
+            [[ "${step}" =~ ^[0-9]+$ ]] || continue
+            is_valid_checkpoint_dir "${step_dir}" || continue
+            if [[ -z "${latest_step}" || "${step}" -gt "${latest_step}" ]]; then
+                latest_step="${step}"
+            fi
+        done
+        step_dir="${policy_root}/${latest_step}"
     fi
 
-    if [[ -d "${name}" ]]; then
-        echo "$(cd "${name}" && pwd)"
-        return 0
+    if [[ -n "${checkpoint_step:-${latest_step:-}}" && -d "${step_dir}" ]] && is_valid_checkpoint_dir "${step_dir}"; then
+        step="$(basename "${step_dir}")"
+        checkpoint_path="${policy_root_rel}/${step}"
+        checkpoint_path_abs="${step_dir}"
     fi
+fi
 
-    if [[ -d "${SCRIPT_DIR}/checkpoints/${name}" ]]; then
-        echo "$(cd "${SCRIPT_DIR}/checkpoints/${name}" && pwd)"
-        return 0
-    fi
-
-    # XPolicyLab README convention:
-    # policy/RISE/checkpoints/<dataset>-<ckpt>-<env_cfg>-<expert_num>-<action_type>-<seed>/
-    if is_valid_checkpoint_dir "${STANDARD_CKPT_DIR}"; then
-        echo "${STANDARD_CKPT_DIR}"
-        return 0
-    fi
-
-    if [[ -n "${checkpoint_step}" && -d "${STANDARD_POLICY_ROOT}/${checkpoint_step}" ]] && is_valid_checkpoint_dir "${STANDARD_POLICY_ROOT}/${checkpoint_step}"; then
-        echo "${STANDARD_POLICY_ROOT}/${checkpoint_step}"
-        return 0
-    fi
-
-    if [[ -d "${STANDARD_POLICY_ROOT}" ]]; then
-        local latest_standard
-        if latest_standard="$(latest_valid_step_dir "${STANDARD_POLICY_ROOT}")"; then
-            echo "${latest_standard}"
-            return 0
-        fi
-    fi
-
-    return 1
-}
-
-if ! checkpoint_path="$(resolve_checkpoint_path "${ckpt_name}")"; then
+if [[ -z "${checkpoint_path}" ]]; then
     echo -e "\033[31m[SERVER] checkpoint not found for ckpt_name='${ckpt_name}'\033[0m" >&2
     echo -e "\033[31m[SERVER] expected model.safetensors, model.pt, or params/ in the checkpoint directory.\033[0m" >&2
-    echo -e "\033[31m[SERVER] tried: RISE_CHECKPOINT_PATH, abs dir, ${STANDARD_CKPT_DIR}\033[0m" >&2
+    echo -e "\033[31m[SERVER] tried: RISE_CHECKPOINT_PATH, ${ckpt_root_rel}\033[0m" >&2
     exit 1
 fi
 
-if ! is_valid_checkpoint_dir "${checkpoint_path}"; then
+if ! is_valid_checkpoint_dir "${checkpoint_path_abs}"; then
     echo -e "\033[31m[SERVER] invalid checkpoint directory: ${checkpoint_path}\033[0m" >&2
     echo -e "\033[31m[SERVER] expected model.safetensors, model.pt, or params/; found assets-only or incomplete checkpoint.\033[0m" >&2
     exit 1
@@ -118,7 +85,7 @@ fi
 
 if [[ -z "${asset_id}" ]]; then
     asset_id=$(
-        python - "${checkpoint_path}" <<'PY'
+        python - "${checkpoint_path_abs}" <<'PY'
 import pathlib
 import sys
 
@@ -131,9 +98,9 @@ PY
 fi
 
 echo -e "\033[33m[SERVER] policy=${policy_name}, task=${task_name}, ckpt=${ckpt_name}\033[0m"
-echo -e "\033[33m[SERVER] standard_ckpt_dir=${STANDARD_CKPT_DIR}\033[0m"
+echo -e "\033[33m[SERVER] ckpt_run_id=${ckpt_run_id}\033[0m"
 echo -e "\033[33m[SERVER] checkpoint_path=${checkpoint_path}\033[0m"
-echo -e "\033[33m[SERVER] config_name=${config_name}, debug_zero_action=${debug_zero_action}\033[0m"
+echo -e "\033[33m[SERVER] config_name=${config_name}\033[0m"
 echo -e "\033[33m[SERVER] asset_id=${asset_id:-<config default>}\033[0m"
 echo -e "\033[33m[SERVER] policy_server_host=${policy_server_host} policy_server_port=${policy_server_port}\033[0m"
 
@@ -167,5 +134,4 @@ exec env \
             config_name="${config_name}" \
             checkpoint_path="${checkpoint_path}" \
             default_prompt="${default_prompt}" \
-            asset_id="${asset_id}" \
-            debug_zero_action="${debug_zero_action}"
+            asset_id="${asset_id}"

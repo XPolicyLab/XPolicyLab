@@ -30,14 +30,8 @@ class Model(ModelTemplate):
         self.expected_action_dim = sum(self.robot_action_dim_info["arm_dim"]) + sum(
             self.robot_action_dim_info["ee_dim"]
         )
-        self.debug_zero_action = _as_bool(model_cfg.get("debug_zero_action", False))
-        self.zero_action_chunk_size = int(model_cfg.get("debug_zero_action_chunk_size") or 1)
         self._obs_by_env: dict[int, dict] = {}
         self.policy = None
-
-        if self.debug_zero_action:
-            print("[RISE] debug_zero_action=true; real checkpoint loading is skipped.")
-            return
 
         if self.action_type != "joint":
             raise ValueError("RISE upstream policy is joint-action based. Use action_type=joint for real inference.")
@@ -50,8 +44,7 @@ class Model(ModelTemplate):
         if not checkpoint_path or checkpoint_path == "null":
             raise FileNotFoundError(
                 "RISE checkpoint_path is required for real inference. "
-                "Set RISE_CHECKPOINT_PATH or deploy.yml checkpoint_path. "
-                "For wiring-only debug, pass debug_zero_action=true."
+                "Set RISE_CHECKPOINT_PATH or deploy.yml checkpoint_path."
             )
 
         checkpoint_dir = _resolve_policy_path(checkpoint_path)
@@ -89,9 +82,6 @@ class Model(ModelTemplate):
         return self.get_action_batch([0])[0]
 
     def get_action_batch(self, env_idx_list):
-        if self.debug_zero_action:
-            return [self._zero_action_list() for _ in env_idx_list]
-
         if self.policy is None:
             raise RuntimeError("RISE policy is not loaded.")
 
@@ -120,11 +110,6 @@ class Model(ModelTemplate):
 
     def reset(self):
         self._obs_by_env.clear()
-
-    def _zero_action_list(self):
-        zero = np.zeros(self.expected_action_dim, dtype=np.float32)
-        action = unpack_robot_state(zero, self.action_type, self.robot_action_dim_info, source_type="obs")
-        return [action.copy() for _ in range(self.zero_action_chunk_size)]
 
 
 def encode_obs(observation, action_type, robot_action_dim_info):
@@ -178,12 +163,6 @@ def _none_if_null(value):
     if value in (None, "null", "None", ""):
         return None
     return value
-
-
-def _as_bool(value) -> bool:
-    if isinstance(value, bool):
-        return value
-    return str(value).lower() in {"1", "true", "yes", "y"}
 
 
 def _override_train_config(train_cfg, model_cfg):
