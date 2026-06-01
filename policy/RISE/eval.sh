@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-# Contract: 11 positional args. `task_name` is the simulator task; `ckpt_name`
-# resolves the checkpoint directory and may differ (e.g. `99999`, `latest`).
+# Contract: 11 user-facing positional args. The policy server port is allocated
+# internally and passed to the server/client helper scripts.
 dataset_name=$1
 task_name=$2
 ckpt_name=$3

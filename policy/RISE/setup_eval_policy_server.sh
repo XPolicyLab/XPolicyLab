@@ -21,7 +21,6 @@ OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
-CKPT_ROOT="${OFFLINE_DIR}/checkpoints/Policy_offline_release/Policy_offline_release"
 STANDARD_CKPT_DIR="${SCRIPT_DIR}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 STANDARD_POLICY_ROOT="${STANDARD_CKPT_DIR}/Policy_offline_release/Policy_offline_release"
 config_name="${RISE_CONFIG_NAME:-Policy_offline_release}"
@@ -101,26 +100,13 @@ resolve_checkpoint_path() {
         fi
     fi
 
-    # Backward-compatible legacy paths from upstream RISE.
-    if [[ -d "${CKPT_ROOT}/${name}" ]] && is_valid_checkpoint_dir "${CKPT_ROOT}/${name}"; then
-        echo "${CKPT_ROOT}/${name}"
-        return 0
-    fi
-
-    if [[ "${name}" == "latest" && -d "${CKPT_ROOT}" ]]; then
-        local latest_step
-        latest_step="$(latest_valid_step_dir "${CKPT_ROOT}")"
-        echo "${latest_step}"
-        return 0
-    fi
-
     return 1
 }
 
 if ! checkpoint_path="$(resolve_checkpoint_path "${ckpt_name}")"; then
     echo -e "\033[31m[SERVER] checkpoint not found for ckpt_name='${ckpt_name}'\033[0m" >&2
     echo -e "\033[31m[SERVER] expected model.safetensors, model.pt, or params/ in the checkpoint directory.\033[0m" >&2
-    echo -e "\033[31m[SERVER] tried: RISE_CHECKPOINT_PATH, abs dir, ${STANDARD_CKPT_DIR}, ${CKPT_ROOT}/<step>\033[0m" >&2
+    echo -e "\033[31m[SERVER] tried: RISE_CHECKPOINT_PATH, abs dir, ${STANDARD_CKPT_DIR}\033[0m" >&2
     exit 1
 fi
 
