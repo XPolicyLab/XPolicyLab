@@ -16,7 +16,7 @@ git clone git@github.com:Luminis-Platform/XPolicyLab.git
 # 拉取Demo演示数据及环境配置，数据集格式为`data/${dataset_name}/${task_name}/${env_cfg}`
 bash scripts/download_data.sh
 # 拉取RoboDojo数据
-bash scripts/download_robodojo_data.sh
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0 # lerobot_v3.0数据
 ```
 将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
 ```text
