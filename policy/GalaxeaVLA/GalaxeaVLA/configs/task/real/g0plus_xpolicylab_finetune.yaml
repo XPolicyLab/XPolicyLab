@@ -1,0 +1,15 @@
+# @package _global_
+# G0Plus_3B fine-tune on XPolicyLab data (14-dim dual-arm joint, 3 cameras).
+# Override pretrained_ckpt and dataset_dirs on the CLI (train.sh does this).
+
+defaults:
+  - override /data: xpolicylab/dual_arm_joint
+  - override /model: vla/g0plus
+
+model:
+  pretrained_ckpt: checkpoints/G0Plus_3B_base/checkpoints
+
+data:
+  dataset:
+    dataset_dirs:
+      - data/robodojo-pick-arx_x5-50-joint-lerobot

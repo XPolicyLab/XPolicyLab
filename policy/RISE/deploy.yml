@@ -1,0 +1,25 @@
+policy_name: RISE
+eval_env: debug
+eval_batch: false
+
+# Server transport (setup_policy_server.py reads `port` / `host`).
+port: null
+host: null
+
+dataset_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: null
+action_dim: null
+gpu_id: null
+seed: null
+
+upstream_dir: RISE
+config_name: Policy_offline_release
+checkpoint_path: null
+default_prompt: null
+sample_data_dir: data/RoboDojo/test_data/arx_x5
+debug_zero_action: false
+debug_zero_action_chunk_size: 1

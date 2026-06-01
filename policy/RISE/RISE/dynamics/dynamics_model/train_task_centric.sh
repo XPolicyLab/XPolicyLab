@@ -1,0 +1,1 @@
+bash scripts/train.sh main_task.py configs/ltx_model/pretrain.yaml
