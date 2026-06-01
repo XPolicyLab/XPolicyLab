@@ -101,7 +101,7 @@ class Model(ModelTemplate):
             if env_idx not in self._obs_by_env:
                 raise KeyError(f"No observation has been provided for env_idx={env_idx}.")
 
-            result = self.policy.infer(self._obs_by_env[env_idx])
+            result = self.policy.infer(_copy_obs_for_policy(self._obs_by_env[env_idx]))
             actions = np.asarray(result["actions"], dtype=np.float32)
             if actions.ndim == 1:
                 actions = actions[None, :]
@@ -136,6 +136,14 @@ def encode_obs(observation, action_type, robot_action_dim_info):
         },
         "state": pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs").astype(np.float32),
         "prompt": _extract_prompt(observation),
+    }
+
+
+def _copy_obs_for_policy(observation):
+    return {
+        "images": dict(observation["images"]),
+        "state": observation["state"],
+        "prompt": observation["prompt"],
     }
 
 
@@ -179,7 +187,7 @@ def _as_bool(value) -> bool:
 
 
 def _override_train_config(train_cfg, model_cfg):
-    action_dim = model_cfg.get("action_dim")
+    action_dim = _none_if_null(model_cfg.get("model_action_dim"))
     if action_dim:
         train_cfg = dataclasses.replace(
             train_cfg,
@@ -189,5 +197,15 @@ def _override_train_config(train_cfg, model_cfg):
     seed = model_cfg.get("seed")
     if seed is not None:
         train_cfg = dataclasses.replace(train_cfg, seed=int(seed))
+
+    asset_id = _none_if_null(model_cfg.get("asset_id"))
+    if asset_id:
+        train_cfg = dataclasses.replace(
+            train_cfg,
+            data=dataclasses.replace(
+                train_cfg.data,
+                assets=dataclasses.replace(train_cfg.data.assets, asset_id=str(asset_id)),
+            ),
+        )
 
     return train_cfg
