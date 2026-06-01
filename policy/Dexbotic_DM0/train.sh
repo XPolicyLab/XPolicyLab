@@ -16,9 +16,9 @@ gpu_id=$7
 
 # Batch config (single source of truth):
 #   global_batch = DM0_BATCH_SIZE * NUM_GPUS * DM0_GRAD_ACCUM
-export DM0_GLOBAL_BATCH_SIZE="${DM0_GLOBAL_BATCH_SIZE:-256}"
+export DM0_GLOBAL_BATCH_SIZE="${DM0_GLOBAL_BATCH_SIZE:-64}"
 export DM0_BATCH_SIZE="${DM0_BATCH_SIZE:-4}"
-export DM0_MAX_STEPS="${DM0_MAX_STEPS:-60000}"
+export DM0_MAX_STEPS="${DM0_MAX_STEPS:-100000}"
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"

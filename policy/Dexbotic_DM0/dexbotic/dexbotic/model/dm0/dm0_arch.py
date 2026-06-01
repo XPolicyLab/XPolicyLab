@@ -226,7 +226,11 @@ class DM0ForCausalLM(DexboticForCausalLM, ActionOutputForCausalLM):
                     key_states, value_states, layer_idx
                 )
             elif cache_length > layer_idx:
-                cached_keys, cached_values = past_key_values[layer_idx]
+                if hasattr(past_key_values, "layers"):
+                    cached_keys = past_key_values.layers[layer_idx].keys
+                    cached_values = past_key_values.layers[layer_idx].values
+                else:
+                    cached_keys, cached_values = past_key_values[layer_idx]
                 key_states = torch.cat(
                     [cached_keys, key_states], dim=-2
                 )
