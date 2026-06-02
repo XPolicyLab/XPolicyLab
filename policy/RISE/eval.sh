@@ -25,8 +25,6 @@ CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
 
-export RISE_MODEL_CLIENT_TIMEOUT=90
-
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
 
 cleanup() {

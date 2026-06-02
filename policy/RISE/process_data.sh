@@ -15,7 +15,7 @@ DATA_DIR="${ROOT_DIR}/data/${dataset_name}/${task_name}/${env_cfg_type}"
 OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
 CONVERTED_DATASET="${SCRIPT_DIR}/data/${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-lerobot"
 
-python "${SCRIPT_DIR}/process_data.py" \
+python "${SCRIPT_DIR}/RISE/process_data.py" \
     "${dataset_name}" \
     "${task_name}" \
     "${env_cfg_type}" \

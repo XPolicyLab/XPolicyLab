@@ -14,8 +14,8 @@ from XPolicyLab.utils.load_file import load_hdf5
 from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info, pack_robot_state
 
 
-POLICY_DIR = Path(__file__).resolve().parent
-REPO_ROOT = POLICY_DIR.parents[3]
+POLICY_DIR = Path(__file__).resolve().parent.parent
+REPO_ROOT = POLICY_DIR.parents[2]
 OFFLINE_DIR = POLICY_DIR / "RISE" / "policy_and_value" / "policy_offline_and_value"
 MINI_LEROBOT_SRC = OFFLINE_DIR / "mini_lerobot" / "src"
 
