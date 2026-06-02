@@ -12,21 +12,19 @@ XPolicyLab 是一个统一的策略训练与评测平台，旨在通过一套代
 mkdir demo_env
 cd demo_env
 git clone git@github.com:Luminis-Platform/XPolicyLab.git
-
-# 拉取 Demo 演示数据及环境配置（安装到 data/RoboDojo_demo/，避免与完整 RoboDojo 冲突）
-# 数据格式：data/${dataset_name}/${task_name}/${env_cfg}
-bash scripts/download_data.sh
+# 可选：拉取完整 RoboDojo / Demo 数据（标准格式）
+bash scripts/download_demo_data.sh
 # 可选：拉取完整 RoboDojo / HDF5 数据（标准格式）
 bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
 # 可选：拉取完整 RoboDojo / LeRobot v3.0 数据
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0>>>>>>> 374843f40c3a7534b0f89f65ff069ac52fd4abbc
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
 ```
 将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
 ```text
 demo_env/
 ├── data
-│   ├── RoboDojo_demo/         # scripts/download_data.sh
-│   ├── RoboDojo/              # scripts/RoboDojo/download_robodojo_data.sh
+│   ├── demo/         # scripts/RoboDojo/download_robodojo_data.sh modelscope demo
+│   ├── RoboDojo/     # scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
 │   └── {dataset_name}/
 │       └── {task_name}/
 │            └── {env_cfg}
@@ -35,7 +33,7 @@ demo_env/
 │                 ├── scene_layout
 │                 ├── seed.txt
 │                 └── traj_data
-├── env_cfg
+├── env_cfg           # scripts/RoboDojo/download_robodojo_data.sh modelscope env_cfg
 └── XPolicyLab
 ```
 

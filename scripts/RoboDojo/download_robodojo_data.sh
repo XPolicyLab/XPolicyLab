@@ -10,10 +10,12 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"  # XPolicyLab 根目录
-DATA_ROOT="${PROJECT_ROOT}/data"
+DATA_ROOT="${PROJECT_ROOT}/../data"
 
 SOURCE="${1:-}"      # 下载源: modelscope / huggingface
-DATA_TYPE="${2:-}"   # 数据格式: lerobot_v3.0 / lerobot_v2.1 / hdf5 / hdf5_w_depth
+DATA_TYPE="${2:-}"   # 数据格式: lerobot_v3.0 / lerobot_v2.1 / hdf5 / hdf5_w_depth / demo
+
+MODELSCOPE_REPO="https://oauth2:ms-98d73e79-a89f-4cfa-ac03-039f2d26c7b4@www.modelscope.cn/datasets/niantianshinidie/RoboDojo_release.git"
 
 usage() {
 	cat <<'EOF'
@@ -24,10 +26,11 @@ Sources:
   huggingface
 
 Types:
-  lerobot_v3.0
-  lerobot_v2.1
-  hdf5
-  hdf5_w_depth
+  lerobot_v3.0   -> RoboDojo_lerobot_v30_video
+  lerobot_v2.1   -> RoboDojo_lerobot_v21_video
+  hdf5           -> RoboDojo
+  hdf5_w_depth   -> RoboDojo_w_depth
+  demo           -> demo
 
 Example:
   bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
@@ -77,19 +80,49 @@ clone_sparse_folder() {
 	echo "==> Saved to ${target_dir}"
 }
 
-case "${SOURCE}:${DATA_TYPE}" in
-	modelscope:lerobot_v3.0)
-		clone_sparse_folder \
-			"https://oauth2:ms-98d73e79-a89f-4cfa-ac03-039f2d26c7b4@www.modelscope.cn/datasets/niantianshinidie/RoboDojo_release.git" \
-			"RoboDojo_lerobot_v30_video" \
-			"${DATA_ROOT}/RoboDojo_lerobot_v30_video"
+resolve_data_paths() {
+	case "${DATA_TYPE}" in
+		lerobot_v3.0)
+			REMOTE_DIR="RoboDojo_lerobot_v30_video"
+			TARGET_DIR="${DATA_ROOT}/RoboDojo_lerobot_v30_video"
+			;;
+		lerobot_v2.1)
+			REMOTE_DIR="RoboDojo_lerobot_v21_video"
+			TARGET_DIR="${DATA_ROOT}/RoboDojo_lerobot_v21_video"
+			;;
+		hdf5)
+			REMOTE_DIR="RoboDojo"
+			TARGET_DIR="${DATA_ROOT}/RoboDojo"
+			;;
+		demo)
+			REMOTE_DIR="demo"
+			TARGET_DIR="${DATA_ROOT}/demo"
+			;;
+		hdf5_w_depth)
+			REMOTE_DIR="RoboDojo_w_depth"
+			TARGET_DIR="${DATA_ROOT}/RoboDojo_w_depth"
+			;;
+		*)
+			echo "Invalid type: ${DATA_TYPE}" >&2
+			return 1
+			;;
+	esac
+}
+
+case "${SOURCE}" in
+	modelscope)
+		if ! resolve_data_paths; then
+			usage
+			exit 1
+		fi
+		clone_sparse_folder "${MODELSCOPE_REPO}" "${REMOTE_DIR}" "${TARGET_DIR}"
 		;;
-	modelscope:lerobot_v2.1|modelscope:hdf5|modelscope:hdf5_w_depth|huggingface:*)
+	huggingface)
 		echo "Not implemented yet: source=${SOURCE}, type=${DATA_TYPE}" >&2
 		exit 1
 		;;
 	*)
-		echo "Invalid source or type: source=${SOURCE}, type=${DATA_TYPE}" >&2
+		echo "Invalid source: ${SOURCE}" >&2
 		usage
 		exit 1
 		;;
