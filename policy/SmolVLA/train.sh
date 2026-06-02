@@ -15,17 +15,25 @@ seed=$6
 gpu_id=$7
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONDA_ENV="${SMOVLA_CONDA_ENV:-smolvla}"
+
+# shellcheck disable=SC1091
+source "${POLICY_DIR}/conda_init.sh"
+smolvla_setup_runtime "${CONDA_ENV}"
+
 data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-REPO_ID="${SMOVLA_REPO_ID:-${data_setting}}"
+# LeRobot 数据集 repo_id 与 task 对应，例如 build_tower -> RoboDojo_sim_build_tower_v30
+REPO_ID="${SMOVLA_REPO_ID:-$(smolvla_repo_id_for_task "${ckpt_name}")}"
 OUTPUT_DIR="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 JOB_NAME="${SMOVLA_JOB_NAME:-${ckpt_setting}}"
 VIDEO_BACKEND="${VIDEO_BACKEND:-pyav}"
 
-mkdir -p "${OUTPUT_DIR}"
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
+export HF_LEROBOT_HOME="${HF_LEROBOT_HOME:-${SMOVLA_HF_LEROBOT_HOME:-/mnt/xspark-data/xspark_shared/lerobot}}"
 
 echo "[SmolVLA] repo_id=${REPO_ID}"
+echo "[SmolVLA] HF_LEROBOT_HOME=${HF_LEROBOT_HOME}"
 echo "[SmolVLA] checkpoint_dir=${OUTPUT_DIR}"
 
 lerobot-train \
