@@ -18,6 +18,8 @@ bash scripts/download_demo_data.sh
 bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
 # 可选：拉取完整 RoboDojo / LeRobot v3.0 数据
 bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
+# 可选：拉取完整 RoboDojo / LeRobot v2.1 数据
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1
 ```
 将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
 ```text
