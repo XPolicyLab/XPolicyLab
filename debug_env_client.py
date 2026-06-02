@@ -13,7 +13,7 @@ class TestEnv:
         env_cfg_type = deploy_cfg['env_cfg_type']
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
-        self.model_client = ModelClient(host=deploy_cfg['host'], port=deploy_cfg['port'])
+        self.model_client = ModelClient(host=deploy_cfg.get("host", "localhost"), port=deploy_cfg['port'])
 
     def get_obs(self, env_idx=0):
         # v1.0
@@ -100,7 +100,7 @@ class TestEnv:
         for i, prefix in enumerate(prefixes):
             state[f"{prefix}arm_joint_state"] = np.zeros(arm_dims[i], dtype=np.float32)
             state[f"{prefix}ee_joint_state"] = np.zeros(ee_dims[i], dtype=np.float32)
-            state[f"{prefix}ee_pose"] = np.ones(7, dtype=np.float32)
+            state[f"{prefix}ee_pose"] = np.zeros(7, dtype=np.float32)
             state[f"{prefix}tcp_pose"] = np.zeros(7, dtype=np.float32)
             state[f"{prefix}delta_ee_pose"] = np.zeros(7, dtype=np.float32)
 
@@ -273,8 +273,8 @@ if __name__ == "__main__":
     parser.add_argument("--task_name", required=True, type=str)
     parser.add_argument("--env_cfg_type", type=str, required=True)
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
-    parser.add_argument("--host", type=str, default="localhost", help="server host")
     parser.add_argument("--port", type=int, required=True, help="server port")
+    parser.add_argument("--host", type=str, default="localhost", help="model server IP/hostname")
     parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")
     parser.add_argument("--eval_batch", type=str2bool, default=False, help="whether to run batch evaluation")
 
