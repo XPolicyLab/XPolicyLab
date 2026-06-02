@@ -35,7 +35,9 @@ pip install -e .
 
 | 变量 | 说明 |
 |------|------|
-| `LINGBOT_VA_DATASET_PATH` | LeRobot 训练数据目录 |
+| `XPOLICYLAB_LEROBOT_DATA_ROOT` / `LEROBOT_DATA_ROOT` | LeRobot 根目录，默认 `<robodojo_test>/data` |
+| `LEROBOT_DATASET_REPO_ID` | repo_id，默认 `RoboDojo_sim_arx-x5_v30`（`arx_x5`） |
+| `LINGBOT_VA_DATASET_PATH` | LeRobot 训练数据完整目录 |
 | `LINGBOT_VA_CONFIG_NAME` | 训练配置名（默认 `robotwin30_train`） |
 | Wan 权重 | 数据处理脚本 `--model-root` 指向本地 Wan2.2 目录或 HF 缓存 |
 

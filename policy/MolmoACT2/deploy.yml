@@ -1,0 +1,16 @@
+policy_name: MolmoACT2
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: joint
+seed: 0
+eval_batch: true
+eval_env: debug
+
+checkpoint_num: 40000
+inference_action_mode: continuous
+policy_uv_env_path: molmoact2/lerobot
+device: cuda
+actions_per_chunk: null
+port: 6000

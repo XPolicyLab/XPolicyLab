@@ -1,0 +1,56 @@
+
+#### change to the ltx backbone ckpts path
+pretrained_model_name_or_path: path/checkpoints
+
+tokenizer_class_path: transformers
+tokenizer_class: T5Tokenizer
+textenc_class_path: transformers
+textenc_class: T5EncoderModel
+vae_class_path: models/ltx_models/autoencoder_kl_ltx.py
+vae_class: AutoencoderKLLTXVideo
+
+diffusion_model_class_path: models/ltx_models/action_encoder_control.py
+diffusion_model_class: LTXVideoTransformer3DModel
+diffusion_scheduler_class_path: diffusers
+diffusion_scheduler_class: FlowMatchEulerDiscreteScheduler
+
+pipeline_class_path: models/pipeline/custom_pipeline.py
+pipeline_class: CustomPipeline
+
+return_video: true
+
+mixed_precision: bf16
+allow_tf32: False
+
+nccl_timeout: 600
+seed: 57
+
+diffusion_model:
+  #### change to our diffusion ckpts path
+  model_path: path/checkpoints/model/diffusion_pytorch_model.safetensors
+  config:
+    activation_fn: gelu-approximate
+    attention_bias: true
+    attention_head_dim: 64
+    attention_out_bias: true
+    caption_channels: 4096
+    cross_attention_dim: 2048
+    in_channels: 128
+    norm_elementwise_affine: false
+    norm_eps: 1.0e-6
+    num_attention_heads: 32
+    num_layers: 28
+    out_channels: 128
+    patch_size: 1
+    patch_size_t: 1
+    qk_norm: rms_norm_across_heads
+    action_expert: false
+    action_in_channels: 14
+    action_num_attention_heads: 16
+    action_attention_head_dim: 32
+
+use_color_jitter: true
+num_inference_step: 50
+noisy_video: true
+
+load_weights: true

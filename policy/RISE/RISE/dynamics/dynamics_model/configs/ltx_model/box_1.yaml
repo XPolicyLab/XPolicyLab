@@ -1,0 +1,73 @@
+
+pretrained_model_name_or_path: /cpfs01/user/yangjiazhi/lijinwei/RISE_release/world_model/dynamics_model/checkpoints
+
+tokenizer_class_path: transformers
+tokenizer_class: T5Tokenizer
+textenc_class_path: transformers
+textenc_class: T5EncoderModel
+vae_class_path: /cpfs01/user/yangjiazhi/lijinwei/RISE_release/world_model/dynamics_model/models/ltx_models/autoencoder_kl_ltx.py
+vae_class: AutoencoderKLLTXVideo
+
+diffusion_model_class_path: /cpfs01/user/yangjiazhi/lijinwei/RISE_release/world_model/dynamics_model/models/ltx_models/action_encoder_control.py
+diffusion_model_class: LTXVideoTransformer3DModel
+diffusion_scheduler_class_path: diffusers
+diffusion_scheduler_class: FlowMatchEulerDiscreteScheduler
+
+pipeline_class_path: /cpfs01/user/yangjiazhi/lijinwei/RISE_release/world_model/dynamics_model/models/pipeline/custom_pipeline.py
+pipeline_class: CustomPipeline
+
+return_video: true
+
+mixed_precision: bf16
+allow_tf32: False
+
+nccl_timeout: 600
+seed: 57
+
+diffusion_model:
+  ### Only Modify Needed Below ###
+  # model_path: /gpfs/lijinwei/Genie-Envisioner/all_Galaxea/2025_11_13_17_44_48/step_40000/diffusion_pytorch_model.safetensors
+  # model_path: /gpfs/lijinwei/Genie-Envisioner/all_Galaxea/2025_11_25_21_45_15/step_40000/diffusion_pytorch_model.safetensors   # !! Cannot be found
+
+
+  # model_path: /gpfs/lijinwei/Genie-Envisioner/all_Galaxea/2026_01_22_19_45_20/step_60000/diffusion_pytorch_model.safetensors
+  # model_path: /gpfs/lijinwei/Genie-Envisioner/all_Galaxea/2026_01_26_10_23_53/step_60000/diffusion_pytorch_model.safetensors
+  model_path: /mnt/data/lijinwei/0227/final_backup/release_ckpt_dynamics/box/diffusion_pytorch_model.safetensors
+
+
+  # model_path: /gpfs/lijinwei/Genie-Envisioner/all_Galaxea/2026_01_08_18_03_22/step_180000/diffusion_pytorch_model.safetensors  # ! Cannot be found
+
+
+  # model_path: /gpfs/lijinwei/Genie-Envisioner/all_Galaxea/43_train_cpu_f2/step_14000/diffusion_pytorch_model.safetensors
+  ### Only Modify Needed Above ###
+  config:
+    activation_fn: gelu-approximate
+    attention_bias: true
+    attention_head_dim: 64
+    attention_out_bias: true
+    caption_channels: 4096
+    cross_attention_dim: 2048
+    in_channels: 128
+    norm_elementwise_affine: false
+    norm_eps: 1.0e-6
+    num_attention_heads: 32
+    num_layers: 28
+    out_channels: 128
+    patch_size: 1
+    patch_size_t: 1
+    qk_norm: rms_norm_across_heads
+    action_expert: false
+    action_in_channels: 14
+    action_num_attention_heads: 16
+    action_attention_head_dim: 32
+
+use_color_jitter: true
+num_inference_step: 50
+noisy_video: true
+
+# false for quick debug, for training set True
+load_weights: true
+
+min_val: [-1.2569797039031982, -0.015368163585662842, -2.9705562591552734, -1.7858469486236572, -1.2238012552261353, -2.116654872894287, -0.004800000227987766, -1.1926462650299072, -0.011425820179283619, -2.889738082885742, -1.5043879747390747, -1.2006704807281494, -2.1159398555755615, -0.0010999999940395355]
+
+max_val: [1.1646835803985596, 3.1207141876220703, 0.0, 1.7559653520584106, 1.3258661031723022, 2.117056131362915, 0.10109999775886536, 1.4933459758758545, 2.8809986114501953, 0.0, 1.7803171873092651, 1.3112828731536865, 2.0924253463745117, 0.10080000013113022]

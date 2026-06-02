@@ -1,20 +1,22 @@
 # MolmoAct2 环境配置
 
-MolmoAct2 需要 **两套独立的 uv 虚拟环境**：
+MolmoAct2 在 XPolicyLab 中有两类 Python 环境：
 
 | 环境 | 目录 | 用途 |
 | --- | --- | --- |
-| 推理 Server | `molmoact2/.venv` | FastAPI 官方 server |
-| 训练 LeRobot | `molmoact2/lerobot/.venv` | `lerobot_train` / XPolicyLab 集成 |
+| **XPolicyLab 训练 / 评测（推荐）** | `molmoact2/lerobot/.venv` | `lerobot_train`、`eval.sh`、`model.py` 推理 |
+| 上游 FastAPI Server（可选） | `molmoact2/.venv` | 官方 `examples/droid/`、`examples/yam/` server |
+
+**RoboDojo 训练与 XPolicyLab 评测共用 `molmoact2/lerobot/.venv`，无需单独推理 venv。**
 
 > `molmoact2/` 不在 Git 中，首次请运行 `bash install.sh` 本地 clone。
 
 ## 一键安装
 
 ```bash
-bash install.sh          # 训练环境 + XPolicyLab（RoboDojo 推荐）
-bash install.sh all      # 推理 + 训练
-bash install.sh infer    # 仅推理 server
+bash install.sh          # lerobot 训练环境 + XPolicyLab（RoboDojo 默认）
+bash install.sh all      # 上述 + 上游 FastAPI 推理 venv
+bash install.sh infer    # 仅上游 FastAPI 推理 venv（非 XPolicyLab eval）
 ```
 
 ## 手动安装
@@ -34,7 +36,28 @@ git submodule update --init --recursive
 # git clone -b molmoact2-policy https://github.com/allenai/lerobot lerobot
 ```
 
-### 2. 推理环境（可选）
+### 2. XPolicyLab 训练 / 评测环境（必需）
+
+RoboDojo 训练与 `eval.sh` 推理均使用此 venv：
+
+```bash
+cd molmoact2/lerobot
+UV_LINK_MODE=copy uv pip install -e ".[molmoact2,training,scipy-dep]" --index-strategy unsafe-best-match
+```
+
+### 3. 安装 XPolicyLab
+
+```bash
+cd molmoact2/lerobot
+source .venv/bin/activate
+cd ../../..
+pip install -e .    # 若 venv 无 pip，可先 python -m ensurepip
+pip install h5py opencv-python
+```
+
+### 4. 上游 FastAPI 推理环境（可选，非 XPolicyLab eval）
+
+仅在使用官方 DROID/YAM server 时需要：
 
 ```bash
 cd molmoact2
@@ -43,7 +66,7 @@ export HF_HUB_ENABLE_HF_TRANSFER=1
 uv run hf download allenai/MolmoAct2
 ```
 
-### 3. 训练环境
+### 5. 训练环境（与第 2 步相同，高级手动步骤）
 
 ```bash
 cd molmoact2/lerobot
@@ -57,16 +80,6 @@ export HF_HUB_ENABLE_HF_TRANSFER=1
 uv run huggingface-cli download allenai/MolmoAct2
 ```
 
-### 4. 安装 XPolicyLab
-
-```bash
-cd molmoact2/lerobot
-source .venv/bin/activate
-cd ../../..
-uv pip install -e .
-uv pip install h5py opencv-python
-```
-
 ## 模型与数据路径
 
 | 变量 | 说明 |
@@ -75,14 +88,17 @@ uv pip install h5py opencv-python
 | `MOLMOACT2_DATASET_ROOT` | LeRobot v3.0 数据集根目录 |
 | `MOLMOACT2_DATASET_REPO_ID` | 数据集 repo id |
 | `MOLMOACT2_OUTPUT_ROOT` | 训练输出根目录 |
+| `MOLMOACT2_LOCAL_CACHE_ROOT` | 本机 HF datasets 缓存（多机训练防 NFS 锁竞争，默认 `/tmp/molmoact2-cache-$(hostname)`） |
 | `SKIP_XPOLICYLAB=1` | `install.sh` 时跳过 XPolicyLab |
 
 ## 常见错误
 
 | 现象 | 处理 |
 | --- | --- |
-| `get_policy_class('molmoact2')` 失败 | 使用 `lerobot/.venv`，非 `molmoact2/.venv` |
-| transformers 冲突 | 保持两个 venv 分离 |
+| `get_policy_class('molmoact2')` 失败 | 使用 `molmoact2/lerobot/.venv`，非 `molmoact2/.venv` |
+| `import XPolicyLab` 失败 | 在 `lerobot/.venv` 中 `pip install -e .`（见上文第 3 步） |
+| transformers 冲突 | XPolicyLab eval 与训练均用 `lerobot/.venv`；FastAPI server 才用 `molmoact2/.venv` |
 | `torchcodec` 版本冲突 | 安装时加 `--index-strategy unsafe-best-match` |
+| 多机训练 dataloader 很慢 | 确认 `train.sh` 已设置本机 `HF_DATASETS_CACHE`；可设 `MOLMOACT2_LOCAL_CACHE_ROOT` 到有足够空间的本地盘 |
 
-训练入口见 [README.md](README.md)。
+训练与评测入口见 [README.md](README.md)。

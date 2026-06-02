@@ -22,14 +22,14 @@ MolmoACT2/
 ├── README.md                # 本文件
 ├── install.sh               # 一键 clone 上游 + 安装 venv（molmoact2/ 不提交 Git）
 ├── train.sh                 # LeRobot 微调入口
-├── eval.sh                  # （待完善）XPolicyLab 评测编排
-├── model.py / deploy.py     # （待完善）XPolicyLab 推理封装
+├── eval.sh                  # XPolicyLab 评测编排
+├── model.py / deploy.py     # XPolicyLab 推理封装
 └── molmoact2/               # 上游 MolmoAct2 源码（install.sh 本地 clone，已 .gitignore）
     ├── examples/            # DROID / YAM FastAPI 推理 server
     └── lerobot/             # LeRobot molmoact2-policy 子模块（训练用）
 ```
 
-当前已就绪：**官方推理 server**（`molmoact2/examples/`）与 **LeRobot 训练文档**（[molmoact2.mdx](https://github.com/allenai/lerobot/blob/molmoact2-policy/docs/source/molmoact2.mdx)）。XPolicyLab 封装脚本（`process_data.sh` / `train.sh` / `eval.sh` 等）按下方约定逐步补齐。
+当前已就绪：**官方推理 server**（`molmoact2/examples/`）、**LeRobot 训练**与 **XPolicyLab eval.sh**（`model.py` + `deploy.yml`）。
 
 ## 环境安装
 
@@ -37,8 +37,8 @@ MolmoACT2/
 
 **要点：**
 - `molmoact2/` 不在 Git 仓库中，首次使用运行 `bash install.sh`
-- 推理（`molmoact2/.venv`）与训练（`lerobot/.venv`）是两套独立 uv 环境
-- XPolicyLab 装进 `lerobot/.venv`
+- **RoboDojo 训练与 XPolicyLab 评测共用 `molmoact2/lerobot/.venv`**
+- `molmoact2/.venv` 仅用于上游 FastAPI 官方 server（可选）
 
 ## 1. 数据处理
 
@@ -136,7 +136,9 @@ bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0
 policy/MolmoACT2/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
 ```
 
-常用环境变量：`MOLMOACT2_CHECKPOINT_PATH`（默认 `allenai/MolmoAct2`）、`MOLMOACT2_BATCH_SIZE`、`MOLMOACT2_STEPS`、`MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY=0`（全量微调）。
+常用环境变量：`MOLMOACT2_CHECKPOINT_PATH`（默认 `allenai/MolmoAct2`）、`MOLMOACT2_BATCH_SIZE`、`MOLMOACT2_STEPS`、`MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY=0`（全量微调）、`MOLMOACT2_LOCAL_CACHE_ROOT`（多机训练时每台机器独立的 HF datasets 缓存，默认 `/tmp/molmoact2-cache-$(hostname)`）。
+
+多机并发训练同一 NFS 数据集时，`train.sh` 会自动把 `HF_DATASETS_CACHE` 指到本机目录，避免 pyarrow mmap 缓存在共享存储上抢锁（与 Pi_05 相同策略）。首次启动会在本机重建 parquet cache，需预留约等于 parquet 体积的本地磁盘空间。
 
 ### 直接调用 LeRobot（高级）
 
@@ -208,9 +210,9 @@ uv run python examples/droid/host_server_droid.py --host 0.0.0.0 --port 8000 --d
 
 请求/响应为 `json_numpy` 编码，详见 `molmoact2/CLAUDE.md`。
 
-### 3.2 XPolicyLab 统一评测（规划）
+### 3.2 XPolicyLab 统一评测
 
-`eval.sh` 遵循 XPolicyLab 统一 11 参数：
+`eval.sh` 遵循 XPolicyLab 统一 11 参数。policy 侧使用 `molmoact2/lerobot/.venv`（与训练相同），在 `deploy.yml` 中通过 `policy_uv_env_path: molmoact2/lerobot` 指定；`eval.sh` 第 10 参数传 `uv` 即可。
 
 ```bash
 bash eval.sh \
@@ -219,10 +221,11 @@ bash eval.sh \
   <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 ```
 
-示例（debug 模式）：
+示例（debug 模式，双臂 cotrain checkpoint）：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0 0 molmoact2 XPolicyLab
+cd policy/MolmoACT2
+bash eval.sh RoboDojo debug_task cotrain arx_x5 3500 joint 0 0 0 uv XPolicyLab
 ```
 
 `deploy.yml` 中 `eval_env` 设为 `debug` 可离线调试观测/动作格式；通过后改为 `sim` 跑 RoboDojo 仿真。

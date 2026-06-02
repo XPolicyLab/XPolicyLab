@@ -2,10 +2,10 @@
 # MolmoAct2 一键安装（对应 INSTALLATION.md）
 #
 # Usage:
-#   bash install.sh          # 训练环境 + XPolicyLab（默认，RoboDojo co-train 推荐）
+#   bash install.sh          # lerobot 训练环境 + XPolicyLab（RoboDojo 默认，训练与 eval 共用）
 #   bash install.sh train    # 同上
-#   bash install.sh infer    # 仅推理 FastAPI server 环境
-#   bash install.sh all      # 推理 + 训练两套 venv
+#   bash install.sh infer    # 仅上游 FastAPI server venv（非 XPolicyLab eval）
+#   bash install.sh all      # lerobot + XPolicyLab + FastAPI server两套 venv
 #
 # 环境变量（可选）:
 #   MOLMOACT2_REPO       默认 https://github.com/allenai/molmoact2.git
@@ -46,9 +46,15 @@ init_molmoact2_source() {
     git clone --recurse-submodules "${MOLMOACT2_REPO}" "${MOLMOACT2_DIR}"
   fi
 
-  if [[ ! -d "${LEROBOT_DIR}/.git" ]]; then
+  if [[ ! -f "${LEROBOT_DIR}/pyproject.toml" ]]; then
+    if [[ -d "${LEROBOT_DIR}" ]] && [[ -n "$(ls -A "${LEROBOT_DIR}" 2>/dev/null)" ]]; then
+      echo "错误: ${LEROBOT_DIR} 已存在但缺少 pyproject.toml，请删除后重试 install.sh" >&2
+      exit 1
+    fi
     echo "lerobot submodule 为空，手动 clone 分支 ${LEROBOT_BRANCH}"
     git clone -b "${LEROBOT_BRANCH}" "${LEROBOT_REPO}" "${LEROBOT_DIR}"
+  elif [[ ! -d "${LEROBOT_DIR}/.git" ]]; then
+    echo "lerobot 源码已存在（无 .git），跳过 clone: ${LEROBOT_DIR}"
   fi
 
   if [[ ! -f "${LEROBOT_DIR}/pyproject.toml" ]]; then
@@ -82,20 +88,23 @@ install_xpolicylab() {
   fi
 
   echo ""
-  echo "=== 4. 安装 XPolicyLab 到 lerobot/.venv ==="
+  echo "=== 4. 安装 XPolicyLab 到 lerobot/.venv（训练与 eval 共用） ==="
   # shellcheck disable=SC1091
   source "${LEROBOT_DIR}/.venv/bin/activate"
   cd "${XPOLICYLAB_ROOT}"
+  if ! python -m pip --version >/dev/null 2>&1; then
+    python -m ensurepip --upgrade
+  fi
   uv pip install -e .
   uv pip install h5py opencv-python
-  python -c "import XPolicyLab; print('XPolicyLab ok')"
+  python -c "import XPolicyLab; import cv2, h5py; print('XPolicyLab ok')"
 }
 
 verify_all() {
   echo ""
   echo "=== 安装完成 ==="
-  echo "推理 venv:  ${MOLMOACT2_DIR}/.venv"
-  echo "训练 venv:  ${LEROBOT_DIR}/.venv"
+  echo "XPolicyLab venv: ${LEROBOT_DIR}/.venv  (train + eval)"
+  echo "FastAPI venv:     ${MOLMOACT2_DIR}/.venv  (optional upstream server)"
   echo "训练入口:   bash ${POLICY_DIR}/train.sh ..."
 }
 

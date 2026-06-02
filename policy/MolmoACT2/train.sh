@@ -22,6 +22,7 @@
 #   MOLMOACT2_ENABLE_LORA_VLM  1=对 VLM 开 LoRA，默认 0
 #   MOLMOACT2_CHUNK_SIZE       action horizon，默认 10
 #   MOLMOACT2_WANDB_ENABLE     1 开启 wandb，默认 0
+#   MOLMOACT2_LOCAL_CACHE_ROOT  本机 HF datasets 缓存根目录，默认 /tmp/molmoact2-cache-$(hostname)
 
 set -euo pipefail
 
@@ -52,12 +53,12 @@ OUTPUT_DIR="${MOLMOACT2_OUTPUT_ROOT}/${ckpt_setting}"
 JOB_NAME="${MOLMOACT2_JOB_NAME:-${ckpt_setting}}"
 
 # 默认：RoboDojo 双臂 v30 co-train（3500 episodes / ~1.86M frames）
-# 8×80GB：每卡 bs=32 → global batch=256；OOM 时可设 MOLMOACT2_BATCH_SIZE=24
+# 8×80GB：每卡 bs=15 → global batch=128；
 MOLMOACT2_DATASET_ROOT="${MOLMOACT2_DATASET_ROOT:-/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30}"
 MOLMOACT2_DATASET_REPO_ID="${MOLMOACT2_DATASET_REPO_ID:-RoboDojo_sim_arx-x5_v30}"
 MOLMOACT2_CHECKPOINT_PATH="${MOLMOACT2_CHECKPOINT_PATH:-allenai/MolmoAct2}"
 
-MOLMOACT2_BATCH_SIZE="${MOLMOACT2_BATCH_SIZE:-32}"
+MOLMOACT2_BATCH_SIZE="${MOLMOACT2_BATCH_SIZE:-16}"
 MOLMOACT2_STEPS="${MOLMOACT2_STEPS:-100000}"
 MOLMOACT2_SAVE_FREQ="${MOLMOACT2_SAVE_FREQ:-10000}"
 MOLMOACT2_NUM_WORKERS="${MOLMOACT2_NUM_WORKERS:-4}"
@@ -105,6 +106,14 @@ fi
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 
+# LeRobot loads parquet via HuggingFace datasets, which builds pyarrow mmap cache
+# under HF_DATASETS_CACHE. Keep dataset on shared storage, but use per-host local
+# cache to avoid NFS lock contention when multiple nodes train concurrently.
+LOCAL_CACHE_ROOT="${MOLMOACT2_LOCAL_CACHE_ROOT:-/tmp/molmoact2-cache-$(hostname)}"
+mkdir -p "${LOCAL_CACHE_ROOT}/hf/datasets" "${LOCAL_CACHE_ROOT}/tmp"
+export HF_DATASETS_CACHE="${LOCAL_CACHE_ROOT}/hf/datasets"
+export TMPDIR="${TMPDIR:-${LOCAL_CACHE_ROOT}/tmp}"
+
 IFS=',' read -ra GPU_ARR <<< "${gpu_id}"
 NUM_GPUS="${#GPU_ARR[@]}"
 
@@ -132,6 +141,7 @@ GLOBAL_BATCH_SIZE=$((MOLMOACT2_BATCH_SIZE * NUM_GPUS))
 echo "=== MolmoAct2 训练 ==="
 echo "data_setting:       ${data_setting}"
 echo "checkpoint_dir:     ${OUTPUT_DIR}"
+echo "local_cache_root:   ${LOCAL_CACHE_ROOT}"
 echo "dataset.root:       ${MOLMOACT2_DATASET_ROOT}"
 echo "dataset.repo_id:    ${MOLMOACT2_DATASET_REPO_ID}"
 echo "base_checkpoint:    ${MOLMOACT2_CHECKPOINT_PATH}"

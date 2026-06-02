@@ -32,7 +32,7 @@ python dataset/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --out
 # <lerobot_dataset_dir>: 例如.cache/huggingface_hub/lerobot/<repo_id>/
 ```
 
-默认数据目录：`data/<5-tuple>/`，可用 `LINGBOT_VA_DATASET_PATH` 覆盖。
+默认 LeRobot 数据：`${XPOLICYLAB_LEROBOT_DATA_ROOT:-<robodojo_test>/data}/<repo_id>`（`arx_x5` → `RoboDojo_sim_arx-x5_v30`）。可用 `LINGBOT_VA_DATASET_PATH` 覆盖完整路径，或用 `LEROBOT_DATASET_REPO_ID` 覆盖 repo 名。
 
 ## 训练
 

@@ -11,7 +11,7 @@ bash process_data.sh <lerobot_data_path> <wan_pretrained_path>
 
 生成 `norm_stats_delta.json` 与 `<lerobot_data_path>/t5_embedding`。
 
-默认数据：`data/<5-tuple>/`，可用 `GIGAWORLD_DATA_DIR` 覆盖。
+默认 LeRobot 数据：`${XPOLICYLAB_LEROBOT_DATA_ROOT:-<robodojo_test>/data}/<repo_id>`（`arx_x5` 对应 `RoboDojo_sim_arx-x5_v30`）。可用 `GIGAWORLD_DATA_DIR` 覆盖完整路径，或用 `LEROBOT_DATASET_REPO_ID` 覆盖 repo 名。
 
 ## 训练
 
@@ -23,10 +23,14 @@ Checkpoint：`checkpoints/<6-tuple>/`（含 `xpolicylab_train_config.json`）
 
 | 变量 | 说明 |
 |------|------|
-| `GIGAWORLD_DATA_DIR` | 训练数据 |
+| `XPOLICYLAB_LEROBOT_DATA_ROOT` / `LEROBOT_DATA_ROOT` | LeRobot 根目录，默认 `<robodojo_test>/data` |
+| `LEROBOT_DATASET_REPO_ID` | 数据集 repo_id，默认 `RoboDojo_sim_arx-x5_v30`（`arx_x5`） |
+| `GIGAWORLD_DATA_DIR` | 训练数据完整路径（覆盖上述默认） |
 | `GIGAWORLD_NORM_PATH` | norm stats |
 | `GIGAWORLD_PRETRAINED_PATH` | Wan 预训练 |
 | `GIGAWORLD_DRY_RUN=1` | 仅生成 config |
+
+训练 seed：`train.seed` 与 `DefaultSampler.seed` 均为 `XPolicyLab_seed + 1`（giga-train 要求 `seed > 0`），并设置 `PYTHONHASHSEED`。
 
 ## 评估
 

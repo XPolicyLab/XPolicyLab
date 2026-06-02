@@ -1,0 +1,14 @@
+policy_name: Abot_M0
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: joint
+seed: 0
+eval_batch: true
+eval_env: debug
+
+checkpoint_num: 60000
+unnorm_key: robodojo_sim
+device: cuda
+port: 6000
