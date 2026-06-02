@@ -9,7 +9,7 @@
 | 环境适配 | `real_env_client.py` | 加载 config/task_info、robot、ModelClient；obs/action 转换；调用 `policy.{name}.deploy` |
 | 工作流 | `workbench.py` | GUI 状态机、layout、placement、评测线程、成功/失败/终止/重试、`result_events.jsonl` |
 | 录制 | `recorder.py` | 可选插件：video、trajectory（HDF5） |
-| 辅助 | `helpers.py` | `build_state`、`create_move_data`、`camera_meta`、`load_yaml` |
+| 辅助 | `data_handler.py` | `build_state`、`create_move_data`、`camera_meta`、`load_yaml` |
 | Layout | `layout_shot.py` | 评测前拍摄 layout 参考图（独立 GUI，非 workbench 流程） |
 
 **核心边界：**

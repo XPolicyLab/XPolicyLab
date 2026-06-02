@@ -9,7 +9,7 @@ import sys
 import threading
 
 from .constants       import XONE_ROOT
-from .helpers         import ensure_uint8_bgr
+from .data_handler    import ensure_uint8_bgr
 from .real_env_client import RealEnv
 from dataclasses      import dataclass, field
 from datetime         import datetime

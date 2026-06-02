@@ -5,8 +5,8 @@ import os
 from pathlib import Path
 from typing import Any
 
-from .constants import XPOLICYLAB_ROOT, XONE_ROOT
-from .helpers import load_yaml, str_to_bool
+from .constants    import XPOLICYLAB_ROOT, XONE_ROOT
+from .data_handler import load_yaml, str_to_bool
 
 def default_deploy_config(policy_name: str) -> Path:
     return XPOLICYLAB_ROOT / "policy" / policy_name / "deploy.yml"

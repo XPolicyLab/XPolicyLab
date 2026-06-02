@@ -2,41 +2,28 @@ import os
 import time
 import random
 import importlib
-from .constants                 import XONE_ROOT
-from .helpers                   import camera_meta, create_move_data, build_state, load_yaml, str_to_bool
-from robot.robot                import get_robot
-from threading                  import Event, Lock
+from .constants                            import XONE_ROOT
+from .data_handler                         import camera_meta, create_move_data, build_state, load_yaml, str_to_bool
+from robot.robot                           import get_robot
+from threading                             import Event, Lock
+from XPolicyLab.client_server.model_client import ModelClient
 
 class RealEnv:
     def __init__(self, deploy_cfg):
         self.m_base_cfg = load_yaml(XONE_ROOT / "config" / f"{deploy_cfg['base_cfg']}.yml")
-        # 评测时去掉 collect 段，避免创建 CollectAny 实例
-        self.m_base_cfg.pop("collect", None)
+        self.m_base_cfg.pop("collect", None) # 评测时去掉 collect 段，避免创建 CollectAny 实例
         self.m_robot = get_robot(base_cfg=self.m_base_cfg)
 
-        self.m_task_info    = load_yaml(XONE_ROOT / "task_info" / f"{deploy_cfg['task_name']}.json")
-        self.m_deploy_cfg   = deploy_cfg
-        self.m_robot_lock   = Lock()
-        self._model_client  = None
-        self.m_current_step = 0
-        self.m_instruction  = random.choice(self.m_task_info.get("instructions") or [self.m_deploy_cfg["task_name"]])
-        self.m_stop_event   = Event()
-        self.m_stop_reason  = ""
+        self.m_task_info     = load_yaml(XONE_ROOT / "task_info" / f"{deploy_cfg['task_name']}.json")
+        self.m_deploy_cfg    = deploy_cfg
+        self.m_robot_lock    = Lock()
+        self.m_model_client  = ModelClient(host=deploy_cfg["host"], port=deploy_cfg["port"])
+        self.m_current_step  = 0
+        self.m_instruction   = random.choice(self.m_task_info.get("instructions") or [self.m_deploy_cfg["task_name"]])
+        self.m_stop_event    = Event()
+        self.m_stop_reason   = ""
 
         self.m_robot.set_up(teleop=False)
-
-    @property
-    def m_model_client(self):
-        if self._model_client is not None and self._model_client.sock is None:
-            self._model_client = None
-
-        if self._model_client is None:
-            from XPolicyLab.client_server.model_client import ModelClient
-
-            host = self.m_deploy_cfg["host"]
-            port = self.m_deploy_cfg["port"]
-            self._model_client = ModelClient(host=host, port=port)
-        return self._model_client
         
     @property
     def deploy_cfg(self):
@@ -132,10 +119,7 @@ class RealEnv:
     
     def finish_episode(self):
         self.reset_robot()
-        if self._model_client is not None and self._model_client.sock is not None:
-            self.m_model_client.call(func_name="reset")
-        elif self._model_client is not None:
-            self._model_client = None
+        self.m_model_client.call(func_name="reset")
         self.m_current_step = 0
         self.m_instruction = random.choice(
             self.m_task_info.get("instructions") or [self.m_deploy_cfg["task_name"]]
@@ -149,10 +133,7 @@ class RealEnv:
 
     def reset(self):
         self.reset_robot()
-        if self._model_client is not None and self._model_client.sock is None:
-            self._model_client = None
-        if self._model_client is not None:
-            self.m_model_client.call(func_name="reset")
+        self.m_model_client.call(func_name="reset")
         self.m_current_step = 0
         self.m_instruction = random.choice(
             self.m_task_info.get("instructions") or [self.m_deploy_cfg["task_name"]]
@@ -165,6 +146,4 @@ class RealEnv:
         return self.should_stop or self.m_current_step >= self.m_task_info["step_lim"]
 
     def close(self):
-        if self._model_client is not None:
-            self._model_client.close()
-            self._model_client = None
+        self.m_model_client.close()
