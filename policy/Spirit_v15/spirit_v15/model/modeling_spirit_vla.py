@@ -583,7 +583,7 @@ class SpiritVLAPolicy(nn.Module):
 
     # ----------------------------- Flow matching core -----------------------------
     def _embed_suffix(self, state, noisy_actions, mask_state=True):
-        """Embed state and noisy actions. mask_state=False for training, True for inference."""
+        """Embed state and noisy actions. Zeros ee z (dims 2, 9) when mask_state is True."""
         embs = []
         pad_masks = []
         att_masks = []
@@ -787,7 +787,7 @@ class SpiritVLAPolicy(nn.Module):
         t_expand = t.view(-1, 1, 1)
         noisy_actions = actions + t_expand * (noise - actions)
 
-        suffix_embs, _, _ = self._embed_suffix(state, noisy_actions, mask_state=False)
+        suffix_embs, _, _ = self._embed_suffix(state, noisy_actions, mask_state=True)
 
         v_t = self.dit(
             hidden_states=suffix_embs,

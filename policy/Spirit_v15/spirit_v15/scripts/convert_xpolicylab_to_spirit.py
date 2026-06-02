@@ -232,6 +232,16 @@ def _ensure_2d_float64(array, name: str) -> np.ndarray:
     return arr
 
 
+def _frame_indices(num_frames: int, source_fps: float, target_fps: float) -> np.ndarray:
+    """Uniformly resample frame indices when target_fps differs from source_fps."""
+    if num_frames <= 1 or abs(source_fps - target_fps) < 1e-3:
+        return np.arange(num_frames, dtype=int)
+    duration = (num_frames - 1) / source_fps
+    target_count = max(2, int(round(duration * target_fps)) + 1)
+    target_count = min(target_count, num_frames)
+    return np.linspace(0, num_frames - 1, target_count).astype(int)
+
+
 def _extract_frequency(data: dict, fallback: float) -> float:
     value = _get_nested(data, "additional_info", "frequency")
     if value is None:
@@ -421,7 +431,8 @@ def write_episode(
     source_meta: Dict[str, str],
     output_episode_dir: Path,
     default_prompt: str,
-    fps: float,
+    source_fps: float,
+    target_fps: float,
 ) -> None:
     states_dir = output_episode_dir / "states"
     meta_dir = output_episode_dir / "meta"
@@ -442,6 +453,12 @@ def write_episode(
         )
 
     left_pose, left_gripper, right_pose, right_gripper = _extract_dual_arm_state(data)
+    source_num_frames = left_pose.shape[0]
+    frame_indices = _frame_indices(source_num_frames, source_fps, target_fps)
+    left_pose = left_pose[frame_indices]
+    left_gripper = left_gripper[frame_indices]
+    right_pose = right_pose[frame_indices]
+    right_gripper = right_gripper[frame_indices]
     num_frames = left_pose.shape[0]
 
     with open(states_dir / "states.jsonl", "w") as states_file:
@@ -451,7 +468,7 @@ def write_episode(
                 "left_gripper_width": float(left_gripper[frame_idx]),
                 "right_ee_positions": right_pose[frame_idx].astype(np.float64).tolist(),
                 "right_gripper_width": float(right_gripper[frame_idx]),
-                "timestamp": float(frame_idx / fps),
+                "timestamp": float(frame_idx / target_fps),
             }
             states_file.write(json.dumps(state_record) + "\n")
 
@@ -459,16 +476,16 @@ def write_episode(
     for video_name in CAMERA_CANDIDATES:
         image_array = _find_camera_array(data, video_name)
         if image_array is not None:
-            if image_array.shape[0] != num_frames:
+            if image_array.shape[0] != source_num_frames:
                 raise ValueError(
-                    f"Video horizon mismatch for {video_name}: expected {num_frames}, got {image_array.shape[0]}"
+                    f"Video horizon mismatch for {video_name}: expected {source_num_frames}, got {image_array.shape[0]}"
                 )
-            images_by_name[video_name] = image_array
+            images_by_name[video_name] = image_array[frame_indices]
         else:
             images_by_name[video_name] = _create_black_frames(num_frames)
 
     for video_name, image_array in images_by_name.items():
-        _write_video(videos_dir / f"{video_name}.mp4", image_array, fps)
+        _write_video(videos_dir / f"{video_name}.mp4", image_array, target_fps)
 
 
 def convert_xpolicylab_dataset(
@@ -507,9 +524,10 @@ def convert_xpolicylab_dataset(
             total_files += 1
             try:
                 data = load(str(input_path), data_type=data_type, data_version=data_version)
-                episode_fps = _extract_frequency(data, resolved_fps)
+                source_fps = _extract_frequency(data, resolved_fps)
+                target_fps = fps_override if fps_override is not None else source_fps
                 if fps_override is None:
-                    resolved_fps = episode_fps
+                    resolved_fps = source_fps
                 output_episode_dir = output_root / "data" / f"episode_{episode_counter:06d}"
                 write_episode(
                     data=data,
@@ -521,7 +539,8 @@ def convert_xpolicylab_dataset(
                     },
                     output_episode_dir=output_episode_dir,
                     default_prompt=task_prompt,
-                    fps=fps_override or episode_fps,
+                    source_fps=source_fps,
+                    target_fps=target_fps,
                 )
                 episode_counter += 1
                 total_success += 1
