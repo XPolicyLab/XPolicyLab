@@ -13,8 +13,8 @@ obs_transform_pipeline: null
 action_type: joint
 prompt: null
 model_path: null
-data_config_name: robotwin_qpos
-dataset_name: robotwin_posttrain
+data_config_name: robodojo_qpos
+dataset_name: robodojo_posttrain
 embodiment_tag: new_embodiment
 prompt_template: long
 prop_pos: front
