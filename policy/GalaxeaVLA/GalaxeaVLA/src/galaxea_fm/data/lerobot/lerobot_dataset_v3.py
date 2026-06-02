@@ -26,6 +26,7 @@ import packaging.version
 import pandas as pd
 import PIL.Image
 import pyarrow as pa
+import pyarrow.compute as pc
 import pyarrow.parquet as pq
 import torch
 import torch.utils
@@ -1605,6 +1606,8 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
                 #image_transforms=image_transforms,
                 delta_timestamps=delta_timestamps,
                 tolerance_s=self.tolerances_s[ds_name],
+                download_videos=download_videos,
+                video_backend=video_backend,
             )
             for ds_root, ds_name in zip(ds_roots, ds_names, strict=True)
         ]
@@ -1717,10 +1720,20 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
 
 
     def get_episode_data(self, episode_idx: int) -> dict:
+        # v3.0 stores many episodes per parquet chunk file. Cache loaded files and
+        # filter by episode_index so stats/init-position scans do not re-read GBs of data.
+        if not hasattr(self, "_parquet_file_cache"):
+            self._parquet_file_cache: dict[str, pa.Table] = {}
+
         for dataset in self._datasets:
             if episode_idx < dataset.num_episodes:
-                file = str(dataset.root / dataset.meta.get_data_file_path(dataset.episodes[episode_idx]))
-                table = pq.read_table(str(file))
+                ep_index = dataset.episodes[episode_idx]
+                file = str(dataset.root / dataset.meta.get_data_file_path(ep_index))
+                if file not in self._parquet_file_cache:
+                    self._parquet_file_cache[file] = pq.read_table(file)
+                table = self._parquet_file_cache[file]
+                mask = pc.equal(table.column("episode_index"), ep_index)
+                table = table.filter(mask)
                 result_dict = {}
                 for col_name in table.column_names:
                     col = table[col_name]

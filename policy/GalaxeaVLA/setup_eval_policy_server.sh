@@ -1,8 +1,8 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# Launched by eval.sh. Activates the GalaxeaVLA uv env, resolves the checkpoint
-# directory from ckpt_name, then starts the XPolicyLab policy server.
+# Launched by eval.sh. Runs setup_policy_server.py with GalaxeaVLA/GalaxeaVLA/.venv
+# (uv project dir passed as policy_uv_env_path; mirrors train.sh UPSTREAM_DIR).
 dataset_name=$1
 task_name=$2
 ckpt_name=$3
@@ -11,16 +11,18 @@ expert_data_num=$5
 action_type=$6
 seed=$7
 policy_gpu_id=$8
-policy_uv_env_path=$9          # uv project dir holding .venv (conda-env slot)
+policy_uv_env_path=$9
 policy_server_port=${10}
+policy_server_host=${11:-localhost}
 
 export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
-echo -e "\033[33m[SERVER] GPU=${policy_gpu_id} port=${policy_server_port}\033[0m"
+echo -e "\033[33m[SERVER] GPU=${policy_gpu_id} host=${policy_server_host} port=${policy_server_port}\033[0m"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
+UPSTREAM_DIR="${SCRIPT_DIR}/GalaxeaVLA"
 
 _resolve_run_root() {
     local root="$1"
@@ -48,7 +50,6 @@ ckpt_run_id="${GALAXEA_CKPT_RUN_ID:-${dataset_name}-${ckpt_name}-${env_cfg_type}
 
 # ---- resolve eval args -> ckpt_path ----
 if [[ -d "${ckpt_name}" && "${ckpt_name}" == */* ]]; then
-    # absolute path or path with slashes passed as ckpt_name slot
     ckpt_path="${ckpt_name}"
 elif [[ -d "${SCRIPT_DIR}/checkpoints/${ckpt_run_id}" ]]; then
     ckpt_path="${SCRIPT_DIR}/checkpoints/${ckpt_run_id}"
@@ -66,45 +67,51 @@ ckpt_path="$(cd "${ckpt_path}" && pwd)"
 echo -e "\033[33m[SERVER] ckpt_run_id=${ckpt_run_id}\033[0m"
 echo -e "\033[33m[SERVER] ckpt_path=${ckpt_path}\033[0m"
 
-# ---- action_type -> upstream Hydra task config (must match training) ----
 case "${action_type}" in
     ee)    task_config_name="real/g0plus_xpolicylab_ee_finetune" ;;
     joint) task_config_name="real/g0plus_xpolicylab_finetune" ;;
     *)
-        echo -e "\033[31m[SERVER] unknown action_type '${action_type}' (expected ee|joint)\033[0m"
+        echo -e "\033[31m[SERVER] unknown action_type '${action_type}' (expected ee|joint)\033[0m" >&2
         exit 1
         ;;
 esac
 echo -e "\033[33m[SERVER] task_config_name=${task_config_name}\033[0m"
 
-# Local backbone dir (PaliGemma / SmolVLM2). deploy.yml may also set this.
 paligemma_path="${GALAXEA_PALIGEMMA_PATH:-${SCRIPT_DIR}/weights/paligemma-3b-pt-224}"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
 
-# ---- activate uv env ----
+# ---- uv env (policy/GalaxeaVLA/GalaxeaVLA/.venv) ----
 if [[ -z "${policy_uv_env_path}" || "${policy_uv_env_path}" == "null" ]]; then
-    policy_uv_env_path="${SCRIPT_DIR}/GalaxeaVLA"
+    policy_uv_env_path="${UPSTREAM_DIR}"
 fi
-echo -e "\033[32m[SERVER] activating uv env: ${policy_uv_env_path}/.venv\033[0m"
-source "${policy_uv_env_path}/.venv/bin/activate"
+policy_uv_env_path="$(cd "${policy_uv_env_path}" && pwd)"
+VENV_PYTHON="${policy_uv_env_path}/.venv/bin/python"
+if [[ ! -x "${VENV_PYTHON}" ]]; then
+    echo -e "\033[31m[SERVER] missing uv venv python: ${VENV_PYTHON}\033[0m" >&2
+    echo -e "\033[31m[SERVER] Run: cd ${SCRIPT_DIR} && bash install.sh\033[0m" >&2
+    exit 1
+fi
+echo -e "\033[32m[SERVER] using uv venv: ${VENV_PYTHON}\033[0m"
 
-PYTHONWARNINGS=ignore::UserWarning \
-PYTHONPATH="${ROOT_DIR}:${policy_uv_env_path}/src:${PYTHONPATH}" \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
-    --config_path "${yaml_file}" \
-    --overrides \
-        port="${policy_server_port}" \
-        host="localhost" \
-        policy_name="GalaxeaVLA" \
-        task_name="${task_name}" \
-        dataset_name="${dataset_name}" \
-        env_cfg_type="${env_cfg_type}" \
-        expert_data_num="${expert_data_num}" \
-        seed="${seed}" \
-        action_type="${action_type}" \
-        action_dim="${action_dim}" \
-        ckpt_path="${ckpt_path}" \
-        task_config_name="${task_config_name}" \
-        paligemma_path="${paligemma_path}"
+exec env \
+    PYTHONWARNINGS=ignore::UserWarning \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH="${ROOT_DIR}:${policy_uv_env_path}/src:${PYTHONPATH:-}" \
+    "${VENV_PYTHON}" -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+        --config_path "${yaml_file}" \
+        --overrides \
+            port="${policy_server_port}" \
+            host="${policy_server_host}" \
+            policy_name="GalaxeaVLA" \
+            task_name="${task_name}" \
+            dataset_name="${dataset_name}" \
+            env_cfg_type="${env_cfg_type}" \
+            expert_data_num="${expert_data_num}" \
+            seed="${seed}" \
+            action_type="${action_type}" \
+            action_dim="${action_dim}" \
+            ckpt_path="${ckpt_path}" \
+            task_config_name="${task_config_name}" \
+            paligemma_path="${paligemma_path}"

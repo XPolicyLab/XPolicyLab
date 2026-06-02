@@ -80,21 +80,58 @@ paligemma_path="$(cd "${paligemma_path}" && pwd)"
 # A language-conditioned VLA needs distinct per-task instructions. Abort if the
 # dataset's task strings have collapsed to a single placeholder across multiple
 # task_index entries (e.g. all "stack the bowls"). Bypass with ALLOW_PLACEHOLDER_LANG=true.
-tasks_meta="${dataset_dir}/meta/tasks.jsonl"
-if [[ "${ALLOW_PLACEHOLDER_LANG:-false}" != "true" && -f "${tasks_meta}" ]]; then
-    read -r n_idx n_uniq < <(python3 - "${tasks_meta}" <<'PY'
+VENV_PYTHON="${UPSTREAM_DIR}/.venv/bin/python3"
+if [[ ! -x "${VENV_PYTHON}" ]]; then
+    VENV_PYTHON="$(command -v python3)"
+fi
+tasks_jsonl="${dataset_dir}/meta/tasks.jsonl"
+tasks_parquet="${dataset_dir}/meta/tasks.parquet"
+if [[ "${ALLOW_PLACEHOLDER_LANG:-false}" != "true" ]]; then
+    if [[ -f "${tasks_jsonl}" ]]; then
+        read -r n_idx n_uniq < <("${VENV_PYTHON}" - "${tasks_jsonl}" <<'PY'
 import json, sys
 rows = [json.loads(l) for l in open(sys.argv[1]) if l.strip()]
 print(len(rows), len({r.get("task", "") for r in rows}))
 PY
 )
-    if [[ "${n_idx}" -gt 1 && "${n_uniq}" -le 1 ]]; then
-        echo -e "\033[31m[train] placeholder language detected: ${n_idx} task_index entries but only ${n_uniq} unique instruction(s) in ${tasks_meta}.\033[0m" >&2
-        echo "  This dataset's per-task language is collapsed; a language-conditioned VLA would train on a single instruction." >&2
-        echo "  Fix the dataset's tasks.jsonl, or set ALLOW_PLACEHOLDER_LANG=true to train anyway (e.g. pure visuomotor)." >&2
-        exit 1
+        tasks_meta="${tasks_jsonl}"
+    elif [[ -f "${tasks_parquet}" ]]; then
+        lang_check_out="$("${VENV_PYTHON}" - "${tasks_parquet}" <<'PY' 2>/dev/null || true
+import sys
+import pyarrow.parquet as pq
+table = pq.read_table(sys.argv[1])
+df = table.to_pandas()
+# LeRobot v3.0 stores natural-language tasks as the pandas index.
+if "task" in df.columns:
+    tasks = df["task"].tolist()
+else:
+    tasks = list(df.index)
+print(len(tasks), len({t for t in tasks if t is not None and str(t).strip()}))
+PY
+)"
+        if [[ -z "${lang_check_out}" || ! "${lang_check_out}" =~ ^[0-9]+\ [0-9]+$ ]]; then
+            echo -e "\033[33m[train] language check skipped: could not parse ${tasks_parquet}\033[0m" >&2
+            n_idx=0
+            n_uniq=0
+            tasks_meta=""
+        else
+            read -r n_idx n_uniq <<< "${lang_check_out}"
+            tasks_meta="${tasks_parquet}"
+        fi
+    else
+        n_idx=0
+        n_uniq=0
+        tasks_meta=""
     fi
-    echo -e "\033[33m[train] language check OK: ${n_uniq} unique instruction(s) over ${n_idx} task_index entries\033[0m"
+    if [[ -n "${tasks_meta}" ]]; then
+        if [[ "${n_idx}" -gt 1 && "${n_uniq}" -le 1 ]]; then
+            echo -e "\033[31m[train] placeholder language detected: ${n_idx} task_index entries but only ${n_uniq} unique instruction(s) in ${tasks_meta}.\033[0m" >&2
+            echo "  This dataset's per-task language is collapsed; a language-conditioned VLA would train on a single instruction." >&2
+            echo "  Fix the dataset tasks metadata, or set ALLOW_PLACEHOLDER_LANG=true to train anyway (e.g. pure visuomotor)." >&2
+            exit 1
+        fi
+        echo -e "\033[33m[train] language check OK: ${n_uniq} unique instruction(s) over ${n_idx} task_index entries (${tasks_meta})\033[0m"
+    fi
 fi
 
 # ---- effective seed ----

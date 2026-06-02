@@ -48,16 +48,30 @@ CAM_NAME_CANDIDATES = {
 }
 
 
+def _normalize_wxyz_pose(pose7: np.ndarray) -> np.ndarray:
+    """Unit-normalize quaternion in XPolicyLab wxyz pose (matches X-VLA quat_to_rotate6d)."""
+    p = np.asarray(pose7, dtype=np.float32).reshape(-1)
+    if p.shape[-1] != 7:
+        raise ValueError(f"Expected 7-dim pose, got shape {p.shape}.")
+    quat = p[3:7]
+    norm = float(np.linalg.norm(quat))
+    if norm < 1e-8:
+        quat = np.array([1.0, 0.0, 0.0, 0.0], dtype=np.float32)
+    else:
+        quat = (quat / norm).astype(np.float32)
+    return np.concatenate([p[:3], quat], axis=-1).astype(np.float32)
+
+
 def _xpolicylab_pose_to_upstream(pose7: np.ndarray) -> np.ndarray:
     """XPolicyLab [x,y,z,qw,qx,qy,qz] -> galaxea_fm [x,y,z,qx,qy,qz,qw]."""
-    p = np.asarray(pose7, dtype=np.float32).reshape(-1)
+    p = _normalize_wxyz_pose(pose7)
     return np.concatenate([p[:3], p[4:7], p[3:4]])
 
 
 def _upstream_pose_to_xpolicylab(pose7: np.ndarray) -> np.ndarray:
     """galaxea_fm [x,y,z,qx,qy,qz,qw] -> XPolicyLab [x,y,z,qw,qx,qy,qz]."""
     p = np.asarray(pose7, dtype=np.float32).reshape(-1)
-    return np.concatenate([p[:3], p[6:7], p[3:6]])
+    return _normalize_wxyz_pose(np.concatenate([p[:3], p[6:7], p[3:6]], axis=-1))
 
 
 # Galaxea ee shape_meta uses left_gripper; XPolicyLab sim obs uses left_ee_joint_state.
@@ -68,7 +82,12 @@ _EE_GRIPPER_TO_XPL = {
 
 
 def _read_upstream_state_from_obs(observation: dict, state_shape_meta: list) -> dict:
-    """Build upstream state tensors from XPolicyLab ee-mode obs (7-dim poses + grippers)."""
+    """Build upstream state tensors from XPolicyLab ee-mode obs (7-dim poses + grippers).
+
+    Obs/action poses follow the same wxyz layout as X-VLA ``build_xvla_proprio`` /
+    ``RoboDojoHandler`` (HDF5 ``left_ee_poses``); only the internal galaxea layout
+    uses scalar-last xyzw before ``RelativePoseTransform``.
+    """
     state_dict = observation.get("state", {})
     state = {}
     for meta in state_shape_meta:
@@ -104,6 +123,8 @@ def _upstream_action_to_xpolicylab_steps(
                 out_key = key
             elif "gripper" in key:
                 out_key = _EE_GRIPPER_TO_XPL[key]
+                # X-VLA passes gripper scalar straight to left_ee_joint_state; clip to sim range.
+                val = np.clip(val, 0.0, 1.0)
             else:
                 out_key = key
             step[out_key] = val

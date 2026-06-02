@@ -80,7 +80,12 @@ GALAXEA_DATASET_DIR=/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v
 GALAXEA_PRETRAINED_CKPT=./checkpoints/G0Plus_3B_base/checkpoints \
 bash train.sh RoboDojo cotrain arx_x5 100 ee 0,1,2,3 0
 
-# (B) joint 微调：用 process_data.sh 产出的 ./data/<tuple>-lerobot 数据集
+# (B) joint 微调：RoboDojo_sim_arx-x5_v30（LeRobot v3.0，14-dim joint）
+GALAXEA_DATASET_DIR=/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30 \
+GALAXEA_PRETRAINED_CKPT=./checkpoints/G0Plus_3B_base/checkpoints \
+bash train.sh RoboDojo cotrain arx_x5 100 joint 0,1,2,3 0
+
+# (C) joint 微调（本地 HDF5 转换数据）：用 process_data.sh 产出 ./data/<tuple>-lerobot
 bash train.sh RoboDojo robodojo_joint arx_x5 100 joint 0 0
 ```
 
@@ -91,7 +96,6 @@ bash train.sh RoboDojo robodojo_joint arx_x5 100 joint 0 0
 - 数据集目录解析：`GALAXEA_DATASET_DIR` 优先，否则默认 `./data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-lerobot`。
 - 预训练权重：`GALAXEA_PRETRAINED_CKPT`（默认 `./checkpoints/G0Plus_3B_base/checkpoints`）。
 - 输出/缓存目录可用 `GALAXEA_FM_OUTPUT_DIR`、`GALAXEA_FM_DATASET_STATS_CACHE_DIR`、`HF_DATASETS_CACHE` 覆盖（均有默认值）。
-- **语言占位符门禁**：若数据集 `meta/tasks.jsonl` 多个 `task_index` 却只有 1 条唯一指令（语言塌缩），`train.sh` 会报错退出；纯视觉运动训练可设 `ALLOW_PLACEHOLDER_LANG=true` 绕过。
 - 默认日志关闭（`GALAXEA_LOGGER_MODE=disabled`，避免强制 swanlab 登录）；额外 hydra 覆盖可作为第 8+ 个参数透传。
 - 产物写入 `checkpoints/<6-tuple>/<timestamp>/`，其中 `checkpoints/step_*` 由 `model.py` 自动选最新 step 部署。
 
@@ -106,7 +110,7 @@ cd XPolicyLab/policy/GalaxeaVLA
 # dataset_name task_name ckpt_name env_cfg_type expert_data_num action_type \
 #   seed policy_gpu_id env_gpu_id policy_uv_env_path eval_env_conda_env
 bash eval.sh RoboDojo test_data cotrain arx_x5 100 ee \
-  0 6 0 ./GalaxeaVLA dp
+  0 0 0 null XPolicyLab
 ```
 
 参数要点：
@@ -114,8 +118,8 @@ bash eval.sh RoboDojo test_data cotrain arx_x5 100 ee \
   `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`；
   例：`RoboDojo-cotrain-arx_x5-100-ee-0`。目录内若有 `<timestamp>/` 子目录则取最新 run；
   内部 `checkpoints/step_*` 由 `model.py` 选最新 step。预训练基座仍用 `G0Plus_3B_base/checkpoints`。
-- 第 10 个 `policy_uv_env_path`：GalaxeaVLA 的 uv 工程目录（含 `.venv`），即 `./GalaxeaVLA`；传 `null` 时脚本默认用 `./GalaxeaVLA`。
-- 第 11 个 `eval_env_conda_env`：环境客户端激活的 conda 环境（通常 `XPolicyLab`）。
+- 第 10 个 `policy_uv_env_path`：uv 工程目录（含 `.venv`），默认 `policy/GalaxeaVLA/GalaxeaVLA`；传 `null` 即用该默认。服务端用 `${policy_uv_env_path}/.venv/bin/python`，**不是** conda。
+- 第 11 个 `eval_env_conda_env`：环境客户端激活的 conda 环境（需能 `import XPolicyLab`，如 `XPolicyLab` / `dp`）。
 
 切换到仿真/真机：把 `deploy.yml` 的 `eval_env` 改成 `sim` 或 `real` 即可，命令不变。
 
