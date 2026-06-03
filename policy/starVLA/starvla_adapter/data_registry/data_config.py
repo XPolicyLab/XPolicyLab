@@ -29,3 +29,9 @@ class XPolicyArxX5DataConfig(_StarVLAArxX5DataConfig):
 ROBOT_TYPE_CONFIG_MAP = {
     "arx_x5": XPolicyArxX5DataConfig(),
 }
+
+DATASET_NAMED_MIXTURES = {
+    "robodojo_sim_arx_x5_v30": [
+        ("RoboDojo_sim_arx-x5_v30", 1.0, "arx_x5"),
+    ],
+}

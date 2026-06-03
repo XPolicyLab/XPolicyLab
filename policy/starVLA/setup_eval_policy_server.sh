@@ -26,12 +26,14 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 default_result_ckpt="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
-default_legacy_ckpt="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
+default_local_ckpt="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
 if [[ -z "${checkpoint_path}" ]]; then
     if [[ -f "${default_result_ckpt}" ]]; then
         checkpoint_path="${default_result_ckpt}"
+    elif [[ -f "${default_local_ckpt}" ]]; then
+        checkpoint_path="${default_local_ckpt}"
     else
-        checkpoint_path="${default_legacy_ckpt}"
+        checkpoint_path="${default_local_ckpt}"
     fi
 fi
 if [[ ! -f "${checkpoint_path}" ]]; then

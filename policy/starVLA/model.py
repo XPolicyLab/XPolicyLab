@@ -133,6 +133,7 @@ class Model(ModelTemplate):
         self.num_ddim_steps = int(self.model_cfg.get("num_ddim_steps", 10))
         self.image_size = tuple(self.model_cfg.get("image_size", [224, 224]))
         self.input_color_order = self.model_cfg.get("input_color_order", "bgr").lower()
+        self.include_state = bool(self.model_cfg.get("include_state", False))
 
         self.obs_by_env: dict[int, dict[str, Any]] = {}
         self.action_chunks_by_env: dict[int, np.ndarray] = {}
@@ -163,18 +164,23 @@ class Model(ModelTemplate):
         if instruction in (None, ""):
             instruction = self.model_cfg.get("task_name", "")
 
-        state = pack_robot_state(
-            observation,
-            self.action_type,
-            self.robot_action_dim_info,
-            source_type="obs",
-        ).astype(np.float32)
-
-        return {
+        converted_obs = {
             "lang": str(instruction),
             "image": images,
-            "state": _xpolicy_to_starvla_joint_order(state, self.robot_action_dim_info),
         }
+        if self.include_state:
+            state = pack_robot_state(
+                observation,
+                self.action_type,
+                self.robot_action_dim_info,
+                source_type="obs",
+            ).astype(np.float32)
+            converted_obs["state"] = _xpolicy_to_starvla_joint_order(
+                state,
+                self.robot_action_dim_info,
+            )
+
+        return converted_obs
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
@@ -198,6 +204,8 @@ class Model(ModelTemplate):
             "unnorm_key": self.unnorm_key,
         }
         response = self.client.predict_action(vla_input)
+        if not response.get("ok", False):
+            raise RuntimeError(f"StarVLA inference failed: {response.get('error', response)}")
         return np.asarray(response["data"]["actions"][0], dtype=np.float32)
 
     def _next_action_vector(self, env_idx: int) -> np.ndarray:

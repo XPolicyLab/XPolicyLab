@@ -5,9 +5,17 @@ import json
 import shutil
 from pathlib import Path
 
+import cv2
 import h5py
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
+
+from XPolicyLab.utils.process_data import (
+    decode_image_bit,
+    get_robot_action_dim_info,
+    pack_robot_state,
+)
 
 
 CAMERA_MAP = {
@@ -31,25 +39,58 @@ def _read_instruction(h5_file: h5py.File, fallback: str) -> str:
     return str(_decode_scalar(h5_file["instruction"][()]) or fallback)
 
 
-def _pack_starvla_joint_order(group: h5py.Group) -> np.ndarray:
-    """Return [left_joints, right_joints, left_gripper, right_gripper]."""
-    left_arm = np.asarray(group["left_arm_joint_states"], dtype=np.float32)
-    right_arm = np.asarray(group["right_arm_joint_states"], dtype=np.float32)
-    left_ee = np.asarray(group["left_ee_joint_states"], dtype=np.float32)
-    right_ee = np.asarray(group["right_ee_joint_states"], dtype=np.float32)
+def _xpolicy_to_starvla_joint_order(vector: np.ndarray, robot_action_dim_info: dict) -> np.ndarray:
+    """Convert [left_arm, left_ee, right_arm, right_ee] to StarVLA order."""
+    arm_dims = robot_action_dim_info["arm_dim"]
+    ee_dims = robot_action_dim_info["ee_dim"]
+    if len(arm_dims) != 2 or arm_dims != [6, 6] or ee_dims != [1, 1]:
+        return vector
+
+    left_arm = vector[..., 0:6]
+    left_ee = vector[..., 6:7]
+    right_arm = vector[..., 7:13]
+    right_ee = vector[..., 13:14]
     return np.concatenate([left_arm, right_arm, left_ee, right_ee], axis=-1)
 
 
-def _write_image_bytes(raw_bytes, output_path: Path) -> None:
+def _decode_bgr_image(raw_bytes) -> np.ndarray:
+    image = decode_image_bit(raw_bytes)
+    if image is None:
+        raise ValueError("Failed to decode compressed image bytes.")
+    image = np.asarray(image)
+    if image.ndim != 3:
+        raise ValueError(f"Expected image with 3 dims, got {image.shape}.")
+    if image.shape[-1] != 3 and image.shape[0] == 3:
+        image = np.transpose(image, (1, 2, 0))
+    if image.shape[-1] != 3:
+        raise ValueError(f"Expected 3-channel image, got {image.shape}.")
+    return image.astype(np.uint8, copy=False)
+
+
+def _write_video_from_hdf5_camera(
+    h5_file: h5py.File,
+    camera_name: str,
+    output_path: Path,
+    length: int,
+    fps: int,
+    width: int = 640,
+    height: int = 480,
+) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    if isinstance(raw_bytes, np.bytes_):
-        raw_bytes = raw_bytes.tobytes()
-    elif isinstance(raw_bytes, memoryview):
-        raw_bytes = raw_bytes.tobytes()
-    elif isinstance(raw_bytes, bytearray):
-        raw_bytes = bytes(raw_bytes)
-    with output_path.open("wb") as fp:
-        fp.write(raw_bytes)
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    writer = cv2.VideoWriter(output_path.as_posix(), fourcc, float(fps), (width, height))
+    if not writer.isOpened():
+        raise RuntimeError(f"Failed to open video writer: {output_path}")
+
+    try:
+        colors = h5_file["vision"][camera_name]["colors"]
+        for frame_index in range(length):
+            image = _decode_bgr_image(colors[frame_index])
+            if image.shape[:2] != (height, width):
+                image = cv2.resize(image, (width, height), interpolation=cv2.INTER_AREA)
+            writer.write(image)
+    finally:
+        writer.release()
 
 
 def _feature_image(height: int = 480, width: int = 640, fps: int = 30) -> dict:
@@ -152,7 +193,13 @@ def _write_modality_json(dataset_dir: Path) -> None:
     )
 
 
-def _write_info_json(dataset_dir: Path, total_episodes: int, total_frames: int, fps: int) -> None:
+def _write_info_json(
+    dataset_dir: Path,
+    total_episodes: int,
+    total_frames: int,
+    total_videos: int,
+    fps: int,
+) -> None:
     info = {
         "codebase_version": "v3.0",
         "robot_type": "arx_x5",
@@ -160,7 +207,7 @@ def _write_info_json(dataset_dir: Path, total_episodes: int, total_frames: int, 
         "total_episodes": total_episodes,
         "total_frames": total_frames,
         "total_tasks": 1,
-        "total_videos": 0,
+        "total_videos": total_videos,
         "chunks_size": 1000,
         "data_path": "data/chunk-{chunk_index:03d}/file-{file_index:03d}.parquet",
         "video_path": "videos/{video_key}/chunk-{chunk_index:03d}/file-{file_index:03d}.mp4",
@@ -185,6 +232,7 @@ def _write_info_json(dataset_dir: Path, total_episodes: int, total_frames: int, 
 def convert(args: argparse.Namespace) -> None:
     if args.env_cfg_type != "arx_x5" or args.action_type != "joint":
         raise NotImplementedError("First starVLA converter supports arx_x5 + joint only.")
+    robot_action_dim_info = get_robot_action_dim_info(args.env_cfg_type)
 
     source_dir = (
         Path(args.root_dir).resolve()
@@ -215,19 +263,75 @@ def convert(args: argparse.Namespace) -> None:
     episode_rows = []
     task_instruction = args.ckpt_name.replace("_", " ")
     total_frames = 0
+    total_videos = 0
     fps = 30
 
-    for episode_index, episode_path in enumerate(episode_paths):
+    episode_iter = tqdm(
+        enumerate(episode_paths),
+        total=len(episode_paths),
+        desc="[starVLA] episodes",
+        unit="episode",
+    )
+    for episode_index, episode_path in episode_iter:
         with h5py.File(episode_path, "r") as h5_file:
             instruction = _read_instruction(h5_file, task_instruction)
             task_instruction = instruction or task_instruction
             fps = int(np.asarray(h5_file["additional_info"]["frequency"]).item())
 
-            state = _pack_starvla_joint_order(h5_file["state"])
-            action = _pack_starvla_joint_order(h5_file["action"])
+            dataset_like = {
+                "state": h5_file["state"],
+                "action": h5_file["action"],
+            }
+            state = _xpolicy_to_starvla_joint_order(
+                pack_robot_state(
+                    dataset_like,
+                    args.action_type,
+                    robot_action_dim_info,
+                    source_type="dataset",
+                    state_type="state",
+                ).astype(np.float32),
+                robot_action_dim_info,
+            )
+            action = _xpolicy_to_starvla_joint_order(
+                pack_robot_state(
+                    dataset_like,
+                    args.action_type,
+                    robot_action_dim_info,
+                    source_type="dataset",
+                    state_type="action",
+                ).astype(np.float32),
+                robot_action_dim_info,
+            )
             length = min(len(state), len(action))
+            episode_iter.set_postfix(file=episode_path.name, frames=length)
 
-            for frame_index in range(length):
+            video_meta = {}
+            for lerobot_key, xpolicy_camera in CAMERA_MAP.items():
+                video_path = (
+                    dataset_dir
+                    / "videos"
+                    / lerobot_key
+                    / "chunk-000"
+                    / f"file-{episode_index:03d}.mp4"
+                )
+                _write_video_from_hdf5_camera(
+                    h5_file,
+                    xpolicy_camera,
+                    video_path,
+                    length,
+                    fps,
+                )
+                video_meta[f"videos/{lerobot_key}/from_timestamp"] = 0.0
+                video_meta[f"videos/{lerobot_key}/chunk_index"] = 0
+                video_meta[f"videos/{lerobot_key}/file_index"] = episode_index
+                total_videos += 1
+
+            for frame_index in tqdm(
+                range(length),
+                desc=f"[starVLA] {episode_path.stem}",
+                unit="frame",
+                leave=False,
+            ):
                 row = {
                     "episode_index": episode_index,
                     "frame_index": frame_index,
@@ -236,31 +340,19 @@ def convert(args: argparse.Namespace) -> None:
                     "observation.state": state[frame_index].astype(np.float32),
                     "action": action[frame_index].astype(np.float32),
                 }
-                for lerobot_key, xpolicy_camera in CAMERA_MAP.items():
-                    rel_path = (
-                        Path("images")
-                        / xpolicy_camera
-                        / f"episode_{episode_index:06d}"
-                        / f"frame_{frame_index:06d}.jpg"
-                    )
-                    _write_image_bytes(
-                        h5_file["vision"][xpolicy_camera]["colors"][frame_index],
-                        dataset_dir / rel_path,
-                    )
-                    row[lerobot_key] = {"path": rel_path.as_posix()}
                 all_rows.append(row)
 
-            episode_rows.append(
-                {
-                    "episode_index": episode_index,
-                    "length": length,
-                    "tasks": [task_instruction],
-                    "data/chunk_index": 0,
-                    "data/file_index": 0,
-                    "data/file_from_index": total_frames,
-                    "data/file_to_index": total_frames + length,
-                }
-            )
+            episode_row = {
+                "episode_index": episode_index,
+                "length": length,
+                "tasks": [task_instruction],
+                "data/chunk_index": 0,
+                "data/file_index": 0,
+                "data/file_from_index": total_frames,
+                "data/file_to_index": total_frames + length,
+            }
+            episode_row.update(video_meta)
+            episode_rows.append(episode_row)
             total_frames += length
 
     pd.DataFrame(all_rows).to_parquet(data_chunk_dir / "file-000.parquet", index=False)
@@ -270,7 +362,13 @@ def convert(args: argparse.Namespace) -> None:
     tasks.to_parquet(dataset_dir / "meta" / "tasks.parquet")
 
     _write_modality_json(dataset_dir)
-    _write_info_json(dataset_dir, total_episodes=len(episode_rows), total_frames=total_frames, fps=fps)
+    _write_info_json(
+        dataset_dir,
+        total_episodes=len(episode_rows),
+        total_frames=total_frames,
+        total_videos=total_videos,
+        fps=fps,
+    )
 
     print(f"[starVLA] wrote LeRobot v3 dataset: {dataset_dir}")
     print(f"[starVLA] episodes={len(episode_rows)}, frames={total_frames}, task={task_instruction!r}")
