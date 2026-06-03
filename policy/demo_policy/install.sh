@@ -1,5 +1,7 @@
+# install policy env
 pip install -e .
+# ...
 
-# install XPolicyLab
+# conda: install XPolicyLab
 cd ../../
 pip install -e .

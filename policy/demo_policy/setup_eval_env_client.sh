@@ -1,15 +1,15 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
-task_name=$2
-ckpt_name=$3
-env_cfg_type=$4
-action_type=$5
-seed=$6
-env_gpu_id=$7
-eval_env_conda_env=$8
-additional_info=$9
+dataset_name=${1}
+task_name=${2}
+ckpt_name=${3}
+env_cfg_type=${4}
+action_type=${5}
+seed=${6}
+env_gpu_id=${7}
+eval_env_conda_env=${8}
+additional_info=${9}
 policy_server_port=${10}
 policy_server_ip=${11:-"localhost"}
 

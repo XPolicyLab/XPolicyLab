@@ -149,7 +149,10 @@ else
 	mv "${src_data}" "${TARGET_DATA_DIR}"
 fi
 
-rm -rf "${TARGET_ENV_CFG_DIR}"
+if [[ -e "${TARGET_ENV_CFG_DIR}" ]]; then
+	echo "env_cfg 已存在，为避免覆盖请先手动处理: ${TARGET_ENV_CFG_DIR}" >&2
+	exit 1
+fi
 mv "${extract_root}/tmp/env_cfg" "${TARGET_ENV_CFG_DIR}"
 
 echo "==> Done"

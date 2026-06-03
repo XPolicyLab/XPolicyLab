@@ -1,17 +1,16 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
-task_name=$2
-ckpt_name=$3
-env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+dataset_name=${1}
+task_name=${2}
+ckpt_name=${3}
+env_cfg_type=${4}
+action_type=${5}
+seed=${6}
+policy_gpu_id=${7}
+policy_conda_env=${8}
+policy_server_port=${9}
+policy_server_host=${10:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"

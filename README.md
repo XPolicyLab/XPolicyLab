@@ -1,27 +1,58 @@
-<h1 align="center">XPolicyLab: A Unified Platform for Policy Deployment</h1>
+![](./assets/logo.png)
 
-XPolicyLab 是一个统一的策略训练与评测平台，旨在通过一套代码同时支持 RoboDojo 仿真环境与真机评测。
+<h1 align="center">XPolicyLab: A Unified Standard for Robot Policy Development and Evaluation</h1>
 
-## 快速开始
+XPolicyLab is a unified platform for robot policy development, training, inference, evaluation, and reinforcement learning. It defines a common interface for data processing, model training, policy serving, and environment-side evaluation, with the goal of improving code readability, reproducibility, and ecosystem compatibility across robot learning projects.
 
-### 环境配置与数据拉取
+The project integrates a broad set of frontier policies and is maintained with the global developer community. Contributions of new policies, benchmarks, and infrastructure components are welcome. XPolicyLab is currently designed to work closely with RoboDojo Benchmark and RoboTwin Benchmark.
 
-首先，克隆项目并拉取演示数据及环境配置：
+arXiv (coming soon) | User Group (coming soon) | Tutorial (RoboDojo)
+
+Co-Project Leads: Tianxing Chen, Tian Nian, Zijian Cai
+
+# 🚀 1. Getting Started
+
+## 1.1 Supported Scope
+
+| Area | Supported models, projects, and benchmarks |
+|---|---|
+| WAM | FastWAM, Motus, GigaWorldPolicy, DreamZero, LingBot-VA, Wall-WM |
+| VLA | GalaxeaVLA, GR00T_N17, H_RDT, InternVLA_A1, LDA-1B, , LingBot-VLA, MolmoACT2, OpenVLA_OFT, Pi0, Pi05, Pi0-Fast, RDT-1B, SmolVLA, Spirit_v15, TinyVLA, X_VLA, starVLA, A1, Abot_M0, Being_H05, GO1, Xiaomi_Robotics_0, Dexbotic_DM0, Mem_0, RISE, UniDex, Wall-OSS |
+| Imitation learning | ACT, DP |
+| Infrastructure | RLinf, starVLA |
+| Benchmarks | RoboDojo, RoboTwin (coming soon) |
+| In progress | ... |
+
+## 1.2 Environment and Data
+
+Create a workspace, clone XPolicyLab, and download the demonstration data and environment configuration:
 
 ```bash
 mkdir demo_env
 cd demo_env
+
+# Clone this repository.
 git clone git@github.com:Luminis-Platform/XPolicyLab.git
-# 拉取完整 RoboDojo / Demo 数据（标准格式），同时会拉取env_cfg文件夹，适用于仅通过XPolicyLab训练模型，没有仿真
+cd XPolicyLab
+
+# Download the complete demo dataset in the standard format.
+# This also downloads env_cfg. Use it when training with XPolicyLab only;
+# do not download it inside an existing simulator workspace.
 bash scripts/download_demo_data.sh
-# 可选：拉取完整 RoboDojo / HDF5 数据（标准格式）
+
+# Optional: download RoboDojo data in the standard HDF5 format.
 bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
-# 可选：拉取完整 RoboDojo / LeRobot v3.0 数据 (qpos为joint position，ee需要重转)
+
+# Optional: download RoboDojo data in LeRobot v3.0 format.
+# qpos denotes joint positions; ee data requires reconversion.
 bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
-# 可选：拉取完整 RoboDojo / LeRobot v2.1 数据 (qpos为joint position，ee需要重转)
+
+# Optional: download RoboDojo data in LeRobot v2.1 format.
 bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1
 ```
-将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
+
+XPolicyLab is usually mounted inside a larger experiment or simulation workspace. A typical layout is:
+
 ```text
 demo_env/
 ├── data
@@ -29,30 +60,24 @@ demo_env/
 │   ├── RoboDojo/     # scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
 │   └── {dataset_name}/
 │       └── {task_name}/
-│            └── {env_cfg}
-│                 ├── data
-│                 ├── preview_video
-│                 ├── scene_layout
-│                 ├── seed.txt
-│                 └── traj_data
+│           └── {env_cfg}/
+│               ├── data
+│               ├── preview_video
+│               ├── scene_layout
+│               ├── seed.txt
+│               └── traj_data
 ├── env_cfg           # scripts/download_demo_data.sh
 └── XPolicyLab
 ```
 
-接着，创建并激活 Conda 环境，安装项目依赖：
+# 📐 2. Standard Formats
 
-```bash
-cd XPolicyLab
-conda create -n XPolicyLab python=3.10 -y
-conda activate XPolicyLab
-pip install -e .
-```
+## 2.1 Observation Format
 
-## 数据与观测格式
+<details>
+<summary>Observation Data Format v1.0</summary>
 
-在 XPolicyLab 中，位姿（Pose）数据的格式统一为 `[x, y, z, qw, qx, qy, qz]`。以下是详细的观测与数据格式说明。
-
-### 观测格式 (Observation Data Format v1.0)
+XPolicyLab represents all pose values as `[x, y, z, qw, qx, qy, qz]`. The same convention is used for end-effector poses, TCP poses, mobile base poses, and trajectory datasets.
 
 ```text
 Observation Data Format v1.0
@@ -63,7 +88,7 @@ Observation Data Format v1.0
 │   └── frequency                              (Field)    int
 ├── vision/                                    (Group)
 │   ├── cam_head/                              (Group)
-│   │   ├── color                              (Field)    (H, W, 3), 3通道为BGR
+│   │   ├── color                              (Field)    (H, W, 3), RGB
 │   │   ├── depth                              (Field)    (H, W) or (H, W, 1)
 │   │   ├── approximate_depth                  (Field)    optional
 │   │   ├── intrinsic_matrix                   (Field)    (3, 3)
@@ -71,7 +96,7 @@ Observation Data Format v1.0
 │   │   └── shape                              (Field)    (2,) or (3,)
 │   ├── cam_left_wrist/                        (Group, optional)
 │   ├── cam_right_wrist/                       (Group, optional)
-│   ├── cam_wrist/                             (Group, optional for single-arm)
+│   ├── cam_wrist/                             (Group, optional for single-arm robots)
 │   └── cam_third_view/                        (Group, optional)
 └── state/                                     (Group)
     ├── left_arm_joint_state                   (Field)    (DOF,), optional
@@ -84,163 +109,183 @@ Observation Data Format v1.0
     ├── right_ee_pose                          (Field)    (7,), optional
     ├── right_tcp_pose                         (Field)    (7,), optional
     ├── right_delta_ee_pose                    (Field)    (7,), optional
-    ├── arm_joint_state                        (Field)    (DOF,), optional for single-arm
-    ├── ee_joint_state                         (Field)    (EEF_DOF,), optional for single-arm
-    ├── ee_pose                                (Field)    (7,), optional for single-arm
-    ├── tcp_pose                               (Field)    (7,), optional for single-arm
-    ├── delta_ee_pose                          (Field)    (7,), optional for single-arm
+    ├── arm_joint_state                        (Field)    (DOF,), optional for single-arm robots
+    ├── ee_joint_state                         (Field)    (EEF_DOF,), optional for single-arm robots
+    ├── ee_pose                                (Field)    (7,), optional for single-arm robots
+    ├── tcp_pose                               (Field)    (7,), optional for single-arm robots
+    ├── delta_ee_pose                          (Field)    (7,), optional for single-arm robots
     └── mobile/                                (Group, optional)
         ├── base_pose                          (Field)    (7,)
         └── base_twist                         (Field)    (6,)
 ```
 
-### 轨迹数据格式 (Trajectory Data Format v1.0)
+</details>
+
+## 2.2 Trajectory Data Format
+
+<details>
+<summary>Trajectory Data Format v1.0</summary>
+
+XPolicyLab represents all pose values as `[x, y, z, qw, qx, qy, qz]`. The same convention is used for end-effector poses, TCP poses, mobile base poses, and trajectory datasets.
 
 ```text
 Trajectory Data Format v1.0
 ├── data_format_version                        (Dataset)  string, e.g. "v1.0"
-├── instructions                               (Dataset)  JSON-serialized string list, task-level instructions
-├── subtasks                                   (Dataset)  JSON-serialized list of stage annotations
+├── instructions                               (Dataset)  JSON-serialized string list
+├── subtasks                                   (Dataset)  JSON-serialized stage annotations
 ├── additional_info/                           (Group)
 │   └── frequency                              (Dataset)  int, control / recording frequency in Hz
 ├── vision/                                    (Group)
 │   ├── cam_head/                              (Group)
-│   │   ├── colors                             (Dataset)  (T, H, W, 3) uint8 BGR images
-│   │   ├── depths                             (Dataset)  (T, H, W) or (T, H, W, 1), depth images
-│   │   ├── approximate_depths                 (Dataset)  optional, approximated / processed depth images
+│   │   ├── colors                             (Dataset)  (T, H, W, 3) uint8 RGB image byte stream
+│   │   ├── depths                             (Dataset)  (T, H, W) or (T, H, W, 1)
+│   │   ├── approximate_depths                 (Dataset)  optional
 │   │   ├── intrinsic_matrix                   (Dataset)  (3, 3) or (T, 3, 3)
 │   │   ├── extrinsics_matrix                  (Dataset)  (4, 4) or (T, 4, 4)
 │   │   └── shape                              (Dataset)  (2,) [H, W] or (3,) [H, W, C]
-│   ├── cam_left_wrist/                        (Group, optional for dual-arm)
-│   ├── cam_right_wrist/                       (Group, optional for dual-arm)
-│   ├── cam_wrist/                             (Group, optional for single-arm)
+│   ├── cam_left_wrist/                        (Group, optional for dual-arm robots)
+│   ├── cam_right_wrist/                       (Group, optional for dual-arm robots)
+│   ├── cam_wrist/                             (Group, optional for single-arm robots)
 │   └── cam_third_view/                        (Group, optional)
 └── state/                                     (Group)
     ├── left_arm_joint_states                  (Dataset)  (T, DOF_L), optional
     ├── left_ee_joint_states                   (Dataset)  (T, EEF_DOF_L), optional
-    ├── left_ee_poses                          (Dataset)  (T, 7), optional, [x, y, z, qw, qx, qy, qz]
+    ├── left_ee_poses                          (Dataset)  (T, 7), optional
     ├── left_tcp_poses                         (Dataset)  (T, 7), optional
     ├── left_delta_ee_poses                    (Dataset)  (T, 7), optional
     ├── right_arm_joint_states                 (Dataset)  (T, DOF_R), optional
     ├── right_ee_joint_states                  (Dataset)  (T, EEF_DOF_R), optional
-    ├── right_ee_poses                         (Dataset)  (T, 7), optional, [x, y, z, qw, qx, qy, qz]
+    ├── right_ee_poses                         (Dataset)  (T, 7), optional
     ├── right_tcp_poses                        (Dataset)  (T, 7), optional
     ├── right_delta_ee_poses                   (Dataset)  (T, 7), optional
-    ├── arm_joint_states                       (Dataset)  (T, DOF), optional for single-arm
-    ├── ee_joint_states                        (Dataset)  (T, EEF_DOF), optional for single-arm
-    ├── ee_poses                               (Dataset)  (T, 7), optional for single-arm
-    ├── tcp_poses                              (Dataset)  (T, 7), optional for single-arm
-    ├── delta_ee_poses                         (Dataset)  (T, 7), optional for single-arm
+    ├── arm_joint_states                       (Dataset)  (T, DOF), optional for single-arm robots
+    ├── ee_joint_states                        (Dataset)  (T, EEF_DOF), optional for single-arm robots
+    ├── ee_poses                               (Dataset)  (T, 7), optional for single-arm robots
+    ├── tcp_poses                              (Dataset)  (T, 7), optional for single-arm robots
+    ├── delta_ee_poses                         (Dataset)  (T, 7), optional for single-arm robots
     └── mobile/                                (Group, optional)
-        ├── base_poses                         (Dataset)  (T, 7), [x, y, z, qw, qx, qy, qz]
+        ├── base_poses                         (Dataset)  (T, 7)
         └── base_twists                        (Dataset)  (T, 6), [vx, vy, vz, wx, wy, wz]
 ```
 
-## 代码结构概览
+</details>
 
-为了使不同策略（Policy）的实现尽可能统一，并便于社区扩展，我们设计了一个兼具规范性与灵活性的框架。
+# 🧩 3. Policy Structure
 
-请查看 `policy/demo_policy` 文件夹，这是一个教学演示模块，包含了完整的结构。其文件内容如下：
+XPolicyLab uses a standard policy package layout so that different policies can share the same data, training, serving, and evaluation interfaces. The teaching example in `policy/demo_policy` contains the complete template:
 
-```text
-demo_policy
-├── deploy.py                       # 部署模型的流程（含串行与并行两种层级方案）
-├── deploy.yml                      # 部署参数配置，参数将传入 model.Model 中，辅助用户定义模型参数并加载模型
-├── eval.sh                         # 评测入口：编排 server + client（同机一键启动）
-├── setup_eval_policy_server.sh     # 在 policy 环境中启动模型服务端，绑定 policy_server_port
-├── setup_eval_env_client.sh        # 在 eval_env 环境中启动环境客户端，按 deploy.yml 的 eval_env 选择 debug/sim/real
-├── __init__.py
-├── install.sh                      # 环境安装脚本
-├── model.py                        # 模型类，定义了模型导入、观测更新、动作获取以及重置逻辑
-├── process_data.sh                 # 数据处理脚本，将 RoboDojo 数据转换为模型训练所需的格式
-└── train.sh                        # 训练启动脚本
+| File | Purpose |
+|---|---|
+| `deploy.py` | Implements the deployment loop, including serial and batched interaction modes. |
+| `deploy.yml` | Defines deployment parameters passed into `model.Model`, including default model configuration and checkpoint loading options. |
+| `eval.sh` | Local one-command evaluation entry point. It allocates an available `policy_server_port`, starts both `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` on the same machine, and cleans up the policy server when evaluation exits. |
+| `setup_eval_policy_server.sh` | Policy-side startup script. It runs the model server inside the policy environment and binds `policy_server_host:policy_server_port`; in remote deployment, this script is launched on the model/GPU machine, while in local evaluation it could be launched by `eval.sh`. |
+| `setup_eval_env_client.sh` | Environment-side startup script. It runs the evaluation client inside the environment environment and dispatches to debug, simulation, or real-world runners according to `deploy.yml`; in remote deployment, this script is launched on the environment/simulator machine, while in local evaluation it could be launched by `eval.sh`. |
+| `install.sh` | Installs the policy environment and editable XPolicyLab package. |
+| `model.py` | Defines model loading, observation updates, action generation, and reset logic. |
+| `process_data.sh` | Converts raw datasets into the policy-specific training format. |
+| `train.sh` | Launches policy training. |
+
+`policy/DP` provides a more complete and easy-to-follow reference implementation.
+
+# 🛠️ 4. Integrating a Custom Policy
+
+The recommended integration principle is script-level reproducibility: avoid hard-coded paths, expose key training and evaluation parameters, support multiple robot morphologies when possible, and keep policy-specific code minimal and documented.
+
+You can first run the demo policy to validate the end-to-end interaction flow. Ensure that you either have a simulation environment available or have downloaded the demo data.
+
+```bash
+conda create -n demo python=3.10
+conda activate demo
+cd policy/demo_policy
+bash install.sh
+bash eval.sh RoboDojo stack_bowls demo_ckpt arx_x5 joint 0 0 0 demo demo
 ```
 
-您也可以参考 `policy/DP`，这是一个简单且实现较为完善的策略示例。
+## 4.1 Create a Policy Template
 
-## 接入自定义策略 (Policy)
-
-### 1. 创建策略
-
-在 XPolicyLab 根目录下，运行以下指令以创建新的策略模板：
+From the XPolicyLab root directory:
 
 ```bash
 bash create_policy.sh ${policy_name}
 ```
-`create_policy.sh`会在`XPolicyLab/policy`创建新policy的目录，可以查看内容文件的相关注释以了解参数。
 
-可将外部项目源码放在 `XPolicyLab/policy/${policy_name}` 下的独立子目录中。例如 `XPolicyLab/policy/DP/diffusion_policy` 。
+The script creates `policy/${policy_name}` with the standard template files and inline parameter comments. External source code can be placed in a dedicated subdirectory, such as `policy/starVLA/source_starvla`.
 
-拉取外部源码后，请删除该源码目录中的 `.git`，避免被 Git 识别为 submodule 。完成后**先进行一次提交保留源码快照**，再进行适配修改，以方便后续修改内容的对照。
+If the external source is cloned from another repository, remove its `.git` directory to avoid registering it as a Git submodule. We recommend committing the imported source snapshot before making adaptation changes, which makes subsequent diffs easier to inspect.
 
-**常见参数说明：**
+## 4.2 Standard Parameters and Naming
 
-训练与评测对参数的要求不同：
+These parameters should appear consistently in data processing, training, and evaluation scripts when applicable:
 
-| 参数 | 训练 (`process_data.sh` / `train.sh`) | 评测 (`eval.sh`) |
+| Parameter | Requirement | Training usage | Evaluation usage |
+|---|---:|---|---|
+| `dataset_name` | Required | Identifies the source dataset under `data/`, e.g. RoboDojo, RoboTwin, or RoboDojo with depth. | Identifies the dataset family used by the evaluation task and checkpoint naming. |
+| `ckpt_name` | Required | Names the experiment and processed artifacts. It may equal `task_name` for single-task training. | Locates the checkpoint directory, often together with dataset, robot configuration, action type, and seed. |
+| `task_name` | Required for evaluation | Optional for training. Multi-task or co-training pipelines can decide internally which raw tasks to consume. | Specifies the task executed by the environment client. |
+| `env_cfg_type` | Required | Selects robot and environment configuration, including robot morphology. Demo and RoboDojo data use `arx_x5` by default. | Selects the environment configuration for rollout. |
+| `action_type` | Required | Specifies the policy action representation, such as `joint` or `ee`. | Must match the deployment control mode. |
+| `seed` | Required | Controls training randomness and enables multi-seed reporting. | Controls evaluation randomness. |
+| `expert_data_num` | Optional | Recommended when distinguishing the number of demonstrations for a single task. | Optional, usually only needed if checkpoint names encode data scale. |
+
+Recommended artifact names:
+
+| Artifact | Naming convention | Default location |
 |---|---|---|
-| `ckpt_name` | **必填**。实验与产物标识，决定 `data/`、`checkpoints/` 子目录名 | **必填**。用来定位 checkpoint 子目录 |
-| `task_name` | **不必填**。单任务训练时可与 `ckpt_name` 相同；cotrain 等多任务场景由 `process_data.sh` / `train.sh` 自行决定读哪些原始任务 | **必填**。指定仿真器中要跑的任务，传给环境客户端 |
+| Processed dataset | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>` | `policy/<policy_name>/data/` or `policy/<policy_name>/processed_data/` |
+| Training checkpoint | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/<policy_name>/checkpoints/` |
+| Raw RoboDojo data | `data/${dataset_name}/${task_name}/${env_cfg}` | Workspace-level `data/` directory |
 
-其余参数：
+This convention keeps datasets and checkpoints identifiable from their core experimental parameters, while still allowing `process_data.sh` to read one or more raw `task_name` directories.
 
-- `dataset_name`: 数据集名称，目的是在 `data` 目录下区分不同项目的数据集，例如 RoboTwin 和 RoboDojo。
-- `env_cfg_type`: 采集或评测的环境配置（包含本体信息等）。在 `demo_env/env_cfg_type` 中可以查看示例。教程中提供了两个示范数据：`dual_franka_panda`（双臂夹爪）和 `g1_inspire`（人形灵巧手）。
-- `expert_data_num`: 训练使用的轨迹数量，参与 checkpoint 6 元组命名。
-- `action_type`: 模型使用的数据类型（如 `ee` 或 `joint`）。这会影响使用的数据内容以及模型输入输出的维度。
-- `seed`: 随机种子，便于多种子复现与对比。
+## 4.3 Implement `install.sh`
 
-> **命名约定：**
-> - **处理后数据集**（`process_data.sh` 输出）固定为 5 元组：
->   `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`，落在 `policy/<policy_name>/data/` 下。
-> - **训练产物**（`train.sh` 输出，对应 DP 的 `ckpt_setting`）固定为 6 元组：
->   `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`，落在 `policy/<policy_name>/checkpoints/` 下。
->
-> 原始 RoboDojo 数据仍按 `data/${dataset_name}/${task_name}/${env_cfg}` 组织；`process_data.sh` 从其中读取一个或多个 `task_name`，但输出目录统一用 `ckpt_name` 命名。
-
-#### 完善 install.sh
-策略创建后，在根据原项目进行环境配置的同时完善install.sh
-
-需要注意：确保每个policy的`install.sh`要对XPolicyLab的项目目录进行`pip install -e . `，以支持我们部分函数的调用。
-
-建议参考 `demo_env/XPolicyLab/policy/DP/install.sh`，如下所示。
+Each policy should install its original dependencies and install XPolicyLab in editable mode:
 
 ```bash
+# Install policy-specific dependencies.
+# ...
+
+# Install XPolicyLab from the repository root.
 cd ../../
-pip install -e . #项目目录下pip install -e .
+pip install -e .
 ```
 
-### 2. 完善数据处理 (`process_data.sh`)
+Editable installation is recommended because policy code often imports utilities from `XPolicyLab.utils`; installing from the root keeps these imports synchronized with the local repository during development.
 
-您需要从 `demo_env/data` 中读取数据，并将其转换为模型所需的格式。我们已提供部分参考参数，您可以根据需要进行修改。建议参考 `demo_env/XPolicyLab/policy/DP/process_data.sh` 及其对应的 Python 文件。
+## 4.4 Implement `process_data.sh`
 
-在数据处理过程中，您可能会用到以下工具函数（参考 `policy/DP/diffusion_policy/process_data.py`）：
+`process_data.sh` converts official data under the workspace-level `data/` directory into the model-specific training format. RoboDojo LeRobot v2.1 and v3.0 datasets are also available for policies that can consume them directly. For an example, see `policy/DP/process_data.sh` and the corresponding Python processing code.
+
+The following utilities are commonly used:
 
 ```python
 from XPolicyLab.utils.load_file import load_hdf5
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_image_bit
+from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info
 ```
 
-- `load_hdf5`: 输入路径读取数据。
-- `decode_image_bit`: 将数据中的字节流解析还原为 NumPy 数组（支持单帧图片字节流及整条轨迹的字节流输入）。
-- `get_robot_action_dim_info`: 输入 `env_cfg` 的名称（注意是字符串，不是字典），返回包含 `arm_dim` 和 `ee_dim` 列表的字典，需要保证你拉取过demo数据，在XPolicyLab同级文件夹有个env_cfg文件夹，可以看到一开始的解释。
+| Utility | Description |
+|---|---|
+| `load_hdf5` | Loads an HDF5 trajectory file from an input path. |
+| `decode_image_bit` | Decodes RGB image byte streams into NumPy arrays. It supports both single-frame byte streams and full trajectory byte streams. |
+| `get_robot_action_dim_info` | Takes `env_cfg_type` as a string and returns `arm_dim` and `ee_dim` lists for robot-specific action dimensions. |
 
-训练与部署中的图像处理应保持一致。要求分辨率统一为`640x480`
-可参考 `policy/DP/diffusion_policy/process_data.py` 会将图像 resize 为 `640x480`，对应 HWC shape 为 `(480, 640, 3)`。
+Image data is stored in RGB channel order and may be represented as multi-frame byte streams. Use `decode_image_bit` to recover correct image arrays. Avoid hard-coding action dimensions when the model architecture permits configurable dimensions.
 
-特别注意 BGR/RGB 通道顺序，请喂给模型 RGB 图像。
+<details>
+<summary>Robot dimension example</summary>
 
-**维度信息示例：**
-
-`env_cfg/robot/_robot_info.json`中有不同机器人的维度信息，可同过传入的`{env_cfg_type}`进行索引。
-
-当列表长度为 1 时代表单臂机器人，长度为 2 时代表双臂机器人。在编写模型架构、定义输入输出以及处理数据时，请尽量利用此信息，以兼容未来不同自由度的末端执行器和机械臂任务。
+`env_cfg/robot/_robot_info.json` stores morphology-specific dimensions indexed by `env_cfg_type`. A list of length 1 denotes a single-arm robot, while a list of length 2 denotes a dual-arm robot.
 
 ```json
 {
     "x5": {
         "arm_dim": [6],
         "ee_dim": [1]
+    },
+    "arx_x5": {
+        "arm_dim": [6, 6],
+        "ee_dim": [1, 1]
     },
     "g1_inspire": {
         "arm_dim": [7, 7],
@@ -249,62 +294,70 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 }
 ```
 
-转换后数据默认保存在 `XPolicyLab/policy/${policy_name}/data` 下。
+</details>
 
-### 3. 训练模型
+## 4.5 Implement `train.sh`
 
-完善 `train.sh` 脚本。我们提供了一些演示参数。
+`train.sh` should expose the key experiment parameters listed above and pass `seed` through to the underlying training code. Some external policy repositories hard-code the seed; adapt them so that different seeds produce independent training runs and can be averaged in later evaluation.
 
-`train.sh` 中包含 `seed` 参数，后续会进行不同 `seed` 的训练及测评，部分 `policy` 的源代码可能会把 `seed` 写死，需要注意且进行适配。
+## 4.6 Implement Evaluation and Deployment
 
-### 4. 评测与部署
+Evaluation requires two components:
 
-要支持评测，需要完善两个核心部分：模型推理支持 (`model.py`) 和控制流程 (`deploy.py`)。
+| Component | Responsibility |
+|---|---|
+| `model.py` | Loads the policy, maintains observation state, returns actions, and resets model-side state. |
+| `deploy.py` | Runs the environment interaction loop and calls the policy server. |
 
-我们提供了一个离线调试方案，默认环境为 `debug_policy_env.py`。该调试器会提供尺寸正确的观测数据（Observation），并根据返回的动作（Action）进行检查和模拟交互。调试通过后，即可尝试在仿真环境中运行。这个离线环境可通过将 `deploy.yml` 的 `eval_env` 设为 `debug` 来启动；切换到 `sim` 或 `real` 不需要修改 `eval.sh`。具体实现可参考 `XPolicyLab/policy/demo_policy/eval.sh` 及其 Python 文件。
+XPolicyLab provides an offline debug environment through `debug_policy_env.py`. It generates correctly shaped observations and validates returned actions, enabling rapid checks of parameter routing, model input/output dimensions, and server-client communication. Set `eval_env: debug` in `deploy.yml` for offline debugging; switch it to `sim` or `real` for simulation or real-robot evaluation without editing `eval.sh`.
 
-#### 完善 `model.Model`
+### 4.6.1 `model.Model` Interface
 
-在 `model.py` 中，`Model` 类继承自 `ModelTemplate`，需要实现以下方法：
+`model.py` should define a `Model` class that inherits from `ModelTemplate` and implements:
 
-1. `__init__`: 接收 `model_cfg`（来自 `deploy.yml` 及 `eval.sh` 的覆盖参数）。
-2. `update_obs`: 更新环境观测。
-3. `update_obs_batch`: 批量更新多个环境的观测窗口。`obs_list` 是一个包含多个字典的列表，每个字典代表一个环境的观测，并指定了该观测的 `env_idx`。
-4. `get_action`: 获取动作。要求返回动作字典，字典的 Key 决定了控制方式（例如，双臂指定 `left_arm_joint` 则使用关节控制，指定 `left_ee_pose` 则使用末端位姿控制）。可通过 `action_type` 参数控制返回内容，Key 需与观测状态中的 Key 类型一致。
-5. `get_action_batch`: 批量获取动作，要求返回动作字典的列表。
-6. `reset`: 重置模型状态。
+| Method | Contract |
+|---|---|
+| `__init__(model_cfg)` | Receives model configuration from `deploy.yml` and runtime overrides from `setup_eval_policy_server.sh`. |
+| `update_obs(obs)` | Updates the model with a single environment observation. See [Observation Format](#21-observation-format). |
+| `update_obs_batch(obs_list)` | Updates the model with batched observations. Each observation dictionary includes an `env_idx`. |
+| `get_action()` | Returns one action dictionary. Action keys define the control mode, e.g. `left_arm_joint` for joint control or `left_ee_pose` for end-effector pose control. |
+| `get_action_batch()` | Returns a list of action dictionaries for batched evaluation. |
+| `reset()` | Resets model-side state. |
 
-> 详细实现可直接参考 `demo_policy/model.py` 中的代码及注释。
+The returned action representation should match `action_type` and the observation state family. For example, a policy should not mix `left_arm_joint_state`-style joint control with `left_ee_pose`-style pose control in the same output. If implementing batched inference is difficult for a policy, `update_obs_batch` and `get_action_batch` can be implemented as simple loops over the single-environment methods. See `policy/DP/model.py` for a concrete implementation.
 
-对`update_obs`和`update_obs_batch`的实现。若已实现了`update_obs_batch`，可以参考`DP`的形式直接实现`update_obs`。如果`update_obs_batch`在某个`policy`较难实现，可直接使用`for`循环`update_obs`。
+# 🔌 5. Deployment Workflow
 
+During evaluation, the environment process and policy process communicate through a policy server. This design supports remote deployment and isolates simulator dependencies from policy dependencies.
 
-#### 配置 `deploy.yml` 与三件套评测脚本
+| File | Role |
+|---|---|
+| `deploy.yml` | Defines model deployment parameters. Low-frequency options can be set as constants or `null` and overridden later with `--overrides`. `eval_env` selects `debug`, `sim`, or `real`; `eval_batch` selects serial or batched inference. |
+| `eval.sh` | Local orchestration script for same-machine evaluation. It selects an available `policy_server_port`, launches the policy server first, then launches the environment client, and finally terminates the server when evaluation exits. Use this script when the policy and environment can run on the same machine. |
+| `setup_eval_policy_server.sh` | Policy-side startup script. It enters `policy_conda_env` or uses `policy_uv_env_path`, starts `setup_policy_server.py`, loads `model.Model`, and binds `policy_server_host:policy_server_port` so that environment clients can request actions. In remote deployment, run this script on the model/GPU machine. |
+| `setup_eval_env_client.sh` | Environment-side startup script. It enters `eval_env_conda_env`, connects to the policy server through `policy_server_host:policy_server_port`, and calls `XPolicyLab/utils/setup_env_client.sh`, which dispatches to `run_debug_env_client.sh`, `run_sim_env_client.sh`, or `run_real_policy_client.sh` according to `deploy.yml`. In remote deployment, run this script on the environment or simulator machine. |
 
-- **`deploy.yml`**: 指定模型部署所需的参数。部分参数可定义为 `null`，随后在 `setup_eval_policy_server.sh` 中通过 `--overrides` 覆盖。`eval_env` 字段（`debug` / `sim` / `real`）决定客户端走哪个 runner，无需改 `eval.sh`。`eval_batch` 控制是否走批量推理路径。
-- **`eval.sh`**: 编排入口。分配一个空闲 `policy_server_port`，然后顺序拉起 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`，并负责退出时清理 server。
-- **`setup_eval_policy_server.sh`**: 在 `policy_conda_env` 中启动 `setup_policy_server.py`，绑定 `policy_server_port`（与 `policy_server_host`，默认 `localhost`，便于跨机部署）。
-- **`setup_eval_env_client.sh`**: 在 `eval_env_conda_env` 中调用 `XPolicyLab/utils/setup_env_client.sh`，根据 `deploy.yml` 的 `eval_env` 转发到 `run_debug_env_client.sh` / `run_sim_env_client.sh` / `run_real_policy_client.sh`。
+Use `policy_gpu_id` for the model process and `env_gpu_id` for the simulation process. The conda-based policy environment can be modeled after `policy/DP`; the uv-based path can be modeled after `policy/PI_05`.
 
-部署分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`，通过 `policy_server_port` 通信，从而隔离环境配置。`policy_conda_env` 的实现可参考 DP，`policy_uv_env_path` 的实现可参考 PI_05。分别用 `policy_gpu_id` 和 `env_gpu_id` 分配模型和仿真的 GPU 占用，可参考 DP/demo_policy 脚本中只在子脚本内 `CUDA_VISIBLE_DEVICES="${policy_gpu_id}"` 的写法，而不是全局 `export CUDA_VISIBLE_DEVICES`。
+For remote deployment, run `setup_eval_policy_server.sh` on the GPU policy machine, then run `setup_eval_env_client.sh ... <policy_server_port> <policy_server_ip>` on the simulation machine. Both sides only need to agree on `policy_server_ip:policy_server_port`.
 
-> **跨机部署**：把 `setup_eval_policy_server.sh` 放在带 GPU 的机器上后台运行，再在仿真机调用 `setup_eval_env_client.sh ... <policy_server_port> <policy_server_ip>` 即可。两侧只需指向同一个 `policy_server_ip:policy_server_port`，不必同机。
+## 5.1 `deploy.py` Notes
 
-#### 部署逻辑 (`deploy.py`)
+Read `policy/demo_policy/deploy.py` for the reference control flow. The most important calls are:
 
-建议阅读 `demo_policy.py` 中的实现与注释以理解逻辑。关键点如下：
+| API | Purpose |
+|---|---|
+| `TASK_ENV.is_episode_end()` | Checks whether all evaluation episodes have finished. |
+| `model_client.call(func_name, obs)` | Serializes the target `Model` method name and observation payload, sends them to the policy server, and returns the model-side result. |
 
-1. `TASK_ENV.is_episode_end()`: 判断当前环境是否全部结束。
-2. `model_client.call`: `func_name` 为字符串，传入观测数据。两者共同序列化后通过端口通信，调用模型侧对应的函数并传递参数。
+After offline debugging, switch `eval_env` in `deploy.yml` from `debug` to `sim` or `real`. The environment client will automatically dispatch to the corresponding runner without changes to `eval.sh`, `setup_eval_policy_server.sh`, or `setup_eval_env_client.sh`.
 
-### 5. 仿真部署与调试体验
+# 📚 6. Citation
 
-当一切调试完毕后，把 `deploy.yml` 里的 `eval_env` 从 `debug` 改为 `sim`（或 `real`）即可在仿真/真机环境中部署，无需改动 `eval.sh`、`setup_eval_policy_server.sh`、`setup_eval_env_client.sh`。`setup_env_client.sh` 会根据该字段自动转发到对应的 runner（`run_sim_env_client.sh` / `run_real_policy_client.sh`）。
-
-您可以通过以下流程体验调试器：
-
-```bash
-cd policy/demo_policy
-# dataset_name task_name ckpt_name env_cfg_type expert_data_num action_type seed policy_gpu_id env_gpu_id policy_conda_env eval_env_conda_env
-bash eval.sh RoboDojo handover_bottle_and_put_into_dustbin demo_ckpt g1_inspire 50 ee 0 0 0 XPolicyLab XPolicyLab
+```bibtex
+Coming Soon
 ```
+
+# 📬 7. Contact
+
+Tianxing Chen: [chentianxing2002@gmail.com](mailto:chentianxing2002@gmail.com)
