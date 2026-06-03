@@ -2,6 +2,6 @@ pip install pyquaternion pyyaml rospkg pexpect mujoco==2.3.7 dm_control==1.0.14 
 
 cd detr && pip install -e .
 
+# install XPolicyLab
 cd ../../..
-
-pip install -e . --no-cache-dir
+pip install -e .

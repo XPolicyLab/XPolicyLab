@@ -8,5 +8,7 @@ pip install \
   huggingface_hub==0.25.2 pandas
 
 pip install -e .
+
+# install XPolicyLab
 cd ../../
 pip install -e .

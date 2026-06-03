@@ -5,7 +5,7 @@ dataset_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
+expert_data_num=$5 # optional
 action_type=$6
 seed=$7
 policy_gpu_id=$8
@@ -40,7 +40,6 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \
