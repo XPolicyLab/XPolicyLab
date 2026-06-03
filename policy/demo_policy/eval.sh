@@ -13,12 +13,12 @@ env_gpu_id=$9
 policy_conda_env=${10}
 eval_env_conda_env=${11}
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
+ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
-CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
+SERVER_SCRIPT="${CURRENT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${CURRENT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
