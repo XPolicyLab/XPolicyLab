@@ -1,6 +1,6 @@
 import numpy as np
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, get_batch_size
+from XPolicyLab.utils.process_data import get_robot_action_dim_info, get_batch_size, get_action_dim
 
 
 class Model(ModelTemplate):
@@ -9,6 +9,8 @@ class Model(ModelTemplate):
         self.model_cfg = model_cfg
         self.action_type = model_cfg["action_type"]
         self.env_cfg_type = model_cfg["env_cfg_type"]
+
+        self.action_dim = get_action_dim(self.env_cfg_type) # get the total dim of the action
 
         # 获取机器人动作维度信息
         # 示例:
