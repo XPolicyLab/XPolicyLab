@@ -31,8 +31,8 @@ python XPolicyLab/setup_policy_server.py \
   env_cfg_type='aloha-agilex' \
   action_type='joint' \
   model_path='/share/being-transfer/users/yiqing/checkpoints/post-robotwin_clean_BH05-2B_chunk-16_20260403_191158/0150000' \
-  data_config_name='robotwin_qpos' \
-  dataset_name='robotwin_posttrain' \
+  data_config_name='robodojo_qpos' \
+  dataset_name='robodojo_posttrain' \
   embodiment_tag='new_embodiment' \
   prompt_template='long' \
   device='cuda'
@@ -65,75 +65,68 @@ python XPolicyLab/debug_env_client.py \
 - 这里的 `debug_env_client.py` 默认输入是 mock observation，不是真实 benchmark env
 - 因此这一步主要用于接口联调，不代表真实任务成功率
 
-## 训练步骤
+## 训练步骤（XPolicyLab 标准流程）
 
-当前训练入口在本地 Being-H 代码里：
+入口在 `policy/Being_H05/` 顶层脚本，与仓库 README 中 DP / GO1 约定一致：
 
-- `XPolicyLab/policy/Being_H05/Being-H/scripts/train/train_robotwin_example.sh`
+| 脚本 | 参数个数 | 作用 |
+|------|----------|------|
+| `process_data.sh` | 5 | 将 LeRobot v2.1 链到 `data/<5-tuple>/` 并注册数据集 |
+| `train.sh` | 7 | 训练，权重写到 `checkpoints/<6-tuple>/` |
+| `eval.sh` | 11 | 启动 policy server + 环境 client 联调 |
 
-建议按下面顺序准备。
+**命名：**
 
-### 1. 准备数据
+- 处理后数据（5 元组）：`<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
+- 训练产物（6 元组）：上述 5 元组 + `-<seed>`
 
-Being-H 的训练脚本要求先把 RoboTwin 数据转成 LeRobot 格式，然后在本地 `dataset_info.py` 里注册路径。
+### 1. 准备 LeRobot 数据
 
-可参考脚本头部注释：
+共享 v2.1（14 维 joint，三相机 `cam_*`）：
 
-```bash
-cd policy/Being_H05/Being-H
-python scripts/data/convert_robotwin_to_lerobot.py \
-  --task_name beat_block_hammer \
-  --setting demo_clean \
-  --episode_num 50 \
-  --data_root /path/to/RoboTwin/data \
-  --output_dir /path/to/datasets/robotwin/beat_block_hammer-demo_clean
-```
+`/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21`
 
-然后在：
+HDF5 → LeRobot 请用 `XPolicyLab/scripts/transform_lerobot_v30_format.py`（或已有 v21 导出）。**不要用 v30**（缺少 `meta/episodes.jsonl`，当前 Being-H loader 不支持）。
 
-- `XPolicyLab/policy/Being_H05/Being-H/configs/dataset_info.py`
-
-里注册对应数据集路径。
-
-### 2. 准备模型权重
-
-训练脚本默认会用到三类路径：
-
-- `PRETRAIN_MODEL`
-- `EXPERT_MODEL`
-- `RESUME_PATH`
-
-当前示例脚本位置：
-
-- `XPolicyLab/policy/Being_H05/Being-H/scripts/train/train_robotwin_example.sh`
-
-运行前需要先把这些路径改成你机器上的真实路径。
-
-### 3. 启动训练
+### 2. process_data（5 参数）
 
 ```bash
-cd policy/Being_H05/Being-H
+cd XPolicyLab/policy/Being_H05
 
-bash scripts/train/train_robotwin_example.sh
+# 示例：cotrain，3500 条 joint
+bash process_data.sh RoboDojo cotrain arx_x5 3500 joint
+
+# 可选：指定其它 LeRobot 根目录
+# LEROBOT_DATA_PATH=/path/to/your_lerobot_v21 bash process_data.sh ...
 ```
 
-这个脚本当前默认是：
+输出：`data/RoboDojo-cotrain-arx_x5-3500-joint/`（symlink）及 `Being-H/configs/posttrain/xpolicylab/<5-tuple>.yaml`。
 
-- `robotwin_qpos`
-- `action_chunk_length=16`
-- `gradient_accumulation_steps=2`
-- `max_steps=150000`
+### 3. train（7 参数）
 
-训练输出会写到脚本中的：
+```bash
+export BEINGH_MLLM_PATH=/path/to/InternVL3_5-2B
+export BEINGH_EXPERT_PATH=/path/to/Qwen3-0.6B
+export BEINGH_RESUME_PATH=/path/to/Being-H05-2B
 
-- `OUTPUT_DIR`
-- `training.log`
+bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3
+```
 
-### 4. 训练完成后用于 XPolicyLab 推理
+Checkpoint 目录：`checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/`，步数子目录如 `0150000/`。
 
-把 `deploy.yml` 或启动命令里的 `model_path` 改成训练输出的 checkpoint 子目录
+`data_config` 为 `robodojo_qpos`（非 `robotwin`）。超参可用环境变量覆盖：`MAX_STEPS`、`SAVE_STEPS`、`LEARNING_RATE` 等。
 
-然后重新启动 `XPolicyLab/setup_policy_server.py` 即可。
+### 4. 评测 / 部署
+
+```bash
+bash eval.sh RoboDojo <task_name> cotrain arx_x5 3500 joint 0 <policy_gpu> <env_gpu> beingh <eval_env> 
+```
+
+或手动启动 server 时，`model_path` 可指向 6 元组目录或最新 step 子目录；也可只传 6 元组字段由 `model.py` 自动解析。
+
+### RoboTwin（非 RoboDojo）
+
+仍使用 `Being-H/scripts/train/train_robotwin_example.sh` 及 `robotwin_*` 配置，不走上述 5/7 参数流程。
 
 
 

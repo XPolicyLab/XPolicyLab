@@ -1,27 +1,38 @@
 # LingBot_VA
 
-LingBot_VA 使用 LeRobot 视频数据、Wan2.2 latent 与动作统计进行后训练。
+LingBot_VA 使用 LeRobot 视频数据、Wan latent 与动作统计进行后训练。安装见 [INSTALLATION.md](INSTALLATION.md)。
 
 ## 数据处理
 
-在 `lingbot_va` 子目录中按以下顺序准备数据：
-
 ```bash
-cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/LingBot_VA/lingbot_va
+cd lingbot_va
+# 转化出30维state & action数据
 python dataset/transform.py --raw_dir <processed_data_task_dir> --repo_id <repo_id>
-python scripts/add_action_config.py --dataset-root <lerobot_dataset_dir> --backup
-python scripts/extract_wan_22_latents.py --dataset-root <lerobot_dataset_dir> --model-root <Wan2.2-TI2V-5B-Diffusers>
-python scripts/make_empty_embedding.py --model-root <Wan2.2-TI2V-5B-Diffusers> --output <lerobot_dataset_dir>/empty_emb.pt
-python scripts/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --output <lerobot_dataset_dir>/action_norm_stats.json
+# --raw_dir: 原始数据路径, 指向RoboDojo数据集的路径
+# --repo_id: 转化后lerobot数据的名称
+
+# 添加指定额外信息
+python dataset/add_action_config.py --dataset-root <lerobot_dataset_dir> --backup
+# --dataset-root: 指向生成的lerobot数据集的所在路径, 例如.cache/huggingface_hub/lerobot/<repo_id>/ 
+# --backup: 备份被修改的文件(meta/episodes.jsonl)
+
+# wan22编码
+python dataset/extract_wan_22_latents.py --dataset-root <lerobot_dataset_dir> --model-root <wan_model_dir>
+# --dataset-root: 指向生成的lerobot数据集的所在路径, 例如.cache/huggingface_hub/lerobot/<repo_id>/ 
+# --model-root: Wan2.2-TI2V-5B-Diffusers的路径
+
+# 添加空编码用于初始化
+python dataset/make_empty_embedding.py --model-root <wan_model_dir> --output <lerobot_dataset_dir>/empty_emb.pt
+# --model-root: Wan2.2-TI2V-5B-Diffusers的路径
+# <lerobot_dataset_dir>: 例如.cache/huggingface_hub/lerobot/<repo_id>/
+
+# 计算stat
+python dataset/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --output <lerobot_dataset_dir>/action_norm_stats.json
+# --dataset-root: 指向生成的lerobot数据集的所在路径, 例如.cache/huggingface_hub/lerobot/<repo_id>/ 
+# <lerobot_dataset_dir>: 例如.cache/huggingface_hub/lerobot/<repo_id>/
 ```
 
-默认训练脚本会把数据路径设为：
-
-```text
-policy/LingBot_VA/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
-```
-
-可通过 `LINGBOT_VA_DATASET_PATH` 覆盖。
+默认 LeRobot 数据：`${XPOLICYLAB_LEROBOT_DATA_ROOT:-<robodojo_test>/data}/<repo_id>`（`arx_x5` → `RoboDojo_sim_arx-x5_v30`）。可用 `LINGBOT_VA_DATASET_PATH` 覆盖完整路径，或用 `LEROBOT_DATASET_REPO_ID` 覆盖 repo 名。
 
 ## 训练
 
@@ -29,19 +40,7 @@ policy/LingBot_VA/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_nu
 bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
-示例：
-
-```bash
-bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3
-```
-
-训练输出固定保存到：
-
-```text
-policy/LingBot_VA/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
-```
-
-`train.sh` 会把上述目录作为 `--save-root` 传给 `lingbot_va/script/run_va_posttrain.sh`。配置名默认 `robotwin30_train`，可通过 `LINGBOT_VA_CONFIG_NAME` 覆盖。
+Checkpoint：`checkpoints/<6-tuple>/`
 
 ## 评估
 

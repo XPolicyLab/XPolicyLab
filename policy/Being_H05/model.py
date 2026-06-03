@@ -12,10 +12,50 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_
 
 
 BEINGH_ROOT = os.path.join(os.path.dirname(__file__), "Being-H")
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if BEINGH_ROOT not in sys.path:
     sys.path.insert(0, os.path.abspath(BEINGH_ROOT))
 
 from BeingH.inference.beingh_policy import BeingHPolicy
+
+
+def _resolve_latest_step_dir(run_dir: str) -> str:
+    if os.path.isfile(os.path.join(run_dir, "config.json")):
+        return run_dir
+    if not os.path.isdir(run_dir):
+        return run_dir
+    step_dirs = [
+        name
+        for name in os.listdir(run_dir)
+        if name.isdigit() and os.path.isdir(os.path.join(run_dir, name))
+    ]
+    if not step_dirs:
+        return run_dir
+    latest = sorted(step_dirs, key=int)[-1]
+    return os.path.join(run_dir, latest)
+
+
+def _resolve_model_path(model_cfg: dict[str, Any]) -> str:
+    model_path = model_cfg.get("model_path")
+    if model_path:
+        return _resolve_latest_step_dir(model_path)
+
+    data_project_name = model_cfg.get("data_project_name") or model_cfg.get("xpolicylab_dataset_name")
+    ckpt_name = model_cfg.get("ckpt_name")
+    env_cfg_type = model_cfg.get("env_cfg_type")
+    expert_data_num = model_cfg.get("expert_data_num")
+    action_type = model_cfg.get("action_type", "joint")
+    seed = model_cfg.get("seed")
+    if None in (data_project_name, ckpt_name, env_cfg_type, expert_data_num, seed):
+        raise ValueError(
+            "deploy config must provide model_path, or data_project_name + ckpt fields for XPolicyLab 6-tuple."
+        )
+
+    run_id = f"{data_project_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    candidate = os.path.join(_SCRIPT_DIR, "checkpoints", run_id)
+    if not os.path.isdir(candidate):
+        raise ValueError(f"checkpoint run dir not found: {candidate}")
+    return _resolve_latest_step_dir(candidate)
 
 
 class Model(ModelTemplate):
@@ -32,12 +72,10 @@ class Model(ModelTemplate):
         if self.action_type != "joint":
             raise ValueError("Being_H05 currently only supports joint/qpos actions in XPolicyLab.")
 
-        model_path = model_cfg.get("model_path")
-        if not model_path:
-            raise ValueError("deploy config must provide model_path for Being_H05.")
+        model_path = _resolve_model_path(model_cfg)
 
-        data_config_name = model_cfg.get("data_config_name", "robotwin_qpos")
-        dataset_name = model_cfg.get("dataset_name", "robotwin_posttrain")
+        data_config_name = model_cfg.get("data_config_name", "robodojo_qpos")
+        dataset_name = model_cfg.get("dataset_name", "robodojo_posttrain")
         embodiment_tag = model_cfg.get("embodiment_tag", "new_embodiment")
         prompt_template = model_cfg.get("prompt_template", "long")
         prop_pos = model_cfg.get("prop_pos", "front")

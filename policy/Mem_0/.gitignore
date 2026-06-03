@@ -1,0 +1,16 @@
+# XPolicyLab convention (mirrors policy/DP/.gitignore)
+data/*
+checkpoints/*
+
+# Mem_0 upstream generated artifacts (regenerable; never commit)
+Mem_0/checkpoints/*
+!Mem_0/checkpoints/_download.py
+Mem_0/lerobot_datasets/
+Mem_0/llamafactory_data/
+Mem_0/datasets/
+Mem_0/assets/
+Mem_0/wandb/
+Mem_0/nohup.out
+Mem_0/language_annotations/
+Mem_0/LlamaFactory/
+_tmp_visual/

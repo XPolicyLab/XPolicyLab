@@ -1,0 +1,12 @@
+model:
+  model_path: <lingbot_vla_model_path>
+  tokenizer_path: <tokenizer_path>
+
+data:
+  datasets_type: vla
+  train_path: <lerobot_dataset_dir>
+  norm_path: assets/norm_stats/robodojo_sim_arx_x5_customized.json
+
+train:
+  global_batch_size: 512
+  output_dir: output/norm

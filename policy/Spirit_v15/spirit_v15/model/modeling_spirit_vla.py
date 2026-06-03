@@ -32,7 +32,7 @@ from transformers import (
     PretrainedConfig,
 )
 
-from ..utils import (
+from utils import (
     FeatureType,
     NormalizationMode,
     PolicyFeature,
@@ -583,7 +583,7 @@ class SpiritVLAPolicy(nn.Module):
 
     # ----------------------------- Flow matching core -----------------------------
     def _embed_suffix(self, state, noisy_actions, mask_state=True):
-        """Embed state and noisy actions. mask_state=False for training, True for inference."""
+        """Embed state and noisy actions. Zeros ee z (dims 2, 9) when mask_state is True."""
         embs = []
         pad_masks = []
         att_masks = []
@@ -787,7 +787,7 @@ class SpiritVLAPolicy(nn.Module):
         t_expand = t.view(-1, 1, 1)
         noisy_actions = actions + t_expand * (noise - actions)
 
-        suffix_embs, _, _ = self._embed_suffix(state, noisy_actions, mask_state=False)
+        suffix_embs, _, _ = self._embed_suffix(state, noisy_actions, mask_state=True)
 
         v_t = self.dit(
             hidden_states=suffix_embs,
@@ -860,6 +860,14 @@ class SpiritVLAPolicy(nn.Module):
 
         filtered_cfg = _filter(SpiritVLAConfig, cfg_dict)
         config = SpiritVLAConfig(**filtered_cfg)
+        backbone_override = os.environ.get("SPIRIT_BACKBONE_PATH", "").strip()
+        if backbone_override:
+            if not os.path.isdir(backbone_override):
+                raise FileNotFoundError(
+                    f"SPIRIT_BACKBONE_PATH is not a directory: {backbone_override}"
+                )
+            print(f"Using local VLM backbone from SPIRIT_BACKBONE_PATH: {backbone_override}")
+            config.backbone = backbone_override
         config._qwen_device_map = None if train else qwen_device_map
         model = cls(config)
         weight_path = os.path.join(ckpt_path, "model.safetensors")

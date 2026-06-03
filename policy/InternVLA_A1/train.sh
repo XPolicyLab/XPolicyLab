@@ -22,7 +22,6 @@ repo_id="${INTERNVLA_REPO_ID:-${data_setting}}"
 intern_action_mode="${INTERNVLA_ACTION_MODE:-delta}"
 use_external_stats="${INTERNVLA_USE_EXTERNAL_STATS:-true}"
 
-mkdir -p "${ckpt_dir}"
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export HF_HOME="${HF_HOME:-/xspark-cache/shared}"
 export HF_LEROBOT_HOME="${HF_LEROBOT_HOME:-/xspark-cache/shared/lerobot}"

@@ -1,0 +1,47 @@
+# rotation
+rotate_red_block_right: ["take the red block and rotate it to the right"]
+rotate_red_block_left: ["take the red block and rotate it to the left"]
+rotate_blue_block_right: ["take the blue block and rotate it to the right"]
+rotate_blue_block_left: ["take the blue block and rotate it to the left"]
+rotate_pink_block_right: ["take the pink block and rotate it to the right"]
+rotate_pink_block_left: ["take the pink block and rotate it to the left"]
+
+# sliding
+push_red_block_right: ["go push the red block right"]
+push_red_block_left: ["go push the red block left"]
+push_blue_block_right: ["go push the blue block right"]
+push_blue_block_left: ["go push the blue block left"]
+push_pink_block_right: ["go push the pink block right"]
+push_pink_block_left: ["go push the pink block left"]
+
+# open/close
+move_slider_left: [ "push the sliding door to the left side"]
+move_slider_right: [ "push the sliding door to the right side"]
+open_drawer: ["pull the handle to open the drawer"]
+close_drawer: ["push the handle to close the drawer"]
+
+# lifting
+lift_red_block_table: ["grasp and lift the red block"]
+lift_blue_block_table: ["grasp and lift the blue block"]
+lift_pink_block_table: ["grasp and lift the pink block"]
+
+lift_red_block_slider: [ "lift the red block from the sliding cabinet"]
+lift_blue_block_slider: [ "lift the blue block from the sliding cabinet"]
+lift_pink_block_slider: [ "lift the pink block from the sliding cabinet"]
+
+lift_red_block_drawer: ["Take the red block from the drawer"]
+lift_blue_block_drawer: ["Take the blue block from the drawer"]
+lift_pink_block_drawer: ["Take the pink block from the drawer"]
+
+place_in_slider: [ "store the grasped block in the sliding cabinet"]
+place_in_drawer: [ "store the grasped block in the drawer"]
+
+push_into_drawer: ["slide the block that it falls into the drawer"]
+
+stack_block: ["stack the grasped block"]
+unstack_block: ["remove the stacked block"]
+
+turn_on_lightbulb: ["use the switch to turn on the light bulb"]
+turn_off_lightbulb: ["use the switch to turn off the light bulb"]
+turn_on_led: ["press the button to turn on the led light"]
+turn_off_led: ["press the button to turn off the led light"]

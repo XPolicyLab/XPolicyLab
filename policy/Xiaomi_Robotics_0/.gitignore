@@ -1,0 +1,10 @@
+/data/
+checkpoints/
+__pycache__/
+*.py[cod]
+xiaomi_robotics_0/**/eval_logs/
+xiaomi_robotics_0/xr0/outputs/
+xiaomi_robotics_0/xr0/wandb/
+xiaomi_robotics_0/xr0/pretrained_ckpt/
+xiaomi_robotics_0/xr0/hf_pretrain/
+xiaomi_robotics_0/xr0/videos/

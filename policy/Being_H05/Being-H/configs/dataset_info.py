@@ -9,6 +9,7 @@ DATASET_REGISTRY = {
     'uni_posttrain': LeRobotIterableDataset,
     'robotwin_posttrain': LeRobotIterableDataset,
     'eef_robotwin': LeRobotIterableDataset,
+    'robodojo_posttrain': LeRobotIterableDataset,
 }
 
 
@@ -277,6 +278,13 @@ DATASET_INFO = {
             'embodiment': 'ROBOCASA',
             'embodiment_tag': 'robocasa',
             'subtask': 'single_panda_gripper.TurnSinkSpout',
+        },
+    },
+
+    # RoboDojo LeRobot v2.1 (from XPolicyLab/scripts/transform_lerobot_v30_format.py or v21 export)
+    'robodojo_posttrain': {
+        'RoboDojo_sim_arx-x5_v21': {
+            'dataset_path': '/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21',
         },
     },
 
@@ -897,3 +905,20 @@ DATASET_INFO = {
         },
     },
 }
+
+
+def _load_xpolicylab_dataset_overrides() -> None:
+    """Merge entries written by policy/Being_H05/process_data.sh (5-tuple paths)."""
+    import json
+    from pathlib import Path
+
+    override_path = Path(__file__).parent / "dataset_info_xpolicylab.json"
+    if not override_path.exists():
+        return
+    with open(override_path, encoding="utf-8") as f:
+        overrides = json.load(f)
+    for registry_name, datasets in overrides.items():
+        DATASET_INFO.setdefault(registry_name, {}).update(datasets)
+
+
+_load_xpolicylab_dataset_overrides()

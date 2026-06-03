@@ -1,9 +1,12 @@
-# Basic experiment configuration
+# Basic experiment configuration (runtime overrides come from eval.sh via setup_eval_policy_server.sh)
 policy_name: OpenVLA_OFT
+dataset_name: null
 task_name: null
-env_cfg: null
+ckpt_name: null
+ckpt_setting: null
 env_cfg_type: null
 expert_data_num: null
+action_type: joint
 seed: null
 eval_batch: true
 eval_env: debug
@@ -12,12 +15,21 @@ checkpoint_num: 600
 result_dir: "./results/openvla-oft/"
 obs_transform_pipeline: "xspark-v1.0"
 
-# Model / action configuration
-action_type: joint
+# OpenVLA-OFT model configuration (aligned with openvla_oft/scripts/finetune.sh)
 base_model_path: checkpoints/shared/openvla-7b
-use_film: false
-use_l1_regression: false
-use_proprio: false
+use_film: true
+use_l1_regression: true
+use_proprio: true
+use_diffusion: false
+num_images_in_input: 3
+center_crop: false
+lora_rank: 32
+num_open_loop_steps: 25
+
+# Action un-normalization key; null means auto-resolve from tfds_dataset_name / checkpoint stats
 unnorm_key: aloha_sim_arx
+# TFDS dataset name used during training
+tfds_dataset_name: aloha_sim_arx
 
 port: 6000
+host: localhost

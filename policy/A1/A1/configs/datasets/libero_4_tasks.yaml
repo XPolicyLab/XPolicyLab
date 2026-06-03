@@ -1,0 +1,15 @@
+# Dataset configuration for LIBERO 4 task suites
+
+# Image augmentation configuration (optional, defaults will be used if not configured)
+image_augmentation:
+  enable: true              # Whether to enable image augmentation
+  enable_random_erasing: true   # Whether to enable random erasing
+  enable_sharpening: true       # Whether to enable sharpening
+  augmentation_prob: 0.5        # Probability of applying augmentation
+
+rlds:
+  - name: libero_4_task_suites_no_noops
+    path: data/libero_rlds
+    weight: 1.0
+    normalization_type: bounds_q99
+    image_augmentation: False

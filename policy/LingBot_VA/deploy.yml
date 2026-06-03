@@ -2,12 +2,16 @@
 policy_name: LingBot_VA
 task_name: null
 env_cfg: null
+env_cfg_type: null
 expert_data_num: null
 seed: 0
 eval_batch: false
+eval_env: debug
 
 config_name: robotwin30_train
-checkpoint_path: "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
+checkpoint_path: "/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21"
+base_model_path: "/mnt/xspark-data/xspark_shared/model_weights/lingbot-va-base"
+action_type: joint
 
 result_dir: "./results/LingBot_VA/"
 

@@ -12,23 +12,30 @@ XPolicyLab 是一个统一的策略训练与评测平台，旨在通过一套代
 mkdir demo_env
 cd demo_env
 git clone git@github.com:Luminis-Platform/XPolicyLab.git
-
-# 拉取演示数据及环境配置，数据集格式为`data/${dataset_name}/${task_name}/${env_cfg}`
-bbash scripts/download_data.sh
+# 拉取完整 RoboDojo / Demo 数据（标准格式），同时会拉取env_cfg文件夹，适用于仅通过XPolicyLab训练模型，没有仿真
+bash scripts/download_demo_data.sh
+# 可选：拉取完整 RoboDojo / HDF5 数据（标准格式）
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
+# 可选：拉取完整 RoboDojo / LeRobot v3.0 数据 (qpos为joint position，ee需要重转)
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
+# 可选：拉取完整 RoboDojo / LeRobot v2.1 数据 (qpos为joint position，ee需要重转)
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1
 ```
 将内容移到`XPolicyLab`同级目录下。下面是示例的目录结构。
 ```text
 demo_env/
 ├── data
-│   └── {dataset_name}
-│       └── {task_name}
+│   ├── demo/         # scripts/download_demo_data.sh
+│   ├── RoboDojo/     # scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
+│   └── {dataset_name}/
+│       └── {task_name}/
 │            └── {env_cfg}
 │                 ├── data
 │                 ├── preview_video
 │                 ├── scene_layout
 │                 ├── seed.txt
 │                 └── traj_data
-├── env_cfg
+├── env_cfg           # scripts/download_demo_data.sh
 └── XPolicyLab
 ```
 
@@ -217,7 +224,7 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 
 - `load_hdf5`: 输入路径读取数据。
 - `decode_image_bit`: 将数据中的字节流解析还原为 NumPy 数组（支持单帧图片字节流及整条轨迹的字节流输入）。
-- `get_robot_action_dim_info`: 输入 `env_cfg` 的名称（注意是字符串，不是字典），返回包含 `arm_dim` 和 `ee_dim` 列表的字典。
+- `get_robot_action_dim_info`: 输入 `env_cfg` 的名称（注意是字符串，不是字典），返回包含 `arm_dim` 和 `ee_dim` 列表的字典，需要保证你拉取过demo数据，在XPolicyLab同级文件夹有个env_cfg文件夹，可以看到一开始的解释。
 
 训练与部署中的图像处理应保持一致。要求分辨率统一为`640x480`
 可参考 `policy/DP/diffusion_policy/process_data.py` 会将图像 resize 为 `640x480`，对应 HWC shape 为 `(480, 640, 3)`。

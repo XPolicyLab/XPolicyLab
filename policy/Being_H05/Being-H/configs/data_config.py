@@ -390,6 +390,19 @@ class RoboTwinQposDataConfig(BaseDataConfig):
         return ComposedModalityTransform(transforms=transforms)
 
 
+class RoboDojoQposDataConfig(RoboTwinQposDataConfig):
+    """
+    RoboDojo / XPolicyLab LeRobot (14-dim joint, cam_high / cam_*_wrist cameras).
+    Same qpos layout as RoboTwinQposDataConfig; only video column names differ.
+    """
+
+    VIDEO_SOURCE_COLUMNS = {
+        'video.head_view': 'observation.images.cam_high',
+        'video.right_wrist_view': 'observation.images.cam_right_wrist',
+        'video.left_wrist_view': 'observation.images.cam_left_wrist',
+    }
+
+
 class RoboTwinFrankaQposDataConfig(BaseDataConfig):
     """
     Data config for RoboTwin with franka-panda dual-arm robot.
@@ -625,6 +638,8 @@ DATA_CONFIG_MAP = {
     "robotwin_qpos_arx": RoboTwinQposDataConfig,
     "robotwin_qpos_piper": RoboTwinQposDataConfig,
     "robotwin_qpos_ur5": RoboTwinQposDataConfig,
+    
+    "robodojo_qpos": RoboDojoQposDataConfig, # robodojo与RoboTwin一致，所以继承了RoboTwin的config
     # franka-panda: 16-dim 双臂 7+1+7+1
     "robotwin_qpos_franka": RoboTwinFrankaQposDataConfig,
 }

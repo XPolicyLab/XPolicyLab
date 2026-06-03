@@ -1,20 +1,20 @@
 # Pi_0
 
-Pi_0 基于 openpi 接入 XPolicyLab，默认训练配置为 `pi0_base_aloha_full_sim_arx-x5_seed_0`。
+Pi_0 基于 openpi 接入 XPolicyLab。环境安装见 [INSTALLATION.md](INSTALLATION.md)。
 
 ## 数据处理
 
-如需先转换为 LeRobot/openpi 数据，可在 `openpi` 子目录运行对应脚本：
+如需先转换为 LeRobot/openpi 数据，在 `openpi` 子目录运行：
 
 ```bash
-cd /mnt/nfs/niantian/robodojo_test/XPolicyLab/policy/Pi_0/openpi
+cd openpi
 python scripts/process_data.py <task_name> <env_cfg_type> <repo_id> <mode> [instruction]
 bash scripts/compute_norm_stats.sh <config_name> <max_frames>
 ```
 
 ## 训练
 
-训练入口遵循 XPolicyLab 统一 7 参数：
+统一 7 参数入口：
 
 ```bash
 bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
@@ -26,17 +26,18 @@ bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <actio
 bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0
 ```
 
-默认 checkpoint 保存到：
+Checkpoint 保存到：
 
 ```text
-policy/Pi_0/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
+checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
 ```
 
-如需切换 openpi config：
+可覆盖环境变量：
 
-```bash
-OPENPI_TRAIN_CONFIG_NAME=pi0_base_aloha_full_sim_arx-x5_seed_0 bash train.sh ...
-```
+| 变量 | 说明 |
+|------|------|
+| `OPENPI_TRAIN_CONFIG_NAME` | openpi 训练配置名 |
+| `OPENPI_LOCAL_CACHE_ROOT` | HF / JAX 本地缓存根目录 |
 
 ## 评估
 

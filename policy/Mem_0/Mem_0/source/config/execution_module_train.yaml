@@ -1,0 +1,100 @@
+seed: 42
+wandb_entity: 
+wandb_project: Mem_0
+is_debug: False                # lightweight debug run (smaller batches/steps, verbose logging, disable color jitter)
+
+execution_module:
+  # Qwen Model
+  qwen_vl:
+    model_path: ./checkpoints/Qwen3-VL-2B-Instruct
+    system_prompt: null
+  # Memory Bank
+  memory_bank:
+    window_size: 30
+    initial_anchor_size: 1
+    num_heads: 8
+    dropout: 0.1
+    memory_accumulation: 8
+  # DiT Action Model
+  action_model:
+    action_model_type: DiT-B
+    hidden_size: 2048
+    add_pos_embed: True
+    max_seq_len: 1024
+    action_dim: 16
+    state_dim: 16
+    action_horizon: 30
+    repeated_diffusion_steps: 8
+    noise_beta_alpha: 1.5
+    noise_beta_beta: 1.0
+    noise_s: 0.999
+    num_timestep_buckets: 1000
+    num_inference_timesteps: 8
+    diffusion_model_cfg:    # DiT transformer parameters
+      cross_attention_dim: 2048 # VLM hidden dim
+      dropout: 0.2
+      final_dropout: true
+      interleave_self_attention: true
+      norm_type: "ada_norm"
+      num_layers: 16
+      output_dim: 2048
+      positional_embeddings: null
+  # Subtask End Classifier
+  classifier:
+    hidden_sizes: [6144, 2048, 512]
+    dropout: 0.1
+    pos_weight: 10.0   # counter class imbalance (false-dominant)
+    focal_gamma: 1.0   # optional focal term; set 0.0 to disable
+    threshold: 0.5   # probability threshold for positive subtask prediction
+  # Loss Weights
+  loss_weights:
+    lambda_action: 1.0
+    lambda_classifier: 0.2
+
+dataloader:
+  type: rmbench_random_episode  # Options: base, rmbench, rmbench_random_episode
+  num_workers: 2  # Number of workers for data loading (RandomEpisodeIterableDataset supports multiple workers)
+  shuffle_episodes: true  # Randomly shuffle episode order per rank (global shuffle then assign to workers)
+  seed: 42  # Random seed for episode shuffling (uses config seed if not specified)
+  infinite: true  # Whether to cycle through episodes infinitely
+  # norm_stats_path: ./assets/Mn_mix/norm_stats.json
+
+trainer:
+  wandb_run_name: # TODO
+  resume: null
+  batch_size: 56
+  train_steps: 30000
+  eval_action_interval: 100
+  log_interval: 10
+  classifier_metrics_window_size: 20
+  enable_wandb: true
+  checkpoint_dir: # TODO
+  save_every_steps: 1000
+  save_final: true
+  scheduler: cosine
+  warmup_ratio: 0.05
+  grad_clip_norm: 2.5
+  weight_decay: 0.005
+  learning_rate:
+    base: 1.0e-5
+    qwen_model: 1.0e-5
+    action_model: 1.0e-4
+    classifier: 1.0e-4
+  min_lr:
+    base: 1.0e-6
+    qwen_model: 1.0e-6
+    action_model: 5.0e-6
+    classifier: 5.0e-6
+  freeze_modules: ""
+  download_videos: false
+
+vla_dataset:
+  RMBench:
+    repo_id: # TODO
+    features_to_load:
+      - observation.state
+      - action
+      - subtask
+      - subtask_end
+      - episode_id
+      - observation.image.head_camera

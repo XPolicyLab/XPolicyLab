@@ -1,0 +1,138 @@
+# GR00T_N17 环境配置
+
+NVIDIA Isaac GR00T N1.7 在 XPolicyLab 中的接入。上游源码位于 [gr00t_n17/](gr00t_n17/)，使用 `uv`（Python 3.10，建议 CUDA 12.8 dGPU）。
+
+## 一键安装
+
+```bash
+bash install.sh
+```
+
+## 手动安装
+
+### 1. 系统依赖
+
+`ffmpeg` 用于读取视频；从 HuggingFace 拉模型时建议安装 `git-lfs`：
+
+```bash
+sudo apt-get update
+sudo apt-get install -y ffmpeg git-lfs
+git lfs install
+```
+
+### 2. 安装 uv
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"  # 若当前 shell 找不到 uv
+```
+
+### 3. 创建 GR00T 环境
+
+```bash
+cd gr00t_n17
+uv sync --python 3.10
+uv run python -c "import gr00t; print('GR00T installed successfully')"
+```
+
+若提示 `CUDA_HOME is unset`：
+
+```bash
+uv run bash scripts/deployment/dgpu/install_deps.sh
+```
+
+### 4. 安装 XPolicyLab
+
+在 `gr00t_n17` 目录下：
+
+```bash
+uv pip install -e ../../..
+uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
+```
+
+## 准备 RoboDojo 数据
+
+源数据集需为 LeRobot v3.0；GR00T 训练入口需要 GR00T-flavored LeRobot v2.1 及 `meta/modality.json`。
+
+```bash
+export LEROBOT_DATA_ROOT="${LEROBOT_DATA_ROOT:-$HF_LEROBOT_HOME}"
+export DATA_ROOT="${LEROBOT_DATA_ROOT}"
+export SRC_DATASET="${GR00T_SRC_DATASET:-RoboDojo_sim_arx-x5_v30}"
+export GR00T_DATASET="${GR00T_DATASET:-RoboDojo_sim_arx-x5_gr00t}"
+
+cp -a "${DATA_ROOT}/${SRC_DATASET}" "${DATA_ROOT}/${GR00T_DATASET}"
+
+cd gr00t_n17
+uv run --project scripts/lerobot_conversion \
+  python scripts/lerobot_conversion/convert_v3_to_v2.py \
+  --root "${DATA_ROOT}" \
+  --repo-id "${GR00T_DATASET}"
+```
+
+或使用 policy 封装脚本：
+
+```bash
+bash process_data.sh RoboDojo cotrain arx_x5 3500 joint
+```
+
+### 补充 meta/modality.json
+
+在转换后的数据目录创建（RoboDojo arx-x5，14 维 state/action）：
+
+```bash
+cat > "${DATA_ROOT}/${GR00T_DATASET}/meta/modality.json" <<'EOF'
+{
+  "state": {
+    "left_arm": { "start": 0, "end": 7 },
+    "right_arm": { "start": 7, "end": 14 }
+  },
+  "action": {
+    "left_arm": { "start": 0, "end": 7 },
+    "right_arm": { "start": 7, "end": 14 }
+  },
+  "video": {
+    "front": { "original_key": "observation.images.cam_high" },
+    "left_wrist": { "original_key": "observation.images.cam_left_wrist" },
+    "right_wrist": { "original_key": "observation.images.cam_right_wrist" }
+  },
+  "annotation": {
+    "human.task_description": { "original_key": "task_index" }
+  }
+}
+EOF
+```
+
+## 模型与数据路径
+
+| 变量 | 说明 |
+|------|------|
+| `LEROBOT_DATA_ROOT` | LeRobot 数据集根目录（默认 `$HF_LEROBOT_HOME`） |
+| `GR00T_SRC_DATASET` | 源 v3.0 数据集 repo id |
+| `GR00T_DATASET` | 转换后的 GR00T 数据集 repo id |
+| `GR00T_BASE_MODEL_PATH` | GR00T-N1.7-3B 本地目录或 HF id（见 `train.sh`） |
+| `GR00T_COSMOS_MODEL_PATH` | Cosmos-Reason2-2B 本地目录或 HF id |
+
+预训练权重也可预先 `huggingface-cli download` 到 `$HF_HOME`，`train.sh` 默认 `HF_HUB_OFFLINE=1` 走本地缓存。
+
+## 安装自检
+
+```bash
+cd gr00t_n17
+uv run python -c "import torch; print(torch.cuda.is_available())"
+uv run python gr00t/experiment/launch_finetune.py --help
+uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
+```
+
+## 评测环境
+
+Policy server 使用 `gr00t_n17/.venv`；env client 可使用任意已安装 XPolicyLab 的 conda 环境：
+
+```bash
+bash install.sh
+# client 侧示例
+conda activate <your_eval_env>
+cd ../../..
+pip install -e .
+```
+
+训练与评测入口见 [README.md](README.md)。

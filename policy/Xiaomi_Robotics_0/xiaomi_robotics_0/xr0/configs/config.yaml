@@ -1,0 +1,11 @@
+# @package _global_
+
+###################################################################
+# Do not modify any default value, adding new variable is allowed #
+###################################################################
+
+defaults:
+  - _self_
+  - data: midata/earphone
+  - model: XR0
+  - trainer: deepspeed

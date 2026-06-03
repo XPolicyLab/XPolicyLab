@@ -1,0 +1,12 @@
+# Image augmentation configuration (optional)
+image_augmentation:
+  enable: true              # Whether to enable image augmentation
+  enable_random_erasing: true   # Whether to enable random erasing
+  enable_sharpening: true       # Whether to enable sharpening
+  augmentation_prob: 0.5        # Probability of applying augmentation
+
+robochallenge: 
+  - path: data/RoboChallenge
+    embodiment: ARX5
+    task_name: put_cup_on_coaster
+    weight: 1.0

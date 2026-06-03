@@ -1,0 +1,1 @@
+python piper.py --datasetDir /mnt/workspace/yangyandan/download/hdf52 --type our_exp_bicam --targetDir /mnt/workspace/yangyandan/download/lerobot

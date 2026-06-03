@@ -1,10 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "spirit-vla-opensource"
 version = "0.1.0"
 description = "Out-of-the-box reproduction of Spirit-v1.5 RoboChallenge results"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
 dependencies = [
     "torch==2.8.0",
     "torchvision==0.23.0",
@@ -27,6 +31,10 @@ train = [
     "einops==0.8.1",
     "flash-attn==2.8.3",
 ]
+
+[tool.setuptools.packages.find]
+include = ["model*", "dataset*", "robochallenge*", "utils*"]
+exclude = ["assets*", "outputs*", "scripts*"]
 
 [tool.uv.extra-build-dependencies]
 flash-attn = ["torch==2.8.0"]

@@ -14,7 +14,9 @@ checkpoint_num: checkpoint_epoch_4_step_100000
 transformer_subdir: transformer_ema
 base_model_path: /mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B-Diffusers/
 stats_path: giga_world_policy/norm_stats_delta.json
-t5_embedding_pkl: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21/t5_embedding/episode_000000.pt
+t5_embedding_pkl: null
+lerobot_dataset_root: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
+fallback_task_name: stack_bowls
 norm_mode: zscore
 device: cuda
 dtype: bf16

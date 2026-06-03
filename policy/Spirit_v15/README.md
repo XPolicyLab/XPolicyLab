@@ -1,31 +1,24 @@
 # Spirit_v15
 
-Spirit_v15 当前训练数据格式是 Spirit 自有目录结构，而不是 LeRobot。根目录训练脚本会先按 XPolicyLab/RoboDojo 原始数据转换，再启动 Spirit 训练。
+Spirit_v15 训练数据为 Spirit 自有目录结构（非 LeRobot）。安装见 [INSTALLATION.md](INSTALLATION.md)。
 
 ## 数据格式
 
-转换后的 Spirit 数据目录形如：
+转换后的目录：
 
 ```text
 <converted_data_root>/
   meta/task_info.json
-  data/
-    episode_000000/
-      meta/episode_meta.json
-      states/states.jsonl
-      videos/
-        head_camera_rgb.mp4
-        left_camera_rgb.mp4
-        right_camera_rgb.mp4
+  data/episode_000000/...
 ```
 
-默认原始数据根目录：
+默认原始数据根目录为 XPolicyLab 仓库的 `data/`（相对 `../../../data`），可通过 `SPIRIT_RAW_DATA_ROOT` 覆盖。
 
-```text
-<robodojo_test>/data
+## 数据处理
+
+```bash
+bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 ```
-
-可通过 `SPIRIT_RAW_DATA_ROOT` 覆盖。
 
 ## 训练
 
@@ -36,36 +29,33 @@ bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <actio
 示例：
 
 ```bash
-bash train.sh RoboDojo stack_bowls arx_x5 50 ee 0 0,1,2,3
+bash process_data.sh RoboDojo sweep_blocks arx_x5 50 ee
+bash train.sh RoboDojo sweep_blocks arx_x5 50 ee 0 0,1,2,3
 ```
 
-默认匹配 pattern：
-
-```text
-<dataset_name>.<ckpt_name>.<env_cfg_type>
-```
-
-默认转换输出：
-
-```text
-policy/Spirit_v15/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
-```
-
-默认 checkpoint 输出：
-
-```text
-policy/Spirit_v15/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
-```
-
-常用覆盖变量：
+### Co-train（35 任务）
 
 ```bash
-SPIRIT_RAW_DATA_ROOT=/path/to/raw/data
-SPIRIT_PATTERNS_CSV=RoboDojo.stack_bowls.arx_x5
-SPIRIT_CONVERTED_DATA_ROOT=/path/to/converted/spirit/data
-SPIRIT_PRETRAINED_PATH=/path/to/Spirit-v1.5
-SPIRIT_SKIP_CONVERT=1
+bash process_data.sh RoboDojo cotrain arx_x5 100 ee
+bash train.sh RoboDojo cotrain arx_x5 100 ee 0 0,1,2,3,4,5,6,7
 ```
+
+输出：
+
+```text
+data/RoboDojo-cotrain-arx_x5-100-ee/
+checkpoints/RoboDojo-cotrain-arx_x5-100-ee-0/
+```
+
+## 环境变量
+
+| 变量 | 说明 |
+|------|------|
+| `SPIRIT_RAW_DATA_ROOT` | 原始 HDF5 数据根 |
+| `SPIRIT_PATTERNS_CSV` | 匹配 pattern |
+| `SPIRIT_CONVERTED_DATA_ROOT` | 转换输出目录 |
+| `SPIRIT_PRETRAINED_PATH` | 预训练权重路径或 HF id |
+| `SPIRIT_SKIP_CONVERT` | 设为 `1` 跳过转换 |
 
 ## 评估
 

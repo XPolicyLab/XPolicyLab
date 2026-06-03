@@ -1,0 +1,2602 @@
+{
+  "episode_0": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      81
+    ],
+    [
+      "Cover the right block with the right cover.",
+      122
+    ],
+    [
+      "Open the cover hiding the red block.",
+      77
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      117
+    ]
+  ],
+  "episode_1": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      95
+    ],
+    [
+      "Cover the right block with the right cover.",
+      97
+    ],
+    [
+      "Open the cover hiding the red block.",
+      77
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      119
+    ]
+  ],
+  "episode_2": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      89
+    ],
+    [
+      "Cover the right block with the right cover.",
+      105
+    ],
+    [
+      "Open the cover hiding the red block.",
+      71
+    ],
+    [
+      "Open the cover hiding the green block.",
+      102
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      102
+    ]
+  ],
+  "episode_3": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      110
+    ],
+    [
+      "Open the cover hiding the red block.",
+      87
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      110
+    ]
+  ],
+  "episode_4": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      87
+    ],
+    [
+      "Cover the right block with the right cover.",
+      106
+    ],
+    [
+      "Open the cover hiding the red block.",
+      86
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      116
+    ]
+  ],
+  "episode_6": [
+    [
+      "Cover the left block with the left cover.",
+      80
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      126
+    ],
+    [
+      "Open the cover hiding the red block.",
+      93
+    ],
+    [
+      "Open the cover hiding the green block.",
+      64
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      102
+    ]
+  ],
+  "episode_5": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      93
+    ],
+    [
+      "Cover the right block with the right cover.",
+      103
+    ],
+    [
+      "Open the cover hiding the red block.",
+      82
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      106
+    ]
+  ],
+  "episode_7": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      84
+    ],
+    [
+      "Cover the right block with the right cover.",
+      115
+    ],
+    [
+      "Open the cover hiding the red block.",
+      79
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_8": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      85
+    ],
+    [
+      "Cover the right block with the right cover.",
+      117
+    ],
+    [
+      "Open the cover hiding the red block.",
+      77
+    ],
+    [
+      "Open the cover hiding the green block.",
+      91
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      100
+    ]
+  ],
+  "episode_9": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      85
+    ],
+    [
+      "Cover the right block with the right cover.",
+      109
+    ],
+    [
+      "Open the cover hiding the red block.",
+      80
+    ],
+    [
+      "Open the cover hiding the green block.",
+      83
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      115
+    ]
+  ],
+  "episode_11": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      83
+    ],
+    [
+      "Cover the right block with the right cover.",
+      113
+    ],
+    [
+      "Open the cover hiding the red block.",
+      86
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_12": [
+    [
+      "Cover the left block with the left cover.",
+      85
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      70
+    ],
+    [
+      "Cover the right block with the right cover.",
+      124
+    ],
+    [
+      "Open the cover hiding the red block.",
+      70
+    ],
+    [
+      "Open the cover hiding the green block.",
+      90
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      98
+    ]
+  ],
+  "episode_10": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      84
+    ],
+    [
+      "Cover the right block with the right cover.",
+      118
+    ],
+    [
+      "Open the cover hiding the red block.",
+      77
+    ],
+    [
+      "Open the cover hiding the green block.",
+      93
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      102
+    ]
+  ],
+  "episode_13": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      117
+    ],
+    [
+      "Open the cover hiding the red block.",
+      94
+    ],
+    [
+      "Open the cover hiding the green block.",
+      72
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      114
+    ]
+  ],
+  "episode_14": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      73
+    ],
+    [
+      "Cover the right block with the right cover.",
+      121
+    ],
+    [
+      "Open the cover hiding the red block.",
+      87
+    ],
+    [
+      "Open the cover hiding the green block.",
+      83
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      123
+    ]
+  ],
+  "episode_15": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      72
+    ],
+    [
+      "Cover the right block with the right cover.",
+      123
+    ],
+    [
+      "Open the cover hiding the red block.",
+      87
+    ],
+    [
+      "Open the cover hiding the green block.",
+      86
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_16": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      80
+    ],
+    [
+      "Cover the right block with the right cover.",
+      120
+    ],
+    [
+      "Open the cover hiding the red block.",
+      78
+    ],
+    [
+      "Open the cover hiding the green block.",
+      74
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      119
+    ]
+  ],
+  "episode_17": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      80
+    ],
+    [
+      "Cover the right block with the right cover.",
+      119
+    ],
+    [
+      "Open the cover hiding the red block.",
+      75
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      114
+    ]
+  ],
+  "episode_18": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      82
+    ],
+    [
+      "Cover the right block with the right cover.",
+      114
+    ],
+    [
+      "Open the cover hiding the red block.",
+      83
+    ],
+    [
+      "Open the cover hiding the green block.",
+      79
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      114
+    ]
+  ],
+  "episode_19": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      85
+    ],
+    [
+      "Cover the right block with the right cover.",
+      115
+    ],
+    [
+      "Open the cover hiding the red block.",
+      80
+    ],
+    [
+      "Open the cover hiding the green block.",
+      80
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      110
+    ]
+  ],
+  "episode_21": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      82
+    ],
+    [
+      "Cover the right block with the right cover.",
+      117
+    ],
+    [
+      "Open the cover hiding the red block.",
+      76
+    ],
+    [
+      "Open the cover hiding the green block.",
+      79
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      125
+    ]
+  ],
+  "episode_20": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      120
+    ],
+    [
+      "Open the cover hiding the red block.",
+      92
+    ],
+    [
+      "Open the cover hiding the green block.",
+      74
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      111
+    ]
+  ],
+  "episode_22": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      82
+    ],
+    [
+      "Cover the right block with the right cover.",
+      117
+    ],
+    [
+      "Open the cover hiding the red block.",
+      73
+    ],
+    [
+      "Open the cover hiding the green block.",
+      80
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      132
+    ]
+  ],
+  "episode_23": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      83
+    ],
+    [
+      "Cover the right block with the right cover.",
+      119
+    ],
+    [
+      "Open the cover hiding the red block.",
+      73
+    ],
+    [
+      "Open the cover hiding the green block.",
+      90
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      104
+    ]
+  ],
+  "episode_24": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      81
+    ],
+    [
+      "Cover the right block with the right cover.",
+      113
+    ],
+    [
+      "Open the cover hiding the red block.",
+      75
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      114
+    ]
+  ],
+  "episode_25": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      84
+    ],
+    [
+      "Cover the right block with the right cover.",
+      118
+    ],
+    [
+      "Open the cover hiding the red block.",
+      72
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      122
+    ]
+  ],
+  "episode_26": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      117
+    ],
+    [
+      "Open the cover hiding the red block.",
+      80
+    ],
+    [
+      "Open the cover hiding the green block.",
+      80
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      124
+    ]
+  ],
+  "episode_27": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      80
+    ],
+    [
+      "Cover the right block with the right cover.",
+      118
+    ],
+    [
+      "Open the cover hiding the red block.",
+      79
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_28": [
+    [
+      "Cover the left block with the left cover.",
+      83
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      83
+    ],
+    [
+      "Cover the right block with the right cover.",
+      104
+    ],
+    [
+      "Open the cover hiding the red block.",
+      86
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      100
+    ]
+  ],
+  "episode_29": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      82
+    ],
+    [
+      "Cover the right block with the right cover.",
+      119
+    ],
+    [
+      "Open the cover hiding the red block.",
+      89
+    ],
+    [
+      "Open the cover hiding the green block.",
+      79
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      111
+    ]
+  ],
+  "episode_30": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      84
+    ],
+    [
+      "Cover the right block with the right cover.",
+      83
+    ],
+    [
+      "Open the cover hiding the red block.",
+      127
+    ],
+    [
+      "Open the cover hiding the green block.",
+      69
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      102
+    ]
+  ],
+  "episode_31": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      95
+    ],
+    [
+      "Open the cover hiding the green block.",
+      99
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      106
+    ]
+  ],
+  "episode_33": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      93
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      80
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      104
+    ]
+  ],
+  "episode_32": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      96
+    ],
+    [
+      "Open the cover hiding the red block.",
+      103
+    ],
+    [
+      "Open the cover hiding the green block.",
+      73
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      116
+    ]
+  ],
+  "episode_34": [
+    [
+      "Cover the left block with the left cover.",
+      79
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      73
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      111
+    ]
+  ],
+  "episode_35": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      87
+    ],
+    [
+      "Open the cover hiding the red block.",
+      108
+    ],
+    [
+      "Open the cover hiding the green block.",
+      90
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      105
+    ]
+  ],
+  "episode_36": [
+    [
+      "Cover the left block with the left cover.",
+      76
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      105
+    ],
+    [
+      "Open the cover hiding the green block.",
+      79
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      111
+    ]
+  ],
+  "episode_38": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      110
+    ],
+    [
+      "Open the cover hiding the green block.",
+      95
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      106
+    ]
+  ],
+  "episode_37": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      94
+    ],
+    [
+      "Open the cover hiding the red block.",
+      98
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      122
+    ]
+  ],
+  "episode_39": [
+    [
+      "Cover the left block with the left cover.",
+      68
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      84
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      79
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      110
+    ]
+  ],
+  "episode_40": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      85
+    ],
+    [
+      "Open the cover hiding the red block.",
+      109
+    ],
+    [
+      "Open the cover hiding the green block.",
+      96
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      98
+    ]
+  ],
+  "episode_41": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      72
+    ],
+    [
+      "Cover the right block with the right cover.",
+      96
+    ],
+    [
+      "Open the cover hiding the red block.",
+      108
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      109
+    ]
+  ],
+  "episode_42": [
+    [
+      "Cover the left block with the left cover.",
+      76
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      72
+    ],
+    [
+      "Cover the right block with the right cover.",
+      89
+    ],
+    [
+      "Open the cover hiding the red block.",
+      120
+    ],
+    [
+      "Open the cover hiding the green block.",
+      68
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      113
+    ]
+  ],
+  "episode_43": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      76
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      103
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      98
+    ]
+  ],
+  "episode_44": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      107
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      106
+    ]
+  ],
+  "episode_46": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      80
+    ],
+    [
+      "Cover the right block with the right cover.",
+      85
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      92
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      113
+    ]
+  ],
+  "episode_45": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      94
+    ],
+    [
+      "Open the cover hiding the green block.",
+      91
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_47": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      89
+    ],
+    [
+      "Open the cover hiding the red block.",
+      117
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      107
+    ]
+  ],
+  "episode_48": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      88
+    ],
+    [
+      "Open the cover hiding the red block.",
+      95
+    ],
+    [
+      "Open the cover hiding the green block.",
+      95
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_49": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      73
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      92
+    ],
+    [
+      "Open the cover hiding the green block.",
+      93
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      118
+    ]
+  ],
+  "episode_50": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      95
+    ],
+    [
+      "Open the cover hiding the green block.",
+      94
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      114
+    ]
+  ],
+  "episode_51": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      83
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      86
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      124
+    ]
+  ],
+  "episode_52": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      93
+    ],
+    [
+      "Open the cover hiding the green block.",
+      104
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      103
+    ]
+  ],
+  "episode_53": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      87
+    ],
+    [
+      "Open the cover hiding the red block.",
+      107
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      108
+    ]
+  ],
+  "episode_54": [
+    [
+      "Cover the left block with the left cover.",
+      76
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      108
+    ],
+    [
+      "Open the cover hiding the green block.",
+      88
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      103
+    ]
+  ],
+  "episode_55": [
+    [
+      "Cover the left block with the left cover.",
+      78
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      73
+    ],
+    [
+      "Cover the right block with the right cover.",
+      94
+    ],
+    [
+      "Open the cover hiding the red block.",
+      95
+    ],
+    [
+      "Open the cover hiding the green block.",
+      94
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      115
+    ]
+  ],
+  "episode_56": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      80
+    ],
+    [
+      "Cover the right block with the right cover.",
+      93
+    ],
+    [
+      "Open the cover hiding the red block.",
+      96
+    ],
+    [
+      "Open the cover hiding the green block.",
+      94
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      103
+    ]
+  ],
+  "episode_57": [
+    [
+      "Cover the left block with the left cover.",
+      76
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      86
+    ],
+    [
+      "Open the cover hiding the red block.",
+      94
+    ],
+    [
+      "Open the cover hiding the green block.",
+      91
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      115
+    ]
+  ],
+  "episode_58": [
+    [
+      "Cover the left block with the left cover.",
+      68
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      97
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      108
+    ]
+  ],
+  "episode_60": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      96
+    ],
+    [
+      "Open the cover hiding the red block.",
+      111
+    ],
+    [
+      "Open the cover hiding the green block.",
+      90
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      94
+    ]
+  ],
+  "episode_59": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      89
+    ],
+    [
+      "Open the cover hiding the red block.",
+      120
+    ],
+    [
+      "Open the cover hiding the green block.",
+      78
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      105
+    ]
+  ],
+  "episode_61": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      102
+    ],
+    [
+      "Open the cover hiding the green block.",
+      87
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_62": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      82
+    ],
+    [
+      "Cover the right block with the right cover.",
+      84
+    ],
+    [
+      "Open the cover hiding the red block.",
+      118
+    ],
+    [
+      "Open the cover hiding the green block.",
+      70
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      110
+    ]
+  ],
+  "episode_63": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      87
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      93
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      111
+    ]
+  ],
+  "episode_64": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      92
+    ],
+    [
+      "Open the cover hiding the red block.",
+      63
+    ],
+    [
+      "Open the cover hiding the green block.",
+      137
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      108
+    ]
+  ],
+  "episode_65": [
+    [
+      "Cover the left block with the left cover.",
+      79
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      96
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      88
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      106
+    ]
+  ],
+  "episode_66": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      83
+    ],
+    [
+      "Cover the right block with the right cover.",
+      87
+    ],
+    [
+      "Open the cover hiding the red block.",
+      112
+    ],
+    [
+      "Open the cover hiding the green block.",
+      73
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_67": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      85
+    ],
+    [
+      "Cover the right block with the right cover.",
+      87
+    ],
+    [
+      "Open the cover hiding the red block.",
+      105
+    ],
+    [
+      "Open the cover hiding the green block.",
+      82
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_68": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      86
+    ],
+    [
+      "Open the cover hiding the red block.",
+      111
+    ],
+    [
+      "Open the cover hiding the green block.",
+      87
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      104
+    ]
+  ],
+  "episode_69": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      88
+    ],
+    [
+      "Open the cover hiding the red block.",
+      99
+    ],
+    [
+      "Open the cover hiding the green block.",
+      88
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      116
+    ]
+  ],
+  "episode_71": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      97
+    ],
+    [
+      "Open the cover hiding the red block.",
+      99
+    ],
+    [
+      "Open the cover hiding the green block.",
+      97
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      110
+    ]
+  ],
+  "episode_70": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      88
+    ],
+    [
+      "Open the cover hiding the red block.",
+      105
+    ],
+    [
+      "Open the cover hiding the green block.",
+      86
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      108
+    ]
+  ],
+  "episode_73": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      68
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      99
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      106
+    ]
+  ],
+  "episode_72": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      93
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      125
+    ]
+  ],
+  "episode_74": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      76
+    ],
+    [
+      "Cover the right block with the right cover.",
+      89
+    ],
+    [
+      "Open the cover hiding the red block.",
+      103
+    ],
+    [
+      "Open the cover hiding the green block.",
+      93
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      107
+    ]
+  ],
+  "episode_75": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      89
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      91
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      118
+    ]
+  ],
+  "episode_77": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      72
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      107
+    ],
+    [
+      "Open the cover hiding the green block.",
+      73
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      120
+    ]
+  ],
+  "episode_78": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      73
+    ],
+    [
+      "Cover the right block with the right cover.",
+      93
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      99
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      105
+    ]
+  ],
+  "episode_76": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      72
+    ],
+    [
+      "Cover the right block with the right cover.",
+      98
+    ],
+    [
+      "Open the cover hiding the red block.",
+      93
+    ],
+    [
+      "Open the cover hiding the green block.",
+      92
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      111
+    ]
+  ],
+  "episode_79": [
+    [
+      "Cover the left block with the left cover.",
+      67
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      99
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      82
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      118
+    ]
+  ],
+  "episode_80": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      93
+    ],
+    [
+      "Open the cover hiding the red block.",
+      107
+    ],
+    [
+      "Open the cover hiding the green block.",
+      83
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_82": [
+    [
+      "Cover the left block with the left cover.",
+      76
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      73
+    ],
+    [
+      "Cover the right block with the right cover.",
+      93
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      127
+    ]
+  ],
+  "episode_81": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      92
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      87
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      116
+    ]
+  ],
+  "episode_83": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      81
+    ],
+    [
+      "Cover the right block with the right cover.",
+      84
+    ],
+    [
+      "Open the cover hiding the red block.",
+      109
+    ],
+    [
+      "Open the cover hiding the green block.",
+      77
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      126
+    ]
+  ],
+  "episode_84": [
+    [
+      "Cover the left block with the left cover.",
+      75
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      75
+    ],
+    [
+      "Cover the right block with the right cover.",
+      95
+    ],
+    [
+      "Open the cover hiding the red block.",
+      109
+    ],
+    [
+      "Open the cover hiding the green block.",
+      69
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      117
+    ]
+  ],
+  "episode_85": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      72
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      113
+    ],
+    [
+      "Open the cover hiding the green block.",
+      85
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      116
+    ]
+  ],
+  "episode_86": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      79
+    ],
+    [
+      "Cover the right block with the right cover.",
+      89
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      89
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      100
+    ]
+  ],
+  "episode_87": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      82
+    ],
+    [
+      "Cover the right block with the right cover.",
+      92
+    ],
+    [
+      "Open the cover hiding the red block.",
+      95
+    ],
+    [
+      "Open the cover hiding the green block.",
+      83
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      119
+    ]
+  ],
+  "episode_88": [
+    [
+      "Cover the left block with the left cover.",
+      73
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      78
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      75
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      121
+    ]
+  ],
+  "episode_89": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      77
+    ],
+    [
+      "Cover the right block with the right cover.",
+      94
+    ],
+    [
+      "Open the cover hiding the red block.",
+      103
+    ],
+    [
+      "Open the cover hiding the green block.",
+      78
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      119
+    ]
+  ],
+  "episode_90": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      98
+    ],
+    [
+      "Open the cover hiding the red block.",
+      101
+    ],
+    [
+      "Open the cover hiding the green block.",
+      90
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      115
+    ]
+  ],
+  "episode_91": [
+    [
+      "Cover the left block with the left cover.",
+      77
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      90
+    ],
+    [
+      "Open the cover hiding the red block.",
+      100
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      125
+    ]
+  ],
+  "episode_92": [
+    [
+      "Cover the left block with the left cover.",
+      76
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      97
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      76
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      117
+    ]
+  ],
+  "episode_93": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      74
+    ],
+    [
+      "Cover the right block with the right cover.",
+      94
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      84
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      116
+    ]
+  ],
+  "episode_94": [
+    [
+      "Cover the left block with the left cover.",
+      72
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      86
+    ],
+    [
+      "Open the cover hiding the red block.",
+      112
+    ],
+    [
+      "Open the cover hiding the green block.",
+      80
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      122
+    ]
+  ],
+  "episode_95": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      70
+    ],
+    [
+      "Cover the right block with the right cover.",
+      99
+    ],
+    [
+      "Open the cover hiding the red block.",
+      103
+    ],
+    [
+      "Open the cover hiding the green block.",
+      92
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      105
+    ]
+  ],
+  "episode_96": [
+    [
+      "Cover the left block with the left cover.",
+      70
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      70
+    ],
+    [
+      "Cover the right block with the right cover.",
+      99
+    ],
+    [
+      "Open the cover hiding the red block.",
+      98
+    ],
+    [
+      "Open the cover hiding the green block.",
+      98
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      105
+    ]
+  ],
+  "episode_97": [
+    [
+      "Cover the left block with the left cover.",
+      74
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      76
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      104
+    ],
+    [
+      "Open the cover hiding the green block.",
+      78
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      118
+    ]
+  ],
+  "episode_98": [
+    [
+      "Cover the left block with the left cover.",
+      71
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      71
+    ],
+    [
+      "Cover the right block with the right cover.",
+      91
+    ],
+    [
+      "Open the cover hiding the red block.",
+      109
+    ],
+    [
+      "Open the cover hiding the green block.",
+      94
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ],
+  "episode_99": [
+    [
+      "Cover the left block with the left cover.",
+      69
+    ],
+    [
+      "Cover the middle block with the middle cover.",
+      76
+    ],
+    [
+      "Cover the right block with the right cover.",
+      97
+    ],
+    [
+      "Open the cover hiding the red block.",
+      106
+    ],
+    [
+      "Open the cover hiding the green block.",
+      81
+    ],
+    [
+      "Open the cover hiding the blue block.",
+      112
+    ]
+  ]
+}

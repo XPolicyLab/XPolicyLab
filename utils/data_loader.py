@@ -32,14 +32,25 @@ def load_xspark_v1(hdf5_path, decode_images=True):
                     d[key] = np.array(decoded_frames)
                     continue
 
-                if isinstance(val, (bytes, np.bytes_, np.ndarray)) and (val.dtype.kind in ['S', 'U']):
+                if isinstance(val, (bytes, np.bytes_)):
                     try:
-                        if isinstance(val, np.ndarray) and val.size == 1:
-                            val_item = val.item()
+                        decoded_str = val.decode("utf-8")
+                        try:
+                            d[key] = json.loads(decoded_str)
+                        except json.JSONDecodeError:
+                            d[key] = decoded_str
+                    except Exception:
+                        d[key] = val
+                elif isinstance(val, np.ndarray) and val.dtype.kind in ["S", "U", "O"]:
+                    try:
+                        val_item = val.item() if val.size == 1 else val
+                        if isinstance(val_item, (bytes, np.bytes_)):
+                            decoded_str = val_item.decode("utf-8")
+                        elif isinstance(val_item, str):
+                            decoded_str = val_item
                         else:
-                            val_item = val
-                        
-                        decoded_str = val_item.decode("utf-8")
+                            d[key] = val
+                            continue
                         try:
                             d[key] = json.loads(decoded_str)
                         except json.JSONDecodeError:
@@ -54,10 +65,9 @@ def load_xspark_v1(hdf5_path, decode_images=True):
         return h5_to_dict(f)
 
 def load(data_path, data_type="xspark", data_version="v1.0"):
-    if data_type=="xspark":
-        if data_version=="v1.0":
+    # RoboDojo sim_cloud HDF5 uses the same xspark v1.0 layout.
+    if data_type in {"xspark", "RoboDojo"}:
+        if data_version == "v1.0":
             return load_xspark_v1(data_path, decode_images=True)
-        else:
-            raise NotImplementedError(f"{data_version} is not valid in {data_type} .")
-    else:
-        raise NotImplementedError(f"{data_type} is not valid data type. ")
+        raise NotImplementedError(f"{data_version} is not valid in {data_type} .")
+    raise NotImplementedError(f"{data_type} is not valid data type. ")

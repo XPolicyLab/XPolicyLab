@@ -17,8 +17,10 @@ SAVE_STEPS="${8:-2500}"
 NUM_WORKERS="${9:-4}"
 PREFETCH_FACTOR="${10:-8}"
 WANDB_MODE="${11:-disabled}"
+SEED="${12:-0}"
 
 export CUDA_VISIBLE_DEVICES="${GPU_ID}"
+export PYTHONHASHSEED="${SEED}"
 
 GPU_IDS="${GPU_ID// /}"
 if [[ -z "${GPU_IDS}" ]]; then
@@ -75,8 +77,25 @@ echo "[INFO] pretrained_path=${PRETRAINED_PATH}"
 echo "[INFO] output_dir=${OUTPUT_DIR}"
 echo "[INFO] gpu_ids=${GPU_IDS}"
 echo "[INFO] num_gpus=${NUM_GPUS}"
+echo "[INFO] seed=${SEED}"
 
 export CUDA_VISIBLE_DEVICES="${GPU_IDS}"
+export PYTHONPATH="${REPO_ROOT}:${PYTHONPATH:-}"
+
+if [[ -z "${SPIRIT_BACKBONE_PATH:-}" && -n "${PRETRAINED_PATH:-}" ]]; then
+  _weights_root="$(dirname "${PRETRAINED_PATH}")"
+  if [[ -d "${_weights_root}/Qwen3-VL-4B-Instruct" ]]; then
+    export SPIRIT_BACKBONE_PATH="${_weights_root}/Qwen3-VL-4B-Instruct"
+  fi
+fi
+if [[ -n "${SPIRIT_BACKBONE_PATH:-}" ]]; then
+  export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
+  export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
+  echo "[INFO] spirit_backbone_path=${SPIRIT_BACKBONE_PATH}"
+  echo "[INFO] HF_HUB_OFFLINE=${HF_HUB_OFFLINE}"
+fi
+
+cd "${REPO_ROOT}"
 
 exec "${TORCHRUN_BIN}" --nproc_per_node="${NUM_GPUS}" \
   "${REPO_ROOT}/train.py" \
@@ -89,4 +108,5 @@ exec "${TORCHRUN_BIN}" --nproc_per_node="${NUM_GPUS}" \
   --save_steps "${SAVE_STEPS}" \
   --num_workers "${NUM_WORKERS}" \
   --prefetch_factor "${PREFETCH_FACTOR}" \
-  --wandb_mode "${WANDB_MODE}"
+  --wandb_mode "${WANDB_MODE}" \
+  --seed "${SEED}"

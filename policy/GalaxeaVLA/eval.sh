@@ -1,0 +1,100 @@
+#!/bin/bash
+set -euo pipefail
+
+# GalaxeaVLA eval — XPolicyLab 11-arg contract (see XPolicyLab/README.md).
+# Policy server runs in the uv project at policy/GalaxeaVLA/GalaxeaVLA/.venv
+# (arg 10: policy_uv_env_path; default null -> ${SCRIPT_DIR}/GalaxeaVLA).
+# Client uses eval_env_conda_env (arg 11). eval_env in deploy.yml: debug|sim|real.
+#
+# Usage:
+#   bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> \
+#                <expert_data_num> <action_type> <seed> \
+#                <policy_gpu_id> <env_gpu_id> <policy_uv_env_path> <eval_env_conda_env>
+#
+# Example (debug wiring, ee ckpt):
+#   bash eval.sh RoboDojo test_data cotrain arx_x5 100 ee 0 0 0 null XPolicyLab
+
+dataset_name=${1:?dataset_name required}
+task_name=${2:?task_name required}
+ckpt_name=${3:?ckpt_name required}
+env_cfg_type=${4:?env_cfg_type required}
+expert_data_num=${5:?expert_data_num required}
+action_type=${6:?action_type required}
+seed=${7:?seed required}
+policy_gpu_id=${8:-0}
+env_gpu_id=${9:-0}
+policy_uv_env_path=${10:-null}
+eval_env_conda_env=${11:?eval_env_conda_env required}
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+UPSTREAM_DIR="${SCRIPT_DIR}/GalaxeaVLA"
+
+if [[ -z "${policy_uv_env_path}" || "${policy_uv_env_path}" == "null" ]]; then
+    policy_uv_env_path="${UPSTREAM_DIR}"
+fi
+policy_uv_env_path="$(cd "${policy_uv_env_path}" && pwd)"
+
+SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
+
+policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
+policy_server_ip="${POLICY_SERVER_HOST:-localhost}"
+
+additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
+
+cleanup() {
+    if [[ -n "${SERVER_PID:-}" ]]; then
+        echo -e "\033[31m[CLEANUP] kill server PID=${SERVER_PID}\033[0m"
+        kill "${SERVER_PID}" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT
+
+echo -e "\033[32m[MAIN] policy_uv_env=${policy_uv_env_path}/.venv\033[0m"
+echo -e "\033[32m[MAIN] start server, policy_server_port=${policy_server_port}\033[0m"
+
+bash "${SERVER_SCRIPT}" \
+    "${dataset_name}" \
+    "${task_name}" \
+    "${ckpt_name}" \
+    "${env_cfg_type}" \
+    "${expert_data_num}" \
+    "${action_type}" \
+    "${seed}" \
+    "${policy_gpu_id}" \
+    "${policy_uv_env_path}" \
+    "${policy_server_port}" \
+    "${policy_server_ip}" &
+SERVER_PID=$!
+echo -e "\033[32m[MAIN] server PID=${SERVER_PID}\033[0m"
+
+for _ in $(seq 1 180); do
+    if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
+        echo -e "\033[31m[ERROR] Policy server exited before opening port ${policy_server_port}.\033[0m" >&2
+        exit 1
+    fi
+    if python3 -c "import socket; s=socket.socket(); s.settimeout(1); s.connect(('${policy_server_ip}', int('${policy_server_port}'))); s.close()" >/dev/null 2>&1; then
+        echo -e "\033[32m[MAIN] server ready on ${policy_server_ip}:${policy_server_port}\033[0m"
+        break
+    fi
+    sleep 2
+done
+
+echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${policy_server_port}\033[0m"
+
+bash "${CLIENT_SCRIPT}" \
+    "${dataset_name}" \
+    "${task_name}" \
+    "${ckpt_name}" \
+    "${env_cfg_type}" \
+    "${action_type}" \
+    "${seed}" \
+    "${env_gpu_id}" \
+    "${eval_env_conda_env}" \
+    "${additional_info}" \
+    "${policy_server_port}" \
+    "${policy_server_ip}"
+
+echo -e "\033[33m[MAIN] eval finished\033[0m"

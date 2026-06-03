@@ -1,0 +1,149 @@
+dataset:
+  _target_: galaxea_fm.data.galaxea_lerobot_dataset.GalaxeaLerobotDataset
+
+  # Read-only RoboDojo_sim_arx-x5_v30 (LeRobot v3.0). Flat 14-dim
+  # observation.state / action are sliced per-key below. Override dataset_dirs
+  # on the CLI if the path differs.
+  dataset_dirs:
+    - /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30
+
+  # v3.0 meta layout (tasks.parquet / episodes parquet). av1 videos require pyav
+  # (torchcodec cannot decode av1 in this env).
+  lerobot_ds_version: "3.0"
+  video_backend: pyav
+
+  # Flat 14-dim layout (info.json names):
+  #   [0:6]   left  joint_0..5  (arm)
+  #   [6:7]   left  joint_6     (gripper, range ~[0,1])
+  #   [7:13]  right joint_0..5  (arm)
+  #   [13:14] right joint_6     (gripper)
+  shape_meta:
+    action:
+      - key: left_arm
+        lerobot_key: action
+        slice: [0, 6]
+        raw_shape: 6
+        shape: 6
+      - key: left_gripper
+        lerobot_key: action
+        slice: [6, 7]
+        raw_shape: 1
+        shape: 1
+      - key: right_arm
+        lerobot_key: action
+        slice: [7, 13]
+        raw_shape: 6
+        shape: 6
+      - key: right_gripper
+        lerobot_key: action
+        slice: [13, 14]
+        raw_shape: 1
+        shape: 1
+
+    state:
+      - key: left_arm
+        lerobot_key: observation.state
+        slice: [0, 6]
+        raw_shape: 6
+        shape: 6
+      - key: left_gripper
+        lerobot_key: observation.state
+        slice: [6, 7]
+        raw_shape: 1
+        shape: 1
+      - key: right_arm
+        lerobot_key: observation.state
+        slice: [7, 13]
+        raw_shape: 6
+        shape: 6
+      - key: right_gripper
+        lerobot_key: observation.state
+        slice: [13, 14]
+        raw_shape: 1
+        shape: 1
+
+    images:
+      - key: cam_high
+        raw_shape:
+          - 3
+          - 480
+          - 640
+        shape:
+          - 3
+          - ${model.model_meta.input_image_size.0}
+          - ${model.model_meta.input_image_size.1}
+      - key: cam_left_wrist
+        raw_shape:
+          - 3
+          - 480
+          - 640
+        shape:
+          - 3
+          - ${model.model_meta.input_image_size.0}
+          - ${model.model_meta.input_image_size.1}
+      - key: cam_right_wrist
+        raw_shape:
+          - 3
+          - 480
+          - 640
+        shape:
+          - 3
+          - ${model.model_meta.input_image_size.0}
+          - ${model.model_meta.input_image_size.1}
+
+  action_size: 32
+  past_action_size: 0
+  obs_size: 1
+  ee_start_moving_thresh: 0.0
+  val_set_proportion: 0.05
+
+
+processor:
+  _target_: galaxea_fm.processors.base_processor.BaseProcessor
+
+  shape_meta: ${data.dataset.shape_meta}
+  num_obs_steps: ${data.dataset.obs_size}
+  num_output_cameras: 3
+  action_output_dim: ${sum_shapes:${data.dataset.shape_meta.action}}
+  proprio_output_dim: ${sum_shapes:${data.dataset.shape_meta.state}}
+
+  action_state_transforms:
+    - _target_: galaxea_fm.transforms.relative_action.RelativeJointTransform
+      keys: [left_arm, right_arm]
+
+  use_stepwise_action_norm: True
+  norm_default_mode: ${model.model_meta.norm_default_mode}
+  norm_exception_mode:
+    action:
+      left_gripper: "0/1"
+      right_gripper: "0/1"
+
+  action_state_merger:
+    _target_: galaxea_fm.transforms.action_state_merger.ConcatLeftAlign
+
+  train_transforms:
+    cam_high:
+      - _target_: torchvision.transforms.Resize
+        size: ${model.model_meta.input_image_size}
+      - _target_: galaxea_fm.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Normalize
+        mean: [0.5, 0.5, 0.5]
+        std: [0.5, 0.5, 0.5]
+    cam_left_wrist: ${data.processor.train_transforms.cam_high}
+    cam_right_wrist: ${data.processor.train_transforms.cam_high}
+
+  val_transforms:
+    cam_high:
+      - _target_: torchvision.transforms.Resize
+        size: ${model.model_meta.input_image_size}
+      - _target_: galaxea_fm.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Normalize
+        mean: [0.5, 0.5, 0.5]
+        std: [0.5, 0.5, 0.5]
+    cam_left_wrist: ${data.processor.val_transforms.cam_high}
+    cam_right_wrist: ${data.processor.val_transforms.cam_high}
+
+  drop_high_level_prob: 1.0
+  use_zh_instruction: False
+
+  tokenizer: ${model.tokenizer}

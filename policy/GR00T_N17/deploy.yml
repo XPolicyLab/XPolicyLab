@@ -1,0 +1,23 @@
+# Basic experiment configuration
+policy_name: GR00T_N17
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+seed: null
+eval_batch: false
+eval_env: debug
+
+# Model / checkpoint configuration (paths relative to policy/ unless noted)
+action_type: joint
+embodiment_tag: NEW_EMBODIMENT
+# Finetuned step under checkpoints/<6-tuple>/; null = auto-resolve + checkpoint_num
+checkpoint_num: last
+model_dir: null
+# Cosmos backbone for processor; HuggingFace repo id (auto-download) or relative local path
+cosmos_model_path: nvidia/Cosmos-Reason2-2B
+default_prompt: Perform the robot manipulation task.
+
+# uv environment for policy server (use eval.sh policy_conda_env=uv)
+policy_uv_env_path: gr00t_n17
+
+port: 6000

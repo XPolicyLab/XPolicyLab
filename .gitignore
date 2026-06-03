@@ -1,17 +1,7 @@
 **/__pycache__/**
 **/*.egg-info/
-# generated data / training outputs
-data/
-policy/*/data/
-policy/*/checkpoints/
-policy/*/outputs/
-policy/*/results/
-
-# model weights / generated artifacts
-*.pt
-*.pth
-*.bin
-*.h5
-*.safetensors
-*.zarr/
-.cache/
+**/.venv/**
+**/checkpoints/**
+train_out/
+checkpoints/
+runs/

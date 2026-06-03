@@ -1,0 +1,15 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: null
+    model:
+      type: "XR0"
+      state_shape: [1, 32]
+      action_shape: [30, 32]
+      dit_num_layers: 16
+      training_repeat: 4
+      enable_freq: true
+      prefix_mask_prob: 0.5
+      async_train: false

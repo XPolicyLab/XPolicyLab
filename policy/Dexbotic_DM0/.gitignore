@@ -1,0 +1,7 @@
+/data/
+checkpoints/
+dexbotic/checkpoints/
+dexbotic/.venv/
+dexbotic/**/__pycache__/
+!dexbotic/dexbotic/norm_assets/**/norm_stats.json
+*.egg-info/
