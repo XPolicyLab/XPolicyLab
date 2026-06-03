@@ -7,6 +7,6 @@ expert_data_num: null
 expert_data_num: null
 seed: null
 eval_batch: true
-eval_env: sim # sim, real, debug
+eval_env: debug # sim, real, debug
 
 checkpoint_num: 600

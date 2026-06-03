@@ -13,17 +13,16 @@ sys.path.append(parent_dir)
 from diffusion_policy.workspace.robotworkspace import RobotWorkspace
 from diffusion_policy.env_runner.dp_runner import DPRunner
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state, get_robot_action_dim_info
+from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state, get_robot_action_dim_info, get_action_dim
 
 class Model(ModelTemplate):
 
     def __init__(self, model_cfg):
-        action_dim = model_cfg['action_dim']
         load_config_path = os.path.join(parent_dir, f'diffusion_policy/config/robot_dp.yaml')
         with open(load_config_path, "r", encoding="utf-8") as f:
             model_training_config = yaml.safe_load(f)
         
-        model_training_config['action_dim'] = action_dim
+        model_training_config['action_dim'] = get_action_dim(model_cfg['env_cfg_type'])
         model_training_config['dataset_name'] = model_cfg['dataset_name']
         model_training_config['task'] = model_cfg['task_name']
         n_obs_steps = model_training_config['n_obs_steps']
@@ -36,7 +35,8 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
 
     def get_model(self, model_cfg):
-        ckpt_file = os.path.join(parent_dir, f"checkpoints/{model_cfg['ckpt_setting']}/{model_cfg['checkpoint_num']}.ckpt")
+        ckpt_setting = f"{model_cfg['dataset_name']}-{model_cfg['ckpt_name']}-{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}-{model_cfg['seed']}"
+        ckpt_file = os.path.join(parent_dir, f"checkpoints/{ckpt_setting}/{model_cfg['checkpoint_num']}.ckpt")
 
         # load checkpoint and workspace
         payload = torch.load(open(ckpt_file, "rb"), pickle_module=dill)
