@@ -42,6 +42,22 @@ Checkpoint 目录示例：
 checkpoints/<ckpt_name>/models/checkpoint_epoch_4_step_100000/
 ```
 
+同机一键评测（`eval.sh` 会分配端口并拉起 server + client）：
+
 ```bash
 bash eval.sh RoboDojo debug_task <ckpt_name> arx_x5 1 joint 0 0 0 gigaworld-policy gigaworld-policy
 ```
+
+拆分机部署（GPU 机跑 policy server，仿真机跑 env client）：
+
+```bash
+# GPU 机
+FREE_PORT=$(bash ../../../XPolicyLab/utils/get_free_port.sh)
+bash setup_eval_policy_server.sh RoboDojo debug_task <ckpt_name> arx_x5 1 joint 0 0 gigaworld-policy "${FREE_PORT}" 0.0.0.0
+
+# 仿真机（<policy_server_ip> 与 <port> 与上一步一致）
+bash setup_eval_env_client.sh RoboDojo debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy \
+  "ckpt_name=<ckpt_name>,action_type=joint" <port> <policy_server_ip>
+```
+
+也可设置 `POLICY_SERVER_HOST` 后仍用 `eval.sh` 绑定 server 地址。
