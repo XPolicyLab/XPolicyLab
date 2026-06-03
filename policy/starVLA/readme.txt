@@ -1,4 +1,6 @@
-clone之后  cd /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA 这个子文件下面 运行install.sh
+clone之后  cd /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA 
+git submodule update --init --recursive
+运行install.sh
 bash ./eval.sh RoboDojo stack_bowls stack_bowls arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab \
 /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA/checkpoints/RoboDojo-stack_bowls-arx_x5-3500-joint-0/checkpoints/steps_60000_pytorch_model.pt
 测试正常
