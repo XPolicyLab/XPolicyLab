@@ -1,6 +1,3 @@
-policy_name: demo_policy
-policy_server_port: null
-policy_server_host: null
 dataset_name: null
 task_name: null
 ckpt_name: null
