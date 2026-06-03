@@ -14,11 +14,11 @@ policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
+UTILS_DIR="${XPL_DIR}/XPolicyLab/utils"
 
 policy_name="$(basename "${CURRENT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}"
 
@@ -28,7 +28,7 @@ conda activate "${policy_conda_env}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python "${XPL_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

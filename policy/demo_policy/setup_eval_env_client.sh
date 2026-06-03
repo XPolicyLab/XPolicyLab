@@ -13,12 +13,12 @@ additional_info=$9
 policy_server_port=${10}
 policy_server_ip=${11:-"localhost"}
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
+UTILS_DIR="${XPL_DIR}/XPolicyLab/utils"
 
-policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+policy_name="$(basename "${CURRENT_DIR}")"
+yaml_file="${XPL_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
@@ -32,7 +32,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${env_cfg_type}" \
     "${policy_name}" \
     "${additional_info}" \
-    "${ROOT_DIR}" \
+    "${XPL_DIR}" \
     "${seed}" \
     "${env_gpu_id}" \
     "${policy_server_ip}"
