@@ -41,10 +41,10 @@ bash "${POLICY_DIR}/spirit_v15/scripts/train_xpolicylab_converted.sh" \
   "${ckpt_dir}" \
   "${gpu_id}" \
   "${SPIRIT_BATCH_SIZE:-32}" \
-  "${SPIRIT_MAX_TRAIN_STEPS:-40000}" \
+  "${SPIRIT_MAX_TRAIN_STEPS:-50000}" \
   "${SPIRIT_LOG_INTERVAL:-25}" \
   "${SPIRIT_SAVE_STEPS:-2500}" \
   "${SPIRIT_NUM_WORKERS:-4}" \
   "${SPIRIT_PREFETCH_FACTOR:-8}" \
-  "${SPIRIT_WANDB_MODE:-disabled}" \
+  "${SPIRIT_WANDB_MODE:-online}" \
   "${seed}"

@@ -1,0 +1,19 @@
+2026-06-02 16:37:25,957 INFO    MainThread:955325 [wandb_setup.py:_flush():81] Current SDK version is 0.26.1
+2026-06-02 16:37:25,957 INFO    MainThread:955325 [wandb_setup.py:_flush():81] Configure stats pid to 955325
+2026-06-02 16:37:25,958 INFO    MainThread:955325 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-06-02 16:37:25,958 INFO    MainThread:955325 [wandb_init.py:setup_run_log_directory():723] Logging user logs to /mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/wandb/run-20260602_163725-qxojk2dt/logs/debug.log
+2026-06-02 16:37:25,958 INFO    MainThread:955325 [wandb_init.py:setup_run_log_directory():724] Logging internal logs to /mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/wandb/run-20260602_163725-qxojk2dt/logs/debug-internal.log
+2026-06-02 16:37:25,958 INFO    MainThread:955325 [wandb_init.py:init():850] calling init triggers
+2026-06-02 16:37:25,958 INFO    MainThread:955325 [wandb_init.py:init():855] wandb.init called with sweep_config: {}
+config: {'wandb_project': 'spirit-v1.5', 'wandb_mode': 'online', '_wandb': {}}
+2026-06-02 16:37:25,958 INFO    MainThread:955325 [wandb_init.py:init():898] starting backend
+2026-06-02 16:37:26,186 INFO    MainThread:955325 [wandb_init.py:init():913] sending inform_init request
+2026-06-02 16:37:26,917 INFO    MainThread:955325 [wandb_init.py:init():918] backend started and connected
+2026-06-02 16:37:26,919 INFO    MainThread:955325 [wandb_init.py:init():988] updated telemetry
+2026-06-02 16:37:26,926 INFO    MainThread:955325 [wandb_init.py:init():1011] communicating run to backend with 90.0 second timeout
+2026-06-02 16:37:27,433 INFO    MainThread:955325 [wandb_init.py:init():1056] starting run threads in backend
+2026-06-02 16:37:27,488 INFO    MainThread:955325 [wandb_run.py:_console_start():2554] atexit reg
+2026-06-02 16:37:27,488 INFO    MainThread:955325 [wandb_run.py:_redirect():2403] redirect: wrap_raw
+2026-06-02 16:37:27,488 INFO    MainThread:955325 [wandb_run.py:_redirect():2472] Wrapping output streams.
+2026-06-02 16:37:27,488 INFO    MainThread:955325 [wandb_run.py:_redirect():2495] Redirects installed.
+2026-06-02 16:37:27,491 INFO    MainThread:955325 [wandb_init.py:init():1094] run started, returning control to user process

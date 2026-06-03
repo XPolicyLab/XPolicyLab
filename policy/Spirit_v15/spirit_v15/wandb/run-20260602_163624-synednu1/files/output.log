@@ -1,0 +1,177 @@
+WandB run: fiery-sea-2
+pretrained_path: /mnt/xspark-data/xspark_shared/model_weights/Spirit-v1.5
+seed: 0
+Model config loaded: dit=1536, n_action_steps=60, attention=eager
+Loading dataset...
+Computing normalization stats...
+Computing norm stats from 20000 samples...
+Loading samples: 100%|█████████████████████████████████| 625/625 [00:17<00:00, 36.74it/s]
+State percentile range [p1, p99]: [-2.9023, 2.9583]
+Action percentile range [p1, p99]: [-1.5174, 1.5528]
+Creating model...
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /Qwen/Qwen3-VL-4B-Instruct/resolve/main/tokenizer_config.json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate (_ssl.c:1032)')))"), '(Request ID: 4624c15a-4029-44a0-b810-e69d150af434)')' thrown while requesting HEAD https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct/resolve/main/tokenizer_config.json
+Retrying in 1s [Retry 1/5].
+'(MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /Qwen/Qwen3-VL-4B-Instruct/resolve/main/tokenizer_config.json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate (_ssl.c:1032)')))"), '(Request ID: e369a934-86ea-416d-bf33-f280180a6489)')' thrown while requesting HEAD https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct/resolve/main/tokenizer_config.json
+Retrying in 2s [Retry 2/5].
+Traceback (most recent call last):
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/train.py", line 257, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/train.py", line 177, in main
+    model = SpiritVLAPolicy.from_pretrained(ckpt_path= args.pretrained_path, strict=False, train=True).to(device)
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/model/modeling_spirit_vla.py", line 864, in from_pretrained
+    model = cls(config)
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/model/modeling_spirit_vla.py", line 512, in __init__
+    self.language_tokenizer = AutoTokenizer.from_pretrained(
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.config.backbone,
+        ^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        use_fast=False,
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/models/auto/tokenization_auto.py", line 1073, in from_pretrained
+    tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/models/auto/tokenization_auto.py", line 905, in get_tokenizer_config
+    resolved_config_file = cached_file(
+        pretrained_model_name_or_path,
+    ...<12 lines>...
+        _commit_hash=commit_hash,
+    )
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 479, in cached_files
+    hf_hub_download(
+    ~~~~~~~~~~~~~~~^
+        path_or_repo_id,
+        ^^^^^^^^^^^^^^^^
+    ...<10 lines>...
+        local_files_only=local_files_only,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+        # Destination
+    ...<14 lines>...
+        force_download=force_download,
+    )
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1077, in _hf_hub_download_to_cache_dir
+    (url_to_download, etag, commit_hash, expected_size, xet_file_data, head_call_error) = _get_metadata_or_catch_error(
+                                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        repo_id=repo_id,
+        ^^^^^^^^^^^^^^^^
+    ...<10 lines>...
+        relative_filename=relative_filename,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1550, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+        url=url, proxies=proxies, timeout=etag_timeout, headers=headers, token=token, endpoint=endpoint
+    )
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1467, in get_hf_file_metadata
+    r = _request_wrapper(
+        method="HEAD",
+    ...<5 lines>...
+        timeout=timeout,
+    )
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+        method=method,
+    ...<2 lines>...
+        **params,
+    )
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 306, in _request_wrapper
+    response = http_backoff(method=method, url=url, **params)
+  File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 330, in http_backoff
+    time.sleep(sleep_time)
+    ~~~~~~~~~~^^^^^^^^^^^^
+KeyboardInterrupt
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/train.py", line 257, in <module>
+[rank0]:     main()
+[rank0]:     ~~~~^^
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/train.py", line 177, in main
+[rank0]:     model = SpiritVLAPolicy.from_pretrained(ckpt_path= args.pretrained_path, strict=False, train=True).to(device)
+[rank0]:             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/model/modeling_spirit_vla.py", line 864, in from_pretrained
+[rank0]:     model = cls(config)
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/model/modeling_spirit_vla.py", line 512, in __init__
+[rank0]:     self.language_tokenizer = AutoTokenizer.from_pretrained(
+[rank0]:                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+[rank0]:         self.config.backbone,
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:     ...<2 lines>...
+[rank0]:         use_fast=False,
+[rank0]:         ^^^^^^^^^^^^^^^
+[rank0]:     )
+[rank0]:     ^
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/models/auto/tokenization_auto.py", line 1073, in from_pretrained
+[rank0]:     tokenizer_config = get_tokenizer_config(pretrained_model_name_or_path, **kwargs)
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/models/auto/tokenization_auto.py", line 905, in get_tokenizer_config
+[rank0]:     resolved_config_file = cached_file(
+[rank0]:         pretrained_model_name_or_path,
+[rank0]:     ...<12 lines>...
+[rank0]:         _commit_hash=commit_hash,
+[rank0]:     )
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 322, in cached_file
+[rank0]:     file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/transformers/utils/hub.py", line 479, in cached_files
+[rank0]:     hf_hub_download(
+[rank0]:     ~~~~~~~~~~~~~~~^
+[rank0]:         path_or_repo_id,
+[rank0]:         ^^^^^^^^^^^^^^^^
+[rank0]:     ...<10 lines>...
+[rank0]:         local_files_only=local_files_only,
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:     )
+[rank0]:     ^
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1014, in hf_hub_download
+[rank0]:     return _hf_hub_download_to_cache_dir(
+[rank0]:         # Destination
+[rank0]:     ...<14 lines>...
+[rank0]:         force_download=force_download,
+[rank0]:     )
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1077, in _hf_hub_download_to_cache_dir
+[rank0]:     (url_to_download, etag, commit_hash, expected_size, xet_file_data, head_call_error) = _get_metadata_or_catch_error(
+[rank0]:                                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+[rank0]:         repo_id=repo_id,
+[rank0]:         ^^^^^^^^^^^^^^^^
+[rank0]:     ...<10 lines>...
+[rank0]:         relative_filename=relative_filename,
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:     )
+[rank0]:     ^
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1550, in _get_metadata_or_catch_error
+[rank0]:     metadata = get_hf_file_metadata(
+[rank0]:         url=url, proxies=proxies, timeout=etag_timeout, headers=headers, token=token, endpoint=endpoint
+[rank0]:     )
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1467, in get_hf_file_metadata
+[rank0]:     r = _request_wrapper(
+[rank0]:         method="HEAD",
+[rank0]:     ...<5 lines>...
+[rank0]:         timeout=timeout,
+[rank0]:     )
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+[rank0]:     response = _request_wrapper(
+[rank0]:         method=method,
+[rank0]:     ...<2 lines>...
+[rank0]:         **params,
+[rank0]:     )
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 306, in _request_wrapper
+[rank0]:     response = http_backoff(method=method, url=url, **params)
+[rank0]:   File "/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15/.venv/lib/python3.13/site-packages/huggingface_hub/utils/_http.py", line 330, in http_backoff
+[rank0]:     time.sleep(sleep_time)
+[rank0]:     ~~~~~~~~~~^^^^^^^^^^^^
+[rank0]: KeyboardInterrupt

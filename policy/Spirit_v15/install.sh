@@ -3,18 +3,23 @@ set -euo pipefail
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SPIRIT_ROOT="${POLICY_DIR}/spirit_v15"
+SPIRIT_VENV="${SPIRIT_ROOT}/.venv"
+SPIRIT_PYTHON="${SPIRIT_VENV}/bin/python"
 XPOLICYLAB_ROOT="$(cd "${POLICY_DIR}/../.." && pwd)"
 
 echo "[Spirit_v15] SPIRIT_ROOT=${SPIRIT_ROOT}"
 echo "[Spirit_v15] XPOLICYLAB_ROOT=${XPOLICYLAB_ROOT}"
 
+# NFS/cache on different filesystems: avoid hardlink warnings from uv.
+export UV_LINK_MODE="${UV_LINK_MODE:-copy}"
+
 if command -v uv >/dev/null 2>&1; then
   cd "${SPIRIT_ROOT}"
   uv sync --extra train
-  uv pip install -e .
+  uv pip install -e . --python "${SPIRIT_PYTHON}"
   cd "${XPOLICYLAB_ROOT}"
-  uv pip install -e .
-  uv run python -c "import XPolicyLab; print('XPolicyLab ok')" 2>/dev/null || true
+  uv pip install -e . --python "${SPIRIT_PYTHON}"
+  "${SPIRIT_PYTHON}" -c "import XPolicyLab; print('XPolicyLab ok')" 2>/dev/null || true
 else
   echo "[Spirit_v15] uv not found, using pip/venv fallback"
   cd "${SPIRIT_ROOT}"

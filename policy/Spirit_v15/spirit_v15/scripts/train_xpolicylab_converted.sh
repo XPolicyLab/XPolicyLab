@@ -80,6 +80,22 @@ echo "[INFO] num_gpus=${NUM_GPUS}"
 echo "[INFO] seed=${SEED}"
 
 export CUDA_VISIBLE_DEVICES="${GPU_IDS}"
+export PYTHONPATH="${REPO_ROOT}:${PYTHONPATH:-}"
+
+if [[ -z "${SPIRIT_BACKBONE_PATH:-}" && -n "${PRETRAINED_PATH:-}" ]]; then
+  _weights_root="$(dirname "${PRETRAINED_PATH}")"
+  if [[ -d "${_weights_root}/Qwen3-VL-4B-Instruct" ]]; then
+    export SPIRIT_BACKBONE_PATH="${_weights_root}/Qwen3-VL-4B-Instruct"
+  fi
+fi
+if [[ -n "${SPIRIT_BACKBONE_PATH:-}" ]]; then
+  export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
+  export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
+  echo "[INFO] spirit_backbone_path=${SPIRIT_BACKBONE_PATH}"
+  echo "[INFO] HF_HUB_OFFLINE=${HF_HUB_OFFLINE}"
+fi
+
+cd "${REPO_ROOT}"
 
 exec "${TORCHRUN_BIN}" --nproc_per_node="${NUM_GPUS}" \
   "${REPO_ROOT}/train.py" \

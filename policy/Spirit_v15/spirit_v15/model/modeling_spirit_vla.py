@@ -32,7 +32,7 @@ from transformers import (
     PretrainedConfig,
 )
 
-from ..utils import (
+from utils import (
     FeatureType,
     NormalizationMode,
     PolicyFeature,
@@ -860,6 +860,14 @@ class SpiritVLAPolicy(nn.Module):
 
         filtered_cfg = _filter(SpiritVLAConfig, cfg_dict)
         config = SpiritVLAConfig(**filtered_cfg)
+        backbone_override = os.environ.get("SPIRIT_BACKBONE_PATH", "").strip()
+        if backbone_override:
+            if not os.path.isdir(backbone_override):
+                raise FileNotFoundError(
+                    f"SPIRIT_BACKBONE_PATH is not a directory: {backbone_override}"
+                )
+            print(f"Using local VLM backbone from SPIRIT_BACKBONE_PATH: {backbone_override}")
+            config.backbone = backbone_override
         config._qwen_device_map = None if train else qwen_device_map
         model = cls(config)
         weight_path = os.path.join(ckpt_path, "model.safetensors")
