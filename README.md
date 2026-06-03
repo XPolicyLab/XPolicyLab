@@ -186,7 +186,7 @@ bash create_policy.sh ${policy_name}
 
 - `dataset_name`: 数据集名称，目的是在 `data` 目录下区分不同项目的数据集，例如 RoboTwin 和 RoboDojo。
 - `env_cfg_type`: 采集或评测的环境配置（包含本体信息等）。在 `demo_env/env_cfg_type` 中可以查看示例。教程中提供了两个示范数据：`dual_franka_panda`（双臂夹爪）和 `g1_inspire`（人形灵巧手）。
-- `expert_data_num`: 训练使用的轨迹数量，参与 checkpoint 6 元组命名，为 `train.sh` 必填参数。
+- `expert_data_num`: 训练使用的轨迹数量，参与 checkpoint 6 元组命名。
 - `action_type`: 模型使用的数据类型（如 `ee` 或 `joint`）。这会影响使用的数据内容以及模型输入输出的维度。
 - `seed`: 随机种子，便于多种子复现与对比。
 
@@ -252,39 +252,11 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 
 转换后数据默认保存在 `XPolicyLab/policy/${policy_name}/data` 下。
 
-`demo_policy/process_data.sh` 的输入参数（5 个，与 LDA_1B / DP 对齐）：
-
-| 序号 | 参数 | 含义 |
-|---|---|---|
-| 1 | `dataset_name` | 数据集名称（如 `RoboDojo`） |
-| 2 | `ckpt_name` | **必填**。处理后数据与训练产物的标识；单任务时可与源 `task_name` 同名，cotrain 时可设为 `cotrain` 等 |
-| 3 | `env_cfg_type` | 环境配置 / 本体类型（如 `g1_inspire`、`arx_x5`） |
-| 4 | `expert_data_num` | 训练使用的轨迹数量 |
-| 5 | `action_type` | 动作类型，`ee` / `joint` 等 |
-
-输出目录名约定为 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`。具体读哪些原始 `task_name`，由各 policy 的 `process_data.sh` / Python 脚本自行决定。
-
 ### 3. 训练模型
 
 完善 `train.sh` 脚本。我们提供了一些演示参数。
 
 `train.sh` 中包含 `seed` 参数，后续会进行不同 `seed` 的训练及测评，部分 `policy` 的源代码可能会把 `seed` 写死，需要注意且进行适配。
-
-训练权重默认保存在 `XPolicyLab/policy/${policy_name}/checkpoints` 下；子目录名采用上文“命名约定”中的 6 元组 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`。
-
-`demo_policy/train.sh` 的输入参数（7 个）：
-
-| 序号 | 参数 | 含义 |
-|---|---|---|
-| 1 | `dataset_name` | 数据集名称，与 `process_data.sh` 保持一致 |
-| 2 | `ckpt_name` | **必填**。checkpoint 标识，决定输出子目录名；需与 `process_data.sh` 保持一致 |
-| 3 | `env_cfg_type` | 环境配置 / 本体类型 |
-| 4 | `expert_data_num` | 训练使用的轨迹数量 |
-| 5 | `action_type` | 动作类型 |
-| 6 | `seed` | 随机种子 |
-| 7 | `gpu_id` | 训练所用 GPU id（多卡可写 `0,1,2,3`，由各 policy 自行处理） |
-
-> 训练阶段不需要传入 `task_name`。若某 policy 的 `train.sh` 仍保留 `task_name` 参数，通常仅为兼容旧接口，或供脚本内部读取原始数据时使用。
 
 ### 4. 评测与部署
 
@@ -316,45 +288,6 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info, decode_imag
 - **`setup_eval_env_client.sh`**: 在 `eval_env_conda_env` 中调用 `XPolicyLab/utils/setup_env_client.sh`，根据 `deploy.yml` 的 `eval_env` 转发到 `run_debug_env_client.sh` / `run_sim_env_client.sh` / `run_real_policy_client.sh`。
 
 部署分为模型进程和环境进程，分别使用 `policy_conda_env/policy_uv_env_path` 和 `eval_env_conda_env`，通过 `policy_server_port` 通信，从而隔离环境配置。`policy_conda_env` 的实现可参考 DP，`policy_uv_env_path` 的实现可参考 PI_05。分别用 `policy_gpu_id` 和 `env_gpu_id` 分配模型和仿真的 GPU 占用，可参考 DP/demo_policy 脚本中只在子脚本内 `CUDA_VISIBLE_DEVICES="${policy_gpu_id}"` 的写法，而不是全局 `export CUDA_VISIBLE_DEVICES`。
-
-`demo_policy/eval.sh` 的输入参数（11 个，默认顺序如下）：
-
-| 序号 | 参数 | 含义 |
-|---|---|---|
-| 1 | `dataset_name` | 数据集名称，与训练时一致 |
-| 2 | `task_name` | **必填**。仿真器中要跑的任务名，传给环境客户端 |
-| 3 | `ckpt_name` | **必填**。用来反查 checkpoint 子目录；可与 `task_name` 不同（例如 `ckpt_name=cotrain` 同时在多个 `task_name` 上评测） |
-| 4 | `env_cfg_type` | 环境设置，在RoboDojo中为`arx_x5` |
-| 5 | `expert_data_num` | 训练使用的轨迹数量|
-| 6 | `action_type` | 动作类型 |
-| 7 | `seed` | 随机种子 |
-| 8 | `policy_gpu_id` | 模型推理服务端使用的 GPU id |
-| 9 | `env_gpu_id` | 环境客户端（仿真）使用的 GPU id |
-| 10 | `policy_conda_env` | 模型服务端激活的 conda 环境名（PI_05 这类基于 uv 的策略可在脚本内改用 `policy_uv_env_path`） |
-| 11 | `eval_env_conda_env` | 环境客户端激活的 conda 环境名 |
-
-`eval.sh` 默认按 `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>` 在 `policy/<policy_name>/checkpoints/` 下找训练产物。
-
-```bash
-PYTHONWARNINGS=ignore::UserWarning \
-CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
-    --config_path "${yaml_file}" \
-    --overrides \
-        policy_server_port="${policy_server_port}" \
-        policy_server_host="${policy_server_host}" \
-        dataset_name="${dataset_name}" \
-        task_name="${task_name}" \
-        ckpt_name="${ckpt_name}" \
-        env_cfg_type="${env_cfg_type}" \
-        seed="${seed}" \
-        policy_name="${policy_name}" \
-        action_type="${action_type}" \
-        action_dim="${action_dim}" \
-    &
-SERVER_PID=$!
-```
-
 
 > **跨机部署**：把 `setup_eval_policy_server.sh` 放在带 GPU 的机器上后台运行，再在仿真机调用 `setup_eval_env_client.sh ... <policy_server_port> <policy_server_ip>` 即可。两侧只需指向同一个 `policy_server_ip:policy_server_port`，不必同机。
 
