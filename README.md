@@ -201,12 +201,11 @@ bash create_policy.sh ${policy_name}
 #### 完善 install.sh
 策略创建后，在根据原项目进行环境配置的同时完善install.sh
 
-需要注意：确保每个policy的`install.sh`要分别对policy目录以及XPolicyLab的项目目录进行`pip install -e . `，以支持我们部分函数的调用。
+需要注意：确保每个policy的`install.sh`要对XPolicyLab的项目目录进行`pip install -e . `，以支持我们部分函数的调用。
 
 建议参考 `demo_env/XPolicyLab/policy/DP/install.sh`，如下所示。
 
 ```bash
-pip install -e . #policy目录下pip install -e .
 cd ../../
 pip install -e . #项目目录下pip install -e .
 ```
