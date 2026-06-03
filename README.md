@@ -207,7 +207,7 @@ bash eval.sh RoboDojo stack_bowls demo_ckpt arx_x5 joint 0 0 0 demo demo
 From the XPolicyLab root directory:
 
 ```bash
-bash create_policy.sh ${policy_name}
+bash scripts/create_policy.sh ${policy_name}
 ```
 
 The script creates `policy/${policy_name}` with the standard template files and inline parameter comments. External source code can be placed in a dedicated subdirectory, such as `policy/starVLA/source_starvla`.
