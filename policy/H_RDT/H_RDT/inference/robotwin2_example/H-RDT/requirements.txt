@@ -1,0 +1,5 @@
+transformers==4.53.0
+einops==0.8.1
+timm==1.0.15
+safetensors
+omegaconf

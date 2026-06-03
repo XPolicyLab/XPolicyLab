@@ -1,0 +1,26 @@
+policy_name: H_RDT
+task_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: joint
+gpu_id: null
+seed: null
+eval_batch: false
+eval_env: sim # sim, real, debug
+
+# XPolicyLab model server
+host: localhost
+port: 6000
+
+# H-RDT runtime
+ckpt_name: null
+checkpoint_path: null
+config_path: null
+lang_embedding_path: null
+lang_embedding_dir: null
+device: cuda
+dtype: bfloat16
+input_color_order: bgr
+vision_backbone_id: dino-siglip
+vision_image_size: 384
+allow_dummy_lang_embedding: false
