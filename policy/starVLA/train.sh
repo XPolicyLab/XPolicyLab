@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ $# -lt 7 ]]; then
     echo "Usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [extra_args...]"
-    echo "Example: bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0,1,2,3"
+    echo "Example: bash train.sh RoboDojo stack_bowls arx_x5 3500 joint 0 0,1,2,3"
     exit 1
 fi
 

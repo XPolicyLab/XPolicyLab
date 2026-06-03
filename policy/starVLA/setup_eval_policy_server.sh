@@ -1,5 +1,10 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+if [[ $# -lt 10 || $# -gt 11 ]]; then
+    echo "Usage: bash setup_eval_policy_server.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <policy_server_port> [policy_server_host]"
+    exit 1
+fi
 
 dataset_name=$1
 task_name=$2
@@ -12,7 +17,6 @@ policy_gpu_id=$8
 policy_conda_env=$9
 policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
-checkpoint_path=${12:-""}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -27,18 +31,20 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type
 processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 default_result_ckpt="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
 default_local_ckpt="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
-if [[ -z "${checkpoint_path}" ]]; then
-    if [[ -f "${default_result_ckpt}" ]]; then
-        checkpoint_path="${default_result_ckpt}"
-    elif [[ -f "${default_local_ckpt}" ]]; then
-        checkpoint_path="${default_local_ckpt}"
-    else
-        checkpoint_path="${default_local_ckpt}"
-    fi
+checkpoint_path="${STARVLA_CKPT_PATH:-}"
+if [[ -n "${checkpoint_path}" ]]; then
+    :
+elif [[ -f "${default_result_ckpt}" ]]; then
+    checkpoint_path="${default_result_ckpt}"
+elif [[ -f "${default_local_ckpt}" ]]; then
+    checkpoint_path="${default_local_ckpt}"
+else
+    checkpoint_path="${default_local_ckpt}"
 fi
 if [[ ! -f "${checkpoint_path}" ]]; then
     echo "[SERVER][ERROR] checkpoint file does not exist: ${checkpoint_path}" >&2
-    echo "[SERVER][ERROR] pass checkpoint as eval.sh arg 12, e.g. results/Checkpoints/<run>/final_model/pytorch_model.pt" >&2
+    echo "[SERVER][ERROR] set STARVLA_CKPT_PATH=/path/to/pytorch_model.pt to override checkpoint lookup" >&2
+    echo "[SERVER][ERROR] expected checkpoint under checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/final_model/pytorch_model.pt" >&2
     exit 1
 fi
 checkpoint_path="$(realpath "${checkpoint_path}")"
@@ -86,6 +92,7 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         ckpt_name="${ckpt_name}" \
         checkpoint_path="${checkpoint_path}" \
         env_cfg_type="${env_cfg_type}" \
+        expert_data_num="${expert_data_num}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \

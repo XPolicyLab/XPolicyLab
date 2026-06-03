@@ -1,5 +1,11 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+if [[ $# -ne 11 ]]; then
+    echo "Usage: bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
+    echo "Example: bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab"
+    exit 1
+fi
 
 dataset_name=$1
 task_name=$2
@@ -12,7 +18,6 @@ policy_gpu_id=$8
 env_gpu_id=$9
 policy_conda_env=${10}
 eval_env_conda_env=${11}
-checkpoint_path=${12:-""}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -22,8 +27,8 @@ SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
-policy_server_ip="localhost"
-additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
+policy_server_host="localhost"
+additional_info="ckpt_name=${ckpt_name},expert_data_num=${expert_data_num},action_type=${action_type}"
 
 cleanup() {
     if [[ -n "${SERVER_PID:-}" ]]; then
@@ -46,26 +51,26 @@ bash "${SERVER_SCRIPT}" \
     "${policy_gpu_id}" \
     "${policy_conda_env}" \
     "${policy_server_port}" \
-    "${policy_server_ip}" \
-    "${checkpoint_path}" &
+    "${policy_server_host}" &
 
 SERVER_PID=$!
 
 sleep 8
 
-echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
+echo "[MAIN] start client, server=${policy_server_host}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
     "${dataset_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
+    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${env_gpu_id}" \
     "${eval_env_conda_env}" \
     "${additional_info}" \
     "${policy_server_port}" \
-    "${policy_server_ip}"
+    "${policy_server_host}"
 
 echo "[MAIN] eval finished"
