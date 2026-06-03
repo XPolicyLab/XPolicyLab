@@ -1,5 +1,11 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+if [[ $# -ne 5 ]]; then
+    echo "Usage: bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>"
+    echo "Example: bash process_data.sh RoboDojo stack_bowls arx_x5 3500 joint"
+    exit 1
+fi
 
 dataset_name=${1}
 ckpt_name=${2}
