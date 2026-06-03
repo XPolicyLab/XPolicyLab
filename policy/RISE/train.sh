@@ -59,11 +59,13 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
+DEFAULT_PI05_WEIGHTS="${SCRIPT_DIR}/weights/pi05_base_pytorch"
+DEFAULT_RAW_DATASET_LINK="${SCRIPT_DIR}/data/RoboDojo_sim_v21_video_abot-lerobot"
 
 STANDARD_CKPT_DIR="${SCRIPT_DIR}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 RAW_DATASET_LINK="${RISE_RAW_DATASET:-${SCRIPT_DIR}/data/${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-lerobot}"
-if [[ ! -e "${RAW_DATASET_LINK}" && -e "${SCRIPT_DIR}/data/RoboDojo_sim_v21_video_abot-lerobot" ]]; then
-    RAW_DATASET_LINK="${SCRIPT_DIR}/data/RoboDojo_sim_v21_video_abot-lerobot"
+if [[ ! -e "${RAW_DATASET_LINK}" && -e "${DEFAULT_RAW_DATASET_LINK}" ]]; then
+    RAW_DATASET_LINK="${DEFAULT_RAW_DATASET_LINK}"
 fi
 RAW_DATASET="$(readlink -f "${RAW_DATASET_LINK}")"
 ADV_DATASET="${RAW_DATASET}_w_adv"
@@ -81,10 +83,36 @@ LEGACY_VALUE_CKPT_ROOT="${OFFLINE_DIR}/checkpoints/value_release/value_release"
 # installing stats into the path expected by openpi_value.training.config.
 PRECOMPUTED_RAW_NORM="${SCRIPT_DIR}/RISE/assets/norm_stats.json"
 
-PI05_PYTORCH_WEIGHT_PATH="/mnt/xspark-data/xspark_shared/model_weights/openpi-assets/checkpoints/pi05_base_pytorch"
-RISE_CONDA_ENV="/mnt/nfs/miniconda3/envs/RISE"
-RISE_PYTHON="${RISE_CONDA_ENV}/bin/python"
-RISE_TORCHRUN="${RISE_CONDA_ENV}/bin/torchrun"
+PI05_PYTORCH_WEIGHT_PATH="${RISE_PYTORCH_WEIGHT_PATH:-${DEFAULT_PI05_WEIGHTS}}"
+
+resolve_rise_executables() {
+    local env_bin=""
+    if [[ -n "${RISE_CONDA_ENV:-}" ]]; then
+        env_bin="${RISE_CONDA_ENV}/bin"
+    elif [[ -n "${CONDA_PREFIX:-}" ]]; then
+        env_bin="${CONDA_PREFIX}/bin"
+    fi
+
+    if [[ -z "${RISE_PYTHON:-}" ]]; then
+        if [[ -n "${env_bin}" && -x "${env_bin}/python" ]]; then
+            RISE_PYTHON="${env_bin}/python"
+        else
+            RISE_PYTHON="$(command -v python)"
+        fi
+    fi
+
+    if [[ -z "${RISE_TORCHRUN:-}" ]]; then
+        if [[ -n "${env_bin}" && -x "${env_bin}/torchrun" ]]; then
+            RISE_TORCHRUN="${env_bin}/torchrun"
+        else
+            RISE_TORCHRUN="$(command -v torchrun)"
+        fi
+    fi
+
+    if [[ -n "${env_bin}" ]]; then
+        export PATH="${env_bin}:${PATH}"
+    fi
+}
 
 if [[ -n "${RISE_NGPUS_PER_NODE:-}" ]]; then
     ngpus_per_node="${RISE_NGPUS_PER_NODE}"
@@ -94,8 +122,8 @@ else
 fi
 
 # All environment required by the RISE configs is defined here.
+resolve_rise_executables
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
-export PATH="${RISE_CONDA_ENV}/bin:${PATH}"
 export WANDB_MODE=offline
 export PYTHONPATH="${OFFLINE_DIR}/src:${PYTHONPATH:-}"
 export RISE_LEROBOT_LAYOUT=robodojo
@@ -114,16 +142,20 @@ require_dataset() {
 
 require_pi05_weights() {
     if [[ ! -f "${RISE_PYTORCH_WEIGHT_PATH}/model.safetensors" && ! -f "${RISE_PYTORCH_WEIGHT_PATH}/model.pt" ]]; then
-        echo "[RISE] Missing PyTorch pi0.5 weights under: ${RISE_PYTORCH_WEIGHT_PATH}" >&2
-        echo "[RISE] Expected model.safetensors or model.pt." >&2
-        echo "[RISE] Convert the JAX pi05_base checkpoint before training." >&2
+        echo "[RISE] Missing Pi0.5 PyTorch weights: ${RISE_PYTORCH_WEIGHT_PATH}" >&2
+        echo "[RISE] Expected model.safetensors or model.pt. See README.md section 1 for download/conversion." >&2
         exit 1
     fi
 }
 
 require_rise_python() {
-    if [[ ! -x "${RISE_PYTHON}" || ! -x "${RISE_TORCHRUN}" ]]; then
-        echo "[RISE] Missing RISE conda executables under: ${RISE_CONDA_ENV}" >&2
+    resolve_rise_executables
+    if [[ -z "${RISE_PYTHON:-}" || ! -x "${RISE_PYTHON}" ]]; then
+        echo "[RISE] Python not found. Activate the RISE conda env, or set RISE_CONDA_ENV / RISE_PYTHON." >&2
+        exit 1
+    fi
+    if [[ -z "${RISE_TORCHRUN:-}" || ! -x "${RISE_TORCHRUN}" ]]; then
+        echo "[RISE] torchrun not found. Activate the RISE conda env, or set RISE_CONDA_ENV / RISE_TORCHRUN." >&2
         exit 1
     fi
     "${RISE_PYTHON}" -c "import jax" >/dev/null

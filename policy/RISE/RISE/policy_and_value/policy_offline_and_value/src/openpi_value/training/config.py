@@ -126,10 +126,16 @@ def _xpolicylab_default_prompt(default: str) -> str:
     return os.environ.get("RISE_DEFAULT_PROMPT", default)
 
 
+def _xpolicylab_default_weights_dir() -> str:
+    # policy/RISE/weights/pi05_base_pytorch
+    policy_dir = pathlib.Path(__file__).resolve().parents[6]
+    return str(policy_dir / "weights" / "pi05_base_pytorch")
+
+
 def _xpolicylab_pytorch_weight_path(default: str | None = None) -> str | None:
     """PyTorch checkpoint dir (model.safetensors or model.pt). Override via RISE_PYTORCH_WEIGHT_PATH."""
     path = os.environ.get("RISE_PYTORCH_WEIGHT_PATH", "").strip()
-    return path or default
+    return path or default or _xpolicylab_default_weights_dir()
 
 
 @dataclasses.dataclass(frozen=True)
@@ -629,9 +635,7 @@ _CONFIGS = [
             repack_transforms=_xpolicylab_repack_group(with_advantage=True),
         ),
         
-        pytorch_weight_path=_xpolicylab_pytorch_weight_path(
-            "/mnt/xspark-data/xspark_shared/model_weights/openpi-assets/checkpoints/pi05_base_pytorch"
-        ),
+        pytorch_weight_path=_xpolicylab_pytorch_weight_path(),
 
         num_train_steps=100_000,
         keep_period=20000,
