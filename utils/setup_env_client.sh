@@ -14,8 +14,9 @@ ROOT_DIR="${10}"
 seed="${11}"
 env_gpu_id="${12}"
 policy_server_ip="${13:-localhost}"
+protocol_override="${14:-}"
 
-read eval_batch eval_env protocol < <(python - <<PY
+read eval_batch eval_env yaml_protocol < <(python - <<PY
 import yaml
 with open("${yaml_file}", "r") as f:
     data = yaml.safe_load(f)
@@ -26,6 +27,7 @@ print(
 )
 PY
 )
+protocol="${protocol_override:-${yaml_protocol}}"
 
 if [[ "${eval_env}" == "debug" ]]; then
     bash "${UTILS_DIR}/run_debug_env_client.sh" "${eval_batch}" "${eval_env_conda_env}" "${policy_server_port}" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${policy_name}" "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}" "${policy_server_ip}" "${protocol}"
