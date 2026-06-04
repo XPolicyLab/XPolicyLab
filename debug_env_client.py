@@ -13,7 +13,21 @@ class TestEnv:
         env_cfg_type = deploy_cfg['env_cfg_type']
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
-        self.model_client = ModelClient(host=deploy_cfg['host'], port=deploy_cfg['port'])
+        if deploy_cfg.get("protocol", "legacy_tcp") == "robodojo_ws":
+            from robodojo.env_client import RoboDojoModelClient
+
+            policy_server_url = deploy_cfg["policy_server_url"]
+            if policy_server_url is None:
+                policy_server_url = f"ws://{deploy_cfg['host']}:{deploy_cfg['port']}"
+            self.model_client = RoboDojoModelClient(
+                url=policy_server_url,
+                evaluation_id=deploy_cfg["evaluation_id"],
+                trial_id=deploy_cfg["trial_id"],
+                action_case_id=deploy_cfg["action_case_id"],
+                repeat_index=deploy_cfg["repeat_index"],
+            )
+        else:
+            self.model_client = ModelClient(host=deploy_cfg['host'], port=deploy_cfg['port'])
 
     def get_obs(self, env_idx=0):
         # v1.0
@@ -273,9 +287,15 @@ if __name__ == "__main__":
     parser.add_argument("--task_name", required=True, type=str)
     parser.add_argument("--env_cfg_type", type=str, required=True)
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
+    parser.add_argument("--protocol", choices=("legacy_tcp", "robodojo_ws"), default="legacy_tcp")
     parser.add_argument("--host", type=str, default="localhost", help="server host")
     parser.add_argument("--port", type=int, required=True, help="server port")
-    parser.add_argument("--eval_episode_num", type=int, default=100, help="number of evaluation episodes")
+    parser.add_argument("--policy_server_url", type=str)
+    parser.add_argument("--evaluation_id", type=str, default="debug-eval")
+    parser.add_argument("--action_case_id", type=str)
+    parser.add_argument("--trial_id", type=str, default="debug-trial")
+    parser.add_argument("--repeat_index", type=int)
+    parser.add_argument("--eval_episode_num", type=int, default=10, help="number of evaluation episodes")
     parser.add_argument("--eval_batch", type=str2bool, default=False, help="whether to run batch evaluation")
 
     args_cli = parser.parse_args()
@@ -283,12 +303,17 @@ if __name__ == "__main__":
     test_env = TestEnv(deploy_cfg)
     eval_batch = deploy_cfg['eval_batch']
 
-    # Load XPolicyLab
-    for idx in range(deploy_cfg["eval_episode_num"]):
-        print(f"\033[94m🚀 Running Episode {idx}\033[0m")
-        test_env.reset() # reset model, robot, and environment
-        if not eval_batch:
-            test_env.eval_one_episode()
-        else:
-            test_env.eval_one_episode_batch()
-        test_env.finish_episode()
+    try:
+        # Load XPolicyLab
+        for idx in range(deploy_cfg["eval_episode_num"]):
+            print(f"\033[94m🚀 Running Episode {idx}\033[0m")
+            test_env.reset() # reset model, robot, and environment
+            if not eval_batch:
+                test_env.eval_one_episode()
+            else:
+                test_env.eval_one_episode_batch()
+            test_env.finish_episode()
+    finally:
+        close = getattr(test_env.model_client, "close", None)
+        if callable(close):
+            close()
