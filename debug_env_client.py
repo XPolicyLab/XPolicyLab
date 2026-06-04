@@ -284,7 +284,7 @@ if __name__ == "__main__":
     eval_batch = deploy_cfg['eval_batch']
 
     # Load XPolicyLab
-    for idx in range(10):
+    for idx in range(deploy_cfg["eval_episode_num"]):
         print(f"\033[94m🚀 Running Episode {idx}\033[0m")
         test_env.reset() # reset model, robot, and environment
         if not eval_batch:
