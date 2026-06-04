@@ -11,6 +11,7 @@ policy_gpu_id=${7}
 env_gpu_id=${8}
 policy_conda_env=${9}
 eval_env_conda_env=${10}
+protocol=${11:-legacy_tcp}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
@@ -32,7 +33,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "[MAIN] start server, policy_server_port=${policy_server_port}"
+echo "[MAIN] start server, policy_server_port=${policy_server_port}, protocol=${protocol}"
 
 bash "${SERVER_SCRIPT}" \
     "${dataset_name}" \
@@ -43,7 +44,9 @@ bash "${SERVER_SCRIPT}" \
     "${seed}" \
     "${policy_gpu_id}" \
     "${policy_conda_env}" \
-    "${policy_server_port}" &
+    "${policy_server_port}" \
+    "${policy_server_ip}" \
+    "${protocol}" &
 
 SERVER_PID=$!
 
@@ -62,6 +65,7 @@ bash "${CLIENT_SCRIPT}" \
     "${eval_env_conda_env}" \
     "${additional_info}" \
     "${policy_server_port}" \
-    "${policy_server_ip}"
+    "${policy_server_ip}" \
+    "${protocol}"
 
 echo "[MAIN] eval finished"

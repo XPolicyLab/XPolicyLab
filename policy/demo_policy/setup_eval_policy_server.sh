@@ -11,6 +11,7 @@ policy_gpu_id=${7}
 policy_conda_env=${8}
 policy_server_port=${9}
 policy_server_host=${10:-"localhost"}
+protocol=${11:-"legacy_tcp"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
@@ -19,7 +20,7 @@ UTILS_DIR="${XPL_DIR}/XPolicyLab/utils"
 policy_name="$(basename "${CURRENT_DIR}")"
 yaml_file="${XPL_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, protocol=${protocol}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
@@ -29,6 +30,7 @@ exec env \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${XPL_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
+        --protocol "${protocol}" \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
