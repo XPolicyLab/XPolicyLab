@@ -18,8 +18,18 @@ class FakePolicyEvalClient:
         self.infers: list[dict[str, Any]] = []
         self.trial_ends: list[dict[str, Any]] = []
 
-    async def connect(self) -> None:
+    async def connect(self, *, handshake: bool = True, evaluation_plan=None) -> None:
         self.connected = True
+        if handshake:
+            await self.hello(evaluation_plan=evaluation_plan)
+
+    async def hello(self, *, evaluation_plan=None, client_name="robodojo-eval-client", client_version="1.0.0"):
+        return Frame(
+            message_type=MessageType.HELLO_ACK,
+            request_id="hello-1",
+            evaluation_id="eval-1",
+            payload={"ok": True},
+        )
 
     async def close(self) -> None:
         self.closed = True

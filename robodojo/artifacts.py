@@ -113,7 +113,7 @@ class ArtifactWriter:
         self.emit_event("trial_finished", **payload)
 
     def write_video_placeholder(self, trial_id: str) -> Path:
-        path = self.root_dir / trial_video_relpath(trial_id)
+        path = self.root_dir / f"videos/{trial_id}.mp4"
         path.parent.mkdir(parents=True, exist_ok=True)
         if not path.exists():
             path.touch()
@@ -125,9 +125,11 @@ class ArtifactWriter:
             "started_at": self._run_started_at,
             "finished_at": self._run_finished_at,
             "status": self._run_status,
-            "policy_server": self.dispatch.policy_server.model_dump(),
+            "policy_server_url": self.dispatch.policy_server_url,
+            "task_id": self.dispatch.task_id,
             "evaluation_plan": self.dispatch.evaluation_plan.model_dump(),
-            "artifact": self.dispatch.artifact,
+            "artifact": self.dispatch.artifact.model_dump(),
+            "callback": self.dispatch.callback.model_dump(),
             "trials": [t.to_manifest_entry() for t in self._trials.values()],
             "files": {
                 "manifest": MANIFEST_NAME,
@@ -154,7 +156,6 @@ class ArtifactWriter:
         success_rate = (completed / executed) if executed else 0.0
 
         metrics_doc = {
-            "schema_version": METRICS_SCHEMA_VERSION,
             "evaluation_id": self.dispatch.evaluation_id,
             "finished_at": self._run_finished_at,
             "summary": {

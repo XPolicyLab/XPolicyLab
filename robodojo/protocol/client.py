@@ -15,6 +15,7 @@ from robodojo.protocol.codec import decode_envelope, encode_frame
 from robodojo.protocol.exceptions import ErrorCode, WsError
 from robodojo.protocol.messages import REQUEST_RESPONSE_PAIRS, MessageType
 from robodojo.protocol.schemas import Frame
+from robodojo.schemas import EvaluationPlanPayload
 
 logger = logging.getLogger(__name__)
 
@@ -47,9 +48,14 @@ class PolicyEvalClient:
     _pending: dict[str, asyncio.Future[Frame]] = field(default_factory=dict, init=False)
     _closed: bool = field(default=False, init=False)
 
-    async def connect(self) -> None:
+    async def connect(
+        self,
+        *,
+        handshake: bool = True,
+        evaluation_plan: EvaluationPlanPayload | None = None,
+    ) -> Frame | None:
         if self._ws is not None:
-            return
+            return None
         last_err: Exception | None = None
         for attempt in range(1, self.config.max_connect_attempts + 1):
             try:
@@ -64,7 +70,9 @@ class PolicyEvalClient:
                 )
                 self._recv_task = asyncio.create_task(self._recv_loop())
                 logger.info("websocket connected: %s", self.config.url)
-                return
+                if handshake:
+                    return await self.hello(evaluation_plan=evaluation_plan)
+                return None
             except Exception as exc:
                 last_err = exc
                 logger.warning("connect attempt %s failed: %s", attempt, exc)
@@ -188,6 +196,16 @@ class PolicyEvalClient:
                 f"expected {expected.value}, got {response.message_type.value}",
             )
         return response
+
+    async def hello(
+        self,
+        *,
+        evaluation_plan: EvaluationPlanPayload | None = None,
+    ) -> Frame:
+        payload: dict[str, Any] = {}
+        if evaluation_plan is not None:
+            payload["evaluation_plan"] = evaluation_plan.model_dump()
+        return await self.request(MessageType.HELLO, payload)
 
     async def prepare_case(
         self,

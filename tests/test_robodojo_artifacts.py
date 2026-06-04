@@ -1,46 +1,25 @@
 import json
 from pathlib import Path
 
+from robodojo_fixtures import platform_dispatch
+
 from robodojo.artifacts import (
-    ARTIFACT_SCHEMA_VERSION,
-    METRICS_SCHEMA_VERSION,
     ArtifactWriter,
-    trial_video_relpath,
 )
-from robodojo.eval_runner import build_trial_runs, write_artifacts, main
+from robodojo.eval_runner import build_trial_runs, main, write_artifacts
 from robodojo.schemas import DispatchPayload
 
 
 def _dispatch_payload() -> DispatchPayload:
-    return DispatchPayload.model_validate(
-        {
-            "evaluation_id": "eval-1",
-            "policy_server": {
-                "url": "ws://127.0.0.1:19000",
-                "connection_mode": "direct",
-            },
-            "evaluation_plan": {
-                "task": "lift-cube",
-                "repeat_count": 2,
-                "trials": [
-                    {"action_case_id": "case-1", "seed": 1},
-                    {"action_case_id": "case-2", "seed": 2},
-                ],
-            },
-            "artifact": {
-                "s3_bucket": "robodojo-artifacts",
-                "s3_prefix": "eval-1/",
-            },
-            "webhook": {
-                "finish_url": "https://example.test/finish",
-                "hmac_secret_ref": "secret/ref",
-            },
-        }
-    )
+    return DispatchPayload.model_validate(platform_dispatch())
 
 
 def _load_jsonl(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line
+    ]
 
 
 def test_artifact_writer_creates_layout(tmp_path):
@@ -54,13 +33,12 @@ def test_artifact_writer_creates_layout(tmp_path):
     metrics = json.loads((artifact_dir / "metrics.json").read_text(encoding="utf-8"))
     events = _load_jsonl(artifact_dir / "events.jsonl")
 
-    assert manifest["schema_version"] == ARTIFACT_SCHEMA_VERSION
     assert manifest["evaluation_id"] == "eval-1"
     assert manifest["status"] == "planned"
+    assert manifest["policy_server_url"] == "ws://127.0.0.1:19000"
     assert len(manifest["trials"]) == 4
     assert manifest["files"]["logs"] == "logs/runner.log"
     assert (artifact_dir / "logs" / "runner.log").exists()
-    assert metrics["schema_version"] == METRICS_SCHEMA_VERSION
     assert metrics["summary"]["trial_count"] == 4
     assert metrics["summary"]["not_executed"] == 4
     assert {event["event"] for event in events} == {
@@ -72,10 +50,11 @@ def test_artifact_writer_creates_layout(tmp_path):
 
     for trial_run in trial_runs:
         trial_id = str(trial_run["trial_id"])
-        video_path = artifact_dir / trial_video_relpath(trial_id)
+        video_path = artifact_dir / f"videos/{trial_id}.mp4"
         assert video_path.exists()
-        assert manifest["trials"][0]["video_key"] == trial_video_relpath(
-            str(trial_runs[0]["trial_id"])
+        assert (
+            manifest["trials"][0]["video_key"]
+            == f"videos/{trial_runs[0]['trial_id']}.mp4"
         )
 
     assert paths["manifest"].endswith("manifest.json")
@@ -97,6 +76,8 @@ def test_eval_runner_writes_artifacts_with_flag(tmp_path):
             str(dispatch_path),
             "--artifact-dir",
             str(artifact_dir),
+            "--no-s3",
+            "--no-webhook",
         ],
         stdout=stdout,
     )
@@ -117,21 +98,21 @@ def test_record_trial_lifecycle_updates_metrics(tmp_path):
         writer.register_trials(
             [
                 {
-                    "trial_id": "eval-1:case-1:repeat-0",
+                    "trial_id": "case-1-r01",
                     "action_case_id": "case-1",
                     "trial_index": 0,
-                    "repeat_index": 0,
-                    "case_meta": {"action_case_id": "case-1"},
+                    "repeat_index": 1,
+                    "case_meta": {"action_case_id": "case-1", "seed": 1},
                 }
             ]
         )
-        writer.record_trial_start("eval-1:case-1:repeat-0")
+        writer.record_trial_start("case-1-r01")
         writer.record_trial_end(
-            "eval-1:case-1:repeat-0",
+            "case-1-r01",
             status="completed",
             metrics={"success": True, "steps": 12},
         )
-        writer.write_video_placeholder("eval-1:case-1:repeat-0")
+        writer.write_video_placeholder("case-1-r01")
         writer.finalize(status="completed")
     finally:
         writer.close()

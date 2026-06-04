@@ -1,38 +1,62 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class PolicyServerPayload(BaseModel):
-    model_config = ConfigDict(extra="allow")
-
-    url: str = Field(min_length=1)
-    connection_mode: str = Field(min_length=1)
-
-
 class EvaluationTrialPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     action_case_id: str = Field(min_length=1)
+    trial_id: str | None = None
+    repeat_index: int | None = None
 
 
 class EvaluationPlanPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     task: str | None = None
-    repeat_count: int = Field(ge=1)
+    repeat_count: int = Field(default=1, ge=1)
     trials: list[EvaluationTrialPayload] = Field(min_length=1)
+
+
+class CallbackPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    finish_url: str = ""
+    hmac_secret_ref: str = ""
+
+
+class ArtifactPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    bucket: str = ""
+    prefix: str = ""
 
 
 class DispatchPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
+    message_type: str = "dispatch"
     evaluation_id: str = Field(min_length=1)
-    policy_server: PolicyServerPayload
+    task_id: str = ""
+    model_name: str = ""
+    policy_server_url: str = Field(min_length=1)
+    platform_id: str = ""
+    execution_mode: str = ""
     evaluation_plan: EvaluationPlanPayload
-    artifact: dict[str, Any]
-    webhook: dict[str, Any]
+    callback: CallbackPayload = Field(default_factory=CallbackPayload)
+    artifact: ArtifactPayload = Field(default_factory=ArtifactPayload)
+
+    @property
+    def finish_url(self) -> str:
+        return self.callback.finish_url
+
+    @property
+    def hmac_secret_ref(self) -> str:
+        return self.callback.hmac_secret_ref
 
 
 @dataclass

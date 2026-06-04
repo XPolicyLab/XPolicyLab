@@ -29,7 +29,7 @@ class RoboDojoModelClient:
         self._client = client or PolicyEvalClient(
             PolicyEvalClientConfig(url=url, evaluation_id=evaluation_id)
         )
-        self._loop.run_until_complete(self._client.connect())
+        self._loop.run_until_complete(self._client.connect(handshake=True))
 
     def call(self, func_name: str | None = None, obs: Any = None, **kwargs: Any) -> Any:
         if func_name == "prepare_case":
@@ -64,7 +64,9 @@ class RoboDojoModelClient:
         if func_name == "get_action":
             observation = obs if obs is not None else self._latest_obs
             if observation is None:
-                raise ValueError("get_action requires obs or a previous update_obs call")
+                raise ValueError(
+                    "get_action requires obs or a previous update_obs call"
+                )
             response = self._loop.run_until_complete(
                 self._client.infer(
                     cast(dict[str, Any], observation),
