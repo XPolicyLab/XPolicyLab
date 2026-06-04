@@ -10,12 +10,18 @@ class PolicyServerPayload(BaseModel):
     connection_mode: str = Field(min_length=1)
 
 
+class EvaluationTrialPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    action_case_id: str = Field(min_length=1)
+
+
 class EvaluationPlanPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     task: str | None = None
     repeat_count: int = Field(ge=1)
-    trials: list[dict[str, Any]]
+    trials: list[EvaluationTrialPayload] = Field(min_length=1)
 
 
 class DispatchPayload(BaseModel):
