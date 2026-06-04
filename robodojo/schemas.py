@@ -14,10 +14,19 @@ class EvaluationTrialPayload(BaseModel):
     repeat_index: int | None = None
 
 
+class EvaluationTaskPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    id: str = Field(min_length=1)
+    name: str = ""
+    env_cfg_type: str = ""
+    control_frequency_hz: int | None = None
+
+
 class EvaluationPlanPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    task: str | None = None
+    task: EvaluationTaskPayload | None = None
     repeat_count: int = Field(default=1, ge=1)
     trials: list[EvaluationTrialPayload] = Field(min_length=1)
 
