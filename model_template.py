@@ -44,32 +44,54 @@ class ModelTemplate:
         Update the current observation used by the model.
         更新当前模型使用的观测。
         """
-        raise NotImplementedError(self._error_msg("update_obs() must be implemented by the user."))
+        raise NotImplementedError(
+            self._error_msg("update_obs() must be implemented by the user.")
+        )
 
     def update_obs_batch(self, obs_list):
         """
         Update the current observation used by the model.
         更新当前模型使用的观测。
         """
-        raise NotImplementedError(self._error_msg("update_obs_batch() must be implemented by the user."))
+        raise NotImplementedError(
+            self._error_msg("update_obs_batch() must be implemented by the user.")
+        )
 
     def get_action(self):
         """
         Predict or generate an action from the current observation/state.
         根据当前观测或内部状态预测/生成动作。
         """
-        raise NotImplementedError(self._error_msg("get_action() must be implemented by the user."))
+        raise NotImplementedError(
+            self._error_msg("get_action() must be implemented by the user.")
+        )
 
     def get_action_batch(self):
         """
         Predict or generate an action from the current observation/state.
         根据当前观测或内部状态预测/生成动作。
         """
-        raise NotImplementedError(self._error_msg("get_action_batch() must be implemented by the user."))
+        raise NotImplementedError(
+            self._error_msg("get_action_batch() must be implemented by the user.")
+        )
 
     def reset(self):
         """
         Reset the internal state of the model at the start of a new episode.
         在新 episode 开始时重置模型内部状态。
+        """
+        pass
+
+    def prepare_case(self, case_meta=None):
+        """
+        Optional hook called before an action case starts.
+        在 action case 开始前调用的 hook。
+        """
+        pass
+
+    def on_trial_end(self, result=None):
+        """
+        Optional hook called after a trial finishes.
+        在单次 trial 结束后调用的 hook。
         """
         pass
