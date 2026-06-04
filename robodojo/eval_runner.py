@@ -115,14 +115,32 @@ def write_artifacts(
     artifact_dir: Path,
     *,
     run_status: str = STATUS_PLANNED,
+    policy_results: list[dict[str, Any]] | None = None,
 ) -> dict[str, str]:
     writer = ArtifactWriter(artifact_dir, dispatch)
     writer.setup()
     try:
         writer.emit_event("run_started")
         writer.register_trials(trial_runs)
+        results_by_trial = {
+            str(result["trial_id"]): result for result in policy_results or []
+        }
         for trial_run in trial_runs:
             trial_id = str(trial_run["trial_id"])
+            result = results_by_trial.get(trial_id)
+            if result is not None:
+                actions = result.get("actions")
+                action_count = len(actions) if isinstance(actions, list) else None
+                writer.record_trial_start(trial_id)
+                writer.record_trial_end(
+                    trial_id,
+                    status=STATUS_COMPLETED,
+                    metrics={
+                        "success": True,
+                        "steps": 1,
+                        "action_count": action_count,
+                    },
+                )
             writer.write_video_placeholder(trial_id)
         return writer.finalize(status=run_status)
     finally:
@@ -263,6 +281,86 @@ def _publish_dispatch_artifacts(
         return failure_published, STATUS_FAILED, str(exc)
 
 
+def run_dispatch(
+    dispatch: DispatchPayload,
+    *,
+    artifact_dir: Path | None = None,
+    upload_s3: bool = True,
+    notify_webhook: bool = True,
+    run_policy_trials: bool = False,
+    max_trials: int = 0,
+) -> tuple[int, dict[str, object]]:
+    trial_runs = build_trial_runs(dispatch)
+    if max_trials > 0:
+        trial_runs = trial_runs[:max_trials]
+
+    artifact_paths: dict[str, str] | None = None
+    published: dict[str, Any] | None = None
+    run_status = STATUS_PLANNED
+    error_summary: str | None = None
+    policy_results: list[dict[str, Any]] = []
+
+    if run_policy_trials:
+        run_status = STATUS_DONE
+        for trial_run in trial_runs:
+            try:
+                policy_results.append(
+                    run_policy_trial_smoke(
+                        policy_server_url=dispatch.policy_server_url,
+                        evaluation_id=dispatch.evaluation_id,
+                        trial_run=trial_run,
+                    )
+                )
+            except PUBLISH_ERRORS as exc:
+                run_status = STATUS_FAILED
+                error_summary = str(exc)
+                break
+
+    if artifact_dir is not None:
+        artifact_status = STATUS_DONE if run_status == STATUS_DONE else STATUS_PLANNED
+        artifact_paths = write_artifacts(
+            dispatch,
+            trial_runs,
+            artifact_dir,
+            run_status=artifact_status,
+            policy_results=policy_results,
+        )
+        if upload_s3 or notify_webhook:
+            published, publish_status, publish_error = _publish_dispatch_artifacts(
+                dispatch,
+                artifact_paths,
+                run_status=run_status,
+                upload_s3=upload_s3,
+                notify_webhook=notify_webhook,
+            )
+            if publish_status == STATUS_COMPLETED:
+                run_status = STATUS_COMPLETED
+            elif publish_status == STATUS_FAILED:
+                run_status = STATUS_FAILED
+                error_summary = publish_error
+
+    summary: dict[str, object] = {
+        "evaluation_id": dispatch.evaluation_id,
+        "policy_server_url": dispatch.policy_server_url,
+        "task_id": dispatch.task_id,
+        "repeat_count": dispatch.evaluation_plan.repeat_count,
+        "trial_count": len(dispatch.evaluation_plan.trials),
+        "planned_trial_runs": len(trial_runs),
+        "trial_runs": trial_runs,
+        "status": run_status,
+    }
+    if policy_results:
+        summary["policy_results"] = policy_results
+    if error_summary is not None:
+        summary["error_summary"] = error_summary
+    if artifact_paths is not None:
+        summary["artifacts"] = artifact_paths
+    if published is not None:
+        summary["published"] = published
+
+    return (1 if run_status == STATUS_FAILED else 0), summary
+
+
 def main(
     argv: Sequence[str] | None = None,
     *,
@@ -309,79 +407,19 @@ def main(
             text = f.read()
 
     dispatch = DispatchPayload.model_validate_json(text)
-    trial_runs = build_trial_runs(dispatch)
-    if args.max_trials > 0:
-        trial_runs = trial_runs[: args.max_trials]
-
-    artifact_paths: dict[str, str] | None = None
-    published: dict[str, Any] | None = None
-    run_status = STATUS_PLANNED
-    error_summary: str | None = None
-    policy_results: list[dict[str, Any]] = []
-
-    if args.run_policy_trials:
-        run_status = STATUS_DONE
-        for trial_run in trial_runs:
-            try:
-                policy_results.append(
-                    run_policy_trial_smoke(
-                        policy_server_url=dispatch.policy_server_url,
-                        evaluation_id=dispatch.evaluation_id,
-                        trial_run=trial_run,
-                    )
-                )
-            except PUBLISH_ERRORS as exc:
-                run_status = STATUS_FAILED
-                error_summary = str(exc)
-                break
-
-    if args.artifact_dir:
-        artifact_status = STATUS_DONE if run_status == STATUS_DONE else STATUS_PLANNED
-        artifact_paths = write_artifacts(
-            dispatch,
-            trial_runs,
-            Path(args.artifact_dir),
-            run_status=artifact_status,
-        )
-        upload_s3 = not args.no_s3
-        notify_webhook_flag = not args.no_webhook
-        if upload_s3 or notify_webhook_flag:
-            published, publish_status, publish_error = _publish_dispatch_artifacts(
-                dispatch,
-                artifact_paths,
-                run_status=run_status,
-                upload_s3=upload_s3,
-                notify_webhook=notify_webhook_flag,
-            )
-            if publish_status == STATUS_COMPLETED:
-                run_status = STATUS_COMPLETED
-            elif publish_status == STATUS_FAILED:
-                run_status = STATUS_FAILED
-                error_summary = publish_error
-
-    summary: dict[str, object] = {
-        "evaluation_id": dispatch.evaluation_id,
-        "policy_server_url": dispatch.policy_server_url,
-        "task_id": dispatch.task_id,
-        "repeat_count": dispatch.evaluation_plan.repeat_count,
-        "trial_count": len(dispatch.evaluation_plan.trials),
-        "planned_trial_runs": len(trial_runs),
-        "trial_runs": trial_runs,
-        "status": run_status,
-    }
-    if policy_results:
-        summary["policy_results"] = policy_results
-    if error_summary is not None:
-        summary["error_summary"] = error_summary
-    if artifact_paths is not None:
-        summary["artifacts"] = artifact_paths
-    if published is not None:
-        summary["published"] = published
+    exit_code, summary = run_dispatch(
+        dispatch,
+        artifact_dir=Path(args.artifact_dir) if args.artifact_dir else None,
+        upload_s3=not args.no_s3,
+        notify_webhook=not args.no_webhook,
+        run_policy_trials=args.run_policy_trials,
+        max_trials=args.max_trials,
+    )
 
     out = stdout or sys.stdout
     json.dump(summary, out, sort_keys=True)
     out.write("\n")
-    return 1 if run_status == STATUS_FAILED else 0
+    return exit_code
 
 
 if __name__ == "__main__":

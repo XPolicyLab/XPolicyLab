@@ -153,7 +153,7 @@ class ArtifactWriter:
         failed = sum(1 for t in trials if t.status == "failed")
         total = len(trials)
         executed = completed + failed
-        success_rate = (completed / executed) if executed else 0.0
+        success_rate = (completed / executed * 100.0) if executed else 0.0
 
         metrics_doc = {
             "evaluation_id": self.dispatch.evaluation_id,

@@ -71,6 +71,12 @@ def test_eval_runner_accepts_platform_dispatch_shape():
         evaluation_id="eval-django",
         evaluation_plan={
             "repeat_count": 1,
+            "task": {
+                "id": "lift-cube",
+                "name": "Lift Cube",
+                "env_cfg_type": "default",
+                "control_frequency_hz": 30,
+            },
             "trials": [
                 {"trial_id": "t1-r01", "action_case_id": "t1", "repeat_index": 1}
             ],
@@ -78,6 +84,8 @@ def test_eval_runner_accepts_platform_dispatch_shape():
     )
     dispatch = DispatchPayload.model_validate(payload)
     assert dispatch.policy_server_url == "ws://127.0.0.1:19000"
+    assert dispatch.evaluation_plan.task is not None
+    assert dispatch.evaluation_plan.task.id == "lift-cube"
     assert dispatch.finish_url.endswith("/finish/")
 
 

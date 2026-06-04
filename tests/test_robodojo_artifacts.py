@@ -123,3 +123,32 @@ def test_record_trial_lifecycle_updates_metrics(tmp_path):
     events = _load_jsonl(writer.root_dir / "events.jsonl")
     assert "trial_started" in {event["event"] for event in events}
     assert "trial_finished" in {event["event"] for event in events}
+
+
+def test_write_artifacts_records_policy_results(tmp_path):
+    dispatch = _dispatch_payload()
+    trial_runs = build_trial_runs(dispatch)[:1]
+    artifact_dir = tmp_path / "artifacts"
+
+    write_artifacts(
+        dispatch,
+        trial_runs,
+        artifact_dir,
+        run_status="done",
+        policy_results=[
+            {
+                "trial_id": trial_runs[0]["trial_id"],
+                "actions": [{"arm_joint_state": [0.0] * 7, "ee_joint_state": [0.0]}],
+            }
+        ],
+    )
+
+    manifest = json.loads((artifact_dir / "manifest.json").read_text(encoding="utf-8"))
+    metrics = json.loads((artifact_dir / "metrics.json").read_text(encoding="utf-8"))
+    events = _load_jsonl(artifact_dir / "events.jsonl")
+
+    assert manifest["trials"][0]["status"] == "completed"
+    assert metrics["summary"]["completed"] == 1
+    assert metrics["summary"]["success_rate"] == 100.0
+    assert metrics["trials"][0]["metrics"]["action_count"] == 1
+    assert "trial_finished" in {event["event"] for event in events}
