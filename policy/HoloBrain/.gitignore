@@ -1,0 +1,4 @@
+data/*
+checkpoints/*
+weights/*
+workspace/*
