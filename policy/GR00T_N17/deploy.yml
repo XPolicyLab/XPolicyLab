@@ -17,6 +17,7 @@ model_dir: null
 cosmos_model_path: nvidia/Cosmos-Reason2-2B
 default_prompt: Perform the robot manipulation task.
 
+# Debug blocker (192.168.156.48): gr00t_n17/.venv not installed; run install.sh first.
 # uv environment for policy server (use eval.sh policy_conda_env=uv)
 policy_uv_env_path: gr00t_n17
 

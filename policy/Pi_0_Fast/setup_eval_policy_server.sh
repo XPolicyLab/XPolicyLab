@@ -22,18 +22,16 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
-CONDA_BASE="$(conda info --base)"
-source "${CONDA_BASE}/etc/profile.d/conda.sh"
-YAML_PYTHON="${CONDA_BASE}/bin/python"
+source "$(conda info --base)/etc/profile.d/conda.sh"
 if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
     deactivate || true
 fi
 unset VIRTUAL_ENV
 if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
     if [[ "${policy_conda_env}" == "uv" ]]; then
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+        policy_uv_env_path=$(python - <<PYENV
 import yaml
 from pathlib import Path
 script_dir = Path("${CURRENT_DIR}")
@@ -45,7 +43,7 @@ print(path)
 PYENV
 )
     else
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+        policy_uv_env_path=$(python - <<PYENV
 from pathlib import Path
 script_dir = Path("${CURRENT_DIR}")
 path = Path("${policy_conda_env}").expanduser()

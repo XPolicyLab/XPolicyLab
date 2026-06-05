@@ -24,52 +24,13 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
 
-CONDA_BASE="$(conda info --base)"
-source "${CONDA_BASE}/etc/profile.d/conda.sh"
-YAML_PYTHON="${CONDA_BASE}/bin/python"
-if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
-    deactivate || true
-fi
-unset VIRTUAL_ENV
-if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
-    if [[ "${policy_conda_env}" == "uv" ]]; then
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
-import yaml
-from pathlib import Path
-script_dir = Path("${CURRENT_DIR}")
-cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8"))
-path = Path(cfg["policy_uv_env_path"]).expanduser()
-if not path.is_absolute():
-    path = (script_dir / path).resolve()
-print(path)
-PYENV
-)
-    else
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
-from pathlib import Path
-script_dir = Path("${CURRENT_DIR}")
-path = Path("${policy_conda_env}").expanduser()
-if not path.is_absolute():
-    path = (script_dir / path).resolve()
-print(path)
-PYENV
-)
-    fi
-    echo "[SERVER] Activating uv environment: ${policy_uv_env_path}/.venv"
-    source "${policy_uv_env_path}/.venv/bin/activate"
-    PYTHON_BIN="$(command -v python)"
-else
-    echo "[SERVER] Activating Conda environment: ${policy_conda_env}"
-    conda activate "${policy_conda_env}"
-    PYTHON_BIN="${CONDA_PREFIX}/bin/python"
-fi
-echo "[SERVER] Using python: ${PYTHON_BIN}"
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate "${policy_conda_env}"
 
 exec env \
-    PYTHONUNBUFFERED=1 \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             policy_server_port="${policy_server_port}" \
