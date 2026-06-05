@@ -50,8 +50,7 @@ bash "${SERVER_SCRIPT}" \
 
 SERVER_PID=$!
 
-# First load may download HF artifacts; allow extra startup time.
-bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 900
+bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 360
 
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 

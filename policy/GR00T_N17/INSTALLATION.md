@@ -29,16 +29,11 @@ source "$HOME/.local/bin/env"  # 若当前 shell 找不到 uv
 
 ### 3. 创建 GR00T 环境
 
-在 **x86_64 GPU 主机**上，上游 `pyproject.toml` 的 `required-environments` 会同时解析 aarch64 专用 wheel，导致 `uv sync` 失败。请使用仓库内 `install.sh`（`uv venv --clear` + `uv pip install -e .`）：
-
 ```bash
-cd policy/GR00T_N17
-bash install.sh
-source gr00t_n17/.venv/bin/activate
-python -c "import gr00t; print('GR00T installed successfully')"
+cd gr00t_n17
+uv sync --python 3.10
+uv run python -c "import gr00t; print('GR00T installed successfully')"
 ```
-
-评测时 `policy_conda_env` 填 **`uv`**（`setup_eval_policy_server.sh` 会激活 `gr00t_n17/.venv`）。
 
 若提示 `CUDA_HOME is unset`：
 

@@ -10,7 +10,7 @@ eval_env: debug
 checkpoint_num: null
 
 # Spirit_v15-specific arguments
-policy_uv_env_path: /mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15
+policy_uv_env_path: ../../../../RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15
 spirit_base_weights: checkpoints/shared/Spirit-v1.5
 spirit_backbone_path: checkpoints/shared/Qwen3-VL-4B-Instruct
 checkpoint_path: null

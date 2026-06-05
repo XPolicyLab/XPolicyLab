@@ -4,23 +4,9 @@ set -euo pipefail
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"
 XPOLICYLAB_ROOT="$(cd "${POLICY_DIR}/../.." && pwd)"
-CONDA_ENV="${DEXBOTIC_CONDA_ENV:-DM0}"
 
 echo "[Dexbotic_DM0] DEXBOTIC_ROOT=${DEXBOTIC_ROOT}"
 echo "[Dexbotic_DM0] XPOLICYLAB_ROOT=${XPOLICYLAB_ROOT}"
-echo "[Dexbotic_DM0] CONDA_ENV=${CONDA_ENV}"
-
-if command -v conda >/dev/null 2>&1; then
-  # shellcheck disable=SC1091
-  source "$(conda info --base)/etc/profile.d/conda.sh"
-  if ! conda env list | awk '{print $1}' | grep -qx "${CONDA_ENV}"; then
-    conda create -n "${CONDA_ENV}" python=3.10 -y
-  fi
-  conda activate "${CONDA_ENV}"
-  pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 \
-    --index-url https://download.pytorch.org/whl/cu128
-  pip install 'deepspeed>=0.18.0' 'numpydantic>=1.6'
-fi
 
 cd "${DEXBOTIC_ROOT}"
 pip install -e .

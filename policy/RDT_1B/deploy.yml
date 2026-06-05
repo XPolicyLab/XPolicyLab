@@ -17,8 +17,8 @@ prompt: null
 checkpoint_path: null
 model_path: null
 config_path: null
-text_encoder_path: /mnt/xspark-data/xspark_shared/model_weights/t5-v1_1-xxl
-vision_encoder_path: /mnt/xspark-data/xspark_shared/model_weights/siglip-so400m-patch14-384
+text_encoder_path: checkpoints/shared/t5-v1_1-xxl
+vision_encoder_path: checkpoints/shared/siglip-so400m-patch14-384
 model_root: null
 ctrl_freq: 25
 chunk_size: 64

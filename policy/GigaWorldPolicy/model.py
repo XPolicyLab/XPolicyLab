@@ -10,8 +10,6 @@ from typing import Any
 
 import numpy as np
 
-from XPolicyLab.utils.process_data import decode_image_bit
-
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[2]
 _GIGAWORLD_ROOT = _CUR_DIR / "giga_world_policy"
@@ -272,11 +270,7 @@ def _extract_image(observation: dict[str, Any], candidate_names: list[str]) -> n
 
 
 def _ensure_chw01(image: Any) -> np.ndarray:
-    if isinstance(image, (bytes, bytearray, memoryview)):
-        image = decode_image_bit(np.frombuffer(bytes(image), dtype=np.uint8))
     image = np.asarray(image)
-    if image.ndim == 1 and image.dtype == np.uint8:
-        image = decode_image_bit(image)
     if image.ndim != 3:
         raise ValueError(f"Expected image ndim=3, got shape {image.shape}")
     if image.shape[0] in (1, 3):

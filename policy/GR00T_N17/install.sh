@@ -14,14 +14,7 @@ if ! command -v uv >/dev/null 2>&1; then
 fi
 
 cd "${GR00T_ROOT}"
-# NOTE: pyproject pins `[tool.uv] required-environments` to both x86_64 and aarch64,
-# and the aarch64 torchcodec/flash-attn wheels under scripts/deployment/dgpu/wheels/
-# are not shipped. `uv sync` therefore fails to lock on an x86_64 GPU host because it
-# must resolve the (missing) aarch64 wheels. We instead create the venv and use
-# `uv pip install -e .`, which resolves only for the *current* platform (x86_64) and
-# honors [tool.uv.sources] / [[tool.uv.index]] while ignoring required-environments.
-uv venv --clear --python 3.10
-uv pip install -e .
+uv sync --python 3.10
 uv run python -c "import gr00t; print('GR00T ok')"
 
 uv pip install -e "${XPOLICYLAB_ROOT}"

@@ -22,9 +22,6 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate "${eval_env_conda_env}"
-
 bash "${UTILS_DIR}/setup_env_client.sh" \
     "${UTILS_DIR}" \
     "${yaml_file}" \

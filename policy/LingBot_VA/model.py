@@ -17,7 +17,6 @@ for _path in (str(_REPO_ROOT), str(_WAN_VA_ROOT)):
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import (
-    decode_image_bit,
     get_robot_action_dim_info,
     pack_robot_state,
     unpack_robot_state,
@@ -90,41 +89,11 @@ def extract_image(observation, candidate_names):
     raise KeyError(f"Could not find any image for candidates: {candidate_names}")
 
 
-def ensure_hwc_uint8(image):
-    if isinstance(image, (bytes, bytearray, memoryview)):
-        image = decode_image_bit(np.frombuffer(bytes(image), dtype=np.uint8))
-
-    image = np.asarray(image)
-    if image.ndim == 1 and image.dtype == np.uint8:
-        image = decode_image_bit(image)
-
-    if image.ndim != 3:
-        raise ValueError(f"Expected image ndim=3, got shape {image.shape}")
-
-    if np.issubdtype(image.dtype, np.floating):
-        image = np.clip(image, 0.0, 1.0)
-        image = (image * 255.0).astype(np.uint8)
-    elif image.dtype != np.uint8:
-        image = image.astype(np.uint8)
-
-    if image.shape[-1] in (1, 3):
-        return image
-    if image.shape[0] in (1, 3):
-        return np.transpose(image, (1, 2, 0))
-    raise ValueError(f"Unsupported image shape: {image.shape}")
-
-
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     images = {
-        "cam_high": ensure_hwc_uint8(
-            extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])
-        ),
-        "cam_left_wrist": ensure_hwc_uint8(
-            extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"])
-        ),
-        "cam_right_wrist": ensure_hwc_uint8(
-            extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"])
-        ),
+        "cam_high": extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"]),
+        "cam_left_wrist": extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"]),
+        "cam_right_wrist": extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"]),
     }
 
     if robot_action_dim_info is None:

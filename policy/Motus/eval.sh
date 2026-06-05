@@ -57,7 +57,7 @@ bash "${SERVER_SCRIPT}" \
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
-bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 600
+sleep 3
 
 echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${FREE_PORT}\033[0m"
 

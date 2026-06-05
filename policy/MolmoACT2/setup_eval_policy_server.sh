@@ -13,30 +13,28 @@ policy_conda_env=$9
 policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-policy_name="$(basename "${CURRENT_DIR}")"
+policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
-CONDA_BASE="$(conda info --base)"
-source "${CONDA_BASE}/etc/profile.d/conda.sh"
-YAML_PYTHON="${CONDA_BASE}/bin/python"
+source "$(conda info --base)/etc/profile.d/conda.sh"
 if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
     deactivate || true
 fi
 unset VIRTUAL_ENV
 if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
     if [[ "${policy_conda_env}" == "uv" ]]; then
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+        policy_uv_env_path=$(python - <<PYENV
 import yaml
 from pathlib import Path
-script_dir = Path("${CURRENT_DIR}")
+script_dir = Path("${SCRIPT_DIR}")
 cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8"))
 path = Path(cfg["policy_uv_env_path"]).expanduser()
 if not path.is_absolute():
@@ -45,9 +43,9 @@ print(path)
 PYENV
 )
     else
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+        policy_uv_env_path=$(python - <<PYENV
 from pathlib import Path
-script_dir = Path("${CURRENT_DIR}")
+script_dir = Path("${SCRIPT_DIR}")
 path = Path("${policy_conda_env}").expanduser()
 if not path.is_absolute():
     path = (script_dir / path).resolve()
@@ -72,8 +70,6 @@ exec env \
     "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            policy_server_port="${policy_server_port}" \
-            policy_server_host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
             dataset_name="${dataset_name}" \

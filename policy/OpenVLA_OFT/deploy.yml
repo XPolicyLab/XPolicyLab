@@ -8,7 +8,7 @@ env_cfg_type: null
 expert_data_num: null
 action_type: joint
 seed: null
-eval_batch: false
+eval_batch: true
 eval_env: debug
 
 checkpoint_num: 600

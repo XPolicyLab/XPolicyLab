@@ -13,8 +13,7 @@ obs_transform_pipeline: "xspark-v1.0"
 
 # Model / action configuration
 action_type: joint
-# Debug blocker (192.168.156.48): openpi .venv missing under robodojo_test; use Pi_05 RoboDojo_env path after install.
-policy_uv_env_path: /mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_0/openpi
+policy_uv_env_path: ../../../../RoboDojo_env/XPolicyLab/policy/Pi_0/openpi
 train_config_name: pi0_base_aloha_full_sim_arx-x5_seed_0
 repo_id: arx_x5_sim
 

@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info
+from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
 from .dm0_infer import load_dm0_infer
 from .dm0_state import ACTION_CHUNK_SIZE, pack_dm0_state, unpack_dm0_action_step
@@ -109,10 +109,15 @@ def _extract_rgb_image(observation: dict, camera_name: str) -> np.ndarray:
     img = np.asarray(img)
 
     if img.ndim == 1 and img.dtype == np.uint8:
-        img = decode_image_bit(img)
+        img = cv2.imdecode(img, cv2.IMREAD_COLOR)
+        if img is None:
+            raise ValueError(f"Failed to decode compressed image for {camera_name}")
 
     if img.ndim == 3 and img.shape[0] in (1, 3) and img.shape[-1] not in (1, 3):
         img = np.transpose(img, (1, 2, 0))
+
+    if img.ndim == 3 and img.shape[-1] == 3:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     return img.astype(np.uint8)
 

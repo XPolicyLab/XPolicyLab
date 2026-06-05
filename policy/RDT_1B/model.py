@@ -22,7 +22,7 @@ for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_RDT_ROOT), str(_RDT_ROOT / "m
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info, unpack_robot_state
+from XPolicyLab.utils.process_data import get_robot_action_dim_info, unpack_robot_state
 
 from .rdt.scripts.agilex_model import create_model
 from .rdt.models.multimodal_encoder.t5_encoder import T5Embedder
@@ -84,7 +84,10 @@ def ensure_hwc_uint8(image):
 
 
 def decode_compressed_image(image_buffer):
-    return decode_image_bit(image_buffer)
+    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if decoded is None:
+        raise ValueError("Failed to decode compressed image buffer.")
+    return decoded
 
 
 def encode_obs(observation, default_prompt):

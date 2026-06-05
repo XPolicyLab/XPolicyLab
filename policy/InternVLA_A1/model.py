@@ -25,12 +25,7 @@ os.environ.setdefault("COSMOS_PATH", str((_CHECKPOINTS_DIR / "shared" / "Cosmos-
 os.environ.setdefault("QWEN3_2B_PATH", str((_CHECKPOINTS_DIR / "shared" / "Qwen3-VL-2B-Instruct").resolve()))
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import (
-    decode_image_bit,
-    get_robot_action_dim_info,
-    pack_robot_state,
-    unpack_robot_state,
-)
+from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
 from lerobot.configs.policies import PreTrainedConfig
 from lerobot.datasets.utils import load_json
@@ -62,7 +57,10 @@ def extract_image(observation, candidate_names):
 
 
 def decode_compressed_image(image_buffer):
-    return decode_image_bit(image_buffer)
+    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if decoded is None:
+        raise ValueError("Failed to decode compressed image buffer.")
+    return decoded
 
 
 def ensure_hwc_uint8(image):

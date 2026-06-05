@@ -16,12 +16,7 @@ from openpi.shared import normalize as _normalize
 from openpi.training import config as _config
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import (
-    decode_image_bit,
-    get_robot_action_dim_info,
-    pack_robot_state,
-    unpack_robot_state,
-)
+from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
 
 
 _POLICY_DIR = Path(__file__).resolve().parent
@@ -253,4 +248,7 @@ def ensure_chw_uint8(image):
 
 
 def decode_compressed_image(image_buffer):
-    return decode_image_bit(image_buffer)
+    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if decoded is None:
+        raise ValueError("Failed to decode compressed image buffer.")
+    return decoded
