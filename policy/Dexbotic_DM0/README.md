@@ -119,13 +119,12 @@ cd dexbotic
 CUDA_VISIBLE_DEVICES=0 python playground/benchmarks/robodojo/robodojo_dm0.py --task inference
 ```
 
-## 评测（XPolicyLab）
+## 部署
 
-环境安装见 [INSTALLATION.md](INSTALLATION.md)。手动部署推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`（便于查看 server 报错）。
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
+
+推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
 bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 3500 ee 0 <policy_gpu> <env_gpu> DM0 XPolicyLab
 ```
-
-Pi_0 / Pi_0_Fast 需先执行 `Pi_05/install.sh`，server 环境填 `uv`。
-

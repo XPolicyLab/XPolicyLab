@@ -25,21 +25,12 @@ bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <actio
 
 Checkpoint：`checkpoints/<6-tuple>/`
 
-## 评估
+## 部署
 
-```bash
-bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
-```
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
 
-OpenVLA 专属参数（`use_film`、`use_proprio`、`num_images_in_input`、`center_crop`、`unnorm_key` 等）统一写在 `deploy.yml`；切换 `eval_env: debug/sim/real` 也只需改 `deploy.yml`。
-
-## 评测（XPolicyLab）
-
-环境安装见 [INSTALLATION.md](INSTALLATION.md)。手动部署推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`（便于查看 server 报错）。
+推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
 bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> openvla_oft XPolicyLab
 ```
-
-Pi_0 / Pi_0_Fast 需先执行 `Pi_05/install.sh`，server 环境填 `uv`。
-

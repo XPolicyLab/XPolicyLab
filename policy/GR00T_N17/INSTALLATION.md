@@ -115,7 +115,7 @@ EOF
 | `GR00T_SRC_DATASET` | 源 v3.0 数据集 repo id |
 | `GR00T_DATASET` | 转换后的 GR00T 数据集 repo id |
 | `GR00T_BASE_MODEL_PATH` | GR00T-N1.7-3B 本地目录或 HF id（见 `train.sh`） |
-| `GR00T_COSMOS_MODEL_PATH` | Cosmos-Reason2-2B 本地目录或 HF id |
+| `GR00T_COSMOS_MODEL_PATH` | 部署推荐 `checkpoints/shared/Cosmos-Reason2-2B`（软链 xspark 共享权重） |
 
 预训练权重也可预先 `huggingface-cli download` 到 `$HF_HOME`，`train.sh` 默认 `HF_HUB_OFFLINE=1` 走本地缓存。
 
