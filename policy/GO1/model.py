@@ -237,7 +237,7 @@ def _encode_obs(observation, action_type, robot_action_dim_info, default_prompt,
 
 
 def _extract_and_prepare_image(vision, candidate_names):
-    """Extract image from vision dict, decode if needed, convert BGR->RGB, return HWC uint8 numpy."""
+    """Extract an HWC uint8 RGB image from the observation."""
     for name in candidate_names:
         if name not in vision:
             continue
@@ -252,16 +252,8 @@ def _extract_and_prepare_image(vision, candidate_names):
 
         img = np.asarray(img)
 
-        if img.ndim == 1 and img.dtype == np.uint8:
-            img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-            if img is None:
-                continue
-
         if img.ndim == 3 and img.shape[0] in (1, 3) and img.shape[-1] not in (1, 3):
             img = np.transpose(img, (1, 2, 0))
-
-        if img.ndim == 3 and img.shape[-1] == 3:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         return img.astype(np.uint8)
 

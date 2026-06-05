@@ -10,16 +10,17 @@ paths:
 
 training:
   train_steps: 60000
-  global_batch_size: 128
+  global_batch_size: 64
   device_train_microbatch_size: 8
-  max_crops: 8
+  crop_mode: resize
+  max_crops: 3
   num_workers: auto
-  seq_len: 2048
+  seq_len: 1536
   log_interval: 10
 
 checkpoint:
-  save_interval: 10000
-  save_interval_unsharded: 10000
+  save_interval: 5000
+  save_interval_unsharded: 5000
   save_num_checkpoints_to_keep: 0
   save_num_unsharded_checkpoints_to_keep: 1
 
@@ -32,10 +33,10 @@ model:
   ft_embedding: lm_head
 
 optimizer:
-  connector_lr: 5e-4
-  vit_lr: 6e-6
-  llm_lr: 5e-5
-  action_head_lr: 5e-4
+  connector_lr: 2e-6
+  vit_lr: 2e-6
+  llm_lr: 5e-6
+  action_head_lr: 5e-5
   connector_weight_decay: 0.0
   vit_weight_decay: 0.0
   llm_weight_decay: 0.0
@@ -44,7 +45,7 @@ optimizer:
   beta2: 0.95
 
 scheduler:
-  warmup_steps: 1000
+  warmup_steps: 2000
   freeze_steps: 1000
   alpha_f: 0.1
   warmup_min_lr: null

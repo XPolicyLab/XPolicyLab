@@ -1798,7 +1798,56 @@ class VLATrainer(Trainer):
         result: Tuple[PathOrStr, Optional[PathOrStr]]
         
         result = super().save_checkpoint(checkpoint_type)
+        stats_path = os.environ.get("DATASET_STATS_PATH")
+        checkpoint_path = Path(result[0])
+        if get_global_rank() == 0 and stats_path and checkpoint_path.is_dir():
+            src = Path(stats_path)
+            if src.is_file():
+                shutil.copy2(src, checkpoint_path / "dataset_stats.json")
+        self._clean_checkpoint_artifacts()
         return result
+
+    def _clean_checkpoint_artifacts(self) -> None:
+        if get_global_rank() != 0:
+            barrier()
+            return
+
+        save_dir = Path(self.cfg.save_folder)
+        latest_unsharded = save_dir / "latest-unsharded"
+        keep_unsharded = None
+        if latest_unsharded.exists():
+            try:
+                keep_unsharded = latest_unsharded.resolve()
+            except OSError:
+                keep_unsharded = None
+
+        unsharded = sorted(save_dir.glob("step*-unsharded"), key=lambda path: path.stat().st_mtime, reverse=True)
+        if keep_unsharded is None and unsharded:
+            keep_unsharded = unsharded[0].resolve()
+            latest_unsharded.unlink(missing_ok=True)
+            try:
+                latest_unsharded.symlink_to(unsharded[0].name, target_is_directory=True)
+            except FileExistsError:
+                pass
+
+        for marker in ("latest", "latest-action-head"):
+            marker_path = save_dir / marker
+            if marker_path.exists() or marker_path.is_symlink():
+                if marker_path.is_dir() and not marker_path.is_symlink():
+                    shutil.rmtree(marker_path, ignore_errors=True)
+                else:
+                    marker_path.unlink(missing_ok=True)
+
+        for path in save_dir.glob("step*"):
+            if not path.is_dir():
+                continue
+            if path.name.endswith("-unsharded"):
+                if keep_unsharded is not None and path.resolve() != keep_unsharded:
+                    shutil.rmtree(path, ignore_errors=True)
+            else:
+                shutil.rmtree(path, ignore_errors=True)
+
+        barrier()
 
 
     # (removed duplicate restore_unsharded_checkpoint definition)

@@ -11,7 +11,7 @@ seed=$7
 policy_gpu_id=$8
 policy_conda_env=$9
 policy_server_port=${10}
-policy_server_host=${11:-"0.0.0.0"}
+policy_server_host=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"

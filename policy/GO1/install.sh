@@ -4,8 +4,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AGIBOT_DIR="${SCRIPT_DIR}/AgiBot-World"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+policy_conda_env="${1:-go1}"
 
 echo -e "\033[33m[GO1 Install] Installing AgiBot-World (GO1) dependencies...\033[0m"
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+if ! conda env list | awk '{print $1}' | grep -qx "${policy_conda_env}"; then
+    conda create -y -n "${policy_conda_env}" python=3.10
+fi
+conda activate "${policy_conda_env}"
 
 cd "${AGIBOT_DIR}"
 pip install -e .
