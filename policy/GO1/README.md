@@ -71,7 +71,7 @@ bash train.sh RoboDojo cotrain arx_x5 3500 joint 42 0,1,2,3
 训练产物目录示例：
 
 ```text
-policy/GO1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42-<timestamp>
+policy/GO1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42
 ```
 
 如需指定其他数据或预训练权重：
@@ -116,7 +116,7 @@ bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 go1 go1
 指定 checkpoint 路径：
 
 ```bash
-export MODEL_PATH=/mnt/xspark-data/lqw/XPolicyLab/policy/GO1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42-20260525_153403/checkpoint-77484
+export MODEL_PATH=/mnt/xspark-data/lqw/XPolicyLab/policy/GO1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42/checkpoint-77484
 bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 go1 go1
 ```
 
