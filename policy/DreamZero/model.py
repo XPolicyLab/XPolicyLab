@@ -107,9 +107,35 @@ def _latest_checkpoint(run_dir: Path) -> Path | None:
         return None
     checkpoints = [p for p in run_dir.iterdir() if p.is_dir() and p.name.startswith("checkpoint-")]
     if not checkpoints:
-        return run_dir
+        if any((run_dir / name).exists() for name in ("config.json", "model.safetensors", "pytorch_model.bin")):
+            return run_dir
+        return None
     checkpoints.sort(key=lambda p: int(p.name.split("-")[-1]))
     return checkpoints[-1]
+
+
+def _candidate_run_dirs(checkpoints_dir: Path, run_basename: str) -> list[Path]:
+    candidates: list[Path] = []
+
+    latest_file = checkpoints_dir / f"{run_basename}.latest"
+    if latest_file.is_file():
+        latest_dir = Path(latest_file.read_text(encoding="utf-8").strip()).expanduser()
+        if latest_dir.is_dir():
+            candidates.append(latest_dir)
+
+    preferred_dir = checkpoints_dir / run_basename
+    if preferred_dir.is_dir() and preferred_dir not in candidates:
+        candidates.append(preferred_dir)
+
+    prefix = f"{run_basename}-"
+    if checkpoints_dir.is_dir():
+        legacy_dirs = [p for p in checkpoints_dir.iterdir() if p.is_dir() and p.name.startswith(prefix)]
+        legacy_dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+        for path in legacy_dirs:
+            if path not in candidates:
+                candidates.append(path)
+
+    return candidates
 
 
 def _resolve_model_path(model_cfg: dict[str, Any]) -> Path:
@@ -128,16 +154,10 @@ def _resolve_model_path(model_cfg: dict[str, Any]) -> Path:
     run_basename = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
     checkpoints_dir = SCRIPT_DIR / "checkpoints"
 
-    latest_file = checkpoints_dir / f"{run_basename}.latest"
-    if latest_file.is_file():
-        candidate = Path(latest_file.read_text(encoding="utf-8").strip())
+    for candidate in _candidate_run_dirs(checkpoints_dir, run_basename):
         resolved = _latest_checkpoint(candidate)
         if resolved is not None:
             return resolved.resolve()
-
-    resolved = _latest_checkpoint(checkpoints_dir / run_basename)
-    if resolved is not None:
-        return resolved.resolve()
 
     return Path(model_cfg.get("pretrained_model_path") or DEFAULT_MODEL_PATH).expanduser().resolve()
 
@@ -287,7 +307,7 @@ def _extract_image(vision: dict[str, Any], camera_key: str) -> np.ndarray:
         return np.zeros((INFERENCE_IMAGE_SIZE[1], INFERENCE_IMAGE_SIZE[0], 3), dtype=np.uint8)
     image = np.asarray(image)
     image = cv2.resize(image, INFERENCE_IMAGE_SIZE, interpolation=cv2.INTER_AREA)
-    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.uint8)
+    return image.astype(np.uint8)
 
 
 def _stack_recent_frames(frames: list[np.ndarray], history: int) -> np.ndarray:

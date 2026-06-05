@@ -178,7 +178,9 @@ def normalize_proprio(proprio: np.ndarray, norm_stats: Dict[str, Any], normaliza
 
 def _unnormalize_actions(normalized_actions, norm_stats, normalization_type):
     """Unnormalize actions using dataset statistics"""
-    action_norm_stats = norm_stats['actions']
+    action_norm_stats = norm_stats.get("actions", norm_stats.get("action"))
+    if action_norm_stats is None:
+        raise KeyError("Normalization stats must contain 'actions' or 'action'.")
 
     if normalization_type == NormalizationType.BOUNDS:
         mask = action_norm_stats.get("mask", np.ones_like(action_norm_stats["min"], dtype=bool))
@@ -231,7 +233,9 @@ def run_inference(model: Molmo,
         
         proprio = proprio.squeeze()
         if not no_norm:
-            proprio_norm_stats = norm_stats["state"] ## 
+            proprio_norm_stats = norm_stats.get("state", norm_stats.get("observation.state"))
+            if proprio_norm_stats is None:
+                raise KeyError("Normalization stats must contain 'state' or 'observation.state'.")
             proprio = normalize_proprio(proprio, proprio_norm_stats, normalization_type)
         proprio = torch.tensor(proprio, dtype=torch.float32).to(device).unsqueeze(0)  # 添加batch维度
         proprio = proprio.unsqueeze(1)  # 添加时间步维度，变为 (batch_size, 1, proprio_dim)

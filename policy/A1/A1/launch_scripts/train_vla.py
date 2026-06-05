@@ -424,8 +424,8 @@ if __name__ == "__main__":
                 use_orig_params=True,
                 wrapping_strategy=FSDPWrapStrategy.by_block_and_size,
                 # wrapping_strategy=FSDPWrapStrategy.by_block,
-                # precision=FSDPPrecision.float
-                precision=FSDPPrecision.mixed
+                precision=FSDPPrecision.float
+                # precision=FSDPPrecision.mixed
             ),
             load_path=args.load_path,
             checkpoint_dir=args.checkpoint,
@@ -440,8 +440,8 @@ if __name__ == "__main__":
             # save_interval_unsharded="${max_duration}",
             save_interval_unsharded=args.save_interval_unsharded,
             save_num_unsharded_checkpoints_to_keep = args.save_num_unsharded_checkpoints_to_keep,
-            save_interval_action_head = args.save_interval_unsharded, # only save the action head checkpoints
-            save_num_action_head_checkpoints_to_keep = 2,
+            save_interval_action_head = None,
+            save_num_action_head_checkpoints_to_keep = 0,
             global_train_batch_size=global_batch_size,
             device_eval_batch_size=args.device_eval_batch_size,
             # device_train_microbatch_size=4,

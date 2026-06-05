@@ -7,3 +7,6 @@ image_augmentation:
 lerobot:
   - path: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
     weight: 1.0
+    normalization_type: bounds
+    use_num_images: 3
+    image_augmentation: true

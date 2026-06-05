@@ -94,7 +94,7 @@ bash train.sh RoboDojo cotrain arx_x5 50 joint 42 0,1,2,3
 对应训练产物目录将命名为：
 
 ```text
-policy/A1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42-<timestamp>
+policy/A1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42
 ```
 
 直接运行命令：
@@ -108,12 +108,15 @@ export LEROBOT_DATA_PATH=/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx
 export SEQ_LEN=1536
 # export GLOBAL_BATCH_SIZE=128
 # export DEVICE_TRAIN_MICROBATCH_SIZE=16
-export GLOBAL_BATCH_SIZE=64
+export GLOBAL_BATCH_SIZE=128
 export DEVICE_TRAIN_MICROBATCH_SIZE=8
 export NUM_WORKERS=4
-export MAX_CROPS=8
+export MAX_CROPS=3
+export ENABLE_WANDB=true
+export WANDB_PROJECT=A1
+export WANDB_API_KEY=<your_wandb_api_key>
 
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 42 4,5,6,7
+bash train.sh RoboDojo cotrain arx_x5 3500 joint 42 0,1,2,3,4,5,6,7
 ```
 
 说明：
@@ -142,7 +145,7 @@ bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_
 conda activate lqw-a1
 cd /mnt/xspark-data/lqw/XPolicyLab/policy/A1
 
-bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 5 joint 42 0 0 lqw-a1 lqw-a1
+bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 a1 a1
 ```
 
 指定 ckpt：
@@ -151,12 +154,12 @@ bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 5 joint 42 0 0 lqw-a1 lqw-a
 conda activate lqw-a1
 cd /mnt/xspark-data/lqw/XPolicyLab/policy/A1
 
-export MODEL_PATH=/mnt/xspark-data/lqw/XPolicyLab/policy/A1/checkpoints/RoboDojo-stack_bowls-arx_x5-5-joint-42-20260523_160510/latest-unsharded
-bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 5 joint 42 0 0 lqw-a1 lqw-a1
+export MODEL_PATH=/mnt/xspark-data/lqw/XPolicyLab/policy/A1/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42/latest-unsharded
+bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 a1 a1
 ```
 
 用 `cotrain` 权重评测单任务：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls cotrain arx_x5 50 joint 42 0 0 lqw-a1 lqw-a1
+bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 a1 a1
 ```

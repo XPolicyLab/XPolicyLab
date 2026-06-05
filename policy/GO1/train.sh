@@ -57,8 +57,7 @@ fi
 echo -e "\033[33m[INFO] Using LeRobot dataset path: ${lerobot_data_path}\033[0m"
 
 RUN_BASENAME="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-RUN_TIMESTAMP="${RUN_TIMESTAMP:-$(date +"%Y%m%d_%H%M%S")}"
-RUNNAME="${RUNNAME:-${RUN_BASENAME}-${RUN_TIMESTAMP}}"
+RUNNAME="${RUNNAME:-${RUN_BASENAME}}"
 export RUN_BASENAME RUNNAME
 export DATA_ROOT_DIR="${lerobot_data_path}"
 export ACTION_DIM="${action_dim}"
