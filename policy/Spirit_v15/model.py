@@ -13,6 +13,7 @@ import torch
 from scipy.spatial.transform import Rotation
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.process_data import decode_image_bit
 from XPolicyLab.policy.Spirit_v15.spirit_v15.model import SpiritVLAPolicy
 
 _POLICY_DIR = Path(__file__).resolve().parent
@@ -66,10 +67,7 @@ def extract_image(observation: dict[str, Any], candidate_names: list[str]) -> An
 
 
 def decode_compressed_image(image_buffer: np.ndarray) -> np.ndarray:
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return cv2.cvtColor(decoded, cv2.COLOR_BGR2RGB)
+    return decode_image_bit(image_buffer)
 
 
 def ensure_hwc_uint8(image: Any) -> np.ndarray:

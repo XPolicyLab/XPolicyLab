@@ -13,7 +13,7 @@
 ## 1. 一键安装（推荐）
 
 ```bash
-cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/Xiaomi_Robotics_0
+cd policy/Xiaomi_Robotics_0
 bash install.sh
 conda activate mibot
 ```
@@ -84,3 +84,39 @@ python -c "import XPolicyLab; print('XPolicyLab ok')"
 ```
 
 环境配置完成后，数据处理、训练与评测入口见 `README.md`。
+
+## XPolicyLab 部署（eval）
+
+已在 GPU 主机完成 debug client 闭环（`setup_eval_policy_server.sh` + `setup_eval_env_client.sh`）。
+
+| 项 | 说明 |
+|----|------|
+| Server 环境 | `mibot` |
+| Client 环境 | `XPolicyLab`（conda） |
+| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-100-ee-0` |
+| expert_data_num | `100` |
+| action_type | `ee` |
+| xspark 权重 | `/mnt/xspark-data/final_ckpt/Xiaomi_Robotics_0/.../last.ckpt/checkpoint` |
+| 备注 | 无 flash_attn 时 model 自动 sdpa |
+
+软链 checkpoint（在 `policy/Xiaomi_Robotics_0/` 下）：
+
+```bash
+mkdir -p checkpoints
+ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+```
+
+`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+
+手动评测：
+
+```bash
+# terminal 1 — server
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-100-ee-0 arx_x5 100 ee 0 0 mibot <port> localhost
+
+# terminal 2 — client
+bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-100-ee-0 arx_x5 ee 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-100-ee-0,action_type=ee" <port> localhost
+```
+
+或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
+

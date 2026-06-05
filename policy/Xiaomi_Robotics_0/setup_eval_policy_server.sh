@@ -25,6 +25,14 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
+_DEPLOY_PROXY_HOST="${DEPLOY_PROXY_HOST:-192.168.16.76}"
+_DEPLOY_PROXY_PORT="${DEPLOY_PROXY_PORT:-18000}"
+export http_proxy="http://${_DEPLOY_PROXY_HOST}:${_DEPLOY_PROXY_PORT}"
+export https_proxy="${http_proxy}"
+export HTTP_PROXY="${http_proxy}"
+export HTTPS_PROXY="${https_proxy}"
+echo "[SERVER] http_proxy=${http_proxy}"
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 

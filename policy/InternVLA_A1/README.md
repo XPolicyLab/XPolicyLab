@@ -33,10 +33,12 @@ policy/InternVLA_A1/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<exper
 INTERNVLA_REPO_ID=<lerobot_repo_id> bash train.sh ...
 ```
 
-## 评估
+## 部署
+
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
+
+推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
-bash eval.sh <task_name> <env_cfg> <expert_data_num> joint <gpu_id> <seed> <policy_conda_env> <eval_env_conda_env> <ckpt_path> [stats_key] [dtype]
+bash eval.sh RoboDojo stack_bowls RoboDojo_sim_seed_0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> internvla_a1 XPolicyLab
 ```
-
-当前封装默认使用 `joint` 动作类型。训练脚本中的 `action_type` 主要参与 XPolicyLab 的数据与 checkpoint 命名。

@@ -239,9 +239,9 @@ uv run python gr00t/eval/open_loop_eval.py \
 
 如果保存步数不同，将 `checkpoint-10000` 替换为实际 checkpoint 目录。
 
-## XPolicyLab 闭环评测（debug / sim / real）
+## 部署
 
-与 `Xiaomi_Robotics_0`、`Pi_05` 一致，使用 `eval.sh` 拉起 policy server + env client：
+使用 `eval.sh` 拉起 policy server + env client；也可分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`：
 
 ```bash
 # 在 policy/GR00T_N17 目录下

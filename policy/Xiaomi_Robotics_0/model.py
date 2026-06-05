@@ -13,7 +13,7 @@ from PIL import Image
 from transformers import AutoProcessor
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info
+from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info
 
 _POLICY_DIR = Path(__file__).resolve().parent
 _XR0_ROOT = _POLICY_DIR / "xiaomi_robotics_0" / "xr0"
@@ -88,17 +88,23 @@ def _resolve_processor_source(model_cfg: dict[str, Any]) -> str | Path:
     )
 
 
-def _resolve_ckpt_dir(model_cfg: dict[str, Any]) -> Path:
-    if model_cfg.get("model_dir"):
-        return _resolve_relative_path(model_cfg["model_dir"], _POLICY_DIR)
-
+def _resolve_ckpt_setting(model_cfg: dict[str, Any]) -> str:
+    ckpt_name = str(model_cfg.get("ckpt_name", ""))
+    if ckpt_name.count("-") >= 3:
+        return ckpt_name
     dataset_name = model_cfg["dataset_name"]
-    ckpt_name = model_cfg["ckpt_name"]
     env_cfg_type = model_cfg["env_cfg_type"]
     expert_data_num = model_cfg["expert_data_num"]
     action_type = model_cfg["action_type"]
     seed = model_cfg["seed"]
-    ckpt_setting = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+
+
+def _resolve_ckpt_dir(model_cfg: dict[str, Any]) -> Path:
+    if model_cfg.get("model_dir"):
+        return _resolve_relative_path(model_cfg["model_dir"], _POLICY_DIR)
+
+    ckpt_setting = _resolve_ckpt_setting(model_cfg)
     return (_CHECKPOINTS_DIR / ckpt_setting).resolve()
 
 
@@ -106,8 +112,42 @@ def _strip_prefix(state_dict: dict[str, torch.Tensor], prefix: str) -> dict[str,
     return {key[len(prefix) :]: value for key, value in state_dict.items() if key.startswith(prefix)}
 
 
+def _force_sdpa_attn(node: Any) -> None:
+    """Deploy hosts may lack flash_attn; fall back to PyTorch SDPA."""
+    if isinstance(node, dict):
+        for key, value in list(node.items()):
+            if key in ("attn_implementation", "_attn_implementation") and value == "flash_attention_2":
+                node[key] = "sdpa"
+            else:
+                _force_sdpa_attn(value)
+    elif isinstance(node, list):
+        for item in node:
+            _force_sdpa_attn(item)
+
+
+def _patch_xr0_vlm_attn_to_sdpa() -> None:
+    """XR0 hardcodes flash_attention_2; force sdpa when flash_attn is unavailable."""
+    from mibot.models.VLA import XR0 as xr0_module
+
+    if getattr(xr0_module.Qwen3VLForConditionalGeneration, "_xpolicylab_sdpa_patch", False):
+        return
+
+    original_from_pretrained = xr0_module.Qwen3VLForConditionalGeneration.from_pretrained
+
+    @classmethod
+    def from_pretrained_sdpa(cls, *args, **kwargs):
+        if kwargs.get("attn_implementation") == "flash_attention_2":
+            kwargs["attn_implementation"] = "sdpa"
+        return original_from_pretrained(*args, **kwargs)
+
+    xr0_module.Qwen3VLForConditionalGeneration.from_pretrained = from_pretrained_sdpa  # type: ignore[method-assign]
+    xr0_module.Qwen3VLForConditionalGeneration._xpolicylab_sdpa_patch = True
+
+
 def _load_xr0_model(model_dir: Path, checkpoint_tag: str, device: torch.device):
     cfg = Config.fromfile(str(model_dir / "config.py"))
+    _force_sdpa_attn(cfg.model.params.model)
+    _patch_xr0_vlm_attn_to_sdpa()
     model = MIMODEL.build(cfg.model.params.model).to(torch.bfloat16)
 
     ckpt_file = model_dir / f"{checkpoint_tag}.ckpt" / "checkpoint" / "mp_rank_00_model_states.pt"
@@ -130,10 +170,7 @@ def _load_xr0_model(model_dir: Path, checkpoint_tag: str, device: torch.device):
 
 
 def _decode_compressed_image(image_buffer: np.ndarray) -> np.ndarray:
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return cv2.cvtColor(decoded, cv2.COLOR_BGR2RGB)
+    return decode_image_bit(image_buffer)
 
 
 def _ensure_hwc_uint8(image: Any) -> np.ndarray:

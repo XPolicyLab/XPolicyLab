@@ -31,7 +31,7 @@ bash install.sh
 `install.sh` 会：
 
 - 在 `dexbotic/` 目录执行 `pip install -e .`
-- 在 XPolicyLab 根目录执行 `pip install -e .`
+- 在 XPolicyLab 根目录执行 `pip install -e .`，并安装 `h5py pyyaml`（policy server 加载 `process_data` 需要）
 - 安装数据转换依赖 `opencv-python-headless`、`tqdm`
 
 ## 3. 手动安装
@@ -109,3 +109,39 @@ global_batch = DM0_BATCH_SIZE × num_gpus × DM0_GRAD_ACCUM
 `train.sh` 会校验上述关系；未设置 `DM0_GRAD_ACCUM` 时按 `DM0_GLOBAL_BATCH_SIZE` 自动计算。
 
 环境配置完成后，数据处理与训练入口见 `README.md`。
+
+## XPolicyLab 部署（eval）
+
+已在 GPU 主机完成 debug client 闭环（`setup_eval_policy_server.sh` + `setup_eval_env_client.sh`）。
+
+| 项 | 说明 |
+|----|------|
+| Server 环境 | `DM0` |
+| Client 环境 | `XPolicyLab`（conda） |
+| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-ee-0` |
+| expert_data_num | `3500` |
+| action_type | `ee` |
+| xspark 权重 | `/mnt/xspark-data/final_ckpt/DM_0/RoboDojo-cotrain-arx_x5-3500-ee-0/checkpoint-20000` |
+| 备注 | install.sh 含 h5py（XPolicyLab server） |
+
+软链 checkpoint（在 `policy/Dexbotic_DM0/` 下）：
+
+```bash
+mkdir -p checkpoints
+ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+```
+
+`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+
+手动评测：
+
+```bash
+# terminal 1 — server
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 3500 ee 0 0 DM0 <port> localhost
+
+# terminal 2 — client
+bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 ee 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-ee-0,action_type=ee" <port> localhost
+```
+
+或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
+

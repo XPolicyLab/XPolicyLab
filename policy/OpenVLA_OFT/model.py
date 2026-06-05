@@ -20,7 +20,12 @@ from .openvla_oft.experiments.robot.openvla_utils import (
 )
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
+from XPolicyLab.utils.process_data import (
+    decode_image_bit,
+    get_robot_action_dim_info,
+    pack_robot_state,
+    unpack_robot_state,
+)
 
 
 _POLICY_DIR = Path(__file__).resolve().parent
@@ -86,19 +91,27 @@ def _resolve_unnorm_key(model_cfg: dict[str, Any], norm_stats: dict | None = Non
 
 def _resolve_finetune_dir(model_cfg: dict[str, Any]) -> Path | None:
     ckpt_setting = _build_ckpt_setting(model_cfg)
-    ckpt_name = ckpt_setting or model_cfg.get("ckpt_name")
-    if not ckpt_name:
+    ckpt_name = model_cfg.get("ckpt_name")
+    candidates = []
+    for value in (ckpt_name, ckpt_setting):
+        if value and value not in candidates:
+            candidates.append(str(value))
+    if not candidates:
         return None
-    checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
-    if not checkpoint_root.is_dir():
-        return None
-    markers = ("dataset_statistics.json", "config.json", "latest-checkpoint.pt")
-    if any((checkpoint_root / marker).exists() for marker in markers):
-        return checkpoint_root
-    for child in sorted(checkpoint_root.iterdir()):
-        if child.is_dir() and any((child / marker).exists() for marker in markers):
-            return child
-    return checkpoint_root
+
+    for name in candidates:
+        checkpoint_root = (_CHECKPOINTS_DIR / name).expanduser().resolve()
+        if not checkpoint_root.is_dir():
+            continue
+        markers = ("dataset_statistics.json", "config.json", "latest-checkpoint.pt")
+        if any((checkpoint_root / marker).exists() for marker in markers):
+            return checkpoint_root
+        for child in sorted(checkpoint_root.iterdir()):
+            if child.is_dir() and any((child / marker).exists() for marker in markers):
+                return child
+        if name == ckpt_name:
+            return checkpoint_root
+    return None
 
 
 def _resolve_policy_path(value: str | None) -> Path | None:
@@ -166,6 +179,31 @@ def extract_image(observation, candidate_names):
             return image
     raise KeyError(f"Could not find any image for candidates: {candidate_names}")
 
+
+def ensure_hwc_uint8(image):
+    if isinstance(image, (bytes, bytearray, memoryview)):
+        image = decode_image_bit(np.frombuffer(bytes(image), dtype=np.uint8))
+
+    image = np.asarray(image)
+    if image.ndim == 1 and image.dtype == np.uint8:
+        image = decode_image_bit(image)
+
+    if image.ndim != 3:
+        raise ValueError(f"Expected image ndim=3, got shape {image.shape}")
+
+    if np.issubdtype(image.dtype, np.floating):
+        image = np.clip(image, 0.0, 1.0)
+        image = (image * 255.0).astype(np.uint8)
+    elif image.dtype != np.uint8:
+        image = image.astype(np.uint8)
+
+    if image.shape[-1] in (1, 3):
+        return image
+    if image.shape[0] in (1, 3):
+        return np.transpose(image, (1, 2, 0))
+    raise ValueError(f"Unsupported image shape: {image.shape}")
+
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
         state = np.asarray(observation["state"], dtype=np.float32)
@@ -181,9 +219,15 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
         raise ValueError("env_cfg is required when encoding raw environment observations.")
 
     images = {
-        "cam_high": extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"]),
-        "cam_left_wrist": extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"]),
-        "cam_right_wrist": extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"]),
+        "cam_high": ensure_hwc_uint8(
+            extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])
+        ),
+        "cam_left_wrist": ensure_hwc_uint8(
+            extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"])
+        ),
+        "cam_right_wrist": ensure_hwc_uint8(
+            extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"])
+        ),
     }
     state = pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs").astype(np.float32)
     prompt = observation.get("prompt", default_prompt)

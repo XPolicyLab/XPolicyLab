@@ -32,7 +32,9 @@ Checkpoint：`checkpoints/<6-tuple>/`（含 `xpolicylab_train_config.json`）
 
 训练 seed：`train.seed` 与 `DefaultSampler.seed` 均为 `XPolicyLab_seed + 1`（giga-train 要求 `seed > 0`），并设置 `PYTHONHASHSEED`。
 
-## 评估
+## 部署
+
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
 
 `deploy.yml` 中 `eval_env: debug` 时 `load_model: false` 可走零动作调试。完整推理设 `load_model: true`。
 

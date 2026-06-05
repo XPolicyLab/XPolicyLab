@@ -20,7 +20,12 @@ for _path in (str(_REPO_ROOT), str(_LEROBOT_SRC), str(_LEROBOT_ROOT)):
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
+from XPolicyLab.utils.process_data import (
+    decode_image_bit,
+    get_robot_action_dim_info,
+    pack_robot_state,
+    unpack_robot_state,
+)
 
 from lerobot.policies.factory import get_policy_class, make_pre_post_processors
 from lerobot.utils.constants import OBS_STATE
@@ -41,10 +46,7 @@ def extract_image(observation, candidate_names):
 
 
 def decode_compressed_image(image_buffer):
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return decoded
+    return decode_image_bit(image_buffer)
 
 
 def ensure_chw_uint8(image):

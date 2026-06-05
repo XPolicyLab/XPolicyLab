@@ -37,3 +37,13 @@ bash examples/RoboDojo/train_files/run_robodojo_train.sh
 | `PRETRAIN_CKPT` | 预训练 checkpoint |
 | `RELOAD_MODULES` | 从预训练加载的模块子集 |
 | `HF_LEROBOT_HOME` | LeRobot 数据根目录 |
+
+## 部署
+
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
+
+推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
+
+```bash
+bash eval.sh RoboDojo stack_bowls RoboDojo-sim-arx_x5-100-joint-0 arx_x5 100 joint 0 <policy_gpu> <env_gpu> ABot XPolicyLab
+```

@@ -16,8 +16,8 @@ obs_transform_pipeline: null
 action_type: joint
 prompt: null
 stats_key: unified_robot
-cosmos_path: checkpoints/shared/Cosmos-Tokenizer-CI8x8
-qwen3_2b_path: checkpoints/shared/Qwen3-VL-2B-Instruct
+cosmos_path: /mnt/xspark-data/xspark_shared/model_weights/Cosmos-Tokenizer-CI8x8
+qwen3_2b_path: /mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct
 resize_size: 224
 image_history_interval: 15
 infer_horizon: 30

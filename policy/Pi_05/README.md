@@ -27,8 +27,12 @@ checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_
 | `OPENPI_TRAIN_CONFIG_NAME` | 默认 `pi05_base_aloha_full_sim_arx-x5_seed_0` |
 | `OPENPI_LOCAL_CACHE_ROOT` | HF / JAX 缓存根目录 |
 
-## 评估
+## 部署
+
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
+
+推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
-bash eval.sh <task_name> <env_cfg_type> <expert_data_num> <action_type> <gpu_id> <seed> <policy_conda_env> <eval_env_conda_env> <model_path> <train_config_name> <repo_id>
+bash eval.sh RoboDojo stack_bowls Pi_05_sim_arx-x5_seed_1 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> uv XPolicyLab
 ```

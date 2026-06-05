@@ -10,15 +10,15 @@ action_type=$6
 seed=$7
 policy_gpu_id=$8
 policy_conda_env=$9
-port=${10}
-config_name=${11:-robotwin30_train}
-host=${12:-0.0.0.0}
+policy_server_port=${10}
+policy_server_host=${11:-"localhost"}
+config_name=${12:-robotwin30_train}
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-policy_name="$(basename "${SCRIPT_DIR}")"
+policy_name="$(basename "${CURRENT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 if [[ "${ckpt_name}" = /* ]]; then
@@ -37,14 +37,14 @@ PY
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, host=${host}, port=${port}, action_dim=${action_dim}"
-echo "[SERVER] checkpoint_path=${CHECKPOINT_PATH}, base_model_path=${BASE_MODEL_PATH}, config_name=${config_name}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
+echo "[SERVER] checkpoint_path=${CHECKPOINT_PATH}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
 export MASTER_ADDR=127.0.0.1
-export MASTER_PORT="${port}"
+export MASTER_PORT="${policy_server_port}"
 export RANK=0
 export LOCAL_RANK=0
 export WORLD_SIZE=1
@@ -55,8 +55,10 @@ exec env \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            host="${host}" \
-            port="${port}" \
+            policy_server_port="${policy_server_port}" \
+            policy_server_host="${policy_server_host}" \
+            port="${policy_server_port}" \
+            host="${policy_server_host}" \
             dataset_name="${dataset_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
@@ -69,4 +71,4 @@ exec env \
             action_dim="${action_dim}" \
             checkpoint_path="${CHECKPOINT_PATH}" \
             base_model_path="${BASE_MODEL_PATH}" \
-            config_name="${config_name}" \
+            config_name="${config_name}"
