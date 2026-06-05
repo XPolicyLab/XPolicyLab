@@ -1,4 +1,5 @@
 #!/bin/bash
+# LEGACY (RMBench standalone eval). Use policy/Mem_0/eval.sh for XPolicyLab server/client eval.
 
 policy_name=Mem_0
 

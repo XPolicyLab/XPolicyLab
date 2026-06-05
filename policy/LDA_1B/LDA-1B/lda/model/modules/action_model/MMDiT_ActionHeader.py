@@ -6,6 +6,7 @@
 
 
 from dataclasses import dataclass, field
+import contextlib
 import math
 import os
 import random
@@ -505,10 +506,19 @@ class FlowmatchingActionHead(nn.Module):
 
     def prepare_input(self, batch: dict) -> BatchFeature:
         return BatchFeature(data=batch)
+
+    def _vision_encoder_grad_enabled(self) -> bool:
+        return any(p.requires_grad for p in self.vision_encoder.parameters())
+
     def encode_future_img(self, next_obs, microbatch_size=72):
+        grad_ctx = (
+            contextlib.nullcontext()
+            if self._vision_encoder_grad_enabled()
+            else torch.no_grad()
+        )
         if self.vision_encoder_type == 'vjepa2':
             next_obs = rearrange(next_obs, "b v t c h w -> (b v) t c h w")
-            with torch.no_grad():
+            with grad_ctx:
                 next_obs = self.vision_encoder.get_vision_features(next_obs)
             next_obs = rearrange(next_obs, "b (t h w) d -> b t h w d", h=self.orig_patch_shape[0], w=self.orig_patch_shape[1])
         elif self.vision_encoder_type == 'dinov3':
@@ -516,7 +526,7 @@ class FlowmatchingActionHead(nn.Module):
             transformed_imgs = []
             for i in range(0, next_obs.shape[0], microbatch_size):
                 batch_next_obs = next_obs[i : i + microbatch_size]
-                with torch.no_grad():
+                with grad_ctx:
                     output = self.vision_encoder(batch_next_obs)
                 batch_next_obs = output.last_hidden_state
                 transformed_imgs.append(batch_next_obs)

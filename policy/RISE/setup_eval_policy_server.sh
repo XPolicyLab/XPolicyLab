@@ -5,25 +5,29 @@ dataset_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-localhost}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+ADAPTER_DIR="${SCRIPT_DIR}/xpolicylab_adapter"
 OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
+
+source "${ADAPTER_DIR}/_artifact_paths.sh"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
-ckpt_run_id="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-ckpt_root_rel="checkpoints/${ckpt_run_id}"
-ckpt_root="${SCRIPT_DIR}/${ckpt_root_rel}"
+expert_data_num="${RISE_EXPERT_DATA_NUM:-}"
+ckpt_run_id="${RISE_CKPT_RUN_ID:-$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
+ckpt_root="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
+ckpt_root_rel="${ckpt_root#${SCRIPT_DIR}/}"
 policy_root_rel="${ckpt_root_rel}/Policy_offline_release/Policy_offline_release"
 policy_root="${SCRIPT_DIR}/${policy_root_rel}"
 config_name="${RISE_CONFIG_NAME:-Policy_offline_release}"
@@ -85,7 +89,7 @@ fi
 
 if [[ -z "${asset_id}" ]]; then
     asset_id=$(
-        python - "${checkpoint_path_abs}" <<'PY'
+        python3 - "${checkpoint_path_abs}" <<'PY'
 import pathlib
 import sys
 
@@ -115,7 +119,7 @@ exec env \
     PYTHONUNBUFFERED=1 \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     PYTHONPATH="${OFFLINE_DIR}/src:${ROOT_DIR}:${PYTHONPATH:-}" \
-    python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python3 -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \
@@ -124,7 +128,6 @@ exec env \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \

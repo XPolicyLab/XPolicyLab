@@ -9,21 +9,15 @@ set -euo pipefail
 #   3. all       - run advantage -> policy
 #
 # Usage:
-#   XPolicyLab standard:
-#     bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [stage] [extra args]
-#
-# Stages:
-#   advantage  Run norm -> value -> label. This prepares the *_w_adv dataset.
-#   policy     Train Policy_offline_release on an existing *_w_adv dataset.
-#   all        Run advantage -> policy.
+#   bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]
 #
 # Examples:
-#   bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 100 joint 42 0 advantage
-#   bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 100 joint 42 0 policy
-#   bash train.sh RoboDojo stack_bowls stack_bowls arx_x5 100 joint 42 0 all
+#   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 advantage
+#   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 policy
+#   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 all
 
 stages_regex="^(advantage|policy|all)$"
-usage="Usage: bash train.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]"
+usage="Usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]"
 
 if [[ "${1:-}" =~ ${stages_regex} ]]; then
     legacy_usage="Usage: bash train.sh <advantage|policy|all> <gpu_id> <seed> [extra args]"
@@ -33,22 +27,20 @@ if [[ "${1:-}" =~ ${stages_regex} ]]; then
     extra_args=("${@:4}")
 
     dataset_name="${RISE_DATASET_NAME:-RoboDojo}"
-    task_name="${RISE_TASK_NAME:-stack_bowls}"
-    ckpt_name="${RISE_CKPT_NAME:-${task_name}}"
+    ckpt_name="${RISE_CKPT_NAME:-stack_bowls}"
     env_cfg_type="${RISE_ENV_CFG_TYPE:-arx_x5}"
     expert_data_num="${RISE_EXPERT_DATA_NUM:-100}"
     action_type="${RISE_ACTION_TYPE:-joint}"
 else
     dataset_name=${1:?${usage}}
-    task_name=${2:?${usage}}
-    ckpt_name=${3:?${usage}}
-    env_cfg_type=${4:?${usage}}
-    expert_data_num=${5:?${usage}}
-    action_type=${6:?${usage}}
-    seed=${7:?${usage}}
-    gpu_id=${8:?${usage}}
-    stage=${9:-${RISE_STAGE:-policy}}
-    extra_args=("${@:10}")
+    ckpt_name=${2:?${usage}}
+    env_cfg_type=${3:?${usage}}
+    expert_data_num=${4:?${usage}}
+    action_type=${5:?${usage}}
+    seed=${6:?${usage}}
+    gpu_id=${7:?${usage}}
+    stage=${8:-${RISE_STAGE:-policy}}
+    extra_args=("${@:9}")
 fi
 
 if [[ ! "${stage}" =~ ${stages_regex} ]]; then
@@ -58,15 +50,31 @@ if [[ ! "${stage}" =~ ${stages_regex} ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ADAPTER_DIR="${SCRIPT_DIR}/xpolicylab_adapter"
 OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
 DEFAULT_PI05_WEIGHTS="${SCRIPT_DIR}/weights/pi05_base_pytorch"
 DEFAULT_RAW_DATASET_LINK="${SCRIPT_DIR}/data/RoboDojo_sim_v21_video_abot-lerobot"
 
-STANDARD_CKPT_DIR="${SCRIPT_DIR}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-RAW_DATASET_LINK="${RISE_RAW_DATASET:-${SCRIPT_DIR}/data/${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-lerobot}"
-if [[ ! -e "${RAW_DATASET_LINK}" && -e "${DEFAULT_RAW_DATASET_LINK}" ]]; then
+source "${ADAPTER_DIR}/_artifact_paths.sh"
+
+STANDARD_CKPT_DIR="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
+
+if [[ -n "${RISE_RAW_DATASET:-}" ]]; then
+    RAW_DATASET_LINK="${RISE_RAW_DATASET}"
+elif [[ -d "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${expert_data_num}")" || \
+      -L "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${expert_data_num}")" ]]; then
+    RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+        "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
+elif [[ -e "${DEFAULT_RAW_DATASET_LINK}" ]]; then
     RAW_DATASET_LINK="${DEFAULT_RAW_DATASET_LINK}"
+else
+    RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+        "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
 fi
+
 RAW_DATASET="$(readlink -f "${RAW_DATASET_LINK}")"
 ADV_DATASET="${RAW_DATASET}_w_adv"
 RAW_ASSET_ID="$(basename "${RAW_DATASET}")"
@@ -77,10 +85,7 @@ ADV_NORM_DIR="${OFFLINE_DIR}/data/norms/${ADV_ASSET_ID}"
 RAW_NORM_PATH="${RAW_NORM_DIR}/norm_stats.json"
 ADV_NORM_PATH="${ADV_NORM_DIR}/norm_stats.json"
 VALUE_CKPT_ROOT="${STANDARD_CKPT_DIR}/value_release/value_release"
-LEGACY_VALUE_CKPT_ROOT="${OFFLINE_DIR}/checkpoints/value_release/value_release"
 
-# The user already computed this file once; keep it as a fallback source for
-# installing stats into the path expected by openpi_value.training.config.
 PRECOMPUTED_RAW_NORM="${SCRIPT_DIR}/RISE/assets/norm_stats.json"
 
 PI05_PYTORCH_WEIGHT_PATH="${RISE_PYTORCH_WEIGHT_PATH:-${DEFAULT_PI05_WEIGHTS}}"
@@ -121,7 +126,6 @@ else
     ngpus_per_node=$(wc -w <<< "${gpu_list}")
 fi
 
-# All environment required by the RISE configs is defined here.
 resolve_rise_executables
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export WANDB_MODE=offline
@@ -143,7 +147,7 @@ require_dataset() {
 require_pi05_weights() {
     if [[ ! -f "${RISE_PYTORCH_WEIGHT_PATH}/model.safetensors" && ! -f "${RISE_PYTORCH_WEIGHT_PATH}/model.pt" ]]; then
         echo "[RISE] Missing Pi0.5 PyTorch weights: ${RISE_PYTORCH_WEIGHT_PATH}" >&2
-        echo "[RISE] Expected model.safetensors or model.pt. See README.md section 1 for download/conversion." >&2
+        echo "[RISE] Expected model.safetensors or model.pt. See INSTALLATION.md for download/conversion." >&2
         exit 1
     fi
 }

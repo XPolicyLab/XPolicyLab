@@ -18,7 +18,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${SCRIPT_DIR}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 

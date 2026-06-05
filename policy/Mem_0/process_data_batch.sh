@@ -15,7 +15,7 @@ set -euo pipefail
 # Defaults:
 #   dataset_id        = <dataset_name>-cotrain-<env_cfg_type>-<expert_data_num>-<action_type>
 #   task_config_path  = <policy>/Mem_0/xpolicylab_adapter/task_config.json
-# Output: Mem_0/lerobot_datasets/<dataset_id>/
+# Output: policy/Mem_0/data/<dataset_id>-lerobot/  (legacy: Mem_0/lerobot_datasets/ with MEM0_LEGACY_PATHS=1)
 #
 # Fast path (no HDF5 re-encode): set ADAPT_FROM to an existing LeRobot dataset root,
 # e.g. xspark_shared/lerobot/RoboDojo_sim_v21_video_abot. The source is read-only;
@@ -54,7 +54,11 @@ if [[ -n "${ADAPT_FROM:-}" ]]; then
     fi
     default_dataset_id="${dataset_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
     resolved_dataset_id="${dataset_id:-${default_dataset_id}}"
-    OUT_DIR="${POLICY_DIR}/Mem_0/lerobot_datasets/${resolved_dataset_id}"
+    if [[ "${MEM0_LEGACY_PATHS:-}" == "1" ]]; then
+        OUT_DIR="${POLICY_DIR}/Mem_0/lerobot_datasets/${resolved_dataset_id}"
+    else
+        OUT_DIR="${POLICY_DIR}/data/${resolved_dataset_id}-lerobot"
+    fi
     echo "[batch] fast adapt from ${ADAPT_FROM}"
     echo "[batch] output dataset_id=${resolved_dataset_id}"
     python "${ADAPTER}" \

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -e
 
 dataset_name=$1
 task_name=$2
@@ -11,21 +11,16 @@ env_gpu_id=$7
 eval_env_conda_env=$8
 additional_info=$9
 policy_server_port=${10}
-policy_server_ip=${11:-localhost}
+policy_server_ip=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-RISE_SITECUSTOMIZE_DIR="${SCRIPT_DIR}/RISE/deploy"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
-echo -e "\033[34m[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}\033[0m"
-
-export PYTHONPATH="${RISE_SITECUSTOMIZE_DIR}:${ROOT_DIR}:${PYTHONPATH:-}"
-export RISE_MODEL_CLIENT_TIMEOUT="${RISE_MODEL_CLIENT_TIMEOUT:-600}"
-export PYTHONWARNINGS=ignore::UserWarning
+echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${UTILS_DIR}/setup_env_client.sh" \
     "${UTILS_DIR}" \

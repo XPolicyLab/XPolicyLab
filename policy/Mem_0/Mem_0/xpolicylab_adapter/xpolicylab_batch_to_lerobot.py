@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -27,8 +28,6 @@ from pathlib import Path
 from tqdm import tqdm
 
 ADAPTER_DIR = Path(__file__).resolve().parent
-UPSTREAM_DIR = ADAPTER_DIR.parent
-ROOT_DIR = UPSTREAM_DIR.parents[3]
 
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
@@ -39,6 +38,9 @@ from XPolicyLab.utils.load_file import load_hdf5  # noqa: E402
 from XPolicyLab.utils.process_data import get_robot_action_dim_info  # noqa: E402
 from xpolicylab_to_lerobot import (  # noqa: E402
     DEFAULT_VCODEC,
+    POLICY_DIR,
+    ROOT_DIR,
+    UPSTREAM_DIR,
     _segment_boundaries,
     convert_episode_frames,
     create_mem0_lerobot_dataset,
@@ -77,7 +79,8 @@ def main() -> None:
         "--annotation_root", required=True,
         help="Root dir containing <task>/language_annotation.json for Mn tasks",
     )
-    parser.add_argument("--dataset_id", default=None, help="Output folder under lerobot_datasets/")
+    parser.add_argument("--dataset_id", default=None,
+                        help="Output tag (default <dataset>-cotrain-<env>-<N>-<action>)")
     parser.add_argument("--camera", default="cam_head")
     parser.add_argument(
         "--no-use-preview", action="store_true",
@@ -104,7 +107,10 @@ def main() -> None:
     dataset_id = args.dataset_id or _default_dataset_id(
         args.dataset_name, args.env_cfg_type, args.expert_data_num, args.action_type,
     )
-    out_root = UPSTREAM_DIR / "lerobot_datasets" / dataset_id
+    if os.environ.get("MEM0_LEGACY_PATHS") == "1":
+        out_root = Path(UPSTREAM_DIR) / "lerobot_datasets" / dataset_id
+    else:
+        out_root = Path(POLICY_DIR) / "data" / f"{dataset_id}-lerobot"
     if out_root.exists():
         shutil.rmtree(out_root)
 

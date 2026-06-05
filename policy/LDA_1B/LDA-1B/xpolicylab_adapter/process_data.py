@@ -1,28 +1,26 @@
 """Convert XPolicyLab HDF5 episodes into LeRobot v2.1 datasets that LDA's
 `gr00t_lerobot` loader can consume directly.
 
-Expected input layout (one task name; pass several comma-separated to merge):
-    <root>/data/<dataset_name>/<task_name>/<env_cfg_type>/data/episode_*.hdf5
+Expected input layout (raw task dirs; comma-separated to merge):
+    <root>/data/<dataset_name>/<raw_task>/<env_cfg_type>/data/episode_*.hdf5
+    (legacy fallback: <root>/final_data/...)
 
 Output layout (one dataset per invocation):
-    <root>/XPolicyLab/policy/LDA_1B/data/<dataset_id>/
+    <policy_dir>/data/<dataset_id>/
         data/chunk-000/episode_XXXXXX.parquet
         videos/chunk-000/video.<cam>/episode_XXXXXX.mp4
         meta/{info.json, modality.json, episodes.jsonl,
               episodes_stats.jsonl, tasks.jsonl, stats.json}
 
-`--task-name` accepts a comma-separated list (e.g. "test_data,test_data_1"); all
-tasks are merged into one LeRobot dataset with continuous episode/frame indices.
+`--raw-task-dirs` (alias `--task-name`) accepts a comma-separated list; all tasks
+are merged into one LeRobot dataset with continuous episode/frame indices.
 `--expert-data-num` caps episodes per task, so N tasks yield up to N*num episodes.
-Each episode's instruction is resolved from its HDF5, so identical instructions
-collapse to a single tasks.jsonl entry while distinct ones each get their own index.
 
-For a single task the dataset_id defaults to
-"<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>"; for a
-merged multi-task run it defaults to "cotrain_dataset". Override either with
---dataset-id. The bundled `xpolicylab` mixture entry in
-lda/dataloader/gr00t_lerobot/mixtures.py reads the folder name from the
-XPOLICYLAB_DATASET_ID env var, which must match the produced folder name.
+Default dataset_id (README §4.2):
+    single-task: "<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>"
+    multi-task:  "cotrain"
+
+Override with --dataset-id. XPOLICYLAB_DATASET_ID in train.sh must match.
 
 Image standard: HWC RGB uint8, resized to (240, 320, 3) before encoding.
 """
@@ -239,6 +237,29 @@ def _modality_json(state_cols: Dict[str, np.ndarray], action_cols: Dict[str, np.
     }
 
 
+def _dataset_tag(dataset_name: str, ckpt_name: str, env_cfg_type: str, action_type: str) -> str:
+    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
+
+
+def _resolve_source_dir(
+    root: Path,
+    dataset_name: str,
+    raw_task: str,
+    env_cfg_type: str,
+    legacy_data_roots: Iterable[str],
+) -> Path:
+    candidates = [root / "data"] + [root / name for name in legacy_data_roots]
+    tried: List[Path] = []
+    for data_root in candidates:
+        source_dir = data_root / dataset_name / raw_task / env_cfg_type / "data"
+        tried.append(source_dir)
+        if source_dir.exists():
+            return source_dir
+    raise FileNotFoundError(
+        "Source directory does not exist. Tried:\n  " + "\n  ".join(str(p) for p in tried)
+    )
+
+
 def _resolve_instruction(episode: Dict[str, Any], fallback: str) -> str:
     inst = episode.get("instruction")
     if isinstance(inst, bytes):
@@ -250,32 +271,33 @@ def _resolve_instruction(episode: Dict[str, Any], fallback: str) -> str:
 
 def convert(args: argparse.Namespace) -> None:
     root = Path(args.root_dir).resolve()
-    task_names = [t.strip() for t in args.task_name.split(",") if t.strip()]
-    if not task_names:
-        raise ValueError("--task-name resolved to an empty task list")
+    policy_dir = Path(args.policy_dir).resolve()
+    raw_task_dirs = [t.strip() for t in args.raw_task_dirs.split(",") if t.strip()]
+    if not raw_task_dirs:
+        raise ValueError("--raw-task-dirs resolved to an empty task list")
 
-    # Gather episodes from every task, capped per task by expert_data_num. Each
-    # job carries its task name as the instruction fallback for that episode.
+    legacy_roots = [x.strip() for x in args.legacy_data_roots.split(",") if x.strip()]
+
+    # Gather episodes from every raw task dir, capped per task by expert_data_num.
     episode_jobs: List[Tuple[Path, str]] = []
-    for task_name in task_names:
-        source_dir = root / "final_data" / args.dataset_name / task_name / args.env_cfg_type / "data"
-        if not source_dir.exists():
-            raise FileNotFoundError(f"Source directory does not exist: {source_dir}")
+    for raw_task in raw_task_dirs:
+        source_dir = _resolve_source_dir(
+            root, args.dataset_name, raw_task, args.env_cfg_type, legacy_roots
+        )
         task_episodes = sorted(source_dir.glob("episode_*.hdf5"))[: int(args.expert_data_num)]
         if not task_episodes:
             raise FileNotFoundError(f"No episode_*.hdf5 files under {source_dir}")
-        episode_jobs.extend((ep, task_name) for ep in task_episodes)
+        episode_jobs.extend((ep, raw_task) for ep in task_episodes)
 
     if args.dataset_id:
         dataset_id = args.dataset_id
-    elif len(task_names) == 1:
-        dataset_id = (
-            f"{args.dataset_name}-{task_names[0]}-{args.env_cfg_type}"
-            f"-{args.expert_data_num}-{args.action_type}"
+    elif len(raw_task_dirs) == 1:
+        dataset_id = _dataset_tag(
+            args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type
         )
     else:
-        dataset_id = "cotrain_dataset"
-    output_root = root / "XPolicyLab" / "policy" / "LDA_1B" / "data" / dataset_id
+        dataset_id = "cotrain"
+    output_root = policy_dir / "data" / dataset_id
 
     # Sanity-check robot dim for the requested action_type.
     robot_info = get_robot_action_dim_info(args.env_cfg_type)
@@ -419,19 +441,36 @@ def convert(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root-dir", required=True)
+    parser.add_argument("--root-dir", required=True, help="workspace root containing data/")
+    parser.add_argument("--policy-dir", required=True, help="policy/LDA_1B directory for output")
     parser.add_argument("--dataset-name", required=True)
+    parser.add_argument("--ckpt-name", required=True, help="artifact ckpt_name (README §4.2)")
+    parser.add_argument(
+        "--raw-task-dirs",
+        default=None,
+        help="raw HDF5 task dir(s) under data/<dataset>/; comma-separated to merge",
+    )
     parser.add_argument(
         "--task-name",
-        required=True,
-        help="task name, or comma-separated list to merge into one dataset",
+        default=None,
+        help="deprecated alias for --raw-task-dirs",
     )
     parser.add_argument("--env-cfg-type", required=True)
     parser.add_argument("--expert-data-num", required=True)
     parser.add_argument("--action-type", required=True, choices=("joint", "ee"))
     parser.add_argument("--dataset-id", default=None, help="override output folder name")
+    parser.add_argument(
+        "--legacy-data-roots",
+        default="final_data",
+        help="comma-separated legacy roots tried after data/ (default: final_data)",
+    )
     parser.add_argument("--fps", type=int, default=DEFAULT_FPS)
-    convert(parser.parse_args())
+    args = parser.parse_args()
+    raw = args.raw_task_dirs or args.task_name
+    if not raw:
+        parser.error("one of --raw-task-dirs or --task-name is required")
+    args.raw_task_dirs = raw
+    convert(args)
 
 
 if __name__ == "__main__":

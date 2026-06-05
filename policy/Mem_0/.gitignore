@@ -1,6 +1,9 @@
 # XPolicyLab convention (mirrors policy/DP/.gitignore)
 data/*
 checkpoints/*
+assets/*
+
+cotrain_convert.log
 
 # Mem_0 upstream generated artifacts (regenerable; never commit)
 Mem_0/checkpoints/*

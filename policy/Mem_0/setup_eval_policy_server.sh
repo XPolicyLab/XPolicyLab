@@ -5,14 +5,13 @@ dataset_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-localhost}
-vllm_url=${12:-}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-localhost}
+vllm_url=${11:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -22,9 +21,13 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 POLICY_DIR="${ROOT_DIR}/XPolicyLab/policy/${policy_name}"
 UPSTREAM_DIR="${POLICY_DIR}/Mem_0"
 yaml_file="${POLICY_DIR}/deploy.yml"
+ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
 
-run_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-seed${seed}"
-ckpt_dir="${UPSTREAM_DIR}/checkpoints/${run_name}"
+source "${ADAPTER_DIR}/_artifact_paths.sh"
+
+expert_data_num="${MEM0_EXPERT_DATA_NUM:-}"
+ckpt_dir="$(mem0_resolve_ckpt_dir "${POLICY_DIR}" "${dataset_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
 
 execution_ckpt="${MEM0_EXECUTION_CKPT:-}"
 if [[ -z "${execution_ckpt}" && -d "${ckpt_dir}" ]]; then
@@ -34,7 +37,7 @@ if [[ -z "${execution_ckpt}" && -d "${ckpt_dir}" ]]; then
     fi
 fi
 
-state_stats_path="${MEM0_STATE_STATS_PATH:-${UPSTREAM_DIR}/assets/${ckpt_name}/norm_stats.json}"
+state_stats_path="${MEM0_STATE_STATS_PATH:-$(mem0_resolve_norm_stats_path "${POLICY_DIR}" "${ckpt_name}")}"
 planning_cfg="${MEM0_PLANNING_MODULE_CONFIG:-${UPSTREAM_DIR}/source/config/planning_module_inference.yaml}"
 global_task="${GLOBAL_TASK:-}"
 action_horizon="${MEM0_ACTION_HORIZON:-30}"
@@ -56,6 +59,7 @@ PY
 )
 
 echo -e "\033[33m[SERVER] policy=${policy_name} task=${task_name} ckpt=${ckpt_name} type=${task_type}\033[0m"
+echo -e "\033[33m[SERVER] ckpt_dir=${ckpt_dir}\033[0m"
 echo -e "\033[33m[SERVER] execution_ckpt=${execution_ckpt:-<unset>}\033[0m"
 echo -e "\033[33m[SERVER] state_stats_path=${state_stats_path}\033[0m"
 echo -e "\033[33m[SERVER] vllm_url=${vllm_url:-<unset>}\033[0m"
@@ -81,7 +85,6 @@ exec env \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \
