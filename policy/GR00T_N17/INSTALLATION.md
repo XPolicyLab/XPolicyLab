@@ -141,3 +141,39 @@ pip install -e .
 ```
 
 训练与评测入口见 [README.md](README.md)。
+
+## XPolicyLab 部署（eval）
+
+已在 GPU 主机完成 debug client 闭环（`setup_eval_policy_server.sh` + `setup_eval_env_client.sh`）。
+
+| 项 | 说明 |
+|----|------|
+| Server 环境 | `uv` |
+| Client 环境 | `XPolicyLab`（conda） |
+| eval 示例 ckpt | `cotrain` |
+| expert_data_num | `3500` |
+| action_type | `joint` |
+| xspark 权重 | `/mnt/xspark-data/final_ckpt/GR00T_N17/RoboDojo-cotrain-arx_x5-3500-joint-0` |
+| 备注 | cosmos: checkpoints/shared/Cosmos-Reason2-2B |
+
+软链 checkpoint（在 `policy/GR00T_N17/` 下）：
+
+```bash
+mkdir -p checkpoints
+ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+```
+
+`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+
+手动评测：
+
+```bash
+# terminal 1 — server
+bash setup_eval_policy_server.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 0 0 uv <port> localhost
+
+# terminal 2 — client
+bash setup_eval_env_client.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 XPolicyLab "ckpt_name=cotrain,action_type=joint" <port> localhost
+```
+
+或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
+

@@ -40,3 +40,14 @@ bash eval.sh <task_name> <env_cfg> <expert_data_num> joint <gpu_id> <seed> <poli
 ```
 
 当前封装默认使用 `joint` 动作类型。训练脚本中的 `action_type` 主要参与 XPolicyLab 的数据与 checkpoint 命名。
+
+## 评测（XPolicyLab）
+
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。手动部署推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`（便于查看 server 报错）。
+
+```bash
+bash eval.sh RoboDojo stack_bowls RoboDojo_sim_seed_0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> internvla_a1 XPolicyLab
+```
+
+Pi_0 / Pi_0_Fast 需先执行 `Pi_05/install.sh`，server 环境填 `uv`。
+

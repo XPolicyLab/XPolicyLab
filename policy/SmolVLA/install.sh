@@ -1,3 +1,4 @@
+# XPolicyLab deploy: policy server env=smolvla; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
 # SmolVLA: conda env + auto-clone HuggingFace LeRobot into policy/SmolVLA/smovla.
 set -euo pipefail
