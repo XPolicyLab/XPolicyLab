@@ -13,28 +13,19 @@ policy_conda_env=$9
 policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-XR0_ROOT="${SCRIPT_DIR}/xiaomi_robotics_0/xr0"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-policy_name="$(basename "${SCRIPT_DIR}")"
+policy_name="$(basename "${CURRENT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
-
-# shellcheck disable=SC1091
-source "${UTILS_DIR}/enable_deploy_proxy.sh"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
-
-export PYTHONPATH="${XR0_ROOT}:${PYTHONPATH:-}"
-# Allow HuggingFace download for vlm_processor_path; set HF_HUB_OFFLINE=1 for fully offline deploy
-export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-0}"
-export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-0}"
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
@@ -42,6 +33,8 @@ exec env \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
+            policy_server_port="${policy_server_port}" \
+            policy_server_host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
             dataset_name="${dataset_name}" \

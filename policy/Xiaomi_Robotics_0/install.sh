@@ -37,6 +37,7 @@ pip install -e .
 
 cd "${XPOLICYLAB_ROOT}"
 pip install -e .
+pip install h5py pyyaml
 
 echo "[Xiaomi_Robotics_0] Installation finished."
 echo "[Xiaomi_Robotics_0] Training / eval / debug client all use: conda activate ${CONDA_ENV}"

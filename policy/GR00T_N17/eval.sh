@@ -48,7 +48,7 @@ bash "${SERVER_SCRIPT}" \
 
 SERVER_PID=$!
 
-sleep 5
+bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 600
 
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 

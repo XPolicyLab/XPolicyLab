@@ -10,20 +10,25 @@ action_type=$6
 seed=$7
 policy_gpu_id=$8
 policy_conda_env=$9
-port=${10}
-host=${11:-"localhost"}
+policy_server_port=${10}
+policy_server_host=${11:-"localhost"}
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-policy_name="$(basename "${SCRIPT_DIR}")"
+policy_name="$(basename "${CURRENT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
-ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+# ckpt_name 可能已是完整 6-tuple 目录名（如 RoboDojo-cotrain-arx_x5-3500-joint-0），勿再拼接前缀。
+if [[ "${ckpt_name}" == *-*-* ]]; then
+  ckpt_setting="${ckpt_name}"
+else
+  ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+fi
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${port}, ckpt_setting=${ckpt_setting}, action_dim=${action_dim}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, ckpt_setting=${ckpt_setting}, action_dim=${action_dim}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
@@ -34,8 +39,10 @@ exec env \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            host="${host}" \
-            port="${port}" \
+            policy_server_port="${policy_server_port}" \
+            policy_server_host="${policy_server_host}" \
+            port="${policy_server_port}" \
+            host="${policy_server_host}" \
             dataset_name="${dataset_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
@@ -45,4 +52,4 @@ exec env \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \
-            action_dim="${action_dim}" \
+            action_dim="${action_dim}"

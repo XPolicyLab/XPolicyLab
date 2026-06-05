@@ -22,22 +22,16 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
-
-# HuggingFace hub download may require proxy on deploy hosts.
-# shellcheck disable=SC1091
-source "${UTILS_DIR}/enable_deploy_proxy.sh"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
 CONDA_BASE="$(conda info --base)"
 source "${CONDA_BASE}/etc/profile.d/conda.sh"
 YAML_PYTHON="${CONDA_BASE}/bin/python"
-if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
-    deactivate || true
-fi
-unset VIRTUAL_ENV
-if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
-    if [[ "${policy_conda_env}" == "uv" ]]; then
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+
+resolve_uv_env() {
+    local raw_path=$1
+    if [[ "${raw_path}" == "uv" ]]; then
+        "${YAML_PYTHON}" - <<PYENV
 import yaml
 from pathlib import Path
 script_dir = Path("${CURRENT_DIR}")
@@ -47,31 +41,46 @@ if not path.is_absolute():
     path = (script_dir / path).resolve()
 print(path)
 PYENV
-)
     else
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+        "${YAML_PYTHON}" - <<PYENV
 from pathlib import Path
 script_dir = Path("${CURRENT_DIR}")
-path = Path("${policy_conda_env}").expanduser()
+path = Path("${raw_path}").expanduser()
 if not path.is_absolute():
     path = (script_dir / path).resolve()
 print(path)
 PYENV
-)
     fi
-    echo "[SERVER] Activating uv environment: ${policy_uv_env_path}/.venv"
-    source "${policy_uv_env_path}/.venv/bin/activate"
-    PYTHON_BIN="$(command -v python)"
+}
+
+if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
+    policy_uv_env_path="$(resolve_uv_env "${policy_conda_env}")"
+    PYTHON_BIN="${policy_uv_env_path}/.venv/bin/python"
+    OPENPI_SRC="${policy_uv_env_path}/src"
+    echo "[SERVER] Using uv environment: ${policy_uv_env_path}"
 else
     echo "[SERVER] Activating Conda environment: ${policy_conda_env}"
     conda activate "${policy_conda_env}"
     PYTHON_BIN="${CONDA_PREFIX}/bin/python"
+    OPENPI_SRC=""
+fi
+
+if [[ ! -x "${PYTHON_BIN}" ]]; then
+    echo "[SERVER][ERROR] Python not found: ${PYTHON_BIN}" >&2
+    echo "[SERVER][ERROR] Run: bash ${CURRENT_DIR}/install.sh" >&2
+    exit 1
 fi
 echo "[SERVER] Using python: ${PYTHON_BIN}"
+
+PYTHONPATH_PARTS=("${ROOT_DIR}")
+if [[ -n "${OPENPI_SRC}" && -d "${OPENPI_SRC}" ]]; then
+    PYTHONPATH_PARTS+=("${OPENPI_SRC}")
+fi
 
 exec env \
     PYTHONUNBUFFERED=1 \
     PYTHONWARNINGS=ignore::UserWarning \
+    PYTHONPATH="$(IFS=:; echo "${PYTHONPATH_PARTS[*]}")" \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
