@@ -9,9 +9,7 @@ pid=${3:?server pid required}
 label=${4:-Policy server}
 timeout_sec=${5:-360}
 
-poll_interval="${WAIT_POLL_INTERVAL:-0.3}"
-max_iters=$(( timeout_sec * 10 ))  # 0.3s steps ≈ timeout_sec wall clock
-for _ in $(seq 1 "${max_iters}"); do
+for _ in $(seq 1 "${timeout_sec}"); do
     if ! kill -0 "${pid}" 2>/dev/null; then
         echo -e "\033[31m[ERROR] ${label} (PID=${pid}) exited before opening port ${port}.\033[0m" >&2
         exit 1
@@ -20,7 +18,7 @@ for _ in $(seq 1 "${max_iters}"); do
         echo -e "\033[32m[MAIN] ${label} ready on ${host}:${port} (PID=${pid})\033[0m"
         exit 0
     fi
-    sleep "${poll_interval}"
+    sleep 1
 done
 
 echo -e "\033[31m[ERROR] ${label} timed out after ${timeout_sec}s waiting for port ${port}.\033[0m" >&2
