@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -14,9 +15,10 @@ from typing import Any, Callable
 from robodojo.schemas import ArtifactPayload
 
 
-FINISH_WEBHOOK_SCHEMA_VERSION = "robodojo-finish-webhook-v1"
-SIGNATURE_HEADER = "X-Robodojo-Signature"
-DJANGO_FINISH_PATH_MARKER = "/internal/eval/"
+DJANGO_SIGNATURE_HEADER = "X-RoboDojo-Signature-256"
+DJANGO_TIMESTAMP_HEADER = "X-RoboDojo-Signature-Timestamp"
+WEBHOOK_RETRY_ATTEMPTS = 3
+WEBHOOK_RETRY_BACKOFF_S = (1.0, 3.0, 9.0)
 
 
 class WebhookDeliveryError(RuntimeError):
@@ -48,10 +50,6 @@ def resolve_hmac_secret(secret_ref: str) -> str | None:
     )
 
 
-def uses_django_finish_webhook(finish_url: str) -> bool:
-    return DJANGO_FINISH_PATH_MARKER in finish_url
-
-
 def canonical_json(payload: dict[str, Any]) -> bytes:
     return json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
 
@@ -67,7 +65,7 @@ def build_django_finish_payload(
     result: str | None,
     artifact: ArtifactPayload,
     metrics: dict[str, Any],
-    error_summary: str | None = None,
+    error: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     prefix = artifact.prefix
     if prefix and not prefix.endswith("/"):
@@ -97,33 +95,23 @@ def build_django_finish_payload(
             "events_key": f"{prefix}events.jsonl",
         },
     }
-    if error_summary:
-        payload["error"] = {"code": status, "message": error_summary}
+    if error is not None:
+        payload["error"] = error
     return payload
 
 
-def build_finish_payload(
-    *,
-    evaluation_id: str,
-    status: str,
-    artifact_manifest_s3_key: str | None,
-    metrics: dict[str, Any],
-    error_summary: str | None = None,
-) -> dict[str, Any]:
-    payload: dict[str, Any] = {
-        "schema_version": FINISH_WEBHOOK_SCHEMA_VERSION,
-        "evaluation_id": evaluation_id,
-        "status": status,
-        "metrics": metrics,
-    }
-    if artifact_manifest_s3_key is not None:
-        payload["artifact_manifest_s3_key"] = artifact_manifest_s3_key
-    if error_summary is not None:
-        payload["error_summary"] = error_summary
-    return payload
+def _signed_headers(body: bytes, secret: str) -> tuple[dict[str, str], str]:
+    signature = sign_payload(body, secret)
+    return (
+        {
+            DJANGO_SIGNATURE_HEADER: signature,
+            DJANGO_TIMESTAMP_HEADER: str(int(time.time())),
+        },
+        signature,
+    )
 
 
-def post_finish_webhook(
+def _post_finish_webhook_once(
     finish_url: str,
     payload: dict[str, Any],
     *,
@@ -138,8 +126,8 @@ def post_finish_webhook(
     headers = {"Content-Type": "application/json"}
     signature = ""
     if resolved_secret:
-        signature = sign_payload(body, resolved_secret)
-        headers[SIGNATURE_HEADER] = signature
+        signature_headers, signature = _signed_headers(body, resolved_secret)
+        headers.update(signature_headers)
     request = urllib.request.Request(
         finish_url,
         data=body,
@@ -175,37 +163,60 @@ def post_finish_webhook(
     )
 
 
+def post_finish_webhook(
+    finish_url: str,
+    payload: dict[str, Any],
+    *,
+    hmac_secret_ref: str = "",
+    secret: str | None = None,
+    opener: Callable[..., Any] | None = None,
+    retry: bool = True,
+) -> WebhookResult:
+    if not retry:
+        return _post_finish_webhook_once(
+            finish_url,
+            payload,
+            hmac_secret_ref=hmac_secret_ref,
+            secret=secret,
+            opener=opener,
+        )
+
+    last_err: WebhookDeliveryError | None = None
+    for attempt in range(WEBHOOK_RETRY_ATTEMPTS):
+        try:
+            return _post_finish_webhook_once(
+                finish_url,
+                payload,
+                hmac_secret_ref=hmac_secret_ref,
+                secret=secret,
+                opener=opener,
+            )
+        except WebhookDeliveryError as exc:
+            last_err = exc
+            if attempt < WEBHOOK_RETRY_ATTEMPTS - 1:
+                time.sleep(WEBHOOK_RETRY_BACKOFF_S[attempt])
+    assert last_err is not None
+    raise last_err
+
+
 def notify_finish_webhook(
     *,
-    evaluation_id: str,
     status: str,
     finish_url: str,
-    hmac_secret_ref: str = "",
     metrics: dict[str, Any],
-    artifact: ArtifactPayload | None = None,
-    artifact_manifest_s3_key: str | None = None,
-    error_summary: str | None = None,
+    artifact: ArtifactPayload,
+    hmac_secret_ref: str = "",
+    error: dict[str, Any] | None = None,
     secret: str | None = None,
     opener: Callable[..., Any] | None = None,
 ) -> WebhookResult:
-    if uses_django_finish_webhook(finish_url):
-        if artifact is None:
-            raise ValueError("artifact is required for Django finish webhook payloads")
-        payload = build_django_finish_payload(
-            status=status,
-            result="success" if status != "failed" else None,
-            artifact=artifact,
-            metrics=metrics,
-            error_summary=error_summary,
-        )
-    else:
-        payload = build_finish_payload(
-            evaluation_id=evaluation_id,
-            status=status,
-            artifact_manifest_s3_key=artifact_manifest_s3_key,
-            metrics=metrics,
-            error_summary=error_summary,
-        )
+    payload = build_django_finish_payload(
+        status=status,
+        result="success" if status != "failed" else None,
+        artifact=artifact,
+        metrics=metrics,
+        error=error,
+    )
     return post_finish_webhook(
         finish_url,
         payload,

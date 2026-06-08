@@ -7,6 +7,10 @@ from robodojo_fixtures import platform_dispatch
 from robodojo.eval_runner import main, publish_artifacts, write_artifacts
 from robodojo.schemas import DispatchPayload
 
+FINISH_URL = (
+    "https://example.test/api/v1/internal/eval/eval-1/trials/1/finish/"
+)
+
 
 def _dispatch_payload() -> DispatchPayload:
     return DispatchPayload.model_validate(
@@ -18,10 +22,10 @@ def _dispatch_payload() -> DispatchPayload:
                         "trial_id": "case-1-r01",
                         "action_case_id": "case-1",
                         "trial_index": 1,
+                        "finish_url": FINISH_URL,
                     }
                 ],
             },
-            callback={"finish_url": "https://example.test/finish"},
         )
     )
 
@@ -57,7 +61,7 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
         run_status="completed",
         upload_s3=True,
         notify_webhook=True,
-        finish_url=dispatch.finish_url,
+        finish_url=FINISH_URL,
         s3_client=object(),
         upload_file=fake_upload,
         webhook_secret="secret",
@@ -87,7 +91,7 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
                 "uploaded_count": 3,
             },
             "webhook": {
-                "finish_url": "https://example.test/finish",
+                "finish_url": FINISH_URL,
                 "status_code": 200,
             },
         },
@@ -122,7 +126,7 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
     assert summary["published"]["webhook"]["status_code"] == 200
 
 
-def test_failure_webhook_includes_manifest_key_after_s3(tmp_path):
+def test_failure_webhook_includes_error_payload(tmp_path):
     dispatch = _dispatch_payload()
     artifact_dir = tmp_path / "artifacts"
     trial_run = {
@@ -132,20 +136,6 @@ def test_failure_webhook_includes_manifest_key_after_s3(tmp_path):
         "case_meta": {"action_case_id": "case-1"},
     }
     artifact_paths = write_artifacts(dispatch, trial_run, artifact_dir)
-
-    def fake_upload(key: str, path: Path, content_type: str | None) -> None:
-        return None
-
-    s3_only = publish_artifacts(
-        dispatch,
-        artifact_paths,
-        run_status="completed",
-        upload_s3=True,
-        notify_webhook=False,
-        s3_client=object(),
-        upload_file=fake_upload,
-    )
-    partial_key = s3_only["s3"]["manifest_s3_key"]
     captured: dict = {}
 
     def capture_webhook(request, timeout=30):
@@ -170,14 +160,13 @@ def test_failure_webhook_includes_manifest_key_after_s3(tmp_path):
         upload_s3=False,
         notify_webhook=True,
         error_summary="webhook down",
-        artifact_manifest_s3_key=partial_key,
-        finish_url=dispatch.finish_url,
+        finish_url=FINISH_URL,
         webhook_secret="secret",
         webhook_opener=capture_webhook,
     )
-    assert (
-        captured["body"]["artifact_manifest_s3_key"]
-        == "evaluations/eval-1/manifest.json"
-    )
+
     assert captured["body"]["status"] == "failed"
-    assert captured["body"]["error_summary"] == "webhook down"
+    assert captured["body"]["error"] == {
+        "code": "failed",
+        "message": "webhook down",
+    }
