@@ -20,7 +20,6 @@ Co-Project Leads: Tianxing Chen, Tian Nian, Zijian Cai
 | VLA | GalaxeaVLA, GR00T_N17, H_RDT, InternVLA_A1, LDA-1B, , LingBot-VLA, MolmoACT2, OpenVLA_OFT, Pi0, Pi05, Pi0-Fast, RDT-1B, SmolVLA, Spirit_v15, TinyVLA, X_VLA, starVLA, A1, Abot_M0, Being_H05, GO1, Xiaomi_Robotics_0, Dexbotic_DM0, Mem_0, RISE, UniDex, Wall-OSS |
 | Imitation learning | ACT, DP |
 | Infrastructure | RLinf, starVLA |
-| Benchmarks | RoboDojo, RoboTwin (coming soon) |
 | In progress | ... |
 
 ## 1.2 Environment and Data
@@ -38,17 +37,20 @@ cd XPolicyLab
 # Download the complete demo dataset in the standard format.
 # This also downloads env_cfg. Use it when training with XPolicyLab only;
 # do not download it inside an existing simulator workspace.
-bash scripts/download_demo_data.sh
+bash scripts/RoboDojo/download_robodojo_data.sh huggingface demo # huggingface
 
 # Optional: download RoboDojo data in the standard HDF5 format.
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
+bash scripts/RoboDojo/download_robodojo_data.sh huggingface hdf5 # huggingface
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5  # modelscope
 
 # Optional: download RoboDojo data in LeRobot v3.0 format.
 # qpos denotes joint positions; ee data requires reconversion.
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0
+bash scripts/RoboDojo/download_robodojo_data.sh huggingface lerobot_v3.0 # huggingface
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0  # huggingface
 
 # Optional: download RoboDojo data in LeRobot v2.1 format.
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1
+bash scripts/RoboDojo/download_robodojo_data.sh huggingface lerobot_v2.1 # huggingface
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1  # huggingface
 ```
 
 XPolicyLab is usually mounted inside a larger experiment or simulation workspace. A typical layout is:
