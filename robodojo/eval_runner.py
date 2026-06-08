@@ -189,14 +189,16 @@ def publish_artifacts(
     if notify_webhook:
         metrics = _load_metrics(artifact_paths["metrics"])
         webhook_result = notify_finish_webhook(
-            evaluation_id=dispatch.evaluation_id,
             status=run_status,
             finish_url=finish_url,
-            hmac_secret_ref=dispatch.hmac_secret_ref,
             metrics=metrics,
             artifact=dispatch.artifact,
-            artifact_manifest_s3_key=manifest_s3_key,
-            error_summary=error_summary,
+            hmac_secret_ref=dispatch.hmac_secret_ref,
+            error=(
+                {"code": run_status, "message": error_summary}
+                if error_summary is not None
+                else None
+            ),
             secret=webhook_secret,
             opener=webhook_opener,
         )
