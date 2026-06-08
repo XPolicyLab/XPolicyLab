@@ -6,7 +6,7 @@ import asyncio
 import logging
 from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import Any, Literal, Protocol
 from uuid import uuid4
 
 import websockets
@@ -38,6 +38,7 @@ class PolicyEvalClientConfig:
     connect_retry_delay_s: float = 5.0
     ws_ping_interval_s: float = 20.0
     ws_ping_timeout_s: float = 20.0
+    proxy: str | Literal[True] | None = None
 
 
 @dataclass
@@ -62,6 +63,7 @@ class PolicyEvalClient:
                 self._ws = await asyncio.wait_for(
                     websockets.connect(
                         self.config.url,
+                        proxy=self.config.proxy,
                         max_size=None,
                         ping_interval=self.config.ws_ping_interval_s,
                         ping_timeout=self.config.ws_ping_timeout_s,
