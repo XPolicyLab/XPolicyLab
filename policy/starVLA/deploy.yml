@@ -21,5 +21,4 @@ unnorm_key: new_embodiment
 use_ddim: true
 num_ddim_steps: 10
 image_size: [224, 224]
-input_color_order: bgr
 include_state: false
