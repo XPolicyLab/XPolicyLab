@@ -23,7 +23,7 @@ with open("${yaml_file}", "r") as f:
 print(
     str(data.get("eval_batch", False)).lower(),
     data.get("eval_env"),
-    data.get("protocol", "legacy_tcp"),
+    data.get("protocol", "robodojo_ws"),
 )
 PY
 )

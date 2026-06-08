@@ -263,7 +263,10 @@ def _parse_session_route(path: str) -> tuple[str, str, int | None] | None:
             return (evaluation_id, "dispatch", None) if evaluation_id else None
         case ["sessions", raw_evaluation_id, "trials", raw_trial_index, "start"]:
             evaluation_id = unquote(raw_evaluation_id)
-            trial_index = int(raw_trial_index)
+            try:
+                trial_index = int(raw_trial_index)
+            except ValueError:
+                return None
             if not evaluation_id or trial_index < 1:
                 return None
             return evaluation_id, "start", trial_index
@@ -338,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
         help="Skip finish webhook callback",
     )
     args = parser.parse_args(argv)
+    if args.no_policy_trials and not args.no_webhook:
+        parser.error("--no-policy-trials requires --no-webhook")
 
     config = ExecutorConfig(
         work_dir=Path(args.work_dir),

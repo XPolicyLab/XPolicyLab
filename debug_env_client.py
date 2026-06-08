@@ -13,7 +13,7 @@ class TestEnv:
         env_cfg_type = deploy_cfg['env_cfg_type']
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
-        if deploy_cfg.get("protocol", "legacy_tcp") == "robodojo_ws":
+        if deploy_cfg.get("protocol", "robodojo_ws") == "robodojo_ws":
             from robodojo.env_client import RoboDojoModelClient
 
             policy_server_url = deploy_cfg["policy_server_url"]
@@ -287,7 +287,7 @@ if __name__ == "__main__":
     parser.add_argument("--task_name", required=True, type=str)
     parser.add_argument("--env_cfg_type", type=str, required=True)
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")
-    parser.add_argument("--protocol", choices=("legacy_tcp", "robodojo_ws"), default="legacy_tcp")
+    parser.add_argument("--protocol", choices=("legacy_tcp", "robodojo_ws"), default="robodojo_ws")
     parser.add_argument("--host", type=str, default="localhost", help="server host")
     parser.add_argument("--port", type=int, required=True, help="server port")
     parser.add_argument("--policy_server_url", type=str)

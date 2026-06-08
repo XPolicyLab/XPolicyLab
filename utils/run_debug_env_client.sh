@@ -13,7 +13,7 @@ root_dir="${9}"
 seed="${10}"
 env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
-protocol="${13:-legacy_tcp}"
+protocol="${13:-robodojo_ws}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true

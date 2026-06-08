@@ -114,6 +114,26 @@ def test_eval_runner_rejects_empty_trial_plan():
         )
 
 
+def test_eval_runner_rejects_webhook_without_policy_trial(tmp_path):
+    path = tmp_path / "dispatch.json"
+    path.write_text(json.dumps(platform_dispatch()), encoding="utf-8")
+
+    with pytest.raises(SystemExit) as exc_info:
+        main(
+            [
+                "--dispatch-payload",
+                str(path),
+                "--artifact-dir",
+                str(tmp_path / "artifacts"),
+                "--trial-index",
+                "1",
+            ],
+            stdout=io.StringIO(),
+        )
+
+    assert exc_info.value.code == 2
+
+
 def test_run_dispatch_includes_policy_error_in_trial_webhook(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ):

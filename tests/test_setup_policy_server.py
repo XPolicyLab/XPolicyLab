@@ -34,3 +34,45 @@ def test_parse_args_accepts_robodojo_ws_cli_options(tmp_path, monkeypatch):
     assert cfg["host"] == "0.0.0.0"
     assert cfg["port"] == 19000
     assert cfg["relay_url"] == "ws://relay.example"
+
+
+def test_parse_args_defaults_to_robodojo_ws(tmp_path, monkeypatch):
+    config_path = tmp_path / "deploy.yml"
+    config_path.write_text(
+        "policy_name: demo_policy\nport: 9999\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "setup_policy_server.py",
+            "--config-path",
+            str(config_path),
+        ],
+    )
+
+    cfg = parse_args_and_config()
+
+    assert cfg["protocol"] == "robodojo_ws"
+
+
+def test_parse_args_keeps_explicit_legacy_tcp_from_config(tmp_path, monkeypatch):
+    config_path = tmp_path / "deploy.yml"
+    config_path.write_text(
+        "policy_name: demo_policy\nport: 9999\nprotocol: legacy_tcp\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "setup_policy_server.py",
+            "--config-path",
+            str(config_path),
+        ],
+    )
+
+    cfg = parse_args_and_config()
+
+    assert cfg["protocol"] == "legacy_tcp"

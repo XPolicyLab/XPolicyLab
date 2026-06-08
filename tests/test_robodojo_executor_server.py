@@ -129,6 +129,31 @@ def test_executor_start_requires_prior_dispatch(tmp_path):
         thread.join(timeout=2)
 
 
+def test_executor_rejects_non_integer_trial_route(tmp_path):
+    def runner(dispatch, artifact_dir, config):
+        return 0, {"status": "completed"}
+
+    server, thread, _config = _start_server(tmp_path, runner)
+    try:
+        port = server.server_address[1]
+        request = Request(
+            f"http://127.0.0.1:{port}/sessions/eval-1/trials/not-int/start",
+            data=json.dumps({"evaluation_id": "eval-1", "trial_index": 1}).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            urlopen(request, timeout=2)
+        except HTTPError as exc:
+            assert exc.code == 404
+        else:
+            raise AssertionError("start unexpectedly accepted non-integer trial route")
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
 def test_executor_rejects_dispatch_evaluation_id_mismatch(tmp_path):
     def runner(dispatch, artifact_dir, config):
         return 0, {"status": "completed"}

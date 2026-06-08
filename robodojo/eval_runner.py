@@ -326,6 +326,8 @@ def run_dispatch(
             error_summary = str(exc)
 
     if artifact_dir is not None:
+        if notify_webhook and not run_policy_trials:
+            raise ValueError("notify_webhook requires run_policy_trials")
         if run_status == STATUS_DONE:
             artifact_status = STATUS_DONE
         elif run_status == STATUS_FAILED:
@@ -419,6 +421,8 @@ def main(
         help="Trial index to run from the dispatch plan",
     )
     args = parser.parse_args(argv)
+    if args.artifact_dir and not args.run_policy_trials and not args.no_webhook:
+        parser.error("--run-policy-trials is required unless --no-webhook is set")
 
     if args.dispatch_payload == "-":
         text = (stdin or sys.stdin).read()
