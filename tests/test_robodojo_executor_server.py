@@ -68,25 +68,36 @@ def test_executor_start_runs_stored_dispatch_in_background(tmp_path):
 
     def runner(dispatch, artifact_dir, config):
         calls.append((dispatch, artifact_dir, config))
-        return 0, {"status": "completed", "evaluation_id": dispatch.evaluation_id}
+        return 0, {
+            "status": "completed",
+            "evaluation_id": dispatch.evaluation_id,
+            "trial_index": config.trial_index,
+        }
 
     server, thread, config = _start_server(tmp_path, runner)
     try:
         port = server.server_address[1]
         _post(port, "/sessions/eval-1/dispatch", platform_dispatch())
 
-        status, body = _post(port, "/sessions/eval-1/start", {"evaluation_id": "eval-1"})
+        status, body = _post(
+            port,
+            "/sessions/eval-1/trials/1/start",
+            {"evaluation_id": "eval-1", "trial_index": 1},
+        )
 
         assert status == 200
         assert body["status"] == "started"
-        assert body["artifact_dir"].endswith("/artifacts/eval-1")
-        result_path = config.work_dir / "eval-1" / "result.json"
+        assert body["trial_index"] == 1
+        assert body["artifact_dir"].endswith("/artifacts/eval-1/trials/1")
+        result_path = config.work_dir / "eval-1" / "trials" / "1" / "result.json"
         _wait_for_path(result_path)
         result = json.loads(result_path.read_text(encoding="utf-8"))
         assert result["exit_code"] == 0
         assert result["summary"]["status"] == "completed"
+        assert result["summary"]["trial_index"] == 1
         assert calls[0][0].evaluation_id == "eval-1"
-        assert calls[0][1] == config.artifact_root / "eval-1"
+        assert calls[0][1] == config.artifact_root / "eval-1" / "trials" / "1"
+        assert calls[0][2].trial_index == 1
     finally:
         server.shutdown()
         server.server_close()
@@ -101,8 +112,8 @@ def test_executor_start_requires_prior_dispatch(tmp_path):
     try:
         port = server.server_address[1]
         request = Request(
-            f"http://127.0.0.1:{port}/sessions/eval-1/start",
-            data=json.dumps({"evaluation_id": "eval-1"}).encode("utf-8"),
+            f"http://127.0.0.1:{port}/sessions/eval-1/trials/1/start",
+            data=json.dumps({"evaluation_id": "eval-1", "trial_index": 1}).encode("utf-8"),
             headers={"Content-Type": "application/json"},
             method="POST",
         )

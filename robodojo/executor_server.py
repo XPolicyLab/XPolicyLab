@@ -6,7 +6,7 @@ import argparse
 import json
 import sys
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -24,12 +24,14 @@ class ExecutorConfig:
     work_dir: Path
     artifact_root: Path
     run_policy_trials: bool = True
-    max_trials: int = 0
     upload_s3: bool = True
     notify_webhook: bool = True
+    trial_index: int | None = None
 
 
-RunnerFn = Callable[[DispatchPayload, Path, ExecutorConfig], tuple[int, dict[str, object]]]
+RunnerFn = Callable[
+    [DispatchPayload, Path, ExecutorConfig], tuple[int, dict[str, object]]
+]
 
 
 def default_runner(
@@ -37,13 +39,15 @@ def default_runner(
     artifact_dir: Path,
     config: ExecutorConfig,
 ) -> tuple[int, dict[str, object]]:
+    if config.trial_index is None:
+        raise ValueError("trial_index is required")
     return run_dispatch(
         dispatch,
         artifact_dir=artifact_dir,
         upload_s3=config.upload_s3,
         notify_webhook=config.notify_webhook,
         run_policy_trials=config.run_policy_trials,
-        max_trials=config.max_trials,
+        trial_index=config.trial_index,
     )
 
 
@@ -62,11 +66,21 @@ class ExecutorState:
     def dispatch_path(self, evaluation_id: str) -> Path:
         return self.session_dir(evaluation_id) / "dispatch.json"
 
-    def result_path(self, evaluation_id: str) -> Path:
+    def result_path(self, evaluation_id: str, trial_index: int | None = None) -> Path:
+        if trial_index is not None:
+            return (
+                self.session_dir(evaluation_id)
+                / "trials"
+                / str(trial_index)
+                / "result.json"
+            )
         return self.session_dir(evaluation_id) / "result.json"
 
-    def artifact_dir(self, evaluation_id: str) -> Path:
-        return self.config.artifact_root / self.safe_id(evaluation_id)
+    def artifact_dir(self, evaluation_id: str, trial_index: int | None = None) -> Path:
+        base_dir = self.config.artifact_root / self.safe_id(evaluation_id)
+        if trial_index is not None:
+            return base_dir / "trials" / str(trial_index)
+        return base_dir
 
     def session_dir(self, evaluation_id: str) -> Path:
         return self.config.work_dir / self.safe_id(evaluation_id)
@@ -89,12 +103,18 @@ def make_handler(state: ExecutorState) -> type[BaseHTTPRequestHandler]:
                 )
                 return
 
-            evaluation_id, action = route
+            evaluation_id, action, trial_index = route
             if action == "dispatch":
                 self._handle_dispatch(evaluation_id)
                 return
             if action == "start":
-                self._handle_start(evaluation_id)
+                if trial_index is None:
+                    self._write_json(
+                        HTTPStatus.NOT_FOUND,
+                        {"error": "unknown endpoint"},
+                    )
+                    return
+                self._handle_start(evaluation_id, trial_index)
                 return
             self._write_json(HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"})
 
@@ -137,15 +157,22 @@ def make_handler(state: ExecutorState) -> type[BaseHTTPRequestHandler]:
                 },
             )
 
-        def _handle_start(self, evaluation_id: str) -> None:
+        def _handle_start(self, evaluation_id: str, trial_index: int) -> None:
             body = self._read_json_body()
             if body is None:
                 return
             body_evaluation_id = body.get("evaluation_id")
-            if body_evaluation_id is not None and body_evaluation_id != evaluation_id:
+            if body_evaluation_id != evaluation_id:
                 self._write_json(
                     HTTPStatus.BAD_REQUEST,
                     {"error": "evaluation_id does not match request path"},
+                )
+                return
+            body_trial_index = body.get("trial_index")
+            if body_trial_index != trial_index:
+                self._write_json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "trial_index does not match request path"},
                 )
                 return
 
@@ -160,11 +187,22 @@ def make_handler(state: ExecutorState) -> type[BaseHTTPRequestHandler]:
             dispatch = DispatchPayload.model_validate_json(
                 dispatch_path.read_text(encoding="utf-8")
             )
-            artifact_dir = state.artifact_dir(evaluation_id)
+            if not any(
+                trial.trial_index == trial_index
+                for trial in dispatch.evaluation_plan.trials
+            ):
+                self._write_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"error": "trial not found in dispatch payload"},
+                )
+                return
+
+            run_config = replace(state.config, trial_index=trial_index)
+            artifact_dir = state.artifact_dir(evaluation_id, trial_index)
             thread = threading.Thread(
                 target=_run_and_store_result,
-                args=(state, dispatch, artifact_dir),
-                name=f"robodojo-executor-{evaluation_id}",
+                args=(state, dispatch, artifact_dir, run_config),
+                name=f"robodojo-executor-{evaluation_id}-trial-{trial_index}",
                 daemon=True,
             )
             thread.start()
@@ -174,6 +212,7 @@ def make_handler(state: ExecutorState) -> type[BaseHTTPRequestHandler]:
                 {
                     "status": "started",
                     "evaluation_id": evaluation_id,
+                    "trial_index": trial_index,
                     "artifact_dir": str(artifact_dir),
                 },
             )
@@ -216,24 +255,29 @@ def make_handler(state: ExecutorState) -> type[BaseHTTPRequestHandler]:
     return ExecutorHandler
 
 
-def _parse_session_route(path: str) -> tuple[str, str] | None:
+def _parse_session_route(path: str) -> tuple[str, str, int | None] | None:
     parts = urlparse(path).path.strip("/").split("/")
-    if len(parts) != 3 or parts[0] != "sessions":
-        return None
-    evaluation_id = unquote(parts[1])
-    action = parts[2]
-    if not evaluation_id or action not in {"dispatch", "start"}:
-        return None
-    return evaluation_id, action
+    match parts:
+        case ["sessions", raw_evaluation_id, "dispatch"]:
+            evaluation_id = unquote(raw_evaluation_id)
+            return (evaluation_id, "dispatch", None) if evaluation_id else None
+        case ["sessions", raw_evaluation_id, "trials", raw_trial_index, "start"]:
+            evaluation_id = unquote(raw_evaluation_id)
+            trial_index = int(raw_trial_index)
+            if not evaluation_id or trial_index < 1:
+                return None
+            return evaluation_id, "start", trial_index
+    return None
 
 
 def _run_and_store_result(
     state: ExecutorState,
     dispatch: DispatchPayload,
     artifact_dir: Path,
+    config: ExecutorConfig,
 ) -> None:
     try:
-        exit_code, summary = state.runner(dispatch, artifact_dir, state.config)
+        exit_code, summary = state.runner(dispatch, artifact_dir, config)
     except Exception as exc:
         exit_code = 1
         summary = {
@@ -242,7 +286,7 @@ def _run_and_store_result(
             "error_summary": str(exc),
         }
 
-    result_path = state.result_path(dispatch.evaluation_id)
+    result_path = state.result_path(dispatch.evaluation_id, config.trial_index)
     result_path.parent.mkdir(parents=True, exist_ok=True)
     result_path.write_text(
         json.dumps(
@@ -287,12 +331,6 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Only materialize planned artifacts; do not connect to policy_server",
     )
-    parser.add_argument(
-        "--max-trials",
-        type=int,
-        default=0,
-        help="When policy trials run, limit trials (0 = all)",
-    )
     parser.add_argument("--no-s3", action="store_true", help="Skip S3 artifact upload")
     parser.add_argument(
         "--no-webhook",
@@ -305,12 +343,14 @@ def main(argv: list[str] | None = None) -> int:
         work_dir=Path(args.work_dir),
         artifact_root=Path(args.artifact_root),
         run_policy_trials=not args.no_policy_trials,
-        max_trials=args.max_trials,
         upload_s3=not args.no_s3,
         notify_webhook=not args.no_webhook,
     )
     server = create_server(args.host, args.port, config)
-    print(f"robodojo executor listening on http://{args.host}:{args.port}", file=sys.stderr)
+    print(
+        f"robodojo executor listening on http://{args.host}:{args.port}",
+        file=sys.stderr,
+    )
     try:
         server.serve_forever()
     except KeyboardInterrupt:

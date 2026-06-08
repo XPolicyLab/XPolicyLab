@@ -24,10 +24,10 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 def test_artifact_writer_creates_layout(tmp_path):
     dispatch = _dispatch_payload()
-    trial_runs = build_trial_runs(dispatch)
+    trial_run = build_trial_runs(dispatch)[0]
     artifact_dir = tmp_path / "artifacts"
 
-    paths = write_artifacts(dispatch, trial_runs, artifact_dir)
+    paths = write_artifacts(dispatch, trial_run, artifact_dir)
 
     manifest = json.loads((artifact_dir / "manifest.json").read_text(encoding="utf-8"))
     metrics = json.loads((artifact_dir / "metrics.json").read_text(encoding="utf-8"))
@@ -36,26 +36,22 @@ def test_artifact_writer_creates_layout(tmp_path):
     assert manifest["evaluation_id"] == "eval-1"
     assert manifest["status"] == "planned"
     assert manifest["policy_server_url"] == "ws://127.0.0.1:19000"
-    assert len(manifest["trials"]) == 4
+    assert len(manifest["trials"]) == 1
     assert manifest["files"]["logs"] == "logs/runner.log"
     assert (artifact_dir / "logs" / "runner.log").exists()
-    assert metrics["summary"]["trial_count"] == 4
-    assert metrics["summary"]["not_executed"] == 4
+    assert metrics["summary"]["trial_count"] == 1
+    assert metrics["summary"]["not_executed"] == 1
     assert {event["event"] for event in events} == {
         "run_started",
         "trial_registered",
         "run_finished",
     }
-    assert sum(1 for event in events if event["event"] == "trial_registered") == 4
+    assert sum(1 for event in events if event["event"] == "trial_registered") == 1
 
-    for trial_run in trial_runs:
-        trial_id = str(trial_run["trial_id"])
-        video_path = artifact_dir / f"videos/{trial_id}.mp4"
-        assert video_path.exists()
-        assert (
-            manifest["trials"][0]["video_key"]
-            == f"videos/{trial_runs[0]['trial_id']}.mp4"
-        )
+    trial_id = str(trial_run["trial_id"])
+    video_path = artifact_dir / f"videos/{trial_id}.mp4"
+    assert video_path.exists()
+    assert manifest["trials"][0]["video_key"] == f"videos/{trial_id}.mp4"
 
     assert paths["manifest"].endswith("manifest.json")
     assert paths["events"].endswith("events.jsonl")
@@ -76,6 +72,8 @@ def test_eval_runner_writes_artifacts_with_flag(tmp_path):
             str(dispatch_path),
             "--artifact-dir",
             str(artifact_dir),
+            "--trial-index",
+            "1",
             "--no-s3",
             "--no-webhook",
         ],
@@ -84,7 +82,7 @@ def test_eval_runner_writes_artifacts_with_flag(tmp_path):
 
     assert exit_code == 0
     summary = json.loads(stdout.getvalue())
-    assert summary["planned_trial_runs"] == 4
+    assert summary["planned_trial_runs"] == 1
     assert summary["artifacts"]["artifact_dir"] == str(artifact_dir)
     assert (artifact_dir / "manifest.json").exists()
 
@@ -95,16 +93,13 @@ def test_record_trial_lifecycle_updates_metrics(tmp_path):
     writer.setup()
     try:
         writer.emit_event("run_started")
-        writer.register_trials(
-            [
-                {
-                    "trial_id": "case-1-r01",
-                    "action_case_id": "case-1",
-                    "trial_index": 0,
-                    "repeat_index": 1,
-                    "case_meta": {"action_case_id": "case-1", "seed": 1},
-                }
-            ]
+        writer.register_trial(
+            {
+                "trial_id": "case-1-r01",
+                "action_case_id": "case-1",
+                "trial_index": 1,
+                "case_meta": {"action_case_id": "case-1", "seed": 1},
+            }
         )
         writer.record_trial_start("case-1-r01")
         writer.record_trial_end(
@@ -127,20 +122,18 @@ def test_record_trial_lifecycle_updates_metrics(tmp_path):
 
 def test_write_artifacts_records_policy_results(tmp_path):
     dispatch = _dispatch_payload()
-    trial_runs = build_trial_runs(dispatch)[:1]
+    trial_run = build_trial_runs(dispatch)[0]
     artifact_dir = tmp_path / "artifacts"
 
     write_artifacts(
         dispatch,
-        trial_runs,
+        trial_run,
         artifact_dir,
         run_status="done",
-        policy_results=[
-            {
-                "trial_id": trial_runs[0]["trial_id"],
-                "actions": [{"arm_joint_state": [0.0] * 7, "ee_joint_state": [0.0]}],
-            }
-        ],
+        policy_result={
+            "trial_id": trial_run["trial_id"],
+            "actions": [{"arm_joint_state": [0.0] * 7, "ee_joint_state": [0.0]}],
+        },
     )
 
     manifest = json.loads((artifact_dir / "manifest.json").read_text(encoding="utf-8"))
