@@ -28,25 +28,55 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-default_result_ckpt="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
-default_local_ckpt="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
+result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}"
+local_run_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
+
+resolve_starvla_checkpoint() {
+    local run_dir=$1
+    local candidates=()
+
+    if [[ ! -d "${run_dir}" ]]; then
+        return 1
+    fi
+
+    shopt -s nullglob
+    candidates=("${run_dir}"/checkpoints/*.pt "${run_dir}"/checkpoints/*.safetensors)
+    shopt -u nullglob
+
+    if (( ${#candidates[@]} == 1 )); then
+        echo "${candidates[0]}"
+        return 0
+    fi
+    if (( ${#candidates[@]} > 1 )); then
+        echo "[SERVER][ERROR] multiple checkpoints found under ${run_dir}/checkpoints:" >&2
+        printf '[SERVER][ERROR]   %s\n' "${candidates[@]}" >&2
+        echo "[SERVER][ERROR] keep only one checkpoint file or set STARVLA_CKPT_PATH explicitly." >&2
+        exit 1
+    fi
+
+    return 1
+}
+
 checkpoint_path="${STARVLA_CKPT_PATH:-}"
 if [[ -n "${checkpoint_path}" ]]; then
     :
-elif [[ -f "${default_result_ckpt}" ]]; then
-    checkpoint_path="${default_result_ckpt}"
-elif [[ -f "${default_local_ckpt}" ]]; then
-    checkpoint_path="${default_local_ckpt}"
+elif checkpoint_path=$(resolve_starvla_checkpoint "${result_run_dir}"); then
+    :
+elif checkpoint_path=$(resolve_starvla_checkpoint "${local_run_dir}"); then
+    :
 else
-    checkpoint_path="${default_local_ckpt}"
+    checkpoint_path="${local_run_dir}/checkpoints/<checkpoint>.pt"
 fi
 if [[ ! -f "${checkpoint_path}" ]]; then
     echo "[SERVER][ERROR] checkpoint file does not exist: ${checkpoint_path}" >&2
     echo "[SERVER][ERROR] set STARVLA_CKPT_PATH=/path/to/pytorch_model.pt to override checkpoint lookup" >&2
-    echo "[SERVER][ERROR] expected checkpoint under checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/final_model/pytorch_model.pt" >&2
+    echo "[SERVER][ERROR] expected exactly one .pt or .safetensors file under one of:" >&2
+    echo "[SERVER][ERROR]   ${result_run_dir}/checkpoints/" >&2
+    echo "[SERVER][ERROR]   ${local_run_dir}/checkpoints/" >&2
     exit 1
 fi
 checkpoint_path="$(realpath "${checkpoint_path}")"
+echo "[SERVER] resolved StarVLA checkpoint: ${checkpoint_path}"
 starvla_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 starvla_server_host="127.0.0.1"
 

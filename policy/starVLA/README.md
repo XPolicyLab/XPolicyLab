@@ -58,6 +58,7 @@ policy/starVLA/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
 
 ## 推理
 
+
 命令（11 个参数）：
 
 ```bash
@@ -65,20 +66,23 @@ cd /path/to/XPolicyLab/policy/starVLA
 bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
 ```
 
-不指定 ckpt：
+不指定 ckpt：在policy/starvla下新建checkpoints文件夹，然后吧final_ckpt中的RoboDojo-cotrain-arx_x5-3500-joint-0文件夹拷贝到这个目录下
 
 ```bash
 cd /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA
 conda activate XPolicyLab
 
-bash eval.sh RoboDojo chess stack_bowls arx_x5 50 joint 0 0 1 XPolicyLab XPolicyLab
+bash eval.sh RoboDojo chess cotrain arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab
 ```
 
-默认会按 6 元组查找：
+默认会按 6 元组查找训练目录，并从 `checkpoints/` 下读取唯一的权重文件：
 
 ```text
-policy/starVLA/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/final_model/pytorch_model.pt
+policy/starVLA/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/checkpoints/<checkpoint>.pt
 ```
+
+也兼容旧的 `policy/starVLA/results/Checkpoints/<6元组>/checkpoints/` 目录。
+如果目录下有多个权重文件，请删除多余文件或通过 `STARVLA_CKPT_PATH` 显式指定。
 
 指定 ckpt：
 
@@ -88,5 +92,5 @@ cd /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA
 
 export STARVLA_CKPT_PATH=/cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA/checkpoints/RoboDojo-stack_bowls-arx_x5-50-joint-0/final_model/pytorch_model.pt
 
-bash eval.sh RoboDojo chess stack_bowls arx_x5 50 joint 0 0 1 XPolicyLab XPolicyLab
+bash eval.sh RoboDojo stack stack_bowls arx_x5 50 joint 0 0 1 XPolicyLab XPolicyLab
 ```
