@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import threading
 from dataclasses import dataclass, replace
@@ -15,7 +16,12 @@ from urllib.parse import quote, unquote, urlparse
 
 from pydantic import ValidationError
 
-from robodojo.eval_runner import run_dispatch
+from robodojo.eval_runner import (
+    STATUS_FAILED,
+    normalize_execution_error,
+    notify_trial_failure,
+    run_dispatch,
+)
 from robodojo.schemas import DispatchPayload
 from robodojo.serialization import to_jsonable
 
@@ -28,6 +34,7 @@ class ExecutorConfig:
     upload_s3: bool = True
     notify_webhook: bool = True
     trial_index: int | None = None
+    webhook_secret: str | None = None
 
 
 RunnerFn = Callable[
@@ -49,6 +56,7 @@ def default_runner(
         notify_webhook=config.notify_webhook,
         run_policy_trials=config.run_policy_trials,
         trial_index=config.trial_index,
+        webhook_secret=config.webhook_secret,
     )
 
 
@@ -284,11 +292,30 @@ def _run_and_store_result(
         exit_code, summary = state.runner(dispatch, artifact_dir, config)
     except Exception as exc:
         exit_code = 1
+        error = normalize_execution_error(exc)
         summary = {
             "evaluation_id": dispatch.evaluation_id,
-            "status": "failed",
-            "error_summary": str(exc),
+            "trial_index": config.trial_index,
+            "status": STATUS_FAILED,
+            "error_summary": error["message"],
+            "error": error,
         }
+        if (
+            config.notify_webhook
+            and config.trial_index is not None
+            and not isinstance(exc, ValueError)
+        ):
+            try:
+                summary["published"] = {
+                    "webhook": notify_trial_failure(
+                        dispatch,
+                        trial_index=config.trial_index,
+                        error=error,
+                        webhook_secret=config.webhook_secret,
+                    )
+                }
+            except Exception as webhook_exc:
+                summary["webhook_error"] = str(webhook_exc)
 
     result_path = state.result_path(dispatch.evaluation_id, config.trial_index)
     result_path.parent.mkdir(parents=True, exist_ok=True)
@@ -353,6 +380,7 @@ def main(argv: list[str] | None = None) -> int:
         run_policy_trials=not args.no_policy_trials,
         upload_s3=not args.no_s3,
         notify_webhook=not args.no_webhook,
+        webhook_secret=os.environ.get("EVAL_SERVER_WEBHOOK_SECRET") or None,
     )
     server = create_server(args.host, args.port, config)
     print(

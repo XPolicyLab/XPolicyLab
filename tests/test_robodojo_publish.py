@@ -159,7 +159,7 @@ def test_failure_webhook_includes_error_payload(tmp_path):
         run_status="failed",
         upload_s3=False,
         notify_webhook=True,
-        error_summary="webhook down",
+        error={"code": "failed", "message": "webhook down"},
         finish_url=FINISH_URL,
         webhook_secret="secret",
         webhook_opener=capture_webhook,

@@ -7,7 +7,8 @@ from urllib.request import Request, urlopen
 import numpy as np
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.executor_server import ExecutorConfig, create_server
+from robodojo.executor_server import ExecutorConfig, _run_and_store_result, create_server
+from robodojo.schemas import DispatchPayload
 
 
 def _post(port: int, path: str, payload: dict):
@@ -191,6 +192,67 @@ def test_executor_writes_result_with_numpy_policy_actions(tmp_path):
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
+
+
+def test_executor_emergency_webhook_when_runner_crashes(tmp_path, monkeypatch):
+    captured: dict[str, object] = {}
+
+    def fake_notify_trial_failure(dispatch, **kwargs):
+        captured["trial_index"] = kwargs["trial_index"]
+        captured["error"] = kwargs["error"]
+        captured["finish_url"] = dispatch.evaluation_plan.trials[0].finish_url
+        return {
+            "finish_url": dispatch.evaluation_plan.trials[0].finish_url,
+            "status_code": 200,
+            "emergency": True,
+        }
+
+    monkeypatch.setattr(
+        "robodojo.executor_server.notify_trial_failure",
+        fake_notify_trial_failure,
+    )
+
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    executor_config = ExecutorConfig(
+        work_dir=tmp_path / "work",
+        artifact_root=tmp_path / "artifacts",
+        upload_s3=False,
+        notify_webhook=True,
+        trial_index=1,
+        webhook_secret="secret",
+    )
+
+    class ExplodingState:
+        def __init__(self, run_config: ExecutorConfig) -> None:
+            self.config = run_config
+
+        def runner(self, _dispatch, _artifact_dir, _config):
+            raise RuntimeError("runner exploded")
+
+        def result_path(self, evaluation_id, trial_index=None):
+            return self.config.work_dir / "eval-1" / "trials" / "1" / "result.json"
+
+    _run_and_store_result(
+        ExplodingState(executor_config),
+        dispatch,
+        executor_config.artifact_root / "eval-1" / "trials" / "1",
+        executor_config,
+    )
+
+    result = json.loads(
+        (
+            executor_config.work_dir / "eval-1" / "trials" / "1" / "result.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert result["exit_code"] == 1
+    assert result["summary"]["error"] == {
+        "code": "internal",
+        "message": "runner exploded",
+    }
+    assert result["summary"]["published"]["webhook"]["emergency"] is True
+    assert captured["trial_index"] == 1
+    assert captured["error"] == result["summary"]["error"]
+    assert str(captured["finish_url"]).endswith("/trials/1/finish/")
 
 
 def test_executor_rejects_dispatch_evaluation_id_mismatch(tmp_path):

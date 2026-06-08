@@ -6,7 +6,8 @@ import pytest
 from pydantic import ValidationError
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.eval_runner import main, run_dispatch
+from robodojo.eval_runner import main, normalize_execution_error, run_dispatch
+from robodojo.protocol.exceptions import ErrorCode, WsError
 from robodojo.schemas import DispatchPayload
 
 
@@ -145,7 +146,7 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
         raise RuntimeError("policy down")
 
     def fake_publish_artifacts(*_args, **kwargs):
-        captured["error_summary"] = kwargs.get("error_summary")
+        captured["error"] = kwargs.get("error")
         captured["finish_url"] = kwargs.get("finish_url")
         return {"webhook": {"finish_url": kwargs.get("finish_url"), "status_code": 200}}
 
@@ -164,13 +165,133 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
     assert exit_code == 1
     assert summary["status"] == "failed"
     assert summary["error_summary"] == "policy down"
-    assert captured["error_summary"] == "policy down"
+    assert summary["error"] == {"code": "internal", "message": "policy down"}
+    assert captured["error"] == {"code": "internal", "message": "policy down"}
     assert str(captured["finish_url"]).endswith("/trials/1/finish/")
     manifest = json.loads(
         ((tmp_path / "artifacts") / "manifest.json").read_text(encoding="utf-8")
     )
     assert manifest["status"] == "failed"
     assert manifest["error_summary"] == "policy down"
+
+
+def test_normalize_execution_error_maps_ws_error():
+    error = normalize_execution_error(
+        WsError(ErrorCode.TIMEOUT, "infer timed out", details={"step": 3})
+    )
+    assert error == {
+        "code": "timeout",
+        "message": "infer timed out",
+        "details": {"step": 3},
+    }
+
+
+def test_run_dispatch_maps_ws_error_to_failed_webhook(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+):
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    captured: dict[str, object] = {}
+
+    def fail_policy_trial(**_kwargs):
+        raise WsError(ErrorCode.INFER_FAILED, "policy rejected frame")
+
+    def fake_publish_artifacts(*_args, **kwargs):
+        captured["error"] = kwargs.get("error")
+        return {"webhook": {"status_code": 200}}
+
+    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fail_policy_trial)
+    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+
+    exit_code, summary = run_dispatch(
+        dispatch,
+        artifact_dir=tmp_path / "artifacts",
+        upload_s3=False,
+        notify_webhook=True,
+        run_policy_trials=True,
+        trial_index=1,
+    )
+
+    assert exit_code == 1
+    assert summary["error"] == {
+        "code": "infer_failed",
+        "message": "policy rejected frame",
+    }
+    assert captured["error"] == summary["error"]
+
+
+def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+):
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    captured: dict[str, object] = {}
+
+    def fail_policy_trial(**_kwargs):
+        raise NotImplementedError("unsupported RoboDojo model call: set_language")
+
+    def fake_publish_artifacts(*_args, **kwargs):
+        captured["error"] = kwargs.get("error")
+        return {"webhook": {"status_code": 200}}
+
+    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fail_policy_trial)
+    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+
+    exit_code, summary = run_dispatch(
+        dispatch,
+        artifact_dir=tmp_path / "artifacts",
+        upload_s3=False,
+        notify_webhook=True,
+        run_policy_trials=True,
+        trial_index=1,
+    )
+
+    assert exit_code == 1
+    assert summary["error"] == {
+        "code": "internal",
+        "message": "unsupported RoboDojo model call: set_language",
+    }
+    assert captured["error"] == summary["error"]
+
+
+def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+):
+    import robodojo.eval_runner as eval_runner_module
+
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    captured: dict[str, object] = {}
+    write_calls = {"count": 0}
+    original_write_artifacts = eval_runner_module.write_artifacts
+
+    def flaky_write_artifacts(*args, **kwargs):
+        write_calls["count"] += 1
+        if write_calls["count"] == 1:
+            raise RuntimeError("artifact write crashed")
+        return original_write_artifacts(*args, **kwargs)
+
+    def fake_publish_artifacts(*_args, **kwargs):
+        captured["error"] = kwargs.get("error")
+        return {"webhook": {"status_code": 200}}
+
+    monkeypatch.setattr(
+        "robodojo.eval_runner.run_policy_trial",
+        lambda **_kwargs: {"trial_id": "case-1-r01", "actions": []},
+    )
+    monkeypatch.setattr("robodojo.eval_runner.write_artifacts", flaky_write_artifacts)
+    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+
+    exit_code, summary = run_dispatch(
+        dispatch,
+        artifact_dir=tmp_path / "artifacts",
+        upload_s3=False,
+        notify_webhook=True,
+        run_policy_trials=True,
+        trial_index=1,
+    )
+
+    assert exit_code == 1
+    assert summary["status"] == "failed"
+    assert summary["error"] == {"code": "internal", "message": "artifact write crashed"}
+    assert captured["error"] == summary["error"]
 
 
 def test_run_dispatch_summary_serializes_numpy_policy_actions(
