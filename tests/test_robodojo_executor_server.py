@@ -4,6 +4,7 @@ import time
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
+import numpy as np
 from robodojo_fixtures import platform_dispatch
 
 from robodojo.executor_server import ExecutorConfig, create_server
@@ -148,6 +149,44 @@ def test_executor_rejects_non_integer_trial_route(tmp_path):
             assert exc.code == 404
         else:
             raise AssertionError("start unexpectedly accepted non-integer trial route")
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_executor_writes_result_with_numpy_policy_actions(tmp_path):
+    def runner(dispatch, artifact_dir, config):
+        return 0, {
+            "status": "done",
+            "policy_results": [
+                {
+                    "trial_id": "case-1-r01",
+                    "actions": [
+                        {
+                            "left_arm_joint_state": np.zeros(6, dtype=np.float32),
+                        }
+                    ],
+                }
+            ],
+        }
+
+    server, thread, config = _start_server(tmp_path, runner)
+    try:
+        port = server.server_address[1]
+        _post(port, "/sessions/eval-1/dispatch", platform_dispatch())
+        _post(
+            port,
+            "/sessions/eval-1/trials/1/start",
+            {"evaluation_id": "eval-1", "trial_index": 1},
+        )
+        result_path = config.work_dir / "eval-1" / "trials" / "1" / "result.json"
+        _wait_for_path(result_path)
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        assert result["exit_code"] == 0
+        assert result["summary"]["policy_results"][0]["actions"][0][
+            "left_arm_joint_state"
+        ] == [0.0] * 6
     finally:
         server.shutdown()
         server.server_close()

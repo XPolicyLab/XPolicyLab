@@ -14,6 +14,7 @@ from robodojo.artifacts import ArtifactWriter
 from robodojo.env_client import RoboDojoModelClient
 from robodojo.s3_upload import UploadFileFn, upload_artifact_directory
 from robodojo.schemas import DispatchPayload
+from robodojo.serialization import to_jsonable
 from robodojo.webhook import WebhookDeliveryError, notify_finish_webhook
 
 STATUS_PLANNED = "planned"
@@ -372,7 +373,7 @@ def run_dispatch(
     }
     summary["trial_index"] = trial_index
     if policy_result is not None:
-        summary["policy_results"] = [policy_result]
+        summary["policy_results"] = [to_jsonable(policy_result)]
     if error_summary is not None:
         summary["error_summary"] = error_summary
     if artifact_paths is not None:

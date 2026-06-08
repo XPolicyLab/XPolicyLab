@@ -17,6 +17,7 @@ from pydantic import ValidationError
 
 from robodojo.eval_runner import run_dispatch
 from robodojo.schemas import DispatchPayload
+from robodojo.serialization import to_jsonable
 
 
 @dataclass(frozen=True)
@@ -293,10 +294,12 @@ def _run_and_store_result(
     result_path.parent.mkdir(parents=True, exist_ok=True)
     result_path.write_text(
         json.dumps(
-            {
-                "exit_code": exit_code,
-                "summary": summary,
-            },
+            to_jsonable(
+                {
+                    "exit_code": exit_code,
+                    "summary": summary,
+                }
+            ),
             sort_keys=True,
             indent=2,
         ),

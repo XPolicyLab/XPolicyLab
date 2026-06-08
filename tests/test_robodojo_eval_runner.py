@@ -1,6 +1,7 @@
 import io
 import json
 
+import numpy as np
 import pytest
 from pydantic import ValidationError
 from robodojo_fixtures import platform_dispatch
@@ -170,3 +171,36 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
     )
     assert manifest["status"] == "failed"
     assert manifest["error_summary"] == "policy down"
+
+
+def test_run_dispatch_summary_serializes_numpy_policy_actions(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    def fake_policy_trial(**_kwargs):
+        return {
+            "trial_id": "case-1-r01",
+            "actions": [
+                {
+                    "left_arm_joint_state": np.zeros(6, dtype=np.float32),
+                    "left_ee_joint_state": np.zeros(1, dtype=np.float32),
+                }
+            ],
+        }
+
+    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fake_policy_trial)
+
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    exit_code, summary = run_dispatch(
+        dispatch,
+        artifact_dir=None,
+        upload_s3=False,
+        notify_webhook=False,
+        run_policy_trials=True,
+        trial_index=1,
+    )
+
+    assert exit_code == 0
+    json.dumps(summary)
+    assert summary["policy_results"][0]["actions"][0]["left_arm_joint_state"] == [
+        0.0
+    ] * 6
