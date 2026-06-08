@@ -67,7 +67,9 @@ bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_
 ```
 
 不指定 ckpt：在policy/starvla下新建checkpoints文件夹，然后吧final_ckpt中的RoboDojo-cotrain-arx_x5-3500-joint-0文件夹拷贝到这个目录下
-
+预权重是放在了/mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-4B-Instruct，
+需要复制一个公开的权重到这里
+policy/starVLA/source_starvla/playground/Pretrained_models/Qwen3-VL-4B-Instruct
 ```bash
 cd /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA
 conda activate XPolicyLab
