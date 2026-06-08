@@ -12,7 +12,7 @@ eval_env_conda_env=${8}
 additional_info=${9}
 policy_server_port=${10}
 policy_server_ip=${11:-"localhost"}
-protocol=${12:-"legacy_tcp"}
+protocol=${12:-"robodojo_ws"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"

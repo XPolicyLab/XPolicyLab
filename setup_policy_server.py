@@ -19,7 +19,7 @@ def main(deploy_cfg):
     policy_name = deploy_cfg.get("policy_name")
     port = deploy_cfg.get("port")
     host = deploy_cfg.get("host", "localhost")
-    protocol = deploy_cfg.get("protocol", "legacy_tcp")
+    protocol = deploy_cfg.get("protocol", "robodojo_ws")
 
     # Instantiate model
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
@@ -110,6 +110,8 @@ def parse_args_and_config():
 
     if args.protocol is not None:
         cfg["protocol"] = args.protocol
+    else:
+        cfg.setdefault("protocol", "robodojo_ws")
     if args.host is not None:
         cfg["host"] = args.host
     if args.port is not None:

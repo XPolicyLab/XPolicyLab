@@ -11,7 +11,7 @@ policy_gpu_id=${7}
 env_gpu_id=${8}
 policy_conda_env=${9}
 eval_env_conda_env=${10}
-protocol=${11:-legacy_tcp}
+protocol=${11:-robodojo_ws}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"

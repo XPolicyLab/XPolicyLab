@@ -71,6 +71,13 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
 
 def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(
+        "robodojo.eval_runner.run_policy_trial",
+        lambda **_kwargs: {
+            "trial_id": "case-1-r01",
+            "actions": [{"arm_joint_state": [0.0] * 7, "ee_joint_state": [0.0]}],
+        },
+    )
+    monkeypatch.setattr(
         "robodojo.eval_runner.publish_artifacts",
         lambda *args, **kwargs: {
             "s3": {
@@ -100,6 +107,7 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
             str(artifact_dir),
             "--trial-index",
             "1",
+            "--run-policy-trials",
         ],
         stdout=stdout,
     )
