@@ -66,7 +66,7 @@ cd /path/to/XPolicyLab/policy/starVLA
 bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
 ```
 
-不指定 ckpt：在policy/starvla下新建checkpoints文件夹，然后吧final_ckpt中的RoboDojo-cotrain-arx_x5-3500-joint-0文件夹拷贝到这个目录下
+不指定 ckpt：在policy/starvla下新建checkpoints文件夹，然后把final_ckpt中的RoboDojo-cotrain-arx_x5-3500-joint-0文件夹拷贝到这个目录下
 预权重是放在了/mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-4B-Instruct，
 需要复制一个公开的权重到这里
 policy/starVLA/source_starvla/playground/Pretrained_models/Qwen3-VL-4B-Instruct
@@ -74,7 +74,7 @@ policy/starVLA/source_starvla/playground/Pretrained_models/Qwen3-VL-4B-Instruct
 cd /cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab/policy/starVLA
 conda activate XPolicyLab
 
-bash eval.sh RoboDojo chess cotrain arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab
+bash eval.sh RoboDojo stack cotrain arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab
 ```
 
 默认会按 6 元组查找训练目录，并从 `checkpoints/` 下读取唯一的权重文件：
