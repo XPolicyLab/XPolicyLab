@@ -17,7 +17,7 @@ def _dispatch_payload() -> DispatchPayload:
                     {
                         "trial_id": "case-1-r01",
                         "action_case_id": "case-1",
-                        "repeat_index": 1,
+                        "trial_index": 1,
                     }
                 ],
             },
@@ -29,16 +29,13 @@ def _dispatch_payload() -> DispatchPayload:
 def test_publish_artifacts_uploads_and_webhooks(tmp_path):
     dispatch = _dispatch_payload()
     artifact_dir = tmp_path / "artifacts"
-    trial_runs = [
-        {
-            "trial_id": "case-1-r01",
-            "action_case_id": "case-1",
-            "trial_index": 0,
-            "repeat_index": 1,
-            "case_meta": {"action_case_id": "case-1"},
-        }
-    ]
-    artifact_paths = write_artifacts(dispatch, trial_runs, artifact_dir)
+    trial_run = {
+        "trial_id": "case-1-r01",
+        "action_case_id": "case-1",
+        "trial_index": 1,
+        "case_meta": {"action_case_id": "case-1"},
+    }
+    artifact_paths = write_artifacts(dispatch, trial_run, artifact_dir)
     uploads: list[str] = []
 
     def fake_upload(key: str, path: Path, content_type: str | None) -> None:
@@ -60,6 +57,7 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
         run_status="completed",
         upload_s3=True,
         notify_webhook=True,
+        finish_url=dispatch.finish_url,
         s3_client=object(),
         upload_file=fake_upload,
         webhook_secret="secret",
@@ -100,6 +98,8 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
             str(dispatch_path),
             "--artifact-dir",
             str(artifact_dir),
+            "--trial-index",
+            "1",
         ],
         stdout=stdout,
     )
@@ -117,16 +117,13 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
 def test_failure_webhook_includes_manifest_key_after_s3(tmp_path):
     dispatch = _dispatch_payload()
     artifact_dir = tmp_path / "artifacts"
-    trial_runs = [
-        {
-            "trial_id": "case-1-r01",
-            "action_case_id": "case-1",
-            "trial_index": 0,
-            "repeat_index": 1,
-            "case_meta": {"action_case_id": "case-1"},
-        }
-    ]
-    artifact_paths = write_artifacts(dispatch, trial_runs, artifact_dir)
+    trial_run = {
+        "trial_id": "case-1-r01",
+        "action_case_id": "case-1",
+        "trial_index": 1,
+        "case_meta": {"action_case_id": "case-1"},
+    }
+    artifact_paths = write_artifacts(dispatch, trial_run, artifact_dir)
 
     def fake_upload(key: str, path: Path, content_type: str | None) -> None:
         return None
@@ -166,6 +163,7 @@ def test_failure_webhook_includes_manifest_key_after_s3(tmp_path):
         notify_webhook=True,
         error_summary="webhook down",
         artifact_manifest_s3_key=partial_key,
+        finish_url=dispatch.finish_url,
         webhook_secret="secret",
         webhook_opener=capture_webhook,
     )

@@ -155,7 +155,7 @@ def test_notify_finish_webhook_uses_django_body_without_signature():
     notify_finish_webhook(
         evaluation_id="eval-1",
         status="done",
-        finish_url="https://api.test/api/v1/internal/eval/eval-1/finish/",
+        finish_url="https://api.test/api/v1/internal/eval/eval-1/trials/1/finish/",
         metrics={"summary": {"trial_count": 1}},
         artifact=ArtifactPayload(bucket="b", prefix="evaluations/eval-1/"),
         opener=fake_urlopen,

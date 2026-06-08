@@ -10,8 +10,10 @@ class EvaluationTrialPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     action_case_id: str = Field(min_length=1)
+    trial_index: int = Field(ge=1)
     trial_id: str | None = None
     repeat_index: int | None = None
+    finish_url: str = ""
 
 
 class EvaluationTaskPayload(BaseModel):
@@ -53,8 +55,6 @@ class DispatchPayload(BaseModel):
     task_id: str = ""
     model_name: str = ""
     policy_server_url: str = Field(min_length=1)
-    platform_id: str = ""
-    execution_mode: str = ""
     evaluation_plan: EvaluationPlanPayload
     callback: CallbackPayload = Field(default_factory=CallbackPayload)
     artifact: ArtifactPayload = Field(default_factory=ArtifactPayload)
@@ -73,7 +73,6 @@ class TrialRecord:
     trial_id: str
     action_case_id: str
     trial_index: int
-    repeat_index: int
     case_meta: dict[str, Any]
     status: str = "not_executed"
     metrics: dict[str, Any] = field(default_factory=dict)
@@ -86,7 +85,6 @@ class TrialRecord:
             "trial_id": self.trial_id,
             "action_case_id": self.action_case_id,
             "trial_index": self.trial_index,
-            "repeat_index": self.repeat_index,
             "case_meta": self.case_meta,
             "status": self.status,
             "video_key": f"videos/{self.trial_id}.mp4",
@@ -103,7 +101,6 @@ class TrialRecord:
         entry: dict[str, Any] = {
             "trial_id": self.trial_id,
             "action_case_id": self.action_case_id,
-            "repeat_index": self.repeat_index,
             "status": self.status,
             "metrics": self.metrics,
         }

@@ -64,22 +64,19 @@ class ArtifactWriter:
             f.write("\n")
         self._logger.info("%s %s", event, fields)
 
-    def register_trials(self, trial_runs: list[dict[str, Any]]) -> None:
-        for trial_run in trial_runs:
-            trial_id = trial_run["trial_id"]
-            self._trials[trial_id] = TrialRecord(
-                trial_id=trial_id,
-                action_case_id=trial_run["action_case_id"],
-                trial_index=trial_run["trial_index"],
-                repeat_index=trial_run["repeat_index"],
-                case_meta=trial_run["case_meta"],
-            )
-            self.emit_event(
-                "trial_registered",
-                trial_id=trial_id,
-                action_case_id=trial_run["action_case_id"],
-                repeat_index=trial_run["repeat_index"],
-            )
+    def register_trial(self, trial_run: dict[str, Any]) -> None:
+        trial_id = trial_run["trial_id"]
+        self._trials[trial_id] = TrialRecord(
+            trial_id=trial_id,
+            action_case_id=trial_run["action_case_id"],
+            trial_index=trial_run["trial_index"],
+            case_meta=trial_run["case_meta"],
+        )
+        self.emit_event(
+            "trial_registered",
+            trial_id=trial_id,
+            action_case_id=trial_run["action_case_id"],
+        )
 
     def record_trial_start(self, trial_id: str, **fields: Any) -> None:
         trial = self._trials[trial_id]

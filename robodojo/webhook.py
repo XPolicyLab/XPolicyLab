@@ -73,6 +73,11 @@ def build_django_finish_payload(
     if prefix and not prefix.endswith("/"):
         prefix = f"{prefix}/"
     summary = metrics.get("summary") if isinstance(metrics.get("summary"), dict) else metrics
+    trials = metrics.get("trials") if isinstance(metrics.get("trials"), list) else []
+    trial_id = ""
+    if trials and isinstance(trials[0], dict):
+        trial_id = str(trials[0].get("trial_id") or "")
+    video_name = f"{trial_id}.mp4" if trial_id else "main.mp4"
     finish_status = "done" if status in {"planned", "done", "success", "completed"} else "failed"
     payload: dict[str, Any] = {
         "status": finish_status,
@@ -86,7 +91,7 @@ def build_django_finish_payload(
         "artifact": {
             "bucket": artifact.bucket,
             "prefix": prefix,
-            "video_s3_key": f"{prefix}videos/main.mp4",
+            "video_s3_key": f"{prefix}videos/{video_name}",
             "manifest_key": f"{prefix}manifest.json",
             "metrics_key": f"{prefix}metrics.json",
             "events_key": f"{prefix}events.jsonl",
