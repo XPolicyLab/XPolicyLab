@@ -16,7 +16,7 @@ data_stats_path: null
 norm_stats_json_path: null
 normalization_type: bounds
 no_norm: false
-action_chunk_size: 50
-sequence_length: 1024
+action_chunk_size: 8
+sequence_length: 1536
 use_wrist_image: true
 prompt: null
