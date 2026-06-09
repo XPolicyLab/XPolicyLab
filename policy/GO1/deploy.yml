@@ -1,4 +1,5 @@
-task_name: GO1
+policy_name: GO1
+task_name: null
 env_cfg_type: null
 expert_data_num: null
 action_type: null
