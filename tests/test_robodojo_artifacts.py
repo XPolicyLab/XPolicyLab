@@ -24,10 +24,10 @@ def _load_jsonl(path: Path) -> list[dict]:
 
 def test_artifact_writer_creates_layout(tmp_path):
     dispatch = _dispatch_payload()
-    trial_run = build_trial_runs(dispatch)[0]
+    trial_run = build_trial_runs(dispatch, evaluation_id="eval-1")[0]
     artifact_dir = tmp_path / "artifacts"
 
-    paths = write_artifacts(dispatch, trial_run, artifact_dir)
+    paths = write_artifacts(dispatch, trial_run, artifact_dir, evaluation_id="eval-1")
 
     manifest = json.loads((artifact_dir / "manifest.json").read_text(encoding="utf-8"))
     metrics = json.loads((artifact_dir / "metrics.json").read_text(encoding="utf-8"))
@@ -70,6 +70,8 @@ def test_eval_runner_writes_artifacts_with_flag(tmp_path):
         [
             "--dispatch-payload",
             str(dispatch_path),
+            "--evaluation-id",
+            "eval-1",
             "--artifact-dir",
             str(artifact_dir),
             "--trial-index",
@@ -89,7 +91,11 @@ def test_eval_runner_writes_artifacts_with_flag(tmp_path):
 
 def test_record_trial_lifecycle_updates_metrics(tmp_path):
     dispatch = _dispatch_payload()
-    writer = ArtifactWriter(tmp_path / "artifacts", dispatch)
+    writer = ArtifactWriter(
+        tmp_path / "artifacts",
+        evaluation_id="eval-1",
+        dispatch=dispatch,
+    )
     writer.setup()
     try:
         writer.emit_event("run_started")
@@ -122,13 +128,14 @@ def test_record_trial_lifecycle_updates_metrics(tmp_path):
 
 def test_write_artifacts_records_policy_results(tmp_path):
     dispatch = _dispatch_payload()
-    trial_run = build_trial_runs(dispatch)[0]
+    trial_run = build_trial_runs(dispatch, evaluation_id="eval-1")[0]
     artifact_dir = tmp_path / "artifacts"
 
     write_artifacts(
         dispatch,
         trial_run,
         artifact_dir,
+        evaluation_id="eval-1",
         run_status="done",
         policy_result={
             "trial_id": trial_run["trial_id"],

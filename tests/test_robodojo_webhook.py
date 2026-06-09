@@ -49,7 +49,6 @@ def test_post_finish_webhook_sends_django_signature_headers(monkeypatch):
 
     payload = build_django_finish_payload(
         status="failed",
-        result=None,
         artifact=ArtifactPayload(bucket="b", prefix="evaluations/eval-1/"),
         metrics={"summary": {"trial_count": 1}},
         error={"code": "failed", "message": "policy down"},
@@ -96,7 +95,6 @@ def test_post_finish_webhook_raises_on_http_error_status():
 
     payload = build_django_finish_payload(
         status="failed",
-        result=None,
         artifact=ArtifactPayload(bucket="b", prefix="evaluations/eval-1/"),
         metrics={"summary": {"trial_count": 1}},
     )
@@ -145,7 +143,6 @@ def test_post_finish_webhook_retries_transient_failures(monkeypatch):
 
     payload = build_django_finish_payload(
         status="failed",
-        result=None,
         artifact=ArtifactPayload(bucket="b", prefix="evaluations/eval-1/"),
         metrics={"summary": {"failed": 1}},
         error={"code": "failed", "message": "policy down"},
@@ -166,18 +163,17 @@ def test_post_finish_webhook_retries_transient_failures(monkeypatch):
 def test_build_django_finish_payload_matches_control_plane():
     payload = build_django_finish_payload(
         status="done",
-        result="success",
         artifact=ArtifactPayload(bucket="robodojo-artifacts", prefix="evaluations/e1/"),
-        metrics={"summary": {"success_rate": 100.0, "latency_ms_avg": 12, "trial_count": 60}},
+        metrics={"summary": {"success_rate": 100.0}},
     )
     assert payload["status"] == "done"
+    assert payload["score_inputs"] == {"success_rate": 100.0}
     assert payload["artifact"]["video_s3_key"] == "evaluations/e1/videos/main.mp4"
 
 
 def test_build_django_finish_payload_includes_error():
     payload = build_django_finish_payload(
         status="failed",
-        result=None,
         artifact=ArtifactPayload(bucket="b", prefix="evaluations/e1/"),
         metrics={"summary": {"trial_count": 1}},
         error={"code": "timeout", "message": "infer timed out"},

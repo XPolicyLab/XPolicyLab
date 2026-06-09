@@ -55,6 +55,19 @@ def normalize_execution_error(exc: BaseException) -> dict[str, Any]:
     return {"code": "internal", "message": str(exc)}
 
 
+def _dispatch_for_trial(dispatch: DispatchPayload, trial_index: int) -> DispatchPayload:
+    if not dispatch.artifact.prefix:
+        return dispatch
+    base_prefix = dispatch.artifact.prefix.rstrip("/")
+    return dispatch.model_copy(
+        update={
+            "artifact": dispatch.artifact.model_copy(
+                update={"prefix": f"{base_prefix}/trials/{trial_index}/"}
+            )
+        }
+    )
+
+
 def notify_trial_failure(
     dispatch: DispatchPayload,
     *,
@@ -74,12 +87,11 @@ def notify_trial_failure(
     if trial is None or not trial.finish_url:
         raise ValueError(f"finish_url not found for trial_index {trial_index}")
 
-    artifact = dispatch.artifact
-    if dispatch.artifact.prefix:
-        base_prefix = dispatch.artifact.prefix.rstrip("/")
-        artifact = dispatch.artifact.model_copy(
-            update={"prefix": f"{base_prefix}/trials/{trial_index}/"}
-        )
+    artifact = _dispatch_for_trial(dispatch, trial_index).artifact
+
+    metrics: dict[str, Any] = {"summary": {}}
+    if trial.trial_id:
+        metrics["trials"] = [{"trial_id": trial.trial_id}]
 
     webhook_result = notify_finish_webhook(
         status=STATUS_FAILED,
@@ -99,17 +111,14 @@ def notify_trial_failure(
 
 
 def run_policy_trial(
-    *,
     policy_server_url: str,
     evaluation_id: str,
     trial_run: dict[str, Any],
-    infer_observation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     trial_id = str(trial_run["trial_id"])
     action_case_id = str(trial_run["action_case_id"])
     case_meta = dict(trial_run.get("case_meta") or {})
-
-    obs = infer_observation or {
+    obs = {
         "state": {},
         "instruction": case_meta.get("instruction", ""),
         "additional_info": {
@@ -132,12 +141,14 @@ def run_policy_trial(
     return {"trial_id": trial_id, "actions": actions}
 
 
-def build_trial_runs(dispatch: DispatchPayload) -> list[dict[str, object]]:
+def build_trial_runs(
+    dispatch: DispatchPayload, evaluation_id: str
+) -> list[dict[str, object]]:
     trial_runs: list[dict[str, object]] = []
     for trial in dispatch.evaluation_plan.trials:
         action_case_id = trial.action_case_id
         trial_id = trial.trial_id or (
-            f"{dispatch.evaluation_id}:{action_case_id}:t{trial.trial_index:02d}"
+            f"{evaluation_id}:{action_case_id}:t{trial.trial_index:02d}"
         )
         trial_dump = trial.model_dump()
         case_meta = {
@@ -163,11 +174,16 @@ def write_artifacts(
     trial_run: dict[str, object],
     artifact_dir: Path,
     *,
+    evaluation_id: str,
     run_status: str = STATUS_PLANNED,
     policy_result: dict[str, Any] | None = None,
     error_summary: str | None = None,
 ) -> dict[str, str]:
-    writer = ArtifactWriter(artifact_dir, dispatch)
+    writer = ArtifactWriter(
+        artifact_dir,
+        evaluation_id=evaluation_id,
+        dispatch=dispatch,
+    )
     writer.setup()
     try:
         writer.emit_event("run_started")
@@ -192,20 +208,6 @@ def write_artifacts(
         writer.close()
 
 
-def _load_metrics(metrics_path: str) -> dict[str, Any]:
-    return json.loads(Path(metrics_path).read_text(encoding="utf-8"))
-
-
-def manifest_s3_key_from_published(published: dict[str, Any] | None) -> str | None:
-    if not published:
-        return None
-    s3_info = published.get("s3")
-    if not isinstance(s3_info, dict):
-        return None
-    key = s3_info.get("manifest_s3_key")
-    return str(key) if key else None
-
-
 def publish_artifacts(
     dispatch: DispatchPayload,
     artifact_paths: dict[str, str],
@@ -214,7 +216,6 @@ def publish_artifacts(
     upload_s3: bool,
     notify_webhook: bool,
     error: dict[str, Any] | None = None,
-    artifact_manifest_s3_key: str | None = None,
     finish_url: str = "",
     s3_client: Any | None = None,
     upload_file: UploadFileFn | None = None,
@@ -222,7 +223,6 @@ def publish_artifacts(
     webhook_opener: Any | None = None,
 ) -> dict[str, Any]:
     published: dict[str, Any] = {}
-    manifest_s3_key = artifact_manifest_s3_key
 
     if upload_s3:
         upload_result = upload_artifact_directory(
@@ -231,7 +231,6 @@ def publish_artifacts(
             s3_client=s3_client,
             upload_file=upload_file,
         )
-        manifest_s3_key = upload_result.manifest_s3_key
         published["s3"] = {
             "bucket": upload_result.bucket,
             "prefix": upload_result.prefix,
@@ -240,7 +239,9 @@ def publish_artifacts(
         }
 
     if notify_webhook:
-        metrics = _load_metrics(artifact_paths["metrics"])
+        metrics = json.loads(
+            Path(artifact_paths["metrics"]).read_text(encoding="utf-8")
+        )
         webhook_result = notify_finish_webhook(
             status=run_status,
             finish_url=finish_url,
@@ -259,14 +260,6 @@ def publish_artifacts(
     return published
 
 
-def _finish_status_for_webhook(run_status: str) -> str:
-    if run_status in {STATUS_DONE, STATUS_COMPLETED}:
-        return STATUS_COMPLETED
-    if run_status == STATUS_FAILED:
-        return STATUS_FAILED
-    return run_status
-
-
 def _publish_dispatch_artifacts(
     dispatch: DispatchPayload,
     artifact_paths: dict[str, str],
@@ -279,7 +272,12 @@ def _publish_dispatch_artifacts(
     webhook_secret: str | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, Any] | None]:
     published: dict[str, Any] = {}
-    webhook_status = _finish_status_for_webhook(run_status)
+    if run_status in {STATUS_DONE, STATUS_COMPLETED}:
+        webhook_status = STATUS_COMPLETED
+    elif run_status == STATUS_FAILED:
+        webhook_status = STATUS_FAILED
+    else:
+        webhook_status = run_status
     try:
         if upload_s3:
             published.update(
@@ -301,17 +299,18 @@ def _publish_dispatch_artifacts(
                     notify_webhook=True,
                     finish_url=finish_url,
                     error=error,
-                    artifact_manifest_s3_key=manifest_s3_key_from_published(published),
                     webhook_secret=webhook_secret,
                 )
             )
         return published, STATUS_COMPLETED, error
     except PUBLISH_ERRORS as exc:
         publish_error = normalize_execution_error(exc)
-        partial_key = manifest_s3_key_from_published(published)
         failure_published: dict[str, Any] = {"error": publish_error["message"]}
-        if partial_key is not None:
-            failure_published["s3"] = {"manifest_s3_key": partial_key}
+        s3_info = published.get("s3")
+        if isinstance(s3_info, dict) and s3_info.get("manifest_s3_key"):
+            failure_published["s3"] = {
+                "manifest_s3_key": str(s3_info["manifest_s3_key"])
+            }
         if notify_webhook:
             try:
                 failure_published.update(
@@ -323,7 +322,6 @@ def _publish_dispatch_artifacts(
                         notify_webhook=True,
                         finish_url=finish_url,
                         error=publish_error,
-                        artifact_manifest_s3_key=partial_key,
                         webhook_secret=webhook_secret,
                     )
                 )
@@ -335,6 +333,7 @@ def _publish_dispatch_artifacts(
 def _build_dispatch_summary(
     dispatch: DispatchPayload,
     *,
+    evaluation_id: str,
     trial_run: dict[str, object],
     trial_index: int,
     run_status: str,
@@ -344,7 +343,7 @@ def _build_dispatch_summary(
     published: dict[str, Any] | None,
 ) -> dict[str, object]:
     summary: dict[str, object] = {
-        "evaluation_id": dispatch.evaluation_id,
+        "evaluation_id": evaluation_id,
         "policy_server_url": dispatch.policy_server_url,
         "task_id": dispatch.task_id,
         "repeat_count": dispatch.evaluation_plan.repeat_count,
@@ -370,6 +369,7 @@ def _fail_dispatch(
     dispatch: DispatchPayload,
     trial_run: dict[str, object],
     *,
+    evaluation_id: str,
     trial_index: int,
     exc: BaseException,
     artifact_dir: Path | None,
@@ -379,16 +379,7 @@ def _fail_dispatch(
 ) -> tuple[int, dict[str, object]]:
     error = normalize_execution_error(exc)
     run_status = STATUS_FAILED
-    run_dispatch_payload = dispatch
-    if dispatch.artifact.prefix:
-        base_prefix = dispatch.artifact.prefix.rstrip("/")
-        run_dispatch_payload = dispatch.model_copy(
-            update={
-                "artifact": dispatch.artifact.model_copy(
-                    update={"prefix": f"{base_prefix}/trials/{trial_index}/"}
-                )
-            }
-        )
+    run_dispatch_payload = _dispatch_for_trial(dispatch, trial_index)
 
     artifact_paths: dict[str, str] | None = None
     published: dict[str, Any] | None = None
@@ -397,6 +388,7 @@ def _fail_dispatch(
             run_dispatch_payload,
             trial_run,
             artifact_dir,
+            evaluation_id=evaluation_id,
             run_status=STATUS_FAILED,
             error_summary=error["message"],
         )
@@ -411,11 +403,12 @@ def _fail_dispatch(
                 error=error,
                 webhook_secret=webhook_secret,
             )
-            if publish_status == STATUS_FAILED and publish_error is not None:
+            if publish_status == STATUS_FAILED:
                 error = publish_error
 
     summary = _build_dispatch_summary(
         dispatch,
+        evaluation_id=evaluation_id,
         trial_run=trial_run,
         trial_index=trial_index,
         run_status=run_status,
@@ -431,6 +424,7 @@ def _execute_dispatch(
     dispatch: DispatchPayload,
     trial_run: dict[str, object],
     *,
+    evaluation_id: str,
     trial_index: int,
     artifact_dir: Path | None,
     upload_s3: bool,
@@ -438,16 +432,7 @@ def _execute_dispatch(
     run_policy_trials: bool,
     webhook_secret: str | None = None,
 ) -> tuple[int, dict[str, object]]:
-    run_dispatch_payload = dispatch
-    if dispatch.artifact.prefix:
-        base_prefix = dispatch.artifact.prefix.rstrip("/")
-        run_dispatch_payload = dispatch.model_copy(
-            update={
-                "artifact": dispatch.artifact.model_copy(
-                    update={"prefix": f"{base_prefix}/trials/{trial_index}/"}
-                )
-            }
-        )
+    run_dispatch_payload = _dispatch_for_trial(dispatch, trial_index)
 
     artifact_paths: dict[str, str] | None = None
     published: dict[str, Any] | None = None
@@ -460,7 +445,7 @@ def _execute_dispatch(
         try:
             policy_result = run_policy_trial(
                 policy_server_url=dispatch.policy_server_url,
-                evaluation_id=run_dispatch_payload.evaluation_id,
+                evaluation_id=evaluation_id,
                 trial_run=trial_run,
             )
         except Exception as exc:
@@ -470,19 +455,14 @@ def _execute_dispatch(
     if artifact_dir is not None:
         if notify_webhook and not run_policy_trials:
             raise ValueError("notify_webhook requires run_policy_trials")
-        if run_status == STATUS_DONE:
-            artifact_status = STATUS_DONE
-        elif run_status == STATUS_FAILED:
-            artifact_status = STATUS_FAILED
-        else:
-            artifact_status = STATUS_PLANNED
         artifact_paths = write_artifacts(
             run_dispatch_payload,
             trial_run,
             artifact_dir,
-            run_status=artifact_status,
+            evaluation_id=evaluation_id,
+            run_status=run_status,
             policy_result=policy_result,
-            error_summary=error["message"] if error is not None else None,
+            error_summary=error["message"] if error else None,
         )
         if upload_s3 or notify_webhook:
             published, publish_status, publish_error = _publish_dispatch_artifacts(
@@ -495,15 +475,15 @@ def _execute_dispatch(
                 error=error,
                 webhook_secret=webhook_secret,
             )
-            if publish_status == STATUS_COMPLETED:
-                if run_status != STATUS_FAILED:
-                    run_status = STATUS_COMPLETED
-            elif publish_status == STATUS_FAILED:
+            if publish_status == STATUS_FAILED:
                 run_status = STATUS_FAILED
                 error = publish_error
+            elif run_status != STATUS_FAILED:
+                run_status = STATUS_COMPLETED
 
     summary = _build_dispatch_summary(
         dispatch,
+        evaluation_id=evaluation_id,
         trial_run=trial_run,
         trial_index=trial_index,
         run_status=run_status,
@@ -517,18 +497,18 @@ def _execute_dispatch(
 
 def run_dispatch(
     dispatch: DispatchPayload,
-    *,
+    trial_index: int,
+    evaluation_id: str,
     artifact_dir: Path | None = None,
     upload_s3: bool = True,
     notify_webhook: bool = True,
     run_policy_trials: bool = False,
-    trial_index: int,
     webhook_secret: str | None = None,
 ) -> tuple[int, dict[str, object]]:
     trial_run = next(
         (
             run
-            for run in build_trial_runs(dispatch)
+            for run in build_trial_runs(dispatch, evaluation_id=evaluation_id)
             if run["trial_index"] == trial_index
         ),
         None,
@@ -538,8 +518,9 @@ def run_dispatch(
 
     try:
         return _execute_dispatch(
-            dispatch,
-            trial_run,
+            dispatch=dispatch,
+            trial_run=trial_run,
+            evaluation_id=evaluation_id,
             trial_index=trial_index,
             artifact_dir=artifact_dir,
             upload_s3=upload_s3,
@@ -553,6 +534,7 @@ def run_dispatch(
         return _fail_dispatch(
             dispatch,
             trial_run,
+            evaluation_id=evaluation_id,
             trial_index=trial_index,
             exc=exc,
             artifact_dir=artifact_dir,
@@ -573,6 +555,11 @@ def main(
         "--dispatch-payload",
         required=True,
         help="Path to dispatch JSON; use '-' to read from stdin",
+    )
+    parser.add_argument(
+        "--evaluation-id",
+        required=True,
+        help="Evaluation id supplied by the control-plane route",
     )
     parser.add_argument(
         "--artifact-dir",
@@ -612,6 +599,7 @@ def main(
     dispatch = DispatchPayload.model_validate_json(text)
     exit_code, summary = run_dispatch(
         dispatch,
+        evaluation_id=args.evaluation_id,
         artifact_dir=Path(args.artifact_dir) if args.artifact_dir else None,
         upload_s3=not args.no_s3,
         notify_webhook=not args.no_webhook,

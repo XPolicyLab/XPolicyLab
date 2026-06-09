@@ -23,6 +23,13 @@ from robodojo.protocol.schemas import Frame
 logger = logging.getLogger(__name__)
 
 
+def _ok_payload(result: Any = None) -> dict[str, Any]:
+    payload: dict[str, Any] = {"ok": True}
+    if result is not None:
+        payload["result"] = result
+    return payload
+
+
 @dataclass
 class PolicyServerConfig:
     host: str = "0.0.0.0"
@@ -111,51 +118,63 @@ class PolicyServer:
         try:
             return await self._dispatch_frame(frame)
         except WsError as exc:
-            return Frame(
-                message_type=MessageType.ERROR,
-                request_id=frame.request_id,
-                evaluation_id=frame.evaluation_id,
-                action_case_id=frame.action_case_id,
-                trial_id=frame.trial_id,
-                repeat_index=frame.repeat_index,
-                step=frame.step,
-                payload={
-                    "code": exc.code.value,
-                    "message": exc.message,
-                    "details": exc.details,
-                },
-            )
+            return self._error_reply(frame, exc.code, exc.message, exc.details)
         except Exception as exc:
             logger.exception("policy server request failed")
-            return Frame(
-                message_type=MessageType.ERROR,
-                request_id=frame.request_id,
-                evaluation_id=frame.evaluation_id,
-                action_case_id=frame.action_case_id,
-                trial_id=frame.trial_id,
-                repeat_index=frame.repeat_index,
-                step=frame.step,
-                payload={
-                    "code": ErrorCode.INTERNAL.value,
-                    "message": str(exc),
-                    "details": {},
-                },
-            )
+            return self._error_reply(frame, ErrorCode.INTERNAL, str(exc))
+
+    def _reply(
+        self,
+        frame: Frame,
+        message_type: MessageType,
+        payload: dict[str, Any] | None = None,
+    ) -> Frame:
+        return Frame(
+            message_type=message_type,
+            request_id=frame.request_id,
+            evaluation_id=frame.evaluation_id,
+            action_case_id=frame.action_case_id,
+            trial_id=frame.trial_id,
+            repeat_index=frame.repeat_index,
+            step=frame.step,
+            payload=payload or {},
+        )
+
+    def _error_reply(
+        self,
+        frame: Frame,
+        code: ErrorCode,
+        message: str,
+        details: dict[str, Any] | None = None,
+    ) -> Frame:
+        return self._reply(
+            frame,
+            MessageType.ERROR,
+            {
+                "code": code.value,
+                "message": message,
+                "details": details or {},
+            },
+        )
+
+    async def _invoke_method(self, method, *args: Any) -> Any:
+        if inspect.iscoroutinefunction(method):
+            return await method(*args)
+        result = await asyncio.to_thread(method, *args)
+        if inspect.isawaitable(result):
+            return await result
+        return result
+
+    async def _call_model_method(self, method, *args: Any) -> Any:
+        async with self._model_lock:
+            return await self._invoke_method(method, *args)
 
     async def _dispatch_frame(self, frame: Frame) -> Frame | None:
         if frame.message_type == MessageType.HELLO:
-            return Frame(
-                message_type=MessageType.HELLO_ACK,
-                request_id=frame.request_id,
-                evaluation_id=frame.evaluation_id,
-                action_case_id=frame.action_case_id,
-                trial_id=frame.trial_id,
-                repeat_index=frame.repeat_index,
-                step=frame.step,
-                payload={
-                    "ok": True,
-                    "server": "demo_policy_server",
-                },
+            return self._reply(
+                frame,
+                MessageType.HELLO_ACK,
+                {"ok": True, "server": "demo_policy_server"},
             )
         if frame.message_type == MessageType.PREPARE_CASE:
             return await self._handle_prepare_case(frame)
@@ -166,16 +185,7 @@ class PolicyServer:
         if frame.message_type == MessageType.TRIAL_END:
             return await self._handle_trial_end(frame)
         if frame.message_type == MessageType.HEARTBEAT:
-            return Frame(
-                message_type=MessageType.HEARTBEAT_ACK,
-                request_id=frame.request_id,
-                evaluation_id=frame.evaluation_id,
-                action_case_id=frame.action_case_id,
-                trial_id=frame.trial_id,
-                repeat_index=frame.repeat_index,
-                step=frame.step,
-                payload={"ok": True},
-            )
+            return self._reply(frame, MessageType.HEARTBEAT_ACK, {"ok": True})
         if frame.message_type == MessageType.CLOSE:
             return None
         raise WsError(
@@ -189,28 +199,11 @@ class PolicyServer:
             case_meta.setdefault("action_case_id", frame.action_case_id)
 
         hook = getattr(self.model, "prepare_case", None)
-        hook_result = None
-        if callable(hook):
-            async with self._model_lock:
-                if inspect.iscoroutinefunction(hook):
-                    hook_result = await hook(case_meta)
-                else:
-                    hook_result = await asyncio.to_thread(hook, case_meta)
-                    if inspect.isawaitable(hook_result):
-                        hook_result = await hook_result
-        payload: dict[str, Any] = {"ok": True}
-        if hook_result is not None:
-            payload["result"] = hook_result
-
-        return Frame(
-            message_type=MessageType.PREPARE_CASE_ACK,
-            request_id=frame.request_id,
-            evaluation_id=frame.evaluation_id,
-            action_case_id=frame.action_case_id,
-            trial_id=frame.trial_id,
-            repeat_index=frame.repeat_index,
-            step=frame.step,
-            payload=payload,
+        hook_result = (
+            await self._call_model_method(hook, case_meta) if callable(hook) else None
+        )
+        return self._reply(
+            frame, MessageType.PREPARE_CASE_ACK, _ok_payload(hook_result)
         )
 
     async def _handle_reset(self, frame: Frame) -> Frame:
@@ -218,30 +211,10 @@ class PolicyServer:
         if not callable(method):
             raise WsError(ErrorCode.RESET_FAILED, "model.reset is not callable")
         try:
-            async with self._model_lock:
-                if inspect.iscoroutinefunction(method):
-                    result = await method()
-                else:
-                    result = await asyncio.to_thread(method)
-                    if inspect.isawaitable(result):
-                        result = await result
+            result = await self._call_model_method(method)
         except Exception as exc:
             raise WsError(ErrorCode.RESET_FAILED, str(exc)) from exc
-
-        payload: dict[str, Any] = {"ok": True}
-        if result is not None:
-            payload["result"] = result
-
-        return Frame(
-            message_type=MessageType.RESET_RESULT,
-            request_id=frame.request_id,
-            evaluation_id=frame.evaluation_id,
-            action_case_id=frame.action_case_id,
-            trial_id=frame.trial_id,
-            repeat_index=frame.repeat_index,
-            step=frame.step,
-            payload=payload,
-        )
+        return self._reply(frame, MessageType.RESET_RESULT, _ok_payload(result))
 
     async def _handle_infer(self, frame: Frame) -> Frame:
         observation = frame.payload.get("observation")
@@ -284,12 +257,7 @@ class PolicyServer:
                         raise AttributeError(
                             "model must implement update_obs()/get_action() or infer(observation)"
                         )
-                    if inspect.iscoroutinefunction(infer):
-                        result = await infer(observation)
-                    else:
-                        result = await asyncio.to_thread(infer, observation)
-                        if inspect.isawaitable(result):
-                            result = await result
+                    result = await self._invoke_method(infer, observation)
         except Exception as exc:
             raise WsError(ErrorCode.INFER_FAILED, str(exc)) from exc
 
@@ -300,43 +268,16 @@ class PolicyServer:
         else:
             payload = {"actions": result, "latency_ms": latency_ms}
 
-        return Frame(
-            message_type=MessageType.INFER_RESULT,
-            request_id=frame.request_id,
-            evaluation_id=frame.evaluation_id,
-            action_case_id=frame.action_case_id,
-            trial_id=frame.trial_id,
-            repeat_index=frame.repeat_index,
-            step=frame.step,
-            payload=payload,
-        )
+        return self._reply(frame, MessageType.INFER_RESULT, payload)
 
     async def _handle_trial_end(self, frame: Frame) -> Frame:
         hook = getattr(self.model, "on_trial_end", None)
-        hook_result = None
-        if callable(hook):
-            async with self._model_lock:
-                if inspect.iscoroutinefunction(hook):
-                    hook_result = await hook(dict(frame.payload))
-                else:
-                    hook_result = await asyncio.to_thread(hook, dict(frame.payload))
-                    if inspect.isawaitable(hook_result):
-                        hook_result = await hook_result
-
-        payload: dict[str, Any] = {"ok": True}
-        if hook_result is not None:
-            payload["result"] = hook_result
-
-        return Frame(
-            message_type=MessageType.TRIAL_END_ACK,
-            request_id=frame.request_id,
-            evaluation_id=frame.evaluation_id,
-            action_case_id=frame.action_case_id,
-            trial_id=frame.trial_id,
-            repeat_index=frame.repeat_index,
-            step=frame.step,
-            payload=payload,
+        hook_result = (
+            await self._call_model_method(hook, dict(frame.payload))
+            if callable(hook)
+            else None
         )
+        return self._reply(frame, MessageType.TRIAL_END_ACK, _ok_payload(hook_result))
 
 
 def main() -> None:

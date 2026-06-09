@@ -39,7 +39,9 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
         "trial_index": 1,
         "case_meta": {"action_case_id": "case-1"},
     }
-    artifact_paths = write_artifacts(dispatch, trial_run, artifact_dir)
+    artifact_paths = write_artifacts(
+        dispatch, trial_run, artifact_dir, evaluation_id="eval-1"
+    )
     uploads: list[str] = []
 
     def fake_upload(key: str, path: Path, content_type: str | None) -> None:
@@ -107,6 +109,8 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
         [
             "--dispatch-payload",
             str(dispatch_path),
+            "--evaluation-id",
+            "eval-1",
             "--artifact-dir",
             str(artifact_dir),
             "--trial-index",
@@ -135,7 +139,9 @@ def test_failure_webhook_includes_error_payload(tmp_path):
         "trial_index": 1,
         "case_meta": {"action_case_id": "case-1"},
     }
-    artifact_paths = write_artifacts(dispatch, trial_run, artifact_dir)
+    artifact_paths = write_artifacts(
+        dispatch, trial_run, artifact_dir, evaluation_id="eval-1"
+    )
     captured: dict = {}
 
     def capture_webhook(request, timeout=30):
