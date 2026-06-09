@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class EvaluationTrialPayload(BaseModel):
@@ -36,7 +36,6 @@ class EvaluationPlanPayload(BaseModel):
 class CallbackPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    finish_url: str = ""
     hmac_secret_ref: str = ""
 
 
@@ -50,8 +49,6 @@ class ArtifactPayload(BaseModel):
 class DispatchPayload(BaseModel):
     model_config = ConfigDict(extra="allow")
 
-    message_type: str = "dispatch"
-    evaluation_id: str = Field(min_length=1)
     task_id: str = ""
     model_name: str = ""
     policy_server_url: str = Field(min_length=1)
@@ -59,9 +56,12 @@ class DispatchPayload(BaseModel):
     callback: CallbackPayload = Field(default_factory=CallbackPayload)
     artifact: ArtifactPayload = Field(default_factory=ArtifactPayload)
 
-    @property
-    def finish_url(self) -> str:
-        return self.callback.finish_url
+    @model_validator(mode="before")
+    @classmethod
+    def reject_evaluation_id(cls, data: Any) -> Any:
+        if isinstance(data, dict) and "evaluation_id" in data:
+            raise ValueError("evaluation_id must be provided separately")
+        return data
 
     @property
     def hmac_secret_ref(self) -> str:

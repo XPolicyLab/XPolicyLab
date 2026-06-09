@@ -62,7 +62,6 @@ def sign_payload(body: bytes, secret: str) -> str:
 def build_django_finish_payload(
     *,
     status: str,
-    result: str | None,
     artifact: ArtifactPayload,
     metrics: dict[str, Any],
     error: dict[str, Any] | None = None,
@@ -70,26 +69,28 @@ def build_django_finish_payload(
     prefix = artifact.prefix
     if prefix and not prefix.endswith("/"):
         prefix = f"{prefix}/"
-    summary = metrics.get("summary") if isinstance(metrics.get("summary"), dict) else metrics
-    trials = metrics.get("trials") if isinstance(metrics.get("trials"), list) else []
+
+    raw_summary = metrics.get("summary")
+    summary = raw_summary if isinstance(raw_summary, dict) else metrics
+
+    trials = metrics.get("trials")
     trial_id = ""
-    if trials and isinstance(trials[0], dict):
+    if isinstance(trials, list) and trials and isinstance(trials[0], dict):
         trial_id = str(trials[0].get("trial_id") or "")
-    video_name = f"{trial_id}.mp4" if trial_id else "main.mp4"
-    finish_status = "done" if status in {"planned", "done", "success", "completed"} else "failed"
+
+    finish_status = (
+        "done" if status in {"planned", "done", "success", "completed"} else "failed"
+    )
     payload: dict[str, Any] = {
         "status": finish_status,
-        "result": result or ("success" if finish_status == "done" else "failed"),
+        "result": "success" if finish_status == "done" else "failed",
         "score_inputs": {
             "success_rate": summary.get("success_rate"),
-            "latency_ms_avg": summary.get("latency_ms_avg"),
-            "trial_count": summary.get("trial_count"),
-            "completed_trial_count": summary.get("completed"),
         },
         "artifact": {
             "bucket": artifact.bucket,
             "prefix": prefix,
-            "video_s3_key": f"{prefix}videos/{video_name}",
+            "video_s3_key": f"{prefix}videos/{trial_id or 'main'}.mp4",
             "manifest_key": f"{prefix}manifest.json",
             "metrics_key": f"{prefix}metrics.json",
             "events_key": f"{prefix}events.jsonl",
@@ -172,17 +173,9 @@ def post_finish_webhook(
     opener: Callable[..., Any] | None = None,
     retry: bool = True,
 ) -> WebhookResult:
-    if not retry:
-        return _post_finish_webhook_once(
-            finish_url,
-            payload,
-            hmac_secret_ref=hmac_secret_ref,
-            secret=secret,
-            opener=opener,
-        )
-
+    attempts = WEBHOOK_RETRY_ATTEMPTS if retry else 1
     last_err: WebhookDeliveryError | None = None
-    for attempt in range(WEBHOOK_RETRY_ATTEMPTS):
+    for attempt in range(attempts):
         try:
             return _post_finish_webhook_once(
                 finish_url,
@@ -193,7 +186,7 @@ def post_finish_webhook(
             )
         except WebhookDeliveryError as exc:
             last_err = exc
-            if attempt < WEBHOOK_RETRY_ATTEMPTS - 1:
+            if attempt < attempts - 1:
                 time.sleep(WEBHOOK_RETRY_BACKOFF_S[attempt])
     assert last_err is not None
     raise last_err
@@ -212,7 +205,6 @@ def notify_finish_webhook(
 ) -> WebhookResult:
     payload = build_django_finish_payload(
         status=status,
-        result="success" if status != "failed" else None,
         artifact=artifact,
         metrics=metrics,
         error=error,

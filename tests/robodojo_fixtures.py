@@ -7,8 +7,6 @@ from typing import Any
 
 def platform_dispatch(**overrides: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {
-        "message_type": "dispatch",
-        "evaluation_id": "eval-1",
         "task_id": "lift-cube",
         "model_name": "demo-policy",
         "policy_server_url": "ws://127.0.0.1:19000",

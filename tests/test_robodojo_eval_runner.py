@@ -17,7 +17,14 @@ def test_eval_runner_main_accepts_file_payload(tmp_path):
     stdout = io.StringIO()
 
     exit_code = main(
-        ["--dispatch-payload", str(path), "--trial-index", "1"],
+        [
+            "--dispatch-payload",
+            str(path),
+            "--evaluation-id",
+            "eval-1",
+            "--trial-index",
+            "1",
+        ],
         stdout=stdout,
     )
 
@@ -37,7 +44,14 @@ def test_eval_runner_main_accepts_stdin_payload():
     stdout = io.StringIO()
 
     exit_code = main(
-        ["--dispatch-payload", "-", "--trial-index", "1"],
+        [
+            "--dispatch-payload",
+            "-",
+            "--evaluation-id",
+            "eval-1",
+            "--trial-index",
+            "1",
+        ],
         stdin=io.StringIO(json.dumps(platform_dispatch())),
         stdout=stdout,
     )
@@ -55,7 +69,14 @@ def test_eval_runner_rejects_malformed_dispatch_payload():
 
     with pytest.raises(ValidationError, match="trials"):
         main(
-            ["--dispatch-payload", "-", "--trial-index", "1"],
+            [
+                "--dispatch-payload",
+                "-",
+                "--evaluation-id",
+                "eval-1",
+                "--trial-index",
+                "1",
+            ],
             stdin=io.StringIO(json.dumps(payload)),
             stdout=io.StringIO(),
         )
@@ -67,7 +88,14 @@ def test_eval_runner_requires_action_case_id_for_each_trial():
 
     with pytest.raises(ValidationError, match="action_case_id"):
         main(
-            ["--dispatch-payload", "-", "--trial-index", "1"],
+            [
+                "--dispatch-payload",
+                "-",
+                "--evaluation-id",
+                "eval-1",
+                "--trial-index",
+                "1",
+            ],
             stdin=io.StringIO(json.dumps(payload)),
             stdout=io.StringIO(),
         )
@@ -75,7 +103,6 @@ def test_eval_runner_requires_action_case_id_for_each_trial():
 
 def test_eval_runner_accepts_platform_dispatch_shape():
     payload = platform_dispatch(
-        evaluation_id="eval-django",
         evaluation_plan={
             "repeat_count": 1,
             "task": {
@@ -110,7 +137,14 @@ def test_eval_runner_rejects_empty_trial_plan():
 
     with pytest.raises(ValidationError, match="trials"):
         main(
-            ["--dispatch-payload", "-", "--trial-index", "1"],
+            [
+                "--dispatch-payload",
+                "-",
+                "--evaluation-id",
+                "eval-1",
+                "--trial-index",
+                "1",
+            ],
             stdin=io.StringIO(json.dumps(payload)),
             stdout=io.StringIO(),
         )
@@ -125,6 +159,8 @@ def test_eval_runner_rejects_webhook_without_policy_trial(tmp_path):
             [
                 "--dispatch-payload",
                 str(path),
+                "--evaluation-id",
+                "eval-1",
                 "--artifact-dir",
                 str(tmp_path / "artifacts"),
                 "--trial-index",
@@ -155,6 +191,7 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
 
     exit_code, summary = run_dispatch(
         dispatch,
+        evaluation_id="eval-1",
         artifact_dir=tmp_path / "artifacts",
         upload_s3=False,
         notify_webhook=True,
@@ -204,6 +241,7 @@ def test_run_dispatch_maps_ws_error_to_failed_webhook(
 
     exit_code, summary = run_dispatch(
         dispatch,
+        evaluation_id="eval-1",
         artifact_dir=tmp_path / "artifacts",
         upload_s3=False,
         notify_webhook=True,
@@ -237,6 +275,7 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
 
     exit_code, summary = run_dispatch(
         dispatch,
+        evaluation_id="eval-1",
         artifact_dir=tmp_path / "artifacts",
         upload_s3=False,
         notify_webhook=True,
@@ -281,6 +320,7 @@ def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
 
     exit_code, summary = run_dispatch(
         dispatch,
+        evaluation_id="eval-1",
         artifact_dir=tmp_path / "artifacts",
         upload_s3=False,
         notify_webhook=True,
@@ -313,6 +353,7 @@ def test_run_dispatch_summary_serializes_numpy_policy_actions(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     exit_code, summary = run_dispatch(
         dispatch,
+        evaluation_id="eval-1",
         artifact_dir=None,
         upload_s3=False,
         notify_webhook=False,

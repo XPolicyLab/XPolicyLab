@@ -21,8 +21,11 @@ def _utc_now_iso() -> str:
 
 
 class ArtifactWriter:
-    def __init__(self, root_dir: Path, dispatch: DispatchPayload):
+    def __init__(
+        self, root_dir: Path, *, evaluation_id: str, dispatch: DispatchPayload
+    ):
         self.root_dir = root_dir
+        self.evaluation_id = evaluation_id
         self.dispatch = dispatch
         self._trials: dict[str, TrialRecord] = {}
         self._run_started_at = _utc_now_iso()
@@ -56,7 +59,7 @@ class ArtifactWriter:
         record = {
             "event": event,
             "ts": _utc_now_iso(),
-            "evaluation_id": self.dispatch.evaluation_id,
+            "evaluation_id": self.evaluation_id,
             **fields,
         }
         with self._events_path.open("a", encoding="utf-8") as f:
@@ -118,7 +121,7 @@ class ArtifactWriter:
 
     def write_manifest(self) -> Path:
         manifest = {
-            "evaluation_id": self.dispatch.evaluation_id,
+            "evaluation_id": self.evaluation_id,
             "started_at": self._run_started_at,
             "finished_at": self._run_finished_at,
             "status": self._run_status,
@@ -153,7 +156,7 @@ class ArtifactWriter:
         success_rate = (completed / executed * 100.0) if executed else 0.0
 
         metrics_doc = {
-            "evaluation_id": self.dispatch.evaluation_id,
+            "evaluation_id": self.evaluation_id,
             "finished_at": self._run_finished_at,
             "summary": {
                 "trial_count": total,
