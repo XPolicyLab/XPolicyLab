@@ -2,23 +2,22 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
 from robodojo.dispatch.errors import normalize_execution_error
-from robodojo.dispatch.planner import build_trial_runs, dispatch_for_trial
+from robodojo.dispatch.planner import dispatch_for_trial, trial_run_for_index
 from robodojo.dispatch.status import (
     STATUS_COMPLETED,
     STATUS_DONE,
     STATUS_FAILED,
     STATUS_PLANNED,
 )
+from robodojo.env_client.runner import TrialRunnerFn
 import robodojo.publish.pipeline as publish_pipeline
 from robodojo.publish.webhook import notify_finish_webhook
 from robodojo.schemas import DispatchPayload
 from robodojo.serialization import to_jsonable
-from robodojo.trial import run_policy_trial
 
 
 def notify_trial_failure(
@@ -41,10 +40,6 @@ def notify_trial_failure(
         raise ValueError(f"finish_url not found for trial_index {trial_index}")
 
     artifact = dispatch_for_trial(dispatch, trial_index).artifact
-
-    metrics: dict[str, Any] = {"summary": {}}
-    if trial.trial_id:
-        metrics["trials"] = [{"trial_id": trial.trial_id}]
 
     webhook_result = notify_finish_webhook(
         status=STATUS_FAILED,
@@ -164,10 +159,7 @@ def _execute_dispatch(
     notify_webhook: bool,
     run_policy_trials: bool,
     webhook_secret: str | None = None,
-    eval_env: str | None = None,
-    root_dir: str | None = None,
-    sim_env_factory: str | None = None,
-    episode_step_limit: int = 5,
+    trial_runner: TrialRunnerFn | None = None,
 ) -> tuple[int, dict[str, object]]:
     run_dispatch_payload = dispatch_for_trial(dispatch, trial_index)
 
@@ -178,18 +170,11 @@ def _execute_dispatch(
     policy_result: dict[str, Any] | None = None
 
     if run_policy_trials:
+        if trial_runner is None:
+            raise ValueError("trial_runner is required when run_policy_trials=True")
         run_status = STATUS_DONE
         try:
-            policy_result = run_policy_trial(
-                policy_server_url=dispatch.policy_server_url,
-                evaluation_id=evaluation_id,
-                trial_run=trial_run,
-                dispatch=dispatch,
-                eval_env=eval_env,
-                root_dir=root_dir,
-                sim_env_factory=sim_env_factory,
-                episode_step_limit=episode_step_limit,
-            )
+            policy_result = trial_runner(dispatch, dict(trial_run), evaluation_id)
         except Exception as exc:
             run_status = STATUS_FAILED
             error = normalize_execution_error(exc)
@@ -246,21 +231,13 @@ def run_dispatch(
     notify_webhook: bool = True,
     run_policy_trials: bool = False,
     webhook_secret: str | None = None,
-    eval_env: str | None = None,
-    root_dir: str | None = None,
-    sim_env_factory: str | None = None,
-    episode_step_limit: int = 5,
+    trial_runner: TrialRunnerFn | None = None,
 ) -> tuple[int, dict[str, object]]:
-    trial_run = next(
-        (
-            run
-            for run in build_trial_runs(dispatch, evaluation_id=evaluation_id)
-            if run["trial_index"] == trial_index
-        ),
-        None,
+    trial_run = trial_run_for_index(
+        dispatch,
+        evaluation_id=evaluation_id,
+        trial_index=trial_index,
     )
-    if trial_run is None:
-        raise ValueError(f"trial_index {trial_index} not found in dispatch plan")
 
     try:
         return _execute_dispatch(
@@ -273,10 +250,7 @@ def run_dispatch(
             notify_webhook=notify_webhook,
             run_policy_trials=run_policy_trials,
             webhook_secret=webhook_secret,
-            eval_env=eval_env,
-            root_dir=root_dir,
-            sim_env_factory=sim_env_factory,
-            episode_step_limit=episode_step_limit,
+            trial_runner=trial_runner,
         )
     except ValueError:
         raise
@@ -292,40 +266,3 @@ def run_dispatch(
             notify_webhook=notify_webhook,
             webhook_secret=webhook_secret,
         )
-
-
-def capture_job_result(
-    *,
-    evaluation_id: str,
-    trial_index: int,
-    dispatch: DispatchPayload,
-    notify_webhook: bool,
-    webhook_secret: str | None,
-    run: Callable[[], tuple[int, dict[str, object]]],
-) -> tuple[int, dict[str, object]]:
-    try:
-        return run()
-    except ValueError:
-        raise
-    except Exception as exc:
-        error = normalize_execution_error(exc)
-        summary: dict[str, object] = {
-            "evaluation_id": evaluation_id,
-            "trial_index": trial_index,
-            "status": STATUS_FAILED,
-            "error_summary": error["message"],
-            "error": error,
-        }
-        if notify_webhook:
-            try:
-                summary["published"] = {
-                    "webhook": notify_trial_failure(
-                        dispatch,
-                        trial_index=trial_index,
-                        error=error,
-                        webhook_secret=webhook_secret,
-                    )
-                }
-            except Exception as webhook_exc:
-                summary["webhook_error"] = str(webhook_exc)
-        return 1, summary

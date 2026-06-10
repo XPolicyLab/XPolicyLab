@@ -1,0 +1,125 @@
+"""Dispatch trial metadata helpers for env client deploy_cfg mapping."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any
+
+from robodojo.schemas import DispatchPayload, EvaluationTrialPayload
+
+
+@dataclass(frozen=True)
+class TrialRunConfig:
+    policy_server_url: str
+    evaluation_id: str
+    trial_id: str
+    action_case_id: str
+    policy_name: str
+    task_name: str
+    env_cfg_type: str
+    eval_env: str
+    eval_batch: bool
+    case_meta: dict[str, Any]
+    instruction: str
+    repeat_index: int | None = None
+
+
+def normalize_policy_name(name: str) -> str:
+    return name.replace("-", "_")
+
+
+def _dispatch_extra(dispatch: DispatchPayload) -> dict[str, Any]:
+    return getattr(dispatch, "__pydantic_extra__", None) or {}
+
+
+def _first_non_empty_str(*values: object, default: str) -> str:
+    for value in values:
+        if value:
+            return str(value)
+    return default
+
+
+def _find_dispatch_trial(
+    dispatch: DispatchPayload, trial_run: dict[str, Any]
+) -> EvaluationTrialPayload | None:
+    trial_index = trial_run.get("trial_index")
+    if trial_index is None:
+        return None
+    for trial in dispatch.evaluation_plan.trials:
+        if trial.trial_index == trial_index:
+            return trial
+    return None
+
+
+def _resolve_instruction(
+    dispatch: DispatchPayload,
+    trial_run: dict[str, Any],
+    case_meta: dict[str, Any],
+) -> str:
+    dispatch_trial = _find_dispatch_trial(dispatch, trial_run)
+    return _first_non_empty_str(
+        case_meta.get("instruction"),
+        case_meta.get("language_instruction"),
+        trial_run.get("instruction"),
+        dispatch_trial.instruction if dispatch_trial is not None else None,
+        default="",
+    )
+
+
+def build_trial_run_config(
+    dispatch: DispatchPayload,
+    trial_run: dict[str, Any],
+    *,
+    evaluation_id: str,
+    eval_env: str | None = None,
+) -> TrialRunConfig:
+    case_meta = dict(trial_run.get("case_meta") or {})
+    task = dispatch.evaluation_plan.task
+    dispatch_extra = _dispatch_extra(dispatch)
+    env_cfg_type = _first_non_empty_str(
+        case_meta.get("env_cfg_type"),
+        trial_run.get("env_cfg_type"),
+        task.env_cfg_type if task is not None else "",
+        default="arx_x5",
+    )
+    task_name = _first_non_empty_str(
+        case_meta.get("task_name"),
+        dispatch.task_id,
+        task.id if task is not None else "",
+        default="debug_task",
+    )
+    policy_name = normalize_policy_name(
+        _first_non_empty_str(
+            case_meta.get("policy_name"),
+            dispatch.model_name,
+            default="demo_policy",
+        )
+    )
+    resolved_eval_env = _first_non_empty_str(
+        eval_env,
+        case_meta.get("eval_env"),
+        dispatch_extra.get("eval_env"),
+        default="debug",
+    )
+    eval_batch = bool(
+        case_meta.get("eval_batch", dispatch_extra.get("eval_batch", False))
+    )
+    instruction = _resolve_instruction(dispatch, trial_run, case_meta)
+    if instruction:
+        case_meta["instruction"] = instruction
+    repeat_index = case_meta.get("repeat_index", trial_run.get("repeat_index"))
+
+    return TrialRunConfig(
+        policy_server_url=dispatch.policy_server_url,
+        evaluation_id=evaluation_id,
+        trial_id=str(trial_run["trial_id"]),
+        action_case_id=str(trial_run["action_case_id"]),
+        policy_name=policy_name,
+        task_name=task_name,
+        env_cfg_type=str(env_cfg_type),
+        eval_env=str(resolved_eval_env),
+        eval_batch=eval_batch,
+        case_meta=case_meta,
+        instruction=instruction,
+        repeat_index=int(repeat_index) if repeat_index is not None else None,
+    )

@@ -1,10 +1,9 @@
-import io
 import json
 from pathlib import Path
 
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.servers.eval_cli import main
+from robodojo.dispatch import run_dispatch
 from robodojo.publish import publish_artifacts, write_artifacts
 from robodojo.schemas import DispatchPayload
 
@@ -76,14 +75,7 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
     assert uploads[-1] == "evaluations/eval-1/manifest.json"
 
 
-def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
-    monkeypatch.setattr(
-        "robodojo.dispatch.executor.run_policy_trial",
-        lambda **_kwargs: {
-            "trial_id": "case-1-r01",
-            "actions": [{"arm_joint_state": [0.0] * 7, "ee_joint_state": [0.0]}],
-        },
-    )
+def test_run_dispatch_publishes_with_artifact_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(
         "robodojo.publish.pipeline.publish_artifacts",
         lambda *args, **kwargs: {
@@ -101,28 +93,25 @@ def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
     )
 
     dispatch = _dispatch_payload()
-    dispatch_path = tmp_path / "dispatch.json"
-    dispatch_path.write_text(dispatch.model_dump_json(), encoding="utf-8")
     artifact_dir = tmp_path / "out"
-    stdout = io.StringIO()
 
-    exit_code = main(
-        [
-            "--dispatch-payload",
-            str(dispatch_path),
-            "--evaluation-id",
-            "eval-1",
-            "--artifact-dir",
-            str(artifact_dir),
-            "--trial-index",
-            "1",
-            "--run-policy-trials",
-        ],
-        stdout=stdout,
+    exit_code, summary = run_dispatch(
+        dispatch,
+        evaluation_id="eval-1",
+        artifact_dir=artifact_dir,
+        upload_s3=True,
+        notify_webhook=True,
+        run_policy_trials=True,
+        trial_index=1,
+        trial_runner=lambda _dispatch, trial_run, _evaluation_id: {
+            "trial_id": trial_run["trial_id"],
+            "steps": 1,
+            "eval_env": "debug",
+            "actions": [],
+        },
     )
 
     assert exit_code == 0
-    summary = json.loads(stdout.getvalue())
     assert summary["status"] == "completed"
     assert (
         summary["published"]["s3"]["manifest_s3_key"]

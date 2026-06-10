@@ -13,32 +13,38 @@ root_dir="${9}"
 seed="${10}"
 env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
-
-deploy_config_path="${root_dir}/XPolicyLab/policy/${policy_name}/deploy.yml"
+protocol="${13:-robodojo_ws}"
+run_mode="${14:---run-once}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
 conda activate "${eval_env_conda_env}"
 
-export PYTHONPATH="${root_dir}/src:${root_dir}/XPolicyLab:${root_dir}:${PYTHONPATH:-}"
-
 echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
-echo -e "\033[34m[CLIENT] Connecting real robot client to server ${policy_server_ip}:${free_port}...\033[0m"
+echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port} (real env)...\033[0m"
 
-# Real client always uses arx_x5; runtime maps to test_dual_robot in real_env_client.py.
-# eval may pass dual_x5 for policy server — do not forward that here.
-client_env_cfg_type="${REAL_CLIENT_ENV_CFG_TYPE:-arx_x5}"
+PYTHONPATH="${root_dir}/XPolicyLab${PYTHONPATH:+:${PYTHONPATH}}"
+
+CLIENT_ARGS=(
+    --dataset_name "${dataset_name}"
+    --task_name "${task_name}"
+    --env_cfg_type "${env_cfg_type}"
+    --policy_name "${policy_name}"
+    --protocol "${protocol}"
+    --host "${policy_server_ip}"
+    --port "${free_port}"
+    --eval_batch "${eval_batch}"
+    --eval_env real
+    --root-dir "${root_dir}"
+)
+
+if [[ "${run_mode}" == "--run-once" ]]; then
+    echo "[ERROR] eval_env=real requires daemon mode; set env_client_mode: daemon in deploy.yml"
+    exit 1
+fi
 
 PYTHONWARNINGS=ignore::UserWarning \
-python "${root_dir}/src/task_env/real_env_client.py" \
-    --dataset_name "${dataset_name}" \
-    --task_name "${task_name}" \
-    --env_cfg_type "${client_env_cfg_type}" \
-    --policy_name "${policy_name}" \
-    --host "${policy_server_ip}" \
-    --port "${free_port}" \
-    --seed "${seed}" \
-    --eval_batch "${eval_batch}" \
-    --additional_info "${additional_info}" \
-    --deploy_config "${deploy_config_path}" \
-    --root_dir "${root_dir}"
+python -m robodojo.servers.env_client_server \
+    "${CLIENT_ARGS[@]}" \
+    --serve-host 0.0.0.0 \
+    --serve-port 19200
