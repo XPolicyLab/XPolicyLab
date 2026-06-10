@@ -53,7 +53,7 @@ uv pip install -e .
 | expert_data_num | `3500` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/Pi_0/RoboDojo_sim_arx_seed_0` |
-| 备注 | 共用 Pi_05/openpi uv 环境 |
+| 备注 | policy_uv_env_path: openpi（uv .venv） |
 
 软链 checkpoint（在 `policy/Pi_0/` 下）：
 

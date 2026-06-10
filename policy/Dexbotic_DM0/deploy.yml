@@ -1,3 +1,4 @@
+policy_name: Dexbotic_DM0
 task_name: null
 env_cfg_type: null
 expert_data_num: null
@@ -10,3 +11,5 @@ model_path: null
 norm_stats_path: null
 action_chunk_size: 50
 prompt: null
+
+port: 6000
