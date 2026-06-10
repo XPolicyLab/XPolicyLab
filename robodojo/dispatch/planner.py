@@ -47,3 +47,15 @@ def build_trial_runs(
             }
         )
     return trial_runs
+
+
+def trial_run_for_index(
+    dispatch: DispatchPayload,
+    *,
+    evaluation_id: str,
+    trial_index: int,
+) -> dict[str, object]:
+    for trial_run in build_trial_runs(dispatch, evaluation_id=evaluation_id):
+        if trial_run["trial_index"] == trial_index:
+            return trial_run
+    raise ValueError(f"trial_index {trial_index} not found in dispatch plan")

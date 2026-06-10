@@ -21,7 +21,7 @@ conda deactivate || true
 conda activate "${eval_env_conda_env}"
 
 echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
-echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port}...\033[0m"
+echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port} (real env)...\033[0m"
 
 PYTHONPATH="${root_dir}/XPolicyLab${PYTHONPATH:+:${PYTHONPATH}}"
 
@@ -34,15 +34,17 @@ CLIENT_ARGS=(
     --host "${policy_server_ip}"
     --port "${free_port}"
     --eval_batch "${eval_batch}"
+    --eval_env real
+    --root-dir "${root_dir}"
 )
 
 if [[ "${run_mode}" == "--run-once" ]]; then
-    PYTHONWARNINGS=ignore::UserWarning \
-    python "${root_dir}/XPolicyLab/debug_env_client.py" "${CLIENT_ARGS[@]}"
-else
-    PYTHONWARNINGS=ignore::UserWarning \
-    python -m robodojo.servers.env_client_server \
-        "${CLIENT_ARGS[@]}" \
-        --serve-host 0.0.0.0 \
-        --serve-port 19200
+    echo "[ERROR] eval_env=real requires daemon mode; set env_client_mode: daemon in deploy.yml"
+    exit 1
 fi
+
+PYTHONWARNINGS=ignore::UserWarning \
+python -m robodojo.servers.env_client_server \
+    "${CLIENT_ARGS[@]}" \
+    --serve-host 0.0.0.0 \
+    --serve-port 19200

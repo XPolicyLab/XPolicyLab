@@ -1,1 +1,1 @@
-"""Process entry points: CLI, HTTP executor, and WebSocket policy server."""
+"""Process entry points: env client daemon and policy server."""

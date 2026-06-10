@@ -3,8 +3,7 @@ from pathlib import Path
 
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.dispatch import build_trial_runs
-from robodojo.servers.eval_cli import main
+from robodojo.dispatch import build_trial_runs, run_dispatch
 from robodojo.publish import ArtifactWriter, write_artifacts
 from robodojo.schemas import DispatchPayload
 
@@ -56,33 +55,21 @@ def test_artifact_writer_creates_layout(tmp_path):
     assert paths["events"].endswith("events.jsonl")
 
 
-def test_eval_runner_writes_artifacts_with_flag(tmp_path):
+def test_run_dispatch_writes_artifacts_without_policy_trials(tmp_path):
     dispatch = _dispatch_payload()
-    dispatch_path = tmp_path / "dispatch.json"
-    dispatch_path.write_text(dispatch.model_dump_json(), encoding="utf-8")
     artifact_dir = tmp_path / "out"
 
-    import io
-
-    stdout = io.StringIO()
-    exit_code = main(
-        [
-            "--dispatch-payload",
-            str(dispatch_path),
-            "--evaluation-id",
-            "eval-1",
-            "--artifact-dir",
-            str(artifact_dir),
-            "--trial-index",
-            "1",
-            "--no-s3",
-            "--no-webhook",
-        ],
-        stdout=stdout,
+    exit_code, summary = run_dispatch(
+        dispatch,
+        evaluation_id="eval-1",
+        artifact_dir=artifact_dir,
+        upload_s3=False,
+        notify_webhook=False,
+        run_policy_trials=False,
+        trial_index=1,
     )
 
     assert exit_code == 0
-    summary = json.loads(stdout.getvalue())
     assert summary["planned_trial_runs"] == 1
     assert summary["artifacts"]["artifact_dir"] == str(artifact_dir)
     assert (artifact_dir / "manifest.json").exists()

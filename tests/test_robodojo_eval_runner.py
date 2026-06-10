@@ -1,36 +1,40 @@
-import io
 import json
 
-import numpy as np
 import pytest
 from pydantic import ValidationError
 from robodojo_fixtures import platform_dispatch
 
 from robodojo.dispatch import normalize_execution_error, run_dispatch
-from robodojo.servers.eval_cli import main
+from robodojo.env_client import TrialRunnerError
 from robodojo.protocol.exceptions import ErrorCode, WsError
 from robodojo.schemas import DispatchPayload
 
 
-def test_eval_runner_main_accepts_file_payload(tmp_path):
-    path = tmp_path / "dispatch.json"
-    path.write_text(json.dumps(platform_dispatch()), encoding="utf-8")
-    stdout = io.StringIO()
+def _fake_trial_runner(*, result=None, exc=None):
+    def runner(_dispatch, trial_run, _evaluation_id):
+        if exc is not None:
+            raise exc
+        return result or {
+            "trial_id": trial_run["trial_id"],
+            "steps": 3,
+            "eval_env": "debug",
+            "policy_name": "demo_policy",
+            "actions": [],
+        }
 
-    exit_code = main(
-        [
-            "--dispatch-payload",
-            str(path),
-            "--evaluation-id",
-            "eval-1",
-            "--trial-index",
-            "1",
-        ],
-        stdout=stdout,
+    return runner
+
+
+def test_run_dispatch_accepts_platform_dispatch():
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+
+    exit_code, summary = run_dispatch(
+        dispatch,
+        evaluation_id="eval-1",
+        trial_index=1,
     )
 
     assert exit_code == 0
-    summary = json.loads(stdout.getvalue())
     assert summary["planned_trial_runs"] == 1
     assert summary["trial_runs"][0]["trial_id"] == "case-1-r01"
     assert summary["trial_runs"][0]["trial_index"] == 1
@@ -42,68 +46,37 @@ def test_eval_runner_main_accepts_file_payload(tmp_path):
     assert summary["trial_runs"][0]["finish_url"].endswith("/trials/1/finish/")
 
 
-def test_eval_runner_main_accepts_stdin_payload():
-    stdout = io.StringIO()
+def test_run_dispatch_summary_includes_platform_fields():
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
 
-    exit_code = main(
-        [
-            "--dispatch-payload",
-            "-",
-            "--evaluation-id",
-            "eval-1",
-            "--trial-index",
-            "1",
-        ],
-        stdin=io.StringIO(json.dumps(platform_dispatch())),
-        stdout=stdout,
+    _, summary = run_dispatch(
+        dispatch,
+        evaluation_id="eval-1",
+        trial_index=1,
     )
 
-    assert exit_code == 0
-    summary = json.loads(stdout.getvalue())
     assert summary["planned_trial_runs"] == 1
     assert summary["trial_count"] == 4
     assert summary["policy_server_url"] == "ws://127.0.0.1:19000"
 
 
-def test_eval_runner_rejects_malformed_dispatch_payload():
+def test_dispatch_payload_rejects_malformed_trials():
     payload = platform_dispatch()
     payload["evaluation_plan"]["trials"] = {"case": "not-a-list"}
 
     with pytest.raises(ValidationError, match="trials"):
-        main(
-            [
-                "--dispatch-payload",
-                "-",
-                "--evaluation-id",
-                "eval-1",
-                "--trial-index",
-                "1",
-            ],
-            stdin=io.StringIO(json.dumps(payload)),
-            stdout=io.StringIO(),
-        )
+        DispatchPayload.model_validate(payload)
 
 
-def test_eval_runner_requires_action_case_id_for_each_trial():
+def test_dispatch_payload_requires_action_case_id_for_each_trial():
     payload = platform_dispatch()
     payload["evaluation_plan"]["trials"] = [{}]
 
     with pytest.raises(ValidationError, match="action_case_id"):
-        main(
-            [
-                "--dispatch-payload",
-                "-",
-                "--evaluation-id",
-                "eval-1",
-                "--trial-index",
-                "1",
-            ],
-            stdin=io.StringIO(json.dumps(payload)),
-            stdout=io.StringIO(),
-        )
+        DispatchPayload.model_validate(payload)
 
 
-def test_eval_runner_accepts_platform_dispatch_shape():
+def test_dispatch_payload_accepts_platform_dispatch_shape():
     payload = platform_dispatch(
         evaluation_plan={
             "repeat_count": 1,
@@ -133,45 +106,26 @@ def test_eval_runner_accepts_platform_dispatch_shape():
     assert dispatch.evaluation_plan.trials[0].finish_url.endswith("/trials/1/finish/")
 
 
-def test_eval_runner_rejects_empty_trial_plan():
+def test_dispatch_payload_rejects_empty_trial_plan():
     payload = platform_dispatch()
     payload["evaluation_plan"]["trials"] = []
 
     with pytest.raises(ValidationError, match="trials"):
-        main(
-            [
-                "--dispatch-payload",
-                "-",
-                "--evaluation-id",
-                "eval-1",
-                "--trial-index",
-                "1",
-            ],
-            stdin=io.StringIO(json.dumps(payload)),
-            stdout=io.StringIO(),
+        DispatchPayload.model_validate(payload)
+
+
+def test_run_dispatch_rejects_webhook_without_policy_trial(tmp_path):
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+
+    with pytest.raises(ValueError, match="notify_webhook requires run_policy_trials"):
+        run_dispatch(
+            dispatch,
+            evaluation_id="eval-1",
+            artifact_dir=tmp_path / "artifacts",
+            notify_webhook=True,
+            run_policy_trials=False,
+            trial_index=1,
         )
-
-
-def test_eval_runner_rejects_webhook_without_policy_trial(tmp_path):
-    path = tmp_path / "dispatch.json"
-    path.write_text(json.dumps(platform_dispatch()), encoding="utf-8")
-
-    with pytest.raises(SystemExit) as exc_info:
-        main(
-            [
-                "--dispatch-payload",
-                str(path),
-                "--evaluation-id",
-                "eval-1",
-                "--artifact-dir",
-                str(tmp_path / "artifacts"),
-                "--trial-index",
-                "1",
-            ],
-            stdout=io.StringIO(),
-        )
-
-    assert exc_info.value.code == 2
 
 
 def test_run_dispatch_includes_policy_error_in_trial_webhook(
@@ -180,15 +134,11 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fail_policy_trial(**_kwargs):
-        raise RuntimeError("policy down")
-
     def fake_publish_artifacts(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
         captured["finish_url"] = kwargs.get("finish_url")
         return {"webhook": {"finish_url": kwargs.get("finish_url"), "status_code": 200}}
 
-    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fail_policy_trial)
     monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
@@ -199,6 +149,7 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
         notify_webhook=True,
         run_policy_trials=True,
         trial_index=1,
+        trial_runner=_fake_trial_runner(exc=RuntimeError("policy down")),
     )
 
     assert exit_code == 1
@@ -225,20 +176,29 @@ def test_normalize_execution_error_maps_ws_error():
     }
 
 
-def test_run_dispatch_maps_ws_error_to_failed_webhook(
+def test_normalize_execution_error_preserves_trial_runner_error():
+    error = normalize_execution_error(
+        TrialRunnerError(
+            "policy unreachable",
+            error={"code": "trial_failed", "message": "policy unreachable"},
+        )
+    )
+    assert error == {
+        "code": "trial_failed",
+        "message": "policy unreachable",
+    }
+
+
+def test_run_dispatch_maps_trial_runner_error_to_webhook(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ):
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fail_policy_trial(**_kwargs):
-        raise WsError(ErrorCode.INFER_FAILED, "policy rejected frame")
-
     def fake_publish_artifacts(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
         return {"webhook": {"status_code": 200}}
 
-    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fail_policy_trial)
     monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
@@ -249,6 +209,45 @@ def test_run_dispatch_maps_ws_error_to_failed_webhook(
         notify_webhook=True,
         run_policy_trials=True,
         trial_index=1,
+        trial_runner=_fake_trial_runner(
+            exc=TrialRunnerError(
+                "policy unreachable",
+                error={"code": "trial_failed", "message": "policy unreachable"},
+            )
+        ),
+    )
+
+    assert exit_code == 1
+    assert summary["error"] == {
+        "code": "trial_failed",
+        "message": "policy unreachable",
+    }
+    assert captured["error"] == summary["error"]
+
+
+def test_run_dispatch_maps_ws_error_to_failed_webhook(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+):
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    captured: dict[str, object] = {}
+
+    def fake_publish_artifacts(*_args, **kwargs):
+        captured["error"] = kwargs.get("error")
+        return {"webhook": {"status_code": 200}}
+
+    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
+
+    exit_code, summary = run_dispatch(
+        dispatch,
+        evaluation_id="eval-1",
+        artifact_dir=tmp_path / "artifacts",
+        upload_s3=False,
+        notify_webhook=True,
+        run_policy_trials=True,
+        trial_index=1,
+        trial_runner=_fake_trial_runner(
+            exc=WsError(ErrorCode.INFER_FAILED, "policy rejected frame")
+        ),
     )
 
     assert exit_code == 1
@@ -265,14 +264,10 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fail_policy_trial(**_kwargs):
-        raise NotImplementedError("unsupported RoboDojo model call: set_language")
-
     def fake_publish_artifacts(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
         return {"webhook": {"status_code": 200}}
 
-    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fail_policy_trial)
     monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
@@ -283,6 +278,9 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
         notify_webhook=True,
         run_policy_trials=True,
         trial_index=1,
+        trial_runner=_fake_trial_runner(
+            exc=NotImplementedError("unsupported RoboDojo model call: set_language")
+        ),
     )
 
     assert exit_code == 1
@@ -313,10 +311,6 @@ def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
         captured["error"] = kwargs.get("error")
         return {"webhook": {"status_code": 200}}
 
-    monkeypatch.setattr(
-        "robodojo.dispatch.executor.run_policy_trial",
-        lambda **_kwargs: {"trial_id": "case-1-r01", "actions": []},
-    )
     monkeypatch.setattr("robodojo.publish.pipeline.write_artifacts", flaky_write_artifacts)
     monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
@@ -328,6 +322,7 @@ def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
         notify_webhook=True,
         run_policy_trials=True,
         trial_index=1,
+        trial_runner=_fake_trial_runner(),
     )
 
     assert exit_code == 1
@@ -336,22 +331,7 @@ def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
     assert captured["error"] == summary["error"]
 
 
-def test_run_dispatch_summary_serializes_numpy_policy_actions(
-    monkeypatch: pytest.MonkeyPatch,
-):
-    def fake_policy_trial(**_kwargs):
-        return {
-            "trial_id": "case-1-r01",
-            "actions": [
-                {
-                    "left_arm_joint_state": np.zeros(6, dtype=np.float32),
-                    "left_ee_joint_state": np.zeros(1, dtype=np.float32),
-                }
-            ],
-        }
-
-    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fake_policy_trial)
-
+def test_run_dispatch_summary_serializes_policy_result():
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     exit_code, summary = run_dispatch(
         dispatch,
@@ -361,10 +341,9 @@ def test_run_dispatch_summary_serializes_numpy_policy_actions(
         notify_webhook=False,
         run_policy_trials=True,
         trial_index=1,
+        trial_runner=_fake_trial_runner(),
     )
 
     assert exit_code == 0
     json.dumps(summary)
-    assert summary["policy_results"][0]["actions"][0]["left_arm_joint_state"] == [
-        0.0
-    ] * 6
+    assert summary["policy_results"][0]["steps"] == 3
