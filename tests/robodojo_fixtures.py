@@ -17,6 +17,7 @@ def platform_dispatch(**overrides: Any) -> dict[str, Any]:
                     "trial_id": "case-1-r01",
                     "trial_index": 1,
                     "action_case_id": "case-1",
+                    "instruction": "pick up the cube",
                     "finish_url": (
                         "https://example.test/api/v1/internal/eval/"
                         "eval-1/trials/1/finish/"

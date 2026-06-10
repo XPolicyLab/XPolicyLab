@@ -7,7 +7,11 @@ from urllib.request import Request, urlopen
 import numpy as np
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.executor_server import ExecutorConfig, _run_and_store_result, create_server
+from robodojo.servers.executor_server import (
+    ExecutorConfig,
+    _run_and_store_result,
+    create_server,
+)
 from robodojo.schemas import DispatchPayload
 
 
@@ -216,7 +220,7 @@ def test_executor_emergency_webhook_when_runner_crashes(tmp_path, monkeypatch):
         }
 
     monkeypatch.setattr(
-        "robodojo.executor_server.notify_trial_failure",
+        "robodojo.dispatch.executor.notify_trial_failure",
         fake_notify_trial_failure,
     )
 

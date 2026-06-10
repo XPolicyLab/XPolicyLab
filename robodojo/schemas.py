@@ -14,6 +14,7 @@ class EvaluationTrialPayload(BaseModel):
     trial_id: str | None = None
     repeat_index: int | None = None
     finish_url: str = ""
+    instruction: str = ""
 
 
 class EvaluationTaskPayload(BaseModel):

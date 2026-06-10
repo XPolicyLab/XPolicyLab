@@ -4,7 +4,8 @@ from pathlib import Path
 
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.eval_runner import main, publish_artifacts, write_artifacts
+from robodojo.servers.eval_cli import main
+from robodojo.publish import publish_artifacts, write_artifacts
 from robodojo.schemas import DispatchPayload
 
 FINISH_URL = (
@@ -77,14 +78,14 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
 
 def test_eval_runner_publishes_with_artifact_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(
-        "robodojo.eval_runner.run_policy_trial",
+        "robodojo.dispatch.executor.run_policy_trial",
         lambda **_kwargs: {
             "trial_id": "case-1-r01",
             "actions": [{"arm_joint_state": [0.0] * 7, "ee_joint_state": [0.0]}],
         },
     )
     monkeypatch.setattr(
-        "robodojo.eval_runner.publish_artifacts",
+        "robodojo.publish.pipeline.publish_artifacts",
         lambda *args, **kwargs: {
             "s3": {
                 "bucket": "robodojo-artifacts",

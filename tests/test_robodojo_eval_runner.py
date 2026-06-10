@@ -6,7 +6,8 @@ import pytest
 from pydantic import ValidationError
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.eval_runner import main, normalize_execution_error, run_dispatch
+from robodojo.dispatch import normalize_execution_error, run_dispatch
+from robodojo.servers.eval_cli import main
 from robodojo.protocol.exceptions import ErrorCode, WsError
 from robodojo.schemas import DispatchPayload
 
@@ -36,6 +37,7 @@ def test_eval_runner_main_accepts_file_payload(tmp_path):
     assert summary["trial_runs"][0]["case_meta"] == {
         "action_case_id": "case-1",
         "trial_index": 1,
+        "instruction": "pick up the cube",
     }
     assert summary["trial_runs"][0]["finish_url"].endswith("/trials/1/finish/")
 
@@ -186,8 +188,8 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
         captured["finish_url"] = kwargs.get("finish_url")
         return {"webhook": {"finish_url": kwargs.get("finish_url"), "status_code": 200}}
 
-    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fail_policy_trial)
-    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fail_policy_trial)
+    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -236,8 +238,8 @@ def test_run_dispatch_maps_ws_error_to_failed_webhook(
         captured["error"] = kwargs.get("error")
         return {"webhook": {"status_code": 200}}
 
-    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fail_policy_trial)
-    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fail_policy_trial)
+    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -270,8 +272,8 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
         captured["error"] = kwargs.get("error")
         return {"webhook": {"status_code": 200}}
 
-    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fail_policy_trial)
-    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fail_policy_trial)
+    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -294,12 +296,12 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
 def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ):
-    import robodojo.eval_runner as eval_runner_module
+    import robodojo.publish.pipeline as publish_pipeline
 
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
     write_calls = {"count": 0}
-    original_write_artifacts = eval_runner_module.write_artifacts
+    original_write_artifacts = publish_pipeline.write_artifacts
 
     def flaky_write_artifacts(*args, **kwargs):
         write_calls["count"] += 1
@@ -312,11 +314,11 @@ def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
         return {"webhook": {"status_code": 200}}
 
     monkeypatch.setattr(
-        "robodojo.eval_runner.run_policy_trial",
+        "robodojo.dispatch.executor.run_policy_trial",
         lambda **_kwargs: {"trial_id": "case-1-r01", "actions": []},
     )
-    monkeypatch.setattr("robodojo.eval_runner.write_artifacts", flaky_write_artifacts)
-    monkeypatch.setattr("robodojo.eval_runner.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr("robodojo.publish.pipeline.write_artifacts", flaky_write_artifacts)
+    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -348,7 +350,7 @@ def test_run_dispatch_summary_serializes_numpy_policy_actions(
             ],
         }
 
-    monkeypatch.setattr("robodojo.eval_runner.run_policy_trial", fake_policy_trial)
+    monkeypatch.setattr("robodojo.dispatch.executor.run_policy_trial", fake_policy_trial)
 
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     exit_code, summary = run_dispatch(

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
-from robodojo.artifacts import MANIFEST_NAME
+from robodojo.publish.artifacts import MANIFEST_NAME
 from robodojo.schemas import ArtifactPayload
 
 UploadFileFn = Callable[[str, Path, str | None], None]
@@ -94,6 +94,7 @@ def upload_artifact_directory(
 
     uploader = upload_file
     if uploader is None:
+
         def _upload(key: str, path: Path, content_type: str | None) -> None:
             _default_upload_file(
                 client,

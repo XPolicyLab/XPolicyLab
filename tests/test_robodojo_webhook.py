@@ -6,7 +6,7 @@ import time
 import pytest
 
 from robodojo.schemas import ArtifactPayload
-from robodojo.webhook import (
+from robodojo.publish.webhook import (
     DJANGO_SIGNATURE_HEADER,
     DJANGO_TIMESTAMP_HEADER,
     WebhookDeliveryError,
