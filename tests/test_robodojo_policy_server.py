@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from model_template import ModelTemplate
-from robodojo.policy_server import PolicyServer
+from robodojo.servers.policy_server import PolicyServer
 from robodojo.protocol.codec import decode_envelope, encode_frame
 from robodojo.protocol.exceptions import ErrorCode
 from robodojo.protocol.messages import MessageType

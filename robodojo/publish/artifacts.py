@@ -33,7 +33,7 @@ class ArtifactWriter:
         self._run_status = "running"
         self._run_error: str | None = None
         self._events_path = root_dir / EVENTS_NAME
-        self._logger = logging.getLogger("robodojo.eval_runner")
+        self._logger = logging.getLogger("robodojo.publish")
         self._log_handler: logging.Handler | None = None
 
     def setup(self) -> None:

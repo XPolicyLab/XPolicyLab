@@ -26,7 +26,7 @@ def main(deploy_cfg):
     model = model_class_func(deploy_cfg)
 
     if protocol == "robodojo_ws":
-        from robodojo.policy_server import PolicyServer, PolicyServerConfig
+        from robodojo.servers.policy_server import PolicyServer, PolicyServerConfig
 
         server = PolicyServer(
             model,

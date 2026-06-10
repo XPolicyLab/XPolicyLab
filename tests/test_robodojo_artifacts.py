@@ -3,10 +3,9 @@ from pathlib import Path
 
 from robodojo_fixtures import platform_dispatch
 
-from robodojo.artifacts import (
-    ArtifactWriter,
-)
-from robodojo.eval_runner import build_trial_runs, main, write_artifacts
+from robodojo.dispatch import build_trial_runs
+from robodojo.servers.eval_cli import main
+from robodojo.publish import ArtifactWriter, write_artifacts
 from robodojo.schemas import DispatchPayload
 
 

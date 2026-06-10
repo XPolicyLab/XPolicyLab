@@ -1,6 +1,6 @@
 import pytest
 
-from robodojo.policy_server import PolicyServer
+from robodojo.servers.policy_server import PolicyServer
 from robodojo.protocol.messages import MessageType
 from robodojo.protocol.schemas import Frame
 

@@ -16,14 +16,10 @@ from urllib.parse import quote, unquote, urlparse
 
 from pydantic import ValidationError
 
-from robodojo.eval_runner import (
-    STATUS_FAILED,
-    normalize_execution_error,
-    notify_trial_failure,
-    run_dispatch,
-)
+from robodojo.dispatch.executor import capture_job_result, run_dispatch
 from robodojo.schemas import DispatchPayload
 from robodojo.serialization import to_jsonable
+from robodojo.trial import add_trial_env_arguments
 
 
 @dataclass(frozen=True)
@@ -35,6 +31,10 @@ class ExecutorConfig:
     notify_webhook: bool = True
     trial_index: int | None = None
     webhook_secret: str | None = None
+    eval_env: str | None = None
+    root_dir: Path | None = None
+    sim_env_factory: str | None = None
+    episode_step_limit: int = 5
 
 
 RunnerFn = Callable[
@@ -59,6 +59,10 @@ def default_runner(
         run_policy_trials=config.run_policy_trials,
         trial_index=config.trial_index,
         webhook_secret=config.webhook_secret,
+        eval_env=config.eval_env,
+        root_dir=str(config.root_dir) if config.root_dir is not None else None,
+        sim_env_factory=config.sim_env_factory,
+        episode_step_limit=config.episode_step_limit,
     )
 
 
@@ -261,35 +265,19 @@ def _run_and_store_result(
     if trial_index is None:
         raise ValueError("trial_index is required")
 
-    try:
-        exit_code, summary = state.runner(
+    exit_code, summary = capture_job_result(
+        evaluation_id=evaluation_id,
+        trial_index=trial_index,
+        dispatch=dispatch,
+        notify_webhook=config.notify_webhook,
+        webhook_secret=config.webhook_secret,
+        run=lambda: state.runner(
             evaluation_id,
             dispatch,
             artifact_dir,
             config,
-        )
-    except Exception as exc:
-        exit_code = 1
-        error = normalize_execution_error(exc)
-        summary = {
-            "evaluation_id": evaluation_id,
-            "trial_index": trial_index,
-            "status": STATUS_FAILED,
-            "error_summary": error["message"],
-            "error": error,
-        }
-        if config.notify_webhook and not isinstance(exc, ValueError):
-            try:
-                summary["published"] = {
-                    "webhook": notify_trial_failure(
-                        dispatch,
-                        trial_index=trial_index,
-                        error=error,
-                        webhook_secret=config.webhook_secret,
-                    )
-                }
-            except Exception as webhook_exc:
-                summary["webhook_error"] = str(webhook_exc)
+        ),
+    )
 
     result_path = state.result_path(evaluation_id, trial_index)
     result_path.parent.mkdir(parents=True, exist_ok=True)
@@ -344,6 +332,7 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Skip finish webhook callback",
     )
+    add_trial_env_arguments(parser)
     args = parser.parse_args(argv)
     if args.no_policy_trials and not args.no_webhook:
         parser.error("--no-policy-trials requires --no-webhook")
@@ -355,6 +344,10 @@ def main(argv: list[str] | None = None) -> int:
         upload_s3=not args.no_s3,
         notify_webhook=not args.no_webhook,
         webhook_secret=os.environ.get("EVAL_SERVER_WEBHOOK_SECRET") or None,
+        eval_env=args.eval_env,
+        root_dir=Path(args.root_dir) if args.root_dir else None,
+        sim_env_factory=args.sim_env_factory,
+        episode_step_limit=args.episode_step_limit,
     )
     server = create_server(args.host, args.port, config)
     print(

@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from robodojo.artifacts import EVENTS_NAME, MANIFEST_NAME, METRICS_NAME, RUNNER_LOG_REL
-from robodojo.schemas import ArtifactPayload
-from robodojo.s3_upload import (
+from robodojo.publish.artifacts import EVENTS_NAME, MANIFEST_NAME, METRICS_NAME, RUNNER_LOG_REL
+from robodojo.publish.s3 import (
     artifact_s3_key,
     normalize_s3_prefix,
     upload_artifact_directory,
 )
+from robodojo.schemas import ArtifactPayload
 
 
 def test_normalize_s3_prefix():
