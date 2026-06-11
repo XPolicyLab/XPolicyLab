@@ -1,6 +1,6 @@
 import os
 
-# XPolicyLab / RoboDojo LeRobot v2.1 training defaults.
+# XPolicyLab LeRobot v2.1 training defaults.
 # Task selection is controlled by GIGAWORLD_DATA_DIR; the dataset directory
 # may contain one task or a joint subset with multiple tasks.
 
@@ -50,7 +50,7 @@ config = dict(
     project_dir=project_dir,
     runners=["MoTCasualWATrainerPretrain"],
     wandb=dict(
-        project="gwp-robodojo",
+        project="gwp-xpolicylab",
         name=f"{exp_name}_{date_str}",
         mode=os.environ.get("WANDB_MODE", "offline"),
         init_timeout=int(os.environ.get("WANDB_INIT_TIMEOUT", "300")),

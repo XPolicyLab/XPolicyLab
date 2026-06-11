@@ -1,4 +1,4 @@
-"""GigaWorldPolicy inference utilities for RoboDojo evaluation.
+"""GigaWorldPolicy inference utilities for XPolicyLab evaluation.
 
 Loads a trained CasualWATrainer checkpoint and serves action predictions
 via a websocket interface compatible with the openpi client protocol.
@@ -612,7 +612,7 @@ class InferenceServer:
         packer = msgpack_numpy.Packer()
 
         # Send metadata
-        await websocket.send(packer.pack({"model": "gwp-robodojo"}))
+        await websocket.send(packer.pack({"model": "gwp-xpolicylab"}))
 
         loop = asyncio.get_running_loop()
         prev_total_time = None
@@ -704,7 +704,7 @@ def main():
     args = parse_args()
 
     print("=" * 60)
-    print("GigaWorldPolicy RoboDojo Inference Server")
+    print("GigaWorldPolicy XPolicyLab Inference Server")
     print("=" * 60)
     print(f"  Model:      {args.model_id}")
     print(f"  Checkpoint: {args.checkpoint_path}")

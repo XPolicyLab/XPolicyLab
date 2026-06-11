@@ -248,7 +248,7 @@ class Model(ModelTemplate):
     def _load_policy(self):
         import torch
 
-        inference_server = importlib.import_module("experiment.robodojo.inference_server")
+        inference_server = importlib.import_module("experiment.xpolicylab.inference_server")
         checkpoint_path = self._resolve_checkpoint_path()
         model_id = _as_path(
             self.model_cfg.get("base_model_path") or self.model_cfg.get("model_id")

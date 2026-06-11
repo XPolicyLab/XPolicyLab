@@ -16,7 +16,7 @@ gpu_id=$7
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INNER_DIR="${POLICY_DIR}/giga_world_policy"
-ROBODOJO_TEST_ROOT="$(cd "${POLICY_DIR}/../../.." && pwd)"
+XPOLICYLAB_ROOT="$(cd "${POLICY_DIR}/../../.." && pwd)"
 
 resolve_lerobot_repo_id() {
   if [[ -n "${LEROBOT_DATASET_REPO_ID:-}" ]]; then
@@ -24,12 +24,12 @@ resolve_lerobot_repo_id() {
     return
   fi
   case "${env_cfg_type}" in
-    arx_x5) echo "RoboDojo_sim_arx-x5_v30" ;;
-    *) echo "RoboDojo_sim_${env_cfg_type}" ;;
+    arx_x5) echo "XPolicyLab_sim_arx-x5_v30" ;;
+    *) echo "XPolicyLab_sim_${env_cfg_type}" ;;
   esac
 }
 
-export XPOLICYLAB_LEROBOT_DATA_ROOT="${XPOLICYLAB_LEROBOT_DATA_ROOT:-${LEROBOT_DATA_ROOT:-${ROBODOJO_TEST_ROOT}/data}}"
+export XPOLICYLAB_LEROBOT_DATA_ROOT="${XPOLICYLAB_LEROBOT_DATA_ROOT:-${LEROBOT_DATA_ROOT:-${XPOLICYLAB_ROOT}/data}}"
 export LEROBOT_DATA_ROOT="${XPOLICYLAB_LEROBOT_DATA_ROOT}"
 export LEROBOT_DATASET_REPO_ID="${LEROBOT_DATASET_REPO_ID:-$(resolve_lerobot_repo_id)}"
 
@@ -43,7 +43,7 @@ base_config="${GIGAWORLD_CONFIG:-configs.xpolicylab_gigaworld.config}"
 accel_config="${GIGAWORLD_ACCEL_CONFIG:-${INNER_DIR}/scripts/accelerate_configs/config_deepspeed_zero2.json}"
 norm_path="${GIGAWORLD_NORM_PATH:-}"
 pretrained_path="${GIGAWORLD_PRETRAINED_PATH:-${WAN22_DIFFUSERS_PATH:?Set GIGAWORLD_PRETRAINED_PATH (or WAN22_DIFFUSERS_PATH) to the local Wan2.2-TI2V-5B-Diffusers directory}}"
-wandb_project="${GIGAWORLD_WANDB_PROJECT:-gwp-robodojo}"
+wandb_project="${GIGAWORLD_WANDB_PROJECT:-gwp-xpolicylab}"
 wandb_name="${GIGAWORLD_WANDB_NAME:-GigaWorldPolicy_${ckpt_setting}}"
 wandb_mode="${WANDB_MODE:-offline}"
 model_action_dim="${GIGAWORLD_MODEL_ACTION_DIM:-14}"

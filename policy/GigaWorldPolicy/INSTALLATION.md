@@ -35,7 +35,7 @@ Common runtime overrides:
 export GIGAWORLD_PRETRAINED_PATH=/path/to/Wan2.2-TI2V-5B-Diffusers
 export GIGAWORLD_NORM_PATH=/path/to/norm_stats_delta.json
 export GIGAWORLD_CONFIG=configs.xpolicylab_gigaworld.config
-export GIGAWORLD_WANDB_PROJECT=gwp-robodojo
+export GIGAWORLD_WANDB_PROJECT=gwp-xpolicylab
 ```
 
 ## XPolicyLab Deploy
@@ -54,10 +54,10 @@ Manual evaluation:
 
 ```bash
 # terminal 1 - server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls <ckpt_name> arx_x5 3500 joint 0 0 gigaworld-policy <port> localhost
+bash setup_eval_policy_server.sh XPolicyLab stack_bowls <ckpt_name> arx_x5 3500 joint 0 0 gigaworld-policy <port> localhost
 
 # terminal 2 - client
-bash setup_eval_env_client.sh RoboDojo stack_bowls <ckpt_name> arx_x5 joint 0 0 XPolicyLab "ckpt_name=<ckpt_name>,action_type=joint" <port> localhost
+bash setup_eval_env_client.sh XPolicyLab stack_bowls <ckpt_name> arx_x5 joint 0 0 XPolicyLab "ckpt_name=<ckpt_name>,action_type=joint" <port> localhost
 ```
 
 Or run `eval.sh`, which allocates a port, starts the server, waits for readiness, and then starts the client.

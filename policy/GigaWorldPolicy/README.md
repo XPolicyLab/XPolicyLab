@@ -25,7 +25,7 @@ data/<dataset_name>/<task_name>/<env_cfg_type>/
 For the current demo:
 
 ```text
-data/RoboDojo_demo/stack_bowls/arx_x5/data/episode_*.hdf5
+data/XPolicyLab_demo/stack_bowls/arx_x5/data/episode_*.hdf5
 ```
 
 `arx_x5` maps to `dual_x5`, so joint state/action is 14-D: left arm 6 + left gripper 1 + right arm 6 + right gripper 1.
@@ -61,19 +61,19 @@ Images are decoded from XPolicyLab HDF5 bytes or arrays as RGB and stored as RGB
 Example:
 
 ```bash
-GIGAWORLD_PYTHON=/path/to/python   bash process_data.sh RoboDojo_demo stack_bowls arx_x5 50 joint
+GIGAWORLD_PYTHON=/path/to/python   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 50 joint
 ```
 
 For multi-task conversion, pass comma-separated task names via `GIGAWORLD_TASK_NAMES`; `ckpt_name` still controls the XPolicyLab 5-tuple output name:
 
 ```bash
-GIGAWORLD_TASK_NAMES=stack_bowls,another_task   bash process_data.sh RoboDojo_demo cotrain arx_x5 50 joint
+GIGAWORLD_TASK_NAMES=stack_bowls,another_task   bash process_data.sh XPolicyLab_demo cotrain arx_x5 50 joint
 ```
 
 If you already have a LeRobot v2.1 dataset, link it instead:
 
 ```bash
-GIGAWORLD_SOURCE_DATA_DIR=/path/to/lerobot   bash process_data.sh RoboDojo_demo stack_bowls arx_x5 50 joint
+GIGAWORLD_SOURCE_DATA_DIR=/path/to/lerobot   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 50 joint
 ```
 
 Optional helpers:
@@ -86,10 +86,10 @@ GIGAWORLD_GENERATE_T5=1 bash process_data.sh ...    # optional, GPU-heavy
 ## Training
 
 Default LeRobot data path is `${XPOLICYLAB_LEROBOT_DATA_ROOT:-${LEROBOT_DATA_ROOT:-<XPolicyLab>/data}}/<repo_id>`.
-For `arx_x5`, the default repo id is `RoboDojo_sim_arx-x5_v30`. Set `GIGAWORLD_DATA_DIR` to override the complete data path, or set `LEROBOT_DATASET_REPO_ID` to override only the repo id.
+For `arx_x5`, the default repo id is `XPolicyLab_sim_arx-x5_v30`. Set `GIGAWORLD_DATA_DIR` to override the complete data path, or set `LEROBOT_DATASET_REPO_ID` to override only the repo id.
 
 ```bash
-GIGAWORLD_PYTHON=/path/to/python   bash train.sh RoboDojo_demo stack_bowls arx_x5 50 joint 0 0,1,2,3
+GIGAWORLD_PYTHON=/path/to/python   bash train.sh XPolicyLab_demo stack_bowls arx_x5 50 joint 0 0,1,2,3
 ```
 
 Training seed is propagated as `XPolicyLab_seed + 1` for giga-train (`seed > 0`), and `PYTHONHASHSEED` uses the same resolved value.
@@ -123,7 +123,7 @@ For server/client interface smoke tests, set `load_model: false` in `deploy.yml`
 Single-machine evaluation (`eval.sh` allocates a port, starts the policy server, waits until it is ready, and then starts the env client):
 
 ```bash
-bash eval.sh RoboDojo debug_task <ckpt_name> arx_x5 1 joint 0 0 0 gigaworld-policy gigaworld-policy
+bash eval.sh XPolicyLab debug_task <ckpt_name> arx_x5 1 joint 0 0 0 gigaworld-policy gigaworld-policy
 ```
 
 Split-machine evaluation (GPU host runs policy server, simulator host runs env client):
@@ -131,10 +131,10 @@ Split-machine evaluation (GPU host runs policy server, simulator host runs env c
 ```bash
 # GPU host
 FREE_PORT=$(bash ../../utils/get_free_port.sh)
-bash setup_eval_policy_server.sh RoboDojo debug_task <ckpt_name> arx_x5 1 joint 0 0 gigaworld-policy "${FREE_PORT}" 0.0.0.0
+bash setup_eval_policy_server.sh XPolicyLab debug_task <ckpt_name> arx_x5 1 joint 0 0 gigaworld-policy "${FREE_PORT}" 0.0.0.0
 
 # Simulator host
-bash setup_eval_env_client.sh RoboDojo debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy \
+bash setup_eval_env_client.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy \
   "ckpt_name=<ckpt_name>,action_type=joint" <port> <policy_server_ip>
 ```
 

@@ -445,7 +445,7 @@ class Trainer:
                 init_timeout=int(wandb_cfg.get("init_timeout", os.environ.get("WANDB_INIT_TIMEOUT", 300)))
             )
             wandb.init(
-                project=wandb_cfg.get("project", "gwp-robodojo"),
+                project=wandb_cfg.get("project", "gwp-xpolicylab"),
                 name=wandb_cfg.get("name", os.path.basename(project_dir)),
                 config=self.config,
                 dir=project_dir,

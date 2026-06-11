@@ -16,7 +16,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer, UMT5EncoderModel
 
 
-def collect_all_tasks(data_root: str) -> dict[str, list[dict]]:
+def collect_task_metadata(data_root: str) -> dict[str, list[dict]]:
     """Collect all (lerobot_path, task_descriptions) pairs.
 
     Supports both direct LeRobot v2.1 roots (<data_root>/meta/tasks.jsonl)
@@ -109,12 +109,12 @@ def main():
     model.eval()
 
     print(f"Scanning datasets under: {args.data_root}")
-    all_tasks = collect_all_tasks(args.data_root)
-    print(f"Found {len(all_tasks)} sub-datasets")
+    tasks_by_dataset = collect_task_metadata(args.data_root)
+    print(f"Found {len(tasks_by_dataset)} sub-datasets")
 
     # Collect unique texts
     unique_texts = set()
-    for tasks in all_tasks.values():
+    for tasks in tasks_by_dataset.values():
         for t in tasks:
             unique_texts.add(t["task"])
     unique_texts = sorted(unique_texts)
@@ -129,7 +129,7 @@ def main():
             text_to_embed[text] = embed
 
     # Save per-dataset t5_text_embeds.pt
-    for lerobot_dir, tasks in tqdm(all_tasks.items(), desc="Saving"):
+    for lerobot_dir, tasks in tqdm(tasks_by_dataset.items(), desc="Saving"):
         meta_dir = os.path.join(lerobot_dir, "meta")
         materialize_symlink_dir(meta_dir)
 
