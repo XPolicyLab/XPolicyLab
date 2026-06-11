@@ -21,6 +21,9 @@ CONFIG_DIR = os.path.join(UPSTREAM_DIR, "configs")
 STD_W, STD_H = 320, 240
 
 CAM_NAME_CANDIDATES = {
+    "cam_high": ["cam_high", "cam_head", "head_camera", "top_camera"],
+    "cam_left_wrist": ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"],
+    "cam_right_wrist": ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"],
     "head_rgb": ["cam_head", "head_camera", "cam_high", "head", "top_camera"],
     "head_condition": ["cam_head", "head_camera", "cam_high", "head"],
     "left_wrist_rgb": ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"],

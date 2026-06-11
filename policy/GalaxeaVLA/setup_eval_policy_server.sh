@@ -45,14 +45,15 @@ _resolve_run_root() {
     fi
 }
 
-ckpt_run_id="${GALAXEA_CKPT_RUN_ID:-$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
+expert_data_num="${GALAXEA_EXPERT_DATA_NUM:-}"
 
 if [[ -d "${ckpt_name}" && "${ckpt_name}" == */* ]]; then
     ckpt_path="${ckpt_name}"
 else
     ckpt_path="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
-        "${env_cfg_type}" "${action_type}" "${seed}")"
+        "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
     if [[ ! -d "${ckpt_path}" ]]; then
+        ckpt_run_id="$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
         echo -e "\033[31m[SERVER] ckpt not found: checkpoints/${ckpt_run_id}\033[0m" >&2
         echo -e "\033[31m[SERVER] (eval args: dataset=${dataset_name} ckpt_name=${ckpt_name} env=${env_cfg_type} action=${action_type} seed=${seed})\033[0m" >&2
         exit 1
@@ -61,6 +62,7 @@ fi
 ckpt_path="$(cd "${ckpt_path}" && pwd)"
 ckpt_path="$(_resolve_run_root "${ckpt_path}")"
 ckpt_path="$(cd "${ckpt_path}" && pwd)"
+ckpt_run_id="${GALAXEA_CKPT_RUN_ID:-$(basename "${ckpt_path}")}"
 echo -e "\033[33m[SERVER] ckpt_run_id=${ckpt_run_id}\033[0m"
 echo -e "\033[33m[SERVER] ckpt_path=${ckpt_path}\033[0m"
 
