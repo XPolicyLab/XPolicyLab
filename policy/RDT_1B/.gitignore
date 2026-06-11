@@ -1,0 +1,5 @@
+data/*
+checkpoints/*
+runs/*
+lang_embeds/*
+weights/RDT/*

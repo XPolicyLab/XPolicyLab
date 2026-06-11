@@ -14,7 +14,13 @@ bash install.sh
 RDT_SKIP_CONDA_CREATE=1 bash install.sh
 ```
 
-仅安装依赖、不下载权重：
+已有权重目录时软链到 `weights/RDT/`（不下载）：
+
+```bash
+RDT_WEIGHTS_SRC=<path_to_weights_root> bash install.sh
+```
+
+仅安装依赖、跳过权重：
 
 ```bash
 RDT_SKIP_WEIGHTS=1 bash install.sh
@@ -70,7 +76,7 @@ huggingface-cli download robotics-diffusion-transformer/rdt-1b --local-dir rdt-1
 | 变量 / 路径 | 说明 |
 |-------------|------|
 | `weights/RDT/` | 默认本地下载目录（相对 policy 根） |
-| `RDT_HDF5_DIR` | 训练数据目录（覆盖 `data/<6-tuple>/`） |
+| `RDT_HDF5_DIR` | 训练数据目录（覆盖 `data/<4-tuple>/`） |
 | `RDT_PRETRAINED_MODEL` | RDT 主模型路径或 HF id |
 | `TEXT_ENCODER_NAME` | 文本编码器路径或 HF id |
 | `VISION_ENCODER_NAME` | 视觉编码器路径或 HF id |
@@ -87,28 +93,25 @@ huggingface-cli download robotics-diffusion-transformer/rdt-1b --local-dir rdt-1
 |----|------|
 | Server 环境 | `RDT` |
 | Client 环境 | `XPolicyLab`（conda） |
-| eval 示例 ckpt | `RoboDojo_sim_seed_0` |
-| expert_data_num | `3500` |
+| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-joint-0` |
 | action_type | `joint` |
-| xspark 权重 | `/mnt/xspark-data/final_ckpt/RDT_1B/RoboDojo_sim_seed_0` |
-
 软链 checkpoint（在 `policy/RDT_1B/` 下）：
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <path_to_trained_ckpt> checkpoints/<5-tuple_dir_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 传入完整 checkpoint 目录名（`<dataset>-<ckpt>-<env_cfg>-<action_type>-<seed>`）。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo_sim_seed_0 arx_x5 3500 joint 0 0 RDT <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 rdt_1b <port> localhost
 
 # terminal 2 — client
-bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo_sim_seed_0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo_sim_seed_0,action_type=joint" <port> localhost
+bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" <port> localhost
 ```
 
 或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
