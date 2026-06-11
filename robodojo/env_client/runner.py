@@ -53,10 +53,7 @@ def _run_trial_loop(
         if max_episodes is not None and episodes >= max_episodes:
             break
         env.reset()
-        if eval_batch:
-            env.eval_one_episode_batch()
-        else:
-            env.eval_one_episode()
+        env.eval_one_episode()
         env.finish_episode()
         episodes += 1
         total_steps += env.episode_step
