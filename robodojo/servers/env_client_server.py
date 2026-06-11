@@ -422,7 +422,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--serve-port", type=int, default=19200)
     parser.add_argument(
         "--artifact-root",
-        default="/private/tmp/robodojo-artifacts",
+        default=os.path.join(os.environ.get("TMPDIR", "/tmp"), "robodojo-artifacts"),
         help="Directory where per-evaluation artifacts are written",
     )
     parser.add_argument("--no-s3", action="store_true", help="Skip S3 artifact upload")

@@ -15,6 +15,7 @@ env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
 protocol="${13:-robodojo_ws}"
 run_mode="${14:---run-once}"
+artifact_root="${ROBODOJO_ARTIFACT_ROOT:-${TMPDIR:-/tmp}/robodojo-artifacts}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -47,4 +48,5 @@ PYTHONWARNINGS=ignore::UserWarning \
 python -m robodojo.servers.env_client_server \
     "${CLIENT_ARGS[@]}" \
     --serve-host 0.0.0.0 \
-    --serve-port 19200
+    --serve-port 19200 \
+    --artifact-root "${artifact_root}"
