@@ -388,6 +388,12 @@ def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
         type=str,
         help="deploy.yml path reported by /v1/health",
     )
+    parser.add_argument(
+        "--action-type",
+        dest="action_type",
+        choices=("joint", "ee"),
+        help="robot action schema for RealEnv (must match policy output, e.g. ee for X_VLA)",
+    )
 
 
 def baseline_from_args(args: argparse.Namespace) -> EnvClientBaselineConfig:
@@ -403,6 +409,7 @@ def baseline_from_args(args: argparse.Namespace) -> EnvClientBaselineConfig:
         eval_episode_num=args.eval_episode_num,
         eval_env=args.eval_env,
         root_dir=args.root_dir,
+        action_type=args.action_type,
     )
 
 
@@ -414,6 +421,8 @@ def _validate_startup_args(
         parser.error("--no-policy-trials requires --no-webhook")
     if args.eval_env == "real" and not args.root_dir:
         parser.error("--root-dir is required when --eval_env=real")
+    if args.eval_env == "real" and not args.action_type:
+        parser.error("--action-type is required when --eval_env=real (e.g. ee for X_VLA)")
 
 
 def main(argv: list[str] | None = None) -> int:
