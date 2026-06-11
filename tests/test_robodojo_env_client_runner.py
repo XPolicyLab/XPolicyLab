@@ -111,7 +111,7 @@ def test_make_dispatch_trial_runner_real_baseline_includes_root_dir_and_skips_ep
         }
 
     runner = make_dispatch_trial_runner(
-        _baseline(eval_env="real", root_dir="/pipeline/root"),
+        _baseline(eval_env="real", root_dir="/pipeline/root", action_type="ee"),
         run_trial=run_trial,
         eval_episode_num=1,
     )

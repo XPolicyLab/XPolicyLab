@@ -40,6 +40,13 @@ def _close_env_model_client(env: Any) -> None:
         close()
 
 
+def _cleanup_env(env: Any) -> None:
+    _close_env_model_client(env)
+    cleanup = getattr(env, "cleanup", None)
+    if callable(cleanup):
+        cleanup()
+
+
 def _run_trial_loop(
     env: Any,
     *,
@@ -92,7 +99,7 @@ def _run_env_trial(
             max_episodes=max_episodes,
         )
     finally:
-        _close_env_model_client(env)
+        _cleanup_env(env)
     return _completed_trial_result(
         deploy_cfg,
         steps=total_steps,

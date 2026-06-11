@@ -270,6 +270,25 @@ def test_validate_startup_args_requires_root_dir_for_real_eval_env():
                 no_webhook=False,
                 eval_env="real",
                 root_dir=None,
+                action_type="ee",
+            ),
+        )
+    assert exc_info.value.code == 2
+
+
+def test_validate_startup_args_requires_action_type_for_real_eval_env():
+    from argparse import ArgumentParser, Namespace
+
+    parser = ArgumentParser()
+    with pytest.raises(SystemExit) as exc_info:
+        _validate_startup_args(
+            parser,
+            Namespace(
+                no_policy_trials=False,
+                no_webhook=False,
+                eval_env="real",
+                root_dir="/pipeline/root",
+                action_type=None,
             ),
         )
     assert exc_info.value.code == 2
@@ -291,10 +310,12 @@ def test_baseline_from_args_includes_root_dir():
             eval_episode_num=10,
             eval_env="real",
             root_dir="/pipeline/root",
+            action_type="ee",
         )
     )
     assert baseline.eval_env == "real"
     assert baseline.root_dir == "/pipeline/root"
+    assert baseline.action_type == "ee"
 
 
 def test_parse_session_route_recognizes_stop():

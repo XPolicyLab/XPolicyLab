@@ -17,6 +17,18 @@ protocol="${13:-robodojo_ws}"
 run_mode="${14:---run-once}"
 artifact_root="${ROBODOJO_ARTIFACT_ROOT:-${TMPDIR:-/tmp}/robodojo-artifacts}"
 
+action_type=$(python - <<PY
+info = "${additional_info}"
+for part in info.split(","):
+    if "=" not in part:
+        continue
+    key, value = part.split("=", 1)
+    if key.strip() == "action_type":
+        print(value.strip())
+        break
+PY
+)
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
 conda activate "${eval_env_conda_env}"
@@ -44,9 +56,15 @@ if [[ "${run_mode}" == "--run-once" ]]; then
     exit 1
 fi
 
+if [[ -z "${action_type}" ]]; then
+    echo "[ERROR] eval_env=real requires action_type in additional_info (e.g. action_type=ee)" >&2
+    exit 1
+fi
+
 PYTHONWARNINGS=ignore::UserWarning \
 python -m robodojo.servers.env_client_server \
     "${CLIENT_ARGS[@]}" \
+    --action-type "${action_type}" \
     --serve-host 0.0.0.0 \
     --serve-port 19200 \
     --artifact-root "${artifact_root}"

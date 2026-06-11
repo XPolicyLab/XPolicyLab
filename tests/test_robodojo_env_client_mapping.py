@@ -53,6 +53,7 @@ def _real_baseline(**overrides: object) -> EnvClientBaselineConfig:
     return _baseline(
         eval_env="real",
         root_dir="/data/X-Robot-Pipeline",
+        action_type="ee",
         **overrides,
     )
 
@@ -85,6 +86,7 @@ def _reference_deploy_cfg(
     if baseline.eval_env == "real":
         reference["eval_env"] = "real"
         reference["root_dir"] = baseline.root_dir
+        reference["action_type"] = baseline.action_type
     return reference
 
 

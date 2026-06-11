@@ -25,6 +25,7 @@ DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS = (
     "repeat_index",
     "eval_episode_num",
     "eval_batch",
+    "action_type",
 )
 
 _DEPLOY_CFG_CASE_META_KEYS = (
@@ -56,6 +57,7 @@ class EnvClientBaselineConfig(_StrictSchema):
     eval_episode_num: int = Field(default=10, ge=1)
     eval_env: str = "debug"
     root_dir: str | None = None
+    action_type: Literal["joint", "ee"] | None = None
 
 
 class TrialRunRequest(_StrictSchema):
