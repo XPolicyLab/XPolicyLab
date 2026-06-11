@@ -37,7 +37,7 @@ export PYTHONPATH="${SCRIPT_DIR}/AgiBot-World:${XPL_DIR}:${PYTHONPATH:-}"
 
 OVERRIDES=(
     port="${policy_server_port}"
-    policy_server_host="${policy_server_host}"
+    host="${policy_server_host}"
     dataset_name="${dataset_name}"
     task_name="${task_name}"
     ckpt_name="${ckpt_name}"

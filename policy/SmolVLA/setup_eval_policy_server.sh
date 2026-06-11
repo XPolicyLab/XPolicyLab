@@ -33,8 +33,8 @@ exec env \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            policy_server_port="${policy_server_port}" \
-            policy_server_host="${policy_server_host}" \
+            port="${policy_server_port}" \
+            host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
             dataset_name="${dataset_name}" \
