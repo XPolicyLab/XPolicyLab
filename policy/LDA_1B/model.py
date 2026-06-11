@@ -130,8 +130,8 @@ def _standardize_rgb_image(image: Any) -> np.ndarray:
     image = _expand2square_uint8(image, _GR00T_IMG_MEAN_U8)
 
     # Step 3: resize to the model's expected input. PIL's default Image.resize
-    # uses bilinear interpolation; cv2.INTER_LINEAR matches that.
-    image = cv2.resize(image, (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE), interpolation=cv2.INTER_LINEAR)
+    # resample for RGB images is BICUBIC; cv2.INTER_CUBIC matches that.
+    image = cv2.resize(image, (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE), interpolation=cv2.INTER_CUBIC)
     if image.shape != (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE, 3):
         raise ValueError(
             f"Expected RGB image shape ({_MODEL_INPUT_SIZE}, {_MODEL_INPUT_SIZE}, 3), got {image.shape}."

@@ -7,8 +7,9 @@ Expected input layout (raw task dirs; comma-separated to merge):
 
 Output layout (one dataset per invocation):
     <policy_dir>/data/<dataset_id>/
-        data/chunk-000/episode_XXXXXX.parquet
-        videos/chunk-000/video.<cam>/episode_XXXXXX.mp4
+        data/chunk-NNN/episode_XXXXXX.parquet
+        videos/chunk-NNN/video.<cam>/episode_XXXXXX.mp4
+    Episodes are split across chunks by episode_index // chunks_size (LeRobot v2.1).
         meta/{info.json, modality.json, episodes.jsonl,
               episodes_stats.jsonl, tasks.jsonl, stats.json}
 
@@ -56,6 +57,16 @@ DEFAULT_FPS = 25  # arx_x5.yml collect_freq
 VIDEO_CODEC = "mp4v"
 VIDEO_PIX_FMT = "yuv420p"
 CHUNK_SIZE = 1000  # LeRobot v2.1 default
+
+
+def _episode_chunk(episode_index: int, chunk_size: int = CHUNK_SIZE) -> int:
+    return episode_index // chunk_size
+
+
+def _total_chunks(num_episodes: int, chunk_size: int = CHUNK_SIZE) -> int:
+    if num_episodes == 0:
+        return 0
+    return (num_episodes + chunk_size - 1) // chunk_size
 
 
 def _standardize_frame(raw_rgb: np.ndarray) -> np.ndarray:
@@ -303,9 +314,7 @@ def convert(args: argparse.Namespace) -> None:
     robot_info = get_robot_action_dim_info(args.env_cfg_type)
     expected_action_dim = sum(robot_info["arm_dim"]) + sum(robot_info["ee_dim"])
 
-    data_dir = output_root / "data" / "chunk-000"
     meta_dir = output_root / "meta"
-    data_dir.mkdir(parents=True, exist_ok=True)
     meta_dir.mkdir(parents=True, exist_ok=True)
 
     fps = int(args.fps) if args.fps else DEFAULT_FPS
@@ -358,6 +367,9 @@ def convert(args: argparse.Namespace) -> None:
             task_index=task_index,
             fps=fps,
         )
+        chunk_index = _episode_chunk(episode_index)
+        data_dir = output_root / "data" / f"chunk-{chunk_index:03d}"
+        data_dir.mkdir(parents=True, exist_ok=True)
         parquet_path = data_dir / f"episode_{episode_index:06d}.parquet"
         pd.DataFrame(rows).to_parquet(parquet_path, index=False)
 
@@ -370,7 +382,7 @@ def convert(args: argparse.Namespace) -> None:
             video_path = (
                 output_root
                 / "videos"
-                / "chunk-000"
+                / f"chunk-{chunk_index:03d}"
                 / f"video.{cam}"
                 / f"episode_{episode_index:06d}.mp4"
             )
@@ -410,7 +422,7 @@ def convert(args: argparse.Namespace) -> None:
         "total_frames": int(total_frames),
         "total_tasks": len(tasks_index),
         "total_videos": len(episodes_meta) * len(CAMERA_NAMES),
-        "total_chunks": 1,
+        "total_chunks": _total_chunks(len(episodes_meta)),
         "chunks_size": CHUNK_SIZE,
         "fps": fps,
         "splits": {"train": f"0:{len(episodes_meta)}"},
