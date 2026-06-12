@@ -283,7 +283,14 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 return
 
             try:
-                reset_idle_env(state.baseline)
+                reset_kwargs: dict[str, object] = {}
+                if state.dispatches:
+                    evaluation_id, dispatch = next(iter(state.dispatches.items()))
+                    reset_kwargs = {
+                        "dispatch": dispatch,
+                        "evaluation_id": evaluation_id,
+                    }
+                reset_idle_env(state.baseline, **reset_kwargs)
             except TrialRunnerError as exc:
                 error = exc.error or {
                     "code": "reset_failed",

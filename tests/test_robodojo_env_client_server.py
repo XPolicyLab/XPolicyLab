@@ -339,7 +339,10 @@ def test_reset_calls_idle_env_reset(tmp_path):
         env.reset()
         return _completed_result(deploy_cfg, steps=0)
 
-    with patch("robodojo.servers.env_client_server.reset_idle_env", side_effect=lambda _baseline: reset_calls.append("reset")):
+    with patch(
+        "robodojo.servers.env_client_server.reset_idle_env",
+        side_effect=lambda _baseline, **_kwargs: reset_calls.append("reset"),
+    ):
         with _running_server(
             run_trial=run_trial,
             tmp_path=tmp_path,

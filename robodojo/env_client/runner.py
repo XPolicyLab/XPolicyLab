@@ -6,12 +6,14 @@ import inspect
 import sys
 from collections.abc import Callable, Mapping
 from typing import Any
+from urllib.parse import urlparse
 
 from robodojo.env_client.api import (
     EnvClientBaselineConfig,
     dispatch_trial_to_deploy_cfg,
 )
 from robodojo.schemas import DispatchPayload
+from robodojo.trial.config import build_trial_run_config
 
 EnvTrialRunner = Callable[..., dict[str, Any]]
 DebugTrialRunner = EnvTrialRunner
@@ -89,25 +91,87 @@ def baseline_to_reset_deploy_cfg(
         else dict(baseline)
     )
 
+    task_name = payload.get("task_name") or "trial"
     payload.setdefault("evaluation_id", "idle-reset")
-    payload.setdefault("trial_id", f"{payload.get('task_name', 'trial')}-reset")
-    payload.setdefault("action_case_id", f"{payload.get('task_name', 'trial')}_case_1")
-    if payload.get("protocol", "robodojo_ws") == "robodojo_ws" and not payload.get(
-        "policy_server_url"
+    payload.setdefault("trial_id", f"{task_name}-reset")
+    payload.setdefault("action_case_id", f"{task_name}_case_1")
+    if (
+        payload.get("protocol", "robodojo_ws") == "robodojo_ws"
+        and not payload.get("policy_server_url")
     ):
-        host = payload.get("host", "localhost")
-        port = int(payload["port"])
-        payload["policy_server_url"] = f"ws://{host}:{port}"
+        host = payload.get("host") or "localhost"
+        port = payload.get("port")
+        if port is not None:
+            payload["policy_server_url"] = f"ws://{host}:{int(port)}"
     return payload
 
 
-def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> None:
+def _sync_host_port_from_policy_url(
+    deploy_cfg: dict[str, Any],
+    policy_server_url: str,
+) -> None:
+    parsed = urlparse(policy_server_url)
+    if parsed.hostname:
+        deploy_cfg["host"] = parsed.hostname
+    if parsed.port:
+        deploy_cfg["port"] = parsed.port
+
+
+def _overlay_dispatch_for_reset(
+    deploy_cfg: dict[str, Any],
+    dispatch: DispatchPayload,
+    *,
+    evaluation_id: str,
+) -> dict[str, Any]:
+    from robodojo.dispatch.planner import build_trial_runs
+
+    trial_runs = build_trial_runs(dispatch, evaluation_id=evaluation_id)
+    if not trial_runs:
+        deploy_cfg["policy_server_url"] = dispatch.policy_server_url
+        return deploy_cfg
+
+    config = build_trial_run_config(
+        dispatch,
+        trial_runs[0],
+        evaluation_id=evaluation_id,
+        eval_env=deploy_cfg.get("eval_env"),
+    )
+    overlay = {
+        "policy_server_url": config.policy_server_url,
+        "policy_name": config.policy_name,
+        "task_name": config.task_name,
+        "env_cfg_type": config.env_cfg_type,
+        "trial_id": f"{config.trial_id}-reset",
+        "action_case_id": config.action_case_id,
+        "evaluation_id": evaluation_id,
+    }
+    action_type = config.case_meta.get("action_type")
+    if action_type in ("joint", "ee"):
+        overlay["action_type"] = action_type
+    deploy_cfg.update(overlay)
+    _sync_host_port_from_policy_url(deploy_cfg, config.policy_server_url)
+    return deploy_cfg
+
+
+def reset_idle_env(
+    baseline: EnvClientBaselineConfig | Mapping[str, Any],
+    *,
+    dispatch: DispatchPayload | None = None,
+    evaluation_id: str | None = None,
+) -> None:
     """Reset policy + robot state while no trial is executing."""
 
     if isinstance(baseline, Mapping) and not isinstance(baseline, EnvClientBaselineConfig):
         baseline = EnvClientBaselineConfig.model_validate(baseline)
 
     deploy_cfg = baseline_to_reset_deploy_cfg(baseline)
+    if dispatch is not None and evaluation_id:
+        deploy_cfg = _overlay_dispatch_for_reset(
+            deploy_cfg,
+            dispatch,
+            evaluation_id=evaluation_id,
+        )
+    deploy_cfg = _prepare_real_deploy_cfg(deploy_cfg)
     eval_env = _baseline_eval_env(baseline)
 
     if eval_env == "real":
@@ -272,19 +336,35 @@ def _fill_deploy_cfg_from_meta(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
     return deploy_cfg
 
 
+def _prepare_real_deploy_cfg(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
+    deploy_cfg = _fill_deploy_cfg_from_meta(deploy_cfg)
+    _validate_real_deploy_cfg(deploy_cfg)
+    return deploy_cfg
+
+
 def _validate_real_deploy_cfg(deploy_cfg: Mapping[str, Any]) -> None:
     if deploy_cfg.get("eval_env") != "real":
         return
+
+    missing: list[str] = []
     if deploy_cfg.get("action_type") not in ("joint", "ee"):
-        raise TrialRunnerError(
-            "action_type is required for real eval_env but was not provided by "
-            "the dispatch payload, policy server meta, or daemon startup args "
-            "(upgrade the policy server to advertise meta, or set ACTION_TYPE).",
-            error={
-                "code": "missing_action_type",
-                "message": "action_type unresolved for real eval_env",
-            },
-        )
+        missing.append("action_type")
+    for key in ("env_cfg_type", "task_name", "policy_server_url"):
+        if not deploy_cfg.get(key):
+            missing.append(key)
+    if not missing:
+        return
+
+    raise TrialRunnerError(
+        "real eval_env reset is missing required deploy fields: "
+        f"{', '.join(missing)}. Provide them via dispatch, policy server meta, "
+        "or env client startup args (ACTION_TYPE, etc.).",
+        error={
+            "code": "missing_reset_deploy_cfg",
+            "message": f"reset deploy_cfg missing: {', '.join(missing)}",
+            "missing": missing,
+        },
+    )
 
 
 def _call_env_trial_runner(
@@ -321,8 +401,7 @@ def make_dispatch_trial_runner(
             evaluation_id=evaluation_id,
             eval_episode_num=episode_override,
         )
-        deploy_cfg = _fill_deploy_cfg_from_meta(deploy_cfg)
-        _validate_real_deploy_cfg(deploy_cfg)
+        deploy_cfg = _prepare_real_deploy_cfg(deploy_cfg)
         stop_check = (
             stop_check_factory(deploy_cfg) if stop_check_factory else _never_stop
         )
