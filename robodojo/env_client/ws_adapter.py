@@ -8,6 +8,49 @@ from typing import Any, cast
 from robodojo.protocol.client import PolicyEvalClient, PolicyEvalClientConfig
 
 
+def _meta_from_hello_ack(hello_ack: Any) -> dict[str, Any]:
+    payload = getattr(hello_ack, "payload", None)
+    if isinstance(payload, dict):
+        meta = payload.get("meta")
+        if isinstance(meta, dict):
+            return meta
+    return {}
+
+
+def fetch_policy_meta(
+    url: str,
+    *,
+    evaluation_id: str = "meta-probe",
+    connect_timeout_s: float = 30.0,
+    max_connect_attempts: int = 10,
+) -> dict[str, Any]:
+    """Fetch policy metadata via a short-lived HELLO handshake.
+
+    Returns ``{}`` when the server predates the meta protocol extension.
+    """
+
+    async def _fetch() -> dict[str, Any]:
+        client = PolicyEvalClient(
+            PolicyEvalClientConfig(
+                url=url,
+                evaluation_id=evaluation_id,
+                connect_timeout_s=connect_timeout_s,
+                max_connect_attempts=max_connect_attempts,
+            )
+        )
+        try:
+            hello_ack = await client.connect(handshake=True)
+            return _meta_from_hello_ack(hello_ack)
+        finally:
+            await client.close()
+
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(_fetch())
+    finally:
+        loop.close()
+
+
 class RoboDojoModelClient:
     def __init__(
         self,
@@ -29,7 +72,8 @@ class RoboDojoModelClient:
         self._client = client or PolicyEvalClient(
             PolicyEvalClientConfig(url=url, evaluation_id=evaluation_id)
         )
-        self._loop.run_until_complete(self._client.connect(handshake=True))
+        hello_ack = self._loop.run_until_complete(self._client.connect(handshake=True))
+        self.server_meta: dict[str, Any] = _meta_from_hello_ack(hello_ack)
 
     def call(self, func_name: str | None = None, obs: Any = None, **kwargs: Any) -> Any:
         if func_name == "prepare_case":

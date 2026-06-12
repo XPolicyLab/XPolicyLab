@@ -373,22 +373,33 @@ def session_stop_path(evaluation_id: str, trial_index: int) -> str:
 def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
     from debug_env_client import str2bool
 
-    parser.add_argument("--dataset_name", required=True, type=str)
-    parser.add_argument("--task_name", required=True, type=str)
-    parser.add_argument("--env_cfg_type", type=str, required=True)
+    parser.add_argument("--dataset_name", type=str, default=None)
+    parser.add_argument("--task_name", type=str, default=None)
+    parser.add_argument("--env_cfg_type", type=str, default=None)
     parser.add_argument(
         "--policy_name",
         type=str,
-        required=True,
-        help="XPolicyLab module name for deployment",
+        default=None,
+        help="XPolicyLab module name for deployment "
+        "(optional: auto-filled from dispatch payload / policy server meta)",
     )
     parser.add_argument(
         "--protocol",
         choices=("legacy_tcp", "robodojo_ws"),
         default="robodojo_ws",
     )
-    parser.add_argument("--host", type=str, default="localhost", help="policy server host")
-    parser.add_argument("--port", type=int, required=True, help="policy server port")
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=None,
+        help="policy server host (optional: dispatch payload provides policy_server_url)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=None,
+        help="policy server port (optional: dispatch payload provides policy_server_url)",
+    )
     parser.add_argument("--policy_server_url", type=str)
     parser.add_argument("--evaluation_id", type=str, default="debug-eval")
     parser.add_argument("--action_case_id", type=str)
@@ -457,8 +468,8 @@ def _validate_startup_args(
         parser.error("--no-policy-trials requires --no-webhook")
     if args.eval_env == "real" and not args.root_dir:
         parser.error("--root-dir is required when --eval_env=real")
-    if args.eval_env == "real" and not args.action_type:
-        parser.error("--action-type is required when --eval_env=real (e.g. ee for X_VLA)")
+    # action_type is resolved per trial (dispatch payload > policy server
+    # HELLO meta > startup arg) and validated at trial start for real envs.
 
 
 def main(argv: list[str] | None = None) -> int:

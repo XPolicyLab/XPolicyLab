@@ -202,6 +202,7 @@ def test_run_debug_trial_stop_check_exits_before_eval_episode_num():
     assert result["steps"] == 3
 
 
+<<<<<<< Updated upstream
 def test_run_debug_trial_stop_check_exits_mid_episode():
     episodes: list[str] = []
     stop_requested = False
@@ -265,6 +266,8 @@ def test_run_debug_trial_stop_check_exits_mid_episode():
     assert result["steps"] == 5
 
 
+=======
+>>>>>>> Stashed changes
 def test_run_real_trial_wires_stop_check_into_episode_end():
     class FakeRealEnv:
         def __init__(self, deploy_cfg: dict[str, Any]):

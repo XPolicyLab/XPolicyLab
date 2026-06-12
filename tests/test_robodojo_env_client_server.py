@@ -4,8 +4,8 @@ import json
 import threading
 import time
 from contextlib import contextmanager
-from unittest.mock import patch
 from typing import Any, Iterator
+from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -181,8 +181,10 @@ def test_start_merges_dispatch_into_deploy_cfg(tmp_path):
         assert body["error"] is None
         assert body["exit_code"] == 0
         assert body["artifact_dir"].endswith("/artifacts/eval-1/trials/1")
+        expected_baseline = _baseline().model_dump()
+        expected_baseline.pop("action_type")  # unset baseline fields are omitted
         assert captured[0] == {
-            **_baseline().model_dump(),
+            **expected_baseline,
             "evaluation_id": "eval-1",
             "trial_id": "case-1-r01",
             "action_case_id": "case-1",
@@ -277,22 +279,20 @@ def test_validate_startup_args_requires_root_dir_for_real_eval_env():
     assert exc_info.value.code == 2
 
 
-def test_validate_startup_args_requires_action_type_for_real_eval_env():
+def test_validate_startup_args_allows_missing_action_type_for_real_eval_env():
     from argparse import ArgumentParser, Namespace
 
     parser = ArgumentParser()
-    with pytest.raises(SystemExit) as exc_info:
-        _validate_startup_args(
-            parser,
-            Namespace(
-                no_policy_trials=False,
-                no_webhook=False,
-                eval_env="real",
-                root_dir="/pipeline/root",
-                action_type=None,
-            ),
-        )
-    assert exc_info.value.code == 2
+    _validate_startup_args(
+        parser,
+        Namespace(
+            no_policy_trials=False,
+            no_webhook=False,
+            eval_env="real",
+            root_dir="/pipeline/root",
+            action_type=None,
+        ),
+    )
 
 
 def test_baseline_from_args_includes_root_dir():
@@ -330,12 +330,18 @@ def test_parse_session_route_recognizes_stop():
 def test_reset_calls_idle_env_reset(tmp_path):
     reset_calls: list[str] = []
 
-    with patch(
-        "robodojo.servers.env_client_server.reset_idle_env",
-        side_effect=lambda _baseline: reset_calls.append("reset"),
-    ):
+    def run_trial(deploy_cfg: dict[str, Any], *, stop_check=lambda: False):
+        class _Env:
+            def reset(self) -> None:
+                reset_calls.append("reset")
+
+        env = _Env()
+        env.reset()
+        return _completed_result(deploy_cfg, steps=0)
+
+    with patch("robodojo.servers.env_client_server.reset_idle_env", side_effect=lambda _baseline: reset_calls.append("reset")):
         with _running_server(
-            run_trial=lambda deploy_cfg: _completed_result(deploy_cfg, steps=0),
+            run_trial=run_trial,
             tmp_path=tmp_path,
         ) as (server, _state):
             port = server.server_address[1]
