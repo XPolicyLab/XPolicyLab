@@ -4,6 +4,7 @@ import json
 import threading
 import time
 from contextlib import contextmanager
+from unittest.mock import patch
 from typing import Any, Iterator
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -324,6 +325,44 @@ def test_parse_session_route_recognizes_stop():
         "stop",
         2,
     )
+
+
+def test_reset_calls_idle_env_reset(tmp_path):
+    reset_calls: list[str] = []
+
+    with patch(
+        "robodojo.servers.env_client_server.reset_idle_env",
+        side_effect=lambda _baseline: reset_calls.append("reset"),
+    ):
+        with _running_server(
+            run_trial=lambda deploy_cfg: _completed_result(deploy_cfg, steps=0),
+            tmp_path=tmp_path,
+        ) as (server, _state):
+            port = server.server_address[1]
+            status, body = _post(port, "/v1/reset", {})
+            assert status == 200
+            assert body == {"status": "reset"}
+            assert reset_calls == ["reset"]
+
+
+def test_reset_rejects_while_trial_is_active(tmp_path):
+    def run_trial(_deploy_cfg: dict[str, Any], *, stop_check=lambda: False):
+        while not stop_check():
+            time.sleep(0.02)
+
+    with _running_server(run_trial=run_trial, tmp_path=tmp_path) as (server, state):
+        port = server.server_address[1]
+        _post(port, session_dispatch_path("eval-1"), _dispatch_payload())
+
+        start_thread = threading.Thread(
+            target=lambda: _post(port, session_start_path("eval-1", 1), {})
+        )
+        start_thread.start()
+        _wait_for_active_trial(state)
+
+        _post_expect_http_error(port, "/v1/reset", 409)
+        state.trial_control.request_stop("eval-1", 1)
+        start_thread.join(timeout=5)
 
 
 def test_stop_without_active_trial_returns_not_found(tmp_path):

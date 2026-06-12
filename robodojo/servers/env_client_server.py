@@ -20,8 +20,10 @@ from robodojo.dispatch.executor import run_dispatch
 from robodojo.env_client.api import EnvClientBaselineConfig, HealthResponse, TrialRunResponse
 from robodojo.env_client.runner import (
     DebugTrialRunner,
+    TrialRunnerError,
     TrialRunnerFn,
     make_dispatch_trial_runner,
+    reset_idle_env,
 )
 from robodojo.env_client.trial_control import StopRequestResult, TrialControlRegistry
 from robodojo.schemas import DispatchPayload
@@ -157,6 +159,10 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
             )
 
         def do_POST(self) -> None:
+            if self._path == "/v1/reset":
+                self._handle_reset()
+                return
+
             route = parse_session_route(self.path)
             if route is None:
                 self._write_json(HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"})
@@ -267,6 +273,36 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
             result = state.trial_control.request_stop(evaluation_id, trial_index)
             status_code, body = _STOP_HTTP_RESPONSES[result]
             self._write_json(status_code, body)
+
+        def _handle_reset(self) -> None:
+            if state.trial_control.has_active_trials():
+                self._write_json(
+                    HTTPStatus.CONFLICT,
+                    {"error": "cannot reset while a trial is executing"},
+                )
+                return
+
+            try:
+                reset_idle_env(state.baseline)
+            except TrialRunnerError as exc:
+                error = exc.error or {
+                    "code": "reset_failed",
+                    "message": str(exc),
+                }
+                self._write_json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"status": "failed", "error": error},
+                )
+                return
+            except Exception as exc:
+                error = normalize_execution_error(exc)
+                self._write_json(
+                    HTTPStatus.INTERNAL_SERVER_ERROR,
+                    {"status": "failed", "error": error},
+                )
+                return
+
+            self._write_json(HTTPStatus.OK, {"status": "reset"})
 
         def _read_json_body(self) -> dict[str, Any] | None:
             try:

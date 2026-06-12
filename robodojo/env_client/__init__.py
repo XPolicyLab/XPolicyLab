@@ -19,6 +19,7 @@ from robodojo.env_client.runner import (
     TrialRunnerError,
     TrialRunnerFn,
     make_dispatch_trial_runner,
+    reset_idle_env,
     run_debug_trial,
     run_real_trial,
 )
@@ -41,6 +42,7 @@ __all__ = [
     "dispatch_trial_to_deploy_cfg",
     "dispatch_trial_to_request",
     "make_dispatch_trial_runner",
+    "reset_idle_env",
     "run_debug_trial",
     "run_real_trial",
     "trial_request_to_deploy_cfg",

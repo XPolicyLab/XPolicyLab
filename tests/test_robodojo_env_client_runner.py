@@ -13,6 +13,7 @@ from robodojo.env_client import (
     EnvClientBaselineConfig,
     TrialRunnerError,
     make_dispatch_trial_runner,
+    reset_idle_env,
     run_debug_trial,
     run_real_trial,
 )
@@ -264,6 +265,62 @@ def test_run_debug_trial_stop_check_exits_mid_episode():
     assert result["steps"] == 5
 
 
+def test_run_real_trial_wires_stop_check_into_episode_end():
+    class FakeRealEnv:
+        def __init__(self, deploy_cfg: dict[str, Any]):
+            self.deploy_cfg = deploy_cfg
+            self.episode_step = 0
+            self.model_client = object()
+            self._stop_check: Callable[[], bool] | None = None
+
+        def set_stop_check(self, stop_check: Callable[[], bool]) -> None:
+            self._stop_check = stop_check
+
+        def is_episode_end(self) -> bool:
+            return self._stop_check is not None and self._stop_check()
+
+        def reset(self) -> None:
+            self.episode_step = 0
+
+        def eval_one_episode(self) -> None:
+            while not self.is_episode_end():
+                self.episode_step += 1
+
+        def eval_one_episode_batch(self) -> None:
+            raise AssertionError("batch path should not run")
+
+        def finish_episode(self) -> None:
+            return None
+
+    fake_real_module = types.ModuleType("task_env.real_env_client")
+    fake_real_module.RealEnv = FakeRealEnv
+    previous_real = sys.modules.get("task_env.real_env_client")
+    previous_task_env = sys.modules.get("task_env")
+    sys.modules["task_env.real_env_client"] = fake_real_module
+    if previous_task_env is None:
+        sys.modules["task_env"] = types.ModuleType("task_env")
+    try:
+        result = run_real_trial(
+            {
+                **_baseline(eval_env="real", root_dir="/pipeline/root").model_dump(),
+                "host": "127.0.0.1",
+                "trial_id": "case-1-r01",
+                "evaluation_id": "eval-1",
+                "action_case_id": "case-1",
+            },
+            stop_check=lambda: True,
+        )
+    finally:
+        if previous_real is None:
+            sys.modules.pop("task_env.real_env_client", None)
+        else:
+            sys.modules["task_env.real_env_client"] = previous_real
+        if previous_task_env is None:
+            sys.modules.pop("task_env", None)
+
+    assert result["steps"] == 0
+
+
 def test_run_real_trial_loops_until_stop_check():
     episodes: list[str] = []
     completed_episodes = 0
@@ -273,6 +330,10 @@ def test_run_real_trial_loops_until_stop_check():
             self.deploy_cfg = deploy_cfg
             self.episode_step = 0
             self.model_client = object()
+            self._stop_check: Callable[[], bool] | None = None
+
+        def set_stop_check(self, stop_check: Callable[[], bool]) -> None:
+            self._stop_check = stop_check
 
         def reset(self) -> None:
             self.episode_step = 0
@@ -332,6 +393,31 @@ def test_run_real_trial_loops_until_stop_check():
         "eval_env": "real",
         "policy_name": "demo_policy",
     }
+
+
+def test_reset_idle_env_calls_env_reset_for_debug_baseline():
+    reset_calls: list[str] = []
+
+    class FakeTestEnv:
+        def __init__(self, deploy_cfg: dict[str, Any]):
+            self.deploy_cfg = deploy_cfg
+
+        def reset(self) -> None:
+            reset_calls.append("reset")
+
+    fake_module = types.ModuleType("debug_env_client")
+    fake_module.TestEnv = FakeTestEnv
+    previous = sys.modules.get("debug_env_client")
+    sys.modules["debug_env_client"] = fake_module
+    try:
+        reset_idle_env(_baseline())
+    finally:
+        if previous is None:
+            sys.modules.pop("debug_env_client", None)
+        else:
+            sys.modules["debug_env_client"] = previous
+
+    assert reset_calls == ["reset"]
 
 
 def test_run_real_trial_requires_root_dir():

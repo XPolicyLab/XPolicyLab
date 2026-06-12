@@ -24,6 +24,9 @@ class TrialControlRegistry:
     def is_active(self, evaluation_id: str, trial_index: int) -> bool:
         return (evaluation_id, trial_index) in self._active
 
+    def has_active_trials(self) -> bool:
+        return bool(self._active)
+
     def request_stop(self, evaluation_id: str, trial_index: int) -> StopRequestResult:
         event = self._active.get((evaluation_id, trial_index))
         if event is None:
