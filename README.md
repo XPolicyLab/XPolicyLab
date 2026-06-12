@@ -377,7 +377,7 @@ With `env_client_mode: daemon` in `deploy.yml`, the process stays up and exposes
 | `GET /v1/health` | Daemon liveness and baseline metadata (`policy_name`, `eval_env`). |
 | `POST /sessions/{evaluation_id}/dispatch` | Cache platform dispatch payload for the session. |
 | `POST /sessions/{evaluation_id}/trials/{trial_index}/start` | Run the selected trial (blocking until completion or stop). |
-| `POST /sessions/{evaluation_id}/trials/{trial_index}/stop` | Request stop at the next episode boundary. |
+| `POST /sessions/{evaluation_id}/trials/{trial_index}/stop` | Request stop at the next `is_episode_end` check (typically one action step later). |
 
 The control plane calls these endpoints on the eval station; finish webhooks and artifact upload remain on the RoboDojo publish path.
 

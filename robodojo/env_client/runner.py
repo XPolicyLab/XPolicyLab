@@ -40,11 +40,10 @@ def _close_env_model_client(env: Any) -> None:
         close()
 
 
-def _cleanup_env(env: Any) -> None:
-    _close_env_model_client(env)
-    cleanup = getattr(env, "cleanup", None)
-    if callable(cleanup):
-        cleanup()
+def _attach_stop_check(env: Any, stop_check: Callable[[], bool]) -> None:
+    set_stop_check = getattr(env, "set_stop_check", None)
+    if callable(set_stop_check):
+        set_stop_check(stop_check)
 
 
 def _run_trial_loop(
@@ -64,6 +63,8 @@ def _run_trial_loop(
         env.finish_episode()
         episodes += 1
         total_steps += env.episode_step
+    if stop_check() and episodes > 0:
+        env.reset()
     return total_steps
 
 
@@ -91,6 +92,7 @@ def _run_env_trial(
     max_episodes: int | None,
 ) -> dict[str, Any]:
     env = env_factory(deploy_cfg)
+    _attach_stop_check(env, stop_check)
     try:
         total_steps = _run_trial_loop(
             env,
