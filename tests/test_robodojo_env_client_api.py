@@ -94,6 +94,7 @@ def test_trial_run_response_completed_and_failed_shapes():
 def test_trial_request_to_deploy_cfg_uses_baseline_and_request_ids():
     deploy_cfg = trial_request_to_deploy_cfg(_trial_request(), _baseline())
     expected = _baseline().model_dump()
+    expected.pop("action_type")  # unset baseline fields are omitted
     expected.update(
         {
             "evaluation_id": "eval-1",
@@ -160,6 +161,7 @@ def test_trial_request_to_deploy_cfg_from_platform_dispatch_trial_run():
 
     deploy_cfg = trial_request_to_deploy_cfg(request, _baseline(task_name="lift-cube"))
     expected = _baseline(task_name="lift-cube").model_dump()
+    expected.pop("action_type")  # unset baseline fields are omitted
     expected.update(
         {
             "evaluation_id": "eval-1",

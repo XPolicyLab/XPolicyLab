@@ -18,6 +18,7 @@ DebugTrialRunner = EnvTrialRunner
 TrialRunnerFn = Callable[[DispatchPayload, dict[str, Any], str], dict[str, Any]]
 StopCheckFactory = Callable[[dict[str, Any]], Callable[[], bool]]
 
+
 def _never_stop() -> bool:
     return False
 
@@ -43,10 +44,11 @@ def _cleanup_env(env: Any) -> None:
         cleanup()
 
 
-def _attach_stop_check(env: Any, stop_check: Callable[[], bool]) -> None:
-    set_stop_check = getattr(env, "set_stop_check", None)
-    if callable(set_stop_check):
-        set_stop_check(stop_check)
+def _cleanup_env(env: Any) -> None:
+    _close_env_model_client(env)
+    cleanup = getattr(env, "cleanup", None)
+    if callable(cleanup):
+        cleanup()
 
 
 def _run_trial_loop(
@@ -66,8 +68,7 @@ def _run_trial_loop(
         env.finish_episode()
         episodes += 1
         total_steps += env.episode_step
-    if stop_check() and episodes > 0:
-        env.reset()
+    env.reset()
     return total_steps
 
 
@@ -94,10 +95,9 @@ def baseline_to_reset_deploy_cfg(
     else:
         payload = dict(baseline)
 
-    task_name = payload.get("task_name", "trial")
     payload.setdefault("evaluation_id", "idle-reset")
-    payload.setdefault("trial_id", f"{task_name}-reset")
-    payload.setdefault("action_case_id", f"{task_name}_case_1")
+    payload.setdefault("trial_id", f"{payload.get('task_name', 'trial')}-reset")
+    payload.setdefault("action_case_id", f"{payload.get('task_name', 'trial')}_case_1")
     if payload.get("protocol", "robodojo_ws") == "robodojo_ws" and not payload.get(
         "policy_server_url"
     ):
@@ -107,22 +107,19 @@ def baseline_to_reset_deploy_cfg(
     return payload
 
 
-def _normalize_baseline(
-    baseline: EnvClientBaselineConfig | Mapping[str, Any],
-) -> EnvClientBaselineConfig:
-    if isinstance(baseline, EnvClientBaselineConfig):
-        return baseline
-    return EnvClientBaselineConfig.model_validate(baseline)
-
-
 def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> None:
     """Reset policy + robot state while no trial is executing."""
 
-    normalized = _normalize_baseline(baseline)
-    deploy_cfg = baseline_to_reset_deploy_cfg(normalized)
+    if isinstance(baseline, Mapping) and not isinstance(
+        baseline, EnvClientBaselineConfig
+    ):
+        baseline = EnvClientBaselineConfig.model_validate(baseline)
 
-    if _baseline_eval_env(normalized) == "real":
-        if not normalized.root_dir:
+    deploy_cfg = baseline_to_reset_deploy_cfg(baseline)
+    eval_env = _baseline_eval_env(baseline)
+
+    if eval_env == "real":
+        if not baseline.root_dir:
             raise TrialRunnerError(
                 "root_dir is required for real eval_env reset",
                 error={
@@ -130,19 +127,26 @@ def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> Non
                     "message": "root_dir is required for real eval_env reset",
                 },
             )
-        _ensure_pipeline_paths(str(normalized.root_dir))
+        _ensure_pipeline_paths(str(baseline.root_dir))
         from task_env.real_env_client import RealEnv
 
         env = RealEnv(deploy_cfg, setup_cameras=False)
     else:
         from debug_env_client import TestEnv
 
-        env = TestEnv(deploy_cfg)
+        env_factory = TestEnv
 
+    env = env_factory(deploy_cfg)
     try:
         env.reset()
     finally:
         _cleanup_env(env)
+
+
+def _wire_env_stop_check(env: Any, stop_check: Callable[[], bool]) -> None:
+    set_stop_check = getattr(env, "set_stop_check", None)
+    if callable(set_stop_check):
+        set_stop_check(stop_check)
 
 
 def _run_env_trial(
@@ -154,7 +158,7 @@ def _run_env_trial(
     max_episodes: int | None,
 ) -> dict[str, Any]:
     env = env_factory(deploy_cfg)
-    _attach_stop_check(env, stop_check)
+    _wire_env_stop_check(env, stop_check)
     try:
         total_steps = _run_trial_loop(
             env,
@@ -220,6 +224,81 @@ def _baseline_eval_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) ->
     return baseline.eval_env
 
 
+# deploy_cfg keys that may be auto-filled from policy server HELLO meta when
+# neither the dispatch payload nor the daemon baseline provided them.
+_META_FILL_KEYS = (
+    "policy_name",
+    "action_type",
+    "env_cfg_type",
+    "task_name",
+    "dataset_name",
+)
+
+_META_PLACEHOLDER_VALUES = {None, "", "auto"}
+
+
+def _missing_meta_keys(deploy_cfg: Mapping[str, Any]) -> list[str]:
+    return [
+        key
+        for key in _META_FILL_KEYS
+        if deploy_cfg.get(key) in _META_PLACEHOLDER_VALUES
+    ]
+
+
+def _policy_server_ws_url(deploy_cfg: Mapping[str, Any]) -> str | None:
+    url = deploy_cfg.get("policy_server_url")
+    if url:
+        return str(url)
+    host, port = deploy_cfg.get("host"), deploy_cfg.get("port")
+    if host and port:
+        return f"ws://{host}:{int(port)}"
+    return None
+
+
+def _fill_deploy_cfg_from_meta(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
+    if deploy_cfg.get("eval_env") != "real":
+        return deploy_cfg
+    missing = _missing_meta_keys(deploy_cfg)
+    if not missing:
+        return deploy_cfg
+
+    url = _policy_server_ws_url(deploy_cfg)
+    if url is None:
+        return deploy_cfg
+
+    from robodojo.env_client.ws_adapter import fetch_policy_meta
+
+    try:
+        meta = fetch_policy_meta(url, max_connect_attempts=3)
+    except Exception as exc:
+        print(
+            f"[env_client] policy meta fetch failed ({url}): {exc}",
+            file=sys.stderr,
+        )
+        return deploy_cfg
+
+    filled = {key: meta[key] for key in missing if meta.get(key) is not None}
+    if filled:
+        print(f"[env_client] deploy_cfg auto-filled from policy meta: {filled}")
+        deploy_cfg.update(filled)
+    return deploy_cfg
+
+
+def _validate_real_deploy_cfg(deploy_cfg: Mapping[str, Any]) -> None:
+    if deploy_cfg.get("eval_env") != "real":
+        return
+    if deploy_cfg.get("action_type") not in ("joint", "ee"):
+        raise TrialRunnerError(
+            "action_type is required for real eval_env but was not provided by "
+            "the dispatch payload, policy server meta, or daemon startup args "
+            "(upgrade the policy server to advertise meta, or set ACTION_TYPE).",
+            error={
+                "code": "missing_action_type",
+                "message": "action_type unresolved for real eval_env",
+            },
+        )
+
+
 def _call_env_trial_runner(
     env_trial_runner: EnvTrialRunner,
     deploy_cfg: dict[str, Any],
@@ -254,6 +333,8 @@ def make_dispatch_trial_runner(
             evaluation_id=evaluation_id,
             eval_episode_num=episode_override,
         )
+        deploy_cfg = _fill_deploy_cfg_from_meta(deploy_cfg)
+        _validate_real_deploy_cfg(deploy_cfg)
         stop_check = (
             stop_check_factory(deploy_cfg) if stop_check_factory else _never_stop
         )

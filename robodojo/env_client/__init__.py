@@ -23,7 +23,7 @@ from robodojo.env_client.runner import (
     run_debug_trial,
     run_real_trial,
 )
-from robodojo.env_client.ws_adapter import RoboDojoModelClient
+from robodojo.env_client.ws_adapter import RoboDojoModelClient, fetch_policy_meta
 
 __all__ = [
     "DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS",
@@ -41,6 +41,7 @@ __all__ = [
     "debug_env_client_deploy_cfg_view",
     "dispatch_trial_to_deploy_cfg",
     "dispatch_trial_to_request",
+    "fetch_policy_meta",
     "make_dispatch_trial_runner",
     "reset_idle_env",
     "run_debug_trial",

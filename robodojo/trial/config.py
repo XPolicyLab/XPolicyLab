@@ -76,30 +76,33 @@ def build_trial_run_config(
     case_meta = dict(trial_run.get("case_meta") or {})
     task = dispatch.evaluation_plan.task
     dispatch_extra = _dispatch_extra(dispatch)
-    env_cfg_type = _first_non_empty_str(
-        case_meta.get("env_cfg_type"),
-        trial_run.get("env_cfg_type"),
-        task.env_cfg_type if task is not None else "",
-        default="arx_x5",
-    )
-    task_name = _first_non_empty_str(
-        case_meta.get("task_name"),
-        dispatch.task_id,
-        task.id if task is not None else "",
-        default="debug_task",
-    )
-    policy_name = normalize_policy_name(
-        _first_non_empty_str(
-            case_meta.get("policy_name"),
-            dispatch.model_name,
-            default="demo_policy",
-        )
-    )
     resolved_eval_env = _first_non_empty_str(
         eval_env,
         case_meta.get("eval_env"),
         dispatch_extra.get("eval_env"),
         default="debug",
+    )
+    # Debug keeps legacy hard defaults; real leaves blanks so the env client
+    # can auto-fill them from policy server HELLO meta.
+    is_debug = resolved_eval_env == "debug"
+    env_cfg_type = _first_non_empty_str(
+        case_meta.get("env_cfg_type"),
+        trial_run.get("env_cfg_type"),
+        task.env_cfg_type if task is not None else "",
+        default="arx_x5" if is_debug else "",
+    )
+    task_name = _first_non_empty_str(
+        case_meta.get("task_name"),
+        dispatch.task_id,
+        task.id if task is not None else "",
+        default="debug_task" if is_debug else "",
+    )
+    policy_name = normalize_policy_name(
+        _first_non_empty_str(
+            case_meta.get("policy_name"),
+            dispatch.model_name,
+            default="demo_policy" if is_debug else "",
+        )
     )
     eval_batch = bool(
         case_meta.get("eval_batch", dispatch_extra.get("eval_batch", False))

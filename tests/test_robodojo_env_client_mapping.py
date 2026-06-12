@@ -67,9 +67,9 @@ def _reference_deploy_cfg(
     parsed = urlparse(config.policy_server_url)
     reference = {
         "dataset_name": baseline.dataset_name,
-        "task_name": config.task_name,
-        "env_cfg_type": config.env_cfg_type,
-        "policy_name": config.policy_name,
+        "task_name": config.task_name or baseline.task_name,
+        "env_cfg_type": config.env_cfg_type or baseline.env_cfg_type,
+        "policy_name": config.policy_name or baseline.policy_name,
         "protocol": baseline.protocol,
         "host": parsed.hostname or baseline.host,
         "port": parsed.port or baseline.port,

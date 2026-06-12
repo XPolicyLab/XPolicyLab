@@ -44,15 +44,19 @@ class _StrictSchema(BaseModel):
 
 
 class EnvClientBaselineConfig(_StrictSchema):
-    """Startup deploy_cfg from daemon launch (``debug_env_client`` CLI parity)."""
+    """Startup deploy_cfg from daemon launch (``debug_env_client`` CLI parity).
 
-    dataset_name: str = Field(min_length=1)
-    task_name: str = Field(min_length=1)
-    env_cfg_type: str = Field(min_length=1)
-    policy_name: str = Field(min_length=1)
+    Most fields are optional: per-trial values come from the dispatch payload
+    and the policy server HELLO meta; startup values only act as fallbacks.
+    """
+
+    dataset_name: str | None = None
+    task_name: str | None = None
+    env_cfg_type: str | None = None
+    policy_name: str | None = None
     protocol: Literal["legacy_tcp", "robodojo_ws"] = "robodojo_ws"
-    host: str = "localhost"
-    port: int = Field(ge=1, le=65535)
+    host: str | None = None
+    port: int | None = Field(default=None, ge=1, le=65535)
     eval_batch: bool = False
     eval_episode_num: int = Field(default=10, ge=1)
     eval_env: str = "debug"
@@ -81,7 +85,7 @@ class TrialRunResponse(_StrictSchema):
 
 class HealthResponse(_StrictSchema):
     ok: bool = True
-    policy_name: str
+    policy_name: str | None = None
     eval_env: str
     deploy_yml: str | None = None
     last_trial_id: str | None = None
@@ -91,8 +95,22 @@ def _baseline_deploy_cfg(
     baseline: EnvClientBaselineConfig | Mapping[str, Any],
 ) -> dict[str, Any]:
     if isinstance(baseline, EnvClientBaselineConfig):
-        return baseline.model_dump()
-    return dict(baseline)
+        cfg = baseline.model_dump()
+    else:
+        cfg = dict(baseline)
+    # Unset baseline fields must not shadow dispatch/meta-provided values.
+    for key in (
+        "dataset_name",
+        "task_name",
+        "env_cfg_type",
+        "policy_name",
+        "host",
+        "port",
+        "action_type",
+    ):
+        if cfg.get(key) is None:
+            cfg.pop(key, None)
+    return cfg
 
 
 def trial_request_to_deploy_cfg(
@@ -119,10 +137,10 @@ def trial_request_to_deploy_cfg(
     case_meta = request.case_meta
     for key in _DEPLOY_CFG_CASE_META_KEYS:
         value = case_meta.get(key)
-        if value is not None:
+        if value is not None and value != "":
             deploy_cfg[key] = value
 
-    if deploy_cfg.get("policy_name") is not None:
+    if deploy_cfg.get("policy_name"):
         deploy_cfg["policy_name"] = normalize_policy_name(str(deploy_cfg["policy_name"]))
 
     deploy_cfg["repeat_index"] = case_meta.get("repeat_index")
