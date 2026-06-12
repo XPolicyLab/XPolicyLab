@@ -17,7 +17,7 @@ from robodojo.env_client import (
     run_debug_trial,
     run_real_trial,
 )
-from robodojo.env_client.runner import _cleanup_env
+from robodojo.env_client.runner import baseline_to_reset_deploy_cfg
 from robodojo.schemas import DispatchPayload
 
 
@@ -33,6 +33,35 @@ def _baseline(**overrides: object) -> EnvClientBaselineConfig:
             **overrides,
         }
     )
+
+
+def _real_reset_baseline(**overrides: object) -> EnvClientBaselineConfig:
+    defaults: dict[str, object] = {
+        "eval_env": "real",
+        "root_dir": "/pipeline/root",
+        "action_type": None,
+        "port": 8000,
+    }
+    defaults.update(overrides)
+    return _baseline(**defaults)
+
+
+def test_baseline_to_reset_deploy_cfg_omits_policy_url_when_port_missing():
+    cfg = baseline_to_reset_deploy_cfg(_baseline(port=None, host="127.0.0.1"))
+
+    assert not cfg.get("policy_server_url")
+
+
+def test_reset_idle_env_rejects_missing_policy_url_when_port_unset(monkeypatch):
+    monkeypatch.setattr(
+        "robodojo.env_client.ws_adapter.fetch_policy_meta",
+        lambda _url, **_kwargs: {},
+    )
+
+    with pytest.raises(TrialRunnerError, match="policy_server_url") as exc_info:
+        reset_idle_env(_real_reset_baseline(port=None))
+
+    assert "policy_server_url" in exc_info.value.error["missing"]
 
 
 def test_make_dispatch_trial_runner_builds_deploy_cfg_and_runs_trial():
@@ -266,22 +295,102 @@ def test_run_debug_trial_stop_check_exits_mid_episode():
     assert result["steps"] == 5
 
 
-def test_cleanup_env_closes_model_client_and_calls_env_cleanup():
-    events: list[str] = []
+def test_reset_idle_env_fills_action_type_from_policy_meta(monkeypatch: pytest.MonkeyPatch):
+    captured: list[dict[str, Any]] = []
 
-    class FakeModelClient:
-        def close(self) -> None:
-            events.append("model_client.close")
+    class FakeRealEnv:
+        def __init__(self, deploy_cfg: dict[str, Any], *, setup_cameras: bool = True):
+            captured.append(deploy_cfg)
+            self.model_client = object()
 
-    class FakeEnv:
-        def __init__(self) -> None:
-            self.model_client = FakeModelClient()
+        def reset(self) -> None:
+            pass
 
         def cleanup(self) -> None:
-            events.append("env.cleanup")
+            pass
 
-    _cleanup_env(FakeEnv())
-    assert events == ["model_client.close", "env.cleanup"]
+    fake_real_module = types.ModuleType("task_env.real_env_client")
+    fake_real_module.RealEnv = FakeRealEnv
+    monkeypatch.setitem(sys.modules, "task_env.real_env_client", fake_real_module)
+    monkeypatch.setattr("robodojo.env_client.runner._ensure_pipeline_paths", lambda _root_dir: None)
+    monkeypatch.setattr(
+        "robodojo.env_client.ws_adapter.fetch_policy_meta",
+        lambda _url, **_kwargs: {
+            "action_type": "ee",
+            "env_cfg_type": "arx_x5",
+            "task_name": "pick",
+            "policy_name": "X_VLA",
+        },
+    )
+
+    reset_idle_env(
+        _real_reset_baseline(policy_name=None, task_name=None, env_cfg_type=None)
+    )
+
+    assert {key: captured[0][key] for key in ("action_type", "env_cfg_type", "task_name", "policy_name")} == {
+        "action_type": "ee",
+        "env_cfg_type": "arx_x5",
+        "task_name": "pick",
+        "policy_name": "X_VLA",
+    }
+
+
+def test_reset_idle_env_raises_missing_action_type_when_meta_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    monkeypatch.setattr(
+        "robodojo.env_client.ws_adapter.fetch_policy_meta",
+        lambda _url, **_kwargs: {},
+    )
+
+    with pytest.raises(TrialRunnerError, match="missing required deploy fields") as exc_info:
+        reset_idle_env(_real_reset_baseline())
+
+    assert exc_info.value.error == {
+        "code": "missing_reset_deploy_cfg",
+        "message": "reset deploy_cfg missing: action_type",
+        "missing": ["action_type"],
+    }
+
+
+def test_reset_idle_env_overlays_active_dispatch_before_meta_fill(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    captured: list[dict[str, Any]] = []
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+
+    class FakeRealEnv:
+        def __init__(self, deploy_cfg: dict[str, Any], *, setup_cameras: bool = True):
+            captured.append(deploy_cfg)
+            self.model_client = object()
+
+        def reset(self) -> None:
+            pass
+
+        def cleanup(self) -> None:
+            pass
+
+    fake_real_module = types.ModuleType("task_env.real_env_client")
+    fake_real_module.RealEnv = FakeRealEnv
+    monkeypatch.setitem(sys.modules, "task_env.real_env_client", fake_real_module)
+    monkeypatch.setattr("robodojo.env_client.runner._ensure_pipeline_paths", lambda _root_dir: None)
+    monkeypatch.setattr(
+        "robodojo.env_client.ws_adapter.fetch_policy_meta",
+        lambda _url, **_kwargs: {"action_type": "ee", "env_cfg_type": "arx_x5"},
+    )
+
+    reset_idle_env(
+        _real_reset_baseline(policy_name=None, task_name=None, env_cfg_type=None),
+        dispatch=dispatch,
+        evaluation_id="eval-1",
+    )
+
+    assert captured[0]["policy_server_url"] == dispatch.policy_server_url
+    assert captured[0]["task_name"] == dispatch.task_id
+    assert captured[0]["env_cfg_type"] == "arx_x5"
+    assert captured[0]["policy_name"] == "demo_policy"
+    assert captured[0]["action_case_id"] == "case-1"
+    assert captured[0]["action_type"] == "ee"
 
 
 def test_run_real_trial_wires_stop_check_into_episode_end():
