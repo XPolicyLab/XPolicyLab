@@ -17,6 +17,7 @@ from robodojo.env_client import (
     run_debug_trial,
     run_real_trial,
 )
+from robodojo.env_client.runner import _cleanup_env
 from robodojo.schemas import DispatchPayload
 
 
@@ -266,8 +267,6 @@ def test_run_debug_trial_stop_check_exits_mid_episode():
 
 
 def test_cleanup_env_closes_model_client_and_calls_env_cleanup():
-    from robodojo.env_client.runner import _cleanup_env
-
     events: list[str] = []
 
     class FakeModelClient:
