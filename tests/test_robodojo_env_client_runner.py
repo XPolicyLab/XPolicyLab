@@ -197,8 +197,71 @@ def test_run_debug_trial_stop_check_exits_before_eval_episode_num():
         else:
             sys.modules["debug_env_client"] = previous
 
-    assert episodes == ["reset", "eval", "finish"]
+    assert episodes == ["reset", "eval", "finish", "reset"]
     assert result["steps"] == 3
+
+
+def test_run_debug_trial_stop_check_exits_mid_episode():
+    episodes: list[str] = []
+    stop_requested = False
+
+    class FakeTestEnv:
+        def __init__(self, deploy_cfg: dict[str, Any]):
+            self.deploy_cfg = deploy_cfg
+            self.episode_step = 0
+            self.model_client = object()
+            self._stop_check = None
+
+        def set_stop_check(self, stop_check: Callable[[], bool]) -> None:
+            self._stop_check = stop_check
+
+        def reset(self) -> None:
+            self.episode_step = 0
+            episodes.append("reset")
+
+        def is_episode_end(self) -> bool:
+            if self._stop_check is not None and self._stop_check():
+                return True
+            return self.episode_step >= 100
+
+        def eval_one_episode(self) -> None:
+            while not self.is_episode_end():
+                self.episode_step += 1
+                if self.episode_step >= 5:
+                    nonlocal stop_requested
+                    stop_requested = True
+            episodes.append("eval")
+
+        def eval_one_episode_batch(self) -> None:
+            raise AssertionError("batch path should not run")
+
+        def finish_episode(self) -> None:
+            episodes.append("finish")
+
+    fake_module = types.ModuleType("debug_env_client")
+    fake_module.TestEnv = FakeTestEnv
+    previous = sys.modules.get("debug_env_client")
+    sys.modules["debug_env_client"] = fake_module
+    try:
+        result = run_debug_trial(
+            {
+                **_baseline().model_dump(),
+                "host": "127.0.0.1",
+                "eval_episode_num": 3,
+                "trial_id": "case-1-r01",
+                "evaluation_id": "eval-1",
+                "action_case_id": "case-1",
+            },
+            stop_check=lambda: stop_requested,
+        )
+    finally:
+        if previous is None:
+            sys.modules.pop("debug_env_client", None)
+        else:
+            sys.modules["debug_env_client"] = previous
+
+    assert episodes == ["reset", "eval", "finish", "reset"]
+    assert result["steps"] == 5
 
 
 def test_run_real_trial_loops_until_stop_check():
@@ -260,6 +323,7 @@ def test_run_real_trial_loops_until_stop_check():
         "reset",
         "eval",
         "finish",
+        "reset",
     ]
     assert result == {
         "status": "completed",

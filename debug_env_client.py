@@ -8,6 +8,7 @@ Batch_Size = 10
 class TestEnv:
     def __init__(self, deploy_cfg):
         self.success_num, self.episode_num = 0, 0
+        self._stop_check = None
         self.deploy_cfg = deploy_cfg
         self.episode_step_limit = 5
         env_cfg_type = deploy_cfg['env_cfg_type']
@@ -28,6 +29,9 @@ class TestEnv:
             )
         else:
             self.model_client = ModelClient(host=deploy_cfg['host'], port=deploy_cfg['port'])
+
+    def set_stop_check(self, stop_check):
+        self._stop_check = stop_check
 
     def get_obs(self, env_idx=0):
         # v1.0
@@ -169,6 +173,9 @@ class TestEnv:
             validate_robot_state_dict(action, self.robot_action_dim_info)
 
     def is_episode_end(self):
+        if self._stop_check is not None and self._stop_check():
+            print("[TestEnv] Check Episode End: stop requested")
+            return True
         print("[TestEnv] Check Episode End:", self.episode_step >= self.episode_step_limit)
         return self.episode_step >= self.episode_step_limit
     
