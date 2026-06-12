@@ -34,10 +34,13 @@ def _ensure_pipeline_paths(root_dir: str) -> None:
             sys.path.insert(0, path)
 
 
-def _close_env_model_client(env: Any) -> None:
+def _cleanup_env(env: Any) -> None:
     close = getattr(env.model_client, "close", None)
     if callable(close):
         close()
+    cleanup = getattr(env, "cleanup", None)
+    if callable(cleanup):
+        cleanup()
 
 
 def _attach_stop_check(env: Any, stop_check: Callable[[], bool]) -> None:
@@ -130,7 +133,7 @@ def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> Non
         _ensure_pipeline_paths(str(normalized.root_dir))
         from task_env.real_env_client import RealEnv
 
-        env = RealEnv(deploy_cfg)
+        env = RealEnv(deploy_cfg, setup_cameras=False)
     else:
         from debug_env_client import TestEnv
 

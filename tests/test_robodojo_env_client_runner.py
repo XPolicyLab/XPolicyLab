@@ -395,15 +395,23 @@ def test_run_real_trial_loops_until_stop_check():
     }
 
 
-def test_reset_idle_env_calls_env_reset_for_debug_baseline():
-    reset_calls: list[str] = []
+def test_reset_idle_env_releases_env_resources_after_reset():
+    events: list[str] = []
+
+    class FakeModelClient:
+        def close(self) -> None:
+            events.append("model_client.close")
 
     class FakeTestEnv:
         def __init__(self, deploy_cfg: dict[str, Any]):
             self.deploy_cfg = deploy_cfg
+            self.model_client = FakeModelClient()
 
         def reset(self) -> None:
-            reset_calls.append("reset")
+            events.append("reset")
+
+        def cleanup(self) -> None:
+            events.append("cleanup")
 
     fake_module = types.ModuleType("debug_env_client")
     fake_module.TestEnv = FakeTestEnv
@@ -417,7 +425,7 @@ def test_reset_idle_env_calls_env_reset_for_debug_baseline():
         else:
             sys.modules["debug_env_client"] = previous
 
-    assert reset_calls == ["reset"]
+    assert events == ["reset", "model_client.close", "cleanup"]
 
 
 def test_run_real_trial_requires_root_dir():
