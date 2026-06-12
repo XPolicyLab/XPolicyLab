@@ -5,3 +5,5 @@
 train_out/
 checkpoints/
 runs/
+Log/
+logs/
