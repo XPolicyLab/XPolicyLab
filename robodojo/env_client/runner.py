@@ -83,6 +83,65 @@ def _completed_trial_result(
     }
 
 
+def baseline_to_reset_deploy_cfg(
+    baseline: EnvClientBaselineConfig | Mapping[str, Any],
+) -> dict[str, Any]:
+    if isinstance(baseline, EnvClientBaselineConfig):
+        payload = baseline.model_dump()
+    else:
+        payload = dict(baseline)
+
+    task_name = payload.get("task_name", "trial")
+    payload.setdefault("evaluation_id", "idle-reset")
+    payload.setdefault("trial_id", f"{task_name}-reset")
+    payload.setdefault("action_case_id", f"{task_name}_case_1")
+    if payload.get("protocol", "robodojo_ws") == "robodojo_ws" and not payload.get(
+        "policy_server_url"
+    ):
+        host = payload.get("host", "localhost")
+        port = int(payload["port"])
+        payload["policy_server_url"] = f"ws://{host}:{port}"
+    return payload
+
+
+def _normalize_baseline(
+    baseline: EnvClientBaselineConfig | Mapping[str, Any],
+) -> EnvClientBaselineConfig:
+    if isinstance(baseline, EnvClientBaselineConfig):
+        return baseline
+    return EnvClientBaselineConfig.model_validate(baseline)
+
+
+def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> None:
+    """Reset policy + robot state while no trial is executing."""
+
+    normalized = _normalize_baseline(baseline)
+    deploy_cfg = baseline_to_reset_deploy_cfg(normalized)
+
+    if _baseline_eval_env(normalized) == "real":
+        if not normalized.root_dir:
+            raise TrialRunnerError(
+                "root_dir is required for real eval_env reset",
+                error={
+                    "code": "missing_root_dir",
+                    "message": "root_dir is required for real eval_env reset",
+                },
+            )
+        _ensure_pipeline_paths(str(normalized.root_dir))
+        from task_env.real_env_client import RealEnv
+
+        env = RealEnv(deploy_cfg)
+    else:
+        from debug_env_client import TestEnv
+
+        env = TestEnv(deploy_cfg)
+
+    try:
+        env.reset()
+    finally:
+        _cleanup_env(env)
+
+
 def _run_env_trial(
     deploy_cfg: dict[str, Any],
     *,
