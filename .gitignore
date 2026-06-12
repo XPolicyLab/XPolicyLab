@@ -5,10 +5,5 @@
 train_out/
 checkpoints/
 runs/
-
-# H_RDT local artifacts and large model assets
-policy/H_RDT/.cache/
-policy/H_RDT/H_RDT/.cache/
-policy/H_RDT/H_RDT/t5-v1_1-xxl/
-policy/H_RDT/**/logs/
-policy/H_RDT/**/wandb/
+Log/
+logs/
