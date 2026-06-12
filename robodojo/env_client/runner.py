@@ -35,14 +35,10 @@ def _ensure_pipeline_paths(root_dir: str) -> None:
             sys.path.insert(0, path)
 
 
-def _close_env_model_client(env: Any) -> None:
+def _cleanup_env(env: Any) -> None:
     close = getattr(env.model_client, "close", None)
     if callable(close):
         close()
-
-
-def _cleanup_env(env: Any) -> None:
-    _close_env_model_client(env)
     cleanup = getattr(env, "cleanup", None)
     if callable(cleanup):
         cleanup()
@@ -87,10 +83,11 @@ def _completed_trial_result(
 def baseline_to_reset_deploy_cfg(
     baseline: EnvClientBaselineConfig | Mapping[str, Any],
 ) -> dict[str, Any]:
-    if isinstance(baseline, EnvClientBaselineConfig):
-        payload = baseline.model_dump()
-    else:
-        payload = dict(baseline)
+    payload = (
+        baseline.model_dump()
+        if isinstance(baseline, EnvClientBaselineConfig)
+        else dict(baseline)
+    )
 
     payload.setdefault("evaluation_id", "idle-reset")
     payload.setdefault("trial_id", f"{payload.get('task_name', 'trial')}-reset")
@@ -115,21 +112,19 @@ def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> Non
 
     if eval_env == "real":
         if not baseline.root_dir:
+            message = "root_dir is required for real eval_env reset"
             raise TrialRunnerError(
-                "root_dir is required for real eval_env reset",
-                error={"code": "missing_root_dir", "message": "root_dir is required for real eval_env reset"},
+                message,
+                error={"code": "missing_root_dir", "message": message},
             )
         _ensure_pipeline_paths(str(baseline.root_dir))
         from task_env.real_env_client import RealEnv
 
-        def env_factory(cfg: dict[str, Any]) -> Any:
-            return RealEnv(cfg, setup_cameras=False)
+        env = RealEnv(deploy_cfg, setup_cameras=False)
     else:
         from debug_env_client import TestEnv
 
-        env_factory = TestEnv
-
-    env = env_factory(deploy_cfg)
+        env = TestEnv(deploy_cfg)
     try:
         env.reset()
     finally:
