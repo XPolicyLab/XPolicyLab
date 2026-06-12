@@ -44,13 +44,6 @@ def _cleanup_env(env: Any) -> None:
         cleanup()
 
 
-def _cleanup_env(env: Any) -> None:
-    _close_env_model_client(env)
-    cleanup = getattr(env, "cleanup", None)
-    if callable(cleanup):
-        cleanup()
-
-
 def _run_trial_loop(
     env: Any,
     *,
@@ -110,9 +103,7 @@ def baseline_to_reset_deploy_cfg(
 def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> None:
     """Reset policy + robot state while no trial is executing."""
 
-    if isinstance(baseline, Mapping) and not isinstance(
-        baseline, EnvClientBaselineConfig
-    ):
+    if isinstance(baseline, Mapping) and not isinstance(baseline, EnvClientBaselineConfig):
         baseline = EnvClientBaselineConfig.model_validate(baseline)
 
     deploy_cfg = baseline_to_reset_deploy_cfg(baseline)
@@ -122,15 +113,13 @@ def reset_idle_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> Non
         if not baseline.root_dir:
             raise TrialRunnerError(
                 "root_dir is required for real eval_env reset",
-                error={
-                    "code": "missing_root_dir",
-                    "message": "root_dir is required for real eval_env reset",
-                },
+                error={"code": "missing_root_dir", "message": "root_dir is required for real eval_env reset"},
             )
         _ensure_pipeline_paths(str(baseline.root_dir))
         from task_env.real_env_client import RealEnv
 
-        env = RealEnv(deploy_cfg, setup_cameras=False)
+        def env_factory(cfg: dict[str, Any]) -> Any:
+            return RealEnv(cfg, setup_cameras=False)
     else:
         from debug_env_client import TestEnv
 
