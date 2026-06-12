@@ -35,10 +35,14 @@ def _ensure_pipeline_paths(root_dir: str) -> None:
             sys.path.insert(0, path)
 
 
-def _cleanup_env(env: Any) -> None:
+def _close_env_model_client(env: Any) -> None:
     close = getattr(env.model_client, "close", None)
     if callable(close):
         close()
+
+
+def _cleanup_env(env: Any) -> None:
+    _close_env_model_client(env)
     cleanup = getattr(env, "cleanup", None)
     if callable(cleanup):
         cleanup()

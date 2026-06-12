@@ -518,7 +518,7 @@ def test_run_debug_trial_executes_episode_loop():
         else:
             sys.modules["debug_env_client"] = previous
 
-    assert episodes == ["reset", "eval", "finish", "reset", "eval", "finish"]
+    assert episodes == ["reset", "eval", "finish", "reset", "eval", "finish", "reset"]
     assert result == {
         "status": "completed",
         "trial_id": "case-1-r01",
