@@ -174,6 +174,7 @@ class VLATrainer(TrainerUtils):
             self.optimizer,
             self.train_dataloader,
         )
+        self.total_batch_size = self._calculate_total_batch_size()
         self._init_wandb()
 
 
