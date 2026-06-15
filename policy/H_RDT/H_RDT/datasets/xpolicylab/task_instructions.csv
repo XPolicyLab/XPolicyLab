@@ -1,0 +1,36 @@
+task_name,instruction
+arrange_largest_number,"Arrange the numbers from left to right to form the largest possible number, and place them on the pad."
+build_tower,Build a tower using the wooden blocks and wooden boards.
+classify_objects,Sort the objects by category into the three baskets.
+cover_blocks,"Cover the blocks from left to right, remember their colors, then uncover them in the order: red, green, and blue."
+deposit_coin,Pick up the coin from the holder and insert it precisely into the coin bank.
+dlc,"Arrange the letters to spell ""RoboDojo"" in a row."
+fasten_screws,Insert and tighten each screw into the nut of the same color.
+fill_egg_holder,"Place the four eggs from the basket into the egg holder, then close the lid."
+fill_pen_holder,"Hold the pen holder with one hand, place all pens into it with the other hand, then put it back down."
+fold_clothes,Fold the clothes neatly.
+hang_mugs,Hang all the mugs on the mug rack.
+imitate_sorting_sequence,"Observe the object placement order, remember it, then place the corresponding objects into the basket in the same order."
+insert_key,"Pick up the thick card, hand it over to the other hand to adjust its pose, then insert it into the card slot."
+insert_tubes,Insert the three tubes into the rack one by one.
+make_kong,"Wait for the opponent to discard a tile, then declare a kong with the matching tiles."
+make_toast,"Pick up two slices of bread, place them into the toaster, and press the lever down."
+match_and_pick_from_conveyor,"Remember the first object on the conveyor, then pick the matching object when it appears again."
+organize_table,"Place the mouse on the mouse pad, push the keyboard into the frame, put the figurine on the stand, place the alarm clock on the drawer, then open the drawer and put all remaining miscellaneous items inside."
+pack_objects_into_box,Place all the objects into the box with their front sides facing left.
+play_Xylophone,Pick up the mallet and strike all xylophone keys from left to right.
+play_stacking_toy,Place all stacking toy pieces onto the correct pegs.
+play_tic_tac_toe,Play tic-tac-toe as the first player and fill the board with the opponent.
+plug_in_charger,Plug the charger into the power strip.
+pour_balls_into_vase,Pour all the balls from the cup into the vase.
+pour_liquid_into_cup,Pour the liquid from the bottle into the cup.
+press_by_number,"Press the two red buttons the required number of times according to the number cards, then press the blue button to confirm."
+push_T,Push the T-shaped block to align it precisely with the gray T-shaped pad.
+put_bottles_into_dustbin,"Pick up the bottles and throw them into the dustbin, using handover when needed."
+sort_nesting_dolls_by_size,Arrange the five nesting dolls in a row from left to right in descending size order.
+stack_blocks,Stack the three blocks with different textures.
+stack_bowls,Stack the three bowls together.
+store_laptop_and_headphones,"Hang the headphones on the headphone stand, close the laptop, then place it into the vertical laptop stand."
+swap_T,"Pick up the two T-shaped blocks, swap their positions, and place them back with the correct orientations."
+swap_blocks,"Swap the two blocks using the empty mat, pressing the button after each move."
+sweep_blocks,"Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks."
