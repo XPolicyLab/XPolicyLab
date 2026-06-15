@@ -8,6 +8,7 @@ import json
 import os
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -19,6 +20,28 @@ DJANGO_SIGNATURE_HEADER = "X-RoboDojo-Signature-256"
 DJANGO_TIMESTAMP_HEADER = "X-RoboDojo-Signature-Timestamp"
 WEBHOOK_RETRY_ATTEMPTS = 3
 WEBHOOK_RETRY_BACKOFF_S = (1.0, 3.0, 9.0)
+# Override scheme+host:port of the dispatched finish_url (path/query preserved),
+# e.g. "http://192.168.101.71:8000". Empty -> use finish_url as-is.
+FINISH_URL_BASE_ENV = "ROBODOJO_FINISH_URL_BASE"
+
+
+def apply_finish_url_base(finish_url: str, base: str | None = None) -> str:
+    if base is None:
+        base = os.environ.get(FINISH_URL_BASE_ENV, "")
+    base = (base or "").strip()
+    if not base or not finish_url:
+        return finish_url
+    base_parts = urllib.parse.urlsplit(base if "//" in base else f"//{base}")
+    url_parts = urllib.parse.urlsplit(finish_url)
+    return urllib.parse.urlunsplit(
+        (
+            base_parts.scheme or url_parts.scheme,
+            base_parts.netloc,
+            url_parts.path,
+            url_parts.query,
+            url_parts.fragment,
+        )
+    )
 
 
 class WebhookDeliveryError(RuntimeError):
@@ -173,6 +196,7 @@ def post_finish_webhook(
     opener: Callable[..., Any] | None = None,
     retry: bool = True,
 ) -> WebhookResult:
+    finish_url = apply_finish_url_base(finish_url)
     attempts = WEBHOOK_RETRY_ATTEMPTS if retry else 1
     last_err: WebhookDeliveryError | None = None
     for attempt in range(attempts):
