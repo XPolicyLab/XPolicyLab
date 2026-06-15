@@ -253,4 +253,7 @@ def ensure_chw_uint8(image):
 
 
 def decode_compressed_image(image_buffer):
-    return decode_image_bit(image_buffer)
+    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if decoded is None:
+        raise ValueError("Failed to decode compressed image buffer.")
+    return decoded
