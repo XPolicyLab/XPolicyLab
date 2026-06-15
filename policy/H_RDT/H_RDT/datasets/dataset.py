@@ -12,6 +12,7 @@ from torch.utils.data import Dataset
 import transformers
 from utils.image_corrupt import image_corrupt
 from datasets.robotwin2.robotwin_agilex_dataset import RobotwinAgilexDataset
+from datasets.xpolicylab import XPolicyLabDataset
 from datasets.pretrain.egodex_dataset import EgoDexDataset
 from datasets.multi_hdf5_vla_dataset import MultiHDF5VLADataset
 import h5py
@@ -93,6 +94,26 @@ class VLAConsumerDataset(Dataset):
 
             self.hdf5_dataset = RobotwinAgilexDataset(
                 **dataset_kwargs,
+            )
+        elif self.dataset_name == "xpolicylab":
+            dataset_mode = os.environ.get("XPOLICY_HRDT_DATASET_MODE", "single_task")
+            if dataset_mode not in ("single_task", "multi_task"):
+                raise ValueError(f"Invalid XPOLICY_HRDT_DATASET_MODE: {dataset_mode}")
+
+            self.hdf5_dataset = XPolicyLabDataset(
+                mode=dataset_mode,
+                data_root=os.environ.get("XPOLICY_HRDT_SOURCE_ROOT"),
+                raw_dataset_name=os.environ.get("XPOLICY_HRDT_RAW_DATASET_NAME", "RoboDojo"),
+                task_name=task_name,
+                env_cfg_type=os.environ.get("XPOLICY_HRDT_ENV_CFG_TYPE"),
+                action_type=os.environ.get("XPOLICY_HRDT_ACTION_TYPE", "joint"),
+                max_episodes=int(os.environ["XPOLICY_HRDT_MAX_EPISODES"])
+                if os.environ.get("XPOLICY_HRDT_MAX_EPISODES")
+                else None,
+                config=config,
+                stat_path=os.environ.get("XPOLICY_HRDT_STAT_PATH"),
+                upsample_rate=upsample_rate,
+                val=val,
             )
         else:
             raise ValueError(f"Unknown dataset_name: {self.dataset_name}")
