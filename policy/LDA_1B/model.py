@@ -107,6 +107,7 @@ def _standardize_rgb_image(image: Any) -> np.ndarray:
     ImageNet mean color, then bilinear-resize to 224x224.
     """
     import cv2
+    from PIL import Image
 
     image = np.asarray(image)
     if image.ndim != 3:
@@ -129,9 +130,11 @@ def _standardize_rgb_image(image: Any) -> np.ndarray:
     # Step 2: square-pad with mean color (PIL Image.new + paste-equivalent).
     image = _expand2square_uint8(image, _GR00T_IMG_MEAN_U8)
 
-    # Step 3: resize to the model's expected input. PIL's default Image.resize
-    # resample for RGB images is BICUBIC; cv2.INTER_CUBIC matches that.
-    image = cv2.resize(image, (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE), interpolation=cv2.INTER_CUBIC)
+    # Step 3: resize to the model's expected input. The dataloader resizes with
+    # PIL's Image.resize (default BICUBIC); cv2.INTER_CUBIC uses a different cubic
+    # kernel and drifts by a few LSBs at edges, so use PIL here to stay byte-exact
+    # with training (gr00t_lerobot/datasets.py: image.resize((224, 224))).
+    image = np.asarray(Image.fromarray(image).resize((_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE)))
     if image.shape != (_MODEL_INPUT_SIZE, _MODEL_INPUT_SIZE, 3):
         raise ValueError(
             f"Expected RGB image shape ({_MODEL_INPUT_SIZE}, {_MODEL_INPUT_SIZE}, 3), got {image.shape}."
@@ -608,12 +611,7 @@ class Model(ModelTemplate):
         if not examples:
             raise RuntimeError("No observation has been provided. Call update_obs() first.")
 
-        output = self.model.predict_action(
-            examples=examples,
-            do_sample=False,
-            use_ddim=True,
-            num_ddim_steps=10,
-        )
+        output = self.model.predict_action(examples=examples)
         normalized = output.get("normalized_actions") if isinstance(output, dict) else output
         normalized = np.asarray(normalized)
 
