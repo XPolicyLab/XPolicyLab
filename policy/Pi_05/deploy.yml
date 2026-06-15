@@ -4,17 +4,20 @@ task_name: null
 env_cfg_type: null
 expert_data_num: null
 seed: null
-eval_batch: true
-eval_env: debug
+eval_batch: false
+eval_env: real
+env_client_mode: daemon
+protocol: robodojo_ws
 
-checkpoint_num: 59999
+checkpoint_num: 29999
 result_dir: "./results/pi05/"
 obs_transform_pipeline: "xspark-v1.0"
 
 # Model / action configuration
 action_type: joint
-policy_uv_env_path: /mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_05/openpi
-train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_1
-repo_id: arx_x5_sim
+policy_uv_env_path: openpi
+train_config_name: pi05_base_aloha_full_real_piper-x_seed_0
+repo_id: Piper_x_real
+ckpt_name: RoboDojo-real-piper_x-100-joint-0
 
 port: 6000

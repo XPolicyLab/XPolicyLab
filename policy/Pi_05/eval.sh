@@ -5,13 +5,14 @@ dataset_name=${1}
 task_name=${2}
 ckpt_name=${3}
 env_cfg_type=${4}
-action_type=${5}
-seed=${6}
-policy_gpu_id=${7}
-env_gpu_id=${8}
-policy_conda_env=${9}
-eval_env_conda_env=${10}
-protocol=${11:-legacy_tcp}
+expert_data_num=${5}
+action_type=${6}
+seed=${7}
+policy_gpu_id=${8}
+env_gpu_id=${9}
+policy_conda_env=${10}
+eval_env_conda_env=${11}
+protocol=${12:-robodojo_ws}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
@@ -23,7 +24,7 @@ CLIENT_SCRIPT="${CURRENT_DIR}/setup_eval_env_client.sh"
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
 
-additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
+additional_info="ckpt_name=${ckpt_name},action_type=${action_type},real_base_cfg=replay_robot_piper_x,eval_episode_num=1"
 
 cleanup() {
     if [[ -n "${SERVER_PID:-}" ]]; then
@@ -40,6 +41,7 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
+    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \
