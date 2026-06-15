@@ -1,0 +1,41 @@
+policy_name: X_WAM
+eval_env: sim
+eval_batch: false
+
+# Server transport: overridden by setup_eval_policy_server.sh per launch.
+# Keys are `port` / `host` because XPolicyLab/setup_policy_server.py reads
+# those names (deploy_cfg.get("port") / deploy_cfg.get("host")).
+port: null
+host: null
+
+# Identifiers + per-launch wiring (set via --overrides from the eval scripts).
+dataset_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+expert_data_num: null
+action_type: ee
+action_dim: null
+seed: 42
+
+# Policy artefacts: resolved in setup_eval_policy_server.sh.
+#   exp_path: experiment dir containing config.yaml + checkpoints/<steps>.ckpt/...
+#   wan_checkpoint_dir: Wan2.2-TI2V-5B base weights (T5 + VAE + DiT).
+exp_path: null
+checkpoint_path: null
+wan_checkpoint_dir: null
+
+# X-WAM inference hyperparameters.
+steps: last
+device: cuda
+compile_model: true
+# Asynchronous denoising: full steps for video, few for actions.
+denoise_steps: 50
+action_denoise_steps: 10
+# Classifier-free guidance scale (0 disables CFG).
+cfg: 0.0
+# Number of predicted actions executed before requesting a fresh obs.
+# null -> execute the full predicted chunk (Ta).
+replan_steps: null
+default_instruction: follow the instruction
+allow_dummy_policy: false
