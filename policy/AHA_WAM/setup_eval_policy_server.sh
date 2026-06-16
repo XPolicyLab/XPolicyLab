@@ -19,7 +19,7 @@ UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
 apptainer_image="${AHA_WAM_APPTAINER_IMAGE:-/mnt/petrelfs/caijisong/shared_img/new_app.sif}"
-elava_root="${AHA_WAM_ELAVA_ROOT:-/mnt/petrelfs/caijisong/linglong/project/fastwam/elava-prior-only/elava}"
+elava_root="${AHA_WAM_ELAVA_ROOT:-${SCRIPT_DIR}/AHAWAM}"
 checkpoint_path="${AHA_WAM_CHECKPOINT_PATH:-${ROOT_DIR}/XPolicyLab/checkpoint/step_002500.pt}"
 dataset_stats_path="${AHA_WAM_DATASET_STATS_PATH:-${ROOT_DIR}/XPolicyLab/checkpoint/dataset_stats.json}"
 diffsynth_model_base_path="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/caijisong/dualWAM/checkpoints}"
@@ -71,7 +71,7 @@ conda activate "${POLICY_CONDA_ENV}"
 export CUDA_VISIBLE_DEVICES="${POLICY_GPU_ID}"
 export PYTHONUNBUFFERED=1
 export PYTHONWARNINGS=ignore::UserWarning
-export DIFFSYNTH_MODEL_BASE_PATH="${FASTWAM_DIFFSYNTH_MODEL_BASE_PATH}"
+export DIFFSYNTH_MODEL_BASE_PATH="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}"
 export PYTHONPATH="${ROOT_DIR}/XPolicyLab:${ROOT_DIR}:${ELAVA_ROOT}:${ELAVA_ROOT}/src:${PYTHONPATH:-}"
 
 python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
@@ -93,7 +93,7 @@ python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         task_config="${TASK_CONFIG}" \
         checkpoint_path="${CHECKPOINT_PATH}" \
         dataset_stats_path="${DATASET_STATS_PATH}" \
-        diffsynth_model_base_path="${FASTWAM_DIFFSYNTH_MODEL_BASE_PATH}" \
+        diffsynth_model_base_path="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}" \
         allow_dummy_policy="${ALLOW_DUMMY_POLICY}" \
         action_forwards_per_video_replan="${ACTION_FORWARDS_PER_VIDEO_REPLAN}"
 BASH
@@ -117,7 +117,7 @@ export ACTION_DIM="${action_dim}"
 export TASK_CONFIG="${task_config}"
 export CHECKPOINT_PATH="${checkpoint_path}"
 export DATASET_STATS_PATH="${dataset_stats_path}"
-export FASTWAM_DIFFSYNTH_MODEL_BASE_PATH="${diffsynth_model_base_path}"
+export AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH="${diffsynth_model_base_path}"
 export ALLOW_DUMMY_POLICY="${allow_dummy_policy}"
 export ACTION_FORWARDS_PER_VIDEO_REPLAN="${action_forwards_per_video_replan}"
 
@@ -146,7 +146,7 @@ if command -v apptainer >/dev/null 2>&1; then
             TASK_CONFIG="${TASK_CONFIG}" \
             CHECKPOINT_PATH="${CHECKPOINT_PATH}" \
             DATASET_STATS_PATH="${DATASET_STATS_PATH}" \
-            FASTWAM_DIFFSYNTH_MODEL_BASE_PATH="${FASTWAM_DIFFSYNTH_MODEL_BASE_PATH}" \
+            AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}" \
             ALLOW_DUMMY_POLICY="${ALLOW_DUMMY_POLICY}" \
             ACTION_FORWARDS_PER_VIDEO_REPLAN="${ACTION_FORWARDS_PER_VIDEO_REPLAN}" \
             bash -lc "${SERVER_BODY}"
