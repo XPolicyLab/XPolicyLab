@@ -266,7 +266,7 @@ def run_real_trial(
         stop_check=stop_check,
         default_eval_env="real",
         env_factory=RealEnv,
-        max_episodes=None,
+        max_episodes=1,
     )
 
 
