@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import inspect
+import os
 import sys
 from collections.abc import Callable, Mapping
 from typing import Any
@@ -80,6 +81,34 @@ def _completed_trial_result(
         "eval_env": deploy_cfg.get("eval_env", default_eval_env),
         "policy_name": deploy_cfg.get("policy_name"),
     }
+
+
+def _hdf5_path_from_env(env: Any) -> str | None:
+    """Best-effort absolute path of the HDF5 just recorded by the robot collector.
+
+    The collector writes {save_dir}/{task_name}/{type}/{episode_index}.hdf5 and
+    increments episode_index after each write, so the last recording is at
+    episode_index - 1. Returns None for non-recording envs (e.g. debug/sim).
+    """
+    collector = getattr(getattr(env, "robot", None), "collector", None)
+    if collector is None:
+        return None
+    episode_index = getattr(collector, "episode_index", 0)
+    cfg = getattr(collector, "collect_cfg", None)
+    if not isinstance(cfg, Mapping) or episode_index <= 0:
+        return None
+    try:
+        path = os.path.abspath(
+            os.path.join(
+                cfg["save_dir"],
+                cfg["task_name"],
+                cfg["type"],
+                f"{episode_index - 1}.hdf5",
+            )
+        )
+    except (KeyError, TypeError):
+        return None
+    return path if os.path.isfile(path) else None
 
 
 def baseline_to_reset_deploy_cfg(
@@ -211,6 +240,7 @@ def _run_env_trial(
 ) -> dict[str, Any]:
     env = env_factory(deploy_cfg)
     _wire_env_stop_check(env, stop_check)
+    hdf5_path: str | None = None
     try:
         total_steps = _run_trial_loop(
             env,
@@ -218,13 +248,17 @@ def _run_env_trial(
             eval_batch=deploy_cfg["eval_batch"],
             max_episodes=max_episodes,
         )
+        hdf5_path = _hdf5_path_from_env(env)
     finally:
         _cleanup_env(env)
-    return _completed_trial_result(
+    result = _completed_trial_result(
         deploy_cfg,
         steps=total_steps,
         default_eval_env=default_eval_env,
     )
+    if hdf5_path:
+        result["hdf5_path"] = hdf5_path
+    return result
 
 
 def run_debug_trial(
@@ -357,6 +391,7 @@ def make_dispatch_trial_runner(
             "steps": result.get("steps"),
             "eval_env": result.get("eval_env"),
             "policy_name": result.get("policy_name"),
+            "hdf5_path": result.get("hdf5_path"),
             "actions": [],
         }
 
