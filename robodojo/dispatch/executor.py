@@ -15,9 +15,23 @@ from robodojo.dispatch.status import (
 )
 from robodojo.env_client.runner import TrialRunnerFn
 import robodojo.publish.pipeline as publish_pipeline
+from robodojo.publish.s3 import normalize_s3_prefix
 from robodojo.publish.webhook import notify_finish_webhook
 from robodojo.schemas import DispatchPayload
 from robodojo.serialization import to_jsonable
+
+
+def _trial_video_key(dispatch: DispatchPayload, trial_index: int) -> str:
+    """Flat TOS delivery key for the trial video, under the web-provided base prefix.
+
+    e.g. robodojo/{team}/{model}/{robot}/{task}/{eval_id}/trial_{index}.mp4
+    """
+    return f"{normalize_s3_prefix(dispatch.artifact.prefix)}trial_{trial_index}.mp4"
+
+
+def _trial_hdf5_key(dispatch: DispatchPayload, trial_index: int) -> str:
+    """Flat TOS delivery key for the trial HDF5 recording (sibling of the mp4)."""
+    return f"{normalize_s3_prefix(dispatch.artifact.prefix)}trial_{trial_index}.hdf5"
 
 
 def notify_trial_failure(
@@ -130,6 +144,8 @@ def _fail_dispatch(
                 finish_url=str(trial_run["finish_url"]),
                 error=error,
                 webhook_secret=webhook_secret,
+                video_key=_trial_video_key(dispatch, trial_index),
+                hdf5_key=_trial_hdf5_key(dispatch, trial_index),
             )
             if publish_status == STATUS_FAILED:
                 error = publish_error
@@ -201,6 +217,8 @@ def _execute_dispatch(
                 finish_url=str(trial_run["finish_url"]),
                 error=error,
                 webhook_secret=webhook_secret,
+                video_key=_trial_video_key(dispatch, trial_index),
+                hdf5_key=_trial_hdf5_key(dispatch, trial_index),
             )
             if publish_status == STATUS_FAILED:
                 run_status = STATUS_FAILED

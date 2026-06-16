@@ -8,6 +8,7 @@ import json
 import os
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from typing import Any, Callable
@@ -19,6 +20,28 @@ DJANGO_SIGNATURE_HEADER = "X-RoboDojo-Signature-256"
 DJANGO_TIMESTAMP_HEADER = "X-RoboDojo-Signature-Timestamp"
 WEBHOOK_RETRY_ATTEMPTS = 3
 WEBHOOK_RETRY_BACKOFF_S = (1.0, 3.0, 9.0)
+# Override scheme+host:port of the dispatched finish_url (path/query preserved),
+# e.g. "http://192.168.101.71:8000". Empty -> use finish_url as-is.
+FINISH_URL_BASE_ENV = "ROBODOJO_FINISH_URL_BASE"
+
+
+def apply_finish_url_base(finish_url: str, base: str | None = None) -> str:
+    if base is None:
+        base = os.environ.get(FINISH_URL_BASE_ENV, "")
+    base = (base or "").strip()
+    if not base or not finish_url:
+        return finish_url
+    base_parts = urllib.parse.urlsplit(base if "//" in base else f"//{base}")
+    url_parts = urllib.parse.urlsplit(finish_url)
+    return urllib.parse.urlunsplit(
+        (
+            base_parts.scheme or url_parts.scheme,
+            base_parts.netloc,
+            url_parts.path,
+            url_parts.query,
+            url_parts.fragment,
+        )
+    )
 
 
 class WebhookDeliveryError(RuntimeError):
@@ -65,6 +88,8 @@ def build_django_finish_payload(
     artifact: ArtifactPayload,
     metrics: dict[str, Any],
     error: dict[str, Any] | None = None,
+    video_key: str | None = None,
+    hdf5_key: str | None = None,
 ) -> dict[str, Any]:
     prefix = artifact.prefix
     if prefix and not prefix.endswith("/"):
@@ -78,23 +103,31 @@ def build_django_finish_payload(
     if isinstance(trials, list) and trials and isinstance(trials[0], dict):
         trial_id = str(trials[0].get("trial_id") or "")
 
+    # `video_key` / `hdf5_key` (when provided) are the human-readable TOS delivery
+    # keys, e.g. robodojo/{team}/{model}/{robot}/{task}/{eval_id}/trial_{index}.mp4
+    # and .../trial_{index}.hdf5. The bookkeeping keys stay under the per-trial prefix.
+    video_s3_key = video_key or f"{prefix}videos/{trial_id or 'main'}.mp4"
+
     finish_status = (
         "done" if status in {"planned", "done", "success", "completed"} else "failed"
     )
+    artifact_payload: dict[str, Any] = {
+        "bucket": artifact.bucket,
+        "prefix": prefix,
+        "video_s3_key": video_s3_key,
+        "manifest_key": f"{prefix}manifest.json",
+        "metrics_key": f"{prefix}metrics.json",
+        "events_key": f"{prefix}events.jsonl",
+    }
+    if hdf5_key:
+        artifact_payload["hdf5_s3_key"] = hdf5_key
     payload: dict[str, Any] = {
         "status": finish_status,
         "result": "success" if finish_status == "done" else "failed",
         "score_inputs": {
             "success_rate": summary.get("success_rate"),
         },
-        "artifact": {
-            "bucket": artifact.bucket,
-            "prefix": prefix,
-            "video_s3_key": f"{prefix}videos/{trial_id or 'main'}.mp4",
-            "manifest_key": f"{prefix}manifest.json",
-            "metrics_key": f"{prefix}metrics.json",
-            "events_key": f"{prefix}events.jsonl",
-        },
+        "artifact": artifact_payload,
     }
     if error is not None:
         payload["error"] = error
@@ -173,6 +206,7 @@ def post_finish_webhook(
     opener: Callable[..., Any] | None = None,
     retry: bool = True,
 ) -> WebhookResult:
+    finish_url = apply_finish_url_base(finish_url)
     attempts = WEBHOOK_RETRY_ATTEMPTS if retry else 1
     last_err: WebhookDeliveryError | None = None
     for attempt in range(attempts):
@@ -202,12 +236,16 @@ def notify_finish_webhook(
     error: dict[str, Any] | None = None,
     secret: str | None = None,
     opener: Callable[..., Any] | None = None,
+    video_key: str | None = None,
+    hdf5_key: str | None = None,
 ) -> WebhookResult:
     payload = build_django_finish_payload(
         status=status,
         artifact=artifact,
         metrics=metrics,
         error=error,
+        video_key=video_key,
+        hdf5_key=hdf5_key,
     )
     return post_finish_webhook(
         finish_url,
