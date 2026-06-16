@@ -88,6 +88,98 @@ def _pad_stat_values(values, dim: int) -> list[float]:
     return padded.tolist()
 
 
+# Route XPolicyLab dual-arm packed [L_arm(6), L_ee(1), R_arm(6), R_ee(1)] (14 dims) into
+# AgiBot's 20/22-dim slot layout. Mirrors model.py:_xpolicylab_obs_to_agibot_state so
+# train-time data and eval-time observation use the same slot convention. The 6 arx_x5
+# arm joints are routed to AgiBot G1's [J1, J2, J4, J5, J6, J7] slots; J3 (upper-arm
+# roll) is the redundant DOF that arx_x5 does not have and is left = 0. Grippers go
+# to left/right_effector_position (slots 14/15); head/waist/robot_velocity slots stay 0.
+_XPL_DUAL_ARM_DIM = 6
+_XPL_DUAL_EE_DIM = 1
+_XPL_DUAL_PACKED_DIM = 2 * (_XPL_DUAL_ARM_DIM + _XPL_DUAL_EE_DIM)  # = 14
+
+# AgiBot G1 7-DOF kinematic chain (per-arm, 0-indexed):
+#   slot 0 = J1 (shoulder)
+#   slot 1 = J2 (shoulder)
+#   slot 2 = J3 (upper-arm roll)  <- locked / zero for 6-DOF arms (e.g. arx_x5)
+#   slot 3 = J4 (elbow)
+#   slot 4 = J5 (wrist)
+#   slot 5 = J6 (wrist)
+#   slot 6 = J7 (wrist)
+# 6-DOF arx_x5 arm joints (i = 0..5) -> AgiBot per-arm slot indices [0, 1, 3, 4, 5, 6]:
+AGIBOT_J3_LOCKED_PER_ARM_INDEX = 2
+_ARX_X5_ARM_TO_AGIBOT_ARM_SLOTS = [
+    s for s in range(7) if s != AGIBOT_J3_LOCKED_PER_ARM_INDEX
+]  # [0, 1, 3, 4, 5, 6]
+
+
+def _pad_dual_arm_packed_to_agibot(values: np.ndarray, target_dim: int) -> np.ndarray:
+    """Route a 14-dim dual-arm packed vector [L_arm(6), L_ee(1), R_arm(6), R_ee(1)]
+    into AgiBot's 20-dim state / 22-dim action layout, locking AgiBot's J3 slot.
+
+    Concrete slot mapping (state and action share the per-arm + effector slots):
+        left arm:
+            arx_x5 joint i (i=0..5)  ->  AgiBot slot [0,1,3,4,5,6][i]
+                                          (J3 / slot 2 stays 0)
+            arx_x5 left gripper      ->  AgiBot slot 14 (left_effector_position)
+        right arm:
+            arx_x5 joint i (i=0..5)  ->  AgiBot slot 7 + [0,1,3,4,5,6][i]
+                                          (J3 / slot 9 stays 0)
+            arx_x5 right gripper     ->  AgiBot slot 15 (right_effector_position)
+        unfilled slots:
+            [16:20]  head_position / waist_pitch / waist_lift -> 0
+            [20:22]  robot_velocity (action only)            -> 0
+    """
+    values = np.asarray(values, dtype=np.float32)
+    if values.ndim == 1:
+        values = values.reshape(1, -1)
+    assert values.shape[-1] == _XPL_DUAL_PACKED_DIM, (
+        f"_pad_dual_arm_packed_to_agibot expects last dim == {_XPL_DUAL_PACKED_DIM}, "
+        f"got shape {values.shape}"
+    )
+    out = np.zeros((*values.shape[:-1], target_dim), dtype=np.float32)
+
+    # Left arm joints (6 dims) -> AgiBot per-arm slots [0, 1, 3, 4, 5, 6]; slot 2 (J3) = 0
+    for src_i, tgt_slot in enumerate(_ARX_X5_ARM_TO_AGIBOT_ARM_SLOTS):
+        out[..., tgt_slot] = values[..., src_i]
+    # Left effector -> slot 14
+    left_ee_src = _XPL_DUAL_ARM_DIM
+    out[..., 14 : 14 + _XPL_DUAL_EE_DIM] = values[
+        ..., left_ee_src : left_ee_src + _XPL_DUAL_EE_DIM
+    ]
+
+    # Right arm joints (6 dims) -> AgiBot per-arm slots [7, 8, 10, 11, 12, 13]; slot 9 (J3) = 0
+    right_arm_src_base = _XPL_DUAL_ARM_DIM + _XPL_DUAL_EE_DIM  # = 7
+    for src_i, tgt_slot in enumerate(_ARX_X5_ARM_TO_AGIBOT_ARM_SLOTS):
+        out[..., 7 + tgt_slot] = values[..., right_arm_src_base + src_i]
+    # Right effector -> slot 15
+    right_ee_src = right_arm_src_base + _XPL_DUAL_ARM_DIM
+    out[..., 15 : 15 + _XPL_DUAL_EE_DIM] = values[
+        ..., right_ee_src : right_ee_src + _XPL_DUAL_EE_DIM
+    ]
+    return out
+
+
+def _agibot_pad(values: np.ndarray, target_dim: int) -> np.ndarray:
+    """Pad to AgiBot 20/22-dim slot layout, routing grippers to effector slots when
+    the source is a 14-dim XPolicyLab dual-arm packed vector. Other source layouts
+    fall back to legacy blind copy + zero-pad."""
+    values = np.asarray(values, dtype=np.float32)
+    if values.shape[-1] == _XPL_DUAL_PACKED_DIM:
+        return _pad_dual_arm_packed_to_agibot(values, target_dim)
+    return _pad_last_dim(values, target_dim)
+
+
+def _agibot_pad_stat_values(values, dim: int) -> list[float]:
+    """Pad per-feature stat values (mean/std/q01/q99/min/max). When the upstream
+    stat vector has 14 entries we apply the same gripper-routing logic so that
+    effector slots get the gripper stats (not zero-padded)."""
+    arr = np.asarray(values, dtype=np.float32).reshape(-1)
+    if arr.shape[0] == _XPL_DUAL_PACKED_DIM:
+        return _pad_dual_arm_packed_to_agibot(arr.reshape(1, -1), dim)[0].tolist()
+    return _pad_stat_values(values, dim)
+
+
 def calculate_dataset_statistics(
     parquet_paths: list[Path], features: list[str] | None = None
 ) -> dict[str, DatasetStatisticalValues]:
@@ -542,7 +634,7 @@ class LeRobotSingleDataset(Dataset):
                 ):
                     if name in stats:
                         stats[name] = {
-                            stat_name: _pad_stat_values(stat_values, dim)
+                            stat_name: _agibot_pad_stat_values(stat_values, dim)
                             for stat_name, stat_values in stats[name].items()
                             if stat_name in {"mean", "std", "min", "max", "q01", "q99"}
                         }
@@ -670,8 +762,8 @@ class LeRobotSingleDataset(Dataset):
         data_files = sorted((self.dataset_path / "data").glob("chunk-*/*.parquet"))
         for parquet_path in tqdm(data_files, desc="Calculating v3 relative stats"):
             parquet_data = pd.read_parquet(parquet_path, columns=["observation.state", "action"])
-            state = _pad_last_dim(np.stack(parquet_data["observation.state"]), AGIBOT_STATE_DIM)
-            action = _pad_last_dim(np.stack(parquet_data["action"]), AGIBOT_ACTION_DIM)
+            state = _agibot_pad(np.stack(parquet_data["observation.state"]), AGIBOT_STATE_DIM)
+            action = _agibot_pad(np.stack(parquet_data["action"]), AGIBOT_ACTION_DIM)
             for key in action_keys_to_process:
                 if key not in AGIBOT_ACTION_MAPPING or key not in AGIBOT_STATE_MAPPING:
                     continue
@@ -1770,7 +1862,7 @@ class LeRobotSingleDataset(Dataset):
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
         if self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT:
             target_dim = AGIBOT_ACTION_DIM if modality == "action" else AGIBOT_STATE_DIM
-            data_array = _pad_last_dim(data_array, target_dim)
+            data_array = _agibot_pad(data_array, target_dim)
         le_indices = np.arange(
             le_state_or_action_cfg[subkey].start,
             le_state_or_action_cfg[subkey].end,
