@@ -352,21 +352,6 @@ class Model(ModelTemplate):
         self.model = self._load_model(self.model_cfg)
         self.model.eval()
 
-        self._meta = {
-            key: value
-            for key, value in {
-                "policy_name": self.model_cfg.get("policy_name", "X_VLA"),
-                "action_type": self.action_type,
-                "env_cfg_type": env_cfg,
-                "task_name": self.model_cfg.get("task_name"),
-                "dataset_name": self.model_cfg.get("dataset_name"),
-            }.items()
-            if value is not None
-        }
-
-    def get_meta(self):
-        return self._meta
-
     def _get_device(self, device_arg: str):
         if device_arg == "auto":
             return torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -36,6 +36,7 @@ _DEPLOY_CFG_CASE_META_KEYS = (
     "eval_batch",
     "eval_episode_num",
     "protocol",
+    "action_type",
 )
 
 
@@ -46,8 +47,8 @@ class _StrictSchema(BaseModel):
 class EnvClientBaselineConfig(_StrictSchema):
     """Startup deploy_cfg from daemon launch (``debug_env_client`` CLI parity).
 
-    Most fields are optional: per-trial values come from the dispatch payload
-    and the policy server HELLO meta; startup values only act as fallbacks.
+    Most fields are optional: per-trial values come from the dispatch payload;
+    startup values only act as fallbacks.
     """
 
     dataset_name: str | None = None
@@ -98,7 +99,7 @@ def _baseline_deploy_cfg(
         cfg = baseline.model_dump()
     else:
         cfg = dict(baseline)
-    # Unset baseline fields must not shadow dispatch/meta-provided values.
+    # Unset baseline fields must not shadow dispatch-provided values.
     for key in (
         "dataset_name",
         "task_name",
@@ -191,6 +192,9 @@ def dispatch_trial_to_request(
         case_meta["eval_batch"] = True
     if config.repeat_index is not None:
         case_meta["repeat_index"] = config.repeat_index
+    action_type = config.case_meta.get("action_type")
+    if action_type in ("joint", "ee"):
+        case_meta["action_type"] = action_type
 
     trial_index = trial_run.get("trial_index")
     overrides: dict[str, Any] = {}

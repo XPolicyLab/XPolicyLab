@@ -424,7 +424,7 @@ def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
         type=str,
         default=None,
         help="XPolicyLab module name for deployment "
-        "(optional: auto-filled from dispatch payload / policy server meta)",
+        "(optional: auto-filled from dispatch payload)",
     )
     parser.add_argument(
         "--protocol",
@@ -513,8 +513,8 @@ def _validate_startup_args(
         parser.error("--root-dir is required when --eval_env=real")
     if getattr(args, "preview_base_cfg", None) and not args.root_dir:
         parser.error("--preview-base-cfg requires --root-dir")
-    # action_type is resolved per trial (dispatch payload > policy server
-    # HELLO meta > startup arg) and validated at trial start for real envs.
+    # action_type is resolved per trial (dispatch payload > startup arg) and
+    # validated at trial start for real envs.
 
 
 def _resolve_preview_cfg_path(root_dir: str, preview_base_cfg: str) -> Path:
