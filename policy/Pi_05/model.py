@@ -17,7 +17,6 @@ from openpi.training import config as _config
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import (
-    decode_image_bit,
     get_robot_action_dim_info,
     pack_robot_state,
     unpack_robot_state,
@@ -86,17 +85,34 @@ def _resolve_pi05_model_root(model_cfg: dict[str, Any]) -> Path:
 
 class Model(ModelTemplate):
     def __init__(self, model_cfg: dict[str, Any]):
-        self.task_name = model_cfg["task_name"]
-        self.action_type = model_cfg.get("action_type", "joint")
-        self.default_prompt = model_cfg.get("prompt", self.task_name)
+        self.model_cfg = dict(model_cfg)
+        self.task_name = self.model_cfg.get("task_name", "default_task")
+        self.action_type = self.model_cfg.get("action_type", "joint")
+        self.default_prompt = self.model_cfg.get("prompt", self.task_name)
+        env_cfg = self.model_cfg.get("env_cfg") or self.model_cfg.get("env_cfg_type")
         self.robot_action_dim_info = (
-            get_robot_action_dim_info(model_cfg["env_cfg_type"]) if model_cfg.get("env_cfg_type") is not None else None
+            get_robot_action_dim_info(env_cfg) if env_cfg is not None else None
         )
         self.observation_window: dict[str, Any] | None = None
         self._latest_env_idx_list: list[int] = [0]
 
-        self.policy = self.get_model(model_cfg=model_cfg)
+        self.policy = self.get_model(model_cfg=self.model_cfg)
         self.model = self.policy
+
+        self._meta = {
+            key: value
+            for key, value in {
+                "policy_name": self.model_cfg.get("policy_name", "Pi_05"),
+                "action_type": self.action_type,
+                "env_cfg_type": env_cfg,
+                "task_name": self.model_cfg.get("task_name"),
+                "dataset_name": self.model_cfg.get("dataset_name"),
+            }.items()
+            if value is not None
+        }
+
+    def get_meta(self):
+        return self._meta
 
     def get_model(self, model_cfg: dict[str, Any]):
         train_config_name = model_cfg.get("train_config_name", "pi05_aloha")
@@ -253,7 +269,4 @@ def ensure_chw_uint8(image):
 
 
 def decode_compressed_image(image_buffer):
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return decoded
+    return decode_image_bit(image_buffer)

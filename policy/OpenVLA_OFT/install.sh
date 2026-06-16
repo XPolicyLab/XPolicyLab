@@ -1,3 +1,4 @@
+# XPolicyLab deploy: policy server env=openvla_oft; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
 set -euo pipefail
 

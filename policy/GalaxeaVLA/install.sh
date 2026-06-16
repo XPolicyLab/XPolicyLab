@@ -1,11 +1,5 @@
 #!/bin/bash
-# GalaxeaVLA (galaxea_fm) environment setup for XPolicyLab.
-#
-# Builds an isolated uv virtualenv inside the upstream project dir and installs
-# galaxea_fm in editable mode. It does NOT download multi-GB weights/backbones;
-# those steps are printed for you to run manually (see INSTALLATION.md).
-#
-# Usage:  bash install.sh
+# Usage: bash install.sh
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -18,16 +12,26 @@ fi
 
 cd "${UPSTREAM_DIR}"
 
-# Optional China mirrors (matches upstream README); comment out if not needed.
 export UV_DEFAULT_INDEX="${UV_DEFAULT_INDEX:-https://mirrors.aliyun.com/pypi/simple/}"
 
-echo "[install] uv sync (python 3.10, torch 2.7.1 cu128) ..."
+echo "[install] uv sync ..."
 uv sync --index-strategy unsafe-best-match
 
 echo "[install] uv pip install -e . (+ dev) ..."
 source .venv/bin/activate
 uv pip install -e .
 uv pip install -e .[dev]
+
+echo "[install] install XPolicyLab (editable) from workspace root ..."
+cd "${SCRIPT_DIR}/../.."
+if [[ -f pyproject.toml ]]; then
+    uv pip install -e .
+elif [[ -f XPolicyLab/pyproject.toml ]]; then
+    uv pip install -e XPolicyLab
+else
+    echo "[install] warning: could not find XPolicyLab pyproject.toml; skip editable install."
+fi
+cd "${UPSTREAM_DIR}"
 
 echo
 echo "[install] core env ready. Remaining MANUAL steps (NOT run here):"

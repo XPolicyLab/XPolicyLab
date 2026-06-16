@@ -138,6 +138,7 @@ class LeRobotBuilder(DatasetBuilder):
         path = raw_config.get("path", "")
         weight = raw_config.get("weight", 1.0)
         num_episodes = raw_config.get("num_episodes")
+        use_num_images = raw_config.get("use_num_images")
         image_aug = raw_config.get("image_augmentation", False)
         
         # Parse normalization_type (default None, meaning no normalization)
@@ -168,6 +169,7 @@ class LeRobotBuilder(DatasetBuilder):
             normalization_type=norm_type,
             use_proprio=train_config.data.use_proprio,
             fixed_action_dim=train_config.model.fixed_action_dim,
+            use_num_images=use_num_images,
             use_wrist_image=train_config.data.use_wrist_image,
             chunk_size=train_config.model.num_actions_chunk,
             num_episodes=num_episodes,

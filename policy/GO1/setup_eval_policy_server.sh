@@ -16,6 +16,7 @@ policy_server_host=${11:-"localhost"}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_DIR="${ROOT_DIR}/XPolicyLab"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
@@ -32,11 +33,11 @@ fi
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-export PYTHONPATH="${SCRIPT_DIR}/AgiBot-World:${PYTHONPATH}"
+export PYTHONPATH="${SCRIPT_DIR}/AgiBot-World:${XPL_DIR}:${PYTHONPATH:-}"
 
 OVERRIDES=(
     port="${policy_server_port}"
-    policy_server_host="${policy_server_host}"
+    host="${policy_server_host}"
     dataset_name="${dataset_name}"
     task_name="${task_name}"
     ckpt_name="${ckpt_name}"
@@ -52,9 +53,42 @@ if [ -n "${MODEL_PATH:-}" ]; then
     OVERRIDES+=(model_path="${MODEL_PATH}")
 fi
 
+PYTHON_ARGS=(--config_path "${yaml_file}" --overrides)
+for override in "${OVERRIDES[@]}"; do
+    PYTHON_ARGS+=("${override}")
+done
+
+SERVER_PY="${XPL_DIR}/setup_policy_server.py"
+SERVER_ENV=(
+    PYTHONWARNINGS=ignore::UserWarning
+    CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
+    PYTHONPATH="${PYTHONPATH}"
+)
+
+if [[ "${policy_server_host}" == "0.0.0.0" ]]; then
+    export GO1_SPS_ARGV="$(
+        python3 -c 'import json, sys; print(json.dumps(sys.argv[1:]))' \
+            "${SERVER_PY}" "${PYTHON_ARGS[@]}"
+    )"
+    exec env "${SERVER_ENV[@]}" python -c "
+import json
+import os
+import runpy
+import sys
+
+import client_server.model_server as model_server_module
+
+_original_init = model_server_module.ModelServer.__init__
+
+def _bind_all_init(self, model, host='localhost', port=None):
+    _original_init(self, model, '0.0.0.0', port)
+
+model_server_module.ModelServer.__init__ = _bind_all_init
+sys.argv = json.loads(os.environ['GO1_SPS_ARGV'])
+runpy.run_path(sys.argv[0], run_name='__main__')
+"
+fi
+
 exec env \
-    PYTHONWARNINGS=ignore::UserWarning \
-    CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
-        --config_path "${yaml_file}" \
-        --overrides "${OVERRIDES[@]}"
+    "${SERVER_ENV[@]}" \
+    python "${SERVER_PY}" "${PYTHON_ARGS[@]}"

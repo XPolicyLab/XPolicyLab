@@ -35,6 +35,11 @@ from XPolicyLab.utils.process_data import (
 
 
 DEFAULT_MODEL_PATH = str((_SCRIPT_DIR / "../../../../models/a1-pretrain").resolve())
+DEFAULT_CAMERA_GROUPS = (
+    ("cam_head", "cam_high"),
+    ("cam_left_wrist", "cam_hand_left"),
+    ("cam_right_wrist", "cam_hand_right"),
+)
 
 
 def _quat_wxyz_to_rpy(quat: np.ndarray) -> np.ndarray:
@@ -107,15 +112,15 @@ def _prepare_ee_action_schema(action: dict) -> dict:
 def _find_latest_unsharded(run_dir: str | os.PathLike | None) -> str | None:
     if not run_dir or not os.path.isdir(run_dir):
         return None
+    latest = os.path.join(run_dir, "latest-unsharded")
+    if os.path.isdir(latest) and os.path.isfile(os.path.join(latest, "model.pt")):
+        return latest
     candidates = []
     for name in os.listdir(run_dir):
         path = os.path.join(run_dir, name)
         if name.endswith("-unsharded") and os.path.isdir(path) and os.path.isfile(os.path.join(path, "model.pt")):
             candidates.append(path)
     if not candidates:
-        latest = os.path.join(run_dir, "latest-unsharded")
-        if os.path.isdir(latest) and os.path.isfile(os.path.join(latest, "model.pt")):
-            return latest
         return None
     candidates.sort(key=os.path.getmtime)
     return candidates[-1]
@@ -161,13 +166,6 @@ def _load_a1_model(checkpoint_path: str, seed: int):
     device = torch.device("cuda")
 
     model = AffordVLA(model_cfg)
-    base_model_state_dict_path = resource_path(DEFAULT_MODEL_PATH, "model.pt")
-    if os.path.exists(base_model_state_dict_path) and os.path.abspath(checkpoint_path) != os.path.abspath(DEFAULT_MODEL_PATH):
-        base_state_dict = torch.load(base_model_state_dict_path, map_location="cpu")
-        missing, unexpected = model.load_state_dict(base_state_dict, strict=False)
-        print(f"[A1 Model] Loaded base checkpoint | missing={len(missing)} | unexpected={len(unexpected)}")
-        del base_state_dict
-
     model_state_dict_path = resource_path(checkpoint_path, "model.pt")
     if not os.path.exists(model_state_dict_path):
         raise FileNotFoundError(f"A1 model.pt not found at {model_state_dict_path}")
@@ -203,7 +201,7 @@ class Model(ModelTemplate):
         ))
         self.action_chunk_size = int(model_cfg.get("action_chunk_size", 50))
         self.sequence_length = int(model_cfg.get("sequence_length", 600))
-        self.no_norm = bool(model_cfg.get("no_norm", True))
+        self.no_norm = bool(model_cfg.get("no_norm", False))
         self.normalization_type = NormalizationType(model_cfg.get("normalization_type", "bounds"))
         self.use_wrist_image = bool(model_cfg.get("use_wrist_image", True))
         self.seed = int(model_cfg.get("seed") or 6198)
@@ -246,6 +244,15 @@ class Model(ModelTemplate):
                 if latest:
                     return latest
 
+            seed_agnostic_base = (
+                f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{self.action_type}"
+            )
+            matches = sorted(checkpoints_dir.glob(f"{seed_agnostic_base}-*"), key=lambda p: p.stat().st_mtime, reverse=True)
+            for match in matches:
+                latest = _find_latest_unsharded(match)
+                if latest:
+                    return latest
+
         return DEFAULT_MODEL_PATH
 
     def _load_norm_stats(self, model_cfg):
@@ -254,8 +261,10 @@ class Model(ModelTemplate):
         stats_path = model_cfg.get("norm_stats_json_path") or model_cfg.get("data_stats_path")
         if not stats_path:
             for candidate in (
-                Path(self.model_path) / "dataset_statistics.json",
                 Path(self.model_path) / "dataset_stats.json",
+                Path(self.model_path) / "dataset_statistics.json",
+                Path(self.model_path).parent / "dataset_stats.json",
+                Path(self.model_path).parent / "dataset_statistics.json",
             ):
                 if candidate.is_file():
                     stats_path = str(candidate)
@@ -335,8 +344,8 @@ def _encode_obs(observation, action_type, robot_action_dim_info, default_prompt)
 
     vision = observation.get("vision", {})
     images = []
-    for camera_name in ("cam_head", "cam_right_wrist", "cam_left_wrist"):
-        img = _extract_rgb_image(vision, camera_name)
+    for camera_names in DEFAULT_CAMERA_GROUPS:
+        img = _extract_rgb_image(vision, camera_names)
         if img is not None:
             images.append(img)
 
@@ -355,8 +364,14 @@ def _encode_obs(observation, action_type, robot_action_dim_info, default_prompt)
     }
 
 
-def _extract_rgb_image(vision, camera_name):
-    camera_data = vision.get(camera_name)
+def _extract_rgb_image(vision, camera_names):
+    if isinstance(camera_names, str):
+        camera_names = (camera_names,)
+    camera_data = None
+    for camera_name in camera_names:
+        camera_data = vision.get(camera_name)
+        if camera_data is not None:
+            break
     if camera_data is None:
         return None
     if isinstance(camera_data, dict):
@@ -367,14 +382,10 @@ def _extract_rgb_image(vision, camera_name):
         return None
 
     img = np.asarray(img)
-    if img.ndim == 1 and img.dtype == np.uint8:
-        img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-        if img is None:
-            return None
     if img.ndim == 3 and img.shape[0] in (1, 3) and img.shape[-1] not in (1, 3):
         img = np.transpose(img, (1, 2, 0))
     if img.ndim != 3 or img.shape[-1] != 3:
         return None
 
     img = cv2.resize(img, (320, 240), interpolation=cv2.INTER_AREA)
-    return cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.uint8)
+    return img.astype(np.uint8)

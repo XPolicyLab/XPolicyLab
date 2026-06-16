@@ -29,11 +29,16 @@ source "$HOME/.local/bin/env"  # 若当前 shell 找不到 uv
 
 ### 3. 创建 GR00T 环境
 
+在 **x86_64 GPU 主机**上，上游 `pyproject.toml` 的 `required-environments` 会同时解析 aarch64 专用 wheel，导致 `uv sync` 失败。请使用仓库内 `install.sh`（`uv venv --clear` + `uv pip install -e .`）：
+
 ```bash
-cd gr00t_n17
-uv sync --python 3.10
-uv run python -c "import gr00t; print('GR00T installed successfully')"
+cd policy/GR00T_N17
+bash install.sh
+source gr00t_n17/.venv/bin/activate
+python -c "import gr00t; print('GR00T installed successfully')"
 ```
+
+评测时 `policy_conda_env` 填 **`uv`**（`setup_eval_policy_server.sh` 会激活 `gr00t_n17/.venv`）。
 
 若提示 `CUDA_HOME is unset`：
 
@@ -110,7 +115,7 @@ EOF
 | `GR00T_SRC_DATASET` | 源 v3.0 数据集 repo id |
 | `GR00T_DATASET` | 转换后的 GR00T 数据集 repo id |
 | `GR00T_BASE_MODEL_PATH` | GR00T-N1.7-3B 本地目录或 HF id（见 `train.sh`） |
-| `GR00T_COSMOS_MODEL_PATH` | Cosmos-Reason2-2B 本地目录或 HF id |
+| `GR00T_COSMOS_MODEL_PATH` | 部署推荐 `checkpoints/shared/Cosmos-Reason2-2B`（软链 xspark 共享权重） |
 
 预训练权重也可预先 `huggingface-cli download` 到 `$HF_HOME`，`train.sh` 默认 `HF_HUB_OFFLINE=1` 走本地缓存。
 
@@ -136,3 +141,39 @@ pip install -e .
 ```
 
 训练与评测入口见 [README.md](README.md)。
+
+## XPolicyLab 部署（eval）
+
+已在 GPU 主机完成 debug client 闭环（`setup_eval_policy_server.sh` + `setup_eval_env_client.sh`）。
+
+| 项 | 说明 |
+|----|------|
+| Server 环境 | `uv` |
+| Client 环境 | `XPolicyLab`（conda） |
+| eval 示例 ckpt | `cotrain` |
+| expert_data_num | `3500` |
+| action_type | `joint` |
+| xspark 权重 | `/mnt/xspark-data/final_ckpt/GR00T_N17/RoboDojo-cotrain-arx_x5-3500-joint-0` |
+| 备注 | cosmos: checkpoints/shared/Cosmos-Reason2-2B |
+
+软链 checkpoint（在 `policy/GR00T_N17/` 下）：
+
+```bash
+mkdir -p checkpoints
+ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+```
+
+`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+
+手动评测：
+
+```bash
+# terminal 1 — server
+bash setup_eval_policy_server.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 0 0 uv <port> localhost
+
+# terminal 2 — client
+bash setup_eval_env_client.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 XPolicyLab "ckpt_name=cotrain,action_type=joint" <port> localhost
+```
+
+或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
+

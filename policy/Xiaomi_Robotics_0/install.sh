@@ -1,3 +1,4 @@
+# XPolicyLab deploy: policy server env=mibot; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -37,6 +38,7 @@ pip install -e .
 
 cd "${XPOLICYLAB_ROOT}"
 pip install -e .
+pip install h5py pyyaml
 
 echo "[Xiaomi_Robotics_0] Installation finished."
 echo "[Xiaomi_Robotics_0] Training / eval / debug client all use: conda activate ${CONDA_ENV}"

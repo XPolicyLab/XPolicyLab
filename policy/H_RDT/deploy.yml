@@ -6,7 +6,7 @@ action_type: joint
 gpu_id: null
 seed: null
 eval_batch: false
-eval_env: sim # sim, real, debug
+eval_env: debug # sim, real, debug
 
 # XPolicyLab model server
 host: localhost
@@ -17,10 +17,11 @@ ckpt_name: null
 checkpoint_path: null
 config_path: null
 lang_embedding_path: null
-lang_embedding_dir: null
+lang_embedding_dir: H_RDT/datasets/xpolicylab/lang_embeddings
+stats_path: H_RDT/datasets/xpolicylab/stats.json
 device: cuda
 dtype: bfloat16
-input_color_order: bgr
+input_color_order: rgb
 vision_backbone_id: dino-siglip
 vision_image_size: 384
 allow_dummy_lang_embedding: false

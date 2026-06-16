@@ -1,10 +1,8 @@
 dataset:
   _target_: galaxea_fm.data.galaxea_lerobot_dataset.GalaxeaLerobotDataset
 
-  # set by train.sh / task config (output of process_data.sh)
   dataset_dirs: null
 
-  # 14-dim dual-arm joint, matches XPolicyLab arx_x5 (dual_x5) and G0Plus_3B_base
   shape_meta:
     action:
       - {key: left_arm, raw_shape: 6, shape: 6}
@@ -20,7 +18,7 @@ dataset:
 
     images:
       - key: head_rgb
-        raw_shape: [3, 240, 320]   # XPolicyLab image standard
+        raw_shape: [3, 240, 320]
         shape: [3, "${model.model_meta.input_image_size.0}", "${model.model_meta.input_image_size.1}"]
       - key: left_wrist_rgb
         raw_shape: [3, 240, 320]

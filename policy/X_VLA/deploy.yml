@@ -10,7 +10,6 @@ eval_env: real
 env_client_mode: daemon
 
 checkpoint_num: null
-result_dir: "./results/XVLA/"
 obs_transform_pipeline: null
 
 # Model / action configuration
@@ -19,7 +18,7 @@ prompt: null
 model_path: null
 processor_path: checkpoints/shared/X-VLA-Pt
 lora_path: null
-domain_id: 6
+domain_id: 0
 steps: 10
 device: cuda
 

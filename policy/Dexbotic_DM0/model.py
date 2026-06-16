@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info
+from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info
 
 from .dm0_infer import load_dm0_infer
 from .dm0_state import ACTION_CHUNK_SIZE, pack_dm0_state, unpack_dm0_action_step
@@ -42,6 +42,19 @@ def _find_latest_checkpoint(run_dir: str) -> Optional[str]:
     return ckpts[-1]
 
 
+def _resolve_run_basename(model_cfg: dict) -> str:
+    """ckpt_name may already be the full 6-tuple directory name."""
+    ckpt_name = str(model_cfg.get("ckpt_name", ""))
+    if ckpt_name.count("-") >= 3:
+        return ckpt_name
+    dataset_name = model_cfg.get("dataset_name", "")
+    action_type = model_cfg.get("action_type", "")
+    env_cfg_type = model_cfg.get("env_cfg_type", "")
+    expert_data_num = model_cfg.get("expert_data_num", "")
+    seed = model_cfg.get("seed", "0")
+    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+
+
 def _list_candidate_run_dirs(run_basename: str) -> list[str]:
     candidates = [
         os.path.join(_CHECKPOINTS_DIR, run_basename),
@@ -67,13 +80,7 @@ def _resolve_model_assets(model_cfg: dict) -> tuple[str, Optional[str]]:
             run_dir = model_path if latest != model_path else os.path.dirname(model_path)
             model_path = latest
     else:
-        dataset_name = model_cfg.get("dataset_name", "")
-        ckpt_name = model_cfg.get("ckpt_name", "")
-        action_type = model_cfg.get("action_type", "")
-        env_cfg_type = model_cfg.get("env_cfg_type", "")
-        expert_data_num = model_cfg.get("expert_data_num", "")
-        seed = model_cfg.get("seed", "0")
-        run_basename = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+        run_basename = _resolve_run_basename(model_cfg)
 
         for candidate_run_dir in _list_candidate_run_dirs(run_basename):
             candidate_model_path = _find_latest_checkpoint(candidate_run_dir)
@@ -109,15 +116,10 @@ def _extract_rgb_image(observation: dict, camera_name: str) -> np.ndarray:
     img = np.asarray(img)
 
     if img.ndim == 1 and img.dtype == np.uint8:
-        img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-        if img is None:
-            raise ValueError(f"Failed to decode compressed image for {camera_name}")
+        img = decode_image_bit(img)
 
     if img.ndim == 3 and img.shape[0] in (1, 3) and img.shape[-1] not in (1, 3):
         img = np.transpose(img, (1, 2, 0))
-
-    if img.ndim == 3 and img.shape[-1] == 3:
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     return img.astype(np.uint8)
 

@@ -4,13 +4,14 @@ format (one step -- no RMBench-format intermediate).
 
 DP-style entrypoint (called by ../process_data.sh):
 
-    python xpolicylab_to_lerobot.py <dataset_name> <task_name> <env_cfg_type> \
+    python xpolicylab_to_lerobot.py <dataset_name> <ckpt_name> <env_cfg_type> \
         <expert_data_num> <action_type> --task_type {M1,Mn} [--instruction "..."] \
         [--language_annotation PATH]
 
-Reads:  <ROOT>/data/<dataset_name>/<task_name>/<env_cfg_type>/data/episode_*.hdf5
+Reads:  <ROOT>/data/<dataset_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5
         via XPolicyLab.utils.load_file.load_hdf5 (default sample: data/RoboDojo/test_data/arx_x5)
-Writes: <upstream>/lerobot_datasets/<dataset_name>-<task_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+Writes: policy/Mem_0/data/<dataset>-<ckpt>-<env>-<action>-lerobot
+        (legacy: Mem_0/lerobot_datasets/... when MEM0_LEGACY_PATHS=1)
 
 State/action are packed with XPolicyLab's dual-arm joint convention (14-dim:
 [LA(6),LGrip,RA(6),RGrip]) and expanded to Mem_0's 16-dim model layout
@@ -44,7 +45,8 @@ from tqdm import tqdm
 
 ADAPTER_DIR = os.path.dirname(os.path.abspath(__file__))
 UPSTREAM_DIR = os.path.dirname(ADAPTER_DIR)               # policy/Mem_0/Mem_0
-ROOT_DIR = os.path.abspath(os.path.join(UPSTREAM_DIR, "..", "..", "..", ".."))  # repo root
+POLICY_DIR = os.path.dirname(UPSTREAM_DIR)              # policy/Mem_0
+ROOT_DIR = os.path.abspath(os.path.join(UPSTREAM_DIR, "..", "..", "..", ".."))  # workspace root (data/)
 ANNOTATIONS_ROOT = os.path.join(UPSTREAM_DIR, "language_annotations")
 LANGUAGE_ANNOTATION_ROOT = os.path.join(ADAPTER_DIR, "language_annotation")
 for p in (ROOT_DIR, UPSTREAM_DIR):
@@ -103,6 +105,23 @@ def _packed14_to_model16(packed14: np.ndarray) -> np.ndarray:
     out[:, 14] = packed14[:, 6]
     out[:, 15] = packed14[:, 13]
     return out
+
+
+def resolve_dataset_out_dir(
+    dataset_name: str,
+    ckpt_name: str,
+    env_cfg_type: str,
+    expert_data_num: int,
+    action_type: str,
+) -> Path:
+    """Default LeRobot output root (README §4.2); legacy when MEM0_LEGACY_PATHS=1."""
+    tag = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
+    if os.environ.get("MEM0_LEGACY_PATHS") == "1":
+        legacy_name = (
+            f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}"
+        )
+        return Path(UPSTREAM_DIR) / "lerobot_datasets" / legacy_name
+    return Path(POLICY_DIR) / "data" / f"{tag}-lerobot"
 
 
 def _decode_rgb(img_bit) -> np.ndarray:
@@ -300,7 +319,8 @@ def convert_episode_frames(
 def main() -> None:
     parser = argparse.ArgumentParser(description="XPolicyLab HDF5 -> Mem_0 LeRobot dataset")
     parser.add_argument("dataset_name", type=str)
-    parser.add_argument("task_name", type=str)
+    parser.add_argument("ckpt_name", type=str,
+                        help="Experiment/raw-task key; HDF5 source dir under data/<dataset>/<ckpt_name>/")
     parser.add_argument("env_cfg_type", type=str)
     parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", type=str, help="'joint' (Mem_0 default) or 'ee'")
@@ -324,17 +344,17 @@ def main() -> None:
         f"arm_dim={robot_action_dim_info['arm_dim']}."
     )
 
-    task_dir = Path(ROOT_DIR) / "data" / args.dataset_name / args.task_name / args.env_cfg_type
+    task_dir = Path(ROOT_DIR) / "data" / args.dataset_name / args.ckpt_name / args.env_cfg_type
     if not task_dir.is_dir():
         raise FileNotFoundError(
             f"Source data dir not found: {task_dir}\n"
-            "Expected data/<dataset_name>/<task_name>/<env_cfg_type>/data/episode_*.hdf5."
+            "Expected data/<dataset_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5."
         )
 
     annotations = {}
     if args.task_type == "Mn":
         ann_path = resolve_mn_annotation_path(
-            args.task_name, args.dataset_name, args.env_cfg_type, args.language_annotation,
+            args.ckpt_name, args.dataset_name, args.env_cfg_type, args.language_annotation,
         )
         if not ann_path.is_file():
             raise FileNotFoundError(
@@ -342,11 +362,11 @@ def main() -> None:
             )
         annotations = json.loads(ann_path.read_text(encoding="utf-8"))
 
-    out_name = (
-        f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}-"
-        f"{args.expert_data_num}-{args.action_type}"
+    out_name = f"{args.dataset_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
+    out_root = resolve_dataset_out_dir(
+        args.dataset_name, args.ckpt_name, args.env_cfg_type,
+        args.expert_data_num, args.action_type,
     )
-    out_root = Path(UPSTREAM_DIR) / "lerobot_datasets" / out_name
     if out_root.exists():
         shutil.rmtree(out_root)
 
@@ -363,7 +383,7 @@ def main() -> None:
             continue
 
         data = load_hdf5(str(load_path))
-        global_task = args.instruction or read_instruction(data, args.task_name)
+        global_task = args.instruction or read_instruction(data, args.ckpt_name)
         state16, action16, episode_length = pack_episode_state_action(
             data, args.action_type, robot_action_dim_info,
         )
@@ -382,7 +402,7 @@ def main() -> None:
 
         nframes = convert_episode_frames(
             dataset,
-            task_name=args.task_name,
+            task_name=args.ckpt_name,
             task_type=args.task_type,
             episode_idx=episode_idx,
             state16=state16,

@@ -85,7 +85,7 @@ class BaseHDF5Handler(DomainHandler):
         keys: Sequence[str] = self.meta["observation_key"]
         return [f[k][()] for k in keys]
 
-    def read_instruction(self, f: h5py.File) -> str:
+    def read_instruction(self, f: h5py.File, datapath: str = "") -> str:
         key: str = self.meta["language_instruction_key"]
         ds = f[key]
         v = ds[()]
@@ -125,7 +125,7 @@ class BaseHDF5Handler(DomainHandler):
             # Images and mask
             images = self.get_image_datasets(f)
             # Language
-            ins = self.read_instruction(f)
+            ins = self.read_instruction(f, datapath=datapath)
             # Domain-specific kinematics and timing
             left, right, lt, rt, freq, qdur = self.build_left_right(f)
         

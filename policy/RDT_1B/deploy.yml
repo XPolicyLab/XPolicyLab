@@ -17,8 +17,8 @@ prompt: null
 checkpoint_path: null
 model_path: null
 config_path: null
-text_encoder_path: checkpoints/shared/t5-v1_1-xxl
-vision_encoder_path: checkpoints/shared/siglip-so400m-patch14-384
+text_encoder_path: null
+vision_encoder_path: null
 model_root: null
 ctrl_freq: 25
 chunk_size: 64

@@ -4,7 +4,7 @@ set -euo pipefail
 # Mem_0 unified training: Execution Module, Planning Module (Mn), or both in sequence.
 #
 # Usage:
-#   bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> \
+#   bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
 #                 <action_type> <seed> <gpu_ids> [train_module]
 #
 # train_module (8th arg, default both):
@@ -32,13 +32,13 @@ set -euo pipefail
 # Shared: DRY_RUN (skip torchrun / LLaMA-Factory train+export; still writes configs)
 
 usage() {
-  echo "usage: bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> \\" >&2
+  echo "usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> \\" >&2
   echo "                   <action_type> <seed> <gpu_ids> [train_module]" >&2
   echo "  train_module: execution | planning | both  (default: both)" >&2
 }
 
 dataset_name=${1:-}
-task_name=${2:-}
+ckpt_name=${2:-}
 env_cfg_type=${3:-}
 expert_data_num=${4:-}
 action_type=${5:-}
@@ -46,7 +46,7 @@ seed=${6:-}
 gpu_ids=${7:-}
 train_module=${8:-}
 
-if [[ -z "${dataset_name}" || -z "${task_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" \
+if [[ -z "${dataset_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" \
       || -z "${action_type}" || -z "${seed}" || -z "${gpu_ids}" ]]; then
   usage
   exit 2
@@ -71,13 +71,15 @@ UPSTREAM_DIR="${POLICY_DIR}/Mem_0"
 ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
 ORCHESTRATOR="${ADAPTER_DIR}/run_planning_train.py"
 
-dataset_id="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-run_name="${dataset_id}-seed${seed}"
-repo_id="${REPO_ID:-${UPSTREAM_DIR}/lerobot_datasets/${dataset_id}}"
+source "${ADAPTER_DIR}/_artifact_paths.sh"
+
+run_id="$(mem0_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
+repo_id="${REPO_ID:-$(mem0_resolve_dataset_dir "${POLICY_DIR}" "${dataset_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${expert_data_num}")}"
 
 run_execution_train() {
-  local rel_ckpt_dir="checkpoints/${run_name}"
-  local gen_config="${UPSTREAM_DIR}/${rel_ckpt_dir}/train_config.yaml"
+  local ckpt_dir="${POLICY_DIR}/checkpoints/${run_id}"
+  local gen_config="${ckpt_dir}/train_config.yaml"
   local batch_size=${BATCH_SIZE:-56}
   local train_steps=${TRAIN_STEPS:-100000}
   local enable_wandb=${ENABLE_WANDB:-true}
@@ -87,7 +89,7 @@ run_execution_train() {
 
   if [[ ! -d "${repo_id}" ]]; then
     echo -e "\033[31m[train:execution] LeRobot dataset not found: ${repo_id}\033[0m" >&2
-    echo "Run: bash process_data.sh ${dataset_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type} <M1|Mn>   (or set REPO_ID=...)" >&2
+    echo "Run: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} <M1|Mn>   (or set REPO_ID=...)" >&2
     exit 1
   fi
 
@@ -104,10 +106,11 @@ run_execution_train() {
   local norm_args=()
   [[ -n "${NORM_STATS_PATH:-}" ]] && norm_args+=( --norm_stats_path "${NORM_STATS_PATH}" )
 
+  mkdir -p "${ckpt_dir}"
   python "${ADAPTER_DIR}/gen_train_config.py" \
       --repo_id "${repo_id}" \
-      --checkpoint_dir "${rel_ckpt_dir}" \
-      --wandb_run_name "${run_name}" \
+      --checkpoint_dir "${ckpt_dir}" \
+      --wandb_run_name "${run_id}" \
       --out "${gen_config}" \
       --seed "${seed}" \
       --batch_size "${batch_size}" \
@@ -121,7 +124,7 @@ run_execution_train() {
     return 0
   fi
 
-  echo -e "\033[33m[train:execution] GPUs=${gpu_ids} (nproc_per_node=${nproc}); run=${run_name}\033[0m"
+  echo -e "\033[33m[train:execution] GPUs=${gpu_ids} (nproc_per_node=${nproc}); run=${run_id}\033[0m"
   export CUDA_VISIBLE_DEVICES="${gpu_ids}"
   export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
   export TOKENIZERS_PARALLELISM=false
@@ -138,10 +141,10 @@ run_execution_train() {
 
 run_planning_train() {
   local lf_root="${LLAMAFACTORY_ROOT:-${UPSTREAM_DIR}/LlamaFactory}"
-  local base_output_dir="${UPSTREAM_DIR}/checkpoints"
-  local run_config_dir="${base_output_dir}/${run_name}"
-  local adapter_dir="${base_output_dir}/${run_name}_planning_sft_lora"
-  local merged_dir="${base_output_dir}/${run_name}_planning_merged"
+  local base_output_dir="${POLICY_DIR}/checkpoints"
+  local run_config_dir="${base_output_dir}/${run_id}"
+  local adapter_dir="${base_output_dir}/${run_id}_planning_sft_lora"
+  local merged_dir="${base_output_dir}/${run_id}_planning_merged"
 
   local episode_start=${EPISODE_START_ID:-0}
   local steps="${STEPS:-prepare copy train merge}"
@@ -165,7 +168,7 @@ run_planning_train() {
 
   if [[ ! -d "${repo_id}" ]]; then
     echo -e "\033[31m[train:planning] LeRobot dataset not found: ${repo_id}\033[0m" >&2
-    echo "Run: bash process_data.sh ${dataset_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type} Mn" >&2
+    echo "Run: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} Mn" >&2
     exit 1
   fi
 
@@ -248,7 +251,7 @@ PY
     echo -e "\033[33m[train:planning] episodes [${episode_start}, ${episode_end}) of total_episodes=${total_eps} (auto from meta/info.json)\033[0m"
   fi
 
-  local qwen8b_dir="${base_output_dir}/Qwen3-VL-8B-Instruct"
+  local qwen8b_dir="${UPSTREAM_DIR}/checkpoints/Qwen3-VL-8B-Instruct"
   if [[ "${ALLOW_NO_QWEN8B:-false}" != "true" ]]; then
     shopt -s nullglob
     local safetensors=( "${qwen8b_dir}"/model*.safetensors )
@@ -277,7 +280,7 @@ PY
     fi
   done
 
-  echo -e "\033[33m[train:planning] run=${run_name} GPUs=${gpu_ids} steps=${steps}\033[0m"
+  echo -e "\033[33m[train:planning] run=${run_id} GPUs=${gpu_ids} steps=${steps}\033[0m"
   export CUDA_VISIBLE_DEVICES="${gpu_ids}"
   export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
   export TOKENIZERS_PARALLELISM=false
@@ -287,7 +290,7 @@ PY
     --lerobot_dataset_path "${repo_id}"
     --llamafactory_root "${lf_root}"
     --base_output_dir "${base_output_dir}"
-    --run_name "${run_name}"
+    --run_name "${run_id}"
     --run_config_dir "${run_config_dir}"
     --adapter_output_dir "${adapter_dir}"
     --merged_output_dir "${merged_dir}"
@@ -316,7 +319,7 @@ PY
   python3 "${ORCHESTRATOR}" "${orchestrator_args[@]}"
 }
 
-echo -e "\033[36m[train] module=${train_module} run=${run_name}\033[0m"
+echo -e "\033[36m[train] module=${train_module} run=${run_id}\033[0m"
 
 case "${train_module}" in
   execution) run_execution_train ;;

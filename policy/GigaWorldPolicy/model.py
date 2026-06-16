@@ -1,288 +1,124 @@
 from __future__ import annotations
 
-import sys
 import importlib
-import json
-import tempfile
+import os
+import sys
+import time
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import numpy as np
 
-_CUR_DIR = Path(__file__).resolve().parent
-_REPO_ROOT = _CUR_DIR.parents[2]
-_GIGAWORLD_ROOT = _CUR_DIR / "giga_world_policy"
-_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
-_DEFAULT_LEROBOT_DATASET_ROOT = Path("/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21")
-_TASK_ALIASES = {
-    "debug_task": "stack_bowls",
-    "stack_bowls": "Stack the three bowls together.",
-    "stack_bowls_three": "Stack the three bowls together.",
-    "stack_bowls_two": "Stack the three bowls together.",
-}
+from XPolicyLab.utils.process_data import decode_image_bit
 
-for _path in (
-    str(_REPO_ROOT),
-    str(_CUR_DIR),
-    str(_GIGAWORLD_ROOT),
-    str(_GIGAWORLD_ROOT / "third_party" / "giga-train"),
-    str(_GIGAWORLD_ROOT / "third_party" / "giga-models"),
-    str(_GIGAWORLD_ROOT / "third_party" / "giga-datasets"),
-    str(_GIGAWORLD_ROOT / "third_party" / "wan"),
-):
+_CUR_DIR = Path(__file__).resolve().parent
+_XPL_ROOT = _CUR_DIR.parents[2]
+_INNER_ROOT = _CUR_DIR / "giga_world_policy"
+_SRC_ROOT = _INNER_ROOT / "src"
+_CHECKPOINTS_DIR = _CUR_DIR / "checkpoints"
+_ARX_X5_DELTA_MASK = np.array(
+    [True, True, True, True, True, True, False, True, True, True, True, True, True, False],
+    dtype=bool,
+)
+
+for _path in (str(_XPL_ROOT), str(_CUR_DIR), str(_INNER_ROOT), str(_SRC_ROOT)):
     if _path not in sys.path:
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state, unpack_robot_state
+from XPolicyLab.utils.load_file import load_json, load_yaml
+from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state
 
 
-def _parse_bool(value: Any) -> bool:
+def _parse_bool(value: Any, default: bool = False) -> bool:
+    if value is None:
+        return default
     if isinstance(value, bool):
         return value
-    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+    return str(value).strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
-def _resolve_path(value: str | None, base_dir: Path = _CUR_DIR) -> Path | None:
+def _parse_int_list(value: Any) -> list[int]:
+    if value is None:
+        return []
+    if isinstance(value, (list, tuple)):
+        return [int(v) for v in value]
+    text = str(value).strip()
+    if not text:
+        return []
+    return [int(part.strip()) for part in text.split(",") if part.strip()]
+
+
+def _as_path(value: str | None, base: Path = _CUR_DIR) -> Path | None:
     if not value:
         return None
-    path = Path(value).expanduser()
+    path = Path(str(value)).expanduser()
     if not path.is_absolute():
-        path = (base_dir / path).resolve()
+        path = base / path
     return path.resolve()
 
 
-def _ensure_stats_compatible(stats_path: Path) -> Path:
-    with open(stats_path, "r", encoding="utf-8") as f:
-        stats = json.load(f)
-
-    changed = False
-    for key in ("observation.state", "action"):
-        entry = stats.get("norm_stats", {}).get(key, {})
-        if "min" not in entry and "q01" in entry:
-            entry["min"] = entry["q01"]
-            changed = True
-        if "max" not in entry and "q99" in entry:
-            entry["max"] = entry["q99"]
-            changed = True
-
-    if not changed:
-        return stats_path
-
-    output_path = Path(tempfile.gettempdir()) / f"{stats_path.stem}_gigaworld_compatible.json"
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(stats, f)
-    return output_path.resolve()
-
-
-def _canonical_task_name(task_name: str | None, fallback_task_name: str | None = None) -> str | None:
-    for candidate in (task_name, fallback_task_name):
-        if not candidate:
-            continue
-        candidate = str(candidate)
-        return _TASK_ALIASES.get(candidate, candidate)
-    return None
-
-
-def _resolve_task_t5_embedding(
-    t5_embedding_pkl: str | None,
-    dataset_root: str | None,
-    task_name: str | None,
-    fallback_task_name: str | None,
-) -> Path | None:
-    explicit_path = _resolve_path(t5_embedding_pkl)
-    if explicit_path is not None:
-        return explicit_path
-
-    root = _resolve_path(dataset_root) or _DEFAULT_LEROBOT_DATASET_ROOT
-    t5_dir = root / "t5_embedding"
-    tasks_path = root / "meta" / "tasks.jsonl"
-    episodes_path = root / "meta" / "episodes.jsonl"
-    if not tasks_path.is_file() or not episodes_path.is_file():
-        return None
-
-    target_task = _canonical_task_name(task_name, fallback_task_name)
-    if target_task is None:
-        return None
-
-    known_tasks: set[str] = set()
-    with open(tasks_path, "r", encoding="utf-8") as f:
-        for line in f:
-            if line.strip():
-                known_tasks.add(json.loads(line)["task"])
-
-    if target_task not in known_tasks:
-        fallback_task = _canonical_task_name(fallback_task_name, None)
-        if fallback_task in known_tasks:
-            target_task = fallback_task
-        else:
-            raise KeyError(f"GigaWorld task {target_task!r} not found in {tasks_path}")
-
-    with open(episodes_path, "r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip():
-                continue
-            episode = json.loads(line)
-            if target_task in episode.get("tasks", []):
-                episode_index = int(episode["episode_index"])
-                candidate = t5_dir / f"episode_{episode_index:06d}.pt"
-                if candidate.is_file():
-                    print(
-                        "[GigaWorldPolicy] using task t5 embedding",
-                        f"task={target_task!r}",
-                        f"path={candidate}",
-                    )
-                    return candidate.resolve()
-                raise FileNotFoundError(f"T5 embedding not found: {candidate}")
-
-    raise FileNotFoundError(f"No episode found for GigaWorld task {target_task!r} in {episodes_path}")
+def _load_robot_action_dim_info(env_cfg_type: str) -> dict[str, list[int]]:
+    env_root = _CUR_DIR.parents[1] / "env_cfg"
+    env_cfg = load_yaml(str(env_root / f"{env_cfg_type}.yml"))
+    robot_name = env_cfg["config"]["robot"]
+    return load_json(str(env_root / "robot" / "_robot_info.json"))[robot_name]
 
 
 def _pad_or_trim_np(value: np.ndarray, dim: int) -> np.ndarray:
-    if value.shape[-1] == dim:
-        return value
-    if value.shape[-1] > dim:
-        return value[..., :dim]
-    pad_width = [(0, 0)] * value.ndim
-    pad_width[-1] = (0, dim - value.shape[-1])
-    return np.pad(value, pad_width, mode="constant").astype(np.float32)
+    arr = np.asarray(value, dtype=np.float32)
+    if arr.shape[-1] == dim:
+        return arr
+    if arr.shape[-1] > dim:
+        return arr[..., :dim]
+    pad_width = [(0, 0)] * arr.ndim
+    pad_width[-1] = (0, dim - arr.shape[-1])
+    return np.pad(arr, pad_width, mode="constant").astype(np.float32)
 
 
-def _config_value(config: Any, key: str) -> Any:
-    if isinstance(config, dict):
-        return config[key]
-    return getattr(config, key)
+def _checkpoint_step(path: Path) -> int:
+    name = path.name
+    if name.startswith("checkpoint-"):
+        tail = name.split("checkpoint-", 1)[1]
+        if tail.isdigit():
+            return int(tail)
+    return -1
 
 
-def _patch_transformer_loader(inference_server_module: Any, action_dim: int) -> None:
-    transformer_cls = inference_server_module.CasualWorldActionTransformer
-    if getattr(transformer_cls, "_xpolicylab_action_dim", None) == action_dim:
-        return
-
-    original_from_pretrained = getattr(
-        transformer_cls,
-        "_xpolicylab_original_from_pretrained",
-        transformer_cls.from_pretrained,
-    )
-    transformer_cls._xpolicylab_original_from_pretrained = original_from_pretrained
-
-    def _from_pretrained_with_action_dim(cls, pretrained_model_name_or_path, *args, **kwargs):
-        import torch
-        import torch.nn as nn
-        from world_action_model.models.transformer_wa_casual import WanRotaryPosEmbed1D
-
-        checkpoint_dir = Path(pretrained_model_name_or_path)
-        weight_path = checkpoint_dir / "diffusion_pytorch_model.bin"
-        if not weight_path.is_file():
-            return original_from_pretrained(pretrained_model_name_or_path, *args, **kwargs)
-
-        torch_dtype = kwargs.pop("torch_dtype", None)
-        transformer = cls.from_config(pretrained_model_name_or_path)
-        inner_dim = _config_value(transformer.config, "num_attention_heads") * _config_value(
-            transformer.config, "attention_head_dim"
-        )
-        transformer.action_encoder = nn.Sequential(
-            nn.Linear(action_dim, 128),
-            nn.GELU(),
-            nn.Linear(128, 256),
-            nn.GELU(),
-            nn.Linear(256, inner_dim),
-        )
-        transformer.action_decoder = nn.Sequential(
-            nn.Linear(inner_dim, 256),
-            nn.GELU(),
-            nn.Linear(256, 128),
-            nn.GELU(),
-            nn.Linear(128, action_dim),
-        )
-        transformer.action_rope = WanRotaryPosEmbed1D(
-            _config_value(transformer.config, "attention_head_dim"),
-            _config_value(transformer.config, "rope_max_seq_len"),
-        )
-
-        state_dict = torch.load(weight_path, map_location="cpu")
-        if isinstance(state_dict, dict) and "state_dict" in state_dict:
-            state_dict = state_dict["state_dict"]
-        transformer.load_state_dict(state_dict, strict=True)
-        if torch_dtype is not None:
-            transformer = transformer.to(torch_dtype)
-        return transformer.eval()
-
-    transformer_cls.from_pretrained = classmethod(_from_pretrained_with_action_dim)
-    transformer_cls._xpolicylab_action_dim = action_dim
+def _choose_checkpoint_file(path: Path, preferred_file: str) -> Path | None:
+    if path.is_file():
+        return path.resolve()
+    if not path.is_dir():
+        return None
+    for name in (preferred_file, "model_ema.pt", "model.pt"):
+        candidate = path / name
+        if candidate.is_file():
+            return candidate.resolve()
+    return None
 
 
-def _patch_pipeline_action_dim(inference_server_module: Any, action_dim: int) -> None:
-    pipeline_cls = inference_server_module.WAPipeline
-    if getattr(pipeline_cls, "_xpolicylab_action_dim", None) == action_dim:
-        return
-
-    original_prepare_latents = getattr(
-        pipeline_cls,
-        "_xpolicylab_original_prepare_latents",
-        pipeline_cls.prepare_latents,
-    )
-    original_call = getattr(
-        pipeline_cls,
-        "_xpolicylab_original_call",
-        pipeline_cls.__call__,
-    )
-    pipeline_cls._xpolicylab_original_prepare_latents = original_prepare_latents
-    pipeline_cls._xpolicylab_original_call = original_call
-
-    def _prepare_latents_with_action_dim(self, *args, **kwargs):
-        kwargs.setdefault("action_dim", action_dim)
-        return original_prepare_latents(self, *args, **kwargs)
-
-    def _call_with_expand_timesteps(self, *args, **kwargs):
-        self.register_to_config(expand_timesteps=True)
-        return original_call(self, *args, **kwargs)
-
-    pipeline_cls.prepare_latents = _prepare_latents_with_action_dim
-    pipeline_cls.__call__ = _call_with_expand_timesteps
-    pipeline_cls._xpolicylab_action_dim = action_dim
-
-
-def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path:
-    ckpt_name = model_cfg.get("ckpt_name")
-    if ckpt_name:
-        local_candidate = (_CHECKPOINTS_DIR / str(ckpt_name)).resolve()
-        if local_candidate.exists():
-            return local_candidate
-
-    return (_CHECKPOINTS_DIR / "RoboDojo_sim_arx_seed_0").resolve()
-
-
-def _extract_image(observation: dict[str, Any], candidate_names: list[str]) -> np.ndarray:
-    vision = observation.get("vision", {})
-    for candidate_name in candidate_names:
-        if candidate_name not in vision:
-            continue
-        image = vision[candidate_name]
-        if isinstance(image, dict):
-            for image_key in ("color", "rgb"):
-                if image_key in image:
-                    return image[image_key]
-        else:
-            return image
-    raise KeyError(f"Could not find any image for candidates: {candidate_names}")
-
-
-def _ensure_chw01(image: Any) -> np.ndarray:
-    image = np.asarray(image)
-    if image.ndim != 3:
-        raise ValueError(f"Expected image ndim=3, got shape {image.shape}")
-    if image.shape[0] in (1, 3):
-        chw = image
-    elif image.shape[-1] in (1, 3):
-        chw = image.transpose(2, 0, 1)
+def _image_to_uint8_hwc(image: Any, input_color_space: str = "rgb") -> np.ndarray:
+    if isinstance(image, (bytes, bytearray, memoryview)):
+        image = decode_image_bit(np.frombuffer(bytes(image), dtype=np.uint8))
+    arr = np.asarray(image)
+    if arr.ndim == 1 and arr.dtype == np.uint8:
+        arr = decode_image_bit(arr)
+    if arr.ndim != 3:
+        raise ValueError(f"Expected image ndim=3, got shape {arr.shape}")
+    if arr.shape[0] in (1, 3) and arr.shape[-1] not in (1, 3):
+        arr = arr.transpose(1, 2, 0)
+    if np.issubdtype(arr.dtype, np.floating):
+        scale = 255.0 if float(np.nanmax(arr)) <= 1.5 else 1.0
+        arr = np.clip(arr * scale, 0, 255).astype(np.uint8)
     else:
-        raise ValueError(f"Unsupported image shape: {image.shape}")
-
-    if np.issubdtype(chw.dtype, np.floating):
-        return np.clip(chw.astype(np.float32), 0.0, 1.0)
-    return (chw.astype(np.float32) / 255.0).clip(0.0, 1.0)
+        arr = np.clip(arr, 0, 255).astype(np.uint8)
+    if arr.shape[-1] == 1:
+        arr = np.repeat(arr, 3, axis=-1)
+    if arr.shape[-1] != 3:
+        raise ValueError(f"Unsupported image shape: {arr.shape}")
+    if input_color_space.lower() == "bgr":
+        arr = arr[..., ::-1]
+    return np.ascontiguousarray(arr)
 
 
 def _manual_unpack_ee(packed_state: np.ndarray, robot_action_dim_info: dict[str, list[int]]) -> dict[str, np.ndarray]:
@@ -308,33 +144,37 @@ def _manual_unpack_ee(packed_state: np.ndarray, robot_action_dim_info: dict[str,
 class Model(ModelTemplate):
     def __init__(self, model_cfg: dict[str, Any]):
         self.model_cfg = dict(model_cfg)
-        self.task_name = self.model_cfg.get("task_name", "debug_task")
-        self.action_type = self.model_cfg.get("action_type", "joint")
+        self.task_name = self.model_cfg.get("task_name") or ""
+        self.action_type = self.model_cfg.get("action_type") or "joint"
         self.env_cfg_type = self.model_cfg.get("env_cfg_type")
-        self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
-        self.action_chunk = int(self.model_cfg.get("action_chunk") or 1)
-        self.xpolicylab_action_dim = self._packed_dim()
-        self.model_state_dim = int(self.model_cfg.get("model_state_dim") or self.xpolicylab_action_dim)
-        self.model_action_dim = int(self.model_cfg.get("model_action_dim") or self.xpolicylab_action_dim)
-        self.load_model = _parse_bool(self.model_cfg.get("load_model", False))
-        self.device = self.model_cfg.get("device", "cuda")
-        self.dtype = self.model_cfg.get("dtype", "bf16")
+        if not self.env_cfg_type:
+            raise ValueError("env_cfg_type is required for GigaWorldPolicy.")
 
-        self.checkpoint_root = _resolve_checkpoint_root(self.model_cfg)
-        self.checkpoint_dir = self._resolve_checkpoint_dir(self.checkpoint_root)
-        self.transformer_path = self._resolve_transformer_path(self.checkpoint_dir)
-        self.base_model_path = _resolve_path(self.model_cfg.get("base_model_path")) or Path(
-            "/mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B-Diffusers/"
+        self.robot_action_dim_info = _load_robot_action_dim_info(self.env_cfg_type)
+        self.xpolicylab_action_dim = self._packed_dim()
+        self.model_state_dim = int(self.model_cfg.get("model_state_dim") or self.model_cfg.get("state_dim") or self.xpolicylab_action_dim)
+        self.model_action_dim = int(self.model_cfg.get("model_action_dim") or self.model_cfg.get("action_dim") or self.xpolicylab_action_dim)
+        self.action_chunk = int(self.model_cfg.get("action_chunk") or 24)
+        execute_action_chunk = self.model_cfg.get("execute_action_chunk", self.model_cfg.get("exec_action_chunk"))
+        self.execute_action_chunk = (
+            self.action_chunk
+            if execute_action_chunk in (None, "")
+            else max(1, min(int(execute_action_chunk), self.action_chunk))
         )
-        self.stats_path = _ensure_stats_compatible(
-            _resolve_path(self.model_cfg.get("stats_path")) or (_GIGAWORLD_ROOT / "norm_stats_delta.json")
-        )
-        self.t5_embedding_pkl = _resolve_task_t5_embedding(
-            self.model_cfg.get("t5_embedding_pkl"),
-            self.model_cfg.get("lerobot_dataset_root"),
-            self.task_name,
-            self.model_cfg.get("fallback_task_name", "stack_bowls"),
-        )
+        self.delta_to_absolute = _parse_bool(self.model_cfg.get("delta_to_absolute"), True)
+        self.num_frames = int(self.model_cfg.get("num_frames") or max(self.action_chunk, 24))
+        self.load_model = _parse_bool(self.model_cfg.get("load_model"), True)
+        self.input_color_space = str(self.model_cfg.get("input_color_space") or "rgb")
+        self.action_request_count = 0
+
+        self.view_candidates = {
+            "left": self.model_cfg.get("left_view_candidates")
+            or ["cam_left_wrist", "cam_left", "agentview_left", "left_camera", "cam_head"],
+            "wrist": self.model_cfg.get("wrist_view_candidates")
+            or ["cam_right_wrist", "cam_wrist", "eye_in_hand", "right_camera", "cam_head"],
+            "right": self.model_cfg.get("right_view_candidates")
+            or ["cam_head", "cam_right", "agentview_right", "head_camera", "cam_third_view"],
+        }
 
         self._latest_env_idx_list = [0]
         self._latest_observation: dict[str, Any] | None = None
@@ -347,126 +187,233 @@ class Model(ModelTemplate):
             f"xpolicylab_action_dim={self.xpolicylab_action_dim}",
             f"model_state_dim={self.model_state_dim}",
             f"model_action_dim={self.model_action_dim}",
-            f"checkpoint_root={self.checkpoint_root}",
-            f"checkpoint_dir={self.checkpoint_dir}",
-            f"transformer_path={self.transformer_path}",
+            f"action_chunk={self.action_chunk}",
+            f"execute_action_chunk={self.execute_action_chunk}",
+            f"delta_to_absolute={self.delta_to_absolute}",
         )
-
-    def _resolve_checkpoint_dir(self, checkpoint_root: Path) -> Path:
-        models_dir = checkpoint_root / "models"
-        checkpoint_num = self.model_cfg.get("checkpoint_num")
-
-        if models_dir.is_dir():
-            if checkpoint_num is not None:
-                checkpoint_candidate = models_dir / str(checkpoint_num)
-                if checkpoint_candidate.is_dir():
-                    return checkpoint_candidate.resolve()
-
-                step_digits = "".join(ch for ch in str(checkpoint_num) if ch.isdigit())
-                if step_digits:
-                    for candidate in sorted(models_dir.iterdir()):
-                        if candidate.is_dir() and candidate.name.endswith(f"step_{step_digits}"):
-                            return candidate.resolve()
-                raise FileNotFoundError(
-                    f"checkpoint_num={checkpoint_num!r} not found under {models_dir}"
-                )
-
-            checkpoint_dirs = [path for path in models_dir.iterdir() if path.is_dir()]
-            if checkpoint_dirs:
-                return max(checkpoint_dirs, key=lambda path: path.stat().st_mtime).resolve()
-
-        return checkpoint_root.resolve()
-
-    def _resolve_transformer_path(self, checkpoint_root: Path) -> Path:
-        transformer_subdir = self.model_cfg.get("transformer_subdir", "transformer_ema")
-        candidates = [
-            checkpoint_root / str(transformer_subdir),
-            checkpoint_root / "transformer_ema",
-            checkpoint_root / "transformer",
-            checkpoint_root,
-        ]
-        for candidate in candidates:
-            if (candidate / "config.json").is_file():
-                return candidate
-        raise FileNotFoundError(f"Could not resolve GigaWorld transformer checkpoint under {checkpoint_root}")
-
-    def _load_policy(self):
-        if self.t5_embedding_pkl is None:
-            raise ValueError("t5_embedding_pkl is required when load_model=true.")
-
-        inference_server = importlib.import_module("giga_world_policy.scripts.inference_server")
-        _patch_transformer_loader(inference_server, self.model_action_dim)
-        _patch_pipeline_action_dim(inference_server, self.model_action_dim)
-        get_policy = inference_server.get_policy
-
-        args = SimpleNamespace(
-            model_id=str(self.base_model_path),
-            transformer_path=str(self.transformer_path),
-            stats_path=str(self.stats_path),
-            t5_embedding_pkl=str(self.t5_embedding_pkl),
-            t5_len=int(self.model_cfg.get("t5_len", 64)),
-            device=self.device,
-            dtype=self.dtype,
-            dst_width=int(self.model_cfg.get("dst_width", 768)),
-            dst_height=int(self.model_cfg.get("dst_height", 192)),
-            action_chunk=int(self.model_cfg.get("action_chunk", 48)),
-            num_frames=int(self.model_cfg.get("num_frames", 5)),
-            num_inference_steps=int(self.model_cfg.get("num_inference_steps", 10)),
-            guidance_scale=float(self.model_cfg.get("guidance_scale", 0.0)),
-            norm_mode=self.model_cfg.get("norm_mode", "zscore"),
-            crop_mode=self.model_cfg.get("crop_mode", "center"),
-            return_images=False,
-            vis_dir=self.model_cfg.get("vis_dir", "./vis"),
-            vis_fps=int(self.model_cfg.get("vis_fps", 5)),
-            state_dim=self.model_state_dim,
-            action_dim=self.model_action_dim,
-            delta_mask=self.model_cfg.get("model_delta_mask") or self.model_cfg.get("delta_mask") or self._default_delta_mask(),
-        )
-        return get_policy(args)
 
     def _packed_dim(self) -> int:
         if self.action_type == "ee":
             return 7 * len(self.robot_action_dim_info["ee_dim"]) + sum(self.robot_action_dim_info["ee_dim"])
         return sum(self.robot_action_dim_info["arm_dim"]) + sum(self.robot_action_dim_info["ee_dim"])
 
-    def _default_delta_mask(self) -> str:
-        dim = self._packed_dim()
-        if self.action_type == "joint":
-            if dim == 14:
-                mask = ["1", "1", "1", "1", "1", "1", "0", "1", "1", "1", "1", "1", "1", "0"]
-            else:
-                mask = ["1"] * dim
-            if self.model_action_dim > len(mask):
-                mask.extend(["0"] * (self.model_action_dim - len(mask)))
-            return ",".join(mask[: self.model_action_dim])
-        mask: list[str] = []
-        for ee_dim in self.robot_action_dim_info["ee_dim"]:
-            mask.extend(["1", "1", "1", "1", "1", "1", "0"])
-            mask.extend(["1"] * ee_dim)
-        if self.model_action_dim > len(mask):
-            mask.extend(["0"] * (self.model_action_dim - len(mask)))
-        return ",".join(mask[: self.model_action_dim])
+    def _resolve_checkpoint_path(self) -> Path:
+        preferred_file = str(self.model_cfg.get("checkpoint_file") or "model_ema.pt")
+        explicit = self.model_cfg.get("checkpoint_path") or self.model_cfg.get("model_path")
+        explicit_path = _as_path(explicit) if explicit else None
+        if explicit_path is not None:
+            chosen = _choose_checkpoint_file(explicit_path, preferred_file)
+            if chosen is None:
+                raise FileNotFoundError(f"Could not resolve checkpoint file from {explicit_path}")
+            return chosen
+
+        dataset_name = self.model_cfg.get("dataset_name")
+        ckpt_name = self.model_cfg.get("ckpt_name")
+        expert_data_num = self.model_cfg.get("expert_data_num")
+        seed = self.model_cfg.get("seed")
+        roots: list[Path] = []
+        if all(v is not None for v in (dataset_name, ckpt_name, self.env_cfg_type, expert_data_num, seed)):
+            setting = f"{dataset_name}-{ckpt_name}-{self.env_cfg_type}-{expert_data_num}-{self.action_type}-{seed}"
+            roots.append(_CHECKPOINTS_DIR / setting)
+        if ckpt_name:
+            roots.append(_CHECKPOINTS_DIR / str(ckpt_name))
+
+        checkpoint_num = self.model_cfg.get("checkpoint_num") or "latest"
+        for root in roots:
+            if not root.exists():
+                continue
+            if str(checkpoint_num).lower() not in {"", "none", "latest"}:
+                names = [str(checkpoint_num)]
+                digits = "".join(ch for ch in str(checkpoint_num) if ch.isdigit())
+                if digits:
+                    names.append(f"checkpoint-{digits}")
+                for name in names:
+                    chosen = _choose_checkpoint_file(root / name, preferred_file)
+                    if chosen is not None:
+                        return chosen
+            chosen = _choose_checkpoint_file(root, preferred_file)
+            if chosen is not None:
+                return chosen
+            ckpt_dirs = [p for p in root.iterdir() if p.is_dir() and p.name.startswith("checkpoint-")]
+            for ckpt_dir in sorted(ckpt_dirs, key=_checkpoint_step, reverse=True):
+                chosen = _choose_checkpoint_file(ckpt_dir, preferred_file)
+                if chosen is not None:
+                    return chosen
+
+        raise FileNotFoundError(
+            "Could not resolve GigaWorldPolicy checkpoint. Set checkpoint_path/model_path, "
+            "or place model_ema.pt/model.pt under checkpoints/<6-tuple>/checkpoint-<step>."
+        )
+
+    def _load_policy(self):
+        import torch
+
+        inference_server = importlib.import_module("experiment.xpolicylab.inference_server")
+        checkpoint_path = self._resolve_checkpoint_path()
+        model_id = _as_path(
+            self.model_cfg.get("base_model_path") or self.model_cfg.get("model_id")
+            or os.environ.get("GIGAWORLD_PRETRAINED_PATH")
+            or os.environ.get("WAN22_DIFFUSERS_PATH")
+        )
+        stats_path = _as_path(self.model_cfg.get("stats_path"))
+        if stats_path is None:
+            dataset_name = self.model_cfg.get("dataset_name")
+            ckpt_name = self.model_cfg.get("ckpt_name")
+            expert_data_num = self.model_cfg.get("expert_data_num")
+            if all(v is not None for v in (dataset_name, ckpt_name, self.env_cfg_type, expert_data_num)):
+                data_setting = f"{dataset_name}-{ckpt_name}-{self.env_cfg_type}-{expert_data_num}-{self.action_type}"
+                candidate = _CUR_DIR / "data" / data_setting / "norm_stats_delta.json"
+                if candidate.is_file():
+                    stats_path = candidate.resolve()
+        if model_id is None or stats_path is None:
+            raise ValueError("base_model_path/model_id and stats_path are required when load_model=true.")
+
+        dtype_name = str(self.model_cfg.get("dtype") or "bf16").lower()
+        dtype = {"bf16": torch.bfloat16, "fp16": torch.float16, "fp32": torch.float32}.get(dtype_name)
+        if dtype is None:
+            raise ValueError(f"Unsupported dtype: {dtype_name}")
+        device = str(self.model_cfg.get("device") or "cuda")
+        seed = int(self.model_cfg.get("sample_seed") or self.model_cfg.get("seed") or 42)
+
+        model_dict = inference_server.build_model(
+            pretrained_path=str(model_id),
+            checkpoint_path=str(checkpoint_path),
+            action_dim=self.model_action_dim,
+            state_dim=self.model_state_dim,
+            flow_shift=float(self.model_cfg.get("flow_shift") or 5.0),
+            device=device,
+            dtype=dtype,
+        )
+        if device.startswith("cuda"):
+            model_dict["rng"] = torch.Generator(device=model_dict["device"]).manual_seed(seed)
+        else:
+            model_dict["rng"] = torch.Generator().manual_seed(seed)
+
+        norm_stats = inference_server.load_norm_stats(str(stats_path), self.model_state_dim, self.model_action_dim, device)
+        t5_embedding = self._load_t5_embedding(inference_server, dtype=torch.float32)
+        tokenizer, text_encoder = self._load_prompt_encoder(str(model_id), torch)
+
+        return inference_server.GWPPolicy(
+            model_dict=model_dict,
+            norm_stats=norm_stats,
+            t5_embedding=t5_embedding,
+            tokenizer=tokenizer,
+            text_encoder=text_encoder,
+            prompt_max_length=int(self.model_cfg.get("prompt_max_length") or 512),
+            prompt_cache_size=int(self.model_cfg.get("prompt_cache_size") or 256),
+            dst_size=tuple(self.model_cfg.get("dst_size") or [320, 256]),
+            num_steps=int(self.model_cfg.get("num_steps") or self.model_cfg.get("num_inference_steps") or 10),
+            num_frames=self.num_frames,
+            action_chunk=self.action_chunk,
+            action_only=_parse_bool(self.model_cfg.get("action_only"), True),
+            zero_action_dims=_parse_int_list(self.model_cfg.get("zero_action_dims")),
+            ctrl_mode_dim=(None if self.model_cfg.get("ctrl_mode_dim") is None else int(self.model_cfg.get("ctrl_mode_dim"))),
+            ctrl_mode_threshold=float(self.model_cfg.get("ctrl_mode_threshold") or 0.0),
+            skip_action_denorm=_parse_bool(self.model_cfg.get("skip_action_denorm"), False),
+            tshape=_parse_bool(self.model_cfg.get("tshape"), True),
+            tshape_head_index=(
+                2
+                if self.model_cfg.get("tshape_head_index") in (None, "")
+                else int(self.model_cfg.get("tshape_head_index"))
+            ),
+        )
+
+    def _load_t5_embedding(self, inference_server: Any, dtype: Any):
+        import torch
+
+        path = _as_path(self.model_cfg.get("t5_embedding_path") or self.model_cfg.get("t5_embedding_pkl"))
+        if path is not None and path.is_file():
+            tensor = torch.load(path, map_location="cpu")
+            if not isinstance(tensor, torch.Tensor):
+                tensor = torch.as_tensor(tensor)
+            tensor = tensor[:64]
+            if tensor.shape[0] < 64:
+                tensor = torch.nn.functional.pad(tensor, (0, 0, 0, 64 - tensor.shape[0]))
+            return tensor.to(dtype=dtype)
+        print("[GigaWorldPolicy] no t5_embedding_path provided; using zeros unless dynamic prompt is enabled")
+        return torch.zeros(64, 4096, dtype=dtype)
+
+    def _load_prompt_encoder(self, model_id: str, torch_module: Any):
+        if _parse_bool(self.model_cfg.get("disable_dynamic_prompt"), False):
+            return None, None
+        try:
+            from transformers import AutoTokenizer, UMT5EncoderModel
+
+            tok_path = os.path.join(model_id, "tokenizer")
+            te_path = os.path.join(model_id, "text_encoder")
+            tokenizer = AutoTokenizer.from_pretrained(tok_path)
+            text_encoder = UMT5EncoderModel.from_pretrained(te_path, torch_dtype=torch_module.float16).to(
+                self.model_cfg.get("device") or "cuda"
+            )
+            text_encoder.eval()
+            print(f"[GigaWorldPolicy] dynamic prompt encoder enabled: {te_path}")
+            return tokenizer, text_encoder
+        except Exception as exc:
+            print(f"[GigaWorldPolicy] dynamic prompt encoder unavailable, using static embedding: {exc}")
+            return None, None
+
+    def _extract_image(self, obs: dict[str, Any], candidates: list[str]) -> np.ndarray:
+        vision = obs.get("vision", {})
+        for name in candidates:
+            if name in vision:
+                item = vision[name]
+                if isinstance(item, dict):
+                    for key in ("color", "rgb", "image"):
+                        if key in item:
+                            return _image_to_uint8_hwc(item[key], self.input_color_space)
+                return _image_to_uint8_hwc(item, self.input_color_space)
+            if name in obs:
+                return _image_to_uint8_hwc(obs[name], self.input_color_space)
+        raise KeyError(f"Could not find image for candidates: {candidates}")
+
+    def _extract_prompt(self, obs: dict[str, Any]) -> str:
+        value = obs.get("instruction", obs.get("instructions", None))
+        if isinstance(value, (list, tuple)):
+            value = value[0] if value else None
+        return str(value or self.task_name or "")
+
+    def _encode_observation(self, obs: dict[str, Any]) -> dict[str, Any]:
+        state = pack_robot_state(obs, self.action_type, self.robot_action_dim_info, source_type="obs").astype(np.float32)
+        state = _pad_or_trim_np(state, self.model_state_dim)
+        return {
+            "observation/image": self._extract_image(obs, list(self.view_candidates["left"])),
+            "observation/wrist_image": self._extract_image(obs, list(self.view_candidates["wrist"])),
+            "observation/right_image": self._extract_image(obs, list(self.view_candidates["right"])),
+            "observation/state": state,
+            "prompt": self._extract_prompt(obs),
+        }
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        self._latest_env_idx_list = [obs.get("env_idx", index) for index, obs in enumerate(obs_list)]
+        if isinstance(obs_list, dict):
+            obs_list = [obs_list]
+        if not obs_list:
+            self._latest_env_idx_list = []
+            self._latest_observations = {}
+            self._latest_observation = None
+            return
+        self._latest_env_idx_list = [int(obs.get("env_idx", index)) for index, obs in enumerate(obs_list)]
         self._latest_observations = {
             env_idx: self._encode_observation(obs) for env_idx, obs in zip(self._latest_env_idx_list, obs_list)
         }
         self._latest_observation = self._latest_observations[self._latest_env_idx_list[0]]
+    def get_action(self, env_idx_list=None):
+        return self.get_action_batch([self._latest_env_idx_list[0]])[0]
 
-    def get_action(self, **kwargs):
-        return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)[0]
-
-    def get_action_batch(self, env_idx_list=None, **kwargs):
-        env_idx_list = env_idx_list or self._latest_env_idx_list
+    def get_action_batch(self, env_idx_list=None):
+        if env_idx_list is None:
+            env_idx_list = self._latest_env_idx_list
+        elif isinstance(env_idx_list, np.ndarray):
+            env_idx_list = env_idx_list.reshape(-1).tolist()
+        elif isinstance(env_idx_list, (int, np.integer)):
+            env_idx_list = [int(env_idx_list)]
+        else:
+            env_idx_list = list(env_idx_list)
         actions = []
         for env_idx in env_idx_list:
-            obs = self._latest_observations.get(env_idx)
-            if obs is None:
-                obs = self._latest_observation
+            obs = self._latest_observations.get(int(env_idx), self._latest_observation)
             if obs is None:
                 raise AssertionError("update_obs or update_obs_batch must be called before get_action.")
             actions.append(self._predict_action_sequence(obs))
@@ -477,36 +424,36 @@ class Model(ModelTemplate):
         self._latest_observation = None
         self._latest_observations = {}
 
-    def _encode_observation(self, observation: dict[str, Any]) -> dict[str, Any]:
-        state = pack_robot_state(observation, self.action_type, self.robot_action_dim_info, source_type="obs").astype(np.float32)
-        state = _pad_or_trim_np(state, self.model_state_dim)
-        return {
-            "observation.state": state,
-            "observation.images.cam_high": _ensure_chw01(
-                _extract_image(observation, ["cam_head", "cam_high", "head_camera", "top_camera"])
-            ),
-            "observation.images.cam_left_wrist": _ensure_chw01(
-                _extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"])
-            ),
-            "observation.images.cam_right_wrist": _ensure_chw01(
-                _extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"])
-            ),
-        }
-
     def _predict_action_sequence(self, encoded_obs: dict[str, Any]) -> list[dict[str, np.ndarray]]:
         if self.policy is None:
-            packed_actions = np.zeros((1, self.model_action_dim), dtype=np.float32)
+            packed_actions = np.zeros((self.action_chunk, self.model_action_dim), dtype=np.float32)
         else:
-            pred = self.policy.inference(encoded_obs)
-            if hasattr(pred, "detach"):
-                pred = pred.detach().cpu().numpy()
-            packed_actions = np.asarray(pred, dtype=np.float32)
+            result = self.policy.infer(encoded_obs)
+            packed_actions = np.asarray(result["actions"], dtype=np.float32)
             if packed_actions.ndim == 1:
                 packed_actions = packed_actions[None, :]
 
+        current_state = _pad_or_trim_np(
+            np.asarray(encoded_obs["observation/state"], dtype=np.float32),
+            self.model_action_dim,
+        )
+        if self.delta_to_absolute:
+            packed_actions = self._delta_to_absolute_actions(packed_actions, current_state)
+        packed_actions = packed_actions[: self.execute_action_chunk]
+
+        self.action_request_count += 1
+        print(
+            "[GigaWorldPolicy] action request",
+            f"#{self.action_request_count}",
+            f"delta_to_absolute={self.delta_to_absolute}",
+            f"state_first6={np.array2string(current_state.reshape(-1)[:6], precision=4, separator=',')}",
+            f"packed0_first6={np.array2string(packed_actions[0, :6], precision=4, separator=',')}",
+            flush=True,
+        )
+
         action_list = []
         for packed_action in packed_actions:
-            packed_action = packed_action[: self.xpolicylab_action_dim]
+            packed_action = _pad_or_trim_np(packed_action, self.xpolicylab_action_dim)
             if self.action_type == "ee":
                 action_list.append(_manual_unpack_ee(packed_action, self.robot_action_dim_info))
             else:
@@ -519,3 +466,15 @@ class Model(ModelTemplate):
                     )
                 )
         return action_list
+
+    def _delta_to_absolute_actions(self, packed_actions: np.ndarray, current_state: np.ndarray) -> np.ndarray:
+        actions = np.asarray(packed_actions, dtype=np.float32).copy()
+        state = np.asarray(current_state, dtype=np.float32).reshape(-1, self.model_action_dim)[0]
+        d = min(actions.shape[-1], state.shape[-1], len(_ARX_X5_DELTA_MASK))
+        if d <= 0:
+            return actions
+        mask = _ARX_X5_DELTA_MASK[:d]
+        prefix = actions[..., :d]
+        prefix[..., mask] = prefix[..., mask] + state[:d][mask]
+        actions[..., :d] = prefix
+        return actions

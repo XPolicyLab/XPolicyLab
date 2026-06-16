@@ -11,6 +11,7 @@ import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.utils.process_data import decode_image_bit
 
 _POLICY_DIR = Path(__file__).resolve().parent
 _GR00T_ROOT = _POLICY_DIR / "gr00t_n17"
@@ -75,10 +76,15 @@ def _resolve_cosmos_model(model_cfg: dict[str, Any]) -> str:
         return DEFAULT_COSMOS_MODEL_REPO
 
     raw = str(raw_path)
+    for candidate in (
+        _POLICY_DIR / raw,
+        _CHECKPOINTS_DIR / raw,
+        _POLICY_DIR / "checkpoints" / raw,
+    ):
+        if (candidate / "config.json").is_file():
+            return str(candidate.resolve())
+
     if _is_hf_repo_id(raw):
-        local_dir = (_POLICY_DIR / raw).resolve()
-        if (local_dir / "config.json").is_file():
-            return str(_resolve_relative_path(raw, _POLICY_DIR))
         return raw
 
     return str(_resolve_relative_path(raw, _POLICY_DIR))
@@ -167,10 +173,7 @@ def _resolve_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
 
 
 def _decode_compressed_image(image_buffer: np.ndarray) -> np.ndarray:
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return decoded
+    return decode_image_bit(image_buffer)
 
 
 def _ensure_hwc_uint8(image: Any) -> np.ndarray:
@@ -219,9 +222,8 @@ def _extract_image(observation: dict[str, Any], candidate_names: list[str]) -> n
 
 
 def _to_rgb_hwc(image: np.ndarray) -> np.ndarray:
-    """XPolicyLab obs images are BGR; GR00T training uses RGB from LeRobot videos."""
-    image = _ensure_hwc_uint8(image)
-    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    """XPolicyLab obs images are RGB; match LeRobot video training."""
+    return _ensure_hwc_uint8(image)
 
 
 def _as_1d(value: Any, length: int) -> np.ndarray:

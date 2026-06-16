@@ -1,6 +1,6 @@
 policy_name: RISE
-eval_env: sim
-eval_batch: true
+eval_env: debug
+eval_batch: false
 
 # Server transport (setup_policy_server.py reads `port` / `host`).
 port: null
@@ -10,7 +10,6 @@ dataset_name: null
 task_name: null
 ckpt_name: null
 env_cfg_type: null
-expert_data_num: null
 action_type: null
 action_dim: null
 gpu_id: null

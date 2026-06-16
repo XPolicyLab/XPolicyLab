@@ -1,26 +1,7 @@
-"""Convert XPolicyLab HDF5 episodes into the Galaxea LeRobot (v2.1/v3) format.
+"""Convert XPolicyLab HDF5 episodes into Galaxea LeRobot format (v2.1/v3).
 
-There is no HDF5 converter upstream, so this writes datasets with the *upstream*
-LeRobotDataset writer (create / add_frame / save_episode) to guarantee the
-output is byte-compatible with galaxea_fm's reader.
-
-Two modes:
-  * single (default): one (dataset_name, task_name, env_cfg_type) -> one dataset
-        <src_root>/<dataset_name>/<task_name>/<env_cfg_type>/data/episode_*.hdf5
-  * batch (--batch_root DIR): merge ALL tasks under DIR into ONE multi-task
-        dataset, with per-episode instruction = task dir name. Expects layout
-        DIR/<task>/<env_cfg_type>/data/episode_*.hdf5
-
-Per-frame source fields:
-  data['state'|'action']            -> packed via pack_robot_state(source_type='dataset')
-  data['vision'][cam]['colors'][t]  -> jpeg bytes (BGR after decode)
-
-Output feature keys consumed by base_lerobot_dataset.py:
-  observation.state.<key> / action.<key>      (left_arm/left_gripper/...)
-  observation.images.<cam>                     (head_rgb/left_wrist_rgb/right_wrist_rgb)
-
-All camera frames are standardized to RGB HWC (240, 320, 3) -- the XPolicyLab
-image standard -- matching the deploy-time preprocessing in model.py.
+Uses the upstream LeRobotDataset writer for byte-compatible output.
+Camera frames are standardized to RGB HWC (240, 320, 3).
 """
 
 import argparse
@@ -42,7 +23,6 @@ from XPolicyLab.utils.process_data import (
 from galaxea_fm.data.lerobot.lerobot_dataset_v3 import LeRobotDataset
 
 STD_W, STD_H = 320, 240
-# XPolicyLab dataset camera -> upstream image feature key.
 CAM_MAP = {
     "cam_head": "head_rgb",
     "cam_left_wrist": "left_wrist_rgb",
@@ -51,11 +31,6 @@ CAM_MAP = {
 
 
 def _state_keys(robot_action_dim_info: dict):
-    """Galaxea state/action keys + dims, in XPolicyLab packed order.
-
-    Packed order is [arm_0, ee_0, arm_1, ee_1] (see process_data.pack_robot_state),
-    which equals Galaxea's [left_arm, left_gripper, right_arm, right_gripper].
-    """
     arm_dims = robot_action_dim_info["arm_dim"]
     ee_dims = robot_action_dim_info["ee_dim"]
     if len(arm_dims) == 1:
@@ -91,15 +66,14 @@ def _split(packed_row, key_dims):
     return out
 
 
-def _standardize(bgr_image) -> np.ndarray:
-    rgb = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
-    rgb = cv2.resize(rgb, (STD_W, STD_H), interpolation=cv2.INTER_AREA)
-    assert rgb.shape == (STD_H, STD_W, 3), rgb.shape
-    return np.ascontiguousarray(rgb, dtype=np.uint8)
+def _standardize(rgb: np.ndarray) -> np.ndarray:
+    # decode_image_bit already yields RGB HWC for XPolicyLab HDF5 (see README §4.4).
+    img = cv2.resize(rgb, (STD_W, STD_H), interpolation=cv2.INTER_AREA)
+    assert img.shape == (STD_H, STD_W, 3), img.shape
+    return np.ascontiguousarray(img, dtype=np.uint8)
 
 
 def _episode_paths(load_dir: str, max_episodes: int):
-    """Sorted episode hdf5 paths under <load_dir>/data, capped to max_episodes (<=0 = all)."""
     paths = sorted(glob.glob(os.path.join(load_dir, "data", "episode_*.hdf5")))
     if max_episodes and max_episodes > 0:
         paths = paths[:max_episodes]
@@ -107,7 +81,6 @@ def _episode_paths(load_dir: str, max_episodes: int):
 
 
 def _add_episode(dataset, hdf5_path, key_dims, robot_action_dim_info, action_type, instruction, position):
-    """Add one episode (all frames) to the dataset and flush it. Returns frame count."""
     data = load_hdf5(hdf5_path)
     state_all = pack_robot_state(
         data, action_type, robot_action_dim_info, source_type="dataset", state_type="state"
@@ -135,36 +108,48 @@ def _add_episode(dataset, hdf5_path, key_dims, robot_action_dim_info, action_typ
     return num_frames
 
 
+def _workspace_and_policy_dirs(here: str) -> tuple[str, str]:
+    policy_dir = os.path.abspath(os.path.join(here, "..", ".."))
+    workspace = os.environ.get("XPOLICYLAB_WORKSPACE")
+    if workspace:
+        workspace = os.path.abspath(workspace)
+    else:
+        workspace = os.path.abspath(os.path.join(policy_dir, "..", ".."))
+        if not os.path.isdir(os.path.join(workspace, "data")) and os.path.isdir(
+            os.path.join(workspace, "..", "data")
+        ):
+            workspace = os.path.abspath(os.path.join(workspace, ".."))
+    return workspace, policy_dir
+
+
+def _dataset_tag(dataset_name: str, ckpt_name: str, env_cfg_type: str, action_type: str) -> str:
+    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("dataset_name")
-    parser.add_argument("task_name", help="single mode: task; batch mode: ignored (use 'all')")
+    parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num", type=int, help="single: #episodes; batch: max episodes per task (0=all)")
-    parser.add_argument("action_type", choices=["joint", "ee"])
-    parser.add_argument("--src_root", default=None, help="single mode root; defaults to <repo_root>/data")
-    parser.add_argument("--batch_root", default=None,
-                        help="batch mode: merge all <task>/<env_cfg_type> under this dir into one dataset")
-    parser.add_argument("--tasks", nargs="*", default=None, help="batch mode: optional subset of task dir names")
+    parser.add_argument("expert_data_num", type=int, help="single: #episodes; batch: max per task (0=all)")
+    parser.add_argument("action_type", choices=["joint"])
+    parser.add_argument("--src_root", default=None, help="defaults to <workspace>/data")
+    parser.add_argument("--batch_root", default=None)
+    parser.add_argument("--tasks", nargs="*", default=None)
     parser.add_argument("--out_root", default=None)
     parser.add_argument("--fps", type=int, default=15)
     parser.add_argument("--robot_type", default=None, help="defaults to env_cfg_type")
-    parser.add_argument("--instruction", default=None,
-                        help="single: episode instruction (default task_name); "
-                             "batch: if set, used for ALL episodes instead of per-task name")
+    parser.add_argument("--instruction", default=None)
     args = parser.parse_args()
 
     here = os.path.dirname(os.path.abspath(__file__))
-    # here -> .../XPolicyLab/policy/GalaxeaVLA/GalaxeaVLA/xpolicylab_adapter
-    # repo_root (5 up) -> .../xspark-data/zijian (where data/ lives, like DP's ../../../data)
-    repo_root = os.path.abspath(os.path.join(here, "..", "..", "..", "..", ".."))
-    data_out_dir = os.path.abspath(os.path.join(here, "..", "..", "data"))
+    workspace_root, policy_dir = _workspace_and_policy_dirs(here)
+    data_out_dir = os.path.join(policy_dir, "data")
 
     robot_action_dim_info = get_robot_action_dim_info(args.env_cfg_type)
     key_dims = _state_keys(robot_action_dim_info)
     features = _build_features(key_dims)
 
-    # ---- resolve mode -> list of (load_dir, instruction, label) episodes plan ----
     if args.batch_root:
         batch_root = os.path.abspath(args.batch_root)
         all_tasks = sorted(
@@ -174,7 +159,7 @@ def main():
         tasks = [t for t in all_tasks if (args.tasks is None or t in args.tasks)]
         if not tasks:
             raise SystemExit(f"no tasks with {args.env_cfg_type}/data under {batch_root}")
-        tag = f"{args.dataset_name}-{args.env_cfg_type}-{args.action_type}"
+        tag = _dataset_tag(args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type)
         plan = []
         for task in tasks:
             load_dir = os.path.join(batch_root, task, args.env_cfg_type)
@@ -182,11 +167,11 @@ def main():
             for ep_path in _episode_paths(load_dir, args.expert_data_num):
                 plan.append((ep_path, instruction, task))
     else:
-        src_root = args.src_root or os.path.join(repo_root, "data")
-        load_dir = os.path.join(src_root, args.dataset_name, args.task_name, args.env_cfg_type)
-        tag = f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
-        instruction = args.instruction or args.task_name.replace("_", " ")
-        plan = [(p, instruction, args.task_name) for p in _episode_paths(load_dir, args.expert_data_num)]
+        src_root = args.src_root or os.path.join(workspace_root, "data")
+        load_dir = os.path.join(src_root, args.dataset_name, args.ckpt_name, args.env_cfg_type)
+        tag = _dataset_tag(args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type)
+        instruction = args.instruction or args.ckpt_name.replace("_", " ")
+        plan = [(p, instruction, args.ckpt_name) for p in _episode_paths(load_dir, args.expert_data_num)]
 
     if not plan:
         raise SystemExit("no episodes found to convert")
@@ -218,8 +203,6 @@ def main():
             instruction, position=f"{label}[{idx + 1}/{len(plan)}]",
         )
 
-    # Flush buffered episode metadata explicitly (metadata is buffered and would
-    # otherwise only flush in __del__, which is fragile).
     dataset.meta._close_writer()
     print(f"[convert] done: {len(plan)} episodes / {total_frames} frames / {n_tasks} tasks -> {out_root}")
 

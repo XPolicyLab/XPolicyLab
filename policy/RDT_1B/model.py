@@ -22,9 +22,9 @@ for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_RDT_ROOT), str(_RDT_ROOT / "m
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info, unpack_robot_state
+from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info, unpack_robot_state
 
-from .rdt.scripts.agilex_model import create_model
+from .rdt.scripts.robodojo_model import create_model
 from .rdt.models.multimodal_encoder.t5_encoder import T5Embedder
 
 
@@ -84,10 +84,7 @@ def ensure_hwc_uint8(image):
 
 
 def decode_compressed_image(image_buffer):
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return decoded
+    return decode_image_bit(image_buffer)
 
 
 def encode_obs(observation, default_prompt):
@@ -235,6 +232,16 @@ class Model(ModelTemplate):
                 return str(fallback_path)
         return str(fallback_path)
 
+    def _with_weights_fallback(self, explicit_value: str | None, resolved: str | None, weight_dirname: str) -> str | None:
+        if explicit_value:
+            return resolved
+        if resolved is not None and Path(resolved).exists():
+            return resolved
+        fallback = _CUR_DIR / "weights" / "RDT" / weight_dirname
+        if fallback.exists():
+            return str(fallback)
+        return resolved
+
     def _default_model_paths(self):
         checkpoint_root = self._resolve_checkpoint_root()
         model_root = _resolve_path(self.model_cfg.get("model_root")) or checkpoint_root or _RDT_ROOT
@@ -244,27 +251,35 @@ class Model(ModelTemplate):
 
         return {
             "config_path": self.model_cfg.get("config_path") or str(default_config_path),
-            "text_encoder_path": self._resolve_indexed_path(
-                model_root,
+            "text_encoder_path": self._with_weights_fallback(
                 self.model_cfg.get("text_encoder_path"),
-                [
-                    "shared/t5-v1_1-xxl",
-                    "text_encoder",
-                    "weights/RDT/t5-v1_1-xxl",
-                    "google/t5-v1_1-xxl",
-                    "t5-v1_1-xxl",
-                ],
+                self._resolve_indexed_path(
+                    model_root,
+                    self.model_cfg.get("text_encoder_path"),
+                    [
+                        "shared/t5-v1_1-xxl",
+                        "text_encoder",
+                        "weights/RDT/t5-v1_1-xxl",
+                        "google/t5-v1_1-xxl",
+                        "t5-v1_1-xxl",
+                    ],
+                ),
+                "t5-v1_1-xxl",
             ),
-            "vision_encoder_path": self._resolve_indexed_path(
-                model_root,
+            "vision_encoder_path": self._with_weights_fallback(
                 self.model_cfg.get("vision_encoder_path"),
-                [
-                    "shared/siglip-so400m-patch14-384",
-                    "vision_encoder",
-                    "weights/RDT/siglip-so400m-patch14-384",
-                    "google/siglip-so400m-patch14-384",
-                    "siglip-so400m-patch14-384",
-                ],
+                self._resolve_indexed_path(
+                    model_root,
+                    self.model_cfg.get("vision_encoder_path"),
+                    [
+                        "shared/siglip-so400m-patch14-384",
+                        "vision_encoder",
+                        "weights/RDT/siglip-so400m-patch14-384",
+                        "google/siglip-so400m-patch14-384",
+                        "siglip-so400m-patch14-384",
+                    ],
+                ),
+                "siglip-so400m-patch14-384",
             ),
             "checkpoint_path": self._resolve_indexed_path(
                 checkpoint_root,

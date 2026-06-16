@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import os
+import shutil
 import shlex
 import socket
 import subprocess
@@ -21,6 +23,7 @@ ENV_TO_CFG = {
     "TRAIN_STEPS": ("training", "train_steps"),
     "GLOBAL_BATCH_SIZE": ("training", "global_batch_size"),
     "DEVICE_TRAIN_MICROBATCH_SIZE": ("training", "device_train_microbatch_size"),
+    "CROP_MODE": ("training", "crop_mode"),
     "MAX_CROPS": ("training", "max_crops"),
     "NUM_WORKERS": ("training", "num_workers"),
     "SEQ_LEN": ("training", "seq_len"),
@@ -66,6 +69,7 @@ DEFAULTS = {
     "TRAIN_STEPS": "10000",
     "GLOBAL_BATCH_SIZE": "16",
     "DEVICE_TRAIN_MICROBATCH_SIZE": "1",
+    "CROP_MODE": "resize",
     "MAX_CROPS": "8",
     "NUM_WORKERS": "auto",
     "SEQ_LEN": "2048",
@@ -135,6 +139,114 @@ def get_free_port():
     with socket.socket() as sock:
         sock.bind(("", 0))
         return str(sock.getsockname()[1])
+
+
+def _jsonable(value):
+    if hasattr(value, "tolist"):
+        return value.tolist()
+    if isinstance(value, dict):
+        return {str(key): _jsonable(val) for key, val in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(item) for item in value]
+    return value
+
+
+def _pick_stat(raw_stats, *keys):
+    for key in keys:
+        if key in raw_stats:
+            return raw_stats[key]
+    return None
+
+
+def _load_lerobot_stats(dataset_path):
+    from lerobot.datasets.lerobot_dataset import CODEBASE_VERSION, LeRobotDatasetMetadata
+
+    meta = LeRobotDatasetMetadata(
+        os.path.basename(str(dataset_path)),
+        str(dataset_path),
+        CODEBASE_VERSION,
+        force_cache_sync=False,
+    )
+    raw_stats = _jsonable(meta.stats)
+    stats = dict(raw_stats)
+
+    state_stats = _pick_stat(raw_stats, "state", "observation.state")
+    action_stats = _pick_stat(raw_stats, "action", "actions")
+    if state_stats is not None:
+        stats["state"] = state_stats
+    if action_stats is not None:
+        stats["action"] = action_stats
+        stats["actions"] = action_stats
+
+    camera_aliases = {
+        "cam_head_color": ("cam_head_color", "observation.images.cam_high", "observation.images.cam_head"),
+        "cam_hand_left_color": ("cam_hand_left_color", "observation.images.cam_left_wrist"),
+        "cam_hand_right_color": ("cam_hand_right_color", "observation.images.cam_right_wrist"),
+    }
+    for alias, keys in camera_aliases.items():
+        camera_stats = _pick_stat(raw_stats, *keys)
+        if camera_stats is not None:
+            stats[alias] = camera_stats
+
+    return stats
+
+
+def _write_dataset_stats(dataset_path, ckpt_dir):
+    stats = _load_lerobot_stats(dataset_path)
+    stats_path = ckpt_dir / "dataset_stats.json"
+    stats_path.write_text(json.dumps(stats, ensure_ascii=False), encoding="utf-8")
+
+    latest_unsharded = ckpt_dir / "latest-unsharded"
+    targets = []
+    if latest_unsharded.exists():
+        targets.append(latest_unsharded.resolve() if latest_unsharded.is_symlink() else latest_unsharded)
+    targets.extend(sorted(ckpt_dir.glob("step*-unsharded"), key=lambda path: path.stat().st_mtime, reverse=True)[:1])
+
+    for target in targets:
+        if target.is_dir():
+            shutil.copy2(stats_path, target / "dataset_stats.json")
+
+    return stats_path
+
+
+def _clean_checkpoint_artifacts(ckpt_dir):
+    ckpt_dir = Path(ckpt_dir)
+    if not ckpt_dir.is_dir():
+        return
+
+    latest_unsharded = ckpt_dir / "latest-unsharded"
+    keep_unsharded = None
+    if latest_unsharded.exists():
+        try:
+            keep_unsharded = latest_unsharded.resolve()
+        except OSError:
+            keep_unsharded = None
+
+    unsharded = sorted(ckpt_dir.glob("step*-unsharded"), key=lambda path: path.stat().st_mtime, reverse=True)
+    if keep_unsharded is None and unsharded:
+        keep_unsharded = unsharded[0].resolve()
+        latest_unsharded.unlink(missing_ok=True)
+        try:
+            latest_unsharded.symlink_to(unsharded[0].name, target_is_directory=True)
+        except FileExistsError:
+            pass
+
+    for marker in ("latest", "latest-action-head"):
+        marker_path = ckpt_dir / marker
+        if marker_path.exists() or marker_path.is_symlink():
+            if marker_path.is_dir() and not marker_path.is_symlink():
+                shutil.rmtree(marker_path, ignore_errors=True)
+            else:
+                marker_path.unlink(missing_ok=True)
+
+    for path in ckpt_dir.glob("step*"):
+        if not path.is_dir():
+            continue
+        if path.name.endswith("-unsharded"):
+            if keep_unsharded is not None and path.resolve() != keep_unsharded:
+                shutil.rmtree(path, ignore_errors=True)
+        else:
+            shutil.rmtree(path, ignore_errors=True)
 
 
 def load_config(policy_dir, a1_dir):
@@ -236,6 +348,8 @@ def resolve_dataset_path(args, values, policy_dir):
 
 
 def write_runtime_configs(a1_dir, dataset_path):
+    normalization_type = os.environ.get("NORMALIZATION_TYPE", os.environ.get("A1_NORMALIZATION_TYPE", "bounds"))
+    use_num_images = os.environ.get("USE_NUM_IMAGES", os.environ.get("A1_USE_NUM_IMAGES", "3"))
     dataset_cfg = a1_dir / "configs" / "datasets" / "xpolicylab_runtime.yaml"
     experiment_cfg = a1_dir / "configs" / "experiments" / "xpolicylab_runtime.yaml"
     dataset_cfg.parent.mkdir(parents=True, exist_ok=True)
@@ -252,6 +366,9 @@ def write_runtime_configs(a1_dir, dataset_path):
                 "lerobot:",
                 f"  - path: {dataset_path}",
                 "    weight: 1.0",
+                f"    normalization_type: {normalization_type}",
+                f"    use_num_images: {use_num_images}",
+                "    image_augmentation: true",
                 "",
             ]
         ),
@@ -306,8 +423,7 @@ def run(args):
         f"{args.dataset_name}-{args.ckpt_name}-{args.env_cfg_type}-"
         f"{args.expert_data_num}-{args.action_type}-{args.seed}"
     )
-    run_timestamp = os.environ.get("RUN_TIMESTAMP") or subprocess.check_output(["date", "+%Y%m%d_%H%M%S"], text=True).strip()
-    runname = os.environ.get("RUNNAME") or f"{run_basename}-{run_timestamp}"
+    runname = os.environ.get("RUNNAME") or run_basename
     wandb_run_name = values["WANDB_RUN_NAME"] or runname
     ckpt_dir = policy_dir / "checkpoints" / runname
     (ckpt_dir / "log").mkdir(parents=True, exist_ok=True)
@@ -391,6 +507,8 @@ def run(args):
         values["NUM_WORKERS"],
         "--seq_len",
         values["SEQ_LEN"],
+        "--crop_mode",
+        values["CROP_MODE"],
         "--max_crops",
         values["MAX_CROPS"],
         "--connector_learning_rate",
@@ -437,6 +555,10 @@ def run(args):
     print(f"[INFO] RUNNAME: {runname}")
     print(f"[INFO] SEQ_LEN: {values['SEQ_LEN']}, MAX_CROPS: {values['MAX_CROPS']}, NUM_WORKERS: {values['NUM_WORKERS']}")
     print(f"[INFO] Command: {' '.join(shlex.quote(part) for part in cmd)}")
+    stats_path = _write_dataset_stats(dataset_path, ckpt_dir)
+    _clean_checkpoint_artifacts(ckpt_dir)
+    print(f"[INFO] Dataset stats saved to: {stats_path}")
+    env["DATASET_STATS_PATH"] = str(stats_path)
 
     log_file = ckpt_dir / "log" / f"training_{subprocess.check_output(['date', '+%Y%m%d_%H%M'], text=True).strip()}.txt"
     with open(log_file, "a", encoding="utf-8") as log:
@@ -448,6 +570,9 @@ def run(args):
         returncode = proc.wait()
     if returncode != 0:
         raise subprocess.CalledProcessError(returncode, cmd)
+    stats_path = _write_dataset_stats(dataset_path, ckpt_dir)
+    _clean_checkpoint_artifacts(ckpt_dir)
+    print(f"[INFO] Dataset stats refreshed at: {stats_path}")
     print(f"[INFO] Training complete. Checkpoints saved to: {ckpt_dir}")
 
 

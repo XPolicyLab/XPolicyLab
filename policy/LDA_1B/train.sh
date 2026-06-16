@@ -1,20 +1,24 @@
 #!/bin/bash
+# Usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 set -euo pipefail
 
-dataset_name=${1}
-task_name=${2}
-env_cfg_type=${3}
-expert_data_num=${4}
-action_type=${5}
-seed=${6}
-gpu_id=${7}
+dataset_name=${1:?dataset_name required}
+ckpt_name=${2:?ckpt_name required}
+env_cfg_type=${3:?env_cfg_type required}
+expert_data_num=${4:?expert_data_num required}
+action_type=${5:?action_type required}
+seed=${6:?seed required}
+gpu_id=${7:?gpu_id required}
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-POLICY_DIR="${ROOT_DIR}/XPolicyLab/policy/LDA_1B"
-UPSTREAM_DIR="${POLICY_DIR}/LDA-1B"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+UPSTREAM_DIR="${SCRIPT_DIR}/LDA-1B"
+ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
 
-ckpt_root_dir="${LDA_CKPT_ROOT:-${POLICY_DIR}/checkpoints}"
+source "${ADAPTER_DIR}/_artifact_paths.sh"
+
+ckpt_root_dir="${LDA_CKPT_ROOT:-${SCRIPT_DIR}/checkpoints}"
+data_root_dir="${LDA_DATA_ROOT:-${SCRIPT_DIR}/data}"
 
 # Training knobs. Keep robot/model shape contracts in the YAML; tune run-scale
 # hyperparameters here, matching the original LDA run scripts style.
@@ -32,23 +36,21 @@ wandb_project="${LDA_WANDB_PROJECT:-lda}"
 wandb_entity="${LDA_WANDB_ENTITY:-}"
 is_debug="${LDA_DEBUG:-False}"
 
-# Feed the 5 CLI args into the generic `xpolicylab` mixture entry registered in
-# upstream lda/dataloader/gr00t_lerobot/mixtures.py. The folder name must match
-# what LDA-1B/xpolicylab_adapter/process_data.py wrote out (same 5-tuple, hyphen-joined).
-export XPOLICYLAB_DATASET_ID="${XPOLICYLAB_DATASET_ID:-${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}}"
-export XPOLICYLAB_ROBOT_TYPE="${XPOLICYLAB_ROBOT_TYPE:-${env_cfg_type}}"
-ckpt_setting="${LDA_CKPT_SETTING:-${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+dataset_id="${LDA_DATASET_ID:-$(xpolicylab_dataset_tag "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")}"
+resolved_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+  "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
+if [[ ! -d "${resolved_dataset_dir}" ]]; then
+  echo -e "\033[31m[train.sh] dataset not found: ${resolved_dataset_dir}\033[0m" >&2
+  echo -e "\033[31m           Run process_data.sh first (expected tag: ${dataset_id}).\033[0m" >&2
+  exit 1
+fi
+dataset_id="$(basename "${resolved_dataset_dir}")"
 
-# Default to the bundled LDA-1B pretrain ckpt if it was downloaded under
-# `<policy>/checkpoints/LDA-pretrain/LDA-pretrain.pt` (matching INSTALLATION.md).
-# LDA-1B is a 1B-param model designed for the "pretrain on millions of episodes
-# -> finetune on tens of thousands" recipe; training from scratch on a few
-# thousand RoboDojo episodes does NOT converge for harder tasks (manifests as
-# the rollout collapsing to ~mean output, i.e. the arm trembling in place on
-# task subsets that need more vision-language grounding). Override with
-# `LDA_PRETRAINED_CHECKPOINT=null` only for explicit from-scratch ablations,
-# or with another path for a different starting checkpoint.
-default_pretrained_ckpt="${POLICY_DIR}/checkpoints/LDA-pretrain/LDA-pretrain.pt"
+export XPOLICYLAB_DATASET_ID="${XPOLICYLAB_DATASET_ID:-${dataset_id}}"
+export XPOLICYLAB_ROBOT_TYPE="${XPOLICYLAB_ROBOT_TYPE:-${env_cfg_type}}"
+ckpt_setting="${LDA_CKPT_SETTING:-$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
+
+default_pretrained_ckpt="${SCRIPT_DIR}/checkpoints/LDA-pretrain/LDA-pretrain.pt"
 if [[ -n "${LDA_PRETRAINED_CHECKPOINT:-}" ]]; then
     pretrained_checkpoint="${LDA_PRETRAINED_CHECKPOINT}"
 elif [[ -f "${default_pretrained_ckpt}" ]]; then
@@ -64,6 +66,8 @@ else
 fi
 mkdir -p "${ckpt_root_dir}/${ckpt_setting}"
 
+echo -e "\033[33m[train] dataset_id=${XPOLICYLAB_DATASET_ID} ckpt_setting=${ckpt_setting}\033[0m"
+
 cd "${UPSTREAM_DIR}"
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export WANDB_MODE="${WANDB_MODE:-disabled}"
@@ -76,6 +80,7 @@ accelerate launch \
   --num_processes "${num_processes}" \
   lda/training/train_LDA.py \
   --config_yaml "${training_cfg}" \
+  --datasets.vla_data.data_root_dir "${data_root_dir}" \
   --datasets.vla_data.per_device_batch_size "${per_device_batch_size}" \
   --datasets.vla_data.training_task_weights "${training_task_weights}" \
   --trainer.freeze_modules "${freeze_module_list}" \

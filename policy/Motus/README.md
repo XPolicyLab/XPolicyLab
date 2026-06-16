@@ -28,15 +28,20 @@ python data/lerobot/add_t5_cache_to_lerobot_dataset.py \
   --t5_folder_name t5_embedding
 ```
 
-## XPolicyLab 训练 / 评测
+## 训练
 
 ```bash
 bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
-bash eval.sh ...
 ```
 
-Checkpoint：
+Checkpoint：`checkpoints/<6-tuple>/`
 
-```text
-checkpoints/<6-tuple>/
+## 部署
+
+环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
+
+推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
+
+```bash
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> motus XPolicyLab
 ```

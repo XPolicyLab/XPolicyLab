@@ -103,9 +103,9 @@ DATASET_NAMED_MIXTURES = {
     ],
 
     # XPolicyLab generic entry. The dataset folder name and robot_type are
-    # driven entirely by env vars set by XPolicyLab/policy/LDA_1B/train.sh from
-    # its 5 CLI args (dataset_name, task_name, env_cfg_type, expert_data_num,
-    # action_type), so any combination works without editing this file.
+    # driven entirely by env vars set by XPolicyLab/policy/LDA_1B/train.sh
+    # (XPOLICYLAB_DATASET_ID = README §4.2 tag
+    #  <dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>, or legacy paths).
     "xpolicylab": [
         (
             os.environ.get(

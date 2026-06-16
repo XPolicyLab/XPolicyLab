@@ -4,9 +4,9 @@ task_name: null
 env_cfg_type: null
 expert_data_num: null
 seed: null
-action_type: ee              # g0plus_xpolicylab_ee_finetune uses dual-arm EE actions
-eval_batch: false
-eval_env: debug             # debug | sim | real
+action_type: joint
+eval_batch: true
+eval_env: sim             # debug | sim | real
 
 # server bind (port is injected by setup_eval_policy_server.sh)
 port: null
@@ -14,14 +14,13 @@ host: localhost
 
 result_dir: "./results/GalaxeaVLA/"
 
-# ==================== GalaxeaVLA (galaxea_fm) specific ====================
-# Variant-agnostic: switch model by changing model_variant + task_config_name.
-#   g0plus  -> real/g0plus_xpolicylab_ee_finetune (ee) or real/g0plus_xpolicylab_finetune (joint)
+model_variant: g0plus
+#   g0plus  -> real/g0plus_xpolicylab_finetune (joint)
 #   g0tiny  -> real/g0tiny_xpolicylab_finetune  (SmolVLM2-250M)
 #   pi0     -> real/pi0_r1lite_finetune
 #   pi0fast -> real/pi0fast_r1lite_finetune
 model_variant: g0plus
-task_config_name: real/g0plus_xpolicylab_ee_finetune
+task_config_name: real/g0plus_xpolicylab_finetune
 
 # Local backbone dir (PaliGemma for g0plus / SmolVLM2 for g0tiny). Required for
 # offline eval; resolved from GALAXEA_PALIGEMMA_PATH if left null.

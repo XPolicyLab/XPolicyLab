@@ -1,39 +1,39 @@
 #!/bin/bash
 set -euo pipefail
 
-# Mem_0 eval orchestrator (XPolicyLab contract + optional Mn vLLM auto-start).
+# Mem_0 eval orchestrator (XPolicyLab 10-arg contract + optional Mn vLLM auto-start).
 #
 # Usage:
 #   bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> \
-#                <expert_data_num> <action_type> <seed> \
+#                <action_type> <seed> \
 #                <policy_gpu_id> <env_gpu_id> \
 #                <policy_conda_env> <eval_env_conda_env> [planning_gpu_ids]
 #
 # `task_name` is the simulator task; `ckpt_name` resolves checkpoint paths.
-# For Mn tasks, pass `planning_gpu_ids` (comma-separated) to auto-start vLLM.
+# For Mn tasks, pass `planning_gpu_ids` (comma-separated) as optional 11th arg to auto-start vLLM.
+# Disambiguate legacy artifacts with MEM0_EXPERT_DATA_NUM when multiple datasets match.
 #
 # Switch debug/sim via deploy.yml `eval_env` (not this script).
 #
 # Examples:
 #   # M1 debug wiring check
-#   bash eval.sh RoboDojo swap_blocks swap_blocks arx_x5 50 joint 0 0 0 mem0 XPolicyLab
+#   bash eval.sh RoboDojo swap_blocks swap_blocks arx_x5 joint 0 0 0 mem0 XPolicyLab
 #
 #   # Mn with auto vLLM on GPUs 4,5,6,7 and execution on GPU 0
-#   GLOBAL_TASK="..." bash eval.sh RoboDojo cover_blocks cover_blocks arx_x5 50 joint 0 \
+#   GLOBAL_TASK="..." bash eval.sh RoboDojo cover_blocks cover_blocks arx_x5 joint 0 \
 #       0 0 mem0 XPolicyLab 4,5,6,7
 
 dataset_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-env_gpu_id=$9
-policy_conda_env=${10}
-eval_env_conda_env=${11}
-planning_gpu_ids=${12:-}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+env_gpu_id=$8
+policy_conda_env=${9}
+eval_env_conda_env=${10}
+planning_gpu_ids=${11:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -104,7 +104,6 @@ if [[ "${task_type}" == "Mn" && -z "${vllm_url}" && -n "${planning_gpu_ids}" ]];
         "${dataset_name}" \
         "${ckpt_name}" \
         "${env_cfg_type}" \
-        "${expert_data_num}" \
         "${action_type}" \
         "${seed}" \
         "${planning_gpu_ids}" \
@@ -123,7 +122,6 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \

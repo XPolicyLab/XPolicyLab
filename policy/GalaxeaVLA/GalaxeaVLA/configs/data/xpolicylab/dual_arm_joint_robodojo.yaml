@@ -1,22 +1,13 @@
 dataset:
   _target_: galaxea_fm.data.galaxea_lerobot_dataset.GalaxeaLerobotDataset
 
-  # Read-only RoboDojo_sim_arx-x5_v30 (LeRobot v3.0). Flat 14-dim
-  # observation.state / action are sliced per-key below. Override dataset_dirs
-  # on the CLI if the path differs.
   dataset_dirs:
     - /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30
 
-  # v3.0 meta layout (tasks.parquet / episodes parquet). av1 videos require pyav
-  # (torchcodec cannot decode av1 in this env).
   lerobot_ds_version: "3.0"
   video_backend: pyav
 
-  # Flat 14-dim layout (info.json names):
-  #   [0:6]   left  joint_0..5  (arm)
-  #   [6:7]   left  joint_6     (gripper, range ~[0,1])
-  #   [7:13]  right joint_0..5  (arm)
-  #   [13:14] right joint_6     (gripper)
+  # Flat 14-dim: [0:6] left arm, [6:7] left gripper, [7:13] right arm, [13:14] right gripper
   shape_meta:
     action:
       - key: left_arm

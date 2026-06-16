@@ -29,9 +29,9 @@ norm_way: minmax  # minmax | meanstd | quantile (must match the norm_stats file)
 # Task type: M1 | Mn (auto-set from task_name via task_config.json when null)
 task_type: null
 
-# Checkpoints / stats (paths relative to this policy folder unless absolute).
-execution_ckpt: null            # e.g. Mem_0/checkpoints/<run>/final_step*.pt
-state_stats_path: null          # e.g. Mem_0/assets/<ckpt_name>/norm_stats.json
+# Checkpoints / stats (resolved by setup_eval_policy_server.sh via _artifact_paths.sh).
+execution_ckpt: null            # e.g. checkpoints/<dataset>-<ckpt>-<env>-<action>-<seed>/final_step*.pt
+state_stats_path: null          # e.g. assets/<ckpt_name>/norm_stats.json
 
 # Mn planning (execution server calls external vLLM)
 planning_module_config_path: Mem_0/source/config/planning_module_inference.yaml

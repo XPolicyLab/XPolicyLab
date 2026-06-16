@@ -47,9 +47,6 @@ target_controller_type: bimanual_relaxed_ik
 hydra:
   verbose: false  # Show full traceback for instantiate errors
   run:
-    # XPolicyLab contract (see XPolicyLab/README.md):
-    # checkpoints/<dataset>-<ckpt_name>-<env>-<num>-<action>-<seed>/<timestamp>/
-    # train.sh exports GALAXEA_CKPT_RUN_ID (the 6-tuple).
     dir: "${oc.env:GALAXEA_FM_OUTPUT_DIR}/${oc.env:GALAXEA_CKPT_RUN_ID}/${now:%Y-%m-%d_%H-%M-%S}"
   job_logging:
     handlers:

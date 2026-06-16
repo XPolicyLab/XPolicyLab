@@ -22,32 +22,61 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 STARVLA_ROOT="${SCRIPT_DIR}/source_starvla"
-STARVLA_ADAPTER="${SCRIPT_DIR}/starvla_adapter"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-default_result_ckpt="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
-default_local_ckpt="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}/final_model/pytorch_model.pt"
+result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}"
+local_run_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
+
+resolve_starvla_checkpoint() {
+    local run_dir=$1
+    local candidates=()
+
+    if [[ ! -d "${run_dir}" ]]; then
+        return 1
+    fi
+
+    shopt -s nullglob
+    candidates=("${run_dir}"/checkpoints/*.pt "${run_dir}"/checkpoints/*.safetensors)
+    shopt -u nullglob
+
+    if (( ${#candidates[@]} == 1 )); then
+        echo "${candidates[0]}"
+        return 0
+    fi
+    if (( ${#candidates[@]} > 1 )); then
+        echo "[SERVER][ERROR] multiple checkpoints found under ${run_dir}/checkpoints:" >&2
+        printf '[SERVER][ERROR]   %s\n' "${candidates[@]}" >&2
+        echo "[SERVER][ERROR] keep only one checkpoint file or set STARVLA_CKPT_PATH explicitly." >&2
+        exit 1
+    fi
+
+    return 1
+}
+
 checkpoint_path="${STARVLA_CKPT_PATH:-}"
 if [[ -n "${checkpoint_path}" ]]; then
     :
-elif [[ -f "${default_result_ckpt}" ]]; then
-    checkpoint_path="${default_result_ckpt}"
-elif [[ -f "${default_local_ckpt}" ]]; then
-    checkpoint_path="${default_local_ckpt}"
+elif checkpoint_path=$(resolve_starvla_checkpoint "${result_run_dir}"); then
+    :
+elif checkpoint_path=$(resolve_starvla_checkpoint "${local_run_dir}"); then
+    :
 else
-    checkpoint_path="${default_local_ckpt}"
+    checkpoint_path="${local_run_dir}/checkpoints/<checkpoint>.pt"
 fi
 if [[ ! -f "${checkpoint_path}" ]]; then
     echo "[SERVER][ERROR] checkpoint file does not exist: ${checkpoint_path}" >&2
     echo "[SERVER][ERROR] set STARVLA_CKPT_PATH=/path/to/pytorch_model.pt to override checkpoint lookup" >&2
-    echo "[SERVER][ERROR] expected checkpoint under checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/final_model/pytorch_model.pt" >&2
+    echo "[SERVER][ERROR] expected exactly one .pt or .safetensors file under one of:" >&2
+    echo "[SERVER][ERROR]   ${result_run_dir}/checkpoints/" >&2
+    echo "[SERVER][ERROR]   ${local_run_dir}/checkpoints/" >&2
     exit 1
 fi
 checkpoint_path="$(realpath "${checkpoint_path}")"
+echo "[SERVER] resolved StarVLA checkpoint: ${checkpoint_path}"
 starvla_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 starvla_server_host="127.0.0.1"
 
@@ -66,8 +95,7 @@ conda activate "${policy_conda_env}"
 
 (
     cd "${STARVLA_ROOT}"
-    STARVLA_EXTRA_DATA_REGISTRY="${STARVLA_ADAPTER}/data_registry" \
-    PYTHONPATH="${STARVLA_ADAPTER}:${STARVLA_ROOT}:${PYTHONPATH:-}" \
+    PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${STARVLA_ROOT}/deployment/model_server/server_policy.py" \
         --ckpt_path "${checkpoint_path}" \
@@ -78,8 +106,7 @@ STARVLA_SERVER_PID=$!
 
 sleep 6
 
-STARVLA_EXTRA_DATA_REGISTRY="${STARVLA_ADAPTER}/data_registry" \
-PYTHONPATH="${STARVLA_ADAPTER}:${STARVLA_ROOT}:${PYTHONPATH:-}" \
+PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
 PYTHONWARNINGS=ignore::UserWarning \
 CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
 python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \

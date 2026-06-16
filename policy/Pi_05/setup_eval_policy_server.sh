@@ -1,17 +1,17 @@
 #!/bin/bash
 set -e
 
-dataset_name=${1:-"RoboDojo"}
-task_name=${2:-"stack_bowls"}
-ckpt_name=${3:-"Pi_05_sim_arx-x5_seed_1"}
-env_cfg_type=${4:-"arx_x5"}
-expert_data_num=${5:-100}
-action_type=${6:-"joint"}
-seed=${7:-0}
-policy_gpu_id=${8:-1}
-policy_conda_env=${9:-"uv"}
-policy_server_port=${10:-0}
-policy_server_host=${11:-"localhost"}
+dataset_name=$1
+task_name=$2
+ckpt_name=$3
+env_cfg_type=$4
+expert_data_num=$5
+action_type=$6
+seed=$7
+policy_gpu_id=$8
+policy_uv_env=${9:-uv}
+policy_server_port=${10}
+policy_server_host=${11:-"0.0.0.0"}
 protocol=${12:-robodojo_ws}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -23,14 +23,16 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
-if [[ -z "${policy_server_port}" || "${policy_server_port}" == "0" ]]; then
-    policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
-fi
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, protocol=${protocol}, action_dim=${action_dim}"
 
-resolve_uv_env_path() {
+CONDA_BASE="$(conda info --base)"
+source "${CONDA_BASE}/etc/profile.d/conda.sh"
+YAML_PYTHON="${CONDA_BASE}/bin/python"
+
+resolve_uv_env() {
     local raw_path=$1
     if [[ "${raw_path}" == "uv" ]]; then
-        python3 - <<PYENV
+        "${YAML_PYTHON}" - <<PYENV
 import yaml
 from pathlib import Path
 script_dir = Path("${CURRENT_DIR}")
@@ -41,7 +43,7 @@ if not path.is_absolute():
 print(path)
 PYENV
     else
-        python3 - <<PYENV
+        "${YAML_PYTHON}" - <<PYENV
 from pathlib import Path
 script_dir = Path("${CURRENT_DIR}")
 path = Path("${raw_path}").expanduser()
@@ -52,35 +54,33 @@ PYENV
     fi
 }
 
-if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
-    policy_uv_env_path="$(resolve_uv_env_path "${policy_conda_env}")"
-    PYTHON_BIN="${policy_uv_env_path}/.venv/bin/python"
-    echo "[SERVER] Using uv environment: ${policy_uv_env_path}"
-else
-    source "$(conda info --base)/etc/profile.d/conda.sh"
-    echo "[SERVER] Activating Conda environment: ${policy_conda_env}"
-    conda activate "${policy_conda_env}"
-    PYTHON_BIN="${CONDA_PREFIX}/bin/python"
-fi
+policy_uv_env_path="$(resolve_uv_env "${policy_uv_env}")"
+PYTHON_BIN="${policy_uv_env_path}/.venv/bin/python"
+OPENPI_SRC="${policy_uv_env_path}/src"
 
 if [[ ! -x "${PYTHON_BIN}" ]]; then
-    echo "[SERVER] Python not found: ${PYTHON_BIN}" >&2
-    echo "[SERVER] Run: cd ${CURRENT_DIR}/openpi && UV_LINK_MODE=copy GIT_LFS_SKIP_SMUDGE=1 uv sync --group lerobot" >&2
+    echo "[SERVER][ERROR] Python not found: ${PYTHON_BIN}" >&2
+    echo "[SERVER][ERROR] Run: bash ${CURRENT_DIR}/install.sh" >&2
     exit 1
 fi
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
+echo "[SERVER] Using uv environment: ${policy_uv_env_path}"
 echo "[SERVER] Using python: ${PYTHON_BIN}"
+
+PYTHONPATH_PARTS=("${ROOT_DIR}/XPolicyLab" "${ROOT_DIR}")
+if [[ -d "${OPENPI_SRC}" ]]; then
+    PYTHONPATH_PARTS+=("${OPENPI_SRC}")
+fi
 
 exec env \
     PYTHONUNBUFFERED=1 \
     PYTHONWARNINGS=ignore::UserWarning \
+    PYTHONPATH="$(IFS=:; echo "${PYTHONPATH_PARTS[*]}")" \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
+        --protocol "${protocol}" \
         --overrides \
-            policy_server_port="${policy_server_port}" \
-            policy_server_host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
             dataset_name="${dataset_name}" \

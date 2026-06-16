@@ -1,3 +1,4 @@
+# XPolicyLab deploy: policy server env=uv; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
 # MolmoAct2 一键安装（对应 INSTALLATION.md）
 #

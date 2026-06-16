@@ -4,25 +4,28 @@ set -euo pipefail
 # Start vLLM for Mem_0 Mn planning module (merged Qwen3-VL-8B weights).
 #
 # Args:
-#   dataset_name ckpt_name env_cfg_type expert_data_num action_type seed
+#   dataset_name ckpt_name env_cfg_type action_type seed
 #   planning_gpu_ids planning_port [policy_dir]
 
 dataset_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-planning_gpu_ids=$7
-planning_port=$8
-policy_dir=${9:-}
+action_type=$4
+seed=$5
+planning_gpu_ids=$6
+planning_port=$7
+policy_dir=${8:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 POLICY_DIR="${policy_dir:-${SCRIPT_DIR}}"
 UPSTREAM_DIR="${POLICY_DIR}/Mem_0"
+ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
 
-run_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-seed${seed}"
-merged_dir="${MEM0_PLANNING_MERGED_PATH:-${UPSTREAM_DIR}/checkpoints/${run_name}_planning_merged}"
+source "${ADAPTER_DIR}/_artifact_paths.sh"
+
+expert_data_num="${MEM0_EXPERT_DATA_NUM:-}"
+merged_dir="${MEM0_PLANNING_MERGED_PATH:-$(mem0_resolve_planning_merged_dir "${POLICY_DIR}" \
+    "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")}"
 
 if [[ ! -d "${merged_dir}" ]]; then
     echo -e "\033[31m[PLANNING] merged weights not found: ${merged_dir}\033[0m" >&2

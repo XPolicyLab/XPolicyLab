@@ -1,4 +1,6 @@
 """
+LEGACY (RMBench joint_action.vector API). Use policy/Mem_0/model.py + deploy.py for XPolicyLab.
+
 Mem_0 deployment entry.
 
 Responsibilities:

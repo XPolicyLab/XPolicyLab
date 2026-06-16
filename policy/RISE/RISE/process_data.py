@@ -77,7 +77,7 @@ CAMERA_MAP = {
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("dataset_name")
-    parser.add_argument("task_name")
+    parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
     parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type")
@@ -88,7 +88,7 @@ def main() -> None:
     if args.action_type != "joint":
         raise ValueError("RISE data conversion expects action_type=joint.")
 
-    data_dir = args.data_dir or REPO_ROOT / "data" / args.dataset_name / args.task_name / args.env_cfg_type
+    data_dir = args.data_dir or REPO_ROOT / "data" / args.dataset_name / args.ckpt_name / args.env_cfg_type
     if not data_dir.exists():
         raise FileNotFoundError(f"Cannot find XPolicyLab data directory: {data_dir.relative_to(REPO_ROOT)}")
 
@@ -98,7 +98,7 @@ def main() -> None:
         raise ValueError(f"RISE release configs expect 14-D joint actions, got {action_dim} for {args.env_cfg_type}.")
 
     output_root = POLICY_DIR / "data" / (
-        f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}-lerobot"
+        f"{args.dataset_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}-lerobot"
     )
     if output_root.exists():
         shutil.rmtree(output_root)
@@ -119,11 +119,14 @@ def main() -> None:
         root=output_root,
     )
 
-    for episode_path in tqdm(episode_paths, desc="RISE convert episodes"):
+    bar = tqdm(episode_paths, desc=f"convert {output_root.name}", unit="ep", dynamic_ncols=True)
+    for episode_index, episode_path in enumerate(bar):
         builder.add_episode(produce_episode, episode_path, args.prompt, robot_action_dim_info, args.action_type)
+        bar.set_postfix(ep=episode_index + 1, total=len(episode_paths))
+    bar.close()
 
     builder.flush()
-    print(f"[RISE] Converted dataset: {output_root.relative_to(POLICY_DIR)}")
+    tqdm.write(f"[RISE] Converted dataset: {output_root.relative_to(POLICY_DIR)} ({len(episode_paths)} episodes)")
 
 
 def produce_episode(video_map, episode_path, prompt, robot_action_dim_info, action_type):
@@ -137,14 +140,7 @@ def produce_episode(video_map, episode_path, prompt, robot_action_dim_info, acti
     tasks = [_extract_prompt(data, prompt)] * state.shape[0]
 
     for video_key, camera_name in CAMERA_MAP.items():
-        frames = [
-            _decode_standard_rgb(frame_bits)
-            for frame_bits in tqdm(
-                data["vision"][camera_name]["colors"],
-                desc=f"{episode_path.stem}:{camera_name}",
-                leave=False,
-            )
-        ]
+        frames = [_decode_standard_rgb(frame_bits) for frame_bits in data["vision"][camera_name]["colors"]]
         encode_video_frames(np.asarray(frames, dtype=np.uint8), video_map[video_key], fps=30)
 
     action_advantage = np.ones((state.shape[0], 1), dtype=np.float32)
@@ -161,7 +157,6 @@ def _decode_standard_rgb(frame_bits):
     if image.ndim != 3 or image.shape[-1] != 3:
         raise ValueError(f"Expected HxWx3 image, got {image.shape}.")
 
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = cv2.resize(image, (320, 240), interpolation=cv2.INTER_AREA)
     if image.shape != (240, 320, 3):
         raise ValueError(f"Expected standardized image shape (240, 320, 3), got {image.shape}.")

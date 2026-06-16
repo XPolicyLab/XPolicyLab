@@ -20,7 +20,7 @@ for _path in (str(_REPO_ROOT), str(_CUR_DIR), str(_XVLA_ROOT)):
         sys.path.insert(0, _path)
 
 from XPolicyLab.model_template import ModelTemplate
-from XPolicyLab.utils.process_data import get_robot_action_dim_info
+from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info
 
 from xvla.models.modeling_xvla import XVLA
 from xvla.models.processing_xvla import XVLAProcessor
@@ -66,10 +66,7 @@ def ensure_hwc_uint8(image):
 
 
 def decode_compressed_image(image_buffer):
-    decoded = cv2.imdecode(np.asarray(image_buffer, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError("Failed to decode compressed image buffer.")
-    return decoded
+    return decode_image_bit(image_buffer)
 
 
 def _normalize_prompt_value(value: Any) -> str | None:
