@@ -30,27 +30,6 @@ def _ok_payload(result: Any = None) -> dict[str, Any]:
     return payload
 
 
-# Policy metadata advertised to env clients via HELLO_ACK so that the eval
-# station can auto-configure (e.g. action_type) without manual CLI params.
-POLICY_META_KEYS = (
-    "policy_name",
-    "action_type",
-    "env_cfg_type",
-    "task_name",
-    "dataset_name",
-    "eval_batch",
-    "eval_episode_num",
-)
-
-
-def build_policy_meta(deploy_cfg: Mapping[str, Any]) -> dict[str, Any]:
-    return {
-        key: deploy_cfg[key]
-        for key in POLICY_META_KEYS
-        if deploy_cfg.get(key) is not None
-    }
-
-
 @dataclass
 class PolicyServerConfig:
     host: str = "0.0.0.0"
@@ -63,7 +42,6 @@ class PolicyServerConfig:
 class PolicyServer:
     model: Any
     config: PolicyServerConfig = field(default_factory=PolicyServerConfig)
-    meta: dict[str, Any] = field(default_factory=dict)
     _server: Server | None = field(default=None, init=False)
     _model_lock: asyncio.Lock = field(
         default_factory=asyncio.Lock,
@@ -191,19 +169,6 @@ class PolicyServer:
         async with self._model_lock:
             return await self._invoke_method(method, *args)
 
-    async def _resolve_meta(self) -> dict[str, Any]:
-        meta = dict(self.meta)
-        hook = getattr(self.model, "get_meta", None)
-        if callable(hook):
-            try:
-                override = await self._call_model_method(hook)
-            except Exception:
-                logger.exception("model.get_meta() failed; using static meta")
-            else:
-                if isinstance(override, Mapping):
-                    meta.update(override)
-        return meta
-
     async def _dispatch_frame(self, frame: Frame) -> Frame | None:
         if frame.message_type == MessageType.HELLO:
             return self._reply(
@@ -212,7 +177,6 @@ class PolicyServer:
                 {
                     "ok": True,
                     "server": "demo_policy_server",
-                    "meta": await self._resolve_meta(),
                 },
             )
         if frame.message_type == MessageType.PREPARE_CASE:
@@ -355,7 +319,6 @@ def main() -> None:
             host=deploy_cfg.get("host", "0.0.0.0"),
             port=int(deploy_cfg.get("port", 19000)),
         ),
-        meta=build_policy_meta(deploy_cfg),
     )
     asyncio.run(server.serve_forever())
 

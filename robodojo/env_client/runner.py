@@ -276,68 +276,7 @@ def _baseline_eval_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) ->
     return baseline.eval_env
 
 
-# deploy_cfg keys that may be auto-filled from policy server HELLO meta when
-# neither the dispatch payload nor the daemon baseline provided them.
-_META_FILL_KEYS = (
-    "policy_name",
-    "action_type",
-    "env_cfg_type",
-    "task_name",
-    "dataset_name",
-)
-
-_META_PLACEHOLDER_VALUES = {None, "", "auto"}
-
-
-def _missing_meta_keys(deploy_cfg: Mapping[str, Any]) -> list[str]:
-    return [
-        key
-        for key in _META_FILL_KEYS
-        if deploy_cfg.get(key) in _META_PLACEHOLDER_VALUES
-    ]
-
-
-def _policy_server_ws_url(deploy_cfg: Mapping[str, Any]) -> str | None:
-    url = deploy_cfg.get("policy_server_url")
-    if url:
-        return str(url)
-    host, port = deploy_cfg.get("host"), deploy_cfg.get("port")
-    if host and port:
-        return f"ws://{host}:{int(port)}"
-    return None
-
-
-def _fill_deploy_cfg_from_meta(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
-    if deploy_cfg.get("eval_env") != "real":
-        return deploy_cfg
-    missing = _missing_meta_keys(deploy_cfg)
-    if not missing:
-        return deploy_cfg
-
-    url = _policy_server_ws_url(deploy_cfg)
-    if url is None:
-        return deploy_cfg
-
-    from robodojo.env_client.ws_adapter import fetch_policy_meta
-
-    try:
-        meta = fetch_policy_meta(url, max_connect_attempts=3)
-    except Exception as exc:
-        print(
-            f"[env_client] policy meta fetch failed ({url}): {exc}",
-            file=sys.stderr,
-        )
-        return deploy_cfg
-
-    filled = {key: meta[key] for key in missing if meta.get(key) is not None}
-    if filled:
-        print(f"[env_client] deploy_cfg auto-filled from policy meta: {filled}")
-        deploy_cfg.update(filled)
-    return deploy_cfg
-
-
 def _prepare_real_deploy_cfg(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
-    deploy_cfg = _fill_deploy_cfg_from_meta(deploy_cfg)
     _validate_real_deploy_cfg(deploy_cfg)
     return deploy_cfg
 
@@ -357,8 +296,8 @@ def _validate_real_deploy_cfg(deploy_cfg: Mapping[str, Any]) -> None:
 
     raise TrialRunnerError(
         "real eval_env reset is missing required deploy fields: "
-        f"{', '.join(missing)}. Provide them via dispatch, policy server meta, "
-        "or env client startup args (ACTION_TYPE, etc.).",
+        f"{', '.join(missing)}. Provide them via dispatch payload "
+        "or env client startup args (ACTION_TYPE, ENV_CFG_TYPE, etc.).",
         error={
             "code": "missing_reset_deploy_cfg",
             "message": f"reset deploy_cfg missing: {', '.join(missing)}",

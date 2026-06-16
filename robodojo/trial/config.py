@@ -82,8 +82,7 @@ def build_trial_run_config(
         dispatch_extra.get("eval_env"),
         default="debug",
     )
-    # Debug keeps legacy hard defaults; real leaves blanks so the env client
-    # can auto-fill them from policy server HELLO meta.
+    # Debug keeps legacy hard defaults; real envs require dispatch or startup args.
     is_debug = resolved_eval_env == "debug"
     env_cfg_type = _first_non_empty_str(
         case_meta.get("env_cfg_type"),
@@ -110,6 +109,9 @@ def build_trial_run_config(
     instruction = _resolve_instruction(dispatch, trial_run, case_meta)
     if instruction:
         case_meta["instruction"] = instruction
+    action_type = case_meta.get("action_type") or dispatch_extra.get("action_type")
+    if action_type in ("joint", "ee"):
+        case_meta["action_type"] = action_type
     repeat_index = case_meta.get("repeat_index", trial_run.get("repeat_index"))
 
     return TrialRunConfig(
