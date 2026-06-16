@@ -26,4 +26,12 @@ Full debug flow:
 bash eval.sh RoboDojo stack_bowls local_aha_wam arx_x5 3500 joint 0 0 0 wam wam
 ```
 
+Training wrapper:
+
+```bash
+bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
+```
+
+`train.sh` launches the external elava codebase with `task=robodojo_local_history_updated_kv_prior_only_16` and `model=fastwam_chunk_local` only. Override dataset, output, and resume paths with `AHA_WAM_TRAIN_DATASET_DIR`, `AHA_WAM_OUTPUT_ROOT`, `AHA_WAM_INIT_CHECKPOINT`, and `AHA_WAM_RESUME`.
+
 For simulator evaluation, set `eval_env: sim` in `deploy.yml` and run from a workspace that provides `scripts/eval_policy.sh` and the RoboDojo simulator environment.
