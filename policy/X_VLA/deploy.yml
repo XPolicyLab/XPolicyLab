@@ -23,3 +23,7 @@ steps: 10
 device: cuda
 
 port: 6000
+host: 0.0.0.0
+protocol: robodojo_ws
+
+real_base_cfg: replay_robot
