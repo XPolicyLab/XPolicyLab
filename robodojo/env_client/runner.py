@@ -61,10 +61,11 @@ def _run_trial_loop(
             break
         env.reset()
         env.eval_one_episode()
+        total_steps += env.episode_step
+        # Reset the robot/policy before finish webhook and trial video export.
+        env.reset()
         env.finish_episode()
         episodes += 1
-        total_steps += env.episode_step
-    env.reset()
     return total_steps
 
 

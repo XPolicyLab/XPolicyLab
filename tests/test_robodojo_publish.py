@@ -106,6 +106,7 @@ def test_publish_artifacts_uploads_flat_video_key(tmp_path):
 
     assert video_key in uploads
     assert published["s3"]["video_s3_key"] == video_key
+    assert all("/trials/" not in key for key in uploads)
 
 
 def test_publish_artifacts_uploads_flat_hdf5_key(tmp_path):

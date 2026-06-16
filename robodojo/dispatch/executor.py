@@ -15,10 +15,14 @@ from robodojo.dispatch.status import (
 )
 from robodojo.env_client.runner import TrialRunnerFn
 import robodojo.publish.pipeline as publish_pipeline
-from robodojo.publish.s3 import normalize_s3_prefix
+from robodojo.publish.s3 import normalize_s3_prefix, resolve_artifact_payload
 from robodojo.publish.webhook import notify_finish_webhook
-from robodojo.schemas import DispatchPayload
+from robodojo.schemas import ArtifactPayload, DispatchPayload
 from robodojo.serialization import to_jsonable
+
+
+def _resolved_artifact(dispatch: DispatchPayload) -> ArtifactPayload:
+    return resolve_artifact_payload(dispatch.artifact)
 
 
 def _trial_video_key(dispatch: DispatchPayload, trial_index: int) -> str:
@@ -26,12 +30,14 @@ def _trial_video_key(dispatch: DispatchPayload, trial_index: int) -> str:
 
     e.g. robodojo/{team}/{model}/{robot}/{task}/{eval_id}/trial_{index}.mp4
     """
-    return f"{normalize_s3_prefix(dispatch.artifact.prefix)}trial_{trial_index}.mp4"
+    prefix = normalize_s3_prefix(_resolved_artifact(dispatch).prefix)
+    return f"{prefix}trial_{trial_index}.mp4"
 
 
 def _trial_hdf5_key(dispatch: DispatchPayload, trial_index: int) -> str:
     """Flat TOS delivery key for the trial HDF5 recording (sibling of the mp4)."""
-    return f"{normalize_s3_prefix(dispatch.artifact.prefix)}trial_{trial_index}.hdf5"
+    prefix = normalize_s3_prefix(_resolved_artifact(dispatch).prefix)
+    return f"{prefix}trial_{trial_index}.hdf5"
 
 
 def notify_trial_failure(
@@ -53,7 +59,9 @@ def notify_trial_failure(
     if trial is None or not trial.finish_url:
         raise ValueError(f"finish_url not found for trial_index {trial_index}")
 
-    artifact = dispatch_for_trial(dispatch, trial_index).artifact
+    artifact = resolve_artifact_payload(
+        dispatch_for_trial(dispatch, trial_index).artifact
+    )
 
     webhook_result = notify_finish_webhook(
         status=STATUS_FAILED,

@@ -175,7 +175,7 @@ def test_build_django_finish_payload_uses_video_key_override():
     payload = build_django_finish_payload(
         status="done",
         artifact=ArtifactPayload(
-            bucket="b", prefix="robodojo/team/model/robot/task/trials/1/"
+            bucket="b", prefix="robodojo/team/model/robot/task/"
         ),
         metrics={"summary": {"success_rate": 100.0}, "trials": [{"trial_id": "case-1-r01"}]},
         video_key="robodojo/team/model/robot/task/trial_1.mp4",
@@ -184,13 +184,13 @@ def test_build_django_finish_payload_uses_video_key_override():
         payload["artifact"]["video_s3_key"]
         == "robodojo/team/model/robot/task/trial_1.mp4"
     )
-    assert payload["artifact"]["manifest_key"].endswith("trials/1/manifest.json")
+    assert payload["artifact"]["manifest_key"].endswith("robodojo/team/model/robot/task/manifest.json")
 
 
 def test_build_django_finish_payload_includes_hdf5_key():
     payload = build_django_finish_payload(
         status="done",
-        artifact=ArtifactPayload(bucket="b", prefix="robodojo/t/m/r/k/e1/trials/1/"),
+        artifact=ArtifactPayload(bucket="b", prefix="robodojo/t/m/r/k/e1/"),
         metrics={"summary": {"success_rate": 100.0}, "trials": [{"trial_id": "case-1-r01"}]},
         video_key="robodojo/t/m/r/k/e1/trial_1.mp4",
         hdf5_key="robodojo/t/m/r/k/e1/trial_1.hdf5",
