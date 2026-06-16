@@ -75,6 +75,77 @@ def test_publish_artifacts_uploads_and_webhooks(tmp_path):
     assert uploads[-1] == "evaluations/eval-1/manifest.json"
 
 
+def test_publish_artifacts_uploads_flat_video_key(tmp_path):
+    dispatch = _dispatch_payload()
+    artifact_dir = tmp_path / "artifacts"
+    trial_run = {
+        "trial_id": "case-1-r01",
+        "action_case_id": "case-1",
+        "trial_index": 1,
+        "case_meta": {"action_case_id": "case-1"},
+    }
+    artifact_paths = write_artifacts(
+        dispatch, trial_run, artifact_dir, evaluation_id="eval-1"
+    )
+    uploads: list[str] = []
+
+    def fake_upload(key: str, path: Path, content_type: str | None) -> None:
+        uploads.append(key)
+
+    video_key = "robodojo/team/model/robot/task/trial_1.mp4"
+    published = publish_artifacts(
+        dispatch,
+        artifact_paths,
+        run_status="completed",
+        upload_s3=True,
+        notify_webhook=False,
+        s3_client=object(),
+        upload_file=fake_upload,
+        video_key=video_key,
+    )
+
+    assert video_key in uploads
+    assert published["s3"]["video_s3_key"] == video_key
+
+
+def test_publish_artifacts_uploads_flat_hdf5_key(tmp_path):
+    dispatch = _dispatch_payload()
+    artifact_dir = tmp_path / "artifacts"
+    trial_run = {
+        "trial_id": "case-1-r01",
+        "action_case_id": "case-1",
+        "trial_index": 1,
+        "case_meta": {"action_case_id": "case-1"},
+    }
+    artifact_paths = write_artifacts(
+        dispatch, trial_run, artifact_dir, evaluation_id="eval-1"
+    )
+    # Stage a recording as the real pipeline would (recordings/{trial_id}.hdf5).
+    recording = artifact_dir / "recordings" / "case-1-r01.hdf5"
+    recording.parent.mkdir(parents=True, exist_ok=True)
+    recording.write_bytes(b"fake hdf5")
+
+    uploads: list[str] = []
+
+    def fake_upload(key: str, path: Path, content_type: str | None) -> None:
+        uploads.append(key)
+
+    hdf5_key = "robodojo/team/model/robot/task/eval-1/trial_1.hdf5"
+    published = publish_artifacts(
+        dispatch,
+        artifact_paths,
+        run_status="completed",
+        upload_s3=True,
+        notify_webhook=False,
+        s3_client=object(),
+        upload_file=fake_upload,
+        hdf5_key=hdf5_key,
+    )
+
+    assert hdf5_key in uploads
+    assert published["s3"]["hdf5_s3_key"] == hdf5_key
+
+
 def test_run_dispatch_publishes_with_artifact_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(
         "robodojo.publish.pipeline.publish_artifacts",

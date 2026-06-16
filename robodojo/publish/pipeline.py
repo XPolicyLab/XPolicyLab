@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
 import urllib.error
 from pathlib import Path
 from typing import Any
@@ -15,9 +17,68 @@ from robodojo.dispatch.status import (
     STATUS_PLANNED,
 )
 from robodojo.publish.artifacts import ArtifactWriter
-from robodojo.publish.s3 import UploadFileFn, upload_artifact_directory
+from robodojo.publish.s3 import UploadFileFn, upload_artifact_directory, upload_file_to_key
 from robodojo.publish.webhook import WebhookDeliveryError, notify_finish_webhook
 from robodojo.schemas import DispatchPayload
+
+
+def _trial_id_from_metrics(artifact_paths: dict[str, str]) -> str:
+    metrics_path = artifact_paths.get("metrics")
+    if not metrics_path:
+        return ""
+    metrics = json.loads(Path(metrics_path).read_text(encoding="utf-8"))
+    trials = metrics.get("trials")
+    if isinstance(trials, list) and trials and isinstance(trials[0], dict):
+        return str(trials[0].get("trial_id") or "")
+    return ""
+
+
+def _resolve_staged_artifact(
+    artifact_paths: dict[str, str], subdir: str, suffix: str
+) -> Path | None:
+    """Locate a staged per-trial artifact ({subdir}/{trial_id}{suffix}) for flat TOS delivery."""
+    trial_id = _trial_id_from_metrics(artifact_paths)
+    if not trial_id:
+        return None
+    path = Path(artifact_paths["artifact_dir"]) / subdir / f"{trial_id}{suffix}"
+    return path if path.is_file() else None
+
+
+def _stage_trial_recording(
+    writer: ArtifactWriter,
+    artifact_dir: Path,
+    trial_id: str,
+    hdf5_path: str | None,
+) -> bool:
+    """Convert the recorded HDF5 to mp4 and stage both files under the artifact dir.
+
+    Returns True if an mp4 was produced (so the caller skips the placeholder).
+    Best-effort: any failure (missing robot deps, bad camera key, corrupt HDF5)
+    falls back to the placeholder so trial publishing never breaks.
+    """
+    if not hdf5_path or not os.path.isfile(hdf5_path):
+        return False
+    try:
+        from robot.utils.base.data_handler import vis_video
+
+        camera_key = os.environ.get("ROBODOJO_VIDEO_CAMERA_KEY", "cam_head")
+        fps = int(os.environ.get("ROBODOJO_VIDEO_FPS", "25"))
+        video_out = artifact_dir / "videos" / f"{trial_id}.mp4"
+        video_out.parent.mkdir(parents=True, exist_ok=True)
+        vis_video(hdf5_path, camera_key, str(video_out), fps=fps)
+
+        hdf5_out = artifact_dir / "recordings" / f"{trial_id}.hdf5"
+        hdf5_out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(hdf5_path, hdf5_out)
+
+        if video_out.is_file():
+            writer.emit_event("trial_recording_staged", trial_id=trial_id)
+            return True
+    except Exception as exc:  # noqa: BLE001 - never let encoding break publishing
+        writer.emit_event(
+            "trial_recording_failed", trial_id=trial_id, error=str(exc)
+        )
+    return False
 
 
 def _publish_exception_types() -> tuple[type[BaseException], ...]:
@@ -75,7 +136,10 @@ def write_artifacts(
                     "action_count": action_count,
                 },
             )
-        writer.write_video_placeholder(trial_id)
+        hdf5_path = (policy_result or {}).get("hdf5_path") if policy_result else None
+        video_written = _stage_trial_recording(writer, artifact_dir, trial_id, hdf5_path)
+        if not video_written:
+            writer.write_video_placeholder(trial_id)
         return writer.finalize(status=run_status, error_summary=error_summary)
     finally:
         writer.close()
@@ -94,6 +158,8 @@ def publish_artifacts(
     upload_file: UploadFileFn | None = None,
     webhook_secret: str | None = None,
     webhook_opener: Any | None = None,
+    video_key: str | None = None,
+    hdf5_key: str | None = None,
 ) -> dict[str, Any]:
     published: dict[str, Any] = {}
 
@@ -111,6 +177,27 @@ def publish_artifacts(
             "uploaded_count": len(upload_result.uploaded_keys),
         }
 
+        def _deliver_flat(local_path: Path | None, key: str | None, result_field: str) -> None:
+            if not key or local_path is None:
+                return
+            upload_file_to_key(
+                local_path,
+                bucket=dispatch.artifact.bucket,
+                key=key,
+                s3_client=s3_client,
+                upload_file=upload_file,
+            )
+            published["s3"][result_field] = key
+
+        _deliver_flat(
+            _resolve_staged_artifact(artifact_paths, "videos", ".mp4"), video_key, "video_s3_key"
+        )
+        _deliver_flat(
+            _resolve_staged_artifact(artifact_paths, "recordings", ".hdf5"),
+            hdf5_key,
+            "hdf5_s3_key",
+        )
+
     if notify_webhook:
         metrics = json.loads(
             Path(artifact_paths["metrics"]).read_text(encoding="utf-8")
@@ -124,6 +211,8 @@ def publish_artifacts(
             error=error,
             secret=webhook_secret,
             opener=webhook_opener,
+            video_key=video_key,
+            hdf5_key=hdf5_key,
         )
         published["webhook"] = {
             "finish_url": webhook_result.finish_url,
@@ -143,6 +232,8 @@ def publish_dispatch_artifacts(
     finish_url: str = "",
     error: dict[str, Any] | None = None,
     webhook_secret: str | None = None,
+    video_key: str | None = None,
+    hdf5_key: str | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, Any] | None]:
     published: dict[str, Any] = {}
     if run_status in {STATUS_DONE, STATUS_COMPLETED}:
@@ -160,6 +251,8 @@ def publish_dispatch_artifacts(
                     run_status=webhook_status,
                     upload_s3=True,
                     notify_webhook=False,
+                    video_key=video_key,
+                    hdf5_key=hdf5_key,
                 )
             )
         if notify_webhook:
@@ -173,6 +266,8 @@ def publish_dispatch_artifacts(
                     finish_url=finish_url,
                     error=error,
                     webhook_secret=webhook_secret,
+                    video_key=video_key,
+                    hdf5_key=hdf5_key,
                 )
             )
         return published, STATUS_COMPLETED, error
@@ -196,6 +291,8 @@ def publish_dispatch_artifacts(
                         finish_url=finish_url,
                         error=publish_error,
                         webhook_secret=webhook_secret,
+                        video_key=video_key,
+                        hdf5_key=hdf5_key,
                     )
                 )
             except PUBLISH_ERRORS as webhook_exc:

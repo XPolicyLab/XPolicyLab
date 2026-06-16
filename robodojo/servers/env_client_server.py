@@ -549,7 +549,21 @@ def _build_preview_manager(args: argparse.Namespace) -> Any | None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Artifact upload (S3 / Volcano TOS) env vars:\n"
+            "  TOS_ENDPOINT_URL  S3-compatible endpoint, e.g. "
+            "https://tos-s3-cn-beijing.volces.com (falls back to AWS_ENDPOINT_URL; "
+            "unset = default AWS S3).\n"
+            "  TOS_REGION        e.g. cn-beijing (falls back to AWS_REGION).\n"
+            "  AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY  TOS access key / secret.\n"
+            "  EVAL_SERVER_WEBHOOK_SECRET  HMAC secret for the finish webhook.\n"
+            "The destination bucket and base key prefix come from the dispatch "
+            "payload's artifact.bucket / artifact.prefix; the trial video is uploaded "
+            "to {prefix}trial_{index}.mp4."
+        ),
+    )
     parser.add_argument("--serve-host", default="0.0.0.0")
     parser.add_argument("--serve-port", type=int, default=19200)
     parser.add_argument(
