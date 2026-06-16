@@ -36,7 +36,7 @@ conda activate "${eval_env_conda_env}"
 echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
 echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port} (real env)...\033[0m"
 
-PYTHONPATH="${root_dir}/XPolicyLab${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH="${root_dir}/src:${root_dir}/XPolicyLab:${root_dir}:${PYTHONPATH:-}"
 
 CLIENT_ARGS=(
     --dataset_name "${dataset_name}"
