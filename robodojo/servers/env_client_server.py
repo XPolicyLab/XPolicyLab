@@ -553,15 +553,20 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Artifact upload (S3 / Volcano TOS) env vars:\n"
-            "  TOS_ENDPOINT_URL  S3-compatible endpoint, e.g. "
-            "https://tos-s3-cn-beijing.volces.com (falls back to AWS_ENDPOINT_URL; "
-            "unset = default AWS S3).\n"
-            "  TOS_REGION        e.g. cn-beijing (falls back to AWS_REGION).\n"
+            "  TOS_ENDPOINT_URL / S3_ENDPOINT_URL  S3-compatible endpoint, e.g. "
+            "https://tos-s3-cn-beijing.volces.com (scheme optional; falls back to "
+            "AWS_ENDPOINT_URL; unset = default AWS S3).\n"
+            "  TOS_REGION / S3_REGION  e.g. cn-shanghai (falls back to AWS_REGION).\n"
+            "  TOS_BUCKET / S3_BUCKET  default bucket when dispatch.artifact.bucket "
+            "is omitted.\n"
+            "  TOS_PREFIX / S3_PREFIX / ROBODOJO_ARTIFACT_PREFIX  default key prefix "
+            "when dispatch.artifact.prefix is omitted.\n"
+            "  S3_ADDRESSING_STYLE  S3 path style (default: virtual when an endpoint "
+            "is set; required for Volcano TOS).\n"
             "  AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY  TOS access key / secret.\n"
             "  EVAL_SERVER_WEBHOOK_SECRET  HMAC secret for the finish webhook.\n"
-            "The destination bucket and base key prefix come from the dispatch "
-            "payload's artifact.bucket / artifact.prefix; the trial video is uploaded "
-            "to {prefix}trial_{index}.mp4."
+            "Dispatch may still set artifact.bucket / artifact.prefix explicitly; env "
+            "vars are used only as fallbacks when those fields are empty."
         ),
     )
     parser.add_argument("--serve-host", default="0.0.0.0")

@@ -13,6 +13,57 @@ from robodojo.schemas import ArtifactPayload
 
 UploadFileFn = Callable[[str, Path, str | None], None]
 
+_ARTIFACT_BUCKET_ENV_KEYS = (
+    "TOS_BUCKET",
+    "S3_BUCKET",
+    "AWS_S3_BUCKET",
+)
+_ARTIFACT_PREFIX_ENV_KEYS = (
+    "TOS_PREFIX",
+    "S3_PREFIX",
+    "ROBODOJO_ARTIFACT_PREFIX",
+)
+_ENDPOINT_ENV_KEYS = (
+    "TOS_ENDPOINT_URL",
+    "S3_ENDPOINT_URL",
+    "AWS_ENDPOINT_URL",
+)
+_REGION_ENV_KEYS = (
+    "TOS_REGION",
+    "S3_REGION",
+    "AWS_REGION",
+)
+
+
+def _env_first(keys: tuple[str, ...]) -> str:
+    for key in keys:
+        value = os.environ.get(key, "").strip()
+        if value:
+            return value
+    return ""
+
+
+def normalize_endpoint_url(url: str) -> str:
+    cleaned = url.strip()
+    if cleaned and "://" not in cleaned:
+        return f"https://{cleaned}"
+    return cleaned
+
+
+def resolve_artifact_payload(artifact: ArtifactPayload) -> ArtifactPayload:
+    """Fill missing bucket/prefix from eval-station env vars when dispatch omits them."""
+    bucket = artifact.bucket.strip() if artifact.bucket else ""
+    if not bucket:
+        bucket = _env_first(_ARTIFACT_BUCKET_ENV_KEYS)
+
+    prefix = artifact.prefix.strip() if artifact.prefix else ""
+    if not prefix:
+        prefix = _env_first(_ARTIFACT_PREFIX_ENV_KEYS)
+
+    if bucket == artifact.bucket and prefix == artifact.prefix:
+        return artifact
+    return artifact.model_copy(update={"bucket": bucket, "prefix": prefix})
+
 
 def normalize_s3_prefix(prefix: str) -> str:
     cleaned = prefix.strip().strip("/")
@@ -46,24 +97,38 @@ def _guess_content_type(path: Path) -> str | None:
     return content_type
 
 
+def _s3_client_config() -> Any:
+    from botocore.config import Config
+
+    style = _env_first(("S3_ADDRESSING_STYLE", "TOS_ADDRESSING_STYLE")).lower()
+    if not style:
+        # Volcano TOS rejects path-style URLs ("Forbidden path to access server").
+        style = "virtual" if _env_first(_ENDPOINT_ENV_KEYS) else "auto"
+    return Config(s3={"addressing_style": style})
+
+
 def build_s3_client(s3_client: Any | None = None) -> Any:
     """Build a boto3 S3 client, pointing at Volcano TOS when configured via env.
 
     TOS is S3-compatible: when TOS_ENDPOINT_URL / TOS_REGION (or the AWS_*
     equivalents) are set, boto3 targets TOS; otherwise it keeps default AWS
     behavior. Credentials use the standard AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY.
+
+    TOS requires virtual-hosted-style requests; see InvalidPathAccess /
+    "Forbidden path to access server" when path-style is used.
     """
     if s3_client is not None:
         return s3_client
 
     import boto3
 
-    endpoint_url = os.environ.get("TOS_ENDPOINT_URL") or os.environ.get("AWS_ENDPOINT_URL")
-    region_name = os.environ.get("TOS_REGION") or os.environ.get("AWS_REGION")
+    endpoint_url = normalize_endpoint_url(_env_first(_ENDPOINT_ENV_KEYS))
+    region_name = _env_first(_REGION_ENV_KEYS)
     return boto3.client(
         "s3",
         endpoint_url=endpoint_url or None,
         region_name=region_name or None,
+        config=_s3_client_config(),
     )
 
 
@@ -129,8 +194,12 @@ def upload_artifact_directory(
 
     client = build_s3_client(s3_client)
 
+    artifact = resolve_artifact_payload(artifact)
     if not artifact.bucket:
-        raise ValueError("artifact.bucket is required")
+        raise ValueError(
+            "artifact.bucket is required "
+            "(set dispatch.artifact.bucket or TOS_BUCKET/S3_BUCKET env var)"
+        )
     bucket = artifact.bucket
     prefix = normalize_s3_prefix(artifact.prefix)
     uploaded_keys: list[str] = []

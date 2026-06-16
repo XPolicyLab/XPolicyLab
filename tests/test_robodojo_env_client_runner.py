@@ -223,7 +223,7 @@ def test_run_debug_trial_stop_check_exits_before_eval_episode_num():
         else:
             sys.modules["debug_env_client"] = previous
 
-    assert episodes == ["reset", "eval", "finish", "reset"]
+    assert episodes == ["reset", "eval", "reset", "finish"]
     assert result["steps"] == 3
 
 
@@ -286,7 +286,7 @@ def test_run_debug_trial_stop_check_exits_mid_episode():
         else:
             sys.modules["debug_env_client"] = previous
 
-    assert episodes == ["reset", "eval", "finish", "reset"]
+    assert episodes == ["reset", "eval", "reset", "finish"]
     assert result["steps"] == 5
 
 
@@ -485,11 +485,12 @@ def test_run_real_trial_loops_until_stop_check():
     assert episodes == [
         "reset",
         "eval",
+        "reset",
         "finish",
         "reset",
         "eval",
-        "finish",
         "reset",
+        "finish",
     ]
     assert result == {
         "status": "completed",

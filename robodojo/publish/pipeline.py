@@ -17,7 +17,13 @@ from robodojo.dispatch.status import (
     STATUS_PLANNED,
 )
 from robodojo.publish.artifacts import ArtifactWriter
-from robodojo.publish.s3 import UploadFileFn, upload_artifact_directory, upload_file_to_key
+from robodojo.publish.s3 import (
+    UploadFileFn,
+    normalize_s3_prefix,
+    resolve_artifact_payload,
+    upload_artifact_directory,
+    upload_file_to_key,
+)
 from robodojo.publish.webhook import WebhookDeliveryError, notify_finish_webhook
 from robodojo.schemas import DispatchPayload
 
@@ -59,13 +65,21 @@ def _stage_trial_recording(
     if not hdf5_path or not os.path.isfile(hdf5_path):
         return False
     try:
-        from robot.utils.base.data_handler import vis_video
+        from robot.utils.base.data_handler import vis_merged_camera_video, vis_video
 
-        camera_key = os.environ.get("ROBODOJO_VIDEO_CAMERA_KEY", "cam_head")
         fps = int(os.environ.get("ROBODOJO_VIDEO_FPS", "25"))
         video_out = artifact_dir / "videos" / f"{trial_id}.mp4"
         video_out.parent.mkdir(parents=True, exist_ok=True)
-        vis_video(hdf5_path, camera_key, str(video_out), fps=fps)
+        camera_keys_raw = os.environ.get(
+            "ROBODOJO_VIDEO_CAMERA_KEYS",
+            "cam_head,cam_left_wrist,cam_right_wrist",
+        )
+        camera_keys = [key.strip() for key in camera_keys_raw.split(",") if key.strip()]
+        if len(camera_keys) >= 2:
+            vis_merged_camera_video(hdf5_path, camera_keys, str(video_out), fps=fps)
+        else:
+            camera_key = camera_keys[0] if camera_keys else "cam_head"
+            vis_video(hdf5_path, camera_key, str(video_out), fps=fps)
 
         hdf5_out = artifact_dir / "recordings" / f"{trial_id}.hdf5"
         hdf5_out.parent.mkdir(parents=True, exist_ok=True)
@@ -162,27 +176,36 @@ def publish_artifacts(
     hdf5_key: str | None = None,
 ) -> dict[str, Any]:
     published: dict[str, Any] = {}
+    artifact = resolve_artifact_payload(dispatch.artifact)
 
     if upload_s3:
-        upload_result = upload_artifact_directory(
-            Path(artifact_paths["artifact_dir"]),
-            dispatch.artifact,
-            s3_client=s3_client,
-            upload_file=upload_file,
-        )
-        published["s3"] = {
-            "bucket": upload_result.bucket,
-            "prefix": upload_result.prefix,
-            "manifest_s3_key": upload_result.manifest_s3_key,
-            "uploaded_count": len(upload_result.uploaded_keys),
-        }
+        flat_delivery = bool(video_key or hdf5_key)
+        if not flat_delivery:
+            upload_result = upload_artifact_directory(
+                Path(artifact_paths["artifact_dir"]),
+                artifact,
+                s3_client=s3_client,
+                upload_file=upload_file,
+            )
+            published["s3"] = {
+                "bucket": upload_result.bucket,
+                "prefix": upload_result.prefix,
+                "manifest_s3_key": upload_result.manifest_s3_key,
+                "uploaded_count": len(upload_result.uploaded_keys),
+            }
+        else:
+            published["s3"] = {
+                "bucket": artifact.bucket,
+                "prefix": normalize_s3_prefix(artifact.prefix),
+                "uploaded_count": 0,
+            }
 
         def _deliver_flat(local_path: Path | None, key: str | None, result_field: str) -> None:
             if not key or local_path is None:
                 return
             upload_file_to_key(
                 local_path,
-                bucket=dispatch.artifact.bucket,
+                bucket=artifact.bucket,
                 key=key,
                 s3_client=s3_client,
                 upload_file=upload_file,
@@ -197,6 +220,12 @@ def publish_artifacts(
             hdf5_key,
             "hdf5_s3_key",
         )
+        if flat_delivery:
+            published["s3"]["uploaded_count"] = sum(
+                1
+                for field in ("video_s3_key", "hdf5_s3_key")
+                if published["s3"].get(field)
+            )
 
     if notify_webhook:
         metrics = json.loads(
@@ -206,7 +235,7 @@ def publish_artifacts(
             status=run_status,
             finish_url=finish_url,
             metrics=metrics,
-            artifact=dispatch.artifact,
+            artifact=artifact,
             hmac_secret_ref=dispatch.hmac_secret_ref,
             error=error,
             secret=webhook_secret,

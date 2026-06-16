@@ -6,16 +6,13 @@ from robodojo.schemas import DispatchPayload
 
 
 def dispatch_for_trial(dispatch: DispatchPayload, trial_index: int) -> DispatchPayload:
-    if not dispatch.artifact.prefix:
-        return dispatch
-    base_prefix = dispatch.artifact.prefix.rstrip("/")
-    return dispatch.model_copy(
-        update={
-            "artifact": dispatch.artifact.model_copy(
-                update={"prefix": f"{base_prefix}/trials/{trial_index}/"}
-            )
-        }
-    )
+    """Return dispatch for a single trial run.
+
+    Local artifact dirs already include ``trials/{trial_index}/``; the S3/TOS
+    delivery prefix from dispatch must stay flat (``.../trial_{index}.mp4``).
+    """
+    _ = trial_index
+    return dispatch
 
 
 def build_trial_runs(
