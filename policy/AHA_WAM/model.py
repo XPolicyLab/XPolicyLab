@@ -228,7 +228,7 @@ class Model(ModelTemplate):
             if text not in sys.path:
                 sys.path.insert(0, text)
 
-        from fastwam.datasets.lerobot.robot_video_dataset import DEFAULT_PROMPT
+        from ahawam.datasets.lerobot.robot_video_dataset import DEFAULT_PROMPT
 
         self.default_prompt_template = DEFAULT_PROMPT
         if self.allow_dummy_policy:
@@ -262,7 +262,7 @@ class Model(ModelTemplate):
 
     def _load_policy(self):
         from hydra.utils import instantiate
-        from fastwam.datasets.lerobot.utils.normalizer import load_dataset_stats_from_json
+        from ahawam.datasets.lerobot.utils.normalizer import load_dataset_stats_from_json
         from omegaconf import OmegaConf
 
         cfg = self._compose_cfg()
@@ -471,7 +471,7 @@ class Model(ModelTemplate):
         return _unpack_robot_state(actions, self.action_type, self.robot_action_dim_info)
 
     def get_action_batch(self, env_idx_list):
-        # The underlying FastWAM history state is single-rollout stateful. Use one process per
+        # The underlying AHAWAM history state is single-rollout stateful. Use one process per
         # environment for true parallel eval; this fallback is for debug compatibility only.
         results = []
         for env_idx in env_idx_list:

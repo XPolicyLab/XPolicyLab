@@ -4,13 +4,13 @@ set -euo pipefail
 # XPolicyLab-compatible training wrapper for the aha-wam RoboDojo model.
 # It intentionally launches only the task/model used by this policy:
 #   task=robodojo_local_history_updated_kv_prior_only_16
-#   model=fastwam_chunk_local
+#   model=ahawam
 #
 # Usage:
 #   bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]
 #
 # The first five XPolicyLab arguments are accepted for interface consistency.
-# Training data and stats are controlled by the upstream task yaml unless
+# Training data and stats are controlled by the local AHAWAM task yaml unless
 # overridden through the AHA_WAM_* environment variables below.
 
 dataset_name=${1:?Usage: bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]}
@@ -34,10 +34,15 @@ if [[ "${action_type}" != "joint" ]]; then
     echo "[ERROR] aha-wam RoboDojo training config is joint/qpos only; got action_type=${action_type}." >&2
     exit 1
 fi
+train_seed="${AHA_WAM_TRAIN_SEED:-${seed}}"
+if (( train_seed <= 0 )); then
+    echo "[aha-wam train] seed=${train_seed} is not accepted by AHAWAM; using train_seed=1." >&2
+    train_seed=1
+fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 POLICY_DIR="${ROOT_DIR}/XPolicyLab/policy/AHA_WAM"
-ELAVA_ROOT="${AHA_WAM_ELAVA_ROOT:-/mnt/petrelfs/caijisong/linglong/project/fastwam/elava-prior-only/elava}"
+AHA_WAM_PROJECT_ROOT="${AHA_WAM_PROJECT_ROOT:-${POLICY_DIR}/AHAWAM}"
 TASK_CONFIG="${AHA_WAM_TASK_CONFIG:-robodojo_local_history_updated_kv_prior_only_16}"
 DATASET_DIR="${AHA_WAM_TRAIN_DATASET_DIR:-/mnt/petrelfs/muyao/data/RoboDojo_lerobot_v21_video}"
 DATASET_STATS_PATH="${AHA_WAM_TRAIN_DATASET_STATS_PATH:-${DATASET_DIR}/dataset_stats.json}"
@@ -59,12 +64,12 @@ log_every="${AHA_WAM_LOG_EVERY:-10}"
 wandb_mode="${AHA_WAM_WANDB_MODE:-offline}"
 wandb_enabled="${AHA_WAM_WANDB_ENABLED:-true}"
 
-if [[ ! -d "${ELAVA_ROOT}" ]]; then
-    echo "[ERROR] Missing elava codebase: ${ELAVA_ROOT}" >&2
+if [[ ! -d "${AHA_WAM_PROJECT_ROOT}" ]]; then
+    echo "[ERROR] Missing AHAWAM project: ${AHA_WAM_PROJECT_ROOT}" >&2
     exit 1
 fi
-if [[ ! -f "${ELAVA_ROOT}/configs/task/${TASK_CONFIG}.yaml" ]]; then
-    echo "[ERROR] Missing task config: ${ELAVA_ROOT}/configs/task/${TASK_CONFIG}.yaml" >&2
+if [[ ! -f "${AHA_WAM_PROJECT_ROOT}/configs/task/${TASK_CONFIG}.yaml" ]]; then
+    echo "[ERROR] Missing task config: ${AHA_WAM_PROJECT_ROOT}/configs/task/${TASK_CONFIG}.yaml" >&2
     exit 1
 fi
 if [[ ! -d "${DATASET_DIR}/meta" ]]; then
@@ -78,7 +83,7 @@ if [[ ! -f "${DATASET_STATS_PATH}" ]]; then
 fi
 if [[ ! -d "${TEXT_CACHE_DIR}" || -z "$(find "${TEXT_CACHE_DIR}" -name '*.pt' -print -quit 2>/dev/null)" ]]; then
     echo "[ERROR] Missing T5 text embedding cache: ${TEXT_CACHE_DIR}" >&2
-    echo "Use the upstream elava scripts/precompute_text_embeds.py for ${TASK_CONFIG}, or set AHA_WAM_TEXT_EMBED_CACHE_DIR." >&2
+    echo "Use AHAWAM/scripts/precompute_text_embeds.py for ${TASK_CONFIG}, or set AHA_WAM_TEXT_EMBED_CACHE_DIR." >&2
     exit 1
 fi
 
@@ -86,25 +91,26 @@ mkdir -p "${OUTPUT_ROOT}"
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export RUN_ID
+export AHA_WAM_OUTPUT_ROOT="${OUTPUT_ROOT}"
 export DIFFSYNTH_MODEL_BASE_PATH="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/caijisong/dualWAM/checkpoints}"
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
-export PYTHONPATH="${ROOT_DIR}:${ELAVA_ROOT}:${ELAVA_ROOT}/src:${PYTHONPATH:-}"
+export PYTHONPATH="${ROOT_DIR}:${AHA_WAM_PROJECT_ROOT}:${AHA_WAM_PROJECT_ROOT}/src:${PYTHONPATH:-}"
 
 echo "[aha-wam train] dataset_name=${dataset_name} task_name=${task_name} env_cfg_type=${env_cfg_type}"
-echo "[aha-wam train] elava_root=${ELAVA_ROOT}"
-echo "[aha-wam train] task=${TASK_CONFIG} model=fastwam_chunk_local"
+echo "[aha-wam train] project_root=${AHA_WAM_PROJECT_ROOT}"
+echo "[aha-wam train] task=${TASK_CONFIG} model=ahawam"
 echo "[aha-wam train] dataset=${DATASET_DIR}"
 echo "[aha-wam train] stats=${DATASET_STATS_PATH}"
 echo "[aha-wam train] text_cache=${TEXT_CACHE_DIR}"
 echo "[aha-wam train] output_root=${OUTPUT_ROOT} run_id=${RUN_ID}"
-echo "[aha-wam train] gpus=${gpu_id} nproc_per_node=${num_gpus}"
+echo "[aha-wam train] gpus=${gpu_id} nproc_per_node=${num_gpus} train_seed=${train_seed}"
 
-cd "${ELAVA_ROOT}"
+cd "${AHA_WAM_PROJECT_ROOT}"
 
 train_args=(
     "task=${TASK_CONFIG}"
-    "model=fastwam_chunk_local"
-    "seed=${seed}"
+    "model=ahawam"
+    "seed=${train_seed}"
     "batch_size=${batch_size}"
     "gradient_accumulation_steps=${gradient_accumulation_steps}"
     "num_workers=${num_workers}"

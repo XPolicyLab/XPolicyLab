@@ -1,0 +1,54 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: null
+  - model: null
+  - task: null
+
+
+output_dir: /nvme/caijisong/mnt1/checkpoint/wam_ckpt/ar-async-obs-ar/${hydra:runtime.choices.task}-${now:%Y-%m-%d}_${now:%H-%M-%S}
+
+# dataloading
+batch_size: 2
+num_workers: 4
+
+# scheduler
+lr_scheduler_type: "cosine"
+learning_rate: 1.0e-4
+num_epochs: 1
+max_steps: null
+log_every: 10
+save_every: 100
+eval_every: 50
+eval_num_inference_steps: 10
+
+# training
+gradient_accumulation_steps: 1
+mixed_precision: "bf16" # one of: [no, fp16, bf16]
+seed: 42
+max_grad_norm: 1.0
+weight_decay: 0.0
+freeze_video_dit: false
+resume: null
+init_checkpoint: null
+# Cross-config resume: total batch size (batch_size * num_gpus * grad_accum)
+# of the source run. Steps are converted proportionally when this differs
+# from the current global batch size.
+resume_global_batch_size: null
+
+# wandb
+wandb:
+  enabled: false
+  workspace: null
+  project: ahawam
+  name: train
+  group: null
+  mode: online
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null
