@@ -271,6 +271,9 @@ def decode_image_bit(image_bits):
             cv2.IMREAD_COLOR
         )
 
+    if isinstance(image_bits, np.ndarray) and image_bits.ndim == 1:
+        return _decode(image_bits)
+
     if isinstance(image_bits, (list, tuple, np.ndarray)):
         images = [_decode(x) for x in image_bits]
         return np.array(images)
