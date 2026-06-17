@@ -203,12 +203,7 @@ class Model(ModelTemplate):
         self._batch_obs: dict[int, dict] = {}
         self._batch_instruction: dict[int, str] = {}
         self.allow_dummy_policy = _parse_bool(self.model_cfg.get("allow_dummy_policy", False))
-        self.action_forwards_per_video_replan = int(
-            self.model_cfg.get("action_forwards_per_video_replan", 2)
-        )
-        if self.action_forwards_per_video_replan <= 0:
-            raise ValueError("action_forwards_per_video_replan must be positive.")
-        self._action_forwards_since_video = 0
+        self._chunks_since_video_prefill = 0
 
         self.elava_root = Path(str(self.model_cfg["elava_root"])).expanduser().resolve()
         self.elava_src = self.elava_root / "src"
@@ -235,18 +230,28 @@ class Model(ModelTemplate):
             self.policy = None
             self.action_horizon = int(self.model_cfg.get("action_horizon") or 64)
             self.replan_steps = int(self.model_cfg.get("replan_steps") or 16)
+            self.chunks_per_video_prefill = int(
+                self.model_cfg.get("chunks_per_video_prefill") or max(1, self.action_horizon // self.replan_steps)
+            )
+            self.video_prefill_action_horizon = self._resolve_video_prefill_action_horizon(self.replan_steps)
             print("[aha-wam] allow_dummy_policy=true; real model loading is skipped.")
         else:
             self.policy = self._load_policy()
             self.action_horizon = int(self.model_cfg.get("action_horizon") or self.policy.action_horizon)
             self.replan_steps = int(self.model_cfg.get("replan_steps") or self.policy.model.action_chunk_size)
             self.replan_steps = min(self.replan_steps, int(self.policy.model.action_chunk_size))
+            self.chunks_per_video_prefill = self._resolve_chunks_per_video_prefill()
+            self.video_prefill_action_horizon = self._resolve_video_prefill_action_horizon(
+                int(self.policy.model.action_chunk_size)
+            )
             self._warmup()
         print(
             "[aha-wam] initialized "
             f"ckpt={self.checkpoint_path} stats={self.dataset_stats_path} "
             f"horizon={self.action_horizon} replan_steps={self.replan_steps} "
-            f"action_forwards_per_video_replan={self.action_forwards_per_video_replan}"
+            f"num_chunks={getattr(self.policy, 'num_chunks', self.action_horizon // max(self.replan_steps, 1))} "
+            f"chunks_per_video_prefill={self.chunks_per_video_prefill} "
+            f"video_prefill_horizon={self.video_prefill_action_horizon}"
         )
 
     def _compose_cfg(self):
@@ -303,6 +308,32 @@ class Model(ModelTemplate):
         policy.episode_prefilled = False
         return policy
 
+    def _resolve_chunks_per_video_prefill(self) -> int:
+        configured = self.model_cfg.get("chunks_per_video_prefill")
+        if _is_none_like(configured):
+            chunks = int(self.policy.num_chunks)
+        else:
+            chunks = int(configured)
+        if chunks <= 0:
+            raise ValueError(f"chunks_per_video_prefill must be positive, got {chunks}.")
+        if chunks > int(self.policy.num_chunks):
+            raise ValueError(
+                "chunks_per_video_prefill cannot exceed chunks in action_horizon: "
+                f"{chunks} > {self.policy.num_chunks}."
+            )
+        return chunks
+
+    def _resolve_video_prefill_action_horizon(self, chunk_size: int) -> int:
+        horizon = int(self.chunks_per_video_prefill) * int(chunk_size)
+        if horizon <= 0:
+            raise ValueError(f"video_prefill_action_horizon must be positive, got {horizon}.")
+        if horizon > int(self.action_horizon):
+            raise ValueError(
+                "video_prefill_action_horizon cannot exceed action_horizon: "
+                f"{horizon} > {self.action_horizon}."
+            )
+        return horizon
+
     def _warmup(self) -> None:
         dummy_image = torch.zeros(
             (1, 3, 384, 320),
@@ -323,7 +354,7 @@ class Model(ModelTemplate):
                 self.policy.model.infer_action(
                     prompt=prompt,
                     input_image=dummy_image,
-                    action_horizon=self.policy.action_horizon,
+                    action_horizon=self.video_prefill_action_horizon,
                     negative_prompt=self.policy.negative_prompt,
                     text_cfg_scale=self.policy.text_cfg_scale,
                     num_inference_steps=self.policy.num_inference_steps,
@@ -336,7 +367,7 @@ class Model(ModelTemplate):
                 self.policy.model.infer_action(
                     prompt=None,
                     input_image=dummy_image,
-                    action_horizon=self.policy.action_horizon,
+                    action_horizon=self.video_prefill_action_horizon,
                     chunk_obs_image=dummy_image,
                     chunk_proprio=dummy_proprio,
                     negative_prompt=self.policy.negative_prompt,
@@ -389,7 +420,7 @@ class Model(ModelTemplate):
         self.policy.model.infer_action(
             prompt=prompt,
             input_image=image_tensor,
-            action_horizon=self.policy.action_horizon,
+            action_horizon=self.video_prefill_action_horizon,
             negative_prompt=self.policy.negative_prompt,
             text_cfg_scale=self.policy.text_cfg_scale,
             seed=self.policy.seed,
@@ -398,14 +429,28 @@ class Model(ModelTemplate):
             phase="video",
         )
         self.policy.episode_prefilled = True
+        self._chunks_since_video_prefill = 0
 
-    def _soft_reset_for_new_observation(self) -> None:
-        self.policy.episode_prefilled = False
-        self._action_forwards_since_video = 0
-        if hasattr(self.policy.model, "_inference_state"):
-            self.policy.model._inference_state = None
+    def _model_num_history_frames(self) -> int:
+        getter = getattr(self.policy.model, "_configured_num_history_frames", None)
+        if callable(getter):
+            return int(getter())
+        return int(getattr(self.policy.model, "num_history_frames", 0))
+
+    def _reset_chunk_rollout_state(self) -> None:
         if hasattr(self.policy.model, "reset_history"):
             self.policy.model.reset_history()
+        if hasattr(self.policy.model, "_inference_state"):
+            self.policy.model._inference_state = None
+        self.policy.episode_prefilled = False
+        self._chunks_since_video_prefill = 0
+
+    def _soft_reset_for_new_observation(self) -> None:
+        if self._model_num_history_frames() <= 0:
+            self._reset_chunk_rollout_state()
+            return
+        self.policy.episode_prefilled = False
+        self._chunks_since_video_prefill = 0
 
     def _predict_chunk(self, obs: dict, instruction: str) -> np.ndarray:
         image_tensor = self._build_image_tensor(obs)
@@ -439,12 +484,12 @@ class Model(ModelTemplate):
         state = getattr(self.policy.model, "_inference_state", None)
         next_chunk_index = 0 if state is None else int(state.get("next_chunk_index", 0))
         if (
-            self._action_forwards_since_video >= self.action_forwards_per_video_replan
-            or next_chunk_index >= self.policy.num_chunks
+            next_chunk_index >= self.chunks_per_video_prefill
+            or self._chunks_since_video_prefill >= self.chunks_per_video_prefill
         ):
             self._soft_reset_for_new_observation()
         chunk = self._predict_chunk(obs, instruction)
-        self._action_forwards_since_video += 1
+        self._chunks_since_video_prefill += 1
         chunk = chunk[: self.replan_steps]
         for action in chunk:
             self.pending_actions.append(np.asarray(action, dtype=np.float32))
@@ -483,11 +528,7 @@ class Model(ModelTemplate):
         self.pending_actions.clear()
         self.last_obs = None
         self.last_instruction = self.default_instruction
-        self._action_forwards_since_video = 0
+        self._chunks_since_video_prefill = 0
         if self.allow_dummy_policy:
             return
-        self.policy.episode_prefilled = False
-        if hasattr(self.policy.model, "reset_history"):
-            self.policy.model.reset_history()
-        if hasattr(self.policy.model, "_inference_state"):
-            self.policy.model._inference_state = None
+        self._reset_chunk_rollout_state()
