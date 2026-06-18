@@ -529,3 +529,45 @@ def test_run_debug_trial_executes_episode_loop():
         "eval_env": "debug",
         "policy_name": "demo_policy",
     }
+
+
+def test_handle_start_submits_publish_in_background(tmp_path, monkeypatch):
+    publish_started = threading.Event()
+    publish_release = threading.Event()
+    publish_submit_seen = {"value": False}
+
+    def fake_run_dispatch(*_args, publish_submit=None, **kwargs):
+        assert publish_submit is not None
+        publish_submit_seen["value"] = True
+
+        def work():
+            publish_started.set()
+            publish_release.wait(timeout=2)
+            return {"webhook": {"status_code": 200}}, "completed", None
+
+        publish_submit(work)
+        return 0, {
+            "status": "completed",
+            "policy_results": [{"trial_id": "case-1-r01", "steps": 1}],
+            "trial_runs": [{"trial_id": "case-1-r01"}],
+        }
+
+    monkeypatch.setattr(
+        "robodojo.servers.env_client_server.run_dispatch",
+        fake_run_dispatch,
+    )
+
+    with _running_server(
+        run_trial=lambda deploy_cfg: _completed_result(deploy_cfg, steps=1),
+        tmp_path=tmp_path,
+    ) as (server, state):
+        port = server.server_address[1]
+        status, body = _start_trial(port)
+
+        assert status == 200
+        assert body["status"] == "completed"
+        assert publish_submit_seen["value"]
+        assert publish_started.wait(timeout=2)
+        publish_release.set()
+        state.shutdown_publish()
+

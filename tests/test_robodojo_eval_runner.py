@@ -134,12 +134,14 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fake_publish_artifacts(*_args, **kwargs):
+    def fake_publish_trial_recording(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
         captured["finish_url"] = kwargs.get("finish_url")
-        return {"webhook": {"finish_url": kwargs.get("finish_url"), "status_code": 200}}
+        return {"webhook": {"finish_url": kwargs.get("finish_url"), "status_code": 200}}, "completed", None
 
-    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline.publish_trial_recording", fake_publish_trial_recording
+    )
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -158,11 +160,6 @@ def test_run_dispatch_includes_policy_error_in_trial_webhook(
     assert summary["error"] == {"code": "internal", "message": "policy down"}
     assert captured["error"] == {"code": "internal", "message": "policy down"}
     assert str(captured["finish_url"]).endswith("/trials/1/finish/")
-    manifest = json.loads(
-        ((tmp_path / "artifacts") / "manifest.json").read_text(encoding="utf-8")
-    )
-    assert manifest["status"] == "failed"
-    assert manifest["error_summary"] == "policy down"
 
 
 def test_normalize_execution_error_maps_ws_error():
@@ -195,11 +192,13 @@ def test_run_dispatch_maps_trial_runner_error_to_webhook(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fake_publish_artifacts(*_args, **kwargs):
+    def fake_publish_trial_recording(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
-        return {"webhook": {"status_code": 200}}
+        return {"webhook": {"status_code": 200}}, "completed", None
 
-    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline.publish_trial_recording", fake_publish_trial_recording
+    )
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -231,11 +230,13 @@ def test_run_dispatch_maps_ws_error_to_failed_webhook(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fake_publish_artifacts(*_args, **kwargs):
+    def fake_publish_trial_recording(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
-        return {"webhook": {"status_code": 200}}
+        return {"webhook": {"status_code": 200}}, "completed", None
 
-    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline.publish_trial_recording", fake_publish_trial_recording
+    )
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -264,11 +265,13 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
 
-    def fake_publish_artifacts(*_args, **kwargs):
+    def fake_publish_trial_recording(*_args, **kwargs):
         captured["error"] = kwargs.get("error")
-        return {"webhook": {"status_code": 200}}
+        return {"webhook": {"status_code": 200}}, "completed", None
 
-    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline.publish_trial_recording", fake_publish_trial_recording
+    )
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -294,25 +297,20 @@ def test_run_dispatch_maps_not_implemented_error_to_failed_webhook(
 def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ):
-    import robodojo.publish.pipeline as publish_pipeline
-
     dispatch = DispatchPayload.model_validate(platform_dispatch())
     captured: dict[str, object] = {}
-    write_calls = {"count": 0}
-    original_write_artifacts = publish_pipeline.write_artifacts
+    publish_calls = {"count": 0}
 
-    def flaky_write_artifacts(*args, **kwargs):
-        write_calls["count"] += 1
-        if write_calls["count"] == 1:
-            raise RuntimeError("artifact write crashed")
-        return original_write_artifacts(*args, **kwargs)
-
-    def fake_publish_artifacts(*_args, **kwargs):
+    def flaky_publish(*_args, **kwargs):
+        publish_calls["count"] += 1
+        if publish_calls["count"] == 1:
+            raise RuntimeError("publish crashed")
         captured["error"] = kwargs.get("error")
-        return {"webhook": {"status_code": 200}}
+        return {"webhook": {"status_code": 200}}, "completed", None
 
-    monkeypatch.setattr("robodojo.publish.pipeline.write_artifacts", flaky_write_artifacts)
-    monkeypatch.setattr("robodojo.publish.pipeline.publish_artifacts", fake_publish_artifacts)
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline.publish_trial_recording", flaky_publish
+    )
 
     exit_code, summary = run_dispatch(
         dispatch,
@@ -327,8 +325,9 @@ def test_run_dispatch_fail_dispatch_still_notifies_on_unexpected_crash(
 
     assert exit_code == 1
     assert summary["status"] == "failed"
-    assert summary["error"] == {"code": "internal", "message": "artifact write crashed"}
+    assert summary["error"] == {"code": "internal", "message": "publish crashed"}
     assert captured["error"] == summary["error"]
+    assert publish_calls["count"] == 2
 
 
 def test_run_dispatch_summary_serializes_policy_result():
@@ -347,3 +346,37 @@ def test_run_dispatch_summary_serializes_policy_result():
     assert exit_code == 0
     json.dumps(summary)
     assert summary["policy_results"][0]["steps"] == 3
+
+
+def test_run_dispatch_submits_publish_in_background(tmp_path, monkeypatch):
+    dispatch = DispatchPayload.model_validate(platform_dispatch())
+    submitted: list[object] = []
+
+    def fake_publish_trial_recording(*_args, **_kwargs):
+        return {"webhook": {"status_code": 200}}, "completed", None
+
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline.publish_trial_recording",
+        fake_publish_trial_recording,
+    )
+
+    def capture_submit(work):
+        submitted.append(work)
+        return work()
+
+    exit_code, summary = run_dispatch(
+        dispatch,
+        evaluation_id="eval-1",
+        artifact_dir=tmp_path / "artifacts",
+        upload_s3=False,
+        notify_webhook=True,
+        run_policy_trials=True,
+        trial_index=1,
+        trial_runner=_fake_trial_runner(),
+        publish_submit=capture_submit,
+    )
+
+    assert exit_code == 0
+    assert summary["status"] == "completed"
+    assert summary["published"] == {"async": True}
+    assert len(submitted) == 1
