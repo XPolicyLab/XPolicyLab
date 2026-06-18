@@ -26,6 +26,7 @@ DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS = (
     "eval_episode_num",
     "eval_batch",
     "action_type",
+    "base_cfg",
 )
 
 _DEPLOY_CFG_CASE_META_KEYS = (
@@ -63,6 +64,7 @@ class EnvClientBaselineConfig(_StrictSchema):
     eval_env: str = "debug"
     root_dir: str | None = None
     action_type: Literal["joint", "ee"] | None = None
+    base_cfg: str | None = None
 
 
 class TrialRunRequest(_StrictSchema):
@@ -108,6 +110,7 @@ def _baseline_deploy_cfg(
         "host",
         "port",
         "action_type",
+        "base_cfg",
     ):
         if cfg.get(key) is None:
             cfg.pop(key, None)
