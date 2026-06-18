@@ -6,11 +6,13 @@ import argparse
 import json
 import os
 import sys
+import traceback
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, field
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import quote, urlparse
 
 from pydantic import ValidationError
@@ -56,6 +58,27 @@ class EnvClientServerState:
     trial_control: TrialControlRegistry = field(default_factory=TrialControlRegistry)
     preview: Any | None = None
     persistent_runtime: Any | None = None
+    # Single-worker pool so trial recordings publish (encode + S3 upload +
+    # finish webhook) one at a time off the /start thread, preserving order
+    # while letting /start return as soon as the trial loop ends.
+    _publish_executor: ThreadPoolExecutor = field(
+        default_factory=lambda: ThreadPoolExecutor(
+            max_workers=1,
+            thread_name_prefix="publish",
+        ),
+        repr=False,
+        compare=False,
+    )
+
+    def submit_publish(self, work: Callable[[], Any]) -> Future[Any]:
+        """Queue trial publishing on the background worker (fire-and-forget)."""
+        future = self._publish_executor.submit(work)
+        future.add_done_callback(_log_publish_failure)
+        return future
+
+    def shutdown_publish(self) -> None:
+        """Block until every queued publish task has drained."""
+        self._publish_executor.shutdown(wait=True)
 
     def pause_preview_for_trial(self) -> None:
         if self.preview is not None:
@@ -83,6 +106,22 @@ class EnvClientServerState:
             / quote(evaluation_id, safe="")
             / "trials"
             / str(trial_index)
+        )
+
+
+def _log_publish_failure(future: Future[Any]) -> None:
+    """Surface unexpected background publish crashes to stderr.
+
+    ``publish_trial_recording`` already converts expected upload/webhook errors
+    into a ``failed`` finish webhook, so this only fires on truly unexpected
+    exceptions that would otherwise be swallowed by the worker thread.
+    """
+    exc = future.exception()
+    if exc is not None:
+        print(
+            "background trial publish failed: "
+            + "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)),
+            file=sys.stderr,
         )
 
 
@@ -275,6 +314,7 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                     run_policy_trials=state.config.run_policy_trials,
                     webhook_secret=state.config.webhook_secret,
                     trial_runner=trial_runner,
+                    publish_submit=state.submit_publish,
                 )
             except Exception as exc:
                 body = TrialRunResponse(
@@ -606,6 +646,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     finally:
         server.server_close()
+        # Drain queued trial publishes so their finish webhooks land before exit.
+        state.shutdown_publish()
         if state.persistent_runtime is not None:
             # A second Ctrl+C during pipeline.stop() leaves the Orbbec
             # firmware half-stopped (stuck at STARTING, no frames until a
