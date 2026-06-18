@@ -218,6 +218,38 @@ def test_build_django_finish_payload_includes_error():
     assert payload["error"] == {"code": "timeout", "message": "infer timed out"}
 
 
+def test_build_django_finish_payload_publish_phase_done():
+    payload = build_django_finish_payload(
+        phase="publish",
+        status="done",
+        artifact=ArtifactPayload(bucket="b", prefix="evaluations/e1/"),
+        metrics={},
+        video_key="evaluations/e1/trial_1.mp4",
+        hdf5_key="evaluations/e1/trial_1.hdf5",
+    )
+    assert payload["phase"] == "publish"
+    assert payload["status"] == "done"
+    assert payload["artifact"] == {
+        "publish_status": "done",
+        "video_s3_key": "evaluations/e1/trial_1.mp4",
+        "hdf5_s3_key": "evaluations/e1/trial_1.hdf5",
+    }
+
+
+def test_build_django_finish_payload_publish_phase_failed_omits_keys():
+    payload = build_django_finish_payload(
+        phase="publish",
+        status="failed",
+        artifact=ArtifactPayload(bucket="b", prefix="evaluations/e1/"),
+        metrics={},
+        error={"code": "upload_failed", "message": "tos unreachable"},
+    )
+    assert payload["phase"] == "publish"
+    assert payload["status"] == "failed"
+    assert payload["artifact"] == {"publish_status": "failed"}
+    assert payload["error"] == {"code": "upload_failed", "message": "tos unreachable"}
+
+
 def test_notify_finish_webhook_uses_django_body_without_signature():
     captured: dict[str, object] = {}
 

@@ -90,7 +90,32 @@ def build_django_finish_payload(
     error: dict[str, Any] | None = None,
     video_key: str | None = None,
     hdf5_key: str | None = None,
+    phase: str = "execution",
 ) -> dict[str, Any]:
+    finish_status = (
+        "done" if status in {"planned", "done", "success", "completed"} else "failed"
+    )
+
+    if phase == "publish":
+        # The robot trial outcome was already persisted from the /start response.
+        # This callback only patches the trial artifact with the TOS delivery keys
+        # actually uploaded; missing keys mean that upload did not succeed.
+        artifact_payload: dict[str, Any] = {
+            "publish_status": "done" if finish_status == "done" else "failed",
+        }
+        if video_key:
+            artifact_payload["video_s3_key"] = video_key
+        if hdf5_key:
+            artifact_payload["hdf5_s3_key"] = hdf5_key
+        payload: dict[str, Any] = {
+            "phase": "publish",
+            "status": finish_status,
+            "artifact": artifact_payload,
+        }
+        if error is not None:
+            payload["error"] = error
+        return payload
+
     prefix = artifact.prefix
     if prefix and not prefix.endswith("/"):
         prefix = f"{prefix}/"
@@ -108,10 +133,7 @@ def build_django_finish_payload(
     # and .../trial_{index}.hdf5. The bookkeeping keys stay under the per-trial prefix.
     video_s3_key = video_key or f"{prefix}videos/{trial_id or 'main'}.mp4"
 
-    finish_status = (
-        "done" if status in {"planned", "done", "success", "completed"} else "failed"
-    )
-    artifact_payload: dict[str, Any] = {
+    artifact_payload = {
         "bucket": artifact.bucket,
         "prefix": prefix,
         "video_s3_key": video_s3_key,
@@ -121,7 +143,8 @@ def build_django_finish_payload(
     }
     if hdf5_key:
         artifact_payload["hdf5_s3_key"] = hdf5_key
-    payload: dict[str, Any] = {
+    payload = {
+        "phase": "execution",
         "status": finish_status,
         "result": "success" if finish_status == "done" else "failed",
         "score_inputs": {
@@ -238,6 +261,7 @@ def notify_finish_webhook(
     opener: Callable[..., Any] | None = None,
     video_key: str | None = None,
     hdf5_key: str | None = None,
+    phase: str = "execution",
 ) -> WebhookResult:
     payload = build_django_finish_payload(
         status=status,
@@ -246,6 +270,7 @@ def notify_finish_webhook(
         error=error,
         video_key=video_key,
         hdf5_key=hdf5_key,
+        phase=phase,
     )
     return post_finish_webhook(
         finish_url,

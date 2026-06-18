@@ -8,8 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from robodojo.dispatch.errors import normalize_execution_error
-from robodojo.dispatch.status import STATUS_COMPLETED, STATUS_DONE, STATUS_FAILED
-from robodojo.publish.s3 import UploadFileFn, upload_file_to_key
+from robodojo.dispatch.status import STATUS_COMPLETED, STATUS_FAILED
+from robodojo.publish.s3 import (
+    UploadFileFn,
+    resolve_artifact_payload,
+    upload_file_to_key,
+)
 from robodojo.publish.webhook import WebhookDeliveryError, notify_finish_webhook
 from robodojo.schemas import DispatchPayload
 
@@ -35,34 +39,32 @@ def _publish_exception_types() -> tuple[type[BaseException], ...]:
 
 PUBLISH_ERRORS = _publish_exception_types()
 
+_TRIAL_MERGED_CAMERA_KEYS = ("cam_head", "cam_left_wrist", "cam_right_wrist")
+_TRIAL_VIDEO_FPS = 25
+
 
 def _encode_trial_video(hdf5_path: str) -> Path | None:
-    """Encode the recorded HDF5 into a temporary mp4 sibling and return its path.
+    """Encode a three-view merged mp4 from the trial HDF5 (head + both wrists).
 
-    Best-effort: any failure (missing robot deps, bad camera key, corrupt HDF5)
-    returns None so the trial still publishes its HDF5 without a video, and the
-    caller reports no ``video_s3_key``.
+    Runs inside the background publish worker together with S3 upload and the
+    finish webhook. Returns None when encoding fails so HDF5 upload can still
+    proceed without a ``video_s3_key``.
     """
     if not hdf5_path or not os.path.isfile(hdf5_path):
         return None
     try:
-        from robot.utils.base.data_handler import vis_video
+        from robot.utils.base.data_handler import vis_merged_camera_video
 
-        camera_key = os.environ.get("ROBODOJO_VIDEO_CAMERA_KEY", "cam_head")
-        fps = int(os.environ.get("ROBODOJO_VIDEO_FPS", "25"))
         video_out = Path(hdf5_path).with_suffix(".mp4")
-        vis_video(hdf5_path, camera_key, str(video_out), fps=fps)
+        vis_merged_camera_video(
+            hdf5_path,
+            list(_TRIAL_MERGED_CAMERA_KEYS),
+            str(video_out),
+            fps=_TRIAL_VIDEO_FPS,
+        )
         return video_out if video_out.is_file() else None
     except Exception:  # noqa: BLE001 - never let encoding break publishing
         return None
-
-
-def _webhook_status(run_status: str) -> str:
-    if run_status in {STATUS_DONE, STATUS_COMPLETED}:
-        return STATUS_COMPLETED
-    if run_status == STATUS_FAILED:
-        return STATUS_FAILED
-    return run_status
 
 
 def publish_trial_recording(
@@ -81,73 +83,68 @@ def publish_trial_recording(
     webhook_secret: str | None = None,
     webhook_opener: Any | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, Any] | None]:
-    """Encode the trial mp4, upload mp4 + hdf5 as flat keys, then fire the finish webhook.
+    """Encode a three-view trial mp4, upload mp4 + hdf5, then fire the publish webhook.
 
-    The mp4 is transcoded from ``hdf5_path`` into a temporary sibling file (no
-    artifact directory / metrics.json indirection) and uploaded to ``video_key``;
-    the HDF5 is uploaded to ``hdf5_key``. Only a successfully uploaded mp4 reports
-    ``video_s3_key`` back to Django, so scoring never receives a key pointing at a
-    missing object. Any upload/webhook failure still delivers a ``failed`` webhook
-    so the trial leaves RUNNING.
+    The robot trial outcome is already persisted synchronously from the ``/start``
+    response, so this runs entirely in the background publish worker: it synthesizes
+    the merged mp4 from ``hdf5_path`` (head + both wrists), uploads it plus the HDF5
+    (with retry), then delivers a ``phase=publish`` webhook that only patches the
+    trial artifact. A failed upload reports ``publish_status=failed`` without
+    failing the trial or the parent session, so the collector can keep evaluating.
     """
+    artifact = resolve_artifact_payload(dispatch.artifact)
+    bucket = artifact.bucket.strip() if artifact.bucket else ""
+    endpoint_url = str(getattr(artifact, "endpoint_url", "") or "").strip() or None
+    region_name = str(getattr(artifact, "region", "") or "").strip() or None
+
     published: dict[str, Any] = {}
     uploaded_video_key: str | None = None
     uploaded_hdf5_key: str | None = None
+    publish_error: dict[str, Any] | None = None
     video_path: Path | None = None
     try:
         if upload_s3:
             s3_published: dict[str, Any] = {}
-            video_path = _encode_trial_video(hdf5_path) if hdf5_path else None
-            if video_path is not None:
-                upload_file_to_key(
-                    video_path,
-                    bucket=dispatch.artifact.bucket,
-                    key=video_key,
-                    s3_client=s3_client,
-                    upload_file=upload_file,
-                )
-                uploaded_video_key = video_key
-                s3_published["video_s3_key"] = video_key
-            if hdf5_path and os.path.isfile(hdf5_path):
-                upload_file_to_key(
-                    Path(hdf5_path),
-                    bucket=dispatch.artifact.bucket,
-                    key=hdf5_key,
-                    s3_client=s3_client,
-                    upload_file=upload_file,
-                )
-                uploaded_hdf5_key = hdf5_key
-                s3_published["hdf5_s3_key"] = hdf5_key
+            try:
+                video_path = _encode_trial_video(hdf5_path) if hdf5_path else None
+                if video_path is not None:
+                    upload_file_to_key(
+                        video_path,
+                        bucket=bucket,
+                        key=video_key,
+                        s3_client=s3_client,
+                        upload_file=upload_file,
+                        endpoint_url=endpoint_url,
+                        region_name=region_name,
+                    )
+                    uploaded_video_key = video_key
+                    s3_published["video_s3_key"] = video_key
+                if hdf5_path and os.path.isfile(hdf5_path):
+                    upload_file_to_key(
+                        Path(hdf5_path),
+                        bucket=bucket,
+                        key=hdf5_key,
+                        s3_client=s3_client,
+                        upload_file=upload_file,
+                        endpoint_url=endpoint_url,
+                        region_name=region_name,
+                    )
+                    uploaded_hdf5_key = hdf5_key
+                    s3_published["hdf5_s3_key"] = hdf5_key
+            except PUBLISH_ERRORS as exc:
+                publish_error = normalize_execution_error(exc)
+                s3_published["error"] = publish_error["message"]
             published["s3"] = s3_published
 
         if notify_webhook:
-            webhook_result = notify_finish_webhook(
-                status=_webhook_status(run_status),
-                finish_url=finish_url,
-                metrics={},
-                artifact=dispatch.artifact,
-                hmac_secret_ref=dispatch.hmac_secret_ref,
-                error=error,
-                secret=webhook_secret,
-                opener=webhook_opener,
-                video_key=uploaded_video_key,
-                hdf5_key=uploaded_hdf5_key,
-            )
-            published["webhook"] = {
-                "finish_url": webhook_result.finish_url,
-                "status_code": webhook_result.status_code,
-            }
-        return published, STATUS_COMPLETED, error
-    except PUBLISH_ERRORS as exc:
-        publish_error = normalize_execution_error(exc)
-        failure_published: dict[str, Any] = {"error": publish_error["message"]}
-        if notify_webhook:
+            publish_status = STATUS_FAILED if publish_error else STATUS_COMPLETED
             try:
                 webhook_result = notify_finish_webhook(
-                    status=STATUS_FAILED,
+                    phase="publish",
+                    status=publish_status,
                     finish_url=finish_url,
                     metrics={},
-                    artifact=dispatch.artifact,
+                    artifact=artifact,
                     hmac_secret_ref=dispatch.hmac_secret_ref,
                     error=publish_error,
                     secret=webhook_secret,
@@ -155,13 +152,18 @@ def publish_trial_recording(
                     video_key=uploaded_video_key,
                     hdf5_key=uploaded_hdf5_key,
                 )
-                failure_published["webhook"] = {
+                published["webhook"] = {
                     "finish_url": webhook_result.finish_url,
                     "status_code": webhook_result.status_code,
                 }
             except PUBLISH_ERRORS as webhook_exc:
-                failure_published["webhook_error"] = str(webhook_exc)
-        return failure_published, STATUS_FAILED, publish_error
+                published["webhook_error"] = str(webhook_exc)
+
+        # The returned status mirrors the robot trial outcome, not the upload:
+        # a failed upload never turns a successful trial into a failed one.
+        if run_status == STATUS_FAILED:
+            return published, STATUS_FAILED, error
+        return published, STATUS_COMPLETED, error
     finally:
         if video_path is not None and video_path.is_file():
             try:
