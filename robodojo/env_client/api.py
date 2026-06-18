@@ -114,6 +114,18 @@ def _baseline_deploy_cfg(
     return cfg
 
 
+def _normalize_case_meta_action_type(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        stripped = value.strip()
+        if not stripped:
+            return None
+        return stripped.lower()
+    normalized = str(value).strip().lower()
+    return normalized or None
+
+
 def trial_request_to_deploy_cfg(
     request: TrialRunRequest,
     baseline: EnvClientBaselineConfig | Mapping[str, Any],
@@ -138,6 +150,8 @@ def trial_request_to_deploy_cfg(
     case_meta = request.case_meta
     for key in _DEPLOY_CFG_CASE_META_KEYS:
         value = case_meta.get(key)
+        if key == "action_type":
+            value = _normalize_case_meta_action_type(value)
         if value is not None and value != "":
             deploy_cfg[key] = value
 
@@ -192,7 +206,7 @@ def dispatch_trial_to_request(
         case_meta["eval_batch"] = True
     if config.repeat_index is not None:
         case_meta["repeat_index"] = config.repeat_index
-    action_type = config.case_meta.get("action_type")
+    action_type = _normalize_case_meta_action_type(config.case_meta.get("action_type"))
     if action_type in ("joint", "ee"):
         case_meta["action_type"] = action_type
 

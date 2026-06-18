@@ -312,8 +312,26 @@ def _baseline_eval_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) ->
 
 
 def _prepare_real_deploy_cfg(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
+    if deploy_cfg.get("eval_env") == "real":
+        _apply_validated_action_type(deploy_cfg)
     _validate_real_deploy_cfg(deploy_cfg)
     return deploy_cfg
+
+
+def _apply_validated_action_type(deploy_cfg: dict[str, Any]) -> None:
+    from task_env.real_env_client import validate_deploy_cfg
+
+    try:
+        deploy_cfg["action_type"] = validate_deploy_cfg(deploy_cfg)
+    except ValueError as exc:
+        raise TrialRunnerError(
+            str(exc),
+            error={
+                "code": "invalid_deploy_cfg",
+                "message": str(exc),
+                "field": "action_type",
+            },
+        ) from exc
 
 
 def _validate_real_deploy_cfg(deploy_cfg: Mapping[str, Any]) -> None:
