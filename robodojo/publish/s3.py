@@ -7,7 +7,43 @@ import os
 from pathlib import Path
 from typing import Any, Callable
 
+from robodojo.schemas import ArtifactPayload
+
 UploadFileFn = Callable[[str, Path, str | None], None]
+
+_ARTIFACT_BUCKET_ENV_KEYS = (
+    "TOS_BUCKET",
+    "S3_BUCKET",
+    "AWS_S3_BUCKET",
+)
+_ARTIFACT_PREFIX_ENV_KEYS = (
+    "TOS_PREFIX",
+    "S3_PREFIX",
+    "ROBODOJO_ARTIFACT_PREFIX",
+)
+
+
+def _env_first(keys: tuple[str, ...]) -> str:
+    for key in keys:
+        value = os.environ.get(key, "").strip()
+        if value:
+            return value
+    return ""
+
+
+def resolve_artifact_payload(artifact: ArtifactPayload) -> ArtifactPayload:
+    """Fill missing bucket/prefix from eval-station env vars when dispatch omits them."""
+    bucket = artifact.bucket.strip() if artifact.bucket else ""
+    if not bucket:
+        bucket = _env_first(_ARTIFACT_BUCKET_ENV_KEYS)
+
+    prefix = artifact.prefix.strip() if artifact.prefix else ""
+    if not prefix:
+        prefix = _env_first(_ARTIFACT_PREFIX_ENV_KEYS)
+
+    if bucket == artifact.bucket and prefix == artifact.prefix:
+        return artifact
+    return artifact.model_copy(update={"bucket": bucket, "prefix": prefix})
 
 
 def normalize_s3_prefix(prefix: str) -> str:
