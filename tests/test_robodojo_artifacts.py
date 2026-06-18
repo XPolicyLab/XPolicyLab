@@ -55,6 +55,34 @@ def test_artifact_writer_creates_layout(tmp_path):
     assert paths["events"].endswith("events.jsonl")
 
 
+def test_write_artifacts_skips_video_when_stage_recordings_disabled(tmp_path, monkeypatch):
+    dispatch = _dispatch_payload()
+    trial_run = build_trial_runs(dispatch, evaluation_id="eval-1")[0]
+    artifact_dir = tmp_path / "artifacts"
+    called = {"stage": False}
+
+    def fail_if_called(*args, **kwargs):
+        called["stage"] = True
+        raise AssertionError("_stage_trial_recording should not run")
+
+    monkeypatch.setattr(
+        "robodojo.publish.pipeline._stage_trial_recording", fail_if_called
+    )
+
+    write_artifacts(
+        dispatch,
+        trial_run,
+        artifact_dir,
+        evaluation_id="eval-1",
+        stage_recordings=False,
+    )
+
+    trial_id = str(trial_run["trial_id"])
+    assert not (artifact_dir / f"videos/{trial_id}.mp4").exists()
+    assert called["stage"] is False
+    assert (artifact_dir / "manifest.json").exists()
+
+
 def test_run_dispatch_writes_artifacts_without_policy_trials(tmp_path):
     dispatch = _dispatch_payload()
     artifact_dir = tmp_path / "out"
@@ -73,6 +101,8 @@ def test_run_dispatch_writes_artifacts_without_policy_trials(tmp_path):
     assert summary["planned_trial_runs"] == 1
     assert summary["artifacts"]["artifact_dir"] == str(artifact_dir)
     assert (artifact_dir / "manifest.json").exists()
+    trial_id = str(build_trial_runs(dispatch, evaluation_id="eval-1")[0]["trial_id"])
+    assert not (artifact_dir / f"videos/{trial_id}.mp4").exists()
 
 
 def test_record_trial_lifecycle_updates_metrics(tmp_path):

@@ -126,6 +126,7 @@ def write_artifacts(
     run_status: str = STATUS_PLANNED,
     policy_result: dict[str, Any] | None = None,
     error_summary: str | None = None,
+    stage_recordings: bool = True,
 ) -> dict[str, str]:
     writer = ArtifactWriter(
         artifact_dir,
@@ -150,10 +151,13 @@ def write_artifacts(
                     "action_count": action_count,
                 },
             )
-        hdf5_path = (policy_result or {}).get("hdf5_path") if policy_result else None
-        video_written = _stage_trial_recording(writer, artifact_dir, trial_id, hdf5_path)
-        if not video_written:
-            writer.write_video_placeholder(trial_id)
+        if stage_recordings:
+            hdf5_path = (policy_result or {}).get("hdf5_path") if policy_result else None
+            video_written = _stage_trial_recording(
+                writer, artifact_dir, trial_id, hdf5_path
+            )
+            if not video_written:
+                writer.write_video_placeholder(trial_id)
         return writer.finalize(status=run_status, error_summary=error_summary)
     finally:
         writer.close()

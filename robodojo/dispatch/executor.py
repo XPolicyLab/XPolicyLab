@@ -141,6 +141,7 @@ def _fail_dispatch(
             evaluation_id=evaluation_id,
             run_status=STATUS_FAILED,
             error_summary=error["message"],
+            stage_recordings=upload_s3,
         )
         if upload_s3 or notify_webhook:
             published, publish_status, publish_error = publish_pipeline.publish_dispatch_artifacts(
@@ -214,6 +215,7 @@ def _execute_dispatch(
             run_status=run_status,
             policy_result=policy_result,
             error_summary=error["message"] if error else None,
+            stage_recordings=upload_s3,
         )
         if upload_s3 or notify_webhook:
             published, publish_status, publish_error = publish_pipeline.publish_dispatch_artifacts(
