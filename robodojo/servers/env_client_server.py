@@ -6,7 +6,6 @@ import argparse
 import json
 import os
 import sys
-import threading
 from dataclasses import dataclass, field
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -56,6 +55,7 @@ class EnvClientServerState:
     dispatches: dict[str, DispatchPayload] = field(default_factory=dict)
     trial_control: TrialControlRegistry = field(default_factory=TrialControlRegistry)
     preview: Any | None = None
+    persistent_runtime: Any | None = None
 
     def pause_preview_for_trial(self) -> None:
         if self.preview is not None:
@@ -264,7 +264,6 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
 
             artifact_dir = state.artifact_dir(evaluation_id, trial_index)
             trial_runner = state.trial_runner_with_stop(evaluation_id, trial_index)
-            state.pause_preview_for_trial()
             try:
                 exit_code, summary = run_dispatch(
                     dispatch,
@@ -291,7 +290,6 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 return
             finally:
                 state.trial_control.clear(evaluation_id, trial_index)
-                state.resume_preview_if_idle()
 
             state.last_trial_id = _trial_id_from_summary(summary, trial_index)
             self._write_json(
@@ -319,14 +317,17 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 return
 
             try:
-                reset_kwargs: dict[str, object] = {}
-                if state.dispatches:
-                    evaluation_id, dispatch = next(iter(state.dispatches.items()))
-                    reset_kwargs = {
-                        "dispatch": dispatch,
-                        "evaluation_id": evaluation_id,
-                    }
-                reset_idle_env(state.baseline, **reset_kwargs)
+                if state.persistent_runtime is not None:
+                    state.persistent_runtime.reset_idle()
+                else:
+                    reset_kwargs: dict[str, object] = {}
+                    if state.dispatches:
+                        evaluation_id, dispatch = next(iter(state.dispatches.items()))
+                        reset_kwargs = {
+                            "dispatch": dispatch,
+                            "evaluation_id": evaluation_id,
+                        }
+                    reset_idle_env(state.baseline, **reset_kwargs)
             except TrialRunnerError as exc:
                 error = exc.error or {
                     "code": "reset_failed",
@@ -473,6 +474,12 @@ def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
         help="X-Robot-Pipeline root directory (required when eval_env=real)",
     )
     parser.add_argument(
+        "--base-cfg",
+        dest="base_cfg",
+        type=str,
+        help="Fixed robot base config for this eval station (config/{name}.yml)",
+    )
+    parser.add_argument(
         "--deploy-yml",
         dest="deploy_yml",
         type=str,
@@ -500,6 +507,7 @@ def baseline_from_args(args: argparse.Namespace) -> EnvClientBaselineConfig:
         eval_env=args.eval_env,
         root_dir=args.root_dir,
         action_type=args.action_type,
+        base_cfg=args.base_cfg,
     )
 
 
@@ -511,41 +519,10 @@ def _validate_startup_args(
         parser.error("--no-policy-trials requires --no-webhook")
     if args.eval_env == "real" and not args.root_dir:
         parser.error("--root-dir is required when --eval_env=real")
-    if getattr(args, "preview_base_cfg", None) and not args.root_dir:
-        parser.error("--preview-base-cfg requires --root-dir")
+    if args.eval_env == "real" and not args.base_cfg:
+        parser.error("--base-cfg is required when --eval_env=real")
     # action_type is resolved per trial (dispatch payload > startup arg) and
     # validated at trial start for real envs.
-
-
-def _resolve_preview_cfg_path(root_dir: str, preview_base_cfg: str) -> Path:
-    candidate = Path(preview_base_cfg)
-    if candidate.suffix in (".yml", ".yaml") or candidate.is_absolute():
-        return candidate
-    return Path(root_dir) / "config" / f"{preview_base_cfg}.yml"
-
-
-def _build_preview_manager(args: argparse.Namespace) -> Any | None:
-    """Create the Orbbec preview manager (camera ownership stays daemon-side)."""
-    if not args.preview_base_cfg:
-        return None
-
-    cfg_path = _resolve_preview_cfg_path(args.root_dir, args.preview_base_cfg)
-    if not cfg_path.is_file():
-        print(f"[env_client] preview base cfg not found: {cfg_path}", file=sys.stderr)
-        return None
-
-    _ensure_pipeline_paths(str(args.root_dir))
-    try:
-        from robot.sensor.orbbec_preview import OrbbecPreviewManager
-    except Exception as exc:
-        print(f"[env_client] camera preview unavailable: {exc}", file=sys.stderr)
-        return None
-
-    try:
-        return OrbbecPreviewManager(str(cfg_path))
-    except Exception as exc:
-        print(f"[env_client] camera preview disabled: {exc}", file=sys.stderr)
-        return None
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -587,16 +564,6 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Only materialize planned artifacts; do not run trials",
     )
-    parser.add_argument(
-        "--preview-base-cfg",
-        dest="preview_base_cfg",
-        type=str,
-        default=None,
-        help=(
-            "Robot base config (name under <root>/config or a yml path) used to "
-            "serve /v1/preview camera streams; omit to disable camera preview"
-        ),
-    )
     add_debug_env_client_arguments(parser)
     args = parser.parse_args(argv)
     _validate_startup_args(parser, args)
@@ -612,15 +579,19 @@ def main(argv: list[str] | None = None) -> int:
         ),
         deploy_yml=args.deploy_yml,
     )
-    state.preview = _build_preview_manager(args)
-    if state.preview is not None:
-        threading.Thread(
-            target=state.preview.start,
-            name="orbbec-preview-boot",
-            daemon=True,
-        ).start()
+    if args.eval_env == "real":
+        _ensure_pipeline_paths(str(args.root_dir))
+        from task_env.real_env_client import PersistentRealRobotRuntime
+
+        state.persistent_runtime = PersistentRealRobotRuntime(
+            root_dir=str(args.root_dir),
+            base_cfg_name=str(args.base_cfg),
+        )
+        state.persistent_runtime.start()
+        state.preview = state.persistent_runtime
+        state.run_trial = state.persistent_runtime.run_trial
         print(
-            f"camera preview enabled (base cfg: {args.preview_base_cfg})",
+            f"persistent robot runtime enabled (base cfg: {args.base_cfg})",
             file=sys.stderr,
         )
 
@@ -635,7 +606,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     finally:
         server.server_close()
-        if state.preview is not None:
+        if state.persistent_runtime is not None:
             # A second Ctrl+C during pipeline.stop() leaves the Orbbec
             # firmware half-stopped (stuck at STARTING, no frames until a
             # device reboot). Ignore SIGINT until cameras are released.
@@ -643,7 +614,7 @@ def main(argv: list[str] | None = None) -> int:
 
             previous = signal.signal(signal.SIGINT, signal.SIG_IGN)
             try:
-                state.preview.shutdown()
+                state.persistent_runtime.cleanup()
             finally:
                 signal.signal(signal.SIGINT, previous)
     return 0
