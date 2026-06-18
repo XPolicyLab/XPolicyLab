@@ -27,7 +27,7 @@ device: cuda
 mixed_precision: bf16
 action_horizon: 64
 replan_steps: 16
-action_forwards_per_video_replan: 2
+chunks_per_video_prefill: 2
 num_inference_steps: 10
 sigma_shift: null
 text_cfg_scale: 1.0

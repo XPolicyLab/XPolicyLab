@@ -90,7 +90,12 @@ class LossLoggerCallback(TrainerCallback):
         if not state.is_world_process_zero or logs is None:
             return
         entry = {"step": state.global_step}
-        for key in ("loss", "dynamics_loss_avg", "action_loss_avg", "learning_rate"):
+        # Bug 4 fix: also log per-modality losses (arm/ee/aux) so we can diagnose
+        # gripper underfitting in real time. compute_loss auto-emits any "*_loss"
+        # key from the model's output dict as "*_loss_avg".
+        for key in ("loss", "dynamics_loss_avg", "action_loss_avg",
+                    "arm_loss_avg", "ee_loss_avg", "aux_loss_avg",
+                    "learning_rate"):
             if key in logs:
                 entry[key] = logs[key]
         if len(entry) > 1:  # more than just "step"
