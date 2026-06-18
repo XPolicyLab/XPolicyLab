@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+import json
 from pathlib import Path
 
 import cv2
@@ -130,6 +131,9 @@ class Model(ModelTemplate):
         ) or str(_HRDT_ROOT / "configs" / "hrdt_finetune.yaml")
         self.config = _load_yaml(self.config_path)
         self._override_action_dims()
+        self.action_q01, self.action_q99 = self._load_action_stats()
+        self.action_scale = self.action_q99 - self.action_q01
+        self.action_scale = np.where(self.action_scale < 1e-6, 1.0, self.action_scale)
 
         self.checkpoint_path = self._resolve_checkpoint_path()
         self.lang_tokens, self.lang_attn_mask = self._load_language_embedding()
@@ -158,6 +162,32 @@ class Model(ModelTemplate):
         common_cfg["state_dim"] = self.action_dim
         common_cfg["action_dim"] = self.action_dim
         self.config.setdefault("model", {}).setdefault("hrdt", {})["output_size"] = self.action_dim
+
+    def _load_action_stats(self):
+        stats_path = _resolve_path(
+            self.model_cfg.get("stats_path") or (_HRDT_ROOT / "datasets" / "xpolicylab" / "stats.json"),
+            _CUR_DIR,
+            _HRDT_ROOT,
+        )
+        with open(stats_path, "r", encoding="utf-8") as fp:
+            stats = json.load(fp)["xpolicylab"]
+
+        q01 = np.asarray(stats["q01"], dtype=np.float32)
+        q99 = np.asarray(stats["q99"], dtype=np.float32)
+        if q01.shape[0] != self.action_dim or q99.shape[0] != self.action_dim:
+            raise ValueError(
+                f"stats dim mismatch: expected {self.action_dim}, got q01={q01.shape[0]}, q99={q99.shape[0]}"
+            )
+        print(f"[H_RDT] loaded q01/q99 stats from: {stats_path}")
+        return q01, q99
+
+    def _normalize_action(self, action):
+        clipped = np.clip(action, self.action_q01, self.action_q99)
+        return ((clipped - self.action_q01) / self.action_scale * 2.0 - 1.0).astype(np.float32)
+
+    def _denormalize_action(self, action):
+        clipped = np.clip(action, -1.0, 1.0)
+        return ((clipped + 1.0) * 0.5 * self.action_scale + self.action_q01).astype(np.float32)
 
     def _resolve_checkpoint_path(self):
         checkpoint_value = (
@@ -279,12 +309,14 @@ class Model(ModelTemplate):
             "head_cam": head_cam,
             "left_cam": left_cam,
             "right_cam": right_cam,
-            "agent_pos": pack_robot_state(
-                observation,
-                self.action_type,
-                self.robot_action_dim_info,
-                source_type="obs",
-            ).astype(np.float32),
+            "agent_pos": self._normalize_action(
+                pack_robot_state(
+                    observation,
+                    self.action_type,
+                    self.robot_action_dim_info,
+                    source_type="obs",
+                ).astype(np.float32)
+            ),
         }
 
     def update_obs(self, obs):
@@ -341,7 +373,7 @@ class Model(ModelTemplate):
             lang_tokens=self.lang_tokens.unsqueeze(0),
             lang_attn_mask=self.lang_attn_mask.unsqueeze(0),
         )
-        return action_pred.float().cpu().numpy()[0]
+        return self._denormalize_action(action_pred.float().cpu().numpy()[0])
 
     def get_action(self, **kwargs):
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)[0]

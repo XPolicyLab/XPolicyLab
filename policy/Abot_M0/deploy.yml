@@ -8,7 +8,7 @@ seed: 0
 eval_batch: true
 eval_env: debug
 
-checkpoint_num: 60000
+checkpoint_num: 150000
 unnorm_key: robodojo_sim
 device: cuda
 port: 6000

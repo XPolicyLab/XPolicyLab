@@ -53,12 +53,33 @@ def read_parquet(path: str) -> dict:
     return pq.read_table(buf).to_pydict()
 
 def decode_image_from_bytes(x) -> Image.Image:
-    if isinstance(x, (bytes, bytearray)): x = np.frombuffer(x, dtype=np.uint8)
+    if isinstance(x, Image.Image):
+        return x
+
+    if isinstance(x, np.ndarray):
+        arr = x
+        if arr.ndim == 3 and arr.shape[-1] in (1, 3):
+            rgb = arr if arr.dtype == np.uint8 else np.clip(arr, 0, 255).astype(np.uint8)
+            return Image.fromarray(rgb)
+        if arr.ndim == 1:
+            x = arr.astype(np.uint8, copy=False)
+        else:
+            x = arr.astype(np.uint8, copy=False).reshape(-1)
+    elif isinstance(x, (bytes, bytearray)):
+        x = np.frombuffer(x, dtype=np.uint8)
+    else:
+        x = np.asarray(x, dtype=np.uint8).reshape(-1)
+
     rgb = cv2.imdecode(x, cv2.IMREAD_COLOR)
     if rgb is None:
-        rgb = np.frombuffer(x, dtype=np.uint8)
-        if rgb.size == 2764800: rgb = rgb.reshape(720, 1280, 3)
-        elif rgb.size == 921600: rgb = rgb.reshape(480, 640, 3)
+        if x.size == 2764800:
+            rgb = x.reshape(720, 1280, 3)
+        elif x.size == 921600:
+            rgb = x.reshape(480, 640, 3)
+        else:
+            raise ValueError(f"Could not decode image buffer of size {x.size}")
+    else:
+        rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
     return Image.fromarray(rgb)
 
 def quat_to_rotate6d(q: np.ndarray, scalar_first = False) -> np.ndarray:

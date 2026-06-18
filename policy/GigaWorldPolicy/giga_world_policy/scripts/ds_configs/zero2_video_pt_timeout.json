@@ -1,0 +1,10 @@
+{
+    "train_batch_size": "auto",
+    "train_micro_batch_size_per_gpu": "auto",
+    "gradient_accumulation_steps": "auto",
+    "zero_optimization": {
+        "stage": 2,
+        "reduce_bucket_size": 50000000,
+        "allgather_bucket_size": 50000000
+    }
+}

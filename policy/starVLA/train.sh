@@ -18,7 +18,6 @@ shift 7
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STARVLA_ROOT="${SCRIPT_DIR}/source_starvla"
-STARVLA_ADAPTER="${SCRIPT_DIR}/starvla_adapter"
 
 config_yaml="${SCRIPT_DIR}/xpolicy_oft_vla.yaml"
 data_dir_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
@@ -33,9 +32,8 @@ echo "[starVLA] train_entry=starVLA/training/train_starvla.py"
 echo "[starVLA] num_processes=${num_processes}, mixed_precision=bf16"
 
 cd "${STARVLA_ROOT}"
-STARVLA_EXTRA_DATA_REGISTRY="${STARVLA_ADAPTER}/data_registry" \
-PYTHONPATH="${STARVLA_ADAPTER}:${STARVLA_ROOT}:${PYTHONPATH:-}" \
-WANDB_MODE="${WANDB_MODE:-offline}" \
+PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
+WANDB_MODE="${WANDB_MODE:-online}" \
 NO_ALBUMENTATIONS_UPDATE="${NO_ALBUMENTATIONS_UPDATE:-1}" \
 NCCL_DEBUG="${NCCL_DEBUG:-WARN}" \
 TRANSFORMERS_VERBOSITY="${TRANSFORMERS_VERBOSITY:-error}" \

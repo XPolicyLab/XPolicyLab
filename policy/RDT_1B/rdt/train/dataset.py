@@ -128,7 +128,13 @@ class VLAConsumerDataset(Dataset):
             self.hdf5_dataset = HDF5VLADataset(use_precomp_lang_embed=use_precomp_lang_embed)
         self.use_precomp_lang_embed = use_precomp_lang_embed
         if use_precomp_lang_embed:
-            self.empty_lang_embed = torch.load("data/empty_lang_embed.pt")
+            lang_embed_dir = os.environ.get("RDT_LANG_EMBED_DIR")
+            if not lang_embed_dir:
+                raise ValueError(
+                    "RDT_LANG_EMBED_DIR must be set when using precomputed language embeddings."
+                )
+            empty_embed_path = os.path.join(lang_embed_dir, "empty_lang_embed.pt")
+            self.empty_lang_embed = torch.load(empty_embed_path)
         
         # Load dataset stat
         with open("configs/dataset_stat.json", 'r') as f:

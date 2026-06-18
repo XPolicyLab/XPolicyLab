@@ -233,8 +233,10 @@ transform_agibot:
       normalization_modes:
         state.left_arm_joint_position: q99
         state.right_arm_joint_position: q99
-        state.left_effector_position: q99
-        state.right_effector_position: q99
+        # Bug 3 fix: use min_max for gripper to preserve [0, 1] full range
+        # (q99 with q01=0.248 was clamping the 'fully open' signal away)
+        state.left_effector_position: min_max
+        state.right_effector_position: min_max
         state.head_position: q99
         state.waist_pitch: q99
         state.waist_lift: q99
@@ -247,8 +249,9 @@ transform_agibot:
       normalization_modes:
         action.left_arm_joint_position: q99
         action.right_arm_joint_position: q99
-        action.left_effector_position: q99
-        action.right_effector_position: q99
+        # Bug 3 fix: use min_max for gripper (see state above)
+        action.left_effector_position: min_max
+        action.right_effector_position: min_max
         action.head_position: q99
         action.waist_pitch: q99
         action.waist_lift: q99

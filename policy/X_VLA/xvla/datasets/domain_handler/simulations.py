@@ -177,7 +177,7 @@ class RobotWin2Handler(BaseHDF5Handler):
 class RoboDojoHandler(BaseHDF5Handler):
     dataset_name = "RoboDojo-*"
 
-    def read_instruction(self, f: h5py.File) -> str:
+    def read_instruction(self, f: h5py.File, datapath: str = "") -> str:
         candidate_keys = []
         primary_key = self.meta.get("language_instruction_key")
         if primary_key:
@@ -208,6 +208,13 @@ class RoboDojoHandler(BaseHDF5Handler):
 
             if text:
                 return text
+
+        task_instructions = self.meta.get("task_instructions", {})
+        if datapath and task_instructions:
+            parts = datapath.split("/")
+            for part in reversed(parts):
+                if part in task_instructions:
+                    return str(task_instructions[part]).strip()
 
         default_instruction = self.meta.get("default_language_instruction", "")
         if isinstance(default_instruction, str) and default_instruction.strip():

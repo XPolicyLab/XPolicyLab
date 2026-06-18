@@ -1,33 +1,56 @@
-# Basic experiment configuration
 policy_name: GigaWorldPolicy
+
+dataset_name: null
 task_name: null
-env_cfg: null
+ckpt_name: null
 env_cfg_type: null
 expert_data_num: null
+action_type: joint
+action_dim: null
 seed: null
+
 eval_batch: false
 eval_env: debug
 
-# Model / action configuration
-action_type: joint
-checkpoint_num: checkpoint_epoch_4_step_100000
-transformer_subdir: transformer_ema
-base_model_path: /mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B-Diffusers/
-stats_path: giga_world_policy/norm_stats_delta.json
-t5_embedding_pkl: null
-lerobot_dataset_root: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
-fallback_task_name: stack_bowls
-norm_mode: zscore
+load_model: true
+checkpoint_path: null
+model_path: null
+checkpoint_num: latest
+checkpoint_file: model_ema.pt
+
+# Path to the Wan2.2-TI2V-5B-Diffusers dir. Leave null to read from
+# $GIGAWORLD_PRETRAINED_PATH / $WAN22_DIFFUSERS_PATH at runtime.
+base_model_path: null
+stats_path: null
+t5_embedding_path: null
+disable_dynamic_prompt: false
+prompt_max_length: 512
+prompt_cache_size: 256
+
+model_state_dim: 14
+model_action_dim: 14
+num_frames: 28
+action_chunk: 28
+execute_action_chunk: 25
+num_steps: 10
+action_only: true
+flow_shift: 5.0
 device: cuda
 dtype: bf16
-action_chunk: 48
-state_dim: null
-action_dim: null
-delta_mask: null
-model_state_dim: 16
-model_action_dim: 16
-model_delta_mask: 1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0
+dst_size: [320, 256]
+tshape: true
+tshape_head_index: 0
+zero_action_dims: []
+ctrl_mode_dim: null
+ctrl_mode_threshold: 0.0
+skip_action_denorm: false
+delta_to_absolute: true
+sample_seed: 42
 
-load_model: true
+input_color_space: rgb
+left_view_candidates: [cam_head]
+wrist_view_candidates: [cam_left_wrist]
+right_view_candidates: [cam_right_wrist]
 
+host: localhost
 port: 6000

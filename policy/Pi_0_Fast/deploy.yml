@@ -13,8 +13,7 @@ obs_transform_pipeline: "xspark-v1.0"
 
 # Model / action configuration
 action_type: joint
-# Share Pi_05 uv openpi environment (run Pi_05/install.sh once).
-policy_uv_env_path: ../Pi_05/openpi
+policy_uv_env_path: openpi
 train_config_name: pi0_fast_aloha_full_sim_arx-x5_seed_0
 repo_id: arx_x5_sim
 

@@ -10,7 +10,7 @@ action_type=$6
 seed=$7
 policy_gpu_id=$8
 env_gpu_id=$9
-policy_conda_env=${10}
+policy_uv_env=${10:-uv}
 eval_env_conda_env=${11}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
@@ -44,7 +44,7 @@ setsid bash "${SERVER_SCRIPT}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \
-    uv \
+    "${policy_uv_env}" \
     "${policy_server_port}" \
     "${policy_server_ip}" &
 

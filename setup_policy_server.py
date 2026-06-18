@@ -17,7 +17,7 @@ def main(deploy_cfg):
     # Extract basic arguments
     policy_name = deploy_cfg.get("policy_name")
     port = deploy_cfg.get("port")
-    host = deploy_cfg.get("host", "localhost")
+    host = deploy_cfg["host"]
 
     # Instantiate model
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
@@ -84,7 +84,24 @@ def parse_args_and_config():
                 val = next(it)
                 cfg[key.lstrip("-")] = _parse_val(val)
     
-    assert "port" in cfg.keys(), "Port number must be specified in config or overrides"
+    def _require_non_empty(key: str):
+        if key not in cfg:
+            raise ValueError(f"{key} must be specified in config or overrides")
+        val = cfg[key]
+        if val is None:
+            raise ValueError(f"{key} must be non-empty")
+        if isinstance(val, str) and not val.strip():
+            raise ValueError(f"{key} must be non-empty")
+
+    for deprecated_key in ("policy_server_host", "policy_server_port"):
+        if deprecated_key in cfg:
+            print(
+                f"\033[31m[WARNING] Deprecated config key '{deprecated_key}' is present; "
+                f"use 'host' and 'port' instead.\033[0m"
+            )
+
+    _require_non_empty("host")
+    _require_non_empty("port")
     return cfg
 
 if __name__ == "__main__":

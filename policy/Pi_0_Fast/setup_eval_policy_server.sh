@@ -9,7 +9,7 @@ expert_data_num=$5
 action_type=$6
 seed=$7
 policy_gpu_id=$8
-policy_conda_env=$9
+policy_uv_env=${9:-uv}
 policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
 
@@ -53,27 +53,21 @@ PYENV
     fi
 }
 
-if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
-    policy_uv_env_path="$(resolve_uv_env "${policy_conda_env}")"
-    PYTHON_BIN="${policy_uv_env_path}/.venv/bin/python"
-    OPENPI_SRC="${policy_uv_env_path}/src"
-    echo "[SERVER] Using uv environment: ${policy_uv_env_path}"
-else
-    echo "[SERVER] Activating Conda environment: ${policy_conda_env}"
-    conda activate "${policy_conda_env}"
-    PYTHON_BIN="${CONDA_PREFIX}/bin/python"
-    OPENPI_SRC=""
-fi
-
-if [[ ! -x "${PYTHON_BIN}" ]]; then
-    echo "[SERVER][ERROR] Python not found: ${PYTHON_BIN}" >&2
+policy_uv_env_path="$(resolve_uv_env "${policy_uv_env}")"
+if [[ ! -f "${policy_uv_env_path}/.venv/bin/activate" ]]; then
+    echo "[SERVER][ERROR] uv venv not found: ${policy_uv_env_path}/.venv" >&2
     echo "[SERVER][ERROR] Run: bash ${CURRENT_DIR}/install.sh" >&2
     exit 1
 fi
+
+echo "[SERVER] Activating uv environment: ${policy_uv_env_path}/.venv"
+source "${policy_uv_env_path}/.venv/bin/activate"
+PYTHON_BIN="$(command -v python)"
+OPENPI_SRC="${policy_uv_env_path}/src"
 echo "[SERVER] Using python: ${PYTHON_BIN}"
 
 PYTHONPATH_PARTS=("${ROOT_DIR}")
-if [[ -n "${OPENPI_SRC}" && -d "${OPENPI_SRC}" ]]; then
+if [[ -d "${OPENPI_SRC}" ]]; then
     PYTHONPATH_PARTS+=("${OPENPI_SRC}")
 fi
 
@@ -85,8 +79,8 @@ exec env \
     "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            policy_server_port="${policy_server_port}" \
-            policy_server_host="${policy_server_host}" \
+            port="${policy_server_port}" \
+            host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
             dataset_name="${dataset_name}" \

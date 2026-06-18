@@ -18,6 +18,7 @@ from .lerobot import (
     LE_ROBOT_EPISODE_FILENAME,
     LeRobotMixtureDataset,
     LeRobotSingleDataset,
+    _agibot_pad,
     _pad_last_dim,
 )
 
@@ -802,7 +803,7 @@ class ShardedLeRobotSubLangSingleActionChunkDatasetDROID(LeRobotSingleDataset):
             data_array = data_array.reshape(-1, 1)
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
         if getattr(self, "is_lerobot_v3", False):
-            data_array = _pad_last_dim(data_array, AGIBOT_STATE_DIM)
+            data_array = _agibot_pad(data_array, AGIBOT_STATE_DIM)
         le_indices = np.arange(
             le_state_or_action_cfg[subkey].start,
             le_state_or_action_cfg[subkey].end,
@@ -972,7 +973,7 @@ class ShardedLeRobotSubLangSingleActionChunkDatasetDROID(LeRobotSingleDataset):
             data_array = data_array.reshape(-1, 1)
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
         if getattr(self, "is_lerobot_v3", False):
-            data_array = _pad_last_dim(data_array, AGIBOT_ACTION_DIM)
+            data_array = _agibot_pad(data_array, AGIBOT_ACTION_DIM)
         le_indices = np.arange(
             le_state_or_action_cfg[subkey].start,
             le_state_or_action_cfg[subkey].end,
@@ -1156,7 +1157,7 @@ class ShardedLeRobotSubLangSingleActionChunkDatasetDROID(LeRobotSingleDataset):
         if state_array.ndim == 1:
             state_array = state_array.reshape(-1, 1)
         if getattr(self, "is_lerobot_v3", False):
-            state_array = _pad_last_dim(state_array, AGIBOT_STATE_DIM)
+            state_array = _agibot_pad(state_array, AGIBOT_STATE_DIM)
         
         # Apply same indices as action
         le_indices = np.arange(

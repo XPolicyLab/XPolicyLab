@@ -49,7 +49,9 @@ export PREPARE_SCRIPT="${ABOT_PREPARE_SCRIPT:-}"
 
 export BATCH_SIZE="${ABOT_BATCH_SIZE:-8}"
 export GRADIENT_ACCUMULATION_STEPS="${ABOT_GRAD_ACC:-1}"
-export NUM_WORKERS="${ABOT_NUM_WORKERS:-2}"
+export NUM_WORKERS="${ABOT_NUM_WORKERS:-0}"
+# RoboDojo_sim_v21_video_abot 为 AV1 编码，必须用 torchvision_av；decord 无法解码
+export VIDEO_BACKEND="${ABOT_VIDEO_BACKEND:-torchvision_av}"
 export MAX_TRAIN_STEPS="${ABOT_MAX_TRAIN_STEPS:-150000}"
 export SAVE_INTERVAL="${ABOT_SAVE_INTERVAL:-10000}"
 
@@ -61,6 +63,7 @@ echo "[ABot-M0] dataset_root=${DATA_ROOT}/${DATASET_REPO}"
 echo "[ABot-M0] checkpoint_dir=${ckpt_dir}"
 echo "[ABot-M0] seed=${seed}"
 echo "[ABot-M0] gpu_id=${gpu_id} (num_gpus=${NUM_GPUS})"
-echo "[ABot-M0] per_device_batch_size=${BATCH_SIZE}, grad_acc=${GRADIENT_ACCUMULATION_STEPS}, effective_batch_size=$((BATCH_SIZE * NUM_GPUS * GRADIENT_ACCUMULATION_STEPS))"
+echo "[ABot-M0] per_device_batch_size=${BATCH_SIZE}, grad_acc=${GRADIENT_ACCUMULATION_STEPS}, num_workers=${NUM_WORKERS}, video_backend=${VIDEO_BACKEND}"
+echo "[ABot-M0] effective_batch_size=$((BATCH_SIZE * NUM_GPUS * GRADIENT_ACCUMULATION_STEPS))"
 
 bash "${POLICY_DIR}/examples/RoboDojo/train_files/run_RoboDojo_train.sh"

@@ -40,7 +40,7 @@ def _decode_image(image: Any) -> np.ndarray:
         decoded = cv2.imdecode(image, cv2.IMREAD_COLOR)
         if decoded is None:
             raise ValueError("Failed to decode compressed image bytes.")
-        image = decoded
+        image = cv2.cvtColor(decoded, cv2.COLOR_BGR2RGB)
 
     if image.ndim != 3:
         raise ValueError(f"Expected HWC/CHW image, got shape {image.shape}.")
@@ -72,30 +72,6 @@ def _extract_camera(observation: dict[str, Any], camera_names: list[str]) -> np.
         else:
             return _decode_image(camera_obs)
     raise KeyError(f"Missing camera from candidates: {camera_names}")
-
-
-def _xpolicy_to_starvla_joint_order(vector: np.ndarray, robot_action_dim_info: dict[str, Any]) -> np.ndarray:
-    arm_dims = robot_action_dim_info["arm_dim"]
-    ee_dims = robot_action_dim_info["ee_dim"]
-    if len(arm_dims) != 2 or arm_dims != [6, 6] or ee_dims != [1, 1]:
-        return vector
-    left_arm = vector[..., 0:6]
-    left_ee = vector[..., 6:7]
-    right_arm = vector[..., 7:13]
-    right_ee = vector[..., 13:14]
-    return np.concatenate([left_arm, right_arm, left_ee, right_ee], axis=-1)
-
-
-def _starvla_to_xpolicy_joint_order(vector: np.ndarray, robot_action_dim_info: dict[str, Any]) -> np.ndarray:
-    arm_dims = robot_action_dim_info["arm_dim"]
-    ee_dims = robot_action_dim_info["ee_dim"]
-    if len(arm_dims) != 2 or arm_dims != [6, 6] or ee_dims != [1, 1]:
-        return vector
-    left_arm = vector[..., 0:6]
-    right_arm = vector[..., 6:12]
-    left_ee = vector[..., 12:13]
-    right_ee = vector[..., 13:14]
-    return np.concatenate([left_arm, left_ee, right_arm, right_ee], axis=-1)
 
 
 class Model(ModelTemplate):
@@ -132,7 +108,6 @@ class Model(ModelTemplate):
         self.use_ddim = bool(self.model_cfg.get("use_ddim", True))
         self.num_ddim_steps = int(self.model_cfg.get("num_ddim_steps", 10))
         self.image_size = tuple(self.model_cfg.get("image_size", [224, 224]))
-        self.input_color_order = self.model_cfg.get("input_color_order", "bgr").lower()
         self.include_state = bool(self.model_cfg.get("include_state", False))
 
         self.obs_by_env: dict[int, dict[str, Any]] = {}
@@ -142,7 +117,7 @@ class Model(ModelTemplate):
 
         print(
             f"[starVLA] connected to StarVLA server, action_dim={self.action_dim}, "
-            f"chunk={self.action_chunk_size}, metadata={server_meta}"
+            f"chunk={self.action_chunk_size}, action_order=xpolicy, metadata={server_meta}"
         )
 
     def _convert_obs(self, observation: dict[str, Any]) -> dict[str, Any]:
@@ -151,8 +126,6 @@ class Model(ModelTemplate):
             _extract_camera(observation, ["cam_left_wrist", "left_camera"]),
             _extract_camera(observation, ["cam_right_wrist", "right_camera"]),
         ]
-        if self.input_color_order == "bgr":
-            images = [cv2.cvtColor(image, cv2.COLOR_BGR2RGB) for image in images]
         images = [
             cv2.resize(image, tuple(self.image_size), interpolation=cv2.INTER_AREA)
             for image in images
@@ -175,10 +148,7 @@ class Model(ModelTemplate):
                 self.robot_action_dim_info,
                 source_type="obs",
             ).astype(np.float32)
-            converted_obs["state"] = _xpolicy_to_starvla_joint_order(
-                state,
-                self.robot_action_dim_info,
-            )
+            converted_obs["state"] = state
 
         return converted_obs
 
@@ -217,10 +187,7 @@ class Model(ModelTemplate):
 
         action_idx = min(step % self.action_chunk_size, len(chunk) - 1)
         self.step_by_env[env_idx] = step + 1
-        action = _starvla_to_xpolicy_joint_order(
-            np.asarray(chunk[action_idx], dtype=np.float32),
-            self.robot_action_dim_info,
-        )
+        action = np.asarray(chunk[action_idx], dtype=np.float32)
         if action.shape[-1] != self.action_dim:
             raise ValueError(f"Expected action dim {self.action_dim}, got {action.shape[-1]}.")
         return action

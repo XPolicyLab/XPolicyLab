@@ -1,11 +1,11 @@
-# XPolicyLab deploy: policy server env=RDT; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
 # RDT_1B 一键安装（对应 INSTALLATION.md）
 #
 # 环境变量（可选）:
 #   RDT_CONDA_ENV       conda 环境名，默认 rdt_1b
 #   RDT_SKIP_CONDA_CREATE=1  跳过 conda create（环境已存在时）
-#   RDT_SKIP_WEIGHTS=1       跳过 HuggingFace 权重下载
+#   RDT_SKIP_WEIGHTS=1       跳过权重准备（不下载、不软链）
+#   RDT_WEIGHTS_SRC          已有权重根目录，软链到 weights/RDT/（优先于下载）
 
 set -euo pipefail
 
@@ -45,21 +45,35 @@ pip install -r requirements.txt
 cd "${XPOLICYLAB_ROOT}"
 pip install -e .
 
+WEIGHT_NAMES=(t5-v1_1-xxl siglip-so400m-patch14-384 rdt-1b)
+
 if [[ "${RDT_SKIP_WEIGHTS:-0}" != "1" ]]; then
-  if ! command -v huggingface-cli >/dev/null 2>&1; then
-    pip install huggingface_hub
-  fi
   mkdir -p "${WEIGHTS_DIR}"
-  cd "${WEIGHTS_DIR}"
-  for repo in google/t5-v1_1-xxl google/siglip-so400m-patch14-384 robotics-diffusion-transformer/rdt-1b; do
-  dir="$(basename "${repo}")"
-  if [[ ! -d "${dir}" ]]; then
-    echo "[RDT_1B] Downloading ${repo} -> ${WEIGHTS_DIR}/${dir}"
-    huggingface-cli download "${repo}" --local-dir "${dir}"
+  if [[ -n "${RDT_WEIGHTS_SRC:-}" ]]; then
+    for dir in "${WEIGHT_NAMES[@]}"; do
+      src="${RDT_WEIGHTS_SRC}/${dir}"
+      if [[ ! -e "${src}" ]]; then
+        echo "[RDT_1B] Weight not found: ${src}" >&2
+        exit 1
+      fi
+      ln -sfn "$(cd "${src}" && pwd)" "${WEIGHTS_DIR}/${dir}"
+      echo "[RDT_1B] weights/RDT/${dir} -> $(readlink -f "${WEIGHTS_DIR}/${dir}")"
+    done
   else
-    echo "[RDT_1B] Skip existing ${dir}"
+    if ! command -v huggingface-cli >/dev/null 2>&1; then
+      pip install huggingface_hub
+    fi
+    cd "${WEIGHTS_DIR}"
+    for repo in google/t5-v1_1-xxl google/siglip-so400m-patch14-384 robotics-diffusion-transformer/rdt-1b; do
+      dir="$(basename "${repo}")"
+      if [[ ! -e "${dir}" ]]; then
+        echo "[RDT_1B] Downloading ${repo} -> ${WEIGHTS_DIR}/${dir}"
+        huggingface-cli download "${repo}" --local-dir "${dir}"
+      else
+        echo "[RDT_1B] Skip existing ${dir}"
+      fi
+    done
   fi
-  done
 fi
 
 python -c "import XPolicyLab; print('XPolicyLab ok')" 2>/dev/null || true
