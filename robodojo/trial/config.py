@@ -104,6 +104,7 @@ def build_trial_run_config(
     )
     task_name = _first_non_empty_str(
         case_meta.get("task_name"),
+        task.name if task is not None else "",
         dispatch.task_id,
         task.id if task is not None else "",
         default="debug_task" if is_debug else "",
