@@ -39,14 +39,7 @@ class Model(ModelTemplate):
         with open(model_cfg["stats_path"], "rb") as f:
             self.stats = pickle.load(f)
 
-        self.chunk_size = int(self.policy.policy.config.chunk_size)
-        self.action_dim = int(self.policy.policy.config.action_dim)
-
-        # Buffers for temporal-aggregation, keyed by env_idx.
         self.latest_obs = {}
-        self.all_time_actions = {}
-        self.step_counter = {}
-        self.max_timesteps = 10000
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
@@ -68,16 +61,14 @@ class Model(ModelTemplate):
             with torch.inference_mode():
                 all_actions = self.policy.policy(**batch, eval=True)
 
-            agg_action = self._temporal_aggregate(env_idx, all_actions)
-            action_np = agg_action.detach().cpu().to(torch.float32).numpy()
-            action_np = action_np * self.stats["action_std"] + self.stats["action_mean"]
+            action_chunk = all_actions[0].detach().cpu().to(torch.float32).numpy()
+            action_chunk = (
+                action_chunk * self.stats["action_std"] + self.stats["action_mean"]
+            )
 
-            # Keep 2-D shape [1, action_dim] so unpack_robot_state returns a
-            # list[dict], matching the chunk-of-steps contract that XPolicyLab
-            # deploy.py expects from get_action_batch (see policy/DP/model.py).
             action_dict_list.append(
                 unpack_robot_state(
-                    action_np[None, :],
+                    action_chunk,
                     action_type=self.action_type,
                     robot_action_dim_info=self.robot_action_dim_info,
                     source_type="obs",
@@ -87,8 +78,6 @@ class Model(ModelTemplate):
 
     def reset(self):
         self.latest_obs.clear()
-        self.all_time_actions.clear()
-        self.step_counter.clear()
 
     def _encode_obs(self, obs):
         cam_chws = []
@@ -118,27 +107,3 @@ class Model(ModelTemplate):
         raw_lang = str(raw)
 
         return curr_image, robot_state, raw_lang
-
-    def _temporal_aggregate(self, env_idx, all_actions):
-        if env_idx not in self.all_time_actions:
-            self.all_time_actions[env_idx] = torch.zeros(
-                self.max_timesteps,
-                self.max_timesteps + self.chunk_size,
-                self.action_dim,
-                dtype=torch.float16,
-                device=all_actions.device,
-            )
-            self.step_counter[env_idx] = 0
-
-        buf = self.all_time_actions[env_idx]
-        t = self.step_counter[env_idx]
-        buf[[t], t : t + self.chunk_size] = all_actions
-
-        col = buf[:, t]
-        populated = torch.all(col != 0, dim=1)
-        col = col[populated]
-        weights = torch.from_numpy(np.exp(-0.01 * np.arange(len(col)))).to(col.device)
-        weights = (weights / weights.sum()).unsqueeze(1)
-
-        self.step_counter[env_idx] = t + 1
-        return (col * weights).sum(dim=0)
