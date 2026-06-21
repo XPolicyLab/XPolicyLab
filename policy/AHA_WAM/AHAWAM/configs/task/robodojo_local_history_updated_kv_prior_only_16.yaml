@@ -15,6 +15,7 @@ model:
   chunk_kv_editor_num_queries: 32
   num_history_frames: 6
   action_video_read_mode: current_only
+  prepend_episode_first_frame: true
   video_rope_frame_stride: ${data.train.action_video_freq_ratio}
   loss:
     lambda_action_prior: 1.0
