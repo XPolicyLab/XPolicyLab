@@ -6,6 +6,8 @@ def get_model(deploy_cfg):
     return model
 
 def eval_one_episode(TASK_ENV, model_client):
+    model_client.call(func_name="reset")
+
     instruction = TASK_ENV.get_instruction()
     model_client.call(func_name="set_language", obs=instruction)
 
