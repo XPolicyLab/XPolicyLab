@@ -140,7 +140,7 @@ class Model(ModelTemplate):
         self.model = self.policy
         self._device = self.policy.device
 
-        self._obs_list: list | None = None
+        self._sample_batch: dict | None = None
         self._latest_env_idx_list: list[int] = [0]
 
     def _compose_config(self, model_cfg: dict[str, Any]):
@@ -205,12 +205,9 @@ class Model(ModelTemplate):
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
-        # Only cache the raw observations here. The eval loop calls update_obs_batch
-        # once per action in the chunk (~chunk_size times), but get_action_batch runs
-        # only once per chunk, so the heavy encoding is deferred to get_action_batch to
-        # avoid recomputing (and discarding) it on every step.
         self._latest_env_idx_list = [obs.get("env_idx", idx) for idx, obs in enumerate(obs_list)]
-        self._obs_list = list(obs_list)
+        samples = [self._encode_obs(obs) for obs in obs_list]
+        self._sample_batch = self._collate(samples)
 
     def _encode_obs(self, observation) -> dict:
         images = {}
@@ -270,18 +267,15 @@ class Model(ModelTemplate):
     def get_action_batch(self, env_idx_list=None):
         from galaxea_fm.utils.pytorch_utils import dict_apply
 
-        if self._obs_list is None:
+        if self._sample_batch is None:
             raise AssertionError(self._error_msg("update_obs or update_obs_batch first!"))
         env_idx_list = env_idx_list if env_idx_list is not None else self._latest_env_idx_list
-
-        samples = [self._encode_obs(obs) for obs in self._obs_list]
-        sample_batch = self._collate(samples)
 
         with torch.no_grad():
             param_dtype = next(self.policy.parameters()).dtype
             use_bf16 = param_dtype == torch.bfloat16
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=use_bf16):
-                batch = self.policy.predict_action(sample_batch)
+                batch = self.policy.predict_action(self._sample_batch)
         batch = dict_apply(batch, lambda x: x.cpu() if isinstance(x, torch.Tensor) else x)
         batch = self.processor.postprocess(batch)
         action_dict = dict_apply(batch["action"], lambda x: x.cpu().numpy())
@@ -299,5 +293,5 @@ class Model(ModelTemplate):
         return result
 
     def reset(self):
-        self._obs_list = None
+        self._sample_batch = None
         self._latest_env_idx_list = [0]
