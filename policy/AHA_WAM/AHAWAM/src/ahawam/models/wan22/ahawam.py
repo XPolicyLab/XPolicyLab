@@ -18,6 +18,8 @@ class AHAWAM(AHAWAMChunkBase):
         num_history_frames: int = 0,
         action_video_read_mode: str = "current_only",
         video_rope_frame_stride: int = 1,
+        detach_history_kv_during_training: bool = True,
+        prepend_episode_first_frame: bool = False,
     ) -> None:
         self.num_history_frames = int(num_history_frames)
         if self.num_history_frames < 0:
@@ -33,6 +35,10 @@ class AHAWAM(AHAWAMChunkBase):
                 "`video_rope_frame_stride` must be positive, "
                 f"got {video_rope_frame_stride}."
             )
+        self.detach_history_kv_during_training = bool(
+            detach_history_kv_during_training
+        )
+        self.prepend_episode_first_frame = bool(prepend_episode_first_frame)
 
     def _configured_num_history_frames(self) -> int:
         return int(getattr(self, "num_history_frames", 0))
@@ -56,6 +62,12 @@ class AHAWAM(AHAWAMChunkBase):
         if stride <= 0:
             raise ValueError(f"`video_rope_frame_stride` must be positive, got {stride}.")
         return stride
+
+    def _configured_detach_history_kv_during_training(self) -> bool:
+        return bool(getattr(self, "detach_history_kv_during_training", True))
+
+    def _configured_prepend_episode_first_frame(self) -> bool:
+        return bool(getattr(self, "prepend_episode_first_frame", False))
 
     def _get_video_history_valid_len(
         self,
@@ -493,7 +505,14 @@ class AHAWAM(AHAWAMChunkBase):
 
         if num_history > 0:
             prior_entries.append(video_kv_cache)
-            if len(prior_entries) > num_history:
+            if self._configured_prepend_episode_first_frame() and len(prior_entries) > 1:
+                pinned = prior_entries[0]
+                max_sliding = num_history - 1
+                sliding = prior_entries[1:]
+                if len(sliding) > max_sliding:
+                    sliding = sliding[-max_sliding:]
+                prior_entries = [pinned] + sliding
+            elif len(prior_entries) > num_history:
                 prior_entries = prior_entries[-num_history:]
             self._history_kv_entries = prior_entries
 
