@@ -183,6 +183,7 @@ def test_start_merges_dispatch_into_deploy_cfg(tmp_path):
         assert body["artifact_dir"].endswith("/artifacts/eval-1/trials/1")
         expected_baseline = _baseline().model_dump()
         expected_baseline.pop("action_type")  # unset baseline fields are omitted
+        expected_baseline.pop("base_cfg")
         assert captured[0] == {
             **expected_baseline,
             "evaluation_id": "eval-1",
@@ -290,6 +291,7 @@ def test_validate_startup_args_allows_missing_action_type_for_real_eval_env():
             no_webhook=False,
             eval_env="real",
             root_dir="/pipeline/root",
+            base_cfg="x-one",
             action_type=None,
         ),
     )
@@ -311,11 +313,13 @@ def test_baseline_from_args_includes_root_dir():
             eval_episode_num=10,
             eval_env="real",
             root_dir="/pipeline/root",
+            base_cfg="x-one",
             action_type="ee",
         )
     )
     assert baseline.eval_env == "real"
     assert baseline.root_dir == "/pipeline/root"
+    assert baseline.base_cfg == "x-one"
     assert baseline.action_type == "ee"
 
 
@@ -372,6 +376,67 @@ def test_reset_rejects_while_trial_is_active(tmp_path):
         _post_expect_http_error(port, "/v1/reset", 409)
         state.trial_control.request_stop("eval-1", 1)
         start_thread.join(timeout=5)
+
+
+def test_start_rejects_second_trial_while_another_trial_is_active(tmp_path):
+    def run_trial(deploy_cfg: dict[str, Any], *, stop_check=lambda: False):
+        while not stop_check():
+            time.sleep(0.02)
+        return _completed_result(deploy_cfg, steps=1)
+
+    with _running_server(run_trial=run_trial, tmp_path=tmp_path) as (server, state):
+        port = server.server_address[1]
+        _post(port, session_dispatch_path("eval-1"), _dispatch_payload())
+
+        start_thread = threading.Thread(
+            target=lambda: _post(port, session_start_path("eval-1", 1), {})
+        )
+        start_thread.start()
+        _wait_for_active_trial(state)
+
+        _post(port, session_dispatch_path("eval-2"), _dispatch_payload())
+        _post_expect_http_error(port, session_start_path("eval-2", 1), 409)
+
+        state.trial_control.request_stop("eval-1", 1)
+        start_thread.join(timeout=5)
+        assert not state.trial_control.has_active_trials()
+
+
+def test_start_allows_another_trial_after_active_trial_clears(tmp_path):
+    run_count = 0
+    run_count_lock = threading.Lock()
+
+    def run_trial(deploy_cfg: dict[str, Any], *, stop_check=lambda: False):
+        nonlocal run_count
+        with run_count_lock:
+            run_count += 1
+            current_run = run_count
+
+        if current_run == 1:
+            while not stop_check():
+                time.sleep(0.02)
+
+        return _completed_result(deploy_cfg, steps=current_run)
+
+    with _running_server(run_trial=run_trial, tmp_path=tmp_path) as (server, state):
+        port = server.server_address[1]
+        _post(port, session_dispatch_path("eval-1"), _dispatch_payload())
+
+        start_thread = threading.Thread(
+            target=lambda: _post(port, session_start_path("eval-1", 1), {})
+        )
+        start_thread.start()
+        _wait_for_active_trial(state)
+        state.trial_control.request_stop("eval-1", 1)
+        start_thread.join(timeout=5)
+        assert not state.trial_control.has_active_trials()
+
+        _post(port, session_dispatch_path("eval-2"), _dispatch_payload())
+        status, body = _post(port, session_start_path("eval-2", 1), {})
+
+        assert status == 200
+        assert body["status"] == "completed"
+        assert body["steps"] == 2
 
 
 def test_stop_without_active_trial_returns_not_found(tmp_path):
@@ -521,7 +586,16 @@ def test_run_debug_trial_executes_episode_loop():
         else:
             sys.modules["debug_env_client"] = previous
 
-    assert episodes == ["reset", "eval", "finish", "reset", "eval", "finish", "reset"]
+    assert episodes == [
+        "reset",
+        "eval",
+        "reset",
+        "finish",
+        "reset",
+        "eval",
+        "reset",
+        "finish",
+    ]
     assert result == {
         "status": "completed",
         "trial_id": "case-1-r01",
@@ -570,4 +644,3 @@ def test_handle_start_submits_publish_in_background(tmp_path, monkeypatch):
         assert publish_started.wait(timeout=2)
         publish_release.set()
         state.shutdown_publish()
-
