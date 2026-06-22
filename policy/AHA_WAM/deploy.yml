@@ -15,19 +15,20 @@ action_type: null
 action_dim: null
 seed: null
 
-elava_root: /mnt/petrelfs/caijisong/linglong/project/fastwam/elava-prior-only/elava
-task_config: robodojo_local_history_updated_kv_prior_only_16
+elava_root: /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM/AHAWAM
+task_config: robodojo_local_history_updated_kv_prior_only
 checkpoint_path: /mnt/petrelfs/caijisong/XPolicyLab/checkpoint/step_002500.pt
 dataset_stats_path: /mnt/petrelfs/caijisong/XPolicyLab/checkpoint/dataset_stats.json
 diffsynth_model_base_path: /mnt/petrelfs/caijisong/dualWAM/checkpoints
 
 sim_cfg_name: sim_robotwin.yaml
-sim_task: robodojo_local_history_updated_kv_prior_only_16
+sim_task: robodojo_local_history_updated_kv_prior_only
 device: cuda
 mixed_precision: bf16
 action_horizon: 64
 replan_steps: 16
-action_forwards_per_video_replan: 2
+chunks_per_video_prefill: 4
+prepend_episode_first_frame: true
 num_inference_steps: 10
 sigma_shift: null
 text_cfg_scale: 1.0

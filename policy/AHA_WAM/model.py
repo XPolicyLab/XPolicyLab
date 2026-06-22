@@ -255,10 +255,16 @@ class Model(ModelTemplate):
 
         configs_root = self.elava_root / "configs"
         task_name = str(self.model_cfg.get("task_config") or self.model_cfg.get("sim_task"))
+        overrides = [f"task={task_name}"]
+        if "prepend_episode_first_frame" in self.model_cfg:
+            overrides.append(
+                "model.prepend_episode_first_frame="
+                f"{str(_parse_bool(self.model_cfg.get('prepend_episode_first_frame'))).lower()}"
+            )
         if GlobalHydra.instance().is_initialized():
             GlobalHydra.instance().clear()
         with initialize_config_dir(version_base="1.3", config_dir=str(configs_root)):
-            return compose(config_name="train.yaml", overrides=[f"task={task_name}"])
+            return compose(config_name="train.yaml", overrides=overrides)
 
     def _load_policy(self):
         from hydra.utils import instantiate

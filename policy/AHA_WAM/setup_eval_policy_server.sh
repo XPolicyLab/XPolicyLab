@@ -19,13 +19,14 @@ UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
 apptainer_image="${AHA_WAM_APPTAINER_IMAGE:-/mnt/petrelfs/caijisong/shared_img/new_app.sif}"
-elava_root="${AHA_WAM_ELAVA_ROOT:-/mnt/petrelfs/caijisong/linglong/project/fastwam/elava-prior-only/elava}"
+elava_root="${AHA_WAM_ELAVA_ROOT:-${SCRIPT_DIR}/AHAWAM}"
 checkpoint_path="${AHA_WAM_CHECKPOINT_PATH:-${ROOT_DIR}/XPolicyLab/checkpoint/step_002500.pt}"
 dataset_stats_path="${AHA_WAM_DATASET_STATS_PATH:-${ROOT_DIR}/XPolicyLab/checkpoint/dataset_stats.json}"
 diffsynth_model_base_path="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/caijisong/dualWAM/checkpoints}"
-task_config="${AHA_WAM_TASK_CONFIG:-robodojo_local_history_updated_kv_prior_only_16}"
+task_config="${AHA_WAM_TASK_CONFIG:-robodojo_local_history_updated_kv_prior_only}"
 allow_dummy_policy="${AHA_WAM_ALLOW_DUMMY_POLICY:-false}"
-action_forwards_per_video_replan="${AHA_WAM_ACTION_FORWARDS_PER_VIDEO_REPLAN:-2}"
+chunks_per_video_prefill="${AHA_WAM_CHUNKS_PER_VIDEO_PREFILL:-4}"
+prepend_episode_first_frame="${AHA_WAM_PREPEND_EPISODE_FIRST_FRAME:-true}"
 env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-/mnt/petrelfs/caijisong/env_cfg}"
 
 action_dim=$(python3 - "${env_cfg_root}" "${env_cfg_type}" <<'PY'
@@ -71,7 +72,7 @@ conda activate "${POLICY_CONDA_ENV}"
 export CUDA_VISIBLE_DEVICES="${POLICY_GPU_ID}"
 export PYTHONUNBUFFERED=1
 export PYTHONWARNINGS=ignore::UserWarning
-export DIFFSYNTH_MODEL_BASE_PATH="${FASTWAM_DIFFSYNTH_MODEL_BASE_PATH}"
+export DIFFSYNTH_MODEL_BASE_PATH="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}"
 export PYTHONPATH="${ROOT_DIR}/XPolicyLab:${ROOT_DIR}:${ELAVA_ROOT}:${ELAVA_ROOT}/src:${PYTHONPATH:-}"
 
 python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
@@ -93,9 +94,10 @@ python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         task_config="${TASK_CONFIG}" \
         checkpoint_path="${CHECKPOINT_PATH}" \
         dataset_stats_path="${DATASET_STATS_PATH}" \
-        diffsynth_model_base_path="${FASTWAM_DIFFSYNTH_MODEL_BASE_PATH}" \
+        diffsynth_model_base_path="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}" \
         allow_dummy_policy="${ALLOW_DUMMY_POLICY}" \
-        action_forwards_per_video_replan="${ACTION_FORWARDS_PER_VIDEO_REPLAN}"
+        chunks_per_video_prefill="${CHUNKS_PER_VIDEO_PREFILL}" \
+        prepend_episode_first_frame="${PREPEND_EPISODE_FIRST_FRAME}"
 BASH
 
 export ROOT_DIR
@@ -117,9 +119,10 @@ export ACTION_DIM="${action_dim}"
 export TASK_CONFIG="${task_config}"
 export CHECKPOINT_PATH="${checkpoint_path}"
 export DATASET_STATS_PATH="${dataset_stats_path}"
-export FASTWAM_DIFFSYNTH_MODEL_BASE_PATH="${diffsynth_model_base_path}"
+export AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH="${diffsynth_model_base_path}"
 export ALLOW_DUMMY_POLICY="${allow_dummy_policy}"
-export ACTION_FORWARDS_PER_VIDEO_REPLAN="${action_forwards_per_video_replan}"
+export CHUNKS_PER_VIDEO_PREFILL="${chunks_per_video_prefill}"
+export PREPEND_EPISODE_FIRST_FRAME="${prepend_episode_first_frame}"
 
 if command -v apptainer >/dev/null 2>&1; then
     apptainer exec --cleanenv \
@@ -146,9 +149,10 @@ if command -v apptainer >/dev/null 2>&1; then
             TASK_CONFIG="${TASK_CONFIG}" \
             CHECKPOINT_PATH="${CHECKPOINT_PATH}" \
             DATASET_STATS_PATH="${DATASET_STATS_PATH}" \
-            FASTWAM_DIFFSYNTH_MODEL_BASE_PATH="${FASTWAM_DIFFSYNTH_MODEL_BASE_PATH}" \
+            AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}" \
             ALLOW_DUMMY_POLICY="${ALLOW_DUMMY_POLICY}" \
-            ACTION_FORWARDS_PER_VIDEO_REPLAN="${ACTION_FORWARDS_PER_VIDEO_REPLAN}" \
+            CHUNKS_PER_VIDEO_PREFILL="${CHUNKS_PER_VIDEO_PREFILL}" \
+            PREPEND_EPISODE_FIRST_FRAME="${PREPEND_EPISODE_FIRST_FRAME}" \
             bash -lc "${SERVER_BODY}"
 else
     echo -e "\033[33m[SERVER] apptainer not found; falling back to local conda environment.\033[0m"
