@@ -53,6 +53,7 @@ class RobotVideoDataset(torch.utils.data.Dataset):
         ] = None,  # whether to hardcode a specific instruction for all samples, for debugging
         num_history_frames: int = 0,
         history_frame_cache_size: int = 64,
+        prepend_episode_first_frame: bool = False,
         max_action_offset: int = 0,
         action_chunk_size: int = 16,
         action_horizon: int = 0,
@@ -148,6 +149,7 @@ class RobotVideoDataset(torch.utils.data.Dataset):
         self.concat_multi_camera = concat_multi_camera
         self.override_instruction = override_instruction
         self.num_history_frames = int(num_history_frames)
+        self.prepend_episode_first_frame = bool(prepend_episode_first_frame)
         self._video_history_valid_len_cache: torch.Tensor | None = None
         self._video_history_valid_len_cache_key: tuple[int, int, int] | None = None
         self._history_frame_cache: OrderedDict[int, torch.Tensor] = OrderedDict()
@@ -215,12 +217,16 @@ class RobotVideoDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.lerobot_dataset)
 
-    def configure_video_history_memory(self, *, num_history_frames: int) -> None:
+    def configure_video_history_memory(
+        self, *, num_history_frames: int, prepend_episode_first_frame: bool | None = None
+    ) -> None:
         if int(num_history_frames) < 0:
             raise ValueError(
                 f"`num_history_frames` must be >= 0, got {num_history_frames}"
             )
         self.num_history_frames = int(num_history_frames)
+        if prepend_episode_first_frame is not None:
+            self.prepend_episode_first_frame = bool(prepend_episode_first_frame)
         self._video_history_valid_len_cache = None
         self._video_history_valid_len_cache_key = None
 
@@ -242,7 +248,15 @@ class RobotVideoDataset(torch.utils.data.Dataset):
         if horizon_stride <= 0:
             raise ValueError(f"Invalid horizon stride: {horizon_stride}")
         available_horizons = max(0, (int(sample_idx) - ep_start) // horizon_stride)
-        return min(int(self.num_history_frames), int(available_horizons))
+        valid_len = min(int(self.num_history_frames), int(available_horizons))
+        if self.prepend_episode_first_frame and int(sample_idx) > ep_start:
+            first_frame_already_included = (
+                valid_len > 0
+                and (int(sample_idx) - horizon_stride * valid_len) == ep_start
+            )
+            if not first_frame_already_included and valid_len < self.num_history_frames:
+                valid_len += 1
+        return valid_len
 
     def get_video_history_valid_len_for_all_indices(self) -> torch.Tensor:
         dataset_len = len(self.lerobot_dataset)
@@ -273,6 +287,15 @@ class RobotVideoDataset(torch.utils.data.Dataset):
                 ep_valid_len = torch.div(
                     rel, horizon_stride, rounding_mode="floor"
                 ).clamp(max=int(self.num_history_frames))
+                if self.prepend_episode_first_frame:
+                    bonus = (
+                        (rel > 0)
+                        & (ep_valid_len < self.num_history_frames)
+                        & (rel % horizon_stride != 0)
+                    ).to(dtype=torch.long)
+                    ep_valid_len = (ep_valid_len + bonus).clamp(
+                        max=int(self.num_history_frames)
+                    )
                 valid_len[start:end] = ep_valid_len.to(dtype=torch.int16)
 
         self._video_history_valid_len_cache = valid_len
@@ -497,6 +520,14 @@ class RobotVideoDataset(torch.utils.data.Dataset):
             if history_idx >= ep_start:
                 history_indices.append(history_idx)
         valid_len = len(history_indices)
+
+        if self.prepend_episode_first_frame and sample_idx > ep_start:
+            if ep_start not in history_indices:
+                if valid_len < self.num_history_frames:
+                    history_indices.insert(0, ep_start)
+                    valid_len += 1
+                else:
+                    history_indices[0] = ep_start
 
         frames = [self._get_processed_single_frame(idx) for idx in history_indices]
         if frames:

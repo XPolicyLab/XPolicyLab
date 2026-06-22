@@ -84,6 +84,8 @@ def create_ahawam(
     max_action_offset: int = 0,
     action_video_read_mode: str = "current_only",
     video_rope_frame_stride: int = 1,
+    detach_history_kv_during_training: bool = True,
+    prepend_episode_first_frame: bool = False,
     action_train_timestep_mode: str = "per_chunk",
     tokenizer_max_len: int = 512,
     load_text_encoder: bool = True,
@@ -97,6 +99,7 @@ def create_ahawam(
     mot_checkpoint_mixed_attn: bool = True,
     redirect_common_files: bool = True,
     checkpoint_shape_adapt: bool = False,
+    prior_only_training: bool = False,
     model_dtype: torch.dtype = torch.bfloat16,
     device: str = "cuda",
 ):
@@ -194,6 +197,8 @@ def create_ahawam(
         num_history_frames=int(num_history_frames),
         action_video_read_mode=str(action_video_read_mode),
         video_rope_frame_stride=int(video_rope_frame_stride),
+        detach_history_kv_during_training=bool(detach_history_kv_during_training),
+        prepend_episode_first_frame=bool(prepend_episode_first_frame),
     )
     max_action_offset = int(max_action_offset)
     if max_action_offset < 0:
@@ -211,6 +216,9 @@ def _configure_dataset_history(dataset, model_cfg: DictConfig | None) -> None:
         return
     dataset.configure_video_history_memory(
         num_history_frames=int(model_cfg.get("num_history_frames", 0)),
+        prepend_episode_first_frame=bool(
+            model_cfg.get("prepend_episode_first_frame", False)
+        ),
     )
 
 
