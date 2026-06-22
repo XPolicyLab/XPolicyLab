@@ -102,10 +102,7 @@ def get_default_device() -> torch.device:
 
 def barrier() -> None:
     if is_distributed():
-        if dist.get_backend() == "nccl" and torch.cuda.is_available():
-            dist.barrier(device_ids=[get_local_rank()])
-        else:
-            dist.barrier()
+        dist.barrier()
 
 
 def peak_gpu_memory(reset: bool = False) -> Optional[float]:

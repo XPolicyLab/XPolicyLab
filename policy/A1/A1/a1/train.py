@@ -1431,7 +1431,16 @@ class Trainer:
 
         warmed_up = False
 
-        
+        # Cache the total dataset size once so we can report the data-epoch during training.
+        # The VLA dataloader is an infinite stream (trainer `epoch` stays 0), so we derive the
+        # epoch from (examples seen / dataset size) instead.
+        try:
+            self._train_dataset_size = len(self.train_loader.dataset)
+        except Exception:
+            self._train_dataset_size = 0
+        if get_global_rank() == 0:
+            log.info(f"Train dataset size (samples): {self._train_dataset_size:,d}")
+
         with torch_profiler as p:
             for epoch in range(self.epoch or 0, self.max_epochs):
                 for batch in self.train_loader:
@@ -1476,6 +1485,13 @@ class Trainer:
 
                     should_log_this_step = self.should_log_this_step()
 
+                    # Data-epoch: how many full passes over the dataset we've done so far.
+                    data_epoch = (
+                        self.global_train_examples_seen_this_epoch / self._train_dataset_size
+                        if getattr(self, "_train_dataset_size", 0)
+                        else 0.0
+                    )
+
                     # Run train step on batch.
                     # print("Running train step...")
                     # s_time = time.time()
@@ -1497,12 +1513,17 @@ class Trainer:
                         # Learning rate metrics.
                         metrics.update(lr_monitor.check())
 
+                        # Data-epoch progress.
+                        metrics["train/epoch"] = data_epoch
+
                     # Log metrics to console.
                     if self.global_step % self.cfg.console_log_interval == 0:
                         if get_global_rank() == 0:
-                            self.log_metrics_to_console(f"[step={self.global_step}/{self.max_steps}]", metrics)
+                            self.log_metrics_to_console(
+                                f"[step={self.global_step}/{self.max_steps} epoch={data_epoch:.3f}]", metrics
+                            )
                         else:
-                            log.info(f"[step={self.global_step}/{self.max_steps}]")
+                            log.info(f"[step={self.global_step}/{self.max_steps} epoch={data_epoch:.3f}]")
 
                     # Log metrics to W&B.
                     if (
@@ -1640,7 +1661,6 @@ class Trainer:
         if save_checkpoints:
             if (
                 self.cfg.save_interval_unsharded is not None
-                and self.cfg.save_num_unsharded_checkpoints_to_keep != 0
                 and self.last_unsharded_checkpoint_step != self.global_step
             ):
                 log.info("Saving final unsharded model checkpoint...")
@@ -1717,50 +1737,61 @@ class VLATrainer(Trainer):
         checkpointer = FullCheckpointer(self.cfg)
         try:
             with checkpointer._temporary_wd(checkpoint_dir) as temp_checkpoint_dir:
-                if get_global_rank() == 0:
-                    action_head_state_dict = {}
-                    for prefix, module in (
-                        ("action_head", self.model.action_head),
-                        ("proprio_projector", self.model.proprio_projector),
-                    ):
-                        for key, value in module.named_parameters():
-                            clean_key = key.replace("_fsdp_wrapped_module.", "")
-                            action_head_state_dict[f"{prefix}.{clean_key}"] = value.detach().cpu().clone()
-                        for key, value in module.named_buffers():
-                            clean_key = key.replace("_fsdp_wrapped_module.", "")
-                            action_head_state_dict[f"{prefix}.{clean_key}"] = value.detach().cpu().clone()
-
-                    save_state_dict(
-                        temp_checkpoint_dir,
-                        "action_head.pt",
-                        action_head_state_dict,
-                        upload_to=remote_checkpoint_dir,
-                        save_overwrite=self.cfg.save_overwrite,
-                        synchronize=False,
-                    )
-
-                    metadata = {
-                        "global_step": self.global_step,
-                        "action_dim": getattr(self.cfg.model, 'action_dim', 7),
-                        "action_head_type": self.cfg.model.action_head,
-                    }
-                    save_state_dict(
-                        temp_checkpoint_dir,
-                        "metadata.pt",
-                        metadata,
-                        upload_to=remote_checkpoint_dir,
-                        save_overwrite=self.cfg.save_overwrite,
-                        synchronize=False,
-                    )
-
-                    latest_path = Path(self.cfg.save_folder) / "latest-action-head"
-                    latest_path.unlink(missing_ok=True)
-                    try:
-                        latest_path.symlink_to(checkpoint_dir.name, target_is_directory=True)
-                    except FileExistsError:
-                        if latest_path.resolve().name != checkpoint_dir.name:
-                            raise
-
+                # Use FSDP's FULL_STATE_DICT to get unsharded weights
+                from torch.distributed.fsdp import FullStateDictConfig, StateDictType
+                
+                with FSDP.state_dict_type(
+                    self.fsdp_model,
+                    state_dict_type=StateDictType.FULL_STATE_DICT,
+                    state_dict_config=FullStateDictConfig(rank0_only=True, offload_to_cpu=True),
+                ):
+                    full_state_dict = self.fsdp_model.state_dict()
+                    if get_global_rank() == 0:
+                        # Get full model state dict
+                        
+                        
+                        # Extract action_head related parameters
+                        action_head_state_dict = {}
+                        for key, value in full_state_dict.items():
+                            if 'action_head' in key or 'proprio_projector' in key:
+                                action_head_state_dict[key] = value
+                        
+                        # Save action head state dict using existing utility
+                        save_state_dict(
+                            temp_checkpoint_dir,
+                            "action_head.pt",
+                            action_head_state_dict,
+                            upload_to=remote_checkpoint_dir,
+                            save_overwrite=self.cfg.save_overwrite,
+                            synchronize=False,
+                        )
+                        
+                        # Save minimal metadata
+                        metadata = {
+                            "global_step": self.global_step,
+                            "action_dim": getattr(self.cfg.model, 'action_dim', 7),
+                            "action_head_type": self.cfg.model.action_head,
+                        }
+                        save_state_dict(
+                            temp_checkpoint_dir,
+                            "metadata.pt",
+                            metadata,
+                            upload_to=remote_checkpoint_dir,
+                            save_overwrite=self.cfg.save_overwrite,
+                            synchronize=False,
+                        )
+                        
+                        # Create latest symlink
+                        latest_path = Path(self.cfg.save_folder) / "latest-action-head"
+                        latest_path.unlink(missing_ok=True)
+                        try:
+                            latest_path.symlink_to(checkpoint_dir.name, target_is_directory=True)
+                        except FileExistsError:
+                            if latest_path.resolve().name != checkpoint_dir.name:
+                                raise
+                
+                # barrier()
+                
         except FileExistsError:
             raise OLMoConfigurationError(
                 f"Action head checkpoint for step {self.global_step} already exists, use --save-overwrite to overwrite it"
@@ -1798,56 +1829,7 @@ class VLATrainer(Trainer):
         result: Tuple[PathOrStr, Optional[PathOrStr]]
         
         result = super().save_checkpoint(checkpoint_type)
-        stats_path = os.environ.get("DATASET_STATS_PATH")
-        checkpoint_path = Path(result[0])
-        if get_global_rank() == 0 and stats_path and checkpoint_path.is_dir():
-            src = Path(stats_path)
-            if src.is_file():
-                shutil.copy2(src, checkpoint_path / "dataset_stats.json")
-        self._clean_checkpoint_artifacts()
         return result
-
-    def _clean_checkpoint_artifacts(self) -> None:
-        if get_global_rank() != 0:
-            barrier()
-            return
-
-        save_dir = Path(self.cfg.save_folder)
-        latest_unsharded = save_dir / "latest-unsharded"
-        keep_unsharded = None
-        if latest_unsharded.exists():
-            try:
-                keep_unsharded = latest_unsharded.resolve()
-            except OSError:
-                keep_unsharded = None
-
-        unsharded = sorted(save_dir.glob("step*-unsharded"), key=lambda path: path.stat().st_mtime, reverse=True)
-        if keep_unsharded is None and unsharded:
-            keep_unsharded = unsharded[0].resolve()
-            latest_unsharded.unlink(missing_ok=True)
-            try:
-                latest_unsharded.symlink_to(unsharded[0].name, target_is_directory=True)
-            except FileExistsError:
-                pass
-
-        for marker in ("latest", "latest-action-head"):
-            marker_path = save_dir / marker
-            if marker_path.exists() or marker_path.is_symlink():
-                if marker_path.is_dir() and not marker_path.is_symlink():
-                    shutil.rmtree(marker_path, ignore_errors=True)
-                else:
-                    marker_path.unlink(missing_ok=True)
-
-        for path in save_dir.glob("step*"):
-            if not path.is_dir():
-                continue
-            if path.name.endswith("-unsharded"):
-                if keep_unsharded is not None and path.resolve() != keep_unsharded:
-                    shutil.rmtree(path, ignore_errors=True)
-            else:
-                shutil.rmtree(path, ignore_errors=True)
-
-        barrier()
 
 
     # (removed duplicate restore_unsharded_checkpoint definition)
@@ -2615,7 +2597,6 @@ class VLATrainer(Trainer):
         if save_checkpoints:
             if (
                 self.cfg.save_interval_unsharded is not None
-                and self.cfg.save_num_unsharded_checkpoints_to_keep != 0
                 and self.last_unsharded_checkpoint_step != self.global_step
             ):
                 log.info("Saving final unsharded model checkpoint...")

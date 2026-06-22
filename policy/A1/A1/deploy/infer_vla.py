@@ -35,6 +35,48 @@ torch.backends.cudnn.allow_tf32 = True
 
 log = logging.getLogger("infer_vla")
 
+def _make_bool_mask(*dims: int) -> np.ndarray:
+    """Same semantics as a1.data.vla.maniparena_datasets.make_bool_mask."""
+    result = []
+    for dim in dims:
+        if dim > 0:
+            result.extend([True] * dim)
+        else:
+            result.extend([False] * (-dim))
+    return np.asarray(result, dtype=bool)
+
+def _apply_delta_postprocess(
+    actions: np.ndarray,
+    proprio_raw: np.ndarray,
+    *,
+    delta: bool,
+    delta_mask: list[int] | None,
+) -> np.ndarray:
+    """If model predicts delta-action, convert to absolute action by adding state back.
+
+    Training-side behavior (ManiparenaDatasetWrapper):
+      action[:dims] -= where(mask, state[:dims], 0)  (or action -= state when no mask)
+    Here we invert it:
+      action[:dims] += where(mask, state[:dims], 0)
+    """
+    if not delta:
+        return actions
+
+    # Ensure 1D state vector
+    state = np.asarray(proprio_raw, dtype=np.float32).reshape(-1)
+    out = np.asarray(actions, dtype=np.float32)
+
+    if delta_mask is None:
+        dims = min(out.shape[-1], state.shape[-1])
+        out[..., :dims] = out[..., :dims] + state[:dims]
+        return out
+
+    mask = _make_bool_mask(*delta_mask)
+    dims = min(out.shape[-1], state.shape[-1], mask.shape[-1])
+    state_form = np.where(mask[:dims], state[:dims], 0.0).astype(np.float32)
+    out[..., :dims] = out[..., :dims] + state_form
+    return out
+
 
 def load_model(checkpoint_path: str, model_cfg: ModelConfig, device: str = "cuda") -> Molmo:
     """Load VLA model from checkpoint"""
@@ -178,9 +220,7 @@ def normalize_proprio(proprio: np.ndarray, norm_stats: Dict[str, Any], normaliza
 
 def _unnormalize_actions(normalized_actions, norm_stats, normalization_type):
     """Unnormalize actions using dataset statistics"""
-    action_norm_stats = norm_stats.get("actions", norm_stats.get("action"))
-    if action_norm_stats is None:
-        raise KeyError("Normalization stats must contain 'actions' or 'action'.")
+    action_norm_stats = norm_stats['actions']
 
     if normalization_type == NormalizationType.BOUNDS:
         mask = action_norm_stats.get("mask", np.ones_like(action_norm_stats["min"], dtype=bool))
@@ -217,7 +257,10 @@ def run_inference(model: Molmo,
                 normalization_type: NormalizationType,
                 use_proprio: bool,
                 use_wrist_image: bool,
-                no_norm: bool = False) -> Dict[str, Any]:
+                no_norm: bool = False,
+                *,
+                delta: bool = False,
+                delta_mask: list[int] | None = None) -> Dict[str, Any]:
     """Run inference on mock data"""
 
     torch.cuda.set_device(f"cuda:{get_local_rank()}")
@@ -232,10 +275,9 @@ def run_inference(model: Molmo,
 
         
         proprio = proprio.squeeze()
+        proprio_raw = np.asarray(proprio, dtype=np.float32).copy()
         if not no_norm:
-            proprio_norm_stats = norm_stats.get("state", norm_stats.get("observation.state"))
-            if proprio_norm_stats is None:
-                raise KeyError("Normalization stats must contain 'state' or 'observation.state'.")
+            proprio_norm_stats = norm_stats["state"] ## 
             proprio = normalize_proprio(proprio, proprio_norm_stats, normalization_type)
         proprio = torch.tensor(proprio, dtype=torch.float32).to(device).unsqueeze(0)  # 添加batch维度
         proprio = proprio.unsqueeze(1)  # 添加时间步维度，变为 (batch_size, 1, proprio_dim)
@@ -316,6 +358,7 @@ def run_inference(model: Molmo,
             actions = _unnormalize_actions(normalized_actions, norm_stats, normalization_type)
         else:
             actions = normalized_actions
+        actions = _apply_delta_postprocess(actions, proprio_raw, delta=delta, delta_mask=delta_mask)
 
 
     # Format output
@@ -461,16 +504,25 @@ def main():
     # log.info(f"  - Previous actions: {input_data['previous_actions'].shape}")
     
     # Run inference
+    # Note: this CLI is mainly for quick smoke tests; by default we skip (un)normalization here.
     log.info("Running inference...")
-    results = run_inference(model, input_data, args.action_head)
+    results = run_inference(
+        model,
+        input_data,
+        seq_len,
+        norm_stats={},
+        normalization_type=NormalizationType.NORMAL,
+        use_proprio=args.use_proprio,
+        use_wrist_image=args.use_wrist_image,
+        no_norm=True,
+    )
     
     # Print results
     log.info("Inference completed!")
     log.info(f"Results:")
     log.info(f"  - Instruction: {results['instruction']}")
-    log.info(f"  - Action head type: {results['action_head_type']}")
-    log.info(f"  - Predicted actions shape: {results['predicted_actions'].shape}")
-    log.info(f"  - Predicted actions: {results['predicted_actions'].cpu().numpy()}")
+    log.info(f"  - Predicted actions shape: {np.asarray(results['predicted_actions']).shape}")
+    log.info(f"  - Predicted actions: {results['predicted_actions']}")
     
     # Save results if requested
     if args.save_results:
@@ -483,8 +535,7 @@ def main():
         # Convert tensors to lists for JSON serialization
         results_json = {
             'instruction': results['instruction'],
-            'action_head_type': results['action_head_type'],
-            'predicted_actions': results['predicted_actions'].cpu().numpy().tolist(),
+            'predicted_actions': np.asarray(results['predicted_actions']).tolist(),
             'input_shape': results['input_shape'],
             'model_config': {
                 'action_head': model_cfg.action_head,
