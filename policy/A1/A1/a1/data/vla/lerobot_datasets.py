@@ -1,7 +1,6 @@
 import re
 import os
 import json
-import inspect
 from typing import Dict
 import argparse
 import numpy as np
@@ -33,12 +32,6 @@ image_transforms_cfg = ImageTransformsConfig(
         ),
     }
 )
-
-
-def _create_lerobot_dataset(**kwargs):
-    valid_keys = inspect.signature(LeRobotDataset.__init__).parameters
-    filtered_kwargs = {key: value for key, value in kwargs.items() if key in valid_keys}
-    return LeRobotDataset(**filtered_kwargs)
 
 def normalize_action_and_proprio(traj: Dict, metadata: Dict,keys_to_normalize:Dict, normalization_type: NormalizationType):  
     """Normalizes the action and proprio fields of a trajectory using the given metadata."""  
@@ -98,6 +91,26 @@ def normalize_action_and_proprio(traj: Dict, metadata: Dict,keys_to_normalize:Di
   
     raise ValueError(f"Unknown Normalization Type {normalization_type}")
 
+def make_bool_mask(*dims: int) -> tuple[bool, ...]:
+    """Make a boolean mask for the given dimensions.
+
+    Example:
+        make_bool_mask(2, -2, 2) == (True, True, False, False, True, True)
+        make_bool_mask(2, 0, 2) == (True, True, True, True)
+
+    Args:
+        dims: The dimensions to make the mask for.
+
+    Returns:
+        A tuple of booleans.
+    """
+    result = []
+    for dim in dims:
+        if dim > 0:
+            result.extend([True] * (dim))
+        else:
+            result.extend([False] * (-dim))
+    return tuple(result)
 
 class LeRobotDatasetWrapper(Dataset):
     def __init__(self, dataset_path,
@@ -111,10 +124,22 @@ class LeRobotDatasetWrapper(Dataset):
                 video_backend="pyav", #decord, pyav
                 num_episodes=None,
                 image_aug=False,
+                norm_stats_path=None,
+                delta=False,
+                delta_mask=None,
                 ):
         self.use_proprio = use_proprio
         self.use_wrist_image = use_wrist_image
         self.normalization_type = normalization_type
+        self.norm_stats_path = norm_stats_path
+        if self.normalization_type is not None:
+            assert self.norm_stats_path is not None, f"norm_stats_path is required when normalization_type is not None"
+            self.norm_stats = json.load(open(self.norm_stats_path))
+        self.delta = delta
+        self.delta_mask = delta_mask
+        if self.delta:
+            assert self.delta_mask is not None, f"delta_mask is required when delta is True"
+            self.delta_mask = make_bool_mask(*self.delta_mask)
         self.pad_action_and_proprio = pad_action_and_proprio
         self.use_num_images = use_num_images
         self.video_backend = video_backend
@@ -191,7 +216,7 @@ class LeRobotDatasetWrapper(Dataset):
         else:
             episodes = list(range(dataset_meta.total_episodes))
         image_transforms = ImageTransforms(image_transforms_cfg) if image_aug else None
-        self.dataset = _create_lerobot_dataset(
+        self.dataset = LeRobotDataset(
             repo_id=os.path.basename(dataset_path),
             root=dataset_path, 
             episodes=episodes, 
@@ -232,16 +257,26 @@ class LeRobotDatasetWrapper(Dataset):
         actions = data_item[self.action_key].cpu().numpy()
         state = data_item[self.state_key].cpu().numpy()
         input_dict = {'actions':actions,'state':state}
-        keys_to_normalize = {self.action_key: "actions", self.state_key: "state"}
-
+        keys_to_normalize = {'actions': "actions", 'state': "state"}
+        if self.delta:
+            if self.delta_mask is not None:
+                mask = np.asarray(self.delta_mask)
+                dims = mask.shape[-1]
+                state_form = np.where(mask, input_dict['state'][..., :dims], 0)
+                if len(state_form.shape) == 1:
+                    state_form = np.expand_dims(state_form, axis=-2)
+                input_dict['actions'][..., :dims] -= state_form
+            else:
+                input_dict['actions'] = input_dict['actions'] - input_dict['state']
         if self.normalization_type is not None:
-            normalized_data  = normalize_action_and_proprio(input_dict,self.dataset.meta.stats,keys_to_normalize,self.normalization_type)
+            normalized_data  = normalize_action_and_proprio(input_dict,self.norm_stats,keys_to_normalize,self.normalization_type)
         else:
             normalized_data = input_dict
         # print(f"action and state after normalization: {normalized_data}")
 
         action = normalized_data['actions']
         proprio = normalized_data['state']
+        print(f"action: {action.shape}, proprio: {proprio.shape}")
         ###
         pad_len_action = self.fixed_action_dim - action.shape[-1]
         if self.pad_action_and_proprio:

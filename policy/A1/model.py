@@ -1,15 +1,22 @@
 import copy
 import importlib.util
+import json
 import os
 import sys
+import time
+from datetime import datetime
 from pathlib import Path
 
 import cv2
 import numpy as np
 import torch
+from PIL import Image
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_A1_DIR = _SCRIPT_DIR / "A1"
+# Allow pointing at an external A1 repo (e.g. the current A1_cvpr working tree) via the
+# A1_REPO_DIR env var, so the server runs the exact inference code the checkpoint was
+# trained/served with. Defaults to the embedded copy at policy/A1/A1.
+_A1_DIR = Path(os.environ.get("A1_REPO_DIR", str(_SCRIPT_DIR / "A1")))
 if str(_A1_DIR) not in sys.path:
     sys.path.insert(0, str(_A1_DIR))
 
@@ -109,6 +116,64 @@ def _prepare_ee_action_schema(action: dict) -> dict:
     return action
 
 
+def _make_bool_mask(*dims: int) -> np.ndarray:
+    """Same semantics as a1.data.vla.maniparena_datasets.make_bool_mask.
+
+    make_bool_mask(6, -1, 6, -1) -> [T*6, F, T*6, F]
+    """
+    result = []
+    for dim in dims:
+        if dim > 0:
+            result.extend([True] * dim)
+        else:
+            result.extend([False] * (-dim))
+    return np.asarray(result, dtype=bool)
+
+
+def _parse_delta_mask(delta_mask):
+    """Accept either a list/tuple of ints or a comma-separated string '6,-1,6,-1'."""
+    if delta_mask is None:
+        return None
+    if isinstance(delta_mask, str):
+        delta_mask = [int(x) for x in delta_mask.replace(" ", "").split(",") if x != ""]
+    return _make_bool_mask(*[int(x) for x in delta_mask])
+
+
+def _parse_image_resize(image_resize):
+    """None / [] / '' -> no resize (keep original resolution). [w,h] or 'w,h' -> (w,h)."""
+    if image_resize is None:
+        return None
+    if isinstance(image_resize, str):
+        image_resize = image_resize.strip()
+        if not image_resize or image_resize.lower() in ("none", "null"):
+            return None
+        image_resize = [int(x) for x in image_resize.replace(" ", "").split(",") if x != ""]
+    if not image_resize:
+        return None
+    if len(image_resize) != 2:
+        raise ValueError(f"image_resize must be [w, h], got {image_resize}")
+    return (int(image_resize[0]), int(image_resize[1]))
+
+
+def _apply_delta_postprocess(actions: np.ndarray, state: np.ndarray, delta_mask: np.ndarray | None) -> np.ndarray:
+    """Convert model-predicted delta-action to absolute action by adding the raw state back.
+
+    Mirrors A1 deploy/infer_vla.py:_apply_delta_postprocess so that the XPolicyLab
+    server reproduces exactly what the A1 HTTP api_server does when launched with
+    --delta --delta_mask. `state` is the RAW (un-normalized) proprio vector.
+    """
+    out = np.array(actions, dtype=np.float32)  # copy: predicted_actions may be a read-only inference-mode array
+    state = np.asarray(state, dtype=np.float32).reshape(-1)
+    if delta_mask is None:
+        dims = min(out.shape[-1], state.shape[-1])
+        out[..., :dims] = out[..., :dims] + state[:dims]
+        return out
+    dims = min(out.shape[-1], state.shape[-1], delta_mask.shape[-1])
+    state_form = np.where(delta_mask[:dims], state[:dims], 0.0).astype(np.float32)
+    out[..., :dims] = out[..., :dims] + state_form
+    return out
+
+
 def _find_latest_unsharded(run_dir: str | os.PathLike | None) -> str | None:
     if not run_dir or not os.path.isdir(run_dir):
         return None
@@ -191,7 +256,16 @@ class Model(ModelTemplate):
         self.task_name = model_cfg.get("task_name", "")
         self.default_prompt = model_cfg.get("prompt") or self.task_name or "Do your job."
 
-        self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
+        # Prefer an explicit robot_action_dim_info from the config (so the server can
+        # run without the env_cfg/ infra); otherwise resolve it from env_cfg_type.
+        radi = model_cfg.get("robot_action_dim_info")
+        if radi:
+            self.robot_action_dim_info = {
+                "arm_dim": [int(x) for x in radi["arm_dim"]],
+                "ee_dim": [int(x) for x in radi["ee_dim"]],
+            }
+        else:
+            self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
         assert len(self.robot_action_dim_info["arm_dim"]) == len(self.robot_action_dim_info["ee_dim"]), (
             "Arm and EE action dimensions must match"
         )
@@ -206,6 +280,25 @@ class Model(ModelTemplate):
         self.use_wrist_image = bool(model_cfg.get("use_wrist_image", True))
         self.seed = int(model_cfg.get("seed") or 6198)
 
+        # Image resize before feeding the model. None/empty -> keep the caller's original
+        # resolution (matches A1 training/HTTP api_server, which hand the full-res image to
+        # the model's own preprocessor). Set to [w, h] to force a fixed size.
+        self.image_resize = _parse_image_resize(model_cfg.get("image_resize"))
+
+        # Delta-action post-processing. The embedded A1 run_inference does NOT support
+        # delta restoration, so we replicate it here using the raw buffered proprio.
+        self.delta = bool(model_cfg.get("delta", False))
+        self.delta_mask = _parse_delta_mask(model_cfg.get("delta_mask")) if self.delta else None
+
+        # Optional request logging: dump each caller's images + raw state + output action
+        # to disk (mirrors A1 deploy/api_server.py:save_request_log) so the owner can verify
+        # what external clients send. Only active when request_log_dir is set.
+        self.request_log_dir = model_cfg.get("request_log_dir") or None
+        self._request_counter = 0
+        if self.request_log_dir:
+            os.makedirs(self.request_log_dir, exist_ok=True)
+            print(f"[A1 Model] request logging ON -> {self.request_log_dir}")
+
         self.model_path = self._resolve_model_path(model_cfg)
         self.norm_stats = self._load_norm_stats(model_cfg)
         self.model, self.a1_model_cfg = _load_a1_model(self.model_path, self.seed)
@@ -215,7 +308,9 @@ class Model(ModelTemplate):
 
         print(
             f"[A1 Model] Initialized | model_path={self.model_path} | action_type={self.action_type} | "
-            f"action_dim={self.action_dim} | action_chunk_size={self.action_chunk_size} | no_norm={self.no_norm}"
+            f"action_dim={self.action_dim} | action_chunk_size={self.action_chunk_size} | "
+            f"norm={self.normalization_type.value} | no_norm={self.no_norm} | "
+            f"delta={self.delta} | delta_mask={None if self.delta_mask is None else self.delta_mask.astype(int).tolist()}"
         )
 
     def _resolve_model_path(self, model_cfg):
@@ -285,6 +380,7 @@ class Model(ModelTemplate):
                 self.action_type,
                 self.robot_action_dim_info,
                 self.default_prompt,
+                self.image_resize,
             )
 
     def get_action(self):
@@ -300,6 +396,7 @@ class Model(ModelTemplate):
                 raise RuntimeError(f"No observation buffered for env_idx={env_idx}. Call update_obs first.")
 
             input_data = self._obs_buffer_batch[env_idx]
+            _t0 = time.monotonic()
             with torch.inference_mode():
                 results = run_inference(
                     self.model,
@@ -311,11 +408,22 @@ class Model(ModelTemplate):
                     use_wrist_image=self.use_wrist_image,
                     no_norm=self.no_norm,
                 )
+            _proc_ms = (time.monotonic() - _t0) * 1000.0
 
             actions = np.asarray(results["predicted_actions"], dtype=np.float32).squeeze()
             if actions.ndim == 1:
                 actions = actions.reshape(1, -1)
+
+            # Restore absolute action from predicted delta (run_inference returns
+            # un-normalized but still delta-relative actions; add the raw state back).
+            if self.delta:
+                raw_state = np.asarray(input_data["proprio"], dtype=np.float32).reshape(-1)
+                actions = _apply_delta_postprocess(actions, raw_state, self.delta_mask)
+
             actions = actions[: self.action_chunk_size, : self.action_dim]
+
+            # Log this caller's input (images + raw state) and output (absolute action).
+            self._save_request_log(input_data, actions, env_idx, _proc_ms)
 
             action_steps = []
             for step_action in actions:
@@ -332,20 +440,78 @@ class Model(ModelTemplate):
 
         return action_batch
 
+    def _save_request_log(self, input_data, actions, env_idx, processing_time_ms):
+        """Dump one caller's input (images + raw state) and output (absolute action).
+
+        Mirrors A1 deploy/api_server.py:save_request_log. The images saved here are
+        exactly what the model received (original resolution unless image_resize is set),
+        and the state is the raw, un-normalized proprio packed by pack_robot_state.
+        Only active when request_log_dir is set.
+        """
+        if not self.request_log_dir:
+            return
+        try:
+            self._request_counter += 1
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+            out_dir = os.path.join(self.request_log_dir, f"{ts}_{self._request_counter:06d}_env{env_idx}")
+            os.makedirs(out_dir, exist_ok=True)
+
+            # 1) images actually fed to the model (HWC uint8 RGB)
+            images = input_data.get("images") or []
+            image_shapes = []
+            for i, img in enumerate(images):
+                arr = np.asarray(img)
+                image_shapes.append(list(arr.shape))
+                try:
+                    Image.fromarray(arr.astype(np.uint8)).save(os.path.join(out_dir, f"cam{i}.png"))
+                except Exception as e:  # noqa: BLE001
+                    print(f"[request-log] save image {i} failed: {e}", flush=True)
+
+            # 2) raw state + output action + config -> meta.json
+            raw_state = np.asarray(input_data.get("proprio"), dtype=np.float32).reshape(-1)
+            acts = np.asarray(actions, dtype=np.float32)
+            meta = {
+                "timestamp": ts,
+                "env_idx": int(env_idx),
+                "instruction": input_data.get("instruction"),
+                "num_images": len(images),
+                "image_shapes": image_shapes,
+                "proprio_state_raw": raw_state.tolist(),  # un-normalized state from the caller
+                "proprio_dim": int(raw_state.shape[-1]),
+                "predicted_actions": acts.tolist(),        # absolute action (delta restored)
+                "predicted_actions_shape": list(acts.shape),
+                "processing_time_ms": round(processing_time_ms, 2),
+                "action_type": self.action_type,
+                "normalization_type": self.normalization_type.value,
+                "no_norm": self.no_norm,
+                "delta": self.delta,
+                "delta_mask": None if self.delta_mask is None else self.delta_mask.astype(int).tolist(),
+            }
+            with open(os.path.join(out_dir, "meta.json"), "w", encoding="utf-8") as f:
+                json.dump(meta, f, indent=2, ensure_ascii=False)
+            np.save(os.path.join(out_dir, "predicted_actions.npy"), acts)
+            print(
+                f"[request-log] saved -> {out_dir} "
+                f"(images={len(images)}, state_dim={meta['proprio_dim']}, {processing_time_ms:.0f}ms)",
+                flush=True,
+            )
+        except Exception as e:  # noqa: BLE001
+            print(f"[request-log] failed: {e}", flush=True)
+
     def reset(self):
         self._obs_buffer_batch = {}
         self._latest_env_idx_list = [0]
-        print("[A1 Model] Reset")
+        print("[A1 Model] Reset", flush=True)
 
 
-def _encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
+def _encode_obs(observation, action_type, robot_action_dim_info, default_prompt, image_resize=None):
     if action_type == "ee":
         observation = _prepare_ee_obs_schema(observation)
 
     vision = observation.get("vision", {})
     images = []
     for camera_names in DEFAULT_CAMERA_GROUPS:
-        img = _extract_rgb_image(vision, camera_names)
+        img = _extract_rgb_image(vision, camera_names, image_resize)
         if img is not None:
             images.append(img)
 
@@ -364,7 +530,7 @@ def _encode_obs(observation, action_type, robot_action_dim_info, default_prompt)
     }
 
 
-def _extract_rgb_image(vision, camera_names):
+def _extract_rgb_image(vision, camera_names, image_resize=None):
     if isinstance(camera_names, str):
         camera_names = (camera_names,)
     camera_data = None
@@ -387,5 +553,8 @@ def _extract_rgb_image(vision, camera_names):
     if img.ndim != 3 or img.shape[-1] != 3:
         return None
 
-    img = cv2.resize(img, (320, 240), interpolation=cv2.INTER_AREA)
+    # By default keep the caller's original resolution (matches A1 training / HTTP server,
+    # which let the model's own preprocessor crop/resize). Only resize when explicitly asked.
+    if image_resize is not None:
+        img = cv2.resize(img, (int(image_resize[0]), int(image_resize[1])), interpolation=cv2.INTER_AREA)
     return img.astype(np.uint8)

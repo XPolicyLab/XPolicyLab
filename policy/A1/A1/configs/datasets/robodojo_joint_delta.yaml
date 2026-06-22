@@ -1,0 +1,291 @@
+# RoboTwin 3.0 / RoboDojo 数据集配置（ARX5 双臂，关节空间 delta）
+# 动作 14 维: [左臂6 | 左爪1 | 右臂6 | 右爪1]
+# delta_mask=[6,-1,6,-1]: 双臂关节做 delta，夹爪保留绝对值
+
+image_augmentation:
+  enable: false
+  enable_random_erasing: false
+  enable_sharpening: true
+  augmentation_prob: 0.5
+
+robodojo:
+  - path: data/robotwin3/RoboDojo/arrange_largest_number
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/build_tower
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/classify_objects
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/cover_blocks
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/deposit_coin
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/dlc
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/fasten_screws
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/fill_egg_holder
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/fill_pen_holder
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/fold_clothes
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/hang_mugs
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/imitate_sorting_sequence
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/insert_key
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/insert_tubes
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/make_kong
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/make_toast
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/match_and_pick_from_conveyor
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/organize_table
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/pack_objects_into_box
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/play_Xylophone
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/play_stacking_toy
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/play_tic_tac_toe
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/plug_in_charger
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/pour_balls_into_vase
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/pour_liquid_into_cup
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/press_by_number
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/push_T
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/put_bottles_into_dustbin
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/sort_nesting_dolls_by_size
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/stack_blocks
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/stack_bowls
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/store_laptop_and_headphones
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/swap_T
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/swap_blocks
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+  - path: data/robotwin3/RoboDojo/sweep_blocks
+    weight: 1.0
+    normalization_type: bounds_q99
+    norm_stats_path: assets/robodojo_joint_delta.json
+    delta: true
+    delta_mask: [6, -1, 6, -1]
+    action_type: joint
+    camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
