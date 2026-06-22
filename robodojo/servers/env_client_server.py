@@ -92,8 +92,10 @@ class EnvClientServerState:
         self,
         evaluation_id: str,
         trial_index: int,
-    ) -> TrialRunnerFn:
-        stop_event = self.trial_control.register(evaluation_id, trial_index)
+    ) -> TrialRunnerFn | None:
+        stop_event = self.trial_control.register_if_idle(evaluation_id, trial_index)
+        if stop_event is None:
+            return None
         return make_dispatch_trial_runner(
             self.baseline,
             run_trial=self.run_trial,
@@ -303,6 +305,12 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
 
             artifact_dir = state.artifact_dir(evaluation_id, trial_index)
             trial_runner = state.trial_runner_with_stop(evaluation_id, trial_index)
+            if trial_runner is None:
+                self._write_json(
+                    HTTPStatus.CONFLICT,
+                    {"error": "another trial is already executing"},
+                )
+                return
             try:
                 exit_code, summary = run_dispatch(
                     dispatch,
