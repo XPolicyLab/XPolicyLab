@@ -1,67 +1,42 @@
-# Copyright (C) 2026 Xiaomi Corporation.
-from __future__ import annotations
+def eval_one_episode(TASK_ENV, model_client):
 
-import argparse
-import sys
-from os.path import join as osp
+    model_client.call(func_name="reset") # reset policy
 
-import torch
-import torch.multiprocessing as mp
-from mmengine import Config
+    while not TASK_ENV.is_episode_end(): # Check whether the episode ends
+        obs = TASK_ENV.get_obs() # Get Observation
+        model_client.call(func_name="update_obs", obs=obs)  # Update Observation
+        actions = model_client.call(func_name="get_action") # Get Action according to observation chunk
 
-from mibot.models import MIMODEL
-from mibot.server.runtime.server import Server
-from mibot.utils.io import build_action_mask, validate_stats
+        for action_idx, action in enumerate(actions):
+            TASK_ENV.take_action(action)
 
-mp.set_start_method("spawn", force=True)
+            if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions):
+                break
 
+            obs = TASK_ENV.get_obs()
+            model_client.call(func_name="update_obs", obs=obs)
 
-def strip_prefix(state_dict, prefix):
-    return {key[len(prefix) :]: value for key, value in state_dict.items() if key.startswith(prefix)}
+def eval_one_episode_batch(TASK_ENV, model_client):
 
+    model_client.call(func_name="reset")
 
-def load_model(model_dir, device):
-    cfg = Config.fromfile(osp(model_dir, "config.py"))
-    model = MIMODEL.build(cfg.model.params.model).to(torch.bfloat16)
-    ckpt = torch.load(osp(model_dir, "last.ckpt/checkpoint", "mp_rank_00_model_states.pt"), map_location="cpu")["module"]
-    print(model.load_state_dict(strip_prefix(ckpt, "model."), assign=True))
-    return cfg, model.eval().to(device)
+    while not TASK_ENV.is_episode_end(): # Check whether the episode ends
+        env_idx_list = TASK_ENV.get_running_env_idx_list() # Get Running Environment Index List
+        obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Observation
+        model_client.call(func_name="update_obs_batch", obs=obs_list)
+        actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)  # Get Action according to observation chunk
 
+        chunk_size = len(actions[0]) # Get the chunk size
+        for action_idx in range(chunk_size): # Iterate over the action chunk
+            current_action_list = [env_actions[action_idx] for env_actions in actions] # Get the current action list
+            TASK_ENV.take_action_batch(current_action_list, env_idx_list) # Take the action
 
-def load_stats(cfg, device):
-    data = cfg.data.params.train_datasets
-    action_length = int(data.get("action_length", cfg.data.params.get("action_length", 30)))
-    mean, std = validate_stats(data.mean, data.std, action_length)
-    return (
-        torch.tensor(mean, device=device),
-        torch.tensor(std, device=device),
-        torch.from_numpy(build_action_mask(action_length)).to(device),
-    )
+            if TASK_ENV.is_episode_end() or action_idx + 1 == chunk_size: # Check whether the episode ends
+                break
 
+            running = set(TASK_ENV.get_running_env_idx_list()) # Get the running environment index list
+            active_batch_idx = [i for i, env_idx in enumerate(env_idx_list) if env_idx in running] # Get the active batch index
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, required=True, help="Path to the model dir.")
-    parser.add_argument("--host", type=str, default="localhost")
-    parser.add_argument("--port", type=int, default=10086)
-    return parser.parse_args()
-
-
-if __name__ == "__main__":
-    args = parse_args()
-    device = "cuda:0"
-    cfg, model = load_model(args.model, device)
-    mean, std, action_mask = load_stats(cfg, device)
-
-    try:
-        server = Server(args.host, args.port, model, mean, std, action_mask, device)
-        print(f"Starting server on {args.host}:{args.port}")
-        server.start()
-        server.join()
-    except OSError as error:
-        if error.errno == 98:
-            print(f"Error: Port {args.port} is already in use. Please choose a different port.")
-            sys.exit(1)
-        raise
-    except KeyboardInterrupt:
-        print("Server interrupted")
+            actions = [actions[i] for i in active_batch_idx] # Get the active action list
+            env_idx_list = [env_idx_list[i] for i in active_batch_idx] # Get the active environment index list
+            model_client.call(func_name="update_obs_batch", obs=TASK_ENV.get_obs_batch(env_idx_list)) # Update the observation

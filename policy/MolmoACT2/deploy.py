@@ -16,7 +16,6 @@ def eval_one_episode(TASK_ENV, model_client):
             obs = TASK_ENV.get_obs()
             model_client.call(func_name="update_obs", obs=obs)
 
-
 def eval_one_episode_batch(TASK_ENV, model_client):
 
     model_client.call(func_name="reset")
