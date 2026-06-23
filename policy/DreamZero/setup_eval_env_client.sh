@@ -41,9 +41,6 @@ fi
 source "$("${conda_exe}" info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
 client_conda_env="${eval_env_conda_env}"
-if [[ "${eval_env}" == "debug" ]]; then
-    client_conda_env="${DREAMZERO_DEBUG_CONDA_ENV:-dreamzero_lv3}"
-fi
 conda activate "${client_conda_env}"
 export PATH="${CONDA_PREFIX}/bin:${PATH}"
 hash -r
@@ -104,4 +101,5 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${additional_info}" \
     "${ROOT_DIR}" \
     "${seed}" \
-    "${env_gpu_id}"
+    "${env_gpu_id}" \
+    "${policy_server_ip}"

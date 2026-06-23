@@ -21,9 +21,13 @@ from XPolicyLab.utils.process_data import (
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DREAMZERO_DIR = SCRIPT_DIR / "dreamzero"
-DEMO_ROOT = SCRIPT_DIR.parents[2]
-DEFAULT_MODEL_PATH = DEMO_ROOT / "models" / "checkpoints" / "DreamZero-AgiBot"
-DEFAULT_TOKENIZER_PATH = DEMO_ROOT / "models" / "checkpoints" / "checkpoints" / "umt5-xxl"
+CHECKPOINTS_DIR = SCRIPT_DIR / "checkpoints"
+DEFAULT_MODEL_PATH = CHECKPOINTS_DIR / "DreamZero-AgiBot"
+LEGACY_FLAT_MODEL_PATH = CHECKPOINTS_DIR
+DEFAULT_TOKENIZER_PATHS = (
+    CHECKPOINTS_DIR / "umt5-xxl",
+    CHECKPOINTS_DIR / "Wan2.1-I2V-14B-480P" / "google" / "umt5-xxl",
+)
 
 if str(DREAMZERO_DIR) not in sys.path:
     sys.path.insert(0, str(DREAMZERO_DIR))
@@ -35,6 +39,7 @@ from groot.vla.model.n1_5.sim_policy import GrootSimPolicy  # noqa: E402
 AGIBOT_STATE_DIM = 20
 AGIBOT_ACTION_DIM = 22
 INFERENCE_IMAGE_SIZE = (640, 480)
+AGIBOT_6DOF_ARM_INDICES = np.array([0, 1, 3, 4, 5, 6], dtype=np.int64)
 
 
 def _configure_torch_dynamo_for_eval() -> None:
@@ -152,22 +157,34 @@ def _resolve_model_path(model_cfg: dict[str, Any]) -> Path:
     action_type = model_cfg.get("action_type", "")
     seed = model_cfg.get("seed", "0")
     run_basename = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
-    checkpoints_dir = SCRIPT_DIR / "checkpoints"
+    checkpoints_dir = CHECKPOINTS_DIR
 
     for candidate in _candidate_run_dirs(checkpoints_dir, run_basename):
         resolved = _latest_checkpoint(candidate)
         if resolved is not None:
             return resolved.resolve()
 
-    return Path(model_cfg.get("pretrained_model_path") or DEFAULT_MODEL_PATH).expanduser().resolve()
+    pretrained_model_path = model_cfg.get("pretrained_model_path")
+    if pretrained_model_path:
+        return Path(pretrained_model_path).expanduser().resolve()
+
+    for candidate in (DEFAULT_MODEL_PATH, LEGACY_FLAT_MODEL_PATH):
+        if (candidate / "experiment_cfg" / "conf.yaml").is_file() and any(
+            (candidate / name).exists()
+            for name in ("config.json", "model.safetensors", "model.safetensors.index.json", "pytorch_model.bin")
+        ):
+            return candidate.resolve()
+
+    return DEFAULT_MODEL_PATH.resolve()
 
 
 def _resolve_tokenizer_path(model_cfg: dict[str, Any]) -> str | None:
     tokenizer_path = model_cfg.get("tokenizer_path") or os.environ.get("TOKENIZER_DIR")
     if tokenizer_path:
         return str(Path(tokenizer_path).expanduser().resolve())
-    if DEFAULT_TOKENIZER_PATH.exists():
-        return str(DEFAULT_TOKENIZER_PATH.resolve())
+    for default_path in DEFAULT_TOKENIZER_PATHS:
+        if default_path.exists():
+            return str(default_path.resolve())
     return None
 
 
@@ -179,6 +196,13 @@ class Model(ModelTemplate):
         self.task_name = model_cfg.get("task_name", "")
         self.default_prompt = model_cfg.get("prompt") or "Do your job."
         self.robot_action_dim_info = get_robot_action_dim_info(self.env_cfg_type)
+        self.expected_action_dim = sum(self.robot_action_dim_info["arm_dim"]) + sum(self.robot_action_dim_info["ee_dim"])
+        configured_action_dim = model_cfg.get("action_dim")
+        if configured_action_dim is not None and int(configured_action_dim) != self.expected_action_dim:
+            raise ValueError(
+                f"DreamZero action_dim mismatch for env_cfg_type={self.env_cfg_type}: "
+                f"deploy config has {configured_action_dim}, robot config expects {self.expected_action_dim}."
+            )
         self.action_horizon = int(model_cfg.get("action_horizon", 24))
         self.video_history = int(model_cfg.get("video_history", 4))
         self.inference_method = model_cfg.get("inference_method", "lazy_joint_forward_causal")
@@ -329,12 +353,26 @@ def _xpolicylab_obs_to_agibot_state(observation: dict[str, Any], action_type: st
         ee = packed[offset : offset + ee_dim]
         offset += ee_dim
         if arm_idx == 0:
-            out[0:7] = _pad_or_trim(arm.reshape(1, -1), 7)[0]
+            out[_agibot_arm_indices(arm_dim, arm_idx)] = _pad_or_trim(arm.reshape(1, -1), arm_dim)[0]
             out[14:15] = _pad_or_trim(ee.reshape(1, -1), 1)[0]
         elif arm_idx == 1:
-            out[7:14] = _pad_or_trim(arm.reshape(1, -1), 7)[0]
+            out[_agibot_arm_indices(arm_dim, arm_idx)] = _pad_or_trim(arm.reshape(1, -1), arm_dim)[0]
             out[15:16] = _pad_or_trim(ee.reshape(1, -1), 1)[0]
     return out
+
+
+def _agibot_arm_indices(arm_dim: int, arm_idx: int) -> np.ndarray:
+    base = 0 if arm_idx == 0 else 7
+    if arm_dim == 6:
+        return base + AGIBOT_6DOF_ARM_INDICES
+    return base + np.arange(min(arm_dim, 7), dtype=np.int64)
+
+
+def _agibot_arm_to_robot_arm(agibot_arm: np.ndarray, arm_dim: int) -> np.ndarray:
+    values = np.asarray(agibot_arm, dtype=np.float32).reshape(-1)
+    if arm_dim == 6 and values.shape[0] >= 7:
+        return values[AGIBOT_6DOF_ARM_INDICES]
+    return _pad_or_trim(values.reshape(1, -1), arm_dim)[0]
 
 
 def _agibot_to_xpolicylab_packed(
@@ -351,6 +389,6 @@ def _agibot_to_xpolicylab_packed(
     for arm_idx, (arm_dim, ee_dim) in enumerate(zip(robot_info["arm_dim"], robot_info["ee_dim"])):
         arm_source = arms[min(arm_idx, 1)]
         ee_source = ees[min(arm_idx, 1)]
-        parts.append(_pad_or_trim(np.asarray(arm_source).reshape(1, -1), arm_dim)[0])
+        parts.append(_agibot_arm_to_robot_arm(arm_source, arm_dim))
         parts.append(_pad_or_trim(np.asarray(ee_source).reshape(1, -1), ee_dim)[0])
     return np.concatenate(parts).astype(np.float32)

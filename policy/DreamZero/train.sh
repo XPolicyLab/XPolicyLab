@@ -9,9 +9,9 @@ Usage:
 
 Optional environment overrides:
   LEROBOT_DATA_PATH                 Default: <demo_root>/RobotDojo/RoboDojo_sim_arx-x5_v30
-  DREAMZERO_PRETRAINED_MODEL_PATH   Default: <demo_root>/models/checkpoints/DreamZero-AgiBot
-  WAN_CKPT_DIR                      Default: <demo_root>/models/checkpoints/checkpoints/Wan2.1-I2V-14B-480P
-  TOKENIZER_DIR                     Default: <demo_root>/models/checkpoints/checkpoints/umt5-xxl
+  DREAMZERO_PRETRAINED_MODEL_PATH   Default: ./checkpoints/DreamZero-AgiBot, or ./checkpoints for flat layout
+  WAN_CKPT_DIR                      Default: ./checkpoints/Wan2.1-I2V-14B-480P
+  TOKENIZER_DIR                     Default: ./checkpoints/umt5-xxl, or Wan2.1 nested tokenizer fallback
   DREAMZERO_PREFLIGHT_ONLY          If 1, validate dataset and weights then exit.
   DREAMZERO_DRY_RUN                 If 1, print resolved command and exit before torchrun.
 EOF
@@ -59,10 +59,20 @@ export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export HYDRA_FULL_ERROR=1
 export WANDB_PROJECT="${WANDB_PROJECT:-dreamzero}"
 
-default_models_dir="${ROOT_DIR}/models/checkpoints"
-wan_ckpt_dir="${WAN_CKPT_DIR:-${default_models_dir}/checkpoints/Wan2.1-I2V-14B-480P}"
-tokenizer_dir="${TOKENIZER_DIR:-${default_models_dir}/checkpoints/umt5-xxl}"
-pretrained_model_path="${DREAMZERO_PRETRAINED_MODEL_PATH:-${default_models_dir}/DreamZero-AgiBot}"
+checkpoints_dir="${SCRIPT_DIR}/checkpoints"
+default_pretrained_model_path="${checkpoints_dir}/DreamZero-AgiBot"
+if [ ! -d "${default_pretrained_model_path}" ] && [ -f "${checkpoints_dir}/config.json" ]; then
+    default_pretrained_model_path="${checkpoints_dir}"
+fi
+
+default_tokenizer_dir="${checkpoints_dir}/umt5-xxl"
+if [ ! -d "${default_tokenizer_dir}" ] && [ -d "${checkpoints_dir}/Wan2.1-I2V-14B-480P/google/umt5-xxl" ]; then
+    default_tokenizer_dir="${checkpoints_dir}/Wan2.1-I2V-14B-480P/google/umt5-xxl"
+fi
+
+wan_ckpt_dir="${WAN_CKPT_DIR:-${checkpoints_dir}/Wan2.1-I2V-14B-480P}"
+tokenizer_dir="${TOKENIZER_DIR:-${default_tokenizer_dir}}"
+pretrained_model_path="${DREAMZERO_PRETRAINED_MODEL_PATH:-${default_pretrained_model_path}}"
 max_steps="${DREAMZERO_MAX_STEPS:-5000}"
 save_steps="${DREAMZERO_SAVE_STEPS:-2500}"
 batch_size="${DREAMZERO_PER_DEVICE_BATCH_SIZE:-1}"

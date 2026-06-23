@@ -323,13 +323,13 @@ class VLA(PreTrainedModel):
                 "Expected 'model.safetensors' or 'model.safetensors.index.json'."
             )
 
+        if hasattr(model, 'action_head') and hasattr(model.action_head, 'inject_lora_after_loading') and model.action_head.config.defer_lora_injection:
+            print("Injecting LoRA adapters into action_head after loading pretrained weights")
+            model.action_head.inject_lora_after_loading()
+
         if lora_weights_path is not None:
             print(f"Loading LoRA weights from: {lora_weights_path}")
             model.load_lora_weight(lora_weights_path)
-        else:
-            if hasattr(model, 'action_head') and hasattr(model.action_head, 'inject_lora_after_loading') and model.action_head.config.defer_lora_injection:
-                print("Injecting LoRA adapters into action_head after loading pretrained weights")
-                model.action_head.inject_lora_after_loading()
         
         print(f"{cls}\n")
         return model
@@ -337,12 +337,28 @@ class VLA(PreTrainedModel):
     @classmethod
     def load_lora(
         cls, 
-        pretrained_model_name_or_path: str
+        pretrained_model_name_or_path: str,
+        base_model_path: str | None = None,
     ): 
         from safetensors.torch import load_file
         import os
         import json
-        print("loading lora@@@@@")
+
+        print(f"Loading LoRA checkpoint from: {pretrained_model_name_or_path}")
+
+        if base_model_path is not None and os.path.isdir(base_model_path):
+            print(f"Loading base model before LoRA from: {base_model_path}")
+            config_path = os.path.join(pretrained_model_name_or_path, "config.json")
+            with open(config_path, "r") as f:
+                config_dict = json.load(f)
+            config = VLAConfig(**config_dict)
+            return cls.from_pretrained_for_tuning(
+                base_model_path,
+                config=config,
+                lora_weights_path=pretrained_model_name_or_path,
+            )
+        if base_model_path is not None:
+            print(f"Base model path not found, falling back to legacy LoRA loading: {base_model_path}")
 
         # Check for different checkpoint formats
         safetensors_path = os.path.join(pretrained_model_name_or_path, "model.safetensors")
