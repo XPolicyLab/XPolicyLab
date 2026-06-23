@@ -1,0 +1,46 @@
+# @package _global_
+
+defaults:
+  - override /data: robodojo
+  - override /model: ahawam
+  - _self_
+
+batch_size: 8
+num_workers: 8
+history_aware_batching: false
+
+model:
+  mot_checkpoint_mixed_attn: true
+  action_obs_downsample_factor: 1
+  chunk_kv_editor_num_queries: 32
+  num_history_frames: 0
+  action_video_read_mode: current_only
+  video_rope_frame_stride: ${data.train.action_video_freq_ratio}
+  detach_history_kv_during_training: true
+  prepend_episode_first_frame: false
+  prior_only_training: true
+  loss:
+    lambda_action_prior: 1.0
+
+output_dir: ${oc.env:AHA_WAM_OUTPUT_ROOT,/nvme/caijisong/mnt1/wam_ckpt/robodojo}/${hydra:runtime.choices.task}-${oc.env:RUN_ID,manual}
+
+wandb:
+  enabled: true
+  workspace: null
+  project: aha-wam
+  name: robodojo_local_history_updated_kv_prior_only
+  group: null
+  mode: offline
+
+lr_scheduler_type: "cosine"
+learning_rate: 3e-5
+num_epochs: 20
+max_steps: null
+log_every: 10
+save_every: 2500
+eval_every: 500
+
+gradient_accumulation_steps: 4
+weight_decay: 1e-2
+resume: null
+init_checkpoint: null
