@@ -122,6 +122,37 @@ def _override_processor_cosmos_model(checkpoint_dir: Path, cosmos_model: str) ->
             json.dump(data, f, indent=2)
 
 
+@contextmanager
+def _override_checkpoint_model_name(checkpoint_dir: Path, cosmos_model: str) -> Iterator[None]:
+    """Replace baked-in absolute backbone model_name in config.json during load."""
+    config_path = checkpoint_dir / "config.json"
+    if not config_path.is_file():
+        yield
+        return
+
+    with open(config_path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    previous = data.get("model_name")
+    if previous == cosmos_model:
+        yield
+        return
+
+    data["model_name"] = cosmos_model
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+    try:
+        yield
+    finally:
+        if previous is not None:
+            data["model_name"] = previous
+        else:
+            data.pop("model_name", None)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+
+
 def _resolve_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
     if model_cfg.get("model_dir"):
         return _resolve_relative_path(model_cfg["model_dir"], _POLICY_DIR)
@@ -137,14 +168,12 @@ def _resolve_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
     if not root.is_dir():
         raise FileNotFoundError(f"Checkpoint root not found: {root}")
 
-    search_roots = [root]
-    for child in sorted(root.iterdir()):
-        if child.is_dir() and not child.name.startswith("checkpoint-"):
-            search_roots.append(child)
-
-    candidates = []
-    for search_root in search_roots:
-        candidates.extend(sorted(search_root.glob("checkpoint-*"), key=lambda p: p.name))
+    # Some uploaded ckpts are wrapped by extra directory levels after unzip.
+    # Recursively collect checkpoint-* directories so both flat and nested layouts work.
+    candidates = sorted(
+        [p for p in root.rglob("checkpoint-*") if p.is_dir()],
+        key=lambda p: (str(p.parent), p.name),
+    )
     if not candidates:
         raise FileNotFoundError(f"No checkpoint-* directories under {root}")
 
@@ -161,8 +190,9 @@ def _resolve_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
     explicit = root / f"checkpoint-{checkpoint_num}"
     if explicit.is_dir():
         return explicit.resolve()
-    for search_root in search_roots:
-        nested = search_root / f"checkpoint-{checkpoint_num}"
+
+    # Fallback for nested archive layouts where checkpoint dir is not directly under root.
+    for nested in root.rglob(f"checkpoint-{checkpoint_num}"):
         if nested.is_dir():
             return nested.resolve()
 
@@ -331,13 +361,14 @@ class Model(ModelTemplate):
         embodiment_tag = model_cfg.get("embodiment_tag", "NEW_EMBODIMENT")
         cosmos_model = _resolve_cosmos_model(model_cfg)
 
-        with _override_processor_cosmos_model(checkpoint_dir, cosmos_model):
-            self.policy = Gr00tPolicy(
-                model_path=str(checkpoint_dir),
-                embodiment_tag=embodiment_tag,
-                device=self.device,
-                strict=True,
-            )
+        with _override_checkpoint_model_name(checkpoint_dir, cosmos_model):
+            with _override_processor_cosmos_model(checkpoint_dir, cosmos_model):
+                self.policy = Gr00tPolicy(
+                    model_path=str(checkpoint_dir),
+                    embodiment_tag=embodiment_tag,
+                    device=self.device,
+                    strict=True,
+                )
         self.model = self.policy
         self.action_horizon = len(self.policy.modality_configs["action"].delta_indices)
 

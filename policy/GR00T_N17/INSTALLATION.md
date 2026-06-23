@@ -29,7 +29,7 @@ source "$HOME/.local/bin/env"  # 若当前 shell 找不到 uv
 
 ### 3. 创建 GR00T 环境
 
-在 **x86_64 GPU 主机**上，上游 `pyproject.toml` 的 `required-environments` 会同时解析 aarch64 专用 wheel，导致 `uv sync` 失败。请使用仓库内 `install.sh`（`uv venv --clear` + `uv pip install -e .`）：
+在 **x86_64 GPU 主机**上，上游 `pyproject.toml` 的 `required-environments` 会同时解析 aarch64 专用 wheel，导致 `uv sync` 失败。请使用仓库内 `install.sh`（`uv venv --clear` + `uv pip install -e . --python-platform <host-arch>`）：
 
 ```bash
 cd policy/GR00T_N17
