@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -125,22 +126,41 @@ def _force_sdpa_attn(node: Any) -> None:
             _force_sdpa_attn(item)
 
 
+def _qwen3_vl_model_path(raw: str) -> str:
+    """Map HF repo id to local NAS path when QWEN3_VL_LOCAL_PATH is set."""
+    local = os.environ.get("QWEN3_VL_LOCAL_PATH")
+    if local and raw in ("Qwen/Qwen3-VL-4B-Instruct", "Qwen/Qwen3-VL-4B-Instruct"):
+        return local
+    return raw
+
+
 def _patch_xr0_vlm_attn_to_sdpa() -> None:
     """XR0 hardcodes flash_attention_2; force sdpa when flash_attn is unavailable."""
+    from transformers.models.qwen3_vl.configuration_qwen3_vl import Qwen3VLTextConfig
     from mibot.models.VLA import XR0 as xr0_module
 
     if getattr(xr0_module.Qwen3VLForConditionalGeneration, "_xpolicylab_sdpa_patch", False):
         return
 
     original_from_pretrained = xr0_module.Qwen3VLForConditionalGeneration.from_pretrained
+    original_text_config_from_pretrained = Qwen3VLTextConfig.from_pretrained
 
     @classmethod
     def from_pretrained_sdpa(cls, *args, **kwargs):
+        if args:
+            args = (_qwen3_vl_model_path(str(args[0])),) + args[1:]
         if kwargs.get("attn_implementation") == "flash_attention_2":
             kwargs["attn_implementation"] = "sdpa"
         return original_from_pretrained(*args, **kwargs)
 
+    @classmethod
+    def text_config_from_pretrained_local(cls, *args, **kwargs):
+        if args:
+            args = (_qwen3_vl_model_path(str(args[0])),) + args[1:]
+        return original_text_config_from_pretrained(*args, **kwargs)
+
     xr0_module.Qwen3VLForConditionalGeneration.from_pretrained = from_pretrained_sdpa  # type: ignore[method-assign]
+    Qwen3VLTextConfig.from_pretrained = text_config_from_pretrained_local  # type: ignore[method-assign]
     xr0_module.Qwen3VLForConditionalGeneration._xpolicylab_sdpa_patch = True
 
 

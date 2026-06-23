@@ -37,11 +37,17 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
 export PYTHONPATH="${XR0_ROOT}:${PYTHONPATH:-}"
-# Allow HuggingFace download for vlm_processor_path; set HF_HUB_OFFLINE=1 for fully offline deploy
 export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-0}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-0}"
+export HF_HOME="${HF_HOME:-${HOME}/.cache/huggingface}"
+# Qwen3-VL backbone: set QWEN3_VL_LOCAL_PATH to NAS weights for offline deploy
+export QWEN3_VL_LOCAL_PATH="${QWEN3_VL_LOCAL_PATH:-}"
 
 exec env \
+    QWEN3_VL_LOCAL_PATH="${QWEN3_VL_LOCAL_PATH}" \
+    HF_HOME="${HF_HOME}" \
+    HF_HUB_OFFLINE="${HF_HUB_OFFLINE}" \
+    TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE}" \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
