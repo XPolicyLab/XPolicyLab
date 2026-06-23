@@ -1,0 +1,73 @@
+dataset_path: "xwam_datasets/RoboDojo"
+sequence_length: 9
+frame_skip: 4
+action_skip: 1
+video_size: [256, 320]
+augment: true
+crop_ratio: 0.95
+brightness: 0.2
+contrast: 0.2
+saturation: 0.2
+hue: 0.05
+inverse_gripper: false
+normalize_depths_per_view: false
+shuffle_view_order: false
+statistics:
+  q01:
+    proprio_left_ee_xyz:
+    - -0.43547154784202574
+    - -0.35238152742385864
+    - 0.883030955195427
+    proprio_right_ee_xyz:
+    - -0.037988206222653385
+    - -0.3523576855659485
+    - 0.883009672164917
+    gripper_pos:
+    - 0.0
+    action_left_ee_xyz:
+    - -0.02221223443746567
+    - -0.017135183364152907
+    - -0.015378354787826537
+    action_right_ee_xyz:
+    - -0.01990201152861118
+    - -0.017087518125772475
+    - -0.014692544937133789
+    action_left_ee_axisangle:
+    - -0.09904726989965021
+    - -0.053091729188657844
+    - -0.09177248759589744
+    action_right_ee_axisangle:
+    - -0.09960405826440105
+    - -0.049171916281316876
+    - -0.08777090883259255
+    gripper_action:
+    - -0.22157427200403393
+  q99:
+    proprio_left_ee_xyz:
+    - 0.03692150440067052
+    - -0.016021361257880937
+    - 1.1400611102581024
+    proprio_right_ee_xyz:
+    - 0.41657417982816686
+    - -0.015815437287092268
+    - 1.1334981882572175
+    gripper_pos:
+    - 1.0
+    action_left_ee_xyz:
+    - 0.02221223443746567
+    - 0.017135183364152907
+    - 0.015378354787826537
+    action_right_ee_xyz:
+    - 0.01990201152861118
+    - 0.017087518125772475
+    - 0.014692544937133789
+    action_left_ee_axisangle:
+    - 0.09904726989965021
+    - 0.053091729188657844
+    - 0.09177248759589744
+    action_right_ee_axisangle:
+    - 0.09960405826440105
+    - 0.049171916281316876
+    - 0.08777090883259255
+    gripper_action:
+    - 0.22157427200403393

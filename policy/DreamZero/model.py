@@ -39,7 +39,6 @@ from groot.vla.model.n1_5.sim_policy import GrootSimPolicy  # noqa: E402
 AGIBOT_STATE_DIM = 20
 AGIBOT_ACTION_DIM = 22
 INFERENCE_IMAGE_SIZE = (640, 480)
-AGIBOT_6DOF_ARM_INDICES = np.array([0, 1, 3, 4, 5, 6], dtype=np.int64)
 
 
 def _configure_torch_dynamo_for_eval() -> None:
@@ -343,6 +342,31 @@ def _stack_recent_frames(frames: list[np.ndarray], history: int) -> np.ndarray:
     return np.stack(padded[-history:], axis=0)
 
 
+# AgiBot G1 7-DOF arm structure (per-arm slot indices):
+#   0 = J1 (shoulder), 1 = J2 (shoulder), 2 = J3 (upper-arm roll),
+#   3 = J4 (elbow),    4 = J5 (wrist),    5 = J6 (wrist),     6 = J7 (wrist)
+# arx_x5 / dual_x5 / similar 6-DOF arms map onto AgiBot's [J1, J2, J4, J5, J6, J7]
+# (per-arm slots [0, 1, 3, 4, 5, 6]); J3 (slot 2) is the redundant upper-arm roll DOF
+# absent on these arms and stays = 0.
+_AGIBOT_J3_LOCKED_PER_ARM_INDEX = 2
+_ARX_X5_ARM_TO_AGIBOT_ARM_SLOTS = [
+    s for s in range(7) if s != _AGIBOT_J3_LOCKED_PER_ARM_INDEX
+]  # [0, 1, 3, 4, 5, 6]
+
+
+def _agibot_arm_slot_targets(arm_dim: int) -> list[int]:
+    """Per-arm AgiBot slot indices for a source `arm_dim`-DOF arm.
+    For 6-DOF arms, returns [0,1,3,4,5,6] (lock AgiBot J3 = slot 2).
+    For 7-DOF arms (AgiBot native), returns [0..6] (identity).
+    For other dims, falls back to the first arm_dim slots."""
+    if arm_dim == 6:
+        return _ARX_X5_ARM_TO_AGIBOT_ARM_SLOTS
+    if arm_dim == 7:
+        return list(range(7))
+    # Fallback: dense fill from slot 0
+    return list(range(min(arm_dim, 7)))
+
+
 def _xpolicylab_obs_to_agibot_state(observation: dict[str, Any], action_type: str, robot_info: dict) -> np.ndarray:
     packed = pack_robot_state(observation, action_type, robot_info, source_type="obs").astype(np.float32)
     out = np.zeros(AGIBOT_STATE_DIM, dtype=np.float32)
@@ -352,27 +376,14 @@ def _xpolicylab_obs_to_agibot_state(observation: dict[str, Any], action_type: st
         offset += arm_dim
         ee = packed[offset : offset + ee_dim]
         offset += ee_dim
-        if arm_idx == 0:
-            out[_agibot_arm_indices(arm_dim, arm_idx)] = _pad_or_trim(arm.reshape(1, -1), arm_dim)[0]
-            out[14:15] = _pad_or_trim(ee.reshape(1, -1), 1)[0]
-        elif arm_idx == 1:
-            out[_agibot_arm_indices(arm_dim, arm_idx)] = _pad_or_trim(arm.reshape(1, -1), arm_dim)[0]
-            out[15:16] = _pad_or_trim(ee.reshape(1, -1), 1)[0]
+        # Route 6-DOF arm joints into AgiBot 7-DOF arm slots, locking J3 (slot 2)
+        arm_slot_offset = arm_idx * 7  # left = 0, right = 7
+        for src_i, tgt_slot in enumerate(_agibot_arm_slot_targets(arm_dim)):
+            out[arm_slot_offset + tgt_slot] = arm[src_i]
+        # Effector slot
+        ee_slot = 14 + arm_idx  # left = 14, right = 15
+        out[ee_slot : ee_slot + ee_dim] = _pad_or_trim(ee.reshape(1, -1), ee_dim)[0]
     return out
-
-
-def _agibot_arm_indices(arm_dim: int, arm_idx: int) -> np.ndarray:
-    base = 0 if arm_idx == 0 else 7
-    if arm_dim == 6:
-        return base + AGIBOT_6DOF_ARM_INDICES
-    return base + np.arange(min(arm_dim, 7), dtype=np.int64)
-
-
-def _agibot_arm_to_robot_arm(agibot_arm: np.ndarray, arm_dim: int) -> np.ndarray:
-    values = np.asarray(agibot_arm, dtype=np.float32).reshape(-1)
-    if arm_dim == 6 and values.shape[0] >= 7:
-        return values[AGIBOT_6DOF_ARM_INDICES]
-    return _pad_or_trim(values.reshape(1, -1), arm_dim)[0]
 
 
 def _agibot_to_xpolicylab_packed(
@@ -383,12 +394,21 @@ def _agibot_to_xpolicylab_packed(
     action_type: str,
     robot_info: dict,
 ) -> np.ndarray:
+    """Inverse of _xpolicylab_obs_to_agibot_state: decode AgiBot per-arm 7-dim
+    vectors back into the source robot's packed layout, dropping the locked J3
+    slot for 6-DOF arms."""
     parts = []
-    arms = [left_arm, right_arm]
-    ees = [left_ee, right_ee]
+    arms = [np.asarray(left_arm).reshape(-1), np.asarray(right_arm).reshape(-1)]
+    ees = [np.asarray(left_ee).reshape(-1), np.asarray(right_ee).reshape(-1)]
     for arm_idx, (arm_dim, ee_dim) in enumerate(zip(robot_info["arm_dim"], robot_info["ee_dim"])):
-        arm_source = arms[min(arm_idx, 1)]
-        ee_source = ees[min(arm_idx, 1)]
-        parts.append(_agibot_arm_to_robot_arm(arm_source, arm_dim))
-        parts.append(_pad_or_trim(np.asarray(ee_source).reshape(1, -1), ee_dim)[0])
+        agibot_arm = arms[min(arm_idx, 1)]
+        agibot_ee = ees[min(arm_idx, 1)]
+        # Extract source-arm-dim joints from AgiBot 7-slot per-arm vector by index
+        src_slots = _agibot_arm_slot_targets(arm_dim)
+        arm_pick = np.array(
+            [agibot_arm[s] if s < agibot_arm.shape[0] else 0.0 for s in src_slots],
+            dtype=np.float32,
+        )
+        parts.append(arm_pick)
+        parts.append(_pad_or_trim(agibot_ee.reshape(1, -1), ee_dim)[0])
     return np.concatenate(parts).astype(np.float32)

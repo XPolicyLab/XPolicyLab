@@ -16,11 +16,11 @@ class HDF5VLADataset:
     """
     def __init__(self, use_precomp_lang_embed=False) -> None:
         # Each HDF5 file contains one episode.
-        self.HDF5_DIR = os.environ.get(
-            "RDT_HDF5_DIR",
-            "/mnt/nfs/niantian/RoboDojo_env/aloha_data/RoboDojo",
-        )
+        self.HDF5_DIR = os.environ.get("RDT_HDF5_DIR")
+        if not self.HDF5_DIR:
+            raise ValueError("RDT_HDF5_DIR must be set when loading HDF5 training data.")
         self.DATASET_NAME = os.environ.get("RDT_DATASET_NAME", "robodojo_aloha_hdf5")
+        self.lang_embed_dir = os.environ.get("RDT_LANG_EMBED_DIR")
         self.use_precomp_lang_embed = use_precomp_lang_embed
         
         self.file_paths = []
@@ -80,6 +80,55 @@ class HDF5VLADataset:
             else:
                 index = np.random.randint(0, len(self.file_paths))
     
+    @staticmethod
+    def _is_robodojo_format(h5_file):
+        return "state" in h5_file and "action" in h5_file and "vision" in h5_file
+
+    def _read_bimanual_qpos(self, h5_file, group_name):
+        group = h5_file[group_name]
+        left = np.concatenate(
+            [group["left_arm_joint_states"][:], group["left_ee_joint_states"][:]],
+            axis=-1,
+        )
+        right = np.concatenate(
+            [group["right_arm_joint_states"][:], group["right_ee_joint_states"][:]],
+            axis=-1,
+        )
+        return np.concatenate([left, right], axis=-1)
+
+    def _parse_robodojo_images(self, h5_file, step_id, first_idx):
+        camera_map = {
+            "cam_high": "cam_head",
+            "cam_left_wrist": "cam_left_wrist",
+            "cam_right_wrist": "cam_right_wrist",
+        }
+        valid_len = min(step_id - (first_idx - 1) + 1, self.IMG_HISORY_SIZE)
+        mask = np.array(
+            [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
+        )
+        parsed = {}
+        for output_key, source_key in camera_map.items():
+            imgs = []
+            if source_key in h5_file["vision"]:
+                colors = h5_file["vision"][source_key]["colors"]
+                for i in range(max(step_id - self.IMG_HISORY_SIZE + 1, 0), step_id + 1):
+                    imgs.append(self._decode_image(colors[i]))
+            if imgs:
+                imgs = np.stack(imgs)
+                if imgs.shape[0] < self.IMG_HISORY_SIZE:
+                    imgs = np.concatenate(
+                        [
+                            np.tile(imgs[:1], (self.IMG_HISORY_SIZE - imgs.shape[0], 1, 1, 1)),
+                            imgs,
+                        ],
+                        axis=0,
+                    )
+            else:
+                imgs = np.zeros((self.IMG_HISORY_SIZE, 0, 0, 0), dtype=np.uint8)
+            parsed[output_key] = imgs
+            parsed[f"{output_key}_mask"] = mask.copy()
+        return parsed
+
     def parse_hdf5_file(self, file_path):
         """[Modify] Parse a hdf5 file to generate a training sample at
             a random timestep.
@@ -120,7 +169,10 @@ class HDF5VLADataset:
                 } or None if the episode is invalid.
         """
         with h5py.File(file_path, 'r') as f:
-            qpos = f['observations']['qpos'][:]
+            if self._is_robodojo_format(f):
+                qpos = self._read_bimanual_qpos(f, "state")
+            else:
+                qpos = f['observations']['qpos'][:]
             num_steps = qpos.shape[0]
             # [Optional] We drop too-short episode
             if num_steps < 128:
@@ -150,7 +202,10 @@ class HDF5VLADataset:
                 "instruction": instruction
             }
             
-            target_qpos = f['action'][step_id:step_id+self.CHUNK_SIZE]
+            if self._is_robodojo_format(f):
+                target_qpos = self._read_bimanual_qpos(f, "action")[step_id:step_id+self.CHUNK_SIZE]
+            else:
+                target_qpos = f['action'][step_id:step_id+self.CHUNK_SIZE]
             
             # Parse the state and action
             state = qpos[step_id:step_id+1]
@@ -178,33 +233,38 @@ class HDF5VLADataset:
             # you may implement fill_in_action()
             actions = fill_in_state(actions)
             
-            # Parse the images
-            def parse_img(key):
-                if key not in f['observations']['images']:
-                    return np.zeros((self.IMG_HISORY_SIZE, 0, 0, 0), dtype=np.uint8)
-                imgs = []
-                for i in range(max(step_id-self.IMG_HISORY_SIZE+1, 0), step_id+1):
-                    img = f['observations']['images'][key][i]
-                    imgs.append(self._decode_image(img))
-                imgs = np.stack(imgs)
-                if imgs.shape[0] < self.IMG_HISORY_SIZE:
-                    # Pad the images using the first image
-                    imgs = np.concatenate([
-                        np.tile(imgs[:1], (self.IMG_HISORY_SIZE-imgs.shape[0], 1, 1, 1)),
-                        imgs
-                    ], axis=0)
-                return imgs
-            # `cam_high` is the external camera image
-            cam_high = parse_img('cam_high')
-            # For step_id = first_idx - 1, the valid_len should be one
-            valid_len = min(step_id - (first_idx - 1) + 1, self.IMG_HISORY_SIZE)
-            cam_high_mask = np.array(
-                [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
-            )
-            cam_left_wrist = parse_img('cam_left_wrist')
-            cam_left_wrist_mask = cam_high_mask.copy()
-            cam_right_wrist = parse_img('cam_right_wrist')
-            cam_right_wrist_mask = cam_high_mask.copy()
+            if self._is_robodojo_format(f):
+                image_data = self._parse_robodojo_images(f, step_id, first_idx)
+                cam_high = image_data["cam_high"]
+                cam_high_mask = image_data["cam_high_mask"]
+                cam_left_wrist = image_data["cam_left_wrist"]
+                cam_left_wrist_mask = image_data["cam_left_wrist_mask"]
+                cam_right_wrist = image_data["cam_right_wrist"]
+                cam_right_wrist_mask = image_data["cam_right_wrist_mask"]
+            else:
+                def parse_img(key):
+                    if key not in f['observations']['images']:
+                        return np.zeros((self.IMG_HISORY_SIZE, 0, 0, 0), dtype=np.uint8)
+                    imgs = []
+                    for i in range(max(step_id-self.IMG_HISORY_SIZE+1, 0), step_id+1):
+                        img = f['observations']['images'][key][i]
+                        imgs.append(self._decode_image(img))
+                    imgs = np.stack(imgs)
+                    if imgs.shape[0] < self.IMG_HISORY_SIZE:
+                        imgs = np.concatenate([
+                            np.tile(imgs[:1], (self.IMG_HISORY_SIZE-imgs.shape[0], 1, 1, 1)),
+                            imgs
+                        ], axis=0)
+                    return imgs
+                cam_high = parse_img('cam_high')
+                valid_len = min(step_id - (first_idx - 1) + 1, self.IMG_HISORY_SIZE)
+                cam_high_mask = np.array(
+                    [False] * (self.IMG_HISORY_SIZE - valid_len) + [True] * valid_len
+                )
+                cam_left_wrist = parse_img('cam_left_wrist')
+                cam_left_wrist_mask = cam_high_mask.copy()
+                cam_right_wrist = parse_img('cam_right_wrist')
+                cam_right_wrist_mask = cam_high_mask.copy()
             
             # Return the resulting sample
             # For unavailable images, return zero-shape arrays, i.e., (IMG_HISORY_SIZE, 0, 0, 0)
@@ -242,7 +302,10 @@ class HDF5VLADataset:
                 } or None if the episode is invalid.
         """
         with h5py.File(file_path, 'r') as f:
-            qpos = f['observations']['qpos'][:]
+            if self._is_robodojo_format(f):
+                qpos = self._read_bimanual_qpos(f, "state")
+            else:
+                qpos = f['observations']['qpos'][:]
             num_steps = qpos.shape[0]
             # [Optional] We drop too-short episode
             if num_steps < 128:
@@ -258,7 +321,10 @@ class HDF5VLADataset:
             else:
                 raise ValueError("Found no qpos that exceeds the threshold.")
             
-            target_qpos = f['action'][:]
+            if self._is_robodojo_format(f):
+                target_qpos = self._read_bimanual_qpos(f, "action")
+            else:
+                target_qpos = f['action'][:]
             
             # Parse the state and action
             state = qpos[first_idx-1:]
@@ -277,18 +343,41 @@ class HDF5VLADataset:
                 "action": action
             }
 
+    def _lang_embed_path(self, file_path):
+        if not self.lang_embed_dir:
+            return None
+        rel = os.path.relpath(file_path, self.HDF5_DIR)
+        parts = rel.split(os.sep)
+        if len(parts) >= 3 and parts[-2] == "data":
+            task_env = os.path.join(parts[0], parts[1])
+        elif len(parts) >= 2:
+            task_env = parts[0]
+        else:
+            return None
+        dataset_key = os.path.basename(os.path.normpath(self.HDF5_DIR))
+        return os.path.join(self.lang_embed_dir, dataset_key, task_env, "lang_embed.pt")
+
     def _get_instruction(self, file_path, h5_file):
-        embed_path = os.path.join(os.path.dirname(file_path), "lang_embed.pt")
-        if self.use_precomp_lang_embed and os.path.exists(embed_path):
+        embed_path = self._lang_embed_path(file_path)
+        if self.use_precomp_lang_embed and embed_path and os.path.exists(embed_path):
             return embed_path
-        instruction = h5_file.attrs.get("language_instruction", "")
+        if "instruction" in h5_file:
+            instruction = h5_file["instruction"][()]
+        else:
+            instruction = h5_file.attrs.get("language_instruction", "")
         if isinstance(instruction, bytes):
             instruction = instruction.decode("utf-8")
         if not instruction:
-            raise ValueError(f"No language_instruction attr or lang_embed.pt found for {file_path}")
+            raise ValueError(f"No instruction or lang_embed.pt found for {file_path}")
         return str(instruction)
 
     def _get_arm_dims(self, h5_file, state_width):
+        if self._is_robodojo_format(h5_file):
+            left_arm_dim = h5_file["state"]["left_arm_joint_states"].shape[-1] + \
+                h5_file["state"]["left_ee_joint_states"].shape[-1]
+            right_arm_dim = h5_file["state"]["right_arm_joint_states"].shape[-1] + \
+                h5_file["state"]["right_ee_joint_states"].shape[-1]
+            return left_arm_dim, right_arm_dim
         obs = h5_file["observations"]
         if "left_arm_dim" in obs and "right_arm_dim" in obs:
             return int(obs["left_arm_dim"][()]), int(obs["right_arm_dim"][()])

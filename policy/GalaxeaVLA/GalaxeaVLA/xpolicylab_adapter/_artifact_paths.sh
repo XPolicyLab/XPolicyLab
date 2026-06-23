@@ -63,5 +63,14 @@ xpolicylab_resolve_ckpt_dir() {
             return 0
         fi
     done
+    # Fallback: match runs named <dataset>-<ckpt>-<env>-<expert_data_num>-<action>-<seed>.
+    local glob_pattern="${policy_dir}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-*-${action_type}-${seed}"
+    local match
+    for match in ${glob_pattern}; do
+        if [[ -d "${match}" ]]; then
+            echo "${match}"
+            return 0
+        fi
+    done
     echo "${policy_dir}/checkpoints/$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
 }

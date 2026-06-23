@@ -8,6 +8,8 @@ steps (action smoothing and Mn subtask switching happen on the model server).
 
 
 def eval_one_episode(TASK_ENV, model_client):
+    model_client.call(func_name="reset")
+
     obs = TASK_ENV.get_obs()
     model_client.call(func_name="begin_episode", obs=obs)
 

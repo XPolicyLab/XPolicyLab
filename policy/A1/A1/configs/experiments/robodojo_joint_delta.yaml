@@ -1,0 +1,2 @@
+model_config: models/pretrain.yaml
+dataset_config: datasets/robodojo_joint_delta.yaml

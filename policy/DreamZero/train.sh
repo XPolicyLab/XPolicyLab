@@ -145,6 +145,8 @@ torchrun --nproc_per_node "${num_gpus}" --standalone groot/vla/experiment/experi
     seed="${seed}" \
     training_args.learning_rate="${DREAMZERO_LEARNING_RATE:-1e-5}" \
     training_args.deepspeed="${DREAMZERO_DEEPSPEED_CONFIG:-groot/vla/configs/deepspeed/zero2.json}" \
+    ++action_head_cfg.config.lora_rank="${DREAMZERO_LORA_RANK:-16}" \
+    ++action_head_cfg.config.lora_alpha="${DREAMZERO_LORA_ALPHA:-16}" \
     save_steps="${save_steps}" \
     training_args.warmup_ratio="${DREAMZERO_WARMUP_RATIO:-0.05}" \
     output_dir="${output_dir}" \

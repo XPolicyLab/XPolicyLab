@@ -19,8 +19,8 @@ training:
   log_interval: 10
 
 checkpoint:
-  save_interval: 5000
-  save_interval_unsharded: 5000
+  save_interval: 2000
+  save_interval_unsharded: 2000
   save_num_checkpoints_to_keep: 0
   save_num_unsharded_checkpoints_to_keep: 1
 

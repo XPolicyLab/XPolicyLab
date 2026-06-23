@@ -1,0 +1,48 @@
+common:
+  img_history_size: 1
+  pcd_history_size: 1
+  action_chunk_size: 16
+  num_cameras: 3
+  state_dim: 14
+  action_dim: 14
+  num_patches: 196
+dataset:
+  buf_path: ./buffer
+  buf_num_chunks: 512
+  buf_chunk_size: 512
+  epsd_len_thresh_low: 32
+  epsd_len_thresh_high: 2048
+  image_aspect_ratio: pad
+  tokenizer_max_length: 1024
+model:
+  act_adaptor: mlp3x_silu
+  st_adaptor: mlp3x_silu
+  img_adapter: mlp2x_silu
+  lang_adapter: mlp2x_silu
+  hrdt:
+    hidden_size: 2176
+    depth: 16
+    num_heads: 16
+    norm_eps: 1.0e-05
+    multiple_of: 256
+    ffn_dim_multiplier: null
+    num_kv_heads: 8
+    output_size: 14
+    use_flash_attn: true
+  noise_scheduler:
+    num_inference_timesteps: 5
+    timestep_max: 0.999
+    sampler_type: uniform
+  time_noise:
+    a: 5
+    beta_m: 100
+  ema:
+    update_after_step: 0
+    inv_gamma: 1.0
+    power: 0.75
+    min_value: 0.0
+    max_value: 0.9999
+  vision:
+    feature_dim: 2176
+  text:
+    feature_dim: 4096

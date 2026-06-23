@@ -5,8 +5,8 @@ env_cfg_type: null
 expert_data_num: null
 seed: null
 action_type: joint
-eval_batch: false
-eval_env: debug             # debug | sim | real
+eval_batch: true
+eval_env: sim             # debug | sim | real
 
 # server bind (port is injected by setup_eval_policy_server.sh)
 port: null

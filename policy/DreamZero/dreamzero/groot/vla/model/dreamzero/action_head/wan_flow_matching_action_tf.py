@@ -789,17 +789,59 @@ class WANPolicyHead(ActionHead):
             weighted_dynamics_loss = weight_dynamics.mean()
             
             if actions.numel() > 0:
+                # Raw per-element MSE (shape [B, T, 32]).
+                # NOTE: action_mask (bool) zeros out the 10 padding dims [22:32].
                 action_loss_per_sample = torch.nn.functional.mse_loss(
                     action_noise_pred.float(), training_target_action.float(), reduction='none'
-                ) * action_mask  # shape: [B, ...]
-                action_loss_per_sample = has_real_action[:, None].float() * action_loss_per_sample  # apply has_real_action
-                weight_action = action_loss_per_sample.mean(dim=2) * self.scheduler.training_weight(
+                ) * action_mask  # [B, T, 32]
+                action_loss_per_sample = has_real_action[:, None, None].float() * action_loss_per_sample
+
+                # ----- Bug 2 fix: detect & exclude always-zero channels -----
+                # A channel is "live" (has real signal) if its target has any non-zero
+                # magnitude across the action horizon. For arx_x5 data routed to AgiBot
+                # 22-dim layout, this auto-masks slots [2, 9, 16-21] (J3 x2, head x2,
+                # waist x2, robot_velocity x2) which carry no real signal. For real
+                # AgiBot data those channels stay live (correctly counted).
+                target_abs_max = training_target_action.abs().amax(dim=1, keepdim=True)  # [B, 1, 32]
+                live_channel_mask = (target_abs_max > 1e-6).float()  # [B, 1, 32]
+
+                # Combined effective mask: padding (action_mask) AND live (data)
+                effective_mask = action_mask.float() * live_channel_mask  # [B, T, 32]
+
+                # ----- Bug 1 fix: mask-aware sum/count instead of mean(dim=2) -----
+                # Previously: .mean(dim=2) divided by 32 (incl. padding + zero channels)
+                # → diluted gripper (2 dims) to 6.25% of loss budget.
+                # Now: divide by the actual live channel count per sample-token.
+                sum_per_token = (action_loss_per_sample * live_channel_mask).sum(dim=2)  # [B, T]
+                count_per_token = effective_mask.sum(dim=2).clamp(min=1.0)               # [B, T]
+                per_token_loss = sum_per_token / count_per_token                          # [B, T]
+
+                weight_action = per_token_loss * self.scheduler.training_weight(
                     timestep_action.flatten(0, 1),
                 ).unflatten(0, (noise_action.shape[0], noise_action.shape[1])).to(self._device)
                 weighted_action_loss = weight_action.mean()
+
+                # ----- Bug 4 fix: per-modality loss decomposition for visibility -----
+                # AgiBot slot layout (per AGIBOT_ACTION_MAPPING):
+                #   [0:7]    left_arm_joint_position
+                #   [7:14]   right_arm_joint_position
+                #   [14:15]  left_effector_position (gripper)
+                #   [15:16]  right_effector_position (gripper)
+                #   [16:22]  head/waist/robot_velocity (zero for arx_x5)
+                def _slot_avg(slots):
+                    sl = action_loss_per_sample[..., slots]      # [B, T, |slots|]
+                    sm = effective_mask[..., slots]               # [B, T, |slots|]
+                    return (sl.sum() / sm.sum().clamp(min=1.0))
+                arm_loss   = _slot_avg(list(range(0, 14)))   # both arms
+                ee_loss    = _slot_avg([14, 15])             # gripper L+R
+                aux_loss   = _slot_avg(list(range(16, 22)))  # head/waist/vel (zero for arx_x5 → 0)
+
                 loss = weighted_dynamics_loss + weighted_action_loss
             else:
                 weighted_action_loss = torch.tensor(0.0, device=self._device)
+                arm_loss = torch.tensor(0.0, device=self._device)
+                ee_loss = torch.tensor(0.0, device=self._device)
+                aux_loss = torch.tensor(0.0, device=self._device)
                 loss = weighted_dynamics_loss
             # loss = dynamics_loss_per_sample.mean()
 
@@ -808,6 +850,9 @@ class WANPolicyHead(ActionHead):
             "loss": loss,
             "dynamics_loss": weighted_dynamics_loss,
             "action_loss": weighted_action_loss,
+            "arm_loss": arm_loss,
+            "ee_loss": ee_loss,
+            "aux_loss": aux_loss,
         }
 
         return BatchFeature(data=output_dict)

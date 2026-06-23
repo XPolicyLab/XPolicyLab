@@ -59,10 +59,7 @@ class RLDSBuilder(DatasetBuilder):
         norm_type_str = raw_config.get("normalization_type") or raw_config.get("action_proprio_normalization_type")
         norm_type = NormalizationType.BOUNDS  # default
         if norm_type_str:
-            try:
-                norm_type = NormalizationType(norm_type_str)
-            except ValueError:
-                log.warning(f"Invalid normalization_type: {norm_type_str}, using default")
+            norm_type = NormalizationType(norm_type_str)
         
         # Parse RLDS pipeline controls from raw_config (with defaults)
         shuffle_buffer_size = raw_config.get("shuffle_buffer_size", 100000)
@@ -126,6 +123,118 @@ class RLDSBuilder(DatasetBuilder):
         return any_present
 
 
+class ManiparenaBuilder(DatasetBuilder):
+    """Builder for LeRobot datasets."""
+    
+    def build(self, raw_config: dict, train_config: TrainConfig, device: str) -> Tuple[Any, float]:
+        from a1.data.vla.maniparena_datasets import ManiparenaDatasetWrapper
+        from a1.data import build_mm_preprocessor
+        from a1.data.vla.utils import NormalizationType
+        
+        # Parse config fields from raw dict
+        path = raw_config.get("path", "")
+        weight = raw_config.get("weight", 1.0)
+        num_episodes = raw_config.get("num_episodes")
+        image_aug = raw_config.get("image_augmentation", False)
+        
+        # Parse normalization_type (default None, meaning no normalization)
+        norm_type_str = raw_config.get("normalization_type") or raw_config.get("action_proprio_normalization_type")
+        norm_type = None
+        if norm_type_str:
+            try:
+                norm_type = NormalizationType(norm_type_str)
+            except ValueError:
+                log.warning(f"Invalid normalization_type: {norm_type_str}, using None (no normalization)")
+        
+        norm_stats_path = raw_config.get("norm_stats_path")
+
+        delta = raw_config.get("delta", False)
+        delta_mask = raw_config.get("delta_mask", None)
+        action_type = raw_config.get("action_type", "ee")
+        # Create preprocessor
+        preprocessor = build_mm_preprocessor(
+            train_config.model,
+            shuffle_messages=train_config.data.shuffle,
+            is_training=True,
+            require_image_features=True
+        )
+        
+        dataset_wrapper = ManiparenaDatasetWrapper
+        
+        dataset = dataset_wrapper(
+            path,
+            normalization_type=norm_type,
+            use_proprio=train_config.data.use_proprio,
+            fixed_action_dim=train_config.model.fixed_action_dim,
+            use_wrist_image=train_config.data.use_wrist_image,
+            chunk_size=train_config.model.num_actions_chunk,
+            num_episodes=num_episodes,
+            image_aug=image_aug,
+            norm_stats_path=norm_stats_path,
+            delta=delta,
+            delta_mask=delta_mask,
+            action_type=action_type,
+        )
+        
+        # Wrap with IterableDatasetWrapper
+        dataset = IterableDatasetWrapper(dataset, preprocessor, train_config.data.seed)
+        
+        return dataset, weight
+
+class RoboDojoBuilder(DatasetBuilder):
+    """Builder for RoboTwin 3.0 / RoboDojo datasets (raw HDF5, ARX5 dual-arm)."""
+
+    def build(self, raw_config: dict, train_config: TrainConfig, device: str) -> Tuple[Any, float]:
+        from a1.data.vla.robodojo_datasets import RoboDojoDatasetReader
+        from a1.data import build_mm_preprocessor
+        from a1.data.vla.utils import NormalizationType
+
+        path = raw_config.get("path", "")
+        weight = raw_config.get("weight", 1.0)
+        num_episodes = raw_config.get("num_episodes")
+
+        norm_type_str = raw_config.get("normalization_type") or raw_config.get("action_proprio_normalization_type")
+        norm_type = None
+        if norm_type_str:
+            try:
+                norm_type = NormalizationType(norm_type_str)
+            except ValueError:
+                log.warning(f"Invalid normalization_type: {norm_type_str}, using None (no normalization)")
+
+        norm_stats_path = raw_config.get("norm_stats_path")
+        delta = raw_config.get("delta", False)
+        delta_mask = raw_config.get("delta_mask", None)
+        action_type = raw_config.get("action_type", "joint")
+        camera_keys = raw_config.get("camera_keys", None)
+        clip_value = raw_config.get("clip_value", None)
+
+        preprocessor = build_mm_preprocessor(
+            train_config.model,
+            shuffle_messages=train_config.data.shuffle,
+            is_training=True,
+            require_image_features=True,
+        )
+
+        dataset = RoboDojoDatasetReader(
+            dataset_path=path,
+            chunk_size=train_config.model.num_actions_chunk,
+            fixed_action_dim=train_config.model.fixed_action_dim,
+            normalization_type=norm_type,
+            norm_stats_path=norm_stats_path,
+            use_proprio=train_config.data.use_proprio,
+            use_wrist_image=train_config.data.use_wrist_image,
+            camera_keys=camera_keys,
+            action_type=action_type,
+            delta=delta,
+            delta_mask=delta_mask,
+            num_episodes=num_episodes,
+            clip_value=clip_value,
+        )
+
+        dataset = IterableDatasetWrapper(dataset, preprocessor, train_config.data.seed)
+        return dataset, weight
+
+
 class LeRobotBuilder(DatasetBuilder):
     """Builder for LeRobot datasets."""
     
@@ -138,7 +247,6 @@ class LeRobotBuilder(DatasetBuilder):
         path = raw_config.get("path", "")
         weight = raw_config.get("weight", 1.0)
         num_episodes = raw_config.get("num_episodes")
-        use_num_images = raw_config.get("use_num_images")
         image_aug = raw_config.get("image_augmentation", False)
         
         # Parse normalization_type (default None, meaning no normalization)
@@ -150,6 +258,10 @@ class LeRobotBuilder(DatasetBuilder):
             except ValueError:
                 log.warning(f"Invalid normalization_type: {norm_type_str}, using None (no normalization)")
         
+        norm_stats_path = raw_config.get("norm_stats_path")
+
+        delta = raw_config.get("delta", False)
+        delta_mask = raw_config.get("delta_mask", None)
         # Create preprocessor
         preprocessor = build_mm_preprocessor(
             train_config.model,
@@ -169,11 +281,13 @@ class LeRobotBuilder(DatasetBuilder):
             normalization_type=norm_type,
             use_proprio=train_config.data.use_proprio,
             fixed_action_dim=train_config.model.fixed_action_dim,
-            use_num_images=use_num_images,
             use_wrist_image=train_config.data.use_wrist_image,
             chunk_size=train_config.model.num_actions_chunk,
             num_episodes=num_episodes,
             image_aug=image_aug,
+            norm_stats_path=norm_stats_path,
+            delta=delta,
+            delta_mask=delta_mask,
         )
         
         # Wrap with IterableDatasetWrapper
@@ -430,6 +544,8 @@ class DatasetBuilderFactory:
     _builders: Dict[str, DatasetBuilder] = {
         "rlds": RLDSBuilder(),
         "lerobot": LeRobotBuilder(),
+        "maniparena": ManiparenaBuilder(),
+        "robodojo": RoboDojoBuilder(),
         "droid": DroidBuilder(),
         "robochallenge": RoboChallengeBuilder(),
         "agibot": AgiBotBuilder(),

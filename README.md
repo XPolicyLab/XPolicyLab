@@ -46,11 +46,11 @@ bash scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5  # modelscope
 # Optional: download RoboDojo data in LeRobot v3.0 format.
 # qpos denotes joint positions; ee data requires reconversion.
 bash scripts/RoboDojo/download_robodojo_data.sh huggingface lerobot_v3.0 # huggingface
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0  # huggingface
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v3.0  # modelscope
 
 # Optional: download RoboDojo data in LeRobot v2.1 format.
 bash scripts/RoboDojo/download_robodojo_data.sh huggingface lerobot_v2.1 # huggingface
-bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1  # huggingface
+bash scripts/RoboDojo/download_robodojo_data.sh modelscope lerobot_v2.1  # modelscope
 ```
 
 XPolicyLab is usually mounted inside a larger experiment or simulation workspace. A typical layout is:

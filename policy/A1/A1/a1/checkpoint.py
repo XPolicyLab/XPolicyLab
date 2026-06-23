@@ -618,31 +618,6 @@ class FullCheckpointer(Checkpointer):
     A :class:`Checkpointer` that saves a single full model and optimizer state dictionary.
     """
 
-    @staticmethod
-    def _clean_fsdp_key(key: str) -> str:
-        return ".".join(part for part in key.split(".") if part != "_fsdp_wrapped_module")
-
-    @classmethod
-    def _manual_full_state_dict(cls, dist_model: nn.Module) -> Dict[str, torch.Tensor]:
-        """Build a regular model state dict without invoking FSDP state_dict hooks."""
-        module = dist_model.module if isinstance(dist_model, (FSDP, DDP)) else dist_model
-        state_dict: Dict[str, torch.Tensor] = {}
-        for key, value in module.named_parameters():
-            state_dict[cls._clean_fsdp_key(key)] = value.detach().cpu().clone()
-        for key, value in module.named_buffers():
-            state_dict[cls._clean_fsdp_key(key)] = value.detach().cpu().clone()
-        for module_name, submodule in module.named_modules():
-            wrapped = getattr(submodule, "_fsdp_wrapped_module", None)
-            if wrapped is None:
-                continue
-            for key, value in wrapped.named_parameters(recurse=False):
-                full_key = f"{module_name}.{key}" if module_name else key
-                state_dict.setdefault(cls._clean_fsdp_key(full_key), value.detach().cpu().clone())
-            for key, value in wrapped.named_buffers(recurse=False):
-                full_key = f"{module_name}.{key}" if module_name else key
-                state_dict.setdefault(cls._clean_fsdp_key(full_key), value.detach().cpu().clone())
-        return state_dict
-
     def save_checkpoint(
         self,
         dir: PathOrStr,
@@ -654,32 +629,18 @@ class FullCheckpointer(Checkpointer):
     ) -> None:
         with self._temporary_wd(dir) as checkpoint_dir:
             if isinstance(dist_model, FSDP):
-                if get_world_size() == 1:
-                    log.warning("Single-rank FSDP detected; using manual full checkpoint export for compatibility.")
-                    model_state_dict = self._manual_full_state_dict(dist_model)
+                with FSDP.state_dict_type(
+                    dist_model,
+                    state_dict_type=StateDictType.FULL_STATE_DICT,
+                    state_dict_config=FullStateDictConfig(rank0_only=True, offload_to_cpu=True),
+                    optim_state_dict_config=FullOptimStateDictConfig(rank0_only=True, offload_to_cpu=True),
+                ):
+                    # We'll write the model and optimizer state dicts individually to reduce (CPU) memory consumption.
+                    # First the model state.
+                    model_state_dict = dist_model.state_dict()
                     self._write_model_dict(
                         model_state_dict, checkpoint_dir, upload_to, save_overwrite=self.cfg.save_overwrite
                     )
-                else:
-                    try:
-                        with FSDP.state_dict_type(
-                            dist_model,
-                            state_dict_type=StateDictType.FULL_STATE_DICT,
-                            state_dict_config=FullStateDictConfig(rank0_only=True, offload_to_cpu=True),
-                            optim_state_dict_config=FullOptimStateDictConfig(rank0_only=True, offload_to_cpu=True),
-                        ):
-                            # We'll write the model and optimizer state dicts individually to reduce (CPU) memory consumption.
-                            # First the model state.
-                            model_state_dict = dist_model.state_dict()
-                            self._write_model_dict(
-                                model_state_dict, checkpoint_dir, upload_to, save_overwrite=self.cfg.save_overwrite
-                            )
-                    except Exception as e:
-                        log.warning(f"FSDP full state_dict failed, falling back to manual checkpoint export: {e}")
-                        model_state_dict = self._manual_full_state_dict(dist_model)
-                        self._write_model_dict(
-                            model_state_dict, checkpoint_dir, upload_to, save_overwrite=self.cfg.save_overwrite
-                        )
 
                     # Then the optimizer state.
                     # optim_state_dict = FSDP.optim_state_dict(dist_model, optim)
@@ -704,18 +665,17 @@ class FullCheckpointer(Checkpointer):
                     "`FullCheckpointer.save_checkpoint` only supported for FSDP and DDP distributed strategies!"
                 )
 
-            # Save trainer state.
-            if get_global_rank() == 0:
-                log.info("Saving trainer state...")
-                save_state_dict(
-                    checkpoint_dir,
-                    "train.pt",
-                    trainer_state,
-                    upload_to=upload_to,
-                    save_overwrite=self.cfg.save_overwrite,
-                    synchronize=False,
-                )
-            barrier()
+            # # Save trainer state.
+            # if get_global_rank() == 0:
+            #     log.info("Saving trainer state...")
+            #     save_state_dict(
+            #         checkpoint_dir,
+            #         "train.pt",
+            #         trainer_state,
+            #         upload_to=upload_to,
+            #         save_overwrite=self.cfg.save_overwrite,
+            #         synchronize=False,
+            #     )
             # Save config.
             self._save_config(checkpoint_dir, upload_to=upload_to)
 

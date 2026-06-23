@@ -290,6 +290,8 @@ def build_vla_train_dataloader(train_config: TrainConfig, device=None):
         ("robochallenge", "robochallenge", True),  # List config with special params
         ("robomind", "robomind", True),      # List config
         ("robocoin", "robocoin", True),      # List config
+        ("maniparena", "maniparena", True),      # List config
+        ("robodojo", "robodojo", True),      # List config (RoboTwin 3.0 / RoboDojo, raw HDF5)
     ]
     for section_path, builder_name, is_list in sections:
         section_config = datasets_config.get(section_path)
@@ -318,11 +320,15 @@ def build_vla_train_dataloader(train_config: TrainConfig, device=None):
     assert len(iterable_sources) > 0, "No datasets configured in vla_config.yaml"
     log.info(f"Built {len(iterable_sources)} datasets: {[type(ds).__name__ for ds in iterable_sources]}")
 
-    # Check if any RLDS dataset is used (for num_workers setting)
-    from a1.data.vla.rlds_datasets import RLDSDataset
-    has_rlds = any(isinstance(ds, RLDSDataset) or
-                   (hasattr(ds, 'dataset') and isinstance(ds.dataset, RLDSDataset))
-                   for ds in iterable_sources)
+    try:
+        # Check if any RLDS dataset is used (for num_workers setting)
+        from a1.data.vla.rlds_datasets import RLDSDataset
+        has_rlds = any(isinstance(ds, RLDSDataset) or
+                    (hasattr(ds, 'dataset') and isinstance(ds.dataset, RLDSDataset))
+                    for ds in iterable_sources)
+    except Exception as e:
+        log.error(f"Error checking for RLDS datasets: {e}")
+        has_rlds = False
 
     # 从配置中读取图像增强参数（如果未配置则使用默认值）
     image_aug_config = vla_cfg.get("image_augmentation", {})

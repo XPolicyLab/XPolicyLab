@@ -1,0 +1,34 @@
+policy_name: Dexora_1B
+task_name: null
+env_cfg_type: null
+seed: null
+eval_batch: false
+eval_env: debug # debug, sim, real
+
+# XPolicyLab model server
+host: localhost
+port: 6000
+
+# Dexora runtime
+dexora_root: /root/crx/Dexora
+checkpoint_path: /root/crx/Dexora/checkpoints/dexora-1b-posttrain/checkpoint-50000
+config_path: /root/crx/Dexora/configs/base.yaml
+stats_file: /mnt/data/crx/robotwin3/RoboDojo_lerobot_v21_video_stats/dataset_statistics.json
+text_encoder_path: google/t5-v1_1-xxl
+vision_encoder_path: google/siglip-so400m-patch14-384
+hf_home: /mnt/data/crx/hf_cache
+hf_hub_cache: /mnt/data/crx/hf_cache/hub
+hf_offline: true
+local_files_only: false
+
+# Robot/action settings. Default fallback is dual-arm [6 + gripper] x 2 = 14.
+action_type: joint
+allow_default_robot_dims: true
+robot_action_dim_info: null
+ctrl_freq: 25
+prompt: null
+input_color_order: rgb
+clip_normalized_actions: true
+device: cuda
+dtype: bfloat16
+strict_load: true
