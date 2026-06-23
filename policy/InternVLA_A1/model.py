@@ -186,6 +186,13 @@ def _resolve_internvla_ckpt_dir(model_cfg: dict[str, Any]) -> Path:
         for child in sorted(checkpoint_root.iterdir())
         if child.is_dir() and (child / "pretrained_model").is_dir()
     )
+    checkpoints_sub = checkpoint_root / "checkpoints"
+    if checkpoints_sub.is_dir():
+        candidate_dirs.extend(
+            child
+            for child in sorted(checkpoints_sub.iterdir())
+            if child.is_dir() and (child / "pretrained_model").is_dir()
+        )
     if not candidate_dirs:
         raise FileNotFoundError(f"No pretrained_model checkpoint found under {checkpoint_root}")
 
