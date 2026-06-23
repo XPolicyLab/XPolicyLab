@@ -115,8 +115,13 @@ class XPolicyArxX5DataConfig:
         )
 
 
+class XPolicyPiperDataConfig(XPolicyArxX5DataConfig):
+    """Real piper dual-arm joint layout matches XPolicyLab ARX X5 (14-dim)."""
+
+
 ROBOT_TYPE_CONFIG_MAP = {
     "xpolicylab_arx_x5": XPolicyArxX5DataConfig(),
+    "xpolicylab_piper": XPolicyPiperDataConfig(),
 }
 
 ROBOT_TYPE_TO_EMBODIMENT_TAG = {}
@@ -127,5 +132,11 @@ DATASET_NAMED_MIXTURES = {
     ],
     "xpolicylab_stack_bowls_arx_x5_50": [
         ("arx_x5", 1.0, "xpolicylab_arx_x5"),
+    ],
+    "xpolicylab_robodojo_real_piper_lerobot_v30": [
+        ("RoboDojo_real_piper", 1.0, "xpolicylab_piper"),
+    ],
+    "xpolicylab_robodojo_real_arx_lerobot_v30": [
+        ("RoboDojo_real_arx", 1.0, "xpolicylab_arx_x5"),
     ],
 }

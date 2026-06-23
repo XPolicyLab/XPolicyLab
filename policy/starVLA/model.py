@@ -74,6 +74,23 @@ def _extract_camera(observation: dict[str, Any], camera_names: list[str]) -> np.
     raise KeyError(f"Missing camera from candidates: {camera_names}")
 
 
+# StarVLA arx checkpoint outputs [R7, L7]; XPolicy / robot expect [L7, R7].
+_ARX_SWAP_DUAL_ARM = frozenset({"arx_x5", "arx"})
+
+
+def _swap_dual_arm_blocks(action: np.ndarray) -> np.ndarray:
+    action = np.asarray(action)
+    if action.shape[-1] != 14:
+        return action
+    return np.concatenate([action[..., 7:14], action[..., 0:7]], axis=-1)
+
+
+def _to_xpolicy_action_layout(action: np.ndarray, env_cfg_type: str) -> np.ndarray:
+    if env_cfg_type in _ARX_SWAP_DUAL_ARM:
+        return _swap_dual_arm_blocks(action)
+    return action
+
+
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = dict(model_cfg)
@@ -190,7 +207,7 @@ class Model(ModelTemplate):
         action = np.asarray(chunk[action_idx], dtype=np.float32)
         if action.shape[-1] != self.action_dim:
             raise ValueError(f"Expected action dim {self.action_dim}, got {action.shape[-1]}.")
-        return action
+        return _to_xpolicy_action_layout(action, self.env_cfg_type)
 
     def get_action(self):
         return self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])[0]
