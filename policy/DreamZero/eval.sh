@@ -35,7 +35,7 @@ CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
-policy_server_host="${DREAMZERO_POLICY_SERVER_HOST:-0.0.0.0}"
+policy_server_host="${DREAMZERO_POLICY_SERVER_HOST:-localhost}"
 
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
 

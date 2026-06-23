@@ -36,7 +36,7 @@ pip install transformer_engine==2.10.0 transformer_engine_cu12==2.10.0 transform
 
 默认训练数据是多任务 LeRobot v3：
 
-模型下载指令，请放到合适的文件夹并export进路径。
+模型、Wan 组件、tokenizer 和训练产物默认都放在当前目录的 `checkpoints/` 下。推荐使用子目录布局；如果历史上把 DreamZero-AgiBot 直接放在 `checkpoints/` 根目录，训练和推理也会兼容。
 
 ```bash
 hf download GEAR-Dreams/DreamZero-AgiBot --repo-type model --local-dir ./checkpoints/DreamZero-AgiBot

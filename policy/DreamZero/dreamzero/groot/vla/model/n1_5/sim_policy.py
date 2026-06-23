@@ -1,5 +1,6 @@
 import importlib
 import json
+import os
 from pathlib import Path
 from typing import Any, Callable
 
@@ -223,6 +224,37 @@ def _update_tokenizer_path_in_config(cfg, new_path: str) -> None:
             _update_tokenizer_path_in_config(v, new_path)
 
 
+def _resolve_lora_base_model_path(train_cfg, model_dir: Path) -> str | None:
+    candidates = []
+
+    cfg_path = train_cfg.get("pretrained_model_path", None)
+    if cfg_path:
+        candidates.append(Path(str(cfg_path)).expanduser())
+
+    env_path = os.environ.get("DREAMZERO_PRETRAINED_MODEL_PATH")
+    if env_path:
+        candidates.append(Path(env_path).expanduser())
+
+    checkpoints_dir = model_dir.parent
+    if model_dir.name.startswith("checkpoint-"):
+        checkpoints_dir = model_dir.parent.parent
+    candidates.extend(
+        [
+            checkpoints_dir / "DreamZero-AgiBot",
+            checkpoints_dir,
+        ]
+    )
+
+    for candidate in candidates:
+        if (candidate / "experiment_cfg" / "conf.yaml").is_file() and (
+            (candidate / "model.safetensors.index.json").is_file()
+            or (candidate / "model.safetensors").is_file()
+        ):
+            return str(candidate.resolve())
+
+    return str(candidates[0]) if candidates else None
+
+
 class GrootSimPolicy(BaseGrootSimPolicy):
     def __init__(
         self,
@@ -274,6 +306,7 @@ class GrootSimPolicy(BaseGrootSimPolicy):
             model_target = train_cfg.model._target_
             
         self.model_target = model_target
+        lora_base_model_path = _resolve_lora_base_model_path(train_cfg, model_dir)
         
         if model_config_overrides is not None and len(model_config_overrides) != 0:
             print(f"Applying model config overrides: {model_config_overrides}")
@@ -298,8 +331,8 @@ class GrootSimPolicy(BaseGrootSimPolicy):
 
             # Instantiate the model
             if hasattr(train_cfg, "save_lora_only") and train_cfg.save_lora_only is True:
-                print(f"Loading LoRA weights from pretrained")
-                model = model_class.load_lora(model_path)
+                print(f"Loading LoRA weights with base model: {lora_base_model_path}")
+                model = model_class.load_lora(model_path, base_model_path=lora_base_model_path)
             else:
                 print(f"Loading model from pretrained directly")
                 model = model_class.from_pretrained(model_path, config=model_config)
@@ -310,9 +343,9 @@ class GrootSimPolicy(BaseGrootSimPolicy):
             if 'lora' in cls_name:
                 cls_module, cls_name = cls_module.rsplit(".", 1)
             if hasattr(train_cfg, "save_lora_only") and train_cfg.save_lora_only is True:
-                print(f"Loading LoRA weights from pretrained")
+                print(f"Loading LoRA weights with base model: {lora_base_model_path}")
                 cls = getattr(importlib.import_module(cls_module), cls_name)
-                model = cls.load_lora(model_path)
+                model = cls.load_lora(model_path, base_model_path=lora_base_model_path)
             else:
                 print(f"Loading model from pretrained directly")
                 cls = getattr(importlib.import_module(cls_module), cls_name)

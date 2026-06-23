@@ -48,6 +48,8 @@ export PYTHONPATH="${SCRIPT_DIR}:${DREAMZERO_DIR:-${SCRIPT_DIR}/dreamzero}:${XPL
 
 OVERRIDES=(
     port="${policy_server_port}"
+    host="${policy_server_host}"
+    policy_server_host="${policy_server_host}"
     dataset_name="${dataset_name}"
     task_name="${task_name}"
     ckpt_name="${ckpt_name}"
