@@ -113,7 +113,7 @@ accelerate launch --num_processes="${num_processes}" --main_process_port "${free
     --dataloader_num_workers="${dataloader_num_workers}" \
     --dataset_type="finetune" \
     --report_to="${report_to}" \
-    --upsample_rate=3 \
+    --upsample_rate=1 \
     --precomp_lang_embed \
     --training_mode="lang" \
     --mode="finetune" \
