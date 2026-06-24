@@ -224,7 +224,7 @@ class XPolicyLabDataset:
         return image
 
     def _parse_camera_history(self, dataset, idx):
-        start_i = max(idx - self.img_history_size * self.upsample_rate + 1, 0)
+        start_i = max(idx - (self.img_history_size - 1) * self.upsample_rate, 0)
         frame_indices = list(range(start_i, idx + 1, self.upsample_rate))
 
         frames = []
