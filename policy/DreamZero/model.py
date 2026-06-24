@@ -38,7 +38,12 @@ from groot.vla.model.n1_5.sim_policy import GrootSimPolicy  # noqa: E402
 
 AGIBOT_STATE_DIM = 20
 AGIBOT_ACTION_DIM = 22
-INFERENCE_IMAGE_SIZE = (640, 480)
+DEFAULT_IMAGE_SIZE = (640, 480)
+DEFAULT_CAMERA_GROUPS = (
+    ("cam_head", "cam_high"),
+    ("cam_left_wrist", "cam_hand_left"),
+    ("cam_right_wrist", "cam_hand_right"),
+)
 
 
 def _configure_torch_dynamo_for_eval() -> None:
@@ -65,6 +70,19 @@ def _as_bool(value: Any, default: bool = False) -> bool:
     if isinstance(value, bool):
         return value
     return str(value).lower() in {"1", "true", "yes", "y"}
+
+
+def _parse_image_resize(value: Any) -> tuple[int, int] | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        if not value or value.lower() in {"none", "null"}:
+            return None
+        value = [int(x) for x in value.replace(" ", "").split(",") if x]
+    if isinstance(value, (list, tuple)) and len(value) == 2:
+        return int(value[0]), int(value[1])
+    raise ValueError(f"image_resize must be null or [width, height], got {value!r}")
 
 
 def _pad_or_trim(values: np.ndarray, dim: int) -> np.ndarray:
@@ -204,6 +222,7 @@ class Model(ModelTemplate):
             )
         self.action_horizon = int(model_cfg.get("action_horizon", 24))
         self.video_history = int(model_cfg.get("video_history", 4))
+        self.image_resize = _parse_image_resize(model_cfg.get("image_resize"))
         self.inference_method = model_cfg.get("inference_method", "lazy_joint_forward_causal")
         self.skip_img_transform = _as_bool(model_cfg.get("skip_img_transform"), False)
         self.tokenizer_path = _resolve_tokenizer_path(model_cfg)
@@ -267,12 +286,11 @@ class Model(ModelTemplate):
             env_idx,
             {"video.top_head": [], "video.hand_left": [], "video.hand_right": []},
         )
-        for camera_key, dreamzero_key in [
-            ("cam_head", "video.top_head"),
-            ("cam_left_wrist", "video.hand_left"),
-            ("cam_right_wrist", "video.hand_right"),
-        ]:
-            frame = _extract_image(observation.get("vision", {}), camera_key)
+        for camera_keys, dreamzero_key in zip(
+            DEFAULT_CAMERA_GROUPS,
+            ("video.top_head", "video.hand_left", "video.hand_right"),
+        ):
+            frame = _extract_image(observation.get("vision", {}), camera_keys, self.image_resize)
             buffers[dreamzero_key].append(frame)
             buffers[dreamzero_key] = buffers[dreamzero_key][-self.video_history :]
 
@@ -323,19 +341,38 @@ class Model(ModelTemplate):
         return action_steps
 
 
-def _extract_image(vision: dict[str, Any], camera_key: str) -> np.ndarray:
-    camera = vision.get(camera_key, {})
-    image = camera.get("color") if isinstance(camera, dict) else camera
+def _extract_image(
+    vision: dict[str, Any],
+    camera_keys: str | tuple[str, ...],
+    image_resize: tuple[int, int] | None,
+) -> np.ndarray:
+    if isinstance(camera_keys, str):
+        camera_keys = (camera_keys,)
+    image = None
+    for camera_key in camera_keys:
+        camera = vision.get(camera_key)
+        if camera is None:
+            continue
+        image = camera.get("color", camera.get("rgb")) if isinstance(camera, dict) else camera
+        if image is not None:
+            break
     if image is None:
-        return np.zeros((INFERENCE_IMAGE_SIZE[1], INFERENCE_IMAGE_SIZE[0], 3), dtype=np.uint8)
+        width, height = image_resize or DEFAULT_IMAGE_SIZE
+        return np.zeros((height, width, 3), dtype=np.uint8)
     image = np.asarray(image)
-    image = cv2.resize(image, INFERENCE_IMAGE_SIZE, interpolation=cv2.INTER_AREA)
+    if image.ndim == 3 and image.shape[0] in (1, 3) and image.shape[-1] not in (1, 3):
+        image = np.transpose(image, (1, 2, 0))
+    if image.ndim != 3 or image.shape[-1] != 3:
+        width, height = image_resize or DEFAULT_IMAGE_SIZE
+        return np.zeros((height, width, 3), dtype=np.uint8)
+    if image_resize is not None:
+        image = cv2.resize(image, image_resize, interpolation=cv2.INTER_AREA)
     return image.astype(np.uint8)
 
 
 def _stack_recent_frames(frames: list[np.ndarray], history: int) -> np.ndarray:
     if not frames:
-        frames = [np.zeros((INFERENCE_IMAGE_SIZE[1], INFERENCE_IMAGE_SIZE[0], 3), dtype=np.uint8)]
+        frames = [np.zeros((DEFAULT_IMAGE_SIZE[1], DEFAULT_IMAGE_SIZE[0], 3), dtype=np.uint8)]
     padded = list(frames)
     while len(padded) < history:
         padded.insert(0, padded[0])

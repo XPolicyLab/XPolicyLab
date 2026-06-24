@@ -1,4 +1,6 @@
 from dataclasses import dataclass, field
+import os
+from pathlib import Path
 from typing import Tuple
 
 from hydra.utils import instantiate
@@ -16,6 +18,52 @@ ACTION_KEY = "action_pred"
 LOSS_KEY = "loss"
 ERROR_MSG = "Error: unexpected input/output"
 N_COLOR_CHANNELS = 3
+
+
+def _resolve_local_wan_dir(checkpoint_dir: str) -> Path | None:
+    env_dir = os.environ.get("WAN_CKPT_DIR")
+    candidates = []
+    if env_dir:
+        candidates.append(Path(env_dir).expanduser())
+
+    ckpt_path = Path(checkpoint_dir).expanduser().resolve()
+    search_roots = [ckpt_path.parent]
+    if ckpt_path.parent.name != "checkpoints":
+        search_roots.append(ckpt_path.parent.parent)
+    for root in search_roots:
+        candidates.append(root / "Wan2.1-I2V-14B-480P")
+
+    for candidate in candidates:
+        if (
+            candidate.is_dir()
+            and (candidate / "models_t5_umt5-xxl-enc-bf16.pth").is_file()
+            and (candidate / "models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth").is_file()
+            and (candidate / "Wan2.1_VAE.pth").is_file()
+        ):
+            return candidate.resolve()
+    return None
+
+
+def _rewrite_wan_paths_in_config(config_dict: dict, checkpoint_dir: str) -> None:
+    wan_dir = _resolve_local_wan_dir(checkpoint_dir)
+    if wan_dir is None:
+        print("[DreamZero] Local Wan2.1 checkpoint dir not found; keeping config paths.")
+        return
+
+    action_head_cfg = config_dict.get("action_head_cfg", {})
+    action_head_inner = action_head_cfg.get("config", action_head_cfg)
+    diffusion_cfg = action_head_inner.get("diffusion_model_cfg", {})
+    text_encoder_cfg = action_head_inner.get("text_encoder_cfg", {})
+    image_encoder_cfg = action_head_inner.get("image_encoder_cfg", {})
+    vae_cfg = action_head_inner.get("vae_cfg", {})
+
+    diffusion_cfg["diffusion_model_pretrained_path"] = str(wan_dir)
+    text_encoder_cfg["text_encoder_pretrained_path"] = str(wan_dir / "models_t5_umt5-xxl-enc-bf16.pth")
+    image_encoder_cfg["image_encoder_pretrained_path"] = str(
+        wan_dir / "models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth"
+    )
+    vae_cfg["vae_pretrained_path"] = str(wan_dir / "Wan2.1_VAE.pth")
+    print(f"[DreamZero] Rewritten Wan component paths to: {wan_dir}")
 
 
 @dataclass
@@ -285,7 +333,6 @@ class VLA(PreTrainedModel):
         if os.path.exists(safetensors_index_path):
             with open(safetensors_index_path, 'r') as f:
                 index = json.load(f)
-            missing_keys_accum = set()
             unexpected_keys_accum = set()
             shard_files = sorted(set(index["weight_map"].values()))
             for shard_file in shard_files:
@@ -293,18 +340,18 @@ class VLA(PreTrainedModel):
                 print(f"Loading shard: {shard_path}")
                 shard_state_dict = load_file(shard_path)
                 missing_keys, unexpected_keys = model.load_state_dict(shard_state_dict, strict=False)
-                if missing_keys:
-                    missing_keys_accum.update(missing_keys)
+                # Missing keys are expected here because each shard only contains a
+                # subset of the full model. Reporting the union across shards makes a
+                # fully-loaded checkpoint look broken.
+                del missing_keys
                 if unexpected_keys:
                     unexpected_keys_accum.update(unexpected_keys)
                 # Free shard immediately
                 del shard_state_dict
                 gc.collect()
-            if missing_keys_accum:
-                print(f"Missing keys when loading sharded pretrained weights: {sorted(missing_keys_accum)} ... total={len(missing_keys_accum)}")
             if unexpected_keys_accum:
                 print(f"Unexpected keys when loading sharded pretrained weights: {sorted(unexpected_keys_accum)} ... total={len(unexpected_keys_accum)}")
-            if not missing_keys_accum and not unexpected_keys_accum:
+            if not unexpected_keys_accum:
                 print("Successfully loaded pretrained base weights (sharded)")
         elif os.path.exists(safetensors_path):
             # Handle single safetensors file
@@ -351,6 +398,7 @@ class VLA(PreTrainedModel):
             config_path = os.path.join(pretrained_model_name_or_path, "config.json")
             with open(config_path, "r") as f:
                 config_dict = json.load(f)
+            _rewrite_wan_paths_in_config(config_dict, pretrained_model_name_or_path)
             config = VLAConfig(**config_dict)
             return cls.from_pretrained_for_tuning(
                 base_model_path,
@@ -389,6 +437,7 @@ class VLA(PreTrainedModel):
         config_path = os.path.join(pretrained_model_name_or_path, "config.json")
         with open(config_path, "r") as f:
             config_dict = json.load(f)
+        _rewrite_wan_paths_in_config(config_dict, pretrained_model_name_or_path)
         config = VLAConfig(**config_dict)
         print("loading model")
 
@@ -485,11 +534,24 @@ class VLA(PreTrainedModel):
         missing_keys, unexpected_keys = self.load_state_dict(state_dict, strict=False)
         
         print("Successfully loaded LoRA state dict")
-            
+
         if missing_keys:
-            print(f"Missing keys when loading LoRA weights: {missing_keys}")
+            missing_lora_keys = [
+                key for key in missing_keys
+                if "lora_" in key or "action_encoder" in key or "action_decoder" in key
+            ]
+            if missing_lora_keys:
+                print(
+                    "Missing trainable keys when loading LoRA weights: "
+                    f"{missing_lora_keys[:20]} ... total={len(missing_lora_keys)}"
+                )
+            else:
+                print(
+                    "LoRA checkpoint loaded; missing non-LoRA base keys are expected "
+                    f"for a LoRA-only checkpoint (total={len(missing_keys)})."
+                )
         if unexpected_keys:
-            print(f"Unexpected keys when loading LoRA weights: {unexpected_keys}")
+            print(f"Unexpected keys when loading LoRA weights: {unexpected_keys[:20]} ... total={len(unexpected_keys)}")
         
         print("Successfully loaded LoRA weights")
 

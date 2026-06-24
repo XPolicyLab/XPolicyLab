@@ -227,10 +227,6 @@ def _update_tokenizer_path_in_config(cfg, new_path: str) -> None:
 def _resolve_lora_base_model_path(train_cfg, model_dir: Path) -> str | None:
     candidates = []
 
-    cfg_path = train_cfg.get("pretrained_model_path", None)
-    if cfg_path:
-        candidates.append(Path(str(cfg_path)).expanduser())
-
     env_path = os.environ.get("DREAMZERO_PRETRAINED_MODEL_PATH")
     if env_path:
         candidates.append(Path(env_path).expanduser())
@@ -244,6 +240,10 @@ def _resolve_lora_base_model_path(train_cfg, model_dir: Path) -> str | None:
             checkpoints_dir,
         ]
     )
+
+    cfg_path = train_cfg.get("pretrained_model_path", None)
+    if cfg_path:
+        candidates.append(Path(str(cfg_path)).expanduser())
 
     for candidate in candidates:
         if (candidate / "experiment_cfg" / "conf.yaml").is_file() and (
@@ -622,18 +622,25 @@ class GrootSimPolicy(BaseGrootSimPolicy):
                 if torch.is_tensor(last_state):
                     last_state = last_state.cpu().numpy()
                 
-                # Shape is (B, T, D) or (T, D), we want the last timestep
-                # After indexing: (B, D) or (D,)
-                if len(last_state.shape) >= 2:
-                    last_state = last_state[..., -1, :]  # Get the last timestep
-                
-                # Action shape is (horizon, D) or (B, horizon, D)
-                # Expand dims to broadcast: (D,) -> (1, D) or (B, D) -> (B, 1, D)
-                if len(unnormalized_action[action_key].shape) > len(last_state.shape):
-                    last_state = np.expand_dims(last_state, axis=-2)  # Add horizon dimension
-                
-                # Add state to relative action to get absolute action
-                print("last_state", last_state.shape, "unnormalized_action[action_key]", unnormalized_action[action_key].shape)
+                action_value = unnormalized_action[action_key]
+
+                # Supported state shapes:
+                #   (D,)       -> one unbatched state
+                #   (T, D)     -> unbatched state history, use last T
+                #   (B, D)     -> batched one-step state
+                #   (B, T, D)  -> batched state history, use last T
+                # Match the action shape before broadcasting:
+                #   (H, D) or (B, H, D)
+                if last_state.ndim >= 3:
+                    last_state = last_state[..., -1, :]
+                elif last_state.ndim == 2:
+                    action_is_batched = getattr(action_value, "ndim", len(action_value.shape)) == 3
+                    if not action_is_batched:
+                        last_state = last_state[-1]
+
+                if action_value.ndim > last_state.ndim:
+                    last_state = np.expand_dims(last_state, axis=-2)
+
                 unnormalized_action[action_key] = unnormalized_action[action_key] + last_state
         
         batch.act = unnormalized_action
