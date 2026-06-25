@@ -378,10 +378,18 @@ class Model(ModelTemplate):
         self.chunk_size = training_config['train']['chunk_size']
         policy.action_dim = self.action_dim
         policy.chunk_size = self.chunk_size
-        self.norm_stats_file = data_config.norm_stats_file
+        norm_stats_file = Path(data_config.norm_stats_file)
+        if not norm_stats_file.is_absolute():
+            norm_stats_file = Path(__file__).resolve().parent / "lingbot_vla" / norm_stats_file
+        self.norm_stats_file = norm_stats_file
         if 'align_params' in training_config['train']:
             self.use_depth_align = True
         else: self.use_depth_align = False
+        if not self.norm_stats_file.exists():
+            raise FileNotFoundError(
+                f"Norm stats file not found: {self.norm_stats_file}. "
+                f"Expected lingbot_vla assets path for: {data_config.norm_stats_file}"
+            )
         with open(self.norm_stats_file) as f:
             self.norm_stats = json.load(f)
 
