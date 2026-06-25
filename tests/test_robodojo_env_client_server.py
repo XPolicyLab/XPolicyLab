@@ -619,7 +619,7 @@ def test_handle_start_submits_publish_in_background(tmp_path, monkeypatch):
             publish_release.wait(timeout=2)
             return {"webhook": {"status_code": 200}}, "completed", None
 
-        publish_submit(work)
+        publish_submit(work, evaluation_id="eval-1", trial_index=1)
         return 0, {
             "status": "completed",
             "policy_results": [{"trial_id": "case-1-r01", "steps": 1}],

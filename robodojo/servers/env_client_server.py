@@ -18,8 +18,13 @@ from urllib.parse import quote, urlparse
 from pydantic import ValidationError
 
 from robodojo.dispatch.errors import normalize_execution_error
-from robodojo.dispatch.executor import run_dispatch
-from robodojo.env_client.api import EnvClientBaselineConfig, HealthResponse, TrialRunResponse
+from robodojo.dispatch.executor import build_republish_work, run_dispatch
+from robodojo.dispatch.status import STATUS_DONE, STATUS_FAILED
+from robodojo.env_client.api import (
+    EnvClientBaselineConfig,
+    HealthResponse,
+    TrialRunResponse,
+)
 from robodojo.env_client.runner import (
     DebugTrialRunner,
     TrialRunnerError,
@@ -29,6 +34,8 @@ from robodojo.env_client.runner import (
     reset_idle_env,
 )
 from robodojo.env_client.trial_control import StopRequestResult, TrialControlRegistry
+from robodojo.publish import state_store
+from robodojo.publish.state_store import PUBLISH_STATUS_FAILED
 from robodojo.schemas import DispatchPayload
 from robodojo.servers.preview_routes import (
     handle_preview_get,
@@ -70,10 +77,24 @@ class EnvClientServerState:
         compare=False,
     )
 
-    def submit_publish(self, work: Callable[[], Any]) -> Future[Any]:
+    def submit_publish(
+        self,
+        work: Callable[[], Any],
+        *,
+        evaluation_id: str,
+        trial_index: int,
+    ) -> Future[Any]:
         """Queue trial publishing on the background worker (fire-and-forget)."""
         future = self._publish_executor.submit(work)
         future.add_done_callback(_log_publish_failure)
+        future.add_done_callback(
+            lambda completed: _record_publish_outcome(
+                self.config.artifact_root,
+                evaluation_id,
+                trial_index,
+                completed,
+            )
+        )
         return future
 
     def shutdown_publish(self) -> None:
@@ -125,6 +146,82 @@ def _log_publish_failure(future: Future[Any]) -> None:
             + "".join(traceback.format_exception(type(exc), exc, exc.__traceback__)),
             file=sys.stderr,
         )
+
+
+def _record_publish_outcome(
+    artifact_root: Path,
+    evaluation_id: str,
+    trial_index: int,
+    future: Future[Any],
+) -> None:
+    exc = future.exception()
+    if exc is not None:
+        state_store.record_outcome(
+            artifact_root,
+            evaluation_id,
+            trial_index,
+            PUBLISH_STATUS_FAILED,
+        )
+        return
+    try:
+        published, _, _ = future.result()
+        publish_status = str(published.get("publish_status", PUBLISH_STATUS_FAILED))
+        state_store.record_outcome(
+            artifact_root,
+            evaluation_id,
+            trial_index,
+            publish_status,
+        )
+    except Exception:  # noqa: BLE001 - best-effort persistence
+        state_store.record_outcome(
+            artifact_root,
+            evaluation_id,
+            trial_index,
+            PUBLISH_STATUS_FAILED,
+        )
+
+
+def _hdf5_path_from_summary(summary: dict[str, object]) -> str | None:
+    policy_result = _first_record(summary.get("policy_results"))
+    hdf5_path = policy_result.get("hdf5_path")
+    return str(hdf5_path) if hdf5_path else None
+
+
+def resume_incomplete_publishes(state: EnvClientServerState) -> int:
+    """Reload persisted dispatches and re-queue incomplete publish tasks."""
+    artifact_root = state.config.artifact_root
+    state.dispatches.update(state_store.load_dispatches(artifact_root))
+    queued = 0
+    for record in state_store.load_incomplete(artifact_root):
+        dispatch = state.dispatches.get(record.evaluation_id)
+        if dispatch is None:
+            continue
+        hdf5_path = record.hdf5_path
+        if not hdf5_path or not os.path.isfile(hdf5_path):
+            state_store.record_outcome(
+                artifact_root,
+                record.evaluation_id,
+                record.trial_index,
+                PUBLISH_STATUS_FAILED,
+            )
+            continue
+        work = build_republish_work(
+            dispatch,
+            evaluation_id=record.evaluation_id,
+            trial_index=record.trial_index,
+            hdf5_path=hdf5_path,
+            run_status=record.run_status,
+            upload_s3=state.config.upload_s3,
+            notify_webhook=state.config.notify_webhook,
+            webhook_secret=state.config.webhook_secret,
+        )
+        state.submit_publish(
+            work,
+            evaluation_id=record.evaluation_id,
+            trial_index=record.trial_index,
+        )
+        queued += 1
+    return queued
 
 
 def _first_record(items: object) -> dict[str, Any]:
@@ -206,7 +303,9 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
             if preview_route is not None:
                 action, role = preview_route
                 if action in ("pause", "resume"):
-                    self._write_json(HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"})
+                    self._write_json(
+                        HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"}
+                    )
                     return
                 handle_preview_get(self, state.preview, action, role)
                 return
@@ -229,7 +328,9 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
             if preview_route is not None:
                 action, _ = preview_route
                 if action not in ("pause", "resume"):
-                    self._write_json(HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"})
+                    self._write_json(
+                        HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"}
+                    )
                     return
                 handle_preview_post(self, state.preview, action)
                 return
@@ -253,6 +354,8 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                     self._handle_start(evaluation_id, trial_index)
                 case "stop":
                     self._handle_stop(evaluation_id, trial_index)
+                case "republish":
+                    self._handle_republish(evaluation_id, trial_index)
 
         @property
         def _path(self) -> str:
@@ -276,6 +379,11 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 return
 
             state.dispatches[evaluation_id] = dispatch
+            state_store.record_dispatch(
+                state.config.artifact_root,
+                evaluation_id,
+                dispatch,
+            )
             self._write_json(
                 HTTPStatus.OK,
                 {
@@ -339,6 +447,16 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
             finally:
                 state.trial_control.clear(evaluation_id, trial_index)
 
+            if state.config.upload_s3 or state.config.notify_webhook:
+                run_status = STATUS_FAILED if exit_code != 0 else STATUS_DONE
+                state_store.record_pending(
+                    state.config.artifact_root,
+                    evaluation_id,
+                    trial_index,
+                    _hdf5_path_from_summary(summary),
+                    run_status,
+                )
+
             state.last_trial_id = _trial_id_from_summary(summary, trial_index)
             self._write_json(
                 HTTPStatus.OK,
@@ -355,6 +473,63 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
             result = state.trial_control.request_stop(evaluation_id, trial_index)
             status_code, body = _STOP_HTTP_RESPONSES[result]
             self._write_json(status_code, body)
+
+        def _handle_republish(self, evaluation_id: str, trial_index: int) -> None:
+            dispatch = state.dispatches.get(evaluation_id)
+            if dispatch is None:
+                self._write_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"error": "dispatch payload not found"},
+                )
+                return
+
+            if not any(
+                trial.trial_index == trial_index
+                for trial in dispatch.evaluation_plan.trials
+            ):
+                self._write_json(
+                    HTTPStatus.NOT_FOUND,
+                    {"error": "trial not found in dispatch payload"},
+                )
+                return
+
+            publish_record = state_store.load_publish_record(
+                state.config.artifact_root,
+                evaluation_id,
+                trial_index,
+            )
+            hdf5_path = publish_record.hdf5_path if publish_record else None
+            if not hdf5_path or not os.path.isfile(hdf5_path):
+                self._write_json(
+                    HTTPStatus.CONFLICT,
+                    {"error": "recording no longer available for re-upload"},
+                )
+                return
+
+            run_status = publish_record.run_status if publish_record else STATUS_DONE
+            state_store.record_pending(
+                state.config.artifact_root,
+                evaluation_id,
+                trial_index,
+                hdf5_path,
+                run_status,
+            )
+            work = build_republish_work(
+                dispatch,
+                evaluation_id=evaluation_id,
+                trial_index=trial_index,
+                hdf5_path=hdf5_path,
+                run_status=run_status,
+                upload_s3=state.config.upload_s3,
+                notify_webhook=state.config.notify_webhook,
+                webhook_secret=state.config.webhook_secret,
+            )
+            state.submit_publish(
+                work,
+                evaluation_id=evaluation_id,
+                trial_index=trial_index,
+            )
+            self._write_json(HTTPStatus.OK, {"status": "republishing"})
 
         def _handle_reset(self) -> None:
             if state.trial_control.has_active_trials():
@@ -460,6 +635,10 @@ def session_start_path(evaluation_id: str, trial_index: int) -> str:
 
 def session_stop_path(evaluation_id: str, trial_index: int) -> str:
     return _session_path(evaluation_id, f"trials/{trial_index}/stop")
+
+
+def session_republish_path(evaluation_id: str, trial_index: int) -> str:
+    return _session_path(evaluation_id, f"trials/{trial_index}/republish")
 
 
 def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
@@ -644,6 +823,12 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     server = create_server(args.serve_host, args.serve_port, state)
+    resumed = resume_incomplete_publishes(state)
+    if resumed:
+        print(
+            f"resumed {resumed} incomplete trial publish task(s) from artifact store",
+            file=sys.stderr,
+        )
     print(
         f"robodojo env client listening on http://{args.serve_host}:{args.serve_port}",
         file=sys.stderr,

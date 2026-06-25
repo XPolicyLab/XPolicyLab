@@ -13,7 +13,7 @@ def parse_session_route(path: str) -> tuple[str, str, int | None] | None:
             return (evaluation_id, "dispatch", None) if evaluation_id else None
         case ["sessions", raw_evaluation_id, "trials", raw_trial_index, action]:
             evaluation_id = unquote(raw_evaluation_id)
-            if action not in ("start", "stop"):
+            if action not in ("start", "stop", "republish"):
                 return None
             try:
                 trial_index = int(raw_trial_index)

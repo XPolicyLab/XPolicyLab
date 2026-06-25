@@ -360,7 +360,7 @@ def test_run_dispatch_submits_publish_in_background(tmp_path, monkeypatch):
         fake_publish_trial_recording,
     )
 
-    def capture_submit(work):
+    def capture_submit(work, **_kwargs):
         submitted.append(work)
         return work()
 

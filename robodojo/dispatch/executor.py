@@ -21,7 +21,7 @@ from robodojo.publish.webhook import notify_finish_webhook
 from robodojo.schemas import ArtifactPayload, DispatchPayload
 from robodojo.serialization import to_jsonable
 
-PublishSubmitFn = Callable[[Callable[[], Any]], Any]
+PublishSubmitFn = Callable[..., Any]
 
 
 def _resolved_artifact(dispatch: DispatchPayload) -> ArtifactPayload:
@@ -122,10 +122,46 @@ def _build_dispatch_summary(
     return summary
 
 
+def build_republish_work(
+    dispatch: DispatchPayload,
+    *,
+    evaluation_id: str,
+    trial_index: int,
+    hdf5_path: str,
+    run_status: str,
+    upload_s3: bool,
+    notify_webhook: bool,
+    webhook_secret: str | None,
+    error: dict[str, Any] | None = None,
+) -> Callable[[], tuple[dict[str, Any], str, dict[str, Any] | None]]:
+    trial_run = trial_run_for_index(
+        dispatch,
+        evaluation_id=evaluation_id,
+        trial_index=trial_index,
+    )
+
+    def do_publish() -> tuple[dict[str, Any], str, dict[str, Any] | None]:
+        return publish_pipeline.publish_trial_recording(
+            dispatch_for_trial(dispatch, trial_index),
+            finish_url=str(trial_run["finish_url"]),
+            run_status=run_status,
+            video_key=_trial_video_key(dispatch, trial_index),
+            hdf5_key=_trial_hdf5_key(dispatch, trial_index),
+            hdf5_path=hdf5_path,
+            error=error,
+            upload_s3=upload_s3,
+            notify_webhook=notify_webhook,
+            webhook_secret=webhook_secret,
+        )
+
+    return do_publish
+
+
 def _publish_after_trial(
     dispatch: DispatchPayload,
     run_dispatch_payload: DispatchPayload,
     *,
+    evaluation_id: str,
     trial_run: dict[str, object],
     trial_index: int,
     run_status: str,
@@ -156,7 +192,11 @@ def _publish_after_trial(
         )
 
     if publish_submit is not None:
-        publish_submit(do_publish)
+        publish_submit(
+            do_publish,
+            evaluation_id=evaluation_id,
+            trial_index=trial_index,
+        )
         if run_status == STATUS_DONE:
             return {"async": True}, STATUS_COMPLETED, error
         return {"async": True}, run_status, error
@@ -191,6 +231,7 @@ def _fail_dispatch(
         published, run_status, error = _publish_after_trial(
             dispatch,
             run_dispatch_payload,
+            evaluation_id=evaluation_id,
             trial_run=trial_run,
             trial_index=trial_index,
             run_status=run_status,
@@ -252,6 +293,7 @@ def _execute_dispatch(
         published, run_status, error = _publish_after_trial(
             dispatch,
             run_dispatch_payload,
+            evaluation_id=evaluation_id,
             trial_run=trial_run,
             trial_index=trial_index,
             run_status=run_status,

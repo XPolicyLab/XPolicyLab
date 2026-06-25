@@ -9,6 +9,7 @@ from typing import Any
 
 from robodojo.dispatch.errors import normalize_execution_error
 from robodojo.dispatch.status import STATUS_COMPLETED, STATUS_FAILED
+from robodojo.publish.state_store import PUBLISH_STATUS_DONE, PUBLISH_STATUS_FAILED
 from robodojo.publish.s3 import (
     UploadFileFn,
     resolve_artifact_payload,
@@ -158,6 +159,11 @@ def publish_trial_recording(
                 }
             except PUBLISH_ERRORS as webhook_exc:
                 published["webhook_error"] = str(webhook_exc)
+
+        publish_failed = bool(publish_error) or bool(published.get("webhook_error"))
+        published["publish_status"] = (
+            PUBLISH_STATUS_FAILED if publish_failed else PUBLISH_STATUS_DONE
+        )
 
         # The returned status mirrors the robot trial outcome, not the upload:
         # a failed upload never turns a successful trial into a failed one.
