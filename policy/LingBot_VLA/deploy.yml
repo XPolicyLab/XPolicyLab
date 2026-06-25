@@ -1,11 +1,17 @@
 # Basic experiment configuration
 policy_name: lingbot-vla
+host: localhost
+port: null
+dataset_name: null
 task_name: null
+ckpt_name: null
+env_cfg_type: null
 env_cfg: null
 expert_data_num: null
-expert_data_num: null
+action_type: null
 seed: null
 eval_batch: false
+eval_env: debug # sim, real, debug
 
 checkpoint_num: 600
 
