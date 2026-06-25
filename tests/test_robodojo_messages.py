@@ -5,7 +5,10 @@ from robodojo.protocol.schemas import Frame
 
 def test_request_response_pairs_cover_core_flow():
     assert REQUEST_RESPONSE_PAIRS[MessageType.HELLO] == MessageType.HELLO_ACK
+    assert REQUEST_RESPONSE_PAIRS[MessageType.UPDATE_OBS] == MessageType.UPDATE_OBS_ACK
+    assert REQUEST_RESPONSE_PAIRS[MessageType.UPDATE_OBS_BATCH] == MessageType.UPDATE_OBS_BATCH_ACK
     assert REQUEST_RESPONSE_PAIRS[MessageType.INFER] == MessageType.INFER_RESULT
+    assert REQUEST_RESPONSE_PAIRS[MessageType.GET_ACTION_BATCH] == MessageType.GET_ACTION_BATCH_RESULT
     assert REQUEST_RESPONSE_PAIRS[MessageType.HEARTBEAT] == MessageType.HEARTBEAT_ACK
     assert MessageType.INFER in REQUEST_RESPONSE_PAIRS
 

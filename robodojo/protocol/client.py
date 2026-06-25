@@ -238,7 +238,7 @@ class PolicyEvalClient:
             repeat_index=repeat_index,
         )
 
-    async def infer(
+    async def update_obs(
         self,
         observation: dict[str, Any],
         *,
@@ -247,8 +247,59 @@ class PolicyEvalClient:
         step: int = 0,
     ) -> Frame:
         return await self.request(
-            MessageType.INFER,
+            MessageType.UPDATE_OBS,
             {"observation": observation},
+            trial_id=trial_id,
+            action_case_id=action_case_id,
+            step=step,
+        )
+
+    async def update_obs_batch(
+        self,
+        observations: list[dict[str, Any]],
+        *,
+        trial_id: str | None = None,
+        action_case_id: str | None = None,
+        step: int = 0,
+    ) -> Frame:
+        return await self.request(
+            MessageType.UPDATE_OBS_BATCH,
+            {"observations": observations},
+            trial_id=trial_id,
+            action_case_id=action_case_id,
+            step=step,
+        )
+
+    async def infer(
+        self,
+        observation: dict[str, Any] | None = None,
+        *,
+        trial_id: str | None = None,
+        action_case_id: str | None = None,
+        step: int = 0,
+    ) -> Frame:
+        payload: dict[str, Any] = {}
+        if observation is not None:
+            payload["observation"] = observation
+        return await self.request(
+            MessageType.INFER,
+            payload,
+            trial_id=trial_id,
+            action_case_id=action_case_id,
+            step=step,
+        )
+
+    async def get_action_batch(
+        self,
+        env_idx_list: list[int],
+        *,
+        trial_id: str | None = None,
+        action_case_id: str | None = None,
+        step: int = 0,
+    ) -> Frame:
+        return await self.request(
+            MessageType.GET_ACTION_BATCH,
+            {"env_idx_list": env_idx_list},
             trial_id=trial_id,
             action_case_id=action_case_id,
             step=step,

@@ -9,6 +9,7 @@ class ErrorCode(str, Enum):
     UNKNOWN_MESSAGE_TYPE = "unknown_message_type"
     TIMEOUT = "timeout"
     INFER_FAILED = "infer_failed"
+    UPDATE_OBS_FAILED = "update_obs_failed"
     RESET_FAILED = "reset_failed"
     INTERNAL = "internal"
 

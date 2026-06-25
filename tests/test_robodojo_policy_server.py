@@ -262,8 +262,114 @@ async def test_policy_server_heartbeat_responds_while_sync_infer_is_running():
 
 
 @pytest.mark.asyncio
+async def test_policy_server_update_obs_then_infer_without_observation():
+    model = DummyModel()
+    server = PolicyServer(model)
+
+    update = _expect_frame(
+        await server.process_frame(
+            _frame(
+                MessageType.UPDATE_OBS,
+                {"observation": {"state": np.ones(3, dtype=np.float32)}},
+                trial_id="trial-1",
+                step=3,
+            )
+        )
+    )
+    infer = _expect_frame(
+        await server.process_frame(
+            _frame(
+                MessageType.INFER,
+                {},
+                trial_id="trial-1",
+                step=3,
+            )
+        )
+    )
+
+    assert update.message_type == MessageType.UPDATE_OBS_ACK
+    assert infer.message_type == MessageType.INFER_RESULT
+    np.testing.assert_array_equal(
+        model.observation["state"],
+        np.ones(3, dtype=np.float32),
+    )
+
+
+@pytest.mark.asyncio
+async def test_policy_server_update_obs_batch_then_get_action_batch():
+    class BatchModel:
+        def __init__(self):
+            self.observations: list[dict[str, Any]] = []
+            self.last_env_idx_list: list[int] | None = None
+
+        def update_obs_batch(self, observations):
+            self.observations = list(observations)
+
+        def get_action_batch(self, env_idx_list):
+            self.last_env_idx_list = list(env_idx_list)
+            return [
+                {"env_idx": env_idx, "value": self.observations[i]["value"]}
+                for i, env_idx in enumerate(env_idx_list)
+            ]
+
+    model = BatchModel()
+    server = PolicyServer(model)
+
+    update = _expect_frame(
+        await server.process_frame(
+            _frame(
+                MessageType.UPDATE_OBS_BATCH,
+                {"observations": [{"env_idx": 0, "value": 1}, {"env_idx": 1, "value": 2}]},
+                trial_id="trial-1",
+            )
+        )
+    )
+    batch = _expect_frame(
+        await server.process_frame(
+            _frame(
+                MessageType.GET_ACTION_BATCH,
+                {"env_idx_list": [0, 1]},
+                trial_id="trial-1",
+            )
+        )
+    )
+
+    assert update.message_type == MessageType.UPDATE_OBS_BATCH_ACK
+    assert batch.message_type == MessageType.GET_ACTION_BATCH_RESULT
+    assert batch.payload["actions"] == [
+        {"env_idx": 0, "value": 1},
+        {"env_idx": 1, "value": 2},
+    ]
+    assert model.last_env_idx_list == [0, 1]
+    assert "latency_ms" in batch.payload
+
+
+@pytest.mark.asyncio
+async def test_policy_server_update_obs_failure_uses_update_obs_failed_code():
+    class FailingUpdateModel:
+        def update_obs(self, observation):
+            raise RuntimeError("bad observation shape")
+
+    server = PolicyServer(FailingUpdateModel())
+
+    response = _expect_frame(
+        await server.process_frame(
+            _frame(MessageType.UPDATE_OBS, {"observation": {"state": 1}})
+        )
+    )
+
+    assert response.message_type == MessageType.ERROR
+    assert response.payload["code"] == ErrorCode.UPDATE_OBS_FAILED.value
+    assert "bad observation shape" in response.payload["message"]
+
+
+@pytest.mark.asyncio
 async def test_policy_server_returns_error_frame_for_bad_infer_payload():
-    server = PolicyServer(DummyModel())
+    class InferOnlyModel:
+        def infer(self, observation):
+            return {"actions": observation}
+
+    server = PolicyServer(InferOnlyModel())
 
     response = _expect_frame(await server.process_frame(_frame(MessageType.INFER, {})))
 

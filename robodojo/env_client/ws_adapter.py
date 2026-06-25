@@ -23,8 +23,6 @@ class RoboDojoModelClient:
         self.trial_id = trial_id
         self.repeat_index = repeat_index
         self._step = 0
-        self._latest_obs: Any | None = None
-        self._latest_obs_batch: list[Any] | None = None
         self._loop = asyncio.new_event_loop()
         self._client = client or PolicyEvalClient(
             PolicyEvalClientConfig(url=url, evaluation_id=evaluation_id)
@@ -45,8 +43,6 @@ class RoboDojoModelClient:
 
         if func_name == "reset":
             self._step = 0
-            self._latest_obs = None
-            self._latest_obs_batch = None
             response = self._loop.run_until_complete(
                 self._client.reset(
                     trial_id=self.trial_id,
@@ -58,18 +54,20 @@ class RoboDojoModelClient:
             return response.payload.get("result")
 
         if func_name == "update_obs":
-            self._latest_obs = obs
+            self._loop.run_until_complete(
+                self._client.update_obs(
+                    cast(dict[str, Any], obs),
+                    trial_id=self.trial_id,
+                    action_case_id=self.action_case_id,
+                    step=self._step,
+                )
+            )
             return None
 
         if func_name == "get_action":
-            observation = obs if obs is not None else self._latest_obs
-            if observation is None:
-                raise ValueError(
-                    "get_action requires obs or a previous update_obs call"
-                )
             response = self._loop.run_until_complete(
                 self._client.infer(
-                    cast(dict[str, Any], observation),
+                    cast(dict[str, Any], obs) if obs is not None else None,
                     trial_id=self.trial_id,
                     action_case_id=self.action_case_id,
                     step=self._step,
@@ -79,28 +77,31 @@ class RoboDojoModelClient:
             return response.payload.get("actions")
 
         if func_name == "update_obs_batch":
-            self._latest_obs_batch = list(obs) if obs is not None else []
+            observations = list(obs) if obs is not None else []
+            self._loop.run_until_complete(
+                self._client.update_obs_batch(
+                    cast(list[dict[str, Any]], observations),
+                    trial_id=self.trial_id,
+                    action_case_id=self.action_case_id,
+                    step=self._step,
+                )
+            )
             return None
 
         if func_name == "get_action_batch":
-            observations = self._latest_obs_batch
-            if observations is None:
-                raise ValueError(
-                    "get_action_batch requires a previous update_obs_batch call"
+            env_idx_list = obs if obs is not None else kwargs.get("env_idx_list")
+            if env_idx_list is None:
+                raise ValueError("get_action_batch requires env_idx_list")
+            response = self._loop.run_until_complete(
+                self._client.get_action_batch(
+                    list(env_idx_list),
+                    trial_id=self.trial_id,
+                    action_case_id=self.action_case_id,
+                    step=self._step,
                 )
-            actions = []
-            for observation in observations:
-                response = self._loop.run_until_complete(
-                    self._client.infer(
-                        cast(dict[str, Any], observation),
-                        trial_id=self.trial_id,
-                        action_case_id=self.action_case_id,
-                        step=self._step,
-                    )
-                )
-                actions.append(response.payload.get("actions"))
+            )
             self._step += 1
-            return actions
+            return response.payload.get("actions")
 
         if func_name == "trial_end":
             response = self._loop.run_until_complete(

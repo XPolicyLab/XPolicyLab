@@ -49,10 +49,21 @@ async def test_policy_server_infer_loop_without_network():
     assert reset is not None
     assert reset.message_type == MessageType.RESET_RESULT
 
+    update = await server.process_frame(
+        _frame(
+            MessageType.UPDATE_OBS,
+            {"observation": {"step": 3}},
+            trial_id="case-1-r01",
+            action_case_id="case-1",
+        )
+    )
+    assert update is not None
+    assert update.message_type == MessageType.UPDATE_OBS_ACK
+
     infer = await server.process_frame(
         _frame(
             MessageType.INFER,
-            {"observation": {"step": 3}},
+            {},
             trial_id="case-1-r01",
             action_case_id="case-1",
         )

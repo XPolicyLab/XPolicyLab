@@ -183,8 +183,14 @@ class PolicyServer:
             return await self._handle_prepare_case(frame)
         if frame.message_type == MessageType.RESET:
             return await self._handle_reset(frame)
+        if frame.message_type == MessageType.UPDATE_OBS:
+            return await self._handle_update_obs(frame)
+        if frame.message_type == MessageType.UPDATE_OBS_BATCH:
+            return await self._handle_update_obs_batch(frame)
         if frame.message_type == MessageType.INFER:
             return await self._handle_infer(frame)
+        if frame.message_type == MessageType.GET_ACTION_BATCH:
+            return await self._handle_get_action_batch(frame)
         if frame.message_type == MessageType.TRIAL_END:
             return await self._handle_trial_end(frame)
         if frame.message_type == MessageType.HEARTBEAT:
@@ -219,10 +225,50 @@ class PolicyServer:
             raise WsError(ErrorCode.RESET_FAILED, str(exc)) from exc
         return self._reply(frame, MessageType.RESET_RESULT, _ok_payload(result))
 
-    async def _handle_infer(self, frame: Frame) -> Frame:
+    async def _handle_update_obs(self, frame: Frame) -> Frame:
         observation = frame.payload.get("observation")
         if observation is None:
-            raise WsError(ErrorCode.INVALID_FRAME, "infer payload missing observation")
+            raise WsError(ErrorCode.INVALID_FRAME, "update_obs payload missing observation")
+
+        method = getattr(self.model, "update_obs", None)
+        if not callable(method):
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "model.update_obs is not callable",
+            )
+        try:
+            await self._call_model_method(method, observation)
+        except Exception as exc:
+            raise WsError(ErrorCode.UPDATE_OBS_FAILED, str(exc)) from exc
+        return self._reply(frame, MessageType.UPDATE_OBS_ACK, _ok_payload())
+
+    async def _handle_update_obs_batch(self, frame: Frame) -> Frame:
+        observations = frame.payload.get("observations")
+        if observations is None:
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "update_obs_batch payload missing observations",
+            )
+        if not isinstance(observations, list):
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "update_obs_batch observations must be a list",
+            )
+
+        method = getattr(self.model, "update_obs_batch", None)
+        if not callable(method):
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "model.update_obs_batch is not callable",
+            )
+        try:
+            await self._call_model_method(method, observations)
+        except Exception as exc:
+            raise WsError(ErrorCode.UPDATE_OBS_FAILED, str(exc)) from exc
+        return self._reply(frame, MessageType.UPDATE_OBS_BATCH_ACK, _ok_payload())
+
+    async def _handle_infer(self, frame: Frame) -> Frame:
+        observation = frame.payload.get("observation")
 
         start = time.perf_counter()
         try:
@@ -230,37 +276,23 @@ class PolicyServer:
                 update_obs = getattr(self.model, "update_obs", None)
                 get_action = getattr(self.model, "get_action", None)
                 if callable(update_obs) and callable(get_action):
-                    if inspect.iscoroutinefunction(
-                        update_obs
-                    ) or inspect.iscoroutinefunction(get_action):
-                        update_result = update_obs(observation)
-                        if inspect.isawaitable(update_result):
-                            await update_result
-                        result = get_action()
-                        if inspect.isawaitable(result):
-                            result = await result
-                    else:
-                        def run_legacy_infer() -> Any:
-                            update_result = update_obs(observation)
-                            if inspect.isawaitable(update_result):
-                                raise TypeError(
-                                    "update_obs returned an awaitable but is not async"
-                                )
-                            result = get_action()
-                            if inspect.isawaitable(result):
-                                raise TypeError(
-                                    "get_action returned an awaitable but is not async"
-                                )
-                            return result
-
-                        result = await asyncio.to_thread(run_legacy_infer)
-                else:
+                    if observation is not None:
+                        await self._invoke_method(update_obs, observation)
+                    result = await self._invoke_method(get_action)
+                elif observation is not None:
                     infer = getattr(self.model, "infer", None)
                     if not callable(infer):
                         raise AttributeError(
                             "model must implement update_obs()/get_action() or infer(observation)"
                         )
                     result = await self._invoke_method(infer, observation)
+                else:
+                    raise WsError(
+                        ErrorCode.INVALID_FRAME,
+                        "infer payload missing observation",
+                    )
+        except WsError:
+            raise
         except Exception as exc:
             raise WsError(ErrorCode.INFER_FAILED, str(exc)) from exc
 
@@ -272,6 +304,37 @@ class PolicyServer:
             payload = {"actions": result, "latency_ms": latency_ms}
 
         return self._reply(frame, MessageType.INFER_RESULT, payload)
+
+    async def _handle_get_action_batch(self, frame: Frame) -> Frame:
+        env_idx_list = frame.payload.get("env_idx_list")
+        if env_idx_list is None:
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "get_action_batch payload missing env_idx_list",
+            )
+        if not isinstance(env_idx_list, list):
+            raise WsError(
+                ErrorCode.INVALID_FRAME,
+                "get_action_batch env_idx_list must be a list",
+            )
+
+        start = time.perf_counter()
+        try:
+            method = getattr(self.model, "get_action_batch", None)
+            if not callable(method):
+                raise AttributeError("model.get_action_batch is not callable")
+            result = await self._call_model_method(method, env_idx_list)
+        except Exception as exc:
+            raise WsError(ErrorCode.INFER_FAILED, str(exc)) from exc
+
+        latency_ms = (time.perf_counter() - start) * 1000.0
+        if isinstance(result, Mapping) and "actions" in result:
+            payload: dict[str, Any] = dict(result)
+            payload.setdefault("latency_ms", latency_ms)
+        else:
+            payload = {"actions": result, "latency_ms": latency_ms}
+
+        return self._reply(frame, MessageType.GET_ACTION_BATCH_RESULT, payload)
 
     async def _handle_trial_end(self, frame: Frame) -> Frame:
         hook = getattr(self.model, "on_trial_end", None)
