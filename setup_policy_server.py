@@ -1,3 +1,4 @@
+import asyncio
 import threading
 import ast
 import time
@@ -17,11 +18,30 @@ def main(deploy_cfg):
     # Extract basic arguments
     policy_name = deploy_cfg.get("policy_name")
     port = deploy_cfg.get("port")
-    host = deploy_cfg["host"]
+    host = deploy_cfg.get("host", "0.0.0.0")
+    protocol = deploy_cfg.get("protocol", "robodojo_ws")
 
     # Instantiate model
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
     model = model_class_func(deploy_cfg)
+
+    if protocol == "robodojo_ws":
+        from robodojo.servers.policy_server import PolicyServer, PolicyServerConfig
+
+        server = PolicyServer(
+            model,
+            PolicyServerConfig(
+                host=host,
+                port=int(port),
+            ),
+        )
+        try:
+            asyncio.run(server.serve_forever())
+        except KeyboardInterrupt:
+            print("\nShutting down RoboDojo policy server...")
+        return
+    if protocol != "legacy_tcp":
+        raise ValueError(f"unsupported policy server protocol: {protocol}")
 
     # Wrap server.start so exceptions inside thread are fully printed
     def run_server():
@@ -49,7 +69,11 @@ def main(deploy_cfg):
 def parse_args_and_config():
     """Parse CLI args and YAML config, merge overrides"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config_path", type=str, required=True, help="Path to config YAML")
+    parser.add_argument("--config_path", "--config-path", dest="config_path", type=str, required=True, help="Path to config YAML")
+    parser.add_argument("--protocol", choices=("legacy_tcp", "robodojo_ws"), help="Policy server protocol")
+    parser.add_argument("--host", help="Policy server bind host")
+    parser.add_argument("--port", type=int, help="Policy server bind port")
+    parser.add_argument("--relay-url", dest="relay_url", help="Relay URL for future relay mode")
     parser.add_argument("--overrides", nargs=argparse.REMAINDER, help="Override config values")
     args = parser.parse_args()
 
@@ -83,6 +107,17 @@ def parse_args_and_config():
             for key in it:
                 val = next(it)
                 cfg[key.lstrip("-")] = _parse_val(val)
+
+    if args.protocol is not None:
+        cfg["protocol"] = args.protocol
+    else:
+        cfg.setdefault("protocol", "robodojo_ws")
+    if args.host is not None:
+        cfg["host"] = args.host
+    if args.port is not None:
+        cfg["port"] = args.port
+    if args.relay_url is not None:
+        cfg["relay_url"] = args.relay_url
     
     def _require_non_empty(key: str):
         if key not in cfg:

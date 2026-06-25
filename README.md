@@ -354,6 +354,41 @@ Read `policy/demo_policy/deploy.py` for the reference control flow. The most imp
 
 After offline debugging, switch `eval_env` in `deploy.yml` from `debug` to `sim` or `real`. The environment client will automatically dispatch to the corresponding runner without changes to `eval.sh`, `setup_eval_policy_server.sh`, or `setup_eval_env_client.sh`.
 
+## 5.2 Platform evaluation (env client daemon)
+
+When RoboDojo drives trials from the control plane (x-policy-web), the environment machine should run the env client as a long-lived HTTP daemon instead of a one-shot `debug_env_client.py` process.
+
+| Setting | Purpose |
+|---|---|
+| `deploy.yml` → `env_client_mode: daemon` | `setup_eval_env_client.sh` launches `python -m robodojo.servers.env_client_server` and listens on `0.0.0.0:19200`. |
+| `deploy.yml` → `env_client_mode: run-once` (default) | Local `eval.sh` keeps the existing one-shot debug client path. |
+
+Typical platform startup on the environment / robot station:
+
+```bash
+bash policy/<POLICY>/setup_eval_env_client.sh \
+  <dataset> <task> <ckpt> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+```
+
+With `env_client_mode: daemon` in `deploy.yml`, the process stays up and exposes:
+
+| Endpoint | Role |
+|---|---|
+| `GET /v1/health` | Daemon liveness and baseline metadata (`policy_name`, `eval_env`). |
+| `POST /sessions/{evaluation_id}/dispatch` | Cache platform dispatch payload for the session. |
+| `POST /sessions/{evaluation_id}/trials/{trial_index}/start` | Run the selected trial (blocking until completion or stop). |
+| `POST /sessions/{evaluation_id}/trials/{trial_index}/stop` | Request stop at the next `is_episode_end` check (typically one action step later). |
+
+The control plane calls these endpoints on the eval station; finish webhooks and artifact upload remain on the RoboDojo publish path.
+
+### 5.2.1 Real-robot (`eval_env: real`)
+
+Set `eval_env: real` and `env_client_mode: daemon` in `deploy.yml`. Real evaluation requires the X-Robot-Pipeline root directory (the repo that contains both `src/` and `XPolicyLab/`). `setup_eval_env_client.sh` passes this path as `ROOT_DIR`; the daemon forwards it as `root_dir` into each trial `deploy_cfg` for `RealEnv` import.
+
+`eval_env: real` does not support `run-once` mode. Episode count is driven by the policy loop until an operator stops the trial from the collector UI or `POST .../stop` is called.
+
 # 📚 6. Citation
 
 ```bibtex

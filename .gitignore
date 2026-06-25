@@ -5,6 +5,8 @@
 train_out/
 checkpoints/
 runs/
+Log/
+logs/
 
 # H_RDT local artifacts and large model assets
 policy/H_RDT/.cache/
