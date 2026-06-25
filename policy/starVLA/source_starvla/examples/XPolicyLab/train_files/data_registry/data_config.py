@@ -125,6 +125,15 @@ DATASET_NAMED_MIXTURES = {
     "xpolicylab_robodojo_sim_arx_x5_v30": [
         ("RoboDojo_sim_arx-x5_v30", 1.0, "xpolicylab_arx_x5"),
     ],
+    "xpolicylab_robodojo_real_piper_x_v30": [
+        ("RoboDojo_real_piper-x_lerobot_v30_video", 1.0, "xpolicylab_arx_x5"),
+    ],
+    "xpolicylab_robodojo_real_piper_lerobot_v30": [
+        ("RoboDojo_real_piper_lerobot_v30", 1.0, "xpolicylab_arx_x5"),
+    ],
+    "xpolicylab_robodojo_real_arx_lerobot_v30": [
+        ("RoboDojo_real_arx_lerobot_v30", 1.0, "xpolicylab_arx_x5"),
+    ],
     "xpolicylab_stack_bowls_arx_x5_50": [
         ("arx_x5", 1.0, "xpolicylab_arx_x5"),
     ],

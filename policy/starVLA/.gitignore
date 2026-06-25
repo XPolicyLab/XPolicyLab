@@ -5,3 +5,4 @@ __pycache__/
 /results/
 /checkpoints/
 /starVLA.egg-info/
+.pip_tmp/*
