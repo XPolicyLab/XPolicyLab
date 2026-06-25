@@ -17,7 +17,17 @@ fi
 conda activate "${CONDA_ENV}"
 
 pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
-pip install lerobot==0.4.4
+
+# LingBot-VLA requires lerobot at a fixed git commit (provides lerobot.common).
+LEROBOT_GIT_DIR="${LINGBOT_ROOT}/.vendor/lerobot"
+LEROBOT_GIT_COMMIT="0cf864870cf29f4738d3ade893e6fd13fbd7cdb5"
+if [[ ! -d "${LEROBOT_GIT_DIR}/.git" ]]; then
+  mkdir -p "$(dirname "${LEROBOT_GIT_DIR}")"
+  GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/huggingface/lerobot.git "${LEROBOT_GIT_DIR}"
+fi
+git -C "${LEROBOT_GIT_DIR}" fetch --depth 1 origin "${LEROBOT_GIT_COMMIT}" 2>/dev/null || true
+git -C "${LEROBOT_GIT_DIR}" checkout "${LEROBOT_GIT_COMMIT}"
+pip install -e "${LEROBOT_GIT_DIR}"
 
 cd "${LINGBOT_ROOT}"
 git submodule update --init --recursive 2>/dev/null || true

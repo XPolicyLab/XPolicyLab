@@ -172,7 +172,8 @@ class PolicyPreprocessMixin:
             )
         delta_time = time.time() - s1
         print(f'sample_actions cost {delta_time} s')
-        observation['action'] = actions.squeeze(0)[:, :14].to(dtype=torch.float32, device='cpu')
+        action_dim = getattr(self.config, "action_dim", actions.shape[-1])
+        observation['action'] = actions.squeeze(0)[:, :action_dim].to(dtype=torch.float32, device='cpu')
         if use_bf16:
             observation['state'] = observation['state'].to(dtype=torch.float32)
         data = self.normalizer.unnormalize(observation)
@@ -232,6 +233,24 @@ def extract_image(observation, candidate_names):
             return image
     raise KeyError(f"Could not find any image for candidates: {candidate_names}")
 
+def extract_prompt(observation, default_prompt):
+    for key in ("prompt", "instruction", "task_instruction", "instructions"):
+        value = observation.get(key)
+        if value is None:
+            continue
+        if isinstance(value, (list, tuple)):
+            value = value[0] if value else None
+        if value is None:
+            continue
+        if hasattr(value, "item"):
+            value = value.item()
+        if isinstance(value, bytes):
+            value = value.decode("utf-8", errors="replace")
+        text = str(value).strip()
+        if text:
+            return text
+    return default_prompt
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):    
     if robot_action_dim_info is None:
         raise ValueError("env_cfg is required when encoding raw environment observations.")
@@ -243,7 +262,7 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     }
 
     state = pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs").astype(np.float32)
-    prompt = observation.get("prompt", default_prompt)
+    prompt = extract_prompt(observation, default_prompt)
 
     return {
             "observation.images.cam_high": images["cam_high"],
@@ -454,7 +473,7 @@ class Model(ModelTemplate):
                 
             if self.use_length > 0:
                 action = self.last_action_chunk[self.global_step % self.use_length]
-            action = action[:, :self.action_dim]
+            action = action[..., :self.action_dim]
             print(f"on server step: {self.global_step}")
             self.global_step+=1
         
@@ -472,7 +491,6 @@ class Model(ModelTemplate):
     
     def get_action(self, **kwargs):
         action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]], **kwargs)
-        print("action_list", action_list[0][0]["left_arm_joint_state"])  # Debug print to check the structure of action_list
 
         return action_list[0]
     
@@ -480,6 +498,8 @@ class Model(ModelTemplate):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
+        if env_idx_list is None and "obs" in kwargs:
+            env_idx_list = kwargs["obs"]
         env_idx_list = env_idx_list or self._latest_env_idx_list
 
         action_list = []

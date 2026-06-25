@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional
 
 import torch
 from tqdm import trange, tqdm
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 from lingbotvla.models import build_processor
 from lingbotvla.utils import helper
 from lingbotvla.utils.arguments import DataArguments, ModelArguments, TrainingArguments, parse_args
@@ -34,6 +34,10 @@ class MyDataArguments(DataArguments):
     chunk_size: int = field(
         default=50,
         metadata={"help": "Chunk size of action."},
+    )
+    max_frames: Optional[int] = field(
+        default=None,
+        metadata={"help": "Use only the first N frames when computing norm stats."},
     )
 
 
@@ -69,6 +73,11 @@ def main():
     
     assert args.data.datasets_type == 'vla'
     dataset = VlaDataset(repo_id=args.data.train_path, action_name='action')
+    if args.data.max_frames is not None and args.data.max_frames < len(dataset):
+        logger.info_rank0(
+            f"Using first {args.data.max_frames} / {len(dataset)} frames for norm stats"
+        )
+        dataset = Subset(dataset, range(args.data.max_frames))
 
     state_norm_keys = ['observation.state']
     acton_norm_keys = ['action']
