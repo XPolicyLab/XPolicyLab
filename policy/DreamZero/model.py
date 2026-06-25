@@ -353,18 +353,27 @@ def _extract_image(
         camera = vision.get(camera_key)
         if camera is None:
             continue
-        image = camera.get("color", camera.get("rgb")) if isinstance(camera, dict) else camera
+        if isinstance(camera, dict):
+            image = camera.get("color")
+            if image is None:
+                image = camera.get("rgb")
+            if image is None:
+                image = camera.get("colors")
+        else:
+            image = camera
         if image is not None:
             break
     if image is None:
         width, height = image_resize or DEFAULT_IMAGE_SIZE
         return np.zeros((height, width, 3), dtype=np.uint8)
     image = np.asarray(image)
-    if image.ndim == 3 and image.shape[0] in (1, 3) and image.shape[-1] not in (1, 3):
+    if image.ndim == 3 and image.shape[0] in (1, 3, 4) and image.shape[-1] not in (1, 3, 4):
         image = np.transpose(image, (1, 2, 0))
-    if image.ndim != 3 or image.shape[-1] != 3:
+    if image.ndim != 3 or image.shape[-1] not in (3, 4):
         width, height = image_resize or DEFAULT_IMAGE_SIZE
         return np.zeros((height, width, 3), dtype=np.uint8)
+    if image.shape[-1] == 4:
+        image = image[..., :3]
     if image_resize is not None:
         image = cv2.resize(image, image_resize, interpolation=cv2.INTER_AREA)
     return image.astype(np.uint8)
