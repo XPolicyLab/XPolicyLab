@@ -14,11 +14,14 @@ policy_server_port=${10}
 policy_server_host=${11:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${XPL_DIR}/XPolicyLab/utils"
+XPL_DIR="$(cd "${CURRENT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_DIR}/utils"
+IMPORT_SHIM_DIR="${XPL_DIR}/.xpl_import_shim"
+mkdir -p "${IMPORT_SHIM_DIR}"
+ln -sfn "${XPL_DIR}" "${IMPORT_SHIM_DIR}/XPolicyLab"
 
 policy_name="$(basename "${CURRENT_DIR}")"
-yaml_file="${XPL_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${CURRENT_DIR}/deploy.yml"
 checkpoint_root="${CURRENT_DIR}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 qwen25_path="${QWEN25_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct}"
 
@@ -55,7 +58,8 @@ exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     QWEN25_PATH="${qwen25_path}" \
-    python "${XPL_DIR}/XPolicyLab/setup_policy_server.py" \
+    PYTHONPATH="${IMPORT_SHIM_DIR}:${XPL_DIR}:${PYTHONPATH:-}" \
+    python "${XPL_DIR}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

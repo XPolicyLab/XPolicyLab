@@ -281,8 +281,6 @@ class Model(ModelTemplate):
         model_cfg,
     ) -> None:
         self.adaptive_ensemble_alpha = model_cfg.get("adaptive_ensemble_alpha", 0.1)
-        self.use_length = model_cfg.get("use_length", 1)
-        self.chunk_ret = model_cfg.get("chunk_ret", True)
         checkpoint_path = model_cfg.get("checkpoint_path")
         
         self.task_name = model_cfg["task_name"]
@@ -309,8 +307,6 @@ class Model(ModelTemplate):
         elif use_fp32:
             self.vla.model.float()
         
-        self.global_step = 0
-        self.last_action_chunk = None
         self.use_bf16 = use_bf16
         self.use_fp32 = use_fp32
 
@@ -333,8 +329,10 @@ class Model(ModelTemplate):
             v = getattr(config, k, training_model_config[k])
             setattr(config, k, v)
 
-        # Set attention_implementation to 'eager' to speed up evaluation.
-        config.attention_implementation = 'eager'
+        # The underlying modeling_lingbot_vla.py only accepts 'flex'/'eager'/'fa2'/'xformer',
+        # and 'fa2'/'xformer' raise NotImplementedError. 'flex' (flex_attention_forward) is
+        # the fast path; 'eager' is the slow fallback. Do NOT use the HF 'flash_attention_2' alias here.
+        config.attention_implementation = 'flex'
         
         # set base model according to training config
         training_base_model = training_config['model']['tokenizer_path']
@@ -438,54 +436,47 @@ class Model(ModelTemplate):
             if isinstance(v, np.ndarray):
                 observation[k] = torch.from_numpy(v)
             
-        if self.use_length == -1 or self.global_step % self.use_length == 0:
-            joint_max_dim = getattr(self, 'joint_max_dim')
-            action_dim = getattr(self, 'action_dim')
-            chunk_size = getattr(self, 'chunk_size')
-            normalized_observation = self.vla.normalizer.normalize(observation)
-            base_image = (normalized_observation["observation.images.cam_high"] * 255).to(torch.uint8)
-            left_wrist_image = (normalized_observation["observation.images.cam_left_wrist"] * 255).to(
-                torch.uint8
-            )
-            right_wrist_image = (normalized_observation["observation.images.cam_right_wrist"] * 255).to(
-                torch.uint8
-            )
-            obs_dict =  {
-                "image": {"base_0_rgb": base_image, "left_wrist_0_rgb": left_wrist_image, "right_wrist_0_rgb": right_wrist_image},
-                "state": normalized_observation["observation.state"].to(torch.float32),
-                "prompt": [observation["task"]],
-            }
-            state = prepare_state(self.config, obs_dict)
-            lang_tokens, lang_masks = prepare_language(self.config, self.language_tokenizer, obs_dict)
-            images, img_masks, _ = prepare_images(self.config, self.image_processor, obs_dict)
-            observation = {
-                'images': images,
-                'img_masks': img_masks,
-                'state': state,
-                'lang_tokens': lang_tokens,
-                'lang_masks': lang_masks,
-            }
+        joint_max_dim = getattr(self, 'joint_max_dim')
+        action_dim = getattr(self, 'action_dim')
+        chunk_size = getattr(self, 'chunk_size')
+        normalized_observation = self.vla.normalizer.normalize(observation)
+        base_image = (normalized_observation["observation.images.cam_high"] * 255).to(torch.uint8)
+        left_wrist_image = (normalized_observation["observation.images.cam_left_wrist"] * 255).to(
+            torch.uint8
+        )
+        right_wrist_image = (normalized_observation["observation.images.cam_right_wrist"] * 255).to(
+            torch.uint8
+        )
+        obs_dict =  {
+            "image": {"base_0_rgb": base_image, "left_wrist_0_rgb": left_wrist_image, "right_wrist_0_rgb": right_wrist_image},
+            "state": normalized_observation["observation.state"].to(torch.float32),
+            "prompt": [observation["task"]],
+        }
+        state = prepare_state(self.config, obs_dict)
+        lang_tokens, lang_masks = prepare_language(self.config, self.language_tokenizer, obs_dict)
+        images, img_masks, _ = prepare_images(self.config, self.image_processor, obs_dict)
+        observation = {
+            'images': images,
+            'img_masks': img_masks,
+            'state': state,
+            'lang_tokens': lang_tokens,
+            'lang_masks': lang_masks,
+        }
 
-            if self.use_bf16:
-                observation['state'] = observation['state'].to(torch.bfloat16)
-        
+        if self.use_bf16:
+            observation['state'] = observation['state'].to(torch.bfloat16)
+
+        # Standard XPolicyLab deployment mode: one forward pass produces the full
+        # action chunk (chunk_size frames); deploy.py iterates over it frame by
+        # frame and breaks early on is_episode_end(). No server-side chunk reuse
+        # state is needed, matching LingBot_VA / Pi_0.
         org_actions = ['action']
-        assert len(org_actions)==1, "Only support single action feature"
-        if self.chunk_ret:
-            action = self.vla.select_action(observation, self.use_bf16, self.config.vlm_causal)[org_actions[0]].float().cpu().numpy()
-            action = action[:self.use_length, :self.action_dim]
-        else:
-            if self.use_length == -1 or self.global_step % self.use_length == 0:
-                action = self.vla.select_action(observation, self.use_bf16, self.config.vlm_causal)[org_actions[0]]
-                self.last_action_chunk = action.float().cpu().numpy()
-                
-            if self.use_length > 0:
-                action = self.last_action_chunk[self.global_step % self.use_length]
-            action = action[..., :self.action_dim]
-            print(f"on server step: {self.global_step}")
-            self.global_step+=1
-        
-        return dict(action = action)
+        assert len(org_actions) == 1, "Only support single action feature"
+        action = self.vla.select_action(observation, self.use_bf16, self.config.vlm_causal)[org_actions[0]]
+        action = action.float().cpu().numpy()
+        action = action[..., :self.action_dim]
+
+        return dict(action=action)
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
@@ -540,9 +531,6 @@ class Model(ModelTemplate):
             elif self.use_fp32:
                 self.vla.model.float()
 
-        self.global_step = 0
-        self.last_action_chunk = None
-
         if getattr(self.data_config, 'norm_type', None) is None:
             self.data_config.norm_type = 'meanstd'
         if getattr(self.config, 'vlm_causal', None) is None:
@@ -561,10 +549,3 @@ class Model(ModelTemplate):
                         merged_weights[key] = f.get_tensor(key)
                 
             self.vla.load_state_dict(merged_weights, strict=True)
-
-if __name__ == "__main__":
-    model_cfg = {
-        "checkpoint_path": "/mnt/pfs/pg4hw0/niantian/lingbot-vla/output/robotwin_4tasks/checkpoints/global_step_4539/hf_ckpt/",
-    }
-
-    model = Model(model_cfg)

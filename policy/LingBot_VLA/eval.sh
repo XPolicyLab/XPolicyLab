@@ -14,8 +14,8 @@ policy_conda_env=${10}
 eval_env_conda_env=${11}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${XPL_DIR}/XPolicyLab/utils"
+XPL_DIR="$(cd "${CURRENT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_DIR}/utils"
 
 SERVER_SCRIPT="${CURRENT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${CURRENT_DIR}/setup_eval_env_client.sh"
