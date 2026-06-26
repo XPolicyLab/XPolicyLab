@@ -802,7 +802,7 @@ class ShardedLeRobotSubLangSingleActionChunkDatasetDROID(LeRobotSingleDataset):
             ), f"Expected 1D array with length {max_length}, got {data_array.shape} array"
             data_array = data_array.reshape(-1, 1)
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
-        if getattr(self, "is_lerobot_v3", False):
+        if getattr(self, "is_lerobot_v3", False) and not self._uses_native_dojo_layout():
             data_array = _agibot_pad(data_array, AGIBOT_STATE_DIM)
         le_indices = np.arange(
             le_state_or_action_cfg[subkey].start,
@@ -972,7 +972,7 @@ class ShardedLeRobotSubLangSingleActionChunkDatasetDROID(LeRobotSingleDataset):
             ), f"Expected 1D array with length {max_length}, got {data_array.shape} array"
             data_array = data_array.reshape(-1, 1)
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
-        if getattr(self, "is_lerobot_v3", False):
+        if getattr(self, "is_lerobot_v3", False) and not self._uses_native_dojo_layout():
             data_array = _agibot_pad(data_array, AGIBOT_ACTION_DIM)
         le_indices = np.arange(
             le_state_or_action_cfg[subkey].start,
@@ -1156,7 +1156,7 @@ class ShardedLeRobotSubLangSingleActionChunkDatasetDROID(LeRobotSingleDataset):
         state_array: np.ndarray = np.stack(traj_data[le_state_key])
         if state_array.ndim == 1:
             state_array = state_array.reshape(-1, 1)
-        if getattr(self, "is_lerobot_v3", False):
+        if getattr(self, "is_lerobot_v3", False) and not self._uses_native_dojo_layout():
             state_array = _agibot_pad(state_array, AGIBOT_STATE_DIM)
         
         # Apply same indices as action

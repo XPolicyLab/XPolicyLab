@@ -90,6 +90,8 @@ class WANPolicyHeadConfig(PretrainedConfig):
     hidden_size: int = field(default=1024, metadata={"help": "Input embedding dimension."})
     max_seq_len: int = field(default=1024, metadata={"help": "Maxium Sequence Length"})
     action_dim: int = field(default=None, metadata={"help": "Action dimension."})
+    native_dojo_action: bool = field(default=False, metadata={"help": "Use native RoboDojo 14D action projectors instead of AgiBot action projectors."})
+    native_dojo_action_dim: int = field(default=14, metadata={"help": "Native RoboDojo packed action dimension."})
     action_horizon: int = field(default=None, metadata={"help": "Action horizon."})
     noise_beta_alpha: float = field(default=1.5, metadata={"help": ""})
     noise_beta_beta: float = field(default=1.0, metadata={"help": ""})
@@ -236,6 +238,7 @@ class WANPolicyHead(ActionHead):
 
         self.model = instantiate(config.diffusion_model_cfg)
         self.action_dim = config.action_dim
+        self.policy_action_dim = config.native_dojo_action_dim if config.native_dojo_action else config.action_dim
         self.action_horizon = config.action_horizon
         self.num_inference_timesteps = config.num_inference_timesteps
         
@@ -350,9 +353,7 @@ class WANPolicyHead(ActionHead):
                 lora_target_modules=self.lora_target_modules,
                 init_lora_weights=self.init_lora_weights,
             )
-            self.model.state_encoder.requires_grad_(True)
-            self.model.action_encoder.requires_grad_(True)
-            self.model.action_decoder.requires_grad_(True)
+            self._set_trainable_action_projectors()
         elif self.train_architecture == "lora" and self.defer_lora_injection:
             print("Deferring LoRA injection until after pretrained weights are loaded")
         else:
@@ -363,6 +364,19 @@ class WANPolicyHead(ActionHead):
         self.vae.requires_grad_(False)
         if not self.defer_lora_injection:
             self.print_trainable_params()
+
+
+    def _set_trainable_action_projectors(self):
+        target_model = self.model
+        if hasattr(target_model, "base_model") and hasattr(target_model.base_model, "model"):
+            target_model = target_model.base_model.model
+        target_model.state_encoder.requires_grad_(True)
+        if self.config.native_dojo_action:
+            target_model.dojo_action_encoder.requires_grad_(True)
+            target_model.dojo_action_decoder.requires_grad_(True)
+        else:
+            target_model.action_encoder.requires_grad_(True)
+            target_model.action_decoder.requires_grad_(True)
 
 
     def print_trainable_params(self):
@@ -398,9 +412,7 @@ class WANPolicyHead(ActionHead):
                 lora_target_modules=self.lora_target_modules,
                 init_lora_weights=self.init_lora_weights,
             )
-            self.model.state_encoder.requires_grad_(True)
-            self.model.action_encoder.requires_grad_(True)
-            self.model.action_decoder.requires_grad_(True)
+            self._set_trainable_action_projectors()
             # self.model.registers.requires_grad_(True)
             # self.model.time_modality_projection.requires_grad_(True)
             
@@ -789,11 +801,10 @@ class WANPolicyHead(ActionHead):
             weighted_dynamics_loss = weight_dynamics.mean()
             
             if actions.numel() > 0:
-                # Raw per-element MSE (shape [B, T, 32]).
-                # NOTE: action_mask (bool) zeros out the 10 padding dims [22:32].
+                # Raw per-element MSE (shape [B, T, action_dim]).
                 action_loss_per_sample = torch.nn.functional.mse_loss(
                     action_noise_pred.float(), training_target_action.float(), reduction='none'
-                ) * action_mask  # [B, T, 32]
+                ) * action_mask
                 action_loss_per_sample = has_real_action[:, None, None].float() * action_loss_per_sample
 
                 # ----- Bug 2 fix: detect & exclude always-zero channels -----
@@ -822,19 +833,26 @@ class WANPolicyHead(ActionHead):
                 weighted_action_loss = weight_action.mean()
 
                 # ----- Bug 4 fix: per-modality loss decomposition for visibility -----
-                # AgiBot slot layout (per AGIBOT_ACTION_MAPPING):
-                #   [0:7]    left_arm_joint_position
-                #   [7:14]   right_arm_joint_position
-                #   [14:15]  left_effector_position (gripper)
-                #   [15:16]  right_effector_position (gripper)
-                #   [16:22]  head/waist/robot_velocity (zero for arx_x5)
+                # AgiBot layout: arms [0:14], grippers [14,15], aux [16:22].
+                # Native Dojo layout: L arm [0:6], L ee [6], R arm [7:13], R ee [13].
                 def _slot_avg(slots):
+                    if not slots:
+                        return torch.tensor(0.0, device=self._device)
                     sl = action_loss_per_sample[..., slots]      # [B, T, |slots|]
                     sm = effective_mask[..., slots]               # [B, T, |slots|]
                     return (sl.sum() / sm.sum().clamp(min=1.0))
-                arm_loss   = _slot_avg(list(range(0, 14)))   # both arms
-                ee_loss    = _slot_avg([14, 15])             # gripper L+R
-                aux_loss   = _slot_avg(list(range(16, 22)))  # head/waist/vel (zero for arx_x5 → 0)
+                if self.config.native_dojo_action:
+                    arm_slots = list(range(0, 6)) + list(range(7, 13))
+                    ee_slots = [6, 13]
+                    aux_slots = []
+                else:
+                    arm_slots = list(range(0, 14))
+                    ee_slots = [14, 15]
+                    aux_slots = list(range(16, 22))
+                max_dim = action_loss_per_sample.shape[-1]
+                arm_loss = _slot_avg([slot for slot in arm_slots if slot < max_dim])
+                ee_loss = _slot_avg([slot for slot in ee_slots if slot < max_dim])
+                aux_loss = _slot_avg([slot for slot in aux_slots if slot < max_dim])
 
                 loss = weighted_dynamics_loss + weighted_action_loss
             else:
@@ -1147,7 +1165,7 @@ class WANPolicyHead(ActionHead):
         end_vae_event.record()
 
         noise_obs = self.generate_noise((image.shape[0], image.shape[1], self.num_frame_per_block, image.shape[3], image.shape[4]), seed=self.seed, device='cuda', dtype=torch.bfloat16)
-        noise_action = self.generate_noise((image.shape[0], self.action_horizon, self.model.action_dim), seed=self.seed, device='cuda', dtype=torch.bfloat16)
+        noise_action = self.generate_noise((image.shape[0], self.action_horizon, self.policy_action_dim), seed=self.seed, device='cuda', dtype=torch.bfloat16)
         batch_size, num_channels, num_frames, height, width = noise_obs.shape
         ######### Generate video #########
         # DiT patch_embedding uses stride (1,2,2), so tokens per frame = (H//2)*(W//2)

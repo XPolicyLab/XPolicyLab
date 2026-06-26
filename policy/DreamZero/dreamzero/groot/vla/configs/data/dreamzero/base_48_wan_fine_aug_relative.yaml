@@ -267,6 +267,82 @@ transform_agibot:
     - ${model_specific_transform}
 
 ################################################################################
+# robodojo_native (RoboDojo/XPolicyLab packed 14D: L arm, L ee, R arm, R ee)
+################################################################################
+
+modality_config_robodojo_native:
+  video:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+    eval_delta_indices: [-3, -2, -1, 0]
+    modality_keys:
+      - video.top_head
+      - video.hand_left
+      - video.hand_right
+  state:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - state.left_arm_joint_position
+      - state.left_effector_position
+      - state.right_arm_joint_position
+      - state.right_effector_position
+  action:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    modality_keys:
+      - action.left_arm_joint_position
+      - action.left_effector_position
+      - action.right_arm_joint_position
+      - action.right_effector_position
+  language:
+    _target_: groot.vla.data.dataset.ModalityConfig
+    delta_indices: [0]
+    modality_keys:
+      - annotation.language.action_text
+
+transform_robodojo_native:
+  _target_: groot.vla.data.transform.ComposedModalityTransform
+  transforms:
+    - <<: *totensor_cfg
+      apply_to: ${modality_config_robodojo_native.video.modality_keys}
+    - <<: *crop_cfg
+      apply_to: ${modality_config_robodojo_native.video.modality_keys}
+    - <<: *resize_cfg
+      apply_to: ${modality_config_robodojo_native.video.modality_keys}
+    - <<: *color_jitter_cfg
+      apply_to: ${modality_config_robodojo_native.video.modality_keys}
+    - <<: *to_numpy_cfg
+      apply_to: ${modality_config_robodojo_native.video.modality_keys}
+
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_robodojo_native.state.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_robodojo_native.state.modality_keys}
+      normalization_modes:
+        state.left_arm_joint_position: q99
+        state.left_effector_position: min_max
+        state.right_arm_joint_position: q99
+        state.right_effector_position: min_max
+
+    - _target_: groot.vla.data.transform.StateActionToTensor
+      apply_to: ${modality_config_robodojo_native.action.modality_keys}
+    - _target_: groot.vla.data.transform.StateActionTransform
+      apply_to: ${modality_config_robodojo_native.action.modality_keys}
+      normalization_modes:
+        action.left_arm_joint_position: q99
+        action.left_effector_position: min_max
+        action.right_arm_joint_position: q99
+        action.right_effector_position: min_max
+
+    - _target_: groot.vla.data.transform.ConcatTransform
+      video_concat_order: ${modality_config_robodojo_native.video.modality_keys}
+      state_concat_order: ${modality_config_robodojo_native.state.modality_keys}
+      action_concat_order: ${modality_config_robodojo_native.action.modality_keys}
+
+    - ${model_specific_transform}
+
+################################################################################
 # yam (YAM: joint+gripper only from Dataset/YAM_play_data/meta/modality.json;
 #       state 14 dims, action 14 dims, 3 views)
 ################################################################################

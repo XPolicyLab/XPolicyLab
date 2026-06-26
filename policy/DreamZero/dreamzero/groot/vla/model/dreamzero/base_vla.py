@@ -538,7 +538,13 @@ class VLA(PreTrainedModel):
         if missing_keys:
             missing_lora_keys = [
                 key for key in missing_keys
-                if "lora_" in key or "action_encoder" in key or "action_decoder" in key
+                if (
+                    "lora_" in key
+                    or "action_encoder" in key
+                    or "action_decoder" in key
+                    or "dojo_action_encoder" in key
+                    or "dojo_action_decoder" in key
+                )
             ]
             if missing_lora_keys:
                 print(

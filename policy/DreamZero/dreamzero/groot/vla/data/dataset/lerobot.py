@@ -41,6 +41,7 @@ INITIAL_ACTIONS_FILENAME = "meta/initial_actions.npz"
 METADATA_DIR = Path(importlib.import_module("groot.vla.data").__file__).parent / "metadata"  # type: ignore
 STEP_FILTER_FILENAME = "meta/step_filter.jsonl"
 LEROBOT_RELATIVE_STATS_FILE_NAME = "meta/relative_stats_dreamzero.json"
+LEROBOT_NATIVE_DOJO_RELATIVE_STATS_FILE_NAME = "meta/relative_stats_dreamzero_native_dojo.json"
 LEROBOT_RELATIVE_HORIZON_STATS_FILE_NAME = "meta/relative_horizon_stats_dreamzero.json"
 
 # Special language keys that load from metadata files instead of parquet columns
@@ -61,6 +62,13 @@ AGIBOT_ACTION_MAPPING = {
     **AGIBOT_STATE_MAPPING,
     "robot_velocity": [20, 22],
 }
+DOJO_NATIVE_STATE_MAPPING = {
+    "left_arm_joint_position": [0, 6],
+    "left_effector_position": [6, 7],
+    "right_arm_joint_position": [7, 13],
+    "right_effector_position": [13, 14],
+}
+DOJO_NATIVE_ACTION_MAPPING = DOJO_NATIVE_STATE_MAPPING
 AGIBOT_V3_VIDEO_MAPPING = {
     "top_head": "observation.images.cam_high",
     "hand_left": "observation.images.cam_left_wrist",
@@ -89,7 +97,7 @@ def _pad_stat_values(values, dim: int) -> list[float]:
 
 
 # Route XPolicyLab dual-arm packed [L_arm(6), L_ee(1), R_arm(6), R_ee(1)] (14 dims) into
-# AgiBot's 20/22-dim slot layout. Mirrors model.py:_xpolicylab_obs_to_agibot_state so
+# AgiBot's 20/22-dim slot layout. Mirrors model.py:_xpolicylab_packed_to_agibot_state so
 # train-time data and eval-time observation use the same slot convention. The 6 arx_x5
 # arm joints are routed to AgiBot G1's [J1, J2, J4, J5, J6, J7] slots; J3 (upper-arm
 # roll) is the redundant DOF that arx_x5 does not have and is left = 0. Grippers go
@@ -559,7 +567,11 @@ class LeRobotSingleDataset(Dataset):
             return modality_meta
         else:
             modality_meta_path = self.dataset_path / LE_ROBOT_MODALITY_FILENAME
-            if not modality_meta_path.exists() and self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT:
+            if self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT and (
+                self._uses_native_dojo_layout() or not modality_meta_path.exists()
+            ):
+                state_mapping = DOJO_NATIVE_STATE_MAPPING if self._uses_native_dojo_layout() else AGIBOT_STATE_MAPPING
+                action_mapping = DOJO_NATIVE_ACTION_MAPPING if self._uses_native_dojo_layout() else AGIBOT_ACTION_MAPPING
                 modality_meta = {
                     "state": {
                         key: {
@@ -571,7 +583,7 @@ class LeRobotSingleDataset(Dataset):
                             "dtype": "float32",
                             "range": None,
                         }
-                        for key, value in AGIBOT_STATE_MAPPING.items()
+                        for key, value in state_mapping.items()
                     },
                     "action": {
                         key: {
@@ -583,7 +595,7 @@ class LeRobotSingleDataset(Dataset):
                             "dtype": "float32",
                             "range": None,
                         }
-                        for key, value in AGIBOT_ACTION_MAPPING.items()
+                        for key, value in action_mapping.items()
                     },
                     "video": {
                         key: {"original_key": value}
@@ -600,6 +612,20 @@ class LeRobotSingleDataset(Dataset):
             with open(modality_meta_path, "r") as f:
                 modality_meta = LeRobotModalityMetadata.model_validate(json.load(f))
             return modality_meta
+
+    def _uses_native_dojo_layout(self) -> bool:
+        if self.tag != EmbodimentTag.AGIBOT:
+            return False
+        action_cfg = self.modality_configs.get("action")
+        if action_cfg is None:
+            return False
+        action_keys = {key.replace("action.", "") for key in action_cfg.modality_keys}
+        return bool(action_keys) and action_keys.issubset(DOJO_NATIVE_ACTION_MAPPING)
+
+    def _relative_stats_file_name(self) -> str:
+        if self._uses_native_dojo_layout():
+            return LEROBOT_NATIVE_DOJO_RELATIVE_STATS_FILE_NAME
+        return LEROBOT_RELATIVE_STATS_FILE_NAME
 
     def _get_lerobot_info_meta(self) -> dict:
         """Get the metadata for the LeRobot dataset."""
@@ -627,7 +653,7 @@ class LeRobotSingleDataset(Dataset):
                 stats: dict = json.load(f)
             for name in ["num_trajectories", "total_trajectory_length"]:
                 stats.pop(name, None)
-            if self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT:
+            if self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT and not self._uses_native_dojo_layout():
                 for name, dim in (
                     ("observation.state", AGIBOT_STATE_DIM),
                     ("action", AGIBOT_ACTION_DIM),
@@ -678,13 +704,13 @@ class LeRobotSingleDataset(Dataset):
                 METADATA_DIR
                 / self.tag.value
                 / self.metadata_version
-                / Path(LEROBOT_RELATIVE_STATS_FILE_NAME).name
+                / Path(self._relative_stats_file_name()).name
             )
             assert (
                 stats_path.exists()
-            ), f"Please provide a {Path(LEROBOT_RELATIVE_STATS_FILE_NAME).name} file in {METADATA_DIR / self.tag.value / self.metadata_version}"
+            ), f"Please provide a {Path(self._relative_stats_file_name()).name} file in {METADATA_DIR / self.tag.value / self.metadata_version}"
         else:
-            stats_path = self.dataset_path / LEROBOT_RELATIVE_STATS_FILE_NAME
+            stats_path = self.dataset_path / self._relative_stats_file_name()
         
         # Try to load existing relative stats
         if stats_path.exists():
@@ -720,7 +746,7 @@ class LeRobotSingleDataset(Dataset):
             stats = self._calculate_v3_relative_stats(action_keys_to_process)
             if stats:
                 stats_serialized = {k: v.model_dump(mode="json") for k, v in stats.items()}
-                save_path = self.dataset_path / LEROBOT_RELATIVE_STATS_FILE_NAME
+                save_path = self.dataset_path / self._relative_stats_file_name()
                 try:
                     print(f"Saving LeRobot v3 relative action stats to {save_path}")
                     with open(save_path, "w") as f:
@@ -745,7 +771,7 @@ class LeRobotSingleDataset(Dataset):
             # Save the calculated stats
             stats_serialized = {k: v.model_dump(mode="json") for k, v in stats.items()}
             # Only save to dataset path (not global metadata path)
-            save_path = self.dataset_path / LEROBOT_RELATIVE_STATS_FILE_NAME
+            save_path = self.dataset_path / self._relative_stats_file_name()
             print(f"Saving relative action stats to {save_path}")
             with open(save_path, "w") as f:
                 json.dump(stats_serialized, f, indent=4)
@@ -762,17 +788,26 @@ class LeRobotSingleDataset(Dataset):
         data_files = sorted((self.dataset_path / "data").glob("chunk-*/*.parquet"))
         for parquet_path in tqdm(data_files, desc="Calculating v3 relative stats"):
             parquet_data = pd.read_parquet(parquet_path, columns=["observation.state", "action"])
-            state = _agibot_pad(np.stack(parquet_data["observation.state"]), AGIBOT_STATE_DIM)
-            action = _agibot_pad(np.stack(parquet_data["action"]), AGIBOT_ACTION_DIM)
+            if self._uses_native_dojo_layout():
+                state = np.stack(parquet_data["observation.state"])
+                action = np.stack(parquet_data["action"])
+                state_mapping = DOJO_NATIVE_STATE_MAPPING
+                action_mapping = DOJO_NATIVE_ACTION_MAPPING
+            else:
+                state = _agibot_pad(np.stack(parquet_data["observation.state"]), AGIBOT_STATE_DIM)
+                action = _agibot_pad(np.stack(parquet_data["action"]), AGIBOT_ACTION_DIM)
+                state_mapping = AGIBOT_STATE_MAPPING
+                action_mapping = AGIBOT_ACTION_MAPPING
             for key in action_keys_to_process:
-                if key not in AGIBOT_ACTION_MAPPING or key not in AGIBOT_STATE_MAPPING:
+                if key not in action_mapping or key not in state_mapping:
                     continue
-                start, end = AGIBOT_ACTION_MAPPING[key]
+                start, end = action_mapping[key]
                 samples[key].append(action[:, start:end] - state[:, start:end])
 
         stats = {}
         for key, chunks in samples.items():
-            start, end = AGIBOT_ACTION_MAPPING.get(key, (0, 0))
+            action_mapping = DOJO_NATIVE_ACTION_MAPPING if self._uses_native_dojo_layout() else AGIBOT_ACTION_MAPPING
+            start, end = action_mapping.get(key, (0, 0))
             dim = max(end - start, 1)
             values = np.concatenate(chunks, axis=0) if chunks else np.zeros((1, dim), dtype=np.float32)
             stats[key] = DatasetStatisticalValues(
@@ -1860,7 +1895,7 @@ class LeRobotSingleDataset(Dataset):
             ), f"Expected 1D array with length {max_length}, got {data_array.shape} array"
             data_array = data_array.reshape(-1, 1)
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
-        if self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT:
+        if self.is_lerobot_v3 and self.tag == EmbodimentTag.AGIBOT and not self._uses_native_dojo_layout():
             target_dim = AGIBOT_ACTION_DIM if modality == "action" else AGIBOT_STATE_DIM
             data_array = _agibot_pad(data_array, target_dim)
         le_indices = np.arange(
