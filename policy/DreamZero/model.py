@@ -226,6 +226,7 @@ class Model(ModelTemplate):
         self.inference_method = model_cfg.get("inference_method", "lazy_joint_forward_causal")
         self.skip_img_transform = _as_bool(model_cfg.get("skip_img_transform"), False)
         self.tokenizer_path = _resolve_tokenizer_path(model_cfg)
+        self.native_dojo_action = _as_bool(model_cfg.get("native_dojo_action"), False)
 
         self.model_path = _resolve_model_path(model_cfg)
         _configure_torch_dynamo_for_eval()
@@ -238,6 +239,7 @@ class Model(ModelTemplate):
             tokenizer_path_override=self.tokenizer_path,
             skip_img_transform=self.skip_img_transform,
         )
+        self.native_dojo_action = self.native_dojo_action or _policy_uses_native_dojo_action(self.policy)
 
         self._obs_batch: dict[int, dict[str, Any]] = {}
         self._frame_buffers: dict[int, dict[str, list[np.ndarray]]] = {}
@@ -294,42 +296,74 @@ class Model(ModelTemplate):
             buffers[dreamzero_key].append(frame)
             buffers[dreamzero_key] = buffers[dreamzero_key][-self.video_history :]
 
-        state = _xpolicylab_obs_to_agibot_state(observation, self.action_type, self.robot_action_dim_info)
+        packed_state = pack_robot_state(
+            observation,
+            self.action_type,
+            self.robot_action_dim_info,
+            source_type="obs",
+        ).astype(np.float32)
         prompt = observation.get("instruction", observation.get("instructions", self.default_prompt))
         if isinstance(prompt, (list, tuple)):
             prompt = prompt[0] if prompt else self.default_prompt
 
-        return {
+        if self.native_dojo_action:
+            state_fields = _xpolicylab_packed_to_native_dojo_fields(packed_state, self.robot_action_dim_info)
+        else:
+            state = _xpolicylab_packed_to_agibot_state(packed_state, self.robot_action_dim_info)
+            state_fields = {
+                "state.left_arm_joint_position": state[0:7].reshape(1, 7),
+                "state.right_arm_joint_position": state[7:14].reshape(1, 7),
+                "state.left_effector_position": state[14:15].reshape(1, 1),
+                "state.right_effector_position": state[15:16].reshape(1, 1),
+                "state.head_position": state[16:18].reshape(1, 2),
+                "state.waist_pitch": state[18:19].reshape(1, 1),
+                "state.waist_lift": state[19:20].reshape(1, 1),
+            }
+
+        encoded = {
             "video.top_head": _stack_recent_frames(buffers["video.top_head"], self.video_history),
             "video.hand_left": _stack_recent_frames(buffers["video.hand_left"], self.video_history),
             "video.hand_right": _stack_recent_frames(buffers["video.hand_right"], self.video_history),
-            "state.left_arm_joint_position": state[0:7].reshape(1, 7),
-            "state.right_arm_joint_position": state[7:14].reshape(1, 7),
-            "state.left_effector_position": state[14:15].reshape(1, 1),
-            "state.right_effector_position": state[15:16].reshape(1, 1),
-            "state.head_position": state[16:18].reshape(1, 2),
-            "state.waist_pitch": state[18:19].reshape(1, 1),
-            "state.waist_lift": state[19:20].reshape(1, 1),
             "annotation.language.action_text": str(prompt),
         }
+        encoded.update(state_fields)
+        return encoded
 
     def _decode_actions(self, action: dict[str, Any]) -> list[dict[str, np.ndarray]]:
-        left_arm = _extract_action_value(action, "action.left_arm_joint_position", 7)
-        right_arm = _extract_action_value(action, "action.right_arm_joint_position", 7)
-        left_ee = _extract_action_value(action, "action.left_effector_position", 1)
-        right_ee = _extract_action_value(action, "action.right_effector_position", 1)
+        left_arm_dim = int(self.robot_action_dim_info["arm_dim"][0])
+        right_arm_dim = int(self.robot_action_dim_info["arm_dim"][1])
+        left_ee_dim = int(self.robot_action_dim_info["ee_dim"][0])
+        right_ee_dim = int(self.robot_action_dim_info["ee_dim"][1])
+        if self.native_dojo_action:
+            left_arm = _extract_action_value(action, "action.left_arm_joint_position", left_arm_dim)
+            right_arm = _extract_action_value(action, "action.right_arm_joint_position", right_arm_dim)
+            left_ee = _extract_action_value(action, "action.left_effector_position", left_ee_dim)
+            right_ee = _extract_action_value(action, "action.right_effector_position", right_ee_dim)
+        else:
+            left_arm = _extract_action_value(action, "action.left_arm_joint_position", 7)
+            right_arm = _extract_action_value(action, "action.right_arm_joint_position", 7)
+            left_ee = _extract_action_value(action, "action.left_effector_position", 1)
+            right_ee = _extract_action_value(action, "action.right_effector_position", 1)
         horizon = min(self.action_horizon, left_arm.shape[0], right_arm.shape[0], left_ee.shape[0], right_ee.shape[0])
 
         action_steps = []
         for idx in range(max(horizon, 1)):
-            packed = _agibot_to_xpolicylab_packed(
-                left_arm[min(idx, left_arm.shape[0] - 1)],
-                right_arm[min(idx, right_arm.shape[0] - 1)],
-                left_ee[min(idx, left_ee.shape[0] - 1)],
-                right_ee[min(idx, right_ee.shape[0] - 1)],
-                self.action_type,
-                self.robot_action_dim_info,
-            )
+            if self.native_dojo_action:
+                packed = _native_dojo_fields_to_xpolicylab_packed(
+                    left_arm[min(idx, left_arm.shape[0] - 1)],
+                    left_ee[min(idx, left_ee.shape[0] - 1)],
+                    right_arm[min(idx, right_arm.shape[0] - 1)],
+                    right_ee[min(idx, right_ee.shape[0] - 1)],
+                )
+            else:
+                packed = _agibot_to_xpolicylab_packed(
+                    left_arm[min(idx, left_arm.shape[0] - 1)],
+                    right_arm[min(idx, right_arm.shape[0] - 1)],
+                    left_ee[min(idx, left_ee.shape[0] - 1)],
+                    right_ee[min(idx, right_ee.shape[0] - 1)],
+                    self.action_type,
+                    self.robot_action_dim_info,
+                )
             action_steps.append(
                 unpack_robot_state(
                     packed,
@@ -413,8 +447,7 @@ def _agibot_arm_slot_targets(arm_dim: int) -> list[int]:
     return list(range(min(arm_dim, 7)))
 
 
-def _xpolicylab_obs_to_agibot_state(observation: dict[str, Any], action_type: str, robot_info: dict) -> np.ndarray:
-    packed = pack_robot_state(observation, action_type, robot_info, source_type="obs").astype(np.float32)
+def _xpolicylab_packed_to_agibot_state(packed: np.ndarray, robot_info: dict) -> np.ndarray:
     out = np.zeros(AGIBOT_STATE_DIM, dtype=np.float32)
     offset = 0
     for arm_idx, (arm_dim, ee_dim) in enumerate(zip(robot_info["arm_dim"], robot_info["ee_dim"])):
@@ -432,6 +465,37 @@ def _xpolicylab_obs_to_agibot_state(observation: dict[str, Any], action_type: st
     return out
 
 
+def _xpolicylab_packed_to_native_dojo_fields(packed: np.ndarray, robot_info: dict) -> dict[str, np.ndarray]:
+    fields: dict[str, np.ndarray] = {}
+    offset = 0
+    for arm_idx, side in enumerate(("left", "right")):
+        arm_dim = int(robot_info["arm_dim"][arm_idx])
+        ee_dim = int(robot_info["ee_dim"][arm_idx])
+        arm = packed[offset : offset + arm_dim]
+        offset += arm_dim
+        ee = packed[offset : offset + ee_dim]
+        offset += ee_dim
+        fields[f"state.{side}_arm_joint_position"] = arm.reshape(1, arm_dim)
+        fields[f"state.{side}_effector_position"] = ee.reshape(1, ee_dim)
+    return fields
+
+
+def _native_dojo_fields_to_xpolicylab_packed(
+    left_arm: np.ndarray,
+    left_ee: np.ndarray,
+    right_arm: np.ndarray,
+    right_ee: np.ndarray,
+) -> np.ndarray:
+    return np.concatenate(
+        [
+            np.asarray(left_arm).reshape(-1),
+            np.asarray(left_ee).reshape(-1),
+            np.asarray(right_arm).reshape(-1),
+            np.asarray(right_ee).reshape(-1),
+        ]
+    ).astype(np.float32)
+
+
 def _agibot_to_xpolicylab_packed(
     left_arm: np.ndarray,
     right_arm: np.ndarray,
@@ -440,7 +504,7 @@ def _agibot_to_xpolicylab_packed(
     action_type: str,
     robot_info: dict,
 ) -> np.ndarray:
-    """Inverse of _xpolicylab_obs_to_agibot_state: decode AgiBot per-arm 7-dim
+    """Inverse of _xpolicylab_packed_to_agibot_state: decode AgiBot per-arm 7-dim
     vectors back into the source robot's packed layout, dropping the locked J3
     slot for 6-DOF arms."""
     parts = []
@@ -458,3 +522,12 @@ def _agibot_to_xpolicylab_packed(
         parts.append(arm_pick)
         parts.append(_pad_or_trim(agibot_ee.reshape(1, -1), ee_dim)[0])
     return np.concatenate(parts).astype(np.float32)
+
+
+def _policy_uses_native_dojo_action(policy: Any) -> bool:
+    try:
+        action_head_cfg = policy.train_cfg.get("action_head_cfg", {})
+        config = action_head_cfg.get("config", action_head_cfg)
+        return _as_bool(config.get("native_dojo_action"), False)
+    except Exception:
+        return False

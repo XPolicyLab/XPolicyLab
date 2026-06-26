@@ -34,6 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 DREAMZERO_DIR="${SCRIPT_DIR}/dreamzero"
+export DREAMZERO_DIR
 
 default_lerobot_path="${ROOT_DIR}/RobotDojo/RoboDojo_sim_arx-x5_v30"
 dataset_path="${LEROBOT_DATA_PATH:-${default_lerobot_path}}"
@@ -58,6 +59,7 @@ echo "[DreamZero train] gpu_id=${gpu_id}, num_gpus=${num_gpus}, action_dim=${act
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export HYDRA_FULL_ERROR=1
 export WANDB_PROJECT="${WANDB_PROJECT:-dreamzero}"
+export PYTHONPATH="${DREAMZERO_DIR}:${SCRIPT_DIR}:${ROOT_DIR}/XPolicyLab:${ROOT_DIR}:${PYTHONPATH:-}"
 
 checkpoints_dir="${SCRIPT_DIR}/checkpoints"
 default_pretrained_model_path="${checkpoints_dir}/DreamZero-AgiBot"
@@ -83,6 +85,17 @@ action_horizon="${DREAMZERO_ACTION_HORIZON:-24}"
 num_frames="${DREAMZERO_NUM_FRAMES:-33}"
 max_chunk_size="${DREAMZERO_MAX_CHUNK_SIZE:-4}"
 report_to="${DREAMZERO_REPORT_TO:-${REPORT_TO:-tensorboard}}"
+native_dojo_action="${DREAMZERO_NATIVE_DOJO_ACTION:-false}"
+data_config="${DREAMZERO_DATA_CONFIG:-dreamzero/agibot_relative}"
+if [ "${native_dojo_action}" = "1" ] || [ "${native_dojo_action}" = "true" ]; then
+    native_dojo_action=true
+    data_config="${DREAMZERO_DATA_CONFIG:-dreamzero/robodojo_native_relative}"
+fi
+python_cmd="${PYTHON:-$(command -v python || command -v python3 || true)}"
+if [ -z "${python_cmd}" ]; then
+    echo "[DreamZero train][ERROR] Python executable not found. Activate the dreamzero conda env first."
+    exit 1
+fi
 
 require_file() {
     local path="$1"
@@ -127,10 +140,39 @@ fi
 
 cd "${DREAMZERO_DIR}"
 
+"${python_cmd}" - <<'PY'
+import importlib.util
+import os
+import sys
+
+repo_dreamzero = os.path.realpath(os.environ["DREAMZERO_DIR"])
+spec = importlib.util.find_spec("groot")
+origin = os.path.realpath(spec.origin) if spec and spec.origin else "<not found>"
+print(f"[DreamZero train] groot package source: {origin}")
+if not origin.startswith(repo_dreamzero + os.sep):
+    print(
+        f"[DreamZero train][ERROR] groot resolves outside this repo. "
+        f"Expected under {repo_dreamzero}, got {origin}.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+expected_files = (
+    "groot/vla/experiment/base.py",
+    "groot/vla/model/dreamzero/modules/wan_video_dit_action_casual_chunk.py",
+)
+for relative_path in expected_files:
+    path = os.path.join(repo_dreamzero, relative_path)
+    print(f"[DreamZero train] expected source: {path}")
+    if not os.path.isfile(path):
+        print(f"[DreamZero train][ERROR] Required source file missing: {path}", file=sys.stderr)
+        sys.exit(1)
+PY
+
 TRAIN_CMD=(
 torchrun --nproc_per_node "${num_gpus}" --standalone groot/vla/experiment/experiment.py
     report_to="${report_to}" \
-    data=dreamzero/agibot_relative \
+    data="${data_config}" \
     wandb_project="${WANDB_PROJECT}" \
     train_architecture="${DREAMZERO_TRAIN_ARCHITECTURE:-lora}" \
     num_frames="${num_frames}" \
@@ -174,7 +216,8 @@ torchrun --nproc_per_node "${num_gpus}" --standalone groot/vla/experiment/experi
     tokenizer_path="${tokenizer_dir}" \
     pretrained_model_path="${pretrained_model_path}" \
     ++action_head_cfg.config.skip_component_loading=true \
-    ++action_head_cfg.config.defer_lora_injection=true
+    ++action_head_cfg.config.defer_lora_injection=true \
+    ++action_head_cfg.config.native_dojo_action="${native_dojo_action}"
 )
 
 if [ "${DREAMZERO_DRY_RUN:-0}" = "1" ]; then

@@ -42,6 +42,8 @@ action_head_cfg:
     hidden_size: ${hidden_size}
     input_embedding_dim: 1536
     backbone_embedding_dim: ${backbone_hidden_size}
+    native_dojo_action: false
+    native_dojo_action_dim: 14
     repa_layer: ${repa_layer}
     repa_coeff: ${repa_coeff}
     load_pretrained_det_decode_layer_path: ${load_pretrained_det_decode_layer_path}
@@ -74,6 +76,9 @@ action_head_cfg:
       num_frame_per_block: ${num_frame_per_block}
       num_action_per_block: ${num_action_per_block}
       num_state_per_block: ${num_state_per_block}
+      action_dim: 32
+      use_native_dojo_action_projectors: ${action_head_cfg.config.native_dojo_action}
+      native_dojo_action_dim: ${action_head_cfg.config.native_dojo_action_dim}
     text_encoder_cfg:
       _target_: groot.vla.model.dreamzero.modules.wan_video_text_encoder.WanTextEncoder
       _convert_: object

@@ -67,6 +67,7 @@ export TOKENIZER_DIR=/path/to/umt5-xxl
 常用训练变量：
 
 ```bash
+export DREAMZERO_NATIVE_DOJO_ACTION=1 #启动这个则用新的MLP训练
 export DREAMZERO_MAX_STEPS=100000
 export DREAMZERO_SAVE_STEPS=10000
 export DREAMZERO_NUM_GPUS=8
@@ -78,7 +79,7 @@ export WANDB_PROJECT=dreamzero
 ```bash
 conda activate dreamzero_robodojo
 
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 42 0,1,2,3,4,5,6,7
+bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
 ```
 
 训练产物目录：

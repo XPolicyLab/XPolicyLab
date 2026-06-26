@@ -90,6 +90,22 @@ class MultiEmbodimentActionEncoder(nn.Module):
         return x
 
 
+class NativeDojoActionEncoder(nn.Module):
+    def __init__(self, action_dim, hidden_size):
+        super().__init__()
+        self.action_proj = nn.Linear(action_dim, hidden_size)
+        self.time_proj = nn.Linear(2 * hidden_size, hidden_size)
+        self.out_proj = nn.Linear(hidden_size, hidden_size)
+        self.pos_encoding = SinusoidalPositionalEncoding(hidden_size)
+
+    def forward(self, actions, timesteps):
+        a_emb = self.action_proj(actions)
+        tau_emb = self.pos_encoding(timesteps).to(dtype=a_emb.dtype)
+        x = torch.cat([a_emb, tau_emb], dim=-1)
+        x = swish(self.time_proj(x))
+        return self.out_proj(x)
+
+
 def causal_rope_action_apply(x, freqs, freqs_action, freqs_state, action_register_length, num_action_per_block, num_state_per_block, action_state_index):
     if ENABLE_TENSORRT:
         return causal_rope_action_apply_no_polar(x, freqs, freqs_action, freqs_state, action_register_length, num_action_per_block, num_state_per_block, action_state_index)
@@ -1283,6 +1299,8 @@ class CausalWanModel(ModelMixin, ConfigMixin):
                  eps=1e-6,
                  num_frame_per_block=1, 
                  action_dim=32,
+                 use_native_dojo_action_projectors=False,
+                 native_dojo_action_dim=14,
                  num_registers=8,
                  max_state_dim=64,
                  max_num_embodiments=32,
@@ -1354,6 +1372,9 @@ class CausalWanModel(ModelMixin, ConfigMixin):
         self.num_frame_per_block = num_frame_per_block
         self.diffusion_model_pretrained_path = diffusion_model_pretrained_path
         self.action_dim = action_dim
+        self.use_native_dojo_action_projectors = use_native_dojo_action_projectors
+        self.native_dojo_action_dim = native_dojo_action_dim
+        self.policy_action_dim = native_dojo_action_dim if use_native_dojo_action_projectors else action_dim
         self.num_registers = num_registers
         self.max_state_dim = max_state_dim
         self.max_num_embodiments = max_num_embodiments
@@ -1380,6 +1401,15 @@ class CausalWanModel(ModelMixin, ConfigMixin):
             input_dim=dim,
             hidden_dim=self.hidden_size,
             output_dim=action_dim,
+        )
+        self.dojo_action_encoder = NativeDojoActionEncoder(
+            action_dim=native_dojo_action_dim,
+            hidden_size=self.dim,
+        )
+        self.dojo_action_decoder = nn.Sequential(
+            nn.Linear(dim, self.hidden_size),
+            nn.ReLU(),
+            nn.Linear(self.hidden_size, native_dojo_action_dim),
         )
 
         # embeddings
@@ -1728,6 +1758,25 @@ class CausalWanModel(ModelMixin, ConfigMixin):
 
         return block_mask
 
+    def _encode_action_tokens(
+        self,
+        action: torch.Tensor,
+        timestep_action: torch.Tensor,
+        embodiment_id: torch.Tensor,
+    ) -> torch.Tensor:
+        if self.use_native_dojo_action_projectors:
+            return self.dojo_action_encoder(action, timestep_action)
+        return self.action_encoder(action, timestep_action, embodiment_id)
+
+    def _decode_action_tokens(
+        self,
+        action_features: torch.Tensor,
+        embodiment_id: torch.Tensor,
+    ) -> torch.Tensor:
+        if self.use_native_dojo_action_projectors:
+            return self.dojo_action_decoder(action_features)
+        return self.action_decoder(action_features, embodiment_id)
+
     def _forward_blocks(
         self,
         x: torch.Tensor,
@@ -1753,7 +1802,7 @@ class CausalWanModel(ModelMixin, ConfigMixin):
 
         if action is not None:
             embodiment_id = torch.tensor([0], device=x.device).repeat(x.shape[0])
-            action_features = self.action_encoder(action, timestep_action, embodiment_id)
+            action_features = self._encode_action_tokens(action, timestep_action, embodiment_id)
             state_features = self.state_encoder(state, embodiment_id)
             action_register = torch.cat([action_features, state_features], dim=1)
             action_length = action_features.shape[1]
@@ -1810,7 +1859,7 @@ class CausalWanModel(ModelMixin, ConfigMixin):
 
         if action is not None:
             action_noise_pred = x[:, seq_len: seq_len + action_length]
-            action_noise_pred = self.action_decoder(action_noise_pred, embodiment_id)
+            action_noise_pred = self._decode_action_tokens(action_noise_pred, embodiment_id)
         else:
             action_noise_pred = None
 
@@ -2056,7 +2105,7 @@ class CausalWanModel(ModelMixin, ConfigMixin):
         # time embeddings
         if action is not None:
             embodiment_id = torch.tensor([0]).repeat(x.shape[0]).to(device=embodiment_id.device)
-            action_features = self.action_encoder(action, timestep_action, embodiment_id)
+            action_features = self._encode_action_tokens(action, timestep_action, embodiment_id)
             action_length = action_features.shape[1]
             state_features = self.state_encoder(state, embodiment_id)
             action_register = torch.cat([action_features, state_features], dim=1)
@@ -2147,7 +2196,7 @@ class CausalWanModel(ModelMixin, ConfigMixin):
 
         if action is not None:
             action_noise_pred = x[:, seq_len: seq_len + action_length]
-            action_noise_pred = self.action_decoder(action_noise_pred, embodiment_id)
+            action_noise_pred = self._decode_action_tokens(action_noise_pred, embodiment_id)
         else:
             action_noise_pred = None
 
