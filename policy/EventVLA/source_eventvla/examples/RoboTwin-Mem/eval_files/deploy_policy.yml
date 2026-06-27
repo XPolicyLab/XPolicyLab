@@ -1,0 +1,31 @@
+policy_name: eventvla
+task_name: null
+task_config: null
+ckpt_setting: null
+seed: null
+instruction_type: unseen
+
+# EventVLA Client Parameters
+host: "127.0.0.1"
+port: 5840
+# policy_ckpt_path should point to the exact checkpoint you are serving.
+# Supported checkpoints use pure_image_keyframe_memory:
+#   - EventVLA public checkpoints
+#   - legacy starVLA QwenOFT checkpoints
+# Some legacy RoboTwin checkpoints store stats under "new_embodiment";
+# set UNNORM_KEY=new_embodiment when serving those weights.
+policy_ckpt_path: "/path/to/eventvla/checkpoints/steps_xxxxx_pytorch_model.pt"
+
+unnorm_key: "robotwin_mem"
+action_mode: "abs"
+image_size: null
+temporal_absolute_indices: null
+temporal_anchor_deltas: null
+temporal_view_names: ["cam_high", "cam_left_wrist", "cam_right_wrist"]
+keyframe_commit_confidence_threshold: null
+keyframe_cluster_timestep_window: null
+first_chunk_random_replan: true
+first_chunk_random_replan_seed: 42
+first_chunk_fixed_replan_step: null
+sampling_interval: 50
+replan_after_keyframe_commit: true
