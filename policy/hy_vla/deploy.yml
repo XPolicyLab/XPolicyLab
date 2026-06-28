@@ -1,0 +1,53 @@
+# Hy-Embodied-0.5-VLA policy deployment config (XPolicyLab / RoboDojo).
+policy_name: hy_vla
+dataset_name: null
+task_name: null
+env_cfg_type: null      # arx_x5 (-> dual_x5, dual-arm) for RoboDojo
+action_type: ee
+seed: null
+eval_batch: false
+eval_env: sim           # debug | sim | real
+
+# --- Model location ---
+# hy_root: the Hy-Embodied source tree (provides the `hy_vla` package + the
+# `robotwin_eval` adapter) AND its uv venv. Resolution order in model.py:
+#   1. this `hy_root`   2. $HY_VLA_ROOT   3. ./Hy-Embodied-0.5-VLA (sibling of
+# this policy dir). Clone it from:
+#   https://github.com/Tencent-Hunyuan/Hy-Embodied-0.5-VLA
+# ckpt_path may be absolute or relative to hy_root.
+hy_root: Hy-Embodied-0.5-VLA
+ckpt_path: Hy-VLA-RoboDojo-v3/hyvla_dojo_ckpt_v3
+norm_path: null         # auto -> <ckpt_path>/norm_stats.pkl
+
+# --- Action / state normalization ---
+# Was the model trained with absolute action supervision (i.e. dataset config
+# `action_type: posrel_with_absolute`)?
+#   false -> every action token is a relative EE pose  -> n_action_steps tokens
+#   true  -> the token stream is interleaved rel + abs -> n_action_steps // 2 frames each
+with_absolute: false
+
+# --- Action decoding ---
+# rel_only : decode the relative half only (safe default; rel stats are identity).
+# rel_abs  : 1:1 blend rel + abs (slerp on quaternion); needs abs stats in norm pkl.
+# abs_only : decode the absolute half only.
+blend_mode: abs_only
+
+# --- Action execution cadence ---
+# exc_action_size     : number of env steps executed per network forward.
+# exc_action_interval : execute every N-th action from the predicted chunk
+#   (interval=3 -> execute action[0], action[3], action[6], ...). Must be >= 1.
+#   img_history_interval is divided by exc_action_interval when selecting
+#   history frames, so temporal coverage stays close to training.
+exc_action_size: 10
+exc_action_interval: 1
+
+# --- MEM video-encoder cadence (use_video_encoder=true in the ckpt) ---
+img_history_size: 6
+img_history_interval: 20
+
+# Policy server uses the Hy-Embodied uv venv (torch + HunYuanVLMoT fork +
+# flash_attn). "uv" -> read this path; relative paths resolve against the
+# policy dir. Run `bash install.sh` to create the venv.
+policy_uv_env_path: Hy-Embodied-0.5-VLA
+
+port: 6000
