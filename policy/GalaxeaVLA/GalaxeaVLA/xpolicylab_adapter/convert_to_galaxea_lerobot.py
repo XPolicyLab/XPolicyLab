@@ -80,8 +80,29 @@ def _episode_paths(load_dir: str, max_episodes: int):
     return paths
 
 
+def _resolve_task_load_dir(batch_root: str, task: str, env_cfg_type: str) -> str | None:
+    """Find task/<env_cfg_type>/data (exact subdir name only)."""
+    load_dir = os.path.join(batch_root, task, env_cfg_type)
+    if os.path.isdir(os.path.join(load_dir, "data")):
+        return load_dir
+    return None
+
+
+def _instruction_from_episode(data: dict, fallback: str) -> str:
+    inst = data.get("instruction")
+    if inst is None:
+        return fallback
+    if isinstance(inst, bytes):
+        inst = inst.decode("utf-8")
+    elif hasattr(inst, "item"):
+        inst = inst.item()
+    inst = str(inst).strip()
+    return inst if inst else fallback
+
+
 def _add_episode(dataset, hdf5_path, key_dims, robot_action_dim_info, action_type, instruction, position):
     data = load_hdf5(hdf5_path)
+    instruction = _instruction_from_episode(data, instruction)
     state_all = pack_robot_state(
         data, action_type, robot_action_dim_info, source_type="dataset", state_type="state"
     )
@@ -154,15 +175,18 @@ def main():
         batch_root = os.path.abspath(args.batch_root)
         all_tasks = sorted(
             d for d in os.listdir(batch_root)
-            if os.path.isdir(os.path.join(batch_root, d, args.env_cfg_type, "data"))
+            if os.path.isdir(os.path.join(batch_root, d))
+            and _resolve_task_load_dir(batch_root, d, args.env_cfg_type) is not None
         )
         tasks = [t for t in all_tasks if (args.tasks is None or t in args.tasks)]
         if not tasks:
-            raise SystemExit(f"no tasks with {args.env_cfg_type}/data under {batch_root}")
+            raise SystemExit(
+                f"no tasks with {args.env_cfg_type}/data under {batch_root}"
+            )
         tag = _dataset_tag(args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type)
         plan = []
         for task in tasks:
-            load_dir = os.path.join(batch_root, task, args.env_cfg_type)
+            load_dir = _resolve_task_load_dir(batch_root, task, args.env_cfg_type)
             instruction = args.instruction or task.replace("_", " ")
             for ep_path in _episode_paths(load_dir, args.expert_data_num):
                 plan.append((ep_path, instruction, task))

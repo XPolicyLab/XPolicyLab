@@ -26,7 +26,7 @@ if [[ "${action_type}" != "joint" ]]; then
     echo -e "\033[31m[train] GalaxeaVLA only supports action_type=joint, got '${action_type}'\033[0m" >&2
     exit 1
 fi
-task_config="real/g0plus_xpolicylab_finetune"
+task_config="${GALAXEA_TASK_CONFIG:-real/g0plus_xpolicylab_finetune_joint}"
 
 default_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
