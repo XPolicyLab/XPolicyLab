@@ -508,7 +508,7 @@ class Model(ModelTemplate):
         task_name: str | None = None,
     ) -> dict[str, Any]:
         resolved_task_name = self._resolve_task_name(task_name)
-        batch = self._prepare_batch(observation, resolved_task_name)
+        batch = self._prepare_batch(observation, resolved_task_name, instruction)
 
         used_chunk_size = self.used_chunk_size
         if resolved_task_name in TASKS_USE_LESS_CHUNK_SIZE:
@@ -556,11 +556,17 @@ class Model(ModelTemplate):
         available = ", ".join(sorted(TASK_INFO.keys()))
         raise KeyError(f"unsupported Spirit task name: {task_name!r}; available tasks: {available}")
 
-    def _prepare_batch(self, observation: dict[str, Any], task_name: str) -> dict[str, Any]:
+    def _prepare_batch(
+        self,
+        observation: dict[str, Any],
+        task_name: str,
+        instruction: str | None = None,
+    ) -> dict[str, Any]:
         spirit_observation = self._normalize_observation(observation)
         robot_type = TASK_INFO[task_name]["robot_type"]
+        task_text = _normalize_prompt_value(instruction) or TASK_INFO[task_name]["task"]
         item: dict[str, Any] = {
-            "task": [TASK_INFO[task_name]["task"]],
+            "task": [task_text],
             "normalized_in_getitem": torch.tensor([False]),
             "batch_source": "rb",
             "robot_type": [robot_type],
