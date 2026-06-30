@@ -300,17 +300,37 @@ class Model(ModelTemplate):
             self._env_states[env_idx] = state
         return state
 
-    def _select_keyframes(self, cache_buffer):
-        """Pick one observation per generated frame (every action_per_frame steps).
+    def _vae_temporal_compression(self):
+        """WAN VAE temporal downsample factor (4): every `factor` sampled frames
+        (after the first) collapse into one latent frame."""
+        vae = getattr(self.vla, "vae", None)
+        if vae is not None and hasattr(vae, "config"):
+            factor = getattr(vae.config, "scale_factor_temporal", None)
+            if factor:
+                return int(factor)
+        return 4
 
-        The streaming VAE/KV-cache expects keyframes aligned with the action frames
-        (frame_chunk_size); the executed-step observations arrive one per action step,
-        so we keep the observation at each action-frame boundary.
+    def _select_keyframes(self, cache_buffer):
+        """Pick the sampled frames that reconstruct the generated latent frames.
+
+        Training latents come from encoding the full clip at once with the WAN VAE,
+        which compresses every `temporal_compression` sampled frames (at the 10fps
+        sampling stride) into ONE latent frame. The sampling stride in executed-step
+        units is `action_per_frame / temporal_compression` (= frame_stride). To make
+        the streaming `encode_chunk` reproduce the training latents, we must feed
+        `temporal_compression` images per generated latent frame -- one observation
+        every `frame_stride` executed steps -- NOT a single keyframe per latent frame.
+
+        The executed-step observations arrive one per action step in `cache_buffer`,
+        so picking `cache_buffer[frame_stride-1::frame_stride]` yields the 10fps
+        samples (steps 3, 6, 9, 12, ...) that align with the training frame_ids.
         """
         if not cache_buffer:
             return []
-        step = int(getattr(self.vla.job_config, "action_per_frame", 0)) or 1
-        keyframes = cache_buffer[step - 1::step]
+        action_per_frame = int(getattr(self.vla.job_config, "action_per_frame", 0)) or 1
+        temporal_compression = self._vae_temporal_compression()
+        frame_stride = max(1, action_per_frame // temporal_compression)
+        keyframes = cache_buffer[frame_stride - 1::frame_stride]
         if not keyframes:
             keyframes = [cache_buffer[-1]]
         return keyframes
@@ -343,8 +363,10 @@ class Model(ModelTemplate):
             state["first_obs"] = encoded_obs
         else:
             # Subsequent chunk: refresh the KV cache with the executed-step observations
-            # before generating. Skipping this would re-encode frame_st_id=0 every call,
-            # which crashes the causal streaming VAE (conv3d kernel > input frames).
+            # before generating. _select_keyframes returns temporal_compression (=4)
+            # sampled frames per generated latent frame so the streaming VAE produces
+            # the same latent count/content as the full-clip encode used in training,
+            # keeping frame_st_id aligned with the committed action frames.
             keyframes = self._select_keyframes(state["cache_buffer"])
             if keyframes and state["raw_action"] is not None:
                 cache_obs = self._to_engine_obs_batch(keyframes, state=state["raw_action"])
