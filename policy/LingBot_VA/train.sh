@@ -42,12 +42,14 @@ export NGPU
 NGPU="$(tr ',' '\n' <<< "${CUDA_VISIBLE_DEVICES}" | sed '/^$/d' | wc -l | xargs)"
 export CONFIG_NAME="${LINGBOT_VA_CONFIG_NAME:-robotwin30_train}"
 export LINGBOT_VA_DATASET_PATH="${LINGBOT_VA_DATASET_PATH:-${LEROBOT_DATA_ROOT}/${LEROBOT_DATASET_REPO_ID}}"
+export LINGBOT_VA_BASE_MODEL_PATH="${LINGBOT_VA_BASE_MODEL_PATH:-}"
 export PYTHONHASHSEED="${seed}"
 
 echo "[LingBot_VA] LEROBOT_DATA_ROOT=${LEROBOT_DATA_ROOT}"
 echo "[LingBot_VA] LEROBOT_DATASET_REPO_ID=${LEROBOT_DATASET_REPO_ID}"
 echo "[LingBot_VA] config=${CONFIG_NAME}"
 echo "[LingBot_VA] dataset=${LINGBOT_VA_DATASET_PATH}"
+echo "[LingBot_VA] base_model=${LINGBOT_VA_BASE_MODEL_PATH:-<unset>}"
 echo "[LingBot_VA] checkpoint_dir=${ckpt_dir}"
 
 bash "${POLICY_DIR}/lingbot_va/script/run_va_posttrain.sh" \

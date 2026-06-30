@@ -1,14 +1,18 @@
 from easydict import EasyDict
+from pathlib import Path
 from .shared_config import va_shared_cfg
 import os
+
+_POLICY_DIR = Path(__file__).resolve().parents[3]
 
 va_robotwin30_cfg = EasyDict(__name__='Config: VA robotwin30')
 va_robotwin30_cfg.update(va_shared_cfg)
 
 va_robotwin30_cfg.infer_mode = "server"
 
-va_robotwin30_cfg.wan22_pretrained_model_name_or_path = "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
-# va_robotwin30_cfg.wan22_pretrained_model_name_or_path = "/mnt/pfs/pg4hw0/niantian/model_weights/lingbot-va-base"
+va_robotwin30_cfg.wan22_pretrained_model_name_or_path = os.environ.get(
+    "LINGBOT_VA_BASE_MODEL_PATH", ""
+)
 
 va_robotwin30_cfg.attn_window = 72
 va_robotwin30_cfg.frame_chunk_size = 2
@@ -41,66 +45,66 @@ va_robotwin30_cfg.inverse_used_action_channel_ids = list(range(30))
 va_robotwin30_cfg.action_norm_method = 'quantiles'
 va_robotwin30_cfg.norm_stat = {
     "q01": [
-    -0.35896676778793335,
-    -0.3138428330421448,
-    0.8636696338653564,
-    0.47643640637397766,
-    -0.580956757068634,
-    -0.0031553704757243395,
-    0.009808734059333801,
-    -0.08750182390213013,
-    -0.3128036856651306,
-    0.8690950870513916,
-    0.003154901321977377,
-    -0.6978152394294739,
-    -0.006679104175418615,
-    -0.7119914889335632,
-    -0.9411209225654602,
-    -5.257390398583084e-07,
-    -2.296771708643064e-05,
-    -1.4580196142196655,
-    -0.02832568995654583,
-    -0.9029805064201355,
     0.0,
-    -0.12483851611614227,
     0.0,
-    -2.81171942333458e-05,
-    -1.5230885744094849,
-    -0.9887850284576416,
-    -0.9706628322601318,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.051365569829941,
+    -3.5348887174584814e-14,
+    1.741881830823392e-16,
+    -1.5984010362625123,
+    -0.6003574305772781,
+    -1.6678147149085998,
+    0.0,
+    -0.4509398394823074,
+    -2.5859282299029243e-14,
+    1.234041714549172e-16,
+    -1.64055180311203,
+    -1.2633746123313903,
+    -1.7645285475254058,
     0.0,
     0.0,
     0.0
   ],
   "q99": [
-    0.0731387659907341,
-    0.10332044959068298,
-    1.0637645721435547,
-    0.9464830160140991,
-    0.007200557738542557,
-    0.7033131122589111,
-    0.7211053967475891,
-    0.3397349715232849,
-    0.1032673791050911,
-    1.0750845670700073,
-    0.7035625576972961,
-    0.7032108306884766,
-    0.5845568180084229,
-    0.9647521376609802,
-    0.1324525624513626,
-    2.5647311210632324,
-    2.373156785964966,
-    1.1154379844665527,
-    0.9222444295883179,
-    1.056174397468567,
     0.0,
-    0.9590040445327759,
-    2.612731456756592,
-    2.5346524715423584,
-    1.1117970943450928,
-    0.09506302326917648,
-    0.9307727813720703,
     0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.5431358617544174,
+    2.495765209197998,
+    2.492974226474762,
+    1.3241519677639007,
+    1.2496635341644287,
+    1.7392305016517635,
+    1.0,
+    1.0814965963363647,
+    2.4167031812667843,
+    2.3470158338546754,
+    1.141731116771698,
+    0.5208872479200363,
+    1.489715996980667,
+    1.0,
     1.0,
     1.0
   ],
@@ -109,7 +113,10 @@ va_robotwin30_cfg.norm_stat = {
 va_robotwin30_train_cfg = EasyDict(__name__='Config: VA robotwin30 train')
 va_robotwin30_train_cfg.update(va_robotwin30_cfg)
 
-va_robotwin30_train_cfg.dataset_path = "/mnt/pfs/pg4hw0/niantian/lerobot/robotwin4tasks_ee_joint_gripper"
+va_robotwin30_train_cfg.dataset_path = os.environ.get(
+    "LINGBOT_VA_DATASET_PATH",
+    str(_POLICY_DIR / "lingbot_va" / "lerobot" / "RoboDojo_sim_arx_x5_joint_100"),
+)
 va_robotwin30_train_cfg.empty_emb_path = os.path.join(va_robotwin30_train_cfg.dataset_path, 'empty_emb.pt')
 va_robotwin30_train_cfg.enable_wandb = True
 va_robotwin30_train_cfg.load_worker = 16

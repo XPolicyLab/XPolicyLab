@@ -29,6 +29,12 @@ CAMERAS = [
     "cam_right_wrist",
 ]
 
+ROBO_DOJO_CAMERA_MAP = {
+    "cam_high": ("cam_high", "cam_head", "cam_third_view"),
+    "cam_left_wrist": ("cam_left_wrist",),
+    "cam_right_wrist": ("cam_right_wrist",),
+}
+
 @dataclasses.dataclass(frozen=True)
 class DatasetConfig:
     use_videos: bool = True
@@ -146,8 +152,19 @@ def create_empty_dataset(
 
 def get_cameras(hdf5_files: list[Path]) -> list[str]:
     with h5py.File(hdf5_files[0], "r") as ep:
-        # ignore depth channel, not currently handled
-        return [key for key in ep["/observations/images"].keys() if "depth" not in key]  # noqa: SIM118
+        if "/observations/images" in ep:
+            # ignore depth channel, not currently handled
+            return [key for key in ep["/observations/images"].keys() if "depth" not in key]  # noqa: SIM118
+
+        if "/vision" in ep:
+            available = set(ep["/vision"].keys())
+            cameras = []
+            for feature_camera, source_candidates in ROBO_DOJO_CAMERA_MAP.items():
+                if any(source_camera in available for source_camera in source_candidates):
+                    cameras.append(feature_camera)
+            return cameras
+
+    raise KeyError(f"No supported image group found in {hdf5_files[0]}")
 
 def has_velocity(hdf5_files: list[Path]) -> bool:
     with h5py.File(hdf5_files[0], "r") as ep:
@@ -158,24 +175,95 @@ def has_effort(hdf5_files: list[Path]) -> bool:
         return "/observations/effort" in ep
 
 
+def _dataset(ep: h5py.File, path: str) -> np.ndarray:
+    return ep[path][:]
+
+
+def _concat_datasets(ep: h5py.File, paths: list[str]) -> np.ndarray:
+    return np.concatenate([_dataset(ep, path) for path in paths], axis=-1)
+
+
 def load_episode_arrays(
     ep: h5py.File,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray | None, np.ndarray | None]:
-    state = ep["/observations/qpos"][:]
-    action = ep["/action"][:]
+    if "/observations/qpos" in ep:
+        state = ep["/observations/qpos"][:].astype(np.float32)
+        action = ep["/action"][:].astype(np.float32)
 
-    velocity = None
-    if "/observations/qvel" in ep:
-        velocity = ep["/observations/qvel"][:]
+        velocity = None
+        if "/observations/qvel" in ep:
+            velocity = ep["/observations/qvel"][:].astype(np.float32)
 
-    effort = None
-    if "/observations/effort" in ep:
-        effort = ep["/observations/effort"][:]
+        effort = None
+        if "/observations/effort" in ep:
+            effort = ep["/observations/effort"][:].astype(np.float32)
 
-    return state, action, velocity, effort
+        return state, action, velocity, effort
+
+    if "/state" in ep and "/action" in ep:
+        state_pose = _concat_datasets(
+            ep,
+            [
+                "/state/left_ee_poses",
+                "/state/right_ee_poses",
+            ],
+        )
+        state_joints = _concat_datasets(
+            ep,
+            [
+                "/state/left_arm_joint_states",
+                "/state/left_ee_joint_states",
+                "/state/right_arm_joint_states",
+                "/state/right_ee_joint_states",
+            ],
+        )
+        state_grippers = _concat_datasets(
+            ep,
+            [
+                "/state/left_ee_joint_states",
+                "/state/right_ee_joint_states",
+            ],
+        )
+        state = np.concatenate([state_pose, state_joints, state_grippers], axis=-1).astype(np.float32)
+
+        action_joints = _concat_datasets(
+            ep,
+            [
+                "/action/left_arm_joint_states",
+                "/action/left_ee_joint_states",
+                "/action/right_arm_joint_states",
+                "/action/right_ee_joint_states",
+            ],
+        )
+        action_grippers = _concat_datasets(
+            ep,
+            [
+                "/action/left_ee_joint_states",
+                "/action/right_ee_joint_states",
+            ],
+        )
+        action_pose = np.zeros((action_joints.shape[0], 14), dtype=action_joints.dtype)
+        action = np.concatenate([action_pose, action_joints, action_grippers], axis=-1).astype(np.float32)
+
+        return state, action, None, None
+
+    raise KeyError("No supported state/action layout found in episode")
 
 def load_image_frame(ep: h5py.File, camera: str, frame_idx: int) -> np.ndarray:
-    image_ds = ep[f"/observations/images/{camera}"]
+    if f"/observations/images/{camera}" in ep:
+        image_ds = ep[f"/observations/images/{camera}"]
+    elif "/vision" in ep:
+        image_ds = None
+        for source_camera in ROBO_DOJO_CAMERA_MAP.get(camera, (camera,)):
+            source_path = f"/vision/{source_camera}/colors"
+            if source_path in ep:
+                image_ds = ep[source_path]
+                break
+        if image_ds is None:
+            raise KeyError(f"No image dataset found for camera {camera}")
+    else:
+        raise KeyError(f"No supported image layout found for camera {camera}")
+
     if image_ds.ndim == 4:
         return np.asarray(image_ds[frame_idx])
 
@@ -191,13 +279,41 @@ def load_image_frame(ep: h5py.File, camera: str, frame_idx: int) -> np.ndarray:
         encoded = np.asarray(data, dtype=np.uint8)
 
     image = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
-
-    image = np.array(Image.fromarray(image).resize((IMG_SIZE, IMG_SIZE),resample=Image.BICUBIC))
     
     if image is None:
         raise ValueError(f"Failed to decode image for camera {camera} at frame {frame_idx}")
 
-    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # RoboDojo HDF5 JPEG bytes are produced with OpenCV channel semantics.
+    # Existing XPolicyLab converters keep cv2.imdecode output as-is when
+    # writing LeRobot frames; converting BGR->RGB here makes colors visibly
+    # wrong (e.g. wooden floor becomes blue).
+    return np.array(
+        Image.fromarray(image).resize(
+            (IMG_SIZE, IMG_SIZE),
+            resample=Image.BICUBIC,
+        )
+    )
+
+
+def read_instruction(ep_path: Path, ep: h5py.File) -> str:
+    instruction_path = ep_path.parent.parent / "instructions.json"
+    if instruction_path.exists():
+        with open(instruction_path, "r", encoding="utf-8") as f:
+            instruction_data = json.load(f)
+
+        instructions = instruction_data.get("instructions", [])
+        if isinstance(instructions, list) and instructions:
+            first_instruction = str(instructions[0]).strip()
+            if first_instruction:
+                return first_instruction
+
+    if "instruction" in ep:
+        instruction = ep["instruction"][()]
+        if isinstance(instruction, bytes):
+            instruction = instruction.decode("utf-8")
+        return str(instruction).strip()
+
+    return ep_path.parent.parent.name
 
 
 def add_frame_compat(dataset: LeRobotDataset, frame: dict, task: str) -> None:
@@ -238,18 +354,9 @@ def populate_dataset(
     for ep_idx in tqdm.tqdm(episodes):
         try:
             ep_path = Path(hdf5_files[ep_idx])
-            instruction_path = ep_path.parent.parent / "instructions.json"
-
-            with open(instruction_path, "r", encoding="utf-8") as f:
-                instruction_data = json.load(f)
-
-            instructions = instruction_data.get("instructions", [])
-            if isinstance(instructions, list) and instructions:
-                first_instruction = str(instructions[0]).strip()
-                if first_instruction:
-                    instruction = first_instruction
 
             with h5py.File(ep_path, "r") as ep:
+                instruction = read_instruction(ep_path, ep)
                 state, action, velocity, effort = load_episode_arrays(ep)
                 num_frames = state.shape[0]
 

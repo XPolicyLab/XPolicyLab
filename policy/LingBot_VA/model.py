@@ -28,16 +28,19 @@ from .lingbot_va.wan_va.distributed.util import init_distributed
 from .lingbot_va.wan_va.wan_va_server import VA_Server
 
 
-DEFAULT_CHECKPOINT_PATH = "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
-DEFAULT_BASE_MODEL_PATH = "/mnt/xspark-data/xspark_shared/model_weights/lingbot-va-base"
 DEFAULT_CONFIG_NAME = "robotwin30_train"
 
 
 def resolve_lingbot_wan_paths(
     checkpoint_path: str,
-    base_model_path: str | None = None,
+    base_model_path: str,
 ) -> tuple[str, str]:
     """Resolve base (vae/tokenizer/text_encoder) and finetuned transformer paths."""
+    if not checkpoint_path:
+        raise ValueError("checkpoint_path is required (set in deploy.yml or eval overrides).")
+    if not base_model_path:
+        raise ValueError("base_model_path is required (set in deploy.yml).")
+
     ckpt_root = Path(checkpoint_path).expanduser().resolve()
     if not ckpt_root.is_dir():
         raise FileNotFoundError(f"Checkpoint directory not found: {ckpt_root}")
@@ -48,7 +51,7 @@ def resolve_lingbot_wan_paths(
     )
     for transformer_path in transformer_candidates:
         if (transformer_path / "config.json").exists():
-            base_root = Path(base_model_path or DEFAULT_BASE_MODEL_PATH).expanduser().resolve()
+            base_root = Path(base_model_path).expanduser().resolve()
             if not (base_root / "vae").is_dir():
                 raise FileNotFoundError(
                     f"Base model directory missing vae/: {base_root}. "
@@ -153,7 +156,6 @@ class Model(ModelTemplate):
         self.model_cfg = dict(model_cfg)
 
         self.model_cfg.setdefault("config_name", DEFAULT_CONFIG_NAME)
-        self.model_cfg.setdefault("checkpoint_path", DEFAULT_CHECKPOINT_PATH)
 
         self.task_name = self.model_cfg.get("task_name", "default_task")
         self.action_type = self.model_cfg["action_type"]
@@ -171,9 +173,11 @@ class Model(ModelTemplate):
 
         self.observation_window: list[dict[str, Any]] | None = None
         self._latest_env_idx_list: list[int] = [0]
-        self._skip_leading_chunk_on_next_action = True
-        self._first_observation: dict[str, Any] | None = None
-        self._latest_raw_action_chunk: np.ndarray | None = None
+        # Per-env streaming state. LingBot_VA generates action chunks autoregressively
+        # and must refresh its KV cache from the executed-step observations before the
+        # next chunk. The standard eval loop only calls update_obs/get_action, so we
+        # buffer those observations here and drive the KV-cache update internally.
+        self._env_states: dict[int, dict[str, Any]] = {}
 
         self.vla = self.get_model(self.model_cfg)
 
@@ -190,12 +194,11 @@ class Model(ModelTemplate):
         checkpoint_path = (
             model_cfg.get("checkpoint_path")
             or model_cfg.get("wan22_pretrained_model_name_or_path")
-            or getattr(job_config, "wan22_pretrained_model_name_or_path", None)
-            or DEFAULT_CHECKPOINT_PATH
         )
+        base_model_path = model_cfg.get("base_model_path")
         base_path, transformer_path = resolve_lingbot_wan_paths(
-            str(checkpoint_path),
-            model_cfg.get("base_model_path"),
+            str(checkpoint_path) if checkpoint_path else "",
+            str(base_model_path) if base_model_path else "",
         )
 
         model_cfg["checkpoint_path"] = transformer_path
@@ -281,10 +284,41 @@ class Model(ModelTemplate):
 
         return action_chunk[:, JOINT_CONTROL_INDICES]
 
-    def _maybe_trim_initial_action_chunk(self, action_chunk):
+    def _new_env_state(self):
+        return {
+            "first_obs": None,            # anchor observation reused for streaming infer
+            "raw_action": None,           # last raw (C, F, H) action chunk for KV-cache state
+            "skip_leading": True,         # trim the conditioning frame from the first chunk
+            "inferred_once": False,       # whether the first chunk has been generated
+            "cache_buffer": [],           # executed-step observations awaiting KV-cache update
+        }
+
+    def _get_env_state(self, env_idx):
+        state = self._env_states.get(env_idx)
+        if state is None:
+            state = self._new_env_state()
+            self._env_states[env_idx] = state
+        return state
+
+    def _select_keyframes(self, cache_buffer):
+        """Pick one observation per generated frame (every action_per_frame steps).
+
+        The streaming VAE/KV-cache expects keyframes aligned with the action frames
+        (frame_chunk_size); the executed-step observations arrive one per action step,
+        so we keep the observation at each action-frame boundary.
+        """
+        if not cache_buffer:
+            return []
+        step = int(getattr(self.vla.job_config, "action_per_frame", 0)) or 1
+        keyframes = cache_buffer[step - 1::step]
+        if not keyframes:
+            keyframes = [cache_buffer[-1]]
+        return keyframes
+
+    def _maybe_trim_initial_action_chunk(self, state, action_chunk):
         action_chunk = np.asarray(action_chunk)
 
-        if not self._skip_leading_chunk_on_next_action:
+        if not state["skip_leading"]:
             return action_chunk
 
         skip_count = int(getattr(self.vla.job_config, "action_per_frame", 0))
@@ -297,23 +331,36 @@ class Model(ModelTemplate):
                 f"chunk_len={action_chunk.shape[0]}, skip_count={skip_count}."
             )
 
-        self._skip_leading_chunk_on_next_action = False
+        state["skip_leading"] = False
         return action_chunk[skip_count:]
 
-    def infer(self, observation):
-        if "reset" in observation and observation["reset"]:
-            self.reset(
-                checkpoint_path=observation["checkpoint_path"] if "checkpoint_path" in observation else None
-            )
-            return dict(action=None)
+    def _infer_env(self, env_idx, encoded_obs):
+        """Generate one action chunk for a single env, advancing its KV cache first."""
+        state = self._get_env_state(env_idx)
 
-        model_obs = self._to_engine_obs(observation)
+        if not state["inferred_once"]:
+            # First chunk: anchor on this observation; VA_Server encodes it (frame_st_id=0).
+            state["first_obs"] = encoded_obs
+        else:
+            # Subsequent chunk: refresh the KV cache with the executed-step observations
+            # before generating. Skipping this would re-encode frame_st_id=0 every call,
+            # which crashes the causal streaming VAE (conv3d kernel > input frames).
+            keyframes = self._select_keyframes(state["cache_buffer"])
+            if keyframes and state["raw_action"] is not None:
+                cache_obs = self._to_engine_obs_batch(keyframes, state=state["raw_action"])
+                cache_obs["compute_kv_cache"] = True
+                self.vla.infer(cache_obs)
+            state["cache_buffer"] = []
+
+        model_obs = self._to_engine_obs(state["first_obs"])
         result = self.vla.infer(model_obs)
-        self._latest_raw_action_chunk = np.asarray(result["action"])
+        state["raw_action"] = np.asarray(result["action"])
+        state["inferred_once"] = True
+
         action = self._format_action_chunk(result["action"])
         action = self._convert_to_joint_control_chunk(action)
-        action = self._maybe_trim_initial_action_chunk(action)
-        return dict(action=action)
+        action = self._maybe_trim_initial_action_chunk(state, action)
+        return action
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
@@ -326,14 +373,18 @@ class Model(ModelTemplate):
         ]
         self.observation_window = encoded_obs_list
 
+        # Buffer executed-step observations so the next get_action can refresh the KV cache.
+        for index, env_idx in enumerate(self._latest_env_idx_list):
+            state = self._env_states.get(env_idx)
+            if state is not None and state["inferred_once"]:
+                state["cache_buffer"].append(encoded_obs_list[index])
+
     def get_action(self, **kwargs):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        if self._first_observation is None:
-            self._first_observation = self.observation_window[0]
-
-        action_chunk = self.infer(self._first_observation)["action"]
+        env_idx = self._latest_env_idx_list[0] if self._latest_env_idx_list else 0
+        action_chunk = self._infer_env(env_idx, self.observation_window[0])
 
         if self.robot_action_dim_info is None:
             return action_chunk
@@ -352,8 +403,10 @@ class Model(ModelTemplate):
         env_idx_list = env_idx_list or self._latest_env_idx_list
         action_list = []
 
-        for batch_index, _ in enumerate(env_idx_list):
-            action_chunk = self.infer(self.observation_window[batch_index])["action"]
+        # VA_Server holds a single streaming state, so envs are stepped sequentially
+        # (brute-force) rather than truly batched. Correct for one running env at a time.
+        for batch_index, env_idx in enumerate(env_idx_list):
+            action_chunk = self._infer_env(env_idx, self.observation_window[batch_index])
 
             if self.robot_action_dim_info is None:
                 action_list.append(action_chunk)
@@ -372,28 +425,6 @@ class Model(ModelTemplate):
     def get_action_per_frame(self):
         return int(getattr(self.vla.job_config, "action_per_frame", 0))
 
-    def get_keyframe_interval(self):
-        action_per_frame = int(getattr(self.vla.job_config, "action_per_frame", 0))
-        if action_per_frame <= 0:
-            return 0
-        return action_per_frame // 4
-
-    def update_cache(self, obs_list):
-        if not obs_list:
-            return None
-
-        if self._latest_raw_action_chunk is None:
-            raise AssertionError("get_action first so the model has a raw action chunk for KV cache update.")
-
-        encoded_obs_list = [
-            encode_obs(obs, self.action_type, self.robot_action_dim_info, self.default_prompt)
-            for obs in obs_list
-        ]
-        cache_obs = self._to_engine_obs_batch(encoded_obs_list, state=self._latest_raw_action_chunk)
-        cache_obs["compute_kv_cache"] = True
-        self.vla.infer(cache_obs)
-        return None
-
     def reset(self, checkpoint_path=None) -> None:
         if checkpoint_path is not None:
             self.model_cfg["checkpoint_path"] = checkpoint_path
@@ -403,9 +434,7 @@ class Model(ModelTemplate):
 
         self.observation_window = None
         self._latest_env_idx_list = [0]
-        self._skip_leading_chunk_on_next_action = True
-        self._first_observation = None
-        self._latest_raw_action_chunk = None
+        self._env_states = {}
 
 
 def _make_fake_obs(prompt: str):

@@ -28,10 +28,13 @@ else
 fi
 
 BASE_MODEL_PATH=$(python - <<PY
+import sys
 import yaml
-from pathlib import Path
 cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8"))
-print(cfg.get("base_model_path", "/mnt/xspark-data/xspark_shared/model_weights/lingbot-va-base"))
+base = cfg.get("base_model_path")
+if not base:
+    sys.exit("base_model_path must be set in deploy.yml")
+print(base)
 PY
 )
 
