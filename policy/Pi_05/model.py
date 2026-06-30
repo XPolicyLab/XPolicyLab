@@ -164,8 +164,8 @@ def encode_obs(observation, action_type, robot_action_dim_info):
             "cam_left_wrist": ensure_chw_uint8(observation["images"]["cam_left_wrist"]),
             "cam_right_wrist": ensure_chw_uint8(observation["images"]["cam_right_wrist"]),
         }
-        instruction = observation.get("instruction")
-        return {"state": state, "images": images, "instruction": instruction}
+        prompt = observation.get("instruction")
+        return {"state": state, "images": images, "prompt": prompt}
 
     if robot_action_dim_info is None:
         raise ValueError("env_cfg_type is required when encoding raw environment observations.")
@@ -180,8 +180,8 @@ def encode_obs(observation, action_type, robot_action_dim_info):
         ),
     }
     state = pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs").astype(np.float32)
-    instruction = observation.get("instruction")
-    return {"state": state, "images": images, "instruction": instruction}
+    prompt = observation.get("instruction")
+    return {"state": state, "images": images, "prompt": prompt}
 
 
 def stack_obs(obs_list: list[dict[str, Any]]) -> dict[str, Any]:
@@ -192,7 +192,7 @@ def stack_obs(obs_list: list[dict[str, Any]]) -> dict[str, Any]:
             "cam_left_wrist": np.stack([obs["images"]["cam_left_wrist"] for obs in obs_list], axis=0),
             "cam_right_wrist": np.stack([obs["images"]["cam_right_wrist"] for obs in obs_list], axis=0),
         },
-        "instruction": [obs["instruction"] for obs in obs_list],
+        "prompt": [obs["prompt"] for obs in obs_list],
     }
 
 
@@ -204,7 +204,7 @@ def slice_stacked_obs(obs: dict[str, Any], batch_index: int) -> dict[str, Any]:
             "cam_left_wrist": obs["images"]["cam_left_wrist"][batch_index],
             "cam_right_wrist": obs["images"]["cam_right_wrist"][batch_index],
         },
-        "instruction": obs["instruction"][batch_index],
+        "prompt": obs["prompt"][batch_index],
     }
 
 
