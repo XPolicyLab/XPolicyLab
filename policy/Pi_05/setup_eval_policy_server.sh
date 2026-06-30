@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+export XLA_PYTHON_CLIENT_MEM_FRACTION=0.3
 
 dataset_name=$1
 task_name=$2
