@@ -30,6 +30,7 @@ if BAK_ROOT not in sys.path:
 
 from wan.modules.t5 import T5EncoderModel
 from utils.image_utils import resize_with_padding
+from utils.vlm_utils import preprocess_vlm_messages
 
 logger = logging.getLogger(__name__)
 
@@ -39,11 +40,23 @@ class MotusPolicy:
     Implements the joint video-action diffusion model for robotic control.
     """
     
-    def __init__(self, checkpoint_path: str, config_path: str, wan_path: str, vlm_path: str, device: str = "cuda", log_dir: Optional[str] = None, task_name: Optional[str] = None):
+    def __init__(self, checkpoint_path: str, config_path: str, wan_path: str, vlm_path: str, device: str = "cuda", log_dir: Optional[str] = None, task_name: Optional[str] = None, embodiment_type: str = "aloha_agilex_2", use_scene_prefix: bool = True):
         self.device = device
         self.checkpoint_path = checkpoint_path
         self.wan_path = wan_path
         self.vlm_path = vlm_path
+        # Normalization embodiment must match the one used at training time.
+        # The RoboDojo checkpoint was trained with the LeRobot pipeline, which
+        # normalizes both state and actions to [0, 1] using the embodiment stats
+        # (default: aloha_agilex_2). It must NOT be left at robotwin2.
+        self.embodiment_type = embodiment_type
+        # Whether to prepend the scene-description prefix to the instruction before
+        # encoding it with T5/VLM. This MUST match the training pipeline:
+        #   - robotwin custom pipeline (robotwin_converter + robotwin_agilex_dataset):
+        #       instructions are stored WITH the prefix -> use_scene_prefix=True
+        #   - LeRobot pipeline (add_t5_cache + lerobot_dataset): T5 cache and VLM text
+        #       both use the RAW task string -> use_scene_prefix=False
+        self.use_scene_prefix = use_scene_prefix
         
         # Load configuration
         with open(config_path, 'r') as f:
@@ -179,11 +192,7 @@ class MotusPolicy:
                 head_img = obs_data['head_camera']['rgb']
                 left_img = obs_data['left_camera']['rgb']
                 right_img = obs_data['right_camera']['rgb']
-                
-                left_img_resized = cv2.resize(left_img, (160, 120))
-                right_img_resized = cv2.resize(right_img, (160, 120))
-                bottom_row = np.concatenate([left_img_resized, right_img_resized], axis=1)
-                image = np.concatenate([head_img, bottom_row], axis=0)
+                image = self._stitch_three_cameras(head_img, left_img, right_img)
             else:
                 raise ValueError("Missing camera data")
         elif 'head_camera' in observation:
@@ -196,18 +205,29 @@ class MotusPolicy:
         target_size = (self.config_dict['common']['video_height'],
                       self.config_dict['common']['video_width'])
 
+        # Convert any input to a HWC numpy array first.
         if isinstance(image, np.ndarray):
-            image_tensor = torch.from_numpy(image).permute(2, 0, 1).unsqueeze(0)
+            image_np = image
         else:
-            image_tensor = image
+            t = image
+            if t.dim() == 4:
+                t = t.squeeze(0)
+            image_np = t.permute(1, 2, 0).cpu().numpy()
 
-        if image_tensor.shape[-2:] != target_size:
-            image_np = image_tensor.squeeze(0).permute(1, 2, 0).cpu().numpy()
-            resized_np = resize_with_padding(image_np, target_size)
-            if resized_np.dtype == np.uint8:
-                resized_np = resized_np.astype(np.float32) / 255.0
-            image_tensor = torch.from_numpy(resized_np).permute(2, 0, 1).unsqueeze(0)
-        
+        # Aspect-preserving resize + center pad to the training resolution.
+        # resize_with_padding is a no-op resize when already at target size, so it is
+        # safe to always call (this also guarantees the [0, 1] conversion below runs).
+        resized_np = resize_with_padding(image_np, target_size)
+
+        # ALWAYS normalize to float in [0, 1] to match training (frames are float/255).
+        if resized_np.dtype == np.uint8:
+            resized_np = resized_np.astype(np.float32) / 255.0
+        else:
+            resized_np = resized_np.astype(np.float32)
+            if float(resized_np.max()) > 1.0:
+                resized_np = resized_np / 255.0
+        image_tensor = torch.from_numpy(resized_np).permute(2, 0, 1).unsqueeze(0)
+
         self.obs_cache.append(image_tensor.to(self.device))
 
         # Extract robot state
@@ -231,12 +251,18 @@ class MotusPolicy:
         
         current_frame = self.obs_cache[-1]
 
+        # Build the text prompt. T5 and VLM MUST receive the exact same string that
+        # was used at training time (see use_scene_prefix note in __init__).
+        if self.use_scene_prefix:
+            scene_prefix = ("The whole scene is in a realistic, industrial art style with three views: "
+                            "a fixed rear camera, a movable left arm camera, and a movable right arm camera. "
+                            "The aloha robot is currently performing the following task: ")
+            prompt_text = f"{scene_prefix}{self.current_instruction}"
+        else:
+            prompt_text = self.current_instruction
+
         # Encode instruction with T5
-        scene_prefix = ("The whole scene is in a realistic, industrial art style with three views: "
-                        "a fixed rear camera, a movable left arm camera, and a movable right arm camera. "
-                        "The aloha robot is currently performing the following task: ")
-        instruction = f"{scene_prefix}{self.current_instruction}"
-        t5_out = self.t5_encoder([instruction], self.device)
+        t5_out = self.t5_encoder([prompt_text], self.device)
         if isinstance(t5_out, torch.Tensor):
             t5_list = [t5_out.squeeze(0)] if t5_out.dim() == 3 else [t5_out]
         elif isinstance(t5_out, list):
@@ -244,16 +270,19 @@ class MotusPolicy:
         else:
             raise ValueError("Unexpected T5 encoder output format")
 
-        # Build VLM inputs
+        # Build VLM inputs (same text as T5)
         first_frame_pil = self._tensor_to_pil_image(current_frame.squeeze(0).cpu())
-        vlm_inputs = self._preprocess_vlm_messages(instruction, first_frame_pil)
+        vlm_inputs = self._preprocess_vlm_messages(prompt_text, first_frame_pil)
 
         # Run inference
+        # IMPORTANT: training (LeRobot pipeline) feeds the model NORMALIZED state in [0, 1].
+        # Feed the normalized state here to match training; feeding the raw state makes the
+        # robot diverge ("fly away").
         num_inference_steps = self.config_dict['model']['inference']['num_inference_timesteps']
         with torch.no_grad():
             predicted_frames, predicted_actions = self.model.inference_step(
                 first_frame=current_frame,
-                state=self.current_state,
+                state=self.current_state_norm,
                 num_inference_steps=num_inference_steps,
                 language_embeddings=t5_list,
                 vlm_inputs=[vlm_inputs],
@@ -273,6 +302,10 @@ class MotusPolicy:
                 self._save_frame_grid(condition_frame_viz, predicted_frames_viz)
                 self.step_count += 1
 
+        # The model predicts actions in the NORMALIZED [0, 1] space (training target).
+        # Denormalize back to the real joint scale before returning; skipping this makes
+        # the robot receive ~[0, 1] values as absolute joint targets and "fly away".
+        predicted_actions = self._denormalize_actions(predicted_actions.to(self.device))
         actions_real = predicted_actions.squeeze(0).cpu().numpy()
         self.prev_action = actions_real[-1].copy()
         self.action_cache.extend(actions_real)
@@ -287,27 +320,43 @@ class MotusPolicy:
         np_img = (tensor_chw.permute(1, 2, 0).numpy() * 255.0).astype(np.uint8)
         return Image.fromarray(np_img, mode='RGB')
 
+    def _stitch_three_cameras(self, head_img, left_img, right_img) -> np.ndarray:
+        """Stitch head/left/right cameras into the concatenated layout used at training.
+
+        This mirrors data/lerobot/add_cam_concatenated_to_lerobot_dataset._stitch_frames
+        (and data/utils/multi_camera_concat) exactly:
+          - top   = head camera at its native resolution
+          - bottom height = head_h // 2
+          - each wrist camera occupies half of the head width
+        Computing the wrist sizes dynamically (instead of hardcoding 160x120) keeps the
+        proportions identical to training regardless of the RoboTwin camera resolution.
+        """
+        head = np.asarray(head_img)
+        left = np.asarray(left_img)
+        right = np.asarray(right_img)
+
+        h_high, w_high = head.shape[:2]
+        bottom_h = h_high // 2
+        split_w = w_high // 2
+        right_w = w_high - split_w
+
+        left_resized = cv2.resize(left, (split_w, bottom_h))
+        right_resized = cv2.resize(right, (right_w, bottom_h))
+        bottom_row = np.concatenate([left_resized, right_resized], axis=1)
+        return np.concatenate([head, bottom_row], axis=0)
+
     def _preprocess_vlm_messages(self, instruction: str, image: Image.Image) -> Dict[str, torch.Tensor]:
-        """Build VLM inputs."""
-        messages = [
-            {
-                'role': 'user',
-                'content': [
-                    {'type': 'text', 'text': instruction},
-                    {'type': 'image', 'image': image},
-                ]
-            }
-        ]
-        text = self.vlm_processor.apply_chat_template(messages, add_generation_prompt=False, tokenize=False)
-        encoded = self.vlm_processor(text=[text], images=[image], return_tensors='pt')
+        """Build VLM inputs using the SAME preprocessing as training.
+
+        Reuses utils.vlm_utils.preprocess_vlm_messages so the message ordering
+        (image first, then text), add_generation_prompt=True and qwen process_vision_info
+        all match the training dataloader exactly.
+        """
+        encoded = preprocess_vlm_messages(instruction, image, self.vlm_processor)
         vlm_inputs = {
-            'input_ids': encoded['input_ids'].to(self.device),
-            'attention_mask': encoded['attention_mask'].to(self.device), 
-            'pixel_values': encoded['pixel_values'].to(self.device),
-            'image_grid_thw': encoded.get('image_grid_thw', None)
+            k: (v.to(self.device) if isinstance(v, torch.Tensor) else v)
+            for k, v in encoded.items()
         }
-        if vlm_inputs['image_grid_thw'] is not None:
-            vlm_inputs['image_grid_thw'] = vlm_inputs['image_grid_thw'].to(self.device)
         return vlm_inputs
 
     def _load_normalization_stats(self):
@@ -323,12 +372,22 @@ class MotusPolicy:
             with open(Path(__file__).parent / 'utils' / 'stat.json', 'r') as f:
                 stat_data = _json.load(f)
 
-        stats = stat_data.get('robotwin2')
+        stats = stat_data.get(self.embodiment_type)
         if stats is None:
-            raise ValueError('Normalization stats not found')
+            raise ValueError(
+                f"Normalization stats for embodiment '{self.embodiment_type}' not found in stat.json. "
+                f"Available: {list(stat_data.keys())}"
+            )
+        logger.info(f"Using normalization stats for embodiment: {self.embodiment_type}")
         self.action_min = torch.tensor(stats['min'], dtype=torch.float32, device=self.device)
         self.action_max = torch.tensor(stats['max'], dtype=torch.float32, device=self.device)
         self.action_range = self.action_max - self.action_min
+        # Guard against zero-range dimensions (matches data/utils/norm.py behavior).
+        self.action_range = torch.where(
+            self.action_range == 0,
+            torch.ones_like(self.action_range),
+            self.action_range,
+        )
 
     def _normalize_actions(self, x: torch.Tensor) -> torch.Tensor:
         """Normalize to [0,1]."""
@@ -410,6 +469,10 @@ def get_model(usr_args):
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
     
+    use_scene_prefix = usr_args.get('use_scene_prefix')
+    if use_scene_prefix is None:
+        use_scene_prefix = True
+
     policy = MotusPolicy(
         checkpoint_path=checkpoint_path,
         wan_path=wan_path,
@@ -417,7 +480,9 @@ def get_model(usr_args):
         config_path=str(config_path),
         device=device,
         log_dir=usr_args.get('log_dir'),
-        task_name=usr_args.get('task_name')
+        task_name=usr_args.get('task_name'),
+        embodiment_type=usr_args.get('embodiment_type') or "aloha_agilex_2",
+        use_scene_prefix=bool(use_scene_prefix),
     )
     
     return policy

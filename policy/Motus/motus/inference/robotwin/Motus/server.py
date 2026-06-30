@@ -124,6 +124,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--log_dir", default=None)
     parser.add_argument("--task_name", default=None)
     parser.add_argument("--log_level", default="INFO")
+    parser.add_argument(
+        "--embodiment_type",
+        default=None,
+        help=(
+            "Normalization embodiment stats key in utils/stat.json. MUST match the "
+            "embodiment used at training time (e.g. aloha_agilex_2, robotwin2). "
+            "Defaults to aloha_agilex_2 when omitted."
+        ),
+    )
+    parser.add_argument(
+        "--use_scene_prefix",
+        type=lambda x: str(x).lower() in ["true", "1", "yes"],
+        default=True,
+        help=(
+            "Prepend the scene-description prefix to the instruction before T5/VLM "
+            "encoding. Set False for checkpoints trained with the LeRobot pipeline "
+            "(raw task strings); True for the robotwin custom pipeline."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -140,6 +159,8 @@ def main() -> None:
         "vlm_path": args.vlm_path,
         "log_dir": args.log_dir,
         "task_name": args.task_name,
+        "embodiment_type": args.embodiment_type,
+        "use_scene_prefix": args.use_scene_prefix,
     }
     server = MotusPolicyServer(host=args.host, port=args.port, model_args=model_args)
     server.serve_forever()

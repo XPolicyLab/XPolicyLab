@@ -15,6 +15,9 @@ ckpt_setting: null
 checkpoint_path: null
 model_path: null
 prompt: null
+# Normalization embodiment; MUST match the embodiment used at training time
+# (the RoboDojo checkpoint was trained with embodiment_type: aloha_agilex_2).
+embodiment_type: aloha_agilex_2
 wan_path: /mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B
 vlm_path: /mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct
 log_dir: /tmp/motus_debug_logs
