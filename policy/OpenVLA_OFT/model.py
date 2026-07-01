@@ -204,6 +204,25 @@ def ensure_hwc_uint8(image):
     raise ValueError(f"Unsupported image shape: {image.shape}")
 
 
+def extract_prompt(observation, default_prompt):
+    for key in ("instruction", "instructions", "prompt", "task_instruction"):
+        value = observation.get(key)
+        if value is None:
+            continue
+        if isinstance(value, (list, tuple)):
+            value = value[0] if value else None
+        if value is None:
+            continue
+        if hasattr(value, "item"):
+            value = value.item()
+        if isinstance(value, bytes):
+            value = value.decode("utf-8", errors="replace")
+        text = str(value).strip()
+        if text:
+            return text
+    return default_prompt
+
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
         state = np.asarray(observation["state"], dtype=np.float32)
@@ -212,8 +231,8 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
             "cam_left_wrist": observation["images"]["cam_left_wrist"],
             "cam_right_wrist": observation["images"]["cam_right_wrist"],
         }
-        prompt = observation.get("prompt", default_prompt)
-        return {"state": state, "images": images, "prompt": prompt}
+        prompt = extract_prompt(observation, default_prompt)
+        return {"state": state, "images": images, "prompt": prompt, "instruction": prompt}
 
     if robot_action_dim_info is None:
         raise ValueError("env_cfg is required when encoding raw environment observations.")
@@ -230,7 +249,7 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
         ),
     }
     state = pack_robot_state(observation, action_type, robot_action_dim_info, source_type="obs").astype(np.float32)
-    prompt = observation.get("prompt", default_prompt)
+    prompt = extract_prompt(observation, default_prompt)
     return {
         "full_image": images["cam_high"],
         "left_wrist_image": images["cam_left_wrist"],

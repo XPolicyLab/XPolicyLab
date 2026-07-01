@@ -152,8 +152,27 @@ class Model(ModelTemplate):
         self.reset()
 
 
+def extract_prompt(observation, default_prompt):
+    for key in ("instruction", "instructions", "prompt", "task_instruction"):
+        value = observation.get(key)
+        if value is None:
+            continue
+        if isinstance(value, (list, tuple)):
+            value = value[0] if value else None
+        if value is None:
+            continue
+        if hasattr(value, "item"):
+            value = value.item()
+        if isinstance(value, bytes):
+            value = value.decode("utf-8", errors="replace")
+        text = str(value).strip()
+        if text:
+            return text
+    return default_prompt
+
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
-    prompt = observation.get("prompt", default_prompt)
+    prompt = extract_prompt(observation, default_prompt)
 
     if "images" in observation and "state" in observation:
         packed_state = np.asarray(observation["state"], dtype=np.float32)

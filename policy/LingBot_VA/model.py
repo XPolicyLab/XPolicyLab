@@ -117,6 +117,25 @@ def ensure_hwc_uint8(image):
     raise ValueError(f"Unsupported image shape: {image.shape}")
 
 
+def extract_prompt(observation, default_prompt):
+    for key in ("instruction", "instructions", "prompt", "task_instruction"):
+        value = observation.get(key)
+        if value is None:
+            continue
+        if isinstance(value, (list, tuple)):
+            value = value[0] if value else None
+        if value is None:
+            continue
+        if hasattr(value, "item"):
+            value = value.item()
+        if isinstance(value, bytes):
+            value = value.decode("utf-8", errors="replace")
+        text = str(value).strip()
+        if text:
+            return text
+    return default_prompt
+
+
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     images = {
         "cam_high": ensure_hwc_uint8(
@@ -140,7 +159,7 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
             source_type="obs",
         ).astype(np.float32)
 
-    prompt = observation.get("prompt", default_prompt)
+    prompt = extract_prompt(observation, default_prompt)
 
     return {
         "observation.images.cam_high": images["cam_high"],
