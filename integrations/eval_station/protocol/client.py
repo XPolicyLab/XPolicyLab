@@ -11,11 +11,11 @@ from uuid import uuid4
 
 import websockets
 
-from robodojo.protocol.codec import decode_envelope, encode_frame
-from robodojo.protocol.exceptions import ErrorCode, WsError
-from robodojo.protocol.messages import REQUEST_RESPONSE_PAIRS, MessageType
-from robodojo.protocol.schemas import Frame
-from robodojo.schemas import EvaluationPlanPayload
+from eval_station.protocol.codec import decode_envelope, encode_frame
+from eval_station.protocol.exceptions import ErrorCode, WsError
+from eval_station.protocol.messages import REQUEST_RESPONSE_PAIRS, MessageType
+from eval_station.protocol.schemas import Frame
+from eval_station.schemas import EvaluationPlanPayload
 
 logger = logging.getLogger(__name__)
 

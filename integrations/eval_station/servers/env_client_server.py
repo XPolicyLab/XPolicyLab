@@ -17,10 +17,10 @@ from urllib.parse import quote, urlparse
 
 from pydantic import ValidationError
 
-from robodojo.dispatch.errors import normalize_execution_error
-from robodojo.dispatch.executor import run_dispatch
-from robodojo.env_client.api import EnvClientBaselineConfig, HealthResponse, TrialRunResponse
-from robodojo.env_client.runner import (
+from eval_station.dispatch.errors import normalize_execution_error
+from eval_station.dispatch.executor import run_dispatch
+from eval_station.env_client.api import EnvClientBaselineConfig, HealthResponse, TrialRunResponse
+from eval_station.env_client.runner import (
     DebugTrialRunner,
     TrialRunnerError,
     TrialRunnerFn,
@@ -28,14 +28,14 @@ from robodojo.env_client.runner import (
     make_dispatch_trial_runner,
     reset_idle_env,
 )
-from robodojo.env_client.trial_control import StopRequestResult, TrialControlRegistry
-from robodojo.schemas import DispatchPayload
-from robodojo.servers.preview_routes import (
+from eval_station.env_client.trial_control import StopRequestResult, TrialControlRegistry
+from eval_station.schemas import DispatchPayload
+from eval_station.servers.preview_routes import (
     handle_preview_get,
     handle_preview_post,
     parse_preview_route,
 )
-from robodojo.servers.session_routes import parse_session_route
+from eval_station.servers.session_routes import parse_session_route
 
 
 @dataclass(frozen=True)

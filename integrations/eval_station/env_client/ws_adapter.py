@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any, cast
 
-from robodojo.protocol.client import PolicyEvalClient, PolicyEvalClientConfig
+from eval_station.protocol.client import PolicyEvalClient, PolicyEvalClientConfig
 
 
 class RoboDojoModelClient:

@@ -15,7 +15,7 @@ class TestEnv:
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
         if deploy_cfg.get("protocol", "robodojo_ws") == "robodojo_ws":
-            from robodojo.env_client import RoboDojoModelClient
+            from eval_station.env_client import RoboDojoModelClient
 
             policy_server_url = deploy_cfg["policy_server_url"]
             if policy_server_url is None:

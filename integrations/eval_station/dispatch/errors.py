@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from robodojo.env_client.runner import TrialRunnerError
-from robodojo.protocol.exceptions import WsError
+from eval_station.env_client.runner import TrialRunnerError
+from eval_station.protocol.exceptions import WsError
 
 
 def normalize_execution_error(exc: BaseException) -> dict[str, Any]:

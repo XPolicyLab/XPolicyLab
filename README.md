@@ -360,7 +360,7 @@ When RoboDojo drives trials from the control plane (x-policy-web), the environme
 
 | Setting | Purpose |
 |---|---|
-| `deploy.yml` → `env_client_mode: daemon` | `setup_eval_env_client.sh` launches `python -m robodojo.servers.env_client_server` and listens on `0.0.0.0:19200`. |
+| `deploy.yml` → `env_client_mode: daemon` | `setup_eval_env_client.sh` launches `python -m eval_station.servers.env_client_server` and listens on `0.0.0.0:19200`. |
 | `deploy.yml` → `env_client_mode: run-once` (default) | Local `eval.sh` keeps the existing one-shot debug client path. |
 
 Typical platform startup on the environment / robot station:

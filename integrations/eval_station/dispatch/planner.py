@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from robodojo.schemas import DispatchPayload
+from eval_station.schemas import DispatchPayload
 
 
 def dispatch_for_trial(dispatch: DispatchPayload, trial_index: int) -> DispatchPayload:

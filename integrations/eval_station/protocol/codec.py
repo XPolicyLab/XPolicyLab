@@ -9,8 +9,8 @@ import msgpack_numpy
 import numpy as np
 from pydantic import ValidationError
 
-from robodojo.protocol.exceptions import ErrorCode, WsError
-from robodojo.protocol.schemas import Frame
+from eval_station.protocol.exceptions import ErrorCode, WsError
+from eval_station.protocol.schemas import Frame
 
 
 def _encode_numpy(obj: Any) -> Any:

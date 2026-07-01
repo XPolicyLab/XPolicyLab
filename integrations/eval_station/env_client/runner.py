@@ -9,12 +9,12 @@ from collections.abc import Callable, Mapping
 from typing import Any
 from urllib.parse import urlparse
 
-from robodojo.env_client.api import (
+from eval_station.env_client.api import (
     EnvClientBaselineConfig,
     dispatch_trial_to_deploy_cfg,
 )
-from robodojo.schemas import DispatchPayload
-from robodojo.trial.config import build_trial_run_config
+from eval_station.schemas import DispatchPayload
+from eval_station.trial.config import build_trial_run_config
 
 EnvTrialRunner = Callable[..., dict[str, Any]]
 DebugTrialRunner = EnvTrialRunner
@@ -153,7 +153,7 @@ def _overlay_dispatch_for_reset(
     *,
     evaluation_id: str,
 ) -> dict[str, Any]:
-    from robodojo.dispatch.planner import build_trial_runs
+    from eval_station.dispatch.planner import build_trial_runs
 
     trial_runs = build_trial_runs(dispatch, evaluation_id=evaluation_id)
     if not trial_runs:

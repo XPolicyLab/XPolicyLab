@@ -1,13 +1,13 @@
 """Trial recording publish: S3 upload and finish webhook delivery."""
 
-from robodojo.publish.pipeline import publish_trial_recording
-from robodojo.publish.s3 import (
+from eval_station.publish.pipeline import publish_trial_recording
+from eval_station.publish.s3 import (
     UploadFileFn,
     build_s3_client,
     normalize_s3_prefix,
     upload_file_to_key,
 )
-from robodojo.publish.webhook import (
+from eval_station.publish.webhook import (
     DJANGO_SIGNATURE_HEADER,
     DJANGO_TIMESTAMP_HEADER,
     WEBHOOK_RETRY_ATTEMPTS,

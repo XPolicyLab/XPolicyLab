@@ -6,20 +6,20 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from robodojo.dispatch.errors import normalize_execution_error
-from robodojo.dispatch.planner import dispatch_for_trial, trial_run_for_index
-from robodojo.dispatch.status import (
+from eval_station.dispatch.errors import normalize_execution_error
+from eval_station.dispatch.planner import dispatch_for_trial, trial_run_for_index
+from eval_station.dispatch.status import (
     STATUS_COMPLETED,
     STATUS_DONE,
     STATUS_FAILED,
     STATUS_PLANNED,
 )
-from robodojo.env_client.runner import TrialRunnerFn
-import robodojo.publish.pipeline as publish_pipeline
-from robodojo.publish.s3 import normalize_s3_prefix, resolve_artifact_payload
-from robodojo.publish.webhook import notify_finish_webhook
-from robodojo.schemas import ArtifactPayload, DispatchPayload
-from robodojo.serialization import to_jsonable
+from eval_station.env_client.runner import TrialRunnerFn
+import eval_station.publish.pipeline as publish_pipeline
+from eval_station.publish.s3 import normalize_s3_prefix, resolve_artifact_payload
+from eval_station.publish.webhook import notify_finish_webhook
+from eval_station.schemas import ArtifactPayload, DispatchPayload
+from eval_station.serialization import to_jsonable
 
 PublishSubmitFn = Callable[[Callable[[], Any]], Any]
 
