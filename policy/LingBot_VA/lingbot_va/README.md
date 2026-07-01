@@ -51,6 +51,7 @@ https://github.com/user-attachments/assets/cec7b7a6-953b-4fa4-8f1a-47efc1fce547
 - **Long-Horizon Performance and Generalization**: High improvements in sample efficiency, long-horizon success rates, and generalization to novel scenes.
 
 # 🚀 News
+- **[2026-04-24]** Weights for post-train on **LIBERO-LONG** released! (**IMPORTANT**: Ensure that `va_libero_cfg.action_snr_shift`, `va_libero_cfg.used_action_channel_ids` and `va_libero_cfg.norm_stat` in [`wan_va/configs/va_libero_cfg.py`](wan_va/configs/va_libero_cfg.py) are synchronized with the latest version of the repository.)
 - **[2026-04-08]** Post-training and inference code for the **LIBERO** dataset is now available!
 - **[2026-02-17]** Post-training code and dataset released! Support fine-tuning LingBot-VA on custom robotic manipulation datasets.
 - **[2026-01-29]** Weights and code for shared backbone released! Please stay tuned for our separated version!
@@ -69,12 +70,14 @@ https://github.com/user-attachments/assets/cec7b7a6-953b-4fa4-8f1a-47efc1fce547
 | :--- | :--- | :--- | :--- |
 | lingbot-va-base &nbsp; | [🤗 robbyant/lingbot-va-base &nbsp;](https://huggingface.co/robbyant/lingbot-va-base) | [🤖 Robbyant/lingbot-va-base &nbsp;](https://modelscope.cn/models/Robbyant/lingbot-va-base)  | LingBot-VA w/ shared backbone|
 | lingbot-va-posttrain-robotwin &nbsp; | [🤗 robbyant/lingbot-va-posttrain-robotwin &nbsp;](https://huggingface.co/robbyant/lingbot-va-posttrain-robotwin) | [🤖 Robbyant/lingbot-va-posttrain-robotwin &nbsp;](https://modelscope.cn/models/Robbyant/lingbot-va-posttrain-robotwin)  | LingBot-VA-Posttrain-Robotwin w/ shared backbone|
+| lingbot-va-posttrain-libero-long &nbsp; | [🤗 robbyant/lingbot-va-posttrain-libero-long &nbsp;](https://huggingface.co/robbyant/lingbot-va-posttrain-libero-long) | [🤖 Robbyant/lingbot-va-posttrain-libero-long &nbsp;](https://modelscope.cn/models/Robbyant/lingbot-va-posttrain-libero-long)  | LingBot-VA-Posttrain-LIBERO-LONG w/ shared backbone|
 
 - **Post-Training Dataset**
 
-| Dataset Name | Repository | Description |
-| :--- | :--- | :--- |
-| robotwin-clean-and-aug-lerobot &nbsp; | [🤗 robbyant/robotwin-clean-and-aug-lerobot](https://huggingface.co/datasets/robbyant/robotwin-clean-and-aug-lerobot) | Cleaned & augmented RoboTwin dataset in LeRobot format for post-training |
+| Dataset Name | Huggingface Repository | ModelScope Repository | Description |
+| :--- | :--- | :--- | :--- |
+| robotwin-clean-and-aug-lerobot &nbsp; | [🤗 robbyant/robotwin-clean-and-aug-lerobot](https://huggingface.co/datasets/robbyant/robotwin-clean-and-aug-lerobot) | [🤖 Robbyant/robotwin-clean-and-aug-lerobot](https://modelscope.cn/datasets/Robbyant/robotwin-clean-and-aug-lerobot) | Cleaned & augmented RoboTwin dataset in LeRobot format for post-training |
+| libero-long-lerobot &nbsp; | [🤗 robbyant/libero-long-lerobot](https://huggingface.co/datasets/robbyant/libero-long-lerobot) | [🤖 Robbyant/libero-long-lerobot](https://modelscope.cn/datasets/Robbyant/libero-long-lerobot) | LIBERO-Long dataset in LeRobot format for post-training |
 ---
 
 # 🛠️ Quick Start
@@ -208,8 +211,7 @@ It is important to note that the inference server and client must be deployed on
 
 
 ### Evaluation on LIBERO
-For LIBERO, we recommend using the following training dataset:
-[LIBERO LONG](https://drive.google.com/file/d/1QGNkvsb1hlRmRkKCgFlyWitv17sRuagS/view?usp=sharing)
+Follow the official instructions to install LIBERO, then launch the server and client:
 
 
 ```bash

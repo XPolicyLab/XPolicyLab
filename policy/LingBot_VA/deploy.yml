@@ -7,12 +7,32 @@ expert_data_num: null
 seed: 0
 eval_batch: false
 eval_env: debug
+protocol: legacy_tcp
 
 config_name: robotwin30_train
-checkpoint_path: "/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21"
-base_model_path: "/mnt/xspark-data/xspark_shared/model_weights/lingbot-va-base"
+checkpoint_path: "/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21_new/checkpoint_step_1000"
+base_model_path: "/mnt/nas/shared_model_weights/lingbot-va-base"
 action_type: joint
 
+# closed_loop: official paper-style autoregressive KV cache (real robot).
+# receding_horizon: replan from current frame each chunk (better for offline replay diag).
+rollout_mode: closed_loop
+
+# Align with official robotwin eval data-update logic: execute the full chunk,
+# keyframe stride = action_per_frame // 4 (=3), skip the first frame (=action_per_frame).
+# These are the model.py defaults, so we leave keyframe_stride / chunk_exec_steps /
+# initial_action_skip unset (no override) to faithfully match robotwin.
+
+# Language instruction: leave unset to use the instruction embedded in the
+# replayed HDF5 episode (root-level `instruction` dataset), injected into
+# obs["instruction"] by replay_robot and forwarded to the server at first-chunk
+# reset. Set `prompt: "..."` here to override with a fixed instruction instead.
+# prompt: "Sort the objects by category into the three baskets."
+
 result_dir: "./results/LingBot_VA/"
+
+# Official wan_va_server websocket endpoint (launch_wan_va_server.sh).
+va_server_host: "127.0.0.1"
+va_server_port: 10001
 
 obs_transform_pipeline: "xspark-v1.0"

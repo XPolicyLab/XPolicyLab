@@ -52,26 +52,40 @@ export RANK=0
 export LOCAL_RANK=0
 export WORLD_SIZE=1
 
+# Upstream LingBot VA server (launch_wan_va_server.sh) address.
+# Override via env vars VA_SERVER_HOST / VA_SERVER_PORT; otherwise fall back
+# to deploy.yml's va_server_host / va_server_port.
+OVERRIDE_LIST=(
+    port="${policy_server_port}"
+    host="${policy_server_host}"
+    dataset_name="${dataset_name}"
+    task_name="${task_name}"
+    ckpt_name="${ckpt_name}"
+    env_cfg_type="${env_cfg_type}"
+    env_cfg="${env_cfg_type}"
+    expert_data_num="${expert_data_num}"
+    seed="${seed}"
+    policy_name="${policy_name}"
+    action_type="${action_type}"
+    action_dim="${action_dim}"
+    checkpoint_path="${CHECKPOINT_PATH}"
+    base_model_path="${BASE_MODEL_PATH}"
+    config_name="${config_name}"
+)
+
+if [[ -n "${VA_SERVER_HOST:-}" ]]; then
+    OVERRIDE_LIST+=("va_server_host=${VA_SERVER_HOST}")
+    echo "[SERVER] override va_server_host=${VA_SERVER_HOST}"
+fi
+if [[ -n "${VA_SERVER_PORT:-}" ]]; then
+    OVERRIDE_LIST+=("va_server_port=${VA_SERVER_PORT}")
+    echo "[SERVER] override va_server_port=${VA_SERVER_PORT}"
+fi
+
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
-            port="${policy_server_port}" \
-            host="${policy_server_host}" \
-            port="${policy_server_port}" \
-            host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
-            task_name="${task_name}" \
-            ckpt_name="${ckpt_name}" \
-            env_cfg_type="${env_cfg_type}" \
-            env_cfg="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
-            seed="${seed}" \
-            policy_name="${policy_name}" \
-            action_type="${action_type}" \
-            action_dim="${action_dim}" \
-            checkpoint_path="${CHECKPOINT_PATH}" \
-            base_model_path="${BASE_MODEL_PATH}" \
-            config_name="${config_name}"
+            "${OVERRIDE_LIST[@]}"

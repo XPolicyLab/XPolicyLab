@@ -28,9 +28,9 @@ va_libero_cfg.video_exec_step = -1
 va_libero_cfg.action_num_inference_steps = 50
 
 va_libero_cfg.snr_shift = 5.0
-va_libero_cfg.action_snr_shift = 1.0
+va_libero_cfg.action_snr_shift = 0.05
 
-va_libero_cfg.used_action_channel_ids = list(range(0, 6)) + list(range(28, 29))
+va_libero_cfg.used_action_channel_ids = list(range(0, 7))
 inverse_used_action_channel_ids = [len(va_libero_cfg.used_action_channel_ids)
                                    ] * va_libero_cfg.action_dim
 for i, j in enumerate(va_libero_cfg.used_action_channel_ids):
@@ -46,7 +46,8 @@ va_libero_cfg.norm_stat = {
         -0.12107142806053162,
         -0.15964286029338837,
         -0.26571428775787354,
-    ] + [0.] * 22 + [-1.0, 0.],
+        -1.0
+    ] + [0.] * 23,
     "q99": [
         0.8999999761581421,
         0.8544642925262451,
@@ -54,5 +55,6 @@ va_libero_cfg.norm_stat = {
         0.17142857611179352,
         0.1842857152223587,
         0.34392857551574707,
-    ] + [0.] * 22 + [1.0, 0.],
+        1.0
+    ] + [0.] * 23,
 }

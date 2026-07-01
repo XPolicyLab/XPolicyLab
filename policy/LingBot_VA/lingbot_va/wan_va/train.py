@@ -53,7 +53,7 @@ class Trainer:
             wandb.login(host=os.environ['WANDB_BASE_URL'], key=os.environ['WANDB_API_KEY'])
             self.wandb = wandb
             self.wandb.init(
-                # entity=os.environ["WANDB_TEAM_NAME"],
+                entity=os.environ["WANDB_TEAM_NAME"],
                 project=os.getenv("WANDB_PROJECT", "va_robotwin"),
                 # dir=log_dir,
                 config=config,
@@ -85,6 +85,7 @@ class Trainer:
             transformer_path,
             torch_dtype=torch.float32,
             torch_device='cpu',
+            attn_mode="flex"
         )
 
         logger.info("Setting up activation checkpointing ...")
@@ -124,7 +125,7 @@ class Trainer:
             num_replicas=config.world_size,
             rank=config.rank,
             shuffle=True,
-            seed=getattr(config, "seed", 42)
+            seed=42
         ) if config.world_size > 1 else None
         self.train_loader = DataLoader(
             train_dataset,
@@ -518,9 +519,6 @@ def run(args):
 
     if args.save_root is not None:
         config.save_root = args.save_root
-    if args.seed is not None:
-        config.seed = args.seed
-        torch.manual_seed(args.seed)
 
     if rank == 0:
         logger.info(f"Using config: {args.config_name}")
@@ -544,12 +542,6 @@ def main():
         type=str,
         default=None,
         help="Root directory for saving checkpoints",
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        default=None,
-        help="Training seed used by samplers and torch.",
     )
 
     args = parser.parse_args()

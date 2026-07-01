@@ -16,6 +16,11 @@ if [ $# -ne 0 ]; then
     overrides="$*"
 fi
 
+export WANDB_API_KEY="your key"
+export WANDB_BASE_URL="your url"
+export WANDB_TEAM_NAME="your team name"
+export WANDB_PROJECT="your project"
+
 ## node setting
 num_gpu=${NGPU}
 master_port=${MASTER_PORT}

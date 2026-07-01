@@ -1,5 +1,3 @@
-import argparse
-import copy
 import os
 import sys
 from pathlib import Path
@@ -9,9 +7,8 @@ import numpy as np
 
 _CUR_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _CUR_DIR.parents[3]
-_WAN_VA_ROOT = _CUR_DIR / "lingbot_va" / "wan_va"
 
-for _path in (str(_REPO_ROOT), str(_WAN_VA_ROOT)):
+for _path in (str(_REPO_ROOT),):
     if _path not in sys.path:
         sys.path.insert(0, _path)
 
@@ -23,53 +20,14 @@ from XPolicyLab.utils.process_data import (
     unpack_robot_state,
 )
 
+from .lingbot_va.evaluation.robotwin.websocket_client_policy import WebsocketClientPolicy
 from .lingbot_va.wan_va.configs import VA_CONFIGS
-from .lingbot_va.wan_va.distributed.util import init_distributed
-from .lingbot_va.wan_va.wan_va_server import VA_Server
 
-
+DEFAULT_VA_SERVER_HOST = "127.0.0.1"
+DEFAULT_VA_SERVER_PORT = 29536
 DEFAULT_CONFIG_NAME = "robotwin30_train"
 
-
-def resolve_lingbot_wan_paths(
-    checkpoint_path: str,
-    base_model_path: str,
-) -> tuple[str, str]:
-    """Resolve base (vae/tokenizer/text_encoder) and finetuned transformer paths."""
-    if not checkpoint_path:
-        raise ValueError("checkpoint_path is required (set in deploy.yml or eval overrides).")
-    if not base_model_path:
-        raise ValueError("base_model_path is required (set in deploy.yml).")
-
-    ckpt_root = Path(checkpoint_path).expanduser().resolve()
-    if not ckpt_root.is_dir():
-        raise FileNotFoundError(f"Checkpoint directory not found: {ckpt_root}")
-
-    transformer_candidates = (
-        ckpt_root / "checkpoints" / "transformer",
-        ckpt_root / "transformer",
-    )
-    for transformer_path in transformer_candidates:
-        if (transformer_path / "config.json").exists():
-            base_root = Path(base_model_path).expanduser().resolve()
-            if not (base_root / "vae").is_dir():
-                raise FileNotFoundError(
-                    f"Base model directory missing vae/: {base_root}. "
-                    "Set base_model_path in deploy.yml."
-                )
-            return str(base_root), str(transformer_path)
-
-    if (ckpt_root / "vae").is_dir():
-        transformer_path = ckpt_root / "transformer"
-        if not (transformer_path / "config.json").exists():
-            raise FileNotFoundError(f"Transformer checkpoint not found under: {ckpt_root}")
-        return str(ckpt_root), str(transformer_path)
-
-    raise FileNotFoundError(
-        f"Unrecognized checkpoint layout under {ckpt_root}. "
-        "Expected checkpoints/transformer/ (SFT export) or vae/ + transformer/ (full bundle)."
-    )
-
+# 30-dim LingBot layout -> 14-dim RoboDojo joint.
 JOINT_CONTROL_INDICES = np.array([
     14, 15, 16, 17, 18, 19,
     28,
@@ -117,25 +75,6 @@ def ensure_hwc_uint8(image):
     raise ValueError(f"Unsupported image shape: {image.shape}")
 
 
-def extract_prompt(observation, default_prompt):
-    for key in ("instruction", "instructions", "prompt", "task_instruction"):
-        value = observation.get(key)
-        if value is None:
-            continue
-        if isinstance(value, (list, tuple)):
-            value = value[0] if value else None
-        if value is None:
-            continue
-        if hasattr(value, "item"):
-            value = value.item()
-        if isinstance(value, bytes):
-            value = value.decode("utf-8", errors="replace")
-        text = str(value).strip()
-        if text:
-            return text
-    return default_prompt
-
-
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     images = {
         "cam_high": ensure_hwc_uint8(
@@ -159,7 +98,7 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
             source_type="obs",
         ).astype(np.float32)
 
-    prompt = extract_prompt(observation, default_prompt)
+    prompt = observation.get("instruction") or observation.get("prompt") or default_prompt
 
     return {
         "observation.images.cam_high": images["cam_high"],
@@ -171,14 +110,25 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
 
 
 class Model(ModelTemplate):
+    """RoboDojo bridge client -> official wan_va_server (WebsocketPolicyServer)."""
+
     def __init__(self, model_cfg) -> None:
         self.model_cfg = dict(model_cfg)
 
-        self.model_cfg.setdefault("config_name", DEFAULT_CONFIG_NAME)
-
         self.task_name = self.model_cfg.get("task_name", "default_task")
         self.action_type = self.model_cfg["action_type"]
-        self.default_prompt = self.model_cfg.get("prompt", self.task_name)
+        # Explicitly-configured prompt (deploy.yml) is authoritative and overrides
+        # any env-injected obs["instruction"]; None when not configured.
+        self._prompt_override = self.model_cfg.get("prompt")
+        self.default_prompt = self._prompt_override or (
+            "Cover the blocks from left to right, remember their colors, then uncover them in the order: red, green, and blue."
+        )
+
+        config_name = self.model_cfg.get("config_name", DEFAULT_CONFIG_NAME)
+        self.job_config = VA_CONFIGS[config_name]
+        self.obs_cam_keys = list(self.job_config.obs_cam_keys)
+        self.action_dim = int(self.job_config.action_dim)
+        self.action_per_frame = int(self.job_config.action_per_frame)
 
         env_cfg = self.model_cfg.get("env_cfg")
         if env_cfg is None:
@@ -192,67 +142,67 @@ class Model(ModelTemplate):
 
         self.observation_window: list[dict[str, Any]] | None = None
         self._latest_env_idx_list: list[int] = [0]
-        # Per-env streaming state. LingBot_VA generates action chunks autoregressively
-        # and must refresh its KV cache from the executed-step observations before the
-        # next chunk. The standard eval loop only calls update_obs/get_action, so we
-        # buffer those observations here and drive the KV-cache update internally.
-        self._env_states: dict[int, dict[str, Any]] = {}
+        self._skip_leading_chunk_on_next_action = True
+        self._first_observation: dict[str, Any] | None = None
+        self._latest_raw_action_chunk: np.ndarray | None = None
+        self._exec_obs_buffer: list[dict[str, Any]] = []
+        self._last_exec_step_count = 0
+        self.rollout_mode = str(self.model_cfg.get("rollout_mode", "closed_loop"))
+        self.keyframe_stride = self.model_cfg.get("keyframe_stride")
+        self.chunk_exec_steps = self.model_cfg.get("chunk_exec_steps")
+        self.initial_action_skip = self.model_cfg.get("initial_action_skip")
 
-        self.vla = self.get_model(self.model_cfg)
+        # Imagined-video saving: when enabled, ask the server to decode predicted
+        # latents each chunk and persist them under result_dir/imagined/.
+        self.save_imagined_video = bool(self.model_cfg.get("save_imagined_video", False))
+        self._imagined_dir: Path | None = None
+        self._chunk_seq = 0
+        if self.save_imagined_video:
+            result_dir = Path(self.model_cfg.get("result_dir", "./results/LingBot_VA"))
+            self._imagined_dir = result_dir / "imagined"
+            self._imagined_dir.mkdir(parents=True, exist_ok=True)
 
-    def get_model(self, model_cfg):
-        config_name = model_cfg.get("config_name", DEFAULT_CONFIG_NAME)
-        if config_name not in VA_CONFIGS:
-            raise KeyError(f"Unknown config_name: {config_name}")
+        self.va_server_host = self.model_cfg.get("va_server_host", DEFAULT_VA_SERVER_HOST)
+        self.va_server_port = int(self.model_cfg.get("va_server_port", DEFAULT_VA_SERVER_PORT))
 
-        job_config = copy.deepcopy(VA_CONFIGS[config_name])
-
-        if model_cfg.get("save_root") is not None:
-            job_config.save_root = model_cfg["save_root"]
-
-        checkpoint_path = (
-            model_cfg.get("checkpoint_path")
-            or model_cfg.get("wan22_pretrained_model_name_or_path")
-        )
-        base_model_path = model_cfg.get("base_model_path")
-        base_path, transformer_path = resolve_lingbot_wan_paths(
-            str(checkpoint_path) if checkpoint_path else "",
-            str(base_model_path) if base_model_path else "",
-        )
-
-        model_cfg["checkpoint_path"] = transformer_path
-        job_config.wan22_pretrained_model_name_or_path = base_path
-        job_config.transformer_pretrained_path = transformer_path
+        print(f"[LingBot_VA] rollout_mode={self.rollout_mode}", flush=True)
         print(
-            f"[LingBot_VA] base_model={base_path}, transformer={transformer_path}",
+            f"[LingBot_VA] va_server=ws://{self.va_server_host}:{self.va_server_port}, "
+            f"config_name={config_name}",
             flush=True,
         )
-        if hasattr(job_config, "infer_mode"):
-            job_config.infer_mode = "server"
+        print(f"[LingBot_VA] save_imagined_video={self.save_imagined_video}, "
+              f"model_cfg keys={list(self.model_cfg.keys())[:10]}", flush=True)
 
-        rank = int(os.getenv("RANK", 0))
-        local_rank = int(os.getenv("LOCAL_RANK", 0))
-        world_size = int(os.getenv("WORLD_SIZE", 1))
+        self._ws = self._connect_client()
+        print(
+            f"[LingBot_VA] keyframe_stride={self._resolve_keyframe_stride()}, "
+            f"chunk_exec_steps={self._resolve_chunk_exec_steps()}, "
+            f"initial_action_skip={self._resolve_initial_action_skip()}",
+            flush=True,
+        )
 
-        if world_size > 1:
-            init_distributed(world_size, local_rank, rank)
+    def _connect_client(self) -> WebsocketClientPolicy:
+        return WebsocketClientPolicy(
+            host=self.va_server_host,
+            port=self.va_server_port,
+        )
 
-        job_config.rank = rank
-        job_config.local_rank = local_rank
-        job_config.world_size = world_size
-
-        model = VA_Server(job_config)
-        model._reset(prompt=self.default_prompt)
-        return model
+    def _soft_reset_inference_state(self):
+        """Clear server KV/VAE state (receding-horizon replan)."""
+        self._ws.infer({"reset": True, "prompt": self.default_prompt})
+        self._skip_leading_chunk_on_next_action = True
+        self._first_observation = None
+        self._latest_raw_action_chunk = None
+        self._exec_obs_buffer = []
 
     def _to_engine_obs(self, observation):
-        image_dict = {
-            key: observation[key]
-            for key in self.vla.job_config.obs_cam_keys
-        }
+        # Match deploy_policy.py: infer only sends {obs, prompt}, not state.
+        # The server _infer() ignores obs['state']; only compute_kv_cache uses
+        # state (passed separately as the full action chunk).
+        image_dict = {key: observation[key] for key in self.obs_cam_keys}
         return {
             "obs": [image_dict],
-            "state": observation["observation.state"],
             "prompt": observation["task"],
         }
 
@@ -261,10 +211,7 @@ class Model(ModelTemplate):
         prompt = self.default_prompt
 
         for observation in observation_list:
-            image_dict = {
-                key: observation[key]
-                for key in self.vla.job_config.obs_cam_keys
-            }
+            image_dict = {key: observation[key] for key in self.obs_cam_keys}
             obs_batch.append(image_dict)
             prompt = observation.get("task", prompt)
 
@@ -281,7 +228,7 @@ class Model(ModelTemplate):
 
         if action.ndim == 3:
             action = np.transpose(action, (1, 2, 0)).reshape(-1, action.shape[0])
-        elif action.ndim == 2 and action.shape[0] == self.vla.job_config.action_dim:
+        elif action.ndim == 2 and action.shape[0] == self.action_dim:
             action = action.T
 
         return action
@@ -303,64 +250,31 @@ class Model(ModelTemplate):
 
         return action_chunk[:, JOINT_CONTROL_INDICES]
 
-    def _new_env_state(self):
-        return {
-            "first_obs": None,            # anchor observation reused for streaming infer
-            "raw_action": None,           # last raw (C, F, H) action chunk for KV-cache state
-            "skip_leading": True,         # trim the conditioning frame from the first chunk
-            "inferred_once": False,       # whether the first chunk has been generated
-            "cache_buffer": [],           # executed-step observations awaiting KV-cache update
-        }
+    def _resolve_keyframe_stride(self) -> int:
+        if self.keyframe_stride is not None:
+            return max(1, int(self.keyframe_stride))
+        if self.action_per_frame <= 0:
+            return 1
+        return max(1, self.action_per_frame // 4)
 
-    def _get_env_state(self, env_idx):
-        state = self._env_states.get(env_idx)
-        if state is None:
-            state = self._new_env_state()
-            self._env_states[env_idx] = state
-        return state
+    def _resolve_initial_action_skip(self) -> int:
+        if self.initial_action_skip is not None:
+            return max(0, int(self.initial_action_skip))
+        return self.action_per_frame
 
-    def _vae_temporal_compression(self):
-        """WAN VAE temporal downsample factor (4): every `factor` sampled frames
-        (after the first) collapse into one latent frame."""
-        vae = getattr(self.vla, "vae", None)
-        if vae is not None and hasattr(vae, "config"):
-            factor = getattr(vae.config, "scale_factor_temporal", None)
-            if factor:
-                return int(factor)
-        return 4
+    def _resolve_chunk_exec_steps(self) -> int | None:
+        if self.chunk_exec_steps is None:
+            return None
+        steps = int(self.chunk_exec_steps)
+        return steps if steps > 0 else None
 
-    def _select_keyframes(self, cache_buffer):
-        """Pick the sampled frames that reconstruct the generated latent frames.
-
-        Training latents come from encoding the full clip at once with the WAN VAE,
-        which compresses every `temporal_compression` sampled frames (at the 10fps
-        sampling stride) into ONE latent frame. The sampling stride in executed-step
-        units is `action_per_frame / temporal_compression` (= frame_stride). To make
-        the streaming `encode_chunk` reproduce the training latents, we must feed
-        `temporal_compression` images per generated latent frame -- one observation
-        every `frame_stride` executed steps -- NOT a single keyframe per latent frame.
-
-        The executed-step observations arrive one per action step in `cache_buffer`,
-        so picking `cache_buffer[frame_stride-1::frame_stride]` yields the 10fps
-        samples (steps 3, 6, 9, 12, ...) that align with the training frame_ids.
-        """
-        if not cache_buffer:
-            return []
-        action_per_frame = int(getattr(self.vla.job_config, "action_per_frame", 0)) or 1
-        temporal_compression = self._vae_temporal_compression()
-        frame_stride = max(1, action_per_frame // temporal_compression)
-        keyframes = cache_buffer[frame_stride - 1::frame_stride]
-        if not keyframes:
-            keyframes = [cache_buffer[-1]]
-        return keyframes
-
-    def _maybe_trim_initial_action_chunk(self, state, action_chunk):
+    def _maybe_trim_initial_action_chunk(self, action_chunk):
         action_chunk = np.asarray(action_chunk)
 
-        if not state["skip_leading"]:
+        if not self._skip_leading_chunk_on_next_action:
             return action_chunk
 
-        skip_count = int(getattr(self.vla.job_config, "action_per_frame", 0))
+        skip_count = self._resolve_initial_action_skip()
         if skip_count <= 0:
             return action_chunk
 
@@ -370,38 +284,101 @@ class Model(ModelTemplate):
                 f"chunk_len={action_chunk.shape[0]}, skip_count={skip_count}."
             )
 
-        state["skip_leading"] = False
+        self._skip_leading_chunk_on_next_action = False
         return action_chunk[skip_count:]
 
-    def _infer_env(self, env_idx, encoded_obs):
-        """Generate one action chunk for a single env, advancing its KV cache first."""
-        state = self._get_env_state(env_idx)
+    def _maybe_truncate_action_chunk(self, action_chunk):
+        exec_steps = self._resolve_chunk_exec_steps()
+        if exec_steps is None or action_chunk.shape[0] <= exec_steps:
+            return action_chunk
+        return action_chunk[:exec_steps]
 
-        if not state["inferred_once"]:
-            # First chunk: anchor on this observation; VA_Server encodes it (frame_st_id=0).
-            state["first_obs"] = encoded_obs
-        else:
-            # Subsequent chunk: refresh the KV cache with the executed-step observations
-            # before generating. _select_keyframes returns temporal_compression (=4)
-            # sampled frames per generated latent frame so the streaming VAE produces
-            # the same latent count/content as the full-clip encode used in training,
-            # keeping frame_st_id aligned with the committed action frames.
-            keyframes = self._select_keyframes(state["cache_buffer"])
-            if keyframes and state["raw_action"] is not None:
-                cache_obs = self._to_engine_obs_batch(keyframes, state=state["raw_action"])
-                cache_obs["compute_kv_cache"] = True
-                self.vla.infer(cache_obs)
-            state["cache_buffer"] = []
-
-        model_obs = self._to_engine_obs(state["first_obs"])
-        result = self.vla.infer(model_obs)
-        state["raw_action"] = np.asarray(result["action"])
-        state["inferred_once"] = True
-
+    def _predict_chunk(self, observation):
+        payload = self._to_engine_obs(observation)
+        if self.save_imagined_video:
+            payload["save_visualization"] = True
+        result = self._ws.infer(payload)
+        self._latest_raw_action_chunk = np.asarray(result["action"])
+        if self.save_imagined_video and result.get("video") is not None:
+            self._save_imagined_chunk(np.asarray(result["video"]))
         action = self._format_action_chunk(result["action"])
         action = self._convert_to_joint_control_chunk(action)
-        action = self._maybe_trim_initial_action_chunk(state, action)
+        action = self._maybe_trim_initial_action_chunk(action)
+        action = self._maybe_truncate_action_chunk(action)
+        # Remember how many env steps this chunk will actually execute so that
+        # _commit_executed_frames samples keyframes over exactly that span
+        # (matching the official robotwin eval cadence).
+        self._last_exec_step_count = int(action.shape[0])
         return action
+
+    def _save_imagined_chunk(self, video: np.ndarray) -> None:
+        """Persist one chunk's imagined frames: npz + a tiled jpg preview."""
+        if self._imagined_dir is None:
+            return
+        seq = self._chunk_seq
+        self._chunk_seq += 1
+        np.savez_compressed(self._imagined_dir / f"chunk_{seq:05d}.npz", video=video)
+        try:
+            from PIL import Image
+
+            frames = np.asarray(video)
+            if frames.ndim == 4:
+                if frames.shape[-1] not in (1, 3) and frames.shape[1] in (1, 3):
+                    frames = np.transpose(frames, (0, 2, 3, 1))
+                if frames.shape[-1] == 1:
+                    frames = np.repeat(frames, 3, axis=-1)
+                frames = frames.astype(np.float32)
+                frames = np.clip(frames, 0.0, 1.0) if frames.max() <= 1.0 else np.clip(frames, 0, 255)
+                frames = (frames * 255.0).astype(np.uint8) if frames.max() <= 1.0 else frames.astype(np.uint8)
+                n, h, w, _ = frames.shape
+                cols = min(n, 4)
+                rows = int(np.ceil(n / cols))
+                tile = Image.new("RGB", (w * cols, h * rows), (0, 0, 0))
+                for i, frame in enumerate(frames):
+                    tile.paste(Image.fromarray(frame.astype(np.uint8)), ((i % cols) * w, (i // cols) * h))
+                tile.save(self._imagined_dir / f"chunk_{seq:05d}.jpg", quality=85)
+        except Exception as exc:
+            print(f"[LingBot_VA] failed to save imagined jpg: {exc}", flush=True)
+
+    def _commit_executed_frames(self):
+        if self._latest_raw_action_chunk is None:
+            return
+        stride = self._resolve_keyframe_stride()
+        exec_steps = int(getattr(self, "_last_exec_step_count", 0)) or len(self._exec_obs_buffer)
+        # deploy_policy.py samples keyframes at (j+1)%action_per_frame==0, i.e. at
+        # steps stride, 2*stride, ..., exec_steps (1-indexed, inclusive of last).
+        # The RoboDojo harness calls update_obs after every take_action EXCEPT the
+        # last (it breaks before update_obs), so the buffer holds exec_steps-1
+        # frames. We sample from the buffer and append observation_window[0]
+        # (which IS the post-last-step observation set by the next update_obs)
+        # to match deploy_policy's inclusive last keyframe.
+        n_obs = len(self._exec_obs_buffer)
+        usable = min(n_obs, exec_steps - 1)  # buffer has at most exec_steps-1
+        # Indices (0-based) of keyframes in buffer: stride-1, 2*stride-1, ...
+        indices = list(range(stride - 1, usable, stride))
+        key_frames = [self._exec_obs_buffer[i] for i in indices if i < n_obs]
+
+        # Append the "last step" keyframe from observation_window if available.
+        # observation_window[0] is the obs AFTER the last take_action of this
+        # chunk (set by the harness's next update_obs before get_action).
+        if self.observation_window is not None and len(key_frames) < (exec_steps // stride):
+            key_frames.append(self.observation_window[0])
+
+        if not key_frames:
+            key_frames = self._exec_obs_buffer[:]
+
+        cache_obs = self._to_engine_obs_batch(key_frames, state=self._latest_raw_action_chunk)
+        cache_obs["compute_kv_cache"] = True
+        self._ws.infer(cache_obs)
+        self._exec_obs_buffer = []
+
+    def infer(self, observation):
+        if observation.get("reset"):
+            self.reset(
+                checkpoint_path=observation.get("checkpoint_path"),
+            )
+            return dict(action=None)
+        return dict(action=self._predict_chunk(observation))
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])
@@ -413,19 +390,39 @@ class Model(ModelTemplate):
             for obs in obs_list
         ]
         self.observation_window = encoded_obs_list
+        if self._first_observation is not None:
+            self._exec_obs_buffer.append(encoded_obs_list[0])
 
-        # Buffer executed-step observations so the next get_action can refresh the KV cache.
-        for index, env_idx in enumerate(self._latest_env_idx_list):
-            state = self._env_states.get(env_idx)
-            if state is not None and state["inferred_once"]:
-                state["cache_buffer"].append(encoded_obs_list[index])
+    def _reset_server_with_instruction(self, observation):
+        """Reset the server with the episode instruction before the first chunk.
+
+        The server encodes the prompt embedding only at reset; matching the
+        official robotwin eval (reset(prompt=instruction) -> infer(first_obs)).
+        """
+        # obs["instruction"] (carried as encoded "task") wins over the deploy.yml
+        # prompt override; fall back to configured prompt, then default_prompt.
+        prompt = observation.get("task") or self._prompt_override or self.default_prompt
+        print(f"[LingBot_VA] reset server with instruction: {prompt!r}", flush=True)
+        self._ws.infer({"reset": True, "prompt": prompt})
+        self._skip_leading_chunk_on_next_action = True
+        self._latest_raw_action_chunk = None
+        self._exec_obs_buffer = []
+        self._chunk_seq = 0
 
     def get_action(self, **kwargs):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        env_idx = self._latest_env_idx_list[0] if self._latest_env_idx_list else 0
-        action_chunk = self._infer_env(env_idx, self.observation_window[0])
+        if self.rollout_mode == "receding_horizon":
+            self._soft_reset_inference_state()
+            action_chunk = self._predict_chunk(self.observation_window[0])
+        else:
+            if self._first_observation is None:
+                self._reset_server_with_instruction(self.observation_window[0])
+                self._first_observation = self.observation_window[0]
+            else:
+                self._commit_executed_frames()
+            action_chunk = self._predict_chunk(self._first_observation)
 
         if self.robot_action_dim_info is None:
             return action_chunk
@@ -441,61 +438,48 @@ class Model(ModelTemplate):
         if self.observation_window is None:
             raise AssertionError("update_obs or update_obs_batch first!")
 
-        env_idx_list = env_idx_list or self._latest_env_idx_list
-        action_list = []
-
-        # VA_Server holds a single streaming state, so envs are stepped sequentially
-        # (brute-force) rather than truly batched. Correct for one running env at a time.
-        for batch_index, env_idx in enumerate(env_idx_list):
-            action_chunk = self._infer_env(env_idx, self.observation_window[batch_index])
-
-            if self.robot_action_dim_info is None:
-                action_list.append(action_chunk)
+        if self.rollout_mode == "receding_horizon":
+            self._soft_reset_inference_state()
+            action_chunk = self._predict_chunk(self.observation_window[0])
+        else:
+            if self._first_observation is None:
+                self._reset_server_with_instruction(self.observation_window[0])
+                self._first_observation = self.observation_window[0]
             else:
-                action_list.append(
-                    unpack_robot_state(
-                        action_chunk,
-                        self.action_type,
-                        self.robot_action_dim_info,
-                        source_type="obs",
-                    )
-                )
+                self._commit_executed_frames()
+            action_chunk = self._predict_chunk(self._first_observation)
 
-        return action_list
+        env_idx_list = env_idx_list or self._latest_env_idx_list
+
+        if self.robot_action_dim_info is None:
+            return [action_chunk for _ in env_idx_list]
+
+        unpacked = unpack_robot_state(
+            action_chunk,
+            self.action_type,
+            self.robot_action_dim_info,
+            source_type="obs",
+        )
+        return [unpacked for _ in env_idx_list]
 
     def get_action_per_frame(self):
-        return int(getattr(self.vla.job_config, "action_per_frame", 0))
+        return self.action_per_frame
+
+    def get_keyframe_interval(self):
+        return self._resolve_keyframe_stride()
 
     def reset(self, checkpoint_path=None) -> None:
         if checkpoint_path is not None:
-            self.model_cfg["checkpoint_path"] = checkpoint_path
-            self.vla = self.get_model(self.model_cfg)
-        else:
-            self.vla._reset(prompt=self.default_prompt)
-
+            print(
+                "[WARN] checkpoint_path reload is not supported in websocket bridge mode; "
+                "restart wan_va_server with the new checkpoint.",
+                flush=True,
+            )
+        self._ws.infer({"reset": True, "prompt": self.default_prompt})
         self.observation_window = None
         self._latest_env_idx_list = [0]
-        self._env_states = {}
-
-
-def _make_fake_obs(prompt: str):
-    h, w = 224, 224
-    return {
-        "vision": {
-            "cam_high": np.random.randint(0, 255, (h, w, 3), dtype=np.uint8),
-            "cam_left_wrist": np.random.randint(0, 255, (h, w, 3), dtype=np.uint8),
-            "cam_right_wrist": np.random.randint(0, 255, (h, w, 3), dtype=np.uint8),
-        },
-        "joint_action": {
-            "left_gripper": 0.0,
-            "left_arm": [0.0] * 6,
-            "right_gripper": 0.0,
-            "right_arm": [0.0] * 6,
-        },
-        "endpose": {
-            "left_endpose": [0.0] * 6,
-            "right_endpose": [0.0] * 6,
-        },
-        "prompt": prompt,
-        "env_idx": 0,
-    }
+        self._skip_leading_chunk_on_next_action = True
+        self._first_observation = None
+        self._latest_raw_action_chunk = None
+        self._exec_obs_buffer = []
+        self._chunk_seq = 0
