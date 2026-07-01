@@ -6,8 +6,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from robodojo.protocol.exceptions import ErrorCode, WsError
-from robodojo.protocol.messages import MessageType
+from eval_station.protocol.exceptions import ErrorCode, WsError
+from eval_station.protocol.messages import MessageType
 
 
 def _utc_now_iso() -> str:

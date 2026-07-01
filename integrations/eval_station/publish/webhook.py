@@ -13,7 +13,7 @@ import urllib.request
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from robodojo.schemas import ArtifactPayload
+from eval_station.schemas import ArtifactPayload
 
 
 DJANGO_SIGNATURE_HEADER = "X-RoboDojo-Signature-256"

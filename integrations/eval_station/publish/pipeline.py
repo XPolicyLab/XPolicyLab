@@ -7,15 +7,15 @@ import urllib.error
 from pathlib import Path
 from typing import Any
 
-from robodojo.dispatch.errors import normalize_execution_error
-from robodojo.dispatch.status import STATUS_COMPLETED, STATUS_FAILED
-from robodojo.publish.s3 import (
+from eval_station.dispatch.errors import normalize_execution_error
+from eval_station.dispatch.status import STATUS_COMPLETED, STATUS_FAILED
+from eval_station.publish.s3 import (
     UploadFileFn,
     resolve_artifact_payload,
     upload_file_to_key,
 )
-from robodojo.publish.webhook import WebhookDeliveryError, notify_finish_webhook
-from robodojo.schemas import DispatchPayload
+from eval_station.publish.webhook import WebhookDeliveryError, notify_finish_webhook
+from eval_station.schemas import DispatchPayload
 
 
 def _publish_exception_types() -> tuple[type[BaseException], ...]:

@@ -15,10 +15,10 @@ from typing import Any
 import yaml
 from websockets.asyncio.server import Server, ServerConnection, serve
 
-from robodojo.protocol.codec import decode_envelope, encode_frame
-from robodojo.protocol.exceptions import ErrorCode, WsError
-from robodojo.protocol.messages import MessageType
-from robodojo.protocol.schemas import Frame
+from eval_station.protocol.codec import decode_envelope, encode_frame
+from eval_station.protocol.exceptions import ErrorCode, WsError
+from eval_station.protocol.messages import MessageType
+from eval_station.protocol.schemas import Frame
 
 logger = logging.getLogger(__name__)
 

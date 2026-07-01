@@ -7,8 +7,8 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from robodojo.schemas import DispatchPayload
-from robodojo.trial.config import build_trial_run_config, normalize_policy_name
+from eval_station.schemas import DispatchPayload
+from eval_station.trial.config import build_trial_run_config, normalize_policy_name
 
 DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS = (
     "dataset_name",

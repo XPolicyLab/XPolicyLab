@@ -1,6 +1,6 @@
 """Env-side trial execution: HTTP contract, in-process runner, and WS adapter."""
 
-from robodojo.env_client.api import (
+from eval_station.env_client.api import (
     DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS,
     EnvClientBaselineConfig,
     HealthResponse,
@@ -12,7 +12,7 @@ from robodojo.env_client.api import (
     dispatch_trial_to_request,
     trial_request_to_deploy_cfg,
 )
-from robodojo.env_client.runner import (
+from eval_station.env_client.runner import (
     DebugTrialRunner,
     EnvTrialRunner,
     StopCheckFactory,
@@ -23,7 +23,7 @@ from robodojo.env_client.runner import (
     run_debug_trial,
     run_real_trial,
 )
-from robodojo.env_client.ws_adapter import RoboDojoModelClient
+from eval_station.env_client.ws_adapter import RoboDojoModelClient
 
 __all__ = [
     "DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS",

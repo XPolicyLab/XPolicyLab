@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from robodojo.schemas import DispatchPayload, EvaluationTrialPayload
+from eval_station.schemas import DispatchPayload, EvaluationTrialPayload
 
 
 @dataclass(frozen=True)

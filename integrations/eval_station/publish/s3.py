@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 
-from robodojo.schemas import ArtifactPayload
+from eval_station.schemas import ArtifactPayload
 
 UploadFileFn = Callable[[str, Path, str | None], None]
 
