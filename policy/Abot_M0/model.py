@@ -95,7 +95,7 @@ def decode_compressed_image(image_buffer: np.ndarray) -> np.ndarray:
 
 
 def prepare_rgb_image(image: np.ndarray) -> np.ndarray:
-    """Decode compressed/CHW observations and convert OpenCV BGR to RGB."""
+    """Decode compressed/CHW observations into HWC uint8 RGB."""
     image = np.asarray(image)
     if image.ndim == 1 and image.dtype == np.uint8:
         image = decode_compressed_image(image)
@@ -103,7 +103,7 @@ def prepare_rgb_image(image: np.ndarray) -> np.ndarray:
         image = np.transpose(image, (1, 2, 0))
     if image.ndim != 3 or image.shape[-1] != 3:
         raise ValueError(f"Expected HWC RGB image, got shape {image.shape}")
-    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return image
 
 
 def resize_image(image: np.ndarray, size: tuple[int, int]) -> np.ndarray:
