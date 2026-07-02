@@ -30,7 +30,7 @@ with_absolute: false
 # rel_only : decode the relative half only (safe default; rel stats are identity).
 # rel_abs  : 1:1 blend rel + abs (slerp on quaternion); needs abs stats in norm pkl.
 # abs_only : decode the absolute half only.
-blend_mode: abs_only
+blend_mode: rel_only
 
 # --- Action execution cadence ---
 # exc_action_size     : number of env steps executed per network forward.
