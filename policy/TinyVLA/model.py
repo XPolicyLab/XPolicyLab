@@ -82,8 +82,7 @@ class Model(ModelTemplate):
     def _encode_obs(self, obs):
         cam_chws = []
         for cam_key in self.camera_keys:
-            bgr = np.asarray(obs["vision"][cam_key]["color"])
-            rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+            rgb = np.asarray(obs["vision"][cam_key]["color"])
             rgb = cv2.resize(rgb, (640, 480), interpolation=cv2.INTER_AREA)
             cam_chws.append(np.transpose(rgb, (2, 0, 1)))
 

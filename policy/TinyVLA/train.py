@@ -220,8 +220,11 @@ def load_images(path, start_ts):
     with h5py.File(path, "r") as root:
         for cam_key in CAMERA_KEYS:
             raw = root["vision"][cam_key]["colors"][start_ts]
-            bgr = raw if raw.ndim == 3 else decode_image_bit(raw)
-            rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+            if raw.ndim == 3:
+                rgb = raw
+            else:
+                # OpenCV decodes compressed image bytes as BGR; XPolicyLab stores images as RGB.
+                rgb = cv2.cvtColor(decode_image_bit(raw), cv2.COLOR_BGR2RGB)
             rgb = cv2.resize(rgb, TARGET_SIZE, interpolation=cv2.INTER_AREA)
             images.append(rgb)
     return np.stack(images, axis=0)

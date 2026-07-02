@@ -123,7 +123,7 @@ class EpisodicDataset(torch.utils.data.Dataset):
             if compressed:
                 for cam_name in image_dict.keys():
                     decompressed_image = cv2.imdecode(image_dict[cam_name], 1)
-                    image_dict[cam_name] = np.array(decompressed_image)
+                    image_dict[cam_name] = cv2.cvtColor(decompressed_image, cv2.COLOR_BGR2RGB)
 
             # get all actions after and including start_ts
             if is_sim:
@@ -152,10 +152,6 @@ class EpisodicDataset(torch.utils.data.Dataset):
         qpos_data = torch.from_numpy(qpos).float()
         action_data = torch.from_numpy(padded_action).float()
         is_pad = torch.from_numpy(is_pad).bool()
-
-        # convert the image data from BGR to RGB format 
-        if 'top' in self.camera_names:
-            image_data = torch.stack([torch.from_numpy(cv2.cvtColor(img.numpy(), cv2.COLOR_BGR2RGB)) for img in image_data], dim=0)
 
         # channel last
         image_data = torch.einsum('k h w c -> k c h w', image_data)
