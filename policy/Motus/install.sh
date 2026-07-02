@@ -1,5 +1,5 @@
-# XPolicyLab deploy: policy server env=motus; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
+# XPolicyLab deploy: policy server env=motus; run setup_eval_policy_server.sh with this env.
 set -euo pipefail
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,6 +24,7 @@ fi
 conda activate "${MOTUS_CONDA_ENV}"
 
 pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
+pip install packaging psutil ninja wheel
 pip install flash-attn --no-build-isolation
 
 cd "${MOTUS_ROOT}"
@@ -33,6 +34,6 @@ pip install -r requirements/lerobot.txt
 pip install -e .
 
 cd "${XPOLICYLAB_ROOT}"
-pip install -e .
+pip install -e ".[robodojo]"
 
 echo "[Motus] Installation finished. conda activate ${MOTUS_CONDA_ENV}"

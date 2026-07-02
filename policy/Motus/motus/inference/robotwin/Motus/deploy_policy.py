@@ -1,5 +1,6 @@
 # Motus Policy for RoboTwin
 
+import inspect
 import torch
 import torch.nn as nn
 import numpy as np
@@ -8,6 +9,8 @@ from pathlib import Path
 import sys
 import os
 import logging
+import json
+import hashlib
 from typing import List, Dict, Any, Optional
 from collections import deque
 import yaml
@@ -40,8 +43,11 @@ class MotusPolicy:
     Implements the joint video-action diffusion model for robotic control.
     """
     
-    def __init__(self, checkpoint_path: str, config_path: str, wan_path: str, vlm_path: str, device: str = "cuda", log_dir: Optional[str] = None, task_name: Optional[str] = None, embodiment_type: str = "aloha_agilex_2", use_scene_prefix: bool = True):
+    def __init__(self, checkpoint_path: str, config_path: str, wan_path: str, vlm_path: str, device: str = "cuda", log_dir: Optional[str] = None, task_name: Optional[str] = None, embodiment_type: str = "aloha_agilex_2", use_scene_prefix: bool = True, t5_device: Optional[str] = None, t5_cache_dir: Optional[str] = None):
         self.device = device
+        self.t5_device = t5_device or device
+        self.t5_cache_dir = Path(t5_cache_dir).expanduser().resolve() if t5_cache_dir else None
+        self.t5_cache_index = self._load_t5_cache_index(self.t5_cache_dir)
         self.checkpoint_path = checkpoint_path
         self.wan_path = wan_path
         self.vlm_path = vlm_path
@@ -65,14 +71,18 @@ class MotusPolicy:
         # Initialize model WITHOUT loading pretrained backbones
         self.model = self._load_model()
 
-        # Initialize T5 encoder for language embeddings (WAN text encoder)
-        self.t5_encoder = T5EncoderModel(
-            text_len=512,
-            dtype=torch.bfloat16,
-            device=device,
-            checkpoint_path=os.path.join(self.wan_path, 'models_t5_umt5-xxl-enc-bf16.pth'),
-            tokenizer_path=os.path.join(self.wan_path, 'google', 'umt5-xxl'),
-        )
+        # Initialize T5 encoder only when no pre-encoded cache is configured.
+        # Loading the full T5 encoder at runtime needs ~41GB VRAM; cached embeddings
+        # keep deployment within a 24GB GPU.
+        self.t5_encoder = None
+        if self.t5_cache_index is None:
+            self.t5_encoder = T5EncoderModel(
+                text_len=512,
+                dtype=torch.bfloat16,
+                device=self.t5_device,
+                checkpoint_path=os.path.join(self.wan_path, 'models_t5_umt5-xxl-enc-bf16.pth'),
+                tokenizer_path=os.path.join(self.wan_path, 'google', 'umt5-xxl'),
+            )
 
         # Initialize VLM processor from vlm_path (for tokenization only, weights from checkpoint)
         self.vlm_processor = AutoProcessor.from_pretrained(self.vlm_path, trust_remote_code=True)
@@ -105,6 +115,57 @@ class MotusPolicy:
         """Set the current instruction for the policy."""
         self.current_instruction = instruction
         logger.info(f"Instruction set: {instruction}")
+
+    def _load_t5_cache_index(self, cache_dir: Optional[Path]) -> Optional[Dict[str, Any]]:
+        if cache_dir is None:
+            return None
+
+        manifest_path = cache_dir / "manifest.json"
+        if not manifest_path.is_file():
+            raise FileNotFoundError(f"t5_cache_dir is set but manifest.json was not found: {manifest_path}")
+
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+
+        entries = manifest.get("entries", {})
+        if not isinstance(entries, dict):
+            raise ValueError(f"Invalid T5 cache manifest: expected dict at entries in {manifest_path}")
+
+        logger.info(f"Loaded {len(entries)} pre-encoded T5 embeddings from {cache_dir}")
+        return entries
+
+    @staticmethod
+    def _prompt_cache_key(prompt_text: str) -> str:
+        return hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+
+    def _get_t5_embeddings(self, prompt_text: str) -> List[torch.Tensor]:
+        if self.t5_cache_index is not None:
+            cache_key = self._prompt_cache_key(prompt_text)
+            entry = self.t5_cache_index.get(cache_key)
+            if entry is None:
+                preview = prompt_text[:200].replace("\n", "\\n")
+                raise KeyError(
+                    f"T5 embedding cache miss for prompt sha256={cache_key}. "
+                    f"Preview: {preview!r}. Rebuild the cache with this instruction."
+                )
+
+            embed_path = self.t5_cache_dir / entry["file"]
+            loaded = torch.load(embed_path, map_location="cpu")
+            if isinstance(loaded, torch.Tensor):
+                return [loaded]
+            if isinstance(loaded, list) and all(isinstance(t, torch.Tensor) for t in loaded):
+                return loaded
+            raise ValueError(f"Unsupported cached T5 embedding format in {embed_path}")
+
+        if self.t5_encoder is None:
+            raise RuntimeError("No T5 encoder or T5 cache is available.")
+
+        t5_out = self.t5_encoder([prompt_text], self.t5_device)
+        if isinstance(t5_out, torch.Tensor):
+            return [t5_out.squeeze(0)] if t5_out.dim() == 3 else [t5_out]
+        if isinstance(t5_out, list):
+            return t5_out
+        raise ValueError("Unexpected T5 encoder output format")
 
     def _load_model(self) -> Motus:
         """Load the Motus model without pretrained backbones, then load checkpoint."""
@@ -261,14 +322,8 @@ class MotusPolicy:
         else:
             prompt_text = self.current_instruction
 
-        # Encode instruction with T5
-        t5_out = self.t5_encoder([prompt_text], self.device)
-        if isinstance(t5_out, torch.Tensor):
-            t5_list = [t5_out.squeeze(0)] if t5_out.dim() == 3 else [t5_out]
-        elif isinstance(t5_out, list):
-            t5_list = t5_out
-        else:
-            raise ValueError("Unexpected T5 encoder output format")
+        # Load pre-encoded T5 embeddings, or encode with T5 if no cache is configured.
+        t5_list = self._get_t5_embeddings(prompt_text)
 
         # Build VLM inputs (same text as T5)
         first_frame_pil = self._tensor_to_pil_image(current_frame.squeeze(0).cpu())
@@ -483,7 +538,22 @@ def get_model(usr_args):
         task_name=usr_args.get('task_name'),
         embodiment_type=usr_args.get('embodiment_type') or "aloha_agilex_2",
         use_scene_prefix=bool(use_scene_prefix),
+        t5_device=usr_args.get('t5_device'),
+        t5_cache_dir=usr_args.get('t5_cache_dir'),
     )
+
+    # Keep standalone robotwin entrypoints compatible with Qwen3-VL rope indexing.
+    vlm_model = getattr(getattr(getattr(policy, "model", None), "vlm_model", None), "model", None)
+    if vlm_model is not None and not getattr(vlm_model, "_xpolicylab_rope_index_patched", False):
+        original_get_rope_index = vlm_model.get_rope_index
+        if "mm_token_type_ids" not in inspect.signature(original_get_rope_index).parameters:
+
+            def _get_rope_index_compat(*args, **kwargs):
+                kwargs.pop("mm_token_type_ids", None)
+                return original_get_rope_index(*args, **kwargs)
+
+            vlm_model.get_rope_index = _get_rope_index_compat
+            vlm_model._xpolicylab_rope_index_patched = True
     
     return policy
 

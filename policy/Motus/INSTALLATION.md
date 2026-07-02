@@ -17,6 +17,7 @@ conda create -n motus python=3.10 -y
 conda activate motus
 
 pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
+pip install packaging psutil ninja wheel
 pip install flash-attn --no-build-isolation
 ```
 

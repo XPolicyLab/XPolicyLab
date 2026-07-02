@@ -8,7 +8,8 @@ expert_data_num: null
 action_type: joint
 seed: 0
 eval_batch: false
-eval_env: debug
+eval_env: sim
+protocol: legacy_tcp
 
 # Motus-specific arguments
 ckpt_setting: null
@@ -23,3 +24,6 @@ vlm_path: /mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct
 log_dir: /tmp/motus_debug_logs
 global_downsample_rate: 1
 video_action_freq_ratio: 6
+# RoboDojo checkpoint uses LeRobot raw task strings for T5/VLM (no scene prefix).
+use_scene_prefix: false
+t5_cache_dir: /mnt/xspark-data/zijian/XPolicyLab_main/policy/Motus/t5_cache/RoboDojo_first100
