@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import cv2
 import numpy as np
 
 from XPolicyLab.model_template import ModelTemplate
@@ -182,10 +181,7 @@ def extract_image(observation: dict[str, Any], candidate_names: list[str]) -> An
 
 
 def decode_compressed_image(image_buffer: np.ndarray) -> np.ndarray:
-    image = decode_image_bit(image_buffer)
-    if image.ndim == 3 and image.shape[-1] == 3:
-        return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    return image
+    return decode_image_bit(image_buffer)
 
 
 def ensure_hwc_uint8(image: Any) -> np.ndarray:
