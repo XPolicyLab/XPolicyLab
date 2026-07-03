@@ -18,8 +18,6 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 UPSTREAM_DIR = os.path.join(CURRENT_DIR, "GalaxeaVLA")
 CONFIG_DIR = os.path.join(UPSTREAM_DIR, "configs")
 
-STD_W, STD_H = 320, 240
-
 CAM_NAME_CANDIDATES = {
     "cam_high": ["cam_high", "cam_head", "head_camera", "top_camera"],
     "cam_left_wrist": ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"],
@@ -135,6 +133,10 @@ class Model(ModelTemplate):
 
         raw_shape = self.image_shape_meta[0]["raw_shape"]
         self._img_h, self._img_w = int(raw_shape[1]), int(raw_shape[2])
+        self.action_horizon = int(cfg.data.dataset.action_size)
+        self.replan_steps = self._resolve_replan_steps(model_cfg.get("replan_steps"))
+        if self.replan_steps is not None:
+            self.replan_steps = min(self.replan_steps, self.action_horizon)
 
         self.policy, self.processor = self._build(cfg)
         self.model = self.policy
@@ -142,6 +144,18 @@ class Model(ModelTemplate):
 
         self._sample_batch: dict | None = None
         self._latest_env_idx_list: list[int] = [0]
+        print(
+            f"[GalaxeaVLA] action_horizon={self.action_horizon} "
+            f"replan_steps={self.replan_steps or self.action_horizon}",
+            flush=True,
+        )
+
+    @staticmethod
+    def _resolve_replan_steps(value) -> int | None:
+        """null -> execute full predicted chunk; otherwise cap to [1, action_horizon]."""
+        if value is None:
+            return None
+        return max(1, int(value))
 
     def _compose_config(self, model_cfg: dict[str, Any]):
         from hydra import compose, initialize_config_dir
@@ -289,7 +303,9 @@ class Model(ModelTemplate):
             )
             if isinstance(steps, dict):
                 steps = [steps]
-            result.append(steps)
+            n_exec = self.replan_steps if self.replan_steps is not None else len(steps)
+            n_exec = min(n_exec, len(steps), self.action_horizon)
+            result.append(steps[:n_exec])
         return result
 
     def reset(self):

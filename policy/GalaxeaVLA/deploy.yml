@@ -29,5 +29,9 @@ paligemma_path: null
 # Flow-matching denoising steps at inference (null -> use the config default).
 num_inference_steps: null
 
+# Actions executed per inference before re-planning. null = full action chunk (32).
+# Default 5 matches official Galaxea libero eval (replan_steps).
+replan_steps: null
+
 # Extra hydra overrides forwarded to compose(), e.g. ["model.model_arch.foo=bar"].
 hydra_overrides: []

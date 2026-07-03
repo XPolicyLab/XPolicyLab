@@ -1,8 +1,7 @@
 dataset:
   _target_: galaxea_fm.data.galaxea_lerobot_dataset.GalaxeaLerobotDataset
 
-  dataset_dirs:
-    - /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30
+  dataset_dirs: null
 
   lerobot_ds_version: "3.0"
   video_backend: pyav
