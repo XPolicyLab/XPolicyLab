@@ -31,7 +31,7 @@ hf download OpenGalaxea/G0-VLA --include "G0Plus_3B_base/*" \
 
 ## 2. 数据转换
 
-HDF5 → Galaxea LeRobot；相机 RGB `(240,320,3)`；state/action 为 `left_arm/left_gripper/right_arm/right_gripper`。
+HDF5 → Galaxea LeRobot（`dual_arm_joint_robodojo` 格式）；相机 RGB `(480,640,3)`，key 为 `cam_high` / `cam_left_wrist` / `cam_right_wrist`；state/action 为 flat 14 维 `observation.state` / `action`。
 
 ### 2.1 单任务
 
@@ -70,7 +70,7 @@ bash train.sh RoboDojo cotrain arx_x5 100 joint 0 0,1,2,3,4,5,6,7
 ```bash
 bash eval.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 0 GalaxeaVLA XPolicyLab
 ```
-`deploy.yml` 中 `eval_env`：`debug` → `sim` → `real`。
+`deploy.yml` 中 `eval_env`：`debug` → `sim` → `real`。`replan_steps`（默认 `5`）控制每次推理后实际执行的动作步数，`null` 表示执行完整 chunk（32 步）。
 
 ---
 
@@ -79,7 +79,7 @@ bash eval.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 0 GalaxeaVLA XPolicyL
 | 文件 | 用途 |
 |---|---|
 | `model.py` | joint 推理（`pack_robot_state` / `unpack_robot_state`） |
-| `GalaxeaVLA/configs/data/xpolicylab/dual_arm_joint*.yaml` | joint 数据 shape_meta |
+| `GalaxeaVLA/configs/data/xpolicylab/dual_arm_joint_robodojo.yaml` | joint 数据 shape_meta（train/deploy 统一） |
 | `GalaxeaVLA/configs/task/real/g0plus_xpolicylab_finetune.yaml` | 微调 task 配置 |
 
 ---

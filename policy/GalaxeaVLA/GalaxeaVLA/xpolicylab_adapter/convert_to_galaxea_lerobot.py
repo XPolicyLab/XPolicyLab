@@ -1,7 +1,9 @@
-"""Convert XPolicyLab HDF5 episodes into Galaxea LeRobot format (v2.1/v3).
+"""Convert XPolicyLab HDF5 episodes into Galaxea LeRobot format (v3).
 
 Uses the upstream LeRobotDataset writer for byte-compatible output.
-Camera frames are standardized to RGB HWC (240, 320, 3).
+Output matches ``xpolicylab/dual_arm_joint_robodojo``:
+  - flat 14-dim ``observation.state`` / ``action``
+  - cameras ``cam_high``, ``cam_left_wrist``, ``cam_right_wrist`` (RGB HWC 480x640)
 """
 
 import argparse
@@ -22,11 +24,11 @@ from XPolicyLab.utils.process_data import (
 
 from galaxea_fm.data.lerobot.lerobot_dataset_v3 import LeRobotDataset
 
-STD_W, STD_H = 320, 240
+STD_W, STD_H = 640, 480
 CAM_MAP = {
-    "cam_head": "head_rgb",
-    "cam_left_wrist": "left_wrist_rgb",
-    "cam_right_wrist": "right_wrist_rgb",
+    "cam_head": "cam_high",
+    "cam_left_wrist": "cam_left_wrist",
+    "cam_right_wrist": "cam_right_wrist",
 }
 
 
@@ -44,11 +46,11 @@ def _state_keys(robot_action_dim_info: dict):
 
 
 def _build_features(key_dims):
-    features = {}
-    for name, dim in key_dims:
-        features[f"observation.state.{name}"] = {"dtype": "float32", "shape": (dim,), "names": None}
-    for name, dim in key_dims:
-        features[f"action.{name}"] = {"dtype": "float32", "shape": (dim,), "names": None}
+    vec_dim = sum(dim for _, dim in key_dims)
+    features = {
+        "observation.state": {"dtype": "float32", "shape": (vec_dim,), "names": None},
+        "action": {"dtype": "float32", "shape": (vec_dim,), "names": None},
+    }
     for cam_key in CAM_MAP.values():
         features[f"observation.images.{cam_key}"] = {
             "dtype": "video",
@@ -56,14 +58,6 @@ def _build_features(key_dims):
             "names": ["height", "width", "channel"],
         }
     return features
-
-
-def _split(packed_row, key_dims):
-    out, offset = {}, 0
-    for name, dim in key_dims:
-        out[name] = packed_row[offset:offset + dim].astype(np.float32)
-        offset += dim
-    return out
 
 
 def _standardize(rgb: np.ndarray) -> np.ndarray:
@@ -116,11 +110,10 @@ def _add_episode(dataset, hdf5_path, key_dims, robot_action_dim_info, action_typ
 
     num_frames = state_all.shape[0]
     for t in tqdm(range(num_frames), desc=position, leave=False):
-        frame = {}
-        for name, value in _split(state_all[t], key_dims).items():
-            frame[f"observation.state.{name}"] = value
-        for name, value in _split(action_all[t], key_dims).items():
-            frame[f"action.{name}"] = value
+        frame = {
+            "observation.state": state_all[t].astype(np.float32),
+            "action": action_all[t].astype(np.float32),
+        }
         for cam_key, frames in decoded.items():
             frame[f"observation.images.{cam_key}"] = _standardize(frames[t])
         frame["task"] = instruction

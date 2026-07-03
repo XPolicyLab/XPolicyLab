@@ -22,7 +22,7 @@ use_l1_regression: true
 use_proprio: true
 use_diffusion: false
 num_images_in_input: 3
-center_crop: false
+center_crop: true
 lora_rank: 32
 num_open_loop_steps: 25
 

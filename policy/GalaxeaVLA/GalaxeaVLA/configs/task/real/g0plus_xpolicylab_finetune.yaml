@@ -1,6 +1,7 @@
 # @package _global_
-# G0Plus_3B joint fine-tune on RoboDojo_sim_arx-x5_v30 (LeRobot v3.0, 14-dim
-# dual-arm joint, 3 cameras). Override pretrained_ckpt / dataset_dirs as needed.
+# G0Plus_3B joint fine-tune on XPolicyLab / RoboDojo LeRobot v3.0 datasets
+# (flat 14-dim state/action, cam_high / cam_left_wrist / cam_right_wrist).
+# Override pretrained_ckpt / dataset_dirs via train.sh or hydra CLI.
 
 defaults:
   - override /data: xpolicylab/dual_arm_joint_robodojo
@@ -12,5 +13,5 @@ model:
 
 data:
   dataset:
-    dataset_dirs:
-      - /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30
+    lerobot_ds_version: "3.0"
+    dataset_dirs: null

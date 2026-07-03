@@ -112,7 +112,7 @@ def write_video(frames_bgr_list, out_path: Path, fps: float):
     )
     try:
         for bgr in frames_bgr_list:
-            writer.append_data(bgr[:, :, ::-1])   # BGR -> RGB
+            writer.append_data(bgr)
     finally:
         writer.close()
 

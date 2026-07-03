@@ -11,7 +11,7 @@ runs in a separate conda env and talks to us over a socket.
 
 The Hy-Embodied source tree (providing the ``hy_vla`` package and the
 ``robotwin_eval`` adapter) is located via ``hy_root`` in deploy.yml, the
-``HY_VLA_ROOT`` env var, or — by default — a ``Hy-Embodied-0.5-VLA`` checkout
+``HY_VLA_ROOT`` env var, or -- by default -- a ``Hy-Embodied-0.5-VLA`` checkout
 placed next to this policy directory. Clone it from:
     https://github.com/Tencent-Hunyuan/Hy-Embodied-0.5-VLA
 
@@ -22,6 +22,12 @@ Data path per inference (mirrors Hy-VLA's own robotwin_eval adapter):
     -> PosRotMat6d -> normalize -> model forward -> denormalize
     -> RT-relative -> absolute UMI PosQuat -> inverse_umi_transform (-> RoboDojo)
     -> xyzw->wxyz -> per-step {left,right}_ee_pose (wxyz) + {left,right}_ee_joint_state dicts
+
+Batched inference: ``update_obs_batch`` / ``get_action_batch`` maintain
+*per-env* observation and MEM history buffers keyed by ``env_idx`` so that
+parallel rollouts never contaminate each other's temporal context. Each env's
+chunk is decoded independently, then the results are assembled in the same
+order as the requested ``env_idx`` list.
 """
 from __future__ import annotations
 
@@ -40,7 +46,7 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info
 # Hy-Embodied source tree resolution order:
 #   1. model_cfg["hy_root"] (deploy.yml)
 #   2. $HY_VLA_ROOT
-#   3. a sibling ``Hy-Embodied-0.5-VLA`` checkout next to this policy dir.
+#   3. a sibling "Hy-Embodied-0.5-VLA" checkout next to this policy dir.
 _POLICY_DIR = Path(__file__).resolve().parent
 _DEFAULT_HY_VLA_ROOT = str(_POLICY_DIR / "Hy-Embodied-0.5-VLA")
 
@@ -314,12 +320,14 @@ class Model(ModelTemplate):
 
         self.use_video_encoder = bool(self.config.use_video_encoder)
 
-        # Per-episode state.
+        # --- Per-episode state, keyed by env_idx for batched rollouts. ---
+        # Each parallel env keeps its own latest encoded observation and its own
+        # MEM video-encoder frame history, so envs never share temporal context.
         self.action_cache: deque[np.ndarray] = deque()
-        self._top_imgs: list[np.ndarray] = []
-        self._left_imgs: list[np.ndarray] = []
-        self._right_imgs: list[np.ndarray] = []
-        self.observation_window: list[dict] | None = None
+        self._obs_by_env: dict[int, dict] = {}
+        self._top_imgs_by_env: dict[int, list[np.ndarray]] = {}
+        self._left_imgs_by_env: dict[int, list[np.ndarray]] = {}
+        self._right_imgs_by_env: dict[int, list[np.ndarray]] = {}
         self._latest_env_idx_list: list[int] = [0]
         print(f"[hy_vla] model ready (video_encoder={self.use_video_encoder}, "
               f"blend={self.blend_mode}, exc={self.exc_action_size}, "
@@ -359,33 +367,47 @@ class Model(ModelTemplate):
         }
 
     def update_obs(self, obs):
+        # Single-env path: env_idx defaults to 0 if the env didn't tag it.
+        if "env_idx" not in obs:
+            obs = {**obs, "env_idx": 0}
         self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
+        """Encode and store the latest observation for each env, and append the
+        raw frames to that env's own MEM history buffer.
+
+        Per-env keying is what makes batched inference correct: with one shared
+        buffer the video-encoder history of every env would be dominated by
+        whichever env happened to be updated last.
+        """
         self._latest_env_idx_list = [obs.get("env_idx", i) for i, obs in enumerate(obs_list)]
-        self.observation_window = [self.encode_obs(obs) for obs in obs_list]
-        if self.use_video_encoder:
-            for batch in self.observation_window:
-                self._top_imgs.append(batch["raw_images.top_head"])
-                self._left_imgs.append(batch["raw_images.hand_left"])
-                self._right_imgs.append(batch["raw_images.hand_right"])
+        for env_idx, obs in zip(self._latest_env_idx_list, obs_list):
+            batch = self.encode_obs(obs)
+            self._obs_by_env[env_idx] = batch
+            if self.use_video_encoder:
+                self._top_imgs_by_env.setdefault(env_idx, []).append(batch["raw_images.top_head"])
+                self._left_imgs_by_env.setdefault(env_idx, []).append(batch["raw_images.hand_left"])
+                self._right_imgs_by_env.setdefault(env_idx, []).append(batch["raw_images.hand_right"])
 
     # ------------------------------------------------------------------
     # Action generation
     # ------------------------------------------------------------------
     def get_action(self, **kwargs):
-        if self.observation_window is None:
+        if not self._obs_by_env:
             raise AssertionError("call update_obs first")
-        batch = self.observation_window[0]
-        chunk16 = self._infer_chunk_wxyz(batch)          # (T, 16) wxyz
+        env_idx = self._latest_env_idx_list[0]
+        chunk16 = self._infer_chunk_wxyz(env_idx)          # (T, 16) wxyz
         return self._chunk_to_action_dicts(chunk16)
 
     def get_action_batch(self, env_idx_list=None, **kwargs):
-        if self.observation_window is None:
+        if not self._obs_by_env:
             raise AssertionError("call update_obs_batch first")
-        # The MEM history buffers are single-env; serve each env sequentially.
-        return [self._chunk_to_action_dicts(self._infer_chunk_wxyz(b))
-                for b in self.observation_window]
+        # Decode each env independently against its own obs + history buffer.
+        # Default to the env order from the most recent update_obs_batch.
+        if env_idx_list is None:
+            env_idx_list = self._latest_env_idx_list
+        return [self._chunk_to_action_dicts(self._infer_chunk_wxyz(env_idx))
+                for env_idx in env_idx_list]
 
     def _chunk_to_action_dicts(self, chunk16_wxyz: np.ndarray) -> list[dict]:
         steps = []
@@ -400,9 +422,10 @@ class Model(ModelTemplate):
         return steps
 
     @torch.no_grad()
-    def _infer_chunk_wxyz(self, batch: dict) -> np.ndarray:
-        """Run one flow-matching forward; return a (exc_action_size, 16)
-        dual-arm PosQuat chunk in RoboTwin wxyz layout."""
+    def _infer_chunk_wxyz(self, env_idx: int) -> np.ndarray:
+        """Run one flow-matching forward for a single env; return a
+        (exc_action_size, 16) dual-arm PosQuat chunk in RoboTwin wxyz layout."""
+        batch = self._obs_by_env[env_idx]
 
         # Initial EE pose: wxyz -> xyzw -> UMI frame (for RT-relative decode).
         initial_wxyz = batch["observation.state"][0, :16].copy()
@@ -419,7 +442,7 @@ class Model(ModelTemplate):
         )
 
         if self.use_video_encoder:
-            self._inject_history_stacks(net_batch)
+            self._inject_history_stacks(net_batch, env_idx)
 
         # numpy -> cuda tensors (skip raw_images.* and task).
         feed = {}
@@ -503,14 +526,17 @@ class Model(ModelTemplate):
         out[-1] = step_id
         return out
 
-    def _inject_history_stacks(self, batch: dict) -> None:
+    def _inject_history_stacks(self, batch: dict, env_idx: int) -> None:
         K = self.img_history_size
         S_raw = self.img_history_interval
         N = self.exc_action_interval
         # Each buffer step = N raw env steps. Scale S to buffer-index units
         # so the absolute temporal coverage stays close to training.
         S_buf = max(1, S_raw // N)
-        step_id = len(self._top_imgs) - 1
+        top_buf = self._top_imgs_by_env[env_idx]
+        left_buf = self._left_imgs_by_env[env_idx]
+        right_buf = self._right_imgs_by_env[env_idx]
+        step_id = len(top_buf) - 1
         idx_list = self._eval_history_indices(step_id, K, S_buf)
         valid = [(step_id - (K - 1 - k) * S_buf) >= 0 for k in range(K)]
 
@@ -522,18 +548,18 @@ class Model(ModelTemplate):
                     arr[k].zero_()
             return arr.unsqueeze(0)  # (1, K, C, H, W)
 
-        batch["observation.images.top_head"] = _stack(self._top_imgs)
-        batch["observation.images.hand_left"] = _stack(self._left_imgs)
-        batch["observation.images.hand_right"] = _stack(self._right_imgs)
+        batch["observation.images.top_head"] = _stack(top_buf)
+        batch["observation.images.hand_left"] = _stack(left_buf)
+        batch["observation.images.hand_right"] = _stack(right_buf)
 
     # ------------------------------------------------------------------
     def reset(self):
         self.policy.reset()
         self.action_cache.clear()
-        self._top_imgs.clear()
-        self._left_imgs.clear()
-        self._right_imgs.clear()
-        self.observation_window = None
+        self._obs_by_env.clear()
+        self._top_imgs_by_env.clear()
+        self._left_imgs_by_env.clear()
+        self._right_imgs_by_env.clear()
         self._latest_env_idx_list = [0]
         print("[hy_vla] reset", flush=True)
 

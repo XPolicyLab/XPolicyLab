@@ -11,6 +11,7 @@ _default_output_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/data"
 output_dir=${7:-${_default_output_dir}}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 echo -e "\033[33m[A1 process_data] Converting HDF5 to LeRobot format...\033[0m"
 python "${SCRIPT_DIR}/process_data.py" \
@@ -20,6 +21,7 @@ python "${SCRIPT_DIR}/process_data.py" \
     "${expert_data_num}" \
     "${action_type}" \
     --fps "${fps}" \
-    --instruction "Do your job." \
-    --output_dir "${output_dir}"
+    --instruction "${task_name}" \
+    --output_dir "${output_dir}" \
+    --project-root "${ROOT_DIR}"
 echo -e "\033[33m[A1 process_data] Done.\033[0m"
