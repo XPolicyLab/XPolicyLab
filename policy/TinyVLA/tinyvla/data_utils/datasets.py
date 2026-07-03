@@ -448,7 +448,9 @@ def load_data(dataset_dir_l, name_filter, camera_names, batch_size_train, batch_
     print(f'train_episode_len_l: {train_episode_len_l}')
 
     train_dataset = EpisodicDataset(dataset_path_list, camera_names, norm_stats, train_episode_ids, train_episode_len, chunk_size, policy_class, llava_pythia_process=llava_pythia_process, imsize=config['training_args'].pretrain_image_size)
-    val_dataset = EpisodicDataset(dataset_path_list, camera_names, norm_stats, val_episode_ids, val_episode_len, chunk_size, policy_class, llava_pythia_process=llava_pythia_process, imsize=config['training_args'].pretrain_image_size)
+    val_dataset = None
+    if len(val_episode_len) > 0:
+        val_dataset = EpisodicDataset(dataset_path_list, camera_names, norm_stats, val_episode_ids, val_episode_len, chunk_size, policy_class, llava_pythia_process=llava_pythia_process, imsize=config['training_args'].pretrain_image_size)
 
     sampler_params = {
         'train': {"batch_size": batch_size_train, 'episode_len_l': train_episode_len_l, 'sample_weights':sample_weights},
