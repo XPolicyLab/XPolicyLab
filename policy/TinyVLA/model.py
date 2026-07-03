@@ -8,6 +8,7 @@ import torch
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import (
+    decode_image_bit,
     get_robot_action_dim_info,
     pack_robot_state,
     unpack_robot_state,
@@ -19,7 +20,6 @@ if str(TINYVLA_DIR) not in sys.path:
     sys.path.append(str(TINYVLA_DIR))
 
 from eval_real_franka import llava_pythia_act_policy
-
 
 
 class Model(ModelTemplate):
@@ -82,7 +82,13 @@ class Model(ModelTemplate):
     def _encode_obs(self, obs):
         cam_chws = []
         for cam_key in self.camera_keys:
-            rgb = np.asarray(obs["vision"][cam_key]["color"])
+            rgb = obs["vision"][cam_key]["color"]
+            if isinstance(rgb, (bytes, bytearray, np.bytes_)):
+                rgb = decode_image_bit(rgb)
+            elif rgb.ndim == 1:
+                rgb = decode_image_bit(rgb)
+            else:
+                rgb = raw
             rgb = cv2.resize(rgb, (640, 480), interpolation=cv2.INTER_AREA)
             cam_chws.append(np.transpose(rgb, (2, 0, 1)))
 
