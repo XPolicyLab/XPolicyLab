@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from PIL import Image
+
 from .openvla_oft.prismatic.vla.constants import NUM_ACTIONS_CHUNK, PROPRIO_DIM
 from .openvla_oft.experiments.robot.openvla_utils import (
     get_vla,
@@ -30,6 +32,7 @@ from XPolicyLab.utils.process_data import (
 
 _POLICY_DIR = Path(__file__).resolve().parent
 _CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
+_ALOHA_PREPROCESS_SIZE = 256
 
 
 def _extract_step_number(value: Any) -> int | None:
@@ -127,12 +130,18 @@ def _resolve_policy_path(value: str | None) -> Path | None:
 
 def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> str:
     base_model_path = model_cfg.get("base_model_path")
+    explicit_checkpoint = model_cfg.get("checkpoint_path") or model_cfg.get("model_path")
+    if explicit_checkpoint:
+        path = Path(explicit_checkpoint).expanduser().resolve()
+        if (path / "config.json").exists():
+            return str(path)
+
     finetune_dir = _resolve_finetune_dir(model_cfg)
     if finetune_dir is not None and (finetune_dir / "config.json").exists():
         return str(finetune_dir)
 
     resolved_base = _resolve_policy_path(base_model_path)
-    if resolved_base is not None:
+    if resolved_base is not None and (resolved_base / "config.json").exists():
         return str(resolved_base)
 
     ckpt_setting = _build_ckpt_setting(model_cfg)
@@ -145,10 +154,9 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> str:
         checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
         return str(checkpoint_root)
 
-    checkpoint_path = model_cfg.get("checkpoint_path") or model_cfg.get("model_path")
-    if checkpoint_path is None:
-        raise ValueError("ckpt_name, base_model_path, or checkpoint_path is required for OpenVLA_OFT.")
-    return str(Path(checkpoint_path).expanduser().resolve())
+    if explicit_checkpoint:
+        return str(Path(explicit_checkpoint).expanduser().resolve())
+    raise ValueError("ckpt_name, base_model_path, or checkpoint_path is required for OpenVLA_OFT.")
 
 @dataclass
 class InferenceConfig:
@@ -204,6 +212,22 @@ def ensure_hwc_uint8(image):
     raise ValueError(f"Unsupported image shape: {image.shape}")
 
 
+def resize_image_for_aloha_preprocessing(image: np.ndarray) -> np.ndarray:
+    """Match preprocess_split_aloha_data.py: 480x640 -> 256x256 BICUBIC before RLDS resize."""
+    if image.shape[0] == _ALOHA_PREPROCESS_SIZE and image.shape[1] == _ALOHA_PREPROCESS_SIZE:
+        return image
+    return np.array(
+        Image.fromarray(image).resize(
+            (_ALOHA_PREPROCESS_SIZE, _ALOHA_PREPROCESS_SIZE),
+            resample=Image.BICUBIC,
+        )
+    )
+
+
+def prepare_vla_image(image) -> np.ndarray:
+    return resize_image_for_aloha_preprocessing(ensure_hwc_uint8(image))
+
+
 def extract_prompt(observation, default_prompt):
     for key in ("instruction", "instructions", "prompt", "task_instruction"):
         value = observation.get(key)
@@ -226,25 +250,26 @@ def extract_prompt(observation, default_prompt):
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
         state = np.asarray(observation["state"], dtype=np.float32)
-        images = {
-            "cam_high": observation["images"]["cam_high"],
-            "cam_left_wrist": observation["images"]["cam_left_wrist"],
-            "cam_right_wrist": observation["images"]["cam_right_wrist"],
-        }
         prompt = extract_prompt(observation, default_prompt)
-        return {"state": state, "images": images, "prompt": prompt, "instruction": prompt}
+        return {
+            "full_image": prepare_vla_image(observation["images"]["cam_high"]),
+            "left_wrist_image": prepare_vla_image(observation["images"]["cam_left_wrist"]),
+            "right_wrist_image": prepare_vla_image(observation["images"]["cam_right_wrist"]),
+            "state": state,
+            "instruction": prompt,
+        }
 
     if robot_action_dim_info is None:
         raise ValueError("env_cfg is required when encoding raw environment observations.")
 
     images = {
-        "cam_high": ensure_hwc_uint8(
+        "cam_high": prepare_vla_image(
             extract_image(observation, ["cam_high", "cam_head", "head_camera", "top_camera"])
         ),
-        "cam_left_wrist": ensure_hwc_uint8(
+        "cam_left_wrist": prepare_vla_image(
             extract_image(observation, ["cam_left_wrist", "left_camera", "left_wrist", "wrist_left"])
         ),
-        "cam_right_wrist": ensure_hwc_uint8(
+        "cam_right_wrist": prepare_vla_image(
             extract_image(observation, ["cam_right_wrist", "right_camera", "right_wrist", "wrist_right"])
         ),
     }
