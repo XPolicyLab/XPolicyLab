@@ -1,0 +1,73 @@
+# =============================================================================
+# RoboDojo HDF5 dataset config
+# =============================================================================
+source: "robodojo"
+
+# HDF5 root directory.
+hdf5_dir: "/path/to/robodojo/hdf5"
+
+# -----------------------------------------------------------------------------
+# Image augmentation
+# -----------------------------------------------------------------------------
+image_aug: True
+camera_randomcrop_aug: True
+cond_mask_prob: 0.0
+cam_ext_mask_prob: -1.0
+
+# -----------------------------------------------------------------------------
+# History (6-frame stack for video-encoder / MEM)
+# -----------------------------------------------------------------------------
+img_history_size: 6
+# Temporal stride between history frames (action steps).
+# Effective raw-frame stride = img_history_interval * downsample_rate = 10.
+img_history_interval: 20
+img_history_random_sample: False
+
+# -----------------------------------------------------------------------------
+# Action chunk
+# -----------------------------------------------------------------------------
+action_chunk_size: 25
+state_dim: 32
+num_cameras: 3
+image_size: 224
+auto_adjust_image_brightness: True
+
+# -----------------------------------------------------------------------------
+# Action / state normalization
+# -----------------------------------------------------------------------------
+mean_std_path: "/path/to/robodojo/norm_stats.pkl"
+mean_std_chunk_slice: 25
+
+# -----------------------------------------------------------------------------
+# Action representation
+# -----------------------------------------------------------------------------
+act_type: "relative_chunk_ee_RT"
+
+# -----------------------------------------------------------------------------
+# Sampling cadence
+# -----------------------------------------------------------------------------
+downsample_rate: 1
+
+# -----------------------------------------------------------------------------
+# UMI coordinate frame
+# -----------------------------------------------------------------------------
+umi_coord_frame: True
+# When True (only meaningful with ``umi_coord_frame=True``), additionally
+# convert gripper values from RoboTwin convention (open=1, close=0,
+# normalised 0-1) to UMI convention (open=0, close=90, raw mm).
+umi_gripper_space: False
+
+# -----------------------------------------------------------------------------
+# Episode filter
+# -----------------------------------------------------------------------------
+filter_dirty: True
+
+# -----------------------------------------------------------------------------
+# Sample enumeration
+# -----------------------------------------------------------------------------
+deterministic: True
+
+# -----------------------------------------------------------------------------
+# Video-encoder (MEM) switch
+# -----------------------------------------------------------------------------
+use_video_encoder: True

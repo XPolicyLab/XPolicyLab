@@ -27,9 +27,15 @@ cd "${HY_VLA_ROOT}"
 echo "[hy_vla] uv sync in ${HY_VLA_ROOT}"
 UV_LINK_MODE=copy uv sync
 
+# Overlay RoboDojo post-training support onto the public Hy-Embodied clone.
+# The public repo does not ship the RoboDojo dataset loader / config / scripts;
+# this copies them in and wires the `robodojo` dataset branch (idempotent).
+echo "[hy_vla] overlaying RoboDojo post-training support"
+uv run python "${POLICY_DIR}/apply_robodojo_overlay.py" "${HY_VLA_ROOT}"
+
 # Make XPolicyLab importable inside the Hy-Embodied venv.
 uv pip install -e "${XPOLICYLAB_ROOT}"
-uv run python -c "import XPolicyLab; import hy_vla; import robotwin_eval; print('hy_vla env ok')"
+uv run python -c "import XPolicyLab; import hy_vla; import robotwin_eval; from hy_vla.data.robodojo_dataset import RoboDojoVLADataset; print('hy_vla env ok (robodojo overlay ok)')"
 
 echo "[hy_vla] Installation finished."
 echo "[hy_vla] Activate: source ${HY_VLA_ROOT}/.venv/bin/activate"

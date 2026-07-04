@@ -34,8 +34,9 @@ bash install.sh
 ```
 
 This clones the Hy-Embodied source tree into `./Hy-Embodied-0.5-VLA` (override
-with `HY_VLA_ROOT`), runs `uv sync` to build its venv, and installs XPolicyLab
-into that venv. Then download a checkpoint, e.g.:
+with `HY_VLA_ROOT`), runs `uv sync` to build its venv, **overlays RoboDojo
+post-training support** onto the clone (see below), and installs XPolicyLab into
+that venv. Then download a checkpoint, e.g.:
 
 ```bash
 # RoboTwin-pretrained release
@@ -46,24 +47,51 @@ huggingface-cli download tencent/Hy-Embodied-0.5-VLA-RoboTwin \
 Point `ckpt_path` / `norm_path` in `deploy.yml` at the downloaded checkpoint
 (absolute, or relative to `hy_root`).
 
-## Data processing
+### RoboDojo overlay
 
-Compute the normalization statistics the server consumes:
+The public Hy-Embodied-0.5-VLA repo does not ship RoboDojo dataset support, and
+we do not modify it. XPolicyLab carries the RoboDojo files under
+[`robodojo/`](robodojo/) (dataset loader, Hydra config, norm-stats computer,
+training launcher) and `install.sh` overlays them onto the clone via
+[`apply_robodojo_overlay.py`](apply_robodojo_overlay.py). The overlayer copies
+those files in and inserts a `source == "robodojo"` branch into the clone's
+`hy_vla/data/vla_dataset.py`. It is idempotent (safe to re-run) and preflights
+for the upstream transforms it relies on, so it fails loudly if the public repo
+changes. To (re-)apply it manually:
 
 ```bash
-bash process_data.sh <manifest_csv> <hdf5_dir> <output_pkl> [downsample_rate] [chunk_size]
+python apply_robodojo_overlay.py "${HY_VLA_ROOT:-./Hy-Embodied-0.5-VLA}"
 ```
+
+## Data processing
+
+Compute the normalization statistics that training and the eval-time server
+consume. The RoboDojo computer scans the HDF5 tree
+(`{hdf5_dir}/{task}/{robot}/data/episode_*.hdf5`) directly — no manifest CSV —
+and writes UMI-frame stats (required, matching the model's eval-time frame):
+
+```bash
+bash process_data.sh <hdf5_dir> <output_pkl> [downsample_rate] [chunk_size]
+```
+
+Defaults mirror `robodojo_hdf5.yaml`: `downsample_rate=1`, `chunk_size=25`.
 
 ## Training
 
+Compute `norm_stats.pkl` first (above), then post-train from the UMI pretrain:
+
 ```bash
 CHIEF_IP=127.0.0.1 INDEX=0 NUM_MACHINES=1 NPROC_PER_NODE=8 \
-HDF5_DIR=/path/to/robotwin/hdf5 EXP_ROOT=/path/to/experiments \
+HDF5_DIR=/path/to/robodojo/hdf5 EXP_ROOT=/path/to/experiments \
+NORM_PATH=/path/to/robodojo/norm_stats.pkl \
 bash train.sh
 ```
 
-`train.sh` forwards to the Hy-Embodied RoboTwin/UMI recipe; see that repo for
-the full multi-node training documentation.
+`train.sh` forwards to the RoboDojo recipe (`scripts/train_robodojo_umi.sh`,
+added by the overlay), which launches `dataset=robodojo_hdf5`. Tune via the env
+overrides `EXP_ID`, `EXP_ROOT`, `PRETRAIN`, `HDF5_DIR`, `NORM_PATH`,
+`NUM_MACHINES`, `NPROC_PER_NODE`, `MAIN_PORT`, `CHIEF_IP`, `INDEX`; see the
+Hy-Embodied repo for the full multi-node training documentation.
 
 ## Deploy / Evaluate
 
