@@ -62,7 +62,7 @@ class LlavaPythiaForCausalLM(GPTNeoXPreTrainedModel, LlavaMetaForCausalLM):
                 self.noise_scheduler = DDIMScheduler(
                     num_train_timesteps=100,
                     beta_schedule='squaredcos_cap_v2',
-                    clip_sample=False,
+                    clip_sample=True,
                     set_alpha_to_one=True,
                     steps_offset=0,
                     prediction_type='epsilon'

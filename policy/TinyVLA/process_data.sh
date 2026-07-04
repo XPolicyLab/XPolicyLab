@@ -1,5 +1,11 @@
 #!/bin/bash
+set -e
 
+
+if [[ $# -ne 5 ]]; then
+  echo "Usage: bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+  exit 1
+fi
 
 dataset_name=${1}
 ckpt_name=${2}
@@ -9,11 +15,16 @@ action_type=${5}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
+SOURCE_ROOT="${XPL_SOURCE_ROOT:-${ROOT_DIR}/data/${dataset_name}}"
+WORKERS="${TINYVLA_PROCESS_WORKERS:-8}"
+COMPRESSION="${TINYVLA_HDF5_COMPRESSION:-lzf}"
 
 ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 out_dir="${POLICY_DIR}/data/${ckpt_setting}"
 
 echo "[TinyVLA process_data] output: ${out_dir}"
+echo "[TinyVLA process_data] source: ${SOURCE_ROOT}"
+echo "[TinyVLA process_data] workers=${WORKERS}, compression=${COMPRESSION}"
 
 #If the 5-tuple output directory already exists, let the user decide:
 #   - y  : skip processing entirely, reuse the existing dataset as-is
@@ -32,19 +43,14 @@ if [[ -d "${out_dir}" ]]; then
       ;;
   esac
 fi
-mkdir -p "${out_dir}"
 
-merged_idx=0
-for task_dir in "${ROOT_DIR}/data/${dataset_name}"/*/; do
-  task_name="$(basename "${task_dir}")"
-  src_dir="${task_dir}${env_cfg_type}/data"
-  for ((i=0; i<expert_data_num; i++)); do
-    src_file="${src_dir}/$(printf 'episode_%07d.hdf5' "${i}")"
-    dst_file="${out_dir}/$(printf 'episode_%07d.hdf5' "${merged_idx}")"
-    ln -s -- "${src_file}" "${dst_file}"
-    merged_idx=$((merged_idx + 1))
-  done
-  echo "[TinyVLA process_data] task='${task_name}': linked ${expert_data_num} episodes"
-done
-
-echo "[TinyVLA process_data] total: ${merged_idx} episodes -> ${out_dir}"
+python "${POLICY_DIR}/process_data.py" \
+  "${dataset_name}" \
+  "${ckpt_name}" \
+  "${env_cfg_type}" \
+  "${expert_data_num}" \
+  "${action_type}" \
+  --source-root "${SOURCE_ROOT}" \
+  --output-dir "${out_dir}" \
+  --workers "${WORKERS}" \
+  --compression "${COMPRESSION}"

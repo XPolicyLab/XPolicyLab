@@ -15,9 +15,10 @@ bash install.sh
 bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 ```
 
-> `process_data.sh` 是一个纯 bash 软链接脚本，严格遵守 XPolicyLab README 的 5 元组约定，
+> `process_data.sh` 会调用 `process_data.py`，严格遵守 XPolicyLab README 的 5 元组约定，
 > 自动扫描 `data/<dataset_name>/` 下所有 task 子目录，把每个 task 在 `<env_cfg_type>/data/`
-> 下前 `expert_data_num` 个 episodes 软链接到：
+> 下前 `expert_data_num` 个 episodes 转成 TinyVLA 官方 HDF5 schema，并把三路图像预先解码/resize
+> 为 `480x640` 的 `uint8` RGB 帧，写入：
 > 
 > ```
 > XPolicyLab/policy/TinyVLA/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
