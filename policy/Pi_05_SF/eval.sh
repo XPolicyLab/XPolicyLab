@@ -1,17 +1,16 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-env_gpu_id=$9
-policy_uv_env=${10:-uv}
-eval_env_conda_env=${11}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+env_gpu_id=$8
+policy_uv_env=${9:-uv}
+eval_env_conda_env=${10}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 find_xpolicylab_root() {
@@ -50,11 +49,10 @@ trap cleanup EXIT
 echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 
 setsid bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \
@@ -69,7 +67,7 @@ bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_se
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

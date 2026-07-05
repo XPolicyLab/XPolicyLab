@@ -1,17 +1,16 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_uv_env=${9:-uv}
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_uv_env=${8:-uv}
+policy_server_port=${9}
+policy_server_host=${10:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 find_xpolicylab_root() {
@@ -157,13 +156,10 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            port="${policy_server_port}" \
-            host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \

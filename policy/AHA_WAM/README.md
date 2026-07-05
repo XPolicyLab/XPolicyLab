@@ -17,7 +17,7 @@ Policy server example:
 
 ```bash
 cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
-bash setup_eval_policy_server.sh RoboDojo stack_bowls local_aha_wam arx_x5 3500 joint 0 0 wam 12345 localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls local_aha_wam arx_x5 joint 0 0 wam 12345 localhost
 ```
 
 Full debug flow (`EVAL_ENV_TYPE=debug` uses the AHA_WAM-specific debug client):

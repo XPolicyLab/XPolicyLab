@@ -67,11 +67,11 @@ export TOKENIZER_DIR=/path/to/umt5-xxl
 默认直接用共享的多任务 LeRobot v3 数据；如需自己转换/截取，用 `process_data.sh`：
 
 ```bash
-bash process_data.sh <bench_name> <task_name> <env_cfg_type> <action_type> [expert_data_num]
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
 ```
 
 尾参 `expert_data_num` 可选：传了则只取前 N 条 episodes，不传则用全部。输出目录为
-`data/<bench_name>-<task_name>-<env_cfg_type>-<action_type>/`，训练时按同名 4 元组自动解析。
+`data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/`，训练时按同名 4 元组自动解析。
 要对比不同数据量，用不同 run 名（如 `cotrain_50ep`）并在 process_data 时传该尾参。
 
 ## 多任务训练

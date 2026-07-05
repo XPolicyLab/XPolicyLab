@@ -25,7 +25,7 @@ yaml_file="${SCRIPT_DIR}/deploy.yml"
 INNER_DIR="${SCRIPT_DIR}/giga_world_policy"
 policy_name="$(basename "${SCRIPT_DIR}")"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${XPL_ROOT}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, host=${policy_server_host}, port=${policy_server_port}, action_dim=${action_dim}"
 

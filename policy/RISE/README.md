@@ -85,7 +85,7 @@ bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0 all
 Use the `EVAL_ENV_TYPE` environment variable: `debug` / `sim` / `real`；`eval_batch` 控制 batch 推理。切换模式无需改 `eval.sh`。
 
 ```bash
-bash eval.sh RoboDojo test_data stack_bowls arx_x5 joint 0 0 0 RISE XPolicyLab
+bash eval.sh RoboDojo stack_bowls test_data arx_x5 joint 0 0 0 RISE XPolicyLab
 ```
 
 ### 3.1 Checkpoint 解析

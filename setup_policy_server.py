@@ -1,4 +1,5 @@
 import asyncio
+import os
 import threading
 import ast
 import time
@@ -7,6 +8,18 @@ import importlib
 import argparse
 import traceback
 from client_server.model_server import ModelServer
+
+
+def _default_protocol() -> str:
+    """Pick the wire protocol matching the eval env client.
+
+    The sim eval client (src/eval_client via ModelClient) only speaks the
+    legacy length-prefixed TCP protocol, while the debug/real env clients
+    speak robodojo_ws. EVAL_ENV_TYPE follows utils/resolve_eval_env_type.sh
+    semantics: empty/unset means sim.
+    """
+    eval_env_type = (os.environ.get("EVAL_ENV_TYPE") or "sim").strip()
+    return "legacy_tcp" if eval_env_type == "sim" else "robodojo_ws"
 
 def eval_function_decorator(policy_model_name, Func_and_Class_name):
     """Load a specified function (e.g., get_model) from a policy module"""
@@ -111,7 +124,7 @@ def parse_args_and_config():
     if args.protocol is not None:
         cfg["protocol"] = args.protocol
     else:
-        cfg.setdefault("protocol", "robodojo_ws")
+        cfg.setdefault("protocol", _default_protocol())
     if args.host is not None:
         cfg["host"] = args.host
     if args.port is not None:

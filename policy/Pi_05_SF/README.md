@@ -154,64 +154,19 @@ sf_cache_miss_policy = error
 
 ## XPolicyLab 推理/评测
 
-确认 `deploy.yml` 中的任务、checkpoint、端口和 `repo_id` 后启动。推荐使用当前 policy 目录自带的 `eval.sh`，它会自动把当前目录链接到 `XPL_ROOT/policy/Pi_05_SF`，并把本目录的 `openpi/src`、`openpi/packages/openpi-client/src` 和 `openpi/src/vggt` 加入 `PYTHONPATH`。
+统一 10 参数入口（与 `demo_policy` 约定一致，无 `expert_data_num`；第 9 个参数是 policy 侧 uv 环境路径或 `uv` 关键字，从 `deploy.yml` 的 `policy_uv_env_path` 解析）：
 
 ```bash
-export XPL_ROOT=<XPolicyLab 仓库根目录>
-export POLICY_DIR=<Pi_05_SF policy 目录>
-export OPENPI_SF_VENV="${POLICY_DIR}/openpi/.venv"
-
-cd "${POLICY_DIR}"
-source "${OPENPI_SF_VENV}/bin/activate"
-
-bash eval.sh
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+    <policy_gpu_id> <env_gpu_id> <policy_uv_env|uv> <eval_env_conda_env>
 ```
 
-如果当前目录还没有拷贝进 `XPolicyLab/policy/Pi_05_SF`，也可以直接把 `POLICY_DIR` 指到独立目录，例如当前开发目录；`eval.sh` 会在 `XPL_ROOT/policy/Pi_05_SF` 创建软链接。
-
-### Server 启动方式迁移
-
-对应启动示例：
+示例：
 
 ```bash
-export XPL_ROOT=<XPolicyLab 仓库根目录>
-export POLICY_DIR=<Pi_05_SF policy 目录>
-export OPENPI_SF_VENV="${POLICY_DIR}/openpi/.venv"
-export CKPT_NAME=<Pi05SF checkpoint step 目录>
-export POLICY_PORT=5001
-export POLICY_HOST=127.0.0.1
-export GPU=1
-
-export HF_LEROBOT_HOME=<LeRobot 数据根目录>
-export HF_HUB_OFFLINE=1
-export HF_DATASETS_OFFLINE=1
-export WANDB_MODE=offline
-export XLA_PYTHON_CLIENT_PREALLOCATE=false
-export XLA_PYTHON_CLIENT_MEM_FRACTION=0.9
-
-ACTION_DIM=$(bash "${XPL_ROOT}/utils/get_action_dim.sh" "$(dirname "${XPL_ROOT}")" arx_x5)
-echo "ACTION_DIM=${ACTION_DIM}"
-
-cd "${POLICY_DIR}"
-source "${OPENPI_SF_VENV}/bin/activate"
-
-PYTHONUNBUFFERED=1 \
-PYTHONWARNINGS=ignore::UserWarning \
-CUDA_VISIBLE_DEVICES="${GPU}" \
-XPL_ROOT="${XPL_ROOT}" \
-bash eval.sh \
-  --overrides \
-    port="${POLICY_PORT}" \
-    host="${POLICY_HOST}" \
-    dataset_name="RoboDojo_lerobot_v21_video" \
-    task_name="stack_bowls" \
-    ckpt_name="${CKPT_NAME}" \
-    env_cfg_type="arx_x5" \
-    expert_data_num="all" \
-    seed="0" \
-    policy_name="Pi_05_SF" \
-    action_type="joint" \
-    action_dim="${ACTION_DIM}" \
-    train_config_name="pi05sf_jax_robodojo_v21_offcache" \
-    repo_id="RoboDojo_lerobot_v21_video"
+bash eval.sh RoboDojo stack_bowls ./checkpoints/pi05sf_jax_robodojo_v21_offcache/59999 arx_x5 joint 0 0 0 uv RoboDojo
 ```
+
+`eval.sh` 会自动把当前目录链接到 `XPolicyLab/policy/Pi_05_SF`，并把本目录的 `open_sf/src`、`open_sf/packages/openpi-client/src` 和 `open_sf/src/vggt` 加入 `PYTHONPATH`。`ckpt_name`、`train_config_name`、`repo_id` 等模型侧配置可在 `deploy.yml` 中修改；`bench_name` / `task_name` / `env_cfg_type` / `seed` / `action_type` 由 eval 入口参数覆盖。
+
+如果当前目录还没有拷贝进 `XPolicyLab/policy/Pi_05_SF`，也可以把该目录放在任意位置；`eval.sh` 会在 `XPolicyLab/policy/Pi_05_SF` 创建软链接。也可分别运行 `setup_eval_policy_server.sh`（前 10 个参数：`<bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <policy_uv_env|uv> <port> [host]`）与 `setup_eval_env_client.sh`，便于单独查看 server 日志。

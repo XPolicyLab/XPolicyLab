@@ -34,6 +34,4 @@ enc_layers: 4
 dec_layers: 7
 pre_norm: false
 dropout: 0.1
-camera_names: null
-
 camera_names: ["cam_head", "cam_right_wrist", "cam_left_wrist"]

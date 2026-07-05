@@ -62,6 +62,8 @@ policy/MolmoACT2/data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>
 
 ### 调用方式（规划）
 
+> 注意：`process_data.sh` 目前尚未随本 policy 提供（规划中）；训练数据请按 `train.sh` 的环境变量指向外部 LeRobot v3.0 数据集。
+
 `process_data.sh` 遵循 XPolicyLab 统一 5 参数（尾参 `expert_data_num` 可选）：
 
 ```bash
@@ -226,7 +228,7 @@ bash eval.sh \
 
 ```bash
 cd policy/MolmoACT2
-bash eval.sh RoboDojo debug_task cotrain arx_x5 joint 0 0 0 uv XPolicyLab
+bash eval.sh RoboDojo debug_task RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 uv XPolicyLab
 ```
 
 Use the `EVAL_ENV_TYPE` environment variable`debug` 可离线调试观测/动作格式；通过后改为 `sim` 跑 RoboDojo 仿真。

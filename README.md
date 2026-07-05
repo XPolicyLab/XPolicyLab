@@ -384,7 +384,7 @@ After offline debugging, unset `EVAL_ENV_TYPE` or set `EVAL_ENV_TYPE=sim` for si
 | `debug` | Offline shape/IO validation (`run_debug_env_client.sh`) |
 | `real` | Not available in open-source release |
 
-The legacy `deploy.yml` key `eval_env` is deprecated and ignored; `setup_env_client.sh` prints a warning when it is still present. When the env client daemon runs sim trials (`--eval-env-type sim`), it shells out to `scripts/eval_policy.sh`; set `XPOLICYLAB_SIM_CONDA_ENV=<simulator-conda-env>` so the subprocess activates the simulator environment (`XPOLICYLAB_SIM_ROOT`, `XPOLICYLAB_SIM_DEVICE_ID`, and `XPOLICYLAB_SIM_SEED` override the benchmark root / GPU / seed), and note a trial only completes when `_result.json` reports `eval_time >= 1`.
+The legacy `deploy.yml` key `eval_env` is deprecated and ignored; `setup_env_client.sh` prints a warning when it is still present. `EVAL_ENV_TYPE` also selects the policy-server wire protocol when `deploy.yml` does not set `protocol` explicitly: `sim` (or unset) defaults to `legacy_tcp` to match the simulation eval client (`ModelClient`), while `debug` / `real` default to `robodojo_ws`. Set `protocol` in `deploy.yml` (or pass `--protocol` to `setup_policy_server.py`) to pin it. When the env client daemon runs sim trials (`--eval-env-type sim`), it shells out to `scripts/eval_policy.sh`; set `XPOLICYLAB_SIM_CONDA_ENV=<simulator-conda-env>` so the subprocess activates the simulator environment (`XPOLICYLAB_SIM_ROOT`, `XPOLICYLAB_SIM_DEVICE_ID`, and `XPOLICYLAB_SIM_SEED` override the benchmark root / GPU / seed), and note a trial only completes when `_result.json` reports `eval_time >= 1`.
 
 ## 5.2 Platform evaluation (env client daemon)
 

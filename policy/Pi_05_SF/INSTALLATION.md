@@ -29,9 +29,10 @@ cd "$XPL_ROOT"
 uv pip install -e .
 ```
 
-运行 `Pi_05_SF` policy server 时指定：
+运行 `Pi_05_SF` eval（统一 10 参数入口，见 README）：
 
 ```bash
 cd "$XPL_ROOT/policy/Pi_05_SF"
-bash eval.sh
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+    <policy_gpu_id> <env_gpu_id> <policy_uv_env|uv> <eval_env_conda_env>
 ```

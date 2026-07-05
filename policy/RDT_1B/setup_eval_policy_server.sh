@@ -34,8 +34,6 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            port="${policy_server_port}" \
-            host="${policy_server_host}" \
             bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \

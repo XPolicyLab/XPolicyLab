@@ -1,10 +1,9 @@
 policy_name: Pi_05_SF
+bench_name: null
 task_name: stack_bowls
 env_cfg_type: arx_x5
-expert_data_num: all
 seed: 0
 eval_batch: true
-eval_env: sim
 checkpoint_num: 59999
 protocol: legacy_tcp
 

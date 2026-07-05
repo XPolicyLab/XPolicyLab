@@ -13,7 +13,8 @@ obs_transform_pipeline: "xspark-v1.0"
 # Model / action configuration
 action_type: joint
 policy_uv_env_path: openpi
-train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_1
+# Must match the config used by train.sh (default OPENPI_TRAIN_CONFIG_NAME).
+train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_0
 repo_id: arx_x5_sim
 
 port: 6000

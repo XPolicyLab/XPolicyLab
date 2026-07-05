@@ -14,11 +14,13 @@ port=${10}
 policy_server_ip=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+# setup_env_client.sh expects the RoboDojo repo root (scripts/eval_policy.sh lives there).
+ROOT_DIR="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${port}"
 
