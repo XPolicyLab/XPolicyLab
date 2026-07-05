@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
-# MolmoAct2 LeRobot 微调入口（XPolicyLab 统一 7 参数）
+# MolmoAct2 LeRobot 微调入口（XPolicyLab 统一 6 参数）
 #
 # Usage:
-#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 #
-# 示例（RoboDojo 双臂 co-train，3500 episodes，8×80GB 推荐配置）:
-#   bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
-#   bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0          # 单卡
+# 示例（RoboDojo 双臂 co-train，8×80GB 推荐配置）:
+#   bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
+#   bash train.sh RoboDojo cotrain arx_x5 joint 0 0          # 单卡
 #
 # 环境变量（可选）:
 #   MOLMOACT2_DATASET_ROOT   LeRobot 数据集根目录（含 meta/ data/ videos/）
 #   MOLMOACT2_DATASET_REPO_ID  传给 --dataset.repo_id 的标识
 #   MOLMOACT2_CHECKPOINT_PATH  起点权重，默认 allenai/MolmoAct2
-#   MOLMOACT2_OUTPUT_ROOT        训练输出根目录，默认 /mnt/xspark-data/xspark_shared/MolmoACT2_checkpoints
+#   MOLMOACT2_OUTPUT_ROOT        训练输出根目录，默认 policy/MolmoACT2/checkpoints
 #   MOLMOACT2_BATCH_SIZE       每卡 batch size，默认 32（8 卡 global batch=256）
 #   MOLMOACT2_STEPS            训练步数，默认 100000
-#   MOLMOACT2_SAVE_FREQ        保存间隔，默认 5000
+#   MOLMOACT2_SAVE_FREQ        保存间隔，默认 10000
 #   MOLMOACT2_NUM_WORKERS      dataloader workers，默认 4
 #   MOLMOACT2_ACTION_MODE      continuous / discrete / both，默认 continuous
 #   MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY  1=只训 action expert，默认 0（co-train 全量微调）
@@ -26,18 +26,17 @@
 
 set -euo pipefail
 
-if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+if [[ $# -lt 6 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LEROBOT_DIR="${POLICY_DIR}/molmoact2/lerobot"
@@ -46,13 +45,25 @@ VENV_PYTHON="${VENV_BIN}/python"
 VENV_LEROBOT_TRAIN="${VENV_BIN}/lerobot-train"
 VENV_ACCELERATE="${VENV_BIN}/accelerate"
 
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 ckpt_setting="${data_setting}-${seed}"
-MOLMOACT2_OUTPUT_ROOT="${MOLMOACT2_OUTPUT_ROOT:-/mnt/xspark-data/xspark_shared/MolmoACT2_checkpoints}"
+MOLMOACT2_OUTPUT_ROOT="${MOLMOACT2_OUTPUT_ROOT:-${POLICY_DIR}/checkpoints}"
 OUTPUT_DIR="${MOLMOACT2_OUTPUT_ROOT}/${ckpt_setting}"
 JOB_NAME="${MOLMOACT2_JOB_NAME:-${ckpt_setting}}"
 
-# 默认：RoboDojo 双臂 v30 co-train（3500 episodes / ~1.86M frames）
+# Standard checkpoint path consumed by eval (model.py resolves checkpoints/<ckpt_name>).
+STANDARD_CKPT_DIR="${POLICY_DIR}/checkpoints/${ckpt_setting}"
+if [[ "${OUTPUT_DIR}" != "${STANDARD_CKPT_DIR}" ]]; then
+  if [[ -e "${STANDARD_CKPT_DIR}" && ! -L "${STANDARD_CKPT_DIR}" ]]; then
+    echo "错误: 标准 checkpoint 路径已存在且不是软链: ${STANDARD_CKPT_DIR}" >&2
+    exit 1
+  fi
+  mkdir -p "${POLICY_DIR}/checkpoints" "${OUTPUT_DIR}"
+  ln -sfn "${OUTPUT_DIR}" "${STANDARD_CKPT_DIR}"
+  echo "已软链标准路径: ${STANDARD_CKPT_DIR} -> ${OUTPUT_DIR}"
+fi
+
+# 默认：RoboDojo 双臂 v30 co-train
 # 8×80GB：每卡 bs=15 → global batch=128；
 MOLMOACT2_DATASET_ROOT="${MOLMOACT2_DATASET_ROOT:-/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30}"
 MOLMOACT2_DATASET_REPO_ID="${MOLMOACT2_DATASET_REPO_ID:-RoboDojo_sim_arx-x5_v30}"

@@ -5,13 +5,15 @@ format (one step -- no RMBench-format intermediate).
 DP-style entrypoint (called by ../process_data.sh):
 
     python xpolicylab_to_lerobot.py <bench_name> <ckpt_name> <env_cfg_type> \
-        <expert_data_num> <action_type> --task_type {M1,Mn} [--instruction "..."] \
-        [--language_annotation PATH]
+        <action_type> --task_type {M1,Mn} [--expert_data_num N] \
+        [--instruction "..."] [--language_annotation PATH]
+
+``--expert_data_num`` is optional; when omitted, every episode found under the
+source dir is converted.
 
 Reads:  <ROOT>/data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5
         via XPolicyLab.utils.load_file.load_hdf5 (default sample: data/RoboDojo/test_data/arx_x5)
-Writes: policy/Mem_0/data/<dataset>-<ckpt>-<env>-<action>-lerobot
-        (legacy: Mem_0/lerobot_datasets/... when MEM0_LEGACY_PATHS=1)
+Writes: policy/Mem_0/data/<bench>-<ckpt>-<env>-<action>-lerobot
 
 State/action are packed with XPolicyLab's dual-arm joint convention (14-dim:
 [LA(6),LGrip,RA(6),RGrip]) and expanded to Mem_0's 16-dim model layout
@@ -111,17 +113,23 @@ def resolve_dataset_out_dir(
     bench_name: str,
     ckpt_name: str,
     env_cfg_type: str,
-    expert_data_num: int,
     action_type: str,
 ) -> Path:
-    """Default LeRobot output root (README §4.2); legacy when MEM0_LEGACY_PATHS=1."""
+    """LeRobot output root: exact 4-tuple naming (README §4.2)."""
     tag = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
-    if os.environ.get("MEM0_LEGACY_PATHS") == "1":
-        legacy_name = (
-            f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}"
-        )
-        return Path(UPSTREAM_DIR) / "lerobot_datasets" / legacy_name
     return Path(POLICY_DIR) / "data" / f"{tag}-lerobot"
+
+
+def list_episode_indices(task_dir: Path, expert_data_num: Optional[int]) -> List[int]:
+    """Episode indices to convert: first N when given, else every episode on disk."""
+    if expert_data_num is not None:
+        return list(range(expert_data_num))
+    indices = sorted(
+        int(p.stem.split("_", 1)[1]) for p in (task_dir / "data").glob("episode_*.hdf5")
+    )
+    if not indices:
+        raise FileNotFoundError(f"No episode_*.hdf5 found under {task_dir / 'data'}")
+    return indices
 
 
 def _decode_rgb(img_bit) -> np.ndarray:
@@ -322,10 +330,11 @@ def main() -> None:
     parser.add_argument("ckpt_name", type=str,
                         help="Experiment/raw-task key; HDF5 source dir under data/<dataset>/<ckpt_name>/")
     parser.add_argument("env_cfg_type", type=str)
-    parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", type=str, help="'joint' (Mem_0 default) or 'ee'")
     parser.add_argument("--task_type", choices=["M1", "Mn"], required=True,
                         help="M1: single-stage; Mn: multi-stage with per-segment sub-tasks")
+    parser.add_argument("--expert_data_num", type=int, default=None,
+                        help="Optional episode count; omit to convert all episodes")
     parser.add_argument("--instruction", default=None,
                         help="Override global_task (default: HDF5 instruction, else task_name)")
     parser.add_argument("--language_annotation", default=None,
@@ -364,8 +373,7 @@ def main() -> None:
 
     out_name = f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
     out_root = resolve_dataset_out_dir(
-        args.bench_name, args.ckpt_name, args.env_cfg_type,
-        args.expert_data_num, args.action_type,
+        args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type,
     )
     if out_root.exists():
         shutil.rmtree(out_root)
@@ -374,7 +382,8 @@ def main() -> None:
     use_preview = not args.no_use_preview
 
     written, total_frames = 0, 0
-    bar = tqdm(range(args.expert_data_num), desc=f"convert {out_name} [{args.task_type}]",
+    episode_indices = list_episode_indices(task_dir, args.expert_data_num)
+    bar = tqdm(episode_indices, desc=f"convert {out_name} [{args.task_type}]",
                unit="ep", dynamic_ncols=True)
     for episode_idx in bar:
         load_path = episode_hdf5_path(task_dir, episode_idx)

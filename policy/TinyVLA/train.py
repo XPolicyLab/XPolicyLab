@@ -65,7 +65,6 @@ def parse_wrapper_args(argv):
     parser.add_argument("--xpl_ckpt_name",       required=True,
                         help="Reused as the TinyVLA TASK_CONFIGS key.")
     parser.add_argument("--xpl_env_cfg_type",    required=True)
-    parser.add_argument("--xpl_expert_data_num", required=True, type=int)
     parser.add_argument("--xpl_action_type",     required=True, choices=["joint", "ee"])
     parser.add_argument("--xpl_seed",            required=True, type=int)
 
@@ -90,8 +89,7 @@ def patch_tinyvla(wrapper_args):
 
     ckpt_setting = (
         f"{wrapper_args.xpl_bench_name}-{wrapper_args.xpl_ckpt_name}"
-        f"-{wrapper_args.xpl_env_cfg_type}-{wrapper_args.xpl_expert_data_num}"
-        f"-{wrapper_args.xpl_action_type}"
+        f"-{wrapper_args.xpl_env_cfg_type}-{wrapper_args.xpl_action_type}"
     )
     data_dir = POLICY_DIR / "data" / ckpt_setting
 
@@ -131,7 +129,7 @@ def main():
 
     ckpt_setting = (
         f"{args.xpl_bench_name}-{args.xpl_ckpt_name}-{args.xpl_env_cfg_type}"
-        f"-{args.xpl_expert_data_num}-{args.xpl_action_type}-{args.xpl_seed}"
+        f"-{args.xpl_action_type}-{args.xpl_seed}"
     )
     output_dir = POLICY_DIR / "checkpoints" / ckpt_setting
 

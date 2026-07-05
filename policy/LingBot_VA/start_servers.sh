@@ -8,7 +8,7 @@
 # Only two positional args matter for server startup:
 #   bash start_servers.sh <GPU_ID> <EXPOSE_PORT>
 #
-# task_name / ckpt_name / expert_data_num / seed / action_type are NOT used by
+# task_name / ckpt_name / seed / action_type are NOT used by
 # the servers in websocket-bridge mode (model.py ignores them; inference is
 # driven by the upstream VA server). They are only meaningful on the eval
 # client side. Defaults are still passed to setup_eval_policy_server.sh to
@@ -43,7 +43,6 @@ DATASET_NAME="${DATASET_NAME:-RoboDojo}"
 TASK_NAME="${TASK_NAME:-stack_bowls}"
 CKPT_NAME="${CKPT_NAME:-RoboDojo-cotrain-arx_x5-3500-joint-0}"
 ENV_CFG_TYPE="${ENV_CFG_TYPE:-arx_x5}"
-EXPERT_DATA_NUM="${EXPERT_DATA_NUM:-3500}"
 ACTION_TYPE="${ACTION_TYPE:-joint}"
 SEED="${SEED:-0}"
 
@@ -174,7 +173,7 @@ tmux new-session -d -s "${FWD_SESSION}" \
      cd '${POLICY_DIR}'; \
      bash setup_eval_policy_server.sh \
          '${DATASET_NAME}' '${TASK_NAME}' '${CKPT_NAME}' \
-         '${ENV_CFG_TYPE}' '${EXPERT_DATA_NUM}' '${ACTION_TYPE}' \
+         '${ENV_CFG_TYPE}' '${ACTION_TYPE}' \
          '${SEED}' '${GPU}' '${CONDA_ENV}' \
          '${EXPOSE_PORT}' '${EXPOSE_HOST}' '${CONFIG_NAME}' 2>&1 | tee '${FWD_LOG}'"
 

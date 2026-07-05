@@ -5,13 +5,12 @@ bench_name=${1}
 task_name=${2}
 ckpt_name=${3}
 env_cfg_type=${4}
-expert_data_num=${5}
-action_type=${6}
-seed=${7}
-policy_gpu_id=${8}
-policy_conda_env=${9}
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+action_type=${5}
+seed=${6}
+policy_gpu_id=${7}
+policy_conda_env=${8}
+policy_server_port=${9}
+policy_server_host=${10:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_DIR="$(cd "${CURRENT_DIR}/../.." && pwd)"
@@ -22,7 +21,8 @@ ln -sfn "${XPL_DIR}" "${IMPORT_SHIM_DIR}/XPolicyLab"
 
 policy_name="$(basename "${CURRENT_DIR}")"
 yaml_file="${CURRENT_DIR}/deploy.yml"
-checkpoint_root="${CURRENT_DIR}/checkpoints/${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+# ckpt_name is the full run directory name under checkpoints/.
+checkpoint_root="${CURRENT_DIR}/checkpoints/${ckpt_name}"
 qwen25_path="${QWEN25_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct}"
 
 checkpoint_path=$(python - <<PY
@@ -69,7 +69,6 @@ exec env \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
             env_cfg="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \

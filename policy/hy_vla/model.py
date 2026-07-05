@@ -251,6 +251,25 @@ class Model(ModelTemplate):
         ckpt_path = model_cfg["ckpt_path"]
         if not os.path.isabs(ckpt_path):
             ckpt_path = os.path.join(hy_root, ckpt_path)
+
+        # Fallback ckpt selection via ckpt_name: setup_eval_policy_server.sh
+        # already resolves ckpt_name -> a ckpt_path override, but when this
+        # server is launched without that override (e.g. setup_policy_server.py
+        # run directly) let a non-placeholder ckpt_name pick the checkpoint too.
+        # Only kicks in when the configured ckpt_path is missing, so existing
+        # absolute / relative ckpt_path behaviour is preserved.
+        ckpt_name = (model_cfg.get("ckpt_name") or "").strip()
+        _ckpt_placeholders = {"", "null", "none", "default", "ckpt", "ckpt_name", "-"}
+        if ckpt_name.lower() not in _ckpt_placeholders and not os.path.isdir(ckpt_path):
+            for cand in (
+                os.path.expanduser(ckpt_name),
+                os.path.join(hy_root, "checkpoints", ckpt_name),
+                os.path.join(str(_POLICY_DIR), "checkpoints", ckpt_name),
+            ):
+                if os.path.isdir(cand):
+                    ckpt_path = os.path.abspath(cand)
+                    break
+
         norm_path = model_cfg.get("norm_path") or os.path.join(ckpt_path, "norm_stats.pkl")
 
         # Decode / cadence knobs (defaults track robotwin_eval/deploy_policy.yml).

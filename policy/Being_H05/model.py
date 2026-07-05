@@ -40,18 +40,12 @@ def _resolve_model_path(model_cfg: dict[str, Any]) -> str:
     if model_path:
         return _resolve_latest_step_dir(model_path)
 
-    data_project_name = model_cfg.get("data_project_name") or model_cfg.get("xpolicylab_bench_name")
+    # ckpt_name is the full run directory name under checkpoints/.
     ckpt_name = model_cfg.get("ckpt_name")
-    env_cfg_type = model_cfg.get("env_cfg_type")
-    expert_data_num = model_cfg.get("expert_data_num")
-    action_type = model_cfg.get("action_type", "joint")
-    seed = model_cfg.get("seed")
-    if None in (data_project_name, ckpt_name, env_cfg_type, expert_data_num, seed):
-        raise ValueError(
-            "deploy config must provide model_path, or data_project_name + ckpt fields for XPolicyLab 6-tuple."
-        )
+    if ckpt_name is None:
+        raise ValueError("deploy config must provide model_path or ckpt_name.")
 
-    run_id = f"{data_project_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    run_id = str(ckpt_name)
     candidate = os.path.join(_SCRIPT_DIR, "checkpoints", run_id)
     if not os.path.isdir(candidate):
         raise ValueError(f"checkpoint run dir not found: {candidate}")

@@ -74,10 +74,10 @@ uv run --project scripts/lerobot_conversion \
   --repo-id "${GR00T_DATASET}"
 ```
 
-或使用 policy 封装脚本：
+或使用 policy 封装脚本（`expert_data_num` 为可选尾参，留空 = 全部 episode）：
 
 ```bash
-bash process_data.sh RoboDojo cotrain arx_x5 3500 joint
+bash process_data.sh RoboDojo cotrain arx_x5 joint
 ```
 
 ### 补充 meta/modality.json
@@ -150,8 +150,7 @@ pip install -e .
 |----|------|
 | Server 环境 | `uv` |
 | Client 环境 | `XPolicyLab`（conda） |
-| eval 示例 ckpt | `cotrain` |
-| expert_data_num | `3500` |
+| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/GR00T_N17/RoboDojo-cotrain-arx_x5-3500-joint-0` |
 | 备注 | cosmos: checkpoints/shared/Cosmos-Reason2-2B |
@@ -160,19 +159,19 @@ pip install -e .
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <xspark_dir> checkpoints/<ckpt_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名（历史 6-tuple 目录名可整体作为 `ckpt_name` 传入）。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 0 0 uv <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 uv <port> localhost
 
 # terminal 2 — client
-bash setup_eval_env_client.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 XPolicyLab "ckpt_name=cotrain,action_type=joint" <port> localhost
+bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost
 ```
 
 或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。

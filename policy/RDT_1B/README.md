@@ -47,12 +47,13 @@ bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0,1,2,3,4,5,6,7
 ## process_data.sh
 
 ```text
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [source_path]
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [source_path]
 ```
 
 | 参数 | 示例 | 说明 |
 |------|------|------|
 | 前 4 项 | 同 `train.sh`（不含 seed/gpu） | 决定 `data/` 与 `lang_embeds/` 子目录名 |
+| `expert_data_num` | 可选 | 留空 = 软链全部数据；设置后按目录取前 N 条 episode 生成过滤树。数据量 ablation 请配合不同 `ckpt_name` 使用 |
 | `source_path` | 可选 | 源 HDF5 根目录；省略时按顺序查找 `data/<dataset>/<ckpt>` 等 |
 
 源数据查找顺序：`source_path` → `RAW_DATA_ROOT` → `XPolicyLab/data/<dataset>/<ckpt>` → `XPolicyLab/data/<dataset>_<ckpt>`。

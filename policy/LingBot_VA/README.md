@@ -82,14 +82,14 @@ VA_SERVER_HOST=127.0.0.1 \
 VA_SERVER_PORT=10001 \
 bash setup_eval_policy_server.sh \
     RoboDojo <task_name> <ckpt_name> \
-    <env_cfg_type> <expert_data_num> <action_type> \
+    <env_cfg_type> <action_type> \
     <seed> <gpu_id> lingbot_va \
     <EXPOSE_PORT> 0.0.0.0
 ```
 
-`VA_SERVER_HOST/PORT` 指向 backend VA server；`$10` 是 forward 自己的监听端口，`$11` 是监听地址。
+`VA_SERVER_HOST/PORT` 指向 backend VA server；`$9` 是 forward 自己的监听端口，`$10` 是监听地址。
 
-> 注：在 ws-bridge 模式下，`task_name` / `ckpt_name` / `expert_data_num` / `seed` / `action_type` 不影响 server 端推理（推理由 backend VA 驱动），它们只在 eval client 端有意义。这些参数仅为满足脚本位置参数契约而保留默认值。
+> 注：在 ws-bridge 模式下，`task_name` / `ckpt_name` / `seed` / `action_type` 不影响 server 端推理（推理由 backend VA 驱动），它们只在 eval client 端有意义。这些参数仅为满足脚本位置参数契约而保留默认值。
 
 ### 3. eval client
 
@@ -121,10 +121,12 @@ python dataset/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --out
 ## 训练
 
 ```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
-Checkpoint：`checkpoints/<6-tuple>/`。
+Checkpoint：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`。评测时把该完整目录名作为 `eval.sh` 的 `ckpt_name` 传入。
+
+Ablation（如数据量对比）用不同的 `ckpt_name` 区分 run；数据量本身在数据处理阶段控制（`process_data` 链的可选 `expert_data_num`，留空 = 全部 episode）。
 
 ## 可视化合成
 

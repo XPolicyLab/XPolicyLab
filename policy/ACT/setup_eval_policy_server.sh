@@ -5,13 +5,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
@@ -31,7 +30,19 @@ print(get_action_dim(sys.argv[1]))
 )
 export ACT_ACTION_DIM="${action_dim}"
 
+# ckpt_name is the checkpoint directory under checkpoints/ (full run dir name).
+if [[ "${ckpt_name}" == /* ]]; then
+    ckpt_dir="${ckpt_name}"
+elif [[ -d "${CURRENT_DIR}/checkpoints/${ckpt_name}" ]]; then
+    ckpt_dir="${CURRENT_DIR}/checkpoints/${ckpt_name}"
+elif [[ -d "${CURRENT_DIR}/${ckpt_name}" ]]; then
+    ckpt_dir="${CURRENT_DIR}/${ckpt_name}"
+else
+    ckpt_dir="${CURRENT_DIR}/checkpoints/${ckpt_name}"
+fi
+
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
+echo "[SERVER] ckpt_dir=${ckpt_dir}"
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
@@ -44,8 +55,8 @@ exec env \
             bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
+            ckpt_dir="${ckpt_dir}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \

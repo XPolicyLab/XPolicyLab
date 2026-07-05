@@ -6,11 +6,13 @@ XPolicyLab HDF5 key mapping via pack_robot_state / vision.cam_head.
 
 Called by ../process_data_batch.sh:
 
-    python xpolicylab_batch_to_lerobot.py <bench_name> <env_cfg_type> \
-        <expert_data_num> <action_type> \
+    python xpolicylab_batch_to_lerobot.py <bench_name> <env_cfg_type> <action_type> \
         --m1_tasks t1,t2 --mn_tasks t3,t4 \
         --annotation_root <path/to/language_annotation> \
-        [--dataset_id NAME] [--vcodec h264] [--no-use-preview]
+        [--expert_data_num N] [--dataset_id NAME] [--vcodec h264] [--no-use-preview]
+
+``--expert_data_num`` is optional (episodes kept per task); when omitted, every
+episode found under each task dir is converted.
 
 ``global_task`` is read from each episode's HDF5 ``instruction`` field.
 Mn sub-tasks come from ``<annotation_root>/<task>/language_annotation.json``.
@@ -20,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -28,23 +29,23 @@ from pathlib import Path
 from tqdm import tqdm
 
 ADAPTER_DIR = Path(__file__).resolve().parent
+UPSTREAM_DIR = ADAPTER_DIR.parent          # policy/Mem_0/Mem_0
+POLICY_DIR = UPSTREAM_DIR.parent           # policy/Mem_0
+ROOT_DIR = POLICY_DIR.parents[2]           # workspace root (contains XPolicyLab/, data/)
 
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-if str(UPSTREAM_DIR) not in sys.path:
-    sys.path.insert(0, str(UPSTREAM_DIR))
+for _p in (str(ROOT_DIR), str(UPSTREAM_DIR), str(ADAPTER_DIR)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from XPolicyLab.utils.load_file import load_hdf5  # noqa: E402
 from XPolicyLab.utils.process_data import get_robot_action_dim_info  # noqa: E402
 from xpolicylab_to_lerobot import (  # noqa: E402
     DEFAULT_VCODEC,
-    POLICY_DIR,
-    ROOT_DIR,
-    UPSTREAM_DIR,
     _segment_boundaries,
     convert_episode_frames,
     create_mem0_lerobot_dataset,
     episode_hdf5_path,
+    list_episode_indices,
     load_episode_images,
     pack_episode_state_action,
     read_instruction,
@@ -59,10 +60,9 @@ def _split_tasks(raw: str) -> list[str]:
 def _default_dataset_id(
     bench_name: str,
     env_cfg_type: str,
-    expert_data_num: int,
     action_type: str,
 ) -> str:
-    return f"{bench_name}-cotrain-{env_cfg_type}-{expert_data_num}-{action_type}"
+    return f"{bench_name}-cotrain-{env_cfg_type}-{action_type}"
 
 
 def main() -> None:
@@ -71,8 +71,9 @@ def main() -> None:
     )
     parser.add_argument("bench_name", type=str)
     parser.add_argument("env_cfg_type", type=str)
-    parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", type=str, help="'joint' or 'ee'")
+    parser.add_argument("--expert_data_num", type=int, default=None,
+                        help="Optional episodes kept per task; omit to convert all episodes")
     parser.add_argument("--m1_tasks", default="", help="Comma-separated M1 task names")
     parser.add_argument("--mn_tasks", default="", help="Comma-separated Mn task names")
     parser.add_argument(
@@ -80,7 +81,7 @@ def main() -> None:
         help="Root dir containing <task>/language_annotation.json for Mn tasks",
     )
     parser.add_argument("--dataset_id", default=None,
-                        help="Output tag (default <dataset>-cotrain-<env>-<N>-<action>)")
+                        help="Output tag (default <bench>-cotrain-<env>-<action>)")
     parser.add_argument("--camera", default="cam_head")
     parser.add_argument(
         "--no-use-preview", action="store_true",
@@ -105,12 +106,9 @@ def main() -> None:
         )
 
     dataset_id = args.dataset_id or _default_dataset_id(
-        args.bench_name, args.env_cfg_type, args.expert_data_num, args.action_type,
+        args.bench_name, args.env_cfg_type, args.action_type,
     )
-    if os.environ.get("MEM0_LEGACY_PATHS") == "1":
-        out_root = Path(UPSTREAM_DIR) / "lerobot_datasets" / dataset_id
-    else:
-        out_root = Path(POLICY_DIR) / "data" / f"{dataset_id}-lerobot"
+    out_root = POLICY_DIR / "data" / f"{dataset_id}-lerobot"
     if out_root.exists():
         shutil.rmtree(out_root)
 
@@ -141,7 +139,7 @@ def main() -> None:
         task_written = 0
 
         ep_bar = tqdm(
-            range(args.expert_data_num),
+            list_episode_indices(task_dir, args.expert_data_num),
             desc=f"  {task_name}[{task_type}]",
             leave=False,
             unit="ep",

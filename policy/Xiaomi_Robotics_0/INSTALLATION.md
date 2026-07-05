@@ -71,7 +71,8 @@ policy/Xiaomi_Robotics_0/xiaomi_robotics_0/xr0/pretrained_ckpt/xr0_pretrained.pt
 
 ```bash
 cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/Xiaomi_Robotics_0
-bash scripts/link_checkpoint.sh RoboDojo cotrain arx_x5 100 ee 0
+# 链接名 = eval 的 ckpt_name；source 为含 config.py 与 last.ckpt/ 的目录
+bash scripts/link_checkpoint.sh RoboDojo-cotrain-arx_x5-ee-0 /path/to/finetuned_ckpt
 ```
 
 ## 5. 安装自检
@@ -94,7 +95,6 @@ python -c "import XPolicyLab; print('XPolicyLab ok')"
 | Server 环境 | `mibot` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-100-ee-0` |
-| expert_data_num | `100` |
 | action_type | `ee` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/Xiaomi_Robotics_0/.../last.ckpt/checkpoint` |
 | 备注 | 无 flash_attn 时 model 自动 sdpa |
@@ -103,16 +103,16 @@ python -c "import XPolicyLab; print('XPolicyLab ok')"
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <xspark_dir> checkpoints/<ckpt_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名（历史 6-tuple 目录名可整体作为 `ckpt_name` 传入）。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-100-ee-0 arx_x5 100 ee 0 0 mibot <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-100-ee-0 arx_x5 ee 0 0 mibot <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-100-ee-0 arx_x5 ee 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-100-ee-0,action_type=ee" <port> localhost

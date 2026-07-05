@@ -1,12 +1,15 @@
 #!/bin/bash
-# Usage: bash process_data_batch.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+# Usage: bash process_data_batch.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
+# Discovers every task under data/<bench_name>/ with episodes for env_cfg_type and
+# merges them into one dataset named <bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>.
+# expert_data_num: optional; empty = all episodes (kept PER task).
 set -euo pipefail
 
 bench_name=${1:?bench_name required}
 ckpt_name=${2:?ckpt_name required}
 env_cfg_type=${3:?env_cfg_type required}
-expert_data_num=${4:?expert_data_num required}
-action_type=${5:?action_type required}
+action_type=${4:?action_type required}
+expert_data_num=${5:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -31,5 +34,5 @@ joined="$(IFS=,; printf '%s' "${sorted[*]}")"
 echo "[process_data_batch] merging ${#sorted[@]} tasks -> ckpt_name=${ckpt_name}: ${joined}"
 
 bash "${SCRIPT_DIR}/process_data.sh" \
-  "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" \
-  "${joined}" "${ckpt_name}"
+  "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" \
+  "${expert_data_num}" "${joined}"

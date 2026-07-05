@@ -4,7 +4,6 @@ task_name: null
 ckpt_name: null
 bench_name: null
 env_cfg_type: null
-expert_data_num: null
 action_type: joint
 seed: 0
 eval_batch: false

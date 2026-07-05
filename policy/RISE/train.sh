@@ -9,15 +9,15 @@ set -euo pipefail
 #   3. all       - run advantage -> policy
 #
 # Usage:
-#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]
 #
 # Examples:
-#   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 advantage
-#   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 policy
-#   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 all
+#   bash train.sh RoboDojo stack_bowls arx_x5 joint 42 0 advantage
+#   bash train.sh RoboDojo stack_bowls arx_x5 joint 42 0 policy
+#   bash train.sh RoboDojo stack_bowls arx_x5 joint 42 0 all
 
 stages_regex="^(advantage|policy|all)$"
-usage="Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]"
+usage="Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]"
 
 if [[ "${1:-}" =~ ${stages_regex} ]]; then
     legacy_usage="Usage: bash train.sh <advantage|policy|all> <gpu_id> <seed> [extra args]"
@@ -29,18 +29,16 @@ if [[ "${1:-}" =~ ${stages_regex} ]]; then
     bench_name="${RISE_BENCH_NAME:-RoboDojo}"
     ckpt_name="${RISE_CKPT_NAME:-stack_bowls}"
     env_cfg_type="${RISE_ENV_CFG_TYPE:-arx_x5}"
-    expert_data_num="${RISE_EXPERT_DATA_NUM:-100}"
     action_type="${RISE_ACTION_TYPE:-joint}"
 else
     bench_name=${1:?${usage}}
     ckpt_name=${2:?${usage}}
     env_cfg_type=${3:?${usage}}
-    expert_data_num=${4:?${usage}}
-    action_type=${5:?${usage}}
-    seed=${6:?${usage}}
-    gpu_id=${7:?${usage}}
-    stage=${8:-${RISE_STAGE:-policy}}
-    extra_args=("${@:9}")
+    action_type=${4:?${usage}}
+    seed=${5:?${usage}}
+    gpu_id=${6:?${usage}}
+    stage=${7:-${RISE_STAGE:-policy}}
+    extra_args=("${@:8}")
 fi
 
 if [[ ! "${stage}" =~ ${stages_regex} ]]; then
@@ -58,21 +56,21 @@ DEFAULT_RAW_DATASET_LINK="${SCRIPT_DIR}/data/RoboDojo_sim_v21_video_abot-lerobot
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
 STANDARD_CKPT_DIR="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
+    "${env_cfg_type}" "${action_type}" "${seed}")"
 
 if [[ -n "${RISE_RAW_DATASET:-}" ]]; then
     RAW_DATASET_LINK="${RISE_RAW_DATASET}"
 elif [[ -d "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${expert_data_num}")" || \
+    "${env_cfg_type}" "${action_type}")" || \
       -L "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${expert_data_num}")" ]]; then
+    "${env_cfg_type}" "${action_type}")" ]]; then
     RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-        "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
+        "${env_cfg_type}" "${action_type}")"
 elif [[ -e "${DEFAULT_RAW_DATASET_LINK}" ]]; then
     RAW_DATASET_LINK="${DEFAULT_RAW_DATASET_LINK}"
 else
     RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-        "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
+        "${env_cfg_type}" "${action_type}")"
 fi
 
 RAW_DATASET="$(readlink -f "${RAW_DATASET_LINK}")"

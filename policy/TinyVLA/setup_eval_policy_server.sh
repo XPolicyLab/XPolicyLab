@@ -5,13 +5,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -21,8 +20,8 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
-ckpt_root="${SCRIPT_DIR}/checkpoints/${ckpt_setting}"
+# ckpt_name is the full run directory name under checkpoints/.
+ckpt_root="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
 
 # train.sh writes a series of `checkpoint-<step>` directories under ckpt_root;
 # always evaluate the most recent one.

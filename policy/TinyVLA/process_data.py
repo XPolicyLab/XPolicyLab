@@ -35,8 +35,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", choices=["joint", "ee"])
+    parser.add_argument("expert_data_num", type=int, nargs="?", default=None,
+                        help="Optional per-task episode cap; defaults to all episodes.")
     parser.add_argument("--source-root", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--workers", type=int, default=min(8, os.cpu_count() or 1))
@@ -216,7 +217,7 @@ def main() -> None:
     args = parse_args()
     ckpt_setting = (
         f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}"
-        f"-{args.expert_data_num}-{args.action_type}"
+        f"-{args.action_type}"
     )
     root = args.source_root if args.source_root is not None else (REPO_ROOT / "data" / args.bench_name)
     out_dir = args.output_dir if args.output_dir is not None else (POLICY_DIR / "data" / ckpt_setting)
@@ -228,11 +229,14 @@ def main() -> None:
     for task_dir in sorted(path for path in root.iterdir() if path.is_dir()):
         task_name = task_dir.name
         data_dir = task_dir / args.env_cfg_type / "data"
-        for episode_idx in range(args.expert_data_num):
-            episodes.append((task_name, data_dir / f"episode_{episode_idx:07d}.hdf5"))
+        episode_paths = sorted(data_dir.glob("episode_*.hdf5"))
+        if args.expert_data_num is not None:
+            episode_paths = episode_paths[: args.expert_data_num]
+        for episode_path in episode_paths:
+            episodes.append((task_name, episode_path))
         print(
             f"[TinyVLA process_data] task='{task_name}': "
-            f"queued {args.expert_data_num} episodes"
+            f"queued {len(episode_paths)} episodes"
         )
     workers = args.workers
     jobs = [

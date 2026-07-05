@@ -23,34 +23,37 @@ conda activate <your_env>
 Convert HDF5 under `data/<bench_name>/<ckpt_name>/<env_cfg_type>/` into DP training zarr:
 
 ```bash
-bash process_data.sh RoboDojo stack_bowls arx_x5 50 joint
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint          # all episodes
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50  # only the first 50 episodes
 ```
 
+Argument order: `bench_name ckpt_name env_cfg_type action_type [expert_data_num]`. The trailing `expert_data_num` is optional; when omitted, all `episode_*.hdf5` under the raw data directory are used.
+
 - **Input**: `data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5`
-- **Output**: `policy/DP/data/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>.zarr`
+- **Output**: `policy/DP/data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>.zarr`
 - **Observations**: three RGB streams (head / left_wrist / right_wrist), resized to `240×320`
 - **State / action**: packed into `agent_pos` and action vectors according to `action_type` (e.g. `joint`)
 
-`ckpt_name` names the experiment and locates processed data; for single-task runs it usually matches the raw data directory name.
+`ckpt_name` names the experiment and locates processed data; for single-task runs it usually matches the raw data directory name. To compare different data scales, use a distinct `ckpt_name` per scale (e.g. `myrun_50ep`) and pass the optional `expert_data_num` at process time.
 
 ## Training
 
 ```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
 Example:
 
 ```bash
-bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0
+bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0
 ```
 
-If the zarr file is missing, `train.sh` calls `process_data.sh` automatically.
+If the zarr file is missing, `train.sh` calls `process_data.sh` automatically (with all episodes).
 
 Checkpoints are saved to:
 
 ```text
-policy/DP/checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/<epoch>.ckpt
+policy/DP/checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/<epoch>.ckpt
 ```
 
 The default checkpoint is saved at epoch 600; `deploy.yml` sets `checkpoint_num: 600` to load that weight.
@@ -73,13 +76,13 @@ Main hyperparameters are in `diffusion_policy/config/robot_dp.yaml` and can be o
 ### Same-machine evaluation
 
 ```bash
-bash eval.sh RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 0 0 <policy_env> <eval_env>
+bash eval.sh RoboDojo stack_bowls RoboDojo-stack_bowls-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_env> <eval_env>
 ```
 
-Argument order: `bench_name task_name ckpt_name env_cfg_type expert_data_num action_type seed policy_gpu env_gpu policy_conda_env eval_env_conda_env`.
+Argument order: `bench_name task_name ckpt_name env_cfg_type action_type seed policy_gpu env_gpu policy_conda_env eval_env_conda_env`.
 
 - `task_name`: simulation task to run
-- `ckpt_name`: experiment name used to load the checkpoint (usually equals `task_name` for single-task runs)
+- `ckpt_name`: full run directory name under `checkpoints/` used to load the checkpoint
 
 ### Two-machine evaluation
 
@@ -87,7 +90,7 @@ Start the policy server on the GPU machine:
 
 ```bash
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls stack_bowls arx_x5 50 joint 0 \
+  RoboDojo stack_bowls RoboDojo-stack_bowls-arx_x5-joint-0 arx_x5 joint 0 0 \
   <policy_env> 5000 0.0.0.0
 ```
 

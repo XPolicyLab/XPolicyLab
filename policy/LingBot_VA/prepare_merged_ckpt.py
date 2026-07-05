@@ -8,6 +8,57 @@ import shutil
 from pathlib import Path
 
 
+def _find_transformer(ckpt_root: Path) -> Path | None:
+    """Locate a transformer/ dir under ``ckpt_root``.
+
+    Supports several layouts (checked in order):
+      * ``<root>/transformer``                          (already a step / merged dir)
+      * ``<root>/checkpoints/transformer``
+      * ``<root>/checkpoint_step_<N>/transformer``      (train.py layout, run root passed)
+      * ``<root>/checkpoints/checkpoint_step_<N>/transformer``
+
+    For the ``checkpoint_step_<N>`` layouts the largest ``N`` is chosen unless the
+    ``LINGBOT_VA_STEP`` env var pins a specific step.
+    """
+    for transformer_path in (
+        ckpt_root / "transformer",
+        ckpt_root / "checkpoints" / "transformer",
+    ):
+        if (transformer_path / "config.json").exists():
+            return transformer_path
+
+    pinned = os.environ.get("LINGBOT_VA_STEP")
+    candidates: list[tuple[int, Path]] = []
+    for search_root in (ckpt_root, ckpt_root / "checkpoints"):
+        if not search_root.is_dir():
+            continue
+        for step_dir in search_root.glob("checkpoint_step_*"):
+            transformer_path = step_dir / "transformer"
+            if not (transformer_path / "config.json").exists():
+                continue
+            try:
+                step_num = int(step_dir.name.rsplit("_", 1)[1])
+            except (IndexError, ValueError):
+                continue
+            candidates.append((step_num, transformer_path))
+
+    if not candidates:
+        return None
+
+    if pinned is not None:
+        pinned_num = int(pinned)
+        for step_num, transformer_path in candidates:
+            if step_num == pinned_num:
+                return transformer_path
+        raise FileNotFoundError(
+            f"LINGBOT_VA_STEP={pinned} not found under {ckpt_root} "
+            f"(available: {sorted(n for n, _ in candidates)})."
+        )
+
+    candidates.sort(key=lambda item: item[0])
+    return candidates[-1][1]
+
+
 def resolve_paths(checkpoint_path: str, base_model_path: str) -> tuple[Path, Path]:
     ckpt_root = Path(checkpoint_path).expanduser().resolve()
     if not ckpt_root.is_dir():
@@ -17,20 +68,14 @@ def resolve_paths(checkpoint_path: str, base_model_path: str) -> tuple[Path, Pat
     if not (base_root / "vae").is_dir():
         raise FileNotFoundError(f"Base model directory missing vae/: {base_root}")
 
-    for transformer_path in (
-        ckpt_root / "checkpoints" / "transformer",
-        ckpt_root / "transformer",
-    ):
-        if (transformer_path / "config.json").exists():
-            return base_root, transformer_path
-
-    if (ckpt_root / "transformer" / "config.json").exists():
-        return ckpt_root, ckpt_root / "transformer"
-
-    raise FileNotFoundError(
-        f"Transformer checkpoint not found under {ckpt_root}. "
-        "Expected checkpoints/transformer/ or transformer/."
-    )
+    transformer_path = _find_transformer(ckpt_root)
+    if transformer_path is None:
+        raise FileNotFoundError(
+            f"Transformer checkpoint not found under {ckpt_root}. Expected "
+            "transformer/, checkpoints/transformer/, or "
+            "[checkpoints/]checkpoint_step_<N>/transformer/."
+        )
+    return base_root, transformer_path
 
 
 def build_merged_ckpt(

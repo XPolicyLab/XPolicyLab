@@ -148,19 +148,40 @@ def load_data(ep_path) -> dict[str, Any]:
 
 def main():
     parser = argparse.ArgumentParser(description="Process some episodes.")
-    parser.add_argument("task_name", type=str, help="The name of the task (e.g., beat_block_hammer)",)
-    parser.add_argument("env_cfg_type", type=str, help="The name of the environment config",)
-    parser.add_argument("repo_id", type=str, help="The dataset repository ID",)
-    parser.add_argument("mode", type=str, choices=["video", "image"], help="Whether to store images as videos or individual image files",)
-    parser.add_argument("--instruction", type=str, default="Do your job.",help="The instruction for the task",)
+    parser.add_argument("bench_name", type=str, help="Dataset bench name (e.g., RoboDojo)")
+    parser.add_argument("ckpt_name", type=str, help="Run name; also selects raw task dir under data/<bench>/")
+    parser.add_argument("env_cfg_type", type=str, help="Environment config type (e.g., arx_x5)")
+    parser.add_argument("action_type", type=str, help="Action type for artifact naming (e.g., joint)")
+    parser.add_argument(
+        "expert_data_num",
+        type=int,
+        nargs="?",
+        default=None,
+        help="Optional number of episodes to process; defaults to all episodes.",
+    )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["video", "image"],
+        default="image",
+        help="Whether to store images as videos or individual image files",
+    )
+    parser.add_argument(
+        "--instruction",
+        type=str,
+        default="Do your job.",
+        help="Default instruction when not present in HDF5",
+    )
     args = parser.parse_args()
 
-    task_name = args.task_name
+    bench_name = args.bench_name
+    ckpt_name = args.ckpt_name
     env_cfg_type = args.env_cfg_type
-    repo_id = args.repo_id
+    action_type = args.action_type
+    repo_id = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
     mode = args.mode
     instruction = args.instruction
-    load_data_dir = os.path.join(ROOT_PATH, "./data", str(task_name), str(env_cfg_type))
+    load_data_dir = os.path.join(ROOT_PATH, "data", str(bench_name), str(ckpt_name), str(env_cfg_type))
 
     env_cfg = load_yaml(os.path.join(ROOT_PATH, "./env_cfg", f"{env_cfg_type}.yml"))
     robot_type = env_cfg['config']['robot']
@@ -176,7 +197,11 @@ def main():
         robot_action_dim_info=robot_action_dim_info,
     )
 
-    episode_files = sorted(Path(load_data_dir).glob("*.hdf5"))
+    episode_files = sorted(Path(load_data_dir).glob("data/episode_*.hdf5"))
+    if not episode_files:
+        episode_files = sorted(Path(load_data_dir).glob("*.hdf5"))
+    if args.expert_data_num is not None:
+        episode_files = episode_files[: args.expert_data_num]
     for ep_file in tqdm(episode_files, desc="Processing episodes", unit="episode"):
         try:
             data = load_data(ep_file)

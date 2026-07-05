@@ -4,10 +4,10 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 Run process_data.sh first. Checkpoints are saved under:
-  policy/Being_H05/checkpoints/<6-tuple>/
+  policy/Being_H05/checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/
 
 Required environment (set before training):
   BEINGH_MLLM_PATH      InternVL / MLLM backbone
@@ -20,7 +20,7 @@ Optional:
 EOF
 }
 
-if [[ "$#" -ne 7 ]]; then
+if [[ "$#" -ne 6 ]]; then
     usage >&2
     exit 1
 fi
@@ -28,17 +28,16 @@ fi
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 BEINGH_DIR="${SCRIPT_DIR}/Being-H"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-DATA_TAG="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+DATA_TAG="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 CKPT_RUN_ID="${DATA_TAG}-${seed}"
 DATA_DIR="${SCRIPT_DIR}/data/${DATA_TAG}"
 OUTPUT_DIR="${SCRIPT_DIR}/checkpoints/${CKPT_RUN_ID}"
@@ -47,8 +46,8 @@ LOG_DIR="${OUTPUT_DIR}/log"
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33m[INFO] GPU: ${gpu_id}, seed: ${seed}\033[0m"
-echo -e "\033[33m[INFO] data tag (5-tuple): ${DATA_TAG}\033[0m"
-echo -e "\033[33m[INFO] checkpoint dir (6-tuple): ${CKPT_RUN_ID}\033[0m"
+echo -e "\033[33m[INFO] data tag (4-tuple): ${DATA_TAG}\033[0m"
+echo -e "\033[33m[INFO] checkpoint dir (4-tuple + seed): ${CKPT_RUN_ID}\033[0m"
 
 if [[ "${action_type}" != "joint" ]]; then
     echo -e "\033[31m[ERROR] Only action_type=joint is supported for Being_H05.\033[0m" >&2
@@ -57,15 +56,15 @@ fi
 
 if [[ ! -d "${DATA_DIR}" ]]; then
     echo -e "\033[31m[ERROR] Missing processed data: ${DATA_DIR}\033[0m" >&2
-    echo -e "\033[33m[ERROR] Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}\033[0m"
+    echo -e "\033[33m[ERROR] Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${action_type}\033[0m"
     exit 1
 fi
 
 if [[ ! -f "${DATASET_YAML}" ]]; then
+    # Regenerate without an episode cap; process_data.sh is the place to cap episodes.
     python3 "${SCRIPT_DIR}/scripts/xpolicylab_dataset.py" prepare \
         --data-tag "${DATA_TAG}" \
         --data-path "${DATA_DIR}" \
-        --expert-data-num "${expert_data_num}" \
         --action-type "${action_type}"
 fi
 

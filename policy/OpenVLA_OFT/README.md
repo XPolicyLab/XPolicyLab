@@ -13,17 +13,21 @@ TFDS_DATA_DIR=<tensorflow_datasets_dir> \
   bash scripts/build_tfds_aloha.sh <data_sample> <aloha_output_dir> <processed_dir> 0.05 0
 ```
 
-默认 TFDS 名：`aloha_<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
+默认 TFDS 名：`aloha_<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>`
+（即 `aloha_` + 训练 run 目录名，与 eval 侧 `aloha_<ckpt_name>` 的默认推导一致）。
 
-可用 `OPENVLA_TFDS_DATASET_NAME` 覆盖。
+可用 `OPENVLA_TFDS_DATASET_NAME` 覆盖；覆盖时需在 `deploy.yml` 里同步设置
+`tfds_dataset_name`（显式覆盖优先于默认推导）。
 
 ## 训练
 
 ```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
-Checkpoint：`checkpoints/<6-tuple>/`
+Checkpoint：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`，
+该目录名整体即 eval 侧的 `ckpt_name`。数据量 ablation 改用不同 `ckpt_name`
+（如 `stack_bowls_50ep`）区分，episode 数在 TFDS 数据转换阶段控制。
 
 ## 部署
 
@@ -32,8 +36,10 @@ Checkpoint：`checkpoints/<6-tuple>/`
 推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> openvla_oft XPolicyLab
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 <policy_gpu> <env_gpu> openvla_oft XPolicyLab
 ```
+
+`ckpt_name` 直接是 `checkpoints/` 下完整的 run 目录名（历史 6-tuple 目录名可整体传入）。
 
 ### Evaluation environment (`EVAL_ENV_TYPE`)
 

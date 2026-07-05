@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-if [[ $# -ne 11 ]]; then
-    echo "Usage: bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
-    echo "Example: bash eval.sh RoboDojo stack_bowls eventvla arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab"
+if [[ $# -ne 10 ]]; then
+    echo "Usage: bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
+    echo "Example: bash eval.sh RoboDojo stack_bowls RoboDojo-eventvla-arx_x5-3500-joint-0 arx_x5 joint 0 0 1 XPolicyLab XPolicyLab"
     exit 1
 fi
 
@@ -11,13 +11,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-env_gpu_id=$9
-policy_conda_env=${10}
-eval_env_conda_env=${11}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+env_gpu_id=$8
+policy_conda_env=$9
+eval_env_conda_env=${10}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -28,7 +27,7 @@ CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_host="localhost"
-additional_info="ckpt_name=${ckpt_name},expert_data_num=${expert_data_num},action_type=${action_type}"
+additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
 
 cleanup() {
     if [[ -n "${SERVER_PID:-}" ]]; then
@@ -45,7 +44,6 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \
@@ -69,7 +67,6 @@ bash "${CLIENT_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${env_gpu_id}" \

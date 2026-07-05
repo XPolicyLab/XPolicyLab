@@ -6,7 +6,7 @@ SmolVLA 基于 LeRobot SmolVLA 接入 XPolicyLab。安装见 [INSTALLATION.md](I
 
 ```bash
 conda activate smolvla   # 或 install.sh 里 SMOVLA_CONDA_ENV 指定的名字
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
 默认 LeRobot `dataset.repo_id` 与 task（`ckpt_name`）对应，与 v30 批量转换一致：
@@ -17,7 +17,10 @@ bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_
 
 训练前会自动 `source /mnt/nfs/niantian/.bashrc`（`SMOVLA_BASHRC` 可改）。
 
-Checkpoint：`checkpoints/<6-tuple>/`
+Checkpoint：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`，
+该目录名整体即 eval 侧的 `ckpt_name`。数据量 ablation 改用不同 `ckpt_name`
+（如 `build_tower_50ep`）区分，episode 数在 LeRobot 数据集转换阶段控制
+（配合 `SMOVLA_REPO_ID` 指向对应数据集）。
 
 ### 批量训练（多 GPU + tmux）
 
@@ -44,7 +47,7 @@ tmux attach -t smolvla_stack_bowls
 推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> smolvla XPolicyLab
+bash eval.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 joint 0 <policy_gpu> <env_gpu> smolvla XPolicyLab
 ```
 
 ### Evaluation environment (`EVAL_ENV_TYPE`)

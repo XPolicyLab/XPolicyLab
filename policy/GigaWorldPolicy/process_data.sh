@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+if [[ $# -lt 4 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
+  echo "  expert_data_num: optional; empty = use all episodes" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
+action_type=$4
+expert_data_num=${5:-}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="${XPOLICYLAB_ROOT:-$(cd "${POLICY_DIR}/../.." && pwd)}"
 INNER_DIR="${POLICY_DIR}/giga_world_policy"
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 out_dir="${POLICY_DIR}/data/${data_setting}"
 source_dir="${GIGAWORLD_SOURCE_DATA_DIR:-}"
 task_names="${GIGAWORLD_TASK_NAMES:-${ckpt_name}}"
@@ -44,19 +45,24 @@ else
   echo "[GigaWorldPolicy] converting XPolicyLab HDF5 -> LeRobot v2.1"
   echo "  source root: ${XPL_ROOT}/data/${bench_name}/{${task_names}}/${env_cfg_type}"
   echo "  output:      ${out_dir}"
-  "${python_bin}" "${INNER_DIR}/scripts/convert_xpolicylab_hdf5_to_lerobot.py" \
-    --xpolicylab-root "${XPL_ROOT}" \
-    --bench-name "${bench_name}" \
-    --task-names "${task_names}" \
-    --env-cfg-type "${env_cfg_type}" \
-    --expert-data-num "${expert_data_num}" \
-    --action-type "${action_type}" \
-    --output-dir "${out_dir}" \
-    --image-width "${image_width}" \
-    --image-height "${image_height}" \
-    --input-color-space "${GIGAWORLD_INPUT_COLOR_SPACE:-rgb}" \
-    --video-codec "${GIGAWORLD_VIDEO_CODEC:-mp4v}" \
+  convert_args=(
+    "${python_bin}" "${INNER_DIR}/scripts/convert_xpolicylab_hdf5_to_lerobot.py"
+    --xpolicylab-root "${XPL_ROOT}"
+    --bench-name "${bench_name}"
+    --task-names "${task_names}"
+    --env-cfg-type "${env_cfg_type}"
+    --action-type "${action_type}"
+    --output-dir "${out_dir}"
+    --image-width "${image_width}"
+    --image-height "${image_height}"
+    --input-color-space "${GIGAWORLD_INPUT_COLOR_SPACE:-rgb}"
+    --video-codec "${GIGAWORLD_VIDEO_CODEC:-mp4v}"
     --overwrite
+  )
+  if [[ -n "${expert_data_num}" ]]; then
+    convert_args+=(--expert-data-num "${expert_data_num}")
+  fi
+  "${convert_args[@]}"
 fi
 
 cd "${INNER_DIR}"

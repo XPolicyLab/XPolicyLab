@@ -6,15 +6,14 @@ bench_name=${1:?bench_name is required}
 task_name=${2:?task_name is required}
 ckpt_name=${3:?ckpt_name is required}
 env_cfg_type=${4:?env_cfg_type is required}
-expert_data_num=${5:?expert_data_num is required}
-action_type=${6:?action_type is required}
-seed=${7:?seed is required}
-policy_gpu_id=${8:?policy_gpu_id is required}
-env_gpu_id=${9:?env_gpu_id is required}
+action_type=${5:?action_type is required}
+seed=${6:?seed is required}
+policy_gpu_id=${7:?policy_gpu_id is required}
+env_gpu_id=${8:?env_gpu_id is required}
 default_conda_env="${CONDA_DEFAULT_ENV:-}"
-policy_conda_env=${10:-${default_conda_env}}
-eval_env_conda_env=${11:-${policy_conda_env}}
-model_path=${12:-${MODEL_PATH:-""}}
+policy_conda_env=${9:-${default_conda_env}}
+eval_env_conda_env=${10:-${policy_conda_env}}
+model_path=${11:-${MODEL_PATH:-""}}
 
 if [[ -z "${policy_conda_env}" ]]; then
     echo "[ERROR] policy_conda_env is empty. Pass it explicitly or activate the DreamZero conda env."
@@ -54,7 +53,6 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \

@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+if [[ $# -lt 4 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
+  echo "  expert_data_num: optional; empty = use all episodes" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
+action_type=$4
+expert_data_num=${5:-}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 converted_data_root="${SPIRIT_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${SPIRIT_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
 
@@ -43,6 +44,7 @@ patterns_csv="$(resolve_patterns_csv)"
 echo "[Spirit_v15] raw_data_root=${raw_data_root}"
 echo "[Spirit_v15] patterns_csv=${patterns_csv}"
 echo "[Spirit_v15] converted_data_root=${converted_data_root}"
+echo "[Spirit_v15] expert_data_num=${expert_data_num:-<all>}"
 
 bash "${POLICY_DIR}/spirit_v15/scripts/train_xpolicylab_from_raw.sh" \
   "${raw_data_root}" \

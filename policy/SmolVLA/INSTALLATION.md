@@ -73,7 +73,6 @@ pip install h5py
 | Server 环境 | `smolvla` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo_sim_arx-x5_seed_0` |
-| expert_data_num | `3500` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/SmoVLA/RoboDojo_sim_arx-x5_seed_0` |
 
@@ -90,7 +89,7 @@ ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 3500 joint 0 0 smolvla <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 joint 0 0 smolvla <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo_sim_arx-x5_seed_0,action_type=joint" <port> localhost

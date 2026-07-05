@@ -1,15 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
+# Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [num_gpus]
 bench_name=${1}
-task_name=${2}
+ckpt_name=${2}
 env_cfg_type=${3}
-expert_data_num=${4}
-action_type=${5}
-seed=${6}
-gpu_id=${7}
-if [[ $# -ge 8 ]]; then
-    num_gpus=${8}
+action_type=${4}
+seed=${5}
+gpu_id=${6}
+if [[ $# -ge 7 ]]; then
+    num_gpus=${7}
 elif [[ "${gpu_id}" == *,* ]]; then
     IFS=',' read -r -a gpu_ids <<< "${gpu_id}"
     num_gpus=${#gpu_ids[@]}
@@ -32,17 +32,16 @@ export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:T
 export PYTHONPATH="${ROOT_DIR}:${FASTWAM_DIR}:${FASTWAM_DIR}/src:${PYTHONPATH:-}"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
-# Default dataset_id mirrors process_data.sh: per-task data_key for a single
-# task, "cotrain_dataset" otherwise. Set FASTWAM_DATASET_ID to point at a
-# pre-merged cotrain dataset (e.g. produced by process_data_batch.sh) without
-# changing the train.sh argument shape.
-data_key="${bench_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+# Default dataset_id mirrors process_data.sh: the 4-tuple data_key. Set
+# FASTWAM_DATASET_ID to point at a differently named dataset (e.g. produced
+# with an explicit dataset_id) without changing the train.sh argument shape.
+data_key="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 dataset_id="${FASTWAM_DATASET_ID:-${data_key}}"
 converted_root="${POLICY_DIR}/data/${dataset_id}"
 dataset_dir="${converted_root}/lerobot"
 stats_path="${converted_root}/dataset_stats.json"
 text_cache_dir="${FASTWAM_DIR}/data/text_embeds_cache/xpolicylab/${dataset_id}"
-ckpt_setting="${FASTWAM_CKPT_SETTING:-${dataset_id}-${seed}}"
+ckpt_setting="${FASTWAM_CKPT_SETTING:-${data_key}-${seed}}"
 action_dit="${FASTWAM_DIR}/checkpoints/ActionDiT_linear_interp_Wan22_alphascale_1024hdim.pt"
 batch_size="${FASTWAM_BATCH_SIZE:-8}"
 gradient_accumulation_steps="${FASTWAM_GRADIENT_ACCUMULATION_STEPS:-1}"
@@ -57,10 +56,10 @@ num_epochs_override="${FASTWAM_NUM_EPOCHS:-200000}"
 if [[ ! -d "${dataset_dir}/meta" ]]; then
     if [[ -n "${FASTWAM_DATASET_ID:-}" ]]; then
         echo "[ERROR] FASTWAM_DATASET_ID=${FASTWAM_DATASET_ID} but ${dataset_dir}/meta is missing."
-        echo "Run process_data_batch.sh (or process_data.sh with --dataset-id) in the policy env first."
+        echo "Run process_data_batch.sh (or process_data.sh with a dataset_id) in the policy env first."
         exit 1
     fi
-    bash "${POLICY_DIR}/process_data.sh" "${bench_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
+    bash "${POLICY_DIR}/process_data.sh" "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}"
 fi
 
 if [[ ! -f "${action_dit}" ]]; then
@@ -74,7 +73,7 @@ fi
 if [[ ! -d "${text_cache_dir}" || -z "$(find "${text_cache_dir}" -name '*.pt' -print -quit 2>/dev/null)" ]]; then
     echo "[ERROR] Missing real T5 text embedding cache: ${text_cache_dir}"
     echo "Run process_data.sh again in the FastWAM policy environment; it converts data and precomputes the matching text embedding cache."
-    echo "  bash ${POLICY_DIR}/process_data.sh ${bench_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}"
+    echo "  bash ${POLICY_DIR}/process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${action_type}"
     exit 1
 fi
 

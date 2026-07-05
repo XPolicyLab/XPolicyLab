@@ -2,16 +2,16 @@
 set -e
 
 
-if [[ $# -ne 5 ]]; then
-  echo "Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+if [[ $# -lt 4 || $# -gt 5 ]]; then
+  echo "Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
   exit 1
 fi
 
 bench_name=${1}
 ckpt_name=${2}
 env_cfg_type=${3}
-expert_data_num=${4}
-action_type=${5}
+action_type=${4}
+expert_data_num=${5:-}   # optional; empty = use all episodes
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
@@ -19,14 +19,14 @@ SOURCE_ROOT="${XPL_SOURCE_ROOT:-${ROOT_DIR}/data/${bench_name}}"
 WORKERS="${TINYVLA_PROCESS_WORKERS:-8}"
 COMPRESSION="${TINYVLA_HDF5_COMPRESSION:-lzf}"
 
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 out_dir="${POLICY_DIR}/data/${ckpt_setting}"
 
 echo "[TinyVLA process_data] output: ${out_dir}"
 echo "[TinyVLA process_data] source: ${SOURCE_ROOT}"
 echo "[TinyVLA process_data] workers=${WORKERS}, compression=${COMPRESSION}"
 
-#If the 5-tuple output directory already exists, let the user decide:
+#If the 4-tuple output directory already exists, let the user decide:
 #   - y  : skip processing entirely, reuse the existing dataset as-is
 #   - N  : abort, the user must remove the directory manually before rerunning
 if [[ -d "${out_dir}" ]]; then
@@ -48,8 +48,8 @@ python "${POLICY_DIR}/process_data.py" \
   "${bench_name}" \
   "${ckpt_name}" \
   "${env_cfg_type}" \
-  "${expert_data_num}" \
   "${action_type}" \
+  ${expert_data_num:+"${expert_data_num}"} \
   --source-root "${SOURCE_ROOT}" \
   --output-dir "${out_dir}" \
   --workers "${WORKERS}" \

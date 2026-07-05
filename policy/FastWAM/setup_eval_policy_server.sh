@@ -5,13 +5,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-localhost}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -23,9 +22,10 @@ FASTWAM_DIR="${POLICY_DIR}/FastWAM"
 yaml_file="${POLICY_DIR}/deploy.yml"
 
 # Checkpoint is selected by ckpt_name (not task_name). task_name is only the
-# simulator task forwarded to the env client; ckpt_name resolves the trained
-# checkpoint, so the same `cotrain` checkpoint can be evaluated across tasks.
-ckpt_setting="${FASTWAM_CKPT_SETTING:-${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+# simulator task forwarded to the env client; ckpt_name is the full run
+# directory name under checkpoints/, so the same checkpoint can be evaluated
+# across tasks.
+ckpt_setting="${FASTWAM_CKPT_SETTING:-${ckpt_name}}"
 ckpt_dir="${FASTWAM_CKPT_ROOT:-${POLICY_DIR}/checkpoints}/${ckpt_setting}"
 weights_dir="${ckpt_dir}/checkpoints/weights"
 dataset_stats_path="${FASTWAM_DATASET_STATS_PATH:-${ckpt_dir}/dataset_stats.json}"
@@ -75,7 +75,6 @@ exec env \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \

@@ -9,7 +9,7 @@
 | 处理后数据集 | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-lerobot` | `policy/RISE/data/` |
 | 训练 checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/RISE/checkpoints/` |
 
-路径解析辅助：`xpolicylab_adapter/_artifact_paths.sh`（含旧版 6 元组命名 fallback，见 §5）。
+路径解析辅助：`xpolicylab_adapter/_artifact_paths.sh`（精确 4 元组 / 4+seed 匹配）。
 
 上游完整三件套（dynamics model、online RL、Piper 真机部署）仍保留在 vendored 源码树中供查阅，但 **XPolicyLab 不提供对应入口脚本**；详见 [§6 与上游 RISE 的关系](#6-与上游-rise-的关系)。
 
@@ -29,7 +29,9 @@ RISE 离线训练使用 **LeRobot v2.1**，分辨率 `(240, 320, 3)` RGB，state
 
 ```bash
 cd policy/RISE
-bash process_data.sh RoboDojo test_data arx_x5 100 joint
+bash process_data.sh RoboDojo test_data arx_x5 joint
+# 可选尾参 expert_data_num 限制 episode 数
+bash process_data.sh RoboDojo test_data arx_x5 joint 100
 ```
 
 - **输入**：`data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5`
@@ -59,8 +61,8 @@ bash process_lerobot.sh <path/to/lerobot_dataset> [link_name]
 ## 2. 训练（离线 policy）
 
 ```bash
-# bench_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id [stage]
-bash train.sh RoboDojo stack_bowls arx_x5 100 joint 0 0 all
+# bench_name ckpt_name env_cfg_type action_type seed gpu_id [stage]
+bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0 all
 ```
 
 | Stage | 作用 |
@@ -72,15 +74,15 @@ bash train.sh RoboDojo stack_bowls arx_x5 100 joint 0 0 all
 | 资源 | 默认路径 |
 |------|----------|
 | Pi0.5 预训练 | `weights/pi05_base_pytorch/` |
-| Raw 数据集 | `data/<dataset>-<ckpt_name>-<env>-<action>-lerobot`（或 `RISE_RAW_DATASET`） |
+| Raw 数据集 | `data/<bench>-<ckpt_name>-<env>-<action>-lerobot`（或 `RISE_RAW_DATASET`） |
 | Advantage 数据集 | `<raw>_w_adv` |
-| 训练 checkpoint | `checkpoints/<dataset>-<ckpt_name>-<env>-<action>-<seed>/` |
+| 训练 checkpoint | `checkpoints/<bench>-<ckpt_name>-<env>-<action>-<seed>/` |
 
 ---
 
 ## 3. 部署与评测
 
-Use the `EVAL_ENV_TYPE` environment variable`debug` / `sim` / `real`；`eval_batch` 控制 batch 推理。切换模式无需改 `eval.sh`。
+Use the `EVAL_ENV_TYPE` environment variable: `debug` / `sim` / `real`；`eval_batch` 控制 batch 推理。切换模式无需改 `eval.sh`。
 
 ```bash
 bash eval.sh RoboDojo test_data stack_bowls arx_x5 joint 0 0 0 RISE XPolicyLab
@@ -91,10 +93,8 @@ bash eval.sh RoboDojo test_data stack_bowls arx_x5 joint 0 0 0 RISE XPolicyLab
 `setup_eval_policy_server.sh` 按优先级查找：
 
 1. `RISE_CHECKPOINT_PATH`
-2. `checkpoints/<dataset>-<ckpt_name>-<env>-<action>-<seed>/`（含 legacy 6 元组 fallback）
+2. `checkpoints/<bench>-<ckpt_name>-<env>-<action>-<seed>/`（精确 `ckpt_run_id`）
 3. `.../Policy_offline_release/Policy_offline_release/<step>/`（最新 step，或 `RISE_CHECKPOINT_STEP`）
-
-评测时若 checkpoint 由旧版 6 元组目录训练，可设置 `RISE_EXPERT_DATA_NUM=<num>` 启用 fallback 解析。
 
 ### 3.2 跨机部署
 
@@ -124,12 +124,12 @@ policy/RISE/
 
 ---
 
-## 5. 注意事项与迁移
+## 5. 注意事项
 
 1. **RGB 通道**：`decode_image_bit` 与 live obs 已是 RGB，**禁止**在转换/推理中再加 `cv2.cvtColor(BGR2RGB)`。若曾用错误转换训练，需 **重新跑 `process_data.sh` 并重新训练**。
-2. **旧版命名**：此前数据集/checkpoint 可能含 `expert_data_num` 于目录名（6 元组）。`_artifact_paths.sh` 会 fallback 查找；新实验请用 § 顶部标准名。
-3. **Advantage 数据集**：直接跑 `policy` stage 前需已有 `<raw>_w_adv`。
-4. **action_type**：仅 `joint`。
+2. **Advantage 数据集**：直接跑 `policy` stage 前需已有 `<raw>_w_adv`。
+3. **action_type**：仅 `joint`。
+4. **数据量 ablation**：使用不同 `ckpt_name`（如 `myrun_50ep`）并在 `process_data.sh` 传可选 `expert_data_num`。
 
 ---
 

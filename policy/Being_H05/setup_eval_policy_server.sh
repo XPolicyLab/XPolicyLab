@@ -5,12 +5,11 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
 
 export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
 
@@ -20,7 +19,8 @@ UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 policy_name="$(basename "${SCRIPT_DIR}")"
 
-ckpt_run_id="${BEINGH_CKPT_RUN_ID:-${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+# ckpt_name is the full run directory name under checkpoints/.
+ckpt_run_id="${BEINGH_CKPT_RUN_ID:-${ckpt_name}}"
 
 _resolve_latest_step() {
     local root="$1"
@@ -80,7 +80,6 @@ exec env \
             bench_name="robodojo_posttrain" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             action_type="${action_type}" \
             action_dim="${action_dim}" \

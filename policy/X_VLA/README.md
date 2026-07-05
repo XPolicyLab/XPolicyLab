@@ -15,12 +15,15 @@ XVLA_META_PATH=/path/to/meta.json bash train.sh ...
 ## 训练
 
 ```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
-Checkpoint：`checkpoints/<6-tuple>/`
+Checkpoint：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`，
+该目录名整体即 eval 侧的 `ckpt_name`。数据量 ablation 改用不同 `ckpt_name`
+（如 `stack_bowls_50ep`）区分，episode 数在 `meta.json` 数据准备阶段控制。
 
-若 checkpoint 缺少 processor/tokenizer，从 base 模型目录复制，勿覆盖 `model.safetensors`。
+训练结束后 `train.sh` 会自动把 base 模型的 processor/tokenizer 文件补进各
+`ckpt-<step>/`（不覆盖 `config.json` / `model.safetensors`），保证 eval 可直接加载。
 
 ## 部署
 
@@ -29,7 +32,7 @@ Checkpoint：`checkpoints/<6-tuple>/`
 推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls XVLA_sim_arx-x5 arx_x5 3500 ee 0 <policy_gpu> <env_gpu> XVLA XPolicyLab
+bash eval.sh RoboDojo stack_bowls XVLA_sim_arx-x5 arx_x5 ee 0 <policy_gpu> <env_gpu> XVLA XPolicyLab
 ```
 
 ### Evaluation environment (`EVAL_ENV_TYPE`)

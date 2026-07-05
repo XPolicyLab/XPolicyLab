@@ -11,7 +11,6 @@ set -euo pipefail
 #
 # `task_name` is the simulator task; `ckpt_name` resolves checkpoint paths.
 # For Mn tasks, pass `planning_gpu_ids` (comma-separated) as optional 11th arg to auto-start vLLM.
-# Disambiguate legacy artifacts with MEM0_EXPERT_DATA_NUM when multiple datasets match.
 #
 # Switch debug/sim via EVAL_ENV_TYPE (default: sim).
 #

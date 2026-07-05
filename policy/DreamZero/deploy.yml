@@ -5,7 +5,6 @@ bench_name: null
 task_name: null
 ckpt_name: null
 env_cfg_type: null
-expert_data_num: null
 action_type: null
 action_dim: null
 seed: null

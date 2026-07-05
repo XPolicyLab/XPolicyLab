@@ -54,7 +54,6 @@ pip install -e .
 | Server 环境 | `lingbot_va` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| expert_data_num | `3500` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21/checkpoints` |
 
@@ -71,7 +70,7 @@ ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 0 lingbot_va <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 lingbot_va <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost

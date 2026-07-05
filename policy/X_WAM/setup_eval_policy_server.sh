@@ -5,13 +5,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-localhost}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -23,8 +22,9 @@ XWAM_DIR="${POLICY_DIR}/X-WAM"
 yaml_file="${POLICY_DIR}/deploy.yml"
 
 # X-WAM checkpoints are experiment directories (config.yaml + checkpoints/<steps>.ckpt/...).
-# ckpt_name selects the experiment; the same checkpoint can be evaluated across tasks.
-exp_setting="${XWAM_EXP_SETTING:-${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+# ckpt_name is the full experiment directory name under checkpoints/; the same
+# checkpoint can be evaluated across tasks.
+exp_setting="${XWAM_EXP_SETTING:-${ckpt_name}}"
 exp_path="${XWAM_EXP_PATH:-${XWAM_CKPT_ROOT:-${POLICY_DIR}/checkpoints}/${exp_setting}}"
 steps="${XWAM_STEPS:-last}"
 
@@ -61,7 +61,6 @@ exec env \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
             seed="${seed}" \
             policy_name="${policy_name}" \
             action_type="${action_type}" \

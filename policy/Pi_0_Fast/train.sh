@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+if [[ $# -lt 6 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+# ckpt_setting is the run directory name; pass it verbatim as ckpt_name to eval.sh.
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 train_config_name="${OPENPI_TRAIN_CONFIG_NAME:-pi0_fast_aloha_full_sim_arx-x5_seed_0}"
 

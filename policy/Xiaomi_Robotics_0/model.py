@@ -89,15 +89,7 @@ def _resolve_processor_source(model_cfg: dict[str, Any]) -> str | Path:
 
 
 def _resolve_ckpt_setting(model_cfg: dict[str, Any]) -> str:
-    ckpt_name = str(model_cfg.get("ckpt_name", ""))
-    if ckpt_name.count("-") >= 3:
-        return ckpt_name
-    bench_name = model_cfg["bench_name"]
-    env_cfg_type = model_cfg["env_cfg_type"]
-    expert_data_num = model_cfg["expert_data_num"]
-    action_type = model_cfg["action_type"]
-    seed = model_cfg["seed"]
-    return f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    return str(model_cfg["ckpt_name"])
 
 
 def _resolve_ckpt_dir(model_cfg: dict[str, Any]) -> Path:

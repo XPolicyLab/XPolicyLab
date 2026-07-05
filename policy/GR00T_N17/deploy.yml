@@ -3,14 +3,13 @@ policy_name: GR00T_N17
 bench_name: null
 task_name: null
 env_cfg_type: null
-expert_data_num: null
 seed: null
 eval_batch: false
 
 # Model / checkpoint configuration (paths relative to policy/ unless noted)
 action_type: joint
 embodiment_tag: NEW_EMBODIMENT
-# Finetuned step under checkpoints/<6-tuple>/; null = auto-resolve + checkpoint_num
+# Finetuned step under checkpoints/<ckpt_name>/; null = auto-resolve + checkpoint_num
 checkpoint_num: last
 model_dir: null
 # Cosmos backbone for processor; HuggingFace repo id (auto-download) or relative local path

@@ -7,29 +7,31 @@ set -euo pipefail
 # from xpolicylab_adapter/language_annotation/<task>/language_annotation.json).
 #
 # Usage:
-#   bash process_data_batch.sh <bench_name> <env_cfg_type> <expert_data_num> <action_type> [dataset_id] [task_config_path]
+#   bash process_data_batch.sh <bench_name> <env_cfg_type> <action_type> [expert_data_num] [dataset_id] [task_config_path]
+#     expert_data_num: optional episodes kept PER task; empty = use all episodes
 # Examples:
-#   bash process_data_batch.sh RoboDojo_first100 arx_x5 100 joint
-#   bash process_data_batch.sh RoboDojo_first100 arx_x5 100 joint my_cotrain_run
+#   bash process_data_batch.sh RoboDojo_first100 arx_x5 joint
+#   bash process_data_batch.sh RoboDojo_first100 arx_x5 joint 100
+#   bash process_data_batch.sh RoboDojo_first100 arx_x5 joint "" my_cotrain_run
 #
 # Defaults:
-#   dataset_id        = <bench_name>-cotrain-<env_cfg_type>-<expert_data_num>-<action_type>
+#   dataset_id        = <bench_name>-cotrain-<env_cfg_type>-<action_type>
 #   task_config_path  = <policy>/Mem_0/xpolicylab_adapter/task_config.json
-# Output: policy/Mem_0/data/<dataset_id>-lerobot/  (legacy: Mem_0/lerobot_datasets/ with MEM0_LEGACY_PATHS=1)
+# Output: policy/Mem_0/data/<dataset_id>-lerobot/
 #
 # Fast path (no HDF5 re-encode): set ADAPT_FROM to an existing LeRobot dataset root,
 # e.g. xspark_shared/lerobot/RoboDojo_sim_v21_video_abot. The source is read-only;
 # videos are symlinked and only parquet/meta are rewritten for Mem_0.
 
-if [[ $# -lt 4 ]]; then
-    echo "usage: bash $(basename "${BASH_SOURCE[0]}") <bench_name> <env_cfg_type> <expert_data_num> <action_type> [dataset_id] [task_config_path]" >&2
+if [[ $# -lt 3 ]]; then
+    echo "usage: bash $(basename "${BASH_SOURCE[0]}") <bench_name> <env_cfg_type> <action_type> [expert_data_num] [dataset_id] [task_config_path]" >&2
     exit 2
 fi
 
 bench_name=${1}
 env_cfg_type=${2}
-expert_data_num=${3}
-action_type=${4}
+action_type=${3}
+expert_data_num=${4:-}
 dataset_id=${5:-}
 task_config_path=${6:-}
 
@@ -52,13 +54,9 @@ if [[ -n "${ADAPT_FROM:-}" ]]; then
         echo "[batch] adapter not found: ${ADAPTER}" >&2
         exit 1
     fi
-    default_dataset_id="${bench_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
+    default_dataset_id="${bench_name}-cotrain-${env_cfg_type}-${action_type}"
     resolved_dataset_id="${dataset_id:-${default_dataset_id}}"
-    if [[ "${MEM0_LEGACY_PATHS:-}" == "1" ]]; then
-        OUT_DIR="${POLICY_DIR}/Mem_0/lerobot_datasets/${resolved_dataset_id}"
-    else
-        OUT_DIR="${POLICY_DIR}/data/${resolved_dataset_id}-lerobot"
-    fi
+    OUT_DIR="${POLICY_DIR}/data/${resolved_dataset_id}-lerobot"
     echo "[batch] fast adapt from ${ADAPT_FROM}"
     echo "[batch] output dataset_id=${resolved_dataset_id}"
     python "${ADAPTER}" \
@@ -106,10 +104,10 @@ if [[ ${#m1_tasks[@]} -eq 0 && ${#mn_tasks[@]} -eq 0 ]]; then
     exit 1
 fi
 
-default_dataset_id="${bench_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
+default_dataset_id="${bench_name}-cotrain-${env_cfg_type}-${action_type}"
 resolved_dataset_id="${dataset_id:-${default_dataset_id}}"
 
-echo "[batch] bench_name=${bench_name} env_cfg_type=${env_cfg_type} expert_data_num=${expert_data_num} action_type=${action_type}"
+echo "[batch] bench_name=${bench_name} env_cfg_type=${env_cfg_type} action_type=${action_type} expert_data_num=${expert_data_num:-<all>}"
 echo "[batch] task_config=${TASK_CFG}"
 echo "[batch] M1 tasks (${#m1_tasks[@]}): ${m1_tasks[*]:-<none>}"
 echo "[batch] Mn tasks (${#mn_tasks[@]}): ${mn_tasks[*]:-<none>}"
@@ -146,11 +144,14 @@ if [[ ${#missing[@]} -gt 0 ]]; then
     exit 1
 fi
 
-py_args=( "${bench_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
+py_args=( "${bench_name}" "${env_cfg_type}" "${action_type}"
           --m1_tasks "${m1_joined}"
           --mn_tasks "${mn_joined}"
           --annotation_root "${ANNOTATION_DIR}"
           --dataset_id "${resolved_dataset_id}" )
+if [[ -n "${expert_data_num}" ]]; then
+    py_args+=( --expert_data_num "${expert_data_num}" )
+fi
 # Optional: override the LeRobot video codec via env var, e.g.
 #   VCODEC=libsvtav1 bash process_data_batch.sh ...
 # Default (no VCODEC set) is the converter's default 'h264', much faster than

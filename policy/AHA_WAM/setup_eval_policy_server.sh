@@ -5,13 +5,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-localhost}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -20,14 +19,52 @@ yaml_file="${SCRIPT_DIR}/deploy.yml"
 
 apptainer_image="${AHA_WAM_APPTAINER_IMAGE:-/mnt/petrelfs/caijisong/shared_img/new_app.sif}"
 elava_root="${AHA_WAM_ELAVA_ROOT:-${SCRIPT_DIR}/AHAWAM}"
-checkpoint_path="${AHA_WAM_CHECKPOINT_PATH:-${ROOT_DIR}/XPolicyLab/checkpoint/step_002500.pt}"
-dataset_stats_path="${AHA_WAM_DATASET_STATS_PATH:-${ROOT_DIR}/XPolicyLab/checkpoint/dataset_stats.json}"
+ckpt_setting="${AHA_WAM_CKPT_SETTING:-${ckpt_name}}"
+run_dir="${SCRIPT_DIR}/checkpoints/${ckpt_setting}"
+checkpoint_path="${AHA_WAM_CHECKPOINT_PATH:-}"
+dataset_stats_path="${AHA_WAM_DATASET_STATS_PATH:-}"
 diffsynth_model_base_path="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/caijisong/dualWAM/checkpoints}"
-task_config="${AHA_WAM_TASK_CONFIG:-robodojo_local_history_updated_kv_prior_only}"
+task_config="${AHA_WAM_TASK_CONFIG:-robodojo_local_history_updated_kv_prior_only_16}"
 allow_dummy_policy="${AHA_WAM_ALLOW_DUMMY_POLICY:-false}"
 chunks_per_video_prefill="${AHA_WAM_CHUNKS_PER_VIDEO_PREFILL:-4}"
 prepend_episode_first_frame="${AHA_WAM_PREPEND_EPISODE_FIRST_FRAME:-true}"
 env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-/mnt/petrelfs/caijisong/env_cfg}"
+
+if [[ -z "${checkpoint_path}" && "${allow_dummy_policy}" != "true" ]]; then
+    weights_dir="${run_dir}/checkpoints/weights"
+    if [[ -d "${weights_dir}" ]]; then
+        checkpoint_path="$(find "${weights_dir}" -maxdepth 1 -type f -name 'step_*.pt' | sort -V | tail -n 1)"
+    fi
+    if [[ -z "${checkpoint_path}" && -d "${run_dir}" ]]; then
+        checkpoint_path="$(find "${run_dir}" -maxdepth 3 -type f -name 'step_*.pt' | sort -V | tail -n 1)"
+    fi
+    legacy_checkpoint="${ROOT_DIR}/XPolicyLab/checkpoint/step_002500.pt"
+    if [[ -z "${checkpoint_path}" && -f "${legacy_checkpoint}" ]]; then
+        checkpoint_path="${legacy_checkpoint}"
+    fi
+    if [[ -z "${checkpoint_path}" || ! -f "${checkpoint_path}" ]]; then
+        echo -e "\033[31m[SERVER] AHA_WAM checkpoint not found for ckpt_name=${ckpt_name}\033[0m" >&2
+        echo -e "\033[31m[SERVER] expected latest step_*.pt under ${weights_dir}; set AHA_WAM_CHECKPOINT_PATH to override.\033[0m" >&2
+        exit 1
+    fi
+fi
+
+if [[ -z "${dataset_stats_path}" ]]; then
+    for candidate in \
+        "${run_dir}/dataset_stats.json" \
+        "${run_dir}/checkpoints/dataset_stats.json" \
+        "${ROOT_DIR}/XPolicyLab/checkpoint/dataset_stats.json"; do
+        if [[ -f "${candidate}" ]]; then
+            dataset_stats_path="${candidate}"
+            break
+        fi
+    done
+    if [[ -z "${dataset_stats_path}" && "${allow_dummy_policy}" != "true" ]]; then
+        echo -e "\033[31m[SERVER] AHA_WAM dataset stats not found for ckpt_name=${ckpt_name}\033[0m" >&2
+        echo -e "\033[31m[SERVER] expected dataset_stats.json under ${run_dir}; set AHA_WAM_DATASET_STATS_PATH to override.\033[0m" >&2
+        exit 1
+    fi
+fi
 
 action_dim=$(python3 - "${env_cfg_root}" "${env_cfg_type}" <<'PY'
 import json
@@ -85,7 +122,6 @@ python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         ckpt_name="${CKPT_NAME}" \
         env_cfg_type="${ENV_CFG_TYPE}" \
         env_cfg_root="${ENV_CFG_ROOT}" \
-        expert_data_num="${EXPERT_DATA_NUM}" \
         seed="${SEED}" \
         policy_name="AHA_WAM" \
         action_type="${ACTION_TYPE}" \
@@ -112,7 +148,6 @@ export TASK_NAME="${task_name}"
 export CKPT_NAME="${ckpt_name}"
 export ENV_CFG_TYPE="${env_cfg_type}"
 export ENV_CFG_ROOT="${env_cfg_root}"
-export EXPERT_DATA_NUM="${expert_data_num}"
 export SEED="${seed}"
 export ACTION_TYPE="${action_type}"
 export ACTION_DIM="${action_dim}"
@@ -142,7 +177,6 @@ if command -v apptainer >/dev/null 2>&1; then
             CKPT_NAME="${CKPT_NAME}" \
             ENV_CFG_TYPE="${ENV_CFG_TYPE}" \
             ENV_CFG_ROOT="${ENV_CFG_ROOT}" \
-            EXPERT_DATA_NUM="${EXPERT_DATA_NUM}" \
             SEED="${SEED}" \
             ACTION_TYPE="${ACTION_TYPE}" \
             ACTION_DIM="${ACTION_DIM}" \

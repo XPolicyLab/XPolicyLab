@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+if [[ $# -lt 6 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 # Batch config (single source of truth):
 #   global_batch = DM0_BATCH_SIZE * NUM_GPUS * DM0_GRAD_ACCUM
@@ -23,8 +22,8 @@ export DM0_MAX_STEPS="${DM0_MAX_STEPS:-100000}"
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"
 EXP_SCRIPT="${DEXBOTIC_ROOT}/playground/benchmarks/robodojo/robodojo_dm0.py"
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 converted_data_root="${DM0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 bench_name_registered="robodojo_${data_setting}"
 data_source_path="${DEXBOTIC_ROOT}/dexbotic/data/data_source/robodojo_${data_setting}.py"

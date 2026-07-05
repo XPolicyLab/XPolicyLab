@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-if [[ $# -lt 10 || $# -gt 11 ]]; then
-    echo "Usage: bash setup_eval_policy_server.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <policy_server_port> [policy_server_host]"
+if [[ $# -lt 9 || $# -gt 10 ]]; then
+    echo "Usage: bash setup_eval_policy_server.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <policy_server_port> [policy_server_host]"
     exit 1
 fi
 
@@ -10,13 +10,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -27,9 +26,9 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
-processed_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}"
-local_run_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
+# ckpt_name is the full run directory name under results/Checkpoints/ or checkpoints/.
+result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${ckpt_name}"
+local_run_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
 
 resolve_starvla_checkpoint() {
     local run_dir=$1
@@ -40,18 +39,17 @@ resolve_starvla_checkpoint() {
     fi
 
     shopt -s nullglob
-    candidates=("${run_dir}"/checkpoints/*.pt "${run_dir}"/checkpoints/*.safetensors)
+    candidates=(
+        "${run_dir}"/final_model/*.pt
+        "${run_dir}"/final_model/*.safetensors
+        "${run_dir}"/checkpoints/*.pt
+        "${run_dir}"/checkpoints/*.safetensors
+    )
     shopt -u nullglob
 
-    if (( ${#candidates[@]} == 1 )); then
-        echo "${candidates[0]}"
+    if (( ${#candidates[@]} > 0 )); then
+        printf '%s\n' "${candidates[@]}" | sort -V | tail -n 1
         return 0
-    fi
-    if (( ${#candidates[@]} > 1 )); then
-        echo "[SERVER][ERROR] multiple checkpoints found under ${run_dir}/checkpoints:" >&2
-        printf '[SERVER][ERROR]   %s\n' "${candidates[@]}" >&2
-        echo "[SERVER][ERROR] keep only one checkpoint file or set STARVLA_CKPT_PATH explicitly." >&2
-        exit 1
     fi
 
     return 1
@@ -70,8 +68,10 @@ fi
 if [[ ! -f "${checkpoint_path}" ]]; then
     echo "[SERVER][ERROR] checkpoint file does not exist: ${checkpoint_path}" >&2
     echo "[SERVER][ERROR] set STARVLA_CKPT_PATH=/path/to/pytorch_model.pt to override checkpoint lookup" >&2
-    echo "[SERVER][ERROR] expected exactly one .pt or .safetensors file under one of:" >&2
+    echo "[SERVER][ERROR] expected a .pt or .safetensors file under one of:" >&2
+    echo "[SERVER][ERROR]   ${result_run_dir}/final_model/" >&2
     echo "[SERVER][ERROR]   ${result_run_dir}/checkpoints/" >&2
+    echo "[SERVER][ERROR]   ${local_run_dir}/final_model/" >&2
     echo "[SERVER][ERROR]   ${local_run_dir}/checkpoints/" >&2
     exit 1
 fi
@@ -119,7 +119,6 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         ckpt_name="${ckpt_name}" \
         checkpoint_path="${checkpoint_path}" \
         env_cfg_type="${env_cfg_type}" \
-        expert_data_num="${expert_data_num}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \

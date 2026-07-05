@@ -23,10 +23,9 @@ source "${ADAPTER_DIR}/_artifact_paths.sh"
 policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
-expert_data_num="${RISE_EXPERT_DATA_NUM:-}"
 ckpt_run_id="${RISE_CKPT_RUN_ID:-$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
 ckpt_root="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
+    "${env_cfg_type}" "${action_type}" "${seed}")"
 ckpt_root_rel="${ckpt_root#${SCRIPT_DIR}/}"
 policy_root_rel="${ckpt_root_rel}/Policy_offline_release/Policy_offline_release"
 policy_root="${SCRIPT_DIR}/${policy_root_rel}"

@@ -15,11 +15,11 @@ Output layout (one dataset per invocation):
 
 `--raw-task-dirs` (alias `--task-name`) accepts a comma-separated list; all tasks
 are merged into one LeRobot dataset with continuous episode/frame indices.
-`--expert-data-num` caps episodes per task, so N tasks yield up to N*num episodes.
+`--expert-data-num` (optional; default: all) caps episodes per task, so N tasks
+yield up to N*num episodes.
 
 Default dataset_id (README §4.2):
-    single-task: "<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>"
-    multi-task:  "cotrain"
+    "<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>"
 
 Override with --dataset-id. XPOLICYLAB_DATASET_ID in train.sh must match.
 
@@ -289,25 +289,25 @@ def convert(args: argparse.Namespace) -> None:
 
     legacy_roots = [x.strip() for x in args.legacy_data_roots.split(",") if x.strip()]
 
-    # Gather episodes from every raw task dir, capped per task by expert_data_num.
+    # Gather episodes from every raw task dir, optionally capped per task by expert_data_num.
     episode_jobs: List[Tuple[Path, str]] = []
     for raw_task in raw_task_dirs:
         source_dir = _resolve_source_dir(
             root, args.bench_name, raw_task, args.env_cfg_type, legacy_roots
         )
-        task_episodes = sorted(source_dir.glob("episode_*.hdf5"))[: int(args.expert_data_num)]
+        task_episodes = sorted(source_dir.glob("episode_*.hdf5"))
+        if args.expert_data_num is not None:
+            task_episodes = task_episodes[: int(args.expert_data_num)]
         if not task_episodes:
             raise FileNotFoundError(f"No episode_*.hdf5 files under {source_dir}")
         episode_jobs.extend((ep, raw_task) for ep in task_episodes)
 
     if args.dataset_id:
         dataset_id = args.dataset_id
-    elif len(raw_task_dirs) == 1:
+    else:
         dataset_id = _dataset_tag(
             args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type
         )
-    else:
-        dataset_id = "cotrain"
     output_root = policy_dir / "data" / dataset_id
 
     # Sanity-check robot dim for the requested action_type.
@@ -468,7 +468,12 @@ def main() -> None:
         help="deprecated alias for --raw-task-dirs",
     )
     parser.add_argument("--env-cfg-type", required=True)
-    parser.add_argument("--expert-data-num", required=True)
+    parser.add_argument(
+        "--expert-data-num",
+        type=int,
+        default=None,
+        help="Optional episodes per task; omit to use all episodes",
+    )
     parser.add_argument("--action-type", required=True, choices=("joint", "ee"))
     parser.add_argument("--dataset-id", default=None, help="override output folder name")
     parser.add_argument(

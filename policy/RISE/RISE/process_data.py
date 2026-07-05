@@ -79,8 +79,13 @@ def main() -> None:
     parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type")
+    parser.add_argument(
+        "--expert-data-num",
+        type=int,
+        default=None,
+        help="Optional episode count; omit to use all episode_*.hdf5 files",
+    )
     parser.add_argument("--data-dir", type=Path, default=None)
     parser.add_argument("--prompt", default=None)
     args = parser.parse_args()
@@ -103,13 +108,18 @@ def main() -> None:
     if output_root.exists():
         shutil.rmtree(output_root)
 
-    episode_paths = [
-        data_dir / "data" / f"episode_{episode_idx:07d}.hdf5"
-        for episode_idx in range(args.expert_data_num)
-    ]
-    missing = [path for path in episode_paths if not path.exists()]
-    if missing:
-        raise FileNotFoundError(f"Missing episode file: {missing[0].relative_to(REPO_ROOT)}")
+    episode_paths = sorted(data_dir.glob("data/episode_*.hdf5"))
+    if not episode_paths:
+        raise FileNotFoundError(f"No episode_*.hdf5 files under {data_dir.relative_to(REPO_ROOT)}/data")
+    if args.expert_data_num is not None:
+        episode_paths = episode_paths[: int(args.expert_data_num)]
+        missing = [
+            data_dir / "data" / f"episode_{episode_idx:07d}.hdf5"
+            for episode_idx in range(len(episode_paths), int(args.expert_data_num))
+        ]
+        missing = [path for path in missing if not path.exists()]
+        if missing:
+            raise FileNotFoundError(f"Missing episode file: {missing[0].relative_to(REPO_ROOT)}")
 
     builder = LeRobotDatasetBuilder(
         repo_id=output_root.name,

@@ -25,9 +25,9 @@ ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
-expert_data_num="${MEM0_EXPERT_DATA_NUM:-}"
-ckpt_dir="$(mem0_resolve_ckpt_dir "${POLICY_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
+ckpt_run_id="$(mem0_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
+ckpt_dir="$(mem0_ckpt_dir "${POLICY_DIR}" "${bench_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}" "${seed}")"
 
 execution_ckpt="${MEM0_EXECUTION_CKPT:-}"
 if [[ -z "${execution_ckpt}" && -d "${ckpt_dir}" ]]; then
@@ -37,7 +37,7 @@ if [[ -z "${execution_ckpt}" && -d "${ckpt_dir}" ]]; then
     fi
 fi
 
-state_stats_path="${MEM0_STATE_STATS_PATH:-$(mem0_resolve_norm_stats_path "${POLICY_DIR}" "${ckpt_name}")}"
+state_stats_path="${MEM0_STATE_STATS_PATH:-$(mem0_norm_stats_path "${POLICY_DIR}" "${ckpt_name}")}"
 planning_cfg="${MEM0_PLANNING_MODULE_CONFIG:-${UPSTREAM_DIR}/source/config/planning_module_inference.yaml}"
 global_task="${GLOBAL_TASK:-}"
 action_horizon="${MEM0_ACTION_HORIZON:-30}"
@@ -59,7 +59,7 @@ PY
 )
 
 echo -e "\033[33m[SERVER] policy=${policy_name} task=${task_name} ckpt=${ckpt_name} type=${task_type}\033[0m"
-echo -e "\033[33m[SERVER] ckpt_dir=${ckpt_dir}\033[0m"
+echo -e "\033[33m[SERVER] ckpt_run_id=${ckpt_run_id} ckpt_dir=${ckpt_dir}\033[0m"
 echo -e "\033[33m[SERVER] execution_ckpt=${execution_ckpt:-<unset>}\033[0m"
 echo -e "\033[33m[SERVER] state_stats_path=${state_stats_path}\033[0m"
 echo -e "\033[33m[SERVER] vllm_url=${vllm_url:-<unset>}\033[0m"

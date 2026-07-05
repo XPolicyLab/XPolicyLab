@@ -14,7 +14,6 @@ RUN_ID="${RUN_ID:-videopt_stage1_$(date +%m%d_%H%M%S)}"
 DATASET_NAME="${DATASET_NAME:-xpolicylab_lerobot_v21_video}"
 CKPT_NAME="${CKPT_NAME:-videopt_stage1}"
 ENV_CFG_TYPE="${ENV_CFG_TYPE:-arx_x5}"
-EXPERT_DATA_NUM="${EXPERT_DATA_NUM:-all}"
 ACTION_TYPE="${ACTION_TYPE:-joint}"
 
 mkdir -p "${LOG_DIR}"
@@ -30,7 +29,7 @@ export PYTHONPATH="${POLICY_DIR}/giga_world_policy/src:${POLICY_DIR}/giga_world_
 export GIGAWORLD_CONFIG="${GIGAWORLD_CONFIG:-configs.videopt_stage1.config}"
 export GIGAWORLD_DATA_DIR="${GIGAWORLD_DATA_DIR:-${DATA_DIR}}"
 export GIGAWORLD_OUTPUT_ROOT="${GIGAWORLD_OUTPUT_ROOT:-${OUTPUT_ROOT}}"
-export GIGAWORLD_CKPT_DIR="${GIGAWORLD_CKPT_DIR:-${OUTPUT_ROOT}/checkpoints/${DATASET_NAME}-${CKPT_NAME}-${ENV_CFG_TYPE}-${EXPERT_DATA_NUM}-${ACTION_TYPE}-${SEED}-${RUN_ID}}"
+export GIGAWORLD_CKPT_DIR="${GIGAWORLD_CKPT_DIR:-${OUTPUT_ROOT}/checkpoints/${DATASET_NAME}-${CKPT_NAME}-${ENV_CFG_TYPE}-${ACTION_TYPE}-${SEED}-${RUN_ID}}"
 export GIGAWORLD_NORM_PATH="${GIGAWORLD_NORM_PATH:-${DATA_DIR}/norm_stats_delta.json}"
 export GIGAWORLD_NUM_FRAMES="${GIGAWORLD_NUM_FRAMES:-28}"
 export GIGAWORLD_ACTION_CHUNK="${GIGAWORLD_ACTION_CHUNK:-${GIGAWORLD_NUM_FRAMES}}"
@@ -75,7 +74,6 @@ bash "${POLICY_DIR}/train.sh" \
   "${DATASET_NAME}" \
   "${CKPT_NAME}" \
   "${ENV_CFG_TYPE}" \
-  "${EXPERT_DATA_NUM}" \
   "${ACTION_TYPE}" \
   "${SEED}" \
   "${GPU_IDS}"

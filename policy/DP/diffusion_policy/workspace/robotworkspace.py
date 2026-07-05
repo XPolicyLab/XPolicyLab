@@ -260,8 +260,11 @@ class RobotWorkspace(BaseWorkspace):
                 # checkpoint
                 if ((self.epoch + 1) % cfg.training.checkpoint_every) == 0:
                     # checkpointing
+                    # Anchor to the policy directory so eval can resolve
+                    # checkpoints/<bench>-<ckpt>-<env_cfg>-<action>-<seed>/ regardless of cwd.
                     save_name = pathlib.Path(self.cfg.task.dataset.zarr_path).stem
-                    self.save_checkpoint(f"checkpoints/{save_name}-{seed}/{self.epoch + 1}.ckpt")
+                    policy_dir = pathlib.Path(__file__).resolve().parents[2]
+                    self.save_checkpoint(str(policy_dir / "checkpoints" / f"{save_name}-{seed}" / f"{self.epoch + 1}.ckpt"))
 
                 # ========= eval end for this epoch ==========
                 policy.train()

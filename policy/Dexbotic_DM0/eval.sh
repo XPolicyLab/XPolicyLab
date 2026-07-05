@@ -5,14 +5,13 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-env_gpu_id=$9
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+env_gpu_id=$8
 default_conda_env="${CONDA_DEFAULT_ENV:-}"
-policy_conda_env=${10:-${default_conda_env}}
-eval_env_conda_env=${11:-${policy_conda_env}}
+policy_conda_env=${9:-${default_conda_env}}
+eval_env_conda_env=${10:-${policy_conda_env}}
 
 if [[ -z "${policy_conda_env}" ]]; then
     echo -e "\033[31m[ERROR] policy_conda_env is empty. Pass it explicitly or run inside an activated conda env.\033[0m"
@@ -50,7 +49,6 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \

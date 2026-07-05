@@ -26,7 +26,7 @@ Use the policy-level launcher:
 
 ```bash
 cd <XPolicyLab>/policy/GigaWorldPolicy
-GIGAWORLD_DATA_DIR=/path/to/lerobot GIGAWORLD_NUM_FRAMES=28 WANDB_MODE=online GIGAWORLD_WANDB_PROJECT=gwp-xpolicylab bash train.sh xpolicylab_lerobot_v21_video stack_bowls arx_x5 100 joint 930 0,1,2,3,4,5,6,7
+GIGAWORLD_DATA_DIR=/path/to/lerobot GIGAWORLD_NUM_FRAMES=28 WANDB_MODE=online GIGAWORLD_WANDB_PROJECT=gwp-xpolicylab bash train.sh xpolicylab_lerobot_v21_video stack_bowls arx_x5 joint 930 0,1,2,3,4,5,6,7
 ```
 
 The model implementation still uses the internal MoT module names in code and checkpoints; those are architecture identifiers, not dataset names.

@@ -152,4 +152,3 @@ hydra:
     subdir: ${hydra.job.num}
 
 setting: null
-expert_data_num: null

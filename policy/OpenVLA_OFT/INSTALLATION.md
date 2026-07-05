@@ -54,7 +54,6 @@ pip install -e .
 | Server 环境 | `openvla_oft` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| expert_data_num | `3500` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/OpenVLA_OFT/seed0/.../100000_chkpt` |
 | 备注 | deploy.yml 建议 eval_batch=false（debug） |
@@ -66,13 +65,13 @@ mkdir -p checkpoints
 ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 直接是 `checkpoints/` 下完整的 run 目录名（历史 6-tuple 目录名可整体传入）。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 0 openvla_oft <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 openvla_oft <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost

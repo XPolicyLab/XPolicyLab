@@ -908,7 +908,7 @@ DATASET_INFO = {
 
 
 def _load_xpolicylab_dataset_overrides() -> None:
-    """Merge entries written by policy/Being_H05/process_data.sh (5-tuple paths)."""
+    """Merge entries written by policy/Being_H05/process_data.sh (XPolicyLab data-tag paths)."""
     import json
     from pathlib import Path
 

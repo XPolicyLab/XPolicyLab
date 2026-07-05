@@ -24,7 +24,7 @@ Full debug flow (`EVAL_ENV_TYPE=debug` uses the AHA_WAM-specific debug client):
 
 ```bash
 export EVAL_ENV_TYPE=debug
-bash eval.sh RoboDojo stack_bowls local_aha_wam arx_x5 3500 joint 0 0 0 wam wam
+bash eval.sh RoboDojo stack_bowls local_aha_wam arx_x5 joint 0 0 0 wam wam
 ```
 
 Environment setup:
@@ -45,10 +45,10 @@ creating `ahawam`.
 Training wrapper:
 
 ```bash
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
 ```
 
-`train.sh` launches the local `AHAWAM` project with `task=robodojo_local_history_updated_kv_prior_only_16` and `model=ahawam` only. Override dataset, output, resume, and seed with `AHA_WAM_TRAIN_DATASET_DIR`, `AHA_WAM_OUTPUT_ROOT`, `AHA_WAM_INIT_CHECKPOINT`, `AHA_WAM_RESUME`, and `AHA_WAM_TRAIN_SEED`. If the XPolicyLab seed is `0`, the wrapper uses training seed `1` because the upstream AHAWAM seeding helper requires a positive uint32 seed.
+`train.sh` launches the local `AHAWAM` project with `task=robodojo_local_history_updated_kv_prior_only_16` and `model=ahawam` only. Checkpoints are written to `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Override dataset, output, resume, and seed with `AHA_WAM_TRAIN_DATASET_DIR`, `AHA_WAM_OUTPUT_ROOT`, `AHA_WAM_INIT_CHECKPOINT`, `AHA_WAM_RESUME`, and `AHA_WAM_TRAIN_SEED`. Use `AHA_WAM_RAW_TASK_DIRS` when the raw task directories differ from `ckpt_name`. If the XPolicyLab seed is `0`, the wrapper uses training seed `1` because the upstream AHAWAM seeding helper requires a positive uint32 seed.
 
 One-step training smoke test:
 
@@ -60,7 +60,7 @@ AHA_WAM_GRADIENT_ACCUMULATION_STEPS=1 \
 AHA_WAM_NUM_WORKERS=0 \
 AHA_WAM_WANDB_ENABLED=false \
 AHA_WAM_OUTPUT_ROOT=/tmp/aha_wam_smoke \
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7 8
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7 8
 ```
 
 The Wan2.2/AHA-WAM training graph is large. With ZeRO-1, use 7-8 80GB GPUs for

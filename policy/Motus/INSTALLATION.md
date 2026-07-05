@@ -63,24 +63,34 @@ pip install -e .
 | Server 环境 | `motus` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| expert_data_num | `3500` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/Motus/checkpoint_step_80000/pytorch_model` |
 
-软链 checkpoint（在 `policy/Motus/` 下）：
+Checkpoint 解析（无需手工软链）：
+
+- `train.sh` 会把权重写到 `policy/Motus/checkpoints/<ckpt_setting>/.../checkpoint_step_<N>/pytorch_model/mp_rank_00_model_states.pt`。
+- eval 传入 `ckpt_name=<ckpt_setting>`，`model.py:resolve_motus_checkpoint` 会在 `checkpoints/<ckpt_name>/` 下**递归**定位最新 `mp_rank_00_model_states.pt`。
+- 用共享盘上的既有权重时，可用环境变量覆盖，避免软链：
+
+```bash
+# 直接指向含 mp_rank_00_model_states.pt 的目录（或其上层，会自动下探）
+export MOTUS_CHECKPOINT_PATH=/mnt/xspark-data/final_ckpt/Motus/checkpoint_step_80000
+# 或指定 checkpoints/ 下的名字
+export MOTUS_CKPT_SETTING=<ckpt_setting>
+```
+
+如仍想软链，也兼容（在 `policy/Motus/` 下）：
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <xspark_dir> checkpoints/<ckpt_setting>
 ```
-
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 0 motus <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 motus <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost

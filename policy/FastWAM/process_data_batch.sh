@@ -1,14 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
-# Discover every task under data/<bench_name>/ that has episodes for the given
-# env_cfg_type, then merge them all into one LeRobot dataset via process_data.sh.
-#   bash process_data_batch.sh RoboDojo arx_x5 3 joint [dataset_id]
+# Discover every task under final_data/<bench_name>/ that has episodes for the
+# given env_cfg_type, then merge them all into one LeRobot dataset via
+# process_data.sh.
+#   bash process_data_batch.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> \
+#       [expert_data_num] [dataset_id]
+# expert_data_num: optional; empty = all episodes (kept PER task).
+# dataset_id: optional output folder name; default <bench>-<ckpt>-<env>-<action>.
 bench_name=${1}
-env_cfg_type=${2}
-expert_data_num=${3}    # episodes kept PER task
+ckpt_name=${2}
+env_cfg_type=${3}
 action_type=${4}
-dataset_id=${5:-}       # optional output folder name; default cotrain_dataset
+expert_data_num=${5:-}
+dataset_id=${6:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -32,7 +37,8 @@ fi
 # Sort for deterministic episode ordering, then comma-join for process_data.sh.
 IFS=$'\n' read -r -d '' -a sorted < <(printf '%s\n' "${task_names[@]}" | sort && printf '\0')
 joined="$(IFS=,; printf '%s' "${sorted[*]}")"
-echo "[process_data_batch] merging ${#sorted[@]} tasks: ${joined}"
+echo "[process_data_batch] merging ${#sorted[@]} tasks -> ckpt_name=${ckpt_name}: ${joined}"
 
 bash "${SCRIPT_DIR}/process_data.sh" \
-  "${bench_name}" "${joined}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" "${dataset_id}"
+  "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" \
+  "${expert_data_num}" "${joined}" "${dataset_id}"

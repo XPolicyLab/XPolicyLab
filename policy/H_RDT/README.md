@@ -81,21 +81,19 @@ ENABLE_LANGUAGE_ENCODING=true ./datasets/xpolicylab/run_xpolicylab_pipeline.sh
 
 `policy/H_RDT/train.sh` now uses the direct `xpolicylab` loader instead of converting data into the RobotWin2 layout.
 Run the pipeline first so `stats.json` and language embeddings are already available.
-By default, it trains all available XPolicyLab tasks together. The fourth
-argument is the total number of training episodes, not the per-task count.
-`train.sh` converts it to the per-task episode count before passing it to the
-dataset loader. Use `3500` for the full RoboDojo cotrain set, which becomes
-`100` episodes per task across 35 tasks.
+By default, it trains all available XPolicyLab tasks together using every
+episode of each task. To cap the per-task episode count, set
+`XPOLICY_HRDT_MAX_EPISODES` before launching.
 It starts finetuning from the H-RDT human pretrain backbone by default:
 `H_RDT/checkpoints/pretrain-0618/checkpoint-500000/pytorch_model.bin`.
 
 ```bash
 cd /vepfs-cnbje63de6fae220/mobile/chengy/xpolicy/demo_env/XPolicyLab/policy/H_RDT
 
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 ```
 
-To override the pretrain backbone, pass a different path as the eighth argument.
+To override the pretrain backbone, pass a different path as the seventh argument.
 
 ## 6. Co-train Checkpoint and Task Embeddings
 
@@ -106,7 +104,7 @@ server must receive that task's language embedding.
 Example:
 
 ```text
-checkpoint_path = checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
+checkpoint_path = checkpoints/RoboDojo-cotrain-arx_x5-joint-0
 task_name = stack_bowls
 lang_embedding_path = H_RDT/datasets/xpolicylab/lang_embeddings/stack_bowls.pt
 ```
@@ -131,7 +129,7 @@ tensorboard --logdir checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/logs --hos
 
 cd /vepfs-cnbje63de6fae220/mobile/chengy/xpolicy/demo_env/XPolicyLab/policy/H_RDT
 
-bash [eval.sh](http://eval.sh) RoboDojo stack_bowls cotrain arx_x5 3500 joint 0 0 0 hrdt hrdt
+bash [eval.sh](http://eval.sh) RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 0 hrdt hrdt
 
 ### Evaluation environment (`EVAL_ENV_TYPE`)
 

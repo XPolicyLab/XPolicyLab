@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+if [[ $# -lt 4 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
+  echo "  expert_data_num: optional; empty = use all episodes" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
+action_type=$4
+expert_data_num=${5:-}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GR00T_ROOT="${POLICY_DIR}/gr00t_n17"
@@ -19,7 +20,7 @@ if [[ -z "${DATA_ROOT}" ]]; then
   echo "Set GR00T_LEROBOT_HOME to the LeRobot datasets root." >&2
   exit 1
 fi
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 dataset_path="${DATA_ROOT}/${data_setting}"
 modality_config="${POLICY_DIR}/configs/${env_cfg_type}_config.py"
 
@@ -144,8 +145,13 @@ src_path="${DATA_ROOT}/${src_dataset}"
 echo "[GR00T_N17] bench_name=${bench_name}"
 echo "[GR00T_N17] ckpt_name=${ckpt_name}"
 echo "[GR00T_N17] env_cfg_type=${env_cfg_type}"
-echo "[GR00T_N17] expert_data_num=${expert_data_num}"
+echo "[GR00T_N17] expert_data_num=${expert_data_num:-<all>}"
 echo "[GR00T_N17] action_type=${action_type}"
+if [[ -n "${expert_data_num}" ]]; then
+  echo "[GR00T_N17] WARNING: GR00T_N17 consumes the pre-built LeRobot source dataset as a whole;" >&2
+  echo "[GR00T_N17] WARNING: expert_data_num=${expert_data_num} is not applied for episode subsetting." >&2
+  echo "[GR00T_N17] WARNING: To ablate data scale, point GR00T_SRC_DATASET at a subset dataset and use a distinct ckpt_name." >&2
+fi
 echo "[GR00T_N17] src_dataset=${src_path}"
 echo "[GR00T_N17] output_dataset=${dataset_path}"
 

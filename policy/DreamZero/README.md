@@ -62,6 +62,18 @@ export WAN_CKPT_DIR=/path/to/Wan2.1-I2V-14B-480P
 export TOKENIZER_DIR=/path/to/umt5-xxl
 ```
 
+## 数据处理（可选）
+
+默认直接用共享的多任务 LeRobot v3 数据；如需自己转换/截取，用 `process_data.sh`：
+
+```bash
+bash process_data.sh <bench_name> <task_name> <env_cfg_type> <action_type> [expert_data_num]
+```
+
+尾参 `expert_data_num` 可选：传了则只取前 N 条 episodes，不传则用全部。输出目录为
+`data/<bench_name>-<task_name>-<env_cfg_type>-<action_type>/`，训练时按同名 4 元组自动解析。
+要对比不同数据量，用不同 run 名（如 `cotrain_50ep`）并在 process_data 时传该尾参。
+
 ## 多任务训练
 
 常用训练变量：
@@ -79,31 +91,31 @@ export WANDB_PROJECT=dreamzero
 ```bash
 conda activate dreamzero_robodojo
 
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
 ```
 
 训练产物目录：
 
 ```text
-policy/DreamZero/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-42
+policy/DreamZero/checkpoints/RoboDojo-cotrain-arx_x5-joint-0
 ```
 
 ## 同机评测
 
-`task_name` 只在评测时表示要跑的仿真任务；权重仍用多任务 `ckpt_name=cotrain`：
+`task_name` 只在评测时表示要跑的仿真任务；`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 dreamzero_robodojo XPolicyLab
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 dreamzero_robodojo XPolicyLab
 ```
 
 指定 checkpoint：
 
 ```bash
 export MODEL_PATH=/path/to/checkpoint-xxxxx
-bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 dreamzero_robodojo XPolicyLab
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 dreamzero_robodojo XPolicyLab
 ```
 
-`MODEL_PATH` 可以是具体 `checkpoint-*`，也可以是包含 `checkpoint-*` 的训练输出目录。不设置时会按 6 元组自动找 latest，再回退到 `deploy.yml` 里的 `pretrained_model_path`。
+`MODEL_PATH` 可以是具体 `checkpoint-*`，也可以是包含 `checkpoint-*` 的训练输出目录。不设置时会按 `ckpt_name` 目录自动找 latest，再回退到 `deploy.yml` 里的 `pretrained_model_path`。
 
 ## 双机评测
 
@@ -111,7 +123,7 @@ policy 机器启动 server，默认绑定 `0.0.0.0`：
 
 ```bash
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
   0 dreamzero_robodojo 5000 0.0.0.0
 ```
 
@@ -119,8 +131,8 @@ bash setup_eval_policy_server.sh \
 
 ```bash
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls cotrain arx_x5 joint 42 \
-  0 XPolicyLab "ckpt_name=cotrain,action_type=joint" \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
   5000 <policy_server_ip>
 ```
 

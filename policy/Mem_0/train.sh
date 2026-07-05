@@ -4,21 +4,20 @@ set -euo pipefail
 # Mem_0 unified training: Execution Module, Planning Module (Mn), or both in sequence.
 #
 # Usage:
-#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
-#                 <action_type> <seed> <gpu_ids> [train_module]
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_ids> [train_module]
 #
-# train_module (8th arg, default both):
+# train_module (7th arg, default both):
 #   execution  — torchrun + train_low.py (Qwen3-VL-2B)
 #   planning   — LLaMA-Factory LoRA SFT + merge (Qwen3-VL-8B; Mn data)
 #   both       — execution first, then planning (Mn full pipeline)
 #
 # M1 (single-stage) must pass execution explicitly:
-#   bash train.sh RoboDojo test_data arx_x5 3 joint 42 0 execution
+#   bash train.sh RoboDojo test_data arx_x5 joint 42 0 execution
 #
 # Mn examples:
-#   bash process_data.sh RoboDojo cover_blocks arx_x5 50 joint Mn
-#   bash train.sh RoboDojo cover_blocks arx_x5 50 joint 42 0,1,2,3,4,5,6,7
-#   bash train.sh RoboDojo cover_blocks arx_x5 50 joint 42 0,1,2,3,4,5,6,7 planning
+#   bash process_data.sh RoboDojo cover_blocks arx_x5 joint 50 Mn
+#   bash train.sh RoboDojo cover_blocks arx_x5 joint 42 0,1,2,3,4,5,6,7
+#   bash train.sh RoboDojo cover_blocks arx_x5 joint 42 0,1,2,3,4,5,6,7 planning
 #
 # Execution tunables (env): BATCH_SIZE, TRAIN_STEPS, ENABLE_WANDB, IS_DEBUG,
 #   NORM_STATS_PATH, MASTER_PORT, REPO_ID, ALLOW_NO_QWEN
@@ -32,21 +31,19 @@ set -euo pipefail
 # Shared: DRY_RUN (skip torchrun / LLaMA-Factory train+export; still writes configs)
 
 usage() {
-  echo "usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> \\" >&2
-  echo "                   <action_type> <seed> <gpu_ids> [train_module]" >&2
+  echo "usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_ids> [train_module]" >&2
   echo "  train_module: execution | planning | both  (default: both)" >&2
 }
 
 bench_name=${1:-}
 ckpt_name=${2:-}
 env_cfg_type=${3:-}
-expert_data_num=${4:-}
-action_type=${5:-}
-seed=${6:-}
-gpu_ids=${7:-}
-train_module=${8:-}
+action_type=${4:-}
+seed=${5:-}
+gpu_ids=${6:-}
+train_module=${7:-both}
 
-if [[ -z "${bench_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" \
+if [[ -z "${bench_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" \
       || -z "${action_type}" || -z "${seed}" || -z "${gpu_ids}" ]]; then
   usage
   exit 2
@@ -74,8 +71,8 @@ ORCHESTRATOR="${ADAPTER_DIR}/run_planning_train.py"
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
 run_id="$(mem0_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
-repo_id="${REPO_ID:-$(mem0_resolve_dataset_dir "${POLICY_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${expert_data_num}")}"
+repo_id="${REPO_ID:-$(mem0_dataset_dir "${POLICY_DIR}" "${bench_name}" "${ckpt_name}" \
+    "${env_cfg_type}" "${action_type}")}"
 
 run_execution_train() {
   local ckpt_dir="${POLICY_DIR}/checkpoints/${run_id}"
@@ -89,7 +86,7 @@ run_execution_train() {
 
   if [[ ! -d "${repo_id}" ]]; then
     echo -e "\033[31m[train:execution] LeRobot dataset not found: ${repo_id}\033[0m" >&2
-    echo "Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} <M1|Mn>   (or set REPO_ID=...)" >&2
+    echo "Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${action_type} [expert_data_num] <M1|Mn>   (or set REPO_ID=...)" >&2
     exit 1
   fi
 
@@ -168,7 +165,7 @@ run_planning_train() {
 
   if [[ ! -d "${repo_id}" ]]; then
     echo -e "\033[31m[train:planning] LeRobot dataset not found: ${repo_id}\033[0m" >&2
-    echo "Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} Mn" >&2
+    echo "Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${action_type} [expert_data_num] Mn" >&2
     exit 1
   fi
 

@@ -47,14 +47,16 @@ Run `bash install.sh` before first use. The deploy policy server env is normally
 Example checkpoint layout under `policy/GigaWorldPolicy/`:
 
 ```text
-checkpoints/<6-tuple>/checkpoint-<step>/model_ema.pt
+checkpoints/<ckpt_name>/checkpoint-<step>/model_ema.pt
 ```
+
+`ckpt_name` is the full run directory name under `checkpoints/`.
 
 Manual evaluation:
 
 ```bash
 # terminal 1 - server
-bash setup_eval_policy_server.sh XPolicyLab stack_bowls <ckpt_name> arx_x5 3500 joint 0 0 gigaworld-policy <port> localhost
+bash setup_eval_policy_server.sh XPolicyLab stack_bowls <ckpt_name> arx_x5 joint 0 0 gigaworld-policy <port> localhost
 
 # terminal 2 - client
 bash setup_eval_env_client.sh XPolicyLab stack_bowls <ckpt_name> arx_x5 joint 0 0 XPolicyLab "ckpt_name=<ckpt_name>,action_type=joint" <port> localhost

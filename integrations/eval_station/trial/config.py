@@ -144,7 +144,6 @@ def build_trial_run_config(
     )
     if action_type in ("joint", "ee"):
         case_meta["action_type"] = action_type
-    # Older control planes still send the pre-rename ``dataset_name`` key.
     bench_name = _first_non_empty_str(
         case_meta.get("bench_name"),
         task_extra.get("bench_name"),

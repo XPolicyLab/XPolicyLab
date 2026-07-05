@@ -60,7 +60,6 @@ pip install -e .
 | Server 环境 | `uv` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo_sim_arx-x5_seed_0` |
-| expert_data_num | `3500` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/Spirit_v1.5/RoboDojo_sim_arx-x5_seed_0` |
 | 备注 | deploy/sitecustomize.py 将 client socket 超时调至 600s |
@@ -69,16 +68,16 @@ pip install -e .
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <xspark_dir> checkpoints/<run_dir_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名（本地训练产物为 `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>`；历史目录名可整体作为 `ckpt_name` 传入）。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 3500 joint 0 0 uv <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 joint 0 0 uv <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo_sim_arx-x5_seed_0,action_type=joint" <port> localhost

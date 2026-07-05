@@ -29,7 +29,7 @@ Override it with `EVENTVLA_CKPT_PATH` when needed.
 ```bash
 cd /mnt/workspace/yangganlin/code/RoboDojo/RoboDojo/XPolicyLab/policy/EventVLA
 export EVENTVLA_CKPT_PATH=/nav-oss/yangganlin/models/robodojo/20260617_robodojo_pure_image_keyframe_memory_teacher_qwenoft/checkpoints/steps_150000_pytorch_model.pt
-bash eval.sh RoboDojo <task_name> eventvla arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab
+bash eval.sh RoboDojo <task_name> RoboDojo-eventvla-arx_x5-3500-joint-0 arx_x5 joint 0 0 1 XPolicyLab XPolicyLab
 ```
 
 The adapter starts two servers:

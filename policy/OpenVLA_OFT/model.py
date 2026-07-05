@@ -1,4 +1,6 @@
+import logging
 import os
+import re
 import sys
 
 # OpenVLA constants are selected from sys.argv at import time; force ALOHA for XPolicyLab eval.
@@ -34,36 +36,126 @@ _POLICY_DIR = Path(__file__).resolve().parent
 _CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
 _ALOHA_PREPROCESS_SIZE = 256
 
+_LOGGER = logging.getLogger("OpenVLA_OFT")
+
+# Training saves loadable checkpoints to sibling dirs named `<run_id>--<step>_chkpt`
+# (see openvla_oft/vla-scripts/finetune.py:save_training_checkpoint). The bare
+# `<run_id>/` dir usually only carries dataset_statistics.json.
+_CHKPT_STEP_RE = re.compile(r"--(\d+)_chkpt$")
+
+# config.json is the reliable marker that a dir holds real fine-tune weights
+# (the merged model); a `<run_id>/` dir with only dataset_statistics.json is not.
+_WEIGHTS_MARKER = "config.json"
+_STATS_FILE = "dataset_statistics.json"
+
 
 def _extract_step_number(value: Any) -> int | None:
     digits = "".join(ch for ch in str(value) if ch.isdigit())
     return int(digits) if digits else None
 
 
+def _chkpt_step(path: Path) -> int | None:
+    match = _CHKPT_STEP_RE.search(path.name)
+    return int(match.group(1)) if match else None
+
+
+def _has_weights(path: Path) -> bool:
+    return (path / _WEIGHTS_MARKER).is_file()
+
+
+def _iter_weight_dirs(checkpoint_root: Path) -> list[Path]:
+    """Return directories under (and including) checkpoint_root that hold real
+    fine-tune weights (a config.json), preferring immediate children but falling
+    back to a bounded recursive search."""
+    found: list[Path] = []
+    if _has_weights(checkpoint_root):
+        found.append(checkpoint_root)
+    for child in sorted(checkpoint_root.iterdir()):
+        if child.is_dir() and _has_weights(child):
+            found.append(child)
+    if found:
+        return found
+    # Fallback: weights may live deeper than the immediate children.
+    seen: set[Path] = set()
+    for config_path in sorted(checkpoint_root.rglob(_WEIGHTS_MARKER)):
+        parent = config_path.parent
+        if parent not in seen:
+            seen.add(parent)
+            found.append(parent)
+    return found
+
+
+def _select_weight_dir(checkpoint_root: Path, target_step: int | None) -> Path | None:
+    """Pick the weights dir under checkpoint_root, honoring checkpoint_num (step)
+    selection across multiple `--<step>_chkpt` dirs, else the latest step."""
+    weight_dirs = _iter_weight_dirs(checkpoint_root)
+    if not weight_dirs:
+        return None
+
+    stepped = [(d, _chkpt_step(d)) for d in weight_dirs]
+    chkpt_dirs = [(d, step) for d, step in stepped if step is not None]
+    if chkpt_dirs:
+        if target_step is not None:
+            for directory, step in chkpt_dirs:
+                if step == target_step:
+                    return directory
+            available = sorted(step for _, step in chkpt_dirs)
+            _LOGGER.warning(
+                "[OpenVLA_OFT] checkpoint_num=%s has no matching --%s_chkpt under %s; "
+                "available steps=%s. Using the latest step instead.",
+                target_step,
+                target_step,
+                checkpoint_root,
+                available,
+            )
+        return max(chkpt_dirs, key=lambda item: item[1])[0]
+
+    # No step-tagged dirs (e.g. an explicit merged/exported checkpoint dir).
+    return weight_dirs[0]
+
+
+def _resolve_dataset_stats_path(finetune_dir: Path | None) -> Path | None:
+    """Locate dataset_statistics.json. The `--<step>_chkpt` weights dir carries a
+    copy, but fall back to the run root / sibling run dir where training also
+    writes it (finetune.py saves it to run_root_dir)."""
+    if finetune_dir is None:
+        return None
+    direct = finetune_dir / _STATS_FILE
+    if direct.is_file():
+        return direct
+    parent = finetune_dir.parent
+    if parent != finetune_dir:
+        root_stats = parent / _STATS_FILE
+        if root_stats.is_file():
+            return root_stats
+        for sibling in sorted(parent.iterdir()):
+            if sibling.is_dir():
+                candidate = sibling / _STATS_FILE
+                if candidate.is_file():
+                    return candidate
+    return None
+
+
 def _build_ckpt_setting(model_cfg: dict[str, Any]) -> str | None:
+    # ckpt_name is the full run directory name under checkpoints/; an explicit
+    # ckpt_setting override still takes priority.
     if model_cfg.get("ckpt_setting"):
         return str(model_cfg["ckpt_setting"])
-    required = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
-    if not all(model_cfg.get(key) is not None for key in required):
+    ckpt_name = model_cfg.get("ckpt_name")
+    if ckpt_name is None:
         return None
-    return (
-        f"{model_cfg['bench_name']}-{model_cfg['ckpt_name']}-"
-        f"{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-"
-        f"{model_cfg['action_type']}-{model_cfg['seed']}"
-    )
+    return str(ckpt_name)
 
 
 def _build_tfds_dataset_name(model_cfg: dict[str, Any]) -> str | None:
+    # An explicit tfds_dataset_name override still takes priority; otherwise
+    # derive from ckpt_name (the full run directory name).
     if model_cfg.get("tfds_dataset_name"):
         return str(model_cfg["tfds_dataset_name"])
-    required = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type")
-    if not all(model_cfg.get(key) is not None for key in required):
+    ckpt_name = model_cfg.get("ckpt_name")
+    if ckpt_name is None:
         return None
-    data_setting = (
-        f"{model_cfg['bench_name']}-{model_cfg['ckpt_name']}-"
-        f"{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}"
-    )
-    return f"aloha_{data_setting}"
+    return f"aloha_{ckpt_name}"
 
 
 def _resolve_unnorm_key(model_cfg: dict[str, Any], norm_stats: dict | None = None) -> str:
@@ -89,31 +181,42 @@ def _resolve_unnorm_key(model_cfg: dict[str, Any], norm_stats: dict | None = Non
 
     if tfds_dataset_name:
         return tfds_dataset_name
-    raise ValueError("unnorm_key or full 5-tuple dataset fields are required for OpenVLA_OFT eval.")
+    raise ValueError("unnorm_key, tfds_dataset_name, or ckpt_name is required for OpenVLA_OFT eval.")
 
 
 def _resolve_finetune_dir(model_cfg: dict[str, Any]) -> Path | None:
     ckpt_setting = _build_ckpt_setting(model_cfg)
     ckpt_name = model_cfg.get("ckpt_name")
-    candidates = []
+    candidates: list[str] = []
     for value in (ckpt_name, ckpt_setting):
-        if value and value not in candidates:
+        if value and str(value) not in candidates:
             candidates.append(str(value))
     if not candidates:
         return None
 
+    checkpoint_num = model_cfg.get("checkpoint_num")
+    target_step = _extract_step_number(checkpoint_num) if checkpoint_num not in (None, "") else None
+
+    existing_roots: list[Path] = []
     for name in candidates:
         checkpoint_root = (_CHECKPOINTS_DIR / name).expanduser().resolve()
         if not checkpoint_root.is_dir():
             continue
-        markers = ("dataset_statistics.json", "config.json", "latest-checkpoint.pt")
-        if any((checkpoint_root / marker).exists() for marker in markers):
-            return checkpoint_root
-        for child in sorted(checkpoint_root.iterdir()):
-            if child.is_dir() and any((child / marker).exists() for marker in markers):
-                return child
-        if name == ckpt_name:
-            return checkpoint_root
+        existing_roots.append(checkpoint_root)
+        resolved = _select_weight_dir(checkpoint_root, target_step)
+        if resolved is not None:
+            return resolved
+
+    # No dir with real fine-tune weights (config.json). Preserve the existing
+    # fallback semantics (load base model) but make the degradation explicit.
+    if existing_roots:
+        _LOGGER.warning(
+            "[OpenVLA_OFT] No fine-tune weights (%s) found under %s; "
+            "falling back to base model (has_finetune_weights=False).",
+            _WEIGHTS_MARKER,
+            existing_roots[0],
+        )
+        return existing_roots[0]
     return None
 
 
@@ -286,20 +389,21 @@ def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self._finetune_dir = _resolve_finetune_dir(model_cfg)
+        self._dataset_stats_path = _resolve_dataset_stats_path(self._finetune_dir)
         self._dataset_stats: dict | None = None
-        if self._finetune_dir is not None and (self._finetune_dir / "dataset_statistics.json").exists():
+        if self._dataset_stats_path is not None:
             import json
 
-            with open(self._finetune_dir / "dataset_statistics.json", "r", encoding="utf-8") as f:
+            with open(self._dataset_stats_path, "r", encoding="utf-8") as f:
                 self._dataset_stats = json.load(f)
 
         self.cfg = self.get_model(model_cfg)
 
         self.vla = get_vla(self.cfg)
-        if self._finetune_dir is not None and (self._finetune_dir / "dataset_statistics.json").exists():
+        if self._dataset_stats_path is not None:
             from .openvla_oft.experiments.robot.openvla_utils import _load_dataset_stats
 
-            _load_dataset_stats(self.vla, str(self._finetune_dir))
+            _load_dataset_stats(self.vla, str(self._dataset_stats_path.parent))
         self.processor = get_processor(self.cfg)
         self.action_head = None
         if self.cfg.use_l1_regression or self.cfg.use_diffusion:

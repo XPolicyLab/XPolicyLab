@@ -5,14 +5,13 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_conda_env=$9
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
-model_path=${12:-${MODEL_PATH:-""}}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_conda_env=$8
+policy_server_port=$9
+policy_server_host=${10:-"localhost"}
+model_path=${11:-${MODEL_PATH:-""}}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -58,7 +57,6 @@ OVERRIDES=(
     policy_name="${policy_name}"
     action_type="${action_type}"
     action_dim="${action_dim}"
-    expert_data_num="${expert_data_num}"
 )
 
 if [ -n "${model_path}" ]; then

@@ -161,8 +161,8 @@ cd XPolicyLab/policy/Xiaomi_Robotics_0
 bash install.sh
 conda activate mibot
 
-bash process_data.sh RoboDojo cotrain arx_x5 100 ee
-bash train.sh RoboDojo cotrain arx_x5 100 ee 0 0,1,2,3,4,5,6,7
+bash process_data.sh RoboDojo cotrain arx_x5 ee
+bash train.sh RoboDojo cotrain arx_x5 ee 0 0,1,2,3,4,5,6,7
 ```
 
 RoboDojo 原始数据会被转换为 `json/` + `videos/` 目录，并自动生成带 `mean`/`std` 的 Hydra 数据配置。

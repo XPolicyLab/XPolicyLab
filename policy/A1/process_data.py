@@ -185,34 +185,37 @@ def _episode_fps(data: dict, default_fps: int) -> int:
         return int(default_fps)
 
 
-def _resolve_dataset_id(args, task_names: list[str]) -> str:
+def _resolve_dataset_id(args) -> str:
     if args.repo_id:
         return args.repo_id
     if args.dataset_id:
         return args.dataset_id
-    if len(task_names) == 1:
-        return f"{args.bench_name}-{task_names[0]}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
-    return f"{args.bench_name}-cotrain-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+    return f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
 
 
 def convert(args) -> None:
     project_root = Path(args.project_root).resolve()
-    task_names = [task.strip() for task in str(args.task_name).split(",") if task.strip()]
+    raw_task_dirs = args.raw_task_dirs or args.ckpt_name
+    task_names = [task.strip() for task in str(raw_task_dirs).split(",") if task.strip()]
     if not task_names:
-        raise ValueError("task_name resolved to an empty task list")
+        raise ValueError("raw_task_dirs resolved to an empty task list")
 
     episode_jobs: list[tuple[Path, str]] = []
     for task_name in task_names:
         source_root = _resolve_source_root(project_root, args.bench_name, task_name, args.env_cfg_type)
-        ep_files = sorted((source_root / "data").glob("episode_*.hdf5"))[: int(args.expert_data_num)]
-        if len(ep_files) < int(args.expert_data_num):
-            raise FileNotFoundError(
-                f"Requested {args.expert_data_num} episodes for task '{task_name}', "
-                f"found {len(ep_files)} in {source_root / 'data'}"
-            )
+        ep_files = sorted((source_root / "data").glob("episode_*.hdf5"))
+        if args.expert_data_num is not None:
+            ep_files = ep_files[: int(args.expert_data_num)]
+            if len(ep_files) < int(args.expert_data_num):
+                raise FileNotFoundError(
+                    f"Requested {args.expert_data_num} episodes for task '{task_name}', "
+                    f"found {len(ep_files)} in {source_root / 'data'}"
+                )
+        if not ep_files:
+            raise FileNotFoundError(f"No episode_*.hdf5 files under {source_root / 'data'}")
         episode_jobs.extend((ep_file, task_name) for ep_file in ep_files)
 
-    dataset_id = _resolve_dataset_id(args, task_names)
+    dataset_id = _resolve_dataset_id(args)
     output_base = Path(args.output_dir).resolve() if args.output_dir else Path(__file__).resolve().parent / "data"
     dataset_root = output_base / dataset_id
     if dataset_root.exists():
@@ -322,10 +325,20 @@ def convert(args) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Convert XPolicyLab HDF5 data to LeRobot v2.1 format for A1.")
     parser.add_argument("bench_name")
-    parser.add_argument("task_name", help="task name, or comma-separated list to merge")
+    parser.add_argument("ckpt_name", help="artifact name; output dataset is <bench>-<ckpt>-<env>-<action>")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", choices=["joint"])
+    parser.add_argument(
+        "--raw-task-dirs",
+        default=None,
+        help="raw HDF5 task dir(s) under data/<bench_name>/; comma-separated to merge (default: ckpt_name)",
+    )
+    parser.add_argument(
+        "--expert-data-num",
+        type=int,
+        default=None,
+        help="episodes kept per task (default: all)",
+    )
     parser.add_argument("--repo_id", default=None, help="backward-compatible output dataset id override")
     parser.add_argument("--dataset-id", default=None, help="output dataset id override")
     parser.add_argument("--mode", choices=["video"], default="video", help="A1 writes LeRobot v2.1 video datasets")

@@ -90,7 +90,7 @@ python -c "import XPolicyLab; print('XPolicyLab ok')"
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
 | `DM0_RAW_DATA_ROOT` | （见 `process_data.sh`） | 原始 HDF5 根目录 |
-| `DM0_CONVERTED_DATA_ROOT` | `data/<5-tuple>` | 转换输出目录 |
+| `DM0_CONVERTED_DATA_ROOT` | `data/<4-tuple>` | 转换输出目录 |
 | `DM0_BASE_MODEL` | `dexbotic/checkpoints/DM0-base` | 预训练模型 |
 | `DM0_GLOBAL_BATCH_SIZE` | `256` | 全局 batch size |
 | `DM0_BATCH_SIZE` | `4` | 每卡 micro batch |
@@ -118,8 +118,7 @@ global_batch = DM0_BATCH_SIZE × num_gpus × DM0_GRAD_ACCUM
 |----|------|
 | Server 环境 | `DM0` |
 | Client 环境 | `XPolicyLab`（conda） |
-| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-ee-0` |
-| expert_data_num | `3500` |
+| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-ee-0` |
 | action_type | `ee` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/DM_0/RoboDojo-cotrain-arx_x5-3500-ee-0/checkpoint-20000` |
 | 备注 | install.sh 含 h5py（XPolicyLab server） |
@@ -128,19 +127,19 @@ global_batch = DM0_BATCH_SIZE × num_gpus × DM0_GRAD_ACCUM
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <xspark_dir> checkpoints/<ckpt_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名（历史 6-tuple 目录名可整体作为 `ckpt_name` 传入）。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 3500 ee 0 0 DM0 <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 0 DM0 <port> localhost
 
 # terminal 2 — client
-bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 ee 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-ee-0,action_type=ee" <port> localhost
+bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-ee-0,action_type=ee" <port> localhost
 ```
 
 或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。

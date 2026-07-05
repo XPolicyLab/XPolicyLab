@@ -1,4 +1,5 @@
 import os
+import glob
 import numpy as np
 import zarr
 import shutil
@@ -10,24 +11,31 @@ from XPolicyLab.utils.process_data import pack_robot_state, get_robot_action_dim
 def main():
     parser = argparse.ArgumentParser(description="Process some episodes.")
     parser.add_argument("bench_name", type=str, help="The name of the benchmark (e.g., RoboDojo)",)
-    parser.add_argument("task_name", type=str, help="The name of the task (e.g., beat_block_hammer)",)
+    parser.add_argument("ckpt_name", type=str, help="Run name; also selects raw task dir under data/<bench>/",)
     parser.add_argument("env_cfg_type", type=str, help="The name of the environment config",)
-    parser.add_argument("expert_data_num", type=int, help="Number of episodes to process (e.g., 50)",)
     parser.add_argument("action_type", type=str, help="The type of action to process (e.g., joint)",)
+    parser.add_argument("expert_data_num", type=int, nargs="?", default=None,
+                        help="Optional number of episodes to process; defaults to all episodes.",)
     args = parser.parse_args()
 
     bench_name = args.bench_name
-    task_name = args.task_name
+    ckpt_name = args.ckpt_name
     env_cfg_type = args.env_cfg_type
     expert_data_num = args.expert_data_num
     action_type = args.action_type
-    load_data_dir = os.path.join("../../../data", str(bench_name), str(task_name), str(env_cfg_type))
+    load_data_dir = os.path.join("../../../data", str(bench_name), str(ckpt_name), str(env_cfg_type))
 
     robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
+    available_episodes = len(glob.glob(os.path.join(load_data_dir, "data", "episode_*.hdf5")))
+    if expert_data_num is None:
+        expert_data_num = available_episodes
+    assert expert_data_num <= available_episodes, (
+        f"Requested {expert_data_num} episodes but only {available_episodes} available in {load_data_dir}")
+
     frame_count = 0
 
-    save_dir = f"./data/{bench_name}-{task_name}-{env_cfg_type}-{expert_data_num}-{action_type}.zarr"
+    save_dir = f"./data/{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}.zarr"
 
     if os.path.exists(save_dir):
         shutil.rmtree(save_dir)

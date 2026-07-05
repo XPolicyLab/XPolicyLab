@@ -218,6 +218,8 @@ If the external source is cloned from another repository, remove its `.git` dire
 
 ## 4.2 Standard Parameters and Naming
 
+Entry scripts use fixed positional arity: **process_data** accepts 4 required arguments plus 1 optional (`expert_data_num`), **train** accepts 6, and **eval** accepts 10. Only `process_data.sh` may take `expert_data_num` as an optional trailing argument; train and eval locate artifacts by `ckpt_name` and the 4-tuple naming convention below.
+
 These parameters should appear consistently in data processing, training, and evaluation scripts when applicable:
 
 | Parameter | Requirement | Training usage | Evaluation usage |
@@ -228,7 +230,7 @@ These parameters should appear consistently in data processing, training, and ev
 | `env_cfg_type` | Required | Selects robot and environment configuration, including robot morphology. Demo and RoboDojo data use `arx_x5` by default. | Selects the environment configuration for rollout. |
 | `action_type` | Required | Specifies the policy action representation, such as `joint` or `ee`. | Must match the deployment control mode. |
 | `seed` | Required | Controls training randomness and enables multi-seed reporting. | Controls evaluation randomness. |
-| `expert_data_num` | Optional | Recommended when distinguishing the number of demonstrations for a single task. | Optional, usually only needed if checkpoint names encode data scale. |
+| `expert_data_num` | Optional | Optional trailing argument of `process_data.sh` only; caps episodes per task and defaults to all available episodes. To ablate data scale, use a distinct `ckpt_name` (e.g. `myrun_50ep`). | Not used. Evaluation scripts locate checkpoints by `ckpt_name`; pass the full run directory name as `ckpt_name`. |
 
 Recommended artifact names:
 
@@ -239,6 +241,28 @@ Recommended artifact names:
 | Raw RoboDojo data | `data/${bench_name}/${task_name}/${env_cfg}` | Workspace-level `data/` directory |
 
 This convention keeps datasets and checkpoints identifiable from their core experimental parameters, while still allowing `process_data.sh` to read one or more raw `task_name` directories.
+
+Standard script contracts (positional args):
+
+```bash
+# Data processing (expert_data_num optional — omit to use all episodes)
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
+
+# Training
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Evaluation (ckpt_name = full checkpoint directory name under checkpoints/)
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <env_gpu_id> <policy_env> <eval_env_conda_env>
+```
+
+End-to-end example:
+
+```bash
+bash process_data.sh RoboDojo cotrain arx_x5 joint
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <env> RoboDojo
+```
 
 ## 4.3 Implement `install.sh`
 

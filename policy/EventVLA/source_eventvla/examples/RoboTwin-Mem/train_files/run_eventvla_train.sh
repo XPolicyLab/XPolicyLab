@@ -12,23 +12,23 @@ Framework_name=EventVLA
 freeze_module_list=''
 base_vlm=${BASE_VLM:-/mnt/inspurfs/efm_t/yangganlin/models/download_models/Qwen3-VL-4B-Instruct}
 config_yaml=./examples/RoboTwin-Mem/train_files/eventvla_robotwin_mem.yaml
-run_root_dir=./results/Checkpoints
+run_root_dir=${RUN_ROOT_DIR:-./results/Checkpoints}
 data_root_dir=${1:-${ROBOTWIN_MEM_DATA_ROOT:-/mnt/inspurfs/efm_t/yangganlin/workspace_tzz/final/RoboTwin-Mem/lerobotdata}}
-data_mix=robotwin_mem8
-memory_ablation_mode=pure_image_keyframe_memory
+data_mix=${EVENTVLA_DATA_MIX:-robotwin_mem8}
+memory_ablation_mode=${EVENTVLA_MEMORY_ABLATION_MODE:-pure_image_keyframe_memory}
 max_keyframe_images=${MAX_KEYFRAME_IMAGES:-5}
 keep_recent_checkpoints=${KEEP_RECENT_CHECKPOINTS:-2}
 resolved_profile=${memory_ablation_mode}
-keyframe_train_memory_source=teacher_to_predict
-keyframe_train_memory_schedule=teacher_to_predict
-keyframe_schedule_teacher_prob_start=1.0
-keyframe_schedule_teacher_prob_end=0.0
+keyframe_train_memory_source=${KEYFRAME_TRAIN_MEMORY_SOURCE:-teacher_to_predict}
+keyframe_train_memory_schedule=${KEYFRAME_TRAIN_MEMORY_SCHEDULE:-teacher_to_predict}
+keyframe_schedule_teacher_prob_start=${KEYFRAME_SCHEDULE_TEACHER_PROB_START:-1.0}
+keyframe_schedule_teacher_prob_end=${KEYFRAME_SCHEDULE_TEACHER_PROB_END:-0.0}
 memory_debug=${MEMORY_DEBUG:-true}
 memory_debug_interval=${MEMORY_DEBUG_INTERVAL:-1}
 memory_debug_first_steps=${MEMORY_DEBUG_FIRST_STEPS:-1}
 
 run_date=$(date +%Y%m%d)
-run_id=${run_date}_${data_mix}_${memory_ablation_mode}_eventvla
+run_id=${RUN_ID:-${run_date}_${data_mix}_${memory_ablation_mode}_eventvla}
 # === End of environment variable configuration ===
 ###########################################################################################
 

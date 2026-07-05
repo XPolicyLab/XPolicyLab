@@ -5,7 +5,7 @@ set -o pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 Optional environment overrides:
   LEROBOT_DATA_PATH   Default: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
@@ -16,7 +16,7 @@ Optional environment overrides:
 EOF
 }
 
-if [ "$#" -ne 7 ]; then
+if [ "$#" -ne 6 ]; then
     usage >&2
     exit 1
 fi
@@ -24,10 +24,9 @@ fi
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -56,7 +55,7 @@ if [ ! -d "${lerobot_data_path}" ]; then
 fi
 echo -e "\033[33m[INFO] Using LeRobot dataset path: ${lerobot_data_path}\033[0m"
 
-RUN_BASENAME="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+RUN_BASENAME="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 RUNNAME="${RUNNAME:-${RUN_BASENAME}}"
 export RUN_BASENAME RUNNAME
 export DATA_ROOT_DIR="${lerobot_data_path}"

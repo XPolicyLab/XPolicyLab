@@ -12,39 +12,42 @@ bash install.sh
 ## 数据处理
 
 ```bash
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
 ```
 
-> `process_data.sh` 会调用 `process_data.py`，严格遵守 XPolicyLab README 的 5 元组约定，
+> `process_data.sh` 会调用 `process_data.py`，遵守 XPolicyLab README 的 4 元组约定，
 > 自动扫描 `data/<bench_name>/` 下所有 task 子目录，把每个 task 在 `<env_cfg_type>/data/`
-> 下前 `expert_data_num` 个 episodes 转成 TinyVLA 官方 HDF5 schema，并把三路图像预先解码/resize
+> 下的 episodes 转成 TinyVLA 官方 HDF5 schema（尾参 `expert_data_num` 可选，传了则每个 task
+> 只取前 N 条，不传则用全部），并把三路图像预先解码/resize
 > 为 `480x640` 的 `uint8` RGB 帧，写入：
 > 
 > ```
-> XPolicyLab/policy/TinyVLA/data/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
+> XPolicyLab/policy/TinyVLA/data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/
 >     episode_0000000.hdf5
 >     episode_0000001.hdf5
 >     ...
 > ```
+>
+> 要对比不同数据量，用不同 `ckpt_name`（如 `myrun_50ep`）并在 process_data 时传可选的 `expert_data_num`。
 
 
 ## 训练
 
-训练入口遵循 XPolicyLab 统一 7 参数：
+训练入口遵循 XPolicyLab 统一 6 参数：
 
 ```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
-训练权重默认保存在 `TinyVLA/checkpoints` 下；子目录名采用 XPolicyLab 约定的 6 元组
-`<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`。
+训练权重默认保存在 `TinyVLA/checkpoints` 下；子目录名采用 XPolicyLab 约定的
+`<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>`（数据按同名 4 元组目录解析）。
 
 ## 评测
 
-评测入口遵循 XPolicyLab 统一 11 参数：
+评测入口遵循 XPolicyLab 统一 10 参数，其中 `ckpt_name` 直接是 `checkpoints/` 下完整的 run 目录名（历史训练产物可整体作为 `ckpt_name` 传入）：
 
 ```bash
-bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 ```
 默认使用最新的checkpoint
 

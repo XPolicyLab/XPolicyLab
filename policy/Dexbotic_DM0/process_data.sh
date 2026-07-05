@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+if [[ $# -lt 4 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
+  echo "  expert_data_num: optional; empty = use all episodes" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
+action_type=$4
+expert_data_num=${5:-}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"
 DATA_SOURCE_DIR="${DEXBOTIC_ROOT}/dexbotic/data/data_source"
 TRANSFORM_SCRIPT="${POLICY_DIR}/scripts/transform_dm0_dexdata_format.py"
 GENERATE_SOURCE_SCRIPT="${POLICY_DIR}/scripts/generate_data_source.py"
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 converted_data_root="${DM0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${DM0_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
 data_source_path="${DATA_SOURCE_DIR}/robodojo_${data_setting}.py"
@@ -32,9 +33,9 @@ resolve_single_input_dir() {
     return
   fi
   echo "Input directory not found for ${bench_name}/${ckpt_name}/${env_cfg_type}" >&2
-  echo "For 35-task co-train (3500 episodes), use ckpt_name=cotrain." >&2
+  echo "For 35-task co-train, use ckpt_name=cotrain." >&2
   echo "For a single task, use ckpt_name=<task_name>, e.g. sweep_blocks." >&2
-  echo "Example: bash process_data.sh RoboDojo cotrain arx_x5 3500 ee" >&2
+  echo "Example: bash process_data.sh RoboDojo cotrain arx_x5 ee" >&2
   echo "Set DM0_RAW_DATA_ROOT or check ckpt_name." >&2
   exit 1
 }
@@ -61,7 +62,7 @@ build_cotrain_staging_dir() {
       [[ -n "${hdf5_path}" ]] || continue
       ln -sf "$(readlink -f "${hdf5_path}")" "${staging_dir}/${task_name}_$(basename "${hdf5_path}")"
       count=$((count + 1))
-      if [[ "${count}" -ge "${expert_data_num}" ]]; then
+      if [[ -n "${expert_data_num}" && "${count}" -ge "${expert_data_num}" ]]; then
         break
       fi
     done < <(find "${env_dir}" -type f \( -name '*.hdf5' -o -name '*.h5' \) | sort)
@@ -86,7 +87,7 @@ resolve_input_dir() {
 echo "[Dexbotic_DM0] bench_name=${bench_name}"
 echo "[Dexbotic_DM0] ckpt_name=${ckpt_name}"
 echo "[Dexbotic_DM0] env_cfg_type=${env_cfg_type}"
-echo "[Dexbotic_DM0] expert_data_num=${expert_data_num}"
+echo "[Dexbotic_DM0] expert_data_num=${expert_data_num:-<all>}"
 echo "[Dexbotic_DM0] action_type=${action_type}"
 echo "[Dexbotic_DM0] raw_data_root=${raw_data_root}"
 echo "[Dexbotic_DM0] converted_data_root=${converted_data_root}"

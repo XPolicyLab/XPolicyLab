@@ -5,16 +5,15 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-env_gpu_id=$9
-policy_conda_env=${10}
-eval_env_conda_env=${11}
-checkpoint_path=${12:-""}
-config_path=${13:-""}
-lang_embedding_path=${14:-""}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+env_gpu_id=$8
+policy_conda_env=$9
+eval_env_conda_env=${10}
+checkpoint_path=${11:-""}
+config_path=${12:-""}
+lang_embedding_path=${13:-""}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -60,10 +59,11 @@ resolve_checkpoint_path() {
     exit 1
 }
 
-processed_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-checkpoint_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
+# ckpt_name is the full run directory name under checkpoints/.
+checkpoint_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
 checkpoint_path="$(resolve_checkpoint_path "${checkpoint_path}" "${checkpoint_dir}")"
-config_path="${config_path:-${SCRIPT_DIR}/data/${processed_name}/hrdt_finetune_xpolicy.yaml}"
+# If the training data directory name differs from ckpt_name, pass config_path explicitly.
+config_path="${config_path:-${SCRIPT_DIR}/data/${ckpt_name}/hrdt_finetune_xpolicy.yaml}"
 lang_embedding_path="${lang_embedding_path:-${SCRIPT_DIR}/H_RDT/datasets/xpolicylab/lang_embeddings/${task_name}.pt}"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
@@ -87,7 +87,6 @@ bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \

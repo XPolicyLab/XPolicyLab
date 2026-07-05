@@ -29,26 +29,28 @@ Dexbotic_DM0
 
 ```bash
 cd policy/Dexbotic_DM0
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
 ```
 
-示例（35 任务 co-train，共 3500 条）：
+尾参 `expert_data_num` 可选：传了则每个任务最多取前 N 条，不传则用全部 episodes。要对比不同数据量，用不同 `ckpt_name`（如 `cotrain_100ep`）并在 process_data 时传该尾参。
+
+示例（35 任务 co-train，全部 episodes）：
 
 ```bash
 export DM0_CONVERT_WORKERS=16   # 并行 worker 数，默认 8
-bash process_data.sh RoboDojo cotrain arx_x5 3500 ee
+bash process_data.sh RoboDojo cotrain arx_x5 ee
 ```
 
-示例（单任务）：
+示例（单任务，只取前 100 条）：
 
 ```bash
-bash process_data.sh RoboDojo sweep_blocks arx_x5 100 ee
+bash process_data.sh RoboDojo sweep_blocks arx_x5 ee 100
 ```
 
 输出目录：
 
 ```text
-data/RoboDojo-cotrain-arx_x5-3500-ee/
+data/RoboDojo-cotrain-arx_x5-ee/
 ├── episode_000000.jsonl
 ├── video/
 │   ├── episode_000000_head.mp4
@@ -57,20 +59,22 @@ data/RoboDojo-cotrain-arx_x5-3500-ee/
 └── index_cache.json            # 首次训练时 Dexbotic 自动生成
 ```
 
-同时会在 `dexbotic/dexbotic/data/data_source/` 下生成 `robodojo_<5-tuple>.py`。
+同时会在 `dexbotic/dexbotic/data/data_source/` 下生成 `robodojo_<4-tuple>.py`。
 
 ## 训练
 
 ```bash
 cd policy/Dexbotic_DM0
 conda activate DM0
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
+
+训练按 `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/` 解析处理好的数据。
 
 示例（8 卡，global batch = 256）：
 
 ```bash
-bash train.sh RoboDojo cotrain arx_x5 3500 ee 0 0,1,2,3,4,5,6,7
+bash train.sh RoboDojo cotrain arx_x5 ee 0 0,1,2,3,4,5,6,7
 ```
 
 ### Batch 配置
@@ -90,7 +94,7 @@ bash train.sh RoboDojo cotrain arx_x5 3500 ee 0 0,1,2,3,4,5,6,7
 Checkpoint 输出：
 
 ```text
-checkpoints/RoboDojo-cotrain-arx_x5-3500-ee-0/
+checkpoints/RoboDojo-cotrain-arx_x5-ee-0/
 ```
 
 ## Dexdata 字段说明
@@ -126,7 +130,7 @@ CUDA_VISIBLE_DEVICES=0 python playground/benchmarks/robodojo/robodojo_dm0.py --t
 推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
 
 ```bash
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 3500 ee 0 <policy_gpu> <env_gpu> DM0 XPolicyLab
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 <policy_gpu> <env_gpu> DM0 XPolicyLab
 ```
 
 ### Evaluation environment (`EVAL_ENV_TYPE`)

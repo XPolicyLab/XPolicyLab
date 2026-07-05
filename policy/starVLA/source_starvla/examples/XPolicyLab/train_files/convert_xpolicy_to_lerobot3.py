@@ -284,7 +284,9 @@ def convert(args: argparse.Namespace) -> None:
     data_chunk_dir.mkdir(parents=True, exist_ok=True)
     episode_meta_dir.mkdir(parents=True, exist_ok=True)
 
-    episode_paths = sorted(hdf5_dir.glob("episode_*.hdf5"))[: int(args.expert_data_num)]
+    episode_paths = sorted(hdf5_dir.glob("episode_*.hdf5"))
+    if args.expert_data_num is not None and int(args.expert_data_num) > 0:
+        episode_paths = episode_paths[: int(args.expert_data_num)]
     if not episode_paths:
         raise FileNotFoundError(f"No episode_*.hdf5 files found in {hdf5_dir}")
 
@@ -407,7 +409,8 @@ def build_argparser() -> argparse.ArgumentParser:
     parser.add_argument("--bench_name", required=True)
     parser.add_argument("--ckpt_name", required=True)
     parser.add_argument("--env_cfg_type", required=True)
-    parser.add_argument("--expert_data_num", required=True, type=int)
+    parser.add_argument("--expert_data_num", type=int, default=None,
+                        help="Optional episode cap; omit to use all episodes.")
     parser.add_argument("--action_type", required=True)
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--keep_existing", action="store_true")

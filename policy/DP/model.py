@@ -35,8 +35,8 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
 
     def get_model(self, model_cfg):
-        ckpt_setting = f"{model_cfg['bench_name']}-{model_cfg['ckpt_name']}-{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}-{model_cfg['seed']}"
-        ckpt_file = os.path.join(parent_dir, f"checkpoints/{ckpt_setting}/{model_cfg['checkpoint_num']}.ckpt")
+        ckpt_setting = str(model_cfg['ckpt_name'])
+        ckpt_file = self._resolve_checkpoint_file(ckpt_setting, model_cfg.get('checkpoint_num', 'latest'))
 
         # load checkpoint and workspace
         payload = torch.load(open(ckpt_file, "rb"), pickle_module=dill)
@@ -56,6 +56,32 @@ class Model(ModelTemplate):
         policy.eval()
         
         return policy
+
+    def _resolve_checkpoint_file(self, ckpt_setting, checkpoint_num):
+        ckpt_dir = os.path.join(parent_dir, "checkpoints", ckpt_setting)
+        checkpoint_num = "latest" if checkpoint_num is None else str(checkpoint_num)
+
+        if checkpoint_num.lower() not in {"", "latest", "none"}:
+            ckpt_file = os.path.join(ckpt_dir, f"{checkpoint_num}.ckpt")
+            if not os.path.isfile(ckpt_file):
+                raise FileNotFoundError(f"DP checkpoint not found: {ckpt_file}")
+            return ckpt_file
+
+        if not os.path.isdir(ckpt_dir):
+            raise FileNotFoundError(f"DP checkpoint directory not found: {ckpt_dir}")
+
+        candidates = []
+        for name in os.listdir(ckpt_dir):
+            if not name.endswith(".ckpt"):
+                continue
+            stem = name[:-5]
+            if stem.isdigit():
+                candidates.append((int(stem), os.path.join(ckpt_dir, name)))
+
+        if not candidates:
+            raise FileNotFoundError(f"No numeric DP checkpoints found under: {ckpt_dir}")
+
+        return max(candidates, key=lambda item: item[0])[1]
 
     def update_obs(self, obs):
         self.update_obs_batch([obs])

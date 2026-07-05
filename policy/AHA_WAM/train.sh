@@ -7,22 +7,20 @@ set -euo pipefail
 #   model=ahawam
 #
 # Usage:
-#   bash train.sh <bench_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [num_gpus]
 #
-# The first five XPolicyLab arguments are accepted for interface consistency.
-# Training data and stats are controlled by the local AHAWAM task yaml unless
-# overridden through the AHA_WAM_* environment variables below.
+# ckpt_name is the run identifier (defaults to the RoboDojo task name for single-task runs).
+# Override raw task directories with AHA_WAM_RAW_TASK_DIRS (comma-separated task names).
 
-bench_name=${1:?Usage: bash train.sh <bench_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]}
-task_name=${2:?}
+bench_name=${1:?Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [num_gpus]}
+ckpt_name=${2:?}
 env_cfg_type=${3:?}
-expert_data_num=${4:?}
-action_type=${5:?}
-seed=${6:?}
-gpu_id=${7:?}
+action_type=${4:?}
+seed=${5:?}
+gpu_id=${6:?}
 
-if [[ $# -ge 8 ]]; then
-    num_gpus=${8}
+if [[ $# -ge 7 ]]; then
+    num_gpus=${7}
 elif [[ "${gpu_id}" == *,* ]]; then
     IFS=',' read -r -a gpu_ids <<< "${gpu_id}"
     num_gpus=${#gpu_ids[@]}
@@ -50,7 +48,8 @@ TEXT_CACHE_DIR="${AHA_WAM_TEXT_EMBED_CACHE_DIR:-${DATASET_DIR}/text_embeds_cache
 OUTPUT_ROOT="${AHA_WAM_OUTPUT_ROOT:-${POLICY_DIR}/checkpoints}"
 INIT_CHECKPOINT="${AHA_WAM_INIT_CHECKPOINT:-}"
 RESUME="${AHA_WAM_RESUME:-}"
-RUN_ID="${RUN_ID:-aha-wam-${bench_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
+RUN_ID="${RUN_ID:-${ckpt_setting}}"
 
 batch_size="${AHA_WAM_BATCH_SIZE:-8}"
 gradient_accumulation_steps="${AHA_WAM_GRADIENT_ACCUMULATION_STEPS:-8}"
@@ -95,14 +94,17 @@ export AHA_WAM_OUTPUT_ROOT="${OUTPUT_ROOT}"
 export DIFFSYNTH_MODEL_BASE_PATH="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/caijisong/dualWAM/checkpoints}"
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 export PYTHONPATH="${ROOT_DIR}:${AHA_WAM_PROJECT_ROOT}:${AHA_WAM_PROJECT_ROOT}/src:${PYTHONPATH:-}"
+if [[ -n "${AHA_WAM_RAW_TASK_DIRS:-}" ]]; then
+    export AHA_WAM_RAW_TASK_DIRS
+fi
 
-echo "[aha-wam train] bench_name=${bench_name} task_name=${task_name} env_cfg_type=${env_cfg_type}"
+echo "[aha-wam train] bench_name=${bench_name} ckpt_name=${ckpt_name} env_cfg_type=${env_cfg_type}"
 echo "[aha-wam train] project_root=${AHA_WAM_PROJECT_ROOT}"
 echo "[aha-wam train] task=${TASK_CONFIG} model=ahawam"
 echo "[aha-wam train] dataset=${DATASET_DIR}"
 echo "[aha-wam train] stats=${DATASET_STATS_PATH}"
 echo "[aha-wam train] text_cache=${TEXT_CACHE_DIR}"
-echo "[aha-wam train] output_root=${OUTPUT_ROOT} run_id=${RUN_ID}"
+echo "[aha-wam train] output_root=${OUTPUT_ROOT} ckpt_setting=${ckpt_setting}"
 echo "[aha-wam train] gpus=${gpu_id} nproc_per_node=${num_gpus} train_seed=${train_seed}"
 
 cd "${AHA_WAM_PROJECT_ROOT}"
@@ -129,7 +131,7 @@ train_args=(
     "data.val.pretrained_norm_stats=${DATASET_STATS_PATH}"
     "data.train.text_embedding_cache_dir=${TEXT_CACHE_DIR}"
     "data.val.text_embedding_cache_dir=${TEXT_CACHE_DIR}"
-    "output_dir=${OUTPUT_ROOT}/${TASK_CONFIG}-${RUN_ID}"
+    "output_dir=${OUTPUT_ROOT}/${ckpt_setting}"
 )
 
 if [[ -n "${INIT_CHECKPOINT}" ]]; then

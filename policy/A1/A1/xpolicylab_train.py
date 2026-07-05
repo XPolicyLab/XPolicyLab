@@ -301,20 +301,16 @@ def resolve_dataset_path(args, values, policy_dir):
         return dataset_path
 
     shared_name = f"{args.bench_name}_sim_{args.env_cfg_type.replace('_', '-')}_v21"
+    dataset_tag = f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
     candidates = []
     if values.get("LEROBOT_DATA_PATH"):
         candidates.append(Path(values["LEROBOT_DATA_PATH"]))
     candidates.extend(
         [
             Path("/mnt/xspark-data/xspark_shared/lerobot") / shared_name,
-            Path(values["LEROBOT_OUTPUT_DIR"]) / f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}",
+            Path(values["LEROBOT_OUTPUT_DIR"]) / dataset_tag,
         ]
     )
-
-    data_dir = Path(values["LEROBOT_OUTPUT_DIR"])
-    if data_dir.is_dir():
-        pattern = f"{args.bench_name}-*-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
-        candidates.extend(sorted(data_dir.glob(pattern), key=lambda p: p.stat().st_mtime, reverse=True))
 
     for candidate in candidates:
         if candidate.is_dir():
@@ -328,16 +324,17 @@ def resolve_dataset_path(args, values, policy_dir):
                 "bash",
                 str(policy_dir / "process_data.sh"),
                 args.bench_name,
-                task_name,
+                args.ckpt_name,
                 args.env_cfg_type,
-                args.expert_data_num,
                 args.action_type,
+                "",
+                task_name,
                 os.environ.get("DATASET_FPS", "30"),
                 str(output_dir),
             ],
             check=True,
         )
-        generated = output_dir / f"{args.bench_name}-{task_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+        generated = output_dir / dataset_tag
         if generated.is_dir():
             return generated.resolve()
 
@@ -421,7 +418,7 @@ def run(args):
 
     run_basename = (
         f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-"
-        f"{args.expert_data_num}-{args.action_type}-{args.seed}"
+        f"{args.action_type}-{args.seed}"
     )
     runname = os.environ.get("RUNNAME") or run_basename
     wandb_run_name = values["WANDB_RUN_NAME"] or runname
@@ -581,7 +578,6 @@ def main():
     parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num")
     parser.add_argument("action_type")
     parser.add_argument("seed")
     parser.add_argument("gpu_id")

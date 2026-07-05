@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import inspect
 import json
+import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -22,6 +24,8 @@ _CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
 _DEFAULT_WAN_PATH = "/mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B"
 _DEFAULT_VLM_PATH = "/mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct"
 _DEFAULT_ROBOT_ACTION_DIM_INFO = {"arm_dim": [6, 6], "ee_dim": [1, 1]}
+# DeepSpeed (accelerator.save_state) writes the sharded model weights into this file.
+_MOTUS_MODEL_STATE_FILENAME = "mp_rank_00_model_states.pt"
 if str(_MOTUS_ROOT) not in sys.path:
     sys.path.insert(0, str(_MOTUS_ROOT))
 
@@ -437,26 +441,67 @@ def _resolve_path(value: Any, base_dir: Path = _POLICY_DIR) -> Path | None:
     return path.resolve()
 
 
+def _checkpoint_step_key(directory: Path) -> tuple[int, float]:
+    """Sort key preferring the highest ``checkpoint_step_<N>`` then newest mtime."""
+    match = re.search(r"checkpoint_step_(\d+)", str(directory))
+    step = int(match.group(1)) if match else -1
+    try:
+        mtime = directory.stat().st_mtime
+    except OSError:
+        mtime = 0.0
+    return (step, mtime)
+
+
+def resolve_motus_checkpoint_dir(base: Path) -> Path:
+    """Resolve a (possibly nested) checkpoint location to what MotusPolicy expects.
+
+    ``models.motus.Motus.load_checkpoint`` accepts either the ``mp_rank_00_model_states.pt``
+    file directly or a directory that *directly* contains it. Training via
+    ``train/train.py`` (DeepSpeed ``accelerator.save_state``) instead nests it as::
+
+        <base>/<dataset_name>/<run_name>/checkpoint_step_<N>/pytorch_model/mp_rank_00_model_states.pt
+
+    so we transparently descend into the nested layout (preferring the latest step)
+    to avoid requiring manual symlinks.
+    """
+    # A direct file path (or a missing path) is passed through unchanged so the
+    # downstream loader can raise a clear, actionable error.
+    if base.is_file() or not base.exists():
+        return base
+    # Cheap checks for the two common layouts before a full recursive scan.
+    if (base / _MOTUS_MODEL_STATE_FILENAME).is_file():
+        return base
+    if (base / "pytorch_model" / _MOTUS_MODEL_STATE_FILENAME).is_file():
+        return base / "pytorch_model"
+    matches = list(base.rglob(_MOTUS_MODEL_STATE_FILENAME))
+    if matches:
+        return max((match.parent for match in matches), key=_checkpoint_step_key)
+    return base
+
+
 def resolve_motus_checkpoint(model_cfg: dict[str, Any]) -> str:
+    # Environment overrides take precedence so operators can point at an arbitrary
+    # checkpoint (absolute dir/file) or a run under checkpoints/ without editing configs.
+    env_checkpoint_path = _resolve_path(os.environ.get("MOTUS_CHECKPOINT_PATH"))
+    if env_checkpoint_path is not None:
+        return str(resolve_motus_checkpoint_dir(env_checkpoint_path))
+
+    env_ckpt_setting = os.environ.get("MOTUS_CKPT_SETTING")
+    if env_ckpt_setting:
+        return str(resolve_motus_checkpoint_dir((_CHECKPOINTS_DIR / env_ckpt_setting).resolve()))
+
     for key in ("ckpt_setting", "checkpoint_path", "model_path"):
         explicit_path = _resolve_path(model_cfg.get(key))
         if explicit_path is not None:
-            return str(explicit_path)
+            return str(resolve_motus_checkpoint_dir(explicit_path))
 
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
         raw_ckpt_name = Path(str(ckpt_name)).expanduser()
         if raw_ckpt_name.is_absolute() or "/" in str(ckpt_name):
-            return str(_resolve_path(ckpt_name))
+            return str(resolve_motus_checkpoint_dir(_resolve_path(ckpt_name)))
 
-        tuple_keys = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
-        if all(model_cfg.get(key) is not None for key in tuple_keys):
-            checkpoint_setting = "-".join(str(model_cfg[key]) for key in tuple_keys)
-            tuple_path = (_CHECKPOINTS_DIR / checkpoint_setting).resolve()
-            if tuple_path.exists():
-                return str(tuple_path)
-
-        return str((_CHECKPOINTS_DIR / str(ckpt_name)).resolve())
+        return str(resolve_motus_checkpoint_dir((_CHECKPOINTS_DIR / str(ckpt_name)).resolve()))
 
     raise ValueError("ckpt_name, ckpt_setting, checkpoint_path, or model_path is required for Motus.")
 

@@ -10,13 +10,12 @@ bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-policy_uv_env=${9:-uv}
-policy_server_port=${10}
-policy_server_host=${11:-"localhost"}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+policy_uv_env=${8:-uv}
+policy_server_port=$9
+policy_server_host=${10:-"localhost"}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
@@ -62,6 +61,66 @@ PYENV
 }
 
 policy_uv_env_path="$(resolve_uv_env "${policy_uv_env}")"
+
+# Resolve the Hy-Embodied source tree root (mirrors model.py._resolve_hy_root):
+# deploy.yml `hy_root` -> $HY_VLA_ROOT -> ./Hy-Embodied-0.5-VLA. Relative paths
+# resolve against the policy dir. Needed to locate `checkpoints/<ckpt_name>`.
+resolve_hy_root() {
+    "${YAML_PYTHON}" - <<PYHY
+import os, yaml
+from pathlib import Path
+script_dir = Path("${CURRENT_DIR}")
+cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8")) or {}
+hy_root = cfg.get("hy_root") or os.environ.get("HY_VLA_ROOT") or str(script_dir / "Hy-Embodied-0.5-VLA")
+p = Path(hy_root).expanduser()
+if not p.is_absolute():
+    p = (script_dir / p).resolve()
+print(p)
+PYHY
+}
+hy_root="$(resolve_hy_root)"
+
+# Turn the eval `ckpt_name` into an optional `ckpt_path=` override for
+# setup_policy_server.py (overrides deploy.yml's default ckpt_path). Priority:
+#   1. $HY_VLA_CKPT_PATH (highest)
+#   2. ckpt_name if absolute / already exists
+#   3. ${hy_root}/checkpoints/${ckpt_name}, then ${POLICY_DIR}/checkpoints/${ckpt_name}
+# Empty / placeholder ckpt_name (or nothing resolvable) -> no override, so the
+# deploy.yml ckpt_path default is used unchanged.
+resolve_ckpt_override() {
+    HY_VLA_CKPT_PATH="${HY_VLA_CKPT_PATH:-}" \
+    CKPT_NAME="${ckpt_name}" \
+    HY_ROOT="${hy_root}" \
+    POLICY_DIR="${CURRENT_DIR}" \
+    "${YAML_PYTHON}" - <<'PYCKPT'
+import os
+from pathlib import Path
+
+env_override = (os.environ.get("HY_VLA_CKPT_PATH") or "").strip()
+if env_override:
+    print(Path(env_override).expanduser())
+    raise SystemExit(0)
+
+ckpt_name = (os.environ.get("CKPT_NAME") or "").strip()
+_PLACEHOLDERS = {"", "null", "none", "default", "ckpt", "ckpt_name", "-"}
+if ckpt_name.lower() in _PLACEHOLDERS:
+    raise SystemExit(0)
+
+cand = Path(ckpt_name).expanduser()
+if cand.is_absolute() or cand.exists():
+    print(cand)
+    raise SystemExit(0)
+
+hy_root = Path(os.environ["HY_ROOT"])
+policy_dir = Path(os.environ["POLICY_DIR"])
+for base in (hy_root / "checkpoints" / ckpt_name, policy_dir / "checkpoints" / ckpt_name):
+    if base.exists():
+        print(base)
+        raise SystemExit(0)
+PYCKPT
+}
+ckpt_path_override="$(resolve_ckpt_override)"
+
 if [[ ! -f "${policy_uv_env_path}/.venv/bin/activate" ]]; then
     echo "[SERVER][ERROR] uv venv not found: ${policy_uv_env_path}/.venv" >&2
     echo "[SERVER][ERROR] Run: bash ${CURRENT_DIR}/install.sh" >&2
@@ -77,6 +136,25 @@ echo "[SERVER] Using python: ${PYTHON_BIN}"
 # (pyproject only packages hy_vla, so robotwin_eval needs the repo on path).
 PYTHONPATH_PARTS=("${ROOT_DIR}" "${policy_uv_env_path}")
 
+overrides=(
+    port="${policy_server_port}"
+    host="${policy_server_host}"
+    bench_name="${bench_name}"
+    task_name="${task_name}"
+    ckpt_name="${ckpt_name}"
+    env_cfg_type="${env_cfg_type}"
+    seed="${seed}"
+    policy_name="${policy_name}"
+    action_type="${action_type}"
+    action_dim="${action_dim}"
+)
+if [[ -n "${ckpt_path_override}" ]]; then
+    echo "[SERVER] ckpt override: ckpt_path=${ckpt_path_override}"
+    overrides+=(ckpt_path="${ckpt_path_override}")
+elif [[ -n "${ckpt_name}" ]]; then
+    echo "[SERVER] ckpt_name='${ckpt_name}' not resolved to a checkpoint dir; using deploy.yml ckpt_path"
+fi
+
 exec env \
     PYTHONUNBUFFERED=1 \
     PYTHONWARNINGS=ignore::UserWarning \
@@ -84,15 +162,4 @@ exec env \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         --config_path "${yaml_file}" \
-        --overrides \
-            port="${policy_server_port}" \
-            host="${policy_server_host}" \
-            bench_name="${bench_name}" \
-            task_name="${task_name}" \
-            ckpt_name="${ckpt_name}" \
-            env_cfg_type="${env_cfg_type}" \
-            expert_data_num="${expert_data_num}" \
-            seed="${seed}" \
-            policy_name="${policy_name}" \
-            action_type="${action_type}" \
-            action_dim="${action_dim}"
+        --overrides "${overrides[@]}"

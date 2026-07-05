@@ -1,14 +1,13 @@
 #!/bin/bash
-# Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+# Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 set -euo pipefail
 
 bench_name=${1:?bench_name required}
 ckpt_name=${2:?ckpt_name required}
 env_cfg_type=${3:?env_cfg_type required}
-expert_data_num=${4:?expert_data_num required}
-action_type=${5:?action_type required}
-seed=${6:?seed required}
-gpu_id=${7:?gpu_id required}
+action_type=${4:?action_type required}
+seed=${5:?seed required}
+gpu_id=${6:?gpu_id required}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -37,14 +36,12 @@ wandb_entity="${LDA_WANDB_ENTITY:-}"
 is_debug="${LDA_DEBUG:-False}"
 
 dataset_id="${LDA_DATASET_ID:-$(xpolicylab_dataset_tag "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")}"
-resolved_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-  "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
+resolved_dataset_dir="${data_root_dir}/${dataset_id}"
 if [[ ! -d "${resolved_dataset_dir}" ]]; then
   echo -e "\033[31m[train.sh] dataset not found: ${resolved_dataset_dir}\033[0m" >&2
   echo -e "\033[31m           Run process_data.sh first (expected tag: ${dataset_id}).\033[0m" >&2
   exit 1
 fi
-dataset_id="$(basename "${resolved_dataset_dir}")"
 
 export XPOLICYLAB_DATASET_ID="${XPOLICYLAB_DATASET_ID:-${dataset_id}}"
 export XPOLICYLAB_ROBOT_TYPE="${XPOLICYLAB_ROBOT_TYPE:-${env_cfg_type}}"

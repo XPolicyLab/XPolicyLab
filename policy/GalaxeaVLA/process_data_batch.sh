@@ -32,6 +32,7 @@ fi
 source "${UPSTREAM_DIR}/.venv/bin/activate"
 PYTHONPATH="${ROOT_DIR}:${UPSTREAM_DIR}/src:${PYTHONPATH:-}" \
 python "${UPSTREAM_DIR}/xpolicylab_adapter/convert_to_galaxea_lerobot.py" \
-    "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${max_per_task}" "${action_type}" \
+    "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" \
+    --expert_data_num "${max_per_task:-0}" \
     --batch_root "${batch_root}" \
     "${tasks_arg[@]}"

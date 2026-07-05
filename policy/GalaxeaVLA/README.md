@@ -4,8 +4,8 @@
 
 | 产物 | 命名 | 默认路径 |
 |---|---|---|
-| 处理后数据集 | `<bench_name>-<ckpt_name>-<env_cfg_type>-joint-lerobot` | `policy/GalaxeaVLA/data/` |
-| 训练 checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-joint-<seed>` | `policy/GalaxeaVLA/checkpoints/` |
+| 处理后数据集 | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-lerobot` | `policy/GalaxeaVLA/data/` |
+| 训练 checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/GalaxeaVLA/checkpoints/` |
 
 ---
 
@@ -37,7 +37,8 @@ HDF5 → Galaxea LeRobot（`dual_arm_joint_robodojo` 格式）；相机 RGB `(48
 
 ```bash
 cd XPolicyLab/policy/GalaxeaVLA
-bash process_data.sh RoboDojo stack_bowls arx_x5 100
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint 100   # optional episode cap
 ```
 
 ### 2.2 批量（多任务）
@@ -52,12 +53,12 @@ bash process_data_batch.sh RoboDojo cotrain arx_x5 joint \
 ## 3. 训练
 
 ```bash
-# bench_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id [hydra...]
-bash train.sh RoboDojo robodojo_joint arx_x5 100 joint 0 0,1,2,3,4,5,6,7
+# bench_name ckpt_name env_cfg_type action_type seed gpu_id [hydra...]
+bash train.sh RoboDojo robodojo_joint arx_x5 joint 0 0,1,2,3,4,5,6,7
 
 # 外部 LeRobot 数据集
 GALAXEA_DATASET_DIR=/path/to/RoboDojo_sim_arx-x5_v30 \
-bash train.sh RoboDojo cotrain arx_x5 100 joint 0 0,1,2,3,4,5,6,7
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
 ```
 
 - Hydra task：`real/g0plus_xpolicylab_finetune`

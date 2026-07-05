@@ -71,14 +71,15 @@ python XPolicyLab/debug_env_client.py \
 
 | 脚本 | 参数个数 | 作用 |
 |------|----------|------|
-| `process_data.sh` | 5 | 将 LeRobot v2.1 链到 `data/<5-tuple>/` 并注册数据集 |
-| `train.sh` | 7 | 训练，权重写到 `checkpoints/<6-tuple>/` |
-| `eval.sh` | 11 | 启动 policy server + 环境 client 联调 |
+| `process_data.sh` | 4（+可选尾参） | 将 LeRobot v2.1 链到 `data/<4-tuple>/` 并注册数据集 |
+| `train.sh` | 6 | 训练，权重写到 `checkpoints/<4-tuple>-<seed>/` |
+| `eval.sh` | 10 | 启动 policy server + 环境 client 联调（`ckpt_name` 直接是 `checkpoints/` 下完整 run 目录名） |
 
 **命名：**
 
-- 处理后数据（5 元组）：`<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
-- 训练产物（6 元组）：上述 5 元组 + `-<seed>`
+- 处理后数据（4 元组）：`<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>`
+- 训练产物：上述 4 元组 + `-<seed>`
+- `expert_data_num` 只作为 `process_data.sh` 的可选尾参（不传 = 全部 episodes）。要对比不同数据量，用不同 `ckpt_name`（如 `myrun_50ep`）并在 process_data 时传该尾参。
 
 ### 1. 准备 LeRobot 数据
 
@@ -88,45 +89,48 @@ python XPolicyLab/debug_env_client.py \
 
 HDF5 → LeRobot 请用 `XPolicyLab/scripts/transform_lerobot_v30_format.py`（或已有 v21 导出）。**不要用 v30**（缺少 `meta/episodes.jsonl`，当前 Being-H loader 不支持）。
 
-### 2. process_data（5 参数）
+### 2. process_data（4 参数 + 可选尾参）
 
 ```bash
 cd XPolicyLab/policy/Being_H05
 
-# 示例：cotrain，3500 条 joint
-bash process_data.sh RoboDojo cotrain arx_x5 3500 joint
+# 示例：cotrain，全部 episodes，joint
+bash process_data.sh RoboDojo cotrain arx_x5 joint
+
+# 示例：只取前 3500 条（数据量 ablation 时建议换一个 ckpt_name）
+bash process_data.sh RoboDojo cotrain_3500ep arx_x5 joint 3500
 
 # 可选：指定其它 LeRobot 根目录
 # LEROBOT_DATA_PATH=/path/to/your_lerobot_v21 bash process_data.sh ...
 ```
 
-输出：`data/RoboDojo-cotrain-arx_x5-3500-joint/`（symlink）及 `Being-H/configs/posttrain/xpolicylab/<5-tuple>.yaml`。
+输出：`data/RoboDojo-cotrain-arx_x5-joint/`（symlink）及 `Being-H/configs/posttrain/xpolicylab/<4-tuple>.yaml`。
 
-### 3. train（7 参数）
+### 3. train（6 参数）
 
 ```bash
 export BEINGH_MLLM_PATH=/path/to/InternVL3_5-2B
 export BEINGH_EXPERT_PATH=/path/to/Qwen3-0.6B
 export BEINGH_RESUME_PATH=/path/to/Being-H05-2B
 
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-Checkpoint 目录：`checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/`，步数子目录如 `0150000/`。
+Checkpoint 目录：`checkpoints/RoboDojo-cotrain-arx_x5-joint-0/`，步数子目录如 `0150000/`。
 
 `data_config` 为 `robodojo_qpos`（非 `robotwin`）。超参可用环境变量覆盖：`MAX_STEPS`、`SAVE_STEPS`、`LEARNING_RATE` 等。
 
 ### 4. 评测 / 部署
 
 ```bash
-bash eval.sh RoboDojo <task_name> cotrain arx_x5 3500 joint 0 <policy_gpu> <env_gpu> beingh <eval_env_conda_env>
+bash eval.sh RoboDojo <task_name> RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 <policy_gpu> <env_gpu> beingh <eval_env_conda_env>
 ```
 
-或手动启动 server 时，`model_path` 可指向 6 元组目录或最新 step 子目录；也可只传 6 元组字段由 `model.py` 自动解析。
+或手动启动 server 时，`model_path` 可指向 run 目录或最新 step 子目录；也可只传 `ckpt_name`（`checkpoints/` 下完整 run 目录名，历史目录名可整体传入）由 `model.py` 自动解析。
 
 ### RoboTwin（非 RoboDojo）
 
-仍使用 `Being-H/scripts/train/train_robotwin_example.sh` 及 `robotwin_*` 配置，不走上述 5/7 参数流程。
+仍使用 `Being-H/scripts/train/train_robotwin_example.sh` 及 `robotwin_*` 配置，不走上述 4/6 参数流程。
 
 
 

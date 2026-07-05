@@ -60,7 +60,6 @@ python3 examples/RoboDojo/prepare_RoboDojo_abot.py \
 | Server 环境 | `ABot` |
 | Client 环境 | `XPolicyLab`（conda） |
 | eval 示例 ckpt | `RoboDojo-sim-arx_x5-100-joint-0` |
-| expert_data_num | `100` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/Abot_M0/RoboDojo-sim-arx_x5-100-joint-0` |
 
@@ -77,7 +76,7 @@ ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-sim-arx_x5-100-joint-0 arx_x5 100 joint 0 0 ABot <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-sim-arx_x5-100-joint-0 arx_x5 joint 0 0 ABot <port> localhost
 
 # terminal 2 — client
 bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-sim-arx_x5-100-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-sim-arx_x5-100-joint-0,action_type=joint" <port> localhost

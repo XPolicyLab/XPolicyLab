@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+if [[ $# -lt 6 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
+# ckpt_setting is the run directory name; pass it verbatim as ckpt_name to eval.sh.
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 repo_id="${INTERNVLA_REPO_ID:-${data_setting}}"
 intern_action_mode="${INTERNVLA_ACTION_MODE:-delta}"
@@ -41,3 +41,16 @@ bash "${POLICY_DIR}/internvla_a1/launch/internvla_a1_3b_finetune.sh" \
   "${use_external_stats}" \
   "${ckpt_dir}" \
   "${seed}"
+
+# LeRobot saves to ${ckpt_dir}/checkpoints/<step>/pretrained_model, while eval
+# model.py scans direct children of checkpoints/<ckpt_name> for pretrained_model.
+# Symlink step dirs to the run root so eval finds them without touching eval code.
+if [[ -d "${ckpt_dir}/checkpoints" ]]; then
+  for step_dir in "${ckpt_dir}/checkpoints"/*/; do
+    step_dir="${step_dir%/}"
+    step_name="$(basename "${step_dir}")"
+    [[ "${step_name}" == "last" ]] && continue
+    [[ -d "${step_dir}/pretrained_model" ]] || continue
+    ln -sfn "checkpoints/${step_name}" "${ckpt_dir}/${step_name}"
+  done
+fi

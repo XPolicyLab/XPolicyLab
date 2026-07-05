@@ -5,10 +5,15 @@ set -o pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+Training data resolution order:
+  1. LEROBOT_DATA_PATH (explicit override)
+  2. <policy>/data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type> (process_data.sh output)
+  3. <demo_root>/RobotDojo/RoboDojo_sim_arx-x5_v30 (shared default)
 
 Optional environment overrides:
-  LEROBOT_DATA_PATH                 Default: <demo_root>/RobotDojo/RoboDojo_sim_arx-x5_v30
+  LEROBOT_DATA_PATH                 Explicit LeRobot dataset root
   DREAMZERO_PRETRAINED_MODEL_PATH   Default: ./checkpoints/DreamZero-AgiBot, or ./checkpoints for flat layout
   WAN_CKPT_DIR                      Default: ./checkpoints/Wan2.1-I2V-14B-480P
   TOKENIZER_DIR                     Default: ./checkpoints/umt5-xxl, or Wan2.1 nested tokenizer fallback
@@ -17,7 +22,7 @@ Optional environment overrides:
 EOF
 }
 
-if [ "$#" -ne 7 ]; then
+if [ "$#" -ne 6 ]; then
     usage >&2
     exit 1
 fi
@@ -25,10 +30,9 @@ fi
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -36,9 +40,18 @@ UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 DREAMZERO_DIR="${SCRIPT_DIR}/dreamzero"
 export DREAMZERO_DIR
 
+data_tag="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
+processed_data_path="${SCRIPT_DIR}/data/${data_tag}"
 default_lerobot_path="${ROOT_DIR}/RobotDojo/RoboDojo_sim_arx-x5_v30"
-dataset_path="${LEROBOT_DATA_PATH:-${default_lerobot_path}}"
-run_basename="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+# Data resolution order: explicit override > process_data.sh output (4-tuple) > shared default.
+if [ -n "${LEROBOT_DATA_PATH:-}" ]; then
+    dataset_path="${LEROBOT_DATA_PATH}"
+elif [ -f "${processed_data_path}/meta/info.json" ]; then
+    dataset_path="${processed_data_path}"
+else
+    dataset_path="${default_lerobot_path}"
+fi
+run_basename="${data_tag}-${seed}"
 output_dir="${SCRIPT_DIR}/checkpoints/${run_basename}"
 
 if [ ! -f "${dataset_path}/meta/info.json" ]; then

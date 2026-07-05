@@ -48,13 +48,17 @@ Point `ckpt_path` / `norm_path` in `deploy.yml` at the downloaded checkpoint
 
 ## Data processing
 
-Compute the normalization statistics the server consumes:
+Hy-VLA does **not** use the standard XPolicyLab `process_data.sh` / `train.sh` contracts.
+Training follows the upstream Hy-Embodied RoboTwin/UMI pipeline. The local wrapper only
+computes normalization statistics for evaluation:
 
 ```bash
 bash process_data.sh <manifest_csv> <hdf5_dir> <output_pkl> [downsample_rate] [chunk_size]
 ```
 
 ## Training
+
+Hy-VLA training is also upstream-managed; there is no standard 6-argument `train.sh`:
 
 ```bash
 CHIEF_IP=127.0.0.1 INDEX=0 NUM_MACHINES=1 NPROC_PER_NODE=8 \
@@ -72,11 +76,11 @@ client separately (easier to read server errors); on a single machine `eval.sh`
 does both:
 
 ```bash
-bash eval.sh RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 50 ee 0 0 0 uv <eval_env_conda_env>
+bash eval.sh RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 ee 0 0 0 uv <eval_env_conda_env>
 ```
 
 Positional args: `<bench_name> <task_name> <ckpt_name> <env_cfg_type>
-<expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id>
+<action_type> <seed> <policy_gpu_id> <env_gpu_id>
 <policy_uv_env> <eval_env_conda_env>`.
 
 Set `EVAL_ENV_TYPE=debug` before running eval for offline shape/IO validation; leave unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.

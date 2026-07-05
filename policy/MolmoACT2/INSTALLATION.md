@@ -111,8 +111,7 @@ uv run huggingface-cli download allenai/MolmoAct2
 |----|------|
 | Server 环境 | `uv` |
 | Client 环境 | `XPolicyLab`（conda） |
-| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| expert_data_num | `3500` |
+| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-joint-0` |
 | action_type | `joint` |
 | xspark 权重 | `/mnt/xspark-data/final_ckpt/MolmoACT2/RoboDojo-cotrain-arx_x5-3500-joint-0` |
 | 备注 | server 脚本内联代理；首次 HF 下载较慢 |
@@ -121,19 +120,19 @@ uv run huggingface-cli download allenai/MolmoAct2
 
 ```bash
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<6-tuple_dir_name>
+ln -sfn <xspark_dir> checkpoints/<run_dir_name>
 ```
 
-`ckpt_name` 若已是完整 6-tuple（含多个 `-`），eval 脚本直接传入该目录名。
+`ckpt_name` 若已是完整 run 目录名（含多个 `-`），eval 脚本直接传入该目录名。
 
 手动评测：
 
 ```bash
 # terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 3500 joint 0 0 uv <port> localhost
+bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 uv <port> localhost
 
 # terminal 2 — client
-bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost
+bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" <port> localhost
 ```
 
 或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。

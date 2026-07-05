@@ -5,25 +5,24 @@ set -e
 # starts the policy server (Hy-Embodied uv venv) and the env client (Isaac Sim
 # conda env) on the same machine, and cleans up the server on exit.
 #
-# Usage (11 positional args):
+# Usage (10 positional args):
 #   bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> \
-#       <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> \
+#       <action_type> <seed> <policy_gpu_id> <env_gpu_id> \
 #       <policy_uv_env> <eval_env_conda_env>
 #
 # Example:
-#   bash eval.sh RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 50 ee 0 0 0 uv <eval_env_conda_env>
+#   bash eval.sh RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 ee 0 0 0 uv <eval_env_conda_env>
 
 bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
-expert_data_num=$5
-action_type=$6
-seed=$7
-policy_gpu_id=$8
-env_gpu_id=$9
-policy_uv_env=${10:-uv}
-eval_env_conda_env=${11}
+action_type=$5
+seed=$6
+policy_gpu_id=$7
+env_gpu_id=$8
+policy_uv_env=${9:-uv}
+eval_env_conda_env=${10}
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
@@ -52,7 +51,6 @@ setsid bash "${SERVER_SCRIPT}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
-    "${expert_data_num}" \
     "${action_type}" \
     "${seed}" \
     "${policy_gpu_id}" \

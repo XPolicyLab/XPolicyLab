@@ -5,16 +5,15 @@ set -e
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
 
 
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 output_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 pretrained_vlm_dir="${output_dir}/pretrained_vlm"
 
@@ -63,7 +62,6 @@ deepspeed --master_port 29600 --include "localhost:${gpu_id}" "${POLICY_DIR}/tra
   --xpl_bench_name                "${bench_name}" \
   --xpl_ckpt_name                   "${ckpt_name}" \
   --xpl_env_cfg_type                "${env_cfg_type}" \
-  --xpl_expert_data_num             "${expert_data_num}" \
   --xpl_action_type                 "${action_type}" \
   --xpl_seed                        "${seed}" \
   --max_steps                       10000 \

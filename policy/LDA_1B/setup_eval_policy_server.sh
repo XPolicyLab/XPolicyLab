@@ -20,21 +20,20 @@ ADAPTER_DIR="${SCRIPT_DIR}/LDA-1B/xpolicylab_adapter"
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
-expert_data_num="${LDA_EXPERT_DATA_NUM:-}"
+ckpt_run_id="$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
 
 if [[ -n "${LDA_CHECKPOINT_PATH:-}" ]]; then
     checkpoint_path="${LDA_CHECKPOINT_PATH}"
 elif ! checkpoint_path="$(xpolicylab_resolve_checkpoint_pt "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
-    "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"; then
-    ckpt_run_id="$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
+    "${env_cfg_type}" "${action_type}" "${seed}")"; then
     echo -e "\033[31m[SERVER] checkpoint not found for ckpt_run_id=${ckpt_run_id}\033[0m" >&2
     echo -e "\033[31m[SERVER] (eval args: dataset=${bench_name} ckpt_name=${ckpt_name} env=${env_cfg_type} action=${action_type} seed=${seed})\033[0m" >&2
-    echo -e "\033[31m[SERVER] Set LDA_CHECKPOINT_PATH=... or LDA_EXPERT_DATA_NUM=... for legacy layouts.\033[0m" >&2
+    echo -e "\033[31m[SERVER] Set LDA_CHECKPOINT_PATH=... to override.\033[0m" >&2
     exit 1
 fi
 
 echo -e "\033[33m[SERVER] GPU=${policy_gpu_id} host=${policy_server_host} port=${policy_server_port}\033[0m"
-echo -e "\033[33m[SERVER] task_name=${task_name} ckpt_name=${ckpt_name}\033[0m"
+echo -e "\033[33m[SERVER] task_name=${task_name} ckpt_name=${ckpt_name} ckpt_run_id=${ckpt_run_id}\033[0m"
 echo -e "\033[33m[SERVER] checkpoint_path=${checkpoint_path}\033[0m"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"

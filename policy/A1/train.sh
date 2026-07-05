@@ -5,7 +5,7 @@ set -o pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 Optional environment overrides:
   LEROBOT_DATA_PATH   Use this LeRobot dataset directly.
@@ -14,7 +14,7 @@ Optional environment overrides:
 EOF
 }
 
-if [ "$#" -ne 7 ]; then
+if [ "$#" -ne 6 ]; then
     usage >&2
     exit 1
 fi

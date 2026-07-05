@@ -19,6 +19,10 @@ class Model(ModelTemplate):
         self.action_type = model_cfg['action_type']
 
     def get_model(self, model_cfg):
+        if not model_cfg.get('ckpt_dir'):
+            # ckpt_name is the full run directory name under checkpoints/.
+            model_cfg['ckpt_dir'] = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), 'checkpoints', str(model_cfg['ckpt_name']))
         return ACT(model_cfg, Namespace(**model_cfg))
 
     def update_obs(self, obs):

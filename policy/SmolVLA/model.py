@@ -119,16 +119,6 @@ def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
         direct_path = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
-        if Path(str(ckpt_name)).expanduser().is_absolute() or "/" in str(ckpt_name):
-            return direct_path
-
-        tuple_keys = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
-        if all(model_cfg.get(key) is not None for key in tuple_keys):
-            checkpoint_setting = "-".join(str(model_cfg[key]) for key in tuple_keys)
-            tuple_path = (_CHECKPOINTS_DIR / checkpoint_setting).expanduser().resolve()
-            if tuple_path.exists():
-                return tuple_path
-
         return direct_path
 
     for key in ("pretrained_path", "model_path", "checkpoint_path"):

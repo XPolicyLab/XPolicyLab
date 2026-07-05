@@ -18,7 +18,7 @@ python scripts/conver_norm_stat.py assets/norm_stats/${DATASET_NAME}_customized.
 ## 训练
 
 ```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
 | 变量 | 说明 |
@@ -28,15 +28,19 @@ bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_
 | `LINGBOT_VLA_CONFIG_PATH` | 默认 `configs/vla/robodojo_sim_arx_x5.yaml` |
 | `LINGBOT_VLA_DATA_PATH` | 数据集完整路径（默认 `${LEROBOT_DATA_ROOT}/${LEROBOT_DATASET_REPO_ID}`） |
 
-Checkpoint：`checkpoints/<6-tuple>/`
+Checkpoint：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`（内部结构为 `checkpoints/global_step_*/hf_ckpt`）。评测时把该完整目录名作为 `eval.sh` 的 `ckpt_name` 传入。
+
+Ablation（如数据量对比）用不同的 `ckpt_name` 区分 run；数据量在数据处理阶段用可选 `expert_data_num` 控制（留空 = 全部 episode）。
 
 ## 评估
 
 部署需在 checkpoint 目录保留 `lingbotvla_cli.yaml`。
 
 ```bash
-bash eval.sh <task_name> <env_cfg> <expert_data_num> <action_type> <gpu_id> <seed> <policy_conda_env> <eval_env_conda_env> <checkpoint_path>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 ```
+
+`ckpt_name` 直接是 `checkpoints/` 下完整的 run 目录名（历史 6-tuple 目录名可整体传入）。
 
 ### Evaluation environment (`EVAL_ENV_TYPE`)
 

@@ -3,7 +3,6 @@ policy_name: Xiaomi_Robotics_0
 bench_name: null
 task_name: null
 env_cfg_type: null
-expert_data_num: null
 seed: null
 eval_batch: false
 
@@ -12,7 +11,7 @@ action_type: ee
 action_length: 30
 # Checkpoint tag directory name under model_dir, e.g. last -> last.ckpt/
 checkpoint_tag: last
-# Finetuned XR-0 weights; null = checkpoints/<dataset>-<ckpt>-<env>-<num>-<action>-<seed>/
+# Finetuned XR-0 weights; null = checkpoints/<ckpt_name>/
 model_dir: null
 data_config_name: null
 # MiBotProcessor: HuggingFace repo id (auto-download) or relative path under xr0/ for offline

@@ -7,7 +7,6 @@ task_name: null
 ckpt_name: null
 env_cfg_type: null
 env_cfg: null
-expert_data_num: null
 action_type: null
 seed: null
 eval_batch: false

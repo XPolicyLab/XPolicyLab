@@ -360,13 +360,13 @@ def _read_v3_tasks(source_path: Path, episodes_df: pd.DataFrame) -> list[dict[st
     return [{"task_index": idx, "task": task} for idx, task in sorted(task_map.items())]
 
 
-def _read_v3_episodes(source_path: Path, expert_data_num: int) -> pd.DataFrame:
+def _read_v3_episodes(source_path: Path, expert_data_num: int | None) -> pd.DataFrame:
     episode_files = sorted((source_path / "meta" / "episodes").glob("chunk-*/*.parquet"))
     if not episode_files:
         raise FileNotFoundError(f"No LeRobot v3 episode metadata found under {source_path / 'meta' / 'episodes'}")
     episodes_df = pd.concat([pd.read_parquet(path) for path in episode_files], ignore_index=True)
     episodes_df = episodes_df.sort_values("episode_index").reset_index(drop=True)
-    if expert_data_num > 0:
+    if expert_data_num is not None and expert_data_num > 0:
         episodes_df = episodes_df.iloc[:expert_data_num].copy()
     return episodes_df
 
@@ -496,7 +496,9 @@ def convert_lerobot_v3(args: argparse.Namespace) -> None:
     if not (source_path / "meta" / "info.json").exists():
         raise FileNotFoundError(f"LeRobot v3 info.json not found: {source_path / 'meta' / 'info.json'}")
 
-    repo_id = args.repo_id or f"{args.bench_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+    ckpt_name = args.ckpt_name or args.task_name
+    default_repo_parts = [args.bench_name, ckpt_name, args.env_cfg_type, args.action_type]
+    repo_id = args.repo_id or "-".join(part for part in default_repo_parts if part)
     output_root = Path(args.output_dir).expanduser().resolve()
     dataset_path = output_root / repo_id
     if dataset_path.exists():
@@ -506,7 +508,7 @@ def convert_lerobot_v3(args: argparse.Namespace) -> None:
     source_info = json.loads((source_path / "meta" / "info.json").read_text(encoding="utf-8"))
     source_stats = json.loads((source_path / "meta" / "stats.json").read_text(encoding="utf-8"))
     chunks_size = int(source_info.get("chunks_size", 1000))
-    episodes_df = _read_v3_episodes(source_path, int(args.expert_data_num))
+    episodes_df = _read_v3_episodes(source_path, args.expert_data_num)
     episode_ids = {int(ep_idx) for ep_idx in episodes_df["episode_index"].tolist()}
     tasks = _read_v3_tasks(source_path, episodes_df)
 
@@ -604,10 +606,14 @@ def convert(args: argparse.Namespace) -> None:
     if load_hdf5 is None or get_robot_action_dim_info is None or pack_robot_state is None or decode_image_bit is None:
         raise ImportError("XPolicyLab is required for legacy HDF5 conversion. Run install.sh first.")
 
-    repo_id = f"{args.bench_name}-{args.task_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+    ckpt_name = args.ckpt_name or args.task_name
+    if not ckpt_name:
+        raise ValueError("ckpt_name (or task_name) is required for HDF5 conversion.")
+
+    repo_id = f"{args.bench_name}-{ckpt_name}-{args.env_cfg_type}-{args.action_type}"
     output_root = Path(args.output_dir).resolve()
     dataset_path = output_root / repo_id
-    source_dir = ROOT_PATH / "data" / args.bench_name / args.task_name / args.env_cfg_type
+    source_dir = ROOT_PATH / "data" / args.bench_name / ckpt_name / args.env_cfg_type
     if not source_dir.exists():
         raise FileNotFoundError(f"XPolicyLab data directory not found: {source_dir}")
 
@@ -617,7 +623,7 @@ def convert(args: argparse.Namespace) -> None:
 
     robot_info = get_robot_action_dim_info(args.env_cfg_type)
     episode_files = sorted((source_dir / "data").glob("episode_*.hdf5"))
-    if args.expert_data_num > 0:
+    if args.expert_data_num is not None and args.expert_data_num > 0:
         episode_files = episode_files[: args.expert_data_num]
     if not episode_files:
         raise FileNotFoundError(f"No episode_*.hdf5 found under {source_dir / 'data'}")
@@ -646,7 +652,7 @@ def convert(args: argparse.Namespace) -> None:
         state = state[:num_steps]
         action = action[:num_steps]
         images = _decode_episode_images(data, num_steps)
-        task_text = _episode_instruction(data, args.task_name)
+        task_text = _episode_instruction(data, ckpt_name)
 
         for frame_idx in range(num_steps):
             frame = {
@@ -679,9 +685,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("legacy_args", nargs="*")
     parser.add_argument("--bench_name", type=str)
+    parser.add_argument("--ckpt_name", type=str)
     parser.add_argument("--task_name", type=str)
     parser.add_argument("--env_cfg_type", type=str)
-    parser.add_argument("--expert_data_num", type=int)
+    parser.add_argument("--expert_data_num", type=int, default=None)
     parser.add_argument("--action_type", type=str, choices=["joint", "ee"])
     parser.add_argument("--source_lerobot_path", type=str, default=os.environ.get("LEROBOT_DATA_PATH"))
     parser.add_argument("--source_format", choices=["hdf5", "lerobot_v3"], default=None)
@@ -694,18 +701,32 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.legacy_args:
-        if len(args.legacy_args) == 5:
-            args.bench_name, args.task_name, args.env_cfg_type, expert_data_num, args.action_type = args.legacy_args
+        positional = list(args.legacy_args)
+        action_types = {"joint", "ee"}
+        if len(positional) == 4 and positional[3] in action_types:
+            args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type = positional
+            args.source_format = args.source_format or "hdf5"
+        elif len(positional) == 5 and positional[3] in action_types:
+            args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type, expert_data_num = positional
             args.expert_data_num = int(expert_data_num)
             args.source_format = args.source_format or "hdf5"
-        elif len(args.legacy_args) == 4:
-            args.bench_name, args.env_cfg_type, expert_data_num, args.action_type = args.legacy_args
+        elif len(positional) == 5 and positional[4] in action_types:
+            args.bench_name, args.task_name, args.env_cfg_type, expert_data_num, args.action_type = positional
+            args.ckpt_name = args.task_name
+            args.expert_data_num = int(expert_data_num)
+            args.source_format = args.source_format or "hdf5"
+        elif len(positional) == 4 and positional[3] not in action_types:
+            args.bench_name, args.env_cfg_type, expert_data_num, args.action_type = positional
             args.expert_data_num = int(expert_data_num)
             args.source_format = args.source_format or "lerobot_v3"
         else:
-            parser.error("Expected either 5 legacy HDF5 args or 4 multitask LeRobot v3 args.")
+            parser.error(
+                "Expected 4/5 positional args: "
+                "<bench> <ckpt> <env_cfg> <action_type> [expert_data_num], "
+                "or legacy HDF5/Lerobot v3 layouts."
+            )
 
-    required = ["bench_name", "env_cfg_type", "expert_data_num", "action_type"]
+    required = ["bench_name", "env_cfg_type", "action_type"]
     missing = [name for name in required if getattr(args, name) is None]
     if missing:
         parser.error(f"Missing required arguments: {', '.join(missing)}")
@@ -718,8 +739,8 @@ def main() -> None:
     if source_format == "lerobot_v3":
         convert_lerobot_v3(args)
     else:
-        if not args.task_name:
-            parser.error("task_name is required for HDF5 conversion.")
+        if not (args.ckpt_name or args.task_name):
+            parser.error("ckpt_name is required for HDF5 conversion.")
         convert(args)
 
 

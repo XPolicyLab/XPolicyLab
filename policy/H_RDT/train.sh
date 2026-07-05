@@ -8,16 +8,15 @@ HRDT_ROOT="${SCRIPT_DIR}/H_RDT"
 DEMO_ENV_ROOT="$(cd "${ROOT_DIR}/.." && pwd)"
 
 bench_name=${1}
-run_name=${2}
+ckpt_name=${2}
 env_cfg_type=${3}
-total_episode_num=${4}
-action_type=${5}
-seed=${6}
-gpu_id=${7}
-pretrained_backbone_path=${8:-"${HRDT_ROOT}/checkpoints/pretrain-0618/checkpoint-500000/pytorch_model.bin"}
+action_type=${4}
+seed=${5}
+gpu_id=${6}
+pretrained_backbone_path=${7:-"${HRDT_ROOT}/checkpoints/pretrain-0618/checkpoint-500000/pytorch_model.bin"}
 
-if [[ -z "${bench_name}" || -z "${run_name}" || -z "${env_cfg_type}" || -z "${total_episode_num}" || -z "${action_type}" || -z "${seed}" || -z "${gpu_id}" ]]; then
-    echo "Usage: bash train.sh <bench_name> <run_name> <env_cfg_type> <total_episode_num> <action_type> <seed> <gpu_id> [pretrained_backbone_path]"
+if [[ -z "${bench_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${action_type}" || -z "${seed}" || -z "${gpu_id}" ]]; then
+    echo "Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [pretrained_backbone_path]"
     exit 1
 fi
 
@@ -36,20 +35,17 @@ report_to="tensorboard"
 deepspeed_config="configs/zero1.json"
 
 task_arg="all"
-task_name="${run_name}"
+task_name="${ckpt_name}"
 dataset_mode="multi_task"
-task_count=35
-max_episodes_per_task=$((total_episode_num / task_count))
 
-processed_name="${bench_name}-${run_name}-${env_cfg_type}-${total_episode_num}-${action_type}"
+processed_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 run_root="${SCRIPT_DIR}/data/${processed_name}"
 output_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 free_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 
-echo "[H_RDT] raw_dataset=${bench_name}, run=${run_name}, tasks=${task_arg}, mode=${dataset_mode}, env_cfg=${env_cfg_type}"
-echo "[H_RDT] total_episode_num=${total_episode_num}, max_episodes_per_task=${max_episodes_per_task}"
+echo "[H_RDT] raw_dataset=${bench_name}, ckpt=${ckpt_name}, tasks=${task_arg}, mode=${dataset_mode}, env_cfg=${env_cfg_type}"
 echo "[H_RDT] action_type=${action_type}, action_dim=${action_dim}, seed=${seed}, gpu=${gpu_id}"
 
 cd "${SCRIPT_DIR}"
@@ -79,7 +75,7 @@ export XPOLICY_HRDT_SOURCE_ROOT="${source_root}"
 export XPOLICY_HRDT_RAW_BENCH_NAME="${bench_name}"
 export XPOLICY_HRDT_ENV_CFG_TYPE="${env_cfg_type}"
 export XPOLICY_HRDT_ACTION_TYPE="${action_type}"
-export XPOLICY_HRDT_MAX_EPISODES="${max_episodes_per_task}"
+# All episodes per task are used by default; set XPOLICY_HRDT_MAX_EPISODES to cap.
 export XPOLICY_HRDT_STAT_PATH="${stats_path}"
 export XPOLICY_HRDT_DATASET_MODE="${dataset_mode}"
 export XPOLICY_HRDT_TASKS="${task_arg}"
@@ -89,6 +85,8 @@ export TRANSFORMERS_CACHE="${HF_HOME}/transformers"
 export HUGGINGFACE_HUB_CACHE="${HF_HOME}/hub"
 
 mkdir -p "${output_dir}"
+# Keep the run self-contained: eval defaults to the config inside the checkpoint dir.
+cp "${config_path}" "${output_dir}/hrdt_finetune_xpolicy.yaml"
 
 cd "${HRDT_ROOT}"
 

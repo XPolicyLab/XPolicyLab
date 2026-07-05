@@ -236,7 +236,7 @@ def convert(args: argparse.Namespace):
     episode_jobs: list[tuple[str, Path]] = []
     for task_name, source_root in source_dirs:
         episode_files = sorted((source_root / "data").glob("episode_*.hdf5"))
-        if args.expert_data_num > 0:
+        if args.expert_data_num is not None and args.expert_data_num > 0:
             episode_files = episode_files[: args.expert_data_num]
         if not episode_files:
             raise FileNotFoundError(f"No episode_*.hdf5 files under {source_root / 'data'}")
@@ -413,7 +413,12 @@ def main():
     parser.add_argument("--bench-name", required=True)
     parser.add_argument("--task-names", required=True, help="One task or comma-separated tasks. For single task this is usually ckpt_name.")
     parser.add_argument("--env-cfg-type", required=True)
-    parser.add_argument("--expert-data-num", required=True, type=int, help="Episodes per task; <=0 means all available.")
+    parser.add_argument(
+        "--expert-data-num",
+        type=int,
+        default=None,
+        help="Optional episodes cap per task; omitted or <=0 means all available.",
+    )
     parser.add_argument("--action-type", default="joint")
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--fps", type=int, default=None)

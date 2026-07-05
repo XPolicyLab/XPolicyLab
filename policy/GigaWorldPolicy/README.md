@@ -4,9 +4,9 @@ This policy follows the XPolicyLab data contract. Raw trajectories are read from
 
 ## XPolicyLab Contract
 
-- `process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>` prepares `data/<5-tuple>`.
-- `train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>` writes checkpoints to `checkpoints/<6-tuple>`.
-- `eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>` starts the XPolicyLab model server and env client.
+- `process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]` prepares `data/<4-tuple>`.
+- `train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>` writes checkpoints to `checkpoints/<bench>-<ckpt>-<env_cfg>-<action>-<seed>`.
+- `eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>` starts the XPolicyLab model server and env client; `ckpt_name` is the full run directory name under `checkpoints/`.
 - `model.py` implements `update_obs`, `update_obs_batch`, `get_action`, `get_action_batch`, and `reset` for `XPolicyLab/setup_policy_server.py`.
 
 ## Raw Data
@@ -35,7 +35,7 @@ data/XPolicyLab_demo/stack_bowls/arx_x5/data/episode_*.hdf5
 `process_data.sh` converts HDF5 episodes to LeRobot v2.1:
 
 ```text
-policy/GigaWorldPolicy/data/<dataset>-<ckpt>-<env_cfg>-<num>-<action>/
+policy/GigaWorldPolicy/data/<bench>-<ckpt>-<env_cfg>-<action>/
 ├── meta/info.json
 ├── meta/tasks.jsonl
 ├── meta/episodes.jsonl
@@ -61,19 +61,19 @@ Images are decoded from XPolicyLab HDF5 bytes or arrays as RGB and stored as RGB
 Example:
 
 ```bash
-GIGAWORLD_PYTHON=/path/to/python   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 50 joint
+GIGAWORLD_PYTHON=/path/to/python   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 joint
 ```
 
-For multi-task conversion, pass comma-separated task names via `GIGAWORLD_TASK_NAMES`; `ckpt_name` still controls the XPolicyLab 5-tuple output name:
+For multi-task conversion, pass comma-separated task names via `GIGAWORLD_TASK_NAMES`; `ckpt_name` still controls the XPolicyLab 4-tuple output name:
 
 ```bash
-GIGAWORLD_TASK_NAMES=stack_bowls,another_task   bash process_data.sh XPolicyLab_demo cotrain arx_x5 50 joint
+GIGAWORLD_TASK_NAMES=stack_bowls,another_task   bash process_data.sh XPolicyLab_demo cotrain arx_x5 joint
 ```
 
 If you already have a LeRobot v2.1 dataset, link it instead:
 
 ```bash
-GIGAWORLD_SOURCE_DATA_DIR=/path/to/lerobot   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 50 joint
+GIGAWORLD_SOURCE_DATA_DIR=/path/to/lerobot   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 joint
 ```
 
 Optional helpers:
@@ -89,7 +89,7 @@ Default LeRobot data path is `${XPOLICYLAB_LEROBOT_DATA_ROOT:-${LEROBOT_DATA_ROO
 For `arx_x5`, the default repo id is `XPolicyLab_sim_arx-x5_v30`. Set `GIGAWORLD_DATA_DIR` to override the complete data path, or set `LEROBOT_DATASET_REPO_ID` to override only the repo id.
 
 ```bash
-GIGAWORLD_PYTHON=/path/to/python   bash train.sh XPolicyLab_demo stack_bowls arx_x5 50 joint 0 0,1,2,3
+GIGAWORLD_PYTHON=/path/to/python   bash train.sh XPolicyLab_demo stack_bowls arx_x5 joint 0 0,1,2,3
 ```
 
 Training seed is propagated as `XPolicyLab_seed + 1` for giga-train (`seed > 0`), and `PYTHONHASHSEED` uses the same resolved value.
@@ -114,7 +114,7 @@ For real checkpoint inference, set one of:
 
 ```yaml
 checkpoint_path: /path/to/checkpoint-5000/model_ema.pt
-# or use the standard XPolicyLab 6-tuple through eval.sh
+# or pass the checkpoints/ run directory name as ckpt_name through eval.sh
 checkpoint_num: checkpoint-5000
 ```
 
@@ -123,7 +123,7 @@ For server/client interface smoke tests, set `load_model: false` in `deploy.yml`
 Single-machine evaluation (`eval.sh` allocates a port, starts the policy server, waits until it is ready, and then starts the env client):
 
 ```bash
-bash eval.sh XPolicyLab debug_task <ckpt_name> arx_x5 1 joint 0 0 0 gigaworld-policy gigaworld-policy
+bash eval.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 0 gigaworld-policy gigaworld-policy
 ```
 
 Split-machine evaluation (GPU host runs policy server, simulator host runs env client):
@@ -131,7 +131,7 @@ Split-machine evaluation (GPU host runs policy server, simulator host runs env c
 ```bash
 # GPU host
 FREE_PORT=$(bash ../../utils/get_free_port.sh)
-bash setup_eval_policy_server.sh XPolicyLab debug_task <ckpt_name> arx_x5 1 joint 0 0 gigaworld-policy "${FREE_PORT}" 0.0.0.0
+bash setup_eval_policy_server.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy "${FREE_PORT}" 0.0.0.0
 
 # Simulator host
 bash setup_eval_env_client.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy \

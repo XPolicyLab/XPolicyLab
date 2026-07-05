@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+if [[ $# -lt 4 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
+  echo "  expert_data_num: optional; empty = use all episodes" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
+action_type=$4
+expert_data_num=${5:-}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XR0_ROOT="${POLICY_DIR}/xiaomi_robotics_0/xr0"
 TRANSFORM_SCRIPT="${POLICY_DIR}/scripts/transform_xr0_json_format.py"
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 converted_data_root="${XR0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${XR0_RAW_DATA_ROOT:-}"
 if [[ -z "${raw_data_root}" ]]; then
@@ -60,7 +61,7 @@ build_cotrain_staging_dir() {
     for hdf5_path in "${env_dir}"/*.hdf5 "${env_dir}"/*.h5; do
       ln -sf "$(readlink -f "${hdf5_path}")" "${staging_dir}/${task_name}_$(basename "${hdf5_path}")"
       count=$((count + 1))
-      if [[ "${count}" -ge "${expert_data_num}" ]]; then
+      if [[ -n "${expert_data_num}" && "${count}" -ge "${expert_data_num}" ]]; then
         break
       fi
     done
@@ -70,18 +71,44 @@ build_cotrain_staging_dir() {
   echo "${staging_dir}"
 }
 
+build_single_staging_dir() {
+  local source_dir=$1
+  local staging_dir="${converted_data_root}/.raw_staging"
+  rm -rf "${staging_dir}"
+  mkdir -p "${staging_dir}"
+
+  local hdf5_path count=0
+  shopt -s nullglob
+  for hdf5_path in "${source_dir}"/*.hdf5 "${source_dir}"/*.h5; do
+    ln -sf "$(readlink -f "${hdf5_path}")" "${staging_dir}/$(basename "${hdf5_path}")"
+    count=$((count + 1))
+    if [[ -n "${expert_data_num}" && "${count}" -ge "${expert_data_num}" ]]; then
+      break
+    fi
+  done
+  shopt -u nullglob
+
+  echo "${staging_dir}"
+}
+
 resolve_input_dir() {
   if [[ "${ckpt_name}" == "cotrain" ]]; then
     build_cotrain_staging_dir
     return
   fi
-  resolve_single_input_dir
+  local single_dir
+  single_dir="$(resolve_single_input_dir)"
+  if [[ -n "${expert_data_num}" ]]; then
+    build_single_staging_dir "${single_dir}"
+    return
+  fi
+  echo "${single_dir}"
 }
 
 echo "[Xiaomi_Robotics_0] bench_name=${bench_name}"
 echo "[Xiaomi_Robotics_0] ckpt_name=${ckpt_name}"
 echo "[Xiaomi_Robotics_0] env_cfg_type=${env_cfg_type}"
-echo "[Xiaomi_Robotics_0] expert_data_num=${expert_data_num}"
+echo "[Xiaomi_Robotics_0] expert_data_num=${expert_data_num:-<all>}"
 echo "[Xiaomi_Robotics_0] action_type=${action_type}"
 echo "[Xiaomi_Robotics_0] raw_data_root=${raw_data_root}"
 echo "[Xiaomi_Robotics_0] converted_data_root=${converted_data_root}"
@@ -105,7 +132,7 @@ python "${POLICY_DIR}/scripts/generate_data_config.py" \
   --json_dir "${converted_data_root}/json" \
   --batch_size "${XR0_BATCH_SIZE:-16}"
 
-if [[ "${ckpt_name}" == "cotrain" && -d "${converted_data_root}/.raw_staging" ]]; then
+if [[ -d "${converted_data_root}/.raw_staging" ]]; then
   rm -rf "${converted_data_root}/.raw_staging"
 fi
 

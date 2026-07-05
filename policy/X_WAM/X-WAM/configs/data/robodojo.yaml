@@ -1,4 +1,7 @@
-dataset_path: "xwam_datasets/RoboDojo"
+# Resolved from the XWAM_DATASET_PATH env var when set (exported by the
+# top-level process_data.sh / train.sh wrappers so conversion output and
+# training input stay in sync); falls back to the historical relative path.
+dataset_path: ${oc.env:XWAM_DATASET_PATH,xwam_datasets/RoboDojo}
 sequence_length: 9
 frame_skip: 4
 action_skip: 1

@@ -145,8 +145,14 @@ def main():
     parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num", type=int, help="single: #episodes; batch: max per task (0=all)")
     parser.add_argument("action_type", choices=["joint"])
+    parser.add_argument(
+        "expert_data_num",
+        type=int,
+        nargs="?",
+        default=0,
+        help="Optional episode cap per task (0 or omitted = all episodes).",
+    )
     parser.add_argument("--src_root", default=None, help="defaults to <workspace>/data")
     parser.add_argument("--batch_root", default=None)
     parser.add_argument("--tasks", nargs="*", default=None)

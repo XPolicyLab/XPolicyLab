@@ -14,7 +14,6 @@
 #   SMOVLA_CONDA_ENV        conda 环境名 (默认 smolvla；若你用 smo_vla 请 export)
 #   SMOVLA_DATASET_NAME     默认 RoboDojo
 #   SMOVLA_ENV_CFG_TYPE     默认 arx_x5
-#   SMOVLA_EXPERT_DATA_NUM  默认 100
 #   SMOVLA_ACTION_TYPE      默认 joint
 #   SMOVLA_SEED             未写 seed 时的默认值 (默认 0)
 #   SMOVLA_TMUX_PREFIX      tmux 会话名前缀 (默认 smolvla)
@@ -32,7 +31,6 @@ TRAIN_SCRIPT="${POLICY_DIR}/train.sh"
 CONDA_ENV="${SMOVLA_CONDA_ENV:-smolvla}"
 DATASET_NAME="${SMOVLA_DATASET_NAME:-RoboDojo}"
 ENV_CFG_TYPE="${SMOVLA_ENV_CFG_TYPE:-arx_x5}"
-EXPERT_DATA_NUM="${SMOVLA_EXPERT_DATA_NUM:-100}"
 ACTION_TYPE="${SMOVLA_ACTION_TYPE:-joint}"
 SEED="${SMOVLA_SEED:-0}"
 TMUX_PREFIX="${SMOVLA_TMUX_PREFIX:-smolvla}"
@@ -67,7 +65,7 @@ LeRobot dataset.repo_id: \${SMOVLA_REPO_ID_PREFIX}_<ckpt_name>_\${SMOVLA_REPO_ID
 tmux session name: \${SMOVLA_TMUX_PREFIX}_<ckpt_name>
 
 Shared train args (override via env):
-  dataset=${DATASET_NAME} env_cfg=${ENV_CFG_TYPE} expert_num=${EXPERT_DATA_NUM}
+  dataset=${DATASET_NAME} env_cfg=${ENV_CFG_TYPE}
   action=${ACTION_TYPE} default_seed=${SEED} conda=${CONDA_ENV}
   per-task seed: ckpt_name:gpu_id:seed (seed 可省略)
 
@@ -212,7 +210,7 @@ export SMOVLA_REPO_ID="${repo_id}"
 echo "[tmux ${session}] GPU=${gpu_id} task=${ckpt_name} seed=${seed} repo_id=${repo_id}"
 echo "[tmux ${session}] HF_LEROBOT_HOME=\${HF_LEROBOT_HOME} conda=${CONDA_ENV}"
 exec bash "${TRAIN_SCRIPT}" \\
-	"${DATASET_NAME}" "${ckpt_name}" "${ENV_CFG_TYPE}" "${EXPERT_DATA_NUM}" \\
+	"${DATASET_NAME}" "${ckpt_name}" "${ENV_CFG_TYPE}" \\
 	"${ACTION_TYPE}" "${seed}" "${gpu_id}"
 EOF
 	chmod +x "${runner}"
@@ -237,7 +235,7 @@ EOF
 	tmux new-session -d -s "${session}" -n train "bash ${runner}"
 }
 
-echo "[SmolVLA batch] dataset=${DATASET_NAME} env=${ENV_CFG_TYPE} expert=${EXPERT_DATA_NUM} action=${ACTION_TYPE} default_seed=${SEED}"
+echo "[SmolVLA batch] dataset=${DATASET_NAME} env=${ENV_CFG_TYPE} action=${ACTION_TYPE} default_seed=${SEED}"
 echo "[SmolVLA batch] conda=${CONDA_ENV} tasks=${#TASK_ORDER[@]}"
 echo
 

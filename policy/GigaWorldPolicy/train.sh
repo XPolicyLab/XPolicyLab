@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+if [[ $# -lt 6 ]]; then
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
 bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
-expert_data_num=$4
-action_type=$5
-seed=$6
-gpu_id=$7
+action_type=$4
+seed=$5
+gpu_id=$6
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INNER_DIR="${POLICY_DIR}/giga_world_policy"
@@ -33,11 +32,13 @@ export XPOLICYLAB_LEROBOT_DATA_ROOT="${XPOLICYLAB_LEROBOT_DATA_ROOT:-${LEROBOT_D
 export LEROBOT_DATA_ROOT="${XPOLICYLAB_LEROBOT_DATA_ROOT}"
 export LEROBOT_DATASET_REPO_ID="${LEROBOT_DATASET_REPO_ID:-$(resolve_lerobot_repo_id)}"
 
-data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 data_dir="${GIGAWORLD_DATA_DIR:-${LEROBOT_DATA_ROOT}/${LEROBOT_DATASET_REPO_ID}}"
-output_root="${GIGAWORLD_OUTPUT_ROOT:-${POLICY_DIR}/experiments}"
-ckpt_dir="${GIGAWORLD_CKPT_DIR:-${output_root}/checkpoints/${ckpt_setting}}"
+# Standard checkpoint path consumed by eval; model.py scans checkpoint-* under it.
+standard_ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
+ckpt_dir="${GIGAWORLD_CKPT_DIR:-${GIGAWORLD_OUTPUT_ROOT:+${GIGAWORLD_OUTPUT_ROOT}/checkpoints/${ckpt_setting}}}"
+ckpt_dir="${ckpt_dir:-${standard_ckpt_dir}}"
 record_config="${ckpt_dir}/xpolicylab_train_config.json"
 base_config="${GIGAWORLD_CONFIG:-configs.xpolicylab_gigaworld.config}"
 accel_config="${GIGAWORLD_ACCEL_CONFIG:-${INNER_DIR}/scripts/accelerate_configs/config_deepspeed_zero2.json}"
@@ -62,6 +63,22 @@ TRAIN_SEED=$((seed + 1))
 export PYTHONHASHSEED="${TRAIN_SEED}"
 
 mkdir -p "${ckpt_dir}"
+# Keep the standard checkpoints/<ckpt_setting> path valid when training elsewhere.
+if [[ "${ckpt_dir}" != "${standard_ckpt_dir}" ]]; then
+  if [[ -e "${standard_ckpt_dir}" && ! -L "${standard_ckpt_dir}" ]]; then
+    echo "Refusing to overwrite existing non-symlink checkpoint dir: ${standard_ckpt_dir}" >&2
+    exit 1
+  fi
+  mkdir -p "${POLICY_DIR}/checkpoints"
+  ln -sfn "${ckpt_dir}" "${standard_ckpt_dir}"
+  echo "[GigaWorldPolicy] linked ${standard_ckpt_dir} -> ${ckpt_dir}"
+fi
+# Expose norm stats where eval's fallback looks: data/<eval ckpt_name>/norm_stats_delta.json.
+if [[ -f "${data_dir}/norm_stats_delta.json" && ! -e "${POLICY_DIR}/data/${ckpt_setting}" ]]; then
+  mkdir -p "${POLICY_DIR}/data"
+  ln -sfn "${data_dir}" "${POLICY_DIR}/data/${ckpt_setting}"
+  echo "[GigaWorldPolicy] linked ${POLICY_DIR}/data/${ckpt_setting} -> ${data_dir}"
+fi
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export GIGAWORLD_DATA_DIR="${data_dir}"
 export GIGAWORLD_MODEL_ACTION_DIM="${model_action_dim}"

@@ -9,7 +9,6 @@ task_name: null
 ckpt_name: null
 env_cfg_type: null
 env_cfg_root: /mnt/petrelfs/caijisong/env_cfg
-expert_data_num: null
 action_type: null
 action_dim: null
 seed: null

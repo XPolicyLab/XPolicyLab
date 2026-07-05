@@ -4,10 +4,13 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [source_path]
+  bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [source_path]
 
 Links HDF5 data into policy/RDT_1B/data/<4-tuple>/ and pre-encodes language embeddings
 into policy/RDT_1B/lang_embeds/<4-tuple>/ (nothing is written into the shared dataset).
+
+expert_data_num: optional; empty = link the full HDF5 tree. When set, a filtered
+tree is materialized with symlinks to the first N episodes per episode directory.
 
 Source path resolution (first match wins):
   1. source_path argument
@@ -15,7 +18,7 @@ Source path resolution (first match wins):
   3. <XPolicyLab>/data/<bench_name>/<ckpt_name>
   4. <XPolicyLab>/data/<bench_name>_<ckpt_name>
 
-Optional:
+Optional flags after source_path:
   --overwrite       Re-encode all lang_embed.pt files
   --skip-encode     Only create the data symlink
   --gpu N           GPU for T5 encoding (default: 0)
@@ -35,6 +38,12 @@ ckpt_name=$2
 env_cfg_type=$3
 action_type=$4
 shift 4
+
+expert_data_num=""
+if [[ $# -gt 0 && "$1" =~ ^[0-9]+$ ]]; then
+    expert_data_num=$1
+    shift
+fi
 
 source_path=""
 overwrite=0
@@ -105,12 +114,33 @@ if ! find "${SRC_DIR}" -name "*.hdf5" -print -quit | grep -q .; then
 fi
 
 mkdir -p "${POLICY_DIR}/data" "${LANG_EMBED_DIR}"
-if [[ -e "${DATA_DIR}" && ! -L "${DATA_DIR}" ]]; then
-    echo "[RDT_1B] ${DATA_DIR} exists and is not a symlink; remove it first." >&2
+subset_marker="${DATA_DIR}/.xpolicylab_subset"
+if [[ -e "${DATA_DIR}" && ! -L "${DATA_DIR}" && ! -f "${subset_marker}" ]]; then
+    echo "[RDT_1B] ${DATA_DIR} exists and is not managed by process_data.sh; remove it first." >&2
     exit 1
 fi
-ln -sfn "${SRC_DIR}" "${DATA_DIR}"
-echo "[RDT_1B] data/${DATA_TAG} -> ${SRC_DIR}"
+
+if [[ -n "${expert_data_num}" ]]; then
+    # Materialize a filtered tree: mirror every directory that holds .hdf5
+    # episodes and symlink only the first N episodes (sorted) of each.
+    rm -rf "${DATA_DIR}"
+    mkdir -p "${DATA_DIR}"
+    touch "${subset_marker}"
+    while IFS= read -r -d '' hdf5_dir; do
+        rel="${hdf5_dir#"${SRC_DIR}"}"
+        rel="${rel#/}"
+        mkdir -p "${DATA_DIR}/${rel}"
+        while IFS= read -r ep_file; do
+            [[ -n "${ep_file}" ]] || continue
+            ln -s "${ep_file}" "${DATA_DIR}/${rel}/$(basename "${ep_file}")"
+        done < <(find "${hdf5_dir}" -maxdepth 1 -name '*.hdf5' | sort | head -n "${expert_data_num}")
+    done < <(find -L "${SRC_DIR}" -name '*.hdf5' -printf '%h\0' | sort -zu)
+    echo "[RDT_1B] data/${DATA_TAG} -> first ${expert_data_num} episodes per dir from ${SRC_DIR}"
+else
+    rm -rf "${DATA_DIR}"
+    ln -sfn "${SRC_DIR}" "${DATA_DIR}"
+    echo "[RDT_1B] data/${DATA_TAG} -> ${SRC_DIR}"
+fi
 
 if [[ "${skip_encode}" -eq 1 ]]; then
     echo "[RDT_1B] Skipped language embedding (--skip-encode)."

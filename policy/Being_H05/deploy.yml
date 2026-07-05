@@ -2,7 +2,6 @@
 policy_name: Being_H05
 task_name: null
 env_cfg_type: null
-expert_data_num: null
 seed: null
 
 checkpoint_num: null

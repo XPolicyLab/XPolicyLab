@@ -2,17 +2,21 @@
 set -euo pipefail
 
 # Usage:
-#   single task : bash process_data.sh <dataset> <task> <env_cfg> <num> <action_type>
-#   merged co.  : bash process_data.sh <dataset> "task_a,task_b,..." <env_cfg> <num> <action_type> [dataset_id]
-# `dataset_id` controls the output folder name under <policy>/data/<dataset_id>/;
-# for a single task it defaults to "<dataset>-<task>-<env_cfg>-<num>-<action_type>",
-# for a comma-list it defaults to "cotrain_dataset" (matches process_data.py).
-bench_name=${1}
-task_name=${2}          # single task, or comma-separated list to merge, e.g. "stack_bowls,press_by_number"
-env_cfg_type=${3}
-expert_data_num=${4}    # episodes kept PER task
-action_type=${5}
-dataset_id=${6:-}
+#   bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> \
+#       [expert_data_num] [raw_task_dirs] [dataset_id]
+# expert_data_num : optional; empty = use all episodes (kept PER task).
+# raw_task_dirs   : raw HDF5 task dir(s) under final_data/<bench_name>/;
+#                   comma-separated list merges into one dataset, e.g.
+#                   "stack_bowls,press_by_number". Defaults to ${ckpt_name}.
+# dataset_id      : controls the output folder name under <policy>/data/<dataset_id>/;
+#                   defaults to "<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>".
+bench_name=$1
+ckpt_name=$2
+env_cfg_type=$3
+action_type=$4
+expert_data_num=${5:-}
+raw_task_dirs=${6:-${ckpt_name}}
+dataset_id=${7:-}
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 POLICY_DIR="${ROOT_DIR}/XPolicyLab/policy/FastWAM"
@@ -21,28 +25,25 @@ FASTWAM_DIR="${POLICY_DIR}/FastWAM"
 # Resolve the effective dataset_id the same way process_data.py does, so the
 # text-embed cache path and the lerobot output path stay in sync without a
 # second round-trip into python.
-n_tasks=$(awk -F',' '{n=0; for(i=1;i<=NF;i++){gsub(/^ +| +$/,"",$i); if($i!="")n++} print n}' <<< "${task_name}")
 if [[ -z "${dataset_id}" ]]; then
-    if [[ "${n_tasks}" == "1" ]]; then
-        dataset_id="${bench_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-    else
-        dataset_id="cotrain_dataset"
-    fi
+    dataset_id="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 fi
 dataset_dir="${POLICY_DIR}/data/${dataset_id}/lerobot"
 text_cache_dir="${FASTWAM_DIR}/data/text_embeds_cache/xpolicylab/${dataset_id}"
 export PYTHONPATH="${ROOT_DIR}:${FASTWAM_DIR}:${FASTWAM_DIR}/src:${PYTHONPATH:-}"
 
-echo "[FastWAM] dataset_id=${dataset_id} (tasks=${n_tasks})"
+echo "[FastWAM] dataset_id=${dataset_id} (raw_task_dirs=${raw_task_dirs})"
 echo "[FastWAM] output lerobot dir: ${dataset_dir}"
 echo "[FastWAM] text embed cache:   ${text_cache_dir}"
 
 py_args=(
-    "${bench_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
+    "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}"
+    --raw-task-dirs "${raw_task_dirs}"
     --project-root "${ROOT_DIR}"
+    --dataset-id "${dataset_id}"
 )
-if [[ -n "${dataset_id}" ]]; then
-    py_args+=(--dataset-id "${dataset_id}")
+if [[ -n "${expert_data_num}" ]]; then
+    py_args+=(--expert-data-num "${expert_data_num}")
 fi
 python "${FASTWAM_DIR}/process_data.py" "${py_args[@]}"
 

@@ -5,12 +5,13 @@ task_name: null
 ckpt_name: null
 ckpt_setting: null
 env_cfg_type: null
-expert_data_num: null
 action_type: joint
 seed: null
 eval_batch: false
 
-checkpoint_num: 600
+# Selects which `<run_id>--<step>_chkpt` to load (matches the training save step,
+# a multiple of finetune.sh save_freq, e.g. 10000). null = use the latest step.
+checkpoint_num: null
 result_dir: "./results/openvla-oft/"
 obs_transform_pipeline: "xspark-v1.0"
 
@@ -25,10 +26,14 @@ center_crop: true
 lora_rank: 32
 num_open_loop_steps: 25
 
-# Action un-normalization key; null means auto-resolve from tfds_dataset_name / checkpoint stats
-unnorm_key: aloha_sim_arx
-# TFDS dataset name used during training
-tfds_dataset_name: aloha_sim_arx
+# Action un-normalization key. Leave null to auto-resolve: model.py derives it from
+# tfds_dataset_name / ckpt_name (matching train.sh's default `aloha_<ckpt_name>`) and,
+# when a single set of dataset stats is present, falls back to that sole key.
+# Only set an explicit value to override a non-default training dataset name.
+unnorm_key: null
+# TFDS dataset name used during training. Leave null to derive `aloha_<ckpt_name>`
+# (train.sh default); set explicitly only if OPENVLA_TFDS_DATASET_NAME overrode it.
+tfds_dataset_name: null
 
 port: 6000
 host: localhost

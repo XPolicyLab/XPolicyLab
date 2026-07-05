@@ -1,18 +1,20 @@
 """Convert XPolicyLab HDF5 episodes into a LeRobot v2.1 dataset for FastWAM.
 
-Single-task usage (legacy, preserved):
-    python process_data.py <dataset> <task> <env_cfg> <num> <action_type>
+Usage:
+    python process_data.py <bench_name> <ckpt_name> <env_cfg_type> <action_type> \
+        [--raw-task-dirs t1,t2] [--expert-data-num N] [--dataset-id ID]
 
 Multi-task / cotrain usage (mirrors LDA_1B):
-    --task-name accepts a comma-separated list, e.g. "stack_bowls,press_by_number".
+    --raw-task-dirs accepts a comma-separated list, e.g. "stack_bowls,press_by_number".
     All listed tasks are merged into one LeRobot dataset with continuous
     episode/frame indices. Each episode's instruction is resolved from its
     HDF5; identical instructions collapse to a single tasks.jsonl entry while
     distinct ones each get their own task_index.
 
-    --dataset-id overrides the output folder name. For a single task it
-    defaults to "<dataset>-<task>-<env_cfg>-<num>-<action_type>"; for a
-    merged multi-task run it defaults to "cotrain_dataset".
+    --expert-data-num caps episodes kept per task; omit it to use all episodes.
+
+    --dataset-id overrides the output folder name; it defaults to
+    "<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>".
 
 Image standard: HWC RGB uint8, resized to (240, 320, 3) before encoding.
 """
@@ -203,39 +205,39 @@ def _resolve_instruction(episode_data: dict, fallback: str) -> str:
     return fallback
 
 
-def _resolve_dataset_id(args, task_names: List[str]) -> str:
+def _resolve_dataset_id(args) -> str:
     if args.dataset_id:
         return args.dataset_id
-    if len(task_names) == 1:
-        return (
-            f"{args.bench_name}-{task_names[0]}-{args.env_cfg_type}"
-            f"-{args.expert_data_num}-{args.action_type}"
-        )
-    return "cotrain_dataset"
+    return f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
 
 
 def convert(args):
     policy_dir = Path(__file__).resolve().parents[1]
     project_root = Path(args.project_root).resolve()
 
-    task_names = [t.strip() for t in str(args.task_name).split(",") if t.strip()]
+    raw_task_dirs = args.raw_task_dirs or args.ckpt_name
+    task_names = [t.strip() for t in str(raw_task_dirs).split(",") if t.strip()]
     if not task_names:
-        raise ValueError("--task-name resolved to an empty task list.")
+        raise ValueError("--raw-task-dirs resolved to an empty task list.")
 
-    # Gather episodes from every task, capped per task by expert_data_num.
+    # Gather episodes from every task, optionally capped per task by expert_data_num.
     # Each job remembers its source task so the instruction fallback is correct.
     episode_jobs: List[Tuple[Path, str]] = []
     for task_name in task_names:
         source_root = _resolve_source_root(project_root, args.bench_name, task_name, args.env_cfg_type)
-        task_episodes = sorted((source_root / "data").glob("episode_*.hdf5"))[: int(args.expert_data_num)]
-        if len(task_episodes) < int(args.expert_data_num):
-            raise FileNotFoundError(
-                f"Requested {args.expert_data_num} episodes for task '{task_name}', "
-                f"found {len(task_episodes)} in {source_root / 'data'}"
-            )
+        task_episodes = sorted((source_root / "data").glob("episode_*.hdf5"))
+        if args.expert_data_num is not None:
+            task_episodes = task_episodes[: int(args.expert_data_num)]
+            if len(task_episodes) < int(args.expert_data_num):
+                raise FileNotFoundError(
+                    f"Requested {args.expert_data_num} episodes for task '{task_name}', "
+                    f"found {len(task_episodes)} in {source_root / 'data'}"
+                )
+        if not task_episodes:
+            raise FileNotFoundError(f"No episode_*.hdf5 files under {source_root / 'data'}")
         episode_jobs.extend((ep, task_name) for ep in task_episodes)
 
-    dataset_id = _resolve_dataset_id(args, task_names)
+    dataset_id = _resolve_dataset_id(args)
     output_base = policy_dir / "data" / dataset_id
     dataset_root = output_base / "lerobot"
 
@@ -329,12 +331,22 @@ def convert(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("bench_name")
-    parser.add_argument("task_name", help="task name, or comma-separated list to merge into one dataset")
+    parser.add_argument("ckpt_name", help="artifact name; output dataset is <bench>-<ckpt>-<env>-<action>")
     parser.add_argument("env_cfg_type")
-    parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", choices=["joint", "ee"])
+    parser.add_argument(
+        "--raw-task-dirs",
+        default=None,
+        help="raw HDF5 task dir(s) under final_data/<bench_name>/; comma-separated to merge (default: ckpt_name)",
+    )
+    parser.add_argument(
+        "--expert-data-num",
+        type=int,
+        default=None,
+        help="episodes kept per task (default: all)",
+    )
     parser.add_argument("--project-root", default=str(Path(__file__).resolve().parents[3]))
-    parser.add_argument("--dataset-id", default=None, help="override output folder name (default: per-task data_key, or 'cotrain_dataset' for multi-task)")
+    parser.add_argument("--dataset-id", default=None, help="override output folder name (default: <bench>-<ckpt>-<env>-<action>)")
     parser.add_argument("--fps", type=int, default=10)
     args = parser.parse_args()
     convert(args)
