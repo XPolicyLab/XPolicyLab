@@ -150,7 +150,7 @@ class CustomLeRobotDataset(Dataset):
             data_roots = data_roots * len(domains)
         self.data_roots = data_roots
         self.dataset = []
-        self.bench_name = []        
+        self.dataset_name = []        
         if dataset_info_cache_path is not None and os.path.exists(dataset_info_cache_path):
             zero_rank_print(f"Load Cache Dataset Information from {dataset_info_cache_path}")
             with open(dataset_info_cache_path, "r") as f:
@@ -208,7 +208,7 @@ class CustomLeRobotDataset(Dataset):
                     ]
                     
                     self.dataset.append(info)
-                self.bench_name.append(_domain_name)
+                self.dataset_name.append(_domain_name)
 
         if dataset_info_cache_path is not None and not(os.path.exists(dataset_info_cache_path)):
             zero_rank_print(f"Save Cache Dataset Information to {dataset_info_cache_path}")

@@ -32,10 +32,10 @@ EPISODE_END_ID=${EPISODE_END_ID:-50}
 # LLaMA-Factory repository root. Defaults to the vendored sub-directory.
 LLAMAFACTORY_ROOT="${LLAMAFACTORY_ROOT:-${_PIPELINE_DIR}/LlamaFactory}"
 
-# Base directory for LoRA output and merged model. Script creates {bench_name}_sft_lora under it.
+# Base directory for LoRA output and merged model. Script creates {dataset_name}_sft_lora under it.
 BASE_OUTPUT_DIR="${BASE_OUTPUT_DIR:-${_PIPELINE_DIR}/checkpoints}"
 
-# Merged model output directory (optional). If empty, uses BASE_OUTPUT_DIR/Qwen3-VL-8B-Instruct-{bench_name}
+# Merged model output directory (optional). If empty, uses BASE_OUTPUT_DIR/Qwen3-VL-8B-Instruct-{dataset_name}
 EXPORT_DIR=""
 
 # Training options (optional; change if needed)

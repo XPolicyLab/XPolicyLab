@@ -62,7 +62,7 @@ After data preprocessing is complete:
 1. Configure dataset:
    ```python
    # Edit datasets/dataset.py line ~45
-   self.bench_name = "egodx"
+   self.dataset_name = "egodx"
    ```
 2. Run training:
    ```bash
@@ -97,10 +97,10 @@ Edit `pretrain.sh`, add this line:
 1. Configure dataset:
    ```python
    # Edit datasets/dataset.py line ~45
-   self.bench_name = "robotwin_agilex"  # or your robot name
+   self.dataset_name = "robotwin_agilex"  # or your robot name
    
    # Add your dataset initialization if not exists:
-   elif self.bench_name == "your_robot":
+   elif self.dataset_name == "your_robot":
        self.hdf5_dataset = YourRobotDataset(config=config)
    ```
 2. Run training:
@@ -136,7 +136,7 @@ Before training, you need to configure the dataset in `datasets/dataset.py`:
 #### For Human Pre-training (EgoDx):
 ```python
 # In datasets/dataset.py, line ~45
-self.bench_name = "egodx"
+self.dataset_name = "egodx"
 
 # The EgoDxDataset will be automatically initialized
 ```
@@ -144,10 +144,10 @@ self.bench_name = "egodx"
 #### For Robot Fine-tuning:
 ```python
 # In datasets/dataset.py, line ~45  
-self.bench_name = "your_robot_name"  # e.g., "robotwin_agilex"
+self.dataset_name = "your_robot_name"  # e.g., "robotwin_agilex"
 
 # Add your dataset to the initialization logic:
-elif self.bench_name == "your_robot_name":
+elif self.dataset_name == "your_robot_name":
     self.hdf5_dataset = YourRobotDataset(
         config=config,
         # your dataset parameters

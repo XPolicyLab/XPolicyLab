@@ -64,7 +64,7 @@ def make_row(dataset_dir: Path,
     row = {
         "dataset_path": str(dataset_dir),
         "robot": None,
-        "bench_name": dataset_dir.name,
+        "dataset_name": dataset_dir.name,
         "total_episodes": total_episodes,
         "total_frames": total_frames,
         "robot_type": robot_type or "",
@@ -81,7 +81,7 @@ def write_csv(rows: List[Dict[str, Any]], out_csv: Path):
         return
     out_csv.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
-        "robot", "bench_name", "dataset_path",
+        "robot", "dataset_name", "dataset_path",
         "robot_type", "total_episodes", "total_frames",
         "num_tasks_in_file", "tasks_in_file",
     ]

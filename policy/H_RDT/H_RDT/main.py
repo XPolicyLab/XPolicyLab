@@ -308,7 +308,7 @@ def parse_args(input_args=None):
     )
 
     parser.add_argument(
-        "--bench_name",
+        "--dataset_name",
         type=str,
         default="robotwin_agilex",
         help="Dataset adapter name used by VLAConsumerDataset."

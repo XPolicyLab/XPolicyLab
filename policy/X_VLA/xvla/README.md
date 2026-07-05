@@ -46,7 +46,7 @@ Example:
 
 ```json
 {
-	"bench_name": "aloha_joint",
+	"dataset_name": "aloha_joint",
 	"language_instruction_key": "language_instruction",
 	"observation_key": ["observation/head_camera/rgb"],
 	"data_dir": "/path/to/your/data"

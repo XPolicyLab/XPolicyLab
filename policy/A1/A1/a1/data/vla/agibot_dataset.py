@@ -387,7 +387,7 @@ class AgiBotWorldAlphaDataset(Dataset):
             "proprio": proprio_vec if self.use_proprio else None,
             "episode_index": int(episode_id),
             "metadata": {
-                "bench_name": "AgibotWorld-Alpha",
+                "dataset_name": "AgibotWorld-Alpha",
                 "set_id": str(set_id),
                 "episode_id": int(episode_id),
                 "frame_index": int(frame_idx),

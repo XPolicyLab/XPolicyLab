@@ -39,7 +39,7 @@ TASK_INSTRUCTIONS = {
     "place_block_mat": "Pick up the blocks from the blue mat and place them on the green mat, then put them back on the original mat, starting from left to right.",
 }
 
-lerobot_bench_name = "rmbench_data_cover_blocks"
+lerobot_dataset_name = "rmbench_data_cover_blocks"
 
 features = {
     "observation.state": {
@@ -85,25 +85,25 @@ total_frames = 0
 
 # Iterate through all tasks
 task_pbar = tqdm(TASK_NAMES, desc="Overall progress", leave=True)
-for bench_name in task_pbar:
+for dataset_name in task_pbar:
     # Create Lerobot dataset
-    lerobot_bench_name = f"{bench_name}"
+    lerobot_dataset_name = f"{dataset_name}"
     dataset = LeRobotDataset.create(
-        repo_id=lerobot_bench_name,
+        repo_id=lerobot_dataset_name,
         fps=30,
         features=features,
-        root=Path(f"{Mem0_workspace}/lerobot_datasets/{lerobot_bench_name}"),
+        root=Path(f"{Mem0_workspace}/lerobot_datasets/{lerobot_dataset_name}"),
         use_videos=True,
     )
     
     # Set task progress description
-    task_pbar.set_description(f"Processing task: {bench_name}")
+    task_pbar.set_description(f"Processing task: {dataset_name}")
     
     # Get global task instruction for current task
-    global_task_text = TASK_INSTRUCTIONS.get(bench_name, "")
+    global_task_text = TASK_INSTRUCTIONS.get(dataset_name, "")
     
     # Read language annotation file for current task
-    annotation_path = Path(f"{RMBench_workspace}/data/{bench_name}/demo_clean/language_annotation.json")
+    annotation_path = Path(f"{RMBench_workspace}/data/{dataset_name}/demo_clean/language_annotation.json")
     language_annotations = {}
     
     if annotation_path.exists():
@@ -111,17 +111,17 @@ for bench_name in task_pbar:
             with open(annotation_path, "r", encoding="utf-8") as f:
                 language_annotations = json.load(f)
         except Exception as e:
-            print(f"  ⚠️  Failed to load annotation file for {bench_name}: {e}")
+            print(f"  ⚠️  Failed to load annotation file for {dataset_name}: {e}")
     else:
-        print(f"  ⚠️  Annotation file for {bench_name} does not exist: {annotation_path}")
+        print(f"  ⚠️  Annotation file for {dataset_name} does not exist: {annotation_path}")
     
     # Process each episode
-    episode_iter = tqdm(range(episode_num), desc=f"  {bench_name}", leave=False, unit="episode")
+    episode_iter = tqdm(range(episode_num), desc=f"  {dataset_name}", leave=False, unit="episode")
     for episode_idx in episode_iter:
         episode_key = f"episode_{episode_idx}"
         
         # Read hdf5 file
-        hdf5_path = f"{RMBench_workspace}/data/{bench_name}/demo_clean/data/episode{episode_idx}.hdf5"
+        hdf5_path = f"{RMBench_workspace}/data/{dataset_name}/demo_clean/data/episode{episode_idx}.hdf5"
         
         try:
             with h5py.File(hdf5_path, "r") as f:
@@ -218,7 +218,7 @@ for bench_name in task_pbar:
                     }
                     
                     # Add current frame using add_frame, with task as keyword argument
-                    dataset.add_frame(frame_data, task=bench_name)
+                    dataset.add_frame(frame_data, task=dataset_name)
             
             # Save when episode ends
             dataset.save_episode()

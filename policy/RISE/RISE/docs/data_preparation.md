@@ -5,7 +5,7 @@ The training code expects LeRobot-style data.
 ## Expected Dataset Layout
 
 ```text
-<bench_name>/
+<dataset_name>/
 ├── data/chunk-000/episode_*.parquet
 ├── meta/
 │   ├── info.json

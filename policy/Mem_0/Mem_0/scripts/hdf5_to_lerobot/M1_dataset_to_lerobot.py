@@ -66,30 +66,30 @@ features = {
 total_episodes = 0
 total_frames = 0
 
-for bench_name in TASK_NAMES:
+for dataset_name in TASK_NAMES:
     # Create Lerobot dataset
-    lerobot_bench_name = f"{bench_name}"
+    lerobot_dataset_name = f"{dataset_name}"
     dataset = LeRobotDataset.create(
-        repo_id=lerobot_bench_name,
+        repo_id=lerobot_dataset_name,
         fps=30,
         features=features,
-        root=Path(f"{Mem0_workspace}/lerobot_datasets/{lerobot_bench_name}"),
+        root=Path(f"{Mem0_workspace}/lerobot_datasets/{lerobot_dataset_name}"),
         use_videos=True,
     )
     
     print(f"\n{'='*60}")
-    print(f"Processing task: {bench_name}")
+    print(f"Processing task: {dataset_name}")
     print(f"{'='*60}")
     
     # User-defined subtask (same subtask used for the entire episode)
-    subtask_text = TASK_INSTRUCTIONS[bench_name]
+    subtask_text = TASK_INSTRUCTIONS[dataset_name]
 
     # Process each episode
     for episode_idx in range(episode_num):
         episode_key = f"episode_{episode_idx}"
         
         # Read hdf5 file
-        hdf5_path = f"{RMBench_workspace}/data/{bench_name}/demo_clean/data/episode{episode_idx}.hdf5"
+        hdf5_path = f"{RMBench_workspace}/data/{dataset_name}/demo_clean/data/episode{episode_idx}.hdf5"
         
         try:
             with h5py.File(hdf5_path, "r") as f:
@@ -155,19 +155,19 @@ for bench_name in TASK_NAMES:
                     }
                     
                     # Add current frame using add_frame, with task as keyword argument
-                    dataset.add_frame(frame_data, task=bench_name)
+                    dataset.add_frame(frame_data, task=dataset_name)
             
             # Save when episode ends
             dataset.save_episode()
-            print(f"  ✓ {bench_name}/{episode_key} saved, {episode_length} frames")
+            print(f"  ✓ {dataset_name}/{episode_key} saved, {episode_length} frames")
             
             total_episodes += 1
             total_frames += episode_length
             
         except FileNotFoundError:
-            print(f"  ⚠️  Skipping {bench_name}/{episode_key}: file not found")
+            print(f"  ⚠️  Skipping {dataset_name}/{episode_key}: file not found")
         except Exception as e:
-            print(f"  ✗ Error: {bench_name}/{episode_key}: {e}")
+            print(f"  ✗ Error: {dataset_name}/{episode_key}: {e}")
             import traceback
             traceback.print_exc()
 

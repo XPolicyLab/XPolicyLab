@@ -43,19 +43,19 @@ MEM0_ROOT = Path(__file__).resolve().parent.parent
 LLAMAFACTORY_DATA_PREP_SCRIPT = MEM0_ROOT / "scripts" / "llama_data_preparation" / "llamafactory_data_preparation.py"
 
 
-def get_bench_name(lerobot_dataset_path: str) -> str:
+def get_dataset_name(lerobot_dataset_path: str) -> str:
     """Derive dataset name from LeRobot path (same as data prep script)."""
     return Path(lerobot_dataset_path).name or "dataset"
 
 
-def get_json_filename(bench_name: str) -> str:
+def get_json_filename(dataset_name: str) -> str:
     """JSON filename produced by data prep script."""
-    return f"{bench_name}_high_level_finetune_data.json"
+    return f"{dataset_name}_high_level_finetune_data.json"
 
 
-def get_images_folder_name(bench_name: str) -> str:
+def get_images_folder_name(dataset_name: str) -> str:
     """Images folder name produced by data prep script."""
-    return f"{bench_name}_images"
+    return f"{dataset_name}_images"
 
 
 def run_cmd(cmd: list[str], cwd: Path | None = None, env_name: str | None = None) -> None:
@@ -73,12 +73,12 @@ def run_cmd(cmd: list[str], cwd: Path | None = None, env_name: str | None = None
 
 
 def step_prepare(cfg: dict) -> str:
-    """Step 1: run data preparation in mem0 env; returns bench_name."""
+    """Step 1: run data preparation in mem0 env; returns dataset_name."""
     lerobot_path = cfg["lerobot_dataset_path"]
     if not lerobot_path or not Path(lerobot_path).exists():
         raise SystemExit("lerobot_dataset_path is not set or path does not exist. Set it in run_planning_pipeline.sh.")
-    bench_name = get_bench_name(lerobot_path)
-    out_dir = MEM0_ROOT / "llamafactory_data" / bench_name
+    dataset_name = get_dataset_name(lerobot_path)
+    out_dir = MEM0_ROOT / "llamafactory_data" / dataset_name
     out_dir.mkdir(parents=True, exist_ok=True)
 
     cmd = [
@@ -91,23 +91,23 @@ def step_prepare(cfg: dict) -> str:
     print("[Step 1] Running data preparation (mem0 env)...")
     run_cmd(cmd, cwd=MEM0_ROOT, env_name=cfg.get("conda_env_mem0"))
     print(f"[Step 1] Done. Output: {out_dir}")
-    return bench_name
+    return dataset_name
 
 
-def step_copy(cfg: dict, bench_name: str) -> None:
-    """Step 2: copy llamafactory_data/{bench_name} to LlamaFactory/data and update dataset_info.json."""
+def step_copy(cfg: dict, dataset_name: str) -> None:
+    """Step 2: copy llamafactory_data/{dataset_name} to LlamaFactory/data and update dataset_info.json."""
     lf_root = Path(cfg["llamafactory_root"])
     if not lf_root.is_dir():
         raise SystemExit("llamafactory_root is not set or path does not exist. Set it in run_planning_pipeline.sh.")
     data_dir = lf_root / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    src = MEM0_ROOT / "llamafactory_data" / bench_name
+    src = MEM0_ROOT / "llamafactory_data" / dataset_name
     if not src.is_dir():
         raise SystemExit(f"Data directory does not exist: {src}. Run step 'prepare' first.")
 
-    json_name = get_json_filename(bench_name)
-    images_name = get_images_folder_name(bench_name)
+    json_name = get_json_filename(dataset_name)
+    images_name = get_images_folder_name(dataset_name)
     src_json = src / json_name
     src_images = src / images_name
     if not src_json.is_file():
@@ -128,7 +128,7 @@ def step_copy(cfg: dict, bench_name: str) -> None:
     else:
         info = {}
 
-    info[bench_name] = {
+    info[dataset_name] = {
         "file_name": json_name,
         "formatting": "sharegpt",
         "columns": {"messages": "messages", "images": "images"},
@@ -142,10 +142,10 @@ def step_copy(cfg: dict, bench_name: str) -> None:
     }
     with open(info_path, "w", encoding="utf-8") as f:
         json.dump(info, f, indent=2, ensure_ascii=False)
-    print(f"[Step 2] Updated {info_path} with dataset '{bench_name}'.")
+    print(f"[Step 2] Updated {info_path} with dataset '{dataset_name}'.")
 
 
-def step_train(cfg: dict, bench_name: str) -> str:
+def step_train(cfg: dict, dataset_name: str) -> str:
     """Step 3: generate train YAML and run training; returns output_dir (adapter path)."""
     base_out = cfg["base_output_dir"]
     if not base_out:
@@ -158,7 +158,7 @@ def step_train(cfg: dict, bench_name: str) -> str:
             f"Base model dir not found: {base_model_path}\n"
             "Download Qwen3-VL-8B-Instruct and place it there, or set base_output_dir in run_planning_pipeline.sh."
         )
-    output_dir = Path(base_out).resolve() / f"{bench_name}_sft_lora"
+    output_dir = Path(base_out).resolve() / f"{dataset_name}_sft_lora"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     train_config = {
@@ -171,7 +171,7 @@ def step_train(cfg: dict, bench_name: str) -> str:
         "finetuning_type": "lora",
         "lora_rank": 8,
         "lora_target": "all",
-        "dataset": bench_name,
+        "dataset": dataset_name,
         "template": TEMPLATE,
         "cutoff_len": 2048,
         "max_samples": cfg.get("max_samples", 1000),
@@ -219,10 +219,10 @@ def step_train(cfg: dict, bench_name: str) -> str:
     return str(output_dir)
 
 
-def step_merge(cfg: dict, adapter_path: str, bench_name: str) -> None:
+def step_merge(cfg: dict, adapter_path: str, dataset_name: str) -> None:
     """Step 4: generate merge YAML and run LoRA merge."""
     export_dir = cfg.get("export_dir") or os.path.join(
-        cfg["base_output_dir"], f"Qwen3-VL-8B-Instruct-{bench_name}"
+        cfg["base_output_dir"], f"Qwen3-VL-8B-Instruct-{dataset_name}"
     )
     export_dir = Path(export_dir).resolve()
     lf_root = Path(cfg["llamafactory_root"])
@@ -312,32 +312,32 @@ def main() -> None:
         cfg["conda_env_llamafactory"] = None
 
     steps = args.steps
-    bench_name = None
+    dataset_name = None
     adapter_path = None
 
     if "prepare" in steps:
-        bench_name = step_prepare(cfg)
+        dataset_name = step_prepare(cfg)
     if "copy" in steps:
-        if bench_name is None:
-            bench_name = get_bench_name(cfg["lerobot_dataset_path"])
+        if dataset_name is None:
+            dataset_name = get_dataset_name(cfg["lerobot_dataset_path"])
             if not cfg["lerobot_dataset_path"]:
                 raise SystemExit("Set lerobot_dataset_path in run_planning_pipeline.sh or run step 'prepare' first.")
-        step_copy(cfg, bench_name)
+        step_copy(cfg, dataset_name)
     if "train" in steps:
-        if bench_name is None:
-            bench_name = get_bench_name(cfg["lerobot_dataset_path"])
+        if dataset_name is None:
+            dataset_name = get_dataset_name(cfg["lerobot_dataset_path"])
             if not cfg["lerobot_dataset_path"]:
                 raise SystemExit("Set lerobot_dataset_path in run_planning_pipeline.sh or run step 'prepare' first.")
-        adapter_path = step_train(cfg, bench_name)
+        adapter_path = step_train(cfg, dataset_name)
     if "merge" in steps:
-        if bench_name is None:
-            bench_name = get_bench_name(cfg["lerobot_dataset_path"])
+        if dataset_name is None:
+            dataset_name = get_dataset_name(cfg["lerobot_dataset_path"])
         if not adapter_path:
             base_out = cfg["base_output_dir"]
             if not base_out:
                 raise SystemExit("base_output_dir is not set. Set it in run_planning_pipeline.sh.")
-            adapter_path = str(Path(base_out).resolve() / f"{bench_name}_sft_lora")
-        step_merge(cfg, adapter_path, bench_name)
+            adapter_path = str(Path(base_out).resolve() / f"{dataset_name}_sft_lora")
+        step_merge(cfg, adapter_path, dataset_name)
 
     print("All requested steps completed.")
 

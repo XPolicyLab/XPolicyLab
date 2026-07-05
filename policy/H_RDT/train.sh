@@ -118,6 +118,6 @@ accelerate launch --num_processes="${num_processes}" --main_process_port "${free
     --training_mode="lang" \
     --mode="finetune" \
     --task_name="${task_name}" \
-    --bench_name="xpolicylab" \
+    --dataset_name="xpolicylab" \
     --seed="${seed}" \
     "${pretrained_args[@]}"

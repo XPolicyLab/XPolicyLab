@@ -82,8 +82,8 @@ def main(config):
         max_traj_id = len(dataset.datasets[dataset_index].trajectory_ids)
         traj_ids = np.random.choice(range(config.evaluation.start_traj, max_traj_id), size=1)
         # traj_ids = [agibot_subset_id[dataset_index]]
-        bench_name = dataset.datasets[dataset_index]._metadata.embodiment_tag.value
-        plot_path = f"{config.evaluation.save_plot_path}/{bench_name}"
+        dataset_name = dataset.datasets[dataset_index]._metadata.embodiment_tag.value
+        plot_path = f"{config.evaluation.save_plot_path}/{dataset_name}"
         create_trajectory_video = config.evaluation.create_trajectory_video
         os.makedirs(plot_path, exist_ok=True)
         for traj_id in traj_ids:

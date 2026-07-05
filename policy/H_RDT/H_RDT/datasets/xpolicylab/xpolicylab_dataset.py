@@ -328,7 +328,7 @@ class XPolicyLabDataset:
                     "state_indicator": np.ones_like(action_current),
                     "action_norm": np.ones_like(action_chunk),
                     "instruction": language_embedding,
-                    "bench_name": self.DATASET_NAME,
+                    "dataset_name": self.DATASET_NAME,
                 }
         except Exception as exc:
             print(f"Error processing {hdf5_file}: {exc}")

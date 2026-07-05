@@ -132,7 +132,7 @@ python scripts/llama_data_preparation/llamafactory_data_preparation.py \
 Copy the generated `.json` file and the images folder from `llamafactory_data/XXX` to `LlamaFactory/data`. Then add an entry to `LlamaFactory/data/dataset_info.json`:
 
 ```
-  "bench_name": {
+  "dataset_name": {
     "file_name": "XXXX.json",
     "formatting": "sharegpt",
     "columns": {

@@ -42,11 +42,11 @@ class VLAConsumerDataset(Dataset):
         upsample_rate=None,
         val=False,
         task_name="open_laptop",
-        bench_name="robotwin_agilex",
+        dataset_name="robotwin_agilex",
     ):
         super(VLAConsumerDataset, self).__init__()
-        self.bench_name = bench_name
-        DATASET_NAMES = {self.bench_name}
+        self.dataset_name = dataset_name
+        DATASET_NAMES = {self.dataset_name}
         
         # Create the mapping between dataset name and id
         self.dataset_name2id = {name: i for i, name in enumerate(DATASET_NAMES)}
@@ -57,8 +57,8 @@ class VLAConsumerDataset(Dataset):
         self.img_history_size = config["common"]["img_history_size"]
         self.image_transform = image_transform   
 
-        # Initialize dataset based on bench_name
-        if self.bench_name == "egodex":
+        # Initialize dataset based on dataset_name
+        if self.dataset_name == "egodex":
             self.hdf5_dataset = EgoDexDataset(
                 config=config,
                 upsample_rate=upsample_rate,
@@ -68,7 +68,7 @@ class VLAConsumerDataset(Dataset):
                 # data_root="./data/egodex",
                 # stat_path="./data/egodex_stat.json",
             )
-        elif self.bench_name == "robotwin_agilex":
+        elif self.dataset_name == "robotwin_agilex":
             dataset_mode = os.environ.get("XPOLICY_HRDT_DATASET_MODE", "single_task")
             if dataset_mode not in ("single_task", "multi_task"):
                 raise ValueError(f"Invalid XPOLICY_HRDT_DATASET_MODE: {dataset_mode}")
@@ -95,7 +95,7 @@ class VLAConsumerDataset(Dataset):
             self.hdf5_dataset = RobotwinAgilexDataset(
                 **dataset_kwargs,
             )
-        elif self.bench_name == "xpolicylab":
+        elif self.dataset_name == "xpolicylab":
             dataset_mode = os.environ.get("XPOLICY_HRDT_DATASET_MODE", "single_task")
             if dataset_mode not in ("single_task", "multi_task"):
                 raise ValueError(f"Invalid XPOLICY_HRDT_DATASET_MODE: {dataset_mode}")
@@ -116,9 +116,9 @@ class VLAConsumerDataset(Dataset):
                 val=val,
             )
         else:
-            raise ValueError(f"Unknown bench_name: {self.bench_name}")
+            raise ValueError(f"Unknown dataset_name: {self.dataset_name}")
             
-        print(f"Initialized dataset: {self.bench_name}")
+        print(f"Initialized dataset: {self.dataset_name}")
 
         self.use_precomp_lang_embed = use_precomp_lang_embed
         self.dataset_type = dataset_type
@@ -166,8 +166,8 @@ class VLAConsumerDataset(Dataset):
             print(f"Warning: Still unable to get valid data after multiple retries, returning default value")
 
         data_dict = {}
-        data_dict['bench_name'] = res['bench_name']
-        data_dict['data_idx'] = self.dataset_name2id[data_dict['bench_name']]
+        data_dict['dataset_name'] = res['dataset_name']
+        data_dict['data_idx'] = self.dataset_name2id[data_dict['dataset_name']]
 
         # Process state and action data
         data_dict["states"] = res['states']
@@ -175,7 +175,7 @@ class VLAConsumerDataset(Dataset):
         data_dict["action_norm"] = res['action_norm']
 
         # Process images
-        if self.bench_name in ['egodex']:
+        if self.dataset_name in ['egodex']:
             # Single camera / stitched image processing
             image_metas = []
             images = res['current_images'][0]

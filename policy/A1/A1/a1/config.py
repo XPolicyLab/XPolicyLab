@@ -2001,7 +2001,7 @@ class DiTActionConfig(BaseConfig):
     ft_vit: bool = False
     
     # 数据配置
-    bench_name: str = "libero_spatial_no_noops"
+    dataset_name: str = "libero_spatial_no_noops"
     data_root_dir: str = "/path/to/rlds/data"
     use_wrist_image: bool = True
     use_proprio: bool = True

@@ -52,7 +52,7 @@ def _resolve_robot_type(
     Convention used by starVLA train scripts:
       ``cfg.datasets.vla_data.data_mix`` is a key in
       ``DATASET_NAMED_MIXTURES`` whose value is a list of
-      ``(bench_name, weight, robot_type)`` tuples.
+      ``(dataset_name, weight, robot_type)`` tuples.
 
     When a data_mix contains entries from multiple robot types (e.g.
     ``bridge_rt_1`` covers ``oxe_bridge`` + ``oxe_rt1``), ``unnorm_key``

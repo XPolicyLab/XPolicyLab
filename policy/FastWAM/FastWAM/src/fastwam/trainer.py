@@ -181,9 +181,9 @@ class Wan22Trainer:
             worker_init_fn=worker_init_fn,
         )
 
-    def _assert_dataset_length_consistent(self, dataset, bench_name: str):
+    def _assert_dataset_length_consistent(self, dataset, dataset_name: str):
         if not hasattr(dataset, "__len__"):
-            raise TypeError(f"`{bench_name}` must implement __len__ for rank consistency checks.")
+            raise TypeError(f"`{dataset_name}` must implement __len__ for rank consistency checks.")
 
         local_length = len(dataset)
         gathered_lengths = self.accelerator.gather(
@@ -193,12 +193,12 @@ class Wan22Trainer:
             return
 
         if self.accelerator.is_main_process:
-            print(f"[dataset-check] {bench_name} length mismatch across ranks after initialization:")
+            print(f"[dataset-check] {dataset_name} length mismatch across ranks after initialization:")
             for rank, rank_length in enumerate(gathered_lengths.cpu().tolist()):
                 print(f"rank {rank}: {rank_length}")
         self.accelerator.wait_for_everyone()
         raise RuntimeError(
-            f"{bench_name} length mismatch across ranks: {gathered_lengths.cpu().tolist()}"
+            f"{dataset_name} length mismatch across ranks: {gathered_lengths.cpu().tolist()}"
         )
 
     def _estimate_total_train_steps(self) -> int:

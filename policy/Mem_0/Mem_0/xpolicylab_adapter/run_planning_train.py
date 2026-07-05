@@ -25,20 +25,20 @@ BASE_MODEL_DIR_NAME = "Qwen3-VL-8B-Instruct"
 TEMPLATE = "qwen3_vl_nothink"
 
 
-def get_bench_name(lerobot_dataset_path: str) -> str:
+def get_dataset_name(lerobot_dataset_path: str) -> str:
     return Path(lerobot_dataset_path).name or "dataset"
 
 
-def get_json_filename(bench_name: str) -> str:
-    return f"{bench_name}_high_level_finetune_data.json"
+def get_json_filename(dataset_name: str) -> str:
+    return f"{dataset_name}_high_level_finetune_data.json"
 
 
-def get_images_folder_name(bench_name: str) -> str:
-    return f"{bench_name}_images"
+def get_images_folder_name(dataset_name: str) -> str:
+    return f"{dataset_name}_images"
 
 
-def prepare_json_path(bench_name: str) -> Path:
-    return MEM0_ROOT / "llamafactory_data" / bench_name / get_json_filename(bench_name)
+def prepare_json_path(dataset_name: str) -> Path:
+    return MEM0_ROOT / "llamafactory_data" / dataset_name / get_json_filename(dataset_name)
 
 
 def prepare_meta_path(json_path: Path) -> Path:
@@ -105,14 +105,14 @@ def step_prepare(cfg: dict) -> str:
             "[planning] lerobot_dataset_path is missing or not a directory. "
             "Run process_data.sh ... Mn first."
         )
-    bench_name = get_bench_name(lerobot_path)
-    json_path = prepare_json_path(bench_name)
+    dataset_name = get_dataset_name(lerobot_path)
+    json_path = prepare_json_path(dataset_name)
     force = cfg.get("force_prepare", False)
 
     if json_path.is_file() and not force:
         if prepare_meta_matches(cfg, prepare_meta_path(json_path)):
             print(f"[prepare] Output exists and meta matches; skipping: {json_path}")
-            return bench_name
+            return dataset_name
         raise SystemExit(
             f"[planning] Prepare output exists but episode/repo metadata differs: {json_path}\n"
             "Set FORCE_PREPARE=true to regenerate, or remove llamafactory_data/ for this dataset."
@@ -120,7 +120,7 @@ def step_prepare(cfg: dict) -> str:
 
     if cfg.get("dry_run"):
         print(f"[prepare] DRY_RUN: would run data prep -> {json_path}")
-        return bench_name
+        return dataset_name
 
     cmd = [
         sys.executable,
@@ -138,12 +138,12 @@ def step_prepare(cfg: dict) -> str:
         raise SystemExit(f"[planning] Data prep did not produce {json_path}")
     write_prepare_meta(cfg, json_path)
     print(f"[prepare] Done: {json_path}")
-    return bench_name
+    return dataset_name
 
 
-def step_copy(cfg: dict, bench_name: str) -> None:
+def step_copy(cfg: dict, dataset_name: str) -> None:
     if cfg.get("dry_run"):
-        print(f"[copy] DRY_RUN: would copy dataset '{bench_name}' to LLaMA-Factory/data")
+        print(f"[copy] DRY_RUN: would copy dataset '{dataset_name}' to LLaMA-Factory/data")
         return
 
     lf_root = Path(cfg["llamafactory_root"])
@@ -155,9 +155,9 @@ def step_copy(cfg: dict, bench_name: str) -> None:
     data_dir = lf_root / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 
-    src = MEM0_ROOT / "llamafactory_data" / bench_name
-    json_name = get_json_filename(bench_name)
-    images_name = get_images_folder_name(bench_name)
+    src = MEM0_ROOT / "llamafactory_data" / dataset_name
+    json_name = get_json_filename(dataset_name)
+    images_name = get_images_folder_name(dataset_name)
     src_json = src / json_name
     src_images = src / images_name
     if not src_json.is_file():
@@ -172,7 +172,7 @@ def step_copy(cfg: dict, bench_name: str) -> None:
 
     info_path = data_dir / "dataset_info.json"
     info = json.loads(info_path.read_text(encoding="utf-8")) if info_path.exists() else {}
-    info[bench_name] = {
+    info[dataset_name] = {
         "file_name": json_name,
         "formatting": "sharegpt",
         "columns": {"messages": "messages", "images": "images"},
@@ -185,7 +185,7 @@ def step_copy(cfg: dict, bench_name: str) -> None:
         },
     }
     info_path.write_text(json.dumps(info, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"[copy] Updated {info_path} with dataset '{bench_name}'.")
+    print(f"[copy] Updated {info_path} with dataset '{dataset_name}'.")
 
 
 def _adapter_dir(cfg: dict) -> Path:
@@ -202,7 +202,7 @@ def _run_config_dir(cfg: dict) -> Path:
     return Path(cfg["run_config_dir"]).resolve()
 
 
-def step_train(cfg: dict, bench_name: str) -> str:
+def step_train(cfg: dict, dataset_name: str) -> str:
     base_out = Path(cfg["base_output_dir"]).resolve()
     lf_root = Path(cfg["llamafactory_root"]).resolve()
     base_model_path = base_out / BASE_MODEL_DIR_NAME
@@ -229,7 +229,7 @@ def step_train(cfg: dict, bench_name: str) -> str:
         "finetuning_type": "lora",
         "lora_rank": 8,
         "lora_target": "all",
-        "dataset": bench_name,
+        "dataset": dataset_name,
         "template": TEMPLATE,
         "cutoff_len": cfg.get("cutoff_len", 4096),
         "max_samples": cfg.get("max_samples", 1000),
@@ -412,19 +412,19 @@ def main() -> None:
         cfg["conda_env_mem0"] = args.conda_env_mem0
         cfg["conda_env_llamafactory"] = args.conda_env_llamafactory
 
-    bench_name: str | None = None
+    dataset_name: str | None = None
     adapter_path: str | None = None
 
     if "prepare" in args.steps:
-        bench_name = step_prepare(cfg)
+        dataset_name = step_prepare(cfg)
     if "copy" in args.steps:
-        if bench_name is None:
-            bench_name = get_bench_name(cfg["lerobot_dataset_path"])
-        step_copy(cfg, bench_name)
+        if dataset_name is None:
+            dataset_name = get_dataset_name(cfg["lerobot_dataset_path"])
+        step_copy(cfg, dataset_name)
     if "train" in args.steps:
-        if bench_name is None:
-            bench_name = get_bench_name(cfg["lerobot_dataset_path"])
-        adapter_path = step_train(cfg, bench_name)
+        if dataset_name is None:
+            dataset_name = get_dataset_name(cfg["lerobot_dataset_path"])
+        adapter_path = step_train(cfg, dataset_name)
     if "merge" in args.steps:
         if adapter_path is None:
             adapter_path = str(_adapter_dir(cfg))

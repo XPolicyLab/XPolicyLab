@@ -44,7 +44,7 @@ def collect_all_files():
     
     # Collect all files
     for dataset_dir in dataset_dirs:
-        bench_name = os.path.basename(dataset_dir)
+        dataset_name = os.path.basename(dataset_dir)
         
         for task_name in os.listdir(dataset_dir):
             task_dir = os.path.join(dataset_dir, task_name)
@@ -64,7 +64,7 @@ def collect_all_files():
                             'hdf5_path': hdf5_path,
                             'pt_path': pt_path,
                             'task_name': task_name,
-                            'bench_name': bench_name,
+                            'dataset_name': dataset_name,
                             'file_index': file_index
                         })
     
@@ -100,7 +100,7 @@ def worker_process(process_id, gpu_id, file_list, progress_queue):
                 hdf5_path = file_info['hdf5_path']
                 pt_path = file_info['pt_path']
                 task_name = file_info['task_name']
-                bench_name = file_info['bench_name']
+                dataset_name = file_info['dataset_name']
                 file_index = file_info['file_index']
                 
                 # Check again if file already exists (prevent duplicate processing by other processes)
@@ -157,7 +157,7 @@ def worker_process(process_id, gpu_id, file_list, progress_queue):
                         "instruction": instructions[0],
                         "embeddings": text_embed,
                         "task_name": task_name,
-                        "dataset": bench_name,
+                        "dataset": dataset_name,
                         "file_index": file_index
                     }, pt_path)
                 else:
@@ -171,7 +171,7 @@ def worker_process(process_id, gpu_id, file_list, progress_queue):
                         "embeddings": text_embed_1,
                         "embeddings2": text_embed_2,
                         "task_name": task_name,
-                        "dataset": bench_name,
+                        "dataset": dataset_name,
                         "file_index": file_index
                     }, pt_path)
                 

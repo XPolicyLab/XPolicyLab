@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 
 
 def make_oxe_dataset_kwargs(
-    bench_name: str,
+    dataset_name: str,
     data_root_dir: Path,
     load_camera_views: Tuple[str] = ("primary",),
     load_depth: bool = False,
@@ -27,9 +27,9 @@ def make_oxe_dataset_kwargs(
     action_proprio_normalization_type = None,
 ) -> Dict[str, Any]:
     """Generates config (kwargs) for given dataset from Open-X Embodiment."""
-    dataset_kwargs = deepcopy(OXE_DATASET_CONFIGS[bench_name])
+    dataset_kwargs = deepcopy(OXE_DATASET_CONFIGS[dataset_name])
     if dataset_kwargs["action_encoding"] not in [ActionEncoding.EEF_POS, ActionEncoding.EEF_R6, ActionEncoding.JOINT_POS_BIMANUAL]:
-        raise ValueError(f"Cannot load `{bench_name}`; only EEF_POS & EEF_R6 & JOINT_POS_BIMANUAL actions supported!")
+        raise ValueError(f"Cannot load `{dataset_name}`; only EEF_POS & EEF_R6 & JOINT_POS_BIMANUAL actions supported!")
 
     # [Contract] For EEF_POS & EEF_R6 actions, only the last action dimension (gripper) is absolute!
     # Normalize all action dimensions *except* the gripper
@@ -46,7 +46,7 @@ def make_oxe_dataset_kwargs(
 
     # Adjust Loaded Camera Views
     if len(missing_keys := (set(load_camera_views) - set(dataset_kwargs["image_obs_keys"]))) > 0:
-        raise ValueError(f"Cannot load `{bench_name}`; missing camera views `{missing_keys}`")
+        raise ValueError(f"Cannot load `{dataset_name}`; missing camera views `{missing_keys}`")
 
     # Filter
     dataset_kwargs["image_obs_keys"] = {
@@ -69,13 +69,13 @@ def make_oxe_dataset_kwargs(
         dataset_kwargs["language_key"] = "language_instruction"
 
     # Specify Standardization Transform
-    dataset_kwargs["standardize_fn"] = OXE_STANDARDIZATION_TRANSFORMS[bench_name]
+    dataset_kwargs["standardize_fn"] = OXE_STANDARDIZATION_TRANSFORMS[dataset_name]
 
     # Add any aux arguments
     if "aux_kwargs" in dataset_kwargs:
         dataset_kwargs.update(dataset_kwargs.pop("aux_kwargs"))
 
-    return {"name": bench_name, "data_dir": str(data_root_dir), **dataset_kwargs}
+    return {"name": dataset_name, "data_dir": str(data_root_dir), **dataset_kwargs}
 
 
 def get_oxe_dataset_kwargs_and_weights(
@@ -92,7 +92,7 @@ def get_oxe_dataset_kwargs_and_weights(
     (per-dataset configs) and weights can be passed directly to `make_interleaved_dataset`.
 
     :param data_root_dir: Base directory containing RLDS/TFDS-formatted datasets (from Open-X)
-    :param mixture_spec: List of (bench_name, sampling_weight) from `oxe.mixtures.OXE_NAMED_MIXTURES`
+    :param mixture_spec: List of (dataset_name, sampling_weight) from `oxe.mixtures.OXE_NAMED_MIXTURES`
     :param load_camera_views: Camera views to load; see `oxe.dataset_configs.py` for available views.
     :param load_depth: Load depth information in addition to camera RGB.
     :param load_proprio: Load proprioceptive state.

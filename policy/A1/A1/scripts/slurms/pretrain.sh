@@ -16,7 +16,7 @@ fi
 
 
 # ===== 2. Training hyperparameters =====
-export bench_name=vla_dataset_pretrain
+export dataset_name=vla_dataset_pretrain
 export vla_config_path="pretrain.yaml"
 exp_name=molmo_7b_pretrain
 save_folder=./model/checkpoints/molmo_7b_pretrain
@@ -57,7 +57,7 @@ launch_scripts/train_vla.py \
     --device_train_microbatch_size 16 \
     --global_batch_size $((128*$NNODES)) \
     --state_mask_prob 0.5 \
-    --dataset $bench_name \
+    --dataset $dataset_name \
     --vla_config_path $vla_config_path \
     --ft_llm \
     --llm_learning_rate 5e-6 \

@@ -135,7 +135,7 @@ def make_dataset_from_rlds(
         - task:
             - language_instruction      # language instruction, present if `language_key` is provided
         - action                        # action vector
-        - bench_name                  # name of the dataset
+        - dataset_name                  # name of the dataset
     """
     REQUIRED_KEYS = {"observation", "action"}
     if language_key is not None:
@@ -196,7 +196,7 @@ def make_dataset_from_rlds(
             "observation": new_obs,
             "task": task,
             "action": tf.cast(traj["action"], tf.float32),
-            "bench_name": tf.repeat(name, traj_len),
+            "dataset_name": tf.repeat(name, traj_len),
         }
 
         if absolute_action_mask is not None:

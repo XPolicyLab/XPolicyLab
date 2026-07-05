@@ -112,7 +112,7 @@ For Wan2.2-TI2V-5B base weights, please refer to the [official Wan2.2 repository
 The training script reads two config files:
 
 - **Model config**: `configs/model/wan22_5b_sft.yaml` — model architecture, training hyperparameters, and inference settings
-- **Dataset config**: `configs/data/{bench_name}.yaml` — data path, normalization statistics, augmentation, and video settings
+- **Dataset config**: `configs/data/{dataset_name}.yaml` — data path, normalization statistics, augmentation, and video settings
 
 The dataset config is selected by the `dataset` field in the model config (default: `robocasa`). All config fields can be overridden from the command line using OmegaConf dot notation.
 
@@ -189,7 +189,7 @@ torchrun \
     --nproc_per_node=$MLP_WORKER_GPU \
     --master_addr=$MLP_WORKER_0_HOST \
     --master_port=$MLP_WORKER_0_PORT \
-    scripts/train_sft.py dataset={bench_name}
+    scripts/train_sft.py dataset={dataset_name}
 ```
 
 Available dataset configs: `robocasa`, `robotwin`. You can override any config field from the command line.

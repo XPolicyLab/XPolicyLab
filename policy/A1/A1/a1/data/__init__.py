@@ -503,165 +503,165 @@ def build_rlds_dit_action_train_dataloader(train_config: TrainConfig,text_model_
     return dataloader
 
 
-def get_dataset_by_name(bench_name, split, train_config=None):
-    if bench_name in ["oxe_magic_soup_plus_minus","oxe_magic_soup_plus","oxe_magic_soup","oxe_magic_soup_plus_minus_A1","oxe_magic_soup_plus_minus_A1_debug", "libero_spatial_no_noops"]:
+def get_dataset_by_name(dataset_name, split, train_config=None):
+    if dataset_name in ["oxe_magic_soup_plus_minus","oxe_magic_soup_plus","oxe_magic_soup","oxe_magic_soup_plus_minus_A1","oxe_magic_soup_plus_minus_A1_debug", "libero_spatial_no_noops"]:
         assert train_config is not None
-        return OXEFAST(split, data_name=bench_name, train_config=train_config)
-    if 'oxe' in bench_name:
+        return OXEFAST(split, data_name=dataset_name, train_config=train_config)
+    if 'oxe' in dataset_name:
         assert train_config is not None
-        return OXEFAST(split, data_name=bench_name, train_config=train_config)
-    if 'agibot' in bench_name:
+        return OXEFAST(split, data_name=dataset_name, train_config=train_config)
+    if 'agibot' in dataset_name:
         assert train_config is not None
-        return AgibotFAST(split, data_name=bench_name, train_config=train_config)
-    if bench_name in ["scifi_document_qa", "pixmo_docs_other"]:
+        return AgibotFAST(split, data_name=dataset_name, train_config=train_config)
+    if dataset_name in ["scifi_document_qa", "pixmo_docs_other"]:
         return PixMoDocs("other", split=split)
-    elif bench_name in ["scifi_table_qa", "pixmo_docs_tables"]:
+    elif dataset_name in ["scifi_table_qa", "pixmo_docs_tables"]:
         return PixMoDocs("tables", split=split)
-    elif bench_name in ["scifi_diagram_qa", "pixmo_docs_diagrams"]:
+    elif dataset_name in ["scifi_diagram_qa", "pixmo_docs_diagrams"]:
         return PixMoDocs("diagrams", split=split)
-    elif bench_name in ["scifi_charts_qa", "pixmo_docs_charts"]:
+    elif dataset_name in ["scifi_charts_qa", "pixmo_docs_charts"]:
         return PixMoDocs("charts", split=split)
 
     # A1 datasets
-    elif bench_name in ["sr_planning", "sharerobot_planning"]:
+    elif dataset_name in ["sr_planning", "sharerobot_planning"]:
         return SRPlanning(split)
-    elif bench_name in ["sr_affordance", "sharerobot_affordance"]:
+    elif dataset_name in ["sr_affordance", "sharerobot_affordance"]:
         return SRAffordance(split)
-    elif bench_name in ["sr_trajectory", "sharerobot_trajectory"]:
+    elif dataset_name in ["sr_trajectory", "sharerobot_trajectory"]:
         return SRTrajectory(split)
-    elif bench_name in ["agd20k", "AGD20K"]:
+    elif dataset_name in ["agd20k", "AGD20K"]:
         return AGD20K(split)
-    elif bench_name in ["blip_laion_cc", "laion_cc"]:
+    elif dataset_name in ["blip_laion_cc", "laion_cc"]:
         return BlipLaionCC(split)
-    elif bench_name in ["droid_cotrack_planning"]:
+    elif dataset_name in ["droid_cotrack_planning"]:
         return DroidCotrackPlanning(split)
-    elif bench_name in ["droid_molmo_sam2_planning"]:
+    elif dataset_name in ["droid_molmo_sam2_planning"]:
         return DroidMolmoSam2Planning(split)
-    elif bench_name in ["maniskill_molmo_planning", "maniskill_planning"]:
+    elif dataset_name in ["maniskill_molmo_planning", "maniskill_planning"]:
         return ManiskillPlanning(split)
-    elif bench_name in ["droid_cotrack_trajectory"]:
+    elif dataset_name in ["droid_cotrack_trajectory"]:
         return DroidCotrackTrajectory(split)
-    elif bench_name in ["droid_molmo_sam2_trajectory"]:
+    elif dataset_name in ["droid_molmo_sam2_trajectory"]:
         return DroidMolmoSam2Trajectory(split)
-    elif bench_name in ["maniskill_molmo_trajectory", "maniskill_trajectory"]:
+    elif dataset_name in ["maniskill_molmo_trajectory", "maniskill_trajectory"]:
         return ManiskillTrajectory(split)
-    elif bench_name in ["hoi4d_planning", "hoi4d"]:
+    elif dataset_name in ["hoi4d_planning", "hoi4d"]:
         return Hoi4DPlanning(split)
-    elif bench_name in ["robovqa",  "RoboVQA"]:
+    elif dataset_name in ["robovqa",  "RoboVQA"]:
         return RoboVQA(split)
-    elif bench_name in ["clevrmath", "clever_math", "clevr_math", "CleverMath", "ClevrMath"]:
+    elif dataset_name in ["clevrmath", "clever_math", "clevr_math", "CleverMath", "ClevrMath"]:
         return CleverMath(split)
-    elif bench_name in ["super_clevr", "Super_Clevr", "SuperCLEVR", "superclevr"]:
+    elif dataset_name in ["super_clevr", "Super_Clevr", "SuperCLEVR", "superclevr"]:
         return SuperCLEVR(split)
     ## Trance
-    elif bench_name in ["trance", "trance_train", "Trance", "TRANCE"]:
+    elif dataset_name in ["trance", "trance_train", "Trance", "TRANCE"]:
         return TRANCE(split='train')
-    elif bench_name in ["trance_test_id"]:
+    elif dataset_name in ["trance_test_id"]:
         return TRANCE(split='test_id')
-    elif bench_name in ["trance_test_ood_left"]:
+    elif dataset_name in ["trance_test_ood_left"]:
         return TRANCE(split='test_ood_left')
-    elif bench_name in ["trance_test_ood_right"]:
+    elif dataset_name in ["trance_test_ood_right"]:
         return TRANCE(split='test_ood_right')
 
 
     # PixMo-Pointing
-    elif bench_name in ["pointing_high_freq", "pixmo_points_high_freq"]:
+    elif dataset_name in ["pointing_high_freq", "pixmo_points_high_freq"]:
         return PixMoPoints(kind="high_frequency", split=split, counting=False)
-    elif bench_name in ["point_count_high_freq", "pixmo_points_high_freq_counting"]:
+    elif dataset_name in ["point_count_high_freq", "pixmo_points_high_freq_counting"]:
         return PixMoPoints(kind="high_frequency", split=split, counting=True)
-    elif bench_name in ["pointing", "pixmo_points"]:
+    elif dataset_name in ["pointing", "pixmo_points"]:
         return PixMoPoints(kind="basic", split=split, counting=False)
-    elif bench_name in ["point_count", "pixmo_points_counting"]:
+    elif dataset_name in ["point_count", "pixmo_points_counting"]:
         return PixMoPoints(kind="basic", split=split, counting=True)
 
     # PixMo-Point-Explanations
-    elif bench_name in ["point_qa", "pixmo_pointing_explanations"]:
+    elif dataset_name in ["point_qa", "pixmo_pointing_explanations"]:
         return PixMoPointExplanations(split=split, split_groups=True)
 
     # PixMo-Count
-    elif bench_name in ["fast_flickr_count_qa_point_count", "pixmo_count_counting"]:
+    elif dataset_name in ["fast_flickr_count_qa_point_count", "pixmo_count_counting"]:
         return PixMoCount(split=split, counting=True)
-    elif bench_name in ["fast_flickr_count_qa_pointing", "pixmo_count"]:
+    elif dataset_name in ["fast_flickr_count_qa_pointing", "pixmo_count"]:
         return PixMoCount(split=split, counting=False)
 
     # PixMo-AskModelAnything
-    elif bench_name in ["user_qa", "pixmo_ask_model_anything"]:
+    elif dataset_name in ["user_qa", "pixmo_ask_model_anything"]:
         return PixMoAskModelAnything(split=split)
 
     # PixMo-CapQa
-    elif bench_name in ["synthetic_qa_v3_as_user_qa", "pixmo_cap_qa"]:
+    elif dataset_name in ["synthetic_qa_v3_as_user_qa", "pixmo_cap_qa"]:
         return PixMoCapQa(split=split)
 
     # PixMo-Cap
-    if bench_name in ["cockatoo_and_transcript_712k_sept6", "pixmo_cap_with_transcripts"]:
+    if dataset_name in ["cockatoo_and_transcript_712k_sept6", "pixmo_cap_with_transcripts"]:
         return PixMoCap(split, mode="transcript_and_caption")
-    if bench_name in ["cockatoo_712k_sept6", "pixmo_cap"]:
+    if dataset_name in ["cockatoo_712k_sept6", "pixmo_cap"]:
         return PixMoCap(split, mode="captions")
 
-    if bench_name == "pointing_eval":
+    if dataset_name == "pointing_eval":
         assert split == "test"
         return PixMoPointsEval()
 
     # Academic datasets
-    if bench_name == "android_control":
+    if dataset_name == "android_control":
         return AndroidControl(split)
-    if bench_name == "android_control_ll":
+    if dataset_name == "android_control_ll":
         return AndroidControl(split, mode="ll")
-    if bench_name == "chart_qa":
+    if dataset_name == "chart_qa":
         return ChartQa(split, weighted=False)
-    if bench_name == "real_world_qa_no_instruction":
+    if dataset_name == "real_world_qa_no_instruction":
         assert split == "test"
         return RealWorldQa("no_instruction")
-    if bench_name == "chart_qa_weighted":
+    if dataset_name == "chart_qa_weighted":
         return ChartQa(split, weighted=True)
-    if bench_name == "info_qa":
+    if dataset_name == "info_qa":
         return InfoQa(split)
-    if bench_name == "doc_qa":
+    if dataset_name == "doc_qa":
         return DocQa(split)
-    if bench_name == "science_qa_img":
+    if dataset_name == "science_qa_img":
         return ScienceQAImageOnly(split)
-    if bench_name == "coco_2014_vqa_multi":
+    if dataset_name == "coco_2014_vqa_multi":
         return Vqa2(split, multi_question=True)
-    if bench_name == "coco_2014_vqa":
+    if dataset_name == "coco_2014_vqa":
         return Vqa2(split, multi_question=False)
-    if bench_name == "text_vqa":
+    if dataset_name == "text_vqa":
         return TextVqa(split)
-    if bench_name == "plot_qa":
+    if dataset_name == "plot_qa":
         return PlotQa(split, in_memory=False)
-    if bench_name == "figure_qa":
+    if dataset_name == "figure_qa":
         return FigureQa(dict(train="train", validation="validation1")[split])
-    if bench_name == "dv_qa":
+    if dataset_name == "dv_qa":
         return DvQa(split, in_memory=False)
-    if bench_name == "okvqa":
+    if dataset_name == "okvqa":
         return OkVqa(split)
-    if bench_name in ["mmmu"]:
+    if dataset_name in ["mmmu"]:
         return MMMU(split)
-    if bench_name in ["mmmu_test"]:
+    if dataset_name in ["mmmu_test"]:
         return MMMU(split)
-    if bench_name == "a_okvqa_da":
+    if dataset_name == "a_okvqa_da":
         return AOkVqa(split=split, direct_answer=True)
-    if bench_name == "a_okvqa_mc":
+    if dataset_name == "a_okvqa_mc":
         return AOkVqa(split=split, direct_answer=False)
-    if bench_name == "st_qa":
+    if dataset_name == "st_qa":
         return SceneTextQa(split=split)
-    if bench_name == "tabwmp_da":
+    if dataset_name == "tabwmp_da":
         return TabWMPDirectAnswer(split=split, include_options=False)
-    if bench_name == "countbench_qa":
+    if dataset_name == "countbench_qa":
         assert split == "huggingface"
         return CountBenchQa()
-    if bench_name == "tally_qa":
+    if dataset_name == "tally_qa":
         return TallyQa(split=split)
-    if bench_name == "ai2_diagram_v2_mix_transparent":
+    if dataset_name == "ai2_diagram_v2_mix_transparent":
         return AI2D(split=split, boxes="both")
-    if bench_name == "clock_bench":
+    if dataset_name == "clock_bench":
         return ClockBench(split=split)
     
-    if bench_name == "dummy_rlds":  
+    if dataset_name == "dummy_rlds":  
         from a1.data.vla.dummy_datasets import DummyRLDS
         return DummyRLDS(split)
 
-    elif bench_name == "math_vista_v2":
+    elif dataset_name == "math_vista_v2":
         if split == "validation":
             split = "testmini"
         return MathVista(split)
-    raise NotImplementedError(bench_name, split)
+    raise NotImplementedError(dataset_name, split)

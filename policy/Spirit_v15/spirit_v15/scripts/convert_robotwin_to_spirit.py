@@ -207,8 +207,8 @@ def write_episode(
                 }
                 states_file.write(json.dumps(state_record) + "\n")
 
-                for video_name, bench_name in CAMERA_DATASETS.items():
-                    frame = decode_rgb_frame(data_file[bench_name][frame_idx])
+                for video_name, dataset_name in CAMERA_DATASETS.items():
+                    frame = decode_rgb_frame(data_file[dataset_name][frame_idx])
                     writer = writers.get(video_name)
                     if writer is None:
                         height, width = frame.shape[:2]
