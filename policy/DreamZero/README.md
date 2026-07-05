@@ -1,145 +1,229 @@
 # DreamZero
 
-本目录是 DreamZero 在 XPolicyLab 中的接入层。DreamZero 原项目源码在 `dreamzero/`，训练、评测、数据和环境适配尽量放在当前目录顶层。
+**Contributor:** RoboDojo Team | **Paper:** World Action Models are Zero-shot Policies | **arXiv:** https://arxiv.org/abs/2602.15922 | **Original code:** https://github.com/dreamzero0/dreamzero
 
-## 一键环境
+`DreamZero` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-默认环境名是 `dreamzero_robodojo`：
+<details>
+<summary>File Structure</summary>
+
+| Path | Purpose |
+|---|---|
+| `README.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
+| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `dreamzero/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+
+</details>
+
+## Installation
+
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-cd policy/DreamZero
+cd XPolicyLab/policy/DreamZero
+# Example: install dependencies for the DreamZero policy adapter.
 bash install.sh
-conda activate dreamzero_robodojo
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. dreamzero
 ```
 
-`install.sh` 会安装 DreamZero、`lerobot>=0.4.0` 和 XPolicyLab。`flash-attn`、`transformer_engine` 默认不装，按机器情况打开。
+## Demo Data Processing
 
-B200 机器建议直接用 CUDA 12.9 对应的 PyTorch 源，并一次性打开 `flash-attn` 和 `transformer_engine`：
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
 
 ```bash
-DREAMZERO_TORCH_INDEX_URL=https://download.pytorch.org/whl/cu129 \
-INSTALL_FLASH_ATTN=1 \
-INSTALL_TRANSFORMER_ENGINE=1 \
-MAX_JOBS=8 \
-bash install.sh dreamzero_robodojo
+cd XPolicyLab/policy/DreamZero
+# Template: convert all available demonstrations for one run.
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+
+# Example: convert stack_bowls demos for arx_x5 joint control.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+
+# Example: create a 50-episode ablation while reading from the original task data.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
 ```
 
-如果后续要跑 TensorRT 加速推理，再额外安装：
+## Model Training
+
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Random seed. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
 
 ```bash
-conda activate dreamzero_robodojo
-pip install tensorrt==10.13.2.6 tensorrt_cu13==10.13.2.6 tensorrt_cu13_libs==10.13.2.6 tensorrt_cu13_bindings==10.13.2.6 --no-deps
-pip install transformer_engine==2.10.0 transformer_engine_cu12==2.10.0 transformer_engine_torch==2.10.0
+cd XPolicyLab/policy/DreamZero
+# Template: train a policy run on one GPU or a GPU list.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Example: train a cotrain run on GPU 0.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+
+# Example: train the same run on four GPUs if the upstream trainer supports it.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-## 默认路径
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
 
-默认训练数据是多任务 LeRobot v3：
+## Deployment and Evaluation
 
-模型、Wan 组件、tokenizer 和训练产物默认都放在当前目录的 `checkpoints/` 下。推荐使用子目录布局；如果历史上把 DreamZero-AgiBot 直接放在 `checkpoints/` 根目录，训练和推理也会兼容。
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
-hf download GEAR-Dreams/DreamZero-AgiBot --repo-type model --local-dir ./checkpoints/DreamZero-AgiBot
+cd XPolicyLab/policy/DreamZero
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
-pip install "huggingface_hub[cli]"
-
-# You may need to set your HuggingFace token:
-# export HF_TOKEN=<YOUR_HUGGINGFACE_TOKEN>
-
-# Download Wan2.1 model weights (~28GB)
-hf download Wan-AI/Wan2.1-I2V-14B-480P --local-dir ./checkpoints/Wan2.1-I2V-14B-480P
-
-# Download umt5-xxl tokenizer
-hf download google/umt5-xxl --local-dir ./checkpoints/umt5-xxl
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
-常用路径都可以覆盖：
+Parameters used by the split server/client flow:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
 
 ```bash
-export LEROBOT_DATA_PATH=/path/to/RoboDojo_sim_arx-x5_v30
-export DREAMZERO_PRETRAINED_MODEL_PATH=/path/to/DreamZero-AgiBot
-export WAN_CKPT_DIR=/path/to/Wan2.1-I2V-14B-480P
-export TOKENIZER_DIR=/path/to/umt5-xxl
-```
+cd XPolicyLab/policy/DreamZero
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
 
-## 数据处理（可选）
-
-默认直接用共享的多任务 LeRobot v3 数据；如需自己转换/截取，用 `process_data.sh`：
-
-```bash
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
-```
-
-尾参 `expert_data_num` 可选：传了则只取前 N 条 episodes，不传则用全部。输出目录为
-`data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/`，训练时按同名 4 元组自动解析。
-要对比不同数据量，用不同 run 名（如 `cotrain_50ep`）并在 process_data 时传该尾参。
-
-## 多任务训练
-
-常用训练变量：
-
-```bash
-export DREAMZERO_NATIVE_DOJO_ACTION=1 #启动这个则用新的MLP训练
-export DREAMZERO_MAX_STEPS=100000
-export DREAMZERO_SAVE_STEPS=10000
-export DREAMZERO_NUM_GPUS=8
-export DREAMZERO_PER_DEVICE_BATCH_SIZE=4
-export DREAMZERO_REPORT_TO=tensorboard
-export WANDB_PROJECT=dreamzero
-```
-
-```bash
-conda activate dreamzero_robodojo
-
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
-```
-
-训练产物目录：
-
-```text
-policy/DreamZero/checkpoints/RoboDojo-cotrain-arx_x5-joint-0
-```
-
-## 同机评测
-
-`task_name` 只在评测时表示要跑的仿真任务；`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名：
-
-```bash
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 dreamzero_robodojo XPolicyLab
-```
-
-指定 checkpoint：
-
-```bash
-export MODEL_PATH=/path/to/checkpoint-xxxxx
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 dreamzero_robodojo XPolicyLab
-```
-
-`MODEL_PATH` 可以是具体 `checkpoint-*`，也可以是包含 `checkpoint-*` 的训练输出目录。不设置时会按 `ckpt_name` 目录自动找 latest，再回退到 `deploy.yml` 里的 `pretrained_model_path`。
-
-## 双机评测
-
-policy 机器启动 server，默认绑定 `0.0.0.0`：
-
-```bash
+# Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
   RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 dreamzero_robodojo 5000 0.0.0.0
-```
+  0 <policy_conda_env> 5000 0.0.0.0
 
-环境机器启动 client，把最后一个参数换成 policy 机器 IP：
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
 
-```bash
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
   RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
   5000 <policy_server_ip>
 ```
 
-通过 `EVAL_ENV_TYPE` 控制 `sim`、`debug`；未设置时默认为 `sim`。`real` 在开源版不可用。
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
 
-## 注意事项
+## Important Parameters
 
-- DreamZero 首次推理会 warmup/compile，client timeout 默认扩到 1800 秒，可用 `DREAMZERO_MODEL_CLIENT_TIMEOUT` 覆盖。
-- `deploy.yml` 的 `inference_method` 默认是 `lazy_joint_forward_causal`，也可改为 `forward` 或 `lazy_joint_forward`。
-- v3 数据当前是 14 维双臂关节，适配层会补成 DreamZero-AgiBot 的 20 维 state 和 22 维 action；缺失的夹爪、head、waist、base velocity 用 0 填充。
+Common parameter meanings used across the commands above:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Policy-specific `deploy.yml` keys worth checking before evaluation:
+
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `action_dim` | Runtime or checkpoint option consumed by this adapter. |
+| `model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `pretrained_model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `tokenizer_path` | Runtime or checkpoint option consumed by this adapter. |
+| `action_horizon` | Runtime or checkpoint option consumed by this adapter. |
+| `video_history` | Runtime or checkpoint option consumed by this adapter. |
+| `ctrl_freq` | Runtime or checkpoint option consumed by this adapter. |
+| `prompt` | Runtime or checkpoint option consumed by this adapter. |
+| `inference_method` | Runtime or checkpoint option consumed by this adapter. |
+| `skip_img_transform` | Runtime or checkpoint option consumed by this adapter. |
+| `native_dojo_action` | Runtime or checkpoint option consumed by this adapter. |
+
+Frequently used environment variables detected in the adapter scripts:
+
+| Variable | Notes |
+|---|---|
+| `AGIBOT` | Optional override used by the local scripts or upstream runtime. |
+| `AGIBOT_ACTION_DIM` | Optional override used by the local scripts or upstream runtime. |
+| `AGIBOT_STATE_DIM` | Optional override used by the local scripts or upstream runtime. |
+| `CAMERA_GROUPS` | Optional override used by the local scripts or upstream runtime. |
+| `CHECKPOINTS_DIR` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_DEFAULT_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_EXE` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_PREFIX` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_CAMERA_GROUPS` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_IMAGE_SIZE` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_MODEL_PATH` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_TOKENIZER_PATHS` | Optional override used by the local scripts or upstream runtime. |
+
+## Notes
+
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

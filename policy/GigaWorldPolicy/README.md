@@ -1,157 +1,230 @@
 # GigaWorldPolicy
 
-This policy follows the XPolicyLab data contract. Raw trajectories are read from XPolicyLab HDF5 episodes and converted into LeRobot v2.1 before training.
+**Contributor:** RoboDojo Team | **Paper:** GigaWorld / GigaWorldPolicy technical report | **arXiv:** TBD | **Original code:** See vendored `giga_world_policy/`.
 
-## XPolicyLab Contract
+`GigaWorldPolicy` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-- `process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]` prepares `data/<4-tuple>`.
-- `train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>` writes checkpoints to `checkpoints/<bench>-<ckpt>-<env_cfg>-<action>-<seed>`.
-- `eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>` starts the XPolicyLab model server and env client; `ckpt_name` is the full run directory name under `checkpoints/`.
-- `model.py` implements `update_obs`, `update_obs_batch`, `get_action`, `get_action_batch`, and `reset` for `XPolicyLab/setup_policy_server.py`.
+<details>
+<summary>File Structure</summary>
 
-## Raw Data
-
-Expected XPolicyLab input layout:
-
-```text
-data/<bench_name>/<task_name>/<env_cfg_type>/
-├── data/episode_*.hdf5
-├── preview_video/
-├── scene_layout/
-├── seed.txt
-└── traj_data/
-```
-
-For the current demo:
-
-```text
-data/XPolicyLab_demo/stack_bowls/arx_x5/data/episode_*.hdf5
-```
-
-`arx_x5` maps to `dual_x5`, so joint state/action is 14-D: left arm 6 + left gripper 1 + right arm 6 + right gripper 1.
-
-## Converted Data
-
-`process_data.sh` converts HDF5 episodes to LeRobot v2.1:
-
-```text
-policy/GigaWorldPolicy/data/<bench>-<ckpt>-<env_cfg>-<action>/
-├── meta/info.json
-├── meta/tasks.jsonl
-├── meta/episodes.jsonl
-├── meta/episodes_stats.jsonl
-├── meta/stats.json
-├── data/chunk-000/episode_000000.parquet
-├── videos/chunk-000/observation.images.cam_high/episode_000000.mp4
-├── videos/chunk-000/observation.images.cam_left_wrist/episode_000000.mp4
-├── videos/chunk-000/observation.images.cam_right_wrist/episode_000000.mp4
-├── videos/chunk-000/observation.images.cam_third_view/episode_000000.mp4
-└── norm_stats_delta.json
-```
-
-Default camera mapping:
-
-- `cam_head` -> `observation.images.cam_high`
-- `cam_left_wrist` -> `observation.images.cam_left_wrist`
-- `cam_right_wrist` -> `observation.images.cam_right_wrist`
-- `cam_third_view` -> `observation.images.cam_third_view`
-
-Images are decoded from XPolicyLab HDF5 bytes or arrays as RGB and stored as RGB videos. Default stored resolution is `640x480`; override with `GIGAWORLD_IMAGE_WIDTH` and `GIGAWORLD_IMAGE_HEIGHT` if needed.
-
-Example:
-
-```bash
-GIGAWORLD_PYTHON=/path/to/python   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 joint
-```
-
-For multi-task conversion, pass comma-separated task names via `GIGAWORLD_TASK_NAMES`; `ckpt_name` still controls the XPolicyLab 4-tuple output name:
-
-```bash
-GIGAWORLD_TASK_NAMES=stack_bowls,another_task   bash process_data.sh XPolicyLab_demo cotrain arx_x5 joint
-```
-
-If you already have a LeRobot v2.1 dataset, link it instead:
-
-```bash
-GIGAWORLD_SOURCE_DATA_DIR=/path/to/lerobot   bash process_data.sh XPolicyLab_demo stack_bowls arx_x5 joint
-```
-
-Optional helpers:
-
-```bash
-GIGAWORLD_COMPUTE_NORM=1 bash process_data.sh ...   # default enabled
-GIGAWORLD_GENERATE_T5=1 bash process_data.sh ...    # optional, GPU-heavy
-```
-
-## Training
-
-Default LeRobot data path is `${XPOLICYLAB_LEROBOT_DATA_ROOT:-${LEROBOT_DATA_ROOT:-<XPolicyLab>/data}}/<repo_id>`.
-For `arx_x5`, the default repo id is `XPolicyLab_sim_arx-x5_v30`. Set `GIGAWORLD_DATA_DIR` to override the complete data path, or set `LEROBOT_DATASET_REPO_ID` to override only the repo id.
-
-```bash
-GIGAWORLD_PYTHON=/path/to/python   bash train.sh XPolicyLab_demo stack_bowls arx_x5 joint 0 0,1,2,3
-```
-
-Training seed is propagated as `XPolicyLab_seed + 1` for giga-train (`seed > 0`), and `PYTHONHASHSEED` uses the same resolved value.
-
-Default training config is `configs.xpolicylab_gigaworld.config` with 14-D state/action and LeRobot v2.1 input. The converted dataset stores all four demo cameras; the default model config uses the first three GWP views unless you override `view_keys` in the config.
-
-Useful overrides:
-
-- `GIGAWORLD_DATA_DIR`: explicit converted LeRobot data path.
-- `GIGAWORLD_NORM_PATH`: normalization stats JSON.
-- `GIGAWORLD_PRETRAINED_PATH`: Wan2.2 Diffusers model path.
-- `GIGAWORLD_MODEL_ACTION_DIM`, `GIGAWORLD_MODEL_STATE_DIM`, `GIGAWORLD_NUM_FRAMES`, `GIGAWORLD_ACTION_CHUNK`.
-- `GIGAWORLD_DRY_RUN=1`: write the effective config without launching training.
-
-## Evaluation
-
-Environment setup is documented in [INSTALLATION.md](INSTALLATION.md). Run `bash install.sh` before first use.
-
-`deploy.yml` defaults to the XPolicyLab demo dimensions: `model_action_dim=14`, `model_state_dim=14`, three XPolicyLab camera views, and RGB input observations.
-
-For real checkpoint inference, set one of:
-
-```yaml
-checkpoint_path: /path/to/checkpoint-5000/model_ema.pt
-# or pass the checkpoints/ run directory name as ckpt_name through eval.sh
-checkpoint_num: checkpoint-5000
-```
-
-For server/client interface smoke tests, set `load_model: false` in `deploy.yml`; the wrapper will return zero actions with the configured action chunk.
-
-Single-machine evaluation (`eval.sh` allocates a port, starts the policy server, waits until it is ready, and then starts the env client):
-
-```bash
-bash eval.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 0 gigaworld-policy gigaworld-policy
-```
-
-Split-machine evaluation (GPU host runs policy server, simulator host runs env client):
-
-```bash
-# GPU host
-FREE_PORT=$(bash ../../utils/get_free_port.sh)
-bash setup_eval_policy_server.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy "${FREE_PORT}" 0.0.0.0
-
-# Simulator host
-bash setup_eval_env_client.sh XPolicyLab debug_task <ckpt_name> arx_x5 joint 0 0 gigaworld-policy \
-  "ckpt_name=<ckpt_name>,action_type=joint" <port> <policy_server_ip>
-```
-
-Set `POLICY_SERVER_HOST` / `POLICY_SERVER_IP` (or GigaWorldPolicy-specific equivalents) to control server binding and client connection when using `eval.sh`.
-
-### Evaluation environment (`EVAL_ENV_TYPE`)
-
-Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
-
-| `EVAL_ENV_TYPE` | Mode |
+| Path | Purpose |
 |---|---|
-| unset or `sim` | RoboDojo simulation |
-| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
-| `real` | Not available in open-source release |
+| `README.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
+| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `giga_world_policy/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+
+</details>
+
+## Installation
+
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-export EVAL_ENV_TYPE=debug
-bash eval.sh ...
+cd XPolicyLab/policy/GigaWorldPolicy
+# Example: install dependencies for the GigaWorldPolicy policy adapter.
+bash install.sh
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. gigaworldpolicy
 ```
 
+## Demo Data Processing
+
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+
+```bash
+cd XPolicyLab/policy/GigaWorldPolicy
+# Template: convert all available demonstrations for one run.
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+
+# Example: convert stack_bowls demos for arx_x5 joint control.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+
+# Example: create a 50-episode ablation while reading from the original task data.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+```
+
+## Model Training
+
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Random seed. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+
+```bash
+cd XPolicyLab/policy/GigaWorldPolicy
+# Template: train a policy run on one GPU or a GPU list.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Example: train a cotrain run on GPU 0.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+
+# Example: train the same run on four GPUs if the upstream trainer supports it.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+```
+
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+## Deployment and Evaluation
+
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+```bash
+cd XPolicyLab/policy/GigaWorldPolicy
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+```
+
+Parameters used by the split server/client flow:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
+
+```bash
+cd XPolicyLab/policy/GigaWorldPolicy
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+
+# Example: bind the policy server to all interfaces on port 5000.
+bash setup_eval_policy_server.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <policy_conda_env> 5000 0.0.0.0
+
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
+bash setup_eval_env_client.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  5000 <policy_server_ip>
+```
+
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
+
+## Important Parameters
+
+Common parameter meanings used across the commands above:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Policy-specific `deploy.yml` keys worth checking before evaluation:
+
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `action_dim` | Runtime or checkpoint option consumed by this adapter. |
+| `load_model` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_path` | Runtime or checkpoint option consumed by this adapter. |
+| `model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_file` | Runtime or checkpoint option consumed by this adapter. |
+| `base_model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `stats_path` | Runtime or checkpoint option consumed by this adapter. |
+| `t5_embedding_path` | Runtime or checkpoint option consumed by this adapter. |
+| `disable_dynamic_prompt` | Runtime or checkpoint option consumed by this adapter. |
+| `prompt_max_length` | Runtime or checkpoint option consumed by this adapter. |
+
+Frequently used environment variables detected in the adapter scripts:
+
+| Variable | Notes |
+|---|---|
+| `ACCEL_CONFIG` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_EXE` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_PREFIX` | Optional override used by the local scripts or upstream runtime. |
+| `CUDA` | Optional override used by the local scripts or upstream runtime. |
+| `DEEPSPEED_TIMEOUT` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_ACCELERATE` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_ACCEL_CONFIG` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_ACTION_CHUNK` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_CKPT_DIR` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_COMPUTE_NORM` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `GIGAWORLD_CONFIG` | Optional override used by the local scripts or upstream runtime. |
+
+## Notes
+
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

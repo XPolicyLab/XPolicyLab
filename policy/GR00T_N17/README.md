@@ -1,341 +1,227 @@
 # GR00T_N17
 
-GR00T_N17 是 NVIDIA Isaac GR00T N1.7 在 XPolicyLab 下的源码接入目录。GR00T N1.7 是一个 Vision-Language-Action 模型，使用视觉、语言和机器人本体状态生成连续动作，适合在 LeRobot 格式数据上做后训练与开环评测。
+**Contributor:** RoboDojo Team | **Paper:** GR00T N1 / N1.5 open foundation model reports | **arXiv:** TBD | **Original code:** https://github.com/NVIDIA/Isaac-GR00T
 
-上游源码位于：
+`GR00T_N17` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-```text
-policy/GR00T_N17/gr00t_n17
-```
+<details>
+<summary>File Structure</summary>
 
-安装步骤见 `INSTALLATION.md`。
-
-## 当前数据
-
-RoboDojo arx-x5 数据路径：
-
-```text
-${LEROBOT_DATA_ROOT}/RoboDojo_sim_arx-x5_v30
-```
-
-该数据是 LeRobot v3.0。GR00T N1.7 当前训练入口要求 GR00T-flavored LeRobot v2.1，并需要额外的 `meta/modality.json`。请先按 `INSTALLATION.md` 转换并补充 metadata。推荐转换后的训练路径为：
-
-```text
-${LEROBOT_DATA_ROOT}/RoboDojo_sim_arx-x5_gr00t
-```
-
-## 项目结构
-
-```text
-GR00T_N17
-├── INSTALLATION.md
-├── process_data.sh              # 数据转换与 stats 生成
-├── train.sh                     # 微调训练
-├── README.md
-└── gr00t_n17
-    ├── gr00t                   # 模型、数据加载、训练和评测代码
-    ├── examples                 # 官方微调示例
-    ├── getting_started          # 官方数据与部署说明
-    ├── scripts                  # 数据转换、部署和 TensorRT 脚本
-    └── pyproject.toml
-```
-
-## 数据处理
-
-```bash
-# 在 policy/GR00T_N17 目录下
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
-```
-
-`expert_data_num` 为可选尾参，留空表示使用全部 episode。GR00T 直接整体消费预构建的 LeRobot 源数据集，
-数据量 ablation 请配合 `GR00T_SRC_DATASET` 指向子集数据集，并使用不同的 `ckpt_name`（如 `cotrain_50ep`）。
-
-示例：
-
-```bash
-bash process_data.sh RoboDojo cotrain arx_x5 joint
-```
-
-默认会从 `RoboDojo_sim_arx-x5_v30` 复制并转换为 GR00T 可用的 LeRobot v2.1，输出到：
-
-```text
-${LEROBOT_DATA_ROOT}/RoboDojo-cotrain-arx_x5-joint
-```
-
-可通过环境变量覆盖源数据路径：
-
-```bash
-GR00T_SRC_DATASET=RoboDojo_sim_arx-x5_v30 bash process_data.sh RoboDojo cotrain arx_x5 joint
-```
-
-## 微调训练
-
-```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
-```
-
-示例：
-
-```bash
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
-```
-
-训练前请确保本地已有：
-
-- `GR00T-N1.7-3B`：`GR00T_BASE_MODEL`（默认 HF id `nvidia/GR00T-N1.7-3B`）
-- `Cosmos-Reason2-2B`：`GR00T_COSMOS_MODEL`（默认 HF id `nvidia/Cosmos-Reason2-2B`）
-
-`train.sh` 会自动把 Cosmos 注册到 HF cache，并默认 `HF_HUB_OFFLINE=1` 走本地模型。
-
-训练产物保存在：
-
-```text
-policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-joint-0
-```
-
-该目录名（`<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>`）即 eval 时传入的 `ckpt_name`。
-
-## 训练前准备（手动调试时可参考）
-
-进入 GR00T 源码目录：
-
-```bash
-# 在 policy/GR00T_N17 目录下/gr00t_n17
-```
-
-设置常用路径：
-
-```bash
-export POLICY_ROOT="$(pwd)"
-export DATASET_PATH=${LEROBOT_DATA_ROOT}/RoboDojo_sim_arx-x5_gr00t
-export CKPT_NAME=RoboDojo-cotrain-arx_x5-joint-0
-export OUTPUT_DIR="${POLICY_ROOT}/checkpoints/${CKPT_NAME}"
-mkdir -p "${OUTPUT_DIR}"
-```
-
-准备 GR00T 的 modality config。该配置需要与 `meta/modality.json` 中的 key 保持一致：
-
-```bash
-cat > /tmp/robodojo_arx_x5_config.py <<'PY'
-from gr00t.configs.data.embodiment_configs import register_modality_config
-from gr00t.data.embodiment_tags import EmbodimentTag
-from gr00t.data.types import (
-    ActionConfig,
-    ActionFormat,
-    ActionRepresentation,
-    ActionType,
-    ModalityConfig,
-)
-
-robodojo_arx_x5_config = {
-    "video": ModalityConfig(
-        delta_indices=[0],
-        modality_keys=["front", "left_wrist", "right_wrist"],
-    ),
-    "state": ModalityConfig(
-        delta_indices=[0],
-        modality_keys=["left_arm", "right_arm"],
-    ),
-    "action": ModalityConfig(
-        delta_indices=list(range(0, 16)),
-        modality_keys=["left_arm", "right_arm"],
-        action_configs=[
-            ActionConfig(
-                rep=ActionRepresentation.RELATIVE,
-                type=ActionType.NON_EEF,
-                format=ActionFormat.DEFAULT,
-            ),
-            ActionConfig(
-                rep=ActionRepresentation.RELATIVE,
-                type=ActionType.NON_EEF,
-                format=ActionFormat.DEFAULT,
-            ),
-        ],
-    ),
-    "language": ModalityConfig(
-        delta_indices=[0],
-        modality_keys=["annotation.human.task_description"],
-    ),
-}
-
-register_modality_config(
-    robodojo_arx_x5_config,
-    embodiment_tag=EmbodimentTag.NEW_EMBODIMENT,
-)
-PY
-```
-
-如需在训练前重新生成统计信息：
-
-```bash
-uv run python gr00t/data/stats.py \
-  --dataset-path "${DATASET_PATH}" \
-  --embodiment-tag NEW_EMBODIMENT \
-  --modality-config-path /tmp/robodojo_arx_x5_config.py
-```
-
-## 微调训练
-
-单卡示例：
-
-```bash
-CUDA_VISIBLE_DEVICES=0 \
-NUM_GPUS=1 \
-MAX_STEPS=10000 \
-SAVE_STEPS=1000 \
-GLOBAL_BATCH_SIZE=32 \
-USE_WANDB=0 \
-uv run bash examples/finetune.sh \
-  --base-model-path nvidia/GR00T-N1.7-3B \
-  --dataset-path "${DATASET_PATH}" \
-  --embodiment-tag NEW_EMBODIMENT \
-  --modality-config-path /tmp/robodojo_arx_x5_config.py \
-  --output-dir "${OUTPUT_DIR}" \
-  --experiment-name "${CKPT_NAME}"
-```
-
-多卡示例：
-
-```bash
-CUDA_VISIBLE_DEVICES=0,1,2,3 \
-NUM_GPUS=4 \
-MAX_STEPS=20000 \
-SAVE_STEPS=1000 \
-GLOBAL_BATCH_SIZE=128 \
-USE_WANDB=0 \
-uv run bash examples/finetune.sh \
-  --base-model-path nvidia/GR00T-N1.7-3B \
-  --dataset-path "${DATASET_PATH}" \
-  --embodiment-tag NEW_EMBODIMENT \
-  --modality-config-path /tmp/robodojo_arx_x5_config.py \
-  --output-dir "${OUTPUT_DIR}" \
-  --experiment-name "${CKPT_NAME}"
-```
-
-训练产物默认保存在：
-
-```text
-policy/GR00T_N17/checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>
-```
-
-当前示例使用的 XPolicyLab 命名为：
-
-```text
-policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-joint-0
-```
-
-## 开环评测
-
-训练完成后，可先用 GR00T 官方开环评测检查预测动作是否正常：
-
-```bash
-# 在 policy/GR00T_N17 目录下/gr00t_n17
-source .venv/bin/activate
-
-uv run python gr00t/eval/open_loop_eval.py \
-  --dataset-path "${DATASET_PATH}" \
-  --embodiment-tag NEW_EMBODIMENT \
-  --model-path "${OUTPUT_DIR}/checkpoint-10000" \
-  --traj-ids 0 \
-  --action-horizon 16 \
-  --steps 200 \
-  --modality-keys left_arm right_arm
-```
-
-如果保存步数不同，将 `checkpoint-10000` 替换为实际 checkpoint 目录。
-
-## 部署
-
-使用 `eval.sh` 拉起 policy server + env client；也可分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh`：
-
-```bash
-# 在 policy/GR00T_N17 目录下
-bash install.sh   # 首次：uv sync + 安装 XPolicyLab 到 gr00t .venv
-
-# debug 连通性测试（0 号卡，policy 用 gr00t uv 环境，client 用 mibot）
-bash eval.sh RoboDojo sweep_blocks RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 0 uv mibot
-```
-
-eval.sh 位置参数：`bench_name task_name ckpt_name env_cfg_type action_type seed policy_gpu_id env_gpu_id policy_conda_env eval_env_conda_env`。
-
-参数说明：
-
-| 参数 | 含义 |
-|------|------|
-| `RoboDojo-cotrain-arx_x5-3500-joint-0` | `ckpt_name`，即 `checkpoints/` 下的完整 run 目录名 |
-| `joint` | 当前 arx_x5 modality 为 joint 空间相对动作，需与训练 `action_type` 一致 |
-| `uv` | policy server 使用 `gr00t_n17/.venv`（见 `deploy.yml` 的 `policy_uv_env_path`） |
-| `mibot` | env client 使用的 conda 环境（需已 `pip install -e XPolicyLab`） |
-
-checkpoint 目录约定（`ckpt_name` 即 run 目录名）：
-
-```text
-checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/
-  └── RoboDojo-cotrain-arx_x5-3500-joint-0/
-        └── checkpoint-60000/
-```
-
-`deploy.yml` 中 `checkpoint_num: last` 会自动选最新 step；也可改为具体步数如 `60000`。
-
-软链接已有权重（链接名即 eval 时传入的 `ckpt_name`）：
-
-```bash
-cd policy/GR00T_N17
-bash scripts/link_checkpoint.sh RoboDojo-cotrain-arx_x5-3500-joint-0 \
-  /path/to/upload_ckpts/policy/GR00T_N17/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/RoboDojo-cotrain-arx_x5-3500-joint-0
-```
-
-`deploy.yml` 可配置项（部署相关）：
-
-| 字段 | 含义 |
-|------|------|
-| `model_dir` | 相对 policy 根目录；`null` 时用 `checkpoints/<ckpt_name>/` |
-| `checkpoint_num` | `last` 或具体 step（如 `60000`） |
-| `cosmos_model_path` | 默认 `nvidia/Cosmos-Reason2-2B`（启动时自动下载），覆盖 checkpoint 内嵌的绝对路径 |
-| `embodiment_tag` | 与训练一致，RoboDojo 为 `NEW_EMBODIMENT` |
-
-部署时 checkpoint 与 Cosmos 均通过相对路径或 HuggingFace 仓库 id 配置，无需硬编码机器路径。
-
-## 与 XPolicyLab 的参数约定
-
-XPolicyLab 统一训练入口通常为：
-
-```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
-```
-
-GR00T_N17 当前保留上游原生训练入口，参数可按以下方式映射：
-
-| XPolicyLab 参数 | GR00T 侧含义 |
+| Path | Purpose |
 |---|---|
-| `bench_name` | 数据集名称，如 `RoboDojo` |
-| `ckpt_name` | 实验名或多任务训练名，如 `cotrain`；数据量 ablation 用不同 `ckpt_name`（如 `cotrain_50ep`） |
-| `env_cfg_type` | 本体配置，如 `arx_x5` |
-| `action_type` | RoboDojo 当前建议使用 `joint` |
-| `seed` | 随机种子，并参与 checkpoint 目录命名 |
-| `gpu_id` | 传给 `CUDA_VISIBLE_DEVICES` |
+| `README.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
+| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `configs/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+| `gr00t_n17/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+| `scripts/` | Vendored upstream code, policy-specific assets, or helper scripts. |
 
-checkpoint 按 `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` 保存到 `policy/GR00T_N17/checkpoints/`，脚本内部调用 `uv run bash examples/finetune.sh`。
+</details>
 
-## 参考文档
+## Installation
 
-- `gr00t_n17/README.md`: NVIDIA Isaac GR00T N1.7 原项目介绍。
-- `gr00t_n17/getting_started/data_preparation.md`: GR00T LeRobot 数据格式说明。
-- `gr00t_n17/getting_started/data_config.md`: modality config 写法。
-- `gr00t_n17/getting_started/finetune_new_embodiment.md`: 自定义本体微调流程。
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
 
-### Evaluation environment (`EVAL_ENV_TYPE`)
+Parameters used by the command:
 
-Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
-
-| `EVAL_ENV_TYPE` | Mode |
+| Parameter | Description |
 |---|---|
-| unset or `sim` | RoboDojo simulation |
-| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
-| `real` | Not available in open-source release |
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-export EVAL_ENV_TYPE=debug
-bash eval.sh ...
+cd XPolicyLab/policy/GR00T_N17
+# Example: install dependencies for the GR00T_N17 policy adapter.
+bash install.sh
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. gr00t-n17
 ```
 
+## Demo Data Processing
+
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+
+```bash
+cd XPolicyLab/policy/GR00T_N17
+# Template: convert all available demonstrations for one run.
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+
+# Example: convert stack_bowls demos for arx_x5 joint control.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+
+# Example: create a 50-episode ablation while reading from the original task data.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+```
+
+## Model Training
+
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Random seed. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+
+```bash
+cd XPolicyLab/policy/GR00T_N17
+# Template: train a policy run on one GPU or a GPU list.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Example: train a cotrain run on GPU 0.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+
+# Example: train the same run on four GPUs if the upstream trainer supports it.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+```
+
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+## Deployment and Evaluation
+
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+```bash
+cd XPolicyLab/policy/GR00T_N17
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+```
+
+Parameters used by the split server/client flow:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
+
+```bash
+cd XPolicyLab/policy/GR00T_N17
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+
+# Example: bind the policy server to all interfaces on port 5000.
+bash setup_eval_policy_server.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <policy_conda_env> 5000 0.0.0.0
+
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
+bash setup_eval_env_client.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  5000 <policy_server_ip>
+```
+
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
+
+## Important Parameters
+
+Common parameter meanings used across the commands above:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Policy-specific `deploy.yml` keys worth checking before evaluation:
+
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `embodiment_tag` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
+| `model_dir` | Runtime or checkpoint option consumed by this adapter. |
+| `cosmos_model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `default_prompt` | Runtime or checkpoint option consumed by this adapter. |
+| `policy_uv_env_path` | Runtime or checkpoint option consumed by this adapter. |
+
+Frequently used environment variables detected in the adapter scripts:
+
+| Variable | Notes |
+|---|---|
+| `DATALOADER_NUM_WORKERS` | Optional override used by the local scripts or upstream runtime. |
+| `DATA_ROOT` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_COSMOS_MODEL_REPO` | Optional override used by the local scripts or upstream runtime. |
+| `E402` | Optional override used by the local scripts or upstream runtime. |
+| `GIT_LFS_SKIP_SMUDGE` | Optional override used by the local scripts or upstream runtime. |
+| `GLOBAL_BATCH_SIZE` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T_BASE_MODEL` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T_COSMOS_MODEL` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T_LEROBOT_HOME` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T_N17` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T_ROOT` | Optional override used by the local scripts or upstream runtime. |
+
+## Notes
+
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

@@ -1,172 +1,180 @@
 # Pi_05_SF
 
-`Pi_05_SF` 是基于 OpenPI接入 Spatial Forcing。
+**Contributor:** RoboDojo Team | **Paper:** Pi0.5 / Open-SF integration notes | **arXiv:** TBD | **Original code:** https://github.com/Physical-Intelligence/openpi
 
+`Pi_05_SF` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-## 环境安装
+<details>
+<summary>File Structure</summary>
 
-安装说明见 [INSTALLATION.md](INSTALLATION.md)。
+| Path | Purpose |
+|---|---|
+| `README.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `open_sf/` | Vendored upstream code, policy-specific assets, or helper scripts. |
 
-基本入口：
+</details>
 
-```bash
-export XPL_ROOT=<XPolicyLab 仓库根目录>
-cd "$XPL_ROOT/policy/Pi_05_SF/openpi"
+## Installation
 
-UV_LINK_MODE=copy GIT_LFS_SKIP_SMUDGE=1 uv sync --group lerobot
-UV_LINK_MODE=copy GIT_LFS_SKIP_SMUDGE=1 uv pip install -e .
-```
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
 
-## 保存 VGGT 离线特征
+Parameters used by the command:
 
-直接生成 cache：
-
-```bash
-export XPL_ROOT=<XPolicyLab 仓库根目录>
-cd "$XPL_ROOT/policy/Pi_05_SF/openpi"
-
-export HF_LEROBOT_HOME=<LeRobot 数据根目录>
-export VGGT_WEIGHT_PATH=<VGGT 权重目录>
-export SF_CACHE_DIR=<要写入的离线 VGGT feature cache 根目录>
-
-uv run --no-sync python scripts/precache_vggt_sf_cache.py pi05sf_jax_robodojo_v21_offcache \
-  --batch-size 256 \
-  --num-workers 8
-```
-
-多进程生成：
+| Parameter | Description |
+|---|---|
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-SF_CACHE_DIR=<要写入的离线 VGGT feature cache 根目录> \
-PRECACHE_NPROC=8 \
-uv run --no-sync torchrun --standalone --nproc_per_node=8 \
-  scripts/precache_vggt_sf_cache.py pi05sf_jax_robodojo_v21_offcache \
-  --batch-size 256 \
-  --num-workers 8
+cd XPolicyLab/policy/Pi_05_SF
+# Example: install dependencies for the Pi_05_SF policy adapter.
+bash install.sh
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. pi-05-sf
 ```
 
-常用变量：
+## Demo Data Processing
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `SF_CACHE_DIR` | `openpi/results/sf_cache` | cache 输出目录 |
-| `SF_CACHE_SAVE_DTYPE` | `bf16` | 支持 `fp16`、`bf16`、`int8` |
-| `SF_CACHE_CHUNK_SIZE` | `128` | 每个 chunk 保存的 step 数 |
-| `SF_DATASET_UID` | `0` | 数据集编号，会参与 cache key |
-| `PRECACHE_NUM_BATCHES` | `0` | `0` 表示遍历数据集可推断的全部 batch |
-| `PRECACHE_OVERWRITE` | `0` | `1` 表示覆盖已有 slot |
-| `PRECACHE_VGGT_DEVICES` | 空 | 指定单进程使用的 CUDA device，例如 `0,1` |
-| `PRECACHE_VGGT_DEVICE_COUNT` | `1` | 未指定 device 时，单进程默认使用的 GPU 数 |
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
 
-生成脚本会写 summary：
+This adapter has no top-level `process_data.sh`. It expects data in the format consumed by the upstream project or by `deploy.yml`/environment variables. Use the upstream README under the vendored source tree when custom conversion is required.
 
-```text
-SF_CACHE_DIR/_precache_summary.json
-SF_CACHE_DIR/_precache_summary.rank0.json
-```
+## Model Training
 
-单进程使用 `_precache_summary.json`；`torchrun` 多进程使用 rank summary。
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
 
-## 一键生成 Cache 后 Strict 训练
+No top-level `train.sh` is provided for this adapter. Train with the upstream project recipe, then point `deploy.yml`, `MODEL_PATH`, or the policy-specific checkpoint variable at the exported checkpoint.
 
-该入口对齐原 openpi-SF 的 strict offcache 流程：先生成或补齐 VGGT cache，检查 summary 和 on-disk mask，再调用 readonly JAX 训练。
+## Deployment and Evaluation
+
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
-export XPL_ROOT=<XPolicyLab 仓库根目录>
-cd "$XPL_ROOT/policy/Pi_05_SF/openpi"
+cd XPolicyLab/policy/Pi_05_SF
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
-export HF_LEROBOT_HOME=<LeRobot 数据根目录>
-export PI05_BASE_PATH=<Pi05 base checkpoint 根目录>
-export VGGT_WEIGHT_PATH=<VGGT 权重目录>
-export SF_CACHE_DIR=<离线 VGGT feature cache 根目录>
-
-bash scripts/run_pi05sf_jax_offcache_strict.sh
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
-已有 cache 目录时，脚本默认拒绝继续，避免误复用旧 cache。可显式选择：
+Parameters used by the split server/client flow:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
 
 ```bash
-RESET_SF_CACHE=1 bash scripts/run_pi05sf_jax_offcache_strict.sh
-REUSE_SF_CACHE=1 bash scripts/run_pi05sf_jax_offcache_strict.sh
+cd XPolicyLab/policy/Pi_05_SF
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+
+# Example: bind the policy server to all interfaces on port 5000.
+bash setup_eval_policy_server.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <policy_conda_env> 5000 0.0.0.0
+
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
+bash setup_eval_env_client.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  5000 <policy_server_ip>
 ```
 
-strict wrapper 常用变量：
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `PRECACHE_NPROC` | `1` | 预生成 cache 使用的 torchrun 进程数 |
-| `MIN_CACHE_SLOTS` | `1000` | cache 校验要求的最少已写 slot |
-| `MIN_EPISODES` | `2` | cache 校验要求的最少 episode 目录数 |
-| `MIN_CHUNKS` | `2` | cache 校验要求的最少 chunk 数 |
-| `BATCH_SIZE` | `256` | 预生成和训练 batch size |
-| `TRAIN_STEPS` | `60000` | readonly 训练步数 |
-| `NUM_WORKERS` | `8` | dataloader worker 数 |
+## Important Parameters
 
-## Readonly 离线 Cache 训练
+Common parameter meanings used across the commands above:
 
-如果 cache 已经准备好，也可以只跑 readonly 训练：
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
-```bash
-export XPL_ROOT=<XPolicyLab 仓库根目录>
-cd "$XPL_ROOT/policy/Pi_05_SF/openpi"
+Policy-specific `deploy.yml` keys worth checking before evaluation:
 
-export HF_LEROBOT_HOME=<LeRobot 数据根目录>
-export PI05_BASE_PATH=<Pi05 base checkpoint 根目录>
-export VGGT_WEIGHT_PATH=<VGGT 权重目录>
-export SF_CACHE_DIR=<已有离线 VGGT feature cache 根目录>
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
+| `protocol` | Runtime or checkpoint option consumed by this adapter. |
+| `result_dir` | Runtime or checkpoint option consumed by this adapter. |
+| `obs_transform_pipeline` | Runtime or checkpoint option consumed by this adapter. |
+| `policy_uv_env_path` | Runtime or checkpoint option consumed by this adapter. |
+| `train_config_name` | Runtime or checkpoint option consumed by this adapter. |
+| `repo_id` | Runtime or checkpoint option consumed by this adapter. |
 
-bash scripts/run_pi05sf_jax_offcache.sh
-```
+Frequently used environment variables detected in the adapter scripts:
 
-训练脚本固定使用：
+| Variable | Notes |
+|---|---|
+| `CONDA_BASE` | Optional override used by the local scripts or upstream runtime. |
+| `GIT_LFS_SKIP_SMUDGE` | Optional override used by the local scripts or upstream runtime. |
+| `HF_DATASETS_OFFLINE` | Optional override used by the local scripts or upstream runtime. |
+| `HF_HUB_OFFLINE` | Optional override used by the local scripts or upstream runtime. |
+| `IMREAD_COLOR` | Optional override used by the local scripts or upstream runtime. |
+| `JAX_PLATFORMS` | Optional override used by the local scripts or upstream runtime. |
+| `OPENPI_CLIENT_SRC` | Optional override used by the local scripts or upstream runtime. |
+| `OPENPI_DATA_HOME` | Optional override used by the local scripts or upstream runtime. |
+| `OPENPI_SRC` | Optional override used by the local scripts or upstream runtime. |
+| `OPEN_SF_ROOT` | Optional override used by the local scripts or upstream runtime. |
+| `POLICY_DIR` | Optional override used by the local scripts or upstream runtime. |
+| `PYENV` | Optional override used by the local scripts or upstream runtime. |
 
-```text
-sf_cache_enable = True
-sf_cache_mode = readonly
-sf_cache_miss_policy = error
-```
+## Notes
 
-缺任意一帧 cache 时会直接报错。
-
-
-## 当前训练配置
-
-实际配置在 `openpi/src/openpi/external_config/pi05sf_jax_robodojo_v21_offcache.py`。
-
-| 配置项 | 当前值 |
-|--------|--------|
-| `TrainConfig.name` | `pi05sf_jax_robodojo_v21_offcache` |
-| `project_name` | `xpolicylab-pi05sf-jax` |
-| `repo_id` | `RoboDojo_lerobot_v21_video` |
-| `model` | `Pi0Config(pi05=True)` |
-| `weight_loader` | `${PI05_BASE_PATH}/params` |
-| `align_target_model` | `vggt` |
-| `align_loss_coeff` | `0.2` |
-| `use_vggt_pe` | `True` |
-| `use_vlm_norm` | `True` |
-| `use_camera_params` | `False` |
-| `sf_cache_enable` | `True` |
-| `sf_cache_mode` | `readonly` |
-| `sf_cache_miss_policy` | `error` |
-| `batch_size` | `256` |
-| `num_train_steps` | `60000` |
-| `fsdp_devices` | `8` |
-
-## XPolicyLab 推理/评测
-
-统一 10 参数入口（与 `demo_policy` 约定一致，无 `expert_data_num`；第 9 个参数是 policy 侧 uv 环境路径或 `uv` 关键字，从 `deploy.yml` 的 `policy_uv_env_path` 解析）：
-
-```bash
-bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
-    <policy_gpu_id> <env_gpu_id> <policy_uv_env|uv> <eval_env_conda_env>
-```
-
-示例：
-
-```bash
-bash eval.sh RoboDojo stack_bowls ./checkpoints/pi05sf_jax_robodojo_v21_offcache/59999 arx_x5 joint 0 0 0 uv RoboDojo
-```
-
-`eval.sh` 会自动把当前目录链接到 `XPolicyLab/policy/Pi_05_SF`，并把本目录的 `open_sf/src`、`open_sf/packages/openpi-client/src` 和 `open_sf/src/vggt` 加入 `PYTHONPATH`。`ckpt_name`、`train_config_name`、`repo_id` 等模型侧配置可在 `deploy.yml` 中修改；`bench_name` / `task_name` / `env_cfg_type` / `seed` / `action_type` 由 eval 入口参数覆盖。
-
-如果当前目录还没有拷贝进 `XPolicyLab/policy/Pi_05_SF`，也可以把该目录放在任意位置；`eval.sh` 会在 `XPolicyLab/policy/Pi_05_SF` 创建软链接。也可分别运行 `setup_eval_policy_server.sh`（前 10 个参数：`<bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <policy_uv_env|uv> <port> [host]`）与 `setup_eval_env_client.sh`，便于单独查看 server 日志。
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

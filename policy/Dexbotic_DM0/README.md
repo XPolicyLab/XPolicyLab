@@ -1,150 +1,224 @@
 # Dexbotic_DM0
 
-Dexbotic DM0 在 XPolicyLab 下的接入目录。DM0 使用 **Dexdata** 格式（jsonl + video），Flow Matching 一次生成 50 步动作 chunk。
+**Contributor:** RoboDojo Team | **Paper:** Dexbotic / DM0 technical report | **arXiv:** TBD | **Original code:** See vendored `dexbotic/`.
 
-上游源码位于 `dexbotic/`。安装步骤见 `INSTALLATION.md`。
+`Dexbotic_DM0` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-## 项目结构
+<details>
+<summary>File Structure</summary>
 
-```text
-Dexbotic_DM0
-├── INSTALLATION.md
-├── install.sh
-├── process_data.sh              # RoboDojo HDF5 -> Dexdata
-├── train.sh                     # torchrun 训练入口
-├── README.md
-├── scripts/
-│   ├── transform_dm0_dexdata_format.py
-│   └── generate_data_source.py
-├── data/                        # 转换后的 Dexdata（gitignore）
-├── checkpoints/                 # 训练输出（gitignore）
-└── dexbotic/                    # Dexbotic 上游源码
-    ├── dexbotic/
-    │   └── data/data_source/    # process_data 自动生成 robodojo_*.py
-    ├── playground/benchmarks/robodojo/robodojo_dm0.py
-    └── checkpoints/DM0-base/    # 预训练权重（需下载）
-```
-
-## 数据处理
-
-```bash
-cd policy/Dexbotic_DM0
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
-```
-
-尾参 `expert_data_num` 可选：传了则每个任务最多取前 N 条，不传则用全部 episodes。要对比不同数据量，用不同 `ckpt_name`（如 `cotrain_100ep`）并在 process_data 时传该尾参。
-
-示例（35 任务 co-train，全部 episodes）：
-
-```bash
-export DM0_CONVERT_WORKERS=16   # 并行 worker 数，默认 8
-bash process_data.sh RoboDojo cotrain arx_x5 ee
-```
-
-示例（单任务，只取前 100 条）：
-
-```bash
-bash process_data.sh RoboDojo sweep_blocks arx_x5 ee 100
-```
-
-输出目录：
-
-```text
-data/RoboDojo-cotrain-arx_x5-ee/
-├── episode_000000.jsonl
-├── video/
-│   ├── episode_000000_head.mp4
-│   ├── episode_000000_left_wrist.mp4
-│   └── episode_000000_right_wrist.mp4
-└── index_cache.json            # 首次训练时 Dexbotic 自动生成
-```
-
-同时会在 `dexbotic/dexbotic/data/data_source/` 下生成 `robodojo_<4-tuple>.py`。
-
-## 训练
-
-```bash
-cd policy/Dexbotic_DM0
-conda activate DM0
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
-```
-
-训练按 `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/` 解析处理好的数据。
-
-示例（8 卡，global batch = 256）：
-
-```bash
-bash train.sh RoboDojo cotrain arx_x5 ee 0 0,1,2,3,4,5,6,7
-```
-
-### Batch 配置
-
-`train.sh` 以 `DM0_GLOBAL_BATCH_SIZE` 为唯一目标，自动推导梯度累积：
-
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `DM0_GLOBAL_BATCH_SIZE` | `256` | 全局 batch |
-| `DM0_BATCH_SIZE` | `4` | 每卡 micro batch |
-| `DM0_GRAD_ACCUM` | 自动 | `global / (batch × num_gpus)` |
-
-8 卡默认：`4 × 8 × 8 = 256`。启动时会打印 `per_device_batch`、`grad_accum`、`global_batch`。
-
-其他常用变量：`DM0_MAX_STEPS`（默认 60000）、`DM0_SAVE_STEPS`（默认 2000）、`DM0_BASE_MODEL`。
-
-Checkpoint 输出：
-
-```text
-checkpoints/RoboDojo-cotrain-arx_x5-ee-0/
-```
-
-## Dexdata 字段说明
-
-| 字段 | 说明 |
-|------|------|
-| `images_1/2/3` | head / left_wrist / right_wrist 三视角 video |
-| `state` | 32 维双臂 proprio |
-| `prompt` | 语言指令 |
-| `is_robot` | 必须为 `true` |
-
-训练时 Dexbotic 在线执行 `AddAction` → `PadState/PadAction(32D)` → `AddTrajectory(50)` → `DeltaAction`，rank0 自动计算 norm stats。`non_delta_mask=[6, 20]` 对应左右 gripper。
-
-## 完整流程
-
-1. 按 `INSTALLATION.md` 创建 `DM0` 环境并 `bash install.sh`
-2. 下载权重：`hf download Dexmal/DM0-base --local-dir dexbotic/checkpoints/DM0-base`
-3. `bash process_data.sh ...`
-4. `bash train.sh ...`
-
-## 推理（可选）
-
-```bash
-export DM0_OUTPUT_DIR=checkpoints/<run_name>
-cd dexbotic
-CUDA_VISIBLE_DEVICES=0 python playground/benchmarks/robodojo/robodojo_dm0.py --task inference
-```
-
-## 部署
-
-环境安装见 [INSTALLATION.md](INSTALLATION.md)。首次请执行 `bash install.sh`。
-
-推荐分别执行 `setup_eval_policy_server.sh` 与 `setup_eval_env_client.sh` 便于查看 server 报错；同机也可使用 `eval.sh`：
-
-```bash
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 <policy_gpu> <env_gpu> DM0 XPolicyLab
-```
-
-### Evaluation environment (`EVAL_ENV_TYPE`)
-
-Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
-
-| `EVAL_ENV_TYPE` | Mode |
+| Path | Purpose |
 |---|---|
-| unset or `sim` | RoboDojo simulation |
-| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
-| `real` | Not available in open-source release |
+| `README.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
+| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `dexbotic/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+| `scripts/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+
+</details>
+
+## Installation
+
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-export EVAL_ENV_TYPE=debug
-bash eval.sh ...
+cd XPolicyLab/policy/Dexbotic_DM0
+# Example: install dependencies for the Dexbotic_DM0 policy adapter.
+bash install.sh
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. dexbotic-dm0
 ```
 
+## Demo Data Processing
+
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+
+```bash
+cd XPolicyLab/policy/Dexbotic_DM0
+# Template: convert all available demonstrations for one run.
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+
+# Example: convert stack_bowls demos for arx_x5 joint control.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+
+# Example: create a 50-episode ablation while reading from the original task data.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+```
+
+## Model Training
+
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Random seed. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+
+```bash
+cd XPolicyLab/policy/Dexbotic_DM0
+# Template: train a policy run on one GPU or a GPU list.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Example: train a cotrain run on GPU 0.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+
+# Example: train the same run on four GPUs if the upstream trainer supports it.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+```
+
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+## Deployment and Evaluation
+
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+```bash
+cd XPolicyLab/policy/Dexbotic_DM0
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+```
+
+Parameters used by the split server/client flow:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
+
+```bash
+cd XPolicyLab/policy/Dexbotic_DM0
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+
+# Example: bind the policy server to all interfaces on port 5000.
+bash setup_eval_policy_server.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <policy_conda_env> 5000 0.0.0.0
+
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
+bash setup_eval_env_client.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  5000 <policy_server_ip>
+```
+
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
+
+## Important Parameters
+
+Common parameter meanings used across the commands above:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Policy-specific `deploy.yml` keys worth checking before evaluation:
+
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `norm_stats_path` | Runtime or checkpoint option consumed by this adapter. |
+| `action_chunk_size` | Runtime or checkpoint option consumed by this adapter. |
+| `prompt` | Runtime or checkpoint option consumed by this adapter. |
+
+Frequently used environment variables detected in the adapter scripts:
+
+| Variable | Notes |
+|---|---|
+| `ACTION_CHUNK_SIZE` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_DEFAULT_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `DATA_SOURCE_DIR` | Optional override used by the local scripts or upstream runtime. |
+| `DEXBOTIC_CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `DEXBOTIC_ROOT` | Optional override used by the local scripts or upstream runtime. |
+| `DM0_BASE_MODEL` | Optional override used by the local scripts or upstream runtime. |
+| `DM0_BATCH_SIZE` | Optional override used by the local scripts or upstream runtime. |
+| `DM0_BENCH_NAME` | Optional override used by the local scripts or upstream runtime. |
+| `DM0_CONVERTED_DATA_ROOT` | Optional override used by the local scripts or upstream runtime. |
+| `DM0_CONVERT_WORKERS` | Optional override used by the local scripts or upstream runtime. |
+| `DM0_DATASET_NAME` | Optional override used by the local scripts or upstream runtime. |
+
+## Notes
+
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

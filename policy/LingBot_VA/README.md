@@ -1,168 +1,230 @@
 # LingBot_VA
 
-LingBot_VA 是基于 Wan2.2 的视频动作（VA）基础模型策略，在 XPolicyLab 中以 **websocket 桥接** 方式部署：底层官方 `wan_va_server.py` 跑推理，上层 `setup_policy_server.py` 做观测编码 / 动作解码转发，对外暴露统一 eval 接口。
+**Contributor:** RoboDojo Team | **Paper:** LingBot-VA technical report | **arXiv:** TBD | **Original code:** See vendored `lingbot_va/`.
 
-安装见 [INSTALLATION.md](INSTALLATION.md)。
+`LingBot_VA` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-## 架构
+<details>
+<summary>File Structure</summary>
 
-```
-eval client ──ws──▶ forward server (setup_policy_server.py)
-                        │ Model (model.py)
-                        │   encode_obs → WebsocketClientPolicy
-                        │   ← action chunk ←
-                        ▼ ws
-              backend VA server (wan_va_server.py, 0.0.0.0:<auto>)
-                        │ load .merged_ckpt (base vae/tokenizer/text_encoder
-                        │                    + finetuned transformer)
-                        ▼ GPU
-```
-
-- **backend VA server**：`launch_wan_va_server.sh`，官方推理进程，监听 `0.0.0.0:<VA_PORT>`。
-- **forward server**：`setup_eval_policy_server.sh`，XPolicyLab 桥接，订阅 backend VA，对外监听 `<EXPOSE_HOST>:<EXPOSE_PORT>`。
-- 两层分离便于：backend 跑在 GPU 机，forward 可同机或跨机；obs/action 维度转换只在 forward 层做。
-
-## 一键启动（推荐）
-
-`start_servers.sh` 一次性在 tmux 里起好两个 server，backend VA 端口自动挑空余，只需指定 GPU 和对外暴露端口：
-
-```bash
-cd policy/LingBot_VA
-bash start_servers.sh <GPU_ID> <EXPOSE_PORT>
-# 例：
-bash start_servers.sh 0 10002
-```
-
-可选 env 覆盖：
-
-| 变量 | 默认 | 作用 |
-|------|------|------|
-| `CHECKPOINT_PATH` | launch 脚本默认 | finetune ckpt 目录（须含 `transformer/`） |
-| `BASE_MODEL_PATH` | launch 脚本默认 | base 权重目录（须含 `vae/` 等） |
-| `CONFIG_NAME` | `robotwin30_train` | wan_va 配置名 |
-| `EXPOSE_HOST` | `0.0.0.0` | forward server 监听地址 |
-| `CONDA_ENV` | `lingbot_va` | conda 环境名 |
-| `TMUX_PREFIX` | `lingbot_va` | tmux session 名前缀（多实例时区分） |
-
-启动后输出会给出两个 tmux session 名和日志路径。管理：
-
-```bash
-tmux attach -t lingbot_va_va     # 看 backend
-tmux attach -t lingbot_va_fwd    # 看 forward
-# 停止
-tmux kill-session -t lingbot_va_va; tmux kill-session -t lingbot_va_fwd
-```
-
-多实例：换 `EXPOSE_PORT` + `TMUX_PREFIX` 即可，backend 端口和 MASTER_PORT 都自动挑空余。
-
-```bash
-TMUX_PREFIX=lingbot_va2 bash start_servers.sh 1 10003
-```
-
-## 手动分步启动
-
-### 1. backend VA server
-
-```bash
-conda activate lingbot_va
-cd policy/LingBot_VA
-bash launch_wan_va_server.sh <GPU_ID> <VA_PORT>
-# 例：bash launch_wan_va_server.sh 0 10001
-```
-
-首次会跑 `prepare_merged_ckpt.py` 把 base 权重和 finetune transformer 合并到 `.merged_ckpt/`（软链），耗时较长。env 覆盖 `CHECKPOINT_PATH` / `BASE_MODEL_PATH` 可换权重。
-
-### 2. forward server
-
-```bash
-conda activate lingbot_va
-cd policy/LingBot_VA
-
-VA_SERVER_HOST=127.0.0.1 \
-VA_SERVER_PORT=10001 \
-bash setup_eval_policy_server.sh \
-    RoboDojo <task_name> <ckpt_name> \
-    <env_cfg_type> <action_type> \
-    <seed> <gpu_id> lingbot_va \
-    <EXPOSE_PORT> 0.0.0.0
-```
-
-`VA_SERVER_HOST/PORT` 指向 backend VA server；`$9` 是 forward 自己的监听端口，`$10` 是监听地址。
-
-> 注：在 ws-bridge 模式下，`task_name` / `ckpt_name` / `seed` / `action_type` 不影响 server 端推理（推理由 backend VA 驱动），它们只在 eval client 端有意义。这些参数仅为满足脚本位置参数契约而保留默认值。
-
-### 3. eval client
-
-```bash
-bash setup_eval_env_client.sh \
-    RoboDojo <task_name> <ckpt_name> \
-    <env_cfg_type> <action_type> <seed> <env_gpu_id> \
-    <eval_env_conda_env> "<additional_info>" \
-    <EXPOSE_PORT> <forward_server_ip>
-```
-
-debug 验证（假 obs，不依赖 simulator）：设置 `EVAL_ENV_TYPE=debug` 时走 `debug_env_client.py`，跑全零 obs 验证 `client → forward → backend` 链路。
-
-同机闭环也可用 `eval.sh`（会等 forward 端口就绪后起 client）。
-
-## 数据处理
-
-```bash
-cd lingbot_va
-python dataset/transform.py --raw_dir <processed_data_task_dir> --repo_id <repo_id>
-python dataset/add_action_config.py --dataset-root <lerobot_dataset_dir> --backup
-python dataset/extract_wan_22_latents.py --dataset-root <lerobot_dataset_dir> --model-root <wan_model_dir>
-python dataset/make_empty_embedding.py --model-root <wan_model_dir> --output <lerobot_dataset_dir>/empty_emb.pt
-python dataset/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --output <lerobot_dataset_dir>/action_norm_stats.json
-```
-
-默认 LeRobot 数据：`${XPOLICYLAB_LEROBOT_DATA_ROOT:-<robodojo_test>/data}/<repo_id>`（`arx_x5` → `RoboDojo_sim_arx-x5_v30`）。可用 `LINGBOT_VA_DATASET_PATH` 覆盖完整路径，或用 `LEROBOT_DATASET_REPO_ID` 覆盖 repo 名。
-
-## 训练
-
-```bash
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
-```
-
-Checkpoint：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`。评测时把该完整目录名作为 `eval.sh` 的 `ckpt_name` 传入。
-
-Ablation（如数据量对比）用不同的 `ckpt_name` 区分 run；数据量本身在数据处理阶段控制（`process_data` 链的可选 `expert_data_num`，留空 = 全部 episode）。
-
-## 可视化合成
-
-`visualization/make_video.py` 把 `obs_data_*.pt` 里的三视角观测合成视频（左=`cam_left_wrist`，中=`cam_high`，右=`cam_right_wrist`，按时序）：
-
-```bash
-conda activate lingbot_va
-cd policy/LingBot_VA/visualization
-python make_video.py "real/<episode_dir>" --fps 8
-```
-
-## 模型与数据路径
-
-| 变量 | 说明 |
-|------|------|
-| `XPOLICYLAB_LEROBOT_DATA_ROOT` / `LEROBOT_DATA_ROOT` | LeRobot 根目录，默认 `<robodojo_test>/data` |
-| `LEROBOT_DATASET_REPO_ID` | repo_id，默认 `RoboDojo_sim_arx-x5_v30`（`arx_x5`） |
-| `LINGBOT_VA_DATASET_PATH` | LeRobot 训练数据完整目录 |
-| `LINGBOT_VA_CONFIG_NAME` | 训练配置名（默认 `robotwin30_train`） |
-| `CHECKPOINT_PATH` | backend VA server 加载的 finetune ckpt 目录 |
-| `BASE_MODEL_PATH` | base 权重目录（vae / text_encoder / tokenizer） |
-
-换 ckpt 必须重启 backend VA server（forward 不会热加载）。
-
-### Evaluation environment (`EVAL_ENV_TYPE`)
-
-Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
-
-| `EVAL_ENV_TYPE` | Mode |
+| Path | Purpose |
 |---|---|
-| unset or `sim` | RoboDojo simulation |
-| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
-| `real` | Not available in open-source release |
+| `README.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
+| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `lingbot_va/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+| `visualization/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+
+</details>
+
+## Installation
+
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-export EVAL_ENV_TYPE=debug
-bash eval.sh ...
+cd XPolicyLab/policy/LingBot_VA
+# Example: install dependencies for the LingBot_VA policy adapter.
+bash install.sh
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. lingbot-va
 ```
 
+## Demo Data Processing
+
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+
+```bash
+cd XPolicyLab/policy/LingBot_VA
+# Template: convert all available demonstrations for one run.
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+
+# Example: convert stack_bowls demos for arx_x5 joint control.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+
+# Example: create a 50-episode ablation while reading from the original task data.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+```
+
+## Model Training
+
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Random seed. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+
+```bash
+cd XPolicyLab/policy/LingBot_VA
+# Template: train a policy run on one GPU or a GPU list.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Example: train a cotrain run on GPU 0.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+
+# Example: train the same run on four GPUs if the upstream trainer supports it.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+```
+
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+## Deployment and Evaluation
+
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+```bash
+cd XPolicyLab/policy/LingBot_VA
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+```
+
+Parameters used by the split server/client flow:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
+
+```bash
+cd XPolicyLab/policy/LingBot_VA
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+
+# Example: bind the policy server to all interfaces on port 5000.
+bash setup_eval_policy_server.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <policy_conda_env> 5000 0.0.0.0
+
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
+bash setup_eval_env_client.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  5000 <policy_server_ip>
+```
+
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
+
+## Important Parameters
+
+Common parameter meanings used across the commands above:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Policy-specific `deploy.yml` keys worth checking before evaluation:
+
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `env_cfg` | Runtime or checkpoint option consumed by this adapter. |
+| `protocol` | Runtime or checkpoint option consumed by this adapter. |
+| `config_name` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_path` | Runtime or checkpoint option consumed by this adapter. |
+| `base_model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `rollout_mode` | Runtime or checkpoint option consumed by this adapter. |
+| `result_dir` | Runtime or checkpoint option consumed by this adapter. |
+| `va_server_host` | Runtime or checkpoint option consumed by this adapter. |
+| `va_server_port` | Runtime or checkpoint option consumed by this adapter. |
+| `obs_transform_pipeline` | Runtime or checkpoint option consumed by this adapter. |
+
+Frequently used environment variables detected in the adapter scripts:
+
+| Variable | Notes |
+|---|---|
+| `AFTER` | Optional override used by the local scripts or upstream runtime. |
+| `BASE_MODEL_PATH` | Optional override used by the local scripts or upstream runtime. |
+| `CHECKPOINT_PATH` | Optional override used by the local scripts or upstream runtime. |
+| `CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `CONFIG_NAME` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_CONFIG_NAME` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_VA_SERVER_HOST` | Optional override used by the local scripts or upstream runtime. |
+| `DEFAULT_VA_SERVER_PORT` | Optional override used by the local scripts or upstream runtime. |
+| `EXCEPT` | Optional override used by the local scripts or upstream runtime. |
+| `JOINT_CONTROL_INDICES` | Optional override used by the local scripts or upstream runtime. |
+| `LAUNCH_VA_SERVER` | Optional override used by the local scripts or upstream runtime. |
+| `LEROBOT_DATASET_REPO_ID` | Optional override used by the local scripts or upstream runtime. |
+
+## Notes
+
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

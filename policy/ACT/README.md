@@ -1,8 +1,8 @@
-# Pi_05
+# ACT
 
-**Contributor:** RoboDojo Team | **Paper:** Pi0.5 technical report | **arXiv:** TBD | **Original code:** https://github.com/Physical-Intelligence/openpi
+**Contributor:** RoboDojo Team | **Paper:** Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware | **arXiv:** https://arxiv.org/abs/2304.13705 | **Original code:** https://github.com/tonyzhaozh/act
 
-`Pi_05` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
+`ACT` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
 <details>
 <summary>File Structure</summary>
@@ -10,7 +10,6 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
@@ -20,7 +19,8 @@
 | `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
 | `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
 | `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
-| `openpi/` | Vendored upstream code, policy-specific assets, or helper scripts. |
+| `conda_env.yaml` | Supplemental documentation or environment metadata. |
+| `detr/` | Vendored upstream code, policy-specific assets, or helper scripts. |
 
 </details>
 
@@ -35,11 +35,11 @@ Parameters used by the command:
 | `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05
-# Example: install dependencies for the Pi_05 policy adapter.
+cd XPolicyLab/policy/ACT
+# Example: install dependencies for the ACT policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. pi-05
+conda activate <policy_env>  # e.g. act
 ```
 
 ## Demo Data Processing
@@ -58,7 +58,7 @@ Parameters used by the command:
 | `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05
+cd XPolicyLab/policy/ACT
 # Template: convert all available demonstrations for one run.
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
@@ -85,7 +85,7 @@ Parameters used by the command:
 | `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05
+cd XPolicyLab/policy/ACT
 # Template: train a policy run on one GPU or a GPU list.
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
@@ -118,7 +118,7 @@ Parameters used by `eval.sh`:
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05
+cd XPolicyLab/policy/ACT
 # Template: run same-machine policy server and RoboDojo environment client.
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
@@ -146,7 +146,7 @@ Parameters used by the split server/client flow:
 | `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05
+cd XPolicyLab/policy/ACT
 # Terminal 1 on the policy machine: start the policy server.
 bash setup_eval_policy_server.sh \
   <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
@@ -193,30 +193,29 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 
 | Key | Notes |
 |---|---|
-| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
-| `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
-| `result_dir` | Runtime or checkpoint option consumed by this adapter. |
-| `obs_transform_pipeline` | Runtime or checkpoint option consumed by this adapter. |
-| `policy_uv_env_path` | Runtime or checkpoint option consumed by this adapter. |
-| `train_config_name` | Runtime or checkpoint option consumed by this adapter. |
-| `repo_id` | Runtime or checkpoint option consumed by this adapter. |
+| `ckpt_setting` | Runtime or checkpoint option consumed by this adapter. |
+| `kl_weight` | Runtime or checkpoint option consumed by this adapter. |
+| `chunk_size` | Runtime or checkpoint option consumed by this adapter. |
+| `hidden_dim` | Runtime or checkpoint option consumed by this adapter. |
+| `dim_feedforward` | Runtime or checkpoint option consumed by this adapter. |
+| `temporal_agg` | Runtime or checkpoint option consumed by this adapter. |
+| `device` | Runtime or checkpoint option consumed by this adapter. |
+| `ckpt_dir` | Runtime or checkpoint option consumed by this adapter. |
+| `policy_class` | Runtime or checkpoint option consumed by this adapter. |
+| `num_epochs` | Runtime or checkpoint option consumed by this adapter. |
+| `position_embedding` | Runtime or checkpoint option consumed by this adapter. |
+| `lr_backbone` | Runtime or checkpoint option consumed by this adapter. |
 
 Frequently used environment variables detected in the adapter scripts:
 
 | Variable | Notes |
 |---|---|
-| `CONDA_BASE` | Optional override used by the local scripts or upstream runtime. |
-| `GIT_LFS_SKIP_SMUDGE` | Optional override used by the local scripts or upstream runtime. |
-| `HF_DATASETS_CACHE` | Optional override used by the local scripts or upstream runtime. |
-| `JAX_COMPILATION_CACHE_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `LOCAL_CACHE_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `OPENPI_DATA_MODE` | Optional override used by the local scripts or upstream runtime. |
-| `OPENPI_LOCAL_CACHE_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `OPENPI_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `OPENPI_SRC` | Optional override used by the local scripts or upstream runtime. |
-| `OPENPI_TRAIN_CONFIG_NAME` | Optional override used by the local scripts or upstream runtime. |
-| `POLICY_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `PYENV` | Optional override used by the local scripts or upstream runtime. |
+| `ACT_ACTION_DIM` | Optional override used by the local scripts or upstream runtime. |
+| `CLEANUP` | Optional override used by the local scripts or upstream runtime. |
+| `INTER_LINEAR` | Optional override used by the local scripts or upstream runtime. |
+| `PYTHONWARNINGS` | Optional override used by the local scripts or upstream runtime. |
+| `TASK_ENV` | Optional override used by the local scripts or upstream runtime. |
+| `XPL_DIR` | Optional override used by the local scripts or upstream runtime. |
 
 ## Notes
 

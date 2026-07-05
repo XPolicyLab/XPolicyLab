@@ -1,72 +1,207 @@
-# aha-wam RoboDojo Adapter
+# AHA_WAM
 
-This policy adapts the locally trained aha-wam checkpoint for XPolicyLab RoboDojo evaluation.
+**Contributor:** RoboDojo Team | **Paper:** AHA-WAM: Asynchronous Horizon-Adaptive World-Action Modeling with Observation-Guided Context Routing | **arXiv:** https://arxiv.org/abs/2606.09811 | **Original code:** https://github.com/serene-sivy/AHA-WAM
 
-Default artifacts:
+`AHA_WAM` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
-- checkpoint: `/mnt/petrelfs/caijisong/XPolicyLab/checkpoint/step_002500.pt`
-- dataset stats: `/mnt/petrelfs/caijisong/XPolicyLab/checkpoint/dataset_stats.json`
-- AHAWAM project: `policy/AHA_WAM/AHAWAM`
-- base model cache: `/mnt/petrelfs/caijisong/dualWAM/checkpoints`
-- env cfg root: `/mnt/petrelfs/caijisong/env_cfg` (`AHA_WAM_ENV_CFG_ROOT`)
+<details>
+<summary>File Structure</summary>
 
-The model was trained with `configs/task/robodojo_local_history_updated_kv_prior_only_16.yaml`, `action_type=joint`, and 14-D qpos actions ordered as `[left_arm, left_ee, right_arm, right_ee]`.
-During evaluation, the default replanning cadence is one video DiT forward followed by two action DiT forwards, then another video DiT forward. Override with `AHA_WAM_CHUNKS_PER_VIDEO_PREFILL`.
+| Path | Purpose |
+|---|---|
+| `README.md` | Supplemental documentation or environment metadata. |
+| `install.sh` | Installs the policy-side runtime and editable dependencies. |
+| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
+| `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
+| `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
+| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
+| `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
+| `AHAWAM/` | Vendored upstream code, policy-specific assets, or helper scripts. |
 
-Policy server example:
+</details>
+
+## Installation
+
+What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
-bash setup_eval_policy_server.sh RoboDojo stack_bowls local_aha_wam arx_x5 joint 0 0 wam 12345 localhost
-```
-
-Full debug flow (`EVAL_ENV_TYPE=debug` uses the AHA_WAM-specific debug client):
-
-```bash
-export EVAL_ENV_TYPE=debug
-bash eval.sh RoboDojo stack_bowls local_aha_wam arx_x5 joint 0 0 0 wam wam
-```
-
-Environment setup:
-
-```bash
-conda create -n ahawam python=3.10 -y
-conda activate ahawam
-pip install -U pip
-pip install torch==2.7.1+cu128 torchvision==0.22.1+cu128 --extra-index-url https://download.pytorch.org/whl/cu128
-cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
+cd XPolicyLab/policy/AHA_WAM
+# Example: install dependencies for the AHA_WAM policy adapter.
 bash install.sh
-export DIFFSYNTH_MODEL_BASE_PATH=/mnt/petrelfs/caijisong/dualWAM/checkpoints
+# Example: activate the environment used later as <policy_conda_env>.
+conda activate <policy_env>  # e.g. aha-wam
 ```
 
-On this cluster, an existing `wam` conda environment can be used instead of
-creating `ahawam`.
+## Demo Data Processing
 
-Training wrapper:
+What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+
+This adapter has no top-level `process_data.sh`. It expects data in the format consumed by the upstream project or by `deploy.yml`/environment variables. Use the upstream README under the vendored source tree when custom conversion is required.
+
+## Model Training
+
+What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+
+Parameters used by the command:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Random seed. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
 
 ```bash
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
+cd XPolicyLab/policy/AHA_WAM
+# Template: train a policy run on one GPU or a GPU list.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+
+# Example: train a cotrain run on GPU 0.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+
+# Example: train the same run on four GPUs if the upstream trainer supports it.
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-`train.sh` launches the local `AHAWAM` project with `task=robodojo_local_history_updated_kv_prior_only_16` and `model=ahawam` only. Checkpoints are written to `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Override dataset, output, resume, and seed with `AHA_WAM_TRAIN_DATASET_DIR`, `AHA_WAM_OUTPUT_ROOT`, `AHA_WAM_INIT_CHECKPOINT`, `AHA_WAM_RESUME`, and `AHA_WAM_TRAIN_SEED`. Use `AHA_WAM_RAW_TASK_DIRS` when the raw task directories differ from `ckpt_name`. If the XPolicyLab seed is `0`, the wrapper uses training seed `1` because the upstream AHAWAM seeding helper requires a positive uint32 seed.
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
 
-One-step training smoke test:
+## Deployment and Evaluation
+
+What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
+
+Parameters used by `eval.sh`:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
-AHA_WAM_MAX_STEPS=1 \
-AHA_WAM_NUM_EPOCHS=1 \
-AHA_WAM_BATCH_SIZE=1 \
-AHA_WAM_GRADIENT_ACCUMULATION_STEPS=1 \
-AHA_WAM_NUM_WORKERS=0 \
-AHA_WAM_WANDB_ENABLED=false \
-AHA_WAM_OUTPUT_ROOT=/tmp/aha_wam_smoke \
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7 8
+cd XPolicyLab/policy/AHA_WAM
+# Template: run same-machine policy server and RoboDojo environment client.
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+
+# Example: evaluate a trained cotrain checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
-The Wan2.2/AHA-WAM training graph is large. With ZeRO-1, use 7-8 80GB GPUs for
-a reliable smoke or full run; single-GPU and 2-GPU smoke tests can OOM during the
-Adam optimizer step.
+Parameters used by the split server/client flow:
 
-For simulator evaluation, leave `EVAL_ENV_TYPE` unset or set `EVAL_ENV_TYPE=sim`, and run from a workspace that provides `scripts/eval_policy.sh` and the RoboDojo simulator environment.
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+| `policy_server_port` | Port exposed by the policy server, for example `5000`. |
+| `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
+| `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
 
-For offline debug with the AHA_WAM-specific `debug_env_client.py`, set `EVAL_ENV_TYPE=debug` (uses `AHA_WAM_ENV_CFG_ROOT` for env cfg lookup).
+```bash
+cd XPolicyLab/policy/AHA_WAM
+# Terminal 1 on the policy machine: start the policy server.
+bash setup_eval_policy_server.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+
+# Example: bind the policy server to all interfaces on port 5000.
+bash setup_eval_policy_server.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <policy_conda_env> 5000 0.0.0.0
+
+# Terminal 2 on the environment machine: connect RoboDojo to the policy server.
+bash setup_eval_env_client.sh \
+  <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
+  <env_gpu_id> <eval_env_conda_env> <additional_info> \
+  <policy_server_port> <policy_server_ip>
+
+# Example: connect to a policy server reachable at <policy_server_ip>:5000.
+bash setup_eval_env_client.sh \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  5000 <policy_server_ip>
+```
+
+Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
+
+## Important Parameters
+
+Common parameter meanings used across the commands above:
+
+| Parameter | Description |
+|---|---|
+| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
+| `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
+| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
+| `action_type` | Action representation, for example `joint`. |
+| `seed` | Evaluation seed. |
+| `policy_gpu_id` | GPU used by the policy server. |
+| `env_gpu_id` | GPU used by the RoboDojo simulation client. |
+| `policy_conda_env` | Conda environment for the policy server. |
+| `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Policy-specific `deploy.yml` keys worth checking before evaluation:
+
+| Key | Notes |
+|---|---|
+| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
+| `env_cfg_root` | Runtime or checkpoint option consumed by this adapter. |
+| `action_dim` | Runtime or checkpoint option consumed by this adapter. |
+| `elava_root` | Runtime or checkpoint option consumed by this adapter. |
+| `task_config` | Runtime or checkpoint option consumed by this adapter. |
+| `checkpoint_path` | Runtime or checkpoint option consumed by this adapter. |
+| `dataset_stats_path` | Runtime or checkpoint option consumed by this adapter. |
+| `diffsynth_model_base_path` | Runtime or checkpoint option consumed by this adapter. |
+| `sim_cfg_name` | Runtime or checkpoint option consumed by this adapter. |
+| `sim_task` | Runtime or checkpoint option consumed by this adapter. |
+| `device` | Runtime or checkpoint option consumed by this adapter. |
+| `mixed_precision` | Runtime or checkpoint option consumed by this adapter. |
+
+Frequently used environment variables detected in the adapter scripts:
+
+| Variable | Notes |
+|---|---|
+| `ACTION_DIM` | Optional override used by the local scripts or upstream runtime. |
+| `ACTION_TYPE` | Optional override used by the local scripts or upstream runtime. |
+| `AHAWAM` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_ALLOW_DUMMY_POLICY` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_APPTAINER_IMAGE` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_BATCH_SIZE` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_CHECKPOINT_PATH` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_CHUNKS_PER_VIDEO_PREFILL` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_CKPT_SETTING` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_DATASET_STATS_PATH` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_DEBUG_EVAL_EPISODE_NUM` | Optional override used by the local scripts or upstream runtime. |
+
+## Notes
+
+- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.
