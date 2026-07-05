@@ -47,6 +47,6 @@ torchrun --nnodes=1 --node_rank=0 --nproc_per_node=8 \
 bash eval.sh RoboDojo stack_bowls <ckpt_name> arx_x5 3500 ee 0 <policy_gpu> <env_gpu> XWAM XPolicyLab
 ```
 
-参数依次为：`dataset_name`、`task_name`、`ckpt_name`、`env_cfg_type`、`expert_data_num`、`action_type`、`seed`、`policy_gpu_id`、`env_gpu_id`、`policy_conda_env`、`eval_env_conda_env`。其中 `expert_data_num`（示例 `3500`）仅参与拼接实验目录名，需与实际 checkpoint 目录的 6-tuple 命名一致。
+参数依次为：`bench_name`、`task_name`、`ckpt_name`、`env_cfg_type`、`expert_data_num`、`action_type`、`seed`、`policy_gpu_id`、`env_gpu_id`、`policy_conda_env`、`eval_env_conda_env`。其中 `expert_data_num`（示例 `3500`）仅参与拼接实验目录名，需与实际 checkpoint 目录的 6-tuple 命名一致。
 
 `ckpt_name` 用于解析实验目录（`exp_path`），与 `task_name` 可不同（如 `cotrain`）。推理超参（异步去噪步数、`cfg`、`replan_steps` 等）见 `deploy.yml`。

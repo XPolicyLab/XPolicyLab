@@ -60,7 +60,7 @@ demo_env/
 ├── data
 │   ├── demo/         # scripts/download_demo_data.sh
 │   ├── RoboDojo/     # scripts/RoboDojo/download_robodojo_data.sh modelscope hdf5
-│   └── {dataset_name}/
+│   └── {bench_name}/
 │       └── {task_name}/
 │           └── {env_cfg}/
 │               ├── data
@@ -222,7 +222,7 @@ These parameters should appear consistently in data processing, training, and ev
 
 | Parameter | Requirement | Training usage | Evaluation usage |
 |---|---:|---|---|
-| `dataset_name` | Required | Identifies the source dataset under `data/`, e.g. RoboDojo, RoboTwin, or RoboDojo with depth. | Identifies the dataset family used by the evaluation task and checkpoint naming. |
+| `bench_name` | Required | Identifies the source dataset under `data/`, e.g. RoboDojo, RoboTwin, or RoboDojo with depth. | Identifies the dataset family used by the evaluation task and checkpoint naming. |
 | `ckpt_name` | Required | Names the experiment and processed artifacts. It may equal `task_name` for single-task training. | Locates the checkpoint directory, often together with dataset, robot configuration, action type, and seed. |
 | `task_name` | Required for evaluation | Optional for training. Multi-task or co-training pipelines can decide internally which raw tasks to consume. | Specifies the task executed by the environment client. |
 | `env_cfg_type` | Required | Selects robot and environment configuration, including robot morphology. Demo and RoboDojo data use `arx_x5` by default. | Selects the environment configuration for rollout. |
@@ -234,9 +234,9 @@ Recommended artifact names:
 
 | Artifact | Naming convention | Default location |
 |---|---|---|
-| Processed dataset | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>` | `policy/<policy_name>/data/` or `policy/<policy_name>/processed_data/` |
-| Training checkpoint | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/<policy_name>/checkpoints/` |
-| Raw RoboDojo data | `data/${dataset_name}/${task_name}/${env_cfg}` | Workspace-level `data/` directory |
+| Processed dataset | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>` | `policy/<policy_name>/data/` or `policy/<policy_name>/processed_data/` |
+| Training checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/<policy_name>/checkpoints/` |
+| Raw RoboDojo data | `data/${bench_name}/${task_name}/${env_cfg}` | Workspace-level `data/` directory |
 
 This convention keeps datasets and checkpoints identifiable from their core experimental parameters, while still allowing `process_data.sh` to read one or more raw `task_name` directories.
 

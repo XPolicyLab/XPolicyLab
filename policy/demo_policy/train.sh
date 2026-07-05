@@ -2,7 +2,7 @@
 set -e
 
 # ==================== 参数定义 ====================
-dataset_name=$1 # requried
+bench_name=$1 # requried
 task_name=$2
 ckpt_name=$3 # requried
 env_cfg_type=$4 # requried

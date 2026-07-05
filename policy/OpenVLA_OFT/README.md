@@ -13,14 +13,14 @@ TFDS_DATA_DIR=<tensorflow_datasets_dir> \
   bash scripts/build_tfds_aloha.sh <data_sample> <aloha_output_dir> <processed_dir> 0.05 0
 ```
 
-默认 TFDS 名：`aloha_<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
+默认 TFDS 名：`aloha_<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
 
 可用 `OPENVLA_TFDS_DATASET_NAME` 覆盖。
 
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 Checkpoint：`checkpoints/<6-tuple>/`

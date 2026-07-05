@@ -4,8 +4,8 @@ LDA-1B（QwenMMDiT + DINOv3）在 XPolicyLab 上的适配。产物命名遵循 [
 
 | 产物 | 命名 | 默认路径 |
 |---|---|---|
-| 处理后数据集 | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>` | `policy/LDA_1B/data/` |
-| 训练 checkpoint | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/LDA_1B/checkpoints/` |
+| 处理后数据集 | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>` | `policy/LDA_1B/data/` |
+| 训练 checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/LDA_1B/checkpoints/` |
 
 旧版含 `expert_data_num` 的目录名（如 `RoboDojo-test_data-arx_x5-3-joint`）及 `cotrain_dataset` 仍可通过 `_artifact_paths.sh` 自动回退解析。
 
@@ -41,7 +41,7 @@ bash process_data_batch.sh RoboDojo cotrain arx_x5 100 joint
 ## 3. 训练
 
 ```bash
-# dataset_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id
+# bench_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id
 bash train.sh RoboDojo test_data arx_x5 100 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 100 joint 0 0
 ```

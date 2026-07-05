@@ -465,7 +465,7 @@ def session_stop_path(evaluation_id: str, trial_index: int) -> str:
 def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
     from debug_env_client import str2bool
 
-    parser.add_argument("--dataset_name", type=str, default=None)
+    parser.add_argument("--bench_name", type=str, default=None)
     parser.add_argument("--task_name", type=str, default=None)
     parser.add_argument("--env_cfg_type", type=str, default=None)
     parser.add_argument(
@@ -543,7 +543,7 @@ def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
 
 def baseline_from_args(args: argparse.Namespace) -> EnvClientBaselineConfig:
     return EnvClientBaselineConfig(
-        dataset_name=args.dataset_name,
+        bench_name=args.bench_name,
         task_name=args.task_name,
         env_cfg_type=args.env_cfg_type,
         policy_name=args.policy_name,

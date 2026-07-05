@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=${1}
+bench_name=${1}
 task_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
@@ -36,7 +36,7 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type
 # task, "cotrain_dataset" otherwise. Set FASTWAM_DATASET_ID to point at a
 # pre-merged cotrain dataset (e.g. produced by process_data_batch.sh) without
 # changing the train.sh argument shape.
-data_key="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_key="${bench_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 dataset_id="${FASTWAM_DATASET_ID:-${data_key}}"
 converted_root="${POLICY_DIR}/data/${dataset_id}"
 dataset_dir="${converted_root}/lerobot"
@@ -60,7 +60,7 @@ if [[ ! -d "${dataset_dir}/meta" ]]; then
         echo "Run process_data_batch.sh (or process_data.sh with --dataset-id) in the policy env first."
         exit 1
     fi
-    bash "${POLICY_DIR}/process_data.sh" "${dataset_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
+    bash "${POLICY_DIR}/process_data.sh" "${bench_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
 fi
 
 if [[ ! -f "${action_dit}" ]]; then
@@ -74,7 +74,7 @@ fi
 if [[ ! -d "${text_cache_dir}" || -z "$(find "${text_cache_dir}" -name '*.pt' -print -quit 2>/dev/null)" ]]; then
     echo "[ERROR] Missing real T5 text embedding cache: ${text_cache_dir}"
     echo "Run process_data.sh again in the FastWAM policy environment; it converts data and precomputes the matching text embedding cache."
-    echo "  bash ${POLICY_DIR}/process_data.sh ${dataset_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}"
+    echo "  bash ${POLICY_DIR}/process_data.sh ${bench_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}"
     exit 1
 fi
 

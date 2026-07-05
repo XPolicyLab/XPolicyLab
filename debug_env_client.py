@@ -290,7 +290,7 @@ def str2bool(v):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_name", required=True, type=str)
+    parser.add_argument("--bench_name", required=True, type=str)
     parser.add_argument("--task_name", required=True, type=str)
     parser.add_argument("--env_cfg_type", type=str, required=True)
     parser.add_argument("--policy_name", type=str, required=True, help="XPolicyLab module name for deployment")

@@ -15,8 +15,8 @@ if ! command -v ffmpeg &> /dev/null; then
 fi
 
 process_dataset() {
-    local dataset_name=$1
-    local dataset_dir="${DATASET_BASE_DIR}/${dataset_name}"
+    local bench_name=$1
+    local dataset_dir="${DATASET_BASE_DIR}/${bench_name}"
     local videos_dir=""
     local output_dir=""
     
@@ -46,7 +46,7 @@ process_dataset() {
     local total_videos=${#video_files[@]}
     
     if [ $total_videos -eq 0 ]; then
-        echo "No video files found in $dataset_name"
+        echo "No video files found in $bench_name"
         return 0
     fi
     
@@ -161,8 +161,8 @@ else
             continue
         fi
         
-        for dataset_name in "${datasets[@]}"; do
-            process_dataset "$dataset_name"
+        for bench_name in "${datasets[@]}"; do
+            process_dataset "$bench_name"
         done
     done
 fi

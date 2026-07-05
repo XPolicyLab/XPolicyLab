@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Contract: 11 positional args. `task_name` is the simulator task; `ckpt_name`
 # resolves the checkpoint directory and may differ (e.g. `cotrain`).
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -37,7 +37,7 @@ trap cleanup EXIT
 
 echo -e "\033[32m[MAIN] start server, policy_server_port=${policy_server_port}\033[0m"
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -66,7 +66,7 @@ done
 
 echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${policy_server_port}\033[0m"
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

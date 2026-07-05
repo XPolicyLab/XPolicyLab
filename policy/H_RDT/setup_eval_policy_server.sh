@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -61,7 +61,7 @@ resolve_checkpoint_path() {
 }
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
-processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+processed_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 checkpoint_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
 checkpoint_path="$(resolve_checkpoint_path "${checkpoint_path}" "${checkpoint_dir}")"
 config_path="${config_path:-${SCRIPT_DIR}/data/${processed_name}/hrdt_finetune_xpolicy.yaml}"
@@ -81,7 +81,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             checkpoint_path="${checkpoint_path}" \

@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 
 Run process_data.sh first. Checkpoints are saved under:
   policy/Being_H05/checkpoints/<6-tuple>/
@@ -25,7 +25,7 @@ if [[ "$#" -ne 7 ]]; then
     exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -38,7 +38,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 BEINGH_DIR="${SCRIPT_DIR}/Being-H"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
-DATA_TAG="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+DATA_TAG="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 CKPT_RUN_ID="${DATA_TAG}-${seed}"
 DATA_DIR="${SCRIPT_DIR}/data/${DATA_TAG}"
 OUTPUT_DIR="${SCRIPT_DIR}/checkpoints/${CKPT_RUN_ID}"
@@ -57,7 +57,7 @@ fi
 
 if [[ ! -d "${DATA_DIR}" ]]; then
     echo -e "\033[31m[ERROR] Missing processed data: ${DATA_DIR}\033[0m" >&2
-    echo -e "\033[33m[ERROR] Run: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}\033[0m"
+    echo -e "\033[33m[ERROR] Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}\033[0m"
     exit 1
 fi
 

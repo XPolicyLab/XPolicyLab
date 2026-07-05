@@ -7,7 +7,7 @@ set -euo pipefail
 # `dataset_id` controls the output folder name under <policy>/data/<dataset_id>/;
 # for a single task it defaults to "<dataset>-<task>-<env_cfg>-<num>-<action_type>",
 # for a comma-list it defaults to "cotrain_dataset" (matches process_data.py).
-dataset_name=${1}
+bench_name=${1}
 task_name=${2}          # single task, or comma-separated list to merge, e.g. "stack_bowls,press_by_number"
 env_cfg_type=${3}
 expert_data_num=${4}    # episodes kept PER task
@@ -24,7 +24,7 @@ FASTWAM_DIR="${POLICY_DIR}/FastWAM"
 n_tasks=$(awk -F',' '{n=0; for(i=1;i<=NF;i++){gsub(/^ +| +$/,"",$i); if($i!="")n++} print n}' <<< "${task_name}")
 if [[ -z "${dataset_id}" ]]; then
     if [[ "${n_tasks}" == "1" ]]; then
-        dataset_id="${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+        dataset_id="${bench_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
     else
         dataset_id="cotrain_dataset"
     fi
@@ -38,7 +38,7 @@ echo "[FastWAM] output lerobot dir: ${dataset_dir}"
 echo "[FastWAM] text embed cache:   ${text_cache_dir}"
 
 py_args=(
-    "${dataset_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
+    "${bench_name}" "${task_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
     --project-root "${ROOT_DIR}"
 )
 if [[ -n "${dataset_id}" ]]; then

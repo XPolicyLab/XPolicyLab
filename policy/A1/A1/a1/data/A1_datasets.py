@@ -466,7 +466,7 @@ class AgibotFAST(DatasetBase):
 
 
             "metadata": {  
-                "dataset_name": self.data_name,  
+                "bench_name": self.data_name,  
                 "instruction": example['task_name'],  
                 "action": action.copy(), 
                 # "observation": observation,

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dataset_name=${1}
+bench_name=${1}
 ckpt_name=${2} # task_name
 env_cfg_type=${3}
 expert_data_num=${4}
@@ -37,15 +37,15 @@ export HYDRA_FULL_ERROR=1
 export CUDA_VISIBLE_DEVICES=${gpu_id}
 
 if [ ! -d  ]; then
-    bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}
+    bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}
 fi
 
 python train.py --config-name="${alg_name}.yaml" \
-                dataset_name="${dataset_name}" \
+                bench_name="${bench_name}" \
                 task.name="${ckpt_name}" \
                 "task.shape_meta.action.shape=[${action_dim}]" \
                 "task.shape_meta.obs.agent_pos.shape=[${action_dim}]" \
-                task.dataset.zarr_path="data/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}.zarr" \
+                task.dataset.zarr_path="data/${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}.zarr" \
                 training.debug=$DEBUG \
                 training.seed=${seed} \
                 training.device="cuda:0" \

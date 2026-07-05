@@ -1,5 +1,5 @@
 {
-    "dataset_name": "RoboDojo_ee",
+    "bench_name": "RoboDojo_ee",
     "language_instruction_key": "instructions",
     "language_instruction_fallback_keys": ["instruction", "language_instruction", "task_name", "task"],
     "observation_key": ["vision/cam_head/colors"],

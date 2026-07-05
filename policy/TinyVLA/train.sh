@@ -2,7 +2,7 @@
 set -e
 
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -14,7 +14,7 @@ POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo -e "\033[33mgpu id (to use): ${gpu_id}\033[0m"
 
 
-ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 output_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 pretrained_vlm_dir="${output_dir}/pretrained_vlm"
 
@@ -60,7 +60,7 @@ fi
 # effective_batch_size = per_device_train_batch_size × gradient_accumulation_steps × num_gpus
 
 deepspeed --master_port 29600 --include "localhost:${gpu_id}" "${POLICY_DIR}/train.py" \
-  --xpl_dataset_name                "${dataset_name}" \
+  --xpl_bench_name                "${bench_name}" \
   --xpl_ckpt_name                   "${ckpt_name}" \
   --xpl_env_cfg_type                "${env_cfg_type}" \
   --xpl_expert_data_num             "${expert_data_num}" \

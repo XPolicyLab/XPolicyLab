@@ -32,7 +32,7 @@ python XPolicyLab/setup_policy_server.py \
   action_type='joint' \
   model_path='/share/being-transfer/users/yiqing/checkpoints/post-robotwin_clean_BH05-2B_chunk-16_20260403_191158/0150000' \
   data_config_name='robodojo_qpos' \
-  dataset_name='robodojo_posttrain' \
+  bench_name='robodojo_posttrain' \
   embodiment_tag='new_embodiment' \
   prompt_template='long' \
   device='cuda'
@@ -77,7 +77,7 @@ python XPolicyLab/debug_env_client.py \
 
 **命名：**
 
-- 处理后数据（5 元组）：`<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
+- 处理后数据（5 元组）：`<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>`
 - 训练产物（6 元组）：上述 5 元组 + `-<seed>`
 
 ### 1. 准备 LeRobot 数据

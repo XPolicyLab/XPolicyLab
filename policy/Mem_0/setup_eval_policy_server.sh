@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -26,7 +26,7 @@ ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
 expert_data_num="${MEM0_EXPERT_DATA_NUM:-}"
-ckpt_dir="$(mem0_resolve_ckpt_dir "${POLICY_DIR}" "${dataset_name}" "${ckpt_name}" \
+ckpt_dir="$(mem0_resolve_ckpt_dir "${POLICY_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
 
 execution_ckpt="${MEM0_EXECUTION_CKPT:-}"
@@ -81,7 +81,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

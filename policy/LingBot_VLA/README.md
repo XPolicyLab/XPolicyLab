@@ -18,7 +18,7 @@ python scripts/conver_norm_stat.py assets/norm_stats/${DATASET_NAME}_customized.
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 | 变量 | 说明 |

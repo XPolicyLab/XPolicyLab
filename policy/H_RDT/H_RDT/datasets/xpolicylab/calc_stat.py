@@ -19,9 +19,9 @@ sys.path.extend([str(HRDT_ROOT), str(XPOLICYLAB_ROOT), str(DEMO_ENV_ROOT)])
 from XPolicyLab.utils.process_data import get_robot_action_dim_info, pack_robot_state
 
 
-def _candidate_task_data_dirs(data_root, raw_dataset_name, task_name, env_cfg_type):
+def _candidate_task_data_dirs(data_root, raw_bench_name, task_name, env_cfg_type):
     return [
-        data_root / raw_dataset_name / task_name / env_cfg_type / "data",
+        data_root / raw_bench_name / task_name / env_cfg_type / "data",
         data_root / task_name / env_cfg_type / "data",
         data_root / task_name / "data" / task_name / env_cfg_type / "data",
         data_root / task_name / "data",
@@ -37,15 +37,15 @@ def _find_hdf5_files(data_dir):
     return files
 
 
-def _resolve_task_data_dir(data_root, raw_dataset_name, task_name, env_cfg_type):
-    for candidate in _candidate_task_data_dirs(data_root, raw_dataset_name, task_name, env_cfg_type):
+def _resolve_task_data_dir(data_root, raw_bench_name, task_name, env_cfg_type):
+    for candidate in _candidate_task_data_dirs(data_root, raw_bench_name, task_name, env_cfg_type):
         if candidate.is_dir() and _find_hdf5_files(candidate):
             return candidate
     return None
 
 
-def _discover_task_names(data_root, raw_dataset_name):
-    search_root = data_root / raw_dataset_name
+def _discover_task_names(data_root, raw_bench_name):
+    search_root = data_root / raw_bench_name
     if not search_root.exists():
         search_root = data_root
 
@@ -56,9 +56,9 @@ def _discover_task_names(data_root, raw_dataset_name):
     )
 
 
-def _parse_tasks(tasks_text, data_root, raw_dataset_name):
+def _parse_tasks(tasks_text, data_root, raw_bench_name):
     if not tasks_text or tasks_text.strip().lower() == "all":
-        return _discover_task_names(data_root, raw_dataset_name)
+        return _discover_task_names(data_root, raw_bench_name)
     return [
         task.strip()
         for task in tasks_text.replace(",", " ").split()
@@ -79,14 +79,14 @@ def _load_action_data(hdf5_path, action_type, robot_action_dim_info):
     ).astype(np.float32)
 
 
-def collect_actions(data_root, raw_dataset_name, env_cfg_type, action_type, tasks, max_episodes):
+def collect_actions(data_root, raw_bench_name, env_cfg_type, action_type, tasks, max_episodes):
     robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
     all_actions = []
     task_file_counts = {}
     skipped_tasks = []
 
     for task_name in tasks:
-        data_dir = _resolve_task_data_dir(data_root, raw_dataset_name, task_name, env_cfg_type)
+        data_dir = _resolve_task_data_dir(data_root, raw_bench_name, task_name, env_cfg_type)
         if data_dir is None:
             skipped_tasks.append(task_name)
             continue
@@ -140,7 +140,7 @@ def write_stats(output_path, actions, task_file_counts, skipped_tasks, elapsed_t
 def main():
     parser = argparse.ArgumentParser(description="Calculate XPolicyLab q01/q99 action statistics.")
     parser.add_argument("--data_root", required=True, help="XPolicyLab source dataset root.")
-    parser.add_argument("--raw_dataset_name", default="RoboDojo")
+    parser.add_argument("--raw_bench_name", default="RoboDojo")
     parser.add_argument("--env_cfg_type", default="arx_x5")
     parser.add_argument("--action_type", default="joint")
     parser.add_argument("--tasks", default="all", help="Task names separated by comma/space, or 'all'.")
@@ -157,10 +157,10 @@ def main():
 
     data_root = Path(args.data_root).expanduser().resolve()
     output_path = Path(args.output_path).expanduser()
-    tasks = _parse_tasks(args.tasks, data_root, args.raw_dataset_name)
+    tasks = _parse_tasks(args.tasks, data_root, args.raw_bench_name)
 
     print(f"[xpolicylab] data root: {data_root}")
-    print(f"[xpolicylab] raw dataset: {args.raw_dataset_name}")
+    print(f"[xpolicylab] raw dataset: {args.raw_bench_name}")
     print(f"[xpolicylab] env cfg: {args.env_cfg_type}")
     print(f"[xpolicylab] tasks: {', '.join(tasks)}")
     print(f"[xpolicylab] max episodes per task: {args.max_episodes}")
@@ -168,7 +168,7 @@ def main():
     start_time = time.time()
     actions, task_file_counts, skipped_tasks = collect_actions(
         data_root=data_root,
-        raw_dataset_name=args.raw_dataset_name,
+        raw_bench_name=args.raw_bench_name,
         env_cfg_type=args.env_cfg_type,
         action_type=args.action_type,
         tasks=tasks,

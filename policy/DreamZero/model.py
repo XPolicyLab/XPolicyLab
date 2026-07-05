@@ -167,13 +167,13 @@ def _resolve_model_path(model_cfg: dict[str, Any]) -> Path:
         resolved = _latest_checkpoint(explicit_path)
         return (resolved or explicit_path).resolve()
 
-    dataset_name = model_cfg.get("dataset_name", "")
+    bench_name = model_cfg.get("bench_name", "")
     ckpt_name = model_cfg.get("ckpt_name", "")
     env_cfg_type = model_cfg.get("env_cfg_type", "")
     expert_data_num = model_cfg.get("expert_data_num", "")
     action_type = model_cfg.get("action_type", "")
     seed = model_cfg.get("seed", "0")
-    run_basename = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    run_basename = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
     checkpoints_dir = CHECKPOINTS_DIR
 
     for candidate in _candidate_run_dirs(checkpoints_dir, run_basename):

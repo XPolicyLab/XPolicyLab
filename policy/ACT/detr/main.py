@@ -107,7 +107,7 @@ def get_args_parser():
         help="policy_class, capitalize",
         required=True,
     )
-    parser.add_argument("--dataset_name", action="store", type=str, help="dataset_name", required=True)
+    parser.add_argument("--bench_name", action="store", type=str, help="bench_name", required=True)
     parser.add_argument("--task_name", action="store", type=str, help="task_name", required=True)
     parser.add_argument("--seed", action="store", type=int, help="seed", required=True)
     parser.add_argument("--num_epochs", action="store", type=int, help="num_epochs", required=True)

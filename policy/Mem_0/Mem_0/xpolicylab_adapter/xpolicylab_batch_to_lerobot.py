@@ -6,7 +6,7 @@ XPolicyLab HDF5 key mapping via pack_robot_state / vision.cam_head.
 
 Called by ../process_data_batch.sh:
 
-    python xpolicylab_batch_to_lerobot.py <dataset_name> <env_cfg_type> \
+    python xpolicylab_batch_to_lerobot.py <bench_name> <env_cfg_type> \
         <expert_data_num> <action_type> \
         --m1_tasks t1,t2 --mn_tasks t3,t4 \
         --annotation_root <path/to/language_annotation> \
@@ -57,19 +57,19 @@ def _split_tasks(raw: str) -> list[str]:
 
 
 def _default_dataset_id(
-    dataset_name: str,
+    bench_name: str,
     env_cfg_type: str,
     expert_data_num: int,
     action_type: str,
 ) -> str:
-    return f"{dataset_name}-cotrain-{env_cfg_type}-{expert_data_num}-{action_type}"
+    return f"{bench_name}-cotrain-{env_cfg_type}-{expert_data_num}-{action_type}"
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="XPolicyLab multi-task HDF5 -> single Mem_0 cotrain LeRobot dataset",
     )
-    parser.add_argument("dataset_name", type=str)
+    parser.add_argument("bench_name", type=str)
     parser.add_argument("env_cfg_type", type=str)
     parser.add_argument("expert_data_num", type=int)
     parser.add_argument("action_type", type=str, help="'joint' or 'ee'")
@@ -105,7 +105,7 @@ def main() -> None:
         )
 
     dataset_id = args.dataset_id or _default_dataset_id(
-        args.dataset_name, args.env_cfg_type, args.expert_data_num, args.action_type,
+        args.bench_name, args.env_cfg_type, args.expert_data_num, args.action_type,
     )
     if os.environ.get("MEM0_LEGACY_PATHS") == "1":
         out_root = Path(UPSTREAM_DIR) / "lerobot_datasets" / dataset_id
@@ -121,7 +121,7 @@ def main() -> None:
     mn_annotations: dict[str, dict] = {}
     for task_name in mn_tasks:
         ann_path = resolve_mn_annotation_path(
-            task_name, args.dataset_name, args.env_cfg_type,
+            task_name, args.bench_name, args.env_cfg_type,
             annotation_root=str(annotation_root),
         )
         if not ann_path.is_file():
@@ -133,7 +133,7 @@ def main() -> None:
 
     bar = tqdm(jobs, desc=f"cotrain {dataset_id}", unit="task", dynamic_ncols=True)
     for task_name, task_type in bar:
-        task_dir = ROOT_DIR / "data" / args.dataset_name / task_name / args.env_cfg_type
+        task_dir = ROOT_DIR / "data" / args.bench_name / task_name / args.env_cfg_type
         if not task_dir.is_dir():
             raise FileNotFoundError(f"Missing task data dir: {task_dir}")
 

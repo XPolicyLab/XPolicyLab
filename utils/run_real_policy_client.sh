@@ -4,7 +4,7 @@ set -e
 eval_batch="${1}"
 eval_env_conda_env="${2}"
 free_port="${3}"
-dataset_name="${4}"
+bench_name="${4}"
 task_name="${5}"
 env_cfg_type="${6}"
 policy_name="${7}"
@@ -39,7 +39,7 @@ echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port} 
 export PYTHONPATH="${root_dir}/src:${root_dir}/XPolicyLab/integrations:${root_dir}/XPolicyLab:${root_dir}:${PYTHONPATH:-}"
 
 CLIENT_ARGS=(
-    --dataset_name "${dataset_name}"
+    --bench_name "${bench_name}"
     --task_name "${task_name}"
     --env_cfg_type "${env_cfg_type}"
     --policy_name "${policy_name}"

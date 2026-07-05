@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -20,7 +20,7 @@ UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 policy_name="$(basename "${SCRIPT_DIR}")"
 
-ckpt_run_id="${BEINGH_CKPT_RUN_ID:-${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+ckpt_run_id="${BEINGH_CKPT_RUN_ID:-${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
 
 _resolve_latest_step() {
     local root="$1"
@@ -76,8 +76,8 @@ exec env \
             host="localhost" \
             policy_name="${policy_name}" \
             task_name="${task_name}" \
-            data_project_name="${dataset_name}" \
-            dataset_name="robodojo_posttrain" \
+            data_project_name="${bench_name}" \
+            bench_name="robodojo_posttrain" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \
             expert_data_num="${expert_data_num}" \

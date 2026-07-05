@@ -13,13 +13,13 @@ bash scripts/compute_norm_stats.sh <config_name> <max_frames>
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 Checkpoint：
 
 ```text
-checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
+checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
 ```
 
 | 变量 | 说明 |

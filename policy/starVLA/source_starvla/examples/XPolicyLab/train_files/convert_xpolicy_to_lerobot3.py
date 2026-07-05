@@ -266,7 +266,7 @@ def convert(args: argparse.Namespace) -> None:
     source_dir = (
         Path(args.root_dir).resolve()
         / "data"
-        / args.dataset_name
+        / args.bench_name
         / args.ckpt_name
         / args.env_cfg_type
     )
@@ -404,7 +404,7 @@ def convert(args: argparse.Namespace) -> None:
 def build_argparser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root_dir", required=True)
-    parser.add_argument("--dataset_name", required=True)
+    parser.add_argument("--bench_name", required=True)
     parser.add_argument("--ckpt_name", required=True)
     parser.add_argument("--env_cfg_type", required=True)
     parser.add_argument("--expert_data_num", required=True, type=int)

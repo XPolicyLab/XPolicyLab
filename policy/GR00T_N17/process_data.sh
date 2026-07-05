@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -19,7 +19,7 @@ if [[ -z "${DATA_ROOT}" ]]; then
   echo "Set GR00T_LEROBOT_HOME to the LeRobot datasets root." >&2
   exit 1
 fi
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 dataset_path="${DATA_ROOT}/${data_setting}"
 modality_config="${POLICY_DIR}/configs/${env_cfg_type}_config.py"
 
@@ -141,7 +141,7 @@ install_conversion_deps() {
 src_dataset="$(resolve_src_dataset)"
 src_path="${DATA_ROOT}/${src_dataset}"
 
-echo "[GR00T_N17] dataset_name=${dataset_name}"
+echo "[GR00T_N17] bench_name=${bench_name}"
 echo "[GR00T_N17] ckpt_name=${ckpt_name}"
 echo "[GR00T_N17] env_cfg_type=${env_cfg_type}"
 echo "[GR00T_N17] expert_data_num=${expert_data_num}"

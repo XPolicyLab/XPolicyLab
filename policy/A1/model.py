@@ -319,12 +319,12 @@ class Model(ModelTemplate):
             latest = _find_latest_unsharded(model_path)
             return latest or model_path
 
-        dataset_name = model_cfg.get("dataset_name", "")
+        bench_name = model_cfg.get("bench_name", "")
         ckpt_name = model_cfg.get("ckpt_name") or model_cfg.get("task_name", "")
         env_cfg_type = model_cfg.get("env_cfg_type", "")
         expert_data_num = model_cfg.get("expert_data_num", "")
         seed = model_cfg.get("seed", "")
-        run_base = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{self.action_type}-{seed}"
+        run_base = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{self.action_type}-{seed}"
         latest_file = _SCRIPT_DIR / "checkpoints" / f"{run_base}.latest"
         if latest_file.is_file():
             latest = _find_latest_unsharded(latest_file.read_text().strip())
@@ -340,7 +340,7 @@ class Model(ModelTemplate):
                     return latest
 
             seed_agnostic_base = (
-                f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{self.action_type}"
+                f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{self.action_type}"
             )
             matches = sorted(checkpoints_dir.glob(f"{seed_agnostic_base}-*"), key=lambda p: p.stat().st_mtime, reverse=True)
             for match in matches:

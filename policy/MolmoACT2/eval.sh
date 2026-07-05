@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -36,7 +36,7 @@ trap cleanup EXIT
 echo "[MAIN] start server, port=${policy_server_port}"
 
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -56,7 +56,7 @@ bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_se
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

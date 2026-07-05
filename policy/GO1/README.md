@@ -3,7 +3,7 @@
 遵循 `XPolicyLab/README.md` 中的统一参数语义与命名约定：
 
 - 训练产物子目录命名固定为 6 元组：
-  `<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`
+  `<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`
 - `ckpt_name` 表示 checkpoint 标识；多任务共训建议显式写成 `cotrain`
 - `task_name` 仅用于评测时指定仿真任务，训练阶段不再需要
 
@@ -13,7 +13,7 @@
 
 ```bash
 cd /path/to/XPolicyLab/policy/GO1
-bash process_data.sh ${dataset_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}
+bash process_data.sh ${bench_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}
 ```
 
 例子：
@@ -29,12 +29,12 @@ bash process_data.sh RoboDojo stack_bowls arx_x5 5 joint
 
 ```bash
 cd /path/to/XPolicyLab/policy/GO1
-bash train.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${gpu_id}
+bash train.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${gpu_id}
 ```
 
 | 参数 | 含义 |
 |---|---|
-| `dataset_name` | 数据集名称，如 `RoboDojo` |
+| `bench_name` | 数据集名称，如 `RoboDojo` |
 | `ckpt_name` | checkpoint 标识，多任务共训建议填 `cotrain` |
 | `env_cfg_type` | 环境配置 / 本体类型，如 `arx_x5` |
 | `expert_data_num` | 训练轨迹数；使用共享多任务数据时可填与版本一致的占位值，如 `3500` |
@@ -88,7 +88,7 @@ bash train.sh RoboDojo cotrain arx_x5 3500 joint 42 0,1,2,3,4,5,6,7
 
 ```bash
 cd /path/to/XPolicyLab/policy/GO1
-bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
+bash eval.sh ${bench_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
 ```
 
 | 参数 | 含义 |
@@ -99,7 +99,7 @@ bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_
 ### 默认 checkpoint 查找
 
 不设置 `MODEL_PATH` 时，`model.py` 会按 6 元组
-`<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`
+`<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>`
 在 `policy/GO1/checkpoints/` 下自动查找最新 checkpoint。
 
 ### 示例

@@ -16,7 +16,7 @@ bash install.sh
 
 ```bash
 cd /path/to/XPolicyLab/policy/starVLA
-bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}
+bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type}
 ```
 
 例子：
@@ -33,7 +33,7 @@ bash policy/starVLA/process_data.sh RoboDojo stack_bowls arx_x5 50 joint
 
 ```bash
 cd /path/to/XPolicyLab/policy/starVLA
-bash train.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${gpu_id}
+bash train.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${gpu_id}
 ```
 
 
@@ -63,7 +63,7 @@ policy/starVLA/checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0
 
 ```bash
 cd /path/to/XPolicyLab/policy/starVLA
-bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
+bash eval.sh ${bench_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
 ```
 
 不指定 ckpt：在policy/starvla下新建checkpoints文件夹，然后把final_ckpt中的RoboDojo-cotrain-arx_x5-3500-joint-0文件夹拷贝到这个目录下

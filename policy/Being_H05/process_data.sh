@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+  bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 
 Links (or reuses) a LeRobot v2.1 dataset under policy/Being_H05/data/<5-tuple>/ and
 registers it for Being-H training.
@@ -14,7 +14,7 @@ Optional environment:
   RAW_DATA_ROOT       If set, print a hint to run XPolicyLab/scripts/transform_lerobot_v30_format.py first
 
 Output layout (XPolicyLab convention):
-  data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
+  data/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
 EOF
 }
 
@@ -23,7 +23,7 @@ if [[ "$#" -ne 5 ]]; then
     exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -31,7 +31,7 @@ action_type=$5
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-DATA_TAG="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+DATA_TAG="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 DEST_DIR="${SCRIPT_DIR}/data/${DATA_TAG}"
 
 DEFAULT_LEROBOT="/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21"
@@ -47,7 +47,7 @@ if [[ ! -d "${SRC_DIR}" ]]; then
     if [[ -n "${RAW_DATA_ROOT:-}" ]]; then
         echo -e "\033[33m[process_data] Convert HDF5 with XPolicyLab/scripts/transform_lerobot_v30_format.py, then set LEROBOT_DATA_PATH.\033[0m"
     else
-        echo -e "\033[33m[process_data] Set LEROBOT_DATA_PATH or convert raw data under ${ROOT_DIR}/data/${dataset_name}/...\033[0m"
+        echo -e "\033[33m[process_data] Set LEROBOT_DATA_PATH or convert raw data under ${ROOT_DIR}/data/${bench_name}/...\033[0m"
     fi
     exit 1
 fi

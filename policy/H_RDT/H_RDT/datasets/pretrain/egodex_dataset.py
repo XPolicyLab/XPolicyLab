@@ -268,7 +268,7 @@ class EgoDexDataset:
                 'current_images': [image_frames],  # [(img_history_size, H, W, 3)] single view
                 'current_images_mask': [np.ones(self.img_history_size, dtype=bool)],  # Image mask
                 'instruction': str(lang_embed_path),  # Language embedding file path
-                'dataset_name': self.DATASET_NAME,
+                'bench_name': self.DATASET_NAME,
                 'task': file_info['task'],
                 'file_info': {
                     'hdf5_path': str(file_info['hdf5']),

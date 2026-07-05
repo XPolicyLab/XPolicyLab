@@ -121,7 +121,7 @@ python dataset/compute_action_stat.py --dataset-root <lerobot_dataset_dir> --out
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 Checkpoint：`checkpoints/<6-tuple>/`。

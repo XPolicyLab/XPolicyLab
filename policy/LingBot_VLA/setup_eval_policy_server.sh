@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=${1}
+bench_name=${1}
 task_name=${2}
 ckpt_name=${3}
 env_cfg_type=${4}
@@ -22,7 +22,7 @@ ln -sfn "${XPL_DIR}" "${IMPORT_SHIM_DIR}/XPolicyLab"
 
 policy_name="$(basename "${CURRENT_DIR}")"
 yaml_file="${CURRENT_DIR}/deploy.yml"
-checkpoint_root="${CURRENT_DIR}/checkpoints/${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+checkpoint_root="${CURRENT_DIR}/checkpoints/${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 qwen25_path="${QWEN25_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct}"
 
 checkpoint_path=$(python - <<PY
@@ -64,7 +64,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

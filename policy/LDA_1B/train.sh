@@ -1,8 +1,8 @@
 #!/bin/bash
-# Usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+# Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 set -euo pipefail
 
-dataset_name=${1:?dataset_name required}
+bench_name=${1:?bench_name required}
 ckpt_name=${2:?ckpt_name required}
 env_cfg_type=${3:?env_cfg_type required}
 expert_data_num=${4:?expert_data_num required}
@@ -36,8 +36,8 @@ wandb_project="${LDA_WANDB_PROJECT:-lda}"
 wandb_entity="${LDA_WANDB_ENTITY:-}"
 is_debug="${LDA_DEBUG:-False}"
 
-dataset_id="${LDA_DATASET_ID:-$(xpolicylab_dataset_tag "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")}"
-resolved_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+dataset_id="${LDA_DATASET_ID:-$(xpolicylab_dataset_tag "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")}"
+resolved_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
   "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
 if [[ ! -d "${resolved_dataset_dir}" ]]; then
   echo -e "\033[31m[train.sh] dataset not found: ${resolved_dataset_dir}\033[0m" >&2
@@ -48,7 +48,7 @@ dataset_id="$(basename "${resolved_dataset_dir}")"
 
 export XPOLICYLAB_DATASET_ID="${XPOLICYLAB_DATASET_ID:-${dataset_id}}"
 export XPOLICYLAB_ROBOT_TYPE="${XPOLICYLAB_ROBOT_TYPE:-${env_cfg_type}}"
-ckpt_setting="${LDA_CKPT_SETTING:-$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
+ckpt_setting="${LDA_CKPT_SETTING:-$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
 
 default_pretrained_ckpt="${SCRIPT_DIR}/checkpoints/LDA-pretrain/LDA-pretrain.pt"
 if [[ -n "${LDA_PRETRAINED_CHECKPOINT:-}" ]]; then

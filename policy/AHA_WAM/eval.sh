@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -30,7 +30,7 @@ cleanup() {
 trap cleanup EXIT
 
 setsid bash "${SCRIPT_DIR}/setup_eval_policy_server.sh" \
-    "${dataset_name}" "${task_name}" "${ckpt_name}" "${env_cfg_type}" \
+    "${bench_name}" "${task_name}" "${ckpt_name}" "${env_cfg_type}" \
     "${expert_data_num}" "${action_type}" "${seed}" "${policy_gpu_id}" \
     "${policy_conda_env}" "${policy_server_port}" "${policy_server_ip}" &
 SERVER_PID=$!
@@ -48,6 +48,6 @@ for _ in $(seq 1 600); do
 done
 
 bash "${SCRIPT_DIR}/setup_eval_env_client.sh" \
-    "${dataset_name}" "${task_name}" "${ckpt_name}" "${env_cfg_type}" \
+    "${bench_name}" "${task_name}" "${ckpt_name}" "${env_cfg_type}" \
     "${action_type}" "${seed}" "${env_gpu_id}" "${eval_env_conda_env}" \
     "${additional_info}" "${policy_server_port}" "${policy_server_ip}"

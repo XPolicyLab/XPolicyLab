@@ -1,9 +1,9 @@
 #!/bin/bash
-# Usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
+# Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
 #                      <action_type> <seed> <gpu_id> [hydra overrides...]
 set -euo pipefail
 
-dataset_name=${1:?dataset_name required}
+bench_name=${1:?bench_name required}
 ckpt_name=${2:?ckpt_name required}
 env_cfg_type=${3:?env_cfg_type required}
 expert_data_num=${4:?expert_data_num required}
@@ -28,7 +28,7 @@ if [[ "${action_type}" != "joint" ]]; then
 fi
 task_config="${GALAXEA_TASK_CONFIG:-real/g0plus_xpolicylab_finetune}"
 
-default_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+default_dataset_dir="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
 dataset_dir="${GALAXEA_DATASET_DIR:-${default_dataset_dir}}"
 if [[ ! -d "${dataset_dir}" ]]; then
@@ -119,7 +119,7 @@ else
     num_gpu="1"
 fi
 
-ckpt_run_id="$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
+ckpt_run_id="$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
 export GALAXEA_FM_OUTPUT_DIR="${GALAXEA_FM_OUTPUT_DIR:-${SCRIPT_DIR}/checkpoints}"
 export GALAXEA_CKPT_RUN_ID="${ckpt_run_id}"
 export GALAXEA_FM_DATASET_STATS_CACHE_DIR="${GALAXEA_FM_DATASET_STATS_CACHE_DIR:-${SCRIPT_DIR}/.cache/galaxea_stats}"
@@ -129,7 +129,7 @@ logger_mode="${GALAXEA_LOGGER_MODE:-disabled}"
 
 action_dim="$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}" 2>/dev/null || echo "?")"
 
-echo -e "\033[33m[train] dataset_name=${dataset_name} ckpt_name=${ckpt_name} env_cfg_type=${env_cfg_type} expert_data_num=${expert_data_num} action_type=${action_type}\033[0m"
+echo -e "\033[33m[train] bench_name=${bench_name} ckpt_name=${ckpt_name} env_cfg_type=${env_cfg_type} expert_data_num=${expert_data_num} action_type=${action_type}\033[0m"
 echo -e "\033[33m[train] task_config=${task_config} | gpus=${gpu_id} (n=${num_gpu}) | seed=${seed} (upstream seed=${effective_seed}) | action_dim(info)=${action_dim}\033[0m"
 echo -e "\033[33m[train] dataset_dir=${dataset_dir}\033[0m"
 echo -e "\033[33m[train] pretrained_ckpt=${pretrained_ckpt}\033[0m"

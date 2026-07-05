@@ -7,7 +7,7 @@
 
 ```bash
 cd /path/to/XPolicyLab/policy/A1
-bash process_data.sh ${dataset_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}
+bash process_data.sh ${bench_name} ${task_name} ${env_cfg_type} ${expert_data_num} ${action_type}
 ```
 
 例子：
@@ -23,7 +23,7 @@ bash process_data.sh RoboDojo stack_bowls arx_x5 5 joint
 
 ```bash
 cd /path/to/XPolicyLab/policy/A1
-bash train.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${gpu_id}
+bash train.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${gpu_id}
 ```
 
 例子：
@@ -53,7 +53,7 @@ bash train.sh RoboDojo cotrain arx_x5 3500 joint 42 0,1,2,3,4,5,6,7
 conda activate a1
 
 cd /path/to/XPolicyLab/policy/A1
-bash eval.sh ${dataset_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
+bash eval.sh ${bench_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} ${seed} ${policy_gpu_id} ${env_gpu_id} ${policy_conda_env} ${eval_env_conda_env}
 ```
 
 例子：

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -85,7 +85,7 @@ exec env \
             host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

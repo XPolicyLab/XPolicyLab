@@ -88,8 +88,8 @@ def save_to_config(stats: dict, dataset_names: list, config_path: Path):
         config = {}
     
     # Update config for each dataset
-    for dataset_name in dataset_names:
-        config[dataset_name] = {
+    for bench_name in dataset_names:
+        config[bench_name] = {
             "min": stats['min'].tolist(),
             "max": stats['max'].tolist(),
         }
@@ -153,7 +153,7 @@ def main():
         processed_datasets = []
         
         for dataset_dir in tqdm(dataset_dirs, desc="Processing datasets"):
-            dataset_name = dataset_dir.name
+            bench_name = dataset_dir.name
             dataset_stats = OnlineStatistics(dim=14)
             dataset_vectors = 0
             
@@ -162,7 +162,7 @@ def main():
             if len(parquet_files) == 0:
                 continue
             
-            for parquet_file in tqdm(parquet_files, desc=f"  {dataset_name}", leave=False):
+            for parquet_file in tqdm(parquet_files, desc=f"  {bench_name}", leave=False):
                 try:
                     df = pd.read_parquet(parquet_file)
                     if 'action' not in df.columns:
@@ -180,10 +180,10 @@ def main():
             
             if dataset_stats.count > 0:
                 stats = dataset_stats.get_statistics()
-                print(f"\nDataset: {dataset_name} - {dataset_vectors} vectors")
+                print(f"\nDataset: {bench_name} - {dataset_vectors} vectors")
                 print_statistics(stats)
-                processed_datasets.append(dataset_name)
-                save_to_config(stats, [dataset_name], config_path)
+                processed_datasets.append(bench_name)
+                save_to_config(stats, [bench_name], config_path)
         
         if len(processed_datasets) == 0:
             print("No action data found in any dataset")
@@ -194,13 +194,13 @@ def main():
         total_vectors = 0
         
         for dataset_dir in tqdm(dataset_dirs, desc="Processing datasets"):
-            dataset_name = dataset_dir.name
+            bench_name = dataset_dir.name
             parquet_files = list(dataset_dir.rglob("data/chunk-*/episode_*.parquet"))
             
             if len(parquet_files) == 0:
                 continue
             
-            for parquet_file in tqdm(parquet_files, desc=f"  {dataset_name}", leave=False):
+            for parquet_file in tqdm(parquet_files, desc=f"  {bench_name}", leave=False):
                 try:
                     df = pd.read_parquet(parquet_file)
                     if 'action' not in df.columns:

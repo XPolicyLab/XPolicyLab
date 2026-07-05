@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -27,7 +27,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${yaml_file}" \
     "${eval_env_conda_env}" \
     "${port}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${env_cfg_type}" \
     "${policy_name}" \

@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -23,10 +23,10 @@ export DM0_MAX_STEPS="${DM0_MAX_STEPS:-100000}"
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"
 EXP_SCRIPT="${DEXBOTIC_ROOT}/playground/benchmarks/robodojo/robodojo_dm0.py"
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 converted_data_root="${DM0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
-dataset_name_registered="robodojo_${data_setting}"
+bench_name_registered="robodojo_${data_setting}"
 data_source_path="${DEXBOTIC_ROOT}/dexbotic/data/data_source/robodojo_${data_setting}.py"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 base_model="${DM0_BASE_MODEL:-${DEXBOTIC_ROOT}/checkpoints/DM0-base}"
@@ -69,7 +69,8 @@ elif (( DM0_BATCH_SIZE * NUM_GPUS * DM0_GRAD_ACCUM != DM0_GLOBAL_BATCH_SIZE )); 
   exit 1
 fi
 
-export DM0_DATASET_NAME="${dataset_name_registered}"
+export DM0_BENCH_NAME="${bench_name_registered}"
+export DM0_DATASET_NAME="${bench_name_registered}"
 export DM0_OUTPUT_DIR="${ckpt_dir}"
 export DM0_MODEL_PATH="${base_model}"
 export DM0_SEED="${seed}"
@@ -77,7 +78,7 @@ export DM0_SEED="${seed}"
 mkdir -p "${ckpt_dir}"
 
 echo "[Dexbotic_DM0] converted_data_root=${converted_data_root}"
-echo "[Dexbotic_DM0] dataset_name=${dataset_name_registered}"
+echo "[Dexbotic_DM0] bench_name=${bench_name_registered}"
 echo "[Dexbotic_DM0] base_model=${base_model}"
 echo "[Dexbotic_DM0] checkpoint_dir=${ckpt_dir}"
 echo "[Dexbotic_DM0] seed=${seed}"

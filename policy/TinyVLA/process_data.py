@@ -32,7 +32,7 @@ TARGET_SIZE = (640, 480)  # (W, H), matching TinyVLA's native 480x640 HDF5 examp
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataset_name")
+    parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
     parser.add_argument("expert_data_num", type=int)
@@ -215,10 +215,10 @@ def convert_one_episode(job: tuple[int, str, Path, Path, str, dict, str]) -> tup
 def main() -> None:
     args = parse_args()
     ckpt_setting = (
-        f"{args.dataset_name}-{args.ckpt_name}-{args.env_cfg_type}"
+        f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}"
         f"-{args.expert_data_num}-{args.action_type}"
     )
-    root = args.source_root if args.source_root is not None else (REPO_ROOT / "data" / args.dataset_name)
+    root = args.source_root if args.source_root is not None else (REPO_ROOT / "data" / args.bench_name)
     out_dir = args.output_dir if args.output_dir is not None else (POLICY_DIR / "data" / ckpt_setting)
 
     out_dir.mkdir(parents=True, exist_ok=False)

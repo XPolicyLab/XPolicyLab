@@ -12,19 +12,19 @@ InternVLA_A1 已接入 XPolicyLab 的本地 policy server，用于 joint action 
 bash compute_norm.sh <repo_id>
 
 # 开启训练
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 `train.sh` 会将训练输出固定保存到：
 
 ```text
-policy/InternVLA_A1/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
+policy/InternVLA_A1/checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
 ```
 
 底层训练使用 `internvla_a1/launch/internvla_a1_3b_finetune.sh`。默认会将数据集 repo id 设为：
 
 ```text
-<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
+<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>
 ```
 
 如需覆盖底层数据集名称，可设置：

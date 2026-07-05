@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <action_type> [source_path]
+  bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [source_path]
 
 Links HDF5 data into policy/RDT_1B/data/<4-tuple>/ and pre-encodes language embeddings
 into policy/RDT_1B/lang_embeds/<4-tuple>/ (nothing is written into the shared dataset).
@@ -12,8 +12,8 @@ into policy/RDT_1B/lang_embeds/<4-tuple>/ (nothing is written into the shared da
 Source path resolution (first match wins):
   1. source_path argument
   2. ${RAW_DATA_ROOT} environment variable
-  3. <XPolicyLab>/data/<dataset_name>/<ckpt_name>
-  4. <XPolicyLab>/data/<dataset_name>_<ckpt_name>
+  3. <XPolicyLab>/data/<bench_name>/<ckpt_name>
+  4. <XPolicyLab>/data/<bench_name>_<ckpt_name>
 
 Optional:
   --overwrite       Re-encode all lang_embed.pt files
@@ -30,7 +30,7 @@ if [[ "$#" -lt 4 ]]; then
     exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 action_type=$4
@@ -68,7 +68,7 @@ done
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../.." && pwd)"
-DATA_TAG="${dataset_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
+DATA_TAG="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 DATA_DIR="${POLICY_DIR}/data/${DATA_TAG}"
 LANG_EMBED_DIR="${POLICY_DIR}/lang_embeds"
 
@@ -81,10 +81,10 @@ resolve_source() {
         candidate="${source_path}"
     elif [[ -n "${RAW_DATA_ROOT:-}" ]]; then
         candidate="${RAW_DATA_ROOT}"
-    elif [[ -d "${ROOT_DIR}/data/${dataset_name}/${ckpt_name}" ]]; then
-        candidate="${ROOT_DIR}/data/${dataset_name}/${ckpt_name}"
-    elif [[ -d "${ROOT_DIR}/data/${dataset_name}_${ckpt_name}" ]]; then
-        candidate="${ROOT_DIR}/data/${dataset_name}_${ckpt_name}"
+    elif [[ -d "${ROOT_DIR}/data/${bench_name}/${ckpt_name}" ]]; then
+        candidate="${ROOT_DIR}/data/${bench_name}/${ckpt_name}"
+    elif [[ -d "${ROOT_DIR}/data/${bench_name}_${ckpt_name}" ]]; then
+        candidate="${ROOT_DIR}/data/${bench_name}_${ckpt_name}"
     else
         return 1
     fi
@@ -94,8 +94,8 @@ resolve_source() {
 if ! SRC_DIR="$(resolve_source)"; then
     echo "[RDT_1B] HDF5 source not found." >&2
     echo "[RDT_1B] Pass source_path or set RAW_DATA_ROOT, or place data at:" >&2
-    echo "         ${ROOT_DIR}/data/${dataset_name}/${ckpt_name}" >&2
-    echo "         ${ROOT_DIR}/data/${dataset_name}_${ckpt_name}" >&2
+    echo "         ${ROOT_DIR}/data/${bench_name}/${ckpt_name}" >&2
+    echo "         ${ROOT_DIR}/data/${bench_name}_${ckpt_name}" >&2
     exit 1
 fi
 

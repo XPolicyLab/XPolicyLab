@@ -49,7 +49,7 @@ def _ensure_finite(name: str, array, context: Dict[str, Any] = None) -> None:
 #         """Converts a RLDS batch to the format expected by the OpenVLA collator/models."""
 #         # return rlds_batch
     
-        # dataset_name, current_action = rlds_batch["dataset_name"], rlds_batch["action"][0]
+        # bench_name, current_action = rlds_batch["bench_name"], rlds_batch["action"][0]
         # # img = Image.fromarray(rlds_batch["observation"]["image_primary"][0])
         # lang = rlds_batch["task"]["language_instruction"].decode().lower()
         # actions = rlds_batch["action"]
@@ -87,7 +87,7 @@ def _ensure_finite(name: str, array, context: Dict[str, Any] = None) -> None:
         # if not self.predict_stop_token:
         #     labels[-1] = IGNORE_INDEX
 
-        # return_dict = dict(pixel_values=pixel_values, input_ids=input_ids, labels=labels, dataset_name=dataset_name, actions=actions)
+        # return_dict = dict(pixel_values=pixel_values, input_ids=input_ids, labels=labels, bench_name=bench_name, actions=actions)
 
         # # Add additional inputs
         # if self.use_wrist_image:
@@ -137,7 +137,7 @@ class RLDSBatchTransform:
 
         absolute_action_mask = rlds_batch["absolute_action_mask"]
 
-        dataset_name = rlds_batch["dataset_name"]
+        bench_name = rlds_batch["bench_name"]
         current_action, future_actions = action[0],action[1:]
 
         image_primary = observation["image_primary"]
@@ -163,11 +163,11 @@ class RLDSBatchTransform:
         assert image_primary.ndim == 3, f"Image should have 3 dimensions, got {image_primary.ndim}"
         assert image_wrist.ndim == 3, f"Wrist image should have 3 dimensions, got {image_wrist.ndim}"
         # Finite checks for image/action/proprio
-        _ensure_finite("image_primary", image_primary, {"dataset": dataset_name})
-        _ensure_finite("image_wrist", image_wrist, {"dataset": dataset_name})
-        _ensure_finite("action", action, {"dataset": dataset_name})
+        _ensure_finite("image_primary", image_primary, {"dataset": bench_name})
+        _ensure_finite("image_wrist", image_wrist, {"dataset": bench_name})
+        _ensure_finite("action", action, {"dataset": bench_name})
         if self.use_proprio:
-            _ensure_finite("proprio", proprio, {"dataset": dataset_name})
+            _ensure_finite("proprio", proprio, {"dataset": bench_name})
         
         # 生成与动作同形状的padding掩码，pad位置标记为True
         action_pad_mask = np.zeros_like(action, dtype=bool)
@@ -190,7 +190,7 @@ class RLDSBatchTransform:
 
 
             "metadata": {  
-                "dataset_name": dataset_name,  
+                "bench_name": bench_name,  
                 "instruction": instruction,  
                 "action": action.copy(), 
                 # "observation": observation,
@@ -494,7 +494,7 @@ class RLDSDataset(Dataset,IterableDataset):
                 yield self._cached_samples[sample_idx]
         else:
             for rlds_batch in self.dataset.as_numpy_iterator():
-                # ['observation', 'task', 'action', 'dataset_name', 'absolute_action_mask'])
+                # ['observation', 'task', 'action', 'bench_name', 'absolute_action_mask'])
                 # print("***** rlds_batch",rlds_batch.keys())
                 # ['image_primary', 'image_wrist', 'proprio', 'timestep', 'pad_mask_dict', 'pad_mask'])
                 # print("***** rlds_batch['observation']",rlds_batch["observation"].keys())

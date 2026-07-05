@@ -59,7 +59,7 @@ The generated output follows the standard LeRobot layout shown below.
 ### Expected Lerobot Data Layout
 
 ```text
-<dataset_name>/
+<bench_name>/
 ├── data/chunk-000/episode_*.parquet
 ├── meta/
 │   ├── info.json

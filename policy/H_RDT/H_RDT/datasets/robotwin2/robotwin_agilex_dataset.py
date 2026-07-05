@@ -460,7 +460,7 @@ class RobotwinAgilexDataset:
                     "state_indicator": state_indicator,
                     "action_norm": action_norm,
                     "instruction": language_embedding,  # Pre-encoded language instruction
-                    "dataset_name": self.DATASET_NAME,  # Dataset name
+                    "bench_name": self.DATASET_NAME,  # Dataset name
                 }
                 
                 return result

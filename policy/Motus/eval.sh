@@ -2,7 +2,7 @@
 set -e
 
 policy_name="$(basename "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
-dataset_name=${1}
+bench_name=${1}
 task_name=${2}
 ckpt_name=${3}
 env_cfg_type=${4}
@@ -21,8 +21,8 @@ UTILS_DIR="${ROOT_DIR}/utils"
 SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
-if [[ -z "${dataset_name}" || -z "${task_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" || -z "${action_type}" || -z "${seed}" || -z "${policy_gpu_id}" || -z "${env_gpu_id}" || -z "${policy_conda_env}" || -z "${eval_env_conda_env}" ]]; then
-    echo "Usage: bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
+if [[ -z "${bench_name}" || -z "${task_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" || -z "${action_type}" || -z "${seed}" || -z "${policy_gpu_id}" || -z "${env_gpu_id}" || -z "${policy_conda_env}" || -z "${eval_env_conda_env}" ]]; then
+    echo "Usage: bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
     exit 1
 fi
 
@@ -43,7 +43,7 @@ echo -e "\033[33m[INFO] Env GPU ID: ${env_gpu_id}\033[0m"
 echo -e "\033[32m[MAIN] start server, port=${FREE_PORT}\033[0m"
 
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -62,7 +62,7 @@ bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${FREE_PORT
 echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${FREE_PORT}\033[0m"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

@@ -449,7 +449,7 @@ def resolve_motus_checkpoint(model_cfg: dict[str, Any]) -> str:
         if raw_ckpt_name.is_absolute() or "/" in str(ckpt_name):
             return str(_resolve_path(ckpt_name))
 
-        tuple_keys = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
+        tuple_keys = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
         if all(model_cfg.get(key) is not None for key in tuple_keys):
             checkpoint_setting = "-".join(str(model_cfg[key]) for key in tuple_keys)
             tuple_path = (_CHECKPOINTS_DIR / checkpoint_setting).resolve()

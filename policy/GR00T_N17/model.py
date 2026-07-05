@@ -126,13 +126,13 @@ def _resolve_checkpoint_dir(model_cfg: dict[str, Any]) -> Path:
     if model_cfg.get("model_dir"):
         return _resolve_relative_path(model_cfg["model_dir"], _POLICY_DIR)
 
-    dataset_name = model_cfg["dataset_name"]
+    bench_name = model_cfg["bench_name"]
     ckpt_name = model_cfg["ckpt_name"]
     env_cfg_type = model_cfg["env_cfg_type"]
     expert_data_num = model_cfg["expert_data_num"]
     action_type = model_cfg["action_type"]
     seed = model_cfg["seed"]
-    ckpt_setting = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    ckpt_setting = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
     root = (_CHECKPOINTS_DIR / ckpt_setting).resolve()
     if not root.is_dir():
         raise FileNotFoundError(f"Checkpoint root not found: {root}")

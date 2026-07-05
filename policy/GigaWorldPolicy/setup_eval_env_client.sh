@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 10 ]]; then
-  echo "Usage: $0 <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <env_gpu_id> <eval_env_conda_env> <additional_info> <port> [policy_server_ip]" >&2
+  echo "Usage: $0 <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <env_gpu_id> <eval_env_conda_env> <additional_info> <port> [policy_server_ip]" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -32,7 +32,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
   "${yaml_file}" \
   "${eval_env_conda_env}" \
   "${policy_server_port}" \
-  "${dataset_name}" \
+  "${bench_name}" \
   "${task_name}" \
   "${env_cfg_type}" \
   "${policy_name}" \

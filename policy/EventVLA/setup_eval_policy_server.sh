@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 10 || $# -gt 11 ]]; then
-    echo "Usage: bash setup_eval_policy_server.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <policy_server_port> [policy_server_host]"
+    echo "Usage: bash setup_eval_policy_server.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <policy_server_port> [policy_server_host]"
     exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -41,7 +41,7 @@ read_yaml_value() {
 }
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
-processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+processed_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${processed_name}-${seed}"
 local_run_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
 
@@ -145,7 +145,7 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --overrides \
         port="${policy_server_port}" \
         host="${policy_server_host}" \
-        dataset_name="${dataset_name}" \
+        bench_name="${bench_name}" \
         task_name="${task_name}" \
         ckpt_name="${ckpt_name}" \
         checkpoint_path="${checkpoint_path}" \

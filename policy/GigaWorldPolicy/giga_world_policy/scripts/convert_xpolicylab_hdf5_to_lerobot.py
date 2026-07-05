@@ -58,12 +58,12 @@ def _stats(values: np.ndarray) -> dict[str, Any]:
     }
 
 
-def _resolve_source_dirs(root: Path, dataset_name: str, task_names: list[str], env_cfg_type: str) -> list[tuple[str, Path]]:
+def _resolve_source_dirs(root: Path, bench_name: str, task_names: list[str], env_cfg_type: str) -> list[tuple[str, Path]]:
     jobs = []
     for task_name in task_names:
         candidates = [
-            root / "data" / dataset_name / task_name / env_cfg_type,
-            root / "final_data" / dataset_name / task_name / env_cfg_type,
+            root / "data" / bench_name / task_name / env_cfg_type,
+            root / "final_data" / bench_name / task_name / env_cfg_type,
             root / "data" / task_name / env_cfg_type,
         ]
         for candidate in candidates:
@@ -219,7 +219,7 @@ def convert(args: argparse.Namespace):
     if not task_names:
         raise ValueError("--task-names resolved to an empty list")
 
-    source_dirs = _resolve_source_dirs(xpl_root, args.dataset_name, task_names, args.env_cfg_type)
+    source_dirs = _resolve_source_dirs(xpl_root, args.bench_name, task_names, args.env_cfg_type)
     output_dir = Path(args.output_dir).resolve()
     if output_dir.exists():
         if not args.overwrite:
@@ -385,7 +385,7 @@ def convert(args: argparse.Namespace):
     _write_json(
         output_dir / "meta" / "xpolicylab_info.json",
         {
-            "dataset_name": args.dataset_name,
+            "bench_name": args.bench_name,
             "task_names": task_names,
             "env_cfg_type": args.env_cfg_type,
             "action_type": args.action_type,
@@ -410,7 +410,7 @@ def convert(args: argparse.Namespace):
 def main():
     parser = argparse.ArgumentParser(description="Convert XPolicyLab HDF5 episodes to LeRobot v2.1 for GigaWorldPolicy")
     parser.add_argument("--xpolicylab-root", required=True)
-    parser.add_argument("--dataset-name", required=True)
+    parser.add_argument("--bench-name", required=True)
     parser.add_argument("--task-names", required=True, help="One task or comma-separated tasks. For single task this is usually ckpt_name.")
     parser.add_argument("--env-cfg-type", required=True)
     parser.add_argument("--expert-data-num", required=True, type=int, help="Episodes per task; <=0 means all available.")

@@ -2,12 +2,12 @@
 set -euo pipefail
 
 if [[ $# -ne 11 ]]; then
-    echo "Usage: bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
+    echo "Usage: bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
     echo "Example: bash eval.sh RoboDojo stack_bowls eventvla arx_x5 3500 joint 0 0 1 XPolicyLab XPolicyLab"
     exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -41,7 +41,7 @@ trap cleanup EXIT
 echo "[MAIN] start EventVLA server, policy_server_port=${policy_server_port}"
 
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -65,7 +65,7 @@ bash "${UTILS_DIR}/wait_for_policy_server.sh" \
 echo "[MAIN] start client, server=${policy_server_host}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

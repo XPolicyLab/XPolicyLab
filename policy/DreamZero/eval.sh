@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-dataset_name=${1:?dataset_name is required}
+bench_name=${1:?bench_name is required}
 task_name=${2:?task_name is required}
 ckpt_name=${3:?ckpt_name is required}
 env_cfg_type=${4:?env_cfg_type is required}
@@ -50,7 +50,7 @@ trap cleanup EXIT
 echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -70,7 +70,7 @@ sleep 3
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

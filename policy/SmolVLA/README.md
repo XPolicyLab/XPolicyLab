@@ -6,7 +6,7 @@ SmolVLA 基于 LeRobot SmolVLA 接入 XPolicyLab。安装见 [INSTALLATION.md](I
 
 ```bash
 conda activate smolvla   # 或 install.sh 里 SMOVLA_CONDA_ENV 指定的名字
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 默认 LeRobot `dataset.repo_id` 与 task（`ckpt_name`）对应，与 v30 批量转换一致：

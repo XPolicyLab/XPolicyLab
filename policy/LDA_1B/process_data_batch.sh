@@ -1,8 +1,8 @@
 #!/bin/bash
-# Usage: bash process_data_batch.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+# Usage: bash process_data_batch.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 set -euo pipefail
 
-dataset_name=${1:?dataset_name required}
+bench_name=${1:?bench_name required}
 ckpt_name=${2:?ckpt_name required}
 env_cfg_type=${3:?env_cfg_type required}
 expert_data_num=${4:?expert_data_num required}
@@ -10,7 +10,7 @@ action_type=${5:?action_type required}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-DATASET_DIR="${ROOT_DIR}/data/${dataset_name}"
+DATASET_DIR="${ROOT_DIR}/data/${bench_name}"
 
 shopt -s nullglob
 task_names=()
@@ -31,5 +31,5 @@ joined="$(IFS=,; printf '%s' "${sorted[*]}")"
 echo "[process_data_batch] merging ${#sorted[@]} tasks -> ckpt_name=${ckpt_name}: ${joined}"
 
 bash "${SCRIPT_DIR}/process_data.sh" \
-  "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" \
+  "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" \
   "${joined}" "${ckpt_name}"

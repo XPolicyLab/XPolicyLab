@@ -5,7 +5,7 @@ defaults:
 name: robot_${task.name}
 _target_: diffusion_policy.workspace.robotworkspace.RobotWorkspace
 
-dataset_name: null
+bench_name: null
 task_name: ${task.name}
 shape_meta: ${task.shape_meta}
 exp_name: "default"

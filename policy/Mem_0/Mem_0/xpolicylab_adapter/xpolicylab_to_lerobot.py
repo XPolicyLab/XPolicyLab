@@ -4,11 +4,11 @@ format (one step -- no RMBench-format intermediate).
 
 DP-style entrypoint (called by ../process_data.sh):
 
-    python xpolicylab_to_lerobot.py <dataset_name> <ckpt_name> <env_cfg_type> \
+    python xpolicylab_to_lerobot.py <bench_name> <ckpt_name> <env_cfg_type> \
         <expert_data_num> <action_type> --task_type {M1,Mn} [--instruction "..."] \
         [--language_annotation PATH]
 
-Reads:  <ROOT>/data/<dataset_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5
+Reads:  <ROOT>/data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5
         via XPolicyLab.utils.load_file.load_hdf5 (default sample: data/RoboDojo/test_data/arx_x5)
 Writes: policy/Mem_0/data/<dataset>-<ckpt>-<env>-<action>-lerobot
         (legacy: Mem_0/lerobot_datasets/... when MEM0_LEGACY_PATHS=1)
@@ -108,17 +108,17 @@ def _packed14_to_model16(packed14: np.ndarray) -> np.ndarray:
 
 
 def resolve_dataset_out_dir(
-    dataset_name: str,
+    bench_name: str,
     ckpt_name: str,
     env_cfg_type: str,
     expert_data_num: int,
     action_type: str,
 ) -> Path:
     """Default LeRobot output root (README §4.2); legacy when MEM0_LEGACY_PATHS=1."""
-    tag = f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
+    tag = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
     if os.environ.get("MEM0_LEGACY_PATHS") == "1":
         legacy_name = (
-            f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}"
+            f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}"
         )
         return Path(UPSTREAM_DIR) / "lerobot_datasets" / legacy_name
     return Path(POLICY_DIR) / "data" / f"{tag}-lerobot"
@@ -215,7 +215,7 @@ def load_episode_images(
 
 def resolve_mn_annotation_path(
     task_name: str,
-    dataset_name: str,
+    bench_name: str,
     env_cfg_type: str,
     language_annotation: Optional[str] = None,
     annotation_root: Optional[str] = None,
@@ -228,7 +228,7 @@ def resolve_mn_annotation_path(
             return candidate
     for candidate in (
         Path(LANGUAGE_ANNOTATION_ROOT) / task_name / "language_annotation.json",
-        Path(ANNOTATIONS_ROOT) / dataset_name / task_name / env_cfg_type / "language_annotation.json",
+        Path(ANNOTATIONS_ROOT) / bench_name / task_name / env_cfg_type / "language_annotation.json",
     ):
         if candidate.is_file():
             return candidate
@@ -318,7 +318,7 @@ def convert_episode_frames(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="XPolicyLab HDF5 -> Mem_0 LeRobot dataset")
-    parser.add_argument("dataset_name", type=str)
+    parser.add_argument("bench_name", type=str)
     parser.add_argument("ckpt_name", type=str,
                         help="Experiment/raw-task key; HDF5 source dir under data/<dataset>/<ckpt_name>/")
     parser.add_argument("env_cfg_type", type=str)
@@ -344,17 +344,17 @@ def main() -> None:
         f"arm_dim={robot_action_dim_info['arm_dim']}."
     )
 
-    task_dir = Path(ROOT_DIR) / "data" / args.dataset_name / args.ckpt_name / args.env_cfg_type
+    task_dir = Path(ROOT_DIR) / "data" / args.bench_name / args.ckpt_name / args.env_cfg_type
     if not task_dir.is_dir():
         raise FileNotFoundError(
             f"Source data dir not found: {task_dir}\n"
-            "Expected data/<dataset_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5."
+            "Expected data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5."
         )
 
     annotations = {}
     if args.task_type == "Mn":
         ann_path = resolve_mn_annotation_path(
-            args.ckpt_name, args.dataset_name, args.env_cfg_type, args.language_annotation,
+            args.ckpt_name, args.bench_name, args.env_cfg_type, args.language_annotation,
         )
         if not ann_path.is_file():
             raise FileNotFoundError(
@@ -362,9 +362,9 @@ def main() -> None:
             )
         annotations = json.loads(ann_path.read_text(encoding="utf-8"))
 
-    out_name = f"{args.dataset_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
+    out_name = f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
     out_root = resolve_dataset_out_dir(
-        args.dataset_name, args.ckpt_name, args.env_cfg_type,
+        args.bench_name, args.ckpt_name, args.env_cfg_type,
         args.expert_data_num, args.action_type,
     )
     if out_root.exists():

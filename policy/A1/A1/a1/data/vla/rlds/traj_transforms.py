@@ -51,7 +51,7 @@ def chunk_act_obs(traj: Dict, window_size: int, future_action_window_size: int =
 
     # Truncate other elements of the trajectory dict
     traj["task"] = tf.nest.map_structure(lambda x: tf.gather(x, tf.range(effective_traj_len)), traj["task"])
-    traj["dataset_name"] = tf.gather(traj["dataset_name"], tf.range(effective_traj_len))
+    traj["bench_name"] = tf.gather(traj["bench_name"], tf.range(effective_traj_len))
     traj["absolute_action_mask"] = tf.gather(traj["absolute_action_mask"], tf.range(effective_traj_len))
 
     return traj

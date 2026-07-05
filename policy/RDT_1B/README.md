@@ -7,7 +7,7 @@ RDT_1B 已按 XPolicyLab policy 方式封装。环境安装见 [INSTALLATION.md]
 所有数据与 embedding 通过 **4 元组** 索引，与 `train.sh` / `process_data.sh` 参数一致：
 
 ```text
-<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>
+<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>
 ```
 
 ```text
@@ -47,7 +47,7 @@ bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0,1,2,3,4,5,6,7
 ## process_data.sh
 
 ```text
-bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <action_type> [source_path]
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [source_path]
 ```
 
 | 参数 | 示例 | 说明 |
@@ -62,7 +62,7 @@ bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <action_type> [so
 ## train.sh
 
 ```text
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
 
 训练前需已执行 `process_data.sh`。默认每 1000 step 存 checkpoint，总步数 200000。

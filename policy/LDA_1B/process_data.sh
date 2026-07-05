@@ -1,8 +1,8 @@
 #!/bin/bash
-# Usage: bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> [raw_task_dirs] [dataset_id]
+# Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> [raw_task_dirs] [dataset_id]
 set -euo pipefail
 
-dataset_name=${1:?dataset_name required}
+bench_name=${1:?bench_name required}
 ckpt_name=${2:?ckpt_name required}
 env_cfg_type=${3:?env_cfg_type required}
 expert_data_num=${4:?expert_data_num required}
@@ -15,13 +15,13 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 ADAPTER_DIR="${SCRIPT_DIR}/LDA-1B/xpolicylab_adapter"
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
-out_tag="$(xpolicylab_dataset_tag "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")"
-echo "[process_data] ${dataset_name}/${raw_task_dirs}/${env_cfg_type} x${expert_data_num} (${action_type}) -> data/${out_tag}/"
+out_tag="$(xpolicylab_dataset_tag "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")"
+echo "[process_data] ${bench_name}/${raw_task_dirs}/${env_cfg_type} x${expert_data_num} (${action_type}) -> data/${out_tag}/"
 
 cmd=(python "${ADAPTER_DIR}/process_data.py"
   --root-dir "${ROOT_DIR}"
   --policy-dir "${SCRIPT_DIR}"
-  --dataset-name "${dataset_name}"
+  --bench-name "${bench_name}"
   --ckpt-name "${ckpt_name}"
   --raw-task-dirs "${raw_task_dirs}"
   --env-cfg-type "${env_cfg_type}"

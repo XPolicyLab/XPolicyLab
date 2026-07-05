@@ -84,26 +84,26 @@ def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process some episodes.")
-    parser.add_argument("dataset_name", type=str, help="The name of the dataset (e.g., ACT)",)
+    parser.add_argument("bench_name", type=str, help="The name of the dataset (e.g., ACT)",)
     parser.add_argument("task_name", type=str, help="The name of the task (e.g., beat_block_hammer)",)
     parser.add_argument("env_cfg_type", type=str, help="The name of the environment config",)
     parser.add_argument("expert_data_num", type=int, help="Number of episodes to process (e.g., 50)",)
     parser.add_argument("action_type", type=str, help="The type of action to process (e.g., joint)",)
     args = parser.parse_args()
     
-    dataset_name = args.dataset_name
+    bench_name = args.bench_name
     task_name = args.task_name
     env_cfg_type = args.env_cfg_type
     expert_data_num = args.expert_data_num
     action_type = args.action_type
 
-    save_dir = f"processed_data/{dataset_name}/{task_name}/{env_cfg_type}-{expert_data_num}-{action_type}"
+    save_dir = f"processed_data/{bench_name}/{task_name}/{env_cfg_type}-{expert_data_num}-{action_type}"
 
-    load_data_dir = os.path.join("../../../data", str(dataset_name), str(task_name), str(env_cfg_type))
+    load_data_dir = os.path.join("../../../data", str(bench_name), str(task_name), str(env_cfg_type))
 
     robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
-    begin = data_transform(os.path.join("../../../data/", dataset_name, task_name, env_cfg_type, 'data'), expert_data_num, load_data_dir, save_dir, robot_action_dim_info)
+    begin = data_transform(os.path.join("../../../data/", bench_name, task_name, env_cfg_type, 'data'), expert_data_num, load_data_dir, save_dir, robot_action_dim_info)
 
     print()
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     except Exception:
         TASK_CONFIGS = {}
 
-    TASK_CONFIGS[f"{dataset_name}-{task_name}-{env_cfg_type}-{expert_data_num}-{action_type}"] = {
+    TASK_CONFIGS[f"{bench_name}-{task_name}-{env_cfg_type}-{expert_data_num}-{action_type}"] = {
         "dataset_dir": save_dir,
         "num_episodes": expert_data_num,
         "episode_len": 5000,

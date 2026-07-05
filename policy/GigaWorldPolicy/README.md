@@ -4,9 +4,9 @@ This policy follows the XPolicyLab data contract. Raw trajectories are read from
 
 ## XPolicyLab Contract
 
-- `process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>` prepares `data/<5-tuple>`.
-- `train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>` writes checkpoints to `checkpoints/<6-tuple>`.
-- `eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>` starts the XPolicyLab model server and env client.
+- `process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>` prepares `data/<5-tuple>`.
+- `train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>` writes checkpoints to `checkpoints/<6-tuple>`.
+- `eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>` starts the XPolicyLab model server and env client.
 - `model.py` implements `update_obs`, `update_obs_batch`, `get_action`, `get_action_batch`, and `reset` for `XPolicyLab/setup_policy_server.py`.
 
 ## Raw Data
@@ -14,7 +14,7 @@ This policy follows the XPolicyLab data contract. Raw trajectories are read from
 Expected XPolicyLab input layout:
 
 ```text
-data/<dataset_name>/<task_name>/<env_cfg_type>/
+data/<bench_name>/<task_name>/<env_cfg_type>/
 ├── data/episode_*.hdf5
 ├── preview_video/
 ├── scene_layout/

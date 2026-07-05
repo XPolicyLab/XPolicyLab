@@ -76,7 +76,7 @@ CAMERA_MAP = {
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataset_name")
+    parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
     parser.add_argument("expert_data_num", type=int)
@@ -88,7 +88,7 @@ def main() -> None:
     if args.action_type != "joint":
         raise ValueError("RISE data conversion expects action_type=joint.")
 
-    data_dir = args.data_dir or REPO_ROOT / "data" / args.dataset_name / args.ckpt_name / args.env_cfg_type
+    data_dir = args.data_dir or REPO_ROOT / "data" / args.bench_name / args.ckpt_name / args.env_cfg_type
     if not data_dir.exists():
         raise FileNotFoundError(f"Cannot find XPolicyLab data directory: {data_dir.relative_to(REPO_ROOT)}")
 
@@ -98,7 +98,7 @@ def main() -> None:
         raise ValueError(f"RISE release configs expect 14-D joint actions, got {action_dim} for {args.env_cfg_type}.")
 
     output_root = POLICY_DIR / "data" / (
-        f"{args.dataset_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}-lerobot"
+        f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}-lerobot"
     )
     if output_root.exists():
         shutil.rmtree(output_root)

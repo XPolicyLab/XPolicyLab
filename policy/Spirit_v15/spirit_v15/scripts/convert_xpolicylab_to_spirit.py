@@ -149,8 +149,8 @@ def _discover_conversion_targets(patterns: List[str]) -> List[Tuple[str, str, st
     return targets
 
 
-def _resolve_input_dir(dataset_name: str, task_name: str, env_cfg_type: str) -> Path:
-    return DATA_ROOT / dataset_name / task_name / env_cfg_type / "data"
+def _resolve_input_dir(bench_name: str, task_name: str, env_cfg_type: str) -> Path:
+    return DATA_ROOT / bench_name / task_name / env_cfg_type / "data"
 
 
 def _find_input_files(input_dir: Path) -> List[Path]:
@@ -171,19 +171,19 @@ def _collect_target_input_files(
     max_episodes_per_target: Optional[int] = None,
 ) -> List[Tuple[str, str, str, Path, List[Path]]]:
     collected = []
-    for dataset_name, task_name, env_cfg_type in targets:
-        input_dir = _resolve_input_dir(dataset_name, task_name, env_cfg_type)
+    for bench_name, task_name, env_cfg_type in targets:
+        input_dir = _resolve_input_dir(bench_name, task_name, env_cfg_type)
         input_files = _find_input_files(input_dir)
         if max_episodes_per_target is not None and max_episodes_per_target > 0:
             input_files = input_files[:max_episodes_per_target]
-        collected.append((dataset_name, task_name, env_cfg_type, input_dir, input_files))
+        collected.append((bench_name, task_name, env_cfg_type, input_dir, input_files))
     return collected
 
 
 def _print_matched_targets(target_inputs: List[Tuple[str, str, str, Path, List[Path]]]) -> None:
     print("Matched targets:")
-    for dataset_name, task_name, env_cfg_type, input_dir, input_files in target_inputs:
-        print(f"  - {dataset_name}/{task_name}/{env_cfg_type}: {len(input_files)} files from {input_dir}")
+    for bench_name, task_name, env_cfg_type, input_dir, input_files in target_inputs:
+        print(f"  - {bench_name}/{task_name}/{env_cfg_type}: {len(input_files)} files from {input_dir}")
 
 
 def _get_nested(data, *keys, default=None):
@@ -515,7 +515,7 @@ def convert_xpolicylab_dataset(
     episode_counter = 0
     resolved_fps = fps_override or 30.0
 
-    for dataset_name, task_name_item, env_cfg_type, input_dir, input_files in target_inputs:
+    for bench_name, task_name_item, env_cfg_type, input_dir, input_files in target_inputs:
         if not input_files:
             failures.append((str(input_dir), "No .hdf5 or .h5 files found"))
             continue
@@ -532,7 +532,7 @@ def convert_xpolicylab_dataset(
                 write_episode(
                     data=data,
                     source_meta={
-                        "source_dataset": dataset_name,
+                        "source_dataset": bench_name,
                         "source_task": task_name_item,
                         "source_env_cfg": env_cfg_type,
                         "source_episode": input_path.stem,

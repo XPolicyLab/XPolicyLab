@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -17,21 +17,21 @@ DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"
 DATA_SOURCE_DIR="${DEXBOTIC_ROOT}/dexbotic/data/data_source"
 TRANSFORM_SCRIPT="${POLICY_DIR}/scripts/transform_dm0_dexdata_format.py"
 GENERATE_SOURCE_SCRIPT="${POLICY_DIR}/scripts/generate_data_source.py"
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 converted_data_root="${DM0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${DM0_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
 data_source_path="${DATA_SOURCE_DIR}/robodojo_${data_setting}.py"
 
 resolve_single_input_dir() {
-  if [[ "${dataset_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}" ]]; then
+  if [[ "${bench_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}" ]]; then
     echo "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}"
     return
   fi
-  if [[ -d "${raw_data_root}/${dataset_name}/${ckpt_name}/${env_cfg_type}" ]]; then
-    echo "${raw_data_root}/${dataset_name}/${ckpt_name}/${env_cfg_type}"
+  if [[ -d "${raw_data_root}/${bench_name}/${ckpt_name}/${env_cfg_type}" ]]; then
+    echo "${raw_data_root}/${bench_name}/${ckpt_name}/${env_cfg_type}"
     return
   fi
-  echo "Input directory not found for ${dataset_name}/${ckpt_name}/${env_cfg_type}" >&2
+  echo "Input directory not found for ${bench_name}/${ckpt_name}/${env_cfg_type}" >&2
   echo "For 35-task co-train (3500 episodes), use ckpt_name=cotrain." >&2
   echo "For a single task, use ckpt_name=<task_name>, e.g. sweep_blocks." >&2
   echo "Example: bash process_data.sh RoboDojo cotrain arx_x5 3500 ee" >&2
@@ -83,7 +83,7 @@ resolve_input_dir() {
   resolve_single_input_dir
 }
 
-echo "[Dexbotic_DM0] dataset_name=${dataset_name}"
+echo "[Dexbotic_DM0] bench_name=${bench_name}"
 echo "[Dexbotic_DM0] ckpt_name=${ckpt_name}"
 echo "[Dexbotic_DM0] env_cfg_type=${env_cfg_type}"
 echo "[Dexbotic_DM0] expert_data_num=${expert_data_num}"
@@ -117,5 +117,5 @@ fi
 
 echo "[Dexbotic_DM0] process_data done."
 echo "[Dexbotic_DM0] dexdata_root=${converted_data_root}"
-echo "[Dexbotic_DM0] dataset_name=robodojo_${data_setting}"
+echo "[Dexbotic_DM0] bench_name=robodojo_${data_setting}"
 echo "[Dexbotic_DM0] data_source=${data_source_path}"

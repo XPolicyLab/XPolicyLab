@@ -4,7 +4,7 @@ set -euo pipefail
 # Mem_0 eval orchestrator (XPolicyLab 10-arg contract + optional Mn vLLM auto-start).
 #
 # Usage:
-#   bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> \
+#   bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> \
 #                <action_type> <seed> \
 #                <policy_gpu_id> <env_gpu_id> \
 #                <policy_conda_env> <eval_env_conda_env> [planning_gpu_ids]
@@ -23,7 +23,7 @@ set -euo pipefail
 #   GLOBAL_TASK="..." bash eval.sh RoboDojo cover_blocks cover_blocks arx_x5 joint 0 \
 #       0 0 mem0 XPolicyLab 4,5,6,7
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -101,7 +101,7 @@ if [[ "${task_type}" == "Mn" && -z "${vllm_url}" && -n "${planning_gpu_ids}" ]];
     planning_port=$(bash "${UTILS_DIR}/get_free_port.sh")
     echo -e "\033[32m[MAIN] Mn task: start vLLM planning server on port ${planning_port}\033[0m"
     bash "${PLANNING_SCRIPT}" \
-        "${dataset_name}" \
+        "${bench_name}" \
         "${ckpt_name}" \
         "${env_cfg_type}" \
         "${action_type}" \
@@ -118,7 +118,7 @@ fi
 
 echo -e "\033[32m[MAIN] start execution policy server, port=${policy_server_port}\033[0m"
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -134,7 +134,7 @@ wait_for_port "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Pol
 
 echo -e "\033[32m[MAIN] start env client (eval_env from deploy.yml), server=${policy_server_ip}:${policy_server_port}\033[0m"
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

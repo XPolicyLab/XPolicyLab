@@ -9,7 +9,7 @@ set -euo pipefail
 #   3. all       - run advantage -> policy
 #
 # Usage:
-#   bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]
 #
 # Examples:
 #   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 advantage
@@ -17,7 +17,7 @@ set -euo pipefail
 #   bash train.sh RoboDojo stack_bowls arx_x5 100 joint 42 0 all
 
 stages_regex="^(advantage|policy|all)$"
-usage="Usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]"
+usage="Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra args]"
 
 if [[ "${1:-}" =~ ${stages_regex} ]]; then
     legacy_usage="Usage: bash train.sh <advantage|policy|all> <gpu_id> <seed> [extra args]"
@@ -26,13 +26,13 @@ if [[ "${1:-}" =~ ${stages_regex} ]]; then
     seed=${3:?${legacy_usage}}
     extra_args=("${@:4}")
 
-    dataset_name="${RISE_DATASET_NAME:-RoboDojo}"
+    bench_name="${RISE_BENCH_NAME:-RoboDojo}"
     ckpt_name="${RISE_CKPT_NAME:-stack_bowls}"
     env_cfg_type="${RISE_ENV_CFG_TYPE:-arx_x5}"
     expert_data_num="${RISE_EXPERT_DATA_NUM:-100}"
     action_type="${RISE_ACTION_TYPE:-joint}"
 else
-    dataset_name=${1:?${usage}}
+    bench_name=${1:?${usage}}
     ckpt_name=${2:?${usage}}
     env_cfg_type=${3:?${usage}}
     expert_data_num=${4:?${usage}}
@@ -57,21 +57,21 @@ DEFAULT_RAW_DATASET_LINK="${SCRIPT_DIR}/data/RoboDojo_sim_v21_video_abot-lerobot
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
-STANDARD_CKPT_DIR="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+STANDARD_CKPT_DIR="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
 
 if [[ -n "${RISE_RAW_DATASET:-}" ]]; then
     RAW_DATASET_LINK="${RISE_RAW_DATASET}"
-elif [[ -d "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+elif [[ -d "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${expert_data_num}")" || \
-      -L "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+      -L "$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${expert_data_num}")" ]]; then
-    RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+    RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
         "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
 elif [[ -e "${DEFAULT_RAW_DATASET_LINK}" ]]; then
     RAW_DATASET_LINK="${DEFAULT_RAW_DATASET_LINK}"
 else
-    RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+    RAW_DATASET_LINK="$(xpolicylab_resolve_dataset_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
         "${env_cfg_type}" "${action_type}" "${expert_data_num}")"
 fi
 

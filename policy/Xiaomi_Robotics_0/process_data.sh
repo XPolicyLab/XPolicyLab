@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -15,7 +15,7 @@ action_type=$5
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XR0_ROOT="${POLICY_DIR}/xiaomi_robotics_0/xr0"
 TRANSFORM_SCRIPT="${POLICY_DIR}/scripts/transform_xr0_json_format.py"
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 converted_data_root="${XR0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${XR0_RAW_DATA_ROOT:-}"
 if [[ -z "${raw_data_root}" ]]; then
@@ -25,15 +25,15 @@ fi
 data_config_name="${XR0_DATA_CONFIG_NAME:-${data_setting}}"
 
 resolve_single_input_dir() {
-  if [[ "${dataset_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}" ]]; then
+  if [[ "${bench_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}" ]]; then
     echo "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}"
     return
   fi
-  if [[ -d "${raw_data_root}/${dataset_name}/${ckpt_name}/${env_cfg_type}" ]]; then
-    echo "${raw_data_root}/${dataset_name}/${ckpt_name}/${env_cfg_type}"
+  if [[ -d "${raw_data_root}/${bench_name}/${ckpt_name}/${env_cfg_type}" ]]; then
+    echo "${raw_data_root}/${bench_name}/${ckpt_name}/${env_cfg_type}"
     return
   fi
-  echo "Input directory not found for ${dataset_name}/${ckpt_name}/${env_cfg_type}" >&2
+  echo "Input directory not found for ${bench_name}/${ckpt_name}/${env_cfg_type}" >&2
   echo "Set XR0_RAW_DATA_ROOT or check ckpt_name." >&2
   exit 1
 }
@@ -78,7 +78,7 @@ resolve_input_dir() {
   resolve_single_input_dir
 }
 
-echo "[Xiaomi_Robotics_0] dataset_name=${dataset_name}"
+echo "[Xiaomi_Robotics_0] bench_name=${bench_name}"
 echo "[Xiaomi_Robotics_0] ckpt_name=${ckpt_name}"
 echo "[Xiaomi_Robotics_0] env_cfg_type=${env_cfg_type}"
 echo "[Xiaomi_Robotics_0] expert_data_num=${expert_data_num}"

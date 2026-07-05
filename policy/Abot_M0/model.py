@@ -244,7 +244,7 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> Path:
     else:
         step_name = "steps_60000_pytorch_model.pt"
 
-    tuple_keys = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
+    tuple_keys = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
     if all(model_cfg.get(key) is not None for key in tuple_keys):
         ckpt_setting = "-".join(str(model_cfg[key]) for key in tuple_keys)
         for checkpoints_dir in _CHECKPOINTS_DIRS:

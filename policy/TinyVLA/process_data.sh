@@ -3,11 +3,11 @@ set -e
 
 
 if [[ $# -ne 5 ]]; then
-  echo "Usage: bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+  echo "Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
   exit 1
 fi
 
-dataset_name=${1}
+bench_name=${1}
 ckpt_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
@@ -15,11 +15,11 @@ action_type=${5}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
-SOURCE_ROOT="${XPL_SOURCE_ROOT:-${ROOT_DIR}/data/${dataset_name}}"
+SOURCE_ROOT="${XPL_SOURCE_ROOT:-${ROOT_DIR}/data/${bench_name}}"
 WORKERS="${TINYVLA_PROCESS_WORKERS:-8}"
 COMPRESSION="${TINYVLA_HDF5_COMPRESSION:-lzf}"
 
-ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 out_dir="${POLICY_DIR}/data/${ckpt_setting}"
 
 echo "[TinyVLA process_data] output: ${out_dir}"
@@ -45,7 +45,7 @@ if [[ -d "${out_dir}" ]]; then
 fi
 
 python "${POLICY_DIR}/process_data.py" \
-  "${dataset_name}" \
+  "${bench_name}" \
   "${ckpt_name}" \
   "${env_cfg_type}" \
   "${expert_data_num}" \

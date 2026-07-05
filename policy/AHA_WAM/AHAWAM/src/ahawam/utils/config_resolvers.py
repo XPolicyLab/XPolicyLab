@@ -33,7 +33,7 @@ def sum_shapes(shape_meta_list):
 
 def max_action_dim(embodiment_datasets_cfg):
     max_dim = 0
-    for dataset_name, dataset_cfg in embodiment_datasets_cfg.items():
+    for bench_name, dataset_cfg in embodiment_datasets_cfg.items():
         if "shape_meta" in dataset_cfg:
             action_cfg = dataset_cfg.shape_meta.action
             current_dim = sum_shapes(action_cfg)
@@ -45,7 +45,7 @@ def max_action_dim(embodiment_datasets_cfg):
 
 def max_state_dim(embodiment_datasets_cfg):
     max_dim = 0
-    for dataset_name, dataset_cfg in embodiment_datasets_cfg.items():
+    for bench_name, dataset_cfg in embodiment_datasets_cfg.items():
         if "shape_meta" in dataset_cfg:
             state_cfg = dataset_cfg.shape_meta.state
             current_dim = sum_shapes(state_cfg)

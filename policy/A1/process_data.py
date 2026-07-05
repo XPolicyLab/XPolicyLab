@@ -39,13 +39,13 @@ def _json_default(value):
     raise TypeError(type(value).__name__)
 
 
-def _resolve_source_root(project_root: Path, dataset_name: str, task_name: str, env_cfg_type: str) -> Path:
+def _resolve_source_root(project_root: Path, bench_name: str, task_name: str, env_cfg_type: str) -> Path:
     candidates = [
-        project_root / "final_data" / dataset_name / task_name / env_cfg_type,
-        project_root / "data" / dataset_name / task_name / env_cfg_type,
+        project_root / "final_data" / bench_name / task_name / env_cfg_type,
+        project_root / "data" / bench_name / task_name / env_cfg_type,
         project_root / "data" / task_name / env_cfg_type,
-        project_root.parent / "final_data" / dataset_name / task_name / env_cfg_type,
-        project_root.parent / "data" / dataset_name / task_name / env_cfg_type,
+        project_root.parent / "final_data" / bench_name / task_name / env_cfg_type,
+        project_root.parent / "data" / bench_name / task_name / env_cfg_type,
         project_root.parent / "data" / task_name / env_cfg_type,
     ]
     for candidate in candidates:
@@ -191,8 +191,8 @@ def _resolve_dataset_id(args, task_names: list[str]) -> str:
     if args.dataset_id:
         return args.dataset_id
     if len(task_names) == 1:
-        return f"{args.dataset_name}-{task_names[0]}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
-    return f"{args.dataset_name}-cotrain-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+        return f"{args.bench_name}-{task_names[0]}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+    return f"{args.bench_name}-cotrain-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
 
 
 def convert(args) -> None:
@@ -203,7 +203,7 @@ def convert(args) -> None:
 
     episode_jobs: list[tuple[Path, str]] = []
     for task_name in task_names:
-        source_root = _resolve_source_root(project_root, args.dataset_name, task_name, args.env_cfg_type)
+        source_root = _resolve_source_root(project_root, args.bench_name, task_name, args.env_cfg_type)
         ep_files = sorted((source_root / "data").glob("episode_*.hdf5"))[: int(args.expert_data_num)]
         if len(ep_files) < int(args.expert_data_num):
             raise FileNotFoundError(
@@ -321,7 +321,7 @@ def convert(args) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Convert XPolicyLab HDF5 data to LeRobot v2.1 format for A1.")
-    parser.add_argument("dataset_name")
+    parser.add_argument("bench_name")
     parser.add_argument("task_name", help="task name, or comma-separated list to merge")
     parser.add_argument("env_cfg_type")
     parser.add_argument("expert_data_num", type=int)

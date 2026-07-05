@@ -119,7 +119,7 @@ def _plan_target_metadata(targets):
     max_per_arm_dims = []
     metadata = {}
     max_fps = 0
-    for dataset_name, task_name, env_cfg_type in targets:
+    for bench_name, task_name, env_cfg_type in targets:
         robot_name, robot_action_dim_info, fps = _load_env_metadata(env_cfg_type)
         per_arm_dims = _dims_from_robot_action_info(robot_action_dim_info)
         if len(max_per_arm_dims) < len(per_arm_dims):
@@ -127,7 +127,7 @@ def _plan_target_metadata(targets):
         for index, dim in enumerate(per_arm_dims):
             max_per_arm_dims[index] = max(max_per_arm_dims[index], dim)
         max_fps = max(max_fps, fps)
-        metadata[(dataset_name, task_name, env_cfg_type)] = {
+        metadata[(bench_name, task_name, env_cfg_type)] = {
             "robot_name": robot_name,
             "robot_action_dim_info": robot_action_dim_info,
             "fps": fps,
@@ -214,14 +214,14 @@ def _pad_state_to_target_dims(array, current_dims, target_dims, name):
     return np.concatenate(padded_parts, axis=1) if padded_parts else arr
 
 
-def _resolve_input_dir(dataset_name, task_name, env_cfg_type, input_dir=None):
+def _resolve_input_dir(bench_name, task_name, env_cfg_type, input_dir=None):
     if input_dir is not None:
         return Path(input_dir)
-    return DATA_ROOT / dataset_name / task_name / env_cfg_type / "data"
+    return DATA_ROOT / bench_name / task_name / env_cfg_type / "data"
 
 
-def _default_repo_id(dataset_name, task_name, env_cfg_type):
-    return f"{dataset_name}_{task_name}_{env_cfg_type}".replace("/", "_").lower()
+def _default_repo_id(bench_name, task_name, env_cfg_type):
+    return f"{bench_name}_{task_name}_{env_cfg_type}".replace("/", "_").lower()
 
 def create_empty_dataset(
     repo_id: str,
@@ -542,17 +542,17 @@ def find_input_files(input_dir):
 
 def _collect_target_input_files(targets):
     collected = []
-    for dataset_name, task_name, env_cfg_type in targets:
-        input_dir = _resolve_input_dir(dataset_name, task_name, env_cfg_type)
+    for bench_name, task_name, env_cfg_type in targets:
+        input_dir = _resolve_input_dir(bench_name, task_name, env_cfg_type)
         input_files = find_input_files(input_dir)
-        collected.append((dataset_name, task_name, env_cfg_type, input_dir, input_files))
+        collected.append((bench_name, task_name, env_cfg_type, input_dir, input_files))
     return collected
 
 
 def _print_matched_targets(target_inputs):
     print("Matched targets:")
-    for dataset_name, task_name, env_cfg_type, input_dir, input_files in target_inputs:
-        print(f"  - {dataset_name}/{task_name}/{env_cfg_type}: {len(input_files)} files from {input_dir}")
+    for bench_name, task_name, env_cfg_type, input_dir, input_files in target_inputs:
+        print(f"  - {bench_name}/{task_name}/{env_cfg_type}: {len(input_files)} files from {input_dir}")
 
 
 def main():
@@ -590,21 +590,21 @@ def main():
     failures = []
     total_files = 0
     total_success = 0
-    for dataset_name, task_name, env_cfg_type, input_dir, input_files in target_inputs:
+    for bench_name, task_name, env_cfg_type, input_dir, input_files in target_inputs:
         task_success = 0
 
         if not input_files:
             failures.append((str(input_dir), "No .hdf5 or .h5 files found"))
             continue
 
-        current_dims = metadata_by_target[(dataset_name, task_name, env_cfg_type)]["per_arm_dims"]
-        for input_path in tqdm(input_files, desc=f"Converting {dataset_name}/{task_name}/{env_cfg_type}"):
+        current_dims = metadata_by_target[(bench_name, task_name, env_cfg_type)]["per_arm_dims"]
+        for input_path in tqdm(input_files, desc=f"Converting {bench_name}/{task_name}/{env_cfg_type}"):
             total_files += 1
 
             if task_success >= args.max_episode:
                 print(
                     f"Reached max_episode={args.max_episode} "
-                    f"for {dataset_name}/{task_name}/{env_cfg_type}"
+                    f"for {bench_name}/{task_name}/{env_cfg_type}"
                 )
                 break
             try:

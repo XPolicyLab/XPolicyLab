@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -23,7 +23,7 @@ yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
 if [[ "${ckpt_name}" == *-*-* ]]; then
   ckpt_setting="${ckpt_name}"
 else
-  ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+  ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 fi
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
@@ -43,7 +43,7 @@ exec env \
             host="${policy_server_host}" \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             ckpt_setting="${ckpt_setting}" \

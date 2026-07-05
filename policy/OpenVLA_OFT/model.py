@@ -43,11 +43,11 @@ def _extract_step_number(value: Any) -> int | None:
 def _build_ckpt_setting(model_cfg: dict[str, Any]) -> str | None:
     if model_cfg.get("ckpt_setting"):
         return str(model_cfg["ckpt_setting"])
-    required = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
+    required = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type", "seed")
     if not all(model_cfg.get(key) is not None for key in required):
         return None
     return (
-        f"{model_cfg['dataset_name']}-{model_cfg['ckpt_name']}-"
+        f"{model_cfg['bench_name']}-{model_cfg['ckpt_name']}-"
         f"{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-"
         f"{model_cfg['action_type']}-{model_cfg['seed']}"
     )
@@ -56,11 +56,11 @@ def _build_ckpt_setting(model_cfg: dict[str, Any]) -> str | None:
 def _build_tfds_dataset_name(model_cfg: dict[str, Any]) -> str | None:
     if model_cfg.get("tfds_dataset_name"):
         return str(model_cfg["tfds_dataset_name"])
-    required = ("dataset_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type")
+    required = ("bench_name", "ckpt_name", "env_cfg_type", "expert_data_num", "action_type")
     if not all(model_cfg.get(key) is not None for key in required):
         return None
     data_setting = (
-        f"{model_cfg['dataset_name']}-{model_cfg['ckpt_name']}-"
+        f"{model_cfg['bench_name']}-{model_cfg['ckpt_name']}-"
         f"{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}"
     )
     return f"aloha_{data_setting}"

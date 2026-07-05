@@ -5,7 +5,7 @@ set -o pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 
 Optional environment overrides:
   LEROBOT_DATA_PATH                 Default: <demo_root>/RobotDojo/RoboDojo_sim_arx-x5_v30
@@ -22,7 +22,7 @@ if [ "$#" -ne 7 ]; then
     exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -38,7 +38,7 @@ export DREAMZERO_DIR
 
 default_lerobot_path="${ROOT_DIR}/RobotDojo/RoboDojo_sim_arx-x5_v30"
 dataset_path="${LEROBOT_DATA_PATH:-${default_lerobot_path}}"
-run_basename="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+run_basename="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 output_dir="${SCRIPT_DIR}/checkpoints/${run_basename}"
 
 if [ ! -f "${dataset_path}/meta/info.json" ]; then

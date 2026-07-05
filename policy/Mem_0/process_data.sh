@@ -5,7 +5,7 @@ set -euo pipefail
 # Run inside the Mem_0 policy conda env (needs lerobot, h5py, opencv, XPolicyLab).
 #
 # Usage:
-#   bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <task_type>
+#   bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <task_type>
 #     task_type = M1 (single-stage) | Mn (multi-stage, needs language_annotation.json)
 #
 # Examples:
@@ -19,7 +19,7 @@ set -euo pipefail
 #   MEM0_LEGACY_PATHS=1    write to Mem_0/lerobot_datasets/ (legacy layout)
 # Output: policy/Mem_0/data/<dataset>-<ckpt>-<env>-<action>-lerobot
 
-dataset_name=${1}
+bench_name=${1}
 ckpt_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
@@ -34,6 +34,6 @@ extra=()
 [[ -n "${LANGUAGE_ANNOTATION:-}" ]] && extra+=( --language_annotation "${LANGUAGE_ANNOTATION}" )
 
 python "${CONVERTER}" \
-    "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" \
+    "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}" \
     --task_type "${task_type}" \
     "${extra[@]}"

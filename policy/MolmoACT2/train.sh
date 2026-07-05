@@ -2,7 +2,7 @@
 # MolmoAct2 LeRobot 微调入口（XPolicyLab 统一 7 参数）
 #
 # Usage:
-#   bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 #
 # 示例（RoboDojo 双臂 co-train，3500 episodes，8×80GB 推荐配置）:
 #   bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
@@ -27,11 +27,11 @@
 set -euo pipefail
 
 if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -46,7 +46,7 @@ VENV_PYTHON="${VENV_BIN}/python"
 VENV_LEROBOT_TRAIN="${VENV_BIN}/lerobot-train"
 VENV_ACCELERATE="${VENV_BIN}/accelerate"
 
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 ckpt_setting="${data_setting}-${seed}"
 MOLMOACT2_OUTPUT_ROOT="${MOLMOACT2_OUTPUT_ROOT:-/mnt/xspark-data/xspark_shared/MolmoACT2_checkpoints}"
 OUTPUT_DIR="${MOLMOACT2_OUTPUT_ROOT}/${ckpt_setting}"

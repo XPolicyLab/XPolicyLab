@@ -496,7 +496,7 @@ def convert_lerobot_v3(args: argparse.Namespace) -> None:
     if not (source_path / "meta" / "info.json").exists():
         raise FileNotFoundError(f"LeRobot v3 info.json not found: {source_path / 'meta' / 'info.json'}")
 
-    repo_id = args.repo_id or f"{args.dataset_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+    repo_id = args.repo_id or f"{args.bench_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
     output_root = Path(args.output_dir).expanduser().resolve()
     dataset_path = output_root / repo_id
     if dataset_path.exists():
@@ -604,10 +604,10 @@ def convert(args: argparse.Namespace) -> None:
     if load_hdf5 is None or get_robot_action_dim_info is None or pack_robot_state is None or decode_image_bit is None:
         raise ImportError("XPolicyLab is required for legacy HDF5 conversion. Run install.sh first.")
 
-    repo_id = f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
+    repo_id = f"{args.bench_name}-{args.task_name}-{args.env_cfg_type}-{args.expert_data_num}-{args.action_type}"
     output_root = Path(args.output_dir).resolve()
     dataset_path = output_root / repo_id
-    source_dir = ROOT_PATH / "data" / args.dataset_name / args.task_name / args.env_cfg_type
+    source_dir = ROOT_PATH / "data" / args.bench_name / args.task_name / args.env_cfg_type
     if not source_dir.exists():
         raise FileNotFoundError(f"XPolicyLab data directory not found: {source_dir}")
 
@@ -678,7 +678,7 @@ def convert(args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("legacy_args", nargs="*")
-    parser.add_argument("--dataset_name", type=str)
+    parser.add_argument("--bench_name", type=str)
     parser.add_argument("--task_name", type=str)
     parser.add_argument("--env_cfg_type", type=str)
     parser.add_argument("--expert_data_num", type=int)
@@ -695,17 +695,17 @@ def main() -> None:
 
     if args.legacy_args:
         if len(args.legacy_args) == 5:
-            args.dataset_name, args.task_name, args.env_cfg_type, expert_data_num, args.action_type = args.legacy_args
+            args.bench_name, args.task_name, args.env_cfg_type, expert_data_num, args.action_type = args.legacy_args
             args.expert_data_num = int(expert_data_num)
             args.source_format = args.source_format or "hdf5"
         elif len(args.legacy_args) == 4:
-            args.dataset_name, args.env_cfg_type, expert_data_num, args.action_type = args.legacy_args
+            args.bench_name, args.env_cfg_type, expert_data_num, args.action_type = args.legacy_args
             args.expert_data_num = int(expert_data_num)
             args.source_format = args.source_format or "lerobot_v3"
         else:
             parser.error("Expected either 5 legacy HDF5 args or 4 multitask LeRobot v3 args.")
 
-    required = ["dataset_name", "env_cfg_type", "expert_data_num", "action_type"]
+    required = ["bench_name", "env_cfg_type", "expert_data_num", "action_type"]
     missing = [name for name in required if getattr(args, name) is None]
     if missing:
         parser.error(f"Missing required arguments: {', '.join(missing)}")

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -65,7 +65,7 @@ if [[ "${eval_env}" == "debug" ]]; then
     echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
     echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${policy_server_port}...\033[0m"
     exec python "${SCRIPT_DIR}/debug_env_client.py" \
-        --dataset_name "${dataset_name}" \
+        --bench_name "${bench_name}" \
         --task_name "${task_name}" \
         --env_cfg_type "${env_cfg_type}" \
         --env_cfg_root "${env_cfg_root}" \
@@ -77,7 +77,7 @@ elif [[ "${eval_env}" == "sim" ]]; then
     echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
     echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${policy_server_port}...\033[0m"
     exec bash "${sim_root_dir}/scripts/eval_policy.sh" \
-        --dataset_name "${dataset_name}" \
+        --bench_name "${bench_name}" \
         --task_name "${task_name}" \
         --env_cfg_type "${env_cfg_type}" \
         --policy_name "AHA_WAM" \
@@ -91,7 +91,7 @@ elif [[ "${eval_env}" == "sim" ]]; then
 elif [[ "${eval_env}" == "real" ]]; then
     exec bash "${UTILS_DIR}/run_real_policy_client.sh" \
         "${eval_batch}" "${eval_env_conda_env}" "${policy_server_port}" \
-        "${dataset_name}" "${task_name}" "${env_cfg_type}" "AHA_WAM" \
+        "${bench_name}" "${task_name}" "${env_cfg_type}" "AHA_WAM" \
         "${additional_info}" "${ROOT_DIR}" "${seed}" "${env_gpu_id}" "${policy_server_ip}"
 else
     echo "[ERROR] Unknown eval_env: ${eval_env}" >&2

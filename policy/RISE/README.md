@@ -6,8 +6,8 @@
 
 | 产物 | 命名 | 默认路径 |
 |---|---|---|
-| 处理后数据集 | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>-lerobot` | `policy/RISE/data/` |
-| 训练 checkpoint | `<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/RISE/checkpoints/` |
+| 处理后数据集 | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-lerobot` | `policy/RISE/data/` |
+| 训练 checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` | `policy/RISE/checkpoints/` |
 
 路径解析辅助：`xpolicylab_adapter/_artifact_paths.sh`（含旧版 6 元组命名 fallback，见 §5）。
 
@@ -25,15 +25,15 @@ RISE 离线训练使用 **LeRobot v2.1**，分辨率 `(240, 320, 3)` RGB，state
 
 ### 1.1 从 XPolicyLab HDF5 转换
 
-原始 HDF5 位于工作区 `data/<dataset_name>/<ckpt_name>/<env_cfg_type>/`（单任务时 `ckpt_name` 通常等于 raw task 目录名）。
+原始 HDF5 位于工作区 `data/<bench_name>/<ckpt_name>/<env_cfg_type>/`（单任务时 `ckpt_name` 通常等于 raw task 目录名）。
 
 ```bash
 cd policy/RISE
 bash process_data.sh RoboDojo test_data arx_x5 100 joint
 ```
 
-- **输入**：`data/<dataset_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5`
-- **输出**：`policy/RISE/data/<dataset_name>-<ckpt_name>-<env_cfg_type>-joint-lerobot/`
+- **输入**：`data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5`
+- **输出**：`policy/RISE/data/<bench_name>-<ckpt_name>-<env_cfg_type>-joint-lerobot/`
 - 脚本末尾自动计算 `norm_stats.json`
 
 ### 1.2 链接已有 LeRobot 数据集
@@ -59,7 +59,7 @@ bash process_lerobot.sh <path/to/lerobot_dataset> [link_name]
 ## 2. 训练（离线 policy）
 
 ```bash
-# dataset_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id [stage]
+# bench_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id [stage]
 bash train.sh RoboDojo stack_bowls arx_x5 100 joint 0 0 all
 ```
 

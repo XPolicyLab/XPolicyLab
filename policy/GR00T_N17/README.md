@@ -44,7 +44,7 @@ GR00T_N17
 
 ```bash
 # 在 policy/GR00T_N17 目录下
-bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 ```
 
 示例：
@@ -68,7 +68,7 @@ GR00T_SRC_DATASET=RoboDojo_sim_arx-x5_v30 bash process_data.sh RoboDojo cotrain 
 ## 微调训练
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
@@ -210,7 +210,7 @@ uv run bash examples/finetune.sh \
 训练产物默认保存在：
 
 ```text
-policy/GR00T_N17/checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
+policy/GR00T_N17/checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>
 ```
 
 当前示例使用的 XPolicyLab 命名为：
@@ -294,14 +294,14 @@ bash scripts/link_checkpoint.sh RoboDojo cotrain arx_x5 3500 joint 0 \
 XPolicyLab 统一训练入口通常为：
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 GR00T_N17 当前保留上游原生训练入口，参数可按以下方式映射：
 
 | XPolicyLab 参数 | GR00T 侧含义 |
 |---|---|
-| `dataset_name` | 数据集名称，如 `RoboDojo` |
+| `bench_name` | 数据集名称，如 `RoboDojo` |
 | `ckpt_name` | 实验名或多任务训练名，如 `cotrain` |
 | `env_cfg_type` | 本体配置，如 `arx_x5` |
 | `expert_data_num` | 训练轨迹数，当前数据为 3500 |

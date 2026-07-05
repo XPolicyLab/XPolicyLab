@@ -1,6 +1,6 @@
 # Basic experiment configuration (runtime overrides come from eval.sh via setup_eval_policy_server.sh)
 policy_name: OpenVLA_OFT
-dataset_name: null
+bench_name: null
 task_name: null
 ckpt_name: null
 ckpt_setting: null

@@ -136,13 +136,13 @@ def _workspace_and_policy_dirs(here: str) -> tuple[str, str]:
     return workspace, policy_dir
 
 
-def _dataset_tag(dataset_name: str, ckpt_name: str, env_cfg_type: str, action_type: str) -> str:
-    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
+def _dataset_tag(bench_name: str, ckpt_name: str, env_cfg_type: str, action_type: str) -> str:
+    return f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("dataset_name")
+    parser.add_argument("bench_name")
     parser.add_argument("ckpt_name")
     parser.add_argument("env_cfg_type")
     parser.add_argument("expert_data_num", type=int, help="single: #episodes; batch: max per task (0=all)")
@@ -176,7 +176,7 @@ def main():
             raise SystemExit(
                 f"no tasks with {args.env_cfg_type}/data under {batch_root}"
             )
-        tag = _dataset_tag(args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type)
+        tag = _dataset_tag(args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type)
         plan = []
         for task in tasks:
             load_dir = _resolve_task_load_dir(batch_root, task, args.env_cfg_type)
@@ -185,8 +185,8 @@ def main():
                 plan.append((ep_path, instruction, task))
     else:
         src_root = args.src_root or os.path.join(workspace_root, "data")
-        load_dir = os.path.join(src_root, args.dataset_name, args.ckpt_name, args.env_cfg_type)
-        tag = _dataset_tag(args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type)
+        load_dir = os.path.join(src_root, args.bench_name, args.ckpt_name, args.env_cfg_type)
+        tag = _dataset_tag(args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type)
         instruction = args.instruction or args.ckpt_name.replace("_", " ")
         plan = [(p, instruction, args.ckpt_name) for p in _episode_paths(load_dir, args.expert_data_num)]
 

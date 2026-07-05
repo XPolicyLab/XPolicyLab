@@ -1,9 +1,9 @@
 #!/bin/bash
-# Usage: bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> \
+# Usage: bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> \
 #            <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 set -euo pipefail
 
-dataset_name=${1:?dataset_name required}
+bench_name=${1:?bench_name required}
 task_name=${2:?task_name required}
 ckpt_name=${3:?ckpt_name required}
 env_cfg_type=${4:?env_cfg_type required}
@@ -37,7 +37,7 @@ trap cleanup EXIT
 echo -e "\033[32m[MAIN] start server, policy_server_port=${policy_server_port}\033[0m"
 
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -54,7 +54,7 @@ sleep 3
 echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${policy_server_port}\033[0m"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

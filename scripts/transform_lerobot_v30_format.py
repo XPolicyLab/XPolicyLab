@@ -166,7 +166,7 @@ def _plan_target_metadata(targets):
     metadata = {}
     max_fps = 0
 
-    for dataset_name, task_name, env_cfg_type in targets:
+    for bench_name, task_name, env_cfg_type in targets:
 
         robot_name, robot_action_dim_info, fps = _load_env_metadata(
             env_cfg_type
@@ -189,7 +189,7 @@ def _plan_target_metadata(targets):
 
         max_fps = max(max_fps, fps)
 
-        metadata[(dataset_name, task_name, env_cfg_type)] = {
+        metadata[(bench_name, task_name, env_cfg_type)] = {
             "robot_name": robot_name,
             "robot_action_dim_info": robot_action_dim_info,
             "fps": fps,
@@ -230,11 +230,11 @@ def _build_motor_names_from_dims(per_arm_dims):
 # Utils
 # ============================================================
 
-def _resolve_input_dir(dataset_name, task_name, env_cfg_type, input_dir=None):
+def _resolve_input_dir(bench_name, task_name, env_cfg_type, input_dir=None):
     if input_dir is not None:
         return Path(input_dir)
 
-    return DATA_ROOT / dataset_name / task_name / env_cfg_type / "data"
+    return DATA_ROOT / bench_name / task_name / env_cfg_type / "data"
 
 
 def _get_nested(data, *keys, default=None):
@@ -732,10 +732,10 @@ def find_input_files(input_dir):
 def _collect_target_input_files(targets):
     collected = []
 
-    for dataset_name, task_name, env_cfg_type in targets:
+    for bench_name, task_name, env_cfg_type in targets:
 
         input_dir = _resolve_input_dir(
-            dataset_name,
+            bench_name,
             task_name,
             env_cfg_type,
         )
@@ -744,7 +744,7 @@ def _collect_target_input_files(targets):
 
         collected.append(
             (
-                dataset_name,
+                bench_name,
                 task_name,
                 env_cfg_type,
                 input_dir,
@@ -759,7 +759,7 @@ def _print_matched_targets(target_inputs):
     print("Matched targets:")
 
     for (
-        dataset_name,
+        bench_name,
         task_name,
         env_cfg_type,
         input_dir,
@@ -767,7 +767,7 @@ def _print_matched_targets(target_inputs):
     ) in target_inputs:
 
         print(
-            f"  - {dataset_name}/{task_name}/{env_cfg_type}: "
+            f"  - {bench_name}/{task_name}/{env_cfg_type}: "
             f"{len(input_files)} files from {input_dir}"
         )
 
@@ -856,7 +856,7 @@ def main():
     try:
 
         for (
-            dataset_name,
+            bench_name,
             task_name,
             env_cfg_type,
             input_dir,
@@ -878,7 +878,7 @@ def main():
 
             current_dims = metadata_by_target[
                 (
-                    dataset_name,
+                    bench_name,
                     task_name,
                     env_cfg_type,
                 )
@@ -886,7 +886,7 @@ def main():
 
             for input_path in tqdm(
                 input_files,
-                desc=f"Converting {dataset_name}/{task_name}/{env_cfg_type}",
+                desc=f"Converting {bench_name}/{task_name}/{env_cfg_type}",
             ):
 
                 total_files += 1
@@ -896,7 +896,7 @@ def main():
                     print(
                         "Reached "
                         f"max_episode={args.max_episode} "
-                        f"for {dataset_name}/{task_name}/{env_cfg_type}"
+                        f"for {bench_name}/{task_name}/{env_cfg_type}"
                     )
 
                     break

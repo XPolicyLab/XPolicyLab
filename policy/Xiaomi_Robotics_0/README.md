@@ -27,7 +27,7 @@ checkpoints/<6 元组命名>/
 `process_data.sh` 调用 `scripts/transform_xr0_json_format.py`，输出目录结构如下：
 
 ```text
-data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
+data/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
 ├── json/
 │   ├── episode_000000.json
 │   └── ...
@@ -44,7 +44,7 @@ data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/
 ## 数据处理
 
 ```bash
-bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 ```
 
 ### 单任务示例
@@ -55,7 +55,7 @@ cd /vepfs-cnbje63de6fae220/niantian/RoboDojo_env/XPolicyLab/policy/Xiaomi_Roboti
 bash process_data.sh RoboDojo sweep_blocks arx_x5 50 ee
 ```
 
-当 `dataset_name=RoboDojo` 时，需设置 `XR0_RAW_DATA_ROOT` 指向 RoboDojo HDF5 根目录：
+当 `bench_name=RoboDojo` 时，需设置 `XR0_RAW_DATA_ROOT` 指向 RoboDojo HDF5 根目录：
 
 ```bash
 export XR0_RAW_DATA_ROOT=/path/to/RoboDojo
@@ -87,7 +87,7 @@ xiaomi_robotics_0/xr0/configs/data/RoboDojo-cotrain-arx_x5-100-ee.yaml
 先运行 `process_data.sh`，再运行：
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 ### 单任务示例
@@ -105,7 +105,7 @@ bash train.sh RoboDojo cotrain arx_x5 100 ee 0 0,1,2,3,4,5,6,7
 训练产物保存在：
 
 ```text
-checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
+checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
 ```
 
 例如：
@@ -152,7 +152,7 @@ ln -sfn /path/to/finetuned_ckpt checkpoints/RoboDojo-cotrain-arx_x5-100-ee-0
 ### 2. 启动评测
 
 ```bash
-bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 ```
 
 Debug 本地测试（policy server 与 env client 均使用 `mibot`，0 号卡）：
@@ -179,7 +179,7 @@ bash eval.sh RoboDojo sweep_blocks cotrain arx_x5 100 ee 0 0 0 mibot mibot
 
 | 参数 | 训练侧含义 |
 |---|---|
-| `dataset_name` | 数据集名称，如 `RoboDojo` |
+| `bench_name` | 数据集名称，如 `RoboDojo` |
 | `ckpt_name` | 实验标识；单任务可与源 `task_name` 相同，`cotrain` 表示 35 任务联合 |
 | `env_cfg_type` | 本体配置，RoboDojo 双臂为 `arx_x5` |
 | `expert_data_num` | 每任务使用的轨迹数（co-train 时 cap 在 100） |
@@ -189,8 +189,8 @@ bash eval.sh RoboDojo sweep_blocks cotrain arx_x5 100 ee 0 0 0 mibot mibot
 
 命名约定：
 
-- **处理后数据**（5 元组）：`data/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/`
-- **训练产物**（6 元组）：`checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/`
+- **处理后数据**（5 元组）：`data/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>/`
+- **训练产物**（6 元组）：`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/`
 
 ## 项目结构
 

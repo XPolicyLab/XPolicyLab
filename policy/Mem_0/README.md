@@ -47,7 +47,7 @@ Set `MEM0_EXPERT_DATA_NUM=100` when legacy or ambiguous artifact paths need disa
 ## Training
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
              <action_type> <seed> <gpu_ids> [train_module]
 ```
 
@@ -85,7 +85,7 @@ Writes `policy/Mem_0/assets/<ckpt_name>/norm_stats.json`.
 Set `eval_env: debug` or `sim` in `deploy.yml`.
 
 ```bash
-bash eval.sh <dataset_name> <task_name> <ckpt_name> <env_cfg_type> \
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> \
              <action_type> <seed> <policy_gpu_id> <env_gpu_id> \
              <policy_conda_env> <eval_env_conda_env> [planning_gpu_ids]
 ```

@@ -4,11 +4,11 @@
 set -euo pipefail
 
 if [[ $# -lt 7 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -27,8 +27,8 @@ fi
 base_model="${GR00T_BASE_MODEL:-nvidia/GR00T-N1.7-3B}"
 cosmos_model="${GR00T_COSMOS_MODEL:-nvidia/Cosmos-Reason2-2B}"
 
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
-ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}"
 dataset_path="${DATA_ROOT}/${data_setting}"
 modality_config="${POLICY_DIR}/configs/${env_cfg_type}_config.py"
 output_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"

@@ -195,7 +195,7 @@ class TestEnv:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_name", required=True)
+    parser.add_argument("--bench_name", required=True)
     parser.add_argument("--task_name", required=True)
     parser.add_argument("--env_cfg_type", required=True)
     parser.add_argument("--env_cfg_root", required=True)

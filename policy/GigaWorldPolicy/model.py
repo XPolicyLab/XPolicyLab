@@ -207,13 +207,13 @@ class Model(ModelTemplate):
                 raise FileNotFoundError(f"Could not resolve checkpoint file from {explicit_path}")
             return chosen
 
-        dataset_name = self.model_cfg.get("dataset_name")
+        bench_name = self.model_cfg.get("bench_name")
         ckpt_name = self.model_cfg.get("ckpt_name")
         expert_data_num = self.model_cfg.get("expert_data_num")
         seed = self.model_cfg.get("seed")
         roots: list[Path] = []
-        if all(v is not None for v in (dataset_name, ckpt_name, self.env_cfg_type, expert_data_num, seed)):
-            setting = f"{dataset_name}-{ckpt_name}-{self.env_cfg_type}-{expert_data_num}-{self.action_type}-{seed}"
+        if all(v is not None for v in (bench_name, ckpt_name, self.env_cfg_type, expert_data_num, seed)):
+            setting = f"{bench_name}-{ckpt_name}-{self.env_cfg_type}-{expert_data_num}-{self.action_type}-{seed}"
             roots.append(_CHECKPOINTS_DIR / setting)
         if ckpt_name:
             roots.append(_CHECKPOINTS_DIR / str(ckpt_name))
@@ -257,11 +257,11 @@ class Model(ModelTemplate):
         )
         stats_path = _as_path(self.model_cfg.get("stats_path"))
         if stats_path is None:
-            dataset_name = self.model_cfg.get("dataset_name")
+            bench_name = self.model_cfg.get("bench_name")
             ckpt_name = self.model_cfg.get("ckpt_name")
             expert_data_num = self.model_cfg.get("expert_data_num")
-            if all(v is not None for v in (dataset_name, ckpt_name, self.env_cfg_type, expert_data_num)):
-                data_setting = f"{dataset_name}-{ckpt_name}-{self.env_cfg_type}-{expert_data_num}-{self.action_type}"
+            if all(v is not None for v in (bench_name, ckpt_name, self.env_cfg_type, expert_data_num)):
+                data_setting = f"{bench_name}-{ckpt_name}-{self.env_cfg_type}-{expert_data_num}-{self.action_type}"
                 candidate = _CUR_DIR / "data" / data_setting / "norm_stats_delta.json"
                 if candidate.is_file():
                     stats_path = candidate.resolve()

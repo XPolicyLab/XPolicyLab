@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -80,7 +80,7 @@ python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
     --overrides \
         port="${POLICY_SERVER_PORT}" \
         host="${POLICY_SERVER_HOST}" \
-        dataset_name="${DATASET_NAME}" \
+        bench_name="${DATASET_NAME}" \
         task_name="${TASK_NAME}" \
         ckpt_name="${CKPT_NAME}" \
         env_cfg_type="${ENV_CFG_TYPE}" \
@@ -107,7 +107,7 @@ export POLICY_CONDA_ENV="${policy_conda_env}"
 export POLICY_GPU_ID="${policy_gpu_id}"
 export POLICY_SERVER_PORT="${policy_server_port}"
 export POLICY_SERVER_HOST="${policy_server_host}"
-export DATASET_NAME="${dataset_name}"
+export DATASET_NAME="${bench_name}"
 export TASK_NAME="${task_name}"
 export CKPT_NAME="${ckpt_name}"
 export ENV_CFG_TYPE="${env_cfg_type}"

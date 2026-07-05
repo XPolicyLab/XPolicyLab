@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=${1}
+bench_name=${1}
 task_name=${2}
 env_cfg_type=${3}
 expert_data_num=${4}
@@ -15,7 +15,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 echo -e "\033[33m[A1 process_data] Converting HDF5 to LeRobot format...\033[0m"
 python "${SCRIPT_DIR}/process_data.py" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${env_cfg_type}" \
     "${expert_data_num}" \

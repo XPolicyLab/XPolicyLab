@@ -40,7 +40,7 @@ def _resolve_model_path(model_cfg: dict[str, Any]) -> str:
     if model_path:
         return _resolve_latest_step_dir(model_path)
 
-    data_project_name = model_cfg.get("data_project_name") or model_cfg.get("xpolicylab_dataset_name")
+    data_project_name = model_cfg.get("data_project_name") or model_cfg.get("xpolicylab_bench_name")
     ckpt_name = model_cfg.get("ckpt_name")
     env_cfg_type = model_cfg.get("env_cfg_type")
     expert_data_num = model_cfg.get("expert_data_num")
@@ -75,7 +75,7 @@ class Model(ModelTemplate):
         model_path = _resolve_model_path(model_cfg)
 
         data_config_name = model_cfg.get("data_config_name", "robodojo_qpos")
-        dataset_name = model_cfg.get("dataset_name", "robodojo_posttrain")
+        bench_name = model_cfg.get("bench_name", "robodojo_posttrain")
         embodiment_tag = model_cfg.get("embodiment_tag", "new_embodiment")
         prompt_template = model_cfg.get("prompt_template", "long")
         prop_pos = model_cfg.get("prop_pos", "front")
@@ -94,7 +94,7 @@ class Model(ModelTemplate):
         self.policy = BeingHPolicy(
             model_path=model_path,
             data_config_name=data_config_name,
-            dataset_name=dataset_name,
+            bench_name=bench_name,
             embodiment_tag=embodiment_tag,
             instruction_template=instruction_template,
             prop_pos=prop_pos,

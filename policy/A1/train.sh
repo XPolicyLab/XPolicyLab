@@ -5,7 +5,7 @@ set -o pipefail
 usage() {
     cat <<'EOF'
 Usage:
-  bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+  bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 
 Optional environment overrides:
   LEROBOT_DATA_PATH   Use this LeRobot dataset directly.

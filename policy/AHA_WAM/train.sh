@@ -7,13 +7,13 @@ set -euo pipefail
 #   model=ahawam
 #
 # Usage:
-#   bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]
+#   bash train.sh <bench_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]
 #
 # The first five XPolicyLab arguments are accepted for interface consistency.
 # Training data and stats are controlled by the local AHAWAM task yaml unless
 # overridden through the AHA_WAM_* environment variables below.
 
-dataset_name=${1:?Usage: bash train.sh <dataset_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]}
+bench_name=${1:?Usage: bash train.sh <bench_name> <task_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id> [num_gpus]}
 task_name=${2:?}
 env_cfg_type=${3:?}
 expert_data_num=${4:?}
@@ -50,7 +50,7 @@ TEXT_CACHE_DIR="${AHA_WAM_TEXT_EMBED_CACHE_DIR:-${DATASET_DIR}/text_embeds_cache
 OUTPUT_ROOT="${AHA_WAM_OUTPUT_ROOT:-${POLICY_DIR}/checkpoints}"
 INIT_CHECKPOINT="${AHA_WAM_INIT_CHECKPOINT:-}"
 RESUME="${AHA_WAM_RESUME:-}"
-RUN_ID="${RUN_ID:-aha-wam-${dataset_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+RUN_ID="${RUN_ID:-aha-wam-${bench_name}-${task_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
 
 batch_size="${AHA_WAM_BATCH_SIZE:-8}"
 gradient_accumulation_steps="${AHA_WAM_GRADIENT_ACCUMULATION_STEPS:-8}"
@@ -96,7 +96,7 @@ export DIFFSYNTH_MODEL_BASE_PATH="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/cai
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 export PYTHONPATH="${ROOT_DIR}:${AHA_WAM_PROJECT_ROOT}:${AHA_WAM_PROJECT_ROOT}/src:${PYTHONPATH:-}"
 
-echo "[aha-wam train] dataset_name=${dataset_name} task_name=${task_name} env_cfg_type=${env_cfg_type}"
+echo "[aha-wam train] bench_name=${bench_name} task_name=${task_name} env_cfg_type=${env_cfg_type}"
 echo "[aha-wam train] project_root=${AHA_WAM_PROJECT_ROOT}"
 echo "[aha-wam train] task=${TASK_CONFIG} model=ahawam"
 echo "[aha-wam train] dataset=${DATASET_DIR}"

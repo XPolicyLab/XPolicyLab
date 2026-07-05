@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -60,7 +60,7 @@ resolve_checkpoint_path() {
     exit 1
 }
 
-processed_name="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+processed_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 checkpoint_dir="${SCRIPT_DIR}/checkpoints/${processed_name}-${seed}"
 checkpoint_path="$(resolve_checkpoint_path "${checkpoint_path}" "${checkpoint_dir}")"
 config_path="${config_path:-${SCRIPT_DIR}/data/${processed_name}/hrdt_finetune_xpolicy.yaml}"
@@ -83,7 +83,7 @@ echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 echo "[MAIN] checkpoint_path=${checkpoint_path}"
 
 bash "${SERVER_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \
@@ -105,7 +105,7 @@ sleep 3
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${ckpt_name}" \
     "${env_cfg_type}" \

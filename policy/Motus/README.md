@@ -31,7 +31,7 @@ python data/lerobot/add_t5_cache_to_lerobot_dataset.py \
 ## 训练
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 Checkpoint：`checkpoints/<6-tuple>/`

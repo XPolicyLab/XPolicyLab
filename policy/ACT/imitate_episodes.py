@@ -222,7 +222,7 @@ def train_bc(train_dataloader, val_dataloader, config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_name", type=str)
+    parser.add_argument("--bench_name", type=str)
     parser.add_argument("--task_name", type=str)
     parser.add_argument("--eval", action="store_true")
     parser.add_argument("--onscreen_render", action="store_true")

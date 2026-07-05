@@ -29,7 +29,7 @@ Dexbotic_DM0
 
 ```bash
 cd policy/Dexbotic_DM0
-bash process_data.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>
 ```
 
 示例（35 任务 co-train，共 3500 条）：
@@ -64,7 +64,7 @@ data/RoboDojo-cotrain-arx_x5-3500-ee/
 ```bash
 cd policy/Dexbotic_DM0
 conda activate DM0
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例（8 卡，global batch = 256）：

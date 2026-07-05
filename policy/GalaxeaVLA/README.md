@@ -4,8 +4,8 @@
 
 | 产物 | 命名 | 默认路径 |
 |---|---|---|
-| 处理后数据集 | `<dataset_name>-<ckpt_name>-<env_cfg_type>-joint-lerobot` | `policy/GalaxeaVLA/data/` |
-| 训练 checkpoint | `<dataset_name>-<ckpt_name>-<env_cfg_type>-joint-<seed>` | `policy/GalaxeaVLA/checkpoints/` |
+| 处理后数据集 | `<bench_name>-<ckpt_name>-<env_cfg_type>-joint-lerobot` | `policy/GalaxeaVLA/data/` |
+| 训练 checkpoint | `<bench_name>-<ckpt_name>-<env_cfg_type>-joint-<seed>` | `policy/GalaxeaVLA/checkpoints/` |
 
 ---
 
@@ -52,7 +52,7 @@ bash process_data_batch.sh RoboDojo cotrain arx_x5 joint \
 ## 3. 训练
 
 ```bash
-# dataset_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id [hydra...]
+# bench_name ckpt_name env_cfg_type expert_data_num action_type seed gpu_id [hydra...]
 bash train.sh RoboDojo robodojo_joint arx_x5 100 joint 0 0,1,2,3,4,5,6,7
 
 # 外部 LeRobot 数据集

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -24,7 +24,7 @@ yaml_file="${POLICY_DIR}/deploy.yml"
 
 # X-WAM checkpoints are experiment directories (config.yaml + checkpoints/<steps>.ckpt/...).
 # ckpt_name selects the experiment; the same checkpoint can be evaluated across tasks.
-exp_setting="${XWAM_EXP_SETTING:-${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+exp_setting="${XWAM_EXP_SETTING:-${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
 exp_path="${XWAM_EXP_PATH:-${XWAM_CKPT_ROOT:-${POLICY_DIR}/checkpoints}/${exp_setting}}"
 steps="${XWAM_STEPS:-last}"
 
@@ -57,7 +57,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

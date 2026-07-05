@@ -217,12 +217,12 @@ def load_data(ep_path: str | Path, action_type: str, robot_action_dim_info: dict
 
 def main():
     parser = argparse.ArgumentParser(description="Convert XPolicyLab HDF5 data to LeRobot format for GO1.")
-    parser.add_argument("dataset_name", type=str, help="Dataset name (e.g., RoboDojo)")
+    parser.add_argument("bench_name", type=str, help="Dataset name (e.g., RoboDojo)")
     parser.add_argument("task_name", type=str, help="Task name (e.g., stack_bowls)")
     parser.add_argument("env_cfg_type", type=str, help="Environment config type (e.g., arx_x5)")
     parser.add_argument("expert_data_num", type=int, help="Number of expert episodes to convert")
     parser.add_argument("action_type", type=str, help="Action type (joint or ee)")
-    parser.add_argument("--repo_id", type=str, default=None, help="LeRobot repo ID. Defaults to {dataset_name}-{task_name}-{env_cfg_type}")
+    parser.add_argument("--repo_id", type=str, default=None, help="LeRobot repo ID. Defaults to {bench_name}-{task_name}-{env_cfg_type}")
     parser.add_argument("--mode", type=str, choices=["video", "image"], default="image", help="Storage mode")
     parser.add_argument("--instruction", type=str, default="Do your job.", help="Default instruction if not in data")
     parser.add_argument("--fps", type=int, default=30, help="Dataset FPS (GO1 default: 30)")
@@ -231,13 +231,13 @@ def main():
 
     if args.repo_id is None:
         args.repo_id = (
-            f"{args.dataset_name}-{args.task_name}-{args.env_cfg_type}-"
+            f"{args.bench_name}-{args.task_name}-{args.env_cfg_type}-"
             f"{args.expert_data_num}-{args.action_type}"
         )
 
-    load_data_dir = os.path.join(ROOT_PATH, "data", args.dataset_name, args.task_name, args.env_cfg_type)
+    load_data_dir = os.path.join(ROOT_PATH, "data", args.bench_name, args.task_name, args.env_cfg_type)
     if not os.path.isdir(load_data_dir):
-        # Fallback: try without dataset_name level (some setups use data/{task_name}/{env_cfg_type})
+        # Fallback: try without bench_name level (some setups use data/{task_name}/{env_cfg_type})
         load_data_dir_alt = os.path.join(ROOT_PATH, "data", args.task_name, args.env_cfg_type)
         if os.path.isdir(load_data_dir_alt):
             load_data_dir = load_data_dir_alt
@@ -250,7 +250,7 @@ def main():
         os.path.join(ROOT_PATH, "env_cfg/robot", "_robot_info.json")
     )[robot_type]
 
-    print(f"[GO1 process_data] Dataset: {args.dataset_name}, Task: {args.task_name}")
+    print(f"[GO1 process_data] Dataset: {args.bench_name}, Task: {args.task_name}")
     print(f"[GO1 process_data] Robot: {robot_type}, Action dim info: {robot_action_dim_info}")
     print(f"[GO1 process_data] Output repo_id: {args.repo_id}, FPS: {args.fps}")
     print(

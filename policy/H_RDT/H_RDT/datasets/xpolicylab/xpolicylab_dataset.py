@@ -30,7 +30,7 @@ class XPolicyLabDataset:
         self,
         mode="single_task",
         data_root=None,
-        raw_dataset_name="RoboDojo",
+        raw_bench_name="RoboDojo",
         task_name=None,
         env_cfg_type=None,
         action_type="joint",
@@ -42,7 +42,7 @@ class XPolicyLabDataset:
     ):
         self.mode = mode
         self.data_root = Path(data_root).expanduser() if data_root else None
-        self.raw_dataset_name = raw_dataset_name
+        self.raw_bench_name = raw_bench_name
         self.task_name = task_name
         self.env_cfg_type = env_cfg_type
         self.action_type = action_type
@@ -117,7 +117,7 @@ class XPolicyLabDataset:
             return []
 
         return [
-            root / self.raw_dataset_name / task_name / self.env_cfg_type / "data",
+            root / self.raw_bench_name / task_name / self.env_cfg_type / "data",
             root / task_name / self.env_cfg_type / "data",
             root / task_name / "data" / task_name / self.env_cfg_type / "data",
             root / task_name / "data",
@@ -156,7 +156,7 @@ class XPolicyLabDataset:
         if self.data_root is None:
             raise ValueError("multi_task mode requires data_root.")
 
-        search_root = self.data_root / self.raw_dataset_name
+        search_root = self.data_root / self.raw_bench_name
         if not search_root.exists():
             search_root = self.data_root
 
@@ -249,8 +249,8 @@ class XPolicyLabDataset:
             env_index = parts.index(self.env_cfg_type)
             if env_index > 0:
                 return parts[env_index - 1]
-        if self.raw_dataset_name in parts:
-            index = parts.index(self.raw_dataset_name)
+        if self.raw_bench_name in parts:
+            index = parts.index(self.raw_bench_name)
             if index + 1 < len(parts):
                 return parts[index + 1]
         return path.parents[2].name
@@ -328,7 +328,7 @@ class XPolicyLabDataset:
                     "state_indicator": np.ones_like(action_current),
                     "action_norm": np.ones_like(action_chunk),
                     "instruction": language_embedding,
-                    "dataset_name": self.DATASET_NAME,
+                    "bench_name": self.DATASET_NAME,
                 }
         except Exception as exc:
             print(f"Error processing {hdf5_file}: {exc}")

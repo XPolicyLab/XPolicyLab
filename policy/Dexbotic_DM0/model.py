@@ -47,12 +47,12 @@ def _resolve_run_basename(model_cfg: dict) -> str:
     ckpt_name = str(model_cfg.get("ckpt_name", ""))
     if ckpt_name.count("-") >= 3:
         return ckpt_name
-    dataset_name = model_cfg.get("dataset_name", "")
+    bench_name = model_cfg.get("bench_name", "")
     action_type = model_cfg.get("action_type", "")
     env_cfg_type = model_cfg.get("env_cfg_type", "")
     expert_data_num = model_cfg.get("expert_data_num", "")
     seed = model_cfg.get("seed", "0")
-    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    return f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
 
 
 def _list_candidate_run_dirs(run_basename: str) -> list[str]:

@@ -7,13 +7,13 @@ set -euo pipefail
 # from xpolicylab_adapter/language_annotation/<task>/language_annotation.json).
 #
 # Usage:
-#   bash process_data_batch.sh <dataset_name> <env_cfg_type> <expert_data_num> <action_type> [dataset_id] [task_config_path]
+#   bash process_data_batch.sh <bench_name> <env_cfg_type> <expert_data_num> <action_type> [dataset_id] [task_config_path]
 # Examples:
 #   bash process_data_batch.sh RoboDojo_first100 arx_x5 100 joint
 #   bash process_data_batch.sh RoboDojo_first100 arx_x5 100 joint my_cotrain_run
 #
 # Defaults:
-#   dataset_id        = <dataset_name>-cotrain-<env_cfg_type>-<expert_data_num>-<action_type>
+#   dataset_id        = <bench_name>-cotrain-<env_cfg_type>-<expert_data_num>-<action_type>
 #   task_config_path  = <policy>/Mem_0/xpolicylab_adapter/task_config.json
 # Output: policy/Mem_0/data/<dataset_id>-lerobot/  (legacy: Mem_0/lerobot_datasets/ with MEM0_LEGACY_PATHS=1)
 #
@@ -22,11 +22,11 @@ set -euo pipefail
 # videos are symlinked and only parquet/meta are rewritten for Mem_0.
 
 if [[ $# -lt 4 ]]; then
-    echo "usage: bash $(basename "${BASH_SOURCE[0]}") <dataset_name> <env_cfg_type> <expert_data_num> <action_type> [dataset_id] [task_config_path]" >&2
+    echo "usage: bash $(basename "${BASH_SOURCE[0]}") <bench_name> <env_cfg_type> <expert_data_num> <action_type> [dataset_id] [task_config_path]" >&2
     exit 2
 fi
 
-dataset_name=${1}
+bench_name=${1}
 env_cfg_type=${2}
 expert_data_num=${3}
 action_type=${4}
@@ -52,7 +52,7 @@ if [[ -n "${ADAPT_FROM:-}" ]]; then
         echo "[batch] adapter not found: ${ADAPTER}" >&2
         exit 1
     fi
-    default_dataset_id="${dataset_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
+    default_dataset_id="${bench_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
     resolved_dataset_id="${dataset_id:-${default_dataset_id}}"
     if [[ "${MEM0_LEGACY_PATHS:-}" == "1" ]]; then
         OUT_DIR="${POLICY_DIR}/Mem_0/lerobot_datasets/${resolved_dataset_id}"
@@ -66,7 +66,7 @@ if [[ -n "${ADAPT_FROM:-}" ]]; then
         --dest "${OUT_DIR}" \
         --annotation_root "${ANNOTATION_DIR}" \
         --task_config "${TASK_CFG}" \
-        --hdf5_root "${ROOT_DIR}/data/${dataset_name}" \
+        --hdf5_root "${ROOT_DIR}/data/${bench_name}" \
         --env_cfg_type "${env_cfg_type}" \
         --workers "${ADAPT_WORKERS:-16}"
     exit 0
@@ -106,10 +106,10 @@ if [[ ${#m1_tasks[@]} -eq 0 && ${#mn_tasks[@]} -eq 0 ]]; then
     exit 1
 fi
 
-default_dataset_id="${dataset_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
+default_dataset_id="${bench_name}-cotrain-${env_cfg_type}-${expert_data_num}-${action_type}"
 resolved_dataset_id="${dataset_id:-${default_dataset_id}}"
 
-echo "[batch] dataset_name=${dataset_name} env_cfg_type=${env_cfg_type} expert_data_num=${expert_data_num} action_type=${action_type}"
+echo "[batch] bench_name=${bench_name} env_cfg_type=${env_cfg_type} expert_data_num=${expert_data_num} action_type=${action_type}"
 echo "[batch] task_config=${TASK_CFG}"
 echo "[batch] M1 tasks (${#m1_tasks[@]}): ${m1_tasks[*]:-<none>}"
 echo "[batch] Mn tasks (${#mn_tasks[@]}): ${mn_tasks[*]:-<none>}"
@@ -122,12 +122,12 @@ use_preview="${USE_PREVIEW:-1}"
 # Pre-validate sources and Mn annotations so we fail before launching the heavy converter.
 missing=()
 for t in "${m1_tasks[@]}" "${mn_tasks[@]}"; do
-    src="${ROOT_DIR}/data/${dataset_name}/${t}/${env_cfg_type}/data"
+    src="${ROOT_DIR}/data/${bench_name}/${t}/${env_cfg_type}/data"
     if [[ ! -d "${src}" ]]; then
         missing+=("data: ${src}")
     fi
     if [[ "${use_preview}" == "1" ]]; then
-        prev_dir="${ROOT_DIR}/data/${dataset_name}/${t}/${env_cfg_type}/preview_video"
+        prev_dir="${ROOT_DIR}/data/${bench_name}/${t}/${env_cfg_type}/preview_video"
         if [[ ! -d "${prev_dir}" ]]; then
             missing+=("preview_video: ${prev_dir}")
         fi
@@ -146,7 +146,7 @@ if [[ ${#missing[@]} -gt 0 ]]; then
     exit 1
 fi
 
-py_args=( "${dataset_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
+py_args=( "${bench_name}" "${env_cfg_type}" "${expert_data_num}" "${action_type}"
           --m1_tasks "${m1_joined}"
           --mn_tasks "${mn_joined}"
           --annotation_root "${ANNOTATION_DIR}"

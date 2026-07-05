@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 5 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 expert_data_num=$4
@@ -14,7 +14,7 @@ action_type=$5
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}"
 converted_data_root="${SPIRIT_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
 raw_data_root="${SPIRIT_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
 
@@ -24,18 +24,18 @@ resolve_patterns_csv() {
     return
   fi
   if [[ "${ckpt_name}" == "cotrain" ]]; then
-    if [[ "${dataset_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud" ]]; then
+    if [[ "${bench_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud" ]]; then
       echo "sim_cloud.*.${env_cfg_type}"
       return
     fi
-    echo "${dataset_name}.*.${env_cfg_type}"
+    echo "${bench_name}.*.${env_cfg_type}"
     return
   fi
-  if [[ "${dataset_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud" ]]; then
+  if [[ "${bench_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud" ]]; then
     echo "sim_cloud.${ckpt_name}.${env_cfg_type}"
     return
   fi
-  echo "${dataset_name}.${ckpt_name}.${env_cfg_type}"
+  echo "${bench_name}.${ckpt_name}.${env_cfg_type}"
 }
 
 patterns_csv="$(resolve_patterns_csv)"

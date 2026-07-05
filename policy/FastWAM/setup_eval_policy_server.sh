@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -25,7 +25,7 @@ yaml_file="${POLICY_DIR}/deploy.yml"
 # Checkpoint is selected by ckpt_name (not task_name). task_name is only the
 # simulator task forwarded to the env client; ckpt_name resolves the trained
 # checkpoint, so the same `cotrain` checkpoint can be evaluated across tasks.
-ckpt_setting="${FASTWAM_CKPT_SETTING:-${dataset_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
+ckpt_setting="${FASTWAM_CKPT_SETTING:-${bench_name}-${ckpt_name}-${env_cfg_type}-${expert_data_num}-${action_type}-${seed}}"
 ckpt_dir="${FASTWAM_CKPT_ROOT:-${POLICY_DIR}/checkpoints}/${ckpt_setting}"
 weights_dir="${ckpt_dir}/checkpoints/weights"
 dataset_stats_path="${FASTWAM_DATASET_STATS_PATH:-${ckpt_dir}/dataset_stats.json}"
@@ -71,7 +71,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

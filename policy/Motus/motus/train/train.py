@@ -649,11 +649,11 @@ def main():
     
     # Extract dataset name from config file path for checkpoint organization
     config_filename = os.path.basename(args.config)  # e.g., "ac_one.yaml"
-    dataset_name = os.path.splitext(config_filename)[0]  # e.g., "ac_one"
+    bench_name = os.path.splitext(config_filename)[0]  # e.g., "ac_one"
     
     # Update checkpoint directory to include dataset name
     base_checkpoint_dir = config.system.checkpoint_dir
-    config.system.checkpoint_dir = os.path.join(base_checkpoint_dir, dataset_name)
+    config.system.checkpoint_dir = os.path.join(base_checkpoint_dir, bench_name)
     
     # Create the dataset directory if it doesn't exist
     os.makedirs(config.system.checkpoint_dir, exist_ok=True)
@@ -700,7 +700,7 @@ def main():
     
     # Update checkpoint directory to include run name
     config.system.checkpoint_dir = os.path.join(config.system.checkpoint_dir, run_name)
-    logger.info(f"Dataset: {dataset_name}")
+    logger.info(f"Dataset: {bench_name}")
     logger.info(f"Checkpoints will be saved to: {config.system.checkpoint_dir}")
     
     # Initialize TensorBoard writer

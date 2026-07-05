@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 11 ]]; then
-  echo "Usage: $0 <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>" >&2
+  echo "Usage: $0 <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -53,7 +53,7 @@ echo "[MAIN] start server bind=${policy_server_host}:${policy_server_port}"
 echo "[MAIN] client will connect to ${policy_server_ip}:${policy_server_port}"
 
 bash "${SERVER_SCRIPT}" \
-  "${dataset_name}" \
+  "${bench_name}" \
   "${task_name}" \
   "${ckpt_name}" \
   "${env_cfg_type}" \
@@ -80,7 +80,7 @@ fi
 echo "[MAIN] start env client, server=${policy_server_ip}:${policy_server_port}"
 
 bash "${CLIENT_SCRIPT}" \
-  "${dataset_name}" \
+  "${bench_name}" \
   "${task_name}" \
   "${ckpt_name}" \
   "${env_cfg_type}" \

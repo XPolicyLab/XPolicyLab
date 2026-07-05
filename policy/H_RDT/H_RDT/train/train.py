@@ -263,7 +263,7 @@ def train(args, logger):
         val=False,
         use_precomp_lang_embed=args.precomp_lang_embed,
         task_name=args.task_name,
-        dataset_name=args.dataset_name,
+        bench_name=args.bench_name,
     )
     
     val_dataset = VLAConsumerDataset(
@@ -277,7 +277,7 @@ def train(args, logger):
         val=True,
         use_precomp_lang_embed=args.precomp_lang_embed,
         task_name=args.task_name,
-        dataset_name=args.dataset_name,
+        bench_name=args.bench_name,
     )
 
     # Create data collator for batching

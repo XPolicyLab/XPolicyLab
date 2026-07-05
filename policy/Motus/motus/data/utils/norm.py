@@ -66,13 +66,13 @@ def denormalize_actions(normalized_actions: torch.Tensor, action_min: np.ndarray
     return torch.from_numpy(denormalized).float()
 
 
-def load_normalization_stats(stats_path: str, dataset_name: str) -> Tuple[Optional[np.ndarray], Optional[np.ndarray]]:
+def load_normalization_stats(stats_path: str, bench_name: str) -> Tuple[Optional[np.ndarray], Optional[np.ndarray]]:
     """
     Load normalization statistics from file for specified dataset.
     
     Args:
         stats_path: Path to normalization statistics file
-        dataset_name: Name of dataset to load stats for (e.g., 'ac_one', 'aloha_agilex_1')
+        bench_name: Name of dataset to load stats for (e.g., 'ac_one', 'aloha_agilex_1')
         
     Returns:
         Tuple of (action_min, action_max) arrays, or (None, None) if loading fails
@@ -83,14 +83,14 @@ def load_normalization_stats(stats_path: str, dataset_name: str) -> Tuple[Option
             stats = json.load(f)
         
         # Get stats for specific dataset
-        if dataset_name in stats:
-            dataset_stats = stats[dataset_name]
+        if bench_name in stats:
+            dataset_stats = stats[bench_name]
             action_min = np.array(dataset_stats['min'], dtype=np.float32)
             action_max = np.array(dataset_stats['max'], dtype=np.float32)
         else:
-            raise KeyError(f"Dataset '{dataset_name}' not found in normalization stats file")
+            raise KeyError(f"Dataset '{bench_name}' not found in normalization stats file")
         
-        logger.info(f"Loaded normalization stats for {dataset_name} from {stats_path}")
+        logger.info(f"Loaded normalization stats for {bench_name} from {stats_path}")
         logger.info(f"  Action min: {action_min}")
         logger.info(f"  Action max: {action_max}")
         logger.info(f"  Action range: {action_max - action_min}")
@@ -104,7 +104,7 @@ def load_normalization_stats(stats_path: str, dataset_name: str) -> Tuple[Option
 
 def load_quantile_stats(
     stats_path: str,
-    dataset_name: str,
+    bench_name: str,
     lower_key: str = 'q01',
     upper_key: str = 'q99',
 ) -> Tuple[Optional[np.ndarray], Optional[np.ndarray]]:
@@ -118,7 +118,7 @@ def load_quantile_stats(
 
     Args:
         stats_path: Path to the quantile stats JSON file
-        dataset_name: Dataset name (e.g., 'latent_action')
+        bench_name: Dataset name (e.g., 'latent_action')
         lower_key: Lower quantile field name (default 'q01')
         upper_key: Upper quantile field name (default 'q99')
 
@@ -130,20 +130,20 @@ def load_quantile_stats(
         with open(stats_path, 'r') as f:
             stats = json.load(f)
 
-        if dataset_name not in stats:
-            raise KeyError(f"Dataset '{dataset_name}' not found in stats file")
-        dataset_stats = stats[dataset_name]
+        if bench_name not in stats:
+            raise KeyError(f"Dataset '{bench_name}' not found in stats file")
+        dataset_stats = stats[bench_name]
 
         if lower_key not in dataset_stats or upper_key not in dataset_stats:
             raise KeyError(
-                f"Keys '{lower_key}'/'{upper_key}' not found in dataset '{dataset_name}' stats"
+                f"Keys '{lower_key}'/'{upper_key}' not found in dataset '{bench_name}' stats"
             )
 
         q_low = np.array(dataset_stats[lower_key], dtype=np.float32)
         q_high = np.array(dataset_stats[upper_key], dtype=np.float32)
 
         logger.info(
-            f"Loaded quantile stats for {dataset_name} from {stats_path} ({lower_key}/{upper_key})"
+            f"Loaded quantile stats for {bench_name} from {stats_path} ({lower_key}/{upper_key})"
         )
         return q_low, q_high
 

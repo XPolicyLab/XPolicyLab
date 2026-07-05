@@ -23,7 +23,7 @@ class Model(ModelTemplate):
             model_training_config = yaml.safe_load(f)
         
         model_training_config['action_dim'] = get_action_dim(model_cfg['env_cfg_type'])
-        model_training_config['dataset_name'] = model_cfg['dataset_name']
+        model_training_config['bench_name'] = model_cfg['bench_name']
         model_training_config['task'] = model_cfg['task_name']
         n_obs_steps = model_training_config['n_obs_steps']
         n_action_steps = model_training_config['n_action_steps']
@@ -35,7 +35,7 @@ class Model(ModelTemplate):
         self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
 
     def get_model(self, model_cfg):
-        ckpt_setting = f"{model_cfg['dataset_name']}-{model_cfg['ckpt_name']}-{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}-{model_cfg['seed']}"
+        ckpt_setting = f"{model_cfg['bench_name']}-{model_cfg['ckpt_name']}-{model_cfg['env_cfg_type']}-{model_cfg['expert_data_num']}-{model_cfg['action_type']}-{model_cfg['seed']}"
         ckpt_file = os.path.join(parent_dir, f"checkpoints/{ckpt_setting}/{model_cfg['checkpoint_num']}.ckpt")
 
         # load checkpoint and workspace

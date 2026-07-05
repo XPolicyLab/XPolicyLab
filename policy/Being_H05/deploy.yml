@@ -14,7 +14,7 @@ action_type: joint
 prompt: null
 model_path: null
 data_config_name: robodojo_qpos
-dataset_name: robodojo_posttrain
+bench_name: robodojo_posttrain
 embodiment_tag: new_embodiment
 prompt_template: long
 prop_pos: front

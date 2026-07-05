@@ -17,7 +17,7 @@ bash scripts/compute_norm_stats.sh <config_name> <max_frames>
 统一 7 参数入口：
 
 ```bash
-bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <gpu_id>
 ```
 
 示例：
@@ -29,7 +29,7 @@ bash train.sh RoboDojo stack_bowls arx_x5 50 joint 0 0
 Checkpoint 保存到：
 
 ```text
-checkpoints/<dataset_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
+checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<expert_data_num>-<action_type>-<seed>/
 ```
 
 可覆盖环境变量：

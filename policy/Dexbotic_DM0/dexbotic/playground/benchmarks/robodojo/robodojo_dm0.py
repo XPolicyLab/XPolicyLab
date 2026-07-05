@@ -131,7 +131,8 @@ class DM0ActionConfig(_DM0ActionConfig):
 @dataclass
 class DM0DataConfig(_DM0DataConfig):
     dataset_name: str = field(
-        default_factory=lambda: os.environ.get("DM0_DATASET_NAME", "robodojo_default")
+        default_factory=lambda: os.environ.get("DM0_BENCH_NAME")
+        or os.environ.get("DM0_DATASET_NAME", "robodojo_default")
     )
     num_images: int = field(default=3)
     data_keys: list[str] = field(

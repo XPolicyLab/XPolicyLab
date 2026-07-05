@@ -20,7 +20,7 @@ export LANG_EMBEDDINGS_DIR="${HRDT_OUTPUT_DIR}/lang_embeddings"
 
 echo "Starting XPolicyLab data processing pipeline..."
 echo "Data Root: $XPOLICYLAB_DATA_ROOT"
-echo "Raw Dataset: $XPOLICYLAB_RAW_DATASET_NAME"
+echo "Raw Dataset: $XPOLICYLAB_RAW_BENCH_NAME"
 echo "Output Dir: $HRDT_OUTPUT_DIR"
 echo "Tasks: $XPOLICYLAB_TASKS"
 echo "Task instruction extraction enabled: $ENABLE_TASK_INSTRUCTION_EXTRACTION"
@@ -46,7 +46,7 @@ if [ "$ENABLE_STATS_CALCULATION" = "true" ]; then
 
     python datasets/xpolicylab/calc_stat.py \
         --data_root "$XPOLICYLAB_DATA_ROOT" \
-        --raw_dataset_name "$XPOLICYLAB_RAW_DATASET_NAME" \
+        --raw_bench_name "$XPOLICYLAB_RAW_BENCH_NAME" \
         --env_cfg_type "$XPOLICYLAB_ENV_CFG_TYPE" \
         --action_type "$XPOLICYLAB_ACTION_TYPE" \
         --tasks "$XPOLICYLAB_TASKS" \

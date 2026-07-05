@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 10 ]]; then
-  echo "Usage: $0 <dataset_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <port> [host]" >&2
+  echo "Usage: $0 <bench_name> <task_name> <ckpt_name> <env_cfg_type> <expert_data_num> <action_type> <seed> <policy_gpu_id> <policy_conda_env> <port> [host]" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -44,7 +44,7 @@ exec env \
     --overrides \
       host="${policy_server_host}" \
       port="${policy_server_port}" \
-      dataset_name="${dataset_name}" \
+      bench_name="${bench_name}" \
       task_name="${task_name}" \
       ckpt_name="${ckpt_name}" \
       env_cfg_type="${env_cfg_type}" \

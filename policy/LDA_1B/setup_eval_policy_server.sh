@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -24,11 +24,11 @@ expert_data_num="${LDA_EXPERT_DATA_NUM:-}"
 
 if [[ -n "${LDA_CHECKPOINT_PATH:-}" ]]; then
     checkpoint_path="${LDA_CHECKPOINT_PATH}"
-elif ! checkpoint_path="$(xpolicylab_resolve_checkpoint_pt "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+elif ! checkpoint_path="$(xpolicylab_resolve_checkpoint_pt "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"; then
-    ckpt_run_id="$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
+    ckpt_run_id="$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
     echo -e "\033[31m[SERVER] checkpoint not found for ckpt_run_id=${ckpt_run_id}\033[0m" >&2
-    echo -e "\033[31m[SERVER] (eval args: dataset=${dataset_name} ckpt_name=${ckpt_name} env=${env_cfg_type} action=${action_type} seed=${seed})\033[0m" >&2
+    echo -e "\033[31m[SERVER] (eval args: dataset=${bench_name} ckpt_name=${ckpt_name} env=${env_cfg_type} action=${action_type} seed=${seed})\033[0m" >&2
     echo -e "\033[31m[SERVER] Set LDA_CHECKPOINT_PATH=... or LDA_EXPERT_DATA_NUM=... for legacy layouts.\033[0m" >&2
     exit 1
 fi
@@ -50,7 +50,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

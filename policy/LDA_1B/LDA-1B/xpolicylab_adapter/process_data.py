@@ -2,7 +2,7 @@
 `gr00t_lerobot` loader can consume directly.
 
 Expected input layout (raw task dirs; comma-separated to merge):
-    <root>/data/<dataset_name>/<raw_task>/<env_cfg_type>/data/episode_*.hdf5
+    <root>/data/<bench_name>/<raw_task>/<env_cfg_type>/data/episode_*.hdf5
     (legacy fallback: <root>/final_data/...)
 
 Output layout (one dataset per invocation):
@@ -18,7 +18,7 @@ are merged into one LeRobot dataset with continuous episode/frame indices.
 `--expert-data-num` caps episodes per task, so N tasks yield up to N*num episodes.
 
 Default dataset_id (README §4.2):
-    single-task: "<dataset_name>-<ckpt_name>-<env_cfg_type>-<action_type>"
+    single-task: "<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>"
     multi-task:  "cotrain"
 
 Override with --dataset-id. XPOLICYLAB_DATASET_ID in train.sh must match.
@@ -248,13 +248,13 @@ def _modality_json(state_cols: Dict[str, np.ndarray], action_cols: Dict[str, np.
     }
 
 
-def _dataset_tag(dataset_name: str, ckpt_name: str, env_cfg_type: str, action_type: str) -> str:
-    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
+def _dataset_tag(bench_name: str, ckpt_name: str, env_cfg_type: str, action_type: str) -> str:
+    return f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
 
 
 def _resolve_source_dir(
     root: Path,
-    dataset_name: str,
+    bench_name: str,
     raw_task: str,
     env_cfg_type: str,
     legacy_data_roots: Iterable[str],
@@ -262,7 +262,7 @@ def _resolve_source_dir(
     candidates = [root / "data"] + [root / name for name in legacy_data_roots]
     tried: List[Path] = []
     for data_root in candidates:
-        source_dir = data_root / dataset_name / raw_task / env_cfg_type / "data"
+        source_dir = data_root / bench_name / raw_task / env_cfg_type / "data"
         tried.append(source_dir)
         if source_dir.exists():
             return source_dir
@@ -293,7 +293,7 @@ def convert(args: argparse.Namespace) -> None:
     episode_jobs: List[Tuple[Path, str]] = []
     for raw_task in raw_task_dirs:
         source_dir = _resolve_source_dir(
-            root, args.dataset_name, raw_task, args.env_cfg_type, legacy_roots
+            root, args.bench_name, raw_task, args.env_cfg_type, legacy_roots
         )
         task_episodes = sorted(source_dir.glob("episode_*.hdf5"))[: int(args.expert_data_num)]
         if not task_episodes:
@@ -304,7 +304,7 @@ def convert(args: argparse.Namespace) -> None:
         dataset_id = args.dataset_id
     elif len(raw_task_dirs) == 1:
         dataset_id = _dataset_tag(
-            args.dataset_name, args.ckpt_name, args.env_cfg_type, args.action_type
+            args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type
         )
     else:
         dataset_id = "cotrain"
@@ -455,7 +455,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root-dir", required=True, help="workspace root containing data/")
     parser.add_argument("--policy-dir", required=True, help="policy/LDA_1B directory for output")
-    parser.add_argument("--dataset-name", required=True)
+    parser.add_argument("--bench-name", required=True)
     parser.add_argument("--ckpt-name", required=True, help="artifact ckpt_name (README §4.2)")
     parser.add_argument(
         "--raw-task-dirs",

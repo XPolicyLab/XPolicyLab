@@ -11,7 +11,7 @@ from eval_station.schemas import DispatchPayload
 from eval_station.trial.config import build_trial_run_config, normalize_policy_name
 
 DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS = (
-    "dataset_name",
+    "bench_name",
     "task_name",
     "env_cfg_type",
     "policy_name",
@@ -30,7 +30,7 @@ DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS = (
 )
 
 _DEPLOY_CFG_CASE_META_KEYS = (
-    "dataset_name",
+    "bench_name",
     "env_cfg_type",
     "task_name",
     "policy_name",
@@ -52,7 +52,7 @@ class EnvClientBaselineConfig(_StrictSchema):
     startup values only act as fallbacks.
     """
 
-    dataset_name: str | None = None
+    bench_name: str | None = None
     task_name: str | None = None
     env_cfg_type: str | None = None
     policy_name: str | None = None
@@ -103,7 +103,7 @@ def _baseline_deploy_cfg(
         cfg = dict(baseline)
     # Unset baseline fields must not shadow dispatch-provided values.
     for key in (
-        "dataset_name",
+        "bench_name",
         "task_name",
         "env_cfg_type",
         "policy_name",

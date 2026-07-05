@@ -61,7 +61,7 @@ def parse_wrapper_args(argv):
     parser = argparse.ArgumentParser(add_help=False)
 
     # XPolicyLab entry-point args
-    parser.add_argument("--xpl_dataset_name",    required=True)
+    parser.add_argument("--xpl_bench_name",    required=True)
     parser.add_argument("--xpl_ckpt_name",       required=True,
                         help="Reused as the TinyVLA TASK_CONFIGS key.")
     parser.add_argument("--xpl_env_cfg_type",    required=True)
@@ -89,7 +89,7 @@ def patch_tinyvla(wrapper_args):
     action_dim = sum(robot_action_dim_info["arm_dim"]) + sum(robot_action_dim_info["ee_dim"])
 
     ckpt_setting = (
-        f"{wrapper_args.xpl_dataset_name}-{wrapper_args.xpl_ckpt_name}"
+        f"{wrapper_args.xpl_bench_name}-{wrapper_args.xpl_ckpt_name}"
         f"-{wrapper_args.xpl_env_cfg_type}-{wrapper_args.xpl_expert_data_num}"
         f"-{wrapper_args.xpl_action_type}"
     )
@@ -130,7 +130,7 @@ def main():
     args = parse_wrapper_args(sys.argv)
 
     ckpt_setting = (
-        f"{args.xpl_dataset_name}-{args.xpl_ckpt_name}-{args.xpl_env_cfg_type}"
+        f"{args.xpl_bench_name}-{args.xpl_ckpt_name}-{args.xpl_env_cfg_type}"
         f"-{args.xpl_expert_data_num}-{args.xpl_action_type}-{args.xpl_seed}"
     )
     output_dir = POLICY_DIR / "checkpoints" / ckpt_setting

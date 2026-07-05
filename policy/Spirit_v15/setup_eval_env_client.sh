@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -46,7 +46,7 @@ if [[ "${eval_env}" == "debug" ]]; then
     echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${policy_server_port}...\033[0m"
     env "${SPIRIT_CLIENT_ENV[@]}" \
         python "${ROOT_DIR}/XPolicyLab/debug_env_client.py" \
-            --dataset_name "${dataset_name}" \
+            --bench_name "${bench_name}" \
             --task_name "${task_name}" \
             --env_cfg_type "${env_cfg_type}" \
             --policy_name "${policy_name}" \
@@ -61,7 +61,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${yaml_file}" \
     "${eval_env_conda_env}" \
     "${policy_server_port}" \
-    "${dataset_name}" \
+    "${bench_name}" \
     "${task_name}" \
     "${env_cfg_type}" \
     "${policy_name}" \

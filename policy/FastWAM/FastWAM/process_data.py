@@ -68,8 +68,8 @@ def _read_hdf5(path):
         return read_obj(f)
 
 
-def _resolve_source_root(project_root, dataset_name, task_name, env_cfg_type):
-    candidate = project_root / "final_data" / dataset_name / task_name / env_cfg_type
+def _resolve_source_root(project_root, bench_name, task_name, env_cfg_type):
+    candidate = project_root / "final_data" / bench_name / task_name / env_cfg_type
     if (candidate / "data").is_dir():
         return candidate
     raise FileNotFoundError(f"Could not find XPolicyLab trajectory directory: {candidate}")
@@ -208,7 +208,7 @@ def _resolve_dataset_id(args, task_names: List[str]) -> str:
         return args.dataset_id
     if len(task_names) == 1:
         return (
-            f"{args.dataset_name}-{task_names[0]}-{args.env_cfg_type}"
+            f"{args.bench_name}-{task_names[0]}-{args.env_cfg_type}"
             f"-{args.expert_data_num}-{args.action_type}"
         )
     return "cotrain_dataset"
@@ -226,7 +226,7 @@ def convert(args):
     # Each job remembers its source task so the instruction fallback is correct.
     episode_jobs: List[Tuple[Path, str]] = []
     for task_name in task_names:
-        source_root = _resolve_source_root(project_root, args.dataset_name, task_name, args.env_cfg_type)
+        source_root = _resolve_source_root(project_root, args.bench_name, task_name, args.env_cfg_type)
         task_episodes = sorted((source_root / "data").glob("episode_*.hdf5"))[: int(args.expert_data_num)]
         if len(task_episodes) < int(args.expert_data_num):
             raise FileNotFoundError(
@@ -328,7 +328,7 @@ def convert(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataset_name")
+    parser.add_argument("bench_name")
     parser.add_argument("task_name", help="task name, or comma-separated list to merge into one dataset")
     parser.add_argument("env_cfg_type")
     parser.add_argument("expert_data_num", type=int)

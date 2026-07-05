@@ -75,7 +75,7 @@ does both:
 bash eval.sh RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 50 ee 0 0 0 uv <eval_env_conda_env>
 ```
 
-Positional args: `<dataset_name> <task_name> <ckpt_name> <env_cfg_type>
+Positional args: `<bench_name> <task_name> <ckpt_name> <env_cfg_type>
 <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id>
 <policy_uv_env> <eval_env_conda_env>`.
 

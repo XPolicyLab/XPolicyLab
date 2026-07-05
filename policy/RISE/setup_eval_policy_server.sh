@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -24,8 +24,8 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${SCRIPT_DIR}/deploy.yml"
 
 expert_data_num="${RISE_EXPERT_DATA_NUM:-}"
-ckpt_run_id="${RISE_CKPT_RUN_ID:-$(xpolicylab_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
-ckpt_root="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${dataset_name}" "${ckpt_name}" \
+ckpt_run_id="${RISE_CKPT_RUN_ID:-$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
+ckpt_root="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${seed}" "${expert_data_num}")"
 ckpt_root_rel="${ckpt_root#${SCRIPT_DIR}/}"
 policy_root_rel="${ckpt_root_rel}/Policy_offline_release/Policy_offline_release"
@@ -124,7 +124,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            dataset_name="${dataset_name}" \
+            bench_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

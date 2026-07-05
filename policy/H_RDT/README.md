@@ -25,7 +25,7 @@ source datasets/xpolicylab/setup_xpolicylab.sh
 
 python datasets/xpolicylab/calc_stat.py \
   --data_root /vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo/sim_cloud \
-  --raw_dataset_name RoboDojo \
+  --raw_bench_name RoboDojo \
   --env_cfg_type arx_x5 \
   --action_type joint \
   --tasks all \

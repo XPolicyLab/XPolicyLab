@@ -92,12 +92,12 @@ def _resolve_ckpt_setting(model_cfg: dict[str, Any]) -> str:
     ckpt_name = str(model_cfg.get("ckpt_name", ""))
     if ckpt_name.count("-") >= 3:
         return ckpt_name
-    dataset_name = model_cfg["dataset_name"]
+    bench_name = model_cfg["bench_name"]
     env_cfg_type = model_cfg["env_cfg_type"]
     expert_data_num = model_cfg["expert_data_num"]
     action_type = model_cfg["action_type"]
     seed = model_cfg["seed"]
-    return f"{dataset_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+    return f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
 
 
 def _resolve_ckpt_dir(model_cfg: dict[str, Any]) -> Path:

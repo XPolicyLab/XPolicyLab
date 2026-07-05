@@ -144,7 +144,7 @@ class CustomLeRobotDataset(Dataset):
             data_roots = data_roots * len(domains)
         self.data_roots = data_roots
         self.dataset = []
-        self.dataset_name = []
+        self.bench_name = []
 
         self.index_to_task = {}
         
@@ -209,7 +209,7 @@ class CustomLeRobotDataset(Dataset):
                     self.index_to_task[len(self.dataset)-1] = cnt
 
                 
-                self.dataset_name.append(_domain_name)
+                self.bench_name.append(_domain_name)
                 self.task_to_indices[cnt] = list(range(len(self.dataset)-len(epiosdes_data), len(self.dataset)))
                 cnt += 1
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dataset_name=$1
+bench_name=$1
 task_name=$2
 ckpt_name=$3
 env_cfg_type=$4
@@ -39,7 +39,7 @@ mkdir -p "${HF_HOME}" "${XDG_CACHE_HOME}"
 
 OVERRIDES=(
     port="${policy_server_port}"
-    dataset_name="${dataset_name}"
+    bench_name="${bench_name}"
     task_name="${task_name}"
     ckpt_name="${ckpt_name}"
     env_cfg_type="${env_cfg_type}"

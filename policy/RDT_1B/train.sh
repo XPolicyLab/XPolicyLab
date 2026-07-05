@@ -2,11 +2,11 @@
 set -euo pipefail
 
 if [[ $# -lt 6 ]]; then
-  echo "Usage: $0 <dataset_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>" >&2
   exit 1
 fi
 
-dataset_name=$1
+bench_name=$1
 ckpt_name=$2
 env_cfg_type=$3
 action_type=$4
@@ -21,8 +21,8 @@ export VISION_ENCODER_NAME="${VISION_ENCODER_NAME:-${WEIGHTS_DIR}/siglip-so400m-
 export RDT_PRETRAINED_MODEL="${RDT_PRETRAINED_MODEL:-${WEIGHTS_DIR}/rdt-1b}"
 export RDT_DATASET_NAME="${RDT_DATASET_NAME:-robodojo_aloha_hdf5}"
 
-data_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
-ckpt_setting="${dataset_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
+data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
+ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 OUTPUT_DIR="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 NUM_GPUS="$(tr ',' '\n' <<< "${gpu_id}" | sed '/^$/d' | wc -l | xargs)"
 
@@ -44,14 +44,14 @@ if [[ "${RDT_PRECOMP_LANG_EMBED:-1}" == "1" ]]; then
   EMBED_DIR="${POLICY_DIR}/lang_embeds/${data_setting}"
   if [[ ! -e "${EMBED_DIR}" ]]; then
     echo "[RDT_1B] Missing lang_embeds/${data_setting}" >&2
-    echo "[RDT_1B] Run first: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${action_type}" >&2
+    echo "[RDT_1B] Run first: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${action_type}" >&2
     exit 1
   fi
 fi
 
 if [[ ! -d "${RDT_HDF5_DIR}" ]]; then
   echo "[RDT_1B] Missing data/${data_setting}" >&2
-  echo "[RDT_1B] Run first: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${action_type}" >&2
+  echo "[RDT_1B] Run first: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${action_type}" >&2
   exit 1
 fi
 

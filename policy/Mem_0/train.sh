@@ -4,7 +4,7 @@ set -euo pipefail
 # Mem_0 unified training: Execution Module, Planning Module (Mn), or both in sequence.
 #
 # Usage:
-#   bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
+#   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> \
 #                 <action_type> <seed> <gpu_ids> [train_module]
 #
 # train_module (8th arg, default both):
@@ -32,12 +32,12 @@ set -euo pipefail
 # Shared: DRY_RUN (skip torchrun / LLaMA-Factory train+export; still writes configs)
 
 usage() {
-  echo "usage: bash train.sh <dataset_name> <ckpt_name> <env_cfg_type> <expert_data_num> \\" >&2
+  echo "usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <expert_data_num> \\" >&2
   echo "                   <action_type> <seed> <gpu_ids> [train_module]" >&2
   echo "  train_module: execution | planning | both  (default: both)" >&2
 }
 
-dataset_name=${1:-}
+bench_name=${1:-}
 ckpt_name=${2:-}
 env_cfg_type=${3:-}
 expert_data_num=${4:-}
@@ -46,7 +46,7 @@ seed=${6:-}
 gpu_ids=${7:-}
 train_module=${8:-}
 
-if [[ -z "${dataset_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" \
+if [[ -z "${bench_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${expert_data_num}" \
       || -z "${action_type}" || -z "${seed}" || -z "${gpu_ids}" ]]; then
   usage
   exit 2
@@ -73,8 +73,8 @@ ORCHESTRATOR="${ADAPTER_DIR}/run_planning_train.py"
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
-run_id="$(mem0_ckpt_run_id "${dataset_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
-repo_id="${REPO_ID:-$(mem0_resolve_dataset_dir "${POLICY_DIR}" "${dataset_name}" "${ckpt_name}" \
+run_id="$(mem0_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")"
+repo_id="${REPO_ID:-$(mem0_resolve_dataset_dir "${POLICY_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${expert_data_num}")}"
 
 run_execution_train() {
@@ -89,7 +89,7 @@ run_execution_train() {
 
   if [[ ! -d "${repo_id}" ]]; then
     echo -e "\033[31m[train:execution] LeRobot dataset not found: ${repo_id}\033[0m" >&2
-    echo "Run: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} <M1|Mn>   (or set REPO_ID=...)" >&2
+    echo "Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} <M1|Mn>   (or set REPO_ID=...)" >&2
     exit 1
   fi
 
@@ -168,7 +168,7 @@ run_planning_train() {
 
   if [[ ! -d "${repo_id}" ]]; then
     echo -e "\033[31m[train:planning] LeRobot dataset not found: ${repo_id}\033[0m" >&2
-    echo "Run: bash process_data.sh ${dataset_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} Mn" >&2
+    echo "Run: bash process_data.sh ${bench_name} ${ckpt_name} ${env_cfg_type} ${expert_data_num} ${action_type} Mn" >&2
     exit 1
   fi
 
