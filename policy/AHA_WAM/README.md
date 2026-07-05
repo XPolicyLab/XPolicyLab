@@ -60,6 +60,7 @@ Parameters used by the command:
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Random seed. |
 | `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| `num_gpus` | Optional explicit process count; inferred from comma-separated `gpu_id` when omitted. |
 
 ```bash
 cd XPolicyLab/policy/AHA_WAM

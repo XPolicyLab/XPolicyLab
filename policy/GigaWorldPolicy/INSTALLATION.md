@@ -1,5 +1,8 @@
 # GigaWorldPolicy Installation
 
+This document is kept because `install.sh` handles dependencies but does not
+bundle the Wan2.2-Diffusers pretrained backbone or all runtime override details.
+
 Install into the current Python/conda environment, or point `GIGAWORLD_CONDA_ENV` at a conda env to install into:
 
 ```bash

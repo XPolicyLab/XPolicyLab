@@ -102,16 +102,16 @@ class Model(ModelTemplate):
         repo_id = model_cfg.get("repo_id", "1118")
         model_root = _resolve_pi05_model_root(model_cfg)
 
-        print(f"[Pi_05_SF] Resolving train config: {train_config_name}", flush=True)
+        print(f"[Spatial_Forcing] Resolving train config: {train_config_name}", flush=True)
         config = _config.get_config(train_config_name)
         norm_stats = None
         if repo_id is not None:
-            print(f"[Pi_05_SF] Loading norm stats from {model_root / 'assets' / str(repo_id)}", flush=True)
+            print(f"[Spatial_Forcing] Loading norm stats from {model_root / 'assets' / str(repo_id)}", flush=True)
             norm_stats = _normalize.load(model_root / "assets" / str(repo_id))
 
-        print(f"[Pi_05_SF] Loading checkpoint from {model_root} (may take several minutes on JuiceFS)...", flush=True)
+        print(f"[Spatial_Forcing] Loading checkpoint from {model_root} (may take several minutes on JuiceFS)...", flush=True)
         policy = _policy_config.create_trained_policy(config, str(model_root), norm_stats=norm_stats)
-        print("[Pi_05_SF] Policy checkpoint loaded.", flush=True)
+        print("[Spatial_Forcing] Policy checkpoint loaded.", flush=True)
         return policy
 
     def update_obs(self, obs):

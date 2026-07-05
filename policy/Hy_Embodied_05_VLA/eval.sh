@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Local one-command evaluation entry point for hy_vla. Allocates a free port,
+# Local one-command evaluation entry point for Hy_Embodied_05_VLA. Allocates a free port,
 # starts the policy server (Hy-Embodied uv venv) and the env client (Isaac Sim
 # conda env) on the same machine, and cleans up the server on exit.
 #

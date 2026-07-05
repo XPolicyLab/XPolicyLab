@@ -10,7 +10,7 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Required supplemental installation guide for assets, system dependencies, or multi-environment setup. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
@@ -29,6 +29,8 @@
 
 What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
 
+Read `INSTALLATION.md` before first use. It is intentionally kept because this policy has setup that `install.sh` cannot fully express, such as external checkpoints, system packages, manual fallback steps, or multi-environment runtime notes.
+
 Parameters used by the command:
 
 | Parameter | Description |
@@ -39,8 +41,8 @@ Parameters used by the command:
 cd XPolicyLab/policy/GalaxeaVLA
 # Example: install dependencies for the GalaxeaVLA policy adapter.
 bash install.sh
-# Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. galaxeavla
+# Example: activate the environment used later as <policy_uv_env_path>.
+source GalaxeaVLA/.venv/bin/activate  # or pass GalaxeaVLA as <policy_uv_env_path>vla
 ```
 
 ## Demo Data Processing
@@ -115,16 +117,16 @@ Parameters used by `eval.sh`:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env_path` | Path to the GalaxeaVLA uv project/env root used by the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
 cd XPolicyLab/policy/GalaxeaVLA
 # Template: run same-machine policy server and RoboDojo environment client.
-bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_uv_env_path> <eval_env_conda_env>
 
 # Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_uv_env_path> <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -139,7 +141,7 @@ Parameters used by the split server/client flow:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env_path` | Path to the GalaxeaVLA uv project/env root used by the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 | `policy_server_port` | Port exposed by the policy server, for example `5000`. |
 | `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
@@ -151,12 +153,12 @@ cd XPolicyLab/policy/GalaxeaVLA
 # Terminal 1 on the policy machine: start the policy server.
 bash setup_eval_policy_server.sh \
   <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
-  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+  <policy_gpu_id> <policy_uv_env_path> <policy_server_port> <policy_server_host>
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
   RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <policy_conda_env> 5000 0.0.0.0
+  0 <policy_uv_env_path> 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
 bash setup_eval_env_client.sh \
@@ -187,7 +189,7 @@ Common parameter meanings used across the commands above:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env_path` | Path to the GalaxeaVLA uv project/env root used by the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 Policy-specific `deploy.yml` keys worth checking before evaluation:

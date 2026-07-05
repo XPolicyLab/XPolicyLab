@@ -25,7 +25,7 @@ log() {
 }
 
 if [[ ! -f scripts/precache_vggt_sf_cache.py || ! -f scripts/run_pi05sf_jax_offcache.sh ]]; then
-  echo "Run this script from the Pi_05_SF/openpi repository root." >&2
+  echo "Run this script from the Spatial_Forcing/open_sf repository root." >&2
   exit 2
 fi
 

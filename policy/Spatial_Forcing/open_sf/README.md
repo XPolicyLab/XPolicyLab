@@ -1,4 +1,4 @@
-# OpenPI-SF for Pi_05_SF
+# OpenPI-SF for Spatial_Forcing
 
 ## 训练配置
 

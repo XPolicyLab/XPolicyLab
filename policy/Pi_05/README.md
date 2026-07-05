@@ -10,7 +10,6 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |

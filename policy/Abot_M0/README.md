@@ -10,7 +10,7 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Required supplemental installation guide for assets, system dependencies, or multi-environment setup. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
 | `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
@@ -27,6 +27,8 @@
 ## Installation
 
 What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Read `INSTALLATION.md` before first use. It is intentionally kept because this policy has setup that `install.sh` cannot fully express, such as external checkpoints, system packages, manual fallback steps, or multi-environment runtime notes.
 
 Parameters used by the command:
 

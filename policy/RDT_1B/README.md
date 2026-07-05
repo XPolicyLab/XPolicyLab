@@ -10,7 +10,7 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Required supplemental installation guide for assets, system dependencies, or multi-environment setup. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
@@ -28,6 +28,8 @@
 
 What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
 
+Read `INSTALLATION.md` before first use. It is intentionally kept because this policy has setup that `install.sh` cannot fully express, such as external checkpoints, system packages, manual fallback steps, or multi-environment runtime notes.
+
 Parameters used by the command:
 
 | Parameter | Description |
@@ -44,29 +46,32 @@ conda activate <policy_env>  # e.g. rdt-1b
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: links HDF5 data into `policy/RDT_1B/data/<4-tuple>/` and pre-encodes language embeddings into `policy/RDT_1B/lang_embeds/<4-tuple>/`.
 
 Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `ckpt_name` | Data/run identifier. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional episode limit; omit to link the full HDF5 tree. |
+| `source_path` | Optional source HDF5 root. If omitted, the script checks `RAW_DATA_ROOT`, `data/<bench>/<ckpt>`, then `data/<bench>_<ckpt>`. |
+| `--overwrite` | Optional flag to re-encode all `lang_embed.pt` files. |
+| `--skip-encode` | Optional flag to only create the data symlink. |
+| `--gpu N` | Optional GPU id for T5 language encoding; default is `0`. |
 
 ```bash
 cd XPolicyLab/policy/RDT_1B
-# Template: convert all available demonstrations for one run.
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+# Template: link data and encode language embeddings.
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [source_path] [--overwrite] [--skip-encode] [--gpu N]
 
-# Example: convert stack_bowls demos for arx_x5 joint control.
+# Example: use default source-path resolution.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+# Example: use a custom HDF5 source and GPU 1 for language encoding.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint 50 /path/to/hdf5 --gpu 1
 ```
 
 ## Model Training

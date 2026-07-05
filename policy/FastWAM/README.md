@@ -10,7 +10,7 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Required supplemental installation guide for assets, system dependencies, or multi-environment setup. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
@@ -28,6 +28,8 @@
 ## Installation
 
 What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Read `INSTALLATION.md` before first use. It is intentionally kept because this policy has setup that `install.sh` cannot fully express, such as external checkpoints, system packages, manual fallback steps, or multi-environment runtime notes.
 
 Parameters used by the command:
 
@@ -57,6 +59,7 @@ Parameters used by the command:
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
 | `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `dataset_id` | Optional explicit converted dataset id/output folder name. |
 
 ```bash
 cd XPolicyLab/policy/FastWAM
@@ -84,6 +87,7 @@ Parameters used by the command:
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Random seed. |
 | `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| `num_gpus` | Optional explicit process count; inferred from comma-separated `gpu_id` when omitted. |
 
 ```bash
 cd XPolicyLab/policy/FastWAM

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Environment-side startup for hy_vla. Connects to the policy server and
+# Environment-side startup for Hy_Embodied_05_VLA. Connects to the policy server and
 # dispatches to the debug / sim runner per EVAL_ENV_TYPE (default: sim).
 
 bench_name=$1

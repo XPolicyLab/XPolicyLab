@@ -1,6 +1,9 @@
 # Mem_0 Installation
 
 Conda only (no Docker). Data conversion, training, and evaluation: [README.md](README.md).
+This document is kept because Mem_0 uses separate execution, planning-training,
+and planning-inference environments plus checkpoint downloads that are not all
+covered by the main `install.sh`.
 
 ## 1. Execution / inference env (`mem0`)
 

@@ -61,6 +61,7 @@ Parameters used by the command:
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Random seed. |
 | `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| `pretrained_backbone_path` | Optional pretrained H-RDT backbone path; defaults to the vendored pretrain checkpoint path. |
 
 ```bash
 cd XPolicyLab/policy/H_RDT

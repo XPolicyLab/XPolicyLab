@@ -19,7 +19,7 @@ from vggt.utils.load_fn import preprocess_images_from_openpi
 
 AlignTargetModel = Literal["auto", "vggt"]
 _OMNI_VGGT_TARGET = "omni" + "vggt"
-_OMNI_VGGT_ERROR = "The Omni geometry model is not included in this Pi_05_SF migration."
+_OMNI_VGGT_ERROR = "The Omni geometry model is not included in this Spatial_Forcing migration."
 
 
 @dataclasses.dataclass

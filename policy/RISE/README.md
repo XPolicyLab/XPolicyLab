@@ -10,7 +10,7 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
+| `INSTALLATION.md` | Required supplemental installation guide for assets, system dependencies, or multi-environment setup. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
 | `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
@@ -29,6 +29,8 @@
 ## Installation
 
 What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+
+Read `INSTALLATION.md` before first use. It is intentionally kept because this policy has setup that `install.sh` cannot fully express, such as external checkpoints, system packages, manual fallback steps, or multi-environment runtime notes.
 
 Parameters used by the command:
 
@@ -73,32 +75,37 @@ bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
 
 ## Model Training
 
-What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+What it does: runs the RISE offline training flow. RISE has stages: `advantage`, `policy`, or `all`. The `policy` stage expects an existing advantage dataset (`*_w_adv`); use `all` to run advantage then policy.
 
 Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `ckpt_name` | Training run identifier. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Random seed. |
-| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| `gpu_id` | GPU id or comma-separated GPU ids. |
+| `stage` | Optional `advantage`, `policy`, or `all`; default is `policy` unless `RISE_STAGE` overrides it. |
+| `extra_args` | Optional arguments forwarded to the upstream stage script. |
 
 ```bash
 cd XPolicyLab/policy/RISE
-# Template: train a policy run on one GPU or a GPU list.
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+# Template: train a specific RISE stage.
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [advantage|policy|all] [extra_args...]
 
-# Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+# Example: compute advantage artifacts.
+bash train.sh RoboDojo stack_bowls arx_x5 joint 42 0 advantage
 
-# Example: train the same run on four GPUs if the upstream trainer supports it.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+# Example: train the final policy after advantage data exists.
+bash train.sh RoboDojo stack_bowls arx_x5 joint 42 0 policy
+
+# Example: run advantage then policy.
+bash train.sh RoboDojo stack_bowls arx_x5 joint 42 0 all
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+Legacy stage-first usage is also supported by the script: `bash train.sh <advantage|policy|all> <gpu_id> <seed> [extra_args...]`, with dataset fields supplied through `RISE_BENCH_NAME`, `RISE_CKPT_NAME`, `RISE_ENV_CFG_TYPE`, and `RISE_ACTION_TYPE`.
 
 ## Deployment and Evaluation
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Policy-side startup for hy_vla. Activates the Hy-Embodied uv venv (torch +
+# Policy-side startup for Hy_Embodied_05_VLA. Activates the Hy-Embodied uv venv (torch +
 # HunYuanVLMoT fork + flash_attn), puts the repo root on PYTHONPATH so the
 # `hy_vla` package and the `robotwin_eval` adapter import, and launches the
 # XPolicyLab policy server.

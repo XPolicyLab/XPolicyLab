@@ -1,8 +1,8 @@
-# Pi_05_SF
+# Spatial_Forcing
 
-**Contributor:** RoboDojo Team | **Paper:** Pi0.5 / Open-SF integration notes | **arXiv:** TBD | **Original code:** https://github.com/Physical-Intelligence/openpi
+**Contributor:** RoboDojo Team | **Paper:** Spatial Forcing / OpenPI integration notes | **arXiv:** TBD | **Original code:** https://github.com/Physical-Intelligence/openpi
 
-`Pi_05_SF` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
+`Spatial_Forcing` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
 
 <details>
 <summary>File Structure</summary>
@@ -10,7 +10,6 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `INSTALLATION.md` | Supplemental documentation or environment metadata. |
 | `install.sh` | Installs the policy-side runtime and editable dependencies. |
 | `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
 | `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
@@ -33,8 +32,8 @@ Parameters used by the command:
 | `policy_env` | Name of the conda environment used by the policy runtime. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05_SF
-# Example: install dependencies for the Pi_05_SF policy adapter.
+cd XPolicyLab/policy/Spatial_Forcing
+# Example: install dependencies for the Spatial_Forcing policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
 conda activate <policy_env>  # e.g. pi-05-sf
@@ -72,7 +71,7 @@ Parameters used by `eval.sh`:
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05_SF
+cd XPolicyLab/policy/Spatial_Forcing
 # Template: run same-machine policy server and RoboDojo environment client.
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
@@ -100,7 +99,7 @@ Parameters used by the split server/client flow:
 | `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
 
 ```bash
-cd XPolicyLab/policy/Pi_05_SF
+cd XPolicyLab/policy/Spatial_Forcing
 # Terminal 1 on the policy machine: start the policy server.
 bash setup_eval_policy_server.sh \
   <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \

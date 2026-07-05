@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Data processing for hy_vla.
+# Data processing for Hy_Embodied_05_VLA.
 #
 # Hy-VLA trains on the Hy-Embodied UMI / RoboTwin data pipeline that ships in
 # the Hy-Embodied source tree, not on a bespoke XPolicyLab converter. This

@@ -1,4 +1,4 @@
-policy_name: Pi_05_SF
+policy_name: Spatial_Forcing
 bench_name: null
 task_name: stack_bowls
 env_cfg_type: arx_x5

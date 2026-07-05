@@ -5,6 +5,9 @@ isolated environment. Default model variant: **G0Plus_3B** (PaliGemma-3B
 backbone, 14-dim dual-arm joint actions). G0Tiny / pi0 / pi0fast are selectable
 via `deploy.yml` (`model_variant` + `task_config_name`) without code changes.
 
+This document is kept because `install.sh` does not download the required
+PaliGemma/G0 checkpoint assets or explain the model-variant mapping.
+
 ## 1. Environment
 
 ```bash

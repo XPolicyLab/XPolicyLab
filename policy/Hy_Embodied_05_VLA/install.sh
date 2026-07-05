@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Installs the hy_vla policy environment.
+# Installs the Hy_Embodied_05_VLA policy environment.
 #
 # The policy server runs inside the Hy-Embodied uv venv (torch 2.7 + the
 # HunYuanVLMoT transformers fork + flash_attn). This script materializes that

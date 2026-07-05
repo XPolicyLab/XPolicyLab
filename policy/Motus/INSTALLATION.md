@@ -1,16 +1,16 @@
-# Motus 环境配置
+# Motus Installation
 
-Motus 上游源码位于 [motus/](motus/)，使用 conda 环境 `motus`。
+`install.sh` covers the standard environment, but this document is kept because Motus has important model-root conventions and checkpoint lookup behavior that are needed for evaluation.
 
-## 一键安装
+## 1. One-command Install
 
 ```bash
+cd XPolicyLab/policy/Motus
 bash install.sh
+conda activate motus
 ```
 
-## 手动安装
-
-### 1. 创建 conda 环境
+## 2. Manual Install Equivalent
 
 ```bash
 conda create -n motus python=3.10 -y
@@ -19,82 +19,40 @@ conda activate motus
 pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
 pip install packaging psutil ninja wheel
 pip install flash-attn --no-build-isolation
-```
 
-### 2. 安装 Motus 依赖
-
-```bash
-cd motus
+cd XPolicyLab/policy/Motus/motus
 pip install -r requirements.txt
 pip install --no-deps lerobot==0.3.2
 pip install -r requirements/lerobot.txt
 pip install -e .
-```
 
-### 3. 安装 XPolicyLab
-
-```bash
-cd ../..
+cd ../../..
 pip install -e .
 ```
 
-## 模型与数据路径
+## 3. Model and Data Paths
 
-| 变量 / 参数 | 说明 |
-|-------------|------|
-| `WAN_PATH` / `--wan_path` | 含 `Wan2.2-TI2V-5B`、`Qwen3-VL-2B-Instruct`、`Motus/` 的模型根目录 |
-| `LEROBOT_DATA_ROOT` | LeRobot 数据集父目录（需指定具体子数据集 `root`） |
-| LeRobot 直读 | 配置中填写 `repo_id` + `root=${LEROBOT_DATA_ROOT}/<dataset>` |
+| Variable or argument | Meaning |
+| --- | --- |
+| `WAN_PATH` / `--wan_path` | Root containing `Wan2.2-TI2V-5B`, `Qwen3-VL-2B-Instruct`, and `Motus/`. |
+| `LEROBOT_DATA_ROOT` | Parent directory for LeRobot datasets. |
+| `MOTUS_CHECKPOINT_PATH` | Direct path to a checkpoint directory, or a parent that contains one. |
+| `MOTUS_CKPT_SETTING` | Name under `checkpoints/` used by evaluation. |
 
-预训练组件通常包括：`Motus/`（Stage2）、`Wan2.2-TI2V-5B/`、`Qwen3-VL-2B-Instruct/`。
+Typical pretrained components are `Motus/` Stage2, `Wan2.2-TI2V-5B/`, and `Qwen3-VL-2B-Instruct/`. See `motus/README.md` for upstream LeRobot training and T5-cache details.
 
-详细 LeRobot 训练与 T5 缓存流程见 [motus/README.md](motus/README.md)。
+## 4. Evaluation Checkpoint Lookup
 
-## 训练与评测
+`train.sh` writes checkpoints under:
 
-见 [README.md](README.md)。
-
-## XPolicyLab 部署（eval）
-
-已在 GPU 主机完成 debug client 闭环（`setup_eval_policy_server.sh` + `setup_eval_env_client.sh`）。
-
-| 项 | 说明 |
-|----|------|
-| Server 环境 | `motus` |
-| Client 环境 | `XPolicyLab`（conda） |
-| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| action_type | `joint` |
-| xspark 权重 | `/mnt/xspark-data/final_ckpt/Motus/checkpoint_step_80000/pytorch_model` |
-
-Checkpoint 解析（无需手工软链）：
-
-- `train.sh` 会把权重写到 `policy/Motus/checkpoints/<ckpt_setting>/.../checkpoint_step_<N>/pytorch_model/mp_rank_00_model_states.pt`。
-- eval 传入 `ckpt_name=<ckpt_setting>`，`model.py:resolve_motus_checkpoint` 会在 `checkpoints/<ckpt_name>/` 下**递归**定位最新 `mp_rank_00_model_states.pt`。
-- 用共享盘上的既有权重时，可用环境变量覆盖，避免软链：
-
-```bash
-# 直接指向含 mp_rank_00_model_states.pt 的目录（或其上层，会自动下探）
-export MOTUS_CHECKPOINT_PATH=/mnt/xspark-data/final_ckpt/Motus/checkpoint_step_80000
-# 或指定 checkpoints/ 下的名字
-export MOTUS_CKPT_SETTING=<ckpt_setting>
+```text
+policy/Motus/checkpoints/<ckpt_setting>/.../checkpoint_step_<N>/pytorch_model/mp_rank_00_model_states.pt
 ```
 
-如仍想软链，也兼容（在 `policy/Motus/` 下）：
+During eval, pass `ckpt_name=<ckpt_setting>`. `model.py` recursively finds the latest `mp_rank_00_model_states.pt`. For externally stored weights, either set `MOTUS_CHECKPOINT_PATH` or symlink them:
 
 ```bash
+cd XPolicyLab/policy/Motus
 mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<ckpt_setting>
+ln -sfn <checkpoint_root> checkpoints/<ckpt_setting>
 ```
-
-手动评测：
-
-```bash
-# terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 motus <port> localhost
-
-# terminal 2 — client
-bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost
-```
-
-或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
-

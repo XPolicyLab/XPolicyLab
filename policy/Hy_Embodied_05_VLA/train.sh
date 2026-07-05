@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Training launcher for hy_vla.
+# Training launcher for Hy_Embodied_05_VLA.
 #
 # Hy-VLA training lives in the Hy-Embodied source tree (multi-node torchrun +
 # Hydra config). This wrapper forwards to that recipe; tune the run via the

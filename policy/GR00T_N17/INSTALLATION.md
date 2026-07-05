@@ -1,18 +1,10 @@
-# GR00T_N17 环境配置
+# GR00T_N17 Installation
 
-NVIDIA Isaac GR00T N1.7 在 XPolicyLab 中的接入。上游源码位于 [gr00t_n17/](gr00t_n17/)，使用 `uv`（Python 3.10，建议 CUDA 12.8 dGPU）。
+`install.sh` is the recommended path, but this document is kept because GR00T_N17 has system dependencies, LeRobot conversion requirements, modality metadata, and optional CUDA fixes that are not obvious from the one-line install command.
 
-## 一键安装
+## 1. System Dependencies
 
-```bash
-bash install.sh
-```
-
-## 手动安装
-
-### 1. 系统依赖
-
-`ffmpeg` 用于读取视频；从 HuggingFace 拉模型时建议安装 `git-lfs`：
+`ffmpeg` is required for video IO, and `git-lfs` is recommended for model downloads:
 
 ```bash
 sudo apt-get update
@@ -20,44 +12,36 @@ sudo apt-get install -y ffmpeg git-lfs
 git lfs install
 ```
 
-### 2. 安装 uv
+Install `uv` if it is not already available:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-source "$HOME/.local/bin/env"  # 若当前 shell 找不到 uv
+source "$HOME/.local/bin/env"
 ```
 
-### 3. 创建 GR00T 环境
+## 2. Install GR00T and XPolicyLab
 
-在 **x86_64 GPU 主机**上，上游 `pyproject.toml` 的 `required-environments` 会同时解析 aarch64 专用 wheel，导致 `uv sync` 失败。请使用仓库内 `install.sh`（`uv venv --clear` + `uv pip install -e .`）：
+On x86_64 GPU hosts, the upstream `pyproject.toml` may try to resolve aarch64-only wheels. Use the local wrapper, which creates `gr00t_n17/.venv` and installs the needed packages directly:
 
 ```bash
-cd policy/GR00T_N17
+cd XPolicyLab/policy/GR00T_N17
 bash install.sh
 source gr00t_n17/.venv/bin/activate
 python -c "import gr00t; print('GR00T installed successfully')"
 ```
 
-评测时 `policy_conda_env` 填 **`uv`**（`setup_eval_policy_server.sh` 会激活 `gr00t_n17/.venv`）。
+During evaluation, pass `uv` as `policy_conda_env`; the startup script activates `gr00t_n17/.venv`.
 
-若提示 `CUDA_HOME is unset`：
+If `CUDA_HOME is unset`, run:
 
 ```bash
+cd XPolicyLab/policy/GR00T_N17/gr00t_n17
 uv run bash scripts/deployment/dgpu/install_deps.sh
 ```
 
-### 4. 安装 XPolicyLab
+## 3. RoboDojo Data Preparation
 
-在 `gr00t_n17` 目录下：
-
-```bash
-uv pip install -e ../../..
-uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
-```
-
-## 准备 RoboDojo 数据
-
-源数据集需为 LeRobot v3.0；GR00T 训练入口需要 GR00T-flavored LeRobot v2.1 及 `meta/modality.json`。
+GR00T expects GR00T-flavored LeRobot v2.1 data plus `meta/modality.json`. Convert from LeRobot v3.0 with:
 
 ```bash
 export LEROBOT_DATA_ROOT="${LEROBOT_DATA_ROOT:-$HF_LEROBOT_HOME}"
@@ -67,22 +51,23 @@ export GR00T_DATASET="${GR00T_DATASET:-RoboDojo_sim_arx-x5_gr00t}"
 
 cp -a "${DATA_ROOT}/${SRC_DATASET}" "${DATA_ROOT}/${GR00T_DATASET}"
 
-cd gr00t_n17
+cd XPolicyLab/policy/GR00T_N17/gr00t_n17
 uv run --project scripts/lerobot_conversion \
   python scripts/lerobot_conversion/convert_v3_to_v2.py \
   --root "${DATA_ROOT}" \
   --repo-id "${GR00T_DATASET}"
 ```
 
-或使用 policy 封装脚本（`expert_data_num` 为可选尾参，留空 = 全部 episode）：
+Or use the adapter wrapper:
 
 ```bash
+cd XPolicyLab/policy/GR00T_N17
 bash process_data.sh RoboDojo cotrain arx_x5 joint
 ```
 
-### 补充 meta/modality.json
+## 4. Add `meta/modality.json`
 
-在转换后的数据目录创建（RoboDojo arx-x5，14 维 state/action）：
+For RoboDojo `arx_x5`, create 14-D state/action metadata:
 
 ```bash
 cat > "${DATA_ROOT}/${GR00T_DATASET}/meta/modality.json" <<'EOF'
@@ -107,72 +92,21 @@ cat > "${DATA_ROOT}/${GR00T_DATASET}/meta/modality.json" <<'EOF'
 EOF
 ```
 
-## 模型与数据路径
+## 5. Useful Paths and Variables
 
-| 变量 | 说明 |
-|------|------|
-| `LEROBOT_DATA_ROOT` | LeRobot 数据集根目录（默认 `$HF_LEROBOT_HOME`） |
-| `GR00T_SRC_DATASET` | 源 v3.0 数据集 repo id |
-| `GR00T_DATASET` | 转换后的 GR00T 数据集 repo id |
-| `GR00T_BASE_MODEL_PATH` | GR00T-N1.7-3B 本地目录或 HF id（见 `train.sh`） |
-| `GR00T_COSMOS_MODEL_PATH` | 部署推荐 `checkpoints/shared/Cosmos-Reason2-2B`（软链 xspark 共享权重） |
+| Variable | Meaning |
+| --- | --- |
+| `LEROBOT_DATA_ROOT` | LeRobot dataset root; defaults to `$HF_LEROBOT_HOME`. |
+| `GR00T_SRC_DATASET` | Source v3.0 dataset repo id. |
+| `GR00T_DATASET` | Converted GR00T dataset repo id. |
+| `GR00T_BASE_MODEL_PATH` | GR00T-N1.7-3B local path or Hugging Face id. |
+| `GR00T_COSMOS_MODEL_PATH` | Cosmos-Reason2-2B path used by deployment. |
 
-预训练权重也可预先 `huggingface-cli download` 到 `$HF_HOME`，`train.sh` 默认 `HF_HUB_OFFLINE=1` 走本地缓存。
-
-## 安装自检
+## 6. Smoke Checks
 
 ```bash
-cd gr00t_n17
+cd XPolicyLab/policy/GR00T_N17/gr00t_n17
 uv run python -c "import torch; print(torch.cuda.is_available())"
 uv run python gr00t/experiment/launch_finetune.py --help
-uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
+PYTHONPATH=../../.. uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
 ```
-
-## 评测环境
-
-Policy server 使用 `gr00t_n17/.venv`；env client 可使用任意已安装 XPolicyLab 的 conda 环境：
-
-```bash
-bash install.sh
-# client 侧示例
-conda activate <your_eval_env>
-cd ../../..
-pip install -e .
-```
-
-训练与评测入口见 [README.md](README.md)。
-
-## XPolicyLab 部署（eval）
-
-已在 GPU 主机完成 debug client 闭环（`setup_eval_policy_server.sh` + `setup_eval_env_client.sh`）。
-
-| 项 | 说明 |
-|----|------|
-| Server 环境 | `uv` |
-| Client 环境 | `XPolicyLab`（conda） |
-| eval 示例 ckpt | `RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| action_type | `joint` |
-| xspark 权重 | `/mnt/xspark-data/final_ckpt/GR00T_N17/RoboDojo-cotrain-arx_x5-3500-joint-0` |
-| 备注 | cosmos: checkpoints/shared/Cosmos-Reason2-2B |
-
-软链 checkpoint（在 `policy/GR00T_N17/` 下）：
-
-```bash
-mkdir -p checkpoints
-ln -sfn <xspark_dir> checkpoints/<ckpt_name>
-```
-
-`ckpt_name` 即 `checkpoints/` 下的完整 run 目录名（历史 6-tuple 目录名可整体作为 `ckpt_name` 传入）。
-
-手动评测：
-
-```bash
-# terminal 1 — server
-bash setup_eval_policy_server.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 uv <port> localhost
-
-# terminal 2 — client
-bash setup_eval_env_client.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-joint-0 arx_x5 joint 0 0 XPolicyLab "ckpt_name=RoboDojo-cotrain-arx_x5-3500-joint-0,action_type=joint" <port> localhost
-```
-
-或使用 `eval.sh`（会等待 server 端口就绪后启动 client）。
-

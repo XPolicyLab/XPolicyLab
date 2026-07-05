@@ -71,32 +71,31 @@ bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
 
 ## Model Training
 
-What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+What it does: starts the EventVLA upstream training recipe and writes results under `results/Checkpoints/<RUN_ID>/`. The printed `RUN_ID` is the value to pass as eval `ckpt_name`.
 
 Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
-| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Training run identifier, for example `cotrain`. |
-| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
-| `seed` | Random seed. |
-| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| `data_mix` | Upstream EventVLA data mix name, for example `robodojo`. |
+| `memory_ablation_mode` | Memory ablation/profile name, for example `pure_image_keyframe_memory`. |
+| `keyframe_memory_policy` | Keyframe memory policy. Supported values are `teacher` and `predict` aliases. |
+| `extra_args` | Optional arguments forwarded to the upstream EventVLA train script. |
+| `RUN_ID` | Optional environment override for the run directory; this becomes eval `ckpt_name`. |
 
 ```bash
 cd XPolicyLab/policy/EventVLA
-# Template: train a policy run on one GPU or a GPU list.
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+# Template: launch EventVLA training.
+bash train.sh <data_mix> <memory_ablation_mode> <keyframe_memory_policy> [extra_args...]
 
-# Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+# Example: train with teacher keyframe memory.
+bash train.sh robodojo pure_image_keyframe_memory teacher
 
-# Example: train the same run on four GPUs if the upstream trainer supports it.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+# Example: force a stable run id that can be reused as eval ckpt_name.
+RUN_ID=RoboDojo-eventvla-arx_x5-joint-0   bash train.sh robodojo pure_image_keyframe_memory teacher
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+Evaluate with `ckpt_name=<RUN_ID>`. EventVLA stores checkpoints under `results/Checkpoints/<RUN_ID>/`, not the generic `checkpoints/<bench>-<ckpt>-<env>-<action>-<seed>/` layout.
 
 ## Deployment and Evaluation
 

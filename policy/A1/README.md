@@ -61,6 +61,8 @@ Parameters used by the command:
 | `action_type`     | Action representation, for example `joint`.                                               |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes.                                  |
 | `raw_task_dirs`   | Optional source task directory or comma-separated task list when the script supports it.  |
+| `fps`             | Optional conversion frame rate; default is `30`.                                          |
+| `output_dir`      | Optional output root for converted data; defaults to the policy `data/` directory.        |
 
 
 ```bash

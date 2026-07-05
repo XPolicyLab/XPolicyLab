@@ -14,12 +14,12 @@ find_xpolicylab_root() {
         fi
         dir="$(dirname "${dir}")"
     done
-    echo "[Pi_05_SF][ERROR] XPolicyLab root not found above ${1}" >&2
+    echo "[Spatial_Forcing][ERROR] XPolicyLab root not found above ${1}" >&2
     return 1
 }
 XPOLICYLAB_ROOT="$(find_xpolicylab_root "${POLICY_DIR}")"
 
-echo "[Pi_05_SF] OPEN_SF_ROOT=${OPEN_SF_ROOT}"
+echo "[Spatial_Forcing] OPEN_SF_ROOT=${OPEN_SF_ROOT}"
 
 if ! command -v uv >/dev/null 2>&1; then
   echo "uv not found. Install via: curl -LsSf https://astral.sh/uv/install.sh | sh" >&2
@@ -29,7 +29,7 @@ fi
 TJY_ROOT="$(cd "${POLICY_DIR}/../../../../.." && pwd)"
 export UV_CACHE_DIR="${UV_CACHE_DIR:-${TJY_ROOT}/.cache/uv}"
 mkdir -p "${UV_CACHE_DIR}"
-echo "[Pi_05_SF] UV_CACHE_DIR=${UV_CACHE_DIR}"
+echo "[Spatial_Forcing] UV_CACHE_DIR=${UV_CACHE_DIR}"
 
 cd "${OPEN_SF_ROOT}"
 rm -rf .venv
@@ -41,9 +41,9 @@ uv run python -c "import XPolicyLab; print('XPolicyLab ok')"
 
 chmod +x "${OPEN_SF_ROOT}/.venv/bin/python"* 2>/dev/null || true
 if ! "${OPEN_SF_ROOT}/.venv/bin/python" -c "import jax; print('jax ok')" 2>/dev/null; then
-  echo "[Pi_05_SF][ERROR] jax not available in ${OPEN_SF_ROOT}/.venv" >&2
+  echo "[Spatial_Forcing][ERROR] jax not available in ${OPEN_SF_ROOT}/.venv" >&2
   exit 1
 fi
 
-echo "[Pi_05_SF] Installation finished."
-echo "[Pi_05_SF] Activate: source ${OPEN_SF_ROOT}/.venv/bin/activate"
+echo "[Spatial_Forcing] Installation finished."
+echo "[Spatial_Forcing] Activate: source ${OPEN_SF_ROOT}/.venv/bin/activate"
