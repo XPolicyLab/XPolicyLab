@@ -128,3 +128,19 @@ CUDA_VISIBLE_DEVICES=0 python playground/benchmarks/robodojo/robodojo_dm0.py --t
 ```bash
 bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-3500-ee-0 arx_x5 3500 ee 0 <policy_gpu> <env_gpu> DM0 XPolicyLab
 ```
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

@@ -182,7 +182,7 @@ XPolicyLab uses a standard policy package layout so that different policies can 
 | `deploy.yml` | Defines deployment parameters passed into `model.Model`, including default model configuration and checkpoint loading options. |
 | `eval.sh` | Local one-command evaluation entry point. It allocates an available `policy_server_port`, starts both `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` on the same machine, and cleans up the policy server when evaluation exits. |
 | `setup_eval_policy_server.sh` | Policy-side startup script. It runs the model server inside the policy environment and binds `policy_server_host:policy_server_port`; in remote deployment, this script is launched on the model/GPU machine, while in local evaluation it could be launched by `eval.sh`. |
-| `setup_eval_env_client.sh` | Environment-side startup script. It runs the evaluation client inside the environment environment and dispatches to debug, simulation, or real-world runners according to `deploy.yml`; in remote deployment, this script is launched on the environment/simulator machine, while in local evaluation it could be launched by `eval.sh`. |
+| `setup_eval_env_client.sh` | Environment-side startup script. It runs the evaluation client inside the environment conda env and dispatches to debug or simulation runners according to `EVAL_ENV_TYPE` (default: `sim`); in remote deployment, this script is launched on the environment/simulator machine, while in local evaluation it could be launched by `eval.sh`. |
 | `install.sh` | Installs the policy environment and editable XPolicyLab package. |
 | `model.py` | Defines model loading, observation updates, action generation, and reset logic. |
 | `process_data.sh` | Converts raw datasets into the policy-specific training format. |
@@ -311,7 +311,7 @@ Evaluation requires two components:
 | `model.py` | Loads the policy, maintains observation state, returns actions, and resets model-side state. |
 | `deploy.py` | Runs the environment interaction loop and calls the policy server. |
 
-XPolicyLab provides an offline debug environment through `debug_policy_env.py`. It generates correctly shaped observations and validates returned actions, enabling rapid checks of parameter routing, model input/output dimensions, and server-client communication. Set `eval_env: debug` in `deploy.yml` for offline debugging; switch it to `sim` or `real` for simulation or real-robot evaluation without editing `eval.sh`.
+XPolicyLab provides an offline debug environment through `debug_env_client.py`. It generates correctly shaped observations and validates returned actions, enabling rapid checks of parameter routing, model input/output dimensions, and server-client communication. Set `EVAL_ENV_TYPE=debug` for offline debugging; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation without editing `eval.sh`.
 
 ### 4.6.1 `model.Model` Interface
 
@@ -334,10 +334,10 @@ During evaluation, the environment process and policy process communicate throug
 
 | File | Role |
 |---|---|
-| `deploy.yml` | Defines model deployment parameters. Low-frequency options can be set as constants or `null` and overridden later with `--overrides`. `eval_env` selects `debug`, `sim`, or `real`; `eval_batch` selects serial or batched inference. |
+| `deploy.yml` | Defines model deployment parameters. Low-frequency options can be set as constants or `null` and overridden later with `--overrides`. `eval_batch` selects serial or batched inference. |
 | `eval.sh` | Local orchestration script for same-machine evaluation. It selects an available `policy_server_port`, launches the policy server first, then launches the environment client, and finally terminates the server when evaluation exits. Use this script when the policy and environment can run on the same machine. |
 | `setup_eval_policy_server.sh` | Policy-side startup script. It enters `policy_conda_env` or uses `policy_uv_env_path`, starts `setup_policy_server.py`, loads `model.Model`, and binds `policy_server_host:policy_server_port` so that environment clients can request actions. In remote deployment, run this script on the model/GPU machine. |
-| `setup_eval_env_client.sh` | Environment-side startup script. It enters `eval_env_conda_env`, connects to the policy server through `policy_server_host:policy_server_port`, and calls `XPolicyLab/utils/setup_env_client.sh`, which dispatches to `run_debug_env_client.sh`, `run_sim_env_client.sh`, or `run_real_policy_client.sh` according to `deploy.yml`. In remote deployment, run this script on the environment or simulator machine. |
+| `setup_eval_env_client.sh` | Environment-side startup script. It enters `eval_env_conda_env`, connects to the policy server through `policy_server_host:policy_server_port`, and calls `XPolicyLab/utils/setup_env_client.sh`, which dispatches to `run_debug_env_client.sh` or `run_sim_env_client.sh` according to `EVAL_ENV_TYPE` (default: `sim`). In remote deployment, run this script on the environment or simulator machine. |
 
 Use `policy_gpu_id` for the model process and `env_gpu_id` for the simulation process. The conda-based policy environment can be modeled after `policy/DP`; the uv-based path can be modeled after `policy/PI_05`.
 
@@ -352,7 +352,13 @@ Read `policy/demo_policy/deploy.py` for the reference control flow. The most imp
 | `TASK_ENV.is_episode_end()` | Checks whether all evaluation episodes have finished. |
 | `model_client.call(func_name, obs)` | Serializes the target `Model` method name and observation payload, sends them to the policy server, and returns the model-side result. |
 
-After offline debugging, switch `eval_env` in `deploy.yml` from `debug` to `sim` or `real`. The environment client will automatically dispatch to the corresponding runner without changes to `eval.sh`, `setup_eval_policy_server.sh`, or `setup_eval_env_client.sh`.
+After offline debugging, unset `EVAL_ENV_TYPE` or set `EVAL_ENV_TYPE=sim` for simulation. The environment client dispatches to the corresponding runner without changes to `eval.sh`, `setup_eval_policy_server.sh`, or `setup_eval_env_client.sh`.
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation (`run_sim_env_client.sh`) |
+| `debug` | Offline shape/IO validation (`run_debug_env_client.sh`) |
+| `real` | Not available in open-source release |
 
 ## 5.2 Platform evaluation (env client daemon)
 
@@ -376,18 +382,16 @@ With `env_client_mode: daemon` in `deploy.yml`, the process stays up and exposes
 
 | Endpoint | Role |
 |---|---|
-| `GET /v1/health` | Daemon liveness and baseline metadata (`policy_name`, `eval_env`). |
+| `GET /v1/health` | Daemon liveness and baseline metadata (`policy_name`, `eval_env_type`). |
 | `POST /sessions/{evaluation_id}/dispatch` | Cache platform dispatch payload for the session. |
 | `POST /sessions/{evaluation_id}/trials/{trial_index}/start` | Run the selected trial (blocking until completion or stop). |
 | `POST /sessions/{evaluation_id}/trials/{trial_index}/stop` | Request stop at the next `is_episode_end` check (typically one action step later). |
 
 The control plane calls these endpoints on the eval station; finish webhooks and artifact upload remain on the RoboDojo publish path.
 
-### 5.2.1 Real-robot (`eval_env: real`)
+### 5.2.1 Real-robot (`EVAL_ENV_TYPE=real`)
 
-Set `eval_env: real` and `env_client_mode: daemon` in `deploy.yml`. Real evaluation requires the X-Robot-Pipeline root directory (the repo that contains both `src/` and `XPolicyLab/`). `setup_eval_env_client.sh` passes this path as `ROOT_DIR`; the daemon forwards it as `root_dir` into each trial `deploy_cfg` for `RealEnv` import.
-
-`eval_env: real` does not support `run-once` mode. Episode count is driven by the policy loop until an operator stops the trial from the collector UI or `POST .../stop` is called.
+Real-robot evaluation is not shipped in the open-source release. `EVAL_ENV_TYPE=real` exits with an error in `setup_env_client.sh`.
 
 # 📚 6. Citation
 

@@ -79,8 +79,7 @@ Positional args: `<bench_name> <task_name> <ckpt_name> <env_cfg_type>
 <expert_data_num> <action_type> <seed> <policy_gpu_id> <env_gpu_id>
 <policy_uv_env> <eval_env_conda_env>`.
 
-Set `eval_env: debug` in `deploy.yml` for offline shape/IO validation before
-`sim`.
+Set `EVAL_ENV_TYPE=debug` before running eval for offline shape/IO validation; leave unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
 
 ## Key `deploy.yml` knobs
 
@@ -93,3 +92,19 @@ Set `eval_env: debug` in `deploy.yml` for offline shape/IO validation before
 | `exc_action_size` | Env steps executed per network forward. |
 | `img_history_size` / `img_history_interval` | MEM video-encoder history cadence (when `use_video_encoder=true`). |
 | `policy_uv_env_path` | Hy-Embodied uv venv root for the server. |
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

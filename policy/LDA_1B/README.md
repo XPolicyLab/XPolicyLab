@@ -70,7 +70,7 @@ bash eval.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 0 LDA_1B XPolicyLab
 # dataset task ckpt env action seed policy_gpu env_gpu policy_conda eval_conda
 ```
 
-`deploy.yml` 中 `eval_env`：`debug` → `sim` → `real`。
+Use the `EVAL_ENV_TYPE` environment variable`debug` → `sim` → `real`。
 
 旧 checkpoint 布局可通过环境变量回退：
 

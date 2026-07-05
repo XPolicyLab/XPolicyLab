@@ -2,7 +2,7 @@
 set -e
 
 # Environment-side startup for hy_vla. Connects to the policy server and
-# dispatches to the debug / sim / real runner per `eval_env` in deploy.yml.
+# dispatches to the debug / sim runner per EVAL_ENV_TYPE (default: sim).
 
 bench_name=$1
 task_name=$2

@@ -46,3 +46,19 @@ tmux attach -t smolvla_stack_bowls
 ```bash
 bash eval.sh RoboDojo stack_bowls RoboDojo_sim_arx-x5_seed_0 arx_x5 3500 joint 0 <policy_gpu> <env_gpu> smolvla XPolicyLab
 ```
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

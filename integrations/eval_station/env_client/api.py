@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from eval_station.eval_env_type import DEFAULT_EVAL_ENV_TYPE
 from eval_station.schemas import DispatchPayload
 from eval_station.trial.config import build_trial_run_config, normalize_policy_name
 
@@ -61,7 +62,7 @@ class EnvClientBaselineConfig(_StrictSchema):
     port: int | None = Field(default=None, ge=1, le=65535)
     eval_batch: bool = False
     eval_episode_num: int = Field(default=10, ge=1)
-    eval_env: str = "debug"
+    eval_env_type: str = DEFAULT_EVAL_ENV_TYPE
     root_dir: str | None = None
     action_type: Literal["joint", "ee"] | None = None
     base_cfg: str | None = None
@@ -81,7 +82,7 @@ class TrialRunResponse(_StrictSchema):
     status: Literal["completed", "failed"]
     trial_id: str | None = None
     steps: int | None = Field(default=None, ge=0)
-    eval_env: str | None = None
+    eval_env_type: str | None = None
     policy_name: str | None = None
     error: dict[str, Any] | None = None
 
@@ -89,7 +90,7 @@ class TrialRunResponse(_StrictSchema):
 class HealthResponse(_StrictSchema):
     ok: bool = True
     policy_name: str | None = None
-    eval_env: str
+    eval_env_type: str
     deploy_yml: str | None = None
     last_trial_id: str | None = None
 
@@ -177,9 +178,9 @@ def debug_env_client_deploy_cfg_view(deploy_cfg: Mapping[str, Any]) -> dict[str,
 
 
 def baseline_deploy_cfg_view(deploy_cfg: Mapping[str, Any]) -> dict[str, Any]:
-    """Debug-env client fields plus baseline-only keys such as ``eval_env`` and ``root_dir``."""
+    """Debug-env client fields plus baseline-only keys such as ``eval_env_type`` and ``root_dir``."""
     view = debug_env_client_deploy_cfg_view(deploy_cfg)
-    for key in ("eval_env", "root_dir"):
+    for key in ("eval_env_type", "root_dir"):
         if key in deploy_cfg:
             view[key] = deploy_cfg[key]
     return view
@@ -191,13 +192,13 @@ def dispatch_trial_to_request(
     *,
     evaluation_id: str,
     eval_episode_num: int | None = 1,
-    eval_env: str | None = None,
+    eval_env_type: str | None = None,
 ) -> TrialRunRequest:
     config = build_trial_run_config(
         dispatch,
         trial_run,
         evaluation_id=evaluation_id,
-        eval_env=eval_env,
+        eval_env_type=eval_env_type,
     )
     case_meta = {
         **config.case_meta,
@@ -242,6 +243,14 @@ def dispatch_trial_to_deploy_cfg(
         trial_run,
         evaluation_id=evaluation_id,
         eval_episode_num=eval_episode_num,
-        eval_env=baseline_cfg.get("eval_env"),
+        eval_env_type=baseline_cfg.get("eval_env_type"),
     )
-    return trial_request_to_deploy_cfg(request, baseline)
+    deploy_cfg = trial_request_to_deploy_cfg(request, baseline)
+    config = build_trial_run_config(
+        dispatch,
+        trial_run,
+        evaluation_id=evaluation_id,
+        eval_env_type=baseline_cfg.get("eval_env_type"),
+    )
+    deploy_cfg["eval_env_type"] = config.eval_env_type
+    return deploy_cfg

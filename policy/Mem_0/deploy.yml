@@ -18,7 +18,6 @@ action_dim: null
 seed: null
 
 # Client/debug routing
-eval_env: sim   # debug, sim, real
 eval_batch: false # Mem_0 MemoryBank is per-episode stateful -> single-env only
 
 # Runtime / inference settings

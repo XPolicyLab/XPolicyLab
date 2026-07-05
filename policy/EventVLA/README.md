@@ -38,3 +38,19 @@ The adapter starts two servers:
 - XPolicyLab policy server from `XPolicyLab/setup_policy_server.py`
 
 The model currently targets `arx_x5` with `action_type=joint`.
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

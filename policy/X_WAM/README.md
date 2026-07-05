@@ -50,3 +50,19 @@ bash eval.sh RoboDojo stack_bowls <ckpt_name> arx_x5 3500 ee 0 <policy_gpu> <env
 参数依次为：`bench_name`、`task_name`、`ckpt_name`、`env_cfg_type`、`expert_data_num`、`action_type`、`seed`、`policy_gpu_id`、`env_gpu_id`、`policy_conda_env`、`eval_env_conda_env`。其中 `expert_data_num`（示例 `3500`）仅参与拼接实验目录名，需与实际 checkpoint 目录的 6-tuple 命名一致。
 
 `ckpt_name` 用于解析实验目录（`exp_path`），与 `task_name` 可不同（如 `cotrain`）。推理超参（异步去噪步数、`cfg`、`replan_steps` 等）见 `deploy.yml`。
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

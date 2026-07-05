@@ -17,7 +17,7 @@ from urllib.parse import quote, urlparse
 
 from pydantic import ValidationError
 
-from eval_station.dispatch.errors import normalize_execution_error
+from eval_station.eval_env_type import is_real_world, resolve_eval_env_type
 from eval_station.dispatch.executor import run_dispatch
 from eval_station.env_client.api import EnvClientBaselineConfig, HealthResponse, TrialRunResponse
 from eval_station.env_client.runner import (
@@ -166,7 +166,7 @@ def _start_response_from_summary(
         response = TrialRunResponse(
             status="failed",
             trial_id=trial_id,
-            eval_env=baseline.eval_env,
+            eval_env_type=baseline.eval_env_type,
             policy_name=baseline.policy_name,
             error=_summary_error(summary),
         )
@@ -176,7 +176,7 @@ def _start_response_from_summary(
             status="completed",
             trial_id=trial_id,
             steps=policy_result.get("steps"),
-            eval_env=policy_result.get("eval_env", baseline.eval_env),
+            eval_env_type=policy_result.get("eval_env_type", baseline.eval_env_type),
             policy_name=policy_result.get("policy_name", baseline.policy_name),
         )
 
@@ -218,7 +218,7 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 HTTPStatus.OK,
                 HealthResponse(
                     policy_name=state.baseline.policy_name,
-                    eval_env=state.baseline.eval_env,
+                    eval_env_type=state.baseline.eval_env_type,
                     deploy_yml=state.deploy_yml,
                     last_trial_id=state.last_trial_id,
                 ),
@@ -328,7 +328,7 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 body = TrialRunResponse(
                     status="failed",
                     trial_id=f"trial-{trial_index}",
-                    eval_env=state.baseline.eval_env,
+                    eval_env_type=state.baseline.eval_env_type,
                     policy_name=state.baseline.policy_name,
                     error=normalize_execution_error(exc),
                 ).model_dump(mode="json")
@@ -510,16 +510,17 @@ def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
         help="whether to run batch evaluation",
     )
     parser.add_argument(
-        "--eval_env",
+        "--eval-env-type",
+        dest="eval_env_type",
         type=str,
-        default="debug",
-        help="evaluation environment: debug, real, or sim label for health reporting",
+        default=None,
+        help="evaluation environment type: debug, sim, or real_world (default: EVAL_ENV_TYPE or sim)",
     )
     parser.add_argument(
         "--root-dir",
         dest="root_dir",
         type=str,
-        help="X-Robot-Pipeline root directory (required when eval_env=real)",
+        help="X-Robot-Pipeline root directory (required when eval_env_type=real_world)",
     )
     parser.add_argument(
         "--base-cfg",
@@ -552,7 +553,7 @@ def baseline_from_args(args: argparse.Namespace) -> EnvClientBaselineConfig:
         port=args.port,
         eval_batch=args.eval_batch,
         eval_episode_num=args.eval_episode_num,
-        eval_env=args.eval_env,
+        eval_env_type=resolve_eval_env_type(args.eval_env_type),
         root_dir=args.root_dir,
         action_type=args.action_type,
         base_cfg=args.base_cfg,
@@ -565,10 +566,10 @@ def _validate_startup_args(
 ) -> None:
     if args.no_policy_trials and not args.no_webhook:
         parser.error("--no-policy-trials requires --no-webhook")
-    if args.eval_env == "real" and not args.root_dir:
-        parser.error("--root-dir is required when --eval_env=real")
-    if args.eval_env == "real" and not args.base_cfg:
-        parser.error("--base-cfg is required when --eval_env=real")
+    if is_real_world(resolve_eval_env_type(args.eval_env_type)) and not args.root_dir:
+        parser.error("--root-dir is required when --eval-env-type=real_world")
+    if is_real_world(resolve_eval_env_type(args.eval_env_type)) and not args.base_cfg:
+        parser.error("--base-cfg is required when --eval-env-type=real_world")
     # action_type is resolved per trial (dispatch payload > startup arg) and
     # validated at trial start for real envs.
 
@@ -627,7 +628,7 @@ def main(argv: list[str] | None = None) -> int:
         ),
         deploy_yml=args.deploy_yml,
     )
-    if args.eval_env == "real":
+    if is_real_world(state.baseline.eval_env_type):
         _ensure_pipeline_paths(str(args.root_dir))
         from task_env.real_env_client import PersistentRealRobotRuntime
 

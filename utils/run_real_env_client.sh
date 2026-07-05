@@ -47,17 +47,17 @@ CLIENT_ARGS=(
     --host "${policy_server_ip}"
     --port "${free_port}"
     --eval_batch "${eval_batch}"
-    --eval_env real
+    --eval-env-type real_world
     --root-dir "${root_dir}"
 )
 
 if [[ "${run_mode}" == "--run-once" ]]; then
-    echo "[ERROR] eval_env=real requires daemon mode; set env_client_mode: daemon in deploy.yml"
+    echo "[ERROR] EVAL_ENV_TYPE=real requires daemon mode; set env_client_mode: daemon in deploy.yml"
     exit 1
 fi
 
 if [[ -z "${action_type}" ]]; then
-    echo "[ERROR] eval_env=real requires action_type in additional_info (e.g. action_type=ee)" >&2
+    echo "[ERROR] EVAL_ENV_TYPE=real requires action_type in additional_info (e.g. action_type=ee)" >&2
     exit 1
 fi
 

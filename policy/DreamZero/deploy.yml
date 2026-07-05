@@ -10,7 +10,6 @@ action_type: null
 action_dim: null
 seed: null
 eval_batch: false
-eval_env: debug # sim, real, debug
 
 # DreamZero-specific parameters
 model_path: null

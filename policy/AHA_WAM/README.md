@@ -20,9 +20,10 @@ cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
 bash setup_eval_policy_server.sh RoboDojo stack_bowls local_aha_wam arx_x5 3500 joint 0 0 wam 12345 localhost
 ```
 
-Full debug flow:
+Full debug flow (`EVAL_ENV_TYPE=debug` uses the AHA_WAM-specific debug client):
 
 ```bash
+export EVAL_ENV_TYPE=debug
 bash eval.sh RoboDojo stack_bowls local_aha_wam arx_x5 3500 joint 0 0 0 wam wam
 ```
 
@@ -66,4 +67,6 @@ The Wan2.2/AHA-WAM training graph is large. With ZeRO-1, use 7-8 80GB GPUs for
 a reliable smoke or full run; single-GPU and 2-GPU smoke tests can OOM during the
 Adam optimizer step.
 
-For simulator evaluation, set `eval_env: sim` in `deploy.yml` and run from a workspace that provides `scripts/eval_policy.sh` and the RoboDojo simulator environment.
+For simulator evaluation, leave `EVAL_ENV_TYPE` unset or set `EVAL_ENV_TYPE=sim`, and run from a workspace that provides `scripts/eval_policy.sh` and the RoboDojo simulator environment.
+
+For offline debug with the AHA_WAM-specific `debug_env_client.py`, set `EVAL_ENV_TYPE=debug` (uses `AHA_WAM_ENV_CFG_ROOT` for env cfg lookup).

@@ -61,3 +61,19 @@ bash eval.sh ${bench_name} ${task_name} ${ckpt_name} ${env_cfg_type} ${expert_da
 ```bash
 bash eval.sh RoboDojo stack_bowls cotrain arx_x5 3500 joint 42 0 0 a1 a1
 ```
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

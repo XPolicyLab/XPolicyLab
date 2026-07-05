@@ -5,6 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from eval_station.eval_env_type import (
+    DEFAULT_EVAL_ENV_TYPE,
+    is_debug,
+    normalize_eval_env_type,
+)
 from eval_station.schemas import DispatchPayload, EvaluationTrialPayload
 
 
@@ -17,7 +22,7 @@ class TrialRunConfig:
     policy_name: str
     task_name: str
     env_cfg_type: str
-    eval_env: str
+    eval_env_type: str
     eval_batch: bool
     case_meta: dict[str, Any]
     instruction: str
@@ -49,6 +54,13 @@ def _first_non_empty_str(*values: object, default: str) -> str:
         if value:
             return str(value)
     return default
+
+
+def _resolve_eval_env_type(*values: object) -> str:
+    for value in values:
+        if value:
+            return normalize_eval_env_type(str(value))
+    return DEFAULT_EVAL_ENV_TYPE
 
 
 def _find_dispatch_trial(
@@ -83,37 +95,37 @@ def build_trial_run_config(
     trial_run: dict[str, Any],
     *,
     evaluation_id: str,
-    eval_env: str | None = None,
+    eval_env_type: str | None = None,
 ) -> TrialRunConfig:
     case_meta = dict(trial_run.get("case_meta") or {})
     task = dispatch.evaluation_plan.task
     dispatch_extra = _dispatch_extra(dispatch)
-    resolved_eval_env = _first_non_empty_str(
-        eval_env,
+    resolved_eval_env_type = _resolve_eval_env_type(
+        eval_env_type,
+        case_meta.get("eval_env_type"),
         case_meta.get("eval_env"),
+        dispatch_extra.get("eval_env_type"),
         dispatch_extra.get("eval_env"),
-        default="debug",
     )
-    # Debug keeps legacy hard defaults; real envs require dispatch or startup args.
-    is_debug = resolved_eval_env == "debug"
+    debug_mode = is_debug(resolved_eval_env_type)
     env_cfg_type = _first_non_empty_str(
         case_meta.get("env_cfg_type"),
         trial_run.get("env_cfg_type"),
         task.env_cfg_type if task is not None else "",
-        default="arx_x5" if is_debug else "",
+        default="arx_x5" if debug_mode else "",
     )
     task_name = _first_non_empty_str(
         case_meta.get("task_name"),
         task.name if task is not None else "",
         dispatch.task_id,
         task.id if task is not None else "",
-        default="debug_task" if is_debug else "",
+        default="debug_task" if debug_mode else "",
     )
     policy_name = normalize_policy_name(
         _first_non_empty_str(
             case_meta.get("policy_name"),
             dispatch.model_name,
-            default="demo_policy" if is_debug else "",
+            default="demo_policy" if debug_mode else "",
         )
     )
     eval_batch = bool(
@@ -137,7 +149,7 @@ def build_trial_run_config(
         policy_name=policy_name,
         task_name=task_name,
         env_cfg_type=str(env_cfg_type),
-        eval_env=str(resolved_eval_env),
+        eval_env_type=resolved_eval_env_type,
         eval_batch=eval_batch,
         case_meta=case_meta,
         instruction=instruction,

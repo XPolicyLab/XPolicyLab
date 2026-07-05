@@ -10,7 +10,6 @@ action_dim: null
 seed: null
 
 eval_batch: false
-eval_env: debug
 
 load_model: true
 checkpoint_path: null

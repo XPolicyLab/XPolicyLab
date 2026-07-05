@@ -6,7 +6,6 @@ action_type: joint
 gpu_id: null
 seed: null
 eval_batch: false
-eval_env: debug # sim, real, debug
 
 # XPolicyLab model server
 host: localhost

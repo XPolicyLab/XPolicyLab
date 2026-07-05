@@ -124,7 +124,7 @@ bash setup_eval_env_client.sh \
   5000 <policy_server_ip>
 ```
 
-`deploy.yml` 里的 `eval_env` 控制 `sim`、`real`、`debug`，默认是 `sim`。
+通过 `EVAL_ENV_TYPE` 控制 `sim`、`debug`；未设置时默认为 `sim`。`real` 在开源版不可用。
 
 ## 注意事项
 

@@ -96,3 +96,19 @@ export STARVLA_CKPT_PATH=/cpfs_infra/user/wangkaixuan/chengy/demo_env/XPolicyLab
 
 bash eval.sh RoboDojo stack stack_bowls arx_x5 50 joint 0 0 1 XPolicyLab XPolicyLab
 ```
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

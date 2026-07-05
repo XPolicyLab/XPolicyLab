@@ -5,7 +5,6 @@ expert_data_num: null
 action_type: null
 seed: null
 eval_batch: false
-eval_env: sim # sim, real, debug
 
 # GO1-specific parameters
 model_path: null

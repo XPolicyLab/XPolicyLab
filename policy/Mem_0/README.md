@@ -20,7 +20,7 @@ bash process_data.sh RoboDojo test_data arx_x5 3 joint M1
 python Mem_0/xpolicylab_adapter/gen_norm_stats.py \
     --repo_id data/RoboDojo-test_data-arx_x5-joint-lerobot --ckpt_name test_data
 bash train.sh RoboDojo test_data arx_x5 3 joint 42 0 execution
-# deploy.yml: eval_env: debug
+# export EVAL_ENV_TYPE=debug
 bash eval.sh RoboDojo test_data test_data arx_x5 joint 0 0 0 mem0 XPolicyLab
 ```
 
@@ -82,7 +82,7 @@ Writes `policy/Mem_0/assets/<ckpt_name>/norm_stats.json`.
 
 ## Evaluation
 
-Set `eval_env: debug` or `sim` in `deploy.yml`.
+Set `EVAL_ENV_TYPE=debug` or leave unset / set `EVAL_ENV_TYPE=sim` for simulation.
 
 ```bash
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> \
@@ -141,7 +141,7 @@ Standard XPolicyLab three-script split plus Mn extension:
 
 - `eval.sh` — 10 args (+ optional 11th `planning_gpu_ids` for Mn vLLM)
 - `setup_eval_policy_server.sh` — execution module (`mem0` conda)
-- `setup_eval_env_client.sh` — debug/sim/real client (`deploy.yml` `eval_env`)
+- `setup_eval_env_client.sh` — debug/sim client (`EVAL_ENV_TYPE`)
 - `setup_eval_planning_server.sh` — vLLM for Mn (auto-started by `eval.sh`)
 
 `deploy.py` uses `begin_episode` / `step` / `reset` (chunk-based rollout), not the minimal `update_obs`/`get_action` loop.

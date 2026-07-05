@@ -9,7 +9,6 @@ expert_data_num: null
 action_type: joint
 seed: null
 eval_batch: false
-eval_env: debug
 
 checkpoint_num: 600
 result_dir: "./results/openvla-oft/"

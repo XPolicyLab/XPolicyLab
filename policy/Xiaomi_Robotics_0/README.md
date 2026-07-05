@@ -130,7 +130,7 @@ checkpoints/RoboDojo-cotrain-arx_x5-100-ee-0/
 
 ## 评测（Debug / Sim / Real）
 
-`deploy.yml` 中 `eval_env: debug` 表示离线调试器；改为 `sim` 或 `real` 即可切换仿真/真机，无需修改 `eval.sh`。
+通过 `EVAL_ENV_TYPE` 控制评测环境：未设置或 `sim` 跑仿真，`debug` 离线校验；`real` 在开源版不可用。无需修改 `eval.sh`。
 
 ### 1. 链接训练权重
 
@@ -165,7 +165,7 @@ bash eval.sh RoboDojo sweep_blocks cotrain arx_x5 100 ee 0 0 0 mibot mibot
 
 | 字段 | 含义 |
 |---|---|
-| `eval_env` | `debug` / `sim` / `real` |
+| `EVAL_ENV_TYPE` | unset/`sim` / `debug` / `real` (open-source blocks `real`) |
 | `eval_batch` | 是否走 batch 推理 |
 | `checkpoint_tag` | 加载 `last.ckpt` 或 `epoch=0-step=30000.ckpt` 等 |
 | `model_dir` | 相对 policy 根目录的 checkpoint 路径；`null` 时用 `checkpoints/<6元组>/` |

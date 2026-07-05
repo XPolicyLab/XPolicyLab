@@ -5,7 +5,6 @@ expert_data_num: null
 action_type: null
 seed: null
 eval_batch: false
-eval_env: debug
 
 model_path: null
 norm_stats_path: null

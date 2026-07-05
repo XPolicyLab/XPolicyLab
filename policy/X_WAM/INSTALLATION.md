@@ -68,7 +68,7 @@ X-WAM 的 checkpoint 是实验目录（含 `config.yaml` + `checkpoints/<steps>.
 | Server 环境 | `XWAM` |
 | Client 环境 | `XPolicyLab`（conda） |
 | action_type | `ee` |
-| eval_env | `sim`（由 `deploy.yml` 控制，可切 debug / real） |
+| EVAL_ENV_TYPE | unset/`sim`（默认仿真）；`debug` 离线校验；`real` 开源版不可用 |
 
 推理超参在 `deploy.yml` 中：`denoise_steps`（视频，默认 50）/ `action_denoise_steps`（动作，默认 10，异步去噪）、`cfg`、`replan_steps`（`null` = 执行整段预测）。
 

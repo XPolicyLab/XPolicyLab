@@ -119,7 +119,7 @@ Checkpoint 目录：`checkpoints/RoboDojo-cotrain-arx_x5-3500-joint-0/`，步数
 ### 4. 评测 / 部署
 
 ```bash
-bash eval.sh RoboDojo <task_name> cotrain arx_x5 3500 joint 0 <policy_gpu> <env_gpu> beingh <eval_env> 
+bash eval.sh RoboDojo <task_name> cotrain arx_x5 3500 joint 0 <policy_gpu> <env_gpu> beingh <eval_env_conda_env>
 ```
 
 或手动启动 server 时，`model_path` 可指向 6 元组目录或最新 step 子目录；也可只传 6 元组字段由 `model.py` 自动解析。
@@ -462,3 +462,19 @@ zlib                         1.2.13              h4ab18f5_6                    c
 zstandard                    0.23.0              py310h7c4b9e2_3               conda-forge
 zstd                         1.5.6               ha6fb4c9_0                    conda-forge
 ```
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

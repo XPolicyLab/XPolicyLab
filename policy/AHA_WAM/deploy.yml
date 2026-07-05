@@ -1,5 +1,4 @@
 policy_name: AHA_WAM
-eval_env: debug
 eval_batch: false
 
 port: null

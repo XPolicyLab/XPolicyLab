@@ -24,7 +24,7 @@ echo -e "\033[34m[CLIENT] policy=${policy_name}, task=${task_name}, ckpt=${ckpt_
 echo -e "\033[34m[CLIENT] server=${policy_server_ip}:${policy_server_port}\033[0m"
 
 # Scope CUDA to this client process; setup_env_client.sh dispatches debug / sim
-# / real based on `eval_env` in deploy.yml, so switching mode is yaml-only.
+# based on EVAL_ENV_TYPE (default: sim).
 exec env \
     CUDA_VISIBLE_DEVICES="${env_gpu_id}" \
     bash "${UTILS_DIR}/setup_env_client.sh" \

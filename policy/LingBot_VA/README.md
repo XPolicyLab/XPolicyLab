@@ -101,7 +101,7 @@ bash setup_eval_env_client.sh \
     <EXPOSE_PORT> <forward_server_ip>
 ```
 
-debug 验证（假 obs，不依赖 simulator）：`deploy.yml` 的 `eval_env: debug` 时自动走 `debug_env_client.py`，跑全零 obs 验证 `client → forward → backend` 链路。
+debug 验证（假 obs，不依赖 simulator）：设置 `EVAL_ENV_TYPE=debug` 时走 `debug_env_client.py`，跑全零 obs 验证 `client → forward → backend` 链路。
 
 同机闭环也可用 `eval.sh`（会等 forward 端口就绪后起 client）。
 
@@ -148,3 +148,19 @@ python make_video.py "real/<episode_dir>" --fps 8
 | `BASE_MODEL_PATH` | base 权重目录（vae / text_encoder / tokenizer） |
 
 换 ckpt 必须重启 backend VA server（forward 不会热加载）。
+
+### Evaluation environment (`EVAL_ENV_TYPE`)
+
+Set the `EVAL_ENV_TYPE` environment variable before running `eval.sh` or `setup_eval_env_client.sh` (default: **sim** when unset):
+
+| `EVAL_ENV_TYPE` | Mode |
+|---|---|
+| unset or `sim` | RoboDojo simulation |
+| `debug` | Offline shape/IO validation (`debug_env_client.py`) |
+| `real` | Not available in open-source release |
+
+```bash
+export EVAL_ENV_TYPE=debug
+bash eval.sh ...
+```
+

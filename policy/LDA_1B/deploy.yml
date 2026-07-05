@@ -9,7 +9,6 @@ gpu_id: null
 seed: null
 port: null
 eval_batch: false
-eval_env: debug # debug, sim, real
 
 checkpoint_path: null
 unnorm_key: null

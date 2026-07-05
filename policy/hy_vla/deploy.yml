@@ -6,7 +6,6 @@ env_cfg_type: null      # arx_x5 (-> dual_x5, dual-arm) for RoboDojo
 action_type: ee
 seed: null
 eval_batch: false
-eval_env: sim           # debug | sim | real
 
 # --- Model location ---
 # hy_root: the Hy-Embodied source tree (provides the `hy_vla` package + the

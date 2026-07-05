@@ -6,7 +6,6 @@ env_cfg_type: null
 expert_data_num: null
 seed: 0
 eval_batch: false
-eval_env: debug
 protocol: legacy_tcp
 
 config_name: robotwin30_train

@@ -6,7 +6,6 @@ expert_data_num: null
 action_type: joint
 seed: 0
 eval_batch: true
-eval_env: debug
 
 checkpoint_num: 150000
 unnorm_key: robodojo_sim

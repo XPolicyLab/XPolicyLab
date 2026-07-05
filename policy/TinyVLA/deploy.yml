@@ -7,7 +7,6 @@ expert_data_num: null
 action_type: null
 seed: null
 eval_batch: false
-eval_env: debug # sim, real, debug
 
 # Filled in by setup_eval_policy_server.sh at launch time.
 model_path: null

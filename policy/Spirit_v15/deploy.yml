@@ -6,7 +6,6 @@ expert_data_num: null
 action_type: ee
 seed: 0
 eval_batch: true
-eval_env: debug
 checkpoint_num: null
 
 # Spirit_v15-specific arguments

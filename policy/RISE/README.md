@@ -80,7 +80,7 @@ bash train.sh RoboDojo stack_bowls arx_x5 100 joint 0 0 all
 
 ## 3. 部署与评测
 
-`deploy.yml` 的 `eval_env` 控制客户端：`debug` / `sim` / `real`；`eval_batch` 控制 batch 推理。切换模式无需改 `eval.sh`。
+Use the `EVAL_ENV_TYPE` environment variable`debug` / `sim` / `real`；`eval_batch` 控制 batch 推理。切换模式无需改 `eval.sh`。
 
 ```bash
 bash eval.sh RoboDojo test_data stack_bowls arx_x5 joint 0 0 0 RISE XPolicyLab
@@ -148,7 +148,7 @@ policy/RISE/
 1. 按 [`INSTALLATION.md`](INSTALLATION.md) 安装环境与 Pi0.5 权重
 2. `bash process_data.sh ...` 或 `bash process_lerobot.sh ...`
 3. `bash train.sh ... all`
-4. `bash eval.sh ...`（`deploy.yml`：`eval_env: debug` → `sim` → `real`）
+4. `bash eval.sh ...`（`EVAL_ENV_TYPE`: unset/`sim` for simulation, `debug` for offline validation）
 
 ---
 

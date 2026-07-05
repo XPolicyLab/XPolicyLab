@@ -13,7 +13,7 @@ set -euo pipefail
 # For Mn tasks, pass `planning_gpu_ids` (comma-separated) as optional 11th arg to auto-start vLLM.
 # Disambiguate legacy artifacts with MEM0_EXPERT_DATA_NUM when multiple datasets match.
 #
-# Switch debug/sim via deploy.yml `eval_env` (not this script).
+# Switch debug/sim via EVAL_ENV_TYPE (default: sim).
 #
 # Examples:
 #   # M1 debug wiring check
@@ -132,7 +132,7 @@ bash "${SERVER_SCRIPT}" \
 SERVER_PID=$!
 wait_for_port "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server"
 
-echo -e "\033[32m[MAIN] start env client (eval_env from deploy.yml), server=${policy_server_ip}:${policy_server_port}\033[0m"
+echo -e "\033[32m[MAIN] start env client (EVAL_ENV_TYPE=${EVAL_ENV_TYPE:-sim}), server=${policy_server_ip}:${policy_server_port}\033[0m"
 bash "${CLIENT_SCRIPT}" \
     "${bench_name}" \
     "${task_name}" \

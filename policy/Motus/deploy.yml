@@ -8,7 +8,6 @@ expert_data_num: null
 action_type: joint
 seed: 0
 eval_batch: false
-eval_env: sim
 protocol: legacy_tcp
 
 # Motus-specific arguments

@@ -1,5 +1,4 @@
 policy_name: X_WAM
-eval_env: sim
 eval_batch: false
 
 # Server transport: overridden by setup_eval_policy_server.sh per launch.

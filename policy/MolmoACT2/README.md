@@ -228,7 +228,7 @@ cd policy/MolmoACT2
 bash eval.sh RoboDojo debug_task cotrain arx_x5 3500 joint 0 0 0 uv XPolicyLab
 ```
 
-`deploy.yml` 中 `eval_env` 设为 `debug` 可离线调试观测/动作格式；通过后改为 `sim` 跑 RoboDojo 仿真。
+Use the `EVAL_ENV_TYPE` environment variable`debug` 可离线调试观测/动作格式；通过后改为 `sim` 跑 RoboDojo 仿真。
 
 ### RoboDojo 观测映射（接入 `model.py` 时需实现）
 

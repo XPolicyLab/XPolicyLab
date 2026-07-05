@@ -5,7 +5,6 @@ env_cfg_type: null
 expert_data_num: null
 seed: null
 eval_batch: false
-eval_env: debug
 
 # Model / checkpoint configuration (paths are relative to policy/ or xr0/ roots)
 action_type: ee

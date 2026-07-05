@@ -16,13 +16,16 @@ env_gpu_id="${12}"
 policy_server_ip="${13:-localhost}"
 protocol_override="${14:-}"
 
-read eval_batch eval_env yaml_protocol env_client_mode < <(python - <<PY
+# shellcheck source=resolve_eval_env_type.sh
+source "${UTILS_DIR}/resolve_eval_env_type.sh"
+eval_env_mode="$(resolve_eval_env_type)" || exit 1
+
+read eval_batch yaml_protocol env_client_mode < <(python - <<PY
 import yaml
 with open("${yaml_file}", "r") as f:
     data = yaml.safe_load(f)
 print(
     str(data.get("eval_batch", False)).lower(),
-    data.get("eval_env"),
     data.get("protocol", "robodojo_ws"),
     data.get("env_client_mode", "run-once"),
 )
@@ -33,6 +36,12 @@ protocol="${protocol_override:-${yaml_protocol}}"
 run_mode="${15:-${ROBODOJO_ENV_CLIENT_RUN_MODE:-${env_client_mode}}}"
 if [[ "${run_mode}" == "run-once" ]]; then
     run_mode="--run-once"
+fi
+
+if [[ -z "${EVAL_ENV_TYPE:-}" ]]; then
+    echo "[CLIENT] EVAL_ENV_TYPE=(default sim) -> ${eval_env_mode}"
+else
+    echo "[CLIENT] EVAL_ENV_TYPE=${EVAL_ENV_TYPE} -> ${eval_env_mode}"
 fi
 
 COMMON_ARGS=(
@@ -50,13 +59,14 @@ COMMON_ARGS=(
     "${policy_server_ip}"
 )
 
-if [[ "${eval_env}" == "debug" ]]; then
+if [[ "${eval_env_mode}" == "debug" ]]; then
     bash "${UTILS_DIR}/run_debug_env_client.sh" "${COMMON_ARGS[@]}" "${protocol}" "${run_mode}"
-elif [[ "${eval_env}" == "sim" ]]; then
+elif [[ "${eval_env_mode}" == "sim" ]]; then
     bash "${UTILS_DIR}/run_sim_env_client.sh" "${COMMON_ARGS[@]}"
-elif [[ "${eval_env}" == "real" ]]; then
-    bash "${UTILS_DIR}/run_real_policy_client.sh" "${COMMON_ARGS[@]}" "${protocol}" "${run_mode}"
+elif [[ "${eval_env_mode}" == "real_world" ]]; then
+    echo "[ERROR] EVAL_ENV_TYPE=real is not available in open-source release" >&2
+    exit 1
 else
-    echo "[ERROR] Unknown eval_env: ${eval_env}"
+    echo "[ERROR] Unknown eval env mode: ${eval_env_mode}" >&2
     exit 1
 fi

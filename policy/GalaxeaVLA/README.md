@@ -70,7 +70,7 @@ bash train.sh RoboDojo cotrain arx_x5 100 joint 0 0,1,2,3,4,5,6,7
 ```bash
 bash eval.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 0 GalaxeaVLA XPolicyLab
 ```
-`deploy.yml` 中 `eval_env`：`debug` → `sim` → `real`。`replan_steps`（默认 `5`）控制每次推理后实际执行的动作步数，`null` 表示执行完整 chunk（32 步）。
+Use the `EVAL_ENV_TYPE` environment variable`debug` → `sim` → `real`。`replan_steps`（默认 `5`）控制每次推理后实际执行的动作步数，`null` 表示执行完整 chunk（32 步）。
 
 ---
 

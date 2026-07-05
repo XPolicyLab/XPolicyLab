@@ -1,5 +1,4 @@
 policy_name: RISE
-eval_env: debug
 eval_batch: false
 
 # Server transport (setup_policy_server.py reads `port` / `host`).

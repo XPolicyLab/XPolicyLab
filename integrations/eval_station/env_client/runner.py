@@ -13,6 +13,11 @@ from eval_station.env_client.api import (
     EnvClientBaselineConfig,
     dispatch_trial_to_deploy_cfg,
 )
+from eval_station.eval_env_type import (
+    DEFAULT_EVAL_ENV_TYPE,
+    is_real_world,
+    normalize_eval_env_type,
+)
 from eval_station.schemas import DispatchPayload
 from eval_station.trial.config import build_trial_run_config
 
@@ -73,13 +78,13 @@ def _completed_trial_result(
     deploy_cfg: Mapping[str, Any],
     *,
     steps: int,
-    default_eval_env: str,
+    default_eval_env_type: str,
 ) -> dict[str, Any]:
     return {
         "status": "completed",
         "trial_id": deploy_cfg.get("trial_id"),
         "steps": steps,
-        "eval_env": deploy_cfg.get("eval_env", default_eval_env),
+        "eval_env_type": deploy_cfg.get("eval_env_type", default_eval_env_type),
         "policy_name": deploy_cfg.get("policy_name"),
     }
 
@@ -164,13 +169,14 @@ def _overlay_dispatch_for_reset(
         dispatch,
         trial_runs[0],
         evaluation_id=evaluation_id,
-        eval_env=deploy_cfg.get("eval_env"),
+        eval_env_type=deploy_cfg.get("eval_env_type"),
     )
     overlay = {
         "policy_server_url": config.policy_server_url,
         "policy_name": config.policy_name,
         "task_name": config.task_name,
         "env_cfg_type": config.env_cfg_type,
+        "eval_env_type": config.eval_env_type,
         "trial_id": f"{config.trial_id}-reset",
         "action_case_id": config.action_case_id,
         "evaluation_id": evaluation_id,
@@ -202,11 +208,11 @@ def reset_idle_env(
             evaluation_id=evaluation_id,
         )
     deploy_cfg = _prepare_real_deploy_cfg(deploy_cfg)
-    eval_env = _baseline_eval_env(baseline)
+    eval_env_type = _baseline_eval_env_type(baseline)
 
-    if eval_env == "real":
+    if is_real_world(eval_env_type):
         if not baseline.root_dir:
-            message = "root_dir is required for real eval_env reset"
+            message = "root_dir is required for real_world eval_env_type reset"
             raise TrialRunnerError(
                 message,
                 error={"code": "missing_root_dir", "message": message},
@@ -235,7 +241,7 @@ def _run_env_trial(
     deploy_cfg: dict[str, Any],
     *,
     stop_check: Callable[[], bool],
-    default_eval_env: str,
+    default_eval_env_type: str,
     env_factory: Callable[[dict[str, Any]], Any],
     max_episodes: int | None,
 ) -> dict[str, Any]:
@@ -255,7 +261,7 @@ def _run_env_trial(
     result = _completed_trial_result(
         deploy_cfg,
         steps=total_steps,
-        default_eval_env=default_eval_env,
+        default_eval_env_type=default_eval_env_type,
     )
     if hdf5_path:
         result["hdf5_path"] = hdf5_path
@@ -272,7 +278,7 @@ def run_debug_trial(
     return _run_env_trial(
         deploy_cfg,
         stop_check=stop_check,
-        default_eval_env="debug",
+        default_eval_env_type="debug",
         env_factory=TestEnv,
         max_episodes=deploy_cfg["eval_episode_num"],
     )
@@ -289,7 +295,7 @@ def run_real_trial(
             "status": "failed",
             "error": {
                 "code": "missing_root_dir",
-                "message": "root_dir is required for real eval_env",
+                "message": "root_dir is required for real_world eval_env_type",
             },
         }
 
@@ -299,20 +305,27 @@ def run_real_trial(
     return _run_env_trial(
         deploy_cfg,
         stop_check=stop_check,
-        default_eval_env="real",
+        default_eval_env_type="real_world",
         env_factory=RealEnv,
         max_episodes=1,
     )
 
 
-def _baseline_eval_env(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> str:
+def _baseline_eval_env_type(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> str:
     if isinstance(baseline, Mapping):
-        return str(baseline.get("eval_env", "debug"))
-    return baseline.eval_env
+        raw = baseline.get("eval_env_type", baseline.get("eval_env", DEFAULT_EVAL_ENV_TYPE))
+        return normalize_eval_env_type(str(raw))
+    return normalize_eval_env_type(baseline.eval_env_type)
+
+
+def _deploy_eval_env_type(deploy_cfg: Mapping[str, Any]) -> str:
+    raw = deploy_cfg.get("eval_env_type", deploy_cfg.get("eval_env", DEFAULT_EVAL_ENV_TYPE))
+    return normalize_eval_env_type(str(raw))
 
 
 def _prepare_real_deploy_cfg(deploy_cfg: dict[str, Any]) -> dict[str, Any]:
-    if deploy_cfg.get("eval_env") == "real":
+    deploy_cfg["eval_env_type"] = _deploy_eval_env_type(deploy_cfg)
+    if is_real_world(deploy_cfg["eval_env_type"]):
         _apply_validated_action_type(deploy_cfg)
     _validate_real_deploy_cfg(deploy_cfg)
     return deploy_cfg
@@ -335,7 +348,7 @@ def _apply_validated_action_type(deploy_cfg: dict[str, Any]) -> None:
 
 
 def _validate_real_deploy_cfg(deploy_cfg: Mapping[str, Any]) -> None:
-    if deploy_cfg.get("eval_env") != "real":
+    if not is_real_world(_deploy_eval_env_type(deploy_cfg)):
         return
 
     missing: list[str] = []
@@ -348,7 +361,7 @@ def _validate_real_deploy_cfg(deploy_cfg: Mapping[str, Any]) -> None:
         return
 
     raise TrialRunnerError(
-        "real eval_env reset is missing required deploy fields: "
+        "real_world eval_env_type reset is missing required deploy fields: "
         f"{', '.join(missing)}. Provide them via dispatch payload "
         "or env client startup args (ACTION_TYPE, ENV_CFG_TYPE, etc.).",
         error={
@@ -376,10 +389,10 @@ def make_dispatch_trial_runner(
     eval_episode_num: int | None = 1,
     stop_check_factory: StopCheckFactory | None = None,
 ) -> TrialRunnerFn:
-    eval_env = _baseline_eval_env(baseline)
+    eval_env_type = _baseline_eval_env_type(baseline)
     if run_trial is None:
-        run_trial = run_real_trial if eval_env == "real" else run_debug_trial
-    episode_override = None if eval_env == "real" else eval_episode_num
+        run_trial = run_real_trial if is_real_world(eval_env_type) else run_debug_trial
+    episode_override = None if is_real_world(eval_env_type) else eval_episode_num
 
     def runner(
         dispatch: DispatchPayload,
@@ -408,7 +421,7 @@ def make_dispatch_trial_runner(
         return {
             "trial_id": result.get("trial_id"),
             "steps": result.get("steps"),
-            "eval_env": result.get("eval_env"),
+            "eval_env_type": result.get("eval_env_type"),
             "policy_name": result.get("policy_name"),
             "hdf5_path": result.get("hdf5_path"),
             "actions": [],
