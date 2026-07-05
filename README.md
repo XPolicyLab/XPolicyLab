@@ -360,6 +360,8 @@ After offline debugging, unset `EVAL_ENV_TYPE` or set `EVAL_ENV_TYPE=sim` for si
 | `debug` | Offline shape/IO validation (`run_debug_env_client.sh`) |
 | `real` | Not available in open-source release |
 
+The legacy `deploy.yml` key `eval_env` is deprecated and ignored; `setup_env_client.sh` prints a warning when it is still present. When the env client daemon runs sim trials (`--eval-env-type sim`), it shells out to `scripts/eval_policy.sh`; set `XPOLICYLAB_SIM_CONDA_ENV=<simulator-conda-env>` so the subprocess activates the simulator environment (`XPOLICYLAB_SIM_ROOT`, `XPOLICYLAB_SIM_DEVICE_ID`, and `XPOLICYLAB_SIM_SEED` override the benchmark root / GPU / seed), and note a trial only completes when `_result.json` reports `eval_time >= 1`.
+
 ## 5.2 Platform evaluation (env client daemon)
 
 When RoboDojo drives trials from the control plane (x-policy-web), the environment machine should run the env client as a long-lived HTTP daemon instead of a one-shot `debug_env_client.py` process.
@@ -391,7 +393,7 @@ The control plane calls these endpoints on the eval station; finish webhooks and
 
 ### 5.2.1 Real-robot (`EVAL_ENV_TYPE=real`)
 
-Real-robot evaluation is not shipped in the open-source release. `EVAL_ENV_TYPE=real` exits with an error in `setup_env_client.sh`.
+Real-robot evaluation is not shipped in the open-source release. `EVAL_ENV_TYPE=real` prints a warning and still routes to the real env client, which requires daemon mode (`env_client_mode: daemon` in `deploy.yml`) plus `action_type` and `base_cfg` in `additional_info` (or `ROBODOJO_BASE_CFG`); without the internal `task_env.real_env_client` runtime the daemon fails at startup.
 
 # 📚 6. Citation
 

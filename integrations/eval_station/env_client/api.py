@@ -159,6 +159,10 @@ def trial_request_to_deploy_cfg(
         if value is not None and value != "":
             deploy_cfg[key] = value
 
+    # Older control planes still send the pre-rename ``dataset_name`` key.
+    if not deploy_cfg.get("bench_name") and case_meta.get("dataset_name"):
+        deploy_cfg["bench_name"] = case_meta["dataset_name"]
+
     if deploy_cfg.get("policy_name"):
         deploy_cfg["policy_name"] = normalize_policy_name(str(deploy_cfg["policy_name"]))
 
@@ -186,20 +190,12 @@ def baseline_deploy_cfg_view(deploy_cfg: Mapping[str, Any]) -> dict[str, Any]:
     return view
 
 
-def dispatch_trial_to_request(
-    dispatch: DispatchPayload,
+def _request_from_trial_run_config(
+    config: Any,
     trial_run: dict[str, Any],
     *,
-    evaluation_id: str,
-    eval_episode_num: int | None = 1,
-    eval_env_type: str | None = None,
+    eval_episode_num: int | None,
 ) -> TrialRunRequest:
-    config = build_trial_run_config(
-        dispatch,
-        trial_run,
-        evaluation_id=evaluation_id,
-        eval_env_type=eval_env_type,
-    )
     case_meta = {
         **config.case_meta,
         "env_cfg_type": config.env_cfg_type,
@@ -219,7 +215,7 @@ def dispatch_trial_to_request(
     if eval_episode_num is not None:
         overrides["eval_episode_num"] = eval_episode_num
     return TrialRunRequest(
-        evaluation_id=evaluation_id,
+        evaluation_id=config.evaluation_id,
         trial_id=config.trial_id,
         trial_index=int(trial_index) if trial_index is not None else None,
         action_case_id=config.action_case_id,
@@ -227,6 +223,30 @@ def dispatch_trial_to_request(
         case_meta=case_meta,
         overrides=overrides,
     )
+
+
+def dispatch_trial_to_request(
+    dispatch: DispatchPayload,
+    trial_run: dict[str, Any],
+    *,
+    evaluation_id: str,
+    eval_episode_num: int | None = 1,
+    eval_env_type: str | None = None,
+) -> TrialRunRequest:
+    config = build_trial_run_config(
+        dispatch,
+        trial_run,
+        evaluation_id=evaluation_id,
+        eval_env_type=eval_env_type,
+    )
+    return _request_from_trial_run_config(
+        config, trial_run, eval_episode_num=eval_episode_num
+    )
+
+
+def _baseline_eval_env_type(baseline_cfg: Mapping[str, Any]) -> str | None:
+    """Resolve the startup eval env type, honoring the legacy ``eval_env`` key."""
+    return baseline_cfg.get("eval_env_type") or baseline_cfg.get("eval_env")
 
 
 def dispatch_trial_to_deploy_cfg(
@@ -238,19 +258,17 @@ def dispatch_trial_to_deploy_cfg(
     eval_episode_num: int | None = 1,
 ) -> dict[str, Any]:
     baseline_cfg = _baseline_deploy_cfg(baseline)
-    request = dispatch_trial_to_request(
-        dispatch,
-        trial_run,
-        evaluation_id=evaluation_id,
-        eval_episode_num=eval_episode_num,
-        eval_env_type=baseline_cfg.get("eval_env_type"),
-    )
-    deploy_cfg = trial_request_to_deploy_cfg(request, baseline)
+    # Build the trial config once; reuse it for both the request and the
+    # resolved eval_env_type stamped onto deploy_cfg.
     config = build_trial_run_config(
         dispatch,
         trial_run,
         evaluation_id=evaluation_id,
-        eval_env_type=baseline_cfg.get("eval_env_type"),
+        eval_env_type=_baseline_eval_env_type(baseline_cfg),
     )
+    request = _request_from_trial_run_config(
+        config, trial_run, eval_episode_num=eval_episode_num
+    )
+    deploy_cfg = trial_request_to_deploy_cfg(request, baseline)
     deploy_cfg["eval_env_type"] = config.eval_env_type
     return deploy_cfg

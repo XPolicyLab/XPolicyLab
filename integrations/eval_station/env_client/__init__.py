@@ -22,6 +22,7 @@ from eval_station.env_client.runner import (
     reset_idle_env,
     run_debug_trial,
     run_real_trial,
+    run_sim_trial,
 )
 from eval_station.env_client.ws_adapter import RoboDojoModelClient
 
@@ -45,5 +46,6 @@ __all__ = [
     "reset_idle_env",
     "run_debug_trial",
     "run_real_trial",
+    "run_sim_trial",
     "trial_request_to_deploy_cfg",
 ]

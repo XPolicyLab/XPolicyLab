@@ -17,6 +17,7 @@ from urllib.parse import quote, urlparse
 
 from pydantic import ValidationError
 
+from eval_station.dispatch.errors import normalize_execution_error
 from eval_station.eval_env_type import is_real_world, resolve_eval_env_type
 from eval_station.dispatch.executor import run_dispatch
 from eval_station.env_client.api import EnvClientBaselineConfig, HealthResponse, TrialRunResponse
@@ -96,11 +97,17 @@ class EnvClientServerState:
         stop_event = self.trial_control.register_if_idle(evaluation_id, trial_index)
         if stop_event is None:
             return None
-        return make_dispatch_trial_runner(
-            self.baseline,
-            run_trial=self.run_trial,
-            stop_check_factory=lambda _: stop_event.is_set,
-        )
+        try:
+            return make_dispatch_trial_runner(
+                self.baseline,
+                run_trial=self.run_trial,
+                stop_check_factory=lambda _: stop_event.is_set,
+            )
+        except Exception:
+            # Runner construction failed (e.g. unsupported eval_env_type);
+            # release the registration or every later /start returns 409.
+            self.trial_control.clear(evaluation_id, trial_index)
+            raise
 
     def artifact_dir(self, evaluation_id: str, trial_index: int) -> Path:
         return (
@@ -304,7 +311,20 @@ def make_handler(state: EnvClientServerState) -> type[BaseHTTPRequestHandler]:
                 return
 
             artifact_dir = state.artifact_dir(evaluation_id, trial_index)
-            trial_runner = state.trial_runner_with_stop(evaluation_id, trial_index)
+            try:
+                trial_runner = state.trial_runner_with_stop(evaluation_id, trial_index)
+            except TrialRunnerError as exc:
+                body = TrialRunResponse(
+                    status="failed",
+                    trial_id=f"trial-{trial_index}",
+                    eval_env_type=state.baseline.eval_env_type,
+                    policy_name=state.baseline.policy_name,
+                    error=exc.error or normalize_execution_error(exc),
+                ).model_dump(mode="json")
+                body["exit_code"] = 1
+                body["artifact_dir"] = str(artifact_dir)
+                self._write_json(HTTPStatus.OK, body)
+                return
             if trial_runner is None:
                 self._write_json(
                     HTTPStatus.CONFLICT,
@@ -566,9 +586,13 @@ def _validate_startup_args(
 ) -> None:
     if args.no_policy_trials and not args.no_webhook:
         parser.error("--no-policy-trials requires --no-webhook")
-    if is_real_world(resolve_eval_env_type(args.eval_env_type)) and not args.root_dir:
+    try:
+        eval_env_type = resolve_eval_env_type(args.eval_env_type)
+    except ValueError as exc:
+        parser.error(str(exc))
+    if is_real_world(eval_env_type) and not args.root_dir:
         parser.error("--root-dir is required when --eval-env-type=real_world")
-    if is_real_world(resolve_eval_env_type(args.eval_env_type)) and not args.base_cfg:
+    if is_real_world(eval_env_type) and not args.base_cfg:
         parser.error("--base-cfg is required when --eval-env-type=real_world")
     # action_type is resolved per trial (dispatch payload > startup arg) and
     # validated at trial start for real envs.

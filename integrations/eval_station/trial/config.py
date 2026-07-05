@@ -49,6 +49,10 @@ def _dispatch_extra(dispatch: DispatchPayload) -> dict[str, Any]:
     return getattr(dispatch, "__pydantic_extra__", None) or {}
 
 
+def _payload_extra(payload: object) -> dict[str, Any]:
+    return getattr(payload, "__pydantic_extra__", None) or {}
+
+
 def _first_non_empty_str(*values: object, default: str) -> str:
     for value in values:
         if value:
@@ -99,6 +103,7 @@ def build_trial_run_config(
 ) -> TrialRunConfig:
     case_meta = dict(trial_run.get("case_meta") or {})
     task = dispatch.evaluation_plan.task
+    task_extra = _payload_extra(task)
     dispatch_extra = _dispatch_extra(dispatch)
     resolved_eval_env_type = _resolve_eval_env_type(
         eval_env_type,
@@ -139,6 +144,18 @@ def build_trial_run_config(
     )
     if action_type in ("joint", "ee"):
         case_meta["action_type"] = action_type
+    # Older control planes still send the pre-rename ``dataset_name`` key.
+    bench_name = _first_non_empty_str(
+        case_meta.get("bench_name"),
+        task_extra.get("bench_name"),
+        dispatch_extra.get("bench_name"),
+        case_meta.get("dataset_name"),
+        task_extra.get("dataset_name"),
+        dispatch_extra.get("dataset_name"),
+        default="",
+    )
+    if bench_name:
+        case_meta["bench_name"] = bench_name
     repeat_index = case_meta.get("repeat_index", trial_run.get("repeat_index"))
 
     return TrialRunConfig(

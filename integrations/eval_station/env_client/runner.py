@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
+import glob
 import inspect
+import json
 import os
+import shlex
+import signal
+import subprocess
 import sys
 from collections.abc import Callable, Mapping
+from datetime import datetime
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -65,7 +72,10 @@ def _run_trial_loop(
         if max_episodes is not None and episodes >= max_episodes:
             break
         env.reset()
-        env.eval_one_episode()
+        if eval_batch:
+            env.eval_one_episode_batch()
+        else:
+            env.eval_one_episode()
         total_steps += env.episode_step
         # Reset the robot/policy before finish webhook and trial video export.
         env.reset()
@@ -130,6 +140,9 @@ def baseline_to_reset_deploy_cfg(
     payload.setdefault("evaluation_id", "idle-reset")
     payload.setdefault("trial_id", f"{task_name}-reset")
     payload.setdefault("action_case_id", f"{task_name}_case_1")
+    # EnvClientBaselineConfig has no repeat_index field, but TestEnv/RealEnv
+    # read deploy_cfg["repeat_index"] unconditionally.
+    payload.setdefault("repeat_index", None)
     if (
         payload.get("protocol", "robodojo_ws") == "robodojo_ws"
         and not payload.get("policy_server_url")
@@ -302,6 +315,9 @@ def run_real_trial(
     _ensure_pipeline_paths(str(root_dir))
     from task_env.real_env_client import RealEnv
 
+    # Real-robot rollouts have no batch inference path; never dispatch
+    # eval_one_episode_batch against a physical robot.
+    deploy_cfg = {**deploy_cfg, "eval_batch": False}
     return _run_env_trial(
         deploy_cfg,
         stop_check=stop_check,
@@ -309,6 +325,205 @@ def run_real_trial(
         env_factory=RealEnv,
         max_episodes=1,
     )
+
+
+def _repo_root_dir() -> str:
+    # runner.py -> env_client -> eval_station -> integrations -> XPolicyLab -> <repo root>
+    return str(Path(__file__).resolve().parents[4])
+
+
+def _sim_root_dir(deploy_cfg: Mapping[str, Any]) -> str:
+    return (
+        deploy_cfg.get("root_dir")
+        or os.environ.get("XPOLICYLAB_SIM_ROOT")
+        or _repo_root_dir()
+    )
+
+
+def _sim_conda_env(deploy_cfg: Mapping[str, Any]) -> str | None:
+    """Conda env with Isaac Sim for the eval subprocess.
+
+    The daemon usually runs in the eval-station env, which cannot import Isaac
+    Sim. Mirror run_sim_env_client.sh by activating the simulator conda env
+    when one is configured; otherwise inherit the daemon environment.
+    """
+    env = deploy_cfg.get("eval_env_conda_env") or os.environ.get(
+        "XPOLICYLAB_SIM_CONDA_ENV"
+    )
+    return str(env) if env else None
+
+
+def _signal_process_group(proc: subprocess.Popen, sig: int) -> None:
+    try:
+        os.killpg(os.getpgid(proc.pid), sig)
+    except (ProcessLookupError, PermissionError):
+        pass
+
+
+def _load_sim_result(root_dir: str, run_id: str) -> dict[str, Any] | None:
+    """Locate the ``_result.json`` written by the sim eval client for run_id.
+
+    eval_env.py writes ``{cwd}/eval_result/.../{run_id}/_result.json``; the
+    subprocess runs with cwd=root_dir.
+    """
+    pattern = os.path.join(str(root_dir), "eval_result", "**", run_id, "_result.json")
+    matches = sorted(glob.glob(pattern, recursive=True), key=os.path.getmtime)
+    if not matches:
+        return None
+    try:
+        with open(matches[-1], "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def run_sim_trial(
+    deploy_cfg: dict[str, Any],
+    *,
+    stop_check: Callable[[], bool] = _never_stop,
+) -> dict[str, Any]:
+    """Run a simulator trial by shelling out to ``scripts/eval_policy.sh``.
+
+    The Isaac Sim rollout runs as a subprocess (mirroring the local
+    ``run_sim_env_client.sh`` path); there is no in-process sim env factory.
+    ``device_id`` / ``seed`` fall back to the daemon environment when the
+    dispatch payload does not carry them. ``eval_episode_num`` is ignored:
+    the episode count is decided by eval_policy.sh / EVAL_NUM / the task
+    config, exactly as in the shell path. Exit code 0 alone is not trusted;
+    the trial only completes when ``_result.json`` reports ``eval_time >= 1``.
+    """
+    root_dir = _sim_root_dir(deploy_cfg)
+    eval_policy = os.path.join(str(root_dir), "scripts", "eval_policy.sh")
+    if not os.path.isfile(eval_policy):
+        message = f"scripts/eval_policy.sh not found under root_dir={root_dir}"
+        return {
+            "status": "failed",
+            "error": {"code": "missing_eval_policy_script", "message": message},
+        }
+
+    missing = [
+        key
+        for key in ("task_name", "env_cfg_type", "policy_name", "port")
+        if not deploy_cfg.get(key)
+    ]
+    if missing:
+        message = (
+            "sim eval_env_type is missing required deploy fields: "
+            f"{', '.join(missing)}"
+        )
+        return {
+            "status": "failed",
+            "error": {
+                "code": "missing_sim_deploy_cfg",
+                "message": message,
+                "missing": missing,
+            },
+        }
+
+    host = deploy_cfg.get("host") or "localhost"
+    device_id = str(
+        deploy_cfg.get("device_id")
+        or os.environ.get("XPOLICYLAB_SIM_DEVICE_ID")
+        or (os.environ.get("CUDA_VISIBLE_DEVICES", "0").split(",")[0] or "0")
+    )
+    seed = str(deploy_cfg.get("seed", os.environ.get("XPOLICYLAB_SIM_SEED", "0")))
+    eval_batch = "true" if deploy_cfg.get("eval_batch") else "false"
+    additional_info = deploy_cfg.get("additional_info")
+    if not additional_info:
+        action_type = deploy_cfg.get("action_type")
+        additional_info = f"action_type={action_type}" if action_type else ""
+
+    cmd = [
+        "bash",
+        eval_policy,
+        "--root_dir", str(root_dir),
+        "--bench_name", str(deploy_cfg.get("bench_name") or ""),
+        "--task_name", str(deploy_cfg["task_name"]),
+        "--env_cfg_type", str(deploy_cfg["env_cfg_type"]),
+        "--policy_name", str(deploy_cfg["policy_name"]),
+        "--device_id", device_id,
+        "--host", str(host),
+        "--port", str(deploy_cfg["port"]),
+        "--eval_batch", eval_batch,
+        "--additional_info", str(additional_info),
+        "--seed", seed,
+    ]
+    conda_env = _sim_conda_env(deploy_cfg)
+    if conda_env:
+        cmd = [
+            "bash",
+            "-c",
+            'source "$(conda info --base)/etc/profile.d/conda.sh" '
+            f"&& conda activate {shlex.quote(conda_env)} "
+            f"&& exec {shlex.join(cmd)}",
+        ]
+
+    # Pin the run id so the _result.json written by eval_env.py can be found
+    # afterwards. eval_policy.sh keeps a pre-set ROBODOJO_RUN_ID as-is.
+    run_id = os.environ.get("ROBODOJO_RUN_ID") or "{}_{}".format(
+        datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),
+        os.getpid(),
+    )
+    env = {**os.environ, "ROBODOJO_RUN_ID": run_id}
+
+    # New session so stop/cleanup can kill the whole process group (bash ->
+    # python -> Isaac Sim), not just the bash wrapper.
+    proc = subprocess.Popen(cmd, cwd=str(root_dir), env=env, start_new_session=True)
+    try:
+        while True:
+            try:
+                returncode = proc.wait(timeout=2.0)
+                break
+            except subprocess.TimeoutExpired:
+                if stop_check():
+                    _signal_process_group(proc, signal.SIGTERM)
+                    try:
+                        returncode = proc.wait(timeout=15.0)
+                    except subprocess.TimeoutExpired:
+                        _signal_process_group(proc, signal.SIGKILL)
+                        returncode = proc.wait()
+                    break
+    finally:
+        if proc.poll() is None:
+            _signal_process_group(proc, signal.SIGKILL)
+            proc.wait()
+
+    if returncode != 0:
+        message = f"scripts/eval_policy.sh exited with code {returncode}"
+        return {
+            "status": "failed",
+            "error": {
+                "code": "sim_eval_failed",
+                "message": message,
+                "returncode": returncode,
+            },
+        }
+
+    # A clean exit code alone is not smoke success (see repo guidance);
+    # require a _result.json with at least one evaluated episode.
+    result_json = _load_sim_result(str(root_dir), run_id)
+    eval_time = (result_json or {}).get("eval_time", 0)
+    if not isinstance(eval_time, (int, float)) or eval_time < 1:
+        message = (
+            "sim eval exited 0 but no valid _result.json was found "
+            f"(run_id={run_id}, eval_time={eval_time!r})"
+        )
+        return {
+            "status": "failed",
+            "error": {
+                "code": "missing_sim_result",
+                "message": message,
+                "run_id": run_id,
+            },
+        }
+
+    result = _completed_trial_result(
+        deploy_cfg,
+        steps=0,
+        default_eval_env_type="sim",
+    )
+    result["sim_result"] = result_json
+    return result
 
 
 def _baseline_eval_env_type(baseline: EnvClientBaselineConfig | Mapping[str, Any]) -> str:
@@ -382,6 +597,23 @@ def _call_env_trial_runner(
     return env_trial_runner(deploy_cfg)
 
 
+def _default_env_trial_runner(eval_env_type: str) -> EnvTrialRunner:
+    if is_real_world(eval_env_type):
+        return run_real_trial
+    if eval_env_type == "debug":
+        return run_debug_trial
+    if eval_env_type == "sim":
+        return run_sim_trial
+    raise TrialRunnerError(
+        f"unsupported eval_env_type for env trial runner: {eval_env_type}",
+        error={
+            "code": "unsupported_eval_env_type",
+            "message": f"unsupported eval_env_type for env trial runner: {eval_env_type}",
+            "eval_env_type": eval_env_type,
+        },
+    )
+
+
 def make_dispatch_trial_runner(
     baseline: EnvClientBaselineConfig | Mapping[str, Any],
     *,
@@ -391,7 +623,7 @@ def make_dispatch_trial_runner(
 ) -> TrialRunnerFn:
     eval_env_type = _baseline_eval_env_type(baseline)
     if run_trial is None:
-        run_trial = run_real_trial if is_real_world(eval_env_type) else run_debug_trial
+        run_trial = _default_env_trial_runner(eval_env_type)
     episode_override = None if is_real_world(eval_env_type) else eval_episode_num
 
     def runner(
@@ -418,7 +650,7 @@ def make_dispatch_trial_runner(
                 str(error.get("message", "env trial failed")),
                 error=error or None,
             )
-        return {
+        summary = {
             "trial_id": result.get("trial_id"),
             "steps": result.get("steps"),
             "eval_env_type": result.get("eval_env_type"),
@@ -426,5 +658,8 @@ def make_dispatch_trial_runner(
             "hdf5_path": result.get("hdf5_path"),
             "actions": [],
         }
+        if result.get("sim_result") is not None:
+            summary["sim_result"] = result["sim_result"]
+        return summary
 
     return runner

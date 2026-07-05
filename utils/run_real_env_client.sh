@@ -17,17 +17,21 @@ protocol="${13:-robodojo_ws}"
 run_mode="${14:---run-once}"
 artifact_root="${ROBODOJO_ARTIFACT_ROOT:-${TMPDIR:-/tmp}/robodojo-artifacts}"
 
-action_type=$(python - <<PY
-info = "${additional_info}"
-for part in info.split(","):
+IFS='|' read -r action_type base_cfg < <(ADDITIONAL_INFO="${additional_info}" python - <<'PY'
+import os
+
+fields = {}
+for part in os.environ.get("ADDITIONAL_INFO", "").split(","):
     if "=" not in part:
         continue
     key, value = part.split("=", 1)
-    if key.strip() == "action_type":
-        print(value.strip())
-        break
+    fields[key.strip()] = value.strip()
+print(fields.get("action_type", "") + "|" + fields.get("base_cfg", ""))
 PY
 )
+base_cfg="${base_cfg:-${ROBODOJO_BASE_CFG:-}}"
+
+echo -e "\033[31m[WARN] Real-world evaluation is not supported in the open-source release; attempting real env client startup anyway.\033[0m" >&2
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -61,10 +65,16 @@ if [[ -z "${action_type}" ]]; then
     exit 1
 fi
 
+if [[ -z "${base_cfg}" ]]; then
+    echo "[ERROR] EVAL_ENV_TYPE=real requires base_cfg in additional_info (e.g. base_cfg=arx_x5_station) or ROBODOJO_BASE_CFG" >&2
+    exit 1
+fi
+
 PYTHONWARNINGS=ignore::UserWarning \
 python -m eval_station.servers.env_client_server \
     "${CLIENT_ARGS[@]}" \
     --action-type "${action_type}" \
+    --base-cfg "${base_cfg}" \
     --serve-host 0.0.0.0 \
     --serve-port 19200 \
     --artifact-root "${artifact_root}"

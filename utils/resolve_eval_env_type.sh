@@ -11,7 +11,7 @@ resolve_eval_env_type() {
         debug)
             echo "debug"
             ;;
-        real)
+        real|real_world)
             echo "real_world"
             ;;
         *)
