@@ -41,7 +41,7 @@ cd XPolicyLab/policy/Abot_M0
 # Example: install dependencies for the Abot_M0 policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. abot-m0
+conda activate ABot
 ```
 
 ## Demo Data Processing
@@ -77,7 +77,7 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. During evaluation you may pass either the full checkpoint directory name as `ckpt_name`, the short `ckpt_name` plus the other tuple fields, or an explicit `checkpoint_path` in `deploy.yml`.
 
 ## Deployment and Evaluation
 
@@ -174,27 +174,27 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 
 | Key | Notes |
 |---|---|
-| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
-| `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
-| `unnorm_key` | Runtime or checkpoint option consumed by this adapter. |
-| `device` | Runtime or checkpoint option consumed by this adapter. |
+| `policy_name` | Must remain `Abot_M0` so `setup_policy_server.py` imports `XPolicyLab.policy.Abot_M0.model`. |
+| `checkpoint_num` | Step file suffix, for example `150000` resolves to `steps_150000_pytorch_model.pt`. |
+| `ckpt_name` | Short run name or full run directory name under `policy/Abot_M0/checkpoints/` or `policy/Abot_M0/abot_m0/checkpoints/`. |
+| `checkpoint_path` | Optional explicit checkpoint file or run directory; takes precedence over `ckpt_name`. |
+| `unnorm_key` | Normalization-stat key, default `robodojo_sim`; also used when generating missing `dataset_statistics.json`. |
+| `device` | Torch device for the policy model, for example `cuda`, `cuda:0`, `cpu`, or `auto`. |
 
 Frequently used environment variables detected in the adapter scripts:
 
 | Variable | Notes |
 |---|---|
-| `ABOT_CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
-| `ABOT_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `ABOT_STATS_JSON` | Optional override used by the local scripts or upstream runtime. |
-| `ABOT_UNNORM_KEY` | Optional override used by the local scripts or upstream runtime. |
-| `CONDA_PREFIX` | Optional override used by the local scripts or upstream runtime. |
-| `INSTALLATION` | Optional override used by the local scripts or upstream runtime. |
-| `INTER_AREA` | Optional override used by the local scripts or upstream runtime. |
-| `POLICY_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `PYTHONUNBUFFERED` | Optional override used by the local scripts or upstream runtime. |
-| `PYTHONWARNINGS` | Optional override used by the local scripts or upstream runtime. |
-| `PYTHON_BIN` | Optional override used by the local scripts or upstream runtime. |
-| `SC1091` | Optional override used by the local scripts or upstream runtime. |
+| `ABOT_CONDA_ENV` | Conda env used by `install.sh`; defaults to `ABot`. |
+| `ABOT_DATA_ROOT` | LeRobot data root for training; defaults to `/mnt/xspark-data/xspark_shared/lerobot`. |
+| `ABOT_DATASET_REPO` | LeRobot repo directory; defaults to `RoboDojo_sim_v21_video_abot`. |
+| `ABOT_DATA_MIX` | ABot dataset mixture key; defaults to `robodojo_sim`. |
+| `ABOT_MODEL_ROOT` | Root containing Qwen and ABot pretrained weights. |
+| `ABOT_BASE_VLM` | Overrides the Qwen3-VL-4B-Instruct-Action path. |
+| `ABOT_PRETRAIN_CKPT` | Overrides the ABot-M0 pretrain checkpoint. |
+| `ABOT_RELOAD_MODULES` | Modules reloaded from pretrain; defaults to `qwen_vl_interface`. |
+| `ABOT_STATS_JSON` | Optional stats fallback for eval; defaults to `/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json`. |
+| `ABOT_UNNORM_KEY` | Overrides the normalization-stat key used at eval time. |
 
 ## Notes
 

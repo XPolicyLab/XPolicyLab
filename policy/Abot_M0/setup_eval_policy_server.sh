@@ -23,6 +23,17 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_ty
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
+# region agent log
+python - <<PY >/dev/null 2>&1 || true
+import json, time
+from pathlib import Path
+log_path = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
+log_path.parent.mkdir(parents=True, exist_ok=True)
+with open(log_path, "a", encoding="utf-8") as f:
+    f.write(json.dumps({"sessionId":"0684e4","runId":"pre-fix","hypothesisId":"H1,H3","location":"policy/Abot_M0/setup_eval_policy_server.sh:args","message":"parsed Abot_M0 server args","data":{"argc":${#},"bench_name":"${bench_name}","task_name":"${task_name}","ckpt_name":"${ckpt_name}","env_cfg_type":"${env_cfg_type}","action_type":"${action_type}","seed":"${seed}","policy_gpu_id":"${policy_gpu_id}","policy_conda_env":"${policy_conda_env}","policy_server_port":"${policy_server_port}","policy_server_host":"${policy_server_host}","action_dim":"${action_dim}"},"timestamp":int(time.time()*1000)}) + "\n")
+PY
+# endregion agent log
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
     deactivate || true
@@ -44,6 +55,7 @@ exec env \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
             bench_name="${bench_name}" \
+            dataset_name="${bench_name}" \
             task_name="${task_name}" \
             ckpt_name="${ckpt_name}" \
             env_cfg_type="${env_cfg_type}" \

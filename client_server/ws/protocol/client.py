@@ -18,6 +18,17 @@ from client_server.ws.protocol.schemas import Frame
 
 logger = logging.getLogger(__name__)
 
+_RED = "\033[31m"
+_GREEN = "\033[32m"
+_BLUE = "\033[34m"
+_YELLOW = "\033[33m"
+_BOLD = "\033[1m"
+_RESET = "\033[0m"
+
+
+def _status(level: str, color: str, message: str) -> None:
+    print(f"{color}{_BOLD}[{level}]{_RESET} {message}", flush=True)
+
 
 class WebSocketConnection(Protocol):
     async def send(self, message: Any, text: bool | None = None) -> None: ...
@@ -48,6 +59,30 @@ class PolicyEvalClient:
     _pending: dict[str, asyncio.Future[Frame]] = field(default_factory=dict, init=False)
     _closed: bool = field(default=False, init=False)
 
+    async def _sleep_with_countdown(self, seconds: float, label: str) -> None:
+        remaining = max(0, int(seconds))
+        if remaining <= 0:
+            return
+        for left in range(remaining, 0, -1):
+            print(
+                f"\r{_YELLOW}{_BOLD}[RECONNECT]{_RESET} {label}; retry in {left:2d}s",
+                end="",
+                flush=True,
+            )
+            await asyncio.sleep(1)
+        print("\r" + " " * 96 + "\r", end="", flush=True)
+
+    async def _reset_connection_state(self) -> None:
+        if self._recv_task is not None:
+            self._recv_task.cancel()
+            self._recv_task = None
+        if self._ws is not None:
+            try:
+                await self._ws.close()
+            except Exception:
+                pass
+            self._ws = None
+
     async def connect(
         self,
         *,
@@ -56,6 +91,7 @@ class PolicyEvalClient:
     ) -> Frame | None:
         if self._ws is not None:
             return None
+        self._closed = False
         connect_kwargs: dict[str, Any] = {
             "max_size": None,
             "ping_interval": self.config.ws_ping_interval_s,
@@ -68,6 +104,12 @@ class PolicyEvalClient:
             connect_kwargs["proxy"] = self.config.proxy
         last_err: Exception | None = None
         for attempt in range(1, self.config.max_connect_attempts + 1):
+            _status(
+                "CONNECTING",
+                _BLUE,
+                f"websocket policy server {self.config.url} "
+                f"(attempt {attempt}/{self.config.max_connect_attempts}, timeout={self.config.connect_timeout_s:g}s)",
+            )
             try:
                 self._ws = await asyncio.wait_for(
                     websockets.connect(
@@ -78,14 +120,29 @@ class PolicyEvalClient:
                 )
                 self._recv_task = asyncio.create_task(self._recv_loop())
                 logger.info("websocket connected: %s", self.config.url)
+                _status("CONNECTED", _GREEN, f"websocket policy server connected: {self.config.url}")
                 if handshake:
                     return await self.hello(evaluation_plan=evaluation_plan)
                 return None
             except Exception as exc:
                 last_err = exc
                 logger.warning("connect attempt %s failed: %s", attempt, exc)
+                await self._reset_connection_state()
+                _status(
+                    "CONNECT-FAILED",
+                    _YELLOW,
+                    f"attempt {attempt}/{self.config.max_connect_attempts} failed: {exc}",
+                )
                 if attempt < self.config.max_connect_attempts:
-                    await asyncio.sleep(self.config.connect_retry_delay_s)
+                    await self._sleep_with_countdown(
+                        self.config.connect_retry_delay_s,
+                        f"reconnecting to {self.config.url}",
+                    )
+        _status(
+            "ERROR",
+            _RED,
+            f"failed to connect to {self.config.url} after {self.config.max_connect_attempts} attempts",
+        )
         raise ConnectionError(
             f"failed to connect after {self.config.max_connect_attempts} attempts: {last_err}"
         ) from last_err
@@ -93,11 +150,7 @@ class PolicyEvalClient:
     async def close(self) -> None:
         self._closed = True
         self._fail_pending(WsError(ErrorCode.INTERNAL, "client closed"))
-        if self._recv_task:
-            self._recv_task.cancel()
-        if self._ws:
-            await self._ws.close()
-        self._ws = None
+        await self._reset_connection_state()
 
     def _fail_pending(self, exc: BaseException) -> None:
         for fut in self._pending.values():
@@ -162,12 +215,22 @@ class PolicyEvalClient:
         repeat_index: int | None = None,
         step: int = 0,
         timeout_s: float | None = None,
+        _reconnect_attempted: bool = False,
     ) -> Frame:
-        if self._ws is None:
-            raise RuntimeError("not connected; call connect() first")
         expected = REQUEST_RESPONSE_PAIRS.get(msg_type)
         if expected is None and msg_type != MessageType.CLOSE:
             raise ValueError(f"no response pairing for {msg_type}")
+        if self._ws is None:
+            if self._closed:
+                raise RuntimeError("not connected; client is closed")
+            if msg_type == MessageType.HELLO:
+                raise RuntimeError("not connected; call connect() first")
+            _status(
+                "RECONNECT",
+                _YELLOW,
+                f"connection to {self.config.url} is closed; reconnecting before {msg_type.value}",
+            )
+            await self.connect(handshake=True)
 
         request_id = str(uuid4())
         frame = Frame(
@@ -191,6 +254,20 @@ class PolicyEvalClient:
             await self._ws.send(encode_frame(frame))
         except Exception:
             self._pending.pop(request_id, None)
+            if not _reconnect_attempted and not self._closed and msg_type != MessageType.HELLO:
+                _status("RECONNECT", _YELLOW, f"send failed for {msg_type.value}; reconnecting to {self.config.url}")
+                await self._reset_connection_state()
+                await self.connect(handshake=True)
+                return await self.request(
+                    msg_type,
+                    payload,
+                    action_case_id=action_case_id,
+                    trial_id=trial_id,
+                    repeat_index=repeat_index,
+                    step=step,
+                    timeout_s=timeout_s,
+                    _reconnect_attempted=True,
+                )
             raise
         timeout = timeout_s if timeout_s is not None else self.config.request_timeout_s
         try:
@@ -198,6 +275,26 @@ class PolicyEvalClient:
         except asyncio.TimeoutError as exc:
             self._pending.pop(request_id, None)
             raise WsError(ErrorCode.TIMEOUT, f"timeout waiting for {expected}") from exc
+        except Exception:
+            self._pending.pop(request_id, None)
+            if self._ws is None and not _reconnect_attempted and not self._closed and msg_type != MessageType.HELLO:
+                _status(
+                    "RECONNECT",
+                    _YELLOW,
+                    f"connection dropped while waiting for {msg_type.value}; reconnecting to {self.config.url}",
+                )
+                await self.connect(handshake=True)
+                return await self.request(
+                    msg_type,
+                    payload,
+                    action_case_id=action_case_id,
+                    trial_id=trial_id,
+                    repeat_index=repeat_index,
+                    step=step,
+                    timeout_s=timeout_s,
+                    _reconnect_attempted=True,
+                )
+            raise
         if expected is not None and response.message_type != expected:
             raise WsError(
                 ErrorCode.INVALID_FRAME,

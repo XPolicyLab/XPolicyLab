@@ -133,26 +133,24 @@ class ACT:
 
         self.t = 0  # Current timestep
 
-        # Load statistics for normalization
+        # Load statistics and policy weights. Missing files are fatal because
+        # running with an unnormalized/randomly initialized ACT policy is invalid.
         ckpt_dir = args_override.get("ckpt_dir", "")
-        if ckpt_dir:
-            # Load dataset stats for normalization
-            stats_path = os.path.join(ckpt_dir, "dataset_stats.pkl")
-            if os.path.exists(stats_path):
-                with open(stats_path, "rb") as f:
-                    self.stats = pickle.load(f)
-            else:
-                print(f"Warning: Could not find stats file at {stats_path}")
-                self.stats = None
+        stats_path = os.path.join(ckpt_dir, "dataset_stats.pkl") if ckpt_dir else ""
+        ckpt_path = os.path.join(ckpt_dir, "policy_last.ckpt") if ckpt_dir else ""
+        if not ckpt_dir:
+            raise ValueError("ACT requires ckpt_dir during evaluation.")
+        if not os.path.isdir(ckpt_dir):
+            raise FileNotFoundError(f"ACT checkpoint directory not found: {ckpt_dir}")
 
-            # Load policy weights
-            ckpt_path = os.path.join(ckpt_dir, "policy_last.ckpt")
-            if os.path.exists(ckpt_path):
-                loading_status = self.policy.load_state_dict(torch.load(ckpt_path))
-            else:
-                print(f"Warning: Could not find policy checkpoint at {ckpt_path}")
-        else:
-            self.stats = None
+        if not os.path.isfile(stats_path):
+            raise FileNotFoundError(f"ACT dataset stats not found: {stats_path}")
+        with open(stats_path, "rb") as f:
+            self.stats = pickle.load(f)
+
+        if not os.path.isfile(ckpt_path):
+            raise FileNotFoundError(f"ACT policy checkpoint not found: {ckpt_path}")
+        self.policy.load_state_dict(torch.load(ckpt_path, map_location=self.device))
         
         self.obs_cache = None
 

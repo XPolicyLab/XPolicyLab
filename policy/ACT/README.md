@@ -44,18 +44,16 @@ conda activate <policy_env>  # e.g. act
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: prepares RoboDojo demonstration data for policy training. `ckpt_name` selects the raw data directory and the generated training config, so use the same value when running `train.sh`.
 
 Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `ckpt_name` | Data/run identifier and raw task directory under `data/<bench_name>/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
 
 ```bash
 cd XPolicyLab/policy/ACT
@@ -64,9 +62,6 @@ bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
-
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
 ```
 
 ## Model Training

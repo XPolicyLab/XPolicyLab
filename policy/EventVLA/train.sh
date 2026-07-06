@@ -2,8 +2,9 @@
 set -euo pipefail
 
 if [[ $# -lt 3 ]]; then
-    echo "Usage: bash train.sh <data_mix> <memory_ablation_mode> <keyframe_memory_policy> [extra_args...]"
+    echo "Usage: bash train.sh <data_mix> <memory_ablation_mode> <keyframe_memory_policy> [data_root_dir] [train_args...]"
     echo "Example: bash train.sh robodojo pure_image_keyframe_memory teacher"
+    echo "Example with training override: bash train.sh robodojo pure_image_keyframe_memory teacher --trainer.max_train_steps 20000"
     echo ""
     echo "The printed RUN_ID (= run directory name) is exactly the ckpt_name expected by eval.sh:"
     echo "  bash train.sh robodojo pure_image_keyframe_memory teacher"
@@ -76,7 +77,7 @@ echo "[EventVLA] keyframe_memory_policy=${resolved_keyframe_memory_policy}"
 echo "[EventVLA] run_root_dir=${RUN_ROOT_DIR}"
 echo "[EventVLA] RUN_ID (= eval ckpt_name)=${RUN_ID}"
 if [[ $# -gt 0 ]]; then
-    echo "[EventVLA] extra_args=$*"
+    echo "[EventVLA] train_args=$*"
 fi
 
 # The vendored run scripts use paths relative to the source_eventvla root.

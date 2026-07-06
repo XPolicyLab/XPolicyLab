@@ -64,6 +64,8 @@ Parameters used by the command:
 
 ```bash
 cd XPolicyLab/policy/AHA_WAM
+export AHA_WAM_TRAIN_DATASET_DIR=/path/to/RoboDojo_lerobot_v21_video
+export DIFFSYNTH_MODEL_BASE_PATH=/path/to/diffsynth/model/cache
 # Template: train a policy run on one GPU or a GPU list.
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
@@ -75,6 +77,7 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+The training dataset must contain `meta/`, `dataset_stats.json`, and a T5 text embedding cache at `text_embeds_cache/` unless `AHA_WAM_TRAIN_DATASET_STATS_PATH` or `AHA_WAM_TEXT_EMBED_CACHE_DIR` overrides those locations.
 
 ## Deployment and Evaluation
 
@@ -188,18 +191,21 @@ Frequently used environment variables detected in the adapter scripts:
 
 | Variable | Notes |
 |---|---|
-| `ACTION_DIM` | Optional override used by the local scripts or upstream runtime. |
-| `ACTION_TYPE` | Optional override used by the local scripts or upstream runtime. |
-| `AHAWAM` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_ALLOW_DUMMY_POLICY` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_APPTAINER_IMAGE` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_BATCH_SIZE` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_CHECKPOINT_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_CHUNKS_PER_VIDEO_PREFILL` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_CKPT_SETTING` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_DATASET_STATS_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `AHA_WAM_DEBUG_EVAL_EPISODE_NUM` | Optional override used by the local scripts or upstream runtime. |
+| `AHA_WAM_TRAIN_DATASET_DIR` | Required for training; points to the prepared RoboDojo LeRobot v2.1 video dataset. |
+| `DIFFSYNTH_MODEL_BASE_PATH` | Required for training and normally required for model loading; points to the Wan/DiffSynth model cache. |
+| `AHA_WAM_TRAIN_DATASET_STATS_PATH` | Optional training stats override; defaults to `$AHA_WAM_TRAIN_DATASET_DIR/dataset_stats.json`. |
+| `AHA_WAM_TEXT_EMBED_CACHE_DIR` | Optional text embedding cache override; defaults to `$AHA_WAM_TRAIN_DATASET_DIR/text_embeds_cache`. |
+| `AHA_WAM_OUTPUT_ROOT` | Optional training checkpoint root; defaults to `policy/AHA_WAM/checkpoints`. |
+| `AHA_WAM_CHECKPOINT_PATH` | Optional explicit eval checkpoint file; overrides `ckpt_name` lookup. |
+| `AHA_WAM_DATASET_STATS_PATH` | Optional explicit eval dataset stats file. |
+| `AHA_WAM_CKPT_SETTING` | Optional eval run directory override under `checkpoints/`. |
+| `AHA_WAM_ENV_CFG_ROOT` | Optional env config root; defaults to `<repo>/env_cfg`. |
+| `AHA_WAM_APPTAINER_IMAGE` | Optional Apptainer image for the policy server. |
+| `AHA_WAM_APPTAINER_BINDS` | Optional Apptainer bind arguments when using `AHA_WAM_APPTAINER_IMAGE`. |
+| `AHA_WAM_CHUNKS_PER_VIDEO_PREFILL` | Optional video prefill cadence; default is `4`. |
+| `AHA_WAM_ALLOW_DUMMY_POLICY` | Debug-only option to skip real checkpoint/stats loading. |
+| `AHA_WAM_DEBUG_EVAL_EPISODE_NUM` | Debug-client episode count override. |
+| `XPOLICYLAB_BENCH_ROOT` | Optional client `--root_dir` override; defaults to the RoboDojo repo root. |
 
 ## Notes
 

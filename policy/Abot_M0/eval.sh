@@ -23,6 +23,17 @@ policy_server_ip="localhost"
 
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
 
+# region agent log
+python - <<PY >/dev/null 2>&1 || true
+import json, time
+from pathlib import Path
+log_path = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
+log_path.parent.mkdir(parents=True, exist_ok=True)
+with open(log_path, "a", encoding="utf-8") as f:
+    f.write(json.dumps({"sessionId":"0684e4","runId":"pre-fix","hypothesisId":"H1","location":"policy/Abot_M0/eval.sh:args","message":"parsed Abot_M0 eval args","data":{"argc":${#},"bench_name":"${bench_name}","task_name":"${task_name}","ckpt_name":"${ckpt_name}","env_cfg_type":"${env_cfg_type}","action_type":"${action_type}","seed":"${seed}","policy_gpu_id":"${policy_gpu_id}","env_gpu_id":"${env_gpu_id}"},"timestamp":int(time.time()*1000)}) + "\n")
+PY
+# endregion agent log
+
 cleanup() {
     if [[ -n "${SERVER_PID:-}" ]]; then
         echo "[MAIN] kill server ${SERVER_PID}"

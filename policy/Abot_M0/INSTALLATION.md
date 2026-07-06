@@ -33,6 +33,7 @@ pip install h5py opencv-python pyyaml
 | `PRETRAIN_CKPT` | ABot-M0 pretrained checkpoint path. |
 | `RELOAD_MODULES` | Module subset to reload, for example `qwen_vl_interface`. |
 | `HF_LEROBOT_HOME` | LeRobot dataset root used by ABot data preparation. |
+| `ABOT_STATS_JSON` | Optional eval fallback stats file. Defaults to `/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json`. |
 
 ## 4. RoboDojo Data Preparation
 
@@ -54,5 +55,7 @@ cd XPolicyLab/policy/Abot_M0
 mkdir -p checkpoints
 ln -sfn <checkpoint_dir> checkpoints/<ckpt_name>
 ```
+
+The model adapter also resolves the standard normalized run id, for example `RoboDojo-cotrain-arx_x5-joint-0`, when the corresponding tuple fields are passed by the eval scripts.
 
 Use `eval.sh` for a same-machine run, or split `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` for debugging.

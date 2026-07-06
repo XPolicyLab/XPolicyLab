@@ -208,6 +208,34 @@ class Model(ModelTemplate):
         self.allow_dummy_policy = _parse_bool(self.model_cfg.get("allow_dummy_policy", False))
         self._chunks_since_video_prefill = 0
 
+#region agent log
+        try:
+            with open("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-c13f7c.log", "a", encoding="utf-8") as f:
+                f.write(
+                    json.dumps(
+                        {
+                            "sessionId": "c13f7c",
+                            "runId": "post-fix",
+                            "hypothesisId": "H4,H5",
+                            "location": "policy/AHA_WAM/model.py:Model.__init__",
+                            "message": "initializing AHA_WAM model adapter",
+                            "data": {
+                                "allow_dummy_policy": self.allow_dummy_policy,
+                                "action_type": self.action_type,
+                                "env_cfg_type": self.env_cfg_type,
+                                "env_cfg_root": str(self.env_cfg_root),
+                                "robot_action_dim_info": self.robot_action_dim_info,
+                            },
+                            "timestamp": int(__import__("time").time() * 1000),
+                        },
+                        ensure_ascii=True,
+                    )
+                    + "\n"
+                )
+        except Exception:
+            pass
+#endregion
+
         self.elava_root = Path(str(self.model_cfg["elava_root"])).expanduser().resolve()
         self.elava_src = self.elava_root / "src"
         self.checkpoint_path = Path(str(self.model_cfg["checkpoint_path"])).expanduser().resolve()
@@ -226,10 +254,10 @@ class Model(ModelTemplate):
             if text not in sys.path:
                 sys.path.insert(0, text)
 
-        from ahawam.datasets.lerobot.robot_video_dataset import DEFAULT_PROMPT
-
-        self.default_prompt_template = DEFAULT_PROMPT
         if self.allow_dummy_policy:
+            self.default_prompt_template = (
+                "A video recorded from a robot's point of view executing the following instruction: {task}"
+            )
             self.policy = None
             self.action_horizon = int(self.model_cfg.get("action_horizon") or 64)
             self.replan_steps = int(self.model_cfg.get("replan_steps") or 16)
@@ -239,6 +267,9 @@ class Model(ModelTemplate):
             self.video_prefill_action_horizon = self._resolve_video_prefill_action_horizon(self.replan_steps)
             print("[aha-wam] allow_dummy_policy=true; real model loading is skipped.")
         else:
+            from ahawam.datasets.lerobot.robot_video_dataset import DEFAULT_PROMPT
+
+            self.default_prompt_template = DEFAULT_PROMPT
             self.policy = self._load_policy()
             self.action_horizon = int(self.model_cfg.get("action_horizon") or self.policy.action_horizon)
             self.replan_steps = int(self.model_cfg.get("replan_steps") or self.policy.model.action_chunk_size)

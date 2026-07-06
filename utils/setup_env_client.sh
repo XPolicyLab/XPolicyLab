@@ -38,6 +38,17 @@ else
     echo "[CLIENT] EVAL_ENV_TYPE=${EVAL_ENV_TYPE} -> ${eval_env_mode}"
 fi
 
+# region agent log
+python - <<PY >/dev/null 2>&1 || true
+import json, time
+from pathlib import Path
+log_path = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
+log_path.parent.mkdir(parents=True, exist_ok=True)
+with open(log_path, "a", encoding="utf-8") as f:
+    f.write(json.dumps({"sessionId":"0684e4","runId":"pre-fix","hypothesisId":"H0,H5","location":"utils/setup_env_client.sh:entry","message":"entered eval env client wrapper","data":{"yaml_file":"${yaml_file}","eval_env_conda_env":"${eval_env_conda_env}","policy_server_port":"${policy_server_port}","bench_name":"${bench_name}","task_name":"${task_name}","env_cfg_type":"${env_cfg_type}","policy_name":"${policy_name}","additional_info":"${additional_info}","ROOT_DIR":"${ROOT_DIR}","seed":"${seed}","env_gpu_id":"${env_gpu_id}","policy_server_ip":"${policy_server_ip}","eval_env_mode":"${eval_env_mode}","protocol":"${protocol}"},"timestamp":int(time.time()*1000)}) + "\n")
+PY
+# endregion agent log
+
 COMMON_ARGS=(
     "${eval_batch}"
     "${eval_env_conda_env}"

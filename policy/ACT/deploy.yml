@@ -1,4 +1,5 @@
 # Basic experiment configuration
+policy_name: ACT
 protocol: ws
 host: localhost
 port: null

@@ -10,6 +10,28 @@ import traceback
 from client_server.tcp.model_server import ModelServer
 
 
+def _agent_debug_log(location, message, data, hypothesis_id="H0,H2,H4"):
+    try:
+        import json
+        from pathlib import Path
+
+        log_path = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "sessionId": "0684e4",
+            "runId": "pre-fix",
+            "hypothesisId": hypothesis_id,
+            "location": location,
+            "message": message,
+            "data": data,
+            "timestamp": int(time.time() * 1000),
+        }
+        with open(log_path, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps(payload, default=str) + "\n")
+    except Exception:
+        pass
+
+
 def _default_protocol() -> str:
     """Default to the websocket policy protocol."""
     return "ws"
@@ -26,6 +48,24 @@ def main(deploy_cfg):
     port = deploy_cfg.get("port")
     host = deploy_cfg.get("host", "0.0.0.0")
     protocol = deploy_cfg.get("protocol", "ws")
+
+    # region agent log
+    _agent_debug_log(
+        "setup_policy_server.py:main",
+        "starting policy server",
+        {
+            "policy_name": policy_name,
+            "host": host,
+            "port": port,
+            "protocol": protocol,
+            "ckpt_name": deploy_cfg.get("ckpt_name"),
+            "checkpoint_path": deploy_cfg.get("checkpoint_path"),
+            "env_cfg_type": deploy_cfg.get("env_cfg_type"),
+            "action_type": deploy_cfg.get("action_type"),
+            "task_name": deploy_cfg.get("task_name"),
+        },
+    )
+    # endregion agent log
 
     # Instantiate model
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
@@ -147,6 +187,25 @@ def parse_args_and_config():
         cfg["port"] = args.port
     if args.relay_url is not None:
         cfg["relay_url"] = args.relay_url
+
+    # region agent log
+    _agent_debug_log(
+        "setup_policy_server.py:parse_args_and_config",
+        "parsed policy server config",
+        {
+            "config_path": args.config_path,
+            "overrides": args.overrides,
+            "policy_name": cfg.get("policy_name"),
+            "host": cfg.get("host"),
+            "port": cfg.get("port"),
+            "protocol": cfg.get("protocol"),
+            "ckpt_name": cfg.get("ckpt_name"),
+            "checkpoint_path": cfg.get("checkpoint_path"),
+            "env_cfg_type": cfg.get("env_cfg_type"),
+            "action_type": cfg.get("action_type"),
+        },
+    )
+    # endregion agent log
     
     def _require_non_empty(key: str):
         if key not in cfg:

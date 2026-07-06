@@ -44,29 +44,25 @@ conda activate <policy_env>  # e.g. eventvla
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: downloads the upstream EventVLA LeRobot dataset and links it as local training data. EventVLA does not convert per-task RoboDojo demos in this wrapper.
 
 Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
+| `ckpt_name` | Accepted for the standard XPolicyLab interface and logged for traceability. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional compatibility argument; EventVLA ignores it and uses the upstream dataset as a whole. |
 
 ```bash
 cd XPolicyLab/policy/EventVLA
-# Template: convert all available demonstrations for one run.
+# Template: fetch and link the upstream training dataset.
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
-# Example: convert stack_bowls demos for arx_x5 joint control.
+# Example: prepare the upstream EventVLA training dataset for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
-
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
 ```
 
 ## Model Training
@@ -80,19 +76,23 @@ Parameters used by the command:
 | `data_mix` | Upstream EventVLA data mix name, for example `robodojo`. |
 | `memory_ablation_mode` | Memory ablation/profile name, for example `pure_image_keyframe_memory`. |
 | `keyframe_memory_policy` | Keyframe memory policy. Supported values are `teacher` and `predict` aliases. |
-| `extra_args` | Optional arguments forwarded to the upstream EventVLA train script. |
+| `data_root_dir` | Optional first extra argument, used as the training data root unless `EVENTVLA_DATA_ROOT` is set. |
+| `train_args` | Optional remaining arguments appended to `eventvla/training/train_eventvla.py`, for example `--trainer.max_train_steps 20000`. |
 | `RUN_ID` | Optional environment override for the run directory; this becomes eval `ckpt_name`. |
 
 ```bash
 cd XPolicyLab/policy/EventVLA
 # Template: launch EventVLA training.
-bash train.sh <data_mix> <memory_ablation_mode> <keyframe_memory_policy> [extra_args...]
+bash train.sh <data_mix> <memory_ablation_mode> <keyframe_memory_policy> [data_root_dir] [train_args...]
 
 # Example: train with teacher keyframe memory.
 bash train.sh robodojo pure_image_keyframe_memory teacher
 
 # Example: force a stable run id that can be reused as eval ckpt_name.
 RUN_ID=RoboDojo-eventvla-arx_x5-joint-0   bash train.sh robodojo pure_image_keyframe_memory teacher
+
+# Example: override an upstream trainer option.
+bash train.sh robodojo pure_image_keyframe_memory teacher --trainer.max_train_steps 20000
 ```
 
 Evaluate with `ckpt_name=<RUN_ID>`. EventVLA stores checkpoints under `results/Checkpoints/<RUN_ID>/`, not the generic `checkpoints/<bench>-<ckpt>-<env>-<action>-<seed>/` layout.
@@ -107,7 +107,7 @@ Parameters used by `eval.sh`:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | EventVLA run directory name, usually the `RUN_ID` printed by `train.sh`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -121,8 +121,8 @@ cd XPolicyLab/policy/EventVLA
 # Template: run same-machine policy server and RoboDojo environment client.
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
-# Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+# Example: evaluate a trained EventVLA run on stack_bowls.
+bash eval.sh RoboDojo stack_bowls RoboDojo-eventvla-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -131,7 +131,7 @@ Parameters used by the split server/client flow:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | EventVLA run directory name, usually the `RUN_ID` printed by `train.sh`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -153,7 +153,7 @@ bash setup_eval_policy_server.sh \
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  RoboDojo stack_bowls RoboDojo-eventvla-arx_x5-joint-0 arx_x5 joint 0 \
   0 <policy_conda_env> 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
@@ -164,8 +164,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls RoboDojo-eventvla-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-eventvla-arx_x5-joint-0,action_type=joint" \
   5000 <policy_server_ip>
 ```
 
@@ -179,7 +179,7 @@ Common parameter meanings used across the commands above:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | EventVLA run directory name, usually the `RUN_ID` printed by `train.sh`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -205,25 +205,22 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | `include_state` | Runtime or checkpoint option consumed by this adapter. |
 | `temporal_absolute_indices` | Runtime or checkpoint option consumed by this adapter. |
 
-Frequently used environment variables detected in the adapter scripts:
+Frequently used environment variables:
 
 | Variable | Notes |
 |---|---|
-| `DATA_SUBDIR` | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_TRAIN_SCRIPT` | Optional override used by the local scripts or upstream runtime. |
-| `DOWNLOAD_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `DOWNLOAD_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_CKPT_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_DATA_MIX` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_DATA_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_MEMORY_ABLATION_MODE` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_RUN_ROOT_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_SERVER_PID` | Optional override used by the local scripts or upstream runtime. |
-| `EVENTVLA_SERVER_READY_TIMEOUT` | Optional override used by the local scripts or upstream runtime. |
+| `RUN_ID` | Overrides the training run directory name and eval `ckpt_name`. |
+| `EVENTVLA_RUN_ROOT_DIR` | Overrides the wrapper training output root, default `policy/EventVLA/results/Checkpoints`. |
+| `EVENTVLA_DATA_ROOT` | Overrides both `process_data.sh` download root and training data root. |
+| `EVENTVLA_TRAIN_SCRIPT` | Overrides the upstream training entry script. |
+| `EVENTVLA_CKPT_PATH` | Bypasses run-directory checkpoint lookup during eval. |
+| `EVENTVLA_SERVER_READY_TIMEOUT` | Timeout, in seconds, while waiting for the upstream EventVLA server. |
+| `BASE_VLM` | Overrides the base Qwen/VLM path used by the upstream training recipe. |
+| `MAX_KEYFRAME_IMAGES` | Overrides the upstream keyframe memory image count. |
+| `KEEP_RECENT_CHECKPOINTS` | Overrides how many step checkpoints the upstream trainer keeps. |
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Keep the training `RUN_ID` stable and pass it as eval `ckpt_name`.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

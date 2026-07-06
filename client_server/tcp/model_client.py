@@ -2,6 +2,18 @@ from .utils import *
 import socket
 import time
 
+RED = "\033[31m"
+GREEN = "\033[32m"
+BLUE = "\033[34m"
+YELLOW = "\033[33m"
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
+
+def _status(level, color, message):
+    print(f"{color}{BOLD}[{level}]{RESET} {message}", flush=True)
+
+
 class ModelClient:
     def __init__(self, host="localhost", port=9999, timeout=30):
         self.host = host
@@ -17,20 +29,34 @@ class ModelClient:
 
         while attempts < max_attempts:
             try:
+                _status(
+                    "CONNECTING",
+                    BLUE,
+                    f"legacy TCP policy server {self.host}:{self.port} "
+                    f"(attempt {attempts + 1}/{max_attempts}, timeout={self.timeout}s)",
+                )
                 self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.sock.settimeout(self.timeout)
                 self.sock.connect((self.host, self.port))
-                print(f"🔗 Connected to model server at {self.host}:{self.port}")
+                _status("CONNECTED", GREEN, f"legacy TCP policy server connected: {self.host}:{self.port}")
                 return
             except Exception as e:
                 attempts += 1
                 if self.sock:
                     self.sock.close()
+                    self.sock = None
                 if attempts < max_attempts:
-                    print(f"⚠️ Connection attempt {attempts} failed: {str(e)}")
-                    print(f"🔄 Retrying in {retry_delay} seconds...")
-                    time.sleep(retry_delay)
+                    _status("CONNECT-FAILED", YELLOW, f"attempt {attempts}/{max_attempts} failed: {e}")
+                    for left in range(retry_delay, 0, -1):
+                        print(
+                            f"\r{YELLOW}{BOLD}[RECONNECT]{RESET} retrying legacy TCP connection in {left:2d}s",
+                            end="",
+                            flush=True,
+                        )
+                        time.sleep(1)
+                    print("\r" + " " * 96 + "\r", end="", flush=True)
                 else:
+                    _status("ERROR", RED, f"failed to connect to legacy TCP policy server {self.host}:{self.port}")
                     raise ConnectionError(f"Failed to connect to server after {max_attempts} attempts: {str(e)}")
 
     def _send(self, data):
@@ -86,8 +112,20 @@ class ModelClient:
         # Deserialize with numpy reconstruction
         return json_to_numpy(b"".join(chunks).decode("utf-8"))
 
-    def call(self, func_name=None, obs=None):
-        response = self._send_recv({"cmd": func_name, "obs": obs})
+    def call(self, func_name=None, obs=None, _reconnect_attempted=False):
+        request = {"cmd": func_name, "obs": obs}
+        try:
+            response = self._send_recv(request)
+        except ConnectionError:
+            if _reconnect_attempted:
+                raise
+            _status(
+                "RECONNECT",
+                YELLOW,
+                f"legacy TCP connection dropped during {func_name}; reconnecting and retrying once",
+            )
+            self._connect()
+            return self.call(func_name=func_name, obs=obs, _reconnect_attempted=True)
         if "res" in response.keys():
             return response["res"]
         return None
@@ -101,7 +139,7 @@ class ModelClient:
                 pass
             finally:
                 self.sock = None
-                print("🔌 Connection closed")
+                _status("DISCONNECTED", YELLOW, "legacy TCP connection closed")
 
     def __enter__(self):
         return self

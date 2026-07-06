@@ -88,14 +88,11 @@ if __name__ == "__main__":
     parser.add_argument("ckpt_name", type=str, help="Run name; also selects raw task dir under data/<bench>/",)
     parser.add_argument("env_cfg_type", type=str, help="The name of the environment config",)
     parser.add_argument("action_type", type=str, help="The type of action to process (e.g., joint)",)
-    parser.add_argument("expert_data_num", type=int, nargs="?", default=None,
-                        help="Optional number of episodes to process; defaults to all episodes.",)
     args = parser.parse_args()
     
     bench_name = args.bench_name
     ckpt_name = args.ckpt_name
     env_cfg_type = args.env_cfg_type
-    expert_data_num = args.expert_data_num
     action_type = args.action_type
 
     save_dir = f"processed_data/{bench_name}/{ckpt_name}/{env_cfg_type}-{action_type}"
@@ -105,11 +102,10 @@ if __name__ == "__main__":
     robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
     raw_episode_dir = os.path.join("../../../data/", bench_name, ckpt_name, env_cfg_type, 'data')
-    if expert_data_num is None:
-        expert_data_num = len([name for name in os.listdir(raw_episode_dir)
-                               if name.startswith("episode_") and name.endswith(".hdf5")])
+    episode_num = len([name for name in os.listdir(raw_episode_dir)
+                       if name.startswith("episode_") and name.endswith(".hdf5")])
 
-    begin = data_transform(raw_episode_dir, expert_data_num, load_data_dir, save_dir, robot_action_dim_info)
+    begin = data_transform(raw_episode_dir, episode_num, load_data_dir, save_dir, robot_action_dim_info)
 
     print()
 
@@ -123,7 +119,7 @@ if __name__ == "__main__":
 
     TASK_CONFIGS[f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"] = {
         "dataset_dir": save_dir,
-        "num_episodes": expert_data_num,
+        "num_episodes": episode_num,
         "episode_len": 5000,
         "camera_names": ["cam_head", "cam_right_wrist", "cam_left_wrist"],
     }

@@ -11,6 +11,17 @@ import websockets.sync.client
 
 from . import msgpack_numpy
 
+_RED = "\033[31m"
+_GREEN = "\033[32m"
+_BLUE = "\033[34m"
+_YELLOW = "\033[33m"
+_BOLD = "\033[1m"
+_RESET = "\033[0m"
+
+
+def _status(level: str, color: str, message: str) -> None:
+    print(f"{color}{_BOLD}[{level}]{_RESET} {message}", flush=True)
+
 
 class WebsocketClientPolicy:
     """Implements the Policy interface by communicating with a server over websocket.
@@ -38,10 +49,18 @@ class WebsocketClientPolicy:
             os.environ.pop(k, None)
         
         while True:
-            if time.time() - start_time > timeout:
+            elapsed = int(time.time() - start_time)
+            remaining = max(0, int(timeout) - elapsed)
+            if elapsed > timeout:
+                _status("ERROR", _RED, f"EventVLA upstream websocket timed out: {self._uri}")
                 raise TimeoutError(f"Failed to connect to server within {timeout} seconds")
             
             try:
+                _status(
+                    "CONNECTING",
+                    _BLUE,
+                    f"EventVLA upstream websocket {self._uri} (timeout in {remaining}s)",
+                )
                 headers = {"Authorization": f"Api-Key {self._api_key}"} if self._api_key else None
                 conn = websockets.sync.client.connect(
                     self._uri,
@@ -53,9 +72,15 @@ class WebsocketClientPolicy:
                     ping_timeout=20,
                 )
                 metadata = msgpack_numpy.unpackb(conn.recv())
+                _status("CONNECTED", _GREEN, f"EventVLA upstream websocket connected: {self._uri}")
                 return conn, metadata
-            except ConnectionRefusedError:
+            except Exception as exc:
                 logging.info(f"Still waiting for server {self._uri} ...")
+                _status(
+                    "RECONNECT",
+                    _YELLOW,
+                    f"EventVLA upstream websocket not ready: {exc}; retry in 2s ({remaining}s left)",
+                )
                 time.sleep(2)
 
     def close(self) -> None:

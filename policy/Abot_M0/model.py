@@ -13,6 +13,8 @@ from PIL import Image
 _CUR_DIR = Path(__file__).resolve().parent
 _ABOT_ROOT = _CUR_DIR / "abot_m0"
 _CHECKPOINTS_DIRS = (_CUR_DIR / "checkpoints", _ABOT_ROOT / "checkpoints")
+_DEFAULT_STATS_JSON = Path("/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json")
+_DEBUG_LOG_PATH = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
 
 if str(_ABOT_ROOT) not in sys.path:
     sys.path.insert(0, str(_ABOT_ROOT))
@@ -38,6 +40,29 @@ _CAMERA_CANDIDATES = {
 _DEFAULT_INCLUDE_STATE = False
 _GRIPPER_INDICES = (12, 13)
 _BINARY_GRIPPER_THRESHOLD = 0.5
+
+
+# region agent log
+def _debug_log(hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:
+    try:
+        import json
+        import time
+
+        payload = {
+            "sessionId": "0684e4",
+            "runId": "pre-fix",
+            "hypothesisId": hypothesis_id,
+            "location": location,
+            "message": message,
+            "data": data,
+            "timestamp": int(time.time() * 1000),
+        }
+        _DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(_DEBUG_LOG_PATH, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps(payload, default=str) + "\n")
+    except Exception:
+        pass
+# endregion agent log
 
 
 def _normalize_prompt_value(value: Any) -> str | None:
@@ -200,30 +225,33 @@ def _build_action_stats_from_gr00t(action_stats: dict[str, Any]) -> dict[str, An
     }
 
 
-def _ensure_dataset_statistics(run_dir: Path) -> None:
+def _ensure_dataset_statistics(run_dir: Path, unnorm_key: str | None) -> None:
     stats_path = run_dir / "dataset_statistics.json"
-    unnorm_key = os.environ.get("ABOT_UNNORM_KEY", "robodojo_sim")
+    resolved_unnorm_key = os.environ.get("ABOT_UNNORM_KEY") or unnorm_key or "robodojo_sim"
 
     if stats_path.exists():
         import json
 
         with open(stats_path, "r", encoding="utf-8") as handle:
             existing = json.load(handle)
-        action_stats = existing.get(unnorm_key, {}).get("action", {})
+        action_stats = existing.get(resolved_unnorm_key, {}).get("action", {})
         if "min" in action_stats and "max" in action_stats:
+            # region agent log
+            _debug_log(
+                "H4",
+                "policy/Abot_M0/model.py:_ensure_dataset_statistics",
+                "using existing dataset statistics",
+                {"stats_path": stats_path, "unnorm_key": resolved_unnorm_key},
+            )
+            # endregion agent log
             return
         print(f"[Abot_M0] Regenerating {stats_path}: expected min/max stats for training alignment.")
 
-    stats_env = os.environ.get("ABOT_STATS_JSON")
-    if not stats_env:
-        raise FileNotFoundError(
-            f"Missing `{stats_path}`. Set ABOT_STATS_JSON to a stats_gr00t.json "
-            "with per-dimension action min/max for training alignment."
-        )
-    stats_source = Path(stats_env).expanduser()
+    stats_source = Path(os.environ.get("ABOT_STATS_JSON", str(_DEFAULT_STATS_JSON))).expanduser()
     if not stats_source.is_file():
         raise FileNotFoundError(
-            f"Missing `{stats_path}` and fallback stats file `{stats_source}`."
+            f"Missing `{stats_path}` and fallback stats file `{stats_source}`. "
+            "Set ABOT_STATS_JSON to a stats_gr00t.json with per-dimension action min/max."
         )
 
     import json
@@ -232,10 +260,18 @@ def _ensure_dataset_statistics(run_dir: Path) -> None:
         gr00t_stats = json.load(handle)
 
     action_stats = gr00t_stats.get("action", gr00t_stats)
-    payload = {unnorm_key: {"action": _build_action_stats_from_gr00t(action_stats)}}
+    payload = {resolved_unnorm_key: {"action": _build_action_stats_from_gr00t(action_stats)}}
     with open(stats_path, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)
     print(f"[Abot_M0] Wrote missing dataset statistics to {stats_path}")
+    # region agent log
+    _debug_log(
+        "H4",
+        "policy/Abot_M0/model.py:_ensure_dataset_statistics",
+        "generated dataset statistics from fallback",
+        {"stats_path": stats_path, "stats_source": stats_source, "unnorm_key": resolved_unnorm_key},
+    )
+    # endregion agent log
 
 
 def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> Path:
@@ -245,22 +281,68 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> Path:
     else:
         step_name = "steps_60000_pytorch_model.pt"
 
-    if model_cfg.get("ckpt_name") is not None:
-        ckpt_setting = str(model_cfg["ckpt_name"])
-        for checkpoints_dir in _CHECKPOINTS_DIRS:
-            ckpt_dir = checkpoints_dir.expanduser().resolve() / ckpt_setting
-            for candidate in (ckpt_dir / "checkpoints" / step_name, ckpt_dir / step_name):
-                if candidate.is_file():
-                    return candidate
-
     for key in ("checkpoint_path", "ckpt_path", "pretrained_path"):
         value = model_cfg.get(key)
         if value:
-            return Path(value).expanduser().resolve()
+            explicit_path = Path(value).expanduser().resolve()
+            explicit_candidates = (
+                explicit_path / "checkpoints" / step_name,
+                explicit_path / step_name,
+                explicit_path,
+            )
+            selected = next((candidate for candidate in explicit_candidates if candidate.is_file()), explicit_path)
+            # region agent log
+            _debug_log(
+                "H2",
+                "policy/Abot_M0/model.py:_resolve_checkpoint_path",
+                "using explicit checkpoint path",
+                {"key": key, "path": explicit_path, "selected": selected, "exists": selected.exists()},
+            )
+            # endregion agent log
+            return selected
+
+    ckpt_names: list[str] = []
+    raw_ckpt_name = model_cfg.get("ckpt_name")
+    if raw_ckpt_name not in (None, ""):
+        ckpt_names.append(str(raw_ckpt_name))
+
+    bench_name = model_cfg.get("bench_name") or model_cfg.get("dataset_name")
+    standard_keys = (bench_name, model_cfg.get("ckpt_name"), model_cfg.get("env_cfg_type"), model_cfg.get("action_type"), model_cfg.get("seed"))
+    if all(value not in (None, "") for value in standard_keys):
+        ckpt_names.append("-".join(str(value) for value in standard_keys))
+
+    seen_candidates: list[Path] = []
+    for ckpt_setting in dict.fromkeys(ckpt_names):
+        raw_path = Path(ckpt_setting).expanduser()
+        candidate_dirs = []
+        if raw_path.is_absolute() or raw_path.parent != Path("."):
+            candidate_dirs.append(raw_path.resolve())
+        candidate_dirs.extend(checkpoints_dir.expanduser().resolve() / ckpt_setting for checkpoints_dir in _CHECKPOINTS_DIRS)
+
+        for ckpt_dir in candidate_dirs:
+            for candidate in (ckpt_dir / "checkpoints" / step_name, ckpt_dir / step_name, ckpt_dir):
+                seen_candidates.append(candidate)
+                if candidate.is_file():
+                    # region agent log
+                    _debug_log(
+                        "H2,H3",
+                        "policy/Abot_M0/model.py:_resolve_checkpoint_path",
+                        "resolved checkpoint candidate",
+                        {"step_name": step_name, "ckpt_names": ckpt_names, "selected": candidate, "checked": seen_candidates},
+                    )
+                    # endregion agent log
+                    return candidate
 
     raise FileNotFoundError(
-        "Could not resolve ABot checkpoint. Provide ckpt_name or checkpoint_path."
+        "Could not resolve ABot checkpoint. Provide ckpt_name or checkpoint_path. "
+        f"Checked: {[str(path) for path in seen_candidates]}"
     )
+
+
+def _checkpoint_run_dir(checkpoint_path: Path) -> Path:
+    if checkpoint_path.parent.name == "checkpoints":
+        return checkpoint_path.parent.parent
+    return checkpoint_path.parent
 
 
 class Model(ModelTemplate):
@@ -276,7 +358,7 @@ class Model(ModelTemplate):
         self.device = self._get_device(self.model_cfg.get("device", "cuda"))
 
         self.ckpt_path = _resolve_checkpoint_path(self.model_cfg)
-        _ensure_dataset_statistics(self.ckpt_path.parents[1])
+        _ensure_dataset_statistics(_checkpoint_run_dir(self.ckpt_path), self.unnorm_key)
         print(f"[Abot_M0] Loading checkpoint: {self.ckpt_path}")
 
         self.model = baseframework.from_pretrained(str(self.ckpt_path))

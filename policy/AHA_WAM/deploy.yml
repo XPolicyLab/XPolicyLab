@@ -17,7 +17,7 @@ action_dim: null
 seed: null
 
 elava_root: null
-task_config: robodojo_local_history_updated_kv_prior_only
+task_config: robodojo_local_history_updated_kv_prior_only_16
 checkpoint_path: null
 dataset_stats_path: null
 diffsynth_model_base_path: null

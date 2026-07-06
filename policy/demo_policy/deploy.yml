@@ -1,3 +1,4 @@
+policy_name: demo_policy
 protocol: ws
 host: localhost
 port: null

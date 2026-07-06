@@ -6,7 +6,7 @@ from argparse import Namespace
 
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import pack_robot_state, unpack_robot_state, get_robot_action_dim_info
-import os, json
+import os
 
 class Model(ModelTemplate):
 
@@ -20,6 +20,8 @@ class Model(ModelTemplate):
 
     def get_model(self, model_cfg):
         if not model_cfg.get('ckpt_dir'):
+            if not model_cfg.get('ckpt_name'):
+                raise ValueError("ACT requires ckpt_name or ckpt_dir during evaluation.")
             # ckpt_name is the full run directory name under checkpoints/.
             model_cfg['ckpt_dir'] = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), 'checkpoints', str(model_cfg['ckpt_name']))

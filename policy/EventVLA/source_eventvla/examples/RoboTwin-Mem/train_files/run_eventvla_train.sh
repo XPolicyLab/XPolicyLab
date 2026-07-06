@@ -13,7 +13,7 @@ freeze_module_list=''
 base_vlm=${BASE_VLM:-/mnt/inspurfs/efm_t/yangganlin/models/download_models/Qwen3-VL-4B-Instruct}
 config_yaml=./examples/RoboTwin-Mem/train_files/eventvla_robotwin_mem.yaml
 run_root_dir=${RUN_ROOT_DIR:-./results/Checkpoints}
-data_root_dir=${1:-${ROBOTWIN_MEM_DATA_ROOT:-/mnt/inspurfs/efm_t/yangganlin/workspace_tzz/final/RoboTwin-Mem/lerobotdata}}
+data_root_dir=${EVENTVLA_DATA_ROOT:-${ROBOTWIN_MEM_DATA_ROOT:-/mnt/inspurfs/efm_t/yangganlin/workspace_tzz/final/RoboTwin-Mem/lerobotdata}}
 data_mix=${EVENTVLA_DATA_MIX:-robotwin_mem8}
 memory_ablation_mode=${EVENTVLA_MEMORY_ABLATION_MODE:-pure_image_keyframe_memory}
 max_keyframe_images=${MAX_KEYFRAME_IMAGES:-5}
@@ -26,6 +26,12 @@ keyframe_schedule_teacher_prob_end=${KEYFRAME_SCHEDULE_TEACHER_PROB_END:-0.0}
 memory_debug=${MEMORY_DEBUG:-true}
 memory_debug_interval=${MEMORY_DEBUG_INTERVAL:-1}
 memory_debug_first_steps=${MEMORY_DEBUG_FIRST_STEPS:-1}
+
+if [[ $# -gt 0 && "${1}" != --* ]]; then
+  data_root_dir=${EVENTVLA_DATA_ROOT:-${1}}
+  shift
+fi
+train_extra_args=("$@")
 
 run_date=$(date +%Y%m%d)
 run_id=${RUN_ID:-${run_date}_${data_mix}_${memory_ablation_mode}_eventvla}
@@ -51,6 +57,9 @@ echo "[train] memory_debug=${memory_debug}"
 echo "[train] config_yaml=${config_yaml}"
 echo "[train] run_id=${run_id}"
 echo "[train] keep_recent_checkpoints=${keep_recent_checkpoints}"
+if [[ ${#train_extra_args[@]} -gt 0 ]]; then
+  echo "[train] extra_args=${train_extra_args[*]}"
+fi
 
 accelerate launch \
   --config_file eventvla/config/deepseeds/deepspeed_zero2.yaml \
@@ -109,7 +118,8 @@ accelerate launch \
   --run_root_dir ${run_root_dir} \
   --run_id ${run_id} \
   --wandb_project null \
-  --trainer.gradient_accumulation_steps 1
+  --trainer.gradient_accumulation_steps 1 \
+  "${train_extra_args[@]}"
 
 
 

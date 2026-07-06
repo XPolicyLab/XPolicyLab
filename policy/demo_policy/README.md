@@ -2,7 +2,7 @@
 
 **Contributor:** RoboDojo Team | **Paper:** Not applicable - XPolicyLab demo adapter. | **arXiv:** Not applicable | **Original code:** Not applicable
 
-`demo_policy` is the XPolicyLab/RoboDojo adapter for the corresponding policy. It keeps integration-facing scripts at this directory level and leaves the original or vendored implementation in the nested source tree when present.
+`demo_policy` is a reference XPolicyLab/RoboDojo adapter for checking policy-server and environment-client wiring. It returns zero actions with the correct action keys and dimensions; it does not train a real model or load a checkpoint.
 
 <details>
 <summary>File Structure</summary>
@@ -10,9 +10,9 @@
 | Path | Purpose |
 |---|---|
 | `README.md` | Supplemental documentation or environment metadata. |
-| `install.sh` | Installs the policy-side runtime and editable dependencies. |
-| `process_data.sh` | Converts RoboDojo demonstration data into the policy-specific training format. |
-| `train.sh` | Launches the XPolicyLab training wrapper for this policy. |
+| `install.sh` | Installs XPolicyLab into the active policy-side runtime. |
+| `process_data.sh` | Stub showing the standard data-processing argument convention. |
+| `train.sh` | Stub showing the standard training/checkpoint naming convention. |
 | `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
 | `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
 | `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
@@ -24,7 +24,7 @@
 
 ## Installation
 
-What it does: installs or activates the policy-side runtime so the XPolicyLab server can import the adapter and upstream model code.
+What it does: installs XPolicyLab in editable mode so the policy server can import `XPolicyLab.policy.demo_policy` and the websocket client/server modules.
 
 Parameters used by the command:
 
@@ -42,7 +42,7 @@ conda activate <policy_env>  # e.g. demo-policy
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: this reference script only prints the standard output naming convention. It does not convert data yet.
 
 Parameters used by the command:
 
@@ -52,8 +52,7 @@ Parameters used by the command:
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional episode limit placeholder accepted by the stub. |
 
 ```bash
 cd XPolicyLab/policy/demo_policy
@@ -63,13 +62,13 @@ bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+# Example: show the standard name for a 50-episode ablation.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50
 ```
 
 ## Model Training
 
-What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
+What it does: this reference script only creates the conventional checkpoint directory and prints where real training code should write. It does not train a model.
 
 Parameters used by the command:
 
@@ -94,7 +93,7 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+The conventional checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. `demo_policy` does not read this directory during evaluation; real adapters should load their model weights from their own checkpoint path.
 
 ## Deployment and Evaluation
 
@@ -106,7 +105,7 @@ Parameters used by `eval.sh`:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Run/checkpoint identifier passed through config and result metadata. The demo model does not load it. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -118,10 +117,10 @@ Parameters used by `eval.sh`:
 ```bash
 cd XPolicyLab/policy/demo_policy
 # Template: run same-machine policy server and RoboDojo environment client.
-bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+EVAL_ENV_TYPE=debug bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
-# Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+# Example: run an offline shape/IO smoke check.
+EVAL_ENV_TYPE=debug bash eval.sh RoboDojo stack_bowls demo arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -130,7 +129,7 @@ Parameters used by the split server/client flow:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Run/checkpoint identifier passed through config and result metadata. The demo model does not load it. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -152,7 +151,7 @@ bash setup_eval_policy_server.sh \
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  RoboDojo stack_bowls demo arx_x5 joint 0 \
   0 <policy_conda_env> 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
@@ -163,8 +162,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls demo arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=demo,action_type=joint" \
   5000 <policy_server_ip>
 ```
 
@@ -178,7 +177,7 @@ Common parameter meanings used across the commands above:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Run/checkpoint identifier passed through config and result metadata. The demo model does not load it. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -198,6 +197,6 @@ Frequently used environment variables detected in the adapter scripts:
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
-- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Keep `ckpt_name` stable between data processing, training, and evaluation when you replace these stubs with a real policy.
+- `task_name` is only the evaluation task; real multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

@@ -44,12 +44,14 @@ base-model cache paths, and output directories are handled consistently:
 
 ```bash
 cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7
+export AHA_WAM_TRAIN_DATASET_DIR=/path/to/RoboDojo_lerobot_v21_video
+export DIFFSYNTH_MODEL_BASE_PATH=/mnt/petrelfs/caijisong/dualWAM/checkpoints
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
 ```
 
-The default dataset is
-`/mnt/petrelfs/muyao/data/RoboDojo_lerobot_v21_video`, with stats at
-`dataset_stats.json` and text embeddings under `text_embeds_cache`.
+The dataset must be provided with `AHA_WAM_TRAIN_DATASET_DIR`; it should contain
+`meta/`, `dataset_stats.json`, and text embeddings under `text_embeds_cache`
+unless the paths below override those defaults.
 
 Useful overrides:
 
@@ -78,7 +80,7 @@ AHA_WAM_GRADIENT_ACCUMULATION_STEPS=1 \
 AHA_WAM_NUM_WORKERS=0 \
 AHA_WAM_WANDB_ENABLED=false \
 AHA_WAM_OUTPUT_ROOT=/tmp/aha_wam_smoke \
-bash train.sh RoboDojo cotrain arx_x5 3500 joint 0 0,1,2,3,4,5,6,7 8
+bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7 8
 ```
 
 With the retained ZeRO-1 launcher, use 7-8 80GB GPUs for this smoke test.

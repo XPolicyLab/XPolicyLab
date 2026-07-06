@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 import numpy as np
-from client_server.tcp.model_client import ModelClient
+from client_server.ws import WsModelClient
 
 
 BATCH_SIZE = 10
@@ -110,8 +110,40 @@ class TestEnv:
             deploy_cfg["env_cfg_type"],
             deploy_cfg["env_cfg_root"],
         )
-        self.model_client = ModelClient(host=deploy_cfg["host"], port=deploy_cfg["port"])
+        self.model_client = WsModelClient(
+            url=f"ws://{deploy_cfg['host']}:{deploy_cfg['port']}",
+            evaluation_id="aha-wam-debug-eval",
+            trial_id="aha-wam-debug-trial",
+        )
         self.episode_step = 0
+
+#region agent log
+        try:
+            with open("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-c13f7c.log", "a", encoding="utf-8") as f:
+                f.write(
+                    json.dumps(
+                        {
+                            "sessionId": "c13f7c",
+                            "runId": "post-fix",
+                            "hypothesisId": "H3,H4",
+                            "location": "policy/AHA_WAM/debug_env_client.py:TestEnv.__init__",
+                            "message": "initialized AHA_WAM websocket debug client",
+                            "data": {
+                                "host": deploy_cfg["host"],
+                                "port": deploy_cfg["port"],
+                                "env_cfg_type": deploy_cfg["env_cfg_type"],
+                                "env_cfg_root": deploy_cfg["env_cfg_root"],
+                                "robot_action_dim_info": self.robot_action_dim_info,
+                            },
+                            "timestamp": int(__import__("time").time() * 1000),
+                        },
+                        ensure_ascii=True,
+                    )
+                    + "\n"
+                )
+        except Exception:
+            pass
+#endregion
 
     def get_obs(self, env_idx=0):
         obs = {
@@ -207,14 +239,19 @@ def main():
 
     deploy_cfg = vars(args)
     test_env = TestEnv(deploy_cfg)
-    for idx in range(args.eval_episode_num):
-        print(f"\033[94m🚀 Running Episode {idx}\033[0m")
-        test_env.reset()
-        if args.eval_batch:
-            test_env.eval_one_episode_batch()
-        else:
-            test_env.eval_one_episode()
-        test_env.finish_episode()
+    try:
+        for idx in range(args.eval_episode_num):
+            print(f"\033[94m🚀 Running Episode {idx}\033[0m")
+            test_env.reset()
+            if args.eval_batch:
+                test_env.eval_one_episode_batch()
+            else:
+                test_env.eval_one_episode()
+            test_env.finish_episode()
+    finally:
+        close = getattr(test_env.model_client, "close", None)
+        if callable(close):
+            close()
 
 
 if __name__ == "__main__":

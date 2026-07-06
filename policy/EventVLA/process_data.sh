@@ -5,8 +5,9 @@ set -euo pipefail
 #   bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
 # EventVLA training data is prepared by the upstream EventVLA pipeline. This script
 # downloads the pre-built LeRobot dataset and links it for local training/eval.
-# Pass the standard 4 (+ optional expert_data_num) args for consistency; eval
-# ckpt_name should match the upstream training output directory name.
+# Pass the standard 4 (+ optional expert_data_num) args for consistency. The
+# optional episode cap is accepted for interface compatibility but is not applied.
+# eval ckpt_name should match the upstream training output directory name.
 
 bench_name=${1:-}
 ckpt_name=${2:-}
@@ -63,4 +64,4 @@ ln -sfn "${TRAIN_DATA_DIR}" "${SCRIPT_DIR}/data/train_data"
 echo "[EventVLA] Download completed."
 echo "[EventVLA] Training data directory: ${TRAIN_DATA_DIR}"
 echo "[EventVLA] Symlink updated: ${SCRIPT_DIR}/data/train_data -> ${TRAIN_DATA_DIR}"
-echo "[EventVLA] eval ckpt_name example: ${bench_name}-${ckpt_name}-${env_cfg_type}-<steps>-${action_type}-<seed>"
+echo "[EventVLA] eval ckpt_name should be the RUN_ID printed by train.sh."

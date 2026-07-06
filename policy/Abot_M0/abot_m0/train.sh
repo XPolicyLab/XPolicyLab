@@ -68,4 +68,15 @@ echo "[ABot-M0] gpu_id=${gpu_id} (num_gpus=${NUM_GPUS})"
 echo "[ABot-M0] per_device_batch_size=${BATCH_SIZE}, grad_acc=${GRADIENT_ACCUMULATION_STEPS}, num_workers=${NUM_WORKERS}, video_backend=${VIDEO_BACKEND}"
 echo "[ABot-M0] effective_batch_size=$((BATCH_SIZE * NUM_GPUS * GRADIENT_ACCUMULATION_STEPS))"
 
+# region agent log
+python - <<PY >/dev/null 2>&1 || true
+import json, time
+from pathlib import Path
+log_path = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
+log_path.parent.mkdir(parents=True, exist_ok=True)
+with open(log_path, "a", encoding="utf-8") as f:
+    f.write(json.dumps({"sessionId":"0684e4","runId":"pre-fix","hypothesisId":"H1","location":"policy/Abot_M0/abot_m0/train.sh:args","message":"parsed Abot_M0 train args","data":{"argc":${#},"bench_name":"${bench_name}","ckpt_name":"${ckpt_name}","env_cfg_type":"${env_cfg_type}","action_type":"${action_type}","seed":"${seed}","gpu_id":"${gpu_id}","ckpt_setting":"${ckpt_setting}"},"timestamp":int(time.time()*1000)}) + "\n")
+PY
+# endregion agent log
+
 bash "${POLICY_DIR}/examples/RoboDojo/train_files/run_RoboDojo_train.sh"

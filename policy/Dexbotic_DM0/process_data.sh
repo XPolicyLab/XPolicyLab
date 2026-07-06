@@ -2,8 +2,9 @@
 set -euo pipefail
 
 if [[ $# -lt 4 ]]; then
-  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]" >&2
+  echo "Usage: $0 <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [source_ckpt_name]" >&2
   echo "  expert_data_num: optional; empty = use all episodes" >&2
+  echo "  source_ckpt_name: optional raw-data source name; defaults to ckpt_name" >&2
   exit 1
 fi
 
@@ -12,6 +13,7 @@ ckpt_name=$2
 env_cfg_type=$3
 action_type=$4
 expert_data_num=${5:-}
+source_ckpt_name=${6:-${ckpt_name}}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEXBOTIC_ROOT="${POLICY_DIR}/dexbotic"
@@ -24,19 +26,20 @@ raw_data_root="${DM0_RAW_DATA_ROOT:?set DM0_RAW_DATA_ROOT to your RoboDojo raw d
 data_source_path="${DATA_SOURCE_DIR}/robodojo_${data_setting}.py"
 
 resolve_single_input_dir() {
-  if [[ "${bench_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}" ]]; then
-    echo "${raw_data_root}/sim_cloud/${ckpt_name}/${env_cfg_type}"
+  if [[ "${bench_name}" == "RoboDojo" && -d "${raw_data_root}/sim_cloud/${source_ckpt_name}/${env_cfg_type}" ]]; then
+    echo "${raw_data_root}/sim_cloud/${source_ckpt_name}/${env_cfg_type}"
     return
   fi
-  if [[ -d "${raw_data_root}/${bench_name}/${ckpt_name}/${env_cfg_type}" ]]; then
-    echo "${raw_data_root}/${bench_name}/${ckpt_name}/${env_cfg_type}"
+  if [[ -d "${raw_data_root}/${bench_name}/${source_ckpt_name}/${env_cfg_type}" ]]; then
+    echo "${raw_data_root}/${bench_name}/${source_ckpt_name}/${env_cfg_type}"
     return
   fi
-  echo "Input directory not found for ${bench_name}/${ckpt_name}/${env_cfg_type}" >&2
-  echo "For 35-task co-train, use ckpt_name=cotrain." >&2
+  echo "Input directory not found for ${bench_name}/${source_ckpt_name}/${env_cfg_type}" >&2
+  echo "For 35-task co-train, use source_ckpt_name=cotrain." >&2
   echo "For a single task, use ckpt_name=<task_name>, e.g. sweep_blocks." >&2
   echo "Example: bash process_data.sh RoboDojo cotrain arx_x5 ee" >&2
-  echo "Set DM0_RAW_DATA_ROOT or check ckpt_name." >&2
+  echo "For an ablation run, keep ckpt_name unique and pass the source as the sixth argument." >&2
+  echo "Set DM0_RAW_DATA_ROOT or check source_ckpt_name." >&2
   exit 1
 }
 
@@ -77,7 +80,7 @@ build_cotrain_staging_dir() {
 }
 
 resolve_input_dir() {
-  if [[ "${ckpt_name}" == "cotrain" ]]; then
+  if [[ "${source_ckpt_name}" == "cotrain" ]]; then
     build_cotrain_staging_dir
     return
   fi
@@ -86,6 +89,7 @@ resolve_input_dir() {
 
 echo "[Dexbotic_DM0] bench_name=${bench_name}"
 echo "[Dexbotic_DM0] ckpt_name=${ckpt_name}"
+echo "[Dexbotic_DM0] source_ckpt_name=${source_ckpt_name}"
 echo "[Dexbotic_DM0] env_cfg_type=${env_cfg_type}"
 echo "[Dexbotic_DM0] expert_data_num=${expert_data_num:-<all>}"
 echo "[Dexbotic_DM0] action_type=${action_type}"
@@ -112,7 +116,7 @@ python "${GENERATE_SOURCE_SCRIPT}" \
   "${data_setting}" \
   "${data_source_path}"
 
-if [[ "${ckpt_name}" == "cotrain" && -d "${converted_data_root}/.raw_staging" ]]; then
+if [[ "${source_ckpt_name}" == "cotrain" && -d "${converted_data_root}/.raw_staging" ]]; then
   rm -rf "${converted_data_root}/.raw_staging"
 fi
 
