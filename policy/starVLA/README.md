@@ -54,7 +54,7 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list under `data/<bench_name>/`. Defaults to `ckpt_name`. |
 
 ```bash
 cd XPolicyLab/policy/starVLA
@@ -66,7 +66,12 @@ bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
 # Example: create a 50-episode ablation while reading from the original task data.
 bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+
+# Example: rename the output while using all episodes from the original task data.
+bash process_data.sh RoboDojo stack_bowls_full arx_x5 joint stack_bowls
 ```
+
+The converted LeRobot dataset is written to `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/`. Use the same `ckpt_name` when launching `train.sh`, unless you also set `STARVLA_XPOLICY_DATASET_NAME` explicitly.
 
 ## Model Training
 
@@ -88,11 +93,11 @@ cd XPolicyLab/policy/starVLA
 # Template: train a policy run on one GPU or a GPU list.
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
-# Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+# Example: train the converted stack_bowls dataset on GPU 0.
+bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0
 
 # Example: train the same run on four GPUs if the upstream trainer supports it.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+bash train.sh RoboDojo stack_bowls arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
@@ -121,8 +126,8 @@ cd XPolicyLab/policy/starVLA
 # Template: run same-machine policy server and RoboDojo environment client.
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
-# Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+# Example: evaluate a trained stack_bowls checkpoint.
+bash eval.sh RoboDojo stack_bowls RoboDojo-stack_bowls-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -153,7 +158,7 @@ bash setup_eval_policy_server.sh \
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  RoboDojo stack_bowls RoboDojo-stack_bowls-arx_x5-joint-0 arx_x5 joint 0 \
   0 <policy_conda_env> 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
@@ -164,8 +169,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls RoboDojo-stack_bowls-arx_x5-joint-0 arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-stack_bowls-arx_x5-joint-0,action_type=joint" \
   5000 <policy_server_ip>
 ```
 

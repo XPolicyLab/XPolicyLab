@@ -57,7 +57,7 @@ Parameters used by the command:
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `ckpt_name` | Training run identifier, for example `cotrain`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation. X_VLA currently supports only `ee`. |
 | `seed` | Random seed. |
 | `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
 
@@ -67,13 +67,13 @@ cd XPolicyLab/policy/X_VLA
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 # Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+bash train.sh RoboDojo cotrain arx_x5 ee 0 0
 
 # Example: train the same run on four GPUs if the upstream trainer supports it.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+bash train.sh RoboDojo cotrain arx_x5 ee 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+`train.sh` requires `XVLA_MODEL_PATH` to point to the pretrained X-VLA base model. Prefer a local directory so the script can copy processor/tokenizer files into each saved `ckpt-*` directory. The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`; pass that full directory name as `ckpt_name` during evaluation.
 
 ## Deployment and Evaluation
 
@@ -87,7 +87,7 @@ Parameters used by `eval.sh`:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation. Must be `ee` for X_VLA. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
@@ -100,7 +100,7 @@ cd XPolicyLab/policy/X_VLA
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
 # Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -111,7 +111,7 @@ Parameters used by the split server/client flow:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation. Must be `ee` for X_VLA. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
@@ -120,7 +120,7 @@ Parameters used by the split server/client flow:
 | `policy_server_port` | Port exposed by the policy server, for example `5000`. |
 | `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
 | `policy_server_ip` | IP or hostname that the environment client uses to reach the policy server. |
-| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=joint`. |
+| `additional_info` | Comma-separated runtime overrides passed to the eval client, for example `ckpt_name=...,action_type=ee`. |
 
 ```bash
 cd XPolicyLab/policy/X_VLA
@@ -131,7 +131,7 @@ bash setup_eval_policy_server.sh \
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 \
   0 <policy_conda_env> 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
@@ -142,8 +142,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-ee-0,action_type=ee" \
   5000 <policy_server_ip>
 ```
 
@@ -159,7 +159,7 @@ Common parameter meanings used across the commands above:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation. Must be `ee` for X_VLA. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
@@ -171,12 +171,12 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | Key | Notes |
 |---|---|
 | `policy_name` | Runtime or checkpoint option consumed by this adapter. |
-| `env_cfg` | Runtime or checkpoint option consumed by this adapter. |
+| `env_cfg_type` | Robot/environment configuration consumed by this adapter. |
 | `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
 | `obs_transform_pipeline` | Runtime or checkpoint option consumed by this adapter. |
 | `prompt` | Runtime or checkpoint option consumed by this adapter. |
 | `model_path` | Runtime or checkpoint option consumed by this adapter. |
-| `processor_path` | Runtime or checkpoint option consumed by this adapter. |
+| `processor_path` | Base model or checkpoint directory containing processor/tokenizer files. Defaults to `checkpoints/shared/X-VLA-Pt`; update it if your base model lives elsewhere. |
 | `lora_path` | Runtime or checkpoint option consumed by this adapter. |
 | `domain_id` | Runtime or checkpoint option consumed by this adapter. |
 | `steps` | Runtime or checkpoint option consumed by this adapter. |
@@ -194,13 +194,14 @@ Frequently used environment variables detected in the adapter scripts:
 | `XVLA` | Optional override used by the local scripts or upstream runtime. |
 | `XVLA_CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
 | `XVLA_META_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `XVLA_MODEL_PATH` | Optional override used by the local scripts or upstream runtime. |
+| `XVLA_MODEL_PATH` | Required by `train.sh`; path or HF id for the pretrained X-VLA base model. Use a local directory when you want automatic processor/tokenizer copying into saved checkpoints. |
 | `XVLA_ROOT` | Optional override used by the local scripts or upstream runtime. |
 | `XVLA_SKIP_CONDA_CREATE` | Optional override used by the local scripts or upstream runtime. |
 | `X_VLA` | Optional override used by the local scripts or upstream runtime. |
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Keep `ckpt_name` stable between training and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- If a checkpoint directory lacks processor/tokenizer files, set `processor_path` in `deploy.yml` to the base model directory before evaluation.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

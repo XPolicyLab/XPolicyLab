@@ -55,11 +55,14 @@ data_key="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 # XWAM_DATASET_PATH env resolver referenced by configs/data/robodojo.yaml.
 dataset_path="${XWAM_DATASET_PATH:-${POLICY_DIR}/data/${data_key}}"
 exp_root="${POLICY_DIR}/checkpoints"
+raw_task_dirs="${XWAM_RAW_TASK_DIRS:-${ckpt_name}}"
+data_limit="${XWAM_DATA_LIMIT:-}"
 
 if [[ ! -d "${dataset_path}/data" ]]; then
     echo "[X_WAM] Converted dataset not found at ${dataset_path}; running process_data.sh first."
+    echo "[X_WAM] Auto-converting raw_task_dirs=${raw_task_dirs}, limit=${data_limit:-all}."
     XWAM_DATASET_PATH="${dataset_path}" bash "${POLICY_DIR}/process_data.sh" \
-        "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}"
+        "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${data_limit}" "${raw_task_dirs}"
 fi
 
 # Base / pretrained weights: honor the config.yaml defaults unless overridden.

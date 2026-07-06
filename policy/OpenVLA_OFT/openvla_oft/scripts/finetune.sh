@@ -3,8 +3,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/.." && pwd)}" # path to the openvla-oft repo
-MODEL_DIR="${MODEL_DIR:-/path/to/model_weights/openvla-7b}" # path to the pretrained OpenVLA model.
-DATA_ROOT="${DATA_ROOT:-/path/to/tensorflow_datasets}" # path to the TFDS datasets.
+POLICY_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+MODEL_DIR="${MODEL_DIR:-${POLICY_DIR}/checkpoints/shared/openvla-7b}" # path to the pretrained OpenVLA model.
+DATA_ROOT="${DATA_ROOT:-${REPO_ROOT}/tensorflow_datasets}" # path to the TFDS datasets.
 export HF_HOME="${HF_HOME:-${HOME}/.cache/huggingface}" # Hugging Face cache directory.
 export TRANSFORMERS_CACHE="${HF_HOME}/transformers"
 

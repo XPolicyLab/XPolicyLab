@@ -28,6 +28,7 @@ find_xpolicylab_root() {
 XPL_ROOT="$(find_xpolicylab_root "${SCRIPT_DIR}")"
 BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
+policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 CONDA_BASE="$(conda info --base)"

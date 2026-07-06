@@ -118,14 +118,32 @@ def _extract_step_number(value: Any) -> int | None:
 def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path | None:
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
-        direct_path = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
-        return direct_path
+        ckpt_path = Path(str(ckpt_name)).expanduser()
+        candidates = []
+        if ckpt_path.is_absolute():
+            candidates.append(ckpt_path)
+        else:
+            candidates.extend((_CHECKPOINTS_DIR / ckpt_path, _CUR_DIR / ckpt_path))
+
+        for candidate in candidates:
+            resolved = candidate.resolve()
+            if resolved.exists():
+                return resolved
+        return candidates[0].resolve()
 
     for key in ("pretrained_path", "model_path", "checkpoint_path"):
         value = model_cfg.get(key)
         if value:
             return Path(value).expanduser().resolve()
     return None
+
+
+def _has_lerobot_artifact(path: Path) -> bool:
+    return (
+        (path / "model.safetensors").is_file()
+        or (path / "pretrained_model" / "model.safetensors").is_file()
+        or (path / "checkpoints" / "last" / "pretrained_model" / "model.safetensors").is_file()
+    )
 
 def encode_obs(observation, action_type, robot_action_dim_info, default_prompt):
     if "images" in observation and "state" in observation:
@@ -206,14 +224,21 @@ class Model(ModelTemplate):
 
         artifact_root = checkpoint_root
         if checkpoint_root.is_dir():
-            candidate_dirs = []
-            if (checkpoint_root / "model.safetensors").exists() or (checkpoint_root / "pretrained_model").is_dir():
-                candidate_dirs.append(checkpoint_root)
-            candidate_dirs.extend(
-                child
-                for child in sorted(checkpoint_root.iterdir())
-                if child.is_dir() and ((child / "model.safetensors").exists() or (child / "pretrained_model").is_dir())
-            )
+            candidate_dirs: list[Path] = []
+
+            def add_candidate(candidate: Path):
+                if candidate.is_dir() and _has_lerobot_artifact(candidate) and candidate not in candidate_dirs:
+                    candidate_dirs.append(candidate)
+
+            add_candidate(checkpoint_root)
+            for child in sorted(checkpoint_root.iterdir()):
+                add_candidate(child)
+
+            lerobot_checkpoints = checkpoint_root / "checkpoints"
+            if lerobot_checkpoints.is_dir():
+                for child in sorted(lerobot_checkpoints.iterdir()):
+                    add_candidate(child)
+
             checkpoint_num = self.model_cfg.get("checkpoint_num")
             desired_step = _extract_step_number(checkpoint_num)
             if desired_step is not None:

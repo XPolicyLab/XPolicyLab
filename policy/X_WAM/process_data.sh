@@ -12,12 +12,12 @@ set -euo pipefail
 #
 # Usage:
 #   bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> \
-#       [expert_data_num] [raw_task_dirs]
+#       [limit] [raw_task_dirs]
 #
-# expert_data_num : optional; empty = convert all episodes. Maps to the
-#                   transform's global --limit (applied across the staged tasks).
-# raw_task_dirs   : comma-separated raw task dir name(s) under the raw bench root;
-#                   defaults to <ckpt_name>. Multiple tasks merge into one dataset.
+# limit         : optional; empty = convert all episodes. Maps to the transform's
+#                 global --limit (applied across the staged tasks).
+# raw_task_dirs : comma-separated raw task dir name(s) under the raw bench root;
+#                 defaults to <ckpt_name>. Multiple tasks merge into one dataset.
 #
 # Raw data location (no personal paths are hard-coded):
 #   XWAM_RAW_INPUT_DIR : if set, used directly as the transform --input-dir
@@ -26,12 +26,12 @@ set -euo pipefail
 #                        ${XWAM_RAW_DATA_ROOT}/<bench_name>. Default:
 #                        ${ROOT_DIR}/final_data.
 #   XWAM_DATASET_PATH  : override the converted-dataset output dir.
-bench_name=${1:?Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]}
+bench_name=${1:?Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [limit] [raw_task_dirs]}
 ckpt_name=${2:?}
 env_cfg_type=${3:?}
 action_type=${4:?}
-expert_data_num=${5:-}
-raw_task_dirs=${6:-${ckpt_name}}
+limit=${5:-${XWAM_DATA_LIMIT:-}}
+raw_task_dirs=${6:-${XWAM_RAW_TASK_DIRS:-${ckpt_name}}}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -83,9 +83,10 @@ transform_args=(
     --input-dir "${input_dir}"
     --output-dir "${output_dir}"
     --workers "${workers}"
+    --env-cfg-type "${env_cfg_type}"
 )
-if [[ -n "${expert_data_num}" ]]; then
-    transform_args+=(--limit "${expert_data_num}")
+if [[ -n "${limit}" ]]; then
+    transform_args+=(--limit "${limit}")
 fi
 
 python "${POLICY_DIR}/transform_robodojo_to_xwam.py" "${transform_args[@]}"

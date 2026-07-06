@@ -58,12 +58,12 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dirs` | Optional source task name or comma-separated task list. Use this when `ckpt_name` is only an output/run name, such as a data-size ablation. |
 
 ```bash
 cd XPolicyLab/policy/Spirit_v15
 # Template: convert all available demonstrations for one run.
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]
 
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
@@ -100,6 +100,8 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+Spirit training writes `model.safetensors` into the run directory. The eval adapter also needs a compatible `config.json`; by default it links this from `checkpoints/shared/Spirit-v1.5/config.json` via `spirit_base_weights` in `deploy.yml`. Before evaluation, either place the Spirit base checkpoint there or override `spirit_base_weights`/`checkpoint_path` with a directory that already contains both `config.json` and `model.safetensors`.
 
 ## Deployment and Evaluation
 
@@ -200,7 +202,7 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
 | `policy_uv_env_path` | Runtime or checkpoint option consumed by this adapter. |
 | `spirit_base_weights` | Runtime or checkpoint option consumed by this adapter. |
-| `spirit_backbone_path` | Runtime or checkpoint option consumed by this adapter. |
+| `spirit_backbone_path` | Local Qwen backbone directory used for offline evaluation. Override this or set `HF_HOME`/`HF_HUB_CACHE` if the model is stored in a shared Hugging Face cache. |
 | `checkpoint_path` | Runtime or checkpoint option consumed by this adapter. |
 | `model_path` | Runtime or checkpoint option consumed by this adapter. |
 | `prompt` | Runtime or checkpoint option consumed by this adapter. |
@@ -229,5 +231,5 @@ Frequently used environment variables detected in the adapter scripts:
 ## Notes
 
 - Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
-- `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- `task_name` is the evaluation task. The adapter uses it when it exists in Spirit's task map, then falls back to `fallback_task_name` from `deploy.yml`.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

@@ -199,7 +199,7 @@ def _resolve_finetune_dir(model_cfg: dict[str, Any]) -> Path | None:
 
     existing_roots: list[Path] = []
     for name in candidates:
-        checkpoint_root = (_CHECKPOINTS_DIR / name).expanduser().resolve()
+        checkpoint_root = _resolve_checkpoint_root(name)
         if not checkpoint_root.is_dir():
             continue
         existing_roots.append(checkpoint_root)
@@ -207,16 +207,18 @@ def _resolve_finetune_dir(model_cfg: dict[str, Any]) -> Path | None:
         if resolved is not None:
             return resolved
 
-    # No dir with real fine-tune weights (config.json). Preserve the existing
-    # fallback semantics (load base model) but make the degradation explicit.
     if existing_roots:
-        _LOGGER.warning(
-            "[OpenVLA_OFT] No fine-tune weights (%s) found under %s; "
-            "falling back to base model (has_finetune_weights=False).",
-            _WEIGHTS_MARKER,
-            existing_roots[0],
+        raise FileNotFoundError(
+            f"Found OpenVLA_OFT checkpoint root but no fine-tune weights ({_WEIGHTS_MARKER}) "
+            f"under: {existing_roots[0]}. Expected a merged checkpoint directory such as "
+            "`<run_id>--<step>_chkpt`."
         )
-        return existing_roots[0]
+    if candidates:
+        checked = [_resolve_checkpoint_root(name) for name in candidates]
+        raise FileNotFoundError(
+            "Could not find OpenVLA_OFT checkpoint. Pass the full run directory name "
+            f"under checkpoints/ or a valid path. Checked: {[str(path) for path in checked]}"
+        )
     return None
 
 
@@ -229,6 +231,15 @@ def _resolve_policy_path(value: str | None) -> Path | None:
     else:
         path = path.resolve()
     return path
+
+
+def _resolve_checkpoint_root(name: str) -> Path:
+    path = Path(name).expanduser()
+    if path.is_absolute():
+        return path.resolve()
+    if path.parent != Path("."):
+        return (_POLICY_DIR / path).resolve()
+    return (_CHECKPOINTS_DIR / path).resolve()
 
 
 def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> str:
@@ -249,12 +260,12 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> str:
 
     ckpt_setting = _build_ckpt_setting(model_cfg)
     if ckpt_setting:
-        checkpoint_root = (_CHECKPOINTS_DIR / ckpt_setting).expanduser().resolve()
+        checkpoint_root = _resolve_checkpoint_root(ckpt_setting)
         return str(checkpoint_root)
 
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
-        checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
+        checkpoint_root = _resolve_checkpoint_root(str(ckpt_name))
         return str(checkpoint_root)
 
     if explicit_checkpoint:

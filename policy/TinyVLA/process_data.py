@@ -40,6 +40,11 @@ def parse_args() -> argparse.Namespace:
                         help="Optional per-task episode cap; defaults to all episodes.")
     parser.add_argument("--source-root", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument(
+        "--tasks",
+        default=None,
+        help="Optional comma-separated task directory list; defaults to all tasks under source root.",
+    )
     parser.add_argument("--workers", type=int, default=min(8, os.cpu_count() or 1))
     parser.add_argument(
         "--compression",
@@ -225,9 +230,17 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=False)
 
     robot_action_dim_info = get_robot_action_dim_info(args.env_cfg_type)
+    task_filter = None
+    if args.tasks:
+        task_filter = {task.strip() for task in args.tasks.split(",") if task.strip()}
+        if not task_filter:
+            raise ValueError("--tasks was provided but no valid task names were parsed.")
+
     episodes: list[tuple[str, Path]] = []
     for task_dir in sorted(path for path in root.iterdir() if path.is_dir()):
         task_name = task_dir.name
+        if task_filter is not None and task_name not in task_filter:
+            continue
         data_dir = task_dir / args.env_cfg_type / "data"
         episode_paths = sorted(data_dir.glob("episode_*.hdf5"))
         if args.expert_data_num is not None:
@@ -238,6 +251,14 @@ def main() -> None:
             f"[TinyVLA process_data] task='{task_name}': "
             f"queued {len(episode_paths)} episodes"
         )
+    if task_filter is not None:
+        found_tasks = {task_name for task_name, _ in episodes}
+        missing_tasks = sorted(task_filter - found_tasks)
+        if missing_tasks:
+            raise FileNotFoundError(
+                "Requested task(s) not found with episodes under source root: "
+                + ", ".join(missing_tasks)
+            )
     workers = args.workers
     jobs = [
         (

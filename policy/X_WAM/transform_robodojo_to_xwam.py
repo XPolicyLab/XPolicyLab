@@ -29,6 +29,7 @@ Usage
     python XPolicyLab/policy/X_WAM/transform_robodojo_to_xwam.py \
         --input-dir  data/RoboDojo \
         --output-dir xwam_datasets/RoboDojo \
+        --env-cfg-type arx_x5 \
         --workers 16 [--limit 3] [--clean]
 """
 
@@ -219,13 +220,13 @@ def convert_one(job: dict) -> dict:
 # Job collection / main
 # ---------------------------------------------------------------------------
 
-def collect_jobs(input_dir: Path, out_dir: Path):
+def collect_jobs(input_dir: Path, out_dir: Path, env_cfg_type: str):
     """Scan all tasks' hdf5 files and assign globally-continuous indices, sorted by (task, in-task index)."""
     tasks = sorted(p.name for p in input_dir.iterdir() if p.is_dir())
     jobs = []
     global_index = 0
     for task_name in tasks:
-        data_dir = input_dir / task_name / "arx_x5" / "data"
+        data_dir = input_dir / task_name / env_cfg_type / "data"
         if not data_dir.is_dir():
             continue
         for src_index, ep_path in enumerate(sorted(data_dir.glob("episode_*.hdf5"))):
@@ -250,6 +251,8 @@ def main():
     parser.add_argument("--workers", type=int, default=16, help="number of parallel processes")
     parser.add_argument("--limit", type=int, default=0,
                         help="convert only the first N episodes (0 = all), for sampling")
+    parser.add_argument("--env-cfg-type", type=str, default="arx_x5",
+                        help="robot/environment config subdir under each task")
     parser.add_argument("--clean", action="store_true", help="clear the output directory before converting")
     args = parser.parse_args()
 
@@ -266,12 +269,12 @@ def main():
         shutil.rmtree(out_dir)
     (out_dir / "data").mkdir(parents=True, exist_ok=True)
 
-    jobs, tasks = collect_jobs(input_dir, out_dir)
+    jobs, tasks = collect_jobs(input_dir, out_dir, args.env_cfg_type)
     if args.limit > 0:
         jobs = jobs[:args.limit]
 
     print(f"[INFO] tasks: {len(tasks)} | episodes to convert: {len(jobs)} | "
-          f"workers: {args.workers} | output: {out_dir}")
+          f"env_cfg_type: {args.env_cfg_type} | workers: {args.workers} | output: {out_dir}")
 
     failures = []
     results = []

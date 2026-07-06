@@ -55,17 +55,20 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list. Leave unset to convert all task directories under the source root. |
 
 ```bash
 cd XPolicyLab/policy/TinyVLA
 # Template: convert all available demonstrations for one run.
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
-# Example: convert stack_bowls demos for arx_x5 joint control.
-bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+# Example: convert all RoboDojo demos for arx_x5 joint control.
+bash process_data.sh RoboDojo cotrain arx_x5 joint
 
-# Example: create a 50-episode ablation while reading from the original task data.
+# Example: convert only stack_bowls demos.
+bash process_data.sh RoboDojo stack_bowls arx_x5 joint stack_bowls
+
+# Example: create a 50-episode stack_bowls ablation.
 bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
 ```
 

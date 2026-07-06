@@ -42,7 +42,7 @@ cd XPolicyLab/policy/Xiaomi_Robotics_0
 # Example: install dependencies for the Xiaomi_Robotics_0 policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. xiaomi-robotics-0
+conda activate <policy_env>  # default: mibot
 ```
 
 ## Demo Data Processing
@@ -56,20 +56,23 @@ Parameters used by the command:
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation returned to RoboDojo, usually `ee` or `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list. Defaults to `ckpt_name`; use it when the output run name differs from the raw task directory. |
 
 ```bash
 cd XPolicyLab/policy/Xiaomi_Robotics_0
 # Template: convert all available demonstrations for one run.
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]
 
-# Example: convert stack_bowls demos for arx_x5 joint control.
-bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+# Example: convert all stack_bowls demos for arx_x5 end-effector control.
+bash process_data.sh RoboDojo stack_bowls arx_x5 ee
 
 # Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 ee 50 stack_bowls
+
+# Example: convert a named multi-task subset into one training dataset.
+bash process_data.sh RoboDojo pick_place_subset arx_x5 ee 100 stack_bowls,push_T
 ```
 
 ## Model Training
@@ -83,7 +86,7 @@ Parameters used by the command:
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `ckpt_name` | Training run identifier, for example `cotrain`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation returned to RoboDojo, usually `ee` or `joint`. |
 | `seed` | Random seed. |
 | `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
 
@@ -93,13 +96,13 @@ cd XPolicyLab/policy/Xiaomi_Robotics_0
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 # Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
+bash train.sh RoboDojo cotrain arx_x5 ee 0 0
 
 # Example: train the same run on four GPUs if the upstream trainer supports it.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+bash train.sh RoboDojo cotrain arx_x5 ee 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+Training writes a standard checkpoint link at `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
 
 ## Deployment and Evaluation
 
@@ -113,7 +116,7 @@ Parameters used by `eval.sh`:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation returned to RoboDojo, usually `ee` or `joint`. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
@@ -126,7 +129,7 @@ cd XPolicyLab/policy/Xiaomi_Robotics_0
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
 # Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 0 0 mibot <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -137,7 +140,7 @@ Parameters used by the split server/client flow:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation returned to RoboDojo, usually `ee` or `joint`. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
@@ -157,8 +160,8 @@ bash setup_eval_policy_server.sh \
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <policy_conda_env> 5000 0.0.0.0
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 \
+  0 mibot 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
 bash setup_eval_env_client.sh \
@@ -168,8 +171,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-ee-0 arx_x5 ee 0 \
+  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-ee-0,action_type=ee" \
   5000 <policy_server_ip>
 ```
 
@@ -185,7 +188,7 @@ Common parameter meanings used across the commands above:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation returned to RoboDojo, usually `ee` or `joint`. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
@@ -204,25 +207,25 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | `vlm_processor_path` | Runtime or checkpoint option consumed by this adapter. |
 | `default_prompt` | Runtime or checkpoint option consumed by this adapter. |
 
-Frequently used environment variables detected in the adapter scripts:
+Frequently used environment variables:
 
 | Variable | Notes |
 |---|---|
-| `CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_VLM_PROCESSOR_REPO` | Optional override used by the local scripts or upstream runtime. |
-| `DEPLOY_PROXY_HOST` | Optional override used by the local scripts or upstream runtime. |
-| `DEPLOY_PROXY_PORT` | Optional override used by the local scripts or upstream runtime. |
-| `E402` | Optional override used by the local scripts or upstream runtime. |
-| `HDF5` | Optional override used by the local scripts or upstream runtime. |
-| `HF_HUB_OFFLINE` | Optional override used by the local scripts or upstream runtime. |
-| `HTTPS_PROXY` | Optional override used by the local scripts or upstream runtime. |
-| `HTTP_PROXY` | Optional override used by the local scripts or upstream runtime. |
-| `MIMODEL` | Optional override used by the local scripts or upstream runtime. |
-| `POLICY_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `PROMPT_RE` | Optional override used by the local scripts or upstream runtime. |
+| `XR0_CONDA_ENV` | Optional environment name used by `install.sh`; default is `mibot`. |
+| `XR0_RAW_DATA_ROOT` | Required by `process_data.sh`; should contain `sim_cloud/<task>/<env_cfg_type>`. |
+| `XR0_CONVERTED_DATA_ROOT` | Optional output directory override for converted JSON/videos. |
+| `XR0_DATA_CONFIG_NAME` | Optional Hydra data config name override. |
+| `XR0_CONVERT_WORKERS` | Optional data conversion worker count; default is `8`. |
+| `XR0_PRETRAINED_PATH` | Optional converted XR-0 pretrained checkpoint path for training. |
+| `XR0_MAX_STEPS` | Optional training step count; default is `30000`. |
+| `XR0_SAVE_INTERVAL` | Optional checkpoint save interval; default is `5000`. |
+| `XR0_ASYNC_TRAIN` | Optional async-training switch; default is `false`. |
+| `DEPLOY_PROXY_HOST` / `DEPLOY_PROXY_PORT` | Optional HuggingFace/proxy settings used by the policy server. |
+| `HF_HUB_OFFLINE` / `TRANSFORMERS_OFFLINE` | Optional offline deploy switches. |
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Use the same short `ckpt_name` between data processing and training. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep` and pass the source task through `raw_task_dirs`.
+- Evaluation uses the full checkpoint directory name as `ckpt_name`, for example `RoboDojo-cotrain-arx_x5-ee-0`, unless `model_dir` in `deploy.yml` points somewhere else.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

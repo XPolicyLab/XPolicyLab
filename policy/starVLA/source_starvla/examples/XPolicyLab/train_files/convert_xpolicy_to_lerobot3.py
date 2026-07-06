@@ -188,6 +188,7 @@ def _write_info_json(
     total_episodes: int,
     total_frames: int,
     total_videos: int,
+    total_tasks: int,
     fps: int,
 ) -> None:
     info = {
@@ -195,7 +196,7 @@ def _write_info_json(
         "robot_type": "unified_robot",
         "total_episodes": total_episodes,
         "total_frames": total_frames,
-        "total_tasks": 1,
+        "total_tasks": total_tasks,
         "chunks_size": 1000,
         "data_files_size_in_mb": 100,
         "video_files_size_in_mb": 200,
@@ -263,19 +264,21 @@ def convert(args: argparse.Namespace) -> None:
         raise NotImplementedError("First starVLA converter supports arx_x5 + joint only.")
     robot_action_dim_info = get_robot_action_dim_info(args.env_cfg_type)
 
-    source_dir = (
-        Path(args.root_dir).resolve()
-        / "data"
-        / args.bench_name
-        / args.ckpt_name
-        / args.env_cfg_type
-    )
-    hdf5_dir = source_dir / "data"
-    if not hdf5_dir.is_dir():
-        raise FileNotFoundError(f"Missing XPolicy HDF5 data dir: {hdf5_dir}")
+    source_root = Path(args.root_dir).resolve() / "data" / args.bench_name
+    raw_task_dirs = [
+        task_dir.strip()
+        for task_dir in (args.raw_task_dirs or args.ckpt_name).split(",")
+        if task_dir.strip()
+    ]
+    episode_sources: list[tuple[str, Path]] = []
+    for raw_task_dir in raw_task_dirs:
+        hdf5_dir = source_root / raw_task_dir / args.env_cfg_type / "data"
+        if not hdf5_dir.is_dir():
+            raise FileNotFoundError(f"Missing XPolicy HDF5 data dir: {hdf5_dir}")
+        episode_sources.extend((raw_task_dir, path) for path in sorted(hdf5_dir.glob("episode_*.hdf5")))
 
     output_root = Path(args.output_dir).resolve()
-    dataset_dir = output_root / "arx_x5"
+    dataset_dir = output_root
     if dataset_dir.exists() and not args.keep_existing:
         shutil.rmtree(dataset_dir)
 
@@ -284,29 +287,33 @@ def convert(args: argparse.Namespace) -> None:
     data_chunk_dir.mkdir(parents=True, exist_ok=True)
     episode_meta_dir.mkdir(parents=True, exist_ok=True)
 
-    episode_paths = sorted(hdf5_dir.glob("episode_*.hdf5"))
     if args.expert_data_num is not None and int(args.expert_data_num) > 0:
-        episode_paths = episode_paths[: int(args.expert_data_num)]
-    if not episode_paths:
-        raise FileNotFoundError(f"No episode_*.hdf5 files found in {hdf5_dir}")
+        episode_sources = episode_sources[: int(args.expert_data_num)]
+    if not episode_sources:
+        searched = ", ".join(
+            str(source_root / raw_task_dir / args.env_cfg_type / "data")
+            for raw_task_dir in raw_task_dirs
+        )
+        raise FileNotFoundError(f"No episode_*.hdf5 files found under: {searched}")
 
     all_rows = []
     episode_rows = []
-    task_instruction = args.ckpt_name.replace("_", " ")
+    task_to_index: dict[str, int] = {}
     total_frames = 0
     total_videos = 0
     fps = 30
 
     episode_iter = tqdm(
-        enumerate(episode_paths),
-        total=len(episode_paths),
+        enumerate(episode_sources),
+        total=len(episode_sources),
         desc="[starVLA] episodes",
         unit="episode",
     )
-    for episode_index, episode_path in episode_iter:
+    for episode_index, (raw_task_dir, episode_path) in episode_iter:
         with h5py.File(episode_path, "r") as h5_file:
-            instruction = _read_instruction(h5_file, task_instruction)
-            task_instruction = instruction or task_instruction
+            fallback_instruction = raw_task_dir.replace("_", " ")
+            instruction = _read_instruction(h5_file, fallback_instruction) or fallback_instruction
+            task_index = task_to_index.setdefault(instruction, len(task_to_index))
             fps = int(np.asarray(h5_file["additional_info"]["frequency"]).item())
 
             dataset_like = {
@@ -362,7 +369,7 @@ def convert(args: argparse.Namespace) -> None:
                     "episode_index": episode_index,
                     "frame_index": frame_index,
                     "timestamp": frame_index / float(fps),
-                    "task_index": 0,
+                    "task_index": task_index,
                     "index": global_frame_index,
                     "observation.state": state[frame_index].astype(np.float32),
                     "action": action[frame_index].astype(np.float32),
@@ -372,7 +379,7 @@ def convert(args: argparse.Namespace) -> None:
             episode_row = {
                 "episode_index": episode_index,
                 "length": length,
-                "tasks": [task_instruction],
+                "tasks": [instruction],
                 "data/chunk_index": 0,
                 "data/file_index": 0,
                 "data/file_from_index": total_frames,
@@ -387,7 +394,10 @@ def convert(args: argparse.Namespace) -> None:
     pd.DataFrame(all_rows).to_parquet(data_chunk_dir / "file-000.parquet", index=False)
     pd.DataFrame(episode_rows).to_parquet(episode_meta_dir / "file-000.parquet", index=False)
 
-    tasks = pd.DataFrame({"task_index": [0]}, index=[task_instruction])
+    tasks = pd.DataFrame(
+        {"task_index": list(task_to_index.values())},
+        index=list(task_to_index.keys()),
+    )
     tasks.to_parquet(dataset_dir / "meta" / "tasks.parquet")
 
     _write_modality_json(dataset_dir)
@@ -396,11 +406,12 @@ def convert(args: argparse.Namespace) -> None:
         total_episodes=len(episode_rows),
         total_frames=total_frames,
         total_videos=total_videos,
+        total_tasks=len(task_to_index),
         fps=fps,
     )
 
     print(f"[starVLA] wrote LeRobot v3 dataset: {dataset_dir}")
-    print(f"[starVLA] episodes={len(episode_rows)}, frames={total_frames}, task={task_instruction!r}")
+    print(f"[starVLA] episodes={len(episode_rows)}, frames={total_frames}, tasks={list(task_to_index)}")
 
 
 def build_argparser() -> argparse.ArgumentParser:
@@ -411,6 +422,11 @@ def build_argparser() -> argparse.ArgumentParser:
     parser.add_argument("--env_cfg_type", required=True)
     parser.add_argument("--expert_data_num", type=int, default=None,
                         help="Optional episode cap; omit to use all episodes.")
+    parser.add_argument(
+        "--raw_task_dirs",
+        default=None,
+        help="Optional source task dir(s) under data/<bench_name>/; comma-separated. Defaults to ckpt_name.",
+    )
     parser.add_argument("--action_type", required=True)
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--keep_existing", action="store_true")

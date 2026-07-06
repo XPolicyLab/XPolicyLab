@@ -26,9 +26,16 @@ data_root_dir="${STARVLA_DATA_ROOT:-${SCRIPT_DIR}/data}"
 data_mix="${STARVLA_DATA_MIX:-xpolicylab_runtime}"
 dataset_name="${STARVLA_XPOLICY_DATASET_NAME:-${data_dir_name}}"
 config_yaml="${SCRIPT_DIR}/.generated/xpolicy_oft_vla_${run_id}.yaml"
+dataset_path="${data_root_dir}/${dataset_name}"
 
-if [[ ! -d "${data_root_dir}/${dataset_name}" ]]; then
-    echo "[starVLA][ERROR] dataset not found: ${data_root_dir}/${dataset_name}" >&2
+if [[ ! -f "${dataset_path}/meta/modality.json" && -f "${dataset_path}/${env_cfg_type}/meta/modality.json" ]]; then
+    dataset_name="${dataset_name}/${env_cfg_type}"
+    dataset_path="${data_root_dir}/${dataset_name}"
+fi
+
+if [[ ! -f "${dataset_path}/meta/modality.json" ]]; then
+    echo "[starVLA][ERROR] LeRobot dataset not found or incomplete: ${dataset_path}" >&2
+    echo "[starVLA][ERROR] expected ${dataset_path}/meta/modality.json" >&2
     echo "[starVLA][ERROR] Run process_data.sh first, or set STARVLA_DATA_ROOT/STARVLA_XPOLICY_DATASET_NAME." >&2
     exit 1
 fi
@@ -55,7 +62,7 @@ echo "[starVLA] config_yaml=${config_yaml}"
 echo "[starVLA] run_id=${run_id}"
 echo "[starVLA] seed=${seed}"
 echo "[starVLA] data_root_dir=${data_root_dir}"
-echo "[starVLA] data_mix=${data_mix}, dataset=${dataset_name}"
+echo "[starVLA] data_mix=${data_mix}, dataset=${dataset_name}, dataset_path=${dataset_path}"
 echo "[starVLA] train_entry=starVLA/training/train_starvla.py"
 echo "[starVLA] num_processes=${num_processes}, mixed_precision=bf16"
 

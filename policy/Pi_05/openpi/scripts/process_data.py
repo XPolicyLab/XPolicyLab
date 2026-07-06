@@ -154,10 +154,17 @@ def main():
     parser.add_argument("action_type", type=str, help="Action type for artifact naming (e.g., joint)")
     parser.add_argument(
         "expert_data_num",
-        type=int,
+        type=str,
         nargs="?",
         default=None,
-        help="Optional number of episodes to process; defaults to all episodes.",
+        help="Optional number of episodes to process; non-numeric values are treated as raw_task_dirs.",
+    )
+    parser.add_argument(
+        "raw_task_dirs",
+        type=str,
+        nargs="?",
+        default=None,
+        help="Optional raw task dir or comma-separated dirs under data/<bench>/; defaults to ckpt_name.",
     )
     parser.add_argument(
         "--mode",
@@ -181,7 +188,16 @@ def main():
     repo_id = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
     mode = args.mode
     instruction = args.instruction
-    load_data_dir = os.path.join(ROOT_PATH, "data", str(bench_name), str(ckpt_name), str(env_cfg_type))
+    expert_data_num = None
+    raw_task_dirs_arg = args.raw_task_dirs
+    if args.expert_data_num is not None:
+        try:
+            expert_data_num = int(args.expert_data_num)
+        except ValueError:
+            if args.raw_task_dirs is not None:
+                raise ValueError("raw_task_dirs was provided twice.") from None
+            raw_task_dirs_arg = args.expert_data_num
+    raw_task_dirs = [item.strip() for item in (raw_task_dirs_arg or ckpt_name).split(",") if item.strip()]
 
     env_cfg = load_yaml(os.path.join(ROOT_PATH, "./env_cfg", f"{env_cfg_type}.yml"))
     robot_type = env_cfg['config']['robot']
@@ -197,11 +213,15 @@ def main():
         robot_action_dim_info=robot_action_dim_info,
     )
 
-    episode_files = sorted(Path(load_data_dir).glob("data/episode_*.hdf5"))
-    if not episode_files:
-        episode_files = sorted(Path(load_data_dir).glob("*.hdf5"))
-    if args.expert_data_num is not None:
-        episode_files = episode_files[: args.expert_data_num]
+    episode_files = []
+    for raw_task_dir in raw_task_dirs:
+        load_data_dir = Path(ROOT_PATH) / "data" / str(bench_name) / raw_task_dir / str(env_cfg_type)
+        task_episode_files = sorted(load_data_dir.glob("data/episode_*.hdf5"))
+        if not task_episode_files:
+            task_episode_files = sorted(load_data_dir.glob("*.hdf5"))
+        episode_files.extend(task_episode_files)
+    if expert_data_num is not None:
+        episode_files = episode_files[:expert_data_num]
     for ep_file in tqdm(episode_files, desc="Processing episodes", unit="episode"):
         try:
             data = load_data(ep_file)

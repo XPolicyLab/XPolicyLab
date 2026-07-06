@@ -49,7 +49,7 @@ This adapter has no top-level `process_data.sh`. It expects data in the format c
 
 What it does: starts the policy-specific training recipe through the XPolicyLab wrapper and writes checkpoints under this adapter directory.
 
-No top-level `train.sh` is provided for this adapter. Train with the upstream project recipe, then point `deploy.yml`, `MODEL_PATH`, or the policy-specific checkpoint variable at the exported checkpoint.
+No top-level `train.sh` is provided for this adapter. Train with the upstream project recipe, then point `deploy.yml` `ckpt_name` at the exported checkpoint. The model adapter also accepts `model_path` or `checkpoint_path` when launching the policy server directly.
 
 ## Deployment and Evaluation
 
@@ -61,7 +61,7 @@ Parameters used by `eval.sh`:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Checkpoint directory, absolute path, `checkpoints/...` path, or run name under this adapter's `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -85,7 +85,7 @@ Parameters used by the split server/client flow:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Checkpoint directory, absolute path, `checkpoints/...` path, or run name under this adapter's `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -133,7 +133,7 @@ Common parameter meanings used across the commands above:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Checkpoint directory, absolute path, `checkpoints/...` path, or run name under this adapter's `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |

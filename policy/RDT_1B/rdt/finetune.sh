@@ -16,7 +16,7 @@ export LDFLAGS="-L/usr/lib/x86_64-linux-gnu"
 export WANDB_PROJECT="robotics_diffusion_transformer"
 
 if [ ! -d "$OUTPUT_DIR" ]; then
-    mkdir - p "$OUTPUT_DIR"
+    mkdir -p "$OUTPUT_DIR"
     echo "Folder '$OUTPUT_DIR' created"
 else
     echo "Folder '$OUTPUT_DIR' already exists"

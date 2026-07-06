@@ -20,7 +20,7 @@ checkpoint_path: null
 model_path: null
 prompt: null
 fallback_task_name: stack_bowls
-force_default_task_name: true
+force_default_task_name: false
 device: auto
 used_chunk_size: 60
 raw_embodiment_stats_json_path: null

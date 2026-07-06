@@ -114,6 +114,13 @@ def _make_action_from_state(state: np.ndarray) -> np.ndarray:
     action[-1] = state[-1]
     return action
 
+
+def _decode_instruction(instruction: Any) -> str:
+    if isinstance(instruction, (bytes, np.bytes_)):
+        return bytes(instruction).decode("utf-8")
+    return str(instruction)
+
+
 def load_data(ep_path) -> dict[str, Any]:
     with h5py.File(ep_path, "r") as ep:
         right_state = np.concatenate(
@@ -132,7 +139,7 @@ def load_data(ep_path) -> dict[str, Any]:
             if source_name in ep["vision"]:
                 images[output_name] = _load_compressed_images(ep["vision"][source_name], "colors")
         try:
-            instructions = ep["instructions"]
+            instructions = [_decode_instruction(instruction) for instruction in ep["instructions"][:]]
         except KeyError:
             instructions = None
 
@@ -172,6 +179,12 @@ def main():
         default="Do your job.",
         help="Default instruction when not present in HDF5",
     )
+    parser.add_argument(
+        "--raw-task-dirs",
+        type=str,
+        default=None,
+        help="Comma-separated raw task dirs under data/<bench_name>/; defaults to ckpt_name.",
+    )
     args = parser.parse_args()
 
     bench_name = args.bench_name
@@ -181,7 +194,11 @@ def main():
     repo_id = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
     mode = args.mode
     instruction = args.instruction
-    load_data_dir = os.path.join(ROOT_PATH, "data", str(bench_name), str(ckpt_name), str(env_cfg_type))
+    raw_task_dirs = [
+        task_dir.strip()
+        for task_dir in (args.raw_task_dirs or ckpt_name).split(",")
+        if task_dir.strip()
+    ]
 
     env_cfg = load_yaml(os.path.join(ROOT_PATH, "./env_cfg", f"{env_cfg_type}.yml"))
     robot_type = env_cfg['config']['robot']
@@ -197,12 +214,23 @@ def main():
         robot_action_dim_info=robot_action_dim_info,
     )
 
-    episode_files = sorted(Path(load_data_dir).glob("data/episode_*.hdf5"))
-    if not episode_files:
-        episode_files = sorted(Path(load_data_dir).glob("*.hdf5"))
-    if args.expert_data_num is not None:
-        episode_files = episode_files[: args.expert_data_num]
-    for ep_file in tqdm(episode_files, desc="Processing episodes", unit="episode"):
+    episode_jobs = []
+    for raw_task_dir in raw_task_dirs:
+        load_data_dir = ROOT_PATH / "data" / str(bench_name) / raw_task_dir / str(env_cfg_type)
+        episode_files = sorted(load_data_dir.glob("data/episode_*.hdf5"))
+        if not episode_files:
+            episode_files = sorted(load_data_dir.glob("*.hdf5"))
+        if args.expert_data_num is not None:
+            episode_files = episode_files[: args.expert_data_num]
+        episode_jobs.extend((raw_task_dir, ep_file) for ep_file in episode_files)
+
+    if not episode_jobs:
+        raise FileNotFoundError(
+            "No HDF5 episodes found for raw task dirs "
+            f"{raw_task_dirs} under data/{bench_name}/<task>/{env_cfg_type}."
+        )
+
+    for raw_task_dir, ep_file in tqdm(episode_jobs, desc="Processing episodes", unit="episode"):
         try:
             data = load_data(ep_file)
             num_frames = data["state"].shape[0]
@@ -220,7 +248,7 @@ def main():
             
             dataset.save_episode()
             dataset.hf_dataset = dataset.create_hf_dataset()
-            tqdm.write(f"Finished {ep_file.name} with {num_frames} frames")
+            tqdm.write(f"Finished {raw_task_dir}/{ep_file.name} with {num_frames} frames")
         except Exception as e:
             tqdm.write(f"Error processing episode {ep_file}: {e}")
 

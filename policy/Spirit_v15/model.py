@@ -360,10 +360,17 @@ class Model(ModelTemplate):
 
         checkpoint_path = _resolve_spirit_checkpoint_dir(self.model_cfg)
         spirit_base_weights = _resolve_policy_path(self.model_cfg.get("spirit_base_weights"))
-        if spirit_base_weights and not (checkpoint_path / "config.json").exists():
-            base_config = spirit_base_weights / "config.json"
-            if base_config.exists():
+        if not checkpoint_path.is_dir():
+            raise FileNotFoundError(f"Spirit_v15 checkpoint directory not found: {checkpoint_path}")
+        if not (checkpoint_path / "config.json").exists():
+            base_config = spirit_base_weights / "config.json" if spirit_base_weights else None
+            if base_config and base_config.exists():
                 (checkpoint_path / "config.json").symlink_to(base_config)
+            else:
+                raise FileNotFoundError(
+                    "Spirit_v15 checkpoint is missing config.json and no usable "
+                    f"spirit_base_weights config was found: {spirit_base_weights}"
+                )
         checkpoint_path = str(checkpoint_path)
 
         self.default_task_name = None

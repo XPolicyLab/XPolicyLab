@@ -16,7 +16,8 @@
 | `eval.sh` | Runs a same-machine policy server plus RoboDojo environment client evaluation. |
 | `setup_eval_policy_server.sh` | Starts only the policy server for distributed/debug evaluation. |
 | `setup_eval_env_client.sh` | Starts only the RoboDojo environment client and connects to a policy server. |
-| `deploy.py` | Policy wrapper used by the XPolicyLab model server. |
+| `deploy.sh` | Starts a standalone policy server from an explicit pretrained path. |
+| `deploy.py` | Evaluation helper functions for local/debug flows. |
 | `model.py` | Model adapter loaded by `deploy.py` or the policy server. |
 | `deploy.yml` | Runtime configuration and default checkpoint/model parameters. |
 
@@ -75,7 +76,9 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation. For example, training with `bash train.sh RoboDojo cotrain arx_x5 joint 0 0` is evaluated with `ckpt_name=RoboDojo-cotrain-arx_x5-joint-0`.
+
+To evaluate a specific LeRobot training step, set `checkpoint_num` in `deploy.yml` or pass it as a server override. The adapter resolves step artifacts under `checkpoints/<run>/checkpoints/<step>/pretrained_model/`; if no `checkpoint_num` is provided, it prefers the latest numeric step when present and otherwise falls back to `checkpoints/<run>/checkpoints/last/pretrained_model/`.
 
 ## Deployment and Evaluation
 
@@ -173,7 +176,7 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | Key | Notes |
 |---|---|
 | `policy_name` | Runtime or checkpoint option consumed by this adapter. |
-| `env_cfg` | Runtime or checkpoint option consumed by this adapter. |
+| `env_cfg_type` | Robot/environment config used to pack RoboDojo observations and unpack actions. |
 | `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
 | `result_dir` | Runtime or checkpoint option consumed by this adapter. |
 | `obs_transform_pipeline` | Runtime or checkpoint option consumed by this adapter. |
@@ -202,6 +205,6 @@ Frequently used environment variables detected in the adapter scripts:
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Keep the training `ckpt_name` stable when naming runs. During evaluation, pass the full checkpoint directory name under `checkpoints/`, such as `RoboDojo-stack_bowls_50ep-arx_x5-joint-0`.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

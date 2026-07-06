@@ -13,7 +13,7 @@ from huggingface_hub import snapshot_download
 
 
 DEFAULT_REPO_ID = "openvla/openvla-7b"
-DEFAULT_LOCAL_DIR = "models/openvla-7b"
+DEFAULT_LOCAL_DIR = Path(__file__).resolve().parents[2] / "checkpoints" / "shared" / "openvla-7b"
 
 
 def parse_args():
@@ -25,7 +25,7 @@ def parse_args():
     )
     parser.add_argument(
         "--local_dir",
-        default=DEFAULT_LOCAL_DIR,
+        default=str(DEFAULT_LOCAL_DIR),
         help="Directory to store the downloaded model snapshot.",
     )
     return parser.parse_args()

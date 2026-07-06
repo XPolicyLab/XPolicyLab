@@ -53,8 +53,8 @@ Parameters used by the command:
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional episode limit for data conversion only. It is not part of checkpoint naming. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list under `data/<bench_name>/`; defaults to `ckpt_name`. |
 
 ```bash
 cd XPolicyLab/policy/Pi_05
@@ -63,6 +63,9 @@ bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+
+# Example: write a differently named dataset while reading all stack_bowls demos.
+bash process_data.sh RoboDojo stack_bowls_ablation arx_x5 joint stack_bowls
 
 # Example: create a 50-episode ablation while reading from the original task data.
 bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
@@ -81,7 +84,7 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Random seed. |
-| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. `train.sh` sets `fsdp_devices=1` for one visible GPU and `2` for multi-GPU by default. |
 
 ```bash
 cd XPolicyLab/policy/Pi_05
@@ -96,6 +99,8 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+By default, training reads the LeRobot repo produced by `process_data.sh`: `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>`. Override this with `OPENPI_LEROBOT_REPO_ID` when reusing an existing dataset.
 
 ## Deployment and Evaluation
 
@@ -185,7 +190,7 @@ Common parameter meanings used across the commands above:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env` | `uv` to use `deploy.yml` `policy_uv_env_path`, or an explicit OpenPI project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 Policy-specific `deploy.yml` keys worth checking before evaluation:
@@ -210,6 +215,8 @@ Frequently used environment variables detected in the adapter scripts:
 | `JAX_COMPILATION_CACHE_DIR` | Optional override used by the local scripts or upstream runtime. |
 | `LOCAL_CACHE_ROOT` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_DATA_MODE` | Optional override used by the local scripts or upstream runtime. |
+| `OPENPI_FSDP_DEVICES` | Overrides the FSDP device count passed to OpenPI training. |
+| `OPENPI_LEROBOT_REPO_ID` | Overrides the LeRobot repo id used by `train.sh`; defaults to `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>`. |
 | `OPENPI_LOCAL_CACHE_ROOT` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_ROOT` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_SRC` | Optional override used by the local scripts or upstream runtime. |

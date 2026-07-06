@@ -44,5 +44,9 @@ pip install -e .
 | `XPOLICYLAB_DATA_ROOT` | XPolicyLab data root; conversion defaults to `../../../data`. |
 | `SPIRIT_CONVERTED_DATA_ROOT` | Converted Spirit training data directory. |
 | `SPIRIT_PATTERNS_CSV` | Data matching pattern, for example `RoboDojo.stack_bowls.arx_x5`. |
+| `SPIRIT_BACKBONE_PATH` | Optional local Qwen backbone directory used by upstream training. |
+| `HF_HOME` / `HF_HUB_CACHE` | Optional Hugging Face cache locations used when `spirit_backbone_path` points to a model id or cache-backed snapshot. |
 
 Run `process_data.sh` before `train.sh`; see `README.md` for the unified command interface.
+
+For evaluation, `deploy.yml` defaults to `checkpoints/shared/Spirit-v1.5` for the Spirit base config and `checkpoints/shared/Qwen3-VL-4B-Instruct` for the Qwen backbone. Put those local checkpoints there or override `spirit_base_weights` and `spirit_backbone_path` before starting the policy server.

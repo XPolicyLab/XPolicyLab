@@ -33,6 +33,7 @@ class Model(ModelTemplate):
         self.model = self.get_model(model_cfg=model_cfg)
 
         self.robot_action_dim_info = get_robot_action_dim_info(model_cfg['env_cfg_type'])
+        self._latest_env_idx_list = None
 
     def get_model(self, model_cfg):
         ckpt_setting = str(model_cfg['ckpt_name'])
@@ -90,13 +91,22 @@ class Model(ModelTemplate):
         env_idx_list = [obs["env_idx"] for obs in obs_list]
         obs_list = [encode_obs(obs, self.action_type, self.robot_action_dim_info) for obs in obs_list]
         self.runner.update_obs(obs_list, env_idx_list)
+        self._latest_env_idx_list = env_idx_list
 
     def get_action(self):
-        action_list = self.get_action_batch(env_idx_list=[0])
+        if not self._latest_env_idx_list:
+            raise RuntimeError("get_action() called before update_obs().")
+
+        action_list = self.get_action_batch(env_idx_list=[self._latest_env_idx_list[0]])
             
         return action_list[0]
 
-    def get_action_batch(self, env_idx_list):
+    def get_action_batch(self, env_idx_list=None):
+        if env_idx_list is None:
+            env_idx_list = self._latest_env_idx_list
+        if not env_idx_list:
+            raise RuntimeError("get_action_batch() called before update_obs_batch().")
+
         actions = self.runner.get_action(self.model, env_idx_list)
         action_dict_list = []
 
@@ -108,6 +118,7 @@ class Model(ModelTemplate):
 
     def reset(self):
         self.runner.reset_obs()
+        self._latest_env_idx_list = None
 
 def encode_obs(observation, action_type, robot_action_dim_info):
     head_img = (np.moveaxis(observation["vision"]["cam_head"]["color"], -1, 0) / 255)

@@ -5,6 +5,7 @@ from collections.abc import Sequence
 import dataclasses
 import difflib
 import logging
+import os
 import pathlib
 from typing import Any, Literal, Protocol, TypeAlias
 
@@ -30,7 +31,14 @@ import openpi.training.weight_loaders as weight_loaders
 import openpi.transforms as _transforms
 
 # RoboDojo normalization assets bundled with this adapter (openpi/assets/RoboDojo_assets).
-_ROBODOJO_ASSETS_DIR = pathlib.Path(__file__).resolve().parents[3] / "assets" / "RoboDojo_assets"
+_DEFAULT_ROBODOJO_ASSETS_DIR = pathlib.Path(__file__).resolve().parents[3] / "assets" / "RoboDojo_assets"
+_ROBODOJO_ASSETS_DIR = pathlib.Path(
+    os.environ.get("OPENPI_ROBODOJO_ASSETS_DIR", str(_DEFAULT_ROBODOJO_ASSETS_DIR))
+).expanduser()
+
+
+def _robodojo_repo_id(default: str = "RoboDojo_sim_arx-x5_v30") -> str:
+    return os.environ.get("OPENPI_DATA_REPO_ID", default)
 
 ModelType: TypeAlias = _model.ModelType
 # Work around a tyro issue with using nnx.filterlib.Filter directly.
@@ -573,7 +581,7 @@ _CONFIGS = [
         name="pi0_base_aloha_full_sim_arx-x5_seed_0",
         model=pi0_config.Pi0Config(),
         data=LeRobotAlohaDataConfig(
-            repo_id="RoboDojo_sim_arx-x5_v30",
+            repo_id=_robodojo_repo_id(),
             assets=AssetsConfig(
                 assets_dir=str(_ROBODOJO_ASSETS_DIR),
                 asset_id="arx_x5_sim",
@@ -608,7 +616,7 @@ _CONFIGS = [
         name="pi0_base_aloha_full_sim_arx-x5_seed_1",
         model=pi0_config.Pi0Config(),
         data=LeRobotAlohaDataConfig(
-            repo_id="RoboDojo_sim_arx-x5_v30",
+            repo_id=_robodojo_repo_id(),
             assets=AssetsConfig(
                 assets_dir=str(_ROBODOJO_ASSETS_DIR),
                 asset_id="arx_x5_sim",
@@ -643,7 +651,7 @@ _CONFIGS = [
         name="pi0_base_aloha_full_sim_arx-x5_seed_2",
         model=pi0_config.Pi0Config(),
         data=LeRobotAlohaDataConfig(
-            repo_id="RoboDojo_sim_arx-x5_v30",
+            repo_id=_robodojo_repo_id(),
             assets=AssetsConfig(
                 assets_dir=str(_ROBODOJO_ASSETS_DIR),
                 asset_id="arx_x5_sim",

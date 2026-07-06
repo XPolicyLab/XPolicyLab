@@ -38,13 +38,42 @@ cd XPolicyLab/policy/OpenVLA_OFT
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
 conda activate <policy_env>  # e.g. openvla-oft
+
+# Download the base model to the default path used by train.sh and deploy.yml:
+# checkpoints/shared/openvla-7b
+cd openvla_oft
+python scripts/download_openvla.py
 ```
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: prepares RoboDojo demonstration data for policy training. The TFDS dataset name must match the name used by `train.sh`.
 
-This adapter has no top-level `process_data.sh`. It expects data in the format consumed by the upstream project or by `deploy.yml`/environment variables. Use the upstream README under the vendored source tree when custom conversion is required.
+The default training run id is:
+
+```text
+<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>
+```
+
+`train.sh` looks for a TFDS dataset named `aloha_<run_id>` unless `OPENVLA_TFDS_DATASET_NAME` is set. Build the dataset with the same `<run_id>`:
+
+```bash
+# In XPolicyLab root, first convert RoboDojo/XPolicyLab HDF5 data to ALOHA layout.
+python scripts/transform_aloha_hdf5_format.py <xspark_data_dir> <aloha_output_dir>
+
+# Then build/register the TFDS dataset. The first argument should be the run id
+# without the leading "aloha_"; build_tfds_aloha.sh adds that prefix.
+cd policy/OpenVLA_OFT/openvla_oft
+TFDS_DATA_DIR="${PWD}/tensorflow_datasets" \
+  bash scripts/build_tfds_aloha.sh \
+    RoboDojo-cotrain-arx_x5-joint-0 \
+    <aloha_output_dir> \
+    <preprocessed_base_dir> \
+    0.05 \
+    0
+```
+
+If you use a custom TFDS name, set the same value for `OPENVLA_TFDS_DATASET_NAME` during training and set `tfds_dataset_name` or `unnorm_key` in `deploy.yml` for evaluation.
 
 ## Model Training
 
@@ -74,6 +103,16 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+By default, `train.sh` uses:
+
+| Input | Default |
+|---|---|
+| Base model | `checkpoints/shared/openvla-7b` |
+| TFDS root | `openvla_oft/tensorflow_datasets` |
+| TFDS dataset | `aloha_<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>` |
+
+Override these with `MODEL_DIR`, `DATA_ROOT`, and `OPENVLA_TFDS_DATASET_NAME` when needed.
 
 ## Deployment and Evaluation
 
@@ -148,6 +187,8 @@ bash setup_eval_env_client.sh \
 ```
 
 Set `EVAL_ENV_TYPE=debug` for offline shape/IO checks when the adapter supports it; leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation.
+
+`ckpt_name` should be the full run directory name under `checkpoints/`, a relative path under `policy/OpenVLA_OFT`, or an absolute path. The model loader now fails fast if the checkpoint root exists but no merged fine-tune weights are found, instead of silently evaluating the base model.
 
 ## Important Parameters
 

@@ -54,7 +54,7 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list. Defaults to `ckpt_name`. |
 
 ```bash
 cd XPolicyLab/policy/Pi_0
@@ -66,7 +66,12 @@ bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
 # Example: create a 50-episode ablation while reading from the original task data.
 bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+
+# Example: merge multiple raw task dirs into one cotrain dataset.
+bash process_data.sh RoboDojo cotrain arx_x5 joint "" stack_bowls,push_T
 ```
+
+The output LeRobot repo id is `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>`. `train.sh` uses the same repo id by default, so keep `ckpt_name`, `env_cfg_type`, and `action_type` aligned between processing and training.
 
 ## Model Training
 
@@ -96,6 +101,8 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+Before training, make sure normalization stats are available at `openpi/assets/RoboDojo_assets/arx_x5_sim/norm_stats.json`, or set `OPENPI_ROBODOJO_ASSETS_DIR` to a directory that contains `arx_x5_sim/norm_stats.json`. To train against an existing LeRobot repo instead of the default `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>`, set `OPENPI_DATA_REPO_ID`.
 
 ## Deployment and Evaluation
 
@@ -210,7 +217,9 @@ Frequently used environment variables detected in the adapter scripts:
 | `JAX_COMPILATION_CACHE_DIR` | Optional override used by the local scripts or upstream runtime. |
 | `LOCAL_CACHE_ROOT` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_DATA_MODE` | Optional override used by the local scripts or upstream runtime. |
+| `OPENPI_DATA_REPO_ID` | Overrides the LeRobot repo id used by `train.sh`; defaults to `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>`. |
 | `OPENPI_LOCAL_CACHE_ROOT` | Optional override used by the local scripts or upstream runtime. |
+| `OPENPI_ROBODOJO_ASSETS_DIR` | Overrides the directory containing RoboDojo norm stats, for example a directory with `arx_x5_sim/norm_stats.json`. |
 | `OPENPI_ROOT` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_SRC` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_TRAIN_CONFIG_NAME` | Optional override used by the local scripts or upstream runtime. |

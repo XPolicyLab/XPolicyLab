@@ -7,6 +7,7 @@ policy_conda_env=${2}
 PRETRAINED_PATH=${3}
 PORT=${4:-6000}
 DEVICE=${5:-cuda}
+ENV_CFG_TYPE=${6:-${SMOVLA_ENV_CFG_TYPE:-arx_x5}}
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 echo -e "\033[33m[INFO] GPU ID (to use): ${gpu_id}\033[0m"
@@ -24,4 +25,6 @@ python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         port="${PORT}" \
         policy_name="${policy_name}" \
         pretrained_path="${PRETRAINED_PATH}" \
-        device="${DEVICE}"
+        device="${DEVICE}" \
+        env_cfg_type="${ENV_CFG_TYPE}" \
+        action_type="joint"

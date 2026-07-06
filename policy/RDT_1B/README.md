@@ -34,14 +34,14 @@ Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
-| `policy_env` | Name of the conda environment used by the policy runtime. |
+| `policy_env` | Name of the conda environment used by the policy runtime. `install.sh` defaults to `rdt_1b`; override it with `RDT_CONDA_ENV=<name>`. |
 
 ```bash
 cd XPolicyLab/policy/RDT_1B
 # Example: install dependencies for the RDT_1B policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. rdt-1b
+conda activate <policy_env>  # e.g. rdt_1b
 ```
 
 ## Demo Data Processing
