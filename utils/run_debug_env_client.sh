@@ -14,7 +14,6 @@ seed="${10}"
 env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
 protocol="${13:-ws}"
-run_mode="${14:---run-once}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -25,23 +24,12 @@ echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port}.
 
 export PYTHONPATH="${root_dir}/XPolicyLab:${root_dir}${PYTHONPATH:+:${PYTHONPATH}}"
 
-CLIENT_ARGS=(
-    --bench_name "${bench_name}"
-    --task_name "${task_name}"
-    --env_cfg_type "${env_cfg_type}"
-    --policy_name "${policy_name}"
-    --protocol "${protocol}"
-    --host "${policy_server_ip}"
-    --port "${free_port}"
+python "${root_dir}/XPolicyLab/debug_env_client.py" \
+    --bench_name "${bench_name}" \
+    --task_name "${task_name}" \
+    --env_cfg_type "${env_cfg_type}" \
+    --policy_name "${policy_name}" \
+    --protocol "${protocol}" \
+    --host "${policy_server_ip}" \
+    --port "${free_port}" \
     --eval_batch "${eval_batch}"
-)
-
-if [[ "${run_mode}" == "--run-once" ]]; then
-    python "${root_dir}/XPolicyLab/debug_env_client.py" "${CLIENT_ARGS[@]}"
-else
-    python -m station.daemon \
-        "${CLIENT_ARGS[@]}" \
-        --eval-env-type debug \
-        --serve-host 0.0.0.0 \
-        --serve-port 19200
-fi

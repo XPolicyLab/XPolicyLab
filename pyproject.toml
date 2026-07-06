@@ -11,15 +11,10 @@ dependencies = [
     "pyyaml>=6",
     "opencv-python-headless>=4.8",
     "h5py>=3.8",
-]
-
-[project.optional-dependencies]
-station = [
     "websockets>=13.0",
     "msgpack>=1.0.8",
     "msgpack-numpy>=0.4.8",
     "pydantic>=2.5",
-    "boto3>=1.34",
 ]
 
 [tool.setuptools]
@@ -27,5 +22,5 @@ py-modules = ["XPolicyLab"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["client_server*", "utils*", "station*"]
+include = ["client_server*", "utils*"]
 exclude = ["policy*", "build*", "scripts*", "__pycache__*", "tests*"]
