@@ -22,7 +22,7 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 # ckpt_name is the full run directory name under checkpoints/.
 checkpoint_root="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
-qwen25_path="${QWEN25_PATH:?set QWEN25_PATH to your Qwen2.5-VL-3B-Instruct weights dir}"
+qwen25_path="${QWEN25_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct}"
 
 checkpoint_path=$(python - <<PY
 from pathlib import Path
@@ -30,6 +30,8 @@ from pathlib import Path
 root = Path("${checkpoint_root}")
 if not root.exists():
     raise FileNotFoundError(f"Checkpoint root not found: {root}")
+if not (root / "lingbotvla_cli.yaml").exists():
+    raise FileNotFoundError(f"Missing training config: {root / 'lingbotvla_cli.yaml'}")
 
 candidates = []
 for path in (root / "checkpoints").glob("global_step_*"):
@@ -49,6 +51,7 @@ PY
 )
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, checkpoint=${checkpoint_path}, policy_server_port=${policy_server_port}"
+echo "[SERVER] QWEN25_PATH=${qwen25_path}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"

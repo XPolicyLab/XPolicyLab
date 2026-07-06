@@ -54,7 +54,7 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dirs` | Optional source task directory or comma-separated task list. The episode limit is applied per task. |
 | `fps` | Optional conversion frame rate; default is `30`. |
 | `output_dir` | Optional output root for converted data; defaults to the policy `data/` directory. |
 
@@ -68,7 +68,12 @@ bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
 # Example: create a 50-episode ablation while reading from the original task data.
 bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+
+# Example: merge two tasks into one cotrain LeRobot dataset.
+bash process_data.sh RoboDojo cotrain arx_x5 joint "" stack_bowls,push_T
 ```
+
+Converted data is written to `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/` by default. `train.sh` uses that same path as its default `LEROBOT_DATA_PATH`, so the single-task example above feeds `data/RoboDojo-stack_bowls-arx_x5-joint/` into training.
 
 ## Model Training
 
@@ -97,7 +102,9 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+By default, `train.sh` reads `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/` and uses `go1/configs/go1_sft_xpolicylab.py`, whose camera keys match `process_data.sh` output. To train on an external/shared LeRobot dataset, set `LEROBOT_DATA_PATH`; if that dataset uses `cam_high/cam_left_wrist/cam_right_wrist` image keys, also set `GO1_CFG_PATH=go1/configs/go1_sft_robodojo_shared.py`.
+
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. During evaluation, `ckpt_name` may be either the short run id such as `cotrain` or the full run directory name such as `RoboDojo-cotrain-arx_x5-joint-0`.
 
 ## Deployment and Evaluation
 
@@ -109,7 +116,7 @@ Parameters used by `eval.sh`:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Short checkpoint id or full checkpoint/run directory name under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -124,7 +131,7 @@ cd XPolicyLab/policy/GO1
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
 # Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+bash eval.sh RoboDojo stack_bowls cotrain arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -133,7 +140,7 @@ Parameters used by the split server/client flow:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Short checkpoint id or full checkpoint/run directory name under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -155,7 +162,7 @@ bash setup_eval_policy_server.sh \
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
+  RoboDojo stack_bowls cotrain arx_x5 joint 0 \
   0 <policy_conda_env> 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
@@ -166,8 +173,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls cotrain arx_x5 joint 0 \
+  0 <eval_env_conda_env> "ckpt_name=cotrain,action_type=joint" \
   5000 <policy_server_ip>
 ```
 
@@ -181,7 +188,7 @@ Common parameter meanings used across the commands above:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Short checkpoint id or full checkpoint/run directory name under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -213,13 +220,11 @@ Frequently used environment variables detected in the adapter scripts:
 | `CTRL_FREQ` | Optional override used by the local scripts or upstream runtime. |
 | `CUDA_HOME` | Optional override used by the local scripts or upstream runtime. |
 | `DATA_ROOT_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_GO1_CFG_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_GO1_MODEL_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_LEROBOT_DATA_PATH` | Optional override used by the local scripts or upstream runtime. |
 | `DEFAULT_PROMPT` | Optional override used by the local scripts or upstream runtime. |
 
 ## Notes
 
 - Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- `model.py` resolves checkpoints by checking the supplied `ckpt_name` first and then the generated 5-tuple `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>`. If neither exists, it fails instead of silently loading the base GO-1 model.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

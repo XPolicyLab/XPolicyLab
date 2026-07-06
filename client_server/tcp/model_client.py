@@ -1,5 +1,6 @@
 from .utils import *
 import socket
+import sys
 import time
 
 RED = "\033[31m"
@@ -47,14 +48,19 @@ class ModelClient:
                     self.sock = None
                 if attempts < max_attempts:
                     _status("CONNECT-FAILED", YELLOW, f"attempt {attempts}/{max_attempts} failed: {e}")
-                    for left in range(retry_delay, 0, -1):
-                        print(
-                            f"\r{YELLOW}{BOLD}[RECONNECT]{RESET} retrying legacy TCP connection in {left:2d}s",
-                            end="",
-                            flush=True,
-                        )
-                        time.sleep(1)
-                    print("\r" + " " * 96 + "\r", end="", flush=True)
+                    if not sys.stdout.isatty():
+                        # Avoid flooding redirected logs with carriage-return updates.
+                        _status("RECONNECT", YELLOW, f"retrying legacy TCP connection in {retry_delay}s")
+                        time.sleep(retry_delay)
+                    else:
+                        for left in range(retry_delay, 0, -1):
+                            print(
+                                f"\r{YELLOW}{BOLD}[RECONNECT]{RESET} retrying legacy TCP connection in {left:2d}s",
+                                end="",
+                                flush=True,
+                            )
+                            time.sleep(1)
+                        print("\r" + " " * 96 + "\r", end="", flush=True)
                 else:
                     _status("ERROR", RED, f"failed to connect to legacy TCP policy server {self.host}:{self.port}")
                     raise ConnectionError(f"Failed to connect to server after {max_attempts} attempts: {str(e)}")

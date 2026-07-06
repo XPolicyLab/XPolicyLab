@@ -14,7 +14,6 @@ _CUR_DIR = Path(__file__).resolve().parent
 _ABOT_ROOT = _CUR_DIR / "abot_m0"
 _CHECKPOINTS_DIRS = (_CUR_DIR / "checkpoints", _ABOT_ROOT / "checkpoints")
 _DEFAULT_STATS_JSON = Path("/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json")
-_DEBUG_LOG_PATH = Path("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-0684e4.log")
 
 if str(_ABOT_ROOT) not in sys.path:
     sys.path.insert(0, str(_ABOT_ROOT))
@@ -40,29 +39,6 @@ _CAMERA_CANDIDATES = {
 _DEFAULT_INCLUDE_STATE = False
 _GRIPPER_INDICES = (12, 13)
 _BINARY_GRIPPER_THRESHOLD = 0.5
-
-
-# region agent log
-def _debug_log(hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:
-    try:
-        import json
-        import time
-
-        payload = {
-            "sessionId": "0684e4",
-            "runId": "pre-fix",
-            "hypothesisId": hypothesis_id,
-            "location": location,
-            "message": message,
-            "data": data,
-            "timestamp": int(time.time() * 1000),
-        }
-        _DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(_DEBUG_LOG_PATH, "a", encoding="utf-8") as handle:
-            handle.write(json.dumps(payload, default=str) + "\n")
-    except Exception:
-        pass
-# endregion agent log
 
 
 def _normalize_prompt_value(value: Any) -> str | None:
@@ -236,14 +212,6 @@ def _ensure_dataset_statistics(run_dir: Path, unnorm_key: str | None) -> None:
             existing = json.load(handle)
         action_stats = existing.get(resolved_unnorm_key, {}).get("action", {})
         if "min" in action_stats and "max" in action_stats:
-            # region agent log
-            _debug_log(
-                "H4",
-                "policy/Abot_M0/model.py:_ensure_dataset_statistics",
-                "using existing dataset statistics",
-                {"stats_path": stats_path, "unnorm_key": resolved_unnorm_key},
-            )
-            # endregion agent log
             return
         print(f"[Abot_M0] Regenerating {stats_path}: expected min/max stats for training alignment.")
 
@@ -264,14 +232,6 @@ def _ensure_dataset_statistics(run_dir: Path, unnorm_key: str | None) -> None:
     with open(stats_path, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)
     print(f"[Abot_M0] Wrote missing dataset statistics to {stats_path}")
-    # region agent log
-    _debug_log(
-        "H4",
-        "policy/Abot_M0/model.py:_ensure_dataset_statistics",
-        "generated dataset statistics from fallback",
-        {"stats_path": stats_path, "stats_source": stats_source, "unnorm_key": resolved_unnorm_key},
-    )
-    # endregion agent log
 
 
 def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> Path:
@@ -291,14 +251,6 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> Path:
                 explicit_path,
             )
             selected = next((candidate for candidate in explicit_candidates if candidate.is_file()), explicit_path)
-            # region agent log
-            _debug_log(
-                "H2",
-                "policy/Abot_M0/model.py:_resolve_checkpoint_path",
-                "using explicit checkpoint path",
-                {"key": key, "path": explicit_path, "selected": selected, "exists": selected.exists()},
-            )
-            # endregion agent log
             return selected
 
     ckpt_names: list[str] = []
@@ -323,14 +275,6 @@ def _resolve_checkpoint_path(model_cfg: dict[str, Any]) -> Path:
             for candidate in (ckpt_dir / "checkpoints" / step_name, ckpt_dir / step_name, ckpt_dir):
                 seen_candidates.append(candidate)
                 if candidate.is_file():
-                    # region agent log
-                    _debug_log(
-                        "H2,H3",
-                        "policy/Abot_M0/model.py:_resolve_checkpoint_path",
-                        "resolved checkpoint candidate",
-                        {"step_name": step_name, "ckpt_names": ckpt_names, "selected": candidate, "checked": seen_candidates},
-                    )
-                    # endregion agent log
                     return candidate
 
     raise FileNotFoundError(

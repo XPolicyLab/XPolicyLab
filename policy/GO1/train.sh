@@ -8,9 +8,9 @@ Usage:
   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 Optional environment overrides:
-  LEROBOT_DATA_PATH   Required: path to your RoboDojo LeRobot dataset dir
+  LEROBOT_DATA_PATH   Default: data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>
   MODEL_NAME_OR_PATH  Default: <workspace>/models/GO-1
-  GO1_CFG_PATH        Default: go1/configs/go1_sft_robodojo_shared.py
+  GO1_CFG_PATH        Default: go1/configs/go1_sft_xpolicylab.py
   CTRL_FREQ           Default: 25
   ACTION_CHUNK_SIZE   Default: 25
 EOF
@@ -33,9 +33,8 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 AGIBOT_DIR="${SCRIPT_DIR}/AgiBot-World"
 
-DEFAULT_LEROBOT_DATA_PATH=""  # set LEROBOT_DATA_PATH to your RoboDojo LeRobot dataset dir
 DEFAULT_GO1_MODEL_PATH="$(cd "${ROOT_DIR}/.." && pwd)/models/GO-1"
-DEFAULT_GO1_CFG_PATH="go1/configs/go1_sft_robodojo_shared.py"
+DEFAULT_GO1_CFG_PATH="go1/configs/go1_sft_xpolicylab.py"
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
 export CUDA_HOME="${CUDA_HOME:-/usr/local/cuda-12}"
@@ -45,12 +44,13 @@ echo -e "\033[33m[INFO] CUDA_HOME: ${CUDA_HOME}\033[0m"
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
 echo -e "\033[33m[INFO] Action dim: ${action_dim}\033[0m"
 
+DEFAULT_LEROBOT_DATA_PATH="${SCRIPT_DIR}/data/${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 lerobot_data_path="${LEROBOT_DATA_PATH:-${DEFAULT_LEROBOT_DATA_PATH}}"
 cfg_path="${GO1_CFG_PATH:-${DEFAULT_GO1_CFG_PATH}}"
 
 if [ ! -d "${lerobot_data_path}" ]; then
     echo -e "\033[31m[ERROR] LeRobot dataset path does not exist: ${lerobot_data_path}\033[0m"
-    echo -e "\033[31m[ERROR] Set LEROBOT_DATA_PATH to override the default shared dataset.\033[0m"
+    echo -e "\033[31m[ERROR] Run process_data.sh first or set LEROBOT_DATA_PATH to an existing LeRobot dataset.\033[0m"
     exit 1
 fi
 echo -e "\033[33m[INFO] Using LeRobot dataset path: ${lerobot_data_path}\033[0m"

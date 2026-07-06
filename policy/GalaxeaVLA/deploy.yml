@@ -14,7 +14,6 @@ host: localhost
 
 result_dir: "./results/GalaxeaVLA/"
 
-model_variant: g0plus
 #   g0plus  -> real/g0plus_xpolicylab_finetune (joint)
 #   g0tiny  -> real/g0tiny_xpolicylab_finetune  (SmolVLM2-250M)
 #   pi0     -> real/pi0_r1lite_finetune
@@ -22,8 +21,8 @@ model_variant: g0plus
 model_variant: g0plus
 task_config_name: real/g0plus_xpolicylab_finetune
 
-# Local backbone dir (PaliGemma for g0plus / SmolVLM2 for g0tiny). Required for
-# offline eval; resolved from GALAXEA_PALIGEMMA_PATH if left null.
+# Local backbone dir (PaliGemma for g0plus / SmolVLM2 for g0tiny). If null,
+# setup_eval_policy_server.sh uses GALAXEA_PALIGEMMA_PATH or weights/paligemma-3b-pt-224.
 paligemma_path: null
 
 # Flow-matching denoising steps at inference (null -> use the config default).

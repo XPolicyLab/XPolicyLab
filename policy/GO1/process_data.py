@@ -80,6 +80,8 @@ def _prepare_ee_data_schema(data: dict) -> dict:
             action[action_ee_key] = state[action_ee_key]
 
     return data
+
+
 @dataclass(frozen=True)
 class DatasetConfig:
     use_videos: bool = False
@@ -215,6 +217,20 @@ def load_data(ep_path: str | Path, action_type: str, robot_action_dim_info: dict
     }
 
 
+def _resolve_load_data_dir(raw_task_dir: str, bench_name: str, env_cfg_type: str) -> Path:
+    candidates = [
+        ROOT_PATH / "data" / bench_name / raw_task_dir / env_cfg_type,
+        ROOT_PATH / "data" / raw_task_dir / env_cfg_type,
+    ]
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate
+    raise FileNotFoundError(
+        "Data directory not found: "
+        + " or ".join(str(candidate) for candidate in candidates)
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description="Convert XPolicyLab HDF5 data to LeRobot format for GO1.")
     parser.add_argument("bench_name", type=str, help="Dataset name (e.g., RoboDojo)")
@@ -240,21 +256,16 @@ def main():
     parser.add_argument("--output_dir", type=str, default=None, help="Output directory for LeRobot dataset. Defaults to HF_LEROBOT_HOME.")
     args = parser.parse_args()
 
-    raw_task_dir = args.raw_task_dirs or args.ckpt_name
+    raw_task_dirs = [
+        task_dir.strip()
+        for task_dir in (args.raw_task_dirs or args.ckpt_name).split(",")
+        if task_dir.strip()
+    ]
 
     if args.repo_id is None:
         args.repo_id = (
             f"{args.bench_name}-{args.ckpt_name}-{args.env_cfg_type}-{args.action_type}"
         )
-
-    load_data_dir = os.path.join(ROOT_PATH, "data", args.bench_name, raw_task_dir, args.env_cfg_type)
-    if not os.path.isdir(load_data_dir):
-        # Fallback: try without bench_name level (some setups use data/{raw_task_dir}/{env_cfg_type})
-        load_data_dir_alt = os.path.join(ROOT_PATH, "data", raw_task_dir, args.env_cfg_type)
-        if os.path.isdir(load_data_dir_alt):
-            load_data_dir = load_data_dir_alt
-        else:
-            raise FileNotFoundError(f"Data directory not found: {load_data_dir} or {load_data_dir_alt}")
 
     env_cfg = load_yaml(os.path.join(ROOT_PATH, "env_cfg", f"{args.env_cfg_type}.yml"))
     robot_type = env_cfg["config"]["robot"]
@@ -262,7 +273,7 @@ def main():
         os.path.join(ROOT_PATH, "env_cfg/robot", "_robot_info.json")
     )[robot_type]
 
-    print(f"[GO1 process_data] Dataset: {args.bench_name}, Raw task dir: {raw_task_dir}")
+    print(f"[GO1 process_data] Dataset: {args.bench_name}, Raw task dirs: {','.join(raw_task_dirs)}")
     print(f"[GO1 process_data] Robot: {robot_type}, Action dim info: {robot_action_dim_info}")
     print(f"[GO1 process_data] Output repo_id: {args.repo_id}, FPS: {args.fps}")
     print(
@@ -281,13 +292,17 @@ def main():
         root=args.output_dir,
     )
 
-    episode_files = sorted(Path(load_data_dir).glob("data/episode_*.hdf5"))
-    if args.expert_data_num is not None and args.expert_data_num > 0:
-        episode_files = episode_files[: args.expert_data_num]
+    episode_jobs = []
+    for raw_task_dir in raw_task_dirs:
+        load_data_dir = _resolve_load_data_dir(raw_task_dir, args.bench_name, args.env_cfg_type)
+        episode_files = sorted(load_data_dir.glob("data/episode_*.hdf5"))
+        if args.expert_data_num is not None and args.expert_data_num > 0:
+            episode_files = episode_files[: args.expert_data_num]
+        episode_jobs.extend((raw_task_dir, ep_file) for ep_file in episode_files)
 
-    print(f"[GO1 process_data] Found {len(episode_files)} episodes to process")
+    print(f"[GO1 process_data] Found {len(episode_jobs)} episodes to process")
 
-    for ep_file in tqdm(episode_files, desc="Processing episodes", unit="episode"):
+    for raw_task_dir, ep_file in tqdm(episode_jobs, desc="Processing episodes", unit="episode"):
         try:
             data = load_data(ep_file, args.action_type, robot_action_dim_info)
             num_frames = data["state"].shape[0]
@@ -304,7 +319,7 @@ def main():
                 dataset.add_frame(frame, task=task_str)
 
             dataset.save_episode()
-            tqdm.write(f"Finished {ep_file.name} with {num_frames} frames")
+            tqdm.write(f"Finished {raw_task_dir}/{ep_file.name} with {num_frames} frames")
         except Exception as e:
             tqdm.write(f"Error processing episode {ep_file}: {e}")
 

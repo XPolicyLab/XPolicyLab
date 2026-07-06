@@ -13,7 +13,7 @@
 #   MOLMOACT2_DATASET_REPO_ID  传给 --dataset.repo_id 的标识
 #   MOLMOACT2_CHECKPOINT_PATH  起点权重，默认 allenai/MolmoAct2
 #   MOLMOACT2_OUTPUT_ROOT        训练输出根目录，默认 policy/MolmoACT2/checkpoints
-#   MOLMOACT2_BATCH_SIZE       每卡 batch size，默认 32（8 卡 global batch=256）
+#   MOLMOACT2_BATCH_SIZE       每卡 batch size，默认 16（8 卡 global batch=128）
 #   MOLMOACT2_STEPS            训练步数，默认 100000
 #   MOLMOACT2_SAVE_FREQ        保存间隔，默认 10000
 #   MOLMOACT2_NUM_WORKERS      dataloader workers，默认 4

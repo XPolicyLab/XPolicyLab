@@ -61,8 +61,6 @@ resolve_checkpoint_path() {
 # ckpt_name is the full run directory name under checkpoints/.
 checkpoint_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
 checkpoint_path="$(resolve_checkpoint_path "${checkpoint_path}" "${checkpoint_dir}")"
-# If the training data directory name differs from ckpt_name, pass config_path explicitly.
-config_path="${config_path:-${SCRIPT_DIR}/data/${ckpt_name}/hrdt_finetune_xpolicy.yaml}"
 lang_embedding_path="${lang_embedding_path:-${SCRIPT_DIR}/H_RDT/datasets/xpolicylab/lang_embeddings/${task_name}.pt}"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")

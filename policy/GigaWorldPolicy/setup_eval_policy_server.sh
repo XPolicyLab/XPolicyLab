@@ -21,9 +21,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
-yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 INNER_DIR="${SCRIPT_DIR}/giga_world_policy"
 policy_name="$(basename "${SCRIPT_DIR}")"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 

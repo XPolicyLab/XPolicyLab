@@ -32,34 +32,6 @@ chunks_per_video_prefill="${AHA_WAM_CHUNKS_PER_VIDEO_PREFILL:-4}"
 prepend_episode_first_frame="${AHA_WAM_PREPEND_EPISODE_FIRST_FRAME:-true}"
 env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-${BENCH_ROOT}/env_cfg}"
 
-#region agent log
-python3 - "${bench_name}" "${task_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}" "${policy_name}" "${BENCH_ROOT}" "${yaml_file}" "${env_cfg_root}" <<'PY' || true
-import json, sys, time
-payload = {
-    "sessionId": "c13f7c",
-    "runId": "post-fix",
-    "hypothesisId": "H1,H2",
-    "location": "policy/AHA_WAM/setup_eval_policy_server.sh:server_paths",
-    "message": "resolved AHA_WAM server wrapper paths",
-    "data": {
-        "bench_name": sys.argv[1],
-        "task_name": sys.argv[2],
-        "ckpt_name": sys.argv[3],
-        "env_cfg_type": sys.argv[4],
-        "action_type": sys.argv[5],
-        "seed": sys.argv[6],
-        "policy_name": sys.argv[7],
-        "bench_root": sys.argv[8],
-        "yaml_file": sys.argv[9],
-        "env_cfg_root": sys.argv[10],
-    },
-    "timestamp": int(time.time() * 1000),
-}
-with open("/personal/tianxing/RoboDojo/XPolicyLab/.cursor/debug-c13f7c.log", "a", encoding="utf-8") as f:
-    f.write(json.dumps(payload, ensure_ascii=True) + "\n")
-PY
-#endregion
-
 if [[ -z "${checkpoint_path}" && "${allow_dummy_policy}" != "true" ]]; then
     weights_dir="${run_dir}/checkpoints/weights"
     if [[ -d "${weights_dir}" ]]; then

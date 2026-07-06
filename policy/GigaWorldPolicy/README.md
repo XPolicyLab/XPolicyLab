@@ -57,7 +57,7 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `GIGAWORLD_TASK_NAMES` | Optional source task name or comma-separated task names. Defaults to `ckpt_name`. |
 
 ```bash
 cd XPolicyLab/policy/GigaWorldPolicy
@@ -68,7 +68,7 @@ bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
 # Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+GIGAWORLD_TASK_NAMES=stack_bowls bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50
 ```
 
 ## Model Training
@@ -203,7 +203,7 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
 | `checkpoint_file` | Runtime or checkpoint option consumed by this adapter. |
 | `base_model_path` | Runtime or checkpoint option consumed by this adapter. |
-| `stats_path` | Runtime or checkpoint option consumed by this adapter. |
+| `stats_path` | Norm stats path. If unset, eval reads `GIGAWORLD_NORM_PATH` or falls back to `data/<ckpt_name>/norm_stats_delta.json`. |
 | `t5_embedding_path` | Runtime or checkpoint option consumed by this adapter. |
 | `disable_dynamic_prompt` | Runtime or checkpoint option consumed by this adapter. |
 | `prompt_max_length` | Runtime or checkpoint option consumed by this adapter. |

@@ -19,7 +19,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
-yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
+policy_name="$(basename "${SCRIPT_DIR}")"
+yaml_file="${SCRIPT_DIR}/deploy.yml"
 
 ADAPTER_DIR="${SCRIPT_DIR}/GalaxeaVLA/xpolicylab_adapter"
 
@@ -69,10 +70,29 @@ if [[ "${action_type}" != "joint" ]]; then
     echo -e "\033[31m[SERVER] GalaxeaVLA only supports action_type=joint, got '${action_type}'\033[0m" >&2
     exit 1
 fi
-task_config_name="real/g0plus_xpolicylab_finetune"
-echo -e "\033[33m[SERVER] task_config_name=${task_config_name}\033[0m"
+read -r task_config_name paligemma_path < <(SCRIPT_DIR="${SCRIPT_DIR}" YAML_FILE="${yaml_file}" python3 - <<'PY'
+import os
+import yaml
 
-paligemma_path="${GALAXEA_PALIGEMMA_PATH:-${SCRIPT_DIR}/weights/paligemma-3b-pt-224}"
+script_dir = os.environ["SCRIPT_DIR"]
+yaml_file = os.environ["YAML_FILE"]
+with open(yaml_file, "r", encoding="utf-8") as f:
+    cfg = yaml.safe_load(f) or {}
+
+task_config_name = cfg.get("task_config_name") or "real/g0plus_xpolicylab_finetune"
+paligemma_path = (
+    cfg.get("paligemma_path")
+    or os.environ.get("GALAXEA_PALIGEMMA_PATH")
+    or os.path.join(script_dir, "weights/paligemma-3b-pt-224")
+)
+print(task_config_name, paligemma_path)
+PY
+)
+if [[ "${paligemma_path}" != /* ]]; then
+    paligemma_path="${SCRIPT_DIR}/${paligemma_path}"
+fi
+echo -e "\033[33m[SERVER] task_config_name=${task_config_name}\033[0m"
+echo -e "\033[33m[SERVER] paligemma_path=${paligemma_path}\033[0m"
 
 action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
@@ -98,7 +118,7 @@ exec env \
         --overrides \
             port="${policy_server_port}" \
             host="${policy_server_host}" \
-            policy_name="GalaxeaVLA" \
+            policy_name="${policy_name}" \
             task_name="${task_name}" \
             bench_name="${bench_name}" \
             env_cfg_type="${env_cfg_type}" \

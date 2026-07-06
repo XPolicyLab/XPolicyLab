@@ -166,7 +166,7 @@ Common parameter meanings used across the commands above:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_conda_env` | Conda env, `uv`, or a uv project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 Policy-specific `deploy.yml` keys worth checking before evaluation:
@@ -199,6 +199,6 @@ Frequently used environment variables detected in the adapter scripts:
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Training accepts a short run id such as `cotrain`; evaluation should use the full checkpoint directory name such as `RoboDojo-cotrain-arx_x5-joint-0`, or an explicit absolute/relative checkpoint path.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

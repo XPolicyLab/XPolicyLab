@@ -62,11 +62,33 @@ _port_is_listening() {
     # Minimal containers often lack ss/lsof/netstat. On Linux, /proc/net/tcp*
     # gives us the LISTEN state without opening a websocket connection.
     if command -v python3 >/dev/null 2>&1; then
-        python3 - "${listen_port}" <<'PY'
+        python3 - "${listen_host}" "${listen_port}" <<'PY'
 import os
+import socket
 import sys
 
-port_hex = f"{int(sys.argv[1]):04X}"
+host = sys.argv[1]
+port_hex = f"{int(sys.argv[2]):04X}"
+
+_WILDCARDS = {"00000000", "00000000000000000000000000000000"}
+
+# /proc/net/tcp stores IPv4 addresses as little-endian hex. Resolve the target
+# host so a listener bound to a different interface does not false-positive.
+host_hex = None
+if host not in ("", "*", "0.0.0.0", "::"):
+    try:
+        host_hex = socket.inet_aton(socket.gethostbyname(host))[::-1].hex().upper()
+    except OSError:
+        host_hex = None  # unresolvable; fall back to port-only matching
+
+
+def _addr_matches(local_addr_hex: str) -> bool:
+    if host_hex is None or local_addr_hex in _WILDCARDS:
+        return True
+    # Exact IPv4 match, or an IPv4-mapped IPv6 entry ending with the same bytes.
+    return local_addr_hex == host_hex or local_addr_hex.endswith(host_hex)
+
+
 checked = False
 for proc_path in ("/proc/net/tcp", "/proc/net/tcp6"):
     if not os.path.exists(proc_path):
@@ -76,7 +98,10 @@ for proc_path in ("/proc/net/tcp", "/proc/net/tcp6"):
         next(handle, None)
         for line in handle:
             parts = line.split()
-            if len(parts) >= 4 and parts[1].rsplit(":", 1)[-1].upper() == port_hex and parts[3] == "0A":
+            if len(parts) < 4 or parts[3] != "0A":
+                continue
+            local_addr, _, local_port = parts[1].rpartition(":")
+            if local_port.upper() == port_hex and _addr_matches(local_addr.upper()):
                 raise SystemExit(0)
 raise SystemExit(1 if checked else 2)
 PY
@@ -124,24 +149,40 @@ PY
 
 echo -e "${BLUE}${BOLD}[CONNECTING]${RESET} ${label} -> ${host}:${port} (PID=${pid}, timeout=${timeout_sec}s)"
 
+# Carriage-return progress bars flood redirected logs; only animate on a TTY.
+stdout_is_tty=0
+if [[ -t 1 ]]; then
+    stdout_is_tty=1
+fi
+
 for elapsed in $(seq 0 "${timeout_sec}"); do
     if ! kill -0 "${pid}" 2>/dev/null; then
-        printf '\n' >&2
+        if (( stdout_is_tty )); then
+            printf '\n' >&2
+        fi
         echo -e "${RED}${BOLD}[ERROR]${RESET} ${label} (PID=${pid}) exited before opening port ${port}." >&2
         exit 1
     fi
     if _port_is_listening "${host}" "${port}"; then
-        printf '\n'
+        if (( stdout_is_tty )); then
+            printf '\n'
+        fi
         echo -e "${GREEN}${BOLD}[CONNECTED]${RESET} ${label} ready on ${host}:${port} (PID=${pid})"
         exit 0
     fi
-    _draw_wait_progress "${elapsed}" "${timeout_sec}" "${label}" "${host}" "${port}"
+    if (( stdout_is_tty )); then
+        _draw_wait_progress "${elapsed}" "${timeout_sec}" "${label}" "${host}" "${port}"
+    elif (( elapsed > 0 && elapsed % 30 == 0 )); then
+        echo -e "${BLUE}${BOLD}[CONNECTING]${RESET} ${label} still waiting for ${host}:${port} (${elapsed}/${timeout_sec}s)"
+    fi
     if (( elapsed >= timeout_sec )); then
         break
     fi
     sleep 1
 done
 
-printf '\n' >&2
+if (( stdout_is_tty )); then
+    printf '\n' >&2
+fi
 echo -e "${RED}${BOLD}[ERROR]${RESET} ${label} timed out after ${timeout_sec}s waiting for port ${port}." >&2
 exit 1

@@ -38,8 +38,10 @@ def _resolve_ckpt_path(ckpt_path: str) -> str:
         return ckpt_path
 
     def _is_run_root(path: str) -> bool:
-        return os.path.isfile(os.path.join(path, "model.pt")) or os.path.isdir(
-            os.path.join(path, "checkpoints")
+        return (
+            os.path.isfile(os.path.join(path, "model.pt"))
+            or os.path.isfile(os.path.join(path, "model_state_dict.pt"))
+            or os.path.isdir(os.path.join(path, "checkpoints"))
         )
 
     if not _is_run_root(ckpt_path) and os.path.isdir(ckpt_path):
@@ -56,7 +58,9 @@ def _resolve_ckpt_path(ckpt_path: str) -> str:
                 ckpt_path = run_dir
                 break
 
-    if os.path.isfile(os.path.join(ckpt_path, "model.pt")):
+    if os.path.isfile(os.path.join(ckpt_path, "model.pt")) or os.path.isfile(
+        os.path.join(ckpt_path, "model_state_dict.pt")
+    ):
         return ckpt_path
 
     steps_root = os.path.join(ckpt_path, "checkpoints")
@@ -67,7 +71,10 @@ def _resolve_ckpt_path(ckpt_path: str) -> str:
                 for name in os.listdir(steps_root)
                 if name.startswith("step_")
                 and os.path.isdir(os.path.join(steps_root, name))
-                and os.path.isfile(os.path.join(steps_root, name, "model.pt"))
+                and (
+                    os.path.isfile(os.path.join(steps_root, name, "model.pt"))
+                    or os.path.isfile(os.path.join(steps_root, name, "model_state_dict.pt"))
+                )
             ),
             key=lambda name: int(name.split("_", 1)[1]),
         )

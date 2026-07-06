@@ -249,7 +249,7 @@ class Model(ModelTemplate):
             or os.environ.get("GIGAWORLD_PRETRAINED_PATH")
             or os.environ.get("WAN22_DIFFUSERS_PATH")
         )
-        stats_path = _as_path(self.model_cfg.get("stats_path"))
+        stats_path = _as_path(self.model_cfg.get("stats_path") or os.environ.get("GIGAWORLD_NORM_PATH"))
         if stats_path is None:
             ckpt_name = self.model_cfg.get("ckpt_name")
             if ckpt_name:

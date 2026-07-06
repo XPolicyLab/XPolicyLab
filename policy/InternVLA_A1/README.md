@@ -37,14 +37,23 @@ cd XPolicyLab/policy/InternVLA_A1
 # Example: install dependencies for the InternVLA_A1 policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. internvla-a1
+conda activate <policy_env>  # e.g. internvla_a1
 ```
 
 ## Demo Data Processing
 
 What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
 
-This adapter has no top-level `process_data.sh`. It expects data in the format consumed by the upstream project or by `deploy.yml`/environment variables. Use the upstream README under the vendored source tree when custom conversion is required.
+This adapter has no top-level `process_data.sh`. It expects a LeRobot dataset repo id that the upstream trainer can load. By default, `train.sh` uses `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>` as `INTERNVLA_REPO_ID`; set `INTERNVLA_REPO_ID=<repo_id>` when the prepared dataset uses a different name.
+
+Before training with the default `INTERNVLA_USE_EXTERNAL_STATS=true`, compute normalization stats for the same repo id and action mode:
+
+```bash
+cd XPolicyLab/policy/InternVLA_A1
+bash compute_norm.sh <repo_id>
+```
+
+The stats are written under `${HF_LEROBOT_HOME}/stats/${INTERNVLA_ACTION_MODE:-delta}/<repo_id>/stats.json`, which is the path consumed by the upstream finetune script. To bypass this requirement, run training with `INTERNVLA_USE_EXTERNAL_STATS=false`.
 
 ## Model Training
 
@@ -74,6 +83,8 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+`train.sh` and `deploy.yml` expect the shared model assets at `checkpoints/shared/Cosmos-Tokenizer-CI8x8` and `checkpoints/shared/Qwen3-VL-2B-Instruct` by default. If those assets live elsewhere, export `COSMOS_PATH` and `QWEN3_2B_PATH`, or set `cosmos_path` and `qwen3_2b_path` in `deploy.yml` before training/evaluation.
 
 ## Deployment and Evaluation
 

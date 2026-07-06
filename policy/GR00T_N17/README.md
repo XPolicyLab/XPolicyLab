@@ -58,8 +58,7 @@ Parameters used by the command:
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional label for compatibility only. It is logged but not used for episode subsetting. |
 
 ```bash
 cd XPolicyLab/policy/GR00T_N17
@@ -69,8 +68,8 @@ bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+# Example: name a 50-episode ablation. Point GR00T_SRC_DATASET at the subset dataset first.
+GR00T_SRC_DATASET=RoboDojo_sim_arx-x5_50ep bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint
 ```
 
 ## Model Training
@@ -100,7 +99,7 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation, or set `model_dir` in `deploy.yml` to a directory relative to `policy/GR00T_N17/`.
 
 ## Deployment and Evaluation
 
@@ -200,8 +199,8 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | `policy_name` | Runtime or checkpoint option consumed by this adapter. |
 | `embodiment_tag` | Runtime or checkpoint option consumed by this adapter. |
 | `checkpoint_num` | Runtime or checkpoint option consumed by this adapter. |
-| `model_dir` | Runtime or checkpoint option consumed by this adapter. |
-| `cosmos_model_path` | Runtime or checkpoint option consumed by this adapter. |
+| `model_dir` | Optional checkpoint directory relative to `policy/GR00T_N17/`; when set, it bypasses `checkpoints/<ckpt_name>`. |
+| `cosmos_model_path` | Hugging Face repo id, or local Cosmos directory relative to `policy/GR00T_N17/`. |
 | `default_prompt` | Runtime or checkpoint option consumed by this adapter. |
 | `policy_uv_env_path` | Runtime or checkpoint option consumed by this adapter. |
 
@@ -216,14 +215,15 @@ Frequently used environment variables detected in the adapter scripts:
 | `GIT_LFS_SKIP_SMUDGE` | Optional override used by the local scripts or upstream runtime. |
 | `GLOBAL_BATCH_SIZE` | Optional override used by the local scripts or upstream runtime. |
 | `GR00T` | Optional override used by the local scripts or upstream runtime. |
-| `GR00T_BASE_MODEL` | Optional override used by the local scripts or upstream runtime. |
-| `GR00T_COSMOS_MODEL` | Optional override used by the local scripts or upstream runtime. |
-| `GR00T_LEROBOT_HOME` | Optional override used by the local scripts or upstream runtime. |
+| `GR00T_BASE_MODEL` | Base GR00T model path or Hugging Face id used by `train.sh`. |
+| `GR00T_COSMOS_MODEL` | Cosmos model path or Hugging Face id used by `train.sh`. |
+| `GR00T_LEROBOT_HOME` | LeRobot dataset root used by `process_data.sh` and `train.sh`. |
 | `GR00T_N17` | Optional override used by the local scripts or upstream runtime. |
 | `GR00T_ROOT` | Optional override used by the local scripts or upstream runtime. |
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Keep `ckpt_name` stable between data processing and training. For evaluation, pass the full checkpoint directory name such as `RoboDojo-stack_bowls_50ep-arx_x5-joint-0`.
+- For data-size ablations, create or select a subset source dataset with `GR00T_SRC_DATASET` and encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

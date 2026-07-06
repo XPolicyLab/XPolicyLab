@@ -38,10 +38,10 @@ Parameters used by the command:
 
 ```bash
 cd XPolicyLab/policy/LDA_1B
-# Example: install dependencies for the LDA_1B policy adapter.
-bash install.sh
+# Example: install dependencies into the default LDA_1B conda environment.
+bash install.sh LDA_1B
 # Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. lda-1b
+conda activate LDA_1B
 ```
 
 ## Demo Data Processing
@@ -99,7 +99,7 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. During evaluation, pass that run id as `ckpt_name`, for example `RoboDojo-cotrain-arx_x5-joint-0`; the server script resolves the latest `checkpoints/steps_*_pytorch_model.pt` inside it.
 
 ## Deployment and Evaluation
 
@@ -111,7 +111,7 @@ Parameters used by `eval.sh`:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Checkpoint run id under `checkpoints/`, for example `RoboDojo-cotrain-arx_x5-joint-0`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -135,7 +135,7 @@ Parameters used by the split server/client flow:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Checkpoint run id under `checkpoints/`, for example `RoboDojo-cotrain-arx_x5-joint-0`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -183,7 +183,7 @@ Common parameter meanings used across the commands above:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Checkpoint run id under `checkpoints/`, for example `RoboDojo-cotrain-arx_x5-joint-0`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -203,22 +203,22 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | `upstream_dir` | Runtime or checkpoint option consumed by this adapter. |
 | `sample_data_dir` | Runtime or checkpoint option consumed by this adapter. |
 
-Frequently used environment variables detected in the adapter scripts:
+Frequently used environment variables:
 
 | Variable | Notes |
 |---|---|
-| `ADAPTER_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `AFTER` | Optional override used by the local scripts or upstream runtime. |
-| `BICUBIC` | Optional override used by the local scripts or upstream runtime. |
-| `CLEANUP` | Optional override used by the local scripts or upstream runtime. |
-| `EMBODIMENT_TAG_MAPPING` | Optional override used by the local scripts or upstream runtime. |
-| `FLASH_ATTENTION_FORCE_BUILD` | Optional override used by the local scripts or upstream runtime. |
-| `IGNORE` | Optional override used by the local scripts or upstream runtime. |
-| `IMG_MEAN` | Optional override used by the local scripts or upstream runtime. |
-| `INTER_AREA` | Optional override used by the local scripts or upstream runtime. |
-| `INTER_CUBIC` | Optional override used by the local scripts or upstream runtime. |
-| `LDA_1B` | Optional override used by the local scripts or upstream runtime. |
-| `LDA_ACCELERATE_CONFIG` | Optional override used by the local scripts or upstream runtime. |
+| `LDA_DATA_ROOT` | Override converted LeRobot data root; default is `policy/LDA_1B/data`. |
+| `LDA_CKPT_ROOT` | Override training checkpoint root; default is `policy/LDA_1B/checkpoints`. |
+| `LDA_DATASET_ID` | Override the converted dataset id consumed by training. Must match the folder under `LDA_DATA_ROOT`. |
+| `LDA_CKPT_SETTING` | Override the training run id written under `LDA_CKPT_ROOT`. |
+| `LDA_PRETRAINED_CHECKPOINT` | Override the pretrained initialization checkpoint; default is `checkpoints/LDA-pretrain/LDA-pretrain.pt` when present. |
+| `LDA_CHECKPOINT_PATH` | Evaluation-only override for an exact `steps_*_pytorch_model.pt` file. |
+| `LDA_NUM_PROCESSES` | Number of accelerate processes; default is `8`. |
+| `LDA_PER_DEVICE_BATCH_SIZE` | Per-device training batch size; default is `16`. |
+| `LDA_MAX_TRAIN_STEPS` | Training step cap; default is `50000`. |
+| `LDA_SAVE_INTERVAL` | Checkpoint save interval; default is `5000`. |
+| `LDA_ACCELERATE_CONFIG` | Accelerate config path; default is `lda/config/deepseeds/deepspeed_zero2.yaml`. |
+| `EVAL_ENV_TYPE` | Evaluation client mode: unset/`sim`, `debug`, or `real`. |
 
 ## Notes
 

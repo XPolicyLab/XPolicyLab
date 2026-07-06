@@ -44,6 +44,9 @@ def _find_latest_checkpoint(run_dir):
 
 def _list_candidate_run_dirs(checkpoints_dir, run_basename):
     candidates = []
+    if not run_basename:
+        return candidates
+
     latest_file = os.path.join(checkpoints_dir, f"{run_basename}.latest")
     if os.path.isfile(latest_file):
         with open(latest_file, "r", encoding="utf-8") as f:
@@ -70,11 +73,35 @@ def _list_candidate_run_dirs(checkpoints_dir, run_basename):
     return candidates
 
 
+def _candidate_run_basenames(model_cfg):
+    ckpt_name = str(model_cfg.get("ckpt_name") or "")
+    names = [ckpt_name] if ckpt_name else []
+
+    bench_name = model_cfg.get("bench_name") or model_cfg.get("dataset_name")
+    env_cfg_type = model_cfg.get("env_cfg_type")
+    action_type = model_cfg.get("action_type")
+    seed = model_cfg.get("seed")
+
+    if all(value not in (None, "") for value in (bench_name, ckpt_name, env_cfg_type, action_type, seed)):
+        standard_name = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}-{seed}"
+        if ckpt_name != standard_name:
+            names.append(standard_name)
+
+        expert_data_num = model_cfg.get("expert_data_num")
+        if expert_data_num not in (None, ""):
+            legacy_name = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{expert_data_num}-{action_type}-{seed}"
+            if ckpt_name != legacy_name:
+                names.append(legacy_name)
+
+    return list(dict.fromkeys(names))
+
+
 def _resolve_model_assets(model_cfg):
     checkpoints_dir = os.path.join(_SCRIPT_DIR, "checkpoints")
     model_path = _normalize_optional_path(model_cfg.get("model_path"))
     data_stats_path = _normalize_optional_path(model_cfg.get("data_stats_path"))
     run_dir = None
+    checked_run_names = []
 
     if model_path:
         latest_ckpt = _find_latest_checkpoint(model_path)
@@ -84,12 +111,15 @@ def _resolve_model_assets(model_cfg):
         elif os.path.basename(model_path).startswith("checkpoint-"):
             run_dir = os.path.dirname(model_path)
     else:
-        run_basename = str(model_cfg.get("ckpt_name", ""))
-        for candidate_run_dir in _list_candidate_run_dirs(checkpoints_dir, run_basename):
-            candidate_model_path = _find_latest_checkpoint(candidate_run_dir)
-            if candidate_model_path is not None:
-                run_dir = candidate_run_dir
-                model_path = candidate_model_path
+        for run_basename in _candidate_run_basenames(model_cfg):
+            checked_run_names.append(run_basename)
+            for candidate_run_dir in _list_candidate_run_dirs(checkpoints_dir, run_basename):
+                candidate_model_path = _find_latest_checkpoint(candidate_run_dir)
+                if candidate_model_path is not None:
+                    run_dir = candidate_run_dir
+                    model_path = candidate_model_path
+                    break
+            if model_path is not None:
                 break
 
     if data_stats_path is None:
@@ -102,6 +132,13 @@ def _resolve_model_assets(model_cfg):
                 break
 
     if model_path is None:
+        if checked_run_names:
+            raise FileNotFoundError(
+                "Could not resolve GO1 checkpoint under "
+                f"{checkpoints_dir}. Checked run names: {checked_run_names}. "
+                "Pass the full run directory as ckpt_name or set MODEL_PATH/model_path explicitly."
+            )
+
         bundled_model_path = os.path.join(_SCRIPT_DIR, "AgiBot-World", "go1", "models", "GO-1")
         if os.path.isdir(bundled_model_path):
             model_path = bundled_model_path

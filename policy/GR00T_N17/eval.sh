@@ -14,7 +14,6 @@ eval_env_conda_env=${10}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
-yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"

@@ -15,6 +15,7 @@ policy_server_host=${10:-localhost}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
+policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 ADAPTER_DIR="${SCRIPT_DIR}/LDA-1B/xpolicylab_adapter"
 
@@ -24,10 +25,16 @@ ckpt_run_id="$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_
 
 if [[ -n "${LDA_CHECKPOINT_PATH:-}" ]]; then
     checkpoint_path="${LDA_CHECKPOINT_PATH}"
+    if ! xpolicylab_is_loadable_checkpoint "${checkpoint_path}"; then
+        echo -e "\033[31m[SERVER] LDA_CHECKPOINT_PATH is not a loadable checkpoint: ${checkpoint_path}\033[0m" >&2
+        echo -e "\033[31m[SERVER] Expected a .pt file whose run dir contains config.yaml and dataset_statistics.json.\033[0m" >&2
+        exit 1
+    fi
 elif ! checkpoint_path="$(xpolicylab_resolve_checkpoint_pt "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
     "${env_cfg_type}" "${action_type}" "${seed}")"; then
     echo -e "\033[31m[SERVER] checkpoint not found for ckpt_run_id=${ckpt_run_id}\033[0m" >&2
     echo -e "\033[31m[SERVER] (eval args: dataset=${bench_name} ckpt_name=${ckpt_name} env=${env_cfg_type} action=${action_type} seed=${seed})\033[0m" >&2
+    echo -e "\033[31m[SERVER] Expected a run dir with config.yaml, dataset_statistics.json, and checkpoints/steps_*_pytorch_model.pt.\033[0m" >&2
     echo -e "\033[31m[SERVER] Set LDA_CHECKPOINT_PATH=... to override.\033[0m" >&2
     exit 1
 fi

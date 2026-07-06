@@ -82,7 +82,7 @@ Parameters used by the command:
 | Parameter | Description |
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Training run identifier, for example `cotrain`. |
+| `ckpt_name` | Training/data run identifier, for example `cotrain`. The generated checkpoint directory appends bench, env, action, and seed. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Random seed. |
@@ -94,14 +94,13 @@ cd XPolicyLab/policy/FastWAM
 # Template: train a policy run on one GPU or a GPU list.
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
-# Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
-
-# Example: train the same run on four GPUs if the upstream trainer supports it.
+# Example: train a cotrain run on four GPUs.
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+
+FastWAM's upstream model is large; multi-GPU training is recommended. The wrapper defaults to `FASTWAM_BATCH_SIZE=8`, but you may still need to lower it or increase the GPU count depending on available memory.
 
 ## Deployment and Evaluation
 
@@ -113,7 +112,7 @@ Parameters used by `eval.sh`:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Full checkpoint/run directory name under `checkpoints/`, for example `RoboDojo-cotrain-arx_x5-joint-0`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -137,7 +136,7 @@ Parameters used by the split server/client flow:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Full checkpoint/run directory name under `checkpoints/`, for example `RoboDojo-cotrain-arx_x5-joint-0`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -185,7 +184,7 @@ Common parameter meanings used across the commands above:
 |---|---|
 | `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
-| `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
+| `ckpt_name` | Full checkpoint/run directory name under `checkpoints/`, for example `RoboDojo-cotrain-arx_x5-joint-0`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `seed` | Evaluation seed. |
@@ -230,6 +229,7 @@ Frequently used environment variables detected in the adapter scripts:
 
 ## Notes
 
-- Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
+- Use the same logical `ckpt_name` for data processing and training. During evaluation, pass the generated checkpoint directory name, usually `<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>`.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- Use the same `action_type` for data processing, training, and evaluation. The reference FastWAM path follows XPolicyLab's `pack_robot_state` / `unpack_robot_state` helpers directly and does not add policy-local `ee` pose conversion.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.

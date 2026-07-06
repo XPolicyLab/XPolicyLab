@@ -41,6 +41,8 @@ export GIGAWORLD_CONFIG=configs.xpolicylab_gigaworld.config
 export GIGAWORLD_WANDB_PROJECT=gwp-xpolicylab
 ```
 
+During evaluation, `GIGAWORLD_NORM_PATH` is used only when `deploy.yml` does not set `stats_path`; if neither is set, the adapter falls back to `data/<ckpt_name>/norm_stats_delta.json`.
+
 ## XPolicyLab Deploy
 
 Run `bash install.sh` before first use. The deploy policy server env is normally `gigaworld-policy` or the conda env passed to `install.sh`; the env client uses the XPolicyLab environment.

@@ -147,7 +147,7 @@ def main():
     parser.add_argument("env_cfg_type")
     parser.add_argument("action_type", choices=["joint"])
     parser.add_argument(
-        "expert_data_num",
+        "max_episodes",
         type=int,
         nargs="?",
         default=0,
@@ -187,14 +187,14 @@ def main():
         for task in tasks:
             load_dir = _resolve_task_load_dir(batch_root, task, args.env_cfg_type)
             instruction = args.instruction or task.replace("_", " ")
-            for ep_path in _episode_paths(load_dir, args.expert_data_num):
+            for ep_path in _episode_paths(load_dir, args.max_episodes):
                 plan.append((ep_path, instruction, task))
     else:
         src_root = args.src_root or os.path.join(workspace_root, "data")
         load_dir = os.path.join(src_root, args.bench_name, args.ckpt_name, args.env_cfg_type)
         tag = _dataset_tag(args.bench_name, args.ckpt_name, args.env_cfg_type, args.action_type)
         instruction = args.instruction or args.ckpt_name.replace("_", " ")
-        plan = [(p, instruction, args.ckpt_name) for p in _episode_paths(load_dir, args.expert_data_num)]
+        plan = [(p, instruction, args.ckpt_name) for p in _episode_paths(load_dir, args.max_episodes)]
 
     if not plan:
         raise SystemExit("no episodes found to convert")

@@ -22,6 +22,7 @@ source "${ADAPTER_DIR}/_artifact_paths.sh"
 out_tag="$(xpolicylab_dataset_tag "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}")"
 
 echo "[process_data_batch] root=${batch_root} -> data/${out_tag}-lerobot/"
+echo "[process_data_batch] max_per_task=${max_per_task} (0 = all episodes per task)"
 echo "[process_data_batch] standardizing every camera frame to RGB HWC (240, 320, 3)"
 
 tasks_arg=()
@@ -33,6 +34,6 @@ source "${UPSTREAM_DIR}/.venv/bin/activate"
 PYTHONPATH="${ROOT_DIR}:${UPSTREAM_DIR}/src:${PYTHONPATH:-}" \
 python "${UPSTREAM_DIR}/xpolicylab_adapter/convert_to_galaxea_lerobot.py" \
     "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" \
-    --expert_data_num "${max_per_task:-0}" \
+    "${max_per_task:-0}" \
     --batch_root "${batch_root}" \
     "${tasks_arg[@]}"

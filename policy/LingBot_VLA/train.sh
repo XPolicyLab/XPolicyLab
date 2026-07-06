@@ -33,13 +33,30 @@ export LEROBOT_DATASET_REPO_ID="${LEROBOT_DATASET_REPO_ID:-$(resolve_lerobot_rep
 
 ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
-config_path="${LINGBOT_VLA_CONFIG_PATH:-configs/vla/robodojo_sim_arx_x5.yaml}"
+config_path="${LINGBOT_VLA_CONFIG_PATH:-configs/vla/robotwin_load20000h.yaml}"
 data_path="${LINGBOT_VLA_DATA_PATH:-${LEROBOT_DATA_ROOT}/${LEROBOT_DATASET_REPO_ID}}"
 export LINGBOT_VLA_DATA_PATH="${data_path}"
 export PYTHONHASHSEED="${seed}"
 
 mkdir -p "${ckpt_dir}"
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
+
+if [[ ! -f "${POLICY_DIR}/lingbot_vla/${config_path}" && ! -f "${config_path}" ]]; then
+  echo "[LingBot_VLA] ERROR: config not found: ${config_path}" >&2
+  echo "[LingBot_VLA] Set LINGBOT_VLA_CONFIG_PATH to an existing config under lingbot_vla/." >&2
+  exit 1
+fi
+
+extra_train_args=()
+if [[ -n "${LINGBOT_VLA_MODEL_PATH:-}" ]]; then
+  extra_train_args+=(--model.model_path "${LINGBOT_VLA_MODEL_PATH}")
+fi
+if [[ -n "${LINGBOT_VLA_TOKENIZER_PATH:-${QWEN25_PATH:-}}" ]]; then
+  extra_train_args+=(--model.tokenizer_path "${LINGBOT_VLA_TOKENIZER_PATH:-${QWEN25_PATH:-}}")
+fi
+if [[ -n "${LINGBOT_VLA_NORM_STATS_FILE:-}" ]]; then
+  extra_train_args+=(--data.norm_stats_file "${LINGBOT_VLA_NORM_STATS_FILE}")
+fi
 
 echo "[LingBot_VLA] LEROBOT_DATA_ROOT=${LEROBOT_DATA_ROOT}"
 echo "[LingBot_VLA] LEROBOT_DATASET_REPO_ID=${LEROBOT_DATASET_REPO_ID}"
@@ -48,8 +65,9 @@ echo "[LingBot_VLA] data_path=${data_path}"
 echo "[LingBot_VLA] checkpoint_dir=${ckpt_dir}"
 
 cd "${POLICY_DIR}/lingbot_vla"
-bash train_origin.sh tasks/vla/train_lingbotvla.py \
+bash train.sh tasks/vla/train_lingbotvla.py \
   "${config_path}" \
   --data.train_path "${data_path}" \
   --train.output_dir "${ckpt_dir}" \
-  --train.seed "${seed}"
+  --train.seed "${seed}" \
+  "${extra_train_args[@]}"

@@ -146,7 +146,7 @@ conda activate "${CONDA_ENV}"
 echo "[train_multinode] node_rank=${node_rank} python=\$(which python)"
 python -c "import torch, lingbotvla, lerobot; print('env ok', torch.__version__, lerobot.__file__)"
 cd $(shell_quote "${TRAIN_DIR}")
-bash train_origin.sh $(printf '%q ' "${TRAIN_ARGS[@]}") 2>&1 | tee "${log_file}"
+bash train.sh $(printf '%q ' "${TRAIN_ARGS[@]}") 2>&1 | tee "${log_file}"
 EOF
 }
 

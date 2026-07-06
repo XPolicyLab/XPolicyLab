@@ -41,12 +41,12 @@ cat <<'EOF'
 
   2) PaliGemma-3B backbone (required by g0plus tokenizer + vision tower):
        hf download google/paligemma-3b-pt-224 \
-         --local-dir weights/paligemma-3b-pt-224
+         --local-dir ../weights/paligemma-3b-pt-224
      (G0Tiny uses HuggingFaceTB/SmolVLM2-500M-Video-Instruct instead.)
 
   3) G0Plus_3B_base checkpoint (default deploy weights):
        hf download OpenGalaxea/G0-VLA --include "G0Plus_3B_base/*" \
-         --local-dir checkpoints
+         --local-dir ../checkpoints
 
   4) Point deploy.yml / GALAXEA_PALIGEMMA_PATH at the backbone dir from step 2.
 EOF

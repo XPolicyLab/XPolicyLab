@@ -35,6 +35,23 @@ xpolicylab_resolve_ckpt_dir() {
     echo "${std_dir}"
 }
 
+xpolicylab_checkpoint_run_dir() {
+    local pt_path=$1 pt_dir
+    pt_dir="$(dirname "${pt_path}")"
+    if [[ "$(basename "${pt_dir}")" == "checkpoints" ]]; then
+        dirname "${pt_dir}"
+    else
+        echo "${pt_dir}"
+    fi
+}
+
+xpolicylab_is_loadable_checkpoint() {
+    local pt_path=$1 run_dir
+    [[ -f "${pt_path}" ]] || return 1
+    run_dir="$(xpolicylab_checkpoint_run_dir "${pt_path}")"
+    [[ -f "${run_dir}/config.yaml" && -f "${run_dir}/dataset_statistics.json" ]]
+}
+
 xpolicylab_resolve_checkpoint_pt() {
     local policy_dir=$1 bench_name=$2 ckpt_name=$3 env_cfg_type=$4 action_type=$5 seed=$6
     local ckpt_dir checkpoints_subdir pt_path
@@ -45,7 +62,10 @@ xpolicylab_resolve_checkpoint_pt() {
         pt_path=$(ls -1 "${checkpoints_subdir}"/steps_*_pytorch_model.pt 2>/dev/null \
             | awk -F'steps_|_pytorch_model.pt' '{printf "%s\t%012d\n", $0, $2}' \
             | sort -k2,2n | tail -n1 | cut -f1)
-        if [[ -n "${pt_path}" && -f "${pt_path}" ]]; then
+        if [[ -z "${pt_path}" || ! -f "${pt_path}" ]]; then
+            continue
+        fi
+        if xpolicylab_is_loadable_checkpoint "${pt_path}"; then
             echo "${pt_path}"
             return 0
         fi

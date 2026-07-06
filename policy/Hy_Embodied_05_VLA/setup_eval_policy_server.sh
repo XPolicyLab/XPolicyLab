@@ -83,8 +83,9 @@ hy_root="$(resolve_hy_root)"
 # Turn the eval `ckpt_name` into an optional `ckpt_path=` override for
 # setup_policy_server.py (overrides deploy.yml's default ckpt_path). Priority:
 #   1. $HY_VLA_CKPT_PATH (highest)
-#   2. ckpt_name if absolute / already exists
-#   3. ${hy_root}/checkpoints/${ckpt_name}, then ${POLICY_DIR}/checkpoints/${ckpt_name}
+#   2. ckpt_name if absolute / exists relative to this policy dir
+#   3. ${hy_root}/checkpoints/${ckpt_name}, ${hy_root}/Hy-VLA-RoboDojo-v3/${ckpt_name},
+#      then ${POLICY_DIR}/checkpoints/${ckpt_name}
 # Empty / placeholder ckpt_name (or nothing resolvable) -> no override, so the
 # deploy.yml ckpt_path default is used unchanged.
 resolve_ckpt_override() {
@@ -96,9 +97,18 @@ resolve_ckpt_override() {
 import os
 from pathlib import Path
 
+policy_dir = Path(os.environ["POLICY_DIR"])
+hy_root = Path(os.environ["HY_ROOT"])
+
+def resolve(raw, base):
+    path = Path(raw).expanduser()
+    if not path.is_absolute():
+        path = base / path
+    return path.resolve()
+
 env_override = (os.environ.get("HY_VLA_CKPT_PATH") or "").strip()
 if env_override:
-    print(Path(env_override).expanduser())
+    print(resolve(env_override, policy_dir))
     raise SystemExit(0)
 
 ckpt_name = (os.environ.get("CKPT_NAME") or "").strip()
@@ -107,15 +117,22 @@ if ckpt_name.lower() in _PLACEHOLDERS:
     raise SystemExit(0)
 
 cand = Path(ckpt_name).expanduser()
-if cand.is_absolute() or cand.exists():
-    print(cand)
+if cand.is_absolute():
+    print(cand.resolve())
     raise SystemExit(0)
 
-hy_root = Path(os.environ["HY_ROOT"])
-policy_dir = Path(os.environ["POLICY_DIR"])
-for base in (hy_root / "checkpoints" / ckpt_name, policy_dir / "checkpoints" / ckpt_name):
+policy_relative = resolve(ckpt_name, policy_dir)
+if policy_relative.exists():
+    print(policy_relative)
+    raise SystemExit(0)
+
+for base in (
+    hy_root / "checkpoints" / ckpt_name,
+    hy_root / "Hy-VLA-RoboDojo-v3" / ckpt_name,
+    policy_dir / "checkpoints" / ckpt_name,
+):
     if base.exists():
-        print(base)
+        print(base.resolve())
         raise SystemExit(0)
 PYCKPT
 }

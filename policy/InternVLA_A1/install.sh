@@ -1,6 +1,7 @@
-# XPolicyLab deploy: policy server env=internvla_a1; run setup_eval_policy_server.sh with this env.
 #!/usr/bin/env bash
 set -euo pipefail
+
+# XPolicyLab deploy: policy server env=internvla_a1; run setup_eval_policy_server.sh with this env.
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INTERNVLA_ROOT="${POLICY_DIR}/internvla_a1"

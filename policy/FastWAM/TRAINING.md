@@ -50,7 +50,7 @@ FastWAM 原本针对的是 RoboTwin / LIBERO 的官方数据集。它们与 XPol
 | 数据格式 | LeRobot v2.1（HF 已发布） | HDF5（`data/<ds>/<task>/<env>/data/episode_*.hdf5`） | `process_data.sh` 在转换时已对齐 |
 | 相机键 | `cam_high / cam_left_wrist / cam_right_wrist` | `cam_head / cam_left_wrist / cam_right_wrist` | `process_data.py: CAMERA_MAP` 已映射 |
 | 视频源分辨率 | 480×640 → resize 到 384×320 | XPolicyLab 渲染分辨率不固定 → 统一 240×320 RGB | `process_data.py: _decode_rgb` 已强制 |
-| state/action 维度 | 14（dual-arm 6+1） | joint：14（6+1 双臂），ee：16（7+1 双臂） | `get_action_dim.sh` 自动算 + Hydra override |
+| state/action 维度 | 14（dual-arm 6+1） | joint：14（6+1 双臂）；`ee` 不在 FastWAM 本地做额外 pose 转换 | `get_action_dim.sh` 自动算 + Hydra override |
 | FPS | 由 `meta/info.json` 决定 | 取自 `additional_info.frequency`，回退到 `--fps 10` | `process_data.py` 已读 HDF5 |
 | 指令 | 每个 task 一句固定 prompt | 每条 episode 可能不同 | `process_data.py` 按 episode 解析 + 去重写入 `tasks.jsonl` |
 | T5 prompt 缓存 | 路径 `./data/text_embeds_cache/robotwin` | 路径 `data/text_embeds_cache/xpolicylab/<dataset_id>` | `process_data.sh` 用 `precompute_text_embeds.py` 自动算 |
@@ -206,7 +206,7 @@ checkpoint 输出目录为 `checkpoints/<bench>-<ckpt>-<env>-<action>-<seed>`，
 
 ### 5.2 `train.sh` 内部做了什么
 
-1. `get_action_dim.sh` 算出本次实际 `action_dim`（joint→14 / ee→16）；
+1. `get_action_dim.sh` 算出本次实际 `action_dim`（沿用 XPolicyLab robot info 的 `arm_dim + ee_dim`）；
 2. 根据 `FASTWAM_DATASET_ID`（或默认 data_key）解析出已转换好的 lerobot 目录与 dataset_stats；
 3. 校验 ActionDiT backbone 和 T5 cache **必须存在**（缺哪个就提示对应命令），不存在直接退出；
 4. cd 到 `FastWAM/`，调上游 `scripts/train_zero1.sh` 并传入下列 Hydra overrides：
@@ -246,7 +246,7 @@ output_dir=<policy>/checkpoints/<ckpt_setting>
 |---|---|---|
 | `FASTWAM_DATASET_ID` | `<bench>-<ckpt>-<env>-<action>` | 选取已转换数据集（如用了自定义 `dataset_id` 时指定） |
 | `FASTWAM_CKPT_SETTING` | `<bench>-<ckpt>-<env>-<action>-<seed>` | 训练输出子目录名（写到 `checkpoints/<ckpt_setting>/`），即 eval 的 `ckpt_name` |
-| `FASTWAM_BATCH_SIZE` | `64` | 单卡 batch size。OOM 就调小（如 16/8/4） |
+| `FASTWAM_BATCH_SIZE` | `8` | 单卡 batch size。OOM 就调小（如 4/2/1） |
 | `FASTWAM_GRADIENT_ACCUMULATION_STEPS` | `1` | 等效 batch = batch × accumulation × world_size |
 | `FASTWAM_NUM_WORKERS` | `8` | DataLoader workers |
 | `PYTORCH_CUDA_ALLOC_CONF` | `expandable_segments:True` | 减少显存碎片；可覆盖 |
@@ -306,15 +306,13 @@ processor:
   （`checkpoints/` 下完整 run 目录名，即训练输出的 `<bench>-<ckpt>-<env>-<action>-<seed>`），
   这样可以用同一个 cotrain checkpoint 评估不同的下游任务。
 
-### 6.3 action_dim 在 eval 与 train 之间的隐患
+### 6.3 action_dim 与 `ee` 表示
 
-- `train.sh` 把 `action_output_dim / proprio_output_dim` 都改成了真实 `action_dim`，所以训练的模型形状是对的。
-- `deploy_policy.get_model()`（上游写法）**只把 `sim_task` 当作 Hydra override**，没有把 `action_dim` 透进来；
-  这意味着 eval 时 processor 的 `action_output_dim/proprio_output_dim` 始终用 yaml 默认值 `14`。
-- 因此 **joint 模式（14 维）开箱即用，ee 模式（16 维）目前与 eval 路径不兼容**。
-  如果要做 ee 训练 + 评估，需要扩展 `setup_eval_policy_server.sh` 经由 `deploy.yml`
-  → `deploy_policy.get_model` → `_compose_sim_cfg(overrides=[...])` 传 `data.train.processor.action_output_dim=16`
-  等。这是一个待解决的 TODO，详见末尾“开放问题”。
+- `train.sh` 把 `action_output_dim / proprio_output_dim` 改成 `get_action_dim.sh` 的结果。
+- 参考 `aa4d9c1` 的 FastWAM 路径，FastWAM 本地不额外解释或转换 `ee_pose`；训练和评测都直接依赖
+  XPolicyLab 的 `pack_robot_state` / `unpack_robot_state` 约定。
+- 评测时必须传入与 checkpoint 训练时一致的 `action_type`。不要仅凭 FastWAM 本地代码推断 `ee`
+  是 16 维或 14 维；以数据转换时的 pack 结果和训练 checkpoint 的 processor 形状为准。
 
 ### 6.4 epoch / steps
 
@@ -410,12 +408,10 @@ bash XPolicyLab/policy/FastWAM/eval.sh \
 
 ## 8. 已知开放问题 / 需用户确认
 
-1. **EE 模式（16 维）评估侧不可用**：见 §6.3。要不要补这个？目前只支持 joint 模式 14 维全流程。
-2. **`num_epochs / max_steps` 默认值**：上游 RoboTwin 是 `num_epochs=5`，对我们的小样本数据集严重欠拟合，是否需要在 `train.sh` 提供一个 XPolicyLab 默认覆盖（例如 `num_epochs=null max_steps=10000`）？
-3. **`norm_default_mode`**：要不要在 train.sh 把默认改成 `q01/q99`？（diffusion policy 实践更常见）
-4. **单卡默认 batch size**：当前 `FASTWAM_BATCH_SIZE=64` 是“多卡假设”，单卡跑会 OOM。要不要把默认下调到 4（accumulation=16），多卡再手动覆盖回去？
-5. **`process_data.sh` 自动跑 `precompute_text_embeds.py`**：当前只用 1 卡（脚本里没 torchrun），10 条以下 instruction 不到 1 分钟。如果未来上千 instruction，可能要改成 torchrun。
-6. **`save_every / eval_every` 与 `num_epochs`**：是否需要按 `expert_data_num` 自动缩放？例如 `save_every = max(100, total_steps // 20)`。
+1. **`num_epochs / max_steps` 默认值**：上游 RoboTwin 是 `num_epochs=5`，对我们的小样本数据集严重欠拟合，是否需要在 `train.sh` 提供一个 XPolicyLab 默认覆盖（例如 `num_epochs=null max_steps=10000`）？
+2. **`norm_default_mode`**：要不要在 train.sh 把默认改成 `q01/q99`？（diffusion policy 实践更常见）
+3. **单卡默认 batch size**：当前 `FASTWAM_BATCH_SIZE=8` 仍可能单卡 OOM。要不要把默认下调到 4（或配 accumulation），多卡再手动覆盖回去？
+4. **`process_data.sh` 自动跑 `precompute_text_embeds.py`**：当前只用 1 卡（脚本里没 torchrun），10 条以下 instruction 不到 1 分钟。如果未来上千 instruction，可能要改成 torchrun。
+5. **`save_every / eval_every` 与 `num_epochs`**：是否需要按 `expert_data_num` 自动缩放？例如 `save_every = max(100, total_steps // 20)`。
 
-把答案告诉我，我会把 (2)(3)(4) 直接落到 `train.sh` / task yaml 的 XPolicyLab 默认里；(1)(5) 是更大的工作量，
-需要你决策优先级。
+把答案告诉我，我会按优先级继续把这些默认值落到 `train.sh` / task yaml 或对应的预处理脚本里。

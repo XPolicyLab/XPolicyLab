@@ -12,7 +12,7 @@ runs in a separate conda env and talks to us over a socket.
 The Hy-Embodied source tree (providing the ``hy_vla`` package and the
 ``robotwin_eval`` adapter) is located via ``hy_root`` in deploy.yml, the
 ``HY_VLA_ROOT`` env var, or -- by default -- a ``Hy-Embodied-0.5-VLA`` checkout
-placed next to this policy directory. Clone it from:
+inside this policy directory. Clone it from:
     https://github.com/Tencent-Hunyuan/Hy-Embodied-0.5-VLA
 
 Data path per inference (mirrors Hy-VLA's own robotwin_eval adapter):
@@ -46,7 +46,7 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info
 # Hy-Embodied source tree resolution order:
 #   1. model_cfg["hy_root"] (deploy.yml)
 #   2. $HY_VLA_ROOT
-#   3. a sibling "Hy-Embodied-0.5-VLA" checkout next to this policy dir.
+#   3. "Hy-Embodied-0.5-VLA" inside this policy dir.
 _POLICY_DIR = Path(__file__).resolve().parent
 _DEFAULT_HY_VLA_ROOT = str(_POLICY_DIR / "Hy-Embodied-0.5-VLA")
 
@@ -218,7 +218,17 @@ def _convert_pose_robo_dojo(
 def _resolve_hy_root(model_cfg: dict[str, Any]) -> str:
     """Locate the Hy-Embodied source tree (provides hy_vla + robotwin_eval)."""
     hy_root = model_cfg.get("hy_root") or os.environ.get("HY_VLA_ROOT") or _DEFAULT_HY_VLA_ROOT
-    return str(Path(hy_root).expanduser().resolve())
+    path = Path(hy_root).expanduser()
+    if not path.is_absolute():
+        path = _POLICY_DIR / path
+    return str(path.resolve())
+
+
+def _resolve_path(path_like: str | Path, base: str | Path) -> str:
+    path = Path(path_like).expanduser()
+    if not path.is_absolute():
+        path = Path(base) / path
+    return str(path.resolve())
 
 
 class Model(ModelTemplate):
@@ -248,9 +258,7 @@ class Model(ModelTemplate):
         if hy_root not in sys.path:
             sys.path.insert(0, hy_root)
 
-        ckpt_path = model_cfg["ckpt_path"]
-        if not os.path.isabs(ckpt_path):
-            ckpt_path = os.path.join(hy_root, ckpt_path)
+        ckpt_path = _resolve_path(model_cfg["ckpt_path"], hy_root)
 
         # Fallback ckpt selection via ckpt_name: setup_eval_policy_server.sh
         # already resolves ckpt_name -> a ckpt_path override, but when this
@@ -262,15 +270,21 @@ class Model(ModelTemplate):
         _ckpt_placeholders = {"", "null", "none", "default", "ckpt", "ckpt_name", "-"}
         if ckpt_name.lower() not in _ckpt_placeholders and not os.path.isdir(ckpt_path):
             for cand in (
-                os.path.expanduser(ckpt_name),
-                os.path.join(hy_root, "checkpoints", ckpt_name),
-                os.path.join(str(_POLICY_DIR), "checkpoints", ckpt_name),
+                _resolve_path(ckpt_name, _POLICY_DIR),
+                _resolve_path(Path("checkpoints") / ckpt_name, hy_root),
+                _resolve_path(Path("Hy-VLA-RoboDojo-v3") / ckpt_name, hy_root),
+                _resolve_path(Path("checkpoints") / ckpt_name, _POLICY_DIR),
             ):
                 if os.path.isdir(cand):
-                    ckpt_path = os.path.abspath(cand)
+                    ckpt_path = cand
                     break
 
-        norm_path = model_cfg.get("norm_path") or os.path.join(ckpt_path, "norm_stats.pkl")
+        norm_cfg = model_cfg.get("norm_path") or os.environ.get("HY_VLA_NORM_PATH")
+        norm_path = (
+            _resolve_path(norm_cfg, hy_root)
+            if norm_cfg
+            else os.path.join(ckpt_path, "norm_stats.pkl")
+        )
 
         # Decode / cadence knobs (defaults track robotwin_eval/deploy_policy.yml).
         blend_mode = model_cfg.get("blend_mode", "rel_only")

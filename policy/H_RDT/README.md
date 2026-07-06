@@ -43,9 +43,35 @@ conda activate <policy_env>  # e.g. h-rdt
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: prepares the metadata H-RDT needs to read RoboDojo HDF5 trajectories directly. `train.sh` does not create a converted top-level dataset; it reads from `HRDT_SOURCE_ROOT`.
 
-This adapter has no top-level `process_data.sh`. It expects data in the format consumed by the upstream project or by `deploy.yml`/environment variables. Use the upstream README under the vendored source tree when custom conversion is required.
+Before training, generate task instructions, action normalization stats, and task language embeddings:
+
+```bash
+cd XPolicyLab/policy/H_RDT/H_RDT
+
+# Point this at the RoboDojo sim_cloud root that contains <bench>/<task>/<env_cfg>/data.
+export HRDT_SOURCE_ROOT=<path_to_robodojo_sim_cloud>
+
+python datasets/xpolicylab/extract_task_instructions.py \
+  "${HRDT_SOURCE_ROOT}" \
+  --env_cfg_type arx_x5
+
+python datasets/xpolicylab/calc_stat.py \
+  --data_root "${HRDT_SOURCE_ROOT}" \
+  --raw_bench_name RoboDojo \
+  --env_cfg_type arx_x5 \
+  --action_type joint \
+  --tasks all \
+  --output_path datasets/xpolicylab/stats.json
+
+# Requires the policy environment and T5 weights used by H-RDT.
+export T5_MODEL_PATH=<path_to_t5-v1_1-xxl>
+export HRDT_CONFIG_PATH="$(pwd)/configs/hrdt_finetune.yaml"
+python datasets/xpolicylab/encode_lang_batch.py
+```
+
+Expected outputs are `datasets/xpolicylab/task_instructions.csv`, `datasets/xpolicylab/stats.json`, and `datasets/xpolicylab/lang_embeddings/*.pt`.
 
 ## Model Training
 
@@ -65,6 +91,7 @@ Parameters used by the command:
 
 ```bash
 cd XPolicyLab/policy/H_RDT
+export HRDT_SOURCE_ROOT=<path_to_robodojo_sim_cloud>
 # Template: train a policy run on one GPU or a GPU list.
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
@@ -76,6 +103,7 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 ```
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+By default training uses all episodes found for each task. To cap the number of episodes per task, set `XPOLICY_HRDT_MAX_EPISODES=<num>` before running `train.sh`; this replaces the legacy `expert_data_num` / `total_episode_num` positional argument.
 
 ## Deployment and Evaluation
 
@@ -201,6 +229,7 @@ Frequently used environment variables detected in the adapter scripts:
 | `TRANSFORMERS_CACHE` | Optional override used by the local scripts or upstream runtime. |
 | `WANDB_PROJECT` | Optional override used by the local scripts or upstream runtime. |
 | `XPOLICY_HRDT_ACTION_TYPE` | Optional override used by the local scripts or upstream runtime. |
+| `XPOLICY_HRDT_MAX_EPISODES` | Optional cap on episodes per task during training. Empty or unset means use all episodes. |
 
 ## Notes
 

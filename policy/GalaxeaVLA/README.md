@@ -57,8 +57,6 @@ Parameters used by the command:
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
 
 ```bash
 cd XPolicyLab/policy/GalaxeaVLA
@@ -67,9 +65,17 @@ bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
+```
 
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+Batch conversion accepts an optional `max_episodes_per_task`; `0` means all episodes for every selected task.
+
+```bash
+cd XPolicyLab/policy/GalaxeaVLA
+# Template: convert a multi-task directory.
+bash process_data_batch.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <batch_root> [max_episodes_per_task] [tasks...]
+
+# Example: convert all tasks and all episodes under the batch root.
+bash process_data_batch.sh RoboDojo cotrain arx_x5 joint /path/to/RoboDojo_data 0
 ```
 
 ## Model Training
@@ -196,15 +202,14 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 
 | Key | Notes |
 |---|---|
-| `policy_name` | Runtime or checkpoint option consumed by this adapter. |
-| `result_dir` | Runtime or checkpoint option consumed by this adapter. |
-| `model_variant` | Runtime or checkpoint option consumed by this adapter. |
-| `model_variant` | Runtime or checkpoint option consumed by this adapter. |
-| `task_config_name` | Runtime or checkpoint option consumed by this adapter. |
-| `paligemma_path` | Runtime or checkpoint option consumed by this adapter. |
-| `num_inference_steps` | Runtime or checkpoint option consumed by this adapter. |
-| `replan_steps` | Runtime or checkpoint option consumed by this adapter. |
-| `hydra_overrides` | Runtime or checkpoint option consumed by this adapter. |
+| `policy_name` | XPolicyLab policy package name; keep as `GalaxeaVLA`. |
+| `result_dir` | Evaluation result directory. |
+| `model_variant` | Human-readable variant label; set `task_config_name` to actually switch Hydra task configs. |
+| `task_config_name` | Hydra task config used for train/eval, for example `real/g0plus_xpolicylab_finetune`. |
+| `paligemma_path` | Local backbone path. If null, eval uses `GALAXEA_PALIGEMMA_PATH` or `weights/paligemma-3b-pt-224`. |
+| `num_inference_steps` | Optional inference denoising step override. |
+| `replan_steps` | Actions executed before replanning; null executes the full predicted chunk. |
+| `hydra_overrides` | Extra Hydra overrides forwarded during eval config composition. |
 
 Frequently used environment variables detected in the adapter scripts:
 

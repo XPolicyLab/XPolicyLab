@@ -8,7 +8,7 @@ env_cfg_type: null
 seed: null
 eval_batch: false
 
-# Model / checkpoint configuration (paths relative to policy/ unless noted)
+# Model / checkpoint configuration (local paths relative to policy/GR00T_N17/)
 action_type: joint
 embodiment_tag: NEW_EMBODIMENT
 # Finetuned step under checkpoints/<ckpt_name>/; null = auto-resolve + checkpoint_num

@@ -30,8 +30,8 @@ resolved by prepending the repo root to `PYTHONPATH` in the eval/train scripts
 
 Notes:
 - The released weight file is `model_state_dict.pt` (not `model.pt`). `model.py`
-  loads either name; `dataset_stats.json` must live in the same `checkpoints/`
-  directory as the weights.
+  and the training loader accept either `model_state_dict.pt` or `model.pt`;
+  `dataset_stats.json` must live in the same `checkpoints/` directory as the weights.
 - Set `GALAXEA_PALIGEMMA_PATH` (or `paligemma_path` in `deploy.yml`) to the
   backbone dir from step 2.
 

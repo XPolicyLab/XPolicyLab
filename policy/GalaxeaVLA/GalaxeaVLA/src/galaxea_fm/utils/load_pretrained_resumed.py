@@ -16,6 +16,24 @@ from galaxea_fm.utils.normalizer import (
 logger = get_logger(__name__)
 
 
+def _load_weight_state_dict(path: Path | str, device: str = "cpu") -> Dict:
+    path = Path(path)
+    if path.is_dir():
+        for filename in ("model.pt", "model_state_dict.pt"):
+            candidate = path / filename
+            if candidate.exists():
+                state_dict = torch.load(candidate, weights_only=True, map_location=device)
+                break
+        else:
+            raise FileNotFoundError(f"Expected model.pt or model_state_dict.pt under {path}")
+    else:
+        state_dict = torch.load(path, weights_only=True, map_location=device)
+
+    if isinstance(state_dict, dict) and "model_state_dict" in state_dict:
+        return state_dict["model_state_dict"]
+    return state_dict
+
+
 def load_pretrained_model(
     pretrained_model_path: Path | str, 
     model: DDP, 
@@ -27,8 +45,7 @@ def load_pretrained_model(
         model: The model to load weights into
         state_dict: State dict from checkpoint
     """
-    pretrained_model_path = Path(pretrained_model_path)
-    pretrained_dict = torch.load(pretrained_model_path / "model.pt", weights_only=True, map_location='cpu')
+    pretrained_dict = _load_weight_state_dict(pretrained_model_path, device="cpu")
     model_dict = model.module.state_dict()
 
     # Check for unexpected and shape mismatches and filter valid keys
@@ -145,16 +162,16 @@ def load_checkpoint_for_eval(
     checkpoint_path = Path(checkpoint_path)
 
     if checkpoint_path.is_dir():
-        # New format: directory with model.pt and dataset_stats.json
+        # New format: directory with model.pt/model_state_dict.pt and dataset_stats.json
         logger.info(f"Loading checkpoint from directory (new format): {checkpoint_path}")
-        state_dict = torch.load(checkpoint_path / "model.pt", map_location=device, weights_only=True)
+        state_dict = _load_weight_state_dict(checkpoint_path, device=device)
         model.load_state_dict(state_dict, strict=True)
         dataset_stats = load_dataset_stats_from_json(checkpoint_path / "dataset_stats.json")
     else:
         # Legacy format: single .pt file
         logger.info(f"Loading checkpoint from file (legacy format): {checkpoint_path}")
-        state_dict = torch.load(checkpoint_path, map_location=device, weights_only=True)
-        model.load_state_dict(state_dict["model_state_dict"], strict=True)
+        state_dict = _load_weight_state_dict(checkpoint_path, device=device)
+        model.load_state_dict(state_dict, strict=True)
         dataset_stats = load_dataset_stats_from_json(checkpoint_path.parent.parent / "dataset_stats.json")
 
     return model, dataset_stats

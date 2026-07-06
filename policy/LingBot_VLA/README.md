@@ -43,7 +43,7 @@ conda activate <policy_env>  # e.g. lingbot-vla
 
 ## Demo Data Processing
 
-What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
+What it does: validates the standard XPolicyLab data-processing arguments and prints the dataset tag expected by training. LingBot_VLA training consumes an upstream-prepared LeRobot dataset; this wrapper does not convert HDF5 data by itself.
 
 Parameters used by the command:
 
@@ -53,19 +53,18 @@ Parameters used by the command:
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional legacy episode-limit label. The wrapper only reports it; cap episodes during upstream conversion. |
 
 ```bash
 cd XPolicyLab/policy/LingBot_VLA
-# Template: convert all available demonstrations for one run.
+# Template: validate the run identity and print the expected dataset tag.
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
 
-# Example: convert stack_bowls demos for arx_x5 joint control.
+# Example: validate a stack_bowls run for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+# Example: keep a 50-episode ablation in the run name.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50
 ```
 
 ## Model Training
@@ -97,6 +96,8 @@ bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
 
 The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
 
+By default `train.sh` uses `lingbot_vla/configs/vla/robotwin_load20000h.yaml`, writes to `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`, and reads data from `${LINGBOT_VLA_DATA_PATH}` or `${LEROBOT_DATA_ROOT}/${LEROBOT_DATASET_REPO_ID}`. Set `LINGBOT_VLA_CONFIG_PATH`, `LINGBOT_VLA_DATA_PATH`, `LEROBOT_DATASET_REPO_ID`, `LINGBOT_VLA_MODEL_PATH`, `LINGBOT_VLA_TOKENIZER_PATH`, and `LINGBOT_VLA_NORM_STATS_FILE` as needed before running real training.
+
 ## Deployment and Evaluation
 
 What it does: serves the policy through XPolicyLab and connects it to a RoboDojo evaluation client. Use `eval.sh` for a same-machine smoke test, or split server/client scripts for debugging and multi-machine evaluation.
@@ -115,6 +116,16 @@ Parameters used by `eval.sh`:
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
 | `policy_conda_env` | Conda environment for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
+
+Checkpoint loading expects:
+
+```text
+checkpoints/<ckpt_name>/
+  lingbotvla_cli.yaml
+  checkpoints/global_step_*/hf_ckpt/*.safetensors
+```
+
+The latest numeric `global_step_*` with an `hf_ckpt` directory is loaded. `QWEN25_PATH` should point to the Qwen2.5-VL-3B-Instruct weights; if unset, the scripts use `/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct`.
 
 ```bash
 cd XPolicyLab/policy/LingBot_VLA
@@ -202,18 +213,17 @@ Frequently used environment variables detected in the adapter scripts:
 
 | Variable | Notes |
 |---|---|
-| `BASE_MODEL_PATH` | Optional override used by the local scripts or upstream runtime. |
-| `BILINEAR` | Optional override used by the local scripts or upstream runtime. |
-| `CONDA_ENV` | Optional override used by the local scripts or upstream runtime. |
-| `FLASH_ATTN_WHEEL_URL` | Optional override used by the local scripts or upstream runtime. |
-| `GIT_LFS_SKIP_SMUDGE` | Optional override used by the local scripts or upstream runtime. |
-| `IMPORTANT` | Optional override used by the local scripts or upstream runtime. |
-| `IMPORT_SHIM_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `LEROBOT_DATASET_REPO_ID` | Optional override used by the local scripts or upstream runtime. |
-| `LEROBOT_DATA_ROOT` | Optional override used by the local scripts or upstream runtime. |
-| `LEROBOT_GIT_COMMIT` | Optional override used by the local scripts or upstream runtime. |
-| `LEROBOT_GIT_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `LINGBOT_ROOT` | Optional override used by the local scripts or upstream runtime. |
+| `LINGBOT_VLA_CONDA_ENV` | Conda env name created by `install.sh`; defaults to `lingbot_vla`. |
+| `LINGBOT_VLA_CONFIG_PATH` | Training yaml relative to `lingbot_vla/`; defaults to `configs/vla/robotwin_load20000h.yaml`. |
+| `LINGBOT_VLA_DATA_PATH` | Full LeRobot dataset path used by `train.sh`. |
+| `LINGBOT_VLA_MODEL_PATH` | Optional override for `--model.model_path` during training. |
+| `LINGBOT_VLA_TOKENIZER_PATH` | Optional override for `--model.tokenizer_path` during training. Falls back to `QWEN25_PATH` when set. |
+| `LINGBOT_VLA_NORM_STATS_FILE` | Optional override for `--data.norm_stats_file` during training. |
+| `XPOLICYLAB_LEROBOT_DATA_ROOT` / `LEROBOT_DATA_ROOT` | LeRobot data root; defaults to `<RoboDojo>/data`. |
+| `LEROBOT_DATASET_REPO_ID` | Dataset repo/directory name; defaults to `RoboDojo_sim_arx-x5_v30` for `arx_x5`. |
+| `QWEN25_PATH` | Qwen2.5-VL-3B-Instruct weights used during evaluation. |
+| `FLASH_ATTN_WHEEL_URL` | Optional flash-attn wheel URL used by `install.sh`. |
+| `EVAL_ENV_TYPE` | Evaluation backend: unset/`sim`, `debug`, or `real`. Unset defaults to simulation. |
 
 ## Notes
 

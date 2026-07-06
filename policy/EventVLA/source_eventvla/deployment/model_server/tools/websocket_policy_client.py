@@ -7,6 +7,7 @@ import time, os
 from typing import Dict, Optional, Tuple
 
 from typing_extensions import override
+import websockets.exceptions
 import websockets.sync.client
 
 from . import msgpack_numpy
@@ -74,7 +75,10 @@ class WebsocketClientPolicy:
                 metadata = msgpack_numpy.unpackb(conn.recv())
                 _status("CONNECTED", _GREEN, f"EventVLA upstream websocket connected: {self._uri}")
                 return conn, metadata
-            except Exception as exc:
+            except (OSError, TimeoutError, websockets.exceptions.ConnectionClosed) as exc:
+                # Only retry startup-transient failures (connection refused/reset,
+                # open timeout, server closing mid-handshake). Auth or protocol
+                # errors propagate immediately instead of spinning until timeout.
                 logging.info(f"Still waiting for server {self._uri} ...")
                 _status(
                     "RECONNECT",

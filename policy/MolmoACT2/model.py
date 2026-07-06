@@ -133,8 +133,10 @@ def _extract_step_number(value: Any) -> int | None:
 def _resolve_checkpoint_root(model_cfg: dict[str, Any]) -> Path:
     ckpt_name = model_cfg.get("ckpt_name")
     if ckpt_name:
-        direct_path = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()
-        return direct_path
+        ckpt_path = Path(str(ckpt_name)).expanduser()
+        if ckpt_path.is_absolute() or ckpt_path.parent != Path("."):
+            return ckpt_path.resolve()
+        return (_CHECKPOINTS_DIR / ckpt_path).resolve()
 
     for key in ("pretrained_path", "model_path", "checkpoint_path"):
         value = model_cfg.get(key)
@@ -208,15 +210,7 @@ class Model(ModelTemplate):
     def _resolve_pretrained_path(self, checkpoint_root: Path) -> str:
         artifact_root = checkpoint_root
         if checkpoint_root.is_dir():
-            candidate_dirs = []
-            if (checkpoint_root / "model.safetensors").exists() or (checkpoint_root / "pretrained_model").is_dir():
-                candidate_dirs.append(checkpoint_root)
-            candidate_dirs.extend(
-                child
-                for child in sorted(checkpoint_root.iterdir())
-                if child.is_dir()
-                and ((child / "model.safetensors").exists() or (child / "pretrained_model").is_dir())
-            )
+            candidate_dirs = self._find_checkpoint_artifact_dirs(checkpoint_root)
             checkpoint_num = self.model_cfg.get("checkpoint_num")
             desired_step = _extract_step_number(checkpoint_num)
             if desired_step is not None:
@@ -259,6 +253,31 @@ class Model(ModelTemplate):
             f"Could not find a LeRobot pretrained policy under `{artifact_root}`. "
             "Expected `model.safetensors` in the path itself or `pretrained_model/`."
         )
+
+    def _find_checkpoint_artifact_dirs(self, checkpoint_root: Path) -> list[Path]:
+        search_roots = [checkpoint_root]
+        nested_checkpoints = checkpoint_root / "checkpoints"
+        if nested_checkpoints.is_dir():
+            search_roots.append(nested_checkpoints)
+
+        candidate_dirs: list[Path] = []
+        seen: set[Path] = set()
+
+        def add_candidate(path: Path) -> None:
+            resolved = path.resolve()
+            if resolved in seen:
+                return
+            if (path / "model.safetensors").is_file() or (path / "pretrained_model").is_dir():
+                candidate_dirs.append(path)
+                seen.add(resolved)
+
+        for root in search_roots:
+            add_candidate(root)
+            for child in sorted(root.iterdir()):
+                if child.is_dir():
+                    add_candidate(child)
+
+        return candidate_dirs
 
     def _load_molmoact2_config(self):
         from lerobot.configs.policies import PreTrainedConfig
