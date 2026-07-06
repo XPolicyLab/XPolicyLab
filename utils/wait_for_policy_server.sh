@@ -1,5 +1,6 @@
 #!/bin/bash
-# Wait until policy server opens TCP port or the server process exits.
+# Wait until policy server process is listening on TCP port or the process exits.
+# Uses LISTEN-state checks only (no TCP connect) to avoid websocket handshake errors.
 # Usage: wait_for_policy_server.sh <host> <port> <server_pid> [label] [timeout_sec]
 set -euo pipefail
 
@@ -9,12 +10,29 @@ pid=${3:?server pid required}
 label=${4:-Policy server}
 timeout_sec=${5:-360}
 
+_port_is_listening() {
+    local listen_port=$1
+    if command -v ss >/dev/null 2>&1; then
+        ss -ltn "sport = :${listen_port}" 2>/dev/null | grep -q LISTEN
+        return $?
+    fi
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -nP -iTCP:"${listen_port}" -sTCP:LISTEN >/dev/null 2>&1
+        return $?
+    fi
+    if command -v netstat >/dev/null 2>&1; then
+        netstat -an 2>/dev/null | grep -Eq "[\.:]${listen_port}[[:space:]].*LISTEN"
+        return $?
+    fi
+    return 1
+}
+
 for _ in $(seq 1 "${timeout_sec}"); do
     if ! kill -0 "${pid}" 2>/dev/null; then
         echo -e "\033[31m[ERROR] ${label} (PID=${pid}) exited before opening port ${port}.\033[0m" >&2
         exit 1
     fi
-    if python3 -c "import socket; s=socket.socket(); s.settimeout(1); s.connect(('${host}', int('${port}'))); s.close()" >/dev/null 2>&1; then
+    if _port_is_listening "${port}"; then
         echo -e "\033[32m[MAIN] ${label} ready on ${host}:${port} (PID=${pid})\033[0m"
         exit 0
     fi
