@@ -28,7 +28,7 @@ JOB_NAME="${SMOVLA_JOB_NAME:-${ckpt_setting}}"
 VIDEO_BACKEND="${VIDEO_BACKEND:-pyav}"
 
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
-export HF_LEROBOT_HOME="${HF_LEROBOT_HOME:-${SMOVLA_HF_LEROBOT_HOME:-/mnt/xspark-data/xspark_shared/lerobot}}"
+export HF_LEROBOT_HOME="${HF_LEROBOT_HOME:-${SMOVLA_HF_LEROBOT_HOME:-${HOME}/.cache/huggingface/lerobot}}"
 
 echo "[SmolVLA] repo_id=${REPO_ID}"
 echo "[SmolVLA] HF_LEROBOT_HOME=${HF_LEROBOT_HOME}"

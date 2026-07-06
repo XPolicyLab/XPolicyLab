@@ -17,7 +17,7 @@ POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
 data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 converted_data_root="${SPIRIT_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
-raw_data_root="${SPIRIT_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
+raw_data_root="${SPIRIT_RAW_DATA_ROOT:?set SPIRIT_RAW_DATA_ROOT to your RoboDojo raw dataset root}"
 
 resolve_patterns_csv() {
   if [[ -n "${SPIRIT_PATTERNS_CSV:-}" ]]; then
@@ -50,7 +50,7 @@ bash "${POLICY_DIR}/spirit_v15/scripts/train_xpolicylab_from_raw.sh" \
   "${raw_data_root}" \
   "${patterns_csv}" \
   "${converted_data_root}" \
-  "${SPIRIT_PRETRAINED_PATH:-/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Spirit-v1.5}" \
+  "${SPIRIT_PRETRAINED_PATH:?set SPIRIT_PRETRAINED_PATH to your Spirit-v1.5 weights dir}" \
   "${POLICY_DIR}/checkpoints/_process_data_placeholder" \
   "1" \
   "32" \

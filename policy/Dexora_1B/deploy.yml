@@ -10,15 +10,16 @@ eval_batch: false
 host: localhost
 port: 6000
 
-# Dexora runtime
-dexora_root: /root/crx/Dexora
-checkpoint_path: /root/crx/Dexora/checkpoints/dexora-1b-posttrain/checkpoint-50000
-config_path: /root/crx/Dexora/configs/base.yaml
-stats_file: /mnt/data/crx/robotwin3/RoboDojo_lerobot_v21_video_stats/dataset_statistics.json
+# Dexora runtime. Absolute paths are left null: set DEXORA_ROOT / DEXORA_CKPT_PATH
+# (and optionally config_path / stats_file / HF_HOME) via env or wrapper args.
+dexora_root: null
+checkpoint_path: null
+config_path: null
+stats_file: null
 text_encoder_path: google/t5-v1_1-xxl
 vision_encoder_path: google/siglip-so400m-patch14-384
-hf_home: /mnt/data/crx/hf_cache
-hf_hub_cache: /mnt/data/crx/hf_cache/hub
+hf_home: null
+hf_hub_cache: null
 hf_offline: true
 local_files_only: false
 

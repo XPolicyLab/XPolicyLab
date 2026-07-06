@@ -9,6 +9,8 @@ uses [left_joints, right_joints, left_gripper, right_gripper].
 
 from __future__ import annotations
 
+import os
+
 from starVLA.dataloader.gr00t_lerobot.datasets import ModalityConfig
 from starVLA.dataloader.gr00t_lerobot.embodiment_tags import EmbodimentTag
 from starVLA.dataloader.gr00t_lerobot.transform.base import ComposedModalityTransform
@@ -138,3 +140,11 @@ DATASET_NAMED_MIXTURES = {
         ("arx_x5", 1.0, "xpolicylab_arx_x5"),
     ],
 }
+
+_runtime_dataset_name = os.environ.get("STARVLA_XPOLICY_DATASET_NAME")
+if _runtime_dataset_name:
+    DATASET_NAMED_MIXTURES[
+        os.environ.get("STARVLA_XPOLICY_DATA_MIX", "xpolicylab_runtime")
+    ] = [
+        (_runtime_dataset_name, 1.0, "xpolicylab_arx_x5"),
+    ]

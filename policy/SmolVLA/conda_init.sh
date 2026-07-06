@@ -1,8 +1,8 @@
 # Shared bootstrap for train.sh / train_batch.sh (bashrc, conda, repo_id).
 
-SMOVLA_BASHRC="${SMOVLA_BASHRC:-/mnt/nfs/niantian/.bashrc}"
+SMOVLA_BASHRC="${SMOVLA_BASHRC:-${HOME}/.bashrc}"
 # 与 .bashrc 中 HF_LEROBOT_HOME 保持一致；source 失败时作兜底
-SMOVLA_HF_LEROBOT_HOME="${SMOVLA_HF_LEROBOT_HOME:-/mnt/xspark-data/xspark_shared/lerobot}"
+SMOVLA_HF_LEROBOT_HOME="${SMOVLA_HF_LEROBOT_HOME:-${HOME}/.cache/huggingface/lerobot}"
 
 smolvla_source_bashrc() {
 	if [[ ! -f "${SMOVLA_BASHRC}" ]]; then
@@ -51,8 +51,7 @@ smolvla_resolve_conda_base() {
 	local candidate
 	for candidate in \
 		"${CONDA_ROOT:-}" \
-		"/mnt/nfs/miniconda3" \
-		"/data/miniconda3" \
+		"/opt/conda" \
 		"/root/miniforge3" \
 		"/root/miniconda3" \
 		"${HOME}/miniforge3" \
@@ -65,7 +64,7 @@ smolvla_resolve_conda_base() {
 	done
 
 	echo "[SmolVLA] ERROR: conda not found. Set CONDA_BASE or install miniconda." >&2
-	echo "[SmolVLA] Tried: /mnt/nfs/miniconda3, /data/miniconda3, ~/miniforge3, ..." >&2
+	echo "[SmolVLA] Tried: /opt/conda, /root/miniforge3, ~/miniforge3, ~/miniconda3, ..." >&2
 	return 1
 }
 

@@ -1,5 +1,5 @@
 # Basic experiment configuration
-policy_name: lingbot-vla
+policy_name: LingBot_VLA
 protocol: ws
 host: localhost
 port: null

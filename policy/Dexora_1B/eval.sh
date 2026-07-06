@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ $# -ne 10 ]]; then
     echo "Usage: bash eval.sh <bench_name> <task_name> <ckpt_name_or_path> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
-    echo "Example: DEXORA_CKPT_PATH=/root/crx/Dexora/checkpoints/dexora-1b-posttrain/checkpoint-50000/ema/model.safetensors bash eval.sh RoboDojo stack_bowls dexora-1b-posttrain/checkpoint-50000 arx_x5 joint 0 0 1 dexora dexora"
+    echo "Example: DEXORA_ROOT=/path/to/Dexora DEXORA_CKPT_PATH=/path/to/Dexora/checkpoints/dexora-1b-posttrain/checkpoint-50000/ema/model.safetensors bash eval.sh RoboDojo stack_bowls dexora-1b-posttrain/checkpoint-50000 arx_x5 joint 0 0 1 dexora dexora"
     exit 1
 fi
 
@@ -19,8 +19,8 @@ policy_conda_env=$9
 eval_env_conda_env=${10}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
@@ -53,7 +53,7 @@ bash "${SERVER_SCRIPT}" \
 
 SERVER_PID=$!
 
-sleep 8
+bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_host}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 1200
 
 echo "[MAIN] start client, server=${policy_server_host}:${policy_server_port}"
 

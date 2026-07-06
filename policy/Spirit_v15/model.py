@@ -322,12 +322,9 @@ def _resolve_hf_local_path(model_id: str) -> str | None:
     cache_roots = []
     if os.environ.get("HF_HOME"):
         cache_roots.append(Path(os.environ["HF_HOME"]) / "hub")
-    cache_roots.extend(
-        (
-            Path.home() / ".cache/huggingface/hub",
-            Path("/xspark-cache/.cache/huggingface/hub"),
-        )
-    )
+    cache_roots.append(Path.home() / ".cache/huggingface/hub")
+    if os.environ.get("HF_HUB_CACHE"):
+        cache_roots.append(Path(os.environ["HF_HUB_CACHE"]))
     repo_cache_name = f"models--{model_id.replace('/', '--')}"
     for cache_root in cache_roots:
         snapshots = cache_root / repo_cache_name / "snapshots"

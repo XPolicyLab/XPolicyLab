@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -12,12 +11,12 @@ env_gpu_id=$8
 policy_conda_env=$9
 eval_env_conda_env=${10}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
-ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
-SERVER_SCRIPT="${CURRENT_DIR}/setup_eval_policy_server.sh"
-CLIENT_SCRIPT="${CURRENT_DIR}/setup_eval_env_client.sh"
+SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
@@ -42,7 +41,7 @@ if [[ -n "${LINGBOT_VA_CHECKPOINT_PATH:-}" ]]; then
 elif [[ "${ckpt_name}" = /* ]]; then
     VA_CHECKPOINT_PATH="${ckpt_name}"
 else
-    VA_CHECKPOINT_PATH="${CURRENT_DIR}/checkpoints/${ckpt_name}"
+    VA_CHECKPOINT_PATH="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
 fi
 
 # wan_va backend endpoint. Reuse an already-running server by exporting
@@ -82,7 +81,7 @@ if [[ "${LAUNCH_VA_SERVER}" == "1" ]]; then
     echo "[MAIN]   config_name=${CONFIG_NAME}, gpu=${policy_gpu_id}, master_port=${va_master_port}"
 
     setsid env \
-        LVA_CURRENT_DIR="${CURRENT_DIR}" \
+        LVA_SCRIPT_DIR="${SCRIPT_DIR}" \
         LVA_CONDA_ENV="${policy_conda_env}" \
         LVA_CHECKPOINT_PATH="${VA_CHECKPOINT_PATH}" \
         LVA_CONFIG_NAME="${CONFIG_NAME}" \

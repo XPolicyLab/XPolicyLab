@@ -13,8 +13,8 @@ policy_conda_env=$9
 eval_env_conda_env=${10}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
@@ -34,17 +34,7 @@ setsid bash "${SCRIPT_DIR}/setup_eval_policy_server.sh" \
     "${policy_conda_env}" "${policy_server_port}" "${policy_server_ip}" &
 SERVER_PID=$!
 
-for _ in $(seq 1 600); do
-    if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
-        echo -e "\033[31m[ERROR] Policy server exited before opening port ${policy_server_port}.\033[0m" >&2
-        exit 1
-    fi
-    if python -c "import socket; s=socket.socket(); s.settimeout(1); s.connect(('${policy_server_ip}', int('${policy_server_port}'))); s.close()" >/dev/null 2>&1; then
-        echo -e "\033[32m[MAIN] server is ready on ${policy_server_ip}:${policy_server_port}\033[0m"
-        break
-    fi
-    sleep 2
-done
+bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 1200
 
 bash "${SCRIPT_DIR}/setup_eval_env_client.sh" \
     "${bench_name}" "${task_name}" "${ckpt_name}" "${env_cfg_type}" \

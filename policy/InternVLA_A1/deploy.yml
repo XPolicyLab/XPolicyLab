@@ -1,6 +1,7 @@
 # Basic experiment configuration
 policy_name: InternVLA_A1
 protocol: ws
+host: localhost
 bench_name: null
 task_name: null
 env_cfg: null
@@ -16,8 +17,10 @@ obs_transform_pipeline: null
 action_type: joint
 prompt: null
 stats_key: unified_robot
-cosmos_path: /mnt/xspark-data/xspark_shared/model_weights/Cosmos-Tokenizer-CI8x8
-qwen3_2b_path: /mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct
+# Left null: model.py falls back to policy checkpoints/shared/<model> or the
+# COSMOS_PATH / QWEN3_2B_PATH env vars.
+cosmos_path: null
+qwen3_2b_path: null
 resize_size: 224
 image_history_interval: 15
 infer_horizon: 30

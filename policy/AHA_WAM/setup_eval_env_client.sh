@@ -14,13 +14,13 @@ policy_server_port=${10}
 policy_server_ip=${11:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 eval_episode_num="${AHA_WAM_DEBUG_EVAL_EPISODE_NUM:-${DEBUG_EVAL_EPISODE_NUM:-100}}"
-sim_root_dir="${XPOLICYLAB_SIM_ROOT:-${ROOT_DIR}}"
-env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-/mnt/petrelfs/caijisong/env_cfg}"
+bench_root="${XPOLICYLAB_BENCH_ROOT:-${BENCH_ROOT}}"
+env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-${BENCH_ROOT}/env_cfg}"
 
 read eval_batch < <(python3 - "${yaml_file}" <<'PY'
 import sys
@@ -69,7 +69,7 @@ conda activate "${eval_env_conda_env}"
 
 export CUDA_VISIBLE_DEVICES="${env_gpu_id}"
 export PYTHONWARNINGS=ignore::UserWarning
-export PYTHONPATH="${ROOT_DIR}/XPolicyLab:${ROOT_DIR}:${PYTHONPATH:-}"
+export PYTHONPATH="${XPL_ROOT}:${BENCH_ROOT}:${PYTHONPATH:-}"
 
 if [[ "${eval_env_mode}" == "debug" ]]; then
     exec python "${SCRIPT_DIR}/debug_env_client.py" \
@@ -84,7 +84,7 @@ if [[ "${eval_env_mode}" == "debug" ]]; then
 fi
 
 if [[ "${eval_env_mode}" == "sim" ]]; then
-    exec bash "${sim_root_dir}/scripts/eval_policy.sh" \
+    exec bash "${BENCH_ROOT}/scripts/eval_policy.sh" \
         --bench_name "${bench_name}" \
         --task_name "${task_name}" \
         --env_cfg_type "${env_cfg_type}" \
@@ -92,7 +92,7 @@ if [[ "${eval_env_mode}" == "sim" ]]; then
         --host "${policy_server_ip}" \
         --port "${policy_server_port}" \
         --eval_batch "${eval_batch}" \
-        --root_dir "${sim_root_dir}" \
+        --root_dir "${bench_root}" \
         --device_id "${env_gpu_id}" \
         --additional_info "${additional_info}" \
         --seed "${seed}"

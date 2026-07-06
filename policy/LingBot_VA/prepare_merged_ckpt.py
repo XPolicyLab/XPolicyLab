@@ -111,11 +111,15 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--checkpoint-path",
-        default="/mnt/nas/final_ckpt/Lingbot_VA/checkpoint_step_5000",
+        default=os.environ.get("LINGBOT_VA_CHECKPOINT_PATH"),
+        required=os.environ.get("LINGBOT_VA_CHECKPOINT_PATH") is None,
+        help="LingBot-VA trained checkpoint dir (or set LINGBOT_VA_CHECKPOINT_PATH).",
     )
     parser.add_argument(
         "--base-model-path",
-        default="/mnt/nas/shared_model_weights/lingbot-va-base",
+        default=os.environ.get("LINGBOT_VA_BASE_MODEL_PATH"),
+        required=os.environ.get("LINGBOT_VA_BASE_MODEL_PATH") is None,
+        help="lingbot-va-base weights dir (or set LINGBOT_VA_BASE_MODEL_PATH).",
     )
     parser.add_argument(
         "--merged-dir",

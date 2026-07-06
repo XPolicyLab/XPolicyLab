@@ -18,7 +18,7 @@ POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 meta_path="${XVLA_META_PATH:-${POLICY_DIR}/xvla/meta.json}"
-model_path="${XVLA_MODEL_PATH:-/mnt/xspark-data/xspark_shared/model_weights/X-VLA-Pt}"
+model_path="${XVLA_MODEL_PATH:?set XVLA_MODEL_PATH to your X-VLA-Pt pretrained weights dir}"
 
 mkdir -p "${ckpt_dir}"
 export CUDA_VISIBLE_DEVICES="${gpu_id}"

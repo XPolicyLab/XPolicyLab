@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 bench_name=${1}
 task_name=${2}
@@ -12,12 +12,12 @@ policy_conda_env=${8}
 policy_server_port=${9}
 policy_server_host=${10:-"localhost"}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XPL_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${XPL_DIR}/XPolicyLab/utils"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
-policy_name="$(basename "${CURRENT_DIR}")"
-yaml_file="${XPL_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+policy_name="$(basename "${SCRIPT_DIR}")"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}"
 
@@ -27,7 +27,7 @@ conda activate "${policy_conda_env}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${XPL_DIR}/XPolicyLab/setup_policy_server.py" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

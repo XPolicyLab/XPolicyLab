@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 export XLA_PYTHON_CLIENT_MEM_FRACTION=0.3
 
 bench_name=$1
@@ -13,14 +13,15 @@ policy_uv_env=${8:-uv}
 policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
-policy_name="$(basename "${CURRENT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+policy_name="$(basename "${SCRIPT_DIR}")"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
@@ -34,7 +35,7 @@ resolve_uv_env() {
         "${YAML_PYTHON}" - <<PYENV
 import yaml
 from pathlib import Path
-script_dir = Path("${CURRENT_DIR}")
+script_dir = Path("${SCRIPT_DIR}")
 cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8"))
 path = Path(cfg["policy_uv_env_path"]).expanduser()
 if not path.is_absolute():
@@ -44,7 +45,7 @@ PYENV
     else
         "${YAML_PYTHON}" - <<PYENV
 from pathlib import Path
-script_dir = Path("${CURRENT_DIR}")
+script_dir = Path("${SCRIPT_DIR}")
 path = Path("${raw_path}").expanduser()
 if not path.is_absolute():
     path = (script_dir / path).resolve()
@@ -56,7 +57,7 @@ PYENV
 policy_uv_env_path="$(resolve_uv_env "${policy_uv_env}")"
 if [[ ! -f "${policy_uv_env_path}/.venv/bin/activate" ]]; then
     echo "[SERVER][ERROR] uv venv not found: ${policy_uv_env_path}/.venv" >&2
-    echo "[SERVER][ERROR] Run: bash ${CURRENT_DIR}/install.sh" >&2
+    echo "[SERVER][ERROR] Run: bash ${SCRIPT_DIR}/install.sh" >&2
     exit 1
 fi
 
@@ -66,7 +67,7 @@ PYTHON_BIN="$(command -v python)"
 OPENPI_SRC="${policy_uv_env_path}/src"
 echo "[SERVER] Using python: ${PYTHON_BIN}"
 
-PYTHONPATH_PARTS=("${ROOT_DIR}")
+PYTHONPATH_PARTS=("${BENCH_ROOT}")
 if [[ -d "${OPENPI_SRC}" ]]; then
     PYTHONPATH_PARTS+=("${OPENPI_SRC}")
 fi
@@ -76,7 +77,7 @@ exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     PYTHONPATH="$(IFS=:; echo "${PYTHONPATH_PARTS[*]}")" \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    "${PYTHON_BIN}" "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

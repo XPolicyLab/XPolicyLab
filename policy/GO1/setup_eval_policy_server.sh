@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -13,14 +12,15 @@ policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-XPL_DIR="${ROOT_DIR}/XPolicyLab"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 if [ -n "${MODEL_PATH:-}" ]; then
@@ -32,7 +32,7 @@ fi
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-export PYTHONPATH="${SCRIPT_DIR}/AgiBot-World:${XPL_DIR}:${PYTHONPATH:-}"
+export PYTHONPATH="${SCRIPT_DIR}/AgiBot-World:${XPL_ROOT}:${PYTHONPATH:-}"
 
 OVERRIDES=(
     port="${policy_server_port}"
@@ -56,7 +56,7 @@ for override in "${OVERRIDES[@]}"; do
     PYTHON_ARGS+=("${override}")
 done
 
-SERVER_PY="${XPL_DIR}/setup_policy_server.py"
+SERVER_PY="${XPL_ROOT}/setup_policy_server.py"
 SERVER_ENV=(
     PYTHONWARNINGS=ignore::UserWarning
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}"

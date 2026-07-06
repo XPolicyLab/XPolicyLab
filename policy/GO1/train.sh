@@ -8,7 +8,7 @@ Usage:
   bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 
 Optional environment overrides:
-  LEROBOT_DATA_PATH   Default: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
+  LEROBOT_DATA_PATH   Required: path to your RoboDojo LeRobot dataset dir
   MODEL_NAME_OR_PATH  Default: <workspace>/models/GO-1
   GO1_CFG_PATH        Default: go1/configs/go1_sft_robodojo_shared.py
   CTRL_FREQ           Default: 25
@@ -33,7 +33,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 AGIBOT_DIR="${SCRIPT_DIR}/AgiBot-World"
 
-DEFAULT_LEROBOT_DATA_PATH="/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21"
+DEFAULT_LEROBOT_DATA_PATH=""  # set LEROBOT_DATA_PATH to your RoboDojo LeRobot dataset dir
 DEFAULT_GO1_MODEL_PATH="$(cd "${ROOT_DIR}/.." && pwd)/models/GO-1"
 DEFAULT_GO1_CFG_PATH="go1/configs/go1_sft_robodojo_shared.py"
 
@@ -81,7 +81,7 @@ export PYTHONPATH="${AGIBOT_DIR}:${PYTHONPATH}"
 export WANDB_PROJECT="${WANDB_PROJECT:-go1}"
 export WANDB_NAME="${RUNNAME}"
 export REPORT_TO="${REPORT_TO:-tensorboard}"
-export XDG_CACHE_HOME="${XDG_CACHE_HOME:-/xspark-cache/.cache}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${SCRIPT_DIR}/.cache}"
 export HF_HOME="${HF_HOME:-${XDG_CACHE_HOME}/huggingface}"
 export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-${HF_HOME}/datasets}"
 export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/transformers}"

@@ -232,7 +232,7 @@ def _normalize_state(state: np.ndarray, state_stats: dict[str, Any] | None) -> n
 def _get_instruction(obs: dict[str, Any], fallback: str) -> str:
     """Resolve the language prompt from a RoboDojo v1.0 observation.
 
-    Reference obs layout (``/mnt/xspark-data/zijian/test.pkl``):
+    Reference obs layout (RoboDojo v1.0 observation dict):
         {
             "vision": {"cam_head": ..., "cam_left_wrist": ..., ...},
             "state": {...},

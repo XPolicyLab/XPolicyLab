@@ -13,15 +13,16 @@ policy_server_port=$9
 policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 ADAPTER_DIR="${SCRIPT_DIR}/xpolicylab_adapter"
 OFFLINE_DIR="${SCRIPT_DIR}/RISE/policy_and_value/policy_offline_and_value"
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 ckpt_run_id="${RISE_CKPT_RUN_ID:-$(xpolicylab_ckpt_run_id "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}")}"
 ckpt_root="$(xpolicylab_resolve_ckpt_dir "${SCRIPT_DIR}" "${bench_name}" "${ckpt_name}" \
@@ -110,15 +111,15 @@ echo -e "\033[33m[SERVER] policy_server_host=${policy_server_host} policy_server
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] env_action_dim=${action_dim}, model_action_dim=${model_action_dim:-<config default>}\033[0m"
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     PYTHONUNBUFFERED=1 \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    PYTHONPATH="${OFFLINE_DIR}/src:${ROOT_DIR}:${PYTHONPATH:-}" \
-    python3 -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    PYTHONPATH="${OFFLINE_DIR}/src:${BENCH_ROOT}:${PYTHONPATH:-}" \
+    python3 -u "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

@@ -7,10 +7,14 @@ env_cfg_type: null
 seed: 0
 eval_batch: false
 protocol: ws
+host: localhost
+port: null
 
 config_name: robotwin30_train
-checkpoint_path: "/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21_new/checkpoint_step_1000"
-base_model_path: "/mnt/nas/shared_model_weights/lingbot-va-base"
+# Left null: checkpoint resolves from ckpt_name (arg 3); base model resolves from
+# LINGBOT_VA_BASE_MODEL_PATH env or a value set here.
+checkpoint_path: null
+base_model_path: null
 action_type: joint
 
 # closed_loop: official paper-style autoregressive KV cache (real robot).

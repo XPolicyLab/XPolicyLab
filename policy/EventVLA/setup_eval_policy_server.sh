@@ -18,12 +18,13 @@ policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 EVENTVLA_ROOT="${SCRIPT_DIR}/source_eventvla"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 read_yaml_value() {
     local key=$1
@@ -39,7 +40,7 @@ read_yaml_value() {
     ' "${yaml_file}"
 }
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 # ckpt_name is the full run directory name (== train.sh RUN_ID) produced by training.
 # train.sh writes to ${SCRIPT_DIR}/results/Checkpoints/<ckpt_name>; the vendored run
 # script, if invoked directly without RUN_ROOT_DIR, defaults to source_eventvla/results/Checkpoints.
@@ -148,7 +149,7 @@ bash "${UTILS_DIR}/wait_for_policy_server.sh" \
 PYTHONPATH="${EVENTVLA_ROOT}:${PYTHONPATH:-}" \
 PYTHONWARNINGS=ignore::UserWarning \
 CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+python "${XPL_ROOT}/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
         port="${policy_server_port}" \

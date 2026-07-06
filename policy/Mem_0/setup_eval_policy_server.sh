@@ -14,11 +14,12 @@ policy_server_host=${10:-localhost}
 vllm_url=${11:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-POLICY_DIR="${ROOT_DIR}/XPolicyLab/policy/${policy_name}"
+POLICY_DIR="${XPL_ROOT}/policy/${policy_name}"
 UPSTREAM_DIR="${POLICY_DIR}/Mem_0"
 yaml_file="${POLICY_DIR}/deploy.yml"
 ADAPTER_DIR="${UPSTREAM_DIR}/xpolicylab_adapter"
@@ -68,15 +69,15 @@ echo -e "\033[33m[SERVER] host=${policy_server_host} port=${policy_server_port}\
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     PYTHONUNBUFFERED=1 \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    PYTHONPATH="${ROOT_DIR}:${UPSTREAM_DIR}:${PYTHONPATH:-}" \
-    python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    PYTHONPATH="${BENCH_ROOT}:${UPSTREAM_DIR}:${PYTHONPATH:-}" \
+    python -u "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

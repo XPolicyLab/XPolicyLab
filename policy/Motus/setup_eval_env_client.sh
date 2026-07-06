@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -15,8 +14,7 @@ policy_server_ip=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-# setup_env_client.sh expects the RoboDojo repo root (scripts/eval_policy.sh lives there).
-ROOT_DIR="$(cd "${XPL_ROOT}/.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
@@ -34,7 +32,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${env_cfg_type}" \
     "${policy_name}" \
     "${additional_info}" \
-    "${ROOT_DIR}" \
+    "${BENCH_ROOT}" \
     "${seed}" \
     "${env_gpu_id}" \
     "${policy_server_ip}"

@@ -6,7 +6,7 @@ eval_batch: false
 # Keys are `port` / `host` because XPolicyLab/setup_policy_server.py reads
 # those names (deploy_cfg.get("port") / deploy_cfg.get("host")).
 port: null
-host: null
+host: localhost
 
 # Identifiers + per-launch wiring (set via --overrides from the eval scripts).
 bench_name: null

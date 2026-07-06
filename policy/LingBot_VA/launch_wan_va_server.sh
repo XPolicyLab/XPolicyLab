@@ -4,15 +4,15 @@
 set -eo pipefail
 
 GPU="${1:-0}"
-VA_PORT="${2:-29536}"
+VA_PORT="${2:-10001}"
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${POLICY_DIR}/../../.." && pwd)"
 XPL_DIR="${ROOT_DIR}/XPolicyLab"
 LINGBOT_VA_DIR="${POLICY_DIR}/lingbot_va"
 
-CHECKPOINT_PATH="${CHECKPOINT_PATH:-/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21_new/checkpoint_step_1000/}"
-BASE_MODEL_PATH="${BASE_MODEL_PATH:-/mnt/xspark-data/xspark_shared/model_weights/lingbot-va-base/}"
+CHECKPOINT_PATH="${CHECKPOINT_PATH:?set CHECKPOINT_PATH to your LingBot-VA checkpoint dir}"
+BASE_MODEL_PATH="${BASE_MODEL_PATH:?set BASE_MODEL_PATH to your lingbot-va-base weights dir}"
 CONFIG_NAME="${CONFIG_NAME:-robotwin30_train}"
 MASTER_PORT="${MASTER_PORT:-29501}"
 

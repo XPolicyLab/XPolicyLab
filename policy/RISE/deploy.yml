@@ -4,7 +4,7 @@ eval_batch: false
 
 # Server transport (setup_policy_server.py reads `port` / `host`).
 port: null
-host: null
+host: localhost
 
 bench_name: null
 task_name: null

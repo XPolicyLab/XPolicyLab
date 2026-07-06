@@ -1,6 +1,7 @@
 # Basic experiment configuration
 policy_name: DreamZero
 protocol: ws
+host: localhost
 port: null
 bench_name: null
 task_name: null

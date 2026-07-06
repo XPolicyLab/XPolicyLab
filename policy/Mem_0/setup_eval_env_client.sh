@@ -14,11 +14,12 @@ policy_server_port=${10}
 policy_server_ip=${11:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo -e "\033[34m[CLIENT] policy=${policy_name} task=${task_name} ckpt=${ckpt_name}\033[0m"
 echo -e "\033[34m[CLIENT] server=${policy_server_ip}:${policy_server_port}\033[0m"
@@ -35,7 +36,7 @@ exec env \
         "${env_cfg_type}" \
         "${policy_name}" \
         "${additional_info}" \
-        "${ROOT_DIR}" \
+        "${BENCH_ROOT}" \
         "${seed}" \
         "${env_gpu_id}" \
         "${policy_server_ip}"

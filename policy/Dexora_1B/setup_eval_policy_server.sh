@@ -18,11 +18,13 @@ policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-dexora_root="${DEXORA_ROOT:-/root/crx/Dexora}"
+dexora_root="${DEXORA_ROOT:?set DEXORA_ROOT to your local Dexora checkout}"
 checkpoint_path="${DEXORA_CKPT_PATH:-}"
 if [[ -z "${checkpoint_path}" ]]; then
     if [[ "${ckpt_name}" = /* || -e "${ckpt_name}" ]]; then
@@ -41,11 +43,11 @@ conda activate "${policy_conda_env}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    HF_HOME="${HF_HOME:-/mnt/data/crx/hf_cache}" \
-    HF_HUB_CACHE="${HF_HUB_CACHE:-/mnt/data/crx/hf_cache/hub}" \
+    HF_HOME="${HF_HOME:-${dexora_root}/.hf_cache}" \
+    HF_HUB_CACHE="${HF_HUB_CACHE:-${dexora_root}/.hf_cache/hub}" \
     HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}" \
-    PYTHONPATH="${ROOT_DIR}:${dexora_root}:${PYTHONPATH:-}" \
-    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    PYTHONPATH="${BENCH_ROOT}:${dexora_root}:${PYTHONPATH:-}" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \
@@ -58,8 +60,8 @@ exec env \
             config_path="${DEXORA_CONFIG_PATH:-${dexora_root}/configs/base.yaml}" \
             text_encoder_path="${DEXORA_T5:-google/t5-v1_1-xxl}" \
             vision_encoder_path="${DEXORA_SIGLIP:-google/siglip-so400m-patch14-384}" \
-            hf_home="${HF_HOME:-/mnt/data/crx/hf_cache}" \
-            hf_hub_cache="${HF_HUB_CACHE:-/mnt/data/crx/hf_cache/hub}" \
+            hf_home="${HF_HOME:-${dexora_root}/.hf_cache}" \
+            hf_hub_cache="${HF_HUB_CACHE:-${dexora_root}/.hf_cache/hub}" \
             hf_offline=True \
             env_cfg_type="${env_cfg_type}" \
             seed="${seed}" \

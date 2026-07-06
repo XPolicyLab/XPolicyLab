@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 # ==================== 参数定义 ====================
 policy_name=ACT
 bench_name=${1}
@@ -14,12 +13,12 @@ env_gpu_id=${8}
 policy_conda_env=${9}
 eval_env_conda_env=${10}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
-ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Current Dir
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
-SERVER_SCRIPT="${CURRENT_DIR}/setup_eval_policy_server.sh"
-CLIENT_SCRIPT="${CURRENT_DIR}/setup_eval_env_client.sh"
+SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
@@ -45,7 +44,7 @@ bash "${SERVER_SCRIPT}" \
 
 SERVER_PID=$!
 
-sleep 3
+bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 1200
 
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 

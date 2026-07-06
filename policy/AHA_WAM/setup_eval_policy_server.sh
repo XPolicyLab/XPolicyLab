@@ -13,22 +13,22 @@ policy_server_port=$9
 policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-apptainer_image="${AHA_WAM_APPTAINER_IMAGE:-/mnt/petrelfs/caijisong/shared_img/new_app.sif}"
+apptainer_image="${AHA_WAM_APPTAINER_IMAGE:-}"
 elava_root="${AHA_WAM_ELAVA_ROOT:-${SCRIPT_DIR}/AHAWAM}"
 ckpt_setting="${AHA_WAM_CKPT_SETTING:-${ckpt_name}}"
 run_dir="${SCRIPT_DIR}/checkpoints/${ckpt_setting}"
 checkpoint_path="${AHA_WAM_CHECKPOINT_PATH:-}"
 dataset_stats_path="${AHA_WAM_DATASET_STATS_PATH:-}"
-diffsynth_model_base_path="${DIFFSYNTH_MODEL_BASE_PATH:-/mnt/petrelfs/caijisong/dualWAM/checkpoints}"
+diffsynth_model_base_path="${DIFFSYNTH_MODEL_BASE_PATH:-}"
 task_config="${AHA_WAM_TASK_CONFIG:-robodojo_local_history_updated_kv_prior_only_16}"
 allow_dummy_policy="${AHA_WAM_ALLOW_DUMMY_POLICY:-false}"
 chunks_per_video_prefill="${AHA_WAM_CHUNKS_PER_VIDEO_PREFILL:-4}"
 prepend_episode_first_frame="${AHA_WAM_PREPEND_EPISODE_FIRST_FRAME:-true}"
-env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-/mnt/petrelfs/caijisong/env_cfg}"
+env_cfg_root="${AHA_WAM_ENV_CFG_ROOT:-${BENCH_ROOT}/env_cfg}"
 
 if [[ -z "${checkpoint_path}" && "${allow_dummy_policy}" != "true" ]]; then
     weights_dir="${run_dir}/checkpoints/weights"
@@ -38,7 +38,7 @@ if [[ -z "${checkpoint_path}" && "${allow_dummy_policy}" != "true" ]]; then
     if [[ -z "${checkpoint_path}" && -d "${run_dir}" ]]; then
         checkpoint_path="$(find "${run_dir}" -maxdepth 3 -type f -name 'step_*.pt' | sort -V | tail -n 1)"
     fi
-    legacy_checkpoint="${ROOT_DIR}/XPolicyLab/checkpoint/step_002500.pt"
+    legacy_checkpoint="${XPL_ROOT}/checkpoint/step_002500.pt"
     if [[ -z "${checkpoint_path}" && -f "${legacy_checkpoint}" ]]; then
         checkpoint_path="${legacy_checkpoint}"
     fi
@@ -53,7 +53,7 @@ if [[ -z "${dataset_stats_path}" ]]; then
     for candidate in \
         "${run_dir}/dataset_stats.json" \
         "${run_dir}/checkpoints/dataset_stats.json" \
-        "${ROOT_DIR}/XPolicyLab/checkpoint/dataset_stats.json"; do
+        "${XPL_ROOT}/checkpoint/dataset_stats.json"; do
         if [[ -f "${candidate}" ]]; then
             dataset_stats_path="${candidate}"
             break
@@ -110,9 +110,9 @@ export CUDA_VISIBLE_DEVICES="${POLICY_GPU_ID}"
 export PYTHONUNBUFFERED=1
 export PYTHONWARNINGS=ignore::UserWarning
 export DIFFSYNTH_MODEL_BASE_PATH="${AHA_WAM_DIFFSYNTH_MODEL_BASE_PATH}"
-export PYTHONPATH="${ROOT_DIR}/XPolicyLab:${ROOT_DIR}:${ELAVA_ROOT}:${ELAVA_ROOT}/src:${PYTHONPATH:-}"
+export PYTHONPATH="${XPL_ROOT}:${BENCH_ROOT}:${ELAVA_ROOT}:${ELAVA_ROOT}/src:${PYTHONPATH:-}"
 
-python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+python -u "${XPL_ROOT}/setup_policy_server.py" \
     --config_path "${YAML_FILE}" \
     --overrides \
         port="${POLICY_SERVER_PORT}" \
@@ -136,7 +136,7 @@ python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
         prepend_episode_first_frame="${PREPEND_EPISODE_FIRST_FRAME}"
 BASH
 
-export ROOT_DIR
+export BENCH_ROOT
 export YAML_FILE="${yaml_file}"
 export ELAVA_ROOT="${elava_root}"
 export POLICY_CONDA_ENV="${policy_conda_env}"
@@ -159,13 +159,12 @@ export ALLOW_DUMMY_POLICY="${allow_dummy_policy}"
 export CHUNKS_PER_VIDEO_PREFILL="${chunks_per_video_prefill}"
 export PREPEND_EPISODE_FIRST_FRAME="${prepend_episode_first_frame}"
 
-if command -v apptainer >/dev/null 2>&1; then
+if command -v apptainer >/dev/null 2>&1 && [[ -n "${apptainer_image}" ]]; then
     apptainer exec --cleanenv \
-        --bind /mnt:/mnt \
-        --bind /nvme/caijisong:/nvme/caijisong \
+        ${AHA_WAM_APPTAINER_BINDS:-} \
         --nv "${apptainer_image}" \
         env \
-            ROOT_DIR="${ROOT_DIR}" \
+            BENCH_ROOT="${BENCH_ROOT}" \
             YAML_FILE="${YAML_FILE}" \
             ELAVA_ROOT="${ELAVA_ROOT}" \
             POLICY_CONDA_ENV="${POLICY_CONDA_ENV}" \

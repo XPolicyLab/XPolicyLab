@@ -214,12 +214,13 @@ def _ensure_dataset_statistics(run_dir: Path) -> None:
             return
         print(f"[Abot_M0] Regenerating {stats_path}: expected min/max stats for training alignment.")
 
-    stats_source = Path(
-        os.environ.get(
-            "ABOT_STATS_JSON",
-            "/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json",
+    stats_env = os.environ.get("ABOT_STATS_JSON")
+    if not stats_env:
+        raise FileNotFoundError(
+            f"Missing `{stats_path}`. Set ABOT_STATS_JSON to a stats_gr00t.json "
+            "with per-dimension action min/max for training alignment."
         )
-    ).expanduser()
+    stats_source = Path(stats_env).expanduser()
     if not stats_source.is_file():
         raise FileNotFoundError(
             f"Missing `{stats_path}` and fallback stats file `{stats_source}`."

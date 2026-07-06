@@ -36,8 +36,7 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 DATA_TAG="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 DEST_DIR="${SCRIPT_DIR}/data/${DATA_TAG}"
 
-DEFAULT_LEROBOT="/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21"
-SRC_DIR="${LEROBOT_DATA_PATH:-${DEFAULT_LEROBOT}}"
+SRC_DIR="${LEROBOT_DATA_PATH:?set LEROBOT_DATA_PATH to your RoboDojo LeRobot dataset dir}"
 
 if [[ "${action_type}" != "joint" ]]; then
     echo -e "\033[31m[process_data] Being_H05 XPolicyLab flow currently supports action_type=joint only.\033[0m" >&2

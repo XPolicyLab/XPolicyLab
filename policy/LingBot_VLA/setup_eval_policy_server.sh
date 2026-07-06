@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=${1}
 task_name=${2}
 ckpt_name=${3}
@@ -12,18 +11,18 @@ policy_conda_env=${8}
 policy_server_port=${9}
 policy_server_host=${10:-"localhost"}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-XPL_DIR="$(cd "${CURRENT_DIR}/../.." && pwd)"
-UTILS_DIR="${XPL_DIR}/utils"
-IMPORT_SHIM_DIR="${XPL_DIR}/.xpl_import_shim"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+IMPORT_SHIM_DIR="${XPL_ROOT}/.xpl_import_shim"
 mkdir -p "${IMPORT_SHIM_DIR}"
-ln -sfn "${XPL_DIR}" "${IMPORT_SHIM_DIR}/XPolicyLab"
+ln -sfn "${XPL_ROOT}" "${IMPORT_SHIM_DIR}/XPolicyLab"
 
-policy_name="$(basename "${CURRENT_DIR}")"
-yaml_file="${CURRENT_DIR}/deploy.yml"
+policy_name="$(basename "${SCRIPT_DIR}")"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 # ckpt_name is the full run directory name under checkpoints/.
-checkpoint_root="${CURRENT_DIR}/checkpoints/${ckpt_name}"
-qwen25_path="${QWEN25_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct}"
+checkpoint_root="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
+qwen25_path="${QWEN25_PATH:?set QWEN25_PATH to your Qwen2.5-VL-3B-Instruct weights dir}"
 
 checkpoint_path=$(python - <<PY
 from pathlib import Path
@@ -58,8 +57,8 @@ exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     QWEN25_PATH="${qwen25_path}" \
-    PYTHONPATH="${IMPORT_SHIM_DIR}:${XPL_DIR}:${PYTHONPATH:-}" \
-    python "${XPL_DIR}/setup_policy_server.py" \
+    PYTHONPATH="${IMPORT_SHIM_DIR}:${XPL_ROOT}:${PYTHONPATH:-}" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

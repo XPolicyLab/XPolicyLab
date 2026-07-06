@@ -35,8 +35,8 @@ eval_env_conda_env=${10}
 planning_gpu_ids=${11:-}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 UPSTREAM_DIR="${SCRIPT_DIR}/Mem_0"
 TASK_CONFIG="${UPSTREAM_DIR}/xpolicylab_adapter/task_config.json"
 
@@ -65,23 +65,7 @@ vllm_url="${VLLM_URL:-}"
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type},task_type=${task_type}"
 
 wait_for_port() {
-    local host=$1
-    local port=$2
-    local pid=$3
-    local label=$4
-    for _ in $(seq 1 180); do
-        if ! kill -0 "${pid}" 2>/dev/null; then
-            echo -e "\033[31m[ERROR] ${label} exited before opening port ${port}.\033[0m" >&2
-            exit 1
-        fi
-        if python3 -c "import socket; s=socket.socket(); s.settimeout(1); s.connect(('${host}', int('${port}'))); s.close()" >/dev/null 2>&1; then
-            echo -e "\033[32m[MAIN] ${label} ready on ${host}:${port}\033[0m"
-            return 0
-        fi
-        sleep 2
-    done
-    echo -e "\033[31m[ERROR] ${label} timed out waiting for port ${port}.\033[0m" >&2
-    exit 1
+    bash "${UTILS_DIR}/wait_for_policy_server.sh" "$1" "$2" "$3" "$4" 1200
 }
 
 cleanup() {

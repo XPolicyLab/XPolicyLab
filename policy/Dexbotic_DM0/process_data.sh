@@ -20,7 +20,7 @@ TRANSFORM_SCRIPT="${POLICY_DIR}/scripts/transform_dm0_dexdata_format.py"
 GENERATE_SOURCE_SCRIPT="${POLICY_DIR}/scripts/generate_data_source.py"
 data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 converted_data_root="${DM0_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
-raw_data_root="${DM0_RAW_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo}"
+raw_data_root="${DM0_RAW_DATA_ROOT:?set DM0_RAW_DATA_ROOT to your RoboDojo raw dataset root}"
 data_source_path="${DATA_SOURCE_DIR}/robodojo_${data_setting}.py"
 
 resolve_single_input_dir() {

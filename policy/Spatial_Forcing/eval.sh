@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -12,7 +11,7 @@ env_gpu_id=$8
 policy_uv_env=${9:-uv}
 eval_env_conda_env=${10}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 find_xpolicylab_root() {
     local dir
     dir="$(cd "${1}" && pwd)"
@@ -26,12 +25,12 @@ find_xpolicylab_root() {
     echo "[ERROR] XPolicyLab root (setup_policy_server.py) not found above ${1}" >&2
     return 1
 }
-XPL_ROOT="$(find_xpolicylab_root "${CURRENT_DIR}")"
-ROOT_DIR="$(dirname "${XPL_ROOT}")"
+XPL_ROOT="$(find_xpolicylab_root "${SCRIPT_DIR}")"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
 
-SERVER_SCRIPT="${CURRENT_DIR}/setup_eval_policy_server.sh"
-CLIENT_SCRIPT="${CURRENT_DIR}/setup_eval_env_client.sh"
+SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
+CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 
 policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"

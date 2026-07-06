@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Example (RoboDojo):
 #   bash process_lerobot.sh \
-#     /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot \
+#     /path/to/lerobot/RoboDojo_sim_v21_video_abot \
 #     RoboDojo_sim_v21_video_abot-lerobot
 
 usage="Usage: bash process_lerobot.sh <source_lerobot_dir> [link_name]"

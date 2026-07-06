@@ -14,7 +14,8 @@ port: 6000
 
 # Upstream EventVLA runtime
 eventvla_root: source_eventvla
-checkpoint_path: /nav-oss/yangganlin/models/robodojo/20260617_robodojo_pure_image_keyframe_memory_teacher_qwenoft/checkpoints/steps_150000_pytorch_model.pt
+# Left null: the wrapper resolves the checkpoint from the run dir or EVENTVLA_CKPT_PATH.
+checkpoint_path: null
 eventvla_server_host: 127.0.0.1
 eventvla_server_port: 5694
 

@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -13,31 +12,35 @@ policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 config_name=${11:-robotwin30_train}
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${CURRENT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
-policy_name="$(basename "${CURRENT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+policy_name="$(basename "${SCRIPT_DIR}")"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 if [[ "${ckpt_name}" = /* ]]; then
     CHECKPOINT_PATH="${ckpt_name}"
 else
-    CHECKPOINT_PATH="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/checkpoints/${ckpt_name}"
+    CHECKPOINT_PATH="${XPL_ROOT}/policy/${policy_name}/checkpoints/${ckpt_name}"
 fi
 
-BASE_MODEL_PATH=$(python - <<PY
-import sys
+BASE_MODEL_PATH="${LINGBOT_VA_BASE_MODEL_PATH:-}"
+if [[ -z "${BASE_MODEL_PATH}" ]]; then
+    BASE_MODEL_PATH=$(python - <<PY
 import yaml
 cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8"))
-base = cfg.get("base_model_path")
-if not base:
-    sys.exit("base_model_path must be set in deploy.yml")
-print(base)
+print(cfg.get("base_model_path") or "")
 PY
 )
+fi
+if [[ -z "${BASE_MODEL_PATH}" ]]; then
+    echo "[SERVER][ERROR] base model path not set. Set LINGBOT_VA_BASE_MODEL_PATH env or base_model_path in deploy.yml." >&2
+    exit 1
+fi
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
 echo "[SERVER] checkpoint_path=${CHECKPOINT_PATH}"
@@ -45,8 +48,9 @@ echo "[SERVER] checkpoint_path=${CHECKPOINT_PATH}"
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
+forward_master_port="${LINGBOT_VA_FORWARD_MASTER_PORT:-$(bash "${UTILS_DIR}/get_free_port.sh")}"
 export MASTER_ADDR=127.0.0.1
-export MASTER_PORT="${policy_server_port}"
+export MASTER_PORT="${forward_master_port}"
 export RANK=0
 export LOCAL_RANK=0
 export WORLD_SIZE=1
@@ -83,7 +87,7 @@ fi
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             "${OVERRIDE_LIST[@]}"
