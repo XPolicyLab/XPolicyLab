@@ -16,6 +16,11 @@ policy_server_ip="${12:-localhost}"
 protocol="${13:-ws}"
 run_mode="${14:---run-once}"
 
+if [[ "${run_mode}" != "--run-once" ]]; then
+    echo "[ERROR] env_client_mode=daemon is not supported in the eval-only release." >&2
+    exit 1
+fi
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
 conda activate "${eval_env_conda_env}"
@@ -36,12 +41,4 @@ CLIENT_ARGS=(
     --eval_batch "${eval_batch}"
 )
 
-if [[ "${run_mode}" == "--run-once" ]]; then
-    python "${root_dir}/XPolicyLab/debug_env_client.py" "${CLIENT_ARGS[@]}"
-else
-    python -m station.daemon \
-        "${CLIENT_ARGS[@]}" \
-        --eval-env-type debug \
-        --serve-host 0.0.0.0 \
-        --serve-port 19200
-fi
+python "${root_dir}/XPolicyLab/debug_env_client.py" "${CLIENT_ARGS[@]}"

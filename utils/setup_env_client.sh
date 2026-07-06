@@ -38,6 +38,11 @@ if [[ "${run_mode}" == "run-once" ]]; then
     run_mode="--run-once"
 fi
 
+if [[ "${run_mode}" != "--run-once" ]]; then
+    echo "[ERROR] env_client_mode=daemon is not supported in the eval-only release." >&2
+    exit 1
+fi
+
 if [[ -z "${EVAL_ENV_TYPE:-}" ]]; then
     echo "[CLIENT] EVAL_ENV_TYPE=(default sim) -> ${eval_env_mode}"
 else
@@ -62,12 +67,8 @@ COMMON_ARGS=(
 if [[ "${eval_env_mode}" == "debug" ]]; then
     bash "${UTILS_DIR}/run_debug_env_client.sh" "${COMMON_ARGS[@]}" "${protocol}" "${run_mode}"
 elif [[ "${eval_env_mode}" == "sim" ]]; then
-    if [[ "${run_mode}" != "--run-once" ]]; then
-        echo "[WARN] env_client_mode=daemon is not supported for EVAL_ENV_TYPE=sim; running the one-shot sim eval client instead." >&2
-    fi
     bash "${UTILS_DIR}/run_sim_env_client.sh" "${COMMON_ARGS[@]}"
 elif [[ "${eval_env_mode}" == "real_world" ]]; then
-    echo -e "\033[31m[WARN] EVAL_ENV_TYPE=real: real-world evaluation is not supported in the open-source release; continuing to real env client.\033[0m" >&2
     bash "${UTILS_DIR}/run_real_env_client.sh" "${COMMON_ARGS[@]}" "${protocol}" "${run_mode}"
 else
     echo "[ERROR] Unknown eval env mode: ${eval_env_mode}" >&2

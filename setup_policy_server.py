@@ -35,7 +35,7 @@ def main(deploy_cfg):
         try:
             from client_server.ws.model_server import PolicyServer, PolicyServerConfig
         except ModuleNotFoundError as exc:
-            if exc.name in ("client_server", "station"):
+            if exc.name == "client_server":
                 # client_server.ws ships in this repo; make it importable even when
                 # XPolicyLab is not pip-installed in the current environment.
                 import sys
@@ -46,17 +46,17 @@ def main(deploy_cfg):
                     from client_server.ws.model_server import PolicyServer, PolicyServerConfig
                 except ModuleNotFoundError as dep_exc:
                     raise RuntimeError(
-                        "ws policy server requires the station dependencies "
+                        "ws policy server requires the ws dependencies "
                         f"(missing module: {dep_exc.name}). Install them in the policy env with: "
                         "pip install 'websockets>=13' 'msgpack>=1.0.8' 'msgpack-numpy>=0.4.8' 'pydantic>=2.5' "
-                        "(or pip install -e '.[station]' from the XPolicyLab root)."
+                        "(or pip install -e '.[ws]' from the XPolicyLab root)."
                     ) from dep_exc
             else:
                 raise RuntimeError(
-                    "ws policy server requires the station dependencies "
+                    "ws policy server requires the ws dependencies "
                     f"(missing module: {exc.name}). Install them in the policy env with: "
                     "pip install 'websockets>=13' 'msgpack>=1.0.8' 'msgpack-numpy>=0.4.8' 'pydantic>=2.5' "
-                    "(or pip install -e '.[station]' from the XPolicyLab root)."
+                    "(or pip install -e '.[ws]' from the XPolicyLab root)."
                 ) from exc
 
         server = PolicyServer(
