@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-eval-station = [
+station = [
     "websockets>=13.0",
     "msgpack>=1.0.8",
     "msgpack-numpy>=0.4.8",
@@ -26,6 +26,6 @@ eval-station = [
 py-modules = ["XPolicyLab"]
 
 [tool.setuptools.packages.find]
-where = [".", "integrations"]
-include = ["client_server*", "utils*", "eval_station*"]
+where = ["."]
+include = ["client_server*", "utils*", "station*"]
 exclude = ["policy*", "build*", "scripts*", "__pycache__*", "tests*"]

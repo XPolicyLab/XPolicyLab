@@ -23,7 +23,7 @@ conda activate "${eval_env_conda_env}"
 echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
 echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port}...\033[0m"
 
-export PYTHONPATH="${root_dir}/XPolicyLab/integrations:${root_dir}/XPolicyLab:${root_dir}${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH="${root_dir}/XPolicyLab:${root_dir}${PYTHONPATH:+:${PYTHONPATH}}"
 
 CLIENT_ARGS=(
     --bench_name "${bench_name}"
@@ -37,11 +37,9 @@ CLIENT_ARGS=(
 )
 
 if [[ "${run_mode}" == "--run-once" ]]; then
-    PYTHONWARNINGS=ignore::UserWarning \
     python "${root_dir}/XPolicyLab/debug_env_client.py" "${CLIENT_ARGS[@]}"
 else
-    PYTHONWARNINGS=ignore::UserWarning \
-    python -m eval_station.servers.env_client_server \
+    python -m station.daemon \
         "${CLIENT_ARGS[@]}" \
         --eval-env-type debug \
         --serve-host 0.0.0.0 \

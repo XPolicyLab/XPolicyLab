@@ -7,7 +7,7 @@ import yaml
 import importlib
 import argparse
 import traceback
-from client_server.model_server import ModelServer
+from client_server.tcp.model_server import ModelServer
 
 
 def _default_protocol() -> str:
@@ -33,28 +33,30 @@ def main(deploy_cfg):
 
     if protocol == "ws":
         try:
-            from eval_station.servers.policy_server import PolicyServer, PolicyServerConfig
+            from client_server.ws.model_server import PolicyServer, PolicyServerConfig
         except ModuleNotFoundError as exc:
-            if exc.name == "eval_station":
-                # eval_station ships in this repo; make it importable even when
+            if exc.name in ("client_server", "station"):
+                # client_server.ws ships in this repo; make it importable even when
                 # XPolicyLab is not pip-installed in the current environment.
                 import sys
-                sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "integrations"))
+                repo_root = os.path.dirname(os.path.abspath(__file__))
+                if repo_root not in sys.path:
+                    sys.path.insert(0, repo_root)
                 try:
-                    from eval_station.servers.policy_server import PolicyServer, PolicyServerConfig
+                    from client_server.ws.model_server import PolicyServer, PolicyServerConfig
                 except ModuleNotFoundError as dep_exc:
                     raise RuntimeError(
-                        "ws policy server requires the eval-station dependencies "
+                        "ws policy server requires the station dependencies "
                         f"(missing module: {dep_exc.name}). Install them in the policy env with: "
                         "pip install 'websockets>=13' 'msgpack>=1.0.8' 'msgpack-numpy>=0.4.8' 'pydantic>=2.5' "
-                        "(or pip install -e '.[eval-station]' from the XPolicyLab root)."
+                        "(or pip install -e '.[station]' from the XPolicyLab root)."
                     ) from dep_exc
             else:
                 raise RuntimeError(
-                    "ws policy server requires the eval-station dependencies "
+                    "ws policy server requires the station dependencies "
                     f"(missing module: {exc.name}). Install them in the policy env with: "
                     "pip install 'websockets>=13' 'msgpack>=1.0.8' 'msgpack-numpy>=0.4.8' 'pydantic>=2.5' "
-                    "(or pip install -e '.[eval-station]' from the XPolicyLab root)."
+                    "(or pip install -e '.[station]' from the XPolicyLab root)."
                 ) from exc
 
         server = PolicyServer(
@@ -156,13 +158,6 @@ def parse_args_and_config():
             raise ValueError(f"{key} must be non-empty")
         if isinstance(val, str) and not val.strip():
             raise ValueError(f"{key} must be non-empty")
-
-    for deprecated_key in ("policy_server_host", "policy_server_port"):
-        if deprecated_key in cfg:
-            print(
-                f"\033[31m[WARNING] Deprecated config key '{deprecated_key}' is present; "
-                f"use 'host' and 'port' instead.\033[0m"
-            )
 
     _require_non_empty("host")
     _require_non_empty("port")

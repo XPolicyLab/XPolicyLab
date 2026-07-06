@@ -177,7 +177,7 @@ bash policy/<POLICY>/setup_eval_env_client.sh \
 <details>
 <summary>Daemon mode</summary>
 
-For platform-driven evaluation, set `env_client_mode: daemon` in `deploy.yml`. The env client starts `python -m eval_station.servers.env_client_server` on `0.0.0.0:19200`.
+For platform-driven evaluation, set `env_client_mode: daemon` in `deploy.yml`. The env client starts `python -m station.daemon` on `0.0.0.0:19200`.
 
 Useful endpoints:
 
@@ -254,11 +254,11 @@ bash policy/<POLICY>/eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type>
   <seed> <policy_gpu_id> <env_gpu_id> <policy_env_or_uv_path> <eval_env_conda_env>
 ```
 
-The default policy-server protocol is `ws`, which needs the eval-station extras
+The default policy-server protocol is `ws`, which needs the station extras
 (`websockets>=13`, `msgpack`, `msgpack-numpy`, `pydantic`) in the **policy** environment:
 
 ```bash
-pip install -e '.[eval-station]'   # from the XPolicyLab root, inside the policy env
+pip install -e '.[station]'   # from the XPolicyLab root, inside the policy env
 ```
 
 Set `protocol: legacy_tcp` only for adapters that still need the older

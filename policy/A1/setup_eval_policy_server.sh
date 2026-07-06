@@ -80,7 +80,7 @@ import os
 import runpy
 import sys
 
-import client_server.model_server as model_server_module
+import client_server.tcp.model_server as model_server_module
 
 _original_init = model_server_module.ModelServer.__init__
 

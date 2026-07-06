@@ -33,9 +33,12 @@ def _patch_model_client(module) -> None:
 
 def _spirit_import(name, globals=None, locals=None, fromlist=(), level=0):
     module = _ORIGINAL_IMPORT(name, globals, locals, fromlist, level)
-    if name in ("client_server.model_client", "XPolicyLab.client_server.model_client"):
+    if name in (
+        "client_server.tcp.model_client",
+        "XPolicyLab.client_server.tcp.model_client",
+    ):
         _patch_model_client(module)
-    elif name in ("client_server", "XPolicyLab.client_server") and fromlist and "model_client" in fromlist:
+    elif name in ("client_server.tcp", "XPolicyLab.client_server.tcp") and fromlist and "model_client" in fromlist:
         model_client_module = getattr(module, "model_client", None)
         if model_client_module is not None:
             _patch_model_client(model_client_module)
