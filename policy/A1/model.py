@@ -200,6 +200,10 @@ def _find_config_path(checkpoint_path: str | os.PathLike) -> Path:
     raise FileNotFoundError(f"config.yaml not found in {checkpoint_path} or {checkpoint_path.parent}")
 
 
+def _env_truthy(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
 def _load_json(path: str | os.PathLike):
     import json
 
@@ -320,7 +324,9 @@ class Model(ModelTemplate):
             return latest or model_path
 
         run_base = str(model_cfg.get("ckpt_name") or model_cfg.get("task_name", ""))
+        checked_paths: list[Path] = []
         latest_file = _SCRIPT_DIR / "checkpoints" / f"{run_base}.latest"
+        checked_paths.append(latest_file)
         if latest_file.is_file():
             latest = _find_latest_unsharded(latest_file.read_text().strip())
             if latest:
@@ -329,16 +335,31 @@ class Model(ModelTemplate):
         checkpoints_dir = _SCRIPT_DIR / "checkpoints"
         if checkpoints_dir.is_dir():
             exact_dir = checkpoints_dir / run_base
+            checked_paths.append(exact_dir)
             candidates = [exact_dir] if exact_dir.is_dir() else []
-            candidates.extend(
-                sorted(checkpoints_dir.glob(f"{run_base}-*"), key=lambda p: p.stat().st_mtime, reverse=True)
-            )
+            prefix_matches = sorted(checkpoints_dir.glob(f"{run_base}-*"), key=lambda p: p.stat().st_mtime, reverse=True)
+            checked_paths.extend(prefix_matches[:5])
+            candidates.extend(prefix_matches)
             for match in candidates:
                 latest = _find_latest_unsharded(match)
                 if latest:
                     return latest
 
-        return DEFAULT_MODEL_PATH
+        if _env_truthy("A1_ALLOW_DEFAULT_MODEL_PATH"):
+            print(
+                f"[A1 Model] checkpoint '{run_base}' was not found; "
+                f"falling back to DEFAULT_MODEL_PATH={DEFAULT_MODEL_PATH}",
+                flush=True,
+            )
+            return DEFAULT_MODEL_PATH
+
+        checked = "\n  ".join(str(path) for path in checked_paths) or "  <no checkpoint candidates>"
+        raise FileNotFoundError(
+            f"A1 checkpoint not found for ckpt_name='{run_base}'.\n"
+            f"Checked:\n  {checked}\n"
+            "Pass the full checkpoint run directory name as ckpt_name, set MODEL_PATH to an explicit "
+            "checkpoint path, or set A1_ALLOW_DEFAULT_MODEL_PATH=true to use the pretrain fallback."
+        )
 
     def _load_norm_stats(self, model_cfg):
         if self.no_norm:

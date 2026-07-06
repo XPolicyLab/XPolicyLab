@@ -38,6 +38,7 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${SCRIPT_DIR}/.cache}"
 mkdir -p "${HF_HOME}" "${XDG_CACHE_HOME}"
 
 OVERRIDES=(
+    host="${policy_server_host}"
     port="${policy_server_port}"
     bench_name="${bench_name}"
     task_name="${task_name}"
@@ -69,29 +70,5 @@ SERVER_ENV=(
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
     PYTHONPATH="${PYTHONPATH}"
 )
-
-if [[ "${policy_server_host}" == "0.0.0.0" ]]; then
-    export A1_SPS_ARGV="$(
-        python3 -c 'import json, sys; print(json.dumps(sys.argv[1:]))' \
-            "${SERVER_PY}" "${PYTHON_ARGS[@]}"
-    )"
-    exec env "${SERVER_ENV[@]}" python -c "
-import json
-import os
-import runpy
-import sys
-
-import client_server.tcp.model_server as model_server_module
-
-_original_init = model_server_module.ModelServer.__init__
-
-def _bind_all_init(self, model, host='localhost', port=None):
-    _original_init(self, model, '0.0.0.0', port)
-
-model_server_module.ModelServer.__init__ = _bind_all_init
-sys.argv = json.loads(os.environ['A1_SPS_ARGV'])
-runpy.run_path(sys.argv[0], run_name='__main__')
-"
-fi
 
 exec env "${SERVER_ENV[@]}" python "${SERVER_PY}" "${PYTHON_ARGS[@]}"

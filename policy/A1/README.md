@@ -213,6 +213,8 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 | Key                    | Notes                                                  |
 | ---------------------- | ------------------------------------------------------ |
 | `policy_name`          | Runtime or checkpoint option consumed by this adapter. |
+| `host`                 | Policy server bind host; use `0.0.0.0` for remote clients. |
+| `port`                 | Policy server bind port.                              |
 | `action_dim`           | Runtime or checkpoint option consumed by this adapter. |
 | `model_path`           | Runtime or checkpoint option consumed by this adapter. |
 | `data_stats_path`      | Runtime or checkpoint option consumed by this adapter. |
@@ -229,20 +231,21 @@ Policy-specific `deploy.yml` keys worth checking before evaluation:
 Frequently used environment variables detected in the adapter scripts:
 
 
-| Variable                | Notes                                                            |
-| ----------------------- | ---------------------------------------------------------------- |
-| `A1_DIR`                | Optional override used by the local scripts or upstream runtime. |
-| `A1_REPO_DIR`           | Optional override used by the local scripts or upstream runtime. |
-| `A1_SPS_ARGV`           | Optional override used by the local scripts or upstream runtime. |
-| `A1_TRAIN_CONFIG`       | Optional override used by the local scripts or upstream runtime. |
-| `BLE001`                | Optional override used by the local scripts or upstream runtime. |
-| `CONDA_DEFAULT_ENV`     | Optional override used by the local scripts or upstream runtime. |
-| `CUDA`                  | Optional override used by the local scripts or upstream runtime. |
-| `DATA_DIR`              | Optional override used by the local scripts or upstream runtime. |
-| `DATA_STATS_PATH`       | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_CAMERA_GROUPS` | Optional override used by the local scripts or upstream runtime. |
-| `DEFAULT_MODEL_PATH`    | Optional override used by the local scripts or upstream runtime. |
-| `E402`                  | Optional override used by the local scripts or upstream runtime. |
+| Variable                      | Notes                                                                 |
+| ----------------------------- | --------------------------------------------------------------------- |
+| `MODEL_PATH`                  | Explicit checkpoint path for evaluation; overrides `ckpt_name` lookup. |
+| `DATA_STATS_PATH`             | Explicit normalization stats JSON path for evaluation.                |
+| `A1_REPO_DIR`                 | Use an external A1 source tree instead of the vendored `A1/` copy.    |
+| `A1_ALLOW_DEFAULT_MODEL_PATH` | Set to `true` to fall back to the default pretrain model if `ckpt_name` is not found. |
+| `DATA_DIR`                    | Root containing A1 pretrained assets; defaults to `RoboDojo/../models`. |
+| `HF_HOME`                     | Hugging Face cache/tokenizer directory used by A1.                    |
+| `XDG_CACHE_HOME`              | Cache root used by A1 dependencies.                                   |
+| `A1_TRAIN_CONFIG`             | Training config override for `train.sh`.                              |
+| `LEROBOT_DATA_PATH`           | Existing LeRobot dataset path used by `train.sh`.                     |
+| `LEROBOT_DATA_PATH_OVERRIDE`  | Highest-priority training dataset path override.                      |
+| `PRETRAIN_CHECKPOINT`         | A1 pretrain checkpoint used to initialize training.                    |
+| `RUNNAME`                     | Optional training run/checkpoint directory name override.             |
+| `CONDA_DEFAULT_ENV`           | Default policy/eval conda environment when not passed explicitly.      |
 
 
 
@@ -251,5 +254,6 @@ Frequently used environment variables detected in the adapter scripts:
 
 - Keep `ckpt_name` stable between data processing, training, and evaluation. For data-size ablations, encode the subset in `ckpt_name` such as `stack_bowls_50ep`.
 - `task_name` is only the evaluation task; multi-task checkpoints can be evaluated on different tasks without renaming the checkpoint directory.
+- During evaluation, pass the full checkpoint run directory name as `ckpt_name` or set `MODEL_PATH` explicitly. A missing checkpoint now fails fast instead of silently loading the pretrain fallback.
 - Prefer running `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` separately when debugging dependency, CUDA, or model-loading issues.
 
