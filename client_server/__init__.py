@@ -1,17 +1,17 @@
-"""Env↔policy transport over TCP and WebSocket."""
+"""Env↔policy transport over WebSocket (default) and legacy TCP."""
 
-from __future__ import annotations
+from client_server.ws.model_client import WsModelClient
+from client_server.ws.model_server import PolicyServer, PolicyServerConfig
 
-from typing import Any
+ModelClient = WsModelClient
+ModelServer = PolicyServer
+ModelServerConfig = PolicyServerConfig
 
-from client_server.tcp import ModelClient, ModelServer
-
-__all__ = ["ModelClient", "ModelServer", "WsModelClient"]
-
-
-def __getattr__(name: str) -> Any:
-    if name == "WsModelClient":
-        from client_server.ws import WsModelClient
-
-        return WsModelClient
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+__all__ = [
+    "ModelClient",
+    "ModelServer",
+    "ModelServerConfig",
+    "PolicyServer",
+    "PolicyServerConfig",
+    "WsModelClient",
+]
