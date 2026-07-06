@@ -13,9 +13,9 @@ policy_server_port=${9}
 policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 ADAPTER_DIR="${SCRIPT_DIR}/LDA-1B/xpolicylab_adapter"
 
 source "${ADAPTER_DIR}/_artifact_paths.sh"
@@ -44,7 +44,7 @@ exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     PYTHONUNBUFFERED=1 \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python -u "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

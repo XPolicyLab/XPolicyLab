@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -13,14 +12,15 @@ policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 GR00T_ROOT="${SCRIPT_DIR}/gr00t_n17"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${policy_server_port}, action_dim=${action_dim}"
 
@@ -72,7 +72,7 @@ export GR00T_VIDEO_BACKEND="${GR00T_VIDEO_BACKEND:-pyav}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    "${PYTHON_BIN}" "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    "${PYTHON_BIN}" "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

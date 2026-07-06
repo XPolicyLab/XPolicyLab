@@ -20,7 +20,7 @@ if [[ -z "${bench_name}" || -z "${ckpt_name}" || -z "${env_cfg_type}" || -z "${a
     exit 1
 fi
 
-source_root="/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo/sim_cloud"
+source_root="${HRDT_SOURCE_ROOT:?set HRDT_SOURCE_ROOT to your RoboDojo sim_cloud dataset root}"
 stats_path="${HRDT_ROOT}/datasets/xpolicylab/stats.json"
 
 train_batch_size=32

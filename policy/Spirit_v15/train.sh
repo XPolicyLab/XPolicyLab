@@ -17,7 +17,7 @@ POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 data_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 converted_data_root="${SPIRIT_CONVERTED_DATA_ROOT:-${POLICY_DIR}/data/${data_setting}}"
-pretrained_path="${SPIRIT_PRETRAINED_PATH:-/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Spirit-v1.5}"
+pretrained_path="${SPIRIT_PRETRAINED_PATH:?set SPIRIT_PRETRAINED_PATH to your Spirit-v1.5 weights dir}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 
 if [[ ! -f "${converted_data_root}/meta/task_info.json" ]]; then

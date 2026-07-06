@@ -13,11 +13,12 @@ policy_server_port=$9
 policy_server_host=${10:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-POLICY_DIR="${ROOT_DIR}/XPolicyLab/policy/${policy_name}"
+POLICY_DIR="${XPL_ROOT}/policy/${policy_name}"
 XWAM_DIR="${POLICY_DIR}/X-WAM"
 yaml_file="${POLICY_DIR}/deploy.yml"
 
@@ -41,7 +42,7 @@ echo -e "\033[33m[SERVER] policy_server_host=${policy_server_host} policy_server
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
 
 # Scope env vars to this server process only; never export them in the
@@ -51,8 +52,8 @@ exec env \
     PYTHONUNBUFFERED=1 \
     TOKENIZERS_PARALLELISM=false \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    PYTHONPATH="${ROOT_DIR}:${XWAM_DIR}:${XWAM_DIR}/evaluation:${PYTHONPATH:-}" \
-    python -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    PYTHONPATH="${BENCH_ROOT}:${XWAM_DIR}:${XWAM_DIR}/evaluation:${PYTHONPATH:-}" \
+    python -u "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

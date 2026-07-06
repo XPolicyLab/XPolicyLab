@@ -65,8 +65,8 @@ Known intentional exceptions:
 
 ## Difference From `aa4d9c1`
 
-Current XPolicyLab is `a15adcd7` on `main`. Compared with `aa4d9c1`, the branch
-made these contract-level changes:
+Current XPolicyLab is on `main` (post `b404586a`). Compared with `aa4d9c1`, the
+branch made these contract-level changes:
 
 - `dataset_name` was renamed to `bench_name` across scripts and configs.
 - Eval routing moved from YAML fields to `EVAL_ENV_TYPE`.
@@ -129,15 +129,21 @@ break first-run install, training, or evaluation for individual adapters.
 - Many policy README examples still use generic checkpoint names such as
   `RoboDojo-cotrain-arx_x5-joint-0`. That is fine for standard wrappers but
   misleading for policies with released upstream checkpoints or proxy servers.
-- Some `deploy.yml` files contain developer-specific absolute paths
-  (`EventVLA`, `Dexora_1B`, `Spirit_v15`, `LingBot_VA`, `Motus`,
-  `InternVLA_A1`, and others listed above). These cannot run on a clean machine
-  until users edit paths or download the stated assets.
-- `demo_policy/eval.sh` still relies on a short sleep before the client instead
-  of `wait_for_policy_server.sh`, so it can race on slow machines.
 - Full sim eval still depends on Isaac/conda/assets/checkpoints being present.
   A passing shell exit alone is not sufficient; verify `_result.json` has
   `eval_time >= 1`.
+
+## Resolved In This Pass
+
+- Hardcoded developer-specific absolute paths were removed from all adapter-level
+  files (`deploy.yml`, `model.py`, and wrapper scripts). Machine-specific model,
+  dataset, and cache paths now resolve from repo-relative defaults or documented
+  env vars, and raise a clear error when a required path is missing instead of
+  silently pointing at a private mount.
+- Every `eval.sh` now gates the client on `utils/wait_for_policy_server.sh`
+  (replacing fixed `sleep` waits and duplicated inline readiness loops), so slow
+  first-time model loads no longer race the environment client.
+- Removed the leftover `station/` bytecode cruft (source was already deleted).
 
 ## Validation Checklist
 

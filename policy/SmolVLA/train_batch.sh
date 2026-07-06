@@ -21,8 +21,8 @@
 #   SMOVLA_DRY_RUN          1=只打印命令不启动 tmux
 #   SMOVLA_REPO_ID_PREFIX   LeRobot repo 前缀 (默认 RoboDojo_sim)
 #   SMOVLA_REPO_ID_SUFFIX   LeRobot repo 后缀 (默认 v30)
-#   SMOVLA_BASHRC           启动前 source 的 bashrc (默认 /mnt/nfs/niantian/.bashrc)
-#   SMOVLA_HF_LEROBOT_HOME  LeRobot 数据根目录 (默认 /mnt/xspark-data/xspark_shared/lerobot)
+#   SMOVLA_BASHRC           启动前 source 的 bashrc (默认 ${HOME}/.bashrc)
+#   SMOVLA_HF_LEROBOT_HOME  LeRobot 数据根目录 (默认 ${HOME}/.cache/huggingface/lerobot)
 set -euo pipefail
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -199,13 +199,13 @@ launch_one() {
 	cat >"${runner}" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
-export SMOVLA_BASHRC="${SMOVLA_BASHRC:-/mnt/nfs/niantian/.bashrc}"
+export SMOVLA_BASHRC="${SMOVLA_BASHRC:-${HOME}/.bashrc}"
 # shellcheck disable=SC1091
 source "${POLICY_DIR}/conda_init.sh"
 smolvla_setup_runtime "${CONDA_ENV}"
 cd "${POLICY_DIR}"
 export CUDA_VISIBLE_DEVICES="${gpu_id}"
-export HF_LEROBOT_HOME="\${HF_LEROBOT_HOME:-${SMOVLA_HF_LEROBOT_HOME:-/mnt/xspark-data/xspark_shared/lerobot}}"
+export HF_LEROBOT_HOME="\${HF_LEROBOT_HOME:-${SMOVLA_HF_LEROBOT_HOME:-${HOME}/.cache/huggingface/lerobot}}"
 export SMOVLA_REPO_ID="${repo_id}"
 echo "[tmux ${session}] GPU=${gpu_id} task=${ckpt_name} seed=${seed} repo_id=${repo_id}"
 echo "[tmux ${session}] HF_LEROBOT_HOME=\${HF_LEROBOT_HOME} conda=${CONDA_ENV}"

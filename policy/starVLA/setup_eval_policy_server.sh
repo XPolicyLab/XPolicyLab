@@ -18,14 +18,15 @@ policy_server_port=$9
 policy_server_host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 STARVLA_ROOT="${SCRIPT_DIR}/source_starvla"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 # ckpt_name is the full run directory name under results/Checkpoints/ or checkpoints/.
 result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${ckpt_name}"
 local_run_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
@@ -109,7 +110,7 @@ sleep 6
 PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
 PYTHONWARNINGS=ignore::UserWarning \
 CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+python "${XPL_ROOT}/setup_policy_server.py" \
     --config_path "${yaml_file}" \
     --overrides \
         port="${policy_server_port}" \

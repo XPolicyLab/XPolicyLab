@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -14,14 +13,15 @@ policy_server_host=${10:-"localhost"}
 model_path=${11:-${MODEL_PATH:-""}}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-XPL_DIR="${ROOT_DIR}/XPolicyLab"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, host=${policy_server_host}, port=${policy_server_port}, action_dim=${action_dim}"
 if [ -n "${model_path}" ]; then
@@ -43,7 +43,7 @@ conda activate "${policy_conda_env}"
 export PATH="${CONDA_PREFIX}/bin:${PATH}"
 hash -r
 
-export PYTHONPATH="${SCRIPT_DIR}:${DREAMZERO_DIR:-${SCRIPT_DIR}/dreamzero}:${XPL_DIR}:${PYTHONPATH:-}"
+export PYTHONPATH="${SCRIPT_DIR}:${DREAMZERO_DIR:-${SCRIPT_DIR}/dreamzero}:${XPL_ROOT}:${PYTHONPATH:-}"
 
 OVERRIDES=(
     port="${policy_server_port}"
@@ -68,7 +68,7 @@ for override in "${OVERRIDES[@]}"; do
     PYTHON_ARGS+=("${override}")
 done
 
-SERVER_PY="${XPL_DIR}/setup_policy_server.py"
+SERVER_PY="${XPL_ROOT}/setup_policy_server.py"
 SERVER_ENV=(
     PYTHONUNBUFFERED=1
     PYTHONWARNINGS=ignore::UserWarning

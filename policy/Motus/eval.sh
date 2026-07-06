@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 policy_name="$(basename "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 bench_name=${1}
 task_name=${2}
@@ -14,8 +13,9 @@ policy_conda_env=${9}
 eval_env_conda_env=${10}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 SERVER_SCRIPT="${SCRIPT_DIR}/setup_eval_policy_server.sh"
 CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
@@ -25,7 +25,7 @@ if [[ -z "${bench_name}" || -z "${task_name}" || -z "${ckpt_name}" || -z "${env_
     exit 1
 fi
 
-FREE_PORT=$(bash "${UTILS_DIR}/get_free_port.sh")
+policy_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
 policy_server_ip="localhost"
 additional_info="ckpt_name=${ckpt_name},action_type=${action_type}"
 
@@ -39,7 +39,7 @@ trap cleanup EXIT
 
 echo -e "\033[33m[INFO] Policy GPU ID: ${policy_gpu_id}\033[0m"
 echo -e "\033[33m[INFO] Env GPU ID: ${env_gpu_id}\033[0m"
-echo -e "\033[32m[MAIN] start server, port=${FREE_PORT}\033[0m"
+echo -e "\033[32m[MAIN] start server, port=${policy_server_port}\033[0m"
 
 bash "${SERVER_SCRIPT}" \
     "${bench_name}" \
@@ -50,14 +50,14 @@ bash "${SERVER_SCRIPT}" \
     "${seed}" \
     "${policy_gpu_id}" \
     "${policy_conda_env}" \
-    "${FREE_PORT}" &
+    "${policy_server_port}" &
 
 SERVER_PID=$!
 echo -e "\033[32m[SERVER] PID=${SERVER_PID} (running in background)\033[0m"
 
-bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${FREE_PORT}" "${SERVER_PID}" "Policy server" 600
+bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 1200
 
-echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${FREE_PORT}\033[0m"
+echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${policy_server_port}\033[0m"
 
 bash "${CLIENT_SCRIPT}" \
     "${bench_name}" \
@@ -69,7 +69,7 @@ bash "${CLIENT_SCRIPT}" \
     "${env_gpu_id}" \
     "${eval_env_conda_env}" \
     "${additional_info}" \
-    "${FREE_PORT}" \
+    "${policy_server_port}" \
     "${policy_server_ip}"
 
 echo -e "\033[33m[MAIN] eval_policy_client has finished; cleaning up server.\033[0m"

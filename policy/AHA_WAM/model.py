@@ -115,7 +115,10 @@ def _get_env_cfg_root(model_cfg: dict[str, Any]) -> Path:
     repo_env_cfg = repo_root / "env_cfg"
     if repo_env_cfg.exists():
         return repo_env_cfg
-    return Path("/mnt/petrelfs/caijisong/env_cfg")
+    raise FileNotFoundError(
+        "env_cfg root not found. Set env_cfg_root in deploy.yml or the "
+        "AHA_WAM_ENV_CFG_ROOT env var to your RoboDojo env_cfg directory."
+    )
 
 
 def _get_robot_action_dim_info(env_cfg_type: str, env_cfg_root: Path) -> dict:

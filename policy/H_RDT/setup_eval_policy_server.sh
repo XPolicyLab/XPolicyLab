@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -16,11 +15,12 @@ config_path=${12:-""}
 lang_embedding_path=${13:-""}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 resolve_checkpoint_path() {
     local explicit_path="$1"
@@ -59,7 +59,7 @@ resolve_checkpoint_path() {
     exit 1
 }
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 # ckpt_name is the full run directory name under checkpoints/.
 checkpoint_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
 checkpoint_path="$(resolve_checkpoint_path "${checkpoint_path}" "${checkpoint_dir}")"
@@ -83,7 +83,7 @@ conda activate "${policy_conda_env}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

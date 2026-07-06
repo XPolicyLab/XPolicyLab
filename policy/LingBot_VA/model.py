@@ -24,7 +24,7 @@ from .lingbot_va.evaluation.robotwin.websocket_client_policy import WebsocketCli
 from .lingbot_va.wan_va.configs import VA_CONFIGS
 
 DEFAULT_VA_SERVER_HOST = "127.0.0.1"
-DEFAULT_VA_SERVER_PORT = 29536
+DEFAULT_VA_SERVER_PORT = 10001
 DEFAULT_CONFIG_NAME = "robotwin30_train"
 
 # 30-dim LingBot layout -> 14-dim RoboDojo joint.

@@ -1,5 +1,7 @@
 # Basic experiment configuration
 protocol: ws
+host: localhost
+port: null
 bench_name: null
 task_name: null
 ckpt_name: null

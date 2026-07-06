@@ -65,7 +65,7 @@ fi
 
 # 默认：RoboDojo 双臂 v30 co-train
 # 8×80GB：每卡 bs=15 → global batch=128；
-MOLMOACT2_DATASET_ROOT="${MOLMOACT2_DATASET_ROOT:-/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v30}"
+MOLMOACT2_DATASET_ROOT="${MOLMOACT2_DATASET_ROOT:?set MOLMOACT2_DATASET_ROOT to your RoboDojo LeRobot dataset dir}"
 MOLMOACT2_DATASET_REPO_ID="${MOLMOACT2_DATASET_REPO_ID:-RoboDojo_sim_arx-x5_v30}"
 MOLMOACT2_CHECKPOINT_PATH="${MOLMOACT2_CHECKPOINT_PATH:-allenai/MolmoAct2}"
 

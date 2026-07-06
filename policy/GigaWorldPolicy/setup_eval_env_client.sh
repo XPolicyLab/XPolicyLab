@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
 if [[ $# -lt 10 ]]; then
@@ -20,9 +20,9 @@ policy_server_ip=${11:-${POLICY_SERVER_IP:-localhost}}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-ROOT_DIR="$(cd "${XPL_ROOT}/.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 policy_name="$(basename "${SCRIPT_DIR}")"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
@@ -37,7 +37,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
   "${env_cfg_type}" \
   "${policy_name}" \
   "${additional_info}" \
-  "${ROOT_DIR}" \
+  "${BENCH_ROOT}" \
   "${seed}" \
   "${env_gpu_id}" \
   "${policy_server_ip}"

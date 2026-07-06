@@ -6,7 +6,7 @@ protocol: ws
 
 # Server transport (setup_policy_server.py reads port/host).
 port: null
-host: null
+host: localhost
 
 # Overridden by eval scripts
 bench_name: null

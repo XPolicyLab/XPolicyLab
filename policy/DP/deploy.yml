@@ -1,10 +1,13 @@
 # Basic experiment configuration
 policy_name: DP
 protocol: ws
+host: localhost
+port: null
 bench_name: null
 task_name: null
 env_cfg_type: null
 seed: null
+action_type: null
 eval_batch: true
 
 checkpoint_num: latest

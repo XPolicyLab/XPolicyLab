@@ -15,9 +15,10 @@ policy_server_host=${10:-"localhost"}
 export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 policy_name="$(basename "${SCRIPT_DIR}")"
 
 # ckpt_name is the full run directory name under checkpoints/.
@@ -58,7 +59,7 @@ else
 fi
 model_path="$(cd "${model_path}" && pwd)"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] ckpt_run_id=${ckpt_run_id}\033[0m"
 echo -e "\033[33m[SERVER] model_path=${model_path}\033[0m"
 echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
@@ -66,11 +67,11 @@ echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-export PYTHONPATH="${SCRIPT_DIR}/Being-H:${ROOT_DIR}:${PYTHONPATH:-}"
+export PYTHONPATH="${SCRIPT_DIR}/Being-H:${BENCH_ROOT}:${PYTHONPATH:-}"
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
-    python "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

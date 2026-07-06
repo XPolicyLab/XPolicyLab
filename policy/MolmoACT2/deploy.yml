@@ -1,5 +1,6 @@
 policy_name: MolmoACT2
 protocol: ws
+host: localhost
 bench_name: null
 task_name: null
 ckpt_name: null

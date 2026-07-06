@@ -22,7 +22,8 @@ from XPolicyLab.utils.process_data import (
 
 
 _CUR_DIR = Path(__file__).resolve().parent
-_DEFAULT_DEXORA_ROOT = Path("/root/crx/Dexora")
+_ENV_DEXORA_ROOT = os.environ.get("DEXORA_ROOT")
+_DEFAULT_DEXORA_ROOT = Path(_ENV_DEXORA_ROOT).expanduser() if _ENV_DEXORA_ROOT else None
 
 
 def _optional_path(value: str | None, *base_dirs: Path) -> Path | None:
@@ -93,8 +94,12 @@ class Model(ModelTemplate):
         self.dexora_root = _optional_path(
             self.model_cfg.get("dexora_root"),
             _CUR_DIR,
-            _DEFAULT_DEXORA_ROOT,
         ) or _DEFAULT_DEXORA_ROOT
+        if self.dexora_root is None:
+            raise ValueError(
+                "Dexora root is required. Set dexora_root in deploy.yml or the "
+                "DEXORA_ROOT env var to your local Dexora checkout."
+            )
         if not self.dexora_root.exists():
             raise FileNotFoundError(f"Dexora root does not exist: {self.dexora_root}")
         if str(self.dexora_root) not in sys.path:

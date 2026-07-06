@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
 if [[ $# -lt 9 ]]; then
@@ -19,20 +19,20 @@ policy_server_host=${10:-${POLICY_SERVER_HOST:-localhost}}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-ROOT_DIR="$(cd "${XPL_ROOT}/.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 INNER_DIR="${SCRIPT_DIR}/giga_world_policy"
 policy_name="$(basename "${SCRIPT_DIR}")"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, host=${policy_server_host}, port=${policy_server_port}, action_dim=${action_dim}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
-export PYTHONPATH="${INNER_DIR}/src:${INNER_DIR}:${ROOT_DIR}:${PYTHONPATH:-}"
+export PYTHONPATH="${INNER_DIR}/src:${INNER_DIR}:${BENCH_ROOT}:${PYTHONPATH:-}"
 
 exec env \
   PYTHONWARNINGS=ignore::UserWarning \

@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 # Environment-side startup for Hy_Embodied_05_VLA. Connects to the policy server and
 # dispatches to the debug / sim runner per EVAL_ENV_TYPE (default: sim).
 
@@ -17,11 +16,12 @@ policy_server_port=${10}
 policy_server_ip=${11:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/XPolicyLab/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
@@ -35,7 +35,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${env_cfg_type}" \
     "${policy_name}" \
     "${additional_info}" \
-    "${ROOT_DIR}" \
+    "${BENCH_ROOT}" \
     "${seed}" \
     "${env_gpu_id}" \
     "${policy_server_ip}"

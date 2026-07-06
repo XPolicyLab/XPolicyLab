@@ -14,16 +14,17 @@ policy_server_port=${10}
 policy_server_ip=${11:-localhost}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 RISE_SITECUSTOMIZE_DIR="${SCRIPT_DIR}/RISE/deploy"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo -e "\033[34m[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}\033[0m"
 
-export PYTHONPATH="${RISE_SITECUSTOMIZE_DIR}:${ROOT_DIR}:${PYTHONPATH:-}"
+export PYTHONPATH="${RISE_SITECUSTOMIZE_DIR}:${BENCH_ROOT}:${PYTHONPATH:-}"
 export RISE_MODEL_CLIENT_TIMEOUT="${RISE_MODEL_CLIENT_TIMEOUT:-600}"
 export PYTHONWARNINGS=ignore::UserWarning
 
@@ -37,7 +38,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${env_cfg_type}" \
     "${policy_name}" \
     "${additional_info}" \
-    "${ROOT_DIR}" \
+    "${BENCH_ROOT}" \
     "${seed}" \
     "${env_gpu_id}" \
     "${policy_server_ip}"

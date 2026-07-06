@@ -21,8 +21,8 @@ from XPolicyLab.utils.process_data import (
 _POLICY_DIR = Path(__file__).resolve().parent
 _MOTUS_ROOT = _POLICY_DIR / "motus" / "inference" / "robotwin" / "Motus"
 _CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
-_DEFAULT_WAN_PATH = "/mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B"
-_DEFAULT_VLM_PATH = "/mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct"
+_DEFAULT_WAN_PATH = os.environ.get("MOTUS_WAN_PATH")
+_DEFAULT_VLM_PATH = os.environ.get("MOTUS_VLM_PATH")
 _DEFAULT_ROBOT_ACTION_DIM_INFO = {"arm_dim": [6, 6], "ee_dim": [1, 1]}
 # DeepSpeed (accelerator.save_state) writes the sharded model weights into this file.
 _MOTUS_MODEL_STATE_FILENAME = "mp_rank_00_model_states.pt"
@@ -358,8 +358,18 @@ def build_motus_model_args(model_cfg: dict[str, Any]) -> dict[str, Any]:
     """Normalize XPolicyLab deploy config into MotusPolicy constructor args."""
     model_args = dict(model_cfg)
     model_args["ckpt_setting"] = resolve_motus_checkpoint(model_cfg)
-    model_args["wan_path"] = str(_resolve_path(model_args.get("wan_path")) or Path(_DEFAULT_WAN_PATH))
-    model_args["vlm_path"] = str(_resolve_path(model_args.get("vlm_path")) or Path(_DEFAULT_VLM_PATH))
+    wan_path = _resolve_path(model_args.get("wan_path")) or _resolve_path(_DEFAULT_WAN_PATH)
+    if wan_path is None:
+        raise ValueError(
+            "wan_path is required. Set wan_path in deploy.yml or the MOTUS_WAN_PATH env var."
+        )
+    vlm_path = _resolve_path(model_args.get("vlm_path")) or _resolve_path(_DEFAULT_VLM_PATH)
+    if vlm_path is None:
+        raise ValueError(
+            "vlm_path is required. Set vlm_path in deploy.yml or the MOTUS_VLM_PATH env var."
+        )
+    model_args["wan_path"] = str(wan_path)
+    model_args["vlm_path"] = str(vlm_path)
 
     t5_cache_dir = _resolve_path(model_args.get("t5_cache_dir"))
     if t5_cache_dir is not None:

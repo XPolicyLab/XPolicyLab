@@ -1,4 +1,4 @@
-#!/home/lin/software/miniconda3/envs/aloha/bin/python
+#!/usr/bin/env python
 # -- coding: UTF-8
 """
 #!/usr/bin/python3

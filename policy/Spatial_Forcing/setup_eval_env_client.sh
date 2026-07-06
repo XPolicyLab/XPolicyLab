@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -28,9 +27,9 @@ find_xpolicylab_root() {
     return 1
 }
 XPL_ROOT="$(find_xpolicylab_root "${SCRIPT_DIR}")"
-ROOT_DIR="$(dirname "${XPL_ROOT}")"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 CONDA_BASE="$(conda info --base)"
 source "${CONDA_BASE}/etc/profile.d/conda.sh"
@@ -55,7 +54,7 @@ bash "${UTILS_DIR}/setup_env_client.sh" \
     "${env_cfg_type}" \
     "${policy_name}" \
     "${additional_info}" \
-    "${ROOT_DIR}" \
+    "${BENCH_ROOT}" \
     "${seed}" \
     "${env_gpu_id}" \
     "${policy_server_ip}"

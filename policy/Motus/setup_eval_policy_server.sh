@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-
+set -euo pipefail
 bench_name=$1
 task_name=$2
 ckpt_name=$3
@@ -13,14 +12,14 @@ port=$9
 host=${10:-"localhost"}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-ENV_ROOT="$(cd "${ROOT_DIR}/.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/utils"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
 
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${ROOT_DIR}/policy/${policy_name}/deploy.yml"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ENV_ROOT}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, port=${port}, action_dim=${action_dim}"
 
@@ -30,7 +29,7 @@ conda activate "${policy_conda_env}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${ROOT_DIR}/setup_policy_server.py" \
+    python "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             host="${host}" \

@@ -1,6 +1,7 @@
 # Basic experiment configuration
 policy_name: Spirit_v15
 protocol: ws
+host: localhost
 bench_name: null
 task_name: null
 env_cfg_type: null
@@ -10,7 +11,9 @@ eval_batch: true
 checkpoint_num: null
 
 # Spirit_v15-specific arguments
-policy_uv_env_path: /mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Spirit_v15/spirit_v15
+# Relative to the policy dir (policy/Spirit_v15/); override with an absolute
+# path or pass a uv env path as eval arg 9.
+policy_uv_env_path: spirit_v15
 spirit_base_weights: checkpoints/shared/Spirit-v1.5
 spirit_backbone_path: checkpoints/shared/Qwen3-VL-4B-Instruct
 checkpoint_path: null

@@ -16,9 +16,10 @@ export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
 echo -e "\033[33m[SERVER] GPU=${policy_gpu_id} host=${policy_server_host} port=${policy_server_port}\033[0m"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-UTILS_DIR="${ROOT_DIR}/XPolicyLab/utils"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+UTILS_DIR="${XPL_ROOT}/utils"
+yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 ADAPTER_DIR="${SCRIPT_DIR}/GalaxeaVLA/xpolicylab_adapter"
 
@@ -73,7 +74,7 @@ echo -e "\033[33m[SERVER] task_config_name=${task_config_name}\033[0m"
 
 paligemma_path="${GALAXEA_PALIGEMMA_PATH:-${SCRIPT_DIR}/weights/paligemma-3b-pt-224}"
 
-action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${ROOT_DIR}" "${env_cfg_type}")
+action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}")
 echo -e "\033[33m[SERVER] action_dim=${action_dim}\033[0m"
 
 if [[ -z "${policy_uv_env_path}" || "${policy_uv_env_path}" == "null" ]]; then
@@ -91,8 +92,8 @@ echo -e "\033[32m[SERVER] using uv venv: ${VENV_PYTHON}\033[0m"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH="${ROOT_DIR}:${policy_uv_env_path}/src:${PYTHONPATH:-}" \
-    "${VENV_PYTHON}" -u "${ROOT_DIR}/XPolicyLab/setup_policy_server.py" \
+    PYTHONPATH="${BENCH_ROOT}:${policy_uv_env_path}/src:${PYTHONPATH:-}" \
+    "${VENV_PYTHON}" -u "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \
