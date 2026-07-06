@@ -26,7 +26,7 @@ with open("${yaml_file}", "r") as f:
     data = yaml.safe_load(f)
 print(
     str(data.get("eval_batch", False)).lower(),
-    data.get("protocol", "robodojo_ws"),
+    data.get("protocol", "ws"),
     data.get("env_client_mode", "run-once"),
     data.get("eval_env") or "-",
 )

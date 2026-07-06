@@ -1,5 +1,6 @@
 # A1 policy-server config aligned with RoboDojo ARX5 joint-delta inference.
 policy_name: A1
+protocol: ws
 bench_name: null
 task_name: null
 env_cfg_type: null

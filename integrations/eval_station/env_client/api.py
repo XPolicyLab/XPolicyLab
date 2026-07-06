@@ -57,7 +57,7 @@ class EnvClientBaselineConfig(_StrictSchema):
     task_name: str | None = None
     env_cfg_type: str | None = None
     policy_name: str | None = None
-    protocol: Literal["legacy_tcp", "robodojo_ws"] = "robodojo_ws"
+    protocol: Literal["legacy_tcp", "ws"] = "ws"
     host: str | None = None
     port: int | None = Field(default=None, ge=1, le=65535)
     eval_batch: bool = False

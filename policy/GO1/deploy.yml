@@ -1,4 +1,5 @@
 policy_name: GO1
+protocol: ws
 bench_name: null
 task_name: null
 env_cfg_type: null

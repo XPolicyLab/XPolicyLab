@@ -1,4 +1,5 @@
 policy_name: Abot_M0
+protocol: ws
 bench_name: null
 task_name: null
 ckpt_name: null

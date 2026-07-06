@@ -144,7 +144,7 @@ def baseline_to_reset_deploy_cfg(
     # read deploy_cfg["repeat_index"] unconditionally.
     payload.setdefault("repeat_index", None)
     if (
-        payload.get("protocol", "robodojo_ws") == "robodojo_ws"
+        payload.get("protocol", "ws") == "ws"
         and not payload.get("policy_server_url")
     ):
         host = payload.get("host") or "localhost"

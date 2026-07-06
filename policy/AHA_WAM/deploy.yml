@@ -1,4 +1,5 @@
 policy_name: AHA_WAM
+protocol: ws
 eval_batch: false
 
 port: null

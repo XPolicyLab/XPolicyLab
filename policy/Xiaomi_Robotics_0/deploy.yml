@@ -1,5 +1,6 @@
 # Basic experiment configuration
 policy_name: Xiaomi_Robotics_0
+protocol: ws
 bench_name: null
 task_name: null
 env_cfg_type: null

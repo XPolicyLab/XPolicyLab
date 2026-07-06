@@ -6,7 +6,7 @@ env_cfg: null
 env_cfg_type: null
 seed: 0
 eval_batch: false
-protocol: legacy_tcp
+protocol: ws
 
 config_name: robotwin30_train
 checkpoint_path: "/mnt/xspark-data/final_ckpt/Lingbot_VA/robodojo_sim_arx_x5_v21_new/checkpoint_step_1000"

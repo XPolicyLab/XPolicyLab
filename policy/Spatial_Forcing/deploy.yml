@@ -5,7 +5,7 @@ env_cfg_type: arx_x5
 seed: 0
 eval_batch: true
 checkpoint_num: 59999
-protocol: legacy_tcp
+protocol: ws
 
 ckpt_name: ./checkpoints/pi05sf_jax_robodojo_v21_offcache/59999
 result_dir: "./results/pi05_sf/"

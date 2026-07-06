@@ -1,4 +1,4 @@
-"""RoboDojo WebSocket policy server."""
+"""WebSocket policy server."""
 
 from __future__ import annotations
 
@@ -60,7 +60,7 @@ class PolicyServer:
             ping_interval=self.config.ws_ping_interval_s,
             ping_timeout=self.config.ws_ping_timeout_s,
         )
-        logger.info("robodojo policy server listening on %s", self.url)
+        logger.info("websocket policy server listening on %s", self.url)
 
     async def stop(self) -> None:
         if self._server is None:
@@ -288,7 +288,7 @@ def main() -> None:
     parser.add_argument(
         "--config-path", "--config_path", dest="config_path", required=True
     )
-    parser.add_argument("--protocol", choices=("robodojo_ws",), default="robodojo_ws")
+    parser.add_argument("--protocol", choices=("ws",), default="ws")
     parser.add_argument("--host")
     parser.add_argument("--port", type=int)
     parser.add_argument("--relay-url", dest="relay_url")

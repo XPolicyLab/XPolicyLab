@@ -1,4 +1,4 @@
-"""HTTP daemon for RoboDojo evaluation on the eval station."""
+"""HTTP daemon for eval-station environment clients."""
 
 from __future__ import annotations
 
@@ -497,8 +497,8 @@ def add_debug_env_client_arguments(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument(
         "--protocol",
-        choices=("legacy_tcp", "robodojo_ws"),
-        default="robodojo_ws",
+        choices=("legacy_tcp", "ws"),
+        default="ws",
     )
     parser.add_argument(
         "--host",
@@ -670,7 +670,7 @@ def main(argv: list[str] | None = None) -> int:
 
     server = create_server(args.serve_host, args.serve_port, state)
     print(
-        f"robodojo env client listening on http://{args.serve_host}:{args.serve_port}",
+        f"eval-station env client listening on http://{args.serve_host}:{args.serve_port}",
         file=sys.stderr,
     )
     try:

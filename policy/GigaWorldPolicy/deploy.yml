@@ -1,4 +1,5 @@
 policy_name: GigaWorldPolicy
+protocol: ws
 
 bench_name: null
 task_name: null

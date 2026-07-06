@@ -11,15 +11,8 @@ from client_server.model_server import ModelServer
 
 
 def _default_protocol() -> str:
-    """Pick the wire protocol matching the eval env client.
-
-    The sim eval client (src/eval_client via ModelClient) only speaks the
-    legacy length-prefixed TCP protocol, while the debug/real env clients
-    speak robodojo_ws. EVAL_ENV_TYPE follows utils/resolve_eval_env_type.sh
-    semantics: empty/unset means sim.
-    """
-    eval_env_type = (os.environ.get("EVAL_ENV_TYPE") or "sim").strip()
-    return "legacy_tcp" if eval_env_type == "sim" else "robodojo_ws"
+    """Default to the websocket policy protocol."""
+    return "ws"
 
 def eval_function_decorator(policy_model_name, Func_and_Class_name):
     """Load a specified function (e.g., get_model) from a policy module"""
@@ -32,13 +25,13 @@ def main(deploy_cfg):
     policy_name = deploy_cfg.get("policy_name")
     port = deploy_cfg.get("port")
     host = deploy_cfg.get("host", "0.0.0.0")
-    protocol = deploy_cfg.get("protocol", "robodojo_ws")
+    protocol = deploy_cfg.get("protocol", "ws")
 
     # Instantiate model
     model_class_func = eval_function_decorator(f"XPolicyLab.policy.{policy_name}.model", "Model")
     model = model_class_func(deploy_cfg)
 
-    if protocol == "robodojo_ws":
+    if protocol == "ws":
         try:
             from eval_station.servers.policy_server import PolicyServer, PolicyServerConfig
         except ModuleNotFoundError as exc:
@@ -51,14 +44,14 @@ def main(deploy_cfg):
                     from eval_station.servers.policy_server import PolicyServer, PolicyServerConfig
                 except ModuleNotFoundError as dep_exc:
                     raise RuntimeError(
-                        "robodojo_ws policy server requires the eval-station dependencies "
+                        "ws policy server requires the eval-station dependencies "
                         f"(missing module: {dep_exc.name}). Install them in the policy env with: "
                         "pip install 'websockets>=13' 'msgpack>=1.0.8' 'msgpack-numpy>=0.4.8' 'pydantic>=2.5' "
                         "(or pip install -e '.[eval-station]' from the XPolicyLab root)."
                     ) from dep_exc
             else:
                 raise RuntimeError(
-                    "robodojo_ws policy server requires the eval-station dependencies "
+                    "ws policy server requires the eval-station dependencies "
                     f"(missing module: {exc.name}). Install them in the policy env with: "
                     "pip install 'websockets>=13' 'msgpack>=1.0.8' 'msgpack-numpy>=0.4.8' 'pydantic>=2.5' "
                     "(or pip install -e '.[eval-station]' from the XPolicyLab root)."
@@ -74,7 +67,7 @@ def main(deploy_cfg):
         try:
             asyncio.run(server.serve_forever())
         except KeyboardInterrupt:
-            print("\nShutting down RoboDojo policy server...")
+            print("\nShutting down websocket policy server...")
         return
     if protocol != "legacy_tcp":
         raise ValueError(f"unsupported policy server protocol: {protocol}")
@@ -106,7 +99,7 @@ def parse_args_and_config():
     """Parse CLI args and YAML config, merge overrides"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_path", "--config-path", dest="config_path", type=str, required=True, help="Path to config YAML")
-    parser.add_argument("--protocol", choices=("legacy_tcp", "robodojo_ws"), help="Policy server protocol")
+    parser.add_argument("--protocol", choices=("legacy_tcp", "ws"), help="Policy server protocol")
     parser.add_argument("--host", help="Policy server bind host")
     parser.add_argument("--port", type=int, help="Policy server bind port")
     parser.add_argument("--relay-url", dest="relay_url", help="Relay URL for future relay mode")

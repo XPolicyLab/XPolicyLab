@@ -13,7 +13,7 @@ root_dir="${9}"
 seed="${10}"
 env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
-protocol="${13:-robodojo_ws}"
+protocol="${13:-ws}"
 run_mode="${14:---run-once}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"

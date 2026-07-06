@@ -7,7 +7,7 @@ env_cfg_type: null
 action_type: joint
 seed: 0
 eval_batch: false
-protocol: legacy_tcp
+protocol: ws
 
 # Motus-specific arguments
 ckpt_setting: null

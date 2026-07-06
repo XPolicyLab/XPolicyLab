@@ -1,4 +1,5 @@
 policy_name: FastWAM
+protocol: ws
 eval_batch: false
 
 # Server transport: overridden by setup_eval_policy_server.sh per launch.

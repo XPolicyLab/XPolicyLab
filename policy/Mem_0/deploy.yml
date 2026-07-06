@@ -2,6 +2,7 @@
 # policy_name MUST equal the policy folder/import name. Values set to null are
 # provided by setup_eval_policy_server.sh --overrides at launch time.
 policy_name: Mem_0
+protocol: ws
 
 # Server transport (setup_policy_server.py reads port/host).
 port: null

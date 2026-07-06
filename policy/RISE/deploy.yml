@@ -1,4 +1,5 @@
 policy_name: RISE
+protocol: ws
 eval_batch: false
 
 # Server transport (setup_policy_server.py reads `port` / `host`).

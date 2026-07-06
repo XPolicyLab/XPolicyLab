@@ -1,5 +1,6 @@
 # Hy-Embodied-0.5-VLA policy deployment config (XPolicyLab / RoboDojo).
 policy_name: Hy_Embodied_05_VLA
+protocol: ws
 bench_name: null
 task_name: null
 env_cfg_type: null      # arx_x5 (-> dual_x5, dual-arm) for RoboDojo

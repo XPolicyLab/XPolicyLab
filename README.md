@@ -117,6 +117,7 @@ policy/<POLICY>/
 | `env_gpu_id` | GPU for the simulator/client. |
 | `policy_conda_env` / `policy_uv_env_path` | Policy runtime environment. |
 | `eval_env_conda_env` | Environment-client runtime. |
+| `protocol` | Policy-server transport in `deploy.yml`; defaults to `ws`. |
 
 Most converted datasets use:
 
@@ -151,6 +152,8 @@ Some policies intentionally differ. Follow the policy README when it disagrees w
 ## Deployment
 
 Same-machine evaluation uses `eval.sh`. For split machines, start the policy server first and then the environment client:
+
+Every policy `deploy.yml` should include `protocol: ws`. Keep `legacy_tcp` only for local debugging of an adapter that has not migrated to the websocket server/client path.
 
 ```bash
 # Policy machine
@@ -251,15 +254,15 @@ bash policy/<POLICY>/eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type>
   <seed> <policy_gpu_id> <env_gpu_id> <policy_env_or_uv_path> <eval_env_conda_env>
 ```
 
-Debug mode uses the `robodojo_ws` protocol, which needs the eval-station extras
+The default policy-server protocol is `ws`, which needs the eval-station extras
 (`websockets>=13`, `msgpack`, `msgpack-numpy`, `pydantic`) in the **policy** environment:
 
 ```bash
 pip install -e '.[eval-station]'   # from the XPolicyLab root, inside the policy env
 ```
 
-The simulation path (`EVAL_ENV_TYPE` unset / `sim`) uses the legacy TCP protocol and
-does not need these extras.
+Set `protocol: legacy_tcp` only for adapters that still need the older
+length-prefixed TCP client.
 
 ## Citation
 

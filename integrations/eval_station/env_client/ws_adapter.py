@@ -1,4 +1,4 @@
-"""Synchronous environment-side adapter for RoboDojo policy WebSocket."""
+"""Synchronous environment-side adapter for the policy websocket protocol."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from typing import Any, cast
 from eval_station.protocol.client import PolicyEvalClient, PolicyEvalClientConfig
 
 
-class RoboDojoModelClient:
+class WsModelClient:
     def __init__(
         self,
         *,
@@ -112,7 +112,7 @@ class RoboDojoModelClient:
             )
             return response.payload.get("result")
 
-        raise NotImplementedError(f"unsupported RoboDojo model call: {func_name}")
+        raise NotImplementedError(f"unsupported websocket model call: {func_name}")
 
     def close(self) -> None:
         if self._loop.is_closed():
@@ -122,7 +122,7 @@ class RoboDojoModelClient:
         finally:
             self._loop.close()
 
-    def __enter__(self) -> RoboDojoModelClient:
+    def __enter__(self) -> WsModelClient:
         return self
 
     def __exit__(self, exc_type: object, exc_val: object, exc_tb: object) -> None:

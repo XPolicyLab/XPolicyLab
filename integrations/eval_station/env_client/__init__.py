@@ -24,7 +24,7 @@ from eval_station.env_client.runner import (
     run_real_trial,
     run_sim_trial,
 )
-from eval_station.env_client.ws_adapter import RoboDojoModelClient
+from eval_station.env_client.ws_adapter import WsModelClient
 
 __all__ = [
     "DEBUG_ENV_CLIENT_DEPLOY_CFG_KEYS",
@@ -32,7 +32,6 @@ __all__ = [
     "EnvTrialRunner",
     "EnvClientBaselineConfig",
     "HealthResponse",
-    "RoboDojoModelClient",
     "TrialRunRequest",
     "TrialRunResponse",
     "StopCheckFactory",
@@ -48,4 +47,5 @@ __all__ = [
     "run_real_trial",
     "run_sim_trial",
     "trial_request_to_deploy_cfg",
+    "WsModelClient",
 ]
