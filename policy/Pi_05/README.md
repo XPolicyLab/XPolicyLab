@@ -31,14 +31,14 @@ Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
-| `policy_env` | Name of the conda environment used by the policy runtime. |
+| `policy_uv_env` | `uv` to use `deploy.yml` `policy_uv_env_path`, or an explicit OpenPI project path. |
 
 ```bash
 cd XPolicyLab/policy/Pi_05
 # Example: install dependencies for the Pi_05 policy adapter.
 bash install.sh
-# Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. pi-05
+# `eval.sh` arg 9 is not a conda env. Pass `uv` or the OpenPI project path.
+source openpi/.venv/bin/activate
 ```
 
 ## Demo Data Processing
@@ -113,16 +113,16 @@ Parameters used by `eval.sh`:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env` | `uv` or an explicit OpenPI project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
 cd XPolicyLab/policy/Pi_05
 # Template: run same-machine policy server and RoboDojo environment client.
-bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_uv_env> <eval_env_conda_env>
 
 # Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 uv <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -137,7 +137,7 @@ Parameters used by the split server/client flow:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env` | `uv` or an explicit OpenPI project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 | `policy_server_port` | Port exposed by the policy server, for example `5000`. |
 | `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
@@ -149,12 +149,12 @@ cd XPolicyLab/policy/Pi_05
 # Terminal 1 on the policy machine: start the policy server.
 bash setup_eval_policy_server.sh \
   <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
-  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+  <policy_gpu_id> <policy_uv_env> <policy_server_port> <policy_server_host>
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
   RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <policy_conda_env> 5000 0.0.0.0
+  0 uv 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
 bash setup_eval_env_client.sh \

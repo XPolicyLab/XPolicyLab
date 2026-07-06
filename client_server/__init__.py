@@ -4,10 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from client_server.ws.model_client import WsModelClient
-
-ModelClient = WsModelClient
-
 __all__ = [
     "ModelClient",
     "ModelServer",
@@ -19,6 +15,10 @@ __all__ = [
 
 
 def __getattr__(name: str) -> Any:
+    if name in ("ModelClient", "WsModelClient"):
+        from client_server.ws.model_client import WsModelClient
+
+        return WsModelClient
     if name in ("ModelServer", "PolicyServer"):
         from client_server.ws.model_server import PolicyServer
 

@@ -56,7 +56,7 @@ COMMON_ARGS=(
 if [[ "${eval_env_mode}" == "debug" ]]; then
     bash "${UTILS_DIR}/run_debug_env_client.sh" "${COMMON_ARGS[@]}" "${protocol}"
 elif [[ "${eval_env_mode}" == "sim" ]]; then
-    bash "${UTILS_DIR}/run_sim_env_client.sh" "${COMMON_ARGS[@]}"
+    bash "${UTILS_DIR}/run_sim_env_client.sh" "${COMMON_ARGS[@]}" "${protocol}"
 elif [[ "${eval_env_mode}" == "real_world" ]]; then
     echo -e "\033[31m[WARN] EVAL_ENV_TYPE=real: real-world evaluation is not supported in the open-source release; continuing to real env client.\033[0m" >&2
     bash "${UTILS_DIR}/run_real_env_client.sh" "${COMMON_ARGS[@]}" "${protocol}"

@@ -11,13 +11,32 @@ XPolicyLab wraps different robot policies behind a shared script and server inte
 
 ## Quick Start
 
+For RoboDojo simulation, XPolicyLab must live inside a RoboDojo checkout because
+the simulator entrypoint, task registry, `env_cfg/`, and assets are owned by the
+parent RoboDojo repo:
+
+```text
+RoboDojo/
+├── XPolicyLab/
+├── env_cfg/
+├── scripts/
+├── src/eval_client/
+└── task/
+```
+
+A standalone XPolicyLab clone is enough for adapter development and offline
+`EVAL_ENV_TYPE=debug` checks, but it cannot run `EVAL_ENV_TYPE=sim` by itself.
+
 ```bash
-mkdir demo_env
-cd demo_env
-git clone git@github.com:Luminis-Sim/XPolicyLab.git
+git clone git@github.com:Luminis-Sim/RoboDojo.git
+cd RoboDojo
+git submodule update --init --recursive XPolicyLab
 cd XPolicyLab
 
-# Small demo bundle for smoke tests.
+# Small demo bundle plus env_cfg for smoke tests.
+bash scripts/download_demo_data.sh
+
+# Optional: dataset-only downloads for training/conversion.
 bash scripts/RoboDojo/download_robodojo_data.sh huggingface demo
 
 # Optional: raw HDF5 demos for policies that run their own conversion.
@@ -28,10 +47,11 @@ bash scripts/RoboDojo/download_robodojo_data.sh huggingface lerobot_v3.0
 bash scripts/RoboDojo/download_robodojo_data.sh huggingface lerobot_v2.1
 ```
 
-Data is downloaded to `../data` relative to this repo:
+The dataset-only downloader writes `../data` relative to this repo; the demo
+bundle also installs `../env_cfg`:
 
 ```text
-demo_env/
+RoboDojo/
 ├── data/
 ├── env_cfg/
 └── XPolicyLab/
@@ -172,7 +192,7 @@ bash policy/<POLICY>/setup_eval_env_client.sh \
 | --- | --- |
 | unset / `sim` | RoboDojo simulation. |
 | `debug` | Offline shape/IO check via `debug_env_client.py`. |
-| `real` | One-shot real-robot eval via `task_env/real_env_client.py` (internal hardware path, not shipped in the open-source release). |
+| `real` | One-shot real-robot eval via `utils/run_real_env_client.sh` (internal hardware path, not shipped in the open-source release). |
 
 ## Data Format
 

@@ -42,7 +42,7 @@ cd XPolicyLab/policy/GalaxeaVLA
 # Example: install dependencies for the GalaxeaVLA policy adapter.
 bash install.sh
 # Example: activate the environment used later as <policy_uv_env_path>.
-source GalaxeaVLA/.venv/bin/activate  # or pass GalaxeaVLA as <policy_uv_env_path>vla
+source GalaxeaVLA/.venv/bin/activate  # or pass GalaxeaVLA as <policy_uv_env_path>
 ```
 
 ## Demo Data Processing

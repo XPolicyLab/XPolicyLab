@@ -30,21 +30,28 @@ Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
-| `policy_env` | Name of the conda environment used by the policy runtime. |
+| `policy_uv_env` | `uv` to use `deploy.yml` `policy_uv_env_path`, or an explicit Hy-Embodied project path. |
 
 ```bash
 cd XPolicyLab/policy/Hy_Embodied_05_VLA
 # Example: install dependencies for the Hy_Embodied_05_VLA policy adapter.
 bash install.sh
-# Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. hy-vla
+# `eval.sh` arg 9 is not a conda env. Pass `uv` or the Hy-Embodied project path.
+source Hy-Embodied-0.5-VLA/.venv/bin/activate
 ```
 
 ## Demo Data Processing
 
 What it does: computes `norm_stats.pkl` for the Hy-Embodied HDF5 dataset. Hy-VLA does not use a bespoke XPolicyLab HDF5-to-LeRobot converter; use the upstream Hy-Embodied data pipeline for full data collection/conversion.
 
-Parameters used by the command:
+`train.sh` forwards its arguments directly to the upstream
+`scripts/train_robotwin_umi.sh` entrypoint. Configure the upstream-required
+environment variables first, such as `HDF5_DIR`, `EXP_ROOT`, `CHIEF_IP`, and
+`NPROC_PER_NODE`; the standard XPolicyLab six-argument training shape does not
+apply to this adapter.
+
+Parameters are upstream-defined by `scripts/train_robotwin_umi.sh`, not the
+common XPolicyLab wrapper.
 
 | Parameter | Description |
 |---|---|
@@ -71,26 +78,16 @@ Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
-| `bench_name` | Benchmark or dataset family, usually `RoboDojo`. |
-| `ckpt_name` | Training run identifier, for example `cotrain`. |
-| `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
-| `seed` | Random seed. |
-| `gpu_id` | GPU id or comma-separated GPU ids for the policy trainer. |
+| upstream args | Arguments consumed by `scripts/train_robotwin_umi.sh`. |
 
 ```bash
 cd XPolicyLab/policy/Hy_Embodied_05_VLA
-# Template: train a policy run on one GPU or a GPU list.
-bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
-
-# Example: train a cotrain run on GPU 0.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0
-
-# Example: train the same run on four GPUs if the upstream trainer supports it.
-bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3
+# Template: pass through to the upstream Hy-Embodied training script.
+HDF5_DIR=<hdf5_dir> EXP_ROOT=<output_dir> bash train.sh <upstream_args...>
 ```
 
-The usual checkpoint directory is `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`. Pass that full directory name as `ckpt_name` during evaluation.
+Use the checkpoint path expected by `deploy.yml` (`ckpt_path`) during
+evaluation. The default action type for this adapter is `ee`.
 
 ## Deployment and Evaluation
 
@@ -104,20 +101,20 @@ Parameters used by `eval.sh`:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation; default and tested path is `ee`. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env` | `uv` or an explicit Hy-Embodied project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
 cd XPolicyLab/policy/Hy_Embodied_05_VLA
 # Template: run same-machine policy server and RoboDojo environment client.
-bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_uv_env> <eval_env_conda_env>
 
-# Example: evaluate a trained cotrain checkpoint on stack_bowls.
-bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 0 0 <policy_conda_env> <eval_env_conda_env>
+# Example: evaluate the default Hy-VLA checkpoint on stack_bowls.
+bash eval.sh RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 ee 0 0 0 uv <eval_env_conda_env>
 ```
 
 Parameters used by the split server/client flow:
@@ -128,11 +125,11 @@ Parameters used by the split server/client flow:
 | `task_name` | RoboDojo simulation task to evaluate, for example `stack_bowls`. |
 | `ckpt_name` | Checkpoint/run directory name, usually under `checkpoints/`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
-| `action_type` | Action representation, for example `joint`. |
+| `action_type` | Action representation; default and tested path is `ee`. |
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env` | `uv` or an explicit Hy-Embodied project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 | `policy_server_port` | Port exposed by the policy server, for example `5000`. |
 | `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
@@ -144,12 +141,12 @@ cd XPolicyLab/policy/Hy_Embodied_05_VLA
 # Terminal 1 on the policy machine: start the policy server.
 bash setup_eval_policy_server.sh \
   <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
-  <policy_gpu_id> <policy_conda_env> <policy_server_port> <policy_server_host>
+  <policy_gpu_id> <policy_uv_env> <policy_server_port> <policy_server_host>
 
 # Example: bind the policy server to all interfaces on port 5000.
 bash setup_eval_policy_server.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <policy_conda_env> 5000 0.0.0.0
+  RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 ee 0 \
+  0 uv 5000 0.0.0.0
 
 # Terminal 2 on the environment machine: connect RoboDojo to the policy server.
 bash setup_eval_env_client.sh \
@@ -159,8 +156,8 @@ bash setup_eval_env_client.sh \
 
 # Example: connect to a policy server reachable at <policy_server_ip>:5000.
 bash setup_eval_env_client.sh \
-  RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0 \
-  0 <eval_env_conda_env> "ckpt_name=RoboDojo-cotrain-arx_x5-joint-0,action_type=joint" \
+  RoboDojo stack_bowls hyvla_dojo_ckpt_v3 arx_x5 ee 0 \
+  0 <eval_env_conda_env> "ckpt_name=hyvla_dojo_ckpt_v3,action_type=ee" \
   5000 <policy_server_ip>
 ```
 

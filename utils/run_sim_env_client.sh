@@ -13,6 +13,7 @@ root_dir="${9}"
 seed="${10}"
 env_gpu_id="${11}"
 policy_server_ip="${12:-localhost}"
+protocol="${13:-ws}"
 
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda deactivate || true
@@ -28,6 +29,7 @@ bash "${root_dir}/scripts/eval_policy.sh" \
     --policy_name "${policy_name}" \
     --host "${policy_server_ip}" \
     --port "${policy_server_port}" \
+    --protocol "${protocol}" \
     --eval_batch "${eval_batch}" \
     --root_dir "${root_dir}" \
     --device_id "${env_gpu_id}" \

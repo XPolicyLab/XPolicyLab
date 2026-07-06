@@ -35,14 +35,14 @@ Parameters used by the command:
 
 | Parameter | Description |
 |---|---|
-| `policy_env` | Name of the conda environment used by the policy runtime. |
+| `policy_env` | Conda environment name, or `uv` / a uv project path for the policy runtime. |
 
 ```bash
 cd XPolicyLab/policy/Spirit_v15
 # Example: install dependencies for the Spirit_v15 policy adapter.
 bash install.sh
-# Example: activate the environment used later as <policy_conda_env>.
-conda activate <policy_env>  # e.g. spirit-v15
+# `setup_eval_policy_server.sh` accepts `uv`, a uv project path, or a conda env.
+source spirit_v15/.venv/bin/activate  # or pass `uv` as <policy_env>
 ```
 
 ## Demo Data Processing
@@ -117,7 +117,7 @@ Parameters used by `eval.sh`:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_conda_env` | Conda env, `uv`, or a uv project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 ```bash
@@ -141,7 +141,7 @@ Parameters used by the split server/client flow:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_conda_env` | Conda env, `uv`, or a uv project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 | `policy_server_port` | Port exposed by the policy server, for example `5000`. |
 | `policy_server_host` | Server bind host, for example `0.0.0.0` on the policy machine. |
