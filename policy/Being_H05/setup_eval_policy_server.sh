@@ -10,6 +10,7 @@ seed=$6
 policy_gpu_id=$7
 policy_conda_env=$8
 policy_server_port=$9
+policy_server_host=${10:-"localhost"}
 
 export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
 
@@ -73,7 +74,7 @@ exec env \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \
-            host="localhost" \
+            host="${policy_server_host}" \
             policy_name="${policy_name}" \
             task_name="${task_name}" \
             data_project_name="${bench_name}" \

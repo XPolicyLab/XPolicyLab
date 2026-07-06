@@ -42,7 +42,8 @@ bash "${SERVER_SCRIPT}" \
     "${seed}" \
     "${policy_gpu_id}" \
     "${policy_conda_env}" \
-    "${policy_server_port}" &
+    "${policy_server_port}" \
+    "${policy_server_ip}" &
 
 SERVER_PID=$!
 sleep 3

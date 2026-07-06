@@ -52,7 +52,7 @@ SERVER_PID=$!
 bash "${UTILS_DIR}/wait_for_policy_server.sh" "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" "Policy server" 1200
 
 echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
-deactivate
+deactivate 2>/dev/null || true
 bash "${CLIENT_SCRIPT}" \
     "${bench_name}" \
     "${task_name}" \

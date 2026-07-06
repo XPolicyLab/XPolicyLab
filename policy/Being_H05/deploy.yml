@@ -3,6 +3,7 @@ policy_name: Being_H05
 task_name: null
 env_cfg_type: null
 seed: null
+eval_batch: false
 
 checkpoint_num: null
 result_dir: "./results/Being_H05/"

@@ -68,7 +68,10 @@ class Model(ModelTemplate):
                         dtype=np.float32,
                     )
                 else:
-                    action_dict[arm_key] = np.zeros(7, dtype=np.float32)
+                    action_dict[arm_key] = np.array(
+                        [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+                        dtype=np.float32,
+                    )
 
                 # 夹爪 / 末端执行器关节动作
                 action_dict[ee_key] = np.zeros(
@@ -81,10 +84,9 @@ class Model(ModelTemplate):
         print("[Model] Generated action")
         return action_list
 
-    def get_action_batch(self):
-        # 当前示例 batch 大小固定为 4
-        # 如果后续有真实 batch 输入，建议改为根据输入动态决定
-        batch_size = self.batch_size
+    def get_action_batch(self, env_idx_list=None):
+        # batch 大小由运行中的环境索引列表决定；缺省时回退到 env_cfg 的默认 batch_size
+        batch_size = len(env_idx_list) if env_idx_list is not None else self.batch_size
         action_batch = [self.get_action() for _ in range(batch_size)]
 
         print(f"[Model] Generated action batch of size: {batch_size}")

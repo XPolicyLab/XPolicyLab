@@ -66,7 +66,7 @@ class ModelTemplate:
             self._error_msg("get_action() must be implemented by the user.")
         )
 
-    def get_action_batch(self):
+    def get_action_batch(self, env_idx_list=None):
         """
         Predict or generate an action from the current observation/state.
         根据当前观测或内部状态预测/生成动作。

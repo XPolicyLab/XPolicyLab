@@ -2,7 +2,6 @@
 policy_name: X_VLA
 bench_name: null
 task_name: null
-env_cfg: null
 env_cfg_type: null
 seed: null
 eval_batch: true

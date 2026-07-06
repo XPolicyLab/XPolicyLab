@@ -57,16 +57,23 @@ class PolicyEvalClient:
     ) -> Frame | None:
         if self._ws is not None:
             return None
+        connect_kwargs: dict[str, Any] = {
+            "max_size": None,
+            "ping_interval": self.config.ws_ping_interval_s,
+            "ping_timeout": self.config.ws_ping_timeout_s,
+        }
+        # `proxy` is only supported by the websockets>=14 asyncio client; passing it
+        # to older releases (e.g. the legacy client shipped with Isaac Sim's
+        # websockets 12) raises TypeError inside loop.create_connection.
+        if self.config.proxy is not None:
+            connect_kwargs["proxy"] = self.config.proxy
         last_err: Exception | None = None
         for attempt in range(1, self.config.max_connect_attempts + 1):
             try:
                 self._ws = await asyncio.wait_for(
                     websockets.connect(
                         self.config.url,
-                        proxy=self.config.proxy,
-                        max_size=None,
-                        ping_interval=self.config.ws_ping_interval_s,
-                        ping_timeout=self.config.ws_ping_timeout_s,
+                        **connect_kwargs,
                     ),
                     timeout=self.config.connect_timeout_s,
                 )

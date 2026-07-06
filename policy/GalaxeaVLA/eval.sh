@@ -70,7 +70,7 @@ for _ in $(seq 1 180); do
 done
 
 echo -e "\033[32m[MAIN] start client, server=${policy_server_ip}:${policy_server_port}\033[0m"
-deactivate
+deactivate 2>/dev/null || true
 bash "${CLIENT_SCRIPT}" \
     "${bench_name}" \
     "${task_name}" \
