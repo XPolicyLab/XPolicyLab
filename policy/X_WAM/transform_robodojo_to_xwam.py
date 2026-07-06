@@ -25,7 +25,7 @@ Notes
 
 Usage
 -----
-    source /root/wan/bin/activate
+    source /path/to/wan_env/bin/activate
     python XPolicyLab/policy/X_WAM/transform_robodojo_to_xwam.py \
         --input-dir  data/RoboDojo \
         --output-dir xwam_datasets/RoboDojo \

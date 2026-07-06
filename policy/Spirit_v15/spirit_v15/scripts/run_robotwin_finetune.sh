@@ -22,7 +22,7 @@ if [[ ! -x "${TORCHRUN_BIN}" && "${CONVERT_ONLY:-0}" != "1" ]]; then
   exit 1
 fi
 
-RAW_ROOT="${RAW_ROOT:-/vepfs-cnbje63de6fae220/xspark_shared/robotwin_data}"
+RAW_ROOT="${RAW_ROOT:-/path/to/robotwin_data}"
 DATASET_NAME="${DATASET_NAME:-aloha-agilex_clean_50}"
 TASKS="${TASKS:-}"
 MAX_EPISODES_PER_TASK="${MAX_EPISODES_PER_TASK:-}"
@@ -31,7 +31,7 @@ CONVERTED_DATA_ROOT="${CONVERTED_DATA_ROOT:-${REPO_ROOT}/outputs/robotwin_spirit
 OVERWRITE_DATASET="${OVERWRITE_DATASET:-0}"
 SKIP_CONVERT="${SKIP_CONVERT:-0}"
 CONVERT_ONLY="${CONVERT_ONLY:-0}"
-PRETRAINED_PATH="${PRETRAINED_PATH:-/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Spirit-v1.5}"
+PRETRAINED_PATH="${PRETRAINED_PATH:-/path/to/model_weights/Spirit-v1.5}"
 if [[ "${CONVERT_ONLY}" != "1" ]]; then
   : "${PRETRAINED_PATH:?Please set PRETRAINED_PATH}"
 fi

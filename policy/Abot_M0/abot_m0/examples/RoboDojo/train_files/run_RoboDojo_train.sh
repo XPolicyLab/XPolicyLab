@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "${REPO_ROOT}"
 
-DATA_ROOT="${DATA_ROOT:-/xspark-cache/shared/lerobot}"
+DATA_ROOT="${DATA_ROOT:-${HF_LEROBOT_HOME:-${HOME}/.cache/huggingface/lerobot}}"
 DATASET_REPO="${DATASET_REPO:-RoboDojo_sim_v21_video_abot}"
 DATASET_DIR="${DATA_ROOT}/${DATASET_REPO}"
 DATA_MIX="${DATA_MIX:-robodojo_sim}"
@@ -16,7 +16,7 @@ if [[ -z "${PREPARE_SCRIPT+x}" ]]; then
 fi
 PREPARE_TASK_TEXT="${PREPARE_TASK_TEXT-${TASK_TEXT-}}"
 
-MODEL_ROOT="${MODEL_ROOT:-/mnt/xspark-data/xspark_shared/model_weights}"
+MODEL_ROOT="${MODEL_ROOT:-${REPO_ROOT}/model_weights}"
 BASE_VLM="${BASE_VLM:-${MODEL_ROOT}/Qwen3-VL-4B-Instruct-Action}"
 PRETRAIN_CKPT="${PRETRAIN_CKPT:-}"
 export MODEL_ROOT

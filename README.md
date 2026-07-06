@@ -153,6 +153,28 @@ Most checkpoints use:
 
 Some policies intentionally differ. Follow the policy README when it disagrees with this table.
 
+## Path Conventions
+
+The integration layer no longer contains machine-specific absolute paths
+(internal cluster mounts such as `/mnt/xspark-data/...` were removed; see
+[REMOVED_ABSOLUTE_PATHS.md](REMOVED_ABSOLUTE_PATHS.md) for the full audit).
+Conventions now in use:
+
+- `/path/to/...` in configs and docs is a placeholder you must replace with a
+  real location (dataset root, model weights, checkpoints).
+- Dataset and model locations are supplied through environment variables where
+  the scripts support them, for example `HF_LEROBOT_HOME` (defaults to
+  `~/.cache/huggingface/lerobot`), `ABOT_DATA_ROOT`, `QWEN25_PATH`,
+  `MODEL_PATH`, `DATA_PATH`, `TFDS_DATA_DIR`.
+- Paths tied to the repository itself (openpi `assets_dir`, adapter data
+  folders) are resolved relative to the file location at runtime and need no
+  configuration.
+- Conda locations are discovered via `$(conda info --base)` instead of
+  hard-coded install paths.
+
+Third-party upstream code vendored inside `policy/<POLICY>/` (for example
+`starVLA/source_starvla`) keeps the original authors' paths untouched.
+
 <details>
 <summary>Known command exceptions</summary>
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONDA_SH="/vepfs-cnbje63de6fae220/xspark_shared/miniconda3/etc/profile.d/conda.sh"
+CONDA_SH="${CONDA_SH:-$(conda info --base)/etc/profile.d/conda.sh}"
 BASE_CONFIG="${BASE_CONFIG:-$SCRIPT_DIR/config_xspark.yml}"
 RUNTIME_CONFIG="${RUNTIME_CONFIG:-$SCRIPT_DIR/.config_xspark_gpu4.runtime.yml}"
 FULL_CONVERT="${FULL_CONVERT:-0}"

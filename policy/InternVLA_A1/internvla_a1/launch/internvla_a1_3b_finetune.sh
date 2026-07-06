@@ -4,14 +4,14 @@ set -euo pipefail
 ###############################################################################
 ################################# ENV config ##################################
 
-export HF_HOME=${HF_HOME:-/xspark-cache/shared}
-export HF_LEROBOT_HOME=${HF_LEROBOT_HOME:-/xspark-cache/shared/lerobot}
+export HF_HOME=${HF_HOME:-${HOME}/.cache/huggingface}
+export HF_LEROBOT_HOME=${HF_LEROBOT_HOME:-${HF_HOME}/lerobot}
 export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0,1,2,3,4,5,6,7}
-export COSMOS_PATH=${COSMOS_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Cosmos-Tokenizer-CI8x8}
-export QWEN3_2B_PATH=${QWEN3_2B_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen3-VL-2B-Instruct}
+export COSMOS_PATH=${COSMOS_PATH:-/path/to/model_weights/Cosmos-Tokenizer-CI8x8}
+export QWEN3_2B_PATH=${QWEN3_2B_PATH:-/path/to/model_weights/Qwen3-VL-2B-Instruct}
 
 WANDB_TOKEN=${WANDB_TOKEN:-}
-CONDA_ROOT=${_CONDA_ROOT:-/mnt/nfs/miniconda3}
+CONDA_ROOT=${_CONDA_ROOT:-$(conda info --base)}
 CONDA_ENV=internvla_a1
 
 source ${CONDA_ROOT}/etc/profile.d/conda.sh
@@ -66,7 +66,7 @@ cd ${PROJ_ROOT}
 
 # 1. policy config
 POLICY="qwena1"
-PRETRAINED_PATH="/mnt/xspark-data/xspark_shared/model_weights/InternVLA-A1-3B"
+PRETRAINED_PATH="${PRETRAINED_PATH:-/path/to/model_weights/InternVLA-A1-3B}"
 
 # 2. dataset config
 DATASET_REPO_ID="${1:-RoboDojo_sim_arx-x5_v30}"

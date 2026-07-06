@@ -30,9 +30,9 @@ conda create -n ahawam python=3.10 -y
 conda activate ahawam
 pip install -U pip
 pip install torch==2.7.1+cu128 torchvision==0.22.1+cu128 --extra-index-url https://download.pytorch.org/whl/cu128
-cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
+cd XPolicyLab/policy/AHA_WAM
 bash install.sh
-export DIFFSYNTH_MODEL_BASE_PATH=/mnt/petrelfs/caijisong/dualWAM/checkpoints
+export DIFFSYNTH_MODEL_BASE_PATH=/path/to/dualWAM/checkpoints
 ```
 
 On this cluster, the preconfigured `wam` environment can be used directly.
@@ -43,9 +43,9 @@ Run through the outer policy wrapper so XPolicyLab arguments, dataset overrides,
 base-model cache paths, and output directories are handled consistently:
 
 ```bash
-cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
+cd XPolicyLab/policy/AHA_WAM
 export AHA_WAM_TRAIN_DATASET_DIR=/path/to/RoboDojo_lerobot_v21_video
-export DIFFSYNTH_MODEL_BASE_PATH=/mnt/petrelfs/caijisong/dualWAM/checkpoints
+export DIFFSYNTH_MODEL_BASE_PATH=/path/to/dualWAM/checkpoints
 bash train.sh RoboDojo cotrain arx_x5 joint 0 0,1,2,3,4,5,6,7
 ```
 
@@ -60,7 +60,7 @@ export AHA_WAM_TRAIN_DATASET_DIR=/path/to/RoboDojo_lerobot_v21_video
 export AHA_WAM_OUTPUT_ROOT=/path/to/checkpoints
 export AHA_WAM_INIT_CHECKPOINT=/path/to/step_xxxxxx.pt
 export AHA_WAM_TRAIN_SEED=1
-export DIFFSYNTH_MODEL_BASE_PATH=/mnt/petrelfs/caijisong/dualWAM/checkpoints
+export DIFFSYNTH_MODEL_BASE_PATH=/path/to/dualWAM/checkpoints
 ```
 
 The wrapper maps seed `0` to training seed `1`, matching the upstream AHAWAM
@@ -72,7 +72,7 @@ Use one optimizer step to validate package imports, Hydra config, dataset access
 and checkpoint/cache paths without launching a full run:
 
 ```bash
-cd /mnt/petrelfs/caijisong/XPolicyLab/policy/AHA_WAM
+cd XPolicyLab/policy/AHA_WAM
 AHA_WAM_MAX_STEPS=1 \
 AHA_WAM_NUM_EPOCHS=1 \
 AHA_WAM_BATCH_SIZE=1 \

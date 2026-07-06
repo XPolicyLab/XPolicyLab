@@ -1,6 +1,6 @@
 model:
-  model_path: /mnt/pfs/pg4hw0/niantian/model_weights/lingbot-vla-4b
-  tokenizer_path: /mnt/pfs/pg4hw0/niantian/model_weights/Qwen2.5-VL-3B-Instruct/
+  model_path: /path/to/model_weights/lingbot-vla-4b
+  tokenizer_path: /path/to/model_weights/Qwen2.5-VL-3B-Instruct/
   post_training: true
   adanorm_time: true
   old_adanorm: true
@@ -8,13 +8,13 @@ model:
 data:
   datasets_type: vla
   data_name: robotwin_fold_clothes_0
-  train_path: /mnt/pfs/pg4hw0/niantian/lerobot/fold_clothes
+  train_path: /path/to/lerobot/fold_clothes
   num_workers: 8
   norm_type: bounds_99_woclip
-  norm_stats_file: /mnt/pfs/pg4hw0/niantian/lingbot-vla/assets/norm_stats/fold_clothes_0.json
+  norm_stats_file: assets/norm_stats/fold_clothes_0.json
 
 train:
-  output_dir: /mnt/pfs/pg4hw0/niantian/lingbot-vla/output/fold_clothes_01
+  output_dir: output/fold_clothes_01
   loss_type: L1_fm
   data_parallel_mode: fsdp2
   enable_full_shard: false

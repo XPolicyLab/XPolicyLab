@@ -84,7 +84,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build Motus pre-encoded T5 cache from RoboDojo HDF5 instructions.")
     parser.add_argument(
         "--data-root",
-        default="/mnt/xspark-data/final_data/RoboDojo_first100",
+        default="/path/to/final_data/RoboDojo_first100",
         help="Read-only RoboDojo data root. All unique instructions per task are collected.",
     )
     parser.add_argument(
@@ -94,7 +94,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--wan-path",
-        default="/mnt/xspark-data/xspark_shared/model_weights/Wan2.2-TI2V-5B",
+        default="/path/to/model_weights/Wan2.2-TI2V-5B",
         help="WAN model directory containing the T5 checkpoint and tokenizer.",
     )
     parser.add_argument("--device", default="cuda", help="CUDA device used to run the T5 encoder (must be a GPU).")

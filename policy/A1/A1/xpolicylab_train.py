@@ -305,12 +305,10 @@ def resolve_dataset_path(args, values, policy_dir):
     candidates = []
     if values.get("LEROBOT_DATA_PATH"):
         candidates.append(Path(values["LEROBOT_DATA_PATH"]))
-    candidates.extend(
-        [
-            Path("/mnt/xspark-data/xspark_shared/lerobot") / shared_name,
-            Path(values["LEROBOT_OUTPUT_DIR"]) / dataset_tag,
-        ]
-    )
+    shared_root = os.environ.get("HF_LEROBOT_HOME")
+    if shared_root:
+        candidates.append(Path(shared_root) / shared_name)
+    candidates.append(Path(values["LEROBOT_OUTPUT_DIR"]) / dataset_tag)
 
     for candidate in candidates:
         if candidate.is_dir():

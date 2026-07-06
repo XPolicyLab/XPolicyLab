@@ -22,7 +22,7 @@ policy_name="$(basename "${SCRIPT_DIR}")"
 yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 # ckpt_name is the full run directory name under checkpoints/.
 checkpoint_root="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
-qwen25_path="${QWEN25_PATH:-/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct}"
+qwen25_path="${QWEN25_PATH:?Set QWEN25_PATH to the Qwen2.5-VL-3B-Instruct weights directory}"
 
 checkpoint_path=$(python - <<PY
 from pathlib import Path

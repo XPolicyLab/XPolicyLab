@@ -8,8 +8,8 @@ PREPROCESSED_BASE_DIR=${3}
 PERCENT_VAL=${4}
 GPU_ID=${5}
 
-REPO_ROOT="/mnt/pfs/pg4hw0/niantian/openvla-oft" # change to your path
-TFDS_DATA_DIR="/mnt/pfs/pg4hw0/niantian/tensorflow_datasets" # change to your path
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" # change to your path
+TFDS_DATA_DIR="${TFDS_DATA_DIR:-${REPO_ROOT}/tensorflow_datasets}" # change to your path
 
 export CUDA_VISIBLE_DEVICES=${GPU_ID}
 

@@ -3,11 +3,11 @@
 # H-RDT XPolicyLab Data Processing Setup
 # Adjust these paths for your environment when needed.
 
-export XPOLICYLAB_DATA_ROOT="${XPOLICYLAB_DATA_ROOT:-/vepfs-cnbje63de6fae220/hekun/datasets/RoboDojo/sim_cloud}"
+export XPOLICYLAB_DATA_ROOT="${XPOLICYLAB_DATA_ROOT:-/path/to/RoboDojo/sim_cloud}"
 export XPOLICYLAB_RAW_BENCH_NAME="${XPOLICYLAB_RAW_BENCH_NAME:-RoboDojo}"
 export XPOLICYLAB_ENV_CFG_TYPE="${XPOLICYLAB_ENV_CFG_TYPE:-arx_x5}"
 export XPOLICYLAB_ACTION_TYPE="${XPOLICYLAB_ACTION_TYPE:-joint}"
-export T5_MODEL_PATH="${T5_MODEL_PATH:-/vepfs-cnbje63de6fae220/mobile/chengy/xpolicy/demo_env/XPolicyLab/policy/H_RDT/H_RDT/t5-v1_1-xxl}"
+export T5_MODEL_PATH="${T5_MODEL_PATH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/t5-v1_1-xxl}"
 
 export HRDT_PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 export HRDT_CONFIG_PATH="${HRDT_PROJECT_ROOT}/configs/hrdt_finetune.yaml"

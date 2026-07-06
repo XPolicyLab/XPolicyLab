@@ -13,7 +13,7 @@ from huggingface_hub import snapshot_download
 
 
 DEFAULT_REPO_ID = "openvla/openvla-7b"
-DEFAULT_LOCAL_DIR = "/mnt/pfs/pg4hw0/niantian/openvla_assets/models/openvla-7b"
+DEFAULT_LOCAL_DIR = "models/openvla-7b"
 
 
 def parse_args():

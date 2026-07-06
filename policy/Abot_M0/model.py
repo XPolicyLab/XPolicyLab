@@ -13,7 +13,7 @@ from PIL import Image
 _CUR_DIR = Path(__file__).resolve().parent
 _ABOT_ROOT = _CUR_DIR / "abot_m0"
 _CHECKPOINTS_DIRS = (_CUR_DIR / "checkpoints", _ABOT_ROOT / "checkpoints")
-_DEFAULT_STATS_JSON = Path("/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json")
+_DEFAULT_STATS_JSON = _ABOT_ROOT / "checkpoints" / "stats_gr00t.json"
 
 if str(_ABOT_ROOT) not in sys.path:
     sys.path.insert(0, str(_ABOT_ROOT))

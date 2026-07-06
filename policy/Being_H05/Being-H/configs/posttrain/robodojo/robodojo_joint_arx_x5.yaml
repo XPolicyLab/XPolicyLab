@@ -1,5 +1,5 @@
 # RoboDojo sim joint training (arx_x5, 14-dim qpos)
-# LeRobot v2.1: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
+# LeRobot v2.1: <lerobot_root>/RoboDojo_sim_arx-x5_v21
 # data_config: robodojo_qpos (cam_high / cam_left_wrist / cam_right_wrist)
 
 robodojo_posttrain:

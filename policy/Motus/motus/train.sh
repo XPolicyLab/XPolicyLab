@@ -12,6 +12,6 @@ torchrun \
 	--deepspeed configs/zero2_stage2.json \
 	--config configs/lerobot_RoboDojo_sim.yaml \
 	--seed ${SEED} \
-	--checkpoint_dir /mnt/xspark-data/xspark_shared/motus_ckpt/ \
+	--checkpoint_dir "${MOTUS_CHECKPOINT_DIR:-checkpoints}" \
 	--run_name robodojo_sim_motus \
 	--report_to tensorboard

@@ -4,7 +4,7 @@ from omegaconf import OmegaConf
 
 # Set environment variables
 os.environ["ABOT_SKIP_DEFAULT_MIXTURES"] = "1"
-os.environ["ABOT_DATASETS_ROOT"] = "/vepfs-cnbje63de6fae220/xspark_shared/lerobot"
+os.environ.setdefault("ABOT_DATASETS_ROOT", "/path/to/lerobot")
 os.environ["ABOT_SIM_STACK_BOWLS_REPO"] = "sim_stack_bowls_video"
 
 try:
@@ -16,7 +16,7 @@ try:
     from ABot.dataloader.lerobot_datasets import get_vla_dataset
     
     data_cfg = OmegaConf.create({
-        "data_root_dir": "/vepfs-cnbje63de6fae220/xspark_shared/lerobot",
+        "data_root_dir": os.environ["ABOT_DATASETS_ROOT"],
         "data_mix": "sim_stack_bowls",
         "delete_pause_frame": False
     })

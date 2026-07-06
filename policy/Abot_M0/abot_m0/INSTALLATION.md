@@ -37,8 +37,8 @@ ABot training expects two model paths:
 Example paths that are already used in this workspace:
 
 ```bash
-BASE_VLM=/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Qwen3-VL-4B-Instruct-Action
-PRETRAIN_CKPT=/vepfs-cnbje63de6fae220/xspark_shared/model_weights/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt
+BASE_VLM=/path/to/model_weights/Qwen3-VL-4B-Instruct-Action
+PRETRAIN_CKPT=/path/to/model_weights/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt
 ```
 
 For the current SimStackBowls setup, the safe default is to load only `qwen_vl_interface` from the pretrain checkpoint:
@@ -62,8 +62,8 @@ Minimal command:
 ```bash
 conda activate ABot
 
-BASE_VLM=/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Qwen3-VL-4B-Instruct-Action \
-PRETRAIN_CKPT=/vepfs-cnbje63de6fae220/xspark_shared/model_weights/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt \
+BASE_VLM=/path/to/model_weights/Qwen3-VL-4B-Instruct-Action \
+PRETRAIN_CKPT=/path/to/model_weights/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt \
 RELOAD_MODULES=qwen_vl_interface \
 NUM_GPUS=8 \
 bash examples/SimStackBowls/train_files/run_sim_stack_bowls_train.sh
@@ -176,8 +176,8 @@ DATA_MIX=my_dataset_mix \
 ROBOT_TYPE=robotwin \
 PREPARE_SCRIPT=scripts/prepare_lerobot_for_abot.py \
 PREPARE_TASK_TEXT= \
-BASE_VLM=/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Qwen3-VL-4B-Instruct-Action \
-PRETRAIN_CKPT=/vepfs-cnbje63de6fae220/xspark_shared/model_weights/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt \
+BASE_VLM=/path/to/model_weights/Qwen3-VL-4B-Instruct-Action \
+PRETRAIN_CKPT=/path/to/model_weights/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt \
 RELOAD_MODULES=qwen_vl_interface \
 NUM_GPUS=4 \
 BATCH_SIZE=2 \

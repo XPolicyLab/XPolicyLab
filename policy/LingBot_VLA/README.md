@@ -125,7 +125,7 @@ checkpoints/<ckpt_name>/
   checkpoints/global_step_*/hf_ckpt/*.safetensors
 ```
 
-The latest numeric `global_step_*` with an `hf_ckpt` directory is loaded. `QWEN25_PATH` should point to the Qwen2.5-VL-3B-Instruct weights; if unset, the scripts use `/mnt/xspark-data/xspark_shared/model_weights/Qwen2.5-VL-3B-Instruct`.
+The latest numeric `global_step_*` with an `hf_ckpt` directory is loaded. `QWEN25_PATH` must point to the Qwen2.5-VL-3B-Instruct weights; there is no public default.
 
 ```bash
 cd XPolicyLab/policy/LingBot_VLA

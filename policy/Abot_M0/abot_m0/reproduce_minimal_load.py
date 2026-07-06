@@ -4,11 +4,11 @@ from omegaconf import OmegaConf
 
 # Set environment variables
 os.environ["ABOT_SKIP_DEFAULT_MIXTURES"] = "1"
-os.environ["ABOT_DATASETS_ROOT"] = "/vepfs-cnbje63de6fae220/xspark_shared/lerobot"
+os.environ.setdefault("ABOT_DATASETS_ROOT", "/path/to/lerobot")
 os.environ["ABOT_SIM_STACK_BOWLS_REPO"] = "sim_stack_bowls_video"
 
 # Add current directory to path to find ABot
-sys.path.append("/vepfs-cnbje63de6fae220/niantian/ABot-Manipulation")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
     from ABot.dataloader.lerobot_datasets import get_vla_dataset
@@ -20,7 +20,7 @@ try:
         "include_state": False,
         "dataset_name": "sim_stack_bowls_video",
         "fps": 1,
-        "data_root_dir": "/vepfs-cnbje63de6fae220/xspark_shared/lerobot", # Explicitly add this based on error
+        "data_root_dir": os.environ["ABOT_DATASETS_ROOT"],
     })
     
     print("Attempting to call get_vla_dataset...")

@@ -29,6 +29,9 @@ import openpi.training.optimizer as _optimizer
 import openpi.training.weight_loaders as weight_loaders
 import openpi.transforms as _transforms
 
+# RoboDojo normalization assets bundled with this adapter (openpi/assets/RoboDojo_assets).
+_ROBODOJO_ASSETS_DIR = pathlib.Path(__file__).resolve().parents[3] / "assets" / "RoboDojo_assets"
+
 ModelType: TypeAlias = _model.ModelType
 # Work around a tyro issue with using nnx.filterlib.Filter directly.
 Filter: TypeAlias = nnx.filterlib.Filter
@@ -572,7 +575,7 @@ _CONFIGS = [
         data=LeRobotAlohaDataConfig(
             repo_id="RoboDojo_sim_arx-x5_v30",
             assets=AssetsConfig(
-                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_0_Fast/openpi/assets/RoboDojo_assets/",
+                assets_dir=str(_ROBODOJO_ASSETS_DIR),
                 asset_id="arx_x5_sim",
             ),
             repack_transforms=_transforms.Group(
@@ -607,7 +610,7 @@ _CONFIGS = [
         data=LeRobotAlohaDataConfig(
             repo_id="RoboDojo_sim_arx-x5_v30",
             assets=AssetsConfig(
-                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_0_Fast/openpi/assets/RoboDojo_assets/",
+                assets_dir=str(_ROBODOJO_ASSETS_DIR),
                 asset_id="arx_x5_sim",
             ),
             repack_transforms=_transforms.Group(
@@ -642,7 +645,7 @@ _CONFIGS = [
         data=LeRobotAlohaDataConfig(
             repo_id="RoboDojo_sim_arx-x5_v30",
             assets=AssetsConfig(
-                assets_dir="/mnt/nfs/niantian/RoboDojo_env/XPolicyLab/policy/Pi_0_Fast/openpi/assets/RoboDojo_assets/",
+                assets_dir=str(_ROBODOJO_ASSETS_DIR),
                 asset_id="arx_x5_sim",
             ),
             repack_transforms=_transforms.Group(

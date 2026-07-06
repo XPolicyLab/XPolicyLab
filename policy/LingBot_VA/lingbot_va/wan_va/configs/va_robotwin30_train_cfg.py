@@ -12,7 +12,7 @@ va_robotwin30_cfg.update(va_shared_cfg)
 va_robotwin30_cfg.infer_mode = "server"
 
 # Inference: launch_wan_va_server.sh builds .merged_ckpt (base vae/tokenizer + finetuned transformer).
-# Training default: "/mnt/pfs/pg4hw0/niantian/lingbot-va/train_out/checkpoints/checkpoint_step_3600"
+# Training default: <train_out>/checkpoints/checkpoint_step_3600
 _POLICY_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 va_robotwin30_cfg.wan22_pretrained_model_name_or_path = os.path.join(_POLICY_ROOT, ".merged_ckpt")
 
@@ -118,8 +118,8 @@ va_robotwin30_cfg.norm_stat = {
 va_robotwin30_train_cfg = EasyDict(__name__="Config: VA robotwin30 train")
 va_robotwin30_train_cfg.update(va_robotwin30_cfg)
 
-va_robotwin30_train_cfg.dataset_path = (
-    "/mnt/pfs/pg4hw0/niantian/lerobot/robotwin4tasks_ee_joint_gripper"
+va_robotwin30_train_cfg.dataset_path = os.environ.get(
+    "LINGBOT_VA_DATASET_PATH", "/path/to/lerobot/robotwin4tasks_ee_joint_gripper"
 )
 va_robotwin30_train_cfg.empty_emb_path = os.path.join(
     va_robotwin30_train_cfg.dataset_path, "empty_emb.pt"

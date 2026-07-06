@@ -30,7 +30,10 @@ from ABot.dataloader.gr00t_lerobot.schema import (  # noqa: E402
 
 LE_ROBOT_DATA_GLOB = "data/*/*.parquet"
 LE_ROBOT_STATS_FILENAME = "meta/stats_gr00t.json"
-DEFAULT_DATA_ROOT = "/mnt/xspark-data/xspark_shared/lerobot"
+DEFAULT_DATA_ROOT = os.environ.get(
+    "ABOT_DATA_ROOT",
+    os.environ.get("HF_LEROBOT_HOME", str(Path.home() / ".cache/huggingface/lerobot")),
+)
 DEFAULT_REPO = "RoboDojo_sim_v21_video_abot"
 FALLBACK_REPO = "RoboDojo_lerobot_v21_video"
 UNNORM_KEY = "robodojo_sim"

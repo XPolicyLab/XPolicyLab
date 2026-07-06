@@ -9,7 +9,7 @@ common:
 
 dataset:
   type: "robotwin"
-  dataset_dir: "/vepfs-cnbje63de6fae220/xspark_shared/robotwin_data/motus_processed"
+  dataset_dir: "/path/to/robotwin_data/motus_processed"
   data_mode: "clean"
   task_mode: "multi"
   task_name: null
@@ -18,13 +18,13 @@ dataset:
 
 model:
   wan:
-    config_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B"
-    checkpoint_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B"
-    vae_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B/Wan2.2_VAE.pth"
+    config_path: "/path/to/model_weights/Wan2.2-TI2V-5B"
+    checkpoint_path: "/path/to/model_weights/Wan2.2-TI2V-5B"
+    vae_path: "/path/to/model_weights/Wan2.2-TI2V-5B/Wan2.2_VAE.pth"
     precision: "bfloat16"
 
   vlm:
-    checkpoint_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Qwen3-VL-2B-Instruct"
+    checkpoint_path: "/path/to/model_weights/Qwen3-VL-2B-Instruct"
     precision: "bfloat16"
     frozen: true
 
@@ -97,4 +97,4 @@ resume:
   checkpoint_path: null
 
 finetune:
-  checkpoint_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Motus"
+  checkpoint_path: "/path/to/model_weights/Motus"

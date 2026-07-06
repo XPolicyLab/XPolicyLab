@@ -23,7 +23,7 @@ ckpt_setting="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 ckpt_dir="${POLICY_DIR}/checkpoints/${ckpt_setting}"
 
 # LeRobot 数据路径；默认读取 RoboDojo abot cotrain 数据，可通过环境变量覆盖
-DATA_ROOT="${ABOT_DATA_ROOT:-/mnt/xspark-data/xspark_shared/lerobot}"
+DATA_ROOT="${ABOT_DATA_ROOT:-${HF_LEROBOT_HOME:-${HOME}/.cache/huggingface/lerobot}}"
 DATASET_REPO="${ABOT_DATASET_REPO:-RoboDojo_sim_v21_video_abot}"
 DATA_MIX="${ABOT_DATA_MIX:-robodojo_sim}"
 
@@ -41,7 +41,7 @@ export RUN_ID="${ckpt_setting}"
 export SEED="${seed}"
 export NUM_GPUS
 
-export MODEL_ROOT="${ABOT_MODEL_ROOT:-/mnt/xspark-data/xspark_shared/model_weights}"
+export MODEL_ROOT="${ABOT_MODEL_ROOT:-${POLICY_DIR}/model_weights}"
 export BASE_VLM="${ABOT_BASE_VLM:-${MODEL_ROOT}/Qwen3-VL-4B-Instruct-Action}"
 export PRETRAIN_CKPT="${ABOT_PRETRAIN_CKPT:-${MODEL_ROOT}/ABot-M0-Pretrain/checkpoints/ABot_M0_Pretrain.pt}"
 export RELOAD_MODULES="${ABOT_RELOAD_MODULES:-qwen_vl_interface}"

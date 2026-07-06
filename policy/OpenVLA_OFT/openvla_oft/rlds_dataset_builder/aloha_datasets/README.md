@@ -23,11 +23,11 @@ Example:
 
 ```bash
 conda activate openvla
-cd /mnt/pfs/pg4hw0/niantian/openvla-oft
+cd /path/to/openvla-oft
 python rlds_dataset_builder/aloha_datasets/build_aloha_dataset.py \
   --dataset_name aloha_put_back_block_200_demos \
-  --preprocessed_dir /mnt/pfs/pg4hw0/niantian/openvla-oft/data/aloha_preprocessed/aloha_put_back_block_200_demos \
-  --tfds_data_dir /mnt/pfs/pg4hw0/niantian/tensorflow_datasets \
+  --preprocessed_dir /path/to/openvla-oft/data/aloha_preprocessed/aloha_put_back_block_200_demos \
+  --tfds_data_dir /path/to/tensorflow_datasets \
   --overwrite
 ```
 

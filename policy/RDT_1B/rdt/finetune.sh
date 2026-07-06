@@ -5,9 +5,9 @@ export NCCL_SOCKET_IFNAME=eth0
 export NCCL_DEBUG=INFO
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 
-export TEXT_ENCODER_NAME="/mnt/xspark-data/xspark_shared/model_weights/t5-v1_1-xxl"
-export VISION_ENCODER_NAME="/mnt/xspark-data/xspark_shared/model_weights/siglip-so400m-patch14-384"
-export RDT_HDF5_DIR="/mnt/nfs/niantian/RoboDojo_env/aloha_data/RoboDojo"
+export TEXT_ENCODER_NAME="${TEXT_ENCODER_NAME:-/path/to/model_weights/t5-v1_1-xxl}"
+export VISION_ENCODER_NAME="${VISION_ENCODER_NAME:-/path/to/model_weights/siglip-so400m-patch14-384}"
+export RDT_HDF5_DIR="${RDT_HDF5_DIR:-/path/to/aloha_data/RoboDojo}"
 export RDT_DATASET_NAME="robodojo_aloha_hdf5"
 export OUTPUT_DIR="./checkpoints/RoboDojo_aloha_hdf5_arx_x5"
 export CFLAGS="-I/usr/include"
@@ -29,7 +29,7 @@ fi
 
 deepspeed --hostfile=hostfile.txt --num_gpus=8 main.py \
     --deepspeed="./configs/zero2.json" \
-    --pretrained_model_name_or_path="/mnt/xspark-data/xspark_shared/model_weights/rdt-1b" \
+    --pretrained_model_name_or_path="${RDT_PRETRAINED_MODEL:-/path/to/model_weights/rdt-1b}" \
     --pretrained_text_encoder_name_or_path=$TEXT_ENCODER_NAME \
     --pretrained_vision_encoder_name_or_path=$VISION_ENCODER_NAME \
     --output_dir=$OUTPUT_DIR \

@@ -2049,7 +2049,7 @@ data = dict(
                 ],
             ],
             train_path=[
-                '/vepfs-cnbje63de6fae220/xspark_shared/xiaomi_datasets/json',
+                '/path/to/xiaomi_datasets/json',
             ]),
         type='json'),
     type='BaseDataModule')
@@ -2077,7 +2077,7 @@ trainer = dict(
     accumulate_grad_batches=1,
     ckpt_path=None,
     default_root_dir=
-    '/vepfs-cnbje63de6fae220/xspark_shared/xiaomi_checkpoints/project_xr0/robodojo_sim',
+    '/path/to/xiaomi_checkpoints/project_xr0/robodojo_sim',
     enable_progress_bar=True,
     exp_name='robodojo_sim',
     gradient_clip_algorithm='norm',

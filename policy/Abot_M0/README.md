@@ -186,14 +186,14 @@ Frequently used environment variables detected in the adapter scripts:
 | Variable | Notes |
 |---|---|
 | `ABOT_CONDA_ENV` | Conda env used by `install.sh`; defaults to `ABot`. |
-| `ABOT_DATA_ROOT` | LeRobot data root for training; defaults to `/mnt/xspark-data/xspark_shared/lerobot`. |
+| `ABOT_DATA_ROOT` | LeRobot data root for training; no public default, set to your LeRobot root. |
 | `ABOT_DATASET_REPO` | LeRobot repo directory; defaults to `RoboDojo_sim_v21_video_abot`. |
 | `ABOT_DATA_MIX` | ABot dataset mixture key; defaults to `robodojo_sim`. |
 | `ABOT_MODEL_ROOT` | Root containing Qwen and ABot pretrained weights. |
 | `ABOT_BASE_VLM` | Overrides the Qwen3-VL-4B-Instruct-Action path. |
 | `ABOT_PRETRAIN_CKPT` | Overrides the ABot-M0 pretrain checkpoint. |
 | `ABOT_RELOAD_MODULES` | Modules reloaded from pretrain; defaults to `qwen_vl_interface`. |
-| `ABOT_STATS_JSON` | Optional stats fallback for eval; defaults to `/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_v21_video_abot/meta/stats_gr00t.json`. |
+| `ABOT_STATS_JSON` | Optional stats fallback for eval; defaults to `abot_m0/checkpoints/stats_gr00t.json` inside the adapter. |
 | `ABOT_UNNORM_KEY` | Overrides the normalization-stat key used at eval time. |
 
 ## Notes

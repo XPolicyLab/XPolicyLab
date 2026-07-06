@@ -6,7 +6,7 @@ load_text_encoder: false
 proprio_dim: ${data.train.processor.proprio_output_dim}
 redirect_common_files: true
 mot_checkpoint_mixed_attn: true
-action_dit_pretrained_path: /mnt/petrelfs/caijisong/dualWAM/checkpoints/ActionDiT_linear_interp_Wan22_alphascale_1024hdim.pt
+action_dit_pretrained_path: /path/to/dualWAM/checkpoints/ActionDiT_linear_interp_Wan22_alphascale_1024hdim.pt
 skip_dit_load_from_pretrain: false
 
 action_horizon: 64

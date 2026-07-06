@@ -4,7 +4,7 @@ model:
 
 data:
   datasets_type: vla
-  train_path: /mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21
+  train_path: /path/to/lerobot/RoboDojo_sim_arx-x5_v21
   norm_path: assets/norm_stats/robodojo_sim_arx_x5_customized.json
 
 train:

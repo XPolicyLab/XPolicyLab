@@ -2,7 +2,7 @@
 paths:
   data_dir: "${A1_DIR}/../../../../models"
   pretrain_checkpoint: "${DATA_DIR}/a1-pretrain"
-  lerobot_data_path: "/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21"
+  lerobot_data_path: "/path/to/lerobot/RoboDojo_sim_arx-x5_v21"
   lerobot_output_dir: "${SCRIPT_DIR}/data"
   hf_home: "${SCRIPT_DIR}/../.cache/huggingface"
   xdg_cache_home: "${SCRIPT_DIR}/../.cache"

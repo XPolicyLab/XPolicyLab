@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--raw-root",
         type=Path,
-        default=Path("/vepfs-cnbje63de6fae220/xspark_shared/robotwin_data"),
+        default=Path("/path/to/robotwin_data"),
         help="RobotWin root. The script will use raw/ under this path when present.",
     )
     parser.add_argument(

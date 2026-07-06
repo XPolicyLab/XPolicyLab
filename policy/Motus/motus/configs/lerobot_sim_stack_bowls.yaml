@@ -29,26 +29,26 @@ dataset:
   params:
     # Required: LeRobotMotusDataset needs repo_id + root to locate the local dataset
     repo_id: "sim_stack_bowls_v21"
-    root: "/vepfs-cnbje63de6fae220/xspark_shared/lerobot/sim_stack_bowls_v21"
+    root: "/path/to/lerobot/sim_stack_bowls_v21"
 
     # Embodiment type for loading normalization statistics (e.g., "aloha_agilex_2", "ac_one")
     embodiment_type: "aloha_agilex_2"
 
     # When t5_embedding is missing, encode on-the-fly and cache it to {root}/t5_embedding/episode_XXXXXX.pt, also write back to meta/episodes.jsonl
     enable_t5_fallback: false
-    t5_wan_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights"
+    t5_wan_path: "/path/to/model_weights"
     t5_folder_name: "t5_embedding"
     t5_text_len: 512
 
 # Model configuration（directly use ac_one default WAN/VLM paths）
 model:
   wan:
-    config_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B"
-    checkpoint_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B"
-    vae_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Wan2.2-TI2V-5B/Wan2.2_VAE.pth"
+    config_path: "/path/to/model_weights/Wan2.2-TI2V-5B"
+    checkpoint_path: "/path/to/model_weights/Wan2.2-TI2V-5B"
+    vae_path: "/path/to/model_weights/Wan2.2-TI2V-5B/Wan2.2_VAE.pth"
     precision: "bfloat16"
   vlm:
-    checkpoint_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Qwen3-VL-2B-Instruct"
+    checkpoint_path: "/path/to/model_weights/Qwen3-VL-2B-Instruct"
     precision: "bfloat16"
     frozen: true
   action_expert:
@@ -148,4 +148,4 @@ resume:
   
 # Finetune settings
 finetune:
-  checkpoint_path: "/vepfs-cnbje63de6fae220/xspark_shared/model_weights/Motus"  # (directory containing mp_rank_00_model_states.pt)
+  checkpoint_path: "/path/to/model_weights/Motus"  # (directory containing mp_rank_00_model_states.pt)

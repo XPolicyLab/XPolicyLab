@@ -12,13 +12,13 @@ from go1.tools.env_parse import get_bool_env
 RUNNAME = os.environ.get("RUNNAME", "go1_robodojo_shared")
 DEBUG_MODE = get_bool_env("DEBUG_MODE")
 
-DATA_ROOT_DIR = os.environ.get("DATA_ROOT_DIR", "/mnt/xspark-data/xspark_shared/lerobot/RoboDojo_sim_arx-x5_v21")
+DATA_ROOT_DIR = os.environ.get("DATA_ROOT_DIR", "/path/to/lerobot/RoboDojo_sim_arx-x5_v21")
 ACTION_DIM = int(os.environ.get("ACTION_DIM", "14"))
 STATE_DIM = int(os.environ.get("STATE_DIM", "14"))
 CTRL_FREQ = int(os.environ.get("CTRL_FREQ", "25"))
 ACTION_CHUNK_SIZE = int(os.environ.get("ACTION_CHUNK_SIZE", "25"))
-MODEL_NAME_OR_PATH = os.environ.get("MODEL_NAME_OR_PATH", "/mnt/pfs/pg4hw0/qiwei/models/GO-1")
-if MODEL_NAME_OR_PATH == "/mnt/pfs/pg4hw0/qiwei/models/GO-1":
+MODEL_NAME_OR_PATH = os.environ.get("MODEL_NAME_OR_PATH", "")
+if not MODEL_NAME_OR_PATH:
     MODEL_NAME_OR_PATH = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "../../../../../../../models/GO-1")
     )

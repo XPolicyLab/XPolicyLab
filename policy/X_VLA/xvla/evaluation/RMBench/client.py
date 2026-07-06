@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -9,12 +10,11 @@ except RuntimeError:
     pass
 
 # Add the absolute path of RoboTwin
-robowin_root = Path("/mnt/pfs/pg4hw0/niantian/RoboTwin")
+robowin_root = Path(os.environ.get("ROBOTWIN_ROOT", "/path/to/RoboTwin"))
 # Ensure RoboTwin root is the first search in order to use envs
 if str(robowin_root) not in sys.path:
     sys.path.insert(0, str(robowin_root))
 # Ensure CWD is RoboTwin in order to load assets
-import os
 os.chdir(robowin_root)
 
 import argparse

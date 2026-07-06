@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument("--dataset_name", required=True, help="ALOHA dataset name to register.")
     parser.add_argument(
         "--repo_root",
-        default="/mnt/pfs/pg4hw0/niantian/openvla-oft",
+        default=str(Path(__file__).resolve().parents[1]),
         help="Path to the openvla-oft repository root.",
     )
     return parser.parse_args()

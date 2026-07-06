@@ -3,15 +3,15 @@ set -euo pipefail
 
 if [ "$#" -lt 3 ]; then
     echo "Usage: $0 <repo_id> <dataset_root> <model_weights_root> [device] [t5_folder_name] [max_episodes] [overwrite] [strip_parquet_metadata]"
-    echo "Example: $0 robodojo_sim /vepfs-cnbje63de6fae220/xspark_shared/lerobot/robodojo_sim /vepfs-cnbje63de6fae220/xspark_shared/model_weights cuda t5_embedding 0 false false"
+    echo "Example: $0 robodojo_sim /path/to/lerobot/robodojo_sim /path/to/model_weights cuda t5_embedding 0 false false"
     exit 1
 fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-CONDA_SH="/vepfs-cnbje63de6fae220/xspark_shared/miniconda3/etc/profile.d/conda.sh"
-MOTUS_PYTHON_DEFAULT="/vepfs-cnbje63de6fae220/xspark_shared/miniconda3/envs/motus/bin/python"
+CONDA_SH="${CONDA_SH:-$(conda info --base 2>/dev/null)/etc/profile.d/conda.sh}"
+MOTUS_PYTHON_DEFAULT="$(command -v python || true)"
 export PYTHONUNBUFFERED=1
 export TOKENIZERS_PARALLELISM=false
 

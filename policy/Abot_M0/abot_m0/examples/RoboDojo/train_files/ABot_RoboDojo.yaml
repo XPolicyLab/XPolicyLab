@@ -45,7 +45,7 @@ framework:
 datasets:
   vla_data:
     dataset_py: lerobot_datasets
-    data_root_dir: /xspark-cache/shared/lerobot/
+    data_root_dir: /path/to/lerobot/
     data_mix: sim_stack_bowls
     sequential_step_sampling: false
     per_device_batch_size: 8

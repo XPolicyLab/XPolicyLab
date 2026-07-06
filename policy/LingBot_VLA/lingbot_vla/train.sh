@@ -5,11 +5,11 @@ set -x
 export TOKENIZERS_PARALLELISM=false
 
 # Use shared JuiceFS cache so multi-node ranks do not fill local /tmp or ~/.cache.
-XPOLICY_CACHE_ROOT="${XPOLICY_CACHE_ROOT:-/mnt/xspark-data/zijian/.cache}"
+XPOLICY_CACHE_ROOT="${XPOLICY_CACHE_ROOT:-${HOME}/.cache}"
 export HF_HOME="${HF_HOME:-${XPOLICY_CACHE_ROOT}/huggingface}"
 export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-${HF_HOME}/datasets}"
 export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-${HF_HOME}/transformers}"
-export TMPDIR="${TMPDIR:-/mnt/xspark-data/zijian/tmp}"
+export TMPDIR="${TMPDIR:-/tmp}"
 mkdir -p "${HF_HOME}" "${HF_DATASETS_CACHE}" "${TRANSFORMERS_CACHE}" "${TMPDIR}"
 if [ -z "$CUDA_VISIBLE_DEVICES" ]; then
   NPROC_PER_NODE=$(nvidia-smi -L | wc -l)
