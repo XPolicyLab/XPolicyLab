@@ -6,6 +6,7 @@ ckpt_name=$2
 env_cfg_type=$3
 action_type=$4
 expert_data_num=${5:-}
+raw_task_dir=${6:-}
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 mode="${OPENPI_DATA_MODE:-image}"
@@ -17,6 +18,9 @@ py_args=(
   "${action_type}"
   --mode "${mode}"
 )
+if [[ -n "${raw_task_dir}" ]]; then
+  py_args+=(--raw_task_dir "${raw_task_dir}")
+fi
 if [[ -n "${expert_data_num}" ]]; then
   py_args+=("${expert_data_num}")
 fi

@@ -54,7 +54,7 @@ Parameters used by the command:
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
 | `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `raw_task_dir` | Optional source task dir under `data/<bench_name>/` to read raw demos from; defaults to `ckpt_name`. Use it to build a subset run from an existing task's data. |
 
 ```bash
 cd XPolicyLab/policy/Pi_0_Fast
@@ -185,7 +185,7 @@ Common parameter meanings used across the commands above:
 | `seed` | Evaluation seed. |
 | `policy_gpu_id` | GPU used by the policy server. |
 | `env_gpu_id` | GPU used by the RoboDojo simulation client. |
-| `policy_conda_env` | Conda environment for the policy server. |
+| `policy_uv_env` | `uv` or an explicit OpenPI project path for the policy server. |
 | `eval_env_conda_env` | Conda environment for RoboDojo simulation/client. |
 
 Policy-specific `deploy.yml` keys worth checking before evaluation:
@@ -215,7 +215,6 @@ Frequently used environment variables detected in the adapter scripts:
 | `OPENPI_SRC` | Optional override used by the local scripts or upstream runtime. |
 | `OPENPI_TRAIN_CONFIG_NAME` | Optional override used by the local scripts or upstream runtime. |
 | `POLICY_DIR` | Optional override used by the local scripts or upstream runtime. |
-| `PYENV` | Optional override used by the local scripts or upstream runtime. |
 
 ## Notes
 

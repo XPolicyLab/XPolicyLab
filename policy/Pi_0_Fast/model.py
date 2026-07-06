@@ -41,7 +41,7 @@ def _resolve_pi_model_root(model_cfg: dict[str, Any]) -> Path:
     if not ckpt_name:
         model_path = model_cfg.get("model_path") or model_cfg.get("checkpoint_path")
         if model_path is None:
-            raise ValueError("ckpt_name or model_path is required for Pi_05.")
+            raise ValueError("ckpt_name or model_path is required for Pi_0_Fast.")
         return Path(model_path).expanduser().resolve()
 
     checkpoint_root = (_CHECKPOINTS_DIR / str(ckpt_name)).expanduser().resolve()

@@ -160,6 +160,13 @@ def main():
         help="Optional number of episodes to process; defaults to all episodes.",
     )
     parser.add_argument(
+        "--raw_task_dir",
+        type=str,
+        default=None,
+        help="Optional source task dir under data/<bench>/ to read raw HDF5 from; "
+        "defaults to ckpt_name. Use to build a subset run from an existing task's data.",
+    )
+    parser.add_argument(
         "--mode",
         type=str,
         choices=["video", "image"],
@@ -181,7 +188,8 @@ def main():
     repo_id = f"{bench_name}-{ckpt_name}-{env_cfg_type}-{action_type}"
     mode = args.mode
     instruction = args.instruction
-    load_data_dir = os.path.join(ROOT_PATH, "data", str(bench_name), str(ckpt_name), str(env_cfg_type))
+    raw_task_dir = args.raw_task_dir or ckpt_name
+    load_data_dir = os.path.join(ROOT_PATH, "data", str(bench_name), str(raw_task_dir), str(env_cfg_type))
 
     env_cfg = load_yaml(os.path.join(ROOT_PATH, "./env_cfg", f"{env_cfg_type}.yml"))
     robot_type = env_cfg['config']['robot']

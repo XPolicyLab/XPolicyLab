@@ -58,19 +58,20 @@ Parameters used by the command:
 | `ckpt_name` | Data/run identifier. Use a different value for ablations, for example `stack_bowls_50ep`. |
 | `env_cfg_type` | Robot/environment configuration, for example `arx_x5`. |
 | `action_type` | Action representation, for example `joint`. |
-| `expert_data_num` | Optional episode limit. Leave unset to use all episodes. |
-| `raw_task_dirs` | Optional source task directory or comma-separated task list when the script supports it. |
+| `expert_data_num` | Optional trailing episode limit. Leave unset to use all episodes. |
+
+Demonstrations are read from `data/<bench_name>/<ckpt_name>/<env_cfg_type>/data/episode_*.hdf5` (relative to the RoboDojo repo root), so the raw data directory must be named after `ckpt_name`.
 
 ```bash
 cd XPolicyLab/policy/RISE
 # Template: convert all available demonstrations for one run.
-bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type>
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
 
 # Example: convert stack_bowls demos for arx_x5 joint control.
 bash process_data.sh RoboDojo stack_bowls arx_x5 joint
 
-# Example: create a 50-episode ablation while reading from the original task data.
-bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50 stack_bowls
+# Example: 50-episode ablation. Data must live at data/RoboDojo/stack_bowls_50ep/arx_x5.
+bash process_data.sh RoboDojo stack_bowls_50ep arx_x5 joint 50
 ```
 
 ## Model Training
