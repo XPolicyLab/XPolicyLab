@@ -20,7 +20,7 @@ protocol_override="${14:-}"
 source "${UTILS_DIR}/resolve_eval_env_type.sh"
 eval_env_mode="$(resolve_eval_env_type)" || exit 1
 
-read eval_batch yaml_protocol env_client_mode legacy_eval_env < <(python - <<PY
+read eval_batch yaml_protocol env_client_mode < <(python - <<PY
 import yaml
 with open("${yaml_file}", "r") as f:
     data = yaml.safe_load(f)
@@ -28,17 +28,10 @@ print(
     str(data.get("eval_batch", False)).lower(),
     data.get("protocol", "ws"),
     data.get("env_client_mode", "run-once"),
-    data.get("eval_env") or "-",
 )
 PY
 )
 protocol="${protocol_override:-${yaml_protocol}}"
-
-if [[ "${legacy_eval_env}" != "-" ]]; then
-    echo -e "\033[33m[WARN] deploy.yml key 'eval_env: ${legacy_eval_env}' is deprecated and IGNORED." \
-        "The eval env is now selected by the EVAL_ENV_TYPE environment variable" \
-        "(current: ${EVAL_ENV_TYPE:-unset -> sim}). Remove 'eval_env' from ${yaml_file}.\033[0m" >&2
-fi
 
 run_mode="${15:-${ROBODOJO_ENV_CLIENT_RUN_MODE:-${env_client_mode}}}"
 if [[ "${run_mode}" == "run-once" ]]; then

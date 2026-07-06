@@ -1,5 +1,5 @@
 import argparse
-from client_server.model_client import ModelClient
+from client_server.tcp.model_client import ModelClient
 import numpy as np
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
@@ -15,7 +15,7 @@ class TestEnv:
         self.robot_action_dim_info = get_robot_action_dim_info(env_cfg_type)
 
         if deploy_cfg.get("protocol", "ws") == "ws":
-            from eval_station.env_client import WsModelClient
+            from client_server.ws import WsModelClient
 
             policy_server_url = deploy_cfg["policy_server_url"]
             if policy_server_url is None:

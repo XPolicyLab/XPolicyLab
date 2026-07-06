@@ -40,7 +40,7 @@ conda activate "${eval_env_conda_env}"
 echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\033[0m"
 echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${free_port} (real env)...\033[0m"
 
-export PYTHONPATH="${root_dir}/src:${root_dir}/XPolicyLab/integrations:${root_dir}/XPolicyLab:${root_dir}:${PYTHONPATH:-}"
+export PYTHONPATH="${root_dir}/src:${root_dir}/XPolicyLab:${root_dir}:${PYTHONPATH:-}"
 
 CLIENT_ARGS=(
     --bench_name "${bench_name}"
@@ -70,8 +70,7 @@ if [[ -z "${base_cfg}" ]]; then
     exit 1
 fi
 
-PYTHONWARNINGS=ignore::UserWarning \
-python -m eval_station.servers.env_client_server \
+python -m station.daemon \
     "${CLIENT_ARGS[@]}" \
     --action-type "${action_type}" \
     --base-cfg "${base_cfg}" \

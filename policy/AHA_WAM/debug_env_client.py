@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 import numpy as np
-from client_server.model_client import ModelClient
+from client_server.tcp.model_client import ModelClient
 
 
 BATCH_SIZE = 10
