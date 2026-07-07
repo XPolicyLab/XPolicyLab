@@ -1,6 +1,10 @@
-# 🚀 XPolicyLab
+<div align="center">
 
-**A unified standard and infrastructure for robot policy development and deployment.**
+<img src="assets/logo.png" alt="XPolicyLab" width="480"/>
+
+<p><strong>XPolicyLab: A unified standard and infrastructure for robot policy development and deployment.</strong></p>
+
+</div>
 
 XPolicyLab provides shared standards and infrastructure for developing, serving, training, evaluating, and deploying robot policies. It keeps policy code, dependencies, checkpoints, and training recipes under `policy/<POLICY>/`, while exposing a common adapter contract for model serving and environment-side evaluation.
 
@@ -186,7 +190,8 @@ With this setup, you can test data conversion, model loading, training scripts, 
 
 ```bash
 export EVAL_ENV_TYPE=debug
-bash policy/<POLICY>/eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> \
+cd policy/<POLICY>
+bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> \
   <seed> <policy_gpu_id> <env_gpu_id> <policy_env_or_uv_path> <eval_env_conda_env>
 ```
 
@@ -372,25 +377,27 @@ Policies may also accept explicit checkpoint paths or upstream-native layouts. C
 
 ## ✅ Checks
 
+Run static checks from the XPolicyLab repo root. Run `eval.sh` from `policy/<POLICY>/`, same as [Common Workflow](#-common-workflow).
+
+Static checks:
+
 ```bash
 git diff --check
 bash -n policy/<POLICY>/*.sh
-python -m py_compile policy/<POLICY>/*.py
+python -m py_compile policy/<POLICY>/model.py policy/<POLICY>/deploy.py
 ```
 
-For wiring checks:
-
-```bash
-export EVAL_ENV_TYPE=debug
-bash policy/<POLICY>/eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> \
-  <seed> <policy_gpu_id> <env_gpu_id> <policy_env_or_uv_path> <eval_env_conda_env>
-```
-
-Install XPolicyLab in the policy environment when a policy imports shared utilities:
+Adapter wiring check (no simulator required):
 
 ```bash
 pip install -e .
+export EVAL_ENV_TYPE=debug
+cd policy/<POLICY>
+bash eval.sh RoboDojo stack_bowls demo arx_x5 joint 0 0 0 \
+  <policy_env_or_uv_path> <eval_env_conda_env>
 ```
+
+For a quick smoke test, use `policy/demo_policy` and placeholder env names such as `base`. See [Quick Start](#-quick-start) for full argument meanings.
 
 ## 📬 Contact
 
