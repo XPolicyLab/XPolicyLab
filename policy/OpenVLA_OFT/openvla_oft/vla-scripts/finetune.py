@@ -5,6 +5,7 @@ Fine-tunes OpenVLA via LoRA.
 """
 
 import os
+import random
 import time
 from collections import deque
 from dataclasses import dataclass
@@ -12,6 +13,7 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple, Type
 
 import draccus
+import numpy as np
 import torch
 import torch.distributed as dist
 import torch.nn as nn
@@ -116,6 +118,9 @@ class FinetuneConfig:
     run_id_note: Optional[str] = None                # Extra note to add to end of run ID for logging
     run_id_override: Optional[str] = None            # Optional string to override the run ID with
     wandb_log_freq: int = 10                         # WandB logging frequency in steps
+
+    # Reproducibility
+    seed: int = 7                                    # Random seed for torch/numpy/random (per-rank offset applied)
 
     # fmt: on
 
@@ -787,6 +792,13 @@ def finetune(cfg: FinetuneConfig) -> None:
     device_id = distributed_state.local_process_index
     torch.cuda.set_device(device_id)
     torch.cuda.empty_cache()
+
+    # Reproducibility: offset the seed per rank so different GPUs draw different samples
+    rank_seed = cfg.seed + distributed_state.process_index
+    random.seed(rank_seed)
+    np.random.seed(rank_seed)
+    torch.manual_seed(rank_seed)
+    torch.cuda.manual_seed_all(rank_seed)
 
     # Initialize wandb logging
     if distributed_state.is_main_process:
