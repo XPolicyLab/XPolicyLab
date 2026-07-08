@@ -43,6 +43,19 @@ bash install.sh
 source molmoact2/lerobot/.venv/bin/activate  # or pass `uv` as <policy_env>
 ```
 
+## Model Weights
+
+The base checkpoint is the fine-tuning starting point loaded by `train.sh`.
+
+| Checkpoint | Use |
+|---|---|
+| `allenai/MolmoAct2` | Base checkpoint for RoboDojo fine-tuning (Qwen2.5-7B backbone + flow-matching action expert, `add_action_expert=true`, `max_action_dim=32`). |
+
+`MOLMOACT2_CHECKPOINT_PATH` accepts a local directory or a Hub repo id and defaults to `allenai/MolmoAct2`. `train.sh` resolves it automatically: an existing local directory is used as-is, otherwise the checkpoint is downloaded from the Hub on first run (network required). No manual download step is needed.
+
+- To reuse a local copy, point `MOLMOACT2_CHECKPOINT_PATH` at a directory whose `config.json` has `"model_type": "molmoact2"`.
+- Concrete shared weight/dataset paths for this cluster are listed in `../POLICY_TRAINING_COMMANDS.md`.
+
 ## Demo Data Processing
 
 What it does: prepares RoboDojo demonstration data for policy training. The output name should match the training run identity so `train.sh` can find it.
@@ -66,6 +79,15 @@ Parameters used by the command:
 
 ```bash
 cd XPolicyLab/policy/MolmoACT2
+source molmoact2/lerobot/.venv/bin/activate
+
+# Dataset is required; checkpoint defaults to allenai/MolmoAct2 (auto-downloaded).
+# See ../POLICY_TRAINING_COMMANDS.md for concrete cluster paths.
+export MOLMOACT2_DATASET_ROOT=<lerobot_data_root>/<dataset_repo_id>
+export MOLMOACT2_DATASET_REPO_ID=<dataset_repo_id>
+# Optional: reuse a local base checkpoint instead of the Hub default.
+# export MOLMOACT2_CHECKPOINT_PATH=<model_weights_dir>/MolmoAct2
+
 # Template: train a policy run on one GPU or a GPU list.
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 

@@ -18,8 +18,9 @@
 #   MOLMOACT2_SAVE_FREQ        Save interval, defaults to 10000
 #   MOLMOACT2_NUM_WORKERS      Dataloader workers, defaults to 4
 #   MOLMOACT2_ACTION_MODE      continuous / discrete / both; defaults to continuous
-#   MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY  1 trains only the action expert; defaults to 0 for full co-training fine-tuning
-#   MOLMOACT2_ENABLE_LORA_VLM  1 enables LoRA for the VLM; defaults to 0
+#   MOLMOACT2_TRAIN_MODE_VLM   fft / lora / freeze for the VLM side; overrides the two legacy vars below when set
+#   MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY  1 freezes the VLM (train_mode_vlm=freeze); defaults to 0 (the action expert is always fully fine-tuned)
+#   MOLMOACT2_ENABLE_LORA_VLM  1 enables LoRA for the VLM (train_mode_vlm=lora); defaults to 0 for full co-training fine-tuning (fft)
 #   MOLMOACT2_CHUNK_SIZE       Action horizon, defaults to 10
 #   MOLMOACT2_WANDB_ENABLE     1 enables wandb; defaults to 0
 #   MOLMOACT2_LOCAL_CACHE_ROOT  Local HF datasets cache root; defaults to /tmp/molmoact2-cache-$(hostname)
@@ -76,6 +77,8 @@ MOLMOACT2_NUM_WORKERS="${MOLMOACT2_NUM_WORKERS:-4}"
 MOLMOACT2_ACTION_MODE="${MOLMOACT2_ACTION_MODE:-continuous}"
 MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY="${MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY:-0}"
 MOLMOACT2_ENABLE_LORA_VLM="${MOLMOACT2_ENABLE_LORA_VLM:-0}"
+# Optional direct override of the VLM training mode: fft / lora / freeze.
+MOLMOACT2_TRAIN_MODE_VLM="${MOLMOACT2_TRAIN_MODE_VLM:-}"
 MOLMOACT2_CHUNK_SIZE="${MOLMOACT2_CHUNK_SIZE:-10}"
 MOLMOACT2_WANDB_ENABLE="${MOLMOACT2_WANDB_ENABLE:-0}"
 VIDEO_BACKEND="${VIDEO_BACKEND:-pyav}"
@@ -128,18 +131,29 @@ export TMPDIR="${TMPDIR:-${LOCAL_CACHE_ROOT}/tmp}"
 IFS=',' read -ra GPU_ARR <<< "${gpu_id}"
 NUM_GPUS="${#GPU_ARR[@]}"
 
-TRAIN_ACTION_EXPERT_FLAG="false"
-if [[ "${MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY}" == "1" ]]; then
-  if [[ "${MOLMOACT2_ACTION_MODE}" != "continuous" ]]; then
-    echo "错误: train_action_expert_only 仅支持 action_mode=continuous" >&2
-    exit 1
-  fi
-  TRAIN_ACTION_EXPERT_FLAG="true"
+# The action expert is always fully fine-tuned; MOLMOACT2_TRAIN_MODE_VLM (fft/lora/freeze)
+# controls only the VLM side. Derive it from the legacy env vars when not set directly.
+if [[ -n "${MOLMOACT2_TRAIN_MODE_VLM}" ]]; then
+  TRAIN_MODE_VLM="${MOLMOACT2_TRAIN_MODE_VLM}"
+elif [[ "${MOLMOACT2_TRAIN_ACTION_EXPERT_ONLY}" == "1" ]]; then
+  TRAIN_MODE_VLM="freeze"
+elif [[ "${MOLMOACT2_ENABLE_LORA_VLM}" == "1" ]]; then
+  TRAIN_MODE_VLM="lora"
+else
+  TRAIN_MODE_VLM="fft"
 fi
 
-LORA_VLM_FLAG="false"
-if [[ "${MOLMOACT2_ENABLE_LORA_VLM}" == "1" ]]; then
-  LORA_VLM_FLAG="true"
+case "${TRAIN_MODE_VLM}" in
+  fft|lora|freeze) ;;
+  *)
+    echo "错误: MOLMOACT2_TRAIN_MODE_VLM 需为 fft / lora / freeze，当前: ${TRAIN_MODE_VLM}" >&2
+    exit 1
+    ;;
+esac
+
+if [[ "${TRAIN_MODE_VLM}" == "freeze" && "${MOLMOACT2_ACTION_MODE}" != "continuous" ]]; then
+  echo "错误: train_mode_vlm=freeze 仅支持 action_mode=continuous" >&2
+  exit 1
 fi
 
 WANDB_FLAG="false"
@@ -160,7 +174,7 @@ echo "gpus:               ${gpu_id} (${NUM_GPUS} proc)"
 echo "batch_size/gpu:     ${MOLMOACT2_BATCH_SIZE}"
 echo "global_batch_size:  ${GLOBAL_BATCH_SIZE}"
 echo "action_mode:        ${MOLMOACT2_ACTION_MODE}"
-echo "train_expert_only:  ${TRAIN_ACTION_EXPERT_FLAG}"
+echo "train_mode_vlm:     ${TRAIN_MODE_VLM}"
 echo "chunk_size:         ${MOLMOACT2_CHUNK_SIZE}"
 echo "steps:              ${MOLMOACT2_STEPS}"
 
@@ -187,8 +201,7 @@ COMMON_ARGS=(
   --policy.freeze_embedding=true
   --policy.normalize_gripper=false
   --policy.enable_knowledge_insulation=false
-  --policy.train_action_expert_only="${TRAIN_ACTION_EXPERT_FLAG}"
-  --policy.enable_lora_vlm="${LORA_VLM_FLAG}"
+  --policy.train_mode_vlm="${TRAIN_MODE_VLM}"
   --policy.push_to_hub=false
   --output_dir="${OUTPUT_DIR}"
   --job_name="${JOB_NAME}"
