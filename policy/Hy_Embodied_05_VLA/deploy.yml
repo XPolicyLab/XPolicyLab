@@ -10,7 +10,7 @@ seed: null
 eval_batch: false
 
 # --- Model location ---
-# hy_root: the Hy-Embodied source tree (provides the `hy_vla` package + the
+# hy_root: the Hy-Embodied / Hy-VLA source tree (provides the `hy_vla` package + the
 # `robotwin_eval` adapter) AND its uv venv. Resolution order in model.py:
 #   1. this `hy_root`   2. $HY_VLA_ROOT   3. ./Hy-Embodied-0.5-VLA inside this
 # policy dir. Relative paths resolve against this policy dir. Clone it from:
@@ -28,6 +28,12 @@ norm_path: null         # auto -> <ckpt_path>/norm_stats.pkl
 #   false -> every action token is a relative EE pose  -> n_action_steps tokens
 #   true  -> the token stream is interleaved rel + abs -> n_action_steps // 2 frames each
 with_absolute: false
+
+# Must match Hy-VLA's RoboDojo training config and the norm_stats.pkl used by
+# this checkpoint. The current RoboDojo training pipeline computes state/action
+# statistics after converting native RoboDojo poses to the UMI coordinate frame.
+umi_coord_frame: true
+umi_gripper_space: false
 
 # --- Action decoding ---
 # rel_only : decode the relative half only (safe default; rel stats are identity).

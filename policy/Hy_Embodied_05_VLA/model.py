@@ -105,123 +105,57 @@ def _pad_state(state: np.ndarray, max_state_dim: int = 32) -> np.ndarray:
     out[..., :cur] = state
     return out
 
-
-# ---------------------------------------------------------------------------
-# UMI <-> RoboDojo coordinate-frame transforms (inlined from transforms.py)
-# ---------------------------------------------------------------------------
-def _apply_umi_coord_transform(qpos: np.ndarray) -> np.ndarray:
-    """Convert RoboDojo EE poses to UMI coordinate frame.
-
-    RoboDojo EE local frame:
-      local_x = forward (red)  -> UMI left  = forward
-      local_y = left    (green) -> UMI up    = left
-      local_z = up      (blue)  -> UMI fwd   = up
-
-    RoboDojo world frame: X=right, Y=forward, Z=up
-    UMI world frame:      X=forward, Y=left, Z=up
-
-    Full transform:
-      pos_umi = W @ pos_rd
-      R_umi   = W @ R_rd @ P
-    where W = [[0,1,0],[-1,0,0],[0,0,1]], P = [[0,0,1],[1,0,0],[0,1,0]].
-
-    In scipy quaternion (xyzw) convention: q_umi = q_W * q_rd * q_P.
-
-    Args:
-        qpos: (T, 16) state in xyzw quaternion convention.
-    Returns:
-        (T, 16) state in xyzw quaternion, UMI frame.
-    """
-    from scipy.spatial.transform import Rotation as _R
-
-    qpos = qpos.copy()
-    if qpos.shape[0] == 0:
-        return qpos
-    W = np.array([[0, 1, 0], [-1, 0, 0], [0, 0, 1]], dtype=np.float64)
-    q_W = _R.from_matrix(W)
-    P = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]], dtype=np.float64)
-    q_P = _R.from_matrix(P)
-
-    qpos[:, 0:3] = qpos[:, 0:3] @ W.T
-    qpos[:, 8:11] = qpos[:, 8:11] @ W.T
-
-    left_quats = qpos[:, 3:7].astype(np.float64)
-    qpos[:, 3:7] = (q_W * _R.from_quat(left_quats) * q_P).as_quat()
-    right_quats = qpos[:, 11:15].astype(np.float64)
-    qpos[:, 11:15] = (q_W * _R.from_quat(right_quats) * q_P).as_quat()
-    return qpos
-
-
-def _inverse_apply_umi_coord_transform(qpos_umi: np.ndarray) -> np.ndarray:
-    """Convert UMI EE poses back to RoboDojo coordinate frame.
-
-    Inverse of ``_apply_umi_coord_transform``:
-      pos_rd = W^T @ pos_umi
-      R_rd   = W^T @ R_umi @ P^T
-    In quat: q_rd = q_W^{-1} * q_umi * q_P^{-1}.
-
-    Args:
-        qpos_umi: (T, 16) state in xyzw quaternion, UMI frame.
-    Returns:
-        (T, 16) state in xyzw quaternion, RoboDojo frame.
-    """
-    from scipy.spatial.transform import Rotation as _R
-
-    qpos = qpos_umi.copy()
-    if qpos.shape[0] == 0:
-        return qpos
-    W_T = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]], dtype=np.float64)
-    q_W_inv = _R.from_matrix(W_T)
-    P_T = np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]], dtype=np.float64)
-    q_P_inv = _R.from_matrix(P_T)
-
-    qpos[:, 0:3] = qpos[:, 0:3] @ W_T.T
-    qpos[:, 8:11] = qpos[:, 8:11] @ W_T.T
-
-    left_quats = qpos[:, 3:7].astype(np.float64)
-    qpos[:, 3:7] = (q_W_inv * _R.from_quat(left_quats) * q_P_inv).as_quat()
-    right_quats = qpos[:, 11:15].astype(np.float64)
-    qpos[:, 11:15] = (q_W_inv * _R.from_quat(right_quats) * q_P_inv).as_quat()
-    return qpos
-
-
 def _convert_pose_robo_dojo(
     eepose16_wxyz: np.ndarray,
     qpos_mean: np.ndarray,
     qpos_std: np.ndarray,
+    umi_coord_frame: bool,
+    umi_gripper_space: bool,
 ) -> np.ndarray:
     """Encode a 16-d dual-arm EE state for the network (RoboDojo variant).
 
-    Same as ``convert_pose`` but applies UMI coordinate transform before
-    PosQuat->PosRotMat6d, so the normalized state matches the UMI-frame
-    statistics produced by the training pipeline.
+    Applies the same optional RoboDojo/RoboTwin -> UMI conversion that the
+    latest Hy-VLA RoboDojo training dataset uses before PosQuat->PosRotMat6d.
 
     Input layout (quaternion is wxyz):
       [left_xyz(3), left_quat_wxyz(4), left_gripper(1),
        right_xyz(3), right_quat_wxyz(4), right_gripper(1)]
-    Output: ``(1, 20)`` float, UMI-frame, normalized.
+    Output: ``(1, 20)`` float, normalized in the configured model frame.
     """
     # Lazy import: hy_vla repo is only on sys.path after Model.__init__.
-    from robotwin_eval.transforms import pos_quat_to_pos_rotation_matrix
+    from hy_vla.utils.transform_utils import (
+        convert_PosQuat2PosRotationMatrix_batch,
+        convert_frame_robo_to_umi,
+    )
 
     e = eepose16_wxyz.copy()
     e[3:7] = eepose16_wxyz[[4, 5, 6, 3]]    # wxyz -> xyzw
     e[11:15] = eepose16_wxyz[[12, 13, 14, 11]]
-    e = _apply_umi_coord_transform(e[None, :])[0]  # RoboDojo -> UMI
-    left = pos_quat_to_pos_rotation_matrix(e[:3], e[3:7], e[7])
-    right = pos_quat_to_pos_rotation_matrix(e[8:11], e[11:15], e[15])
-    ee_prop = np.concatenate([left, right])
-    ee_prop = (ee_prop - qpos_mean) / qpos_std
+    if umi_coord_frame:
+        e = convert_frame_robo_to_umi(
+            e[None, :], convert_gripper=umi_gripper_space,
+        )[0]
+    ee_prop = convert_PosQuat2PosRotationMatrix_batch(e[None, :], quat_order="xyzw")[0]
+    ee_prop = (ee_prop - qpos_mean) / (qpos_std + 1e-8)
     return ee_prop[None, ...]
 
 
 def _resolve_hy_root(model_cfg: dict[str, Any]) -> str:
     """Locate the Hy-Embodied source tree (provides hy_vla + robotwin_eval)."""
-    hy_root = model_cfg.get("hy_root") or os.environ.get("HY_VLA_ROOT") or _DEFAULT_HY_VLA_ROOT
-    path = Path(hy_root).expanduser()
-    if not path.is_absolute():
-        path = _POLICY_DIR / path
-    return str(path.resolve())
+    candidates = [model_cfg.get("hy_root"), os.environ.get("HY_VLA_ROOT"), _DEFAULT_HY_VLA_ROOT]
+    fallback = None
+    for hy_root in candidates:
+        if not hy_root:
+            continue
+        path = Path(hy_root).expanduser()
+        if not path.is_absolute():
+            path = _POLICY_DIR / path
+        path = path.resolve()
+        fallback = path
+        if path.is_dir():
+            return str(path)
+    assert fallback is not None
+    return str(fallback)
 
 
 def _resolve_path(path_like: str | Path, base: str | Path) -> str:
@@ -237,6 +171,12 @@ class Model(ModelTemplate):
         self.action_type = model_cfg.get("action_type", "ee")
         self.env_cfg_type = model_cfg.get("env_cfg_type")
         self.default_prompt = model_cfg.get("prompt") or model_cfg.get("task_name") or ""
+        # Must match the training dataset / norm-stats generation. The
+        # RoboDojo Hy-VLA training config uses UMI coordinates by default.
+        self.umi_coord_frame = bool(model_cfg.get("umi_coord_frame", True))
+        self.umi_gripper_space = bool(model_cfg.get("umi_gripper_space", False))
+        if self.umi_gripper_space and not self.umi_coord_frame:
+            raise ValueError("umi_gripper_space=true requires umi_coord_frame=true")
 
         # Dual-arm check: arx_x5 -> dual_x5 -> arm_dim [6,6], ee_dim [1,1].
         if self.env_cfg_type is not None:
@@ -322,13 +262,18 @@ class Model(ModelTemplate):
         from hy_vla import HyVLA, HyVLAConfig
         from robotwin_eval.transforms import (
             get_norm_data,
-            pos_quat_to_pos_rotation_matrix,
             pos_rotation_matrix_to_pos_quat,
             relative_to_dual_arm_poses,
+        )
+        from hy_vla.utils.transform_utils import (
+            convert_frame_robo_to_umi,
+            convert_frame_umi_to_robo,
         )
 
         self._relative_to_dual_arm_poses = relative_to_dual_arm_poses
         self._pos_rotation_matrix_to_pos_quat = pos_rotation_matrix_to_pos_quat
+        self._convert_frame_robo_to_umi = convert_frame_robo_to_umi
+        self._convert_frame_umi_to_robo = convert_frame_umi_to_robo
 
         print(f"[hy_vla] loading config + model from {ckpt_path} ...", flush=True)
         self.config = HyVLAConfig.from_pretrained(ckpt_path)
@@ -378,7 +323,9 @@ class Model(ModelTemplate):
         self._latest_env_idx_list: list[int] = [0]
         print(f"[hy_vla] model ready (video_encoder={self.use_video_encoder}, "
               f"blend={self.blend_mode}, exc={self.exc_action_size}, "
-              f"exc_interval={self.exc_action_interval}).", flush=True)
+              f"exc_interval={self.exc_action_interval}, "
+              f"umi_coord_frame={self.umi_coord_frame}, "
+              f"umi_gripper_space={self.umi_gripper_space}).", flush=True)
 
     # ------------------------------------------------------------------
     # Observation encoding
@@ -452,7 +399,15 @@ class Model(ModelTemplate):
         # Decode each env independently against its own obs + history buffer.
         # Default to the env order from the most recent update_obs_batch.
         if env_idx_list is None:
+            env_idx_list = kwargs.get("obs")
+        if env_idx_list is None:
             env_idx_list = self._latest_env_idx_list
+        elif isinstance(env_idx_list, np.ndarray):
+            env_idx_list = env_idx_list.reshape(-1).tolist()
+        elif isinstance(env_idx_list, (int, np.integer)):
+            env_idx_list = [int(env_idx_list)]
+        else:
+            env_idx_list = list(env_idx_list)
         return [self._chunk_to_action_dicts(self._infer_chunk_wxyz(env_idx))
                 for env_idx in env_idx_list]
 
@@ -474,18 +429,26 @@ class Model(ModelTemplate):
         (exc_action_size, 16) dual-arm PosQuat chunk in RoboTwin wxyz layout."""
         batch = self._obs_by_env[env_idx]
 
-        # Initial EE pose: wxyz -> xyzw -> UMI frame (for RT-relative decode).
+        # Initial EE pose: wxyz -> xyzw -> optional UMI frame, matching the
+        # coordinate frame used by the training norm stats.
         initial_wxyz = batch["observation.state"][0, :16].copy()
         initial_xyzw_rd = initial_wxyz.copy()
         initial_xyzw_rd[3:7] = initial_wxyz[[4, 5, 6, 3]]
         initial_xyzw_rd[11:15] = initial_wxyz[[12, 13, 14, 11]]
-        initial_xyzw_umi = _apply_umi_coord_transform(initial_xyzw_rd[None, :])[0]
+        if self.umi_coord_frame:
+            initial_xyzw_model = self._convert_frame_robo_to_umi(
+                initial_xyzw_rd[None, :],
+                convert_gripper=self.umi_gripper_space,
+            )[0]
+        else:
+            initial_xyzw_model = initial_xyzw_rd
 
         # Normalize the state into the network's 20-d PosRotMat space.
         net_batch = dict(batch)
         net_batch["observation.state"] = _convert_pose_robo_dojo(
             batch["observation.state"][0],
             self.norm_data["qpos_mean"], self.norm_data["qpos_std"],
+            self.umi_coord_frame, self.umi_gripper_space,
         )
 
         if self.use_video_encoder:
@@ -511,10 +474,16 @@ class Model(ModelTemplate):
             actions.append(self.policy._action_queue.popleft())
         actions = torch.cat(actions, dim=0).float().cpu().numpy()   # (chunk, 20 or 40)
 
-        actions_umi_xyzw = self._decode_actions(actions, initial_xyzw_umi)  # (T, 16) UMI xyzw
+        actions_xyzw = self._decode_actions(actions, initial_xyzw_model)  # (T, 16) model-frame xyzw
 
-        # UMI -> RoboDojo coordinate frame.
-        actions_rd_xyzw = _inverse_apply_umi_coord_transform(actions_umi_xyzw)
+        # Optional UMI -> RoboDojo coordinate frame.
+        if self.umi_coord_frame:
+            actions_rd_xyzw = self._convert_frame_umi_to_robo(
+                actions_xyzw,
+                convert_gripper=self.umi_gripper_space,
+            )
+        else:
+            actions_rd_xyzw = actions_xyzw
 
         # xyzw -> wxyz for the env.
         actions_wxyz = actions_rd_xyzw.copy()

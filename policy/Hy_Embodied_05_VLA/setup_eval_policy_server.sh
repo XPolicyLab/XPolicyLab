@@ -71,11 +71,21 @@ import os, yaml
 from pathlib import Path
 script_dir = Path("${SCRIPT_DIR}")
 cfg = yaml.safe_load(open("${yaml_file}", encoding="utf-8")) or {}
-hy_root = cfg.get("hy_root") or os.environ.get("HY_VLA_ROOT") or str(script_dir / "Hy-Embodied-0.5-VLA")
-p = Path(hy_root).expanduser()
-if not p.is_absolute():
-    p = (script_dir / p).resolve()
-print(p)
+candidates = [cfg.get("hy_root"), os.environ.get("HY_VLA_ROOT"), str(script_dir / "Hy-Embodied-0.5-VLA")]
+fallback = None
+for hy_root in candidates:
+    if not hy_root:
+        continue
+    p = Path(hy_root).expanduser()
+    if not p.is_absolute():
+        p = (script_dir / p).resolve()
+    else:
+        p = p.resolve()
+    fallback = p
+    if p.is_dir():
+        print(p)
+        raise SystemExit(0)
+print(fallback)
 PYHY
 }
 hy_root="$(resolve_hy_root)"
@@ -151,7 +161,7 @@ echo "[SERVER] Using python: ${PYTHON_BIN}"
 
 # BENCH_ROOT keeps XPolicyLab importable; hy_root -> hy_vla + robotwin_eval
 # (pyproject only packages hy_vla, so robotwin_eval needs the repo on path).
-PYTHONPATH_PARTS=("${BENCH_ROOT}" "${policy_uv_env_path}")
+PYTHONPATH_PARTS=("${BENCH_ROOT}" "${hy_root}")
 
 overrides=(
     port="${policy_server_port}"
