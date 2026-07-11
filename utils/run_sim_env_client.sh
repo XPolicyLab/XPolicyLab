@@ -23,7 +23,21 @@ echo -e "\033[34m[CLIENT] Activating Conda environment: ${eval_env_conda_env}\03
 echo -e "\033[34m[CLIENT] Connecting to server ${policy_server_ip}:${policy_server_port}...\033[0m"
 echo -e "\033[34m[CLIENT] Watch for green [CONNECTED]; yellow [RECONNECT] means the client is retrying.\033[0m"
 
-bash "${root_dir}/scripts/eval_policy.sh" \
+if [[ -f "${root_dir}/scripts/eval_policy.sh" ]]; then
+    eval_policy_script="${root_dir}/scripts/eval_policy.sh"
+elif [[ -f "${root_dir}/script/eval_policy.sh" ]]; then
+    eval_policy_script="${root_dir}/script/eval_policy.sh"
+else
+    echo -e "\033[31m[CLIENT][ERROR] Cannot find RoboTwin eval script.\033[0m" >&2
+    echo "Tried:" >&2
+    echo "  ${root_dir}/scripts/eval_policy.sh" >&2
+    echo "  ${root_dir}/script/eval_policy.sh" >&2
+    exit 1
+fi
+
+echo -e "\033[34m[CLIENT] Using eval script: ${eval_policy_script}\033[0m"
+
+bash "${eval_policy_script}" \
     --bench_name "${bench_name}" \
     --task_name "${task_name}" \
     --env_cfg_type "${env_cfg_type}" \
