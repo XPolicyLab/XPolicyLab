@@ -10,5 +10,9 @@
     "piper_x": {
         "arm_dim": [6, 6],
         "ee_dim": [1, 1]
+    },
+    "aloha_agilex": {
+        "arm_dim": [6, 6],
+        "ee_dim": [1, 1]
     }
 }
