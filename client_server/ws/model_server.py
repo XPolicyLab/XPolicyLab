@@ -34,8 +34,8 @@ def _ok_payload(result: Any = None) -> dict[str, Any]:
 class PolicyServerConfig:
     host: str = "0.0.0.0"
     port: int = 19000
-    ws_ping_interval_s: float = 20.0
-    ws_ping_timeout_s: float = 20.0
+    ws_ping_interval_s: float = 60.0
+    ws_ping_timeout_s: float = 300.0
 
 
 @dataclass

@@ -36,5 +36,14 @@ negative_prompt: ""
 rand_device: cpu
 tiled: false
 timing_enabled: false
+# The official RoboDojo step_020000 checkpoint contains both MoT experts.
+# Skip redundant Wan DiT/ActionDiT preload, then replace them from checkpoint.
+skip_dit_load_from_pretrain: true
+# Reuse the original Wan .pth common files. This also avoids relying on the
+# currently gated DiffSynth converted-safetensors repository.
+redirect_common_files: false
+# A single 24 GiB GPU also hosts Isaac Sim. Keep VAE/T5 on CPU and swap the
+# MoT and auxiliary encoders sequentially so their weights never coexist on GPU.
+sequential_aux_offload: true
 default_instruction: follow the instruction
 allow_dummy_policy: false
