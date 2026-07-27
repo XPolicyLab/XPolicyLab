@@ -49,7 +49,9 @@ bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0
 
 `deploy.yml` keys to check before evaluation: `action_dim`, `checkpoint_path`, `dataset_stats_path`, `sim_cfg_name`, `sim_task`, `device`, `mixed_precision`, `action_horizon`, `replan_steps`, `num_inference_steps`, `sigma_shift`.
 
-Optional policy-specific environment overrides used by the scripts: `FASTWAM_DATASET_ID`, `FASTWAM_BATCH_SIZE`, `FASTWAM_GRADIENT_ACCUMULATION_STEPS`, `FASTWAM_NUM_WORKERS`, `FASTWAM_NUM_EPOCHS`, `FASTWAM_CKPT_SETTING`, `FASTWAM_CKPT_ROOT`, `FASTWAM_CHECKPOINT_PATH`, `FASTWAM_DATASET_STATS_PATH`, `FASTWAM_ALLOW_DUMMY_POLICY`.
+Optional policy-specific environment overrides used by the scripts: `FASTWAM_DATASET_ID`, `FASTWAM_BATCH_SIZE`, `FASTWAM_GRADIENT_ACCUMULATION_STEPS`, `FASTWAM_NUM_WORKERS`, `FASTWAM_NUM_EPOCHS`, `FASTWAM_CKPT_SETTING`, `FASTWAM_CKPT_ROOT`, `FASTWAM_CHECKPOINT_PATH`, `FASTWAM_DATASET_STATS_PATH`, `FASTWAM_ALLOW_DUMMY_POLICY`, `FASTWAM_SEQUENTIAL_AUX_OFFLOAD`, `FASTWAM_WS_REQUEST_TIMEOUT_S`, `FASTWAM_WS_PING_INTERVAL_S`, `FASTWAM_WS_PING_TIMEOUT_S`.
+
+Set `FASTWAM_SEQUENTIAL_AUX_OFFLOAD=true` when policy inference and the simulator share a 24 GiB GPU. It is disabled by default. FastWAM client timeouts default to 600 seconds per request, a 60-second ping interval, and a 300-second ping timeout; override them with the corresponding `FASTWAM_WS_*` variables above.
 
 ## Notes
 

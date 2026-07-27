@@ -38,6 +38,7 @@ class FastWAM(torch.nn.Module):
         action_num_train_timesteps: int = 1000,
         loss_lambda_video: float = 1.0,
         loss_lambda_action: float = 1.0,
+        sequential_aux_offload: bool = False,
     ):
         super().__init__()
         self.video_expert = video_expert
@@ -82,6 +83,7 @@ class FastWAM(torch.nn.Module):
 
         self.device = torch.device(device)
         self.torch_dtype = torch_dtype
+        self.sequential_aux_offload = bool(sequential_aux_offload)
         self.loss_lambda_video = float(loss_lambda_video)
         self.loss_lambda_action = float(loss_lambda_action)
 
@@ -102,6 +104,7 @@ class FastWAM(torch.nn.Module):
         action_dit_config: dict[str, Any] | None = None,
         action_dit_pretrained_path: str | None = None,
         skip_dit_load_from_pretrain: bool = False,
+        sequential_aux_offload: bool = False,
         mot_checkpoint_mixed_attn: bool = True,
         video_train_shift: float = 5.0,
         video_infer_shift: float = 5.0,
@@ -117,8 +120,9 @@ class FastWAM(torch.nn.Module):
         if "text_dim" not in video_dit_config:
             raise ValueError("`video_dit_config['text_dim']` is required for FastWAM.")
 
+        component_load_device = "cpu" if sequential_aux_offload else device
         components = load_wan22_ti2v_5b_components(
-            device=device,
+            device=component_load_device,
             torch_dtype=torch_dtype,
             model_id=model_id,
             tokenizer_model_id=tokenizer_model_id,
@@ -168,6 +172,7 @@ class FastWAM(torch.nn.Module):
             action_num_train_timesteps=action_num_train_timesteps,
             loss_lambda_video=loss_lambda_video,
             loss_lambda_action=loss_lambda_action,
+            sequential_aux_offload=sequential_aux_offload,
         )
         model.model_paths = {
             "video_dit": components.dit_path,
@@ -181,6 +186,22 @@ class FastWAM(torch.nn.Module):
         return model
 
     def to(self, *args, **kwargs):
+        target = kwargs.get("device")
+        if target is None and args and not isinstance(args[0], torch.dtype):
+            target = args[0]
+        if (
+            self.sequential_aux_offload
+            and target is not None
+            and torch.device(target).type == "cuda"
+        ):
+            dtype = kwargs.get("dtype")
+            self.mot.to(device=target, dtype=dtype)
+            if self.proprio_encoder is not None:
+                self.proprio_encoder.to(device=target, dtype=dtype)
+            self.vae.to(device="cpu")
+            if self.text_encoder is not None:
+                self.text_encoder.to(device="cpu")
+            return self
         super().to(*args, **kwargs)
         self.mot.to(*args, **kwargs)
         if self.text_encoder is not None:
@@ -958,7 +979,16 @@ class FastWAM(torch.nn.Module):
         ).to(device=self.device, dtype=self.torch_dtype)
 
         input_image = input_image.to(device=self.device, dtype=self.torch_dtype)
+        if self.sequential_aux_offload:
+            self.mot.to(device="cpu")
+            if self.proprio_encoder is not None:
+                self.proprio_encoder.to(device="cpu")
+            torch.cuda.empty_cache()
+            self.vae.to(device=self.device, dtype=self.torch_dtype)
         first_frame_latents = self._encode_input_image_latents_tensor(input_image=input_image, tiled=tiled)
+        if self.sequential_aux_offload:
+            self.vae.to(device="cpu")
+            torch.cuda.empty_cache()
         fuse_flag = bool(getattr(self.video_expert, "fuse_vae_embedding_in_latents", False))
 
         use_prompt = prompt is not None
@@ -969,7 +999,12 @@ class FastWAM(torch.nn.Module):
             raise ValueError("Either `prompt` or both `context/context_mask` must be provided.")
 
         if use_prompt:
+            if self.sequential_aux_offload:
+                self.text_encoder.to(device=self.device, dtype=self.torch_dtype)
             context, context_mask = self.encode_prompt(prompt)
+            if self.sequential_aux_offload:
+                self.text_encoder.to(device="cpu")
+                torch.cuda.empty_cache()
         else:
             if context is None or context_mask is None:
                 raise ValueError("`context` and `context_mask` must be both provided together.")
@@ -983,6 +1018,10 @@ class FastWAM(torch.nn.Module):
                 )
             context = context.to(device=self.device, dtype=self.torch_dtype, non_blocking=True)
             context_mask = context_mask.to(device=self.device, dtype=torch.bool, non_blocking=True)
+        if self.sequential_aux_offload:
+            self.mot.to(device=self.device, dtype=self.torch_dtype)
+            if self.proprio_encoder is not None:
+                self.proprio_encoder.to(device=self.device, dtype=self.torch_dtype)
         if proprio is not None:
             context, context_mask = self._append_proprio_to_context(
                 context=context,

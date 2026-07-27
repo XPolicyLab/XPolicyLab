@@ -324,6 +324,31 @@ def get_model(usr_args: Dict[str, Any]):
         sim_cfg_name=sim_cfg_name,
         sim_task=sim_task,
     )
+    # Released RoboDojo checkpoints contain the complete video/action MoT
+    # state.  Allow deployment to initialize those experts without first
+    # downloading/loading the Wan DiT and generated ActionDiT backbone only to
+    # overwrite both immediately in load_checkpoint().
+    if "skip_dit_load_from_pretrain" in usr_args:
+        OmegaConf.update(
+            cfg,
+            "model.skip_dit_load_from_pretrain",
+            _parse_bool(usr_args["skip_dit_load_from_pretrain"]),
+            force_add=True,
+        )
+    if "redirect_common_files" in usr_args:
+        OmegaConf.update(
+            cfg,
+            "model.redirect_common_files",
+            _parse_bool(usr_args["redirect_common_files"]),
+            force_add=True,
+        )
+    if "sequential_aux_offload" in usr_args:
+        OmegaConf.update(
+            cfg,
+            "model.sequential_aux_offload",
+            _parse_bool(usr_args["sequential_aux_offload"]),
+            force_add=True,
+        )
 
     checkpoint_path = usr_args.get("ckpt_setting")
     if _is_none_like(checkpoint_path):

@@ -28,6 +28,9 @@ echo -e "\033[34m[CLIENT] server=${policy_server_ip}:${policy_server_port}\033[0
 # based on EVAL_ENV_TYPE (default: sim).
 exec env \
     CUDA_VISIBLE_DEVICES="${env_gpu_id}" \
+    XPOLICY_WS_REQUEST_TIMEOUT_S="${FASTWAM_WS_REQUEST_TIMEOUT_S:-600}" \
+    XPOLICY_WS_PING_INTERVAL_S="${FASTWAM_WS_PING_INTERVAL_S:-60}" \
+    XPOLICY_WS_PING_TIMEOUT_S="${FASTWAM_WS_PING_TIMEOUT_S:-300}" \
     bash "${UTILS_DIR}/setup_env_client.sh" \
         "${UTILS_DIR}" \
         "${yaml_file}" \

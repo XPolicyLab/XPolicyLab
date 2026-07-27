@@ -101,4 +101,5 @@ exec env \
             action_dim="${action_dim}" \
             checkpoint_path="${checkpoint_path}" \
             dataset_stats_path="${dataset_stats_path}" \
+            sequential_aux_offload="${FASTWAM_SEQUENTIAL_AUX_OFFLOAD:-false}" \
             allow_dummy_policy="${allow_dummy_policy}"

@@ -62,6 +62,12 @@ def main(deploy_cfg):
             PolicyServerConfig(
                 host=host,
                 port=int(port),
+                ws_ping_interval_s=float(
+                    deploy_cfg.get("ws_ping_interval_s", 20.0)
+                ),
+                ws_ping_timeout_s=float(
+                    deploy_cfg.get("ws_ping_timeout_s", 20.0)
+                ),
             ),
         )
         try:

@@ -7,6 +7,8 @@ eval_batch: false
 # those names (deploy_cfg.get("port") / deploy_cfg.get("host")).
 port: null
 host: localhost
+ws_ping_interval_s: 60
+ws_ping_timeout_s: 300
 
 # Identifiers + per-launch wiring (set via --overrides from the eval scripts).
 bench_name: null
@@ -36,5 +38,14 @@ negative_prompt: ""
 rand_device: cpu
 tiled: false
 timing_enabled: false
+# The official RoboDojo step_020000 checkpoint contains both MoT experts.
+# Skip redundant Wan DiT/ActionDiT preload, then replace them from checkpoint.
+skip_dit_load_from_pretrain: true
+# Reuse the original Wan .pth common files. This also avoids relying on the
+# currently gated DiffSynth converted-safetensors repository.
+redirect_common_files: false
+# Enable explicitly for a 24 GiB GPU with
+# FASTWAM_SEQUENTIAL_AUX_OFFLOAD=true when starting the policy server.
+sequential_aux_offload: false
 default_instruction: follow the instruction
 allow_dummy_policy: false

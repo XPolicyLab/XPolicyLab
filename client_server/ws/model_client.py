@@ -3,9 +3,15 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from typing import Any, cast
 
 from client_server.ws.protocol.client import PolicyEvalClient, PolicyEvalClientConfig
+
+
+def _env_float(name: str, default: float) -> float:
+    value = os.environ.get(name)
+    return default if value is None else float(value)
 
 
 class WsModelClient:
@@ -27,7 +33,19 @@ class WsModelClient:
         self._latest_obs_batch: list[Any] | None = None
         self._loop = asyncio.new_event_loop()
         self._client = client or PolicyEvalClient(
-            PolicyEvalClientConfig(url=url, evaluation_id=evaluation_id)
+            PolicyEvalClientConfig(
+                url=url,
+                evaluation_id=evaluation_id,
+                request_timeout_s=_env_float(
+                    "XPOLICY_WS_REQUEST_TIMEOUT_S", 120.0
+                ),
+                ws_ping_interval_s=_env_float(
+                    "XPOLICY_WS_PING_INTERVAL_S", 20.0
+                ),
+                ws_ping_timeout_s=_env_float(
+                    "XPOLICY_WS_PING_TIMEOUT_S", 20.0
+                ),
+            )
         )
         self._loop.run_until_complete(self._client.connect(handshake=True))
 
