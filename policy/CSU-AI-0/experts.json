@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "bundle": {
+    "name": "CSU-AI-0-v1",
+    "root": "checkpoints/CSU-AI-0-v1"
+  },
+  "experts": {
+    "xiaomi": {
+      "policy_name": "Xiaomi_Robotics_1",
+      "action_type": "ee",
+      "checkpoint_name": "RoboDojo-sim-arx_x5-ee-0",
+      "checkpoint_relpath": "xiaomi/RoboDojo-sim-arx_x5-ee-0",
+      "hf_home_relpath": "shared/huggingface",
+      "policy_env": "mibot"
+    },
+    "spatial_forcing": {
+      "policy_name": "Spatial_Forcing",
+      "action_type": "joint",
+      "checkpoint_name": "RoboDojo-sim-arx_x5-joint-0",
+      "checkpoint_relpath": "spatial_forcing/RoboDojo-sim-arx_x5-joint-0",
+      "policy_env": "uv"
+    },
+    "hunyuan": {
+      "policy_name": "Hy_Embodied_05_VLA",
+      "action_type": "ee",
+      "checkpoint_name": "rd20",
+      "checkpoint_relpath": "hunyuan/rd20",
+      "policy_env": "uv"
+    }
+  }
+}

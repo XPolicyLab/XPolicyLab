@@ -1,0 +1,22 @@
+policy_name: CSU-AI-0
+bench_name: RoboDojo
+task_name: null
+ckpt_name: QRouter
+env_cfg_type: arx_x5
+seed: null
+eval_batch: false
+eval_env: debug
+protocol: ws
+
+router_name: QRouter
+router_bundle_path: router/QRouter.joblib
+router_manifest_path: adapter_manifest.json
+
+action_type: auto
+gpu_id: 0
+host: 127.0.0.1
+port: 6000
+ws_ping_interval_s: 60
+ws_ping_timeout_s: 600
+expert_start_timeout_s: 1200
+expert_request_timeout_s: 900

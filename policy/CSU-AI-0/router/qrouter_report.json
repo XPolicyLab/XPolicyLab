@@ -1,0 +1,120 @@
+{
+  "status": "PASS",
+  "model_name": "QRouter",
+  "stage": "qrouter_gold_standard_v1",
+  "model_family": "HistGradientBoostingClassifier",
+  "training_rows": 4122,
+  "training_seed_counts": {
+    "1": 2070,
+    "2": 2052
+  },
+  "training_task_vocabulary": 54,
+  "seed0_used_for_training": false,
+  "hard_rule_used_at_inference": false,
+  "posthoc_override_used": false,
+  "gold_standard": {
+    "cover_blocks": "hunyuan",
+    "fold_clothes": "xiaomi",
+    "fold_clothes_random": "spatial_forcing",
+    "stack_blocks": "xiaomi",
+    "stack_blocks_random": "spatial_forcing",
+    "default": "xiaomi",
+    "expected_seed0_counts": {
+      "xiaomi": 2000,
+      "hunyuan": 50,
+      "spatial_forcing": 50
+    },
+    "user_defined_300_episode_mix": {
+      "xiaomi": 200,
+      "hunyuan": 50,
+      "spatial_forcing": 50
+    }
+  },
+  "gold_standard_sha256": "230f5808604e1f5b2eaa42e0694275d102851bf8bf9785d8f18ac045483379e6",
+  "crossfit_exact_match": {
+    "seed2_to_seed1": {
+      "rows": 2070,
+      "matches": 2070,
+      "mismatches": 0,
+      "accuracy": 1.0,
+      "first_mismatch_indices": []
+    },
+    "seed1_to_seed2": {
+      "rows": 2052,
+      "matches": 2052,
+      "mismatches": 0,
+      "accuracy": 1.0,
+      "first_mismatch_indices": []
+    }
+  },
+  "training_exact_match": {
+    "rows": 4122,
+    "matches": 4122,
+    "mismatches": 0,
+    "accuracy": 1.0,
+    "first_mismatch_indices": []
+  },
+  "seed0_exact_match": {
+    "rows": 2100,
+    "matches": 2100,
+    "mismatches": 0,
+    "accuracy": 1.0,
+    "first_mismatch_indices": []
+  },
+  "reloaded_bundle_seed0_exact_match": {
+    "rows": 2100,
+    "matches": 2100,
+    "mismatches": 0,
+    "accuracy": 1.0,
+    "first_mismatch_indices": []
+  },
+  "seed0_selected_expert_counts": {
+    "xiaomi": 2000,
+    "hunyuan": 50,
+    "spatial_forcing": 50
+  },
+  "official_dimension_counts": {
+    "Generalization": {
+      "xiaomi": 550,
+      "spatial_forcing": 50
+    },
+    "Long-Horizon": {
+      "xiaomi": 400
+    },
+    "Memory": {
+      "hunyuan": 50,
+      "xiaomi": 250
+    },
+    "Open": {
+      "xiaomi": 400
+    },
+    "Precision": {
+      "xiaomi": 400
+    }
+  },
+  "metadata_note": "Official alltasks.json maps fold_clothes and stack_blocks to Generalization; the user-defined 50/200/50 mix is retained as a gold-standard grouping without rewriting official dimensions.",
+  "files": {
+    "model": {
+      "path": "C:\\Users\\86198\\Desktop\\CAD\\router-consolidated-training-v2\\artifacts\\qrouter_gold_standard_v1\\QRouter.joblib",
+      "sha256": "1600870c4999b7e183bb34cb528d8fcb8e9a1527b30c4e6034b4fe5dc9972a87"
+    },
+    "seed0_route_manifest": {
+      "path": "C:\\Users\\86198\\Desktop\\CAD\\router-consolidated-training-v2\\artifacts\\qrouter_gold_standard_v1\\qrouter_seed0_route_manifest.csv",
+      "sha256": "06f2cb0d344ff4d689922fd4a0a85330ab9f1099a036a0abb4c24e400cd3304a",
+      "rows": 2100
+    },
+    "training_labels": {
+      "path": "C:\\Users\\86198\\Desktop\\CAD\\router-consolidated-training-v2\\artifacts\\qrouter_gold_standard_v1\\qrouter_training_labels.csv",
+      "sha256": "0a6f3bffd0678d760b3e46e2b2875f097a19c3b41c250493c1ad60df9cb90700",
+      "rows": 4122
+    },
+    "source_training_scenes": {
+      "path": "C:\\Users\\86198\\Desktop\\CAD\\router-consolidated-training-v2\\snapshot_focus5_xiaomi_recollect_v1\\scenes.csv",
+      "sha256": "297d145746705c6dac7810306ffc54e2367f64c3d8f47e4013010b4179fc680c"
+    },
+    "source_seed0_manifest": {
+      "path": "C:\\Users\\86198\\Desktop\\CAD\\router-seed0-focus5-conservative-five-v1\\seed0_focus5_conservative_route_manifest.csv",
+      "sha256": "bc2b778d3d73c4d37d9a8691d96e443fb0da14fe8c9c15ba790e1b8b992eddf3"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "submission_policy": "CSU-AI-0",
+  "router_name": "QRouter",
+  "router_family": "HistGradientBoostingClassifier",
+  "router_stage": "qrouter_gold_standard_v1",
+  "seed0_used_for_training": false,
+  "hard_rule_used_at_inference": false,
+  "posthoc_override_used": false,
+  "expected_seed0_routes": {
+    "xiaomi": 2000,
+    "hunyuan": 50,
+    "spatial_forcing": 50
+  },
+  "artifacts": {
+    "QRouter.joblib": {
+      "path": "router/QRouter.joblib",
+      "bytes": 19625,
+      "sha256": "1600870c4999b7e183bb34cb528d8fcb8e9a1527b30c4e6034b4fe5dc9972a87"
+    },
+    "QRouter.portable.json": {
+      "path": "router/QRouter.portable.json",
+      "bytes": 208257,
+      "sha256": "65b5a33ac72d4a2dcff720e22b3f7f6924352c6b18d7eab161703e3decfc3a01",
+      "source_bundle_sha256": "1600870c4999b7e183bb34cb528d8fcb8e9a1527b30c4e6034b4fe5dc9972a87",
+      "one_hot_task_count": 54,
+      "tree_iterations": 200,
+      "predictions_exact": true
+    },
+    "qrouter_report.json": {
+      "path": "router/qrouter_report.json",
+      "bytes": 3807,
+      "sha256": "1990db8d0aff7cc101de2cc7bfa73e082848df628fb1d1b0103e7d13d45fdd99"
+    }
+  }
+}
