@@ -16,6 +16,15 @@ else
     echo "[CSU-AI-0] CSU_SKIP_ROUTER_INSTALL=1; router dependency installation skipped"
 fi
 
+if [[ "${CSU_SKIP_DOWNLOAD_DEPS:-0}" != "1" ]]; then
+    echo "[CSU-AI-0] installing public checkpoint downloader dependencies"
+    "${ROUTER_PYTHON}" -m pip install \
+        "huggingface_hub>=0.28,<2" \
+        "modelscope>=1.20,<2"
+else
+    echo "[CSU-AI-0] CSU_SKIP_DOWNLOAD_DEPS=1; downloader dependencies skipped"
+fi
+
 PYTHONPATH="$(cd "${XPL_ROOT}/.." && pwd):${XPL_ROOT}:${PYTHONPATH:-}" \
     "${ROUTER_PYTHON}" -c 'import yaml, websockets.asyncio; from XPolicyLab.model_template import ModelTemplate'
 for policy in Xiaomi_Robotics_1 Spatial_Forcing Hy_Embodied_05_VLA; do

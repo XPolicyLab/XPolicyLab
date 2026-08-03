@@ -37,6 +37,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 echo "[CSU-AI-0] task=${task_name} expert=${CSU_SELECTED_EXPERT} confidence=${CSU_ROUTE_CONFIDENCE} action_type=${CSU_TARGET_ACTION_TYPE}"
+echo "[MAIN] start server, policy_server_port=${policy_server_port}"
 
 bash "${SCRIPT_DIR}/setup_eval_policy_server.sh" \
     "${bench_name}" "${task_name}" QRouter "${env_cfg_type}" auto \
@@ -44,12 +45,15 @@ bash "${SCRIPT_DIR}/setup_eval_policy_server.sh" \
     "${policy_server_ip}" &
 SERVER_PID=$!
 
-sleep "${CSU_SERVER_WARMUP_SECONDS:-5}"
+bash "${UTILS_DIR}/wait_for_policy_server.sh" \
+    "${policy_server_ip}" "${policy_server_port}" "${SERVER_PID}" \
+    "CSU-AI-0 policy server" "${CSU_SERVER_READY_TIMEOUT_SECONDS:-1200}"
 
+echo "[MAIN] start client, server=${policy_server_ip}:${policy_server_port}"
 bash "${SCRIPT_DIR}/setup_eval_env_client.sh" \
     "${bench_name}" "${task_name}" QRouter "${env_cfg_type}" \
     "${CSU_TARGET_ACTION_TYPE}" "${seed}" "${env_gpu_id}" \
     "${eval_env_conda_env}" "${additional_info}" \
     "${policy_server_port}" "${policy_server_ip}"
 
-echo "[CSU-AI-0] eval finished"
+echo "[MAIN] eval finished"

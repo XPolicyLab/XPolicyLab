@@ -1,0 +1,298 @@
+{
+  "bundle": {
+    "name": "CSU-AI-0-v1",
+    "root": "checkpoints/CSU-AI-0-v1"
+  },
+  "integrity_reference": {
+    "provider": "huggingface",
+    "repo_id": "RoboDojo-Benchmark/RoboDojo",
+    "repo_type": "dataset",
+    "revision": "c037c1b3183a030724e694d69a08cb62369ed285"
+  },
+  "schema_version": 1,
+  "sources": {
+    "hunyuan": {
+      "destination_relpath": "hunyuan/rd20",
+      "files": [
+        {
+          "path": ".mdl",
+          "sha256": "a6fcd6e26d680a54b419277d44ff21a603caa64dc44c091db1e122049cf3925e",
+          "size": 34,
+          "source_path": ".mdl"
+        },
+        {
+          "path": ".msc",
+          "sha256": "4d844610cff86f431b2a27b9e81b46635625112eca3a1cc8f25a3976f4cb56c8",
+          "size": 662,
+          "source_path": ".msc"
+        },
+        {
+          "path": ".mv",
+          "sha256": "e0d8bf1fc3fe6ea53856c531bd063511aa46a40fdb5ffc69a2a92de022b6c798",
+          "size": 36,
+          "source_path": ".mv"
+        },
+        {
+          "path": "README.md",
+          "sha256": "3a3f18c60647dec1968143b57d553f98b757dd0ab445ebc415ff786bcbac1ee2",
+          "size": 1387,
+          "source_path": "README.md"
+        },
+        {
+          "path": "chat_template.jinja",
+          "sha256": "0a3568d31461f095ffd81fe0444fb0347cfb97385fc371678a3fa7043303085c",
+          "size": 5826,
+          "source_path": "chat_template.jinja"
+        },
+        {
+          "path": "config.json",
+          "sha256": "e36630bde4814d29b82a53672b8b64eef30bec9f239f351ca64605b7f3e81016",
+          "size": 3465,
+          "source_path": "config.json"
+        },
+        {
+          "path": "configuration.json",
+          "sha256": "4a55aca9c995283f01920a2af0b8b0af072e1fbc3a3db36e12fb3f95382d7ab5",
+          "size": 41,
+          "source_path": "configuration.json"
+        },
+        {
+          "path": "model.safetensors",
+          "sha256": "162150d10c01b008f363eee694d48dceebe0f53633328e55ceab2b2cbaaf8b04",
+          "size": 9053587152,
+          "source_path": "model.safetensors"
+        },
+        {
+          "path": "norm_stats.pkl",
+          "sha256": "27aa6b71628be59cc518bb38585dc53c6dca5cf6ba5e6bb10183601395625720",
+          "size": 16581,
+          "source_path": "norm_stats.pkl"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "sha256": "bb9f59990034dae326581b9c62471523975417869f78a244b7ae2ce8cbb085eb",
+          "size": 488,
+          "source_path": "special_tokens_map.json"
+        },
+        {
+          "path": "tokenizer.json",
+          "sha256": "f8a4db9062449d985badacd53e829adbd5e0e4d85d705c74bc8342da7d4c5a1f",
+          "size": 9530129,
+          "source_path": "tokenizer.json"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "sha256": "725d5b66dbde5263ccf1d884c7f9ce2c5e5d8bf6576b47aaba79196973c507d0",
+          "size": 168467,
+          "source_path": "tokenizer_config.json"
+        }
+      ],
+      "provider": "modelscope",
+      "public_url": "https://www.modelscope.cn/models/zzilch/rd20",
+      "repo_id": "zzilch/rd20",
+      "revision": "master",
+      "source_subdir": ""
+    },
+    "spatial_forcing": {
+      "destination_relpath": "spatial_forcing/RoboDojo-sim-arx_x5-joint-0",
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "95b84753669a44b357aa580cdb4637550c035b22f252cb96dbde39b2edc3a340",
+          "size": 927,
+          "source_path": "README.md"
+        },
+        {
+          "path": "_CHECKPOINT_METADATA",
+          "sha256": "6e376261c9939d6a5339d5667fb4e1466c89fe7ee2f5de948c9eda2a0faebc66",
+          "size": 426,
+          "source_path": "_CHECKPOINT_METADATA"
+        },
+        {
+          "path": "assets/RoboDojo_lerobot_v21_video/norm_stats.json",
+          "sha256": "515dc38ea530d008a3bde3bcea0aa23578f77c47c32ceb73b5b01381c437f930",
+          "size": 3419,
+          "source_path": "assets/RoboDojo_lerobot_v21_video/norm_stats.json"
+        },
+        {
+          "path": "configuration.json",
+          "sha256": "3c9ac837910a988e6d8674bc99e137d0d1c1594a1f14e83f3d1923751c9be47e",
+          "size": 47,
+          "source_path": "configuration.json"
+        },
+        {
+          "path": "params/_METADATA",
+          "sha256": "03676f6798c8adf52a81e2e04b445c29767cd09fc16679fe35118a2c95a67258",
+          "size": 25611,
+          "source_path": "params/_METADATA"
+        },
+        {
+          "path": "params/_sharding",
+          "sha256": "022c40b0147390a312d5acfca8760f03aac6db1a8ac63edf97053443b83a90b6",
+          "size": 19882,
+          "source_path": "params/_sharding"
+        },
+        {
+          "path": "params/array_metadatas/process_0",
+          "sha256": "3bd12c9038f777c7066bf779eb9345fb40398b5f627bb5638464988943a5c7e1",
+          "size": 9959,
+          "source_path": "params/array_metadatas/process_0"
+        },
+        {
+          "path": "params/d/9cdc7ca7a64927ad7a7b1187cd4e5e32",
+          "sha256": "f1d2e9007e509ae5d222945a447440b4e6ed7b8541db4bbaae9f6feefef6e9a7",
+          "size": 74204,
+          "source_path": "params/d/9cdc7ca7a64927ad7a7b1187cd4e5e32"
+        },
+        {
+          "path": "params/manifest.ocdbt",
+          "sha256": "74a4c9e7a7f9bb00533284bf423826c42e66051c948dd4a0d2032107e827c42c",
+          "size": 120,
+          "source_path": "params/manifest.ocdbt"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/0111f68d541a0f4409917498fc26fe16",
+          "sha256": "672b95626447eabec7f594ce53a6eb88a561f6b1feb70f791644cf76a4efade7",
+          "size": 1138,
+          "source_path": "params/ocdbt.process_0/d/0111f68d541a0f4409917498fc26fe16"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/1c1fc78b34a5863ff21f1b0c3d186a97",
+          "sha256": "91f1a1a8ed16ccf2a59f0320f0deb79b0d299497df73e25d4e931e513a8cd40c",
+          "size": 1680343452,
+          "source_path": "params/ocdbt.process_0/d/1c1fc78b34a5863ff21f1b0c3d186a97"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/22b299133aa80ff2d638a2c66fdfd94d",
+          "sha256": "906ea15d2eb83fb82055becb4900455a73abf72148ebab62bed4e98bbc358373",
+          "size": 978545635,
+          "source_path": "params/ocdbt.process_0/d/22b299133aa80ff2d638a2c66fdfd94d"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/23dce47a13d0c6a317e39528a97d7c10",
+          "sha256": "04aa7491ad35a792e56ea7e0b4cf30b8732c45ec7c5477e0594176dd0f0685d0",
+          "size": 2191621806,
+          "source_path": "params/ocdbt.process_0/d/23dce47a13d0c6a317e39528a97d7c10"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/2f2c65060c0bf1921c21c9861d91826c",
+          "sha256": "f4a3cf1372391ec6ab9b29ef02bcf55ce4f7cc184c16d5a769b729f4fa366fd3",
+          "size": 5618,
+          "source_path": "params/ocdbt.process_0/d/2f2c65060c0bf1921c21c9861d91826c"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/3cbc3f33f9a1647a33aab0b36526b134",
+          "sha256": "1e99d5876e6b8db2e12c43c8079f6b98cffac2c26bbd84e59cc505e983d146d2",
+          "size": 217,
+          "source_path": "params/ocdbt.process_0/d/3cbc3f33f9a1647a33aab0b36526b134"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/420497aa5bcb258d0cba997b9dbe8fc5",
+          "sha256": "e6d7998cdff9f80c3bd2352434ae237be45c5a6cd5c8c87d640a1e000695b2a8",
+          "size": 2169750852,
+          "source_path": "params/ocdbt.process_0/d/420497aa5bcb258d0cba997b9dbe8fc5"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/51a44b276d9ade22ca13cce05872475d",
+          "sha256": "9cd083bcf4c209ad4d6ee010413b62b961474c5e1a427cde683df7f5e6121361",
+          "size": 334078321,
+          "source_path": "params/ocdbt.process_0/d/51a44b276d9ade22ca13cce05872475d"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/58a10ddfac40e51612bf9dd6b13a5ed4",
+          "sha256": "7440128bc43546fe5027244ac488dd931ddcc4333b760c4d9903355fae596b73",
+          "size": 244601041,
+          "source_path": "params/ocdbt.process_0/d/58a10ddfac40e51612bf9dd6b13a5ed4"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/5d83e1b55367ba03c4a5bd3959cff715",
+          "sha256": "868e951271e33302b85a06751e4a0135ea411a83ce934b4c51102d3d70214ad3",
+          "size": 49550,
+          "source_path": "params/ocdbt.process_0/d/5d83e1b55367ba03c4a5bd3959cff715"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/5fa37be526069df6982cfd2134e3983a",
+          "sha256": "5a5f6a29cf54aee799ff62a2806fc1c4f50dc6cd1a09b04450e5ea54ffdefa4f",
+          "size": 1195813322,
+          "source_path": "params/ocdbt.process_0/d/5fa37be526069df6982cfd2134e3983a"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/a6e2127624d564f8a391cb3cdd2131fa",
+          "sha256": "3fab762c8339b86b284cf64c03e8f68100b9c724c54a3224a54ececcb0562b0f",
+          "size": 560210587,
+          "source_path": "params/ocdbt.process_0/d/a6e2127624d564f8a391cb3cdd2131fa"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/b488d248771b4adb6ce4177aa8fa0aaa",
+          "sha256": "c708cb1c07e495d341a97377b643116baab4eea313d1e8fb161e9cbe1144765a",
+          "size": 560166318,
+          "source_path": "params/ocdbt.process_0/d/b488d248771b4adb6ce4177aa8fa0aaa"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/b4d6994d03914c3b179f7d32c2e7acf8",
+          "sha256": "93cf63c981f68e78468d303678e25f97775f6533f1edf64545029d69350ec308",
+          "size": 71148553,
+          "source_path": "params/ocdbt.process_0/d/b4d6994d03914c3b179f7d32c2e7acf8"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/b7485c1322c1cee9b6986595edf11e86",
+          "sha256": "18d164739f60df52a6702b65cd460ca39426dcf30e5a19c12639de42e77ff81f",
+          "size": 244731819,
+          "source_path": "params/ocdbt.process_0/d/b7485c1322c1cee9b6986595edf11e86"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/e18ab65c8902cc126f71d3024e699996",
+          "sha256": "abee07420addeb2da1e66a81797ebc6a1d079feb113fad83cf4fdfb3a08277c2",
+          "size": 309636,
+          "source_path": "params/ocdbt.process_0/d/e18ab65c8902cc126f71d3024e699996"
+        },
+        {
+          "path": "params/ocdbt.process_0/d/eb3e7666805e0a8ec22d1695b0252046",
+          "sha256": "02c7552ad4e9f18e74f0ce3714b223b0ea96961b98b93f8fedb83426ea9a11a5",
+          "size": 2240371211,
+          "source_path": "params/ocdbt.process_0/d/eb3e7666805e0a8ec22d1695b0252046"
+        },
+        {
+          "path": "params/ocdbt.process_0/manifest.ocdbt",
+          "sha256": "f587a4f6e9d2ba96fe0ad4fed7c15291b7e6acbf57ff0bca5bc6c30abdd59592",
+          "size": 731,
+          "source_path": "params/ocdbt.process_0/manifest.ocdbt"
+        }
+      ],
+      "provider": "modelscope",
+      "public_url": "https://www.modelscope.cn/models/zzyzzzz699/pi05sf",
+      "repo_id": "zzyzzzz699/pi05sf",
+      "revision": "master",
+      "source_subdir": ""
+    },
+    "xiaomi": {
+      "destination_relpath": "xiaomi/RoboDojo-sim-arx_x5-ee-0",
+      "files": [
+        {
+          "path": "config.py",
+          "sha256": "43ad703ad0ef006d295d2921397b3896838f83608d522d86a4fe29a80f93f8bb",
+          "size": 54280,
+          "source_path": "config.py"
+        },
+        {
+          "path": "config.yaml",
+          "sha256": "88237270408e179ce1b0823410076c99211d9e6436f2d9926ea25cbd7564b29c",
+          "size": 24593,
+          "source_path": "config.yaml"
+        },
+        {
+          "path": "model_states.pt",
+          "sha256": "4aa5e4efc3ac0a84f0971bd30047ce5901628da6c848e26bb82d24c73da0a186",
+          "size": 11004717293,
+          "source_path": "last.ckpt/checkpoint/mp_rank_00_model_states.pt"
+        }
+      ],
+      "provider": "huggingface",
+      "public_url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo",
+      "repo_id": "RoboDojo-Benchmark/RoboDojo",
+      "repo_type": "dataset",
+      "revision": "c037c1b3183a030724e694d69a08cb62369ed285",
+      "source_subdir": "ckpt/RoboDojo/Xiaomi_Robotics_1/RoboDojo-sim-arx_x5-ee-0"
+    }
+  }
+}
