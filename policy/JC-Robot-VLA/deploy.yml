@@ -1,0 +1,36 @@
+policy_name: JC-Robot-VLA
+protocol: ws
+host: localhost
+bench_name: null
+task_name: null
+env_cfg_type: null
+seed: null
+eval_batch: false
+
+checkpoint_num: 59999
+result_dir: "/home/pro6000-2-3/DataStorage/wjz/RoboDojo/results/JC-Robot-VLA/"
+obs_transform_pipeline: "xspark-v1.0"
+
+action_type: joint
+policy_uv_env_path: openpi
+train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_0
+repo_id: arx_x5_sim
+
+port: 6000
+
+# === Inference-time optimization parameters ===
+
+# Action chunk execution: only execute first N steps of each 50-step chunk,
+# then re-infer with fresh observations. null = execute full chunk (backward compatible).
+# Recommended: 10 (converts open-loop to closed-loop control).
+action_chunk_exec_steps: 10
+
+# Action clipping: clips predicted actions to training data bounds (q01/q99 + margin).
+# Prevents extreme joint commands during distribution shift.
+action_clip_enabled: true
+action_clip_margin: 0.1  # Fraction of q-range to add as safety margin
+
+# Temporal action ensembling: blends overlapping action chunks to reduce jitter.
+# Only effective when action_chunk_exec_steps < 50.
+temporal_ensemble_enabled: false
+temporal_ensemble_alpha: 0.3  # 0.0 = fully trust old, 1.0 = fully trust new
