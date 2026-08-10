@@ -1,0 +1,5 @@
+checkpoints/
+results/
+open_sf/
+.open_sf.install.*/
+*.verification.json

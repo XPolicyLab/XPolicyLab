@@ -1,0 +1,16 @@
+{
+  "CSU-AI-0": {
+    "provider": "huggingface",
+    "repo_type": "dataset",
+    "repo_id": "ShaoRun/vla_ro",
+    "revision": "main",
+    "source_subdir": "checkpoints/CSU-AI-0",
+    "public_url": "https://huggingface.co/datasets/ShaoRun/vla_ro/tree/main/checkpoints/CSU-AI-0",
+    "local_dir": "checkpoints/CSU-AI-0",
+    "sha256_manifest": "CSU-AI-0.sha256",
+    "file_count": 23,
+    "checkpoint_format": "Orbax OCDBT",
+    "train_config_name": "pi05sf_jax_robodojo_v21_offcache",
+    "repo_id_for_norm_stats": "RoboDojo_lerobot_v21_video"
+  }
+}

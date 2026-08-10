@@ -1,0 +1,19 @@
+policy_name: CSU-AI-0
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+
+# Spatial Forcing / OpenPI runtime configuration.
+checkpoint_num: null
+policy_uv_env_path: open_sf
+train_config_name: pi05sf_jax_robodojo_v21_offcache
+repo_id: RoboDojo_lerobot_v21_video
+obs_transform_pipeline: xspark-v1.0
