@@ -1,0 +1,38 @@
+# G0.5 视觉记忆变体（mem）。继承 g05，只改两处以对齐 g05_pretrain_mem 权重：
+#   1) action_expert 用混合注意力（每 4 层 1 个 full，其余 linear），与 mem checkpoint 一致；
+#      装进 g05 的“全 full”配置会出现 108 missing(self_attn) / 162 unexpected(linear_attn)。
+#   2) pretrained_ckpt 指向 mem 权重软链。
+# 用法：在 task config 里 `override /model: g05_mem`，或命令行 `model=g05_mem`。
+defaults:
+  - g05
+  - _self_
+
+pretrained_ckpt: /efm-vepfs/group-jt/research/lyc/CruxAI/checkpoints/g05_pretrain_mem.pt
+
+model_arch:
+  action_expert:
+    layer_types:
+      - linear_attention
+      - linear_attention
+      - linear_attention
+      - full_attention
+      - linear_attention
+      - linear_attention
+      - linear_attention
+      - full_attention
+      - linear_attention
+      - linear_attention
+      - linear_attention
+      - full_attention
+      - linear_attention
+      - linear_attention
+      - linear_attention
+      - full_attention
+      - linear_attention
+      - linear_attention
+      - linear_attention
+      - full_attention
+      - linear_attention
+      - linear_attention
+      - linear_attention
+      - full_attention

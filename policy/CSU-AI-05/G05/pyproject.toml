@@ -1,0 +1,203 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "g05"
+authors = [
+    {name = "GalaxeaAI", email="yicheng.liu@galaxea.ai"},
+]
+description = "GalaxeaVLA: G0.5 Vision-Language-Action Model"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.10.16,<3.11"
+keywords = ["vision-language-actions models", "multimodal pretraining", "robot learning"]
+license = {file = "LICENSE-G0.5"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    # huggingface
+    "accelerate==1.8.1",
+    "datasets==3.6.0",
+    "diffusers==0.29.0",
+    "huggingface-hub==0.35.0",
+    "transformers==4.57.1",
+    "safetensors==0.6.1",
+    "peft==0.18.0",
+    # configuaration
+    "draccus==0.10.0",
+    "hydra-colorlog==1.2.0",
+    "hydra-core==1.3.2",
+    "hydra-optuna-sweeper==1.2.0",
+    # images & videos
+    "av==14.2.0",
+    "einops==0.8.0",
+    "matplotlib==3.10.0",
+    "numpy==1.26.4",
+    "h5py==3.14.0",
+    "imageio==2.34.1",
+    "imageio-ffmpeg==0.6.0",
+    "opencv-python==4.10.0.84",
+    "pillow==10.2.0",
+    "plotly==6.2.0",
+    "pandas==2.2.3",
+    "scipy==1.15.3",
+    "sharedarray==3.2.4",
+    "zarr==2.18.3",
+    # torch
+    "ema-pytorch==0.7.7",
+    "deepspeed==0.15.4",
+    "nvidia-ml-py",
+    "timm==0.9.10",
+    "pytorch_kinematics_ms==0.7.3",
+    "torch==2.7.1",
+    "torchvision==0.22.1",
+    "torchaudio==2.7.1",
+    "torchmetrics==1.7.4",
+    "torch-geometric==2.5.3",
+    "torchcodec==0.4.0",
+    "vit-pytorch==1.9.1",
+    # GalaxeaManipSim
+    "coacd==1.0.5",
+    "gymnasium==0.29.1",
+    "gym==0.22.0",
+    "mplib==0.2.1",
+    "open3d==0.18.0",
+    "seaborn==0.13.2",
+    "sapien==2.2.2",
+    "transforms3d==0.4.1",
+    "trimesh==4.7.3",
+    "tyro==0.9.28",
+    # lerobot
+    "deepdiff==8.5.0",
+    "jsonlines==4.0.0",
+    "numba==0.61.2",
+    "pymunk==6.11.1",
+    "pyserial==3.5",
+    # logging utils
+    "loguru==0.7.3",
+    "pyyaml==6.0.3",
+    "rootutils==1.0.7",
+    "rich==13.9.4",
+    "swanlab==0.6.9",
+    "termcolor==2.4.0",
+    "tqdm>=4.67.1",
+    "toml==0.10.2",
+    "wandb==0.23.1",
+    "websockets==16.0",
+    # utils
+    "gdown==5.2.0",
+    "yapf==0.40.2",
+    "addict==2.4.0",
+    "plyfile==1.0.3",
+    # libero
+    "easydict==1.9",
+    "robomimic==0.2.0",
+    "thop==0.1.1-2209072238",
+    "robosuite==1.4.0",
+    "mujoco==3.3.2",
+    "bddl==1.0.1",
+    "future==0.18.2",
+    "decorator==5.2.1",
+    "nltk==3.9.2",
+    "sympy==1.14.0",
+    "timeout-decorator==0.5.0",
+    "requests==2.32.5",
+    "networkx==3.4.2",
+    "python-dotenv==1.2.1",
+    "scikit-learn==1.7.2",
+    "lxml==6.0.2",
+    "openai==2.15.0",
+    "regex==2025.11.3",
+    "antlr4-python3-runtime==4.9.3",
+    "jinja2==3.1.6",
+    "openpyxl>=3.1.5",
+    "packaging==25.0",
+    "pydantic==2.12.5",
+    "pydantic-core==2.41.5",
+    "validators==0.35.0",
+    "bitsandbytes>=0.49.1",
+    "vector-quantize-pytorch==1.27.6",
+    # Fused Linear Cross Entropy: avoids materializing [N, V] logits and saves about 15GB peak VRAM.
+    # Required by ar_helper.cal_ce_loss for large-vocabulary cases such as V=257k PaliGemma.
+    "liger-kernel>=0.5.0,<0.7",
+    "flash-linear-attention>=0.2.0",
+    "flash-attn-4>=4.0.0b15",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "ipython==8.31.0",
+    "ipdb==0.13.13",
+    "jupytext==1.16.6",
+    "nbformat==5.10.4",
+    "pre-commit==4.0.1",
+]
+
+[project.urls]
+Homepage = "https://opengalaxea.github.io/G05/"
+Repository = "https://github.com/OpenGalaxea/GalaxeaVLA"
+Documentation = "https://github.com/OpenGalaxea/GalaxeaVLA/tree/main/docs"
+
+
+[tool.setuptools.packages.find]
+# Use the src/ layout so packages are discovered under src/
+where = ["src"]
+exclude = ["cache"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.package-data]
+"g05" = ["py.typed"]
+
+[tool.uv.pip]
+index-strategy = "unsafe-best-match"
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu128", marker = "sys_platform != 'darwin'"},
+]
+
+# Override this index through UV_DEFAULT_INDEX when a mirror is required.
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "gpu: requires CUDA GPU",
+    "pretrained: requires pretrained model weights",
+    "real_data: requires real dataset files",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.basedpyright]
+typeCheckingMode = "off"
+# reportMissingImports = "none"
+# reportMissingTypeStubs = "none"
+reportUnusedImport = "none"
+reportUnusedClass = "none"
+reportUnusedFunction = "none"
+reportUnusedVariable = "none"
+reportDuplicateImport = "none"

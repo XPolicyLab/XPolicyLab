@@ -1,0 +1,29 @@
+policy_name: CSU-AI-05
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+action_dim: null
+eval_batch: true
+# Isaac initialization and the first compiled G05 batch can block the client's
+# event loop for longer than the websocket library's 20 s default.  Keep the
+# normal ping cadence, but allow long, valid simulator/model operations.
+ws_ping_interval_s: 20.0
+ws_ping_timeout_s: 300.0
+
+g05_root: null
+ckpt_path: null
+eval_embodiment: robodojo
+action_steps: 16
+frequency: 30
+action_source: fm
+inference_batch_size: 8
+vision_attn_backend: sdpa
+# CSU-AI-05 was evaluated with continuous FM actions and the PyTorch SDPA vision
+# backend. Keep these stable defaults to reproduce the submitted result.
+hydra_overrides: []
