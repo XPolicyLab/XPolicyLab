@@ -17,7 +17,16 @@ XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+deploy_config="${G05_DEPLOY_CONFIG:-deploy.yml}"
+if [[ "${deploy_config}" == */* ]]; then
+  yaml_file="${deploy_config}"
+else
+  yaml_file="${SCRIPT_DIR}/${deploy_config}"
+fi
+if [[ ! -f "${yaml_file}" ]]; then
+  echo "G05 deploy config not found: ${yaml_file}" >&2
+  exit 2
+fi
 
 G05_ROOT="${G05_ROOT:-${SCRIPT_DIR}/G05}"
 PYTHON_BIN="${G05_PYTHON:-}"

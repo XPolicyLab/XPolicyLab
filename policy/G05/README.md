@@ -66,31 +66,31 @@ The public archive name intentionally does not encode the training step.
 
 ### RoboDojo-real checkpoint
 
-Use this archive for RoboDojo-real evaluation only:
+The current real-policy bundle is trained only for the ARX-X5 embodiment. Download it from ModelScope:
 
 ```bash
-huggingface-cli download OpenGalaxea/g05-robodojo \
-  g05_robodojo_real_checkpoint.tar \
-  g05_robodojo_real_checkpoint.tar.sha256 \
-  --local-dir ./checkpoints/g05_robodojo_real
-
-cd ./checkpoints/g05_robodojo_real
-sha256sum -c g05_robodojo_real_checkpoint.tar.sha256
-tar -xf g05_robodojo_real_checkpoint.tar
+modelscope download --model ZhyRobert/g05-robodojo-real \
+  --include 'arx_x5/**' \
+  --local_dir ./checkpoints/g05_robodojo_real
 ```
 
-The extracted checkpoint file is:
+The checkpoint file is:
 
 ```text
-g05_robodojo_real_checkpoint/checkpoint/checkpoints/checkpoint.pt
+checkpoints/g05_robodojo_real/arx_x5/checkpoint.pt
 ```
 
-Then set:
+Run the policy server with the real ARX-X5 deployment config:
 
 ```bash
-export G05_CKPT_PATH=/path/to/g05_robodojo_real_checkpoint/checkpoint/checkpoints/checkpoint.pt
+export G05_CKPT_PATH=/path/to/checkpoints/g05_robodojo_real/arx_x5/checkpoint.pt
+export G05_DEPLOY_CONFIG=deploy_real_arx_x5.yml
+export G05_ROOT=/path/to/checkpoint-compatible/GalaxeaVLA_Private
+export G05_PYTHON=/path/to/its/python3.10
 export ROBODOJO_G05_ACTION_SOURCE=fm
 ```
+
+This configuration is specific to `robodojo_arx_x5`: bilateral 14-dimensional absolute joint-position actions, 25 Hz control, a 32-step predicted horizon, and 16 returned actions per request. The default `deploy.yml` remains the RoboDojo-sim configuration and is unchanged.
 
 This release does not include RoboDojo-real training code or data-processing scripts. The real checkpoint is provided for official RoboDojo-real evaluation with this adapter.
 

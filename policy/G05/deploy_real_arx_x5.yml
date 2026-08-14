@@ -1,0 +1,23 @@
+policy_name: G05
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+action_dim: 14
+eval_batch: true
+ws_ping_timeout_s: 120.0
+ws_ping_interval_s: 120.0
+
+g05_root: null
+ckpt_path: null
+eval_embodiment: robodojo_arx_x5
+action_steps: 16
+frequency: 25
+action_source: fm
+hydra_overrides:
+  - model.model_arch.ar.block_wise_autoregressive=false
