@@ -80,14 +80,29 @@ The checkpoint file is:
 checkpoints/g05_robodojo_real/arx_x5/checkpoint.pt
 ```
 
-Run the policy server with the real ARX-X5 deployment config:
+Download and verify the checkpoint-compatible eval-only runtime:
+
+```bash
+modelscope download --model ZhyRobert/g05-robodojo-real \
+  --include 'runtime/g05_real_inference_runtime.tar.gz*' \
+  --local_dir ./checkpoints/g05_robodojo_real
+
+cd ./checkpoints/g05_robodojo_real/runtime
+sha256sum -c g05_real_inference_runtime.tar.gz.sha256
+tar -xzf g05_real_inference_runtime.tar.gz
+```
+
+Install the runtime and run the policy server with the real ARX-X5 deployment config:
 
 ```bash
 export G05_CKPT_PATH=/path/to/checkpoints/g05_robodojo_real/arx_x5/checkpoint.pt
 export G05_DEPLOY_CONFIG=deploy_real_arx_x5.yml
-export G05_ROOT=/path/to/checkpoint-compatible/GalaxeaVLA_Private
-export G05_PYTHON=/path/to/its/python3.10
+export G05_ROOT=/path/to/checkpoints/g05_robodojo_real/runtime/g05_real_runtime
+export G05_PYTHON=/path/to/python3.10
 export ROBODOJO_G05_ACTION_SOURCE=fm
+
+cd XPolicyLab/policy/G05
+bash install.sh
 ```
 
 This configuration is specific to `robodojo_arx_x5`: bilateral 14-dimensional absolute joint-position actions, 25 Hz control, a 32-step predicted horizon, and 16 returned actions per request. The default `deploy.yml` remains the RoboDojo-sim configuration and is unchanged.
