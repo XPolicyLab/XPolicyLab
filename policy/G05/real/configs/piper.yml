@@ -1,0 +1,9 @@
+env_cfg_type: piper
+eval_embodiment: robodojo_piper
+checkpoint_dir: checkpoints/piper
+frequency: 25
+action_type: joint
+action_source: fm
+action_horizon: 32
+action_steps: 16
+checkpoint_status: pending
