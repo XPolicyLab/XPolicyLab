@@ -9,9 +9,10 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 ## Installation
 
 ```bash
+conda create -n dp python=3.10 -y
+conda activate dp
 cd XPolicyLab/policy/DP
 bash install.sh
-conda activate <policy_env>  # e.g. dp
 ```
 
 ## Data Processing
