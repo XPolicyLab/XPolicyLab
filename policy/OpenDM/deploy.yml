@@ -1,0 +1,47 @@
+policy_name: OpenDM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# DM0.5-Mem RoboDojo sim inference contract.
+model_path: null
+norm_stats_path: null
+experiment_path: scripts/robodojo_dm05_history.py
+model_action_mode: absolute
+action_chunk_size: 50
+action_steps: 25
+
+history_enabled: true
+history_image_key: images_1
+history_slots: 20
+history_fps: 1.0
+runtime_fps: 25.0
+history_action_interval: 25
+history_tokens_per_slot: 16
+
+diffusion_steps: 10
+diffusion_integration_dtype: model
+diffusion_noise_seed: null
+prompt: null
+robot_type: null
+control_mode: null
+speed: "0.5"
+add_state: true
+n_bins: 256
+model_max_length: 1536
+
+bf16: false
+enable_bf16_compute: true
+force_fp32_action_path: true
+llm_attn_implementation: sdpa
+vision_attn_implementation: sdpa
+action_attn_implementation: sdpa
+liger_kernel: true

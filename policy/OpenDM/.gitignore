@@ -1,0 +1,7 @@
+/checkpoints/
+/opendm/checkpoints/
+/opendm/user_checkpoints/
+/opendm/wandb/
+/logs/
+__pycache__/
+*.py[cod]
