@@ -44,9 +44,6 @@ CAMERA_CANDIDATES = {
     "cam_right_wrist": [
         ("vision", "cam_right_wrist", "colors"),
     ],
-    "cam_wrist": [
-        ("vision", "cam_wrist", "colors"),
-    ],
 }
 
 @dataclasses.dataclass(frozen=True)
