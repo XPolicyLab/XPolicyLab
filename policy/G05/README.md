@@ -66,18 +66,20 @@ The public archive name intentionally does not encode the training step.
 
 ### RoboDojo-real checkpoint
 
-The current real-policy bundle is trained only for the ARX-X5 embodiment. Download it from ModelScope:
+Real-policy bundles are robot-specific and must not be interchanged. The
+current baseline available for official testing is the Piper bundle. Download
+it from ModelScope:
 
 ```bash
 modelscope download --model ZhyRobert/g05-robodojo-real \
-  --include 'arx_x5/**' \
+  --include 'real/piper/**' \
   --local_dir ./checkpoints/g05_robodojo_real
 ```
 
 The checkpoint file is:
 
 ```text
-checkpoints/g05_robodojo_real/arx_x5/checkpoint.pt
+checkpoints/g05_robodojo_real/real/piper/checkpoints/checkpoint.pt
 ```
 
 Download and verify the checkpoint-compatible eval-only runtime:
@@ -92,11 +94,11 @@ sha256sum -c g05_real_inference_runtime.tar.gz.sha256
 tar -xzf g05_real_inference_runtime.tar.gz
 ```
 
-Install the runtime and run the policy server with the real ARX-X5 deployment config:
+Install the runtime and run the policy server with the real Piper deployment config:
 
 ```bash
-export G05_CKPT_PATH=/path/to/checkpoints/g05_robodojo_real/arx_x5/checkpoint.pt
-export G05_DEPLOY_CONFIG=deploy_real_arx_x5.yml
+export G05_CKPT_PATH=/path/to/checkpoints/g05_robodojo_real/real/piper/checkpoints/checkpoint.pt
+export G05_DEPLOY_CONFIG=deploy_real_piper.yml
 export G05_ROOT=/path/to/checkpoints/g05_robodojo_real/runtime/g05_real_runtime
 export G05_PYTHON=/path/to/python3.10
 export ROBODOJO_G05_ACTION_SOURCE=fm
@@ -105,7 +107,11 @@ cd XPolicyLab/policy/G05
 bash install.sh
 ```
 
-This configuration is specific to `robodojo_arx_x5`: bilateral 14-dimensional absolute joint-position actions, 25 Hz control, a 32-step predicted horizon, and 16 returned actions per request. The default `deploy.yml` remains the RoboDojo-sim configuration and is unchanged.
+This configuration is specific to `robodojo_piper`: bilateral 14-dimensional
+absolute joint-position actions, 25 Hz control, a 32-step predicted horizon,
+and 16 returned actions per request. It is an AR+FM checkpoint served through
+the continuous FM action head. The default `deploy.yml` remains the
+RoboDojo-sim configuration and is unchanged.
 
 This release does not include RoboDojo-real training code or data-processing scripts. The real checkpoint is provided for official RoboDojo-real evaluation with this adapter.
 

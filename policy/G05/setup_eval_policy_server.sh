@@ -87,7 +87,7 @@ fi
 ckpt_path="$(resolve_ckpt_path "${ckpt_name}")"
 
 if ! action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}" 2>/dev/null); then
-  if [[ "${env_cfg_type}" == "arx_x5" ]]; then
+  if [[ "${env_cfg_type}" == "arx_x5" || "${env_cfg_type}" == "piper" || "${env_cfg_type}" == "piper_x" ]]; then
     action_dim=14
   else
     echo "Could not resolve action_dim for ${env_cfg_type}; check ${BENCH_ROOT}/env_cfg." >&2
