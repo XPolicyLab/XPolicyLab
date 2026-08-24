@@ -64,42 +64,45 @@ export ROBODOJO_G05_ACTION_SOURCE=fm
 
 The public archive name intentionally does not encode the training step.
 
-### RoboDojo-real checkpoint
+### RoboDojo-real checkpoints
 
-Real-policy bundles are robot-specific and must not be interchanged. The
-current baseline available for official testing is the Piper bundle. Download
-it from ModelScope:
+Real-policy bundles are robot-specific and must not be interchanged. Separate
+ARX-X5, Piper, and Piper-X bundles are available for official testing. Download
+only the bundle that matches the evaluation robot:
 
 ```bash
 modelscope download --model ZhyRobert/g05-robodojo-real \
-  --include 'real/piper/**' \
+  --include 'real/<robot>/**' \
   --local_dir ./checkpoints/g05_robodojo_real
 ```
 
-The checkpoint file is:
+Replace `<robot>` with `arx_x5`, `piper`, or `piper_x`. Each bundle is
+self-contained for evaluation and has this layout:
 
 ```text
-checkpoints/g05_robodojo_real/real/piper/checkpoints/checkpoint.pt
+real/<robot>/checkpoints/checkpoint.pt
+real/<robot>/config.yaml
+real/<robot>/dataset_stats.json
+real/<robot>/action_tokenizer_hf/
+real/<robot>/input_processor/
+real/<robot>/inference_runtime/
 ```
 
-Download and verify the checkpoint-compatible eval-only runtime:
+Select the matching deployment configuration:
 
-```bash
-modelscope download --model ZhyRobert/g05-robodojo-real \
-  --include 'runtime/g05_real_inference_runtime.tar.gz*' \
-  --local_dir ./checkpoints/g05_robodojo_real
-
-cd ./checkpoints/g05_robodojo_real/runtime
-sha256sum -c g05_real_inference_runtime.tar.gz.sha256
-tar -xzf g05_real_inference_runtime.tar.gz
+```text
+arx_x5 -> deploy_real_arx_x5.yml -> robodojo_arx_x5
+piper  -> deploy_real_piper.yml  -> robodojo_piper
+piper_x -> deploy_real_piper_x.yml -> robodojo_piper_x
 ```
 
-Install the runtime and run the policy server with the real Piper deployment config:
+Install the selected runtime and start the adapter with matching paths. For
+example, for Piper:
 
 ```bash
 export G05_CKPT_PATH=/path/to/checkpoints/g05_robodojo_real/real/piper/checkpoints/checkpoint.pt
 export G05_DEPLOY_CONFIG=deploy_real_piper.yml
-export G05_ROOT=/path/to/checkpoints/g05_robodojo_real/runtime/g05_real_runtime
+export G05_ROOT=/path/to/checkpoints/g05_robodojo_real/real/piper/inference_runtime
 export G05_PYTHON=/path/to/python3.10
 export ROBODOJO_G05_ACTION_SOURCE=fm
 
@@ -107,11 +110,12 @@ cd XPolicyLab/policy/G05
 bash install.sh
 ```
 
-This configuration is specific to `robodojo_piper`: bilateral 14-dimensional
-absolute joint-position actions, 25 Hz control, a 32-step predicted horizon,
-and 16 returned actions per request. It is an AR+FM checkpoint served through
-the continuous FM action head. The default `deploy.yml` remains the
-RoboDojo-sim configuration and is unchanged.
+All three real configurations use bilateral 14-dimensional absolute
+joint-position actions, 25 Hz control, a 32-step predicted horizon, and 16
+returned actions per request. They are AR+FM checkpoints served through the
+continuous FM action head. Offline evaluation found lower continuous-action
+error from FM than AR, so FM is the released default. The default `deploy.yml`
+remains the RoboDojo-sim configuration and is unchanged.
 
 This release does not include RoboDojo-real training code or data-processing scripts. The real checkpoint is provided for official RoboDojo-real evaluation with this adapter.
 
