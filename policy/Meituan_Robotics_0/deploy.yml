@@ -1,0 +1,20 @@
+policy_name: Meituan_Robotics_0
+protocol: ws
+host: localhost
+port: 6000
+
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+action_type: joint
+gpu_id: null
+seed: 0
+eval_batch: true
+
+# Evaluation-only profile for the best RoboDojo Qwen3.5 MMDiT checkpoint.
+checkpoint_profile: robodojo_qwen35_mmdit_abs_q99_640x480
+checkpoint_path: null
+base_vlm: null
+image_size: [640, 480]
+execute_horizon: 16
