@@ -23,25 +23,15 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_ty
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, action_dim=${action_dim}"
 
-# HuggingFace hub download may require proxy on deploy hosts (proxyup alias).
-_DEPLOY_PROXY_HOST="${DEPLOY_PROXY_HOST:-192.168.16.76}"
-_DEPLOY_PROXY_PORT="${DEPLOY_PROXY_PORT:-18000}"
-export http_proxy="http://${_DEPLOY_PROXY_HOST}:${_DEPLOY_PROXY_PORT}"
-export https_proxy="${http_proxy}"
-export HTTP_PROXY="${http_proxy}"
-export HTTPS_PROXY="${https_proxy}"
-echo "[SERVER] http_proxy=${http_proxy}"
-
-CONDA_BASE="$(conda info --base)"
-source "${CONDA_BASE}/etc/profile.d/conda.sh"
-YAML_PYTHON="${CONDA_BASE}/bin/python"
-if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
-    deactivate || true
-fi
-unset VIRTUAL_ENV
 if [[ "${policy_conda_env}" == "uv" || "${policy_conda_env}" == */* ]]; then
     if [[ "${policy_conda_env}" == "uv" ]]; then
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
+        resolver_python="${SCRIPT_DIR}/.venv/bin/python"
+        if [[ ! -x "${resolver_python}" ]]; then
+            echo "[SERVER][ERROR] uv venv not found: ${SCRIPT_DIR}/.venv" >&2
+            echo "[SERVER][ERROR] Run: bash ${SCRIPT_DIR}/install.sh" >&2
+            exit 1
+        fi
+        policy_uv_env_path=$("${resolver_python}" - <<PYENV
 import yaml
 from pathlib import Path
 script_dir = Path("${SCRIPT_DIR}")
@@ -53,20 +43,27 @@ print(path)
 PYENV
 )
     else
-        policy_uv_env_path=$("${YAML_PYTHON}" - <<PYENV
-from pathlib import Path
-script_dir = Path("${SCRIPT_DIR}")
-path = Path("${policy_conda_env}").expanduser()
-if not path.is_absolute():
-    path = (script_dir / path).resolve()
-print(path)
-PYENV
-)
+        policy_uv_env_path="${policy_conda_env}"
+        if [[ "${policy_uv_env_path}" != /* ]]; then
+            policy_uv_env_path="${SCRIPT_DIR}/${policy_uv_env_path}"
+        fi
+        policy_uv_env_path="$(cd "${policy_uv_env_path}" && pwd)"
+    fi
+    if [[ ! -f "${policy_uv_env_path}/.venv/bin/activate" ]]; then
+        echo "[SERVER][ERROR] uv venv not found: ${policy_uv_env_path}/.venv" >&2
+        echo "[SERVER][ERROR] Run: bash ${SCRIPT_DIR}/install.sh" >&2
+        exit 1
     fi
     echo "[SERVER] Activating uv environment: ${policy_uv_env_path}/.venv"
     source "${policy_uv_env_path}/.venv/bin/activate"
     PYTHON_BIN="$(command -v python)"
 else
+    CONDA_BASE="$(conda info --base)"
+    source "${CONDA_BASE}/etc/profile.d/conda.sh"
+    if type deactivate >/dev/null 2>&1 && [[ -n "${VIRTUAL_ENV:-}" ]]; then
+        deactivate || true
+    fi
+    unset VIRTUAL_ENV
     echo "[SERVER] Activating Conda environment: ${policy_conda_env}"
     conda activate "${policy_conda_env}"
     PYTHON_BIN="${CONDA_PREFIX}/bin/python"
