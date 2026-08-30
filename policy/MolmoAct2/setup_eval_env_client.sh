@@ -22,8 +22,7 @@ yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
-export PYTHONPATH="${SCRIPT_DIR}/deploy:${BENCH_ROOT}:${PYTHONPATH:-}"
-export MOLMOACT_MODEL_CLIENT_TIMEOUT="${MOLMOACT_MODEL_CLIENT_TIMEOUT:-600}"
+export PYTHONPATH="${BENCH_ROOT}:${PYTHONPATH:-}"
 export PYTHONWARNINGS=ignore::UserWarning
 
 bash "${UTILS_DIR}/setup_env_client.sh" \
