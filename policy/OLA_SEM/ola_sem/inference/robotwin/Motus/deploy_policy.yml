@@ -1,0 +1,16 @@
+# Basic experiment configuration (keep unchanged)
+policy_name: null
+task_name: null
+task_config: null
+ckpt_setting: null
+seed: null
+instruction_type: unseen
+inference_mode: legacy
+test_num: 100
+num_inference_timesteps: null
+history_action_noise_std: null
+future_video_denoise_fraction: null
+result_path_tag: null
+
+# LAWM Parameters
+model_config: robotwin.yml

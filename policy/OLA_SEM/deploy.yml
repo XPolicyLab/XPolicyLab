@@ -1,0 +1,25 @@
+policy_name: OLA_SEM
+protocol: ws
+host: 127.0.0.1
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+
+checkpoint_path: null
+wan_path: null
+vlm_path: null
+device: cuda
+inference_mode: history_flow
+num_inference_timesteps: 4
+history_action_noise_std: 0.02
+future_video_denoise_fraction: 1.0
+request_timeout_s: 1200
+max_connect_seconds: 1200
+ws_ping_interval_s: 20
+ws_ping_timeout_s: 120

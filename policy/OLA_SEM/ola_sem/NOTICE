@@ -1,0 +1,13 @@
+OLA-SEM is a focused RoboTwin LAP training and inference release derived from
+Motus: A Unified Latent Action World Model.
+
+Upstream project: https://github.com/thu-ml/Motus
+
+The retained Motus implementation and this derived release are distributed
+under the Apache License 2.0 included in LICENSE. OLA-SEM keeps the Motus Python
+class names and RoboTwin policy directory name for checkpoint compatibility.
+
+The RoboTwin data conversion utilities are vendored from OLA-SEM commit
+657c3db8926e2075e3fa056fc28ef00c26cbb957. XPolicyLab modifies the converter
+to use its shared RGB image decoder and performs RGB-to-BGR conversion only at
+the OpenCV VideoWriter boundary.
