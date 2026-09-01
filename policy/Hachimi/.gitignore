@@ -1,0 +1,8 @@
+checkpoints/
+open_sf_wam/.venv/
+open_sf_wam/checkpoints_out/
+results/
+__pycache__/
+*.pyc
+*.log
+wandb/

@@ -1,0 +1,19 @@
+policy_name: Hachimi
+bench_name: null
+task_name: stack_bowls
+env_cfg_type: arx_x5
+seed: 0
+eval_batch: true
+gpu_id: null
+checkpoint_num: 59999
+protocol: ws
+
+ckpt_name: ./checkpoints/RoboDojo-sim-arx_x5-joint-0
+result_dir: "./results/hachimi/"
+obs_transform_pipeline: "xspark-v1.0"
+action_type: joint
+policy_uv_env_path: open_sf_wam
+train_config_name: pi05sfwam_jax_robodojo_v21_merged
+repo_id: RoboDojo_lerobot_v21_merged
+host: 127.0.0.1
+port: 5000
