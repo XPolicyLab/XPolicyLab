@@ -11,12 +11,6 @@ checkpoints/
 runs/
 Log/
 logs/
-policy/OLA_SEM/data/
-policy/OLA_SEM/logs/
-policy/OLA_SEM/slurm-*.out
-policy/OLA_SEM/.triton_cache/
-policy/OLA_SEM/checkpoints-smoke/
-policy/OLA_SEM/eval_runs/
 
 # H_RDT local artifacts and large model assets
 policy/H_RDT/.cache/

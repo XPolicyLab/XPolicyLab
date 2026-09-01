@@ -25,8 +25,9 @@ export OLA_SEM_MAX_EPISODES=16
 export OLA_SEM_BATCH_SIZE=1
 export OLA_SEM_NUM_WORKERS=0
 export OLA_SEM_REPORT_TO=none
-export MASTER_PORT=$((20000 + SLURM_JOB_ID % 20000))
-export TRITON_CACHE_DIR=/tmp/ola_sem_triton_cache_${SLURM_JOB_ID}
+run_id=${SLURM_JOB_ID:-$$}
+export MASTER_PORT=$((20000 + run_id % 20000))
+export TRITON_CACHE_DIR=/tmp/ola_sem_triton_cache_${run_id}
 mkdir -p "${TRITON_CACHE_DIR}"
 
 bash process_data.sh RoboTwin smoke aloha_agilex joint "${OLA_SEM_DATASET_ROOT}"

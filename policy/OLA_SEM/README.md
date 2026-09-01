@@ -1,10 +1,10 @@
 # OLA_SEM
 
-**Contributor:** OLA-SEM | **Original code:** https://github.com/chris1220313648/OLA-Sem
+**Contributor:** OLA-SEM | **Paper:** To be released | **arXiv:** Pending | **Original code:** https://github.com/chris1220313648/OLA-Sem
 
 This adapter integrates the OLA-SEM language-action world model for RoboTwin 2.0. It vendors the required upstream inference and training source under `ola_sem/`; checkpoints and pretrained Wan/Qwen assets remain external. The supported contract is `env_cfg_type=aloha_agilex`, `action_type=joint`, one environment, a 14-D absolute-qpos action, and a 16-step chunk.
 
-Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). 
+Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
@@ -154,8 +154,8 @@ only when intentionally continuing from an existing fine-tuned checkpoint.
 Outputs use `checkpoints/RoboTwin-history_flow_clean-aloha_agilex-joint-42/`.
 Other supported overrides are `OLA_SEM_OUTPUT_ROOT`, `OLA_SEM_MAX_STEPS`,
 `OLA_SEM_MAX_EPISODES`, `OLA_SEM_BATCH_SIZE`, `OLA_SEM_NUM_WORKERS`, and
-`OLA_SEM_REPORT_TO`. Submit `sbatch slurm/train_smoke.sh` for the one-step
-8-GPU smoke run after adapting its site-specific Slurm paths.
+`OLA_SEM_REPORT_TO`. Run `bash slurm/train_smoke.sh` for the one-step 8-GPU
+smoke run after adapting its site-specific environment and asset paths.
 
 ## Evaluation
 
@@ -166,7 +166,7 @@ checkpoint can be used directly for evaluation. Its root must contain
 validates `flow_source.mode=history`, `video_mode=gaussian`,
 `action_noise_std=0.02`, and `history_length=16` and evaluates with four
 denoising steps. Both workflows below run directly on a machine that already
-has a GPU; Slurm is not required.
+has a GPU.
 
 Set the shared model and simulator paths first:
 
@@ -238,6 +238,26 @@ and does not retry them. Results are written under
 plus final `summary.json`, `summary.tsv`, and `summary.md`. Set
 `OLA_SEM_EVAL_VIDEO_LOG=true` to save videos or
 `OLA_SEM_EVAL_RUN_ROOT=/another/output/directory` to change the output parent.
+
+## Configuration
+
+The standard run-specific keys in `deploy.yml` are supplied by `eval.sh`. The
+OLA-SEM-specific and transport keys are:
+
+| Key | Default | Meaning / override |
+| --- | --- | --- |
+| `checkpoint_path` | `null` | Explicit OLA-SEM checkpoint root. When unset, the shared checkpoint resolver uses `ckpt_name`; an absolute path passed as `ckpt_name` is also accepted. |
+| `wan_path` | `null` | Wan2.2-TI2V-5B root. Required at runtime and normally supplied by `OLA_SEM_WAN_PATH`. |
+| `vlm_path` | `null` | Qwen3-VL-2B-Instruct root. Required at runtime and normally supplied by `OLA_SEM_VLM_PATH`. |
+| `device` | `cuda` | Device used for model inference. |
+| `inference_mode` | `history_flow` | Inference algorithm. This adapter accepts only `history_flow`. |
+| `num_inference_timesteps` | `4` | Number of denoising steps used for each predicted action chunk. |
+| `history_action_noise_std` | `0.02` | Noise standard deviation for executed-action history; it must match the checkpoint metadata. |
+| `future_video_denoise_fraction` | `1.0` | Fraction of the denoising schedule applied to future-video latents; valid range is `[0, 1]`. |
+| `request_timeout_s` | `1200` | Compatibility value matching the top-level RoboTwin client's request timeout. The current wrapper sets the same value directly. |
+| `max_connect_seconds` | `1200` | Compatibility value matching the top-level client's connection retry window. The current wrapper sets the same value directly. |
+| `ws_ping_interval_s` | `20` | Policy-server WebSocket ping interval in seconds. |
+| `ws_ping_timeout_s` | `120` | Policy-server WebSocket ping timeout in seconds. |
 
 ## Notes
 
