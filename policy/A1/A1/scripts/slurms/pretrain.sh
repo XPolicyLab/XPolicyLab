@@ -34,7 +34,7 @@ if [ "$NODE_RANK" -eq 0 ]; then
     python save_code.py -n "${exp_name}" -o "${save_folder}"
 fi
 
-export WANDB_API_KEY=35ed06feafa826b6d6dd0c186d59eeba150e7442
+# WANDB_API_KEY comes from .env.personal or the environment — do not commit a real key.
 export WANDB_PROJECT=rc_training
 export WANDB_ENTITY=
 # export WANDB_MODE=offline

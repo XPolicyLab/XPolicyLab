@@ -12,7 +12,7 @@ export NCCL_SOCKET_IFNAME=eth0
 export NCCL_IB_HCA=mlx5_2,mlx5_3
 export NCCL_IB_DISABLE=1
 export NCCL_DEBUG=INFO
-export WANDB_API_KEY=8c8c73c90734b2e7292c02bb73313673f5167291
+export WANDB_API_KEY=wandb/api/key # replace with your wandb api key
 
 # used for check save when communication
 export NCCL_BLOCKING_WAIT=1
