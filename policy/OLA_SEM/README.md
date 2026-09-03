@@ -154,8 +154,7 @@ only when intentionally continuing from an existing fine-tuned checkpoint.
 Outputs use `checkpoints/RoboTwin-history_flow_clean-aloha_agilex-joint-42/`.
 Other supported overrides are `OLA_SEM_OUTPUT_ROOT`, `OLA_SEM_MAX_STEPS`,
 `OLA_SEM_MAX_EPISODES`, `OLA_SEM_BATCH_SIZE`, `OLA_SEM_NUM_WORKERS`, and
-`OLA_SEM_REPORT_TO`. Run `bash slurm/train_smoke.sh` for the one-step 8-GPU
-smoke run after adapting its site-specific environment and asset paths.
+`OLA_SEM_REPORT_TO`.
 
 ## Evaluation
 
@@ -195,49 +194,8 @@ bash eval.sh RoboTwin hanging_mug \
 ```
 
 Here `ola_sem` is the policy conda environment and the final argument is the
-RoboTwin conda environment. Change `hanging_mug` to any task listed in
-`eval_tasks_50.txt`. `EVAL_ENV_TYPE=debug` instead uses XPolicyLab's synthetic
+RoboTwin conda environment. Change `hanging_mug` to any RoboTwin 2.0 task name. `EVAL_ENV_TYPE=debug` instead uses XPolicyLab's synthetic
 debug client and does not measure RoboTwin task success.
-
-### Local 50-task evaluation
-
-`eval_all.sh` detects all GPUs visible to the current process. It starts one
-independent OLA-SEM policy server per GPU and distributes all 50 tasks from
-`eval_tasks_50.txt` across them. By default it runs both clean and randomized
-conditions with 100 valid episodes each, for 100 task-condition evaluations and
-10,000 total episodes:
-
-```bash
-bash eval_all.sh \
-  /path/to/checkpoints/ola_sem \
-  ola_sem \
-  /path/to/robotwin-conda-env
-```
-
-The complete interface is:
-
-```bash
-bash eval_all.sh \
-  <checkpoint_root> <policy_conda_env> <robotwin_conda_env> \
-  [episodes=100] [gpu_ids=all] [seed=42] [conditions=clean,randomized]
-```
-
-For example, run one episode for every clean task as a local smoke test:
-
-```bash
-bash eval_all.sh /path/to/checkpoints/ola_sem ola_sem robotwin 1 0 42 clean
-```
-
-The default `all` uses `OLA_SEM_GPU_IDS` when set, otherwise
-`CUDA_VISIBLE_DEVICES`, and otherwise every GPU reported by `nvidia-smi`.
-Pass one ID such as `0` or a comma-separated subset such as `0,2,3` to limit
-the run. Each worker uses the same GPU for its policy server and RoboTwin. The
-script disables video by default, continues after individual task failures,
-and does not retry them. Results are written under
-`eval_runs/local_<timestamp>_<pid>/`, including per-task logs and result JSON
-plus final `summary.json`, `summary.tsv`, and `summary.md`. Set
-`OLA_SEM_EVAL_VIDEO_LOG=true` to save videos or
-`OLA_SEM_EVAL_RUN_ROOT=/another/output/directory` to change the output parent.
 
 ## Configuration
 

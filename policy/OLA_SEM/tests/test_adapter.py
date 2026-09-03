@@ -22,7 +22,6 @@ from XPolicyLab.policy.OLA_SEM.robotwin_eval_client import (
     standard_action_to_qpos,
     task_config_video_override,
 )
-from XPolicyLab.policy.OLA_SEM import summarize_local_eval
 from XPolicyLab.policy.OLA_SEM.ola_sem.data.robotwin2.robotwin_data_convert.robotwin_converter import (
     RobotWinConverter,
 )
@@ -275,49 +274,3 @@ def test_result_file_validation(tmp_path):
     result.write_text("1.01", encoding="utf-8")
     with pytest.raises(ValueError, match=r"outside \[0, 1\]"):
         parse_result_file(result, 100)
-
-
-def test_local_50_task_summary(tmp_path):
-    tasks_file = Path(__file__).parents[1] / "eval_tasks_50.txt"
-    tasks = summarize_local_eval.load_tasks(tasks_file)
-    assert len(tasks) == 50
-
-    run_dir = tmp_path / "local_eval"
-    for child in ("elements", "logs", "status"):
-        (run_dir / child).mkdir(parents=True)
-    result_file = tmp_path / "_result.txt"
-    result_file.write_text("0.5\n", encoding="utf-8")
-
-    for task in tasks:
-        stem = f"clean_{task}"
-        (run_dir / "status" / f"{stem}.exit_code").write_text(
-            "0\n", encoding="utf-8"
-        )
-        (run_dir / "elements" / f"{stem}.json").write_text(
-            json.dumps(
-                {
-                    "task": task,
-                    "task_config": "demo_clean",
-                    "episodes": 100,
-                    "success_count": 50,
-                    "success_rate": 0.5,
-                    "result_file": str(result_file),
-                }
-            ),
-            encoding="utf-8",
-        )
-
-    records = summarize_local_eval.build_records(run_dir, tasks, ["clean"], 100)
-    assert len(records) == 50
-    assert all(record["status"] == "passed" for record in records)
-    assert summarize_local_eval.write_outputs(run_dir, records, ["clean"])
-    summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
-    assert summary["conditions"]["clean"]["macro_average_success_rate"] == 0.5
-    assert summary["conditions"]["clean"]["aggregate_success_rate"] == 0.5
-
-    (run_dir / "status" / f"clean_{tasks[0]}.exit_code").write_text(
-        "1\n", encoding="utf-8"
-    )
-    records = summarize_local_eval.build_records(run_dir, tasks, ["clean"], 100)
-    assert records[0]["status"] == "failed"
-    assert not summarize_local_eval.write_outputs(run_dir, records, ["clean"])
