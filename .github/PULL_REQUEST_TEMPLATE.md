@@ -9,7 +9,7 @@
 ## Components
 - [ ] install.sh
 - [ ] model.py (+ __init__.py)
-- [ ] images: RGB end to end, decoding only via decode_image_bit, no channel swaps (see CONTRIBUTING.md)
+- [ ] images: only decode_image_bit is supported (legacy layouts → RGB), no channel swaps (see README)
 - [ ] deploy.yml (standard key set incl. protocol: ws / host / port, policy_name matches the directory)
 - [ ] deploy.py aligned with demo_policy (or divergence explained)
 - [ ] eval.sh + setup_eval_policy_server.sh + setup_eval_env_client.sh
@@ -18,6 +18,7 @@
 
 ## Testing
 - [ ] bash -n + py_compile pass
+- [ ] decode grep: only decode_image_bit on XPolicyLab data
 - [ ] EVAL_ENV_TYPE=debug closed loop passes (paste the log tail)
 - [ ] Simulator eval: task=..., success=... (if available)
 

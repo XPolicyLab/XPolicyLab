@@ -53,7 +53,7 @@ Take dimensions from `get_robot_action_dim_info(env_cfg_type)` in `XPolicyLab.ut
 
 ## Conventions
 
-`AGENTS.md` at the repo root states the image, path, and dimension rules that apply to every change; it is always loaded, so follow it rather than re-deriving anything. The three that adapters get wrong most often: `model.py` never decodes (the server already did), offline code decodes only via `decode_image_bit`, and everything is RGB end to end — a `COLOR_BGR2RGB` added after a decode is always a bug, and the only exceptions are medium adapters around `cv2.VideoWriter` / `cv2.VideoCapture` and a documented `deploy.yml` opt-in like `policy/Dexora_1B`'s `input_color_order`.
+`AGENTS.md` at the repo root states the image, path, and dimension rules that apply to every change; it is always loaded, so follow it rather than re-deriving anything. The three that adapters get wrong most often: `model.py` never decodes (the server already did), offline code decodes **only** via `decode_image_bit` (the single supported decoder — image bits carry some inconsistency from earlier data versions; see README [Standard Data Formats](../../../README.md#decode-only-through-decode_image_bit)), and everything is RGB end to end — a `COLOR_BGR2RGB` added after a decode is always a bug, and the only exceptions are medium adapters around `cv2.VideoWriter` / `cv2.VideoCapture` and a documented `deploy.yml` opt-in like `policy/Dexora_1B`'s `input_color_order`.
 
 Adapter-specific conventions on top of those:
 

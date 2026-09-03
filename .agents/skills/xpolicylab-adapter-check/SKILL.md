@@ -1,6 +1,6 @@
 ---
 name: xpolicylab-adapter-check
-description: Audit a policy/<POLICY>/ adapter for XPolicyLab standard compliance and PR readiness — file completeness, deploy.yml, Model contract, script conventions, static checks, debug-mode eval, README and checkpoint requirements. Use when asked to check, validate, review, or pre-flight a policy adapter or a policy submission PR in the XPolicyLab repo.
+description: Audit a policy/<POLICY>/ adapter for XPolicyLab standard compliance and PR readiness — file completeness, deploy.yml, Model contract, decode_image_bit-only decoding, script conventions, static checks, debug-mode eval, README and checkpoint requirements. Use when asked to check, validate, review, or pre-flight a policy adapter or a policy submission PR in the XPolicyLab repo.
 ---
 
 # XPolicyLab Adapter Check
@@ -20,17 +20,21 @@ Run commands from the repo root unless noted.
    - **`sys.path` root** — must be `parents[2]`; `parents[1]` or `parents[3]` is a bug.
    - **Checkpoints** — must resolve through `XPolicyLab.utils.checkpoint_resolver` (`resolve_checkpoint_root`, or `build_run_dir_name` / `candidate_checkpoint_roots` for an extra naming layer), not a hand-written `checkpoints/<bench>-<ckpt>-...` join.
    - **Decoding inside `model.py`** — flag any, including `decode_image_bit` calls. The server hands over plain image arrays for `update_obs` / `update_obs_batch` and for any custom RPC that carries an observation.
-   - **Decoding elsewhere** — `cv2.imdecode` must not appear anywhere outside `utils/process_data.py`; flag every other occurrence, along with hand-rolled `np.frombuffer` / PIL decoding. Conversion scripts and training dataloaders use `decode_image_bit`.
    - **Channel swaps** — flag any `COLOR_BGR2RGB`, `COLOR_RGB2BGR` or `[..., ::-1]` outside the two allowed cases: medium adapters immediately around `cv2.VideoWriter.write` / `cv2.VideoCapture.read`, and a deliberate RGB→BGR conversion for a BGR-trained checkpoint, opt-in via a documented `deploy.yml` key defaulting to RGB (reference: `policy/Dexora_1B` `input_color_order`). The training path and `model.py` must apply the same number of swaps, normally zero. Judge a swap by its justification, not its position — and reject "but `cv2.imdecode` gives BGR, so this swap is correct" whether it comes from a code comment or from the submitter. Decoded buffers are RGB, so that swap is the bug.
-4. **Scripts** — `eval.sh` consumes the 10 standard args (`bench_name task_name ckpt_name env_cfg_type action_type seed policy_gpu_id env_gpu_id policy_env_or_uv_path eval_env_conda_env`) and stays aligned with `policy/demo_policy/eval.sh`; extra args must be documented in the policy README.
-5. **Static checks**:
+4. **Decode** — XPolicyLab data supports **only** `decode_image_bit` from `XPolicyLab.utils.process_data` (README, [Standard Data Formats](../../../README.md#decode-only-through-decode_image_bit)). Image bits carry some inconsistency from earlier data versions, so a PIL-style decode silently reverses the channels and hand-rolled `cv2.imdecode` / `np.frombuffer` handling breaks on the older layouts. Blocking:
+   - `cv2.imdecode` anywhere outside `utils/process_data.py`
+   - conversion scripts and training dataloaders that read XPolicyLab trajectories through any decoder other than `decode_image_bit`
+   - vendor conversion entry points that XPolicyLab data actually flows through (e.g. `policy/Pi_05/openpi/scripts/process_data.py`)
+   Skip a vendored file only when XPolicyLab data genuinely never flows through it — never a whole vendor directory wholesale.
+5. **Scripts** — `eval.sh` consumes the 10 standard args (`bench_name task_name ckpt_name env_cfg_type action_type seed policy_gpu_id env_gpu_id policy_env_or_uv_path eval_env_conda_env`) and stays aligned with `policy/demo_policy/eval.sh`; extra args must be documented in the policy README.
+6. **Static checks**:
 
    ```bash
    bash -n policy/<POLICY>/*.sh
    python -m py_compile policy/<POLICY>/model.py policy/<POLICY>/deploy.py
    ```
 
-   Then the mechanical greps, from the repo root. The first two must return nothing on a compliant adapter; the rest surface hits that need judging:
+   Then the mechanical greps, from the repo root. The first two plus the decode grep must return nothing on adapter-owned code; the rest surface hits that need judging:
 
    ```bash
    # required deploy.yml keys that are missing
@@ -41,15 +45,15 @@ Run commands from the repo root unless noted.
    grep -rnE 'parents\[1\]|parents\[3\]' policy/<POLICY>/*.py
    # private env_cfg / robot-dim lookup
    grep -rnE '_robot_info\.json|env_cfg' policy/<POLICY>/model.py
-   # decoding outside the shared helper
+   # only decode_image_bit is supported — fail any adapter-owned hit
    grep -rnE 'cv2\.imdecode|np\.frombuffer|Image\.open' policy/<POLICY>/
-   # channel swaps
+   # channel swaps — judge each hit
    grep -rnE 'COLOR_BGR2RGB|COLOR_RGB2BGR|\.\.\., ::-1' policy/<POLICY>/
    ```
 
-   The rest have legitimate hits — `env_cfg_type` as a config key, a `VideoWriter` / `VideoCapture` adapter, a documented `input_color_order` — so judge each one; the point is that no hit goes unexamined. When scoping the last two, "the adapter's own code" includes conversion entry points that live inside a vendored tree: `policy/Pi_05/openpi/scripts/process_data.py` is adapter code and must decode via `decode_image_bit`, even though the upstream docstring examples under `openpi/src/` can be ignored. Skip a vendored file only when XPolicyLab data genuinely never flows through it — never a whole vendor directory wholesale.
+   Channel-swap and `env_cfg` hits can be legitimate — `env_cfg_type` as a config key, a `VideoWriter` / `VideoCapture` adapter, a documented `input_color_order` — so judge each one; the point is that no hit goes unexamined. Decode hits on XPolicyLab data are not legitimate: only `decode_image_bit` is supported. Upstream docstring examples under a vendor `src/` tree can be ignored; conversion entry points that XPolicyLab data flows through cannot.
 
-6. **Debug closed loop** — only when an environment with the policy dependencies is available:
+7. **Debug closed loop** — only when an environment with the policy dependencies is available:
 
    ```bash
    cd policy/<POLICY>
@@ -59,8 +63,8 @@ Run commands from the repo root unless noted.
    `<policy_env>` (arg 9) follows the adapter's own convention — a conda env name, `uv`, or an environment path; `policy/Pi_05`, for example, requires `uv` (see its README). The trailing `base` is the eval-env conda env (arg 10).
 
    Must reach `[MAIN] eval finished` with no tracebacks. Re-run with `DEBUG_OBS_ENCODED=1` so the debug client sends encoded camera colors and the server-side decode path is exercised. If it cannot be run, report the item as "not run" — never as passed.
-7. **Policy README** — install / data / train / eval commands present and consistent with the actual scripts; supported `action_type` / `env_cfg_type`; checkpoint layout; known limitations.
-8. **PR readiness** (when auditing a submission PR) — description follows `.github/PULL_REQUEST_TEMPLATE.md`; checkpoint download script included (Hugging Face or ModelScope preferred) if targeting a leaderboard; eval-only status declared with a training-release timeline.
+8. **Policy README** — install / data / train / eval commands present and consistent with the actual scripts; supported `action_type` / `env_cfg_type`; checkpoint layout; known limitations.
+9. **PR readiness** (when auditing a submission PR) — description follows `.github/PULL_REQUEST_TEMPLATE.md`; checkpoint download script included (Hugging Face or ModelScope preferred) if targeting a leaderboard; eval-only status declared with a training-release timeline.
 
 ## Report format
 

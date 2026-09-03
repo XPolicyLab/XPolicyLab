@@ -55,7 +55,7 @@ Two more shared entry points, so adapters do not re-derive them: the importable 
 
 `model.py` never decodes images. The policy server decodes every observation it forwards, so `obs["vision"][<camera>]["color"]` is always a plain image array. This holds for `update_obs` / `update_obs_batch` and for any custom RPC a policy exposes that carries an observation, so an adapter with its own deploy loop still must not decode.
 
-In offline code — conversion scripts and training dataloaders that read trajectory files — decode only with `decode_image_bit` from `XPolicyLab.utils.process_data`, never with hand-rolled `cv2.imdecode` / `np.frombuffer` / PIL decoding. RoboTwin/RoboDojo legacy image-bit layouts are only handled correctly by this function.
+In offline code — conversion scripts and training dataloaders that read trajectory files — **only `decode_image_bit` from `XPolicyLab.utils.process_data` is supported**. Never hand-roll `cv2.imdecode` / `np.frombuffer` / PIL decoding. Image bits carry some inconsistency from earlier data versions: a PIL-style decode returns reversed channels, and hand-rolled buffer handling breaks on the older layouts. Only this function covers every version and returns RGB. The README states the rule in [Standard Data Formats](README.md#decode-only-through-decode_image_bit).
 
 Images are RGB end to end. `decode_image_bit` returns RGB — treat this as settled and do not re-derive it from the usual "OpenCV returns BGR" rule, which does not apply here: XPolicyLab buffers are encoded from RGB arrays, and `cv2.imencode` / `cv2.imdecode` move channels through JPEG in the order they were given, so the round trip is RGB in, RGB out. No channel conversion belongs in conversion, training, or eval code. Two exceptions: medium adapters — `COLOR_RGB2BGR` immediately before `cv2.VideoWriter.write(...)` and `COLOR_BGR2RGB` immediately after `cv2.VideoCapture.read()` — and a deliberate RGB→BGR conversion for a checkpoint trained on BGR data, which must be opt-in through a documented `deploy.yml` key that defaults to RGB (see `policy/Dexora_1B`'s `input_color_order`). A `cv2.cvtColor(decode_image_bit(...), COLOR_BGR2RGB)` anywhere means training and evaluation disagree on channel order.
 
@@ -111,6 +111,15 @@ bash -n policy/<POLICY>/*.sh
 python -m py_compile policy/<POLICY>/model.py policy/<POLICY>/deploy.py
 ```
 
+XPolicyLab data supports only `decode_image_bit` (README, [Standard Data Formats](README.md#decode-only-through-decode_image_bit)). The first grep must return nothing on adapter-owned conversion and training code; vendor files that never see XPolicyLab trajectories can be skipped, but a `cv2.imdecode` on those trajectories is a fail. The second grep surfaces channel swaps that need judging (medium adapters and a documented `input_color_order` are the only allowed hits):
+
+```bash
+# only decode_image_bit is supported
+grep -rnE 'cv2\.imdecode|np\.frombuffer|Image\.open' policy/<POLICY>/
+# channel swaps — judge each hit
+grep -rnE 'COLOR_BGR2RGB|COLOR_RGB2BGR|\.\.\., ::-1' policy/<POLICY>/
+```
+
 **2. Debug closed loop** — no simulator needed; verifies imports, server startup, observation serialization, action keys and dimensions, and batch logic:
 
 ```bash
@@ -142,7 +151,7 @@ GitHub pre-fills this from [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUE
 ## Components
 - [ ] install.sh
 - [ ] model.py (+ __init__.py)
-- [ ] images: RGB end to end, decoding only via decode_image_bit, no channel swaps (see CONTRIBUTING.md)
+- [ ] images: only decode_image_bit is supported (legacy layouts → RGB), no channel swaps (see README)
 - [ ] deploy.yml (standard key set incl. protocol: ws / host / port, policy_name matches the directory)
 - [ ] deploy.py aligned with demo_policy (or divergence explained)
 - [ ] eval.sh + setup_eval_policy_server.sh + setup_eval_env_client.sh
@@ -151,6 +160,7 @@ GitHub pre-fills this from [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUE
 
 ## Testing
 - [ ] bash -n + py_compile pass
+- [ ] decode grep: only decode_image_bit on XPolicyLab data
 - [ ] EVAL_ENV_TYPE=debug closed loop passes (paste the log tail)
 - [ ] Simulator eval: task=..., success=... (if available)
 

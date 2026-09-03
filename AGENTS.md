@@ -32,10 +32,13 @@ No channel conversion belongs in conversion, training, or eval code. Two excepti
 `model.py` never decodes. The server decodes every observation it forwards, including for custom
 RPCs, so `obs["vision"][<camera>]["color"]` is already an array; adapters only reshape, cast, resize.
 
-Offline code — conversion scripts and training dataloaders — decodes only with `decode_image_bit`
-from `XPolicyLab.utils.process_data`. Never hand-roll `cv2.imdecode` / `np.frombuffer` / PIL
-decoding: RoboTwin and RoboDojo legacy image-bit layouts are only handled correctly by that
-function. Mechanically, `cv2.imdecode` must not appear outside `utils/process_data.py`.
+Offline code — conversion scripts and training dataloaders — decodes **only** with
+`decode_image_bit` from `XPolicyLab.utils.process_data`. That is the single supported decoder:
+image bits carry some inconsistency from earlier data versions, and only this function
+handles every version and returns RGB. Never hand-roll `cv2.imdecode` / `np.frombuffer` / PIL
+decoding — a PIL-style decode reverses the channels, and the rest trip over the older layouts.
+Mechanically, `cv2.imdecode` must not appear outside `utils/process_data.py`. The why is in
+README, [Standard Data Formats](README.md#decode-only-through-decode_image_bit).
 
 ## Paths and dimensions come from the shared helpers
 
