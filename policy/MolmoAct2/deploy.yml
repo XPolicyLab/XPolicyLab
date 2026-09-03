@@ -1,0 +1,25 @@
+policy_name: MolmoAct2
+protocol: ws
+host: localhost
+port: 6000
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+
+# Direct Hugging Face inference defaults for MolmoAct2-RoboDojo.
+hf_repo_id: hqfang/MolmoAct2-RoboDojo
+hf_revision: 68964756dbfe5b455e6b4e4aa571199aa17d087c
+norm_tag: robodojo
+inference_action_mode: continuous
+expected_action_representation: absolute
+num_steps: 10
+actions_per_chunk: 25
+enable_cuda_graph: false
+dtype: bfloat16
+device: cuda
+policy_uv_env_path: .
