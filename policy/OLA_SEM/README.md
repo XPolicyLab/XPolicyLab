@@ -164,7 +164,7 @@ checkpoint can be used directly for evaluation. Its root must contain
 `config.json` beside `pytorch_model/mp_rank_00_model_states.pt`. This adapter
 validates `flow_source.mode=history`, `video_mode=gaussian`,
 `action_noise_std=0.02`, and `history_length=16` and evaluates with four
-denoising steps. Both workflows below run directly on a machine that already
+denoising steps. The workflow below runs directly on a machine that already
 has a GPU.
 
 Set the shared model and simulator paths first:
@@ -174,8 +174,6 @@ export OLA_SEM_WAN_PATH=/path/to/Wan2.2-TI2V-5B
 export OLA_SEM_VLM_PATH=/path/to/Qwen3-VL-2B-Instruct
 export OLA_SEM_ROBOTWIN_ROOT=/path/to/RoboTwin
 ```
-
-### Single-task evaluation
 
 Choose `demo_clean` or `demo_randomized` and the number of valid episodes,
 then call the standard ten-argument `eval.sh` interface:
