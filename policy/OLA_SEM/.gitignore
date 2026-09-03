@@ -1,0 +1,21 @@
+# Python and runtime caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.triton_cache/
+
+# Local datasets, checkpoints, logs, and evaluation outputs
+/data/
+/checkpoints/
+/checkpoints-smoke/
+/logs/
+/eval_runs/
+/slurm-*.out
+
+# Downloaded model assets and upstream training outputs
+/ola_sem/pretrained_models/
+/ola_sem/checkpoints/
+/ola_sem/runs/
+/ola_sem/wandb/
+/ola_sem/tensorboard_logs/
+/ola_sem/.cache/
