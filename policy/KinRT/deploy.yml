@@ -1,0 +1,22 @@
+policy_name: KinRT
+protocol: ws
+host: localhost
+port: 6000
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+
+checkpoint_num: 10000
+checkpoint_path: null
+train_config_name: kinrt_lora_robodojo
+repo_id: RoboDojo-KinRT-stack_bowls100-arx_x5-joint
+action_chunk_size: 50
+paligemma_lora_rank: null
+action_expert_lora_rank: null
+policy_uv_env_path: ../../../../KinRT_RoboDojo/policy/pi05
+result_dir: ./results/kinrt_robodojo_10k
