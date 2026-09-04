@@ -18,7 +18,7 @@ XPL_ROOT = Path(__file__).resolve().parents[2]
 BENCH_ROOT = XPL_ROOT.parent
 DEFAULT_RUNTIME = (
     Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
-    / "me_x_1_0"
+    / "mach_embodied_dex1_0"
     / "source"
     / "runtime"
 )
@@ -38,26 +38,26 @@ def _instruction(obs: dict[str, Any]) -> str:
     if isinstance(value, list):
         value = value[0] if value else None
     if not isinstance(value, str) or not value.strip():
-        raise ValueError("ME_X_1_0 requires a non-empty instruction")
+        raise ValueError("MachEmbodied_Dex1_0 requires a non-empty instruction")
     return value.strip()
 
 
 class Model(ModelTemplate):
-    """Eval-only ME-X-1.0 adapter for Aloha-AgileX joint control."""
+    """Eval-only MachEmbodied-Dex1.0 adapter for Aloha-AgileX joint control."""
 
     def __init__(self, model_cfg: dict[str, Any]):
         self.model_cfg = model_cfg
         self.action_type = model_cfg["action_type"]
         self.env_cfg_type = model_cfg["env_cfg_type"]
         if self.action_type != "joint":
-            raise ValueError("ME_X_1_0 only supports action_type=joint")
+            raise ValueError("MachEmbodied_Dex1_0 only supports action_type=joint")
         if self.env_cfg_type != "arx_x5":
-            raise ValueError("ME_X_1_0 only supports env_cfg_type=arx_x5")
+            raise ValueError("MachEmbodied_Dex1_0 only supports env_cfg_type=arx_x5")
         self.robot_dims = get_robot_action_dim_info(self.env_cfg_type)
         arm_dims = self.robot_dims["arm_dim"]
         ee_dims = self.robot_dims["ee_dim"]
         if len(arm_dims) != 2 or len(ee_dims) != 2:
-            raise ValueError(f"ME_X_1_0 requires a bimanual robot: {self.robot_dims}")
+            raise ValueError(f"MachEmbodied_Dex1_0 requires a bimanual robot: {self.robot_dims}")
         self.action_layout = (
             ("left_arm_joint_state", arm_dims[0]),
             ("left_ee_joint_state", ee_dims[0]),
@@ -67,7 +67,7 @@ class Model(ModelTemplate):
         self.action_dim = sum(size for _, size in self.action_layout)
         upstream_value = (
             model_cfg.get("upstream_policy_path")
-            or os.environ.get("MEX_RUNTIME_PATH")
+            or os.environ.get("MACH_EMBODIED_DEX_RUNTIME_PATH")
             or DEFAULT_RUNTIME
         )
         upstream = _required_path(upstream_value, "upstream_policy_path")
@@ -78,15 +78,15 @@ class Model(ModelTemplate):
         checkpoint = _required_path(checkpoint, "checkpoint_path/ckpt_name")
         wan_path = _required_path(
             model_cfg.get("wan_path")
-            or os.environ.get("MEX_WAN_PATH")
+            or os.environ.get("MACH_EMBODIED_DEX_WAN_PATH")
             or checkpoint / "wan",
-            "wan_path/MEX_WAN_PATH",
+            "wan_path/MACH_EMBODIED_DEX_WAN_PATH",
         )
         cadence = float(model_cfg.get("tactile_frame_interval_seconds", 0.06))
         if not np.isfinite(cadence) or cadence <= 0:
             raise ValueError("tactile_frame_interval_seconds must be finite and positive")
 
-        self.policy = runtime.MEXPolicy(
+        self.policy = runtime.MachEmbodiedDexPolicy(
             checkpoint_path=str(checkpoint),
             wan_path=str(wan_path),
             tactile_frame_interval_seconds=cadence,
@@ -125,7 +125,7 @@ class Model(ModelTemplate):
 
     def update_obs_batch(self, obs_list: list[dict[str, Any]]) -> None:
         if len(obs_list) != 1:
-            raise RuntimeError("ME_X_1_0 does not support batched inference")
+            raise RuntimeError("MachEmbodied_Dex1_0 does not support batched inference")
         self.update_obs(obs_list[0])
 
     def get_action(self) -> list[dict[str, np.ndarray]]:
@@ -133,7 +133,7 @@ class Model(ModelTemplate):
             raise RuntimeError("Call update_obs before get_action")
         chunk = np.asarray(self.policy.get_action(), dtype=np.float32)
         if chunk.shape != (16, self.action_dim) or not np.isfinite(chunk).all():
-            raise RuntimeError(f"Invalid ME-X-1.0 action chunk: {chunk.shape}")
+            raise RuntimeError(f"Invalid MachEmbodied-Dex1.0 action chunk: {chunk.shape}")
         actions = []
         for vector in chunk:
             action = {}
@@ -146,7 +146,7 @@ class Model(ModelTemplate):
 
     def get_action_batch(self, env_idx_list=None):
         if env_idx_list is not None and len(env_idx_list) != 1:
-            raise RuntimeError("ME_X_1_0 does not support batched inference")
+            raise RuntimeError("MachEmbodied_Dex1_0 does not support batched inference")
         return [self.get_action()]
 
     def reset(self) -> None:

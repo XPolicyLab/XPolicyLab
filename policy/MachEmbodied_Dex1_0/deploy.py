@@ -12,4 +12,4 @@ def eval_one_episode(TASK_ENV, model_client):
 
 
 def eval_one_episode_batch(TASK_ENV, model_client):
-    raise RuntimeError("ME_X_1_0 supports eval_batch=false only")
+    raise RuntimeError("MachEmbodied_Dex1_0 supports eval_batch=false only")

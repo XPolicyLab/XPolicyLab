@@ -1,4 +1,4 @@
-policy_name: ME_X_1_0
+policy_name: MachEmbodied_Dex1_0
 protocol: ws
 host: localhost
 port: null

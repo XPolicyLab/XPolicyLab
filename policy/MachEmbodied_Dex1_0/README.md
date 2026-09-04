@@ -1,8 +1,8 @@
-# ME-X-1.0
+# MachEmbodied-Dex1.0
 
-**Contributor:** Li Auto ME-X Team | **Paper:** Pending | **arXiv:** Pending | **Original code:** https://github.com/Liuxuetao1219/ME_X_1_0
+**Contributor:** Li Auto | **Paper:** Pending | **arXiv:** Pending | **Original code:** https://github.com/Liuxuetao1219/MachEmbodied-Dex1.0
 
-`ME_X_1_0` is the eval-only XPolicyLab adapter for the ME-X-1.0 RoboTwin Clean50-to-Random
+`MachEmbodied_Dex1_0` is the eval-only XPolicyLab adapter for the MachEmbodied-Dex1.0 RoboTwin Clean50-to-Random
 checkpoint. It supports `bench_name=RoboTwin`, `env_cfg_type=arx_x5`, and
 `action_type=joint`.
 
@@ -14,7 +14,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ```bash
 conda activate <policy_env>
-cd XPolicyLab/policy/ME_X_1_0
+cd XPolicyLab/policy/MachEmbodied_Dex1_0
 bash install.sh
 ```
 
@@ -31,9 +31,9 @@ Unsupported in this eval-only submission (release ETA: TBD).
 ## Evaluation
 
 ```bash
-CHECKPOINT_DIR=checkpoints/ME-X-1.0-RoboTwin-Clean2Random-Leaderboard
+CHECKPOINT_DIR=checkpoints/MachEmbodied-Dex1.0-RoboTwin-Clean2Random-Leaderboard
 
-hf download liuxuetao/ME-X-1.0-RoboTwin-Clean2Random-Leaderboard \
+hf download liuxuetao/MachEmbodied-Dex1.0-RoboTwin-Clean2Random-Leaderboard \
   --local-dir "${CHECKPOINT_DIR}"
 
 hf download Wan-AI/Wan2.2-TI2V-5B \
@@ -47,17 +47,17 @@ hf download Wan-AI/Wan2.2-TI2V-5B \
   --local-dir "${CHECKPOINT_DIR}/wan"
 ```
 
-The ME-X repository provides `model.pt`, `tactile_ae.pt`, `model_config.json`, and
+The MachEmbodied-Dex repository provides `model.pt`, `tactile_ae.pt`, `model_config.json`, and
 `manifest.json`; the second command downloads the required Wan2.2 assets.
 
 ```bash
-cd XPolicyLab/policy/ME_X_1_0
+cd XPolicyLab/policy/MachEmbodied_Dex1_0
 bash eval.sh RoboTwin adjust_bottle \
-  ME-X-1.0-RoboTwin-Clean2Random-Leaderboard \
+  MachEmbodied-Dex1.0-RoboTwin-Clean2Random-Leaderboard \
   arx_x5 joint 42 0 0 <policy_env> <robotwin_env>
 ```
 
-`<policy_env>` runs ME-X-1.0; `<robotwin_env>` runs RoboTwin/SAPIEN.
+`<policy_env>` runs MachEmbodied-Dex1.0; `<robotwin_env>` runs RoboTwin/SAPIEN.
 
 ## Configuration
 
