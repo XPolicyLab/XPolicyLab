@@ -34,7 +34,7 @@ episode_num = 50
 TASK_INSTRUCTIONS = {
     "battery_try": "There are two batteries and a battery slot on the table. Combining the two batteries in different orientations causes the dashboard needle to rotate.",
     "blocks_ranking_try": "There is a button and three colored cubes arranged in a random row on the table. Each time the cubes are rearranged, the arm presses the button until the arrangement is successful.",
-    "cover_blocks": "On the table, red, green, and blue blocks are arranged randomly along with three lids. From the current viewpoint, cover the blocks from right to left using the lids, and then uncover them again in the sequence red, green, and blue.",
+    "cover_blocks": "On the table, red, green, and blue blocks are arranged randomly along with three lids. From the current viewpoint, cover the blocks from left to right using the lids, and then uncover them again in the sequence red, green, and blue.",
     "press_button": "Observe the two numbers on the table. Press the left button the number of times corresponding to the number on the left, and press the middle button the number of times corresponding to the number on the right. Then press the right button once to confirm.",
     "place_block_mat": "Pick up the blocks from the blue mat and place them on the green mat, then put them back on the original mat, starting from left to right.",
 }

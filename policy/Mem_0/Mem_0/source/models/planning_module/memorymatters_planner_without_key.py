@@ -186,7 +186,7 @@ if __name__ == "__main__":
 
     cfg = OmegaConf.load(args.config_yaml)
     # global_task = "There are two batteries and a battery slot on the table. Combining the two batteries in different orientations causes the dashboard needle to rotate."
-    global_task = "On the table, red, green, and blue blocks are arranged randomly along with three lids. From the current viewpoint, cover the blocks from right to left using the lids, and then uncover them again in the sequence red, green, and blue."
+    global_task = "On the table, red, green, and blue blocks are arranged randomly along with three lids. From the current viewpoint, cover the blocks from left to right using the lids, and then uncover them again in the sequence red, green, and blue."
     high_level_policy = MemoryMattersPlanner(cfg, global_task=global_task)
     
 
