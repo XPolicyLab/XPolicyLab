@@ -17,7 +17,16 @@ XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+deploy_config="${G05_DEPLOY_CONFIG:-deploy.yml}"
+if [[ "${deploy_config}" == */* ]]; then
+  yaml_file="${deploy_config}"
+else
+  yaml_file="${SCRIPT_DIR}/${deploy_config}"
+fi
+if [[ ! -f "${yaml_file}" ]]; then
+  echo "G05 deploy config not found: ${yaml_file}" >&2
+  exit 2
+fi
 
 G05_ROOT="${G05_ROOT:-${SCRIPT_DIR}/G05}"
 PYTHON_BIN="${G05_PYTHON:-}"
@@ -78,7 +87,7 @@ fi
 ckpt_path="$(resolve_ckpt_path "${ckpt_name}")"
 
 if ! action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_type}" 2>/dev/null); then
-  if [[ "${env_cfg_type}" == "arx_x5" ]]; then
+  if [[ "${env_cfg_type}" == "arx_x5" || "${env_cfg_type}" == "piper" || "${env_cfg_type}" == "piper_x" ]]; then
     action_dim=14
   else
     echo "Could not resolve action_dim for ${env_cfg_type}; check ${BENCH_ROOT}/env_cfg." >&2

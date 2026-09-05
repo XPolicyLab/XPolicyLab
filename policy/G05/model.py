@@ -40,7 +40,7 @@ class Model(ModelTemplate):
         self.env_cfg_type = str(model_cfg.get("env_cfg_type", "arx_x5"))
         self.embodiment_type = str(model_cfg.get("eval_embodiment") or "robodojo")
         self.action_steps = int(model_cfg.get("action_steps") or 16)
-        self.default_frequency = float(model_cfg.get("frequency") or 30)
+        self.default_frequency = float(model_cfg.get("frequency") or 25)
         self.inference_batch_size = max(
             1,
             int(
@@ -157,8 +157,8 @@ class Model(ModelTemplate):
         try:
             return get_robot_action_dim_info(self.env_cfg_type)
         except Exception as exc:
-            if self.env_cfg_type == "arx_x5":
-                print(f"[G05] using built-in arx_x5 dims because env_cfg lookup failed: {exc}")
+            if self.env_cfg_type in {"arx_x5", "piper", "piper_x"}:
+                print(f"[G05] using built-in {self.env_cfg_type} dims because env_cfg lookup failed: {exc}")
                 return {"arm_dim": [6, 6], "ee_dim": [1, 1]}
             raise
 

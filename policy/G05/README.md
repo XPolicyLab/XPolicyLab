@@ -64,33 +64,58 @@ export ROBODOJO_G05_ACTION_SOURCE=fm
 
 The public archive name intentionally does not encode the training step.
 
-### RoboDojo-real checkpoint
+### RoboDojo-real checkpoints
 
-Use this archive for RoboDojo-real evaluation only:
+Real-policy bundles are robot-specific and must not be interchanged. Separate
+ARX-X5, Piper, and Piper-X bundles are available for official testing. Download
+only the bundle that matches the evaluation robot:
 
 ```bash
-huggingface-cli download OpenGalaxea/g05-robodojo \
-  g05_robodojo_real_checkpoint.tar \
-  g05_robodojo_real_checkpoint.tar.sha256 \
-  --local-dir ./checkpoints/g05_robodojo_real
-
-cd ./checkpoints/g05_robodojo_real
-sha256sum -c g05_robodojo_real_checkpoint.tar.sha256
-tar -xf g05_robodojo_real_checkpoint.tar
+modelscope download --model ZhyRobert/g05-robodojo-real \
+  --include 'real/<robot>/**' \
+  --local_dir ./checkpoints/g05_robodojo_real
 ```
 
-The extracted checkpoint file is:
+Replace `<robot>` with `arx_x5`, `piper`, or `piper_x`. Each bundle is
+self-contained for evaluation and has this layout:
 
 ```text
-g05_robodojo_real_checkpoint/checkpoint/checkpoints/checkpoint.pt
+real/<robot>/checkpoints/checkpoint.pt
+real/<robot>/config.yaml
+real/<robot>/dataset_stats.json
+real/<robot>/action_tokenizer_hf/
+real/<robot>/input_processor/
+real/<robot>/inference_runtime/
 ```
 
-Then set:
+Select the matching deployment configuration:
+
+```text
+arx_x5 -> deploy_real_arx_x5.yml -> robodojo_arx_x5
+piper  -> deploy_real_piper.yml  -> robodojo_piper
+piper_x -> deploy_real_piper_x.yml -> robodojo_piper_x
+```
+
+Install the selected runtime and start the adapter with matching paths. For
+example, for Piper:
 
 ```bash
-export G05_CKPT_PATH=/path/to/g05_robodojo_real_checkpoint/checkpoint/checkpoints/checkpoint.pt
+export G05_CKPT_PATH=/path/to/checkpoints/g05_robodojo_real/real/piper/checkpoints/checkpoint.pt
+export G05_DEPLOY_CONFIG=deploy_real_piper.yml
+export G05_ROOT=/path/to/checkpoints/g05_robodojo_real/real/piper/inference_runtime
+export G05_PYTHON=/path/to/python3.10
 export ROBODOJO_G05_ACTION_SOURCE=fm
+
+cd XPolicyLab/policy/G05
+bash install.sh
 ```
+
+All three real configurations use bilateral 14-dimensional absolute
+joint-position actions, 25 Hz control, a 32-step predicted horizon, and 16
+returned actions per request. They are AR+FM checkpoints served through the
+continuous FM action head. Offline evaluation found lower continuous-action
+error from FM than AR, so FM is the released default. The default `deploy.yml`
+remains the RoboDojo-sim configuration and is unchanged.
 
 This release does not include RoboDojo-real training code or data-processing scripts. The real checkpoint is provided for official RoboDojo-real evaluation with this adapter.
 
