@@ -4,7 +4,7 @@
 
 This adapter applies KinRT to RoboDojo's dual-ARX-X5 environment: `bench_name=RoboDojo`, `env_cfg_type=arx_x5`, and `action_type=joint`. The default model is the delivered **Full35 checkpoint at 60,000 training steps**, trained with full parameter fine-tuning on 35 tasks, 3,500 episodes, and 1,859,602 frames. Its configuration is `kinrt_full_robodojo`; its dataset and normalization key is `RoboDojo_lerobot_v30_video`.
 
-KinRT source remains in a separate checkout; this directory contains the XPolicyLab integration. The checkpoint has passed artifact verification, complete GPU restoration, synthetic-input inference, WebSocket checks with all 35 task instructions, and standard raw/encoded debug loops. Simulator task-success results have not yet been validated.
+KinRT source remains in a separate checkout; this directory contains the XPolicyLab integration. Complete GPU restoration, all-prompt WebSocket checks, and standard raw/encoded debug loops passed. The ongoing seed-0 simulator evaluation has completed `stack_bowls` at **22/25 (88%)** and `stack_bowls_random` at **4/25 (16%)**; these are two configurations, not a complete Full35 result.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -27,17 +27,19 @@ export KINRT_OPENPI_ROOT=<workspace>/KinRT_RoboDojo/policy/pi05
 bash install.sh "$KINRT_OPENPI_ROOT"
 ```
 
-The path is optional with this sibling layout. Installation pins KinRT to `590d52802cde804cdc2d0ccb672c1a3a90d76f91` and runs `uv sync --frozen --no-default-groups` without editing its `pyproject.toml` or `uv.lock`. It then installs the adapter dependencies into the KinRT OpenPI environment.
+The path is optional with this sibling layout. Installation pins KinRT to `590d52802cde804cdc2d0ccb672c1a3a90d76f91` and runs `uv sync --frozen --no-default-groups`. `KINRT_PYPI_MIRROR` selects `pypi` (default), `tencent`, or `original`; a guarded helper temporarily changes only lockfile mirror URLs after TOML semantic validation, preserving versions and hashes and restoring the original `uv.lock` afterward. `pyproject.toml` remains unchanged. The installer then adds the adapter dependencies.
 
-LeRobot is checked out separately at `8fff0fde7c79f23a93d845d1a50e985de01f8b8a` (v0.4.4, dataset format v3.0). An environment-local `kinrt_full35_lerobot.pth` gives this checkout's `src/` import precedence, reproducing the delivered run's `PYTHONPATH` source overlay while preserving the older locked dependencies. A successful install verifies imports and the selected LeRobot version; it does not validate model loading or GPU inference.
+LeRobot is checked out separately at `8fff0fde7c79f23a93d845d1a50e985de01f8b8a` (v0.4.4, dataset format v3.0). An environment-local `kinrt_full35_lerobot.pth` gives this checkout's `src/` import precedence, reproducing the delivered run's `PYTHONPATH` source overlay while preserving the older locked dependencies. A successful install verifies the actual KinRT adapter import path, the selected LeRobot version, and OpenCV import; it does not validate checkpoint loading or GPU inference. The installer explicitly adds `pytest==9.0.3`, which upstream model modules import even when development dependency groups are disabled, and reinstalls headless OpenCV after removing the GUI wheel's shared files.
 
-Runtime verification used an existing compatible OpenPI environment with the pinned source overlays, rather than a fresh run of `install.sh`. Its core versions were JAX/JAXlib `0.5.0`, Flax `0.10.2`, Orbax `0.11.1`, PyTorch `2.6.0`, and NumPy `1.26.4`, with isolated additional packages Accelerate `1.10.1`, psutil `7.2.2`, and msgpack-numpy `0.4.8`. The installer includes the missing Accelerate/psutil dependencies, but a complete fresh Linux installation remains untested.
+Installation and GPU execution have also passed in a newly created Linux policy environment with the pinned source overlays: JAX/JAXlib `0.5.0`, Flax `0.10.2`, Orbax `0.11.1`, PyTorch `2.6.0`, and NumPy `1.26.4`. Checks covered dependency synchronization, tokenizer download and digest verification, source preparation, original-lockfile restoration, the actual KinRT adapter path, LeRobot v3.0 source selection, and OpenCV `4.11.0`. Full checkpoint restoration, finite synthetic inference, and both standard raw/encoded debug loops passed in this new environment. Its simulator pair replay remains in progress; the simulator installation is still a separate prerequisite. See the [fresh runtime evidence](evidence/fresh_runtime_checks.json).
 
 The delivery notes document a training-time `data_loader.py` fix for LeRobot task tables, but do not include its original patch. Installation applies a reconstructed compatibility fix that maps the DataFrame's `task_index` column to its prompt index. It also adapts the upstream router-label generator to read v3 episodes packed into or split across Parquet files, filtering by episode and sorting by global frame index without changing clustering or feature calculations. The converter finalizes v3 dataset writers. These changes are explicit; the source commit alone does not contain every modification used for the delivered training run.
 
 From the adapter directory, `python prepare_full35_source.py "$KINRT_OPENPI_ROOT" --check` validates the known source without changing it; the same command without `--check` applies the fixes. `--revert` restores only this helper's exact changes. Both source files are checked before either is modified; unknown source edits are rejected. The installer performs the check and apply steps automatically.
 
-The model repository is private. Authenticate an account with access using `hf auth login`, or provide `HF_TOKEN` through your environment. Evaluators need their own authorized access. No credential is stored in this repository.
+The model repository is public and ungated. The default checkpoint download does not require an HF account, login, or token. Anonymous access was verified using a new cache with implicit authentication disabled; changing visibility did not change the pinned model revision.
+
+The [reproduction guide](REPRODUCING.md) gives the complete evaluation prerequisites and commands, including public checkpoint download, first-use tokenizer caching, the RoboDojo material-path helper, and the single-environment setting used when the policy and simulator share a 24 GiB GPU. The installer also provisions the separate PaliGemma tokenizer through `prepare_tokenizer.py`, verifies SHA-256 `8986bb4f423f07f8c7f70d0dbe3526fb2316056c17bae71b1ea975e77a168fc6`, and caches it under `OPENPI_DATA_HOME` (default `~/.cache/openpi`). Keep that cache setting for evaluation; a verified local tokenizer file can be supplied as described in the guide.
 
 ## Data Processing
 
@@ -121,6 +123,8 @@ KinRT uses four experts, top-1 dense routing, supervised routing coefficient `0.
 
 ## Evaluation
 
+For the measured seed-0 simulator protocol, follow [REPRODUCING.md](REPRODUCING.md). It includes `prepare_robodojo.py`, which is a separate explicit preparation step and is not invoked by the policy installer. On a shared 24 GiB GPU, use one simulator environment and `XLA_PYTHON_CLIENT_ALLOCATOR=platform` as documented there.
+
 Download the 60k parameters and checkpoint assets before model execution:
 
 ```bash
@@ -181,7 +185,22 @@ These timings describe this smoke test, including RPC transport where applicable
 
 Both standard `EVAL_ENV_TYPE=debug` runs reached `[MAIN] eval finished`, recorded in `logs/debug_encoded_0.log` and `logs/debug_encoded_1.log`; the runner also wrote `debug.complete`. Each mode completed 10 synthetic debug episodes with batch size 10. These checks validate the standard client/server lifecycle and action interface, not manipulation success.
 
-A seed-0 simulator run has started with `stack_bowls`, but no simulator success results have yet been validated. The available simulator checkout maps 34 of the 35 training tasks; the spelling task's code and layouts are missing, so a complete 35-task success-rate evaluation requires those assets.
+The separate fresh policy environment repeated full checkpoint restoration and synthetic inference successfully, followed by both standard raw/encoded debug modes. Its `50 x 14` synthetic action array exactly matched the original environment's array (`numpy.array_equal=true`, maximum absolute difference `0.0`); this comparison covers one identical input, not all possible trajectories. Both new debug logs reached `[MAIN] eval finished` at line 461. The [fresh runtime evidence](evidence/fresh_runtime_checks.json) retains log and action-file digests and distinguishes these completed checks from the ongoing simulator replay.
+
+### Simulator Results So Far
+
+| Configuration | Seed | Native episodes | Successes | Success rate |
+| --- | --- | --- | --- | --- |
+| `stack_bowls` | 0 | 25 | 22 | 88% |
+| `stack_bowls_random` | 0 | 25 | 4 | 16% |
+
+The [reference evidence](evidence/seed0_reference_pair.json) records all 50 episode outcomes, run IDs, source-result SHA-256 values, model and simulator revisions, and the execution order. It identifies these measurements as the original compatible-environment run; it is not evidence of a fresh-install replay. Success percentages come from the boolean episode outcomes, not the simulator's separate partial-credit score.
+
+These measurements use corrected material paths, one simulator environment, joint control, and action chunks of 50. A single fresh policy server ran the 25 `stack_bowls` episodes first, then the 25 `stack_bowls_random` episodes, without prior synthetic inference or a server restart. The policy RNG advances on every inference and is not reset by the adapter's episode reset, so two separate `eval.sh` invocations have a different RNG history. Follow the single-server sequence in [REPRODUCING.md](REPRODUCING.md) for the reported protocol.
+
+An earlier run with incorrect tabletop materials was stopped and excluded. The two completed configurations are the fixed/random pair of one canonical task. They do not establish a Full35 average or guarantee identical outcomes on other hardware, simulator versions, or rendering settings.
+
+The delivered metadata confirms training on **35 tasks, 3,500 episodes, and 1,859,602 frames**. The number 34 refers only to currently available simulator tasks: the spelling task's simulation code, configuration, and layouts are missing. The available evaluation scope expands to 46 configurations and 1,700 native episodes: 22 single configurations with 50 episodes each, plus 12 fixed/random pairs with 25 episodes per configuration. That is the planned scope, not the completed count. The fresh environment's 25+25 pair replay is in progress. Planned continuation over the other 44 configurations / 1,650 episodes starts a new policy server and records that RNG boundary; it is not one uninterrupted server run with the pair.
 
 ## Model Assets
 
@@ -193,7 +212,7 @@ bash download_checkpoint.sh [DESTINATION] [--assets-only | --include-training-st
 
 The default destination is `policy/KinRT/checkpoints/KinRT-RoboDojo-Full35-60k/`, resolved relative to the adapter directory. A normal download includes 60k model parameters, checkpoint metadata and normalization, and all delivery files. It excludes the 50k checkpoint and optimizer/training state. The two optional modes are mutually exclusive: `--assets-only` downloads delivery files and the checkpoint normalization without model weights; `--include-training-state` additionally retrieves the 60k training state.
 
-The downloader prefers the installed policy environment's `.venv/bin/python`, falling back to `python` when it is absent. `KINRT_PYTHON_BIN` overrides that choice. The chosen Python must provide the download and verification dependencies. Authenticate with `hf auth login` or `HF_TOKEN` before accessing the private repository.
+The downloader prefers the installed policy environment's `.venv/bin/python`, falling back to `python` when it is absent. `KINRT_PYTHON_BIN` overrides that choice. The chosen Python must provide the download and verification dependencies. No authentication is required for the default public repository.
 
 Verification can also be rerun explicitly with flags matching the selected download:
 
@@ -229,7 +248,9 @@ delivery/dataset_meta/tasks.parquet
 
 The two normalization files have different formatting but identical parsed JSON values. The [public Full35 router-label release](https://github.com/gleeacast/KinRT/releases/download/robodojo-full35-router-labels-v1/router_labels_k4_full35.npy) was downloaded independently and has the same bytes and digest as the delivery copy. On the Linux execution host, all **353 inference-checkpoint files** and all **14 delivery-manifest entries** were downloaded from the pinned revision and passed SHA-256 verification before model restoration. The final checkpoint's full 1,057 manifest paths exist remotely; the additional 704 training-state files are outside this inference download and were not needed for the execution checks.
 
-The adapter's `--assets-only` downloader was exercised against the pinned private snapshot and downloaded 17 small files successfully. All 12 portable asset-helper tests passed (`python -m unittest discover -s policy/KinRT/tests` from the XPolicyLab root). Additional local checks covered six training-wrapper cases, nine source compatibility cases using the pinned upstream files, and two converter lifecycle cases. These checks do not execute the model.
+The adapter's `--assets-only` downloader was exercised anonymously against the pinned public snapshot using a new HF cache with credential variables absent and `HF_HUB_DISABLE_IMPLICIT_TOKEN=1`. It downloaded 17 files and verified all 14 delivery entries plus the checkpoint normalization. An anonymous request also verified the normalization digest, and an HTTP HEAD request for an actual model-weight shard returned 200. The anonymous check did not redownload all model weights; the full 353-file inference checkpoint had already passed verification and GPU execution.
+
+All 12 portable asset-helper tests passed. Additional checks covered six training-wrapper cases, nine source compatibility cases using pinned upstream files, and two converter lifecycle cases. All 12 installer-helper tests and all 17 simulator-preparation tests passed on Linux, including real signal cleanup and symlink cases. These helper tests are separate from model execution.
 
 ## Configuration
 
@@ -251,9 +272,10 @@ Images remain RGB throughout conversion, training, and evaluation. The policy se
 | `KINRT_OPENPI_ROOT` | KinRT `policy/pi05` checkout and installed policy environment. |
 | `KINRT_SOURCE_REPO` / `KINRT_SOURCE_REV` | Source repository and pinned KinRT revision used by installation. |
 | `KINRT_LEROBOT_ROOT` | Optional clean LeRobot checkout at the pinned v0.4.4 commit; defaults to the `LeRobot_KinRT_Full35` sibling. |
+| `UV_BIN` / `KINRT_PYPI_MIRROR` | Optional uv executable; lockfile download mirror `pypi` (default), `tencent`, or `original`. |
 | `KINRT_ALLOW_UNPINNED_SOURCE` | Development opt-out from the source revision check. |
 | `KINRT_PYTHON_BIN` | Python executable override for policy wrapper commands and asset downloads. |
-| `HF_TOKEN` | Hugging Face credential supplied through the environment; private repository access is required. |
+| `HF_TOKEN` | Optional Hugging Face credential; not required for the default public repository. |
 | `KINRT_HF_REPO_ID` / `KINRT_HF_REVISION` | Model repository/revision overrides; defaults are the pinned Full35 delivery. |
 | `HF_LEROBOT_HOME` | Parent directory of local training datasets. |
 | `KINRT_ROBODOJO_REPO_ID` | Training dataset ID; defaults to `RoboDojo_lerobot_v30_video` in `train.sh`. Custom conversion uses a separate ID. |
@@ -273,16 +295,18 @@ Images remain RGB throughout conversion, training, and evaluation. The policy se
 | `KINRT_CHECKPOINT_NUM` | Preferred checkpoint step; default 60000. |
 | `KINRT_ACTION_CHUNK_SIZE` | Actions executed per inference call; default 50. |
 | `XLA_PYTHON_CLIENT_PREALLOCATE` / `XLA_PYTHON_CLIENT_MEM_FRACTION` | Evaluation defaults: `false` / `0.8`; adjust for the available GPU memory. |
+| `XLA_PYTHON_CLIENT_ALLOCATOR` | Use `platform` for the documented shared-GPU simulator reproduction. |
+| `OPENPI_DATA_HOME` | Persistent OpenPI download cache, including the PaliGemma tokenizer. |
 | `KINRT_EXTRA_PYTHONPATH` | Optional dependency path for isolated testing. |
 
 ## Limitations
 
-- Complete GPU restoration, synthetic inference, all-prompt WebSocket checks, and standard raw/encoded debug loops passed on the RTX 3090 host. Simulator task-success evaluation remains unverified; valid actions on synthetic inputs do not establish manipulation performance.
-- Runtime checks used an existing compatible Linux policy environment with isolated dependencies and pinned source overlays. A complete fresh installation has not been exercised.
-- The repository is private. Leaderboard evaluators must obtain access before downloading; the integration does not change repository visibility.
+- Complete GPU restoration, synthetic inference, all-prompt WebSocket checks, and standard raw/encoded debug loops passed on the RTX 3090 host. The reported simulator results cover only the seed-0 fixed/random stacking-bowls pair; the remaining suite is not a completed result.
+- Installation, full checkpoint restoration, synthetic inference, and both standard debug modes passed in the new Linux policy environment. Its 25+25 simulator replay remains in progress. The installer does not provision RoboDojo or Isaac Sim.
+- The model repository is public and ungated; anonymous download has passed. The complete original training dataset is separate from these inference assets.
 - The full original training dataset is not included. Delivered router labels require its original frame ordering, and the metadata alone cannot reconstruct that ordering or the demonstrations.
 - The documented training-time DataFrame compatibility patch was not delivered; installation contains a reconstructed fix, not the exact original patch. Delivered lockfiles also record a training-time package-mirror change.
 - There is no matched 60k Pi 0.5 baseline in this delivery. Earlier 10k single-task metrics and baseline results do not establish Full35 performance.
 - The adapter targets joint control for dual ARX-X5 robots. Simulator evaluation requires the complete RoboDojo Isaac Sim environment and assets.
-- The available simulator checkout covers 34 of the 35 training tasks; the spelling task lacks code/layouts. No complete 35-task success-rate result is claimed.
+- The available simulator checkout covers 34 of the 35 training tasks; the spelling task lacks code/configuration/layouts. No complete 35-task success rate, multi-seed result, or exact cross-hardware reproduction is claimed.
 - Batch inference processes environments sequentially to bound accelerator memory use. An encoded two-environment WebSocket batch passed, but batched simulator task success has not been measured.

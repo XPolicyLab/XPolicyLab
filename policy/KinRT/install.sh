@@ -18,6 +18,14 @@ if [[ "$(uname -s)" != "Linux" ]]; then
 fi
 UV_BIN="${UV_BIN:-$(command -v uv || true)}"
 if [[ -z "${UV_BIN}" ]]; then
+  for candidate in "${HOME}/.local/bin/uv" "${HOME}/.cargo/bin/uv"; do
+    if [[ -x "${candidate}" ]]; then
+      UV_BIN="${candidate}"
+      break
+    fi
+  done
+fi
+if [[ -z "${UV_BIN}" ]]; then
   echo "[KinRT][ERROR] uv is required. Install it from https://docs.astral.sh/uv/." >&2
   exit 1
 fi
@@ -81,13 +89,18 @@ fi
 "${PYTHON_BIN}" -c "import sys; assert sys.version_info >= (3, 11), 'Python 3.11 or newer is required'"
 "${PYTHON_BIN}" "${POLICY_DIR}/prepare_full35_source.py" "${OPENPI_ROOT}" --check
 UV_PROJECT_ENVIRONMENT="${OPENPI_ROOT}/.venv" UV_LINK_MODE=copy GIT_LFS_SKIP_SMUDGE=1 \
-  "${UV_BIN}" sync --frozen --no-default-groups --python "${PYTHON_BIN}"
+  "${PYTHON_BIN}" "${POLICY_DIR}/sync_full35_dependencies.py" \
+    "${OPENPI_ROOT}" --uv "${UV_BIN}" --mirror "${KINRT_PYPI_MIRROR:-pypi}"
 "${PYTHON_BIN}" "${POLICY_DIR}/prepare_full35_source.py" "${OPENPI_ROOT}"
 "${UV_BIN}" pip uninstall --python "${PYTHON_BIN}" opencv-python
 # The v3 source overlay imports Accelerate; the old runtime lock omits it and psutil.
-"${UV_BIN}" pip install --python "${PYTHON_BIN}" \
-  opencv-python-headless==4.11.0.86 scikit-learn joblib accelerate==1.10.1 psutil==7.2.2
+# Upstream model imports also require pytest from the otherwise disabled dev group.
+# Reinstall headless: uninstalling the GUI wheel removes their shared cv2 files.
+"${UV_BIN}" pip install --python "${PYTHON_BIN}" --reinstall-package opencv-python-headless \
+  opencv-python-headless==4.11.0.86 scikit-learn==1.8.0 joblib==1.5.3 \
+  accelerate==1.10.1 psutil==7.2.2 msgpack-numpy==0.4.8 pytest==9.0.3
 "${UV_BIN}" pip install --python "${PYTHON_BIN}" -e "${XPL_ROOT}"
+"${PYTHON_BIN}" "${POLICY_DIR}/prepare_tokenizer.py"
 
 # The delivered run used this v3 source overlay with the older locked dependencies.
 "${PYTHON_BIN}" - "${LEROBOT_ROOT}" <<'PYOVERLAY'
@@ -101,11 +114,13 @@ overlay.write_text(f"import sys; sys.path.insert(0, {str(source)!r})\n", encodin
 print(f"[KinRT] LeRobot source overlay: {source}")
 PYOVERLAY
 
-"${PYTHON_BIN}" - "${LEROBOT_ROOT}" <<'PYVERIFY'
+"${PYTHON_BIN}" - "${LEROBOT_ROOT}" "${XPL_ROOT}" <<'PYVERIFY'
 from pathlib import Path
 import sys
 
 import XPolicyLab
+import XPolicyLab.policy.KinRT.model as kinrt_model
+import cv2
 import openpi
 import lerobot.datasets.lerobot_dataset as lerobot_dataset
 
@@ -113,6 +128,12 @@ expected = (Path(sys.argv[1]) / "src").resolve()
 actual = Path(lerobot_dataset.__file__).resolve()
 if expected not in actual.parents or lerobot_dataset.CODEBASE_VERSION != "v3.0":
     raise RuntimeError(f"Unexpected LeRobot dataset implementation: {actual}")
+expected_adapter = (Path(sys.argv[2]) / "policy/KinRT/model.py").resolve()
+actual_adapter = Path(kinrt_model.__file__).resolve()
+if actual_adapter != expected_adapter:
+    raise RuntimeError(f"Unexpected KinRT adapter: {actual_adapter}")
 print(f"[KinRT] Policy imports ready; LeRobot v3.0: {actual}")
+print(f"[KinRT] KinRT adapter imports ready: {actual_adapter}")
+print(f"[KinRT] OpenCV ready: {cv2.__version__} ({cv2.__file__})")
 print("[KinRT] Model loading and GPU inference have not been tested by this installer.")
 PYVERIFY
