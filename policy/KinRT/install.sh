@@ -84,7 +84,9 @@ UV_PROJECT_ENVIRONMENT="${OPENPI_ROOT}/.venv" UV_LINK_MODE=copy GIT_LFS_SKIP_SMU
   "${UV_BIN}" sync --frozen --no-default-groups --python "${PYTHON_BIN}"
 "${PYTHON_BIN}" "${POLICY_DIR}/prepare_full35_source.py" "${OPENPI_ROOT}"
 "${UV_BIN}" pip uninstall --python "${PYTHON_BIN}" opencv-python
-"${UV_BIN}" pip install --python "${PYTHON_BIN}" opencv-python-headless==4.11.0.86 scikit-learn joblib
+# The v3 source overlay imports Accelerate; the old runtime lock omits it and psutil.
+"${UV_BIN}" pip install --python "${PYTHON_BIN}" \
+  opencv-python-headless==4.11.0.86 scikit-learn joblib accelerate==1.10.1 psutil==7.2.2
 "${UV_BIN}" pip install --python "${PYTHON_BIN}" -e "${XPL_ROOT}"
 
 # The delivered run used this v3 source overlay with the older locked dependencies.

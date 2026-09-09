@@ -4,7 +4,7 @@
 
 This adapter applies KinRT to RoboDojo's dual-ARX-X5 environment: `bench_name=RoboDojo`, `env_cfg_type=arx_x5`, and `action_type=joint`. The default model is the delivered **Full35 checkpoint at 60,000 training steps**, trained with full parameter fine-tuning on 35 tasks, 3,500 episodes, and 1,859,602 frames. Its configuration is `kinrt_full_robodojo`; its dataset and normalization key is `RoboDojo_lerobot_v30_video`.
 
-KinRT source remains in a separate checkout; this directory contains the XPolicyLab integration. This checkpoint has passed artifact checks; full inference and closed-loop evaluation have not been run for this submission update.
+KinRT source remains in a separate checkout; this directory contains the XPolicyLab integration. The checkpoint has passed artifact verification, complete GPU restoration, synthetic-input inference, WebSocket checks with all 35 task instructions, and standard raw/encoded debug loops. Simulator task-success results have not yet been validated.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -30,6 +30,8 @@ bash install.sh "$KINRT_OPENPI_ROOT"
 The path is optional with this sibling layout. Installation pins KinRT to `590d52802cde804cdc2d0ccb672c1a3a90d76f91` and runs `uv sync --frozen --no-default-groups` without editing its `pyproject.toml` or `uv.lock`. It then installs the adapter dependencies into the KinRT OpenPI environment.
 
 LeRobot is checked out separately at `8fff0fde7c79f23a93d845d1a50e985de01f8b8a` (v0.4.4, dataset format v3.0). An environment-local `kinrt_full35_lerobot.pth` gives this checkout's `src/` import precedence, reproducing the delivered run's `PYTHONPATH` source overlay while preserving the older locked dependencies. A successful install verifies imports and the selected LeRobot version; it does not validate model loading or GPU inference.
+
+Runtime verification used an existing compatible OpenPI environment with the pinned source overlays, rather than a fresh run of `install.sh`. Its core versions were JAX/JAXlib `0.5.0`, Flax `0.10.2`, Orbax `0.11.1`, PyTorch `2.6.0`, and NumPy `1.26.4`, with isolated additional packages Accelerate `1.10.1`, psutil `7.2.2`, and msgpack-numpy `0.4.8`. The installer includes the missing Accelerate/psutil dependencies, but a complete fresh Linux installation remains untested.
 
 The delivery notes document a training-time `data_loader.py` fix for LeRobot task tables, but do not include its original patch. Installation applies a reconstructed compatibility fix that maps the DataFrame's `task_index` column to its prompt index. It also adapts the upstream router-label generator to read v3 episodes packed into or split across Parquet files, filtering by episode and sorting by global frame index without changing clustering or feature calculations. The converter finalizes v3 dataset writers. These changes are explicit; the source commit alone does not contain every modification used for the delivered training run.
 
@@ -161,7 +163,25 @@ bash eval.sh RoboDojo stack_bowls full35_full_k4_b256_s0_60k arx_x5 joint 0 \
 
 Replace `stack_bowls` with the desired supported RoboDojo task. This is a per-task invocation of the shared 35-task model, not a complete 35-task evaluation. Keep the default action chunk size of 50 when comparing that policy setting; smaller `KINRT_ACTION_CHUNK_SIZE` values change replanning frequency.
 
-**These inference, debug, and simulator commands have not yet been validated with the delivered 60k checkpoint.** Local verification was limited to artifact integrity, checkpoint metadata, and sampled weight decoding on an 8 GB Windows GPU machine. Full checkpoint restoration and task success remain unverified.
+### Verified Execution Scope
+
+The complete inference checkpoint was restored and exercised on Ubuntu 22.04 with an RTX 3090 24 GiB GPU and NVIDIA driver `580.95.05`. Inputs were synthetic; the WebSocket checks substituted each of the 35 delivered task instructions and validated action shape and finite values.
+
+| Check | Observed result |
+| --- | --- |
+| Complete checkpoint restoration | 13.469 s |
+| First synthetic inference, including first-call compilation | 13.279 s; finite `50 x 14` action chunk |
+| Real WebSocket server, all 35 task instructions | 35/35 calls returned finite `50 x 14` chunks |
+| Warmed WebSocket inference, calls 2-35 | Mean 0.257 s per chunk in this run |
+| Encoded RGB observations, batch environment indices `[2, 7]` | Two valid `50 x 14` chunks in 0.525 s |
+| Standard `eval.sh` debug, raw and encoded observations | Both modes finished; 10 default episodes per mode, batch size 10 |
+| Peak observed device memory during smoke/RPC checks | 17,886 MiB, including a 1,195 MiB idle/display baseline |
+
+These timings describe this smoke test, including RPC transport where applicable; they are not a throughput benchmark or a task-success measurement. The batch check exercised the adapter's sequential per-environment inference through the actual server. Evaluation launchers default to `XLA_PYTHON_CLIENT_PREALLOCATE=false` and `XLA_PYTHON_CLIENT_MEM_FRACTION=0.8`; both can be overridden for the host's memory budget.
+
+Both standard `EVAL_ENV_TYPE=debug` runs reached `[MAIN] eval finished`, recorded in `logs/debug_encoded_0.log` and `logs/debug_encoded_1.log`; the runner also wrote `debug.complete`. Each mode completed 10 synthetic debug episodes with batch size 10. These checks validate the standard client/server lifecycle and action interface, not manipulation success.
+
+A seed-0 simulator run has started with `stack_bowls`, but no simulator success results have yet been validated. The available simulator checkout maps 34 of the 35 training tasks; the spelling task's code and layouts are missing, so a complete 35-task success-rate evaluation requires those assets.
 
 ## Model Assets
 
@@ -207,7 +227,7 @@ delivery/dataset_meta/tasks.parquet
 39e934f1eea211fc471be6a32cfd920fd5bc5a8c06a01c819cfc7e68b6990f65
 ```
 
-The two normalization files have different formatting but identical parsed JSON values. The [public Full35 router-label release](https://github.com/gleeacast/KinRT/releases/download/robodojo-full35-router-labels-v1/router_labels_k4_full35.npy) was downloaded independently and has the same bytes and digest as the delivery copy. All 14 entries in `delivery/delivery_files.sha256` passed local checks. The final checkpoint's 1,057 manifest paths all exist in the pinned remote revision; that inventory check is not a substitute for downloading and hashing the weights needed on the execution host.
+The two normalization files have different formatting but identical parsed JSON values. The [public Full35 router-label release](https://github.com/gleeacast/KinRT/releases/download/robodojo-full35-router-labels-v1/router_labels_k4_full35.npy) was downloaded independently and has the same bytes and digest as the delivery copy. On the Linux execution host, all **353 inference-checkpoint files** and all **14 delivery-manifest entries** were downloaded from the pinned revision and passed SHA-256 verification before model restoration. The final checkpoint's full 1,057 manifest paths exist remotely; the additional 704 training-state files are outside this inference download and were not needed for the execution checks.
 
 The adapter's `--assets-only` downloader was exercised against the pinned private snapshot and downloaded 17 small files successfully. All 12 portable asset-helper tests passed (`python -m unittest discover -s policy/KinRT/tests` from the XPolicyLab root). Additional local checks covered six training-wrapper cases, nine source compatibility cases using the pinned upstream files, and two converter lifecycle cases. These checks do not execute the model.
 
@@ -252,14 +272,17 @@ Images remain RGB throughout conversion, training, and evaluation. The policy se
 | `KINRT_CHECKPOINT_PATH` | Evaluation checkpoint; default `checkpoints/KinRT-RoboDojo-Full35-60k/checkpoints/60000` relative to this adapter. |
 | `KINRT_CHECKPOINT_NUM` | Preferred checkpoint step; default 60000. |
 | `KINRT_ACTION_CHUNK_SIZE` | Actions executed per inference call; default 50. |
+| `XLA_PYTHON_CLIENT_PREALLOCATE` / `XLA_PYTHON_CLIENT_MEM_FRACTION` | Evaluation defaults: `false` / `0.8`; adjust for the available GPU memory. |
 | `KINRT_EXTRA_PYTHONPATH` | Optional dependency path for isolated testing. |
 
 ## Limitations
 
-- Full model inference, debug transport, and simulator evaluation of this 60k checkpoint are pending. The local Windows host has 8 GB VRAM and cannot validate this Linux JAX CUDA execution path.
+- Complete GPU restoration, synthetic inference, all-prompt WebSocket checks, and standard raw/encoded debug loops passed on the RTX 3090 host. Simulator task-success evaluation remains unverified; valid actions on synthetic inputs do not establish manipulation performance.
+- Runtime checks used an existing compatible Linux policy environment with isolated dependencies and pinned source overlays. A complete fresh installation has not been exercised.
 - The repository is private. Leaderboard evaluators must obtain access before downloading; the integration does not change repository visibility.
 - The full original training dataset is not included. Delivered router labels require its original frame ordering, and the metadata alone cannot reconstruct that ordering or the demonstrations.
 - The documented training-time DataFrame compatibility patch was not delivered; installation contains a reconstructed fix, not the exact original patch. Delivered lockfiles also record a training-time package-mirror change.
 - There is no matched 60k Pi 0.5 baseline in this delivery. Earlier 10k single-task metrics and baseline results do not establish Full35 performance.
 - The adapter targets joint control for dual ARX-X5 robots. Simulator evaluation requires the complete RoboDojo Isaac Sim environment and assets.
-- Batched simulation evaluation uses sequential model inference within each batch to bound accelerator memory use. The 60k model has not yet been exercised through that path.
+- The available simulator checkout covers 34 of the 35 training tasks; the spelling task lacks code/layouts. No complete 35-task success-rate result is claimed.
+- Batch inference processes environments sequentially to bound accelerator memory use. An encoded two-environment WebSocket batch passed, but batched simulator task success has not been measured.

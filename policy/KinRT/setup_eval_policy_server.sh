@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export XLA_PYTHON_CLIENT_MEM_FRACTION="${XLA_PYTHON_CLIENT_MEM_FRACTION:-0.3}"
+# Allocate Full35 on demand while keeping a bounded GPU memory budget.
+export XLA_PYTHON_CLIENT_PREALLOCATE="${XLA_PYTHON_CLIENT_PREALLOCATE:-false}"
+export XLA_PYTHON_CLIENT_MEM_FRACTION="${XLA_PYTHON_CLIENT_MEM_FRACTION:-0.8}"
 
 if ! command -v conda >/dev/null 2>&1; then
   for conda_candidate in \
