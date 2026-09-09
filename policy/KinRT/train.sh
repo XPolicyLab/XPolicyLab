@@ -19,15 +19,19 @@ if [[ "${bench_name}" != "RoboDojo" || "${env_cfg_type}" != "arx_x5" || "${actio
 fi
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+XPL_ROOT="$(cd "${POLICY_DIR}/../.." && pwd)"
 DEFAULT_OPENPI_ROOT="$(cd "${POLICY_DIR}/../../../.." && pwd)/KinRT_RoboDojo/policy/pi05"
 OPENPI_ROOT="${KINRT_OPENPI_ROOT:-${DEFAULT_OPENPI_ROOT}}"
 PYTHON_BIN="${KINRT_PYTHON_BIN:-${OPENPI_ROOT}/.venv/bin/python}"
-train_config_name="${OPENPI_TRAIN_CONFIG_NAME:-kinrt_lora_robodojo}"
-repo_id="${KINRT_ROBODOJO_REPO_ID:-RoboDojo-KinRT-arx_x5-joint}"
+train_config_name="${OPENPI_TRAIN_CONFIG_NAME:-kinrt_full_robodojo}"
+repo_id="${KINRT_ROBODOJO_REPO_ID:-RoboDojo_lerobot_v30_video}"
 hf_lerobot_home="${HF_LEROBOT_HOME:-${HF_HOME:-${HOME}/.cache/huggingface}/lerobot}"
-router_labels_path="${KINRT_ROBODOJO_ROUTER_LABELS_PATH:-${hf_lerobot_home}/${repo_id}/meta/router_labels_k4/router_labels.npy}"
-run_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
-checkpoint_dir="${POLICY_DIR}/checkpoints/${run_name}"
+dataset_root="${hf_lerobot_home}/${repo_id}"
+router_labels_subdir=router_labels_k4
+if [[ "${repo_id}" == "RoboDojo_lerobot_v30_video" ]]; then
+  router_labels_subdir=router_labels_k4_full35
+fi
+router_labels_path="${KINRT_ROBODOJO_ROUTER_LABELS_PATH:-${dataset_root}/meta/${router_labels_subdir}/router_labels.npy}"
 norm_stats_path="${OPENPI_ROOT}/assets/${train_config_name}/${repo_id}/norm_stats.json"
 
 requires_router_labels=1
@@ -47,14 +51,35 @@ if [[ ! -x "${PYTHON_BIN}" ]]; then
 fi
 if (( requires_router_labels == 1 )) && [[ ! -f "${router_labels_path}" ]]; then
   echo "[KinRT][ERROR] Router labels not found: ${router_labels_path}" >&2
-  echo "[KinRT][ERROR] Run generate_router_labels.sh before training." >&2
+  echo "[KinRT][ERROR] Install the published Full35 assets for the original dataset, or generate labels for a separately named custom dataset." >&2
   exit 1
 fi
 if [[ ! -f "${norm_stats_path}" ]]; then
   echo "[KinRT][ERROR] Normalization statistics not found: ${norm_stats_path}" >&2
-  echo "[KinRT][ERROR] Run: bash ${POLICY_DIR}/compute_norm_stats.sh ${train_config_name}" >&2
+  echo "[KinRT][ERROR] Install the published Full35 assets, or run compute_norm_stats.sh for a custom dataset." >&2
   exit 1
 fi
+if (( requires_router_labels == 1 )) && [[ "${repo_id}" == "RoboDojo_lerobot_v30_video" ]]; then
+  "${PYTHON_BIN}" "${POLICY_DIR}/full35_assets.py" validate-training \
+    --dataset-root "${dataset_root}" \
+    --labels "${router_labels_path}" \
+    --norm-stats "${norm_stats_path}"
+fi
+
+run_name="$(PYTHONPATH="${XPL_ROOT}${PYTHONPATH:+:${PYTHONPATH}}" \
+  "${PYTHON_BIN}" - "${bench_name}" "${ckpt_name}" "${env_cfg_type}" "${action_type}" "${seed}" <<'PY'
+import sys
+
+from XPolicyLab.utils.checkpoint_resolver import build_run_dir_name
+
+keys = ("bench_name", "ckpt_name", "env_cfg_type", "action_type", "seed")
+run_name = build_run_dir_name(dict(zip(keys, sys.argv[1:], strict=True)))
+if run_name is None:
+    raise ValueError("Training requires a non-empty benchmark, checkpoint name, embodiment, action type, and seed.")
+print(run_name)
+PY
+)"
+checkpoint_dir="${POLICY_DIR}/checkpoints/${run_name}"
 
 gpu_count=$(awk -F',' '{print NF}' <<<"${gpu_id}")
 fsdp_devices="${OPENPI_FSDP_DEVICES:-${gpu_count}}"
@@ -75,19 +100,16 @@ if [[ "${KINRT_RESUME:-0}" == "1" ]]; then
   run_mode=(--resume)
 fi
 
-train_overrides=()
-if [[ -n "${OPENPI_NUM_TRAIN_STEPS:-}" ]]; then
-  train_overrides+=(--num-train-steps="${OPENPI_NUM_TRAIN_STEPS}")
+default_batch_size=32
+if [[ "${train_config_name}" == "kinrt_full_robodojo" && "${repo_id}" == "RoboDojo_lerobot_v30_video" ]]; then
+  default_batch_size=256
 fi
-if [[ -n "${OPENPI_BATCH_SIZE:-}" ]]; then
-  train_overrides+=(--batch-size="${OPENPI_BATCH_SIZE}")
-fi
-if [[ -n "${OPENPI_NUM_WORKERS:-}" ]]; then
-  train_overrides+=(--num-workers="${OPENPI_NUM_WORKERS}")
-fi
-if [[ -n "${OPENPI_SAVE_INTERVAL:-}" ]]; then
-  train_overrides+=(--save-interval="${OPENPI_SAVE_INTERVAL}")
-fi
+train_overrides=(
+  --num-train-steps="${OPENPI_NUM_TRAIN_STEPS:-60000}"
+  --batch-size="${OPENPI_BATCH_SIZE:-${default_batch_size}}"
+  --num-workers="${OPENPI_NUM_WORKERS:-8}"
+  --save-interval="${OPENPI_SAVE_INTERVAL:-5000}"
+)
 if [[ "${OPENPI_WANDB_ENABLED:-1}" == "0" ]]; then
   train_overrides+=(--no-wandb-enabled)
 fi

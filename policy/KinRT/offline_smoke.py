@@ -32,12 +32,12 @@ def _to_numpy(value) -> np.ndarray:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint-root", type=Path, required=True)
-    parser.add_argument("--checkpoint-step", type=int, default=100)
+    parser.add_argument("--checkpoint-step", type=int, default=60000)
     parser.add_argument("--dataset-root", type=Path)
-    parser.add_argument("--repo-id", default="RoboDojo-KinRT-demo-arx_x5-joint")
+    parser.add_argument("--repo-id", default="RoboDojo_lerobot_v30_video")
     parser.add_argument("--sample-index", type=int, default=0)
     parser.add_argument("--action-chunk-size", type=int, default=50)
-    parser.add_argument("--train-config-name", default="kinrt_lora_robodojo")
+    parser.add_argument("--train-config-name", default="kinrt_full_robodojo")
     parser.add_argument("--actions-output", type=Path)
     return parser.parse_args()
 
@@ -55,7 +55,12 @@ def main() -> None:
         }
         input_source = "synthetic"
     else:
-        from lerobot.common.datasets.lerobot_dataset import LeRobotDataset
+        try:
+            from lerobot.datasets.lerobot_dataset import LeRobotDataset
+        except ModuleNotFoundError as error:
+            if error.name not in {"lerobot.datasets", "lerobot.datasets.lerobot_dataset"}:
+                raise
+            from lerobot.common.datasets.lerobot_dataset import LeRobotDataset
 
         dataset = LeRobotDataset(args.repo_id, root=args.dataset_root)
         sample = dataset[args.sample_index]

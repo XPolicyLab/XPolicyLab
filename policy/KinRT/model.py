@@ -84,8 +84,8 @@ class Model(ModelTemplate):
         self.model = self.policy
 
     def _load_policy(self, model_cfg: dict[str, Any]):
-        train_config_name = model_cfg.get("train_config_name", "kinrt_lora_robodojo")
-        repo_id = model_cfg.get("repo_id", "RoboDojo-KinRT-arx_x5-joint")
+        train_config_name = model_cfg.get("train_config_name", "kinrt_full_robodojo")
+        repo_id = model_cfg.get("repo_id", "RoboDojo_lerobot_v30_video")
         model_root = _resolve_model_root(model_cfg)
         config = _config.get_config(train_config_name)
         rank_overrides = {

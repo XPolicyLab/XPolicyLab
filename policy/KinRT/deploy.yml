@@ -11,12 +11,12 @@ action_type: joint
 gpu_id: null
 eval_batch: true
 
-checkpoint_num: 10000
-checkpoint_path: null
-train_config_name: kinrt_lora_robodojo
-repo_id: RoboDojo-KinRT-stack_bowls100-arx_x5-joint
+checkpoint_num: 60000
+checkpoint_path: checkpoints/KinRT-RoboDojo-Full35-60k/checkpoints/60000
+train_config_name: kinrt_full_robodojo
+repo_id: RoboDojo_lerobot_v30_video
 action_chunk_size: 50
 paligemma_lora_rank: null
 action_expert_lora_rank: null
 policy_uv_env_path: ../../../../KinRT_RoboDojo/policy/pi05
-result_dir: ./results/kinrt_robodojo_10k
+result_dir: ./results/kinrt_robodojo_full35_60k

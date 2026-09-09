@@ -17,7 +17,12 @@ from tqdm import tqdm
 from XPolicyLab.utils.load_file import load_yaml
 from XPolicyLab.utils.process_data import decode_image_bit, get_robot_action_dim_info
 
-from lerobot.common.datasets.lerobot_dataset import HF_LEROBOT_HOME, LeRobotDataset
+try:
+    from lerobot.datasets.lerobot_dataset import HF_LEROBOT_HOME, LeRobotDataset
+except ModuleNotFoundError as exc:
+    if exc.name != "lerobot.datasets":
+        raise
+    from lerobot.common.datasets.lerobot_dataset import HF_LEROBOT_HOME, LeRobotDataset
 
 
 CAMERA_ALIASES = {
@@ -283,7 +288,13 @@ def main() -> None:
                 frame[f"observation.images.{camera_name}"] = images[frame_index]
             dataset.add_frame(frame)
         dataset.save_episode()
-        dataset.hf_dataset = dataset.create_hf_dataset()
+        if not hasattr(dataset, "finalize"):
+            dataset.hf_dataset = dataset.create_hf_dataset()
+
+    # LeRobot v3 writes Parquet footers and buffered episode metadata here.
+    if hasattr(dataset, "finalize"):
+        dataset.finalize()
+    dataset.stop_image_writer()
 
     output_path = Path(HF_LEROBOT_HOME) / args.repo_id
     conversion_metadata = {
