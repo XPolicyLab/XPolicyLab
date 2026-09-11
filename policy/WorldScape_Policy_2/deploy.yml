@@ -1,0 +1,43 @@
+policy_name: WorldScape_Policy_2
+protocol: ws
+host: localhost
+port: null
+
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: joint
+seed: 0
+eval_batch: false
+
+# worldscape_root: null -> use policy/WorldScape_Policy_2/worldscape-policy/
+# (WORLDSCAPE_POLICY_ROOT overrides).
+# checkpoint_path: null -> resolve from ckpt_name via the shared XPolicyLab
+# checkpoint layout (checkpoints/<run-dir>), see README (WORLDSCAPE_CHECKPOINT
+# forces an explicit directory).
+worldscape_root: null
+checkpoint_path: null
+device: cuda
+mode: auto
+
+action_horizon: 24
+replan_steps: 24
+observation_interval: 3
+memory_reset_chunks: 0
+vlm_history_num_frames: 4
+diffusion_view_layout: null
+
+vlm_cot_prompt: "You are a robot planner. Instructions: {task}. Given the current high-level task instruction and current head-view observation, predict the next atomic action subtask for the next second."
+t5_prompt_template: "A video shows that a robot {instruction} The robot {instruction}"
+default_instruction: "follow the instruction"
+validate_checkpoint_artifacts: false
+log_inference: true
+allow_dummy_policy: false
+
+request_timeout_s: 600
+max_connect_attempts: 240
+connect_retry_delay_s: 5
+max_connect_seconds: 1200
+ws_ping_interval_s: 20
+ws_ping_timeout_s: 20

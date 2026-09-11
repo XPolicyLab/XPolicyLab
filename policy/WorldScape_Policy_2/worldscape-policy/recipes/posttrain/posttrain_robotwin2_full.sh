@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+export SINGLE_HIGH_LEVEL_INSTRUCTION_PER_EPISODE=true
+export ALIGN_LOSS_WEIGHT=0.001
+export LEARNING_RATE="${LEARNING_RATE:-3e-5}"
+export PER_DEVICE_TRAIN_BATCH_SIZE="${PER_DEVICE_TRAIN_BATCH_SIZE:-16}"
+export MAX_STEPS="${MAX_STEPS:-50000}"
+export SKIP_GRAD_NORM_THRESHOLD="${SKIP_GRAD_NORM_THRESHOLD:-100000.0}"
+export SKIP_GRAD_NORM_THRESHOLD_START_RATIO="${SKIP_GRAD_NORM_THRESHOLD_START_RATIO:-0.05}"
+
+export VLM_HISTORY_NUM_FRAMES="${VLM_HISTORY_NUM_FRAMES:-4}"
+action_horizon="${ACTION_HORIZON:-24}"
+export VLM_HISTORY_STRIDE="${VLM_HISTORY_STRIDE:-$action_horizon}"
+export VLM_HISTORY_WINDOW="${VLM_HISTORY_WINDOW:-$((4 * action_horizon))}"
+export WAM_MAX_CHUNK_SIZE="${WAM_MAX_CHUNK_SIZE:-1}"
+
+export RUN_NAME="${RUN_NAME:-stage1_posttrain_ful_chunk1_RESUME}"
+export WANDB_RUN_NAME="${WANDB_RUN_NAME:-$RUN_NAME}"
+
+exec "$SCRIPT_DIR/posttrain_robotwin2.sh" "$@"
