@@ -1,0 +1,15 @@
+# Adapter rows in the shared multi-embodiment pretraining model:
+#   0 = egodex
+#   1 = agibot
+#   2 = agilex
+#   3 = umi
+#   4 = robotwin/libero
+#   5 = robomind_agilex
+#   6 = robocoin
+#   7 = droid
+#
+# Posttraining selects one source row and copies it into local row 0.
+pretrained_adapter_source_rows:
+  agilex: 2
+  libero: 4
+  robotwin2: 4

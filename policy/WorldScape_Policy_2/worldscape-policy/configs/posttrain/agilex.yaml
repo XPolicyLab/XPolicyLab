@@ -1,0 +1,138 @@
+# AgileX post-training overlay. Task recipes select profiles.
+includes:
+  - common_wan22.yaml
+
+selectors:
+  task: ${oc.env:WSP_TASK,agilex}
+  run_name: ${oc.env:RUN_NAME,baseline}
+  mode: ${oc.env:WSP_MODE,interactive}
+  visual_prompt: ${oc.env:VISUAL_PROMPT,none}
+  dataset_name: ${oc.env:NATIVE_DATASET_NAME,worldscape_hdf5_text}
+
+profiles:
+  dataset_name:
+    worldscape_hdf5_text:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: none
+      data_loader:
+        dataset_kwargs:
+          # Preserve Fold Shirt packing: language boundaries delimit chunks.
+          respect_trajectory_segments: false
+          max_episodes: ${oc.decode:${oc.env:MAX_EPISODES,null}}
+    worldscape_hdf5_goal:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: goal
+      data_loader:
+        action_dim_mask: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 20]
+    worldscape_hdf5_demo:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: demo
+      data_loader:
+        action_dim_mask: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 20]
+
+batch_adapter:
+  embodiment_ids:
+    agilex: 0
+
+native_export:
+  enabled: true
+  every_checkpoint: true
+  model_variant: wsp2-wan22-5b
+  tokenizer_source: ${model.tokenizer_path}
+  normalization:
+    schema_version: "1"
+    visual:
+      input_range: uint8
+      model_range: minus_one_one
+    state: {kind: bundled, reference: transform_bundle.json}
+    action: {kind: bundled, reference: transform_bundle.json}
+  provenance:
+    exporter: worldscape-policy-native-training
+    task: ${selectors.task}
+  transform_bundle:
+    _target_: worldscape_policy.training.native_export.build_identity_transform_bundle
+    image_input_range: uint8
+    action_mode: ${data_loader.action_mode}
+    relative_action: ${data_loader.relative_action}
+    provenance:
+      source: native-posttraining
+      normalization: identity
+    embodiments:
+      agilex:
+        embodiment_id: 0
+        max_state_dim: 64
+        max_action_dim: 32
+        state_fields:
+          - [state.left_pos, 3]
+          - [state.left_rot6d, 6]
+          - [state.left_gripper, 1]
+          - [state.right_pos, 3]
+          - [state.right_rot6d, 6]
+          - [state.right_gripper, 1]
+        action_fields:
+          - [action.left_pos, 3]
+          - [action.left_rot6d, 6]
+          - [action.left_gripper, 1]
+          - [action.right_pos, 3]
+          - [action.right_rot6d, 6]
+          - [action.right_gripper, 1]
+
+model:
+  pretrained_action_adapter_index: ${pretrained_adapter_source_rows.agilex}
+  expected_num_frames: 33
+  expected_action_horizon: 24
+  expected_semantic_gate_only: true
+  expected_semantic_grad_clip_norm: 0.5
+
+data_loader:
+  _target_: worldscape_policy.training.data.build_registered_loader
+  dataset_name: ${selectors.dataset_name}
+  batch_size: ${oc.decode:${oc.env:PER_DEVICE_TRAIN_BATCH_SIZE,8}}
+  # Every built-in AgileX source is HDF5. The shard schedule owns randomization;
+  # DataLoader-level shuffle is invalid for its iterable stream.
+  shuffle: false
+  bucket_by_length: true
+  num_workers: ${oc.decode:${oc.env:DATALOADER_NUM_WORKERS,2}}
+  prefetch_factor: ${oc.decode:${oc.env:DATALOADER_PREFETCH_FACTOR,2}}
+  persistent_workers: ${oc.decode:${oc.env:DATALOADER_PERSISTENT_WORKERS,true}}
+  pin_memory: ${oc.decode:${oc.env:DATALOADER_PIN_MEMORY,false}}
+  seed: ${oc.decode:${oc.env:SEED,62}}
+  augment_video: true
+  training: true
+  wo_norm: true
+  dataset_kwargs:
+    data_root: ${oc.env:DATA_ROOT}
+    action_horizon: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+    max_event_chunks: ${oc.decode:${oc.env:MAX_EVENT_CHUNKS,16}}
+    history_num_frames: ${oc.decode:${oc.env:HISTORY_NUM_FRAMES,8}}
+    history_stride: ${oc.decode:${oc.env:HISTORY_STRIDE,24}}
+    history_window: ${oc.decode:${oc.env:HISTORY_WINDOW,192}}
+    temporal_packing: true
+    temporal_anchor_index: 0
+    max_chunk_size: 4
+    wo_norm: true
+    seed: ${oc.decode:${oc.env:SEED,62}}
+    shard_size: ${oc.decode:${oc.env:DATASET_SHARD_SIZE,10000}}
+    shard_sampling_rate: ${oc.decode:${oc.env:DATASET_SHARD_SAMPLING_RATE,0.1}}
+    num_shards_to_sample: ${oc.decode:${oc.env:NUM_SHARDS_TO_SAMPLE,1048576}}
+    # Match the legacy fold-shirt dataloader's candidate-step thinning while
+    # keeping length-bucketed batches enabled for unpadded native training.
+    step_stride: ${oc.decode:${oc.env:DATASET_STEP_STRIDE,1}}
+    index_cache: ${oc.decode:${oc.env:DATASET_INDEX_CACHE,false}}
+    index_cache_dir: ${oc.decode:${oc.env:DATASET_INDEX_CACHE_DIR,null}}
+    cache_video_resize_width: ${oc.decode:${oc.env:CACHE_VIDEO_RESIZE_WIDTH,320}}
+    cache_video_resize_height: ${oc.decode:${oc.env:CACHE_VIDEO_RESIZE_HEIGHT,160}}
+    cache_video_resize_interpolation: ${oc.env:CACHE_VIDEO_RESIZE_INTERPOLATION,area}
+    training: true
+
+freeze:
+  config:
+    # AgileX always preserves the pretrained image encoder.
+    image_encoder: true
+
+trainer:
+  log_prompt_text: ${oc.decode:${oc.env:LOG_PROMPT_TEXT,false}}
+  vlm_prompt_template: ${model.vlm_cot_prompt}

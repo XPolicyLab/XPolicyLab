@@ -1,0 +1,149 @@
+[build-system]
+requires = ["setuptools>=67", "wheel", "pip"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "worldscape-policy"
+description = "WorldScape Policy: composable conditioning, memory, and world-action models"
+version="2.0.0a1"
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+authors = [
+    {name = "WorldScape Policy Contributors"}
+]
+requires-python = "~=3.11,<3.13"
+dependencies = [
+    "av==15.0.0",
+    "torch==2.8.0",
+    "torchvision==0.23.0",
+    "torchaudio==2.8.0",
+    "scipy==1.15.3",
+    "numpy==1.26.4",
+    "hydra-core",
+    "click",
+    "loguru",
+    "msgpack",
+    "msgpack-numpy",
+    "transformers==4.57.1",
+    "einops==0.8.1",
+    "diffusers==0.30.2",
+    "huggingface_hub>=0.36,<1",
+    "safetensors==0.7.0",
+    "pillow>=10,<13",
+    "ftfy==6.3.1",
+    "tiktoken",
+    "sentencepiece",
+    "tqdm>=4.66"
+]
+
+[project.optional-dependencies]
+core = [
+    "av==15.0.0",
+    "torch==2.8.0",
+    "torchvision==0.23.0",
+    "torchaudio==2.8.0",
+    "scipy==1.15.3",
+    "numpy==1.26.4",
+    "hydra-core",
+    "click",
+    "loguru",
+    "msgpack",
+    "msgpack-numpy",
+    "transformers==4.57.1",
+    "diffusers==0.30.2",
+    "einops==0.8.1",
+    "huggingface_hub>=0.36,<1",
+    "safetensors==0.7.0",
+    "pillow>=10,<13",
+    "ftfy==6.3.1",
+    "tiktoken",
+    "sentencepiece",
+    "tqdm>=4.66",
+]
+train = [
+    "pandas>=2.2,<3.1",
+    "h5py>=3.10,<4",
+    "pyarrow>=15,<24",
+    "wandb>=0.26,<0.27",
+    "deepspeed==0.18.9",
+]
+agilex = [
+    "opencv-python-headless==4.8.0.76",
+    "imageio==2.34.2",
+    "imageio-ffmpeg>=0.5",
+    "pandas>=2.2,<3.1",
+    "h5py>=3.10,<4",
+]
+robotwin2 = [
+    "gymnasium>=1,<2",
+    "mujoco>=3,<4",
+    "pybullet>=3.2; sys_platform == 'linux'",
+    "pygame>=2.5,<3",
+    "imageio==2.34.2",
+    "imageio-ffmpeg",
+]
+libero = [
+    "gymnasium>=1,<2",
+    "mujoco>=3,<4",
+    "opencv-python-headless==4.8.0.76",
+    "imageio==2.34.2",
+    "imageio-ffmpeg",
+]
+server = [
+    "websockets>=14,<16",
+    "imageio==2.34.2",
+]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "ruff>=0.5.0",
+]
+
+[project.scripts]
+wsp-eval = "worldscape_policy.cli.evaluate:main"
+wsp-serve = "worldscape_policy.cli.serve:main"
+wsp-train = "worldscape_policy.cli.train:main"
+
+[tool.setuptools.packages.find]
+where = [".", "src"]
+include = ["worldscape_policy*", "evals*"]
+
+[tool.setuptools]
+include-package-data = true
+py-modules = []
+
+[tool.setuptools.data-files]
+"share/worldscape-policy/configs/model" = ["configs/model/*.yaml"]
+"share/worldscape-policy/configs/conditioning" = ["configs/conditioning/*.yaml"]
+"share/worldscape-policy/configs/memory" = ["configs/memory/*.yaml"]
+"share/worldscape-policy/configs/wam" = ["configs/wam/*.yaml"]
+"share/worldscape-policy/configs/posttrain" = ["configs/posttrain/*.yaml"]
+"share/worldscape-policy/configs/pretrain" = ["configs/pretrain/*.yaml"]
+"share/worldscape-policy/configs/eval" = ["configs/eval/*.yaml"]
+"share/worldscape-policy/recipes/common" = ["recipes/common/*.sh"]
+"share/worldscape-policy/recipes/eval" = ["recipes/eval/*.sh"]
+"share/worldscape-policy/recipes/checkpoint" = ["recipes/checkpoint/*.sh"]
+"share/worldscape-policy/recipes/pretrain" = ["recipes/pretrain/*.sh"]
+"share/worldscape-policy/recipes/posttrain" = ["recipes/posttrain/*.sh"]
+"share/worldscape-policy/tools/checkpoint" = ["tools/checkpoint/*.py"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+markers = [
+    "integration: tests requiring external checkpoints or services",
+    "gpu: tests requiring CUDA",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/worldscape_policy/wam/wan22/*.py" = ["ALL"]

@@ -1,0 +1,25 @@
+policy_name: wsp2_policy
+task_name: null
+task_config: null
+ckpt_setting: null
+seed: 0
+instruction_type: unseen
+eval_num_episodes: 100
+max_seed_trials: 1000
+eval_video_log: false
+clear_cache_freq: 1
+sim_cfg_path: null
+sim_cfg_name: robotwin2_manager.yaml
+mixed_precision: bf16
+device: cuda
+mode: auto
+action_type: qpos
+action_horizon: 24
+replan_steps: 24
+skip_get_obs_within_replan: true
+observation_interval: 3
+vlm_history_num_frames: 4
+vlm_cot_prompt: "You are a robot planner. Instructions: {task}. Given the current high-level task instruction and current head-view observation, predict the next atomic action subtask for the next second."
+t5_prompt_template: "A video shows that a robot {instruction} The robot {instruction}"
+validate_checkpoint_artifacts: false
+log_inference: false
