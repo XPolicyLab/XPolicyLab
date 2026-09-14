@@ -1,0 +1,8 @@
+env_cfg_type: arx_x5
+eval_embodiment: robodojo_arx_x5
+checkpoint_dir: checkpoints/arx_x5
+frequency: 25
+action_type: joint
+action_source: fm
+action_horizon: 32
+action_steps: 16

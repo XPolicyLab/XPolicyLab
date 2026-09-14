@@ -1,0 +1,19 @@
+policy_name: G05.real
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+eval_batch: false
+
+checkpoint_path: null
+eval_embodiment: robodojo_arx_x5
+action_source: fm
+action_steps: 16
+frequency: 25
+inference_batch_size: 1
+ws_ping_timeout_s: 120.0
+ws_ping_interval_s: 120.0
