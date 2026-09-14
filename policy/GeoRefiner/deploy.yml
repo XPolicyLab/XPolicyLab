@@ -1,0 +1,40 @@
+# XPolicyLab runtime configuration
+policy_name: GeoRefiner
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+gpu_id: null
+eval_batch: true
+
+# X-VLA base policy. Relative paths are resolved by the sibling X_VLA adapter.
+checkpoint_num: null
+obs_transform_pipeline: null
+action_type: ee
+prompt: null
+model_path: null
+processor_path: checkpoints/shared/X-VLA-Pt
+lora_path: null
+domain_id: 0
+steps: 10
+device: cuda
+
+# GeoRefiner postprocessing. GEOREFINER_* environment variables provide local
+# overrides; otherwise assets resolve under this policy's checkpoints directory.
+georefiner:
+  mode: refine
+  root: null
+  checkpoint_path: null
+  artifact_dir: null
+  device: cuda
+  dtype: float32
+  micro_batch_size: 2
+  refine_gripper: false
+  fallback_to_nominal: true
+  max_position_deviation_m: 0.02
+  max_rotation_deviation_rad: 0.15
+  log_interval: 50
