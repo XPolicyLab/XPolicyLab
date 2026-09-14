@@ -18,6 +18,17 @@ echo "[G05 install] g05_root=${G05_ROOT}"
 
 "${PYTHON_BIN}" -m pip install -U pip
 "${PYTHON_BIN}" -m pip install -e "${XPL_ROOT}"
+
+# The real-evaluation runtime ships checkpoint-compatible tokenizer and
+# dataset packages under third_party. Install them before G05 so pip never
+# substitutes an incompatible public package with the same name.
+for runtime_dep in galaxea_dataset galaxea_tokenizer; do
+  dep_root="${G05_ROOT}/third_party/${runtime_dep}"
+  if [[ -f "${dep_root}/pyproject.toml" ]]; then
+    "${PYTHON_BIN}" -m pip install -e "${dep_root}"
+  fi
+done
+
 if [[ -f "${G05_ROOT}/pyproject.toml" ]]; then
   "${PYTHON_BIN}" -m pip install -e "${G05_ROOT}"
 fi
