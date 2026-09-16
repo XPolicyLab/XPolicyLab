@@ -22,7 +22,7 @@
 
 
 
-XPolicyLab 是策略代码与评测环境之间的共享层。每个模型的依赖、权重与训练配方放在 `policy/<POLICY>/`；XPolicyLab 负责那些枯燥但容易出错的部分 —— 服务化、观测/动作契约，以及评测接线。截至 2026 年 9 月，生态已接入 **44 个机器人策略**，覆盖 VLA、world-action、模仿学习与记忆增强等家族；同一套 adapter 可服务 RoboTwin、RoboDojo 仿真，以及标准化真机评测。
+XPolicyLab 是策略代码与评测环境之间的共享层。每个模型的依赖、权重与训练配方放在 `policy/<POLICY>/`；XPolicyLab 负责那些枯燥但容易出错的部分 —— 服务化、观测/动作契约，以及评测接线。截至 2026 年 9 月，生态已接入 **45 个机器人策略**，覆盖 VLA、world-action、模仿学习与记忆增强等家族；同一套 adapter 可服务 RoboTwin、RoboDojo 仿真，以及标准化真机评测。
 
 仓库级概念与接入步骤从本文开始。安装命令、权重布局与训练细节以各策略自己的 README 为准。
 
@@ -80,7 +80,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 
 ## 🧭 已接入策略
 
-当前已接入 44 个策略，覆盖 VLA、world-action、模仿学习与记忆增强等家族，另加 [demo_policy](policy/demo_policy/README.md) 作为最小参考 adapter。顶层 adapter 位于 `policy/`；每个策略 README 记录该模型的论文/仓库链接、环境、数据格式、训练入口与 checkpoint 布局。
+当前已接入 45 个策略，覆盖 VLA、world-action、模仿学习与记忆增强等家族，另加 [demo_policy](policy/demo_policy/README.md) 作为最小参考 adapter。顶层 adapter 位于 `policy/`；每个策略 README 记录该模型的论文/仓库链接、环境、数据格式、训练入口与 checkpoint 布局。
 
 
 | Policy                                   | Policy                                               | Policy                                      | Policy                                                     | Policy                                                         | Policy                                            |
@@ -92,7 +92,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 | [OLA-SEM](policy/OLA_SEM/README.md)      | [OpenDM](policy/OpenDM/README.md)                    | [OpenVLA-OFT](policy/OpenVLA_OFT/README.md) | [OpenWAM](policy/OpenWAM/README.md)                        | [π0](policy/Pi_0/README.md)                                    | [π0.5](policy/Pi_05/README.md)                    |
 | [π0-Fast](policy/Pi_0_Fast/README.md)    | [RDT-1B](policy/RDT_1B/README.md)                    | [RISE](policy/RISE/README.md)               | [SmolVLA](policy/SmolVLA/README.md)                        | [Spatial Forcing](policy/Spatial_Forcing/README.md)            | [Spirit v1.5](policy/Spirit_v15/README.md)        |
 | [TinyVLA](policy/TinyVLA/README.md)      | [X-VLA](policy/X_VLA/README.md)                      | [X-WAM](policy/X_WAM/README.md)             | [Xiaomi-Robotics-0](policy/Xiaomi_Robotics_0/README.md)    | [Xiaomi-Robotics-1 (XR-1)](policy/Xiaomi_Robotics_1/README.md) | [StarVLA](policy/starVLA/README.md)               |
-| [ACT](policy/ACT/README.md)              | [DP](policy/DP/README.md)                            | [demo_policy](policy/demo_policy/README.md) |                                                            |                                                                |                                                   |
+| [ACT](policy/ACT/README.md) | [DP](policy/DP/README.md) | [Evo-1](policy/Evo_1/README.md) | [demo_policy](policy/demo_policy/README.md) | | |
 
 
 接入自有策略，或报名排行榜，都通过 PR —— 见 [接入你自己的策略](#-接入你自己的策略)。

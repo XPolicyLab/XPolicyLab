@@ -1,0 +1,6 @@
+upstream/
+checkpoints/
+processed_data/
+training_cache/
+logs/
+__pycache__/

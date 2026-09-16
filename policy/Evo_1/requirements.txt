@@ -1,0 +1,18 @@
+# Native evo1-flash dependencies plus the shared XPolicyLab transport.
+torch==2.5.1
+torchvision==0.20.1
+transformers==4.39.0
+numpy>=1.24,<2
+timm>=0.9,<2
+accelerate>=0.34,<2
+einops
+ninja
+packaging
+pillow
+pandas
+pyarrow
+av
+fvcore
+pyyaml
+wandb
+swanlab

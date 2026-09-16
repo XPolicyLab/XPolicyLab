@@ -1,0 +1,8 @@
+compute_environment: LOCAL_MACHINE
+distributed_type: 'NO'
+mixed_precision: bf16
+num_processes: 1
+num_machines: 1
+machine_rank: 0
+use_cpu: false
+debug: false
