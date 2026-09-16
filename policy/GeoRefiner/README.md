@@ -28,23 +28,17 @@ Not included. GeoRefiner training code will be released separately; release ETA:
 
 The reproducible configuration is:
 
-- X-VLA: `RoboDojo-sim-arx_x5-ee-0/ckpt-100000`
+- X-VLA checkpoint: [`RoboDojo-sim-arx_x5-ee-0/ckpt-100000`](https://huggingface.co/Hazel500am/X-VLA-GeoRefiner-RoboDojo/tree/44870539ffabd538a10849809c5bc34e3c93bbff/xvla/RoboDojo-sim-arx_x5-ee-0/ckpt-100000)
 - GeoRefiner: [`georefiner_xvla_trained_fp32.pt`](https://huggingface.co/Hazel500am/X-VLA-GeoRefiner-RoboDojo/blob/44870539ffabd538a10849809c5bc34e3c93bbff/georefiner_xvla_trained_fp32.pt)
 
-From the RoboDojo repository root, download the official X-VLA checkpoint:
-
-```bash
-bash scripts/RoboDojo/download_ckpt.sh huggingface X_VLA
-```
-
-Then download the GeoRefiner checkpoint:
+Download both checkpoints from the Hugging Face repository:
 
 ```bash
 cd XPolicyLab/policy/GeoRefiner
 bash download_checkpoint.sh
 ```
 
-The `ckpt_name` argument selects the X-VLA checkpoint. `GEOREFINER_CHECKPOINT` may override the GeoRefiner checkpoint path.
+The script installs the X-VLA checkpoint under the sibling `X_VLA/checkpoints/` adapter directory and the GeoRefiner assets under this adapter's `checkpoints/` directory. The `ckpt_name` argument selects the X-VLA checkpoint. `GEOREFINER_CHECKPOINT` may override the GeoRefiner checkpoint path.
 
 ## Evaluation
 
