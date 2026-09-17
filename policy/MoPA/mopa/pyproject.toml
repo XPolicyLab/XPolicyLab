@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mopa-policy"
+version = "0.1.0"
+description = "MoPA manipulation-query policy with Qwen3-VL and flow matching"
+readme = "README.md"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[project.scripts]
+mopa-prepare = "mopa.data.prepare:main"
+mopa-train = "mopa.training.cli:main"
+
+[tool.setuptools]
+packages = ["mopa", "mopa.data", "mopa.integrations", "mopa.models", "mopa.training"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.package-dir]
+mopa = "."
+
+[tool.setuptools.package-data]
+mopa = ["configs/*.json"]

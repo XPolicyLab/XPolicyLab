@@ -1,0 +1,21 @@
+policy_name: MoPA
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+
+# Override only when the same Qwen assets have moved to another local directory.
+base_vlm: null
+checkpoint_path: null
+device: cuda
+dtype: bfloat16
+# Number of actions to execute per chunk; null executes all four predictions.
+execute_steps: null
+request_timeout_s: 120
