@@ -1,0 +1,65 @@
+# Shared Wan2.2 flow-matching and action/state geometry.
+model:
+  diffusion_model_pretrained_path: ${oc.decode:${oc.env:WAN_CKPT_DIR,null}}
+  model_config:
+    model:
+      wam:
+        plugin: wan22
+        variant: ti2v-5b
+        core:
+          target: worldscape_policy.wam.wan22.model.CausalWanModel
+          parameters:
+            model_type: ti2v
+            patch_size: [1, 2, 2]
+            # 160x320 diffusion input -> 50 tokens/frame; RoboTwin's native
+            # 384x320 concatenation -> 120 tokens/frame.
+            frame_seqlen: ${oc.decode:${oc.env:WAM_FRAME_SEQLEN,50}}
+            in_dim: 48
+            dim: 3072
+            ffn_dim: 14336
+            freq_dim: 256
+            text_dim: ${model.model_config.model.shape.condition_dim}
+            out_dim: 48
+            num_heads: 24
+            num_layers: 30
+            max_chunk_size: 4
+            num_frame_per_block: 2
+            action_dim: 32
+            max_state_dim: 64
+            # Match the legacy DreamZero Wan2.2 adapters in the shared
+            # pretraining checkpoint (8 embodiment slots, 1024-wide MLP).
+            max_num_embodiments: 8
+            hidden_size: 1024
+            num_action_per_block: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+            num_state_per_block: 1
+            concat_first_frame_latent: false
+            diffusion_model_pretrained_path: null
+        num_timestep_buckets: 1000
+        train_architecture: full
+        decouple_inference_noise: false
+        video_inference_final_noise: 0.8
+        decouple_video_action_noise: false
+        video_noise_beta_alpha: 3.0
+        video_noise_beta_beta: 1.0
+        use_high_noise_emphasis: false
+        high_noise_beta_alpha: 3.0
+        high_noise_beta_beta: 1.0
+  generation_config:
+    schema_version: "1"
+    num_dit_steps: 8
+    num_inference_steps: 16
+    dynamic_cache_schedule: false
+    kv_cache_fifo: false
+    cfg_scale: 1.0
+    sigma_shift: 5.0
+
+noise_kernel:
+  _target_: worldscape_policy.wam.wan22.Wan22LegacyExactKernel
+  config:
+    _target_: worldscape_policy.wam.wan22.Wan22KernelConfig
+    num_train_timesteps: 1000
+    num_inference_steps: 50
+    num_frame_per_block: 2
+    num_action_per_block: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+    num_state_per_block: 1
+    action_horizon: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
