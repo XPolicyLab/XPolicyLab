@@ -1,0 +1,29 @@
+# Run with:
+# docker compose -f scripts/docker/compose.yml up --build
+services:
+  epsilonvla_server:
+    image: epsilonvla_server
+    build:
+      context: ../..
+      dockerfile: scripts/docker/serve_policy.Dockerfile
+    init: true
+    tty: true
+    network_mode: host
+    # Populate configured epsilonvla data home to /epsilonvla_assets inside the container.
+    # Populate aws credential inside the container.
+    volumes:
+      - $PWD:/app
+      - ${EPSILONVLA_DATA_HOME:-~/.cache/epsilonvla}:/epsilonvla_assets
+    environment:
+      - SERVER_ARGS
+      - EPSILONVLA_DATA_HOME=/epsilonvla_assets
+      - IS_DOCKER=true
+
+    # Comment out this block if not running on a machine with GPUs.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
