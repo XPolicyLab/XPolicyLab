@@ -1,0 +1,38 @@
+# XPolicyLab deployment defaults for Griffin Alpha-S. Per-run fields (bench_name, task_name,
+# ckpt_name, env_cfg_type, action_type, seed, port, host) are overridden by the setup scripts.
+policy_name: Griffin_Alpha_S
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# ---- Checkpoint ---------------------------------------------------------------------------
+# Explicit checkpoint: a lerobot policy directory, a lerobot-train run directory, or a Hugging
+# Face repo id (e.g. griffinlabs/Griffin-Alpha-S-LIBERO). Overrides ckpt_name when set.
+pretrained_path: null
+# Hub branch when the checkpoint is a repo id: null/main = flow-matching head, fast = FAST head.
+revision: null
+# lerobot-train step to load from checkpoints/<run>/checkpoints/<step>/pretrained_model/;
+# null picks `last`, falling back to the highest numbered step.
+checkpoint_num: null
+
+# ---- Inference ----------------------------------------------------------------------------
+device: cuda
+# Fallback language instruction when the observation carries no `instruction`.
+prompt: null
+# XPolicyLab camera names in the checkpoint's prompt order (primary camera first, then wrists).
+# The i-th camera is fed to the i-th image key the checkpoint was trained with.
+cameras: [cam_head, cam_left_wrist, cam_right_wrist]
+# Actions executed per predicted 50-step chunk before replanning; null = the checkpoint's value.
+n_action_steps: null
+# Flow head only: Euler integration steps; null = the checkpoint's num_inference_steps.
+num_inference_steps: null
+# Loading a 4.4B backbone + 0.9B expert and running the first forward can exceed the 120 s default.
+request_timeout_s: 300
