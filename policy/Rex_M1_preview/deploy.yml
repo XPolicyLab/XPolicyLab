@@ -1,0 +1,36 @@
+# Adapted for Rex-M1-preview (2026) from the Xiaomi_Robotics_1 adapter in XPolicyLab.
+# Basic experiment configuration
+policy_name: Rex_M1_preview
+protocol: ws
+host: localhost
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+gpu_id: null
+eval_batch: true
+
+# Model configuration
+# Only "ee" is supported: the packed 60-dim action carries end-effector slots
+# only (ACTION_PARTS in mibot/utils/io.py), so joint targets cannot be recovered.
+action_type: ee
+model_dir: null
+
+# Number of leading steps of each predicted chunk to execute.
+# 0 (or null) executes the whole chunk, whose length comes from the checkpoint.
+# 15 re-plans twice per 30-step chunk. This setting is checkpoint-specific.
+action_length: 15
+
+# Image preprocessing, matching mibot.utils.io.resize_image used by the
+# official client and by JsonDataset at training time.
+image_factor: 32
+image_max_pixels: 160000
+
+# VLM processor (HuggingFace repo id or local path)
+vlm_processor_path: Qwen/Qwen3-VL-4B-Instruct
+
+# Default instruction when obs does not carry one
+default_prompt: Perform the instructed bimanual manipulation task.
+
+port: 6000
