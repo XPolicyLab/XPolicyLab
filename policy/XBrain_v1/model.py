@@ -113,6 +113,11 @@ class Model(ModelTemplate):
             prompt_max_length=int(model_cfg.get("prompt_max_length", 120)),
             enable_control_mode_token=True, enable_end_effector_token=True,
         )
+        # Training masks noise on the padded action dimensions. Keep the same
+        # runtime contract: only the 14 RoboDojo action dimensions are denoised.
+        denoise_mask = [True] * 14 + [False] * (pipe.policy.max_action_dim - 14)
+        pipe.policy.set_action_denoise_mask(denoise_mask)
+        print("[XBrain_v1] action denoise mask enabled: 14/{} dims".format(pipe.policy.max_action_dim))
         device = os.environ.get("XBRAIN_DEVICE", "cuda")
         if device.startswith("cuda") and not torch.cuda.is_available():
             raise RuntimeError(
