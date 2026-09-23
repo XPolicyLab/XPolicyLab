@@ -20,28 +20,29 @@ The command delegates to `policy/Pi_05/install.sh`; no credentials or checkpoint
 ## Model assets
 
 XPolicyLab contains the Pi05 loader and model code, but Git does not contain binary
-weights. Supply the RoboDojo checkpoint as a mounted directory:
+weights. Supply the RoboDojo checkpoint as a mounted directory (the default
+public release is step 14077):
 
 ```text
 policy/EchoPolicy/checkpoints/pi05_robodojo_59999/
 ```
 
 ```bash
-export ECHO_POLICY_CHECKPOINT_PATH=/path/to/pi05_robodojo_59999
+export ECHO_POLICY_CHECKPOINT_PATH=/path/to/pi05_robodojo_14077
 bash download_checkpoint.sh
 ```
 
-For a maintainer-approved public release, download from Hugging Face instead:
+The published JAX/Orbax checkpoint can be downloaded directly from Hugging Face:
 
 ```bash
-export ECHO_POLICY_CHECKPOINT_REPO=<org>/<repo>
 bash download_checkpoint.sh
 ```
 
-The official XPolicyLab repository currently does not publish a RoboDojo-specific
-`59999` checkpoint URL. Before a leaderboard PR is merged, the maintainer must
-either provide an approved public checkpoint location or accept a documented
-external checkpoint path.
+The default is `cjgogo/RoboDojo-pi05-checkpoints`, path
+`checkpoints/sim-10task/14077`. Set `ECHO_POLICY_CHECKPOINT_STEP=15000` to use
+the later published simulation checkpoint, or override
+`ECHO_POLICY_CHECKPOINT_REPO` and `ECHO_POLICY_CHECKPOINT_REMOTE_PATH` for an
+approved mirror.
 
 ## VLM configuration
 
@@ -61,20 +62,20 @@ If `VLM_API_KEY` is absent, the adapter logs a warning and falls back to the ori
 ```bash
 cd XPolicyLab/policy/EchoPolicy
 export EVAL_ENV_TYPE=debug
-bash eval.sh RoboDojo cover_blocks pi05_robodojo_59999 arx_x5 joint 0 0 0 uv <robodojo_env>
+bash eval.sh RoboDojo cover_blocks pi05_robodojo_14077 arx_x5 joint 0 0 0 uv <robodojo_env>
 ```
 
 For a split policy server, start the policy machine with:
 
 ```bash
-bash setup_eval_policy_server.sh RoboDojo cover_blocks pi05_robodojo_59999 arx_x5 joint 0 0 uv 9001 0.0.0.0
+bash setup_eval_policy_server.sh RoboDojo cover_blocks pi05_robodojo_14077 arx_x5 joint 0 0 uv 9001 0.0.0.0
 ```
 
 Then point the RoboDojo environment client at the policy machine's reachable IP:
 
 ```bash
-bash setup_eval_env_client.sh RoboDojo cover_blocks pi05_robodojo_59999 arx_x5 joint 0 0 <robodojo_env> \
-  'ckpt_name=pi05_robodojo_59999,action_type=joint' 9001 <POLICY_SERVER_IP>
+bash setup_eval_env_client.sh RoboDojo cover_blocks pi05_robodojo_14077 arx_x5 joint 0 0 <robodojo_env> \
+  'ckpt_name=pi05_robodojo_14077,action_type=joint' 9001 <POLICY_SERVER_IP>
 ```
 
 The public server must expose the standard XPolicyLab websocket protocol. Never put an API key, SSH credential, or private host path in the PR.
