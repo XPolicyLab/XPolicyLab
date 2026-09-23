@@ -11,5 +11,14 @@ checkpoint_num: 59999
 result_dir: "./results/echopolicy/"
 action_type: joint
 policy_uv_env_path: ../Pi_05/openpi
+pi05_batch_size: 160
+preallocate: true
+mem_fraction: 0.9
+echo_progress_interval: 10
+echo_vla_candidates: 16
+echo_action_chunk_size: 10
+echo_vla_image_noise_std: 5.0
+echo_vla_joint_noise_std: 0.05
+echo_cfg_enabled: false
 train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_0
 repo_id: arx_x5_sim

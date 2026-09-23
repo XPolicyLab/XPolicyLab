@@ -2,7 +2,7 @@
 
 **Contributor:** EchoPolicy team | **Paper:** to be added | **Original code:** private EchoPolicy repository
 
-EchoPolicy adds VLM subgoal planning around the XPolicyLab Pi05 adapter for RoboDojo's `arx_x5` joint-action environment. It is currently an **eval-only** adapter: model weights are downloaded separately and the VLM key is injected at runtime.
+EchoPolicy runs the RoboDojo `arx_x5` joint-action Pi05 policy through the same in-process orchestration path used by the guoke2 deployment. Each observation is decomposed into VLM subgoals, expanded into 16 noisy candidates, grouped by endpoint, selected with the VLM, and emitted from a 10-step action cache. It is an **eval-only** adapter: model weights are downloaded separately and the VLM key is injected at runtime.
 
 Shared conventions, split-machine deployment, and official results are documented in the [XPolicyLab README](../../README.md) and the [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -58,7 +58,7 @@ export VLM_BASE_URL='https://<approved-endpoint>/v1beta'
 export VLM_THINKING_LEVEL=low
 ```
 
-If `VLM_API_KEY` is absent, the adapter logs a warning and falls back to the original instruction. The key is never read from a checked-in file.
+`VLM_API_KEY` is required for evaluation. For offline protocol tests only, set `ECHO_ALLOW_PASSTHROUGH=1`; the key is never read from a checked-in file.
 
 ## Evaluation
 
@@ -82,6 +82,10 @@ bash setup_eval_env_client.sh RoboDojo cover_blocks pi05_robodojo_59999 arx_x5 j
 ```
 
 The public server must expose the standard XPolicyLab websocket protocol. Never put an API key, SSH credential, or private host path in the PR.
+
+## Runtime defaults
+
+The public adapter matches guoke2 defaults: Gemini `gemini-3.8-flash`, low thinking level, 16 VLA candidates, image noise standard deviation 5.0, joint-state noise standard deviation 0.05 for far targets, 10-step action chunks, CFG disabled, unlimited VLM concurrency, and Pi05 inference padded to batch size **160**. Set `XLA_PYTHON_CLIENT_PREALLOCATE=true` and the XLA memory fraction to `0.9` in the policy process.
 
 ## Limitations
 

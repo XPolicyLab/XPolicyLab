@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
-export XLA_PYTHON_CLIENT_MEM_FRACTION=0.3
+export XLA_PYTHON_CLIENT_PREALLOCATE=true
+export XLA_CLIENT_MEM_FRACTION=0.9
 
 bench_name=$1
 task_name=$2
@@ -76,7 +77,6 @@ exec env \
     PYTHONUNBUFFERED=1 \
     PYTHONWARNINGS=ignore::UserWarning \
     PYTHONPATH="$(IFS=:; echo "${PYTHONPATH_PARTS[*]}")" \
-    CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     "${PYTHON_BIN}" "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
         --overrides \
