@@ -2,10 +2,10 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET="${SCRIPT_DIR}/checkpoints/pi05_robodojo_${ECHO_POLICY_CHECKPOINT_STEP:-14077}"
+TARGET="${SCRIPT_DIR}/checkpoints/pi05_robodojo_${ECHO_POLICY_CHECKPOINT_STEP:-59999}"
 SOURCE_PATH="${ECHO_POLICY_CHECKPOINT_PATH:-}"
-REPO_ID="${ECHO_POLICY_CHECKPOINT_REPO:-cjgogo/RoboDojo-pi05-checkpoints}"
-REMOTE_PATH="${ECHO_POLICY_CHECKPOINT_REMOTE_PATH:-checkpoints/sim-10task/${ECHO_POLICY_CHECKPOINT_STEP:-14077}}"
+REPO_ID="${ECHO_POLICY_CHECKPOINT_REPO:-RoboDojo-Benchmark/RoboDojo}"
+REMOTE_PATH="${ECHO_POLICY_CHECKPOINT_REMOTE_PATH:-ckpt/RoboDojo/Pi_05/RoboDojo-sim-arx_x5-joint-0/${ECHO_POLICY_CHECKPOINT_STEP:-59999}}"
 if [[ -n "${SOURCE_PATH}" ]]; then
   SOURCE_PATH="$(realpath -e "${SOURCE_PATH}")"
   [[ -d "${SOURCE_PATH}" ]] || { echo "Checkpoint path is not a directory: ${SOURCE_PATH}" >&2; exit 2; }
@@ -20,9 +20,9 @@ TMP_DIR="$(mktemp -d "${SCRIPT_DIR}/.checkpoint-download.XXXXXX")"
 cleanup() { rm -rf "${TMP_DIR}"; }
 trap cleanup EXIT
 if command -v hf >/dev/null 2>&1; then
-  hf download "${REPO_ID}" --include "${REMOTE_PATH}/**" --local-dir "${TMP_DIR}"
+  hf download "${REPO_ID}" --repo-type dataset --include "${REMOTE_PATH}/**" --local-dir "${TMP_DIR}"
 elif command -v huggingface-cli >/dev/null 2>&1; then
-  huggingface-cli download "${REPO_ID}" --include "${REMOTE_PATH}/**" --local-dir "${TMP_DIR}"
+  huggingface-cli download "${REPO_ID}" --repo-type dataset --include "${REMOTE_PATH}/**" --local-dir "${TMP_DIR}"
 else
   echo "Install huggingface_hub (hf) in the policy environment." >&2
   exit 2
