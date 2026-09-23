@@ -21,9 +21,8 @@ cleanup() { rm -rf "${TMP_DIR}"; }
 trap cleanup EXIT
 download_args=(
   --repo-type dataset
-  --include "${REMOTE_PATH}/_CHECKPOINT_METADATA"
-  --include "${REMOTE_PATH}/params/**"
-  --include "${REMOTE_PATH}/assets/**"
+  --include "${REMOTE_PATH}/**"
+  --exclude "${REMOTE_PATH}/train_state/**"
   --local-dir "${TMP_DIR}"
 )
 if command -v hf >/dev/null 2>&1; then
