@@ -1,0 +1,15 @@
+policy_name: EchoPolicy
+protocol: ws
+host: localhost
+port: 6000
+bench_name: null
+task_name: null
+env_cfg_type: null
+seed: null
+eval_batch: true
+checkpoint_num: 59999
+result_dir: "./results/echopolicy/"
+action_type: joint
+policy_uv_env_path: ../Pi_05/openpi
+train_config_name: pi05_base_aloha_full_sim_arx-x5_seed_0
+repo_id: arx_x5_sim
