@@ -2,7 +2,7 @@
 
 **Contributor:** EchoPolicy team | **Paper:** to be added | **Original code:** private EchoPolicy repository
 
-EchoPolicy runs the RoboDojo `arx_x5` joint-action Pi05 policy through the same in-process orchestration path used by the guoke2 deployment. Each observation is decomposed into VLM subgoals, expanded into 16 noisy candidates, grouped by endpoint, selected with the VLM, and emitted from a 10-step action cache. It is an **eval-only** adapter: model weights are downloaded separately and the VLM key is injected at runtime.
+EchoPolicy runs the RoboDojo `arx_x5` joint-action Pi05 policy through the same in-process orchestration path used by the deployed policy. Each observation is decomposed into VLM subgoals, expanded into 16 noisy candidates, grouped by endpoint, selected with the VLM, and emitted from a 10-step action cache. It is an **eval-only** adapter: model weights are downloaded separately and the VLM key is injected at runtime.
 
 Shared conventions, split-machine deployment, and official results are documented in the [XPolicyLab README](../../README.md) and the [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -85,9 +85,11 @@ The public server must expose the standard XPolicyLab websocket protocol. Never 
 
 ## Runtime defaults
 
-The public adapter matches guoke2 defaults: Gemini `gemini-3.8-flash`, low thinking level, 16 VLA candidates, image noise standard deviation 5.0, joint-state noise standard deviation 0.05 for far targets, 10-step action chunks, CFG disabled, unlimited VLM concurrency, and Pi05 inference padded to batch size **160**. Set `XLA_PYTHON_CLIENT_PREALLOCATE=true` and the XLA memory fraction to `0.9` in the policy process.
+The public adapter uses these deployment defaults: Gemini `gemini-3.8-flash`, low thinking level, 16 VLA candidates, image noise standard deviation 5.0, joint-state noise standard deviation 0.05 for far targets, 10-step action chunks, CFG disabled, unlimited VLM concurrency, and Pi05 inference padded to batch size **160**. Set `XLA_PYTHON_CLIENT_PREALLOCATE=true` and the XLA memory fraction to `0.9` in the policy process.
 
 ## Limitations
 
 - Training and data conversion scripts are not included; this is an eval-only submission.
 - Official leaderboard evaluation requires a public checkpoint repository (set in `ECHO_POLICY_CHECKPOINT_REPO`) and maintainer confirmation that the evaluation environment may inject the VLM secret or use an approved VLM endpoint.
+
+The standard eval loop may update observations after each executed action; these updates only replace stored observations. Candidate inference runs on `get_action` / `get_action_batch`, in the requested environment order. Set `ECHO_LOG_DIR` to retain per-environment planning and selection diagnostics. GPU selection in the launch script uses the runtime device visibility API.
