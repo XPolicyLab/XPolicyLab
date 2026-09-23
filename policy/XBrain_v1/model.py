@@ -7,6 +7,11 @@ import numpy as np
 import torch
 import torch.nn.functional as torch_functional
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.policy.XBrain_v1.gripper_thresholds import (
+    apply_gripper_thresholds,
+    load_gripper_thresholds,
+    normalize_prompt,
+)
 from XPolicyLab.utils.process_data import get_batch_size, get_robot_action_dim_info, pack_robot_state
 
 
@@ -29,6 +34,10 @@ class Model(ModelTemplate):
         self.action_horizon = int(model_cfg.get("action_horizon", 30))
         if self.action_horizon <= 0 or self.action_horizon > 30:
             raise ValueError("action_horizon must be in [1, 30]")
+        threshold_path = Path(__file__).with_name("gripper_thresholds.json")
+        self._gripper_thresholds = load_gripper_thresholds(threshold_path, self.env_cfg_type)
+        self._reported_gripper_prompts = set()
+        self._warned_gripper_prompts = set()
 
         # Get robot action dimension metadata
         # Example:
@@ -173,7 +182,28 @@ class Model(ModelTemplate):
             # The checkpoint predicts 50 steps, but the executor receives at
             # most the first 30 before collecting a fresh observation.
             predicted = predicted[:self.action_horizon]
+            predicted = self._apply_prompt_gripper_thresholds(predicted, prompt)
         return self._format_pipeline_actions(predicted)
+
+    def _apply_prompt_gripper_thresholds(self, predicted, prompt):
+        prompt_key = normalize_prompt(prompt)
+        rule = self._gripper_thresholds.get(prompt_key)
+        if rule is None:
+            if prompt_key not in self._warned_gripper_prompts:
+                print(
+                    f"[XBrain_v1] no gripper thresholds matched env={self.env_cfg_type} "
+                    f"prompt={prompt!r}; preserving predicted gripper values"
+                )
+                self._warned_gripper_prompts.add(prompt_key)
+            return predicted
+
+        if prompt_key not in self._reported_gripper_prompts:
+            print(
+                f"[XBrain_v1] gripper thresholds task={rule.task} "
+                f"left={rule.left} right={rule.right}"
+            )
+            self._reported_gripper_prompts.add(prompt_key)
+        return apply_gripper_thresholds(predicted, rule)
 
     @staticmethod
     def _prepare_image(image, source):
