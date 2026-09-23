@@ -43,7 +43,9 @@ path `ckpt/RoboDojo/Pi_05/RoboDojo-sim-arx_x5-joint-0/59999`. Set
 `ECHO_POLICY_CHECKPOINT_STEP` to another step only when the corresponding
 directory exists in that official repository, or override
 `ECHO_POLICY_CHECKPOINT_REPO` and `ECHO_POLICY_CHECKPOINT_REMOTE_PATH` for an
-approved mirror. The helper passes `--repo-type dataset` to the Hugging Face CLI.
+approved mirror. The helper passes `--repo-type dataset` to the Hugging Face CLI
+and downloads only inference artifacts (`params`, `assets`, and metadata), not
+the much larger training `train_state`.
 
 ## VLM configuration
 

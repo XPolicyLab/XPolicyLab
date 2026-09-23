@@ -19,10 +19,17 @@ mkdir -p "${TARGET}"
 TMP_DIR="$(mktemp -d "${SCRIPT_DIR}/.checkpoint-download.XXXXXX")"
 cleanup() { rm -rf "${TMP_DIR}"; }
 trap cleanup EXIT
+download_args=(
+  --repo-type dataset
+  --include "${REMOTE_PATH}/_CHECKPOINT_METADATA"
+  --include "${REMOTE_PATH}/params/**"
+  --include "${REMOTE_PATH}/assets/**"
+  --local-dir "${TMP_DIR}"
+)
 if command -v hf >/dev/null 2>&1; then
-  hf download "${REPO_ID}" --repo-type dataset --include "${REMOTE_PATH}/**" --local-dir "${TMP_DIR}"
+  hf download "${REPO_ID}" "${download_args[@]}"
 elif command -v huggingface-cli >/dev/null 2>&1; then
-  huggingface-cli download "${REPO_ID}" --repo-type dataset --include "${REMOTE_PATH}/**" --local-dir "${TMP_DIR}"
+  huggingface-cli download "${REPO_ID}" "${download_args[@]}"
 else
   echo "Install huggingface_hub (hf) in the policy environment." >&2
   exit 2
