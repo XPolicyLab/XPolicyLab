@@ -19,4 +19,4 @@ tokenizer_model_path: null
 fast_tokenizer_path: null
 default_prompt: "Complete the task described by the instruction."
 action_chunk_size: 50
-action_horizon: 50
+action_horizon: 30

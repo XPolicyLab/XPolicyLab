@@ -7,7 +7,7 @@ checkpoint_env: XBRAIN_PIPERX_CHECKPOINT_PATH
 norm_stats_env: XBRAIN_PIPERX_NORM_STATS_PATH
 action_type: joint
 action_chunk_size: 50
-action_horizon: 50
+action_horizon: 30
 observation_memory_size: 1
 image_size: [224, 224]
 image_color_space: RGB

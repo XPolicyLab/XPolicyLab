@@ -110,8 +110,11 @@ helper for an existing conda-pack archive and is not part of the official
 setup.
 
 The standard XPolicyLab `eval.sh` arguments are documented in the repository
-README. The default action horizon is 50 and can be overridden in
-`deploy.yml` for controlled experiments.
+README. The checkpoint predicts 50 actions per inference call, but the adapter
+returns only the first 30 actions to the client. After those actions execute,
+the client collects a fresh observation and requests a new prediction. The
+`action_horizon` setting may shorten this execution horizon, but cannot exceed
+30.
 
 ## Evaluation-only submission
 

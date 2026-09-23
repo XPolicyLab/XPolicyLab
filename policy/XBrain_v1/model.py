@@ -26,9 +26,9 @@ class Model(ModelTemplate):
 
         if self.action_type != "joint":
             raise ValueError(f"XBrain_v1 currently supports action_type=joint, got {self.action_type!r}")
-        self.action_horizon = int(model_cfg.get("action_horizon", 50))
-        if self.action_horizon <= 0 or self.action_horizon > 50:
-            raise ValueError("action_horizon must be in [1, 50]")
+        self.action_horizon = int(model_cfg.get("action_horizon", 30))
+        if self.action_horizon <= 0 or self.action_horizon > 30:
+            raise ValueError("action_horizon must be in [1, 30]")
 
         # Get robot action dimension metadata
         # Example:
@@ -170,6 +170,8 @@ class Model(ModelTemplate):
             predicted = np.asarray(predicted.detach().float().cpu())
             if predicted.shape != (50, 14) or not np.isfinite(predicted).all():
                 raise ValueError(f"pipeline returned unexpected action shape/values: {predicted.shape}")
+            # The checkpoint predicts 50 steps, but the executor receives at
+            # most the first 30 before collecting a fresh observation.
             predicted = predicted[:self.action_horizon]
         return self._format_pipeline_actions(predicted)
 

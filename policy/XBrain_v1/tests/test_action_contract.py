@@ -17,7 +17,8 @@ def main() -> None:
         )
         assert config["embodiment_id"] == embodiment
         assert config["state_dim"] == 14
-        assert config["action_horizon"] == 50
+        assert config["action_chunk_size"] == 50
+        assert config["action_horizon"] == 30
         assert config["control_frequency_hz"] == expected_frequency[name]
         assert config["training_arm_action_mode"] == "delta"
         assert config["policy_output_arm_action_mode"] == "absolute"
