@@ -19,20 +19,29 @@ The command delegates to `policy/Pi_05/install.sh`; no credentials or checkpoint
 
 ## Model assets
 
-Download the RoboDojo fine-tuned Pi05 checkpoint into:
+XPolicyLab contains the Pi05 loader and model code, but Git does not contain binary
+weights. Supply the RoboDojo checkpoint as a mounted directory:
 
 ```text
 policy/EchoPolicy/checkpoints/pi05_robodojo_59999/
 ```
 
-Set the public repository before downloading:
+```bash
+export ECHO_POLICY_CHECKPOINT_PATH=/path/to/pi05_robodojo_59999
+bash download_checkpoint.sh
+```
+
+For a maintainer-approved public release, download from Hugging Face instead:
 
 ```bash
 export ECHO_POLICY_CHECKPOINT_REPO=<org>/<repo>
 bash download_checkpoint.sh
 ```
 
-The PR must replace this placeholder repository with the public checkpoint location before official leaderboard evaluation.
+The official XPolicyLab repository currently does not publish a RoboDojo-specific
+`59999` checkpoint URL. Before a leaderboard PR is merged, the maintainer must
+either provide an approved public checkpoint location or accept a documented
+external checkpoint path.
 
 ## VLM configuration
 

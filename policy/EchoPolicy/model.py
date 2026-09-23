@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import logging
 import os
-from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -39,13 +38,12 @@ class Model(ModelTemplate):
         self._latest_observations: list[dict[str, Any]] = []
         self._build_planner(model_cfg)
 
-        pi_cfg = dict(model_cfg)
-        # Keep downloaded weights under this policy directory. The download
-        # script described in README.md populates this path.
-        pi_cfg["model_path"] = str(
-            Path(__file__).resolve().parent / "checkpoints" / "pi05_robodojo_59999"
-        )
-        self._pi05 = Pi05Model(pi_cfg)
+        # Reuse the official Pi05 resolver unchanged.  It accepts an explicit
+        # model_path/checkpoint_path, a path-valued ckpt_name, or the standard
+        # XPolicyLab checkpoints/<ckpt_name> layout.  Keeping resolution in the
+        # upstream adapter means this policy can consume the same checkpoint
+        # layout as policy/Pi_05 without embedding a machine-specific path.
+        self._pi05 = Pi05Model(dict(model_cfg))
         self.model = self._pi05.model
 
     def _build_planner(self, cfg: dict[str, Any]) -> None:
