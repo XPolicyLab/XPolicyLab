@@ -1,0 +1,64 @@
+# Deployment contract for HWM_CogWAM (CogWAM served through XPolicyLab).
+#
+# Adapted from CogWAM's own `configs/robodojo_deploy.yml`, which documents
+# this exact contract against the released
+# `cogwam_robodojo_causal_dino_mot_h25_eventmem_dino_multilayer_50k_v1`
+# checkpoint. Everything below `unnorm_key` is a hard ABI check performed by
+# `cogwam.eval.robodojo_policy.Model.__init__` against the CogWAM backend
+# server's handshake metadata — not an image-processing suggestion — and is
+# not meant to be retuned per-run.
+#
+# `eval.sh` overrides the per-invocation identity fields (host/port,
+# bench/task/ckpt/env_cfg/action_type/seed/gpu_id). `setup_eval_policy_server.sh`
+# additionally overrides `policy_server_host` / `policy_server_port`
+# (address of the CogWAM backend it just started) and
+# `expected_checkpoint_path` (the resolved checkpoint directory) at launch
+# time — do not hand-edit those three here.
+
+policy_name: HWM_CogWAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: joint
+gpu_id: null
+seed: null
+eval_batch: false
+
+# Filled by setup_eval_policy_server.sh once the CogWAM backend server is up.
+policy_server_host: null
+policy_server_port: null
+# Filled by setup_eval_policy_server.sh with the resolved checkpoint
+# directory; Model.__init__ then asserts the backend loaded the exact same
+# path (cogwam/eval/robodojo_policy.py:_validate_checkpoint_selection).
+expected_checkpoint_path: null
+
+unnorm_key: new_embodiment
+use_ddim: true
+num_ddim_steps: 10
+# Execute this many actions from each 25-step chunk before querying again.
+# The remaining 15 actions are the RTC overlap and are discarded while RTC is
+# off (see rtc_enabled below).
+replan_interval: 10
+
+# Inference-time Real-Time Chunking (RTC). The released runs keep this OFF;
+# the code path is retained so the ablation can be reproduced.
+rtc_enabled: false
+rtc_execution_horizon: 15
+rtc_inference_delay: 1
+rtc_max_guidance_weight: 20.0
+rtc_prefix_attention_schedule: linear
+rtc_debug_max_replans: 8
+
+# Planner text is useful for debugging but noisy for a full leaderboard run.
+log_planner_text: false
+
+# Hard ABI checks against the checkpoint's training-time composite geometry.
+image_size: [320, 384]
+expected_image_layout: tri_view_composite
+expected_composite_view_key: video.tri_view_composite
+expected_action_chunk_size: 25
+expected_action_dim: 14
