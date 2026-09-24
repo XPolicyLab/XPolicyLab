@@ -1,0 +1,22 @@
+policy_name: XBrain_v1
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+checkpoint_root: ./checkpoints
+runtime_root: null
+checkpoint_path: null
+inference_config: ./runtime_config/piper_x.yaml
+norm_stats_path: null
+tokenizer_model_path: null
+fast_tokenizer_path: null
+default_prompt: "Complete the task described by the instruction."
+action_chunk_size: 50
+action_horizon: 30

@@ -1,0 +1,116 @@
+{
+  "piper_x": [
+    {
+      "task": "cap_pen",
+      "prompt": "Pick up the pen and the pen cap, then put the cap on the pen.",
+      "left": 0.15,
+      "right": 0.15
+    },
+    {
+      "task": "classify_objects",
+      "prompt": "Classify the two types of objects on the table and place them into the two baskets.",
+      "left": 0.15,
+      "right": 0.15
+    },
+    {
+      "task": "disassemble_LEGO",
+      "prompt": "Take apart the assembled LEGO structure and place all the pieces into the bowl.",
+      "left": 0.25,
+      "right": 0.25
+    },
+    {
+      "task": "hang_mugs",
+      "prompt": "Hang the mugs on the mug rack.",
+      "left": 0.15,
+      "right": 0.15
+    },
+    {
+      "task": "pack_objects_into_backpack",
+      "prompt": "Place all the objects on the table into the backpack.",
+      "left": 0.15,
+      "right": 0.15
+    },
+    {
+      "task": "sweep_blocks",
+      "prompt": "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.",
+      "left": 0.35,
+      "right": 0.3
+    }
+  ],
+  "piper": [
+    {
+      "task": "fill_pen_holder",
+      "prompt": "Pick up the pen holder and place all the pens into it.",
+      "left": 0.25,
+      "right": 0.25
+    },
+    {
+      "task": "insert_charger",
+      "prompt": "Insert the charger plug into the power strip, then connect the charging cable to the plug.",
+      "left": 0.2,
+      "right": 0.2
+    },
+    {
+      "task": "put_objects_into_basket",
+      "prompt": "Place all the objects on the table into the basket.",
+      "left": 0.2,
+      "right": 0.2
+    },
+    {
+      "task": "stack_and_cover_blocks",
+      "prompt": "Stack the blocks on the table, then cover them with the cup.",
+      "left": 0.45,
+      "right": 0.45
+    },
+    {
+      "task": "stack_bowls",
+      "prompt": "Stack the bowls on the table.",
+      "left": 0.2,
+      "right": 0.2
+    },
+    {
+      "task": "stand_up_bottles",
+      "prompt": "Stand the bottle upright.",
+      "left": 0.65,
+      "right": 0.65
+    }
+  ],
+  "arx_x5": [
+    {
+      "task": "cover_blocks",
+      "prompt": "Cover the three blocks from left to right, then uncover them again in the order of red, green, and blue.",
+      "left": 0.75,
+      "right": 0.75
+    },
+    {
+      "task": "insert_tubes",
+      "prompt": "Pick up the test tubes on the table and insert them into the test tube rack.",
+      "left": 0.4,
+      "right": 0.4
+    },
+    {
+      "task": "make_bread",
+      "prompt": "Pick up the two slices of bread from the bowl and place them into the toaster, then place the two small bowls on the plate.",
+      "left": 0.2,
+      "right": 0.2
+    },
+    {
+      "task": "make_food",
+      "prompt": "Take the cutting board out and place it on the table. Then place the steak and the knife on the cutting board, put the vegetables and shrimp into the pot, place the pot on the stove, and finally cover it with the lid.",
+      "left": 0.2,
+      "right": 0.2
+    },
+    {
+      "task": "pack_and_pour_fruit",
+      "prompt": "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.",
+      "left": 0.2,
+      "right": 0.2
+    },
+    {
+      "task": "store_in_safe",
+      "prompt": "Place all the objects into the safe, then close the safe.",
+      "left": 0.2,
+      "right": 0.2
+    }
+  ]
+}

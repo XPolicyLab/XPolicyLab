@@ -1,0 +1,25 @@
+# Public inference contract for the RoboDojo ARX X5 real-robot checkpoint.
+robot_type: arx_x5
+env_cfg_type: arx_x5
+embodiment_id: 0
+control_frequency_hz: 30
+checkpoint_env: XBRAIN_ARX_X5_CHECKPOINT_PATH
+norm_stats_env: XBRAIN_ARX_X5_NORM_STATS_PATH
+action_type: joint
+action_chunk_size: 50
+action_horizon: 30
+observation_memory_size: 1
+image_size: [224, 224]
+image_color_space: RGB
+image_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+state_dim: 14
+state_names: [left_joint_0, left_joint_1, left_joint_2, left_joint_3, left_joint_4, left_joint_5, left_gripper, right_joint_0, right_joint_1, right_joint_2, right_joint_3, right_joint_4, right_joint_5, right_gripper]
+training_arm_action_mode: delta
+policy_output_arm_action_mode: absolute
+gripper_action_mode: absolute
+executor_applies_joint_delta: false
+delta_mask: [true, true, true, true, true, true, false, true, true, true, true, true, true, false]
+vlm_type: paligemma2
+prompt_max_length: 120
+encode_action_input: false
+encode_sub_task_input: false
