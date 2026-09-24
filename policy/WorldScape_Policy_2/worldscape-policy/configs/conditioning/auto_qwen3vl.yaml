@@ -1,0 +1,68 @@
+# Auto Qwen3-VL (2B/4B) + T5 mode profile.
+model:
+  vlm_pretrained_path: ${oc.decode:${oc.env:Qwen_CKPT_DIR,null}}
+  vlm_cot_prompt: '${oc.env:PLANNING_INSTRUCTION_TEMPLATE,"You are a robot planner. Instructions: {task}. Given the current high-level task instruction and current head-view observation, predict the next atomic action subtask for the next second."}'
+  vlm_token_dim: ${oc.decode:${oc.env:VLM_TOKEN_DIM,2560}}
+  vlm_context_dim: ${oc.decode:${oc.env:VLM_CONTEXT_DIM,4096}}
+  vlm_attn_implementation: ${oc.env:VLM_ATTN_IMPLEMENTATION,sdpa}
+  model_config:
+    model:
+      condition_router:
+        auto:
+          vlm:
+            target: worldscape_policy.conditioning.vlm.qwen3vl.QwenPlanningEncoder
+            parameters:
+              model_id: ${oc.env:Qwen_CKPT_DIR,Qwen/Qwen3-VL-4B-Instruct}
+              enable_planning_branch: true
+              # Perception defaults to the final VLM hidden layer. AR planning
+              # token states come from that same final-layer feature space.
+              # QFormer remains available with VLM_TOKEN_MODE=qformer.
+              vlm_token_mode: ${oc.env:VLM_TOKEN_MODE,last}
+              qformer_num_query_tokens: 64
+              qformer_num_heads: 8
+              # Keep optional QFormer output in the native VLM token space;
+              # the shared projector below maps every token to WAM condition_dim.
+              qformer_output_dim: ${oc.decode:${oc.env:VLM_TOKEN_DIM,2560}}
+          projector:
+            kind: linear
+            input_dim: ${oc.decode:${oc.env:VLM_TOKEN_DIM,2560}}
+            output_dim: ${oc.decode:${oc.env:VLM_CONTEXT_DIM,4096}}
+          output_norm: true
+          semantic_gate_only: true
+          semantic_grad_clip_norm: 0.5
+
+profiles:
+  mode:
+    auto:
+      model:
+        initialization: checkpoint_overlay
+        model_config:
+          model:
+            mode: auto
+        expected_mode: auto
+      data_loader:
+        mode: auto
+      objective:
+        semantic_forcing_weight: 0.001
+        semantic_loss:
+          _target_: worldscape_policy.training.objective.SemanticForcingLoss
+          cosine_weight: ${oc.decode:${oc.env:ALIGN_LOSS_COSINE_WEIGHT,1.0}}
+          mse_weight: ${oc.decode:${oc.env:ALIGN_LOSS_MSE_WEIGHT,0.0}}
+      prompt_schedule:
+        enabled: true
+        projector_only_end: 0.0
+        schedule:
+          _target_: worldscape_policy.training.prompt_schedule.PromptSchedule
+          stages:
+            - _target_: worldscape_policy.training.prompt_schedule.Stage
+              end: 0.05
+              auto_ratio: 0.5
+              name: stage_a
+            - _target_: worldscape_policy.training.prompt_schedule.Stage
+              end: 0.30
+              auto_ratio: 0.5
+              name: stage_b
+            - _target_: worldscape_policy.training.prompt_schedule.Stage
+              end: 1.0
+              auto_ratio: 0.7
+              name: stage_c

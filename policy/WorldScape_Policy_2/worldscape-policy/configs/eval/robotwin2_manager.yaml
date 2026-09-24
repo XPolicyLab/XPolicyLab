@@ -1,0 +1,55 @@
+# Native RoboTwin2.0 evaluation through script/eval_policy.py.
+ckpt: ${oc.env:WORLDSCAPE_CHECKPOINT}
+seed: ${oc.decode:${oc.env:ROBOTWIN_SEED_INDEX,0}}
+mixed_precision: bf16
+
+EVALUATION:
+  robotwin_root: ${oc.env:ROBOTWIN_ROOT}
+  policy_name: wsp2_policy
+  task_name: null
+  instruction_type: unseen
+  eval_num_episodes: ${oc.decode:${oc.env:ROBOTWIN_EPISODES_PER_TASK,100}}
+  max_seed_trials: ${oc.decode:${oc.env:ROBOTWIN_MAX_SEED_TRIALS,1000}}
+  output_dir: ${oc.env:WORLDSCAPE_EVAL_OUTPUT,./evaluate_results/robotwin/${now:%Y%m%d_%H%M%S}}
+  save_video: ${oc.decode:${oc.env:ROBOTWIN_SAVE_VIDEO,false}}
+  # Run RoboTwin script/test_render.py once per worker before model loading.
+  render_preflight: ${oc.decode:${oc.env:ROBOTWIN_RENDER_PREFLIGHT,false}}
+  # Build the cuRobo planners once in a single process before spawning GPU
+  # workers so Warp kernels are cached; avoids the concurrent cold-cache
+  # NVRTC failure (`CUDA kernel build failed with error code 6`).
+  warp_prewarm: ${oc.decode:${oc.env:ROBOTWIN_WARP_PREWARM,true}}
+  warp_prewarm_timeout_s: ${oc.decode:${oc.env:ROBOTWIN_WARP_PREWARM_TIMEOUT_S,1800}}
+  clear_cache_freq: 1
+  device: cuda
+  mode: ${oc.env:WSP_MODE,auto}
+  action_type: qpos
+  action_horizon: ${oc.decode:${oc.env:ROBOTWIN_ACTION_HORIZON,24}}
+  replan_steps: ${oc.decode:${oc.env:ROBOTWIN_REPLAN_STEPS,${oc.env:ROBOTWIN_ACTION_HORIZON,24}}}
+  memory_reset_chunks: ${oc.decode:${oc.env:ROBOTWIN_MEMORY_RESET_CHUNKS,2}}
+  skip_get_obs_within_replan: true
+  observation_interval: ${oc.decode:${oc.env:ROBOTWIN_OBSERVATION_INTERVAL,3}}
+  vlm_history_num_frames: ${oc.decode:${oc.env:ROBOTWIN_VLM_HISTORY_NUM_FRAMES,4}}
+  # Training samples VLM head frames at a fixed action-step stride,
+  # independently of how often evaluation replans.
+  vlm_history_stride: ${oc.decode:${oc.env:ROBOTWIN_VLM_HISTORY_STRIDE,${oc.env:ROBOTWIN_ACTION_HORIZON,24}}}
+  # Null reads the layout embedded in the checkpoint; set explicitly only for
+  # compatibility with a checkpoint that predates layout metadata.
+  diffusion_view_layout: ${oc.decode:${oc.env:ROBOTWIN_DIFFUSION_VIEW_LAYOUT,null}}
+  vlm_cot_prompt: '${oc.env:ROBOTWIN_VLM_COT_PROMPT,"You are a robot planner. Instructions: {task}. Given the current high-level task instruction and current head-view observation, predict the next atomic action subtask for the next second."}'
+  t5_prompt_template: '${oc.env:ROBOTWIN_T5_PROMPT_TEMPLATE,"A video shows that a robot {instruction} The robot {instruction}"}'
+  validate_checkpoint_artifacts: ${oc.decode:${oc.env:WSP_VALIDATE_CHECKPOINT_ARTIFACTS,false}}
+  log_inference: ${oc.decode:${oc.env:WSP_LOG_INFERENCE,true}}
+
+MULTIRUN:
+  gpu_ids: ${oc.decode:${oc.env:ROBOTWIN_GPU_IDS,[0]}}
+  workers_per_gpu: 1
+  eval_phases: clean
+  resume: true
+  poll_interval_sec: 1.0
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null
