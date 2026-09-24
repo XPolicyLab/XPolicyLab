@@ -1,0 +1,24 @@
+policy_name: SIPAI
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+
+device: cuda:0
+exec_chunk_size: 10
+
+architecture: sipai_memory_ae_joint_v1
+dtype: float32
+history_frames: 25
+history_interval: 20
+history_grid_size: 4
+history_compressor_hidden_dim: 512
+max_token_len: 200
+num_inference_steps: 10
