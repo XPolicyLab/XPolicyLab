@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "evidence_type": "fresh_policy_environment_runtime_checks",
+  "recorded_date": "2026-09-09",
+  "scope": "New Linux policy environment; existing RoboDojo/Isaac Sim environment. Synthetic execution and standard debug passed; simulator pair replay is still in progress.",
+  "model": {
+    "repository": "Gleez/kinrt-robodojo-full35-a800-60k",
+    "revision": "9460d07a9c7677ef3c72ece08df1f34eba7e45c7",
+    "checkpoint_step": 60000,
+    "train_config": "kinrt_full_robodojo",
+    "normalization_key": "RoboDojo_lerobot_v30_video",
+    "training_tasks": 35,
+    "training_episodes": 3500,
+    "training_frames": 1859602
+  },
+  "installation": {
+    "status": "passed",
+    "actual_adapter_import_from_new_checkout": true,
+    "kinrt_source_revision": "590d52802cde804cdc2d0ccb672c1a3a90d76f91",
+    "lerobot_source_revision": "8fff0fde7c79f23a93d845d1a50e985de01f8b8a",
+    "active_lerobot_dataset_codebase": "v3.0",
+    "locked_lerobot_distribution_version": "0.1.0",
+    "lerobot_note": "The pinned v3.0 source overlay has import precedence over the older locked distribution metadata.",
+    "opencv_import_version": "4.11.0",
+    "pytest_import_dependency": "9.0.3",
+    "original_lockfile_restored": true,
+    "tokenizer_sha256_verified": "8986bb4f423f07f8c7f70d0dbe3526fb2316056c17bae71b1ea975e77a168fc6",
+    "linux_installer_helper_tests_passed": 12,
+    "linux_simulator_preparation_tests_passed": 17
+  },
+  "checkpoint_verification": {
+    "inference_files_sha256_verified": 353,
+    "delivery_entries_sha256_verified": 14,
+    "training_state_included": false
+  },
+  "synthetic_inference": {
+    "status": "passed",
+    "gpu": "NVIDIA GeForce RTX 3090 24 GiB",
+    "instruction": "stack the bowls",
+    "state_shape": [14],
+    "action_shape": [50, 14],
+    "finite": true,
+    "model_load_seconds": 25.24159244634211,
+    "inference_seconds": 13.828290399163961,
+    "numpy_array_equal_to_original_environment": true,
+    "maximum_absolute_difference": 0.0,
+    "original_actions_sha256": "01ddf334a9fee6dd8942c31b2080e8da89ddd149a6315b0450888606bbfe1e92",
+    "fresh_actions_sha256": "01ddf334a9fee6dd8942c31b2080e8da89ddd149a6315b0450888606bbfe1e92",
+    "comparison_scope": "One identical synthetic input, not all task trajectories or simulator outcomes."
+  },
+  "standard_debug": {
+    "entry_point": "eval.sh",
+    "eval_env_type": "debug",
+    "raw_observations": "passed",
+    "encoded_observations": "passed",
+    "episodes_per_mode": 10,
+    "completion_marker": "[MAIN] eval finished",
+    "raw_log_completion_line": 461,
+    "encoded_log_completion_line": 461
+  },
+  "public_access": {
+    "private": false,
+    "gated": false,
+    "content_revision_unchanged": true,
+    "new_hf_cache": true,
+    "credential_environment_variables_absent": true,
+    "hf_hub_disable_implicit_token": true,
+    "anonymous_assets_only_download": "passed",
+    "downloaded_files": 17,
+    "delivery_entries_verified": 14,
+    "checkpoint_normalization_verified": true,
+    "normalization_sha256": "b3d1307c5f8b1c0334fe8377cb5aef422067b22204fb1529fb5c8289a98d2c68",
+    "weight_head_path": "checkpoints/60000/params/params.PaliGemma.llm.embedder.input_embedding.value/0.0",
+    "anonymous_weight_head_status": 200,
+    "all_weights_redownloaded_anonymously": false
+  },
+  "simulator_replay": {
+    "status": "in_progress",
+    "task_order": ["stack_bowls", "stack_bowls_random"],
+    "native_episodes_per_configuration": 25,
+    "completed_pair_claimed": false,
+    "reference_results": "seed0_reference_pair.json",
+    "remaining_planned_configurations": 44,
+    "remaining_planned_native_episodes": 1650,
+    "remaining_configuration_server": "new server; RNG boundary recorded separately"
+  },
+  "source_file_sha256": {
+    "install_final.log": "4362f274bcfec6c17d12e55008193d10f5681299e89e96cd57376546a1214e6f",
+    "smoke.log": "b2ab6c8f473430e92851784a1e4e00644c9042149a822968027d9e8935ab3345",
+    "debug_encoded_0.log": "dd791b78d6d632cae066cd57fb60932cdb22b6ec1823b06906ce9822d234dae3",
+    "debug_encoded_1.log": "f2651d58ae9cd7db8f253df8069636845729caf5d1dfe5d71be5e3ab4c5fef55",
+    "synthetic_actions.npy": "01ddf334a9fee6dd8942c31b2080e8da89ddd149a6315b0450888606bbfe1e92",
+    "assets.json": "f14ae57ac79aecf336d40f4d9c014959eb389b5fcc6b7d26e9181086911edb4e",
+    "versions.json": "7defd23c8ec2ddc3d33f895732c91c818c22889c5723fe6683b9ab96a2ed8508",
+    "public_download.log": "b8daa81da4c6437fb9eb5366092e447c6f329d7bcbc14c76a4c3650f9ca7ec31",
+    "tokenizer.log": "c54365eebd86f482a2b6e4744e9234a5cdbf3e6433fdef48d4a136d2cfd1f371"
+  }
+}
