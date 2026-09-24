@@ -1,0 +1,4 @@
+h5py
+opencv-python-headless
+pyyaml
+torch

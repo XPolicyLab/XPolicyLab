@@ -1,0 +1,28 @@
+data:
+  clean_root: datasets/ME-Dex-1.0-RoboTwin-Clean50-Tactile
+  text_cache: datasets/ME-Dex-1.0-RoboTwin-Clean50-Tactile/t5_prompt_table.pt
+  quality_manifest: datasets/ME-Dex-1.0-RoboTwin-Clean50-Tactile/quality_manifest.json.gz
+  episodes_per_task: 50
+  samples_per_episode: 10
+
+model:
+  topology: full_joint
+  h_bridge_joint_start_layer: 8
+  h_bridge_joint_end_layer: 22
+  initialization_checkpoint: checkpoints/Motus/mp_rank_00_model_states.pt
+  tactile_checkpoint: checkpoints/ME-Dex-1.0-RoboTwin-Clean2Random-Leaderboard/tactile_ae.pt
+  tactile_slot_ids: [0, 1, 2, 3, 4, 5, 6, 7, 17, 18, 19, 20, 21, 22, 23, 24]
+  tactile_latent_dim: 48
+  tactile_frame_count: 18
+  tactile_queries_per_frame: 16
+  tactile_observed_frames: 2
+  hidden_size: 1024
+
+training:
+  batch_size: 4
+  world_size: 32
+  max_steps: 50000
+  learning_rate: 0.00005
+  warmup_steps: 1000
+  save_interval: 10000
+  output_dir: outputs/me_dex_1_0_clean50
