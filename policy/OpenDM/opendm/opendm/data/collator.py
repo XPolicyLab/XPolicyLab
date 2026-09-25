@@ -1,6 +1,7 @@
 """Batch collation for training and norm-stat computation."""
 
 from collections.abc import Sequence
+from enum import Enum
 
 import numpy as np
 import torch
@@ -89,17 +90,76 @@ class TrainingCollator:
         batch["action"] = torch.cat(action_list, dim=0)
         batch["action_mask"] = torch.cat(action_mask_list, dim=0)
 
+        if any(inst.get("history_mask") is not None for inst in instances):
+            padded_history_mask = []
+            for inst, input_ids in zip(instances, padded_input_ids, strict=True):
+                history_mask = inst.get("history_mask")
+                if history_mask is None:
+                    history_mask = torch.zeros_like(input_ids, dtype=torch.bool)
+                elif history_mask.shape[1] < input_ids.shape[1]:
+                    history_mask = torch.cat(
+                        [
+                            history_mask,
+                            torch.zeros(
+                                (1, input_ids.shape[1] - history_mask.shape[1]),
+                                dtype=history_mask.dtype,
+                            ),
+                        ],
+                        dim=1,
+                    )
+                else:
+                    history_mask = history_mask[:, : input_ids.shape[1]]
+                padded_history_mask.append(history_mask)
+            batch["history_mask"] = torch.cat(padded_history_mask, dim=0)
+            history_pixels = [
+                inst["history_pixel_values"]
+                for inst in instances
+                if inst.get("history_pixel_values") is not None
+            ]
+            if history_pixels:
+                batch["history_pixel_values"] = torch.cat(history_pixels, dim=0)
+
         return batch
 
 
 class NormStatsCollator:
-    def __call__(self, instances: Sequence[dict]) -> dict[str, np.ndarray]:
-        batch = {}
+    def __call__(self, instances: Sequence[dict]) -> dict:
+        grouped_instances: dict[str | None, list[dict]] = {}
+        for instance in instances:
+            robot_type = instance.get("meta_data", {}).get("robot_type")
+            if isinstance(robot_type, Enum):
+                robot_type = str(robot_type.value)
+            elif robot_type is not None:
+                robot_type = str(robot_type)
+            grouped_instances.setdefault(robot_type, []).append(instance)
 
-        state_list = [inst["state"] for inst in instances]
-        action_list = [inst["action"] for inst in instances]
+        if None in grouped_instances and len(grouped_instances) > 1:
+            raise ValueError(
+                "Cannot compute norm stats from a batch containing both typed "
+                "and untyped robot samples"
+            )
 
-        batch["state"] = np.stack(state_list, axis=0)
-        batch["action"] = np.concatenate(action_list, axis=0)
-
-        return batch
+        robot_batches = {}
+        for robot_type, robot_instances in grouped_instances.items():
+            robot_batch = {}
+            for key in ("state", "action"):
+                presence = [key in instance for instance in robot_instances]
+                if any(presence) and not all(presence):
+                    raise ValueError(
+                        f"Inconsistent {key!r} presence for robot_type {robot_type!r}"
+                    )
+                if not any(presence):
+                    continue
+                values = [instance[key] for instance in robot_instances]
+                robot_batch[key] = (
+                    np.stack(values, axis=0)
+                    if key == "state"
+                    else np.concatenate(values, axis=0)
+                )
+            if "action" not in robot_batch:
+                raise ValueError(
+                    f"Cannot compute norm stats without action for robot_type "
+                    f"{robot_type!r}"
+                )
+            robot_batches[robot_type] = robot_batch
+        return {"robot_batches": robot_batches}

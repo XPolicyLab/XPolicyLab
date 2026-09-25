@@ -1,7 +1,6 @@
 """Robot imitation data transforms and pipeline."""
 
 import io
-import json
 import os
 import re
 
@@ -18,6 +17,7 @@ from opendm.constants.robot import (
     RobotStateDesc,
 )
 from opendm.data.augmentations import TransformPipeline
+from opendm.data.normalize import NormStats, NormStatsFile, load_norm_stats_file
 
 
 def _state_desc_value(desc: RobotStateDesc | str) -> str:
@@ -28,43 +28,6 @@ def _state_desc_value(desc: RobotStateDesc | str) -> str:
 
 def _format_state_descs(descs) -> list[str]:
     return sorted(_state_desc_value(desc) for desc in descs)
-
-
-def _pad_or_truncate_last_dim(arr: np.ndarray, target_dim: int) -> np.ndarray:
-    """Match dexbotic's inference-time PadState behavior."""
-    if arr.ndim == 0:
-        raise ValueError("cannot pad a scalar state")
-    current_dim = arr.shape[-1]
-    if current_dim >= target_dim:
-        return arr[..., :target_dim]
-    padding = [(0, 0)] * arr.ndim
-    padding[-1] = (0, target_dim - current_dim)
-    return np.pad(arr, padding, mode="constant", constant_values=0)
-
-
-def _refine_and_wrap_task_prompt(prompt: object) -> str:
-    """Match dexbotic DM05InferenceConfig prompt preparation."""
-    text = str(prompt).strip()
-    if text and text[-1] not in ".!?。！？…":
-        text += "."
-    if text and not text.lower().startswith(("task:", "subtask:")):
-        text = f"Task: {text}"
-    return text
-
-
-def _select_state_for_text(state: object, meta: dict) -> np.ndarray:
-    """Drop 0426 shared-layout padding before serializing state bins."""
-    state_arr = np.asarray(state, dtype=np.float32)
-    if state_arr.ndim != 1:
-        raise ValueError(
-            f"state for text must be a 1D vector, got shape={state_arr.shape}"
-        )
-    valid_dim_mask = meta.get("valid_dim_mask")
-    if valid_dim_mask is None:
-        return state_arr
-    mask = np.asarray(valid_dim_mask, dtype=bool).reshape(-1)
-    usable = min(state_arr.shape[0], mask.shape[0])
-    return state_arr[:usable][mask[:usable]]
 
 
 class Pipeline:
@@ -88,40 +51,33 @@ class Pipeline:
 
 
 class PixelTransform:
-    """Apply an image augmentation pipeline to selected image fields.
+    """Apply an image augmentation pipeline to ``data["images"]`` in list order.
+
+    Also transforms ``data["history_images"]`` when present, matching dexbotic's
+    ``dm05_history`` inference path (PadToSquare + Resize before image_processor).
 
     Args:
         transform_pipeline: Albumentations-style pipeline that accepts an
             ``image`` keyword and returns a mapping containing ``"image"``.
-        image_keys: Keys whose PIL images should be converted to NumPy arrays,
-            transformed, and converted back to RGB PIL images.
     """
 
-    def __init__(
-        self,
-        transform_pipeline: TransformPipeline,
-        image_keys: list[str] | None = None,
-    ):
-        self.image_keys = image_keys
+    def __init__(self, transform_pipeline: TransformPipeline):
         self.transform_pipeline = transform_pipeline
 
+    def _transform_images(self, images):
+        return [
+            Image.fromarray(
+                self.transform_pipeline(image=np.array(image))["image"],
+                mode="RGB",
+            )
+            for image in images
+        ]
+
     def __call__(self, data):
-        for key in self.image_keys:
-            image = data[key]
-            np_image = np.array(image)
-            np_image = self.transform_pipeline(image=np_image)["image"]
-            data[key] = Image.fromarray(np_image, mode="RGB")
+        data["images"] = self._transform_images(data["images"])
         history_images = data.get("history_images")
         if history_images:
-            transformed_history = []
-            for image in history_images:
-                if image is None:
-                    transformed_history.append(None)
-                    continue
-                np_image = np.array(image)
-                np_image = self.transform_pipeline(image=np_image)["image"]
-                transformed_history.append(Image.fromarray(np_image, mode="RGB"))
-            data["history_images"] = transformed_history
+            data["history_images"] = self._transform_images(history_images)
         return data
 
 
@@ -131,9 +87,11 @@ class Normalize:
     Args:
         norm_stats_path: Path to a JSON file containing a ``norm_stats`` object.
         norm_keys: Sample keys to normalize in place.
-        use_quantiles: If ``True``, clip and scale values with q01/q99
-            quantiles to the range ``[-1, 1]``. If ``False``, standardize with
-            mean and standard deviation.
+        use_quantiles: If ``True``, scale values with q01/q99 quantiles to
+            ``[-1, 1]``. If ``False``, standardize with mean and standard
+            deviation.
+        clip_to_bounds: If ``True`` (default), clip to ``[q01, q99]`` before
+            quantile scaling.
     """
 
     def __init__(
@@ -141,39 +99,46 @@ class Normalize:
         norm_stats_path: str,
         norm_keys: list[str],
         use_quantiles: bool = True,
-        pad_to_stats: bool = False,
+        norm_stats_file: NormStatsFile | None = None,
         clip_to_bounds: bool = True,
     ):
         self.norm_stats_path = norm_stats_path
-        with megfile.smart_open(norm_stats_path, "r") as f:
-            loaded = json.load(f)
-        self.norm_stats = loaded["norm_stats"]
+        self.norm_stats_file = norm_stats_file or load_norm_stats_file(norm_stats_path)
+        # Preserve the historical attribute for callers that inspect the default
+        # profile directly.
+        self.norm_stats = self.norm_stats_file.norm_stats
         self.norm_keys = norm_keys
         self.use_quantiles = use_quantiles
-        self.pad_to_stats = pad_to_stats
         self.clip_to_bounds = clip_to_bounds
 
     def __call__(self, data, **kw):
+        meta = data.get("meta_data", {})
+        norm_stats = self.norm_stats_file.select(
+            meta.get("robot_type"),
+            control_mode=meta.get("control_mode"),
+        )
         for key in self.norm_keys:
-            data[key] = self._normalize(data[key], self.norm_stats[key])
+            if key not in norm_stats:
+                continue
+            if key not in data:
+                continue
+            data[key] = self._normalize(data[key], norm_stats[key])
         return data
 
-    def _normalize(self, arr, stats):
+    def _normalize(self, arr, stats: NormStats):
         arr = np.asarray(arr, dtype=np.float32)
         if self.use_quantiles:
-            lo = np.asarray(stats["q01"], dtype=np.float32)
-            hi = np.asarray(stats["q99"], dtype=np.float32)
-            if self.pad_to_stats:
-                arr = _pad_or_truncate_last_dim(arr, lo.shape[-1])
+            if stats.q01 is None or stats.q99 is None:
+                raise ValueError("q01 and q99 are required for quantile normalization")
+            lo = np.asarray(stats.q01, dtype=np.float32)
+            hi = np.asarray(stats.q99, dtype=np.float32)
             if self.clip_to_bounds:
                 arr = np.clip(arr, lo, hi)
             out = ((arr - lo) / (hi - lo + 1e-6) * 2.0 - 1.0).astype(np.float32)
             return np.where((lo == 0) & (hi == 0), 0.0, out)
 
-        mean = np.asarray(stats["mean"], dtype=np.float32)
-        std = np.asarray(stats["std"], dtype=np.float32)
-        if self.pad_to_stats:
-            arr = _pad_or_truncate_last_dim(arr, mean.shape[-1])
+        mean = np.asarray(stats.mean, dtype=np.float32)
+        std = np.asarray(stats.std, dtype=np.float32)
         return ((arr - mean) / (std + 1e-6)).astype(np.float32)
 
 
@@ -193,33 +158,45 @@ class Denormalize:
         norm_stats_path: str,
         norm_keys: list[str],
         use_quantiles: bool = True,
+        norm_stats_file: NormStatsFile | None = None,
     ):
-        with megfile.smart_open(norm_stats_path, "r") as f:
-            loaded = json.load(f)
-        self.norm_stats = loaded["norm_stats"]
+        self.norm_stats_file = norm_stats_file or load_norm_stats_file(norm_stats_path)
+        self.norm_stats = self.norm_stats_file.norm_stats
         self.norm_keys = norm_keys
         self.use_quantiles = use_quantiles
 
     def __call__(self, data, **kw):
+        meta = data.get("meta_data", {})
+        norm_stats = self.norm_stats_file.select(
+            meta.get("robot_type"),
+            control_mode=meta.get("control_mode"),
+        )
         for key in self.norm_keys:
-            if key in data and key in self.norm_stats:
-                data[key] = self._denormalize(data[key], self.norm_stats[key])
+            if key in data and key in norm_stats:
+                data[key] = self._denormalize(data[key], norm_stats[key])
         return data
 
-    def _denormalize(self, arr, stats):
+    def _denormalize(self, arr, stats: NormStats):
         arr = np.asarray(arr, dtype=np.float32)
         if self.use_quantiles:
-            lo = np.asarray(stats["q01"], dtype=np.float32)
-            hi = np.asarray(stats["q99"], dtype=np.float32)
+            if stats.q01 is None or stats.q99 is None:
+                raise ValueError(
+                    "q01 and q99 are required for quantile denormalization"
+                )
+            lo = np.asarray(stats.q01, dtype=np.float32)
+            hi = np.asarray(stats.q99, dtype=np.float32)
             out = ((arr + 1.0) / 2.0 * (hi - lo + 1e-6) + lo).astype(np.float32)
             return np.where((lo == 0) & (hi == 0), 0.0, out)
-        mean = np.asarray(stats["mean"], dtype=np.float32)
-        std = np.asarray(stats["std"], dtype=np.float32)
+        mean = np.asarray(stats.mean, dtype=np.float32)
+        std = np.asarray(stats.std, dtype=np.float32)
         return (arr * (std + 1e-6) + mean).astype(np.float32)
 
 
 class LoadImages:
     """Load image-like sample entries from image files or video frames.
+
+    Reads JSONL fields named by ``image_keys`` in order and stores the loaded
+    PIL images as ``data["images"]`` for downstream list-order processing.
 
     Args:
         image_keys: Keys whose values are metadata dictionaries with ``url``,
@@ -235,15 +212,59 @@ class LoadImages:
         self.image_dir = image_dir
 
     def __call__(self, data):
+        images = []
         for key in self.image_keys:
             image_url = os.path.join(self.image_dir, data[key]["url"].lstrip("./"))
             image_type = data[key]["type"]
             if image_type == "image":
-                data[key] = _load_image(image_url)
+                images.append(_load_image(image_url))
             elif image_type == "video":
-                data[key] = _load_video(image_url, data[key]["frame_idx"])
+                images.append(_load_video(image_url, data[key]["frame_idx"]))
             else:
                 raise ValueError(f"Invalid image type: {image_type}")
+        data["images"] = images
+        return data
+
+
+class LoadHistory:
+    """Load past main-view frames on a uniform 1 FPS slot grid.
+
+    Slots are oldest-first. Missing frames (before episode start) are dropped
+    so ``history_images`` is the compact valid list consumed by
+    ``ChatTokenization``.
+    """
+
+    def __init__(
+        self,
+        image_key: str = "images_1",
+        image_dir: str = "",
+        max_history_images: int = 32,
+        uniform_fps: float = 1.0,
+    ):
+        self.image_key = image_key
+        self.image_dir = image_dir
+        self.max_history_images = max_history_images
+        self.uniform_fps = uniform_fps
+
+    def __call__(self, data):
+        meta = data["meta_data"]
+        source_fps = float(meta["fps"])
+        frame_index = int(meta["frame_index"])
+        lines = data["raw_lines"]
+        history_images = []
+        for slot in range(self.max_history_images, 0, -1):
+            raw_index = frame_index - int(round(slot / self.uniform_fps * source_fps))
+            if raw_index < 0 or raw_index >= len(lines):
+                continue
+            item = orjson.loads(lines[raw_index])[self.image_key]
+            image_url = os.path.join(self.image_dir, item["url"].lstrip("./"))
+            if item["type"] == "image":
+                history_images.append(_load_image(image_url))
+            elif item["type"] == "video":
+                history_images.append(_load_video(image_url, item["frame_idx"]))
+            else:
+                raise ValueError(f"Invalid history image type: {item['type']}")
+        data["history_images"] = history_images
         return data
 
 
@@ -451,6 +472,106 @@ class BuildAction:
         return self.build_pipeline(data, **kw)
 
 
+def _normalize_quat(quat: np.ndarray) -> np.ndarray:
+    return quat / np.maximum(np.linalg.norm(quat, axis=-1, keepdims=True), 1e-8)
+
+
+def _rotvec_to_quat(rotvec: np.ndarray) -> np.ndarray:
+    rotvec = np.asarray(rotvec, dtype=np.float32)
+    angle = np.linalg.norm(rotvec, axis=-1, keepdims=True)
+    half_angle = 0.5 * angle
+    scale = np.where(
+        angle > 1e-8,
+        np.sin(half_angle) / np.maximum(angle, 1e-8),
+        0.5 - (angle * angle) / 48.0,
+    )
+    quat = np.concatenate([np.cos(half_angle), rotvec * scale], axis=-1)
+    return _normalize_quat(quat).astype(np.float32)
+
+
+def _quat_to_rotvec(quat: np.ndarray) -> np.ndarray:
+    quat = _normalize_quat(np.asarray(quat, dtype=np.float32))
+    quat = np.where(quat[..., :1] < 0, -quat, quat)
+    vec = quat[..., 1:4]
+    vec_norm = np.linalg.norm(vec, axis=-1, keepdims=True)
+    angle = 2.0 * np.arctan2(vec_norm, quat[..., :1])
+    rotvec = np.where(
+        vec_norm > 1e-8,
+        vec * (angle / np.maximum(vec_norm, 1e-8)),
+        np.zeros_like(vec),
+    )
+    return rotvec.astype(np.float32)
+
+
+def _quat_multiply(left: np.ndarray, right: np.ndarray) -> np.ndarray:
+    lw, lx, ly, lz = [left[..., i] for i in range(4)]
+    rw, rx, ry, rz = [right[..., i] for i in range(4)]
+    quat = np.stack(
+        [
+            lw * rw - lx * rx - ly * ry - lz * rz,
+            lw * rx + lx * rw + ly * rz - lz * ry,
+            lw * ry - lx * rz + ly * rw + lz * rx,
+            lw * rz + lx * ry - ly * rx + lz * rw,
+        ],
+        axis=-1,
+    )
+    return _normalize_quat(quat).astype(np.float32)
+
+
+def rpy_to_axis_angle(rpy) -> np.ndarray:
+    """Convert roll/pitch/yaw to axis-angle using Rz(yaw) @ Ry(pitch) @ Rx(roll)."""
+    rpy = np.asarray(rpy, dtype=np.float32)
+    roll = rpy[..., 0]
+    pitch = rpy[..., 1]
+    yaw = rpy[..., 2]
+    cr = np.cos(roll * 0.5)
+    sr = np.sin(roll * 0.5)
+    cp = np.cos(pitch * 0.5)
+    sp = np.sin(pitch * 0.5)
+    cy = np.cos(yaw * 0.5)
+    sy = np.sin(yaw * 0.5)
+    quat = np.stack(
+        [
+            cy * cp * cr + sy * sp * sr,
+            cy * cp * sr - sy * sp * cr,
+            sy * cp * sr + cy * sp * cr,
+            sy * cp * cr - cy * sp * sr,
+        ],
+        axis=-1,
+    )
+    return _quat_to_rotvec(quat)
+
+
+class ArrangeState:
+    """Rewrite xyz+rpy+grip arms to xyz+axis-angle+grip. No-op unless EEF."""
+
+    def __call__(self, data, **kw):
+        del kw
+        meta = dict(data.get("meta_data") or {})
+        if meta.get("control_mode") not in {"eef", "ee", "end effector"}:
+            return data
+        native = np.asarray(data["state"], dtype=np.float32).reshape(-1)
+        if native.size not in (7, 14):
+            raise ValueError(
+                f"EEF ArrangeState expects 7 or 14 dims, got {native.size}"
+            )
+        parts = []
+        desc = []
+        for start in range(0, native.size, 7):
+            arm = native[start : start + 7]
+            parts.append(
+                np.concatenate(
+                    [arm[:3], rpy_to_axis_angle(arm[3:6]), arm[6:7]],
+                    axis=-1,
+                )
+            )
+            desc.extend([RobotStateDesc.EEF] * 6 + [RobotStateDesc.GRIPPER])
+        data["state"] = np.concatenate(parts, axis=-1).astype(np.float32)
+        meta["state_desc"] = desc
+        data["meta_data"] = meta
+        return data
+
+
 class ActionAbsolute:
     """Convert delta action targets back to absolute targets.
 
@@ -460,10 +581,8 @@ class ActionAbsolute:
     Args:
         non_delta_ids: State descriptor names or enum values that were not
             delta-encoded and should be preserved from ``action``.
-
-    Raises:
-        AssertionError: If required state, action, or metadata fields are
-            missing.
+        compose_eef_rot: If ``True``, quaternion-compose each EEF
+            axis-angle triple from ``state_desc`` instead of ``state + delta``.
     """
 
     def __init__(
@@ -471,8 +590,10 @@ class ActionAbsolute:
         non_delta_ids: tuple[RobotStateDesc | str, ...] | list[RobotStateDesc | str] = (
             RobotStateDesc.GRIPPER,
         ),
+        compose_eef_rot: bool = False,
     ):
         self.non_delta_ids = {_state_desc_value(desc) for desc in non_delta_ids}
+        self.compose_eef_rot = compose_eef_rot
 
     def __call__(self, data):
         assert "state" in data and "action" in data, (
@@ -499,6 +620,31 @@ class ActionAbsolute:
         if non_delta_indices:
             abs_action[..., non_delta_indices] = data["action"][..., non_delta_indices]
 
+        if self.compose_eef_rot:
+            eef_id = _state_desc_value(RobotStateDesc.EEF)
+            values = [_state_desc_value(sid) for sid in state_desc]
+            i = 0
+            while i < len(values):
+                if values[i] != eef_id:
+                    i += 1
+                    continue
+                start = i
+                while i < len(values) and values[i] == eef_id:
+                    i += 1
+                if i - start < 6:
+                    continue
+                rot = slice(start + 3, start + 6)
+                current = data["state"][..., rot]
+                delta = data["action"]
+                if delta.ndim == current.ndim + 1:
+                    current = current[..., None, :]
+                abs_action[..., rot] = _quat_to_rotvec(
+                    _quat_multiply(
+                        _rotvec_to_quat(delta[..., rot]),
+                        _rotvec_to_quat(current),
+                    )
+                )
+
         data["action"] = abs_action
         return data
 
@@ -506,18 +652,23 @@ class ActionAbsolute:
 class ChatTokenization:
     """Tokenize a multimodal robot sample with a chat template.
 
-    The transform builds a user message containing the task prompt, optional
-    fixed-layout history slots, selected current images, and optionally the
-    binned robot state. Active history slots use ``<unused0>`` and missing
-    slots use attention-masked ``<unused1>`` tokens.
+    Current-view images are interleaved via the processor chat template.
+    History uses a fixed slot grid (default 32): empty slots are
+    ``<unused1>`` pads, valid images are ``<unused0>`` placeholders
+    (``HISTORY_TOKENS_PER_IMAGE`` each) and are injected separately in the
+    model prefix forward.
 
     Args:
         processor: Multimodal processor or tokenizer-compatible object with
             ``apply_chat_template``.
         n_bins: Number of bins used when discretizing normalized state values.
         max_length: Maximum token length. Long prompts are shortened to fit.
-        image_keys: Keys containing PIL images to include in the chat message.
+        image_prompts: Prompt labels zipped with ``data["images"]`` in order.
         add_state: Whether to append a discretized state text field.
+        is_history: Whether to insert history-image placeholders and emit
+            ``history_pixel_values`` / ``history_mask``.
+        max_history_images: History slot count when ``is_history`` is set.
+        enable_logging: Whether to log the decoded tokenized prompt.
     """
 
     def __init__(
@@ -525,9 +676,10 @@ class ChatTokenization:
         processor,
         n_bins: int = 256,
         max_length: int | None = 1024,
-        image_keys: list[str] | None = None,
+        image_prompts: list[str] | None = None,
         add_state: bool = True,
         is_history: bool = False,
+        max_history_images: int = 32,
         enable_logging: bool = False,
     ):
         self.processor = processor
@@ -536,23 +688,14 @@ class ChatTokenization:
         )
         self.n_bins = n_bins
         self.max_length = max_length
-        self.image_keys = image_keys
+        self.image_prompts = image_prompts or []
         self.add_state = add_state
         self.is_history = is_history
+        self.max_history_images = max_history_images
         self.enable_logging = enable_logging
         self.history_placeholder_token_id = self.tokenizer.convert_tokens_to_ids(
             "<unused0>"
         )
-        history_pad_token_id = self.tokenizer.convert_tokens_to_ids("<unused1>")
-        if self.is_history:
-            unk_token_id = getattr(self.tokenizer, "unk_token_id", None)
-            if self.history_placeholder_token_id in (None, unk_token_id):
-                raise ValueError("Tokenizer does not define DM0.5-Mem token <unused0>")
-            if history_pad_token_id != 7:
-                raise ValueError(
-                    "DM0.5-Mem expects <unused1> token id 7, got "
-                    f"{history_pad_token_id!r}"
-                )
 
     def action_to_bin_tokens(self, action: np.ndarray, n_bins: int = 256) -> list[int]:
         """Convert normalized continuous action values to integer bin IDs.
@@ -571,56 +714,57 @@ class ChatTokenization:
         return np.clip(bins, 0, n_bins - 1).tolist()
 
     def __call__(self, data):
-        # TODO: Make image labels adapt to arbitrary image keys.
-        image_labels = {
-            "images_1": "Head image: ",
-            "images_2": "Left wrist image: ",
-            "images_3": "Right wrist image: ",
-        }
         meta = data.get("meta_data", {})
         text_parts = []
         if meta.get("robot_type") is not None:
             text_parts.append(f"Robot: {meta['robot_type']}\n")
         if meta.get("control_mode") is not None:
-            text_parts.append(f"Control mode: {meta['control_mode']}\n")
-        speed = meta.get("speed", "0.5")
+            control_mode = meta["control_mode"]
+            control_mode = (
+                "end effector"
+                if control_mode in {"eef", "ee", "end effector"}
+                else control_mode
+            )
+            text_parts.append(f"Control mode: {control_mode}\n")
+        speed = meta.get("speed") or "0.5"
         assert isinstance(speed, str), (
             f"Expected speed to be a string, got {type(speed)}"
         )
         text_parts.append(f"Overall speed: {speed}\n")
-        prompt_text = _refine_and_wrap_task_prompt(data["prompt"])
-        text_parts.append(f"{prompt_text}\n")
+        text_parts.append(f"Task: {data['prompt']}.\n")
         user_content = [{"type": "text", "text": "".join(text_parts)}]
 
         history_pixel_values = None
         history_mask = None
         if self.is_history:
-            history_images = list(data.get("history_images") or [])
-            history_tokens = "".join(
-                (
-                    "<unused0>" * HISTORY_TOKENS_PER_IMAGE + "\n"
-                    if image is not None
-                    else "<unused1>" * HISTORY_TOKENS_PER_IMAGE
-                )
-                for image in history_images
-            )
-            user_content[-1]["text"] += f"History images: {history_tokens}"
-            active_images = [
-                image.convert("RGB") for image in history_images if image is not None
+            history_images = [
+                image
+                for image in list(data.get("history_images") or [])[
+                    -self.max_history_images :
+                ]
+                if image is not None
             ]
-            if active_images:
+            n_valid = len(history_images)
+            user_content[-1]["text"] += "History images: "
+            user_content[-1]["text"] += (
+                "<unused1>"
+                * (HISTORY_TOKENS_PER_IMAGE * (self.max_history_images - n_valid))
+                + (("<unused0>" * HISTORY_TOKENS_PER_IMAGE) + "\n") * n_valid
+            )
+            normalized = [image.convert("RGB") for image in history_images]
+            if normalized:
                 history_pixel_values = self.processor.image_processor(
-                    images=active_images,
+                    images=normalized,
                     return_tensors="pt",
                 )["pixel_values"]
 
-        for key in self.image_keys:
-            image_label = image_labels.get(key, f"{key}: ")
+        for prompt, image in zip(self.image_prompts, data["images"], strict=True):
+            label = f"{prompt} image: "
             if user_content[-1]["type"] == "text":
-                user_content[-1]["text"] += image_label
+                user_content[-1]["text"] += label
             else:
-                user_content.append({"type": "text", "text": image_label})
-            user_content.append({"type": "image", "image": data[key]})
+                user_content.append({"type": "text", "text": label})
+            user_content.append({"type": "image", "image": image})
         if self.add_state:
             user_content.append(
                 {
@@ -629,7 +773,7 @@ class ChatTokenization:
                     + " ".join(
                         str(b)
                         for b in self.action_to_bin_tokens(
-                            _select_state_for_text(data["state"], meta),
+                            data["state"],
                             self.n_bins,
                         )
                     ),
@@ -655,10 +799,7 @@ class ChatTokenization:
                 decode_text,
             )
             logger.info(f"Decoded input_ids: {decode_text_collapsed}")
-        if (
-            self.max_length is not None
-            and inputs["input_ids"].shape[1] > self.max_length
-        ):
+        if inputs["input_ids"].shape[1] > self.max_length:
             prompt_for_truncation = data["prompt"]
             prompt_token_ids = self.tokenizer.encode(
                 prompt_for_truncation,
@@ -686,23 +827,13 @@ class ChatTokenization:
                 inputs = self.processor.apply_chat_template(
                     messages,
                     tokenize=True,
-                    add_generation_prompt=True,
                     return_dict=True,
                     return_tensors="pt",
                 )
-        if (
-            self.max_length is not None
-            and inputs["input_ids"].shape[1] > self.max_length
-        ):
-            history_note = " with history enabled" if self.is_history else ""
-            raise ValueError(
-                "Robot inference sample length exceeds max_length"
-                f"{history_note}: seq_len={inputs['input_ids'].shape[1]}, "
-                f"max_length={self.max_length}."
-            )
         token_type_ids = inputs["token_type_ids"]
         if self.is_history:
             history_mask = inputs["input_ids"] == self.history_placeholder_token_id
+            # Match dexbotic: mark ``<unused0>`` history slots as image tokens (type=1).
             token_type_ids = token_type_ids.clone()
             token_type_ids[history_mask] = 1
         return {

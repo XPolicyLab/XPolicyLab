@@ -1,6 +1,9 @@
 """DM05 model architecture built on a Gemma3 VLM and Action Expert."""
 
 import logging
+import math
+import threading
+from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -28,6 +31,11 @@ from transformers.models.gemma3.modeling_gemma3 import (
     repeat_kv,
 )
 
+from opendm.constants.precision import (
+    BF16_MIXED_PRECISION_POLICY,
+    FP32_MIXED_PRECISION_POLICY,
+    MODEL_DTYPE,
+)
 from opendm.constants.robot import HISTORY_POOL_SIZE
 from opendm.model.base import (
     DMBaseConfig,
@@ -38,6 +46,7 @@ from opendm.model.dm05.dm05_utils import (
     VLADynamicCache,
     is_flash_attention_2_available,
     is_flex_attention_available,
+    linear_fp32,
     make_suffix_attn_mask,
     mask_history_pad_tokens_in_attention,
     patch_decoder_layers,
@@ -47,29 +56,8 @@ from opendm.model.dm05.dm05_utils import (
 
 logger = logging.getLogger(__name__)
 
-
-def _linear_fp32(x: torch.Tensor, linear: nn.Linear) -> torch.Tensor:
-    """Run action-path linear layers in FP32, matching dexbotic training."""
-    with torch.autocast(device_type=x.device.type, enabled=False):
-        return F.linear(
-            x.float(),
-            linear.weight.float(),
-            None if linear.bias is None else linear.bias.float(),
-        )
-
-
-def _project_history_image_features(
-    vlm_model: nn.Module,
-    pixels: torch.Tensor,
-) -> torch.Tensor:
-    """Project SigLIP patch features exactly as dexbotic's history path does."""
-    with torch.no_grad():
-        vision_outputs = vlm_model.vision_tower(
-            pixel_values=pixels,
-            return_dict=True,
-        )
-        return vlm_model.multi_modal_projector(vision_outputs.last_hidden_state)
-
+_SUFFIX_GRAPH_PROFILE_CACHE_SIZE = 8
+_SUFFIX_GRAPH_PREFIX_BUCKET_ALIGNMENT = 16
 
 # ---------------------------------------------------------------------------
 # Config
@@ -113,9 +101,6 @@ class DM05ActionExpert(Gemma3TextModel):
     def __init__(
         self,
         config: Gemma3TextConfig,
-        *,
-        rotary_config: Gemma3TextConfig,
-        force_fp32_action_path: bool = False,
     ):
         super(Gemma3TextModel, self).__init__(config)
         self.padding_idx = config.pad_token_id
@@ -128,12 +113,7 @@ class DM05ActionExpert(Gemma3TextModel):
             ]
         )
         self.norm = Gemma3RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
-        # Match dexbotic-open training: suffix queries reuse the VLM prefix KV
-        # cache, so their rotary embedding must come from the language config.
-        # Some training checkpoints retain the action model's default RoPE in
-        # action_config even though it was not used for action rotary.
-        self.rotary_emb = Gemma3RotaryEmbedding(rotary_config)
-        self.force_fp32_action_path = force_fp32_action_path
+        self.rotary_emb = Gemma3RotaryEmbedding(config)
         self.gradient_checkpointing = False
         hidden_size = config.hidden_size
         self.input_time_modulators = nn.ModuleList(
@@ -143,6 +123,7 @@ class DM05ActionExpert(Gemma3TextModel):
             nn.Linear(hidden_size, 3 * hidden_size) for _ in self.layers
         )
         self.final_time_modulator = nn.Linear(hidden_size, 3 * hidden_size)
+        self.precision_policy = BF16_MIXED_PRECISION_POLICY
         self.post_init()
         self._init_time_modulators()
         self.set_action_attention_backend("eager")
@@ -326,8 +307,8 @@ class DM05ActionExpert(Gemma3TextModel):
             eps = norm.variance_epsilon
         normed = x * torch.rsqrt(var + eps)
 
-        if self.force_fp32_action_path:
-            modulation = _linear_fp32(adarms_cond, modulator)
+        if self.precision_policy == FP32_MIXED_PRECISION_POLICY:
+            modulation = linear_fp32(adarms_cond, modulator)
         else:
             modulation = modulator(adarms_cond.to(dtype=modulator.weight.dtype))
         if modulation.ndim == 2:
@@ -414,6 +395,22 @@ class DM05OutputWithPast(Gemma3CausalLMOutputWithPast):
     fm_loss: torch.FloatTensor | None = None
 
 
+@dataclass
+class DM05SuffixGraphProfile:
+    """Static buffers for replaying one action-expert diffusion step."""
+
+    prefix_len: int
+    diffusion_steps: int
+    prefix_cache_keys: tuple[torch.Tensor, ...]
+    prefix_cache_values: tuple[torch.Tensor, ...]
+    attention_mask: torch.Tensor
+    position_ids: torch.Tensor
+    state: torch.Tensor
+    time: torch.Tensor
+    action_mask: torch.Tensor | None
+    graph: torch.cuda.CUDAGraph | None = None
+
+
 # ---------------------------------------------------------------------------
 # Model
 # ---------------------------------------------------------------------------
@@ -446,13 +443,7 @@ class DM05Model(DMPreTrainedModel):
         )
 
         # Initialize the action expert (Gemma3TextModel without lm_head), preserving suffix-only semantics.
-        self.action_expert = DM05ActionExpert(
-            action_config_ref,
-            rotary_config=self.language_model.config,
-            force_fp32_action_path=bool(
-                getattr(config, "force_fp32_action_path", False)
-            ),
-        )
+        self.action_expert = DM05ActionExpert(action_config_ref)
 
         ae_hidden_size = action_config_ref.hidden_size
 
@@ -517,6 +508,7 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
     """
 
     config_class = DM05Config
+    _FSDP_VLM_LAYERS_TO_WRAP = 24
     _tied_weights_keys = {
         "model.vlm.lm_head.weight": "model.vlm.model.language_model.embed_tokens.weight",
     }
@@ -525,7 +517,32 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
         super().__init__(config)
         config.model_type = self.config_class.model_type
         self.all_tied_weights_keys = dict(getattr(self, "_tied_weights_keys", {}))
+        self.precision_policy = getattr(
+            config,
+            "precision_policy",
+            BF16_MIXED_PRECISION_POLICY,
+        )
         self._real_init(config)
+        self._init_suffix_graph_runtime_state()
+        self.set_precision_policy(self.precision_policy)
+
+    def _init_suffix_graph_runtime_state(self) -> None:
+        self._suffix_graph_profiles = OrderedDict()
+        self._suffix_graph_candidates = OrderedDict()
+        self._suffix_graph_disabled_profiles = OrderedDict()
+        self._suffix_graph_lock = threading.RLock()
+
+    def __getstate__(self):
+        state = super().__getstate__()
+        state.pop("_suffix_graph_profiles", None)
+        state.pop("_suffix_graph_candidates", None)
+        state.pop("_suffix_graph_disabled_profiles", None)
+        state.pop("_suffix_graph_lock", None)
+        return state
+
+    def __setstate__(self, state):
+        super().__setstate__(state)
+        self._init_suffix_graph_runtime_state()
 
     def _real_init(self, config: DM05Config):
         self.model = DM05Model(config)
@@ -533,6 +550,29 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
 
         # Patch decoder layers to safely handle KV cache during checkpointing.
         patch_decoder_layers(self.model.vlm.model)
+
+    def set_precision_policy(self, precision_policy: str) -> None:
+        if precision_policy not in (
+            BF16_MIXED_PRECISION_POLICY,
+            FP32_MIXED_PRECISION_POLICY,
+        ):
+            raise ValueError(f"Invalid precision_policy: {precision_policy!r}")
+        self.precision_policy = precision_policy
+        self.config.precision_policy = precision_policy
+        self.model.action_expert.precision_policy = precision_policy
+
+    def fsdp_wrap_modules(self) -> list[nn.Module]:
+        """Return the fixed child-unit boundaries for DM05 FSDP wrapping."""
+        vlm_layers = self.model.vlm.model.language_model.layers
+        if len(vlm_layers) < self._FSDP_VLM_LAYERS_TO_WRAP:
+            raise ValueError(
+                "DM05 FSDP requires at least "
+                f"{self._FSDP_VLM_LAYERS_TO_WRAP} VLM layers, got {len(vlm_layers)}"
+            )
+        return [
+            self.model.action_expert,
+            *vlm_layers[-self._FSDP_VLM_LAYERS_TO_WRAP :],
+        ]
 
     def freeze_vlm_embedding(self):
         """Freeze the Gemma VLM token embedding layer.
@@ -570,12 +610,14 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
         bf16: bool,
     ) -> str:
         if requested == "auto":
-            if bf16 and is_flash_attention_2_available():
+            if (
+                self.precision_policy == FP32_MIXED_PRECISION_POLICY or bf16
+            ) and is_flash_attention_2_available():
                 return "flash_attention_2"
             return "sdpa"
 
         if requested == "flash_attention_2":
-            if not bf16:
+            if self.precision_policy != FP32_MIXED_PRECISION_POLICY and not bf16:
                 raise ValueError("flash_attention_2 requires bf16=True")
             if not torch.cuda.is_available():
                 raise RuntimeError("flash_attention_2 requires CUDA")
@@ -797,9 +839,11 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
     ) -> Gemma3CausalLMOutputWithPast:
         """Run the training forward pass and compute flow-matching loss."""
         batch_size = input_ids.shape[0]
+        if self.precision_policy == FP32_MIXED_PRECISION_POLICY:
+            action = action.to(dtype=MODEL_DTYPE)
 
-        # Step 1: fill the prefix cache, injecting history soft tokens.
-        kv_cache, prefix_len = self._compute_prefix_cache(
+        # Step 1: prefix forward — history via unused0 scatter, current views via VLM.
+        kv_cache, prefix_hidden_states = self._compute_prefix_cache(
             input_ids=input_ids,
             attention_mask=attention_mask,
             pixel_values=pixel_values,
@@ -808,6 +852,7 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
             history_mask=history_mask,
             cache_cls=VLADynamicCache,
         )
+        prefix_len = prefix_hidden_states.shape[1]
 
         # Step 2: run suffix forward for flow matching.
         noise = torch.randn_like(action)
@@ -824,8 +869,8 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
         u_t = noise - action
 
         # Build suffix embeddings and per-layer time conditioning.
-        suffix_embeds = self._action_linear(self.model.action_in_proj, x_t)
-        adarms_cond = self._build_adarms_cond(time, suffix_embeds.dtype)
+        suffix_embeds = self._action_input_proj(x_t)
+        adarms_cond = self._build_adarms_cond(time)
 
         # Run suffix forward with fused attention.
         suffix_len = suffix_embeds.shape[1]
@@ -860,9 +905,7 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
         )
 
         # Compute the flow-matching loss.
-        v_t = self._action_linear(self.model.action_out_proj, suffix_out).to(
-            torch.float32
-        )
+        v_t = self._action_output_proj(suffix_out)
         u_t = u_t.to(dtype=v_t.dtype)
 
         elem_mse = F.mse_loss(v_t, u_t, reduction="none")  # [B, T, D]
@@ -871,9 +914,14 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
             dim=(1, 2)
         )
         fm_loss = per_sample_fm.mean()
+        loss = fm_loss
+        if self.precision_policy == FP32_MIXED_PRECISION_POLICY:
+            # FSDP observes wrapped-module backward through returned tensors, while
+            # the action expert also consumes KV tensors written into the cache.
+            loss = loss + prefix_hidden_states.sum(dtype=torch.float32) * 0.0
 
         return DM05OutputWithPast(
-            loss=fm_loss,
+            loss=loss,
             fm_loss=fm_loss,
             logits=None,
             past_key_values=None,
@@ -893,15 +941,45 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
         states: torch.FloatTensor | None = None,
         image_masks: torch.BoolTensor | None = None,
         diffusion_steps: int = 10,
-        diffusion_integration_dtype: Literal["model", "float32"] = "model",
-        diffusion_noise_seed: int | None = None,
         past_key_values: DynamicCache | None = None,
         action_mask: torch.BoolTensor | None = None,
         history_pixel_values: torch.Tensor | None = None,
         history_mask: torch.BoolTensor | None = None,
         **kwargs,
     ) -> torch.Tensor:
-        kv_cache, prefix_len = self._compute_prefix_cache(
+        # Cached suffix graphs can retain autocast weight buffers beyond their lifetime.
+        # Keep SDPA and the FP32/BF16 precision policy, without graph replay.
+        return self._inference_action_impl(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            pixel_values=pixel_values,
+            token_type_ids=token_type_ids,
+            states=states,
+            image_masks=image_masks,
+            diffusion_steps=diffusion_steps,
+            past_key_values=past_key_values,
+            action_mask=action_mask,
+            history_pixel_values=history_pixel_values,
+            history_mask=history_mask,
+            **kwargs,
+        )
+
+    def _inference_action_impl(
+        self,
+        input_ids: torch.LongTensor = None,
+        attention_mask: torch.Tensor | None = None,
+        pixel_values: torch.Tensor | None = None,
+        token_type_ids: torch.LongTensor | None = None,
+        states: torch.FloatTensor | None = None,
+        image_masks: torch.BoolTensor | None = None,
+        diffusion_steps: int = 10,
+        past_key_values: DynamicCache | None = None,
+        action_mask: torch.BoolTensor | None = None,
+        history_pixel_values: torch.Tensor | None = None,
+        history_mask: torch.BoolTensor | None = None,
+        **kwargs,
+    ) -> torch.Tensor:
+        kv_cache, prefix_hidden_states = self._compute_prefix_cache(
             input_ids=input_ids,
             attention_mask=attention_mask,
             pixel_values=pixel_values,
@@ -910,45 +988,30 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
             history_mask=history_mask,
             cache_cls=DynamicCache,
         )
+        prefix_len = prefix_hidden_states.shape[1]
+        del prefix_hidden_states
 
         batch_size = input_ids.shape[0]
         device = input_ids.device
-        model_dtype = self._action_state_dtype()
-        if diffusion_integration_dtype == "model":
-            integration_dtype = model_dtype
-        elif diffusion_integration_dtype == "float32":
-            integration_dtype = torch.float32
-        else:
-            raise ValueError(
-                "diffusion_integration_dtype must be 'model' or 'float32', got "
-                f"{diffusion_integration_dtype!r}"
-            )
+        dtype = self.model.action_in_proj.weight.dtype
 
-        noise_generator = None
-        if diffusion_noise_seed is not None:
-            noise_generator = torch.Generator(device=device)
-            noise_generator.manual_seed(diffusion_noise_seed)
         x_t = torch.randn(
             batch_size,
             self.model.config.chunk_size,
             self.model.config.action_dim,
             device=device,
-            dtype=integration_dtype,
-            generator=noise_generator,
+            dtype=dtype,
         )
         time_val = 1.0
         dt = -1.0 / diffusion_steps
         for _ in range(diffusion_steps):
             time_tensor = torch.full(
-                (batch_size,), time_val, device=device, dtype=model_dtype
+                (batch_size,), time_val, device=device, dtype=dtype
             )
             if action_mask is not None:
-                x_t = x_t * action_mask.to(dtype=integration_dtype)
-            suffix_embeds = self._action_linear(
-                self.model.action_in_proj,
-                x_t.to(dtype=model_dtype),
-            )
-            adarms_cond = self._build_adarms_cond(time_tensor, suffix_embeds.dtype)
+                x_t = x_t * action_mask
+            suffix_embeds = self._action_input_proj(x_t)
+            adarms_cond = self._build_adarms_cond(time_tensor)
             suffix_len = int(suffix_embeds.shape[1])
             invisible_prefix_token_ids = (HISTORY_PAD_TOKEN_ID,)
             suffix_attn_mask = make_suffix_attn_mask(
@@ -978,13 +1041,359 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
                 adarms_cond=adarms_cond,
             )
 
-            v_t = self._action_linear(
-                self.model.action_out_proj,
-                suffix_out,
-            ).to(dtype=integration_dtype)
+            v_t = self._action_output_proj(suffix_out)
             x_t = x_t + v_t * dt
             time_val += dt
         return x_t
+
+    def _can_use_suffix_graph(self, initial_noise: torch.Tensor) -> bool:
+        return (
+            not self.training
+            and initial_noise.is_cuda
+            and self.model.action_expert._suffix_attn_backend == "sdpa"
+        )
+
+    def _suffix_graph_key(
+        self,
+        *,
+        prefix_len: int,
+        initial_noise: torch.Tensor,
+        diffusion_steps: int,
+        action_mask: torch.Tensor | None,
+    ) -> tuple:
+        graph_modules = (
+            self.model.action_in_proj,
+            self.model.action_expert,
+            self.model.action_out_proj,
+            self.model.time_mlp_in,
+            self.model.time_mlp_out,
+        )
+        return (
+            tuple(initial_noise.shape),
+            int(prefix_len),
+            int(diffusion_steps),
+            initial_noise.device,
+            initial_noise.dtype,
+            (
+                None
+                if action_mask is None
+                else (tuple(action_mask.shape), action_mask.device, action_mask.dtype)
+            ),
+            tuple(
+                (id(parameter), parameter._version)
+                for module in graph_modules
+                for parameter in module.parameters()
+            ),
+        )
+
+    def _suffix_graph_prefix_bucket_len(self, prefix_len: int) -> int:
+        alignment = int(_SUFFIX_GRAPH_PREFIX_BUCKET_ALIGNMENT)
+        return int(math.ceil(int(prefix_len) / alignment) * alignment)
+
+    def _pad_suffix_graph_input_ids(
+        self,
+        input_ids: torch.LongTensor,
+        target_len: int,
+    ) -> torch.LongTensor:
+        input_len = int(input_ids.shape[1])
+        if input_len == target_len:
+            return input_ids
+        if input_len > target_len:
+            raise ValueError(
+                f"suffix graph prefix bucket {target_len} is shorter than input "
+                f"length {input_len}."
+            )
+        pad_token_id = int(self.model.vlm.model.language_model.padding_idx)
+        return F.pad(input_ids, (0, target_len - input_len), value=pad_token_id)
+
+    @staticmethod
+    def _copy_prefix_cache_tensor(
+        target: torch.Tensor,
+        source: torch.Tensor,
+    ) -> None:
+        target.zero_()
+        source_len = int(source.shape[2])
+        target_len = int(target.shape[2])
+        if source_len > target_len:
+            raise ValueError(
+                f"suffix graph prefix cache bucket {target_len} is shorter than "
+                f"source prefix cache {source_len}."
+            )
+        target[:, :, :source_len, :].copy_(source)
+
+    def _make_suffix_graph_cache_tensor(
+        self,
+        source: torch.Tensor,
+        target_prefix_len: int,
+    ) -> torch.Tensor:
+        target = source.detach().new_zeros(
+            *source.shape[:2],
+            int(target_prefix_len),
+            source.shape[3],
+        )
+        self._copy_prefix_cache_tensor(target, source)
+        return target
+
+    def _cache_suffix_graph_profile(
+        self,
+        profile_key: tuple,
+        profile: DM05SuffixGraphProfile,
+    ) -> None:
+        self._suffix_graph_disabled_profiles.pop(profile_key, None)
+        self._suffix_graph_profiles[profile_key] = profile
+        self._suffix_graph_profiles.move_to_end(profile_key)
+        if len(self._suffix_graph_profiles) > _SUFFIX_GRAPH_PROFILE_CACHE_SIZE:
+            _, retired = self._suffix_graph_profiles.popitem(last=False)
+            if retired.graph is not None:
+                retired.graph.reset()
+
+    def _retire_suffix_graph_profile(self, profile_key: tuple) -> None:
+        profile = self._suffix_graph_profiles.pop(profile_key, None)
+        self._suffix_graph_candidates.pop(profile_key, None)
+        if profile is not None and profile.graph is not None:
+            profile.graph.reset()
+
+    def _disable_suffix_graph_profile(
+        self,
+        profile_key: tuple,
+        reason: Exception,
+    ) -> None:
+        self._retire_suffix_graph_profile(profile_key)
+        self._suffix_graph_disabled_profiles[profile_key] = None
+        self._suffix_graph_disabled_profiles.move_to_end(profile_key)
+        if len(self._suffix_graph_disabled_profiles) > _SUFFIX_GRAPH_PROFILE_CACHE_SIZE:
+            self._suffix_graph_disabled_profiles.popitem(last=False)
+        logger.warning(
+            "Disabling DM05 suffix CUDA Graph profile after failure; "
+            "falling back to eager suffix decode: %s",
+            reason,
+            exc_info=True,
+        )
+
+    def _should_capture_suffix_graph_profile(self, profile_key: tuple) -> bool:
+        if profile_key in self._suffix_graph_candidates:
+            del self._suffix_graph_candidates[profile_key]
+            return True
+        self._suffix_graph_candidates[profile_key] = None
+        if len(self._suffix_graph_candidates) > _SUFFIX_GRAPH_PROFILE_CACHE_SIZE:
+            self._suffix_graph_candidates.popitem(last=False)
+        return False
+
+    def _build_suffix_metadata(
+        self,
+        *,
+        input_ids: torch.LongTensor,
+        prefix_len: int,
+        suffix_len: int,
+        device: torch.device,
+        dtype: torch.dtype,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        invisible_prefix_token_ids = (HISTORY_PAD_TOKEN_ID,)
+        attention_mask = make_suffix_attn_mask(
+            input_ids=input_ids,
+            prefix_len=prefix_len,
+            suffix_len=suffix_len,
+            batch_size=int(input_ids.shape[0]),
+            device=device,
+            dtype=dtype,
+            pad_token_id=self.model.vlm.model.language_model.padding_idx,
+            invisible_prefix_token_ids=invisible_prefix_token_ids,
+        )
+        position_ids = self._build_suffix_position_ids(
+            prefix_len,
+            suffix_len,
+            device,
+            input_ids=input_ids,
+            pad_token_id=self.model.vlm.model.language_model.padding_idx,
+            invisible_prefix_token_ids=invisible_prefix_token_ids,
+        )
+        return attention_mask, position_ids
+
+    @torch.no_grad()
+    def _run_suffix_graph(
+        self,
+        *,
+        input_ids: torch.LongTensor,
+        kv_cache: Cache,
+        prefix_len: int,
+        initial_noise: torch.Tensor,
+        diffusion_steps: int,
+        action_mask: torch.Tensor | None,
+    ) -> torch.Tensor | None:
+        graph_prefix_len = self._suffix_graph_prefix_bucket_len(prefix_len)
+        profile_key = self._suffix_graph_key(
+            prefix_len=graph_prefix_len,
+            initial_noise=initial_noise,
+            diffusion_steps=diffusion_steps,
+            action_mask=action_mask,
+        )
+        with self._suffix_graph_lock:
+            if profile_key in self._suffix_graph_disabled_profiles:
+                return None
+            try:
+                profile = self._suffix_graph_profiles.get(profile_key)
+                if profile is None:
+                    if not self._should_capture_suffix_graph_profile(profile_key):
+                        return None
+                    profile = self._capture_suffix_graph_profile(
+                        input_ids=input_ids,
+                        kv_cache=kv_cache,
+                        prefix_len=graph_prefix_len,
+                        initial_noise=initial_noise,
+                        diffusion_steps=diffusion_steps,
+                        action_mask=action_mask,
+                    )
+                self._cache_suffix_graph_profile(profile_key, profile)
+
+                if profile is None or profile.graph is None:
+                    raise RuntimeError("Suffix CUDA Graph profile was not captured.")
+                self._copy_suffix_graph_inputs(
+                    profile,
+                    input_ids=input_ids,
+                    kv_cache=kv_cache,
+                    initial_noise=initial_noise,
+                    action_mask=action_mask,
+                )
+
+                time_value = 1.0
+                dt = -1.0 / diffusion_steps
+                for _ in range(diffusion_steps):
+                    profile.time.fill_(time_value)
+                    profile.graph.replay()
+                    time_value += dt
+                return profile.state.clone()
+            except Exception as exc:
+                self._disable_suffix_graph_profile(profile_key, exc)
+                return None
+
+    @torch.no_grad()
+    def _capture_suffix_graph_profile(
+        self,
+        *,
+        input_ids: torch.LongTensor,
+        kv_cache: Cache,
+        prefix_len: int,
+        initial_noise: torch.Tensor,
+        diffusion_steps: int,
+        action_mask: torch.Tensor | None,
+    ) -> DM05SuffixGraphProfile:
+        padded_input_ids = self._pad_suffix_graph_input_ids(input_ids, prefix_len)
+        attention_mask, position_ids = self._build_suffix_metadata(
+            input_ids=padded_input_ids,
+            prefix_len=prefix_len,
+            suffix_len=int(initial_noise.shape[1]),
+            device=initial_noise.device,
+            dtype=initial_noise.dtype,
+        )
+        source_keys, source_values = self._extract_prefix_cache_tensors(kv_cache)
+        profile = DM05SuffixGraphProfile(
+            prefix_len=int(prefix_len),
+            diffusion_steps=int(diffusion_steps),
+            prefix_cache_keys=tuple(
+                self._make_suffix_graph_cache_tensor(tensor, prefix_len)
+                for tensor in source_keys
+            ),
+            prefix_cache_values=tuple(
+                self._make_suffix_graph_cache_tensor(tensor, prefix_len)
+                for tensor in source_values
+            ),
+            attention_mask=attention_mask,
+            position_ids=position_ids,
+            state=initial_noise.detach().clone(),
+            time=torch.ones(
+                int(initial_noise.shape[0]),
+                device=initial_noise.device,
+                dtype=initial_noise.dtype,
+            ),
+            action_mask=(
+                None
+                if action_mask is None
+                else action_mask.new_empty(initial_noise.shape).copy_(action_mask)
+            ),
+        )
+
+        warmup_stream = torch.cuda.Stream(device=initial_noise.device)
+        warmup_stream.wait_stream(torch.cuda.current_stream(initial_noise.device))
+        with torch.cuda.stream(warmup_stream):
+            for _ in range(2):
+                self._run_suffix_graph_step(profile)
+        torch.cuda.current_stream(initial_noise.device).wait_stream(warmup_stream)
+        torch.cuda.synchronize(initial_noise.device)
+
+        profile.state.copy_(initial_noise)
+        profile.time.fill_(1.0)
+        graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(graph):
+            self._run_suffix_graph_step(profile)
+        profile.graph = graph
+        return profile
+
+    def _copy_suffix_graph_inputs(
+        self,
+        profile: DM05SuffixGraphProfile,
+        *,
+        input_ids: torch.LongTensor,
+        kv_cache: Cache,
+        initial_noise: torch.Tensor,
+        action_mask: torch.Tensor | None,
+    ) -> None:
+        profile.state.copy_(initial_noise)
+        if profile.action_mask is not None:
+            if action_mask is None:
+                raise ValueError(
+                    "action_mask does not match the captured graph profile"
+                )
+            profile.action_mask.copy_(action_mask)
+
+        padded_input_ids = self._pad_suffix_graph_input_ids(
+            input_ids,
+            profile.prefix_len,
+        )
+        attention_mask, position_ids = self._build_suffix_metadata(
+            input_ids=padded_input_ids,
+            prefix_len=profile.prefix_len,
+            suffix_len=int(initial_noise.shape[1]),
+            device=initial_noise.device,
+            dtype=initial_noise.dtype,
+        )
+        profile.attention_mask.copy_(attention_mask)
+        profile.position_ids.copy_(position_ids)
+
+        source_keys, source_values = self._extract_prefix_cache_tensors(kv_cache)
+        for target, source in zip(profile.prefix_cache_keys, source_keys, strict=True):
+            self._copy_prefix_cache_tensor(target, source)
+        for target, source in zip(
+            profile.prefix_cache_values, source_values, strict=True
+        ):
+            self._copy_prefix_cache_tensor(target, source)
+
+    def _run_suffix_graph_step(self, profile: DM05SuffixGraphProfile) -> None:
+        x_t = profile.state
+        if profile.action_mask is not None:
+            x_t = x_t * profile.action_mask
+        # Match eager inference: keep action projections outside BF16 autocast.
+        suffix_embeds = self._action_input_proj(x_t)
+        adarms_cond = self._build_adarms_cond(profile.time, suffix_embeds.dtype)
+        suffix_out = self.model.action_expert(
+            suffix_embeds=suffix_embeds,
+            attention_mask=profile.attention_mask,
+            position_ids=profile.position_ids,
+            prefix_cache_keys=profile.prefix_cache_keys,
+            prefix_cache_values=profile.prefix_cache_values,
+            adarms_cond=adarms_cond,
+        )
+        updated = x_t + self._action_output_proj(suffix_out) * (
+            -1.0 / profile.diffusion_steps
+        )
+        profile.state.copy_(updated)
+
+    def _clear_suffix_graph_profile(self) -> None:
+        for profile in self._suffix_graph_profiles.values():
+            if profile.graph is not None:
+                profile.graph.reset()
+        self._suffix_graph_profiles.clear()
+        self._suffix_graph_candidates.clear()
+        self._suffix_graph_disabled_profiles.clear()
 
     def _compute_prefix_cache(
         self,
@@ -996,8 +1405,15 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
         history_pixel_values: torch.Tensor | None = None,
         history_mask: torch.BoolTensor | None = None,
         cache_cls: type[Cache] = DynamicCache,
-    ) -> tuple[Cache, int]:
-        """Fill the VLM KV cache and inject pooled history image features."""
+    ) -> tuple[Cache, torch.Tensor]:
+        """Fill VLM KV cache; history images are injected separately from current views.
+
+        History uses ``<unused0>`` placeholders replaced via vision features +
+        ``masked_scatter``. Invalid 0525 slots use ``<unused1>`` pads; those
+        positions are zeroed in embeds and masked in attention/position ids
+        (dexbotic-open parity). Current camera images still go through the
+        standard Gemma3 multimodal path (``pixel_values`` + ``token_type_ids``).
+        """
         kv_cache = cache_cls(config=self.model.language_model.config)
         prefix_inputs_embeds = None
         vlm_model = self.model.vlm.model
@@ -1020,14 +1436,10 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
                     device=inputs_embeds.device,
                     dtype=next(vlm_model.vision_tower.parameters()).dtype,
                 )
-                # Dexbotic training extracts the SigLIP last hidden state and
-                # applies Gemma3's multimodal projector before 4x4 pooling.
-                # This also avoids relying on the version-dependent return
-                # type of Gemma3Model.get_image_features().
-                image_features = _project_history_image_features(
-                    vlm_model,
-                    pixels,
-                )
+                image_features = vlm_model.get_image_features(
+                    pixels, return_dict=True
+                ).pooler_output
+
                 spatial = int(image_features.shape[1] ** 0.5)
                 hidden = image_features.shape[-1]
                 grid = image_features.view(-1, spatial, spatial, hidden).permute(
@@ -1039,6 +1451,8 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
                 image_features = grid.permute(0, 2, 3, 1).reshape(
                     -1, HISTORY_POOL_SIZE * HISTORY_POOL_SIZE, hidden
                 )
+                image_features = image_features.to(dtype=inputs_embeds.dtype)
+
                 history_mask_expanded = history_mask.unsqueeze(-1).expand_as(
                     inputs_embeds
                 )
@@ -1053,17 +1467,19 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
             attention_mask=attention_mask,
         )
         prefix_position_ids = (prefix_attention_mask.cumsum(dim=-1) - 1).clamp_min_(0)
-        self.model.vlm.model(
-            input_ids=None if prefix_inputs_embeds is not None else input_ids,
-            attention_mask=prefix_attention_mask,
-            position_ids=prefix_position_ids,
-            past_key_values=kv_cache,
-            inputs_embeds=prefix_inputs_embeds,
-            pixel_values=pixel_values,
-            token_type_ids=token_type_ids,
-            use_cache=True,
-        )
-        return kv_cache, kv_cache.get_seq_length()
+        model_kwargs = {
+            "input_ids": None if prefix_inputs_embeds is not None else input_ids,
+            "attention_mask": prefix_attention_mask,
+            "position_ids": prefix_position_ids,
+            "past_key_values": kv_cache,
+            "inputs_embeds": prefix_inputs_embeds,
+            "pixel_values": pixel_values,
+            "token_type_ids": token_type_ids,
+            "use_cache": True,
+        }
+
+        prefix_outputs = self.model.vlm.model(**model_kwargs)
+        return kv_cache, prefix_outputs.last_hidden_state
 
     def _extract_prefix_cache_tensors(
         self,
@@ -1081,30 +1497,31 @@ class DM05ForConditionalGeneration(DMPreTrainedModel):
     def _build_adarms_cond(
         self,
         time: torch.Tensor,
-        dtype: torch.dtype,
+        dtype: torch.dtype | None = None,
     ) -> torch.Tensor:
         ae_hidden = self.model.action_in_proj.out_features
-        if bool(getattr(self.model.config, "force_fp32_action_path", False)):
-            dtype = torch.float32
+        if self.precision_policy == FP32_MIXED_PRECISION_POLICY:
+            time_emb = posemb_sincos(time, ae_hidden, max_period=4.0).to(MODEL_DTYPE)
+            cond = linear_fp32(time_emb, self.model.time_mlp_in)
+            cond = F.silu(cond)
+            cond = linear_fp32(cond, self.model.time_mlp_out)
+            return F.silu(cond)
+
+        dtype = self.model.time_mlp_in.weight.dtype if dtype is None else dtype
         time_emb = posemb_sincos(time, ae_hidden, max_period=4.0).to(dtype)
-        cond = self._action_linear(self.model.time_mlp_in, time_emb)
+        cond = self.model.time_mlp_in(time_emb)
         cond = F.silu(cond)
-        cond = self._action_linear(self.model.time_mlp_out, cond)
+        cond = self.model.time_mlp_out(cond)
         return F.silu(cond)
 
-    def _action_linear(
-        self,
-        linear: nn.Linear,
-        x: torch.Tensor,
-    ) -> torch.Tensor:
-        if bool(getattr(self.model.config, "force_fp32_action_path", False)):
-            return _linear_fp32(x, linear)
-        return linear(x)
+    def _action_input_proj(self, x: torch.Tensor) -> torch.Tensor:
+        return linear_fp32(x, self.model.action_in_proj).to(self._suffix_hidden_dtype())
 
-    def _action_state_dtype(self) -> torch.dtype:
-        if bool(getattr(self.model.config, "force_fp32_action_path", False)):
-            return torch.float32
-        return self.model.action_in_proj.weight.dtype
+    def _action_output_proj(self, x: torch.Tensor) -> torch.Tensor:
+        return linear_fp32(x, self.model.action_out_proj)
+
+    def _suffix_hidden_dtype(self) -> torch.dtype:
+        return next(self.model.action_expert.parameters()).dtype
 
     def _build_suffix_position_ids(
         self,

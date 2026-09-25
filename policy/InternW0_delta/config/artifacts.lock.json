@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "checkpoint": {
+    "path": "checkpoints/robodojo.pt",
+    "size": 12423419670,
+    "sha256": "344d4221d628462fb8d1f7263fdfeab74ed4701e7e0af25dde4a693b22968aaa",
+    "step": 9090,
+    "distributed_with_repository": false
+  },
+  "wan_base": {
+    "model_id": "Wan-AI/Wan2.2-TI2V-5B",
+    "path": "assets/Wan-AI/Wan2.2-TI2V-5B",
+    "distributed_with_repository": false,
+    "files": {
+      "Wan2.2_VAE.pth": {
+        "size": 2818839170,
+        "sha256": "20eb789667fa5e60e7516bf509512f6cb61f01b0aa0695eadaea930c13892b36"
+      },
+      "models_t5_umt5-xxl-enc-bf16.pth": {
+        "size": 11361920418,
+        "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d"
+      }
+    }
+  },
+  "vlm": {
+    "model_id": "Alibaba-DAMO-Academy/RynnBrain1.1-2B",
+    "path": "assets/Alibaba-DAMO-Academy/RynnBrain1.1-2B",
+    "distributed_with_repository": false,
+    "required_file": "model.safetensors",
+    "size": 4426558864,
+    "sha256": "2819d84441c27c18c403c1302f60ff1ba2c9cfcdc989657bf6589e8cd11a7e6d"
+  },
+  "normalization_stats": {
+    "path": "config/dataset_stats.json",
+    "sha256": "520202818f0c921cc281376343c2a4fe9285dd48cda1fced272cd89863dcce3d",
+    "method": "zscore",
+    "mode": "global_mean/global_std"
+  },
+  "evaluation_config": {
+    "path": "config/eval_model.yaml",
+    "sha256": "0ac9abf79fd725f80243522f8fcaad0b53f735d7f48e6b387066c4cb94df03e4"
+  }
+}

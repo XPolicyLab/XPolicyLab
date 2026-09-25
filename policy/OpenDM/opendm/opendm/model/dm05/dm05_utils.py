@@ -5,6 +5,7 @@ from functools import partial
 from typing import Any
 
 import torch
+import torch.nn.functional as F
 from transformers.cache_utils import Cache, CacheLayerMixin
 from transformers.modeling_layers import GradientCheckpointingLayer
 
@@ -21,6 +22,66 @@ except ImportError:
 
 
 from transformers.models.gemma3.modeling_gemma3 import Gemma3DecoderLayer
+
+from opendm.constants.precision import COMPUTE_DTYPE, TF32_ENABLED
+
+
+def dm05_autocast(device: torch.device | str):
+    """Run eligible DM05 operators in BF16 on the given device."""
+    device_type = device.type if isinstance(device, torch.device) else device
+    return torch.autocast(device_type=device_type, dtype=COMPUTE_DTYPE)
+
+
+def configure_fp32_precision_runtime() -> None:
+    """Apply the FP32 precision policy's global matmul settings."""
+    torch.set_float32_matmul_precision("highest")
+    torch.backends.cuda.matmul.allow_tf32 = TF32_ENABLED
+    torch.backends.cudnn.allow_tf32 = TF32_ENABLED
+
+
+def linear_fp32(x: torch.Tensor, linear: torch.nn.Module) -> torch.Tensor:
+    """Run a linear projection outside AMP using FP32 inputs and weights."""
+    with torch.autocast(device_type=x.device.type, enabled=False):
+        x = x.float()
+        if linear.__class__.__name__ == "ModulesToSaveWrapper":
+            linear = (
+                linear.original_module
+                if linear.disable_adapters
+                else linear.modules_to_save[linear.active_adapters[0]]
+            )
+        if type(linear) is torch.nn.Linear:
+            bias = None if linear.bias is None else linear.bias.float()
+            return F.linear(x, linear.weight.float(), bias)
+        return linear(x)
+
+
+def fused_linear_euler_update(
+    *,
+    hidden_states: torch.Tensor,
+    current: torch.Tensor,
+    linear: torch.nn.Linear,
+    dt: float,
+) -> torch.Tensor:
+    """Apply ``current + dt * linear(hidden_states)`` with one flattened addmm."""
+
+    batch_size, seq_len, _ = hidden_states.shape
+    action_dim = int(current.shape[-1])
+    hidden_flat = hidden_states.reshape(batch_size * seq_len, -1)
+    current_flat = current.reshape(batch_size * seq_len, action_dim)
+
+    updated = torch.addmm(
+        current_flat,
+        hidden_flat,
+        linear.weight.transpose(0, 1),
+        beta=1.0,
+        alpha=float(dt),
+    )
+    if linear.bias is not None:
+        updated = updated + linear.bias.to(
+            dtype=updated.dtype,
+            device=updated.device,
+        ) * float(dt)
+    return updated.view_as(current)
 
 
 def is_flash_attention_2_available() -> bool:
@@ -46,18 +107,11 @@ def _config_value_for_compat(config, field: str):
 
 
 def validate_action_config_compatible(action_config, language_config) -> None:
-    """Validate the layer/KV layout shared by prefix and suffix attention.
-
-    RoPE is intentionally not compared here. Dexbotic DM05 constructs the
-    action expert's rotary embedding from the VLM language config, even when
-    the serialized ``action_config.rope_parameters`` still contains the base
-    action-model defaults. The OpenDM port follows that construction in
-    ``DM05ActionExpert`` so prefix and suffix always use the same rotary basis.
-    """
     fields = (
         "num_hidden_layers",
         "layer_types",
         "max_position_embeddings",
+        "rope_parameters",
         "num_attention_heads",
         "num_key_value_heads",
         "head_dim",
@@ -72,8 +126,7 @@ def validate_action_config_compatible(action_config, language_config) -> None:
             )
     if mismatches:
         raise ValueError(
-            "DM05 action_config attention layout must match VLM language config "
-            "for suffix KV reuse; "
+            "DM05 action_config must match VLM language config for suffix KV reuse; "
             + "; ".join(mismatches)
         )
 
@@ -195,7 +248,7 @@ def posemb_sincos(
     return torch.cat([torch.sin(sin_input), torch.cos(sin_input)], dim=1)
 
 
-# Gemma3 ``<unused1>`` is the DM0.5-Mem invalid-history-slot token.
+# Gemma3 ``<unused1>`` — 0525 invalid history-slot pad.
 HISTORY_PAD_TOKEN_ID = 7
 
 
@@ -203,7 +256,11 @@ def mask_history_pad_tokens_in_attention(
     input_ids: torch.LongTensor | None,
     attention_mask: torch.Tensor | None,
 ) -> torch.Tensor | None:
-    """Exclude fixed-layout history padding from prefix attention."""
+    """Zero attention on ``<unused1>`` history pads (dexbotic-open parity).
+
+    Avoid host sync (``.item()``) so this stays valid inside CUDA graph
+    capture used by the fast no-history path.
+    """
     if input_ids is None:
         return attention_mask
 
@@ -230,6 +287,9 @@ def make_suffix_attn_mask(
     Each suffix token can attend to:
     - Non-padding tokens in the prefix.
     - All suffix tokens with full attention.
+
+    ``invisible_prefix_token_ids`` (e.g. history ``<unused1>`` pads) are also
+    treated as invisible, matching dexbotic-open.
 
     Returns:
         A 4D attention mask with shape

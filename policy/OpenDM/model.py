@@ -1,4 +1,4 @@
-"""Inference-only XPolicyLab adapter for the RoboDojo DM0.5-Mem checkpoint."""
+"""XPolicyLab inference adapter for the RoboDojo DM0.5-Mem checkpoint."""
 
 from __future__ import annotations
 
@@ -218,9 +218,6 @@ class Model(ModelTemplate):
         )
 
     def _configure_history(self, model_cfg: dict[str, Any]) -> None:
-        if not _as_bool(model_cfg.get("history_enabled"), default=True):
-            raise ValueError("The DM0.5-Mem checkpoint requires history_enabled=true")
-        self.history_enabled = True
         self.history_image_key = str(model_cfg.get("history_image_key") or "images_1")
         if self.history_image_key not in _CAMERA_CANDIDATES:
             raise ValueError(f"unknown history_image_key: {self.history_image_key}")
@@ -308,7 +305,7 @@ class Model(ModelTemplate):
         runtime_model_cfg.model_name_or_path = str(model_path)
         runtime_model_cfg.chunk_size = self.action_chunk_size
         runtime_model_cfg.bf16 = _as_bool(self.model_cfg.get("bf16"), default=False)
-        runtime_model_cfg.force_fp32_action_path = _as_bool(self.model_cfg.get("force_fp32_action_path"), default=True)
+        runtime_model_cfg.precision_policy = "fp32_mixed"
         runtime_model_cfg.llm_attn_implementation = str(self.model_cfg.get("llm_attn_implementation") or "sdpa")
         runtime_model_cfg.vision_attn_implementation = str(self.model_cfg.get("vision_attn_implementation") or "sdpa")
         runtime_model_cfg.action_attn_implementation = str(self.model_cfg.get("action_attn_implementation") or "sdpa")
@@ -316,19 +313,13 @@ class Model(ModelTemplate):
 
         model = runtime_model_cfg.build_model(use_lora=False)
         inference = experiment.inference_config
-        inference.enable_bf16_compute = _as_bool(self.model_cfg.get("enable_bf16_compute"), default=True)
         inference.diffusion_steps = int(self.model_cfg.get("diffusion_steps") or 10)
-        inference.diffusion_integration_dtype = str(
-            self.model_cfg.get("diffusion_integration_dtype") or "model"
-        ).lower()
-        if inference.diffusion_integration_dtype not in {"model", "float32"}:
-            raise ValueError("diffusion_integration_dtype must be model or float32")
         noise_seed = self.model_cfg.get("diffusion_noise_seed")
         inference.diffusion_noise_seed = (
             None if noise_seed is None or str(noise_seed).strip() == "" else int(noise_seed)
         )
         inference.output_action_dim = self.action_dim
-        inference.image_keys = list(_CAMERA_CANDIDATES)
+        inference.max_history_images = self.history_slots
         experiment.data_config.action_mode = ActionMode(self.model_action_mode)
         inference._initialize(
             model=model,
@@ -471,12 +462,12 @@ class Model(ModelTemplate):
             source_type="obs",
             state_type="state",
         ).astype(np.float32)
-        payload = {
-            image_key: Image.fromarray(_extract_rgb_image(observation, image_key)) for image_key in _CAMERA_CANDIDATES
-        }
+        payload = {"images": [
+            Image.fromarray(_extract_rgb_image(observation, image_key)) for image_key in _CAMERA_CANDIDATES
+        ]}
         payload.update(
             {
-                "history_images": self._history_images_for(env_idx, evaluation_id),
+                "history_images": [image for image in self._history_images_for(env_idx, evaluation_id) if image is not None],
                 "prompt": _normalize_prompt(observation, self.default_prompt),
                 "state": state,
                 "meta_data": {

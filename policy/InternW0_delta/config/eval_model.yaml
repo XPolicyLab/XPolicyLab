@@ -1,0 +1,119 @@
+# Evaluation-only architecture and preprocessing contract saved with robodojo.pt.
+data:
+  train:
+    num_frames: 33
+    action_video_freq_ratio: 4
+    video_size: [384, 256]
+    concat_multi_camera: robotwin
+    single_canvas: true
+    processor:
+      shape_meta:
+        images:
+          - {key: cam_high, raw_shape: [3, 480, 640], shape: [3, 240, 320]}
+          - {key: cam_left_wrist, raw_shape: [3, 480, 640], shape: [3, 240, 320]}
+          - {key: cam_right_wrist, raw_shape: [3, 480, 640], shape: [3, 240, 320]}
+        action:
+          - {key: default, raw_shape: 14, shape: 14}
+        state:
+          - {key: default, raw_shape: 14, shape: 14}
+      norm_default_mode: z-score
+      use_stepwise_action_norm: false
+      action_state_merger:
+        action_target_dim: 80
+        state_target_dim: 80
+        action_target_slices: &robot_slices
+          - {source_slice: [0, 6], target_slice: [0, 6]}
+          - {source_slice: [6, 7], target_slice: [16, 17]}
+          - {source_slice: [7, 13], target_slice: [40, 46]}
+          - {source_slice: [13, 14], target_slice: [56, 57]}
+        state_target_slices: *robot_slices
+
+model:
+  _target_: wam.model.factory.create_wam
+  model_id: Wan-AI/Wan2.2-TI2V-5B
+  tokenizer_model_id: Wan-AI/Wan2.2-TI2V-5B
+  tokenizer_max_len: 128
+  load_text_encoder: true
+  proprio_dim: 80
+  redirect_common_files: false
+  skip_dit_load_from_pretrain: true
+  action_dit_pretrained_path: null
+  action_dit_use_interpolated_init: false
+  mot_checkpoint_mixed_attn: true
+  mot_attention_backend: flex
+  mot_flex_block_size: 64
+  video_dit_config:
+    has_image_input: false
+    patch_size: [1, 2, 2]
+    in_dim: 48
+    hidden_dim: 3072
+    ffn_dim: 14336
+    freq_dim: 256
+    text_dim: 4096
+    out_dim: 48
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    eps: 1.0e-6
+    seperated_timestep: true
+    require_clip_embedding: false
+    require_vae_embedding: false
+    fuse_vae_embedding_in_latents: true
+    use_gradient_checkpointing: true
+    video_attention_mask_mode: first_frame_causal
+    action_conditioned: false
+    action_dim: 80
+    action_group_causal_mask_mode: group_diagonal
+  action_dit_config:
+    action_dim: 80
+    hidden_dim: 1024
+    ffn_dim: 4096
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    text_dim: 4096
+    freq_dim: 256
+    eps: 1.0e-6
+    use_gradient_checkpointing: true
+    physical_time_rope_enabled: false
+    dimension_valid_mask: null
+    valid_input_scale: 1.0
+  video_scheduler: {train_shift: 6.0, infer_shift: 6.0, num_train_timesteps: 1000}
+  action_scheduler: {train_shift: 1.0, infer_shift: 1.0, num_train_timesteps: 1000}
+  loss: {lambda_video: 0.5, lambda_action: 1.0}
+  future_delta:
+    enabled: true
+    num_tokens: null
+    video_size: [384, 256]
+    num_views: 1
+    num_frames: 33
+    action_video_freq_ratio: 4
+    loss_weight: 0.5
+    semantic_alignment:
+      {enabled: true, student_layer: 8, teacher_layer: 20, loss_weight: 0.1, max_sigma: 0.5}
+  understanding:
+    enabled: true
+    vlm_model_path: assets/Alibaba-DAMO-Academy/RynnBrain1.1-2B
+    trust_remote_code: true
+    train_vlm: false
+    vlm_gradient_checkpointing: false
+    vlm_batch_size: 0
+    max_pixels: 65536
+    prompt_cache_size: 256
+    precompute_metadata: true
+    save_vlm_weights: null
+    interval_chunks: 1
+    prompt: null
+    default_view_layout: auto
+    default_view_names: ""
+  memory:
+    enabled: false
+    video:
+      enabled: true
+      num_anchor_frames: 1
+      num_recent_frames: 1
+      deduplicate_identical_anchor_batch: true
+  proprio_encoding: {dimension_valid_mask: null, valid_input_scale: 1.0}
+  mot_checkpoint_layer_stride: 2
+  mot_checkpoint_extra_layers: []
+  mot_checkpoint_preserve_rng_state: true

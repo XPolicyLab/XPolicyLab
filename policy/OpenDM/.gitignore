@@ -3,5 +3,6 @@
 /opendm/user_checkpoints/
 /opendm/wandb/
 /logs/
+/data/
 __pycache__/
 *.py[cod]

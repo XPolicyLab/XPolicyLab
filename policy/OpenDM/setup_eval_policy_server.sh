@@ -51,6 +51,7 @@ OVERRIDES=(
 
 echo "[SERVER] policy=OpenDM task=${task_name} port=${policy_server_port} config=${yaml_file}"
 exec env \
+    PYTHONDONTWRITEBYTECODE=1 \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${XPL_ROOT}/setup_policy_server.py" \

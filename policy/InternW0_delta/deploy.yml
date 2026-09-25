@@ -1,0 +1,38 @@
+policy_name: InternW0_delta
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: true
+
+# Local-only weights. Paths are resolved relative to this policy directory.
+# They are documented and downloaded/prepared by README.md and
+# download_assets.sh, but are intentionally excluded from Git.
+checkpoint_path: checkpoints/robodojo.pt
+base_model_dir: assets/Wan-AI/Wan2.2-TI2V-5B
+vlm_model_path: assets/Alibaba-DAMO-Academy/RynnBrain1.1-2B
+
+# Small reproducibility files are part of the source submission.
+dataset_stats_path: config/dataset_stats.json
+train_config_path: config/eval_model.yaml
+
+# Checkpoint inference contract.
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 10
+num_inference_steps: 10
+action_hz: 25.0
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false
+default_instruction: follow the instruction
+allow_dummy_policy: false

@@ -1,0 +1,11 @@
+# Upstream dependencies are resolved alongside this file into requirements.lock.
+h5py
+websockets
+msgpack
+msgpack-numpy
+orjson
+pyarrow
+opencv-python-headless
+pyyaml
+ninja
+packaging
