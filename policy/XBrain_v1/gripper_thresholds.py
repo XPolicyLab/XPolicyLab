@@ -42,8 +42,10 @@ def load_gripper_thresholds(path, env_cfg_type):
 
 
 def apply_gripper_thresholds(actions, rule):
-    """Return a copy with sub-threshold left/right gripper values set to zero."""
+    """Zero values below each threshold; scale values at/above it by 1.3."""
     filtered = actions.copy()
-    filtered[filtered[:, 6] < rule.left, 6] = 0.0
-    filtered[filtered[:, 13] < rule.right, 13] = 0.0
+    for column, threshold in ((6, rule.left), (13, rule.right)):
+        below = actions[:, column] < threshold
+        filtered[below, column] = 0.0
+        filtered[~below, column] *= 1.3
     return filtered

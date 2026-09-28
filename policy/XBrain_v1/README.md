@@ -79,11 +79,13 @@ right_ee_joint_state:  absolute gripper value (1)
 The official executor must execute these values directly; it must not add the
 current joint state or apply a second joint-delta conversion.
 
-Before returning the first 30 actions, the adapter matches the client-provided
+Before returning the first 20 actions, the adapter matches the client-provided
 `instruction` (or `task_instruction`) against the bundled
 `gripper_thresholds.json`. Left gripper dimension 6 and right gripper dimension
 13 use independent per-task thresholds. A value strictly below its threshold
-is replaced with zero; a value equal to or above the threshold is preserved.
+is replaced with zero; a value equal to or above the threshold is multiplied by
+1.3. The comparison uses the original prediction, and scaling occurs once before
+returning the actions. This postprocessing does not clip the scaled values.
 Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
 preserved and the server logs a warning once.
@@ -120,10 +122,10 @@ setup.
 
 The standard XPolicyLab `eval.sh` arguments are documented in the repository
 README. The checkpoint predicts 50 actions per inference call, but the adapter
-returns only the first 30 actions to the client. After those actions execute,
+returns only the first 20 actions to the client. After those actions execute,
 the client collects a fresh observation and requests a new prediction. The
 `action_horizon` setting may shorten this execution horizon, but cannot exceed
-30.
+20.
 
 ## Evaluation-only submission
 

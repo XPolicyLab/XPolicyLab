@@ -20,7 +20,7 @@ def main() -> None:
     config.update(
         env_cfg_type=args.env_cfg_type,
         action_type="joint",
-        action_horizon=30,
+        action_horizon=20,
         prompt_max_length=120,
     )
 
@@ -41,7 +41,7 @@ def main() -> None:
     actions = model.get_action()
     elapsed = time.monotonic() - started
 
-    assert len(actions) == 30
+    assert len(actions) == 20
     expected_shapes = {
         "left_arm_joint_state": (6,),
         "left_ee_joint_state": (1,),
@@ -56,7 +56,7 @@ def main() -> None:
             assert np.isfinite(value).all(), key
     print(
         f"POLICY_INTERFACE_OK robot={args.env_cfg_type} seconds={elapsed:.3f} "
-        "action_count=30 action_dim=14 finite=true"
+        "action_count=20 action_dim=14 finite=true"
     )
 
 

@@ -31,9 +31,9 @@ class Model(ModelTemplate):
 
         if self.action_type != "joint":
             raise ValueError(f"XBrain_v1 currently supports action_type=joint, got {self.action_type!r}")
-        self.action_horizon = int(model_cfg.get("action_horizon", 30))
-        if self.action_horizon <= 0 or self.action_horizon > 30:
-            raise ValueError("action_horizon must be in [1, 30]")
+        self.action_horizon = int(model_cfg.get("action_horizon", 20))
+        if self.action_horizon <= 0 or self.action_horizon > 20:
+            raise ValueError("action_horizon must be in [1, 20]")
         threshold_path = Path(__file__).with_name("gripper_thresholds.json")
         self._gripper_thresholds = load_gripper_thresholds(threshold_path, self.env_cfg_type)
         self._reported_gripper_prompts = set()
@@ -180,7 +180,7 @@ class Model(ModelTemplate):
             if predicted.shape != (50, 14) or not np.isfinite(predicted).all():
                 raise ValueError(f"pipeline returned unexpected action shape/values: {predicted.shape}")
             # The checkpoint predicts 50 steps, but the executor receives at
-            # most the first 30 before collecting a fresh observation.
+            # most the first 20 before the next inference on a fresh observation.
             predicted = predicted[:self.action_horizon]
             predicted = self._apply_prompt_gripper_thresholds(predicted, prompt)
         return self._format_pipeline_actions(predicted)
@@ -200,7 +200,7 @@ class Model(ModelTemplate):
         if prompt_key not in self._reported_gripper_prompts:
             print(
                 f"[XBrain_v1] gripper thresholds task={rule.task} "
-                f"left={rule.left} right={rule.right}"
+                f"left={rule.left} right={rule.right} at_or_above_scale=1.3"
             )
             self._reported_gripper_prompts.add(prompt_key)
         return apply_gripper_thresholds(predicted, rule)
