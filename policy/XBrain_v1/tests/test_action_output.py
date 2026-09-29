@@ -1,6 +1,7 @@
 """Exercise the real adapter with synthetic predictions, without loading weights."""
 
 from pathlib import Path
+import asyncio
 import unittest
 from unittest.mock import patch
 
@@ -22,16 +23,24 @@ class FakePipeline:
         self.prediction[:, 6] = 0.35
         self.prediction[:, 13] = 0.30
         self.calls = 0
+        self.last_state = None
 
     def __call__(self, images, prompt, state, **kwargs):
         self.calls += 1
+        self.last_state = state.detach().cpu().numpy().copy()
         return self.prediction
+
+    def reset_observation_memory(self):
+        self.last_state = None
 
 
 class ActionOutputTests(unittest.TestCase):
-    def make_model(self, robot="piper_x", horizon=None):
+    def make_model(self, robot="piper_x", horizon=None, output_action_type="joint"):
         config = yaml.safe_load((POLICY_ROOT / "deploy.yml").read_text())
         config["env_cfg_type"] = robot
+        # These tests exercise the joint-output postprocessing independently of
+        # the PiperX endpose output test below.
+        config["output_action_type"] = output_action_type
         if horizon is not None:
             config["action_horizon"] = horizon
         pipeline = FakePipeline()
@@ -111,6 +120,162 @@ class ActionOutputTests(unittest.TestCase):
         for horizon in (0, 21, 30):
             with self.subTest(horizon=horizon), self.assertRaisesRegex(ValueError, r"\[1, 20\]"):
                 self.make_model(horizon=horizon)
+
+    def test_piperx_endpose_output_uses_official_action_keys(self):
+        model, pipeline = self.make_model()
+        model.output_action_type = "ee"
+        self.observe(model, "An unconfigured task prompt.")
+        actions = model.get_action()
+        self.assertEqual(len(actions), 20)
+        self.assertEqual(
+            set(actions[0]),
+            {"left_ee_pose", "left_ee_joint_state", "right_ee_pose", "right_ee_joint_state"},
+        )
+        self.assertEqual(np.asarray(actions[0]["left_ee_pose"]).shape, (7,))
+        self.assertEqual(np.asarray(actions[0]["right_ee_pose"]).shape, (7,))
+        np.testing.assert_allclose(actions[0]["left_ee_joint_state"], [0.35])
+        np.testing.assert_allclose(actions[0]["right_ee_joint_state"], [0.30])
+        for action in actions:
+            np.testing.assert_allclose(np.linalg.norm(action["left_ee_pose"][3:]), 1.0, atol=1e-5)
+            np.testing.assert_allclose(np.linalg.norm(action["right_ee_pose"][3:]), 1.0, atol=1e-5)
+
+    def test_piperx_backpack_skips_fk_and_z_processing(self):
+        prompt = "Place all the objects on the table into the backpack."
+        for output_type in ("auto", "ee"):
+            model, pipeline = self.make_model(output_action_type=output_type)
+            for field in ("instruction", "task_instruction"):
+                with self.subTest(output_type=output_type, prompt=prompt, field=field):
+                    self.observe(model, "  " + prompt.upper().replace(" ", "  ").rstrip(".") + "  ")
+                    if field == "task_instruction":
+                        observation = dict(model._obs)
+                        observation["task_instruction"] = observation.pop("instruction")
+                        model.update_obs(observation)
+                    expected = pipeline.prediction.numpy()[:20].copy()
+                    expected[:, 6] = 0.455
+                    expected[:, 13] = 0.39
+                    with patch("XPolicyLab.policy.XBrain_v1.model.joints14_to_endpose16",
+                               side_effect=AssertionError("Backpack must not run FK")), \
+                         patch("XPolicyLab.policy.XBrain_v1.model.adjust_piperx_endpose_z",
+                               side_effect=AssertionError("Backpack must not adjust Z")):
+                        actions = model.get_action()
+                    self.assertEqual(set(actions[0]), {
+                        "left_arm_joint_state", "left_ee_joint_state",
+                        "right_arm_joint_state", "right_ee_joint_state",
+                    })
+                    self.assertEqual(len(actions), 20)
+                    np.testing.assert_allclose(self.rows(actions), expected)
+                    self.assertEqual(model.output_action_type, "ee")
+
+    def test_only_backpack_of_six_piperx_tasks_returns_joint(self):
+        model, _ = self.make_model(output_action_type="auto")
+        for rule in model._gripper_thresholds.values():
+            with self.subTest(task=rule.task):
+                self.observe(model, rule.prompt)
+                actions = model.get_action()
+                expected_arm_keys = ({"left_arm_joint_state", "right_arm_joint_state"}
+                                     if rule.task == "pack_objects_into_backpack"
+                                     else {"left_ee_pose", "right_ee_pose"})
+                self.assertEqual(len(actions), 20)
+                for action in actions:
+                    self.assertEqual(set(action), expected_arm_keys | {
+                        "left_ee_joint_state", "right_ee_joint_state"})
+
+    def test_piperx_output_switches_per_request_without_reset(self):
+        model, _ = self.make_model(output_action_type="auto")
+        for prompt, key in (
+            ("Place all the objects on the table into the backpack.", "left_arm_joint_state"),
+            ("Hang the mugs on the mug rack.", "left_ee_pose"),
+            ("Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", "left_ee_pose"),
+            ("An unconfigured task prompt.", "left_ee_pose"),
+        ):
+            self.observe(model, prompt)
+            actions = model.get_action()
+            self.assertEqual(len(actions), 20)
+            self.assertIn(key, actions[0])
+
+    def test_batch_uses_each_observations_prompt(self):
+        model, _ = self.make_model(output_action_type="auto")
+        observations = []
+        for prompt in ("Hang the mugs on the mug rack.",
+                       "Place all the objects on the table into the backpack.",
+                       "Hang the mugs on the mug rack."):
+            self.observe(model, prompt)
+            observations.append(model._obs)
+        model.update_obs_batch(observations)
+        actions = model.get_action_batch()
+        self.assertEqual([len(chunk) for chunk in actions], [20, 20, 20])
+        self.assertIn("left_ee_pose", actions[0][0])
+        self.assertIn("left_arm_joint_state", actions[1][0])
+        self.assertIn("left_ee_pose", actions[2][0])
+
+    def test_other_robots_keep_joint_output(self):
+        for robot in ("piper", "arx_x5"):
+            model, _ = self.make_model(robot, output_action_type="auto")
+            for prompt in ("Place all the objects on the table into the backpack.",
+                           "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.",
+                           "An unconfigured task prompt."):
+                with self.subTest(robot=robot, prompt=prompt):
+                    self.observe(model, prompt)
+                    actions = model.get_action()
+                    self.assertEqual(len(actions), 20)
+                    self.assertIn("left_arm_joint_state", actions[0])
+                    self.assertNotIn("left_ee_pose", actions[0])
+
+    def test_joint_observation_is_used_for_piperx_endpose_output(self):
+        model, pipeline = self.make_model(output_action_type="auto")
+        self.observe(model, "Hang the mugs on the mug rack.")
+        observation = dict(model._obs)
+        joint_state = np.arange(14, dtype=np.float32) / 100
+        observation["state"] = {
+            "left_arm_joint_state": joint_state[:6],
+            "left_ee_joint_state": joint_state[6:7],
+            "right_arm_joint_state": joint_state[7:13],
+            "right_ee_joint_state": joint_state[13:14],
+        }
+        # Unrelated optional client metadata is not a new rejection condition.
+        observation["robot_type"] = "arm"
+        model.update_obs(observation)
+        actions = model.get_action()
+        np.testing.assert_array_equal(pipeline.last_state, joint_state)
+        self.assertEqual(len(actions), 20)
+        self.assertIn("left_ee_pose", actions[0])
+
+    def test_standard_protocol_roundtrip_preserves_output_types(self):
+        from client_server.ws.model_server import PolicyServer
+        from client_server.ws.protocol.codec import decode_envelope, encode_frame
+        from client_server.ws.protocol.messages import MessageType
+        from client_server.ws.protocol.schemas import Frame
+
+        async def check():
+            cases = (
+                ("piper_x", "Hang the mugs on the mug rack.", "left_ee_pose"),
+                ("piper_x", "Place all the objects on the table into the backpack.", "left_arm_joint_state"),
+                ("piper", "Place all the objects on the table into the basket.", "left_arm_joint_state"),
+                ("arx_x5", "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", "left_arm_joint_state"),
+            )
+            for robot, prompt, arm_key in cases:
+                model, _ = self.make_model(robot, output_action_type="auto")
+                server = PolicyServer(model)
+                self.observe(model, prompt)
+                observation = model._obs
+                reset = Frame(message_type=MessageType.RESET, request_id="reset",
+                              evaluation_id="offline-check", payload={})
+                reset_reply = await server.process_frame(decode_envelope(encode_frame(reset)))
+                self.assertEqual(reset_reply.message_type, MessageType.RESET_RESULT)
+                infer = Frame(message_type=MessageType.INFER, request_id="infer",
+                              evaluation_id="offline-check", payload={"observation": observation})
+                reply = await server.process_frame(decode_envelope(encode_frame(infer)))
+                response = decode_envelope(encode_frame(reply))
+                self.assertEqual(response.message_type, MessageType.INFER_RESULT, response.payload)
+                actions = response.payload["actions"]
+                self.assertEqual(len(actions), 20)
+                self.assertIn(arm_key, actions[0])
+                for action in actions:
+                    np.testing.assert_allclose(action["left_ee_joint_state"], [0.455], rtol=1e-6)
+                    np.testing.assert_allclose(action["right_ee_joint_state"], [0.39], rtol=1e-6)
+                    self.assertTrue(all(np.isfinite(value).all() for value in action.values()))
+
+        asyncio.run(check())
 
 
 if __name__ == "__main__":

@@ -53,8 +53,8 @@
     {
       "task": "put_objects_into_basket",
       "prompt": "Place all the objects on the table into the basket.",
-      "left": 0.2,
-      "right": 0.2
+      "left": 0.3,
+      "right": 0.3
     },
     {
       "task": "stack_and_cover_blocks",
@@ -103,8 +103,8 @@
     {
       "task": "pack_and_pour_fruit",
       "prompt": "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.",
-      "left": 0.2,
-      "right": 0.2
+      "left": 0.3,
+      "right": 0.3
     },
     {
       "task": "store_in_safe",

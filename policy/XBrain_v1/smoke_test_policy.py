@@ -42,12 +42,21 @@ def main() -> None:
     elapsed = time.monotonic() - started
 
     assert len(actions) == 20
-    expected_shapes = {
-        "left_arm_joint_state": (6,),
-        "left_ee_joint_state": (1,),
-        "right_arm_joint_state": (6,),
-        "right_ee_joint_state": (1,),
-    }
+    # The generic smoke-test prompt is not the backpack joint exception.
+    if model.output_action_type == "ee":
+        expected_shapes = {
+            "left_ee_pose": (7,),
+            "left_ee_joint_state": (1,),
+            "right_ee_pose": (7,),
+            "right_ee_joint_state": (1,),
+        }
+    else:
+        expected_shapes = {
+            "left_arm_joint_state": (6,),
+            "left_ee_joint_state": (1,),
+            "right_arm_joint_state": (6,),
+            "right_ee_joint_state": (1,),
+        }
     for action in actions:
         assert set(action) == set(expected_shapes)
         for key, shape in expected_shapes.items():
@@ -56,7 +65,8 @@ def main() -> None:
             assert np.isfinite(value).all(), key
     print(
         f"POLICY_INTERFACE_OK robot={args.env_cfg_type} seconds={elapsed:.3f} "
-        "action_count=20 action_dim=14 finite=true"
+        f"action_count=20 action_dim={sum(shape[0] for shape in expected_shapes.values())} "
+        f"output_action_type={model.output_action_type} finite=true"
     )
 
 

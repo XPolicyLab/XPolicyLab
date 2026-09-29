@@ -12,10 +12,19 @@ from XPolicyLab.policy.XBrain_v1.gripper_thresholds import (
     load_gripper_thresholds,
     normalize_prompt,
 )
+from XPolicyLab.policy.XBrain_v1.piperx_fk_adapter import (
+    adjust_piperx_endpose_z,
+    fk_source_path,
+    joints14_to_endpose16,
+)
 from XPolicyLab.utils.process_data import get_batch_size, get_robot_action_dim_info, pack_robot_state
 
 
 class Model(ModelTemplate):
+    # Only the PiperX backpack task keeps joint output when EE output is enabled.
+    _PIPERX_JOINT_OUTPUT_PROMPTS = frozenset(normalize_prompt(prompt) for prompt in (
+        "Place all the objects on the table into the backpack.",
+    ))
     _ROBOT_RESOURCES = {
         "piper_x": {"embodiment_id": 6, "norm_env": "XBRAIN_PIPERX_NORM_STATS_PATH", "ckpt_env": "XBRAIN_PIPERX_CHECKPOINT_PATH"},
         "piper": {"embodiment_id": 6, "norm_env": "XBRAIN_PIPER_NORM_STATS_PATH", "ckpt_env": "XBRAIN_PIPER_CHECKPOINT_PATH"},
@@ -31,6 +40,14 @@ class Model(ModelTemplate):
 
         if self.action_type != "joint":
             raise ValueError(f"XBrain_v1 currently supports action_type=joint, got {self.action_type!r}")
+        output_action_type = str(model_cfg.get("output_action_type", "auto"))
+        if output_action_type not in {"auto", "joint", "ee"}:
+            raise ValueError("output_action_type must be auto, joint, or ee")
+        if output_action_type == "auto":
+            output_action_type = "ee" if self.env_cfg_type == "piper_x" else "joint"
+        if output_action_type == "ee" and self.env_cfg_type != "piper_x":
+            raise ValueError("Endpose output is supported only for piper_x")
+        self.output_action_type = output_action_type
         self.action_horizon = int(model_cfg.get("action_horizon", 20))
         if self.action_horizon <= 0 or self.action_horizon > 20:
             raise ValueError("action_horizon must be in [1, 20]")
@@ -38,6 +55,7 @@ class Model(ModelTemplate):
         self._gripper_thresholds = load_gripper_thresholds(threshold_path, self.env_cfg_type)
         self._reported_gripper_prompts = set()
         self._warned_gripper_prompts = set()
+        self._reported_joint_output_prompts = set()
 
         # Get robot action dimension metadata
         # Example:
@@ -76,6 +94,8 @@ class Model(ModelTemplate):
         self._obs = None
         self._obs_batch = None
         self._pipe = self._load_pipeline(model_cfg)
+        if self.output_action_type == "ee":
+            print(f"[XBrain_v1] output_action_type=ee fk={fk_source_path()}")
         print(f"[XBrain_v1] initialized real pipeline for {self.env_cfg_type}")
 
     def _load_pipeline(self, model_cfg):
@@ -183,7 +203,7 @@ class Model(ModelTemplate):
             # most the first 20 before the next inference on a fresh observation.
             predicted = predicted[:self.action_horizon]
             predicted = self._apply_prompt_gripper_thresholds(predicted, prompt)
-        return self._format_pipeline_actions(predicted)
+        return self._format_pipeline_actions(predicted, prompt=prompt)
 
     def _apply_prompt_gripper_thresholds(self, predicted, prompt):
         prompt_key = normalize_prompt(prompt)
@@ -266,8 +286,27 @@ class Model(ModelTemplate):
 
         return action_list
 
-    @staticmethod
-    def _format_pipeline_actions(predicted):
+    def _format_pipeline_actions(self, predicted, prompt=""):
+        prompt_key = normalize_prompt(prompt)
+        use_joint_exception = (
+            self.env_cfg_type == "piper_x"
+            and prompt_key in self._PIPERX_JOINT_OUTPUT_PROMPTS
+        )
+        if self.output_action_type == "ee" and use_joint_exception:
+            if prompt_key not in self._reported_joint_output_prompts:
+                print(
+                    f"[XBrain_v1] output_action_type=joint reason=prompt_exception "
+                    f"prompt={prompt!r}; skipping FK and endpose Z adjustment"
+                )
+                self._reported_joint_output_prompts.add(prompt_key)
+        if self.output_action_type == "ee" and not use_joint_exception:
+            pose16 = adjust_piperx_endpose_z(joints14_to_endpose16(predicted))
+            return [{
+                "left_ee_pose": row[:7].astype(np.float32),
+                "left_ee_joint_state": row[7:8].astype(np.float32),
+                "right_ee_pose": row[8:15].astype(np.float32),
+                "right_ee_joint_state": row[15:16].astype(np.float32),
+            } for row in pose16]
         return [{
             "left_arm_joint_state": row[:6].astype(np.float32),
             "left_ee_joint_state": row[6:7].astype(np.float32),

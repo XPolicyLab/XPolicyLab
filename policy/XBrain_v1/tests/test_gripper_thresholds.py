@@ -21,6 +21,17 @@ def main():
         thresholds = load_gripper_thresholds(config_path, env_cfg_type)
         assert len(thresholds) == expected_count
 
+    for robot, task in (("arx_x5", "pack_and_pour_fruit"), ("piper", "put_objects_into_basket")):
+        rules = load_gripper_thresholds(config_path, robot)
+        rule = next(rule for rule in rules.values() if rule.task == task)
+        assert rule.left == rule.right == 0.30
+        values = np.zeros((3, 14), dtype=np.float32)
+        values[:, 6] = [0.29, 0.30, 0.31]
+        values[:, 13] = [0.31, 0.30, 0.29]
+        result = apply_gripper_thresholds(values, rule)
+        np.testing.assert_allclose(result[:, 6], [0, 0.39, 0.403], rtol=1e-6)
+        np.testing.assert_allclose(result[:, 13], [0.403, 0.39, 0], rtol=1e-6)
+
     piper_x = load_gripper_thresholds(config_path, "piper_x")
     sweep_prompt = (
         "  PICK up the broom, hand it over to the right hand, then use the "
