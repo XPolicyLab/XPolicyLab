@@ -1,0 +1,12 @@
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: DEEPSPEED
+downcast_bf16: 'no'
+main_training_function: main
+rdzv_backend: static
+same_network: true
+use_cpu: false
+
+deepspeed_config:
+  deepspeed_config_file: configs/deepspeed/zero2.json
+  zero3_init_flag: false

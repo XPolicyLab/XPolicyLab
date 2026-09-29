@@ -1,0 +1,54 @@
+# Training and policy-server environment.
+#
+# This stack is kernel-sensitive: RynnBrain1.1-2B interleaves `linear_attention`
+# layers with full attention, so flash-linear-attention and causal_conv1d are
+# hard requirements, not accelerations. See docs/environment.md for the full
+# table, including the versions we could NOT recover from the original run.
+#
+# torch is intentionally not pinned here -- install it first, matched to your
+# CUDA toolkit, then install this file. The verified combination is
+#   pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
+
+# --- core model stack ---------------------------------------------------------
+# >=5.2.0 is load-bearing: it is the first release exposing
+# Qwen3_5ForConditionalGeneration, which the RynnBrain1.1 checkpoint requires.
+transformers>=5.2.0
+torchvision==0.21.0
+accelerate==1.5.2
+deepspeed==0.16.9
+safetensors
+diffusers
+timm
+
+# --- RynnBrain1.1 linear-attention kernels ------------------------------------
+# Pinned exactly: newer flash-linear-attention releases change numerics and
+# measurably degrade checkpoints trained against 0.3.2.
+flash-linear-attention==0.3.2
+causal_conv1d==1.5.0.post8
+triton==3.2.0
+# flash-attn is installed separately, it needs --no-build-isolation:
+#   pip install flash-attn==2.7.4.post1 --no-build-isolation
+
+# --- data ---------------------------------------------------------------------
+numpy==1.26.4
+av==12.3.0
+decord==0.6.0
+pyarrow==14.0.1
+pandas
+opencv-python
+pydantic==2.10.6
+numpydantic==1.6.9
+
+# --- config, logging, misc ----------------------------------------------------
+omegaconf
+einops
+scipy
+pillow
+rich
+tensorboard
+wandb
+qwen-vl-utils
+
+# --- policy server ------------------------------------------------------------
+websockets
+msgpack

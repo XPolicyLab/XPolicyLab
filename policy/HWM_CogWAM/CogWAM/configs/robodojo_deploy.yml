@@ -1,0 +1,55 @@
+# Deployment contract for the RoboDojo XPolicy bridge.
+#
+# ``scripts/eval_robodojo.sh`` overrides the per-invocation fields (ports, task,
+# seed, GPUs, replan cadence). Everything else here is a hard ABI check against
+# the policy server's handshake metadata, not an image-processing suggestion.
+
+policy_name: cogwam
+protocol: ws
+bench_name: null
+task_name: null
+env_cfg_type: null
+action_type: joint
+gpu_id: null
+seed: null
+eval_batch: false
+
+# Local bridge address the simulator connects to.
+host: localhost
+port: 6000
+# Remote CogWAM policy server reached by the lightweight XPolicy adapter.
+policy_server_host: 127.0.0.1
+policy_server_port: 7777
+# eval_robodojo.sh fills this with COGWAM_CKPT_PATH and the adapter verifies
+# that the remote server loaded the exact same checkpoint.
+expected_checkpoint_path: null
+unnorm_key: new_embodiment
+use_ddim: true
+num_ddim_steps: 10
+# Execute this many actions from each H25 chunk before querying again. The
+# remaining 15 actions are the RTC overlap and are discarded while RTC is off.
+replan_interval: 10
+# Inference-time Real-Time Chunking (RTC). The released runs keep this OFF;
+# the code path is retained so the ablation can be reproduced. With
+# H25/replan10 the previous chunk has fifteen unexecuted actions, so fifteen is
+# the largest meaningful consistency horizon. delay=1 deliberately makes the
+# first transition action a hard anchor before the remaining linear fade; it
+# does not claim that the synchronous simulator has one step of latency.
+rtc_enabled: false
+rtc_execution_horizon: 15
+rtc_inference_delay: 1
+rtc_max_guidance_weight: 20.0
+rtc_prefix_attention_schedule: linear
+# Print normalized switch/prefix errors for the first N replans in each env.
+# Set to zero after an RTC setting has been validated.
+rtc_debug_max_replans: 8
+# Planner text can be useful for debugging but is too noisy for a
+# 2100-episode official run. ROBODOJO_LOG_PLANNER_TEXT overrides per invocation.
+log_planner_text: false
+
+# These are hard ABI checks, not image-processing suggestions.
+image_size: [320, 384]
+expected_image_layout: tri_view_composite
+expected_composite_view_key: video.tri_view_composite
+expected_action_chunk_size: 25
+expected_action_dim: 14

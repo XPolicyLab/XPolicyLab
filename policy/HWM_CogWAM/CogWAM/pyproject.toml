@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cogwam"
+version = "0.1.0"
+description = "CogWAM: a cognitive world-action model with event-driven semantic memory for bimanual manipulation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "The CogWAM Authors" }]
+keywords = ["vision-language-action", "world-model", "robot-learning", "robodojo"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# Runtime pins live in requirements.txt: the stack is CUDA/kernel sensitive and
+# resolving it through PEP 508 markers loses the verified combination.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6.0"]
+
+[project.urls]
+Repository = "https://github.com/CogWAM/CogWAM"
+
+[tool.setuptools.packages.find]
+include = ["cogwam*"]
+
+# No autoformatter is configured on purpose. Most of this tree is ported
+# verbatim from an upstream research repository, and UPSTREAM_SOURCES.json
+# records the SHA-256 each file came from so the port can be audited against it.
+# Reflowing 20k lines would destroy that diff. `ruff check` is the enforced gate.
+
+[tool.ruff]
+line-length = 121
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["A", "B", "E", "F", "I", "RUF", "W"]
+ignore = ["F722"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402", "F401"]
+# Ported verbatim from the upstream research tree (see UPSTREAM_SOURCES.json).
+# Both rules below would require changing runtime semantics to satisfy:
+#   B905 -- adding `strict=` to zip() either introduces a new exception path
+#           (strict=True) or is a no-op annotation of existing behaviour;
+#           neither is a change a port should make silently.
+#   B023 -- the flagged closures are invoked inside the same loop iteration
+#           (gradient-checkpoint thunks), so the late-binding warning does not
+#           describe a reachable defect here.
+"cogwam/models/cogwam.py" = ["B905", "B023"]
+"cogwam/models/world_action_mot.py" = ["B905", "B023"]
+"cogwam/models/vlm_interface.py" = ["B905"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "gpu: requires a CUDA device",
+    "weights: requires the released checkpoint and backbone weights on disk",
+]

@@ -1,0 +1,26 @@
+# RoboDojo evaluation-client environment.
+#
+# This is a SEPARATE environment from requirements.txt. The simulator pins
+# Python 3.11 + Isaac Sim 5.1 + CUDA 12.8, which does not co-install with the
+# training stack. The evaluation client talks to the policy server over
+# WebSocket, so the two environments never need to share an interpreter.
+#
+# Install the simulator itself first (see docs/environment.md):
+#   git clone --recurse-submodules https://github.com/RoboDojo-Benchmark/RoboDojo.git
+#   cd RoboDojo && git checkout 9b4cc885e8f530ed3ab14a30a312ae70242771c4
+#   git submodule update --init --recursive
+#
+# Then install this file into the simulator's interpreter.
+
+numpy
+pillow
+websockets
+msgpack
+omegaconf
+tyro
+
+# The client builds the tri-view composite itself, with the same code the
+# trainer uses. Isaac Sim usually ships both already; pinning nothing here
+# avoids fighting its resolver.
+opencv-python
+torchvision

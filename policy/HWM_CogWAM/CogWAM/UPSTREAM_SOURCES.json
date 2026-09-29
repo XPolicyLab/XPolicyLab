@@ -1,0 +1,385 @@
+{
+ "schema_version": 1,
+ "source_root": "StarVLA research tree",
+ "entries": [
+  {
+   "source_path": "starVLA/dataloader/__init__.py",
+   "source_sha256": "5abdcb768364d718040c186dc31bd6ed735d10c24114d3a07c5084fde5bc834f",
+   "target_path": "cogwam/data/__init__.py",
+   "adaptation": "Renamed to the cogwam namespace. Kept build_dataloader with its (cfg, dataset_py, save_statistics) signature and its rank-0 save_dataset_statistics side effect. DELETED the dataset_py dispatch (the 'lerobot_datasets' and 'vlm_datasets' backends, make_vlm_dataloader, FastWAMEpochSampler wiring) -- only the jointflow path is reachable; dataset_py is now validated against {'jointflow','jointflow_lerobot'} and raises instead of dispatching. DELETED the unused module-level save_dataset_statistics(dataset_statistics, run_dir) helper (no caller). ADDED lazy re-exports (module __getattr__) for the dataset/mixture symbols so that importing cogwam.data.composite from cogwam.models.cogwam or the policy server does not pull in PyAV/OpenCV/albumentations/pyarrow -- upstream got the same isolation by keeping the compositor in deployment/ outside the dataloader package."
+  },
+  {
+   "source_path": "starVLA/dataloader/lerobot_datasets.py",
+   "source_sha256": "68f0ec3cc5f44f58affc72efb4cfabd30d199dece66a367e206b668e90bdcbb3",
+   "target_path": "cogwam/data/collate.py",
+   "adaptation": "Only collate_fn survives (identity over the sample list; the framework batches ragged image/text fields itself). DELETED make_LeRobotSingleDataset, get_vla_dataset and the __main__ block: they belong to the 'lerobot_datasets' dataset_py backend, which is no longer reachable. Upstream's NVIDIA/SUST/HKUST attribution header is preserved."
+  },
+  {
+   "source_path": "deployment/fastwam_image.py",
+   "source_sha256": "97d00b9be1db33b7bc7f3d99ddd1bc916d9607c18928aefa0660e0881e5fa8bf",
+   "target_path": "cogwam/data/composite.py",
+   "adaptation": "Unified with deployment/model_server/tools/image_tools.py into one module. Upstream carried two near-duplicate copies of the compositor -- this deployment-safe one and a re-export shim at starVLA/dataloader/fastwam_image.py that existed only so simulator environments would not execute the training package initializer; the shim is gone and cogwam/data/__init__.py keeps the same isolation by importing the dataset stack lazily. build_robotwin_composite -> build_tri_view_composite and FASTWAM_COMPOSITE_SIZE -> TRI_VIEW_COMPOSITE_SIZE (renames only; verified to produce byte-identical pixels to upstream). FASTWAM_COMPOSITE_LAYOUT/VIEW_KEY are retained because released checkpoint metadata may carry either layout name and the evaluation adapter treats the two contracts as equivalent. ADDED TRI_VIEW_COMPOSITE_SOURCE_VIEW_KEYS."
+  },
+  {
+   "source_path": "deployment/model_server/tools/image_tools.py",
+   "source_sha256": "ea839b396072667eb0a1c723bfcc93e1e25886e4dd2d49c84302cc1ef262c186",
+   "target_path": "cogwam/data/composite.py",
+   "adaptation": "Only to_pil_preserve survives, verbatim (imported by cogwam/models/cogwam.py). DELETED convert_to_uint8, resize_with_pad and _resize_with_pad_pil: the tf.image.resize_with_pad replica has no caller in this recipe, which stitches a fixed tri-view composite instead of letterboxing."
+  },
+  {
+   "source_path": "starVLA/dataloader/jointflow/joint_dataset.py",
+   "source_sha256": "eb27cb0f354c8d14fcdc356547acaccd72e084fdc06e56fc56f28cac9243831e",
+   "target_path": "cogwam/data/dataset.py",
+   "adaptation": "Renamed to the cogwam namespace; JointLiberoDataset -> JointFlowDataset (the class never was LIBERO-specific). KEPT verbatim: the future-stride index math (_future_dino_stride/_future_dino_index), future_valid_requires_full_stride, the shared-video-delta-offset validation, the tri-view composite assembly and its obs_image_size/camera-order contracts, the optional vlm_view_size per-camera stream, text_annotation_from_row, the event-memory sample fields, build_joint_dataset/build_joint_dataloader/build_event_memory_dataloader. DELETED: the whole offline DINOv3 latent store (dino_target_latents, _load_dino_store/_read_dino/_load_episode_view_latent/_episode_latent_path/_absolute_frame_index/_original_view_keys/_dino_target_view_indices/_dino_target_view_keys/_configured_dino_target_view_keys, _dataset_offline_latents_dim, _inspect_precomputed_dino_store, _validate_precomputed_dino_targets) because the recipe sets online_dino=true, dino_target_latents=false and framework.dino.force_online=true and no latent store ships; _validate_io_shortcuts (it gates on framework.wam, a key this framework does not have, and returns immediately for decode_future_video=true + load_current_dino_target default); JointFastWAMRobotWinDataset and every fastwam_direct_frame_sampling / FastWAMEpochSampler branch; the LIBERO composite layout and the non-composite 'separate_views' packing branch; _select_future_target_views and future_target_view_keys; the data_config.make_joint_dataset factory hook (RoboDojo's DataConfig has no such method); planner RGB/text history (text_history_frame_offsets, text_history_memory_from_trajectory, planner_history_images) -- the event-memory recipe forbids history and the dataset now raises if history.enabled is set; compute_action_correlation_cholesky; the __main__ demo entry point. BEHAVIOUR DEVIATIONS: (1) online_dino='auto' is rejected with an explicit error instead of probing for a latent store that this release does not ship (online_dino=true/false still resolve as before); (2) JointFlowDataset raises if constructed with online_dino=false, since the offline reader is gone; (3) an unknown image_layout now raises from _composite_contract rather than falling through to per-camera resizing. Verified on a synthetic LeRobot v2.1 episode that both build_joint_dataset and build_event_memory_dataloader produce samples byte-identical to upstream under the released recipe."
+  },
+  {
+   "source_path": "starVLA/dataloader/jointflow/event_memory.py",
+   "source_sha256": "a19eef8f1030490e1ad304a690d74e2987acdce7b2641f74b7e5da508942491c",
+   "target_path": "cogwam/data/event_memory.py",
+   "adaptation": "Copied verbatim; no renames were needed (the module never referenced the old project name). Exports KEEP_DECISION and UPDATE_DECISION for cogwam/models/cogwam.py. The semantic_index_v1.npz build/cache and fingerprint, the n1 normalization, the KEEP/UPDATE labelling, the 2 UPDATE / 2 hard KEEP / 2 random KEEP sampler and the expected_phase_update_ratio 0.064 +/- 0.005 assertion are unchanged. Upstream's own test suite (starVLA/dataloader/jointflow/test_event_memory.py) passes against this module unmodified apart from the import path."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/datasets.py",
+   "source_sha256": "37d31155796239f5542a6a8275f34a3ac08f265037b63b72da316fe412b1b432",
+   "target_path": "cogwam/data/lerobot/datasets.py",
+   "adaptation": "Renamed imports to the cogwam namespace; surviving code is otherwise verbatim (2947 -> ~1690 lines). KEPT LeRobotSingleDataset metadata/statistics/IO, LeRobotMixtureDataset with its safe_hash sampling, retry loop and merged statistics writer, and ModalityConfig. DELETED: all LeRobot v3.0 branches (LE_ROBOT3_* paths, get_trajectory_data_lerobot_v3, get_episode_file_index/get_episode_file_from_index, the v3 video from_timestamp offset) -- RoboDojo is v2.1 and an unsupported lerobot_version now raises instead of silently returning None; CachedLeRobotSingleDataset; the delta/rel action modes with calculate_delta_action_statistics, calculate_rel_action_statistics, _get_action_col_slices, _normalize_action_mode_apply_keys, _normalize_action_mode_state_map, _infer_state_key_for_action and _apply_action_mode (identity under abs); the generic __getitem__/get_step_data/_pack_sample/read_action_only, which JointFlowDataset overrides and whose packer imported another benchmark's compositor; _save_dataset_statistics_, _get_position_and_gripper_values, MixtureSpecElement, the _combine_modality_stats/_generate_action_mask_for_used_keys wrappers, and load_merged_statistics/apply_cached_statistics with update_metadata's cached_statistics_path argument (never passed). BEHAVIOUR DEVIATIONS: (1) _normalize_action_mode raises on delta/rel/unknown modes instead of silently mapping them to 'abs'; the stats cache payload is still {'mode': 'abs'}, so existing meta/stats_gr00t.json caches stay valid; (2) the image-column (video-less, e.g. VLA-Arena) reader in get_video and the matching total_videos==0 sampling bypass are removed -- RoboDojo stores mp4; (3) a hard-coded 'episode_033675.parquet' skip in the statistics pass was dropped, it belonged to another dataset and cannot match RoboDojo's 3500 episodes; (4) the lapa_action/dream_actions exemptions in _check_integrity are gone. File-scoped '# ruff: noqa' waivers are used instead of restructuring the vendored NVIDIA code."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/embodiment_tags.py",
+   "source_sha256": "e25894243e1c03a43f8f8fe8d8244e8b31fad12601d02605920c958b03c0c268",
+   "target_path": "cogwam/data/lerobot/embodiment_tags.py",
+   "adaptation": "Reduced to the single EmbodimentTag.NEW_EMBODIMENT member that RoboDojo uses; its string value 'new_embodiment' is load-bearing because it keys dataset_statistics.json and therefore the deployment denormalizer. DELETED the other eleven research embodiments, EMBODIMENT_TAG_MAPPING (projector indices for a shared GR00T action head this release does not have) and ROBOT_TYPE_TO_EMBODIMENT_TAG (other benchmarks' robot types; read only by the deleted registry)."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/schema.py",
+   "source_sha256": "8c819ca93f273714f78f46c7478fdfa749c198dfc5e56def1061e765ea9dc3e9",
+   "target_path": "cogwam/data/lerobot/schema.py",
+   "adaptation": "Verbatim apart from the absolute import of EmbodimentTag, `from __future__ import annotations`, and a file-scoped '# ruff: noqa: E501' for the long pydantic field descriptions."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/transform/__init__.py",
+   "source_sha256": "60481fd6279cfa54aaec2bce78505c344486b203c2299051ef3bdaa3c5bb0efc",
+   "target_path": "cogwam/data/lerobot/transform/__init__.py",
+   "adaptation": "Rewritten with absolute imports and an explicit __all__. The commented-out state_action re-export block is now a real export of StateActionToTensor/StateActionTransform, which cogwam/data/robodojo.py and cogwam/data/dataset.py use."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/transform/base.py",
+   "source_sha256": "d201caaebd2730f07f4f86235d5e87396e60eb092a3e1f2bf449899a188f12ef",
+   "target_path": "cogwam/data/lerobot/transform/base.py",
+   "adaptation": "Verbatim apart from absolute imports, `from __future__ import annotations` and a file-scoped E501 waiver."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/transform/concat.py",
+   "source_sha256": "915a04860ae67aefd6cc1551f15cc6a19a9b0e33cc92f88533f7175a0242d168",
+   "target_path": "cogwam/data/lerobot/transform/concat.py",
+   "adaptation": "Verbatim apart from absolute imports and `from __future__ import annotations`. NOTE: ConcatTransform is not used by the RoboDojo DataConfig (which packs state/action in JointFlowDataset._pack_sample instead); it is retained because it is part of the transform package's public surface."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/transform/state_action.py",
+   "source_sha256": "6f74b05e0702d03ec41fdbfa0eec7028139e4d039a5efd816777d0c2fb802bc8",
+   "target_path": "cogwam/data/lerobot/transform/state_action.py",
+   "adaptation": "Kept RotationTransform, Normalizer (including the fastwam_zscore mode this recipe normalizes with: (x - mean) / (std + 1e-8) clipped to [-5, 5], and its exact inverse), StateActionToTensor and StateActionTransform verbatim. DELETED StateActionPerturbation, StateActionDropout and StateActionSinCosTransform, which have no caller and which upstream's transform/__init__.py did not export either."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/video.py",
+   "source_sha256": "f31168b7f00cf3e424c22d755079c9eeb08a0b3afe395e5b1d015f0674ddb58f",
+   "target_path": "cogwam/data/lerobot/video.py",
+   "adaptation": "Kept get_frames_by_timestamps with all five backends (video_backend is a user-facing config key; the recipe uses pyav). DELETED get_frames_by_indices (no caller) and get_all_frames (only the deleted CachedLeRobotSingleDataset used it), plus an unused `duration` local in the pyav branch."
+  },
+  {
+   "source_path": "starVLA/dataloader/jointflow/mix_registry.py",
+   "source_sha256": "08898503e387652e7ebbac1eb7f6667de1ed1b321d328f14b2b8a59a5a7c1bc2",
+   "target_path": "cogwam/data/mixtures.py",
+   "adaptation": "Renamed to the cogwam namespace. Kept resolve_data_mix and its KeyError message shape. DELETED the LIBERO alias table, the derived RoboTwin clean/randomized aliases (_derived_robotwin_mixtures) and register_jointflow_mixtures, which mutated a process-global registry. Lookup is now a direct read of cogwam.data.robodojo.DATASET_NAMED_MIXTURES."
+  },
+  {
+   "source_path": "examples/RoboDojo/train_files/data_registry/data_config.py",
+   "source_sha256": "fd74f39728f9746c1caf7bf4e6dd3fb9c2ee6b064a6bb8fda141880b52049b3c",
+   "target_path": "cogwam/data/robodojo.py",
+   "adaptation": "Renamed to the cogwam namespace; class attributes annotated ClassVar (no behaviour change). The 14-D [left_arm(6), left_gripper(1), right_arm(6), right_gripper(1)] ordering, the 16-step action_indices and the fastwam_zscore normalization modes are unchanged. DELETED the 'robodojo_v21' and 'robodojo_v21_language_optional' mixtures (the recipe pins robodojo_v21_language) and the empty ROBOT_TYPE_TO_EMBODIMENT_TAG placeholder, which is now derived directly from the DataConfig classvar instead of by the deleted registry."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/launch_xpolicy_server.py",
+   "source_sha256": "c0c2ddad8ffd9473f003f2ddd265cba8d74bf7927c1b73ba7f3dd74644d37243",
+   "target_path": "cogwam/eval/launch_bridge.py",
+   "adaptation": "Renamed; ROBODOJO_ROOT no longer has an internal-storage default and is required. STARVLA_ROOT -> the repository root derived from __file__. Overlay policy directory starVLA -> cogwam. The websockets-12 legacy-server shim, the overlay-identity verification and the bridge keepalive patch are unchanged apart from the _starvla_ -> _cogwam_ attribute rename."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/launch_robodojo_client.py",
+   "source_sha256": "66e016d273f8c9b5a890525b2541316cc2139a563284fdf901c7fb0c45b8fc21",
+   "target_path": "cogwam/eval/launch_client.py",
+   "adaptation": "Renamed; ROBODOJO_ROOT is required with no default, STARVLA_ROOT -> repository root. The keepalive patch, the no-video wrapper, the _eval_batch_from_deploy override (and its hard failure if upstream removes that hook) and the non-__main__ exec of RoboDojo's official main are unchanged apart from the _starvla_ -> _cogwam_ rename."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/robodojo_model.py",
+   "source_sha256": "93c7138b832289cceb8ef894a8c1e18e56d7d82988abb46cafb96607fbe3ffa1",
+   "target_path": "cogwam/eval/robodojo_policy.py",
+   "adaptation": "The compositor is now a plain `from cogwam.data.composite import build_tri_view_composite, build_per_view_images` instead of upstream's spec_from_file_location hack: cogwam.data.composite is dependency-light and cogwam.data.__init__ defers the dataset stack, so the simulator environment no longer needs the file-path trick to avoid the training imports. The layout/view-key/source-view constants come from that module too, so training and evaluation cannot drift. KEPT verbatim (these are the reproduction contract): the chunk-25/replan-10 scheduler (chunk_offset = step % replan_interval; a fresh chunk is requested when chunk_offset == 0; only the first replan_interval actions are executed and the tail is discarded), the KEEP/UPDATE state machine and its three raises, _append_semantic_memory/_semantic_memory_items, the per-env dicts and reset(), the event-memory handshake assertion (event_replan_interval == replan_interval and event_semantic_offset == -replan_interval), the full RTC request/debug path (default off), _validate_mot_runtime_contract, image decoding and camera extraction, and the deferred composite build. framework_name check now requires 'CogWAM' and raises for anything else instead of returning early. starvla_server_host/port config keys renamed to policy_server_host/port; log prefix [starVLA] -> [CogWAM]. Composite size is now validated against the server's obs_image_size handshake field rather than a FASTWAM_COMPOSITE_SIZE constant, and the fastwam/tri_view layout-equivalence set is gone: this repository ships one layout (tri_view_composite). DELETED as unreachable: the non-event text-planning path (_should_refresh_planner_text, cached_planner_texts, text_replan_chunks, planner_text_refreshed handling) -- event_driven_memory_ntp makes a fresh decision at every replan; all text_history / planner_history_images / finished_task_list state; the event-memory figure recorder (_load_eventmem_module, on_trial_end, eventmem_* config) which depended on a deployment renderer outside this port and only ran for ROBODOJO_SAVE_MODE=images; and the dead _infer_chunk/_next_action helpers."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/robodojo_fast_rollout.py",
+   "source_sha256": "39855eead9c0637f2504cb0ccd9950c27fb93166027e65472e6a63ee9b29a2f9",
+   "target_path": "cogwam/eval/rollout.py",
+   "adaptation": "KEPT verbatim: the 42-task/54-config/2100-episode protocol assertions, the native eval_nums 25+25/50 check, episode-balanced partitioning, the one-Isaac-process-per-GPU constraint, the thread cap and its measurements, retry/backoff, progress+ETA reporting, and the manifest/worker-status/summary sequencing. ENV RENAMES: STARVLA_CKPT_PATH -> COGWAM_CKPT_PATH, STARVLA_SERVER_HOST/HOST -> COGWAM_POLICY_HOST, STARVLA_SERVER_PORT -> COGWAM_POLICY_PORT. ROBODOJO_ROOT now has no default and raises with clone-at-pinned-commit instructions. The child launcher is scripts/eval_robodojo.sh invoked with explicit positional arguments instead of a chain of internal wrapper scripts; the summary is run as `python -m cogwam.eval.summarize`. parse_worker_info was pruned to CLIENT_WORKER_INDEX/CLIENT_NUM_WORKERS plus NODE_RANK/MACHINE_RANK/SLURM_PROCID and NNODES/NUM_MACHINES/SLURM_NNODES; the NODE_INFO/rank-file parsing and the vendor-specific platform variables were internal-cluster only. COGWAM_CKPT_PATH may now be a released artifact directory as well as a .pt file (_checkpoint_name/_model_root handle both). Defaults updated to the released recipe: action chunk 16 -> 25, replan 12/16 -> 10, run name full_official_fast_h16 -> full_official_fast_h25. DELETED: text_replan_chunks plumbing (the client no longer has a non-event text path) and the eventmem capture environment."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/summarize_robodojo_table1.py",
+   "source_sha256": "b04f5919417b99ed796eba878268fb16bc683313c009ed09d700f2859e15b6a1",
+   "target_path": "cogwam/eval/summarize.py",
+   "adaptation": "Ported verbatim apart from import ordering, one docstring line, and an added docstring paragraph recording where the 'unstable' exclusion rule actually lives (RoboDojo's eval_env.py drops unstable episodes from `details` and from its episode counter, so counting `details` entries reproduces it). The 42-task taxonomy, the 25+25 Generalization composition, equal-weight task->dimension and dimension->Average aggregation, the dagger partial-dimension marker and its 'must not be quoted as the final benchmark number' warning are unchanged."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/verify_robodojo_checkpoint_contract.py",
+   "source_sha256": "cff2921f1d69109ac42ecde0ff11d685230e1adce1c40096e1e1915028b2817f",
+   "target_path": "cogwam/eval/verify_contract.py",
+   "adaptation": "PRUNED to the one geometry this repository reproduces. KEPT: metadata-only tensor-shape reading, contiguous MoT layer indices, the shared-vs-per-layer context layout check, the obsolete action-DINO branch rejection, config-vs-weights agreement on world/action widths and FFNs and heads*head_dim, the 30-layer/24x128/512/1024/2048/4096 released architecture, time_frequency_dim/grid/train-timestep/norm_eps/shift constants, the pooled-DINO-grid vs world-grid identity, the 14-D finite mean/std stats check, the event-memory contract (t-10 labels, replan 10, no RGB history, >=66 max_new_tokens), and the composite/obs_image_size/action_type/data_mix data checks. The composite layout, view key, source-view order and 320x384 size are imported from cogwam.data.composite rather than restated. ADDED: an --artifact-dir mode that first verifies artifact_manifest.json (including the dataset_statistics.json sha256) via cogwam.serve.policy_wrapper.validate_artifact_directory, and reports both hashes in the summary. DELETED: the QwenGR00T framework branch; _RELEASED_50K_CONTRACTS (internal run-name table); the layer-wise base/base_L architecture profiles and truncate_vlm_layers checks (this repo reproduces the non-layer-wise 30-layer model and now rejects layer-wise checkpoints explicitly); multi-resolution current_dino_pool support (now rejected); the correlated-noise Cholesky artifact check; the non-causal attention_pattern branch; and _validate_construction_inference_semantics, the ~150-line config.yaml vs config.full.yaml field-by-field comparison, which has no meaning for a released artifact that carries exactly one config."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/__init__.py",
+   "source_sha256": "1f2ac6b63d8ce3959c3e2aa133a3095952b40db16678f8133b9f046bf83a77b7",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/__init__.py",
+   "adaptation": "pkgutil namespace overlay, verbatim; docstring renamed."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/policy/__init__.py",
+   "source_sha256": "fcb44afd6df719bf29922d63c79419d09c0e80e7ab104d45507d52f7e8a72ff8",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/policy/__init__.py",
+   "adaptation": "pkgutil namespace overlay, verbatim."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/policy/starVLA/__init__.py",
+   "source_sha256": "8175f3db80d47f3f6bacaff0d755d9e090206311863275768971a11f79e7f707",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/policy/cogwam/__init__.py",
+   "adaptation": "Overlay policy package renamed starVLA -> cogwam (policy_name is also the on-disk directory RoboDojo looks for)."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/policy/starVLA/deploy.py",
+   "source_sha256": "8aff5e31f9c956dd3b612ff13b8823dcbb5ce32a01ba55b68b1ba3f162f83979",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/policy/cogwam/deploy.py",
+   "adaptation": "The live rollout loop (it shadows RoboDojo's own deploy.py). eval_one_episode / eval_one_episode_batch and the one-action-per-step assertions are verbatim; the event-memory figure capture hooks (_eventmem_capture_enabled, _finish_eventmem_rollout, the trial_end call) were removed with the recorder they drove."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/policy/starVLA/model.py",
+   "source_sha256": "999a70cc431386d6e990b017e6d3243ff6979771af8673841316950e9d33aea2",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/policy/cogwam/model.py",
+   "adaptation": "Still a pure import shim: this file is what makes the repository-owned adapter (not RoboDojo's checked-in policy directory) the live Model. The sys.path walk up from the shim is replaced by a normal `from cogwam.eval.robodojo_policy import Model`, because the repository root is already placed first on sys.path by launch_bridge.py and `cogwam` cannot be masked the way a top-level `examples` package could."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/utils/__init__.py",
+   "source_sha256": "cdb8d378889e07ba94faaaf10a27acd3c9b060d80d640cb80d27751bc7e90941",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/utils/__init__.py",
+   "adaptation": "pkgutil namespace overlay, verbatim."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/xpolicy_overlay/XPolicyLab/utils/load_file.py",
+   "source_sha256": "b035372624b6616e02cbaeb336bf5449873794fe5e7a3bf4d3678d685361462e",
+   "target_path": "cogwam/eval/xpolicy_overlay/XPolicyLab/utils/load_file.py",
+   "adaptation": "Verbatim; only the docstring's project name changed. Keeps h5py out of module import time."
+  },
+  {
+   "source_path": "starVLA/model/framework/base_framework.py",
+   "source_sha256": "67c79e87c1b30ff0b113df02d0144339be452f3bca3fc1a39bad43b1b2857822",
+   "target_path": "cogwam/models/base.py",
+   "adaptation": "Rewritten. Deleted FRAMEWORK_REGISTRY and _auto_import_framework_modules: the pkgutil scan imported all 26 upstream frameworks (and a 2590-line test module) just to resolve one name. build_model imports the single class and rejects any other framework.name. from_pretrained is reduced to load_state_dict_file; supports_training_tag/forward_vlm are dropped with the VLM-only training path."
+  },
+  {
+   "source_path": "starVLA/model/tools.py",
+   "source_sha256": "ba2f491ae54e33234b5a83480a690a9a61c63f7c57d729a25d1691537ebb7b34",
+   "target_path": "cogwam/models/kernels.py",
+   "adaptation": "Only has_flash_attn survives, now lru_cached. FrameworkTools.unnormalize_actions dropped -- it implements q01/q99 min-max de-normalisation, while this recipe de-normalises through the training-time ComposedModalityTransform (fastwam_zscore). Registry, CrossAttention, preprocess_images and print_freeze_status had no reachable callers."
+  },
+  {
+   "source_path": "starVLA/reproducibility/robodojo_rynn50k.py",
+   "source_sha256": "e71a727067e001493a396450f8b04a830b7d1acbc58461b7fc9cd92e9bcc4bb7",
+   "target_path": "cogwam/recipe.py",
+   "adaptation": "Rewritten, not copied. Upstream carried thirteen reproduction profiles layered by dict spreading; this keeps only the multi-layer-DINO event-memory profile, flattened into one EXPECTED dict of 162 dotted paths. The _get_child/_select/_plain selectors and the SHA-256 canonical-JSON fingerprint are behaviourally identical. Two deliberate deviations: (1) the five absolute cluster-storage paths (run_root_dir, base_vlm, dino hf_model_id/weights, data_root_dir) are REMOVED from the frozen contract -- upstream enforced them, which made the recipe unrunnable outside one filesystem; validate_runtime_assets checks backbone identity (model_type, hidden sizes, layer count, patch size) instead. (2) interaction_mode is pinned to 'base' rather than accepted as 'base or joint'. Adds COGWAM_SKIP_RECIPE_VALIDATION, which downgrades the failure to a warning and marks the returned audit record validated=False."
+  },
+  {
+   "source_path": "deployment/model_server/server_policy.py",
+   "source_sha256": "f08d03220dd31fa074404e512568318b89cc0b2c36ae7c1bc6e63b370253cf2b",
+   "target_path": "cogwam/serve/policy_server.py",
+   "adaptation": "Added mutually-exclusive --artifact-dir / --ckpt_path, plus --host, --device and --unnorm_key. Default port 10093 -> 7777 to match scripts/serve_policy.sh. Removed the debugpy hook and its DEBUG env switch."
+  },
+  {
+   "source_path": "deployment/model_server/checkpoint_contract.py",
+   "source_sha256": "dc4ff59d890dddcc6a8dabdc2aa35b57650d5babb4ad1009193dcfa38353e86e",
+   "target_path": "cogwam/serve/policy_wrapper.py",
+   "adaptation": "Folded into policy_wrapper.py verbatim (find_run_file, load_checkpoint_contract_config, resolve_config_expects_state, _truthy). Only the docstring changed: it no longer names the internal cluster metadata as a thing not to infer from."
+  },
+  {
+   "source_path": "deployment/model_server/policy_norm_processor.py",
+   "source_sha256": "676a1874be7a574d37124fa6276487b55ea83758db7008d6d909a1f0d12f0821",
+   "target_path": "cogwam/serve/policy_wrapper.py",
+   "adaptation": "Folded into policy_wrapper.py. Normalisation math (_infer_key_dims, _build_dataset_metadata, unapply_actions) is unchanged. PolicyNormProcessor now takes the already-loaded (model_cfg, norm_stats) instead of re-reading the checkpoint path, so it works for both --artifact-dir and --ckpt_path; behaviour is identical because the caller reads them with the same loader. ROBOT_TYPE_CONFIG_MAP / DATASET_NAMED_MIXTURES are imported from cogwam.data.robodojo, which defines them directly, so there is no import-time registry mutation to arrange. Deleted _DEPLOYMENT_DATA_MIX_ROBOT_TYPE_ALIASES (it aliased a mixture name this recipe never uses) and the error hint that referenced the removed examples/ tree."
+  },
+  {
+   "source_path": "deployment/model_server/policy_wrapper.py",
+   "source_sha256": "d93316de68514018072203581c8d6857c2544a4502c4f973004e5e3d2c834a8e",
+   "target_path": "cogwam/serve/policy_wrapper.py",
+   "adaptation": "Renamed baseframework->CogWAMBase and QwenWorldActionMoT->CogWAM. from_pretrained is gone in this repository, so construction is explicit: read_mode_config/inference_config.yaml -> dict_to_namespace -> build_model -> load_state_dict(strict=True) with the upstream missing/unexpected-key diagnostics preserved. ADDED: an --artifact-dir mode that validates artifact_manifest.json (self-hash plus sha256 of model.safetensors and dataset_statistics.json) before loading, and publishes artifact_manifest_sha256/artifact_weights_sha256 in the handshake. DELETED as unreachable for this recipe: the correlated-noise Cholesky injection (CogWAM has no set_action_correlation and the recipe never sets use_correlated_noise); the QwenActionWorldCoFlow chunk check and its coflow_* metadata; _build_wam_runtime_metadata and every wam_* metadata key (the two-stage WAM guidance recipe has no config block here) -- only its qwen_attn_implementation field survives, published directly; the text_history_*/finished_task_list_* metadata and the planner_finished_task_list response field (the event-memory recipe forbids RGB history); the rynn_mem_vision_encoder metadata and its configured-vs-runtime consistency check (mem_vision_encoder is mutually exclusive with event memory in the model). KEPT verbatim: the state ABI resolution and _sync_framework_state_contract, the state normalizer built from the training ComposedModalityTransform, _prepare_examples, action_chunk_size discovery, the unnorm-key processor cache, planner_text_cache_supported and its guard, and predict_action's un-normalisation loop and response keys (actions, normalized_actions, planner_text, planner_text_refreshed, semantic_decision, semantic_memory_add, semantic_current_subtask)."
+  },
+  {
+   "source_path": "deployment/model_server/tools/msgpack_numpy.py",
+   "source_sha256": "c04568948fcee52b691e3be4b6cffb759f7e79ad67530fcd5d23095a0d13c057",
+   "target_path": "cogwam/serve/protocol.py",
+   "adaptation": "Folded verbatim into protocol.py together with the websocket server and client. No functional change to the array codec."
+  },
+  {
+   "source_path": "deployment/model_server/tools/websocket_policy_client.py",
+   "source_sha256": "2c705feee05db768b985f62a3c1a7a74ff83834f0129826bb2cd1555e50a6b49",
+   "target_path": "cogwam/serve/protocol.py",
+   "adaptation": "Folded into protocol.py so the RoboDojo adapter has a single import. Kept the inspect-based ping_interval/ping_timeout filtering (the simulator image pins an older websockets). Dropped the typing_extensions @override decorator: there is no base Policy class in this repository, so it was a no-op that added a dependency."
+  },
+  {
+   "source_path": "deployment/model_server/tools/websocket_policy_server.py",
+   "source_sha256": "41d3ef83f6a9a4f1e920dee21b4b8c454e472bcd34a773650edc202899f25d8d",
+   "target_path": "cogwam/serve/protocol.py",
+   "adaptation": "Folded into protocol.py; imports msgpack helpers from the same module instead of a sibling. Handshake metadata push, ping/infer/predict_action routing, flat-dict-as-payload fallback, payload splatting into wrapper.predict_action, the {status, ok, type, request_id, data} envelope and the idle watchdog are byte-identical. Removed the module's __main__ NotImplementedError stub."
+  },
+  {
+   "source_path": "starVLA/training/train_starvla.py",
+   "source_sha256": "46fe3929d2dd847ccbf6e01ef89ee903ddd767d134e6b59a01c400866c84dda6",
+   "target_path": "cogwam/training/checkpoint.py",
+   "adaptation": "The save/restore half of VLATrainer extracted into CheckpointMixin: _save_initial_configs, _init_checkpointing, _adjust_lr_scheduler_for_resume, _full_state_metadata_path, _validate_full_state_checkpoint, _get_latest_full_state_checkpoint, _restore_pending_full_training_state, _save_checkpoint. The steps_N_pytorch_model.pt / steps_N_model.safetensors naming, the steps_N_state/ accelerate state directory, the _SUCCESS commit marker (unlinked before rewrite, touched last), trainer_state.json and the world-size / accumulation resume guards are all unchanged. The tail of _finalize_training became _save_final_model. DELETED: the reset_world_gates_after_pretrained_load knob and _reset_world_gate_parameters (CogWAM has no world_gate parameters) and the _save_ema_checkpoint call. CHANGED: trainer_extras.pt no longer stores jointflow_rng_state, because the random.Random it seeded went away with the task sampler; it now stores the two dataloader epoch counters (vla_epoch_count, semantic_epoch_count), which are the remaining trainer-owned state Accelerate does not checkpoint. This file is written by rank 0 and read by every rank, so it may only ever hold rank-invariant values -- broadcasting one rank's RNG snapshot to all ranks would collapse their sampling streams."
+  },
+  {
+   "source_path": "starVLA/model/framework/share_tools.py",
+   "source_sha256": "6947fd3c40506b2aaf61ee5b06dad6fe5ee640dff079385b2317866f7d27f8ae",
+   "target_path": "cogwam/training/config.py",
+   "adaptation": "Renamed to the cogwam namespace. Kept NamespaceWithGet, dict_to_namespace, _to_omegaconf, merge_framework_config, read_mode_config, apply_config_compat, CONFIG_VERSION. DELETED merge_pram_config (decorator no framework in this repo uses), populate_layerwise_dit_cfg (layerwise_planner_coupling is false in the frozen recipe and CogWAM builds its DiT shape directly), read_model_config (config.json variant; only the config.yaml variant read_mode_config is reachable), state2str_transform and add_discretized_state_to_instruction (pi-0.5-style discretized-state prompting, unused by CogWAM) and the numpy import they needed. Inside merge_framework_config the `tasks.weights` atomic-merge special case was removed: CogWAMDefaultConfig has no `tasks` node, so OmegaConf.select always returned None. Comment reference to build_framework updated to build_model. Added `from __future__ import annotations` and an __all__."
+  },
+  {
+   "source_path": "starVLA/training/trainer_utils/config_tracker.py",
+   "source_sha256": "18b0e7ffc016e75e5b863893241225b649ed99def9265aa26e1a355b296f3dde",
+   "target_path": "cogwam/training/config_tracker.py",
+   "adaptation": "Behaviour-identical copy of wrap_config / unwrap_config / AccessTrackedConfig and the five OmegaConf monkey patches. Only mechanical changes: module docstring added, `from __future__ import annotations`, typing.Optional/Union/Set replaced by PEP 604/585 forms, two function-local `import re` hoisted to module scope, a >121-column ternary in _collect_all_paths expanded to an if/elif/else chain, an unused enumerate index dropped, one f-string without placeholders de-f'd, `raise AttributeError(...) from None` to satisfy ruff B904 (the original already swallowed the cause), black formatting, __all__."
+  },
+  {
+   "source_path": "starVLA/training/train_starvla.py",
+   "source_sha256": "46fe3929d2dd847ccbf6e01ef89ee903ddd767d134e6b59a01c400866c84dda6",
+   "target_path": "cogwam/training/optim.py",
+   "adaptation": "setup_optimizer_and_scheduler lifted verbatim from train_starvla.py (the definition that shadowed the trainer_tools.py one at import time, i.e. fused=True unconditionally rather than fused=torch.cuda.is_available()). Numerics unchanged: AdamW over build_param_lr_groups with cfg.trainer.optimizer betas/eps/weight_decay and transformers get_scheduler(cosine_with_min_lr, min_lr)."
+  },
+  {
+   "source_path": "starVLA/training/trainer_utils/overwatch.py",
+   "source_sha256": "26490d610d638c975b1f60ade0d94125d09f86e1773ce8ad0fb65d81e6bf057f",
+   "target_path": "cogwam/training/overwatch.py",
+   "adaptation": "Copied as-is (rank-aware logging wrapper); no semantic change."
+  },
+  {
+   "source_path": "starVLA/training/train_starvla.py",
+   "source_sha256": "46fe3929d2dd847ccbf6e01ef89ee903ddd767d134e6b59a01c400866c84dda6",
+   "target_path": "cogwam/training/train.py",
+   "adaptation": "Entry point only: argparse + OmegaConf load/merge/apply_config_compat, build_accelerator (was build_training_accelerator), configure_torch_runtime, setup_directories, prepare_data, main. STARVLA_ALLOW_TF32 / STARVLA_FLOAT32_MATMUL_PRECISION became COGWAM_ALLOW_TF32 / COGWAM_FLOAT32_MATMUL_PRECISION. build_framework -> cogwam.models.base.build_model; starVLA.dataloader.build_dataloader -> cogwam.data.build_dataloader; the lazily-imported build_event_memory_dataloader is now a top-level cogwam.data import. The module-level mutable `accelerator` global is gone; the Accelerator is constructed once in __main__ and passed to main(). The reproduction-profile gate now compares against cogwam.recipe.RECIPE_PROFILE and RAISES on any other value (upstream silently skipped validation for every profile except one hard-coded string, which meant this very recipe was never checked); validate_recipe + validate_runtime_assets results are written to <run>/cogwam_runtime_audit.json. DELETED: the torch_npu / transfer_to_npu import shim, load_fast_tokenizer (physical-intelligence/fast tokenizer, unused), the debugpy `is_debug` attach block, the independent_gradient_clipping plumbing in the accelerator builder (gradient_clipping is now read straight from the YAML), the FastWAM world-validation dataloader branch (fastwam_val_fraction / fastwam_split; trainer.world_validation.enabled is frozen false and no model in this repo implements evaluate_wam_world_prediction), the validate_dataset_statistics call (gated on a different reproduction_profile string and therefore never fired for this recipe) and the entire correlated-noise Cholesky block (framework.action_model.use_correlated_noise is absent from the recipe and CogWAM implements no set_action_correlation)."
+  },
+  {
+   "source_path": "starVLA/training/train_starvla.py",
+   "source_sha256": "46fe3929d2dd847ccbf6e01ef89ee903ddd767d134e6b59a01c400866c84dda6",
+   "target_path": "cogwam/training/trainer.py",
+   "adaptation": "VLATrainer -> CogWAMTrainer(TrainerUtils, CheckpointMixin), carrying prepare_training, _prepare_distributed_components, _validate_runtime_batch_contract, _calculate_total_batch_size, _init_wandb, the data iterators, _is_log_step, _global_grad_norm, the shared-VLM interface gradient probe, _log_metrics, _log_training_config, train() and _train_step(). _build_native_loss_metrics became the module-level collect_loss_metrics with only its mot_* (World--Action MoT) branch. _train_step collapsed to the single dual-stream path: model.forward(batch_vla, semantic_examples=batch_semantic, global_step=...) with total_loss = output_dict['action_loss']. DELETED: the JointFlow task sampler (_sample_jointflow_task, _jointflow_* state, _TASK_LOSS_KEY/_TASK_LOGNAME, _build_loss_metrics) and its RNG; every Co-Flow branch (_COFLOW_DASHBOARD_KEYS, _filter_coflow_dashboard_metrics, the coflow_* metrics and the enable_action_world_coflow forward variant); _current_display_task_name; EMA (_ema_settings, _init_ema, _ema_save_dtype, _save_ema_checkpoint and the sharded_ema import); _validate_joint_world_optimizer_contract and _validate_wam_two_stage_runtime_contract (both early-return without a JointFlow joint task / trainer.wam_two_stage_phase and both inspect modules CogWAM does not define); the whole independent action/world clipping path (_validate_independent_gradient_clipping_contract, _backward_for_current_step, _clip_independent_gradient_partitions, _clip_independent_zero2_partitions), which requires the deleted gradient_partition metadata; _configure_unused_param_anchors (no model in this repo exposes set_unused_param_anchors_enabled, so it returned immediately -- DeepSpeed's own ignore_unused_parameters:true in configs/deepspeed/zero2.json is what actually takes effect); eval_action_model and eval_world_model, plus their eval_interval / world_validation dispatch in train(). The per-head grad-norm decomposition survives but is now task-free: _compute_head_sqnorms/_finalize_grad_metrics emit train/grad_norm_total, train/grad_norm_head and train/grad_norm_shared from build_grad_norm_groups. __init__ now RAISES if trainer.action_eval_enabled or trainer.world_validation.enabled is true, rather than silently ignoring a knob whose code path is gone. wandb.init no longer passes entity."
+  },
+  {
+   "source_path": "starVLA/training/trainer_utils/trainer_tools.py",
+   "source_sha256": "8518f54a66c99a1a9213f10a89af1e54329cc54f6452ae4765bd471fa69f24fc",
+   "target_path": "cogwam/training/utils.py",
+   "adaptation": "Kept normalize_dotlist_args, build_param_lr_groups, TrainerUtils and the steps_(\\d+)_(?:pytorch_model\\.pt|model\\.safetensors) resume-discovery regex (now the module-level _CHECKPOINT_PATTERN, compiled once, matching the same strings). BUG FIX: ported the missing _strict_load_full_model from a sibling checkout of the upstream tree, at starVLA/training/trainer_utils/trainer_tools.py:99 (sha256 2637c3a18a9335e1cca0ba31883f031a2a435fc4d71bcd497a63da43c02161d2) and wired it into TrainerUtils.load_pretrained_backbones' strict full-model branch; upstream fell through to plain load_state_dict(strict=True), which produced no structured missing/unexpected/shape audit and omitted the meta-tensor assign= handling. build_param_lr_groups lost the world_gates / world_to_action_adapters synthetic selectors and the per-group `gradient_partition` metadata: both exist only for the independent action/world ZeRO-2 clipper, which is deleted, and they select module names (world_gate, world_adapter, world_fusion, world_qformer, world_pooler, wam_visual_head, wam_state_ctx, wam_act_ctx, future_dino_queries) that CogWAM does not define. DELETED setup_optimizer_and_scheduler (moved to cogwam/training/optim.py, taking the train_starvla.py variant that the entry point actually called), only_main_process and is_main_process (unused), resize_images (unused; dragged in PIL), TrainerUtils.euclidean_distance / eval_qwenpi / extract_json_from_string (the deleted action-MSE probe and a QwenQFormerDiT bbox eval), compute_grad_angle_with_stats and pcgrad_project (co-training gradient surgery), print_freeze_status (unused). build_task_grad_groups was REPLACED by build_grad_norm_groups: the original keyed its groups off the deleted JointFlow task sampler and off modules CogWAM lacks, so it could never emit a metric here; the replacement splits shared (qwen_vl_interface) from head (action_plan_queries, world_plan_queries, action_model). group_grad_sqnorm, group_grad_local_sqnorm, _full_grad and _module_trainable_params are unchanged. freeze_backbones lost two unconditional debug prints and its `if dist.get_rank == 0` (comparing the bound method to 0, so the summary never printed) is now a real rank check that also tolerates a non-distributed run; print_trainable_parameters and load_pretrained_backbones likewise no longer call dist.get_rank() before init."
+  },
+  {
+   "source_path": "starVLA/config/deepseeds/deepspeed_zero2_aidi_safe.yaml",
+   "source_sha256": "121f921e56bda8d4211be211e2e2af8de065412ec3a79c07b801e0325d75408e",
+   "target_path": "configs/accelerate/zero2.yaml",
+   "adaptation": "Renamed only; the sole value change is deepspeed_config_file, repointed from starVLA/config/deepseeds/ds_config_aidi_safe.json to configs/deepspeed/zero2.json."
+  },
+  {
+   "source_path": "examples/RoboDojo/train_files/released_rynn50k/rynn_base_text_h25_mem_bf16_dino_multilayer_50k.yaml",
+   "source_sha256": "dff44b4c4125850b84a999687d10c3acfd49c58b9f7322883cf48a1ba83bd808",
+   "target_path": "configs/cogwam_robodojo_h25_eventmem_dino_multilayer_50k.yaml",
+   "adaptation": "Every numeric and string value is byte-identical to upstream except: run_id -> cogwam_robodojo_h25_eventmem_dino_multilayer_50k, framework.reproduction_profile -> cogwam_robodojo_causal_dino_mot_h25_eventmem_dino_multilayer_50k_v1, framework.name QwenWorldActionMoT -> CogWAM, wandb_project starVLA_RoboDojo -> CogWAM_RoboDojo, wandb_entity dropped. The four absolute cluster-storage paths became ${oc.env:COGWAM_RUN_ROOT} (run_root_dir), ${oc.env:COGWAM_BASE_VLM} (framework.qwenvl.base_vlm), ${oc.env:COGWAM_DINO_MODEL} (framework.dino.hf_model_id and framework.dino.weights, which pointed at the same directory upstream) and ${oc.env:COGWAM_DATA_ROOT} (datasets.vla_data.data_root_dir). All explanatory comments kept; the header comment was rewritten because it referenced sibling configs that are not part of this repository. Verified: cogwam.recipe.validate_recipe accepts this file unmodified (fingerprint f58cc99c47e5cd3480b637d35ef4bdf0008887471afe0936be1e6a85fdf506e2)."
+  },
+  {
+   "source_path": "starVLA/config/deepseeds/ds_config_aidi_safe.json",
+   "source_sha256": "1842617c605a9931eb356cc73550c2f82db0a48c3ba1f4adcb4bb12ca9bdbe0e",
+   "target_path": "configs/deepspeed/zero2.json",
+   "adaptation": "Renamed only; every setting is byte-identical (ZeRO-2, bf16, 5e8 allgather/reduce buckets, overlap_comm, contiguous_gradients, ignore_unused_parameters, zero_allow_untested_optimizer)."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/deploy.yml",
+   "source_sha256": "11675fa998305caf25321dcbff71c858c865e02dc4d2a8c88386c54ad32b1579",
+   "target_path": "configs/robodojo_deploy.yml",
+   "adaptation": "policy_name starVLA -> cogwam; starvla_server_host/port -> policy_server_host/port with the default port 5694 -> 7777. Retuned to the released recipe: replan_interval 12 -> 10, expected_action_chunk_size 16 -> 25, rtc_execution_horizon 4 -> 15, expected_image_layout fastwam_composite -> tri_view_composite and the matching composite_view_key. Removed text_replan_chunks and the eventmem_* block along with the code paths they drove."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/eval_robodojo.sh",
+   "source_sha256": "6f85ad2c5ce3b9604c246bddab9d3f0283735c56ef7533849d69dda7f73adacb",
+   "target_path": "scripts/eval_robodojo.sh",
+   "adaptation": "Single-config mode. KEPT: every argument validation (chunk/replan bounds, the RTC horizon/delay/schedule/weight rules), the Isaac log filter, the output/native directory layout, run_metadata.json, the required-file and asset-directory preflight, the bridge launch + wait_for_policy_server handshake, the bounded PhysX restart loop on rc 99/134/139, and the Table-1 summary invocation. CHANGED: ROBODOJO_ROOT is required and, when missing, prints the clone-at-pinned-commit instructions; STARVLA_* -> COGWAM_*; policy_name starVLA -> cogwam; the two trailing conda-env positional arguments were dropped (8 positionals instead of 10) because the split client resolves one interpreter directly; defaults are chunk 25 / replan 10; ROBODOJO_SAVE_MODE=images and the eventmem renderer requirement were removed; the launchers are invoked as `python -m cogwam.eval.launch_bridge` / `launch_client` / `summarize`."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/run_aidi_robodojo.sh",
+   "source_sha256": "2880e8929152c464e1bcf33d4773f041612969a89d79e10b9e89be5625306d06",
+   "target_path": "scripts/eval_robodojo.sh",
+   "adaptation": "Absorbed. This wrapper only existed to fill in internal-storage defaults and forward ten positional arguments; its argument order (bench, task, ckpt_name, env_cfg, action_type, seed, policy_gpu, env_gpu) is what cogwam.eval.rollout now passes directly."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/run_aidi_robodojo_fast.sh",
+   "source_sha256": "1abe6510cbcccb856e6948efa8730bdea7398cc2b0664a232b2e5a9588261d8f",
+   "target_path": "scripts/eval_robodojo.sh",
+   "adaptation": "Absorbed; it only set ROBODOJO_EVAL_MODE=fast plus a default run name before chaining to the wrapper above."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/run_aidi_robodojo_fast_full.sh",
+   "source_sha256": "bfa2ea8df3d4ac014ee92de801bcc8dca8bc2036d14b14cb5c26aa8cf8e0d73f",
+   "target_path": "scripts/eval_robodojo.sh",
+   "adaptation": "Full-protocol mode (the no-argument branch of the same script). Keeps the NUM_CLIENTS / CLIENT_CUDA_VISIBLE_DEVICES agreement check, TASKS_PER_GPU=1, NUM_SERVERS=8, six envs per client, the EULA/albumentations environment and the progress/retry tuning, then execs `python -m cogwam.eval.rollout`. Defaults moved to chunk 25 / replan 10; ROBODOJO_PYTHON no longer defaults to a container path but is auto-detected by probing for isaacsim; the discarded two-phase launcher variables and the cluster banner were dropped."
+  },
+  {
+   "source_path": "examples/RoboDojo/eval_files/run_robodojo_policy_servers_8.sh",
+   "source_sha256": "725c7f543d8d04be35a69dba45d326704be4b5693d5356cd35e1872b575b7447",
+   "target_path": "scripts/serve_policy.sh",
+   "adaptation": "Renamed and de-clustered. KEPT: the preflight contract check, torch.cuda.device_count vs NUM_SERVERS, the per-GPU launch loop on BASE_PORT+i, the proxy-stripped WebSocket readiness probe, the ready/timeout loop with log tails, kill_tree cleanup and the supervision loop. CHANGED: STARVLA_QWEN35_* -> COGWAM_QWEN35_*; ROBODOJO_CKPT/CKPT -> COGWAM_ARTIFACT_DIR or COGWAM_CKPT_PATH; it now requires COGWAM_BASE_VLM and COGWAM_DINO_MODEL to be exported (backbones are not redistributed); logs default under COGWAM_RUN_ROOT instead of a bucket path; the READY banner prints COGWAM_POLICY_HOST. The server is started as `python -m cogwam.serve.policy_server`."
+  },
+  {
+   "source_path": "run_aidi_rbtw.sh",
+   "source_sha256": "c2eeccc7327b252a31961a74786b3934c0e98b1779d42ece527a1bf6eb5599e3",
+   "target_path": "scripts/train_multi_node.sh",
+   "adaptation": "Clean rewrite retaining only the generic parts: the accelerate launch invocation (--config_file configs/accelerate/zero2.yaml --deepspeed_multinode_launcher standard, -m cogwam.training.train --config_yaml <cfg>), PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True, and the Qwen3_5ForConditionalGeneration VLM preflight. The RLIMIT_NOFILE >= 8192 check (raise toward 65536, hard-fail below 8192) came from examples/realRobots/Piper/cogwam/aidi_launch.sh in the hwm tree. Rendezvous is now COGWAM_MAIN_PROCESS_IP / COGWAM_MAIN_PROCESS_PORT / COGWAM_MACHINE_RANK / COGWAM_NUM_MACHINES / COGWAM_GPUS_PER_NODE. REMOVED ENTIRELY: the controller/worker split, k8s service-account namespace lookup, <prefix>-task-<n>.svc.cluster.local peer resolution, the SSH fan-out, the pip bootstrap with internal mirrors, the docker image hint, NCCL_SOCKET_IFNAME/eth0 assumptions, the config-derived node-count inference, and every STARVLA_* environment variable."
+  },
+  {
+   "source_path": "starVLA/dataloader/jointflow/test_event_memory.py",
+   "source_sha256": "71b01928bc8726b52eed998163f180a3096e4f7f65cec81339431d74ee370e92",
+   "target_path": "tests/test_event_memory.py",
+   "adaptation": "Import path only; assertions unchanged. Passes against the ported event_memory module."
+  },
+  {
+   "source_path": "examples/RoboDojo/train_files/released_rynn50k/make_cogwam_midtrain_init.py",
+   "source_sha256": "079b3f16aab3d18021c6fd8814e1f54eedb17322f9598bd056686fcc8ee1f01a",
+   "target_path": "tools/convert_checkpoint.py",
+   "adaptation": "Written fresh, informed by the upstream shape adapter. Upstream re-shaped an initialisation checkpoint (truncating the action query bank 32->25, growing the vocabulary by the two event-memory rows); this tool does no re-shaping at all. It validates the four top-level prefixes, refuses any DINO-prefixed tensor, un-shares aliased storage before writing safetensors, and emits a key inventory plus a digest manifest. LEGACY_PREFIX_REMAP is deliberately empty: it is the single place a future attribute rename would land."
+  },
+  {
+   "source_path": "starVLA/dataloader/action_correlation.py",
+   "source_sha256": "f289405e61433ff6bc50c2c8313b14768f31fe18fe1c3ba0876fc5f1ec1f6f87",
+   "target_path": null,
+   "adaptation": "NOT PORTED. Reachable only through framework.action_model.use_correlated_noise, which the recipe does not set and which the CogWAM framework does not implement (no set_action_correlation hook). Its caller joint_dataset.compute_action_correlation_cholesky was deleted with it."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/registry.py",
+   "source_sha256": "793f7c82216a8bc707c85cfdf809b5f2e2b99c16f3ea6fa75a907e469d8a03cb",
+   "target_path": null,
+   "adaptation": "NOT PORTED. The importlib scan over examples/*/train_files/data_registry/ and the three mutable global registries it merged into are replaced by direct imports from cogwam.data.robodojo. Its base registries (gr00t_lerobot/data_config.py, gr00t_lerobot/mixtures.py) are not ported either: every robot type and named mixture in them belongs to another benchmark."
+  },
+  {
+   "source_path": "starVLA/dataloader/gr00t_lerobot/transform/video.py",
+   "source_sha256": "405e9df6219b69dcc0b3324f4a6d81afb49dd057578eb202cb3fa64d458da5fe",
+   "target_path": null,
+   "adaptation": "NOT PORTED. The upstream video-augmentation transforms (VideoCrop, VideoColorJitter, VideoResize, ...) are never instantiated by this recipe -- RoboDojoArxX5DataConfig.transform() builds only StateActionToTensor/StateActionTransform -- and they were the sole reason the data layer depended on albumentations and OpenCV's augmentation stack. Removed along with their re-exports from cogwam/data/lerobot/transform/__init__.py."
+  },
+  {
+   "source_path": "starVLA/dataloader/jointflow/text_history.py",
+   "source_sha256": "c90f5098d1b883b691457e4fa505e72d8b580eb90da85b73941ee2fd1e32a04c",
+   "target_path": null,
+   "adaptation": "NOT PORTED. Its only consumers were joint_dataset.py's planner-history branches. The released recipe sets text_annotations.history.enabled=false, and both the dataset and cogwam/models/cogwam.py raise when history is enabled alongside event memory, so nothing reachable can import it. cogwam/data/dataset.py raises an explicit error if text_annotations.history.enabled is set."
+  }
+ ],
+ "note": "Per-file provenance for the port. source_sha256 is the SHA-256 of the upstream revision each file was ported from; adaptation records every semantic deviation, not only renames. target_path null means the upstream file was deliberately NOT ported. Files written from scratch for this repository (documentation, scripts, and tests other than those listed) have no entry."
+}

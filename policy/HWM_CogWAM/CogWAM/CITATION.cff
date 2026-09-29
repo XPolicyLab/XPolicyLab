@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+title: "CogWAM: Cognitive World-Action Model with Event-Driven Semantic Memory"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - name: The CogWAM Authors
+abstract: >-
+  CogWAM couples a vision-language backbone to a dual-width mixture-of-transformers
+  that jointly denoises a future visual latent and an action chunk, conditioned on
+  an event-driven semantic memory that is refreshed by an explicit KEEP/UPDATE
+  decision rather than on every step.
+keywords:
+  - vision-language-action
+  - world-model
+  - robot-learning
+  - semantic-memory
+  - robodojo
+license: MIT
+version: 0.1.0
+references:
+  - type: software
+    title: "StarVLA: A Lego-like Codebase for Vision-Language-Action Model Developing"
+    authors:
+      - name: starVLA Community
+    repository-code: "https://github.com/starVLA/starVLA"
+    license: MIT
+    notes: CogWAM is derived from the StarVLA codebase.
+  - type: software
+    title: "RoboDojo: a robot simulation benchmark"
+    repository-code: "https://github.com/RoboDojo-Benchmark/RoboDojo"
+    version: 0.2.0
+    notes: Evaluation benchmark used for all reported numbers.

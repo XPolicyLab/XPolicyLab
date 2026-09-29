@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+.venv/
+venv/
+
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Run artifacts: checkpoints, logs, exported artifacts, evaluation tables.
+outputs/
+artifacts/
+wandb/
+*.safetensors
+*.pt
+*.npz
+
+.DS_Store
+.idea/
+.vscode/
+
+# Scratch space: anything under a `bar/` directory is ignored on purpose.
+**/bar/

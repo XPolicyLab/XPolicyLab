@@ -1,0 +1,234 @@
+# The released CogWAM RoboDojo recipe: multi-layer DINO + event-driven semantic
+# memory. The clean current prefix and the future denoising target both
+# mean-fuse normalized patch tokens from four DINO depths instead of the last
+# layer alone. Both sides move together because they share one world_input
+# projection. The 12x10 grids are unchanged, so weight shapes match a
+# single-layer run exactly.
+#
+# Absolute storage locations are supplied by the environment; see
+# the Installation section of README.md. Set COGWAM_RUN_ROOT, COGWAM_BASE_VLM,
+# COGWAM_DINO_MODEL and COGWAM_DATA_ROOT before launching.
+
+run_id: cogwam_robodojo_h25_eventmem_dino_multilayer_50k
+run_root_dir: ${oc.env:COGWAM_RUN_ROOT}
+seed: 42
+wandb_project: CogWAM_RoboDojo
+is_debug: false
+version_id: "0.21"
+
+framework:
+  name: CogWAM
+  enable_world_action_mot: true
+  reproduction_profile: cogwam_robodojo_causal_dino_mot_h25_eventmem_dino_multilayer_50k_v1
+
+  qwenvl:
+    base_vlm: ${oc.env:COGWAM_BASE_VLM}
+    attn_implementation: sdpa
+    require_attn_implementation: true
+    enable_gradient_checkpointing: true
+    enable_thinking: false
+    vl_hidden_dim: 2048
+    truncate_vlm_layers: 0
+
+  planner:
+    num_world_queries: 16
+    num_action_queries: 25
+    world_placeholder_token: "<WORLD_PLAN>"
+    action_placeholder_token: "<ACTION_PLAN>"
+    text_supervision:
+      enabled: true
+      mode: event_driven_memory_ntp
+      keep_token: "<KEEP>"
+      update_token: "<UPDATE>"
+      subtask_field: subtask_text
+      prompt_template: |-
+        Task instruction: {instruction}
+        Semantic Memory: {semantic_memory}
+        Cached Current Subtask: {cached_current_subtask}
+        Decide whether the cached subtask is still valid. Reply with <KEEP> only when it remains valid. Otherwise begin with <UPDATE>, then provide only `Memory Add:` and `Current Subtask:`.
+      update_response_template: |-
+        {update_token}
+        Memory Add: {memory_add}
+        Current Subtask: {subtask_text}
+      max_new_tokens: 96
+      do_sample: false
+      scheduled_sampling:
+        enabled: true
+        # p(model semantic state used as physical conditioning), linearly
+        # interpolated by optimizer step. Sampled text never supervises itself.
+        points:
+          - [0, 0.0]
+          - [30000, 0.0]
+          - [40000, 0.2]
+          - [50000, 0.5]
+      history:
+        enabled: false
+
+  world_action_mot:
+    architecture: causal_dino_mot
+    interaction_mode: base
+    world_attention_mask_mode: first_frame_causal
+    action_precision_mode: inherit
+
+    world_hidden_size: 512
+    action_hidden_size: 1024
+    world_ffn_dim: 2048
+    action_ffn_dim: 4096
+    num_layers: 30
+    num_attention_heads: 24
+    attention_head_dim: 128
+    layerwise_planner_coupling: false
+    norm_eps: 1.0e-06
+    time_frequency_dim: 256
+    world_grid_height: 12
+    world_grid_width: 10
+    max_world_tokens: 120
+    enable_gradient_checkpointing: true
+
+    world_train_shift: 5.0
+    world_infer_shift: 5.0
+    world_num_train_timesteps: 1000
+    action_train_shift: 5.0
+    action_infer_shift: 5.0
+    action_num_train_timesteps: 1000
+    num_inference_timesteps: 20
+
+    action_prediction_type: velocity
+    action_velocity_target: noise_minus_clean
+    jit_t_eps: 0.05
+    repeated_diffusion_steps: 1
+    action_loss_weight: 1.0
+    world_loss_weight: 1.0
+    # Semantic objective = 0.005 * (decision CE + UPDATE-body CE).
+    text_loss_weight: 0.005
+
+  dino:
+    name: dinov3_vitb16
+    model_size: base
+    hf_model_id: ${oc.env:COGWAM_DINO_MODEL}
+    repo_or_dir: facebookresearch/dinov3
+    weights: ${oc.env:COGWAM_DINO_MODEL}
+    loader: hf
+    image_size: [384, 320]
+    patch_size: 16
+    embed_dim: 768
+    stats_path: null
+    load_live_backbone: true
+    force_online: true
+    dino_pool: 2
+    current_dino_pool: null
+    dino_layers: [2, 5, 8, 11]
+
+  action_model:
+    action_dim: 14
+    state_dim: 14
+    action_horizon: 25
+
+datasets:
+  vla_data:
+    dataset_py: jointflow
+    data_root_dir: ${oc.env:COGWAM_DATA_ROOT}
+    # Audited v2.1 text dataset: 3500 episodes / 1,859,602 frames.
+    data_mix: robodojo_v21_language
+    lerobot_version: v2.1
+    image_layout: tri_view_composite
+    composite_source_view_keys: ["video.cam_high", "video.cam_left_wrist", "video.cam_right_wrist"]
+    composite_view_key: "video.tri_view_composite"
+    include_state: true
+    action_type: abs_qpos
+    action_mode: abs
+    action_horizon: 25
+    world_model:
+      future_stride: 16
+    future_valid_requires_full_stride: true
+    decode_future_video: true
+    online_dino: true
+    dino_target_latents: false
+    optional_text_annotations:
+      enabled: false
+      require_columns: false
+    text_annotations:
+      enabled: true
+      fields:
+        subtask_text: subtask_text
+        completed_subtask_text: complete_text
+      history:
+        enabled: false
+      event_memory:
+        enabled: true
+        semantic_offset: -10
+        replan_interval: 10
+        replan_phase: 0
+        normalization: n1
+        empty_memory: "None."
+        empty_cached_subtask: "None."
+        semantic_memory_field: semantic_memory
+        cached_subtask_field: cached_current_subtask
+        decision_field: semantic_decision
+        memory_add_field: memory_add
+        cache_valid_field: semantic_cache_valid
+        index_cache_name: semantic_index_v1.npz
+        expected_phase_update_ratio: 0.064
+        expected_phase_update_tolerance: 0.005
+        sampler:
+          per_device_batch_size: 6
+          update_per_batch: 2
+          hard_keep_per_batch: 2
+          random_keep_per_batch: 2
+          seed: 42
+          num_workers: 4
+          prefetch_factor: 2
+          pin_memory: true
+          persistent_workers: false
+    sequential_step_sampling: false
+    balance_dataset_weights: false
+    balance_trajectory_weights: false
+    per_device_batch_size: 12
+    load_all_data_for_training: true
+    obs_image_size: [320, 384]
+    video_backend: pyav
+    num_workers: 8
+    prefetch_factor: 2
+    pin_memory: true
+    persistent_workers: false
+
+trainer:
+  seed_before_model_init: true
+  expected_global_batch_size: 768
+  max_train_steps: 50000
+  num_warmup_steps: 2000
+  save_interval: 10000
+  eval_interval: 1000
+  # External RoboDojo evaluation maintains persistent semantic state. The
+  # trainer's stateless action-MSE probe is intentionally disabled.
+  action_eval_enabled: false
+  world_validation:
+    enabled: false
+  pretrained_checkpoint: null
+  is_resume: false
+  save_full_training_state: true
+  learning_rate:
+    base: 1.0e-05
+    qwen_vl_interface: 1.0e-05
+    action_plan_queries: 1.0e-04
+    world_plan_queries: 1.0e-04
+    action_model: 1.0e-04
+  lr_scheduler_type: cosine_with_min_lr
+  scheduler_specific_kwargs:
+    min_lr: 5.0e-07
+  freeze_modules: ""
+  loss_scale:
+    vla: 1.0
+  max_grad_norm: 1.0
+  weight_decay: 0.0
+  logging_frequency: 200
+  log_grad_norms: false
+  log_global_grad_norm: true
+  deepspeed_skip_unused_param_anchors: true
+  gradient_clipping: 1.0
+  gradient_accumulation_steps: 1
+  optimizer:
+    name: AdamW
+    betas: [0.9, 0.95]
+    eps: 1.0e-08
+    weight_decay: 1.0e-08
