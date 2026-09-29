@@ -4,8 +4,8 @@ This is an evaluation-only RoboDojo/XPolicyLab adapter. Training code and
 training data-processing code are intentionally not included. The adapter
 loads the selected Piper X release checkpoint through an inference-only
 runtime and returns action chunks through XPolicyLab. Model observations and
-predictions remain in joint space; PiperX output is converted to endpose except
-for the backpack task described below.
+predictions remain in joint space. All three robots, including every PiperX
+task, currently return joint actions by default.
 
 Supported targets: `env_cfg_type=piper_x`, `piper`, and `arx_x5`, with
 `action_type=joint`. The selected `env_cfg_type` chooses the matching
@@ -81,18 +81,20 @@ right_ee_joint_state:  absolute gripper value (1)
 The official executor must execute these values directly; it must not add the
 current joint state or apply a second joint-delta conversion.
 
-### PiperX joint observations and endpose actions
+### Joint output by default; optional PiperX endpose actions
 
 Keep the server/evaluation argument `action_type=joint` for all three robots.
 It describes the checkpoint and input-state contract. The separate
-`output_action_type: auto` setting selects endpose (`ee`) for `piper_x` and
-joint output for `piper` and `arx_x5`. Explicit `joint` output is also supported;
-explicit `ee` output is supported only for PiperX. The `env_cfg_type` supplied
+`output_action_type: joint` setting disables FK and Z adjustment for every
+task. Omitting this setting or using `auto` also selects joint output for all
+three robots. The existing endpose path is retained for an explicit future
+`output_action_type: ee` opt-in, supported only for PiperX. The `env_cfg_type` supplied
 at server startup selects the robot and checkpoint; observations do not need
 to include an extra robot identifier.
 
-The model predicts 50 joint actions, the adapter selects the first 20 and applies
-the task's gripper thresholds, then converts PiperX joint targets through the
+The model predicts 50 joint actions, and the adapter selects the first 20 and
+applies the task's gripper thresholds and per-arm scales. Only when endpose is
+explicitly enabled does it convert PiperX joint targets through the
 bundled `piperx_fk.py`. This NumPy-only implementation and its adapter ship in
 the policy directory and require no external SDK checkout or absolute code path.
 Input joint angles are radians. Each pose is in its own arm's base frame, with
@@ -113,7 +115,8 @@ RoboDojo's `take_action` distinguishes `joint` and `ee` by the action dictionary
 keys. Each row contains one arm representation only; the observation still
 supplies the joint fields needed by the checkpoint.
 
-After FK, each arm's Z is adjusted independently for each outgoing action:
+In the optional endpose path, after FK each arm's Z is adjusted independently
+for each outgoing action:
 
 ```text
 0.13 <= z <= 0.17: z_out = max(z - 0.02, 0.13)
@@ -123,7 +126,8 @@ otherwise:        z_out = z
 Only Z is adjusted; X/Y, quaternion and the processed grippers are retained.
 There is no stateful carry-over between rows or tasks.
 
-PiperX's sole joint-output exception is the `pack_objects_into_backpack` prompt:
+When endpose is explicitly enabled, PiperX's joint-output exception remains
+the `pack_objects_into_backpack` prompt:
 
 ```text
 Place all the objects on the table into the backpack.
@@ -132,23 +136,40 @@ Place all the objects on the table into the backpack.
 This task returns the first 20 joint actions with the same gripper processing,
 skipping both FK and Z adjustment. Every request resolves its output type from
 its own prompt, including batch items and task changes without restart. All
-other PiperX prompts use endpose with the default `auto` configuration. Piper
-and ARX X5 always retain their joint output with that configuration.
+other PiperX prompts then use endpose. With the current default `joint` (or
+`auto`) configuration, every PiperX task stays in joint mode. Piper and ARX X5
+also retain their joint output.
 
 Before returning the first 20 actions, the adapter matches the client-provided
 `instruction` (or `task_instruction`) against the bundled
 `gripper_thresholds.json`. Left gripper dimension 6 and right gripper dimension
 13 use independent per-task thresholds. A value strictly below its threshold
 is replaced with zero; a value equal to or above the threshold is multiplied by
-1.3. The comparison uses the original prediction, and scaling occurs once before
+that task's `left_scale` or `right_scale`. Each scale defaults to 1.3 when omitted
+from the JSON, and a scale of 1.0 leaves eligible values unchanged. Thresholds
+still apply even with scale 1.0. The comparison uses the original prediction,
+and scaling occurs once before
 returning the actions. This postprocessing does not clip the scaled values.
 Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
 preserved and the server logs a warning once.
 
-The left and right thresholds are both `0.30` for ARX X5
-`pack_and_pour_fruit` and Piper `put_objects_into_basket`. All other thresholds
-remain as specified in `gripper_thresholds.json`.
+Task-specific settings updated on 2026-09-29:
+
+| Robot | Task | Left threshold | Right threshold | Left scale | Right scale |
+|---|---|---:|---:|---:|---:|
+| PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 |
+| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 |
+| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.0 |
+| Piper | `fill_pen_holder` | 0.35 | 0.35 | 1.1 | 1.1 |
+| Piper | `put_objects_into_basket` | 0.33 | 0.33 | 1.15 | 1.15 |
+| Piper | `insert_charger` | 0.20 | 0.20 | 1.1 | 1.1 |
+| Piper | `stack_and_cover_blocks` | 0.45 | 0.45 | 1.1 | 1.1 |
+| ARX X5 | `pack_and_pour_fruit` | 0.30 | 0.30 | 1.1 | 1.1 |
+
+Other task thresholds and their default 1.3 scales remain unchanged. Edit
+`left`/`right` for thresholds and `left_scale`/`right_scale` for multipliers in
+`gripper_thresholds.json`.
 
 The training dataset metadata records these control frequencies:
 

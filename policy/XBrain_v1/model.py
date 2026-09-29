@@ -40,11 +40,13 @@ class Model(ModelTemplate):
 
         if self.action_type != "joint":
             raise ValueError(f"XBrain_v1 currently supports action_type=joint, got {self.action_type!r}")
-        output_action_type = str(model_cfg.get("output_action_type", "auto"))
+        output_action_type = str(model_cfg.get("output_action_type", "joint"))
         if output_action_type not in {"auto", "joint", "ee"}:
             raise ValueError("output_action_type must be auto, joint, or ee")
         if output_action_type == "auto":
-            output_action_type = "ee" if self.env_cfg_type == "piper_x" else "joint"
+            # Joint output is the current default for every robot and task.
+            # Retain EE conversion for an explicit future opt-in only.
+            output_action_type = "joint"
         if output_action_type == "ee" and self.env_cfg_type != "piper_x":
             raise ValueError("Endpose output is supported only for piper_x")
         self.output_action_type = output_action_type
@@ -220,7 +222,8 @@ class Model(ModelTemplate):
         if prompt_key not in self._reported_gripper_prompts:
             print(
                 f"[XBrain_v1] gripper thresholds task={rule.task} "
-                f"left={rule.left} right={rule.right} at_or_above_scale=1.3"
+                f"left={rule.left} right={rule.right} "
+                f"left_scale={rule.left_scale} right_scale={rule.right_scale}"
             )
             self._reported_gripper_prompts.add(prompt_key)
         return apply_gripper_thresholds(predicted, rule)

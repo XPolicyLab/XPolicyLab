@@ -6,7 +6,7 @@ control_frequency_hz: 25
 checkpoint_env: XBRAIN_PIPERX_CHECKPOINT_PATH
 norm_stats_env: XBRAIN_PIPERX_NORM_STATS_PATH
 action_type: joint
-output_action_type: ee
+output_action_type: joint
 action_chunk_size: 50
 action_horizon: 20
 observation_memory_size: 1

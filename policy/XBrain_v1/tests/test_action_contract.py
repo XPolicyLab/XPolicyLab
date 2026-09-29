@@ -14,7 +14,7 @@ def main() -> None:
     assert deployment["action_chunk_size"] == 50
     assert deployment["action_horizon"] == 20
     assert deployment["action_type"] == "joint"
-    assert deployment["output_action_type"] == "auto"
+    assert deployment["output_action_type"] == "joint"
     expected_frequency = {"piper_x": 25, "piper": 30, "arx_x5": 30}
     for name, embodiment in (("piper_x", 6), ("piper", 6), ("arx_x5", 0)):
         config = yaml.safe_load(
@@ -23,7 +23,7 @@ def main() -> None:
         assert config["embodiment_id"] == embodiment
         assert config["state_dim"] == 14
         assert config["action_type"] == "joint"
-        assert config.get("output_action_type", "joint") == ("ee" if name == "piper_x" else "joint")
+        assert config.get("output_action_type", "joint") == "joint"
         assert config["action_chunk_size"] == 50
         assert config["action_horizon"] == 20
         assert config["control_frequency_hz"] == expected_frequency[name]
