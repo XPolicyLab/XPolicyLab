@@ -70,9 +70,9 @@ Verify what you got before evaluating:
 
 ```bash
 md5sum checkpoints/Rex_M1_preview/last.ckpt/checkpoint/mp_rank_00_model_states.pt
-#   383ed6219938fd065c7d2700ada5e9f1
+#   c70dca6f20ece75e12e6e5facbae3d22
 md5sum checkpoints/Rex_M1_preview/config.py
-#   138ed1e3da91221a5af267853353c111
+#   4dc613d4a187c24b0b90c43ed9a76b6a
 ```
 
 The expected layout:
