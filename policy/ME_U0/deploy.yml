@@ -1,0 +1,17 @@
+policy_name: ME_U0
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+num_inference_steps: 12
+action_chunk_size: 36
+request_timeout_s: 300
+ws_ping_interval_s: null
+ws_ping_timeout_s: null
