@@ -1,0 +1,25 @@
+# Basic experiment configuration
+policy_name: EpsilonVLA
+protocol: ws
+host: 127.0.0.1
+bench_name: null
+task_name: stack_bowls
+env_cfg_type: arx_x5
+seed: all
+eval_batch: true
+
+checkpoint_num: 60000
+result_dir: "./results/epsilonvla/"
+obs_transform_pipeline: "xspark-v1.0"
+
+# Model / action configuration
+action_type: joint
+policy_uv_env_path: epsilonvla
+# Must match the config used by train.sh (default EPSILONVLA_TRAIN_CONFIG_NAME).
+#repo_id: RoboDojo_lerobot_v21_with_sim_fasten_screws_grasp
+train_config_name: epsilonvla_robodojo_posttrain_abs_joint_infer
+repo_id: EpsilonVLA/RoboDoJo
+policy_batch_size: 25
+# Execute the first 16 predicted actions before replanning.
+execute_steps: 16
+port: 5000
