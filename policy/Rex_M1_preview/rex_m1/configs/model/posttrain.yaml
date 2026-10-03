@@ -1,0 +1,16 @@
+# @package _global_
+
+model:
+  type: "BaseRunner"
+  params:
+    pretrained: pretrained_ckpt/model_states.pt
+    model:
+      type: "xr1"
+      freq_coefficient: 1.0
+      freq_excluded_dims: [17, 18, 19]
+      ffn_gradient_checkpointing: true
+      async_train: true
+      # Modified by the Rex-M1-preview authors (2026): ptp_length and ptp_loss_coefficient
+      # below were added by Rex-M1-preview; the rest of this file is upstream's.
+      ptp_length: 0
+      ptp_loss_coefficient: 1.0
