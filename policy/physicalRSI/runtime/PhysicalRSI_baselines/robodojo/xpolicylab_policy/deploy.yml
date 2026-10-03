@@ -1,0 +1,16 @@
+policy_name: physicalRSI
+protocol: ws
+host: localhost
+port: 6000
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+policy_uv_env_path: runtime_env
+result_dir: ./results/physicalrsi/
+obs_transform_pipeline: xspark-v1.0
+physicalrsi_startup_timeout_s: 1800

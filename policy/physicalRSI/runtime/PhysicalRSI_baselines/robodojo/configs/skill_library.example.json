@@ -1,0 +1,36 @@
+{
+  "schema": "physicalrsi.skill-library/v1",
+  "agent": {
+    "endpoint": "https://YOUR_API_HOST/v1/chat/completions",
+    "model": "YOUR_VISION_MODEL"
+  },
+  "memory": {
+    "lessons": [
+      "Preserve the execution skill's observation and action contract."
+    ]
+  },
+  "compositions": [
+    "memory-guided-manipulation",
+    "memory-guided-visual-history"
+  ],
+  "skills": {
+    "pi05": {
+      "name": "pi05",
+      "configuration": {
+        "model_path": "/path/to/skill-assets/checkpoints/pi05",
+        "checkpoint_num": 59999,
+        "train_config_name": "pi05_base_aloha_full_sim_arx-x5_seed_0",
+        "repo_id": "arx_x5_sim"
+      }
+    },
+    "pi05-sparse-memory": {
+      "name": "pi05-sparse-memory",
+      "configuration": {
+        "model_path": "/path/to/skill-assets/checkpoints/pi05-sparse-memory",
+        "checkpoint_num": 120000,
+        "train_config_name": "pi05_sparse_mem_robodojo_all35_80k",
+        "repo_id": "robodojo_arx_x5_all35"
+      }
+    }
+  }
+}

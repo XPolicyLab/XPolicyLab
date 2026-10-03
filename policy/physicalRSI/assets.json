@@ -1,0 +1,230 @@
+{
+  "schema": "physicalrsi.skill-assets/v1",
+  "repository": "yanming03/XPolicyLab",
+  "release": "physicalrsi-skill-assets-v1",
+  "assets": [
+    {
+      "name": "openpi-inference-source",
+      "format": "tar-parts",
+      "destination": "implementations/openpi",
+      "parts": [
+        {
+          "name": "openpi-inference-source.tar.part000",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/openpi-inference-source.tar.part000",
+          "size": 1495040,
+          "sha256": "66ed7a07c07fdf778f475ec8c55185d086e44a6710debebf53fb4cce9cc1ca2d"
+        }
+      ]
+    },
+    {
+      "name": "pi05-weights",
+      "format": "tar-parts",
+      "destination": "checkpoints/pi05",
+      "parts": [
+        {
+          "name": "pi05-weights.tar.part000",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part000",
+          "size": 1073741824,
+          "sha256": "9ab8e3a50d4e048b70a5123842daa1f74d0fbdd7d9f03aaac871b9f5f27a6103"
+        },
+        {
+          "name": "pi05-weights.tar.part001",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part001",
+          "size": 1073741824,
+          "sha256": "86be602d0e35e51f7400c46994b78d674c5e931f7475229dea8f6d3b526dc5e6"
+        },
+        {
+          "name": "pi05-weights.tar.part002",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part002",
+          "size": 1073741824,
+          "sha256": "f2a497127c11939d6121e659a9c9072bc5be19d92d02120eaf35e08a497f149d"
+        },
+        {
+          "name": "pi05-weights.tar.part003",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part003",
+          "size": 1073741824,
+          "sha256": "e5649f00aa5b29236e06d33023bb7e7d8a95bfd422748a9a52caa08d913b41d7"
+        },
+        {
+          "name": "pi05-weights.tar.part004",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part004",
+          "size": 1073741824,
+          "sha256": "859b9857887fe96e3dc98e1c500dea4f0f30515d09589d87e84a9e4d4f1dbd53"
+        },
+        {
+          "name": "pi05-weights.tar.part005",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part005",
+          "size": 1073741824,
+          "sha256": "52ad319b42fc151b668a6d60b6ec554185f4962ade89b03f615e18188fbadb9c"
+        },
+        {
+          "name": "pi05-weights.tar.part006",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part006",
+          "size": 1073741824,
+          "sha256": "43fed1fe64bc19105684ce843ddd83da43bfec45e0ba02b397bec038b37c7ffc"
+        },
+        {
+          "name": "pi05-weights.tar.part007",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part007",
+          "size": 1073741824,
+          "sha256": "4a447354a4b8f786c5def3e861a292cbaa85239cdc88adffcd0b1dcbf5155034"
+        },
+        {
+          "name": "pi05-weights.tar.part008",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part008",
+          "size": 1073741824,
+          "sha256": "60cd293143feba2ed180b87c1c2fe5557dc54a4bebe72ce9f1419e2dd01645b7"
+        },
+        {
+          "name": "pi05-weights.tar.part009",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part009",
+          "size": 1073741824,
+          "sha256": "ee4760283a6aace816c73d089a92128c50f5291ee827350f9c6f995ebac0df4b"
+        },
+        {
+          "name": "pi05-weights.tar.part010",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part010",
+          "size": 1073741824,
+          "sha256": "ebe53470f029258ef8c4a97eff770bd1e64a84e18d892a0582e5033066c1dbb7"
+        },
+        {
+          "name": "pi05-weights.tar.part011",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/pi05-weights.tar.part011",
+          "size": 629856256,
+          "sha256": "00d5120fa7e88cebba43fe472d130cc6519691d35b80d6993e09e578136ad558"
+        }
+      ]
+    },
+    {
+      "name": "sparse-memory-weights",
+      "format": "tar-parts",
+      "destination": "checkpoints/pi05-sparse-memory",
+      "parts": [
+        {
+          "name": "sparse-memory-weights.tar.part000",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part000",
+          "size": 1073741824,
+          "sha256": "89a1b2171896164a235ab1d00f411cdbae4fe65394bfa0fb1d352deb8cd6004d"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part001",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part001",
+          "size": 1073741824,
+          "sha256": "f546946b14d0e098dcc5cf3babf37546a9943f47f907d79dc2c6f4294582e62f"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part002",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part002",
+          "size": 1073741824,
+          "sha256": "e7c9011c9d4b5840881c34c085b65e42ef88d7919bbb4dc255ec05b417988d8e"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part003",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part003",
+          "size": 1073741824,
+          "sha256": "666b25ad1d32f1b82a689e874aac24e329b948327c042c9d5f2ff4b0b6a293ce"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part004",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part004",
+          "size": 1073741824,
+          "sha256": "75814dee05be41d4365ba38600a095d67f1254d40b4f155a72e4c66071a8add5"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part005",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part005",
+          "size": 1073741824,
+          "sha256": "53e95cf89004a8738141164eef30650703a583804b1e221754fe6e4bcb082aa4"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part006",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part006",
+          "size": 1073741824,
+          "sha256": "86d600056cc11db18336b9558dd65ff8714332d5fe724fefb8a3f97464891327"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part007",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part007",
+          "size": 1073741824,
+          "sha256": "c20ec227186593c5ec69dfe6917571218742cbd8bd79a1d7dca7b2e46b6d2bf6"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part008",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part008",
+          "size": 1073741824,
+          "sha256": "03ab8b6fb77d69457d081e87b06c31d4b2110a8492a5d6db77c7fe49ef58c130"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part009",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part009",
+          "size": 1073741824,
+          "sha256": "3fc89dea0b89aa9f69727762bc6253acd930cf73cc00407d94d87b8f26e20a6f"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part010",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part010",
+          "size": 1073741824,
+          "sha256": "5674beae105ae7e55df04f2a0be069ed2f0377b2879435faa588140e97ed08a8"
+        },
+        {
+          "name": "sparse-memory-weights.tar.part011",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/sparse-memory-weights.tar.part011",
+          "size": 629129216,
+          "sha256": "d2b50190929e4d388f358874797f927e025a3d4917a50e39bd19d5ecde92afee"
+        }
+      ]
+    },
+    {
+      "name": "physicalrsi-code-skills",
+      "format": "deduplicated-tar-parts",
+      "destination": "implementations/code-skills",
+      "parts": [
+        {
+          "name": "physicalrsi-code-skills.tar.part000",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part000",
+          "size": 1073741824,
+          "sha256": "079ed7a16df79c0ebcb35e8cce4072ab5871e46bcba721a89e42d473b10e8150"
+        },
+        {
+          "name": "physicalrsi-code-skills.tar.part001",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part001",
+          "size": 1073741824,
+          "sha256": "cda8d9cb5d591750960ef2fbad77fd4d62865d526f2c41ec3ce83ba6bb0c7d99"
+        },
+        {
+          "name": "physicalrsi-code-skills.tar.part002",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part002",
+          "size": 1073741824,
+          "sha256": "c26a0f164a0fd6f4108d7d2834bbc882bddd1952e8861b67d534a1fa7ddc5007"
+        },
+        {
+          "name": "physicalrsi-code-skills.tar.part003",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part003",
+          "size": 1073741824,
+          "sha256": "347d847c37c45d9d646070d9aaa2362efc517f847313f136940739ec5243b999"
+        },
+        {
+          "name": "physicalrsi-code-skills.tar.part004",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part004",
+          "size": 1073741824,
+          "sha256": "d5962bfe24789bc872787f94387cbccbc498549d760046a4967f7e61caa8e081"
+        },
+        {
+          "name": "physicalrsi-code-skills.tar.part005",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part005",
+          "size": 1073741824,
+          "sha256": "2b6564db3c0023bf5296f971b7a85235bd459b35dc3ff2984869e7df4d4e80ca"
+        },
+        {
+          "name": "physicalrsi-code-skills.tar.part006",
+          "url": "https://github.com/yanming03/XPolicyLab/releases/download/physicalrsi-skill-assets-v1/physicalrsi-code-skills.tar.part006",
+          "size": 623855616,
+          "sha256": "c26e8a0ee35b63c7035086b3ca303445a087062d8a34fee39b13da0d1e72f36e"
+        }
+      ],
+      "files": 40054,
+      "unique_blobs": 2182,
+      "unique_content_bytes": 7054329242
+    }
+  ]
+}

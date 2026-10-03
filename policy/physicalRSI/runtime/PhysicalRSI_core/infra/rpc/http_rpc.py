@@ -1,0 +1,224 @@
+#
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""HTTP-transport RPC for the env + model RPC boundary.
+
+Uses HTTP POST with JSON payloads instead of pickle-framed TCP.
+Numpy arrays cross the wire tagged as
+``{"__ndarray__": <base64>, "dtype": ..., "shape": [...]}`` — the raw
+bytes stay compact (vs ``tolist()``, which stringifies every element)
+and the decode is explicit.
+"""
+
+from __future__ import annotations
+
+import base64
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from logging import getLogger as get_logger
+from typing import Any, Callable
+
+import numpy as np
+
+from PhysicalRSI_core.infra.rpc.rpc_client import RpcClient, RpcError, check_response
+from PhysicalRSI_core.infra.rpc.rpc_facade import make_error_response
+
+DEFAULT_TIMEOUT_S = 30.0
+_DIRECT_HOSTS = frozenset({"127.0.0.1", "localhost"})
+
+logger = get_logger("http_rpc")
+
+
+def _is_direct_url(url: str) -> bool:
+    """Return whether *url* uses a hostname that must bypass HTTP proxies."""
+    hostname = urllib.parse.urlsplit(url).hostname
+    return hostname is not None and hostname.lower() in _DIRECT_HOSTS
+
+
+def _from_json(obj: Any) -> Any:
+    """Rehydrate ``{"__ndarray__": <b64>, "dtype": ..., "shape": [...]}``
+    back into ndarrays and ``{"__npscalar__": <value>, "dtype": ...}``
+    back into numpy scalars. Everything else is passed through unchanged.
+    """
+    if isinstance(obj, dict):
+        if "__ndarray__" in obj and set(obj) <= {"__ndarray__", "dtype", "shape"}:
+            raw = base64.b64decode(obj["__ndarray__"])
+            arr = np.frombuffer(raw, dtype=obj.get("dtype"))
+            # frombuffer returns a read-only view of the base64 bytes; copy
+            # so callers can mutate the returned array like they would with
+            # a pickle round-tripped one.
+            return arr.reshape(obj.get("shape", (-1,))).copy()
+        if "__npscalar__" in obj and set(obj) <= {"__npscalar__", "dtype"}:
+            return np.dtype(obj["dtype"]).type(obj["__npscalar__"])
+        return {k: _from_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_from_json(v) for v in obj]
+    return obj
+
+
+class HttpRpcClient(RpcClient):
+    """RPC client that talks to an RPC server via HTTP POST.
+
+    Parameters
+    ----------
+    base_url : str
+        Server address, e.g. ``"http://127.0.0.1:8080"``.
+
+        ``127.0.0.1`` and ``localhost`` bypass HTTP proxies. Other hostnames
+        use the process proxy configuration.
+    enable_sessions : bool
+        If True, the client is session-aware: it auto-generates a session id
+        and carries it on every call; :func:`wait_for_ready` registers it
+        with the server on connect. If False, the client sends no session_id
+        and is fully session-unaware.
+    """
+
+    def __init__(self, base_url: str, *, enable_sessions: bool = False) -> None:
+        super().__init__(enable_sessions=enable_sessions)
+        self._base_url = base_url.rstrip("/")
+        self._opener = (
+            urllib.request.build_opener(urllib.request.ProxyHandler({}))
+            if _is_direct_url(self._base_url)
+            else None
+        )
+
+    def call(
+        self,
+        method: str,
+        args: tuple = (),
+        kwargs: dict | None = None,
+        *,
+        timeout_s: float | None = None,
+    ) -> Any:
+        """Invoke a remote method via HTTP POST and return the result."""
+        payload = {
+            "method": method,
+            "args": list(args),
+            "kwargs": kwargs or {},
+            "session_id": self._session_id,
+        }
+        body = json.dumps(payload, cls=_NumpyEncoder).encode("utf-8")
+        url = f"{self._base_url}/call"
+        request_timeout = timeout_s if timeout_s is not None else DEFAULT_TIMEOUT_S
+
+        req = urllib.request.Request(
+            url,
+            data=body,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            open_request = self._opener.open if self._opener else urllib.request.urlopen
+            with open_request(req, timeout=request_timeout) as resp:
+                raw = resp.read()
+        except urllib.error.HTTPError as exc:
+            # HTTPError is an OSError subclass; catch first so we can parse
+            # the ok=False body the server sent alongside the status code.
+            raw = exc.read()
+        except OSError as exc:
+            raise RpcError(method, f"HTTP request failed: {exc}") from exc
+
+        try:
+            response = _from_json(json.loads(raw))
+        except json.JSONDecodeError as exc:
+            raise RpcError(method, f"invalid JSON response: {exc}") from exc
+
+        return check_response(response, method)
+
+
+# ---------------------------------------------------------------------------
+#  Server
+# ---------------------------------------------------------------------------
+
+
+class _NumpyEncoder(json.JSONEncoder):
+    """JSON encoder that tags numpy arrays and scalars for faithful decode."""
+
+    def default(self, obj: Any) -> Any:
+        if isinstance(obj, np.ndarray):
+            return {
+                "__ndarray__": base64.b64encode(obj.tobytes()).decode("ascii"),
+                "dtype": str(obj.dtype),
+                "shape": list(obj.shape),
+            }
+        if isinstance(obj, np.generic):
+            item = obj.item()
+            # boolean, int, unsigned int, float
+            if obj.dtype.kind in "biuf" and isinstance(item, (bool, int, float)):
+                return {"__npscalar__": item, "dtype": str(obj.dtype)}
+        return super().default(obj)
+
+
+class _HttpRpcHandler(BaseHTTPRequestHandler):
+    """Handles POST /call with JSON-RPC body, dispatches to server.dispatch()."""
+
+    def log_message(self, format: str, *args: Any) -> None:  # noqa: A002
+        return
+
+    def do_POST(self) -> None:
+        if self.path != "/call":
+            self.send_response(404)
+            self.end_headers()
+            return
+
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length) if content_length > 0 else b""
+        try:
+            request = json.loads(body)
+            method = request["method"]
+            args = tuple(_from_json(v) for v in request.get("args", []))
+            kwargs = {k: _from_json(v) for k, v in request.get("kwargs", {}).items()}
+            session_id = request.get("session_id")
+            if session_id is None:
+                result = self.server.dispatch(method, args, kwargs)
+            else:
+                result = self.server.dispatch(  # type: ignore[attr-defined]
+                    method, args, kwargs, session_id=session_id
+                )
+            response: dict = {"ok": True, "result": result}
+        except Exception as exc:
+            response = make_error_response(exc)
+
+        # Always 200; failures are described inside the body via ok=False.
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        try:
+            self.wfile.write(json.dumps(response, cls=_NumpyEncoder).encode("utf-8"))
+        except (BrokenPipeError, ConnectionResetError) as exc:
+            # Client went away mid-response — log for visibility and move on.
+            logger.debug("rpc http write failed: %s", exc)
+
+
+class HttpRpcServer(ThreadingHTTPServer):
+    """HTTP server that dispatches JSON-RPC calls.
+
+    Same interface as ``SocketRpcServer`` — drop-in replacement at dispatch
+    sites that use ``server_address``, ``serve_forever``, ``shutdown``, and
+    ``server_close``.
+    """
+
+    allow_reuse_address = True
+    daemon_threads = True
+
+    def __init__(
+        self,
+        server_address: tuple[str, int],
+        dispatch: Callable[..., Any],
+    ) -> None:
+        super().__init__(server_address, _HttpRpcHandler)
+        self.dispatch = dispatch

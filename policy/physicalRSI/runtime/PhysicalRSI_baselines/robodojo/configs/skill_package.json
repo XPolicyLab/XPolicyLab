@@ -1,0 +1,38 @@
+{
+  "schema": "physicalrsi.skill-package/v1",
+  "name": "physicalrsi-manipulation",
+  "entrypoint": "PhysicalRSI_baselines.robodojo.skill_model:Model",
+  "skill_contract": "PhysicalRSI_core.contracts:Operation",
+  "memory_contract": "PhysicalRSI.Embodied_Harness.memory.store:Snapshot",
+  "skills": [
+    {
+      "name": "pi05",
+      "implementation": "PhysicalRSI_baselines.robodojo.skills.pi05",
+      "assets": [
+        "openpi-inference-source",
+        "pi05-weights"
+      ]
+    },
+    {
+      "name": "pi05-sparse-memory",
+      "implementation": "PhysicalRSI_baselines.robodojo.skills.sparse",
+      "assets": [
+        "openpi-inference-source",
+        "sparse-memory-weights"
+      ]
+    },
+    {
+      "name": "code-policy",
+      "implementation": "PhysicalRSI_baselines.robodojo.skills.code_policy",
+      "assets": []
+    }
+  ],
+  "weight_layout": "Separate explicitly identified checkpoints; no merged checkpoint is claimed.",
+  "evaluation_profile": {
+    "compositions": "Frozen configured subset of registered skill compositions",
+    "selection": "Agent uses instruction, observations and task-aware memory",
+    "calls_per_episode": 1,
+    "policy_inputs": "Original observations and instructions preserved"
+  },
+  "code_policy_requirements": "Pinned source, primitive specification, harness and resource bindings; no neural checkpoint."
+}
