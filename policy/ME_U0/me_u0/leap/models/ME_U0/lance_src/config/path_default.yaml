@@ -1,0 +1,27 @@
+# 预训练模型根目录
+base_dir: "downloads"
+
+# Lance 模型配置
+lance:
+  image: "${base_dir}/Lance_3B"
+  video: "${base_dir}/Lance_3B_Video"
+
+# Vision Transformer 配置
+vit:
+  qwen2_5_vl: "${base_dir}/Qwen2.5-VL-ViT"
+
+# VAE 配置
+vae:
+  wan: "${base_dir}/Wan2.2_VAE.pth"
+
+# GenEVAL 配置
+geneval:
+  data: "benchmarks/image_gen/GenEVAL/GenEVAL.jsonl"
+
+# DPG 配置
+dpg:
+  data: "benchmarks/image_gen/DPG/DPG.jsonl"
+
+# GEdit 配置
+gedit:
+  data: "benchmarks/image_gen/GEdit/GEdit_en.json"
