@@ -1,0 +1,24 @@
+policy_name: ME_Brain_1
+protocol: ws
+host: localhost
+bench_name: null
+task_name: null
+ckpt_name: null
+gpu_id: null
+env_cfg_type: null
+seed: null
+eval_batch: true
+
+model_path: /path/to/focus-vlwa-release
+asset_id: arx_x5_sim
+tokenizer_path: null
+num_inference_steps: 10
+history_mode: head_history
+max_token_len: 400
+focus_vlwa_source: null
+policy_uv_env_path: /path/to/focus-vlwa
+
+result_dir: ./results/focus_vlwa/
+obs_transform_pipeline: xspark-v1.0
+action_type: joint
+port: 6000
