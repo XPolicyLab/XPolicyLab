@@ -1,0 +1,9 @@
+## Push one tile with closed downward fingers
+Signature: the middle matching tile left the upright row after a forward push, while both adjacent tiles stayed upright.
+Instead: close the gripper, align to one tile center on its near side, then advance toward the far side in small horizontal increments near the tile's upper face. Retreat toward the robot before shifting laterally; do not sweep across the upright row.
+Evidence: 000006 to 000007. Right EE quaternion [0.5,-0.5,0.5,0.5], x=0, z=0.98, y advanced from -0.20 to -0.14 in 0.02 m increments. Pose error stayed below 0.2 mm. Image 000007 shows the two-circle face in the tipped region and a gap at its old upright location.
+Status: scene-specific coordinates; repeated validation pending. Upright tile centers appear 0.04 m apart.
+
+Repeated evidence: observations 000008 and 000009 repeat the push at x=-0.04 and x=+0.04. Observation 000009, after withdrawing the arm, shows exactly three face-up tiles and all nonmatching tiles still upright. Status: verified in this scene. A closed-tool lateral shift at y=-0.22 cleared the row. Vertical-only success is not inferred from measured pose; visual confirmation remains required.
+
+Critical retreat correction: review of 000037 and 000062 shows the nonmatching right-hand tiles are no longer upright in their original row. The reset replay moved diagonally from the final pushing pose directly to the parked arm pose. Unlike 000009, it omitted the initial near-side retreat. That diagonal can sweep through nonmatching tiles. The push helper itself ends at contact; callers must first retreat toward the robot at the same x (for example to y=-0.22,z=1.08), then park laterally. The earlier 000037 statement claiming full selective visual confirmation was incorrect; the right half had been occluded/missed during inspection.

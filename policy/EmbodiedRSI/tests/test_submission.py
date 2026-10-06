@@ -11,8 +11,9 @@ from unittest.mock import patch
 import yaml
 
 from XPolicyLab.policy.EmbodiedRSI.runtime.workspace import (
-    POLICY_DIR, create_workspace, prepare_run, verify_tree,
+    POLICY_DIR, create_workspace, prepare_run, tree_hashes, verify_tree,
 )
+from XPolicyLab.policy.EmbodiedRSI.runtime.execution.python import NUMPY, SAFE_BUILTINS, validate_snippet
 from XPolicyLab.policy.EmbodiedRSI.deploy import PolicyFailure, _call
 from XPolicyLab.policy.EmbodiedRSI.runtime.config import config_from_dict
 from XPolicyLab.policy.EmbodiedRSI.runtime.agent.session import agent_command
@@ -25,10 +26,44 @@ class SubmissionTests(unittest.TestCase):
         self.root = Path(temporary.name)
         self.checkpoint = self.root / "checkpoint"
         shutil.copytree(POLICY_DIR / "Workspace", self.checkpoint)
+        # These fixture tests also cover user-supplied workspaces without experience.
+        for component in ("skills", "lessons"):
+            shutil.rmtree(self.checkpoint / component)
+            (self.checkpoint / component).mkdir()
         self.config = yaml.safe_load((POLICY_DIR / "deploy.yml").read_text())
         self.config.update(checkpoint_path=str(self.checkpoint), run_dir=str(self.root / "run"),
                            task_name="stack_bowls_random", diagnostic=True)
         self.enterContext(patch.dict(os.environ, EMBODIEDRSI_RUN_DIR=""))
+
+    def test_bundled_experience_loads_per_task_after_relocation(self):
+        relocated = self.root / "recipient/policy/EmbodiedRSI"
+        shutil.copytree(POLICY_DIR / "Workspace", relocated / "Workspace")
+        manifest = json.loads((relocated / "Workspace/experience-manifest.json").read_text())
+        recipes = {p.stem for p in (relocated / "Workspace/recipes").glob("*.md") if p.stem != "README"}
+        self.assertEqual(set(manifest["tasks"]), recipes)
+        config = yaml.safe_load((POLICY_DIR / "deploy.yml").read_text())
+        config["diagnostic"] = True
+        self.assertEqual(config["ckpt_name"], "embodiedrsi_astra_xhigh")
+        with patch("XPolicyLab.policy.EmbodiedRSI.runtime.workspace.POLICY_DIR", relocated):
+            for task, entry in manifest["tasks"].items():
+                for variant in entry["native_variants"]:
+                    with self.subTest(task=variant):
+                        cfg, frozen = prepare_run({**config, "task_name": variant,
+                                                   "run_dir": str(self.root / "runs" / variant)})
+                        self.assertEqual(Path(cfg["checkpoint_path"]), relocated / "Workspace")
+                        self.assertEqual(cfg["task_config"]["simulator"]["env_task"], task)
+                        self.assertEqual(frozen, entry["files"])
+                        run = Path(cfg["run_dir"])
+                        workspace = create_workspace(run / "episode", run / "inputs", run / "frozen_harness")
+                        self.assertEqual(tree_hashes(workspace, components=("skills", "lessons")), entry["files"])
+                        self.assertEqual(list((workspace / "observations").iterdir()), [])
+                # Loading frozen helpers must not need filesystem access or take robot actions.
+                namespace = {"__builtins__": dict(SAFE_BUILTINS), "np": NUMPY}
+                for path in sorted((relocated / "Workspace/skills" / task).rglob("*.py")):
+                    with self.subTest(skill=str(path.relative_to(relocated))):
+                        code = path.read_text()
+                        validate_snippet(code)
+                        exec(compile(code, str(path), "exec"), namespace)
 
     def test_test_runs_without_global_release_or_learned_experience(self):
         self.config["diagnostic"] = False

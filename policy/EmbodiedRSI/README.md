@@ -9,7 +9,7 @@ It has two phases:
 1. **Playground:** The agent explores the environment, iteratively develops control programs, and consolidates its experience into Skills and Lessons.
 2. **Test:** The agent uses the frozen Skills and Lessons to solve tasks in new scenes, adapting its programs to live feedback within each episode.
 
-This **eval-only adapter** provides the evaluation runtime and Agent Code Workspace for Test. The bundled Skills and Lessons are empty; a learned workspace can be supplied separately.
+This **eval-only adapter** provides the evaluation runtime and Agent Code Workspace for Test, including frozen Playground experience for all 42 tasks: 293 skill files and 165 lesson files.
 
 Shared argument and deployment conventions are in the [XPolicyLab README](../../README.md).
 
@@ -108,6 +108,8 @@ The simulator sets the native action limit; there is no agent wall-clock cap. Ea
 
 ## Notes
 
-- Task experience belongs in `Workspace/skills/<task>/` and `Workspace/lessons/<task>/`; `*_random` variants use the base task name. These directories currently contain placeholders; add the frozen files before evaluating with learned experience.
+- The bundled experience comes from Playground run `202610052245_robodojo_D_recipe_astra_xhigh_v01_a01` (`gpt-6-astra`, `xhigh`). [The manifest](Workspace/experience-manifest.json) records each task's variants and file hashes. All files are included in this repository; the original run directory is unnecessary.
+- At startup, `Workspace/skills/<task>/` and `Workspace/lessons/<task>/` are copied into that episode's `skills/` and `lessons/`. Only the selected task is loaded; `*_random` variants use the base task's experience. The default `ckpt_name=embodiedrsi_astra_xhigh` enables this automatically.
+- Observation numbers in the frozen experience refer to past Playground evidence. Those historical logs are not runtime dependencies; each Test episode receives fresh observations.
 - Each Test episode starts with a fresh agent and workspace. Python and robot state persist between submissions; Skills and Lessons stay read-only, and agent-initiated reset is disabled. The official evaluator controls episode boundaries and scoring.
 - `deploy.py` forwards terminal observations to waiting Python programs so their final `step(action)` completes. Debug checks verify this interface; task success is measured in the official simulator.

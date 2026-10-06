@@ -125,6 +125,8 @@ immutable.
 
 Review the frozen skills and lessons relevant to the current task. `skills/example.md` and `lessons/example.md`, when present, describe the format; use the recorded evidence to assess each skill or lesson before applying it.
 
+Only the current task's frozen experience is mounted here. Observation numbers and `observations/...` references inside skills or lessons describe past Playground evidence; that history is not included and does not identify files in this episode. Use the supplied skill code and notes with this episode's live observations.
+
 When using a skill:
 
 - check its preconditions, limitations, and experimental evidence against the current observations;
