@@ -46,4 +46,3 @@ def move_ee(arm, target, grip=1.0, max_steps=80, position_step=0.008, tolerance=
             break
     print(arm, reason, 'steps', i + 1, 'pose', obs['state'][arm + '_ee_pose'])
     return obs, reason, i + 1
-

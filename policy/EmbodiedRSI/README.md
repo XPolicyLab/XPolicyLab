@@ -1,6 +1,6 @@
 # EmbodiedRSI
 
-**Contributor:** [EinsiaAI](https://lab.einsia.ai/) | **Paper:** Coming soon | **Original code:** [EmbodiedRSI](https://github.com/Einsia/EmbodiedRSI)
+**Contributor:** [EinsiaAI](https://lab.einsia.ai/) | **Paper:** Coming soon | **arXiv:** Submission in progress | **Original code:** [EmbodiedRSI](https://github.com/Einsia/EmbodiedRSI)
 
 EmbodiedRSI is a **self-evolving robotic agent** operating in an **SWE-style workspace**. It writes, executes and revises Python programs to control robots.
 
@@ -11,7 +11,7 @@ It has two phases:
 
 This **eval-only adapter** provides the evaluation runtime and Agent Code Workspace for Test, including frozen Playground experience for all 42 tasks: 293 skill files and 165 lesson files.
 
-Shared argument and deployment conventions are in the [XPolicyLab README](../../README.md).
+Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
