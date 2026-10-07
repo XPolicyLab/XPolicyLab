@@ -12,6 +12,7 @@ class GripperThreshold:
     right: float
     left_scale: float = 1.3
     right_scale: float = 1.3
+    action_horizon: int | None = None
 
 
 def normalize_prompt(prompt):
@@ -28,6 +29,9 @@ def load_gripper_thresholds(path, env_cfg_type):
 
     thresholds = {}
     for entry in entries:
+        horizon = entry.get("action_horizon")
+        if horizon is not None and (type(horizon) is not int or not 1 <= horizon <= 50):
+            raise ValueError(f"Invalid action_horizon for {env_cfg_type}/{entry['task']}: {horizon!r}")
         rule = GripperThreshold(
             task=str(entry["task"]),
             prompt=str(entry["prompt"]),
@@ -35,6 +39,7 @@ def load_gripper_thresholds(path, env_cfg_type):
             right=float(entry["right"]),
             left_scale=float(entry.get("left_scale", 1.3)),
             right_scale=float(entry.get("right_scale", 1.3)),
+            action_horizon=horizon,
         )
         if not all(math.isfinite(value) and value >= 0 for value in (rule.left, rule.right)):
             raise ValueError(f"Invalid gripper threshold for {env_cfg_type}/{rule.task}")

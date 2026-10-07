@@ -13,6 +13,14 @@ from XPolicyLab.policy.XBrain_v1.model import Model
 
 
 POLICY_ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_HORIZONS = {
+    "piper_x": {"cap_pen": 30, "classify_objects": 20, "disassemble_LEGO": 30,
+                "hang_mugs": 30, "pack_objects_into_backpack": 20, "sweep_blocks": 30},
+    "piper": {"fill_pen_holder": 20, "insert_charger": 20, "put_objects_into_basket": 20,
+              "stack_and_cover_blocks": 40, "stack_bowls": 20, "stand_up_bottles": 20},
+    "arx_x5": {"cover_blocks": 20, "insert_tubes": 20, "make_bread": 30,
+               "make_food": 20, "pack_and_pour_fruit": 20, "store_in_safe": 20},
+}
 
 
 class FakePipeline:
@@ -65,18 +73,18 @@ class ActionOutputTests(unittest.TestCase):
             action["right_arm_joint_state"], action["right_ee_joint_state"],
         ]) for action in actions])
 
-    def test_first_20_rows_and_task_grippers_are_sent_once(self):
+    def test_first_30_sweep_rows_and_task_grippers_are_sent_once(self):
         model, pipeline = self.make_model()
         prompt = next(rule.prompt for rule in model._gripper_thresholds.values()
                       if rule.task == "sweep_blocks")
         self.observe(model, prompt)
         original = pipeline.prediction.numpy().copy()
-        expected = original[:20].copy()
+        expected = original[:30].copy()
         expected[:, 6] = 0.455
-        expected[:, 13] = 0.30
+        expected[:, 13] = 0.39
         first = self.rows(model.get_action())
         second = self.rows(model.get_action())
-        self.assertEqual(first.shape, (20, 14))
+        self.assertEqual(first.shape, (30, 14))
         np.testing.assert_allclose(first, expected)
         np.testing.assert_allclose(second, expected)
         np.testing.assert_array_equal(pipeline.prediction.numpy(), original)
@@ -84,14 +92,20 @@ class ActionOutputTests(unittest.TestCase):
     def test_all_18_task_rules_apply_independently(self):
         for robot in ("piper_x", "piper", "arx_x5"):
             model, pipeline = self.make_model(robot)
+            self.assertEqual({rule.task for rule in model._gripper_thresholds.values()},
+                             set(EXPECTED_HORIZONS[robot]))
             for rule in model._gripper_thresholds.values():
                 with self.subTest(robot=robot, task=rule.task):
+                    horizon = EXPECTED_HORIZONS[robot][rule.task]
                     pipeline.prediction[:, 6] = rule.left / 2
                     pipeline.prediction[:, 13] = rule.right * 2
                     self.observe(model, rule.prompt)
                     result = self.rows(model.get_action())
-                    self.assertEqual(result.shape, (20, 14))
-                    np.testing.assert_array_equal(result[:, 6], np.zeros(20))
+                    self.assertEqual(result.shape, (horizon, 14))
+                    np.testing.assert_array_equal(result[:, 6], np.zeros(horizon))
+                    arm_columns = list(range(6)) + list(range(7, 13))
+                    np.testing.assert_array_equal(result[:, arm_columns],
+                                                  pipeline.prediction.numpy()[:horizon, arm_columns])
                     # Predictions and postprocessing use float32 throughout.
                     np.testing.assert_allclose(result[:, 13], rule.right * 2 * rule.right_scale, rtol=1e-6)
 
@@ -99,6 +113,34 @@ class ActionOutputTests(unittest.TestCase):
         model, pipeline = self.make_model()
         self.observe(model, "An unconfigured task prompt.")
         np.testing.assert_array_equal(self.rows(model.get_action()), pipeline.prediction.numpy()[:20])
+
+    def test_task_horizons_follow_normalized_prompt_without_sticking(self):
+        for robot in EXPECTED_HORIZONS:
+            model, _ = self.make_model(robot)
+            rules = list(model._gripper_thresholds.values())
+            for rule in rules + list(reversed(rules)):
+                for field in ("instruction", "task_instruction"):
+                    with self.subTest(robot=robot, task=rule.task, field=field):
+                        prompt = "  " + rule.prompt.upper().replace(" ", "  ").rstrip(".") + "  "
+                        self.observe(model, prompt)
+                        if field == "task_instruction":
+                            obs = dict(model._obs)
+                            obs[field] = obs.pop("instruction")
+                            model.update_obs(obs)
+                        self.assertEqual(len(model.get_action()), EXPECTED_HORIZONS[robot][rule.task])
+                        self.assertEqual(model.action_horizon, 20)
+                        self.observe(model, "An unconfigured task prompt.")
+                        self.assertEqual(len(model.get_action()), 20)
+
+    def test_task_horizon_overrides_only_the_matched_tasks_fallback(self):
+        model, _ = self.make_model("piper", horizon=10)
+        prompts = {rule.task: rule.prompt for rule in model._gripper_thresholds.values()}
+        for prompt, horizon in ((prompts["stack_and_cover_blocks"], 40),
+                                (prompts["stack_bowls"], 10),
+                                ("An unconfigured task prompt.", 10)):
+            self.observe(model, prompt)
+            self.assertEqual(len(model.get_action()), horizon)
+        self.assertEqual(model.action_horizon, 10)
 
     def test_new_observation_requests_a_fresh_plan(self):
         model, pipeline = self.make_model()
@@ -110,7 +152,7 @@ class ActionOutputTests(unittest.TestCase):
         self.assertEqual(pipeline.calls, 2)
         np.testing.assert_allclose(second, first + 1)
 
-    def test_20_is_the_default_and_maximum(self):
+    def test_20_is_the_fallback_default_and_maximum(self):
         with patch.object(Model, "_load_pipeline", return_value=FakePipeline()), \
              patch("XPolicyLab.policy.XBrain_v1.model.get_robot_action_dim_info",
                    return_value={"arm_dim": [6, 6], "ee_dim": [1, 1]}):
@@ -175,22 +217,22 @@ class ActionOutputTests(unittest.TestCase):
                 expected_arm_keys = ({"left_arm_joint_state", "right_arm_joint_state"}
                                      if rule.task == "pack_objects_into_backpack"
                                      else {"left_ee_pose", "right_ee_pose"})
-                self.assertEqual(len(actions), 20)
+                self.assertEqual(len(actions), EXPECTED_HORIZONS["piper_x"][rule.task])
                 for action in actions:
                     self.assertEqual(set(action), expected_arm_keys | {
                         "left_ee_joint_state", "right_ee_joint_state"})
 
     def test_piperx_output_switches_per_request_without_reset(self):
         model, _ = self.make_model(output_action_type="ee")
-        for prompt, key in (
-            ("Place all the objects on the table into the backpack.", "left_arm_joint_state"),
-            ("Hang the mugs on the mug rack.", "left_ee_pose"),
-            ("Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", "left_ee_pose"),
-            ("An unconfigured task prompt.", "left_ee_pose"),
+        for prompt, key, horizon in (
+            ("Place all the objects on the table into the backpack.", "left_arm_joint_state", 20),
+            ("Hang the mugs on the mug rack.", "left_ee_pose", 30),
+            ("Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", "left_ee_pose", 20),
+            ("An unconfigured task prompt.", "left_ee_pose", 20),
         ):
             self.observe(model, prompt)
             actions = model.get_action()
-            self.assertEqual(len(actions), 20)
+            self.assertEqual(len(actions), horizon)
             self.assertIn(key, actions[0])
 
     def test_batch_uses_each_observations_prompt(self):
@@ -203,7 +245,7 @@ class ActionOutputTests(unittest.TestCase):
             observations.append(model._obs)
         model.update_obs_batch(observations)
         actions = model.get_action_batch()
-        self.assertEqual([len(chunk) for chunk in actions], [20, 20, 20])
+        self.assertEqual([len(chunk) for chunk in actions], [30, 20, 30])
         self.assertIn("left_ee_pose", actions[0][0])
         self.assertIn("left_arm_joint_state", actions[1][0])
         self.assertIn("left_ee_pose", actions[2][0])
@@ -237,24 +279,25 @@ class ActionOutputTests(unittest.TestCase):
         model.update_obs(observation)
         actions = model.get_action()
         np.testing.assert_array_equal(pipeline.last_state, joint_state)
-        self.assertEqual(len(actions), 20)
+        self.assertEqual(len(actions), 30)
         self.assertIn("left_ee_pose", actions[0])
 
     def test_every_piperx_task_defaults_to_joint_without_fk_or_z(self):
         for output_type in (None, "auto", "joint"):
             model, pipeline = self.make_model(output_action_type=output_type)
             self.assertEqual(model.output_action_type, "joint")
-            prompts = [rule.prompt for rule in model._gripper_thresholds.values()]
-            prompts.append("An unconfigured task prompt.")
+            prompts = [(rule.prompt, EXPECTED_HORIZONS["piper_x"][rule.task])
+                       for rule in model._gripper_thresholds.values()]
+            prompts.append(("An unconfigured task prompt.", 20))
             with patch("XPolicyLab.policy.XBrain_v1.model.joints14_to_endpose16",
                        side_effect=AssertionError("Default PiperX output must not use FK")), \
                  patch("XPolicyLab.policy.XBrain_v1.model.adjust_piperx_endpose_z",
                        side_effect=AssertionError("Default PiperX output must not adjust Z")):
-                for prompt in prompts:
+                for prompt, horizon in prompts:
                     with self.subTest(output_type=output_type, prompt=prompt):
                         self.observe(model, prompt)
                         actions = model.get_action()
-                        self.assertEqual(len(actions), 20)
+                        self.assertEqual(len(actions), horizon)
                         for index, action in enumerate(actions):
                             self.assertEqual(set(action), {
                                 "left_arm_joint_state", "left_ee_joint_state",
@@ -264,9 +307,9 @@ class ActionOutputTests(unittest.TestCase):
     def test_task_scales_are_resolved_for_each_new_prompt(self):
         model, _ = self.make_model("piper")
         for prompt, left, right in (
-            ("Pick up the pen holder and place all the pens into it.", 0.385, 0.0),
-            ("Place all the objects on the table into the basket.", 0.4025, 0.0),
-            ("Insert the charger plug into the power strip, then connect the charging cable to the plug.", 0.385, 0.33),
+            ("Pick up the pen holder and place all the pens into it.", 0.0, 0.0),
+            ("Place all the objects on the table into the basket.", 0.0, 0.0),
+            ("Insert the charger plug into the power strip, then connect the charging cable to the plug.", 0.385, 0.0),
             ("Stack the bowls on the table.", 0.455, 0.39),
         ):
             with self.subTest(prompt=prompt):
@@ -283,14 +326,16 @@ class ActionOutputTests(unittest.TestCase):
 
         async def check():
             cases = (
-                ("piper_x", "Hang the mugs on the mug rack.", 0.455, 0.39),
-                ("piper_x", "Place all the objects on the table into the backpack.", 0.385, 0.33),
-                ("piper_x", "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.", 0.455, 0.30),
-                ("piper", "Place all the objects on the table into the basket.", 0.4025, 0.0),
-                ("piper", "Pick up the pen holder and place all the pens into it.", 0.385, 0.0),
-                ("arx_x5", "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", 0.385, 0.33),
+                ("piper_x", "Hang the mugs on the mug rack.", 0.4025, 0.345, 30),
+                ("piper_x", "Place all the objects on the table into the backpack.", 0.385, 0.33, 20),
+                ("piper_x", "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.", 0.455, 0.39, 30),
+                ("piper", "Place all the objects on the table into the basket.", 0.0, 0.0, 20),
+                ("piper", "Pick up the pen holder and place all the pens into it.", 0.0, 0.0, 20),
+                ("piper", "Stack the blocks on the table, then cover them with the cup.", 0.0, 0.0, 40),
+                ("arx_x5", "Pick up the two slices of bread from the bowl and place them into the toaster, then place the two small bowls on the plate.", 0.455, 0.39, 30),
+                ("arx_x5", "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", 0.385, 0.33, 20),
             )
-            for robot, prompt, left, right in cases:
+            for robot, prompt, left, right, horizon in cases:
                 model, _ = self.make_model(robot)
                 server = PolicyServer(model)
                 self.observe(model, prompt)
@@ -305,7 +350,7 @@ class ActionOutputTests(unittest.TestCase):
                 response = decode_envelope(encode_frame(reply))
                 self.assertEqual(response.message_type, MessageType.INFER_RESULT, response.payload)
                 actions = response.payload["actions"]
-                self.assertEqual(len(actions), 20)
+                self.assertEqual(len(actions), horizon)
                 self.assertIn("left_arm_joint_state", actions[0])
                 for action in actions:
                     self.assertNotIn("left_ee_pose", action)

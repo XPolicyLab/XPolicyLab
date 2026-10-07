@@ -50,6 +50,7 @@ class Model(ModelTemplate):
         if output_action_type == "ee" and self.env_cfg_type != "piper_x":
             raise ValueError("Endpose output is supported only for piper_x")
         self.output_action_type = output_action_type
+        # Fallback for tasks without an explicit prompt-specific horizon.
         self.action_horizon = int(model_cfg.get("action_horizon", 20))
         if self.action_horizon <= 0 or self.action_horizon > 20:
             raise ValueError("action_horizon must be in [1, 20]")
@@ -201,11 +202,17 @@ class Model(ModelTemplate):
             predicted = np.asarray(predicted.detach().float().cpu())
             if predicted.shape != (50, 14) or not np.isfinite(predicted).all():
                 raise ValueError(f"pipeline returned unexpected action shape/values: {predicted.shape}")
-            # The checkpoint predicts 50 steps, but the executor receives at
-            # most the first 20 before the next inference on a fresh observation.
-            predicted = predicted[:self.action_horizon]
+            # Select the outgoing prefix for this request without changing the
+            # fallback horizon used by subsequent tasks or batch items.
+            predicted = predicted[:self._action_horizon_for_prompt(prompt)]
             predicted = self._apply_prompt_gripper_thresholds(predicted, prompt)
         return self._format_pipeline_actions(predicted, prompt=prompt)
+
+    def _action_horizon_for_prompt(self, prompt):
+        rule = self._gripper_thresholds.get(normalize_prompt(prompt))
+        if rule is not None and rule.action_horizon is not None:
+            return rule.action_horizon
+        return self.action_horizon
 
     def _apply_prompt_gripper_thresholds(self, predicted, prompt):
         prompt_key = normalize_prompt(prompt)
@@ -223,7 +230,8 @@ class Model(ModelTemplate):
             print(
                 f"[XBrain_v1] gripper thresholds task={rule.task} "
                 f"left={rule.left} right={rule.right} "
-                f"left_scale={rule.left_scale} right_scale={rule.right_scale}"
+                f"left_scale={rule.left_scale} right_scale={rule.right_scale} "
+                f"action_horizon={self._action_horizon_for_prompt(prompt)}"
             )
             self._reported_gripper_prompts.add(prompt_key)
         return apply_gripper_thresholds(predicted, rule)

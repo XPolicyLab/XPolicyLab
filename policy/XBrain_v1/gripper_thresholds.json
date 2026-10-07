@@ -4,7 +4,8 @@
       "task": "cap_pen",
       "prompt": "Pick up the pen and the pen cap, then put the cap on the pen.",
       "left": 0.15,
-      "right": 0.15
+      "right": 0.15,
+      "action_horizon": 30
     },
     {
       "task": "classify_objects",
@@ -16,13 +17,17 @@
       "task": "disassemble_LEGO",
       "prompt": "Take apart the assembled LEGO structure and place all the pieces into the bowl.",
       "left": 0.25,
-      "right": 0.25
+      "right": 0.25,
+      "action_horizon": 30
     },
     {
       "task": "hang_mugs",
       "prompt": "Hang the mugs on the mug rack.",
       "left": 0.15,
-      "right": 0.15
+      "right": 0.15,
+      "left_scale": 1.15,
+      "right_scale": 1.15,
+      "action_horizon": 30
     },
     {
       "task": "pack_objects_into_backpack",
@@ -38,31 +43,32 @@
       "left": 0.35,
       "right": 0.3,
       "left_scale": 1.3,
-      "right_scale": 1.0
+      "right_scale": 1.3,
+      "action_horizon": 30
     }
   ],
   "piper": [
     {
       "task": "fill_pen_holder",
       "prompt": "Pick up the pen holder and place all the pens into it.",
-      "left": 0.35,
-      "right": 0.35,
+      "left": 0.5,
+      "right": 0.5,
       "left_scale": 1.1,
       "right_scale": 1.1
     },
     {
       "task": "insert_charger",
       "prompt": "Insert the charger plug into the power strip, then connect the charging cable to the plug.",
-      "left": 0.2,
-      "right": 0.2,
+      "left": 0.35,
+      "right": 0.35,
       "left_scale": 1.1,
       "right_scale": 1.1
     },
     {
       "task": "put_objects_into_basket",
       "prompt": "Place all the objects on the table into the basket.",
-      "left": 0.33,
-      "right": 0.33,
+      "left": 0.45,
+      "right": 0.45,
       "left_scale": 1.15,
       "right_scale": 1.15
     },
@@ -72,7 +78,8 @@
       "left": 0.45,
       "right": 0.45,
       "left_scale": 1.1,
-      "right_scale": 1.1
+      "right_scale": 1.1,
+      "action_horizon": 40
     },
     {
       "task": "stack_bowls",
@@ -104,13 +111,14 @@
       "task": "make_bread",
       "prompt": "Pick up the two slices of bread from the bowl and place them into the toaster, then place the two small bowls on the plate.",
       "left": 0.2,
-      "right": 0.2
+      "right": 0.2,
+      "action_horizon": 30
     },
     {
       "task": "make_food",
       "prompt": "Take the cutting board out and place it on the table. Then place the steak and the knife on the cutting board, put the vegetables and shrimp into the pot, place the pot on the stove, and finally cover it with the lid.",
-      "left": 0.2,
-      "right": 0.2
+      "left": 0.35,
+      "right": 0.35
     },
     {
       "task": "pack_and_pour_fruit",

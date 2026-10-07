@@ -1,6 +1,9 @@
 """Check prompt-specific left/right gripper threshold behavior."""
 
 from pathlib import Path
+import io
+import json
+from unittest.mock import patch
 
 import numpy as np
 
@@ -16,12 +19,14 @@ EXPECTED_TASK_COUNTS = {"piper_x": 6, "piper": 6, "arx_x5": 6}
 EXPECTED_OVERRIDES = {
     ("piper_x", "pack_objects_into_backpack"): (0.15, 0.15, 1.1, 1.1),
     ("piper_x", "classify_objects"): (0.25, 0.25, 1.3, 1.3),
-    ("piper_x", "sweep_blocks"): (0.35, 0.30, 1.3, 1.0),
-    ("piper", "fill_pen_holder"): (0.35, 0.35, 1.1, 1.1),
-    ("piper", "put_objects_into_basket"): (0.33, 0.33, 1.15, 1.15),
-    ("piper", "insert_charger"): (0.20, 0.20, 1.1, 1.1),
+    ("piper_x", "sweep_blocks"): (0.35, 0.30, 1.3, 1.3),
+    ("piper_x", "hang_mugs"): (0.15, 0.15, 1.15, 1.15),
+    ("piper", "fill_pen_holder"): (0.50, 0.50, 1.1, 1.1),
+    ("piper", "put_objects_into_basket"): (0.45, 0.45, 1.15, 1.15),
+    ("piper", "insert_charger"): (0.35, 0.35, 1.1, 1.1),
     ("piper", "stack_and_cover_blocks"): (0.45, 0.45, 1.1, 1.1),
     ("arx_x5", "pack_and_pour_fruit"): (0.30, 0.30, 1.1, 1.1),
+    ("arx_x5", "make_food"): (0.35, 0.35, 1.3, 1.3),
 }
 
 
@@ -63,11 +68,22 @@ def main():
     filtered = apply_gripper_thresholds(actions, rule)
 
     np.testing.assert_allclose(filtered[:, 6], [0.0, 0.455, 0.4563, 0.0, 0.468, 1.17])
-    np.testing.assert_allclose(filtered[:, 13], [0.0, 0.3, 0.301, 0.31, 0.0, 0.8])
+    np.testing.assert_allclose(filtered[:, 13], [0.0, 0.39, 0.3913, 0.403, 0.0, 1.04])
     arm_columns = list(range(6)) + list(range(7, 13))
     np.testing.assert_array_equal(filtered[:, arm_columns], original[:, arm_columns])
     np.testing.assert_array_equal(actions, original)
     assert filtered.dtype == actions.dtype
+    for invalid_horizon in (0, 51, -1, 30.5, True, "30"):
+        config = {"piper_x": [{"task": "invalid", "prompt": "Test.",
+                               "left": 0.15, "right": 0.15,
+                               "action_horizon": invalid_horizon}]}
+        with patch.object(Path, "open", return_value=io.StringIO(json.dumps(config))):
+            try:
+                load_gripper_thresholds(config_path, "piper_x")
+            except ValueError as exc:
+                assert "action_horizon" in str(exc)
+            else:
+                raise AssertionError(f"Accepted invalid horizon {invalid_horizon!r}")
     print("GRIPPER_THRESHOLDS_OK tasks=18 left_right_independent=true task_specific_scales=true")
 
 

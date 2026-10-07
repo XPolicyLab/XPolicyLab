@@ -92,8 +92,9 @@ three robots. The existing endpose path is retained for an explicit future
 at server startup selects the robot and checkpoint; observations do not need
 to include an extra robot identifier.
 
-The model predicts 50 joint actions, and the adapter selects the first 20 and
-applies the task's gripper thresholds and per-arm scales. Only when endpose is
+The model predicts 50 joint actions. The adapter selects a prompt-specific
+prefix (20 by default, with the 30/40-step exceptions listed below) and applies
+the task's gripper thresholds and per-arm scales. Only when endpose is
 explicitly enabled does it convert PiperX joint targets through the
 bundled `piperx_fk.py`. This NumPy-only implementation and its adapter ship in
 the policy directory and require no external SDK checkout or absolute code path.
@@ -140,7 +141,7 @@ other PiperX prompts then use endpose. With the current default `joint` (or
 `auto`) configuration, every PiperX task stays in joint mode. Piper and ARX X5
 also retain their joint output.
 
-Before returning the first 20 actions, the adapter matches the client-provided
+Before selecting the outgoing prefix, the adapter matches the client-provided
 `instruction` (or `task_instruction`) against the bundled
 `gripper_thresholds.json`. Left gripper dimension 6 and right gripper dimension
 13 use independent per-task thresholds. A value strictly below its threshold
@@ -152,24 +153,41 @@ and scaling occurs once before
 returning the actions. This postprocessing does not clip the scaled values.
 Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
-preserved and the server logs a warning once.
+preserved, its prefix uses the default horizon, and the server logs a warning once.
 
-Task-specific settings updated on 2026-09-29:
+Task-specific settings updated on 2026-10-07:
 
-| Robot | Task | Left threshold | Right threshold | Left scale | Right scale |
-|---|---|---:|---:|---:|---:|
-| PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 |
-| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 |
-| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.0 |
-| Piper | `fill_pen_holder` | 0.35 | 0.35 | 1.1 | 1.1 |
-| Piper | `put_objects_into_basket` | 0.33 | 0.33 | 1.15 | 1.15 |
-| Piper | `insert_charger` | 0.20 | 0.20 | 1.1 | 1.1 |
-| Piper | `stack_and_cover_blocks` | 0.45 | 0.45 | 1.1 | 1.1 |
-| ARX X5 | `pack_and_pour_fruit` | 0.30 | 0.30 | 1.1 | 1.1 |
+| Robot | Task | Left threshold | Right threshold | Left scale | Right scale | Returned steps |
+|---|---|---:|---:|---:|---:|---:|
+| PiperX | `cap_pen` | 0.15 | 0.15 | 1.3 | 1.3 | 30 |
+| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 | 20 |
+| PiperX | `disassemble_LEGO` | 0.25 | 0.25 | 1.3 | 1.3 | 30 |
+| PiperX | `hang_mugs` | 0.15 | 0.15 | 1.15 | 1.15 | 30 |
+| PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 | 20 |
+| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 30 |
+| Piper | `fill_pen_holder` | 0.50 | 0.50 | 1.1 | 1.1 | 20 |
+| Piper | `insert_charger` | 0.35 | 0.35 | 1.1 | 1.1 | 20 |
+| Piper | `put_objects_into_basket` | 0.45 | 0.45 | 1.15 | 1.15 | 20 |
+| Piper | `stack_and_cover_blocks` | 0.45 | 0.45 | 1.1 | 1.1 | 40 |
+| Piper | `stack_bowls` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
+| Piper | `stand_up_bottles` | 0.65 | 0.65 | 1.3 | 1.3 | 20 |
+| ARX X5 | `cover_blocks` | 0.75 | 0.75 | 1.3 | 1.3 | 20 |
+| ARX X5 | `insert_tubes` | 0.40 | 0.40 | 1.3 | 1.3 | 20 |
+| ARX X5 | `make_bread` | 0.20 | 0.20 | 1.3 | 1.3 | 30 |
+| ARX X5 | `make_food` | 0.35 | 0.35 | 1.3 | 1.3 | 20 |
+| ARX X5 | `pack_and_pour_fruit` | 0.30 | 0.30 | 1.1 | 1.1 | 20 |
+| ARX X5 | `store_in_safe` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
 
-Other task thresholds and their default 1.3 scales remain unchanged. Edit
+Edit
 `left`/`right` for thresholds and `left_scale`/`right_scale` for multipliers in
-`gripper_thresholds.json`.
+`gripper_thresholds.json`. A task's optional `action_horizon` selects how many
+leading rows of the 50-step prediction to return. It overrides the deployment's
+fallback horizon for that task and must be an integer from 1 to 50. Tasks without
+this field use `deploy.yml`'s `action_horizon: 20` (the fallback remains configurable
+from 1 to 20). Both the horizon and gripper rules are resolved for each request,
+including batch observations, without changing the fallback or retaining the
+previous task's setting. The first matched request logs the task, thresholds,
+scales, and effective `action_horizon`.
 
 The training dataset metadata records these control frequencies:
 
@@ -202,11 +220,11 @@ helper for an existing conda-pack archive and is not part of the official
 setup.
 
 The standard XPolicyLab `eval.sh` arguments are documented in the repository
-README. The checkpoint predicts 50 actions per inference call, but the adapter
-returns only the first 20 actions to the client. After those actions execute,
-the client collects a fresh observation and requests a new prediction. The
-`action_horizon` setting may shorten this execution horizon, but cannot exceed
-20.
+README. The checkpoint predicts 50 actions per inference call. The adapter
+returns the first 20, 30, or 40 actions according to the task table above.
+After the returned actions execute, the client collects a fresh observation
+and requests a new prediction. Changing the deployment's fallback
+`action_horizon` only affects tasks without an explicit task-level override.
 
 ## Evaluation-only submission
 
