@@ -20,5 +20,5 @@ tokenizer_model_path: null
 fast_tokenizer_path: null
 default_prompt: "Complete the task described by the instruction."
 action_chunk_size: 50
-# Default prefix; matching tasks in gripper_thresholds.json can select 30/40.
+# Default prefix; matching tasks in gripper_thresholds.json can select 30/40/50.
 action_horizon: 20

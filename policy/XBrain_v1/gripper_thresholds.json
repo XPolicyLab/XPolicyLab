@@ -51,10 +51,11 @@
     {
       "task": "fill_pen_holder",
       "prompt": "Pick up the pen holder and place all the pens into it.",
-      "left": 0.5,
-      "right": 0.5,
-      "left_scale": 1.1,
-      "right_scale": 1.1
+      "left": 0.2,
+      "right": 0.2,
+      "left_scale": 1.0,
+      "right_scale": 1.0,
+      "action_horizon": 50
     },
     {
       "task": "insert_charger",
@@ -67,10 +68,11 @@
     {
       "task": "put_objects_into_basket",
       "prompt": "Place all the objects on the table into the basket.",
-      "left": 0.45,
-      "right": 0.45,
-      "left_scale": 1.15,
-      "right_scale": 1.15
+      "left": 0.22,
+      "right": 0.22,
+      "left_scale": 1.0,
+      "right_scale": 1.0,
+      "action_horizon": 30
     },
     {
       "task": "stack_and_cover_blocks",
@@ -117,8 +119,11 @@
     {
       "task": "make_food",
       "prompt": "Take the cutting board out and place it on the table. Then place the steak and the knife on the cutting board, put the vegetables and shrimp into the pot, place the pot on the stove, and finally cover it with the lid.",
-      "left": 0.35,
-      "right": 0.35
+      "left": 0.25,
+      "right": 0.25,
+      "left_scale": 1.0,
+      "right_scale": 1.0,
+      "action_horizon": 30
     },
     {
       "task": "pack_and_pour_fruit",

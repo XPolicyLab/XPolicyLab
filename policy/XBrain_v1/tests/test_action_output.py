@@ -16,10 +16,10 @@ POLICY_ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_HORIZONS = {
     "piper_x": {"cap_pen": 30, "classify_objects": 20, "disassemble_LEGO": 30,
                 "hang_mugs": 30, "pack_objects_into_backpack": 20, "sweep_blocks": 30},
-    "piper": {"fill_pen_holder": 20, "insert_charger": 20, "put_objects_into_basket": 20,
+    "piper": {"fill_pen_holder": 50, "insert_charger": 20, "put_objects_into_basket": 30,
               "stack_and_cover_blocks": 40, "stack_bowls": 20, "stand_up_bottles": 20},
     "arx_x5": {"cover_blocks": 20, "insert_tubes": 20, "make_bread": 30,
-               "make_food": 20, "pack_and_pour_fruit": 20, "store_in_safe": 20},
+               "make_food": 30, "pack_and_pour_fruit": 20, "store_in_safe": 20},
 }
 
 
@@ -307,8 +307,8 @@ class ActionOutputTests(unittest.TestCase):
     def test_task_scales_are_resolved_for_each_new_prompt(self):
         model, _ = self.make_model("piper")
         for prompt, left, right in (
-            ("Pick up the pen holder and place all the pens into it.", 0.0, 0.0),
-            ("Place all the objects on the table into the basket.", 0.0, 0.0),
+            ("Pick up the pen holder and place all the pens into it.", 0.35, 0.30),
+            ("Place all the objects on the table into the basket.", 0.35, 0.30),
             ("Insert the charger plug into the power strip, then connect the charging cable to the plug.", 0.385, 0.0),
             ("Stack the bowls on the table.", 0.455, 0.39),
         ):
@@ -329,10 +329,11 @@ class ActionOutputTests(unittest.TestCase):
                 ("piper_x", "Hang the mugs on the mug rack.", 0.4025, 0.345, 30),
                 ("piper_x", "Place all the objects on the table into the backpack.", 0.385, 0.33, 20),
                 ("piper_x", "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.", 0.455, 0.39, 30),
-                ("piper", "Place all the objects on the table into the basket.", 0.0, 0.0, 20),
-                ("piper", "Pick up the pen holder and place all the pens into it.", 0.0, 0.0, 20),
+                ("piper", "Place all the objects on the table into the basket.", 0.35, 0.30, 30),
+                ("piper", "Pick up the pen holder and place all the pens into it.", 0.35, 0.30, 50),
                 ("piper", "Stack the blocks on the table, then cover them with the cup.", 0.0, 0.0, 40),
                 ("arx_x5", "Pick up the two slices of bread from the bowl and place them into the toaster, then place the two small bowls on the plate.", 0.455, 0.39, 30),
+                ("arx_x5", "Take the cutting board out and place it on the table. Then place the steak and the knife on the cutting board, put the vegetables and shrimp into the pot, place the pot on the stove, and finally cover it with the lid.", 0.35, 0.30, 30),
                 ("arx_x5", "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.", 0.385, 0.33, 20),
             )
             for robot, prompt, left, right, horizon in cases:

@@ -93,7 +93,7 @@ at server startup selects the robot and checkpoint; observations do not need
 to include an extra robot identifier.
 
 The model predicts 50 joint actions. The adapter selects a prompt-specific
-prefix (20 by default, with the 30/40-step exceptions listed below) and applies
+prefix (20 by default, with the 30/40/50-step exceptions listed below) and applies
 the task's gripper thresholds and per-arm scales. Only when endpose is
 explicitly enabled does it convert PiperX joint targets through the
 bundled `piperx_fk.py`. This NumPy-only implementation and its adapter ship in
@@ -155,7 +155,7 @@ Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
 preserved, its prefix uses the default horizon, and the server logs a warning once.
 
-Task-specific settings updated on 2026-10-07:
+Task-specific settings updated on 2026-10-09:
 
 | Robot | Task | Left threshold | Right threshold | Left scale | Right scale | Returned steps |
 |---|---|---:|---:|---:|---:|---:|
@@ -165,16 +165,16 @@ Task-specific settings updated on 2026-10-07:
 | PiperX | `hang_mugs` | 0.15 | 0.15 | 1.15 | 1.15 | 30 |
 | PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 | 20 |
 | PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 30 |
-| Piper | `fill_pen_holder` | 0.50 | 0.50 | 1.1 | 1.1 | 20 |
+| Piper | `fill_pen_holder` | 0.20 | 0.20 | 1.0 | 1.0 | 50 |
 | Piper | `insert_charger` | 0.35 | 0.35 | 1.1 | 1.1 | 20 |
-| Piper | `put_objects_into_basket` | 0.45 | 0.45 | 1.15 | 1.15 | 20 |
+| Piper | `put_objects_into_basket` | 0.22 | 0.22 | 1.0 | 1.0 | 30 |
 | Piper | `stack_and_cover_blocks` | 0.45 | 0.45 | 1.1 | 1.1 | 40 |
 | Piper | `stack_bowls` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
 | Piper | `stand_up_bottles` | 0.65 | 0.65 | 1.3 | 1.3 | 20 |
 | ARX X5 | `cover_blocks` | 0.75 | 0.75 | 1.3 | 1.3 | 20 |
 | ARX X5 | `insert_tubes` | 0.40 | 0.40 | 1.3 | 1.3 | 20 |
 | ARX X5 | `make_bread` | 0.20 | 0.20 | 1.3 | 1.3 | 30 |
-| ARX X5 | `make_food` | 0.35 | 0.35 | 1.3 | 1.3 | 20 |
+| ARX X5 | `make_food` | 0.25 | 0.25 | 1.0 | 1.0 | 30 |
 | ARX X5 | `pack_and_pour_fruit` | 0.30 | 0.30 | 1.1 | 1.1 | 20 |
 | ARX X5 | `store_in_safe` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
 
@@ -221,7 +221,7 @@ setup.
 
 The standard XPolicyLab `eval.sh` arguments are documented in the repository
 README. The checkpoint predicts 50 actions per inference call. The adapter
-returns the first 20, 30, or 40 actions according to the task table above.
+returns the first 20, 30, 40, or all 50 actions according to the task table above.
 After the returned actions execute, the client collects a fresh observation
 and requests a new prediction. Changing the deployment's fallback
 `action_horizon` only affects tasks without an explicit task-level override.
