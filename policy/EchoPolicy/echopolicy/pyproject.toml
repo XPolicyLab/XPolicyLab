@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vlm-orchestrator"
+version = "0.1.0"
+description = "EchoPolicy VLM orchestration for RoboDojo and Pi05 policy servers"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.10"
+dependencies = [
+    "websockets>=12.0",
+    "msgpack>=1.0",
+    "numpy>=1.24",
+    "pillow>=10.0",
+    "requests[socks]>=2.28",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[project.scripts]
+vlm-orchestrator = "vlm_orchestrator.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["vlm_orchestrator*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
