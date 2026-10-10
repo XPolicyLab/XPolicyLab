@@ -1,0 +1,16 @@
+# MM-ABC runtime dependencies. torch (CUDA build) and flash-attn are expected
+# to be installed for the machine's CUDA first; everything else is here.
+# Validated with torch 2.6.0+cu124, flash-attn 2.8.3, transformers 4.57.0.
+torch>=2.6
+transformers>=4.57,<4.58
+numpy>=1.26
+pyarrow>=17,<19      # 14.x is ABI-incompatible with numpy 2.x and breaks every parquet read
+pandas>=2.0
+av>=12               # PyAV: video decode and encode (converter)
+opencv-python-headless>=4.8
+pillow>=10
+h5py>=3.10
+omegaconf>=2.3
+scipy>=1.12
+tqdm>=4.66
+wandb>=0.17

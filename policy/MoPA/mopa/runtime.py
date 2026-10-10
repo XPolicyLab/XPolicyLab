@@ -9,6 +9,7 @@ import numpy as np
 import torch
 
 from .common import FORMAT_VERSION, denormalize, joint_fields, normalize, rgb_image, validate_statistics
+from .data import mobile
 from .models.policy import ArmQueryPolicy
 
 
@@ -21,10 +22,14 @@ class Policy:
         weights = directory / "model.pt" if checkpoint.is_dir() else checkpoint
         self.config = json.loads((directory / "config.json").read_text())
         if self.config.get("format_version") != FORMAT_VERSION:
-            raise ValueError("Expected a MoPA manipulation-only checkpoint with one bank of eight queries")
+            raise ValueError("Checkpoint is not a compatible MoPA Query-DMoT checkpoint")
         self.action_dim = int(self.config["action_dim"])
         self.state_dim = int(self.config["state_dim"])
-        dim = sum(size for _, size in joint_fields(self.config["robot_action_dim_info"]))
+        self.is_mobile = mobile.matches_layout(self.config)
+        if self.is_mobile:
+            dim = mobile.MODEL_DIM
+        else:
+            dim = sum(size for _, size in joint_fields(self.config["robot_action_dim_info"]))
         if self.state_dim != dim or self.action_dim != dim:
             raise ValueError("Checkpoint dimensions disagree with its joint layout")
         self.cameras = self.config["cameras"]
@@ -48,7 +53,7 @@ class Policy:
         self.model.to(self.device).eval()
 
     def predict(self, images, instructions, states):
-        """Return physical joint actions [batch, 4, dim], with cameras in saved order."""
+        """Return physical joint actions [batch, action_horizon, dim], with cameras in saved order."""
         states = np.asarray(states, dtype=np.float32)
         if states.ndim != 2 or states.shape[1] != self.state_dim or not np.isfinite(states).all():
             raise ValueError(f"Expected finite joint states [batch, {self.state_dim}]")

@@ -1,4 +1,4 @@
-"""Qwen3-VL conditioning with one learned arm-query bank and no base branch.
+"""Qwen3-VL conditioning with isolated learned arm and base query banks.
 
 Native Qwen3-VL handles image feature insertion and DeepStack visual features;
 its language model is never called in isolation.
@@ -10,14 +10,49 @@ import torch
 from torch import nn
 
 
-def build_query_attention_mask(padding_mask: torch.Tensor) -> torch.Tensor:
-    """Causal [B,1,L,L] SDPA visibility for [prompt, arm queries]."""
+def build_query_attention_mask(
+    padding_mask: torch.Tensor,
+    *,
+    arm_query_tokens: int | None = None,
+    base_query_tokens: int = 0,
+) -> torch.Tensor:
+    """Causal prompt mask plus isolated arm/base query suffixes.
+
+    Source Query-DMoT appends two learned banks to the Qwen prompt.  Prompt
+    tokens retain causal visibility; each query bank may attend to the prompt
+    and to its own causal prefix, while the arm and base banks cannot read one
+    another.  The old one-bank call remains valid when ``base_query_tokens`` is
+    zero.
+    """
     if padding_mask.ndim != 2 or padding_mask.shape[1] == 0:
         raise ValueError("padding_mask must have nonempty shape [B,L]")
     valid = padding_mask.bool()
-    positions = torch.arange(valid.shape[1], device=valid.device)
-    causal = positions[:, None] >= positions[None, :]
-    return causal[None, None] & valid[:, None, :, None] & valid[:, None, None, :]
+    length = valid.shape[1]
+    if arm_query_tokens is None:
+        return (torch.arange(length, device=valid.device)[:, None]
+                >= torch.arange(length, device=valid.device)[None, :])[None, None] \
+            & valid[:, None, :, None] & valid[:, None, None, :]
+    arm_query_tokens = int(arm_query_tokens)
+    base_query_tokens = int(base_query_tokens)
+    if arm_query_tokens <= 0 or base_query_tokens < 0:
+        raise ValueError("arm_query_tokens must be positive and base_query_tokens non-negative")
+    prompt_length = length - arm_query_tokens - base_query_tokens
+    if prompt_length <= 0:
+        raise ValueError("Query suffix must leave at least one prompt token")
+    allowed = torch.zeros((length, length), device=valid.device, dtype=torch.bool)
+    prompt_positions = torch.arange(prompt_length, device=valid.device)
+    allowed[:prompt_length, :prompt_length] = (
+        prompt_positions[:, None] >= prompt_positions[None, :]
+    )
+    # Appended query rows can inspect the complete prompt, then their own
+    # query group's causal prefix.  No arm/base cross-bank edges are present.
+    for start, count in ((prompt_length, arm_query_tokens),
+                         (prompt_length + arm_query_tokens, base_query_tokens)):
+        if count:
+            rows = torch.arange(start, start + count, device=valid.device)
+            allowed[rows, :prompt_length] = True
+            allowed[rows[:, None], rows[None, :]] = rows[:, None] >= rows[None, :]
+    return allowed[None, None] & valid[:, None, :, None] & valid[:, None, None, :]
 
 
 class QwenArmQueryBackbone(nn.Module):
@@ -39,6 +74,10 @@ class QwenArmQueryBackbone(nn.Module):
         self.processor = AutoProcessor.from_pretrained(model_id)
         self.processor.tokenizer.padding_side = "left"
         self.hidden_size = int(self.model.config.text_config.hidden_size)
+        self.arm_num_query_tokens = int(config.get("arm_num_query_tokens", 8))
+        self.base_num_query_tokens = int(config.get("base_num_query_tokens", 0))
+        if self.arm_num_query_tokens <= 0 or self.base_num_query_tokens < 0:
+            raise ValueError("Invalid arm/base query counts")
         self.image_token_id = int(self.model.config.image_token_id)
         if bool(config.get("gradient_checkpointing", False)):
             self.model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
@@ -77,6 +116,8 @@ class QwenArmQueryBackbone(nn.Module):
         count = query_tokens.shape[0]
         if count <= 0 or query_tokens.shape != (count, self.hidden_size):
             raise ValueError("query_tokens must have shape [positive Q, Qwen hidden_size]")
+        if count != self.arm_num_query_tokens + self.base_num_query_tokens:
+            raise ValueError("query_tokens count does not match configured arm/base banks")
         pad_id = self.processor.tokenizer.pad_token_id
         if pad_id is None:
             raise ValueError("The Qwen processor must define a padding token")
@@ -97,7 +138,11 @@ class QwenArmQueryBackbone(nn.Module):
                                 queries.unsqueeze(0).expand(input_ids.shape[0], -1, -1)), dim=1)
         outputs = native_backbone(
             **inputs, inputs_embeds=embeddings,
-            attention_mask=build_query_attention_mask(expanded_padding),
+            attention_mask=build_query_attention_mask(
+                expanded_padding,
+                arm_query_tokens=self.arm_num_query_tokens,
+                base_query_tokens=self.base_num_query_tokens,
+            ),
             position_ids=positions, use_cache=False,
             output_attentions=False, return_dict=True,
         )

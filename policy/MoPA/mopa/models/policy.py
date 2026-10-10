@@ -1,4 +1,4 @@
-"""MoPA manipulation policy with one query bank and a flow action head."""
+"""MoPA Query-DMoT policy with independent arm and mobility query banks."""
 
 from __future__ import annotations
 
@@ -12,32 +12,41 @@ from .backbone import QwenArmQueryBackbone
 
 
 class ArmQueryPolicy(nn.Module):
-    """End-to-end policy with a conditioning backbone and an arm-query action head.
+    """End-to-end policy with source-compatible dual query conditioning.
 
-    The conditioning backbone must expose ``hidden_size`` and
-    ``encode(images, instructions, query_tokens) -> [B,Q,H]``. The returned
-    tensor must remain connected to query_tokens for training the query bank.
+    The conditioning backbone exposes ``hidden_size`` and
+    ``encode(images, instructions, query_tokens) -> [B,Q,H]``.  The query
+    tensor is ``[arm queries, base queries]`` and remains connected to both
+    learned banks during training.
     """
 
     def __init__(self, config: dict, backbone=None):
         super().__init__()
         self.config = dict(config)
         self.backbone = backbone if backbone is not None else QwenArmQueryBackbone(config)
-        self.num_query_tokens = int(config.get("num_query_tokens", 8))
+        self.arm_num_query_tokens = int(config.get("arm_num_query_tokens", 8))
+        self.base_num_query_tokens = int(config.get("base_num_query_tokens", 8))
+        self.num_query_tokens = self.arm_num_query_tokens + self.base_num_query_tokens
+        configured_queries = config.get("num_query_tokens")
+        if configured_queries is not None and int(configured_queries) != self.num_query_tokens:
+            raise ValueError("num_query_tokens must equal arm_num_query_tokens + base_num_query_tokens")
         self.repeated_diffusion_steps = int(config.get("repeated_diffusion_steps", 8))
         query_init_std = float(config.get("query_init_std", 0.02))
         if self.num_query_tokens <= 0 or self.repeated_diffusion_steps <= 0:
             raise ValueError("Query count and diffusion repeat count must be positive")
         if not math.isfinite(query_init_std) or query_init_std <= 0:
             raise ValueError("query_init_std must be finite and positive")
-        self.arm_query_tokens = nn.Parameter(torch.empty(self.num_query_tokens, self.backbone.hidden_size))
+        self.arm_query_tokens = nn.Parameter(torch.empty(self.arm_num_query_tokens, self.backbone.hidden_size))
+        self.base_query_tokens = nn.Parameter(torch.empty(self.base_num_query_tokens, self.backbone.hidden_size))
         nn.init.normal_(self.arm_query_tokens, std=query_init_std)
+        nn.init.normal_(self.base_query_tokens, std=query_init_std)
         self.action_model = ArmQueryActionHead(config, self.backbone.hidden_size)
         if bool(config.get("freeze_backbone", False)):
             self.backbone.requires_grad_(False)
 
     def encode(self, images, instructions) -> torch.Tensor:
-        queries = self.backbone.encode(images, instructions, self.arm_query_tokens)
+        query_bank = torch.cat((self.arm_query_tokens, self.base_query_tokens), dim=0)
+        queries = self.backbone.encode(images, instructions, query_bank)
         expected = (len(images), self.num_query_tokens, self.backbone.hidden_size)
         if tuple(queries.shape) != expected:
             raise ValueError(f"Backbone query shape must be {expected}, got {tuple(queries.shape)}")
@@ -57,9 +66,11 @@ class ArmQueryPolicy(nn.Module):
         # Validate before repeating so malformed ranks cannot broadcast silently.
         self.action_model._validate(query, state, actions)
         repeats = self.repeated_diffusion_steps
-        loss = self.action_model(query.repeat(repeats, 1, 1),
-                                 actions.repeat(repeats, 1, 1), state.repeat(repeats, 1, 1))
-        return {"action_loss": loss, "action_dit_loss_manipulation": loss.detach()}
+        return self.action_model(
+            query.repeat(repeats, 1, 1),
+            actions.repeat(repeats, 1, 1),
+            state.repeat(repeats, 1, 1),
+        )
 
     @torch.no_grad()
     def predict_action(self, images, instructions, state) -> torch.Tensor:

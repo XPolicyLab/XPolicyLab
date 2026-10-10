@@ -1,1 +1,1 @@
-"""MoPA arm-only Query-DMoT adapter for XPolicyLab."""
+"""MoPA Query-DMoT mobile manipulation adapter for XPolicyLab."""

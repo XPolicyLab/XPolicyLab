@@ -1,0 +1,50 @@
+# MM-ABC with a Qwen3-VL-4B backbone (base config).
+canonical: configs/canonical/canonical_80.yaml
+
+action_loss_weight: 1.0
+
+backbone:
+  path: pretrained_ckpt/Qwen3-VL-4B-Instruct   # relative to policy/MM_ABC
+  num_layers: 36
+  hidden_size: 2560
+  attn_implementation: flash_attention_2
+  # The first three taps are DeepStack-injected into expert blocks 0-2; the last is the context.
+  memory_layers: [11, 19, 27, 35]
+  gradient_checkpointing: true
+  use_native_deepstack: true
+
+expert:
+  num_blocks: 16
+  hidden_size: 1024
+  num_heads: 16
+  ffn_size: 4096
+  dropout: 0.1
+  injection_blocks: [0, 1, 2]
+
+flow:
+  chunk_size: 64
+  near_steps: 32
+  execute_steps: 16
+  num_inference_steps: 10
+  repeated_noise_draws: 8
+  time_beta: [1.5, 1.0]
+  sigma_min: 0.05
+  pred_type: x
+  loss_type: v
+
+future:
+  enabled: true
+  num_tokens: 192          # 3 views x 8x8 block grid
+  block_grid: 8
+  loss_weight: 0.05
+  offsets: null            # null = end of each action segment
+  teachers: [vggt]
+  vggt:
+    repo_path: pretrained_ckpt/vggt-omega
+    ckpt_path: pretrained_ckpt/VGGT-Omega-1B-256-Text-Alignment
+    image_size: 256
+    feature_dim: 2048
+
+obs:
+  image_size: 224
+  views: [primary, wrist_left, wrist_right]

@@ -1,0 +1,14 @@
+# Same sample budget as mobile.yaml at global batch 256 (2 nodes x 8 GPUs x micro-batch 16).
+defaults: configs/train/mobile.yaml
+
+run_name: mmabc-mobile-4b-b256
+micro_batch_size: 16
+max_steps: 30000
+
+optim:
+  warmup_steps: 500
+
+checkpoint:
+  root: checkpoints/mobile-4b-b256
+  resume_every: 500
+  milestone_every: 2500

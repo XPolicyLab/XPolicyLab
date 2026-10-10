@@ -4,8 +4,8 @@ from pathlib import Path
 import sys
 
 XPL_ROOT = Path(__file__).resolve().parents[2]
-if str(XPL_ROOT) not in sys.path:
-    sys.path.insert(0, str(XPL_ROOT))
+if str(XPL_ROOT.parent) not in sys.path:
+    sys.path.insert(0, str(XPL_ROOT.parent))
 
 from mopa.integrations.xpolicylab import train_main
 

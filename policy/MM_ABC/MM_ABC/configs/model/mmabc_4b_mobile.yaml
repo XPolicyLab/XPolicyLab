@@ -1,0 +1,19 @@
+# MM-ABC / Qwen3-VL-4B on Mobile, from scratch (75-d Mobile layout).
+defaults: configs/model/mmabc_4b.yaml
+
+canonical: configs/canonical/canonical_mobile.yaml
+
+backbone:
+  gradient_checkpointing: false
+
+flow:
+  chunk_size: 32
+  near_steps: 32
+  execute_steps: 16
+  pred_type: x
+  loss_type: v
+  normalize_weight: false
+
+future:
+  enabled: true
+  offsets: [32, 32]

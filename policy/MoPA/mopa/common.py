@@ -1,11 +1,11 @@
-"""Joint layout, RGB preprocessing and quantile normalization."""
+"""Joint layouts, RGB preprocessing and dataset normalization."""
 
 from __future__ import annotations
 
 import numpy as np
 from PIL import Image
 
-FORMAT_VERSION = "xpl-mopa-arm-v1"
+FORMAT_VERSION = "xpl-mopa-query-dmot-v2"
 DATASET_FORMAT = "xpl-mopa-npz-v1"
 DEFAULT_CAMERAS = ["cam_head", "cam_left_wrist", "cam_right_wrist"]
 
@@ -51,8 +51,11 @@ def unpack_joint(vector, dim_info):
 
 
 def validate_statistics(stats, dim):
-    lower = np.asarray(stats["q01"], dtype=np.float32)
-    upper = np.asarray(stats["q99"], dtype=np.float32)
+    # Prefer exact extrema when available; generic datasets use quantiles.
+    lower_key, upper_key = (("min", "max") if "min" in stats and "max" in stats
+                            else ("q01", "q99"))
+    lower = np.asarray(stats[lower_key], dtype=np.float32)
+    upper = np.asarray(stats[upper_key], dtype=np.float32)
     if lower.shape != (dim,) or upper.shape != (dim,):
         raise ValueError(f"Normalization statistics must have dimension {dim}")
     if not np.isfinite(lower).all() or not np.isfinite(upper).all() or np.any(upper < lower):
@@ -60,19 +63,32 @@ def validate_statistics(stats, dim):
     return lower, upper
 
 
+def _affine_parameters(stats, dim):
+    lower, upper = validate_statistics(stats, dim)
+    minmax = "min" in stats and "max" in stats
+    if minmax:
+        span = np.maximum(upper - lower, 1e-6)
+        return lower + 0.5 * span, 0.5 * span, True
+    span = upper - lower
+    return lower, span, False
+
+
 def normalize(array, stats):
     array = np.asarray(array, dtype=np.float32)
-    lower, upper = validate_statistics(stats, array.shape[-1])
-    span = upper - lower
-    normalized = 2 * (array - lower) / np.where(span > 1e-6, span, 1.0) - 1
-    return np.where(span > 1e-6, np.clip(normalized, -1, 1), 0).astype(np.float32)
+    offset, scale, minmax = _affine_parameters(stats, array.shape[-1])
+    if minmax:
+        # Keep the affine transform invertible for out-of-range predictions.
+        return ((array - offset) / scale).astype(np.float32)
+    normalized = 2 * (array - offset) / np.where(scale > 1e-6, scale, 1.0) - 1
+    return np.where(scale > 1e-6, np.clip(normalized, -1, 1), 0).astype(np.float32)
 
 
 def denormalize(array, stats):
     array = np.asarray(array, dtype=np.float32)
-    lower, upper = validate_statistics(stats, array.shape[-1])
-    result = (np.clip(array, -1, 1) + 1) * (upper - lower) / 2 + lower
-    return result.astype(np.float32)
+    offset, scale, minmax = _affine_parameters(stats, array.shape[-1])
+    if minmax:
+        return (array * scale + offset).astype(np.float32)
+    return (np.clip(array, -1, 1) + 1) * scale / 2 + offset
 
 
 def rgb_image(array, image_size):
