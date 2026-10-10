@@ -1,0 +1,29 @@
+holoassist_train_abs_skip2v3:
+  _target_: llava.data.LazyVLAHoloAssistHFAbsDataset
+  image_mapping_path: data/ha_dataset/hf_images_v2_mapping.pkl
+  stats_path: data/ha_dataset/stats
+  data_path: data/ha_dataset/HoloAssist_HF_hands_filtered_skip2v3_train
+  image_path: data/ha_dataset/HoloAssist_HF_images_v2
+
+holoassist_eval_abs_skip2v3_sub20:
+  _target_: llava.data.LazyVLAHoloAssistHFAbsDataset
+  image_mapping_path: data/ha_dataset/hf_images_v2_mapping.pkl
+  stats_path: data/ha_dataset/stats
+  data_path: data/ha_dataset/HoloAssist_HF_hands_filtered_skip2v3_val
+  image_path: data/ha_dataset/HoloAssist_HF_images_v2
+  data_skip: 20
+
+hot3d_train_abs:
+  _target_: llava.data.LazyVLAHoloAssistHFAbsDataset
+  image_mapping_path: data/hot3d_hf/hf_images_mapping.pkl
+  stats_path: data/hot3d_hf/stats
+  data_path: data/hot3d_hf/HF_hand_V1_train
+  image_path: data/hot3d_hf/HF_images
+
+hot3d_eval_abs_sub20:
+  _target_: llava.data.LazyVLAHoloAssistHFAbsDataset
+  image_mapping_path: data/hot3d_hf/hf_images_mapping.pkl
+  stats_path: data/hot3d_hf/stats
+  data_path: data/hot3d_hf/HF_hands_V1_val
+  image_path: data/hot3d_hf/HF_images
+  data_skip: 20

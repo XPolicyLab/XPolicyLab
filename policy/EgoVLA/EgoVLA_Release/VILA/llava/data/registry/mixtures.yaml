@@ -1,0 +1,40 @@
+vflan:
+  - captioning_image-paragraph-captioning_train
+  - captioning_msrvtt_train
+  - captioning_textcap_train
+  - generation_visual-dialog_train
+  - reasoning_clevr_train
+  - reasoning_nlvr_train
+  - reasoning_visual-mrc_train
+  - text_flan_1m
+  - vqa_activitynet-qa_train
+  - vqa_docvqa_train
+  - vqa_gqa_train
+  - vqa_ivqa_train
+  - vqa_msrvtt-qa_train
+  - vqa_msvd-qa_train
+  - vqa_ocr-vqa_train
+  - vqa_st-vqa_train
+  - vqa_viquae_train
+  - vqa_vqa-v2_train
+
+vila-v1.5-sft:
+  - ai2d_train_12k
+  - chartqa_train_18k
+  - docvqa_train_10k
+  - dvqa_train_200k
+  - geoqa
+  - llava_instruct
+  - math
+  - scienceqa
+  - sharegpt4v_gpt4_100k
+  - sharegpt4v_sft
+  - sharegpt_video
+  - sherlock
+  - shot2story_shotonly
+  - synthdog_en
+  - vatex
+  - vflan
+  - video_chatgpt
+  - wit_subset
+  - youcook2
