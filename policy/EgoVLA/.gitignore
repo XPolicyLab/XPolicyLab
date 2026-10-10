@@ -1,0 +1,28 @@
+# Local dependency/runtime caches
+/upstream/
+.deps/
+.deps_*/
+
+# Python build and test artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Training, evaluation, and preprocessing outputs
+/data/
+/checkpoints/
+/results/
+/outputs/
+/runs/
+/wandb/
+*.log
+
+# Optional local model assets
+mano_v1_2/
+
+# Upstream release tests and simulation-only assets are not part of the SparkArena adapter
+/EgoVLA_Release/VILA/inference_test/
+/EgoVLA_Release/VILA/tests/
+/EgoVLA_Release/init_poses*.pkl

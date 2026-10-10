@@ -1,0 +1,31 @@
+policy_name: EgoVLA
+protocol: ws
+host: localhost
+port: null
+bench_name: SparkArena
+task_name: null
+ckpt_name: null
+env_cfg_type: tianji_marvin_wuji
+seed: 0
+action_type: joint
+gpu_id: null
+eval_batch: true
+pretrained_path: null
+upstream_root: null
+runtime_module: XPolicyLab.policy.EgoVLA.model
+runtime_class: EgoVLASparkArenaInference
+checkpoint_provenance: egovla_sparkarena_provenance.json
+camera_mode: head_only
+camera_key: cam_head
+raw_input_resolution: [480, 640]
+input_resolution: [384, 384]
+input_color_order: RGB
+image_geometry: full_frame_resize_480x640_to_384x384
+channel_swap: false
+wrist_camera_required: false
+prompt_version: v0
+conversation_template: vicuna_v1
+action_chunk_size: 30
+history_length: 6
+history_stride: 5
+request_timeout_s: 120

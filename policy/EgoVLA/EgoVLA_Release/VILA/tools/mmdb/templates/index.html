@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Similarity Search</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 40px;
+            color: #555;
+        }
+
+        #input-zone {
+            width: 400px;
+            height: 200px;
+            border: 2px dashed #bbb;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            color: #999;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        #input-zone:hover {
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        #input-zone.dragover {
+            border-color: #007bff;
+            background-color: #f0f8ff;
+        }
+
+        #uploaded-image {
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            align-items: left;
+        }
+
+        #response-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .response-container {
+            display: inline-block;
+            margin: 20px;
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 200px;
+        }
+
+        .response-container:hover {
+            transform: scale(1.05);
+        }
+
+        .response-container img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .image-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        #modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="input-zone">Drag and drop an image here, or click to upload</div>
+    <div id="query-zone"></div>
+    <div id="response-zone"></div>
+
+    <input type="file" name="image" id="imageInput" accept="image/*" class="hidden">
+
+    <div id="modal">
+        <span id="modal-close">&times;</span>
+        <img id="modal-image" src="">
+    </div>
+
+    <script>
+        const inputZone = document.getElementById('input-zone');
+        const queryZone = document.getElementById('query-zone');
+        const responseZone = document.getElementById('response-zone');
+        const imageInput = document.getElementById('imageInput');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            inputZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight the drop zone when an image is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            inputZone.addEventListener(eventName, () => inputZone.classList.add('dragover'), false);
+        });
+
+        // Remove highlight when the image is dragged away
+        ['dragleave', 'drop'].forEach(eventName => {
+            inputZone.addEventListener(eventName, () => inputZone.classList.remove('dragover'), false);
+        });
+
+        // Handle dropped files
+        inputZone.addEventListener('drop', handleDrop, false);
+
+        // Handle clicks to open file input
+        inputZone.addEventListener('click', () => imageInput.click());
+
+        // Handle file input change
+        imageInput.addEventListener('change', handleFiles);
+
+        // Prevent default drag behavior
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Handle file drop
+        async function handleDrop(e) {
+            let dt = e.dataTransfer;
+
+            // Check if the user dropped an image file or an image from another website
+            if (dt.files.length > 0) {
+                handleFiles({ target: { files: dt.files } });
+            }
+        }
+
+        // Handle file input change
+        async function handleFiles(e) {
+            let file = e.target.files[0];
+            if (!file) return;
+
+            let formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                let response = await fetch('/query', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    let data = await response.json();
+
+                    // Hide the input zone
+                    inputZone.style.display = 'none';
+
+                    // Display the uploaded image in the query zone
+                    let imgElement = document.createElement('img');
+                    imgElement.id = 'uploaded-image';
+                    imgElement.src = 'data:image/png;base64,' + data.image;
+                    queryZone.appendChild(imgElement);
+
+                    // Add a heading to the response zone
+                    let h1Element = document.createElement('h1');
+                    h1Element.textContent = 'Most Similar Images';
+                    responseZone.appendChild(h1Element);
+
+                    // Display the similar images in the response zone
+                    data.responses.forEach(function (response) {
+                        let container = document.createElement('div');
+                        container.classList.add('response-container');
+
+                        let imgElement = document.createElement('img');
+                        imgElement.src = 'data:image/png;base64,' + response.image;
+
+                        // Add click event to open the image in a modal
+                        imgElement.addEventListener('click', () => {
+                            document.getElementById('modal-image').src = imgElement.src;
+                            document.getElementById('modal').style.display = 'flex';
+                        });
+
+                        let infoElement = document.createElement('div');
+                        infoElement.classList.add('image-info');
+                        infoElement.innerHTML = `<p>
+                            UID: <b>${response.uid}</b><br>
+                            Score: <b>${response.score.toFixed(4)}</b>
+                        </p>`;
+
+                        container.appendChild(imgElement);
+                        container.appendChild(infoElement);
+                        responseZone.appendChild(container);
+                    });
+                } else {
+                    alert('Error uploading image. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the image.');
+            }
+        }
+
+        // Close the modal when clicking outside of the image
+        document.getElementById('modal').addEventListener('click', function (e) {
+            if (e.target === document.getElementById('modal')) {
+                document.getElementById('modal').style.display = 'none';
+            }
+        });
+
+        // Close the modal when clicking the close button
+        document.getElementById('modal-close').addEventListener('click', function () {
+            document.getElementById('modal').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>

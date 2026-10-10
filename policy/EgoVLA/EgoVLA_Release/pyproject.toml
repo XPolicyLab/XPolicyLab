@@ -1,0 +1,29 @@
+[build-system]
+requires = [
+  "setuptools>=61.0",
+  "pin-pink",
+  "qpsolvers",
+  "h5py"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "human_plan"
+version = "0.0.1"
+description = "Manipulation from egocentric video"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = []
+
+[project.optional-dependencies]
+train = []
+build = []
+
+[tool.setuptools.packages.find]
+exclude = ["assets*", "benchmark*", "docs", "dist*", "playground*", "scripts*", "tests*"]
+
+[tool.wheel]
+exclude = ["assets*", "benchmark*", "docs", "dist*", "playground*", "scripts*", "tests*"]
