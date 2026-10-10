@@ -60,7 +60,10 @@ cmd=(bash "${POLICY_DIR}/scripts/ME_U0/run_multinode.sh" 1
   --work-root "${run_root}"
   --config "${config_rel}"
   "training.seed=${seed}"
-  "${overrides[@]}")
+")
+if (( ${#overrides[@]} > 0 )); then
+  cmd+=("${overrides[@]}")
+fi
 printf '[ME_U0] %q ' "${cmd[@]}"; printf '\n'
 if (( dry_run == 1 )); then
   exit 0
