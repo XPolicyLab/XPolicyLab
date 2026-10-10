@@ -16,7 +16,7 @@ num_inference_steps: 10
 history_mode: head_history
 max_token_len: 400
 focus_vlwa_source: null
-policy_uv_env_path: /path/to/focus-vlwa
+policy_uv_env_path: source
 
 result_dir: ./results/focus_vlwa/
 obs_transform_pipeline: xspark-v1.0

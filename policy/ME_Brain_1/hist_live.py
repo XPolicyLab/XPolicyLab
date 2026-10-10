@@ -25,7 +25,9 @@ def _source_from_deploy(policy_dir: Path) -> str | None:
 def _configure_client_source() -> None:
     policy_dir = Path(__file__).resolve().parent
     configured = os.environ.get("FOCUS_VLWA_SOURCE") or _source_from_deploy(policy_dir)
-    source = Path(configured).expanduser() if configured else policy_dir / "focus-vlwa" / "src"
+    source = Path(configured).expanduser() if configured else policy_dir / "source" / "src"
+    if not configured and not source.is_dir():
+        source = policy_dir / "focus-vlwa" / "src"
     if configured and not source.is_absolute():
         source = policy_dir / source
     if configured and not source.is_dir():

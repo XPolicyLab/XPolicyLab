@@ -28,11 +28,9 @@ _CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
 def _configure_focus_vlwa_import(model_cfg: dict[str, Any]) -> None:
     configured = os.environ.get("FOCUS_VLWA_SOURCE") or model_cfg.get("focus_vlwa_source")
     if not configured:
-        linked_source = _POLICY_DIR / "focus-vlwa"
-        if linked_source.exists() or linked_source.is_symlink():
-            from ._source import configure_source
+        from ._source import configure_source
 
-            configure_source()
+        configure_source()
         return
     source = Path(configured).expanduser()
     if not source.is_absolute():

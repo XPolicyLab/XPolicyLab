@@ -59,3 +59,21 @@ def test_client_environment_source_precedes_deploy_config(tmp_path, monkeypatch)
     monkeypatch.setenv("FOCUS_VLWA_SOURCE", str(source))
     hist_live._configure_client_source()
     assert sys.path[0] == str(source)
+
+
+def test_bundled_source_precedes_legacy_checkout(tmp_path, monkeypatch):
+    from XPolicyLab.policy.ME_Brain_1 import _source, hist_live
+    import sys
+
+    policy = tmp_path / "policy"
+    bundled = policy / "source"
+    legacy = policy / "focus-vlwa"
+    (bundled / "src/focus_vlwa").mkdir(parents=True)
+    (legacy / "src/focus_vlwa").mkdir(parents=True)
+    monkeypatch.setattr(_source, "__file__", str(policy / "_source.py"))
+    monkeypatch.setattr(hist_live, "__file__", str(policy / "hist_live.py"))
+    monkeypatch.setattr(sys, "path", sys.path[:])
+    monkeypatch.delenv("FOCUS_VLWA_SOURCE", raising=False)
+    assert _source.configure_source() == bundled
+    hist_live._configure_client_source()
+    assert sys.path[0] == str(bundled / "src")
