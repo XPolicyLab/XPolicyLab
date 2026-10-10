@@ -132,7 +132,7 @@ EVAL_ENV_TYPE=debug DEBUG_OBS_ENCODED=1 bash eval.sh RoboDojo stack_bowls joint2
 
 ## Model Assets
 
-`download_checkpoints.sh` fetches from the public [Hugging Face](https://huggingface.co/Haodong082399/VPP2) repository into `checkpoints/`; [ModelScope](https://modelscope.cn/models/haodong123/VPP2_preview) is an alternative mirror that needs an authorized account (SDK login or `MODELSCOPE_API_TOKEN`). The Wan2.1 encoders are always included:
+`download_checkpoints.sh` fetches weights into `checkpoints/` from public [Hugging Face](https://huggingface.co/Haodong082399/VPP2) (default) or [ModelScope](https://modelscope.cn/models/haodong123/VPP2). Both sources support anonymous downloads; no login or token is required. Every download mode includes the root `config.json` in `policy/VPP2/` and the shared Wan2.1 encoders:
 
 ```bash
 bash download_checkpoints.sh [--stage eval|train|all] [--source huggingface|modelscope]
@@ -140,6 +140,7 @@ bash download_checkpoints.sh [--stage eval|train|all] [--source huggingface|mode
 # Example: evaluation bundle (default), then the training initializer
 bash download_checkpoints.sh
 bash download_checkpoints.sh --stage train
+bash download_checkpoints.sh --source modelscope
 ```
 
 ```text
@@ -160,12 +161,12 @@ checkpoints/
 
 Keep the four bundle files together. `python launch_policy.py --dry-run` checks bundle file sizes against the manifest, the manifest step and the encoder inventory without allocating a GPU.
 
-The robot-video pretrained Video models are also public, under `checkpoints_video/` in the same Hugging Face repository (about 65.6 GB each; not on ModelScope): `vpp2-video-stage1-49f.pth` (Stage 1, event-level, 49 frames) and `vpp2-video-stage2-17f.pth` (Stage 2, fixed horizon, 17 frames). They serve zero-shot video prediction, which is not part of this adapter — see the upstream [video prediction guide](https://github.com/roboterax/video-prediction-policy-2/blob/main/docs/video_prediction.md); its script is newer than the commit `install.sh` pins. `download_checkpoints.sh` does not fetch them, and the RoboDojo recipe above still starts from Video-10k:
+The robot-video pretrained Video models are also public, under `checkpoints_video/` in both repositories (about 65.6 GB each): `vpp2-video-stage1-49f.pth` (Stage 1, event-level, 49 frames) and `vpp2-video-stage2-17f.pth` (Stage 2, fixed horizon, 17 frames). They serve zero-shot video prediction, which is not part of this adapter — see the upstream [video prediction guide](https://github.com/roboterax/video-prediction-policy-2/blob/main/docs/video_prediction.md); its script is newer than the commit `install.sh` pins. `download_checkpoints.sh` does not fetch them, and the RoboDojo recipe above still starts from Video-10k:
 
 ```bash
 # Writes <weights_dir>/checkpoints_video/vpp2-video-stage1-49f.pth
 hf download Haodong082399/VPP2 --local-dir <weights_dir> \
-  --include 'checkpoints_video/vpp2-video-stage1-49f.pth'
+  --include config.json 'checkpoints_video/vpp2-video-stage1-49f.pth'
 ```
 
 ## Configuration
@@ -195,7 +196,6 @@ Model-specific keys: `deployment_adapter: robodojo_ee16`, `action_dim: 16`, `act
 | `NNODES` / `NPROC_PER_NODE` / `NODE_RANK` / `MASTER_ADDR` / `MASTER_PORT` / `REQUIRE_RDMA` | training | Launcher topology; defaults `12` / `8` / `0` / `127.0.0.1` / `29500` / `1`. |
 | `PYTHON_BIN` | data, training | Interpreter for the upstream scripts; defaults to `python`. |
 | `TORCH_VERSION` / `TORCHVISION_VERSION` / `TORCH_CUDA` | install | PyTorch build; defaults `2.11.0` / `0.26.0` / `cu130`. |
-| `MODELSCOPE_API_TOKEN` | assets | Only for `--source modelscope`. |
 
 ## Notes
 
