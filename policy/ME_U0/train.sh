@@ -59,8 +59,7 @@ cmd=(bash "${POLICY_DIR}/scripts/ME_U0/run_multinode.sh" 1
   --exp-name "${run_id}"
   --work-root "${run_root}"
   --config "${config_rel}"
-  "training.seed=${seed}"
-")
+  "training.seed=${seed}")
 if (( ${#overrides[@]} > 0 )); then
   cmd+=("${overrides[@]}")
 fi
