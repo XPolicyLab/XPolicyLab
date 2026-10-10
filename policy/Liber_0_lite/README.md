@@ -19,7 +19,7 @@ External dependencies:
 | Dependency | Required for |
 | --- | --- |
 | Linux, NVIDIA GPU/driver, Python 3.10, PyTorch 2.11.0 (CUDA 13), torchvision 0.26.0 | Policy inference; installed Python package versions are pinned by `install.sh` and [requirements.txt](requirements.txt). |
-| Checkpoint and base model assets | Downloaded separately into `checkpoint/` and `assets/`; requires network access and checkpoint repository permission. Set `LIBER0_MODEL_PATH` to the assets directory. |
+| Checkpoint and base model assets | Downloaded separately into `checkpoint/` and `assets/`; requires network access. Set `LIBER0_MODEL_PATH` to the assets directory. |
 | XPolicyLab and RoboDojo `env_cfg/` | Required for both debug and simulation. Place `XPolicyLab/` beside `env_cfg/`, including `arx_x5.yml` and `robot/_robot_info.json`. |
 | RoboDojo simulator, scene/robot assets, Isaac Sim and its Conda environment | Simulation only; install separately using the benchmark's environment instructions. Not installed by this policy. |
 
@@ -35,12 +35,10 @@ python download_checkpoint.py --destination ./checkpoint --assets-dir ./assets
 export LIBER0_MODEL_PATH="$PWD/assets"
 ```
 
-Checkpoint: [PixelWAM-RoboDojo](https://huggingface.co/zxw1810/PixelWAM-RoboDojo)
-(private; authorized access required).
+Checkpoint: [Liber0-Lite-Robodojo](https://huggingface.co/LiberAI/Liber0-Lite-Robodojo).
 
 The downloader pins both repositories and verifies checkpoint checksums.
-Downloads total approximately 53 GB. Run `hf auth login` with an authorized
-account before downloading. The downloader does not use proxy environment variables.
+Downloads total approximately 53 GB. The downloader does not use proxy environment variables.
 
 ## Data Processing
 
