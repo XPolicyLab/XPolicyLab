@@ -18,7 +18,9 @@ XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 BENCH_ROOT="${BENCH_ROOT:-$(cd "${XPL_ROOT}/.." && pwd)}"
 UTILS_DIR="${XPL_ROOT}/utils"
 policy_name="$(basename "${SCRIPT_DIR}")"
-yaml_file="${SCRIPT_DIR}/deploy.yml"
+yaml_file="${WSP_DEPLOY_CONFIG:-${SCRIPT_DIR}/deploy.yml}"
+[[ "${yaml_file}" = /* ]] || yaml_file="${SCRIPT_DIR}/${yaml_file}"
+export WSP_DEPLOY_CONFIG="${yaml_file}"
 
 if [[ "${action_type}" != "joint" ]]; then
     echo "[CLIENT][ERROR] ${policy_name} requires action_type=joint." >&2

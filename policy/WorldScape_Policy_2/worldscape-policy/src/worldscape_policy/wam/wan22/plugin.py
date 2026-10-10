@@ -131,6 +131,14 @@ class Wan22WAMPlugin(nn.Module):
             raise TypeError("visual_codec_provider must return a visual codec module")
         return codec
 
+    def set_observation_history_mode(self, mode: str) -> int:
+        """Configure history mode and return the checkpoint's window capacity."""
+        configure = getattr(self._numerical_kernel, "set_observation_history_mode", None)
+        if not callable(configure):
+            raise RuntimeError("The WAM numerical kernel does not support observation history modes")
+        return configure(self.core, mode)
+
+
     def _vae(self) -> nn.Module:
         vae = getattr(self._codec(), "vae", None)
         if not isinstance(vae, nn.Module):
@@ -297,7 +305,13 @@ class Wan22WAMPlugin(nn.Module):
         generator: torch.Generator,
     ) -> WorldActionOutput:
         self._distributed.coordinate("plugin.sample.enter")
-        inference_state = visual_memory.wam_state.fork()
+        rolling = getattr(
+            getattr(self._numerical_kernel, "config", None),
+            "observation_history_mode", "periodic",
+        ) == "rolling"
+        # Rolling prefill reconstructs KVs from real observations, so cloning
+        # the previous window's GPU caches would only double peak memory use.
+        inference_state = WAMInferenceState() if rolling else visual_memory.wam_state.fork()
         self._distributed.validate_state_owner(
             inference_state.cache_owner_rank,
             inference_state.cache_world_size,
@@ -388,6 +402,10 @@ class Wan22WAMPlugin(nn.Module):
             cache_owner_rank=self._distributed.rank,
             cache_world_size=self._distributed.world_size,
         )
+        if rolling:
+            # The full observed window is provided again next time. Retain the
+            # causal metadata, not GPU caches that will never be reused.
+            next_inference_state = next_inference_state.without_caches()
         output.next_visual_memory = VisualMemoryState(
             persistent_prompt_latents=visual_memory.persistent_prompt_latents,
             persistent_prompt_version=visual_memory.persistent_prompt_version,

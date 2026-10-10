@@ -4,7 +4,7 @@ import json
 import logging
 import os
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal, Mapping, cast
 
@@ -33,6 +33,31 @@ from worldscape_policy.wam.registry import DEFAULT_WAM_REGISTRY, WAMRegistry
 from worldscape_policy.wam.wan22 import Wan22DistributedContext, Wan22KernelConfig
 
 LOGGER = logging.getLogger(__name__)
+
+def _checkpoint_action_dimensions(
+    directory: Path, model_action_dim: int,
+) -> tuple[tuple[int, int], ...]:
+    """Read real widths from the same artifact used to unpad output actions."""
+    from worldscape_policy.checkpoint.transforms import (
+        TRANSFORM_BUNDLE_FILENAME, CheckpointTransformArtifact,
+    )
+
+    path = directory / TRANSFORM_BUNDLE_FILENAME
+    if not path.is_file():
+        return ()
+    artifact = CheckpointTransformArtifact.read(path)
+    dimensions: dict[int, int] = {}
+    for transform in artifact.embodiments.values():
+        width = sum(field.size for field in transform.action_fields)
+        if transform.max_action_dim > model_action_dim or width > model_action_dim:
+            raise ValueError("Transform action dimensions exceed the model action_dim")
+        previous = dimensions.setdefault(transform.embodiment_id, width)
+        if previous != width:
+            raise ValueError("Conflicting action widths for the same embodiment_id")
+    LOGGER.info("Inference action padding sigma constraint: %s", dimensions)
+    return tuple(sorted(dimensions.items()))
+
+
 
 _STAGE2_NEW_PREFIXES = (
     "condition_router.auto.vlm.",
@@ -82,6 +107,7 @@ def build_wan22_policy_from_checkpoint(
     expected_semantic_gate_only: bool | None = None,
     expected_semantic_grad_clip_norm: float | None = None,
     training: bool = False,
+    constrain_action_padding: bool = False,
     diffusion_model_pretrained_path: str | None = None,
     text_encoder_pretrained_path: str | None = None,
     image_encoder_pretrained_path: str | None = None,
@@ -108,6 +134,8 @@ def build_wan22_policy_from_checkpoint(
     makes the precedence unambiguous: checkpoint > raw component > random init.
     """
 
+    if not isinstance(constrain_action_padding, bool):
+        raise TypeError("constrain_action_padding must be a boolean")
     directory = Path(checkpoint_dir) if checkpoint_dir else None
     if initialization not in {
         "auto",
@@ -203,6 +231,14 @@ def build_wan22_policy_from_checkpoint(
     resolved_tokenizer_path = tokenizer_path or _resolve_tokenizer_path(
         directory, action
     )
+    kernel_config = _kernel_config(raw, action)
+    if not training and constrain_action_padding and directory is not None:
+        kernel_config = replace(
+            kernel_config,
+            action_dims_by_embodiment=_checkpoint_action_dimensions(
+                directory, native_config.model.shape.action_dim,
+            ),
+        )
     t5_config = _required_mapping(action, "text_encoder_cfg")
     t5_overrides: dict[str, Any] = {"tokenizer_path": resolved_tokenizer_path}
     if text_encoder_pretrained_path is not None:
@@ -313,7 +349,7 @@ def build_wan22_policy_from_checkpoint(
         vae=vae,
         core=core,
         image_encoder=image_encoder,
-        kernel_config=_kernel_config(raw, action),
+        kernel_config=kernel_config,
         output_norm=output_norm,
         configured_mode=mode,
         wam_registry=wam_registry,
