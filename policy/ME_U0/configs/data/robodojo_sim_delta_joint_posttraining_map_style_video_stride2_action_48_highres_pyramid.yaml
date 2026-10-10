@@ -1,0 +1,95 @@
+# RoboDojo ARX-X5 delta-joint post-training dataset.
+# The dataset is an existing LeRobot v3 video dataset; process_data.sh links and validates it.
+robodojo_posttrain_data_root: ${oc.env:ME_U0_ROBODOJO_DATA_ROOT,/path/to/RoboDojo_lerobot_v30_video}
+robodojo_posttrain_norm_stats: configs/data/stats/robodojo_sim_arx_x5_delta_joint_horizon48.json
+
+data:
+  batch_size: 2
+  num_workers: 4
+  prefetch_factor: 2
+  dataloader_timeout_seconds: 1800
+  collate_fn:
+    _target_: leap.data.world_unified.collator.WorldUnifiedCollator
+    return_dict: true
+  train:
+    _target_: leap.data.me_u0.map_style_robot_video_dataset.MapStyleRobotMixtureDataset
+    datasets:
+    - _target_: leap.data.me_u0.map_style_robot_video_dataset.MapStyleLerobotV3VideoDataset
+      dataset_name: robodojo_sim_arx_x5
+      logical_domain_id: 13
+      num_cameras: 3
+      metadata_enabled: true
+      dataset_dirs:
+      - ${robodojo_posttrain_data_root}
+      stats_cache_dir: ${work_root}/cache/stats
+      pretrained_norm_stats: ${robodojo_posttrain_norm_stats}
+      stats_mode: require
+      decode_resize: [256, 320]
+      shape_meta: &robodojo_delta_joint_shape_meta
+        images:
+        - {key: observation.images.cam_high, raw_shape: [3, 480, 640], shape: [3, 256, 320]}
+        - {key: observation.images.cam_left_wrist, raw_shape: [3, 480, 640], shape: [3, 256, 320]}
+        - {key: observation.images.cam_right_wrist, raw_shape: [3, 480, 640], shape: [3, 256, 320]}
+        action:
+        - {key: left_arm, lerobot_key: action, select_indices: [0, 1, 2, 3, 4, 5], raw_shape: 6, shape: 6}
+        - {key: right_arm, lerobot_key: action, select_indices: [7, 8, 9, 10, 11, 12], raw_shape: 6, shape: 6}
+        - {key: left_gripper, lerobot_key: action, select_indices: [6], raw_shape: 1, shape: 1}
+        - {key: right_gripper, lerobot_key: action, select_indices: [13], raw_shape: 1, shape: 1}
+        state:
+        - {key: left_arm, lerobot_key: observation.state, select_indices: [0, 1, 2, 3, 4, 5], raw_shape: 6, shape: 6}
+        - {key: right_arm, lerobot_key: observation.state, select_indices: [7, 8, 9, 10, 11, 12], raw_shape: 6, shape: 6}
+        - {key: left_gripper, lerobot_key: observation.state, select_indices: [6], raw_shape: 1, shape: 1}
+        - {key: right_gripper, lerobot_key: observation.state, select_indices: [13], raw_shape: 1, shape: 1}
+      num_frames: 49
+      action_video_freq_ratio: 2
+      video_read_stride: 2
+      video_size: [384, 320]
+      is_training_set: true
+      seed: ${training.seed}
+      global_sample_stride: 1
+      minimum_future_offset: 48
+      concat_multi_camera: pyramid_3cam
+      val_set_proportion: 0.0
+      decode_workers: 4
+      processor:
+        _target_: leap.data.me_u0.processors.me_u0_processor.MEU0Processor
+        shape_meta: *robodojo_delta_joint_shape_meta
+        num_obs_steps: 25
+        num_output_cameras: 3
+        action_output_dim: 26
+        proprio_output_dim: 26
+        delta_action_dim_mask: null
+        action_state_transforms:
+        - _target_: leap.data.me_u0.transforms.relative_action.RelativeJointTransform
+          keys: [left_arm, right_arm]
+        - _target_: leap.data.me_u0.transforms.relative_action.NormalizedOpenToCloseTransform
+          keys: [left_gripper, right_gripper]
+        use_stepwise_action_norm: false
+        norm_default_mode: q01/q99
+        norm_exception_mode: null
+        action_state_merger:
+          _target_: leap.data.me_u0.transforms.action_state_merger.ConcatLeftAlign
+          action_target_dim: 26
+          state_target_dim: 26
+        train_transforms:
+        - _target_: leap.data.me_u0.transforms.image.ToTensor
+        - _target_: torchvision.transforms.Resize
+          size: [256, 320]
+        val_transforms:
+        - _target_: leap.data.me_u0.transforms.image.ToTensor
+        - _target_: torchvision.transforms.Resize
+          size: [256, 320]
+      main_image_key: observation.images.cam_high
+      main_image_size: [224, 224]
+      corrupt_sample_retries: 0
+    skip_corrupt_data: true
+    corrupt_sample_retries: 0
+  batch_sampler:
+    _target_: leap.data.me_u0.map_style_robot_video_dataset.MapStyleGlobalBatchSampler
+    batch_size: ${data.batch_size}
+    drop_last: true
+    seed: ${training.seed}
+    replacement: false
+    round_up_to_global_batch: false
+    source_weights:
+      robodojo_sim_arx_x5: 1

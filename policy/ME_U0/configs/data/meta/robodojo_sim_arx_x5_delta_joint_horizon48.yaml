@@ -1,0 +1,57 @@
+metadata_version: 1
+dataset_id: robodojo_sim_arx_x5
+source:
+  format: lerobot_v3
+  dataset_path: /path/to/RoboDojo_lerobot_v30_video
+  data_path: data/chunk-{chunk_index:03d}/file-{file_index:03d}.parquet
+  video_path: videos/{video_key}/chunk-{chunk_index:03d}/file-{file_index:03d}.mp4
+  task_path: meta/tasks.parquet
+inventory:
+  episode_count: 3500
+  frame_count: 1859602
+  task_count: 35
+robot:
+  model: arx_x5
+  arm_dof:
+  - 6
+  - 6
+  end_effector:
+  - parallel_gripper
+  - parallel_gripper
+control:
+  fps: 25
+  timestep_seconds: 0.04
+cameras:
+- key: observation.images.cam_high
+  resolution:
+  - 480
+  - 640
+- key: observation.images.cam_left_wrist
+  resolution:
+  - 480
+  - 640
+- key: observation.images.cam_right_wrist
+  resolution:
+  - 480
+  - 640
+native_layout:
+  state: '[left_arm6, left_gripper1, right_arm6, right_gripper1]'
+  action: '[left_arm6, left_gripper1, right_arm6, right_gripper1]'
+  units:
+    arm: rad
+    gripper: normalized command
+instruction:
+  frame_field: task_index
+  lookup: meta/tasks.parquet DataFrame row indexed by task_index
+  subtask_supervision: false
+normalization:
+  stats_file: leap/configs/data/stats/robodojo_sim_arx_x5_delta_joint_horizon48.json
+  mode: global q01/q99
+  action_horizon: 48
+  global_quantile_method: linear histogram, 5000 bins
+  action_semantics:
+    left_arm: action[t+k] - observation.state[t]
+    right_arm: action[t+k] - observation.state[t]
+    left_gripper: absolute action[t+k]
+    right_gripper: absolute action[t+k]
+  episode_tail: repeat final action

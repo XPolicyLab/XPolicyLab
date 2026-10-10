@@ -2,7 +2,7 @@
 
 **Contributor:** [anesthesia3690](https://github.com/anesthesia3690) | **Paper:** MachEmbodied-U0: Unified Understanding and Generation Model for Embodied Intelligence | **arXiv:** [2609.25627](https://arxiv.org/abs/2609.25627) | **Original code:** [MachEmbodied/ME-U0](https://github.com/MachEmbodied/ME-U0)
 
-ME-U0 jointly predicts future video and robot actions. This evaluation-only adapter supports RoboDojo's `arx_x5` robot with `joint` actions. The vendored `me_u0/` directory contains the ME-U0 model, Lance/Qwen/Wan components, preprocessing, and action codec; no separate training checkout is imported at runtime.
+ME-U0 jointly predicts future video and robot actions. This policy directory contains the RoboDojo `arx_x5` joint-action adapter and the matching GPU post-training entry points. The vendored `me_u0/` directory contains the model, data pipeline, Lance/Qwen/Wan components, preprocessing, and action codec.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -19,11 +19,39 @@ The installer creates a Python 3.12 environment with PyTorch 2.8 and FlashAttent
 
 ## Data Processing
 
-Not provided by this evaluation-only adapter. Upstream post-training consumes LeRobot v3 video data with `action`, `observation.state`, and three RGB camera streams. Data mappings and preparation are documented in the [ME-U0 repository](https://github.com/MachEmbodied/ME-U0); this adapter does not convert XPolicyLab trajectories.
+RoboDojo post-training consumes an existing LeRobot v3 video dataset with three RGB camera streams, `action`, and `observation.state`. `process_data.sh` validates the dataset and creates the policy-local data link; it does not convert RoboDojo simulator episodes.
+
+```bash
+export ME_U0_ROBODOJO_DATA_ROOT=/path/to/RoboDojo_lerobot_v30_video
+bash process_data.sh RoboDojo all arx_x5 joint
+```
+
+The dataset uses the delta-joint H48 contract and the included q01/q99 statistics.
 
 ## Training
 
-Post-training code and configurations are already available in the [ME-U0 repository](https://github.com/MachEmbodied/ME-U0#post-training). This adapter does not add `process_data.sh` or `train.sh` entry points.
+Install the policy dependencies and the additional GPU training dependencies in the same CUDA environment:
+
+```bash
+bash install.sh me_u0
+python -m pip install -r requirements-training.txt
+```
+
+Set the Lance assets, pretraining checkpoint, and training output root:
+
+```bash
+export LEAP_MODEL_ROOT=/path/to/lance-assets
+export ME_U0_PRETRAINED_PTH=/path/to/ME-U0-Pretrained/model.pt
+export RUN_ROOT=/path/to/train_runs
+```
+
+Run the XPolicyLab-style GPU entry point. The first six arguments are the shared policy convention; the GPU list controls the local `torchrun` world size.
+
+```bash
+bash train.sh RoboDojo all arx_x5 joint 0 0,1,2,3
+```
+
+Additional arguments are forwarded as training configuration overrides. Use `--dry-run` to print the resolved launcher command without starting training.
 
 ## Model Assets
 

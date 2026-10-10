@@ -1,0 +1,14 @@
+# DeepSpeed ZeRO-2 + BF16 — default distributed config for most experiments.
+#
+# Usage in experiment yaml:
+#   defaults:
+#     - /distributed: zero2_bf16
+#
+# Override in experiment:
+#   distributed:
+#     gradient_accumulation_steps: 4
+
+distributed:
+  mixed_precision: bf16
+  deepspeed_config: leap/distributed/deepspeed_configs/zero2.json
+  gradient_accumulation_steps: 1

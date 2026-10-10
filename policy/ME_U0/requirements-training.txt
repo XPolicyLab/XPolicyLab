@@ -1,0 +1,6 @@
+# Additional packages for the GPU post-training entry point.
+deepspeed>=0.14,<0.19
+datasets>=4.0,<4.8.5
+torchcodec>=0.3,<0.5
+accelerate>=0.30
+tensorboard

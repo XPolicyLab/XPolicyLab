@@ -1,0 +1,3 @@
+# Global defaults for all experiments
+work_root: ${oc.env:LEAP_WORK_ROOT,./work_dirs}
+model_root: ${oc.env:LEAP_MODEL_ROOT,/path/to/lance-assets}
