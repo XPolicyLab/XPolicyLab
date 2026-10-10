@@ -1,7 +1,7 @@
 import torch
 def build_batched_joint_mask(text_valid: torch.Tensor, target_len: int, ref_len: int, action_len: int, dtype: torch.dtype, joint_layout: str='legacy') -> torch.Tensor:
     if joint_layout not in {'legacy', 'native'}:
-        raise ValueError(f'Unsupported liber_0_lite joint_layout: {joint_layout!r}')
+        raise ValueError(f'Unsupported Liber_0_lite joint_layout: {joint_layout!r}')
     (batch_size, text_len) = text_valid.shape
     device = text_valid.device
     tms = text_len - 1

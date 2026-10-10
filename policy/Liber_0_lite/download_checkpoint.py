@@ -1,4 +1,4 @@
-"""Download an explicitly selected release; no default/private URL is assumed."""
+"""Download and verify the pinned public checkpoint release."""
 import argparse
 import hashlib
 import json
@@ -8,8 +8,8 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--repo-id", default="zxw1810/PixelWAM-RoboDojo")
-    parser.add_argument("--revision", default="b9960b1c83cbff457be430efa1b558f8878e1423")
+    parser.add_argument("--repo-id", default="LiberAI/Liber0-Lite-Robodojo")
+    parser.add_argument("--revision", default="270e1146e9f278ed1122c1ea614e5600dcf33ec3")
     parser.add_argument("--destination", type=Path, required=True)
     parser.add_argument("--assets-dir", type=Path, required=True)
     args = parser.parse_args()

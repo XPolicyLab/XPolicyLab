@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 import yaml
 
-adapter = importlib.import_module("XPolicyLab.policy.liber_0_lite.model")
+adapter = importlib.import_module("XPolicyLab.policy.Liber_0_lite.model")
 from XPolicyLab.utils.process_data import decode_obs_images, encode_image_bit, pack_robot_state
 
 
@@ -199,7 +199,7 @@ def test_loader_uses_bundled_runtime(monkeypatch, tmp_path):
 def test_official_websocket_and_deploy_loop_with_mock_engine(policy, encoded):
     from client_server.ws.model_client import WsModelClient
     from client_server.ws.model_server import PolicyServer, PolicyServerConfig
-    eval_one_episode = importlib.import_module("XPolicyLab.policy.liber_0_lite.deploy").eval_one_episode
+    eval_one_episode = importlib.import_module("XPolicyLab.policy.Liber_0_lite.deploy").eval_one_episode
 
     class Environment:
         step = 0
@@ -248,7 +248,7 @@ def test_official_websocket_and_deploy_loop_with_mock_engine(policy, encoded):
 def test_official_batch_loop_handles_finished_environments(policy, encoded):
     from client_server.ws.model_client import WsModelClient
     from client_server.ws.model_server import PolicyServer, PolicyServerConfig
-    deploy = importlib.import_module('XPolicyLab.policy.liber_0_lite.deploy')
+    deploy = importlib.import_module('XPolicyLab.policy.Liber_0_lite.deploy')
 
     class Environment:
         def __init__(self):

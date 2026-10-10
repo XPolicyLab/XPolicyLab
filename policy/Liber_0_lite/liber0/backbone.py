@@ -19,7 +19,7 @@ def _validate_patch_weight_pooling(patch_size: int, mode: str) -> tuple[int, str
     mode = str(mode)
     if (patch_size, mode) in {(PRETRAINED_PATCH_SIZE, 'none'), (POOLED_PATCH_SIZE, 'target_only_global_norm')}:
         return (patch_size, mode)
-    raise ValueError(f'liber_0_lite patch configuration must be patch32 with no pooling or patch16 with target_only_global_norm, got patch_size={patch_size}, patch_weight_pooling={mode!r}.')
+    raise ValueError(f'Liber_0_lite patch configuration must be patch32 with no pooling or patch16 with target_only_global_norm, got patch_size={patch_size}, patch_weight_pooling={mode!r}.')
 
 def _pool_patch32_weights_to_patch16(input_weight: torch.Tensor, output_weight: torch.Tensor, output_bias: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, float]:
     old_area = PRETRAINED_PATCH_SIZE * PRETRAINED_PATCH_SIZE
@@ -98,7 +98,7 @@ def _install_portable_inference_rope(backbone: nn.Module) -> None:
     rotary.forward = types.MethodType(forward, rotary)
 
 class JointModel(nn.Module):
-    """liber_0_lite backbone plus action/proprio interfaces."""
+    """Liber_0_lite backbone plus action/proprio interfaces."""
 
     def __init__(self, backbone: nn.Module, action_dim: int, proprio_dim: int, max_action_horizon: int) -> None:
         super().__init__()
@@ -136,7 +136,7 @@ class LiberModel(nn.Module):
         (batch_size, channels, height, width) = images.shape
         patch_size = int(patch_size)
         if channels != RGB_CHANNELS or height % patch_size or width % patch_size:
-            raise ValueError(f'liber_0_lite images must be RGB and divisible by {patch_size}, got {tuple(images.shape)}.')
+            raise ValueError(f'Liber_0_lite images must be RGB and divisible by {patch_size}, got {tuple(images.shape)}.')
         return images.reshape(batch_size, channels, height // patch_size, patch_size, width // patch_size, patch_size).permute(0, 2, 4, 1, 3, 5).reshape(batch_size, height // patch_size * (width // patch_size), channels * patch_size * patch_size)
 
     @staticmethod
@@ -337,11 +337,11 @@ class LiberModel(nn.Module):
     @torch.no_grad()
     def infer_joint(self, prompt: Optional[str], input_image: Optional[torch.Tensor], action_horizon: int, proprio: Optional[torch.Tensor]=None, reference_images: Optional[dict[str, torch.Tensor]]=None, context: Optional[torch.Tensor]=None, context_mask: Optional[torch.Tensor]=None, num_inference_steps: int=30, sigma_shift: Optional[float]=None, seed: Optional[int]=None, rand_device: str='cpu', text_cfg_scale: float=1.0, negative_prompt: str='', **_: Any) -> dict[str, Any]:
         if float(text_cfg_scale) != 1.0 or negative_prompt:
-            raise ValueError('liber_0_lite action inference supports text_cfg_scale=1 and an empty negative_prompt only; CFG is not trained for this action head.')
+            raise ValueError('Liber_0_lite action inference supports text_cfg_scale=1 and an empty negative_prompt only; CFG is not trained for this action head.')
         if context is not None or context_mask is not None:
-            raise ValueError('liber_0_lite inference requires a raw prompt.')
+            raise ValueError('Liber_0_lite inference requires a raw prompt.')
         if prompt is None:
-            raise ValueError('liber_0_lite inference requires prompt.')
+            raise ValueError('Liber_0_lite inference requires prompt.')
         if input_image is None:
             raise ValueError('input_image is required for mosaic target inference.')
         else:

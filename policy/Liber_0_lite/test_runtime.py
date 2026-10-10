@@ -11,7 +11,7 @@ import pytest
 import torch
 from torchvision.transforms import Resize, functional as TF
 
-runtime = importlib.import_module('XPolicyLab.policy.liber_0_lite.liber0')
+runtime = importlib.import_module('XPolicyLab.policy.Liber_0_lite.liber0')
 preprocessing = importlib.import_module(runtime.__name__ + '.preprocessing')
 scheduler = importlib.import_module(runtime.__name__ + '.scheduler')
 backbone = importlib.import_module(runtime.__name__ + '.backbone')
@@ -91,7 +91,7 @@ def test_padding_mask_preserves_unpadded_attention():
 @pytest.mark.parametrize('corrupt', [False, True])
 def test_download_manifest_and_pinned_assets(monkeypatch, tmp_path, corrupt):
     import huggingface_hub
-    download = importlib.import_module('XPolicyLab.policy.liber_0_lite.download_checkpoint')
+    download = importlib.import_module('XPolicyLab.policy.Liber_0_lite.download_checkpoint')
     calls = []
 
     def snapshot(**kwargs):
@@ -121,5 +121,7 @@ def test_download_manifest_and_pinned_assets(monkeypatch, tmp_path, corrupt):
         assert len(calls) == 2
         assert all(len(call['revision']) == 40 for call in calls)
         assert calls[1]['repo_id'] == 'HiDream-ai/HiDream-O1-Image'
+    assert calls[0]['repo_id'] == 'LiberAI/Liber0-Lite-Robodojo'
+    assert calls[0]['revision'] == '270e1146e9f278ed1122c1ea614e5600dcf33ec3'
     assert 'runtime.tar.gz' not in calls[0]['allow_patterns']
     assert 'policy.tar.gz' not in calls[0]['allow_patterns']

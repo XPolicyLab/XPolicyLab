@@ -1,4 +1,4 @@
-"""liber_0_lite policy adapter."""
+"""Liber_0_lite policy adapter."""
 import os
 from pathlib import Path
 import sys
@@ -47,7 +47,7 @@ class Model(ModelTemplate):
             raise ValueError("This checkpoint supports arx_x5 joint control only.")
         torch.set_float32_matmul_precision("highest")
         torch.backends.cuda.matmul.allow_tf32 = False
-        print("[liber_0_lite runtime]", sys.executable, torch.__version__, torch.version.cuda,
+        print("[Liber_0_lite runtime]", sys.executable, torch.__version__, torch.version.cuda,
               os.environ["TORCH_ALLOW_TF32_CUBLAS_OVERRIDE"],
               torch.get_float32_matmul_precision(), torch.backends.cuda.matmul.allow_tf32, flush=True)
         assert os.environ["TORCH_ALLOW_TF32_CUBLAS_OVERRIDE"] == "0"
