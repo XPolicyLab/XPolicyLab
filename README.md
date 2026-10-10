@@ -23,7 +23,7 @@ Building Scalable Infrastructure for Robot Learning Workshop, awarded to all XPo
 
 </div>
 
-XPolicyLab is the shared layer between policy code and evaluation environments. Keep each model's dependencies, checkpoints, and training recipes under `policy/<POLICY>/`; XPolicyLab handles the parts that are boring but easy to get wrong — serving, observation/action contracts, and eval wiring. As of October 2026, the ecosystem integrates **55 robot policies** spanning VLA, world-action, imitation-learning, and memory-augmented families, and the same adapters serve RoboTwin, RoboDojo simulation, and standardized real-robot evaluation.
+XPolicyLab is the shared layer between policy code and evaluation environments. Keep each model's dependencies, checkpoints, and training recipes under `policy/<POLICY>/`; XPolicyLab handles the parts that are boring but easy to get wrong — serving, observation/action contracts, and eval wiring. As of October 2026, the ecosystem integrates **60 robot policies** spanning VLA, world-action, imitation-learning, and memory-augmented families, and the same adapters serve RoboTwin, RoboDojo simulation, and standardized real-robot evaluation.
 
 Start here for repo-level concepts and integration steps. For install commands, checkpoint layout, and training details, jump to that policy's README — it is the source of truth for its model.
 
@@ -81,7 +81,7 @@ XPolicyLab is benchmark-agnostic: any benchmark, simulator, or real-robot setup 
 
 ## 🧭 Integrated Policies
 
-57 policies are currently integrated, spanning VLA, world-action, imitation-learning, and memory-augmented families, plus [demo_policy](policy/demo_policy/README.md) as the minimal reference adapter. Top-level adapters live in `policy/`; each policy README documents that model's paper/repo link, environment, data format, training entrypoint, and checkpoint layout.
+60 policies are currently integrated, spanning VLA, world-action, imitation-learning, and memory-augmented families, plus [demo_policy](policy/demo_policy/README.md) as the minimal reference adapter. Top-level adapters live in `policy/`; each policy README documents that model's paper/repo link, environment, data format, training entrypoint, and checkpoint layout.
 
 
 | Policy                                   | Policy                                               | Policy                                      | Policy                                                     | Policy                                                         | Policy                                            |
@@ -95,7 +95,8 @@ XPolicyLab is benchmark-agnostic: any benchmark, simulator, or real-robot setup 
 | [TinyVLA](policy/TinyVLA/README.md)      | [X-VLA](policy/X_VLA/README.md)                      | [X-WAM](policy/X_WAM/README.md)             | [Xiaomi-Robotics-0](policy/Xiaomi_Robotics_0/README.md)    | [Xiaomi-Robotics-1 (XR-1)](policy/Xiaomi_Robotics_1/README.md) | [StarVLA](policy/StarVLA/README.md)               |
 | [ACT](policy/ACT/README.md) | [DP](policy/DP/README.md) | [Evo-1](policy/Evo_1/README.md) | [InternW0_delta](policy/InternW0_delta/README.md) | [KinRT](policy/KinRT/README.md) | [PatchWAM-Lite](policy/PatchWAM/README.md) |
 | [Awomo-0.5](policy/Awomo05/README.md) | [MoPA](policy/MoPA/README.md) | [PhysicalRSI](policy/physicalRSI/README.md) | [Simate-beta](policy/Simate_beta/README.md) | [SimpleMemVLA](policy/SimpleMemVLA/README.md) | [WorldScape Policy 2.0](policy/WorldScape_Policy_2/README.md) |
-| [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [VPP2](policy/VPP2/README.md) | [Liber_0_lite](policy/Liber_0_lite/README.md) | [demo_policy](policy/demo_policy/README.md) | | |
+| [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [VPP2](policy/VPP2/README.md) | [Liber_0_lite](policy/Liber_0_lite/README.md) | [Discrete Forcing](policy/Discrete_Forcing/README.md) | [EgoVLA](policy/EgoVLA/README.md) | [MM-ABC](policy/MM_ABC/README.md) |
+| [demo_policy](policy/demo_policy/README.md) | | | | | |
 
 Adding a policy of your own, or entering a leaderboard, both go through a PR — see [Add Your Own Policy](#-add-your-own-policy).
 
