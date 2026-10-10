@@ -1,0 +1,8 @@
+# MM-ABC with a Qwen3-VL-2B backbone.
+defaults: configs/model/mmabc_4b.yaml
+
+backbone:
+  path: pretrained_ckpt/Qwen3-VL-2B-Instruct
+  num_layers: 28
+  hidden_size: 2048
+  memory_layers: [9, 15, 21, 27]

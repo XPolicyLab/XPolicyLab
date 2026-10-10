@@ -1,0 +1,65 @@
+# MM-ABC on all 8 Mobile tasks, from scratch. 2 nodes x 8 GPUs x micro-batch 8 = global batch 128.
+run_name: mmabc-mobile-4b
+model: configs/model/mmabc_4b_mobile.yaml
+seed: 0
+init_from: null          # weights-only warm start (DCP dir); null = from scratch
+
+micro_batch_size: 8
+grad_accum_steps: 1
+max_steps: 60000
+log_every: 20
+
+shard_strategy: hsdp
+reshard_after_forward: true
+compile_expert: false
+auto_resume: true
+fp32_visual: true
+allow_tf32: true
+
+data:
+  mixture: configs/mixture/mobile_all.yaml
+  norm_stats_dir: configs/norm_stats
+  prompt_dropout: 0.0
+  num_workers: 6
+  prefetch_factor: 4
+  processor_in_workers: true
+  warm_page_cache: true
+
+freeze: []
+
+debug_grad_norm: false
+debug_grad_groups: false
+debug_watch: []
+debug_nonfinite: false
+debug_sdpa: false
+debug_anomaly: false
+shard_size: null
+
+model_overrides: {}      # merged onto the model config
+
+optim:
+  lr_backbone: 1.0e-5
+  lr_expert: 1.0e-4
+  weight_decay: 1.0e-8
+  betas: [0.9, 0.95]
+  eps: 1.0e-8
+  warmup_steps: 1000
+  min_lr_ratio: 0.02
+  max_grad_norm: 1.0
+  grad_norm_spike_factor: 8.0
+  grad_norm_window: 200
+  grad_norm_min_history: 25
+  grad_norm_ceiling: 1.0e4
+  max_skip_frac: 0.25
+  skip_rate_window: 200
+
+checkpoint:
+  root: checkpoints/mobile-4b
+  resume_every: 1000
+  keep_resume: 2
+  milestone_every: 5000
+  min_free_gb: 200
+  save_final: true
+
+wandb_project: mmabc-mobile
+wandb_entity: null

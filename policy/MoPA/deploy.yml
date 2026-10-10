@@ -11,11 +11,13 @@ action_type: null
 gpu_id: null
 eval_batch: false
 
-# Override only when the same Qwen assets have moved to another local directory.
 base_vlm: null
 checkpoint_path: null
 device: cuda
 dtype: bfloat16
-# Number of actions to execute per chunk; null executes all four predictions.
 execute_steps: null
+action_key_style: singular
+# Use bgr only for a checkpoint trained on BGR images; server input is always RGB.
+input_color_order: rgb
+mobile_action_contract: mopa75
 request_timeout_s: 120

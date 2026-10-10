@@ -8,6 +8,9 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import torch.distributed as distributed
+from torch.nn.parallel import DistributedDataParallel
+from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import DataLoader, Dataset
 
 
@@ -21,6 +24,8 @@ def collate_samples(samples: list[dict]) -> dict:
 
 
 def save_checkpoint(model: torch.nn.Module, config: dict, statistics: dict, directory: Path) -> None:
+    if isinstance(model, DistributedDataParallel):
+        model = model.module
     directory.mkdir(parents=True, exist_ok=True)
     # Replace complete files so an interrupted torch.save cannot leave a corrupt model.pt.
     temporary = directory / "model.pt.tmp"
@@ -45,10 +50,17 @@ def train_model(model: torch.nn.Module, dataset: Dataset, config: dict, output_d
         raise ValueError("Invalid worker/save/log/warmup setting.")
     if max_grad_norm <= 0:
         raise ValueError("max_grad_norm must be positive.")
+    is_distributed = distributed.is_available() and distributed.is_initialized()
+    rank = distributed.get_rank() if is_distributed else 0
+    world_size = distributed.get_world_size() if is_distributed else 1
     model.to(device)
     model.train()
     generator = torch.Generator().manual_seed(seed)
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers,
+    sampler = (DistributedSampler(dataset, num_replicas=world_size, rank=rank,
+                                  shuffle=True, seed=seed, drop_last=False)
+               if is_distributed else None)
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=sampler is None,
+                        sampler=sampler, num_workers=num_workers,
                         collate_fn=collate_samples, generator=generator)
     backbone, head = [], []
     for name, parameter in model.named_parameters():
@@ -62,6 +74,13 @@ def train_model(model: torch.nn.Module, dataset: Dataset, config: dict, output_d
     if not groups:
         raise ValueError("The model has no trainable parameters.")
     optimizer = torch.optim.AdamW(groups, betas=(0.9, 0.95), eps=1e-8, weight_decay=weight_decay)
+    if is_distributed:
+        device_index = torch.device(device).index
+        model = DistributedDataParallel(
+            model, device_ids=[device_index] if torch.device(device).type == "cuda" else None,
+            output_device=device_index if torch.device(device).type == "cuda" else None,
+            find_unused_parameters=True,
+        )
     warmup_steps = min(warmup_steps, max_steps - 1)
 
     def make_lr_factor(initial_lr):
@@ -79,12 +98,18 @@ def train_model(model: torch.nn.Module, dataset: Dataset, config: dict, output_d
 
     scheduler = torch.optim.lr_scheduler.LambdaLR(
         optimizer, [make_lr_factor(group["lr"]) for group in optimizer.param_groups])
+    epoch = 0
+    if sampler is not None:
+        sampler.set_epoch(epoch)
     iterator = iter(loader)
     loss_value = float("nan")
     for step in range(1, max_steps + 1):
         try:
             batch = next(iterator)
         except StopIteration:
+            epoch += 1
+            if sampler is not None:
+                sampler.set_epoch(epoch)
             iterator = iter(loader)
             batch = next(iterator)
         batch["state"] = batch["state"].to(device)
@@ -99,8 +124,20 @@ def train_model(model: torch.nn.Module, dataset: Dataset, config: dict, output_d
         scheduler.step()
         loss_value = float(loss.detach().cpu())
         if step == 1 or step % log_interval == 0 or step == max_steps:
-            print(f"[MoPA] step={step}/{max_steps} action_loss={loss_value:.6f}", flush=True)
+            reported_loss = loss.detach().clone()
+            if is_distributed:
+                distributed.all_reduce(reported_loss, op=distributed.ReduceOp.SUM)
+                reported_loss /= world_size
+            if rank == 0:
+                print(f"[MoPA] step={step}/{max_steps} action_loss={float(reported_loss.cpu()):.6f} "
+                      f"global_batch={batch_size * world_size}", flush=True)
         if save_interval and step % save_interval == 0 and step < max_steps:
-            save_checkpoint(model, config, dataset.statistics, output_dir / f"steps_{step}")
-    save_checkpoint(model, config, dataset.statistics, output_dir)
+            if rank == 0:
+                save_checkpoint(model, config, dataset.statistics, output_dir / f"steps_{step}")
+            if is_distributed:
+                distributed.barrier()
+    if rank == 0:
+        save_checkpoint(model, config, dataset.statistics, output_dir)
+    if is_distributed:
+        distributed.barrier()
     return loss_value

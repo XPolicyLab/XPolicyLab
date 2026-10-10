@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mmabc"
+version = "0.1.0"
+description = "MM-ABC: vision-language-action policy for mobile manipulation"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.6",
+    "transformers>=4.57,<4.58",
+    "numpy>=1.26",
+    "pyarrow>=17,<19",
+    "pandas>=2.0",
+    "av>=12",
+    "opencv-python-headless>=4.8",
+    "h5py>=3.10",
+    "omegaconf>=2.3",
+    "pillow>=10",
+    "scipy>=1.12",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+train = ["wandb>=0.17", "flash-attn>=2.7"]
+serve = ["msgpack>=1.0", "websockets>=12"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+mmabc-train = "mmabc.train.entrypoint:main"
+
+[tool.setuptools.packages.find]
+include = ["mmabc*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

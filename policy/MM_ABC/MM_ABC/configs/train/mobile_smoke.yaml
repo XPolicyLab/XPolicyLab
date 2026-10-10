@@ -1,0 +1,16 @@
+# Short end-to-end check: data, every loss term, resume and milestone checkpoints.
+defaults: configs/train/mobile.yaml
+
+run_name: mmabc-mobile-smoke
+max_steps: 40
+log_every: 5
+
+optim:
+  warmup_steps: 10
+
+checkpoint:
+  root: checkpoints/mobile-smoke
+  resume_every: 20
+  keep_resume: 1
+  milestone_every: 40
+  min_free_gb: 100

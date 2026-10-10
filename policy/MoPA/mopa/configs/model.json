@@ -1,10 +1,11 @@
 {
   "base_vlm": null,
   "backbone_dtype": "bfloat16",
-  "num_query_tokens": 8,
-  "base_num_query_tokens": 0,
+  "num_query_tokens": 16,
+  "arm_num_query_tokens": 8,
+  "base_num_query_tokens": 8,
   "query_init_std": 0.02,
-  "action_horizon": 4,
+  "action_horizon": 32,
   "input_embedding_dim": 768,
   "hidden_size": 1024,
   "num_attention_heads": 12,
@@ -19,6 +20,8 @@
   "num_inference_timesteps": 4,
   "repeated_diffusion_steps": 8,
   "in_context_condition_dim": 0,
+  "manipulation_action_range": [0, 56],
+  "mobility_action_range": [56, 75],
   "gradient_checkpointing": false,
   "freeze_backbone": false
 }

@@ -9,13 +9,21 @@ from pathlib import Path
 import numpy as np
 
 from ..common import DATASET_FORMAT, joint_fields, rgb_image
+from . import mobile
 
 
 def validate_contract(metadata: dict) -> int:
     """Validate the arm-joint and image layout shared by training and inference."""
     if metadata.get("action_type", "joint") != "joint":
         raise ValueError("MoPA supports joint actions only.")
-    dim = sum(size for _, size in joint_fields(metadata["robot_action_dim_info"]))
+    if mobile.matches_layout(metadata):
+        if metadata.get("state_dim") not in (None, mobile.MODEL_DIM):
+            raise ValueError("Mobile state_dim must be 75")
+        if metadata.get("action_dim") not in (None, mobile.MODEL_DIM):
+            raise ValueError("Mobile action_dim must be 75")
+        dim = mobile.MODEL_DIM
+    else:
+        dim = sum(size for _, size in joint_fields(metadata["robot_action_dim_info"]))
     for name in ("state_dim", "action_dim"):
         if name in metadata and metadata[name] != dim:
             raise ValueError(f"{name} does not match robot_action_dim_info ({dim}).")
@@ -96,6 +104,148 @@ def prepare_dataset(episodes: Iterable[dict], metadata: dict, output_dir: str | 
                   episodes=records, num_frames=sum(record["length"] for record in records))
     for name, value in (("metadata.json", result), ("dataset_statistics.json", statistics)):
         (output_dir / name).write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+    return result
+
+
+def _decode_scalar(value) -> str:
+    if isinstance(value, np.ndarray) and value.shape == ():
+        value = value.item()
+    if isinstance(value, (bytes, np.bytes_)):
+        value = value.decode("utf-8")
+    text = str(value).strip()
+    if not text:
+        raise ValueError("instruction must be nonempty")
+    return text
+
+
+def _reservoir_update(reservoir: np.ndarray, seen: int, values: np.ndarray,
+                      rng: np.random.Generator) -> tuple[np.ndarray, int]:
+    """Bound statistics memory while retaining an unbiased row sample."""
+    if values.ndim != 2:
+        raise ValueError(f"Expected [T,D] values, got {values.shape}")
+    limit = reservoir.shape[0]
+    for row in values:
+        seen += 1
+        if seen <= limit:
+            reservoir[seen - 1] = row
+        else:
+            slot = int(rng.integers(0, seen))
+            if slot < limit:
+                reservoir[slot] = row
+    return reservoir, seen
+
+
+def _update_moments(count, mean, m2, lower, upper, values):
+    """Merge one frame block into exact per-dimension moments and extrema."""
+    values = np.asarray(values, dtype=np.float64)
+    if values.ndim != 2 or not len(values):
+        raise ValueError(f"Expected a nonempty [T,D] block, got {values.shape}")
+    block_count = values.shape[0]
+    block_mean = values.mean(axis=0)
+    centered = values - block_mean
+    block_m2 = np.sum(centered * centered, axis=0)
+    total = count + block_count
+    delta = block_mean - mean
+    correction = delta * delta * count * block_count / max(total, 1)
+    mean = mean + delta * block_count / max(total, 1)
+    m2 = m2 + block_m2 + correction
+    lower = np.minimum(lower, values.min(axis=0))
+    upper = np.maximum(upper, values.max(axis=0))
+    return total, mean, m2, lower, upper
+
+
+def _minmax_statistics(count, mean, m2, lower, upper, sample, seen):
+    """Serialize exact min/max statistics and sampled quantile diagnostics."""
+    variance = m2 / max(count - 1, 1)
+    return {
+        "count": [int(count)] * len(mean),
+        "mean": mean.tolist(),
+        "std": np.sqrt(np.maximum(variance, 0.0)).tolist(),
+        "min": lower.tolist(),
+        "max": upper.tolist(),
+        "q01": np.quantile(sample[:min(seen, len(sample))], 0.01, axis=0).tolist(),
+        "q99": np.quantile(sample[:min(seen, len(sample))], 0.99, axis=0).tolist(),
+    }
+
+
+def prepare_mobile_dataset(source_dir: str | Path, metadata: dict,
+                            output_dir: str | Path, *, episode_limit: int | None = None,
+                            statistics_samples: int = 200_000) -> dict:
+    """Index source HDF5 episodes for lazy frame reads and bounded-memory statistics."""
+    try:
+        import h5py  # noqa: F401
+    except ImportError as exc:  # pragma: no cover - only reached in a broken env
+        raise RuntimeError("Mobile conversion requires h5py") from exc
+    dim = validate_contract(metadata)
+    if not mobile.matches_layout(metadata) or dim != mobile.MODEL_DIM:
+        raise ValueError("prepare_mobile_dataset requires the Mobile contract")
+    source_dir = Path(source_dir).expanduser()
+    files = sorted(set(source_dir.rglob("*.hdf5")) | set(source_dir.rglob("*.h5")))
+    if not files:
+        raise FileNotFoundError(f"No Mobile HDF5 episodes found below {source_dir}")
+    if episode_limit is not None:
+        if not 1 <= episode_limit <= len(files):
+            raise ValueError(f"episode_limit must be in [1, {len(files)}]")
+        files = files[:episode_limit]
+    if statistics_samples <= 0:
+        raise ValueError("statistics_samples must be positive")
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=False)
+    rng = np.random.default_rng(0)
+    state_sample = np.empty((statistics_samples, dim), dtype=np.float32)
+    action_sample = np.empty((statistics_samples, dim), dtype=np.float32)
+    state_mean = np.zeros(dim, dtype=np.float64)
+    action_mean = np.zeros(dim, dtype=np.float64)
+    state_m2 = np.zeros(dim, dtype=np.float64)
+    action_m2 = np.zeros(dim, dtype=np.float64)
+    state_min = np.full(dim, np.inf, dtype=np.float64)
+    action_min = np.full(dim, np.inf, dtype=np.float64)
+    state_max = np.full(dim, -np.inf, dtype=np.float64)
+    action_max = np.full(dim, -np.inf, dtype=np.float64)
+    state_count = action_count = 0
+    state_seen = action_seen = 0
+    records = []
+    import h5py
+    for index, path in enumerate(files):
+        with h5py.File(path, "r") as handle:
+            if "state" not in handle or "action" not in handle:
+                raise ValueError(f"{path}: expected state/ and action/ groups")
+            state = mobile.pack({key: handle[f"state/{key}"][()] for key, _, _ in mobile.KEYS})
+            action = mobile.pack({key: handle[f"action/{key}"][()] for key, _, _ in mobile.KEYS})
+            if state.ndim != 2 or action.shape != state.shape or not len(state):
+                raise ValueError(f"{path}: invalid state/action shapes {state.shape}/{action.shape}")
+            instruction = _decode_scalar(handle["instruction"][()])
+
+            for camera in metadata["cameras"]:
+                if f"vision/{camera}/colors" not in handle:
+                    raise ValueError(f"{path}: missing vision/{camera}/colors")
+                if len(handle[f"vision/{camera}/colors"]) != len(state):
+                    raise ValueError(f"{path}: camera {camera} length differs from state")
+        state_sample, state_seen = _reservoir_update(state_sample, state_seen, state, rng)
+        action_sample, action_seen = _reservoir_update(action_sample, action_seen, action, rng)
+        state_count, state_mean, state_m2, state_min, state_max = _update_moments(
+            state_count, state_mean, state_m2, state_min, state_max, state
+        )
+        action_count, action_mean, action_m2, action_min, action_max = _update_moments(
+            action_count, action_mean, action_m2, action_min, action_max, action
+        )
+        records.append({"file": str(path.resolve()), "length": int(len(state)),
+                        "instruction": instruction})
+        print(f"[MoPA] indexed Mobile episode {index + 1}/{len(files)}: {len(state)} frames", flush=True)
+    statistics = {
+        "normalization": "mmabc_minmax",
+        "state": _minmax_statistics(state_count, state_mean, state_m2, state_min,
+                                     state_max, state_sample, state_seen),
+        "action": _minmax_statistics(action_count, action_mean, action_m2, action_min,
+                                      action_max, action_sample, action_seen),
+    }
+    result = dict(metadata)
+    result.update(format_version=DATASET_FORMAT, action_type="joint", action_dim=dim,
+                  state_dim=dim, storage_format="mobile_hdf5", episodes=records,
+                  num_frames=sum(record["length"] for record in records),
+                  statistics_samples=statistics_samples)
+    (output_dir / "metadata.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    (output_dir / "dataset_statistics.json").write_text(json.dumps(statistics, indent=2) + "\n", encoding="utf-8")
     return result
 
 

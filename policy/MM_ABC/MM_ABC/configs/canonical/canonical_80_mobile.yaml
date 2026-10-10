@@ -1,0 +1,42 @@
+# Mobile m92uw in the 80-d pretraining canonical layout (same slots as canonical_80.yaml),
+# filled by mmabc.embodiments.mobile.to_c80. head_pose uses the pretraining `reserved` block;
+# slots m92uw lacks are masked via meta/embodiment.json.
+
+total_dim: 80
+
+segments:
+  # ---- left arm block [0, 29) ----
+  - {name: left_arm_joints,   range: [0, 7],   kind: joint,   group: arm,  norm: meanstd}
+  - {name: left_eef_position, range: [7, 10],  kind: eef_pos, group: eef,  norm: meanstd}
+  - {name: left_eef_rotation, range: [10, 16], kind: eef_rot, group: eef,  norm: meanstd, target_dim: 3}
+  - {name: left_gripper,      range: [16, 17], kind: gripper, group: hand, norm: minmax}
+  - {name: left_hand_joints,  range: [17, 29], kind: hand,    group: hand, norm: meanstd}
+  # ---- right arm block [29, 58) ----
+  - {name: right_arm_joints,   range: [29, 36], kind: joint,   group: arm,  norm: meanstd}
+  - {name: right_eef_position, range: [36, 39], kind: eef_pos, group: eef,  norm: meanstd}
+  - {name: right_eef_rotation, range: [39, 45], kind: eef_rot, group: eef,  norm: meanstd, target_dim: 3}
+  - {name: right_gripper,      range: [45, 46], kind: gripper, group: hand, norm: minmax}
+  - {name: right_hand_joints,  range: [46, 58], kind: hand,    group: hand, norm: meanstd}
+  # ---- shared block [58, 80) ----
+  - {name: base_twist,      range: [58, 61], kind: base_twist, group: base,      norm: meanstd}
+  - {name: base_pose_delta, range: [61, 64], kind: base_pose,  group: base,      norm: meanstd}
+  - {name: torso_joints,    range: [64, 68], kind: joint,      group: torso,     norm: meanstd}
+  - {name: lift_height,     range: [68, 69], kind: joint,      group: torso,     norm: meanstd}
+  - {name: head_pan_tilt,   range: [69, 71], kind: joint,      group: head,      norm: meanstd}
+  - {name: discrete_flags,  range: [71, 73], kind: discrete,   group: discrete,  norm: identity}
+  - {name: head_pose,       range: [73, 80], kind: cmd,        group: head_pose, norm: minmax}
+
+heads:
+  manip:
+    range: [0, 58]
+    groups: [arm, eef, hand]
+  aux:
+    range: [58, 80]
+    groups: [base, torso, head, discrete, head_pose]
+
+action_types:
+  joint:
+    keep_groups: [arm, eef]
+    drop_groups: []
+
+reference_frames: [base, eef_local]

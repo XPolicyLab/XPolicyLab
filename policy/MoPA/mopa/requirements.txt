@@ -3,3 +3,4 @@ torchvision==0.22.1
 transformers==4.57.0
 numpy>=1.23
 pillow>=10.0
+h5py>=3.8

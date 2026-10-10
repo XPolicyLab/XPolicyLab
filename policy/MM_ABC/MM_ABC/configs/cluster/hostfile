@@ -1,0 +1,6 @@
+# Format: <ssh_host> <rendezvous_ip> <ssh_key>
+# Add your own nodes; the first active line is the rendezvous master.
+# Keys resolve against SSH_KEY_DIR (default ~/.ssh); '-' uses SSH defaults.
+# The source tree, assets and Python environment must exist at identical paths.
+# user@node-a 192.0.2.10 -
+# user@node-b 192.0.2.11 id_ed25519

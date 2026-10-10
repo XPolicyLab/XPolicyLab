@@ -21,21 +21,39 @@ yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}"
 
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate "${policy_conda_env}"
+source "${SCRIPT_DIR}/resolve_python.sh"
+PY="$(resolve_python "${policy_conda_env}")"
+BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
+export PYTHONPATH="${BENCH_ROOT}:${XPL_ROOT}:${PYTHONPATH:-}"
+echo "[SERVER] python=${PY}"
+
+overrides=(
+    "port=${policy_server_port}"
+    "host=${policy_server_host}"
+    "bench_name=${bench_name}"
+    "task_name=${task_name}"
+    "ckpt_name=${ckpt_name}"
+    "env_cfg_type=${env_cfg_type}"
+    "seed=${seed}"
+    "policy_name=${policy_name}"
+    "action_type=${action_type}"
+)
+if [[ -n "${MOPA_CHECKPOINT_PATH:-}" ]]; then
+    overrides+=("checkpoint_path=${MOPA_CHECKPOINT_PATH}")
+fi
+if [[ -n "${MOBILE_ACTION_CONTRACT:-}" ]]; then
+    overrides+=("mobile_action_contract=${MOBILE_ACTION_CONTRACT}")
+fi
+if [[ -n "${MOPA_ACTION_KEY_STYLE:-}" ]]; then
+    overrides+=("action_key_style=${MOPA_ACTION_KEY_STYLE}")
+fi
+if [[ -n "${MOPA_EXECUTE_STEPS:-}" ]]; then
+    overrides+=("execute_steps=${MOPA_EXECUTE_STEPS}")
+fi
 
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${XPL_ROOT}/setup_policy_server.py" \
+    "${PY}" "${XPL_ROOT}/setup_policy_server.py" \
         --config_path "${yaml_file}" \
-        --overrides \
-            port="${policy_server_port}" \
-            host="${policy_server_host}" \
-            bench_name="${bench_name}" \
-            task_name="${task_name}" \
-            ckpt_name="${ckpt_name}" \
-            env_cfg_type="${env_cfg_type}" \
-            seed="${seed}" \
-            policy_name="${policy_name}" \
-            action_type="${action_type}"
+        --overrides "${overrides[@]}"

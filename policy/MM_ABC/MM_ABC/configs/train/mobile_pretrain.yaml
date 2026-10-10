@@ -1,0 +1,18 @@
+# MM-ABC on all 8 Mobile tasks, finetuned from the MM-ABC pretrain in the 80-d canonical layout.
+defaults: configs/train/mobile.yaml
+
+run_name: mmabc-mobile-4b-pretrain
+model: configs/model/mmabc_4b_mobile_pretrain.yaml
+
+init_from: pretrained_ckpt/mmabc_pretrain_200k   # fp32 weights, scripts/export_pretrain_weights.py
+
+data:
+  mixture: configs/mixture/mobile_c80_all.yaml
+  prompt_dropout: 0.05     # prompt header fields only
+
+optim:
+  lr_backbone: 5.0e-6
+  lr_expert: 5.0e-5
+
+checkpoint:
+  root: checkpoints/mobile-4b-pretrain

@@ -6,14 +6,22 @@ from mopa.integrations.xpolicylab import ModelAdapter
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
+from mopa.data import mobile
 
 
 class Model(ModelTemplate):
     def __init__(self, model_cfg):
         if model_cfg.get("action_type") != "joint":
             raise ValueError("MoPA supports action_type=joint only")
-        dim_info = get_robot_action_dim_info(model_cfg["env_cfg_type"])
-        checkpoint = resolve_checkpoint_root(model_cfg, Path(__file__).resolve().parent / "checkpoints")
+        env_cfg_type = model_cfg["env_cfg_type"]
+        # The mobile layout adds poses and base channels to the joint schema.
+        dim_info = (mobile.metadata()["robot_action_dim_info"]
+                    if str(env_cfg_type).lower() in {"m92uw", "mobile", "mobile_m92uw"}
+                    else get_robot_action_dim_info(env_cfg_type))
+        policy_dir = Path(__file__).resolve().parent
+        checkpoint = resolve_checkpoint_root(
+            model_cfg, policy_dir / "checkpoints", policy_dir=policy_dir,
+        )
         self.adapter = ModelAdapter(checkpoint, dim_info, model_cfg)
 
     def reset(self):

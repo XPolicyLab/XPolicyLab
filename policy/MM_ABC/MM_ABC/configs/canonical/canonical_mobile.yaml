@@ -1,0 +1,36 @@
+# Mobile m92uw layout (75 dims), shared by state and action (mmabc/embodiments/mobile.py):
+# the 11 HDF5 keys, poses as position(3) + rotation-6D(6). `cmd` = absolute next-frame
+# command; kind `joint` would make a segment an increment a[t+k] - s[t].
+
+total_dim: 75
+
+segments:
+  - {name: left_arm_joint,  range: [0, 7],   kind: cmd, group: arm,  norm: minmax}
+  - {name: right_arm_joint, range: [7, 14],  kind: cmd, group: arm,  norm: minmax}
+  - {name: left_hand,       range: [14, 26], kind: cmd, group: arm,  norm: minmax}
+  - {name: right_hand,      range: [26, 38], kind: cmd, group: arm,  norm: minmax}
+  - {name: left_ee_pos,     range: [38, 41], kind: cmd, group: arm,  norm: minmax}
+  - {name: left_ee_rot6d,   range: [41, 47], kind: cmd, group: arm,  norm: minmax}
+  - {name: right_ee_pos,    range: [47, 50], kind: cmd, group: arm,  norm: minmax}
+  - {name: right_ee_rot6d,  range: [50, 56], kind: cmd, group: arm,  norm: minmax}
+  - {name: waist,           range: [56, 58], kind: cmd, group: base, norm: minmax}
+  - {name: leg,             range: [58, 60], kind: cmd, group: base, norm: minmax}
+  - {name: head_pos,        range: [60, 63], kind: cmd, group: base, norm: minmax}
+  - {name: head_rot6d,      range: [63, 69], kind: cmd, group: base, norm: minmax}
+  - {name: root_lin_vel,    range: [69, 72], kind: cmd, group: base, norm: minmax}
+  - {name: root_ang_vel,    range: [72, 75], kind: cmd, group: base, norm: minmax}
+
+heads:
+  manip:
+    range: [0, 56]
+    groups: [arm]
+  aux:
+    range: [56, 75]
+    groups: [base]
+
+action_types:
+  joint:
+    keep_groups: [arm, base]
+    drop_groups: []
+
+reference_frames: [base]
