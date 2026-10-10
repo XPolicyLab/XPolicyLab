@@ -1,0 +1,30 @@
+policy_name: EmbodiedRSI
+protocol: ws
+host: 127.0.0.1
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: embodiedrsi_astra_xhigh
+env_cfg_type: arx_x5
+seed: 1
+action_type: ee
+gpu_id: null
+eval_batch: false
+model: gpt-6-astra
+reasoning_effort: xhigh
+agent_image: embodiedrsi-agent:xpolicy
+agent_cpus: 4
+agent_memory_mb: 8192
+# Empty selects a fresh directory under XPolicyLab/runs/EmbodiedRSI/.
+run_dir: null
+diagnostic: false
+execution_budget: 100
+submission_timeout_sec: 1200
+feedback_fps: 25
+agent_recovery:
+  max_restarts: 3
+  backoff_seconds: 60
+  max_backoff_seconds: 300
+  jitter_seconds: 20
+ws_ping_interval_s: 20.0
+ws_ping_timeout_s: 120.0

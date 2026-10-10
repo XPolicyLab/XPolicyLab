@@ -1,0 +1,12 @@
+# Bounded dual-arm EE motion
+Use `ee_motion.py` through `--include`. `move_ee` accepts side-keyed absolute world poses [x,y,z,qw,qx,qy,qz], side-keyed normalized gripper commands, and an explicit action budget. Missing targets hold the measured pose. It repeatedly observes position and quaternion errors and stops after convergence, stagnation, terminal feedback, or its budget. Returns observation, actions consumed, and stop reason.
+
+Preconditions: dual ARX action keys, unit target quaternions, reachable collision-free target and path. This does not plan obstacle avoidance. Allocate max_steps from the live remaining budget. It does not infer grasp success from command convergence. Reaching a target does not guarantee object retention.
+
+Evidence: observations 000002-000005 support repeated EE target settling. At 000004 table contact prevented requested z=0.915; z=0.935 subsequently reached. Measured rather than requested poses should guide further action. Both helpers were exercised throughout observations 000009-000025. The corrected sequential swap achieved official success in 000025 after 314 actions in its attempt. Transfer beyond this scene is unverified.
+
+`move_ee_slow` additionally bounds each Cartesian increment (default 5 mm) and quaternion chord increment (default 0.035, roughly 4 degrees) from the measured pose. Its explicit max_steps is also the stop condition for stalled progress. 000009 reached a difficult right-gripper orientation using a neutral downward hover followed by this gradual rotation. 000006 showed that the original direct-target helper can reach quickly while dropping an object; prefer the incremental variant for carrying.
+
+Optional `min_opening` for the slow helper maps held sides to a minimum normalized reported finger opening. It stops when a measured opening collapses below the threshold. Enable only after confirming a grasp; some valid thin objects require a nearly closed gripper, and retained aperture is not proof of retention. In this scene successful T-stem grasps reported about 0.159, while lost objects reported 0.0 (000005-000006). A 0.06 threshold is used during the later carry.
+
+Caller contract: stop the whole staged program on `success` or `ended`, inspect `stalled`, `budget`, or `opening_collapsed_*`, and continue a dependent manipulation only after `reached`. Deduct the returned action count before calling another helper. No helper can query the shell status budget internally. The opening guard was used on successful carries; a separate induced-failure test of the guard was not run.

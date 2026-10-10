@@ -1,0 +1,11 @@
+# Copy to $EMBODIEDRSI_CODEX_HOME/config.toml and set your API base URL.
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+model_provider = "api"
+
+[model_providers.api]
+name = "API"
+base_url = "https://api.openai.com/v1" # Or your custom API base URL; omit /responses.
+env_key = "OPENAI_API_KEY" # Export your provider's API key in the evaluation shell.
+wire_api = "responses"
+requires_openai_auth = false
