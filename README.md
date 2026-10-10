@@ -75,13 +75,13 @@ XPolicyLab is benchmark-agnostic: any benchmark, simulator, or real-robot setup 
 **Infrastructure**
 
 - **[RLinf](https://github.com/RLinf/RLinf)** *(coming soon)*: infrastructure target for policy development and deployment workflows.
-- **StarVLA**: infrastructure and policy stack; see [policy/starVLA](policy/starVLA/README.md).
+- **StarVLA**: infrastructure and policy stack; see [policy/StarVLA](policy/StarVLA/README.md).
 
 
 
 ## 🧭 Integrated Policies
 
-55 policies are currently integrated, spanning VLA, world-action, imitation-learning, and memory-augmented families, plus [demo_policy](policy/demo_policy/README.md) as the minimal reference adapter. Top-level adapters live in `policy/`; each policy README documents that model's paper/repo link, environment, data format, training entrypoint, and checkpoint layout.
+57 policies are currently integrated, spanning VLA, world-action, imitation-learning, and memory-augmented families, plus [demo_policy](policy/demo_policy/README.md) as the minimal reference adapter. Top-level adapters live in `policy/`; each policy README documents that model's paper/repo link, environment, data format, training entrypoint, and checkpoint layout.
 
 
 | Policy                                   | Policy                                               | Policy                                      | Policy                                                     | Policy                                                         | Policy                                            |
@@ -92,10 +92,10 @@ XPolicyLab is benchmark-agnostic: any benchmark, simulator, or real-robot setup 
 | [LDA-1B](policy/LDA_1B/README.md)        | [LingBot-VA](policy/LingBot_VA/README.md)            | [LingBot-VLA](policy/LingBot_VLA/README.md) | [Meituan-Robotics-0](policy/Meituan_Robotics_0/README.md)  | [Mem-0](policy/Mem_0/README.md)                                | [MolmoAct2](policy/MolmoAct2/README.md)           |
 | [OLA-SEM](policy/OLA_SEM/README.md)      | [OpenDM](policy/OpenDM/README.md)                    | [OpenVLA-OFT](policy/OpenVLA_OFT/README.md) | [OpenWAM](policy/OpenWAM/README.md)                        | [π0](policy/Pi_0/README.md)                                    | [π0.5](policy/Pi_05/README.md)                    |
 | [π0-Fast](policy/Pi_0_Fast/README.md)    | [RDT-1B](policy/RDT_1B/README.md)                    | [RISE](policy/RISE/README.md)               | [SmolVLA](policy/SmolVLA/README.md)                        | [Spatial Forcing](policy/Spatial_Forcing/README.md)            | [Spirit v1.5](policy/Spirit_v15/README.md)        |
-| [TinyVLA](policy/TinyVLA/README.md)      | [X-VLA](policy/X_VLA/README.md)                      | [X-WAM](policy/X_WAM/README.md)             | [Xiaomi-Robotics-0](policy/Xiaomi_Robotics_0/README.md)    | [Xiaomi-Robotics-1 (XR-1)](policy/Xiaomi_Robotics_1/README.md) | [StarVLA](policy/starVLA/README.md)               |
+| [TinyVLA](policy/TinyVLA/README.md)      | [X-VLA](policy/X_VLA/README.md)                      | [X-WAM](policy/X_WAM/README.md)             | [Xiaomi-Robotics-0](policy/Xiaomi_Robotics_0/README.md)    | [Xiaomi-Robotics-1 (XR-1)](policy/Xiaomi_Robotics_1/README.md) | [StarVLA](policy/StarVLA/README.md)               |
 | [ACT](policy/ACT/README.md) | [DP](policy/DP/README.md) | [Evo-1](policy/Evo_1/README.md) | [InternW0_delta](policy/InternW0_delta/README.md) | [KinRT](policy/KinRT/README.md) | [PatchWAM-Lite](policy/PatchWAM/README.md) |
 | [Awomo-0.5](policy/Awomo05/README.md) | [MoPA](policy/MoPA/README.md) | [PhysicalRSI](policy/physicalRSI/README.md) | [Simate-beta](policy/Simate_beta/README.md) | [SimpleMemVLA](policy/SimpleMemVLA/README.md) | [WorldScape Policy 2.0](policy/WorldScape_Policy_2/README.md) |
-| [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [demo_policy](policy/demo_policy/README.md) | | | | |
+| [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [VPP2](policy/VPP2/README.md) | [Liber_0_lite](policy/Liber_0_lite/README.md) | [demo_policy](policy/demo_policy/README.md) | | |
 
 Adding a policy of your own, or entering a leaderboard, both go through a PR — see [Add Your Own Policy](#-add-your-own-policy).
 

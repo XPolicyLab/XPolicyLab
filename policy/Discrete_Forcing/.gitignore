@@ -1,0 +1,6 @@
+source_discrete_forcing/
+data/
+checkpoints/
+__pycache__/
+tests/__pycache__/
+*.log

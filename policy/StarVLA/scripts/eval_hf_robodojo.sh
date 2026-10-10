@@ -15,7 +15,7 @@ normalization files, size and SHA256, then starts the vendored XPolicyLab
 StarVLA server. Do not start a second upstream StarVLA server manually.
 
 Optional environment variables:
-  STARVLA_HF_ROOT             Download root (default: policy/starVLA/checkpoints/huggingface)
+  STARVLA_HF_ROOT             Download root (default: policy/StarVLA/checkpoints/huggingface)
   STARVLA_HF_LOCAL_FILES_ONLY Set to 1 for offline/cache-only use
   STARVLA_HF_VERIFY_ONLY      Set to 1 for an already-materialized run directory
   STARVLA_HF_SKIP_WEIGHT_HASH Set to 1 to skip the 10 GB weight SHA after checking its size

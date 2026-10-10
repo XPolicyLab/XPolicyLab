@@ -58,7 +58,7 @@ Take dimensions from `get_robot_action_dim_info(env_cfg_type)` in `XPolicyLab.ut
 Adapter-specific conventions on top of those:
 
 - `eval.sh` positional args, same for all adapters: `bench_name task_name ckpt_name env_cfg_type action_type seed policy_gpu_id env_gpu_id policy_env_or_uv_path eval_env_conda_env`.
-- **The importable root is `Path(__file__).resolve().parents[2]`** — the parent of the XPolicyLab checkout, since the server imports `XPolicyLab.policy.<POLICY>.model`. `parents[3]` is especially damaging: it silently shadows modules when inserted at `sys.path[0]`.
+- **The importable root is `Path(__file__).resolve().parent.parents[2]`** (equivalently `Path(__file__).resolve().parents[3]`) — the parent of the XPolicyLab checkout, since the server imports `XPolicyLab.policy.<POLICY>.model`. Counted from the policy directory, `parents[3]` is especially damaging: it silently shadows modules when inserted at `sys.path[0]`.
 - **Resolve checkpoints with `XPolicyLab.utils.checkpoint_resolver`**: `resolve_checkpoint_root(model_cfg, checkpoints_dir)` covers the shared precedence (explicit `deploy.yml` path key, `ckpt_name` as a path, the concatenated run-dir name, then `checkpoints/<ckpt_name>`). Adapters with an extra naming layer build on `build_run_dir_name` / `candidate_checkpoint_roots` instead of starting over. Checkpoints land in `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`.
 - Observations carry the language prompt under `instruction` (string; fall back to `instructions`). Poses are `[x, y, z, qw, qx, qy, qz]`.
 - Trajectory HDF5 files store a singular `instruction` string and camera extrinsics as `extrinsic_matrix`; runtime observations use `extrinsics_matrix`.

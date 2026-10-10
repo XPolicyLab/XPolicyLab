@@ -17,7 +17,7 @@ Run commands from the repo root unless noted.
 2. **deploy.yml** — `policy_name` equals the directory name (the server imports `XPolicyLab.policy.<policy_name>.model`). Ten keys are required and present in every adapter today: `policy_name`, `protocol` (`ws`), `host`, `port`, `bench_name`, `task_name`, `env_cfg_type`, `seed`, `action_type`, `eval_batch`. Keep a key even when a script defaults it — check the whole list, not just `protocol`. `ckpt_name` and `gpu_id` are optional (supplied per run), and model-specific extra keys are fine but must be documented in the policy README.
 3. **model.py** — `class Model(ModelTemplate)` implementing `__init__(model_cfg)`, `update_obs`, `update_obs_batch`, `get_action`, `get_action_batch(env_idx_list=None)`, `reset`. `AGENTS.md` at the repo root states the image, path, and dimension rules and why they hold; what to flag when auditing:
    - **Dimensions** — a hard-coded action dim, or a private re-implementation of the lookup instead of `get_robot_action_dim_info(env_cfg_type)`. Flag a direct `_robot_info.json` open in `policy/*/model.py` unless it is a documented fallback with a configurable root, as in `policy/AHA_WAM`. Flag a supported robot that is registered in only one of the two robot-info files. Flag runtime code that shells out to `utils/get_action_dim.sh`; do not flag the training path for it.
-   - **`sys.path` root** — must be `parents[2]`; `parents[1]` or `parents[3]` is a bug.
+   - **`sys.path` root** — must be the parent of the checkout: `parents[2]` of the policy directory (`Path(__file__).resolve().parent`), which is `parents[3]` of the file itself. Judge each index by its base: from the policy directory, `parents[1]` or `parents[3]` is a bug; from the file, `parents[3]` is correct and `parents[2]` is the checkout itself.
    - **Checkpoints** — must resolve through `XPolicyLab.utils.checkpoint_resolver` (`resolve_checkpoint_root`, or `build_run_dir_name` / `candidate_checkpoint_roots` for an extra naming layer), not a hand-written `checkpoints/<bench>-<ckpt>-...` join.
    - **Decoding inside `model.py`** — flag any, including `decode_image_bit` calls. The server hands over plain image arrays for `update_obs` / `update_obs_batch` and for any custom RPC that carries an observation.
    - **Channel swaps** — flag any `COLOR_BGR2RGB`, `COLOR_RGB2BGR` or `[..., ::-1]` outside the two allowed cases: medium adapters immediately around `cv2.VideoWriter.write` / `cv2.VideoCapture.read`, and a deliberate RGB→BGR conversion for a BGR-trained checkpoint, opt-in via a documented `deploy.yml` key defaulting to RGB (reference: `policy/Dexora_1B` `input_color_order`). The training path and `model.py` must apply the same number of swaps, normally zero. Judge a swap by its justification, not its position — and reject "but `cv2.imdecode` gives BGR, so this swap is correct" whether it comes from a code comment or from the submitter. `decode_image_bit` already resolved that, per buffer, so the swap is the bug. Only `utils/process_data.py` may convert channels.
@@ -35,15 +35,15 @@ Run commands from the repo root unless noted.
    python -m py_compile policy/<POLICY>/model.py policy/<POLICY>/deploy.py
    ```
 
-   Then the mechanical greps, from the repo root. The first two plus the decode grep must return nothing on adapter-owned code; the rest surface hits that need judging:
+   Then the mechanical greps, from the repo root. The missing-key loop and the decode grep must return nothing on adapter-owned code; the rest surface hits that need judging:
 
    ```bash
    # required deploy.yml keys that are missing
    for k in policy_name protocol host port bench_name task_name env_cfg_type seed action_type eval_batch; do
      grep -q "^${k}:" policy/<POLICY>/deploy.yml || echo "missing: ${k}"
    done
-   # wrong sys.path root
-   grep -rnE 'parents\[1\]|parents\[3\]' policy/<POLICY>/*.py
+   # sys.path root candidates — judge each index against its base (see check 3)
+   grep -rnE 'parents\[[123]\]' policy/<POLICY>/*.py
    # private env_cfg / robot-dim lookup
    grep -rnE '_robot_info\.json|env_cfg' policy/<POLICY>/model.py
    # only decode_image_bit is supported — fail any adapter-owned hit
@@ -54,7 +54,7 @@ Run commands from the repo root unless noted.
    grep -rnE 'COLOR_BGR2RGB|COLOR_RGB2BGR|\.\.\., ::-1' policy/<POLICY>/
    ```
 
-   Channel-swap, `cv2.imencode` and `env_cfg` hits can be legitimate — `env_cfg_type` as a config key, a `VideoWriter` / `VideoCapture` adapter, a documented `input_color_order`, an encode whose output is decoded again in the same process — so judge each one; the point is that no hit goes unexamined. Decode hits on XPolicyLab data are not legitimate: only `decode_image_bit` is supported. Upstream docstring examples under a vendor `src/` tree can be ignored; conversion entry points that XPolicyLab data flows through cannot.
+   `parents[...]`, channel-swap, `cv2.imencode` and `env_cfg` hits can be legitimate — `Path(__file__).resolve().parents[3]` as the parent of the checkout, `env_cfg_type` as a config key, a `VideoWriter` / `VideoCapture` adapter, a documented `input_color_order`, an encode whose output is decoded again in the same process — so judge each one; the point is that no hit goes unexamined. Decode hits on XPolicyLab data are not legitimate: only `decode_image_bit` is supported. Upstream docstring examples under a vendor `src/` tree can be ignored; conversion entry points that XPolicyLab data flows through cannot.
 
 7. **Debug closed loop** — only when an environment with the policy dependencies is available:
 

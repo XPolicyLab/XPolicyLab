@@ -67,9 +67,10 @@ reversed. The why is in README,
 `env_cfg/` lives in the **parent workspace, outside this repo** — `XPolicyLab/env_cfg` does not
 exist, so an adapter must never build that path itself.
 
-- **Importable root** in `policy/<POLICY>/model.py` is `Path(__file__).resolve().parents[2]`, the
-  parent of the checkout. `parents[1]` is the checkout itself and `parents[3]` is unrelated; both
-  are bugs.
+- **Importable root** in `policy/<POLICY>/model.py` is the parent of the checkout:
+  `Path(__file__).resolve().parent.parents[2]`, which is the same directory as
+  `Path(__file__).resolve().parents[3]`. Counted from the policy directory, `parents[1]` is the
+  checkout itself and `parents[3]` is unrelated; both are bugs.
 - **Checkpoints** resolve through `XPolicyLab.utils.checkpoint_resolver` — `resolve_checkpoint_root`,
   or `build_run_dir_name` / `candidate_checkpoint_roots` when an adapter adds its own naming layer —
   never by re-deriving `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`.

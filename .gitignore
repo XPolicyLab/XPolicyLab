@@ -1,4 +1,5 @@
 **/__pycache__/**
+.DS_Store
 **/*.egg-info/
 .cursor/*
 !.cursor/skills

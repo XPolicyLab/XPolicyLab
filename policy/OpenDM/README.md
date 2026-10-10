@@ -1,10 +1,8 @@
-# OpenDM — RoboDojo memory SFT and evaluation
+# OpenDM
 
-**Contributor:** DM0.5 team | **Technical blog:** [DM0.5](https://www.dexmal.com/blog/dm0.5) | **Original code:** [dexmal/opendm](https://github.com/dexmal/opendm)
+**Contributor:** DM0.5 team | **Paper:** [DM0.5 technical blog](https://www.dexmal.com/blog/dm0.5) | **arXiv:** TBD | **Original code:** [dexmal/opendm](https://github.com/dexmal/opendm)
 
-**Initial model:** [Dexmal/DM05-MEM](https://huggingface.co/Dexmal/DM05-MEM) · **Released policy:** [Dexmal/DM05-MEM-Robodojo-Sim](https://huggingface.co/Dexmal/DM05-MEM-Robodojo-Sim)
-
-This adapter supports data conversion, full supervised fine-tuning, resumable checkpoints, export and XPolicyLab evaluation for **RoboDojo / `arx_x5` / `joint`**. State and action are 14D absolute joint/gripper vectors. Memory uses 20 head-camera frames at 1 Hz; the model predicts 50 actions and evaluation executes 25 at 25 Hz.
+OpenDM fine-tunes the initial [Dexmal/DM05-MEM](https://huggingface.co/Dexmal/DM05-MEM) memory model on RoboDojo; the released policy is [Dexmal/DM05-MEM-Robodojo-Sim](https://huggingface.co/Dexmal/DM05-MEM-Robodojo-Sim). This adapter supports data conversion, full supervised fine-tuning, resumable checkpoints, export and XPolicyLab evaluation for **RoboDojo / `arx_x5` / `joint`**. State and action are 14D absolute joint/gripper vectors. Memory uses 20 head-camera frames at 1 Hz; the model predicts 50 actions and evaluation executes 25 at 25 Hz.
 
 `opendm/` contains source from [dexmal/opendm at `fbab441`](https://github.com/dexmal/opendm/tree/fbab441b63c789e5c37f7293e61fea9ed356c6c5) under the [Apache-2.0 license](opendm/LICENSE). Consult each public model repository for its model asset license.
 
@@ -36,7 +34,7 @@ Hardware planning estimates; peak memory and throughput depend on the device and
 
 Fewer GPUs are supported through gradient accumulation, subject to memory capacity. Accumulation reduces the number of simultaneous samples; it does not shard the model on a single GPU. Exact peak memory and throughput still need measurement. An A100/H100 class GPU is appropriate for the training attention backends.
 
-## Model assets
+## Model Assets
 
 Model assets and datasets follow the latest version on each official repository’s `main` branch. Rerun the download commands to fetch updates.
 

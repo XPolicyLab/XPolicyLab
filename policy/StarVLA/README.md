@@ -1,8 +1,8 @@
-# starVLA
+# StarVLA
 
 **Contributor:** RoboDojo Team | **Paper:** StarVLA: A Versatile Vision-Language-Action Model with Efficient Training and Policy Adaptation | **arXiv:** https://arxiv.org/abs/2604.05014 | **Original code:** https://github.com/starVLA/starVLA
 
-`starVLA` adapts the StarVLA vision-language-action framework to XPolicyLab/RoboDojo, exposing three variants that share the public `Qwen3-VL-4B-Instruct` backbone. Integration scripts live at this directory level; the vendored upstream implementation lives in `source_starvla/`.
+`StarVLA` adapts the StarVLA vision-language-action framework to XPolicyLab/RoboDojo, exposing three variants that share the public `Qwen3-VL-4B-Instruct` backbone. Integration scripts live at this directory level; the vendored upstream implementation lives in `source_starvla/`.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -14,7 +14,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 | `starVLA-GR00T` | `QwenGR00T` | Flow-matching DiT action head |
 | `starVLA-π` | `QwenPI_v3` | Layer-wise interleaved cross/self-attention DiT flow-matching head |
 
-These names are reporting labels. All three variants use `starVLA` as the XPolicyLab runtime `policy_name`; the selected checkpoint identifies the framework implementation. The action-policy components are trained from scratch, while Qwen3-VL-4B-Instruct is used as the public backbone initialization. No internal robot data, private demonstrations, hidden VLA pretraining, or unreleased pretrained policy weights are required by this adapter.
+These names are reporting labels. All three variants use `StarVLA` as the XPolicyLab runtime `policy_name`; the selected checkpoint identifies the framework implementation. The action-policy components are trained from scratch, while Qwen3-VL-4B-Instruct is used as the public backbone initialization. No internal robot data, private demonstrations, hidden VLA pretraining, or unreleased pretrained policy weights are required by this adapter.
 
 ## External StarVLA Runtime Contract
 
@@ -34,7 +34,7 @@ Released checkpoints should retain their run-directory layout so the runtime can
 `install.sh` installs PyTorch 2.6, the upstream requirements, flash-attn, and `source_starvla/` in editable mode into the active environment:
 
 ```bash
-cd XPolicyLab/policy/starVLA
+cd XPolicyLab/policy/StarVLA
 bash install.sh
 conda activate <policy_env>  # e.g. starvla
 ```
@@ -46,7 +46,7 @@ Converts RoboDojo demos into a LeRobot dataset at `data/<bench_name>-<ckpt_name>
 The output is LeRobot v3.0 with the official keys — `observation.state`, `action`, `observation.images.cam_high` / `cam_left_wrist` / `cam_right_wrist` ([official LeRobot conversion](../../README.md#official-lerobot-conversion)). The bundled converter is used instead of `scripts/transform_lerobot_v30_format.py` because starVLA's GR00T-style loader also needs a `meta/modality.json` written alongside the dataset.
 
 ```bash
-cd XPolicyLab/policy/starVLA
+cd XPolicyLab/policy/StarVLA
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]
 
 # Example: convert stack_bowls demos for arx_x5 joint control
@@ -62,7 +62,7 @@ bash process_data.sh RoboDojo stack_bowls_full arx_x5 joint stack_bowls
 ## Training
 
 ```bash
-cd XPolicyLab/policy/starVLA
+cd XPolicyLab/policy/StarVLA
 bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [extra_args...]
 
 # Example: train the converted stack_bowls dataset on GPU 0 (use gpu_id 0,1,2,3 for multi-GPU)
@@ -74,7 +74,7 @@ Checkpoints land in `checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action
 ## Evaluation
 
 ```bash
-cd XPolicyLab/policy/starVLA
+cd XPolicyLab/policy/StarVLA
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
   <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>
 
@@ -96,7 +96,7 @@ Use the dedicated entry point for the released QwenOFT, QwenGR00T, and QwenPI_v3
 # From a current RoboDojo checkout, install its official benchmark assets once.
 cd RoboDojo
 bash scripts/init_assets.sh
-cd XPolicyLab/policy/starVLA
+cd XPolicyLab/policy/StarVLA
 
 # Exact seed-0 commands used for the 10-layout checks reported below.
 STARVLA_ROBODOJO_NUM_ENVS=1 bash scripts/eval_hf_robodojo.sh oft build_tower 0 0 1 \

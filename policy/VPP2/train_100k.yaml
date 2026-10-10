@@ -1,0 +1,9 @@
+# Inherit the complete official recipe; only local paths differ.
+_base_: upstream/configs/robodojo/train_100k.yaml
+output_dir: ${oc.env:VPP2_OUTPUT_DIR,${oc.env:VPP2_POLICY_DIR}/runs/robodojo_joint2b_100k}
+paths:
+  wan: ${oc.env:VPP2_WAN_ROOT,${oc.env:VPP2_POLICY_DIR}/checkpoints/Wan2.1-I2V-14B-480P}
+  video_init: ${oc.env:VPP2_VIDEO_INIT,${oc.env:VPP2_POLICY_DIR}/checkpoints/initialization/robodojo_his10k.pt}
+  action_init: ${oc.env:VPP2_ACTION_INIT,${oc.env:VPP2_POLICY_DIR}/checkpoints/action2b_init.pt}
+  data: ${oc.env:VPP2_PREPARED,${oc.env:VPP2_POLICY_DIR}/data/robodojo}
+  media: ${oc.env:VPP2_MEDIA_ROOT,${oc.env:VPP2_POLICY_DIR}/data/robodojo_source}

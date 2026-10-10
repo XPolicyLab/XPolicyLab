@@ -1,6 +1,6 @@
 # InternVLA_A1_5
 
-**Contributor:** RoboDojo Team | **Paper:** InternVLA-A1.5 technical report | **arXiv:** TBD
+**Contributor:** RoboDojo Team | **Paper:** InternVLA-A1.5 technical report | **arXiv:** TBD | **Original code:** See vendored `internvla_a1_5/`.
 
 `InternVLA_A1_5` is the XPolicyLab/RoboDojo inference adapter for the InternVLA-A1.5 policy. It wraps `InternVLAA15Policy` (flow-matching action expert + Qwen3.5 VLM) into the `ModelTemplate` interface so it can be served by the XPolicyLab policy server and evaluated against RoboDojo simulation tasks; the InternVLA-A1.5/LeRobot runtime source is vendored in `internvla_a1_5/`, matching the self-contained layout of `InternVLA_A1`.
 

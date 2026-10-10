@@ -7,9 +7,7 @@ with MMDiT-Psi0, 640x480 RGB, and 14D dual-arm absolute joint actions. The
 minimal inference runtime vendored in `source_starvla/` is copied from the
 open-source StarVLA checkout; `policy/starVLA` is neither imported nor changed.
 
-Shared argument conventions and split-machine deployment are documented in the
-[XPolicyLab README](../../README.md). Official results are published on the
-[RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
+Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 

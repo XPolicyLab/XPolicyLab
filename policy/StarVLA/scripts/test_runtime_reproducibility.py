@@ -19,12 +19,12 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(SOURCE_ROOT))
 
 try:
-    from XPolicyLab.policy.starVLA.runtime_config import (
+    from XPolicyLab.policy.StarVLA.runtime_config import (
         resolve_checkpoint_framework,
         resolve_include_state,
         validate_server_runtime_contract,
     )
-    from XPolicyLab.policy.starVLA.scripts.prepare_hf_checkpoint import (
+    from XPolicyLab.policy.StarVLA.scripts.prepare_hf_checkpoint import (
         load_manifest,
         resolve_variant,
         validate_checkpoint_dir,
@@ -58,11 +58,11 @@ class RuntimeRegistryTest(unittest.TestCase):
 
 class IncludeStateResolutionTest(unittest.TestCase):
     def test_model_import_resolves_runtime_config_with_repo_pythonpath(self):
-        module = importlib.import_module("XPolicyLab.policy.starVLA.model")
+        module = importlib.import_module("XPolicyLab.policy.StarVLA.model")
         self.assertTrue(hasattr(module, "Model"))
 
     def test_observation_decoder_preserves_rgb_channel_order(self):
-        module = importlib.import_module("XPolicyLab.policy.starVLA.model")
+        module = importlib.import_module("XPolicyLab.policy.StarVLA.model")
         decoded = module._decode_image([[[255, 0, 0]]])
         self.assertEqual(decoded[0, 0].tolist(), [255, 0, 0])
 

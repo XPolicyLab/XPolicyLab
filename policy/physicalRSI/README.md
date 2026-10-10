@@ -1,8 +1,8 @@
 # PhysicalRSI
 
-**Contributor:** HKU MMLAB | **Project:** [PhysicalRSI](https://mmlab.hk/research/PhysicalRSI) | **Original code:** [yanming03/PhysicalRSI](https://github.com/yanming03/PhysicalRSI)
+**Contributor:** HKU MMLAB | **Paper:** TBD | **arXiv:** TBD | **Original code:** [yanming03/PhysicalRSI](https://github.com/yanming03/PhysicalRSI)
 
-PhysicalRSI combines an API-backed agent, frozen task-aware memory and an execution skill library for RoboDojo ARX X5. At episode start, the agent selects a registered skill composition that remains active until reset. The library contains pi05, pi05-sparse-memory and code-policy programs, with their internal weight identities recorded separately. Runtime source is included under `runtime/`.
+[PhysicalRSI](https://mmlab.hk/research/PhysicalRSI) combines an API-backed agent, frozen task-aware memory and an execution skill library for RoboDojo ARX X5. At episode start, the agent selects a registered skill composition that remains active until reset. The library contains pi05, pi05-sparse-memory and code-policy programs, with their internal weight identities recorded separately. Runtime source is included under `runtime/`.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 

@@ -102,7 +102,7 @@ def validate_server_runtime_contract(
     if not isinstance(contract, dict):
         raise ValueError(
             "StarVLA server does not advertise runtime_contract. Use "
-            "policy/starVLA/eval.sh or scripts/eval_hf_robodojo.sh so XPolicyLab starts "
+            "policy/StarVLA/eval.sh or scripts/eval_hf_robodojo.sh so XPolicyLab starts "
             "its vendored server; do not start deployment/model_server/server_policy.py "
             "from an arbitrary upstream StarVLA checkout."
         )

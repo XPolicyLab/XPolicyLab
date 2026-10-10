@@ -1,17 +1,15 @@
 # Awomo-0.5
 
-**Contributor:** Auwomo | **Original code:** https://github.com/Awomo-WestlakeDI/Awomo-0.5 | **Model assets:** [Awomo-0.5-Robodojo](https://huggingface.co/Auwomo/Awomo-0.5-Robodojo)
+**Contributor:** Auwomo | **Paper:** TBD | **arXiv:** TBD | **Original code:** https://github.com/Awomo-WestlakeDI/Awomo-0.5
 
 `Awomo05` adapts Awomo-0.5 to XPolicyLab/RoboDojo (`arx_x5`, absolute joint
-control, batched inference). Adapter files live in this directory; the inference
-implementation lives in `awomo/`. This release provides inference only.
+control, batched inference). Adapter files live in this directory; the vendored
+inference implementation lives in `awomo/`. This release provides inference only.
+Local evaluation used RoboDojo
+[`2184bf8`](https://github.com/RoboDojo-Benchmark/RoboDojo/commit/2184bf8844ea9d205382c4aefa3a694311418251)
+with adjusted XPolicyLab submodule configuration.
 
-**RoboDojo upstream baseline:** [`2184bf8844ea9d205382c4aefa3a694311418251`](https://github.com/RoboDojo-Benchmark/RoboDojo/commit/2184bf8844ea9d205382c4aefa3a694311418251).
-Local evaluation used this baseline with adjusted XPolicyLab submodule configuration.
-
-Shared conventions and split-machine deployment are documented in the
-[XPolicyLab README](../../README.md). Official results:
-[RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
+Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
@@ -25,6 +23,15 @@ bash policy/Awomo05/install.sh
 The requirements specify PyTorch 2.8.0, Transformers 5.5.0, and PEFT 0.5.0.
 Install RoboDojo's simulator environment separately. The parent workspace must
 provide `env_cfg/arx_x5.yml` and the robot configuration.
+
+## Data Processing
+
+Not supported. This is an **eval-only** submission: `process_data.sh` is omitted.
+
+## Training
+
+Not supported. `train.sh` is omitted; the eval-only scope must be agreed with the
+maintainers before the submission is accepted.
 
 ## Model Assets
 
@@ -92,10 +99,6 @@ The standard server script explicitly selects BGR for this checkpoint, and
 explicit checkpoint paths and standard XPolicyLab checkpoint directories are
 also supported. For split-machine evaluation, use the supplied server and
 client setup scripts with the standard argument order.
-
-This is an **eval-only** submission. Data processing and training entry points
-are not provided. Agree the eval-only scope with the maintainers before
-requesting acceptance.
 
 ## Configuration
 
