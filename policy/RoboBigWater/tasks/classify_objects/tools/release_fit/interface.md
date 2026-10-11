@@ -1,0 +1,5 @@
+`robo release-fit --u U --v V --plane Z [--radius M] [--search M] [--camera head|wrist_l|wrist_r]` finds the nearest visible free horizontal disk near a pixel ray's intersection with world-z plane Z; no motion or budget cost.
+Radius defaults to .04 m (.01...08); search defaults to .10 m (radius...15). Radius describes the required landing footprint, including any desired margin; it is not inferred from a held load.
+Returns suggested_release (u, v, plane, camera), surface_world, radius_m, offset_m, plan_ok and plan_fail_reason. Pixels have top-left origin and full image resolution.
+Uses a 3 mm world grid, ±4 mm plane tolerance, neighboring depth samples, and the nearest connected visible support patch. Adds one grid cell plus measured pixel-rounding error as margin; occluded, missing, elevated or off-image samples are unavailable.
+Fails without motion on invalid input/calibration, invalid plane intersection or insufficient visible free area. Does not verify containment, reachability, travel clearance, load orientation, hidden geometry, retention or final placement; placement_verified is false.

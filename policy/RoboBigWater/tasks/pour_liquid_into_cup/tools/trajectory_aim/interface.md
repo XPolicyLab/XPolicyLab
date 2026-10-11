@@ -1,0 +1,10 @@
+## Tool: trajectory_aim
+`robo trajectory_aim --target_x X --target_y Y --target_z Z --source_z Z --dir_x X --dir_y Y --dir_z Z --speed_min V --speed_max V --target_radius R --source_radius R --position_error E --direction_error DEG`
+Read-only ballistic aiming; no observations, motion or action steps. Coordinates/direction are world-frame, distances meters, speeds m/s.
+Target is a horizontal disk. Source height above target: (0,2] m; nonzero nominal direction is normalized; speeds 0<=min<=max<=10; target_radius (0,1] m.
+Required source_radius and position_error are [0,1] m: horizontal emitting-disk radius and bounded XY source-position error. Required direction_error [0,180] degrees bounds a cone containing every emission direction, including orientation changes. Explicit zeros select point/exact-position/fixed-direction assumptions; bounds are caller estimates, not measurements.
+Returns source_position centering nominal speed-endpoint landings, direction_unit, horizontal_offset_m, landing_endpoints and flight_time_bounds_s; endpoints/times describe only the nominal direction.
+landing_radius_m sums speed_uncertainty_radius_m, source_radius, position_error and conservative direction_uncertainty_radius_m; target_margin_m subtracts that sum from target_radius; speed_interval_fits tests this bound. point_target_margin_m excludes width/position/angular error. Negative margins are valid calculations.
+max_fitting_height_m and max_fitting_source_z bound heights certified by this conservative model, capped at 2 m above target; null means no certified fit even at zero drop. Zero height gives no admissible positive drop. Height changes require recalculating source_position.
+Gravity 9.81 m/s², horizontal source disk and bounded launch-direction cone; excludes vertical position uncertainty and drag. Angular reserve can reject feasible paths; this is not a minimax cone solution. No clearance, reachability or completion check.
+Returns plan_ok/plan_fail_reason; invalid, missing or nonfinite inputs fail without motion.

@@ -1,0 +1,11 @@
+## Tool: surface_frame
+`robo surface_frame --u U --v V --up_u U --up_v V [--camera head|wrist_l|wrist_r --radius N]` measures a local frame without motion or action-budget cost.
+`robo place_surface ARM --u U --v V --up_u U --up_v V --tx X --ty Y --tz Z --tnx X --tny Y --tnz Z --tux X --tuy Y --tuz Z [--camera head|wrist_l|wrist_r --radius N --clearance M --tolerance M --release 0|1]` measures and moves a held planar feature to a desired world frame.
+U,V selects a planar material point; up_u,up_v selects a second point on the same plane defining its positive tangent, at least 0.01 m away. Initial radius is 3..15 pixels (default 5); valid planar patches with insufficient metric extent expand up to 48 pixels or the image boundary.
+Measurement returns surface_world, camera-facing normal_world, up_world, frame_world (normal/up/cross-product columns), plane_rms_m, direction_baseline_m, samples, requested_radius, radius_used, and place_frame_source arguments.
+For motion, ARM is left or right; T is the desired position of the selected surface point in world meters, not a center or TCP target. TN/TU are its desired normal/tangent; signs must correspond to the measured camera-facing normal and selected tangent.
+TN/TU must be nonzero and perpendicular within 0.1 cosine. Rigid attachment is assumed; the measured point must be within 0.3 m of TCP. Full rotation and feature-to-TCP offset are compensated.
+Motion raises, aligns in increments of at most 0.02 m TCP travel and 5 degrees, then advances vertically by at most 0.01 m. Clearance is 0.02..0.15 m (default 0.06); tolerance is 0.002..0.015 m (default 0.008); rotation tolerance is 5 degrees.
+Release defaults 0 (retain grip); 1 opens only after reaching the target and retracts by clearance. Motion consumes physical time and returns measured_source, requested_tcp, reached_tcp, stages, released, placement_verified=false.
+Both return plan_ok/plan_fail_reason; invalid input/calibration, missing depth, boundaries, depth jumps, nonplanarity, grazing views or short/off-plane directions fail before motion. Execution stops without retries on planning, clipping, tracking or budget failure.
+Geometry and TCP tracking do not establish attachment, collision clearance or placement; failure before release preserves grip.

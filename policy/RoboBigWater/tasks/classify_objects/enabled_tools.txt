@@ -1,0 +1,4 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/classify_objects/tools/<name>)
+
+pixel_grasp
+release_fit

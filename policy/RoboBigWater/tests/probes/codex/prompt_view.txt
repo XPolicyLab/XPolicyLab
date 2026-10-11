@@ -1,0 +1,11 @@
+This is an interface check, not a manipulation task. Do exactly this:
+
+1. Run `robo obs`. Look at obs/head.png. It shows the text "head STEP <n>" and one red disc.
+2. Record the step number you read in the image and the pixel coordinates (u, v) of the centre of the red disc, with the origin at the top-left corner of the image. Also record the image width and height in pixels as you perceive them.
+3. Run `robo move left --dx 0.01`. Look at obs/head.png again and record the same things.
+4. Repeat step 3 until you have recorded 5 observations in total.
+5. Write the 5 records to notes.md, one JSON object per line, with keys: step_read, u, v, width, height.
+6. Run `robo done`.
+
+Estimate the coordinates by looking at the image. Do not use any program to analyse the image.
+In your final message, repeat the 5 records and say which tool you used to look at the images.

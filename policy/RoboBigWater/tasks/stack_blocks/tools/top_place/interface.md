@@ -1,0 +1,11 @@
+### top_place
+`robo top_place ARM --x X --y Y --support_z S --held_height H [--inset D] [--grasp_tilt A] [--clearance C] [--park ready|home|both|retreat] [--route compact|high] [--yaw auto|preserve]`
+ARM is left or right; coordinates and distances are world-frame metres; X/Y is the desired held-item centre.
+S is support top; H is full vertical item height; D is world-vertical pickup inset below its top (default 0.01).
+Assumes the item stayed upright, centred on the TCP in X/Y, with wrist orientation unchanged since closure; release TCP Z=S+H−D+0.002 leaves a 2 mm gap.
+Requires finite inputs, 0<D<H≤0.30, D≤0.04; alternatively supply --z Z for direct release TCP height, omitting S/H.
+A declares tilt from downward at closure (default 0, range 0–45 degrees); current tilt must match within 5 degrees, with level opening for A>0 and commanded closure. Contact and grasp offsets are unverified.
+Preserves wrist orientation on the initial path. C defaults to 0.03 (0.03–0.20); raises if below release Z+C (minus the 2 mm gap in support mode); compact (default) transfers diagonally to release and opens. High retains transfer altitude then descends vertically; paths are not collision-checked.
+Parking defaults to ready: retreat vertically by C, then move 0.12 m toward the incoming XY side with unchanged orientation; undefined direction fails before motion. Retreat only withdraws vertically. Home returns the selected arm by joint interpolation directly after opening in compact mode; high inserts vertical retreat first. Both returns both arms concurrently with the same joint speed/settling limits, charging the longer return duration; the other gripper must already be commanded open. Joint returns have no guaranteed vertical or inter-arm clearance; ready is not home.
+Returns plan_ok, plan_fail_reason, stages, release_tcp, yaw_change_deg, released, placement_status=unverified.
+A motion-free compact IK rejection permits a high-route retry; yaw=auto (default) then permits at most +90/−90-degree world-Z yaw transfer attempts at clearance altitude followed by fixed-yaw descent, changing final item yaw while preserving upright height; yaw=preserve disables these. Stops on invalid input, orientation mismatch, planning/clipping errors, pose errors above 8 mm/5 degrees, or episode end; pre-release failures retain closure.

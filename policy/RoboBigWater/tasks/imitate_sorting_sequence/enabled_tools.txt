@@ -1,0 +1,7 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/imitate_sorting_sequence/tools/<name>)
+vision_checks
+
+checked_transfer
+landing_search
+
+rgb_watch

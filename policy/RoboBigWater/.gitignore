@@ -1,0 +1,13 @@
+runs/
+.venv/
+.uv-cache/
+__pycache__/
+*.pyc
+agent/codex/secrets/
+.build-ctx.*/
+agent/codex/CODEX_VERSION
+.cache/
+.scratch/
+agent/AGENTS.md
+config.env
+agent/build/

@@ -1,0 +1,20 @@
+# arx_x5 with rendered depth from all three cameras. Copied into RoboDojo/env_cfg by scripts/run_official_eval.sh.
+config_name: arx_x5
+
+config:
+  sim: sim_config
+  scene: default
+  robot: dual_x5
+  camera: camera_config_rgbd
+
+observation:
+  collect_freq: 25
+  robot:
+    joint_states: true
+    world_ee_state: true
+  vision:
+    approximate_depth: false
+    depth: true
+    intrinsic_matrix: false
+    extrinsic_matrix: false
+    shape: true

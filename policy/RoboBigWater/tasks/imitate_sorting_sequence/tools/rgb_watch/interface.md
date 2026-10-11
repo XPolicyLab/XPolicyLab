@@ -1,0 +1,11 @@
+`robo watch-rgb --regions '[{"name":"description","roi":[x0,y0,x1,y1],"background_roi":[u0,v0,u1,v1]},...]' [--timeout 24] > obs/watch.json`
+`robo watch-check --regions '...' [--images no|yes]` validates crops for free; default compact diagnostics, optional PNG data (redirect to obs/check.json).
+Holds both arms and samples head RGB every 0.2 s; 1–10 nonoverlapping crops with unique names and entire silhouettes. Pixel ends are exclusive.
+Each crop needs a uniform surrounding rim or an optional separate background_roi (at least 4×4 pixels) depicting the background beneath its silhouette.
+Times persistent departures using appearance loss and exposed background; requires 0.6 s confirmation and 1 s full-image quietness. Timeout: 0.8–30 s; stops with 150 steps reserved.
+Returns plan_ok/plan_fail_reason, complete, review_required, region_checks, descriptions (empty if incomplete), events (confirmed subset), interaction_candidates (chronological appearance changes, possibly occlusions; local_motion gives persistent RGB translation or null), unresolved_regions (crop IDs, reasons and early/later times), event_groups, identity_verified=false, action_steps and PNG/UTF-8 data.
+Fails before motion on invalid crops, low contrast or overlap; returns all crop diagnostics and, with images enabled, the initial image. Ambiguous timing, timeout or exhausted reserve retain partial evidence requiring visual review: an unresolved crop may have been handled earlier and returned, even if it departs later. Names are caller supplied; identity_sheet_b64 preserves native context and final appearance; local_motion verifies neither pickup nor delivery; interaction_sheet_b64 magnifies early changes.
+Export the PNG: `sed -n 's/.*"contact_sheet_b64": "\([^"]*\)".*/\1/p' obs/watch.json | base64 -d > obs/watch.png`
+Export detail: `sed -n 's/.*"identity_sheet_b64": "\([^"]*\)".*/\1/p' obs/watch.json | base64 -d > obs/identity.png`; repeat with interaction_sheet_b64 and obs/interaction.png for interaction detail.
+Export persistent text: `sed -n 's/.*"notes_b64": "\([^"]*\)".*/\1/p' obs/watch.json | base64 -d >> notes.md`
+Watching costs one charged command plus five action steps per sample; exports run in the client shell because the server API has no client filesystem access.

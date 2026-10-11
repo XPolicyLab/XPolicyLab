@@ -1,0 +1,2 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/cover_blocks/tools/<name>)
+precision_transfer

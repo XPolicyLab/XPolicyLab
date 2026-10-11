@@ -1,0 +1,488 @@
+{
+ "align_blocks|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T193726Z",
+  "succ": 48
+ },
+ "align_blocks|1": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T104318Z",
+  "succ": 44
+ },
+ "align_blocks|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T095705Z",
+  "succ": 46
+ },
+ "build_tower|0": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261006T120149Z",
+  "succ": 25
+ },
+ "build_tower|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261006T120235Z",
+  "succ": 32
+ },
+ "build_tower|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261006T144639Z",
+  "succ": 27
+ },
+ "classify_objects|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T103307Z",
+  "succ": 40
+ },
+ "classify_objects|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261004T113904Z",
+  "succ": 40
+ },
+ "classify_objects|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T025700Z",
+  "succ": 39
+ },
+ "cover_blocks|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T061721Z",
+  "succ": 50
+ },
+ "cover_blocks|1": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T045746Z",
+  "succ": 50
+ },
+ "cover_blocks|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T051826Z",
+  "succ": 50
+ },
+ "deposit_coin|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261006T145629Z",
+  "succ": 15
+ },
+ "deposit_coin|1": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261006T145714Z",
+  "succ": 15
+ },
+ "deposit_coin|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261006T145800Z",
+  "succ": 14
+ },
+ "fold_clothes_random|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T213346Z",
+  "succ": 3
+ },
+ "fold_clothes_random|1": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T214233Z",
+  "succ": 6
+ },
+ "fold_clothes_random|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T215520Z",
+  "succ": 5
+ },
+ "fold_clothes|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T145845Z",
+  "succ": 9
+ },
+ "fold_clothes|1": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T184957Z",
+  "succ": 5
+ },
+ "fold_clothes|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T212300Z",
+  "succ": 9
+ },
+ "general_pickup|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T174723Z",
+  "succ": 41
+ },
+ "general_pickup|1": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T101340Z",
+  "succ": 34
+ },
+ "general_pickup|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T025800Z",
+  "succ": 37
+ },
+ "insert_tubes|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T103427Z",
+  "succ": 32
+ },
+ "insert_tubes|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T005810Z",
+  "succ": 25
+ },
+ "insert_tubes|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T025720Z",
+  "succ": 21
+ },
+ "make_kong|0": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261007T025052Z",
+  "succ": 16
+ },
+ "make_kong|1": {
+  "host": "4090-4",
+  "n": 45,
+  "run": "roboshell-20261007T043405Z",
+  "succ": 0
+ },
+ "make_kong|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261007T045252Z",
+  "succ": 0
+ },
+ "match_and_pick_from_conveyor|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T103347Z",
+  "succ": 27
+ },
+ "match_and_pick_from_conveyor|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261004T113924Z",
+  "succ": 28
+ },
+ "match_and_pick_from_conveyor|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T025700Z",
+  "succ": 30
+ },
+ "play_stacking_toy|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T102914Z",
+  "succ": 37
+ },
+ "play_stacking_toy|1": {
+  "host": "4090-2",
+  "n": 50,
+  "run": "roboshell-20261004T111903Z",
+  "succ": 39
+ },
+ "play_stacking_toy|2": {
+  "host": "4090-2",
+  "n": 50,
+  "run": "roboshell-20261004T181225Z",
+  "succ": 34
+ },
+ "play_tic_tac_toe|0": {
+  "host": "4090-2",
+  "n": 50,
+  "run": "roboshell-20261007T040859Z",
+  "succ": 18
+ },
+ "play_tic_tac_toe|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261007T045537Z",
+  "succ": 22
+ },
+ "play_tic_tac_toe|2": {
+  "host": "4090-4",
+  "n": 41,
+  "run": "roboshell-20261007T050224Z",
+  "succ": 7
+ },
+ "pour_balls_into_vase|0": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261006T144725Z",
+  "succ": 43
+ },
+ "pour_balls_into_vase|1": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261006T145458Z",
+  "succ": 41
+ },
+ "pour_balls_into_vase|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261006T145543Z",
+  "succ": 40
+ },
+ "pour_liquid_into_cup_random|0": {
+  "host": "4090-2",
+  "n": 25,
+  "run": "roboshell-20261007T113607Z",
+  "succ": 9
+ },
+ "pour_liquid_into_cup_random|1": {
+  "host": "4090-2",
+  "n": 25,
+  "run": "roboshell-20261007T084516Z",
+  "succ": 10
+ },
+ "pour_liquid_into_cup_random|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261007T004023Z",
+  "succ": 25
+ },
+ "pour_liquid_into_cup|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T223810Z",
+  "succ": 24
+ },
+ "pour_liquid_into_cup|1": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T224456Z",
+  "succ": 24
+ },
+ "pour_liquid_into_cup|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261006T234348Z",
+  "succ": 23
+ },
+ "press_by_number|0": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261007T024624Z",
+  "succ": 50
+ },
+ "press_by_number|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261007T024710Z",
+  "succ": 50
+ },
+ "press_by_number|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261007T024755Z",
+  "succ": 50
+ },
+ "push_T_random|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261004T181008Z",
+  "succ": 20
+ },
+ "push_T_random|1": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261005T023354Z",
+  "succ": 23
+ },
+ "push_T_random|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261005T102227Z",
+  "succ": 22
+ },
+ "push_T|0": {
+  "host": "4090-2",
+  "n": 25,
+  "run": "roboshell-20261004T052658Z",
+  "succ": 20
+ },
+ "push_T|1": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261005T010137Z",
+  "succ": 20
+ },
+ "push_T|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261005T025820Z",
+  "succ": 19
+ },
+ "put_bottles_into_dustbin|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T103327Z",
+  "succ": 32
+ },
+ "put_bottles_into_dustbin|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261004T231506Z",
+  "succ": 34
+ },
+ "put_bottles_into_dustbin|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T025740Z",
+  "succ": 29
+ },
+ "solve_equation|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T103407Z",
+  "succ": 42
+ },
+ "solve_equation|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261004T222241Z",
+  "succ": 37
+ },
+ "solve_equation|2": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T082012Z",
+  "succ": 38
+ },
+ "stack_blocks_by_language|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T140818Z",
+  "succ": 42
+ },
+ "stack_blocks_by_language|1": {
+  "host": "4090-4",
+  "n": 50,
+  "run": "roboshell-20261005T065720Z",
+  "succ": 39
+ },
+ "stack_blocks_by_language|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T052236Z",
+  "succ": 44
+ },
+ "stack_blocks_random|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261004T210632Z",
+  "succ": 25
+ },
+ "stack_blocks_random|1": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261005T103238Z",
+  "succ": 24
+ },
+ "stack_blocks_random|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261005T104605Z",
+  "succ": 24
+ },
+ "stack_blocks|0": {
+  "host": "4090-2",
+  "n": 25,
+  "run": "roboshell-20261004T052658Z",
+  "succ": 25
+ },
+ "stack_blocks|1": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261005T101552Z",
+  "succ": 25
+ },
+ "stack_blocks|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261005T025840Z",
+  "succ": 24
+ },
+ "stack_bowls_random|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261004T103247Z",
+  "succ": 24
+ },
+ "stack_bowls_random|1": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261004T182725Z",
+  "succ": 23
+ },
+ "stack_bowls_random|2": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261005T040135Z",
+  "succ": 24
+ },
+ "stack_bowls|0": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261004T103447Z",
+  "succ": 23
+ },
+ "stack_bowls|1": {
+  "host": "4090-4",
+  "n": 25,
+  "run": "roboshell-20261004T113944Z",
+  "succ": 22
+ },
+ "stack_bowls|2": {
+  "host": "4090-1",
+  "n": 25,
+  "run": "roboshell-20261005T025740Z",
+  "succ": 23
+ },
+ "swap_T|0": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261004T194846Z",
+  "succ": 46
+ },
+ "swap_T|1": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T060127Z",
+  "succ": 42
+ },
+ "swap_T|2": {
+  "host": "4090-1",
+  "n": 50,
+  "run": "roboshell-20261005T091846Z",
+  "succ": 36
+ }
+}

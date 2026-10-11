@@ -1,0 +1,4 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/pack_objects_into_box/tools/<name>)
+
+guarded_transfer
+surface_region

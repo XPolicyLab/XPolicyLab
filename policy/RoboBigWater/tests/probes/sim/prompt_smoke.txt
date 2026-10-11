@@ -1,0 +1,8 @@
+This is an end-to-end check of the robot interface. Do exactly this:
+
+1. Run `robo obs` and look at obs/head.png.
+2. Run `robo move left --dy 0.05` and look at obs/head.png again.
+3. Run `robo gripper left close`.
+4. Run `robo done`.
+
+In your final message, describe in two sentences what you see in the head camera image, and report the value of "error_m" from step 2.

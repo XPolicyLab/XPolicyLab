@@ -1,0 +1,6 @@
+`robo compose_transfer {left,right} --source_u U --source_v V --target_u U --target_v V --floor Z [--via_x X --via_y Y --via_z Z]` composes the existing public `primitive_skill`; an optional via waypoint is inserted into loaded-route IK and action-budget preflight.
+`robo compose_bridge {left,right} ... --second_u U --second_v V` uses the same composition with a freshly measured two-support bridge gate.
+`robo compose_lift_carry {left,right} ... [--via_x X --via_y Y --via_z Z]` prepares only the public lift, verifies the lift effect, then hands the current held pose to native `carry` and verifies the post-release surface effect. A carry failure after lift is terminal and is never replayed.
+Pixels and floor must come from the current public RGB-D observation; `layer_plan`'s episode-local `target_pixel` may be used for a support, and all coordinates are rejected outside the current frame or advertised bounds.
+The command stops after any refusal, changed observation, arrival error or unverified effect and never issues a dependent place/retry. A successful return means both public effect gates passed, not official task success.
+After each composition the caller must observe again, verify the visible assembly and home before changing arms. Do not reuse pixels or tickets across an observation change or episode.

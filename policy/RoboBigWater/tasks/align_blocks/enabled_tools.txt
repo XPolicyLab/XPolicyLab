@@ -1,0 +1,4 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/align_blocks/tools/<name>)
+measure_scene
+grasp_slide
+align_reference

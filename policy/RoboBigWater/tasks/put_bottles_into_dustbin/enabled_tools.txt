@@ -1,0 +1,5 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/put_bottles_into_dustbin/tools/<name>)
+depth_shape
+axis_grasp
+supported_transfer
+opposed_transfer

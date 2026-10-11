@@ -1,0 +1,2 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/organize_table/tools/<name>)
+precision

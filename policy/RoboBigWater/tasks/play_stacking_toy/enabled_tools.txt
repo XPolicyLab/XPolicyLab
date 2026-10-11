@@ -1,0 +1,5 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/play_stacking_toy/tools/<name>)
+feature_point
+precision_transfer
+spherical_center
+projected_center

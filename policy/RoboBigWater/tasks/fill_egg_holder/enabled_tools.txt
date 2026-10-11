@@ -1,0 +1,5 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/fill_egg_holder/tools/<name>)
+precision_pick
+
+checked_place
+recess_target

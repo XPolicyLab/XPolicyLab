@@ -1,0 +1,12 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/build_tower/tools/<name>)
+precise_transfer
+
+color_region
+
+carry
+
+layered_geometry
+transfer_geometry
+primitive_skill
+contact_primitives
+skill_compositions

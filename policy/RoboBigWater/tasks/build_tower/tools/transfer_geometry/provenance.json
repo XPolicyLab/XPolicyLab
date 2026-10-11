@@ -1,0 +1,34 @@
+{
+  "scope": "static public-geometry extraction, no live RoboShell success claimed",
+  "sources": [
+    {
+      "path": "seed2-repair-20261003\\robodojo_urai_contact_profile.py",
+      "sha256": "6d14fc8b7dae1cc422903408ca23c83c397673869f2bdfa8bef357c952813c49",
+      "functions": [
+        "PickPlaceInputError",
+        "X5Geometry",
+        "_scalar",
+        "_array",
+        "_metric_components",
+        "_draft_depth",
+        "_world_cloud",
+        "_pixel_index",
+        "_select_object",
+        "build_draft"
+      ]
+    },
+    {
+      "path": "tower-proof-seed2-r02-20261002\\place_on_pad-reference.py",
+      "sha256": "3b91b7fb5547622624ed1ece725b62c9fb9de252b915607b60ce53726359b6da",
+      "functions": [
+        "_corridor_top"
+      ]
+    }
+  ],
+  "adaptations": [
+    "SDK corridor import replaced by the same extracted local helper",
+    "public camera/depth contract adapter lives in tool.py"
+  ],
+  "destination_sha256": "4261166eb42595e17379aede609603b3a618a24975ed5e3e61a8b75fa8158cc0",
+  "prior_official_evidence": "tower-focused-seed2-r10-20261003/validation.json; guided URAI evidence, not proof of byte-identical runtime or RoboShell success"
+}

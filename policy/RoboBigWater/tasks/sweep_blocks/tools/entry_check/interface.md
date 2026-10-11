@@ -1,0 +1,7 @@
+`robo entry_check --u U --v V --u2 U2 --v2 V2 --inside_u IU --inside_v IV --point_u PU --point_v PV [--radius .02] [--margin .005] [--camera head|wrist_l|wrist_r]`
+Read-only calibrated depth measurement: first pair defines a finite, nearly level entry; inside selects its inward side; point selects the surface reference to classify. No motion or action budget cost.
+Radius (.001..0.10 m) bounds the full horizontal footprint about the selected point; margin (.002..0.03 m) adds clearance. Selected point need not be its center if radius encloses its full extent.
+Returns plan_ok, plan_fail_reason, point_measurements, status (outside, edge_or_side_margin, past_entry_margin), selected_footprint_past_entry, signed_inward_distance_m, lateral_clearance_m, footprint_inward_clearance_m, footprint_lateral_clearance_m, point_height_above_entry_m and inward_world.
+minimum_entry_shift_xy and candidate_point_xy give the shortest XY correction satisfying entry and side margins only; they are not motion commands or collision-checked paths.
+Entry width .03..0.50 m must exceed twice (radius+margin); endpoint height difference <=.025 m; inside distance .015..0.30 m; point distance from entry center <=.50 m. Bad input, missing depth or unsupported boundary-plane fit returns plan_ok=false.
+plan_ok means measurement succeeded, including an outside result. containment_verified is always false: the selected footprint, entry identity, remaining interior boundaries, support, unseen geometry and completion are not verified.

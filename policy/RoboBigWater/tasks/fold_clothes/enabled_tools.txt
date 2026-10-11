@@ -1,0 +1,4 @@
+# Task-local tool registry names
+panel_cycle
+surface_outline
+crease_transfer

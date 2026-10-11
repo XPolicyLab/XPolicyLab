@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/sweep_blocks/tools/<name>)
+precision_grasp
+feature_motion
+supported_regrasp
+clear_transport
+entry_check

@@ -1,0 +1,4 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/solve_equation/tools/<name>)
+flat_transfer
+surface_point
+clear_surface

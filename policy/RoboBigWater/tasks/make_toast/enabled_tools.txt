@@ -1,0 +1,8 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/make_toast/tools/<name>)
+locate_pixel
+guarded_grasp
+guarded_press
+frame_place
+surface_frame
+place_between
+carry_visible

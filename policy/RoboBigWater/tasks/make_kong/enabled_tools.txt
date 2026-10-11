@@ -1,0 +1,3 @@
+# Public commands; row_extension imports the guarded motion implementations.
+region_geometry
+row_extension

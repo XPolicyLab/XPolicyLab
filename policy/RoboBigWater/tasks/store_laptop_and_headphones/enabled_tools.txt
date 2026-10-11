@@ -1,0 +1,8 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/store_laptop_and_headphones/tools/<name>)
+surface_scan
+secure_pick
+carry_place
+arc_move
+transfer
+
+edge_grip

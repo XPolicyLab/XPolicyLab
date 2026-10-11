@@ -1,0 +1,17 @@
+policy_name: RoboBigWater
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# RoboBigWater settings. The model, effort and API endpoint come from RoboBigWater's config.env.
+command_budget: 0        # 0 = unlimited; the official step limit is the only limit on the leaderboard
+agent_wall_s: 3600
+request_timeout_s: 120.0

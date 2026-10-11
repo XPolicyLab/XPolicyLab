@@ -1,0 +1,7 @@
+`robo rim-fit --u PIXEL --v PIXEL [--camera head|wrist_l|wrist_r] [--window 60] [--band 0.04] [--reach 0.12]`
+Fits the highest supported horizontal circular rim near a valid depth pixel; read-only, no motion or command-budget cost.
+The seed pixel must lie within the height search range; window is patch half-width (8–100 pixels), band is vertical half-width (0.01–0.04 m), reach is horizontal distance from seed (0.03–0.12 m).
+Returns centre_world (XYZ in metres), centre_xy, rim_z, radius_m, arc_degrees, radial_rmse_m, inlier_points, surface_world and camera_source.
+Accepts radii 0.015–0.12 m and requires at least 220° visible arc and 70% radial support within a 3 mm horizontal slice. Rejects lower candidates with ≥40 local annular samples more than 3 mm above them; incomplete upper geometry requires a wider patch/band or another seed.
+centre_world is on the measured rim plane; any desired vertical stand-off must be added explicitly. Does not verify free space, contents, or physical clearance.
+Returns plan_ok and plan_fail_reason; missing depth, invalid calibration/arguments, insufficient coverage or unsupported shape fail without motion. rim_search_clipped rejects a fit within 3 mm of the upper height boundary and returns candidate_rim_z and search_upper_z; a higher seed or wider band is required. Successful fits also return search_upper_z; unobserved higher geometry remains unverified.

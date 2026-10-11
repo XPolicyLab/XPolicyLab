@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/stack_blocks/tools/<name>)
+top_pick
+
+top_place
+surface_measure
+surface_transfer

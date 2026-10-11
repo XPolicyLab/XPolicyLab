@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/match_and_pick_from_conveyor/tools/<name>)
+timed_pick
+surface_center
+lift_hold
+
+surface_watch

@@ -1,0 +1,8 @@
+This is an interface check, not a manipulation task. Do exactly this:
+
+1. Run `robo obs`.
+2. Repeat 20 times: run `robo move left --dx 0.01`, then look at obs/head.png and obs/wrist_l.png, then append one line to notes.md with the step number you read in the head image and the pixel coordinates (u, v) of the centre of the red disc.
+3. Run `robo done`.
+
+Estimate the coordinates by looking at the image. Do not use any program to analyse the image.
+In your final message, say how many lines notes.md has.

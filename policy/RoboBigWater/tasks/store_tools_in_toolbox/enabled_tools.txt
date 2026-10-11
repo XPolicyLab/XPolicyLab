@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/store_tools_in_toolbox/tools/<name>)
+planar_transfer
+clearance3d
+
+surface3d
+gripscan3d

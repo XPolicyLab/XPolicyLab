@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/plug_in_charger/tools/<name>)
+surface_points
+mate_pair
+carry_offset
+axial_pick
+depth_patch

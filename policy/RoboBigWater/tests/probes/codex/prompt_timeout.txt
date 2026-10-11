@@ -1,0 +1,10 @@
+This is an interface check, not a manipulation task. Do exactly this, one command per shell call:
+
+1. Run `robo wait 1` and note the JSON it prints.
+2. Run `robo wait 2` and note the JSON it prints.
+3. Run `robo wait 4` and note the JSON it prints.
+4. Run `robo done`.
+
+Each command can take several minutes to return. That is expected; wait for it.
+If a command is interrupted or times out, say so, and say what you observed (error text, exit code).
+In your final message list, for each of the three commands: whether it returned normally, its exit code, and the value of "step" in its output.

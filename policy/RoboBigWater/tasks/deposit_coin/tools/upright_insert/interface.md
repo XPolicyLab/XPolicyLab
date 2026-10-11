@@ -1,0 +1,10 @@
+`robo upright_insert --top=x,y,z --opening=x,y,z --end1=x,y,z --end2=x,y,z [--mode preview|move]`
+Measures/refines an upright circular part, grasps, lifts, transfers into a horizontal narrow aperture, checks release, retreats and returns both arms to their initial poses.
+Inputs are world meters: top is the exposed crest center; opening is the horizontal jaw-opening direction across the faces; end1/end2 are aperture endpoints at mouth height.
+Options: --diameter 0.0285 (0.015–0.05 m), --thickness 0.0019 (0.0005–0.005 m), --offset 0.020 (0.008–0.030 m assumed center below lifted TCP), --depth 0.012 (0.010–0.6×diameter m).
+--pitch -1 selects automatic initial tilt (60° for opposite-side travel, 0° otherwise); explicit 0–60° accepted. Default mode=preview validates measurements and returns poses without motion or reachability testing.
+Move selects the source-side arm, refines supported RGB-D geometry, lifts 0.12 m, separates yaw from reach pitch, and checks retention between bounded segments; opposite-side travel includes measured peer clearance. Paths are not collision checked.
+One source-confirmed empty retry requires ≥7 s remaining and refreshes source geometry; uncertain retention stops closed. Supported circular fits update the rigid center offset; partial planes constrain lateral position/yaw only.
+Release requires fresh wrist support, alignment and ≥10 mm inferred penetration; bounded settling/depth correction preserves a homing reserve. Visual disappearance and stable measured closure do not prove completion or retention.
+Returns plan_ok/plan_fail_reason, executed, active_arm, poses, acquisition_pitch_deg, source_refinement/approach_source_refinement/retry_source_refinement, closure_checks, acquisition_checks, transfer_checks/transfer_offset_updates, held_offset_local, alignment_check, insertion_checks, released, placement and home_status.
+Fails on invalid geometry, unsupported/conflicting observations, planning/tracking failure, insufficient body clearance or time. Executed failures attempt both-arm return without opening; all motion consumes action steps.
