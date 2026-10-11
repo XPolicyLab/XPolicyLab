@@ -4,7 +4,9 @@
 
 **WorldScape RSI brings World Action Models and agentic reasoning into a unified framework for long-horizon robotic manipulation.** It connects visual perception, task memory, action generation, execution feedback, and recovery—and makes the resulting experience reusable across subsequent policy and harness versions.
 
-Our central idea is **Policy–Harness Co-Evolution**: improve both the model that proposes actions and the execution framework that turns those proposals into reliable behavior. A stronger policy supplies richer execution experience to refine the harness; an improved harness enables more reliable execution and produces higher-quality data for the next policy update.
+Our central idea is **Policy–Harness Co-Evolution**: improve both the model that proposes actions and the execution framework that turns those proposals into reliable behavior.
+
+**A stronger harness produces better evidence for the next policy update, while an advanced policy contributes to a next-generation intelligent harness — forming a bidirectional recursive self-improvement loop between policy and harness.**
 
 **World Action Models · Agentic Robotics · Multimodal In-Context Learning · Skill Memory · Adaptive Policy Routing · Closed-Loop Control · Execution-Aware Recovery · Code as Policies · Policy–Harness Co-Evolution · Recursive Self-Improvement**
 
@@ -18,46 +20,49 @@ Robotic execution requires more than a single action prediction. The system must
 
 WorldScape RSI organizes these responsibilities around two complementary capabilities:
 
-- **WorldScape WAM** generates temporally coordinated joint-action chunks from observations and model-supported history.
-- **Astra Agent** combines visual reasoning with task skills and multimodal demonstrations, then acts through structured motion commands and execution feedback.
+- **WorldScape Policy** generates temporally coordinated joint-action chunks from observations and model-supported history.
+- **WorldScape Agent** combines visual reasoning with advantage-conditioned task skills and multimodal demonstrations, then acts through structured motion commands and execution feedback.
 
 An episode-level **JEV binary router** provides a common selection interface. The selected executor remains fixed for that episode; each pathway maintains its own observation–action feedback loop. This keeps route selection explicit and execution behavior traceable.
 
 ## Architecture
 
 ```text
-        Task instruction + three RGB views + measured robot state
+       Task instruction + three RGB views + measured robot state
                                   |
                           JEV episode router
-                     /                            \
-             WorldScape WAM                    Astra Agent
-             Visual history              Task Skill + task ICL
-             Action chunks               Reasoning + motion commands
-             Commit / discard            Verification + recovery
-                     \                            /
-                        Simulation-side execution
-                         RoboDojo / Isaac Sim
+                     /                              \
+          WorldScape Policy                    WorldScape Agent
+          Visual history                Advantage-conditioned task skills
+          Action chunks                         + multimodal ICL
+          Commit / discard              Reasoning + motion commands
+                     |                  Verification + recovery
+                     \                              /
+                       Simulation-side execution
+                          RoboDojo / Isaac Sim
                                   |
                   New observations and execution feedback
                                   |
-                    Versioned execution evidence
+                     Versioned execution experience
                                   |
-               Policy improvement + harness improvement
+                  Policy–Harness Co-Evolution / RSI
+                 Policy experience → harness refinement
+                 Harness evidence  → policy improvement
                                   |
-                     Validation → next release
+                       Validation → next release
 ```
 
-WAM runs through the adjacent `WorldScape_Policy_2` adapter **inside the policy server**. Its checkpoint transforms, RoboDojo camera configuration, action conversion, and temporal memory remain owned by that adapter. Astra uses the retained motion harness and simulation-side planning stack. Astra's ICL is not passed to WAM.
+WorldScape Policy runs through the adjacent `WorldScape_Policy_2` adapter **inside the policy server**. Its checkpoint transforms, RoboDojo camera configuration, action conversion, and temporal memory remain owned by that adapter. WorldScape Agent, powered by Astra, uses the retained motion harness and simulation-side planning stack. Its ICL is not passed to WorldScape Policy.
 
 ### A harness that connects reasoning to execution
 
 | Capability | Role in the system |
 | --- | --- |
-| Task-conditioned skill memory | Supplies reusable procedures, constraints, and recovery guidance for the current task. |
+| Advantage-conditioned task skill memory | Supplies reusable procedures, constraints, and recovery guidance for the current task. |
 | Multimodal in-context learning | Grounds decisions in task demonstrations and visual references. |
 | Structured motion commands | Expresses translation, orientation, grasping, synchronized motion, and return-to-home. |
 | Execution-aware feedback | Makes motion failures, observed state, and remaining execution budget available to the control loop. |
-| Stateful WAM execution | Commits executed action steps, discards interrupted predictions, and resets memory between episodes. |
+| Stateful WorldScape Policy execution | Commits executed action steps, discards interrupted predictions, and resets memory between episodes. |
 | Versioned experience | Connects outcomes to the demonstrations, skills, code, and model configuration used to produce them. |
 
 Demonstrations guide decisions in the current scene. Their coordinates are not a fixed trajectory replay. Similarly, a successful motion command does not by itself establish a successful grasp or completed task: subsequent observations and native task evaluation determine the outcome.
@@ -68,13 +73,13 @@ Demonstrations guide decisions in the current scene. Their coordinates are not a
 
 | Policy track | Harness track |
 | --- | --- |
-| Curate trajectories for model adaptation. | Convert experience into reusable task skills. |
+| Curate trajectories for model adaptation. | Convert experience into reusable advantage-conditioned task skills. |
 | Learn executor selection from comparative development outcomes. | Build observation–decision–action ICL demonstrations. |
 | Evaluate candidate policy and routing checkpoints. | Refine motion procedures, verification, and recovery logic. |
 
 The intended RSI cycle is **execute → analyze → propose updates → validate → version → execute again**. Policy and harness updates can advance at different cadences while sharing evidence and evaluation criteria. Release boundaries keep those changes out of an ongoing episode.
 
-The inference adapter implements the execution and experience-consumption side of this design. Policy training and learned-router training are separate release activities; this package does not automatically retrain WAM or rewrite skills after each episode.
+The inference adapter implements the execution and experience-consumption side of this design. Policy training and learned-router training are separate release activities; this package does not automatically retrain WorldScape Policy or rewrite skills after each episode.
 
 ## Task memory and demonstrations
 
@@ -82,7 +87,7 @@ The current v2 asset manifest covers **42 tasks**, with **42 task Skill files pl
 
 | Demonstration source | Tasks | Content |
 | --- | ---: | --- |
-| Astra success records | 13 | Recorded decisions, actions, and observations. |
+| WorldScape Agent success records (Astra) | 13 | Recorded decisions, actions, and observations. |
 | Retained approved collection demonstrations | 2 | Decision demonstrations in the supported loader format. |
 | Official task-video references | 27 | Visual task references without a complete agent decision/action trace. |
 
@@ -112,8 +117,8 @@ Shared workspace layout and launch conventions are documented in the [XPolicyLab
 | --- | --- |
 | Task skills and ICL manifests | Included in the adapter. |
 | ICL images and media | Restore from the matching v2 asset archive; media is excluded from Git. |
-| WorldScape WAM | Supply a compatible **RoboDojo** checkpoint and the adjacent adapter's dependencies. |
-| Astra | Supply a supported provider/model configuration through the external secrets file. |
+| WorldScape Policy (WAM) | Supply a compatible **RoboDojo** checkpoint and the adjacent adapter's dependencies. |
+| WorldScape Agent (Astra) | Supply a supported provider/model configuration through the external secrets file. |
 | Learned JEV | Supply a trained checkpoint matching the feature and class contract. |
 
 Restore the frozen ICL assets from the policy directory:
@@ -122,7 +127,7 @@ Restore the frozen ICL assets from the policy directory:
 python import_icl_assets.py /path/to/Worldscape_RSI-ICL-assets-20261011-v2.zip
 ```
 
-The importer verifies the archive checksum and individual asset hashes. An archive from another release is not interchangeable. The current submission does not provide a public download URL for this asset archive or a trained JEV checkpoint; obtain the matching release assets from the maintainers before running evaluation. WAM weights and API credentials are not bundled.
+The importer verifies the archive checksum and individual asset hashes. An archive from another release is not interchangeable. The current submission does not provide a public download URL for this asset archive or a trained JEV checkpoint; obtain the matching release assets from the maintainers before running evaluation. WorldScape Policy weights and agent API credentials are not bundled.
 
 ## Configuration
 
@@ -148,7 +153,7 @@ export WRSI_ROUTE_MODE=learned
 export WRSI_OUTPUT_DIR=/results/worldscape-rsi
 ```
 
-Replace these example paths and the profile name with the deployed resources. Both hosts must use matching adapter code and configuration. The active integration loads WAM in-process; it does **not** use the historical `WRSI_WAM_URL` or `WRSI_WAM_LOCK` settings.
+Replace these example paths and the profile name with the deployed resources. Both hosts must use matching adapter code and configuration. The active integration loads WorldScape Policy in-process; it does **not** use the historical `WRSI_WAM_URL` or `WRSI_WAM_LOCK` settings.
 
 ### JEV routing contract
 
@@ -175,7 +180,7 @@ python -m unittest discover \
   -s XPolicyLab/policy/WorldScape_RSI/tests -t . -v
 ```
 
-Asset-only preflight validates loading of the task's ICL. Full preflight additionally checks the selected route's local configuration. Neither command performs a paid API request, loads a real WAM inference run, or launches the simulator.
+Asset-only preflight validates loading of the task's ICL. Full preflight additionally checks the selected route's local configuration. Neither command performs a paid API request, performs real WorldScape Policy inference, or launches the simulator.
 
 ### 2. Launch a task
 
@@ -196,10 +201,10 @@ policy_gpu_id env_gpu_id policy_conda_env eval_env_conda_env
 
 The example uses seed `0`, GPU `0` for each environment, and illustrative Conda environment names. Choose GPU assignments suitable for the deployed resources. `eval.sh` starts the server, waits for readiness, starts the simulation client, and cleans up its server process on exit.
 
-For a fixed Astra or WAM comparison, set the route explicitly before the same launch command:
+For a fixed WorldScape Agent or WorldScape Policy comparison, set the route explicitly before the same launch command:
 
 ```bash
-export WRSI_ROUTE_MODE=astra  # Agent-only route in the hybrid adapter.
+export WRSI_ROUTE_MODE=astra  # WorldScape Agent route in the hybrid adapter.
 # Or: export WRSI_ROUTE_MODE=wam
 ```
 
@@ -207,9 +212,9 @@ These modes preserve the hybrid adapter's installation layout; they are not a se
 
 ### Execution interface
 
-Astra's `get_action()` returns a structured command envelope consumed by this adapter's **custom `deploy.py`**. The simulation-side harness resolves it through the measured state and motion planner before applying robot actions. A generic joint-action debug client cannot replace this loop.
+WorldScape Agent's `get_action()` returns a structured command envelope consumed by this adapter's **custom `deploy.py`**. The simulation-side harness resolves it through the measured state and motion planner before applying robot actions. A generic joint-action debug client cannot replace this loop.
 
-WAM uses `wam_update_obs`, `wam_get_action`, `wam_commit_action`, and `wam_discard_action` through the policy server. The client reports actually executed steps so temporal state remains consistent after interrupted action chunks. RGB decoding follows XPolicyLab's shared image helpers; callers must not introduce a second color-channel conversion.
+WorldScape Policy uses `wam_update_obs`, `wam_get_action`, `wam_commit_action`, and `wam_discard_action` through the policy server. The client reports actually executed steps so temporal state remains consistent after interrupted action chunks. RGB decoding follows XPolicyLab's shared image helpers; callers must not introduce a second color-channel conversion.
 
 ## Data processing and training
 
@@ -231,7 +236,7 @@ The checked v2 integration records the following in [`VALIDATION.json`](VALIDATI
 | Adjacent WorldScape adapter | Unchanged |
 | Other 41 task skills and ICL | Unchanged by the balls update |
 | Native simulation of the integrated package | Not yet verified |
-| Real WAM inference through this integration | Not yet verified |
+| Real WorldScape Policy inference through this integration | Not yet verified |
 | Trained JEV checkpoint included | No |
 
 The balls update is grounded in a source run that achieved native success at seed 1 / layout 1 in **374/600 steps**. That source-run result is distinct from regression testing of the integrated package. No official leaderboard performance is claimed here.
@@ -260,5 +265,5 @@ Historical utilities retained under the harness are not alternate launch instruc
 
 ## Acknowledgements
 
-WorldScape RSI builds on the WorldScape WAM stack, the XPolicyLab integration framework, and RoboDojo's simulation and evaluation infrastructure. Shared setup and submission conventions are documented in the [XPolicyLab README](../../README.md) and [contribution guide](../../CONTRIBUTING.md). Demonstration sources remain
+WorldScape RSI builds on [WorldScape-Policy](https://github.com/manifoldai-research/WorldScape-Policy), developed by manifoldai-research, the XPolicyLab integration framework, and RoboDojo's simulation and evaluation infrastructure. Shared setup and submission conventions are documented in the [XPolicyLab README](../../README.md) and [contribution guide](../../CONTRIBUTING.md). Demonstration sources remain
 attributed in the ICL manifest.
