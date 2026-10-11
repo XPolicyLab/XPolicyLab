@@ -1,0 +1,3997 @@
+{
+ "summary": {
+  "protocol": "RGB-only observation (stock arx_x5 config); depth estimated inside the policy server by Depth Anything V2 Metric-Indoor-Base, scale from the known table height; frozen tools, seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered 0-4), one episode per layout, no optimizer; official RoboDojo success and progress checkers",
+  "date": "2026-10-11",
+  "episodes": 420,
+  "categories": {
+   "Generalization": {
+    "success_rate": 23.3,
+    "progress_score": 26.7,
+    "standard": {
+     "success_rate": 25.0,
+     "progress_score": 28.8
+    },
+    "cluttered": {
+     "success_rate": 21.7,
+     "progress_score": 24.5
+    }
+   },
+   "Precision": {
+    "success_rate": 6.2,
+    "progress_score": 9.1
+   },
+   "Long-Horizon": {
+    "success_rate": 5.0,
+    "progress_score": 21.8
+   },
+   "Memory": {
+    "success_rate": 36.7,
+    "progress_score": 40.3
+   },
+   "Open": {
+    "success_rate": 35.0,
+    "progress_score": 38.9
+   }
+  },
+  "leaderboard_formula": {
+   "success_rate": 21.2,
+   "progress_score": 27.4
+  }
+ },
+ "variants": [
+  {
+   "task": "arrange_largest_number",
+   "variant": "arrange_largest_number",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 3,
+   "success_rate": 60.0,
+   "progress_score": 67.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 5.0,
+     "end_reason": "agent_exit",
+     "commands": 38,
+     "steps": 989
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 1014
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 43,
+     "steps": 991
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 50,
+     "steps": 1010
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 26,
+     "steps": 835
+    }
+   ]
+  },
+  {
+   "task": "arrange_largest_number",
+   "variant": "arrange_largest_number_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 2,
+   "success_rate": 40.0,
+   "progress_score": 52.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 27,
+     "steps": 840
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 991
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 18,
+     "steps": 528
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "done",
+     "commands": 37,
+     "steps": 1038
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "done",
+     "commands": 27,
+     "steps": 709
+    }
+   ]
+  },
+  {
+   "task": "fold_clothes",
+   "variant": "fold_clothes",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 2,
+   "success_rate": 40.0,
+   "progress_score": 44.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 12,
+     "steps": 498
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 37,
+     "steps": 474
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 4,
+     "steps": 322
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 12,
+     "steps": 463
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 490
+    }
+   ]
+  },
+  {
+   "task": "fold_clothes",
+   "variant": "fold_clothes_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 1,
+   "success_rate": 20.0,
+   "progress_score": 32.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "early_fail",
+     "commands": 6,
+     "steps": 431
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "done",
+     "commands": 30,
+     "steps": 429
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "sim_time",
+     "commands": 24,
+     "steps": 500
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "sim_time",
+     "commands": 13,
+     "steps": 500
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 21,
+     "steps": 343
+    }
+   ]
+  },
+  {
+   "task": "hang_mugs",
+   "variant": "hang_mugs",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 6.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 36,
+     "steps": 694
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 46,
+     "steps": 790
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 771
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 713
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 37,
+     "steps": 758
+    }
+   ]
+  },
+  {
+   "task": "hang_mugs",
+   "variant": "hang_mugs_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 683
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 34,
+     "steps": 718
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 39,
+     "steps": 735
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 653
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 38,
+     "steps": 706
+    }
+   ]
+  },
+  {
+   "task": "make_toast",
+   "variant": "make_toast",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 5.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 1201
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 53,
+     "steps": 1128
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 47,
+     "steps": 1267
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 59,
+     "steps": 1392
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 1332
+    }
+   ]
+  },
+  {
+   "task": "make_toast",
+   "variant": "make_toast_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 45,
+     "steps": 1186
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 1064
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 53,
+     "steps": 1073
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 1333
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 56,
+     "steps": 1260
+    }
+   ]
+  },
+  {
+   "task": "pack_objects_into_box",
+   "variant": "pack_objects_into_box",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 14.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 34,
+     "steps": 1300
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 33,
+     "steps": 1155
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 1196
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "sim_time",
+     "commands": 54,
+     "steps": 1300
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 27,
+     "steps": 1195
+    }
+   ]
+  },
+  {
+   "task": "pack_objects_into_box",
+   "variant": "pack_objects_into_box_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 4.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 58,
+     "steps": 890
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 833
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 48,
+     "steps": 924
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 1080
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 1266
+    }
+   ]
+  },
+  {
+   "task": "pour_liquid_into_cup",
+   "variant": "pour_liquid_into_cup",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 4,
+     "steps": 397
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 3,
+     "steps": 400
+    }
+   ]
+  },
+  {
+   "task": "pour_liquid_into_cup",
+   "variant": "pour_liquid_into_cup_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 1,
+   "success_rate": 20.0,
+   "progress_score": 20.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 342
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 19,
+     "steps": 399
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 18,
+     "steps": 366
+    }
+   ]
+  },
+  {
+   "task": "push_T",
+   "variant": "push_T",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 1,
+   "success_rate": 20.0,
+   "progress_score": 20.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 16,
+     "steps": 483
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 14,
+     "steps": 551
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 19,
+     "steps": 501
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 584
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 4,
+     "steps": 135
+    }
+   ]
+  },
+  {
+   "task": "push_T",
+   "variant": "push_T_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 2,
+   "success_rate": 40.0,
+   "progress_score": 40.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 319
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 10,
+     "steps": 600
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 6,
+     "steps": 286
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 6,
+     "steps": 265
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 471
+    }
+   ]
+  },
+  {
+   "task": "sort_nesting_dolls_by_size",
+   "variant": "sort_nesting_dolls_by_size",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 1,
+   "success_rate": 20.0,
+   "progress_score": 20.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 438
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 60,
+     "steps": 702
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 51,
+     "steps": 532
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 658
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 674
+    }
+   ]
+  },
+  {
+   "task": "sort_nesting_dolls_by_size",
+   "variant": "sort_nesting_dolls_by_size_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 697
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 49,
+     "steps": 600
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 12,
+     "steps": 169
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 599
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 540
+    }
+   ]
+  },
+  {
+   "task": "stack_blocks",
+   "variant": "stack_blocks",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 3,
+   "success_rate": 60.0,
+   "progress_score": 66.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "done",
+     "commands": 6,
+     "steps": 265
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 10,
+     "steps": 350
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 370
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 15,
+     "steps": 498
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 329
+    }
+   ]
+  },
+  {
+   "task": "stack_blocks",
+   "variant": "stack_blocks_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 2,
+   "success_rate": 40.0,
+   "progress_score": 46.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 306
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "sim_time",
+     "commands": 12,
+     "steps": 550
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 4,
+     "steps": 290
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "done",
+     "commands": 10,
+     "steps": 418
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 19,
+     "steps": 513
+    }
+   ]
+  },
+  {
+   "task": "stack_bowls",
+   "variant": "stack_bowls",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 5,
+   "success_rate": 100.0,
+   "progress_score": 100.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 13,
+     "steps": 275
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 36,
+     "steps": 744
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 14,
+     "steps": 321
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 13,
+     "steps": 297
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 15,
+     "steps": 297
+    }
+   ]
+  },
+  {
+   "task": "stack_bowls",
+   "variant": "stack_bowls_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 5,
+   "success_rate": 100.0,
+   "progress_score": 100.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 29,
+     "steps": 524
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 20,
+     "steps": 367
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 12,
+     "steps": 289
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 14,
+     "steps": 296
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 14,
+     "steps": 300
+    }
+   ]
+  },
+  {
+   "task": "store_laptop_and_headphones",
+   "variant": "store_laptop_and_headphones",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 4.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 44,
+     "steps": 668
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 708
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 744
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 733
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 51,
+     "steps": 731
+    }
+   ]
+  },
+  {
+   "task": "store_laptop_and_headphones",
+   "variant": "store_laptop_and_headphones_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 43,
+     "steps": 756
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 44,
+     "steps": 738
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 38,
+     "steps": 691
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 38,
+     "steps": 777
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 739
+    }
+   ]
+  },
+  {
+   "task": "sweep_blocks",
+   "variant": "sweep_blocks",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 735
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 839
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 938
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 802
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 782
+    }
+   ]
+  },
+  {
+   "task": "sweep_blocks",
+   "variant": "sweep_blocks_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 828
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 823
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 53,
+     "steps": 812
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 879
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 579
+    }
+   ]
+  },
+  {
+   "task": "classify_objects",
+   "variant": "classify_objects",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 3,
+   "success_rate": 30.0,
+   "progress_score": 53.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 23,
+     "steps": 1076
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 22,
+     "steps": 1061
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 20,
+     "steps": 943
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 26,
+     "steps": 1052
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 20,
+     "steps": 981
+    },
+    {
+     "layout": 5,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 18,
+     "steps": 909
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "done",
+     "commands": 19,
+     "steps": 866
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 1027
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 30,
+     "steps": 1083
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 22,
+     "steps": 1064
+    }
+   ]
+  },
+  {
+   "task": "fill_egg_holder",
+   "variant": "fill_egg_holder",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 7.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 51,
+     "steps": 660
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 37,
+     "steps": 518
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 683
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 57,
+     "steps": 677
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 639
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 32,
+     "steps": 528
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 53,
+     "steps": 684
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 48,
+     "steps": 667
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "sim_time",
+     "commands": 49,
+     "steps": 700
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 41,
+     "steps": 531
+    }
+   ]
+  },
+  {
+   "task": "fill_pen_holder",
+   "variant": "fill_pen_holder",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 6.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 877
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 888
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "done",
+     "commands": 39,
+     "steps": 766
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 720
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 839
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "done",
+     "commands": 53,
+     "steps": 814
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 45,
+     "steps": 834
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 930
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 815
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 46,
+     "steps": 721
+    }
+   ]
+  },
+  {
+   "task": "make_kong",
+   "variant": "make_kong",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 25,
+     "steps": 391
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 16,
+     "steps": 262
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 36,
+     "steps": 546
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 544
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 40,
+     "steps": 548
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 33,
+     "steps": 514
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 32,
+     "steps": 538
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 42,
+     "steps": 586
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 32,
+     "steps": 450
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 38,
+     "steps": 510
+    }
+   ]
+  },
+  {
+   "task": "organize_table",
+   "variant": "organize_table",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 22.5,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 27,
+     "steps": 985
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 25,
+     "steps": 913
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 26,
+     "steps": 881
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 941
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 964
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 38,
+     "steps": 919
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 33,
+     "steps": 901
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 28,
+     "steps": 924
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 959
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 939
+    }
+   ]
+  },
+  {
+   "task": "play_stacking_toy",
+   "variant": "play_stacking_toy",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 10.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "sim_time",
+     "commands": 36,
+     "steps": 1200
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 31,
+     "steps": 1197
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 1103
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 22,
+     "steps": 584
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 38,
+     "steps": 1167
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 33,
+     "steps": 1169
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 33,
+     "steps": 1185
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 32,
+     "steps": 1167
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 60.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 1142
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 34,
+     "steps": 1189
+    }
+   ]
+  },
+  {
+   "task": "play_tic_tac_toe",
+   "variant": "play_tic_tac_toe",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 1,
+   "success_rate": 10.0,
+   "progress_score": 48.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "early_fail",
+     "commands": 28,
+     "steps": 769
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 50.0,
+     "end_reason": "early_fail",
+     "commands": 30,
+     "steps": 702
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "early_fail",
+     "commands": 20,
+     "steps": 620
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "sim_time",
+     "commands": 46,
+     "steps": 1100
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 75.0,
+     "end_reason": "done",
+     "commands": 44,
+     "steps": 1033
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 75.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 1038
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "early_fail",
+     "commands": 37,
+     "steps": 914
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 46,
+     "steps": 993
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "sim_time",
+     "commands": 49,
+     "steps": 1100
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "sim_time",
+     "commands": 53,
+     "steps": 1100
+    }
+   ]
+  },
+  {
+   "task": "put_bottles_into_dustbin",
+   "variant": "put_bottles_into_dustbin",
+   "type": "Long-Horizon",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 28.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 610
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 15,
+     "steps": 696
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 650
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 17,
+     "steps": 643
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 17,
+     "steps": 672
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 19,
+     "steps": 696
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 11,
+     "steps": 669
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 23,
+     "steps": 686
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 14,
+     "steps": 690
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "sim_time",
+     "commands": 21,
+     "steps": 700
+    }
+   ]
+  },
+  {
+   "task": "cover_blocks",
+   "variant": "cover_blocks",
+   "type": "Memory",
+   "episodes": 10,
+   "success": 10,
+   "success_rate": 100.0,
+   "progress_score": 100.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 426
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 403
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 505
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 423
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 426
+    },
+    {
+     "layout": 5,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 504
+    },
+    {
+     "layout": 6,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 424
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 475
+    },
+    {
+     "layout": 8,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 3,
+     "steps": 450
+    },
+    {
+     "layout": 9,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 506
+    }
+   ]
+  },
+  {
+   "task": "imitate_sorting_sequence",
+   "variant": "imitate_sorting_sequence",
+   "type": "Memory",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 22.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 1239
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 50.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 1450
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 30.0,
+     "end_reason": "agent_exit",
+     "commands": 53,
+     "steps": 1285
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 50.0,
+     "end_reason": "agent_exit",
+     "commands": 57,
+     "steps": 1279
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "early_fail",
+     "commands": 18,
+     "steps": 845
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 5.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 1446
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 5.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 1382
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 50.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 1404
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "early_fail",
+     "commands": 60,
+     "steps": 1416
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 1293
+    }
+   ]
+  },
+  {
+   "task": "match_and_pick_from_conveyor",
+   "variant": "match_and_pick_from_conveyor",
+   "type": "Memory",
+   "episodes": 10,
+   "success": 5,
+   "success_rate": 50.0,
+   "progress_score": 50.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 424
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 13,
+     "steps": 555
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 326
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 14,
+     "steps": 596
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 581
+    },
+    {
+     "layout": 5,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 7,
+     "steps": 304
+    },
+    {
+     "layout": 6,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 453
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 19,
+     "steps": 629
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 577
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 605
+    }
+   ]
+  },
+  {
+   "task": "press_by_number",
+   "variant": "press_by_number",
+   "type": "Memory",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 325
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 396
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 353
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 339
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 255
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 255
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 241
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 283
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 1,
+     "steps": 422
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 283
+    }
+   ]
+  },
+  {
+   "task": "swap_T",
+   "variant": "swap_T",
+   "type": "Memory",
+   "episodes": 10,
+   "success": 7,
+   "success_rate": 70.0,
+   "progress_score": 70.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 9,
+     "steps": 357
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 285
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 12,
+     "steps": 320
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 304
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 224
+    },
+    {
+     "layout": 5,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 261
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 5,
+     "steps": 277
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 296
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 11,
+     "steps": 339
+    },
+    {
+     "layout": 9,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 10,
+     "steps": 287
+    }
+   ]
+  },
+  {
+   "task": "swap_blocks",
+   "variant": "swap_blocks",
+   "type": "Memory",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 50,
+     "steps": 690
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 55,
+     "steps": 670
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 44,
+     "steps": 686
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 42,
+     "steps": 664
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 48,
+     "steps": 606
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 692
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 53,
+     "steps": 692
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 33,
+     "steps": 622
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 46,
+     "steps": 696
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 53,
+     "steps": 700
+    }
+   ]
+  },
+  {
+   "task": "align_blocks",
+   "variant": "align_blocks",
+   "type": "Open",
+   "episodes": 10,
+   "success": 5,
+   "success_rate": 50.0,
+   "progress_score": 50.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 4,
+     "steps": 120
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 10,
+     "steps": 148
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 124
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 10,
+     "steps": 200
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 9,
+     "steps": 200
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 2,
+     "steps": 131
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 14,
+     "steps": 193
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 120
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 10,
+     "steps": 200
+    },
+    {
+     "layout": 9,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 7,
+     "steps": 195
+    }
+   ]
+  },
+  {
+   "task": "classify_objects_by_language",
+   "variant": "classify_objects_by_language",
+   "type": "Open",
+   "episodes": 10,
+   "success": 1,
+   "success_rate": 10.0,
+   "progress_score": 31.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 22,
+     "steps": 1002
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 995
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "sim_time",
+     "commands": 12,
+     "steps": 1100
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 29,
+     "steps": 1077
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 1048
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "sim_time",
+     "commands": 20,
+     "steps": 1100
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 19,
+     "steps": 1052
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 13,
+     "steps": 726
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 18,
+     "steps": 1045
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 1057
+    }
+   ]
+  },
+  {
+   "task": "general_pickup",
+   "variant": "general_pickup",
+   "type": "Open",
+   "episodes": 10,
+   "success": 8,
+   "success_rate": 80.0,
+   "progress_score": 80.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 15,
+     "steps": 173
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 57
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 70
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 85
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 69
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 6,
+     "steps": 101
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 175
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 75
+    },
+    {
+     "layout": 8,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 58
+    },
+    {
+     "layout": 9,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 81
+    }
+   ]
+  },
+  {
+   "task": "pick_from_conveyor_by_image",
+   "variant": "pick_from_conveyor_by_image",
+   "type": "Open",
+   "episodes": 10,
+   "success": 1,
+   "success_rate": 10.0,
+   "progress_score": 10.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 33,
+     "steps": 531
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 24,
+     "steps": 423
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 486
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 21,
+     "steps": 316
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 23,
+     "steps": 393
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 34,
+     "steps": 539
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 31,
+     "steps": 472
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 25,
+     "steps": 588
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 22,
+     "steps": 376
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 319
+    }
+   ]
+  },
+  {
+   "task": "pour_by_language",
+   "variant": "pour_by_language",
+   "type": "Open",
+   "episodes": 10,
+   "success": 2,
+   "success_rate": 20.0,
+   "progress_score": 20.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 50,
+     "steps": 761
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 50,
+     "steps": 791
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 49,
+     "steps": 785
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 35,
+     "steps": 613
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "early_fail",
+     "commands": 22,
+     "steps": 378
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 44,
+     "steps": 793
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 48,
+     "steps": 795
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 40,
+     "steps": 718
+    },
+    {
+     "layout": 8,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 34,
+     "steps": 714
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 48,
+     "steps": 800
+    }
+   ]
+  },
+  {
+   "task": "solve_equation",
+   "variant": "solve_equation",
+   "type": "Open",
+   "episodes": 10,
+   "success": 8,
+   "success_rate": 80.0,
+   "progress_score": 80.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 12,
+     "steps": 235
+    },
+    {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 280
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 9,
+     "steps": 286
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 12,
+     "steps": 207
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 142
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 9,
+     "steps": 129
+    },
+    {
+     "layout": 6,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 124
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 14,
+     "steps": 265
+    },
+    {
+     "layout": 8,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 10,
+     "steps": 188
+    },
+    {
+     "layout": 9,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 13,
+     "steps": 250
+    }
+   ]
+  },
+  {
+   "task": "stack_blocks_by_language",
+   "variant": "stack_blocks_by_language",
+   "type": "Open",
+   "episodes": 10,
+   "success": 3,
+   "success_rate": 30.0,
+   "progress_score": 40.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 18,
+     "steps": 353
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "sim_time",
+     "commands": 5,
+     "steps": 400
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 397
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 3,
+     "steps": 261
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 9,
+     "steps": 381
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "done",
+     "commands": 6,
+     "steps": 221
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "sim_time",
+     "commands": 7,
+     "steps": 400
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 309
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 10,
+     "steps": 322
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 4,
+     "steps": 317
+    }
+   ]
+  },
+  {
+   "task": "store_tools_in_toolbox",
+   "variant": "store_tools_in_toolbox",
+   "type": "Open",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 884
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 832
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 813
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 47,
+     "steps": 771
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 52,
+     "steps": 797
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 40,
+     "steps": 571
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 744
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 818
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 802
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 834
+    }
+   ]
+  },
+  {
+   "task": "build_tower",
+   "variant": "build_tower",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 1.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 16,
+     "steps": 935
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 25,
+     "steps": 957
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 17,
+     "steps": 953
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 18,
+     "steps": 999
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 24,
+     "steps": 1032
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 18,
+     "steps": 918
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 1007
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 20,
+     "steps": 880
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 10.0,
+     "end_reason": "done",
+     "commands": 23,
+     "steps": 873
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 18,
+     "steps": 937
+    }
+   ]
+  },
+  {
+   "task": "deposit_coin",
+   "variant": "deposit_coin",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 6,
+     "steps": 162
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 5,
+     "steps": 155
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 7,
+     "steps": 219
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 7,
+     "steps": 203
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 4,
+     "steps": 161
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 10,
+     "steps": 200
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 7,
+     "steps": 173
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 7,
+     "steps": 174
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 198
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 7,
+     "steps": 170
+    }
+   ]
+  },
+  {
+   "task": "fasten_screws",
+   "variant": "fasten_screws",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 10.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "budget",
+     "commands": 60,
+     "steps": 616
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 656
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 56,
+     "steps": 646
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 762
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 57,
+     "steps": 856
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 58,
+     "steps": 627
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 46,
+     "steps": 490
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 59,
+     "steps": 833
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 54,
+     "steps": 680
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 36,
+     "steps": 409
+    }
+   ]
+  },
+  {
+   "task": "insert_key",
+   "variant": "insert_key",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 1,
+     "steps": 0
+    }
+   ]
+  },
+  {
+   "task": "insert_tubes",
+   "variant": "insert_tubes",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 1,
+   "success_rate": 10.0,
+   "progress_score": 22.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 470
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 497
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 20,
+     "steps": 438
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 464
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 39,
+     "steps": 468
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 23,
+     "steps": 482
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 40.0,
+     "end_reason": "agent_exit",
+     "commands": 19,
+     "steps": 474
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 18,
+     "steps": 432
+    },
+    {
+     "layout": 8,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 19,
+     "steps": 463
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 20.0,
+     "end_reason": "agent_exit",
+     "commands": 34,
+     "steps": 482
+    }
+   ]
+  },
+  {
+   "task": "play_Xylophone",
+   "variant": "play_Xylophone",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 29,
+     "steps": 325
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 27,
+     "steps": 453
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 35,
+     "steps": 453
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 42,
+     "steps": 434
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 55,
+     "steps": 500
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 43,
+     "steps": 385
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 39,
+     "steps": 410
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 36,
+     "steps": 420
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 29,
+     "steps": 420
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 29,
+     "steps": 361
+    }
+   ]
+  },
+  {
+   "task": "plug_in_charger",
+   "variant": "plug_in_charger",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 0,
+   "success_rate": 0.0,
+   "progress_score": 0.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 375
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 21,
+     "steps": 400
+    },
+    {
+     "layout": 2,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 14,
+     "steps": 326
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 15,
+     "steps": 336
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 347
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 383
+    },
+    {
+     "layout": 6,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 15,
+     "steps": 271
+    },
+    {
+     "layout": 7,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 14,
+     "steps": 387
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 17,
+     "steps": 353
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 12,
+     "steps": 382
+    }
+   ]
+  },
+  {
+   "task": "pour_balls_into_vase",
+   "variant": "pour_balls_into_vase",
+   "type": "Precision",
+   "episodes": 10,
+   "success": 4,
+   "success_rate": 40.0,
+   "progress_score": 40.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 2,
+     "steps": 558
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 14,
+     "steps": 385
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 532
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 10,
+     "steps": 496
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 5,
+     "steps": 356
+    },
+    {
+     "layout": 5,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 2,
+     "steps": 574
+    },
+    {
+     "layout": 6,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 475
+    },
+    {
+     "layout": 7,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 11,
+     "steps": 425
+    },
+    {
+     "layout": 8,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 490
+    },
+    {
+     "layout": 9,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 16,
+     "steps": 541
+    }
+   ]
+  }
+ ]
+}

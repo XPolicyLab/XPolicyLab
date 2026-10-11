@@ -30,6 +30,8 @@ Unsupported. `train.sh` is omitted. There is no checkpoint: the tools in `tasks/
 
 ## Evaluation
 
+Results of this revision (RGB-only, estimated depth) are in `eval/rgb_only_dev_layouts.md`: seed-0 development layouts of all 42 tasks, 21.2% success / 27.4 progress on the leaderboard formula. Official three-seed evaluation has not been run with estimated depth yet.
+
 ```bash
 cd XPolicyLab/policy/RoboBigWater
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
@@ -81,7 +83,7 @@ Extra `deploy.yml` keys: `command_budget` (0 = only the official step limit), `a
 - The server answers each 45 s of agent silence with one hold step, within the client's 120 s request timeout; hold steps cost about 1% of the step budget.
 - The observation is RGB only. Depth is estimated inside the policy server from each colour image by Depth Anything V2 (Metric-Indoor-Base), with its scale fixed from the known table height and the camera calibration (`agent/camera_model.json`: fixed intrinsics, fixed head pose, wrist poses from the arm's end pose); the simulator's depth channel is never requested. Tools cannot import the simulator or read object poses: they see joint angles, TCP poses, the three RGB images with the estimated depth and calibration, and the same motion primitives as the base commands (`roboshell/server/tools.py`, `EpisodeAPI`).
 - `agent/INTERFACE.md` is the manual the agent reads; each enabled tool's `interface.md` is appended to it. The delivery check (`eval/check_task.py`) rejects tool text that names the task or its objects.
-- Per-seed success counts from our own runs of this adapter on seeds 0--2 are in `eval/official_results.json` (27 task variants, 3,286 episodes); they are not leaderboard entries.
+- `eval/rgb_only_dev_layouts.md` (and `.json`) holds our RGB-only results: the frozen tools on the seed-0 development layouts of all 42 tasks, 420 episodes under the official checkers. On the leaderboard formula they reach 21.2% success and a progress score of 27.4. The tools were developed with the simulator's depth and have not yet been adapted to estimated depth; the earlier results obtained with rendered depth are not reported here because that observation is not allowed on the Agentic track.
 - The server writes each decoded observation as PNG files for the agent (`obs/head.png`, ...), and the task tools read those files back; this is RoboBigWater's own archive inside one process, so the `cv2.imencode` / `cv2.imdecode` calls in `roboshell/server/` and `tasks/*/tools/` never touch XPolicyLab trajectory bits. `model.py` decodes nothing.
 - The internal Python package, entry script and run directories keep the development name `roboshell` (`roboshell/`, `roboshell.sh`, `runs/`); the policy name is RoboBigWater.
 - Data processing and training are unsupported.
