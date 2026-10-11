@@ -12,5 +12,4 @@ if [[ ! -d "${worldscape_root}/src/worldscape_policy" ]]; then
 fi
 worldscape_root="$(cd "${worldscape_root}" && pwd)"
 
-python -m pip install -e "${worldscape_root}[server]"
-python -m pip install -e "${XPL_ROOT}"
+python -m pip install -e "${worldscape_root}[server]" -e "${XPL_ROOT}"

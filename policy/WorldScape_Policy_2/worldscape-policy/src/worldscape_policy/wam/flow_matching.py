@@ -42,12 +42,26 @@ class Wan22KernelConfig:
     high_noise_beta_alpha: float = 3.0
     high_noise_beta_beta: float = 1.0
     kv_cache_fifo: bool = False
+    observation_history_mode: str = "periodic"
     training_sigma_shift: float = 5.0
+    # Real (unpadded) action widths, indexed by checkpoint embodiment ID.
+    # Empty disables the constraint, including native inference and training defaults.
+    action_dims_by_embodiment: tuple[tuple[int, int], ...] = ()
     distributed: Wan22DistributedConfig = field(
         default_factory=Wan22DistributedConfig
     )
 
     def __post_init__(self) -> None:
+        ids: set[int] = set()
+        for embodiment_id, width in self.action_dims_by_embodiment:
+            if (
+                type(embodiment_id) is not int or embodiment_id < 0
+                or type(width) is not int or width <= 0 or embodiment_id in ids
+            ):
+                raise ValueError("Action dimensions require unique nonnegative IDs and positive widths")
+            ids.add(embodiment_id)
+        if self.observation_history_mode not in {"periodic", "rolling"}:
+            raise ValueError("observation_history_mode must be periodic or rolling")
         expected = {
             "num_frame_per_block": 2,
             "num_state_per_block": 1,
@@ -245,12 +259,24 @@ class Wan22LegacyExactKernel:
         inference_state: WAMInferenceState,
         observation_num_frames: int,
     ) -> WAMInferenceState:
+        if self.config.observation_history_mode == "rolling":
+            max_chunks = self.history_window_chunks(core)
+            if (
+                observation_num_frames < 1
+                or (observation_num_frames - 1) % 8
+                or observation_num_frames > 1 + 8 * (max_chunks - 1)
+            ):
+                raise ValueError(
+                    "rolling history requires 1 + 8*K observation frames, "
+                    f"with 0 <= K < checkpoint max_chunk_size={max_chunks}"
+                )
+            # The caller supplies the entire real sliding window. Re-encode its
+            # anchor and rebuild all KVs at local positions on every prediction.
+            return WAMInferenceState()
         if inference_state.current_start_frame == 0:
             return inference_state
         if int(getattr(core, "max_chunk_size", 0)) == 1:
-            # A one-chunk checkpoint only trained visual positions 1-2 and
-            # action/state block index 0. Start each replan from a fresh local
-            # anchor instead of advancing to the unseen second block.
+            # Restart from a fresh local anchor to stay within trained positions.
             return WAMInferenceState()
         if observation_num_frames == 1:
             return WAMInferenceState()
@@ -266,6 +292,20 @@ class Wan22LegacyExactKernel:
             current_start_frame=1 + self.config.num_frame_per_block,
             rebase_observation_window=True,
         )
+
+    def history_window_chunks(self, core: nn.Module) -> int:
+        local_frames = int(getattr(core, "local_attn_size", 0))
+        block_frames = self.config.num_frame_per_block
+        if local_frames <= 1 or (local_frames - 1) % block_frames:
+            raise ValueError("rolling history requires a finite checkpoint max_chunk_size")
+        return (local_frames - 1) // block_frames
+
+    def set_observation_history_mode(self, core: nn.Module, mode: str) -> int:
+        """Select a runtime mode without modifying checkpoint/training geometry."""
+        config = replace(self.config, observation_history_mode=mode)
+        max_chunks = self.history_window_chunks(core)
+        self.config = config
+        return max_chunks
 
     def training_forward(
         self,
@@ -374,6 +414,18 @@ class Wan22LegacyExactKernel:
         )
         if chunk_latents.ndim != 5:
             raise ValueError("chunk_latents must have shape [B,C,T,H,W]")
+        rolling = self.config.observation_history_mode == "rolling"
+        if rolling:
+            latent_frames = chunk_latents.shape[2]
+            max_chunks = self.history_window_chunks(core)
+            if (
+                latent_frames < 1
+                or (latent_frames - 1) % self.config.num_frame_per_block
+                or latent_frames > 1 + (max_chunks - 1) * self.config.num_frame_per_block
+            ):
+                raise ValueError("rolling history latents exceed the checkpoint window or contain a partial chunk")
+            if inference_state.current_start_frame != 0:
+                raise ValueError("rolling history requires a freshly prepared WAM state")
         self._validate_core_geometry(
             core,
             video_frames=1 + self.config.num_frame_per_block,
@@ -444,7 +496,28 @@ class Wan22LegacyExactKernel:
             )
             if start_frame == 0:
                 start_frame = 1
-        if start_frame != 1:
+        if rolling:
+            # Sequential clean-block prefill preserves training's causal mask.
+            # A single unmasked full-window call would leak future observations
+            # into earlier blocks. No predicted video enters the durable cache.
+            for end in range(
+                1 + self.config.num_frame_per_block,
+                chunk_latents.shape[2] + 1,
+                self.config.num_frame_per_block,
+            ):
+                self._prefill_chunk_if_needed(
+                    core=core,
+                    chunk_latents=chunk_latents[:, :, :end],
+                    state_start_frame=end,
+                    i2v_condition=i2v_condition,
+                    contexts=contexts,
+                    kv_caches=kv_caches,
+                    cross_caches=cross_caches,
+                    persistent_prefill=persistent_prefill,
+                    permanent_ctx_len=permanent_ctx_len,
+                )
+            start_frame = chunk_latents.shape[2]
+        elif start_frame != 1:
             self._prefill_chunk_if_needed(
                 core=core,
                 chunk_latents=chunk_latents,
@@ -493,6 +566,12 @@ class Wan22LegacyExactKernel:
         )
         video_scheduler = self._make_scheduler(device)
         action_scheduler = self._make_scheduler(device)
+        padding_mask = self._action_padding_mask(embodiment_id, action_shape[-1])
+        initial_action_noise = noisy_action.clone() if padding_mask is not None else None
+        if padding_mask is not None:
+            noisy_action = self._constrain_action_padding(
+                noisy_action, initial_action_noise, padding_mask, action_scheduler.sigmas[0]
+            )
         if self.config.decouple_inference_noise:
             sigma_max = video_scheduler.sigmas[0]
             final_noise = self.config.video_inference_final_noise
@@ -577,6 +656,11 @@ class Wan22LegacyExactKernel:
                 step_index=index,
                 return_dict=False,
             )[0]
+            if padding_mask is not None:
+                noisy_action = self._constrain_action_padding(
+                    noisy_action, initial_action_noise, padding_mask,
+                    action_scheduler.sigmas[index + 1],
+                )
 
         predicted_video = noisy_video
         if inference_state.current_start_frame == 0 and anchor is not None:
@@ -600,6 +684,36 @@ class Wan22LegacyExactKernel:
             ),
             next_state,
         )
+
+    def _action_padding_mask(self, embodiment_id: Tensor, action_dim: int) -> Tensor | None:
+        """Resolve padding per batch row, including mixed/reordered embodiments."""
+        if not self.config.action_dims_by_embodiment:
+            return None
+        if embodiment_id.ndim != 1 or embodiment_id.dtype not in (torch.int32, torch.int64):
+            raise ValueError("embodiment_id must be a one-dimensional integer tensor")
+        widths = torch.full_like(embodiment_id, -1)
+        for identifier, width in self.config.action_dims_by_embodiment:
+            if width > action_dim:
+                raise ValueError("Checkpoint real action width exceeds model action_dim")
+            widths = torch.where(embodiment_id == identifier, width, widths)
+        if bool((widths < 0).any()):
+            raise ValueError("No checkpoint action dimensions for the requested embodiment_id")
+        return torch.arange(action_dim, device=embodiment_id.device)[None, None, :] >= widths[:, None, None]
+
+    @staticmethod
+    def _constrain_action_padding(
+        sample: Tensor, initial_noise: Tensor | None, padding_mask: Tensor, sigma: Tensor,
+    ) -> Tensor:
+        """Training pads clean actions with zero, hence x_pad(sigma)=sigma*epsilon.
+
+        Preserve real coordinates exactly and reuse the original noise at every
+        state, including skipped model steps and the terminal sigma=0 state.
+        Do not change the model velocity or the UniPC history for real actions.
+        """
+        if initial_noise is None:
+            raise ValueError("Padding constraint requires the initial action noise")
+        expected = (initial_noise.float() * sigma.float()).to(sample.dtype)
+        return torch.where(padding_mask, expected, sample)
 
     def _prefill_chunk_if_needed(
         self,

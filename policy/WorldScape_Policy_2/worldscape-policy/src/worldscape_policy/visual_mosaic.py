@@ -47,8 +47,14 @@ def prepare_diffusion_mosaic(
     return resized.reshape(batch, frames, channels, height, width)
 
 
-def compose_three_view_robotwin(views: Tensor) -> Tensor:
-    """Resize raw ``[head, left, right]`` views directly into a 384x320 image."""
+def compose_three_view_robotwin(
+    views: Tensor, *, output_size: tuple[int, int] = (384, 320),
+) -> Tensor:
+    """Resize ``[head, left, right]`` into a configurable (height, width) canvas.
+
+    Head occupies the top two-thirds (rounded); wrists share the remaining row.
+    The default preserves the native RoboTwin2 layout exactly.
+    """
 
     if views.ndim != 6:
         raise ValueError("views must have shape [B,T,V,C,H,W]")
@@ -68,25 +74,32 @@ def compose_three_view_robotwin(views: Tensor) -> Tensor:
             antialias=True,
         )
 
-    head = resize(flat[:, 0], (256, 320))
-    left = resize(flat[:, 1], (128, 160))
-    right = resize(flat[:, 2], (128, 160))
+    canvas_height, canvas_width = output_size
+    if (type(canvas_height) is not int or canvas_height < 3
+            or type(canvas_width) is not int or canvas_width < 2 or canvas_width % 2):
+        raise ValueError("Concat output requires integer height >= 3 and even width >= 2")
+    head_height = round(canvas_height * 2 / 3)
+    wrist_size = (canvas_height - head_height, canvas_width // 2)
+    head = resize(flat[:, 0], (head_height, canvas_width))
+    left = resize(flat[:, 1], wrist_size)
+    right = resize(flat[:, 2], wrist_size)
     bottom = torch.cat((left, right), dim=-1)
     result = torch.cat((head, bottom), dim=-2)
-    return result.reshape(batch, frames, channels, 384, 320)
+    return result.reshape(batch, frames, channels, canvas_height, canvas_width)
 
 
 def prepare_diffusion_robotwin_concat(
     views: Tensor,
     *,
     input_range: VisualInputRange,
+    output_size: tuple[int, int] = (384, 320),
 ) -> Tensor:
     """Normalize raw views, then resize each view once into the final layout."""
 
     normalized = normalize_visual(views, input_range=input_range)
     # Antialiased interpolation may overshoot the normalized range by a few
     # ulps around saturated edges, while the VAE input contract is strict.
-    return compose_three_view_robotwin(normalized).clamp_(-1.0, 1.0)
+    return compose_three_view_robotwin(normalized, output_size=output_size).clamp_(-1.0, 1.0)
 
 
 __all__ = [

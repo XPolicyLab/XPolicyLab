@@ -261,7 +261,10 @@ class WorldScapePolicy(nn.Module):
         )
         if (
             observation.images.ndim == 6
-            and observation.images.shape[2] == 3
+            and (observation.images.shape[2] == 3 or (
+                observation.images.shape[2] == 1
+                and getattr(self.visual_memory.codec, "diffusion_view_layout", None) == "robotwin_concat"
+            ))
             and callable(prepare_diffusion_video)
         ):
             reference_video = prepare_diffusion_video(observation.images)
@@ -272,9 +275,8 @@ class WorldScapePolicy(nn.Module):
             max_chunk_size = int(
                 getattr(getattr(self.wam, "core", None), "max_chunk_size", 0)
             )
-            if max_chunk_size == 1:
-                # One-chunk checkpoints restart their local causal window at
-                # every replan, so position 0 must be the current real frame.
+            if max_chunk_size == 1 and getattr(self, "single_window_reference", "latest") == "latest":
+                # Use the current observation when restarting the local causal window.
                 return reference_video[:, -1:], True
             return reference_video[:, :1], True
         return observation.head_view, False

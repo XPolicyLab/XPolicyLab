@@ -11,19 +11,15 @@ action_type: joint
 seed: 0
 eval_batch: false
 
-# worldscape_root: null -> use policy/WorldScape_Policy_2/worldscape-policy/
-# (WORLDSCAPE_POLICY_ROOT overrides).
-# checkpoint_path: null -> resolve from ckpt_name via the shared XPolicyLab
-# checkpoint layout (checkpoints/<run-dir>), see README (WORLDSCAPE_CHECKPOINT
-# forces an explicit directory).
+# Null paths select bundled source and shared XPolicyLab checkpoint resolution.
 worldscape_root: null
 checkpoint_path: null
 device: cuda
 mode: auto
 
 action_horizon: 24
-replan_steps: 24
-observation_interval: 3
+replan_steps: null
+observation_interval: null
 memory_reset_chunks: 0
 vlm_history_num_frames: 4
 diffusion_view_layout: null
@@ -41,3 +37,22 @@ connect_retry_delay_s: 5
 max_connect_seconds: 1200
 ws_ping_interval_s: 20
 ws_ping_timeout_s: 20
+
+# Native defaults; select deploy_robodojo.yml for RoboDojo checkpoints.
+runtime_profile: robotwin2
+input_color_order: rgb
+# Indices into adapter views, placed as top / bottom-left / bottom-right.
+diffusion_concat_view_order: [0, 1, 2]
+single_window_reference: latest
+# Output canvas in pixels; applies only to robotwin_concat. Match the checkpoint.
+diffusion_concat_height: 384
+diffusion_concat_width: 320
+wam_history_mode: periodic
+short_window_for_non_memory_tasks: false
+memory_window_chunks: null
+ordinary_window_chunks: null
+constrain_action_padding: false
+interactive_qwen:
+  enabled: false
+press_by_number_prompt:
+  enabled: false
