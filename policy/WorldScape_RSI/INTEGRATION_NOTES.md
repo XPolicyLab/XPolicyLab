@@ -1,6 +1,6 @@
 # Company dev integration candidate, 2026-10-11
 
-Install this folder as policy/Worldscape_RSI on the existing company dev branch.
+Install this folder as policy/WorldScape_RSI on the existing company dev branch.
 Do not replace policy/WorldScape_Policy_2. No new Git branch is required.
 
 Initial instruction + RGB + measured state -> episode-level local binary router -> WAM or Astra.

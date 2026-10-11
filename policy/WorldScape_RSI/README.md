@@ -1,22 +1,22 @@
-# Worldscape RSI
+# WorldScape RSI
 
 ### Experience-Driven Embodied Intelligence through Policy–Harness Co-Evolution
 
-**Worldscape RSI brings World Action Models and agentic reasoning into a unified framework for long-horizon robotic manipulation.** It connects visual perception, task memory, action generation, execution feedback, and recovery—and makes the resulting experience reusable across subsequent policy and harness versions.
+**WorldScape RSI brings World Action Models and agentic reasoning into a unified framework for long-horizon robotic manipulation.** It connects visual perception, task memory, action generation, execution feedback, and recovery—and makes the resulting experience reusable across subsequent policy and harness versions.
 
-Our central idea is **Policy–Harness Co-Evolution**: improve both the model that proposes actions and the execution framework that turns those proposals into reliable behavior. A stronger policy benefits from a stronger harness; a stronger harness produces better evidence for the next policy update.
+Our central idea is **Policy–Harness Co-Evolution**: improve both the model that proposes actions and the execution framework that turns those proposals into reliable behavior. A stronger policy supplies richer execution experience to refine the harness; an improved harness enables more reliable execution and produces higher-quality data for the next policy update.
 
 **World Action Models · Agentic Robotics · Multimodal In-Context Learning · Skill Memory · Adaptive Policy Routing · Closed-Loop Control · Execution-Aware Recovery · Code as Policies · Policy–Harness Co-Evolution · Recursive Self-Improvement**
 
 **Contributor:** WorldScape RSI team<br>
-**XPolicyLab policy name:** `Worldscape_RSI`<br>
+**XPolicyLab policy name:** `WorldScape_RSI`<br>
 **Target:** RoboDojo · ARX X5 · dual-arm joint control
 
-## Why Worldscape RSI?
+## Why WorldScape RSI?
 
 Robotic execution requires more than a single action prediction. The system must interpret a goal, recognize the current scene, choose an execution strategy, manage motion constraints, check what actually happened, and recover when an action does not achieve its intended effect.
 
-Worldscape RSI organizes these responsibilities around two complementary capabilities:
+WorldScape RSI organizes these responsibilities around two complementary capabilities:
 
 - **WorldScape WAM** generates temporally coordinated joint-action chunks from observations and model-supported history.
 - **Astra Agent** combines visual reasoning with task skills and multimodal demonstrations, then acts through structured motion commands and execution feedback.
@@ -92,13 +92,13 @@ The v2 release incorporates the updated `pour_balls_into_vase` demonstration, it
 
 ## Installation
 
-Use the company `dev` integration containing both `policy/Worldscape_RSI` and the adjacent RoboDojo-capable `policy/WorldScape_Policy_2`. The latter must include `deploy_robodojo.yml` and `xpolicylab_adapter/`; a different upstream snapshot may not provide these dependencies.
+Use the company `dev` integration containing both `policy/WorldScape_RSI` and the adjacent RoboDojo-capable `policy/WorldScape_Policy_2`. The latter must include `deploy_robodojo.yml` and `xpolicylab_adapter/`; a different upstream snapshot may not provide these dependencies.
 
 Use Linux and the supported Python 3.11 policy-server environment. Keep the RoboDojo / Isaac Sim / cuRobo simulation environment separate from the GPU policy environment. Follow the adjacent [WorldScape installation guide](../WorldScape_Policy_2/README.md#installation) for its GPU stack.
 
 ```bash
 # Run in the prepared policy-server environment.
-cd XPolicyLab/policy/Worldscape_RSI
+cd XPolicyLab/policy/WorldScape_RSI
 bash install.sh
 ```
 
@@ -165,21 +165,21 @@ The supported configuration is `RoboDojo`, `arx_x5`, `joint`, and **one environm
 From the parent workspace in which `XPolicyLab` is importable:
 
 ```bash
-python -m XPolicyLab.policy.Worldscape_RSI.preflight \
+python -m XPolicyLab.policy.WorldScape_RSI.preflight \
   --task general_pickup --assets-only
 
-python -m XPolicyLab.policy.Worldscape_RSI.preflight \
+python -m XPolicyLab.policy.WorldScape_RSI.preflight \
   --task general_pickup
 
 python -m unittest discover \
-  -s XPolicyLab/policy/Worldscape_RSI/tests -t . -v
+  -s XPolicyLab/policy/WorldScape_RSI/tests -t . -v
 ```
 
 Asset-only preflight validates loading of the task's ICL. Full preflight additionally checks the selected route's local configuration. Neither command performs a paid API request, loads a real WAM inference run, or launches the simulator.
 
 ### 2. Launch a task
 
-From `XPolicyLab/policy/Worldscape_RSI`, after supplying the required assets, services, credentials, and environments:
+From `XPolicyLab/policy/WorldScape_RSI`, after supplying the required assets, services, credentials, and environments:
 
 ```bash
 bash eval.sh \
@@ -241,7 +241,7 @@ Before an evaluation release, supply and freeze the required checkpoints and ass
 ## Code map
 
 ```text
-Worldscape_RSI/
+WorldScape_RSI/
 ├── model.py, deploy.py       # Policy entry and custom simulation loop
 ├── deploy.yml               # Runtime configuration
 ├── wam_backend.py           # Adjacent WorldScape adapter integration
@@ -260,5 +260,5 @@ Historical utilities retained under the harness are not alternate launch instruc
 
 ## Acknowledgements
 
-Worldscape RSI builds on the WorldScape WAM stack, the XPolicyLab integration framework, and RoboDojo's simulation and evaluation infrastructure. Shared setup and submission conventions are documented in the [XPolicyLab README](../../README.md) and [contribution guide](../../CONTRIBUTING.md). Demonstration sources remain
+WorldScape RSI builds on the WorldScape WAM stack, the XPolicyLab integration framework, and RoboDojo's simulation and evaluation infrastructure. Shared setup and submission conventions are documented in the [XPolicyLab README](../../README.md) and [contribution guide](../../CONTRIBUTING.md). Demonstration sources remain
 attributed in the ICL manifest.

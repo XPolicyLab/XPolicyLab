@@ -14,7 +14,7 @@ def eval_one_episode(TASK_ENV,model_client):
         raise RuntimeError("Server/client release or task mismatch")
     # Explicit episode boundary, before route selection and execution reports.
     model_client.call(func_name="reset")
-    run=Path(os.environ.get("WRSI_OUTPUT_DIR","eval_result/Worldscape_RSI"))/task/uuid.uuid4().hex
+    run=Path(os.environ.get("WRSI_OUTPUT_DIR","eval_result/WorldScape_RSI"))/task/uuid.uuid4().hex
     run.mkdir(parents=True,exist_ok=False)
     (run/"release.json").write_text(json.dumps(metadata,indent=2),encoding="utf-8")
     os.environ["RDA_TASK"]=task;os.environ["RDA_RUN_DIR"]=str(run.resolve())

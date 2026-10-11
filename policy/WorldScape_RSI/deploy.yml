@@ -1,4 +1,4 @@
-policy_name: Worldscape_RSI
+policy_name: WorldScape_RSI
 protocol: ws
 host: localhost
 port: null
