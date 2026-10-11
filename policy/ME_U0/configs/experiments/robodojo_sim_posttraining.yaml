@@ -1,0 +1,71 @@
+# RoboDojo ARX-X5 delta-joint post-training.
+run_id: ${oc.env:ME_U0_RUN_ID,UNSET_RUN_ID}
+work_dir: ${work_root}/${run_id}
+
+defaults:
+  - /defaults
+  - /trainer: ME_U0
+  - /model: ME_U0
+  - /data: robodojo_sim_delta_joint_posttraining_map_style_video_stride2_action_48_highres_pyramid
+  - /distributed: zero2_bf16
+
+robodojo_action_type: joint
+robodojo_clip_normalized_actions: false
+posttrain_save_every_n_steps: 5000
+posttrain_save_at_fit_end: true
+
+model:
+  action_position_mode: group_substep_mrope
+  checkpoint_root: ${model_root}
+  pretrained_pth: ${oc.env:ME_U0_PRETRAINED_PTH,/path/to/ME-U0-Pretrained/model.pt}
+  action_space_schema_id: pi05_state_action_v1
+  action_dim: 26
+  state_dim: 26
+  pretrained_strict: true
+  freeze_understanding: false
+  freeze_vit: false
+  action_horizon: 48
+  batch_vae_vit_encoders: true
+  num_video_frames: 25
+  num_video_latent_frames: 7
+
+runtime:
+  data_style: map_style
+  batch_contract: canonical_subtask
+  preflight: none
+  resume_contract: base
+  require_pretrained: true
+
+training:
+  seed: 42
+  max_steps: 80000
+  max_epochs: 10
+  gradient_accumulation_steps: 1
+  gradient_clip_max_norm: 1.0
+
+optimizer:
+  type: AdamW
+  lr: 5.0e-5
+  vit_lr: 5.0e-6
+  action_lr: 5.0e-5
+  weight_decay: 0.0
+  betas: [0.9, 0.95]
+
+scheduler:
+  type: cosine_with_warmup
+  warmup_steps: 1300
+  min_lr_ratio: 0.1
+
+callbacks:
+  - _target_: leap.callbacks.logging_callback.ExperimentSetupCallback
+  - _target_: leap.callbacks.logging_callback.TrainingProgressCallback
+    log_interval: 10
+  - _target_: leap.callbacks.logging_callback.TensorBoardCallback
+    log_interval: 10
+  - _target_: leap.callbacks.logging_callback.JsonLogCallback
+    log_interval: 10
+  - _target_: leap.callbacks.atomic_checkpoint_callback.AtomicCheckpointCallback
+    save_every_n_steps: ${posttrain_save_every_n_steps}
+    save_every_n_epochs: 0
+    max_keep: 10
+    save_at_fit_end: ${posttrain_save_at_fit_end}

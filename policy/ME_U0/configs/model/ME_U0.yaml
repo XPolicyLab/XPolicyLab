@@ -1,0 +1,49 @@
+# ME_U0 ViT-observation model. The protected lance_src tree is unchanged.
+model:
+  _target_: leap.models.ME_U0.modeling.build_mach_embodied_unified
+  checkpoint_root: ${model_root}
+  lance_subdir: Lance_3B_Video
+  vit_subdir: Qwen2.5-VL-ViT
+  vae_filename: Wan2.2_VAE.pth
+
+  action_dim: 26
+  state_dim: 26
+  # Null is the legacy 26-D action layout.  The explicit unified EEF route
+  # sets unified_eef_action_v1 and uses the fixed 48-D action schema.
+  action_space_schema_id: null
+  action_horizon: 32
+  action_position_mode: legacy_grouped
+  num_logical_domains: 17
+  per_view_size: 96
+  # User-turn safety cap used by the shared Lance chat-template helper. The
+  # complete wrapped text_ids sequence is bounded by 550 tokens.
+  max_text_len: 512
+  num_video_frames: 33
+  num_video_latent_frames: 9
+  max_num_frames: 41
+  max_latent_size: 64
+  latent_patch_size: [1, 1, 1]
+
+  apply_qwen_2_5_vl_pos_emb: true
+  flex_block_size: 128
+  time_dist_video: logitnormal
+  timestep_shift: 4.0
+  action_time_schedule: shared
+  time_dist_action: logitnormal
+  validation_timestep_shift: 3.0
+  num_inference_steps: 24
+
+  video_loss_weight: 10.0
+  action_loss_weight: 10.0
+  freeze_understanding: false
+  freeze_vit: false
+  freeze_vae: true
+  gradient_checkpointing: false
+  # Batch VAE/ViT inputs; both encoders execute on the current CUDA stream.
+  batch_vae_vit_encoders: true
+
+  # Pretraining starts from the official Lance backbone unless an experiment
+  # supplies a strict weights-only warm start.
+  pretrained_pth: null
+  pretrained_strict: true
+  main_image_size: 224
