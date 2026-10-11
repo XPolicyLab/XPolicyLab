@@ -96,6 +96,8 @@ Commands that move the robot refresh `obs/` before they return.
 | `obs/head_depth.npy`, `obs/wrist_l_depth.npy`, `obs/wrist_r_depth.npy` | Depth of the same three images: float32 array of shape (480, 640), metres along the camera z axis (distance to the image plane), 0 where there is no data. Load with `numpy.load` |
 | `obs/*_depth.png` | Grayscale preview of the depth: near is bright, far is dark |
 
+The depth is **estimated from the colour image** by a neural network (Depth Anything V2), with its scale set from the known table plane; it is not measured. Expect errors of 2 to 4 cm on objects, more on the wrist cameras, at object edges and on thin parts; flat table pixels near the robot are the most reliable. Treat depth as approximate: prefer values averaged over a region to single pixels, check results against known object sizes and the table height, and confirm by observing again after a motion.
+
 `obs/state.json`:
 
 - `left`, `right`: `tcp_pos`, `tcp_quat`, `tcp_rpy` (extrinsic x-y-z, degrees), `approach_dir`, `open_dir`, `gripper`.

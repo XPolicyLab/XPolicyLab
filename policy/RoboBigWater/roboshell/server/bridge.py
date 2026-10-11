@@ -26,6 +26,7 @@ from roboshell.server import geometry as geo
 from roboshell.server.core import CAMERA_NAMES, Episode, log
 from roboshell.server.http_api import dispatch, start_http
 from roboshell.server.tools import load_tools, schema
+from roboshell.server.depth_estimator import DepthEstimator
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 HOLD_S = 45.0  # answer the client with a one-step hold if the agent is silent this long (client timeout is 120 s)
@@ -55,6 +56,12 @@ class BridgeExecutor:
             self.specs[tag] = RobotSpec(list(robot["default_root_pos"]) + list(robot["default_root_rot"]))
         with open(cfg.get("camera_model", os.path.join(ROOT, "agent", "camera_model.json"))) as handle:
             self.camera_model = json.load(handle)["cameras"]
+        # Depth is estimated from the colour images inside this policy; the observation never carries a depth channel.
+        model_dir = os.environ.get("ROBOSHELL_DEPTH", "").strip() or os.path.join(ROOT, ".cache", "depth-model", "Depth-Anything-V2-Metric-Indoor-Base-hf")
+        if not os.path.isdir(model_dir):
+            raise RuntimeError(f"depth model not found at {model_dir}: run scripts/install_depth_model.sh or set ROBOSHELL_DEPTH in config.env")
+        self.depth_estimator = DepthEstimator(model_dir, 0)
+        log(f"depth from RGB: {self.depth_estimator.name}")
         self._step_lim = self.read_step_lim()
         self.planner_obj = None
         self.obs = None
@@ -141,8 +148,6 @@ class BridgeExecutor:
             color = np.ascontiguousarray(np.asarray(self.obs["vision"][source]["color"])[:, :, :3]).astype(np.uint8)
             ok, encoded = cv2.imencode(".png", cv2.cvtColor(color, cv2.COLOR_RGB2BGR))
             png[source] = encoded.tobytes()
-            if "depth" in self.obs["vision"][source]:
-                depth[source] = np.asarray(self.obs["vision"][source]["depth"], dtype=np.float32)
             model = self.camera_model[source]
             if "extrinsics_world" in model:
                 extrinsic = np.asarray(model["extrinsics_world"], dtype=float)
@@ -151,6 +156,7 @@ class BridgeExecutor:
                 extrinsic = self.ee(tag) @ np.asarray(model["ee_to_camera"], dtype=float)
             cameras[source] = {"intrinsics": np.asarray(model["intrinsics"], dtype=float), "extrinsics_world": extrinsic,
                                "size": [color.shape[1], color.shape[0]]}
+            depth[source] = self.depth_estimator(color, cameras[source]["intrinsics"], extrinsic, source)
         return {"png": png, "cameras": cameras, "depth": depth}
 
     def success_now(self):

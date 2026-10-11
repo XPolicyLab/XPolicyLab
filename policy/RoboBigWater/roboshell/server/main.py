@@ -42,6 +42,8 @@ from roboshell.contract import v0 as C
 from roboshell.server import geometry as geo
 from roboshell.server.core import CAMERA_NAMES, SUCCESS_THRESHOLD, Episode, log
 from roboshell.server.envsetup import build_env, start_episode
+from roboshell.server.depth_estimator import DepthEstimator
+DEPTH_ESTIMATOR = None   # set once at start-up when ROBOSHELL_DEPTH names a model: the observation is then RGB only
 from roboshell.server.http_api import dispatch, start_http
 from roboshell.server.tools import load_tools, schema
 
@@ -131,13 +133,15 @@ class DirectExecutor:
             color = np.ascontiguousarray(np.asarray(camera["color"])[:, :, :3]).astype(np.uint8)
             ok, encoded = cv2.imencode(".png", cv2.cvtColor(color, cv2.COLOR_RGB2BGR))
             png[source] = encoded.tobytes()
-            if "depth" in camera:
-                depth[source] = np.asarray(camera["depth"], dtype=np.float32)
             cameras[source] = {
                 "intrinsics": np.asarray(camera["intrinsic_matrix"], dtype=float),
                 "extrinsics_world": np.asarray(camera["extrinsic_matrix"], dtype=float) @ USD_TO_OPENCV,
                 "size": [color.shape[1], color.shape[0]],
             }
+            if DEPTH_ESTIMATOR is not None:   # RGB only: depth comes from the network, never from the simulator
+                depth[source] = DEPTH_ESTIMATOR(color, cameras[source]["intrinsics"], cameras[source]["extrinsics_world"], source)
+            elif "depth" in camera:
+                depth[source] = np.asarray(camera["depth"], dtype=np.float32)
         return {"png": png, "cameras": cameras, "depth": depth}
 
     def success_now(self):
@@ -224,7 +228,12 @@ class Server:
 
     def build(self):
         started = time.time()
-        self.env = build_env(APP, ARGS.task, ARGS.seed, device_id=ARGS.device_id)
+        global DEPTH_ESTIMATOR
+        model_dir = os.environ.get("ROBOSHELL_DEPTH", "").strip()
+        DEPTH_ESTIMATOR = DepthEstimator(model_dir, ARGS.device_id) if model_dir else None
+        if DEPTH_ESTIMATOR is not None:
+            log(f"depth from RGB: {DEPTH_ESTIMATOR.name} (rendered depth not captured)")
+        self.env = build_env(APP, ARGS.task, ARGS.seed, device_id=ARGS.device_id, depth=DEPTH_ESTIMATOR is None)
         self.executor = DirectExecutor(self.env)
         log(f"environment built in {time.time() - started:.0f} s")
 

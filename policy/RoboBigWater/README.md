@@ -2,7 +2,7 @@
 
 **Contributor:** RoboBigWater authors | **Paper:** not yet available | **arXiv:** not yet available | **Original code:** not yet available
 
-Evaluation-only agent policy. An unmodified coding agent (Codex CLI, `gpt-6-astra`) operates the ARX X5 through one command-line program, `robo`; a server in this directory turns each command into a timed joint path with cuRobo inverse kinematics and streams it through the standard action contract. Task competence is in small Python tools under `tasks/<task>/tools/`, written by a second copy of the same model during development and frozen here; the acting agent only chooses which tool to call and with what arguments. The agent runs in a Docker container with no network beyond the model endpoint; the API key never enters the container. Depth is used: the adapter ships an RGB-D observation config (`env_cfg/arx_x5_rgbd.yml`).
+Evaluation-only agent policy. An unmodified coding agent (Codex CLI, `gpt-6-astra`) operates the ARX X5 through one command-line program, `robo`; a server in this directory turns each command into a timed joint path with cuRobo inverse kinematics and streams it through the standard action contract. Task competence is in small Python tools under `tasks/<task>/tools/`, written by a second copy of the same model during development and frozen here; the acting agent only chooses which tool to call and with what arguments. The agent runs in a Docker container with no network beyond the model endpoint; the API key never enters the container. The observation is RGB only (stock `arx_x5` config); depth is estimated inside the policy server from the colour images.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -14,11 +14,11 @@ Requirements on the policy machine: the RoboDojo checkout this XPolicyLab lives 
 cd XPolicyLab/policy/RoboBigWater
 bash install.sh                      # first run only creates config.env from config.env.example
 vi config.env                        # fill ISAAC_PYTHON, CODEX_BIN, MODEL_UPSTREAM, MODEL_BASE_PATH, MODEL_KEY_FILE; ROBODOJO_REPO defaults to the checkout
-bash install.sh                      # builds the agent image, installs websockets>=13 for the policy server, adds the RGB-D env configs
+bash install.sh                      # builds the agent image, installs websockets>=13 and transformers for the policy server, downloads the depth model (370 MB)
 ./roboshell.sh check                 # optional, no GPU: one Codex turn against a fake server, verifies image, endpoint and key
 ```
 
-`install.sh` copies `env_cfg/arx_x5_rgbd.yml` and `env_cfg/camera_config_rgbd.yml` next to the stock RoboDojo configs; nothing upstream is modified. The policy server runs in the Isaac Sim Python (`ISAAC_PYTHON`), so `<policy_env>` below may be that interpreter's path or any value when `config.env` sets `ISAAC_PYTHON`.
+`install.sh` downloads the monocular depth model (Depth Anything V2, Metric-Indoor-Base) into `.cache/depth-model`; nothing upstream is modified and the stock `arx_x5` observation config is used. The policy server runs in the Isaac Sim Python (`ISAAC_PYTHON`), so `<policy_env>` below may be that interpreter's path or any value when `config.env` sets `ISAAC_PYTHON`.
 
 ## Data Processing
 
@@ -36,10 +36,10 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
   <policy_gpu_id> <env_gpu_id> <policy_env> <eval_env>
 
 # Example: stack_bowls, seed 0, simulator and policy server on GPU 0
-bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5_rgbd joint 0 0 0 unused /path/to/RoboDojo/isaacsim-5.1.0/.venv
+bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 unused /path/to/RoboDojo/isaacsim-5.1.0/.venv
 ```
 
-- `env_cfg_type` is `arx_x5_rgbd` (three 640x480 RGB-D cameras). `action_type` must stay `joint`. `ckpt_name` is a label only; `gpt-6-astra` is the convention.
+- `env_cfg_type` is the stock `arx_x5` (three 640x480 RGB cameras, no depth). `action_type` must stay `joint`. `ckpt_name` is a label only; `gpt-6-astra` is the convention.
 - Cluttered Generalization variants are task names with the `_random` suffix (`stack_bowls_random`); they share the tools of the base task.
 - The policy server and the simulator may share one GPU (about 14 GB together). Batch evaluation is not supported (`eval_batch: false`).
 - The agent's full session for each episode (commands, observations, transcript) is written under `runs/bridge/<task>/`. `python3 eval/official_validate.py .` flags episodes in which the agent never issued a command (an infrastructure failure, not a result).
@@ -49,7 +49,7 @@ Offline wiring check (no simulator). The policy server starts the real agent, so
 
 ```bash
 export EVAL_ENV_TYPE=debug
-bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5_rgbd joint 0 0 0 unused <eval_env>
+bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 unused <eval_env>
 ```
 
 Development without the official client (direct executor, resets and replays, seed-0 layouts):
@@ -79,7 +79,7 @@ Extra `deploy.yml` keys: `command_budget` (0 = only the official step limit), `a
 ## Notes
 
 - The server answers each 45 s of agent silence with one hold step, within the client's 120 s request timeout; hold steps cost about 1% of the step budget.
-- Tools cannot import the simulator or read object poses: they see joint angles, TCP poses, the three RGB-D images with calibration, and the same motion primitives as the base commands (`roboshell/server/tools.py`, `EpisodeAPI`).
+- The observation is RGB only. Depth is estimated inside the policy server from each colour image by Depth Anything V2 (Metric-Indoor-Base), with its scale fixed from the known table height and the camera calibration (`agent/camera_model.json`: fixed intrinsics, fixed head pose, wrist poses from the arm's end pose); the simulator's depth channel is never requested. Tools cannot import the simulator or read object poses: they see joint angles, TCP poses, the three RGB images with the estimated depth and calibration, and the same motion primitives as the base commands (`roboshell/server/tools.py`, `EpisodeAPI`).
 - `agent/INTERFACE.md` is the manual the agent reads; each enabled tool's `interface.md` is appended to it. The delivery check (`eval/check_task.py`) rejects tool text that names the task or its objects.
 - Per-seed success counts from our own runs of this adapter on seeds 0--2 are in `eval/official_results.json` (27 task variants, 3,286 episodes); they are not leaderboard entries.
 - The server writes each decoded observation as PNG files for the agent (`obs/head.png`, ...), and the task tools read those files back; this is RoboBigWater's own archive inside one process, so the `cv2.imencode` / `cv2.imdecode` calls in `roboshell/server/` and `tasks/*/tools/` never touch XPolicyLab trajectory bits. `model.py` decodes nothing.

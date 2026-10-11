@@ -17,8 +17,7 @@ case "$cmd" in
     "$ROOT/agent/codex/build.sh"
     "$ROOT/scripts/install_policy_deps.sh"
     source "$ROOT/scripts/sim_env.sh"
-    cp -n "$ROOT/env_cfg/arx_x5_rgbd.yml" "$ROBODOJO_REPO/env_cfg/" 2>/dev/null || true
-    cp -n "$ROOT/env_cfg/camera_config_rgbd.yml" "$ROBODOJO_REPO/env_cfg/camera/" 2>/dev/null || true
+    "$ROOT/scripts/install_depth_model.sh"
     [ -f "$ROOT/agent/camera_model.json" ] || echo "note: agent/camera_model.json missing; run scripts/run_camera_model.sh GPU once"
     echo "setup done" ;;
   check)   LANE=check "$ROOT/tests/probes/codex/run_probe_container.sh" check "$ROOT/tests/probes/codex/prompt_min.txt" "${PORT:-28750}"
