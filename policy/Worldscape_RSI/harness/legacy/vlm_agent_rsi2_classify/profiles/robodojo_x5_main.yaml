@@ -1,0 +1,123 @@
+# Benchmark profile for RoboDojo (ARX X5 dual-arm embodiment).
+# Same role as harness/configs/robotwin2_profile.yaml: everything the VLM must know about this robot
+# that is not task specific. Keys override DEFAULT_PROFILE in main_prompts.py.
+# {table_z} placeholders are filled per episode from controller.table_z (in cm).
+# Provenance: geometry from the X5 URDF (fingertip centre 14.5 cm ahead of the wrist), reach from a
+# sampled planner probe, the empty-closed gripper reading from a gripper probe. Grasp and travel
+# heights are transcribed from the RoboTwin profile.
+robot: >-
+  a dual-arm ARX X5 robot (two 6-DoF arms, each with a two-finger parallel gripper that opens to about
+  10 cm) standing at the near edge of the table, below and behind the head camera: the LEFT arm base is
+  at x = -30, the RIGHT arm base at x = +30, both at y = -45 cm, and the arms reach forward over the
+  table (towards +y).
+frame: >-
+  World frame, units are centimetres. +x = to the RIGHT in the head-camera image, +y = FORWARD / AWAY from
+  the robot body and the camera (towards the top of the head-camera image), +z = UP. The table top is at
+  z = {table_z} and spans roughly x in [-70, +70], y in [-60, +50]. Objects on the table have their base
+  at z ~ {table_z}.
+workspace: >-
+  Sampled reachable region (planner probe): the LEFT arm covers x in [-60, +15] and the RIGHT arm x in
+  [-15, +60]; use the left arm for objects with x < 0 and the right arm for x > 0, neither arm crosses the
+  centre line by more than ~15 cm. Forward reach: with 'point down' or 'point down45' the fingertips reach
+  y <= +5; with 'point forward' up to y <= +20. The sampled lower y bound is -50. Heights: fingertips from
+  z = {table_z+1} (just above the table) to ~100. Keep the two grippers at least 15 cm apart. These bounds
+  come from a sparse grid: a target inside them can still fail to plan, and a failed command leaves the
+  arm where it was.
+cameras: >-
+  cam_head: mounted above and behind the robot, looking forward and down at the table; the left arm appears
+  on the LEFT of the image and +y points UP the image. Markers are drawn on it: for each arm a small circle
+  at the WRIST and a cross at the FINGERTIP CENTRE (labelled 'L wrist' / 'L tip' in orange for the left arm,
+  'R wrist' / 'R tip' in blue for the right arm) joined by a line; a thin grid ON THE TABLE TOP every 10 cm (with a fainter
+  line every 5 cm), every 10 cm line labelled: x along the near edge and y along the left edge; and an axis legend (+X, +Y) at the
+  table origin. cam_left_wrist / cam_right_wrist: wrist cameras looking along the fingers of the
+  corresponding arm. A white cross marks the FINGERTIP CENTRE, i.e. exactly where the fingers will close,
+  and arrows from it show the world +x / +y / +z directions, each 5 cm long at fingertip depth with a
+  tick every 1 cm.
+  A cyan line labelled 'jaw axis' shows the finger opening/closing direction. An object is graspable only
+  when it sits ON the cross: something visible between the two finger silhouettes but away from the cross
+  is beside or below the fingertips. Convert the offset you see into a 'move' command with the arrows (an
+  object 3 cm along the +x arrow needs 'move x +3').
+gripper: >-
+  The 'gripper position' reported below is the FINGERTIP CENTRE (tool centre point), 14.5 cm ahead of the
+  wrist along the fingers; every move/rotate command acts on that point. 'approach' is the unit vector the
+  fingers point along; 'finger axis' is the direction along which the fingers open and close. At the start
+  both grippers point FORWARD (+y). To grasp from above use '<arm> point down' first, then spin the finger
+  axis with '<arm> rotate yaw <deg>' so that the fingers straddle the narrow side of the object. Gripper
+  opening is reported 0 (closed) .. 1 (open) and is MEASURED from the finger joints; an empty gripper stops
+  at about 0.19 when closed, so after a 'close' command an opening clearly above that reading means an
+  object is held (the result line of the close command says so explicitly).
+tips:
+- >-
+  Plan: orient the gripper ('<arm> point down'), move above the target (fingertips ~10 cm higher than the
+  grasp height), align x/y using the head image and then the wrist camera, descend until the fingertips
+  are at grasp height, close, lift 10 cm, transport at a safe height, descend, open.
+- >-
+  Small objects on the table (blocks, cups, bottles) are grasped with the fingertip centre 2-4 cm above
+  the table top, i.e. z = {table_z+2}-{table_z+4}; the table top itself is at z = {table_z}, so never send
+  fingertips below z = {table_z+1}.
+- >-
+  Each command is executed by a motion planner as one complete motion; if a command reports FAILED the
+  target was not reached and the note says WHY. 'IK found no joint solution' means no solution was found
+  for that pose: do not retry the same direction, come back toward this arm's base (bases at x = -30 and
+  x = +30, y = -45), change the orientation ('point forward' reaches ~15 cm further than 'point down')
+  or switch arms. 'No collision-free path' with a successful IK check means cuRobo could not find a path;
+  it checks the table and self-collision, not tabletop objects. Lift or back off a few cm.
+  '<arm> home' returns directly to the initial joint angles; it does not use collision planning, so first
+  clear any held object and inspect the result. After it, re-approach from above.
+- >-
+  Prefer few, decisive commands: several commands per turn are fine while moving in free space; use one
+  small command at a time when within 5 cm of an object.
+- >-
+  After a 'close' command, read its result line and check the wrist image; then verify in the next images
+  that the object actually rose when you lifted. If not, open, re-align (often 1-2 cm off) and retry,
+  possibly with a different yaw so the fingers straddle the narrow side.
+- >-
+  Placing needs the same alignment as grasping. Before opening, bring the HELD OBJECT - not just the
+  fingertips - over the exact target spot (pad, hole, slot, stack, container): allow for the offset between
+  the fingertips and the object's own reference point and for the object's orientation relative to the
+  target, checking the head grid first and then the wrist view. Height arithmetic: if you grasped with the
+  fingertips at z_g while the object rested on the table (z = {table_z}), lower the fingertips to
+  z_g + (h - {table_z}) to set it on a surface at height h BEFORE opening; dropping from 3 cm or more tips
+  the object over.
+- >-
+  Before closing the gripper, check the wrist camera: the object must sit ON the white cross (the
+  fingertip centre), and its narrow side must lie along the finger axis. An object that merely appears
+  between the finger silhouettes is usually 3-5 cm off, and a close there reads 'nothing between them'.
+  Measure the offset against the 1 cm ticks of the arrows, move by that amount along the matching world axis, look
+  again, then close. Never close twice at the same spot: after an empty close, lift 3 cm and re-align.
+- >-
+  A descent that stops early (the FAILED note says so) means the fingers are resting on top of the object
+  or on the table, not straddling it: open, lift 3 cm, shift by the offset the cross shows, descend again.
+- >-
+  Before grasping or acting on an object, choose WHERE on it to act and say so in the plan: a part that
+  fits between the fingers with its narrow side along the finger axis, that is clear of other objects,
+  and that suits the next step (the middle of an elongated object - a tool, bottle, shovel - for a stable
+  lift; a handle, rim or stem when the object must be poured, inserted, hung or turned). Aim the fingertip
+  cross at that spot, not at the object as a whole. A pick-up requires the object's reference point to
+  rise 10 cm: verify that the whole object is clear of the table, since one held by an end may pivot on
+  the table without passing the checker.
+- >-
+  Read x/y from the table grid in the head image (labelled lines every 10 cm, a fainter line every 5 cm; the
+  grid lies on the table plane, so read the base of an object, not its top); read heights from the reported gripper z. Do not trust a rough
+  guess when the grid is available.
+- >-
+  Travel height: keep the fingertips at z >= {table_z+12} whenever you move sideways (x or y) in free
+  space, and only descend when you are directly above the target. Sweeping an arm at low height knocks
+  objects over or off the table, which cannot be undone.
+- >-
+  If you believe the goal is reached but the episode continues, it is not reached: the checker may require
+  the object to be lifted clearly higher (e.g. 10 cm above where it started), placed within a few cm of the
+  target, or both grippers to be open at the end. Adjust and keep going instead of stopping.
+- >-
+  Never reply 'done' unless the task goal is visibly achieved. If an object seems missing, it is probably
+  occluded by an arm or outside the current view: move the arms up/away, look again in all images, and
+  continue.
+- >-
+  If another robot or agent is demonstrating something, do not move either arm: reply with 'wait' commands
+  until it has completely finished and returned to its rest pose, and write each step it performed into
+  memory in the order it happened. Moving before the demonstration is over fails the task.
+- >-
+  Keep an explicit tally of your own execution in memory: what you set out to do this turn, whether the
+  result lines and the next images confirm it actually happened, and - for anything that must be done a
+  number of times or in a sequence - how many times it has really been completed so far. Count an action
+  only after you have verified it in the images, never because you commanded it.

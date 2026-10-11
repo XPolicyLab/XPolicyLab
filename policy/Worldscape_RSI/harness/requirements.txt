@@ -1,0 +1,2 @@
+# Additional parser dependency; simulator dependencies stay in the RoboDojo env.
+json5==0.12.1

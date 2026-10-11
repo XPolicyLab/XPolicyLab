@@ -1,0 +1,14 @@
+{
+  "candidate": "Worldscape_RSI-company-dev-20261011-v2",
+  "offline_tests": 18,
+  "offline_tests_passed": true,
+  "native_simulation_verified": false,
+  "real_wam_inference_verified": false,
+  "trained_jev_included": false,
+  "shell_syntax_passed": true,
+  "colleague_wam_unchanged": true,
+  "skills_and_icl_unchanged": false,
+  "python_files_compiled": 347,
+  "rotation_guard_cases_passed": 8,
+  "other_41_task_skills_icl_unchanged": true
+}
