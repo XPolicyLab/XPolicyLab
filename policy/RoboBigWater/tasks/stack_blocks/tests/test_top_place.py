@@ -113,9 +113,9 @@ class PlacementTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertTrue(feedback['released'])
         self.assertEqual((api.releases, api.parks), (1, 1))
-        self.assertAlmostEqual(api.a.pose[2, 3], 0.82)
+        self.assertAlmostEqual(api.a.pose[2, 3], 0.90)
         self.assertEqual([s['stage'] for s in feedback['stages']],
-                         ['transfer', 'home'])
+                         ['transfer', 'retreat', 'home'])
 
     def test_high_home_retains_vertical_withdrawal(self):
         api = API()
@@ -380,12 +380,63 @@ class DualAPI(API):
 class DualHomeTests(unittest.TestCase):
     args = dict(PlacementTests.args, park='both')
 
+    def test_parking_cannot_sweep_at_release_height(self):
+        class GuardedAPI(DualAPI):
+            def set_gripper(self, arm, value):
+                # Model a small release-settling offset within pose tolerance.
+                arm.pose[:3, 3] += [0.003, -0.002, 0.001]
+                self.release_pose = arm.tcp()
+                return super().set_gripper(arm, value)
+
+            def run(self, sequences):
+                np.testing.assert_allclose(self.a.pose[:3, :3],
+                                           self.release_pose[:3, :3])
+                np.testing.assert_allclose(self.a.pose[:2, 3],
+                                           self.release_pose[:2, 3])
+                assert self.a.pose[2, 3] >= self.release_pose[2, 3] + 0.079
+                return super().run(sequences)
+
+        for park in ('home', 'both'):
+            for route in ('compact', 'high'):
+                api = GuardedAPI()
+                result, code = tool.run(api, 'top_place', dict(
+                    self.args, park=park, route=route))
+                self.assertEqual(code, 0, result)
+                self.assertEqual(api.parks, 1)
+
+    def test_withdrawal_fault_stops_all_parking_without_retry(self):
+        class FaultOnWithdrawal(DualAPI):
+            def move_tcp(self, arm, target, feedback):
+                if self.releases:
+                    self.moves += 1
+                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                    return 2
+                return super().move_tcp(arm, target, feedback)
+
+        for park in ('home', 'both'):
+            for route in ('compact', 'high'):
+                for fault in ('ik', 'tracking', 'clipping', 'ended'):
+                    class WithdrawalAPI(FaultOnWithdrawal):
+                        def move_tcp(self, arm, target, feedback):
+                            if self.releases and fault != 'ik':
+                                self.fault = fault
+                                return API.move_tcp(self, arm, target, feedback)
+                            return super().move_tcp(arm, target, feedback)
+                    api = WithdrawalAPI()
+                    result, code = tool.run(api, 'top_place', dict(
+                        self.args, park=park, route=route))
+                    self.assertEqual(code, 2, result)
+                    self.assertTrue(result['released'])
+                    self.assertEqual(result['stages'][-1]['stage'], 'retreat')
+                    self.assertEqual(api.moves, 2 if route == 'compact' else 3)
+                    self.assertEqual((api.releases, api.parks), (1, 0))
+
     def test_paths_match_serial_home_but_cost_maximum_duration(self):
         api = DualAPI()
         starts = {tag: api.arm(tag).joints() for tag in ('left', 'right')}
         result, code = tool.run(api, 'top_place', self.args)
         self.assertEqual(code, 0, result)
-        self.assertEqual([s['stage'] for s in result['stages']], ['transfer', 'home_both'])
+        self.assertEqual([s['stage'] for s in result['stages']], ['transfer', 'retreat', 'home_both'])
         lengths = []
         for tag, start in starts.items():
             home = api.arm(tag).home_joints

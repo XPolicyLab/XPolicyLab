@@ -4,3 +4,10 @@ top_pick
 top_place
 surface_measure
 surface_transfer
+plane_localize
+
+prism_localize
+
+settled_pick
+
+stereo_localize

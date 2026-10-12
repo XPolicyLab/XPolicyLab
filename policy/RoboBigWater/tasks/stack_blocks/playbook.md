@@ -1,41 +1,44 @@
 # stack_blocks playbook
 
-Recorded development outcomes: 9/10 passed (standard 4/5, random 5/5); these used successive tool revisions, not one final-version evaluation.
-Budget: 22 s = 550 simulation action steps at 25 Hz; observation/measurement calls are free. Command count alone understates motion cost.
+v0.3rgb development: 10/10 layouts passed, all score 100% / auto_success, across successive revisions; this is not a final-version retest.
+Budget: 22 s = 550 action steps at 25 Hz. Observation/localization calls consume no action steps; motion inside tools does.
 
-## Procedure distilled from successes
-1. Inspect `robo obs` head image; identify the target pieces among clutter and choose an existing base reachable from both sources. Avoid an extra base relocation where possible.
-2. Measure visible top interiors with `surface_measure --u U --v V --ref_u R --ref_v S`; select bare table at the source bottom plane as reference. Observed heights were 0.030–0.040 m; measure rather than reuse those values.
-3. Transfer the first source using `surface_transfer ARM --source_u U --source_v V --target_u X --target_v Y --ref_u R --ref_v S --park home`. Select the arm from current geometry; successful episodes used left→right, left→left and right→right sequences.
-4. Inspect the fresh post-transfer image and select the raised destination top again. Transfer the remaining source onto it, normally with `--park both` for final parking; the other gripper must already be open.
-5. While the episode remains live, inspect the stack and parking feedback. Stop issuing commands at episode end; an extra `obs` or `done` was repeatedly rejected.
+## Procedure supported by successful episodes
+1. Inspect current head and wrist images; identify the requested pieces and a base reachable from both sources. Keep an existing base where practical; relocate only when reach or interference warrants the extra pick/place.
+2. Localize source and support from current images. `surface_measure` gives a depth-based estimate, not verified dimensions; cross-check implausible heights or centres before moving.
+3. `plane_localize` supplies XY conditional on a justified top plane. `prism_localize` needs visible ordered square corners, known height/side ratio and valid bottom support. `stereo_localize` needs the same physical point in simultaneous views; its Z is not automatically top height.
+4. Use `top_pick` (or `settled_pick`) then inspect retention. Successful common parameters: clearance=0.03 m, inset=0.008–0.01 m, lift=0.08–0.13 m, route=compact; choose geometry and clearance from the live scene, not these ranges alone.
+5. Place with `top_place`, preserving declared grasp tilt and the actual pickup inset. Support mode computes release TCP Z = support top + held height − inset + 0.002 m; direct `--z` is TCP release height. Both assume upright, centred retention.
+6. Reselect the raised destination after each placement or disturbance. Inspect for a retained stack before the next pickup; stale pixels, a fallen item or a shifted base invalidate the earlier plan.
+7. Withdraw vertically after release. `park=retreat` defers homing; `home` returns the selected arm; `both` returns both after withdrawal and requires the other gripper commanded open. Complete parking while the episode remains live.
 
-Current transfer defaults: head camera, radius=0.08 m, tolerance=0.002 m, inset=0.01 m, clearance=0.03 m, place_route=compact, grasp=auto, yaw=auto.
-`surface_transfer` remeasures both surfaces and propagates source height/inset into placement; release TCP Z = destination top + source height − inset + 0.002 m.
-Automatic grasp tilt uses live TCP geometry: 22.5° for nearer directed transfers, 45° beyond 75% of the inter-TCP span; this is a heuristic, not a reach guarantee.
-`home` parks the selected arm; `both` returns both concurrently. `retreat` leaves the arm overhead; `ready` withdraws toward the incoming side without homing. Check clearance before choosing either.
+## Reach, recovery and uncertainty
+- Downward grasps worked in the fastest standard episode. Angled grasps at 22.5–45 degrees also worked; preserve the reported tilt in placement. Orient before closure; a held-item rotation can invalidate the assumed offset/height.
+- Compact and high placement routes both succeeded. Random 2 recovered high-route IK rejection with compact placement at the reported release pose while retaining the grasp; route choice is not a reach guarantee.
+- `surface_transfer` composes measurement, pickup and placement. Random 2 used left then right with place_route=high, park=home then both; measured geometry still required visual scrutiny and placement recovery.
+- Guarded descent failure calls for geometry/retention inspection. Manual close/lift sometimes recovered, but random 4 shifted the source without lifting it. Do not turn these anecdotes into an unconditional recovery.
+- `settled_pick` retries one eligible approach tracking miss only; it cannot repair low-plane descent errors. Its successful random-1 pickups needed no automatic retry.
+- Rejected measurements cost no action steps: correct reference selection/correspondence instead of relaxing checks or guessing lower support planes. Broad reference consensus can still share depth bias.
+- On failure inspect stages, `released` and remaining time: pre-release placement rejection can retain a grasp; post-release retreat failure must not trigger another pickup/place sequence.
+- `plan_ok=true` establishes motion execution only. Grasp retention, centred offsets, stability and collision clearance are unverified; clearance above one surface does not clear all clutter.
+- Six final placements ended during parking with episode_over despite recorded auto_success. Episode_over alone also denotes timeout; do not infer success or completed parking from it, or issue commands after termination.
 
-## Recovery and interpretation
-- `nonhorizontal_or_edge_patch`: reselect surface and reference interiors. Random 2 recovered after three free rejections, including a change to a previously valid reference; no motion was needed.
-- A raised top and retained payload require visual checks: `plan_ok=true` reports execution, not grasp or stable placement. Occlusion/touching coplanar surfaces can bias measured centres.
-- Placement failure with closure retained is not a new pickup request. Inspect `pickup`, `placement`, `released`, stage feedback and remaining time before recovery.
-- Random 4 retained its second grasp after compact/high/yaw placement rejection at 12.04 s. `rotate right --pitch 22.5 --frame world` then `top_place --grasp_tilt 45` finished at 17.40 s; this also changed height 0.030→0.033 m and target X by ~1.4 mm. It is an episode-specific recovery, not a general tilt or height prescription.
-- Rotating a held item can invalidate upright height/offset assumptions. Prefer establishing the transfer-compatible orientation before closure; retries after executed-motion faults are not automatic.
-- In standard 4 and random 0–4, auto_success interrupted final parking after release; nested feedback reported episode_over/placement_failed with released=true. Parking and independent stability checks were not completed. Episode_over alone also occurs on timeout and does not prove success.
+## Recorded costs and decisive sequences
+Commands below are budgeted actions, excluding free sensing; steps include all simulation motion. Coordinates and guessed plane heights are deliberately not recipes.
 
-## Recorded episode costs and decisive behavior
-Action commands exclude free observation/measurement calls; steps are total simulation action steps.
-
-| Layout | Action commands | Steps | Seconds | Sequence / decisive observation |
+| Layout | Commands | Steps | Seconds | Sequence / recovery |
 |---|---:|---:|---:|---|
-| Standard 0 | 11 | 526 | 21.04 | Right pick/place twice, manual slip recovery, home both; guessed 60 mm height replaced by measured 35 mm. |
-| Standard 1 | 9 | 427 | 17.08 | Failed pick, down/y manual recovery, place, pick/place, home both; descent missed by 24.9 mm. |
-| Standard 2 | 3 | 522 | 20.88 | Two left transfers, home both; 30 mm height, clearances 0.08 then 0.04 m, park=retreat; bounded 45° pickup fallback recovered four downward IK rejections. |
-| Standard 4 | 2 | 443 | 17.72 | Left then right transfers, park=home both times; 35 mm height, initial 22.5° grasp, no manual recovery. |
-| Random 0 | 2 | 454 | 18.16 | Left then right, park=home then both; 30 mm height, initial 45° directed grasp, no manual recovery. |
-| Random 1 | 2 | 452 | 18.08 | Left then right, park=home then both; 30 mm height, initial 22.5° directed grasp. |
-| Random 2 | 2 | 441 | 17.64 | Left then right, park=home then both; 40 mm height, initial 22.5° grasp; corrected rejected pixel selections. |
-| Random 3 | 2 | 437 | 17.48 | Right twice, park=home then both; 35 mm height, both grasps 22.5°, no manual recovery. |
-| Random 4 | 4 | 435 | 17.40 | Left transfer, failed right placement, rotate, top_place; first same-side outward 22.5° grasp worked. |
+| Standard 0 | 6 | 185 | 7.40 | surface_measure → right pick/close/lift/place → pick/measure/place; retained existing base. |
+| Standard 1 | 4 | 197 | 7.88 | surface_measure/plane_localize → right pick/place twice; downward grasps, high placement, park=retreat then both. |
+| Standard 2 | 12 | 408 | 16.32 | Left pick/place with manual first lift; relocalize displaced pair; fallen angled payload recovered by downward regrasp; home both. |
+| Standard 3 | 8 | 391 | 15.64 | Right base relocation → left middle → right top; refreshed plane localization, high placements. |
+| Standard 4 | 11 | 348 | 13.92 | Angled left transfer displaced base; plane localization and right downward regrasp/place recovered; right final pick/place. |
+| Random 0 | 15 | 495 | 19.80 | Prism localization, base relocation, left/right transfers; fallen top and middle relocalized, reordered and restacked; home both. |
+| Random 1 | 9 | 387 | 15.48 | Surface/prism/stereo/plane checks → settled_pick; retained-grasp reach failure prompted base relocation; right pick/place twice. |
+| Random 2 | 6 | 279 | 11.16 | Surface/prism checks → left transfer → move/recheck → right transfer → compact place → diagonal withdrawal → home both. |
+| Random 3 | 15 | 434 | 17.36 | Failed first stack → fresh plane/stereo localization → right base relocation → angled pick/place twice → home both. |
+| Random 4 | 13 | 420 | 16.80 | Stereo → left base relocation after IK failure; failed low-plane pickups → fresh stereo → left middle/right top, tilt=22.5°. |
 
-Unresolved standard 3: 5 action commands / 550 steps / 22.00 s, score 15%, sim_time termination. Base relocation cost 7.56 s; next transfer ended at 13.88 s, final pickup at 18.24 s; final opening exhausted the budget. Aligned final centres did not establish completion.
+Total: 99 budgeted actions, 3,544 steps, 141.76 s; mean 14.176 s, range 7.40–19.80 s.
+Depth-based top planes were sometimes below true centres; successful episodes do not validate their guessed absolute heights or isolate the benefit of each tool revision.
+Standard 3's final agent report claimed a fall, but the recorded outcome and aligned final centres show success; use outcome data for retrospective classification.

@@ -5,8 +5,8 @@
   "episodes": 420,
   "categories": {
    "Generalization": {
-    "success_rate": 25.0,
-    "progress_score": 28.3
+    "success_rate": 25.8,
+    "progress_score": 29.2
    },
    "Precision": {
     "success_rate": 7.5,
@@ -26,8 +26,8 @@
    }
   },
   "leaderboard_formula": {
-   "success_rate": 27.2,
-   "progress_score": 33.4
+   "success_rate": 27.3,
+   "progress_score": 33.6
   },
   "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
@@ -38,6 +38,7 @@
    "insert_tubes",
    "pour_liquid_into_cup",
    "press_by_number",
+   "stack_blocks",
    "stack_blocks_by_language"
   ]
  },
@@ -865,33 +866,33 @@
    "variant": "stack_blocks",
    "type": "Generalization",
    "episodes": 5,
-   "success": 3,
-   "success_rate": 60.0,
-   "progress_score": 66.0,
+   "success": 4,
+   "success_rate": 80.0,
+   "progress_score": 83.0,
    "per_layout": [
     {
      "layout": 0,
-     "success": false,
-     "progress": 15.0,
-     "end_reason": "done",
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
      "commands": 6,
-     "steps": 265
+     "steps": 173
     },
     {
      "layout": 1,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 10,
-     "steps": 350
+     "commands": 4,
+     "steps": 164
     },
     {
      "layout": 2,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 11,
-     "steps": 370
+     "commands": 13,
+     "steps": 458
     },
     {
      "layout": 3,
@@ -899,17 +900,18 @@
      "progress": 15.0,
      "end_reason": "agent_exit",
      "commands": 15,
-     "steps": 498
+     "steps": 502
     },
     {
      "layout": 4,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 11,
-     "steps": 329
+     "commands": 12,
+     "steps": 486
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "stack_blocks",
@@ -918,49 +920,50 @@
    "episodes": 5,
    "success": 2,
    "success_rate": 40.0,
-   "progress_score": 46.0,
+   "progress_score": 49.0,
    "per_layout": [
     {
      "layout": 0,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 9,
-     "steps": 306
+     "commands": 8,
+     "steps": 394
     },
     {
      "layout": 1,
      "success": false,
      "progress": 15.0,
-     "end_reason": "sim_time",
-     "commands": 12,
-     "steps": 550
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 509
     },
     {
      "layout": 2,
-     "success": true,
-     "progress": 100.0,
-     "end_reason": "auto_success",
-     "commands": 4,
-     "steps": 290
+     "success": false,
+     "progress": 15.0,
+     "end_reason": "agent_exit",
+     "commands": 17,
+     "steps": 485
     },
     {
      "layout": 3,
-     "success": false,
-     "progress": 15.0,
-     "end_reason": "done",
-     "commands": 10,
-     "steps": 418
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 12,
+     "steps": 443
     },
     {
      "layout": 4,
      "success": false,
-     "progress": 0.0,
-     "end_reason": "agent_exit",
-     "commands": 19,
-     "steps": 513
+     "progress": 15.0,
+     "end_reason": "sim_time",
+     "commands": 22,
+     "steps": 550
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "stack_bowls",

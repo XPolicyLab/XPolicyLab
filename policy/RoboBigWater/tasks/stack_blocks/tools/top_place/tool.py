@@ -192,16 +192,15 @@ def run(api, command, args):
         released = True
         if alive is False or api.over:
             return result("episode_over")
-        # Compact home parking follows the base home command's direct joint
-        # return after opening. Do not pay for a Cartesian withdrawal followed
-        # by a second, independently settled parking motion. The high route
-        # retains explicit vertical clearance before the joint return.
-        # As with base home, the joint path is not collision-checked.
-        if not homes or route == "high":
-            pose[2, 3] = goal[2] + clearance
-            reason = move("retreat", pose)
-            if reason:
-                return result(reason)
+        # Opening does not clear the fingers from the released item. Joint
+        # homing can immediately rotate/sweep them sideways at release height.
+        # Withdraw with the live release orientation and XY before any parking,
+        # including compact home/both. Never bypass a failed withdrawal.
+        pose = arm.tcp().copy()
+        pose[2, 3] += clearance
+        reason = move("retreat", pose)
+        if reason:
+            return result(reason)
         if park == "ready":
             # Withdraw toward the incoming side using only the live source
             # pose and requested destination. Preserve the grasp orientation

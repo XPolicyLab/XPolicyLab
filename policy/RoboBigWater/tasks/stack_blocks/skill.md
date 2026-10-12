@@ -1,45 +1,46 @@
 # stack_blocks tool development
 
-Development outcomes: 9/10 layouts passed (standard 4/5, random 5/5), across successive revisions; final tools were not rerun on all layouts.
-Enabled tools: top_pick, top_place, surface_measure, surface_transfer. Runtime geometry comes only from caller arguments, calibrated observations and public robot feedback.
+v0.3rgb: all 10 development layouts eventually passed across successive revisions (8 failure-round edits); no all-layout final-version retest is supplied.
+Enabled: top_pick, top_place, surface_measure, surface_transfer, plane_localize, prism_localize, settled_pick, stereo_localize.
+Runtime inputs are caller arguments and public EpisodeAPI observations/robot feedback; true poses were used only for retrospective diagnosis.
 
-## Designs and evidence
-- Measure before composing motion: connected horizontal depth surfaces replace guessed dimensions and single-pixel centres. Surface/reference selection rejects edge patches; visible centres remain biased by occlusion or touching surfaces.
-- Carry geometry through execution: surface_transfer measures once, then passes consistent centres, source height, vertical inset and grasp tilt into checked pickup/placement. This prevents same-location returns and discarded measurements.
-- Use explicit release geometry: support top + held height − inset + 2 mm. Guessed 55.5–60 mm heights for 30–35 mm items produced ~27 mm drops; excess drop plausibly contributed to slips, but causation was not isolated.
-- Select orientation before closure for both endpoints: vertical yaw alternatives and 45° approach recovery helped central pickup; destination-directed 22.5°/45° grasps reduced expensive table handoffs.
-- Reach heuristics remain incomplete: yaw alone failed far transfers; 45° could fail at the source; shallow tilt could fail at the destination. Same-side outward selection fixed random 4's first transfer, but its second needed manual retained-grasp recovery.
-- Optimize action steps, not command count: combine approach rotation/translation, use measured lift and compact release paths, remove redundant stages, and support concurrent home. Do not shorten release holds or increase speeds to hide budget failures.
-- Retain bounded recovery: retry eligible motion-free IK rejections only; stop on clipping, tracking errors, executed-motion faults or episode end. Check poses before closure/release and expose stage details plus released status.
-- Preserve uncertainty: commanded closure is not contact, plan_ok is not stable placement, and episode_over is not success. Paths and joint returns are not collision-checked; clearance relative to a selected top is not global obstacle clearance.
-- Remaining failure: standard 3 spent 7.56 s relocating the base, 6.32 s on the next transfer and 4.36 s on final pickup; final opening reached 22 s. No completion was recorded despite aligned final centres.
-- Validation accumulated to 55 offline tests covering synthetic calibrated depth, release geometry, tilt/yaw/route recovery, retry bounds, failure isolation and parking. These do not establish physical retention, reachability or generalization.
+## Findings and tool designs
+- RGB-estimated depth was the main recurring geometry hazard: tops below true centres led to guarded descents, offset grasps, displaced supports and expensive recovery. Accepted depth estimates could also be grossly high or laterally wrong.
+- `surface_measure` averages connected horizontal depth regions; explicit lower references provide relative height. Occlusion, touching surfaces, foreground contamination and common depth bias remain limitations.
+- `plane_localize` intersects calibrated rays with caller-constrained horizontal planes, ignoring target depth. Its XY error bounds are conditional; a guessed low plane remains wrong even with precise ray geometry.
+- `prism_localize` fits ordered square top corners with a known height/side ratio to recover size and height from a support constraint. Poor corners/shape fits fail; correct fits cannot repair a biased support reference.
+- Distributed reference estimation requires 22/36 flat tile votes within 12 mm and quadrant coverage. Expanded surrounding regions mask the face and must agree; this handles some local clutter without weakening the quorum.
+- Explicit prism supports require an available surrounding audit and reject implausibly low Z. The earlier audit failed open when consensus was unavailable, reproducing the original failure; missing evidence now returns no geometry.
+- `stereo_localize` triangulates a caller-matched point without estimated depth or support heights. Viewing-angle, ray-gap, reprojection and sensitivity checks reject weak geometry; consistent wrong matches and calibration bias can still pass.
+- `top_pick` checks motion before closure/lift and bounds yaw/angled IK alternatives. `settled_pick` adds one eligible approach tracking retry; descent failures stay terminal. This wrapper did not address the actual low-plane descents that motivated it.
+- `top_place` carries support/height/inset/tilt into release geometry and exposes released status. Restored vertical withdrawal before compact home/both removes a plausible finger-sweep hazard; logs do not isolate it as the sole cause of falls.
+- `surface_transfer` composes sensing and checked motions, preserving geometry and bounded orientation recovery. One v0.3rgb success used it; that episode still required retained-grasp route recovery and post-release withdrawal recovery.
+- Count action steps, not calls: localization is free, motion is not. Bounded retries, fresh observations, deferred/concurrent homing and retaining a valid grasp reduce waste; base relocation can resolve reach but costs another transfer.
+- Never equate commanded closure with retention, plan_ok with stacking, or episode_over with success. Track closure/release stages, stop retries after executed-motion faults, and verify from current images while the episode is live.
+- Offline synthetic/mocked tests reached 81 at round 15. They cover geometry, rejection paths, route/tilt/yaw recovery and parking, not physical retention or hidden-layout generalization; raw episode depth/calibration arrays were unavailable for replay.
 
 ## Development log
-- 2026-10-01, prior round 7: agent exited after closure without lift; added checked top_pick to remove top/centre ambiguity and include lift. Physical grasp failure remained unproven.
-- 2026-10-01, prior round 11: crowded wrists and 85–88 mm transfer misses suggested interference; added top_place with checked release/withdrawal/home and fixed --top_z interface spelling.
-- 2026-10-02, round 1: excessive guessed release height and slip; added support_z/held_height/inset mode and release_tcp feedback, retaining direct-Z mode.
-- 2026-10-02, rounds 2–3: standard 0/1 passed in 526/427 steps with manual slip/descent recovery; successful high drops did not validate the guessed dimensions.
-- 2026-10-02, round 4: accurate localization followed by downward IK failure; added nearest-axis then alternate-axis pickup after motion-free rejection.
-- 2026-10-02, round 5: high approaches failed; added one diagonal approach at requested clearance before changing yaw, with unchanged-TCP retry checks.
-- 2026-10-02, round 6: 55.5 mm guessed versus 30 mm observed height; added free surface_measure using calibrated depth, bounded connected growth and an explicit lower reference plane.
-- 2026-10-02, round 7: both arms rejected central downward pickup; added bounded combined 45° approach and declared, preserved placement tilt; separate manual rotation had caused configuration jumps.
-- 2026-10-02, round 8: measured height discarded and first pickup returned to its source; added surface_transfer composition, overlap rejection and nested failure feedback.
-- 2026-10-02, round 9: standard 2 passed in 522 steps; measured 30 mm geometry and angled pickup fallback worked, leaving 1.12 s.
-- 2026-10-02, round 10: relocation plus conservative trajectories exhausted 22 s; combined approach rotation/translation, set 30 mm default clearance and measured transfer lift.
-- 2026-10-02, round 11: final transfer timed out; added compact diagonal placement to release+10 mm, with high-route fallback after motion-free rejection.
-- 2026-10-02, round 12: repeated homing/orientation cost; added ready parking (vertical withdrawal then 120 mm incoming-side offset), now standalone top_place default; transfer retained home default.
-- 2026-10-02, round 13: timeout persisted; compact placement now reaches release directly and avoids source raises caused solely by the 2 mm gap.
-- 2026-10-02, round 14: timeout during final opening; compact home now returns directly after full opening hold. Standard 3 remained unsuccessful after five edits.
-- 2026-10-02, round 15: placement IK failure forced a costly handoff; added bounded +90/−90° world-Z yaw retries and yaw=preserve override.
-- 2026-10-02, round 16: yaw did not recover cross-arm reach; added destination-directed 45° pregrasp and live-TCP bisector selection in surface_transfer.
-- 2026-10-02, round 17: directed 45° pickup itself failed; added adjustable tilt, 22.5° automatic first choice and one alternate after wholly motion-free approach rejection.
-- 2026-10-02, round 18: standard 4 passed in 443 steps using shallow directed left grasp then downward right grasp; final auto_success interrupted parking.
-- 2026-10-02, round 19: final home timed out; added park=both with concurrent joint paths and unchanged speed/settling limits. Savings require avoiding earlier serial returns.
-- 2026-10-02, round 20: shallow pickup succeeded but far placement failed; destinations beyond 75% of the live TCP span now select 45° first, with one eligible alternate tilt.
-- 2026-10-02, rounds 21–24: random 0–3 passed in 454/452/441/437 steps; two transfers each, measured heights and fresh target pixels; random 2 needed free measurement retries.
-- 2026-10-02, round 25: same-side outward reach escaped the bisector rule; extended directed selection beyond half inter-TCP XY distance when destination is farther than source; offline suite reached 55 tests.
-- 2026-10-02, round 26: random 4 passed in 435 steps; initial outward grasp worked, second placement still needed manual pitch change and altered release inputs. No isolated proof of tilt benefit.
-- 2026-10-02, round 27: distilled final playbook, tool interfaces and this dated log; preserved unresolved timeout and evidence limits. No tool algorithm changes or simulator evaluation.
+- 2026-10-01, inherited rounds 7/11: added checked top_pick and top_place after missing lifts and transfer/interference failures.
+- 2026-10-02, inherited rounds 1–8: added explicit release geometry, axis/diagonal/angled pickup alternatives, connected surface measurement and transfer composition after height guesses, IK failures and discarded measurements.
+- 2026-10-02, inherited rounds 9–14: compact approaches/releases and deferred parking reduced time; direct compact homing was introduced, but standard 3 still timed out.
+- 2026-10-02, inherited rounds 15–20: added bounded placement yaw, destination-directed pregrasp, adjustable tilt, concurrent home and span-based tilt selection for reach/budget failures.
+- 2026-10-02, inherited rounds 21–27: extended outward-reach heuristic; development ended 9/10 with 55 offline tests. Manual retained-grasp recovery remained necessary; final documents retained the unresolved timeout.
+- 2026-10-03, inherited final retest: 8/10 under official motion timing; separate evidence from the current RGB-depth run.
+- 2026-10-12, v0.3rgb round 1: standard 0 passed, 185 steps / 7.40 s; manual lift after guarded stop, no transfer composition.
+- 2026-10-12, round 2: standard 1 failed at 15%, 512 steps; added plane_localize for biased target depth and raised-plane guessing. Conditional error bounds; 58 offline tests.
+- 2026-10-12, rounds 3–5: standard 1/2/3 passed in 197/408/391 steps; plane localization, refreshed targets and manual recovery, not proof of accurate assumed heights.
+- 2026-10-12, round 6: standard 4 failed at 15%, 506 steps; final payload ended ~80 mm off despite accurate TCP. Restored live-pose vertical withdrawal before home/both; 60 tests, one added motion per compact home placement.
+- 2026-10-12, round 7: standard 4 passed in 348 steps after displaced-base recovery; withdrawal benefit not isolated.
+- 2026-10-12, round 8: random 0 failed at 15%, 549 steps; added prism_localize to constrain dimensions without target depth or embedded scene sizes. Five new tests, 65 total.
+- 2026-10-12, round 9: random 0 passed in 495 steps after base relocation, falls and reordering; supplied low support planes remained unvalidated.
+- 2026-10-12, round 10: added settled_pick for a presumed approach tracking miss; one bounded pre-descent retry. Existing 65-test suite passed; no demonstrated descent recovery.
+- 2026-10-12, round 11: corrected diagnosis: both misses were in descent; same episode ended at 15%, 19.52 s. Added ref_box consensus to plane/prism localization to reduce single-patch reference bias; 69 tests.
+- 2026-10-12, round 12: newer random 1 failure ended at 0%, 454 steps; added stereo_localize for depth-independent matched-point geometry, with strict consistency/sensitivity checks; 74 tests.
+- 2026-10-12, round 13: random 1 passed in 387 steps with central relocation; eight of nine stereo calls rejected, and successful settled pickups needed no retry. Individual benefits not isolated.
+- 2026-10-12, round 14: random 2 failed at 15%, 530 steps; guessed support Z=0.740 put tops below true centres. Added automatic surrounding reference and optional low-support audit to prism_localize; 78 tests.
+- 2026-10-12, round 15: random 2 failed at 15%, 417 steps; unavailable audit still accepted the low plane. Made explicit-support audit mandatory, added bounded expanding consensus and conflict rejection; 81 tests.
+- 2026-10-12, round 16: random 2 passed in 279 steps using surface_transfer twice plus placement/withdrawal recovery; this did not test the automatic prism support mode's benefit.
+- 2026-10-12, rounds 17–18: random 3/4 passed in 434/420 steps; support audits rejected unverified/low planes, and fresh stereo plus relocation accompanied recovery. Bias and unverified grasp offsets remain.
+- 2026-10-12, round 19: distilled this log and playbook to under 60 lines each; corrected stale transfer parking documentation. No runtime algorithms, enabled tools, evaluations or servers changed.
 
-- Final retest 2026-10-03 (official motion timing only; final tools, one run per layout, no optimizer): retest passed: 8 / 10
+- Final retest 2026-10-12 (final tools, one run per layout, no optimizer): retest passed: 6 / 10
