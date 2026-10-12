@@ -28,6 +28,7 @@ TOOL = {'name': 'settled_cycle', 'commands': [{
         {'name': 'peak', 'type': 'float', 'default': 135.0},
         {'name': 'hold', 'type': 'float', 'default': 3.5},
         {'name': 'gap', 'type': 'float', 'default': .04},
+        {'name': 'rim_height_margin', 'type': 'float', 'default': .03},
     ],
 }]}
 
@@ -174,8 +175,11 @@ def run(api, command, args):
         values = {k: float(args[k]) for k in REQUIRED}
         peak, seconds, gap = [float(args.get(k, default)) for k, default in
                               (('peak', 135), ('hold', 3.5), ('gap', .04))]
-        if not np.isfinite([*values.values(), peak, seconds, gap]).all():
+        height_margin = float(args.get('rim_height_margin', .03))
+        if not np.isfinite([*values.values(), peak, seconds, gap, height_margin]).all():
             raise ValueError('all geometry and settings must be finite')
+        if not .02 <= height_margin <= .06:
+            raise ValueError('rim_height_margin must be .02.. .06 m')
         contact = np.array([values[k] for k in 'xyz'])
         reference = np.array([values['ref_'+k] for k in 'xyz'])
         rim = np.array([values['rim_'+k] for k in 'xyz'])
@@ -193,12 +197,19 @@ def run(api, command, args):
         lift = max(.05, support + extent + reserve + .015-reference[2])
         if lift > .15:
             raise ValueError('required initial lift exceeds .15 m')
-        low = rim + [-sign*.5*rr, 0, gap]
+        # An accepted RGB/depth estimate is not an exact obstacle height.
+        # Inflate the obstacle separately from the tracking/shape reserve;
+        # preserve nominal geometry for aiming and observation diagnostics.
+        clearance_rim = rim.copy()
+        clearance_rim[2] += height_margin
+        low = clearance_rim + [-sign*.5*rr, 0, gap]
         # Cross the raised destination only while upright and above its full
         # conservative envelope; lowering is coupled to rotation after alignment.
-        path = lowering_path(peak, rim, rr, extent, radius, support, gap, sign)
+        path = lowering_path(peak, clearance_rim, rr, extent, radius, support, gap, sign)
         aligned_z = path[0][1][2]
         phases['geometry'] = dict(lift_m=lift, alignment_reference_z=aligned_z,
+                                  measured_rim_z=float(rim[2]), rim_height_margin=height_margin,
+                                  clearance_rim_z=float(clearance_rim[2]),
                                   low_reference=low.tolist(), mirrored_angle_deg=sign*peak,
                                   transfer_policy='upright alignment, near-side lowering rotation',
                                   return_policy='fixed near-side XY; interpolation-checked rise after deep dwell',

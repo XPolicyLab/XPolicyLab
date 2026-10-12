@@ -1,3 +1,5 @@
 # Active measured-geometry and complete-cycle commands.
 region_geometry
 settled_cycle
+upright_geometry
+planar_ring

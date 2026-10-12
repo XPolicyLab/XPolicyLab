@@ -1,34 +1,48 @@
 # Tool development findings
 
-Round 2 retained 10/10 successful layouts; nine used the final `settled_cycle` in 333–341/400 steps, including three left-arm and six right-arm runs. Standard 0 used legacy tools. These are development results, not a new final-tool retest.
-The prior round's final retest passed only 2/10 despite successful grasps and visible transfer. Short 110–120° holds and fully tilted departure left residual flow or insufficient emptying; accurate TCP tracking did not establish delivery.
-Enabled design: free calibrated `region_geometry` plus one measured-geometry execution command. Legacy modules remain as dependencies; `grasp_transfer`, `trajectory_aim` and `aimed_pivot` are not enabled.
-`region_geometry` fits upright circular sections; consistent slices correct visible-surface bias. Optional world-XY filtering removes distant geometry, but a filter center is not a measured center and may remove the support plane.
-`settled_cycle` combines forward grasp, computed clearance lift, upright alignment, low lowering rotation, mirrored 135° tilt, 3.5 s dwell, fixed-XY return and .6 s settling at 60°. No blind retry, release or home.
-The final near-side inset is half the measured rim radius and persists from 90° through dwell/return. It addresses observed overshoot heuristically; it is not a certified stream-footprint model.
-A continuous finite-cylinder/raised-disk strip model replaces discontinuous sphere bounds. Endpoint compensation protects interpolated lowering; return reuses the same checked angle/height grid in reverse.
-The low constant-height upright return conflicts with the supplied body geometry. The implemented return rises as clearance requires while preserving dwell XY; successful records support this compromise, not a universal no-spill guarantee.
-Guards enforce 2 mm reference and 1° orientation limits, reserve shape/tracking error, and stop at the first failed motion. They exclude hand volume, handles and unseen obstacles; rigid attachment and slip remain unverified.
-Blue RGB/depth table candidates before/after dwell helped localize spill to before reversal. Missing candidates do not measure remaining volume or prove containment; true poses were analysis evidence only.
-All nine final-cycle records auto-succeeded during return, while the command reported episode_over and task_success_verified=false. Preserve the distinction between evaluator outcome, partial execution and motion status; TCP-derived tilt is only a rigid proxy.
-Development reported 113 offline tests after the final execution edit, covering mirrored paths, dense interpolated body clearance, failure stops and termination. Arithmetic tests cannot validate physical flow or generalization.
-Advice: integrate sequencing that callers repeatedly omit; use measured geometry without layout constants; check interpolated paths as well as endpoints; instrument phase boundaries; budget settling explicitly; verify both arm signs physically.
-Remaining limits: no per-change ablation, no measured particle/volume margin, no successful automatic retry evidence, and no final-cycle run on standard 0 in this bundle. Ballistic aiming did not separate these passes from failures.
+Current enabled tools: region_geometry, upright_geometry, planar_ring, settled_cycle. Legacy tools remain available as source but disabled.
+The v0.3rgb bundle retains 10/10 development successes across versions, each one cycle in 335–346/400 steps; both arms passed. Only random 3/4 exercised the final margin/recovery combination; no fresh final-version ten-layout retest is supplied.
+
+Depth/landmarks dominated recent failures: a 57 mm source error wasted 77 steps; a later 21 mm source error produced an empty grasp; destination errors of 14–28 mm caused material aiming risk despite sub-mm TCP tracking.
+Use calibrated RGB rays with broad measured support, circular contact arcs and upright/coaxial constraints. region_geometry supplies regional depth evidence; upright_geometry reconstructs source contact/reference/extent; planar_ring reconstructs destination centre/radius/height.
+A front-edge pixel is not the hidden base centre. Even zero axis residual or sub-mm circle RMS can coexist with large position/height error. Arc fits remove that ambiguity only if landmarks mark actual circular support contact.
+Support overrides are checked within 12 mm. Boundary-depth corroboration uses median 5×5 patches, >=70% valid coverage and robust spread; explicit low heights fail rather than silently changing.
+For non-explicit support-arc heights >20 mm below boundary-depth median, planar_ring independently reconstructs height AND XY/radius, preserves the old hypothesis and propagates sensitivity; >30 mm spread fails. Raising clearance alone cannot repair scale-induced aim error.
+settled_cycle integrates forward grasp, clearance lift, upright transfer, mirrored 135° rotation, 3.5 s dwell and fixed-XY settled return. Near-side half-radius inset persists; .6 s at 60° allows settling before the evaluation crossing.
+Check interpolation, not just endpoints: legacy return arithmetic exposed 25.6 mm clearance loss. Current cylinder envelope includes chord effects and a separate .030 m height allowance (.02–.06 configurable); Z changes during return.
+Instrumentation should distinguish completed tracking, interrupted waypoints and termination. episode_over is not a success label; rigid TCP tilt does not verify attachment. Blue-patch false negatives prevent using an empty list as proof of containment.
+Remaining limits: no visual attachment check, hand/handle envelope, measured particle margin or proven automatic retry; broad-plane selection, systematic depth error, landmark bias and slip remain. No per-change ablation establishes causality.
+Write tools against EpisodeAPI observations/calibration and motions only; keep true poses analysis-only. Keep interfaces generic, validate before motion, return structured failures, and spend free perception calls before the costly cycle.
+Offline coverage reached 144 tests: both-side synthetic geometry, biased depth/landmarks, conflict/recovery modes, malformed inputs, and dense cylinder paths across both signs and 125/130/135°. Arithmetic tests do not validate physical flow or generalization.
 
 ## Development log
 
-- 2026-10-03, prior R1–R6: Surface bias and repeated missed grasps led to calibrated geometry, attached-reference pivoting, explicit ingress and forward grasp; 36 offline tests by R6.
-- 2026-10-03, prior R7–R16: High/moving discharge and unsafe reversal led to arc ordering, body-plane guards, fixed-reference recovery and raised-obstacle checks; 68 tests. Silent axis substitution was removed after reachability failures.
-- 2026-10-03, prior R17–R28: Added bounded ballistic aiming, depth disturbance stops and XY filtering; reduced redundant vertical stops. Several lift/departure variants remained vulnerable to flow during return.
-- 2026-10-03, prior R29–R34: Integrated aiming/sweep uncertainty and finalized legacy documentation; 101 tests, five retained development successes, but the final retest passed only 2/10.
-- 2026-10-05, round 2 iteration 1: Standard 0 passed via legacy left grasp, +130°/1.5 s pour and two return commands; 292 steps, approximately 11 mm near-side aim.
-- 2026-10-05, iteration 2: Standard 1 spilled after 120°/1.5 s and a 168 mm fully tilted lift; 353 steps. Added integrated settled_cycle at 130°/3.5 s, geometric clearance, settling and diagnostics; 109 tests.
-- 2026-10-05, iteration 3: First cycle failed at 364 steps with a 434-pixel patch 86 mm beyond the opening. Replaced 82° high tilted transfer/descent with upright alignment then fixed-XY lowering; 111 tests.
-- 2026-10-05, iteration 4: Cycle failed at 354 steps with a 435-pixel patch; 90° reference gap was 109 mm. Continuous cylinder bounds, interpolation compensation and tighter tracking reduced that gap to 52 mm; added pre/post-dwell diagnostics; 112 tests.
-- 2026-10-05, iteration 5: Cycle failed at 350 steps; a 409-pixel patch first appeared after dwell, before return, and cup displacement was 64 mm. Emission/contact timing remained unknown. Arithmetic found a separate 25.6 mm return interpolation deficit.
-- 2026-10-05, iteration 5 edit: Retained half-radius near-side aim through dwell/return, increased peak to 135°, and reversed the checked lowering grid for return. No extra waypoints or dwell; 113 tests, including both signs and 125/130/135° geometry.
-- 2026-10-05, iterations 6–9: Standard 1–4 passed in 337/333/338/340 steps; left arm verified on 2 and 4. No pre/post-dwell blue candidates; return remained fixed XY with geometric rise.
-- 2026-10-05, iterations 10–14: Random 0–4 passed in 341/339/339/334/339 steps; random 3 verified left arm. Random 1–4 refined body geometry with XY filters and retained unfiltered support heights.
-- 2026-10-05, iteration 15 (final): Distilled current playbook and development findings, retained dated history in condensed form, clarified terminal interface semantics and checked all seven interfaces. Execution behavior and enabled tools unchanged; no evaluation/server launched.
+- 2026-10-03, prior R1–R6: Added calibrated geometry, attached-reference pivoting and explicit forward grasp after surface bias/missed grasps; 36 tests.
+- 2026-10-03, prior R7–R16: Added arc ordering, body-plane and raised-obstacle guards, fixed-reference recovery; removed silent axis substitution; 68 tests.
+- 2026-10-03, prior R17–R28: Added ballistic bounds, depth disturbance stops and XY filtering; reduced vertical stops. Moving/high discharge and return flow remained failure modes.
+- 2026-10-03, prior R29–R34: Integrated sweep uncertainty; 101 tests. Five retained development successes did not generalize: final retest 2/10.
+- 2026-10-05, iteration 1: Legacy left-arm standard 0 passed in 292 steps via grasp, +130°/1.5 s pivot and two return commands.
+- 2026-10-05, iteration 2: Spill after a 168 mm fully tilted lift prompted integrated settled_cycle with 3.5 s dwell and settling; 109 tests.
+- 2026-10-05, iterations 3–4: Replaced high tilted transfer with upright alignment; continuous cylinder/interpolation clearance reduced a 90° gap from 109 to 52 mm; 112 tests.
+- 2026-10-05, iteration 5: Pre-return spill and 64 mm cup displacement prompted persistent near-side inset, 135° peak and checked reverse grid; separate return deficit was 25.6 mm; 113 tests.
+- 2026-10-05, iterations 6–14: Remaining standard/random layouts passed in 333–341 steps, both arm signs. Later recorded final retest was 10/10 for that earlier tool version.
+- 2026-10-05, iteration 15: Condensed prior deliverables and clarified termination semantics; execution unchanged.
+- 2026-10-12, v0.3rgb R1: 57 mm first-grasp error plus retreat left too little return time; added upright_geometry from base/top rays and support plane; 117 tests.
+- 2026-10-12, R2: Grasp succeeded but 366-step cycle spilled; ~19 mm destination bias plus inset motivated planar_ring with calibrated rays at measured height; 123 tests.
+- 2026-10-12, R3: Standard 0 passed left, 346 steps; small residuals still did not establish unbiased geometry.
+- 2026-10-12, R4: Spill with stale .740 m support versus observed .75818 prompted explicit-support conflict guard (>12 mm); 125 tests.
+- 2026-10-12, R5–R9: Standard 1–4 and random 0 passed in 337/335/336/341/341 steps. Standard 3 still showed conflicting broad-plane estimates; no universal plane-selection guarantee.
+- 2026-10-12, R10: Random 1 spill, ~28 mm destination bias and front-edge landmark ambiguity prompted planar_ring coaxial support-arc height mode; 130 tests.
+- 2026-10-12, R11: Random 1 passed right in 340 steps with support-arc ring geometry.
+- 2026-10-12, R12: Random 2 missed grasp despite .23 mm TCP error; ~21 mm source bias prompted upright_geometry support-contact arcs; 134 tests. Attachment verification remained absent.
+- 2026-10-12, R13: Random 2 passed right in 335 steps using source/destination support arcs.
+- 2026-10-12, R14: Random 3 low .818 m rim, 137 mm cup displacement and spill prompted regional boundary-depth cross-check; 137 tests. Exact contact timing was unknown.
+- 2026-10-12, R15: Guard missed a 32.686 mm median conflict because of redundant per-patch voting; removed that veto; 139 tests.
+- 2026-10-12, R16: Another accepted 27.416 mm discrepancy prompted max(20 mm, two robust deviations) tolerance and independent depth-height mode; 142 tests.
+- 2026-10-12, R17: Noisy guard still accepted 19.714 mm discrepancy; spill detected by dwell. Added separate .030 m execution height margin and exported sensitivity; 143 tests.
+- 2026-10-12, R18: Margin alone failed (65 mm displacement/spill); arc/depth differed 28.791 mm. Added >20 mm low-arc recovery of height, XY and radius with retained hypothesis/uncertainty; 144 tests.
+- 2026-10-12, R19: Random 3 passed left in 340 steps after .823803→.851251 m depth recovery plus .030 m margin; effects not isolated.
+- 2026-10-12, R20: Random 4 passed right in 340 steps, support-arc mode with depth agreement and .030 m margin; accepted low height shows agreement is not accuracy.
+- 2026-10-12, R21 final: Distilled playbook and dated history, removed stale current-run claims, retained generic interfaces; checked documentation constraints. No execution changes, server or evaluation.
 
-- Final retest 2026-10-05 (final tools, one run per layout, no optimizer): retest passed: 10 / 10
+- Final retest 2026-10-12 (final tools, one run per layout, no optimizer): retest passed: 3 / 10

@@ -30,7 +30,7 @@ class CycleTests(unittest.TestCase):
             stages = report['stages']
             deep = next(i for i, s in enumerate(stages) if s['stage'] == 'deep_dwell')
             self.assertAlmostEqual(stages[deep-1]['tilt_deg'], 135)
-            np.testing.assert_allclose(stages[deep-1]['reached_reference'], [.01 + (.0175 if arm == 'right' else -.0175), -.03, .901], atol=.002)
+            np.testing.assert_allclose(stages[deep-1]['reached_reference'], [.01 + (.0175 if arm == 'right' else -.0175), -.03, .931], atol=.002)
             settle = next(i for i, s in enumerate(stages) if s['stage'] == 'settle_before_crossing')
             self.assertAlmostEqual(stages[settle-1]['tilt_deg'], 60)
             self.assertGreater(settle, deep)
@@ -59,12 +59,13 @@ class CycleTests(unittest.TestCase):
                 self.assertAlmostEqual(s['reached_reference'][1], -.03)
             self.assertAlmostEqual(lower[-1]['reached_reference'][0], .01 + (.0175 if arm == 'right' else -.0175))
             near_horizontal = next(s for s in lower if abs(s['tilt_deg']-90) < 1e-6)
-            self.assertLess(near_horizontal['reached_reference'][2] - .86, .06)
+            self.assertLess(near_horizontal['reached_reference'][2] - .89, .06)
             self.assertFalse(any(s['stage'] == 'transfer_and_tilt' for s in stages))
 
     def test_lowering_intervals_clear_support_and_raised_disk(self):
         # Independently sample the attached cylinder, including interpolation
-        # between TCP targets. This checks both arm signs and several lengths.
+        # between TCP targets. Actual rim is 30 mm above its nominal estimate;
+        # check both arm signs and several lengths against that higher rim.
         for arm in ('left', 'right'):
             for extent in (.15, .24, .30):
                 args = self.args(arm, extent=extent)
@@ -87,9 +88,10 @@ class CycleTests(unittest.TestCase):
                         inset = abs((1-fraction)*p['reached_reference'][0] + fraction*q['reached_reference'][0] - .01)
                         overlap = (x-inset)**2+y*y <= .035**2
                         if overlap.any():
-                            self.assertGreaterEqual(bottom[overlap].min(), .86)
+                            self.assertGreaterEqual(bottom[overlap].min(), .89)
 
     def test_return_interpolation_clears_body_for_both_arms_and_peak_range(self):
+        # The higher actual rim applies on reversal too, including TCP chord sag.
         for arm in ('left', 'right'):
             sign = 1 if arm == 'left' else -1
             for peak in (125, 130, 135):
@@ -116,12 +118,39 @@ class CycleTests(unittest.TestCase):
                             self.assertGreaterEqual(z.min(), .78)
                             overlap = (x-.01)**2+(y+.03)**2 <= .035**2
                             if overlap.any():
-                                self.assertGreaterEqual(z[overlap].min(), .86)
+                                self.assertGreaterEqual(z[overlap].min(), .89)
+
+    def test_height_uncertainty_prevents_nominal_path_penetration(self):
+        rim = np.array([.01, -.03, .86])
+        # At horizontal, a cylinder's lowest surface lies directly beneath
+        # its axial point inside the opening. The old nominal path penetrates
+        # a rim underestimated by 30 mm despite its tracking reserve.
+        old = cycle.lowering_path(135, rim, .035, .24, .035, .78, .04, 1)
+        old_horizontal = next(ref for angle, ref in old if angle == 90)
+        self.assertLess(old_horizontal[2]-.035, .89)
+        for arm in ('left', 'right'):
+            costs = []
+            for margin in (.02, .03, .05):
+                api = MockAPI()
+                report, code = cycle.run(api, 'settled_cycle',
+                                         self.args(arm, rim_height_margin=margin))
+                self.assertEqual(code, 0, report)
+                bounds = report['phases']['geometry']
+                self.assertAlmostEqual(bounds['measured_rim_z'], .86)
+                self.assertAlmostEqual(bounds['clearance_rim_z'], .86+margin)
+                for stage in report['stages']:
+                    if abs(stage.get('tilt_deg', 0)-90) < 1e-6:
+                        self.assertGreater(stage['reached_reference'][2]-.035, .86+margin)
+                costs.append((api.calls, api.held, len(api.grips)))
+            # Waypoint/dwell counts are preserved, not a physical step estimate.
+            self.assertEqual(len(set(costs)), 1)
 
     def test_invalid_inputs_never_touch_robot(self):
         for update in (dict(hold=2), dict(peak=120), dict(radius=float('nan')),
                        dict(rim_radius=-1), dict(ref_x=.25), dict(extent=.06),
-                       dict(z=1.04), dict(gap=.1), dict(support_z=1.)):
+                       dict(z=1.04), dict(gap=.1), dict(support_z=1.),
+                       dict(rim_height_margin=.019), dict(rim_height_margin=.061),
+                       dict(rim_height_margin=float("nan"))):
             api = MockAPI()
             report, code = cycle.run(api, 'settled_cycle', self.args(**update))
             self.assertEqual(code, 2, report)

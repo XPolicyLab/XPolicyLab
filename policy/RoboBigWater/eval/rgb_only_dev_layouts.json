@@ -5,8 +5,8 @@
   "episodes": 420,
   "categories": {
    "Generalization": {
-    "success_rate": 23.3,
-    "progress_score": 26.7
+    "success_rate": 25.0,
+    "progress_score": 28.3
    },
    "Precision": {
     "success_rate": 6.2,
@@ -26,8 +26,8 @@
    }
   },
   "leaderboard_formula": {
-   "success_rate": 26.6,
-   "progress_score": 32.5
+   "success_rate": 26.9,
+   "progress_score": 32.9
   },
   "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
@@ -35,6 +35,7 @@
   },
   "reevolved_tasks": [
    "align_blocks",
+   "pour_liquid_into_cup",
    "press_by_number",
    "stack_blocks_by_language"
   ]
@@ -555,57 +556,6 @@
    "variant": "pour_liquid_into_cup",
    "type": "Generalization",
    "episodes": 5,
-   "success": 0,
-   "success_rate": 0.0,
-   "progress_score": 0.0,
-   "per_layout": [
-    {
-     "layout": 0,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 4,
-     "steps": 400
-    },
-    {
-     "layout": 1,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "agent_exit",
-     "commands": 4,
-     "steps": 397
-    },
-    {
-     "layout": 2,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 4,
-     "steps": 400
-    },
-    {
-     "layout": 3,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 4,
-     "steps": 400
-    },
-    {
-     "layout": 4,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 3,
-     "steps": 400
-    }
-   ]
-  },
-  {
-   "task": "pour_liquid_into_cup",
-   "variant": "pour_liquid_into_cup_random",
-   "type": "Generalization",
-   "episodes": 5,
    "success": 1,
    "success_rate": 20.0,
    "progress_score": 20.0,
@@ -620,22 +570,6 @@
     },
     {
      "layout": 1,
-     "success": true,
-     "progress": 100.0,
-     "end_reason": "auto_success",
-     "commands": 1,
-     "steps": 342
-    },
-    {
-     "layout": 2,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "agent_exit",
-     "commands": 19,
-     "steps": 399
-    },
-    {
-     "layout": 3,
      "success": false,
      "progress": 0.0,
      "end_reason": "sim_time",
@@ -643,14 +577,83 @@
      "steps": 400
     },
     {
-     "layout": 4,
+     "layout": 2,
      "success": false,
      "progress": 0.0,
      "end_reason": "done",
-     "commands": 18,
-     "steps": 366
+     "commands": 4,
+     "steps": 399
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 337
+    },
+    {
+     "layout": 4,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
+  },
+  {
+   "task": "pour_liquid_into_cup",
+   "variant": "pour_liquid_into_cup_random",
+   "type": "Generalization",
+   "episodes": 5,
+   "success": 2,
+   "success_rate": 40.0,
+   "progress_score": 40.0,
+   "per_layout": [
+    {
+     "layout": 0,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 4,
+     "steps": 400
+    },
+    {
+     "layout": 1,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "sim_time",
+     "commands": 5,
+     "steps": 400
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 339
+    },
+    {
+     "layout": 3,
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "done",
+     "commands": 4,
+     "steps": 399
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 342
+    }
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "push_T",
