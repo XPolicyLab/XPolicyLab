@@ -1,40 +1,43 @@
 # push_T playbook
 
-Observe → register → transfer → inspect feedback → home both. Use fresh measured geometry on every layout.
-`planar_match` and observations are free; motion has a 600-action-step / 24 s budget at 25 Hz, separate from command count.
+Current RGB development run: 10/10 layouts reached auto_success; 10–16 motion-command attempts, 426–551/600 action steps, 17.04–22.04/24 s. These are successes collected across evolving tools, not a fixed-version retest.
 
-1. Run `robo obs`; select interior pixels on the movable top surface and destination silhouette.
-2. Run `robo planar_match --u U --v V --ref_u RU --ref_v RV` (head, color_tol=45 by default).
-3. If registration fails, inspect seeds/occlusion before moving. Tolerance 25 with revised seeds recovered standard layout 1; automatic retries already tighten tolerance.
-4. Prefer `contact_xyz`, `contact_goal_xy`, `contact_open_deg` when `contact_available=true`; map them to x/y/z, to_x/to_y, open_deg, and use returned yaw. Do not mix seed and contact destinations.
-5. Call `robo planar_transfer ARM --x X --y Y --z Z --to_x GX --to_y GY --open_deg A --yaw YAW`; choose an arm that can reach the observed contact. Defaults: clearance=.07, inset=.006, relay=auto, verify=auto.
-6. Read stages, final_arm, residuals and refinement_attempted. Verification accepts <=3 mm / <=2° relative to the requested transform; it does not independently validate the original destination registration.
-7. After release/retraction, run `robo home both`; successful episodes ended on homing. Stop at episode_over=true; another done command is unnecessary.
+## Procedure
 
-Recovery and budget:
-- An unavailable released view can follow completed transport. Inspect stages before any retry; the tool tries head/wrist views and one bounded clearance itself.
-- If visibility remains unavailable after release, homing can clear the view and complete the task; random layouts 1 and 3 succeeded this way. Missing verification alone proves neither success nor failed transport.
-- A measured released_alignment_error returns correction_args. Preserve the original goal; self-matching an overlapped silhouette is not independent goal evidence.
-- The tool already permits one small-error compensated regrip with >=8 s remaining. Inspect its result before requesting another correction; tiny strokes sometimes produced almost no surface motion.
-- Reserve homing time: final homes in successful development episodes took 1.12–1.96 s. This range is observed, not a duration guarantee.
-- Avoid blind inset increases: .012 m caused contact_position_error in standard layout 4. Open/retract and reobserve after a contact failure; the gripper may remain closed.
-- Outward clearing succeeded in standard layout 3 (3.52 s); backward clearing failed IK. Standard layout 2 spent 6.92 s clearing and timed out during transfer. Recompute clearance from the current scene rather than replaying offsets.
+1. Observe the head view; select interior seeds on the movable surface and destination. Clear occluding fingers only when needed, using reachable moves derived from the current scene.
+2. Run `planar_match`; inspect segmentation, plane sources, fit and contact availability. Revised seeds and color_tol=15–25 recovered several registrations; the default is 45.
+3. Establish projection heights independently where possible. `planar_height` requires the same complete surface in two calibrated views; all four queries in the supplied successful episodes failed, so its physical benefit remains unproved.
+4. Equal-size `height_fit=auto` can reject or fit implausibly low source planes. `height_fit=off` with explicit planes recovered later episodes, but neither a passing fit nor an explicit height proves physical accuracy.
+5. Preserve the complete returned `transfer_args`: contact, transformed goal, opening axis, yaw, z and outline. Add the reachable arm; do not mix seed geometry with a contact-bound outline.
+6. Use `planar_transfer` with relay=auto, verify=auto; usual clearance=.07 m and inset=.006 m. Relay measures handoff slip and returns final_arm; nearly 180° rotations can complete on one arm.
+7. Inspect descent/reached TCP after contact failure. Separate execution `contact_z` from projection `z`; later successes used contact_z 26–39 mm above z. This is observed recovery, not a universal height offset. Increasing clearance or pointing down alone often failed.
+8. Read stages before retrying: `released_alignment_error` and unavailable released views can follow completed transport. Recover full feedback with status if output is truncated; keep check_args and correction_args intact.
+9. After external visibility recovery, use free `planar_check` with saved check_args to remeasure the original transform. It performs no clearance or motion. Do not self-match an overlapped silhouette to invent a new goal.
+10. Apply fresh correction_args on the returned arm with relay=off, preserving the original goal/outline/z. One internal refinement is already permitted for <=12 mm/6° residual with >=8 s left; repeated tiny strokes often stalled or oscillated.
+11. Reserve time for `home both`: final homes took .60–.88 s in these episodes. All 10 successes ended on home; stop at episode_over=true. A subsequent check/done is rejected.
 
-Development successes (historical tool versions; commands exclude free obs/match, steps = seconds ×25):
+## Successful episode evidence
 
-| Layout | Order after observation/match | Measured yaw; notable parameters | Commands | Steps | Seconds |
+S = standard, R = random. Order below omits initial obs/match and rejected setup attempts; counts include those motion attempts but exclude free perception/status. Corrections exclude internal refinements.
+Heights and yaw are episode measurements, never layout constants. Unless noted: clearance=.07, inset=.006, main relay=auto, correction relay=off, verify=auto.
+
+| Layout | Main transport → corrections → finish | Yaw; projection z / execution contact_z (m) | Commands | Steps | Seconds |
 |---|---|---|---:|---:|---:|
-| standard 0 | left point/rotate/contact/slide/rotate/slide/release/retract → home | +119.95° split 90°+29.95°; no transfer tool | 11 | 295 | 11.80 |
-| standard 1 | retry match → left transfer → home | +37.00°; color_tol=25 | 2 | 285 | 11.40 |
-| standard 3 | clear → rematch → right transfer → home | +79.79°; default relay | 6 | 539 | 21.56 |
-| standard 4 | five right transfers, open/retract recovery → home | +6.14° initially; final two inset=0 | 8 | 535 | 21.40 |
-| random 0 | right transfer → home → rematch/correct → home | +47.86° initially; ~10 mm correction | 4 | 329 | 13.16 |
-| random 1 | right transfer → home | +99.05°; released view unavailable | 2 | 373 | 14.92 |
-| random 2 | left transfer → home | −122.98°; defaults | 2 | 496 | 19.84 |
-| random 3 | right transfer → left correction → home | +75.58°; correction clearance=.03, inset=.012, relay=off | 3 | 521 | 20.84 |
-| random 4 | right transfer → home | −179.47°; defaults | 2 | 432 | 17.28 |
+| S0 | clear/rematch → left → 4 left → home | +119.26°; .77393 / same initially; correction inset=0 | 10 | 526 | 21.04 |
+| S1 | left → home/point/correct cycles (3) → home | +41°; historical z=.780; clearance=.03–.04, inset=0 | 16 | 515 | 20.60 |
+| S2 | clear/home/point → right-to-left → 4 left → home | −149.66°; .760 / .790 | 14 | 551 | 22.04 |
+| S3 | outward clear → right-to-left → 2 left → clear/home | +77.98°; .760 / .788 | 12 | 470 | 18.80 |
+| S4 | lift/outward clear → right → 3 right → home | +6.34°; .755 / .789 initially | 12 | 502 | 20.08 |
+| R0 | lift → right → 3 right → home | +48.04°; .760 / .790 initially | 11 | 515 | 20.60 |
+| R1 | switch arms/lift → right-to-left → 2 left → home | +97.53°; .760 / .786 | 12 | 478 | 19.12 |
+| R2 | lift/outward clear → left-to-right → 5 right → home | −123.05°; .750 / .780 initially | 14 | 513 | 20.52 |
+| R3 | lift → right-to-left → 3 left → home | +74.94°; .750 / .785 initially | 10 | 488 | 19.52 |
+| R4 | lift/outward clear → left → 2 left → home | −178.28°; .760 / .786 initially | 11 | 426 | 17.04 |
 
-Random 3's correction did not change the logged center; its benefit is unproven. Truncated stage feedback does not establish which internal refinements ran.
-Development passed 9/10; standard 2 remained unfinished. Final tools retested at 7/10, so development successes are not reliability guarantees.
-Final retest successes (commands/action steps): standard 0 8/551, 1 4/573, 4 3/443; random 0 4/406, 1 2/429, 2 2/496, 3 2/446.
-Final retest failures: standard 2 sim_time (6/600), standard 3 done (4/541), random 4 sim_time (3/600). Retest trajectories are not supplied here; do not infer their exact failure stages.
+## Limits and recovery lessons
+
+- A <=3 mm/2° check certifies only the requested transform. Earlier random-2 failure passed at 2.12 mm/.84°; current successes often retained larger residuals. Evaluator success and tool acceptance differ.
+- S2/S3 and R0–R3 changed requested goals during corrections; S1 and R0/R1 also skipped verification. These episodes do not establish accurate original-goal tracking or reusable compensation.
+- S3 outward clearing took 1.60 s after backward/upward moves failed IK. Do not replay saved offsets or force deeper descent; a motion may fail with fingers closed.
+- R0 spent 9.52 s on two correction calls with little net movement; R2 used five corrections without monotonic improvement. Recheck plane/contact/visibility evidence before spending the remaining budget.
+- Successful development supports separate contact/projection heights, carried geometry, bounded relay and visibility recovery; it does not isolate each feature's causal benefit or validate final precision.

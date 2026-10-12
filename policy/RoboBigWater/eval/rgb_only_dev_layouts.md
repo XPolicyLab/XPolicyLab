@@ -2,18 +2,18 @@
 
 Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses). Depth is estimated inside the policy server by Depth Anything V2 (Metric-Indoor-Base) with its scale fixed from the known table height; the simulator's depth is never read. Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered `_random` 0-4), one episode per layout with frozen tools, no optimizer, official success and progress checkers.
 
-Tools: 36 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). 6 tasks (`align_blocks`, `insert_tubes`, `pour_liquid_into_cup`, `press_by_number`, `stack_blocks`, `stack_blocks_by_language`) carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file is updated as they finish.
+Tools: 35 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). 7 tasks (`align_blocks`, `insert_tubes`, `pour_liquid_into_cup`, `press_by_number`, `push_T`, `stack_blocks`, `stack_blocks_by_language`) carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file is updated as they finish.
 
 ## Summary (leaderboard formula: mean of the five task types; Generalization = mean of standard and cluttered)
 
 | | Success rate (%) | Progress score |
 |---|---:|---:|
-| Generalization | 25.8 | 29.2 |
+| Generalization | 26.7 | 30.0 |
 | Precision | 7.5 | 11.9 |
 | Long-Horizon | 5.0 | 21.8 |
 | Memory | 53.3 | 57.0 |
 | Open | 45.0 | 48.1 |
-| **Overall (leaderboard formula)** | **27.3** | **33.6** |
+| **Overall (leaderboard formula)** | **27.5** | **33.8** |
 
 Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 
@@ -25,6 +25,7 @@ Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 | insert_tubes | 1/10 | 2/10 |
 | pour_liquid_into_cup | 1/10 | 3/10 |
 | press_by_number | 0/10 | 10/10 |
+| push_T | 3/10 | 4/10 |
 | stack_blocks | 5/10 | 6/10 |
 | stack_blocks_by_language | 3/10 | 7/10 |
 
@@ -44,7 +45,7 @@ Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 | Generalization | pack_objects_into_box_random | 0/5 | 4.0 |
 | Generalization | pour_liquid_into_cup | 1/5 | 20.0 |
 | Generalization | pour_liquid_into_cup_random | 2/5 | 40.0 |
-| Generalization | push_T | 1/5 | 20.0 |
+| Generalization | push_T | 2/5 | 40.0 |
 | Generalization | push_T_random | 2/5 | 40.0 |
 | Generalization | sort_nesting_dolls_by_size | 1/5 | 20.0 |
 | Generalization | sort_nesting_dolls_by_size_random | 0/5 | 0.0 |

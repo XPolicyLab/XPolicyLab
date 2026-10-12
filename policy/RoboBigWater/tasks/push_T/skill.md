@@ -1,47 +1,52 @@
 # push_T tool development
 
-Delivered tool: `planar_contact`, exposing free RGB-D `planar_match` and budgeted `planar_transfer`.
-Development passed 9/10 layouts; final fixed-tool retest under official motion timing passed 10/10 (2026-10-03). The earlier 7/10 retest was under the old self-imposed speed caps and is superseded.
+Delivered `planar_contact`: free `planar_match`, `planar_height`, `planar_check`; budgeted `planar_transfer`. Inputs are caller arguments and EpisodeAPI RGB/depth/calibration/TCP observations; no simulator state or layout constants.
+Current RGB run collected 10/10 development successes across evolving versions, using 426–551 action steps of 600. This is not a final fixed-version reliability test; older non-RGB retest results are separate evidence.
 
-Design and evidence:
-- Visual estimates and glancing strokes lost contact: a 205 mm TCP stroke moved the surface only 29 mm. Server-side outline registration plus closed constant-height contact replaced repeated visual guesses.
-- Register equal-area horizontal color regions over a full turn; bounded tolerance retries keep seeds fixed and retain the 5 mm fit gate. Bad seeds and occluded outlines still fail.
-- Return a material contact point and its transformed destination together. Opposing-edge fits avoid junctions and PCA axis bias: 37 rasterized rotations reduced maximum error 3.49°→1.04°, RMS 1.40°→0.28° in synthetic tests.
-- Cross-workspace IK failures motivated relay at the observed TCP bisector. Measure released handoff slip before regrip and update contact, opening axis and remaining yaw without changing the destination.
-- Reduce settling overhead: omit redundant opening holds, use continuous sweeps split only above 90°, and combine free-space orientation/approach. Recovery is bounded to unexecuted IK rejection with unchanged TCP.
-- Verify released outlines against a call-local observed template and requested transform. <=3 mm / <=2° is tool acceptance, not an evaluator threshold or proof of correct initial registration.
-- Try calibrated head and wrist views before moving for visibility; reject incomplete regions. One clearance returns to the full measured entry pose, because entry XY with the final wrist orientation can be unreachable.
-- Small corrections sometimes barely moved the surface. One measured XY/yaw bias compensates presumed repeatable contact play for residuals <=12 mm / <=6° with >=8 s left; verify against the original goal, never the biased endpoint.
-- Inputs come only from caller arguments and EpisodeAPI observations/TCPs. No simulator state, hidden object poses, layout coordinates or stored shape templates are used.
+## Designs and evidence
 
-What remains uncertain:
-- Contact play and relay slip are supported diagnoses, not proven friction mechanisms; saved true positions omit yaw and many stage outputs are truncated.
-- Camera clearance and refinement can exhaust time; the 8 s admission gate does not guarantee enough time for completion and homing.
-- A reached TCP is not an observed surface pose. plan_ok=false may mean failed observation after completed motion; report stages and fresh correction arguments.
-- Deeper inset and repeated small strokes were unreliable. Full-pose reachable endpoints do not guarantee an IK-feasible path.
-- Synthetic/mocked tests validate geometry and bounded control flow, not physical retention or success rates. Previous rounds recorded 34 passing local tests; no new evaluation was run in finalization.
+- Project complete RGB regions onto horizontal planes. Learned per-pixel depth distorted outlines and rejected height-adjusted contacts; regional depth initializes omitted planes, while explicit planes constrain registration.
+- Return a coherent material contact, goal, opening axis and outline token. Preserve observed geometry through relay/corrections; recapturing an occluded fragment can redefine the goal and produce oscillating corrections.
+- Keep registration z separate from execution contact_z. Changing z alone with unchanged XY invalidates the geometry; a previous 1.15 mm/.99° verified result still failed the evaluator.
+- Unload a 2–12 mm upward descent discrepancy once, then transport at measured TCP height. Low target pressure accompanied ineffective strokes; raised execution heights accompanied later successes, without proving the contact mechanism.
+- Relay at the observed TCP bisector and measure handoff slip. Continuous <=90° sweeps and combined approach/orientation reduce motion overhead; retries remain bounded and stop on motion failure.
+- Validate each candidate during bounded seed/tolerance search, retaining alternatives after area/fit rejection. Preserve full-outline gates and camera provenance; compatible appearance alone does not imply valid geometry.
+- Alternate views can produce false displacement under a biased plane. Bound differential ray-plane parallax to 3 mm under 4 cm plane uncertainty; accept validated tracking despite learned-depth bias, not despite missing depth support.
+- For saturated colors, bounded HSV lighting tolerance supplements RGB only behind independent outline validation. One saved release admitted 31/579 top pixels under the old seed gate and 579/579 with the fallback; exact calibrated replay was unavailable.
+- Equal-size outline fitting refines source height within 4 cm/15% scale when reference_z is supplied. Frequent fit rejection and low fitted planes expose its assumption limits; passing rigid fit cannot independently establish either plane.
+- `planar_height` instead fits simultaneous two-view silhouettes over z±6 cm, without destination-size or depth-height assumptions. It rejects weak parallax, >2.5 mm RMS and >12 mm ambiguity; all four recorded success-episode queries failed, so deployment benefit is unproved.
+- Verify released geometry against the requested transform, with <=3 mm/2° acceptance. Return recoverable check_args even when release visibility fails; free planar_check can measure the original goal after external clearance.
+- One refinement uses the measured pose directly toward the original goal (<=12 mm/6°, >=8 s left). Removed doubled-error feed-forward after an 8.95 mm residual crossed the goal and grew to 10.40 mm; repeated slip remains a reported failure.
 
-Advice for similar tools:
-- Spend free perception before motion; preserve the original material-point transform through every handoff and correction.
-- Test independently rasterized rotations and calibrated alternate views, not just rigidly transformed sample clouds.
-- Separate motion status, visibility and alignment; stop immediately on motion failure or exhaustion, and expose failure stage and gripper state.
-- Budget action steps across setup, transport, verification, correction and homing. Fewer API calls save settling time but do not guarantee faster physical motion.
+## Advice and remaining limits
+
+- Preserve material geometry, camera origin and goal across corrections; expose registration, execution, visibility and alignment as separate results. A reached TCP is not an observed surface pose.
+- Use independent rasterized silhouettes and calibrated cameras in tests. The last implementation round recorded 71 passing synthetic/mocked tests covering geometry, bad inputs, occlusion, parallax, recovery and retry bounds; these do not establish physical retention.
+- Small fit residuals can coexist with source/reference-plane bias. Requested-transform acceptance is not independent destination validation; random-2 failed despite a 2.12 mm/.84° check.
+- Contact-height failures, stale/occluded outlines, uncertain planes and repeated tiny strokes remain expensive. Clearance/refinement admission gates do not guarantee time for homing; reserve budget explicitly.
+- Caller goal shifts and verify=off in successful episodes limit conclusions about precision. Avoid converting their heights, pixels, offsets or doubled corrections into defaults.
 
 ## Development log
 
-- 2026-09-30, r2: added seeded registration and closed planar transfer after localization/contact loss; seven-angle and RGB-D synthetic checks supported geometry.
-- 2026-09-30, r7: added observed-TCP relay and elevated-pose lowering after reach failures and costly manual switching.
-- 2026-09-30, r8: bounded color retries and omitted redundant open holds; mocked two-arm relay saved 24 action steps.
-- 2026-09-30, r9: consolidated transport sweeps; six-to-two relay transport calls removed 32 settling steps in the studied path.
-- 2026-09-30, r10: combined orientation/approach with guarded fallback; two fewer calls remove 16 settling steps when accepted.
-- 2026-09-30, r12: selected centered parallel-edge contacts with interior support and finger clearance after obstructed descent.
-- 2026-09-30, r13: bounded translation-before-turn setup recovery after displaced receiver IK failures.
-- 2026-09-30, r15: observed handoff slip corrected receiver geometry; preserved destination and remaining orientation.
-- 2026-09-30, r20: opposing-edge refinement reduced raster-dependent opening-axis bias; 23 local tests passed.
-- 2026-09-30, r21: released-outline verification and inverse correction_args exposed unchecked alignment; 25 tests passed.
-- 2026-09-30, r25–26: bounded released-view clearance, then full entry-pose restoration after clearance IK rejection; 30 tests passed.
-- 2026-09-30, r27: head/wrist measurement fallback before clearance, retaining completeness and fit gates.
-- 2026-09-30, r28: one budget-gated translation compensation after ineffective millimeter strokes; 33 tests passed.
-- 2026-09-30, r30: extended compensation to small angular residuals while verifying the unbiased goal; 34 tests passed.
-- 2026-09-30, r1/3/5/11/14/17–19/33: delivery checks rejected and reverted proposals; these are not additional deployed improvements.
-- 2026-10-01, r34: distilled successful episode procedures, retained limits and dated history, and documented 7/10 final retest; implementation unchanged.
+- 2026-09-30, prior r2–20: seeded registration/contact, observed-TCP relay, efficient sweeps/setup, centered opposing-edge contacts and measured handoff correction addressed contact loss, reach failures and raster angle bias.
+- 2026-09-30, prior r21–30: released-outline checks, full-entry-pose clearance and alternate views exposed residual error; added one compensated refinement for ineffective small strokes (superseded by RGB r16).
+- 2026-09-30, prior r1/3/5/11/14/17–19/33: rejected/reverted proposals were not deployed improvements.
+- 2026-10-01, prior r34: consolidated documents; historical 7/10 retest was later superseded by the recorded 2026-10-03 10/10 under official motion timing, separate from this RGB run.
+- 2026-10-12, RGB r1: replaced per-pixel depth geometry with plane-projected RGB silhouettes after unavailable release observations and rejected regrips.
+- 2026-10-12, RGB r2: added measured-pose unload/transport after 10–16 mm strokes produced no object motion despite accepted descent.
+- 2026-10-12, RGB r4: validate every candidate before terminating bounded search; targets repeated release failures from the first unsuitable segment.
+- 2026-10-12, RGB r6: honor explicit registration planes after a .840414 reference estimate passed fitting and the caller's .742 plane was rejected.
+- 2026-10-12, RGB r7: separate contact_z from projection z after mixed-height geometry produced false alignment confidence.
+- 2026-10-12, RGB r8: allow one guarded upward clearance for short corrections; old <4 cm entry/final displacement gate prevented recovery.
+- 2026-10-12, RGB r9: carry bounded outline tokens and validate freshness before motion to prevent recaptured-fragment drift; 53 local tests passed.
+- 2026-10-12, RGB r10: preserve camera origin and reject uncertain cross-view parallax after oscillating corrections; 55 tests passed.
+- 2026-10-12, RGB r12: added bounded equal-size source-height fitting to address same-view plane bias; 59 tests passed, reference-plane accuracy remained unresolved.
+- 2026-10-12, RGB r13: shape-validated tracking honors supplied planes despite learned-depth bias/spread; unchecked capture keeps depth gates; 62 tests passed.
+- 2026-10-12, RGB r14: added bounded HSV recovery behind shape gates for lighting-shifted release colors; 64 tests passed.
+- 2026-10-12, RGB r16: replaced inferred-bias refinement with direct measured-pose correction to the original goal after overshoot; 64 tests passed.
+- 2026-10-12, RGB r17: added free planar_check and recoverable check_args after external clearance otherwise forced self-registration; 67 tests passed.
+- 2026-10-12, RGB r21: added independent two-view planar_height after low residual failed task completion; 71 tests passed, physical benefit remained unverified.
+- 2026-10-12, RGB r3/5/11/15/18–20/22–24: recorded all 10 development successes; every final home triggered auto_success despite unresolved precision checks.
+- 2026-10-12, RGB r25: distilled final playbook, interfaces and this history; documentation checks only, no implementation change, server or evaluation run.
+
+- Final retest 2026-10-12 (final tools, one run per layout, no optimizer): retest passed: 4 / 10

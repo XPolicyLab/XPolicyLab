@@ -5,8 +5,8 @@
   "episodes": 420,
   "categories": {
    "Generalization": {
-    "success_rate": 25.8,
-    "progress_score": 29.2
+    "success_rate": 26.7,
+    "progress_score": 30.0
    },
    "Precision": {
     "success_rate": 7.5,
@@ -26,8 +26,8 @@
    }
   },
   "leaderboard_formula": {
-   "success_rate": 27.3,
-   "progress_score": 33.6
+   "success_rate": 27.5,
+   "progress_score": 33.8
   },
   "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
@@ -38,6 +38,7 @@
    "insert_tubes",
    "pour_liquid_into_cup",
    "press_by_number",
+   "push_T",
    "stack_blocks",
    "stack_blocks_by_language"
   ]
@@ -662,51 +663,52 @@
    "variant": "push_T",
    "type": "Generalization",
    "episodes": 5,
-   "success": 1,
-   "success_rate": 20.0,
-   "progress_score": 20.0,
+   "success": 2,
+   "success_rate": 40.0,
+   "progress_score": 40.0,
    "per_layout": [
     {
      "layout": 0,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 16,
-     "steps": 483
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 6,
+     "steps": 283
     },
     {
      "layout": 1,
      "success": false,
      "progress": 0.0,
-     "end_reason": "done",
-     "commands": 14,
-     "steps": 551
+     "end_reason": "agent_exit",
+     "commands": 21,
+     "steps": 534
     },
     {
      "layout": 2,
      "success": false,
      "progress": 0.0,
-     "end_reason": "done",
-     "commands": 19,
-     "steps": 501
+     "end_reason": "agent_exit",
+     "commands": 11,
+     "steps": 523
     },
     {
      "layout": 3,
      "success": false,
      "progress": 0.0,
      "end_reason": "agent_exit",
-     "commands": 16,
-     "steps": 584
+     "commands": 12,
+     "steps": 580
     },
     {
      "layout": 4,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 4,
-     "steps": 135
+     "commands": 14,
+     "steps": 546
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "push_T",
@@ -722,42 +724,43 @@
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 6,
-     "steps": 319
+     "commands": 12,
+     "steps": 531
     },
     {
      "layout": 1,
      "success": false,
      "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 10,
-     "steps": 600
+     "end_reason": "agent_exit",
+     "commands": 12,
+     "steps": 480
     },
     {
      "layout": 2,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 6,
-     "steps": 286
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 14,
+     "steps": 516
     },
     {
      "layout": 3,
      "success": false,
      "progress": 0.0,
      "end_reason": "agent_exit",
-     "commands": 6,
-     "steps": 265
+     "commands": 12,
+     "steps": 521
     },
     {
      "layout": 4,
-     "success": true,
-     "progress": 100.0,
-     "end_reason": "auto_success",
-     "commands": 11,
-     "steps": 471
+     "success": false,
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 18,
+     "steps": 524
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "sort_nesting_dolls_by_size",

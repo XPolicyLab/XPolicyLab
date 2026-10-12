@@ -60,8 +60,200 @@ def request(sign=1):
                 open_deg=sign * 160, yaw=-sign * 146, verify="off")
 
 
+def sample_template():
+    x, y = np.meshgrid(np.arange(-.02, .021, .002), np.arange(-.02, .021, .002))
+    return np.column_stack([x.ravel(), y.ravel()]), .78, np.array([30., 30., 230.])
+
+
 class TransferTests(unittest.TestCase):
-    def test_measured_translation_bias_overcomes_repeatable_contact_play(self):
+    def test_short_correction_vertical_clearance_preserves_original_goal(self):
+        for sign in (-1, 1):
+            api = API()
+            api.sim_time_left = lambda: 6.
+            args = dict(request(sign), x=sign * .31, y=-.18,
+                        to_x=sign * .32, to_y=-.18, yaw=3.,
+                        z=.76, contact_z=.78, verify="auto", relay="off")
+            end = np.array([args["to_x"], args["to_y"]])
+            template = (sample_template()[0], .76, sample_template()[2])
+            with patch.object(tool, "observed_surface", return_value=template), \
+                    patch.object(tool, "handoff_measurement", side_effect=[
+                        ValueError("occluded"), (end + [.005, 0.], .76, 3., .001)]) as measure:
+                result, code = tool.run(api, "planar_transfer", args)
+            self.assertEqual(code, 1, result)
+            self.assertEqual(result["plan_fail_reason"], "released_alignment_error")
+            self.assertEqual(result["stages"][-1]["clearance_mode"], "vertical")
+            moves = [c[2] for c in api.calls if c[0] == "move"]
+            np.testing.assert_allclose(moves[-1][:3, :3], moves[-2][:3, :3])
+            np.testing.assert_allclose(moves[-1][:3, 3] - moves[-2][:3, 3], [0, 0, .15])
+            self.assertEqual(api.arm(args["arm"]).gripper(), 1.)
+            self.assertEqual(measure.call_count, 2)
+            for index in range(5):
+                self.assertIs(measure.call_args_list[0].args[index],
+                              measure.call_args_list[1].args[index])
+            correction = result["correction_args"]
+            np.testing.assert_allclose([correction["to_x"], correction["to_y"]], end)
+            self.assertEqual(correction["z"], .76)
+            self.assertEqual(correction["contact_z"], .78)
+            self.assertEqual(correction["yaw"], -3.)
+
+    def test_vertical_clearance_is_bounded_and_stops_on_motion_failure(self):
+        for failure in ("occluded", "ik", "position", "over", "none"):
+            class ClearanceAPI(API):
+                def sim_time_left(self):
+                    return 6.
+
+                def move_tcp(self, arm, target, feedback):
+                    code = super().move_tcp(arm, target, feedback)
+                    if self.moves == 5:
+                        if failure == "position":
+                            arm.pose[2, 3] -= .02
+                        elif failure == "over":
+                            self.over = True
+                    return code
+            api = ClearanceAPI(fail_at=5 if failure == "ik" else None)
+            args = dict(request(), x=.31, y=-.18, to_x=.32,
+                        to_y=-.18, yaw=0., verify="auto", relay="off")
+            final = (np.array([.32, -.18]), .78, 0., .001)
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
+                    patch.object(tool, "handoff_measurement", side_effect=[
+                        ValueError("occluded"),
+                        ValueError("occluded") if failure == "occluded" else final]) as measure:
+                result, code = tool.run(api, "planar_transfer", args)
+            self.assertEqual(api.moves, 5)
+            self.assertEqual(code == 0, failure == "none")
+            self.assertEqual(result["alignment_verified"], failure == "none")
+            self.assertEqual(measure.call_count, 2 if failure in ("none", "occluded") else 1)
+
+    def test_vertical_clearance_requires_time_reserve(self):
+        api = API()
+        api.sim_time_left = lambda: 1.99
+        args = dict(request(), x=.31, to_x=.32, to_y=-.18,
+                    yaw=0., verify="auto", relay="off")
+        with patch.object(tool, "observed_surface", return_value=sample_template()), \
+                patch.object(tool, "handoff_measurement", side_effect=ValueError("occluded")) as measure:
+            result, code = tool.run(api, "planar_transfer", args)
+        self.assertEqual(code, 1)
+        self.assertEqual(result["plan_fail_reason"], "released_surface_unavailable")
+        self.assertEqual(api.moves, 4)
+        self.assertEqual(measure.call_count, 1)
+
+    def test_contact_height_preserves_visual_plane_through_relay(self):
+        api = API()
+        args = dict(request(), z=.76, contact_z=.78, verify="auto")
+        end = np.array([args["to_x"], args["to_y"]])
+        with patch.object(tool, "observed_surface", return_value=(sample_template()[0], .76, sample_template()[2])) as observe, \
+                patch.object(tool, "handoff_measurement", side_effect=[
+                    (np.array([0., -.19]), .76, 1., .001),
+                    (end, .76, 0., .001)]) as measure:
+            result, code = tool.run(api, "planar_transfer", args)
+        self.assertEqual(code, 0, result)
+        self.assertTrue(result["relay_completed"])
+        self.assertEqual(result["registration_z"], .76)
+        self.assertEqual(result["contact_z"], .78)
+        for call in observe.call_args_list:
+            self.assertAlmostEqual(call.args[1][2], .76)
+        # Both contact descents retain the execution height, including after
+        # handoff measurement returns the different visual plane.
+        moves = [c[2] for c in api.calls if c[0] == "move"]
+        descents = [pose for stage, pose in zip(result["stages"], moves)
+                    if stage["stage"] == "descend"]
+        self.assertEqual(len(descents), 2)
+        for pose in descents:
+            self.assertAlmostEqual(pose[2, 3], .774)
+        self.assertAlmostEqual(measure.call_args.args[2][2], .76)
+
+    def test_refinement_keeps_independent_contact_height(self):
+        api = API()
+        api.sim_time_left = lambda: 10.
+        args = dict(request(), x=.15, to_x=.23, z=.76,
+                    contact_z=.78, yaw=0., verify="auto")
+        end = np.array([args["to_x"], args["to_y"]])
+        with patch.object(tool, "observed_surface", return_value=(sample_template()[0], .76, sample_template()[2])) as observe, \
+                patch.object(tool, "handoff_measurement", side_effect=[
+                    (end - [.005, 0.], .76, 0., .001),
+                    (end - [.004, 0.], .76, 0., .001)]):
+            result, code = tool.run(api, "planar_transfer", args)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(result["refinement_attempted"])
+        self.assertEqual(result["correction_args"]["z"], .76)
+        self.assertEqual(result["correction_args"]["contact_z"], .78)
+        for call in observe.call_args_list:
+            self.assertEqual(call.args[1][2], .76)
+        moves = [c[2] for c in api.calls if c[0] == "move"]
+        for stage, pose in zip(result["stages"], moves):
+            if stage["stage"] in ("descend", "transport"):
+                self.assertAlmostEqual(pose[2, 3], .774)
+
+    def test_contact_height_clearance_uses_execution_plane(self):
+        api = API()
+        api.arm("right").pose[2, 3] = .835
+        args = dict(request(), x=.15, to_x=.23, z=.76,
+                    contact_z=.78, yaw=0., verify="auto")
+        with patch.object(tool, "observed_surface", return_value=sample_template()), \
+                patch.object(tool, "handoff_measurement", side_effect=ValueError("occluded")):
+            result, code = tool.run(api, "planar_transfer", args)
+        self.assertNotEqual(code, 0)
+        self.assertFalse(any(s["stage"] == "clear_released_view" for s in result["stages"]))
+
+    def test_invalid_contact_height_stops_before_observation_or_motion(self):
+        for height in (float("nan"), float("inf"), .821, .739):
+            for mode in ("auto", "off"):
+                api = API()
+                with patch.object(tool, "observed_surface") as observe:
+                    result, code = tool.run(api, "planar_transfer", dict(
+                        request(), contact_z=height, verify=mode))
+                self.assertNotEqual(code, 0)
+                self.assertFalse(result["plan_ok"])
+                self.assertEqual(api.calls, [])
+                observe.assert_not_called()
+
+    def test_loaded_descent_is_unloaded_before_closure_and_transport(self):
+        class Loaded(API):
+            def move_tcp(self, arm, target, feedback):
+                code = super().move_tcp(arm, target, feedback)
+                if self.moves == 2:
+                    arm.pose[2, 3] += .008
+                return code
+        api = Loaded()
+        result, code = tool.run(api, "planar_transfer", dict(request(), relay="off"))
+        self.assertEqual(code, 0, result)
+        stages = result["stages"]
+        self.assertEqual(stages[2]["stage"], "unload_descent")
+        self.assertAlmostEqual(stages[2]["height_adjustment_m"], .008)
+        self.assertEqual([c[0] for c in api.calls[:4]], ["move", "move", "move", "grip"])
+        moves = [c[2] for c in api.calls if c[0] == "move"]
+        for pose in moves[2:-1]:
+            self.assertAlmostEqual(pose[2, 3], .782)
+        np.testing.assert_allclose(moves[-2][:2, 3], [-.26, -.23])
+
+    def test_unloading_does_not_accept_large_or_lateral_descent_errors(self):
+        for offset in ([0, 0, .021], [.007, 0, .004]):
+            class Displaced(API):
+                def move_tcp(self, arm, target, feedback):
+                    code = super().move_tcp(arm, target, feedback)
+                    if self.moves == 2:
+                        arm.pose[:3, 3] += offset
+                    return code
+            api = Displaced()
+            result, code = tool.run(api, "planar_transfer", dict(request(), relay="off"))
+            self.assertNotEqual(code, 0)
+            self.assertEqual(api.moves, 2)
+            self.assertFalse(any(c[0] == "grip" for c in api.calls))
+
+    def test_failed_unload_stops_before_closure(self):
+        class Loaded(API):
+            def move_tcp(self, arm, target, feedback):
+                code = super().move_tcp(arm, target, feedback)
+                if self.moves == 2:
+                    arm.pose[2, 3] += .008
+                return code
+        api = Loaded(fail_at=3)
+        result, code = tool.run(api, "planar_transfer", dict(request(), relay="off"))
+        self.assertNotEqual(code, 0)
+        self.assertEqual(result["stages"][-1]["stage"], "unload_descent")
+        self.assertFalse(any(c[0] == "grip" for c in api.calls))
+
+    def test_persistent_contact_play_is_reported_without_guessing_compensation(self):
         for sign in (-1, 1):
             api = API()
             api.sim_time_left = lambda: 9.4
@@ -78,18 +270,19 @@ class TransferTests(unittest.TestCase):
                 actual = transports[-1][2][:2, 3] - bias
                 return actual, .78, 0., .001
 
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", side_effect=measure):
                 result, code = tool.run(api, "planar_transfer", args)
-            self.assertEqual(code, 0, result)
-            self.assertTrue(result["alignment_verified"])
+            self.assertEqual(code, 1, result)
+            self.assertFalse(result["alignment_verified"])
             self.assertTrue(result["refinement_attempted"])
-            self.assertIsNone(result["correction_args"])
-            np.testing.assert_allclose(result["refinement_bias_xy"], bias)
-            np.testing.assert_allclose(api.arm("right").tcp()[:2, 3], end + bias)
+            self.assertEqual(result["plan_fail_reason"], "released_alignment_error")
+            np.testing.assert_allclose(api.arm("right").tcp()[:2, 3], end)
+            np.testing.assert_allclose(
+                [result["correction_args"]["to_x"], result["correction_args"]["to_y"]], end)
             self.assertEqual(api.moves, 8)
 
-    def test_angular_compensation_preserves_requested_outline(self):
+    def test_transient_pose_error_is_corrected_once_without_overshoot(self):
         for sign in (-1, 1):
             for distance in (0., .004):
                 api = API()
@@ -106,28 +299,30 @@ class TransferTests(unittest.TestCase):
                     return {"plan_ok": True, "stages": []}, 0
 
                 def measure(api, template, start, goal, angle):
-                    # A persistent release offset from the executed endpoint
-                    # and opening direction models translational/angular play.
+                    # A disturbance on the first stroke need not recur on
+                    # regrip. The old doubled correction overshoots by 3 deg
+                    # and up to 4 mm even with perfect second-stroke contact.
                     motion = calls[-1]
-                    actual = np.array([motion["to_x"], motion["to_y"]]) - lag
-                    actual_axis = motion["open_deg"] + motion["yaw"] - angular_lag
+                    disturbed = len(calls) == 1
+                    actual = np.array([motion["to_x"], motion["to_y"]]) - lag * disturbed
+                    actual_axis = motion["open_deg"] + motion["yaw"] - angular_lag * disturbed
                     desired_axis = args["open_deg"] + args["yaw"]
                     np.testing.assert_allclose(goal[:2], end)
                     if len(calls) == 2:
                         self.assertAlmostEqual(angle, angular_lag)
                     return actual, .78, actual_axis - desired_axis, .001
 
-                with patch.object(tool, "observed_surface", return_value=object()), \
+                with patch.object(tool, "observed_surface", return_value=sample_template()), \
                         patch.object(tool, "transfer", side_effect=execute), \
                         patch.object(tool, "handoff_measurement", side_effect=measure):
                     result, code = tool.run(api, "planar_transfer", args)
                 self.assertEqual(code, 0, result)
                 self.assertTrue(result["alignment_verified"])
                 self.assertEqual(len(calls), 2)
-                self.assertAlmostEqual(calls[1]["yaw"], 2 * angular_lag)
-                self.assertAlmostEqual(result["refinement_bias_yaw_deg"], angular_lag)
+                self.assertAlmostEqual(calls[1]["yaw"], angular_lag)
+                self.assertEqual(result["refinement_policy"], "measured_pose_to_original_goal")
                 np.testing.assert_allclose(
-                    [calls[1]["to_x"], calls[1]["to_y"]], end + lag)
+                    [calls[1]["to_x"], calls[1]["to_y"]], end)
 
     def test_refinement_stops_after_one_attempt_and_verifies_unbiased_goal(self):
         for failure in ("residual", "motion", "unavailable"):
@@ -137,15 +332,18 @@ class TransferTests(unittest.TestCase):
             end = np.array([args["to_x"], args["to_y"]])
             contact = end - [.006, 0.]
             effects = [(contact, .78, 0., .001)]
-            effects += ([ValueError("occluded")] if failure == "unavailable"
+            effects += ([ValueError("occluded"), ValueError("still occluded")] if failure == "unavailable"
                         else [(contact, .78, 0., .001)])
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", side_effect=effects) as measure:
                 result, code = tool.run(api, "planar_transfer", args)
             self.assertNotEqual(code, 0)
             self.assertFalse(result["alignment_verified"])
             self.assertTrue(result["refinement_attempted"])
-            self.assertLessEqual(api.moves, 8)
+            self.assertLessEqual(api.moves, 9 if failure == "unavailable" else 8)
+            if failure == "unavailable":
+                self.assertEqual(measure.call_count, 3)
+                self.assertEqual(result["plan_fail_reason"], "released_surface_unavailable")
             if failure == "residual":
                 self.assertEqual(result["plan_fail_reason"], "released_alignment_error")
                 self.assertAlmostEqual(result["correction_args"]["to_x"], end[0])
@@ -158,7 +356,7 @@ class TransferTests(unittest.TestCase):
             api.sim_time_left = lambda: remaining
             args = dict(request(), x=.15, to_x=.23, yaw=0, verify="auto")
             contact = np.array([args["to_x"] - distance, args["to_y"]])
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", return_value=(contact, .78, yaw, .001)):
                 result, _ = tool.run(api, "planar_transfer", args)
             self.assertNotIn("refinement_attempted", result)
@@ -183,7 +381,7 @@ class TransferTests(unittest.TestCase):
             args = dict(request(sign), x=sign*.15, to_x=sign*.23,
                         yaw=sign*73, verify="auto")
             end = np.array([args["to_x"], args["to_y"]])
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", side_effect=[
                         ValueError("occluded"), (end, .78, 0., .001)]):
                 result, code = tool.run(api, "planar_transfer", args)
@@ -196,7 +394,7 @@ class TransferTests(unittest.TestCase):
         api = API()
         api.arm("right").pose[2, 3] = .82
         args = dict(request(), x=.15, to_x=.23, yaw=0, verify="auto")
-        with patch.object(tool, "observed_surface", return_value=object()), \
+        with patch.object(tool, "observed_surface", return_value=sample_template()), \
                 patch.object(tool, "handoff_measurement", side_effect=ValueError("occluded")) as measure:
             result, code = tool.run(api, "planar_transfer", args)
         self.assertEqual(code, 1)
@@ -210,7 +408,7 @@ class TransferTests(unittest.TestCase):
             api = API()
             args = dict(request(), x=.15, to_x=destination, to_y=-.18,
                         yaw=0, verify="auto")
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", side_effect=[
                         ValueError("occluded"),
                         (np.array([destination, -.18]), .78, 0., .001)]) as measure:
@@ -233,7 +431,7 @@ class TransferTests(unittest.TestCase):
             # reports actual slip relative to the original requested outline.
             measurements = [(np.array([0., -.19]), .78, 0., .001),
                             ValueError("occluded"), (contact, .78, 3., .001)]
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", side_effect=measurements) as measure:
                 result, code = tool.run(api, "planar_transfer", args)
             self.assertEqual(code, 1)
@@ -267,7 +465,7 @@ class TransferTests(unittest.TestCase):
                     return code
             api = ClearanceAPI(fail_at=5 if failure == "ik" else None)
             args = dict(request(), x=.15, to_x=.23, yaw=0, verify="auto")
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", side_effect=ValueError("occluded")) as measure:
                 result, code = tool.run(api, "planar_transfer", args)
             self.assertNotEqual(code, 0)
@@ -288,9 +486,13 @@ class TransferTests(unittest.TestCase):
             delta = np.array([.007, -.004]) if slip else np.zeros(2)
             expected = (source - start) @ tool.rz(angle).T + end
             actual = (expected - end) @ tool.rz(slip).T + end + delta
-            with patch.object(tool, "observed_surface", side_effect=[
-                    (source, .78, np.array([30, 30, 230])),
-                    (actual, .78, np.array([30, 30, 230]))]):
+            surfaces = iter((source, actual))
+            def observe(api, point, color=None, camera_name="cam_head", validate=None):
+                surface = next(surfaces)
+                if validate is not None:
+                    validate(surface, .78)
+                return surface, .78, np.array([30, 30, 230])
+            with patch.object(tool, "observed_surface", side_effect=observe):
                 api = API()
                 result, code = tool.run(api, "planar_transfer", args)
             self.assertEqual(api.moves, 4)  # No verification motion.
@@ -307,7 +509,7 @@ class TransferTests(unittest.TestCase):
     def test_verification_visibility_failures_never_claim_alignment(self):
         for initial in (True, False):
             api = API()
-            effects = [ValueError("occluded")] if initial else [object(), ValueError("occluded")]
+            effects = [ValueError("occluded")] if initial else [sample_template(), ValueError("occluded")]
             with patch.object(tool, "observed_surface", side_effect=effects), \
                     patch.object(tool, "handoff_measurement", side_effect=ValueError("occluded")):
                 result, code = tool.run(api, "planar_transfer",
@@ -325,7 +527,7 @@ class TransferTests(unittest.TestCase):
             args = request(sign)
             contact = np.array([sign * .007, -.188])
             correction = sign * 9.
-            with patch.object(tool, "observed_surface", return_value=object()), \
+            with patch.object(tool, "observed_surface", return_value=sample_template()), \
                     patch.object(tool, "handoff_measurement", return_value=(contact, .781, correction, .001)):
                 result, code = tool.run(api, "planar_transfer", args)
             self.assertEqual(code, 0, result)
@@ -343,7 +545,7 @@ class TransferTests(unittest.TestCase):
 
     def test_rejected_handoff_measurement_stops_before_receiver_motion(self):
         api = API()
-        with patch.object(tool, "observed_surface", return_value=object()), \
+        with patch.object(tool, "observed_surface", return_value=sample_template()), \
                 patch.object(tool, "handoff_measurement", side_effect=ValueError("occluded")):
             result, code = tool.run(api, "planar_transfer", request())
         self.assertNotEqual(code, 0)
