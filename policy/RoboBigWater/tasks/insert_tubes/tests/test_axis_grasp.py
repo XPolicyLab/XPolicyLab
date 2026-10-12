@@ -203,6 +203,76 @@ class GraspTests(unittest.TestCase):
             self.assertEqual(api.moves, [])
             self.assertEqual(api.closures, [])
 
+    def test_accepted_high_descent_unloads_once_before_closure(self):
+        for shortfall in (.0021, .0038, .0079):
+            api = API()
+            move = api.move_tcp
+
+            def contact(arm, target, feedback):
+                code = move(arm, target, feedback)
+                if len(api.moves) == 2:
+                    arm.pose[2, 3] += shortfall
+                    arm.pose[0, 3] += .0002
+                return code
+
+            api.move_tcp = contact
+            result, code = grasp.run(api, 'axis-grasp', args())
+            self.assertEqual(code, 0, result)
+            self.assertEqual([s['stage'] for s in result['stages']],
+                             ['approach', 'descend', 'unload'])
+            self.assertEqual(api.closures, [0.])
+            np.testing.assert_allclose(api.moves[-1][:3, :3], api.moves[-2][:3, :3])
+            np.testing.assert_allclose(api.moves[-1][:3, 3],
+                                       [.1602, -.1, .783 + shortfall])
+            np.testing.assert_allclose(result['grasp_point_world'], api.a.pose[:3, 3])
+            self.assertEqual(result['requested_grasp_point_world'], [.16, -.1, .78])
+            self.assertFalse(result['grasp_verified'])
+
+    def test_unload_never_rescues_rejected_descent_or_retries(self):
+        for fault in ('descent', 'lateral', 'ik', 'tracking', 'angle', 'budget'):
+            api = API()
+            move = api.move_tcp
+
+            def contact(arm, target, feedback):
+                code = move(arm, target, feedback)
+                if len(api.moves) == 2:
+                    arm.pose[2, 3] += .024 if fault == 'descent' else .004
+                    if fault == 'lateral':
+                        arm.pose[0, 3] += .009
+                if len(api.moves) == 3:
+                    if fault == 'ik':
+                        feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                        return 2
+                    if fault == 'tracking':
+                        arm.pose[2, 3] -= .003
+                    if fault == 'angle':
+                        arm.pose[:3, :3] = Rotation.from_rotvec([.09, 0, 0]).as_matrix() @ arm.pose[:3, :3]
+                    if fault == 'budget':
+                        api.over = True
+                return code
+
+            api.move_tcp = contact
+            result, code = grasp.run(api, 'axis-grasp', args())
+            self.assertNotEqual(code, 0, result)
+            self.assertFalse(result['closed'])
+            self.assertEqual(api.closures, [])
+            self.assertEqual(len(api.moves), 2 if fault in ('descent', 'lateral') else 3)
+
+    def test_small_tracking_residual_does_not_add_motion(self):
+        api = API()
+        move = api.move_tcp
+
+        def small_residual(arm, target, feedback):
+            code = move(arm, target, feedback)
+            arm.pose[2, 3] += .001
+            return code
+
+        api.move_tcp = small_residual
+        result, code = grasp.run(api, 'axis-grasp', args())
+        self.assertEqual(code, 0, result)
+        self.assertEqual(len(api.moves), 2)
+        self.assertAlmostEqual(result['grasp_point_world'][2], .781)
+
 
 if __name__ == '__main__':
     unittest.main()

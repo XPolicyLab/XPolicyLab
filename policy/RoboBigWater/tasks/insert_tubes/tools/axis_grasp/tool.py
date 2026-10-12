@@ -3,6 +3,8 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 
+# Argument names must survive argparse normalization and literal server lookup.
+# Publish underscore flags; hyphenated declarations silently lose overrides.
 TOOL = {"name": "axis_grasp", "commands": [{
     "name": "axis-grasp", "budget": True,
     "help": "Grasp a horizontal feature with fingers perpendicular to its axis",
@@ -10,14 +12,14 @@ TOOL = {"name": "axis_grasp", "commands": [{
         {"name": name, "type": "float", "required": True}
         for name in ("x", "y", "z", "ax", "ay")
     ] + [{"name": "clearance", "type": "float", "default": .035},
-         {"name": "rotation-clearance", "type": "float", "default": .10},
+         {"name": "rotation_clearance", "type": "float", "default": .10},
          {"name": "speed", "type": "float", "default": 2.0}]
 }]}
 
 
 # Explicit bounded hold duration; Arm.gripper() is a command, not a sensor.
 TOOL["commands"][0]["args"].append(
-    {"name": "gripper-steps", "type": "int", "default": 6})
+    {"name": "gripper_steps", "type": "int", "default": 6})
 
 
 def command_gripper(api, arm, value, steps):
@@ -54,9 +56,57 @@ def timed_move(api, arm, target, feedback, speed):
             setattr(motion, name, value)
 
 
+def checked_grasp_chain(api, arm, initial, targets, turning, speed):
+    """Check complete approach alternatives before spending motion steps.
+
+    Estimates are IK-only. Preserve the same clearance and grasp point for
+    both finger symmetries; never execute a reachable prefix of a dead end.
+    """
+    prefix = targets[:-2]
+    above, descend = targets[-2][1], targets[-1][1]
+    candidates = [targets]
+    rotations = [above[:3, :3].copy()]
+    if turning:
+        alternate = above[:3, :3].copy()
+        alternate[:, 1:3] *= -1
+        rotations.append(alternate)
+        high, low = above.copy(), descend.copy()
+        high[:3, :3] = low[:3, :3] = alternate
+        candidates.append(prefix + [('approach', high), ('descend', low)])
+    for rotation in rotations:
+        orient = (prefix[-1][1] if prefix else initial).copy()
+        orient[:3, :3] = rotation
+        high, low = above.copy(), descend.copy()
+        high[:3, :3] = low[:3, :3] = rotation
+        candidates.append(prefix + [('align', orient), ('approach_split', high),
+                                    ('descend', low)])
+    report = {'attempts': [], 'selected': None, 'collision_checked': False,
+              'grasp_verified': False}
+    motion = getattr(api, 'motion', None)
+    names = ('MAX_LINEAR_SPEED', 'MAX_ANGULAR_SPEED', 'MAX_JOINT_SPEED')
+    original = {name: getattr(motion, name) for name in names} if motion else {}
+    try:
+        for name, value in original.items():
+            setattr(motion, name, value * speed)
+        for index, candidate in enumerate(candidates):
+            estimate = api.estimate_tcp_chain(
+                arm, [(name, pose.copy()) for name, pose in candidate])
+            report['attempts'].append({
+                'candidate': index, 'estimate_ok': estimate.get('estimate_ok') is True,
+                'failed_stage': estimate.get('failed_stage'), 'reason': estimate.get('reason')})
+            if estimate.get('estimate_ok') is True:
+                report['selected'] = index
+                return candidate, report
+        return [], report
+    finally:
+        for name, value in original.items():
+            setattr(motion, name, value)
+
+
 def run(api, command, args):
     stages = []
     closed = False
+    preflight = None
     try:
         if command != "axis-grasp" or args.get("arm") not in ("left", "right"):
             raise ValueError("unknown command or arm")
@@ -104,6 +154,12 @@ def run(api, command, args):
         targets += [("approach", above), ("descend", descend)]
         if api.over:
             raise ValueError("episode_over")
+        if callable(getattr(api, 'estimate_tcp_chain', None)):
+            targets, preflight = checked_grasp_chain(
+                api, arm, initial, targets, turning, speed)
+            if not targets:
+                return dict(plan_ok=False, plan_fail_reason='grasp_chain_unreachable',
+                            stages=stages, closed=False, preflight=preflight), 1
         if arm.gripper() < .99:
             command_gripper(api, arm, 1., gripper_steps)
         for index, (name, target) in enumerate(targets):
@@ -113,7 +169,7 @@ def run(api, command, args):
             before = np.asarray(arm.tcp()).copy()
             code = timed_move(api, arm, target.copy(), feedback, speed)
             actual = np.asarray(arm.tcp())
-            if (name in ("approach", "approach_alternate") and feedback.get("plan_ok") is False
+            if (preflight is None and name in ("approach", "approach_alternate") and feedback.get("plan_ok") is False
                     and feedback.get("plan_fail_reason") == "ik_unreachable"
                     and np.allclose(actual, before, atol=1e-6) and not api.over):
                 # Parallel fingers admit two equivalent top-down orientations.
@@ -139,16 +195,32 @@ def run(api, command, args):
             error = float(np.linalg.norm(actual[:3, 3] - target[:3, 3]))
             angle = float(Rotation.from_matrix(actual[:3, :3] @ target[:3, :3].T).magnitude())
             stages.append(dict(stage=name, error_m=error, angle_error_rad=angle, feedback=feedback))
-            if code or feedback.get("plan_ok") is False or error > .008 or angle > .08 or api.over:
+            position_limit = .002 if name == "unload" else .008
+            if code or feedback.get("plan_ok") is False or error > position_limit or angle > .08 or api.over:
                 return dict(plan_ok=False, plan_fail_reason=feedback.get("plan_fail_reason") or
                             ("episode_over" if api.over else "tracking_error"), stages=stages,
-                            closed=False), code or 1
+                            closed=False, preflight=preflight), code or 1
+            if (name == "descend" and actual[2, 3] - target[2, 3] > .002
+                    and np.linalg.norm(actual[:2, 3] - target[:2, 3]) <= .003):
+                # An accepted descent can still be pressing into a surface.
+                # Holding its lower joint target during closure sustains that
+                # preload. Unload once, vertically at fixed orientation; never
+                # reinterpret a rejected descent as a successful grasp.
+                unload = target.copy()
+                unload[:2, 3] = actual[:2, 3]
+                unload[2, 3] = actual[2, 3] + .003
+                targets.insert(index + 1, ("unload", unload))
         command_gripper(api, arm, 0., gripper_steps)
         closed = True
+        reached = np.asarray(arm.tcp(), dtype=float)
+        if reached.shape != (4, 4) or not np.isfinite(reached).all():
+            raise ValueError("invalid TCP pose after closure")
         return dict(plan_ok=not api.over, plan_fail_reason="episode_over" if api.over else None,
-                    stages=stages, closed=True, grasp_point_world=goal.tolist(),
+                    stages=stages, closed=True, preflight=preflight,
+                    grasp_point_world=reached[:3, 3].tolist(),
+                    requested_grasp_point_world=goal.tolist(),
                     axis_world=(np.r_[axis, 0.] / np.linalg.norm(axis)).tolist(),
                     grasp_verified=False), int(api.over)
     except Exception as exc:
         return dict(plan_ok=False, plan_fail_reason="grasp_failed", plan_detail=str(exc),
-                    stages=stages, closed=closed), 1
+                    stages=stages, closed=closed, preflight=preflight), 1

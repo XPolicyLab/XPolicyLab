@@ -1,37 +1,33 @@
-# insert_tubes playbook
+# insert_tubes playbook — RGB run, 2026-10-12
 
-Development evidence: eight successful layouts, 433–482 action steps (17.32–19.28 s at 25 Hz); budget 500 steps.
-These are results across successive tool versions, not a replay of every layout with the final tools.
+Five layouts passed across successive versions: 2, 3, 4, 5, 7; layouts 0, 1, 6, 9 failed and 8 ended as infrastructure status. This is not a final-version retest.
+The eight archived episodes contain five successes; older 8/10 results belong to the preceding run.
+Budget: 500 action steps at 25 Hz (20 s). Read-only perception consumes no action steps.
 
-1. Read `obs`; seed `locate-feature body` on each visible colored body and `locate-feature openings` near the rack surface.
-2. Start with head camera, radius 12, color tolerance 65, minimum recess depth 0.03 m; one failed body seed recovered with radius 6 and a nearby pixel (layout 4), costing no action steps.
-3. Select separate, visibly wide openings using measured rim centers, spans and recess depths; successful later episodes measured about 0.052–0.059 m recess. Wall-hit depth is not guaranteed vertical clearance.
-4. Use the arm on the source side. Successful orders included left then right inner/outer, two left then right, and all-right near/inner/outer. No fixed source order fits all layouts.
-5. Run `axis-grasp` then `rigid-place` for each body before the next grasp. Successful grasps generally shifted 0.020–0.025 m from the visible center toward an end; confirm the full midpoint separately.
-6. Grasp settings: speed 2, clearance 0.035 m, rotation-clearance 0.10 m, gripper-steps 6 (later successes). Elevated turns and fixed-orientation descent reduce finger sweep through nearby bodies.
-7. Inspect head/wrist observations after grasping. Returned grasp geometry is an echo, and closure is not verified retention; layout 0 executed an empty placement despite plan_ok=true.
-8. Placement inputs describe the current full midpoint and signed axis; axis maps to +Z and its negative end goes down. Grasp axis sign is arbitrary; do not blindly copy its sign to placement.
-9. Successful supplied full lengths were 0.115–0.120 m; visible colored extents are shorter. Use measured current geometry, never stored episode coordinates or simulator origins.
-10. Placement settings: speed 2, clearance 0.025 m, TCP clearance 0.04 m, depth 0.03–0.04 m, release 1, release-engagement 0.25, retreat 0.06 m, gripper-steps 6.
-11. Check effective_depth_m against minimum_release_depth_m and inspect yaw_selection; 65 mm observed rear clearance is a selection target, not guaranteed collision freedom.
-12. Let guarded release complete its straight withdrawal. Routine intermediate homing costs time; reserve a final return after placements remain seated.
-13. After a motionless IK rejection, inspect stages and current TCP before recovery. Layouts 3/5/8 recovered with one backward/upward translation (19–20 steps) and a midpoint updated by the reached displacement.
-14. Those translations were 0.07–0.08 m backward and 0.03–0.04 m upward in those scenes; choose displacement from current clearance, not as a universal waypoint. Stop on executed tracking failure and reassess retention.
-15. Insufficient engagement requires changed grasp geometry or reassessment. Layout 7 bypassed the guard with retained placement plus separate opening; its successful shallow drop is not a reliable general recovery.
-16. Historical lower TCP-clearance/engagement requests still reported defaults 0.04 m/0.25; inspect effective feedback rather than assuming a requested override took effect.
-17. Seven successful episodes used base `home both`; layout 7 used `return-home both --speed 2`. Its auto-success interrupted return at 13/30 planned steps with 0.765 rad remaining right joint error.
-18. Successful final base returns consumed 20–34 steps; leave additional margin for recovery. An ended episode rejects further commands; auto-success does not prove full homing.
+1. Inspect `obs` in head and available wrist views; localize bodies and separate openings with `locate-feature body/openings` (head, radius 12, color_tolerance 65, min_depth 0.03).
+2. Cross-check implausible depth geometry with calibrated `stereo-feature point/body/line/segment`; body/line extents exclude hidden or differently colored ends. Failed correspondence or clipped-region checks are free; change the measurement, not motion coordinates by guesswork.
+3. Measure the rim surface, not an interior point. Successful runs used stereo rim points and constrained `locate-feature opening/openings --height`; later `stereo-feature plane` measures a complete rectangular outer surface but has no success-run validation here.
+4. Use current full endpoints, midpoint, length and signed axis. Successful constrained heights were episode estimates, not reusable constants. Check height sensitivity and `depth_verified`; remeasure after displacement or suspected slip.
+5. Resolve polarity explicitly: rigid placement maps the positive end upward and negative end downward. Chromatic-end evidence can resolve `locate-feature segment` sign; `input_order_unresolved` and arbitrary stereo signs are not physical end identity.
+6. Use the source-side arm and complete each grasp/place before the next. Successful orders vary; all-right execution worked on layout 3. Typical successful grasp offsets were 14–24 mm toward the capped end, with the full midpoint supplied separately.
+7. `axis-grasp`: speed 2, clearance 0.035 m, rotation_clearance 0.10 m, gripper_steps 6. Inspect reached pose, `closed` and images; `grasp_verified=false` means retention still needs observation.
+8. `rigid-place`: speed 2, clearance 0.025 m, depth 0.035–0.043 m, tcp_clearance 0.020–0.035 m, release 1, release_engagement 0.25, retreat 0.060 m, gripper_steps 6. These are observed successful requests, not guarantees for new geometry.
+9. Successful supplied lengths were 0.115–0.130 m; measure the full span rather than inflating length to pass the release guard. Confirm `effective_depth_m >= minimum_release_depth_m`; both assume correct geometry and rigid retention.
+10. Inspect preflight, stages, yaw clearance and terminal-alignment diagnostics. A 65 mm rear-hand clearance target or accepted IK chain does not certify collision freedom. Missing terminal views preserve supplied geometry; they do not verify alignment.
+11. Let guarded release finish straight withdrawal, then inspect all placements. On motionless planning rejection, reassess the failed stage and current geometry; on executed tracking failure, reassess contact/retention before any recovery.
+12. Avoid routine intermediate homes. Layouts 5/7 required peer returns costing 23/30 steps; reserve time for final return and settling. Successful final returns consumed 12–17 steps before episode termination, which may interrupt homing.
+13. Do not generalize manual release bypasses: layouts 5/7 passed after yaw/descent/open recovery, but layout 5's descent still missed by 69.4 mm. Accurate TCP motion and an upright image do not establish evaluator completion.
+14. Use underscore flags (`--tcp_clearance`, `--release_engagement`, `--rotation_clearance`, `--gripper_steps`, `--color_tolerance`, `--min_depth`); earlier hyphenated declarations silently lost overrides.
 
-| Layout | Source order / exception | Recorded commands / motion attempts | Action steps | Seconds |
-|---|---|---:|---:|---:|
-| 1 | Left, right outer, right remaining; no retry | 12 / 7 | 472 | 18.88 |
-| 2 | Left, right inner, right outer; internal opposite-orientation grasp fallback | 12 / 7 | 482 | 19.28 |
-| 3 | Right near, upper inner, outer; one move and placement retry | 14 / 9 | 470 | 18.80 |
-| 4 | Left outer, left remaining, right; one free perception retry | 13 / 7 | 433 | 17.32 |
-| 5 | Left, right inner, right outer; one move and placement retry | 14 / 9 | 455 | 18.20 |
-| 6 | Upper left, lower left, right; no retry | 12 / 7 | 449 | 17.96 |
-| 7 | Left shallow drop/home, right inner, right outer; two zero-step rejections | 16 / 11 | 471 | 18.84 |
-| 8 | Left, right inner, right outer; one move and placement retry | 14 / 9 | 457 | 18.28 |
+| Layout / RGB round | Source → destination order | Recorded / perception / motion attempts | Steps / seconds | Exception |
+|---|---|---:|---:|---|
+| 2 / R16 | Left→left, right inner→middle, right outer→right | 23 / 15 / 7 | 494 / 19.76 | Internal lift recovery; only 6 steps spare |
+| 3 / R18 | Right upper inner→middle, lower→left, outer→right | 28 / 20 / 7 | 438 / 17.52 | Eight free perception failures; internal lift recovery |
+| 4 / R19 | Left outer→left, right→right, left remaining→middle | 22 / 12 / 9 | 479 / 19.16 | First descent stopped 10.93 mm high; inspected +4 mm move and separate close |
+| 5 / R20 | Left→left, right inner→right, right outer→middle | 32 / 19 / 12 | 492 / 19.68 | Peer home, retry, tracking failure, manual yaw/descent/open |
+| 7 / R26 | Left→left, right inner→right, right outer→middle | 28 / 15 / 12 | 485 / 19.40 | Peer return, retry, 54.43 mm lowering error, manual yaw/descent/open |
 
-Recorded commands include perception; motion attempts include zero-step planning failures. All successes began with obs and four locator calls, plus the extra locator retry on layout 4.
-Layout 0 ended at 494 steps/40% after a missed final grasp; layout 9 ended at 500 steps/40% despite final release at step 488. Neither completion claims nor upright appearance substitute for the episode result.
+Counts come from commands.md; recorded totals include one initial observation, motion attempts include zero-step failures, and internal stages are not separate commands.
+Common sequence: observation → locate/stereo geometry → (axis-grasp → rigid-place) ×3 with fresh perception as needed → final home.
+Layouts 2/3/5/7 used final `home both`; layout 4 used `return-home both --speed 2`, interrupted at 15/31 planned steps with about 0.61 rad joint error.
+Layout 7's intermediate `return-home left --speed 2` completed all 30 steps; its final base home ended after 12 steps. Report episode success separately from completed homing.

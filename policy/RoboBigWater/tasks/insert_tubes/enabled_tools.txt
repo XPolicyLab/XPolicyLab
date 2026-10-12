@@ -3,3 +3,4 @@ locate_feature
 rigid_place
 axis_grasp
 return_home
+stereo_feature

@@ -1,47 +1,47 @@
-# insert_tubes tool development
+# insert_tubes tool development — RGB run
 
-Observed outcome: 8/10 development layouts passed across successive versions; layouts 0 and 9 scored 40%. The final tool set was not rerun across all layouts.
-Enabled tools: locate_feature, axis_grasp, rigid_place, return_home. Runtime geometry comes from caller arguments and public EpisodeAPI observations/robot state, never simulator object poses.
-
-- Perception: calibrate RGB-D back-projection and test camera aliases against the real observation contract. Fit each connected colored rim separately; expose aperture spans and median/quartile recess depth.
-- Geometry: visible colored centers differ from full midpoints and simulator origins. Preserve the current rigid grasp offset through tilt, yaw, transfer and descent; remeasure after suspected slip.
-- Execution: align finger opening perpendicular to the measured axis, clear rotating fingers, lower at fixed orientation, require support engagement and withdraw straight after opening.
-- Verification: planner acceptance, reached TCP, retained grasp and stable support are distinct. Gates are 8 mm/0.08 rad; closure alone never verifies retention.
-- Recovery: exploit equivalent grasp orientations, then bounded path decomposition or alternative observed yaws only after IK rejection without motion. Preserve original destination geometry and stop after partial execution or tracking failure.
-- Occupancy: depth-selected yaw helps avoid neighboring placements; 65 mm rear clearance is heuristic, occlusion remains, and the best available corridor can miss the target. Report that shortfall.
-- Timing: shorten paths and fixed dwell costs while preserving settling/checks. Six gripper holds reduced from 12 to 6 steps save 36 steps/1.44 s; speed 2 and an explicit final-return reserve mattered.
-- Limits: commanded-open is not measured-empty; joint homing and source-shift recovery lack obstacle planning. Expanded yaw and added recovery stages did not establish layout-9 success.
-- Testing: development logs report 47 local unittest methods after round 29, covering synthetic perception, rigid transforms, fake-API failure gates, bounded retries and timing restoration; these do not establish physical success.
+Outcome: layouts 2/3/4/5/7 passed, 0/1/6/9 failed, 8 has final infrastructure status. Five of eight archived episodes passed; successful episodes used 438–494/500 steps. Final tools were not retested across all layouts.
+Enabled: locate_feature, stereo_feature, axis_grasp, rigid_place, return_home. Runtime inputs are caller geometry and public EpisodeAPI observations/robot state/IK estimates; simulator object poses are analysis-only.
+RGB-derived depth is unreliable on thin bodies, boundaries and wrist views. Region/support constraints and calibrated RGB triangulation improve measurement, but assumed heights and incomplete colored spans remain unverified geometry.
+Full midpoint, visible center, grasp point and simulator origin differ. Preserve the measured grasp transform; verify signed endpoint identity and reacquire geometry after displacement or slip.
+IK acceptance, reached TCP, retained grasp, engagement and stable seating are separate claims. Motion gates remain 8 mm/0.08 rad; rigid engagement is a prediction, not observed insertion depth.
+Preflight complete paths before costly prefixes. Bound recovery families, stop after partial/tracking failure, and rank valid candidates by estimated motion cost without relaxing clearance or release gates.
+Depth yaw/transit clearance and hand masks are heuristics: occluded contacts and biased high tops remain unresolved. Extra recovery headings did not establish layout-9 success.
+Straight withdrawal reduces sweeping near earlier placements; commanded-open is not measured-empty. Joint home can disturb the scene and automatic success can interrupt it.
+Successful runs support constrained geometry, aligned end-offset grasps and internal recovery; manual release bypasses in layouts 5/7 do not establish a safe general procedure.
+Local synthetic tests cover projection, polarity, rigid transforms, argument parsing, fake-API gates, bounded retries and timing restoration. R35 reports 138 distinct tests covered; this is not physical or final-version evaluation evidence.
 
 ## Development log
 
-All entries dated 2026-10-02; round numbers preserve the development sequence.
-- 2026-10-02, R1: 55 mm grasp offset and guessed descent collision → added free RGB-D body/rim localization; synthetic geometry checks passed.
-- 2026-10-02, R2: seven camera lookup failures → resolve head/wrist aliases and validate calibration/depth; nine alias cases covered.
-- 2026-10-02, R3: 35 mm blocked descent and below-rim transfer → added rigid_place with grasp-offset transforms, sweep clearance and reached-pose gates.
-- 2026-10-02, R4: oblique grasp shifted source 32 mm → added axis_grasp; combined cleared rotation/transfer, TCP depth cap and motionless-IK split fallback.
-- 2026-10-02, R5: successful cycles cost 8.36 s → bounded motion-speed scaling and shorter approach; scoped timing restoration retained settling.
-- 2026-10-02, R6: final grasp displaced source 110 mm → 0.10 m turning clearance and vertical fixed-orientation descent; low TCP error had missed free-object collision.
-- 2026-10-02, R7: released bodies displaced on departure → 0.06 m straight post-release withdrawal; shallow support remained a separate issue.
-- 2026-10-02, R8: 13 failed opening measurements → connected chromatic rims and multi-opening output; avoid mixed surfaces and truncated enclosures.
-- 2026-10-02, R9: inward withdrawal and probable arm interference → source-facing yaw applied to the complete rigid transform; no added motion.
-- 2026-10-02, R10: final lowering blocked 53.9 mm above target → observed-depth rear-hand corridor search; source yaw alone ignored neighbors.
-- 2026-10-02, R11: layout 1 passed in 472 steps; aligned grasps, selected yaw and straight withdrawals worked together.
-- 2026-10-02, R12: final grasp hit a 2.42 rad joint jump → try equivalent opposite finger orientation before split fallback; no retry after motion failure.
-- 2026-10-02, R13: withdrawal ended at step 481 → configurable six-step gripper holds; commanded gripper values cannot support adaptive retention sensing.
-- 2026-10-02, R14: withdrawal still ended at step 490 → default speed 2 and simultaneous return_home with 0.03 rad final-joint check.
-- 2026-10-02, R15: layout 2 passed in 482 steps; opposite-orientation fallback worked, base home used, only 18 steps remained.
-- 2026-10-02, R16: 22 mm engagement tipped after tracked lowering → require configurable release fraction (default 0.25 of full length), reporting achievable depth before opening.
-- 2026-10-02, R17: repeated ejection at one destination despite 32 mm requested depth → median recess filter, default 30 mm; observed depth is not guaranteed free volume.
-- 2026-10-02, R18–21: layouts 3–6 passed in 470/433/455/449 steps; two used one bounded manual translation and updated held geometry; layout 4 retried perception for free.
-- 2026-10-02, R22: 16.93 mm blocked lowering with 52.14 mm selected clearance → expand yaw beyond source half-plane below 65 mm, report unmet target.
-- 2026-10-02, R23–24: layouts 7/8 passed in 471/457 steps; selected yaws remained in source half-plane, so benefit of wider yaw was unproven. Layout 7 bypassed release guard and ended mid-home.
-- 2026-10-02, R25: coupled upright/yaw IK rejection → minimal upright intermediate orientation before original transfer; preserve endpoints and stop gates.
-- 2026-10-02, R26: 146 mm horizontal lift rejected → lower source-sweep clearance, upright tilt, then rise to original transfer height; separate source and destination constraints.
-- 2026-10-02, R27: upright alignment succeeded but fixed-yaw transfers rejected → at most four separated observed-clear alternative yaws, recomputing full rigid targets.
-- 2026-10-02, R28: nearby open peer obstructed approach → one eligible peer return, fresh depth and replanning with active-hand drift checks; never reuse stale obstacles.
-- 2026-10-02, R29: source tilt rejected on 2.94 rad wrist jump → one backward signed-axis shift plus tilt, bounded by min(0.75 length, 0.10 m), with original final geometry; 47 local tests reported.
-- 2026-10-02, R30: final layout-9 trace parked peer for 32 steps, used source-upright and alternative-yaw recovery, and released at step 488; final placement cost 155 steps/6.20 s, episode failed at 500. Source-shift recovery was not exercised.
-- 2026-10-02, R30: distilled final documentation and interface contracts; no motion-code changes or evaluations. Historical low clearance/engagement overrides reported defaults, while current run() accepts lower values; treat this as an unresolved argument/feedback discrepancy, not a guaranteed clamp.
+- 2026-10-02–03, inherited run: developed RGB-D localization, axis-aligned grasp, rigid placement, yaw clearance, straight departure, six-step gripper holds and fast return; earlier final retest was 8/10. Keep this evidence separate from the RGB run below.
+- 2026-10-11, RGB R1: eight localization rejections → caller-height RGB projection and endpoint segment mode; return height sensitivity and unverified depth/occupancy rather than guessing scene constants.
+- 2026-10-11, RGB R2: uncertain heights and stale offsets → calibrated point/segment stereo; reject weak baselines, ray inconsistency and excessive pixel sensitivity without motion.
+- 2026-10-11, RGB R3: requested 0.015 m TCP clearance silently became 0.04 → underscore argument declarations and real client/server contract tests; repaired override loss without relaxing gates.
+- 2026-10-11, RGB R4: six of seven manual stereo matches failed → seeded body-region stereo with unique endpoint pairing; visible length remains partial and sign arbitrary.
+- 2026-10-11, RGB R5: earlier placement moved during a command beginning with peer joint home → bounded fixed-orientation outward peer withdrawal; snapshots suggest, but do not prove, a sweep collision.
+- 2026-10-11, RGB R6: clipped peer silhouette forced assumed geometry → line stereo using an unclipped primary span and peer centerline; bounded extrapolation, no full-length claim.
+- 2026-10-11, RGB R7: accepted descent stopped 3.76 mm high and closure missed → one conditional 3 mm unload above reached height; report reached grasp point, never verified retention.
+- 2026-10-11, RGB R8–9: rejected yaw then 74.36 mm transfer error → choose nearby observed-clear alternative headings; avoid excess lift by using horizontal offset for rotation sweep.
+- 2026-10-11, RGB R10: released-body withdrawal hit a joint jump → one same-line midpoint split after motionless IK rejection; no joint-home fallback or retry after executed failure.
+- 2026-10-11, RGB R11: localization failures preceded empty transports → neutral silhouette plus surrounding support-plane fallback; infer radius from width, reject ambiguous/sloped support.
+- 2026-10-11, RGB R12: planned 33 mm engagement hid a 4.09 mm high stop → recompute engagement at reached TCP before release; fail closed below the minimum.
+- 2026-10-11, RGB R13–14: large recovery turn tracked poorly and support fitting rejected noisy depth → separate turns over 30° from transfer; require agreement between spatial support bands.
+- 2026-10-11, RGB R15: transfer disturbed an earlier placement → observed obstacle-top transit floor plus rigid sweep margin; clearance is still not a collision certificate.
+- 2026-10-11, RGB R16: layout 2 passed, 23 recorded commands/494 steps; internal source recovery and constrained geometry worked, leaving 6 steps spare.
+- 2026-10-11, RGB R17: repeated high-lift failures plausibly included the active hand in depth obstacles → orientation-aware rear-hand capsule mask; nearby surfaces may also be masked.
+- 2026-10-11, RGB R18–20: layouts 3/4/5 passed in 438/479/492 steps; layout 4 recovered a failed descent, layout 5 bypassed a failed lowering guard manually. Success does not validate those recoveries generally.
+- 2026-10-11, RGB R21: successful tilt followed by unreachable rise → estimate complete source-recovery chains with bounded yaw alternatives before executing their prefixes.
+- 2026-10-11, RGB R22: accurate TCP placement inverted an input-order axis → endpoint RGB votes resolve sign toward the distinct chromatic end; unresolved appearance retains an explicit warning.
+- 2026-10-11, RGB R23: predicted engagement disagreed with physical seating → optional two-view endpoint alignment, one 3–25 mm lateral correction; larger resolved residuals fail closed, missing views retain supplied geometry.
+- 2026-10-11, RGB R24–25: direct lift stranded a held body; existing factorization missed yaw-first paths → preflight through lowering before active lift and add bounded yaw-before-tilt candidates. Layout 6 still failed.
+- 2026-10-12, RGB R26: layout 7 passed in 28 commands/485 steps; peer return completed, final placement tracked poorly and manual release bypassed the guard. Terminal alignment remained unresolved.
+- 2026-10-12, RGB R27: an interior point was about 14.5 mm below the rim → stereo outer-rectangle plane fit, excluding interiors; complete matching boundaries are required.
+- 2026-10-12, RGB R28–29: rejected peer withdrawal caused a 32-step home detour; source turns could not continue → peer-line/split preflight and bounded transfer-before-turn chains. No success established.
+- 2026-10-12, RGB R30: estimated chain passed but reached-state source tilt rejected → re-estimate one midpoint turn plus the full remainder from measured state; no retry after partial motion. Layout 8 ultimately has infrastructure status.
+- 2026-10-12, RGB R31–32: full-height yaw-first paths and original-source tilt failed → shorter-source yaw-first and bounded outward source-shift preflights, preserving destination/transit/release constraints.
+- 2026-10-12, RGB R33: grasp alignment spent 22 steps before unreachable translation → preflight complete grasp chains for both finger symmetries and split paths; actual episode savings unverified.
+- 2026-10-12, RGB R34: placements cost 115/105/106 steps, leaving 15 for home → rank reachable headings within the first eligible recovery family by complete estimated motion cost; unknown first cost preserves legacy order.
+- 2026-10-12, RGB R35: unresolved endpoint votes propagated into placement → compact chromatic-component fallback with neutral shaft/opposite-end evidence; preserve projected geometry and reject ambiguous appearance. Height bias, slip, tracking and budget remain unresolved.
+- 2026-10-12, RGB R36: distilled final playbook, interfaces and development log; corrected inherited outcome claims against focus/archived episodes. Documentation-only checks; no tool behavior changes, evaluation or server run.
 
-- Final retest 2026-10-03 (official motion timing only; final tools, one run per layout, no optimizer): retest passed: 8 / 10
+- Final retest 2026-10-12 (final tools, one run per layout, no optimizer): retest passed: 2 / 10
