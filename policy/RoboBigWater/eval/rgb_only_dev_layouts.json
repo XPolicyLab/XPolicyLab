@@ -21,13 +21,13 @@
     "progress_score": 57.0
    },
    "Open": {
-    "success_rate": 40.0,
-    "progress_score": 43.9
+    "success_rate": 45.0,
+    "progress_score": 48.1
    }
   },
   "leaderboard_formula": {
-   "success_rate": 25.6,
-   "progress_score": 31.7
+   "success_rate": 26.6,
+   "progress_score": 32.5
   },
   "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
@@ -35,7 +35,8 @@
   },
   "reevolved_tasks": [
    "align_blocks",
-   "press_by_number"
+   "press_by_number",
+   "stack_blocks_by_language"
   ]
  },
  "variants": [
@@ -2354,7 +2355,7 @@
      "steps": 337
     }
    ],
-   "tools": "re-evolved with estimated depth (2026-10-12)"
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "swap_T",
@@ -2628,7 +2629,7 @@
      "steps": 115
     }
    ],
-   "tools": "re-evolved with estimated depth (2026-10-12)"
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "classify_objects_by_language",
@@ -3090,91 +3091,92 @@
    "variant": "stack_blocks_by_language",
    "type": "Open",
    "episodes": 10,
-   "success": 3,
-   "success_rate": 30.0,
-   "progress_score": 40.0,
+   "success": 7,
+   "success_rate": 70.0,
+   "progress_score": 74.0,
    "per_layout": [
     {
      "layout": 0,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 18,
-     "steps": 353
+     "commands": 7,
+     "steps": 351
     },
     {
      "layout": 1,
-     "success": false,
-     "progress": 20.0,
-     "end_reason": "sim_time",
-     "commands": 5,
-     "steps": 400
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 198
     },
     {
      "layout": 2,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 5,
-     "steps": 397
+     "commands": 2,
+     "steps": 179
     },
     {
      "layout": 3,
      "success": false,
-     "progress": 0.0,
+     "progress": 20.0,
      "end_reason": "done",
-     "commands": 3,
-     "steps": 261
+     "commands": 5,
+     "steps": 259
     },
     {
      "layout": 4,
-     "success": false,
-     "progress": 20.0,
-     "end_reason": "agent_exit",
-     "commands": 9,
-     "steps": 381
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 188
     },
     {
      "layout": 5,
-     "success": false,
-     "progress": 20.0,
-     "end_reason": "done",
-     "commands": 6,
-     "steps": 221
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 184
     },
     {
      "layout": 6,
      "success": false,
-     "progress": 20.0,
-     "end_reason": "sim_time",
-     "commands": 7,
-     "steps": 400
+     "progress": 0.0,
+     "end_reason": "agent_exit",
+     "commands": 8,
+     "steps": 393
     },
     {
      "layout": 7,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 6,
-     "steps": 309
+     "commands": 2,
+     "steps": 192
     },
     {
      "layout": 8,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "agent_exit",
-     "commands": 10,
-     "steps": 322
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 231
     },
     {
      "layout": 9,
      "success": false,
      "progress": 20.0,
      "end_reason": "agent_exit",
-     "commands": 4,
-     "steps": 317
+     "commands": 6,
+     "steps": 389
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "store_tools_in_toolbox",

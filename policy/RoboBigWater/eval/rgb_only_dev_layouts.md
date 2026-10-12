@@ -2,7 +2,7 @@
 
 Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses). Depth is estimated inside the policy server by Depth Anything V2 (Metric-Indoor-Base) with its scale fixed from the known table height; the simulator's depth is never read. Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered `_random` 0-4), one episode per layout with frozen tools, no optimizer, official success and progress checkers.
 
-Tools: 40 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). `press_by_number` and `align_blocks` carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file will be updated as they finish.
+Tools: 39 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). 3 tasks (`align_blocks`, `press_by_number`, `stack_blocks_by_language`) carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file is updated as they finish.
 
 ## Summary (leaderboard formula: mean of the five task types; Generalization = mean of standard and cluttered)
 
@@ -12,17 +12,18 @@ Tools: 40 tasks carry the tools developed earlier with rendered depth, unchanged
 | Precision | 6.2 | 9.1 |
 | Long-Horizon | 5.0 | 21.8 |
 | Memory | 53.3 | 57.0 |
-| Open | 40.0 | 43.9 |
-| **Overall** | **25.6** | **31.7** |
+| Open | 45.0 | 48.1 |
+| **Overall (leaderboard formula)** | **26.6** | **32.5** |
 
 Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 
 ## Re-evolved tasks
 
-| Task | Before (earlier tools) | After re-evolution | Progress score after |
-|---|---:|---:|---:|
-| align_blocks | 5/10 | 9/10 | 90.0 |
-| press_by_number | 0/10 | 10/10 | 100.0 |
+| Task | Earlier tools | Re-evolved (frozen retest) |
+|---|---:|---:|
+| align_blocks | 5/10 | 9/10 |
+| press_by_number | 0/10 | 10/10 |
+| stack_blocks_by_language | 3/10 | 7/10 |
 
 ## Per variant (seed 0, 10 episodes per task; 5 + 5 for Generalization tasks)
 
@@ -72,7 +73,7 @@ Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 | Open | pick_from_conveyor_by_image | 1/10 | 10.0 |
 | Open | pour_by_language | 2/10 | 20.0 |
 | Open | solve_equation | 8/10 | 80.0 |
-| Open | stack_blocks_by_language | 3/10 | 40.0 |
+| Open | stack_blocks_by_language | 7/10 | 74.0 |
 | Open | store_tools_in_toolbox | 0/10 | 0.0 |
 | Precision | build_tower | 0/10 | 1.0 |
 | Precision | deposit_coin | 0/10 | 0.0 |

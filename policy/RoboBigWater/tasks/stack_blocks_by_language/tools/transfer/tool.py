@@ -37,6 +37,214 @@ TOOL["commands"].append({"name": "transfer_many", "budget": True, "args": [
 ]})
 
 
+TOOL["commands"].append({"name": "solid", "budget": False, "args": [
+    arg("u", required=True), arg("v", required=True), arg("size", .035),
+    arg("elevation", 0.), arg("plane_z", None), arg("camera", "head", kind="str")]})
+for command in TOOL["commands"]:
+    if command["name"] in ("transfer", "transfer_many"):
+        command["args"].append(arg("z_mode", "surface", kind="str"))
+
+TOOL["commands"].append({"name": "transfer_pixels", "budget": True, "args": [
+    {"name": "arm", "positional": True, "choices": ["left", "right"]},
+    *[arg(k, required=True) for k in ("u", "v", "to_u", "to_v")],
+    arg("size", .035), arg("elevation", 0.), arg("to_elevation", 0.),
+    arg("camera", "head", kind="str"), arg("clearance", .045),
+    arg("carry_clearance", .01), arg("open", "x", kind="str"),
+    arg("approach", "auto", kind="str"), arg("arm_policy", "auto", kind="str")
+]})
+
+
+def transfer_pixels(api, args):
+    """Bind current image measurements directly to center-mode execution."""
+    measurements = []
+    for prefix in ("", "to_"):
+        result, code = solid(api, dict(u=args[prefix+"u"], v=args[prefix+"v"],
+            size=args.get("size", .035), elevation=args.get(prefix+"elevation", 0.),
+            camera=args.get("camera", "head")))
+        if code:
+            return dict(result, measurement=prefix or "source", released=False), code
+        measurements.append(result)
+    source, support = measurements
+    if np.linalg.norm(np.array(source["center_xyz"])-support["center_xyz"]) < source["size"]*.8:
+        raise ValueError("source and support must be distinct")
+    request = dict(clearance=.045, carry_clearance=.01, open="x",
+                   approach="auto", arm_policy="auto")
+    request.update(args)
+    request.update(zip(("x", "y", "z"), source["center_xyz"]))
+    request.update(zip(("to_x", "to_y", "to_z"), support["on_top_xyz"]))
+    request["z_mode"] = "center"
+    result, code = transfer(api, request)
+    result["measurements"] = dict(source=source, support=support)
+    return result, code
+
+
+def support_height_check(api, source):
+    """Reject a TCP below a confidently observed local table, without motion.
+
+    Missing/ambiguous depth leaves the legacy coordinate interface available;
+    this is a gross contact guard, not object localization or a grasp check.
+    """
+    import cv2
+    try:
+        obs = api.observe()
+        info = obs["cameras"]["cam_head"]
+        K = np.asarray(info["intrinsics"], float)
+        T = np.asarray(info["extrinsics_world"], float)
+        point = (source-T[:3, 3]) @ T[:3, :3]
+        if point[2] <= 0:
+            return None
+        uv = K @ point
+        u, v = uv[:2]/uv[2]
+        rgb = cv2.imdecode(np.frombuffer(obs["png"]["cam_head"], np.uint8), cv2.IMREAD_COLOR)
+        if not (0 <= u < rgb.shape[1] and 0 <= v < rgb.shape[0]):
+            return None
+        hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+        # Exclude saturated foreground from the surrounding plane pool.
+        selected = (hsv[:, :, 1] > 65) & (hsv[:, :, 2] > 160)
+        mask = np.zeros(rgb.shape[:2], np.uint8)
+        cv2.circle(mask, (int(u), int(v)), 10, 1, -1)
+        plane, samples = table_plane(obs, "cam_head", K, T, mask, selected, u, v)
+        return dict(measured_plane_z=plane, plane_samples=samples,
+                    source_above_plane_m=float(source[2]-plane))
+    except (AttributeError, KeyError, ValueError, TypeError, cv2.error):
+        return None
+
+
+def fit_solid(mask, K, T, size, plane_z):
+    """Fit a known-size upright cube silhouette at a caller-constrained height."""
+    import cv2
+    from scipy.optimize import least_squares
+    rows, cols = np.where(mask)
+    if len(rows) < 25 or min(rows) == 0 or min(cols) == 0 or max(rows) == mask.shape[0]-1 or max(cols) == mask.shape[1]-1:
+        raise ValueError("insufficient or clipped silhouette")
+    outline = cv2.convexHull(np.column_stack([cols, rows]).astype(np.float32)).reshape(-1, 2)
+    angles = np.linspace(0, 2*np.pi, 32, endpoint=False)
+    directions = np.column_stack([np.cos(angles), np.sin(angles)])
+    observed = np.max(outline @ directions.T, axis=0)
+    center_z = plane_z + size/2
+    ray = T[:3, :3] @ np.linalg.solve(K, [np.mean(cols), np.mean(rows), 1.])
+    if abs(ray[2]) < .1:
+        raise ValueError("view too shallow")
+    initial = T[:3, 3] + ray*((center_z-T[2, 3])/ray[2])
+    corners = np.array(list(product([-.5, .5], repeat=3)))*size
+    def project(params):
+        x, y, yaw = params
+        c, sn = np.cos(yaw), np.sin(yaw)
+        R = np.array([[c, -sn, 0], [sn, c, 0], [0, 0, 1.]])
+        cam = (corners @ R.T + [x, y, center_z] - T[:3, 3]) @ T[:3, :3]
+        if np.any(cam[:, 2] <= 0):
+            raise ValueError("geometry behind camera")
+        uv = cam @ K.T
+        return uv[:, :2]/uv[:, 2:3]
+    def residual(params):
+        return np.max(project(params) @ directions.T, axis=0)-observed
+    fits = [least_squares(residual, [*initial[:2], yaw], max_nfev=70)
+            for yaw in (-.65, -.3, 0., .3, .65)]
+    best = min(fits, key=lambda f: np.sum(f.fun**2))
+    fitted = np.zeros_like(mask, dtype=np.uint8)
+    cv2.fillConvexPoly(fitted, cv2.convexHull(np.round(project(best.x)).astype(np.int32)), 1)
+    overlap = np.count_nonzero((fitted > 0) & (mask > 0))/max(1, np.count_nonzero((fitted > 0) | (mask > 0)))
+    error = float(np.sqrt(np.mean(best.fun**2)))
+    if not best.success or error > 1.5 or overlap < .85:
+        raise ValueError("silhouette inconsistent with size/height or occluded")
+    return np.array([*best.x[:2], center_z]), overlap, error
+
+
+def table_plane(obs, camera, K, T, mask, selected, u, v):
+    """Pool a horizontal support estimate independently of caller height."""
+    depth = np.asarray(obs["depth"][camera], float).squeeze()
+    if depth.shape != mask.shape:
+        raise ValueError("depth/image shape mismatch")
+    vv, uu = np.indices(depth.shape)
+    rays = np.linalg.solve(K, np.stack([uu.ravel(), vv.ravel(), np.ones(depth.size)]))
+    heights = (T[2, :3] @ rays * depth.ravel() + T[2, 3]).reshape(depth.shape)
+    radius = np.hypot(uu-u, vv-v)
+    extent = max(np.ptp(np.where(mask)[0]), np.ptp(np.where(mask)[1]))
+    valid = ((radius > max(20, extent*1.5)) & (radius < max(100, extent*4))
+             & np.isfinite(depth) & (depth > 0) & np.isfinite(heights) & ~selected)
+    values = heights[valid]
+    if len(values) < 100:
+        raise ValueError("insufficient plane samples; supply plane_z")
+    bins = np.floor(values/.008).astype(int)
+    unique, counts = np.unique(bins, return_counts=True)
+    peak = unique[np.argmax(counts)]*.008+.004
+    values = values[np.abs(values-peak) < .012]
+    if len(values) < 100 or len(values) < .35*np.count_nonzero(valid):
+        raise ValueError("ambiguous plane; supply plane_z")
+    return float(np.median(values)), len(values)
+
+
+def solid(api, args):
+    import cv2
+    size, elevation = float(args.get("size", .035)), float(args.get("elevation", 0.))
+    u, v = float(args["u"]), float(args["v"])
+    if not np.isfinite([size, elevation, u, v]).all() or not .015 <= size <= .10 or not 0 <= elevation <= .4:
+        raise ValueError("invalid size, elevation or pixel")
+    obs = api.observe()
+    camera = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}.get(args.get("camera", "head"), args.get("camera"))
+    rgb = cv2.imdecode(np.frombuffer(obs["png"][camera], np.uint8), cv2.IMREAD_COLOR)
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV).astype(float)
+    if not (0 <= u < rgb.shape[1] and 0 <= v < rgb.shape[0]):
+        raise ValueError("pixel outside image")
+    u, v = int(u), int(v)
+    hue, sat, val = hsv[v, u]
+    if sat < 65 or val < 40:
+        raise ValueError("seed must be saturated")
+    delta = np.abs(hsv[:, :, 0]-hue)
+    selected = ((np.minimum(delta, 180-delta) < 12) & (hsv[:, :, 1] > 65)
+                & (hsv[:, :, 2] >= max(40, .75*val)))
+    _, labels = cv2.connectedComponents(selected.astype(np.uint8))
+    mask = (labels == labels[v, u]).astype(np.uint8)
+    info = obs["cameras"][camera]
+    K, T = np.asarray(info["intrinsics"], float), np.asarray(info["extrinsics_world"], float)
+    plane = args.get("plane_z")
+    if plane is not None:
+        plane = float(plane)
+        if not np.isfinite(plane):
+            raise ValueError("plane_z must be finite")
+    samples = 0
+    measured_plane = None
+    try:
+        measured_plane, samples = table_plane(obs, camera, K, T, mask, selected, u, v)
+    except (KeyError, ValueError):
+        if plane is None:
+            raise
+    if plane is None:
+        plane = measured_plane
+    elif measured_plane is not None and abs(plane-measured_plane) > .012:
+        return dict(plan_ok=False, plan_fail_reason="plane_height_conflict",
+                    plan_detail="supplied plane differs from pooled surrounding depth by more than 0.012 m",
+                    supplied_plane_z=plane, measured_plane_z=measured_plane,
+                    plane_samples=samples), 2
+    segmentation = "seed_brightness"
+    try:
+        center, overlap, error = fit_solid(mask, K, T, size, plane+elevation)
+    except ValueError as original_error:
+        # A bright face can exclude shaded faces of the same solid. Try one
+        # bounded photometric expansion, retaining all geometric fit gates.
+        # Never relax size/height or fill an occluded silhouette geometrically.
+        expanded = ((np.minimum(delta, 180-delta) < 18)
+                    & (hsv[:, :, 1] > 65)
+                    & (hsv[:, :, 2] >= max(40, .5*val)))
+        _, expanded_labels = cv2.connectedComponents(expanded.astype(np.uint8))
+        expanded_mask = (expanded_labels == expanded_labels[v, u]).astype(np.uint8)
+        if np.array_equal(expanded_mask, mask):
+            raise original_error
+        # Retain the original independently pooled plane: changing the mask
+        # must not also tune the height to make an otherwise bad fit pass.
+        try:
+            center, overlap, error = fit_solid(expanded_mask, K, T, size, plane+elevation)
+        except ValueError:
+            raise original_error
+        segmentation = "shaded_faces"
+    return dict(plan_ok=True, plan_fail_reason=None, center_xyz=center.tolist(),
+                on_top_xyz=(center+[0, 0, size]).tolist(), plane_z=plane,
+                elevation=elevation, size=size, silhouette_iou=overlap,
+                fit_error_px=error, plane_samples=samples, segmentation=segmentation,
+                measured_plane_z=measured_plane, plane_checked=measured_plane is not None,
+                z_mode="center"), 0
+
+
 def surface(api, args):
     import cv2
     obs = api.observe()
@@ -262,6 +470,39 @@ def handoff_motion(api, arm, path, peer, saved, next_source):
     return len(outgoing), progress is not None
 
 
+def preflight_frame(api, arm, source, dest, clearance, carry_clearance,
+                    lift_mode, opening, anchor, rotation, approach):
+    """Discarded IK estimates only; never execute a failed loaded route."""
+    travel_z = max(source[2] + clearance, dest[2] + carry_clearance)
+    above = source + [0, 0, clearance]
+    if lift_mode == "auto" and travel_z-source[2] <= .10:
+        above[2] = travel_z
+    positions = [("approach", above), ("descend", source),
+                 ("lift", np.r_[source[:2], travel_z]),
+                 ("carry", np.r_[dest[:2], travel_z]), ("place", dest),
+                 ("disengage", np.r_[dest[:2], max(travel_z, dest[2])
+                                      + max(clearance, .045)])]
+    attempts, frames = [], [(rotation, approach)]
+    # As with the existing stationary approach retry, explicit frames are
+    # preferences. Change them only BEFORE any contact or physical motion.
+    for mode in ("reach", "down45", "down"):
+        frame, mode = grasp_rotation(mode, opening, arm.tcp()[:3, :3],
+                                     anchor, source, dest)
+        if not any(np.allclose(frame, old) for old, _ in frames):
+            frames.append((frame, mode))
+    for frame, mode in frames:
+        chain = []
+        for name, point in positions:
+            target = np.eye(4)
+            target[:3, :3], target[:3, 3] = frame, point
+            chain.append((name, target))
+        estimate = api.estimate_tcp_chain(arm, chain)
+        attempts.append(dict(approach=mode, **estimate))
+        if estimate.get("estimate_ok"):
+            return frame, mode, attempts
+    return None, None, attempts
+
+
 def transfer(api, args, session=None, finish=True, next_transfer=None):
     stages = []
     released = False
@@ -281,7 +522,10 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
     # contact point is near the payload mid-plane.  Accept that common input
     # directly, but leave already-centered coordinates unchanged.
     source_input_z = float(source[2])
-    if .79 <= source[2] <= .87:
+    z_mode = args.get("z_mode", "surface")
+    if z_mode not in ("surface", "center"):
+        raise ValueError("z_mode must be surface or center")
+    if z_mode == "surface" and .79 <= source[2] <= .87:
         source[2] -= .0175
     if args["open"] not in ("x", "y"):
         raise ValueError("open must be x or y")
@@ -296,6 +540,11 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
         raise ValueError("arm_policy must be auto or fixed")
     if arm.gripper() < .9:
         raise ValueError("requires an empty open gripper")
+    height_check = support_height_check(api, source)
+    if height_check is not None and height_check["source_above_plane_m"] < .003:
+        return dict(plan_ok=False, plan_fail_reason="pickup_below_observed_support",
+                    stages=[], released=False, returned=False, grasp_verified=False,
+                    **height_check), 2
     # Entry TCPs are observed anchors, not physical workspace boundaries.
     # Minimax selection accounts for BOTH endpoints before committing a grasp.
     def reach(candidate):
@@ -319,6 +568,14 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
     requested_approach = approach
     rotation, approach = grasp_rotation(approach, args["open"], arm.tcp()[:3, :3],
                                         anchor, source, dest)
+    rotation, approach, estimates = preflight_frame(
+        api, arm, source, dest, clearance, carry_clearance, lift_mode,
+        args["open"], anchor, rotation, approach)
+    selection["reachability_estimates"] = estimates
+    if rotation is None:
+        return dict(plan_ok=False, plan_fail_reason="no_reachable_transfer_frame",
+                    stages=stages, released=False, returned=False,
+                    grasp_verified=False, **selection), 2
     selection.update(requested_approach=requested_approach, selected_approach=approach,
                      approach_dir=rotation[:, 0].tolist(), open_dir=rotation[:, 1].tolist())
     peer = api.arm("right" if arm.tag == "left" else "left")
@@ -396,7 +653,7 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
                     if next_arm != arm.tag:
                         break
                     row = np.asarray(next_row, float).copy()
-                    if .79 <= row[2] <= .87:
+                    if z_mode == "surface" and .79 <= row[2] <= .87:
                         row[2] -= .0175
                     for point in (row[:3], row[3:]):
                         if (np.linalg.norm(point[:2]-target[:2, 3]) < .20
@@ -540,8 +797,11 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
                 handoff_return = (np.linalg.norm(dest[:2]-next_anchor) + .05
                                   < np.linalg.norm(dest[:2]-own_anchor))
                 row = np.asarray(next_transfer[1], float).copy()
-                if .79 <= row[2] <= .87:
+                if z_mode == "surface" and .79 <= row[2] <= .87:
                     row[2] -= .0175
+                handoff_return = handoff_return or any(
+                    np.linalg.norm(dest[:2]-p[:2]) < .205
+                    for p in (row[:3], row[3:]))
                 # Test the same proximity condition the next row would use
                 # after the ordinary withdrawal, then reach its parking
                 # endpoint in one checked vertical primitive.
@@ -721,7 +981,13 @@ def batch_arms(points, requested, anchors, available):
 
 def transfer_many(api, args):
     """A caller-defined sequence with one entry-posture restoration at the end."""
-    points = np.asarray(json.loads(args["points"]), dtype=float)
+    rows = json.loads(args["points"])
+    if isinstance(rows, list) and rows and all(isinstance(row, dict) for row in rows):
+        keys = ("x", "y", "z", "to_x", "to_y", "to_z")
+        if any(set(row) != set(keys) for row in rows):
+            raise ValueError("each mapping requires exactly x,y,z,to_x,to_y,to_z")
+        rows = [[row[k] for k in keys] for row in rows]
+    points = np.asarray(rows, dtype=float)
     if (points.ndim != 2 or points.shape[1] != 6 or not 1 <= len(points) <= 8
             or not np.isfinite(points).all()):
         raise ValueError("points must be a finite JSON array of 1 to 8 six-coordinate rows")
@@ -766,12 +1032,16 @@ def transfer_many(api, args):
 
 def run(api, command, args):
     try:
+        if command == "solid":
+            return solid(api, args)
         if command == "surface":
             return surface(api, args)
         if command == "transfer":
             return transfer(api, args)
         if command == "transfer_many":
             return transfer_many(api, args)
+        if command == "transfer_pixels":
+            return transfer_pixels(api, args)
         raise ValueError("unknown command")
     except Exception as error:
         return {"plan_ok": False, "plan_fail_reason": "invalid_input_or_observation",

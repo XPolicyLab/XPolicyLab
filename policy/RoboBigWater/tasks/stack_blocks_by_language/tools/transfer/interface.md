@@ -1,10 +1,11 @@
 ## Tool: transfer
-`robo surface --u U --v V [--camera head|wrist_l|wrist_r]` returns a world-space face center, visible XY extent, and sample count; it performs no motion.
-`robo transfer ARM --x X --y Y --z Z --to_x X --to_y Y --to_z Z [options]` executes pickup, carry, release, retreat, and entry return.
-`robo transfer_many ARM --points JSON [--arms left,right,...] [options]` executes 1–8 rows and restores moved arms after the final row.
-Options include `clearance`, `carry_clearance`, `open`, `approach`, `arm_policy`, `lift_mode`, and `release_gap`; values are validated before motion.
-A visible face height is converted to a contact height; measured endpoint tracking gates closure and release.
-`approach=auto` selects a tilted or vertical frame from measured reach; `arm_policy=auto` compares measured endpoint distances.
-A bounded retry/subdivision handles selected stationary IK failures; tracking, planning, time, and gripper-state failures stop before unsafe continuation.
-Returns `plan_ok`, failure reason, stages, selected arm/frame, release details, per-row results, completion count, and return status.
-Motion success does not verify attachment or settled placement; caller coordinates and clear paths are required.
+`robo solid --u U --v V [--size .035] [--elevation 0] [--plane_z Z] [--camera head|wrist_l|wrist_r]` fits a complete upright equal-sided silhouette without motion; elevation is its supporting height above the table plane.
+Returns `center_xyz`, `on_top_xyz` (center plus size), plane, fit quality and segmentation mode; shaded-face expansion retains geometric checks. Pooled depth checks supplied planes within 12 mm. Conflicts, occlusion, clipping or ambiguous geometry fail.
+`robo surface --u U --v V [--camera head|wrist_l|wrist_r]` returns a depth-derived visible face center, XY extent and sample count without motion.
+`robo transfer_pixels ARM --u U --v V --to_u U --to_v V [--size .035] [--elevation 0] [--to_elevation 0] [--camera head|wrist_l|wrist_r]` measures source and support silhouettes, then transfers to the support center plus size; returns both measurements and execution feedback. Invalid or identical silhouettes fail before motion.
+`robo transfer ARM --x X --y Y --z Z --to_x X --to_y Y --to_z Z [options]` executes pickup, carry, release, retreat and entry return; `transfer_many ARM --points JSON [--arms left,right,...]` accepts 1–8 six-coordinate rows or mappings.
+Motion options: `clearance`, `carry_clearance`, `open`, `approach`, `arm_policy`; coordinate commands also accept `lift_mode`, `release_gap`, `z_mode=surface|center`.
+Destination Z denotes payload center; `z_mode=center` preserves center heights, while default `surface` applies legacy pickup face correction. Pixel transfers set center mode internally.
+Read-only IK checks the route with bounded frame alternatives; `arm_policy=auto` compares endpoint distances. Pickups less than 3 mm above a confident observed table estimate fail before motion; unavailable estimates leave coordinates unchecked.
+Returns `plan_ok`, failure reason, estimates, stages, selected arm/frame, release details, per-row completion and return status; entry restoration is attempted after the final row; terminal interruption may leave `returned=false`.
+Tracking, planning, time and gripper-state failures stop continuation; IK and tracking do not certify collision clearance, attachment or settled placement.

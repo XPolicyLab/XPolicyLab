@@ -44,6 +44,8 @@ class API:
     def set_gripper(self, arm, value):
         self.grips.append(value)
         arm.opening = value
+    def estimate_tcp_chain(self, arm, stages):
+        return dict(estimate_ok=True, estimate_only=True)
     def sim_time_left(self): return 20
     def run(self, seq):
         for tag, path in seq.items():
@@ -792,63 +794,75 @@ class Tests(unittest.TestCase):
                     np.testing.assert_allclose(outgoing.joints(), entry)
                     np.testing.assert_allclose(incoming.joints(), incoming_entry)
 
-    def test_switch_combines_withdrawal_and_parking_with_same_endpoint(self):
-        from unittest.mock import patch
+    def test_shared_destination_returns_peer_before_incoming_motion(self):
+        api, peer = self.peer_api()
+        entry = api.robot.joints().copy()
         rows = [[-.3, -.12, .78, 0, -.12, .82],
                 [.3, -.12, .78, 0, -.12, .855]]
-        args = dict(self.many_args(), arms='left,right', points=json.dumps(rows))
-        combined, _ = self.peer_api()
-        result, code = tool.run(combined, 'transfer_many', args)
-        self.assertEqual(code, 0)
-        self.assertTrue(result['transfers'][0]['stages'][-1]['includes_idle_clearance'])
-        self.assertEqual(result['transfers'][1]['stages'][0]['stage'],
-                         'idle_arm_already_cleared')
-        separate, _ = self.peer_api()
-        original = tool.transfer
-        def old_path(*a, **kw):
-            kw['next_transfer'] = None
-            return original(*a, **kw)
-        with patch.object(tool, 'transfer', old_path):
-            baseline, code = tool.run(separate, 'transfer_many', args)
-        self.assertEqual(code, 0)
-        self.assertEqual(combined.moves, separate.moves-1)
-        np.testing.assert_allclose(combined.targets[5], separate.targets[6])
-        self.assertEqual(result['completed'], baseline['completed'])
-        self.assertTrue(result['returned'])
-
-    def test_combined_withdrawal_stationary_rejection_preserves_old_path(self):
-        api, _ = self.peer_api()
         original = api.move_tcp
+        checked = []
         def move(arm, target, feedback):
-            if len(api.grips) == 2 and target[2, 3]-arm.tcp()[2, 3] > .15:
-                feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
-                return 2
+            if arm is peer and len(api.grips) == 2:
+                np.testing.assert_allclose(api.robot.joints(), entry)
+                checked.append(True)
             return original(arm, target, feedback)
         api.move_tcp = move
-        rows = [[-.3, -.12, .78, 0, -.12, .82],
-                [.3, -.12, .78, 0, -.12, .855]]
         result, code = tool.run(api, 'transfer_many', dict(
             self.many_args(), arms='left,right', points=json.dumps(rows)))
-        self.assertEqual(code, 0)
-        self.assertEqual(result['transfers'][0]['stages'][-1]['stage'], 'disengage_fallback')
-        self.assertEqual(result['transfers'][1]['stages'][0]['stage'], 'clear_idle_arm')
+        self.assertEqual(code, 0, result)
+        self.assertTrue(checked)
+        first = result['transfers'][0]['stages']
+        self.assertEqual(first[-1]['stage'], 'handoff_return')
+        self.assertFalse(any(s.get('includes_idle_clearance') for s in first))
+        self.assertEqual(result['completed'], 2)
+        self.assertTrue(result['returned'])
 
-    def test_moved_peer_invalidates_combined_clearance(self):
-        from unittest.mock import patch
+    def test_preflight_carry_failure_changes_frame_before_motion(self):
+        api = API()
+        frames = []
+        def estimate(arm, chain):
+            self.assertEqual(api.moves, 0)
+            self.assertEqual(api.grips, [])
+            self.assertEqual([name for name, _ in chain],
+                             ['approach', 'descend', 'lift', 'carry', 'place', 'disengage'])
+            frames.append(chain[0][1][:3, :3].copy())
+            return dict(estimate_ok=len(frames) > 1, reason='ik_unreachable',
+                        failed_stage='carry')
+        api.estimate_tcp_chain = estimate
+        result, code = tool.run(api, 'transfer', dict(self.args(), approach='down'))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(len(frames), 2)
+        self.assertFalse(np.allclose(frames[0], frames[1]))
+        np.testing.assert_allclose(api.targets[0][:3, :3], frames[1])
+        self.assertEqual(result['selected_approach'], 'reach')
+
+    def test_preflight_all_frames_fail_without_grasp_or_motion(self):
         api, _ = self.peer_api()
-        rows = [[-.3, -.12, .78, 0, -.12, .82],
-                [.3, -.12, .78, 0, -.12, .855]]
-        original = tool.transfer
-        def drift(*a, **kw):
-            result = original(*a, **kw)
-            if not kw['finish']:
-                api.robot.pose[0, 3] += .004
-            return result
-        with patch.object(tool, 'transfer', drift):
-            result, code = tool.run(api, 'transfer_many', dict(
-                self.many_args(), arms='left,right', points=json.dumps(rows)))
-        self.assertEqual(code, 0)
-        self.assertEqual(result['transfers'][1]['stages'][0]['stage'], 'clear_idle_arm')
+        api.estimate_tcp_chain = lambda arm, chain: dict(
+            estimate_ok=False, reason='ik_unreachable', failed_stage='carry')
+        result, code = tool.run(api, 'transfer', self.args())
+        self.assertEqual(code, 2)
+        self.assertEqual(result['plan_fail_reason'], 'no_reachable_transfer_frame')
+        self.assertEqual(api.moves, 0)
+        self.assertEqual(api.grips, [])
+        self.assertFalse(result['released'])
+        self.assertLessEqual(len(result['reachability_estimates']), 4)
+
+    def test_mapping_rows_match_numeric_rows_and_validate_before_motion(self):
+        args = self.many_args()
+        keys = ('x', 'y', 'z', 'to_x', 'to_y', 'to_z')
+        rows = json.loads(args['points'])
+        mappings = [dict(zip(keys, row)) for row in rows]
+        api, _ = self.peer_api()
+        result, code = tool.run(api, 'transfer_many', dict(args, points=json.dumps(mappings)))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['completed'], len(rows))
+        mappings[-1].pop('z')
+        api, _ = self.peer_api()
+        result, code = tool.run(api, 'transfer_many', dict(args, points=json.dumps(mappings)))
+        self.assertEqual(code, 2)
+        self.assertEqual(api.moves, 0)
+        self.assertEqual(api.grips, [])
 
     def test_many_stops_before_next_grasp_on_tracking_failure(self):
         api, _ = self.peer_api()
