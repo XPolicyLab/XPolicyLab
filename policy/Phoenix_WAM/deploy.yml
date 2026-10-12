@@ -1,0 +1,38 @@
+policy_name: Phoenix_WAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+# Selects joint96_source/robots/{arx_x5,piper,piper_x}.json, statistics and soft prompt.
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: true
+
+# Weights are prepared by download_checkpoint.sh. Shared ckpt_name resolution
+# is used unless checkpoint_path is explicitly supplied.
+checkpoint_path: null
+
+# Checkpoint inference contract.
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 10
+num_inference_steps: 10
+action_hz: 25.0
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false
+default_instruction: follow the instruction
+allow_dummy_policy: false
+
+# Phoenix_WAM defaults to the released real Piper Joint96 policy (all three robot profiles).
+runtime_mode: joint96_real
+current_visual_mode: repeat9_full_stvae
+expected_step: null
+audit_dir: logs/joint96

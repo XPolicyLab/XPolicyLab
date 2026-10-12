@@ -1,0 +1,50 @@
+{
+  "repo_id": "ssuuuuu/phoenix-wam",
+  "revision": "master",
+  "filename": "phoenix-wam-piper-step_040000.pt",
+  "step": 40000,
+  "size": 12045482134,
+  "sha256": "ad50b79734afd7d0943f2a9256826dcc04b8a05f6c795a46c75afa91d131b0e9",
+  "weights": {
+    "checkpoint": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "phoenix-wam-piper-step_040000.pt",
+      "path": "phoenix-wam-piper-step_040000.pt",
+      "sha256": "ad50b79734afd7d0943f2a9256826dcc04b8a05f6c795a46c75afa91d131b0e9",
+      "size": 12045482134
+    },
+    "dino_checkpoint": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "phoenix-wam-dino-step_110000.pt",
+      "path": "phoenix-wam-dino-step_110000.pt",
+      "sha256": "ec83a00d2e65fab98a7f5c15a56700386dbf672dcde275ed7d99f16940650c0c",
+      "size": 10145964243
+    },
+    "stvae_checkpoint": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "phoenix-wam-stvae-step_150000.pt",
+      "path": "phoenix-wam-stvae-step_150000.pt",
+      "sha256": "28d9b8efc16c2b7005e46dd9051d0c25429d64022d47492cd2e03b1470cf28f2",
+      "size": 289377555
+    },
+    "wan_vae": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "Wan2.2_VAE.safetensors",
+      "path": "base_models/DiffSynth-Studio/Wan-Series-Converted-Safetensors/Wan2.2_VAE.safetensors",
+      "sha256": "0e913a2ca571c75fcb63385a8edadcca73454af5842596cb1ad11e4142590996",
+      "size": 1409401152
+    },
+    "t5_encoder": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "models_t5_umt5-xxl-enc-bf16.safetensors",
+      "path": "base_models/DiffSynth-Studio/Wan-Series-Converted-Safetensors/models_t5_umt5-xxl-enc-bf16.safetensors",
+      "sha256": "d92de679881d38af9c89eff7bb1b6d6c9d96cb2b69831e4027e9ecabdd38eb23",
+      "size": 11361845432
+    }
+  }
+}
