@@ -114,7 +114,8 @@ class TransferTests(unittest.TestCase):
                                  failed_stage='raised_travel')
         with patch.object(self.api, 'estimate_tcp_chain', wraps=self.api.estimate_tcp_chain) as estimate:
             result, code = self.execute()
-        self.assertEqual(estimate.call_count, 1)
+        self.assertEqual(estimate.call_count, 2)
+        self.assertEqual(result['alternative_route']['args']['approach'], 'down')
         self.assertEqual(code, 2)
         self.assertEqual(result['preflight']['pickup_approach'], 'down')
         self.assertEqual(self.api.calls, [])
@@ -173,7 +174,8 @@ class TransferTests(unittest.TestCase):
         with patch.object(self.api, 'estimate_tcp_chain', wraps=self.api.estimate_tcp_chain) as estimate:
             result, code = self.execute()
         self.assertEqual(code, 2)
-        self.assertEqual(estimate.call_count, 1)
+        self.assertEqual(estimate.call_count, 2)
+        self.assertEqual(result['alternative_route']['args']['approach'], 'down')
         self.assertEqual(self.api.calls, [])
 
     def test_contact_tracking_error_never_closes(self):

@@ -2,7 +2,7 @@
 
 Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses). Depth is estimated inside the policy server by Depth Anything V2 (Metric-Indoor-Base) with its scale fixed from the known table height; the simulator's depth is never read. Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered `_random` 0-4), one episode per layout with frozen tools, no optimizer, official success and progress checkers.
 
-Tools: 35 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). 7 tasks (`align_blocks`, `insert_tubes`, `pour_liquid_into_cup`, `press_by_number`, `push_T`, `stack_blocks`, `stack_blocks_by_language`) carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file is updated as they finish.
+Tools: 34 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). 8 tasks (`align_blocks`, `insert_tubes`, `play_tic_tac_toe`, `pour_liquid_into_cup`, `press_by_number`, `push_T`, `stack_blocks`, `stack_blocks_by_language`) carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file is updated as they finish.
 
 ## Summary (leaderboard formula: mean of the five task types; Generalization = mean of standard and cluttered)
 
@@ -10,10 +10,10 @@ Tools: 35 tasks carry the tools developed earlier with rendered depth, unchanged
 |---|---:|---:|
 | Generalization | 26.7 | 30.0 |
 | Precision | 7.5 | 11.9 |
-| Long-Horizon | 5.0 | 21.8 |
+| Long-Horizon | 11.2 | 26.8 |
 | Memory | 53.3 | 57.0 |
 | Open | 45.0 | 48.1 |
-| **Overall (leaderboard formula)** | **27.5** | **33.8** |
+| **Overall (leaderboard formula)** | **28.8** | **34.8** |
 
 Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 
@@ -23,6 +23,7 @@ Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 |---|---:|---:|
 | align_blocks | 5/10 | 9/10 |
 | insert_tubes | 1/10 | 2/10 |
+| play_tic_tac_toe | 1/10 | 6/10 |
 | pour_liquid_into_cup | 1/10 | 3/10 |
 | press_by_number | 0/10 | 10/10 |
 | push_T | 3/10 | 4/10 |
@@ -63,7 +64,7 @@ Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
 | Long-Horizon | make_kong | 0/10 | 0.0 |
 | Long-Horizon | organize_table | 0/10 | 22.5 |
 | Long-Horizon | play_stacking_toy | 0/10 | 10.0 |
-| Long-Horizon | play_tic_tac_toe | 1/10 | 48.0 |
+| Long-Horizon | play_tic_tac_toe | 6/10 | 87.5 |
 | Long-Horizon | put_bottles_into_dustbin | 0/10 | 28.0 |
 | Memory | cover_blocks | 10/10 | 100.0 |
 | Memory | imitate_sorting_sequence | 0/10 | 22.0 |

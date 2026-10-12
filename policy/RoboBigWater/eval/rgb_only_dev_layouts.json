@@ -13,8 +13,8 @@
     "progress_score": 11.9
    },
    "Long-Horizon": {
-    "success_rate": 5.0,
-    "progress_score": 21.8
+    "success_rate": 11.2,
+    "progress_score": 26.8
    },
    "Memory": {
     "success_rate": 53.3,
@@ -26,8 +26,8 @@
    }
   },
   "leaderboard_formula": {
-   "success_rate": 27.5,
-   "progress_score": 33.8
+   "success_rate": 28.8,
+   "progress_score": 34.8
   },
   "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
@@ -36,6 +36,7 @@
   "reevolved_tasks": [
    "align_blocks",
    "insert_tubes",
+   "play_tic_tac_toe",
    "pour_liquid_into_cup",
    "press_by_number",
    "push_T",
@@ -1825,91 +1826,92 @@
    "variant": "play_tic_tac_toe",
    "type": "Long-Horizon",
    "episodes": 10,
-   "success": 1,
-   "success_rate": 10.0,
-   "progress_score": 48.0,
+   "success": 6,
+   "success_rate": 60.0,
+   "progress_score": 87.5,
    "per_layout": [
     {
      "layout": 0,
-     "success": false,
-     "progress": 30.0,
-     "end_reason": "early_fail",
-     "commands": 28,
-     "steps": 769
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 1054
     },
     {
      "layout": 1,
-     "success": false,
-     "progress": 50.0,
-     "end_reason": "early_fail",
-     "commands": 30,
-     "steps": 702
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 1061
     },
     {
      "layout": 2,
      "success": false,
-     "progress": 30.0,
-     "end_reason": "early_fail",
-     "commands": 20,
-     "steps": 620
+     "progress": 75.0,
+     "end_reason": "agent_exit",
+     "commands": 9,
+     "steps": 1030
     },
     {
      "layout": 3,
-     "success": false,
-     "progress": 30.0,
-     "end_reason": "sim_time",
-     "commands": 46,
-     "steps": 1100
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 1081
     },
     {
      "layout": 4,
-     "success": false,
-     "progress": 75.0,
-     "end_reason": "done",
-     "commands": 44,
-     "steps": 1033
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 1061
     },
     {
      "layout": 5,
-     "success": false,
-     "progress": 75.0,
-     "end_reason": "agent_exit",
-     "commands": 52,
-     "steps": 1038
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 8,
+     "steps": 1023
     },
     {
      "layout": 6,
      "success": false,
-     "progress": 30.0,
-     "end_reason": "early_fail",
-     "commands": 37,
-     "steps": 914
+     "progress": 75.0,
+     "end_reason": "agent_exit",
+     "commands": 9,
+     "steps": 1012
     },
     {
      "layout": 7,
-     "success": true,
-     "progress": 100.0,
-     "end_reason": "auto_success",
-     "commands": 46,
-     "steps": 993
+     "success": false,
+     "progress": 50.0,
+     "end_reason": "done",
+     "commands": 9,
+     "steps": 1088
     },
     {
      "layout": 8,
      "success": false,
-     "progress": 30.0,
-     "end_reason": "sim_time",
-     "commands": 49,
-     "steps": 1100
+     "progress": 75.0,
+     "end_reason": "agent_exit",
+     "commands": 13,
+     "steps": 1087
     },
     {
      "layout": 9,
-     "success": false,
-     "progress": 30.0,
-     "end_reason": "sim_time",
-     "commands": 53,
-     "steps": 1100
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 9,
+     "steps": 1083
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "put_bottles_into_dustbin",
