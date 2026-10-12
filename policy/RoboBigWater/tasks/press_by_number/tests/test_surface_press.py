@@ -255,9 +255,9 @@ class Tests(unittest.TestCase):
 
     def test_projection(self):
         obs = dict(depth={'cam_head': np.ones((5, 5))}, cameras={'cam_head': dict(intrinsics=np.eye(3), extrinsics_world=np.eye(4))})
-        self.assertEqual(tool.surface_point(obs, 2, 2)['point_world'], [2, 2, 1])
+        self.assertEqual(tool.raw_surface_point(obs, 2, 2)['point_world'], [2, 2, 1])
         obs['depth']['cam_head'][2, 2] = 2
-        with self.assertRaises(ValueError): tool.surface_point(obs, 2, 2)
+        with self.assertRaises(ValueError): tool.raw_surface_point(obs, 2, 2)
 
     def test_deep_blocked_stroke_releases_without_pushing_farther(self):
         api = API(shallow=True)

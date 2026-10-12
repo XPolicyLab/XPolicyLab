@@ -1,33 +1,40 @@
 # align_blocks tool development
 
-## Findings and designs
+## Final designs and evidence
 
-- Development achieved 9/10 layouts; layout 5 remained unresolved after five edits. Tools evolved between episodes; the final version was not evaluated on all ten layouts.
-- `measure_scene` makes free, calibrated RGB-D measurements: visible centers, footprint edge yaw, line residuals, elongated reference geometry, and padded contact lanes. It uses observations only; no simulator state or stored layout positions.
-- `grasp_slide` packages elevated approach, open descent, closure, optional turn/translation/follow motions, release, and withdrawal. Measured TCP height carries forward after bounded upward descent shortfall; no blind retries.
-- `align_reference` associates the guide by observed height, span, and normal distance, chooses a padded lane near the region centroid, selects the arm by contact x, and executes one contact cycle with stage feedback.
-- Successful episodes 6–9 used align_reference plus home in 121–133 action steps (4.84–5.32 s), including manual recovery in layout 7. grasp_slide was not called in any recorded successful episode.
-- Wrist tracking and gripper closure do not certify payload motion. Endpoint torque, direct finger interference, and an angled block can survive a geometrically plausible sweep.
-- Collinearity, world-y span, and edge orientation are distinct measurements. The 2 mm line tolerance is a diagnostic criterion, not the evaluator's success threshold.
-- Occlusion can add or merge regions; even the expected count can hide biased centers. Keep partial geometry explicit and count failure visible; never promote a two-point line fit to completion.
-- Association must precede motion: the longest white component can be distant background. Rank spatially plausible candidates rather than relying on segmentation order.
-- Preserve useful contact after a recoverable push failure; distinguish it from withdrawal failure after release. Report completed stages so recovery does not repeat the entire sequence.
-- Budget compound tools in action steps, not command count. One failed acquisition consumed 60 steps; a repeat grasp consumed 64. Stage-level time guards do not guarantee time to finish or home.
-- Current limits: no verified rigid grasp, no automatic shorter-push recovery, possible withdrawal IK failure, and no robust separation of touching colored regions. The world-y push convention is not a general arbitrary-frame planner.
-- Offline coverage reached 27 tests across perception, argument validation, fake-API execution, association, and transformed contact selection. Synthetic tests and recorded feedback replay cannot establish physical reliability; saved RGB-D was unavailable for full replay.
+- v0.3rgb development: 10/10 layouts passed, 114–148 action steps (4.56–5.92 s) in successful episodes; one edit for layout 6, two for layout 9. Versions evolved; final tools were not rerun on every layout.
+- `measure_scene`: free calibrated RGB-D region centers/extents, edge yaw, line residuals, elongated reference geometry, and padded contact lanes. Observations only; no simulator state or stored layout coordinates.
+- `grasp_slide`: elevated approach, open descent, closure, optional turn/translation/follow motion, release/withdrawal; bounded upward descent shortfall carries measured TCP height into translation. No blind retries.
+- `align_reference`: associate by height/span/normal distance, select a padded lane near the region centroid and its arm, retain observed yaw, push perpendicular toward the regions, release, observe, withdraw, observe. Reports stages and preserves post-release evidence if withdrawal fails.
+- Normal travel covers the farthest signed center distance plus projected half-extent and 25 mm depth allowance; ambiguous sides or travel outside 12–240 mm fail before motion. Lane padding certifies only reference-normal travel.
+- Thin-surface depth needs constraints: elongated RGB support with >=70% valid depth and <=80 mm robust height relief may project onto its median horizontal plane; report `geometry_source` and relief.
+- For a reference 35–90 mm above consistent local support, reproject onto support +15 mm. Require two patches outside a 12-pixel band, >=80 points and >=70% valid depth each, <=15 mm height spread, <=10 mm disagreement, and nearby elevated colored regions.
+- The support offset is an explicit thickness assumption; missing/inconsistent support leaves the prior estimate. RGB planarity, biased median height, occlusion, and nonhorizontal lookalikes remain limits.
+- Association must precede motion: longest white component can be distant background. Central padded contact reduces torque and interference; it does not verify a rigid grasp.
+- Wrist tracking/closure does not certify guide movement. The final normal sweep removes an unverified leveling turn and preserves the direction assumed by lane clearance.
+- Recover by completed stage: shorter push can reuse contact; withdrawal failure after release can proceed to home. Return geometric evidence even on partial failure, and budget action steps rather than command count.
+- Count mismatch invalidates line certification; two-point residual is meaningless. Partial surfaces can bias centers even at the expected count. Collinearity, edge orientation, and world-y span are different diagnostics.
+- Successful layout 8 exercised median-plane fallback; layout 6 used raw depth geometry, so its success does not isolate fallback benefit. Layout 9 used support correction and a shorter manual normal push; full automatic normal-sweep success remains unproven here.
+- Remaining limits: missed references, no verified grip, reachability/withdrawal IK failures, touching-region segmentation, and no automatic shorter-push recovery. Optional G follow motions have no demonstrated successful execution in this run.
+- Prior offline validation: 37 tests (15 perception, 12 association/execution, 10 grasp-slide), including transformed scenes, support rejection, travel bounds, orientation preservation, and withdrawal-failure evidence. Synthetic tests cannot establish physical reliability; saved depth was unavailable for full replay.
 
 ## Development log
 
-- 2026-10-03, round 3, layout 2: visual localization missed one block (only ~6 mm motion; final y span 69 mm). Added measure_scene for numeric geometry; a +22-degree wrist turn had changed positions only 1–2 mm.
-- 2026-10-03, round 4, layout 2: open-finger passes missed the guide; low repositioning dragged it backward 107 mm. Added grasp_slide to enforce elevated approach and closed planar contact; 5 fake-API tests passed.
-- 2026-10-03, round 8, layout 5: requested z=0.760 m reached 0.7801 m and strict tracking aborted after 60 steps. Added opt-in upward contact tolerance and measured-height translation; added observed endpoint leveling geometry; 13 tests passed.
-- 2026-10-03, round 9, layout 5: omitted tolerance repeated the abort; contact overlapped a block, which advanced another 29 mm on release. Made tolerance default 25 mm (<=8 mm lateral); added 30 mm footprint padding and 25 mm endpoint insets for contact lanes; 16 tests passed.
-- 2026-10-03, round 10, layout 5: a 98-step slide succeeded mechanically, but 8.32 mm y span hid 4.75 mm line error and rotated contact. Added footprint edge yaw, 2 mm line criterion, and bounded closed turns; 20 tests passed.
-- 2026-10-03, round 11, layout 5: 4.12 s initial sweep plus 2.56 s reacquisition left 0.28 s after home and 4.72 mm residual. Added follow turn/displacement while retaining closure; 10 grasp_slide tests passed, physical benefit remained unproven.
-- 2026-10-03, round 12, layout 5: added align_reference to combine observation-derived contact selection and a guarded push/release cycle. Last recorded layout-5 attempt still failed at 7.32 s with merged detections and an angled block; no successful repair established.
-- 2026-10-03, round 13, layout 6: longest-reference selection approached background at z=0.049 m, y=1.728 m and wasted 23 steps. Added footprint-scaled height/span/normal association before motion; 25 tests passed. Subsequent layout-6 episode succeeded in 127 steps.
-- 2026-10-03, round 15, layout 7: endpoint contact 195 mm from region centroid rotated the guide ~20 degrees; corrective motions exhausted the budget despite 0.66 mm line residual. Selected nearest padded lane midpoint and its side's arm, reducing recorded lever arm to ~45 mm; 27 tests passed.
-- 2026-10-03, rounds 16–18, layouts 7–9: central contact gathered the row, but layout 7 required a shorter manual push; layouts 8/9 failed withdrawal after release. All passed after home in 133/121/123 steps; perception remained incomplete or biased.
-- 2026-10-03, round 19, final: distilled successful sequences, retained unresolved failures and dated history, and clarified interface contracts. Documentation-only change; no robot control, evaluation, or server run.
+- 2026-10-03, round 3: visual localization missed contact; added measure_scene. A +22-degree wrist turn changed centers only 1–2 mm.
+- 2026-10-03, round 4: open passes missed the guide; low reposition dragged it backward 107 mm. Added elevated approach/closed planar grasp_slide; 5 tests passed.
+- 2026-10-03, rounds 8–9: descent shortfall aborted after ~60 steps; contact overlapped a block. Added default 25 mm upward tolerance, <=8 mm lateral error, measured-height translation, 30 mm lane padding and 25 mm endpoint insets; 16 tests passed.
+- 2026-10-03, round 10: small y span hid 4.75 mm residual and angled contact. Added edge yaw, 2 mm line criterion, and bounded turns; 20 tests passed.
+- 2026-10-03, round 11: 4.12 s sweep plus 2.56 s reacquisition exhausted time. Added closed follow motions; 10 grasp-slide tests passed, physical benefit unproven.
+- 2026-10-03, round 12: added align_reference to combine measured contact selection and guarded execution; layout 5 still failed at 7.32 s with merged detections and an angled block.
+- 2026-10-03, round 13: longest-reference selection approached background and wasted 23 steps. Added height/span/normal association; 25 tests passed; next layout-6 episode passed in 127 steps.
+- 2026-10-03, round 15: endpoint contact 195 mm from centroid rotated the guide ~20 degrees. Selected nearest padded lane midpoint and its side's arm; lever arm ~45 mm; 27 tests passed.
+- 2026-10-03, rounds 16–19: layouts 7–9 passed in 133/121/123 steps with shorter-push or withdrawal recovery; distilled documentation. Older development was 9/10; separately recorded final retest was 10/10 under official motion timing.
+- 2026-10-12, v0.3rgb rounds 1–6: layouts 0–5 passed, including previously unresolved layout 5. Manual recovery reused contact in 0/1/3/4; 2/5 homed after release/withdrawal failure. G contact rejection cost 59–61 steps in 1/3/4.
+- 2026-10-12, round 7: layout 6 missed the white reference; repeated contact cycles consumed 190/200 steps before home disturbed the held guide. Raw >20 mm relief rejection was suspect, not confirmed without saved depth. Added bounded median-plane fallback; 30 tests passed.
+- 2026-10-12, rounds 8–10: layouts 6/7/8 passed in 118/134/114 steps. Layout 8 exercised fallback at 30.6 mm relief; layout 7 reused contact after push IK failure; layout 8 homed after released withdrawal failure.
+- 2026-10-12, round 11: layout 9 estimated reference z=.823 m versus true center .775 m; TCP at .8035 m pushed without moving objects. Added guarded local-support correction with lateral reprojection, targeting first contact; 32 tests passed. Withdrawal error was secondary.
+- 2026-10-12, round 12: corrected height enabled contact, but 104-step cycle left an uneven tilted row; guide yaw changed -11.7 to -14.5 degrees despite wrist leveling, and reacquisition cost 75 steps. Replaced turn/world-y push with bounded reference-normal travel; preserved failure evidence; 37 tests passed.
+- 2026-10-12, round 13: layout 9 support-corrected surface z=.78362 m enabled acquisition. Planned [.03268,.15880] m push failed IK; manual [.028,.136] m push, release/home passed in 115 steps. Supports contact estimation and normal-direction recovery, not guaranteed grasp or automatic reachability.
+- 2026-10-12, round 14, final: replaced stale summaries with this run's 10/10 evidence and costs; condensed playbook/history, retained interface contracts and physical-evidence limits. Documentation only; no evaluation, robot control, or server run.
 
-- Final retest 2026-10-03 (official motion timing only; final tools, one run per layout, no optimizer): retest passed: 10 / 10
+- Final retest 2026-10-12 (final tools, one run per layout, no optimizer): retest passed: 9 / 10

@@ -53,6 +53,80 @@ class API:
 
 
 class Tests(unittest.TestCase):
+    def test_sweep_is_normal_and_covers_every_region(self):
+        data = scene()
+        ref = data["references"][1]
+        angle = np.deg2rad(-23)
+        rotation = np.array([[np.cos(angle), -np.sin(angle), 0],
+                             [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
+        for region in data["regions"]:
+            region["surface_center_m"] = (rotation @ region["surface_center_m"]).tolist()
+        ref["endpoints_m"] = [(rotation @ p).tolist() for p in ref["endpoints_m"]]
+        delta = tool.sweep_displacement(data, ref)
+        axis = np.subtract(*ref["endpoints_m"])
+        self.assertAlmostEqual(float(delta @ axis), 0)
+        normal = delta[:2] / np.linalg.norm(delta)
+        for region in data["regions"]:
+            distance = (np.array(region["surface_center_m"][:2]) - ref["endpoints_m"][0][:2]) @ normal
+            radius = np.array(region["surface_extent_m"][:2]) @ np.abs(normal) / 2
+            self.assertGreaterEqual(np.linalg.norm(delta) + 1e-10, distance + radius + .025)
+        # An arbitrary translation and reversed endpoint ordering cannot change travel.
+        for region in data["regions"]:
+            region["surface_center_m"] = (np.array(region["surface_center_m"]) + [.3, -.4, .2]).tolist()
+        ref["endpoints_m"] = [(np.array(p) + [.3, -.4, .2]).tolist()
+                              for p in ref["endpoints_m"]][::-1]
+        np.testing.assert_allclose(tool.sweep_displacement(data, ref), delta)
+
+    def test_sweep_can_travel_toward_either_side(self):
+        data = scene()
+        ref = data["references"][1]
+        forward = tool.sweep_displacement(data, ref)
+        for region in data["regions"]:
+            region["surface_center_m"][1] = -.25
+        np.testing.assert_allclose(tool.sweep_displacement(data, ref), -forward)
+
+    def test_ambiguous_or_excessive_sweep_fails_before_motion(self):
+        for y in (-.2, .2):
+            data = scene()
+            data["regions"][0]["surface_center_m"][1] = y
+            api = API()
+            with patch.object(tool, "_observe_measure", return_value=data):
+                result, code = tool.run(api, "align_reference", {})
+            self.assertEqual(code, 1)
+            self.assertEqual(api.calls, [])
+
+    def test_push_preserves_contact_orientation_and_height(self):
+        data = scene()
+        ref = data["references"][1]
+        ref["yaw_deg"] = -17
+        api = API()
+        with patch.object(tool, "_observe_measure", return_value=data):
+            result, code = tool.run(api, "align_reference", {})
+        self.assertEqual(code, 0)
+        names = [stage["stage"] for stage in result["stages"]]
+        self.assertNotIn("square", names)
+        poses = [c for c in api.calls if isinstance(c, np.ndarray)]
+        descend, push = poses[2:4]
+        np.testing.assert_allclose(push[:3, :3], descend[:3, :3])
+        np.testing.assert_allclose(push[:3, 3] - descend[:3, 3],
+                                   result["selection"]["push_delta_m"])
+
+    def test_withdrawal_failure_keeps_post_release_measurement(self):
+        class WithdrawalFailure(API):
+            def move_tcp(self, arm, pose, feedback):
+                if sum(isinstance(c, np.ndarray) for c in self.calls) == 4:
+                    feedback.update(plan_ok=False, plan_fail_reason="ik_unreachable")
+                    return 1
+                return super().move_tcp(arm, pose, feedback)
+        api = WithdrawalFailure()
+        data = scene()
+        with patch.object(tool, "_observe_measure", return_value=data):
+            result, code = tool.run(api, "align_reference", {})
+        self.assertEqual(code, 1)
+        self.assertEqual(result["plan_fail_reason"], "ik_unreachable")
+        self.assertIs(result["after"], data)
+        self.assertEqual(result["stages"][-2]["stage"], "release")
+
     def test_central_clear_lane_limits_lever_arm(self):
         data = scene()
         ref = data["references"][1]

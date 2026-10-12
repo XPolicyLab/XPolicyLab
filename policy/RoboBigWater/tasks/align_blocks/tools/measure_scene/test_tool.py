@@ -37,6 +37,90 @@ def scene():
 
 
 class MeasurementTests(unittest.TestCase):
+    def supported_scene(self, bias=.05):
+        obs = scene()
+        rgb = cv2.imdecode(np.frombuffer(obs['png']['cam_head'], np.uint8), cv2.IMREAD_COLOR)
+        rgb[np.all(rgb == 0, axis=2)] = [60, 90, 130]
+        _, png = cv2.imencode('.png', rgb)
+        obs['png']['cam_head'] = png.tobytes()
+        depth = obs['depth']['cam_head']
+        depth[~np.isfinite(depth)] = 1.04
+        depth[150:155, 40:281] = 1.02 - bias
+        return obs
+
+    def test_biased_thin_surface_uses_local_support_and_reprojects_xy(self):
+        for shift in (0., .23):
+            obs = self.supported_scene()
+            obs['cameras']['cam_head']['extrinsics_world'][2, 3] += shift
+            result, code = tool.run(ObservationOnlyAPI(obs), 'measure_scene', {'expected': 3})
+            self.assertEqual(code, 0)
+            ref = result['references'][0]
+            self.assertEqual(ref['geometry_source'], 'local_support_plane')
+            self.assertAlmostEqual(ref['support_height_m'], .76 + shift)
+            self.assertAlmostEqual(ref['endpoints_m'][0][2], .775 + shift)
+            # Reprojection changes lateral geometry as well as height.
+            expected_y = -.04 - 32 * 1.025 / 500
+            self.assertAlmostEqual(ref['endpoints_m'][0][1], expected_y, places=4)
+            self.assertTrue(ref['contact_lanes']['candidates'])
+            self.assertTrue(all(abs(c['surface_point_m'][2] - (.775 + shift)) < 1e-5
+                                for c in ref['contact_lanes']['candidates']))
+
+    def test_support_correction_requires_consistent_two_sided_plane(self):
+        for case in ('missing', 'uneven', 'disagree', 'too_high', 'unbiased'):
+            obs = self.supported_scene(bias=.12 if case == 'too_high' else (0 if case == 'unbiased' else .05))
+            depth = obs['depth']['cam_head']
+            if case == 'missing':
+                depth[155:] = np.nan
+            elif case == 'uneven':
+                depth[160:185] += np.linspace(-.04, .04, 320)
+            elif case == 'disagree':
+                depth[155:] += .02
+            result, code = tool.run(ObservationOnlyAPI(obs), 'measure_scene', {'expected': 3})
+            self.assertEqual(code, 0)
+            self.assertNotEqual(result['references'][0]['geometry_source'], 'local_support_plane', case)
+
+    def test_thin_reference_survives_depth_relief_and_rigid_scene_changes(self):
+        clean, _ = tool.run(ObservationOnlyAPI(scene()), 'measure_scene', {'expected': 3})
+        for angle, translation in ((0., [0., 0., 0.]), (.4, [.2, -.3, .1])):
+            obs = scene()
+            # Smooth network depth error: the old 20 mm height gate rejected it.
+            obs['depth']['cam_head'][150:155, 40:281] += np.linspace(-.03, .03, 241)
+            camera = obs['cameras']['cam_head']
+            c, s = np.cos(angle), np.sin(angle)
+            rotation = np.array([[c, -s, 0.], [s, c, 0.], [0., 0., 1.]])
+            camera['extrinsics_world'][:3, :3] = rotation @ camera['extrinsics_world'][:3, :3]
+            camera['extrinsics_world'][:3, 3] = rotation @ camera['extrinsics_world'][:3, 3] + translation
+            result, code = tool.run(ObservationOnlyAPI(obs), 'measure_scene', {'expected': 3})
+            self.assertEqual(code, 0)
+            self.assertEqual(len(result['references']), 1)
+            ref = result['references'][0]
+            self.assertEqual(ref['geometry_source'], 'horizontal_median_plane')
+            self.assertGreater(ref['depth_height_relief_m'], .02)
+            self.assertAlmostEqual(ref['yaw_deg'], np.degrees(angle), places=2)
+            self.assertAlmostEqual(ref['length_m'], clean['references'][0]['length_m'], places=4)
+            self.assertTrue(all(ref['within_span']))
+            self.assertTrue(ref['contact_lanes']['candidates'])
+
+    def test_planar_fallback_rejects_large_relief_and_sparse_depth(self):
+        for sparse in (False, True):
+            obs = scene()
+            obs['depth']['cam_head'][150:155, 40:281] += np.linspace(-.07, .07, 241)
+            if sparse:
+                obs['depth']['cam_head'][150:155, 40:281] = np.nan
+                obs['depth']['cam_head'][150:152, 40:281] = 1.02 + np.linspace(-.03, .03, 241)
+            result, code = tool.run(ObservationOnlyAPI(obs), 'measure_scene', {'expected': 3})
+            self.assertEqual(code, 0)
+            self.assertEqual(result['references'], [])
+
+    def test_planar_fallback_requires_elongated_image_support(self):
+        v, u = np.mgrid[0:20, 0:20]
+        v, u = v.ravel(), u.ravel()
+        depth = np.full((20, 20), 1.)
+        k = np.diag([100., 100., 1.])
+        transform = np.eye(4)
+        points = tool.project(v, u, depth, k, transform)
+        self.assertIsNone(tool.planar_reference(v, u, depth, k, transform, points))
+
     def test_rotated_footprint_reports_shortest_edge_turn(self):
         for angle in (-32., 23., 83.):
             a = np.radians(angle)
@@ -73,6 +157,7 @@ class MeasurementTests(unittest.TestCase):
         self.assertTrue(all(abs(x) < .01 for x in result['references'][0]['region_edge_turn_deg_mod90']))
         self.assertAlmostEqual(result["row"]["yaw_deg"], -11.31, places=2)
         self.assertEqual(len(result["references"]), 1)
+        self.assertEqual(result['references'][0]['geometry_source'], 'depth_region')
         self.assertTrue(all(result["references"][0]["within_span"]))
         self.assertTrue(all(x > 0 for x in result["references"][0]["signed_center_distances_m"]))
 

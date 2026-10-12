@@ -1,4 +1,4 @@
-"""Detect the scene reference and make one bounded leveling push."""
+"""Detect the scene reference and make one bounded normal sweep."""
 import importlib.util
 import math
 from pathlib import Path
@@ -13,7 +13,7 @@ _spec.loader.exec_module(_measure)
 
 TOOL = {"name": "align_reference", "commands": [{
     "name": "align_reference", "budget": True,
-    "help": "detect the visible guide and make one bounded leveling push",
+    "help": "detect the visible guide and make one bounded perpendicular push",
     "args": []
 }]}
 
@@ -107,9 +107,40 @@ def select_contact(measurement, ref, lanes):
     return lane["surface_point_m"]
 
 
+def sweep_displacement(measurement, ref):
+    """Keep contact-lane clearance valid along the entire translation.
+
+    A wrist turn is not evidence that a loosely held reference rotated. Use
+    its observed axis without turning, and sweep past the farthest visible
+    region with a footprint allowance and 25 mm estimated-depth margin.
+    No world-coordinate datum or assumed transmission of wrist yaw is used.
+    """
+    ends = np.asarray(ref["endpoints_m"], float)
+    centers = np.asarray([r["surface_center_m"] for r in measurement["regions"]], float)
+    extents = np.asarray([r["surface_extent_m"] for r in measurement["regions"]], float)
+    axis = ends[1, :2] - ends[0, :2]
+    length = float(np.linalg.norm(axis))
+    if not math.isfinite(length) or length <= .01:
+        raise ValueError("invalid_reference_axis")
+    axis /= length
+    normal = np.array([-axis[1], axis[0]])
+    offsets = (centers[:, :2] - ends[0, :2]) @ normal
+    if float(np.median(offsets)) < 0:
+        normal = -normal
+        offsets = -offsets
+    if not np.isfinite(offsets).all() or np.min(offsets) <= 0:
+        raise ValueError("regions_not_on_one_side_of_reference")
+    radii = extents[:, :2] @ np.abs(normal) / 2
+    distance = float(np.max(offsets + radii)) + .025
+    if not math.isfinite(distance) or not .012 <= distance <= .24:
+        raise ValueError("required_sweep_outside_bounds")
+    return np.r_[normal * distance, 0.]
+
+
 def run(api, command, args):
     stages = []
     selection = {}
+    before = after = None
     try:
         if command != "align_reference":
             raise ValueError("unsupported command")
@@ -124,15 +155,14 @@ def run(api, command, args):
         x, y, surface_z = map(float, point)
         selection["contact_surface_point_m"] = list(point)
         yaw = float(ref["yaw_deg"])
-        dy = max(-0.24, min(0.24, -y))
-        if abs(dy) < .012:
-            dy = .012 if y <= 0 else -.012
+        delta = sweep_displacement(before, ref)
+        selection["push_delta_m"] = delta.tolist()
         arm_name = "left" if x < 0 else "right"
         selection["arm"] = arm_name
         arm = api.arm(arm_name)
         target = np.asarray(arm.tcp(), dtype=float).copy()
         above_z = surface_z + .06
-        # Downward approach with finger opening along the guide's long axis.
+        # Downward approach with finger opening perpendicular to the guide.
         angle = math.radians(yaw)
         approach = np.array([0., 0., -1.])
         across = np.array([-math.sin(angle), math.cos(angle), 0.])
@@ -170,16 +200,15 @@ def run(api, command, args):
         move("descend", target)
         api.set_gripper(arm, 0.0)
         stages.append({"stage": "close"})
-        # Square the guide before translating it toward the world-y datum.
-        rot = np.array([[math.cos(-angle), -math.sin(-angle), 0.],
-                        [math.sin(-angle), math.cos(-angle), 0.], [0., 0., 1.]])
+        # Preserve the observed yaw: rotating the wrist does not establish
+        # reference rotation, and world-y travel can cross the padded lanes.
         target = np.asarray(arm.tcp(), float).copy()
-        target[:3, :3] = rot @ target[:3, :3]
-        move("square", target)
-        target[:3, 3] = np.asarray(arm.tcp(), float)[:3, 3] + [0., dy, 0.]
+        target[:3, 3] += delta
         move("push", target)
         api.set_gripper(arm, 1.0)
         stages.append({"stage": "release"})
+        # Retain fresh evidence even if the later withdrawal cannot be planned.
+        after = _observe_measure(api)
         target[:3, 3] = np.asarray(arm.tcp(), float)[:3, 3] + [0., 0., .06]
         move("withdraw", target)
         after = _observe_measure(api)
@@ -189,4 +218,4 @@ def run(api, command, args):
                 "note": "One push completed; after contains fresh geometric evidence."}, 0
     except Exception as exc:
         return {"plan_ok": False, "plan_fail_reason": str(exc), "stages": stages,
-                "selection": selection}, 1
+                "selection": selection, "before": before, "after": after}, 1

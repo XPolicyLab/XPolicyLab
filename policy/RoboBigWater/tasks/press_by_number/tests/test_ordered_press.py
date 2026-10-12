@@ -114,11 +114,10 @@ class Tests(unittest.TestCase):
 
     def test_measurement_csv_round_trip_is_observation_only(self):
         import json
-        observation = {'depth': {'cam_head': np.ones((5, 5))},
-                       'cameras': {'cam_head': {'intrinsics': np.eye(3),
-                                                'extrinsics_world': np.eye(4)}}}
-        api = types.SimpleNamespace(observe=lambda: observation)
-        measured, code = tool.run(api, 'surface_point', dict(u=2, v=2))
+        from test_support_surface import observation
+        obs = observation(.73, .02)
+        api = types.SimpleNamespace(observe=lambda: obs)
+        measured, code = tool.run(api, 'surface_point', dict(u=80, v=60))
         self.assertEqual(code, 0)
         np.testing.assert_allclose([float(v) for v in measured['point_csv'].split(',')],
                                    measured['point_world'], atol=1e-9)
@@ -133,7 +132,7 @@ class Tests(unittest.TestCase):
         expected = ['a']*9+['c']+['b']*9+['c']
         self.assertEqual(result['strokes_attempted'], expected)
         self.assertEqual(result['strokes_completed'], expected)
-        self.assertEqual(len(api.descents), 20)
+        self.assertEqual(len(api.descents), 38)  # Six uninterrupted extensions at each of three points.
         for arm in api.arms.values():
             np.testing.assert_allclose(arm.joints(), arm.home_joints)
         self.assertLess(api.steps, 700)
@@ -152,12 +151,12 @@ class Tests(unittest.TestCase):
                                     ay=-.15, by=-.15, cy=-.15)
         self.assertEqual(code, 0, result)
         contact = [pose for _, pose in api.targets if tool.fingertip_position(pose)[2] < .8]
-        self.assertEqual(len(contact), 3)  # C's second stroke uses joint replay.
+        self.assertEqual(len(contact), 21)  # Seven monotonic targets per first descent.
         for pose in contact:
             np.testing.assert_allclose(pose[:3, 0], [0, 0, -1])
             self.assertAlmostEqual(pose[1, 3], -.15)
-            self.assertAlmostEqual(tool.fingertip_position(pose)[2], .794)
-            self.assertAlmostEqual(pose[2, 3], .794 + tool.TIP_BEYOND_TCP)
+            self.assertGreaterEqual(tool.fingertip_position(pose)[2], .782 - 1e-9)
+            self.assertLessEqual(tool.fingertip_position(pose)[2], .794 + 1e-9)
         self.assertEqual(result['strokes_completed'], ['a', 'c', 'b', 'c'])
 
     def test_contact_drift_still_aborts_after_one_release(self):
@@ -193,14 +192,36 @@ class Tests(unittest.TestCase):
                 clear_moves += 1
                 self.assertAlmostEqual(tip[2] - .8, .012)
             else:
-                self.assertAlmostEqual(.8 - tip[2], .006)
-                # A TCP above the surface still puts the distal tip below it.
-                self.assertGreater(pose[2, 3], .8)
+                self.assertGreaterEqual(.8 - tip[2], .006 - 1e-9)
+                self.assertLessEqual(.8 - tip[2], .018 + 1e-9)
         self.assertGreaterEqual(clear_moves, 6)
         for stage in result['stages']:
             if stage['stage'] == 'cycle':
-                self.assertAlmostEqual(stage['penetration_m'], .006)
-                self.assertAlmostEqual(stage['tcp_penetration_m'], -.00657)
+                self.assertAlmostEqual(stage['penetration_m'], .018)
+                self.assertAlmostEqual(stage['tcp_penetration_m'], .00543)
+
+    def test_blocked_approach_is_not_safe_to_repeat_and_retracts(self):
+        api = API()
+        original = api.move_tcp
+        blocked = []
+        def move(arm, pose, feedback):
+            code = original(arm, pose, feedback)
+            if not blocked and pose[2, 3] < .85:
+                arm.pose[0, 3] += .003
+                arm.pose[2, 3] += .009
+                blocked.append(arm.tcp())
+            return code
+        api.move_tcp = move
+        result, code = self.execute(api)
+        self.assertEqual(code, 2)
+        self.assertEqual(result['plan_fail_reason'], 'release_or_approach_tracking_error')
+        self.assertFalse(result['retry_safe'])
+        self.assertTrue(result['approach_attempted'])
+        self.assertEqual(result['strokes_attempted'], [])
+        self.assertEqual(result['stages'][-1]['stage'], 'abort_release')
+        np.testing.assert_allclose(api.arm('left').tcp()[:2, 3], blocked[0][:2, 3])
+        self.assertGreaterEqual(api.arm('left').tcp()[2, 3], blocked[0][2, 3]+.05)
+        self.assertEqual(len(api.descents), 0)
 
     def test_descent_exception_releases_without_retry(self):
         api = API()
@@ -217,7 +238,8 @@ class Tests(unittest.TestCase):
         api.fail_release = True
         result, code = self.execute(api)
         self.assertEqual(code, 2)
-        self.assertEqual(len(api.descents), 1)
+        self.assertEqual(len(api.descents), 7)
+        self.assertEqual(result['strokes_attempted'], ['a'])
         self.assertEqual(result['strokes_completed'], [])
 
     def test_budget_guard_precedes_motion(self):
@@ -226,6 +248,53 @@ class Tests(unittest.TestCase):
         result, code = self.execute(api)
         self.assertEqual(result['plan_fail_reason'], 'insufficient_time')
         self.assertEqual(api.steps, 600)
+
+    def test_biased_heights_count_once_per_release_with_bounded_contact(self):
+        # A toy spring with a 6 mm stop and a 3 mm activation threshold.
+        # It is an independent behavioral model, not physical validation.
+        class SpringAPI(API):
+            def __init__(self, top):
+                super().__init__()
+                self.top = top
+                self.active = dict(a=False, b=False, c=False)
+                self.activations = dict(a=0, b=0, c=0)
+                self.minimum = dict(a=1., b=1., c=1.)
+            def run(self, paths):
+                result = super().run(paths)
+                for tag in paths:
+                    arm = self.arm(tag)
+                    tip = tool.fingertip_position(arm.tcp())
+                    for name, x in zip('abc', [-.14, .01, .16]):
+                        if abs(tip[0]-x) > .01:
+                            continue
+                        if tip[2] < self.top-.006:
+                            arm.pose[2, 3] += self.top-.006-tip[2]
+                        tip = tool.fingertip_position(arm.tcp())
+                        self.minimum[name] = min(self.minimum[name], tip[2])
+                        if tip[2] < self.top-.003 and not self.active[name]:
+                            self.activations[name] += 1
+                            self.active[name] = True
+                        if tip[2] > self.top-.0003:
+                            self.active[name] = False
+                return result
+            def move_tcp(self, arm, pose, feedback):
+                result = super().move_tcp(arm, pose, feedback)
+                self.hold(4)  # Conservative allowance for server settling.
+                return result
+        for top in (.69, .80, .87):
+            for bias in (-.004, 0., .008, .010):
+                api = SpringAPI(top)
+                result, code = self.execute(api, az=top+bias, bz=top+bias, cz=top+bias)
+                self.assertEqual(code, 0, result)
+                self.assertEqual(api.activations, dict(a=9, b=9, c=2))
+                self.assertFalse(any(api.active.values()))
+                self.assertLess(api.steps, 700)
+                self.assertEqual(len(result['strokes_completed']), 20)
+                for name in 'abc':
+                    depths = [stage['commanded_tip_depth_m'] for stage in result['stages']
+                              if stage['stage'] == name+'_down' and 'commanded_tip_depth_m' in stage]
+                    self.assertTrue(np.all(np.diff(depths) > 0))
+                    self.assertLessEqual(max(depths), .01800001)
 
     def test_official_timing_local_cycle(self):
         # Synthetic 0.25 rad joint excursion: two endpoints plus 80 ms

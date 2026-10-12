@@ -20,7 +20,7 @@ TOOL = {"name": "surface_press", "commands": [
 ]}
 
 
-def surface_point(observation, u, v):
+def raw_surface_point(observation, u, v):
     depth = np.asarray(observation["depth"]["cam_head"], dtype=float)
     if depth.ndim != 2 or not (1 <= u < depth.shape[1]-1 and 1 <= v < depth.shape[0]-1):
         raise ValueError("pixel must have a complete 3x3 depth neighborhood")
@@ -50,6 +50,97 @@ def surface_point(observation, u, v):
             "point_world": p[:3].tolist(),
             "point_csv": ",".join(format(float(value), ".9f") for value in p[:3]),
             "depth_spread_m": float(np.ptp(valid))}
+
+
+# Resting base-to-top extent from the static asset geometry (metres), not
+# a world height or a layout coordinate. Infer the supporting height anew.
+SURFACE_HEIGHT = 0.030913632
+
+
+def surface_point(observation, u, v):
+    """Constrain noisy foreground depth with a broad visible support region."""
+    import io
+    from PIL import Image
+    result = raw_surface_point(observation, u, v)
+    raw = np.asarray(result["point_world"])
+    depth = np.asarray(observation["depth"]["cam_head"], dtype=float)
+    try:
+        rgb = np.asarray(Image.open(io.BytesIO(observation["png"]["cam_head"])).convert("RGB"), dtype=float)
+    except (KeyError, OSError, TypeError) as exc:
+        raise ValueError("insufficient visible support: RGB unavailable") from exc
+    if rgb.shape != (*depth.shape, 3):
+        raise ValueError("RGB/depth dimensions disagree")
+    camera = observation["cameras"]["cam_head"]
+    k = np.asarray(camera["intrinsics"], dtype=float)
+    t = np.asarray(camera["extrinsics_world"], dtype=float)
+    vv, uu = np.indices(depth.shape)
+    rays = np.stack([uu, vv, np.ones_like(uu)], axis=-1) @ np.linalg.inv(k).T
+    rays = rays @ t[:3, :3].T
+    world = t[:3, 3] + depth[..., None] * rays
+    r, g, b = np.moveaxis(rgb, -1, 0)
+    # Visible wood: exclude saturated foreground, pale signage, dark robot
+    # parts and neutral background. The spatial annulus excludes depth halos.
+    wood = ((r > 40) & (r < 245) & (r > 1.15*g) & (r < 2.1*g)
+            & (g > 1.12*b) & (g < 3.0*b))
+    distance = np.linalg.norm(world[..., :2]-raw[:2], axis=-1)
+    mask = (wood & np.isfinite(depth) & (depth > 0) & (rays[..., 2] < -.1)
+            & (distance > .07) & (distance < .40)
+            & (world[..., 2] > raw[2]-.15) & (world[..., 2] < raw[2]+.03))
+    support = world[mask]
+    if len(support) < 200:
+        raise ValueError("insufficient visible support: need 200 valid samples")
+    # Monocular depth can warp a horizontal surface smoothly. A global
+    # height-spread gate mistakes that spatial bias for disconnected support.
+    # Fit its local height field, rejecting residuals rather than raw heights.
+    xy = support[:, :2] - raw[:2]
+    design = np.column_stack([xy, np.ones(len(xy))])
+    weights = np.exp(-np.sum(xy*xy, axis=1)/(2*.18**2))
+    keep = np.ones(len(support), dtype=bool)
+    for _ in range(6):
+        weighted = np.sqrt(weights[keep])
+        coefficients = np.linalg.lstsq(design[keep]*weighted[:, None],
+                                       support[keep, 2]*weighted, rcond=None)[0]
+        residual = support[:, 2] - design @ coefficients
+        updated = np.abs(residual) < .015
+        if updated.sum() < max(200, .65*len(support)):
+            raise ValueError("support plane uncertain: inconsistent heights")
+        if np.array_equal(updated, keep):
+            break
+        keep = updated
+    inliers = support[keep]
+    spread = float(np.percentile(np.abs(residual[keep]), 90))
+    if (spread > .01 or np.min(np.ptp(inliers[:, :2], axis=0)) < .12
+            or np.linalg.norm(coefficients[:2]) > .25):
+        raise ValueError(f"support plane uncertain: residual={spread:.4f} m, "
+                         f"extent={np.ptp(inliers[:, :2], axis=0).tolist()}, "
+                         f"slope={coefficients[:2].tolist()}")
+    # Avoid extrapolating from a distant sliver of visible support.
+    centered = xy[keep] - np.average(xy[keep], axis=0, weights=weights[keep])
+    covariance = (centered.T * weights[keep]) @ centered / weights[keep].sum()
+    offset = np.average(xy[keep], axis=0, weights=weights[keep])
+    if np.min(np.linalg.eigvalsh(covariance)) < .001 or offset @ np.linalg.solve(covariance, offset) > 4:
+        raise ValueError("support plane uncertain: selected ray outside supported region")
+    ray = rays[v, u]
+    slope = coefficients[:2]
+    denominator = ray[2] - slope @ ray[:2]
+    if denominator >= -.1:
+        raise ValueError("selected ray does not face the support")
+    ray_depth = (coefficients[2] + SURFACE_HEIGHT - t[2, 3]
+                 + slope @ (t[:2, 3]-raw[:2])) / denominator
+    plane_z = float(t[2, 3] + ray_depth*ray[2] - SURFACE_HEIGHT)
+    point = t[:3, 3] + ray_depth*ray
+    if ray_depth <= 0 or np.linalg.norm(point-raw) > .08:
+        raise ValueError("support constraint disagrees with selected surface")
+    result.update(point_world=point.tolist(),
+                  point_csv=",".join(format(float(value), ".9f") for value in point),
+                  measurement=dict(method="local_support_fit_plus_fixed_extent",
+                                   support_slope=coefficients[:2].tolist(),
+                                   support_raw_spread_m=float(np.ptp(inliers[:, 2])),
+                                   raw_point_world=raw.tolist(), support_height_m=plane_z,
+                                   surface_height_m=SURFACE_HEIGHT,
+                                   support_samples=len(inliers), support_spread_m=spread,
+                                   correction_m=float(np.linalg.norm(point-raw))))
+    return result
 
 
 def joint_stroke(start, end, travel):
@@ -354,6 +445,9 @@ def ordered_points(args):
 TIP_BEYOND_TCP = 0.08657 + 0.071 - 0.145
 TIP_DEPRESSION = 0.006
 TIP_CLEARANCE = 0.012
+# Bounded allowance for centimetre-scale RGB depth bias; never a new stroke.
+MAX_TIP_DEPRESSION = 0.018
+CONTACT_RESIDUAL = 0.002
 
 
 def fingertip_position(pose):
@@ -370,11 +464,14 @@ def contact_pose(template, surface, height):
 def ordered_press(api, args):
     stages, attempted, completed = [], [], []
     pending = None
+    approach_attempted = False
 
     def result(reason=None, detail=None):
         return dict(plan_ok=reason is None, plan_fail_reason=reason,
                     plan_detail=detail, stages=stages, strokes_attempted=attempted,
-                    strokes_completed=completed, retry_safe=not attempted,
+                    strokes_completed=completed,
+                    retry_safe=not attempted and not approach_attempted,
+                    approach_attempted=approach_attempted,
                     registration_verified=False), 2 if reason else 0
 
     def check_alive():
@@ -426,9 +523,17 @@ def ordered_press(api, args):
             if arm.gripper_target != 0:
                 api.set_gripper(arm, 0)
             pose = contact_pose(pose, points[p], TIP_CLEARANCE)
+            # A low measured height can actuate during approach, before the
+            # first explicit stroke. Never advertise that as safe to replay.
+            approach_attempted = True
+            retreat = pose.copy()
+            retreat[2, 3] = max(float(arm.tcp()[2, 3]), float(pose[2, 3]+.05))
+            pending = (tag, retreat)
             move(tag, pose, "preposition_"+p)
+            pending = None
             poses[tag] = pose.copy()
         cache = {}
+        endpoint_poses = {}
 
         def endpoint(tag, p, phase):
             pose = contact_pose(poses[tag], points[p],
@@ -436,9 +541,39 @@ def ordered_press(api, args):
             key = (tag, p, phase)
             arm = api.arm(tag)
             if key not in cache:
-                move(tag, pose, p+"_"+phase, contact=phase == "down")
-                cache[key] = arm.joint_target.copy()
+                depths = (np.arange(TIP_DEPRESSION, MAX_TIP_DEPRESSION + .0001, .002)
+                          if phase == "down" else [None])
+                for depth in depths:
+                    if depth is not None:
+                        if api.sim_time_left() < 4.0:
+                            raise RuntimeError("insufficient_time")
+                        pose = contact_pose(poses[tag], points[p], -depth)
+                    move(tag, pose, p+"_"+phase, contact=phase == "down")
+                    cache[key] = arm.joint_target.copy()
+                    endpoint_poses[key] = pose.copy()
+                    if depth is not None:
+                        api.hold(2)
+                        check_alive()
+                        reached = arm.tcp()
+                        tip = fingertip_position(reached)
+                        residual = float(tip[2] - (points[p][2]-depth))
+                        lateral = float(np.linalg.norm(tip[:2]-points[p][:2]))
+                        stages[-1].update(commanded_tip_depth_m=float(depth),
+                                          vertical_residual_m=residual,
+                                          lateral_error_m=lateral)
+                        if np.linalg.norm(reached[:3, :3]-pose[:3, :3]) > .15:
+                            raise RuntimeError("orientation_tracking_error")
+                        # Resistance or lateral slip ends this uninterrupted
+                        # descent. Neither establishes that activation occurred.
+                        if lateral >= .002:
+                            raise RuntimeError("lateral_tracking_error")
+                        if residual >= CONTACT_RESIDUAL:
+                            stages[-1]["descent_stop"] = "tracking_resistance"
+                            break
+                        if depth >= MAX_TIP_DEPRESSION - .0001:
+                            stages[-1]["descent_stop"] = "depth_cap_activation_unknown"
             else:
+                pose = endpoint_poses[key]
                 delta = np.max(np.abs(cache[key]-arm.joints()))
                 if delta > .5:
                     raise RuntimeError("local_joint_tracking_error")
@@ -491,7 +626,12 @@ def ordered_press(api, args):
         recovery = None
         if pending is not None and not api.over:
             try:
-                move(pending[0], pending[1], "abort_release")
+                if not attempted:
+                    retreat = api.arm(pending[0]).tcp().copy()
+                    retreat[2, 3] = max(retreat[2, 3]+.05, pending[1][2, 3])
+                else:
+                    retreat = pending[1]
+                move(pending[0], retreat, "abort_release")
                 api.hold(2)
             except Exception as release_exc:
                 recovery = str(release_exc)

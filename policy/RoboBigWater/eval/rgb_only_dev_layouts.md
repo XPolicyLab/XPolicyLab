@@ -1,6 +1,8 @@
-# RoboBigWater, RGB-only: frozen tools on the seed-0 development layouts
+# RoboBigWater, RGB-only: current tools on the seed-0 development layouts
 
-Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses). Depth is estimated inside the policy server by Depth Anything V2 (Metric-Indoor-Base) with its scale fixed from the known table height; the simulator's depth is never read. Tools: the frozen set in `tasks/` (developed earlier with rendered depth, unchanged). Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered `_random` 0-4), one episode per layout, no optimizer, official success and progress checkers. 420 episodes, 2026-10-11.
+Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses). Depth is estimated inside the policy server by Depth Anything V2 (Metric-Indoor-Base) with its scale fixed from the known table height; the simulator's depth is never read. Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered `_random` 0-4), one episode per layout with frozen tools, no optimizer, official success and progress checkers.
+
+Tools: 40 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). `press_by_number` and `align_blocks` carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file will be updated as they finish.
 
 ## Summary (leaderboard formula: mean of the five task types; Generalization = mean of standard and cluttered)
 
@@ -9,11 +11,18 @@ Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-eff
 | Generalization | 23.3 | 26.7 |
 | Precision | 6.2 | 9.1 |
 | Long-Horizon | 5.0 | 21.8 |
-| Memory | 36.7 | 40.3 |
-| Open | 35.0 | 38.9 |
-| **Overall** | **21.2** | **27.4** |
+| Memory | 53.3 | 57.0 |
+| Open | 40.0 | 43.9 |
+| **Overall** | **25.6** | **31.7** |
 
-For reference, the same tools with the simulator's rendered depth reached 48.8 / 54.1 on this formula (the previous revision of this adapter); GPT-6 Astra zero-shot through a fixed harness is 22.5 / 29.0 on the leaderboard.
+Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
+
+## Re-evolved tasks
+
+| Task | Before (earlier tools) | After re-evolution | Progress score after |
+|---|---:|---:|---:|
+| align_blocks | 5/10 | 9/10 | 90.0 |
+| press_by_number | 0/10 | 10/10 | 100.0 |
 
 ## Per variant (seed 0, 10 episodes per task; 5 + 5 for Generalization tasks)
 
@@ -54,10 +63,10 @@ For reference, the same tools with the simulator's rendered depth reached 48.8 /
 | Memory | cover_blocks | 10/10 | 100.0 |
 | Memory | imitate_sorting_sequence | 0/10 | 22.0 |
 | Memory | match_and_pick_from_conveyor | 5/10 | 50.0 |
-| Memory | press_by_number | 0/10 | 0.0 |
+| Memory | press_by_number | 10/10 | 100.0 |
 | Memory | swap_T | 7/10 | 70.0 |
 | Memory | swap_blocks | 0/10 | 0.0 |
-| Open | align_blocks | 5/10 | 50.0 |
+| Open | align_blocks | 9/10 | 90.0 |
 | Open | classify_objects_by_language | 1/10 | 31.0 |
 | Open | general_pickup | 8/10 | 80.0 |
 | Open | pick_from_conveyor_by_image | 1/10 | 10.0 |

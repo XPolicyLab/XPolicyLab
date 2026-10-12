@@ -6,15 +6,7 @@
   "categories": {
    "Generalization": {
     "success_rate": 23.3,
-    "progress_score": 26.7,
-    "standard": {
-     "success_rate": 25.0,
-     "progress_score": 28.8
-    },
-    "cluttered": {
-     "success_rate": 21.7,
-     "progress_score": 24.5
-    }
+    "progress_score": 26.7
    },
    "Precision": {
     "success_rate": 6.2,
@@ -25,18 +17,26 @@
     "progress_score": 21.8
    },
    "Memory": {
-    "success_rate": 36.7,
-    "progress_score": 40.3
+    "success_rate": 53.3,
+    "progress_score": 57.0
    },
    "Open": {
-    "success_rate": 35.0,
-    "progress_score": 38.9
+    "success_rate": 40.0,
+    "progress_score": 43.9
    }
   },
   "leaderboard_formula": {
+   "success_rate": 25.6,
+   "progress_score": 31.7
+  },
+  "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
    "progress_score": 27.4
-  }
+  },
+  "reevolved_tasks": [
+   "align_blocks",
+   "press_by_number"
+  ]
  },
  "variants": [
   {
@@ -2269,91 +2269,92 @@
    "variant": "press_by_number",
    "type": "Memory",
    "episodes": 10,
-   "success": 0,
-   "success_rate": 0.0,
-   "progress_score": 0.0,
+   "success": 10,
+   "success_rate": 100.0,
+   "progress_score": 100.0,
    "per_layout": [
     {
      "layout": 0,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 325
-    },
-    {
-     "layout": 1,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
      "steps": 396
     },
     {
+     "layout": 1,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 476
+    },
+    {
      "layout": 2,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 353
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 415
     },
     {
      "layout": 3,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 339
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 395
     },
     {
      "layout": 4,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 255
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 301
     },
     {
      "layout": 5,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 255
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 305
     },
     {
      "layout": 6,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 241
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 304
     },
     {
      "layout": 7,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 283
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 331
     },
     {
      "layout": 8,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
      "commands": 1,
-     "steps": 422
+     "steps": 480
     },
     {
      "layout": 9,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 283
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 1,
+     "steps": 337
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth (2026-10-12)"
   },
   {
    "task": "swap_T",
@@ -2542,28 +2543,12 @@
    "variant": "align_blocks",
    "type": "Open",
    "episodes": 10,
-   "success": 5,
-   "success_rate": 50.0,
-   "progress_score": 50.0,
+   "success": 9,
+   "success_rate": 90.0,
+   "progress_score": 90.0,
    "per_layout": [
     {
      "layout": 0,
-     "success": true,
-     "progress": 100.0,
-     "end_reason": "auto_success",
-     "commands": 4,
-     "steps": 120
-    },
-    {
-     "layout": 1,
-     "success": true,
-     "progress": 100.0,
-     "end_reason": "auto_success",
-     "commands": 10,
-     "steps": 148
-    },
-    {
-     "layout": 2,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
@@ -2571,62 +2556,79 @@
      "steps": 124
     },
     {
-     "layout": 3,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 10,
-     "steps": 200
-    },
-    {
-     "layout": 4,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 9,
-     "steps": 200
-    },
-    {
-     "layout": 5,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "done",
-     "commands": 2,
-     "steps": 131
-    },
-    {
-     "layout": 6,
+     "layout": 1,
      "success": false,
      "progress": 0.0,
      "end_reason": "agent_exit",
-     "commands": 14,
-     "steps": 193
+     "commands": 2,
+     "steps": 113
+    },
+    {
+     "layout": 2,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 118
+    },
+    {
+     "layout": 3,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 4,
+     "steps": 115
+    },
+    {
+     "layout": 4,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 122
+    },
+    {
+     "layout": 5,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 117
+    },
+    {
+     "layout": 6,
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 109
     },
     {
      "layout": 7,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 5,
-     "steps": 120
+     "commands": 2,
+     "steps": 121
     },
     {
      "layout": 8,
-     "success": false,
-     "progress": 0.0,
-     "end_reason": "sim_time",
-     "commands": 10,
-     "steps": 200
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 2,
+     "steps": 122
     },
     {
      "layout": 9,
      "success": true,
      "progress": 100.0,
      "end_reason": "auto_success",
-     "commands": 7,
-     "steps": 195
+     "commands": 4,
+     "steps": 115
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth (2026-10-12)"
   },
   {
    "task": "classify_objects_by_language",

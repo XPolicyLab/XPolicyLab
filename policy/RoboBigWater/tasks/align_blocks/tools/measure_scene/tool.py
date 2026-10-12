@@ -69,6 +69,80 @@ def edge_yaw(xy):
     return round((float(rect[2]) + 45) % 90 - 45, 3)
 
 
+def reference_geometry(points):
+    center, direction, normal = line_fit(points[:, :2])
+    along = (points[:, :2] - center) @ direction
+    across = (points[:, :2] - center) @ normal
+    low, high = np.percentile(along, [2, 98])
+    width = float(np.ptp(np.percentile(across, [2, 98])))
+    length = float(high - low)
+    if length < .05 or length < 6 * max(width, .001):
+        return None
+    return center, direction, normal, low, high, width, length
+
+
+def planar_reference(v, u, depth, k, transform, points, height=None):
+    """Recover thin horizontal surfaces distorted by estimated depth.
+
+    Require elongated RGB support and bounded depth relief before imposing a
+    horizontal plane. Its height is a region median, never a stored table pose.
+    This assumption is reported; downstream spatial association still applies.
+    """
+    if len(points) < .7 * len(u):
+        return None
+    rect = cv2.minAreaRect(np.column_stack([u, v]).astype(np.float32))
+    short, long = sorted(rect[1])
+    if long < 20 or long < 6 * max(short, 1):
+        return None
+    relief = float(np.ptp(np.percentile(points[:, 2], [5, 95])))
+    if relief > .08:
+        return None
+    z = float(np.median(points[:, 2])) if height is None else float(height)
+    valid = np.isfinite(depth[v, u]) & (depth[v, u] > 0)
+    rays = (transform[:3, :3] @ np.linalg.solve(
+        k, np.array([u[valid], v[valid], np.ones(valid.sum())]))).T
+    if np.any(np.abs(rays[:, 2]) < .1):
+        return None
+    distance = (z - transform[2, 3]) / rays[:, 2]
+    if not np.isfinite(distance).all() or np.any(distance <= 0):
+        return None
+    return transform[:3, 3] + rays * distance[:, None]
+
+
+def support_height(v, u, rgb, depth, k, transform, excluded, points, detections):
+    """Constrain an implausibly elevated thin surface using two-sided support.
+
+    A 15 mm surface allowance is a thin-reference assumption, not a table
+    coordinate. Require independent, flat support patches on both sides and
+    nearby elevated detections; otherwise retain the original measurement.
+    """
+    mask = np.zeros(depth.shape, np.uint8)
+    mask[v, u] = 1
+    outer = cv2.dilate(mask, np.ones((61, 61), np.uint8)).astype(bool)
+    inner = cv2.dilate(mask, np.ones((25, 25), np.uint8)).astype(bool)
+    rv, ru = np.nonzero(outer & ~inner & ~excluded & (rgb.max(axis=2) > 40))
+    if len(ru) < 160 or not detections:
+        return None
+    center, _, normal = line_fit(np.column_stack([u, v]))
+    side = (np.column_stack([ru, rv]) - center) @ normal
+    heights = []
+    for selected in (side < 0, side > 0):
+        patch = project(rv[selected], ru[selected], depth, k, transform)
+        if len(patch) < 80 or len(patch) < .7 * np.count_nonzero(selected):
+            return None
+        if np.ptp(np.percentile(patch[:, 2], [10, 90])) > .015:
+            return None
+        heights.append(float(np.median(patch[:, 2])))
+    if abs(heights[0] - heights[1]) > .01:
+        return None
+    table_z = float(np.mean(heights))
+    excess = float(np.median(points[:, 2])) - table_z
+    region_height = np.median([d['surface_center_m'][2] for d in detections]) - table_z
+    if not .035 < excess <= .09 or not .015 <= region_height <= .09:
+        return None
+    return table_z
+
+
 def contact_lanes(center, direction, low, high, z, detections):
     """Subtract padded region footprints projected along the reference axis.
 
@@ -141,27 +215,37 @@ def measure(rgb, depth, k, transform, color, reference, expected, line_tolerance
                                    if result["plan_ok"] else None),
             criterion="Fitted-line residual only; neither world-y span nor completion. Surface orientation can offset centers even during edge contact.")
     references = []
+    excluded = color_mask(rgb, color) | color_mask(rgb, reference)
     for v, u in regions(color_mask(rgb, reference)):
         points = project(v, u, depth, k, transform)
         if len(points) < 30:
             continue
-        center, direction, normal = line_fit(points[:, :2])
-        along = (points[:, :2] - center) @ direction
-        across = (points[:, :2] - center) @ normal
-        low, high = np.percentile(along, [2, 98])
-        width = float(np.ptp(np.percentile(across, [2, 98])))
-        length = float(high - low)
-        if length < 0.05 or length < 6 * max(width, 0.001):
-            continue
-        if np.ptp(np.percentile(points[:, 2], [5, 95])) > 0.02:
-            continue
+        geometry = reference_geometry(points)
+        source = "depth_region"
+        relief = float(np.ptp(np.percentile(points[:, 2], [5, 95])))
+        table_z = support_height(v, u, rgb, depth, k, transform, excluded, points, detections)
+        if geometry is None or relief > .02 or table_z is not None:
+            projected = planar_reference(v, u, depth, k, transform, points,
+                                         None if table_z is None else table_z + .015)
+            if projected is None:
+                continue
+            geometry = reference_geometry(projected)
+            if geometry is None:
+                continue
+            points = projected
+            source = "horizontal_median_plane" if table_z is None else "local_support_plane"
+        center, direction, normal, low, high, width, length = geometry
         z = float(np.median(points[:, 2]))
         endpoints = np.array([center + low * direction, center + high * direction])
         ref = {"endpoints_m": rounded(np.column_stack([endpoints, [z, z]])),
+               "geometry_source": source, "depth_height_relief_m": round(relief, 5),
                "yaw_deg": round(math.degrees(math.atan2(direction[1], direction[0])), 3),
                "length_m": round(length, 5), "width_m": round(width, 5),
                "normal_xy": rounded(normal),
                "signed_center_distances_m": [], "within_span": []}
+        if table_z is not None:
+            ref["support_height_m"] = round(table_z, 5)
+            ref["assumed_surface_offset_m"] = .015
         ref["region_edge_turn_deg_mod90"] = [
             round((ref["yaw_deg"] - d["edge_yaw_deg_mod90"] + 45) % 90 - 45, 3)
             if d["edge_yaw_deg_mod90"] is not None else None for d in detections]
