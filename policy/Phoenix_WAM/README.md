@@ -2,7 +2,7 @@
 
 本版本仅支持评测。
 
-Phoenix_WAM is an evaluation-only policy based on [InternW0-Delta](https://github.com/InternRobotics/InternW0-Delta), supporting **ARX X5, Piper and Piper X** with one shared checkpoint. Robot-specific normalization and soft prompts are selected automatically through `env_cfg_type`.
+Phoenix_WAM is an evaluation-only policy supporting **ARX X5, Piper and Piper X** with one shared checkpoint. Robot-specific normalization and soft prompts are selected automatically through `env_cfg_type`.
 
 The released checkpoint is Piper posttraining step **40000**, initialized from pretraining step 165000. ARX X5 and Piper X use this checkpoint for transfer evaluation. We provide the policy; **RoboDojo provides the real-robot client and hardware configuration**.
 
