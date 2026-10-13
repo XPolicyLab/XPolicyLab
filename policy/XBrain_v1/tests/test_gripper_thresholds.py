@@ -11,6 +11,7 @@ from XPolicyLab.policy.XBrain_v1.gripper_thresholds import (
     apply_gripper_thresholds,
     load_gripper_thresholds,
     normalize_prompt,
+    resolve_episode_gripper_rule,
 )
 
 
@@ -22,7 +23,9 @@ EXPECTED_OVERRIDES = {
     ("piper_x", "sweep_blocks"): (0.35, 0.30, 1.3, 1.3),
     ("piper_x", "hang_mugs"): (0.15, 0.15, 1.15, 1.15),
     ("piper", "fill_pen_holder"): (0.20, 0.20, 1.0, 1.0),
-    ("piper", "put_objects_into_basket"): (0.22, 0.22, 1.0, 1.0),
+    ("piper", "put_objects_into_basket"): (0.25, 0.25, 1.0, 1.0),
+    ("piper", "stack_bowls"): (0.25, 0.25, 1.5, 1.5),
+    ("piper", "stand_up_bottles"): (0.70, 0.70, 1.2, 1.2),
     ("piper", "insert_charger"): (0.35, 0.35, 1.1, 1.1),
     ("piper", "stack_and_cover_blocks"): (0.45, 0.45, 1.1, 1.1),
     ("arx_x5", "pack_and_pour_fruit"): (0.30, 0.30, 1.1, 1.1),
@@ -43,6 +46,14 @@ def main():
         rules = load_gripper_thresholds(config_path, robot)
         rule = next(rule for rule in rules.values() if rule.task == task)
         assert (rule.left, rule.right, rule.left_scale, rule.right_scale) == expected
+        if rule.episode_joint2:
+            state = np.zeros(14, dtype=np.float32)
+            state[1] = 1.2
+            rule, selected = resolve_episode_gripper_rule(rule, state)
+            assert selected == "left"
+            assert rule.action_horizon == 40
+            assert (rule.left, rule.right, rule.left_scale, rule.right_scale) == (0.8, 0.2, 1.1, 1.3)
+            expected = (rule.left, rule.right, rule.left_scale, rule.right_scale)
         left, right, left_scale, right_scale = expected
         values = np.zeros((3, 14), dtype=np.float32)
         values[:, 6] = [left - 0.01, left, left + 0.01]

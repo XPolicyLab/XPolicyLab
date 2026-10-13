@@ -155,7 +155,7 @@ Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
 preserved, its prefix uses the default horizon, and the server logs a warning once.
 
-Task-specific settings updated on 2026-10-09:
+Task-specific settings updated on 2026-10-13:
 
 | Robot | Task | Left threshold | Right threshold | Left scale | Right scale | Returned steps |
 |---|---|---:|---:|---:|---:|---:|
@@ -165,18 +165,71 @@ Task-specific settings updated on 2026-10-09:
 | PiperX | `hang_mugs` | 0.15 | 0.15 | 1.15 | 1.15 | 30 |
 | PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 | 20 |
 | PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 30 |
-| Piper | `fill_pen_holder` | 0.20 | 0.20 | 1.0 | 1.0 | 50 |
+| Piper | `fill_pen_holder` | per-episode | per-episode | per-episode | per-episode | 40 |
 | Piper | `insert_charger` | 0.35 | 0.35 | 1.1 | 1.1 | 20 |
-| Piper | `put_objects_into_basket` | 0.22 | 0.22 | 1.0 | 1.0 | 30 |
+| Piper | `put_objects_into_basket` | 0.25 | 0.25 | 1.0 | 1.0 | 30 |
 | Piper | `stack_and_cover_blocks` | 0.45 | 0.45 | 1.1 | 1.1 | 40 |
-| Piper | `stack_bowls` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
-| Piper | `stand_up_bottles` | 0.65 | 0.65 | 1.3 | 1.3 | 20 |
+| Piper | `stack_bowls` | 0.25 | 0.25 | 1.5 | 1.5 | 30 |
+| Piper | `stand_up_bottles` | 0.70 | 0.70 | 1.2 | 1.2 | 30 |
 | ARX X5 | `cover_blocks` | 0.75 | 0.75 | 1.3 | 1.3 | 20 |
 | ARX X5 | `insert_tubes` | 0.40 | 0.40 | 1.3 | 1.3 | 20 |
 | ARX X5 | `make_bread` | 0.20 | 0.20 | 1.3 | 1.3 | 30 |
 | ARX X5 | `make_food` | 0.25 | 0.25 | 1.0 | 1.0 | 30 |
 | ARX X5 | `pack_and_pour_fruit` | 0.30 | 0.30 | 1.1 | 1.1 | 20 |
 | ARX X5 | `store_in_safe` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
+
+For `fill_pen_holder`, every received joint-state observation is checked until
+one arm is observed with joint2 strictly greater than 1.0. Use the second joint of each six-joint arm in the
+unnormalized 14-D observation: left is index 1 and right is index 8, in radians.
+Before a role is selected, both grippers use threshold 0.2 and scale 1.0. When
+an observation first identifies exactly one qualifying arm, that arm gets
+threshold 0.8 and scale 1.1; the other arm gets threshold 0.2 and scale 1.3.
+The triggering observation may arrive between action requests; it is processed
+by update_obs immediately, so a later observation cannot replace the first hit.
+The selection is fixed for all subsequent observations and 40-step chunks in
+that episode, even if the joint2 values change or cross 1.0. Equal to 1.0 does
+not count as greater. Neither qualifying is normal while waiting. If both
+first qualify in the same received observation, their actual order is unknown:
+keep the neutral threshold 0.2 / scale 1.0, log the ambiguity and wait for an
+unambiguous observation instead of guessing a side. Nonfinite or wrong-sized
+states still fail validation.
+
+`reset()` begins a new model episode and clears the selection. The standard
+`deploy.py` already calls reset before each episode, so repeated tests of the
+same task begin in the neutral state and reselect on that episode's first observed
+qualifying arm without modifying
+the client. The existing `prepare_case` and `trial_end` protocol hooks also
+clear observations, pipeline memory and role selections. Changing prompt
+clears that environment's selection. Batch requests keep selections separate
+by environment index (or batch slot when no indices are provided).
+
+If a client starts another trial with the same prompt without sending reset,
+prepare_case or trial_end, the model cannot distinguish it from another chunk
+of the current trial. A pause, WebSocket reconnect or a changed joint value
+alone is not treated as an episode boundary. The server does not infer task
+success or completion from observations. Selection logs show the selected arm,
+both joint2 values in the triggering observation and the effective gripper
+parameters. The decision uses received observations; it cannot detect the order
+of movements that the client has never sent. Batch observation updates are
+also monitored between inference calls.
+
+For Piper `stand_up_bottles`, the server also tracks an independent joint5
+correction for each arm. A newly received, unnormalized joint-state observation
+arms the correction when that arm's gripper state is strictly below 0.6 and its
+fifth joint is strictly below -1.1 radians. In the 14-D state/action layout,
+left joint5/gripper are indices 4/6, and right joint5/gripper are indices 11/13.
+While armed, each outgoing joint5 target is changed to
+`max(original_target - 0.05, -1.25)`. The first predicted joint5 target strictly
+above -1.1 disables that arm's correction: that row and the remaining rows of
+the chunk stay unchanged, even if later targets fall below -1.1 again. A real
+gripper state strictly above 0.6 also disables correction. Equality alone does
+not arm or disarm the rule. Another newly received observation satisfying both
+trigger conditions can rearm it; repeated inference without a new observation
+cannot. Gripper triggers use observed state, not predicted or amplified gripper
+actions. Only returned rows are examined; discarded rows of the 50-step plan
+cannot disable the rule. Reset, prepare_case, trial_end and prompt changes clear
+the correction, and batched environments maintain separate state. This does not
+change the task's 30 returned steps, gripper threshold 0.7 or scale 1.2.
 
 Edit
 `left`/`right` for thresholds and `left_scale`/`right_scale` for multipliers in

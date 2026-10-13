@@ -16,8 +16,8 @@ POLICY_ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_HORIZONS = {
     "piper_x": {"cap_pen": 30, "classify_objects": 20, "disassemble_LEGO": 30,
                 "hang_mugs": 30, "pack_objects_into_backpack": 20, "sweep_blocks": 30},
-    "piper": {"fill_pen_holder": 50, "insert_charger": 20, "put_objects_into_basket": 30,
-              "stack_and_cover_blocks": 40, "stack_bowls": 20, "stand_up_bottles": 20},
+    "piper": {"fill_pen_holder": 40, "insert_charger": 20, "put_objects_into_basket": 30,
+              "stack_and_cover_blocks": 40, "stack_bowls": 30, "stand_up_bottles": 30},
     "arx_x5": {"cover_blocks": 20, "insert_tubes": 20, "make_bread": 30,
                "make_food": 30, "pack_and_pour_fruit": 20, "store_in_safe": 20},
 }
@@ -60,10 +60,13 @@ class ActionOutputTests(unittest.TestCase):
     @staticmethod
     def observe(model, prompt):
         image = np.zeros((224, 224, 3), dtype=np.uint8)
+        state = np.zeros(14, dtype=np.float32)
+        if "pen holder" in " ".join(prompt.casefold().split()):
+            state[8] = 1.2
         model.update_obs(dict(
             vision={name: {"color": image} for name in
                     ("cam_head", "cam_left_wrist", "cam_right_wrist")},
-            state=np.zeros(14, dtype=np.float32), instruction=prompt,
+            state=state, instruction=prompt,
         ))
 
     @staticmethod
@@ -98,7 +101,7 @@ class ActionOutputTests(unittest.TestCase):
                 with self.subTest(robot=robot, task=rule.task):
                     horizon = EXPECTED_HORIZONS[robot][rule.task]
                     pipeline.prediction[:, 6] = rule.left / 2
-                    pipeline.prediction[:, 13] = rule.right * 2
+                    pipeline.prediction[:, 13] = 1.6 if rule.episode_joint2 else rule.right * 2
                     self.observe(model, rule.prompt)
                     result = self.rows(model.get_action())
                     self.assertEqual(result.shape, (horizon, 14))
@@ -107,7 +110,8 @@ class ActionOutputTests(unittest.TestCase):
                     np.testing.assert_array_equal(result[:, arm_columns],
                                                   pipeline.prediction.numpy()[:horizon, arm_columns])
                     # Predictions and postprocessing use float32 throughout.
-                    np.testing.assert_allclose(result[:, 13], rule.right * 2 * rule.right_scale, rtol=1e-6)
+                    expected_right = 1.6 * 1.1 if rule.episode_joint2 else rule.right * 2 * rule.right_scale
+                    np.testing.assert_allclose(result[:, 13], expected_right, rtol=1e-6)
 
     def test_unknown_prompt_preserves_both_grippers(self):
         model, pipeline = self.make_model()
@@ -136,7 +140,8 @@ class ActionOutputTests(unittest.TestCase):
         model, _ = self.make_model("piper", horizon=10)
         prompts = {rule.task: rule.prompt for rule in model._gripper_thresholds.values()}
         for prompt, horizon in ((prompts["stack_and_cover_blocks"], 40),
-                                (prompts["stack_bowls"], 10),
+                                (prompts["stack_bowls"], 30),
+                                (prompts["insert_charger"], 10),
                                 ("An unconfigured task prompt.", 10)):
             self.observe(model, prompt)
             self.assertEqual(len(model.get_action()), horizon)
@@ -307,10 +312,10 @@ class ActionOutputTests(unittest.TestCase):
     def test_task_scales_are_resolved_for_each_new_prompt(self):
         model, _ = self.make_model("piper")
         for prompt, left, right in (
-            ("Pick up the pen holder and place all the pens into it.", 0.35, 0.30),
+            ("Pick up the pen holder and place all the pens into it.", 0.455, 0.0),
             ("Place all the objects on the table into the basket.", 0.35, 0.30),
             ("Insert the charger plug into the power strip, then connect the charging cable to the plug.", 0.385, 0.0),
-            ("Stack the bowls on the table.", 0.455, 0.39),
+            ("Stack the bowls on the table.", 0.525, 0.45),
         ):
             with self.subTest(prompt=prompt):
                 self.observe(model, prompt)
@@ -330,7 +335,7 @@ class ActionOutputTests(unittest.TestCase):
                 ("piper_x", "Place all the objects on the table into the backpack.", 0.385, 0.33, 20),
                 ("piper_x", "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.", 0.455, 0.39, 30),
                 ("piper", "Place all the objects on the table into the basket.", 0.35, 0.30, 30),
-                ("piper", "Pick up the pen holder and place all the pens into it.", 0.35, 0.30, 50),
+                ("piper", "Pick up the pen holder and place all the pens into it.", 0.455, 0.0, 40),
                 ("piper", "Stack the blocks on the table, then cover them with the cup.", 0.0, 0.0, 40),
                 ("arx_x5", "Pick up the two slices of bread from the bowl and place them into the toaster, then place the two small bowls on the plate.", 0.455, 0.39, 30),
                 ("arx_x5", "Take the cutting board out and place it on the table. Then place the steak and the knife on the cutting board, put the vegetables and shrimp into the pot, place the pot on the stove, and finally cover it with the lid.", 0.35, 0.30, 30),

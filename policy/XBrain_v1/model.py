@@ -1,6 +1,8 @@
 import json
 import os
 import sys
+from copy import deepcopy
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -11,12 +13,14 @@ from XPolicyLab.policy.XBrain_v1.gripper_thresholds import (
     apply_gripper_thresholds,
     load_gripper_thresholds,
     normalize_prompt,
+    resolve_episode_gripper_rule,
 )
 from XPolicyLab.policy.XBrain_v1.piperx_fk_adapter import (
     adjust_piperx_endpose_z,
     fk_source_path,
     joints14_to_endpose16,
 )
+from XPolicyLab.policy.XBrain_v1.stand_up_bottles import BottleJoint5Correction
 from XPolicyLab.utils.process_data import get_batch_size, get_robot_action_dim_info, pack_robot_state
 
 
@@ -59,6 +63,13 @@ class Model(ModelTemplate):
         self._reported_gripper_prompts = set()
         self._warned_gripper_prompts = set()
         self._reported_joint_output_prompts = set()
+        self._episode_gripper_rules = {}
+        self._bottle_joint5_corrections = {}
+        self._active_prompt_keys = {}
+        self._gripper_episode_key = "single"
+        self._ambiguous_gripper_keys = set()
+        self._batch_env_indices = None
+        self._pending_batch_gripper_samples = []
 
         # Get robot action dimension metadata
         # Example:
@@ -161,6 +172,10 @@ class Model(ModelTemplate):
 
     def update_obs(self, obs):
         # Update a single observation here if needed
+        prompt = str(obs.get("instruction") or obs.get("task_instruction") or
+                     self.model_cfg.get("default_prompt", "")).strip()
+        self._gripper_episode_key = "single"
+        self._observe_task_policies(prompt, obs)
         self._obs = obs
         self._obs_batch = None
 
@@ -168,6 +183,17 @@ class Model(ModelTemplate):
         # Update a batch of observations here if needed
         self._obs_batch = list(obs_list)
         self._obs = None
+        if self._batch_env_indices is not None and len(self._batch_env_indices) == len(self._obs_batch):
+            self._observe_batch_gripper_rules(self._obs_batch, self._batch_env_indices)
+        else:
+            # Before env indices are available, retain the received order of
+            # compact state/prompt samples. Camera arrays aren't needed here.
+            self._pending_batch_gripper_samples.append([
+                {"state": deepcopy(obs.get("state")),
+                 "instruction": obs.get("instruction"),
+                 "task_instruction": obs.get("task_instruction")}
+                for obs in self._obs_batch
+            ])
 
     def get_action(self):
         if self._pipe is not None:
@@ -205,6 +231,7 @@ class Model(ModelTemplate):
             # Select the outgoing prefix for this request without changing the
             # fallback horizon used by subsequent tasks or batch items.
             predicted = predicted[:self._action_horizon_for_prompt(prompt)]
+            predicted = self._apply_prompt_joint_corrections(predicted, prompt)
             predicted = self._apply_prompt_gripper_thresholds(predicted, prompt)
         return self._format_pipeline_actions(predicted, prompt=prompt)
 
@@ -217,6 +244,9 @@ class Model(ModelTemplate):
     def _apply_prompt_gripper_thresholds(self, predicted, prompt):
         prompt_key = normalize_prompt(prompt)
         rule = self._gripper_thresholds.get(prompt_key)
+        if rule is not None and rule.episode_joint2 is not None:
+            rule = self._episode_gripper_rules.get(
+                self._gripper_episode_key, replace(rule, episode_joint2=None))
         if rule is None:
             if prompt_key not in self._warned_gripper_prompts:
                 print(
@@ -235,6 +265,114 @@ class Model(ModelTemplate):
             )
             self._reported_gripper_prompts.add(prompt_key)
         return apply_gripper_thresholds(predicted, rule)
+
+    def _clear_episode_gripper_rule(self):
+        self._episode_gripper_rules.clear()
+        self._bottle_joint5_corrections.clear()
+        self._active_prompt_keys.clear()
+        self._ambiguous_gripper_keys.clear()
+        self._batch_env_indices = None
+        self._pending_batch_gripper_samples.clear()
+        # Log the actual per-episode thresholds again after a new episode.
+        self._reported_gripper_prompts.clear()
+
+    def _prepare_episode_gripper_rule(self, prompt, obs):
+        prompt_key = normalize_prompt(prompt)
+        key = self._gripper_episode_key
+        if prompt_key != self._active_prompt_keys.get(key):
+            self._episode_gripper_rules.pop(key, None)
+            self._bottle_joint5_corrections.pop(key, None)
+            self._ambiguous_gripper_keys.discard(key)
+            self._active_prompt_keys[key] = prompt_key
+        base = self._gripper_thresholds.get(prompt_key)
+        if base is None or base.episode_joint2 is None or key in self._episode_gripper_rules:
+            return
+        raw_state = obs.get("state")
+        if isinstance(raw_state, dict):
+            state = pack_robot_state(
+                obs, self.action_type, self.robot_action_dim_info, source_type="obs"
+            ).astype(np.float32)
+        else:
+            state = np.asarray(raw_state, dtype=np.float32)
+        if state.shape != (14,) or not np.isfinite(state).all():
+            raise ValueError(f"fill_pen_holder requires finite state shape (14,), got {state.shape}")
+        left_joint2 = float(state[1])
+        right_joint2 = float(state[8])
+        rule, selected = resolve_episode_gripper_rule(base, state)
+        if selected is None:
+            if left_joint2 > base.episode_joint2.cutoff and right_joint2 > base.episode_joint2.cutoff:
+                if key not in self._ambiguous_gripper_keys:
+                    print(
+                        f"[XBrain_v1] fill_pen_holder role pending: both arm joint2 values "
+                        f"exceed {base.episode_joint2.cutoff} in the same observation; "
+                        f"left_joint2={left_joint2:.6f} right_joint2={right_joint2:.6f}; "
+                        "keeping neutral gripper rule until an unambiguous observation"
+                    )
+                    self._ambiguous_gripper_keys.add(key)
+            return
+        self._episode_gripper_rules[key] = rule
+        # The default pending rule may already have been printed for this task.
+        self._reported_gripper_prompts.discard(prompt_key)
+        print(
+            f"[XBrain_v1] fill_pen_holder rule selected={selected} episode_key={key} "
+            f"left_joint2={left_joint2:.6f} right_joint2={right_joint2:.6f} "
+            f"left_threshold={rule.left} right_threshold={rule.right} "
+            f"left_scale={rule.left_scale} right_scale={rule.right_scale} "
+            f"action_horizon={rule.action_horizon}"
+        )
+
+    def _observe_task_policies(self, prompt, obs):
+        self._prepare_episode_gripper_rule(prompt, obs)
+        rule = self._gripper_thresholds.get(normalize_prompt(prompt))
+        if self.env_cfg_type != "piper" or rule is None or rule.task != "stand_up_bottles":
+            return
+        raw_state = obs.get("state")
+        if isinstance(raw_state, dict):
+            state = pack_robot_state(
+                obs, self.action_type, self.robot_action_dim_info, source_type="obs"
+            ).astype(np.float32)
+        else:
+            state = np.asarray(raw_state, dtype=np.float32)
+        if state.shape != (14,) or not np.isfinite(state).all():
+            raise ValueError(f"stand_up_bottles requires finite state shape (14,), got {state.shape}")
+        correction = self._bottle_joint5_corrections.setdefault(
+            self._gripper_episode_key, BottleJoint5Correction())
+        previous = tuple(correction.active)
+        correction.observe(state)
+        if previous != tuple(correction.active):
+            print(
+                f"[XBrain_v1] stand_up_bottles joint5 correction episode_key={self._gripper_episode_key} "
+                f"left_active={correction.active[0]} right_active={correction.active[1]} "
+                f"left_gripper_state={state[6]:.6f} right_gripper_state={state[13]:.6f} "
+                f"left_joint5_state={state[4]:.6f} right_joint5_state={state[11]:.6f}"
+            )
+
+    def _apply_prompt_joint_corrections(self, predicted, prompt):
+        rule = self._gripper_thresholds.get(normalize_prompt(prompt))
+        if self.env_cfg_type != "piper" or rule is None or rule.task != "stand_up_bottles":
+            return predicted
+        correction = self._bottle_joint5_corrections.get(self._gripper_episode_key)
+        if correction is None:
+            return predicted
+        previous = tuple(correction.active)
+        corrected = correction.apply(predicted)
+        if previous != tuple(correction.active):
+            print(
+                f"[XBrain_v1] stand_up_bottles joint5 correction stopped by predicted joint5 > -1.1 "
+                f"episode_key={self._gripper_episode_key} "
+                f"left_active={correction.active[0]} right_active={correction.active[1]}"
+            )
+        return corrected
+
+    def _observe_batch_gripper_rules(self, observations, indices):
+        try:
+            for env_idx, obs in zip(indices, observations):
+                self._gripper_episode_key = ("batch", env_idx)
+                prompt = str(obs.get("instruction") or obs.get("task_instruction") or
+                             self.model_cfg.get("default_prompt", "")).strip()
+                self._observe_task_policies(prompt, obs)
+        finally:
+            self._gripper_episode_key = "single"
 
     @staticmethod
     def _prepare_image(image, source):
@@ -330,15 +468,39 @@ class Model(ModelTemplate):
             batch_size = len(env_idx_list) if env_idx_list is not None else self.batch_size
             return [self.get_action() for _ in range(batch_size)]
         action_batch = []
-        for obs in self._obs_batch:
-            self._obs = obs
-            action_batch.append(self.get_action())
-        self._obs = None
+        indices = list(env_idx_list) if env_idx_list is not None else list(range(len(self._obs_batch)))
+        if len(indices) != len(self._obs_batch):
+            raise ValueError("env_idx_list and observation batch must have the same length")
+        if not self._pending_batch_gripper_samples and indices != self._batch_env_indices:
+            self._observe_batch_gripper_rules(self._obs_batch, indices)
+        for samples in self._pending_batch_gripper_samples:
+            if len(samples) == len(indices):
+                self._observe_batch_gripper_rules(samples, indices)
+        self._pending_batch_gripper_samples.clear()
+        self._batch_env_indices = indices
+        try:
+            for env_idx, obs in zip(indices, self._obs_batch):
+                self._gripper_episode_key = ("batch", env_idx)
+                prompt = str(obs.get("instruction") or obs.get("task_instruction") or
+                             self.model_cfg.get("default_prompt", "")).strip()
+                self._prepare_episode_gripper_rule(prompt, obs)
+                self._obs = obs
+                action_batch.append(self.get_action())
+        finally:
+            self._obs = None
+            self._gripper_episode_key = "single"
         return action_batch
 
     def reset(self):
         # Reset model state here if it has internal state, such as an RNN hidden state
         self._obs = None
         self._obs_batch = None
+        self._clear_episode_gripper_rule()
         if self._pipe is not None:
             self._pipe.reset_observation_memory()
+
+    def prepare_case(self, case_meta=None):
+        self.reset()
+
+    def on_trial_end(self, result=None):
+        self.reset()

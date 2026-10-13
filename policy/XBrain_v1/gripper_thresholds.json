@@ -55,7 +55,14 @@
       "right": 0.2,
       "left_scale": 1.0,
       "right_scale": 1.0,
-      "action_horizon": 50
+      "action_horizon": 40,
+      "episode_joint2": {
+        "cutoff": 1.0,
+        "selected_threshold": 0.8,
+        "selected_scale": 1.1,
+        "other_threshold": 0.2,
+        "other_scale": 1.3
+      }
     },
     {
       "task": "insert_charger",
@@ -68,8 +75,8 @@
     {
       "task": "put_objects_into_basket",
       "prompt": "Place all the objects on the table into the basket.",
-      "left": 0.22,
-      "right": 0.22,
+      "left": 0.25,
+      "right": 0.25,
       "left_scale": 1.0,
       "right_scale": 1.0,
       "action_horizon": 30
@@ -86,14 +93,20 @@
     {
       "task": "stack_bowls",
       "prompt": "Stack the bowls on the table.",
-      "left": 0.2,
-      "right": 0.2
+      "left": 0.25,
+      "right": 0.25,
+      "left_scale": 1.5,
+      "right_scale": 1.5,
+      "action_horizon": 30
     },
     {
       "task": "stand_up_bottles",
       "prompt": "Stand the bottle upright.",
-      "left": 0.65,
-      "right": 0.65
+      "left": 0.7,
+      "right": 0.7,
+      "left_scale": 1.2,
+      "right_scale": 1.2,
+      "action_horizon": 30
     }
   ],
   "arx_x5": [
