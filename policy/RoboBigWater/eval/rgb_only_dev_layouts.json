@@ -13,8 +13,8 @@
     "progress_score": 11.9
    },
    "Long-Horizon": {
-    "success_rate": 11.2,
-    "progress_score": 26.8
+    "success_rate": 13.8,
+    "progress_score": 29.2
    },
    "Memory": {
     "success_rate": 53.3,
@@ -26,8 +26,8 @@
    }
   },
   "leaderboard_formula": {
-   "success_rate": 28.8,
-   "progress_score": 34.8
+   "success_rate": 29.2,
+   "progress_score": 35.2
   },
   "frozen_tools_before_reevolution": {
    "success_rate": 21.2,
@@ -40,6 +40,7 @@
    "pour_liquid_into_cup",
    "press_by_number",
    "push_T",
+   "put_bottles_into_dustbin",
    "stack_blocks",
    "stack_blocks_by_language"
   ]
@@ -1918,91 +1919,92 @@
    "variant": "put_bottles_into_dustbin",
    "type": "Long-Horizon",
    "episodes": 10,
-   "success": 0,
-   "success_rate": 0.0,
-   "progress_score": 28.0,
+   "success": 2,
+   "success_rate": 20.0,
+   "progress_score": 47.5,
    "per_layout": [
     {
      "layout": 0,
      "success": false,
-     "progress": 25.0,
+     "progress": 40.0,
      "end_reason": "agent_exit",
-     "commands": 21,
-     "steps": 610
+     "commands": 15,
+     "steps": 688
     },
     {
      "layout": 1,
      "success": false,
-     "progress": 25.0,
+     "progress": 40.0,
      "end_reason": "agent_exit",
-     "commands": 15,
-     "steps": 696
+     "commands": 46,
+     "steps": 676
     },
     {
      "layout": 2,
      "success": false,
-     "progress": 25.0,
+     "progress": 40.0,
      "end_reason": "agent_exit",
-     "commands": 16,
-     "steps": 650
+     "commands": 12,
+     "steps": 577
     },
     {
      "layout": 3,
      "success": false,
      "progress": 40.0,
      "end_reason": "agent_exit",
-     "commands": 17,
-     "steps": 643
+     "commands": 34,
+     "steps": 671
     },
     {
      "layout": 4,
-     "success": false,
-     "progress": 40.0,
-     "end_reason": "agent_exit",
-     "commands": 17,
-     "steps": 672
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 10,
+     "steps": 673
     },
     {
      "layout": 5,
      "success": false,
-     "progress": 25.0,
-     "end_reason": "agent_exit",
-     "commands": 19,
-     "steps": 696
+     "progress": 40.0,
+     "end_reason": "sim_time",
+     "commands": 16,
+     "steps": 700
     },
     {
      "layout": 6,
      "success": false,
-     "progress": 40.0,
-     "end_reason": "agent_exit",
-     "commands": 11,
-     "steps": 669
+     "progress": 10.0,
+     "end_reason": "sim_time",
+     "commands": 27,
+     "steps": 700
     },
     {
      "layout": 7,
-     "success": false,
-     "progress": 10.0,
-     "end_reason": "agent_exit",
-     "commands": 23,
-     "steps": 686
+     "success": true,
+     "progress": 100.0,
+     "end_reason": "auto_success",
+     "commands": 14,
+     "steps": 454
     },
     {
      "layout": 8,
      "success": false,
      "progress": 40.0,
      "end_reason": "agent_exit",
-     "commands": 14,
-     "steps": 690
+     "commands": 26,
+     "steps": 663
     },
     {
      "layout": 9,
      "success": false,
-     "progress": 10.0,
-     "end_reason": "sim_time",
-     "commands": 21,
-     "steps": 700
+     "progress": 25.0,
+     "end_reason": "agent_exit",
+     "commands": 27,
+     "steps": 682
     }
-   ]
+   ],
+   "tools": "re-evolved with estimated depth"
   },
   {
    "task": "cover_blocks",

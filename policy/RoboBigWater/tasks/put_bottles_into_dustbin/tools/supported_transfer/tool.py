@@ -10,7 +10,7 @@ TOOL = {"name": "supported_transfer", "commands": [{
         *[{"name": "park_" + n, "type": "float", "default": None} for n in ("x", "y", "z")],
         *[{"name": "release_" + n, "type": "float", "default": None} for n in ("x", "y", "z")],
         {"name": "path", "choices": ["direct", "staged"], "default": "direct"},
-        {"name": "clearance", "type": "float", "default": .12},
+        {"name": "clearance", "type": "float", "default": .08},
         {"name": "withdrawal", "type": "float", "default": .08},
         {"name": "retreat", "choices": ["rising", "straight"], "default": "rising"},
         {"name": "lift", "type": "float", "default": .12},
@@ -35,7 +35,7 @@ def run(api, command, args):
         if path not in ("direct", "staged"):
             raise ValueError("invalid path")
         goal = np.array([float(args[n]) for n in ("x", "y", "z")])
-        clearance, lift = float(args.get("clearance", .12)), float(args.get("lift", .12))
+        clearance, lift = float(args.get("clearance", .08)), float(args.get("lift", .12))
         withdrawal = float(args.get("withdrawal", .08))
         release_values = [args.get("release_" + n) for n in ("x", "y", "z")]
         if any(v is not None for v in release_values) and not all(v is not None for v in release_values):
@@ -87,7 +87,7 @@ def run(api, command, args):
             error, degrees = float(np.linalg.norm(reached[:3, 3]-pos)), angle(rot, reached[:3, :3])
             stages.append(dict(feedback, stage=name, error_m=error, error_deg=degrees))
             if code or not feedback.get("plan_ok", False):
-                return fail(feedback.get("plan_fail_reason") or "motion_failed")
+                return fail(feedback.get("plan_fail_reason") or "motion_failed", feedback.get("plan_detail", ""))
             if api.over:
                 return fail("episode_over")
             if feedback.get("clipped") or feedback.get("workspace_limited"):
@@ -102,7 +102,10 @@ def run(api, command, args):
         # Raise before horizontal travel so the held geometry clears the support.
         raised = initial[:3, 3].copy()
         raised[2] = high[2]
-        placement = (("raise", raised), ("place", goal)) if path == "direct" else (
+        # End lateral travel above the support. A diagonal touchdown can drag
+        # the held body before the TCP reaches its otherwise valid goal.
+        preplace = goal+np.array([0., 0., lift])
+        placement = (("raise", raised), ("carry", preplace), ("lower", goal)) if path == "direct" else (
             ("raise", raised), ("carry", high), ("lower", goal))
         for name, pos in placement:
             if np.linalg.norm(np.asarray(donor.tcp())[:3, 3]-pos) > .002:
@@ -133,17 +136,50 @@ def run(api, command, args):
             failure = move(receiver, "orient", receiving[:3, 3], orient)
             if failure:
                 return failure
-        for name, pos in (("approach", goal-clearance*orient[:, 0]), ("insert", goal)):
+        # Keep lateral arrival above the placement before descending at the
+        # standoff. A long diagonal descent can sweep the open fingers through
+        # the supported body before the nominal insertion starts.
+        approach = goal-clearance*orient[:, 0]
+        arrival = approach.copy()
+        arrival[2] = max(float(receiver.tcp()[2, 3]), goal[2]+lift)
+        receiver_raise = np.asarray(receiver.tcp())[:3, 3].copy()
+        receiver_raise[2] = arrival[2]
+        if np.linalg.norm(receiver_raise-np.asarray(receiver.tcp())[:3, 3]) > .002:
+            failure = move(receiver, "receiver_raise", receiver_raise, orient)
+            if failure:
+                return failure
+        roll_attempted = False
+        for name, pos in (("receiver_transit", arrival), ("approach", approach), ("insert", goal)):
+            before_receiver = np.array(receiver.tcp(), copy=True)
+            before_donor = np.array(donor.tcp(), copy=True)
+            remaining = api.sim_time_left() if hasattr(api, "sim_time_left") else None
             failure = move(receiver, name, pos, orient)
+            # The symmetric finger roll keeps the approach axis and standoff
+            # unchanged. Only retry an IK rejection proven not to have executed;
+            # a stalled/contacting approach must never launch another motion.
+            if (failure and name in ("receiver_transit", "approach")
+                    and not roll_attempted
+                    and stages[-1].get("plan_fail_reason") == "ik_unreachable"
+                    and not stages[-1].get("clipped")
+                    and not stages[-1].get("workspace_limited")
+                    and not api.over and remaining is not None
+                    and np.isfinite(remaining)
+                    and api.sim_time_left() == remaining
+                    and np.allclose(receiver.tcp(), before_receiver, atol=1e-7, rtol=0)
+                    and np.allclose(donor.tcp(), before_donor, atol=1e-7, rtol=0)):
+                orient = orient @ np.diag([1., -1., -1.])
+                roll_attempted = True
+                failure = move(receiver, name+"_roll", pos, orient)
             if failure:
                 return failure
         api.set_gripper(receiver, 0.)
         if api.over:
             return fail("episode_over")
-        if destination is None or path == "staged":
-            failure = move(receiver, "lift", goal+np.array([0., 0., lift]), orient)
-            if failure:
-                return failure
+        # Separate support extraction from lateral transport even on the
+        # direct route; endpoint tracking does not establish retained grip.
+        failure = move(receiver, "lift", goal+np.array([0., 0., lift]), orient)
+        if failure:
+            return failure
         if destination is not None:
             failure = move(receiver, "deliver", destination, orient)
             if failure:

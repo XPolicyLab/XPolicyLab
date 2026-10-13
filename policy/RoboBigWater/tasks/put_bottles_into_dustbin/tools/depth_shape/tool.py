@@ -23,7 +23,7 @@ def cloud(depth, intrinsic, transform, box):
     return points @ transform[:3, :3].T + transform[:3, 3]
 
 
-def fit_axis(points, mode):
+def fit_axis(points, mode, support_z=None):
     if len(points) < 40:
         raise ValueError("too few foreground samples")
     origin = np.median(points, axis=0)
@@ -59,31 +59,55 @@ def fit_axis(points, mode):
         residual = np.abs(np.linalg.norm(xy-center, axis=1)-radius)
         keep = residual <= max(.002, float(np.quantile(residual, .8)))
     rms = float(np.sqrt(np.mean(residual[keep]**2)))
-    if not .005 <= radius <= .15 or rms > min(.008, .2*radius):
+    if not .005 <= radius <= .15:
         raise ValueError("region does not support a reliable circular cross section")
+    # Upright axes have no support-contact constraint on their fitted XY.
+    # A visibly deformed learned-depth arc can otherwise pass the broad radius
+    # test and expose a misleading grasp center. Tighten its residual gate;
+    # this is a model-fit check, not a bound on systematic center error.
+    residual_limit = min(.008, (.1 if mode == "vertical" else .2)*radius)
+    if rms > residual_limit:
+        raise ValueError(
+            f"{mode} circular fit RMS {rms:.4f} m exceeds {residual_limit:.4f} m "
+            "limit; axis center unreliable; remeasure visible axis geometry")
     directions = (xy[keep] - center) / radius
     if np.linalg.eigvalsh(np.cov(directions.T))[0] < .005:
         raise ValueError("visible arc too narrow to infer a center")
     grasp = origin + center[0]*e1 + center[1]*e2 + .5*(lo+hi)*axis
+    # A small residual on a learned-depth arc does not validate its extrapolated
+    # center. Allow centimetre-scale support/depth error, but reject substantial
+    # intersection with the support used to select this same foreground.
+    # Do not clamp to support+radius: neither inferred quantity is ground truth.
+    if mode == "horizontal" and support_z is not None:
+        support_z = float(support_z)
+        if not np.isfinite(support_z):
+            raise ValueError("support_z must be finite")
+        penetration = support_z - (grasp[2] - radius)
+        if penetration > .025:
+            raise ValueError(
+                f"horizontal circular fit intersects support by {penetration:.4f} m "
+                "(limit 0.025 m); center unreliable despite small arc residual; "
+                "check support height and visible region")
     return {"axis_center": grasp.tolist(), "axis_direction": axis.tolist(),
             "radius_m": float(radius), "fit_rms_m": rms, "body_samples": int(keep.sum())}
 
 
-def fit_geometry(points, mode):
+def fit_geometry(points, mode, support_z=None):
     """Surface summaries may expose only an unambiguous validated axis fit."""
     if mode != "surface":
-        return fit_axis(points, mode)
+        return fit_axis(points, mode, support_z)
     fits = []
+    failures = {}
     for candidate_mode in ("vertical", "horizontal"):
         try:
-            fits.append(dict(fit_axis(points, candidate_mode), axis_mode=candidate_mode))
-        except ValueError:
-            pass
+            fits.append(dict(fit_axis(points, candidate_mode, support_z), axis_mode=candidate_mode))
+        except ValueError as exc:
+            failures[candidate_mode] = str(exc)
     if len(fits) == 1:
         return dict(fits[0], fit_ok=True)
     return {"fit_ok": False, "fit_fail_reason": (
         "axis orientation ambiguous" if fits else "no reliable cylindrical fit"),
-        "center_is_surface_only": True}
+        "center_is_surface_only": True, "fit_failures": failures}
 
 
 class ComponentAmbiguity(ValueError):
@@ -215,7 +239,7 @@ def run(api, command, args):
                         "surface_median": np.median(component, axis=0).tolist(),
                         "visible_bounds": np.quantile(component, [.02, .98], axis=0).tolist()}
                     try:
-                        candidate.update(fit_geometry(component, mode))
+                        candidate.update(fit_geometry(component, mode, support))
                         candidate.setdefault("fit_ok", True)
                     except ValueError as fit_error:
                         candidate.update(fit_ok=False, fit_fail_reason=str(fit_error))
@@ -230,7 +254,7 @@ def run(api, command, args):
                   "support_z": support}
         if mode != "raw":
             result = {"plan_ok": True, "plan_fail_reason": None,
-                      **fit_geometry(points, mode), **result}
+                      **fit_geometry(points, mode, support), **result}
             result["foreground_components"] = components
         return result, 0
     except Exception as exc:

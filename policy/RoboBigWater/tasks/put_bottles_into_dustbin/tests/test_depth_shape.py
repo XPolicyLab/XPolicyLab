@@ -8,6 +8,101 @@ m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 
 class GeometryTests(unittest.TestCase):
+    def test_deformed_upright_arcs_do_not_expose_centers(self):
+        theta, height = np.meshgrid(np.linspace(-1.4, 1.4, 60),
+                                    np.linspace(-.09, .09, 50))
+        for yaw, offset in [(0., [0., 0., .9]), (.8, [.2, -.3, 1.2])]:
+            for noise, accepted in [(.001, True), (.006, False)]:
+                radius = .032 + np.random.default_rng(123).normal(0, noise, theta.shape)
+                points = np.column_stack((
+                    radius.ravel()*np.cos(theta.ravel()+yaw),
+                    radius.ravel()*np.sin(theta.ravel()+yaw), height.ravel())) + offset
+                if accepted:
+                    fit = m.fit_axis(points, 'vertical')
+                    np.testing.assert_allclose(fit['axis_center'], offset, atol=.002)
+                else:
+                    with self.assertRaisesRegex(ValueError, 'RMS .* exceeds .* limit'):
+                        m.fit_axis(points, 'vertical')
+                    fit = m.fit_geometry(points, 'surface')
+                    self.assertFalse(fit['fit_ok'])
+                    self.assertNotIn('axis_center', fit)
+                    self.assertIn('RMS', fit['fit_failures']['vertical'])
+                    # The same noisy arc remains within the old 20% gate.
+                    # Rotate its long axis to XY to verify horizontal policy.
+                    horizontal = (points - offset)[:, [2, 1, 0]] + offset
+                    old_policy = m.fit_axis(horizontal, 'horizontal')
+                    self.assertGreater(old_policy['fit_rms_m'], .1*old_policy['radius_m'])
+                    self.assertLess(old_policy['fit_rms_m'], .2*old_policy['radius_m'])
+
+    def test_support_consistency_with_noisy_rotated_upper_arcs(self):
+        rng = np.random.default_rng(62)
+        angle, along = np.meshgrid(np.linspace(-1.1, 1.1, 60),
+                                  np.linspace(-.12, .12, 50))
+        for yaw, support in [(0., .65), (.8, 1.12), (2.4, -.2)]:
+            axis = np.array([np.cos(yaw), np.sin(yaw), 0.])
+            side = np.array([-axis[1], axis[0], 0.])
+            for center_height, accepted in [(.035, True), (.025, True), (0., False)]:
+                center = np.array([.23, -.17, support+center_height])
+                points = (center + along.ravel()[:, None]*axis
+                          + .035*np.sin(angle.ravel())[:, None]*side
+                          + .035*np.cos(angle.ravel())[:, None]*[0., 0., 1.])
+                points += rng.normal(0., .0002, points.shape)
+                unconstrained = m.fit_axis(points, 'horizontal')
+                self.assertLess(unconstrained['fit_rms_m'], .001)
+                if accepted:
+                    result = m.fit_axis(points, 'horizontal', support)
+                    np.testing.assert_allclose(result['axis_center'], center, atol=.002)
+                else:
+                    with self.assertRaisesRegex(ValueError, 'intersects support'):
+                        m.fit_axis(points, 'horizontal', support)
+                    result = m.fit_geometry(points, 'surface', support)
+                    self.assertFalse(result['fit_ok'])
+                    self.assertNotIn('axis_center', result)
+                    self.assertIn('intersects support', result['fit_failures']['horizontal'])
+
+    def test_support_conflict_is_checked_in_public_modes_and_candidates(self):
+        # Render upper arcs whose unconstrained circles extend 4 cm into the
+        # dominant plane. A second disconnected arc exercises candidate fits.
+        v, u = np.mgrid[:160, :200]
+        a, b = (u-100)/300., (v-80)/300.
+        for centers in [[.10], [-.10, .10]]:
+            depth = np.ones(u.shape)
+            for x in centers:
+                qa, qb, qc = a*a+1, -2*(a*x+1.), x*x+1.-.04**2
+                disc = qb*qb-4*qa*qc
+                d = (-qb-np.sqrt(np.maximum(0, disc)))/(2*qa)
+                mask = (disc > 0) & (np.abs(b*d) < .15)
+                depth = np.where(mask, np.minimum(depth, d), depth)
+            class API:
+                def observe(self):
+                    t = np.diag([1., -1., -1., 1.]); t[2, 3] = 2.
+                    return {'cameras': {'cam_head': {
+                        'intrinsics': [[300,0,100],[0,300,80],[0,0,1]],
+                        'extrinsics_world': t}}, 'depth': {'cam_head': depth}}
+            args = dict(u0=0, v0=0, u1=200, v1=160)
+            for mode in ('surface', 'horizontal'):
+                result, code = m.run(API(), 'depth_shape', dict(args, mode=mode))
+                if len(centers) == 2:
+                    self.assertEqual(code, 2, result)
+                    self.assertEqual(result['candidate_count'], 2)
+                    results = result['candidates']
+                elif mode == 'horizontal':
+                    self.assertEqual(code, 2, result)
+                    self.assertIn('intersects support', result['plan_detail'])
+                    continue
+                else:
+                    self.assertEqual(code, 0, result)
+                    results = [result]
+                for fit in results:
+                    self.assertFalse(fit['fit_ok'])
+                    self.assertNotIn('axis_center', fit)
+                    reason = (fit['fit_failures']['horizontal'] if mode == 'surface'
+                              else fit['fit_fail_reason'])
+                    self.assertIn('intersects support', reason)
+            raw, code = m.run(API(), 'depth_shape', dict(args, mode='raw'))
+            self.assertEqual(code, 0, raw)
+            self.assertEqual(raw['samples'], depth.size)
+
     def test_visible_half_cylinders(self):
         rng = np.random.default_rng(12)
         for mode, axis in [('vertical', np.array([0.,0.,1.])), ('horizontal', np.array([.8,.6,0.]))]:

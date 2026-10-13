@@ -68,6 +68,57 @@ class FakeAPI:
 class GraspTests(unittest.TestCase):
     args = dict(transit='direct', idle_clearance='off', path='staged', arm='left', x=-.2, y=.1, z=.9, clearance=.10)
 
+    def test_default_raised_entry_finishes_yaw_before_descent(self):
+        defaults = {a['name']: a['default'] for a in m.TOOL['commands'][0]['args']
+                    if 'default' in a}
+        self.assertEqual(defaults['path'], 'staged')
+        for tag, sign in (('left', 1.), ('right', -1.)):
+            for offset in (np.zeros(3), np.array([.13, .09, .06])):
+                for mode in ('vertical', 'horizontal'):
+                    routes = {}
+                    for path in (None, 'cli', 'direct'):
+                        api = FakeAPI()
+                        api.pose[:3, 3] = np.array([-sign*.45, -.1, 1.05])+offset
+                        goal = np.array([sign*.04, -.2, .88])+offset
+                        args = dict(arm=tag, mode=mode, x=goal[0], y=goal[1],
+                                    z=goal[2], clearance=.08)
+                        if path == 'cli':
+                            args = dict(defaults, **args)
+                        elif path:
+                            args['path'] = path
+                        out, code = m.run(api, 'axis_grasp', args)
+                        self.assertEqual(code, 0, out)
+                        routes[path] = api.moves
+                        if mode == 'vertical' and path != 'direct':
+                            self.assertEqual([s['stage'] for s in out['stages']],
+                                             ['transit', 'approach', 'insert', 'lift'])
+                            high, entry, insert = api.moves[:3]
+                            np.testing.assert_allclose(high[:2, 3], entry[:2, 3])
+                            np.testing.assert_allclose(high[:3, :3], entry[:3, :3])
+                            np.testing.assert_allclose(entry[:3, :3], insert[:3, :3])
+                            self.assertAlmostEqual(entry[2, 3], insert[2, 3])
+                            np.testing.assert_allclose(insert[:3, 3], goal)
+                            np.testing.assert_allclose(insert[:3, 3]-entry[:3, 3],
+                                                       .08*entry[:3, 0])
+                    np.testing.assert_allclose(routes[None], routes['cli'])
+                    if mode == 'horizontal':
+                        np.testing.assert_allclose(routes[None], routes['direct'])
+                    else:
+                        self.assertEqual(len(routes[None]), len(routes['direct'])+1)
+
+    def test_default_descent_stall_stops_before_insertion_or_closure(self):
+        for tag, sign in (('left', 1.), ('right', -1.)):
+            api = FakeAPI(fault='position')
+            api.pose[:3, 3] = [-sign*.45, -.1, 1.05]
+            out, code = m.run(api, 'axis_grasp', dict(
+                arm=tag, x=sign*.04, y=-.2, z=.88,
+                release_x=-sign*.4, release_y=-.1, release_z=1.08))
+            self.assertEqual(code, 2, out)
+            self.assertEqual(out['plan_fail_reason'], 'pose_error')
+            self.assertEqual([s['stage'] for s in out['stages']], ['transit', 'approach'])
+            self.assertNotIn(0., api.grips)
+            self.assertFalse(out['released'])
+
     def test_deferred_transit_yaw_and_rejection_guards(self):
         for sign, tag in ((1., 'left'), (-1., 'right')):
             for offset in (np.zeros(3), np.array([.12, .08, .04])):
@@ -94,7 +145,7 @@ class GraspTests(unittest.TestCase):
                             return code
                         api.move_tcp = move
                         result, code = m.run(api, 'axis_grasp', dict(
-                            arm=tag, x=goal[0], y=goal[1], z=goal[2]))
+                            path='direct', arm=tag, x=goal[0], y=goal[1], z=goal[2]))
                         success = fault in ('none', 'reject')
                         self.assertEqual(code, 0 if success else 2)
                         np.testing.assert_allclose(attempts[0][:3, :3], initial[:3, :3])
@@ -111,6 +162,55 @@ class GraspTests(unittest.TestCase):
                             self.assertEqual(len(attempts), 1)
                             self.assertNotIn(0., api.grips)
 
+    def test_raised_route_ik_recovery_and_guards(self):
+        for route in ('transit', 'insert'):
+            for tag, sign in (('left', 1.), ('right', -1.)):
+                for offset in (np.zeros(3), np.array([.11, .07, .03])):
+                    for fault in ('reject', 'repeat', 'elapsed', 'active', 'idle',
+                                  'pose_error', 'clip', 'timeout'):
+                        with self.subTest(route=route, arm=tag, offset=offset, fault=fault):
+                            api = FakeAPI()
+                            api.pose[:3, 3] = np.array([-sign*.45, -.1, 1.05])+offset
+                            # Rearward travel defers yaw; forward travel uses
+                            # the ordinary raised, fixed-orientation route.
+                            goal = np.array([sign*.04, -.2 if route == 'insert' else .1, .88])+offset
+                            original = api.move_tcp
+                            attempts = []
+                            rejected_index = 1 if route == 'insert' else 0
+                            def move(arm, target, feedback):
+                                index = len(attempts)
+                                attempts.append(target.copy())
+                                if index == rejected_index or (fault == 'repeat' and index == rejected_index+1):
+                                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                    if fault == 'elapsed': api.time_left -= .04
+                                    if fault == 'active': api.pose[0, 3] += .01
+                                    if fault == 'idle': api._idle.pose[0, 3] += .01
+                                    if fault == 'pose_error':
+                                        feedback.update(plan_ok=True, plan_fail_reason=None)
+                                        api.pose = target.copy()
+                                        api.pose[0, 3] += .02
+                                        return 0
+                                    if fault == 'clip': feedback['clipped'] = True
+                                    if fault == 'timeout': api.over = True
+                                    return 2
+                                return original(arm, target, feedback)
+                            api.move_tcp = move
+                            out, code = m.run(api, 'axis_grasp', dict(
+                                path='direct', arm=tag, x=goal[0], y=goal[1], z=goal[2]))
+                            self.assertEqual(code, 0 if fault == 'reject' else 2, out)
+                            if fault in ('reject', 'repeat'):
+                                first, retry = attempts[rejected_index:rejected_index+2]
+                                np.testing.assert_allclose(first[:3, 3], retry[:3, 3])
+                                if route == 'insert':
+                                    np.testing.assert_allclose(retry[:3, :3], attempts[0][:3, :3])
+                                else:
+                                    np.testing.assert_allclose(retry[:3, :3], first[:3, :3] @ np.diag([1., -1., -1.]))
+                                self.assertEqual(out['stages'][rejected_index+1]['stage'],
+                                                 'insert_forward' if route == 'insert' else 'transit_alternate')
+                            if fault != 'reject':
+                                self.assertNotIn(0., api.grips)
+                                self.assertEqual(len(attempts), rejected_index+1+int(fault == 'repeat'))
+
     def test_rearward_return_carry_normalizes_yaw_during_lift(self):
         for sign, tag in ((1., 'left'), (-1., 'right')):
             for offset in (np.zeros(3), np.array([.12, .08, .04])):
@@ -121,7 +221,7 @@ class GraspTests(unittest.TestCase):
                         goal = np.array([sign*.04, -.2, .88])+offset
                         destination = goal+np.array([direction*sign*.4, .05, .18])
                         result, code = m.run(api, 'axis_grasp', dict(
-                            arm=tag, x=goal[0], y=goal[1], z=goal[2],
+                            path='direct', arm=tag, x=goal[0], y=goal[1], z=goal[2],
                             carry_orientation=policy, release_x=destination[0],
                             release_y=destination[1], release_z=destination[2]))
                         self.assertEqual(code, 0)
@@ -168,7 +268,7 @@ class GraspTests(unittest.TestCase):
                     return original(arm, target, feedback)
                 api.move_tcp = move
                 result, code = m.run(api, 'axis_grasp', dict(
-                    arm=tag, x=sign*.04, y=-.2, z=.88,
+                    path='direct', arm=tag, x=sign*.04, y=-.2, z=.88,
                     release_x=-sign*.4, release_y=-.1, release_z=1.08))
                 self.assertTrue(fired)
                 names = [s['stage'] for s in result['stages']]
@@ -680,7 +780,6 @@ class GraspTests(unittest.TestCase):
                                          ['approach', 'insert', 'lift', 'carry'])
                         goal = np.array([-.2, .1, .9])
                         extraction = goal.copy()
-                        extraction[:2] += .5*(destination[:2]-goal[:2])
                         extraction[2] += .1
                         np.testing.assert_allclose(api.moves[-2][:3, 3], extraction)
                         np.testing.assert_allclose(api.moves[-2][:3, 0], [0, 0, -1])
@@ -721,126 +820,176 @@ class GraspTests(unittest.TestCase):
                     self.assertEqual(api.grips, [1., 0.])
                     self.assertFalse(result['released'])
 
-    def test_diagonal_extraction_avoids_vertical_only_ik_failure(self):
-        for path in ('direct', 'staged'):
-            api = FakeAPI()
-            original = api.move_tcp
-            def move(arm, target, feedback):
-                # A higher pose over the pickup can be outside the arm's reach.
-                if len(api.moves) == 2 and np.allclose(target[:3, 3], [-.2, .1, 1.]):
-                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
-                    return 2
-                return original(arm, target, feedback)
-            api.move_tcp = move
-            result, code = m.run(api, 'axis_grasp', dict(
-                self.args, path=path, mode='horizontal',
-                release_x=-.5, release_y=.1, release_z=1.05))
-            self.assertEqual(code, 0 if path == 'direct' else 2)
-            self.assertEqual(result['released'], path == 'direct')
-
-    def test_extraction_clearance_and_rotation_travel(self):
-        goal = np.array([-.2, .1, .9])
-        for height in (1., 1.05, 1.3):
-            destination = np.array([-.5, -.1, height])
+    def test_horizontal_support_departure_and_failure_guards(self):
+        for tag, sign in (('left', -1.), ('right', 1.)):
             for path in ('direct', 'staged'):
-                api = FakeAPI()
-                result, code = m.run(api, 'axis_grasp', dict(
-                    self.args, path=path, mode='horizontal',
-                    release_x=destination[0], release_y=destination[1], release_z=height))
-                self.assertEqual(code, 0)
-                extraction = api.moves[-2][:3, 3]
-                self.assertAlmostEqual(extraction[2], 1.)
-                np.testing.assert_allclose(api.moves[-2][:3, 0], [0, 0, -1])
-                self.assertGreater(np.linalg.norm(extraction[:2]-destination[:2]), .1)
-                vertical = goal + [0, 0, .1]
-                if path == 'staged':
-                    np.testing.assert_allclose(extraction, vertical)
-                else:
-                    old_length = .1 + np.linalg.norm(destination-vertical)
-                    new_length = np.linalg.norm(extraction-goal) + np.linalg.norm(destination-extraction)
-                    self.assertLess(new_length, old_length)
+                for policy in ('auto', 'forward', 'grasp'):
+                    for offset in (np.zeros(3), np.array([.08, -.06, .04])):
+                        for fault in ('none', 'ik', 'position', 'rotation', 'clip', 'timeout', 'exception'):
+                            with self.subTest(arm=tag, path=path, policy=policy, offset=offset, fault=fault):
+                                api = FakeAPI()
+                                goal = np.array([sign*.2, .1, .9])+offset
+                                destination = goal + [sign*.6, -.2, .2]
+                                original = api.move_tcp
+                                attempts = []
+                                def move(arm, target, feedback):
+                                    attempts.append(target.copy())
+                                    if len(attempts) == 3:
+                                        # A contact-zone oracle rejects lateral or rotational
+                                        # departure before vertical clearance is established.
+                                        np.testing.assert_allclose(target[:2, 3], goal[:2])
+                                        np.testing.assert_allclose(target[:3, :3], api.pose[:3, :3])
+                                        self.assertAlmostEqual(target[2, 3], goal[2]+.1)
+                                        if fault == 'ik':
+                                            feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                            return 2
+                                        if fault == 'exception':
+                                            raise RuntimeError('motion error')
+                                    code = original(arm, target, feedback)
+                                    if len(attempts) == 3:
+                                        if fault == 'position': api.pose[0, 3] += .02
+                                        if fault == 'rotation': api.pose[:3, :3] = np.eye(3)
+                                        if fault == 'clip': feedback['clipped'] = True
+                                        if fault == 'timeout': api.over = True
+                                    return code
+                                api.move_tcp = move
+                                result, code = m.run(api, 'axis_grasp', dict(
+                                    self.args, arm=tag, path=path, mode='horizontal',
+                                    x=goal[0], y=goal[1], z=goal[2], carry_orientation=policy,
+                                    release_x=destination[0], release_y=destination[1],
+                                    release_z=destination[2]))
+                                success = fault == 'none' or (fault == 'ik' and policy == 'auto')
+                                self.assertEqual(code, 0 if success else 2)
+                                self.assertEqual(len(attempts), 4 if fault == 'none' else (6 if success else 3))
+                                self.assertEqual(result['released'], success)
+                                self.assertEqual(api.grips, [1., 0., 1.] if success else [1., 0.])
 
-    def test_diagonal_rejection_falls_back_to_vertical_then_rotating_carry(self):
-        for tag in ('left', 'right'):
-            api = FakeAPI()
-            original = api.move_tcp
-            attempts = []
-            def move(arm, target, feedback):
-                attempts.append(target.copy())
-                if len(attempts) == 3:
-                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
-                    return 2
-                return original(arm, target, feedback)
-            api.move_tcp = move
-            result, code = m.run(api, 'axis_grasp', dict(
-                self.args, arm=tag, path='direct', mode='horizontal',
-                release_x=-.5, release_y=.1, release_z=1.05))
-            self.assertEqual(code, 0)
-            self.assertEqual([s['stage'] for s in result['stages']],
-                             ['approach', 'insert', 'lift', 'lift_vertical', 'carry'])
-            np.testing.assert_allclose(attempts[3][:3, 3], [-.2, .1, 1.])
-            np.testing.assert_allclose(attempts[3][:3, :3], attempts[1][:3, :3])
-            np.testing.assert_allclose(attempts[4][:3, 0], [0, 1, 0])
-            self.assertEqual(api.grips, [1., 0., 1.])
+    def test_partial_extraction_recovery_guards(self):
+        for tag, sign in (('left', -1.), ('right', 1.)):
+            for offset in (np.zeros(3), np.array([.09, -.08, .06])):
+                for fault in ('none', 'elapsed', 'active', 'idle', 'clip', 'workspace',
+                              'timeout', 'no_time', 'nan_time', 'other',
+                              'partial_ik', 'partial_pose', 'rotate_ik', 'rotate_pose', 'carry_ik'):
+                    with self.subTest(arm=tag, offset=offset, fault=fault):
+                        api = FakeAPI()
+                        goal = np.array([sign*.18, .08, .87])+offset
+                        dest = goal + [sign*.4, .02, .2]
+                        original = api.move_tcp
+                        closed = []
+                        def move(arm, target, feedback):
+                            if api.grips and api.grips[-1] == 0.:
+                                closed.append(target.copy())
+                                n = len(closed)
+                                if n == 1:
+                                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                    if fault == 'elapsed': api.time_left -= .04
+                                    if fault == 'active': api.pose[0, 3] += .01
+                                    if fault == 'idle': api._idle.pose[0, 3] += .01
+                                    if fault == 'clip': feedback['clipped'] = True
+                                    if fault == 'workspace': feedback['workspace_limited'] = True
+                                    if fault == 'timeout': api.over = True
+                                    if fault == 'other': feedback['plan_fail_reason'] = 'motion_failed'
+                                    return 2
+                                if n in (2, 3):
+                                    np.testing.assert_allclose(target[:2, 3], goal[:2])
+                                    self.assertAlmostEqual(target[2, 3], goal[2]+(.05 if n == 2 else .1))
+                                    if n == 2:
+                                        np.testing.assert_allclose(target[:3, :3], api.pose[:3, :3])
+                                    if fault == ('partial_ik' if n == 2 else 'rotate_ik'):
+                                        feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                        return 2
+                                if n == 4 and fault == 'carry_ik':
+                                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                    return 2
+                                code = original(arm, target, feedback)
+                                if (n == 2 and fault == 'partial_pose') or (n == 3 and fault == 'rotate_pose'):
+                                    api.pose[0, 3] += .02
+                                return code
+                            return original(arm, target, feedback)
+                        api.move_tcp = move
+                        if fault == 'no_time': api.time_left = None
+                        if fault == 'nan_time': api.time_left = float('nan')
+                        result, code = m.run(api, 'axis_grasp', dict(
+                            self.args, arm=tag, mode='horizontal', x=goal[0], y=goal[1],
+                            z=goal[2], lift=.1, release_x=dest[0], release_y=dest[1], release_z=dest[2]))
+                        self.assertEqual(code, 0 if fault in ('none', 'rotate_ik') else 2, result)
+                        count = 6 if fault == 'rotate_ik' else 4 if fault in ('none', 'carry_ik') else (2 if fault.startswith('partial_') else
+                                                          3 if fault.startswith('rotate_') else 1)
+                        self.assertEqual(len(closed), count)
+                        self.assertEqual(result['released'], fault in ('none', 'rotate_ik'))
+                        if fault in ('none', 'rotate_ik'):
+                            np.testing.assert_allclose(closed[-1][:3, :3], closed[-2][:3, :3])
+                            np.testing.assert_allclose(closed[-1][:3, 3], dest)
+                        else:
+                            self.assertEqual(api.grips[-1], 0.)
 
-    def test_vertical_fallback_guards_and_single_attempt(self):
-        for fault in ('none', 'drift', 'other_drift', 'elapsed', 'unknown_time',
-                      'clip', 'workspace', 'timeout', 'other_reason', 'staged'):
-            with self.subTest(fault=fault):
-                api, other = FakeAPI(), FakeAPI()
-                other.pose[:3, 3] = [2., 2., 2.]
-                api.arm = lambda tag: api if tag == 'left' else other
-                original = api.move_tcp
-                attempts = []
-                def move(arm, target, feedback):
-                    attempts.append(target.copy())
-                    if len(attempts) < 3:
-                        return original(arm, target, feedback)
-                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
-                    if fault == 'drift': api.pose[0, 3] += .01
-                    if fault == 'other_drift': other.pose[0, 3] += .01
-                    if fault == 'elapsed': api.time_left -= .04
-                    if fault == 'unknown_time': api.time_left = None
-                    if fault == 'clip': feedback['clipped'] = True
-                    if fault == 'workspace': feedback['workspace_limited'] = True
-                    if fault == 'timeout': api.over = True
-                    if fault == 'other_reason': feedback['plan_fail_reason'] = 'other'
-                    return 2
-                api.move_tcp = move
-                result, code = m.run(api, 'axis_grasp', dict(
-                    self.args, path='staged' if fault == 'staged' else 'direct',
-                    mode='horizontal', release_x=-.5, release_y=.1, release_z=1.05))
-                self.assertEqual(code, 2)
-                self.assertEqual(len(attempts), 4 if fault == 'none' else 3)
-                self.assertEqual(api.grips, [1., 0.])
-                self.assertFalse(result['released'])
-
-    def test_vertical_fallback_faults_prevent_carry_and_release(self):
-        for fault in ('position', 'rotation', 'clip', 'timeout', 'exception'):
-            api = FakeAPI()
-            original = api.move_tcp
-            attempts = []
-            def move(arm, target, feedback):
-                attempts.append(target.copy())
-                if len(attempts) == 3:
-                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
-                    return 2
-                code = original(arm, target, feedback)
-                if len(attempts) == 4:
-                    if fault == 'position': api.pose[0, 3] += .02
-                    if fault == 'rotation': api.pose[:3, :3] = np.eye(3)
-                    if fault == 'clip': feedback['clipped'] = True
-                    if fault == 'timeout': api.over = True
-                    if fault == 'exception': raise RuntimeError('motion error')
-                return code
-            api.move_tcp = move
-            result, code = m.run(api, 'axis_grasp', dict(
-                self.args, path='direct', mode='horizontal',
-                release_x=-.5, release_y=.1, release_z=1.05))
-            self.assertEqual(code, 2)
-            self.assertEqual(len(attempts), 4)
-            self.assertEqual(api.grips, [1., 0.])
-            self.assertFalse(result['released'])
+    def test_partial_rotation_shift_guards(self):
+        for tag, sign in (('left', -1.), ('right', 1.)):
+            for offset in (np.zeros(3), np.array([.12, -.09, .04])):
+                for fault in ('none', 'elapsed', 'active', 'idle', 'clip', 'workspace',
+                              'timeout', 'no_time', 'nan_time', 'other', 'pose',
+                              'near_idle', 'short', 'shift_ik', 'shift_pose',
+                              'rotate_ik', 'rotate_pose', 'carry_ik'):
+                    with self.subTest(tag=tag, offset=offset, fault=fault):
+                        api = FakeAPI()
+                        goal = np.array([sign*.18, .08, .87])+offset
+                        dest = goal + [sign*(.05 if fault == 'short' else .5), .02, .2]
+                        original = api.move_tcp
+                        closed = []
+                        def move(arm, target, feedback):
+                            if api.grips and api.grips[-1] == 0.:
+                                closed.append(target.copy())
+                                n = len(closed)
+                                if n in (1, 3):
+                                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                    if n == 3:
+                                        if fault == 'elapsed': api.time_left -= .04
+                                        if fault == 'active': api.pose[0, 3] += .01
+                                        if fault == 'idle': api._idle.pose[0, 3] += .01
+                                        if fault == 'clip': feedback['clipped'] = True
+                                        if fault == 'workspace': feedback['workspace_limited'] = True
+                                        if fault == 'timeout': api.over = True
+                                        if fault == 'no_time': api.time_left = None
+                                        if fault == 'nan_time': api.time_left = float('nan')
+                                        if fault == 'other': feedback['plan_fail_reason'] = 'motion_failed'
+                                        if fault == 'pose':
+                                            api.pose = target.copy()
+                                            api.pose[0, 3] += .02
+                                            feedback.update(plan_ok=True, plan_fail_reason=None)
+                                            return 0
+                                    return 2
+                                if (n, fault) in ((4, 'shift_ik'), (5, 'rotate_ik'), (6, 'carry_ik')):
+                                    feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                                    return 2
+                                code = original(arm, target, feedback)
+                                if n == 2 and fault == 'near_idle':
+                                    api._idle.pose[:3, 3] = goal + [0, 0, .12]
+                                if (n, fault) in ((4, 'shift_pose'), (5, 'rotate_pose')):
+                                    api.pose[0, 3] += .02
+                                return code
+                            return original(arm, target, feedback)
+                        api.move_tcp = move
+                        result, code = m.run(api, 'axis_grasp', dict(
+                            self.args, arm=tag, mode='horizontal', x=goal[0], y=goal[1],
+                            z=goal[2], lift=.1, release_x=dest[0], release_y=dest[1], release_z=dest[2]))
+                        expected = (6 if fault in ('none', 'carry_ik') else
+                                    4 if fault.startswith('shift_') else
+                                    5 if fault.startswith('rotate_') else 3)
+                        self.assertEqual(len(closed), expected, result)
+                        self.assertEqual(code, 0 if fault == 'none' else 2, result)
+                        self.assertEqual(api.grips, [1., 0., 1.] if fault == 'none' else [1., 0.])
+                        if expected >= 4:
+                            delta = dest[:2]-goal[:2]
+                            shift = goal + [0, 0, .075]
+                            shift[:2] += delta/np.linalg.norm(delta)*.2
+                            np.testing.assert_allclose(closed[3][:3, 3], shift)
+                            np.testing.assert_allclose(closed[3][:3, :3], closed[1][:3, :3])
+                        if expected >= 5:
+                            np.testing.assert_allclose(closed[4][:2, 3], closed[3][:2, 3])
+                            self.assertAlmostEqual(closed[4][2, 3], goal[2]+.1)
+                        if fault == 'none':
+                            np.testing.assert_allclose(closed[-1][:3, 3], dest)
+                            np.testing.assert_allclose(closed[-1][:3, :3], closed[-2][:3, :3])
 
     def test_direct_default_clears_support_before_lateral_carry(self):
         api = FakeAPI()

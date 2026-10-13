@@ -1,28 +1,34 @@
 # put_bottles_into_dustbin playbook
 
-Evidence: layout 1 alone reached automatic success; its historical tool version predates later default and routing changes.
-Use fresh RGB-D geometry and reachable release poses; the numeric record below is episode evidence, not reusable layout coordinates.
+Evidence: round 40 development snapshots, 7/10 automatic successes; mean score 82. Versions evolved between episodes; this is not a final-version retest.
+Budget: 700 action steps at 25 Hz = 28 s. Read-only perception costs no action steps; motion, settling, opening and homing do.
 
-1. Observe; fit each isolated body with `depth_shape --mode vertical|horizontal`. Use `axis_center` and horizontal `axis_direction`, not a visible-surface median. Refresh after contact or displacement; inspect candidates and seed ambiguous components.
-2. Plan grasp-to-release paths within one arm's reach. The successful episode used left for all four bodies, upright pair first, then horizontal pair; neither transfer tool ran.
-3. Use `axis_grasp` with complete release XYZ and `reorient=combined`; choose clearance/lift from visible geometry. Direct routes require clear sweeps; staged routes separate extraction and carry.
-4. Inspect the failed stage before recovery. A failed lift can leave a valid closed grasp: preserve it and check observed retention before a reachable carry. Repeated contact invalidates old geometry.
-5. Check observed placement and remaining simulation time after each release. `plan_ok` reports execution, and `released` reports opening; neither proves disposal. Reserve time for completion/settling and home if required.
+1. Observe current head RGB; identify each orientation, clear approach, reachable release region and possible shared support area.
+2. Fit upright base/top axis pixels with `vertical_span`; fit lying straight side edges with `horizontal_span`. Start with inferred support, pixel_error=3/2 respectively and support_error=0.02 m.
+3. For ambiguous support, `vertical_span` accepts a visible local support patch. Reselect inconsistent endpoints using its gravity-line diagnostics. A supplied height cannot override reliable mismatch or local ambiguity.
+4. `depth_shape` supplies component/fit diagnostics; only valid axis fits give solid centers. `plane_project` requires independently justified height and pixel identity; successful guessed-height recoveries do not validate those assumptions.
+5. Use fresh `vertical_grasp`/`span_grasp` to preserve fitted geometry through execution, or pass validated XYZ/axis to `axis_grasp`. Refresh after any contact, tipping, release or staging displacement.
+6. Deliver directly with an arm that reaches both grasp and release. Successful left-only episodes cleared accessible bodies, remeasured displaced neighbors, then recovered the remainder; initial upright-first order was not universal.
+7. Current defaults: staged entry, combined reorientation, raised transit, automatic idle clearance/carry orientation; lift=0.10 m. Vertical wrapper clearance=0.08 m, fraction=0.75; horizontal wrapper clearance=max(0.04 m, diameter+support uncertainty).
+8. Successful historical vertical fractions were 0.50–0.60; older direct paths also worked. These observations do not establish one universally best fraction/path or benchmark current defaults.
+9. Supply complete release XYZ over the observed opening with Z≥grasp Z+lift and clear sweeps. Verify retained motion and actual landing in RGB; plan_ok/released/grasp_verified=false do not establish disposal.
+10. For far-side grasps, retain with the reachable arm, normalize a lying grasp with `point ARM forward --open x` (orientation only), then use `supported_transfer` at a visibly clear, stable shared support pose.
+11. Successful transfers used direct path, clearance=0.08–0.12 m, withdrawal=0.08 m, retreat=rising, lift=0.10–0.12 m; complete successful calls in layouts 2/3/5 took 6.68–6.96 s. Account for pickup, reorientation and recovery separately.
+12. Inspect failed stage and RGB before recovery. After donor release/parking, recover the supported body with the receiver rather than restarting the exchange. After failed extraction, preserve a visibly retained grip; slippage requires new geometry and regrasp.
+13. Reserve time for release and `home both`; every supplied success ended on home. Final home cost 7–19 steps (0.28–0.76 s); some intermediate homes cost more. Stop after automatic completion.
 
-## Successful episode — 2026-10-01, round 7, layout 1
-- Score 100; 10 budgeted commands including 3 failures; 681 action steps at 25 Hz = 27.24/28 s, leaving 19 steps (0.76 s).
-- Command record: obs + 5 depth_shape calls (free), axis_grasp ×5, move ×2, gripper open, axis_grasp ×1, home both. All six grasp calls used left and combined reorientation.
-- Head-image ROIs (exclusive u1/v1): vertical (144,128,210,213), (134,208,205,279); horizontal (245,199,344,249), (334,252,430,342); surface (1,180,132,270). Support height was inferred.
-- First upright: XY=(-0.271,-0.153); Z=0.861/clearance=0.10/staged and Z=0.875/clearance=0.04/direct rejected before motion. Z=0.915, clearance=0.04, lift=0.10, direct, release=(-0.50,-0.08,1.04) succeeded in 4.08 s.
-- Second upright: XYZ=(-0.288,0.0045,0.88), clearance=0.07, lift=0.13, staged, same release; 5.80 s, cumulative 9.88 s.
-- First horizontal: XYZ=(-0.05665,-0.0702,0.7911), axis=(-0.9612,-0.2757), clearance=0.08, lift=0.12, staged, same release; closed successfully but lift rejected, cumulative 13.80 s.
-- Closed-grasp recovery: move delta=(-0.18,-0.08,0.10), then (-0.20,0,0.06), then open; cumulative 17.12 s. Logged object motion confirmed retention during recovery.
-- Last horizontal: XYZ=(0.1092,-0.2296,0.7911), axis=(-0.6842,0.7293), clearance=0.06, lift=0.10, direct, release=(-0.47,-0.15,0.96); 8.16 s, cumulative 25.28 s.
-- Home both took 1.96 s; automatic success at 27.24 s. A later done call was rejected because the episode had ended.
-- Combined rotation avoided a separate orientation/home detour; a higher reachable first grip and closed-grasp diagonal recovery preserved enough time for the fourth delivery.
+Successful records (2026-10-12): “recorded” includes free perception; “budgeted” includes rejected motion commands. All scores 100.
 
-## Limits of the evidence
-- Supplied snapshots: 1/9 successes; five simulation-time endings and three agent exits. Layout 9 has no recorded result.
-- Supported exchanges worked in some development attempts but cost 11–17 s; none established whole-task success. Opposed exchange also encountered receiver IK/contact failures.
-- Current defaults differ: 0.04 m clearance in both modes, raised sideways upright transit, idle-arm clearance, upright vertical extraction, and automatic horizontal carry rotation. The historical timing is not a benchmark of current code.
-- Later shorter paths and bounded alternatives did not establish reliable four-body completion. Prefer observed retention and stage timings over tool success flags or nominal Cartesian travel savings.
+| Layout / round | Recorded / budgeted | Steps / seconds | Margin | Productive sequence and recovery |
+|---|---|---|---|---|
+| 1 / 8 | 30 / 12 | 550 / 22.00 | 6.00 s | Six upright attempts yielded no delivery; four left horizontal axis_grasp deliveries, refreshing horizontal_span after toppling, then home. |
+| 2 / 12 | 20 / 9 | 646 / 25.84 | 2.16 s | Left axis_grasp + span_grasp; right upright pickup→supported_transfer; rejected left span→right span→point forward→second transfer→home. |
+| 3 / 15 | 23 / 10 | 662 / 26.48 | 1.52 s | Left axis/span deliveries; right span→point→partial transfer→left axis recovery; right axis→transfer→home. |
+| 5 / 29 | 28 / 15 | 646 / 25.84 | 2.16 s | Failed left span→visual/manual pickup and delivery; vertical_grasp twice; right span→point→transfer→home. |
+| 7 / 36 | 36 / 18 | 532 / 21.28 | 6.72 s | Left vertical→span twice→failed vertical; attempted closed transport slipped; fresh depth fit/manual regrasp→delivery→home. |
+| 8 / 38 | 38 / 27 | 664 / 26.56 | 1.44 s | Ambiguous spans→projection; four left axis calls delivered three uprights; repeated visual/manual regrasp delivered last horizontal→home. |
+| 9 / 39 | 31 / 19 | 695 / 27.80 | 0.20 s | Left axis twice; manual right pickup→partial transfer→receiver recovery; right axis table staging→home right→fresh span→left axis→home. |
+
+Limits: layouts 0/4/6 scored 40 at 27.48/28.00/26.64 s; one body remained after grasp/transfer failures and recovery cost. Layouts 0/6 exited; layout 4 timed out.
+No supplied successful snapshot used `opposed_transfer`. Manual support-check bypasses and stale targets caused contact in successes too; retain them as failure evidence, not a reusable procedure.
+Layout 9 receiver recovery cost 2.36 s after a 4.40 s partial transfer; table staging moved the last body and required a fresh span. Its 0.20 s margin leaves no room for blind retries.

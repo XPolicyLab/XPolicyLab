@@ -21,10 +21,12 @@ def angle(a, b):
 
 def run(api, command, args):
     stages, donor_released, receiver_released = [], False, False
+    receiver_preflight = []
 
     def fail(reason, detail=""):
         return {"plan_ok": False, "plan_fail_reason": reason, "plan_detail": detail,
-                "stages": stages, "donor_released": donor_released,
+                "stages": stages, "receiver_preflight": receiver_preflight,
+                "donor_released": donor_released,
                 "receiver_released": receiver_released, "grasp_verified": False}, 2
 
     try:
@@ -91,6 +93,41 @@ def run(api, command, args):
 
         if api.over:
             return fail("episode_over")
+        # Reject impossible receiving routes before transporting a held body.
+        # This public API discards its IK plans and performs no motion. It
+        # certifies neither collision clearance nor retention; execution still
+        # uses all existing motion and pose guards.
+        remaining = api.sim_time_left()
+        if remaining is None or not np.isfinite(remaining):
+            return fail("receiver_preflight_unavailable")
+        for attempt in range(2 if reorient == "combined" else 1):
+            route = []
+            if reorient == "separate" and angle(receiving[:3, :3], orient) > 1:
+                route.append(("orient", receiving[:3, 3]))
+            route.extend((("approach", receiving_goal-clearance*orient[:, 0]),
+                          ("insert", receiving_goal)))
+            if destination is not None:
+                route.append(("deliver", destination))
+            targets = []
+            for name, pos in route:
+                target = np.eye(4)
+                target[:3, :3], target[:3, 3] = orient, pos
+                targets.append((name, target))
+            estimate = api.estimate_tcp_chain(receiver, targets)
+            receiver_preflight.append(estimate)
+            if (api.over or api.sim_time_left() != remaining
+                    or not np.allclose(donor.tcp(), initial, atol=1e-7, rtol=0)
+                    or not np.allclose(receiver.tcp(), receiving, atol=1e-7, rtol=0)):
+                return fail("receiver_preflight_state_changed")
+            if estimate.get("estimate_ok") is True:
+                break
+            if (attempt == 0 and reorient == "combined"
+                    and estimate.get("reason") == "ik_unreachable"):
+                orient = orient @ np.diag([1., -1., -1.])
+                continue
+            return fail("receiver_preflight_failed", str(estimate.get("reason")))
+        else:
+            return fail("receiver_preflight_failed", str(estimate.get("reason")))
         if np.linalg.norm(initial[:3, 3] - goal) > .002:
             failure = move(donor, "present", goal, rot)
             if failure:
@@ -128,20 +165,10 @@ def run(api, command, args):
                     and unchanged_rejection()):
                 orient = orient @ np.diag([1., -1., -1.])
                 failure = move(receiver, "approach_alternate", pos, orient)
-                if failure and unchanged_rejection():
-                    # Both combined paths failed without execution. Translate
-                    # with the current rotation, then rotate at the same entry
-                    # standoff. This changes the interpolation, not grip geometry.
-                    orient = min(opposed, key=lambda r: angle(before[:3, :3], r))
-                    failure = move(receiver, "approach_translate", pos, before[:3, :3])
-                    if failure:
-                        return failure
-                    held = np.asarray(donor.tcp())
-                    if (not np.isfinite(held).all() or
-                            np.linalg.norm(held[:3, 3]-goal) > .008 or
-                            angle(rot, held[:3, :3]) > 5):
-                        return fail("donor_displaced")
-                    failure = move(receiver, "approach_rotate", pos, orient)
+                # Do not translate toward the donor with the old wrist rotation.
+                # The opposing entry standoff is designed for the opposing
+                # orientation; matching TCP positions do not imply matching
+                # finger/palm swept volumes. Two rejected rolls end the attempt.
             if failure:
                 return failure
             # Receiver contact must not displace the still-closed donor.
@@ -173,6 +200,7 @@ def run(api, command, args):
             if api.over:
                 return fail("episode_over")
         return {"plan_ok": True, "plan_fail_reason": None, "stages": stages,
+                "receiver_preflight": receiver_preflight,
                 "receiver": receiver_name, "donor_released": donor_released,
                 "receiver_released": receiver_released, "grasp_verified": False,
                 "reached_tcp": {"pos": np.asarray(receiver.tcp())[:3, 3].tolist()}}, 0

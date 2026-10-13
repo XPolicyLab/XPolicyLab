@@ -57,6 +57,48 @@ class API:
 class TransferTests(unittest.TestCase):
     args = dict(path='staged', retreat='straight', donor='right', x=0., y=.05, z=.88)
 
+    def test_default_entry_avoids_low_rearward_reach_and_preserves_overrides(self):
+        defaults = {a['name']: a['default'] for a in m.TOOL['commands'][0]['args']
+                    if 'default' in a}
+        for donor in ('left', 'right'):
+            for shift in (np.zeros(3), np.array([.07, -.09, .06])):
+                for policy in ('python', 'cli', 'explicit_long'):
+                    api = API()
+                    for arm in api.arms.values():
+                        arm.pose[:3, 3] += shift
+                    goal = np.array([0., .03, .88])+shift
+                    receiver = api.arm('left' if donor == 'right' else 'right')
+                    move = api.move_tcp
+                    def limited(arm, target, feedback):
+                        code = move(arm, target, feedback)
+                        # Synthetic low rearward reach boundary, relative to
+                        # the supplied exchange point, not a scene position.
+                        if (arm is receiver and target[2, 3] < goal[2]+.04
+                                and target[1, 3] < goal[1]-.10):
+                            arm.pose[0, 3] += .014
+                        return code
+                    api.move_tcp = limited
+                    args = dict(defaults) if policy == 'cli' else {}
+                    args.update(donor=donor, x=goal[0], y=goal[1], z=goal[2],
+                                release_x=goal[0]+(-.4 if donor == 'right' else .4),
+                                release_y=goal[1], release_z=goal[2]+.2)
+                    if policy == 'explicit_long':
+                        args['clearance'] = .12
+                    result, code = m.run(api, 'supported_transfer', args)
+                    if policy == 'explicit_long':
+                        self.assertEqual(code, 2, result)
+                        self.assertEqual(result['plan_fail_reason'], 'pose_error')
+                        self.assertEqual(result['stages'][-1]['stage'], 'approach')
+                        self.assertFalse(any(e[0] == 'gripper' and e[1] is receiver
+                                             and e[2] == 0. for e in api.events))
+                    else:
+                        self.assertEqual(code, 0, result)
+                        self.assertTrue(result['receiver_released'])
+                        targets = [e[2] for e in api.events
+                                   if e[0] == 'move' and e[1] is receiver]
+                        np.testing.assert_allclose(targets[1][:3, 3], goal+[0, -.08, 0])
+                        np.testing.assert_allclose(targets[2][:3, 3], goal)
+
     def test_direct_default_preserves_exchange_separation(self):
         for donor, release_x in [('right', -.45), ('left', .45)]:
             api = API()
@@ -66,14 +108,14 @@ class TransferTests(unittest.TestCase):
             result, code = m.run(api, 'supported_transfer', args)
             self.assertEqual(code, 0)
             self.assertEqual([s['stage'] for s in result['stages']],
-                             ['place', 'withdraw', 'park', 'approach', 'insert', 'deliver'])
+                             ['carry', 'lower', 'withdraw', 'park', 'receiver_transit', 'approach', 'insert', 'lift', 'deliver'])
             donor_arm = api.arm(donor)
-            self.assertEqual(api.events[1], ('gripper', donor_arm, 1.))
-            self.assertTrue(all(e[1] is donor_arm for e in api.events[:4]))
+            self.assertEqual(api.events[2], ('gripper', donor_arm, 1.))
+            self.assertTrue(all(e[1] is donor_arm for e in api.events[:5]))
             self.assertTrue(result['receiver_released'])
 
     def test_direct_placement_and_delivery_faults(self):
-        for stage_index in (1, 6):
+        for stage_index in (1, 8):
             for fault in ('pose', 'clip', 'timeout', 'exception', 'ik'):
                 api = API(stage_index, fault)
                 result, code = m.run(api, 'supported_transfer', dict(
@@ -95,6 +137,54 @@ class TransferTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(result['stages'][-1]['stage'], 'lift')
         self.assertFalse(result['receiver_released'])
+
+    def test_support_contact_has_no_lateral_motion(self):
+        # Model a contact zone in which lateral motion disturbs the body.
+        # This catches both the old diagonal touchdown and diagonal extraction.
+        for donor in ('left', 'right'):
+            for path in ('direct', 'staged'):
+                for height in (.84, .93):
+                    api = API()
+                    goal = np.array([.03, .04, height])
+                    lift = .10
+                    move = api.move_tcp
+                    held = {donor: True, 'left' if donor == 'right' else 'right': False}
+                    grip = api.set_gripper
+                    def set_gripper(arm, value):
+                        name = next(n for n, a in api.arms.items() if a is arm)
+                        held[name] = value == 0.
+                        grip(arm, value)
+                    def contact_move(arm, target, feedback):
+                        name = next(n for n, a in api.arms.items() if a is arm)
+                        start, end = arm.tcp()[:3, 3], target[:3, 3]
+                        if (held[name] and min(start[2], end[2]) < height+lift-.001
+                                and np.linalg.norm(start[:2]-end[:2]) > .002):
+                            self.fail('lateral loaded travel intersects support contact zone')
+                        return move(arm, target, feedback)
+                    # Begin above the clearance plane, independent of layout.
+                    api.arm(donor).pose[2, 3] = height+.18
+                    api.move_tcp, api.set_gripper = contact_move, set_gripper
+                    result, code = m.run(api, 'supported_transfer', dict(
+                        self.args, donor=donor, path=path, x=goal[0], y=goal[1],
+                        z=height, lift=lift, release_x=(-.45 if donor == 'right' else .45),
+                        release_y=.08, release_z=height+.22))
+                    self.assertEqual(code, 0, result)
+
+    def test_direct_extraction_failure_stops_before_delivery(self):
+        for donor in ('left', 'right'):
+            for fault in ('pose', 'clip', 'timeout', 'exception', 'ik'):
+                api = API(8, fault)
+                result, code = m.run(api, 'supported_transfer', dict(
+                    self.args, donor=donor, path='direct',
+                    release_x=(-.45 if donor == 'right' else .45),
+                    release_y=.08, release_z=1.08))
+                self.assertEqual(code, 2)
+                self.assertTrue(result['donor_released'])
+                self.assertFalse(result['receiver_released'])
+                self.assertNotIn('deliver', [s['stage'] for s in result['stages']])
+                receiver = api.arm('left' if donor == 'right' else 'right')
+                self.assertEqual([e[2] for e in api.events
+                                  if e[0] == 'gripper' and e[1] is receiver], [0.])
 
     def test_short_default_park_and_no_redundant_open(self):
         for name, sign in [('left', -1), ('right', 1)]:
@@ -138,7 +228,7 @@ class TransferTests(unittest.TestCase):
             np.testing.assert_allclose(donor_moves[-2], goal+[0, -.08, 0])
             receiver_moves = [e[2][:3, 3] for e in api.events
                               if e[0] == 'move' and e[1] is api.arm(result['receiver'])]
-            np.testing.assert_allclose(receiver_moves[0], goal+[0, -.12, 0])
+            np.testing.assert_allclose(receiver_moves[1], goal+[0, -.08, 0])
             # An explicitly longer retreat still fails the unchanged pose guard.
             api.events.clear()
             api.arms = {'left': Arm(-.4), 'right': Arm(.4)}
@@ -167,7 +257,7 @@ class TransferTests(unittest.TestCase):
         moves = [e[2][:3, 3] for e in api.events if e[0] == 'move']
         np.testing.assert_allclose(moves[2], [0, -.11, .88])
         np.testing.assert_allclose(moves[3], [.25, -.11, 1.])
-        np.testing.assert_allclose(moves[4], [0, -.04, .88])
+        np.testing.assert_allclose(moves[5], [0, -.04, .88])
 
     def test_direct_delivery_for_both_receivers(self):
         for donor, release_x in [('right', -.45), ('left', .45)]:
@@ -185,7 +275,7 @@ class TransferTests(unittest.TestCase):
 
     def test_failed_delivery_retains_receiver_grip(self):
         for fault in ('pose', 'clip', 'timeout', 'exception', 'ik'):
-            api = API(8, fault)
+            api = API(9, fault)
             result, code = m.run(api, 'supported_transfer', dict(
                 self.args, release_x=-.45, release_y=.08, release_z=1.08))
             self.assertEqual(code, 2)
@@ -214,7 +304,7 @@ class TransferTests(unittest.TestCase):
             result, code = m.run(api, 'supported_transfer', dict(self.args, donor=name))
             self.assertEqual(code, 0)
             self.assertEqual([s['stage'] for s in result['stages']],
-                             ['carry', 'lower', 'withdraw', 'park', 'approach', 'insert', 'lift'])
+                             ['carry', 'lower', 'withdraw', 'park', 'receiver_transit', 'approach', 'insert', 'lift'])
             self.assertFalse(result['grasp_verified'])
             self.assertTrue(result['donor_released'])
             self.assertFalse(result['receiver_released'])
@@ -240,7 +330,7 @@ class TransferTests(unittest.TestCase):
         self.assertTrue(all(e[1] is api.arm('right') for e in api.events))
 
     def test_failed_insert_never_closes_receiver(self):
-        api = API(6)
+        api = API(7)
         result, code = m.run(api, 'supported_transfer', self.args)
         self.assertEqual(code, 2)
         self.assertFalse(any(e[0] == 'gripper' and e[2] == 0 for e in api.events))
@@ -289,6 +379,116 @@ class TransferTests(unittest.TestCase):
                 self.assertTrue(result['donor_released'])
                 self.assertFalse(result['receiver_released'])
                 self.assertTrue(all(e[1] is api.arm(donor) for e in api.events))
+
+    def test_approach_roll_recovery_and_execution_guards(self):
+        for donor in ('left', 'right'):
+            for shift in (-.04, .06):
+                for fault in ('recover', 'twice', 'time', 'receiver_drift',
+                              'donor_drift', 'clip', 'workspace', 'over',
+                              'missing_time', 'nan_time', 'other_reason'):
+                    with self.subTest(donor=donor, shift=shift, fault=fault):
+                        api = API()
+                        api.remaining = 20.
+                        api.sim_time_left = lambda: api.remaining
+                        if fault == 'missing_time':
+                            api.sim_time_left = lambda: None
+                        if fault == 'nan_time':
+                            api.sim_time_left = lambda: float('nan')
+                        receiver = api.arm('left' if donor == 'right' else 'right')
+                        goal = np.array([shift, .03, .87])
+                        targets = []
+                        move = api.move_tcp
+                        def rejection(arm, target, feedback):
+                            if arm is receiver and len(targets) < (2 if fault == 'twice' else 1):
+                                targets.append(target.copy())
+                                feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable',
+                                                plan_detail='configuration change')
+                                if fault == 'time':
+                                    api.remaining -= .04
+                                if fault == 'receiver_drift':
+                                    arm.pose[0, 3] += .001
+                                if fault == 'donor_drift':
+                                    api.arm(donor).pose[1, 3] += .001
+                                if fault == 'clip':
+                                    feedback['clipped'] = True
+                                if fault == 'workspace':
+                                    feedback['workspace_limited'] = True
+                                if fault == 'over':
+                                    api.over = True
+                                if fault == 'other_reason':
+                                    feedback['plan_fail_reason'] = 'motion_failed'
+                                return 2
+                            if arm is receiver:
+                                targets.append(target.copy())
+                            return move(arm, target, feedback)
+                        api.move_tcp = rejection
+                        result, code = m.run(api, 'supported_transfer', dict(
+                            self.args, donor=donor, x=goal[0], y=goal[1], z=goal[2],
+                            release_x=(-.45 if donor == 'right' else .45),
+                            release_y=.1, release_z=1.1))
+                        self.assertTrue(result['donor_released'])
+                        if fault == 'recover':
+                            self.assertEqual(code, 0, result)
+                            self.assertTrue(result['receiver_released'])
+                            np.testing.assert_allclose(targets[0][:3, 3], targets[1][:3, 3])
+                            expected = targets[0][:3, :3] @ np.diag([1., -1., -1.])
+                            for target in targets[1:]:
+                                np.testing.assert_allclose(target[:3, :3], expected)
+                            np.testing.assert_allclose(targets[3][:3, 3], goal)
+                        else:
+                            self.assertEqual(code, 2)
+                            self.assertEqual(len(targets), 2 if fault == 'twice' else 1)
+                            self.assertFalse(result['receiver_released'])
+                            self.assertFalse(any(e[0] == 'gripper' and e[1] is receiver
+                                                 and e[2] == 0. for e in api.events))
+                            self.assertEqual(result['plan_detail'], 'configuration change')
+
+    def test_receiver_arrival_avoids_low_lateral_sweep(self):
+        for donor in ('left', 'right'):
+            for path in ('direct', 'staged'):
+                for initial_dz in (-.06, .24):
+                    for shift in (np.zeros(3), np.array([.03, -.06, .08])):
+                        api = API()
+                        goal = np.array([0., .05, .88])+shift
+                        receiver = api.arm('left' if donor == 'right' else 'right')
+                        for arm in api.arms.values():
+                            arm.pose[:3, 3] += shift
+                        receiver.pose[2, 3] = goal[2]+initial_dz
+                        receiver.pose[:3, :3] @= np.diag([1., -1., -1.])
+                        move = api.move_tcp
+                        def guarded(arm, target, feedback):
+                            start, end = arm.tcp()[:3, 3], target[:3, 3]
+                            # Before insertion, off-axis lateral motion in the
+                            # low support region intersects a synthetic obstacle.
+                            if (arm is receiver and
+                                    np.linalg.norm(start[:2]-end[:2]) > .002 and
+                                    min(start[2], end[2]) < goal[2]+.12-.001 and
+                                    max(abs(start[0]-goal[0]), abs(end[0]-goal[0])) > .002):
+                                self.fail('low lateral receiver sweep')
+                            return move(arm, target, feedback)
+                        api.move_tcp = guarded
+                        result, code = m.run(api, 'supported_transfer', dict(
+                            self.args, donor=donor, path=path,
+                            x=goal[0], y=goal[1], z=goal[2]))
+                        self.assertEqual(code, 0, result)
+                        self.assertEqual('receiver_raise' in [s['stage'] for s in result['stages']],
+                                         initial_dz < .12)
+
+    def test_receiver_arrival_failures_stop_before_closure(self):
+        for donor in ('left', 'right'):
+            for low_start in (False, True):
+                for failure_move in (5, 6):
+                    for fault in ('pose', 'clip', 'timeout', 'exception', 'ik'):
+                        api = API(failure_move, fault)
+                        receiver = api.arm('left' if donor == 'right' else 'right')
+                        if low_start:
+                            receiver.pose[2, 3] = .84
+                        result, code = m.run(api, 'supported_transfer', dict(self.args, donor=donor))
+                        self.assertEqual(code, 2, result)
+                        self.assertTrue(result['donor_released'])
+                        self.assertFalse(result['receiver_released'])
+                        self.assertFalse(any(e[0] == 'gripper' and e[1] is receiver
+                                             and e[2] == 0. for e in api.events))
 
     def test_invalid_arguments_no_motion(self):
         for changes in ({'retreat': 'bad'}, {'path': 'bad'}, {'x': float('nan')}, {'park_x': .4}, {'clearance': 0},

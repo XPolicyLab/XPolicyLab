@@ -1,5 +1,12 @@
 """Axis-aware grasp paths using only the public EpisodeAPI."""
+import importlib.util
+from pathlib import Path
 import numpy as np
+
+_spec = importlib.util.spec_from_file_location(
+    "_axis_support", Path(__file__).resolve().parents[1] / "vertical_span/tool.py")
+_support = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_support)
 
 TOOL = {"name": "axis_grasp", "commands": [{
     "name": "axis_grasp", "budget": True,
@@ -7,7 +14,7 @@ TOOL = {"name": "axis_grasp", "commands": [{
     "args": [
         {"name": "arm", "positional": True, "choices": ["left", "right"]},
         *[{"name": n, "type": "float", "required": True} for n in ("x", "y", "z")],
-        {"name": "path", "choices": ["direct", "staged"], "default": "direct"},
+        {"name": "path", "choices": ["direct", "staged"], "default": "staged"},
         {"name": "reorient", "choices": ["combined", "separate"], "default": "combined"},
         {"name": "transit", "choices": ["raised", "direct"], "default": "raised"},
         {"name": "idle_clearance", "choices": ["auto", "off"], "default": "auto"},
@@ -78,17 +85,66 @@ def arrival_distance(point, waypoints):
     return distance
 
 
+def check_support(api, goal):
+    """Reject unresolved horizontal center clearance, not correct its height."""
+    try:
+        obs = api.observe()
+        key = "cam_head" if "cam_head" in obs["cameras"] else "head"
+        cam = obs["cameras"][key]
+        k = np.asarray(cam["intrinsics"], float)
+        t = np.asarray(cam["extrinsics_world"], float)
+        size = np.asarray(cam["size"], float)
+        if (k.shape != (3, 3) or t.shape != (4, 4) or size.shape != (2,)
+                or not np.isfinite(np.r_[k.ravel(), t.ravel(), size]).all()
+                or np.any(size <= 0) or not np.allclose(t[3], [0, 0, 0, 1])
+                or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-4)
+                or not np.isclose(np.linalg.det(t[:3, :3]), 1., atol=1e-4)):
+            raise ValueError("invalid head calibration")
+        q = k @ (t[:3, :3].T @ (goal-t[:3, 3]))
+        if q[2] <= 0:
+            raise ValueError("target behind head camera")
+        pixel = q[:2]/q[2]
+        if not np.isfinite(pixel).all() or np.any(pixel < 0) or np.any(pixel >= size):
+            raise ValueError("target outside head image")
+        support = _support.support_plane(obs["depth"][key], k, t, size, pixel)
+        gap = float(goal[2]-support["height_m"])
+        return dict(status="unresolved" if gap <= support["uncertainty_m"] else "clear",
+                    support_estimate=support, center_clearance_m=gap,
+                    required_clearance_m=support["uncertainty_m"])
+    except _support.AmbiguousSupport as exc:
+        # Multiple measured bands are evidence, unlike missing depth. Test
+        # clearance against every plausible band without choosing a plane or
+        # inventing a corrected grasp center from support alone.
+        checks = [dict(candidate,
+                       center_clearance_m=float(goal[2]-candidate["height_m"]),
+                       clearance_margin_m=float(goal[2]-candidate["height_m"]
+                                                -candidate["uncertainty_m"]))
+                  for candidate in exc.candidates]
+        unresolved = any(c["clearance_margin_m"] <= 0 for c in checks)
+        return dict(status="ambiguous" if unresolved else "clear",
+                    support_ambiguous=True, support_candidates=checks,
+                    detail=str(exc))
+    except Exception as exc:
+        # Missing depth cannot establish support clearance.
+        return dict(status="unavailable", detail=str(exc))
+
+
 def run(api, command, args):
     stages, released = [], False
+    support_check = {"status": "not_applicable"}
 
     def fail(reason, detail=""):
         return {"plan_ok": False, "plan_fail_reason": reason, "plan_detail": detail,
-                "stages": stages, "released": released, "grasp_verified": False}, 2
+                "stages": stages, "released": released, "grasp_verified": False,
+                "support_check": support_check}, 2
 
     try:
         if command != "axis_grasp" or args.get("arm") not in ("left", "right"):
             raise ValueError("invalid command or arm")
-        path = args.get("path", "direct")
+        # Finish raised arrival orientation and descent at the standoff before
+        # inserting. Coordinate-based callers need the same default separation
+        # as the image-based vertical wrapper; explicit direct paths remain valid.
+        path = args.get("path", "staged")
         if path not in ("direct", "staged"):
             raise ValueError("invalid path")
         reorient = args.get("reorient", "combined")
@@ -126,6 +182,20 @@ def run(api, command, args):
         orient = rotation(args.get("mode", "vertical"), ax, ay, initial[:3, :3])
         if api.over:
             return fail("episode_over")
+
+        if args.get("mode", "vertical") == "horizontal":
+            support_check = check_support(api, goal)
+            if support_check["status"] == "ambiguous":
+                return fail("support_height_ambiguous",
+                            "Horizontal center does not clear every plausible local support "
+                            "within uncertainty; no motion executed. Candidate clearances are "
+                            "diagnostics, not corrected grasp heights. Resolve support and "
+                            "reconstruct current silhouette geometry before retrying.")
+            if support_check["status"] == "unresolved":
+                return fail("horizontal_center_near_support",
+                            "Horizontal center clearance is unresolved within support uncertainty. "
+                            "Reconstruct current silhouette geometry with horizontal_span or span_grasp; "
+                            "no corrected center is inferred from support alone.")
 
         def move(name, pos, rot, moving_arm=None):
             if api.over:
@@ -264,13 +334,30 @@ def run(api, command, args):
             failure = move("transit", elevated, initial[:3, :3] if defer_yaw else orient)
             if failure and defer_yaw and rejected_without_motion(before):
                 failure = move("transit_entry", elevated, orient)
+            if (failure and not defer_yaw and reorient == "combined"
+                    and rejected_without_motion(before)):
+                # The raised route bypasses the approach-stage roll fallback.
+                # This equivalent roll keeps the approach axis and every
+                # checked position unchanged, and is attempted only once.
+                orient = orient @ np.diag([1., -1., -1.])
+                failure = move("transit_alternate", elevated, orient)
             if failure:
                 return failure
         entry_moves = (("insert", goal),) if diagonal_entry else (
             ("approach", goal-clearance*orient[:, 0]), ("insert", goal))
         for name, pos in entry_moves:
             before = snapshot()
+            entry_orient = orient.copy()
             failure = move(name, pos, orient)
+            if (failure and name == "insert" and diagonal_entry and defer_yaw
+                    and rejected_without_motion(before)
+                    and np.trace(np.asarray(arm.tcp())[:3, :3].T @ forward)
+                    > 1 + 2*np.cos(np.radians(1))):
+                # A deferred side-entry yaw can cross an IK branch during
+                # descent. Preserve the reached forward roll instead; the
+                # center and diagonal swept TCP segment remain unchanged.
+                orient = forward.copy()
+                failure = move("insert_forward", pos, orient)
             # A Cartesian approach can settle a few centimetres short after
             # executing most of its path (typically near a reach boundary).
             # If the TCP is close and orientation is valid, recover by
@@ -319,6 +406,21 @@ def run(api, command, args):
                             failure = move("approach_" + suffix + "_alternate", pos, orient)
                         if not failure or not rejected_without_motion(before):
                             break
+            # A rearward standoff may be unreachable even though the center
+            # is reachable. After all nonexecuting orientation alternatives,
+            # shorten it once, retaining the raised arrival's original roll.
+            # This is a fixed-orientation descent to a closer standoff, not
+            # permission to close on a stalled approach or alter the center.
+            if (failure and name == "approach" and raised and path == "staged"
+                    and reorient == "combined"
+                    and args.get("mode", "vertical") == "vertical"
+                    and clearance > .04 + 1e-9
+                    and rejected_without_motion(before)):
+                shorter = goal - .04 * entry_orient[:, 0]
+                route = [before[0][:3, 3], shorter, goal]
+                if arrival_distance(np.asarray(other.tcp())[:3, 3], route) >= separation:
+                    orient = entry_orient
+                    failure = move("approach_shorter", shorter, orient)
             if failure:
                 return failure
         carry_rot = orient
@@ -339,36 +441,55 @@ def run(api, command, args):
         api.set_gripper(arm, 0.0)
         if api.over:
             return fail("episode_over")
-        # Side entry into an upright body must clear its support before lateral
-        # transport. A shallow direct line can drag/tip the base despite accurate
-        # endpoint tracking; TCP arrival alone cannot establish retained grip.
-        upright = args.get("mode", "vertical") == "vertical"
-        if destination is None or path == "staged" or rotate_carry or upright:
-            extraction = goal + np.array([0., 0., lift])
-            if destination is not None and path == "direct" and rotate_carry and not upright:
-                # Reserve at least half the lateral travel for rotation: the
-                # destination may be unreachable in the grasp orientation.
-                fraction = min(.5, lift / (destination[2] - goal[2]))
-                extraction[:2] += fraction * (destination[:2] - goal[:2])
-            before = snapshot()
-            # Upright yaw preserves the vertical major axis. Combine the
-            # bounded return-yaw correction with the existing vertical lift,
-            # avoiding rotation along the long lateral carry. If planning
-            # rejects without execution, retain the original lift/carry route.
-            lift_rot = carry_rot if forward_return else orient
-            failure = move("lift", extraction, lift_rot)
-            if failure and forward_return and rejected_without_motion(before):
-                failure = move("lift_entry", extraction, orient)
-            # A long lateral extraction can leave the downward-orientation
-            # workspace before rotation starts. One vertical alternative keeps
-            # the requested clearance and grip, then uses the normal carry.
-            vertical = goal + np.array([0., 0., lift])
-            if (failure and destination is not None and path == "direct"
-                    and rotate_carry and not np.allclose(extraction, vertical)
-                    and rejected_without_motion(before)):
-                failure = move("lift_vertical", vertical, orient)
-            if failure:
-                return failure
+        # Clear support vertically before any lateral transport, for every
+        # entry/carry policy. A shallow diagonal can drag a marginal grip.
+        # TCP arrival alone cannot establish retained grip.
+        extraction = goal + np.array([0., 0., lift])
+        before = snapshot()
+        # Upright yaw preserves the vertical major axis. Combine the
+        # bounded return-yaw correction with the existing vertical lift,
+        # avoiding rotation along the long lateral carry. If planning
+        # rejects without execution, retain the original lift/carry route.
+        lift_rot = carry_rot if forward_return else orient
+        failure = move("lift", extraction, lift_rot)
+        if failure and forward_return and rejected_without_motion(before):
+            failure = move("lift_entry", extraction, orient)
+        # A downward wrist can run out of vertical reach before the complete
+        # lift. Try one shorter fixed-grip extraction, then complete the rise
+        # with the selected carry rotation before normal transport.
+        # Half-lift is a clearance heuristic, not a held-geometry certificate.
+        if (failure and destination is not None and carry_orientation == "auto"
+                and args.get("mode", "vertical") == "horizontal"
+                and rotate_carry and lift >= .08
+                and rejected_without_motion(before)):
+            partial = goal + np.array([0., 0., lift / 2])
+            failure = move("lift_partial", partial, orient)
+            if not failure:
+                before_rotate = snapshot()
+                failure = move("lift_rotate", extraction, carry_rot)
+                if failure and rejected_without_motion(before_rotate):
+                    # A retained downward grip may rotate only after leaving
+                    # its current reach boundary. One bounded rising translation
+                    # toward the supplied destination precedes another rotation.
+                    # The half-lift already cleared the TCP vertically; clearance
+                    # of the held geometry remains a caller assumption.
+                    delta = destination[:2] - partial[:2]
+                    distance = float(np.linalg.norm(delta))
+                    if distance > lift:
+                        shifted = partial.copy()
+                        shifted[:2] += delta * min(2*lift, distance/2) / distance
+                        shifted[2] += lift/4
+                        rotated = shifted.copy()
+                        rotated[2] = extraction[2]
+                        idle_pos = np.asarray(before_rotate[2])[:3, 3]
+                        if arrival_distance(idle_pos, [partial, shifted, rotated]) >= separation:
+                            failure = move("lift_shift", shifted, orient)
+                            if not failure:
+                                failure = move("lift_shift_rotate", rotated, carry_rot)
+                if not failure:
+                    rotate_carry = False
+        if failure:
+            return failure
         if destination is not None:
             before = snapshot()
             failure = move("carry", destination, carry_rot)
@@ -413,6 +534,7 @@ def run(api, command, args):
                 return fail("episode_over")
         return {"plan_ok": True, "plan_fail_reason": None, "stages": stages,
                 "reached_tcp": {"pos": np.asarray(arm.tcp())[:3, 3].tolist()},
-                "released": released, "grasp_verified": False}, 0
+                "released": released, "grasp_verified": False,
+                "support_check": support_check}, 0
     except Exception as exc:
         return fail("axis_grasp_failed", str(exc))

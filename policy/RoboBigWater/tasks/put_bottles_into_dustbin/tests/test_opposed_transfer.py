@@ -9,6 +9,9 @@ class API(BaseAPI):
     def sim_time_left(self):
         return 20.
 
+    def estimate_tcp_chain(self, arm, stages):
+        return dict(estimate_ok=True, estimate_only=True)
+
 spec = importlib.util.spec_from_file_location(
     'opposed_transfer', Path(__file__).parents[1] / 'tools/opposed_transfer/tool.py')
 m = importlib.util.module_from_spec(spec)
@@ -18,6 +21,61 @@ spec.loader.exec_module(m)
 class OpposedTests(unittest.TestCase):
     args = dict(donor='right', x=0., y=.05, z=1.02, grip_dz=.10,
                 release_x=-.45, release_y=.05, release_z=1.14)
+
+    def test_receiver_preflight_stops_before_loaded_motion(self):
+        for donor in ('left', 'right'):
+            for shift in (np.zeros(3), np.array([.07, -.04, .08])):
+                for fault in ('ik_unreachable', 'other', 'exception', 'drift', 'time'):
+                    api = API()
+                    for arm in api.arms.values():
+                        arm.pose[:3, 3] += shift
+                    args = dict(self.args, donor=donor)
+                    for prefix in ('', 'release_'):
+                        for coordinate, offset in zip('xyz', shift):
+                            args[prefix+coordinate] += offset
+                    calls = []
+                    def estimate(arm, stages):
+                        calls.append(stages)
+                        self.assertEqual(api.events, [])
+                        if fault == 'exception':
+                            raise RuntimeError('planner unavailable')
+                        if fault == 'drift':
+                            arm.pose[0, 3] += .001
+                        if fault == 'time':
+                            api.sim_time_left = lambda: 19.
+                        return dict(estimate_ok=False, reason=fault, failed_stage='approach')
+                    api.estimate_tcp_chain = estimate
+                    result, code = m.run(api, 'opposed_transfer', args)
+                    self.assertEqual(code, 2, result)
+                    self.assertEqual(api.events, [])
+                    self.assertFalse(result['donor_released'])
+                    self.assertEqual(len(calls), 2 if fault == 'ik_unreachable' else 1)
+
+    def test_receiver_preflight_selects_reachable_roll_and_exact_route(self):
+        for donor in ('left', 'right'):
+            for policy in ('combined', 'separate'):
+                for delivery in (True, False):
+                    api = API()
+                    args = dict(self.args, donor=donor, reorient=policy)
+                    if not delivery:
+                        args = {k: v for k, v in args.items() if not k.startswith('release_')}
+                    calls = []
+                    receiver = api.arm('left' if donor == 'right' else 'right')
+                    def estimate(arm, stages):
+                        self.assertIs(arm, receiver)
+                        self.assertEqual(api.events, [])
+                        calls.append(stages)
+                        rejected = policy == 'combined' and len(calls) == 1
+                        return dict(estimate_ok=not rejected, reason='ik_unreachable' if rejected else None)
+                    api.estimate_tcp_chain = estimate
+                    result, code = m.run(api, 'opposed_transfer', args)
+                    self.assertEqual(code, 0, result)
+                    self.assertEqual(len(calls), 2 if policy == 'combined' else 1)
+                    moves = [e[2] for e in api.events if e[0] == 'move' and e[1] is receiver]
+                    self.assertEqual(len(moves), len(calls[-1]))
+                    for actual, (_, estimated) in zip(moves, calls[-1]):
+                        np.testing.assert_allclose(actual, estimated)
+                    self.assertEqual(calls[-1][-1][0], 'deliver' if delivery else 'insert')
 
     def test_alternate_roll_resolves_nonexecuting_ik_rejection(self):
         for donor in ('left', 'right'):
@@ -86,62 +144,51 @@ class OpposedTests(unittest.TestCase):
                 api.move_tcp = move
                 result, code = m.run(api, 'opposed_transfer', self.args)
                 self.assertEqual(code, 2)
-                self.assertEqual(len(attempts), 3 if fault == 'both_rejected' else
+                self.assertEqual(len(attempts), 2 if fault == 'both_rejected' else
                                  2 if fault == 'alternate_pose' else 1)
                 self.assertFalse(result['donor_released'])
                 self.assertFalse(result['receiver_released'])
                 self.assertFalse(any(e[0] == 'gripper' for e in api.events))
 
-    def test_decoupled_route_and_failure_guards(self):
-        for fault in (None, 'translate_pose', 'rotate_ik', 'donor_drift',
-                      'second_drift', 'second_time', 'second_clip'):
-            with self.subTest(fault=fault):
+    def test_two_rejected_rolls_never_translate_into_donor(self):
+        # An opposing standoff does not clear a forward-facing palm. Model
+        # contact there as donor displacement; neither rejection may invoke it.
+        for donor_name in ('left', 'right'):
+            for shift in ((0., 0., 0.), (.06, -.04, .05)):
                 api = API()
-                receiver = api.arm('left')
+                donor = api.arm(donor_name)
+                receiver = api.arm('right' if donor_name == 'left' else 'left')
+                for arm in (donor, receiver):
+                    arm.pose[:3, 3] += shift
+                start = receiver.tcp().copy()
                 original = api.move_tcp
-                initial_rotation = receiver.tcp()[:3, :3]
                 attempts = []
-                remaining = [20.]
-                api.sim_time_left = lambda: remaining[0]
-
                 def move(arm, target, feedback):
                     if arm is receiver:
                         attempts.append(target.copy())
-                        n = len(attempts)
-                        if n <= 2 or (n == 4 and fault == 'rotate_ik'):
-                            feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
-                            if n == 2:
-                                if fault == 'second_drift':
-                                    receiver.pose[0, 3] += .001
-                                if fault == 'second_time':
-                                    remaining[0] -= .04
-                                if fault == 'second_clip':
-                                    feedback['clipped'] = True
-                            return 2
-                        code = original(arm, target, feedback)
-                        if n == 3 and fault == 'translate_pose':
-                            receiver.pose[0, 3] += .02
-                        if n == 3 and fault == 'donor_drift':
-                            api.arm('right').pose[0, 3] += .02
-                        return code
+                        if m.angle(start[:3, :3], target[:3, :3]) < 5:
+                            donor.pose[0, 3] += .05
+                            return original(arm, target, feedback)
+                        feedback.update(plan_ok=False, plan_fail_reason='ik_unreachable')
+                        return 2
                     return original(arm, target, feedback)
-
                 api.move_tcp = move
-                result, code = m.run(api, 'opposed_transfer', self.args)
-                self.assertEqual(code, 0 if fault is None else 2)
-                if fault is None:
-                    self.assertEqual([s['stage'] for s in result['stages']],
-                                     ['present', 'approach', 'approach_alternate',
-                                      'approach_translate', 'approach_rotate', 'insert',
-                                      'withdraw', 'deliver'])
-                    np.testing.assert_allclose(attempts[2][:3, :3], initial_rotation)
-                    np.testing.assert_allclose(attempts[2][:3, 3], attempts[3][:3, 3])
-                    np.testing.assert_allclose(attempts[3][:3, :3], attempts[4][:3, :3])
-                else:
-                    self.assertFalse(result['donor_released'])
-                    self.assertFalse(any(e[0] == 'gripper' for e in api.events))
-                    expected = 2 if fault.startswith('second_') else 4 if fault == 'rotate_ik' else 3
-                    self.assertEqual(len(attempts), expected)
+                args = dict(self.args, donor=donor_name)
+                for prefix in ('', 'release_'):
+                    for coordinate, offset in zip('xyz', shift):
+                        args[prefix + coordinate] += offset
+                result, code = m.run(api, 'opposed_transfer', args)
+                self.assertEqual(code, 2)
+                self.assertEqual(result['plan_fail_reason'], 'ik_unreachable')
+                self.assertEqual([s['stage'] for s in result['stages']],
+                                 ['present', 'approach', 'approach_alternate'])
+                self.assertEqual(len(attempts), 2)
+                np.testing.assert_allclose(receiver.tcp(), start)
+                np.testing.assert_allclose(donor.tcp()[:3, 3],
+                                           [args[k] for k in 'xyz'])
+                self.assertFalse(result['donor_released'])
+                self.assertFalse(result['receiver_released'])
+                self.assertFalse(any(e[0] == 'gripper' for e in api.events))
 
     def test_rotation_unreachable_at_previous_endpoint(self):
         for route in ('combined', 'separate'):
