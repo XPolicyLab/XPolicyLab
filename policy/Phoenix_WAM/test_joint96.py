@@ -165,14 +165,18 @@ class RealContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from hydra.utils import instantiate
-        cls.manifest, cls.assets = load_assets(os.environ['JOINT96_TEST_WEIGHTS'])
+        cls.releases = {robot: load_assets(os.environ['JOINT96_TEST_WEIGHTS'], robot_type=robot)
+                        for robot in ('arx_x5', 'piper', 'piper_x')}
+        cls.manifest, cls.assets = cls.releases['arx_x5']
         _activate_runtime(cls.assets['runtime_root'])
         from . import joint96_backend as backend
         cls.backend = backend
         from wam.datasets.lerobot.utils.normalizer import load_dataset_stats_from_json
         cls.cfg = backend.load_inference_config(cls.assets['inference_config'], cls.assets)
         cls.stats = cls.assets['dataset_stats']
-        payload = torch.load(cls.assets['checkpoint'], map_location='cpu', mmap=True, weights_only=True)
+        cls.payloads = {robot: torch.load(assets['checkpoint'], map_location='cpu', mmap=True, weights_only=True)
+                        for robot, (_, assets) in cls.releases.items()}
+        payload = cls.payloads['arx_x5']
         cls.payload = {key: payload[key] for key in ('step', 'joint96_metadata')}
         cls.full_payload = payload
         cls.processor = instantiate(cls.cfg.observation.processor).eval()
@@ -188,12 +192,16 @@ class RealContractTests(unittest.TestCase):
         from wam.datasets.lerobot.utils.normalizer import load_dataset_stats_from_json
         for robot, slot in [('arx_x5', 2), ('piper', 4), ('piper_x', 15)]:
             with self.subTest(robot=robot):
-                assets = select_robot_assets(self.assets, robot)
+                manifest, assets = self.releases[robot]
                 cfg = self.backend.load_inference_config(assets['inference_config'], assets)
-                self.backend.validate_contract(cfg, self.payload, assets['dataset_stats'], self.manifest['step'])
-                support = checkpoint_robot_support(self.full_payload, assets['robot_profile'])
+                payload = self.payloads[robot]
+                self.backend.validate_contract(cfg, payload, assets['dataset_stats'], manifest['step'])
+                self.assertIn(robot.replace('_', '-'), assets['checkpoint'].name)
+                self.assertEqual(cfg.checkpoint_contract.expected_pretrain_step,
+                                 {'arx_x5': 175000, 'piper': 165000, 'piper_x': 180000}[robot])
+                support = checkpoint_robot_support(payload, assets['robot_profile'])
                 self.assertEqual(support['embodiment_id'], slot)
-                self.assertEqual(support['posttrained'], robot == 'piper')
+                self.assertTrue(support['posttrained'])
                 self.assertTrue(support['structurally_supported'])
                 processor = instantiate(cfg.observation.processor).eval()
                 stats = json.loads(assets['dataset_stats'].read_text())
@@ -211,14 +219,34 @@ class RealContractTests(unittest.TestCase):
                 np.testing.assert_allclose(actions, np.broadcast_to(expected, (32, 14)), atol=1e-6)
                 if slot != 2:
                     with self.assertRaisesRegex(ValueError, 'normalization'):
-                        self.backend.validate_contract(cfg, self.payload, self.stats, self.manifest['step'])
+                        self.backend.validate_contract(cfg, payload, self.stats, manifest['step'])
+
+    def test_cross_robot_checkpoints_are_rejected(self):
+        for robot, (manifest, assets) in self.releases.items():
+            cfg = self.backend.load_inference_config(assets['inference_config'], assets)
+            for other, payload in self.payloads.items():
+                if other == robot:
+                    continue
+                with self.subTest(robot=robot, checkpoint=other):
+                    with self.assertRaisesRegex(ValueError, 'embodiment_ids'):
+                        self.backend.validate_contract(cfg, payload, assets['dataset_stats'], manifest['step'])
+
+    def test_wrong_loss_recipe_is_rejected(self):
+        manifest, assets = self.releases['piper_x']
+        cfg = self.backend.load_inference_config(assets['inference_config'], assets)
+        cfg.checkpoint_contract.loss_recipe = 'robodojo_real_half_video_v1'
+        with self.assertRaisesRegex(ValueError, 'loss recipe'):
+            self.backend.validate_contract(cfg, self.payloads['piper_x'], assets['dataset_stats'], manifest['step'])
+        cfg.checkpoint_contract.loss_weights = {'vae': .25, 'stvae': .25, 'action': 1.0}
+        with self.assertRaisesRegex(ValueError, 'loss_weights'):
+            self.backend.validate_contract(cfg, self.payloads['piper_x'], assets['dataset_stats'], manifest['step'])
 
     def test_prompt_id_reaches_dit_for_each_robot(self):
         from .robot_profiles import select_robot_assets
         from hydra.utils import instantiate
         from wam.datasets.lerobot.utils.normalizer import load_dataset_stats_from_json
         for robot, slot in [('arx_x5', 2), ('piper', 4), ('piper_x', 15)]:
-            assets = select_robot_assets(self.assets, robot)
+            manifest, assets = self.releases[robot]
             cfg = self.backend.load_inference_config(assets['inference_config'], assets)
             processor = instantiate(cfg.observation.processor).eval()
             processor.set_normalizer_from_stats(load_dataset_stats_from_json(str(assets['dataset_stats'])))
@@ -301,7 +329,7 @@ class RealContractTests(unittest.TestCase):
         self.assertEqual(self.check_contract()['action_dim'], 80)
 
     def test_reject_domain_family_cache_and_lineage(self):
-        for key, value in [('domain', 'robotwin'), ('embodiment_ids', {'arx_x5': 2}),
+        for key, value in [('domain', 'robotwin'), ('embodiment_ids', {'piper': 4}),
                            ('cache_contract_sha256', 'invalid')]:
             payload = copy.deepcopy(self.payload)
             payload['joint96_metadata']['soft_prompt']['training_contract'][key] = value

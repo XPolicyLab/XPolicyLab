@@ -55,7 +55,7 @@
     "encoder_source/third_party/dino90k_runtime/starVLA/model/modules/multi_teacher_distillation/attention.py": "3d9cf435f3c19d99f2f1dd084eee971fee22dd0197fea0411c6bca10a2c5aec6",
     "encoder_source/third_party/dino90k_runtime/starVLA/model/modules/multi_teacher_distillation/student.py": "fafc70df0c42cca3872f58a2ba56446caeb3f7ca79b8f0a350581ef18384a366",
     "encoder_source/third_party/dino90k_runtime/starVLA/model/modules/multi_teacher_distillation/types.py": "db6a7f1766ad586c55d5867ed3ea9434f251b2bc27a3321b139cf17ca2f65bb5",
-    "inference.json": "a750438f2ea9cf62a062b6f94d357e300531469153e462f804ab898b268a07a4",
+    "inference.json": "8c3574622d8c02ecdb5dc0d9d8e87c3d312b1608ec9b943ed75d061cde7fee26",
     "normalization/manifest.json": "22948e7e898b1eb6df928a2b61632df3a70dad29bc260a85490e3f2bf14b82af",
     "normalization/stats_slot2.json": "25955346b26578e188f97946a0274c4184798a03c707b2d48f4610f05d3b6826",
     "registry.json": "9f2b8133d52921fd3da7ccf1383a704f65074fed64f7b8b2c5aa6511006c9dde",
@@ -128,8 +128,8 @@
     "tokenizer/tokenizer_config.json": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05",
     "normalization/stats_slot4.json": "8054a509d111a12436ee76d9bbd7e3e3e00f7ee50bcbb3e0e58c92b381f6ed6e",
     "normalization/stats_slot15.json": "6bba57ddd13d4fedccfe1a71eba87771b89de0b44feb86cc9586269990f13989",
-    "robots/arx_x5.json": "b9d1c0fe49a59fac3ce44047669a3054c8da5aab3abaa35f2d4b6e2f63f14104",
+    "robots/arx_x5.json": "7865d39adb96f3cef2236fb0124461c3b889a8c7f603ed6ebb5f936cb463f3b7",
     "robots/piper.json": "3c00d49ed0a4a754f621f10fe90cbd9a0d6716156bbeb002e97c0d65ef3925ca",
-    "robots/piper_x.json": "4887379a6e8ad334dc25d7e472dac7bb9095f2464e0d984dfb3e50366c01bcc8"
+    "robots/piper_x.json": "b57ff3dad5acad6e26a51f3419c27e0efda8fa05f0b00933cb139772a48aac8c"
   }
 }

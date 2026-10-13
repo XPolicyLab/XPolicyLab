@@ -373,19 +373,15 @@
   "checkpoint_contract": {
     "enabled": true,
     "cached_visuals": true,
-    "expected_pretrain_step": 165000,
+    "expected_pretrain_step": null,
     "evaluation_membership": "train_pool",
     "action_video_attention": "current_and_noisy_future_v1",
     "robodojo_real_softprompt": {
       "enabled": true
     },
     "robodojo_real_family_cache": true,
-    "loss_recipe": "robodojo_real_half_video_v1",
-    "loss_weights": {
-      "vae": 0.25,
-      "stvae": 0.25,
-      "action": 1.0
-    },
+    "loss_recipe": null,
+    "loss_weights": null,
     "max_posttrain_steps": 40000
   }
 }

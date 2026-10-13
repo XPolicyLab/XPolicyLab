@@ -52,17 +52,41 @@ def prepare_tokenizer(root, source):
             shutil.copy2(path, destination)
 
 
+def read_release(policy_dir=POLICY_DIR):
+    release = json.loads((Path(policy_dir) / 'phoenix_release.json').read_text())
+    if release.get('schema') != 'phoenix-joint96-release-v2':
+        raise ValueError('Expected robot-specific Phoenix_WAM release manifest')
+    return release
+
+
+def release_weights(release, robot_type=None):
+    """Select one robot checkpoint, or all checkpoints for a shared download."""
+    from .robot_profiles import SUPPORTED_ROBOTS
+    robots = SUPPORTED_ROBOTS if robot_type is None else (robot_type,)
+    selected = {}
+    for robot in robots:
+        if robot not in SUPPORTED_ROBOTS or robot not in release['checkpoints']:
+            raise ValueError(f'Unsupported checkpoint robot: {robot}')
+        key = 'checkpoint' if robot_type is not None else f'checkpoint_{robot}'
+        selected[key] = release['checkpoints'][robot]
+    if any(key.startswith('checkpoint') for key in release['weights']):
+        raise ValueError('Shared weights must not override robot checkpoints')
+    return {**selected, **release['weights']}
+
+
 def load_assets(root, *, policy_dir=POLICY_DIR, robot_type="arx_x5"):
     root = Path(root).resolve(strict=True)
-    release = json.loads((Path(policy_dir) / 'phoenix_release.json').read_text())
+    release = read_release(policy_dir)
+    specs = release_weights(release, robot_type)
     _, paths = read_source(policy_dir)
     from .robot_profiles import select_robot_assets
     paths = select_robot_assets(paths, robot_type)
     weights = {}
-    for key, spec in release['weights'].items():
+    for key, spec in specs.items():
         path = relative_path(root, spec['path'])
         if not path.is_file():
-            raise FileNotFoundError(f'Missing {key}: {path}. Run download_joint96_weights.sh.')
+            raise FileNotFoundError(f'Missing {robot_type} {key}: {path}. '
+                                    f'Run download_checkpoint.sh {root} --robot-type {robot_type}.')
         if sha256(path) != spec['sha256']:
             raise ValueError(f'Weight checksum mismatch: {key}')
         weights[key] = path
@@ -71,17 +95,19 @@ def load_assets(root, *, policy_dir=POLICY_DIR, robot_type="arx_x5"):
     paths.update(weights)
     paths['base_model_root'] = root / 'base_models'
     paths['tokenizer_root'] = root / TOKENIZER_PATH
-    return dict(step=release['step'], checkpoint_sha256=release['sha256']), paths
+    paths['checkpoint_spec'] = specs['checkpoint']
+    return dict(step=specs['checkpoint']['step'],
+                checkpoint_sha256=specs['checkpoint']['sha256'], robot_type=robot_type), paths
 
 
-def verify_remote_weights(*, policy_dir=POLICY_DIR, api=None):
+def verify_remote_weights(*, policy_dir=POLICY_DIR, robot_type=None, api=None):
     """Verify the public repository contains every exact weight used by inference."""
     if api is None:
         from modelscope.hub.api import HubApi
         api = HubApi()
-    release = json.loads((Path(policy_dir) / 'phoenix_release.json').read_text())
+    specs = release_weights(read_release(policy_dir), robot_type)
     listings, result = {}, {}
-    for key, spec in release['weights'].items():
+    for key, spec in specs.items():
         identity = (spec['repo_id'], spec['revision'])
         if identity not in listings:
             listings[identity] = {item['Path']: item for item in api.get_model_files(
@@ -98,7 +124,7 @@ def verify_remote_weights(*, policy_dir=POLICY_DIR, api=None):
     return result
 
 
-def download_weights(root, *, policy_dir=POLICY_DIR, api=None, download_file=None, cache_dir=None):
+def download_weights(root, *, policy_dir=POLICY_DIR, robot_type=None, api=None, download_file=None, cache_dir=None):
     """Download individual pinned weight files; never download source or archives."""
     if api is None or download_file is None:
         from modelscope.hub.api import HubApi
@@ -106,10 +132,10 @@ def download_weights(root, *, policy_dir=POLICY_DIR, api=None, download_file=Non
         api = api or HubApi()
         download_file = download_file or model_file_download
     root, policy_dir = Path(root).resolve(), Path(policy_dir)
-    release = json.loads((policy_dir / 'phoenix_release.json').read_text())
+    specs = release_weights(read_release(policy_dir), robot_type)
     _, source = read_source(policy_dir)
     missing, listings = [], {}
-    for key, spec in release['weights'].items():
+    for key, spec in specs.items():
         path = relative_path(root, spec['path'])
         if path.exists():
             if not path.is_file() or sha256(path) != spec['sha256']:
@@ -146,8 +172,8 @@ def download_weights(root, *, policy_dir=POLICY_DIR, api=None, download_file=Non
         finally:
             temporary.unlink(missing_ok=True)
     prepare_tokenizer(root, source['tokenizer_root'])
-    (root / 'WEIGHTS_READY.json').write_text(json.dumps(dict(step=release['step'],
-        sha256={key: spec['sha256'] for key, spec in release['weights'].items()},
+    (root / 'WEIGHTS_READY.json').write_text(json.dumps(dict(robot_type=robot_type or 'all',
+        sha256={key: spec['sha256'] for key, spec in specs.items()},
         source='checked-in joint96_source', model_loaded=False), indent=2) + '\n')
     print(f'Individual weights verified: {root}', flush=True)
 
@@ -180,15 +206,18 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('weights', type=Path)
     parser.add_argument('--expected-step', type=int)
-    parser.add_argument('--robot-type', default='arx_x5', choices=('arx_x5', 'piper', 'piper_x'))
+    parser.add_argument('--robot-type', choices=('arx_x5', 'piper', 'piper_x'),
+                        help='Robot to download, verify or preflight; download/verify defaults to all robots')
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--download', action='store_true')
     mode.add_argument('--verify-remote', action='store_true')
     parser.add_argument('--cache-dir', type=Path, help='ModelScope download cache directory')
     args = parser.parse_args()
     if args.download:
-        download_weights(args.weights, cache_dir=args.cache_dir)
+        download_weights(args.weights, robot_type=args.robot_type, cache_dir=args.cache_dir)
     elif args.verify_remote:
-        print(json.dumps(verify_remote_weights(), indent=2))
+        print(json.dumps(verify_remote_weights(robot_type=args.robot_type), indent=2))
     else:
+        if args.robot_type is None:
+            parser.error('--robot-type is required for checkpoint preflight')
         print(json.dumps(preflight(args.weights, expected_step=args.expected_step, robot_type=args.robot_type), indent=2))

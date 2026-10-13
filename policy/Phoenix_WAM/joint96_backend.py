@@ -99,13 +99,21 @@ def validate_contract(cfg, payload, stats_path, expected_step):
     if conditioning != 'legacy_clip_prefix' or identity.get('current_conditioning', 'legacy_clip_prefix') != conditioning:
         raise ValueError('This repeat9 evaluator requires legacy_clip_prefix training identity')
     contract = payload['joint96_metadata'].get('soft_prompt', {}).get('training_contract', {})
-    required_contract = dict(domain='robodojo_real', embodiment_ids={'piper': 4},
+    recipes = {
+        'robodojo_real_half_video_v1': {'vae': .25, 'stvae': .25, 'action': 1.0},
+        'robodojo_real_standard_video_v1': {'vae': .5, 'stvae': .5, 'action': 1.0},
+    }
+    loss_weights = recipes.get(get('checkpoint_contract.loss_recipe'))
+    if loss_weights is None or dict(cfg.checkpoint_contract.loss_weights) != loss_weights:
+        raise ValueError('Unsupported or inconsistent saved posttraining loss recipe')
+    required_contract = dict(domain='robodojo_real',
+        embodiment_ids={str(cfg.robot_profile.robot_type): int(cfg.robot_profile.embodiment_id)},
         action_space='native_joint14_to_canonical80', cached_visuals=True,
         normalization='frame_weighted_per_mechanical_family_joint14',
-        loss_weights={'vae': .25, 'stvae': .25, 'action': 1.0})
+        loss_weights=loss_weights)
     for key, expected in required_contract.items():
         if contract.get(key) != expected:
-            raise ValueError('Not the released cached real Piper posttraining checkpoint: ' + key)
+            raise ValueError(f'Checkpoint does not match {cfg.robot_profile.robot_type} posttraining: {key}')
     required = {'model.joint96_three_view': True, 'model.proprio_dim': 80,
         'model.action_dit_config.action_dim': 80, 'model.video_dit_config.in_dim': 96,
         'model.video_dit_config.out_dim': 96, 'model.action_dit_config.num_embodiments': 28,
@@ -113,8 +121,6 @@ def validate_contract(cfg, payload, stats_path, expected_step):
         'checkpoint_contract.enabled': True, 'checkpoint_contract.cached_visuals': True,
         'checkpoint_contract.robodojo_real_family_cache': True,
         'checkpoint_contract.robodojo_real_softprompt.enabled': True,
-        'checkpoint_contract.expected_pretrain_step': 165000,
-        'checkpoint_contract.loss_recipe': 'robodojo_real_half_video_v1',
         'checkpoint_contract.action_video_attention': 'current_and_noisy_future_v1',
         'observation.domain': 'robodojo', 'observation.embodiment': cfg.robot_profile.robot_type,
         'observation.concat_multi_camera': 'latent_horizontal', 'observation.single_canvas': False,
@@ -137,7 +143,8 @@ def validate_contract(cfg, payload, stats_path, expected_step):
     if identity['action_video_attention'] != required['checkpoint_contract.action_video_attention']:
         raise ValueError('Checkpoint attention mismatch')
     source_step = payload['joint96_metadata']['model_paths'].get('posttrain_initialization', {}).get('step')
-    if source_step != get('checkpoint_contract.expected_pretrain_step'):
+    expected_pretrain_step = get('checkpoint_contract.expected_pretrain_step')
+    if type(expected_pretrain_step) is not int or expected_pretrain_step <= 0 or source_step != expected_pretrain_step:
         raise ValueError('Saved config and checkpoint pretraining lineage differ')
     # The training checkpoint binds the cache contract. That contract hashes the
     # package manifest, which in turn hashes each family's normalization file.
@@ -174,6 +181,10 @@ def load_inference_config(path, assets):
     cfg = OmegaConf.load(path)
     cfg.robot_profile = OmegaConf.create(assets['robot_profile'])
     cfg.observation.embodiment = cfg.robot_profile.robot_type
+    release = assets['checkpoint_spec']
+    cfg.checkpoint_contract.expected_pretrain_step = int(release['pretrain_step'])
+    cfg.checkpoint_contract.loss_recipe = release['loss_recipe']
+    cfg.checkpoint_contract.loss_weights = OmegaConf.create(release['loss_weights'])
     # Relocate the inference configuration without changing model parameters.
     codec = cfg.model.joint_visual_codec
     codec.source_root = str(assets['encoder_source_root'])
@@ -216,7 +227,7 @@ def build_runtime(checkpoint, inference_config, stats_path, *, expected_step, ou
     from .robot_profiles import checkpoint_robot_support
     support = checkpoint_robot_support(payload, assets['robot_profile'])
     if not support['posttrained']:
-        print(f"[Phoenix_WAM] {support['robot_type']}: transfer inference; this checkpoint was posttrained on Piper only.", flush=True)
+        raise ValueError('Selected checkpoint was not posttrained for ' + support['robot_type'])
     processor = instantiate(cfg.observation.processor).eval()
     processor.set_normalizer_from_stats(load_dataset_stats_from_json(str(stats_path)))
     for field in ('action', 'state'):

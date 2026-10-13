@@ -28,5 +28,5 @@
   ],
   "dataset_fps": 30,
   "action_hz": 25.0,
-  "checkpoint_posttrained": false
+  "checkpoint_posttrained": true
 }

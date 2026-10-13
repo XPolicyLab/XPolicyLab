@@ -1,19 +1,56 @@
 {
-  "repo_id": "ssuuuuu/phoenix-wam",
-  "revision": "master",
-  "filename": "phoenix-wam-piper-step_040000.pt",
-  "step": 40000,
-  "size": 12045482134,
-  "sha256": "ad50b79734afd7d0943f2a9256826dcc04b8a05f6c795a46c75afa91d131b0e9",
-  "weights": {
-    "checkpoint": {
+  "schema": "phoenix-joint96-release-v2",
+  "checkpoints": {
+    "arx_x5": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "phoenix-wam-arx-x5-step_040000.pt",
+      "path": "phoenix-wam-arx-x5-step_040000.pt",
+      "sha256": "44e179ad5b841a0c38f99c2a5d7f2c50aa437666e3d0f5a5e4687587fc8064cd",
+      "size": 12045482134,
+      "step": 40000,
+      "pretrain_step": 175000,
+      "loss_recipe": "robodojo_real_half_video_v1",
+      "loss_weights": {
+        "vae": 0.25,
+        "stvae": 0.25,
+        "action": 1.0
+      }
+    },
+    "piper": {
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
       "filename": "phoenix-wam-piper-step_040000.pt",
       "path": "phoenix-wam-piper-step_040000.pt",
       "sha256": "ad50b79734afd7d0943f2a9256826dcc04b8a05f6c795a46c75afa91d131b0e9",
-      "size": 12045482134
+      "size": 12045482134,
+      "step": 40000,
+      "pretrain_step": 165000,
+      "loss_recipe": "robodojo_real_half_video_v1",
+      "loss_weights": {
+        "vae": 0.25,
+        "stvae": 0.25,
+        "action": 1.0
+      }
     },
+    "piper_x": {
+      "repo_id": "ssuuuuu/phoenix-wam",
+      "revision": "master",
+      "filename": "phoenix-wam-piper-x-step_040000.pt",
+      "path": "phoenix-wam-piper-x-step_040000.pt",
+      "sha256": "3f0d959c37421d02483a837c8af4dcca37dfc2e7756bc2996779c009dd91b45a",
+      "size": 12045482134,
+      "step": 40000,
+      "pretrain_step": 180000,
+      "loss_recipe": "robodojo_real_standard_video_v1",
+      "loss_weights": {
+        "vae": 0.5,
+        "stvae": 0.5,
+        "action": 1.0
+      }
+    }
+  },
+  "weights": {
     "dino_checkpoint": {
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",

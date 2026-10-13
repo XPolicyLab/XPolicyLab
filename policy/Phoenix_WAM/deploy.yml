@@ -5,7 +5,7 @@ port: null
 bench_name: null
 task_name: null
 ckpt_name: null
-# Selects joint96_source/robots/{arx_x5,piper,piper_x}.json, statistics and soft prompt.
+# Selects the matching posttrained checkpoint, robot profile, statistics and soft prompt.
 env_cfg_type: null
 seed: null
 action_type: null
@@ -31,7 +31,7 @@ timing_enabled: false
 default_instruction: follow the instruction
 allow_dummy_policy: false
 
-# Phoenix_WAM defaults to the released real Piper Joint96 policy (all three robot profiles).
+# Each robot uses its own released Joint96 posttraining checkpoint.
 runtime_mode: joint96_real
 current_visual_mode: repeat9_full_stvae
 expected_step: null

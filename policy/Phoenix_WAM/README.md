@@ -2,9 +2,9 @@
 
 本版本仅支持评测。
 
-Phoenix_WAM is an evaluation-only policy supporting **ARX X5, Piper and Piper X** with one shared checkpoint. Robot-specific normalization and soft prompts are selected automatically through `env_cfg_type`.
+Phoenix_WAM is an evaluation-only policy supporting **ARX X5, Piper and Piper X** using the same code. `env_cfg_type` automatically selects the matching checkpoint, normalization statistics and soft prompt ID.
 
-The released checkpoint is Piper posttraining step **40000**, initialized from pretraining step 165000. ARX X5 and Piper X use this checkpoint for transfer evaluation. We provide the policy; **RoboDojo provides the real-robot client and hardware configuration**.
+Each robot has its own posttraining step **40000** checkpoint. We provide the policy; **RoboDojo provides the real-robot client and hardware configuration**.
 
 ## Installation
 
@@ -16,7 +16,17 @@ conda activate phoenix-wam
 bash download_checkpoint.sh checkpoints/phoenix-wam-step40000
 ```
 
-The download script fetches the policy checkpoint and shared frozen-model dependencies from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-wam). Model configuration, tokenizer and all three robots' normalization statistics are included in this policy directory.
+The download script fetches all three policy checkpoints and the shared frozen-model dependencies from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-wam). Model configuration, tokenizer and all three robots' normalization statistics are included in this policy directory.
+
+To download only one robot and its shared dependencies, add `--robot-type arx_x5`, `--robot-type piper` or `--robot-type piper_x` to the download command.
+
+| `env_cfg_type` | Selected checkpoint | Soft prompt ID |
+| --- | --- | --- |
+| `arx_x5` | `phoenix-wam-arx-x5-step_040000.pt` | 2 |
+| `piper` | `phoenix-wam-piper-step_040000.pt` | 4 |
+| `piper_x` | `phoenix-wam-piper-x-step_040000.pt` | 15 |
+
+Keep the published filenames inside `WAM_CHECKPOINT_PATH`; do not rename or interchange the files. Loading verifies the selected checkpoint's SHA256 and training metadata. A missing or mismatched checkpoint stops startup.
 
 ## Evaluation
 
@@ -46,7 +56,7 @@ WAM_AUDIT_DIR="$PWD/logs/piper_x" bash setup_eval_policy_server.sh \
 
 RoboDojo's official client connects to the GPU server's reachable IP on port `9000`, using `policy_name=Phoenix_WAM`, the matching `env_cfg_type`, and `action_type=joint`. For the standard client wrapper, use `EVAL_ENV_TYPE=real` and the official hardware configuration. Shared deployment conventions are in the [XPolicyLab README](../../README.md#-deployment-flow).
 
-The policy returns 10 joint actions per call by default. Use the standard `deploy.py` loop, which acknowledges each executed action with an observation. Call `reset()` between episodes. If the official client uses the single-environment loop, set `eval_batch: false` in its copy of `deploy.yml`.
+The official client controls execution timing: ARX X5/Piper use a 30 Hz action timeline, Piper X uses 25 Hz. The policy returns 10 joint actions per call by default. Use the standard `deploy.py` loop, which acknowledges each executed action with an observation. Call `reset()` between episodes. If the official client uses the single-environment loop, set `eval_batch: false` in its copy of `deploy.yml`.
 
 Optional offline GPU smoke test, from the **parent directory of `XPolicyLab`**:
 
