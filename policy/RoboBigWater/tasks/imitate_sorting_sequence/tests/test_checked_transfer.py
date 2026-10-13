@@ -1,6 +1,7 @@
 """Offline geometry and fail-closed execution regressions."""
 import importlib.util
 import io
+import base64
 from pathlib import Path
 import sys
 import types
@@ -85,6 +86,120 @@ class API:
 
 
 class TransferTests(unittest.TestCase):
+    def shaded_observation(self, shadow=False, neutral=False):
+        obs = observation()
+        rgb = np.full((80, 80, 3), [160, 90, 50], dtype=np.uint8)
+        rgb[30:50, 30:50] = [35, 35, 35] if neutral else [20, 120, 30]
+        if shadow:
+            # Connected cast shadow; its depth need not agree with its color.
+            rgb[50:65, 30:50] = [64, 36, 20]
+            obs['depth']['cam_head'][50:65, 30:50] = .94
+        stream = io.BytesIO()
+        Image.fromarray(rgb).save(stream, format='PNG')
+        obs['png']['cam_head'] = stream.getvalue()
+        return obs
+
+    def test_attached_shadow_does_not_shift_plane_fit(self):
+        for neutral in (False, True):
+            baseline = tool.grasp_geometry(self.shaded_observation(neutral=neutral),
+                (25,25,55,70), .8, '5,5,20,20', .04)
+            fit = tool.grasp_geometry(self.shaded_observation(True, neutral),
+                (25,25,55,70), .8, '5,5,20,20', .04)
+            np.testing.assert_allclose(fit['grasp_xyz'], baseline['grasp_xyz'])
+            np.testing.assert_allclose(fit['visible_bounds'], baseline['visible_bounds'])
+            self.assertEqual(fit['shaded_pixels_removed'], 300)
+            self.assertEqual(fit['pixels'], 400)
+
+    def test_shadow_filter_keeps_dark_neutral_and_different_hue_material(self):
+        rgb = np.array([[[30.,30.,30.], [20.,70.,20.], [2.,1.,1.], [64.,36.,20.]]])
+        mask, count = tool.color_foreground(rgb, np.array([160.,90.,50.]), 0)
+        self.assertEqual(mask.tolist(), [[True, True, True, False]])
+        self.assertEqual(count, 1)
+        mask, count = tool.color_foreground(np.full((1,1,3), 50.), np.full(3, 200.), 0)
+        self.assertTrue(mask[0,0])
+        self.assertEqual(count, 0)
+
+    def test_fit_overlay_is_opt_in_and_uses_calibrated_pixels(self):
+        api = API()
+        args = dict(roi='25,25,55,55', floor_z=.8,
+                    plane_roi='5,5,20,20', height=.04)
+        plain, code = tool.run(api, 'grasp-geometry', args)
+        self.assertEqual(code, 0)
+        self.assertNotIn('fit_image_b64', plain['grasp_geometry'])
+        result, code = tool.run(api, 'grasp-geometry', dict(args, fit_image=1))
+        self.assertEqual(code, 0)
+        fit = result['grasp_geometry']
+        np.testing.assert_allclose(fit['top_center_pixel'], [39.5,39.5])
+        with Image.open(io.BytesIO(base64.b64decode(fit['fit_image_b64']))) as im:
+            self.assertEqual(im.size, (30,30))
+        self.assertEqual(api.steps, 0)
+        self.assertEqual(api.moves, [])
+        bad, code = tool.run(api, 'grasp-geometry', dict(args, fit_image=2))
+        self.assertEqual((code, bad['plan_fail_reason']), (2, 'invalid_fit_image'))
+
+    def test_rgb_plane_fit_ignores_biased_object_depth(self):
+        obs = observation()
+        # A sloping network error makes the original foreground touch the crop.
+        obs['depth']['cam_head'][25:55, 25:55] = .94
+        with self.assertRaisesRegex(ValueError, 'plane_not_visible|surface_cut'):
+            tool.grasp_geometry(obs, (25, 25, 55, 55), .74)
+        fit = tool.grasp_geometry(obs, (25, 25, 55, 55), .74, '5,5,20,20', .04)
+        self.assertEqual(fit['fit_method'], 'rgb_plane_height')
+        self.assertAlmostEqual(fit['floor_z'], .8)
+        np.testing.assert_allclose(fit['grasp_xyz'], [-.0024, .0024, .82], atol=1e-6)
+        obs['depth']['cam_head'][30:50, 30:50] = .7
+        again = tool.grasp_geometry(obs, (25, 25, 55, 55), .74, '5,5,20,20', .04)
+        np.testing.assert_allclose(fit['grasp_xyz'], again['grasp_xyz'])
+
+    def test_rgb_plane_fit_rejects_bad_constraints_and_crops(self):
+        for patch_roi, height, reason in [('', .04, 'required'),
+                                          ('5,5,20,20', None, 'required'),
+                                          ('5,5,20,20', float('nan'), 'required'),
+                                          ('25,25,40,40', .04, 'invalid_plane_roi')]:
+            with self.subTest(patch_roi=patch_roi, height=height):
+                with self.assertRaisesRegex(ValueError, reason):
+                    tool.grasp_geometry(observation(), (25,25,55,55), .8, patch_roi, height)
+        with self.assertRaisesRegex(ValueError, 'surface_cut'):
+            tool.grasp_geometry(observation(), (32,32,48,48), .8, '5,5,20,20', .04)
+        obs = observation()
+        obs['depth']['cam_head'][5:12, 5:20] = .94
+        with self.assertRaisesRegex(ValueError, 'plane_depth_inconsistent'):
+            tool.grasp_geometry(obs, (25,25,55,55), .8, '5,5,20,20', .04)
+
+    def test_rgb_plane_transfer_refits_after_gate_and_keeps_retention(self):
+        api = API()
+        def frame():
+            obs = observation()
+            if api.steps:
+                obs['depth']['cam_head'] -= .01
+            return obs
+        with patch.object(api, 'observe', side_effect=frame), patch.object(
+                tool, 'grasp_geometry', wraps=tool.grasp_geometry) as fit:
+            result, code = self.call(api, [{'visual_lift_evidence': True}] * 10,
+                command='roi-transfer', roi='25,25,55,55', floor_z=.74,
+                plane_roi='5,5,20,20', height=.10)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(fit.call_count, 2)
+        self.assertAlmostEqual(result['grasp_geometry']['floor_z'], .81)
+        self.assertTrue(result['released'])
+        self.assertGreater(len(result['visual_checks']), 0)
+        api = API()
+        result, code = self.call(api, [{'visual_lift_evidence': False}],
+            command='roi-transfer', roi='25,25,55,55', floor_z=.74,
+            plane_roi='5,5,20,20', height=.10)
+        self.assertEqual(code, 2)
+        self.assertFalse(result['released'])
+        self.assertEqual(result['plan_fail_reason'], 'visual_grasp_unconfirmed')
+
+    def test_rgb_plane_fit_errors_spend_no_motion(self):
+        api = API()
+        result, code = tool.run(api, 'roi-transfer', dict(roi='25,25,55,55',
+                               floor_z=.8, plane_roi='5,5,20,20', height=-1))
+        self.assertEqual(code, 2)
+        self.assertEqual(result['plan_fail_reason'], 'plane_roi_and_height_required')
+        self.assertEqual(api.steps, 0)
+        self.assertEqual(api.moves, [])
+
     def test_combined_setup_reduces_stops_and_executes_checked_route(self):
         api = API()
         estimate = api.estimate_tcp_chain

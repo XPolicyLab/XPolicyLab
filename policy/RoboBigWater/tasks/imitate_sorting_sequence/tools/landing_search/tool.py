@@ -17,7 +17,13 @@ TOOL = {"name": "landing_search", "commands": [{
              {"name": "landing_roi", "required": True},
              {"name": "floor_z", "type": "float", "required": True},
              {"name": "landing_floor_z", "type": "float", "required": True},
-             {"name": "release_above", "type": "float", "default": .04}]}]}
+             {"name": "landing_plane_roi", "default": ""},
+             {"name": "release_above", "type": "float", "default": .04},
+             {"name": "plane_roi", "default": ""},
+             {"name": "height", "type": "float", "default": None},
+             {"name": "arm", "default": "", "choices": ["left", "right"]},
+             {"name": "clearance", "type": "float", "default": .10},
+             {"name": "via", "default": ""}]}]}
 
 
 def crop(value, shape):
@@ -45,6 +51,36 @@ def inside_crop(obs, lo, hi, height, roi):
                        & (uv[1] >= y0) & (uv[1] < y1)))
 
 
+def measure_plane(points, colors, valid, value, receiving_roi):
+    """Measure a caller-selected bare patch; never infer height from a release."""
+    roi = crop(value, valid.shape)
+    x0, y0, x1, y1 = roi
+    a, b, c, d = receiving_roi
+    if not (a <= x0 < x1 <= c and b <= y0 < y1 <= d):
+        raise ValueError("landing_plane_roi_outside_landing_roi")
+    good = valid[y0:y1, x0:x1]
+    if min(good.shape) < 6 or good.sum() < max(36, .9 * good.size):
+        raise ValueError("landing_plane_depth_missing")
+    z = points[y0:y1, x0:x1, 2]
+    height = float(np.median(z[good]))
+    spread = float(np.percentile(z[good], 90) - np.percentile(z[good], 10))
+    if spread > .008:
+        raise ValueError("landing_plane_depth_inconsistent")
+    rgb = colors[y0:y1, x0:x1][good]
+    if np.percentile(np.linalg.norm(rgb - np.median(rgb, axis=0), axis=1), 90) > 30:
+        raise ValueError("landing_plane_appearance_inconsistent")
+    # Distributed evidence prevents a contiguous hole or a mixed/sloping patch
+    # from being hidden by a global median or global coverage fraction.
+    for rows in np.array_split(np.arange(good.shape[0]), 3):
+        for cols in np.array_split(np.arange(good.shape[1]), 3):
+            mask = good[np.ix_(rows, cols)]
+            tile = z[np.ix_(rows, cols)]
+            if mask.mean() < .8 or abs(float(np.median(tile[mask])) - height) > .004:
+                raise ValueError("landing_plane_depth_inconsistent")
+    return dict(height_m=height, roi=list(roi), pixels=int(good.sum()),
+                depth_spread_m=spread, method="regional_median")
+
+
 def search(obs, args):
     floor, landing = float(args["floor_z"]), float(args["landing_floor_z"])
     release = float(args.get("release_above", .04))
@@ -53,7 +89,15 @@ def search(obs, args):
     points, colors, valid = _transfer.cloud(obs)
     source_roi = crop(args["roi"], valid.shape)
     roi = crop(args["landing_roi"], valid.shape)
-    geometry = _transfer.grasp_geometry(obs, source_roi, floor)
+    measurement = None
+    if args.get("landing_plane_roi"):
+        measurement = measure_plane(points, colors, valid, args["landing_plane_roi"], roi)
+        landing = measurement["height_m"]
+    geometry = _transfer.grasp_geometry(obs, source_roi, floor,
+                                       args.get("plane_roi", ""), args.get("height"))
+    # The source fit can replace a guessed floor with a measured plane.
+    # All release heights and falling-volume checks must use that same floor.
+    floor = float(geometry["floor_z"])
     goal = np.asarray(geometry["grasp_xyz"])
     lower, upper = np.asarray(geometry["visible_bounds"])
     x0, y0, x1, y1 = roi
@@ -101,17 +145,67 @@ def search(obs, args):
         if len(selected) == 8:
             break
     return dict(candidates=selected, grasp_geometry=geometry, tested_centers=81,
+                landing_plane_measurement=measurement, landing_floor_z=landing,
                 clear_centers=len(candidates), rejected=rejected,
                 action_steps=0, reachability_checked=False, landing_verified=False,
                 caveat="Visible geometry only; hidden surfaces, grasp slip and bounce remain uncertain. Recheck before motion.")
+
+
+def reachable(api, obs, report, args, clearance, via):
+    """Preview at most eight geometric candidates, with no physical retries."""
+    geometry = report["grasp_geometry"]
+    goal = np.asarray(geometry["grasp_xyz"])
+    # A feasible path is not useful if execution cannot form its RGB-D template.
+    _transfer.template(obs, crop(args["roi"], obs["depth"]["cam_head"].shape),
+                       goal, geometry["floor_z"])
+    arm = api.arm(args["arm"])
+    accepted, rejected = [], []
+    for candidate in report["candidates"]:
+        dest = np.array([candidate[k] for k in ("to_x", "to_y", "to_z")])
+        _, preview = _transfer.fit_route(api, arm, geometry, goal, dest,
+                                        clearance, via, candidate["release_above"])
+        reason = None
+        if not preview.get("estimate_ok"):
+            reason = "preflight_" + (preview.get("reason") or "unreachable")
+        elif not _transfer.budget_ok(api, preview, include_gate=True):
+            reason = "insufficient_steps_with_home_reserve"
+        if reason:
+            rejected.append(dict(to_xyz=dest.tolist(), reason=reason))
+            continue
+        # Ready-to-pass arguments, not an executable or persistent plan.
+        transfer_args = dict(arm=args["arm"], roi=args["roi"],
+                             floor_z=geometry["floor_z"], clearance=clearance,
+                             via=args.get("via", ""),
+                             plane_roi=args.get("plane_roi", ""), height=args.get("height"))
+        transfer_args.update({k: candidate[k] for k in
+                             ("to_x", "to_y", "to_z", "landing_floor_z", "release_above")})
+        accepted.append(dict(candidate, preflight=preview, transfer_args=transfer_args))
+    accepted.sort(key=lambda c: c["preflight"]["required_action_steps"])
+    report.update(candidates=accepted, reachability_checked=True,
+                  route_rejections=rejected, route_centers_tested=len(accepted)+len(rejected))
+    if not accepted:
+        return "no_reachable_footprint_with_home_reserve"
+    return None
 
 
 def run(api, command, args):
     try:
         if command != "landing-search":
             raise ValueError("unknown_command")
-        report = search(api.observe(), args)
+        tag = args.get("arm", "")
+        clearance = float(args.get("clearance", .10))
+        via = [float(v) for v in args.get("via", "").split(",")] if args.get("via") else []
+        if (tag not in ("", "left", "right") or not math.isfinite(clearance)
+                or not .06 <= clearance <= .18 or len(via) not in (0, 2)
+                or not np.isfinite(via).all()):
+            raise ValueError("invalid_arguments")
+        if tag and api.over:
+            raise ValueError("episode_over")
+        obs = api.observe()
+        report = search(obs, args)
         reason = None if report["candidates"] else "no_clear_visible_footprint"
+        if tag and reason is None:
+            reason = reachable(api, obs, report, args, clearance, via)
         return dict(report, plan_ok=reason is None, plan_fail_reason=reason), 0 if reason is None else 2
     except Exception as exc:
         return dict(plan_ok=False, plan_fail_reason=str(exc) or "landing_search_error",

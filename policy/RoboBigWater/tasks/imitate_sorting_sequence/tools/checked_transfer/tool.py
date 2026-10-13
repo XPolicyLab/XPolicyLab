@@ -1,12 +1,13 @@
 """Bounded vertical grasp/transfer with camera-only lift evidence."""
 import io
+import base64
 import importlib.util
 import math
 import weakref
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 TOOL = {"name": "checked_transfer", "commands": [{
     "name": "grasp-transfer", "budget": True,
@@ -42,6 +43,17 @@ TOOL["commands"].extend([
 TOOL["commands"].append({"name": "roi-check", "budget": False,
     "help": "Fit and check vertical and level-finger tilted candidates without motion",
     "args": [a.copy() for a in TOOL["commands"][-1]["args"]]})
+
+
+for spec in TOOL["commands"]:
+    if spec["name"] in ("grasp-geometry", "roi-check", "roi-transfer"):
+        spec["args"].extend([
+            {"name": "plane_roi", "default": ""},
+            {"name": "height", "type": "float", "default": None},
+        ])
+    if spec["name"] == "grasp-geometry":
+        spec["args"].append({"name": "fit_image", "type": "int", "default": 0,
+                             "choices": [0, 1]})
 
 
 # Use the same tool-owned initialization evidence as guarded rotations.
@@ -153,17 +165,177 @@ def template(obs, roi, goal, floor):
     return p[::stride], c[::stride]
 
 
-def grasp_geometry(obs, roi, floor):
+def color_foreground(rgb, background, spread):
+    """Discount multiplicative shading only on a distinctly colored plane.
+
+    Neutral/different-hue dark material remains foreground. Near-black pixels
+    have unreliable chromaticity and are deliberately not classified as shade.
+    This is an RGB heuristic, not evidence that a same-colored item is absent.
+    """
+    contrast = np.linalg.norm(rgb - background, axis=2) > max(35., spread + 20.)
+    shade = np.zeros(contrast.shape, dtype=bool)
+    if np.max(background) - np.min(background) > .18 * max(1., np.max(background)):
+        scale = (rgb @ background) / max(1., float(background @ background))
+        residual = np.linalg.norm(rgb - scale[:, :, None] * background, axis=2)
+        shade = ((scale >= .15) & (scale < .95)
+                 & (residual <= .08 * np.maximum(np.linalg.norm(rgb, axis=2), 1.)))
+    return contrast & ~shade, int(np.count_nonzero(contrast & shade))
+
+
+def fit_projection(obs, roi, rc, center, top, rgb, with_image):
+    """Expose the actual calibrated pinch and fitted pixels for visual review."""
+    model = obs["cameras"]["cam_head"]
+    xyz = np.array([center, [center[0], center[1], top]])
+    local = np.linalg.solve(np.asarray(model["extrinsics_world"]),
+                            np.column_stack([xyz, np.ones(2)]).T)[:3]
+    uvw = np.asarray(model["intrinsics"]) @ local
+    if not np.isfinite(uvw).all() or np.any(local[2] <= 0):
+        raise ValueError("invalid_fit_projection")
+    uv = (uvw[:2] / uvw[2]).T
+    report = dict(pinch_pixel=uv[0].tolist(), top_center_pixel=uv[1].tolist())
+    if with_image:
+        x0, y0, x1, y1 = roi
+        crop = rgb[y0:y1, x0:x1].copy()
+        crop[rc[:, 0], rc[:, 1]] = .65 * crop[rc[:, 0], rc[:, 1]] + .35 * np.array([255, 255, 0])
+        im = Image.fromarray(crop.astype(np.uint8))
+        draw = ImageDraw.Draw(im)
+        for pixel, color in zip(uv, ("red", "cyan")):
+            u, v = pixel - [x0, y0]
+            draw.line((u-4, v, u+4, v), fill=color)
+            draw.line((u, v-4, u, v+4), fill=color)
+        stream = io.BytesIO()
+        im.save(stream, format="PNG")
+        report["fit_image_b64"] = base64.b64encode(stream.getvalue()).decode()
+    return report
+
+
+def regional_plane(points, rgb, valid, roi, box, background, patch_z):
+    """Cross-check a small patch against distributed, similarly colored tiles.
+
+    Equal tile votes prevent one dense patch dominating the height. Exclude
+    the complete source crop, not just its estimated foreground. No object
+    depth, caller's guessed floor, or persistent episode cache sets this fit.
+    """
+    x0, y0, x1, y1 = roi
+    a, b, c, d = box
+    pad = max(x1-x0, y1-y0, c-a, d-b)
+    h, w = valid.shape
+    left, right = max(0, min(x0, a)-pad), min(w, max(x1, c)+pad)
+    top, bottom = max(0, min(y0, b)-pad), min(h, max(y1, d)+pad)
+    matching = valid & (np.linalg.norm(rgb-background, axis=2) <= 25.)
+    matching[y0:y1, x0:x1] = False
+    # At most 64 nonoverlapping tiles, each with broad uniform coverage.
+    xs = np.linspace(left, right, 9, dtype=int)
+    ys = np.linspace(top, bottom, 9, dtype=int)
+    votes = []
+    for row in range(8):
+        for col in range(8):
+            mask = matching[ys[row]:ys[row+1], xs[col]:xs[col+1]]
+            if mask.sum() < max(25, .8 * mask.size):
+                continue
+            z = points[ys[row]:ys[row+1], xs[col]:xs[col+1], 2][mask]
+            if np.percentile(z, 90)-np.percentile(z, 10) <= .02:
+                votes.append((row, col, float(np.median(z))))
+    report = dict(patch_z=float(patch_z), candidate_tiles=len(votes),
+                  method="patch_only", consensus_tiles=0)
+    if len(votes) < 6:
+        return patch_z, report
+    heights = np.array([v[2] for v in votes])
+    # Select a dominant horizontal level rather than averaging two levels.
+    groups = [np.abs(heights-z) <= .01 for z in heights]
+    group = max(groups, key=np.count_nonzero)
+    selected = [v for v, keep in zip(votes, group) if keep]
+    report["consensus_tiles"] = len(selected)
+    if len(selected) < max(6, math.ceil(.7 * len(votes))):
+        # A smooth network-depth ramp need not have a dominant 20 mm band.
+        # Diagnose that separately from steps/multiple levels. Fit all votes:
+        # discarding outliers here could conceal a genuine second surface.
+        rows = np.array([v[0] for v in votes], dtype=float)
+        cols = np.array([v[1] for v in votes], dtype=float)
+        design = np.column_stack([np.ones(len(votes)), rows, cols])
+        coef, _, rank, _ = np.linalg.lstsq(design, heights, rcond=None)
+        residual = np.abs(heights - design @ coef)
+        drift = float(7 * (abs(coef[1]) + abs(coef[2])))
+        if (len(votes) < 12 or rank != 3 or
+                len(set(rows)) < 4 or len(set(cols)) < 4 or
+                np.percentile(residual, 90) > .004 or residual.max() > .008 or
+                drift > .05):
+            raise ValueError("plane_consensus_ambiguous")
+        # Keep a horizontal physical plane, using equal-vote regional median;
+        # never extrapolate the apparent slope into the excluded source crop.
+        measured = float(np.median(heights))
+        if abs(measured-patch_z) > .06:
+            raise ValueError("plane_patch_disagrees_with_region")
+        report.update(method="regional_smooth_depth", consensus_z=measured,
+                      correction_m=measured-patch_z, smooth_tiles=len(votes),
+                      depth_drift_m=drift, residual_p90_m=float(np.percentile(residual, 90)),
+                      residual_max_m=float(residual.max()))
+        return measured, report
+    if len({v[0] for v in selected}) < 3 or len({v[1] for v in selected}) < 3:
+        return patch_z, report
+    measured = float(np.median(heights[group]))
+    if abs(measured-patch_z) > .06:
+        raise ValueError("plane_patch_disagrees_with_region")
+    report.update(method="regional_consensus", consensus_z=measured,
+                  correction_m=measured-patch_z)
+    return measured, report
+
+
+def grasp_geometry(obs, roi, floor, plane_roi="", height=None, fit_image=False, trace=None):
     """Fit one isolated visible component; no semantic or hidden-pose inference."""
-    points, _, valid = cloud(obs)
+    points, rgb, valid = cloud(obs)
     x0, y0, x1, y1 = roi
     h, w = valid.shape
     if not math.isfinite(floor) or not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
         raise ValueError("invalid_roi_or_floor")
-    p, valid = points[y0:y1, x0:x1], valid[y0:y1, x0:x1]
-    foreground = valid & (p[:, :, 2] > floor + .004)
-    if np.count_nonzero(valid & (np.abs(p[:, :, 2] - floor) <= .004)) < 12:
-        raise ValueError("plane_not_visible_in_crop")
+    constrained = bool(plane_roi) or height is not None
+    shaded_pixels = 0
+    plane_measurement = None
+    if constrained:
+        if not plane_roi or height is None or not math.isfinite(float(height)) or not .008 <= float(height) <= .14:
+            raise ValueError("plane_roi_and_height_required")
+        height = float(height)
+        box = tuple(int(v) for v in plane_roi.split(","))
+        if len(box) != 4:
+            raise ValueError("invalid_plane_roi")
+        a, b, c, d = box
+        if not (0 <= a < c <= w and 0 <= b < d <= h) or (a < x1 and c > x0 and b < y1 and d > y0):
+            raise ValueError("invalid_plane_roi")
+        good = valid[b:d, a:c]
+        if good.sum() < max(25, .8 * good.size):
+            raise ValueError("plane_depth_missing")
+        z = points[b:d, a:c, 2][good]
+        floor = float(np.median(z))
+        if np.percentile(z, 90) - np.percentile(z, 10) > .02:
+            raise ValueError("plane_depth_inconsistent")
+        colors = rgb[b:d, a:c][good]
+        background = np.median(colors, axis=0)
+        spread = float(np.percentile(np.linalg.norm(colors - background, axis=1), 90))
+        if spread > 30:
+            raise ValueError("plane_appearance_inconsistent")
+        floor, plane_measurement = regional_plane(
+            points, rgb, valid, roi, box, background, floor)
+        foreground, shaded_pixels = color_foreground(rgb[y0:y1, x0:x1], background, spread)
+        # Intersect calibrated RGB rays with the caller's top-height constraint.
+        # Object depth is never used for these XY coordinates.
+        model = obs["cameras"]["cam_head"]
+        transform = np.asarray(model["extrinsics_world"], dtype=float)
+        rows, cols = np.indices(foreground.shape)
+        rays = np.linalg.solve(np.asarray(model["intrinsics"], dtype=float),
+                               np.array([(cols+x0).ravel(), (rows+y0).ravel(), np.ones(rows.size)]))
+        rays = (transform[:3, :3] @ rays).T
+        origin = transform[:3, 3]
+        if np.any(np.abs(rays[:, 2]) < 1e-6):
+            raise ValueError("plane_ray_parallel")
+        distance = (floor + height - origin[2]) / rays[:, 2]
+        if np.any(distance <= 0):
+            raise ValueError("plane_behind_camera")
+        p = (origin + rays * distance[:, None]).reshape(*foreground.shape, 3)
+    else:
+        p, valid = points[y0:y1, x0:x1], valid[y0:y1, x0:x1]
+        foreground = valid & (p[:, :, 2] > floor + .004)
+        if np.count_nonzero(valid & (np.abs(p[:, :, 2] - floor) <= .004)) < 12:
+            raise ValueError("plane_not_visible_in_crop")
     unseen = foreground.copy()
     components = []
     for row, col in zip(*np.nonzero(foreground)):
@@ -187,6 +359,14 @@ def grasp_geometry(obs, roi, floor):
     if len(components) > 1 and len(components[1]) >= max(12, .10 * len(components[0])):
         raise ValueError("multiple_surfaces_in_crop")
     rc = np.asarray(components[0])
+    if trace is not None:
+        # Internal, image-only evidence for bounded crop refinement. Capture
+        # before rejecting truncation; never expose a partial pinch as valid.
+        trace.update(pixels=rc + [y0, x0], floor_z=float(floor),
+                     edges=[bool(np.any(rc[:, 1] == 0)),
+                            bool(np.any(rc[:, 0] == 0)),
+                            bool(np.any(rc[:, 1] == unseen.shape[1]-1)),
+                            bool(np.any(rc[:, 0] == unseen.shape[0]-1))])
     if np.any((rc == 0) | (rc == np.array(unseen.shape) - 1)):
         raise ValueError("surface_cut_by_crop")
     surface = p[rc[:, 0], rc[:, 1]]
@@ -200,8 +380,141 @@ def grasp_geometry(obs, roi, floor):
     return dict(vertical_candidates=candidates, grasp_xyz=center.tolist(), open="x" if width[0] <= width[1] else "y",
                 approach="down", visible_bounds=[lower.tolist(), upper.tolist()],
                 visible_width_xy=width.tolist(), height_m=float(height), pixels=len(surface),
-                geometry_only=True, holding_verified=False,
+                geometry_only=True, holding_verified=False, floor_z=float(floor),
+                fit_method="rgb_plane_height" if constrained else "depth",
+                plane_measurement=plane_measurement,
+                shaded_pixels_removed=shaded_pixels,
+                **fit_projection(obs, roi, rc, center, upper[2], rgb, fit_image),
                 caveat="Visible bounds and the supplied plane only; occlusion, hollow or flexible shapes can invalidate this pinch estimate.")
+
+
+def rgb_lift_reference(obs, roi, plane_roi, geometry):
+    """Bounded RGB samples on the fitted top plane, independent of object depth."""
+    if not geometry or geometry.get("fit_method") != "rgb_plane_height":
+        return None
+    with Image.open(io.BytesIO(obs["png"]["cam_head"])) as im:
+        rgb = np.asarray(im.convert("RGB"), dtype=float)
+    a, b, c, d = map(int, plane_roi.split(","))
+    background = np.median(rgb[b:d, a:c].reshape(-1, 3), axis=0)
+    x0, y0, x1, y1 = roi
+    crop = rgb[y0:y1, x0:x1]
+    mask, _ = color_foreground(crop, background, 0.)
+    # Weak contrast cannot reliably distinguish a newly exposed plane.
+    mask &= np.max(np.abs(crop - background), axis=2) >= 80
+    rows, cols = np.nonzero(mask)
+    model = obs["cameras"]["cam_head"]
+    transform = np.asarray(model["extrinsics_world"], dtype=float)
+    rays = (transform[:3, :3] @ np.linalg.solve(np.asarray(model["intrinsics"]),
+            np.array([cols+x0, rows+y0, np.ones(len(rows))]))).T
+    origin = transform[:3, 3]
+    top = geometry["floor_z"] + geometry["height_m"]
+    points = origin + rays * ((top-origin[2]) / rays[:, 2])[:, None]
+    lower, upper = np.asarray(geometry["visible_bounds"])
+    inside = np.all((points[:, :2] >= lower[:2]) & (points[:, :2] <= upper[:2]), axis=1)
+    points, colors = points[inside], crop[rows[inside], cols[inside]]
+    if len(points) < 24 or not np.isfinite(points).all():
+        return None
+    stride = max(1, math.ceil(len(points) / 160))
+    return dict(points=points[::stride], colors=colors[::stride], background=background,
+                baseline_rgb=rgb, baseline_camera=model)
+
+
+def rgb_lift_evidence(obs, reference, delta):
+    """Require a cleared source and novel elevated RGB with bounded registration.
+
+    A single small camera-plane displacement can account for seating in the
+    fingers and plane-height projection error. Never fit samples independently,
+    change the source test, or use missing/occluded pixels as positive evidence.
+    """
+    report = dict(visual_lift_evidence=False, heuristic=True)
+    if reference is None:
+        return report
+    try:
+        delta = np.asarray(delta, dtype=float)
+        if delta.shape != (3,) or not np.isfinite(delta).all() or delta[2] < .05:
+            return report
+        with Image.open(io.BytesIO(obs["png"]["cam_head"])) as im:
+            rgb = np.asarray(im.convert("RGB"), dtype=float)
+        model = obs["cameras"]["cam_head"]
+        def project(points, camera=model):
+            local = np.linalg.solve(np.asarray(camera["extrinsics_world"]),
+                                    np.column_stack([points, np.ones(len(points))]).T)[:3]
+            uvw = np.asarray(camera["intrinsics"]) @ local
+            return (uvw[:2] / uvw[2]).T, local[2] > 0
+
+        def matches(pixels, front, colors, frame, radius, missing=False):
+            # Missing baseline pixels count as pre-existing appearance; missing
+            # live pixels count against confirmation. No clipping to the image.
+            good = front & np.isfinite(pixels).all(axis=1)
+            uv = np.rint(np.where(good[:, None], pixels, 0)).astype(int)
+            good &= ((uv[:, 0] >= radius) & (uv[:, 0] < frame.shape[1]-radius)
+                     & (uv[:, 1] >= radius) & (uv[:, 1] < frame.shape[0]-radius))
+            votes = np.full(len(pixels), missing, dtype=bool)
+            dx, dy = np.meshgrid(np.arange(-radius, radius+1), np.arange(-radius, radius+1))
+            patch = frame[uv[good, 1, None]+dy.ravel(), uv[good, 0, None]+dx.ravel()]
+            close = np.max(np.abs(patch-colors[good, None]), axis=2) <= 35
+            votes[good] = np.sum(close, axis=1) >= math.ceil(.6*close.shape[1])
+            return votes
+
+        points = reference["points"]
+        n = len(points)
+        if n < 24:
+            return report
+        source, source_front = project(points)
+        lifted, lifted_front = project(points + delta)
+        usable = source_front & lifted_front & (np.linalg.norm(lifted-source, axis=1) >= 8)
+        background = np.broadcast_to(reference["background"], (n, 3))
+        cleared = matches(source, source_front, background, rgb, 1) & usable
+
+        def elevated(offset):
+            expected = points + delta + offset
+            live, front = project(expected)
+            before, before_front = project(expected, reference["baseline_camera"])
+            separated = source_front & front & (np.linalg.norm(live-source, axis=1) >= 8)
+            matched = matches(live, front, reference["colors"], rgb, 2) & separated
+            prior = matches(before, before_front, reference["colors"], reference["baseline_rgb"],
+                            2, missing=True)
+            return float(np.mean(matched)), float(np.mean(prior))
+
+        matched, prior = elevated(np.zeros(3))
+        report.update(sample_count=n, source_plane_fraction=float(np.mean(cleared)),
+                      elevated_rgb_fraction=matched, baseline_elevated_rgb_fraction=prior,
+                      nominal_elevated_rgb_fraction=matched,
+                      registration_offset_m=[0., 0., 0.], registration_offset_px=[0, 0])
+        def accepted(match, previous):
+            return bool(np.mean(cleared) >= .60 and match >= .65 and match-previous >= .40)
+        report["visual_lift_evidence"] = accepted(matched, prior)
+        if report["visual_lift_evidence"] or np.mean(cleared) < .60:
+            return report
+
+        # Search a fixed small disk in image space, converted to one rigid
+        # world displacement at median predicted camera depth. The correction
+        # is also limited to 25 mm and one quarter of the measured lift.
+        transform = np.asarray(model["extrinsics_world"], dtype=float)
+        intrinsics = np.asarray(model["intrinsics"], dtype=float)
+        local = np.linalg.solve(transform, np.column_stack([points+delta, np.ones(n)]).T)
+        depth = float(np.median(local[2]))
+        if not math.isfinite(depth) or depth <= 0:
+            return report
+        shifts = sorted(((u, v) for u in range(-6, 7, 2) for v in range(-6, 7, 2)
+                         if 0 < u*u+v*v <= 36), key=lambda x: x[0]**2+x[1]**2)
+        for u, v in shifts:
+            offset = transform[:3, :3] @ (depth * np.linalg.solve(intrinsics, [u, v, 0.]))
+            if np.linalg.norm(offset) > min(.025, .25*delta[2]):
+                continue
+            corrected, corrected_front = project(points + delta + offset)
+            if (not np.all(corrected_front) or not np.isfinite(corrected).all()
+                    or np.max(np.linalg.norm(corrected-lifted, axis=1)) > 6. + 1e-8):
+                continue
+            match, previous = elevated(offset)
+            if accepted(match, previous):
+                report.update(visual_lift_evidence=True, elevated_rgb_fraction=match,
+                              baseline_elevated_rgb_fraction=previous,
+                              registration_offset_m=offset.tolist(), registration_offset_px=[u, v])
+                break
+    except Exception as exc:
+        report["reason"] = str(exc) or "invalid_rgb_evidence"
+    return report
 
 
 def receiving_plane_check(points, valid, lo, hi, height):
@@ -313,7 +626,7 @@ def vertical_rotation(yaw, tilt=0.):
     return np.stack([down, across, np.cross(down, across)], axis=1)
 
 
-def fit_route(api, arm, geometry, goal, dest, clearance, via, release_above=0.):
+def fit_route(api, arm, geometry, goal, dest, clearance, via, release_above=0., pickup_only=False):
     """Read-only bounded search; never attempt an infeasible candidate physically."""
     initial = arm.tcp()
     attempts = []
@@ -338,6 +651,8 @@ def fit_route(api, arm, geometry, goal, dest, clearance, via, release_above=0.):
                     route = transfer_route(initial, goal, dest, clearance, via, "down", "x",
                                            rotation=rotation, release_above=release_above,
                                            setup=setup)
+                    if pickup_only:
+                        route = route[:next(i for i, (name, _) in enumerate(route) if name == "lift") + 1]
                     report = preflight(api, arm, route)
                     attempts.append(dict(**choice, estimate_ok=bool(report.get("estimate_ok")),
                                          reason=report.get("reason"), failed_stage=report.get("failed_stage")))
@@ -579,6 +894,8 @@ def preflight(api, arm, route):
 
 
 def run(api, command, args):
+    pickup_only = command in ("roi-pick", "pick-check")
+    fitted = command in ("roi-transfer", "roi-check", "grasp-geometry", "roi-pick", "pick-check")
     stages, checks = [], []
     gate = None
     start = None
@@ -597,26 +914,33 @@ def run(api, command, args):
                 pass
         out = dict(plan_ok=reason is None, plan_fail_reason=reason, stages=stages,
                    visual_checks=checks, released=any(s["stage"] == "release" for s in stages),
-                   holding_verified=False, visual_gate=gate, grasp_geometry=geometry, preflight=preview,
+                   holding_verified=bool(pickup_only and reason is None and checks
+                                         and checks[-1].get("visual_lift_evidence")),
+                   visual_gate=gate, grasp_geometry=geometry, preflight=preview,
                    destination_check=destination)
         if start is not None:
             out["action_steps"] = max(0, round((start - api.sim_time_left()) * 25))
         return out, 0 if reason is None else 2
     try:
-        if command not in ("grasp-transfer", "roi-transfer", "grasp-geometry", "transfer-check", "roi-check"):
+        if command not in ("grasp-transfer", "roi-transfer", "grasp-geometry", "transfer-check", "roi-check", "roi-pick", "pick-check"):
             return result("unknown_command")
         args = dict(args)
-        if command in ("roi-transfer", "grasp-geometry", "roi-check"):
+        if args.get("fit_image", 0) not in (0, 1):
+            return result("invalid_fit_image")
+        if fitted:
             roi = tuple(int(v) for v in args["roi"].split(","))
             if len(roi) != 4:
                 return result("invalid_roi")
-            geometry = grasp_geometry(api.observe(), roi, float(args["floor_z"]))
+            geometry = grasp_geometry(api.observe(), roi, float(args["floor_z"]),
+                                      args.get("plane_roi", ""), args.get("height"),
+                                      bool(args.get("fit_image", 0)))
+            args["floor_z"] = geometry["floor_z"]
             if command == "grasp-geometry":
                 return result()
             args.update(zip(("x", "y", "z"), geometry["grasp_xyz"]))
             args.update(open=geometry["open"], approach="down")
         goal = np.array([float(args[k]) for k in ("x", "y", "z")])
-        dest = np.array([float(args[k]) for k in ("to_x", "to_y", "to_z")])
+        dest = goal.copy() if pickup_only else np.array([float(args[k]) for k in ("to_x", "to_y", "to_z")])
         yaw = float(args.get("yaw", 0.))
         floor, clearance = float(args["floor_z"]), float(args.get("clearance", 0.10))
         release_above = float(args.get("release_above", .04))
@@ -639,14 +963,17 @@ def run(api, command, args):
         reference, appearance = template(api.observe(), roi, goal, floor)
         arm = api.arm(tag)
         start = api.sim_time_left()
-        destination = destination_check(api.observe(), reference, goal, dest, floor, geometry,
-                                        release_above, landing_floor_z)
-        if not destination["clear_of_visible_obstructions"]:
-            return result("destination_obstructed")
-        if not destination.get("receiving_plane_ok", True):
-            return result("landing_plane_unconfirmed")
+        if not pickup_only:
+            destination = destination_check(api.observe(), reference, goal, dest, floor, geometry,
+                                            release_above, landing_floor_z)
+            if not destination["clear_of_visible_obstructions"]:
+                return result("destination_obstructed")
+            if not destination.get("receiving_plane_ok", True):
+                return result("landing_plane_unconfirmed")
         def checked_route():
-            if command in ("roi-transfer", "roi-check"):
+            if fitted:
+                if pickup_only:
+                    return fit_route(api, arm, geometry, goal, goal, clearance, [], 0., pickup_only=True)
                 return fit_route(api, arm, geometry, goal, dest, clearance, via, release_above)
             route = transfer_route(arm.tcp(), goal, dest, clearance, via, approach, axis, yaw,
                                    release_above=release_above)
@@ -656,7 +983,7 @@ def run(api, command, args):
             return result("preflight_" + (preview.get("reason") or "unreachable"))
         if not budget_ok(api, preview, include_gate=True):
             return result("insufficient_steps_with_home_reserve")
-        if command in ("transfer-check", "roi-check"):
+        if command in ("transfer-check", "roi-check", "pick-check"):
             return result()
         gate, code = visual_gate(api)
         if code or not gate.get("plan_ok"):
@@ -664,17 +991,23 @@ def run(api, command, args):
         if api.over:
             return result("episode_over")
         # Refresh the source after waiting; pre-wait imagery may be stale.
-        if command == "roi-transfer":
-            geometry = grasp_geometry(api.observe(), roi, floor)
+        source_obs = api.observe()
+        if command in ("roi-transfer", "roi-pick"):
+            geometry = grasp_geometry(source_obs, roi, floor,
+                                      args.get("plane_roi", ""), args.get("height"))
+            floor = geometry["floor_z"]
             goal = np.array(geometry["grasp_xyz"])
             axis = geometry["open"]
-        reference, appearance = template(api.observe(), roi, goal, floor)
-        destination = destination_check(api.observe(), reference, goal, dest, floor, geometry,
-                                        release_above, landing_floor_z)
-        if not destination["clear_of_visible_obstructions"]:
-            return result("destination_obstructed")
-        if not destination.get("receiving_plane_ok", True):
-            return result("landing_plane_unconfirmed")
+        reference, appearance = template(source_obs, roi, goal, floor)
+        if not pickup_only:
+            destination = destination_check(api.observe(), reference, goal, dest, floor, geometry,
+                                            release_above, landing_floor_z)
+            if not destination["clear_of_visible_obstructions"]:
+                return result("destination_obstructed")
+            if not destination.get("receiving_plane_ok", True):
+                return result("landing_plane_unconfirmed")
+        rgb_reference = (rgb_lift_reference(source_obs, roi, args.get("plane_roi", ""), geometry)
+                         if pickup_only else None)
         route, preview = checked_route()
         if not preview.get("estimate_ok"):
             return result("preflight_" + (preview.get("reason") or "unreachable"))
@@ -701,6 +1034,29 @@ def run(api, command, args):
                 raise ValueError("motion_tracking_error")
             if error > 0.012:
                 offset = reached[:3, 3] - desired[:3, 3]
+                # The final pickup pose need not hit its nominal height to
+                # permit image verification. Bound the undershoot, then reset
+                # the controller to the measured pose before taking evidence.
+                if (pickup_only and name == "lift" and rgb_reference is not None
+                        and geometry.get("fit_method") == "rgb_plane_height"
+                        and grasp_tcp is not None
+                        and np.linalg.norm(offset[:2]) <= .010
+                        and 0 < -offset[2] <= min(.035, clearance / 2)
+                        and reached[2, 3] - grasp_tcp[2] >= .05):
+                    stages[-1]["lift_shortfall_m"] = float(-offset[2])
+                    return reached.copy()
+                # A biased plane can put a fitted pinch below physical contact.
+                # Pickup-only recovery stops pressing before closure and still
+                # requires fresh lift evidence; it never authorizes a carry.
+                if (pickup_only and name == "descend" and rgb_reference is not None
+                        and geometry.get("fit_method") == "rgb_plane_height"
+                        and np.linalg.norm(offset[:2]) <= .010
+                        and 0 < offset[2] <= min(.035, clearance / 2)
+                        and clearance - offset[2] >= .05
+                        and np.all(reached[:2, 3] >= np.asarray(geometry["visible_bounds"][0])[:2])
+                        and np.all(reached[:2, 3] <= np.asarray(geometry["visible_bounds"][1])[:2])):
+                    stages[-1]["contact_shortfall_m"] = float(offset[2])
+                    return reached.copy()
                 # A blocked final descent can still leave a usable release pose.
                 # Never excuse lateral drift, overshoot, earlier route errors,
                 # or a shortfall exceeding half the requested clearance.
@@ -719,7 +1075,13 @@ def run(api, command, args):
         grasp_tcp = None
         def check():
             delta = np.asarray(arm.tcp())[:3, 3] - grasp_tcp
-            report = evidence(api.observe(), reference, appearance, delta, floor_z=floor)
+            obs = api.observe()
+            report = evidence(obs, reference, appearance, delta, floor_z=floor)
+            if pickup_only and not report["visual_lift_evidence"] and rgb_reference is not None:
+                report["rgb_lift"] = rgb_lift_evidence(obs, rgb_reference, delta)
+                if report["rgb_lift"]["visual_lift_evidence"]:
+                    report["visual_lift_evidence"] = True
+                    report["verification_method"] = "rgb_source_clear_and_elevated_match"
             checks.append(report)
             if not report["visual_lift_evidence"]:
                 raise ValueError("visual_grasp_unconfirmed")
@@ -730,9 +1092,30 @@ def run(api, command, args):
             if name == "rotate":
                 grip("open", 1)
             elif name == "descend":
+                if elevated_release is not None:
+                    # Estimate from the actual pose, including the target reset;
+                    # preserve the existing absolute lift and its clearance.
+                    recovery = preflight(api, arm, [
+                        ("contact_hold", elevated_release), route[-1]])
+                    stages[-1]["contact_recovery_preflight"] = recovery
+                    if not recovery.get("estimate_ok"):
+                        raise ValueError("contact_recovery_unreachable")
+                    if not budget_ok(api, recovery, include_gate=False):
+                        raise ValueError("insufficient_steps_with_home_reserve")
+                    move("contact_hold", elevated_release)
                 grip("close", 0)
                 grasp_tcp = np.asarray(arm.tcp())[:3, 3].copy()
             elif name in ("lift", "carry"):
+                if name == "lift" and elevated_release is not None:
+                    recovery = preflight(api, arm, [("lift_hold", elevated_release)])
+                    stages[-1]["lift_recovery_preflight"] = recovery
+                    if not recovery.get("estimate_ok"):
+                        raise ValueError("lift_recovery_unreachable")
+                    if not budget_ok(api, recovery, include_gate=False):
+                        raise ValueError("insufficient_steps_with_home_reserve")
+                    move("lift_hold", elevated_release)
+                    if np.asarray(arm.tcp())[2, 3] - grasp_tcp[2] < .05:
+                        raise ValueError("insufficient_measured_lift")
                 check()
             elif name == "lower":
                 stages[-1]["release_above_m"] = release_above

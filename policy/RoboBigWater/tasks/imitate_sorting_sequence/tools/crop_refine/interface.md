@@ -1,0 +1,6 @@
+`robo grasp-refine --roi x0,y0,x1,y1 --floor_z M --plane_roi x0,y0,x1,y1 --height M [--max_pad 16] [--fit_image 0|1]`: free RGB-D pinch fit with bounded crop expansion; no motion or action steps.
+ROI coordinates are full head-image pixels, exclusive ends; plane_roi is a separate bare uniform horizontal patch; height is physical thickness, 0.008–0.14 m. floor_z is required; measured plane depth replaces it.
+Expands only clipped sides in increments up to 4 pixels, at most max_pad (1–32) per side, using one RGB-D image. Requires the original component to remain intact, at most triple its area, and <=10 mm fitted plane change.
+Returns plan_ok/plan_fail_reason, attempts, fitted_roi, fitted_plane_roi, grasp_geometry and fit_args compatible with grasp-geometry/roi-check/pick-check/roi-pick/roi-transfer. fit_image=1 adds grasp_geometry.fit_image_b64, a base64 PNG crop with fitted pixels and pinch crosses.
+If expansion overlaps the validated plane patch, retains its largest separate rectangle (>=50% original area, >=5 pixels per side) and rechecks it; fit_args includes the trimmed patch.
+Fails on ambiguous components or plane, initial crop overlap, insufficient remaining patch, image clipping, expansion limit, changed component, invalid inputs or unsuitable geometry. A successful fit does not certify reachability or grip.
