@@ -10,14 +10,12 @@ Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard layout
 |---|---:|---:|---:|
 | Generalization | 34.2 | 37.7 | 26.7 / 30.0 |
 | Precision | 21.3 | 28.4 | 7.5 / 11.9 |
-| Long-Horizon | 18.8 | 31.9 | 13.8 / 29.2 |
+| Long-Horizon | 18.8 | 32.2 | 13.8 / 29.2 |
 | Memory | 73.3 | 73.3 | 55.0 / 58.0 |
 | Open | 43.8 | 46.6 | 45.0 / 48.1 |
 | **Overall (leaderboard formula)** | **38.3** | **43.6** | 29.6 / 35.4 |
 
 Seven tasks (`deposit_coin`, `fill_egg_holder`, `fill_pen_holder`, `hang_mugs`, `insert_key`, `pick_from_conveyor_by_image`, `store_tools_in_toolbox`) originally carried fixed object geometry in their tools (part sizes, templates of fixed scene parts). That geometry was removed and replaced by measurements made in the episode; these seven tasks were then retested with the same protocol, without further development. In 5 of the 10 `fill_egg_holder` episodes a new measurement command returned a numpy boolean that the server could not log, which ended the episode; they count as failures here, and the type conversion is fixed in the shipped tools.
-
-The retest of five of these seven tasks was still running when this file was written. Episodes not yet run are counted as failures with progress 0 (`hang_mugs` 0 of 5 run, `hang_mugs_random` 4 of 5 run, `fill_pen_holder` 5 of 10 run, `pick_from_conveyor_by_image` 6 of 10 run, `store_tools_in_toolbox` 7 of 10 run); this file will be updated when they finish.
 
 ## Per task (10 episodes each; Generalization tasks 5 standard + 5 cluttered)
 
@@ -51,7 +49,7 @@ The retest of five of these seven tasks was still running when this file was wri
 | Precision | `deposit_coin` | 0/10 | 2.0 | 0/10 |
 | Precision | `fasten_screws` | 0/10 | 17.0 | 0/10 |
 | Long-Horizon | `fill_egg_holder` | 0/10 | 1.0 | 0/10 |
-| Long-Horizon | `fill_pen_holder` | 0/10 | 5.0 | 0/10 |
+| Long-Horizon | `fill_pen_holder` | 0/10 | 7.5 | 0/10 |
 | Generalization | `hang_mugs` | 0/10 | 0.0 | 0/10 |
 | Precision | `insert_key` | 0/10 | 15.0 | 0/10 |
 | Long-Horizon | `make_kong` | 0/10 | 0.0 | 0/10 |

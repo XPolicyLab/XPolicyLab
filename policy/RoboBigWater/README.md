@@ -31,7 +31,7 @@ Unsupported. `train.sh` is omitted. There is no checkpoint: the tools in `tasks/
 
 ## Evaluation
 
-Results of this revision are in `eval/rgb_only_dev_layouts.md`: the frozen tools on the seed-0 development layouts of all 42 tasks, 420 episodes under the official checkers, 38.3% success and a progress score of 43.6 on the leaderboard formula (the previous revision, with a depth network: 29.6% / 35.4). The retest of five tasks was still running when this revision was pushed; their episodes not yet run are counted as failures, and the file will be updated. Official three-seed evaluation has not been run with this revision yet.
+Results of this revision are in `eval/rgb_only_dev_layouts.md`: the frozen tools on the seed-0 development layouts of all 42 tasks, 420 episodes under the official checkers, 38.3% success and a progress score of 43.6 on the leaderboard formula (the previous revision, with a depth network: 29.6% / 35.4). Official three-seed evaluation has not been run with this revision yet.
 
 ```bash
 cd XPolicyLab/policy/RoboBigWater

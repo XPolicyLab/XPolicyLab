@@ -13,7 +13,7 @@
    },
    "Long-Horizon": {
     "success_rate": 18.8,
-    "progress_score": 31.9
+    "progress_score": 32.2
    },
    "Memory": {
     "success_rate": 73.3,
@@ -41,33 +41,7 @@
    "pick_from_conveyor_by_image",
    "store_tools_in_toolbox"
   ],
-  "incomplete": [
-   [
-    "hang_mugs",
-    0,
-    5
-   ],
-   [
-    "hang_mugs_random",
-    4,
-    5
-   ],
-   [
-    "fill_pen_holder",
-    5,
-    10
-   ],
-   [
-    "pick_from_conveyor_by_image",
-    6,
-    10
-   ],
-   [
-    "store_tools_in_toolbox",
-    7,
-    10
-   ]
-  ]
+  "incomplete": []
  },
  "variants": [
   {
@@ -262,31 +236,31 @@
      "layout": 0,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 1,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 2,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 3,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 4,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     }
    ]
   },
@@ -330,7 +304,7 @@
      "layout": 4,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     }
    ]
   },
@@ -1281,7 +1255,7 @@
    "success": 0,
    "episodes": 10,
    "success_rate": 0.0,
-   "progress_score": 5.0,
+   "progress_score": 7.5,
    "depth_model_success": 0,
    "depth_model_success_rate": 0.0,
    "depth_model_progress": 6.0,
@@ -1320,31 +1294,31 @@
      "layout": 5,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 6,
      "success": false,
-     "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "progress": 25.0,
+     "end_reason": "done"
     },
     {
      "layout": 7,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 8,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 9,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     }
    ]
   },
@@ -2436,25 +2410,25 @@
      "layout": 6,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 7,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 8,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 9,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     }
    ]
   },
@@ -2738,19 +2712,19 @@
      "layout": 7,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "agent_exit"
     },
     {
      "layout": 8,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     },
     {
      "layout": 9,
      "success": false,
      "progress": 0.0,
-     "end_reason": "pending: counted as a failure with progress 0"
+     "end_reason": "done"
     }
    ]
   },
