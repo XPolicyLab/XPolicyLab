@@ -1,10 +1,10 @@
 # EmbodiedEvo Playground source
 
-This directory bundles the Playground implementation from the supplied
-EmbodiedEvo source checkout, previously named `EmbodiedRSI`. It runs independently
-of that checkout. The [source manifest](SOURCE_MANIFEST.json) records the upstream
-commit and hashes of imported files; [third-party notices](THIRD_PARTY_NOTICES.md)
-cover the unchanged public recipes and their license.
+This directory contains EmbodiedEvo's Playground runtime: exploration,
+persistent Python sessions, frozen Skills/Lessons and Test execution.
+The [source manifest](SOURCE_MANIFEST.json) records the source revision and file
+hashes; [third-party notices](THIRD_PARTY_NOTICES.md) document the public recipes
+and their license.
 
 Start with the [policy's Playground instructions](../README.md#playground).
 `../playground.sh` uses the policy Python environment, preserves caller-relative
@@ -31,16 +31,16 @@ transfer. Existing exports are never overwritten.
 | `orchestrator/` | Explore, persistent sessions, freeze, isolated agents and direct Test |
 | `environments/`, `simulators/` | Python execution, native actions, Playground reset and raw feedback |
 | `tasks/`, `tasks_baseline/` | Handwritten phase instructions, primitive manuals and recipes |
-| `integrations/robodojo_policy/` | Upstream optional native-evaluator transport, including Playground reset |
+| `integrations/robodojo_policy/` | Optional native-evaluator transport, including Playground reset |
 | `scripts/`, `docker/`, `configs/` | Provisioning, diagnostics and configuration examples |
 | `entrypoint.py`, `export_workspace.py` | XPolicyLab launcher and frozen-workspace export |
 | `tests/` | CPU checks; native transport tests need a provisioned RoboDojo/XPolicyLab |
 
 The optional native transport uses a separate subprocess and selects its own
 bundled `EmbodiedEvo` adapter; normal Test deployment uses the outer adapter.
-The upstream direct `test`/`run` commands remain available. See the
+The `test` and `run` commands provide direct Test and combined execution. See the
 [execution protocol](docs/PROTOCOL.md), [installation](docs/INSTALL.md) and
-[running guide](docs/RUNNING.md). These upstream guides describe commands from
+[running guide](docs/RUNNING.md). These guides describe commands from
 this directory; their optional standalone `.venv` is separate from `../.venv`.
 The default agent image tag is aligned with the outer policy:
 `embodiedevo-agent:xpolicy`.

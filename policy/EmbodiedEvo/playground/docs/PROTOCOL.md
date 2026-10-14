@@ -1,7 +1,6 @@
 # Execution and evaluation protocol
 
-The protocol identifier remains `workspace-session-v1`. EmbodiedEvo is the project
-name; renaming does not change the experiment semantics.
+EmbodiedEvo uses the `workspace-session-v1` protocol for Playground and Test.
 
 ## Persistent code sessions
 

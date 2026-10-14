@@ -1,5 +1,5 @@
 {
-  "source": "EmbodiedEvo (local EmbodiedRSI source checkout)",
+  "source": "EmbodiedEvo",
   "commit": "1fb171bbf91bdb96b41d12be60ce9c8202681905",
   "scope": "Playground/session runtime, simulator adapters, optional native transport, task templates, provisioning, documentation and CPU tests. No environments, vendor assets, credentials or run outputs.",
   "files": {
@@ -46,12 +46,12 @@
     "docs/INSTALL.md": {
       "upstream_path": "docs/INSTALL.md",
       "upstream_sha256": "ee8b3edfc58ddbf73582bc1c1c85e444ef33cb998c76163b8076b57856d22780",
-      "bundled_sha256": "3345f1f13ed560c1d923544fe2edb7c727484818139351f67562c2beff248b73"
+      "bundled_sha256": "4cd3574ff5bd3eae02d5a49d0ff1e058dc7fcbac9da3de1fe3efe79765c64c74"
     },
     "docs/PROTOCOL.md": {
       "upstream_path": "docs/PROTOCOL.md",
       "upstream_sha256": "4c7cebc61792fcac73945c8f624aedf1420da973781b4531ef81a0c77e3e19ea",
-      "bundled_sha256": "4c7cebc61792fcac73945c8f624aedf1420da973781b4531ef81a0c77e3e19ea"
+      "bundled_sha256": "83caeada7f7e3f92dc5fbcde851037f738b929cc68b3cc69dc08ce8723ec0454"
     },
     "docs/RUNNING.md": {
       "upstream_path": "docs/RUNNING.md",
@@ -61,7 +61,7 @@
     "docs/SOURCE.md": {
       "upstream_path": "docs/SOURCE.md",
       "upstream_sha256": "f5b8482431bb6b2bae28066debe6222f3e0153d05270db6cf74d016146354e55",
-      "bundled_sha256": "ba70a0c907858e7eab52dc8c45eea97159089838eba7f3dca0d3898a7db56e1e"
+      "bundled_sha256": "ac9018dfc52d0bfd6fae19451cabaf7d25c873243640b1c420756efd17af374f"
     },
     "environments/__init__.py": {
       "upstream_path": "environments/__init__.py",
@@ -760,17 +760,19 @@
     }
   },
   "bundled_on": "2026-10-14",
-  "adaptations": [
-    "Rename the bundled native transport policy identifier/imports to EmbodiedEvo.",
-    "Align the agent image default with embodiedevo-agent:xpolicy.",
-    "Prefer the bundled native transport adapter over the outer Test adapter in its own subprocess.",
-    "Add a caller-relative launcher and verified frozen Skills/Lessons export into a fresh Test workspace.",
-    "Replace source-bundle documentation to describe this XPolicyLab integration."
-  ],
   "added_files": {
-    "README.md": "8a87d68a0d5188d989e7608816bf1baf2222f351be0130f214b125f41ce967ea",
+    "README.md": "626e41b82a5ce2ae3837281211ac9a681515f503d1ef5f0b97ab67a27b12e55e",
     "entrypoint.py": "d49cf6ae2cfddc7ea91c3e5879b4255cc223886c9479a658b2d34b0ce75b162d",
     "export_workspace.py": "db871495fc41983028b8aa0cd2c91d1d77d1dc6c6f9a50cfeab9b62f3319b2ce",
     "tests/test_export_workspace.py": "d2b6af48f46d58be2d8e3e714479685a589e0701606248221640608b39b8345f"
+  },
+  "repository": "https://github.com/Einsia/EmbodiedEvo",
+  "integration": {
+    "policy_name": "EmbodiedEvo",
+    "python_package": "embodiedevo",
+    "protocol": "workspace-session-v1",
+    "agent_image": "embodiedevo-agent:xpolicy",
+    "launcher": "../playground.sh",
+    "knowledge_export": "export_workspace.py"
   }
 }

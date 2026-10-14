@@ -2,8 +2,8 @@
 
 EmbodiedEvo uses three separate environments: host orchestration, the RoboDojo
 simulator, and a thin coding-agent container. Native XPolicyLab evaluation also
-uses a small policy-server environment. Run the commands below from the checkout
-root. No step needs access to the original private development repository.
+uses a small policy-server environment. Run the commands below from
+`policy/EmbodiedEvo/playground/`.
 
 ## Host Python environment
 
@@ -18,20 +18,16 @@ and CPU resources. The real XPolicyLab transport suite is skipped until that
 external dependency is installed. Tests do not validate native physics or model
 performance.
 
-`requirements-host.txt` pins the host dependencies used for the export's CPU
+`requirements-host.txt` pins the host dependencies used for CPU
 validation (Python 3.12.7 on Linux). Keep those pins out of the simulator's
 environment, which follows its own upstream dependency constraints.
 
-### Updating an existing installation
+### Package and runtime names
 
-The project package and CLI are now `embodiedevo`, environment variables use
-`EMBODIEDEVO_`, and the policy is `EmbodiedEvo`. Reinstall the editable package
-with the command above, update exported settings and launch scripts, and build
-the configured `embodiedevo-agent:xpolicy` image before starting new runs.
-Existing run evidence and local runtime profiles are not migrated automatically.
-For a vendor snapshot created under a previous project name, provision an
-independent copy in a fresh checkout; the helper refuses to overwrite a snapshot
-without the current provenance marker.
+The Python package and CLI are `embodiedevo`, environment variables use the
+`EMBODIEDEVO_` prefix, and the XPolicyLab policy is `EmbodiedEvo`. The agent image
+is `embodiedevo-agent:xpolicy`. Install the package and build that image before
+starting an experiment.
 
 ## RoboDojo runtime and assets
 
@@ -59,9 +55,8 @@ submodules and hash of pre-existing source patches. The source patch is kept
 locally in `.embodiedevo-source.patch`. These files and all vendor assets are
 ignored by Git. Treat the provisioned source as read-only during experiments.
 
-This distribution does not contain the simulator image or the exact historical
-runtime patches. A different RoboDojo revision must be validated with the smoke
-commands below; code export alone does not reproduce historical scores.
+Provision the simulator image and assets separately. Validate the installed
+RoboDojo revision with the smoke commands below before starting an experiment.
 
 ## Codex API configuration
 

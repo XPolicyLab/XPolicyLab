@@ -1,6 +1,6 @@
 # EmbodiedEvo
 
-**Contributor:** [Einsia.AI](https://lab.einsia.ai/) | **Paper:** [arXiv:2610.18867](https://arxiv.org/pdf/2610.18867) | **Project Page:** [EmbodiedEvo](https://lab.einsia.ai/embodiedevo/) | **Original code:** [EmbodiedEvo](https://github.com/Einsia/EmbodiedRSI)
+**Contributor:** [Einsia.AI](https://lab.einsia.ai/) | **Paper:** [arXiv:2610.18867](https://arxiv.org/pdf/2610.18867) | **Project Page:** [EmbodiedEvo](https://lab.einsia.ai/embodiedevo/) | **Original code:** [EmbodiedEvo](https://github.com/Einsia/EmbodiedEvo)
 
 EmbodiedEvo is a **self-evolving robotic agent** operating in an **SWE-style workspace**. It writes, executes and revises Python programs to control robots.
 
@@ -9,7 +9,7 @@ It has two phases:
 1. **Playground:** The agent explores the environment, iteratively develops control programs, and consolidates its experience into Skills and Lessons.
 2. **Test:** The agent uses the frozen Skills and Lessons to solve tasks in new scenes, adapting its programs to live feedback within each episode.
 
-This adapter includes the [Playground source and execution workflow](playground/README.md), the Test runtime, and frozen Playground experience for all 42 tasks: 293 skill files and 165 lesson files. Its XPolicyLab policy identifier and directory name are `EmbodiedEvo`.
+This adapter includes the Playground source and execution workflow, the Test runtime, and frozen Playground experience for all 42 tasks: 293 skill files and 165 lesson files. Its XPolicyLab policy identifier and directory name are `EmbodiedEvo`.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -58,11 +58,11 @@ There is no gradient-based training or neural checkpoint. `train.sh` is omitted.
 
 ## Playground
 
-The bundled [source](playground/) comes from the EmbodiedEvo repository supplied as
-`EmbodiedRSI`. It includes the orchestrator, persistent Python sessions, RoboDojo
-adapters, task templates, provisioning scripts and CPU tests. See its
-[source manifest](playground/SOURCE_MANIFEST.json) for the upstream revision and
-file hashes. Runtime assets and environments are provisioned separately.
+EmbodiedEvo's [Playground implementation](playground/) includes the orchestrator,
+persistent Python sessions, RoboDojo adapters, task templates, provisioning
+scripts and CPU tests. The [source manifest](playground/SOURCE_MANIFEST.json)
+records the source revision and file hashes. Runtime assets and environments
+are provisioned separately.
 
 Run these commands from `policy/EmbodiedEvo/`, after Installation above. Prepare
 an independent simulator snapshot using a working RoboDojo checkout and conda
@@ -100,9 +100,9 @@ files and existing output directories. Public recipes remain supplied knowledge;
 setting `EMBODIEDEVO_USE_RECIPE=0` before exploration also omits the recipe from the
 exported Test instruction. Keep Test scenes disjoint from the Playground scene.
 
-`bash playground.sh test ...` and `bash playground.sh run ...` retain the upstream
-direct-simulator Test and combined workflow. Their reports differ from the
-official `eval.sh` reports. See [protocol details](playground/docs/PROTOCOL.md).
+`bash playground.sh test ...` starts direct-simulator Test, and
+`bash playground.sh run ...` runs Playground followed by Test. Their reports
+differ from the official `eval.sh` reports. See [protocol details](playground/docs/PROTOCOL.md).
 
 CPU checks for the bundled source (no simulator, Docker or model calls):
 
@@ -129,7 +129,7 @@ EVAL_NUM=1 EVAL_ENV_TYPE=sim bash eval.sh RoboDojo stack_bowls embodiedevo_astra
 
 `EVAL_NUM=1` runs one complete episode; unset it for the full benchmark. Completion is marked by `[MAIN] eval finished`; task success is scored separately.
 
-`env_cfg_type` is `arx_x5`; `action_type` accepts `ee` or `joint`. `ckpt_name=embodiedevo_astra_xhigh` selects the bundled [Workspace](Workspace/); use an exported workspace path to load newly learned Skills and Lessons. No neural checkpoint is required. The old `EmbodiedRSI` policy/import path and `EMBODIEDRSI_*` settings have been replaced by `EmbodiedEvo` and `EMBODIEDEVO_*`; update launch commands and rerun `install.sh` if an existing virtualenv still refers to the old directory.
+`env_cfg_type` is `arx_x5`; `action_type` accepts `ee` or `joint`. `ckpt_name=embodiedevo_astra_xhigh` selects the bundled [Workspace](Workspace/); use an exported workspace path to load newly learned Skills and Lessons. No neural checkpoint is required.
 
 `policy_env` (arg 9) and `eval_env` (arg 10) accept a virtualenv directory, Python executable, conda environment name or `current`. Use the installed policy environment for arg 9 and the RoboDojo simulator environment for arg 10. Set `eval_batch: true` in `deploy.yml` for independent agents across parallel environments.
 
