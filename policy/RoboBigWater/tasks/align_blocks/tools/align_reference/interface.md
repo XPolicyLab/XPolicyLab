@@ -1,9 +1,10 @@
-`robo align_reference` (no arguments)
-Detects magenta regions and an elongated white reference using calibrated head-camera RGB-D; approaches, closes, translates perpendicular to the observed reference without turning, releases, and withdraws.
-Accepts only references spanning the detected centers at nearby surface height and normal distance; unrelated background features are rejected before motion.
-Selects the clear lane nearest the mean region position along the reference and the arm on that side; preserves the measured clearance padding.
-Travel covers the farthest center plus its projected half-extent and a 0.025 m depth allowance; requires all centers on one side and total travel between 0.012 and 0.24 m.
-Returns `plan_ok`, `plan_fail_reason`, selected reference index/endpoints/contact point/arm/push_delta_m, per-stage feedback, and `before`/`after` measurements when available, including after release if withdrawal fails.
-Fails before motion on missing, invalid, ambiguous, or out-of-bounds geometry; stops on planning/tracking failure, episode end, or insufficient time before a motion stage.
-Allows descent shortfall up to 0.03 m above target with at most 0.01 m lateral error; other position errors above 0.014 m fail.
-Consumes action steps; failure may leave contact closed or occur after release. No retries; motion completion does not certify payload motion or geometric alignment.
+`robo align_reference --surface_z M --reference_z M`
+Measures magenta regions and an elongated white reference from calibrated head-camera RGB at supplied world-z surface heights in meters.
+Selects a nearby spanning reference and a padded contact lane; approaches, closes, and pushes perpendicular to its measured axis.
+Initial travel covers the farthest center plus projected half-extent and 0.025 m allowance; allowed travel is 0.012–0.24 m.
+Before release, remeasures and permits at most two additional 0.025–0.045 m normal pushes for residual above 0.002 m or relative edge angle above 6 degrees.
+Continuations require fresh reference association, actual TCP clearance, visible edge angles, and more than 2.5 seconds remaining; the second also requires observed reference movement.
+Releases and withdraws; no wrist turns or reacquisition. RGB silhouette bias and loose contact remain measurement limits.
+Returns `plan_ok`, `plan_fail_reason`, `stages`, `selection` including continuation decisions, and `before`/`after` measurements when available.
+Invalid initial geometry fails before motion; uncertain continuation geometry skips extra travel. Planning/tracking failure or episode end stops execution and can leave contact closed.
+Descent allows up to 0.03 m upward and 0.01 m lateral shortfall; other position errors above 0.014 m fail. Consumes action steps; completion is not an alignment verdict.

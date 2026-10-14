@@ -1,5 +1,5 @@
 `robo pixel-world --u INT --v INT [--camera head|wrist_l|wrist_r]`
-Returns visible surface `world_xyz` and `depth_m` in meters; zero-based full-image pixels; no motion or command cost.
+Requires depth; absent depth fails. Returns visible surface `world_xyz` and `depth_m` in meters; zero-based full-image pixels; no motion or command cost.
 Surface points differ from pinch centers; returns `motion_readiness=unchecked` and guarded rotation syntax; fails on invalid depth, camera data, or pixels.
 `robo wait-still [--quiet 2] [--timeout 6] [--roi x0,y0,x1,y1] [--camera head|wrist_l|wrist_r]`
 Holds current targets, sampling RGB every 0.2 s against a fixed interval image; symmetric one-pixel edge tolerance; optional exclusive-end ROI.

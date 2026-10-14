@@ -1,11 +1,9 @@
-`robo layer_plan --parts JSON` proposes an initial layered arrangement from selected current head-image pixels; free and read-only.
-JSON keys: `supports` (four [u,v] pairs), `spans` (two), `cap` (one pair), `crest` (one pair). All eight pixels must be distinct integers inside the current image.
-Requires isolated flat tops and consistent visible lower planes for the first seven regions, plus visibly clear initial footprints. Rejects ambiguity rather than substituting nominal heights.
-Returns ordered stage IDs, prerequisites, source-arm/transfer proposals, desired headings and required follow-up checks; failed predecessors stay incomplete. Always perform the listed home follow-up before switching arms. Future heights are predictions; reobserve each moved source and destination before acting. No IK, grasp, stability or completion guarantee.
-`robo span_target --source_u U --source_v V --left_u U --left_v V --right_u U --right_v V [--arm left|right]` computes a release proposal using two currently visible support tops; free and read-only.
-Requires top-height difference<=3mm,>=80% of each sampled top within the inset visible footprint, and>=1cm geometric-centre margin inside the observed support polygon. Assumes uniform mass; hidden geometry, actual contact and friction are unmeasured.
-Returns `transfer_arguments` for separate execution, including the calibrated X5 fingertip floor (12.6mm beyond the145mm TCP), measured grasp-to-bottom release offset, and relative source/release headings. Recheck the source, swept path, reach and physical effect; geometry success is not motion or task success.
-When current head calibration is available, `layer_plan` also returns an episode-local `target_pixel` for each support target. Refresh it after every motion; it is not a layout coordinate or a reusable seed privilege.
-For a crest with a measured upper contour, its proposal includes both `grasp_axis` (absolute current jaw heading) and `place_yaw` (absolute target heading); use these fields with `compose_transfer` instead of treating `grasp_yaw`/`yaw` as absolute headings.
-`robo project_world --x X --y Y --z Z` projects one current public world point through the current head calibration and returns an episode-local pixel. It is free, read-only, and refuses points behind or outside the current image; callers must still check depth and surface identity.
-Both commands return `plan_ok`, `plan_fail_reason` and `motion_sent=false`; invalid/missing public data or failed geometry returns a refusal with no motion.
+Legacy disabled commands require calibrated depth in addition to RGB; unavailable depth causes refusal.
+`robo layer_plan --parts JSON` returns an initial arrangement from current head-image pixels; free and read-only.
+Parts contains supports (four [u,v] pairs), spans (two), cap (one) and crest (one); all eight selections must be distinct, in-image integers.
+Requires isolated horizontal tops, consistent visible lower planes and clear initial footprints; returns stage IDs, prerequisites, transfer proposals, headings, projected target pixels and unverified predicted heights.
+`robo span_target --source_u U --source_v V --left_u U --left_v V --right_u U --right_v V [--arm left|right]` returns release geometry from two visible support tops.
+Requires height difference <=3 mm, >=80% sampled-top footprint overlap and >=1 cm geometric-center support margin; uniform mass is assumed.
+Transfer proposals include calibrated fingertip offset, grasp-to-bottom offset and relative headings; inclined-contour proposals may also expose absolute grasp_axis and place_yaw.
+`robo project_world --x X --y Y --z Z` projects a world point into the current head image and refuses points behind or outside it.
+Commands return plan_ok, plan_fail_reason and motion_sent=false; invalid data or incompatible geometry refuses without motion. No IK, contact, stability or completion verification.

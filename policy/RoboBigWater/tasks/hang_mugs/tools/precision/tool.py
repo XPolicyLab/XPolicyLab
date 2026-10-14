@@ -16,9 +16,17 @@ def arg(name, kind="str", default=None, choices=None):
 
 ARM = {"name": "arm", "positional": True, "choices": ["left", "right"]}
 TOOL = {"name": "precision", "commands": [
-    {"name": "surface", "budget": False, "help": "convert visible pixels to world coordinates",
+    {"name": "contour-stereo", "budget": False, "help": "measure independent planar elliptical RGB contours without paired vertices",
+     "args": [arg("rim"), arg("rim2"), arg("center"), arg("refine", "int", 0, [0, 1, 2]),
+              arg("camera", default="head", choices=["head", "wrist_l", "wrist_r"]),
+              arg("camera2", default="wrist_r", choices=["head", "wrist_l", "wrist_r"])]},
+    {"name": "stereo-guide", "budget": False, "help": "calibrated RGB correspondence diagnostics without motion",
      "args": [arg("pixels"), arg("camera", default="head", choices=["head", "wrist_l", "wrist_r"]),
               arg("pixels2", default=""), arg("camera2", default="wrist_r", choices=["head", "wrist_l", "wrist_r"])]},
+    {"name": "surface", "budget": False, "help": "convert visible pixels to world coordinates",
+     "args": [arg("pixels"), arg("camera", default="head", choices=["head", "wrist_l", "wrist_r"]),
+              arg("pixels2", default=""), arg("camera2", default="wrist_r", choices=["head", "wrist_l", "wrist_r"]),
+              arg("z", default="")]},
     {"name": "aperture", "budget": False, "help": "estimate a planar opening from visible boundary pixels",
      "args": [arg("rim"), arg("center"), arg("camera", default="head", choices=["head", "wrist_l", "wrist_r"]),
               arg("rim2", default=""), arg("camera2", default="wrist_r", choices=["head", "wrist_l", "wrist_r"]),
@@ -65,7 +73,138 @@ def bounded(value, low, high, name):
     return value
 
 
+def image_shape(observation, name):
+    """Image bounds from RGB, independent of the presence of a depth channel."""
+    if name in observation.get("png", {}):
+        import cv2
+        rgb = cv2.imdecode(np.frombuffer(observation["png"][name], np.uint8), cv2.IMREAD_COLOR)
+        if rgb is None:
+            raise ValueError("invalid RGB image")
+        return rgb.shape[:2]
+    # Some observations may contain depth instead of PNG.
+    depth = np.asarray(observation.get("depth", {}).get(name))
+    if depth.ndim == 2:
+        return depth.shape
+    raise ValueError("camera image unavailable")
+
+
+def plane_surface(observation, args):
+    """Intersect calibrated subpixel rays with a caller-measured horizontal plane."""
+    name = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}[args.get("camera", "head")]
+    camera = observation["cameras"][name]
+    k = np.asarray(camera["intrinsics"], float)
+    t = np.asarray(camera["extrinsics_world"], float)
+    if (k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all()
+            or not np.isfinite(t).all()
+            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-5)):
+        raise ValueError("invalid camera data")
+    z = float(args["z"])
+    if not np.isfinite(z):
+        raise ValueError("z must be finite")
+    h, w = image_shape(observation, name)
+    queries = str(args["pixels"]).split(";")
+    if not 1 <= len(queries) <= 32:
+        raise ValueError("pixels requires 1 to 32 pixel pairs")
+    samples = []
+    for query in queries:
+        uv = vector(query, 2)
+        if not (0 <= uv[0] < w and 0 <= uv[1] < h):
+            raise ValueError("pixel outside image")
+        ray = t[:3, :3] @ np.linalg.solve(k, np.r_[uv, 1.])
+        ray /= np.linalg.norm(ray)
+        if abs(ray[2]) < .10:
+            raise ValueError("ray too nearly parallel to plane")
+        distance = (z - t[2, 3]) / ray[2]
+        if not np.isfinite(distance) or distance <= 0:
+            raise ValueError("plane intersection behind camera")
+        world = t[:3, 3] + distance * ray
+        samples.append({"pixel": uv.tolist(), "world": world.tolist()})
+    return {"plan_ok": True, "plan_fail_reason": None, "measurement_mode": "known_plane",
+            "plane_z_m": z, "samples": samples,
+            "world_mean": np.mean([s["world"] for s in samples], axis=0).tolist(),
+            "geometry": "caller supplied height; no object height or identity inferred"}, 0
+
+
+def stereo_guide(observation, args):
+    """Epipolar loci are search aids, never corrected measurements."""
+    names = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
+    first, second = args.get("camera", "head"), args.get("camera2", "wrist_r")
+    if first == second:
+        raise ValueError("two different cameras required")
+    views = []
+    for name in (first, second):
+        c = observation["cameras"][names[name]]
+        k, t = np.asarray(c["intrinsics"], float), np.asarray(c["extrinsics_world"], float)
+        if (k.shape != (3, 3) or t.shape != (4, 4) or
+                not np.all(np.isfinite(k)) or not np.all(np.isfinite(t)) or
+                not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-5)):
+            raise ValueError("invalid camera data")
+        views.append((k, t, image_shape(observation, names[name])))
+    k1, t1, shape1 = views[0]
+    k2, t2, shape2 = views[1]
+    rotation = t2[:3, :3].T @ t1[:3, :3]
+    translation = t2[:3, :3].T @ (t1[:3, 3] - t2[:3, 3])
+    if np.linalg.norm(translation) < 1e-6:
+        raise ValueError("coincident cameras")
+    x, y, z = translation
+    cross = np.array([[0, -z, y], [z, 0, -x], [-y, x, 0]])
+    fundamental = np.linalg.inv(k2).T @ cross @ rotation @ np.linalg.inv(k1)
+    queries = str(args["pixels"]).split(";")
+    matches = str(args["pixels2"]).split(";") if args.get("pixels2") else None
+    if not 1 <= len(queries) <= 32 or (matches is not None and len(matches) != len(queries)):
+        raise ValueError("1 to 32 selections required; paired lists must have equal lengths")
+    rows, worlds = [], []
+    for index, query in enumerate(queries):
+        uv = vector(query, 2)
+        if np.any(uv < 0) or np.any(uv >= np.array(shape1[::-1])):
+            raise ValueError("pixel outside image")
+        line = fundamental @ np.r_[uv, 1]
+        length = np.linalg.norm(line[:2])
+        if length < 1e-12:
+            raise ValueError("selection at epipole; locus undefined")
+        line /= length
+        a, b, c = line
+        h, w = shape2
+        ends = []
+        for u, v in ([(u, -(a*u+c)/b) for u in (0, w-1)] if abs(b) > 1e-12 else []) + (
+                [( -(b*v+c)/a, v) for v in (0, h-1)] if abs(a) > 1e-12 else []):
+            if 0 <= u <= w-1 and 0 <= v <= h-1 and not any(np.linalg.norm(np.array([u,v])-e) < 1e-6 for e in ends):
+                ends.append([float(u), float(v)])
+        row = {"index": index, "pixel": uv.tolist(), "line_abc": line.tolist(), "segment": ends}
+        if matches is not None:
+            match = vector(matches[index], 2)
+            if np.any(match < 0) or np.any(match >= np.array(shape2[::-1])):
+                raise ValueError("pixel outside image")
+            row["epipolar_error_px"] = abs(float(line @ np.r_[match, 1]))
+            try:
+                measured, _ = stereo_boundary(observation, dict(args, rim=query, rim2=matches[index]), minimum=1)
+                row.update(pair_ok=True, **measured["samples"][0])
+                worlds.append(row["world"])
+            except ValueError as exc:
+                row.update(pair_ok=False, reason=str(exc))
+        rows.append(row)
+    result = {"plan_ok": True, "plan_fail_reason": None, "camera2": second, "guides": rows,
+              "geometry": "search loci only; no snapping or semantic correspondence certification"}
+    if matches is not None:
+        result["all_pairs_ok"] = len(worlds) == len(rows)
+        if len(worlds) == len(rows) and len(worlds) >= 4:
+            samples = np.array(worlds)
+            _, singular, basis = np.linalg.svd(samples - samples.mean(axis=0), full_matrices=False)
+            result["plane_residuals_m"] = ((samples - samples.mean(axis=0)) @ basis[2]).tolist()
+            result["plane_singular_values_m"] = singular.tolist()
+            try:
+                boundary_plane(samples)
+                result["plane_fit_ok"] = True
+            except ValueError as exc:
+                result.update(plane_fit_ok=False, plane_fit_reason=str(exc))
+    return result, 0
+
+
 def surface(observation, args):
+    if args.get("z", "") != "":
+        if args.get("pixels2"):
+            raise ValueError("z and pixels2 are mutually exclusive")
+        return plane_surface(observation, args)
     if args.get("pixels2"):
         converted, diagnostics = stereo_boundary(
             observation, dict(args, rim=args["pixels"], rim2=args["pixels2"]), minimum=1)
@@ -75,6 +214,8 @@ def surface(observation, args):
                 "geometry": "matched physical locations; semantic correspondence unverified"}, 0
     camera_name = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}[args.get("camera", "head")]
     camera = observation["cameras"][camera_name]
+    if camera_name not in observation.get("depth", {}):
+        raise ValueError("RGB-only observation: provide pixels2 correspondences or a measured world z")
     depth = np.asarray(observation["depth"][camera_name])
     intrinsics = np.asarray(camera["intrinsics"], dtype=float)
     transform = np.asarray(camera["extrinsics_world"], dtype=float)
@@ -331,7 +472,7 @@ def stereo_boundary(observation, args, minimum=4):
         camera = observation["cameras"][cameras[name]]
         intrinsics = np.asarray(camera["intrinsics"], dtype=float)
         transform = np.asarray(camera["extrinsics_world"], dtype=float)
-        shape = np.asarray(observation["depth"][cameras[name]]).shape
+        shape = image_shape(observation, cameras[name])
         if (intrinsics.shape != (3, 3) or transform.shape != (4, 4) or len(shape) != 2
                 or not np.all(np.isfinite(intrinsics)) or not np.all(np.isfinite(transform))
                 or not np.allclose(transform[:3, :3].T @ transform[:3, :3], np.eye(3), atol=1e-5)):
@@ -377,6 +518,286 @@ def stereo_boundary(observation, args, minimum=4):
         angles.append(angle)
     return {"samples": samples}, {"measurement_mode": "stereo", "max_ray_gap_m": max(gaps),
                                   "min_parallax_deg": min(angles), "max_reprojection_error_px": max(errors)}
+
+
+def refine_rgb_contour(observation, name, pixels, radius):
+    """Bounded normal-direction RGB edge localization, independent of stereo.
+
+    Never optimize coordinates to improve a plane fit. Every vertex needs a
+    resolved, unambiguous image edge; a missing vertex aborts the entire fit.
+    """
+    import cv2
+    rgb = cv2.imdecode(np.frombuffer(observation["png"][name], np.uint8), cv2.IMREAD_COLOR)
+    if rgb is None:
+        raise ValueError("invalid RGB image")
+    rgb = cv2.GaussianBlur(rgb.astype(np.float32), (3, 3), .6)
+    tangent = np.roll(pixels, -1, axis=0) - np.roll(pixels, 1, axis=0)
+    lengths = np.linalg.norm(tangent, axis=1)
+    if np.any(lengths < 1):
+        raise ValueError("unresolved contour tangents")
+    normals = np.c_[-tangent[:, 1], tangent[:, 0]] / lengths[:, None]
+    offsets = np.linspace(-radius, radius, 8*radius+1)
+    samples = pixels[:, None, :] + offsets[None, :, None]*normals[:, None, :]
+    responses = []
+    for direction in (-1, 1):
+        uv = samples + direction*.75*normals[:, None, :]
+        if np.any(uv < 1) or np.any(uv >= np.array(rgb.shape[1::-1])-2):
+            raise ValueError("RGB refinement search crosses image boundary")
+        responses.append(cv2.remap(rgb, uv[:, :, 0].astype(np.float32),
+                                   uv[:, :, 1].astype(np.float32), cv2.INTER_LINEAR))
+    strength = np.linalg.norm(responses[1]-responses[0], axis=2)/np.sqrt(3)
+    refined, minimum_contrast = [], float("inf")
+    for i, row in enumerate(strength):
+        peak = int(np.argmax(row))
+        if row[peak] < 12:
+            raise ValueError(f"RGB edge unresolved at vertex {i}")
+        if peak in (0, len(row)-1):
+            raise ValueError(f"RGB edge outside refinement bound at vertex {i}")
+        maxima = [j for j in range(1, len(row)-1)
+                  if row[j] >= row[j-1] and row[j] >= row[j+1]]
+        maxima += [j for j, neighbor in ((0, 1), (len(row)-1, len(row)-2))
+                   if row[j] >= row[neighbor]]
+        if any(abs(offsets[j]-offsets[peak]) >= 1 and row[j] >= .8*row[peak] for j in maxima):
+            raise ValueError(f"ambiguous RGB edges at vertex {i}")
+        # Parabolic interpolation over the quarter-pixel response samples.
+        a, b, c = row[peak-1:peak+2]
+        denominator = a-2*b+c
+        if denominator >= -1e-5:
+            raise ValueError(f"flat RGB edge response at vertex {i}")
+        delta = float(np.clip(.5*(a-c)/denominator, -.5, .5))
+        shift = offsets[peak]+.25*delta
+        refined.append(pixels[i]+shift*normals[i])
+        minimum_contrast = min(minimum_contrast, float(b))
+    refined = np.array(refined)
+    return refined, dict(max_shift_px=float(np.max(np.linalg.norm(refined-pixels, axis=1))),
+                         min_edge_contrast=minimum_contrast, vertices=refined.tolist())
+
+
+def convex_cyclic_contour(pixels):
+    """Accept forward collinear subdivisions, never concavity or backtracking.
+
+    OpenCV's strict convexity test rejects even exact straight-edge samples.
+    Remove only redundant subdivisions for this topology test; callers retain
+    all original measurements for fitting, coverage and uncertainty bounds.
+    """
+    import cv2
+    vertices = np.asarray(pixels, dtype=float).copy()
+    while len(vertices) > 3:
+        incoming = vertices - np.roll(vertices, 1, axis=0)
+        outgoing = np.roll(vertices, -1, axis=0) - vertices
+        cross = incoming[:, 0]*outgoing[:, 1] - incoming[:, 1]*outgoing[:, 0]
+        scale = np.linalg.norm(incoming, axis=1)*np.linalg.norm(outgoing, axis=1)
+        redundant = np.flatnonzero((np.abs(cross) <= 1e-12*scale)
+                                   & (np.sum(incoming*outgoing, axis=1) > 0))
+        if not len(redundant):
+            break
+        vertices = np.delete(vertices, redundant[0], axis=0)
+    return bool(cv2.isContourConvex(vertices.astype(np.float32)))
+
+
+def contour_stereo(observation, args):
+    """Intersect independently fitted ellipses with common epipolar scanlines.
+
+    The caller supplies the same complete planar inner edge in both images,
+    not corresponding vertices. Curve fitting adds no independent evidence:
+    every selected vertex must fit its ellipse and both full ellipses must
+    agree under one plane-induced homography. Optional RGB refinement is
+    independent of that fit and does not establish semantic identification.
+    """
+    import cv2
+
+    def encode(pixels):
+        return ";".join(",".join(map(str, p)) for p in pixels)
+
+    def warp(H, pixels):
+        p = np.c_[pixels, np.ones(len(pixels))] @ H.T
+        if np.any(p[:, 2] <= 1e-8):
+            raise ValueError("contour crosses rectification horizon")
+        return p[:, :2] / p[:, 2:]
+
+    def intersections(conic, y):
+        a = conic[0, 0]
+        b = 2*(conic[0, 1]*y+conic[0, 2])
+        c = conic[1, 1]*y*y+2*conic[1, 2]*y+conic[2, 2]
+        disc = b*b-4*a*c
+        if abs(a) < 1e-12 or disc <= 0:
+            raise ValueError("epipolar scanline must cross each ellipse twice")
+        return np.c_[np.sort([(-b-np.sqrt(disc))/(2*a), (-b+np.sqrt(disc))/(2*a)]), [y, y]]
+
+    def distance_to_edges(pixels, poly):
+        edge = np.roll(poly, -1, axis=0) - poly
+        delta = pixels[:, None, :] - poly[None, :, :]
+        u = np.clip(np.sum(delta * edge, axis=2) / np.sum(edge**2, axis=1), 0, 1)
+        distances = np.linalg.norm(delta-u[:, :, None]*edge, axis=2)
+        return float(np.max(np.min(distances, axis=1)))
+
+    names = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
+    labels = [args.get("camera", "head"), args.get("camera2", "wrist_r")]
+    if labels[0] == labels[1]:
+        raise ValueError("two different cameras required")
+    refine = bounded(args.get("refine", 0), 0, 2, "refine")
+    if refine != int(refine):
+        raise ValueError("refine must be 0, 1 or 2 pixels")
+    views, polygons, curves, conics, curve_errors = [], [], [], [], []
+    refinement = []
+    for label, key in zip(labels, ("rim", "rim2")):
+        if names[label] not in observation.get("png", {}):
+            raise ValueError("current RGB images required for both contours")
+        c = observation["cameras"][names[label]]
+        K, T = np.asarray(c["intrinsics"], float), np.asarray(c["extrinsics_world"], float)
+        if (K.shape != (3, 3) or T.shape != (4, 4) or not np.isfinite(K).all()
+                or not np.isfinite(T).all() or min(K[0, 0], K[1, 1]) <= 0
+                or not np.allclose(T[:3, :3].T @ T[:3, :3], np.eye(3), atol=1e-5)):
+            raise ValueError("invalid camera data")
+        pixels = np.array([vector(p, 2) for p in str(args[key]).split(";")])
+        shape = image_shape(observation, names[label])
+        if (not 8 <= len(pixels) <= 32 or len(set(map(tuple, np.rint(pixels)))) != len(pixels)
+                or np.any(pixels < 0) or np.any(pixels >= np.array(shape[::-1]))):
+            raise ValueError("8 to 32 distinct in-image cyclic vertices required per contour")
+        if refine:
+            pixels, evidence = refine_rgb_contour(observation, names[label], pixels, int(refine))
+            refinement.append(dict(camera=label, **evidence))
+        poly32 = pixels.astype(np.float32)
+        if not convex_cyclic_contour(pixels) or abs(cv2.contourArea(poly32)) < 16:
+            raise ValueError("complete convex cyclic contour with resolved area required")
+        (cx, cy), (width, height), angle = cv2.fitEllipse(poly32)
+        if not np.isfinite([cx, cy, width, height, angle]).all() or min(width, height) < 4:
+            raise ValueError("unresolved elliptical contour")
+        angle = np.radians(angle)
+        rotation = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
+        axes = np.array([width, height])/2
+        offset = np.array([cx, cy])
+        local = (pixels-offset) @ rotation / axes
+        phases = np.sort(np.arctan2(local[:, 1], local[:, 0]))
+        if np.max(np.diff(np.r_[phases, phases[0]+2*np.pi])) > np.radians(80):
+            raise ValueError("ellipse selections must cover the complete contour")
+        theta = np.linspace(0, 2*np.pi, 256, endpoint=False)
+        curve = offset + (np.c_[np.cos(theta), np.sin(theta)]*axes) @ rotation.T
+        if np.any(curve < 0) or np.any(curve >= np.array(shape[::-1])):
+            raise ValueError("complete fitted ellipse must lie inside the image")
+        fit_error = distance_to_edges(pixels, curve)
+        if fit_error > .75:
+            raise ValueError("selected contour differs from an ellipse by more than .75 pixel")
+        quadratic = rotation @ np.diag(1/axes**2) @ rotation.T
+        conic = np.empty((3, 3))
+        conic[:2, :2] = quadratic
+        conic[:2, 2] = conic[2, :2] = -quadratic @ offset
+        conic[2, 2] = offset @ quadratic @ offset - 1
+        views.append((K, T))
+        polygons.append(pixels)
+        curves.append(curve)
+        conics.append(conic)
+        curve_errors.append(fit_error)
+    center_uv = vector(args["center"], 2)
+    if cv2.pointPolygonTest(polygons[0].astype(np.float32), tuple(center_uv), True) <= 0:
+        raise ValueError("center outside first contour")
+
+    # A shared virtual camera with horizontal baseline, derived solely from
+    # current calibration. Unlike pixel rectification this resamples no image.
+    baseline = views[1][1][:3, 3] - views[0][1][:3, 3]
+    if np.linalg.norm(baseline) < 1e-6:
+        raise ValueError("coincident cameras")
+    x = baseline / np.linalg.norm(baseline)
+    z = views[0][1][:3, 2] + views[1][1][:3, 2]
+    z -= x * (z @ x)
+    if np.linalg.norm(z) < .1:
+        raise ValueError("degenerate rectification orientation")
+    z /= np.linalg.norm(z)
+    rect_rotation = np.stack([x, np.cross(z, x), z], axis=1)
+    H = [rect_rotation.T @ T[:3, :3] @ np.linalg.inv(K) for K, T in views]
+    rect = [warp(h, p) for h, p in zip(H, curves)]
+    rect_conics = [np.linalg.inv(h).T @ c @ np.linalg.inv(h) for h, c in zip(H, conics)]
+    low = max(p[:, 1].min() for p in rect)
+    high = min(p[:, 1].max() for p in rect)
+    if high <= low:
+        raise ValueError("contours have no common epipolar extent")
+    # Both global endpoint assignments are considered; ambiguous explanations
+    # are refused. Reversing vertex winding does not change these assignments.
+    candidates, failures = [], []
+    for reverse in (False, True):
+        try:
+            paired = [[], []]
+            used = [set(), set()]
+            for y in np.linspace(low + .02*(high-low), high - .02*(high-low), 12):
+                slices = [intersections(c, y) for c in rect_conics]
+                if reverse:
+                    slices[1] = slices[1][::-1]
+                original = [warp(np.linalg.inv(h), s) for h, s in zip(H, slices)]
+                for a, b in zip(*original):
+                    rounded = [tuple(np.rint(a)), tuple(np.rint(b))]
+                    if any(p in u for p, u in zip(rounded, used)):
+                        continue
+                    for dest, u, pixel, rounded_pixel in zip(paired, used, (a, b), rounded):
+                        dest.append(pixel)
+                        u.add(rounded_pixel)
+            measured_args = dict(args, rim=encode(paired[0]), rim2=encode(paired[1]), snap=0)
+            result, diagnostics = stereo_boundary(observation, measured_args, minimum=8)
+            samples = np.array([s["world"] for s in result["samples"]])
+            origin, basis, residual, inliers = boundary_plane(samples)
+            if len(inliers) != len(samples):
+                raise ValueError("complete contours must fit one plane without discarded samples")
+            normal = basis[2]
+
+            def project_plane(pixels, view):
+                K, T = view
+                rays = (T[:3, :3] @ np.linalg.solve(K, np.c_[pixels, np.ones(len(pixels))].T)).T
+                rays /= np.linalg.norm(rays, axis=1)[:, None]
+                cosine = rays @ normal
+                if np.any(np.abs(cosine) < .20):
+                    raise ValueError("contour plane too nearly edge-on")
+                distances = ((origin-T[:3, 3]) @ normal) / cosine
+                if np.any(distances <= 0):
+                    raise ValueError("contour plane behind camera")
+                return T[:3, 3] + distances[:, None]*rays
+
+            world_polys = [project_plane(p, v) for p, v in zip(polygons, views)]
+            # Validate the WHOLE fitted curves, including epipolar extrema
+            # outside the common scanline range. Interpolated scanlines alone
+            # could falsely accept an occluded/truncated second boundary.
+            errors = []
+            for i in (0, 1):
+                world = project_plane(curves[i], views[i])
+                K, T = views[1-i]
+                local = (world-T[:3, 3]) @ T[:3, :3]
+                if np.any(local[:, 2] <= 0):
+                    raise ValueError("contour reprojection behind camera")
+                projected = local @ K.T
+                errors.append(distance_to_edges(projected[:, :2]/projected[:, 2:], curves[1-i]))
+            if max(errors) > 1.0:
+                raise ValueError("whole-contour reprojection exceeds 1 pixel")
+            center = project_plane(center_uv[None, :], views[0])[0]
+            radius = min(inscribed_radius((p-center) @ basis[:2].T) for p in world_polys)
+            # Half-pixel annotation precision is a stated design assumption;
+            # include observed contour disagreement and parallax amplification.
+            uncertainty = 0.
+            for p, world, view in zip(polygons, world_polys, views):
+                for offset in ((-.5, -.5), (-.5, .5), (.5, -.5), (.5, .5)):
+                    uncertainty = max(uncertainty, float(np.max(np.linalg.norm(
+                        project_plane(p + np.array(offset)*(1+2*(max(errors)+max(curve_errors))), view)-world, axis=1))))
+            uncertainty = uncertainty / np.sin(np.radians(diagnostics["min_parallax_deg"])) + residual
+            if normal @ (center-views[0][1][:3, 3]) > 0:
+                normal = -normal
+            candidates.append(dict(center=center.tolist(), normal=normal.tolist(),
+                                   inner_radius_lower_bound_m=max(0., radius-uncertainty),
+                                   raw_radius_m=radius, sampling_margin_m=uncertainty,
+                                   plane_max_error_m=residual, contour_reprojection_error_px=max(errors),
+                                   ellipse_fit_error_px=max(curve_errors),
+                                   contour_vertex_counts=list(map(len, polygons)),
+                                   interpolated_pair_count=len(samples), **diagnostics))
+        except ValueError as exc:
+            failures.append(str(exc))
+    if len(candidates) != 1:
+        raise ValueError("ambiguous contour planes" if candidates else
+                         "no consistent contour plane: " + "; ".join(failures))
+    out = candidates[0]
+    valid = out["inner_radius_lower_bound_m"] > 0
+    out.update(plan_ok=valid, plan_fail_reason=None if valid else "insufficient_clearance_resolution",
+               plane_valid=True, clearance_valid=valid, remeasure_required=not valid,
+               measurement_mode="independent_planar_contours", executed=False,
+               rgb_refinement=refinement, refinement_bound_px=int(refine),
+               physical_success_verified=False,
+               geometry="same complete convex planar elliptical inner edge in both views; cyclic traces need not have matched vertices; half-pixel annotation assumption; identity, thickness and physical engagement unverified")
+    return out, 0 if valid else 2
 
 
 def foreground_boundary(observation, args, radius):
@@ -562,7 +983,7 @@ def aperture_at_radius(observation, args):
     camera = observation["cameras"][camera_name]
     transform = np.asarray(camera["extrinsics_world"], dtype=float)
     uv = vector(args["center"], 2)
-    height, width = np.asarray(observation["depth"][camera_name]).shape
+    height, width = image_shape(observation, camera_name)
     if not (0 <= uv[0] < width and 0 <= uv[1] < height):
         raise ValueError("center outside image")
     ray = transform[:3, :3] @ np.linalg.solve(np.asarray(camera["intrinsics"]), np.r_[uv, 1])
@@ -766,6 +1187,10 @@ class MotionStopped(Exception):
 def run(api, command, args):
     stages = []
     try:
+        if command == "contour-stereo":
+            return contour_stereo(api.observe(), args)
+        if command == "stereo-guide":
+            return stereo_guide(api.observe(), args)
         if command == "surface":
             return surface(api.observe(), args)
         if command == "aperture":

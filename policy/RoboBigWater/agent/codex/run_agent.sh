@@ -18,8 +18,23 @@ EGRESS=roboshell-egress-$LANE
 MODEL_BASE_PATH=${MODEL_BASE_PATH:-/v1}
 MODEL_PREFIX=${MODEL_PREFIX:-/$(echo "$MODEL_BASE_PATH" | cut -d/ -f2)/}
 
-docker network inspect "$NET_INT" >/dev/null 2>&1 || docker network create --internal "$NET_INT" >/dev/null
-docker network inspect "$NET_EXT" >/dev/null 2>&1 || docker network create "$NET_EXT" >/dev/null
+# Lane networks. Docker's default address pools hold only ~30 networks per host (15 x 172.x/16, 16 x 192.168.x/20);
+# when they are exhausted, fall back to a small explicit /28 from 10.202.0.0/16 chosen by a hash of the lane name
+# (a few retries on collision), which allows hundreds of lanes.
+make_net() {  # make_net NAME [--internal]
+  local name=$1; shift
+  docker network inspect "$name" >/dev/null 2>&1 && return 0
+  docker network create "$@" "$name" >/dev/null 2>&1 && return 0
+  local h i sub
+  h=$(printf '%s' "$name" | cksum | cut -d' ' -f1)
+  for i in 0 1 2 3 4 5 6 7 8 9; do
+    sub=$(( (h + i * 7919) % 4096 ))
+    if docker network create "$@" --subnet "10.202.$((sub / 16)).$(( (sub % 16) * 16 ))/28" "$name" >/dev/null 2>&1; then return 0; fi
+  done
+  echo "could not create docker network $name" >&2; return 1
+}
+make_net "$NET_INT" --internal
+make_net "$NET_EXT"
 GATEWAY=$(docker network inspect "$NET_EXT" --format '{{(index .IPAM.Config 0).Gateway}}')
 if [ "${1:-}" = "--gateway" ]; then echo "$GATEWAY"; exit 0; fi
 
@@ -34,6 +49,7 @@ MODEL=${MODEL:-gpt-6-astra}; EFFORT=${EFFORT:-medium}
 AGENTS_MD=${AGENTS_MD:-$ROOT/agent/AGENTS.md}
 mkdir -p "$RUN/work" "$RUN/codex_home" "$RUN/egress_dump"
 cp "$AGENTS_MD" "$RUN/work/AGENTS.md"
+cp "$ROOT/agent/frame.png" "$RUN/work/frame.png"   # the manual refers to it (world frame seen from above)
 # Codex inside the container talks to the egress proxy; the placeholder key is replaced there
 cat > "$RUN/codex_home/config.toml" <<TOML
 model = "$MODEL"

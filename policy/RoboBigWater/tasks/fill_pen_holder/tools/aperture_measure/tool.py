@@ -1,143 +1,172 @@
-"""Read-only aperture localization from user-selected rim pixels and RGB-D calibration."""
-from itertools import combinations
+"""Round opening of a standing receptacle, from RGB only (no depth fit, no stored object size).
+
+aperture_height   measures the rim height above the measured table plane in this episode: automatically from the
+                  receptacle's outline (segkit.rim_height_auto), or from caller-picked foot/top pixel pairs on vertical
+                  edges (segkit.rim_height_picked); also reports the rim centre on that plane.
+aperture_measure  centre and radius of the opening on the rim plane table_z + --height, where --height is REQUIRED and
+                  is a measured value (aperture_height, plus any lift the caller applied since)."""
+import importlib.util
+import os
+
 import numpy as np
 
-TOOL = {"name": "aperture_measure", "commands": [{
-    "name": "aperture_measure", "budget": False,
-    "help": "Measure an aperture center on a fitted rim plane without motion",
-    "args": [
-        {"name": "rim", "type": "str", "required": True},
-        {"name": "center", "type": "str", "required": True},
-        {"name": "camera", "type": "str", "default": "head",
-         "choices": ["head", "wrist_l", "wrist_r"]},
-    ]}]}
-SOURCES = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
+_spec = importlib.util.spec_from_file_location("roboshell_segkit_loader", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "segkit", "loader.py"))
+_loader = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_loader)
+kit = _loader.load("segkit")
+
+TOOL = {"name": "aperture_measure", "commands": [
+    {"name": "aperture_measure", "budget": False,
+     "help": "Measure the centre of a round opening on its rim plane, at a measured rim height (no motion)",
+     "args": [
+         {"name": "height", "type": "float", "default": None,
+          "help": "REQUIRED: rim height above the table in metres, measured in this episode (robo aperture_height)"},
+         {"name": "rim", "type": "str", "default": "", "help": "u,v;u,v;... pixels on the top rim (empty: automatic)"},
+         {"name": "near", "type": "str", "default": "", "help": "u,v near the receptacle when several match"},
+         {"name": "camera", "type": "str", "default": "head", "choices": ["head", "wrist_l", "wrist_r"]},
+     ]},
+    {"name": "aperture_height", "budget": False,
+     "help": "Measure the rim height of a standing receptacle above the table, and its rim centre (no motion)",
+     "args": [
+         {"name": "near", "type": "str", "default": "", "help": "u,v near the receptacle when several match"},
+         {"name": "foot", "type": "str", "default": "", "help": "u,v;u,v;... where vertical edges meet the table (with --top)"},
+         {"name": "top", "type": "str", "default": "", "help": "u,v;u,v;... where the same edges reach the rim (with --foot)"},
+         {"name": "camera", "type": "str", "default": "head", "choices": ["head", "wrist_l", "wrist_r"]},
+     ]},
+]}
+BEHIND_Y = -0.24                # robot: TCP y at reset is -.207; behind it is the robot
 
 
-def pixels(value, minimum, maximum):
-    result = np.array([[float(x) for x in pair.split(',')] for pair in value.split(';')])
-    if (result.ndim != 2 or result.shape[1] != 2 or
-            not minimum <= len(result) <= maximum or not np.isfinite(result).all()):
-        raise ValueError("invalid pixel list; expected u,v pairs separated by semicolons")
-    if len(np.unique(result, axis=0)) != len(result):
-        raise ValueError("pixel samples must be distinct")
-    return result
-
-
-def inside_hull(samples, query):
-    # A complete rim selection must surround the requested center in the image.
-    angles = np.sort(np.arctan2(samples[:, 1] - query[1], samples[:, 0] - query[0]))
-    return np.max(np.diff(np.r_[angles, angles[0] + 2*np.pi])) < np.pi - 1e-4
-
-
-def fit_plane(world, tolerance=.004):
-    centroid = world.mean(axis=0)
-    _, singular, vt = np.linalg.svd(world - centroid, full_matrices=False)
-    if singular[1] / np.sqrt(len(world)) < .004 or singular[1] / singular[0] < .12:
-        raise ValueError("rim samples are too narrow or nearly collinear")
-    normal = vt[-1]
-    if normal[2] < 0:
-        normal = -normal
-    residual = np.abs((world-centroid) @ normal)
-    if residual.max() > tolerance:
-        raise ValueError("rim depths are not coplanar within 4 mm")
-    tilt = float(np.degrees(np.arccos(np.clip(normal[2], -1, 1))))
-    if tilt > 15:
-        raise ValueError("rim is not sufficiently horizontal (maximum 15 degrees)")
-    return centroid, normal, residual, tilt
-
-
-def measure(depth, camera, rim, center):
-    depth = np.asarray(depth, dtype=float)
-    k = np.asarray(camera['intrinsics'], dtype=float)
-    transform = np.asarray(camera['extrinsics_world'], dtype=float)
-    if (depth.ndim != 2 or k.shape != (3, 3) or transform.shape != (4, 4)
-            or not np.isfinite(k).all() or not np.isfinite(transform).all()
-            or k[0, 0] <= 0 or k[1, 1] <= 0):
-        raise ValueError("invalid depth or camera calibration")
-    if (not np.allclose(transform[3], [0, 0, 0, 1]) or
-            not np.allclose(transform[:3, :3].T @ transform[:3, :3], np.eye(3), atol=1e-3)):
-        raise ValueError("invalid camera transform")
-    h, w = depth.shape
-    all_uv = np.vstack((rim, center))
-    if np.any(all_uv < 0) or np.any(all_uv[:, 0] > w-1) or np.any(all_uv[:, 1] > h-1):
-        raise ValueError("pixel outside image")
-    uv = np.rint(rim).astype(int)
-    if len(np.unique(uv, axis=0)) != len(uv):
-        raise ValueError("rim samples resolve to duplicate pixels")
-    if not inside_hull(uv, center):
-        raise ValueError("rim samples must surround the center")
-    z = depth[uv[:, 1], uv[:, 0]]
-    if not np.isfinite(z).all() or np.any(z <= 0):
-        raise ValueError("missing rim depth")
-    rays = np.column_stack((uv, np.ones(len(uv)))) @ np.linalg.inv(k).T
-    local = rays * (z / rays[:, 2])[:, None]
-    world = local @ transform[:3, :3].T + transform[:3, 3]
-    accepted = np.arange(len(world))
+def _pixels(text, what):
+    text = str(text or "").strip()
+    if not text:
+        return None
     try:
-        centroid, normal, residual, tilt = fit_plane(world)
-    except ValueError as original:
-        # A bounded consensus repair: never discard samples from a minimal
-        # four/five-pixel selection; at most two of six or more may be excluded.
-        if len(world) < 6:
-            raise original
-        candidates = []
-        for count in range(1, min(2, len(world) // 4) + 1):
-            for removed in combinations(range(len(world)), count):
-                indices = np.array([i for i in range(len(world)) if i not in removed])
-                if not inside_hull(uv[indices], center):
-                    continue
-                try:
-                    fit = fit_plane(world[indices], .002)
-                except ValueError:
-                    continue
-                c, n, _, _ = fit
-                ray = transform[:3, :3] @ (np.linalg.inv(k) @ np.r_[center, 1.])
-                den = float(ray @ n)
-                if abs(den) / np.linalg.norm(ray) < .15:
-                    continue
-                distance = float((c-transform[:3, 3]) @ n / den)
-                if distance <= 0:
-                    continue
-                dest = transform[:3, 3] + distance * ray
-                candidates.append((indices, fit, dest))
-        if not candidates:
-            raise ValueError("no supported rim plane; select at least six visible rim pixels surrounding center") from original
-        # Even a smaller admissible subset must not imply a materially different
-        # result. This prevents choosing arbitrarily between competing surfaces.
-        accepted, best, reference = candidates[0]
-        for _, fit, dest in candidates[1:]:
-            if (np.linalg.norm(dest-reference) > .004 or
-                    np.dot(fit[1], best[1]) < np.cos(np.deg2rad(5))):
-                raise ValueError("ambiguous rim planes; select visible samples from one surface")
-        centroid, normal, residual, tilt = best
-    ray = transform[:3, :3] @ (np.linalg.inv(k) @ np.r_[center, 1.])
-    denominator = float(ray @ normal)
-    if abs(denominator) / np.linalg.norm(ray) < .15:
-        raise ValueError("view is too oblique to measure the rim")
-    distance = float((centroid-transform[:3, 3]) @ normal / denominator)
-    if distance <= 0:
-        raise ValueError("intersection is behind camera")
-    dest = transform[:3, 3] + distance * ray
-    return {"dest": dest.tolist(), "normal": normal.tolist(), "tilt_deg": tilt,
-            "max_residual_m": float(residual.max()), "rim_xyz": world.tolist(),
-            "dest_arg": ','.join(f'{v:.5f}' for v in dest),
-            "selection_verified": False,
-            "inlier_indices": accepted.tolist(),
-            "rejected_indices": sorted(set(range(len(world))) - set(accepted.tolist())),
-            "consensus_used": len(accepted) != len(world)}
+        uv = np.array([[float(x) for x in p.split(",")] for p in text.split(";") if p.strip()])
+    except ValueError:
+        raise ValueError(f"--{what} must be u,v pairs separated by ;")
+    if uv.ndim != 2 or uv.shape[1] != 2 or not np.isfinite(uv).all():
+        raise ValueError(f"--{what} must be u,v pairs separated by ;")
+    return uv
+
+
+def _region(api, img, k, t, near_text):
+    """The receptacle region (vivid table-hue colour) nearest --near, or the largest one."""
+    tcps = [np.asarray(api.arm(tag).tcp(), dtype=float) for tag in ("left", "right")]
+    regions = kit.vivid_regions(img, k, t, tcps=tcps, behind_y=BEHIND_Y)[:4]
+    if not regions:
+        return None, []
+    near = _pixels(near_text, "near")
+    if near is None:
+        return regions[0], regions
+    gaps = [float(np.min(np.hypot(*(np.argwhere(m)[:, ::-1] - near[0]).T))) for m in regions]
+    return regions[int(np.argmin(gaps))], regions
+
+
+def _fail(exc, failure="measurement_failed"):
+    return {"plan_ok": False, "plan_fail_reason": failure, "failure_class": failure, "plan_detail": str(exc)[:400]}, 2
 
 
 def run(api, command, args):
+    if command == "aperture_height":
+        return run_height(api, args)
+    return run_measure(api, args)
+
+
+def run_measure(api, args):
     try:
-        if command != 'aperture_measure':
-            raise ValueError("unknown command")
-        rim = pixels(args['rim'], 4, 32)
-        center = pixels(args['center'], 1, 1)[0]
-        source = SOURCES[args.get('camera', 'head')]
+        if args.get("height") is None or str(args.get("height")).strip() == "":
+            return _fail("--height is required: the rim height above the table measured in this episode. Run "
+                         "`robo aperture_height` while the receptacle stands free on the table (it returns height_m); "
+                         "if a gripper lifted it since, add the measured TCP z change of that gripper.", "missing_argument")
+        camera = args.get("camera", "head")
+        kit.use_table(api)                      # raises ValueError("table_unknown: ...")
+        height = float(args["height"])
+        if not np.isfinite(height) or not kit.RIM_HEIGHT_VALID[0] <= height <= kit.RIM_HEIGHT_VALID[1]:
+            raise ValueError(f"height must be {kit.RIM_HEIGHT_VALID[0]:.2f}-{kit.RIM_HEIGHT_VALID[1]:.2f} m (generic window)")
+        z = kit.TABLE_Z + height
         observation = api.observe()
-        result = measure(observation['depth'][source], observation['cameras'][source], rim, center)
-        return dict(result, plan_ok=True, plan_fail_reason=None), 0
+        img, k, t = kit.view(observation, camera)
+        rim_text = str(args.get("rim") or "").strip()
+        if rim_text:
+            uv = _pixels(rim_text, "rim")
+            if uv is None or len(uv) < 3:
+                raise ValueError("--rim needs at least 3 u,v pairs separated by ;")
+            pts = kit.hit_plane(k, t, uv, z)[:, :2]
+            if not np.isfinite(pts).all():
+                raise ValueError("a rim pixel does not look at the rim plane")
+            if len(pts) >= 5:
+                centre, radius, residual, keep = kit.robust_circle(pts)
+            else:
+                centre, radius, residual = kit.fit_circle(pts)
+                keep = np.arange(len(pts))
+            method, inliers = "picked", int(len(keep))
+        else:
+            tcps = [np.asarray(api.arm(tag).tcp(), dtype=float) for tag in ("left", "right")]
+            regions = kit.vivid_regions(img, k, t, tcps=tcps, behind_y=BEHIND_Y)[:4]
+            if not regions:
+                raise ValueError("no receptacle-coloured region found: pick rim pixels with --rim")
+            near = _pixels(args.get("near"), "near")
+            fits = []
+            for m in regions:
+                fit = kit.rim_from_mask(k, t, m, z)
+                if fit is None:
+                    continue
+                gap = 0.0 if near is None else float(np.min(np.hypot(*(np.argwhere(m)[:, ::-1] - near[0]).T)))
+                fits.append((gap, -fit["inliers"], fit))
+            if not fits:
+                raise ValueError("no outline has a circle on the rim plane: is it standing at this height? pick --rim")
+            fit = min(fits, key=lambda x: (x[0], x[1]))[2]
+            centre, radius, residual, method, inliers = fit["centre"], fit["radius"], fit["residual"], "auto", fit["inliers"]
+        if not kit.RIM_RADIUS_VALID[0] <= radius <= kit.RIM_RADIUS_VALID[1]:
+            raise ValueError(f"fitted radius {radius:.3f} m outside the generic window {kit.RIM_RADIUS_VALID[0]}-{kit.RIM_RADIUS_VALID[1]}: "
+                             "pick pixels on the top rim edge all around, or the receptacle is not standing")
+        dest = np.array([centre[0], centre[1], z])
+        mpp = kit.metres_per_pixel(k, t, kit.project(k, t, dest)[0][0], z)
+        rms = float(np.sqrt(np.mean(np.square(residual))))
+        consistent = float(np.max(residual)) <= 0.006
+        return {**kit.table_report(), "plan_ok": True, "plan_fail_reason": None, "rim_center": np.round(dest, 4).tolist(), "dest": np.round(dest, 4).tolist(),
+                "dest_arg": ",".join(f"{v:.4f}" for v in dest), "radius_m": round(float(radius), 4),
+                "residual_max_m": round(float(np.max(residual)), 4), "inliers": inliers, "method": method, "camera": camera,
+                "uncertainty_m": round(rms + mpp + 0.002, 4), "upright": True if consistent else None,
+                "assumes": f"rim plane z {z:.3f} (measured table {kit.TABLE_Z:.3f} + supplied height {height:.3f})", "selection_verified": False}, 0
     except Exception as exc:
-        return {"plan_ok": False, "plan_fail_reason": "measurement_failed",
-                "plan_detail": str(exc)}, 2
+        return _fail(exc)
+
+
+def run_height(api, args):
+    try:
+        camera = args.get("camera", "head")
+        kit.use_table(api)                      # raises ValueError("table_unknown: ...")
+        observation = api.observe()
+        img, k, t = kit.view(observation, camera)
+        feet, tops = _pixels(args.get("foot"), "foot"), _pixels(args.get("top"), "top")
+        if (feet is None) != (tops is None):
+            raise ValueError("--foot and --top go together (one top pixel per foot pixel)")
+        region, _ = _region(api, img, k, t, args.get("near"))
+        out = {**kit.table_report(), "plan_ok": True, "plan_fail_reason": None, "camera": camera, "selection_verified": False}
+        if feet is not None:
+            got = kit.rim_height_picked(k, t, feet, tops, kit.TABLE_Z)
+            out.update(method="picked", pairs=got["pairs"], rejected_pairs=got["rejected"],
+                       spread_m=None if got["spread_m"] is None else round(got["spread_m"], 4))
+        else:
+            if region is None:
+                raise ValueError("no receptacle-coloured region found: pick --foot/--top pixel pairs on vertical edges")
+            got = kit.rim_height_auto(img, k, t, region, kit.TABLE_Z)
+            out.update(method="auto", score=round(got["score"], 2), median_score=round(got["median_score"], 2),
+                       spread_m=round(got["spread_m"], 4))
+        height = float(got["height_m"])
+        out.update(height_m=round(height, 4), height_arg=f"{height:.4f}", rim_z=round(kit.TABLE_Z + height, 4),
+                   uncertainty_m=round(max(0.005, out.get("spread_m") or 0.0), 4))
+        rim = None if region is None else kit.rim_from_mask(k, t, region, kit.TABLE_Z + height)
+        if rim is not None and kit.RIM_RADIUS_VALID[0] <= rim["radius"] <= kit.RIM_RADIUS_VALID[1]:
+            dest = np.array([*rim["centre"], kit.TABLE_Z + height])
+            out.update(rim_center=np.round(dest, 4).tolist(), dest_arg=",".join(f"{v:.4f}" for v in dest),
+                       radius_m=round(float(rim["radius"]), 4), residual_max_m=round(float(np.max(rim["residual"])), 4))
+        else:
+            out["rim_note"] = "no rim circle found on that plane: run robo aperture_measure --height=... --rim=..."
+        out["next"] = f"robo aperture_measure --height={height:.4f}  # again after anything moved the receptacle"
+        out["valid_while"] = "the receptacle stands on the table as measured; after a gripper lifts it, add that TCP z change"
+        return out, 0
+    except Exception as exc:
+        return _fail(exc)

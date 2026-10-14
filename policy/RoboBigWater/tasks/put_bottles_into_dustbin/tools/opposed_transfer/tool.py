@@ -100,7 +100,21 @@ def run(api, command, args):
         remaining = api.sim_time_left()
         if remaining is None or not np.isfinite(remaining):
             return fail("receiver_preflight_unavailable")
-        for attempt in range(2 if reorient == "combined" else 1):
+        # Keep the opposing approach first. If both rolls reject IK, try
+        # perpendicular horizontal entries at the SAME caller-supplied grip center.
+        # These are orientation alternatives, not guessed exchange positions.
+        entry_candidates = [orient]
+        if reorient == "combined":
+            entry_candidates.append(orient @ np.diag([1., -1., -1.]))
+            # Enter first from the receiver's side to shorten the cross-body
+            # route. Each side retains both equivalent horizontal openings.
+            side = 1. if receiver_name == "left" else -1.
+            for direction in (side, -side):
+                lateral = np.diag([direction, direction, 1.])
+                pair = [lateral, lateral @ np.diag([1., -1., -1.])]
+                pair.sort(key=lambda r: angle(receiving[:3, :3], r))
+                entry_candidates.extend(pair)
+        for attempt, orient in enumerate(entry_candidates):
             route = []
             if reorient == "separate" and angle(receiving[:3, :3], orient) > 1:
                 route.append(("orient", receiving[:3, 3]))
@@ -121,9 +135,8 @@ def run(api, command, args):
                 return fail("receiver_preflight_state_changed")
             if estimate.get("estimate_ok") is True:
                 break
-            if (attempt == 0 and reorient == "combined"
+            if (attempt + 1 < len(entry_candidates)
                     and estimate.get("reason") == "ik_unreachable"):
-                orient = orient @ np.diag([1., -1., -1.])
                 continue
             return fail("receiver_preflight_failed", str(estimate.get("reason")))
         else:

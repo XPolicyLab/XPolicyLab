@@ -20,10 +20,10 @@ def arg(name, default=None, required=False, kind="float"):
 
 TOOL = {"name": "planar_contact", "commands": [
     {"name": "planar_match", "budget": False,
-     "help": "Register two seeded planar color regions using RGB-D",
+     "help": "Register two seeded planar color regions using calibrated RGB rays",
      "args": [arg(n, required=True, kind="int") for n in ("u", "v", "ref_u", "ref_v")]
              + [arg("camera", "head", kind="str"), arg("color_tol", 45),
-                arg("surface_z"), arg("reference_z"), arg("height_fit", "auto", kind="str")]},
+                arg("surface_z", required=True), arg("reference_z", required=True), arg("height_fit", "auto", kind="str")]},
     {"name": "planar_transfer", "budget": True,
      "help": "Close at a point, transport at constant height, release and retract",
      "args": [{"name": "arm", "positional": True, "choices": ["left", "right"]}]
@@ -84,42 +84,34 @@ def check_projection_view(api, template, camera_name, point):
         raise ValueError("projection view differs from template: plane uncertainty exceeds 3 mm")
 
 
-def region(rgb, depth, camera, u, v, tolerance, plane_z=None, constrain_plane=False,
-           sample_step=.002):
-    h, w = depth.shape
+def region(rgb, camera, u, v, tolerance, plane_z, sample_step=.002, measure_area=False):
+    """Segment RGB, then intersect calibrated rays with a supplied world plane."""
+    if rgb is None or rgb.ndim != 3 or rgb.shape[2] != 3:
+        raise ValueError("RGB image unavailable")
+    if plane_z is None or not math.isfinite(float(plane_z)):
+        raise ValueError("finite measured plane height required; RGB alone has no absolute scale")
+    h, w = rgb.shape[:2]
     if not (0 <= u < w and 0 <= v < h):
         raise ValueError("seed outside image")
     color = rgb[v, u].astype(float)
     mask = (np.linalg.norm(rgb.astype(float) - color, axis=2) <= tolerance)
-    mask &= np.isfinite(depth) & (depth > 0)
     _, labels = cv2.connectedComponents(mask.astype(np.uint8), connectivity=8)
     label = labels[v, u]
     if label == 0:
-        raise ValueError("seed has no valid depth")
+        raise ValueError("seed has no color region")
     vv, uu = np.nonzero(labels == label)
     if not 30 <= len(uu) <= h * w * 0.2:
         raise ValueError("region too small or too large; select an interior seed")
     k = np.asarray(camera["intrinsics"], float)
     t = np.asarray(camera["extrinsics_world"], float)
-    rays = np.linalg.solve(k, np.stack([uu, vv, np.ones(len(uu))]))
-    points = (t[:3, :3] @ (rays * depth[vv, uu]) + t[:3, 3, None]).T
-    # Explicit plane constraints outrank learned depth. Unvalidated capture
-    # still checks depth; tracking may constrain the plane only with independent
-    # color and complete-outline validation supplied by its caller.
-    constrained = constrain_plane and plane_z is not None
+    if (k.shape != (3, 3) or t.shape != (4, 4)
+            or not np.isfinite(k).all() or not np.isfinite(t).all()):
+        raise ValueError("invalid camera calibration")
     interior = cv2.erode((labels == label).astype(np.uint8), np.ones((3, 3), np.uint8))
-    core = interior[vv, uu].astype(bool)
-    if core.sum() < 20:
+    if interior.sum() < 20:
         raise ValueError("insufficient interior surface")
-    heights = points[core, 2]
-    median_z = float(np.median(heights))
-    if not constrained and np.quantile(np.abs(heights - median_z), .8) > .04:
-        raise ValueError("region depth inconsistent with a horizontal surface")
-    z = median_z if plane_z is None else float(plane_z)
-    if not math.isfinite(z):
-        raise ValueError("surface plane must be finite")
-    if not constrained and abs(z - median_z) > .04:
-        raise ValueError("surface plane disagrees with regional depth by more than 4 cm")
+    z = float(plane_z)
+    rays = np.linalg.solve(k, np.stack([uu, vv, np.ones(len(uu))]))
     world_rays = t[:3, :3] @ rays
     if np.any(np.abs(world_rays[2]) < .1):
         raise ValueError("grazing view of horizontal plane")
@@ -127,12 +119,34 @@ def region(rgb, depth, camera, u, v, tolerance, plane_z=None, constrain_plane=Fa
     if np.any(scales <= 0):
         raise ValueError("surface plane behind camera")
     points = (t[:3, 3, None] + world_rays * scales).T
-    # Equal-area sampling removes perspective-dependent pixel density.
+    # Deduplication caps sample density but does not fill gaps when a pixel
+    # footprint exceeds sample_step. Sample count is NOT a physical area.
     _, indices = np.unique(np.round(points[:, :2] / sample_step), axis=0, return_index=True)
     xy = points[indices, :2]
     ray = t[:3, :3] @ np.linalg.solve(k, [u, v, 1])
     seed = t[:3, 3] + ray * ((z - t[2, 3]) / ray[2])
-    return xy, seed, z, len(uu)
+    result = (xy, seed, z, len(uu))
+    if measure_area:
+        # Integrate calibrated pixel footprints, including holes in the mask.
+        # Four half-pixel corners define each projected quadrilateral exactly
+        # under the planar homography, even for oblique views.
+        corners = []
+        inverse = np.linalg.inv(k)
+        for du, dv in ((-.5, -.5), (.5, -.5), (.5, .5), (-.5, .5)):
+            rays = t[:3, :3] @ inverse @ np.stack([uu + du, vv + dv, np.ones(len(uu))])
+            if np.any(np.abs(rays[2]) < .1):
+                raise ValueError("grazing pixel footprint")
+            corners.append((t[:3, 3, None] + rays * ((z-t[2, 3])/rays[2]))[:2].T)
+        corners = np.stack(corners, axis=1)
+        # Local coordinates avoid cancellation at large world coordinates.
+        corners -= corners[:, :1].copy()
+        following = np.roll(corners, -1, axis=1)
+        area = .5 * np.abs(np.sum(corners[:, :, 0] * following[:, :, 1]
+                                 - corners[:, :, 1] * following[:, :, 0], axis=1)).sum()
+        if not math.isfinite(float(area)) or area <= 0:
+            raise ValueError("invalid projected surface area")
+        return (*result, float(area))
+    return result
 
 
 def register(source, reference):
@@ -307,8 +321,10 @@ def contact_geometry(source):
 def match(api, args):
     obs = api.observe()
     name = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}.get(args.get("camera", "head"), args.get("camera"))
-    if name not in obs["cameras"] or name not in obs.get("depth", {}):
-        raise ValueError("camera or depth unavailable")
+    if name not in obs["cameras"] or name not in obs["png"]:
+        raise ValueError("camera or RGB unavailable")
+    if any(args.get(key) is None for key in ("surface_z", "reference_z")):
+        raise ValueError("surface_z and reference_z required: supply measured world heights from calibrated views")
     height_mode = args.get("height_fit", "auto")
     if height_mode not in ("auto", "off"):
         raise ValueError("height_fit must be auto or off")
@@ -316,14 +332,13 @@ def match(api, args):
     if not 5 <= tolerance <= 100:
         raise ValueError("color_tol must be 5..100")
     rgb = cv2.imdecode(np.frombuffer(obs["png"][name], np.uint8), cv2.IMREAD_COLOR)
-    depth = np.asarray(obs["depth"][name], float)
     # A loose color threshold can connect a surface to the surrounding support.
     # Retry only perception, keeping the caller's seeds and every geometry gate.
     errors = []
     for effective_tolerance in dict.fromkeys(max(5., tolerance * f) for f in (1., .75, .5)):
         try:
-            source, seed, z, count = region(rgb, depth, obs["cameras"][name], int(args["u"]), int(args["v"]), effective_tolerance, plane_z=args.get("surface_z"), constrain_plane=True)
-            reference, _, ref_z, ref_count = region(rgb, depth, obs["cameras"][name], int(args["ref_u"]), int(args["ref_v"]), effective_tolerance, plane_z=args.get("reference_z"), constrain_plane=True)
+            source, seed, z, count = region(rgb, obs["cameras"][name], int(args["u"]), int(args["v"]), effective_tolerance, plane_z=args.get("surface_z"))
+            reference, _, ref_z, ref_count = region(rgb, obs["cameras"][name], int(args["ref_u"]), int(args["ref_v"]), effective_tolerance, plane_z=args.get("reference_z"))
             initial_z = z
             height_scale, height_error = 1., None
             if height_mode == "auto" and args.get("reference_z") is not None:
@@ -370,8 +385,7 @@ def match(api, args):
                            "surface_z": z, "scale": height_scale,
                            "perimeter_rms_m": height_error},
             "plane_sources": ["outline_scale" if height_scale != 1. else
-                              ("caller" if args.get("surface_z") is not None else "depth_median"),
-                              "caller" if args.get("reference_z") is not None else "depth_median"],
+                              "caller", "caller"],
             "region_pixels": [count, ref_count], "color_tol_used": effective_tolerance}, 0
 
 
@@ -379,8 +393,8 @@ def stereo_height(api, args):
     """Fit coincident world outlines, without a free XY/yaw registration.
 
     Height changes parallax between cameras. A rigid fit here would erase
-    precisely the displacement that constrains height. Depth only masks invalid
-    pixels; it never supplies the fitted height.
+    precisely the displacement that constrains height. Only RGB silhouettes
+    and calibration supply the fitted height.
     """
     obs = api.observe()
     z = float(args["z"])
@@ -388,22 +402,22 @@ def stereo_height(api, args):
     if not math.isfinite(z) or not 5 <= tolerance <= 100:
         raise ValueError("finite z and color_tol 5..100 required")
     names = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
-    surfaces, origins, colors = [], [], []
+    surfaces, origins, colors, measured_areas = [], [], [], []
     for prefix, default in (("", "head"), ("other_", "wrist_l")):
         name = args.get(prefix + "camera", default)
         name = names.get(name, name)
         camera = obs["cameras"][name]
         rgb = cv2.imdecode(np.frombuffer(obs["png"][name], np.uint8), cv2.IMREAD_COLOR)
-        depth = np.asarray(obs["depth"][name], float)
         u, v = int(args[prefix + "u"]), int(args[prefix + "v"])
-        xy, _, _, _ = region(rgb, depth, camera, u, v, tolerance,
-                              plane_z=z, constrain_plane=True, sample_step=.001)
+        xy, _, _, _, area = region(rgb, camera, u, v, tolerance,
+                                  plane_z=z, sample_step=.001, measure_area=True)
         origin = np.asarray(camera["extrinsics_world"], float)[:3, 3]
         if abs(origin[2] - z) < .15:
             raise ValueError("camera too close to search planes")
         surfaces.append(xy)
         origins.append(origin)
         colors.append(rgb[v, u].astype(float))
+        measured_areas.append(area)
     if not compatible_color(colors[0], colors[1], allow_lighting=True):
         raise ValueError("seed colors disagree between views")
     center = (surfaces[0].mean(axis=0) + surfaces[1].mean(axis=0)) / 2
@@ -430,12 +444,13 @@ def stereo_height(api, args):
     if uncertainty > .012 or plausible.min() == heights[0] or plausible.max() == heights[-1]:
         raise ValueError("cross-view height is ambiguous")
     # Whole-region area must agree independently of the nearest-neighbor fit.
-    areas = [len(s) * ((heights[best]-o[2])/(z-o[2]))**2
-             for s, o in zip(surfaces, origins)]
+    areas = [area * ((heights[best]-o[2])/(z-o[2]))**2
+             for area, o in zip(measured_areas, origins)]
     if not .85 <= areas[0]/areas[1] <= 1.18:
         raise ValueError("cross-view surface areas disagree; possible occlusion")
     return dict(plan_ok=True, plan_fail_reason=None, surface_z=float(heights[best]),
                 height_uncertainty_m=uncertainty, cross_view_rms_m=float(scores[best]),
+                surface_areas_m2=areas, area_ratio=float(areas[0]/areas[1]),
                 plane_source="calibrated_silhouettes", initial_z=z), 0
 
 
@@ -462,7 +477,6 @@ def observed_surface(api, point, color=None, camera_name="cam_head", validate=No
     obs = api.observe()
     name = camera_name
     camera = obs["cameras"][name]
-    depth = np.asarray(obs["depth"][name], float)
     rgb = cv2.imdecode(np.frombuffer(obs["png"][name], np.uint8), cv2.IMREAD_COLOR)
     transform = np.asarray(camera["extrinsics_world"], float)
     local = transform[:3, :3].T @ (np.asarray(point) - transform[:3, 3])
@@ -470,7 +484,7 @@ def observed_surface(api, point, color=None, camera_name="cam_head", validate=No
         raise ValueError("contact behind camera")
     pixel = np.asarray(camera["intrinsics"], float) @ local
     u, v = np.rint(pixel[:2] / pixel[2]).astype(int)
-    h, w = depth.shape
+    h, w = rgb.shape[:2]
     # Search only a bounded image neighborhood; require the original color
     # after release, so a nearby support surface cannot become the template.
     offsets = [(0, 0)]
@@ -497,9 +511,8 @@ def observed_surface(api, point, color=None, camera_name="cam_head", validate=No
             continue
         for tolerance in (30., 20., 15.):
             try:
-                surface, _, z, _ = region(rgb, depth, camera, x, y, tolerance,
-                                           plane_z=point[2],
-                                           constrain_plane=color is not None and validate is not None)
+                surface, _, z, _ = region(rgb, camera, x, y, tolerance,
+                                           plane_z=point[2])
                 if cKDTree(surface).query(np.asarray(point)[:2])[0] > .04:
                     continue
                 if validate is not None:
@@ -714,7 +727,7 @@ def transfer(api, args, allow_relay=True):
     failure = move("descend", start, rotation)
     if failure:
         return failure
-    # A depth-biased target can press the open fingertips against the support.
+    # A biased target plane can press the open fingertips against the support.
     # Holding that lower joint target during closure preserves the load; short
     # corrections then slide without closing. Cancel only a small, predominantly
     # vertical tracking error by commanding the measured pose before closure.

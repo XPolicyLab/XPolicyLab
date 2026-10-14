@@ -16,8 +16,7 @@ A tool module defines
         ...
 
 `api` is the EpisodeAPI below: the robot state, the motion primitives and the
-observations, nothing else. A tool never sees the simulator, so it works in
-both modes. The agent-facing text of a tool is tools/<name>/interface.md.
+observations, nothing else. A tool never sees the simulator. The agent-facing text of a tool is tools/<name>/interface.md.
 """
 
 import importlib.util

@@ -49,7 +49,7 @@ def pixel_footprint(center, K, T):
     uv = K @ cam
     uv = uv[:2]/uv[2]
     pixels = uv + np.array([[.5, 0], [-.5, 0], [0, .5], [0, -.5]])
-    world = pick.inspection.project_to_height(pixels, center[2], K, T)
+    world = pick.rgb_geometry.project(pixels, center[2], K, T)
     jacobian = np.column_stack((world[0, :2]-world[1, :2],
                                 world[2, :2]-world[3, :2]))
     scale = float(np.linalg.svd(jacobian, compute_uv=False)[0])
@@ -59,39 +59,10 @@ def pixel_footprint(center, K, T):
 
 
 def locate(api, near, support, hue=None):
-    """Accept depth-supported circular inner rims, including enclosed openings.
-
-    A same-hue solid axis must never substitute for an obscured held component.
-    Missing geometry fails closed rather than using the TCP as its centre.
-    """
-    candidates = []
-    obs = api.observe()
-    for camera in pick.inspection.CAMERAS:
-        try:
-            rgb, depth, K, T, xyz, valid = pick.cloud(obs, camera)
-            # A closed contour need not expose the whole aperture: its
-            # centroid shifts when depth/foreground hides one side. Use the
-            # supported circular boundary even for enclosed image regions.
-            center, measured_hue = rim.fit_opening(
-                rgb, xyz, valid, K, T, near,
-                pick.inspection.project_to_height, hue)
-            candidates.append({'top_center_world': center, 'hue_deg': measured_hue,
-                               'pixel_footprint_m': pixel_footprint(center, K, T)})
-        except Exception:
-            continue
-    if not candidates:
-        raise ValueError('opening_unobserved')
-    centers = np.array([p['top_center_world'] for p in candidates])
-    center = np.median(centers, axis=0)
-    if np.max(np.linalg.norm(centers-center, axis=1)) > .003:
-        raise ValueError('inconsistent_views')
-    # Keep the existing unweighted conflict gate: a coarse view is never
-    # silently discarded when it disagrees. Among consistent fits, prevent a
-    # newly visible coarse rim from shifting a precise estimate by half its
-    # quantization error and triggering a false contact recovery.
-    weights = np.array([p['pixel_footprint_m']**-2 for p in candidates])
-    center = np.average(centers, axis=0, weights=weights)
-    return center, candidates[int(np.argmax(weights))]['hue_deg'], len(candidates)
+    """Reconstruct the held aperture from at least two calibrated RGB views."""
+    measured = pick.rgb_geometry.locate(api.observe(), near, True, hue,
+                                        .03 if hue is None else .008)
+    return measured['center'], measured['hue'], measured['views']
 
 
 class Stop(Exception):
@@ -451,4 +422,6 @@ def run(api, command, args):
         return result, 2
     except Exception as exc:
         result.update(plan_fail_reason='insertion_failed', plan_detail=str(exc))
+        if hasattr(exc, 'diagnostics'):
+            result['geometry_diagnostics'] = exc.diagnostics
         return result, 2

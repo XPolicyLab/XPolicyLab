@@ -67,9 +67,16 @@ def run(api, command, args):
             if failure:
                 return failure
         target[:3, :3] = rotation
-        failure = move("orient", target)
-        if failure:
-            return failure
+        # A small correction at a high/rear viewing pose can track poorly even
+        # though the standoff is reachable. Apply it during the clear transit
+        # instead of spending a separate orientation-only motion there. Large
+        # reorientations retain the original raised-pose route.
+        correction = float(np.degrees(np.arccos(np.clip(
+            (np.trace(initial[:3, :3].T @ rotation)-1)/2, -1, 1))))
+        if approach != "forward" or correction > 10.:
+            failure = move("orient", target)
+            if failure:
+                return failure
         api.set_gripper(arm, 1.0)
         if api.over:
             return {"plan_ok": False, "plan_fail_reason": "episode_over", "stages": stages}, 3

@@ -1,11 +1,7 @@
-`robo rim_measure --u U --v V [--window 50 --camera head|wrist_l|wrist_r --arm left|right]`: read-only RGB-D circular-edge fit; zero action steps.
-All commands accept `--camera head|wrist_l|wrist_r`, pixel seed U,V, window half-size 10–160 pixels, and HSV thresholds `--brightness 170 --saturation 65` (0–255).
-Measure returns `center_world`, `rim_z`, `rim_z_range`, `radius_m`, upward `normal_world`, `tilt_deg`, rim points, fit diagnostics and optional `tcp_minus_center_world`.
-`robo rim_transfer --arm left|right --u U --v V --x X --y Y --z Z [--clearance 0.04 --support_z H]`: translates the measured center to world X,Y,Z meters without rotation or release.
-Transit first raises or lowers to max(Z, H+tilted-edge extent+radius/2+clearance), then translates; clearance 0.02–0.15 m, H defaults to Z; assumes body depth ≤radius/2 and no obstacles above H; distance limit 0.60 m.
-Transfer uses ≤60 mm segments and remeasures each; stops on >15 mm attachment drift, >5 mm radius change, >15° normal change, loss of all checked views or motion/pose failure.
-`robo rim_place --arm left|right --u U --v V --x X --y Y --z Z [--gap 0.018 --clearance 0.04]`: X,Y,Z describe the support edge center; final carried center height is Z+gap (gap 0.005–0.04 m).
-Place levels about the measured center in ≤10° increments, checks rigid attachment, transfers, opens and withdraws vertically ≥80 mm; tilt >60°, leveling drift >10 mm, final tilt >8° or final alignment error >10 mm withholds release.
-Place accepts the same camera/window/color options; leveling changes TCP orientation; transfer preserves it. With --arm, initial fit failure tries active wrist/head via the seed depth, gated by surface footprint, original crop and TCP proximity; returns measurement_camera/measurement_seed/initialization_method on recovery. Tracking first remeasures the supplied crop, then tries projected seeds and nearby observed RGB-D boundaries in the selected, active wrist and head views with unchanged fit/attachment gates; no motion retries.
-Motion commands return stages and `released`; place reports `stability_verified=false`, transfer reports visual consistency and center/TCP offset; these do not certify force retention or resting stability.
-All return `plan_ok`/`plan_fail_reason`; invalid inputs, unreliable geometry or episode end stop execution. Failures can leave partial motion; withdrawal can fail after release.
+`robo rim_measure --camera head|wrist_l|wrist_r --camera2 head|wrist_l|wrist_r --points '[[u,v],...]' --points2 '[[u,v],...]' [--arm left|right]`: read-only RGB triangulation and circular-edge fit; zero action steps.
+Supply 6–64 distinct corresponding physical edge points in identical order from two current views; cover at least 180° of one circular edge. Apparent silhouette extrema generally are not corresponding physical points.
+Uses observation intrinsics/extrinsics; no depth, fixed height or known radius required. Camera defaults to head; camera2 must differ.
+Returns center_world, rim_z, rim_z_range, radius_m, upward normal_world, tilt_deg, rim_points_world, fit_rms_m, angular_coverage_deg, rim_samples and max_reprojection_px; optional arm adds tcp_minus_center_world.
+Returns plan_ok/plan_fail_reason; rejects malformed inputs, missing images/calibration, baseline <30 mm, ray angle <5°, ray disagreement >4 mm, reprojection >2 px, radius outside 12–200 mm, insufficient angular coverage, or unreliable circularity.
+Does not move or certify retention. Correspondence correctness remains caller-supplied; repeated appearance can yield ambiguous matches.
+Provides only `rim_measure`; single-pixel fitting, `rim_transfer` and `rim_place` are unsupported.

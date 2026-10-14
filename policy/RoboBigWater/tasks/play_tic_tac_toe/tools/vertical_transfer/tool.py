@@ -1,6 +1,7 @@
 """Cartesian transfer with vertical contact segments; no fixed scene coordinates."""
 import numpy as np
 import sys
+import json
 
 from roboshell.server.core import tool_rotation
 
@@ -16,6 +17,8 @@ TOOL = {"name": "vertical_transfer", "commands": [{
         *[{"name": key, "type": "float", "required": True}
           for key in ("x", "y", "z", "to_x", "to_y", "to_z")],
         {"name": "wait_sec", "type": "float", "default": 6.0, "help": "Maximum visual departure/return wait after homing; 0 selects the 6 s default"},
+        {"name": "return_roi", "type": "str", "help": "JSON [u0,v0,u1,v1] fixed head-image crop for visual departure/return; required on first RGB-only transfer"},
+        {"name": "wait_return", "type": "int", "choices": [0, 1], "default": 1},
         {"name": "clearance", "type": "float", "default": 0.03},
         {"name": "travel_z", "type": "float", "help": "Explicit horizontal travel TCP height (m); overrides clearance"},
         {"name": "approach", "type": "str", "choices": ["down", "down45"], "default": "down"},
@@ -96,6 +99,24 @@ def transfer_targets(current, source, dest, travel_z, opening, tilted=False):
     return stages
 
 
+def approach_clearance(start, target, tcp_to_ee, floor):
+    """Certify nominal offset-TCP height for end-link linear/SLERP motion.
+
+    Between samples, the chord error is bounded by r * angle**2 / (8*n**2).
+    This is geometry only: it cannot certify actual tracking or collisions.
+    """
+    from scipy.spatial.transform import Rotation, Slerp
+    ee0, ee1 = start @ tcp_to_ee, target @ tcp_to_ee
+    rotation = Rotation.from_matrix(np.stack([ee0[:3, :3], ee1[:3, :3]]))
+    angle = (rotation[0].inv() * rotation[1]).magnitude()
+    fraction = np.linspace(0., 1., 65)
+    offset = np.linalg.inv(tcp_to_ee)[:3, 3]
+    tcp_z = ((1-fraction)*ee0[2, 3] + fraction*ee1[2, 3] +
+             Slerp([0., 1.], rotation)(fraction).apply(offset)[:, 2])
+    margin = np.linalg.norm(offset) * angle**2 / (8 * 64**2)
+    return bool(np.min(tcp_z) - margin >= floor - 1e-9)
+
+
 def plan_transfer(api, arm, source, dest, travel_z, opening, approach="down"):
     """Preflight exactly the caller's contact frame; never substitute a tilt.
 
@@ -103,11 +124,48 @@ def plan_transfer(api, arm, source, dest, travel_z, opening, approach="down"):
     with vertical fingers need not work with angled fingers, even when the
     carried frame stays constant and every TCP target is accurately reached.
     """
-    targets = transfer_targets(arm.tcp(), source, dest, travel_z, opening,
+    current = arm.tcp()
+    targets = transfer_targets(current, source, dest, travel_z, opening,
                                tilted=approach == "down45")
     estimate = api.estimate_tcp_chain(arm, targets)
+    entry_path = "separate_orientation"
+    # The server interpolates the end link, not the offset TCP. Bound the
+    # rotation arc's deviation from its chord by r * angle**2 / 8. Keep the
+    # entire empty approach above travel_z even during this interpolation.
+    offset = getattr(arm, "tcp_to_ee", None)
+    if offset is not None:
+        offset = np.asarray(offset, dtype=float)
+        if offset.shape != (4, 4) or not np.isfinite(offset).all():
+            raise ValueError("invalid TCP calibration")
+        above = dict(targets)["above_source"].copy()
+        angle = np.arccos(np.clip((np.trace(current[:3, :3].T @ above[:3, :3]) - 1) / 2, -1, 1))
+        arc_bound = np.linalg.norm(offset[:3, 3]) * angle**2 / 8
+        safe_z = travel_z + arc_bound + 1e-6
+        start = current.copy()
+        compact = []
+        if start[2, 3] < safe_z:
+            start[2, 3] = safe_z
+            compact.append(("initial_raise", start.copy()))
+        # Prefer the lower endpoint when the offset-TCP arc remains clear;
+        # otherwise the conservative high endpoint bounds the whole arc.
+        low = above.copy()
+        low[2, 3] = travel_z + .001
+        if approach_clearance(start, low, offset, travel_z):
+            above = low
+        else:
+            above[2, 3] = start[2, 3]
+        compact.append(("above_source", above))
+        compact.extend((name, pose) for name, pose in targets
+                       if name not in ("initial_raise", "orient", "above_source"))
+        fast = api.estimate_tcp_chain(arm, compact)
+        if (fast.get("estimate_ok") and
+                (not estimate.get("estimate_ok") or
+                 fast["total_action_steps"] <= estimate["total_action_steps"])):
+            targets, estimate = compact, fast
+            entry_path = "combined_raised_approach"
     return targets, dict(estimate, pickup_approach=approach,
-                         destination_approach=approach, travel_z=float(travel_z))
+                         destination_approach=approach, travel_z=float(travel_z),
+                         entry_path=entry_path)
 
 
 def route_option(api, tag, source, dest, travel_z, opening, approach):
@@ -188,7 +246,18 @@ def depth_frame(api, obs=None):
     obs = api.observe() if obs is None else obs
     key = "cam_head" if "cam_head" in obs.get("cameras", {}) else "head"
     camera = obs["cameras"][key]
-    depth = np.asarray(obs["depth"][key], dtype=float)
+    # Missing range data remains explicitly unknown; never fabricate geometry.
+    if "depth" in obs and key in obs["depth"]:
+        depth = np.asarray(obs["depth"][key], dtype=float)
+    else:
+        import cv2
+        raw = obs.get("png", {}).get(key)
+        if raw is None:
+            raise ValueError("missing RGB observation")
+        image = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+        if image is None:
+            raise ValueError("invalid RGB observation")
+        depth = np.full(image.shape[:2], np.nan)
     k = np.asarray(camera["intrinsics"], dtype=float)
     transform = np.asarray(camera["extrinsics_world"], dtype=float)
     if (depth.ndim != 2 or k.shape != (3, 3) or transform.shape != (4, 4)
@@ -232,11 +301,53 @@ def compare_rgb(current, baseline, mask):
                 largest_difference_pixels=different, largest_departure_pixels=departed)
 
 
-def capture_return(api, height):
+def compare_return_rgb(current, baseline, mask):
+    """Allow only tiny, bidirectionally explained one-pixel edge settling.
+
+    Keep departure detection and all contact/grasp comparisons unchanged.
+    Never update the reference or register a displaced image onto it.
+    """
+    visual = compare_rgb(current, baseline, mask)
+    visual["edge_settling_accepted"] = False
+    if visual["matches"] or visual["departed"] or visual["largest_difference_pixels"] >= 20:
+        return visual
+    h, w = mask.shape
+
+    def unexplained(a, b):
+        padded = np.pad(b, ((1, 1), (1, 1), (0, 0)), mode="edge")
+        allowed = np.pad(mask, 1, constant_values=False)
+        best = np.full(mask.shape, np.inf)
+        for dy in range(3):
+            for dx in range(3):
+                delta = np.max(np.abs(a - padded[dy:dy+h, dx:dx+w]), axis=2)
+                delta = np.where(allowed[dy:dy+h, dx:dx+w], delta, np.inf)
+                best = np.minimum(best, delta)
+        return int(np.count_nonzero(mask & (best > 30)))
+
+    residual = max(unexplained(current, baseline), unexplained(baseline, current))
+    visual["unexplained_edge_pixels"] = residual
+    visual["edge_settling_accepted"] = residual == 0
+    visual["matches"] = residual == 0
+    return visual
+
+
+def capture_return(api, height, roi=None):
     # Only observed geometry above the supplied contact planes. Newly deposited
     # low geometry cannot permanently change these reference rays.
     obs = api.observe()
     depth, k, transform = depth_frame(api, obs)
+    if not np.isfinite(depth).any():
+        if roi is None:
+            raise ValueError("RGB-only capture requires return_roi=[u0,v0,u1,v1], a fixed visible moving-silhouette crop excluding changing contact surfaces")
+        rect = np.asarray(json.loads(roi) if isinstance(roi, str) else roi, dtype=float)
+        if rect.shape != (4,) or not np.isfinite(rect).all() or not np.equal(rect, np.floor(rect)).all():
+            raise ValueError("return_roi must contain four integer pixel bounds")
+        u0, v0, u1, v1 = rect.astype(int)
+        if not (0 <= u0 < u1 <= depth.shape[1] and 0 <= v0 < v1 <= depth.shape[0] and min(u1-u0, v1-v0) >= 12):
+            raise ValueError("return_roi outside image or smaller than 12 pixels")
+        mask = np.zeros(depth.shape, bool)
+        mask[v0:v1, u0:u1] = True
+        return depth, k.copy(), transform.copy(), mask, rgb_frame(obs, depth.shape)
     v, u = np.indices(depth.shape)
     rays = np.stack(((u-k[0, 2])/k[0, 0], (v-k[1, 2])/k[1, 1], np.ones_like(u)), -1)
     world_z = (rays @ transform[2, :3]) * depth + transform[2, 3]
@@ -330,6 +441,16 @@ def source_alignment(source, view, approach):
                 suggested_source=[*view['center_xy'], float(source[2])])
 
 
+def plane_disk(shape, k, transform, target, radius):
+    v, u = np.indices(shape)
+    rays = np.stack([u, v, np.ones_like(u)], -1) @ np.linalg.inv(k).T @ transform[:3, :3].T
+    distance = np.divide(target[2]-transform[2, 3], rays[..., 2],
+                         out=np.full(shape, np.nan), where=np.abs(rays[..., 2]) > 1e-8)
+    xyz = transform[:3, 3] + rays * distance[..., None]
+    return (np.isfinite(xyz).all(-1) & (distance > 0)
+            & (np.linalg.norm(xyz[..., :2]-target[:2], axis=-1) < radius))
+
+
 def capture_source_appearance(api, source):
     """Project a regional plane, so noisy per-pixel depth cannot crop RGB."""
     obs = api.observe()
@@ -337,6 +458,9 @@ def capture_source_appearance(api, source):
     rgb = rgb_frame(obs, depth.shape)
     if rgb is None:
         return None
+    key = "cam_head" if "cam_head" in obs.get("cameras", {}) else "head"
+    if "depth" not in obs or key not in obs["depth"]:
+        return rgb, plane_disk(depth.shape, k, transform, source, .04), k.copy(), transform.copy()
     v, u = np.indices(depth.shape)
     rays = np.stack(((u-k[0, 2])/k[0, 0], (v-k[1, 2])/k[1, 1], np.ones_like(u)), -1)
     world = (rays * depth[..., None]) @ transform[:3, :3].T + transform[:3, 3]
@@ -402,6 +526,12 @@ def source_retained(api, source, baseline, appearance=None):
             return dict(checked=False, retained=False, reason="no_distinct_source_evidence",
                         distinct_feature=False, source_rgb_pixels=int(mask.sum()))
         comparison = compare_rgb(now, rgb, mask)
+        displaced = (translated_source_feature(now, appearance, source)
+                     if feature and not comparison['matches'] else None)
+        if displaced is not None:
+            return dict(checked=True, retained=True, comparison_mode="translated_rgb_feature",
+                        reason="source_feature_remains_nearby", appearance=comparison,
+                        **displaced)
         return dict(checked=bool(comparison['matches']), retained=bool(comparison['matches']),
                     comparison_mode="rgb_and_depth" if depth_retained else "rgb_feature",
                     appearance=comparison, distinct_feature=feature,
@@ -411,6 +541,70 @@ def source_retained(api, source, baseline, appearance=None):
     return dict(checked=True, retained=bool(depth_retained),
                 visible_samples=current['visible_samples'],
                 visible_center=current['visible_center'])
+
+
+def translated_source_feature(now, appearance, source):
+    """Match an enclosed feature plus its background collar after a small nudge.
+
+    A changed source image alone cannot distinguish removal from displacement.
+    Pixel displacement is bounded on the caller's contact plane, not by a
+    remembered image scale. A match is negative grasp evidence only.
+    """
+    import cv2
+    rgb, mask, k, transform = appearance
+    background = np.median(rgb[mask], axis=0)
+    contrast = ((np.max(np.abs(rgb-background), axis=2) > 45) & mask).astype(np.uint8)
+    contrast = cv2.morphologyEx(contrast, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(contrast, connectivity=8)
+    interior = cv2.erode(mask.astype(np.uint8), np.ones((7, 7), np.uint8)).astype(bool)
+    candidates = [i for i in range(1, n) if 20 <= stats[i, cv2.CC_STAT_AREA] <= .6*mask.sum()
+                  and np.all(interior[labels == i])]
+    if not candidates:
+        return None
+    i = max(candidates, key=lambda j: stats[j, cv2.CC_STAT_AREA])
+    x, y, w, h = stats[i, :4]
+    x, y, w, h = int(x-3), int(y-3), int(w+6), int(h+6)
+    if x < 0 or y < 0 or x+w > rgb.shape[1] or y+h > rgb.shape[0]:
+        return None
+    template = rgb[y:y+h, x:x+w].astype(np.float32)
+    # Search a calibrated local disk only; neighboring lookalikes cannot
+    # establish retention of this feature outside the 20 mm displacement gate.
+    search = plane_disk(mask.shape, k, transform, source, .065)
+    vv, uu = np.nonzero(search)
+    if not len(uu):
+        return None
+    x0, y0, x1, y1 = int(uu.min()), int(vv.min()), int(uu.max()+1), int(vv.max()+1)
+    crop = now[y0:y1, x0:x1].astype(np.float32)
+    if crop.shape[0] < h or crop.shape[1] < w:
+        return None
+    errors = cv2.matchTemplate(crop, template, cv2.TM_SQDIFF) / template.size
+    v, u = np.indices(errors.shape)
+
+    def on_plane(u, v):
+        rays = np.stack(((u-k[0, 2])/k[0, 0], (v-k[1, 2])/k[1, 1], np.ones_like(u)), -1)
+        directions = rays @ transform[:3, :3].T
+        distance = np.divide(source[2]-transform[2, 3], directions[..., 2],
+                             out=np.full(u.shape, np.nan), where=np.abs(directions[..., 2]) > 1e-8)
+        return np.where((distance > 0)[..., None],
+                        directions*distance[..., None]+transform[:3, 3], np.nan)
+
+    origin = on_plane(np.asarray(x+w/2), np.asarray(y+h/2))
+    shifts = on_plane(u+x0+w/2, v+y0+h/2)-origin
+    distance = np.linalg.norm(shifts[..., :2], axis=-1)
+    errors[(~np.isfinite(distance)) | (distance > .02)] = np.inf
+    iy, ix = np.unravel_index(np.argmin(errors), errors.shape)
+    if errors[iy, ix] > 18**2:
+        return None
+    matched = crop[iy:iy+h, ix:ix+w]
+    # Require nearly all pixels, including background, to agree: partial
+    # occlusion and fragments of similar silhouettes remain inconclusive.
+    fraction = float(np.mean(np.max(np.abs(matched-template), axis=2) <= 30))
+    if fraction < .92:
+        return None
+    return dict(displacement_xy_m=shifts[iy, ix, :2].tolist(),
+                displacement_pixels=[int(ix+x0-x), int(iy+y0-y)],
+                template_rmse=float(np.sqrt(max(0., errors[iy, ix]))),
+                matching_fraction=fraction)
 
 
 def destination_change(api, reference, dest):
@@ -432,6 +626,19 @@ def destination_change(api, reference, dest):
     mask = (np.isfinite(baseline) & (baseline > 0)
             & (np.linalg.norm(world[..., :2]-dest[:2], axis=-1) < .025)
             & (world[..., 2] > dest[2]-.08) & (world[..., 2] < dest[2]+.02))
+    key = "cam_head" if "cam_head" in obs.get("cameras", {}) else "head"
+    if not np.isfinite(baseline).any() and ("depth" not in obs or key not in obs["depth"]):
+        mask = plane_disk(baseline.shape, k, transform, dest, .025)
+        count = int(mask.sum())
+        rgb = rgb_frame(obs, baseline.shape)
+        if rgb is None or reference[4] is None:
+            raise ValueError("missing RGB destination observation")
+        if count < 20:
+            raise ValueError("destination projects to fewer than 20 pixels")
+        visual = compare_rgb(rgb, reference[4], mask)
+        return dict(checked=True, blocked=not visual['matches'], reference_pixels=count,
+                    comparison_mode="rgb_caller_plane", appearance=visual,
+                    reason=None if visual['matches'] else "appearance_changed")
     count = int(mask.sum())
     if count < 20:
         return dict(checked=False, blocked=False, reference_pixels=count,
@@ -492,7 +699,7 @@ def await_return(api, reference, maximum, require_change=True, accept_initial=Fa
             rgb = rgb_frame(obs, baseline.shape)
             if rgb is None:
                 raise ValueError("missing RGB return observation")
-            visual = compare_rgb(rgb, rgb_reference, mask)
+            visual = compare_return_rgb(rgb, rgb_reference, mask)
             changed = changed or visual["departed"]
             matches = visual["matches"]
         else:
@@ -500,7 +707,8 @@ def await_return(api, reference, maximum, require_change=True, accept_initial=Fa
             changed = changed or np.count_nonzero(valid & (delta > .016)) >= max(4, int(np.ceil(samples.size * .002)))
             matches = bool(valid.all() and np.all(delta <= .008))
         diagnostics = dict(reference_pixels=int(mask.sum()),
-                           different_pixels=int(np.count_nonzero(~valid | (delta > .008))),
+                           different_pixels=(visual["largest_difference_pixels"] if not np.isfinite(baseline).any() and visual is not None
+                                             else int(np.count_nonzero(~valid | (delta > .008)))),
                            comparison_mode="rgb" if visual is not None else "depth",
                            appearance=visual, change_observed=bool(changed))
         if matches and accept_initial and elapsed == 0 and not require_change:
@@ -667,6 +875,8 @@ def run(api, command, args):
         if not np.isfinite(maximum) or not (maximum == 0 or .6 <= maximum <= 12):
             raise ValueError("wait_sec must be 0 (default) or between 0.6 and 12")
         maximum = maximum or 6.0
+        if args.get("wait_return", 1) not in (0, 1):
+            raise ValueError("wait_return must be 0 or 1")
         arm = api.arm(args["arm"])
         if api.over:
             raise StopTransfer("episode_over")
@@ -696,7 +906,7 @@ def run(api, command, args):
         if (_reference is None or _reference["owner"] is not owner
                 or remaining > _reference["remaining"] + 1e-6):
             _reference = None
-            reference = capture_return(api, max(source[2], dest[2]) + .06)
+            reference = capture_return(api, max(source[2], dest[2]) + .06, args.get("return_roi"))
             _reference = dict(owner=owner, remaining=remaining, frame=reference,
                               pending=False, changed=False)
         elif retry is not None:
@@ -795,13 +1005,14 @@ def run(api, command, args):
                 raise StopTransfer("episode_over")
             if np.max(np.abs(arm.joints() - arm.home_joints)) > 0.01:
                 raise StopTransfer("home_position_error")
-            visual_return = await_return(api, reference, maximum,
-                                         initial_changed=_reference["changed"], progress=_reference)
-            _reference["changed"] = visual_return.get("change_observed", False)
-            if not visual_return["plan_ok"]:
-                raise StopTransfer(visual_return["plan_fail_reason"])
-            _reference["pending"] = False
-            _reference["changed"] = False
+            if args.get("wait_return", 1):
+                visual_return = await_return(api, reference, maximum,
+                                             initial_changed=_reference["changed"], progress=_reference)
+                _reference["changed"] = visual_return.get("change_observed", False)
+                if not visual_return["plan_ok"]:
+                    raise StopTransfer(visual_return["plan_fail_reason"])
+                _reference["pending"] = False
+                _reference["changed"] = False
     except StopTransfer as exc:
         reason = str(exc)
     except (ValueError, KeyError, TypeError) as exc:
@@ -868,6 +1079,6 @@ def run(api, command, args):
             "alternative_route": alternative_route,
             "holding_verified": False,
             "completion": "retracted" if deposit_only and reason is None else
-                          ("synchronized" if reason is None else "incomplete"),
+                          (("home" if args.get("wait_return", 1) == 0 else "synchronized") if reason is None else "incomplete"),
             "return_pending": bool(_reference and _reference.get("pending")),
             "note": "Motion completion does not verify grasp or placement; inspect the new observation."}, 0 if reason is None else 2

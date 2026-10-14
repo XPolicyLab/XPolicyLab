@@ -1,4 +1,5 @@
 """Observation-only planar metrology and checked Cartesian transfers."""
+import json
 import numpy as np
 
 
@@ -9,7 +10,7 @@ def number(name, default=None):
 
 
 TOOL = {"name": "precise_transfer", "commands": [
-    {"name": "surfaces", "budget": False, "help": "inventory visible horizontal faces from head depth",
+    {"name": "surfaces", "budget": False, "help": "list RGB region candidates and current metrology requirements",
      "args": [number("tolerance", .002),
               {"name": "format", "type": "str", "default": "compact",
                "choices": ["compact", "full"]}]},
@@ -19,7 +20,9 @@ TOOL = {"name": "precise_transfer", "commands": [
      "args": [{"name": "arm", "positional": True, "choices": ["left", "right"]}]
      + [number(n) for n in ("x", "y", "z", "to_x", "to_y", "to_z")]
      + [{"name": "open", "type": "str", "default": "x", "choices": ["x", "y"]},
-        number("clearance", .10), number("grasp_yaw", 0.), number("yaw", 0.), number("peer_clearance", .18),
+        {"name": "keepouts", "type": "str", "default": "[]"},
+        {"name": "sweep_margin", "type": "float", "default": None},
+        number("clearance", .10), number("grasp_yaw", 0.), number("grasp_tilt", 0.), number("yaw", 0.), number("peer_clearance", .18),
         {"name": "yaw_symmetry", "type": "str", "default": "exact", "choices": ["exact", "half_turn"]},
         {"name": "finger_sign", "type": "str", "default": "auto", "choices": ["auto", "positive", "negative"]},
         {"name": "lift_x", "type": "float", "default": None},
@@ -35,6 +38,61 @@ TOOL = {"name": "precise_transfer", "commands": [
         {"name": "park_y", "type": "float", "default": None},
         {"name": "park", "type": "str", "default": "start", "choices": ["start", "source", "none"]}]}
 ]}
+
+
+def keepout_boxes(args):
+    """Caller-measured world boxes, expanded by a stated envelope bound."""
+    raw = args.get('keepouts', '[]')
+    boxes = json.loads(raw) if isinstance(raw, str) else raw
+    if not isinstance(boxes, list) or len(boxes) > 64:
+        raise ValueError('keepouts must be a JSON list of at most 64 boxes')
+    margin = args.get('sweep_margin')
+    if margin is not None and (not np.isfinite(float(margin)) or not 0 <= float(margin) <= .5):
+        raise ValueError('sweep_margin must be finite and 0 to 0.5 m')
+    if not boxes:
+        return np.empty((0, 6))
+    if margin is None:
+        raise ValueError('keepouts require sweep_margin bounding hand and payload about TCP through all orientations')
+    boxes = np.asarray(boxes, dtype=float)
+    if boxes.ndim != 2 or boxes.shape[1] != 6 or not np.isfinite(boxes).all():
+        raise ValueError('keepouts require finite [xmin,ymin,zmin,xmax,ymax,zmax] rows')
+    if np.any(boxes[:, :3] >= boxes[:, 3:]):
+        raise ValueError('keepout minimum must be below maximum in every dimension')
+    boxes = boxes.copy()
+    boxes[:, :3] -= float(margin)
+    boxes[:, 3:] += float(margin)
+    return boxes
+
+
+def check_keepout_segment(start, end, boxes, stage):
+    """Exact slab intersection: includes stationary turns and tangencies."""
+    start, end = np.asarray(start), np.asarray(end)
+    for index, box in enumerate(boxes):
+        enter, leave = 0., 1.
+        for dim, delta in enumerate(end - start):
+            if abs(delta) < 1e-12:
+                if start[dim] < box[dim] or start[dim] > box[dim + 3]:
+                    break
+            else:
+                a = (box[dim] - start[dim]) / delta
+                b = (box[dim + 3] - start[dim]) / delta
+                enter, leave = max(enter, min(a, b)), min(leave, max(a, b))
+                if enter > leave:
+                    break
+        else:
+            raise ValueError(f'keepout {index} intersects {stage}; revise measured geometry, grasp or route')
+
+
+def tilt_grasp(rotation, opening, yaw, degrees):
+    """Tilt about the positive horizontal opening line, independent of finger sign."""
+    angle = np.deg2rad(yaw)
+    direction = (np.array([np.cos(angle), np.sin(angle), 0.]) if opening == 'x'
+                 else np.array([-np.sin(angle), np.cos(angle), 0.]))
+    x, y, z = direction
+    cross = np.array([[0., -z, y], [z, 0., -x], [-y, x, 0.]])
+    angle = np.deg2rad(degrees)
+    turn = np.eye(3) + np.sin(angle) * cross + (1 - np.cos(angle)) * (cross @ cross)
+    return turn @ rotation
 
 
 def face_rectangle(xy):
@@ -296,6 +354,16 @@ def diverse_region_indices(columns, rows, limit=8):
     return sorted(chosen)
 
 
+def rgb_overview(obs):
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / 'rgb_geometry' / 'tool.py'
+    spec = importlib.util.spec_from_file_location('_transfer_rgb_geometry', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.overview(obs)
+
+
 def chromatic_scene(obs):
     """Bound complementary camera evidence; failure cannot discard depth results."""
     try:
@@ -376,27 +444,12 @@ def placement_scene(api, destination):
     except Exception as exc:
         return {"available": False, "reason": str(exc),
                 "chromatic_scene": {"available": False, "reason": str(exc)}}
-    # Preserve scene-wide and inclined evidence even when no horizontal face
-    # can be measured. Both summaries describe the same post-parking snapshot.
-    companion = chromatic_scene(obs)
-    overview = scene_overview(companion)
     try:
-        scene = inventory(obs["depth"]["cam_head"], obs["cameras"]["cam_head"], .002)
-        faces = scene["faces"]
-        candidates = []
-        for index, face in enumerate(faces):
-            center = np.asarray(face["top_center"])
-            direction = np.asarray(face["long_direction_xy"])
-            basis = np.column_stack((direction, [-direction[1], direction[0]]))
-            offset = (np.asarray(destination[:2]) - center[:2]) @ basis
-            if np.all(np.abs(offset) <= np.array([face["length_m"], face["width_m"]]) / 2 + .003):
-                candidates.append({"face_index": index,
-                                   "top_minus_release_z_m": float(center[2] - destination[2])})
-        return compact_placement_scene(overview, summarize_scene(scene, destination, candidates))
+        return dict(rgb_overview(obs), available=True, placement_verified=False,
+                    release_tcp_xyz=np.asarray(destination, float).tolist())
     except Exception as exc:
-        # An unavailable camera must not turn a completed motion into a
-        # transfer failure and invite an unsafe duplicate manipulation.
-        return {"scene_overview": overview, "available": False, "reason": str(exc)}
+        # Missing imagery must not invite replay of a completed transfer.
+        return {"available": False, "reason": str(exc), "placement_verified": False}
 
 
 def compact_placement_scene(overview, summary):
@@ -467,15 +520,15 @@ def summarize_scene(scene, destination, candidates):
     return rounded(result)
 
 
-def run(api, command, args):
+def _execute(api, command, args):
     stages = []
     arm = None
     closure_requested = False
     release_requested = False
     try:
         values = [float(v) for k, v in args.items()
-                  if k not in ("arm", "open", "park", "motion", "finger_sign", "landing", "entry", "format", "lift_mode", "yaw_symmetry", "departure", "retreat")
-                  and not (k in ("lift_x", "lift_y", "lift_z", "park_x", "park_y") and v is None)]
+                  if k not in ("arm", "open", "park", "motion", "finger_sign", "landing", "entry", "format", "lift_mode", "yaw_symmetry", "departure", "retreat", "keepouts")
+                  and not (k in ("lift_x", "lift_y", "lift_z", "park_x", "park_y", "sweep_margin") and v is None)]
         if not np.all(np.isfinite(values)):
             raise ValueError("arguments must be finite")
         if command in ("surface", "surfaces"):
@@ -483,15 +536,12 @@ def run(api, command, args):
             if output_format not in ("compact", "full"):
                 raise ValueError("invalid output format")
             obs = api.observe()
-            depth, camera = obs["depth"]["cam_head"], obs["cameras"]["cam_head"]
-            result = (inventory(depth, camera, args.get("tolerance", .002)) if command == "surfaces"
-                      else measure(depth, camera, args["u"], args["v"], args.get("tolerance", .002)))
-            assembly = initial_assembly(obs, result) if command == "surfaces" else None
-            if command == "surfaces" and output_format == "compact":
-                result = compact_inventory(result)
-            if command == "surfaces":
-                result = dict(initial_assembly=assembly, chromatic_scene=chromatic_scene(obs), **result)
-            return dict(result, plan_ok=True, plan_fail_reason=None), 0
+            if not .0005 <= args.get("tolerance", .002) <= .005:
+                raise ValueError("invalid tolerance")
+            if command == "surface":
+                raise ValueError("One pixel cannot determine height from RGB. Use rgb_measure --points with corresponding physical vertices in two current views.")
+            result = rgb_overview(obs)
+            return dict(result, plan_ok=True, plan_fail_reason=None, motion_sent=False), 0
         if command != "transfer":
             raise ValueError("unknown command")
         if args.get("arm") not in ("left", "right") or args.get("open", "x") not in ("x", "y"):
@@ -527,8 +577,8 @@ def run(api, command, args):
         if finger_sign not in ("auto", "positive", "negative"):
             raise ValueError("invalid finger_sign")
         clearance = float(args.get("clearance", .10))
-        # The successful URAI X5 composition used a measured 15 mm loaded gap.
-        # This lower bound is a candidate route parameter, not a collision
+        # The 15 mm lower bound is a design value for the loaded gap.
+        # It is a candidate route parameter, not a collision
         # guarantee; callers still need public swept-path evidence.
         if not .015 <= clearance <= .25:
             raise ValueError("clearance must be 0.015 to 0.25 m")
@@ -537,6 +587,7 @@ def run(api, command, args):
             raise ValueError("peer_clearance must be 0.05 to 0.30 m")
         yaw = float(args.get("yaw", 0.))
         grasp_yaw = float(args.get("grasp_yaw", 0.))
+        grasp_tilt = float(args.get("grasp_tilt", 0.))
         yaw_symmetry = args.get("yaw_symmetry", "exact")
         if yaw_symmetry not in ("exact", "half_turn"):
             raise ValueError("invalid yaw symmetry")
@@ -544,6 +595,8 @@ def run(api, command, args):
             raise ValueError("yaw must be -180 to 180 degrees")
         if not -180 <= grasp_yaw <= 180:
             raise ValueError("grasp_yaw must be -180 to 180 degrees")
+        if not -45 <= grasp_tilt <= 45:
+            raise ValueError("grasp_tilt must be -45 to 45 degrees")
         source = np.array([args[n] for n in ("x", "y", "z")], dtype=float)
         dest = np.array([args[n] for n in ("to_x", "to_y", "to_z")], dtype=float)
         lift_xy = [args.get("lift_x"), args.get("lift_y")]
@@ -575,12 +628,16 @@ def run(api, command, args):
             angle = np.deg2rad(grasp_yaw)
             c, s = np.cos(angle), np.sin(angle)
             rotation = np.array([[c, -s, 0.], [s, c, 0.], [0., 0., 1.]]) @ rotation
-        # A combined empty turn must not descend across nearby raised
-        # geometry. Keep the observed entry height until directly over source;
-        # the existing vertical descent then runs with fixed orientation.
-        elevated_turn = (entry_mode == "vertical" and args.get("motion", "separate") == "compact"
-                         and np.linalg.norm(rotation - target[:3, :3]) > .05)
-        hover_z = max(entry[2], approach_z) if elevated_turn else approach_z
+        if grasp_tilt != 0.:
+            # Preserve horizontal jaw alignment and TCP contact midpoint.
+            # Keep this tilt through release; only the requested loaded yaw
+            # may change it. Never straighten a tilted held grasp in flight.
+            rotation = tilt_grasp(rotation, args.get("open", "x"), grasp_yaw, grasp_tilt)
+        # Vertical entry separates lateral travel from descent even when the
+        # hand is already aligned. A low source-relative hover otherwise
+        # creates a descending sweep through nearby raised geometry.
+        elevated_entry = entry_mode == "vertical"
+        hover_z = max(entry[2], approach_z) if elevated_entry else approach_z
         # Explicit staging may leave the open grip directly above its next
         # grasp. Avoid stopping twice on that same downward corridor. Require
         # an already aligned orientation; never merge a turn into contact.
@@ -600,22 +657,25 @@ def run(api, command, args):
                 entry_via = source.copy()
                 entry_via[:2] -= delta_xy * (clearance / distance_xy)
                 entry_via[2] = max(entry[2], approach_z)
-        # Only explicit rising mode can change the loaded swept volume.
-        # Compact vertical landing can rise during transport instead of
-        # demanding the full destination height at the source's wrist pose.
-        # A high diagonal destination needs an elevated landing approach too:
-        # rise while translating, then descend from a clearance-sized setback.
+        # Bound the final loaded lateral descent to a stated 10 mm design
+        # distance, independent of route length or scene dimensions. Use the
+        # actual departure waypoint, not the original source, for its heading.
+        # Complete any payload turn at the elevated approach before landing.
+        rising_landing = (lift_mode == "rising"
+                          and args.get("motion", "separate") == "compact"
+                          and lift_xy[0] is None and dest[2] > approach_z)
         landing_via = None
-        if (lift_mode == "rising" and args.get("motion", "separate") == "compact" and landing == "diagonal"
-                and lift_xy[0] is None and dest[2] > approach_z):
-            delta_xy = dest[:2] - source[:2]
+        if landing == "diagonal":
+            departure_xy = source[:2] if lift_xy[0] is None else np.asarray(lift_xy, dtype=float)
+            delta_xy = dest[:2] - departure_xy
             distance_xy = float(np.linalg.norm(delta_xy))
-            landing_via = dest.copy()
-            if distance_xy > 0:
-                landing_via[:2] -= delta_xy * min(clearance / distance_xy, .5)
-            landing_via[2] = carry_z
+            if distance_xy > .010 or rising_landing or abs(yaw) > 1e-6:
+                landing_via = dest.copy()
+                if distance_xy > 0:
+                    landing_via[:2] -= delta_xy * min(.010 / distance_xy, .5)
+                landing_via[2] = carry_z
         loaded_lift_z = (approach_z if lift_mode == "rising" and args.get("motion", "separate") == "compact"
-                         and (landing == "vertical" or landing_via is not None) else carry_z)
+                         and (landing == "vertical" or rising_landing) else carry_z)
         lift_z = args.get("lift_z")
         if lift_z is not None:
             if lift_xy[0] is None:
@@ -635,11 +695,11 @@ def run(api, command, args):
         route = [source]
         if staged_descent:
             route = [entry, source]
-        if entry_mode == "diagonal" or elevated_turn:
+        if entry_mode == "diagonal" or elevated_entry:
             raised_entry = entry.copy()
             raised_entry[2] = max(entry[2], approach_z)
             route = [entry, raised_entry]
-            if elevated_turn:
+            if elevated_entry:
                 route.append([source[0], source[1], hover_z])
             elif entry_via is not None:
                 route.append(entry_via)
@@ -690,6 +750,8 @@ def run(api, command, args):
                 raise ValueError(f"other arm {peer_tag} is near the transfer route; "
                                  "clear that arm before retrying")
 
+        boxes = keepout_boxes(args)
+
         def move(name, pos=None, rotation=None, allow_fallback=False):
             if api.over:
                 raise RuntimeError("episode ended")
@@ -698,6 +760,7 @@ def run(api, command, args):
                 target[:3, 3] = pos
             if rotation is not None:
                 target[:3, :3] = rotation
+            check_keepout_segment(before[:3, 3], target[:3, 3], boxes, name)
             feedback = {}
             code = api.move_tcp(arm, target.copy(), feedback)
             stages.append(dict(feedback, stage=name))
@@ -869,3 +932,116 @@ def run(api, command, args):
             except Exception:
                 pass
         return result, 2
+
+
+class _PreviewArm:
+    """Copy public TCP/commanded aperture; never forward mutations."""
+    def __init__(self, arm):
+        self.pose = np.asarray(arm.tcp(), dtype=float).copy()
+        self.aperture = float(arm.gripper())
+
+    def tcp(self):
+        return self.pose.copy()
+
+    def gripper(self):
+        return self.aperture
+
+
+class _PreviewAPI:
+    over = False
+
+    def __init__(self, api):
+        self.arms = {tag: _PreviewArm(api.arm(tag)) for tag in ('left', 'right')}
+        self.targets = []
+
+    def arm(self, tag):
+        return self.arms[tag]
+
+    def move_tcp(self, arm, target, feedback):
+        self.targets.append(target.copy())
+        arm.pose = target.copy()
+        feedback.update(plan_ok=True, error_m=0., error_deg=0.)
+        return 0
+
+    def set_gripper(self, arm, value):
+        arm.aperture = value
+
+    def observe(self):
+        raise ValueError('no image acquisition during motion preview')
+
+
+def run(api, command, args):
+    if command != 'transfer':
+        return _execute(api, command, args)
+    # Run the same executor on copied public poses before ANY live mutation,
+    # including on adapters without IK estimation. All nominal segments and
+    # stationary turns are checked; live moves check actual starting poses too.
+    try:
+        boxes = keepout_boxes(args)
+        if len(boxes):
+            result, code = _execute(_PreviewAPI(api), command, args)
+            if code:
+                result.update(motion_sent=False, closure_requested=False,
+                              release_requested=False, stages=[])
+                return result, code
+    except Exception as exc:
+        return dict(plan_ok=False, plan_fail_reason=str(exc), motion_sent=False,
+                    closure_requested=False, release_requested=False, stages=[]), 2
+    # Older API adapters can still execute, but must not imply IK preflight.
+    if not callable(getattr(api, 'estimate_tcp_chain', None)):
+        result, code = _execute(api, command, args)
+        result['reachability_preflight'] = {'available': False}
+        return result, code
+    attempts = []
+    try:
+        signs = [args.get('finger_sign', 'auto')]
+        if signs == ['auto']:
+            signs += ['positive', 'negative']
+        modes = [args.get('motion', 'separate')]
+        if modes == ['compact']:
+            modes.append('separate')
+        seen = set()
+        for sign in signs:
+            for mode in modes:
+                candidate = dict(args, finger_sign=sign, motion=mode)
+                preview = _PreviewAPI(api)
+                result, code = _execute(preview, command, candidate)
+                if code:
+                    # Argument and clearance errors are not IK failures.
+                    result.update(motion_sent=False, closure_requested=False,
+                                  release_requested=False, stages=[])
+                    return result, code
+                stages = [(row['stage'], target) for row, target in
+                          zip(result['stages'], preview.targets)]
+                signature = tuple((name, target.tobytes()) for name, target in stages)
+                if signature in seen:
+                    continue
+                seen.add(signature)
+                estimate = api.estimate_tcp_chain(api.arm(args['arm']), stages)
+                attempts.append(dict(finger_sign=sign, motion=mode, **estimate))
+                if estimate.get('estimate_ok'):
+                    result, code = _execute(api, command, candidate)
+                    result['reachability_preflight'] = dict(
+                        available=True, attempts=attempts, selected_finger_sign=sign,
+                        selected_motion=mode, collision_checked=False,
+                        qualification='IK-only prediction from current joints; tracking, contact and placement remain unverified.')
+                    return result, code
+                if estimate.get('reason') != 'ik_unreachable':
+                    break
+        failed_stages = sorted({a.get('failed_stage', 'unknown') for a in attempts})
+        return dict(plan_ok=False, plan_fail_reason=(
+                        'no reachable complete transfer including retreat; failed stages: '
+                        + ', '.join(failed_stages)),
+                    motion_sent=False, closure_requested=False, release_requested=False,
+                    grasp_verified=False, placement_verified=False, stages=[],
+                    orientation_options=dict(
+                        grasp_tilt_degrees=[-45, 45] if float(args.get('grasp_tilt', 0.)) == 0. else [],
+                        qualification='Explicit grasp_tilt preserves open/grasp_yaw and TCP targets; '
+                        'tilted hand clearance and contact height require caller validation. '
+                        'These alternatives are not reachability estimates; no retry was executed.'),
+                    reachability_preflight=dict(available=True, attempts=attempts,
+                                                collision_checked=False)), 2
+    except Exception as exc:
+        return dict(plan_ok=False, plan_fail_reason=str(exc), motion_sent=False,
+                    closure_requested=False, release_requested=False, stages=[],
+                    reachability_preflight=dict(available=True, attempts=attempts)), 2

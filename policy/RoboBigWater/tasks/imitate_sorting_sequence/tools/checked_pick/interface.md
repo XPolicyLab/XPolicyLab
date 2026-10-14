@@ -1,6 +1,6 @@
 `robo roi-pick left|right --roi x0,y0,x1,y1 --floor_z M [--clearance 0.10] [--plane_roi x0,y0,x1,y1 --height M]`
 `robo pick-check` accepts identical arguments; free, motionless geometry/reachability/cost preview. roi-pick costs one command plus physical steps.
-Fits head RGB-D, previews approach/lift, waits for visual quietness, refits, opens, approaches, closes and lifts; ends elevated with gripper closed, without transport or release.
+Requires depth; fails without it. Fits head RGB-D, previews approach/lift, waits for visual quietness, refits, opens, approaches, closes and lifts; ends elevated with gripper closed, without transport or release.
 ROI encloses a complete isolated silhouette plus surrounding plane, in full head-image pixels with exclusive ends. floor_z is world meters; clearance is 0.06–0.18 m above the pinch.
 Optional plane_roi is a separate bare uniform patch; height is known thickness, 0.008–0.14 m. Regional bare tiles cross-check depth and replace floor_z; returns plane_measurement. Ambiguous levels fail; sparse coverage retains patch depth; bounded smooth depth ramps use a regional median. Broad bias and wrong thickness can misplace the pinch.
 Previews vertical then ±30°/±45° level-finger tilts and elevated setup alternatives; cheapest feasible route within the least-tilted tier. Reserves 150 home steps before/after the gate; no automatic retries.

@@ -1,10 +1,11 @@
 ## flat_transfer
-`robo flat_transfer <left|right> --x X --y Y --z Z --to_x X --to_y Y --to_z Z --thickness M [--center observed|given] [--approach down45|down] [--yaw auto|DEG] [--turn DEG] [--clearance M] [--inset M] [--gap M]`
-Transfers a thin rigid item with optional elevated rotation; starts with an empty, open gripper. Center defaults to observed: head depth refines source x/y/z from a connected horizontal face, with x/y shift at most 15 mm; given uses supplied geometry verbatim.
-World meters: source x/y at its center, z at its upper face; destination x/y at its center, z at the receiving surface; thickness is vertical extent (0.002–0.06 m).
-Approach defaults to down45; down gives a vertical first contact when selected. Fingers initially align with world x before yaw. Yaw is world-z degrees before contact (−180 to 180); auto uses +45° for right-arm destinations at x<0, −45° for left-arm destinations at x>0, otherwise 0°.
-Turn defaults to 0°; nonzero requires down and adds one in-place rotation after lift, held through release. Positive is counterclockwise viewed from above; −180 to 180; relative to the grasped attitude, independent of yaw.
-Clearance defaults to 0.08 m (0.04–0.18); inset below the source face to 0.002 m (at most half thickness or 0.006); release gap to 0.002 m (0–0.01).
-Moves above source, descends vertically, closes, lifts, optionally turns, translates, lowers vertically, opens, and retreats.
-Returns plan_ok, plan_fail_reason, stages, source_refinement, grasp_yaw_deg, turn_deg, turn_applied, grasp_commanded, released, physical_result_verified=false; grasp, item orientation, and collision clearance are unverified.
-Stops before motion on ambiguous, occluded, or unavailable source depth in observed mode. Stops on invalid input, planning failure, exhausted time, or TCP error above 6 mm / 4 degrees; no retries or automatic arm return. A failed turn may leave partial rotation with the grip retained.
+`robo flat_transfer <left|right> --x X --y Y --z Z --to_x X --to_y Y --to_z Z --thickness M [--center observed|given] [--contact interior|center] [--verify rgb|none] [--approach down45|down] [--yaw auto|DEG] [--turn DEG] [--clearance M] [--inset M] [--gap M]`
+Transfers a thin rigid item; starts with an empty, open gripper. All positions and distances are world meters.
+Source x/y is its center, z its upper face; destination x/y is its center, z the receiving surface; thickness is vertical extent (0.002–0.06 m).
+Center defaults to observed: bounded RGB silhouette rays intersect the supplied z plane to refine x/y by at most 15 mm; z is unchanged and must be independently measured. Given preserves supplied coordinates. Contact defaults to interior: RGB material with ≥2 mm visible margin within 30 mm of center; center disables this offset. Destination compensates the offset, including turn.
+Verify defaults to rgb: compares source and elevated silhouettes after lift; stops with grip retained on absent or ambiguous pickup evidence. None disables this check. RGB modes require a distinct colored or neutral silhouette and calibrated RGB images.
+Approach defaults to down (vertical); down45 tilts 45°. Yaw sets world-z degrees before contact; auto is +45° for right destinations at x<0, −45° for left destinations at x>0, otherwise 0°. Fingers align with world x before yaw.
+Turn defaults to 0°, range −180 to 180; nonzero requires down and adds an elevated relative world-z rotation after lift. Positive is counterclockwise from above.
+Clearance defaults to 0.08 m (0.04–0.18); inset to 0.002 m (at most half thickness or 0.006); release gap to 0.002 m (0–0.01). Attitude remains fixed through carry and release.
+Returns plan_ok, plan_fail_reason, stages, source_refinement, contact_geometry, lift_evidence, grasp_yaw_deg, turn_deg, turn_applied, grasp_commanded, released, physical_result_verified=false. RGB evidence does not certify stable grasp, identity, orientation, or clearance.
+Stops on invalid input, ambiguous RGB geometry, planning failure, exhausted time, or TCP error above 6 mm / 4°; no retries or automatic arm return. A failed turn may leave partial rotation.

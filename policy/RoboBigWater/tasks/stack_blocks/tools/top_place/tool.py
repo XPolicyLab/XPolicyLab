@@ -132,7 +132,7 @@ def run(api, command, args):
 
         # Withdraw vertically if the retained bottom does not already clear
         # the destination by C. The release gap is not part of that clearance:
-        # including it caused a separate 2 mm raise with a full settling hold.
+        # including it would cause a separate 2 mm raise with a full settling hold.
         # Compact translation ends at release, with a monotonically descending
         # bottom that stays above the support under the declared grasp model.
         # This does not establish clearance over intervening obstacles.

@@ -1,10 +1,9 @@
 """Episode logic of robo-server, independent of how the robot is driven.
 
 An Executor provides the robot state, runs joint-target chunks and returns
-observations. Two executors exist: the direct one drives the RoboDojo
-environment in-process (main.py); the bridge one hands the chunks to the
-official evaluation client through an XPolicyLab policy server (bridge.py).
-Everything the agent sees is produced here, so both modes behave the same.
+observations. Here the executor is the bridge (bridge.py): it hands the chunks
+to the official evaluation client through an XPolicyLab policy server.
+Everything the agent sees is produced here.
 """
 
 import io
@@ -37,6 +36,16 @@ TCP_OFFSET_M = 0.145  # RoboDojo's gripper_bias: end link to the point between t
 
 def log(message):
     print(f"[robo-server] {message}", flush=True)
+
+
+class NoDepth(dict):
+    """The depth slot of an observation in this harness: always empty. `.get()` returns None; indexing raises a
+    KeyError whose message says what to use instead, so a tool that still reads depth fails with a readable reason."""
+    MESSAGE = ("no depth in this harness: the observation is RGB and camera matrices only; use robo table_plane "
+               "and pixel rays against a plane of known height, or triangulate one point seen by two cameras")
+
+    def __getitem__(self, key):
+        raise KeyError(self.MESSAGE)
 
 
 def depth_preview(depth):

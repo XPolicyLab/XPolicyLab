@@ -1,5 +1,6 @@
 """Map a measured held plane to a frame defined by two observed endpoints."""
 import importlib.util
+import json
 from pathlib import Path
 import numpy as np
 
@@ -12,18 +13,18 @@ def load(name):
     return module
 
 
-surface = load('surface_frame')
-pixel = load('locate_pixel')
+rgb = load('rgb_geometry')
+placement = load('frame_place')
 TOOL = dict(name='place_between', commands=[dict(
     name='place_between', budget=True,
-    help='map a held plane to an observed endpoint midpoint and directed vertical frame',
+    help='triangulate a held face and destination endpoints, then map to a vertical frame',
     args=[
         dict(name='arm', positional=True, choices=['left', 'right']),
-        *[dict(arg) for arg in surface.TOOL['commands'][0]['args']],
-        *[dict(name=p + '_' + a, type='int', required=True)
-          for p in ('a', 'b') for a in ('u', 'v')],
-        dict(name='target_camera', default='head', choices=list(surface.SOURCES)),
-        dict(name='target_radius', type='int', default=1),
+        *rgb.CAMERA_ARGS,
+        dict(name='pairs', type='str', required=True),
+        dict(name='target_pairs', type='str', required=True),
+        dict(name='target_camera', default='head', choices=list(rgb.SOURCES)),
+        dict(name='target_camera2', default='wrist_r', choices=list(rgb.SOURCES)),
         *[dict(name='d' + a, type='float', default=0.) for a in 'xyz'],
         dict(name='clearance', type='float', default=.06),
         dict(name='tolerance', type='float', default=.008),
@@ -55,26 +56,31 @@ def run(api, command, args):
     try:
         if command != 'place_between' or args.get('arm') not in ('left', 'right'):
             raise ValueError('invalid command or arm')
+        # Bound and validate both selections before any robot command.
+        encoded = args['target_pairs']
+        if not isinstance(encoded, str) or len(encoded) > 2048:
+            raise ValueError('target_pairs must be a JSON array string')
+        pixels = np.asarray(json.loads(encoded), dtype=float)
+        if pixels.shape != (2, 4) or not np.isfinite(pixels).all():
+            raise ValueError('target_pairs must have two rows [u,v,u2,v2]')
         observation = api.observe()
-        source = surface.SOURCES[args.get('camera', 'head')]
-        measured = surface.measure_frame(
-            observation['depth'][source], observation['cameras'][source],
-            *[surface.integer(args[k]) for k in ('u', 'v', 'up_u', 'up_v')],
-            surface.integer(args.get('radius', 5)))
-        target = surface.SOURCES[args.get('target_camera', 'head')]
-        # Validate proper rigid calibration even if target is a different camera.
-        pixel.valid_pose(observation['cameras'][target]['extrinsics_world'])
-        points = [pixel.measure(
-            observation['depth'][target], observation['cameras'][target],
-            pixel.integer(args[p + '_u']), pixel.integer(args[p + '_v']),
-            pixel.integer(args.get('target_radius', 1)))[0] for p in ('a', 'b')]
+        measured = rgb.frame(observation, args)
+        endpoints = [rgb.stereo(observation, args.get('target_camera', 'head'),
+                               args.get('target_camera2', 'wrist_r'), row)
+                     for row in pixels]
+        points = np.array([item['surface_world'] for item in endpoints])
         frame = destination(*points, [float(args.get('d' + a, 0)) for a in 'xyz'])
+        sensitivity = max(item['half_pixel_sensitivity_m'] for item in endpoints)
+        span = float(np.linalg.norm(points[1] - points[0]))
+        if sensitivity > .004 or 2 * sensitivity / span > .1:
+            raise ValueError('destination position or direction poorly conditioned')
         execution = dict(args)
         execution.update(measured['place_frame_source'])
         execution.update(frame)
-        result, code = surface._placement.run(api, 'place_frame', execution)
-        result.update(measured_source=measured, measured_endpoints=[p.tolist() for p in points],
-                      destination_frame=frame)
+        result, code = placement.run(api, 'place_frame', execution)
+        result.update(measured_source=measured, measured_endpoints=points.tolist(),
+                      endpoint_measurements=endpoints, destination_frame=frame,
+                      correspondence_verified=False)
         return result, code
     except Exception as exc:
         return dict(plan_ok=False, plan_fail_reason='measurement_failed', plan_detail=str(exc),

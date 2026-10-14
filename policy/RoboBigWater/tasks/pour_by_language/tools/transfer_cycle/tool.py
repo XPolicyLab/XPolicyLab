@@ -6,16 +6,16 @@ import numpy as np
 
 
 # Sustained exposure is separate from the endpoint settling allowance.
-# Forty-five stationary ticks test incomplete drainage after accurate
-# forty-tick holds failed completion. Exposure is not transfer evidence.
+# Forty-five stationary ticks is a design dwell for drainage.
+# Exposure is not transfer evidence.
 MIN_DWELL = 1.80
 DEFAULT_DWELL = MIN_DWELL
-# Accurate 135-degree exposure still failed completion with 45 stable ticks.
-# Test deeper inversion without extending dwell or adding arc stops. Retain
-# tracking, observed clearance and live reserves; capture remains unverified.
+# Design inversion angle: prefer deeper inversion to a longer dwell or extra
+# arc stops. Retain tracking, observed clearance and live reserves; capture
+# remains unverified.
 MIN_PITCH = 140
 DEFAULT_PITCH = MIN_PITCH
-# Bound depth-supported lowering without weakening the local hand allowance.
+# Bound RGB-supported lowering without weakening the local hand allowance.
 ARC_LOWERING_CAP = .02
 # Each arc endpoint forces a new acceleration/braking cycle. A bounded
 # 8.5 mm nominal tip chord trades centering precision for stationary exposure.
@@ -92,29 +92,31 @@ def audit_held_axis(api, arm, baseline, local_centre, local_axis, radius):
 
 
 def observe_endpoint(observation, expected):
-    """Fit an upper annulus near a predicted world point, using public depth."""
-    depths, cameras = observation.get('depth', {}), observation.get('cameras', {})
-    name = next((n for n in ('cam_head', 'head') if n in depths and n in cameras), None)
-    if name is None:
-        raise ValueError('paired head depth/calibration required for endpoint verification')
-    depth = np.asarray(depths[name], dtype=float)
-    if depth.ndim == 3 and depth.shape[-1] == 1:
-        depth = depth[..., 0]
-    k = np.asarray(cameras[name]['intrinsics'], dtype=float)
-    t = np.asarray(cameras[name]['extrinsics_world'], dtype=float)
-    if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
-            or not np.isfinite(k).all() or not np.isfinite(t).all()
-            or not np.allclose(t[3], [0, 0, 0, 1])
-            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)):
-        raise ValueError('invalid head depth/calibration')
-    v, u = np.nonzero(np.isfinite(depth) & (depth > 0))
-    pixels = np.column_stack((u, v, np.ones(len(u))))
-    points = ((pixels @ np.linalg.inv(k).T) * depth[v, u, None]) @ t[:3, :3].T + t[:3, 3]
-    local = points[(np.linalg.norm(points[:, :2] - expected[:2], axis=1) <= .055)
-                   & (np.abs(points[:, 2] - expected[2]) <= .025)]
-    result = _tip.fit_tip(local)
+    """Fit an upper annulus near a prediction from calibrated RGB stereo."""
+    try:
+        points = _axis.rgb.cloud(observation, 'head')['points']
+        local = points[(np.linalg.norm(points[:, :2] - expected[:2], axis=1) <= .055)
+                       & (np.abs(points[:, 2] - expected[2]) <= .025)]
+        result = _tip.fit_tip(local)
+    except ValueError:
+        view = _axis.rgb.views(observation).get('cam_head')
+        if view is None:
+            raise ValueError('paired RGB PNGs and camera calibrations required')
+        pixel, distance = _axis.rgb.project(np.asarray(expected)[None], view)
+        if distance[0] <= 0:
+            raise ValueError('predicted endpoint behind camera')
+        u, v = np.round(pixel[0]).astype(int)
+        result = _axis.rgb.horizontal_ring(observation, int(u), int(v), window=24,
+                       minimum_radius=.006, maximum_radius=.04, expected=expected)
+        result['endpoint_z'] = result.pop('rim_z')
+        result.pop('clearance_verified')
+        result['endpoint_verified'] = False
     if np.linalg.norm(np.asarray(result['centre_world']) - expected) > .02:
         raise ValueError('observed endpoint disagrees with predicted position')
+    result['conic_scales'] = _axis.rgb.conic_scales(
+        observation, result['centre_world'], result['radius_m'])
+    result['arc_scales'] = _axis.rgb.arc_scales(
+        observation, result['centre_world'], result['radius_m'])
     return result
 
 
@@ -321,17 +323,23 @@ def correct_arc(path, upright, delta, minimum_height):
 
 
 def verify_lift(api, measured, source, length, before, evidence):
-    """Require repeatable depth at a stationary TCP; never retry motion.
+    """Require repeatable RGB geometry at a stationary TCP; never retry motion.
 
     A single read immediately after motion can disagree with a subsequent
     read at the same robot pose. Keep the acquisition tolerances, and bound
     re-observation rather than treating the first apparent shift as slip.
+    A valid third read receives one final confirmation opportunity; absent
+    geometry never extends the three-read search and motion is never retried.
     """
     expected = np.asarray(before['centre_world']) + measured[:3, 3] - source
     previous = None
     attempts = []
     evidence['observation_attempts'] = attempts
-    for _ in range(3):
+    for attempt in range(4):
+        if attempt == 3:
+            if previous is None:
+                break
+            evidence['final_confirmation_read'] = True
         try:
             if api.over:
                 raise RuntimeError('episode ended')
@@ -339,7 +347,28 @@ def verify_lift(api, measured, source, length, before, evidence):
                                                         measured[:3, 3], measured[:3, :3])
             if position_error > .001 or angle_error > .25:
                 raise RuntimeError('TCP changed during endpoint observations')
-            after = observe_endpoint(api.observe(), expected)
+            observation = api.observe()
+            try:
+                after = observe_endpoint(observation, expected)
+            except ValueError as exc:
+                if 'ambiguous' in str(exc):
+                    raise
+                # A closed contour can disappear after lifting even with broad
+                # visible arcs. The prior only seeds a fresh two-view edge fit.
+                try:
+                    after = _axis.rgb.tracked_ring(observation, expected, before['radius_m'])
+                except ValueError as exc:
+                    # Never resolve conflicting stereo evidence with one view.
+                    if 'no supported two-view edges' not in str(exc):
+                        raise
+                    try:
+                        after = _axis.rgb.scaled_ring(observation, expected, before['radius_m'],
+                                                     before.get('conic_scales', {}))
+                    except ValueError as exc:
+                        if 'no complete conic' not in str(exc):
+                            raise
+                        after = _axis.rgb.scaled_arc(observation, expected, before['radius_m'],
+                                                    before.get('arc_scales', {}))
             point = np.asarray(after['centre_world'])
             error = float(np.linalg.norm(point - expected))
             delta = point - measured[:3, 3] - np.array([0., 0., length])
@@ -479,7 +508,7 @@ def motion_steps(previous, pos, rot):
 
     Nominal .20 m/s and 90 deg/s are planning estimates, not server limits.
     The server has a one-tick minimum and no fixed settling holds; measured
-    joint convergence can still add time. Do not add the retired eight ticks.
+    joint convergence can still add time. Do not add a fixed eight-tick settle.
     """
     relative = previous[:3, :3].T @ rot
     angle = math.degrees(math.acos(float(np.clip((np.trace(relative)-1)/2, -1, 1))))
@@ -553,7 +582,7 @@ def hand_cloud(pose):
 
 
 def entry_obstacle_points(points, source, tip, entry_offset, top):
-    """Positive depth evidence in the rear-hand entry sweep, not free-space proof.
+    """Positive RGB stereo evidence in the rear-hand entry sweep, not free-space proof.
 
     The upright entry frame always approaches along +Y. Exclude the intended
     grasp region and inspect the rear 75..145 mm of the existing hand model,
@@ -572,7 +601,7 @@ def entry_obstacle_points(points, source, tip, entry_offset, top):
                      & (local[:, 1] <= -.075)
                      & (local[:, 2] >= -.033)
                      & (points[:, 2] <= top+.033)]
-    # Deduplicate depth pixels spatially. Six supported cells reject isolated
+    # Deduplicate triangulated samples spatially. Six supported cells reject isolated
     # spikes without requiring a particular image resolution or camera pose.
     cells = np.unique(np.floor(selected / .004).astype(np.int64), axis=0)
     result = dict(status='no_supported_obstacle', clearance_verified=False,
@@ -638,7 +667,7 @@ def timing_alternatives(api, args):
     """Bounded read-only search; preserve the supplied endpoint and target.
 
     Suggestions are never executed. Each candidate goes through the same
-    geometry/depth/entry/clearance validation as an ordinary estimate.
+    geometry/RGB/entry/clearance validation as an ordinary estimate.
     """
     candidates = []
     for rise in (.01, .02, .03, .04):
@@ -728,7 +757,7 @@ def run(api, command, args):
                                         empty_above[2] if not entry_offset else above[2])
         if entry_evidence['status'] == 'observed_obstacle':
             return dict(plan_ok=False, plan_fail_reason='observed_entry_obstacle',
-                        plan_detail='Depth intersects the rear-hand entry envelope; '
+                        plan_detail='RGB stereo points intersect the rear-hand entry envelope; '
                                     'remeasure a higher section before requesting new geometry.',
                         entry_clearance=entry_evidence, stages=[]), 2
         # Keep every loaded crossing upright. A tilted crossing can shed
@@ -785,8 +814,8 @@ def run(api, command, args):
                     suggested_geometry=dict(tx=values['tx'], ty=values['ty'],
                                             tz=terminal['suggested_target_z']), stages=[]), 2
             lowered = lower_arc(arc, angles, profile, values['tz'], values['tip'])
-            # Large envelope-only drops previously stalled intermediate motion.
-            # Keep the 20 mm cap through horizontal, where deeper drops stalled.
+            # Large envelope-only drops can stall intermediate motion. Keep
+            # the 20 mm design cap through horizontal.
             # Beyond horizontal allow the downward axial projection as well.
             # Retain a 50 mm TCP underside
             # allowance above the observed ceiling (in addition to its padding).

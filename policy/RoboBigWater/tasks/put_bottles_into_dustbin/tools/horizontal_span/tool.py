@@ -132,25 +132,19 @@ def run(api, command, args):
                                    "Vertical reconstruction requires independently selected "
                                    "base/top endpoints; side segment endpoints are not end caps.",
                     "geometry_verified": False}, 2
-        support, detail = None, "unavailable"
-        try:
-            support = _support.support_plane(obs.get("depth", {})[key], k, t, size, pixels.mean(0))
-        except _support.AmbiguousSupport as exc:
-            return {"plan_ok": False, "plan_fail_reason": "support_height_ambiguous",
-                    "support_candidates": exc.candidates,
-                    "plan_detail": str(exc), "geometry_verified": False}, 2
-        except Exception as exc:
-            detail = str(exc)
+        support, detail = _support.rgb_support(api)
         if supplied is None:
             if support is None:
-                raise ValueError("support estimate unavailable; supply support_z: " + detail)
+                raise ValueError("RGB support estimate unavailable; supply measured support_z: " + detail)
             z = support["height_m"]
             se = max(se, support["uncertainty_m"])
         else:
             z = float(supplied)
-            if support is not None and abs(z-support["height_m"]) > max(.025, se+.005):
+            if _support.support_mismatch(z, support):
                 return {"plan_ok": False, "plan_fail_reason": "support_height_mismatch",
-                        "support_estimate": support,
+                        "plan_detail": "supplied height disagrees with measured RGB support by >12 mm; "
+                                       "retry_args omits height to reconstruct from the measurement",
+                        "supplied_support_z": z, "support_estimate": support,
                         "retry_args": {n: v for n, v in args.items() if n != "support_z"}}, 2
         center, axis, radius, residual = fit(k, t, pixels, z)
         if residual > pe+1:
@@ -174,7 +168,7 @@ def run(api, command, args):
                 "support_z": z, "support_estimate": support, "support_error": se,
                 "sampled_center_bounds": [points.min(0).tolist(), points.max(0).tolist()],
                 "sampled_radius_range_m": [min(radii), max(radii)],
-                "depth_used": support is not None, "geometry_verified": False,
+                "depth_used": False, "geometry_verified": False,
                 "assumption": "two straight silhouette sides of one circular horizontal body resting on support; "
                               "center is near selected axial midpoint; samples are not certified bounds and exclude "
                               "calibration, occlusion, taper and wrong identity"}, 0

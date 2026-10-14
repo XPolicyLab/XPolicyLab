@@ -1,4 +1,4 @@
-"""Seeded RGB-D registration; all geometry is measured from public observations."""
+"""Seeded RGB planar registration from calibrated color silhouettes."""
 import math
 import cv2
 import numpy as np
@@ -10,7 +10,9 @@ TOOL = {"name": "surface_pair", "commands": [{
     "args": [{"name": n, "type": "int", "required": True}
              for n in ("u", "v", "ref_u", "ref_v")]
             + [{"name": "camera", "type": "str", "default": "head"},
-               {"name": "color_tol", "type": "float", "default": 35}],
+               {"name": "color_tol", "type": "float", "default": 35},
+               {"name": "z", "type": "float", "default": None},
+               {"name": "ref_z", "type": "float", "default": None}],
 }]}
 
 def rz(degrees):
@@ -19,40 +21,163 @@ def rz(degrees):
     return np.array([[c, -s], [s, c]])
 
 
-def region(rgb, depth, camera, u, v, tolerance):
-    h, w = depth.shape
+def views(obs):
+    result = {}
+    for name, cam in obs.get("cameras", {}).items():
+        data = obs.get("png", {}).get(name)
+        if data is None:
+            continue
+        image = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+        k, t = np.asarray(cam["intrinsics"], float), np.asarray(cam["extrinsics_world"], float)
+        if (image is None or k.shape != (3, 3) or t.shape != (4, 4)
+                or not np.isfinite(k).all() or not np.isfinite(t).all()
+                or abs(np.linalg.det(k)) < 1e-9
+                or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=.001)):
+            continue
+        result[name] = (image, k, t)
+    return result
+
+
+def components(image, color, tolerance):
+    # Absolute RGB changes with illumination and viewpoint. Match chromatic
+    # identity first, then estimate the bright face independently in each view.
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    seed = cv2.cvtColor(np.uint8([[color]]), cv2.COLOR_BGR2HSV)[0, 0]
+    if seed[1] >= 60:
+        distance = np.abs(hsv[..., 0].astype(float) - float(seed[0]))
+        distance = np.minimum(distance, 180-distance)
+        mask = ((distance <= min(15, tolerance / 4)) & (hsv[..., 1] >= 60)
+                & (hsv[..., 2] >= 35)).astype(np.uint8)
+    else:
+        mask = (np.linalg.norm(image.astype(float) - color, axis=2) <= tolerance).astype(np.uint8)
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    regions = []
+    for label in range(1, count):
+        x, y, w, h, area = stats[label]
+        if not 30 <= area <= image.shape[0] * image.shape[1] * .2:
+            continue
+        if x == 0 or y == 0 or x+w == image.shape[1] or y+h == image.shape[0]:
+            continue
+        region = (labels == label).astype(np.uint8)
+        # Side faces share hue but are not coplanar with the top. Split only
+        # statistically distinct brightness modes, not a smooth shading ramp.
+        values = gray[region != 0]
+        threshold, _ = cv2.threshold(values, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        low, high = values[values <= threshold], values[values > threshold]
+        if (len(low) >= max(8, .04*area) and len(high) >= .3*area
+                and high.mean()-low.mean() >= 15
+                and high.mean()-low.mean() >= 3 * max(low.std(), high.std(), 1)):
+            region &= (gray > threshold).astype(np.uint8)
+            n, faces, sizes, _ = cv2.connectedComponentsWithStats(region, 8)
+            if n < 2:
+                continue
+            largest = 1 + int(np.argmax(sizes[1:, cv2.CC_STAT_AREA]))
+            region = (faces == largest).astype(np.uint8)
+            if region.sum() < 30:
+                continue
+        contours, _ = cv2.findContours(region, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        contour = max(contours, key=cv2.contourArea)[:, 0].astype(float)
+        regions.append((region, contour))
+    return regions
+
+
+def rays_at(pixels, view, z):
+    _, k, t = view
+    rays = np.column_stack((pixels, np.ones(len(pixels)))) @ np.linalg.inv(k).T @ t[:3, :3].T
+    if np.any(np.abs(rays[:, 2]) < 1e-5):
+        raise ValueError("near-horizontal pixel ray")
+    lengths = (z - t[2, 3]) / rays[:, 2]
+    if np.any(lengths <= 0):
+        raise ValueError("plane is behind camera")
+    return t[:3, 3] + lengths[:, None] * rays
+
+
+def boundary_samples(contour, view, z):
+    xy = rays_at(contour, view, z)[:, :2]
+    samples = []
+    for start, end in zip(xy, np.roll(xy, -1, axis=0)):
+        n = max(1, int(np.ceil(np.linalg.norm(end-start)/.001)))
+        if n > 200:
+            raise ValueError("outline outside useful metric scale")
+        samples.extend(start + (end-start) * np.arange(n)[:, None]/n)
+    return np.asarray(samples)
+
+
+def plane_height(reference, contour, other_regions):
+    """Find the horizontal plane where independently visible outlines coincide.
+
+    The search interval is a workspace envelope, not an assumed surface height.
+    Each other view must have a distinct camera center and a sharp minimum.
+    """
+    estimates = []
+    for other_view, regions in other_regions:
+        if np.linalg.norm(reference[2][:3, 3] - other_view[2][:3, 3]) < .05:
+            continue
+        def score(z):
+            try:
+                a = boundary_samples(contour, reference, z)
+                tree = cKDTree(a)
+                errors = []
+                for _, edge in regions:
+                    b = boundary_samples(edge, other_view, z)
+                    # Both directions penalize missing and extra silhouette area.
+                    errors.append(math.sqrt((np.mean(tree.query(b)[0]**2)
+                        + np.mean(cKDTree(b).query(a)[0]**2))/2))
+                return min(errors, default=float("inf"))
+            except ValueError:
+                return float("inf")
+        coarse = np.arange(.50, 1.151, .01)
+        errors = np.array([score(z) for z in coarse])
+        index = int(np.argmin(errors))
+        if index in (0, len(coarse)-1) or not np.isfinite(errors[index]):
+            continue
+        fine = np.arange(coarse[index]-.012, coarse[index]+.0121, .0005)
+        values = np.array([score(z) for z in fine])
+        best = int(np.argmin(values))
+        height, error = float(fine[best]), float(values[best])
+        separated = min(score(height-.01), score(height+.01))
+        if error <= .0025 and separated > error+.001:
+            estimates.append((height, error))
+    if not estimates:
+        raise ValueError("no sharp multiview surface-height match; supply measured z or improve visibility")
+    heights = np.array([item[0] for item in estimates])
+    if np.ptp(heights) > .004:
+        raise ValueError("camera pairs disagree on surface height")
+    return float(np.median(heights)), max(item[1] for item in estimates)
+
+
+def region(all_views, name, u, v, tolerance, height=None):
+    view = all_views[name]
+    image = view[0]
+    h, w = image.shape[:2]
     if not (0 <= u < w and 0 <= v < h):
         raise ValueError("seed outside image")
-    color = rgb[v, u].astype(float)
-    mask = (np.linalg.norm(rgb.astype(float) - color, axis=2) <= tolerance)
-    mask &= np.isfinite(depth) & (depth > 0)
-    _, labels = cv2.connectedComponents(mask.astype(np.uint8), connectivity=8)
-    label = labels[v, u]
-    if label == 0:
-        raise ValueError("seed has no valid depth")
-    vv, uu = np.nonzero(labels == label)
-    if not 30 <= len(uu) <= h * w * 0.2:
-        raise ValueError("region too small or too large; select an interior seed")
-    k = np.asarray(camera["intrinsics"], float)
-    t = np.asarray(camera["extrinsics_world"], float)
-    rays = np.linalg.solve(k, np.stack([uu, vv, np.ones(len(uu))]))
-    points = (t[:3, :3] @ (rays * depth[vv, uu]) + t[:3, 3, None]).T
-    z = float(np.median(points[:, 2]))
-    if np.mean(np.abs(points[:, 2] - z) < 0.004) < 0.65:
-        raise ValueError("region is not predominantly horizontal")
-    points = points[np.abs(points[:, 2] - z) < 0.004]
-    if len(points) < 25:
-        raise ValueError("insufficient planar surface")
-    if np.ptp(points[:, 2]) > 0.008:
-        raise ValueError("region is not horizontal")
-    # Equal-area sampling removes perspective-dependent pixel density.
-    _, indices = np.unique(np.round(points[:, :2] / 0.002), axis=0, return_index=True)
-    xy = points[indices, :2]
-    ray = t[:3, :3] @ np.linalg.solve(k, [u, v, 1])
-    seed = t[:3, 3] + ray * float(depth[v, u])
-    if abs(seed[2] - z) > 0.004:
-        raise ValueError("seed is not on the planar surface")
-    return xy, seed, z, len(uu)
+    color = image[v, u].astype(float)
+    selected = [(mask, edge) for mask, edge in components(image, color, tolerance) if mask[v, u]]
+    if len(selected) != 1:
+        raise ValueError("seed has no complete color region")
+    mask, contour = selected[0]
+    height_error = None
+    if height is None:
+        others = [(other, components(other[0], color, tolerance))
+                  for key, other in all_views.items() if key != name]
+        height, height_error = plane_height(view, contour, others)
+    height = float(height)
+    if not math.isfinite(height) or not .50 <= height <= 1.15:
+        raise ValueError("z must be a measured world height in .50..1.15 m")
+    edge = rays_at(contour, view, height)[:, :2]
+    # Rasterize in world XY for equal-area samples, independent of perspective.
+    origin = edge.min(axis=0)-.002
+    shape = np.ceil((edge.max(axis=0)-origin)/.001).astype(int)+3
+    if np.max(shape) > 600 or np.min(shape) < 5:
+        raise ValueError("outline outside useful metric scale")
+    raster = np.zeros((shape[1], shape[0]), np.uint8)
+    cv2.fillPoly(raster, [np.round((edge-origin)/.001).astype(np.int32)], 1)
+    yy, xx = np.nonzero(raster)
+    xy = origin + np.column_stack((xx, yy))*.001
+    seed = rays_at(np.array([[u, v]]), view, height)[0]
+    return xy, seed, height, int(mask.sum()), height_error
 
 
 def register(source, reference):
@@ -198,13 +323,10 @@ def run(api, command, args):
         name = args.get("camera", "head")
         name = {"head": "cam_head", "wrist_l": "cam_left_wrist",
                 "wrist_r": "cam_right_wrist"}.get(name, name)
-        camera = obs["cameras"][name]
-        depth = np.asarray(obs["depth"][name], float)
-        rgb = cv2.imdecode(np.frombuffer(obs["png"][name], np.uint8), cv2.IMREAD_COLOR)
-        if rgb is None or rgb.shape[:2] != depth.shape:
-            raise ValueError("invalid RGB-D image")
-        source, seed, z, count = region(rgb, depth, camera, *seeds[:2], tolerance)
-        reference, ref_seed, ref_z, ref_count = region(rgb, depth, camera, *seeds[2:], tolerance)
+        all_views = views(obs)
+        source, seed, z, count, z_error = region(all_views, name, *seeds[:2], tolerance, args.get("z"))
+        reference, ref_seed, ref_z, ref_count, ref_error = region(
+            all_views, name, *seeds[2:], tolerance, args.get("ref_z"))
         if np.linalg.norm(source.mean(axis=0) - reference.mean(axis=0)) < .01:
             raise ValueError("seeds must identify distinct regions")
         rotation, offset, error = register(source, reference)
@@ -212,6 +334,7 @@ def run(api, command, args):
         inverse = contact_result(reference, ref_z, rotation.T, -rotation.T @ offset, z)
         return dict(plan_ok=True, plan_fail_reason=None, first=forward, second=inverse,
                     fit_rms_m=error, region_pixels=[count, ref_count],
+                    height_fit_rms_m=[z_error, ref_error], source="RGB calibrated planes",
                     grasp_verified=False), 0
     except Exception as exc:
         return dict(plan_ok=False, plan_fail_reason="surface_measurement_failed",

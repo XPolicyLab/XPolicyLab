@@ -93,10 +93,8 @@ Commands that move the robot refresh `obs/` before they return.
 | `obs/wrist_l.png` | Camera on the left wrist, 640x480 |
 | `obs/wrist_r.png` | Camera on the right wrist, 640x480 |
 | `obs/state.json` | State of both arms and the camera parameters |
-| `obs/head_depth.npy`, `obs/wrist_l_depth.npy`, `obs/wrist_r_depth.npy` | Depth of the same three images: float32 array of shape (480, 640), metres along the camera z axis (distance to the image plane), 0 where there is no data. Load with `numpy.load` |
-| `obs/*_depth.png` | Grayscale preview of the depth: near is bright, far is dark |
 
-The depth is **estimated from the colour image** by a neural network (Depth Anything V2), with its scale set from the known table plane; it is not measured. Expect errors of 2 to 4 cm on objects, more on the wrist cameras, at object edges and on thin parts; flat table pixels near the robot are the most reliable. Treat depth as approximate: prefer values averaged over a region to single pixels, check results against known object sizes and the table height, and confirm by observing again after a motion.
+There is **no depth image**. Positions in 3D come from the colour images and the camera parameters below: a pixel defines a ray from the camera; where that ray meets a plane of known height (the table, see `robo table_plane`) or the ray from a second camera to the same point is where the point is.
 
 `obs/state.json`:
 
@@ -107,7 +105,7 @@ The depth is **estimated from the colour image** by a neural network (Depth Anyt
 - `sim_time_left_s`, `budget_left`, `step`.
 
 A world point p is seen at pixel (u, v) with p_cam = inverse(T) * p, u = K[0][0] * p_cam.x / p_cam.z + K[0][2], v = K[1][1] * p_cam.y / p_cam.z + K[1][2].
-The other way round, pixel (u, v) with depth d is the world point T * [(u - K[0][2]) * d / K[0][0], (v - K[1][2]) * d / K[1][1], d, 1].
+The other way round, pixel (u, v) is the ray from the camera centre T[0:3, 3] along R * [(u - K[0][2]) / K[0][0], (v - K[1][2]) / K[1][1], 1], with R = T[0:3, 0:3]; on the plane z = h it is the point at distance (h - c.z) / d.z along the ray (c the centre, d the direction).
 
 ## Extra tools
 

@@ -1,4 +1,4 @@
-"""RGB-D surface measurement and bounded, visually checked transfers."""
+"""RGB stereo surface measurement and bounded, visually checked transfers."""
 import numpy as np
 
 
@@ -13,6 +13,9 @@ def arg(name, default=None, required=False, kind="float", **extra):
 
 
 TOOL = {"name": "precision_transfer", "commands": [
+    {"name": "locate", "budget": False, "help": "intersect a pixel ray with a measured horizontal plane",
+     "args": [arg("u", required=True), arg("v", required=True), arg("z"),
+              arg("camera", "head", kind="str")]},
     {"name": "surface", "budget": False, "help": "measure a colored surface near a pixel",
      "args": [arg("u", required=True), arg("v", required=True),
               arg("camera", "head", kind="str")]},
@@ -21,26 +24,41 @@ TOOL = {"name": "precision_transfer", "commands": [
              [arg(k, required=True) for k in ("x", "y", "z", "to_x", "to_y", "to_z")] +
              [arg("open", "x", kind="str", choices=["x", "y"]),
               arg("approach", "down", kind="str", choices=["down", "down45"]),
-              arg("clearance", .045), arg("seat", .003),
+              arg("clearance", .045), arg("seat", .003), arg("source_plane"), arg("yaw", 0.),
               arg("landing", "auto", kind="str", choices=["auto", "off"])]}
 ]}
 
 
-def cloud(obs, camera="head"):
-    import cv2
-    key = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}.get(camera, camera)
-    if key not in obs["cameras"]:
-        raise ValueError("camera unavailable")
-    dep = np.asarray(obs["depth"][key]).squeeze()
-    bgr = cv2.imdecode(np.frombuffer(obs["png"][key], np.uint8), cv2.IMREAD_COLOR)
-    hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
-    c = obs["cameras"][key]
-    k, t = np.asarray(c["intrinsics"]), np.asarray(c["extrinsics_world"])
-    v, u = np.indices(dep.shape)
-    rays = np.stack([u, v, np.ones_like(u)], -1) @ np.linalg.inv(k).T
-    xyz = (rays * dep[..., None]) @ t[:3, :3].T + t[:3, 3]
-    valid = np.isfinite(dep) & (dep > 0) & np.isfinite(xyz).all(-1)
-    return xyz, hsv, valid
+# Loaded by path because server tool modules are not Python packages.
+import importlib.util
+from pathlib import Path
+_spec = importlib.util.spec_from_file_location('precision_rgb_geometry', Path(__file__).with_name('rgb_geometry.py'))
+rgb_geometry = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(rgb_geometry)
+_spec = importlib.util.spec_from_file_location('precision_temporal_rgb', Path(__file__).with_name('temporal_rgb.py'))
+temporal_rgb = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(temporal_rgb)
+_cloud_cache = {}
+
+
+def temporal_context():
+    from types import SimpleNamespace
+    return SimpleNamespace(rgb_geometry=rgb_geometry, surface=surface, hue_mask=hue_mask)
+
+
+
+def cloud(obs, camera="head", seed=None):
+    # Cache only identical RGB bytes AND calibration; never reuse a moved view.
+    key = (camera, seed, tuple((name, obs['png'].get(name),
+                         np.asarray(c['intrinsics']).tobytes(),
+                         np.asarray(c['extrinsics_world']).tobytes())
+                        for name, c in sorted(obs['cameras'].items())))
+    if key not in _cloud_cache:
+        result = rgb_geometry.cloud(obs, camera, seed=seed)
+        if len(_cloud_cache) >= 3:
+            _cloud_cache.clear()
+        _cloud_cache[key] = result
+    return _cloud_cache[key]
 
 
 def hue_mask(hsv, hue):
@@ -88,9 +106,35 @@ def enclosed_pinch(selected, xyz, points, center):
     return grasp, "xy"[axis], widths
 
 
-def surface(obs, u, v, camera, search_hues=True):
+def footprint_axis(points):
+    """Undirected geometric principal axis, never semantic uprightness."""
+    xy = np.asarray(points, float)[:, :2]
+    values, vectors = np.linalg.eigh(np.cov(xy.T))
+    ratio = float(values[1] / max(values[0], 1e-12))
+    direction = vectors[:, 1]
+    angle = float(np.degrees(np.arctan2(direction[1], direction[0])) % 180.)
+    return dict(axis_angle_deg=angle if ratio >= 1.2 else None,
+                axis_anisotropy=ratio, axis_period_deg=180)
+
+
+def surface(obs, u, v, camera, search_hues=True, plane_z=None):
     import cv2
-    xyz, hsv, valid = cloud(obs, camera)
+    if plane_z is None:
+        xyz, hsv, valid = cloud(obs, camera, seed=(float(u), float(v)))
+        if not valid.any():
+            raise ValueError("local RGB silhouettes have no reliable stereo height; overlapping calibrated views are required")
+    else:
+        # Explicit measured-plane projection is for static source metrology only.
+        # Never add it to cloud(): that would fabricate height evidence for
+        # retention checks while material is moving or occluded.
+        img, k, t = rgb_geometry.view(obs, camera)
+        if not np.isfinite(plane_z):
+            raise ValueError("plane height must be finite")
+        vv, uu = np.indices(img.shape[:2])
+        xyz, valid = rgb_geometry.intersect(k, t, np.column_stack([uu.ravel(), vv.ravel()]), plane_z)
+        xyz = xyz.reshape((*img.shape[:2], 3))
+        valid = valid.reshape(img.shape[:2])
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h, w = valid.shape
     if not np.isfinite([u, v]).all() or not (0 <= u < w and 0 <= v < h):
         raise ValueError("pixel outside image")
@@ -102,10 +146,11 @@ def surface(obs, u, v, camera, search_hues=True):
     # Validate geometry before committing to a seed hue. A click beside thin
     # material often lands on a saturated support, even within the search disk.
     order = np.argsort(distance[near], kind="stable")
-    hues = hsv[..., 0][near][order]
+    hues = hsv[..., 0][near][order].tolist()
     tried = set()
     reason = "no connected color surface"
-    selected = None
+    anchor = None
+    best = None
     for seed in hues:
         hue = float(seed)
         if hue in tried:
@@ -122,6 +167,10 @@ def surface(obs, u, v, camera, search_hues=True):
         # but never let an invalid broad component hide a compact candidate.
         for label in sorted(candidates, key=lambda c: -sizes[c]):
             candidate = labels == label
+            if plane_z is not None and (candidate[0].any() or candidate[-1].any() or
+                                       candidate[:, 0].any() or candidate[:, -1].any()):
+                reason = "component clipped by image boundary"
+                continue
             points = xyz[candidate]
             if len(points) < 8:
                 reason = "visible component too small"
@@ -130,16 +179,30 @@ def surface(obs, u, v, camera, search_hues=True):
             if np.max(hi[:2] - lo[:2]) > .20 or hi[2] - lo[2] > .04:
                 reason = "surface is broad or depth-mixed; select a compact visible patch"
                 continue
-            selected = candidate
+            # A low-saturation shaded edge can be a valid but incomplete
+            # component. Keep the first valid component as an identity anchor,
+            # then consider fuller overlapping hue windows. Never migrate to
+            # a disconnected neighbour or grow by chaining changing anchors.
+            if anchor is None:
+                anchor = candidate.copy()
+                # Include shades already connected to the anchor even when
+                # the click/grasp is farther than 12 px from their boundary.
+                if search_hues:
+                    hues.extend(np.unique(hsv[..., 0][anchor]).tolist())
+            if np.count_nonzero(candidate & anchor) < .8 * np.count_nonzero(anchor):
+                continue
+            if best is None or len(points) > len(best[2]):
+                best = (candidate, hue, points, lo, hi)
             break
-        if selected is not None:
+        if best is not None and not search_hues:
             break
-    if selected is None:
+    if best is None:
         raise ValueError(reason)
+    selected, hue, points, lo, hi = best
     center = (lo + hi) / 2
     top = float(np.percentile(points[:, 2], 85))
     # Stay inside visible material rather than pinching the nearest hole edge.
-    # Image-space thickness is only a ranking; coordinates still come from depth.
+    # Image-space thickness is only a ranking; coordinates come from silhouette stereo.
     top_mask = selected & (xyz[..., 2] >= top - .004)
     interior = cv2.distanceTransform(top_mask.astype(np.uint8), cv2.DIST_L2, 5)
     candidates = top_mask & (interior >= .8 * float(interior.max()))
@@ -159,7 +222,8 @@ def surface(obs, u, v, camera, search_hues=True):
     return dict(center_xy=center[:2].tolist(), top_z=top, grasp_xyz=grasp.tolist(),
                 grasp_offset_xy=(grasp[:2]-center[:2]).tolist(),
                 open_axis=opening, cross_section_xy=widths,
-                extent_xyz=(hi-lo).tolist(), hue=hue, pixels=len(points))
+                extent_xyz=(hi-lo).tolist(), hue=hue, pixels=len(points),
+                **footprint_axis(points))
 
 
 def signature(obs, source):
@@ -185,7 +249,16 @@ def signature(obs, source):
 
 
 def signature_view(obs, source, camera):
-    xyz, hsv, valid = cloud(obs, camera)
+    # Project the requested grasp before stereo fitting. Whole-scene searches
+    # can repeat expensive rejected fits for every shaded clutter component.
+    try:
+        _, k, t = rgb_geometry.view(obs, camera)
+        p = k @ (t[:3, :3].T @ (source-t[:3, 3]))
+        if p[2] <= .02:
+            return None
+        xyz, hsv, valid = cloud(obs, camera, seed=tuple(p[:2]/p[2]))
+    except (ValueError, KeyError):
+        return None
     # A local hue vote can select the support visible around thin material.
     # Seed from the closest observed material to the actual grasp instead.
     distance = np.linalg.norm(xyz-source, axis=-1)
@@ -222,6 +295,9 @@ def signature_view(obs, source, camera):
         break
     if measured is None:
         return None
+    # Local selection is not a complete background model. Preserve full-scene
+    # evidence only after a source has passed the metric/compactness gates.
+    xyz, hsv, valid = cloud(obs, camera)
     # Preserve observed same-color surroundings. A destination support or a
     # neighboring surface is not evidence that this grasp was dropped there.
     background = xyz[valid & hue_mask(hsv, measured["hue"]) &
@@ -260,6 +336,8 @@ def refresh_background(obs, sig, displacement=None):
     Protect the entire planned carry capsule: an early displaced grasp must
     not become background. Never refresh after horizontal transport starts.
     """
+    if isinstance(sig, temporal_rgb.Signature):
+        return sig
     if sig is None or len(sig) < 4:
         return sig
     xyz, hsv, valid = cloud(obs)
@@ -275,6 +353,8 @@ def refresh_background(obs, sig, displacement=None):
 
 
 def check_carry(obs, sig, displacement):
+    if isinstance(sig, temporal_rgb.Signature):
+        return temporal_rgb.check(temporal_context(), obs, sig, displacement)
     if sig is None:
         return {"status": "unverified", "reason": "no color signature"}
     xyz, hsv, valid = cloud(obs)
@@ -358,7 +438,7 @@ def check_carry(obs, sig, displacement):
                 # Optional malformed/absent depth cannot erase head evidence
                 # or abort an otherwise valid transfer.
                 wrist_checks.append(dict(camera=camera, status="unverified",
-                                         reason="wrist RGB-D unavailable"))
+                                         reason="wrist RGB stereo unavailable"))
     return {"status": status, "elevated_pixels": int(held),
             "low_pixels": int(grounded), "source_pixels": int(source_pixels),
             "path_pixels": int(residual),
@@ -373,6 +453,8 @@ def check_landing(obs, sig, displacement):
     precede a slip during lowering. Require a whole component at the release
     footprint, independently of the now elevated hand. Missing views abstain.
     """
+    if isinstance(sig, temporal_rgb.Signature):
+        return temporal_rgb.check(temporal_context(), obs, sig, displacement, landing=True)
     import cv2
     expected = sig[1] + displacement
     views = []
@@ -439,7 +521,13 @@ def supported_release(obs, source, dest, sig):
     info = {"status": "unverified", "lowering_m": 0.}
     if sig is None:
         return dest.copy(), info
-    xyz, _, valid = cloud(obs)
+    try:
+        xyz, _, valid = cloud(obs)
+    except (ValueError, KeyError, rgb_geometry.cv2.error) as exc:
+        # This is an optional endpoint refinement. Missing support geometry
+        # leaves the explicit endpoint intact, not an inferred support plane.
+        info["reason"] = str(exc)
+        return dest.copy(), info
 
     def level(center, inner, outer, ceiling):
         radius = np.linalg.norm(xyz[..., :2] - center[:2], axis=-1)
@@ -583,6 +671,26 @@ def run(api, command, args):
                 "stages": stages, "visual_checks": checks, "released": released}, 2
 
     try:
+        if command == "locate":
+            obs = api.observe()
+            img, k, t = rgb_geometry.view(obs, args.get("camera", "head"))
+            u, v = float(args['u']), float(args['v'])
+            if not np.isfinite([u, v]).all() or not (0 <= u < img.shape[1] and 0 <= v < img.shape[0]):
+                return fail("invalid_arguments", "pixel outside image")
+            z = args.get('z')
+            if z is None:
+                spec = importlib.util.spec_from_file_location('shared_table_plane',
+                    Path(__file__).resolve().parents[4] / 'tools/table_plane/tool.py')
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                z = module.measure_table_z(api)
+            if z is None or not np.isfinite(float(z)):
+                return fail("plane_unmeasured")
+            xyz, valid = rgb_geometry.intersect(k, t, np.array([[u, v]]), float(z))
+            if not valid[0]:
+                return fail("invalid_ray")
+            return dict(plan_ok=True, plan_fail_reason=None, xyz=xyz[0].tolist(),
+                        plane_z=float(z), source="RGB ray / supplied or measured plane"), 0
         if command == "surface":
             result = surface(api.observe(), float(args["u"]), float(args["v"]), args.get("camera", "head"))
             return dict(plan_ok=True, plan_fail_reason=None, **result), 0
@@ -590,6 +698,20 @@ def run(api, command, args):
             return fail("invalid_arguments")
         source = np.array([float(args[k]) for k in ("x", "y", "z")])
         dest = np.array([float(args[k]) for k in ("to_x", "to_y", "to_z")])
+        source_plane = args.get("source_plane")
+        if source_plane is not None:
+            source_plane = float(source_plane)
+            if not np.isfinite(source_plane) or abs(source_plane-source[2]) > .012:
+                return fail("invalid_arguments", "source_plane must be measured and within 12 mm of grasp height")
+        def capture_signature(obs, point):
+            if source_plane is not None:
+                return temporal_rgb.capture(temporal_context(), obs, point, source_plane)
+            return signature(obs, point)
+        yaw = float(args.get("yaw", 0.))
+        if not np.isfinite(yaw) or abs(yaw) > 180.:
+            return fail("invalid_arguments", "yaw must be finite and within +/-180 degrees")
+        if yaw and (source_plane is None or args.get("approach", "down") != "down"):
+            return fail("invalid_arguments", "yaw requires source_plane and approach=down")
         clearance = float(args.get("clearance", .045))
         seat = float(args.get("seat", .003))
         landing = args.get("landing", "auto")
@@ -609,7 +731,7 @@ def run(api, command, args):
         if arm.gripper() < .9:
             return fail("gripper_not_open", "transfer requires an initially open gripper")
         observation = api.observe()
-        sig = signature(observation, source)
+        sig = capture_signature(observation, source)
         source, dest = seated_endpoints(source, dest, sig, seat)
         landing_check = {"status": "disabled", "lowering_m": 0.}
         if landing == "auto":
@@ -741,7 +863,7 @@ def run(api, command, args):
         def recover_signature(stage):
             nonlocal sig, source, dest, path
             if sig is None:
-                sig = signature(api.observe(), source)
+                sig = capture_signature(api.observe(), source)
                 checks.append(dict(stage=stage,
                                    status="measured" if sig is not None else "unverified"))
                 if sig is not None:
@@ -846,13 +968,40 @@ def run(api, command, args):
                 return fail(reason, detail)
             raise
         carry_check = verify("carry")
-        if probed and carry_check["status"] != "visible_at_tcp":
+        if (probed or isinstance(sig, temporal_rgb.Signature)) and carry_check["status"] != "visible_at_tcp":
             return fail("visual_grasp_unverified", "held surface not confirmed after probe-height carry; gripper remains closed")
+        if yaw:
+            # Rotate only after confirmed transport, at clearance height. Keep
+            # requested destination TCP fixed; its offset is caller-controlled.
+            before = arm.tcp().copy()
+            angle = np.radians(yaw)
+            rotation = temporal_rgb.yaw_rotation(angle)
+            idle_offset = idle.ee()[:3, 3] - idle.tcp()[:3, 3]
+            # Sample the wrist sweep; subtract an arc sampling error bound.
+            count = max(2, int(np.ceil(abs(yaw) / 5.)) + 1)
+            sweep_error = np.linalg.norm(local_offset) * abs(angle) / (count-1) / 2
+            for theta in np.linspace(0., angle, count):
+                offset = temporal_rgb.yaw_rotation(theta) @ before[:3, :3] @ local_offset
+                separation = gripper_clearance(idle.tcp()[:3, 3],
+                    np.array([before[:3, 3], dest]), offset, idle_offset)
+                if not np.isfinite(separation) or separation - sweep_error < .14:
+                    return fail("idle_arm_obstructs_yaw", "gripper remains closed at clearance height")
+            pose[:3, :3] = rotation @ before[:3, :3]
+            move("yaw")
+            actual_rotation = arm.tcp()[:3, :3] @ before[:3, :3].T
+            error = np.degrees(np.arccos(np.clip((np.trace(rotation.T @ actual_rotation)-1)/2, -1, 1)))
+            if error > 3.:
+                return fail("rotation_inaccurate", "gripper remains closed at clearance height")
+            sig = temporal_rgb.rotated(sig, source, actual_rotation)
+            carry_check = verify("yaw")
+            if carry_check["status"] != "visible_at_tcp":
+                return fail("visual_grasp_unverified", "rotated silhouette unconfirmed; gripper remains closed")
         move("lower", dest)
         api.set_gripper(arm, 1.)
         released = True
         move("retract", np.r_[dest[:2], high])
-        if (carry_check.get("elevated_pixels", 0) < 8 and
+        if (isinstance(sig, temporal_rgb.Signature) or
+                carry_check.get("elevated_pixels", 0) < 8 and
                 any(view.get("status") == "visible_at_tcp"
                     for view in carry_check.get("wrist_checks", []))):
             landing_result = check_landing(api.observe(), sig, dest-source)

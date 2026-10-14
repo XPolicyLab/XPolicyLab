@@ -4,6 +4,17 @@ All scene coordinates come from the caller. No simulator/object access is used.
 """
 import numpy as np
 
+import importlib.util as _rgb_import
+import sys as _rgb_sys
+from pathlib import Path as _RgbPath
+_rgb_name = '_make_kong_calibrated_rgb_geometry'
+if _rgb_name not in _rgb_sys.modules:
+    _rgb_spec = _rgb_import.spec_from_file_location(_rgb_name, _RgbPath(__file__).parents[1] / 'rgb_geometry' / 'tool.py')
+    _rgb_module = _rgb_import.module_from_spec(_rgb_spec)
+    _rgb_spec.loader.exec_module(_rgb_module)
+    _rgb_sys.modules[_rgb_name] = _rgb_module
+rgb_geometry = _rgb_sys.modules[_rgb_name]
+
 
 COMMON = [
     {"name": "arm", "positional": True, "choices": ["left", "right"]},
@@ -293,9 +304,9 @@ def peer_clearance(api, arm_tag, current, stages, margin):
 
 
 def depth_points(api):
-    """Unproject fresh valid head-depth samples without scene access."""
+    """Unproject freshly reconstructed RGB stereo ranges without scene access."""
     obs = api.observe()
-    depth = np.asarray(obs["depth"]["cam_head"], dtype=float)
+    depth = np.asarray(rgb_geometry.reconstruct(obs, "cam_head"), dtype=float)
     cam = obs["cameras"]["cam_head"]
     k = np.asarray(cam["intrinsics"], dtype=float)
     t = np.asarray(cam["extrinsics_world"], dtype=float)
@@ -364,7 +375,7 @@ def lifted_depth(api, samples, pickup_pose, lifted_pose):
     local = (points - pickup_pose[:3, 3]) @ pickup_pose[:3, :3]
     expected = local @ lifted_pose[:3, :3].T + lifted_pose[:3, 3]
     obs = api.observe()
-    depth = np.asarray(obs["depth"]["cam_head"], float)
+    depth = np.asarray(rgb_geometry.reconstruct(obs, "cam_head"), float)
     cam = obs["cameras"]["cam_head"]
     k, t = np.asarray(cam["intrinsics"], float), np.asarray(cam["extrinsics_world"], float)
     if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
@@ -624,7 +635,23 @@ def estimate_tcp_chain(api, arm, stages):
     # Compatibility with deployments that actually expose the older extension.
     extension = getattr(api, "estimate_tcp_chain", None)
     if callable(extension):
-        return extension(arm, stages)
+        try:
+            result = dict(extension(arm, stages))
+            # The current server includes a hypothetical return-home leg and
+            # two generic aperture events. Compound callers count their own
+            # actual aperture events, and do not execute a return-home leg.
+            if result.get('estimate_ok') and 'home_action_steps' in result:
+                rows = result.get('stage_costs', [])
+                if len(rows) != len(stages):
+                    raise ValueError('incomplete per-stage motion estimate')
+                motion_steps = sum(int(row['action_steps']) for row in rows)
+                if any(int(row['action_steps']) < 0 for row in rows):
+                    raise ValueError('negative motion estimate')
+                result.update(motion_action_steps=motion_steps, home_reserve_steps=0,
+                              total_action_steps=motion_steps + int(result.get('gripper_action_steps', 0)))
+            return result
+        except Exception as exc:
+            return dict(estimate_ok=False, reason='preflight_unavailable', detail=str(exc))
     from types import SimpleNamespace
     from roboshell.server.core import GRIPPER_STEPS, WORKSPACE
     stage = "calibrate"

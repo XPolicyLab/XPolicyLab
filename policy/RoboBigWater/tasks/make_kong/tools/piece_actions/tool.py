@@ -268,7 +268,7 @@ def paths(api, command, args, variant=None):
     grip(other, 'slot_release', release)
     move(other, 'slot_retract', b)
     grip(other, 'open_receiver', max(.6, release))
-    return actions, dict(source_points=[src.tolist()], intermediate_center=middle.tolist(),
+    return actions, dict(source_points=[src.tolist()], source_top=(source + [0, 0, t/2]).tolist(), intermediate_center=middle.tolist(),
                          receive_settle_steps=RECEIVE_SETTLE_STEPS if flat_axis == 'x' else 0,
                          source_aperture=source_aperture, flat_axis=flat_axis,
                          final_center=destination.tolist(), final_front_normal=(turn @ [0., 0., 1.]).tolist(),
@@ -279,6 +279,19 @@ def paths(api, command, args, variant=None):
                          intermediate_withdrawal_direction=[0., 0., 1.],
                          destination_entry_direction=[0., 0., -1.],
                          destination_withdrawal_direction=[0., 0., 1.])
+
+
+def pickup_depth(api, info):
+    """Require fresh upper-face evidence, including visible long ends.
+
+    The body top is independent of TCP offset. A narrow interior strip and
+    symmetric height band exclude lower layers and nearby elevated geometry.
+    """
+    top = np.asarray(info['source_top'], float)
+    band = min(.006, info['thickness']/4)
+    footprint = ([.4*info['height'], .012] if info.get('flat_axis') == 'x'
+                 else [.012, .4*info['height']])
+    return motion.source_depth(api, top, .012, band, footprint, band)
 
 
 def intermediate_depth(api, info):
@@ -451,12 +464,15 @@ def _run(api, command, args, variant=None):
         if api.over:
             return fail('episode_over')
         initial_samples = []
-        for source in info['source_points']:
-            evidence = motion.source_depth(api, np.asarray(source), .012, .012)
+        for index, source in enumerate(info['source_points']):
+            is_pickup = 'relay' in command and index == len(info['source_points'])-1
+            evidence = (pickup_depth(api, info) if is_pickup else
+                        motion.source_depth(api, np.asarray(source), .012, .012))
             if not evidence['present']:
                 return fail('source_not_observed', evidence)
-            initial_samples = [s for s in evidence['samples']
-                               if np.linalg.norm(np.asarray(s['world'])[:2]-np.asarray(source)[:2]) <= .01201]
+            initial_samples = evidence.get('matching_samples', evidence['samples']) if is_pickup else [
+                s for s in evidence['samples']
+                if np.linalg.norm(np.asarray(s['world'])[:2]-np.asarray(source)[:2]) <= .01201]
         if 'relay' in command:
             result['destination_depth'] = []
             for i, (tag, name, pose, opening) in enumerate(actions):
@@ -566,11 +582,10 @@ def _run(api, command, args, variant=None):
             # receiving hand can occlude the resting face. Its empty approach
             # does not change the requested contact or add a motion retry.
             if name == 'descend':
-                evidence = motion.source_depth(api, target[:3, 3], .012, .012)
+                evidence = pickup_depth(api, info)
                 if not evidence['present']:
                     return fail('source_not_observed', evidence)
-                pending_samples = [s for s in evidence['samples']
-                                   if np.linalg.norm(np.asarray(s['world'])[:2]-target[:2, 3]) <= .01201]
+                pending_samples = evidence.get('matching_samples', evidence['samples'])
             feedback = {}
             code = api.move_tcp(arm, target.copy(), feedback)
             reached = arm.tcp()

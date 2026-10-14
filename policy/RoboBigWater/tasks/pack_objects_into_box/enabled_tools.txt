@@ -2,3 +2,10 @@
 
 guarded_transfer
 surface_region
+table_plane
+stereo_points
+
+transfer_check
+stereo_edges
+
+relay_check

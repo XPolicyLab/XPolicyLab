@@ -1,11 +1,11 @@
 ## Tool: place_between
-`robo place_between ARM --u U --v V --up_u U --up_v V --a_u U --a_v V --b_u U --b_v V [--camera head|wrist_l|wrist_r --target_camera head|wrist_l|wrist_r --radius N --target_radius N --dx M --dy M --dz M --clearance M --tolerance M --release 0|1]`
-Maps a held planar material point and tangent to an observed endpoint midpoint and vertical frame, compensating the measured TCP offset and orientation.
-U,V identifies a visible planar source point; up_u,up_v identifies its positive tangent on the same plane, at least 0.01 m away. Source radius is 3..15 (default 5).
-A/B are two visible endpoint pixels defining the destination horizontal direction; their midpoint plus world DX/DY/DZ (default zero, norm at most 0.15 m) is the selected source point's desired position, not a center or TCP position.
-Destination tangent is world +Z; destination normal is normalized (B-A) cross +Z. Endpoint order determines normal sign and must correspond to the camera-facing source normal. Endpoint span must be 0.02..0.4 m and horizontal within 0.1 cosine.
-Cameras default head; target_radius is 0..5 (default 1). All measurements use one calibrated observation. Invalid depth, geometry, calibration or arguments fail before motion.
-ARM is left|right. Clearance is 0.02..0.15 m (default 0.06); tolerance is 0.002..0.015 m (default 0.008). Source point must be within 0.3 m of TCP; rigid attachment is assumed.
-Raised transport uses at most 0.02 m TCP travel and 5 degrees per increment; vertical insertion uses at most 0.01 m. Release defaults 0; 1 opens after reaching the target and retracts by clearance.
-Returns plan_ok/plan_fail_reason, measured_source, measured_endpoints, destination_frame, requested_tcp, reached_tcp, stages, released and placement_verified=false. Motion consumes action time and stops without retries on planning, clipping, tracking or budget failure.
-Measurements and TCP tracking do not verify attachment, clearance or seating; failures before release preserve grip.
+`robo place_between ARM --pairs '[[U,V,U2,V2],...]' --target_pairs '[[AU,AV,AU2,AV2],[BU,BV,BU2,BV2]]' [--camera head|wrist_l|wrist_r --camera2 head|wrist_l|wrist_r --target_camera head|wrist_l|wrist_r --target_camera2 head|wrist_l|wrist_r --dx M --dy M --dz M --clearance M --tolerance M --release 0|1]`
+ARM is left|right. RGB stereo pairs select the same physical material points in two simultaneous views; source cameras default head/wrist_l, destination cameras head/wrist_r.
+Source pairs contain 3..12 noncollinear points on one held planar face; the first is the anchor and first-to-second defines its positive tangent. The normal faces the first camera.
+Destination pairs define endpoints A/B of a horizontal segment, 0.02..0.4 m apart and horizontal within 0.1 cosine; their midpoint plus world DX/DY/DZ (default zero, norm <=0.15 m) is the anchor's desired position.
+Maps the source tangent to world +Z and its normal to normalized (B-A) cross +Z; endpoint order controls normal sign. Compensates full measured feature-to-TCP offset, assuming rigid attachment.
+All geometry comes from one current observation; fails before motion on invalid stereo, source plane, endpoint geometry or arguments. Endpoint half-pixel sensitivity must be <=4 mm and direction sensitivity <=0.1 rad.
+Clearance 0.02..0.15 m defaults 0.06; tolerance 0.002..0.015 m defaults 0.008; anchor must be within 0.3 m of TCP. No height or size inference beyond the supplied correspondences.
+Raised transport is bounded to 0.02 m/5 degrees per increment; vertical insertion to 0.01 m. Release defaults 0; 1 opens only after arrival and retracts vertically by clearance.
+Returns plan_ok/plan_fail_reason, measured_source, measured_endpoints, endpoint_measurements, destination_frame, requested_tcp, reached_tcp, stages and released; placement_verified=false and correspondence_verified=false.
+Consumes action time; stops without retries on planning, tracking, clipping or budget failure. Measurements do not verify attachment, collision clearance or seating; failure before release preserves grip.

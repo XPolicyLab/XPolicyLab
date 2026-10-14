@@ -6,5 +6,5 @@ Approaches a horizontal circular edge obliquely, closes a radial pinch, and lift
 `--depth 0.020` lowers the pinch below the top; allowed 0–0.025 m.
 `--clearance 0.04` is approach height (0.04–0.20 m); `--lift 0.12` is minimum lift (0.04–0.45 m), raised to at least `2*radius+depth+0.025` for hanging-edge clearance.
 Returns `plan_ok`, `plan_fail_reason`, stage feedback, grasp point, `tilt_deg`, `effective_lift_m` and reached TCP; motions consume action steps.
-`grasp_verified=false`: successful motion does not certify retention; inspect the resulting observation.
+Returns `grasp_verified=false`; successful motion does not certify retention.
 Stops on invalid inputs, motion failure, pose error or episode end, without retries or automatic release.

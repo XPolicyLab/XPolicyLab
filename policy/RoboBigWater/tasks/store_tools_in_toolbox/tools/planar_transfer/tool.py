@@ -705,8 +705,22 @@ def carry(api, args, mode="carry_pose"):
             check()
             # A loose travel tolerance must not authorize closing or opening
             # at a pose blocked by contact. These stages need precise height.
-            tolerance = (min(v["tolerance"], .004) if name == "recover_lower" else
-                         min(v["tolerance"], .008) if name in ("descend", "lower") else v["tolerance"])
+            # A travel-sized error can span most of a thin grasp section.
+            # Do not close against a support-blocked target, even when the
+            # underlying planner calls its looser endpoint check successful.
+            tolerance = (.002 if name == "descend" else
+                         min(v["tolerance"], .004) if name == "recover_lower" else
+                         min(v["tolerance"], .008) if name == "lower" else v["tolerance"])
+            if name == "descend":
+                reached = arm.tcp()[:3, 3]
+                stages[-1]["preclosure_check"] = {
+                    "requested_xyz": pos.tolist(), "reached_xyz": reached.tolist(),
+                    "error_xyz": (reached-pos).tolist(),
+                    "position_limit_m": tolerance,
+                    "accepted": bool(error <= tolerance and
+                                     max(angle_error, feedback.get("error_deg", 0)) <= 5),
+                    "contact_verified": False,
+                }
             if error > tolerance or max(angle_error, feedback.get("error_deg", 0)) > 5:
                 reason = "tracking_error"
                 # move_tcp leaves its final joint target active even when the

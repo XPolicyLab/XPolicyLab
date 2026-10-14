@@ -16,6 +16,7 @@ ARGS = [dict(name='arm', positional=True, choices=['left', 'right']),
         actions.number('face_y', -1), actions.number('clearance', .10),
         actions.number('aperture', .65), actions.number('source_aperture', 1.), actions.number('release_aperture', .65),
         actions.number('carry_guard', 0),
+        dict(name='source_views', type='str'),
         dict(name='tip', type='str', default='')]
 EXPOSE_ARGS = [arg for arg in ARGS if arg['name'] != 'tip'] + [
     dict(name='pieces', type='str', required=True),
@@ -41,6 +42,7 @@ TOOL = dict(name='row_extension', commands=[
     dict(name='inspect_raised_sources', budget=False, args=[
         *[actions.number(k, required=True) for k in ('floor_z', 'length', 'thickness')],
         actions.number('width'),
+        dict(name='source_views', type='str'),
         dict(name='camera', default='head', choices=['head', 'wrist_l', 'wrist_r'])],
          help='measure visible raised rectangular upper faces without motion')])
 
@@ -49,6 +51,7 @@ TOOL = dict(name='row_extension', commands=[
 # extend_row, so preview and execution cannot diverge.
 TOOL['commands'].extend([
     dict(name='inspect_upright_groups', budget=False, args=[
+        dict(name='profiles', type='str'),
         dict(name='camera', default='head', choices=['head', 'wrist_l', 'wrist_r'])],
          help='measure consecutive upright pieces and their upper centers without motion'),
     dict(name='fetch_place', budget=True, args=ARGS,
@@ -78,6 +81,8 @@ def inspect_sources(api, args):
     camera_name = args.get('camera', 'head')
     camera_key = {'head': 'cam_head', 'wrist_l': 'cam_left_wrist', 'wrist_r': 'cam_right_wrist'}[camera_name]
     snapshot = api.observe()
+    if args.get('source_views') is not None:
+        return paired_sources(snapshot, args, floor, length, width, thickness)
     observation, code = regions.run(SimpleNamespace(observe=lambda: snapshot), 'inspect_regions', dict(camera=camera_name))
     if code:
         return observation, code
@@ -96,7 +101,7 @@ def inspect_sources(api, args):
             u, v = (box[0]+box[2]-1)//2, (box[1]+box[3]-1)//2
             try:
                 cam = snapshot['cameras'][camera_key]
-                face = regions.surface(snapshot['depth'][camera_key], cam['intrinsics'],
+                face = regions.surface(regions.rgb_geometry.reconstruct(snapshot, camera_key), cam['intrinsics'],
                                        cam['extrinsics_world'], u, v, .002)
             except Exception as exc:
                 rejected.append(dict(pixel_box=box, reason='depth_face_unresolved', detail=str(exc)))
@@ -131,9 +136,276 @@ def inspect_sources(api, args):
                      'All candidates returned without selection. Occlusion, patterns, rotation or merged faces may omit or bias measurements.'), 0 if candidates else 2
 
 
+def fit_paired_rectangle(a, pa, b, pb):
+    """Fit an axis-aligned horizontal rectangle to eight noisy RGB corners.
+
+    Metric scale comes from the camera baseline, never expected dimensions.
+    Each observation contributes equally in pixels. Both cyclic edge-axis
+    assignments are tried; no corner is discarded or reordered.
+    """
+    rgb = regions.rgb_geometry
+    oa, da = rgb.rays(a, pa)
+    ob, db = rgb.rays(b, pb)
+    da /= np.linalg.norm(da, axis=1)[:, None]
+    db /= np.linalg.norm(db, axis=1)[:, None]
+    if np.linalg.norm(oa-ob) < .015 or np.any(np.linalg.norm(np.cross(da, db), axis=1) < .04):
+        raise ValueError('insufficient triangulation baseline or ray angle')
+    gaps = []
+    for u, v in zip(da, db):
+        distances = np.linalg.lstsq(np.column_stack((u, -v)), ob-oa, rcond=None)[0]
+        gaps.append(float(np.linalg.norm(oa+distances[0]*u-ob-distances[1]*v)))
+    fits = []
+    for swap in (False, True):
+        basis = np.zeros((4, 3, 5))
+        for i, (x, y) in enumerate([(0, 0), (1, 0), (1, 1), (0, 1)]):
+            if swap:
+                x, y = y, x
+            basis[i, 0, x] = basis[i, 1, y+2] = basis[i, 2, 4] = 1
+        affines, constants = [], []
+        for view in (a, b):
+            projection = view['K'] @ view['T'][:3, :3].T
+            affines.append(np.einsum('ij,njk->nik', projection, basis))
+            constants.append(np.broadcast_to(-projection @ view['T'][:3, 3], (4, 3)))
+        affine, constant = np.concatenate(affines), np.concatenate(constants)
+        pixels = np.concatenate((pa, pb))
+        matrix = affine[:, :2]-pixels[:, :, None]*affine[:, 2:3]
+        rhs = pixels*constant[:, 2:3]-constant[:, :2]
+        params, _, rank, _ = np.linalg.lstsq(matrix.reshape(-1, 5), rhs.ravel(), rcond=None)
+        if rank != 5:
+            continue
+
+        def projected(p):
+            q = np.einsum('nik,k->ni', affine, p)+constant
+            if np.any(q[:, 2] <= .02) or np.any(q[:, 2] > 3):
+                raise ValueError('rectangle outside visible forward range')
+            uv = q[:, :2]/q[:, 2:3]
+            jac = (affine[:, :2]-uv[:, :, None]*affine[:, 2:3])/q[:, 2:3, None]
+            return uv, jac.reshape(-1, 5)
+
+        try:
+            for _ in range(12):
+                uv, jac = projected(params)
+                step = np.linalg.lstsq(jac, (pixels-uv).ravel(), rcond=None)[0]
+                params += step
+                if np.linalg.norm(step) < 1e-10:
+                    break
+            uv, jac = projected(params)
+        except ValueError:
+            continue
+        residual = np.linalg.norm(uv-pixels, axis=1)
+        rms = float(np.sqrt(np.mean(residual**2)))
+        center_map = np.array([[.5,.5,0,0,0], [0,0,.5,.5,0], [0,0,0,0,1]])
+        covariance = np.linalg.pinv(jac.T @ jac)
+        sigma = np.sqrt(np.maximum(0, np.diag(center_map @ covariance @ center_map.T)))
+        # Estimate pixel noise from the residual degrees of freedom (16
+        # coordinates minus 5 parameters), with a one-pixel annotation floor.
+        # Propagate it to centers AND corners: a stable center alone can hide
+        # an uncertain footprint. These are local two-sigma diagnostics, not
+        # guarantees against incorrect correspondence or calibration bias.
+        pixel_sigma = max(1., float(np.sqrt(np.sum(residual**2)/11)))
+        def radius(mapping):
+            cov = mapping @ covariance @ mapping.T
+            return 2*pixel_sigma*np.sqrt(max(0., float(np.max(np.diag(cov)))))
+        metric_error = dict(pixel_sigma_px=pixel_sigma,
+                            center_2sigma_m=radius(center_map),
+                            corner_2sigma_m=max(radius(mapping) for mapping in basis))
+        fits.append((rms, residual, sigma, uv, jac, np.einsum('nik,k->ni', basis, params), metric_error))
+    if not fits:
+        raise ValueError('rectangle has insufficient independent forward viewing rays')
+    rms, residual, sigma, uv, jac, points, metric_error = min(fits, key=lambda f: f[0])
+    if rms > 2.0 or residual.max() > 3.0:
+        raise ValueError(f'corners inconsistent with a horizontal rectangle: reprojection RMS {rms:.3f}px, '
+                         f'max {residual.max():.3f}px (limits 2.0/3.0px)')
+    if np.linalg.matrix_rank(jac) < 5 or np.max(sigma) > .004:
+        raise ValueError('rectangle center is underconstrained by the selected views')
+    if metric_error['center_2sigma_m'] > .008 or metric_error['corner_2sigma_m'] > .010:
+        raise ValueError('rectangle per-axis uncertainty exceeds 8 mm center / 10 mm corner limits')
+    return points, gaps, dict(reprojection_rms_px=rms, reprojection_max_px=float(residual.max()),
+                             fitted_pixels=uv[:4].tolist(), other_fitted_pixels=uv[4:].tolist(),
+                             center_sigma_per_pixel=sigma.tolist(), **metric_error)
+
+
+def paired_sources(snapshot, args, floor, length, width, thickness):
+    """Recover selected upper rectangles from same-snapshot calibrated rays."""
+    selection = json.loads(args['source_views'])
+    rgb = regions.rgb_geometry
+    cal = rgb.views(snapshot)
+    a, b = (rgb.CAMERAS[selection[k]] for k in ('camera', 'other_camera'))
+    if a == b:
+        raise ValueError('source_views requires two different cameras')
+    faces, others = (np.asarray(selection[k], float) for k in ('faces', 'other_faces'))
+    if (faces.ndim != 3 or faces.shape[1:] != (4, 2) or
+            others.shape != faces.shape or not 1 <= len(faces) <= 16 or
+            not np.isfinite(faces).all() or not np.isfinite(others).all()):
+        raise ValueError('source_views requires corresponding arrays of 1..16 cyclic four-corner faces')
+    table = rgb.measured_table(snapshot)
+    if table.get('table_z') is None:
+        return dict(plan_ok=False, plan_fail_reason='table_plane_unresolved', table_measurement=table), 2
+    if abs(floor - table['table_z']) > .004:
+        return dict(plan_ok=False, plan_fail_reason='source_floor_mismatch', table_measurement=table), 2
+    candidates = []
+    for index, (pa, pb) in enumerate(zip(faces, others)):
+        try:
+            points, gaps, quality = fit_paired_rectangle(cal[a], pa, cal[b], pb)
+            edges = np.roll(points, -1, axis=0) - points
+            lengths = np.linalg.norm(edges, axis=1)
+            if np.any(lengths < .004):
+                raise ValueError('degenerate rectangle')
+            cosine = np.sum(edges*np.roll(edges, -1, axis=0), axis=1)/(lengths*np.roll(lengths, -1))
+            if (np.ptp(points[:, 2]) > .003 or np.any(abs(cosine) > .15) or
+                    np.any(abs(lengths[:2]-lengths[2:]) > .003) or
+                    np.linalg.norm(points[0]+points[2]-points[1]-points[3]) > .004):
+                raise ValueError('corners must describe one horizontal rectangle in cyclic order')
+            span = np.ptp(points[:, :2], axis=0)
+            # The relay requires an axis-aligned footprint; a rotated rectangle
+            # must not silently become an axis-aligned bounding box.
+            if np.any(np.min(abs(edges[:, :2]), axis=1) > .003):
+                raise ValueError('upper rectangle must align with world x/y')
+            if (abs(max(lengths)-length) > length*.20+.002 or
+                    (width is not None and abs(min(lengths)-width) > width*.20+.002) or
+                    min(lengths) <= thickness+.003):
+                raise ValueError('face_size_mismatch')
+            center = points.mean(0)
+            info = elevation(center[2], table['table_z'], thickness)
+            if info['source_bottom_above_floor'] < info['minimum_bottom_above_floor']:
+                raise ValueError('face_not_raised')
+            if any(np.linalg.norm(center-np.asarray(c['source_top'])) < .003 for c in candidates):
+                raise ValueError('duplicate face')
+            candidates.append(dict(source_top=center.tolist(), extent_xy=span.tolist(),
+                                   corners_world=points.tolist(), ray_gaps_m=gaps, corner_fit=quality,
+                                   face_index=index, normal=[0., 0., 1.],
+                                   measurement='paired_rgb_corners', **info))
+        except Exception as exc:
+            return dict(plan_ok=False, plan_fail_reason='source_corners_unresolved',
+                        face_index=index, plan_detail=str(exc), table_measurement=table), 2
+    return dict(plan_ok=True, plan_fail_reason=None, candidates=candidates,
+                rejected_faces=[], table_measurement=table, method='paired_rgb_corners',
+                note='Same physical corners and complete visible faces are caller constraints; '
+                     'measurements expire after motion. No identity verification.'), 0
+
+
+def fit_upright_profile(view, pixels, floor):
+    """Fit all six rays to one grounded cuboid in image space.
+
+    Rounded pixel selections are noisy, especially on short upper edges.
+    Independent ray intersections amplify that noise inconsistently. Here the
+    five unknowns are two x edges, front/rear y, and upper z; floor is measured.
+    There are no size, position or aspect-ratio priors in the fit.
+    """
+    rgb = regions.rgb_geometry
+    rgb.rays(view, pixels)  # Validate finite, in-image coordinates.
+    # Each world corner is an affine function of the five unknowns.
+    basis = np.zeros((6, 3, 5))
+    offset = np.zeros((6, 3))
+    for i, (x, y) in enumerate([(0, 2), (1, 2), (1, 2), (0, 2), (0, 3), (1, 3)]):
+        basis[i, 0, x] = basis[i, 1, y] = 1
+        if i < 2:
+            offset[i, 2] = floor
+        else:
+            basis[i, 2, 4] = 1
+    projection = view['K'] @ view['T'][:3, :3].T
+    affine = np.einsum('ij,njk->nik', projection, basis)
+    constant = (offset-view['T'][:3, 3]) @ projection.T
+    matrix = affine[:, :2] - pixels[:, :, None]*affine[:, 2:3]
+    rhs = pixels*constant[:, 2:3]-constant[:, :2]
+    params, _, rank, _ = np.linalg.lstsq(matrix.reshape(-1, 5), rhs.ravel(), rcond=None)
+    if rank != 5:
+        raise ValueError('profile has insufficient independent viewing rays')
+
+    def projected(p):
+        q = np.einsum('nik,k->ni', affine, p)+constant
+        if np.any(q[:, 2] <= .02) or np.any(q[:, 2] > 3):
+            raise ValueError('profile is outside visible forward range')
+        uv = q[:, :2]/q[:, 2:3]
+        jac = (affine[:, :2]-uv[:, :, None]*affine[:, 2:3])/q[:, 2:3, None]
+        return uv, jac.reshape(-1, 5)
+
+    for _ in range(12):
+        uv, jac = projected(params)
+        step = np.linalg.lstsq(jac, (pixels-uv).ravel(), rcond=None)[0]
+        params += step
+        if np.linalg.norm(step) < 1e-10:
+            break
+    uv, jac = projected(params)
+    residual = np.linalg.norm(uv-pixels, axis=1)
+    rms = float(np.sqrt(np.mean(residual**2)))
+    if rms > 2.0 or residual.max() > 3.0:
+        raise ValueError(f'profile inconsistent with a grounded cuboid: reprojection RMS {rms:.3f}px, '
+                         f'max {residual.max():.3f}px (limits 2.0/3.0px)')
+    # Propagate one-pixel coordinate noise to the upper-center estimate.
+    # A visually plausible near-horizon fit must not become precise geometry.
+    center_map = np.array([[.5, .5, 0, 0, 0], [0, 0, .5, .5, 0], [0, 0, 0, 0, 1]])
+    covariance = np.linalg.pinv(jac.T @ jac)
+    center_sigma = np.sqrt(np.maximum(0, np.diag(center_map @ covariance @ center_map.T)))
+    if np.linalg.matrix_rank(jac) < 5 or np.max(center_sigma) > .008:
+        raise ValueError('profile upper center is underconstrained by the selected view')
+    # Twelve image coordinates minus five fitted parameters: seven residual
+    # degrees of freedom. These local errors assume exact floor/calibration;
+    # they cannot detect coherent wrong outlines or a biased floor estimate.
+    pixel_sigma = max(1., float(np.sqrt(np.sum(residual**2)/7)))
+    center_error = 2*pixel_sigma*center_sigma
+    corner_error = 2*pixel_sigma*np.sqrt(np.maximum(0,
+        np.einsum('nik,kl,nil->ni', basis, covariance, basis)))
+    if np.max(center_error) > .008 or np.max(corner_error) > .010:
+        raise ValueError('profile metric uncertainty exceeds 8 mm center / 10 mm corner limits')
+    points = np.einsum('nik,k->ni', basis, params)+offset
+    width, thickness, height = abs(params[1]-params[0]), abs(params[3]-params[2]), params[4]-floor
+    if ((params[3]-params[2])*(view['T'][1, 3]-params[2]) >= 0 or
+            not .01 < thickness < width <= .12 or not .025 <= height <= .12 or thickness >= height):
+        raise ValueError('profile does not describe an axis-aligned upright rectangular body')
+    return points, dict(reprojection_rms_px=rms, reprojection_max_px=float(residual.max()),
+                        fitted_pixels=uv.tolist(), center_sigma_per_pixel=center_sigma.tolist(),
+                        pixel_sigma_px=pixel_sigma, center_2sigma_m=center_error.tolist(),
+                        corner_2sigma_m=corner_error.tolist())
+
+
+def outline_uprights(api, args):
+    """Metric cuboids from visible contact/front/rear edges, without dense stereo."""
+    rgb = regions.rgb_geometry
+    profiles = np.asarray(json.loads(args['profiles']), float)
+    if (profiles.ndim != 3 or profiles.shape[1:] != (6, 2) or
+            not 1 <= len(profiles) <= 64 or not np.isfinite(profiles).all()):
+        raise ValueError('profiles must be 1..64 arrays of six visible [u,v] corners')
+    obs = api.observe()
+    table = rgb.measured_table(obs)
+    floor = table.get('table_z')
+    if floor is None or not np.isfinite(floor):
+        return dict(plan_ok=False, plan_fail_reason='table_plane_unresolved',
+                    table_measurement=table), 2
+    view = rgb.views(obs)[rgb.CAMERAS[args.get('camera', 'head')]]
+    patches = []
+    for index, pixels in enumerate(profiles):
+        # Front cyclic order: bottom left/right, upper right/left. Rear
+        # upper corners follow in left/right order; no dimensions supplied.
+        try:
+            fitted, quality = fit_upright_profile(view, pixels, float(floor))
+        except ValueError as exc:
+            return dict(plan_ok=False, plan_fail_reason='profile_geometry_unresolved',
+                        profile_index=index, plan_detail=str(exc), table_measurement=table), 2
+        front, rear = fitted[:4], fitted[4:]
+        z = float(front[2:, 2].mean())
+        upper = np.array([front[3], front[2], rear[1], rear[0]])
+        width = float(abs(front[1, 0]-front[0, 0]))
+        thickness = float(abs(rear[:, 1].mean()-front[:, 1].mean()))
+        height = z-float(floor)
+        center = upper.mean(0)
+        if any(np.linalg.norm(center-np.asarray(p['center_xy']+[p['z']])) < .003
+               for p in patches):
+            raise ValueError('duplicate or overlapping profiles')
+        patches.append(dict(center_xy=center[:2].tolist(), z=z,
+            extent_xy=[width, thickness], normal=[0., 0., 1.],
+            pixel_box=[*pixels.min(0).tolist(), *pixels.max(0).tolist()],
+            near_horizontal=True, touches_roi_edge=False,
+            profile_index=index, height=height, width=width, thickness=thickness,
+            profile_fit=quality))
+    return dict(plan_ok=True, regions=[dict(upper_patches=patches)],
+                table_measurement=table, method='grounded_six_corner_profiles'), 0
+
+
 def inspect_upright_groups(api, args):
     camera = args.get('camera', 'head')
-    report, code = regions.run(api, 'inspect_regions', dict(camera=camera))
+    report, code = (outline_uprights(api, args) if args.get('profiles') is not None else
+                    regions.run(api, 'inspect_regions', dict(camera=camera)))
     if code:
         return report, code
     pts = []
@@ -150,7 +422,8 @@ def inspect_upright_groups(api, args):
                     .01 < e[1] < e[0] <= .12):
                 if not any(np.linalg.norm(c-np.asarray(q['center'])) < .003 for q in pts):
                     pts.append(dict(center=c.tolist(), extent_xy=e.tolist(),
-                                    normal=p.get('normal'), pixel_box=p.get('pixel_box')))
+                                    normal=p.get('normal'), pixel_box=p.get('pixel_box'),
+                                    **{k: p[k] for k in ('profile_index', 'height', 'width', 'thickness', 'profile_fit') if k in p}))
     pts.sort(key=lambda q: tuple(q['center']))
     rows = []
     for p in pts:
@@ -185,6 +458,11 @@ def inspect_upright_groups(api, args):
             for i, row in enumerate(groups)]
     return dict(plan_ok=bool(groups), plan_fail_reason=None if groups else 'no_upright_surfaces',
                 groups=groups, row_geometry=ends, isolated_surfaces=isolated, camera=camera,
+                method=report.get('method', 'rgb_stereo_upper_faces'),
+                table_measurement=report.get('table_measurement'),
+                geometry_input=None if groups else dict(command='inspect_upright_groups',
+                    argument='profiles', format='JSON array of six [u,v] corners per body: bottom front left/right, upper front right/left, upper rear left/right',
+                    constraints='Visible floor-contact bottoms, vertical y-normal fronts and horizontal tops; floor measured from current RGB'),
                 note='Aligned narrow upper faces only; both visible ends returned without selection. '
                      'Occlusion can truncate rows. Appearance identity and hidden geometry are unresolved.'), 0 if groups else 2
 
@@ -398,7 +676,7 @@ def run(api, command, args):
             # Discovery is read-only and never substitutes or selects a source.
             discovery, _ = run(api, 'inspect_raised_sources', dict(
                 floor_z=derived['floor_z'], length=float(args['height']),
-                thickness=float(args['thickness']), camera='head'))
+                thickness=float(args['thickness']), camera='head', source_views=args.get('source_views')))
             return dict(plan_ok=False, plan_fail_reason='source_not_raised', derived_geometry=derived,
                         source_discovery=discovery,
                         plan_detail='Source must be raised by at least one body thickness above the row floor. '
@@ -406,7 +684,7 @@ def run(api, command, args):
                         'no motion performed.'), 2
         discovery, discovery_code = inspect_sources(api, dict(
             floor_z=derived['floor_z'], length=float(args['height']),
-            thickness=float(args['thickness']), camera='head'))
+            thickness=float(args['thickness']), camera='head', source_views=args.get('source_views')))
         if discovery_code:
             return dict(plan_ok=False, plan_fail_reason='raised_source_unresolved',
                         source_discovery=discovery), 2

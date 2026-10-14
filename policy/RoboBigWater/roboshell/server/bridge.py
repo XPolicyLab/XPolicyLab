@@ -2,7 +2,7 @@
 
 This module is the XPolicyLab policy. The official client calls update_obs()
 with every observation and get_action() for the next action chunk; the agent
-talks to the same robo interface as in direct mode. A robo command becomes one
+talks to the robo interface. A robo command becomes one
 joint-target chunk, and the command's feedback is computed from the observation
 the client sends back after the chunk ran. Nothing here touches the simulator:
 the policy knows only the observations, the robot model and the camera model.
@@ -23,10 +23,9 @@ import yaml
 
 from roboshell.contract import v0 as C
 from roboshell.server import geometry as geo
-from roboshell.server.core import CAMERA_NAMES, Episode, log
+from roboshell.server.core import NoDepth, CAMERA_NAMES, Episode, log
 from roboshell.server.http_api import dispatch, start_http
 from roboshell.server.tools import load_tools, schema
-from roboshell.server.depth_estimator import DepthEstimator
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 HOLD_S = 45.0  # answer the client with a one-step hold if the agent is silent this long (client timeout is 120 s)
@@ -56,12 +55,7 @@ class BridgeExecutor:
             self.specs[tag] = RobotSpec(list(robot["default_root_pos"]) + list(robot["default_root_rot"]))
         with open(cfg.get("camera_model", os.path.join(ROOT, "agent", "camera_model.json"))) as handle:
             self.camera_model = json.load(handle)["cameras"]
-        # Depth is estimated from the colour images inside this policy; the observation never carries a depth channel.
-        model_dir = os.environ.get("ROBOSHELL_DEPTH", "").strip() or os.path.join(ROOT, ".cache", "depth-model", "Depth-Anything-V2-Metric-Indoor-Base-hf")
-        if not os.path.isdir(model_dir):
-            raise RuntimeError(f"depth model not found at {model_dir}: run scripts/install_depth_model.sh or set ROBOSHELL_DEPTH in config.env")
-        self.depth_estimator = DepthEstimator(model_dir, 0)
-        log(f"depth from RGB: {self.depth_estimator.name}")
+        log("observation: RGB and camera matrices only, no depth")
         self._step_lim = self.read_step_lim()
         self.planner_obj = None
         self.obs = None
@@ -156,8 +150,7 @@ class BridgeExecutor:
                 extrinsic = self.ee(tag) @ np.asarray(model["ee_to_camera"], dtype=float)
             cameras[source] = {"intrinsics": np.asarray(model["intrinsics"], dtype=float), "extrinsics_world": extrinsic,
                                "size": [color.shape[1], color.shape[0]]}
-            depth[source] = self.depth_estimator(color, cameras[source]["intrinsics"], extrinsic, source)
-        return {"png": png, "cameras": cameras, "depth": depth}
+        return {"png": png, "cameras": cameras, "depth": NoDepth()}
 
     def success_now(self):
         return None  # the policy cannot know; the official client records the outcome
@@ -364,7 +357,7 @@ class Model:
         log(f"episode {os.path.basename(directory)}: agent started, instruction {episode.instruction!r}")
 
     def gateway_refused(self):
-        """True if the acting agent's session ended on a model-gateway error (same list as evolve/iterate.sh)."""
+        """True if the acting agent's session ended on a model-gateway error (a fixed list of gateway error messages)."""
         try:
             with open(os.path.join(self.agent_dir, "codex_events.jsonl"), errors="replace") as handle:
                 return any(GATEWAY_ERRORS.search(line) for line in handle if '"type":"error"' in line or "turn.failed" in line)

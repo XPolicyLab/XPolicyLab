@@ -86,57 +86,25 @@ def arrival_distance(point, waypoints):
 
 
 def check_support(api, goal):
-    """Reject unresolved horizontal center clearance, not correct its height."""
-    try:
-        obs = api.observe()
-        key = "cam_head" if "cam_head" in obs["cameras"] else "head"
-        cam = obs["cameras"][key]
-        k = np.asarray(cam["intrinsics"], float)
-        t = np.asarray(cam["extrinsics_world"], float)
-        size = np.asarray(cam["size"], float)
-        if (k.shape != (3, 3) or t.shape != (4, 4) or size.shape != (2,)
-                or not np.isfinite(np.r_[k.ravel(), t.ravel(), size]).all()
-                or np.any(size <= 0) or not np.allclose(t[3], [0, 0, 0, 1])
-                or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-4)
-                or not np.isclose(np.linalg.det(t[:3, :3]), 1., atol=1e-4)):
-            raise ValueError("invalid head calibration")
-        q = k @ (t[:3, :3].T @ (goal-t[:3, 3]))
-        if q[2] <= 0:
-            raise ValueError("target behind head camera")
-        pixel = q[:2]/q[2]
-        if not np.isfinite(pixel).all() or np.any(pixel < 0) or np.any(pixel >= size):
-            raise ValueError("target outside head image")
-        support = _support.support_plane(obs["depth"][key], k, t, size, pixel)
-        gap = float(goal[2]-support["height_m"])
-        return dict(status="unresolved" if gap <= support["uncertainty_m"] else "clear",
-                    support_estimate=support, center_clearance_m=gap,
-                    required_clearance_m=support["uncertainty_m"])
-    except _support.AmbiguousSupport as exc:
-        # Multiple measured bands are evidence, unlike missing depth. Test
-        # clearance against every plausible band without choosing a plane or
-        # inventing a corrected grasp center from support alone.
-        checks = [dict(candidate,
-                       center_clearance_m=float(goal[2]-candidate["height_m"]),
-                       clearance_margin_m=float(goal[2]-candidate["height_m"]
-                                                -candidate["uncertainty_m"]))
-                  for candidate in exc.candidates]
-        unresolved = any(c["clearance_margin_m"] <= 0 for c in checks)
-        return dict(status="ambiguous" if unresolved else "clear",
-                    support_ambiguous=True, support_candidates=checks,
-                    detail=str(exc))
-    except Exception as exc:
-        # Missing depth cannot establish support clearance.
-        return dict(status="unavailable", detail=str(exc))
+    """Reject centers too close to the measured RGB support before motion."""
+    support, detail = _support.rgb_support(api)
+    if support is None:
+        return dict(status="unavailable", detail=detail)
+    gap = float(goal[2]-support["height_m"])
+    return dict(status="unresolved" if gap <= support["uncertainty_m"] else "clear",
+                support_estimate=support, center_clearance_m=gap,
+                required_clearance_m=support["uncertainty_m"])
 
 
 def run(api, command, args):
     stages, released = [], False
     support_check = {"status": "not_applicable"}
+    route_preflight = []
 
     def fail(reason, detail=""):
         return {"plan_ok": False, "plan_fail_reason": reason, "plan_detail": detail,
                 "stages": stages, "released": released, "grasp_verified": False,
-                "support_check": support_check}, 2
+                "support_check": support_check, "route_preflight": route_preflight}, 2
 
     try:
         if command != "axis_grasp" or args.get("arm") not in ("left", "right"):
@@ -160,9 +128,9 @@ def run(api, command, args):
         if carry_orientation not in ("auto", "grasp", "forward"):
             raise ValueError("invalid carry_orientation")
         goal = np.array([float(args[n]) for n in ("x", "y", "z")])
-        # Use the supported minimum standoff for either entry direction to
-        # shorten the separate insertion segment. Resolve CLI None and omitted
-        # programmatic arguments identically; preserve explicit clearances.
+        # Resolve CLI None and omitted arguments identically. Horizontal
+        # defaults are refined below from measured support; explicit values
+        # preserve the caller's approach contract.
         clearance_arg = args.get("clearance")
         clearance = float(clearance_arg if clearance_arg is not None else .04)
         lift = float(args.get("lift", .10))
@@ -185,17 +153,25 @@ def run(api, command, args):
 
         if args.get("mode", "vertical") == "horizontal":
             support_check = check_support(api, goal)
-            if support_check["status"] == "ambiguous":
-                return fail("support_height_ambiguous",
-                            "Horizontal center does not clear every plausible local support "
-                            "within uncertainty; no motion executed. Candidate clearances are "
-                            "diagnostics, not corrected grasp heights. Resolve support and "
-                            "reconstruct current silhouette geometry before retrying.")
             if support_check["status"] == "unresolved":
                 return fail("horizontal_center_near_support",
                             "Horizontal center clearance is unresolved within support uncertainty. "
                             "Reconstruct current silhouette geometry with horizontal_span or span_grasp; "
                             "no corrected center is inferred from support alone.")
+            if clearance_arg is None and support_check["status"] == "clear":
+                # For a circular body resting on the measured plane, center
+                # height above support is its radius. Finish rotating travel
+                # above an entire diameter, including support uncertainty on
+                # both sides, before fixed-orientation insertion. This is a
+                # contact-clearance heuristic, not a silhouette/identity fit.
+                clearance = max(.04, 2 * (
+                    support_check["center_clearance_m"]
+                    + support_check["support_estimate"]["uncertainty_m"]))
+                support_check["default_standoff_m"] = clearance
+                if clearance > .25:
+                    return fail("horizontal_standoff_unresolved",
+                                "Support-derived standoff exceeds 0.25 m; "
+                                "supply measured silhouette geometry or explicit clearance.")
 
         def move(name, pos, rot, moving_arm=None):
             if api.over:
@@ -204,6 +180,47 @@ def run(api, command, args):
             target[:3, :3], target[:3, 3] = rot, pos
             feedback = {}
             moving_arm = arm if moving_arm is None else moving_arm
+            # Check both segments before committing to a standoff or a carry
+            # rotation. A reachable first endpoint can strand the next motion.
+            # Estimates are discarded; actual moves retain all feedback guards.
+            continuation = (goal if name.startswith("approach") else
+                            destination if name == "carry_rotate" else None)
+            horizontal_transit = (name.startswith("transit")
+                                  and args.get("mode", "vertical") == "horizontal")
+            if (continuation is not None or name == "transit_corridor" or horizontal_transit) and moving_arm is arm:
+                before = snapshot()
+                if before[3] is None or not np.isfinite(before[3]):
+                    stages.append(dict(stage=name, plan_ok=False,
+                                       plan_fail_reason="route_preflight_unavailable"))
+                    return fail("route_preflight_unavailable")
+                chain = [(name, target.copy())]
+                if name == "transit_corridor" or horizontal_transit:
+                    route = [] if horizontal_transit else [("transit", elevated)]
+                    if not diagonal_entry:
+                        route.append(("approach", goal-clearance*rot[:, 0]))
+                    route.append(("insert", goal))
+                else:
+                    next_name = "insert" if name.startswith("approach") else "carry_translate"
+                    route = [(next_name, continuation)]
+                for next_name, point in route:
+                    endpoint = target.copy()
+                    endpoint[:3, 3] = point
+                    chain.append((next_name, endpoint))
+                estimate = api.estimate_tcp_chain(arm, chain)
+                route_preflight.append(dict(stage=name, estimate=estimate))
+                if (api.over or api.sim_time_left() != before[3]
+                        or not np.allclose(arm.tcp(), before[0], atol=1e-7, rtol=0)
+                        or not np.allclose(before[1].tcp(), before[2], atol=1e-7, rtol=0)):
+                    stages.append(dict(stage=name, plan_ok=False,
+                                       plan_fail_reason="route_preflight_state_changed"))
+                    return fail("route_preflight_state_changed")
+                if estimate.get("estimate_ok") is not True:
+                    reason = ("ik_unreachable" if estimate.get("reason") == "ik_unreachable"
+                              else "route_preflight_failed")
+                    detail = "Route estimate rejected " + str(estimate.get("failed_stage", name))
+                    stages.append(dict(stage=name, plan_ok=False, plan_fail_reason=reason,
+                                       plan_detail=detail, estimate_only=True, sim_duration_s=0.))
+                    return fail(reason, detail)
             time_before = api.sim_time_left()
             code = api.move_tcp(moving_arm, target.copy(), feedback)
             time_after = api.sim_time_left()
@@ -258,17 +275,29 @@ def run(api, command, args):
         entry = goal-clearance*orient[:, 0]
         arrival = entry[:2] - initial[:2, 3]
         sideways = abs(float(np.dot(arrival, orient[:2, 1])))
-        raised = (args.get("mode", "vertical") == "vertical"
-                  and np.linalg.norm(arrival) > 2*clearance
-                  and (transit == "raised" or sideways > 2*clearance))
+        vertical = args.get("mode", "vertical") == "vertical"
+        raised = (np.linalg.norm(arrival) > 2*clearance
+                  and (transit == "raised" or (vertical and sideways > 2*clearance)))
         elevated = entry.copy()
-        elevated[2] = max(initial[2, 3], goal[2]+lift)
+        elevated[2] = max(initial[2, 3], goal[2]+lift, entry[2])
         # Direct raised entry descends and inserts along one fixed-orientation
         # diagonal. Keep staged entry available for a strictly axial insertion.
         # Check the actual diagonal for idle-arm proximity, not its old corner.
-        diagonal_entry = raised and path == "direct"
+        # Downward entry keeps its full standoff and fixed orientation after
+        # high lateral travel; direct must not bypass that insertion boundary.
+        diagonal_entry = raised and vertical and path == "direct"
+        # Separate long rearward/lateral arrivals: traverse at the more
+        # forward Y first, then approach the elevated standoff. This avoids
+        # combining the full lateral reach with a rearward wrist position.
+        # Coordinates derive only from the current TCP and caller geometry.
+        corridor = None
+        if raised and side_entry and transit == "raised":
+            corridor = elevated.copy()
+            corridor[1] = max(initial[1, 3], goal[1]+clearance)
         arrival_points = ([initial[:3, 3], elevated, goal] if diagonal_entry else
                           [initial[:3, 3]] + ([elevated] if raised else []) + [entry, goal])
+        if corridor is not None:
+            arrival_points.insert(1, corridor)
         # Each gripper gets the same conservative 16 cm envelope. The old
         # point-to-point test accounted for only one gripper's extent, and
         # ignored close passes between otherwise distant endpoints.
@@ -321,13 +350,17 @@ def run(api, command, args):
         # long sideways sweep can hit the grasp center before insertion even
         # with perfect TCP tracking, so it must retain the elevated waypoint.
         if raised:
+            if corridor is not None:
+                failure = move("transit_corridor", corridor, orient)
+                if failure:
+                    return failure
             # Keep long empty travel at its existing forward orientation.
             # For a direct rearward side entry, the bounded 30-degree yaw can
             # instead interpolate over the short elevated-to-center descent.
             # Restrict this to an already forward, matching-roll wrist: never
             # defer a large roll/pitch change into the insertion region.
             forward = rotation("vertical", ax, ay, orient)
-            defer_yaw = (diagonal_entry and side_entry and reorient == "combined"
+            defer_yaw = (corridor is None and diagonal_entry and side_entry and reorient == "combined"
                          and np.trace(initial[:3, :3].T @ forward)
                          > 1 + 2*np.cos(np.radians(1)))
             before = snapshot()
@@ -341,6 +374,28 @@ def run(api, command, args):
                 # checked position unchanged, and is attempted only once.
                 orient = orient @ np.diag([1., -1., -1.])
                 failure = move("transit_alternate", elevated, orient)
+            if (failure and not vertical and reorient == "combined"
+                    and rejected_without_motion(before)):
+                # Downward wrists can reject the high endpoint in both rolls.
+                # Reuse the bounded oblique entries without abandoning raised
+                # travel. Check the changed standoff's complete idle polyline;
+                # move() preflights transit, standoff and unchanged center.
+                for reverse in (False, True):
+                    candidate = inclined_rotation(ax, ay, initial[:3, :3], travel, reverse)
+                    candidate_entry = goal-clearance*candidate[:, 0]
+                    candidate_high = candidate_entry.copy()
+                    candidate_high[2] = max(initial[2, 3], goal[2]+lift, candidate_entry[2])
+                    route = [before[0][:3, 3], candidate_high, candidate_entry, goal]
+                    if arrival_distance(np.asarray(other.tcp())[:3, 3], route) < separation:
+                        continue
+                    for alternate in (False, True):
+                        orient = candidate @ (np.diag([1., -1., -1.]) if alternate else np.eye(3))
+                        suffix = ("_reverse" if reverse else "") + ("_alternate" if alternate else "")
+                        failure = move("transit_inclined" + suffix, candidate_high, orient)
+                        if not failure or not rejected_without_motion(before):
+                            break
+                    if not failure or not rejected_without_motion(before):
+                        break
             if failure:
                 return failure
         entry_moves = (("insert", goal),) if diagonal_entry else (
@@ -364,6 +419,7 @@ def run(api, command, args):
             # continuing straight to insertion instead of making the caller
             # repeat the full approach from the previous destination.
             if (failure and name == "approach"
+                    and "default_standoff_m" not in support_check
                     # Recovery must shorten the original standoff. At the
                     # 4 cm default it otherwise repeats the stalled target,
                     # consuming settling steps without changing the route.
@@ -490,6 +546,15 @@ def run(api, command, args):
                     rotate_carry = False
         if failure:
             return failure
+        # Explicit forward orientation also applies to pickup-only calls.
+        # Finish fixed-orientation extraction first; rotate at the lifted TCP,
+        # and preserve the closed grip on either success or motion failure.
+        if destination is None and carry_orientation == "forward":
+            forward = rotation("vertical", ax, ay, orient)
+            if not np.allclose(forward, orient):
+                failure = move("carry_orient", np.asarray(arm.tcp())[:3, 3], forward)
+                if failure:
+                    return failure
         if destination is not None:
             before = snapshot()
             failure = move("carry", destination, carry_rot)
@@ -535,6 +600,6 @@ def run(api, command, args):
         return {"plan_ok": True, "plan_fail_reason": None, "stages": stages,
                 "reached_tcp": {"pos": np.asarray(arm.tcp())[:3, 3].tolist()},
                 "released": released, "grasp_verified": False,
-                "support_check": support_check}, 0
+                "support_check": support_check, "route_preflight": route_preflight}, 0
     except Exception as exc:
         return fail("axis_grasp_failed", str(exc))

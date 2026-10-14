@@ -1,9 +1,19 @@
-"""Read-only geometry of a caller-selected visible depth region."""
+"""Read-only calibrated geometry from RGB correspondences or supplied height."""
 import numpy as np
+import importlib.util
+from pathlib import Path
+
+_spec = importlib.util.spec_from_file_location("region_stereo", Path(__file__).with_name("stereo.py"))
+stereo = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(stereo)
+
+_patch_spec = importlib.util.spec_from_file_location("region_patch_stereo", Path(__file__).with_name("patch_stereo.py"))
+patch_stereo = importlib.util.module_from_spec(_patch_spec)
+_patch_spec.loader.exec_module(patch_stereo)
 
 TOOL = {"name": "surface_region", "commands": [{
     "name": "surface_region", "budget": False,
-    "help": "Measure visible depth surfaces inside an inclusive pixel rectangle",
+    "help": "Triangulate RGB features inside an inclusive pixel rectangle",
     "args": [{"name": "camera", "type": "str", "default": "head"}]
     + [{"name": k, "type": "int", "required": True} for k in ("u0", "v0", "u1", "v1")]
     + [{"name": k, "type": "float", "default": None} for k in
@@ -182,7 +192,7 @@ def measure(depth, camera, args):
     keep = np.isfinite(points).all(1) & (points[:, 2] >= low) & (points[:, 2] <= high)
     points, pixels = points[keep], pixels[keep]
     if not len(points):
-        raise ValueError("no valid depth samples in selected region")
+        raise ValueError("no reliable RGB correspondences in selected region; stereo_points accepts paired pixels; stereo_edges accepts corresponding straight segments with unmatched endpoints")
     pmin, pmax = points.min(0), points.max(0)
     highest = int(np.argmax(points[:, 2]))
     # PCA describes only visible surfaces; its sign cannot identify semantic front/back.
@@ -221,10 +231,22 @@ def run(api, command, args):
         if args.get("height") is not None:
             result = at_height(observation["cameras"][name], args)
             return dict(result, plan_ok=True, plan_fail_reason=None), 0
-        if name not in observation.get("depth", {}) or name not in observation.get("cameras", {}):
-            return {"plan_ok": False, "plan_fail_reason": "depth_unavailable",
-                    "plan_detail": "Supply height explicitly for calibrated ray estimates; height is not measured."}, 2
-        result = measure(observation["depth"][name], observation["cameras"][name], args)
+        ranges = stereo.sparse_ranges(observation, name)
+        mode = "sparse_rgb_triangulation"
+        try:
+            result = measure(ranges, observation["cameras"][name], args)
+        except ValueError as exc:
+            if (not str(exc).startswith("no reliable RGB correspondences")
+                    or args.get("z_min") is None or args.get("z_max") is None
+                    or args.get("footprint_x") is not None):
+                raise
+            ranges = patch_stereo.patch_ranges(observation, name, args)
+            result = measure(ranges, observation["cameras"][name], args)
+            mode = "sparse_rgb_patch_height_search"
+        result["measurement_mode"] = mode
+        result["geometry_scope"] = "Matched visible samples only; bounds are not complete extents. Missing texture/occlusion is unknown."
+        if mode == "sparse_rgb_patch_height_search":
+            result["geometry_scope"] += " Locally horizontal 9x9 patches, reciprocal two-camera matches with <=4 mm height and <=.75 pixel return agreement, 2 mm search spacing or finer; mixed surfaces and slopes may be rejected or biased. Not insertion heights."
         return dict(result, plan_ok=True, plan_fail_reason=None), 0
     except Exception as exc:
         return {"plan_ok": False, "plan_fail_reason": "measurement_failed", "plan_detail": str(exc)}, 2

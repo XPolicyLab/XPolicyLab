@@ -5,6 +5,7 @@ import itertools
 import numpy as np
 from PIL import Image
 from scipy import ndimage
+from scipy.optimize import least_squares
 from scipy.spatial import ConvexHull
 
 
@@ -12,7 +13,7 @@ TOOL = {"name": "stereo_feature", "commands": [{
     "name": "stereo-feature", "budget": False,
     "help": "Measure RGB points, axes or rectangular planes in two calibrated cameras",
     "args": [
-        {"name": "mode", "positional": True, "choices": ["point", "segment", "body", "line", "plane"]},
+        {"name": "mode", "positional": True, "choices": ["point", "segment", "body", "line", "horizontal", "plane"]},
         {"name": "camera", "type": "str", "default": "head"},
         {"name": "peer", "type": "str", "required": True},
         *[{"name": name, "type": "float", "required": True}
@@ -210,15 +211,133 @@ def line_measure(a, b, regions):
                 warning='First-view colored extent only; peer centerline may be extrapolated. Same straight physical axis must be selected. Incorrect matching lines, asymmetric silhouettes, occlusion and calibration bias are not resolved; retention and clearance are unverified.')
 
 
+def horizontal_fit(a, b, pixels):
+    """Fit a horizontal 3-D line to image lines, not corresponding end caps."""
+    cameras = (a, b)
+    normals = []
+    for camera, endpoints in zip(cameras, pixels):
+        n = np.cross(ray(camera, endpoints[0]), ray(camera, endpoints[1]))
+        normals.append(n / np.linalg.norm(n))
+    normals = np.asarray(normals)
+    _, _, vectors = np.linalg.svd(normals[:, :2])
+    direction = vectors[-1]
+    side = np.array([-direction[1], direction[0]])
+    matrix = np.column_stack((normals[:, :2] @ side, normals[:, 2]))
+    if np.linalg.cond(matrix) > 100:
+        raise ValueError('horizontal height is ill-conditioned')
+    offset, height = np.linalg.solve(matrix, [n @ c['T'][:3, 3]
+                                             for n, c in zip(normals, cameras)])
+
+    def residual(parameters):
+        theta, offset, height = parameters
+        axis = np.array([np.cos(theta), np.sin(theta), 0.])
+        origin = np.array([-np.sin(theta)*offset, np.cos(theta)*offset, height])
+        errors = []
+        for camera, endpoints in zip(cameras, pixels):
+            world_normal = np.cross(axis, origin-camera['T'][:3, 3])
+            line = camera['invK'].T @ camera['T'][:3, :3].T @ world_normal
+            norm = np.linalg.norm(line[:2])
+            if norm < 1e-12:
+                raise ValueError('degenerate projected horizontal line')
+            errors.extend((np.column_stack((endpoints, np.ones(2))) @ line)/norm)
+        return errors
+
+    fit = least_squares(residual, [np.arctan2(direction[1], direction[0]), offset, height],
+                        max_nfev=60, xtol=1e-10, ftol=1e-10, gtol=1e-10)
+    if not fit.success or np.max(np.abs(fit.fun)) > 2:
+        raise ValueError('image axes disagree with a horizontal line by over 2 pixels')
+    theta, offset, height = fit.x
+    axis = np.array([np.cos(theta), np.sin(theta), 0.])
+    origin = np.array([-np.sin(theta)*offset, np.cos(theta)*offset, height])
+    endpoints = []
+    for pixel in pixels[0]:
+        d = ray(a, pixel)
+        if abs(d[2]) < .1:
+            raise ValueError('horizontal plane is viewed edge-on')
+        distance = (height-a['T'][2, 3])/d[2]
+        if distance <= 0:
+            raise ValueError('horizontal intersection behind camera')
+        point = a['T'][:3, 3]+distance*d
+        endpoints.append(origin+axis*((point-origin) @ axis))
+    endpoints = np.asarray(endpoints)
+    # The peer need only expose part of the same line, but it must overlap.
+    for point in endpoints:
+        pc = b['T'][:3, :3].T @ (point-b['T'][:3, 3])
+        if pc[2] <= 0:
+            raise ValueError('horizontal line behind peer camera')
+    return endpoints, float(np.max(np.abs(fit.fun)))
+
+
+def horizontal_measure(a, b, regions):
+    pixels = np.asarray([r['endpoints_pixel'] for r in regions])
+    endpoints, residual = horizontal_fit(a, b, pixels)
+    shifts = []
+    # Independently perturb all fitted endpoint coordinates, including angle.
+    for index in range(8):
+        for sign in (-1., 1.):
+            perturbed = pixels.copy()
+            perturbed.flat[index] += sign
+            changed, _ = horizontal_fit(a, b, perturbed)
+            shifts.append(float(np.max(np.linalg.norm(changed-endpoints, axis=1))))
+    sensitivity = max(shifts)
+    if sensitivity > .015:
+        raise ValueError('horizontal endpoint sensitivity exceeds 15 mm')
+    geometry = segment_geometry([dict(point_world=p.tolist(), one_pixel_sensitivity_m=sensitivity)
+                                 for p in endpoints])
+    geometry['visible_length_m'] = geometry.pop('length_m')
+    # The constrained fit already supplies 3-D points. Project them directly:
+    # re-triangulating via line_match would impose the unconstrained line
+    # problem's epipolar-angle gate on a fit with measured stable height.
+    projected = np.asarray([b['K'] @ (b['T'][:3, :3].T @
+                                     (p-b['T'][:3, 3])) for p in endpoints])
+    peer_pixels = projected[:, :2]/projected[:, 2:]
+    delta = pixels[1, 1]-pixels[1, 0]
+    span_squared = float(delta @ delta)
+    if span_squared < 1e-12:
+        raise ValueError('degenerate peer span')
+    fractions = (peer_pixels-pixels[1, 0]) @ delta/span_squared
+    if not np.isfinite(fractions).all() or np.any((fractions < -.5) | (fractions > 1.5)):
+        raise ValueError('centerline extrapolation exceeds half the observed peer span')
+    return dict(geometry, measurement_method='calibrated_rgb_horizontal_axis', depth_used=False,
+                assumed_horizontal=True, full_geometry_verified=False,
+                correspondence_verified=False, regions=regions, cameras=[a['name'], b['name']],
+                horizontal_height_m=float(endpoints[0, 2]), reprojection_error_px=residual,
+                one_pixel_sensitivity_m=sensitivity, peer_span_fractions=fractions.tolist(),
+                warning='Horizontal-axis constraint supplied by mode selection; height is fitted from RGB. '
+                        'Primary visible extent only, arbitrary axis sign; hidden ends, silhouette bias, '
+                        'wrong matching axes, retention and clearance are unverified.')
+
+
 def body_measure(obs, a, b, args):
     tolerance = float(args.get('color_tolerance', 65.))
     if not np.isfinite(tolerance) or not 5 <= tolerance <= 150:
         raise ValueError('color_tolerance must be finite within 5..150')
+    endpoint_names = ('u2', 'v2', 'pu2', 'pv2')
+    if args['mode'] == 'horizontal' and any(args.get(n) is not None for n in endpoint_names):
+        if any(args.get(n) is None for n in endpoint_names):
+            raise ValueError('explicit horizontal axes require u2/v2 and pu2/pv2')
+        regions = []
+        for camera, names in ((a, ('u', 'v', 'u2', 'v2')),
+                              (b, ('pu', 'pv', 'pu2', 'pv2'))):
+            pixels = np.asarray([args[n] for n in names], dtype=float).reshape(2, 2)
+            if not np.isfinite(pixels).all() or not np.all((pixels >= 0) & (pixels < camera['size'])):
+                raise ValueError('axis endpoints must be finite and inside their respective images')
+            if np.linalg.norm(pixels[1]-pixels[0]) < 16:
+                raise ValueError('explicit axis must cover at least 16 pixels')
+            regions.append(dict(endpoints_pixel=pixels.tolist(), selection='caller_centerline',
+                                silhouette_verified=False))
+        result = horizontal_measure(a, b, regions)
+        result['axis_selection'] = 'explicit_centerlines'
+        result['warning'] += (' Caller selections must lie on the same physical centerline; '
+                              'endpoint correspondence is not required and RGB support is not verified.')
+        return result
     regions = [region_axis(obs, camera, pixel, tolerance,
-                           allow_clipped=args['mode'] == 'line' and camera is b) for camera, pixel in
+                           allow_clipped=args['mode'] in ('line', 'horizontal') and camera is b) for camera, pixel in
                ((a, [args['u'], args['v']]), (b, [args['pu'], args['pv']]))]
     if np.linalg.norm(np.subtract(regions[0]['median_rgb'], regions[1]['median_rgb'])) > tolerance:
         raise ValueError('selected regions have inconsistent colors')
+    if args['mode'] == 'horizontal':
+        return horizontal_measure(a, b, regions)
     if args['mode'] == 'line':
         return line_measure(a, b, regions)
     pa, pb = [np.asarray(region['endpoints_pixel']) for region in regions]
@@ -249,15 +368,21 @@ def planar_boundary(obs, camera, pixel, tolerance):
         raise ValueError('plane seeds must be inside their respective images')
     rgb = np.asarray(Image.open(io.BytesIO(obs['png'][camera['name']])).convert('RGB'), float)
     u, v = pixel.astype(int)
-    color = rgb[v, u]
-    if color.max() < 70 or np.ptp(color) < .25*color.max():
-        raise ValueError('plane seed must select a chromatic surface')
     # Normalized colors tolerate illumination across a broad planar surface.
     chroma = rgb / np.maximum(rgb.sum(-1, keepdims=True), 1)
-    mask = ((np.linalg.norm(chroma-color/color.sum(), axis=-1) < min(.15, tolerance/500))
-            & (rgb.max(-1) > 70) & (np.ptp(rgb, axis=-1) > .20*rgb.max(-1)))
+    color = np.median(chroma[max(0, v-1):v+2, max(0, u-1):u+2], axis=(0, 1))
+    if np.ptp(color) < .08:
+        raise ValueError('plane seed must select a chromatic surface')
+    mask = ((np.linalg.norm(chroma-color, axis=-1) <= min(.25, tolerance/500))
+            & (rgb.max(-1) > 35) & (np.ptp(chroma, axis=-1) >= .08))
     labels, _ = ndimage.label(mask)
     label = labels[v, u]
+    if not label:
+        nearby = labels[max(0, v-1):v+2, max(0, u-1):u+2]
+        counts = np.bincount(nearby.ravel())
+        counts[0] = 0
+        if counts.max() >= 5:
+            label = int(counts.argmax())
     if not label:
         raise ValueError('unstable plane seed')
     surface = labels == label
@@ -358,7 +483,7 @@ def segment_geometry(measurements):
 
 def measure(obs, args):
     mode = args["mode"]
-    if mode not in ("point", "segment", "body", "line", "plane"):
+    if mode not in ("point", "segment", "body", "line", "horizontal", "plane"):
         raise ValueError("unknown mode")
     a = camera_data(obs, args.get("camera", "head"))
     b = camera_data(obs, args["peer"])
@@ -366,7 +491,7 @@ def measure(obs, args):
         raise ValueError("camera baseline must be at least 20 mm")
     if mode == 'plane':
         return plane_measure(obs, a, b, args)
-    if mode in ('body', 'line'):
+    if mode in ('body', 'line', 'horizontal'):
         return body_measure(obs, a, b, args)
     first = triangulate(a, b, [args["u"], args["v"]], [args["pu"], args["pv"]])
     result = dict(measurement_method="calibrated_rgb_triangulation", depth_used=False,

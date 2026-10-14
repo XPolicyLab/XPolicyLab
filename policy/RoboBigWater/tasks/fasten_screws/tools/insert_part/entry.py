@@ -61,8 +61,8 @@ def fit_faces(rgb, xyz, valid, K, T, near, hue, project):
                     or uv[:, 0].max() == z.shape[1]-1 or uv[:, 1].max() == z.shape[0]-1):
                 continue
             # Use the same plane tolerance on both sides of the boundary.
-            # A continuous sidewall can be only 0.7--2 mm below the top
-            # in the adjacent pixel. Requiring a 2 mm jump here loses its
+            # A continuous sidewall can be only slightly below the top
+            # in the adjacent pixel. Requiring a larger jump here loses its
             # real edge, even though the outer samples prove a depth drop.
             edge_lower = valid & (z < height-.0007)
             uv = boundary_midpoints(uv, edge_lower)
@@ -108,29 +108,7 @@ def fit_faces(rgb, xyz, valid, K, T, near, hue, project):
 
 
 def locate_entry(api, near, hue, pick, footprint=None):
-    obs = api.observe()
-    centers, weights = [], []
-    for camera in pick.inspection.CAMERAS:
-        try:
-            rgb, _, K, T, xyz, valid = pick.cloud(obs, camera)
-            candidates = fit_faces(rgb, xyz, valid, K, T, near, hue,
-                                   pick.inspection.project_to_height)
-            # Mating surfaces may be neutral or dark even when the held part
-            # is chromatic.  Only use this bounded fallback when the material
-            # matched search found no geometrically valid face in this view.
-            if not candidates and hue is not None:
-                candidates = fit_faces(rgb, xyz, valid, K, T, near, None,
-                                       pick.inspection.project_to_height)
-        except Exception:
-            continue
-        for candidate in candidates:
-            weight = 1. if footprint is None else footprint(candidate, K, T)**-2
-            centers.append(candidate)
-            weights.append(weight)
-    if not centers:
-        raise ValueError('entry_face_unobserved')
-    centers = np.asarray(centers)
-    center = np.median(centers, axis=0)
-    if np.max(np.linalg.norm(centers-center, axis=1)) > .0015:
-        raise ValueError('entry_faces_inconsistent')
-    return np.average(centers, axis=0, weights=weights), len(centers)
+    measured = pick.rgb_geometry.locate(api.observe(), near, False, hue, .008)
+    if np.linalg.norm(measured['center'][:2]-near[:2]) > .02:
+        raise ValueError('entry_outside_search')
+    return measured['center'], measured['views']

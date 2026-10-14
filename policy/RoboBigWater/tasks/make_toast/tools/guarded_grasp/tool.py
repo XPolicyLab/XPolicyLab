@@ -21,6 +21,7 @@ TOOL = {"name": "guarded_grasp", "commands": [
            for k in ("ax", "ay", "az", "ox", "oy", "oz")],
          {"name": "opening", "type": "float", "default": 0.5},
          {"name": "lift", "type": "float", "default": 0.06},
+         {"name": "direct", "type": "int", "default": 0, "choices": [0, 1]},
      ]},
     {"name": "grasp_point", "budget": True,
      "help": "orient, approach, pinch and lift at a world TCP point",
@@ -54,7 +55,7 @@ def parameters(command, args):
     if command == "grasp_point":
         defaults.update(yaw=0.0, tilt=0.0, opening=0.5, lift=0.06, lift_dx=0.0, lift_dy=0.0)
     if command == "grasp_pose":
-        defaults.update(opening=0.5, lift=0.06, lift_dx=0.0, lift_dy=0.0)
+        defaults.update(opening=0.5, lift=0.06, lift_dx=0.0, lift_dy=0.0, direct=0)
     p = {k: float(args[k]) for k in ("x", "y", "z")}
     if command == "grasp_pose":
         p.update({k: float(args[k]) for k in ("ax", "ay", "az", "ox", "oy", "oz")})
@@ -62,12 +63,14 @@ def parameters(command, args):
     if not all(np.isfinite(v) for v in p.values()):
         raise ValueError("arguments must be finite")
     for key, low, high in [("clearance", 0.02, 0.15), ("tolerance", 0.002, 0.015),
-                            ("opening", 0.05, 1.0), ("lift", 0.02, 0.15),
+                            ("opening", 0.05, 1.0), ("lift", 0.0 if command == "grasp_pose" else 0.02, 0.15),
                             ("yaw", -180, 180), ("tilt", 0, 60)]:
         if key in p and not low <= p[key] <= high:
             raise ValueError(f"{key} must be in [{low}, {high}]")
     if "lift_dx" in p and np.hypot(p["lift_dx"], p["lift_dy"]) > 0.15:
         raise ValueError("horizontal lift displacement must be at most 0.15 m")
+    if p.get("direct", 0) not in (0, 1):
+        raise ValueError("direct must be 0 or 1")
     return p
 
 
@@ -180,18 +183,26 @@ def run(api, command, args):
             # Transit above the approach origin, then enter along the requested axis.
             # All positions derive from the caller's goal, never scene constants.
             pregrasp = goal - p["clearance"] * target[:3, 0]
-            travel_z = max(start[2], pregrasp[2] + p["clearance"])
-            target[2, 3] = travel_z
-            move("raise", target)
-            target[:3, 3] = [pregrasp[0], pregrasp[1], travel_z]
-            move("approach", target)
+            if not p["direct"]:
+                travel_z = max(start[2], pregrasp[2] + p["clearance"])
+                target[2, 3] = travel_z
+                move("raise", target)
+                target[:3, 3] = [pregrasp[0], pregrasp[1], travel_z]
+                move("approach", target)
+            else:
+                target[:3, 3] = pregrasp
+                move("approach", target)
             grip("open", p["opening"])
             target[:3, 3] = pregrasp
-            move("pregrasp", target)
-            target[:3, 3] = goal
-            move("insert", target)
+            if not p["direct"]:
+                move("pregrasp", target)
+            count = max(1, int(np.ceil(p["clearance"] / .01))) if p["direct"] else 1
+            for index in range(1, count + 1):
+                target[:3, 3] = pregrasp + (goal - pregrasp) * index / count
+                move("insert", target)
             grip("close", 0.0)
-            lift(target)
+            if p["lift"] or p["lift_dx"] or p["lift_dy"]:
+                lift(target)
             result.update(plan_ok=True, plan_fail_reason=None,
                           verification="motion only; inspect observations for object retention")
             return result, 0

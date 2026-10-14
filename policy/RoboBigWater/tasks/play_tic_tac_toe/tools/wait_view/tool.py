@@ -1,5 +1,6 @@
 """Compare a caller-selected depth crop with an observed reference; no scene access."""
 import numpy as np
+import cv2
 
 TOOL = {"name": "wait_view", "commands": [
     {"name": "remember-view", "budget": False,
@@ -24,10 +25,20 @@ def frame(api, camera):
     if native not in obs.get("cameras", {}) and camera in obs.get("cameras", {}):
         native = camera
     data = obs["cameras"][native]
-    depth = np.asarray(obs["depth"][native], dtype=float)
+    if "depth" in obs and native in obs["depth"]:
+        depth = np.asarray(obs["depth"][native], dtype=float)
+    else:
+        raw = obs.get("png", {}).get(native)
+        if raw is None:
+            raise ValueError("missing RGB observation")
+        image = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+        if image is None:
+            raise ValueError("invalid RGB observation")
+        # Positive normalized intensities retain the existing finite-data checks.
+        depth = 1.0 + cv2.GaussianBlur(image, (3, 3), 0).astype(float)/255.0
     k = np.asarray(data["intrinsics"], dtype=float)
     transform = np.asarray(data["extrinsics_world"], dtype=float)
-    if (depth.ndim != 2 or k.shape != (3, 3) or transform.shape != (4, 4)
+    if (depth.ndim not in (2, 3) or k.shape != (3, 3) or transform.shape != (4, 4)
             or not np.isfinite(k).all() or not np.isfinite(transform).all()):
         raise ValueError("invalid camera arrays")
     return depth, k, transform
@@ -41,6 +52,16 @@ def compare(depth, reference, tolerance):
         raise ValueError("depth dimensions changed")
     valid = np.isfinite(crop) & (crop > 0)
     difference = np.abs(crop - baseline)
+    if crop.ndim == 3:
+        delta = difference.max(axis=2)
+        def largest(cutoff):
+            binary = cv2.morphologyEx((delta > cutoff).astype(np.uint8), cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
+            n, _, stats, _ = cv2.connectedComponentsWithStats(binary, connectivity=8)
+            return int(stats[1:, cv2.CC_STAT_AREA].max()) if n > 1 else 0
+        different, departed = largest(max(30/255, tolerance)), largest(max(45/255, 2*tolerance))
+        return dict(matches=different < 12, changed=departed >= 20,
+                    valid_fraction=1.0, different_fraction=float((delta > 30/255).mean()),
+                    comparison_mode='rgb')
     # Every captured ray must remain valid; a sparse missing region is not rest.
     matches = bool(valid.all() and np.all(difference <= tolerance))
     # Invalid samples cannot demonstrate actual motion away from the reference.
@@ -70,13 +91,13 @@ def run(api, command, args):
             if not (0 <= u0 < u1 <= depth.shape[1] and 0 <= v0 < v1 <= depth.shape[0]):
                 raise ValueError("rectangle outside image")
             crop = depth[v0:v1, u0:u1].copy()
-            if crop.size < 25 or not (np.isfinite(crop) & (crop > 0)).all():
+            if np.prod(crop.shape[:2]) < 25 or not (np.isfinite(crop) & (crop > 0)).all():
                 raise ValueError("reference requires at least 25 valid depth pixels")
             _reference = dict(rect=rect, camera=camera, crop=crop, k=k.copy(),
                               transform=transform.copy(), shape=depth.shape,
                               owner=api.arm("left"), remaining=api.sim_time_left())
             return dict(plan_ok=True, plan_fail_reason=None, camera=camera,
-                        rectangle=list(rect), reference_pixels=int(crop.size)), 0
+                        rectangle=list(rect), reference_pixels=int(np.prod(crop.shape[:2]))), 0
         if command != "wait-view":
             raise ValueError("unknown command")
         maximum = float(args.get("max_sec", 8))
@@ -93,7 +114,11 @@ def run(api, command, args):
             raise ValueError("missing_reference_for_this_episode")
         limit = min(int(maximum * 25), max(0, int(api.sim_time_left() * 25) - 1))
         needed = int(np.ceil(stable * 25))
+        previous = reference.pop('progress', None)
         since = None
+        if previous and abs(previous['remaining']-api.sim_time_left()) < 1e-8:
+            changed = previous['changed']
+            since = -previous['stable_steps'] if previous['stable_steps'] else None
         while True:
             if api.over:
                 reason = "episode_over"
@@ -113,6 +138,8 @@ def run(api, command, args):
                 since = None
             if elapsed >= limit:
                 reason = "return_timeout" if changed or not require else "no_change_observed"
+                reference['progress'] = dict(remaining=api.sim_time_left(), changed=changed,
+                    stable_steps=elapsed-since if since is not None else 0)
                 break
             steps = min(5, limit - elapsed)
             api.hold(steps)

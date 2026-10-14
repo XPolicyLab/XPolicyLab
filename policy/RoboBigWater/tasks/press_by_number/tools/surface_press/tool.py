@@ -4,8 +4,11 @@ import numpy as np
 TOOL = {"name": "surface_press", "commands": [
     {"name": "surface_point", "budget": False,
      "help": "Measure a visible pixel in world coordinates without motion",
-     "args": [{"name": "u", "type": "int", "required": True},
-              {"name": "v", "type": "int", "required": True}]},
+     "args": [{"name": "u", "type": "float", "required": True},
+              {"name": "v", "type": "float", "required": True},
+              {"name": "height", "type": "float"},
+              {"name": "camera2", "choices": ["cam_left_wrist", "cam_right_wrist"]},
+              {"name": "u2", "type": "float"}, {"name": "v2", "type": "float"}]},
     {"name": "surface_press", "budget": True,
      "help": "Execute vertical press/release cycles at a measured surface point",
      "args": [{"name": "arm", "positional": True, "choices": ["left", "right"]},
@@ -20,21 +23,7 @@ TOOL = {"name": "surface_press", "commands": [
 ]}
 
 
-def raw_surface_point(observation, u, v):
-    depth = np.asarray(observation["depth"]["cam_head"], dtype=float)
-    if depth.ndim != 2 or not (1 <= u < depth.shape[1]-1 and 1 <= v < depth.shape[0]-1):
-        raise ValueError("pixel must have a complete 3x3 depth neighborhood")
-    patch = depth[v-1:v+2, u-1:u+2]
-    valid = patch[np.isfinite(patch) & (patch > 0)]
-    if len(valid) < 7 or np.ptp(valid) > 0.015:
-        raise ValueError("missing depth or surface boundary; select an interior pixel")
-    camera = observation["cameras"]["cam_head"]
-    k = np.asarray(camera["intrinsics"], dtype=float)
-    t = np.asarray(camera["extrinsics_world"], dtype=float)
-    z = float(np.median(valid))
-    p = t @ np.r_[np.linalg.solve(k, [u, v, 1]) * z, 1.0]
-    if not np.all(np.isfinite(p)):
-        raise ValueError("invalid camera calibration")
+def measurement_result(point, diagnostics):
     return {"plan_ok": True, "plan_fail_reason": None,
             "execution_interface": {
                 "sequence": "A x NA, C x 1, B x NB, C x 1, both arms home; C after EACH group",
@@ -47,100 +36,232 @@ def raw_surface_point(observation, u, v):
                 "arguments": "A/B/C: world surface points in metres; NA/NB: integers 1..9",
                 "semantics": "Atomic full sequence including home; no retries. "
                              "Prior manual strokes cannot be safely incorporated or replayed."},
-            "point_world": p[:3].tolist(),
-            "point_csv": ",".join(format(float(value), ".9f") for value in p[:3]),
-            "depth_spread_m": float(np.ptp(valid))}
+            "point_world": point.tolist(),
+            "point_csv": ",".join(format(float(value), ".9f") for value in point),
+            "measurement": diagnostics}
 
 
-# Resting base-to-top extent from the static asset geometry (metres), not
-# a world height or a layout coordinate. Infer the supporting height anew.
-SURFACE_HEIGHT = 0.030913632
+def pixel_ray(observation, camera, u, v):
+    """Validated RGB pixel -> world origin and unit ray; never accesses depth."""
+    import cv2
+    rgb = cv2.imdecode(np.frombuffer(observation["png"][camera], np.uint8), cv2.IMREAD_COLOR)
+    if rgb is None:
+        raise ValueError("missing RGB image")
+    if not np.isfinite([u, v]).all() or not (1 <= u < rgb.shape[1]-1 and 1 <= v < rgb.shape[0]-1):
+        raise ValueError("pixel must be inside the RGB image")
+    calibration = observation["cameras"][camera]
+    k = np.asarray(calibration["intrinsics"], dtype=float)
+    t = np.asarray(calibration["extrinsics_world"], dtype=float)
+    if (k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all()
+            or not np.isfinite(t).all() or k[0, 0] <= 0 or k[1, 1] <= 0
+            or not np.allclose(k[2], [0, 0, 1])
+            or not np.allclose(t[3], [0, 0, 0, 1])
+            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)
+            or abs(np.linalg.det(t[:3, :3])-1) > 1e-3):
+        raise ValueError("invalid camera calibration")
+    ray = t[:3, :3] @ np.linalg.solve(k, [u, v, 1])
+    return t[:3, 3], ray / np.linalg.norm(ray)
 
 
-def surface_point(observation, u, v):
-    """Constrain noisy foreground depth with a broad visible support region."""
-    import io
-    from PIL import Image
-    result = raw_surface_point(observation, u, v)
-    raw = np.asarray(result["point_world"])
-    depth = np.asarray(observation["depth"]["cam_head"], dtype=float)
-    try:
-        rgb = np.asarray(Image.open(io.BytesIO(observation["png"]["cam_head"])).convert("RGB"), dtype=float)
-    except (KeyError, OSError, TypeError) as exc:
-        raise ValueError("insufficient visible support: RGB unavailable") from exc
-    if rgb.shape != (*depth.shape, 3):
-        raise ValueError("RGB/depth dimensions disagree")
-    camera = observation["cameras"]["cam_head"]
-    k = np.asarray(camera["intrinsics"], dtype=float)
-    t = np.asarray(camera["extrinsics_world"], dtype=float)
-    vv, uu = np.indices(depth.shape)
-    rays = np.stack([uu, vv, np.ones_like(uu)], axis=-1) @ np.linalg.inv(k).T
-    rays = rays @ t[:3, :3].T
-    world = t[:3, 3] + depth[..., None] * rays
-    r, g, b = np.moveaxis(rgb, -1, 0)
-    # Visible wood: exclude saturated foreground, pale signage, dark robot
-    # parts and neutral background. The spatial annulus excludes depth halos.
-    wood = ((r > 40) & (r < 245) & (r > 1.15*g) & (r < 2.1*g)
-            & (g > 1.12*b) & (g < 3.0*b))
-    distance = np.linalg.norm(world[..., :2]-raw[:2], axis=-1)
-    mask = (wood & np.isfinite(depth) & (depth > 0) & (rays[..., 2] < -.1)
-            & (distance > .07) & (distance < .40)
-            & (world[..., 2] > raw[2]-.15) & (world[..., 2] < raw[2]+.03))
-    support = world[mask]
-    if len(support) < 200:
-        raise ValueError("insufficient visible support: need 200 valid samples")
-    # Monocular depth can warp a horizontal surface smoothly. A global
-    # height-spread gate mistakes that spatial bias for disconnected support.
-    # Fit its local height field, rejecting residuals rather than raw heights.
-    xy = support[:, :2] - raw[:2]
-    design = np.column_stack([xy, np.ones(len(xy))])
-    weights = np.exp(-np.sum(xy*xy, axis=1)/(2*.18**2))
-    keep = np.ones(len(support), dtype=bool)
-    for _ in range(6):
-        weighted = np.sqrt(weights[keep])
-        coefficients = np.linalg.lstsq(design[keep]*weighted[:, None],
-                                       support[keep, 2]*weighted, rcond=None)[0]
-        residual = support[:, 2] - design @ coefficients
-        updated = np.abs(residual) < .015
-        if updated.sum() < max(200, .65*len(support)):
-            raise ValueError("support plane uncertain: inconsistent heights")
-        if np.array_equal(updated, keep):
-            break
-        keep = updated
-    inliers = support[keep]
-    spread = float(np.percentile(np.abs(residual[keep]), 90))
-    if (spread > .01 or np.min(np.ptp(inliers[:, :2], axis=0)) < .12
-            or np.linalg.norm(coefficients[:2]) > .25):
-        raise ValueError(f"support plane uncertain: residual={spread:.4f} m, "
-                         f"extent={np.ptp(inliers[:, :2], axis=0).tolist()}, "
-                         f"slope={coefficients[:2].tolist()}")
-    # Avoid extrapolating from a distant sliver of visible support.
-    centered = xy[keep] - np.average(xy[keep], axis=0, weights=weights[keep])
-    covariance = (centered.T * weights[keep]) @ centered / weights[keep].sum()
-    offset = np.average(xy[keep], axis=0, weights=weights[keep])
-    if np.min(np.linalg.eigvalsh(covariance)) < .001 or offset @ np.linalg.solve(covariance, offset) > 4:
-        raise ValueError("support plane uncertain: selected ray outside supported region")
-    ray = rays[v, u]
-    slope = coefficients[:2]
-    denominator = ray[2] - slope @ ray[:2]
-    if denominator >= -.1:
+def surface_point(observation, u, v, extent, support_z):
+    """Intersect a head ray with measured support plus caller-measured height."""
+    if support_z is None or not np.isfinite(support_z):
+        raise ValueError("support plane unknown; supply a second RGB correspondence")
+    if not np.isfinite(extent) or not 0 < extent <= .3:
+        raise ValueError("height must be measured from images, greater than 0 and at most 0.3 m")
+    origin, ray = pixel_ray(observation, "cam_head", u, v)
+    if ray[2] >= -.1:
         raise ValueError("selected ray does not face the support")
-    ray_depth = (coefficients[2] + SURFACE_HEIGHT - t[2, 3]
-                 + slope @ (t[:2, 3]-raw[:2])) / denominator
-    plane_z = float(t[2, 3] + ray_depth*ray[2] - SURFACE_HEIGHT)
-    point = t[:3, 3] + ray_depth*ray
-    if ray_depth <= 0 or np.linalg.norm(point-raw) > .08:
-        raise ValueError("support constraint disagrees with selected surface")
-    result.update(point_world=point.tolist(),
-                  point_csv=",".join(format(float(value), ".9f") for value in point),
-                  measurement=dict(method="local_support_fit_plus_fixed_extent",
-                                   support_slope=coefficients[:2].tolist(),
-                                   support_raw_spread_m=float(np.ptp(inliers[:, 2])),
-                                   raw_point_world=raw.tolist(), support_height_m=plane_z,
-                                   surface_height_m=SURFACE_HEIGHT,
-                                   support_samples=len(inliers), support_spread_m=spread,
-                                   correction_m=float(np.linalg.norm(point-raw))))
-    return result
+    distance = (support_z + extent - origin[2]) / ray[2]
+    if distance <= 0:
+        raise ValueError("surface is behind the camera")
+    return measurement_result(origin + distance*ray, dict(
+        method="rgb_ray_measured_support_plus_height", support_height_m=float(support_z),
+        surface_height_m=float(extent), extent_source="caller, measured from images"))
+
+
+def stereo_surface_point(observation, u, v, camera2, u2, v2):
+    """Triangulate the same physical surface landmark in two RGB views."""
+    if camera2 not in ("cam_left_wrist", "cam_right_wrist"):
+        raise ValueError("second camera must be a wrist view")
+
+    def solve(pixels):
+        o1, d1 = pixel_ray(observation, "cam_head", *pixels[:2])
+        o2, d2 = pixel_ray(observation, camera2, *pixels[2:])
+        angle = np.linalg.norm(np.cross(d1, d2))
+        if np.linalg.norm(o1-o2) < .02 or angle < np.sin(np.deg2rad(8)):
+            raise ValueError("insufficient stereo baseline or ray angle")
+        lengths = np.linalg.lstsq(np.column_stack([d1, -d2]), o2-o1, rcond=None)[0]
+        if min(lengths) <= 0:
+            raise ValueError("correspondence is behind a camera")
+        a, b = o1+lengths[0]*d1, o2+lengths[1]*d2
+        if np.linalg.norm(a-b) > .003:
+            raise ValueError("inconsistent correspondence: ray separation exceeds 3 mm")
+        point = (a+b)/2
+        for name, pixel in (("cam_head", pixels[:2]), (camera2, pixels[2:])):
+            cal = observation["cameras"][name]
+            t = np.asarray(cal["extrinsics_world"])
+            local = t[:3, :3].T @ (point-t[:3, 3])
+            projected = np.asarray(cal["intrinsics"]) @ local
+            if np.linalg.norm(projected[:2]/projected[2]-pixel) > 1.5:
+                raise ValueError("inconsistent correspondence: reprojection exceeds 1.5 pixels")
+        return point, float(np.linalg.norm(a-b))
+
+    pixels = np.array([u, v, u2, v2], dtype=float)
+    point, gap = solve(pixels)
+    # Half-pixel sensitivity catches distant/weak stereo despite small residuals.
+    sensitivity = max(np.linalg.norm(solve(pixels + sign*.5*np.eye(4)[i])[0]-point)
+                      for i in range(4) for sign in (-1, 1))
+    if sensitivity > .004:
+        raise ValueError("stereo uncertainty exceeds 4 mm per half pixel")
+    return measurement_result(point, dict(method="rgb_two_view_triangulation",
+        camera2=camera2, ray_gap_m=gap, half_pixel_sensitivity_m=float(sensitivity),
+        correspondence_verified=False))
+
+
+def matched_surface_point(observation, u, v, support_z):
+    """Local horizontal-plane sweep; match RGB patches, not silhouette centres.
+
+    Two patch sizes must independently select the same height. Broad peaks,
+    flat patches, occlusions and competing matches are rejected. No motion or
+    scene dimensions are used; the 0.3 m search band is a measurement limit.
+    """
+    import cv2
+    origin, ray = pixel_ray(observation, "cam_head", u, v)
+    if support_z is None or not np.isfinite(support_z) or ray[2] >= -.1:
+        raise ValueError("patch matching needs a measured support and downward ray")
+    head = cv2.imdecode(np.frombuffer(observation["png"]["cam_head"], np.uint8),
+                        cv2.IMREAD_GRAYSCALE)
+    cal = observation["cameras"]["cam_head"]
+    samples = []
+    for radius in (8, 12):
+        xs, ys = np.meshgrid(np.arange(-radius, radius+1)+u,
+                             np.arange(-radius, radius+1)+v)
+        if xs.min() < 1 or ys.min() < 1 or xs.max() >= head.shape[1]-2 or ys.max() >= head.shape[0]-2:
+            raise ValueError("patch crosses image boundary")
+        ref = cv2.remap(head.astype(np.float32), xs.astype(np.float32),
+                        ys.astype(np.float32), cv2.INTER_LINEAR).ravel()
+        if np.std(ref) < 6:
+            raise ValueError("untextured patch; select a visible surface detail or supply matched landmarks")
+        ref -= ref.mean()
+        ref /= np.linalg.norm(ref)
+        rays = (np.asarray(cal["extrinsics_world"])[:3, :3] @
+                np.linalg.solve(np.asarray(cal["intrinsics"]),
+                                np.array([xs.ravel(), ys.ravel(), np.ones(xs.size)]))).T
+        if np.any(rays[:, 2] >= -.1):
+            raise ValueError("patch contains grazing rays")
+        samples.append((ref, rays))
+    pair_results = []
+    for camera in ("cam_left_wrist", "cam_right_wrist"):
+        try:
+            # Reuse the strict calibration validation even though no manual
+            # pixel correspondence is needed for this mode.
+            other_origin, _ = pixel_ray(observation, camera, 2, 2)
+            if np.linalg.norm(origin-other_origin) < .02:
+                continue
+            source = cv2.imdecode(np.frombuffer(observation["png"][camera], np.uint8),
+                                  cv2.IMREAD_GRAYSCALE).astype(np.float32)
+            c = observation["cameras"][camera]
+            rotation = np.asarray(c["extrinsics_world"])[:3, :3]
+            intrinsics = np.asarray(c["intrinsics"])
+            estimates = []
+            for ref, rays in samples:
+                def score(z):
+                    distance = (z-origin[2])/rays[:, 2]
+                    world = origin + distance[:, None]*rays
+                    local = (world-other_origin) @ rotation
+                    if np.any(distance <= 0) or np.any(local[:, 2] <= 0):
+                        return -1.
+                    projected = local @ intrinsics.T
+                    uv = projected[:, :2]/projected[:, 2:]
+                    if (np.any(uv < 1) or np.any(uv[:, 0] >= source.shape[1]-2)
+                            or np.any(uv[:, 1] >= source.shape[0]-2)):
+                        return -1.
+                    patch = cv2.remap(source, uv[:, 0].astype(np.float32)[:, None],
+                                      uv[:, 1].astype(np.float32)[:, None], cv2.INTER_LINEAR).ravel()
+                    if np.std(patch) < 6:
+                        return -1.
+                    patch -= patch.mean()
+                    return float(ref @ patch / np.linalg.norm(patch))
+                grid = support_z + np.arange(.001, .3001, .001)
+                scores = np.array([score(z) for z in grid])
+                best = int(np.argmax(scores))
+                if best in (0, len(grid)-1) or scores[best] < .90:
+                    raise ValueError("weak or boundary patch match")
+                # A strong alternative more than 4 mm away is not a depth
+                # measurement, even when its NCC is high.
+                alternatives = scores[np.abs(grid-grid[best]) >= .004-1e-9]
+                margin = float(scores[best]-alternatives.max())
+                if margin < .06:
+                    raise ValueError("ambiguous patch match")
+                fine = grid[best] + np.arange(-.001, .00101, .0001)
+                fine_scores = [score(z) for z in fine]
+                z = float(fine[np.argmax(fine_scores)])
+                # Avoid a near-collinear pair masquerading as high confidence.
+                point = origin + (z-origin[2])/ray[2]*ray
+                second_ray = point-other_origin
+                second_ray /= np.linalg.norm(second_ray)
+                if np.linalg.norm(np.cross(ray, second_ray)) < np.sin(np.deg2rad(8)):
+                    raise ValueError("weak patch triangulation angle")
+                estimates.append(dict(z=z, ncc=float(max(fine_scores)), margin=margin))
+            if abs(estimates[0]["z"]-estimates[1]["z"]) > .002:
+                raise ValueError("patch sizes disagree; nonplanar or occluded region")
+            pair_results.append(dict(camera=camera, z=float(np.mean([e["z"] for e in estimates])),
+                                     patches=estimates))
+        except (ValueError, KeyError, TypeError):
+            continue
+    if not pair_results:
+        raise ValueError("no unambiguous RGB patch match; expose a surface detail in both views or supply measured geometry")
+    if np.ptp([p["z"] for p in pair_results]) > .002:
+        raise ValueError("wrist patch measurements disagree")
+    z = float(np.mean([p["z"] for p in pair_results]))
+    point = origin + (z-origin[2])/ray[2]*ray
+    return measurement_result(point, dict(method="rgb_local_plane_sweep", support_height_m=float(support_z),
+        surface_height_m=z-float(support_z), pairs=pair_results,
+        correspondence_verified=False, note="Photometric consistency assumes a horizontal textured patch."))
+
+
+def measured_support(api):
+    # Shared perception uses only EpisodeAPI RGB/calibration and its per-episode cache.
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location("surface_support_plane",
+        Path(__file__).resolve().parents[4] / "tools/table_plane/tool.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.measure_table_z(api)
+
+
+def measure_surface(api, args):
+    u, v = float(args["u"]), float(args["v"])
+    stereo = [args.get(key) for key in ("camera2", "u2", "v2")]
+    height = args.get("height")
+    if height is None and not any(value is not None for value in stereo):
+        support = measured_support(api)
+        observation = api.observe()
+        try:
+            return matched_surface_point(observation, u, v, support)
+        except ValueError as patch_error:
+            # Textureless interiors can still have a measurable circular rim.
+            # Load the sibling explicitly: tool modules are loaded by file path.
+            import importlib.util
+            from pathlib import Path
+            spec = importlib.util.spec_from_file_location(
+                "surface_rim_geometry", Path(__file__).with_name("rim_geometry.py"))
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            try:
+                point, diagnostics = module.measure(observation, u, v, support, pixel_ray)
+                return measurement_result(point, diagnostics)
+            except ValueError as rim_error:
+                raise ValueError(f"{patch_error}; rim fallback: {rim_error}") from rim_error
+    if any(value is not None for value in stereo):
+        if not all(value is not None for value in stereo) or height is not None:
+            raise ValueError("supply camera2/u2/v2 together, or measured height, never both")
+        return stereo_surface_point(api.observe(), u, v, stereo[0], float(stereo[1]), float(stereo[2]))
+    if height is None:
+        raise ValueError("supply camera2/u2/v2 for a matched physical point, or measured height")
+    return surface_point(api.observe(), u, v, float(height), measured_support(api))
 
 
 def joint_stroke(start, end, travel):
@@ -194,7 +315,7 @@ def run(api, command, args):
 
     try:
         if command == "surface_point":
-            return surface_point(api.observe(), int(args["u"]), int(args["v"])), 0
+            return measure_surface(api, args), 0
         if command != "surface_press":
             raise ValueError("unknown command")
         goal = np.array([float(args[k]) for k in ("x", "y", "z")])
@@ -218,7 +339,7 @@ def run(api, command, args):
         from roboshell.server.core import tool_rotation
         arm = api.arm(args["arm"])
         target = arm.tcp().copy()
-        # Repeated 10--12 mm contact residuals suggest interference in the
+        # Persistent contact residuals suggest interference in the
         # straight-down configuration. Tilt to change the contact geometry;
         # TCP tracking alone cannot identify the colliding part or activation.
         rotation = tool_rotation("down45", axis, target[:3, :3])
@@ -445,6 +566,11 @@ def ordered_points(args):
 TIP_BEYOND_TCP = 0.08657 + 0.071 - 0.145
 TIP_DEPRESSION = 0.006
 TIP_CLEARANCE = 0.012
+# Begin feedback at the measured face, before nominal penetration: RGB
+# underestimation can put even this target in contact. These are controller
+# increments, not assumed mechanism dimensions. All segments stay in one
+# uninterrupted descent, so they cannot introduce an extra release/cycle.
+INITIAL_TIP_DEPRESSION = 0.0
 # Bounded allowance for centimetre-scale RGB depth bias; never a new stroke.
 MAX_TIP_DEPRESSION = 0.018
 CONTACT_RESIDUAL = 0.002
@@ -509,17 +635,34 @@ def ordered_press(api, args):
             raise ValueError("finite surface points and integer counts 1..9 expected")
         if any(np.linalg.norm(points[p]-points[q]) < .05 for p, q in (("a", "b"), ("a", "c"), ("b", "c"))):
             raise ValueError("surface points must be distinct and separated by at least 5 cm")
-        if api.sim_time_left() < 5 + .95*(sum(counts)+2):
+        # Camera positioning can leave an arm on a branch from which an
+        # in-place downward rotation is unreachable. Normalize using the
+        # API's own home joints, before either low approach is attempted.
+        displaced = [t for t in ("left", "right")
+                     if np.max(np.abs(api.arm(t).joints()-api.arm(t).home_joints)) > .08]
+        reset_steps = (max(len(api.motion.time_path(np.stack([
+            api.arm(t).joints(), api.arm(t).home_joints]))) for t in displaced) + 3
+                       if displaced else 0)
+        if api.sim_time_left() < 5 + .95*(sum(counts)+2) + reset_steps/25:
             return result("insufficient_time")
+        if displaced:
+            home(displaced)
+            stages[-1]["stage"] = "prepare_home"
         from roboshell.server.core import tool_rotation
         poses = {}
-        for tag, p in (("left", "a"), ("right", "c")):
+        # Complete both rotations before either approach: a second-arm IK
+        # rejection must not strand the first arm near possible contact.
+        for tag in ("left", "right"):
             arm = api.arm(tag)
             pose = arm.tcp().copy()
             # Align the finger approach with the stroke. A tilted gripper
-            # loaded sideways and stalled above the surface in the trace.
+            # can load sideways and stall above the surface.
             pose[:3, :3] = tool_rotation("down", "x", pose[:3, :3])
             move(tag, pose, "orient")
+            poses[tag] = pose.copy()
+        for tag, p in (("left", "a"), ("right", "c")):
+            arm = api.arm(tag)
+            pose = poses[tag]
             if arm.gripper_target != 0:
                 api.set_gripper(arm, 0)
             pose = contact_pose(pose, points[p], TIP_CLEARANCE)
@@ -541,7 +684,7 @@ def ordered_press(api, args):
             key = (tag, p, phase)
             arm = api.arm(tag)
             if key not in cache:
-                depths = (np.arange(TIP_DEPRESSION, MAX_TIP_DEPRESSION + .0001, .002)
+                depths = (np.arange(INITIAL_TIP_DEPRESSION, MAX_TIP_DEPRESSION + .0001, .002)
                           if phase == "down" else [None])
                 for depth in depths:
                     if depth is not None:

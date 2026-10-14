@@ -32,7 +32,7 @@ if [ -f "${SCRIPT_DIR}/config.env" ] || [ -n "${ISAAC_PYTHON:-}" ]; then
   # shellcheck source=scripts/sim_env.sh
   source "${SCRIPT_DIR}/scripts/sim_env.sh"
 fi
-# RoboBigWater uses the stock RGB observation (env_cfg_type arx_x5); depth is estimated inside the policy server
+# RoboBigWater uses the stock RGB observation (env_cfg_type arx_x5); no depth is requested or estimated
 
 bash "${UTILS_DIR}/setup_env_client.sh" \
     "${UTILS_DIR}" \

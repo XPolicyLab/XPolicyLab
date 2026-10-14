@@ -30,24 +30,7 @@ def frame(direction):
 
 
 def world_points(observation, camera):
-    depths, models = observation.get('depth', {}), observation.get('cameras', {})
-    source = pose.axis.CAMERA_SOURCES.get(camera, camera)
-    if source not in depths or source not in models:
-        source = camera
-    depth = np.asarray(depths[source], dtype=float)
-    if depth.ndim == 3 and depth.shape[-1] == 1:
-        depth = depth[..., 0]
-    k = np.asarray(models[source]['intrinsics'], dtype=float)
-    t = np.asarray(models[source]['extrinsics_world'], dtype=float)
-    if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
-            or not np.isfinite(k).all() or not np.isfinite(t).all()
-            or not np.allclose(t[3], [0, 0, 0, 1])
-            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)
-            or np.linalg.det(t[:3, :3]) < .999):
-        raise ValueError('invalid paired depth/calibration')
-    v, u = np.nonzero(np.isfinite(depth) & (depth > 0))
-    pixels = np.column_stack((u, v, np.ones(len(u))))
-    return ((pixels @ np.linalg.inv(k).T) * depth[v, u, None]) @ t[:3, :3].T + t[:3, 3]
+    return pose.axis.rgb.cloud(observation, camera)['points']
 
 
 def fit_points(points, centre, direction, radius, span=.05):

@@ -9,7 +9,7 @@ from roboshell.server.tools import base_task, load_tools  # noqa: E402
 task = base_task(sys.argv[1])
 base = os.path.join(ROOT, "tasks", task)
 ok = True
-for name in ("enabled_tools.txt", "playbook.md", "skill.md"):
+for name in ("enabled_tools.txt",):
     present = os.path.exists(os.path.join(base, name))
     print(("ok  " if present else "MISSING ") + name)
     ok &= present

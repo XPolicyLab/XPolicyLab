@@ -2,3 +2,4 @@
 measure_scene
 grasp_slide
 align_reference
+table_plane

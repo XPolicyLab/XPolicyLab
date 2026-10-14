@@ -1,0 +1,10 @@
+`robo rgb-stereo --u U --v V [--camera head|wrist_l|wrist_r]`
+Triangulates a selected visible surface using calibrated RGB image pairs; read-only, no motion or command-budget cost.
+Pixels are finite integers. Also accepts cam_head, cam_left_wrist and cam_right_wrist. Requires at least two simultaneous PNGs with paired camera matrices and adequate overlapping texture.
+Returns plan_ok/plan_fail_reason, surface_world in metres, source, camera_source, pair sample counts and geometry_verified=false. The point is on the exterior surface, not an interior axis.
+Classical stereo rejects inconsistent reverse matches, weak texture, poor photometric agreement and triangulations moving more than 2 mm under a quarter-pixel disparity perturbation; this is a conditioning bound, not calibrated accuracy.
+A seed requires at least three supported samples within four pixels and no spread beyond 12 mm from their median. Missing, ambiguous, occluded or malformed evidence returns perception_failed and plan_detail. Holes are never filled and free space is not inferred.
+`robo rgb-triangulate --u U --v V --u2 U2 --v2 V2 --camera2 head|wrist_l|wrist_r [--camera head|wrist_l|wrist_r]`
+Read-only triangulation of caller-selected corresponding pixels in two distinct current RGB views; accepts fractional pixels and the same camera aliases. Selections must represent the same physical point; silhouette extrema and apparent ellipse centres are not generally corresponding points.
+Returns point_world (metres), stereo_pair, ray_gap_m, reprojection_px, conditioning_m and correspondence_verified=false/geometry_verified=false; does not automatically match pixels or infer an interior axis.
+Rejects malformed/out-of-image pixels, baseline below 15 mm, ray condition number above 50, ranges outside 0.05–3 m, ray gap above 3 mm, reprojection above 1.5 pixels, or worst simultaneous half-pixel perturbation above 4 mm. These checks bound geometric consistency, not selection correctness; failures return perception_failed without motion.

@@ -1,8 +1,7 @@
-"""RGB-D surface measurement and checked, orientation-preserving transport."""
-import io
+"""Calibrated RGB surface measurement and checked, orientation-preserving transport."""
+import cv2
 import json
 import numpy as np
-from PIL import Image
 
 
 def arg(name, default=None, required=False):
@@ -16,7 +15,7 @@ def arg(name, default=None, required=False):
 
 TOOL = {"name": "precision_transfer", "commands": [
     {"name": "locate_hue", "budget": False,
-     "help": "Measure visible horizontal surfaces from RGB-D",
+     "help": "Measure horizontal surfaces by calibrated RGB plane alignment",
      "args": [arg("hue", required=True), arg("tolerance", 18)]},
     {"name": "transfer", "budget": True,
      "help": "Shallow vertical grasp and visually checked translation",
@@ -53,46 +52,109 @@ def valid_job(args):
         return False
 
 
+def patches(obs, hue, tolerance, camera):
+    """Bright planar face candidates; side shading must not shift the centroid."""
+    png = obs.get("png", {}).get(camera)
+    calibration = obs.get("cameras", {}).get(camera)
+    if png is None or calibration is None:
+        return []
+    rgb = cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_COLOR)
+    if rgb is None:
+        return []
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+    delta = np.abs(hsv[..., 0].astype(float) * 2 - hue)
+    mask = ((np.minimum(delta, 360-delta) <= tolerance)
+            & (hsv[..., 1] >= 65) & (hsv[..., 2] >= 65)).astype(np.uint8)
+    k = np.asarray(calibration["intrinsics"], float)
+    t = np.asarray(calibration["extrinsics_world"], float)
+    if k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all() or not np.isfinite(t).all():
+        return []
+    brightness = np.round(rgb.mean(axis=2)).astype(np.uint8)
+    count, labels, stats, _ = cv2.connectedComponentsWithStats(mask)
+    result = []
+    for i in range(1, count):
+        if stats[i, cv2.CC_STAT_AREA] < 30:
+            continue
+        component = labels == i
+        values = brightness[component]
+        threshold, _ = cv2.threshold(values, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        # Uniform faces need no split. Shaded sides are excluded only when
+        # brightness modes differ substantially; this is image evidence, not height.
+        low, high = values[values <= threshold], values[values > threshold]
+        if len(low) and len(high) and float(high.mean()-low.mean()) > 15:
+            component &= brightness > threshold
+        contours, _ = cv2.findContours(component.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if not contours:
+            continue
+        contour = max(contours, key=cv2.contourArea)
+        area = cv2.contourArea(contour)
+        hull = cv2.convexHull(contour).reshape(-1, 2)
+        if area < 20 or area / max(cv2.contourArea(hull), 1) < .85:
+            continue  # occlusion/nonconvex fragments cannot establish a face center
+        u, v, w, h = cv2.boundingRect(contour)
+        if u == 0 or v == 0 or u+w >= rgb.shape[1] or v+h >= rgb.shape[0]:
+            continue
+        rays = np.c_[hull, np.ones(len(hull))] @ np.linalg.inv(k).T @ t[:3, :3].T
+        if np.any(rays[:, 2] >= -1e-3):
+            continue
+        slope = rays[:, :2] / rays[:, 2, None]
+        result.append(dict(a=t[:2, 3] - t[2, 3]*slope, b=slope,
+                           origin=t[:3, 3], pixels=int(area), bbox=[u,v,u+w-1,v+h-1]))
+    return result
+
+
+def plane_polygon(patch, z):
+    return np.asarray(patch["a"] + z*patch["b"], np.float32)
+
+
+def overlap(first, second, z):
+    if z >= min(first["origin"][2], second["origin"][2]) - .02:
+        return 0.
+    # Millimetre scale avoids OpenCV intersection tolerances at metre scale.
+    a, b = plane_polygon(first, z)*1000, plane_polygon(second, z)*1000
+    intersection, _ = cv2.intersectConvexConvex(a, b)
+    return float(intersection / max(cv2.contourArea(a)+cv2.contourArea(b)-intersection, 1e-12))
+
+
 def measure(obs, hue, tolerance, camera="cam_head"):
-    """Return connected chromatic surfaces, with top-plane rather than image centroids."""
-    rgb = Image.open(io.BytesIO(obs["png"][camera])).convert("RGB")
-    hsv = np.asarray(rgb.convert("HSV"), dtype=float)
-    depth = np.asarray(obs["depth"][camera], dtype=float)
-    delta = np.abs(hsv[..., 0] * 360 / 255 - hue)
-    mask = (np.minimum(delta, 360 - delta) <= tolerance) & (hsv[..., 1] >= 65)
-    mask &= (hsv[..., 2] >= 65) & np.isfinite(depth) & (depth > 0)
-    k = np.asarray(obs["cameras"][camera]["intrinsics"], dtype=float)
-    t = np.asarray(obs["cameras"][camera]["extrinsics_world"], dtype=float)
-    height, width = depth.shape
-    seen = np.zeros_like(mask)
+    """Align the same horizontal face across calibrated views; never infer depth from size."""
+    candidates = patches(obs, hue, tolerance, camera)
+    others = {name: patches(obs, hue, tolerance, name) for name in obs.get("cameras", {}) if name != camera}
     results = []
-    for v, u in zip(*np.nonzero(mask)):
-        if seen[v, u]:
+    for face in candidates:
+        matches = []
+        for name, faces in others.items():
+            for other in faces:
+                if np.linalg.norm(face["origin"] - other["origin"]) < .03:
+                    continue
+                # Broad workspace search, independent of layout and item dimensions.
+                zs = np.arange(.50, 1.201, .005)
+                scores = np.array([overlap(face, other, z) for z in zs])
+                j = int(np.argmax(scores))
+                if scores[j] < .60 or j in (0, len(zs)-1):
+                    continue
+                fine = np.arange(zs[j]-.006, zs[j]+.0061, .0005)
+                fs = np.array([overlap(face, other, z) for z in fine])
+                z = float(fine[int(np.argmax(fs))])
+                peak = float(fs.max())
+                if peak < .75 or max(overlap(face, other, z-.015), overlap(face, other, z+.015)) > peak-.08:
+                    continue
+                polygon = plane_polygon(face, z)
+                lo, hi = polygon.min(axis=0), polygon.max(axis=0)
+                center = np.r_[(lo+hi)/2, z]
+                if np.any(np.abs(center[:2]) > .75):
+                    continue
+                matches.append((peak, center, hi-lo, name))
+        if not matches:
             continue
-        seen[v, u] = True
-        todo, pixels = [(v, u)], []
-        while todo:
-            row, col = todo.pop()
-            pixels.append((row, col))
-            for rr, cc in ((row-1, col), (row+1, col), (row, col-1), (row, col+1)):
-                if 0 <= rr < height and 0 <= cc < width and mask[rr, cc] and not seen[rr, cc]:
-                    seen[rr, cc] = True
-                    todo.append((rr, cc))
-        if len(pixels) < 20:
+        matches.sort(key=lambda item: -item[0])
+        best = matches[0]
+        # Similar repeated faces must not create competing stereo hypotheses.
+        if any(m[0] >= best[0]-.05 and np.linalg.norm(m[1]-best[1]) > .012 for m in matches[1:]):
             continue
-        vv, uu = np.asarray(pixels).T
-        rays = np.column_stack((uu, vv, np.ones(len(uu)))) @ np.linalg.inv(k).T
-        points = (rays * depth[vv, uu, None]) @ t[:3, :3].T + t[:3, 3]
-        z = float(np.quantile(points[:, 2], .97))
-        top = points[np.abs(points[:, 2] - z) < .0025]
-        if len(top) < 12:
-            continue
-        lo, hi = np.quantile(top[:, :2], [.02, .98], axis=0)
-        center = [* ((lo + hi) / 2), float(np.median(top[:, 2]))]
-        results.append({"top_center": [float(v) for v in center],
-                        "top_span_xy": (hi-lo).tolist(), "top_pixels": len(top),
-                        "pixels": len(pixels),
-                        "bbox_uv": [int(uu.min()), int(vv.min()), int(uu.max()), int(vv.max())]})
+        results.append(dict(top_center=best[1].tolist(), top_span_xy=best[2].tolist(),
+                            top_pixels=face["pixels"], pixels=face["pixels"], bbox_uv=face["bbox"],
+                            stereo_iou=best[0], cameras=[camera, best[3]], method="rgb_planar_face_alignment"))
     return sorted(results, key=lambda item: item["top_center"][0])
 
 
@@ -122,7 +184,7 @@ def locate_views(obs, hue, tolerance, expected, xy_tol, z_tol, arm):
     best_score = None
     best_camera = None
     for camera in ("cam_head", f"cam_{arm}_wrist"):
-        if not all(camera in obs.get(key, {}) for key in ("png", "depth", "cameras")):
+        if not all(camera in obs.get(key, {}) for key in ("png", "cameras")):
             continue
         for item in measure(obs, hue, tolerance, camera):
             center = np.asarray(item["top_center"], dtype=float)

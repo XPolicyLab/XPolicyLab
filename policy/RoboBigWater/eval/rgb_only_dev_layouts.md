@@ -1,92 +1,67 @@
-# RoboBigWater, RGB-only: current tools on the seed-0 development layouts
+# RoboBigWater: frozen tools on the seed-0 development layouts
 
-Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses). Depth is estimated inside the policy server by Depth Anything V2 (Metric-Indoor-Base) with its scale fixed from the known table height; the simulator's depth is never read. Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard 0-4 and cluttered `_random` 0-4), one episode per layout with frozen tools, no optimizer, official success and progress checkers.
+Observation: the stock `arx_x5` config (three RGB cameras, joint states, end-effector poses) and the fixed camera calibration. No depth is used: neither the simulator's depth nor a depth network. Positions come from calibrated pixel rays intersected with planes whose height is measured in the episode (the table plane is measured from the images once per episode, the first time it is needed) and from two-view triangulation.
 
-Tools: 32 tasks carry the tools developed earlier with rendered depth, unchanged (frozen retest 2026-10-11). 10 tasks (`align_blocks`, `imitate_sorting_sequence`, `insert_tubes`, `play_tic_tac_toe`, `pour_liquid_into_cup`, `press_by_number`, `push_T`, `put_bottles_into_dustbin`, `stack_blocks`, `stack_blocks_by_language`) carry tools re-evolved with estimated depth on the same development layouts and were retested frozen on 2026-10-12. The other tasks are being re-evolved; this file is updated as they finish.
+Protocol: seed 0, development layouts 0-9 (Generalization tasks: standard layouts 0-4 and cluttered `_random` layouts 0-4), one episode per layout, frozen tools, no optimizer, official success and progress checkers. The tools were evolved on these same layouts, so these numbers are optimistic for unseen layouts.
 
 ## Summary (leaderboard formula: mean of the five task types; Generalization = mean of standard and cluttered)
 
-| | Success rate (%) | Progress score |
-|---|---:|---:|
-| Generalization | 26.7 | 30.0 |
-| Precision | 7.5 | 11.9 |
-| Long-Horizon | 13.8 | 29.2 |
-| Memory | 55.0 | 58.0 |
-| Open | 45.0 | 48.1 |
-| **Overall (leaderboard formula)** | **29.6** | **35.4** |
+| | Success rate (%) | Progress score | Previous revision, depth network: success / progress |
+|---|---:|---:|---:|
+| Generalization | 34.2 | 37.7 | 26.7 / 30.0 |
+| Precision | 21.3 | 28.4 | 7.5 / 11.9 |
+| Long-Horizon | 18.8 | 31.9 | 13.8 / 29.2 |
+| Memory | 73.3 | 73.3 | 55.0 / 58.0 |
+| Open | 43.8 | 46.6 | 45.0 / 48.1 |
+| **Overall (leaderboard formula)** | **38.3** | **43.6** | 29.6 / 35.4 |
 
-Before re-evolution (all 42 tasks with the earlier tools): 21.2% / 27.4.
+Seven tasks (`deposit_coin`, `fill_egg_holder`, `fill_pen_holder`, `hang_mugs`, `insert_key`, `pick_from_conveyor_by_image`, `store_tools_in_toolbox`) originally carried fixed object geometry in their tools (part sizes, templates of fixed scene parts). That geometry was removed and replaced by measurements made in the episode; these seven tasks were then retested with the same protocol, without further development. In 5 of the 10 `fill_egg_holder` episodes a new measurement command returned a numpy boolean that the server could not log, which ended the episode; they count as failures here, and the type conversion is fixed in the shipped tools.
 
-## Re-evolved tasks
+The retest of five of these seven tasks was still running when this file was written. Episodes not yet run are counted as failures with progress 0 (`hang_mugs` 0 of 5 run, `hang_mugs_random` 4 of 5 run, `fill_pen_holder` 5 of 10 run, `pick_from_conveyor_by_image` 6 of 10 run, `store_tools_in_toolbox` 7 of 10 run); this file will be updated when they finish.
 
-| Task | Earlier tools | Re-evolved (frozen retest) |
-|---|---:|---:|
-| align_blocks | 5/10 | 9/10 |
-| imitate_sorting_sequence | 0/10 | 1/10 |
-| insert_tubes | 1/10 | 2/10 |
-| play_tic_tac_toe | 1/10 | 6/10 |
-| pour_liquid_into_cup | 1/10 | 3/10 |
-| press_by_number | 0/10 | 10/10 |
-| push_T | 3/10 | 4/10 |
-| put_bottles_into_dustbin | 0/10 | 2/10 |
-| stack_blocks | 5/10 | 6/10 |
-| stack_blocks_by_language | 3/10 | 7/10 |
+## Per task (10 episodes each; Generalization tasks 5 standard + 5 cluttered)
 
-## Per variant (seed 0, 10 episodes per task; 5 + 5 for Generalization tasks)
-
-| Type | Variant | Success | Progress score |
-|---|---|---:|---:|
-| Generalization | arrange_largest_number | 3/5 | 67.0 |
-| Generalization | arrange_largest_number_random | 2/5 | 52.0 |
-| Generalization | fold_clothes | 2/5 | 44.0 |
-| Generalization | fold_clothes_random | 1/5 | 32.0 |
-| Generalization | hang_mugs | 0/5 | 6.0 |
-| Generalization | hang_mugs_random | 0/5 | 0.0 |
-| Generalization | make_toast | 0/5 | 5.0 |
-| Generalization | make_toast_random | 0/5 | 0.0 |
-| Generalization | pack_objects_into_box | 0/5 | 14.0 |
-| Generalization | pack_objects_into_box_random | 0/5 | 4.0 |
-| Generalization | pour_liquid_into_cup | 1/5 | 20.0 |
-| Generalization | pour_liquid_into_cup_random | 2/5 | 40.0 |
-| Generalization | push_T | 2/5 | 40.0 |
-| Generalization | push_T_random | 2/5 | 40.0 |
-| Generalization | sort_nesting_dolls_by_size | 1/5 | 20.0 |
-| Generalization | sort_nesting_dolls_by_size_random | 0/5 | 0.0 |
-| Generalization | stack_blocks | 4/5 | 83.0 |
-| Generalization | stack_blocks_random | 2/5 | 49.0 |
-| Generalization | stack_bowls | 5/5 | 100.0 |
-| Generalization | stack_bowls_random | 5/5 | 100.0 |
-| Generalization | store_laptop_and_headphones | 0/5 | 4.0 |
-| Generalization | store_laptop_and_headphones_random | 0/5 | 0.0 |
-| Generalization | sweep_blocks | 0/5 | 0.0 |
-| Generalization | sweep_blocks_random | 0/5 | 0.0 |
-| Long-Horizon | classify_objects | 3/10 | 53.0 |
-| Long-Horizon | fill_egg_holder | 0/10 | 7.0 |
-| Long-Horizon | fill_pen_holder | 0/10 | 6.0 |
-| Long-Horizon | make_kong | 0/10 | 0.0 |
-| Long-Horizon | organize_table | 0/10 | 22.5 |
-| Long-Horizon | play_stacking_toy | 0/10 | 10.0 |
-| Long-Horizon | play_tic_tac_toe | 6/10 | 87.5 |
-| Long-Horizon | put_bottles_into_dustbin | 2/10 | 47.5 |
-| Memory | cover_blocks | 10/10 | 100.0 |
-| Memory | imitate_sorting_sequence | 1/10 | 28.0 |
-| Memory | match_and_pick_from_conveyor | 5/10 | 50.0 |
-| Memory | press_by_number | 10/10 | 100.0 |
-| Memory | swap_T | 7/10 | 70.0 |
-| Memory | swap_blocks | 0/10 | 0.0 |
-| Open | align_blocks | 9/10 | 90.0 |
-| Open | classify_objects_by_language | 1/10 | 31.0 |
-| Open | general_pickup | 8/10 | 80.0 |
-| Open | pick_from_conveyor_by_image | 1/10 | 10.0 |
-| Open | pour_by_language | 2/10 | 20.0 |
-| Open | solve_equation | 8/10 | 80.0 |
-| Open | stack_blocks_by_language | 7/10 | 74.0 |
-| Open | store_tools_in_toolbox | 0/10 | 0.0 |
-| Precision | build_tower | 0/10 | 1.0 |
-| Precision | deposit_coin | 0/10 | 0.0 |
-| Precision | fasten_screws | 0/10 | 10.0 |
-| Precision | insert_key | 0/10 | 0.0 |
-| Precision | insert_tubes | 2/10 | 44.0 |
-| Precision | play_Xylophone | 0/10 | 0.0 |
-| Precision | plug_in_charger | 0/10 | 0.0 |
-| Precision | pour_balls_into_vase | 4/10 | 40.0 |
+| Type | Task | Success | Progress score | Previous revision |
+|---|---|---:|---:|---:|
+| Memory | `cover_blocks` | 10/10 | 100.0 | 10/10 |
+| Generalization | `push_T` | 10/10 | 100.0 | 4/10 |
+| Memory | `swap_T` | 10/10 | 100.0 | 7/10 |
+| Long-Horizon | `play_tic_tac_toe` | 9/10 | 97.5 | 6/10 |
+| Memory | `press_by_number` | 9/10 | 90.0 | 10/10 |
+| Open | `stack_blocks_by_language` | 9/10 | 92.0 | 7/10 |
+| Open | `align_blocks` | 8/10 | 80.0 | 9/10 |
+| Memory | `imitate_sorting_sequence` | 8/10 | 80.0 | 1/10 |
+| Generalization | `stack_blocks` | 8/10 | 81.5 | 6/10 |
+| Generalization | `stack_bowls` | 8/10 | 83.0 | 10/10 |
+| Open | `general_pickup` | 7/10 | 70.0 | 8/10 |
+| Memory | `match_and_pick_from_conveyor` | 7/10 | 70.0 | 5/10 |
+| Precision | `pour_balls_into_vase` | 7/10 | 70.0 | 4/10 |
+| Open | `solve_equation` | 7/10 | 70.0 | 8/10 |
+| Generalization | `fold_clothes` | 6/10 | 68.0 | 3/10 |
+| Precision | `play_Xylophone` | 6/10 | 60.0 | 0/10 |
+| Long-Horizon | `classify_objects` | 4/10 | 56.5 | 3/10 |
+| Open | `classify_objects_by_language` | 4/10 | 48.0 | 1/10 |
+| Generalization | `sort_nesting_dolls_by_size` | 4/10 | 40.0 | 1/10 |
+| Generalization | `arrange_largest_number` | 3/10 | 45.5 | 5/10 |
+| Precision | `insert_tubes` | 3/10 | 38.0 | 2/10 |
+| Long-Horizon | `put_bottles_into_dustbin` | 2/10 | 49.0 | 2/10 |
+| Precision | `build_tower` | 1/10 | 25.0 | 0/10 |
+| Generalization | `make_toast` | 1/10 | 10.0 | 0/10 |
+| Generalization | `pour_liquid_into_cup` | 1/10 | 10.0 | 3/10 |
+| Precision | `deposit_coin` | 0/10 | 2.0 | 0/10 |
+| Precision | `fasten_screws` | 0/10 | 17.0 | 0/10 |
+| Long-Horizon | `fill_egg_holder` | 0/10 | 1.0 | 0/10 |
+| Long-Horizon | `fill_pen_holder` | 0/10 | 5.0 | 0/10 |
+| Generalization | `hang_mugs` | 0/10 | 0.0 | 0/10 |
+| Precision | `insert_key` | 0/10 | 15.0 | 0/10 |
+| Long-Horizon | `make_kong` | 0/10 | 0.0 | 0/10 |
+| Long-Horizon | `organize_table` | 0/10 | 30.0 | 0/10 |
+| Generalization | `pack_objects_into_box` | 0/10 | 8.0 | 0/10 |
+| Open | `pick_from_conveyor_by_image` | 0/10 | 0.0 | 1/10 |
+| Long-Horizon | `play_stacking_toy` | 0/10 | 16.0 | 0/10 |
+| Precision | `plug_in_charger` | 0/10 | 0.0 | 0/10 |
+| Open | `pour_by_language` | 0/10 | 13.0 | 2/10 |
+| Generalization | `store_laptop_and_headphones` | 0/10 | 6.0 | 0/10 |
+| Open | `store_tools_in_toolbox` | 0/10 | 0.0 | 0/10 |
+| Memory | `swap_blocks` | 0/10 | 0.0 | 0/10 |
+| Generalization | `sweep_blocks` | 0/10 | 0.0 | 0/10 |

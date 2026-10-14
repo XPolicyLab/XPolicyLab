@@ -1,53 +1,127 @@
-"""Depth-based feature measurements; no scene state or motion."""
+"""RGB-only calibrated rays, explicit planes and two-view feature geometry."""
 import json
+import cv2
 import numpy as np
 
-TOOL = {"name": "surface_points", "commands": [{
-    "name": "surface-points", "budget": False,
-    "help": "Measure image points in world coordinates, optionally on a fitted plane",
-    "args": [
-        {"name": "camera", "type": "str", "required": True},
-        {"name": "pixels", "type": "str", "required": True,
-         "help": "JSON list of [u,v] image coordinates"},
-        {"name": "base_pixels", "type": "str", "default": "",
-         "help": "Rear samples; single mode takes one rear endpoint corresponding to the FIRST forward point; no ROI"},
-        {"name": "base_mode", "choices": ["endpoints", "surface", "single", "plane", "extrema"], "default": "endpoints",
-         "help": "endpoints/surface/single use rear pixels; plane uses a rear-face ROI and assumes perpendicular extensions"},
-        {"name": "radius", "type": "float", "default": 12.0,
-         "help": "extrema mode search radius in pixels, 3..24"},
-        {"name": "refine_endpoints", "type": "int", "choices": [0, 1], "default": 1,
-         "help": "Refine paired rear/forward samples to supported visible forward extents; 0 retains clicked points"},
-        {"name": "roi", "type": "str", "default": "",
-         "help": "Optional JSON [u0,v0,u1,v1] planar surface rectangle"},
-        {"name": "frame_arm", "type": "str", "default": "",
-         "help": "Optional left/right TCP frame for the measured points"},
-    ]}, {"name": "plane-pair", "budget": False,
-        "help": "Locate an unambiguous pair of enclosed dark regions on a bright planar surface",
-        "args": [
-            {"name": "camera", "type": "str", "required": True},
-            {"name": "roi", "type": "str", "required": True},
-            {"name": "separation", "type": "float", "required": True},
-            {"name": "tolerance", "type": "float", "default": 0.002},
-            {"name": "contrast", "type": "float", "default": 0.0},
-            {"name": "pixels", "type": "str", "default": "",
-             "help": "Optional two approximate region centers, in required output order"},
-            {"name": "radius", "type": "float", "default": 4.0,
-             "help": "Maximum centroid distance from each seed, 1..12 pixels; contrast=0 searches stable thresholds; seeds optional"},
-            {"name": "frame_arm", "type": "str", "default": ""},
-    ]}, {"name": "stereo-points", "budget": False, "args": [
-        {"name": "camera", "required": True},
-        {"name": "pixels", "required": True},
-        {"name": "other_camera", "required": True},
-        {"name": "other_pixels", "required": True},
-        {"name": "tolerance", "type": "float", "default": 0.002},
-        {"name": "frame_arm", "default": ""},
-        {"name": "base_mode", "choices": ["endpoints", "surface"], "default": "endpoints"},
-    ]}, {"name": "feature-pose", "budget": False, "args": [
-        {"name": "arm", "positional": True, "choices": ["left", "right"]},
-        {"name": "points_local", "type": "str", "required": True},
-        {"name": "axis_local", "type": "str", "default": ""},
-        {"name": "depth_tolerance", "type": "float", "default": 0.01},
-    ]}]}
+
+def arg(name, default=None, kind="str", required=False):
+    out = dict(name=name, type=kind)
+    if required:
+        out["required"] = True
+    elif default is not None:
+        out["default"] = default
+    return out
+
+
+plane_args = [arg("plane_z", ""), arg("plane_points", "")]
+TOOL = {"name": "surface_points", "commands": [
+    dict(name="surface-points", budget=False, args=[
+        arg("camera", required=True), arg("pixels", required=True),
+        arg("roi", ""), arg("frame_arm", "")] + plane_args),
+    dict(name="plane-pair", budget=False, args=[
+        arg("camera", required=True), arg("roi", required=True),
+        arg("separation", kind="float", required=True),
+        arg("tolerance", .002, "float"), arg("contrast", 0., "float"),
+        arg("pixels", ""), arg("radius", 4., "float"), arg("roi_margin", 8, "int"), arg("frame_arm", "")] + plane_args),
+    dict(name="stereo-points", budget=False, args=[
+        arg("camera", required=True), arg("pixels", required=True),
+        arg("other_camera", required=True), arg("other_pixels", ""), arg("other_roi", ""),
+        arg("other_segments", ""),
+        arg("tolerance", .002, "float"), arg("frame_arm", ""),
+        arg("base_mode", "none"), arg("refine_radius", 0., "float")]),
+    dict(name="feature-pose", budget=False, args=[
+        dict(name="arm", positional=True, choices=["left", "right"]),
+        arg("points_local", required=True), arg("axis_local", "")])
+]}
+
+
+def camera_view(observation, name):
+    cameras = observation.get("cameras", {})
+    aliases = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
+    name = name if name in cameras else aliases.get(name, name)
+    if name not in cameras:
+        raise ValueError("unknown camera")
+    cam = cameras[name]
+    k = np.asarray(cam["intrinsics"], dtype=float)
+    t = np.asarray(cam["extrinsics_world"], dtype=float)
+    if (k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all()
+            or not np.isfinite(t).all() or k[0, 0] <= 0 or k[1, 1] <= 0
+            or abs(np.linalg.det(k)) < 1e-10
+            or not np.allclose(t[3], [0, 0, 0, 1])
+            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-5)
+            or not np.isclose(np.linalg.det(t[:3, :3]), 1, atol=1e-5)):
+        raise ValueError("invalid camera calibration")
+    png = observation.get("png", {}).get(name)
+    if png is None:
+        raise ValueError("RGB unavailable for " + name)
+    gray = cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_GRAYSCALE)
+    if gray is None:
+        raise ValueError("invalid RGB image")
+    return name, gray, k, t
+
+
+def checked_pixels(pixels, shape):
+    uv = np.asarray(pixels, dtype=float)
+    if (uv.ndim != 2 or uv.shape[1] != 2 or not 1 <= len(uv) <= 32
+            or not np.isfinite(uv).all()):
+        raise ValueError("pixels must contain 1..32 finite [u,v] pairs")
+    if np.any(uv < 0) or np.any(uv > np.array(shape[::-1]) - 1):
+        raise ValueError("pixel outside image")
+    return uv
+
+
+def measured_plane(plane_z=None, plane_points=None):
+    if (plane_z is None) == (plane_points is None):
+        raise ValueError("provide exactly one measured plane_z or plane_points; no implicit surface height")
+    if plane_z is not None:
+        z = float(plane_z)
+        if not np.isfinite(z):
+            raise ValueError("plane_z must be finite")
+        return np.array([0., 0., z]), np.array([0., 0., 1.]), 0.
+    points = np.asarray(plane_points, dtype=float)
+    if (points.ndim != 2 or points.shape[1] != 3 or not 3 <= len(points) <= 32
+            or not np.isfinite(points).all()):
+        raise ValueError("plane_points requires 3..32 measured world points")
+    center = points.mean(axis=0)
+    _, values, vh = np.linalg.svd(points - center, full_matrices=False)
+    if values[1] / np.sqrt(len(points)) < .001:
+        raise ValueError("plane points are collinear or span less than 1 mm")
+    residuals = (points-center) @ vh[-1]
+    if np.max(np.abs(residuals)) > .001:
+        raise ValueError("plane samples disagree by more than 1 mm")
+    return center, vh[-1], float(np.sqrt(np.mean(residuals**2)))
+
+
+def measure(observation, camera, pixels, roi=None, plane_z=None, plane_points=None):
+    name, gray, k, t = camera_view(observation, camera)
+    pixels = checked_pixels(pixels, gray.shape)
+    if roi is not None:
+        box = np.asarray(roi, dtype=float)
+        if box.shape != (4,) or not np.isfinite(box).all() or not np.equal(box, np.round(box)).all():
+            raise ValueError("roi requires four integer bounds")
+        u0, v0, u1, v1 = box.astype(int)
+        if not (0 <= u0 < u1 <= gray.shape[1] and 0 <= v0 < v1 <= gray.shape[0]):
+            raise ValueError("invalid ROI bounds")
+        if np.any(pixels < [u0, v0]) or np.any(pixels >= [u1, v1]):
+            raise ValueError("pixels must be inside ROI")
+    center, normal, rms = measured_plane(plane_z, plane_points)
+    if normal @ (t[:3, 3] - center) < 0:
+        normal = -normal
+    rays = np.linalg.solve(k, np.column_stack((pixels, np.ones(len(pixels)))).T).T @ t[:3, :3].T
+    denom = rays @ normal
+    if np.any(np.abs(denom) / np.linalg.norm(rays, axis=1) < .1):
+        raise ValueError("viewing rays nearly parallel to plane")
+    distances = ((center-t[:3, 3]) @ normal) / denom
+    if not np.isfinite(distances).all() or np.any(distances <= 0):
+        raise ValueError("plane intersection behind camera")
+    world = t[:3, 3] + rays * distances[:, None]
+    result = dict(points_world=world.tolist(), midpoint_world=world.mean(axis=0).tolist(),
+                  plane_point=center.tolist(), normal_toward_camera=normal.tolist(),
+                  plane_rms_m=rms, inlier_fraction=1., plane_assumed=True,
+                  measurement_method="RGB ray-plane intersection", feature_identity_verified=False)
+    if len(world) == 2:
+        result["separation_m"] = float(np.linalg.norm(world[1]-world[0]))
+    return result
 
 
 def paired_axis(tips, bases, mode="endpoints"):
@@ -86,7 +160,7 @@ def paired_axis(tips, bases, mode="endpoints"):
     if length < 0.005:
         raise ValueError("axis samples need at least 5 mm forward-to-rear baseline")
     if mode == "single" and length > 0.08:
-        raise ValueError("single segment baseline exceeds 80 mm; check depth and correspondence")
+        raise ValueError("single segment baseline exceeds 80 mm; check correspondence")
     residual = float(np.linalg.norm(segments - forward, axis=1).max())
     if residual > min(0.002, 0.15 * length):
         raise ValueError("inconsistent axis samples: unequal, nonparallel or nonperpendicular segments; "
@@ -131,132 +205,6 @@ def plane_axis(tips, plane):
             "feature_identity_verified": False}
 
 
-def forward_extrema(observation, camera, pixels, plane, radius=12):
-    """Measure visible forward extents of two seeded perpendicular extensions.
-
-    Bounded image components and metric transverse gates prevent remote matches.
-    A supported visible extreme is not proof of an unoccluded physical endpoint.
-    """
-    import cv2
-    if not np.isfinite(radius) or not 3 <= radius <= 24:
-        raise ValueError("extrema radius must be 3..24 pixels")
-    seeds = np.asarray(pixels, dtype=float)
-    if seeds.shape != (2, 2) or not np.isfinite(seeds).all():
-        raise ValueError("extrema requires two finite pixel seeds")
-    raw = measure(observation, camera, seeds)
-    points = np.asarray(raw["points_world"])
-    center = np.asarray(plane["plane_point"])
-    normal = np.asarray(plane["normal_toward_camera"])
-    normal = normal / np.linalg.norm(normal)
-    offsets = (points - center) @ normal
-    if offsets.mean() < 0:
-        normal = -normal
-        offsets = -offsets
-    if np.any(offsets < .005) or np.any(offsets > .08):
-        raise ValueError("seeds must lie 5..80 mm forward of the rear plane")
-    transverse = points[1] - points[0]
-    transverse -= normal * (transverse @ normal)
-    spacing = np.linalg.norm(transverse)
-    if spacing < .003:
-        raise ValueError("extrema seeds need at least 3 mm transverse spacing")
-    gate = min(.003, spacing / 4)
-    aliases = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
-    if camera not in observation["cameras"]:
-        camera = aliases.get(camera, camera)
-    depth = np.asarray(observation["depth"][camera], dtype=float).squeeze()
-    model = observation["cameras"][camera]
-    k = np.asarray(model["intrinsics"], dtype=float)
-    t = np.asarray(model["extrinsics_world"], dtype=float)
-    ends, diagnostics = [], []
-    for seed, point in zip(seeds, points):
-        u, v = np.rint(seed).astype(int)
-        r = int(np.ceil(radius))
-        u0, u1 = max(0, u-r), min(depth.shape[1], u+r+1)
-        v0, v1 = max(0, v-r), min(depth.shape[0], v+r+1)
-        vv, uu = np.mgrid[v0:v1, u0:u1]
-        uv = np.stack((uu, vv), axis=-1)
-        rays = np.linalg.solve(k, np.column_stack((uv.reshape(-1, 2),
-                                                   np.ones(uu.size))).T).T
-        z = depth[v0:v1, u0:u1]
-        cloud = (rays * z.reshape(-1, 1)) @ t[:3, :3].T + t[:3, 3]
-        cloud = cloud.reshape(*z.shape, 3)
-        delta = cloud - point
-        lateral = delta - (delta @ normal)[..., None] * normal
-        heights = (cloud - center) @ normal
-        mask = (np.isfinite(z) & (z > 0) & (heights >= .005) & (heights <= .08)
-                & (np.linalg.norm(lateral, axis=-1) <= gate)
-                & (np.linalg.norm(uv - seed, axis=-1) <= radius))
-        _, labels = cv2.connectedComponents(mask.astype(np.uint8), connectivity=8)
-        label = labels[v-v0, u-u0]
-        component = labels == label
-        if label == 0 or component.sum() < 6:
-            raise ValueError("insufficient seed-connected depth support")
-        highest = float(heights[component].max())
-        cap = component & (heights >= highest - .001)
-        if cap.sum() < 3:
-            raise ValueError("forward extreme lacks three depth samples within 1 mm")
-        # Reject a truncated visible extreme; a rearward cropped shaft is allowed.
-        boundary = np.zeros(mask.shape, dtype=bool)
-        boundary[[0, -1], :] = True
-        boundary[:, [0, -1]] = True
-        boundary |= np.linalg.norm(uv - seed, axis=-1) >= radius - 1.5
-        if np.any(cap & boundary):
-            raise ValueError("forward extreme reaches search/image boundary; enlarge radius or recenter")
-        end = np.median(cloud[cap], axis=0)
-        ends.append(end)
-        diagnostics.append(dict(component_samples=int(component.sum()), cap_samples=int(cap.sum()),
-                                advance_from_seed_m=float((end-point) @ normal),
-                                cap_pixels=uv[cap].tolist()))
-    ends = np.asarray(ends)
-    result = plane_axis(ends, plane)
-    result.update(points_world=ends.tolist(), midpoint_world=ends.mean(axis=0).tolist(),
-                  separation_m=float(np.linalg.norm(ends[1]-ends[0])), base_mode="extrema",
-                  seed_points_world=points.tolist(), extrema_regions=diagnostics,
-                  endpoint_visibility_verified=False, radius_px=float(radius))
-    return result
-
-
-def refine_paired_endpoints(observation, camera, pixels, measured, radius):
-    """Refine using the measured direction and its original rear constraints.
-
-    Only a complete, consistent two-region estimate replaces caller samples.
-    Sparse or cropped evidence leaves them explicitly unverified.
-    """
-    if not np.isfinite(radius) or not 3 <= radius <= 24:
-        raise ValueError("endpoint refinement radius must be 3..24 pixels")
-    result = dict(measured, endpoint_refinement="unverified",
-                  endpoint_visibility_verified=False)
-    plane = (measured["rear_plane"] if measured["base_mode"] == "plane" else
-             dict(plane_point=np.mean(measured["base_points_world"], axis=0).tolist(),
-                  normal_toward_camera=measured["axis_world"]))
-    try:
-        refined = forward_extrema(observation, camera, pixels, plane, radius)
-        # Revalidate against the actual rear samples, not just the derived plane.
-        geometry = (plane_axis(refined["points_world"], plane)
-                    if measured["base_mode"] == "plane" else
-                    paired_axis(refined["points_world"], measured["base_points_world"],
-                                measured["base_mode"]))
-        correction = np.asarray(refined["points_world"]) - measured["points_world"]
-        advance = correction @ np.asarray(measured["axis_world"])
-        # Do not replace an already selected end with an inward cap median,
-        # or move just one endpoint based on unequal visible extents.
-        if np.any(advance < .002):
-            result.update(endpoint_refinement="no_supported_forward_correction",
-                          endpoint_advance_m=advance.tolist())
-            return result
-    except ValueError as exc:
-        result["endpoint_refinement_detail"] = str(exc)
-        return result
-    result.update(geometry)
-    for key in ("points_world", "midpoint_world", "separation_m", "extrema_regions"):
-        result[key] = refined[key]
-    result.update(endpoint_refinement="refined_visible_extents",
-                  clicked_points_world=measured["points_world"],
-                  endpoint_correction_m=correction.tolist(), endpoint_advance_m=advance.tolist(),
-                  endpoint_direction_assumed=measured["axis_world"], radius_px=float(radius))
-    return result
-
-
 def transform_points(points, pose):
     points = np.asarray(points, dtype=float)
     pose = np.asarray(pose, dtype=float)
@@ -265,147 +213,6 @@ def transform_points(points, pose):
     if pose.shape != (4, 4) or not np.isfinite(pose).all():
         raise ValueError("invalid TCP pose")
     return points @ pose[:3, :3].T + pose[:3, 3]
-
-
-def check_feature_depth(observation, points, tolerance):
-    """Conservative free-space contradiction, not identity/attachment proof.
-
-    Depth is optical-axis Z, as in measure(). A full valid 3x3 footprint
-    must lie behind every predicted feature in one camera to reject a capture.
-    Foreground, image edges and missing depth cannot establish absence.
-    """
-    views = []
-    contradicted = False
-    supported = np.zeros(len(points), dtype=bool)
-    for name, model in observation.get("cameras", {}).items():
-        if name not in observation.get("depth", {}):
-            continue
-        try:
-            depth = np.asarray(observation["depth"][name], dtype=float).squeeze()
-            k = np.asarray(model["intrinsics"], dtype=float)
-            t = np.asarray(model["extrinsics_world"], dtype=float)
-            if depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4) or not (
-                    np.isfinite(k).all() and np.isfinite(t).all()):
-                raise ValueError("invalid depth or camera matrices")
-            camera_points = transform_points(points, np.linalg.inv(t))
-            states, gaps = [], []
-            for point in camera_points:
-                state, gap = "unobserved", None
-                if point[2] > 0:
-                    pixel = k @ point
-                    uv = pixel[:2] / pixel[2]
-                    if np.isfinite(uv).all() and (1 <= uv[0] < depth.shape[1]-1
-                                                and 1 <= uv[1] < depth.shape[0]-1):
-                        u, v = np.rint(uv).astype(int)
-                        patch = depth[v-1:v+2, u-1:u+2]
-                        if patch.shape == (3, 3) and np.isfinite(patch).all() and (patch > 0).all():
-                            gap = float(patch.min() - point[2])
-                            state = ("free_space" if gap > tolerance else
-                                     "occluded" if gap < -tolerance else "depth_consistent")
-                states.append(state)
-                gaps.append(gap)
-            contradicted |= all(state == "free_space" for state in states)
-            supported |= np.asarray([state == "depth_consistent" for state in states])
-            views.append({"camera": name, "states": states, "nearest_depth_gap_m": gaps})
-        except Exception as exc:
-            views.append({"camera": name, "unavailable_reason": str(exc)})
-    return {"attachment_status": ("contradicted" if contradicted else
-                                  "depth_consistent" if supported.all() else "unverified"),
-            "depth_views": views, "depth_tolerance_m": tolerance,
-            "visual_verification": False}
-
-
-def fit_plane(points):
-    if len(points) < 20:
-        raise ValueError("at least 20 valid surface samples required")
-    rng = np.random.default_rng(0)
-    best = np.zeros(len(points), dtype=bool)
-    for _ in range(120):
-        a, b, c = points[rng.choice(len(points), 3, replace=False)]
-        n = np.cross(b - a, c - a)
-        if np.linalg.norm(n) < 1e-10:
-            continue
-        n /= np.linalg.norm(n)
-        mask = np.abs((points - a) @ n) < 0.001
-        if mask.sum() > best.sum():
-            best = mask
-    if best.sum() < max(20, len(points) * 0.65):
-        raise ValueError("ROI has no dominant plane; select a smaller flat surface")
-    p = points[best]
-    center = p.mean(axis=0)
-    _, s, vh = np.linalg.svd(p - center, full_matrices=False)
-    if s[1] / np.sqrt(len(p)) < 0.001:
-        raise ValueError("surface patch is too narrow")
-    normal = vh[-1]
-    rms = float(np.sqrt(np.mean(((p - center) @ normal) ** 2)))
-    return center, normal, rms, float(best.mean())
-
-
-def measure(observation, camera, pixels, roi=None):
-    # EpisodeAPI exposes source names; saved client observations use aliases.
-    aliases = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
-    cameras = observation.get("cameras", {})
-    if camera not in cameras:
-        camera = aliases.get(camera, camera)
-    if camera not in cameras:
-        raise ValueError("unknown camera; available: " + ", ".join(sorted(cameras)))
-    if camera not in observation.get("depth", {}):
-        raise ValueError("depth unavailable for camera " + camera)
-    d = np.asarray(observation["depth"][camera], dtype=float).squeeze()
-    if d.ndim != 2:
-        raise ValueError("camera depth must be a 2D image")
-    h, w = d.shape
-    c = observation["cameras"][camera]
-    k = np.asarray(c["intrinsics"], dtype=float)
-    t = np.asarray(c["extrinsics_world"], dtype=float)
-    if k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all() or not np.isfinite(t).all():
-        raise ValueError("invalid camera matrices")
-    pixels = np.asarray(pixels, dtype=float)
-    if pixels.ndim != 2 or pixels.shape[1] != 2 or not 1 <= len(pixels) <= 32 or not np.isfinite(pixels).all():
-        raise ValueError("pixels must contain 1 to 32 finite [u,v] pairs")
-    if np.any(pixels < 0) or np.any(pixels[:, 0] > w - 1) or np.any(pixels[:, 1] > h - 1):
-        raise ValueError("pixel outside image")
-
-    def rays(uv):
-        return np.linalg.solve(k, np.column_stack((uv, np.ones(len(uv)))).T).T @ t[:3, :3].T
-
-    ray = rays(pixels)
-    info = {}
-    if roi is not None:
-        box = np.asarray(roi, dtype=float)
-        if box.shape != (4,) or not np.isfinite(box).all() or not np.equal(box, np.round(box)).all():
-            raise ValueError("roi must contain four integer pixel bounds")
-        u0, v0, u1, v1 = box.astype(int)
-        if not (0 <= u0 < u1 <= w and 0 <= v0 < v1 <= h):
-            raise ValueError("invalid ROI bounds")
-        if np.any(pixels[:, 0] < u0) or np.any(pixels[:, 0] >= u1) or np.any(pixels[:, 1] < v0) or np.any(pixels[:, 1] >= v1):
-            raise ValueError("plane-projected pixels must be within ROI")
-        vv, uu = np.mgrid[v0:v1, u0:u1]
-        uv = np.column_stack((uu.ravel(), vv.ravel()))
-        z = d[vv, uu].ravel()
-        valid = np.isfinite(z) & (z > 0)
-        uv, z = uv[valid], z[valid]
-        stride = max(1, int(np.ceil(len(z) / 3000)))
-        cloud = t[:3, 3] + rays(uv[::stride]) * z[::stride, None]
-        center, normal, rms, fraction = fit_plane(cloud)
-        if np.dot(normal, t[:3, 3] - center) < 0:
-            normal = -normal
-        denom = ray @ normal
-        if np.any(np.abs(denom) < 1e-4):
-            raise ValueError("viewing ray is parallel to surface")
-        z = np.dot(center - t[:3, 3], normal) / denom
-        info = {"plane_point": center.tolist(), "normal_toward_camera": normal.tolist(),
-                "plane_rms_m": rms, "inlier_fraction": fraction}
-    else:
-        uv = np.rint(pixels).astype(int)
-        z = d[uv[:, 1], uv[:, 0]]
-    if not np.isfinite(z).all() or np.any(z <= 0):
-        raise ValueError("invalid depth or plane intersection")
-    world = t[:3, 3] + ray * z[:, None]
-    info.update(points_world=world.tolist(), midpoint_world=world.mean(axis=0).tolist())
-    if len(world) == 2:
-        info["separation_m"] = float(np.linalg.norm(world[1] - world[0]))
-    return info
 
 
 def stable_unseeded_pair(candidate_trials, tolerance):
@@ -450,7 +257,7 @@ def stable_unseeded_pair(candidate_trials, tolerance):
 
 
 def plane_pair(observation, camera, roi, separation, tolerance=0.002, contrast=0.0,
-               seeds=None, radius=4.0):
+               seeds=None, radius=4.0, plane_z=None, plane_points=None, roi_margin=8):
     """Image-derived candidates only; no semantic labels or scene dimensions."""
     import cv2
     if not np.isfinite([separation, tolerance, contrast]).all() or not (
@@ -459,19 +266,22 @@ def plane_pair(observation, camera, roi, separation, tolerance=0.002, contrast=0
         raise ValueError("invalid separation, tolerance, or contrast")
     if not np.isfinite(radius) or not 1 <= radius <= 12:
         raise ValueError("radius must be 1..12 pixels")
+    if not np.isfinite(roi_margin) or int(roi_margin) != roi_margin or not 0 <= roi_margin <= 24:
+        raise ValueError("roi_margin must be an integer in 0..24 pixels")
+    roi_margin = int(roi_margin)
     if seeds is not None:
         seeds = np.asarray(seeds, dtype=float)
         if seeds.shape != (2, 2) or not np.isfinite(seeds).all():
             raise ValueError("pixels must be two finite region centers")
         if np.linalg.norm(seeds[1] - seeds[0]) <= 2 * radius:
             raise ValueError("seed neighborhoods must not overlap; reduce radius")
-        measure(observation, camera, seeds, roi)  # Bounds and calibration checks.
+        measure(observation, camera, seeds, roi, plane_z, plane_points)  # Bounds and calibration checks.
     if contrast == 0:
         trials, accepted, diagnostic_trials, candidate_trials = [], [], [], []
         for level in (10., 20., 40., 60., 80., 120.):
             try:
                 trial = plane_pair(observation, camera, roi, separation, tolerance,
-                                   level, seeds, radius)
+                                   level, seeds, radius, plane_z, plane_points, roi_margin)
             except ValueError as exc:
                 trials.append({"contrast": level, "plan_ok": False, "plan_detail": str(exc)})
                 continue
@@ -487,19 +297,18 @@ def plane_pair(observation, camera, roi, separation, tolerance=0.002, contrast=0
                             threshold_trials=trials)
             if trial["plan_ok"]:
                 accepted.append(trial)
-        if seeds is None:
-            accepted, reason = stable_unseeded_pair(candidate_trials, tolerance)
-            if reason:
-                return dict(plan_ok=False, plan_fail_reason=reason,
-                            threshold_trials=trials, detection_diagnostics=diagnostic_trials,
-                            feature_identity_verified=False)
+        accepted, reason = stable_unseeded_pair(candidate_trials, tolerance)
+        if reason:
+            return dict(plan_ok=False, plan_fail_reason=reason,
+                        threshold_trials=trials, detection_diagnostics=diagnostic_trials,
+                        feature_identity_verified=False)
         if len(accepted) < 2:
             return dict(plan_ok=False, plan_fail_reason="insufficient_threshold_support",
                         threshold_trials=trials, detection_diagnostics=diagnostic_trials,
                         feature_identity_verified=False)
         centers = np.asarray([item["pixels"] for item in accepted])
         median = np.median(centers, axis=0)
-        refined = measure(observation, camera, median, roi)
+        refined = measure(observation, camera, median, roi, plane_z, plane_points)
         spread_px = float(np.linalg.norm(centers - median, axis=2).max())
         spread_m = float(np.linalg.norm(np.asarray([item["points_world"] for item in accepted])
                                        - refined["points_world"], axis=2).max())
@@ -514,32 +323,26 @@ def plane_pair(observation, camera, roi, separation, tolerance=0.002, contrast=0
                     threshold_support=len(accepted), detection_diagnostics=diagnostic_trials,
                     center_spread_px=spread_px,
                     center_spread_m=spread_m, visual_verification=False,
-                    feature_identity_verified=False)
-    # Validate ROI and calibrated depth before indexing or decoding the image.
+                    feature_identity_verified=False, foreground_checked=False, plane_assumed=True)
+    # Validate ROI and calibrated rays before indexing or decoding the image.
     box = np.asarray(roi, dtype=float)
     if box.shape != (4,) or not np.isfinite(box).all():
         raise ValueError("roi must contain four finite pixel bounds")
     center = [(box[0] + box[2] - 1) / 2, (box[1] + box[3] - 1) / 2]
-    plane = measure(observation, camera, [center], roi)
+    plane = measure(observation, camera, [center], roi, plane_z, plane_points)
     aliases = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
     if camera not in observation.get("cameras", {}):
         camera = aliases.get(camera, camera)
     gray = cv2.imdecode(np.frombuffer(observation["png"][camera], dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
-    depth = np.asarray(observation["depth"][camera], dtype=float).squeeze()
-    if gray is None or gray.shape != depth.shape:
-        raise ValueError("RGB and depth dimensions must match")
-    u0, v0, u1, v1 = box.astype(int)
+    select_u0, select_v0, select_u1, select_v1 = box.astype(int)
+    u0, v0 = max(0, select_u0-roi_margin), max(0, select_v0-roi_margin)
+    u1, v1 = min(gray.shape[1], select_u1+roi_margin), min(gray.shape[0], select_v1+roi_margin)
     patch = gray[v0:v1, u0:u1]
     threshold = float(np.percentile(patch, 80) - contrast)
     count, labels, stats, centroids = cv2.connectedComponentsWithStats(
         (patch < threshold).astype(np.uint8), connectivity=8)
-    model = observation["cameras"][camera]
-    k = np.asarray(model["intrinsics"], dtype=float)
-    t = np.asarray(model["extrinsics_world"], dtype=float)
-    normal = np.asarray(plane["normal_toward_camera"])
-    plane_point = np.asarray(plane["plane_point"])
     pixels, areas = [], []
-    rejections = dict(boundary=0, area=0, surround=0, invalid_depth=0, foreground=0)
+    rejections = dict(boundary=0, area=0, surround=0, outside_roi=0)
     for label in range(1, count):
         x, y, w, h, area = stats[label]
         # Boundary components and large dark patches are not enclosed features.
@@ -554,28 +357,19 @@ def plane_pair(observation, camera, roi, separation, tolerance=0.002, contrast=0
         if np.median(patch[ring]) < threshold + contrast / 2:
             rejections["surround"] += 1
             continue
-        vv, uu = np.nonzero(mask)
-        z = depth[vv + v0, uu + u0]
-        valid = np.isfinite(z) & (z > 0)
-        if valid.mean() < 0.8:
-            rejections["invalid_depth"] += 1
+        pixel = centroids[label] + [u0, v0]
+        if not (select_u0 <= pixel[0] < select_u1 and select_v0 <= pixel[1] < select_v1):
+            rejections["outside_roi"] += 1
             continue
-        uv = np.column_stack((uu[valid] + u0, vv[valid] + v0, np.ones(valid.sum())))
-        rays = np.linalg.solve(k, uv.T).T @ t[:3, :3].T
-        world = t[:3, 3] + rays * z[valid, None]
-        # Recessed depth is allowed; foreground occluders are not.
-        if np.mean((world - plane_point) @ normal > 0.003) > 0.1:
-            rejections["foreground"] += 1
-            continue
-        pixels.append((centroids[label] + [u0, v0]).tolist())
+        pixels.append(pixel.tolist())
         areas.append(int(area))
     result = {key: plane[key] for key in (
         "plane_point", "normal_toward_camera", "plane_rms_m", "inlier_fraction")}
     result.update(regions=[], region_count=len(pixels), regions_truncated=len(pixels) > 32,
                   region_rejections=rejections, near_pairs=[], candidates=[], candidate_count=0,
-                  contrast_threshold=threshold, visual_verification=False, feature_identity_verified=False)
+                  contrast_threshold=threshold, visual_verification=False, feature_identity_verified=False, foreground_checked=False, plane_assumed=True)
     if pixels:
-        diagnostic_points = measure(observation, camera, pixels[:32], roi)["points_world"]
+        diagnostic_points = measure(observation, camera, pixels[:32], roi, plane_z, plane_points)["points_world"]
         result["regions"] = [dict(index=i, pixel=pixel, point_world=point, area_px=area)
                              for i, (pixel, point, area) in enumerate(zip(pixels[:32], diagnostic_points, areas))]
     if not 2 <= len(pixels) <= 32:
@@ -623,36 +417,296 @@ def plane_pair(observation, camera, roi, separation, tolerance=0.002, contrast=0
     return dict(result, plan_ok=True, plan_fail_reason=None)
 
 
-def stereo_points(observation, camera, pixels, other_camera, other_pixels, tolerance):
-    """Triangulate caller correspondences from one simultaneous observation.
+def corner_candidates(gray, seed, radius):
+    """Bounded image-supported corners, never an epipolar projection of a click."""
+    seed = np.asarray(seed, dtype=float)
+    # Include gradient/subpixel support outside the search disk, but never
+    # admit a refined corner outside that disk or next to the image boundary.
+    lo = np.maximum(0, np.floor(seed - radius - 5).astype(int))
+    hi = np.minimum(gray.shape[::-1], np.ceil(seed + radius + 6).astype(int))
+    patch = gray[lo[1]:hi[1], lo[0]:hi[0]]
+    corners = cv2.goodFeaturesToTrack(patch, maxCorners=64, qualityLevel=.02,
+                                    minDistance=2, blockSize=3)
+    if corners is None:
+        return []
+    corners += lo.astype(np.float32)
+    corners = corners.reshape(-1, 2)
+    corners = corners[(corners >= 4).all(axis=1) &
+                      (corners < np.array(gray.shape[::-1]) - 4).all(axis=1)]
+    if not len(corners):
+        return []
+    corners = cv2.cornerSubPix(gray, corners.reshape(-1, 1, 2).copy(), (2, 2), (-1, -1),
+                              (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 40, .001))
+    result = []
+    for point in corners.reshape(-1, 2):
+        if (np.isfinite(point).all() and np.linalg.norm(point - seed) <= radius
+                and all(np.linalg.norm(point - old) > .75 for old in result)):
+            result.append(point.astype(float))
+    if len(result) > 8:
+        raise ValueError("too many nearby corners; reduce refine_radius")
+    return result
 
-    Depth is a local support check, not the estimator: a narrow feature may
-    occupy the neighboring pixel while the selected ray hits background.
+
+class CorrespondenceFailure(ValueError):
+    def __init__(self, detail, diagnostics):
+        super().__init__(detail)
+        self.diagnostics = diagnostics
+
+
+def roi_corners(gray, roi):
+    """Enumerate image corners without silently truncating a crowded search."""
+    box = np.asarray(roi, dtype=float)
+    if box.shape != (4,) or not np.isfinite(box).all() or not np.equal(box, np.round(box)).all():
+        raise ValueError("other_roi requires four integer bounds")
+    u0, v0, u1, v1 = box.astype(int)
+    h, w = gray.shape
+    if not (0 <= u0 < u1 <= w and 0 <= v0 < v1 <= h) or max(u1-u0, v1-v0) > 512 or (u1-u0)*(v1-v0) > 65536:
+        raise ValueError("other_roi must lie in image, span at most 512 pixels per side and contain at most 65536 pixels")
+    # Include surrounding gradients, then enforce the requested bounds after refinement.
+    lo = np.maximum([0, 0], [u0-5, v0-5])
+    hi = np.minimum([w, h], [u1+5, v1+5])
+    patch = gray[lo[1]:hi[1], lo[0]:hi[0]]
+    corners = cv2.goodFeaturesToTrack(patch, maxCorners=0, qualityLevel=.02,
+                                    minDistance=2, blockSize=3)
+    if corners is None:
+        return []
+    corners = corners.reshape(-1, 2) + lo.astype(np.float32)
+    corners = corners[(corners >= 4).all(axis=1) & (corners < [w-4, h-4]).all(axis=1)]
+    if not len(corners):
+        return []
+    corners = cv2.cornerSubPix(gray, corners.reshape(-1, 1, 2).copy(), (2, 2), (-1, -1),
+                              (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 40, .001))
+    result = []
+    for point in corners.reshape(-1, 2):
+        if (np.isfinite(point).all() and (point >= [u0, v0]).all() and (point < [u1, v1]).all()
+                and all(np.linalg.norm(point-old) > .75 for old in result)):
+            result.append(point.astype(float))
+    if len(result) > 128:
+        raise ValueError("other_roi contains more than 128 corners; narrow the ROI")
+    return result
+
+
+def search_stereo(observation, camera, pixels, other_camera, other_roi, tolerance, radius):
+    """Search a caller-bounded second view; ambiguity is never resolved by proximity."""
+    if not np.isfinite(radius) or not 1 <= radius <= 12:
+        raise ValueError("ROI search requires refine_radius=1..12")
+    a, b = camera_view(observation, camera), camera_view(observation, other_camera)
+    seeds = checked_pixels(pixels, a[1].shape)
+    if a[0] == b[0]:
+        raise ValueError("distinct cameras required")
+    cb = roi_corners(b[1], other_roi)
+    selected_a, selected_b, diagnostics = [], [], []
+    for index, seed in enumerate(seeds):
+        ca = corner_candidates(a[1], seed, radius)
+        matches = []
+        for pa in ca:
+            for pb in cb:
+                try:
+                    check = triangulate_views(a, [pa], b, [pb], tolerance)
+                except ValueError:
+                    continue
+                if max(v['reprojection_error_px'][0] for v in check['stereo_views']) <= .5:
+                    matches.append(dict(pixel=pa.tolist(), other_pixel=pb.tolist(),
+                                        ray_gap_m=check['ray_gap_m'][0],
+                                        reprojection_error_px=[v['reprojection_error_px'][0]
+                                                               for v in check['stereo_views']]))
+        diagnostics.append(dict(index=index, reference_corners=[p.tolist() for p in ca],
+                                search_corner_count=len(cb), compatible_count=len(matches),
+                                candidates=matches[:16], candidates_truncated=len(matches) > 16))
+        if len(matches) == 1:
+            selected_a.append(matches[0]['pixel'])
+            selected_b.append(matches[0]['other_pixel'])
+    if len(selected_a) != len(seeds):
+        raise CorrespondenceFailure("ROI search requires exactly one compatible corner pair per seed; "
+                                    "inspect candidate pixels and narrow ROI or reference seeds",
+                                    diagnostics)
+    for points in (selected_a, selected_b):
+        for i, point in enumerate(points):
+            if any(np.linalg.norm(np.array(point)-old) < 1 for old in points[:i]):
+                raise CorrespondenceFailure("multiple seeds select the same corner", diagnostics)
+    result = triangulate_views(a, selected_a, b, selected_b, tolerance)
+    result.update(refinement_method="bounded second-view ROI with unique stereo corners",
+                  refined_pixels=selected_a, refined_other_pixels=selected_b,
+                  correspondence_diagnostics=diagnostics, other_roi=other_roi,
+                  refine_radius_px=radius)
+    return result
+
+
+def refine_stereo(observation, camera, pixels, other_camera, other_pixels, tolerance, radius):
+    """Accept exactly one geometric corner correspondence per supplied seed pair."""
+    if not np.isfinite(radius) or not 1 <= radius <= 12:
+        raise ValueError("refine_radius must be 0 (disabled) or 1..12 pixels")
+    a = camera_view(observation, camera)
+    b = camera_view(observation, other_camera)
+    seeds_a = checked_pixels(pixels, a[1].shape)
+    seeds_b = checked_pixels(other_pixels, b[1].shape)
+    if a[0] == b[0] or len(seeds_a) != len(seeds_b):
+        raise ValueError("distinct cameras and equal correspondence counts required")
+    refined_a, refined_b, counts = [], [], []
+    for index, (sa, sb) in enumerate(zip(seeds_a, seeds_b)):
+        ca = corner_candidates(a[1], sa, radius)
+        cb = corner_candidates(b[1], sb, radius)
+        matches = []
+        for pa in ca:
+            for pb in cb:
+                try:
+                    check = stereo_points(observation, camera, [pa], other_camera, [pb], tolerance)
+                except ValueError:
+                    continue
+                if max(v['reprojection_error_px'][0] for v in check['stereo_views']) <= .5:
+                    matches.append((pa, pb))
+        counts.append([len(ca), len(cb), len(matches)])
+        if len(matches) != 1:
+            raise ValueError(f"corner correspondence {index}: {len(matches)} compatible pairs "
+                             f"from {len(ca)}/{len(cb)} corners; require exactly one; "
+                             "narrow seeds/radius around the same visible physical corner")
+        pa, pb = matches[0]
+        if any(np.linalg.norm(pa - old) < 1 for old in refined_a) or any(
+                np.linalg.norm(pb - old) < 1 for old in refined_b):
+            raise ValueError("multiple seeds select the same corner")
+        refined_a.append(pa)
+        refined_b.append(pb)
+    result = stereo_points(observation, camera, refined_a, other_camera, refined_b, tolerance)
+    result.update(refinement_method="bounded RGB corners with unique stereo correspondence",
+                  refined_pixels=np.asarray(refined_a).tolist(),
+                  refined_other_pixels=np.asarray(refined_b).tolist(),
+                  corner_candidate_counts=counts, refine_radius_px=radius,
+                  seed_offsets_px=[np.linalg.norm(np.asarray(refined_a)-seeds_a, axis=1).tolist(),
+                                   np.linalg.norm(np.asarray(refined_b)-seeds_b, axis=1).tolist()])
+    return result
+
+
+def stereo_lines(observation, camera, pixels, other_camera, other_pixels, tolerance):
+    """Intersect back-projected line planes; rear samples need not correspond."""
+    views = [camera_view(observation, camera), camera_view(observation, other_camera)]
+    return triangulate_lines(views, pixels, other_pixels, tolerance)
+
+
+def triangulate_lines(views, pixels, other_pixels, tolerance):
+    """Line reconstruction for calibrated current or TCP-relative saved views."""
+    samples = [checked_pixels(pixels, views[0][1].shape),
+               checked_pixels(other_pixels, views[1][1].shape)]
+    if any(p.shape != (4, 2) for p in samples):
+        raise ValueError("lines mode requires two corresponding forward ends then two rear line samples per view")
+    if any(np.any(np.linalg.norm(p[:2] - p[2:], axis=1) < 5) for p in samples):
+        raise ValueError("line samples need at least 5 pixels of visible baseline in each view")
+    result = triangulate_views(views[0], samples[0][:2], views[1], samples[1][:2], tolerance)
+    tips = np.asarray(result["points_world"])
+    pair = tips[1] - tips[0]
+    if np.linalg.norm(pair) < .003:
+        raise ValueError("axis pair separation must be at least 3 mm")
+    pair /= np.linalg.norm(pair)
+    axes, angles = [], []
+    for i in range(2):
+        normals = []
+        for view, uv in zip(views, samples):
+            _, _, k, pose = view
+            line = np.cross(np.r_[uv[i], 1.], np.r_[uv[i + 2], 1.])
+            normal = pose[:3, :3] @ (k.T @ line)
+            normals.append(normal / np.linalg.norm(normal))
+        axis = np.cross(*normals)
+        sine = np.linalg.norm(axis)
+        if sine < np.sin(np.deg2rad(10)):
+            raise ValueError("weak line-plane intersection; need at least 10 degrees")
+        axis /= sine
+        signs = []
+        for view, uv in zip(views, samples):
+            _, _, k, pose = view
+            local = pose[:3, :3].T @ (tips[i] - pose[:3, 3])
+            direction = pose[:3, :3].T @ axis
+            q, dq = k @ local, k @ direction
+            derivative = dq[:2] * q[2] - q[:2] * dq[2]
+            if np.linalg.norm(derivative) < 1e-10:
+                raise ValueError("axis projects to a point")
+            signs.append(np.dot(derivative, uv[i] - uv[i + 2]))
+        if signs[0] * signs[1] <= 0:
+            raise ValueError("rear line samples disagree on forward direction")
+        if signs[0] < 0:
+            axis = -axis
+        axes.append(axis)
+        angles.append(float(np.degrees(np.arcsin(sine.clip(0, 1)))))
+    disagreement = float(np.degrees(np.arccos(np.dot(*axes).clip(-1, 1))))
+    if disagreement > 5:
+        raise ValueError("measured line axes disagree by more than 5 degrees")
+    axis = np.sum(axes, axis=0)
+    axis /= np.linalg.norm(axis)
+    if abs(np.dot(axis, pair)) > np.sin(np.deg2rad(5)):
+        raise ValueError("measured line axis is not perpendicular to forward pair within 5 degrees")
+    result.update(axis_world=axis.tolist(), base_mode="lines", axis_segment_count=2,
+                  parallel_segments_checked=True, line_plane_angle_deg=angles,
+                  axis_disagreement_deg=disagreement, rear_correspondence_required=False,
+                  line_membership_assumed=True)
+    return result
+
+
+def stereo_edge_points(observation, camera, pixels, other_camera, segments, tolerance):
+    """Point/physical-edge incidence, explicitly supplied by the caller.
+
+    An epipolar intersection is NOT independent evidence of correspondence.
+    In particular, view-dependent silhouettes need not be the same 3D edge.
     """
+    first = camera_view(observation, camera)
+    second = camera_view(observation, other_camera)
+    pixels = checked_pixels(pixels, first[1].shape)
+    segments = np.asarray(segments, dtype=float)
+    if segments.shape != (len(pixels), 2, 2) or not np.isfinite(segments).all():
+        raise ValueError("other_segments must contain one finite [[u0,v0],[u1,v1]] per pixel")
+    for segment in segments:
+        checked_pixels(segment, second[1].shape)
+    relative = np.linalg.inv(second[3]) @ first[3]
+    t = relative[:3, 3]
+    if np.linalg.norm(t) < 1e-5:
+        raise ValueError("distinct camera centers required")
+    cross = np.array([[0, -t[2], t[1]], [t[2], 0, -t[0]], [-t[1], t[0], 0]])
+    fundamental = np.linalg.inv(second[2]).T @ cross @ relative[:3, :3] @ np.linalg.inv(first[2])
+    lines = np.column_stack((pixels, np.ones(len(pixels)))) @ fundamental.T
+    other, diagnostics = [], []
+    for line, segment in zip(lines, segments):
+        norm = np.linalg.norm(line[:2])
+        if norm < 1e-12:
+            raise ValueError("selected pixel is at an epipole")
+        line = line / norm
+        delta = segment[1] - segment[0]
+        length = np.linalg.norm(delta)
+        if length < 5:
+            raise ValueError("each segment must be at least 5 pixels long")
+        denominator = float(line[:2] @ delta)
+        sine = abs(denominator) / length
+        if sine < np.sin(np.deg2rad(20)):
+            raise ValueError("segment crosses epipolar line at less than 20 degrees")
+        fraction = -float(line[:2] @ segment[0] + line[2]) / denominator
+        if not 0 <= fraction <= 1:
+            raise ValueError("epipolar intersection lies outside the supplied segment")
+        other.append((segment[0] + fraction * delta).tolist())
+        diagnostics.append(dict(segment_fraction=fraction,
+                                crossing_angle_deg=float(np.degrees(np.arcsin(min(1., sine))))))
+    result = triangulate_views(first, pixels, second, other, tolerance)
+    result.update(other_pixels_intersected=other, edge_diagnostics=diagnostics,
+                  correspondence_method="caller-supplied point/physical-edge incidence",
+                  point_on_edge_assumed=True, epipolar_residual_independent=False)
+    return result
+
+
+def stereo_points(observation, camera, pixels, other_camera, other_pixels, tolerance):
+    """Triangulate explicit same-point RGB correspondences; no depth input."""
     if not np.isfinite(tolerance) or not .0005 <= tolerance <= .005:
         raise ValueError("tolerance must be 0.0005..0.005 meters")
-    aliases = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
+    return triangulate_views(camera_view(observation, camera), pixels,
+                             camera_view(observation, other_camera), other_pixels, tolerance)
+
+
+def triangulate_views(first, pixels, second, other_pixels, tolerance):
+    """Same geometry for cached decoded images and public point measurements."""
+    if not np.isfinite(tolerance) or not .0005 <= tolerance <= .005:
+        raise ValueError("tolerance must be 0.0005..0.005 meters")
     views = []
-    for name, uv in ((camera, pixels), (other_camera, other_pixels)):
-        cameras = observation.get("cameras", {})
-        name = name if name in cameras else aliases.get(name, name)
-        uv = np.asarray(uv, dtype=float)
-        if uv.shape not in ((2, 2), (4, 2)) or not np.isfinite(uv).all():
-            raise ValueError("each view requires two forward pixels, optionally followed by two rear pixels")
-        c = cameras[name]
-        k = np.asarray(c["intrinsics"], dtype=float)
-        pose = np.asarray(c["extrinsics_world"], dtype=float)
-        depth = np.asarray(observation["depth"][name], dtype=float).squeeze()
-        if (k.shape != (3, 3) or pose.shape != (4, 4) or depth.ndim != 2
-                or not np.isfinite(k).all() or not np.isfinite(pose).all()
-                or not np.allclose(pose[:3, :3].T @ pose[:3, :3], np.eye(3), atol=1e-5)):
-            raise ValueError("invalid camera calibration or depth")
-        if np.any(uv < 1) or np.any(uv >= np.array(depth.shape[::-1]) - 1):
-            raise ValueError("pixels require a full 3x3 depth footprint")
+    for view, uv in ((first, pixels), (second, other_pixels)):
+        name, gray, k, pose = view
+        uv = checked_pixels(uv, gray.shape)
         rays = np.linalg.solve(k, np.column_stack((uv, np.ones(len(uv)))).T).T
         rays = rays @ pose[:3, :3].T
         rays /= np.linalg.norm(rays, axis=1)[:, None]
-        views.append((name, uv, k, pose, depth, rays))
+        views.append((name, uv, k, pose, gray, rays))
     a, b = views
     if a[0] == b[0] or len(a[1]) != len(b[1]):
         raise ValueError("distinct cameras and equal correspondence counts required")
@@ -675,7 +729,7 @@ def stereo_points(observation, camera, pixels, other_camera, other_pixels, toler
         angles.append(float(np.degrees(np.arcsin(sine.clip(0, 1)))))
     points = np.asarray(points)
     diagnostics = []
-    for name, uv, k, pose, depth, _ in views:
+    for name, uv, k, pose, gray, _ in views:
         local = transform_points(points, np.linalg.inv(pose))
         if np.any(local[:, 2] <= 0):
             raise ValueError("triangulated points behind camera")
@@ -683,17 +737,7 @@ def stereo_points(observation, camera, pixels, other_camera, other_pixels, toler
         error = np.linalg.norm(projected[:, :2] / projected[:, 2, None] - uv, axis=1)
         if np.any(error > 1):
             raise ValueError("reprojection error exceeds one pixel")
-        support = []
-        for pixel, point in zip(uv, local):
-            u, v = np.rint(pixel).astype(int)
-            patch = depth[v-1:v+2, u-1:u+2]
-            valid = patch[np.isfinite(patch) & (patch > 0)]
-            residual = float(np.min(np.abs(valid - point[2]))) if valid.size else float('inf')
-            if residual > tolerance:
-                raise ValueError("triangulated point lacks nearby depth support in " + name)
-            support.append(residual)
-        diagnostics.append(dict(camera=name, reprojection_error_px=error.tolist(),
-                                depth_support_error_m=support))
+        diagnostics.append(dict(camera=name, reprojection_error_px=error.tolist()))
     return dict(points_world=points.tolist(), ray_gap_m=gaps,
                 triangulation_angle_deg=angles, stereo_views=diagnostics,
                 feature_identity_verified=False, visual_verification=False)
@@ -701,97 +745,75 @@ def stereo_points(observation, camera, pixels, other_camera, other_pixels, toler
 
 def run(api, command, args):
     try:
+        frame_arm = args.get("frame_arm", "")
+        if frame_arm not in ("", "left", "right"):
+            raise ValueError("frame_arm must be left/right")
         if command == "feature-pose":
             if args["arm"] not in ("left", "right"):
                 raise ValueError("arm must be left/right")
             pose = api.arm(args["arm"]).tcp().copy()
-            local = json.loads(args["points_local"])
-            world = transform_points(local, pose)
-            tolerance = float(args.get("depth_tolerance", 0.01))
-            if not np.isfinite(tolerance) or not 0.002 <= tolerance <= 0.03:
-                raise ValueError("depth_tolerance must be 0.002..0.03 meters")
-            result = {"points_world": world.tolist(), "midpoint_world": world.mean(axis=0).tolist(),
-                      "rigid_attachment_assumed": True, "visual_verification": False}
+            world = transform_points(json.loads(args["points_local"]), pose)
+            result = dict(points_world=world.tolist(), midpoint_world=world.mean(axis=0).tolist(),
+                          attachment_status="unverified", rigid_attachment_assumed=True,
+                          visual_verification=False)
             if args.get("axis_local"):
                 axis = np.asarray(json.loads(args["axis_local"]), dtype=float)
                 if axis.shape != (3,) or not np.isfinite(axis).all() or np.linalg.norm(axis) < 1e-8:
-                    raise ValueError("axis_local must be a finite nonzero 3D vector")
+                    raise ValueError("axis_local must be finite and nonzero")
                 result["axis_world"] = (pose[:3, :3] @ (axis / np.linalg.norm(axis))).tolist()
-            try:
-                observation = api.observe()
-                result.update(check_feature_depth(observation, world, tolerance))
-            except Exception as exc:
-                result.update(attachment_status="unverified", depth_views=[],
-                              depth_check_unavailable=str(exc))
-            if result["attachment_status"] == "contradicted":
-                result["predicted_points_world"] = result.pop("points_world")
-                result["predicted_midpoint_world"] = result.pop("midpoint_world")
-                return dict(result, plan_ok=False, plan_fail_reason="rigid_capture_contradicted",
-                            plan_detail="Predicted features lie in observed free space; local capture is stale or incorrect."), 2
             return dict(result, plan_ok=True, plan_fail_reason=None), 0
-        frame_arm = args.get("frame_arm", "")
-        if frame_arm not in ("", "left", "right"):
-            raise ValueError("frame_arm must be left/right")
+        obs = api.observe()
         if command == "stereo-points":
-            result = stereo_points(api.observe(), args["camera"], json.loads(args["pixels"]),
-                                   args["other_camera"], json.loads(args["other_pixels"]),
-                                   float(args.get("tolerance", .002)))
-            points = np.asarray(result["points_world"])
-            mode = args.get("base_mode", "endpoints")
-            if mode not in ("endpoints", "surface"):
-                raise ValueError("stereo base_mode must be endpoints/surface")
-            if len(points) == 4:
-                result.update(paired_axis(points[:2], points[2:], mode))
-            points = points[:2]
-            result.update(points_world=points.tolist(), midpoint_world=points.mean(axis=0).tolist(),
-                          separation_m=float(np.linalg.norm(points[1] - points[0])))
-        elif command == "plane-pair":
-            result = plane_pair(api.observe(), args["camera"], json.loads(args["roi"]),
-                                float(args["separation"]), float(args.get("tolerance", 0.002)),
-                                float(args.get("contrast", 0)),
-                                json.loads(args["pixels"]) if args.get("pixels") else None,
-                                float(args.get("radius", 4)))
-            if not result["plan_ok"]:
-                return result, 2
-        elif command == "surface-points":
-            observation = api.observe()
-            refine = args.get("refine_endpoints", 1)
-            if refine not in (0, 1):
-                raise ValueError("refine_endpoints must be 0 or 1")
-            mode = args.get("base_mode", "endpoints")
-            if mode not in ("endpoints", "surface", "single", "plane", "extrema"):
-                raise ValueError("base_mode must be endpoints/surface/single/plane/extrema")
-            if args.get("base_pixels") and args.get("roi"):
-                raise ValueError("base_pixels requires raw depth, without ROI projection")
-            if mode in ("plane", "extrema"):
-                if not args.get("roi") or args.get("base_pixels"):
-                    raise ValueError("base_mode=plane requires rear-face ROI and no base_pixels")
-                box = np.asarray(json.loads(args["roi"]), dtype=float)
-                if box.shape != (4,):
-                    raise ValueError("roi must contain four integer pixel bounds")
-                center = [(box[0] + box[2] - 1) / 2, (box[1] + box[3] - 1) / 2]
-                plane = measure(observation, args["camera"], [center], box)
-                if mode == "extrema":
-                    result = forward_extrema(observation, args["camera"], json.loads(args["pixels"]),
-                                             plane, float(args.get("radius", 12)))
-                else:
-                    result = measure(observation, args["camera"], json.loads(args["pixels"]))
-                    result.update(plane_axis(result["points_world"], plane))
-                    if refine:
-                        result = refine_paired_endpoints(observation, args["camera"],
-                                                         json.loads(args["pixels"]), result,
-                                                         float(args.get("radius", 12)))
+            radius = float(args.get("refine_radius", 0))
+            tolerance = float(args.get("tolerance", .002))
+            mode = args.get("base_mode", "none")
+            if mode not in ("none", "endpoints", "surface", "lines"):
+                raise ValueError("base_mode must be none/endpoints/surface/lines")
+            if not np.isfinite(tolerance) or not .0005 <= tolerance <= .005:
+                raise ValueError("tolerance must be 0.0005..0.005 meters")
+            if sum(bool(args.get(key)) for key in ("other_pixels", "other_roi", "other_segments")) != 1:
+                raise ValueError("provide exactly one of other_pixels, other_roi or other_segments")
+            if mode == "lines":
+                if not args.get("other_pixels") or radius != 0:
+                    raise ValueError("lines mode requires explicit other_pixels and refine_radius=0")
+                result = stereo_lines(obs, args["camera"], json.loads(args["pixels"]),
+                                      args["other_camera"], json.loads(args["other_pixels"]), tolerance)
+            elif args.get("other_segments"):
+                if radius != 0:
+                    raise ValueError("other_segments requires refine_radius=0")
+                result = stereo_edge_points(obs, args["camera"], json.loads(args["pixels"]),
+                                           args["other_camera"], json.loads(args["other_segments"]), tolerance)
+            elif args.get("other_roi"):
+                result = search_stereo(obs, args["camera"], json.loads(args["pixels"]),
+                                       args["other_camera"], json.loads(args["other_roi"]), tolerance, radius)
             else:
-                result = measure(observation, args["camera"], json.loads(args["pixels"]),
-                                 json.loads(args["roi"]) if args.get("roi") else None)
-            if args.get("base_pixels"):
-                bases = measure(observation, args["camera"], json.loads(args["base_pixels"]))
-                result.update(paired_axis(result["points_world"], bases["points_world"],
-                                          args.get("base_mode", "endpoints")))
-                if refine and mode in ("endpoints", "surface"):
-                    result = refine_paired_endpoints(observation, args["camera"],
-                                                     json.loads(args["pixels"]), result,
-                                                     float(args.get("radius", 12)))
+                inputs = (obs, args["camera"], json.loads(args["pixels"]),
+                          args["other_camera"], json.loads(args["other_pixels"]), tolerance)
+                result = refine_stereo(*inputs, radius) if radius != 0 else stereo_points(*inputs)
+            points = np.asarray(result["points_world"])
+            if mode in ("endpoints", "surface"):
+                if len(points) != 4:
+                    raise ValueError("axis mode requires two forward then two corresponding rear points")
+                result.update(paired_axis(points[:2], points[2:], mode))
+                points = points[:2]
+            result.update(points_world=points.tolist(), midpoint_world=points.mean(axis=0).tolist())
+            if len(points) == 2:
+                result["separation_m"] = float(np.linalg.norm(points[1]-points[0]))
+        elif command in ("surface-points", "plane-pair"):
+            zarg = args.get("plane_z", "")
+            z = None if zarg in ("", None) else float(zarg)
+            plane_points = json.loads(args["plane_points"]) if args.get("plane_points") else None
+            measured_plane(z, plane_points)  # Fail before threshold searches if missing.
+            roi = json.loads(args["roi"]) if args.get("roi") else None
+            if command == "surface-points":
+                result = measure(obs, args["camera"], json.loads(args["pixels"]), roi, z, plane_points)
+            else:
+                result = plane_pair(obs, args["camera"], roi, float(args["separation"]),
+                                    float(args.get("tolerance", .002)), float(args.get("contrast", 0)),
+                                    json.loads(args["pixels"]) if args.get("pixels") else None,
+                                    float(args.get("radius", 4)), z, plane_points, float(args.get("roi_margin", 8)))
+                if not result["plan_ok"]:
+                    return result, 2
         else:
             raise ValueError("unknown command")
         if frame_arm:
@@ -811,5 +833,8 @@ def run(api, command, args):
                 "arm": frame_arm or None,
             }
         return dict(result, plan_ok=True, plan_fail_reason=None), 0
+    except CorrespondenceFailure as exc:
+        return {"plan_ok": False, "plan_fail_reason": "ambiguous_or_missing_correspondence",
+                "plan_detail": str(exc), "correspondence_diagnostics": exc.diagnostics}, 2
     except Exception as exc:
         return {"plan_ok": False, "plan_fail_reason": "measurement_failed", "plan_detail": str(exc)}, 2

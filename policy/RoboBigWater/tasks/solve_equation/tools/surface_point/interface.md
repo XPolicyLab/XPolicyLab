@@ -1,8 +1,10 @@
 ## surface_point
-`robo surface_point --u U --v V [--camera head|wrist_l|wrist_r] [--radius R]`
-Measures visible surface world x/y/z in meters from calibrated depth at a native image pixel; no motion or action budget cost.
-U is the integer column from the left; V is the integer row from the top; origin is (0,0). Camera defaults to head.
-R is the depth patch radius in pixels (0–5, default 1); median optical-axis depth is unprojected through the pixel ray.
-Returns plan_ok, plan_fail_reason, world_xyz, x, y, z, depth_m, depth_spread_m, valid_samples, and surface_only=true.
-The point lies on the visible face, not at a hidden center or underlying support; no thickness is inferred.
-Fails for invalid arguments, unavailable calibration/depth, invalid center depth, too few valid samples, or patch depth spread above 0.015 m.
+`robo surface_point --u U --v V --z_min Z0 --z_max Z1 [--camera head|wrist_l|wrist_r] [--other head|wrist_l|wrist_r] [--radius R]`
+Measures a textured horizontal visible surface with calibrated RGB stereo; no motion or action cost.
+U/V are native pixel column/row from the top-left, with subpixel values allowed; camera defaults to head and other to wrist_r.
+Z0/Z1 bound the world height search in meters; interval width must be 0.012–0.25 m. R is patch radius, 3–8 pixels, default 4.
+Warps the patch through horizontal planes at ≤0.5 mm spacing; checks texture, parallax, peak uniqueness, reverse matching and a smaller patch.
+Returns plan_ok, plan_fail_reason, world_xyz, x, y, z, matched_pixel, ncc, peak_margin, peak_width_m, consistency_m, surface_only=true.
+The point belongs to the visible face; footprint center, hidden support and thickness are not inferred. Search spacing is not an accuracy guarantee.
+Fails on absent RGB/calibration, inadequate texture/parallax/visibility, weak or ambiguous matches, boundary peaks, inconsistent patches or invalid arguments.
+Sloped faces, boundaries spanning distinct heights, shadows and occlusion can invalidate the horizontal-patch model.

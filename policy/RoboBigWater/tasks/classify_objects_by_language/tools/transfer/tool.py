@@ -1,9 +1,49 @@
 """Checked Cartesian grasp and transfer sequences using only EpisodeAPI."""
 import numpy as np
+import importlib.util
+from pathlib import Path
+import cv2
+import copy
 from types import SimpleNamespace
 from itertools import product
 
 from roboshell.server.core import tool_rotation
+
+# Shared RGB measurement implementation; its cache belongs to EpisodeAPI arms.
+_plane_spec = importlib.util.spec_from_file_location(
+    "rgb_support_plane", Path(__file__).resolve().parents[4] / "tools/table_plane/tool.py")
+TABLE_PLANE = importlib.util.module_from_spec(_plane_spec)
+_plane_spec.loader.exec_module(TABLE_PLANE)
+
+_patch_spec = importlib.util.spec_from_file_location(
+    "transfer_rgb_patches", Path(__file__).resolve().parents[1] / "surface_patch/tool.py")
+RGB_PATCH = importlib.util.module_from_spec(_patch_spec)
+_patch_spec.loader.exec_module(RGB_PATCH)
+
+
+def measured_support(api):
+    try:
+        receipt = TABLE_PLANE.table_plane(api)
+        z = receipt.get("table_z")
+        if z is not None and np.isfinite(float(z)):
+            return dict(receipt, table_z=float(z))
+    except Exception:
+        pass
+    return {"table_z": None, "reason": "RGB support measurement unavailable"}
+
+
+
+def support_check(api, heights):
+    """A 3 mm TCP clearance is a checking design value, not an object size."""
+    receipt = measured_support(api)
+    z = receipt["table_z"]
+    if z is None:
+        return dict(status="unavailable", measurement=receipt)
+    minimum = z + .003
+    rejected = {name: float(value) for name, value in heights.items() if value < minimum}
+    return dict(status="too_low" if rejected else "clear", measurement=receipt,
+                minimum_tcp_z=minimum, rejected=rejected, clearance_m=.003,
+                grasp_verified=False)
 
 
 def number(name, default=None, required=False, help=""):
@@ -35,6 +75,9 @@ TOOL = {"name": "transfer", "commands": [
         *[number(axis, required=True, help="source TCP world coordinate") for axis in "xyz"],
         *[number("h" + axis, required=True, help="intermediate release and regrasp TCP world coordinate") for axis in "xyz"],
         {"name": "receive_open", "default": "x", "choices": ["x", "y"]},
+        {"name": "approach", "type": "str", "default": "down", "choices": ["down", "down45"]},
+        {"name": "receive_approach", "type": "str", "default": "down", "choices": ["down", "down45"]},
+        {"name": "handoff_carry", "type": "str", "default": "down", "choices": ["down", "down45", "keep"]},
     ]},
 ]}
 TOOL["commands"].append(dict(TOOL["commands"][0], name="transfer_check", budget=False,
@@ -46,7 +89,7 @@ option_args = [dict(spec) for spec in TOOL["commands"][0]["args"]]
 for spec in option_args:
     if spec["name"] in OPTION_CHOICES:
         spec["choices"] = OPTION_CHOICES[spec["name"]]
-    if spec["name"] in ("open", "carry"):
+    if spec["name"] in ("open", "carry", "approach"):
         spec["default"] = "auto"
 TOOL["commands"].append(dict(name="transfer_options", budget=False, args=option_args,
     help="compare nominal routes without motion; return executable pickup arguments"))
@@ -54,6 +97,30 @@ TOOL["commands"].append(dict(name="transfer_options", budget=False, args=option_
 
 class Stop(Exception):
     pass
+
+
+RECOVERY_ATTR = "transfer_rgb_recovery"
+
+
+def take_recovery(api, arm):
+    """Consume episode-owned evidence once; reject stale or moved recovery poses."""
+    kept = getattr(arm, RECOVERY_ATTR, None)
+    setattr(arm, RECOVERY_ATTR, None)
+    if kept is None:
+        return None
+    try:
+        age = float(kept["time_left"] - api.sim_time_left())
+        current, prior = arm.tcp(), kept["pose"]
+        angle = np.degrees(np.arccos(np.clip(
+            (np.trace(prior[:3, :3].T @ current[:3, :3]) - 1) / 2, -1, 1)))
+        if (not np.isfinite(age) or not 0 <= age <= 2.0
+                or not np.isfinite(current).all()
+                or np.linalg.norm(current[:3, 3] - prior[:3, 3]) > .005
+                or angle > 5):
+            return None
+        return kept["rgb_reference"]
+    except Exception:
+        return None
 
 
 def planning_context(api, arm):
@@ -72,7 +139,7 @@ def planning_context(api, arm):
 
 
 def preflight(api, arm, source, destination, opening, approach, carry, clearance, retreat, tolerance):
-    """Try one alternate ordering, entirely in planning, for approach failures."""
+    """Compare bounded approach variants entirely in planning."""
     parameters = (api, arm, source, destination, opening, approach, carry,
                   clearance, retreat, tolerance)
     primary = preflight_path(*parameters)
@@ -95,6 +162,15 @@ def preflight(api, arm, source, destination, opening, approach, carry, clearance
             alternate["primary_failure"] = primary
             return alternate
         primary["alternate"] = alternate
+        # Neither endpoint rotation order may be feasible, even though a
+        # simultaneous translation/rotation takes a feasible IK branch. This
+        # route used to be considered only after the separate route succeeded.
+        combined = preflight_path(*parameters, combined_approach=True)
+        if combined["status"] == "reachable":
+            combined["approach_order"] = "combined"
+            combined["primary_failure"] = primary
+            return combined
+        primary["combined"] = combined
     return primary
 
 
@@ -314,10 +390,186 @@ def recheck_source(api, source, reference, before):
         return {"status": "unavailable"}
 
 
+def rgb_intermediate_reference(api, point, source):
+    """Image footprint of a caller-defined regrasp volume, not a size estimate."""
+    try:
+        # An overlapping source can legitimately leave the same appearance.
+        if np.linalg.norm(np.asarray(point)[:2] - np.asarray(source)[:2]) < .10:
+            return None
+        obs = api.observe()
+        cam = obs['cameras']['cam_head']
+        K = np.asarray(cam['intrinsics'], float)
+        T = np.asarray(cam['extrinsics_world'], float)
+        img = cv2.imdecode(np.frombuffer(obs['png']['cam_head'], np.uint8), cv2.IMREAD_COLOR)
+        if (img is None or K.shape != (3, 3) or T.shape != (4, 4)
+                or not np.isfinite(K).all() or not np.isfinite(T).all()
+                or not np.allclose(T[:3, :3].T @ T[:3, :3], np.eye(3), atol=1e-4)):
+            return None
+        # Design envelope: +/- 30 mm XY and +/- 40 mm Z about supplied TCP.
+        corners = np.asarray(point) + np.array(list(product((-.03, .03), (-.03, .03), (-.04, .04))))
+        local = (corners - T[:3, 3]) @ T[:3, :3]
+        if np.any(local[:, 2] <= 0):
+            return None
+        q = local @ K.T
+        uv = q[:, :2] / q[:, 2:3]
+        if (not np.isfinite(uv).all() or np.any(uv < 2)
+                or np.any(uv[:, 0] >= img.shape[1]-2) or np.any(uv[:, 1] >= img.shape[0]-2)):
+            return None
+        mask = np.zeros(img.shape[:2], np.uint8)
+        cv2.fillConvexPoly(mask, cv2.convexHull(np.round(uv).astype(np.int32)), 1)
+        mask = mask.astype(bool)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(float)
+        gy, gx = np.gradient(gray)
+        textured = mask & (np.hypot(gx, gy) > 8)
+        if mask.sum() < 64 or textured.sum() < 32:
+            return None
+        return img.copy(), K.copy(), T.copy(), mask
+    except Exception:
+        return None
+
+
+def check_rgb_intermediate(api, reference):
+    """Unchanged appearance rejects a transfer; changed appearance proves nothing."""
+    if reference is None:
+        return {'status': 'unavailable', 'method': 'RGB temporal footprint'}
+    try:
+        before, K, T, mask = reference
+        obs = api.observe()
+        cam = obs['cameras']['cam_head']
+        after = cv2.imdecode(np.frombuffer(obs['png']['cam_head'], np.uint8), cv2.IMREAD_COLOR)
+        if (after is None or after.shape != before.shape
+                or not np.allclose(K, cam['intrinsics'], atol=1e-8, rtol=0)
+                or not np.allclose(T, cam['extrinsics_world'], atol=1e-8, rtol=0)):
+            return {'status': 'camera_changed', 'method': 'RGB temporal footprint'}
+        difference = after.astype(float)-before.astype(float)
+        delta = np.max(np.abs(difference), axis=2)[mask]
+        # Require essentially identical full-colour evidence, not a majority
+        # of background pixels. Small arrivals and occlusion remain inconclusive.
+        same = np.max(delta) <= 12 and np.quantile(delta, .99) <= 4
+        lighting = {'status': 'not_needed' if same else 'unsupported'}
+        if not same:
+            # Fit only outside the tested volume: fitting inside could erase
+            # an arriving surface. The 5..18 pixel annulus is a design margin.
+            outer = cv2.dilate(mask.astype(np.uint8), np.ones((37, 37), np.uint8))
+            inner = cv2.dilate(mask.astype(np.uint8), np.ones((11, 11), np.uint8))
+            ring = (outer != 0) & (inner == 0)
+            valid = ring & np.all((before > 24) & (before < 231)
+                                  & (after > 24) & (after < 231), axis=2)
+            if valid.sum() >= 128 and valid.sum() >= .9 * ring.sum():
+                offset = np.median(difference[valid], axis=0)
+                residual_ring = np.max(np.abs(difference[valid]-offset), axis=1)
+                # Small additive exposure/colour shifts only; spatial shadows,
+                # occlusion and changed surroundings must remain inconclusive.
+                if (np.max(np.abs(offset)) <= 24
+                        and np.quantile(residual_ring, .99) <= 3):
+                    residual = np.max(np.abs(difference[mask]-offset), axis=1)
+                    same = np.max(residual) <= 12 and np.quantile(residual, .99) <= 4
+                    lighting = {'status': 'supported', 'offset_bgr': offset.tolist(),
+                                'ring_pixels': int(valid.sum()),
+                                'max_residual': float(np.max(residual)),
+                                'p99_residual': float(np.quantile(residual, .99))}
+        return {'status': 'unchanged' if same else 'inconclusive',
+                'method': 'RGB temporal footprint', 'pixels': int(mask.sum()),
+                'max_difference': float(np.max(delta)),
+                'p99_difference': float(np.quantile(delta, .99)),
+                'arrival_verified': False, 'lighting_check': lighting}
+    except Exception:
+        return {'status': 'unavailable', 'method': 'RGB temporal footprint'}
+
+
+def check_rgb_source(api, reference, tcp):
+    """Negative evidence only, after the held-volume projection clears the site."""
+    result = {'status': 'unavailable', 'method': 'RGB temporal source',
+              'grasp_verified': False}
+    if reference is None:
+        return result
+    try:
+        _, K, T, mask = reference
+        # Same design envelope as the reference, not an inferred object size.
+        corners = np.asarray(tcp, float) + np.array(list(product(
+            (-.03, .03), (-.03, .03), (-.04, .04))))
+        local = (corners - T[:3, 3]) @ T[:3, :3]
+        if not np.isfinite(local).all() or np.any(local[:, 2] <= 0):
+            return result
+        q = local @ K.T
+        uv = q[:, :2] / q[:, 2:3]
+        yy, xx = np.nonzero(mask)
+        # Bounding boxes are deliberately conservative. A vertical lift can
+        # still project over the original site; identical pixels then cannot
+        # distinguish a held surface from an unlifted one.
+        overlap = (uv[:, 0].min() <= xx.max()+2 and uv[:, 0].max() >= xx.min()-2
+                   and uv[:, 1].min() <= yy.max()+2 and uv[:, 1].max() >= yy.min()-2)
+        if overlap:
+            return dict(result, status='projected_overlap')
+        evidence = check_rgb_intermediate(api, reference)
+        evidence.pop('arrival_verified', None)
+        result.update(evidence, method='RGB temporal source')
+        if result['status'] == 'unchanged':
+            result['status'] = 'source_unchanged'
+        return result
+    except Exception:
+        return result
+
+
+def check_rgb_support(api, point):
+    """Reject a fully measured bare handoff envelope; unknown pixels veto it."""
+    result = dict(status="unavailable", method="RGB stereo support",
+                  arrival_verified=False, samples=[])
+    try:
+        point = np.asarray(point, float)
+        support = measured_support(api)["table_z"]
+        if (point.shape != (3,) or not np.isfinite(point).all() or support is None
+                or not 0 <= point[2]-support <= .06):
+            return result
+        obs = api.observe()
+        ref = RGB_PATCH.view(obs, "head")
+        # Stated checking envelope, not an inferred body size. Project its
+        # full height to retain foreground rays, rather than selecting by
+        # reconstructed XY and inadvertently dropping occluding geometry.
+        corners = np.array([[point[0]+x, point[1]+y, z]
+                            for x, y, z in product((-.035, .035), (-.035, .035),
+                                                   (support, point[2]+.06))])
+        q = (corners-ref[2][:3, 3]) @ ref[2][:3, :3] @ ref[1].T
+        if np.any(q[:, 2] <= 0):
+            return result
+        uv = q[:, :2]/q[:, 2:3]
+        lo = np.floor(uv.min(axis=0)).astype(int)
+        hi = np.ceil(uv.max(axis=0)).astype(int)+1
+        size = hi-lo
+        if (np.any(lo < 1) or np.any(hi >= np.array(ref[0].shape[::-1])-1)
+                or np.any(size < 14) or np.any(size > 81)):
+            return result
+        result.update(status="inconclusive", support_z=float(support),
+                      bounds=[*lo.tolist(), *hi.tolist()])
+        # Contiguous tiles cover the entire bounding rectangle. Never infer
+        # emptiness from a majority of valid tiles or fill unmatched gaps.
+        xs = np.linspace(lo[0], hi[0], max(2, int(size[0]//7))+1).astype(int)
+        ys = np.linspace(lo[1], hi[1], max(2, int(size[1]//7))+1).astype(int)
+        heights = np.arange(support-.006, point[2]+.081, .001)
+        for y0, y1 in zip(ys[:-1], ys[1:]):
+            for x0, x1 in zip(xs[:-1], xs[1:]):
+                bounds = [int(x0), int(y0), int(x1), int(y1)]
+                sample = RGB_PATCH.measure_patch(obs, "head", ref, bounds, heights)
+                result["samples"].append(dict(bounds=bounds, **sample))
+                pairs = list(sample.get("pairs", {}).values())
+                if (not sample.get("plan_ok") or abs(sample["top_z"]-support) > .002
+                        or len(pairs) < 2 or any("reason" in p or p.get("ncc", 0) < .95
+                                                or abs(p.get("z", float("inf"))-support) > .002
+                                                for p in pairs)):
+                    return result
+        return dict(result, status="empty")
+    except Exception:
+        return result
+
+
 def check_intermediate(api, point):
     """Reject a clearly bare regrasp site; occlusion is not absence evidence."""
     try:
-        depth, K, T = depth_frame(api)
+        try:
+            frame = depth_frame(api)
+        except Exception:
+            return check_rgb_support(api, point)
+        depth, K, T = frame
         vv, uu = np.indices(depth.shape)
         rays = np.stack([uu, vv, np.ones_like(uu)], axis=-1) @ np.linalg.inv(K).T
         world_rays = rays @ T[:3, :3].T
@@ -401,8 +653,99 @@ def check_intermediate(api, point):
         return {"status": "unavailable"}
 
 
+def rgb_transport_reference(api):
+    """Copy pre-motion RGB/calibration; no inferred dimensions or hidden poses."""
+    try:
+        obs = copy.deepcopy(api.observe())
+        RGB_PATCH.view(obs, "head")
+        support = measured_support(api)["table_z"]
+        if support is None:
+            return None
+        return dict(rgb=obs, support_z=support)
+    except Exception:
+        return None
+
+
+def rgb_transport_height(api, start, destination, margin, reference):
+    """Sparse horizontal stereo surfaces, with static-head and neighbour gates.
+
+    50 mm corridor radius, 60 mm held-footprint exclusion, 250 mm search
+    height and 150 mm maximum raise are checking design bounds, not sizes.
+    Missing samples never establish free space.
+    """
+    baseline = float(max(start[2], destination[2]))
+    result = dict(status="unavailable", transport_z=baseline, transit_margin=float(margin),
+                  method="RGB stereo transit", coverage_complete=False)
+    try:
+        if not isinstance(reference, dict) or "rgb" not in reference:
+            return result
+        vector = destination[:2] - start[:2]
+        length = float(np.linalg.norm(vector))
+        if length < .06:
+            return dict(result, status="short_path")
+        obs = api.observe()
+        ref = RGB_PATCH.view(obs, "head")
+        old = RGB_PATCH.view(reference["rgb"], "head")
+        if (ref[0].shape != old[0].shape or not np.allclose(ref[1], old[1], atol=1e-8, rtol=0)
+                or not np.allclose(ref[2], old[2], atol=1e-8, rtol=0)):
+            return dict(result, status="camera_changed")
+        support = float(reference["support_z"])
+        normal = np.array([-vector[1], vector[0]]) / length * .05
+        corners = np.array([[*(xy + sign * normal), z]
+                            for xy in (start[:2], destination[:2])
+                            for sign in (-1, 1) for z in (support, support + .25)])
+        q = (corners - ref[2][:3, 3]) @ ref[2][:3, :3] @ ref[1].T
+        if np.any(q[:, 2] <= 0):
+            return result
+        uv = q[:, :2] / q[:, 2:3]
+        low = np.maximum(np.floor(uv.min(axis=0)).astype(int), 0)
+        high = np.minimum(np.ceil(uv.max(axis=0)).astype(int), ref[0].shape[::-1])
+        # At most 8 x 8 disjoint 9-pixel windows. Coarse coverage is explicit.
+        xs = np.unique(np.linspace(low[0], high[0]-9, min(8, max(0, (high[0]-low[0])//9))).astype(int))
+        ys = np.unique(np.linspace(low[1], high[1]-9, min(8, max(0, (high[1]-low[1])//9))).astype(int))
+        heights = np.arange(support-.004, support+.2505, .001)
+        samples = []
+        tested = 0
+        for row, y in enumerate(ys):
+            for col, x in enumerate(xs):
+                bounds = [int(x), int(y), int(x+9), int(y+9)]
+                diff = np.abs(ref[0][y:y+9, x:x+9] - old[0][y:y+9, x:x+9])
+                if diff.max() > 12 or np.percentile(diff, 99) > 4:
+                    continue
+                tested += 1
+                receipt = RGB_PATCH.measure_patch(obs, "head", ref, bounds, heights)
+                if not receipt["plan_ok"]:
+                    continue
+                point = RGB_PATCH.intersect(ref, [x+4, y+4], receipt["top_z"])
+                delta = point[:2] - start[:2]
+                fraction = np.clip(delta @ vector / length**2, 0, 1)
+                if (np.linalg.norm(delta - fraction*vector) > .05
+                        or np.linalg.norm(delta) <= .06 or point[2] <= support+.003):
+                    continue
+                samples.append(dict(row=row, col=col, point_world=point.tolist(),
+                                    bounds=bounds, pairs=receipt["pairs"]))
+        accepted = [a for a in samples if any(
+            abs(a["row"]-b["row"]) + abs(a["col"]-b["col"]) == 1
+            and abs(a["point_world"][2]-b["point_world"][2]) <= .004
+            and np.linalg.norm(np.array(a["point_world"])-b["point_world"]) <= .06
+            for b in samples)]
+        result.update(tested_patches=tested, supported_patches=len(accepted), samples=accepted)
+        if not accepted:
+            return dict(result, status="inconclusive_rgb")
+        highest = max(a["point_world"][2] for a in accepted)
+        required = max(baseline, highest + margin)
+        result.update(highest_surface_z=highest, suggested_transport_z=required)
+        if required > baseline+.15:
+            return dict(result, status="inconclusive_high_geometry")
+        return dict(result, status="observed_rgb_surfaces", transport_z=required)
+    except Exception:
+        return result
+
+
 def transport_height(api, start, destination, transit_margin, reference=None):
     """Raise the horizontal leg over observed surfaces; not a collision planner."""
+    if isinstance(reference, dict) and "rgb" in reference:
+        return rgb_transport_height(api, start, destination, transit_margin, reference)
     baseline = float(max(start[2], destination[2]))
     result = {"status": "unavailable", "transport_z": baseline, "transit_margin": float(transit_margin)}
     try:
@@ -504,11 +847,12 @@ def transfer_options(api, args):
               "rejected": [], "grasp_verified": False}
     try:
         selected = {key: args.get(key, default) for key, default in
-                    (("arm", None), ("open", "auto"), ("approach", "down"), ("carry", "auto"))}
+                    (("arm", None), ("open", "auto"), ("approach", "auto"), ("carry", "auto"))}
         if any(selected[key] not in choices for key, choices in OPTION_CHOICES.items()):
             raise ValueError("invalid arm or orientation")
-        # Auto never changes TCP coordinates, distances or tolerances. Tilted
-        # approach is opt-in because kinematic reach says nothing about contact.
+        # This read-only search compares both approaches unless constrained.
+        # Auto never changes TCP coordinates, distances or tolerances, and
+        # nominal reachability is not evidence of contact-free execution.
         expanded = {"arm": ["left", "right"], "open": ["x", "y"],
                     "approach": ["down", "down45"], "carry": ["down", "down45"]}
         variants = [expanded[key] if selected[key] in ("auto", "both") else [selected[key]]
@@ -548,6 +892,8 @@ def run(api, command, args):
     result = {"plan_ok": False, "plan_fail_reason": None, "stages": [],
               "released": False, "grasp_verified": False}
     arm = None
+    rgb_reference = None
+    recovery_reference = None
 
     def fail(reason):
         result["plan_fail_reason"] = reason
@@ -623,8 +969,15 @@ def run(api, command, args):
             fail("invalid_arguments")
         arm = api.arm(args["arm"])
         active()
+        if not check_only:
+            recovery_reference = take_recovery(api, arm)
         if source is None and arm.gripper() > .5:
             fail("gripper_not_commanded_closed")
+        if source is not None:
+            result["phase"] = "check_support"
+            result["support_check"] = support_check(api, {"source_z": source[2]})
+            if result["support_check"]["status"] == "too_low":
+                fail("source_below_support_clearance")
         result["phase"] = "preflight"
         result["preflight"] = preflight(api, arm, source, destination, opening,
                                         approach, carry, clearance, retreat, tolerance)
@@ -653,9 +1006,10 @@ def run(api, command, args):
         try:
             clearance_reference = depth_frame(api)
         except Exception:
-            clearance_reference = None
+            clearance_reference = rgb_transport_reference(api)
         if source is not None:
-            reference = source_reference(api, source, clearance_reference) if clearance_reference is not None else None
+            reference = source_reference(api, source, clearance_reference) if isinstance(clearance_reference, tuple) else None
+            rgb_reference = rgb_intermediate_reference(api, source, destination)
             # Both lateral moves occur above the supplied grasp/release heights.
             travel_z = max(float(arm.tcp()[2, 3]), float(source[2] + clearance), float(destination[2]))
             result["phase"] = "approach"
@@ -681,6 +1035,9 @@ def run(api, command, args):
             result["lift_check"] = check_source(api, reference)
             if result["lift_check"]["status"] == "source_unchanged":
                 fail("source_not_lifted")
+            result["rgb_lift_check"] = check_rgb_source(api, rgb_reference, arm.tcp()[:3, 3])
+            if result["rgb_lift_check"]["status"] == "source_unchanged":
+                fail("source_not_lifted")
         else:
             # gripper() is the commanded value, not evidence of contact.
             if arm.gripper() > 0.5:
@@ -689,6 +1046,12 @@ def run(api, command, args):
             position[2] = max(position[2], destination[2])
             if position[2] - arm.tcp()[2, 3] > tolerance:
                 move("raise", position)
+            rgb_reference = recovery_reference
+            result["recovery_source_check"] = {"status": "available" if rgb_reference is not None else "unavailable"}
+            if rgb_reference is not None:
+                result["rgb_lift_check"] = check_rgb_source(api, rgb_reference, arm.tcp()[:3, 3])
+                if result["rgb_lift_check"]["status"] == "source_unchanged":
+                    fail("source_not_lifted")
         # Observe the corridor in the actual carry configuration: the
         # downward forearm can otherwise be mistaken for a tall obstacle.
         # The source/destination baseline lift has already completed.
@@ -698,6 +1061,11 @@ def run(api, command, args):
             result["phase"] = "check_source_after_rotation"
             result["rotation_source_check"] = recheck_source(api, source, reference, clearance_reference)
             if result["rotation_source_check"]["status"] == "source_unchanged":
+                fail("source_not_lifted")
+        if source is not None or rgb_reference is not None:
+            result["phase"] = "check_source_after_rotation"
+            result["rgb_rotation_source_check"] = check_rgb_source(api, rgb_reference, arm.tcp()[:3, 3])
+            if result["rgb_rotation_source_check"]["status"] == "source_unchanged":
                 fail("source_not_lifted")
         result["phase"] = "check_clearance"
         result["clearance_check"] = transport_height(api, arm.tcp()[:3, 3], destination, transit_margin, clearance_reference)
@@ -714,6 +1082,11 @@ def run(api, command, args):
             result["phase"] = "check_source_after_translation"
             result["translation_source_check"] = recheck_source(api, source, reference, clearance_reference)
             if result["translation_source_check"]["status"] == "source_unchanged":
+                fail("source_not_lifted")
+        if source is not None or rgb_reference is not None:
+            result["phase"] = "check_source_after_translation"
+            result["rgb_translation_source_check"] = check_rgb_source(api, rgb_reference, arm.tcp()[:3, 3])
+            if result["rgb_translation_source_check"]["status"] == "source_unchanged":
                 fail("source_not_lifted")
         if abs(arm.tcp()[2, 3] - destination[2]) > 0.001:
             move("release_height", destination)
@@ -732,6 +1105,16 @@ def run(api, command, args):
         result.update(plan_ok=False, plan_fail_reason="tool_error", plan_detail=str(exc))
     if arm is not None:
         try:
+            # Only a failed descent may seed manual close/place recovery.
+            # Keep pre-approach imagery, never an already occluded grasp image.
+            if (not check_only and command == "pick_place" and rgb_reference is not None
+                    and not result["plan_ok"] and result["stages"]
+                    and result["stages"][-1]["stage"] == "descend"):
+                setattr(arm, RECOVERY_ATTR, dict(rgb_reference=rgb_reference,
+                        pose=arm.tcp().copy(), time_left=float(api.sim_time_left())))
+        except Exception:
+            pass
+        try:
             result["reached_tcp"] = {"pos": arm.tcp()[:3, 3].tolist()}
             result["gripper_command"] = arm.gripper()
         except Exception:
@@ -748,6 +1131,13 @@ def relay(api, args):
         opening = args.get("open", "x")
         receive_open = args.get("receive_open", "x")
         carry = args.get("carry", "down45")
+        approach = args.get("approach", "down")
+        receive_approach = args.get("receive_approach", "down")
+        handoff_carry = args.get("handoff_carry", "down")
+        if (approach not in ("down", "down45") or
+                receive_approach not in ("down", "down45") or
+                handoff_carry not in ("down", "down45", "keep")):
+            raise ValueError("invalid relay orientation")
         if donor not in ("left", "right") or opening not in ("x", "y") or receive_open not in ("x", "y") or carry not in ("down", "down45", "keep"):
             raise ValueError("invalid arm or orientation")
         receiver = "right" if donor == "left" else "left"
@@ -758,6 +1148,10 @@ def relay(api, args):
         tolerance = float(args.get("tolerance", 0.012))
         if not np.isfinite([*coords.values(), clearance, transit_margin, retreat, tolerance]).all() or not 0.03 <= clearance <= 0.30 or not 0.01 <= transit_margin <= 0.15 or not 0 <= retreat <= 0.20 or not 0.001 <= tolerance <= 0.03:
             raise ValueError("invalid coordinates or distances")
+        result["support_check"] = support_check(api, {"source_z": coords["z"], "intermediate_z": coords["hz"]})
+        if result["support_check"]["status"] == "too_low":
+            result["plan_fail_reason"] = "source_below_support_clearance"
+            return result, 2
         # Validate both recorded configurations before moving either arm.
         homes = {}
         for tag in (donor, receiver):
@@ -784,8 +1178,12 @@ def relay(api, args):
                 raise Stop("park_not_reached")
 
         park(receiver)
-        common = dict(clearance=clearance, transit_margin=transit_margin, tolerance=tolerance, approach="down")
-        first = dict(common, arm=donor, open=opening, carry="down", retreat=min(clearance, 0.20),
+        rgb_reference = rgb_intermediate_reference(
+            api, np.array([coords['h' + a] for a in 'xyz']),
+            np.array([coords[a] for a in 'xyz']))
+        common = dict(clearance=clearance, transit_margin=transit_margin, tolerance=tolerance)
+        first = dict(common, arm=donor, open=opening, approach=approach,
+                     carry=handoff_carry, retreat=min(clearance, 0.20),
                      **{a: coords[a] for a in "xyz"},
                      **{"t" + a: coords["h" + a] for a in "xyz"})
         result["phase"] = "intermediate_transfer"
@@ -797,6 +1195,10 @@ def relay(api, args):
             return result, 2
         park(donor)
         result["phase"] = "check_intermediate"
+        result['rgb_intermediate_check'] = check_rgb_intermediate(api, rgb_reference)
+        if result['rgb_intermediate_check']['status'] == 'unchanged':
+            result['plan_fail_reason'] = 'intermediate_unchanged'
+            return result, 2
         result["intermediate_check"] = check_intermediate(
             api, np.array([coords["h" + a] for a in "xyz"]))
         if result["intermediate_check"]["status"] == "empty":
@@ -805,7 +1207,8 @@ def relay(api, args):
         if result["intermediate_check"]["status"] == "misaligned":
             result["plan_fail_reason"] = "intermediate_misaligned"
             return result, 2
-        second = dict(common, arm=receiver, open=receive_open, carry=carry, retreat=retreat,
+        second = dict(common, arm=receiver, open=receive_open, approach=receive_approach,
+                      carry=carry, retreat=retreat,
                       **{a: coords["h" + a] for a in "xyz"},
                       **{"t" + a: coords["t" + a] for a in "xyz"})
         result["phase"] = "final_transfer"

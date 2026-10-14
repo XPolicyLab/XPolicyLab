@@ -1,5 +1,4 @@
 # tools enabled for this task, one per line (shared tools/<name> or tasks/put_bottles_into_dustbin/tools/<name>)
-depth_shape
 axis_grasp
 supported_transfer
 opposed_transfer
@@ -8,3 +7,5 @@ vertical_span
 horizontal_span
 span_grasp
 vertical_grasp
+table_plane
+stereo_span

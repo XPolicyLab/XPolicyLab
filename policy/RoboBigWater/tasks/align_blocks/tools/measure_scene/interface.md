@@ -1,11 +1,9 @@
-`robo measure_scene [--camera head|wrist_l|wrist_r] [--color magenta] [--reference white] [--expected N] [--line_tolerance M]`
-Read-only RGB-D measurement; consumes no action steps and makes no motion.
-Colors: magenta, red, green, blue, white, yellow. Defaults shown; expected=0 accepts any count.
-Returns visible upper-surface centers/extents in world meters, sorted by world x, pixel locations, and minimum-area footprint edge_yaw_deg_mod90 in [-45,45).
-Returns row yaw, x/y spans, line residuals, and within_line_tolerance (default 0.002 m; null on count failure); this tests collinearity only. Small y span alone can hide a bent arrangement.
-Returns elongated horizontal reference candidates: endpoints, yaw, width, positive-y-facing normal, signed center distances, span membership, geometry_source, and depth_height_relief_m.
-Each reference includes leveling_geometry: the lower endpoint index and positive-y displacement to level it with the fixed higher endpoint; geometry only, not a motion guarantee.
-contact_lanes gives reference surface points outside projected region footprints padded by 0.03 m, inset 0.025 m from endpoints; clearance applies only to motion normal to reference, not arbitrary paths or unseen obstacles. Surface z is not TCP height; count mismatch withholds candidates.
-Reference candidates are sorted by length; absence is reported separately. Distances are to the reference centerline, not contact gaps; region_edge_turn_deg_mod90 gives shortest edge-to-reference turns in region order, not guaranteed physical corrections.
-Fails safely on invalid inputs, missing RGB-D/calibration, absent regions, or expected-count mismatch.
-Elongated RGB support with >=70% valid depth and <=0.08 m relief may use horizontal_median_plane projection; local_support_plane instead uses consistent nearby support on both sides plus a reported 0.015 m surface allowance when raw height exceeds support by 0.035–0.09 m. Reports support_height_m/assumed_surface_offset_m for that correction; planarity, thickness, and color ambiguity remain assumptions. Does not certify completion.
+`robo measure_scene --surface_z M --reference_z M [--camera head|wrist_l|wrist_r] [--color magenta] [--reference white] [--expected N] [--line_tolerance M]`
+Read-only calibrated RGB ray-to-plane measurement; no motion or action steps.
+Both heights are required finite world-z meters for the visible horizontal surfaces, measured by the caller; no stored heights or thickness defaults.
+Colors: magenta, red, green, blue, white, yellow; expected=0 accepts any count; line_tolerance defaults to 0.002 m.
+Returns projected silhouette centers/extents, pixel locations, edge_yaw_deg_mod90, row yaw/spans/residuals and within_line_tolerance.
+Returns elongated reference endpoints/yaw/width/normal, signed center distances, span membership, edge turns and leveling_geometry.
+contact_lanes excludes projected footprints with 0.03 m padding and 0.025 m endpoint insets; clearance applies only to reference-normal translation. Surface height is not TCP height.
+Geometry assumes horizontal surfaces at the supplied heights; side faces, occlusion and erroneous heights bias positions. Collinearity is not completion.
+Fails safely on missing heights, invalid RGB/calibration, backward or parallel rays, absent regions or count mismatch; count mismatch withholds contact candidates and line verdict. Missing reference is reported separately.

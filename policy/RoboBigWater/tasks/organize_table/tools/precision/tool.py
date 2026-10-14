@@ -1,5 +1,12 @@
 """Observation-only surface measurements and fail-fast Cartesian sequences."""
 import numpy as np
+import importlib.util
+import json
+from pathlib import Path
+
+_rgb_spec = importlib.util.spec_from_file_location("precision_rgb", Path(__file__).with_name("rgb_geometry.py"))
+rgb_geometry = importlib.util.module_from_spec(_rgb_spec)
+_rgb_spec.loader.exec_module(rgb_geometry)
 
 from roboshell.server.core import WORKSPACE, tool_rotation
 
@@ -15,39 +22,50 @@ ARM = {"name": "arm", "positional": True, "choices": ["left", "right"]}
 XYZ = [argument(k, required=True) for k in "xyz"]
 COMMON = [ARM, *XYZ, argument("clearance", 0.05), argument("tolerance", 0.01)]
 TOOL = {"name": "precision", "commands": [
-    {"name": "surface_box", "budget": False, "help": "measure visible depth within a pixel rectangle",
+    {"name": "surface_box", "budget": False, "help": "project a pixel rectangle onto a supplied horizontal plane",
      "args": [{"name": "camera", "positional": True, "choices": ["head", "wrist_l", "wrist_r"]},
-              *[argument(k, required=True) for k in ("u0", "v0", "u1", "v1")],
-              argument("zmin", -10.0), argument("zmax", 10.0),
-              argument("ymin", -10.0), argument("ymax", 10.0),
-              argument("seed_u", -1), argument("seed_v", -1),
-              argument("link", 0.008), argument("depth_span", 0.04),
-              argument("push_dx", 0.0), argument("push_dy", 0.0)]},
+              *[argument(k, required=True) for k in ("u0", "v0", "u1", "v1", "plane_z")]]},
     {"name": "checked_pick", "budget": True, "help": "approach, close and lift with measured pose checks",
      "args": [*COMMON, argument("lift", 0.05), argument("verify_radius", 0.04),
+              {"name": "verify_roi", "type": "str", "help": "RGB surface region as JSON [u0,v0,u1,v1]; requires positive lift evidence"},
+              {"name": "verify_camera", "choices": ["head", "wrist_l", "wrist_r"], "default": "head"},
               {"name": "approach", "type": "str", "default": "down", "choices": ["down", "down45"]},
               {"name": "open", "type": "str", "default": "x", "choices": ["x", "y"]}]},
     {"name": "checked_place", "budget": True, "help": "translate, lower, release and retract with measured pose checks",
      "args": [*COMMON, argument("transit_z", 0.0), argument("retract", 0.0), argument("carry_clearance", 0.08),
               argument("source_z", help="original grasp TCP height; omitted means current TCP height"),
-              {"name": "entry", "type": "str", "default": "auto", "choices": ["auto", "vertical"]}]},
+              {"name": "carry_roi", "type": "str", "help": "current payload-only RGB patch as JSON [u0,v0,u1,v1]"},
+              {"name": "carry_point", "type": "str", "help": "current measured patch world point as JSON [x,y,z]; required with carry_roi"},
+              argument("verify_radius", 0.04),
+              {"name": "verify_camera", "choices": ["head", "wrist_l", "wrist_r"], "default": "head"},
+              {"name": "entry", "type": "str", "default": "vertical", "choices": ["auto", "vertical"]}]},
     {"name": "checked_pull", "budget": True, "help": "approach along +Y, close and pull along -Y with measured pose checks",
      "args": [*COMMON, argument("standoff", 0.06), argument("distance", 0.15), argument("verify_radius", 0.025),
               argument("allow_unverified", 0), argument("inset", 0.01),
               {"name": "open", "type": "str", "default": "z", "choices": ["x", "z"]}]},
-    {"name": "checked_push", "budget": True, "help": "closed-hand horizontal push from an absolute contact point",
+    {"name": "checked_push", "budget": True, "help": "one bounded horizontal stroke, retreat and open",
      "args": [*COMMON, argument("dx", required=True), argument("dy", required=True),
-              argument("standoff", 0.025), argument("retract", 0.08)]},
+              argument("standoff", 0.025), argument("retract", 0.08), argument("max_step", 0.02)]},
 ]}
 
 # Reuse the pick argument contract; destination coordinates are absolute TCPs.
 TOOL["commands"].append({
     "name": "checked_transfer", "budget": True,
-    "help": "checked grasp, elevated transfer, axial placement and release",
+    "help": "checked grasp, elevated transfer, vertical placement and release",
     "args": [*TOOL["commands"][1]["args"],
              *[argument("to_" + k, required=True) for k in "xyz"],
              argument("transit_z", 0.0), argument("allow_unverified", 0)],
 })
+
+TOOL["commands"].extend([
+    {"name": "pixel_point", "budget": False, "help": "locate a selected pixel using a plane or a second calibrated view",
+     "args": [{"name": "camera", "positional": True, "choices": ["head", "wrist_l", "wrist_r"]},
+              *[argument(k, required=True) for k in ("u", "v")], argument("plane_z"),
+              {"name": "camera2", "choices": ["head", "wrist_l", "wrist_r"]}, argument("u2"), argument("v2")]},
+    {"name": "plane_segment", "budget": False, "help": "measure selected endpoint length and world yaw at a supplied height",
+     "args": [{"name": "camera", "positional": True, "choices": ["head", "wrist_l", "wrist_r"]},
+              *[argument(k, required=True) for k in ("u0", "v0", "u1", "v1", "plane_z")]]},
+])
 
 
 def number(args, key, default=None):
@@ -190,77 +208,7 @@ def seeded_patch(grid, valid, depths, seed, link, span):
 
 
 def measure(observation, args):
-    push_direction = [number(args, "push_dx", 0), number(args, "push_dy", 0)]
-    push_length = np.hypot(*push_direction)
-    if not np.isfinite(push_length) or (push_length != 0 and not 0.01 <= push_length <= 0.25):
-        raise ValueError("push direction length must be zero (disabled) or 0.01–0.25 m")
-    source = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}[args["camera"]]
-    depth = np.asarray(observation["depth"][source], dtype=float)
-    if depth.ndim != 2:
-        raise ValueError("depth must be a two dimensional array")
-    bounds = [number(args, k) for k in ("u0", "v0", "u1", "v1")]
-    if any(v != int(v) for v in bounds):
-        raise ValueError("pixel bounds must be integers")
-    u0, v0, u1, v1 = map(int, bounds)
-    h, w = depth.shape
-    if not (0 <= u0 < u1 < w and 0 <= v0 < v1 < h):
-        raise ValueError("rectangle must have positive area and be within the image")
-    zmin, zmax = number(args, "zmin", -10), number(args, "zmax", 10)
-    if zmin >= zmax:
-        raise ValueError("zmin must be below zmax")
-    ymin, ymax = number(args, "ymin", -10), number(args, "ymax", 10)
-    if ymin >= ymax:
-        raise ValueError("ymin must be below ymax")
-    su, sv = number(args, "seed_u", -1), number(args, "seed_v", -1)
-    seeded = (su, sv) != (-1, -1)
-    if seeded and not (su == int(su) and sv == int(sv) and u0 <= su <= u1 and v0 <= sv <= v1):
-        raise ValueError("both seed coordinates must be integer pixels within the rectangle")
-    link, span = number(args, "link", 0.008), number(args, "depth_span", 0.04)
-    if not (0.001 <= link <= 0.03 and 0.005 <= span <= 0.20):
-        raise ValueError("link or depth_span out of range")
-    model = observation["cameras"][source]
-    intrinsic = np.asarray(model["intrinsics"], dtype=float)
-    transform = np.asarray(model["extrinsics_world"], dtype=float)
-    if intrinsic.shape != (3, 3) or transform.shape != (4, 4):
-        raise ValueError("invalid camera matrix shape")
-    if not np.isfinite(intrinsic).all() or not np.isfinite(transform).all():
-        raise ValueError("nonfinite camera matrix")
-    vv, uu = np.mgrid[v0:v1 + 1, u0:u1 + 1]
-    values = depth[v0:v1 + 1, u0:u1 + 1].ravel()
-    valid = np.isfinite(values) & (values > 0)
-    pixels = np.column_stack((uu.ravel()[valid], vv.ravel()[valid], np.ones(valid.sum())))
-    camera_points = (pixels @ np.linalg.inv(intrinsic).T) * values[valid, None]
-    points = camera_points @ transform[:3, :3].T + transform[:3, 3]
-    keep = np.isfinite(points).all(axis=1) & (points[:, 2] >= zmin) & (points[:, 2] <= zmax)
-    keep &= (points[:, 1] >= ymin) & (points[:, 1] <= ymax)
-    selection = {"mode": "rectangle"}
-    if seeded:
-        shape = vv.shape
-        grid = np.full((*shape, 3), np.nan)
-        grid.reshape(-1, 3)[valid] = points
-        mask = np.zeros(values.shape, dtype=bool)
-        mask[valid] = keep
-        selected = seeded_patch(grid, mask.reshape(shape), values.reshape(shape),
-                                (int(sv) - v0, int(su) - u0), link, span)
-        points = grid[selected]
-        selection = {"mode": "seed_connected", "seed_world": grid[int(sv)-v0, int(su)-u0].tolist(),
-                     "selected_fraction": float(selected.sum() / max(1, keep.sum())),
-                     "touches_roi_edge": bool(selected[0].any() or selected[-1].any()
-                                              or selected[:, 0].any() or selected[:, -1].any()),
-                     "link_m": link, "depth_span_m": span}
-    else:
-        points = points[keep]
-    if len(points) < 9:
-        raise ValueError("fewer than nine valid depth samples after filtering")
-    low, median, high = np.quantile(points, [0.05, 0.5, 0.95], axis=0)
-    return {"plan_ok": True, "plan_fail_reason": None, "samples": len(points),
-            "world_median": median.tolist(), "world_low": low.tolist(), "world_high": high.tolist(),
-            "visible_extent": (high - low).tolist(),
-            "selection": selection,
-            **({"push_geometry": push_geometry(points, push_direction)} if push_length else {}),
-            "footprint": footprint(points), "height_profile": height_profile(points),
-            "y_profile": y_profile(points),
-            "measurement": "Visible surfaces only; connected touching geometry may merge, crops and depth limits may truncate surfaces; no hidden center is inferred."}
+    return rgb_geometry.measure(observation, "surface_box", args)
 
 
 class Stop(Exception):
@@ -483,6 +431,31 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
     verify_radius = number(args, "verify_radius", 0.025 if command == "checked_pull" else 0.04)
     if verify_radius != 0 and not 0.015 <= verify_radius <= 0.08:
         raise ValueError("verify_radius must be zero or 0.015–0.08 m")
+    rgb_reference = None
+    initial_observation = None
+    if command == "checked_pick" and args.get("verify_roi") is not None:
+        if verify_radius == 0:
+            raise ValueError("verify_roi requires a nonzero verify_radius")
+        # Validate texture, ROI and calibration before any motion, including
+        # composite preflight. The snapshot is local to this command only.
+        initial_observation = api.observe()
+        rgb_reference = rgb_geometry.lift_reference(
+            initial_observation, args.get("verify_camera", "head"), args["verify_roi"])
+        result["rgb_reference"] = {"status": "ready", "selection": "explicit_roi"}
+    elif command == "checked_pick" and verify_radius:
+        # Missing ROI no longer silently skips RGB evidence. Selection uses
+        # calibrated rays and caller XYZ/radius, never a guessed plane height.
+        try:
+            initial_observation = api.observe()
+            rgb_reference = rgb_geometry.automatic_lift_reference(
+                initial_observation, args.get("verify_camera", "head"), goal, verify_radius)
+            result["rgb_reference"] = {"status": "ready", "selection": "grasp_ray_neighborhood",
+                                       "candidate_features": int(np.count_nonzero(rgb_reference[3]))}
+        except Exception as exc:
+            # An automatic region is not guaranteed to contain visible texture.
+            # Preserve the existing unavailable-evidence behavior; explicit ROI
+            # validation above remains strict and can never fall back silently.
+            result["rgb_reference"] = {"status": "unavailable", "detail": str(exc)}
     if not (0.01 <= clearance <= 0.25 and 0.003 <= tolerance <= 0.025 and 0.02 <= lift <= 0.20):
         raise ValueError("clearance, tolerance or lift out of range")
     if command == "checked_pull":
@@ -501,6 +474,21 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
     lifted = goal + [0, 0, lift]
     arm = api.arm(args["arm"])
     pose = np.array(arm.tcp() if initial_pose is None else initial_pose, dtype=float, copy=True)
+    rgb_carry_reference = None
+    if command == "checked_place":
+        result["rgb_carry_reference"] = {"status": "not_requested"}
+        if args.get("carry_roi") is not None or args.get("carry_point") is not None:
+            result["released"] = False
+            if args.get("carry_roi") is None or args.get("carry_point") is None or verify_radius == 0:
+                raise ValueError("carry_roi and carry_point require each other and nonzero verify_radius")
+            carry_point = np.asarray(json.loads(args["carry_point"]), dtype=float)
+            if (carry_point.shape != (3,) or not np.isfinite(carry_point).all()
+                    or np.linalg.norm(carry_point - pose[:3, 3]) > .30):
+                raise ValueError("carry_point must be a finite measured point within 0.30 m of current TCP")
+            rgb_carry_reference = rgb_geometry.lift_reference(
+                api.observe(), args.get("verify_camera", "head"), args["carry_roi"])
+            rgb_carry_origin = pose[:3, 3].copy()
+            result["rgb_carry_reference"] = {"status": "ready", "point_world": carry_point.tolist()}
     travel = pose[:3, 3].copy()
     travel[2] = max(travel[2], above[2])
     if command == "checked_place":
@@ -541,7 +529,7 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
         retract = number(args, "retract", 0.0)
         if retract != 0 and not 0.01 <= retract <= 0.25:
             raise ValueError("retract must be zero (automatic) or 0.01–0.25 m")
-        entry = args.get("entry", "auto")
+        entry = args.get("entry", "vertical")
         if entry not in ("auto", "vertical"):
             raise ValueError("entry must be auto or vertical")
         # TCP +X is insertion direction. Only use a downward axis within
@@ -581,11 +569,9 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
         transit[:2] = precontact[:2]
         points.extend([precontact, seated, pulled])
     if command == "checked_pick":
-        # Withdraw a tilted hand along the reverse insertion axis. A vertical
-        # lift can lever the fingers against nearby geometry after closure.
-        # lift remains the requested vertical rise, not the diagonal length.
-        if args.get("approach", "down") == "down45":
-            lifted[1] -= lift
+        # Closure changes contact mechanics: lift vertically to unload the
+        # support before lateral transport, even with a tilted wrist. The
+        # open-hand insertion below still follows the approach axis.
         points.append(lifted)
         # A tilted hand must enter along its approach axis rather than sweep
         # its fingers vertically across the contact geometry. Keep the oblique
@@ -599,10 +585,23 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
         displacement = np.array([number(args, "dx"), number(args, "dy"), 0.0])
         distance = np.linalg.norm(displacement)
         standoff, retract = number(args, "standoff", 0.025), number(args, "retract", 0.08)
-        if not (0.01 <= distance <= 0.25 and 0.01 <= standoff <= 0.10 and 0.02 <= retract <= 0.25):
+        max_step = number(args, "max_step", 0.02)
+        if not (0.001 <= distance <= 0.25 and 0.001 <= max_step <= 0.02
+                and 0.01 <= standoff <= 0.10 and 0.02 <= retract <= 0.25):
             raise ValueError("push distance, standoff or retract out of range")
         direction = displacement / distance
-        precontact = goal - standoff * direction
+        # A long requested correction is not evidence for a long contact stroke.
+        # Execute one bounded increment only; no repeated strokes from stale geometry.
+        requested_displacement = displacement.copy()
+        displacement = direction * min(distance, max_step)
+        result.update(requested_push_xy=requested_displacement[:2].tolist(),
+                      commanded_push_xy=displacement[:2].tolist(),
+                      requested_push_m=float(distance), stroke_m=float(min(distance, max_step)),
+                      stroke_limited=bool(distance > max_step), released=False,
+                      fresh_measurement_required=True)
+        # XYZ is the TCP stroke start, not a surface point. Do not add a
+        # horizontal gap to the capped stroke: contact may precede that point.
+        precontact = goal.copy()
         pushed = goal + displacement
         retracted = pushed + [0, 0, retract]
         # Departure height must clear the source neighborhood before an
@@ -616,24 +615,25 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
         # that may immediately rotate or return home. A contact-relative
         # retreat alone can leave the hand below neighboring visible geometry.
         retracted[2] = max(retracted[2], transit[2])
-        # Release contact along the reverse tilted tool axis before the long
-        # vertical retreat. A vertical-only departure sweeps tilted fingers
-        # across the contact region. Bound the horizontal withdrawal so the
-        # full route-height restoration does not become a long reverse sweep.
+        # With the approach axis vertical, withdrawal has no horizontal sweep.
         disengage_rise = min(0.03, retracted[2] - pushed[2])
-        disengaged = pushed + disengage_rise * (np.array([0, 0, 1]) - direction)
+        disengaged = pushed + np.array([0, 0, disengage_rise])
         retracted[:2] = disengaged[:2]
         result["disengage_tcp"] = disengaged.tolist()
         result["disengage_displacement"] = (disengaged - pushed).tolist()
         result["requested_retract_m"] = float(retract)
         result["retract_m"] = float(retracted[2] - pushed[2])
         result["retract_tcp"] = retracted.tolist()
-        # End the vertical descent behind the contact region, then insert
-        # along TCP +X. This avoids a transverse sweep of tilted fingers.
-        push_entry = precontact + clearance * (np.array([0, 0, 1]) - direction)
+        # All approach-gap travel occurs at the elevated route height.
+        # Align above XYZ before the purely vertical descent. Standoff now
+        # offsets only the elevated approach waypoint, never the low stroke.
+        push_entry = precontact.copy()
+        push_entry[2] = transit[2]
         transit[:2] = push_entry[:2]
+        transit[:2] -= standoff * direction[:2]
         result["push_entry_tcp"] = push_entry.tolist()
         result["push_entry_displacement"] = (precontact - push_entry).tolist()
+        result["contact_path_xy_m"] = float(np.linalg.norm(displacement))
         points.extend([push_entry, precontact, pushed, disengaged, retracted])
     if not all(bounded_point(p) for p in points):
         raise ValueError("a requested waypoint is outside the supported workspace")
@@ -645,8 +645,8 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
             raise ValueError("invalid approach or open axis")
         rotation = tool_rotation(approach, opening, pose[:3, :3])
     elif command == "checked_push":
-        # TCP +X is the approach axis; aim 45 degrees down along the push.
-        approach = (direction + [0, 0, -1]) / np.sqrt(2)
+        # TCP +X points down, preventing tilted-finger forward insertion.
+        approach = np.array([0., 0., -1.])
         across = np.array([-direction[1], direction[0], 0])
         candidates = [np.column_stack((approach, sign * across,
                       np.cross(approach, sign * across))) for sign in (1, -1)]
@@ -695,7 +695,7 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
         available()
         api.set_gripper(arm, value)
         result["gripper_command"] = value
-        if command == "checked_place" and value == 1.0:
+        if command in ("checked_place", "checked_push") and value == 1.0:
             result["released"] = True
         result["stages"].append({"stage": "open" if value else "close"})
         available()
@@ -703,22 +703,90 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
     if command == "checked_push":
         result.update(contact_verified=False, displacement_verified=False,
                       push_from_tcp=goal.tolist(), push_to_tcp=pushed.tolist())
+        initially_open = arm.gripper() >= 0.99
         if travel[2] > pose[2, 3] + 0.001:
-            move("raise", travel, pose[:3, :3])
+            try:
+                move("raise", travel, pose[:3, :3])
+            except Stop:
+                if not result["stages"]:
+                    raise
+                feedback = result["stages"][-1].get("motion_feedback", {})
+                reached = np.asarray(arm.tcp(), dtype=float)
+                # An open, already downward hand may be above the required
+                # route before this command. An atomic IK rejection of the
+                # extra source rise need not force abandonment of a short
+                # stroke. Never relax a requested clearance or rotate a
+                # tilted hand at this lower height. This is not an obstacle map.
+                if not (result["plan_fail_reason"] == "ik_unreachable"
+                        and not api.over and arm.gripper() >= 0.99
+                        and not feedback.get("workspace_limited") and not feedback.get("clipped")
+                        and np.isfinite(reached).all()
+                        and np.linalg.norm(reached[:3, 3] - pose[:3, 3]) <= 0.001
+                        and np.linalg.norm(reached[:3, :3] - pose[:3, :3]) <= 0.01
+                        and np.linalg.norm(rotation - pose[:3, :3]) <= 0.08
+                        and pose[2, 3] >= goal[2] + max(clearance, 0.08) + tolerance):
+                    raise
+                result["push_height_recovery"] = {
+                    "attempted": True, "original_reason": "ik_unreachable",
+                    "rejected_transit_z": float(travel[2]),
+                    "contact_clearance_m": float(pose[2, 3] - goal[2])}
+                travel[2] = transit[2] = push_entry[2] = pose[2, 3]
+                retracted[2] = max(pushed[2] + retract, transit[2])
+                result.update(transit_z=float(transit[2]), departure_rise_m=0.0,
+                              retract_m=float(retracted[2] - pushed[2]),
+                              retract_tcp=retracted.tolist(), push_entry_tcp=push_entry.tolist(),
+                              push_entry_displacement=(precontact - push_entry).tolist())
         if np.linalg.norm(rotation - pose[:3, :3]) > 0.02:
             move("orient", np.asarray(arm.tcp())[:3, 3].copy(), rotation)
         if arm.gripper() > 0.01:
             grip(0.0)
-        move("approach", transit, rotation)
+        approach_origin = np.asarray(arm.tcp(), dtype=float).copy()
+        try:
+            move("approach", transit, rotation)
+        except Stop:
+            feedback = result["stages"][-1].get("motion_feedback", {})
+            reached = np.asarray(arm.tcp(), dtype=float)
+            # Undo only the extra departure rise, after orientation is complete.
+            # Never descend below the initial source height or the contact
+            # clearance margin. No second recovery after a rejected rise.
+            lower_z = max(pose[2, 3], goal[2] + max(clearance, 0.08) + tolerance)
+            if not (result["plan_fail_reason"] == "ik_unreachable"
+                    and initially_open and not api.over
+                    and "push_height_recovery" not in result
+                    and not feedback.get("workspace_limited") and not feedback.get("clipped")
+                    and np.isfinite(reached).all()
+                    and np.linalg.norm(reached[:3, 3] - approach_origin[:3, 3]) <= 0.001
+                    and np.linalg.norm(reached[:3, :3] - approach_origin[:3, :3]) <= 0.01
+                    and np.linalg.norm(reached[:3, :3] - rotation) <= 0.08
+                    and lower_z < reached[2, 3] - 0.01):
+                raise
+            result["push_approach_recovery"] = {
+                "attempted": True, "original_reason": "ik_unreachable",
+                "rejected_transit_z": float(transit[2]),
+                "source_height_floor": float(pose[2, 3]),
+                "contact_clearance_m": float(lower_z - goal[2])}
+            lower = reached[:3, 3].copy()
+            lower[2] = lower_z
+            move("lower_route", lower, rotation)
+            travel[2] = transit[2] = push_entry[2] = lower_z
+            retracted[2] = max(pushed[2] + retract, lower_z)
+            result.update(transit_z=float(lower_z),
+                          retract_m=float(retracted[2] - pushed[2]),
+                          retract_tcp=retracted.tolist(), push_entry_tcp=push_entry.tolist(),
+                          push_entry_displacement=(precontact - push_entry).tolist())
+            move("approach_retry", transit, rotation)
         if np.linalg.norm(transit - push_entry) > 0.001:
             move("entry", push_entry, rotation)
         move("precontact", precontact, rotation)
-        # Include the gap separately from the requested post-contact travel.
+        # The entire horizontal stroke at contact height is capped.
         move("push", pushed, rotation)
         move("disengage", disengaged, rotation)
         if np.linalg.norm(retracted - disengaged) > 0.001:
             move("retract", retracted, rotation)
-        result["verification"] = "TCP travel only; inspect visible displacement and rotation. Hand stays closed."
+        grip(1.0)
+        result["verification"] = ("One bounded TCP stroke only, followed by retreat and commanded opening; "
+                                  "contact and object displacement are unverified. "
+                                  "Fresh geometry is required for another correction.")
     elif command == "checked_pull":
         result.update(grasp_verified=False, contact_verified=False)
         reference = None
@@ -806,7 +874,7 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
         if verify_radius:
             observation = None
             try:
-                observation = api.observe()
+                observation = initial_observation if initial_observation is not None else api.observe()
                 result["source_check"] = source_evidence(observation, goal, verify_radius)
             except Exception as exc:
                 result["source_check"]["detail"] = str(exc)
@@ -948,6 +1016,7 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
                 result.update(plan_ok=False, plan_fail_reason=failure)
             raise
         grip(0.0)
+        lift_start = np.asarray(arm.tcp(), dtype=float)[:3, 3].copy()
         move("lift", lifted, rotation)
         result["verification"] = "Inspect the new observation; commanded closure does not prove a grasp."
         if reference is not None:
@@ -970,6 +1039,19 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
                 result["lift_gate_reason"] = "translated_region_visibly_empty"
                 result["verification"] = "Lift unconfirmed: most predicted surface samples are visibly empty; hand stays closed at the withdrawal pose."
                 stop("lift_motion_unconfirmed")
+        if rgb_reference is not None:
+            try:
+                displacement = np.asarray(arm.tcp(), dtype=float)[:3, 3] - lift_start
+                evidence = rgb_geometry.lift_motion(
+                    rgb_reference, api.observe(), displacement, goal, verify_radius)
+            except Exception as exc:
+                evidence = {"status": "unavailable", "translated_surface_observed": False,
+                            "detail": str(exc)}
+            result["lift_check"] = evidence
+            if not evidence.get("translated_surface_observed", False):
+                result["verification"] = "RGB lift check is inconclusive; stopped closed before transport."
+                stop("rgb_lift_unconfirmed")
+            result["verification"] = "Selected RGB features are consistent with measured lift; retention and uprightness are not certified."
     else:
         if arm.gripper() > 0.01:
             stop("gripper_not_commanded_closed")
@@ -984,6 +1066,21 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
             result["carry_reference_detail"] = str(exc)
 
         def check_carry(stage):
+            if rgb_carry_reference is not None:
+                # Keep the original selected surface and measured point for all
+                # checks. Rebasing after a slip could silently select the hand.
+                displacement = np.asarray(arm.tcp())[:3, 3] - rgb_carry_origin
+                try:
+                    evidence = rgb_geometry.lift_motion(rgb_carry_reference, api.observe(),
+                                                        displacement, carry_point, verify_radius)
+                except Exception as exc:
+                    evidence = {"status": "unavailable", "translated_surface_observed": False,
+                                "detail": str(exc)}
+                result["carry_checks"].append({"stage": stage, **evidence})
+                if not evidence.get("translated_surface_observed", False):
+                    result["verification"] = "Selected RGB patch motion unconfirmed; stopped closed before release."
+                    stop("rgb_carry_unconfirmed")
+                return
             # Track the initial visible patch in the unchanged TCP orientation.
             # Missing/occluded evidence cannot establish that a payload was lost.
             if carry_points is None:
@@ -1002,6 +1099,8 @@ def execute(api, command, args, result, *, preflight=False, initial_pose=None, d
 
         if travel[2] > pose[2, 3] + 0.001:
             move("raise", travel, rotation)
+            if rgb_carry_reference is not None and travel[2] - pose[2, 3] >= .08 - 1e-9:
+                check_carry("after_raise")
             # A low initial patch can contain support geometry or precede
             # payload settling during ascent. Rebase at the elevated pose,
             # before horizontal transport, without changing evidence gates.
@@ -1096,7 +1195,7 @@ def transfer(api, args, result):
                                      args.get("open", "x"), projected[:3, :3])
     rise = max(number(args, "lift", 0.05), 0.08)
     projected[:3, 3] = [number(args, k) for k in "xyz"]
-    projected[:3, 3] += [0, -rise if args.get("approach", "down") == "down45" else 0, rise]
+    projected[:3, 3] += [0, 0, rise]
     execute(api, "checked_place", place_args, {}, preflight=True, initial_pose=projected,
             departure_origin_z=number(args, "z"))
     for phase, command, values in (("pick", "checked_pick", args),
@@ -1146,8 +1245,8 @@ def transfer(api, args, result):
 def run(api, command, args, *, departure_origin_z=None):
     result = {"plan_ok": False, "plan_fail_reason": None, "stages": []}
     try:
-        if command == "surface_box":
-            return measure(api.observe(), args), 0
+        if command in ("surface_box", "pixel_point", "plane_segment"):
+            return rgb_geometry.measure(api.observe(), command, args), 0
         if command == "checked_transfer":
             transfer(api, args, result)
             return result, 0

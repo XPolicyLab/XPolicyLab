@@ -1,101 +1,86 @@
-"""Observation-only segment geometry on a caller-selected supporting plane."""
+"""Measure one elongated object lying on the table from two picked end pixels: snap to the object in the image,
+measure its body radius from the silhouette width (or take the caller's measured --radius), then intersect the camera
+rays with the table plane raised by that radius. No depth fit, no size prior: a missing width fails."""
+import importlib.util
+import os
+
 import numpy as np
+
+_spec = importlib.util.spec_from_file_location("roboshell_segkit_loader", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "segkit", "loader.py"))
+_loader = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_loader)
+kit = _loader.load("segkit")
 
 TOOL = {"name": "segment_measure", "commands": [{
     "name": "segment_measure", "budget": False,
-    "help": "Measure a supported segment from image selections and calibrated depth",
+    "help": "Measure an elongated object on the table from two picked end pixels (no motion)",
     "args": [
-        *[{"name": k, "type": "str", "required": True} for k in ("a", "b", "surface")],
-        {"name": "radius", "type": "float", "required": True},
-        {"name": "camera", "type": "str", "default": "head",
-         "choices": ["head", "wrist_l", "wrist_r"]},
+        {"name": "a", "type": "str", "required": True, "help": "u,v pixel of end A"},
+        {"name": "b", "type": "str", "required": True, "help": "u,v pixel of end B"},
+        {"name": "camera", "type": "str", "default": "head", "choices": ["head", "wrist_l", "wrist_r"]},
+        {"name": "radius", "type": "float", "default": 0.0, "help": "metres, measured by the caller; 0 = measure it from the silhouette width in this image"},
+        {"name": "snap", "type": "int", "default": 1, "choices": [0, 1]},
     ]}]}
-SOURCES = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
 
 
-def pixels(value, minimum, maximum):
-    uv = np.array([[float(x) for x in pair.split(',')] for pair in value.split(';')])
-    if (uv.ndim != 2 or uv.shape[1] != 2 or not minimum <= len(uv) <= maximum
-            or not np.isfinite(uv).all() or len(np.unique(uv, axis=0)) != len(uv)):
-        raise ValueError("expected distinct finite u,v pixel pairs separated by semicolons")
+def pixel(text):
+    uv = np.asarray([float(x) for x in str(text).split(",")], dtype=float)
+    if uv.shape != (2,) or not np.isfinite(uv).all():
+        raise ValueError("pixels are u,v")
     return uv
-
-
-def measure(depth, camera, ends, surface, radius):
-    radius = float(radius)
-    if not np.isfinite(radius) or not .001 <= radius <= .025:
-        raise ValueError("radius must be .001–.025 meters")
-    depth = np.asarray(depth, dtype=float)
-    k = np.asarray(camera['intrinsics'], dtype=float)
-    t = np.asarray(camera['extrinsics_world'], dtype=float)
-    if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
-            or not np.isfinite(k).all() or not np.isfinite(t).all()
-            or k[0, 0] <= 0 or k[1, 1] <= 0
-            or not np.allclose(k[2], [0, 0, 1])
-            or not np.allclose(t[3], [0, 0, 0, 1])
-            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)
-            or not np.isclose(np.linalg.det(t[:3, :3]), 1, atol=1e-3)):
-        raise ValueError("invalid depth or camera calibration")
-    h, w = depth.shape
-    uv = np.vstack((ends, surface))
-    if (not np.isfinite(uv).all() or np.any(uv < 0)
-            or np.any(uv[:, 0] > w-1) or np.any(uv[:, 1] > h-1)):
-        raise ValueError("pixel outside image")
-    sample = np.rint(surface).astype(int)
-    if len(np.unique(sample, axis=0)) != len(sample):
-        raise ValueError("surface samples resolve to duplicate pixels")
-    # Require interpolation, not an extrapolation from a distant surface.
-    for end in ends:
-        angles = np.sort(np.arctan2(sample[:, 1]-end[1], sample[:, 0]-end[0]))
-        if np.max(np.diff(np.r_[angles, angles[0]+2*np.pi])) >= np.pi-1e-4:
-            raise ValueError("surface samples must surround both selected ends")
-    z = depth[sample[:, 1], sample[:, 0]]
-    if not np.isfinite(z).all() or np.any(z <= 0):
-        raise ValueError("missing surface depth")
-    inv = np.linalg.inv(k)
-    local = np.column_stack((sample, np.ones(len(sample)))) @ inv.T
-    world = (local * (z/local[:, 2])[:, None]) @ t[:3, :3].T + t[:3, 3]
-    center = world.mean(axis=0)
-    _, singular, vt = np.linalg.svd(world-center, full_matrices=False)
-    if singular[1]/np.sqrt(len(world)) < .01 or singular[1]/singular[0] < .1:
-        raise ValueError("surface samples are too narrow or collinear")
-    normal = vt[-1]
-    if normal[2] < 0:
-        normal = -normal
-    residual = float(np.max(np.abs((world-center) @ normal)))
-    tilt = float(np.degrees(np.arccos(np.clip(normal[2], -1, 1))))
-    if residual > .002 or tilt > 10:
-        raise ValueError("surface must be planar within .002 m and horizontal within 10 degrees")
-    rays = np.column_stack((ends, np.ones(2))) @ inv.T @ t[:3, :3].T
-    denominators = rays @ normal
-    if np.any(np.abs(denominators)/np.linalg.norm(rays, axis=1) < .15):
-        raise ValueError("view is too oblique")
-    distances = ((center-t[:3, 3]) @ normal + radius)/denominators
-    if np.any(distances <= 0):
-        raise ValueError("intersection behind camera")
-    xyz = t[:3, 3] + distances[:, None]*rays
-    length = float(np.linalg.norm(xyz[1]-xyz[0]))
-    if not .06 <= length <= .30:
-        raise ValueError("measured segment length must be .06–.30 m")
-    return {"a": xyz[0].tolist(), "b": xyz[1].tolist(),
-            "a_arg": ','.join(f'{v:.5f}' for v in xyz[0]),
-            "b_arg": ','.join(f'{v:.5f}' for v in xyz[1]),
-            "length_m": length, "radius_m": radius, "normal": normal.tolist(),
-            "max_residual_m": residual, "tilt_deg": tilt,
-            "selection_verified": False}
 
 
 def run(api, command, args):
     try:
-        if command != 'segment_measure':
-            raise ValueError("unknown command")
-        ends = np.vstack((pixels(args['a'], 1, 1), pixels(args['b'], 1, 1)))
-        surface = pixels(args['surface'], 4, 32)
-        source = SOURCES[args.get('camera', 'head')]
+        camera = args.get("camera", "head")
+        a_uv, b_uv = pixel(args["a"]), pixel(args["b"])
+        kit.use_table(api)                      # raises ValueError("table_unknown: ...")
         observation = api.observe()
-        result = measure(observation['depth'][source], observation['cameras'][source],
-                         ends, surface, args['radius'])
-        return dict(result, plan_ok=True, plan_fail_reason=None), 0
+        img, k, t = kit.view(observation, camera)
+        snapped = int(args.get("snap", 1)) == 1
+        if snapped:
+            snap = kit.snap_segment(img, a_uv, b_uv)
+            if np.linalg.norm(snap["a_uv"] - a_uv) > 25 or np.linalg.norm(snap["b_uv"] - b_uv) > 25:
+                raise ValueError("the object found along the picked line ends more than 25 px from the picks: pick again or --snap 0")
+            a_uv, b_uv, width_px, ends, contrast = snap["a_uv"], snap["b_uv"], snap["width_px"], snap["end_width_px"], snap["contrast"]
+        else:
+            width_px, ends, contrast = float("nan"), None, None
+        mid = (a_uv + b_uv) / 2
+        mpp = kit.metres_per_pixel(k, t, mid, kit.TABLE_Z)
+        width = width_px * mpp if np.isfinite(width_px) else float("nan")
+        radius = float(args.get("radius") or 0.0)
+        if radius > 0:
+            radius_source = "supplied"
+        else:
+            if not np.isfinite(width_px):
+                raise ValueError("no body width was measured (--snap 0, or no body found across the line): pick the ends "
+                                 "again with --snap 1, or pass --radius measured from the image")
+            radius = kit.radius_from_silhouette(k, t, a_uv, b_uv, width_px, kit.TABLE_Z)
+            radius_source = "silhouette"
+        radius = kit.measured_radius(radius)
+        a, b = kit.hit_plane(k, t, np.array([a_uv, b_uv]), kit.TABLE_Z + radius)
+        if not np.isfinite([a, b]).all():
+            raise ValueError("a picked pixel does not look at the table")
+        length = float(np.linalg.norm(b - a))
+        colour = kit.colour_name(kit.line_colour(img, a_uv, b_uv))
+        out = {"a": np.round(a, 4).tolist(), "b": np.round(b, 4).tolist(),
+               "a_arg": ",".join(f"{v:.4f}" for v in a), "b_arg": ",".join(f"{v:.4f}" for v in b),
+               "a_uv": np.round(a_uv, 1).tolist(), "b_uv": np.round(b_uv, 1).tolist(), "camera": camera,
+               "length_m": round(length, 4), "width_m": None if not np.isfinite(width) else round(float(width), 4),
+               "radius_m": round(radius, 4), "radius_source": radius_source, "uncertainty_m": round(1.5 * mpp + 0.003, 4), "colour": colour,
+               "snapped": snapped, "contrast": None if contrast is None else round(float(contrast), 1),
+               "end_width_px": None if ends is None else {k_: round(v, 1) for k_, v in ends.items()},
+               "selection_verified": False}
+        ratio = kit.depth_above_plane(kit.depth_of(observation, camera), k, t, a, b)
+        if ratio is not None:
+            out["depth_ratio"] = round(ratio, 3)       # scale-free: depth vs the table beside it, minus 1 (only with a depth array)
+        out.update(kit.table_report())
+        if not kit.SEGMENT_LENGTH_VALID[0] <= length <= kit.SEGMENT_LENGTH_VALID[1]:
+            out.update(plan_ok=False, plan_fail_reason="length_out_of_range", failure_class="length_out_of_range",
+                       plan_detail=f"{length:.3f} m is outside {kit.SEGMENT_LENGTH_VALID[0]:.2f}-{kit.SEGMENT_LENGTH_VALID[1]:.2f} m: the picks are not the two ends of one object")
+            return out, 2
+        out.update(plan_ok=True, plan_fail_reason=None)
+        return out, 0
     except Exception as exc:
-        return {"plan_ok": False, "plan_fail_reason": "measurement_failed",
-                "plan_detail": str(exc)}, 2
+        return {"plan_ok": False, "plan_fail_reason": "measurement_failed", "failure_class": "measurement_failed",
+                "plan_detail": str(exc)[:300]}, 2

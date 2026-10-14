@@ -21,8 +21,9 @@ TOOL = {"name": "mate_pair", "commands": [{
              arg("source_axis", "[0,0,-1]"), arg("target_axis", "[0,0,-1]"),
              arg("clearance", 0.015, "float"), arg("depth", 0.0, "float"),
              arg("tolerance", 0.002, "float"),
-             arg("orient_step_deg", 20.0, "float", "Maximum separate rotation increment, 5..45 degrees; 0 selects legacy single motion"),
-             arg("wrist_lift_deg", 0.0, "float", "Allowed axis tilt, 0..25 degrees, constrained by feature tolerance; raises wrist"),
+             arg("advance_step", 0.005, "float", "Maximum checked axial increment, 0.001..0.005 meters"),
+             arg("orient_step_deg", 20.0, "float", "Maximum rotation increment, 5..45 degrees; 0 selects automatic bounded 20-degree increments"),
+             arg("wrist_lift_deg", 8.0, "float", "Tilt search permission, 0..25 degrees; effective cap 8 degrees; exact alignment tried first"),
              arg("park_clearance", 0.12, "float", "Minimum calibrated tool-segment separation after parking, 0..0.2 meters"),
              {"name": "compact", "type": "int", "default": 1, "choices": [0, 1]},
              {"name": "correspondence", "default": "ordered", "choices": ["ordered", "either"]},
@@ -67,8 +68,8 @@ def registration(tcp, source, target, source_axis, target_axis, tolerance):
 def reconcile_pair_spacing(source, target, tolerance):
     """Use the measured held-feature spacing while retaining destination midpoint/direction.
 
-    Depth pixels on a narrow destination pair can bias its two endpoints by a
-    millimetre or so.  When that bias is within the caller's geometric
+    Measured endpoints of a narrow destination pair can carry a small
+    independent bias.  When that bias is within the caller's geometric
     tolerance, preserving the source spacing gives the rigid registration a
     physically mateable pair instead of asking both endpoints to stretch.
     """
@@ -137,6 +138,21 @@ def orientation_steps(start, goal, calibration, max_degrees, tolerance):
     return poses
 
 
+def advance_travels(clearance, depth, step):
+    """Checkpoint at the surface before entering; include the exact endpoint.
+
+    Subdivide each side independently so no unchecked segment crosses the
+    surface. The bound is a travel design parameter, not a scene dimension.
+    """
+    travels = []
+    for offset, distance in ((0.0, clearance), (clearance, depth)):
+        if distance > 0:
+            count = max(1, int(np.ceil(distance / step - 1e-12)))
+            travels.extend(offset + distance * np.arange(1, count + 1) / count)
+            travels[-1] = offset + distance
+    return travels
+
+
 def descent_steps(start, goal):
     """Bound fixed-orientation approach travel; never retry a missed waypoint."""
     distance = float(np.linalg.norm(goal[:3, 3] - start[:3, 3]))
@@ -188,6 +204,18 @@ def elevated_transfer_goal(start, hover, axis):
     descent = max(0.0, float((hover[:3, 3] - start[:3, 3]) @ unit(axis)))
     result[:3, 3] -= unit(axis) * descent
     return result, descent
+
+
+def parking_approach_clearance(initial, goal, axis, clearance, compact, orient_step):
+    """Include the elevated endpoint and axial descent in the parking sweep."""
+    angle = np.arccos(np.clip((np.trace(
+        initial[:3, :3].T @ goal[:3, :3]) - 1) / 2, -1, 1))
+    if compact and orient_step and angle > np.deg2rad(20):
+        hover = goal.copy()
+        hover[:3, 3] -= unit(axis) * clearance
+        _, descent = elevated_transfer_goal(initial, hover, axis)
+        return clearance + descent
+    return clearance
 
 
 def lift_wrist(goal, target, axis, tcp_to_ee, degrees, tolerance, depth=0.0):
@@ -249,7 +277,7 @@ def segment_distance(a, b, c, d):
 
 def parking_pose(other_tcp, other_calibration, goal, calibration, axis,
                  clearance, depth, margin):
-    """Bound proximity over the final axial sweep; no full-body collision claim.
+    """Bound proximity over the supplied axial sweep; no full-body collision claim.
 
     Distance is 1-Lipschitz under translation, so subtracting half the sampling
     interval gives a conservative lower bound between sampled axial poses.
@@ -338,10 +366,18 @@ def run(api, command, args):
         clearance = float(args.get("clearance", 0.015))
         depth = float(args.get("depth", 0.0))
         tol = float(args.get("tolerance", 0.002))
+        advance_step = float(args.get("advance_step", 0.005))
+        if not np.isfinite(advance_step) or not .001 <= advance_step <= .005:
+            raise ValueError("advance_step must be 0.001..0.005 meters")
         orient_step = float(args.get("orient_step_deg", 20.0))
         if not np.isfinite(orient_step) or not (orient_step == 0 or 5 <= orient_step <= 45):
             raise ValueError("orient_step_deg must be 0 or 5..45")
-        wrist_lift = float(args.get("wrist_lift_deg", 0.0))
+        # Zero used to disable not just rotation subdivision, but also route
+        # preflight, endpoint selection and elevated transport. Resolve it
+        # before any route decisions so it cannot select an unchecked path.
+        orient_step = orient_step or 20.0
+        geometry['effective_orient_step_deg'] = orient_step
+        wrist_lift = float(args.get("wrist_lift_deg", 8.0))
         park_clearance = float(args.get("park_clearance", 0.12))
         if not np.isfinite(park_clearance) or not 0 <= park_clearance <= .2:
             raise ValueError("park_clearance must be 0..0.2 meters")
@@ -349,6 +385,14 @@ def run(api, command, args):
             raise ValueError("wrist_lift_deg must be 0..25 degrees")
         if not np.isfinite([clearance, depth, tol]).all() or not (0 <= clearance <= 0.08 and 0 <= depth <= 0.03 and 0.0005 <= tol <= 0.005):
             raise ValueError("clearance 0..0.08, depth 0..0.03, tolerance 0.0005..0.005 meters required")
+        # Eight degrees is a design limit, leaving two degrees for tracking
+        # under the required ten-degree final-axis bound. It is not a scene size.
+        tilt_permission = min(wrist_lift, 8.0)
+        geometry['wrist_lift_permission_deg'] = wrist_lift
+        geometry['wrist_lift_limit_deg'] = tilt_permission
+        # Automatic recovery is available only with read-only route planning.
+        # Never spend the permission merely because it was supplied.
+        wrist_lift = 0.0
         arm = api.arm(args["arm"])
         mode = args.get("correspondence", "ordered")
         park = args.get("park_other", 1)
@@ -443,45 +487,84 @@ def run(api, command, args):
             exchanged = True
             return adjusted_goal(target)
 
-        # Check the entire large coordinated route before parking or transport.
+        # Check the entire compact route before parking or transport.
         # Numerical planning rejection must not strand the held body halfway.
         # Older APIs without a planner retain the checked execution path.
         geometry['preflight_available'] = callable(getattr(api, 'planner', None))
         if compact and orient_step and geometry['preflight_available']:
             attempts = []
-            for candidate_index in range(2 if mode == 'either' else 1):
-                hover_check = goal.copy()
-                hover_check[:3, 3] -= ta * clearance
-                angle_check = np.arccos(np.clip((np.trace(
-                    initial[:3, :3].T @ goal[:3, :3]) - 1) / 2, -1, 1))
-                if angle_check <= np.deg2rad(20):
+            preferred_target = target.copy()
+            preferred_order = correspondence
+            selected = False
+            # Search in increasing permission, trying BOTH exact correspondences
+            # before any tilt. Include a caller's fractional final bound.
+            tilt_limits = [0.0] + list(np.arange(2.0, tilt_permission, 2.0))
+            if tilt_permission > 0:
+                tilt_limits.append(tilt_permission)
+            for tilt_limit in tilt_limits:
+                wrist_lift = tilt_limit
+                target = preferred_target.copy()
+                correspondence = preferred_order
+                goal = adjusted_goal(target)
+                for candidate_index in range(2 if mode == 'either' else 1):
+                    hover_check = goal.copy()
+                    hover_check[:3, 3] -= ta * clearance
+                    angle_check = np.arccos(np.clip((np.trace(
+                        initial[:3, :3].T @ goal[:3, :3]) - 1) / 2, -1, 1))
+                    route = []
+                    if angle_check <= np.deg2rad(20):
+                        # Match execution's small-angle combination gate. If
+                        # it cannot combine, check the separate orientation
+                        # increments too, including zero-translation cases.
+                        local_check = (source - initial[:3, 3]) @ initial[:3, :3]
+                        end_check = local_check @ hover_check[:3, :3].T + hover_check[:3, 3]
+                        sagitta_check = float(np.linalg.norm(local_check, axis=1).max()
+                                              * (1 - np.cos(angle_check / 2)))
+                        heights_check = -(np.concatenate((source, end_check))
+                                          - target.mean(axis=0)) @ ta
+                        combine_check = (1e-4 < angle_check
+                            and np.linalg.norm(hover_check[:3, 3] - initial[:3, 3]) > tol
+                            and float(heights_check.min()) >= tol + sagitta_check)
+                        rotate_check = initial.copy()
+                        rotate_check[:3, :3] = goal[:3, :3]
+                        if not combine_check and not np.allclose(
+                                rotate_check[:3, :3], initial[:3, :3], atol=1e-4):
+                            route.extend(orientation_steps(initial, rotate_check,
+                                                           calibration, orient_step, tol))
+                        route.append(hover_check)
+                        gap_check = tol  # Separate route retains execution's checks.
+                    else:
+                        elevated, descent_check = elevated_transfer_goal(initial, hover_check, ta)
+                        local_check = (source - initial[:3, 3]) @ initial[:3, :3]
+                        route, gap_check = transfer_steps(initial, elevated, calibration, local_check,
+                            initial[:3, :3].T @ unit(sa), target.mean(axis=0), ta,
+                            depth, orient_step, tol)
+                        if gap_check < tol:
+                            report = dict(plan_ok=False, plan_fail_reason='unsafe_transfer_plane')
+                        elif descent_check > 1e-8:
+                            route.extend(descent_steps(elevated, hover_check))
+                    if gap_check >= tol:
+                        for travel in advance_travels(clearance, depth, advance_step):
+                            endpoint = hover_check.copy()
+                            endpoint[:3, 3] += ta * travel
+                            route.append(endpoint)
+                        report = preflight_path(api, arm, route)
+                    attempts.append(dict(correspondence=correspondence,
+                        tilt_limit_deg=tilt_limit,
+                        wrist_lift_applied_deg=geometry['wrist_lift_applied_deg'], **report))
+                    geometry['preflight_attempts'] = attempts
+                    if report['plan_ok']:
+                        geometry['kinematic_path_preflight_passed'] = True
+                        selected = True
+                        break
+                    if candidate_index == 0 and mode == 'either':
+                        goal = exchange_goal()
+                if selected:
+                    geometry['wrist_lift_selected_limit_deg'] = tilt_limit
                     break
-                elevated, descent_check = elevated_transfer_goal(initial, hover_check, ta)
-                local_check = (source - initial[:3, 3]) @ initial[:3, :3]
-                route, gap_check = transfer_steps(initial, elevated, calibration, local_check,
-                    initial[:3, :3].T @ unit(sa), target.mean(axis=0), ta,
-                    depth, orient_step, tol)
-                if gap_check < tol:
-                    report = dict(plan_ok=False, plan_fail_reason='unsafe_transfer_plane')
-                else:
-                    if descent_check > 1e-8:
-                        route.extend(descent_steps(elevated, hover_check))
-                    for travel in np.linspace(0, clearance + depth,
-                            int(np.ceil((clearance + depth) / .002)) + 1)[1:]:
-                        endpoint = hover_check.copy()
-                        endpoint[:3, 3] += ta * travel
-                        route.append(endpoint)
-                    report = preflight_path(api, arm, route)
-                attempts.append(dict(correspondence=correspondence, **report))
-                geometry['preflight_attempts'] = attempts
-                if report['plan_ok']:
-                    geometry['kinematic_path_preflight_passed'] = True
-                    break
-                if candidate_index == 0 and mode == 'either':
-                    goal = exchange_goal()
-                else:
-                    raise RuntimeError('preflight_unreachable; no motion attempted; '
-                                       'no complete coordinated route passed IK/plane checks')
+            if not selected:
+                raise RuntimeError('preflight_unreachable; no motion attempted; '
+                                   'no complete coordinated route passed IK/plane checks')
 
         # Clear a stale setpoint before moving the other arm: hold() otherwise
         # continues pushing toward the endpoint of an earlier blocked move.
@@ -519,9 +602,12 @@ def run(api, command, args):
                     raise ValueError("parking clearance requires calibrated TCP-to-end-link transforms")
                 other_calibration = array(other.tcp_to_ee, (4, 4))
                 goal = adjusted_goal(target)
+                parking_extent = parking_approach_clearance(
+                    initial, goal, ta, clearance, compact, orient_step)
+                geometry['parking_approach_clearance_m'] = parking_extent
                 parking, before_gap, after_gap = parking_pose(
                     other.tcp(), other_calibration, goal, calibration, ta,
-                    clearance, depth, park_clearance)
+                    parking_extent, depth, park_clearance)
                 geometry.update(parking_segment_gap_before_m=before_gap,
                                 parking_segment_gap_planned_m=after_gap,
                                 whole_arm_clearance_verified=False)
@@ -552,7 +638,7 @@ def run(api, command, args):
                     goal = adjusted_goal(target)
                     _, measured_gap, _ = parking_pose(
                         other.tcp(), other_calibration, goal, calibration, ta,
-                        clearance, depth, 0)
+                        parking_approach_clearance(initial, goal, ta, clearance, compact, orient_step), depth, 0)
                     geometry['parking_segment_gap_measured_m'] = measured_gap
                     if measured_gap < park_clearance - tol:
                         raise RuntimeError("other arm measured clearance insufficient")
@@ -562,7 +648,8 @@ def run(api, command, args):
         def check_other_clearance(pose):
             if park and park_clearance:
                 _, gap, _ = parking_pose(other.tcp(), other_calibration, pose,
-                                         calibration, ta, clearance, depth, 0)
+                                         calibration, ta, parking_approach_clearance(
+                                             initial, pose, ta, clearance, compact, orient_step), depth, 0)
                 if gap < park_clearance - tol:
                     raise RuntimeError("other tool too close to selected axial path; stopped before approach")
 
@@ -588,6 +675,7 @@ def run(api, command, args):
             angle = float(np.arccos(np.clip((np.trace(reached[:3, :3].T @ pose[:3, :3]) - 1) / 2, -1, 1)))
             stages.append({"stage": name, "error_m": error, "rotation_error_deg": float(np.degrees(angle)),
                            "plan_ok": planned, "plan_fail_reason": feedback.get("plan_fail_reason"),
+                           "settle_steps": feedback.get("settle_steps"),
                            "plan_detail": feedback.get("plan_detail")})
             local_points = (source - initial[:3, 3]) @ initial[:3, :3]
             current_points = local_points @ reached[:3, :3].T + reached[:3, 3]
@@ -724,8 +812,9 @@ def run(api, command, args):
                 if not orient("orient_reversed", rotate):
                     raise RuntimeError(stages[-1]["plan_fail_reason"] or "motion planning failed")
                 require_move("align_reversed", hover)
-        distance = clearance + depth
-        for travel in np.linspace(0, distance, int(np.ceil(distance / 0.002)) + 1)[1:]:
+        travels = advance_travels(clearance, depth, advance_step)
+        geometry.update(advance_step_m=advance_step, advance_increment_count=len(travels))
+        for travel in travels:
             pose = hover.copy()
             pose[:3, 3] += ta * travel
             require_move("advance", pose)

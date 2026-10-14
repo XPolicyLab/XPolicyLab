@@ -1,9 +1,10 @@
 """Execute explicit surface transfers using robot state only."""
 from types import SimpleNamespace
-import cv2
+import importlib.util
+from pathlib import Path
 import numpy as np
 from roboshell.server import geometry as geo, motion
-from roboshell.server.core import WORKSPACE, tool_rotation
+from roboshell.server.core import WORKSPACE, tool_rotation, GRIPPER_STEPS
 from roboshell.server.motion import time_path
 
 TOOL = {"name": "panel_cycle", "commands": []}
@@ -29,24 +30,11 @@ TOOL["commands"].append({
 
 
 def source_heights(api, sources, z, *, release=False):
-    """Estimate contact medians or conservative release surfaces from depth."""
+    """Estimate local heights from calibrated RGB triangulation; retain Z when sparse."""
     heights = np.full(len(sources), z, dtype=float)
     details = []
     try:
-        obs = api.observe()
-        depth = np.asarray(obs["depth"]["cam_head"], float)
-        camera = obs["cameras"]["cam_head"]
-        intrinsic = np.asarray(camera["intrinsics"], float)
-        transform = np.asarray(camera["extrinsics_world"], float)
-        if (depth.ndim != 2 or intrinsic.shape != (3, 3)
-                or transform.shape != (4, 4) or not np.isfinite(intrinsic).all()
-                or not np.isfinite(transform).all()):
-            raise ValueError("invalid depth or calibration")
-        v, u = np.nonzero(np.isfinite(depth) & (depth > 0))
-        rays = np.linalg.inv(intrinsic) @ np.stack([u, v, np.ones(len(u))])
-        world = transform @ np.vstack([rays * depth[v, u], np.ones(len(u))])
-        valid = np.isfinite(world).all(axis=0) & (np.abs(world[3]) > 1e-9)
-        cloud = (world[:3, valid] / world[3, valid]).T
+        cloud, _ = colored_cloud(api)
         for index, source in enumerate(sources):
             local = cloud[np.linalg.norm(cloud[:, :2] - source, axis=1) <= .004, 2]
             reason = None
@@ -75,6 +63,38 @@ def source_heights(api, sources, z, *, release=False):
                         fallback_reason="observation_unavailable", detail=str(exc)) for source in sources]
         heights[:] = z
     return heights, details
+
+
+_SUPPORT_VIEW = None
+
+
+def support_height_check(api, z):
+    """Reject a clearly submerged request using independent RGB support geometry.
+
+    Sparse local feature matches do not invalidate a measured support plane.
+    The 12 mm allowance is a conservative design tolerance, not a contact Z.
+    Unknown support preserves the existing caller-height fallback.
+    """
+    global _SUPPORT_VIEW
+    try:
+        if _SUPPORT_VIEW is None:
+            spec = importlib.util.spec_from_file_location(
+                '_panel_support_view', Path(__file__).resolve().parents[1]
+                / 'cloth_view' / 'tool.py')
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            _SUPPORT_VIEW = module
+        support_z, provenance = _SUPPORT_VIEW.measured_table_z(api)
+        support_z = float(support_z)
+        if not np.isfinite(support_z):
+            raise ValueError('nonfinite RGB support height')
+        gap = support_z - z
+        return dict(status='below_support' if gap > .012 else 'compatible',
+                    requested_z=float(z), support_z=support_z,
+                    below_support_m=max(0., float(gap)), tolerance_m=.012,
+                    source=provenance)
+    except Exception as exc:
+        return dict(status='unknown', requested_z=float(z), reason=str(exc))
 
 
 def release_height(z, source_depth, target_depth, source_detail, target_detail):
@@ -142,25 +162,15 @@ def carry_points(source, dest, z, clearance):
         yield [float(xy[0]), float(xy[1]), z + lift * height]
 
 
+_rgb_spec = importlib.util.spec_from_file_location(
+    '_panel_rgb_geometry', Path(__file__).with_name('rgb_geometry.py'))
+_rgb = importlib.util.module_from_spec(_rgb_spec)
+_rgb_spec.loader.exec_module(_rgb)
+
+
 def colored_cloud(api):
-    """Calibrated visible points and Lab colors, exclusively from the camera."""
-    obs = api.observe()
-    depth = np.asarray(obs['depth']['cam_head'], float)
-    bgr = cv2.imdecode(np.frombuffer(obs['png']['cam_head'], np.uint8), cv2.IMREAD_COLOR)
-    camera = obs['cameras']['cam_head']
-    intrinsic = np.asarray(camera['intrinsics'], float)
-    transform = np.asarray(camera['extrinsics_world'], float)
-    if (bgr is None or depth.shape != bgr.shape[:2] or intrinsic.shape != (3, 3)
-            or transform.shape != (4, 4) or not np.isfinite(intrinsic).all()
-            or not np.isfinite(transform).all()):
-        raise ValueError('invalid RGB-D calibration')
-    v, u = np.nonzero(np.isfinite(depth) & (depth > 0))
-    rays = np.linalg.inv(intrinsic) @ np.stack([u, v, np.ones(len(u))])
-    world = transform @ np.vstack([rays * depth[v, u], np.ones(len(u))])
-    valid = np.isfinite(world).all(axis=0) & (np.abs(world[3]) > 1e-9)
-    cloud = (world[:3, valid] / world[3, valid]).T
-    colors = cv2.cvtColor(bgr, cv2.COLOR_BGR2LAB)[v, u].astype(float)
-    return cloud, colors[valid]
+    """Sparse 3D points from reciprocal RGB feature matches, not depth images."""
+    return _rgb.colored_cloud(api)
 
 
 def contact_appearance(api, source, height):
@@ -170,10 +180,10 @@ def contact_appearance(api, source, height):
         selected = (radius <= .008) & (np.abs(cloud[:, 2] - height) <= .012)
         local = colors[selected]
         if len(local) < 8:
-            return None
+            return _rgb.image_appearance(api, source, height)
         color = np.median(local, axis=0)
         if np.median(np.linalg.norm(local - color, axis=1)) > 15:
-            return None
+            return _rgb.image_appearance(api, source, height)
         matching_z = cloud[selected, 2][np.linalg.norm(local - color, axis=1) <= 30]
         bounds = np.percentile(matching_z, [10, 90]).tolist()
         # Contrast is required only for negative evidence. An interior patch
@@ -184,31 +194,31 @@ def contact_appearance(api, source, height):
         return dict(color=color.tolist(), allow_negative=allow_negative,
                     source_z_bounds=bounds)
     except Exception:
-        return None
+        return _rgb.image_appearance(api, source, height)
 
 
 def transport_check(api, source, height, tcp, color):
-    """Reject only a visible stationary source with no matching raised points."""
+    """Report matched raised points; sparse nonmatches never prove absence."""
     result = dict(status='unknown', lifted_pixels=0, source_pixels=0)
-    if color is None or tcp[2] - height < .045:
-        return result
+    if color is None:
+        return dict(result, reason='missing_source_appearance')
+    result['appearance_source'] = (color.get('appearance_source', 'rgb_triangulated')
+                                   if isinstance(color, dict) else 'rgb_triangulated')
+    if tcp[2] - height < .045:
+        return dict(result, reason='insufficient_lift')
     try:
-        allow_negative = True
-        if isinstance(color, dict):
-            allow_negative = color['allow_negative']
-            color = np.asarray(color['color'], float)
         cloud, colors = colored_cloud(api)
-        match = np.linalg.norm(colors - color, axis=1) <= 30
+        match = _rgb.appearance_match(colors, color)
         near = np.linalg.norm(cloud[:, :2] - tcp[:2], axis=1) <= .045
         lifted = match & near & (cloud[:, 2] > height + .02) & (cloud[:, 2] > tcp[2] - .06) & (cloud[:, 2] < tcp[2] + .015)
         stationary = match & (np.linalg.norm(cloud[:, :2] - source, axis=1) <= .008) & (np.abs(cloud[:, 2] - height) <= .008)
         result.update(lifted_pixels=int(lifted.sum()), source_pixels=int(stationary.sum()))
         if lifted.sum() >= 6:
             result['status'] = 'visible_transport'
-        elif allow_negative and lifted.sum() == 0 and stationary.sum() >= 8 and near.sum() >= 20:
-            result['status'] = 'no_visible_transport'
+        else:
+            result['reason'] = 'insufficient_raised_matches'
     except Exception:
-        pass
+        result['reason'] = 'observation_unavailable'
     return result
 
 
@@ -232,11 +242,10 @@ def source_recheck(api, source, height, profile):
     if profile is None:
         return dict(result, reason='missing_source_appearance')
     try:
-        color = np.asarray(profile['color'] if isinstance(profile, dict) else profile, float)
         cloud, colors = colored_cloud(api)
         near = ((np.linalg.norm(cloud[:, :2] - source, axis=1) <= .012)
                 & (np.abs(cloud[:, 2] - height) <= .02))
-        match = near & (np.linalg.norm(colors - color, axis=1) <= 30)
+        match = near & _rgb.appearance_match(colors, profile)
         result.update(visible_pixels=int(near.sum()), matching_pixels=int(match.sum()))
         if match.sum() >= 8:
             points = cloud[match]
@@ -260,8 +269,6 @@ def source_recheck(api, source, height, profile):
                     if baseline[0] - bounds[1] > .004:
                         result.update(status='lower_surface_exposed',
                                       reason='matching_color_below_original_surface')
-        elif near.sum() >= 20 and match.sum() == 0:
-            result.update(status='appearance_changed')
         else:
             result['reason'] = 'insufficient_visible_evidence'
     except Exception:
@@ -310,8 +317,17 @@ def _run(api, command, args):
                 raise ValueError("transfer distance must be between .01 and .6 m")
     except (KeyError, TypeError, ValueError, OverflowError):
         return {"plan_ok": False, "plan_fail_reason": "invalid_arguments"}, 2
+    support_check = support_height_check(api, z)
+    if support_check['status'] == 'below_support':
+        return dict(plan_ok=False, plan_fail_reason='requested_height_below_support',
+                    failed_stage='support_height_check', transfers=0, stages=[],
+                    support_height_check=support_check,
+                    plan_detail='Requested Z contradicts the RGB support plane. '
+                    'Remeasure source and destination coordinates together; '
+                    'changing projection height also changes XY.'), 1
     if command == "edge_transfer":
-        return run_paired(api, sources, destinations, z, clearance, edge_points)
+        result, code = run_paired(api, sources, destinations, z, clearance, edge_points)
+        return dict(result, support_height_check=support_check), code
     records = []
     completed = 0
     failure = {}
@@ -453,7 +469,7 @@ def _run(api, command, args):
         destination_heights.append(dict(destination_xy=list(map(float, dest)),
                                         z=target_z,
                                         raised=target_z > z,
-                                        estimator='local_p90',
+                                        estimator='rgb_triangulated_p90',
                                         fallback_reason=target_details[0]['fallback_reason'],
                                         **release_detail))
         # A visible but inconsistent surface is not evidence that the nominal
@@ -492,7 +508,7 @@ def _run(api, command, args):
                     or record.get('contact_settle_steps') != 5
                     or not np.isfinite(residual).all()
                     or not lateral_ok
-                    or not .002 < residual[2] <= .006
+                    or not .002 < residual[2] <= (.010 if approach == 'down' else .006)
                     or record.get('error_deg', 99) > 1.
                     or record.get('settle_translation_m', 99) > .0005):
                 return False
@@ -506,6 +522,14 @@ def _run(api, command, args):
                     np.linalg.norm(residual[:2]) > .001 else 'stable_upward_stall'))
             source_z = adjusted_z
             details[0]['z'] = source_z
+            # With one caller-supplied plane and no destination measurement,
+            # carry the recovered contact floor to release too. Otherwise the
+            # command repeats the same low-height stall at its far endpoint.
+            if not target_details[0].get('refined'):
+                target_z = max(target_z, source_z)
+                destination_heights[-1].update(z=target_z, raised=target_z > z,
+                                               recovered_contact_floor=True)
+                pending_destination[2] = target_z
             failure.clear()
             # Reuse the strict contact validator once; failure never recurses.
             if not move(arm, [source[0], source[1], source_z], 'contact'):
@@ -552,8 +576,10 @@ def _run(api, command, args):
             "transfers": completed, "stages": records, "holding_arm": holding,
             "contact_heights": contact_heights,
             "destination_heights": destination_heights,
+            "support_height_check": support_check,
             "transport_checks": transport_checks,
             "source_rechecks": source_rechecks,
+            "final_outline": final_outline(api) if ok else None,
             "transport_summary": transport_summary(transport_checks, [t[0] for t in transfers]),
             "pending_destination": pending_destination if not ok else None,
             **failure}, 0 if ok else 1
@@ -598,6 +624,21 @@ def plan_pair(api, arms, targets):
     return sequences
 
 
+def final_outline(api, destinations=None):
+    try:
+        spec = importlib.util.spec_from_file_location(
+            '_panel_final_outline', Path(__file__).resolve().parents[1] / 'surface_outline' / 'tool.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        args = {} if destinations is None else dict(
+            ax=float(destinations[0][0]), ay=float(destinations[0][1]),
+            bx=float(destinations[1][0]), by=float(destinations[1][1]))
+        result, _ = module.run(api, 'surface_outline', args)
+        return result
+    except Exception as exc:
+        return dict(plan_ok=False, plan_fail_reason='perception_unavailable', plan_detail=str(exc))
+
+
 def run_paired(api, sources, destinations, z, clearance, edge_points):
     arms = [api.arm(tag) for tag in ('left', 'right')]
     records, failure = [], {}
@@ -616,7 +657,7 @@ def run_paired(api, sources, destinations, z, clearance, edge_points):
     target_heights = np.maximum(target_heights, z)
     destination_heights = [dict(destination_xy=list(map(float, dest)),
                                 z=float(height), raised=bool(height > z),
-                                estimator='local_p90',
+                                estimator='rgb_triangulated_p90',
                                 fallback_reason=detail['fallback_reason'])
                            for dest, height, detail in
                            zip(destinations, target_heights, target_details)]
@@ -678,9 +719,16 @@ def run_paired(api, sources, destinations, z, clearance, edge_points):
             result.append(pose)
         return result
 
-    def grip(arm, value, label):
-        if api.over or not api.set_gripper(arm, value) or api.over:
-            failure.update(plan_fail_reason='episode_over', failed_stage=label, failed_arm=arm.tag)
+    def grip_pair(value, label):
+        # EpisodeAPI.set_gripper uses this same public arm target plus hold.
+        # Set BOTH targets before advancing physics, avoiding a one-sided dwell.
+        if api.over:
+            failure.update(plan_fail_reason='episode_over', failed_stage=label)
+            return False
+        for arm in arms:
+            arm.gripper_target = float(value)
+        if not api.hold(GRIPPER_STEPS) or api.over:
+            failure.update(plan_fail_reason='episode_over', failed_stage=label)
             return False
         return True
 
@@ -703,18 +751,15 @@ def run_paired(api, sources, destinations, z, clearance, edge_points):
                            failed_stage='destination_depth',
                            failed_arm=uncertain[0], failed_arms=uncertain)
             return False
-        for arm in arms:
-            if arm.gripper() < .999 and not grip(arm, 1., 'open'):
-                return False
+        if any(arm.gripper() < .999 for arm in arms) and not grip_pair(1., 'open'):
+            return False
         if not stage(poses([[*s, h + clearance] for s, h in zip(sources, heights)]), 'approach'):
             return False
         if not stage(poses([[*s, h] for s, h in zip(sources, heights)]), 'contact'):
             return False
-        for arm in arms:
-            # Mark possible closure even if the primitive ends the episode.
-            holding = 'both' if holding else arm.tag
-            if not grip(arm, 0., 'close'):
-                return False
+        holding = 'both'
+        if not grip_pair(0., 'close'):
+            return False
         points = list(edge_points(sources, destinations, z, clearance))
         retreats = {}
         for index, pair in enumerate(points):
@@ -748,11 +793,9 @@ def run_paired(api, sources, destinations, z, clearance, edge_points):
                 return False
             if index == len(points) - 2:
                 retreats = {arm.tag: arm.joints().copy() for arm in arms}
-        for arm in arms:
-            if not grip(arm, 1., 'release_open'):
-                return False
-            holding = 'right' if arm.tag == 'left' else None
-            completed += 1
+        if not grip_pair(1., 'release_open'):
+            return False
+        holding, completed = None, 2
         sequences = {arm.tag: motion.time_path(np.stack([
             arm.joints(), retreats[arm.tag], arm.home_joints])) for arm in arms}
         alive = api.run(sequences)
@@ -788,6 +831,7 @@ def run_paired(api, sources, destinations, z, clearance, edge_points):
                   transport_checks=transport_checks,
                   source_rechecks=source_rechecks,
                   transport_summary=transport_summary(transport_checks, ['left', 'right']),
+                  final_outline=final_outline(api, destinations) if ok else None,
                   orientation_recovery=orientation_recovery,
                   pending_destination=None if ok else
                   [[float(x), float(y), float(h)]

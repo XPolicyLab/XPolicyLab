@@ -83,6 +83,16 @@ def run(api, command, args):
         if landing == 'diagonal':
             if pose[2, 3] < dest[2] + clearance - 1e-9:
                 raise ValueError('diagonal landing requires departure at least clearance above release Z')
+            # A long descending carry sweeps the payload through its receiving
+            # geometry before its centre arrives. Keep at least the requested
+            # clearance during travel and restrict the final diagonal to 10mm
+            # horizontal setback (a route design bound, not a scene size).
+            delta_xy = dest[:2] - pose[:2, 3]
+            distance_xy = float(np.linalg.norm(delta_xy))
+            if distance_xy > .01:
+                pose[:2, 3] = dest[:2] - delta_xy * (.01 / distance_xy)
+                pose[2, 3] = dest[2] + clearance
+                targets.append(('landing_approach', pose.copy()))
         else:
             pose[:3, 3] = [dest[0], dest[1], height]
             targets.append(('transport', pose.copy()))

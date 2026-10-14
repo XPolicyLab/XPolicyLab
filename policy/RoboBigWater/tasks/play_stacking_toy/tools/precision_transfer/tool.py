@@ -1,18 +1,8 @@
 """Bounded vertical grasp and feature-offset placement primitives."""
-import numpy as np
 import importlib.util
 from pathlib import Path
+import numpy as np
 from roboshell.server.core import tool_rotation
-
-# Load only the sibling task tool's geometry code, never episode files/state.
-_spec = importlib.util.spec_from_file_location('transfer_feature_geometry',
-    Path(__file__).resolve().parents[1] / 'feature_point' / 'tool.py')
-_feature = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_feature)
-_cap_spec = importlib.util.spec_from_file_location('transfer_cap_geometry',
-    Path(__file__).resolve().parents[1] / 'projected_center' / 'tool.py')
-_cap = importlib.util.module_from_spec(_cap_spec)
-_cap_spec.loader.exec_module(_cap)
 
 
 def number_arg(name, default=None, help_text=""):
@@ -30,16 +20,93 @@ TOOL = {"name": "precision_transfer", "commands": [
     {"name": "grasp_at", "budget": True, "help": "vertical approach, close, and vertical lift", "args":
      [ARM] + XYZ + COMMON + [{"name": "open", "type": "str", "default": "x", "choices": ["x", "y"]}]},
     {"name": "place_at", "budget": True, "help": "translate a measured feature to a destination, lower, release, retreat", "args":
-     [ARM] + XYZ + COMMON + [number_arg("ox", 0.0), number_arg("oy", 0.0), number_arg("oz", 0.0),
-     {"name": "offset_mode", "type": "str", "default": "manual", "choices": ["manual", "aperture"]},
-     {"name": "target_mode", "type": "str", "default": "cap", "choices": ["cap", "point"]},
-     {"name": "refine", "type": "str", "default": "auto", "choices": ["auto", "required", "off"]},
+     [ARM] + XYZ + COMMON + [{"name": "o"+c, "type": "float",
+                            "help": "explicit measured feature-minus-TCP component"} for c in "xyz"] + [
+     {"name": "held_samples", "type": "str", "default": "", "help": "JSON corresponding physical point pixels for rgb_point"},
+     {"name": "held_boxes", "type": "str", "default": "", "help": "JSON tight circular rim boxes for rgb_rim"},
+     number_arg("held_z", -1., "measured feature plane height; -1 triangulates"),
+     number_arg("held_radius", 0., "previously measured rim radius; permits one held_boxes view with held_z=-1"),
+     number_arg("radius_error", .0001, "uncertainty of supplied radius in meters"),
+     number_arg("pixel_error", .5), number_arg("height_error", .001),
+     number_arg("offset_error", .002, "maximum accepted RGB sensitivity in meters"),
+     {"name": "target_samples", "type": "str", "default": "", "help": "JSON current destination pixels; replaces XY, preserves release Z"},
+     {"name": "target_model", "type": "str", "default": "point", "choices": ["point", "sphere"]},
+     number_arg("target_error", .002, "maximum destination measurement sensitivity in meters"),
+     {"name": "offset_mode", "type": "str", "default": "manual", "choices": ["manual"]},
+     {"name": "target_mode", "type": "str", "default": "point", "choices": ["point"]},
+     {"name": "refine", "type": "str", "default": "off", "choices": ["off"]},
      {"name": "finish", "type": "str", "default": "release", "choices": ["release", "hover"]}]},
 ]}
 
 
 class Stop(Exception):
     pass
+
+
+def measured_target(api, args, goal):
+    """Measure destination axis without confusing surface height and release height."""
+    samples = args.get('target_samples', '')
+    model = args.get('target_model', 'point')
+    limit = float(args.get('target_error', .002))
+    if model not in ('point', 'sphere') or not np.isfinite(limit) or not .0001 <= limit <= .005:
+        raise ValueError('target_model point|sphere and target_error [0.0001,0.005] required')
+    if not samples:
+        if model != 'point':
+            raise ValueError('target_model sphere requires target_samples')
+        return goal, dict(status='caller_supplied')
+    tool = 'rgb_geometry' if model == 'point' else 'rgb_silhouette'
+    spec = importlib.util.spec_from_file_location('transfer_target_geometry',
+                Path(__file__).resolve().parents[1]/tool/'tool.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    result, code = module.run(api, 'rgb_point' if model == 'point' else 'rgb_sphere',
+                             dict(samples=samples, z=-1., arm='none',
+                                  pixel_error=args.get('pixel_error', .5)))
+    if code or not result.get('plan_ok'):
+        raise ValueError('target measurement failed: '+result.get('plan_detail', 'unknown'))
+    sensitivity = float(result['sensitivity_m'])
+    point = np.asarray(result['point_world'], float)
+    if point.shape != (3,) or not np.isfinite(point).all() or not np.isfinite(sensitivity) or sensitivity > limit:
+        raise ValueError('target measurement invalid or sensitivity exceeds %.6f m' % limit)
+    measured = goal.copy()
+    measured[:2] = point[:2]
+    return measured, dict(status='rgb_measured', model=model, measurement=result,
+                         requested_goal=goal.tolist(), applied_goal=measured.tolist(),
+                         xy_adjustment_m=float(np.linalg.norm(measured[:2]-goal[:2])))
+
+
+def measured_offset(api, args):
+    """Resolve fresh RGB geometry or a complete explicit vector before any motion."""
+    values = [args.get('o'+c) for c in 'xyz']
+    samples, boxes = args.get('held_samples', ''), args.get('held_boxes', '')
+    radius = float(args.get('held_radius', 0.))
+    if not np.isfinite(radius) or (radius and not boxes):
+        raise ValueError('held_radius requires held_boxes')
+    if samples or boxes:
+        if (samples and boxes) or any(v is not None for v in values):
+            raise ValueError('supply one of held_samples, held_boxes, or all ox/oy/oz')
+        limit = float(args.get('offset_error', .002))
+        if not np.isfinite(limit) or not .0001 <= limit <= .005:
+            raise ValueError('offset_error must be in [0.0001,0.005]')
+        # Load the task-local RGB implementation, without server state or caches.
+        spec = importlib.util.spec_from_file_location('transfer_rgb_geometry',
+                    Path(__file__).resolve().parents[1]/'rgb_geometry'/'tool.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        result, code = module.run(api, 'rgb_rim' if boxes else 'rgb_point', dict(
+            boxes=boxes, samples=samples, arm=args['arm'], z=args.get('held_z', -1.),
+            radius=radius, radius_error=args.get('radius_error', .0001),
+            pixel_error=args.get('pixel_error', .5), height_error=args.get('height_error', .001)))
+        if code or not result.get('plan_ok'):
+            raise ValueError('held measurement failed: '+result.get('plan_detail', 'unknown'))
+        if result['sensitivity_m'] > limit:
+            raise ValueError('held measurement sensitivity %.6f exceeds %.6f m' %
+                             (result['sensitivity_m'], limit))
+        offset = np.asarray(result['feature_minus_tcp'], float)
+        return offset, dict(status='rgb_measured', measurement=result)
+    if any(v is None for v in values):
+        raise ValueError('missing held geometry: supply held_samples, held_boxes, or all measured ox/oy/oz; no implicit zero offset')
+    return np.asarray(values, float), dict(status='caller_supplied')
 
 
 def route_clearance(route, other):
@@ -50,76 +117,6 @@ def route_clearance(route, other):
         fraction = np.clip(np.dot(other-start, delta)/max(np.dot(delta, delta), 1e-20), 0., 1.)
         distances.append(float(np.linalg.norm(start+fraction*delta-other)))
     return min(distances)
-
-
-def destination_axis(observation, goal):
-    """Fit a visible local cap axis; final feature height is caller-controlled."""
-    candidates = []
-    reports = {}
-    # This is a bounded measurement volume, not an assumed surface height.
-    seed = goal + [0., 0., .02]
-    for name, key in _cap.CAMERAS.items():
-        try:
-            key = key if key in observation['cameras'] else name
-            camera = observation['cameras'][key]
-            report, found = _cap.scan(observation['depth'][key], camera['intrinsics'],
-                                      camera['extrinsics_world'], seed, .045)
-            reports[name] = report
-            for item in found:
-                point = np.asarray(item['point_world'])
-                if (np.linalg.norm(point[:2]-goal[:2]) <= .012 and
-                        goal[2]-.002 <= point[2] <= goal[2]+.06):
-                    candidates.append(dict(item, camera=name))
-        except Exception as exc:
-            reports[name] = dict(status='unavailable', detail=str(exc))
-    if not candidates:
-        return dict(status='unavailable', detail='no resolved cap axis near destination', cameras=reports)
-    best = min(candidates, key=lambda c: c['uncertainty_m'])
-    for other in candidates:
-        if np.linalg.norm(np.asarray(best['point_world'])-other['point_world']) > (
-                best['uncertainty_m']+other['uncertainty_m']+.0005):
-            return dict(status='unavailable', detail='ambiguous destination surfaces', cameras=reports)
-    return dict(best, status='measured', requested_xy=goal[:2].tolist(),
-                correction_xy=(np.asarray(best['point_world'])[:2]-goal[:2]).tolist())
-
-
-def grasp_surface(observation, goal):
-    """Conservative local horizontal surface estimate; no semantic labels/state."""
-    camera = observation['cameras']['cam_head']
-    d = np.asarray(observation['depth']['cam_head'], dtype=float)
-    k = np.asarray(camera['intrinsics'], dtype=float)
-    t = np.asarray(camera['extrinsics_world'], dtype=float)
-    if (d.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4) or
-            not np.isfinite(np.r_[k.ravel(), t.ravel()]).all()):
-        raise ValueError('invalid head depth/calibration')
-    yy, xx = np.indices(d.shape)
-    rays = np.stack((xx, yy, np.ones_like(xx)), axis=-1) @ np.linalg.inv(k).T
-    points = (rays*d[..., None]) @ t[:3, :3].T + t[:3, 3]
-    valid = np.isfinite(d) & (d > 0) & np.isfinite(points).all(axis=-1)
-    near = valid & (np.linalg.norm(points[..., :2]-goal[:2], axis=-1) <= .018)
-    p = points[near]
-    if len(p) < 16:
-        raise ValueError('local surface is underresolved or occluded')
-    # Upper quantile ignores isolated depth spikes; holes/background fall below
-    # the top band. Require broad support, not a single pixel or sidewall.
-    top = float(np.quantile(p[:, 2], .90))
-    band = p[np.abs(p[:, 2]-top) <= .001]
-    if len(band) < 12 or len(band) < .25*len(p):
-        raise ValueError('no well-supported horizontal surface')
-    centered = band[:, :2]-band[:, :2].mean(axis=0)
-    if np.linalg.svd(centered, compute_uv=False)[-1]/np.sqrt(len(band)) < .003:
-        raise ValueError('surface support is too narrow')
-    # Refuse a higher occluding surface instead of estimating through it.
-    if np.count_nonzero(p[:, 2] > top+.003) > max(2, .02*len(p)):
-        raise ValueError('multiple heights or foreground occlusion')
-    design = np.column_stack((centered, np.ones(len(band))))
-    fit = np.linalg.lstsq(design, band[:, 2], rcond=None)[0]
-    residual = float(np.max(np.abs(design @ fit-band[:, 2])))
-    if np.linalg.norm(fit[:2]) > .1 or residual > .0007:
-        raise ValueError('surface is tilted or noisy')
-    height = float((goal[:2]-band[:, :2].mean(axis=0)) @ fit[:2]+fit[2])
-    return dict(status='measured', surface_z=height, suggested_tcp_z=height,
-                tcp_above_surface_m=float(goal[2]-height), sample_count=len(band))
 
 
 def run(api, command, args):
@@ -135,23 +132,21 @@ def run(api, command, args):
         if command not in ("grasp_at", "place_at") or args.get("arm") not in ("left", "right"):
             raise ValueError("invalid command or arm")
         goal = np.array([float(args[c]) for c in "xyz"])
-        offset = np.array([float(args.get("o"+c, 0)) for c in "xyz"])
+        offset = np.array([float(args.get("o"+c, 0) or 0) for c in "xyz"])
         clearance = float(args.get("clearance", 0.10))
         tolerance = float(args.get("tolerance", 0.008))
         separation = float(args.get("separation", 0.12))
         via_z = float(args.get("height", 0.0))
         finish = args.get("finish", "release")
         offset_mode = args.get('offset_mode', 'manual')
-        target_mode = args.get('target_mode', 'cap')
-        refine = args.get('refine', 'auto')
-        if refine not in ('auto', 'required', 'off'):
+        target_mode = args.get('target_mode', 'point')
+        refine = args.get('refine', 'off')
+        if refine != 'off':
             raise ValueError('invalid refine mode')
-        if target_mode not in ('cap', 'point'):
+        if target_mode != 'point':
             raise ValueError('invalid target mode')
-        if offset_mode not in ('manual', 'aperture'):
+        if offset_mode != 'manual':
             raise ValueError('invalid offset mode')
-        if offset_mode == 'aperture' and (command != 'place_at' or np.any(offset)):
-            raise ValueError('aperture offset mode requires place_at and zero explicit offsets')
         if finish not in ("release", "hover"):
             raise ValueError("invalid finish mode")
         if not np.isfinite(np.r_[goal, offset, clearance, tolerance, via_z, separation]).all():
@@ -166,32 +161,14 @@ def run(api, command, args):
         if api.over:
             raise Stop("episode_over")
         pose = arm.tcp().copy()
-        if command == 'place_at' and offset_mode == 'aperture':
-            try:
-                held_feature = dict(_feature.held_center(api.observe(), args['arm'], pose), status='measured')
-            except Exception as exc:
-                held_feature = {'status': 'unavailable', 'detail': str(exc)}
-                raise Stop('held_feature_unavailable')
-            offset = np.asarray(held_feature['feature_minus_tcp'])
-        if command == 'place_at' and finish == 'release' and target_mode == 'cap':
-            try:
-                target_check = destination_axis(api.observe(), goal)
-            except Exception as exc:
-                target_check = dict(status='unavailable', detail=str(exc))
-            if target_check['status'] != 'measured':
-                raise Stop('destination_axis_unavailable')
-            goal[:2] = target_check['point_world'][:2]
-        elif command == 'place_at':
-            target_check = dict(status='unchecked', mode=target_mode, finish=finish)
-        if command == 'grasp_at':
-            try:
-                height_check = grasp_surface(api.observe(), goal)
-            except Exception as exc:
-                height_check = {'status': 'unavailable', 'detail': str(exc)}
-            if height_check['status'] == 'measured':
-                delta = height_check['tcp_above_surface_m']
-                if delta > .008 or delta < -.006:
-                    raise Stop('grasp_height_above_surface' if delta > 0 else 'grasp_height_below_surface')
+        # Geometry is explicitly measured through RGB commands; motion never invents it.
+        height_check = dict(status='unmeasured', detail='caller supplies measured world height')
+        if command == 'place_at':
+            goal, target_check = measured_target(api, args, goal)
+            target_check.update(mode=target_mode, finish=finish)
+            offset, held_feature = measured_offset(api, args)
+            if offset.shape != (3,) or not np.isfinite(offset).all() or np.linalg.norm(offset) > .2:
+                raise ValueError('finite measured offset norm <=0.2 required')
         target_pos = goal if command == "grasp_at" else goal-offset
         # A grasp's lift distance must not inherit the initial/home TCP height.
         # Held transfers retain their existing altitude unless explicitly overridden.
@@ -272,56 +249,11 @@ def run(api, command, args):
             move("descend", goal)
             grip(0.0)
             move("lift", [goal[0], goal[1], high])
-            try:
-                held_feature = dict(_feature.held_center(api.observe(), args['arm'], arm.tcp()), status='measured')
-            except Exception as exc:
-                held_feature = {'status': 'unavailable', 'detail': str(exc)}
+            held_feature = dict(status='unmeasured', detail='RGB measurement with arm returns feature_minus_tcp')
         else:
             move("transit_height", [pose[0, 3], pose[1, 3], high])
             move("align", [target_pos[0], target_pos[1], high])
             if finish == "release":
-                if refine != 'off':
-                    # Re-observe after lateral acceleration: an offset measured
-                    # at pickup need not survive transport. Never infer attachment.
-                    try:
-                        measured = _feature.held_center(api.observe(), args['arm'], arm.tcp())
-                        fresh = np.asarray(measured['feature_minus_tcp'], dtype=float)
-                        if (fresh.shape != (3,) or not np.isfinite(fresh).all() or
-                                measured['circle_error_m'] > .0004 or
-                                measured['plane_error_m'] > .0003 or
-                                np.linalg.norm(fresh-offset) > .005):
-                            raise ValueError('fresh offset is imprecise or differs by more than 5 mm')
-                        transport_check = dict(status='measured', previous_offset=offset.tolist(),
-                                               measured_offset=fresh.tolist())
-                    except Exception as exc:
-                        transport_check = dict(status='unavailable', detail=str(exc))
-                        if refine == 'required':
-                            raise Stop('transport_feature_unavailable')
-                    if transport_check['status'] == 'measured':
-                        corrected = goal-fresh
-                        if not via_z:
-                            high = max(high, float(corrected[2]+clearance))
-                        above = np.array([corrected[0], corrected[1], high])
-                        if (not (-.75 <= corrected[0] <= .75 and -.75 <= corrected[1] <= .60
-                                 and .74 <= corrected[2] <= 1.45) or
-                                high > 1.45 or high < corrected[2]+clearance-1e-9):
-                            raise Stop('refined_route_outside_limits')
-                        other_now = np.asarray(api.arm(other_tag).tcp(), dtype=float)
-                        if other_now.shape != (4, 4) or not np.isfinite(other_now).all():
-                            raise Stop('invalid_other_arm_tcp')
-                        raised = arm.tcp()[:3, 3].copy()
-                        raised[2] = high
-                        minimum = route_clearance([arm.tcp()[:3, 3], raised, above, corrected, above],
-                                                  other_now[:3, 3])
-                        arm_clearance.update(minimum_m=minimum, other_tcp=other_now[:3, 3].tolist(),
-                                             status='clear' if minimum >= separation else 'blocked')
-                        if minimum < separation:
-                            raise Stop('other_arm_route_proximity')
-                        offset = fresh
-                        target_pos = corrected
-                        held_feature = dict(measured, status='measured')
-                        move('refine_height', raised)
-                        move('refine_alignment', above)
                 move("lower", target_pos)
                 grip(1.0)
                 released = True

@@ -77,6 +77,20 @@ def frames():
                 yield rr, dict(pitch=pitch, yaw=yaw, finger_sign=flip)
 
 
+def tilt_seconds(previous, angle):
+    """Loaded sweep timing: never accelerate toward the final discharge.
+
+    These are motion design limits, not assumptions about fill level. Integrate
+    across the breakpoints so non-five-degree requests get the same pacing.
+    Keeping the early sweep at 20 deg/s funds 12 deg/s through the entire end
+    of the sweep without increasing the default total time.
+    """
+    return sum(max(0., min(angle, upper)-max(previous, lower))/speed
+               for lower, upper, speed in ((0., 30., 40.),
+                                            (30., 60., 20.),
+                                            (60., 180., 12.)))
+
+
 def route(v, start, r, sign, relocate=None):
     """List of (phase, TCP or gripper/hold value, minimum seconds)."""
     g, p, d = v['g'], v['p'], v['d']
@@ -117,11 +131,9 @@ def route(v, start, r, sign, relocate=None):
         for previous, angle in zip(angles[:-1], angles[1:]):
             target = tilted(angle, previous)
             sweep.append((angle, target))
-            # Slow before discharge can begin, not only once nearly sideways.
-            # Small stop-to-stop rotations let contents settle at the low wall
-            # instead of carrying momentum into a narrow receiving opening.
-            speed = 12 if angle > 30 and previous < 100 else (20 if angle > 100 else 40)
-            steps.append(('tilt', target, (angle-previous)/speed))
+            # Contents may still be leaving past 100 degrees; do not speed up
+            # there merely because the planned attitude is nearly inverted.
+            steps.append(('tilt', target, tilt_seconds(previous, angle)))
         steps.append(('hold', v['hold'], 0))
         # The return is empty: keep the same clearance path but skip alternate
         # waypoints. This saves repeated stop/start costs for the slower pour.

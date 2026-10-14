@@ -1,10 +1,21 @@
-"""Read-only RGB-D region measurements; no scene identities or pose priors."""
+"""Read-only calibrated RGB region measurements; no scene identities or pose priors."""
 import io
 import numpy as np
 
+import importlib.util as _rgb_import
+import sys as _rgb_sys
+from pathlib import Path as _RgbPath
+_rgb_name = '_make_kong_calibrated_rgb_geometry'
+if _rgb_name not in _rgb_sys.modules:
+    _rgb_spec = _rgb_import.spec_from_file_location(_rgb_name, _RgbPath(__file__).parents[1] / 'rgb_geometry' / 'tool.py')
+    _rgb_module = _rgb_import.module_from_spec(_rgb_spec)
+    _rgb_spec.loader.exec_module(_rgb_module)
+    _rgb_sys.modules[_rgb_name] = _rgb_module
+rgb_geometry = _rgb_sys.modules[_rgb_name]
+
 TOOL = {"name": "region_geometry", "commands": [{
     "name": "inspect_regions", "budget": False,
-    "help": "measure separate pale image regions using current RGB and depth",
+    "help": "measure separate pale image regions using calibrated RGB stereo",
     "args": [
         {"name": "camera", "default": "head", "choices": ["head", "wrist_l", "wrist_r"]},
         *[{"name": k, "type": "int"} for k in ("u0", "v0", "u1", "v1")],
@@ -13,7 +24,7 @@ TOOL = {"name": "region_geometry", "commands": [{
     ]}]}
 TOOL['commands'].append({
     'name': 'inspect_surface', 'budget': False,
-    'help': 'measure a connected planar depth patch around a selected pixel',
+    'help': 'measure a connected RGB stereo surface around a selected pixel',
     'args': [
         {'name': 'camera', 'default': 'head', 'choices': ['head', 'wrist_l', 'wrist_r']},
         *[{'name': k, 'type': 'int', 'required': True} for k in ('u', 'v')],
@@ -206,12 +217,12 @@ def run(api, command, args):
         obs = api.observe()
         if command == 'inspect_surface':
             cam = obs['cameras'][camera]
-            patch = surface(obs['depth'][camera], cam['intrinsics'], cam['extrinsics_world'],
+            patch = surface(rgb_geometry.reconstruct(obs, camera), cam['intrinsics'], cam['extrinsics_world'],
                             args['u'], args['v'], float(args.get('tolerance', .002)))
             return dict(plan_ok=True, plan_fail_reason=None, surface=patch,
                         note='Connected visible plane only; center is a surface point, not a body center or TCP target. Coplanar touching faces can merge; occlusion can truncate bounds. Measurements expire after motion.'), 0
         rgb = np.array(Image.open(io.BytesIO(obs['png'][camera])).convert('RGB'))
-        depth = np.asarray(obs['depth'][camera], float)
+        depth = np.asarray(rgb_geometry.reconstruct(obs, camera), float)
         h, w = depth.shape
         roi = [args.get(k) if args.get(k) is not None else default
                for k, default in zip(('u0', 'v0', 'u1', 'v1'), (0, 0, w, h))]
@@ -262,7 +273,7 @@ def face_descriptor(obs, seed, tolerance):
     roi = seed[3:] if len(seed) == 7 else None
     camera = {'head': 'cam_head', 'wrist_l': 'cam_left_wrist', 'wrist_r': 'cam_right_wrist'}[name]
     cal = obs['cameras'][camera]
-    depth = np.asarray(obs['depth'][camera], float)
+    depth = np.asarray(rgb_geometry.reconstruct(obs, camera), float)
     rgb = np.asarray(Image.open(io.BytesIO(obs['png'][camera])).convert('RGB'), float)
     patch = surface(depth, cal['intrinsics'], cal['extrinsics_world'], u, v, tolerance, roi)
     x0, y0, x1, y1 = patch['pixel_box']

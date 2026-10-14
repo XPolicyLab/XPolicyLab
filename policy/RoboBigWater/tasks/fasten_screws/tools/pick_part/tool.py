@@ -1,14 +1,8 @@
-"""Geometry-selected, single-attempt grasp with RGB-D lift evidence."""
+"""Geometry-selected grasp with calibrated multi-view RGB lift evidence."""
 import importlib.util
 from pathlib import Path
 
-import cv2
 import numpy as np
-
-_spec = importlib.util.spec_from_file_location(
-    '_pick_part_inspection', Path(__file__).parents[1] / 'inspect_parts/tool.py')
-inspection = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(inspection)
 
 TOOL = {'name': 'pick_part', 'commands': [{
     'name': 'pick_part', 'budget': True,
@@ -26,57 +20,34 @@ TOOL = {'name': 'pick_part', 'commands': [{
         {'name': 'lift', 'type': 'float', 'default': .08},
     ]}]}
 
+TOOL['commands'].append({
+    'name': 'part_pose', 'budget': False,
+    'help': 'measure a horizontal circular boundary from calibrated RGB views',
+    'args': [*({'name': k, 'type': 'float', 'required': True} for k in ('x', 'y', 'z')),
+             {'name': 'shape', 'type': 'str', 'default': 'annular', 'choices': ['annular', 'solid']}]})
 
-def cloud(obs, camera):
-    key = inspection.CAMERAS[camera]
-    if key not in obs['cameras']:
-        key = camera
-    c = obs['cameras'][key]
-    decoded = cv2.imdecode(np.frombuffer(obs['png'][key], np.uint8), cv2.IMREAD_COLOR)
-    if decoded is None:
-        raise ValueError('invalid PNG')
-    rgb = cv2.cvtColor(decoded, cv2.COLOR_BGR2RGB)
-    depth = np.asarray(obs['depth'][key], dtype=float).squeeze()
-    K = np.asarray(c['intrinsics'], dtype=float)
-    T = np.asarray(c['extrinsics_world'], dtype=float)
-    if rgb.shape != (*depth.shape, 3) or depth.ndim != 2:
-        raise ValueError('RGB and depth dimensions differ')
-    v, u = np.indices(depth.shape)
-    rays = np.stack([u, v, np.ones_like(u)], axis=-1) @ np.linalg.inv(K).T
-    valid = np.isfinite(depth) & (depth > 0)
-    xyz = (rays * np.where(valid, depth, 0)[..., None]) @ T[:3, :3].T + T[:3, 3]
-    return rgb, depth, K, T, xyz, valid
+
+_rgb_spec = importlib.util.spec_from_file_location('_part_rgb', Path(__file__).with_name('rgb_geometry.py'))
+rgb_geometry = importlib.util.module_from_spec(_rgb_spec)
+_rgb_spec.loader.exec_module(rgb_geometry)
+_table_spec = importlib.util.spec_from_file_location(
+    '_part_table', Path(__file__).resolve().parents[4] / 'tools/table_plane/tool.py')
+table = importlib.util.module_from_spec(_table_spec)
+_table_spec.loader.exec_module(table)
 
 
 def lift_evidence(obs, part, displacement):
-    """Require chromatic geometry at the translated height, never just disappearance."""
-    center = np.asarray(part['top_center_world'])
-    radius = min(.035, max(.012, max(part['span_xy_m']) * .6))
-    height = part['height_above_support_m']
-    views = []
-    for camera in inspection.CAMERAS:
-        try:
-            rgb, _, _, _, xyz, valid = cloud(obs, camera)
-            hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
-            hue_delta = np.abs((hsv[..., 0].astype(float)*2-part['hue_deg']+180) % 360-180)
-            xy = np.linalg.norm(xyz[..., :2]-center[:2]-displacement[:2], axis=-1) < radius
-            chromatic = valid & xy & (hue_delta < 18) & (hsv[..., 1] >= 35) & (hsv[..., 2] >= 45)
-            z = xyz[..., 2]
-            # Restrict evidence to the upper half of the original component,
-            # translated by the actual TCP movement, with small depth tolerance.
-            elevated = chromatic & (z > center[2]+displacement[2]-min(height/2, .015)-.006)
-            elevated &= z < center[2]+displacement[2]+.008
-            source = chromatic & (np.abs(z-center[2]) < .006)
-            views.append({'camera': camera, 'lifted_pixels': int(elevated.sum()),
-                          'source_pixels': int(source.sum())})
-        except Exception:
-            continue
-    lifted = any(v['lifted_pixels'] >= 6 for v in views)
-    stationary = any(v['source_pixels'] >= 6 for v in views)
-    # Simultaneous evidence at both heights may be a reflection or neighbour.
-    status = ('verified' if lifted and not stationary else
-              'ambiguous' if lifted else 'not_lifted' if stationary else 'unobserved')
-    return {'lift_status': status, 'views': views}
+    expected = np.asarray(part['top_center_world'])+displacement
+    try:
+        measured = rgb_geometry.locate(obs, expected, part['opening_visible'], part['hue_deg'], .015)
+    except ValueError as exc:
+        return {'lift_status': 'unobserved', 'measurement_reason': str(exc),
+                'geometry_diagnostics': getattr(exc, 'diagnostics', {})}
+    error = float(np.linalg.norm(measured['center']-expected))
+    lifted = measured['center'][2]-part['top_center_world'][2]
+    return {'lift_status': 'verified' if error < .008 and lifted > .025 else 'not_lifted',
+            'lifted_top_world': measured['center'].tolist(), 'measured_lift_m': float(lifted),
+            'lift_error_m': error, 'views': measured['cameras']}
 
 
 def down_rotation(current, opening):
@@ -98,6 +69,15 @@ def run(api, command, args):
         result['plan_fail_reason'] = reason
         raise Stop()
     try:
+        if command == 'part_pose':
+            shape = args.get('shape', 'annular')
+            if shape not in ('annular', 'solid'):
+                raise ValueError('invalid_shape')
+            measured = rgb_geometry.locate(api.observe(), [args[k] for k in ('x', 'y', 'z')],
+                                           shape == 'annular')
+            measured['center'] = measured['center'].tolist()
+            result.update(measured, plan_ok=True)
+            return result, 0
         if command != 'pick_part':
             raise ValueError('unknown command')
         tag = args['arm']
@@ -108,27 +88,46 @@ def run(api, command, args):
         support = args.get('support')
         if support is not None:
             support = float(support)
-        if (tag not in ('left', 'right') or camera not in inspection.CAMERAS
+        if (tag not in ('left', 'right') or camera not in rgb_geometry.CAMERAS
                 or shape not in ('annular', 'any') or opening not in ('x', 'y')
                 or not np.isfinite(xy).all() or not .04 <= lift <= .15
                 or (support is not None and not np.isfinite(support))):
             raise ValueError('invalid argument')
         if api.over:
             stop('episode_over')
-        rgb, depth, K, T, _, _ = cloud(api.observe(), camera)
-        measured = inspection.measure(rgb, depth, K, T, support)
-        parts = measured['parts']
-        result['annular_candidates'] = [p for p in parts if p['opening_visible']]
-        if not parts:
-            stop('no_visible_components')
-        part = min(parts, key=lambda p: np.linalg.norm(np.array(p['top_center_world'][:2])-xy))
+        # An explicit support may describe an elevated surface, but cannot
+        # lie beneath the observed table. Validate before any arm motion;
+        # table_plane reuses its RGB measurement within this episode.
+        table_z = table.measure_table_z(api)
+        if table_z is not None and not np.isfinite(table_z):
+            table_z = None
+        supplied_support = support
+        corrected = (support is not None and table_z is not None
+                     and support < table_z-.004)
+        if support is None or corrected:
+            support = table_z
+        result.update(support_requested_m=supplied_support,
+                      measured_table_z=table_z, support_used_m=support,
+                      support_corrected=bool(corrected))
+        if support is None:
+            stop('support_unobserved')
+        # A broad acquisition interval above the measured support, not an
+        # assumed surface height; two views solve height and radius together.
+        measured = rgb_geometry.locate(api.observe(), np.r_[xy, support+.035],
+                                       shape == 'annular', z_span=.034)
+        center = measured['center']
+        height = float(center[2]-support)
+        if not .006 <= height <= .065:
+            stop('component_height_out_of_range')
+        part = dict(top_center_world=center.tolist(),
+                    mid_height_center_world=[*center[:2], support+height/2],
+                    height_above_support_m=height, hue_deg=measured['hue'],
+                    span_xy_m=[measured['radius']*2]*2, opening_visible=shape == 'annular',
+                    border_clipped=False, measurement= {k:v for k,v in measured.items() if k != 'center'})
         result['selected_part'] = part
-        if np.linalg.norm(np.array(part['top_center_world'][:2])-xy) > .025:
+        result['annular_candidates'] = [part] if shape == 'annular' else []
+        if np.linalg.norm(center[:2]-xy) > .025:
             stop('no_component_near_target')
-        if shape == 'annular' and not part['opening_visible']:
-            stop('opening_not_observed')
-        if part['border_clipped']:
-            stop('component_clipped')
         goal = np.array(part['mid_height_center_world'])
         arm = api.arm(tag)
         def move(name, target):
@@ -184,4 +183,6 @@ def run(api, command, args):
         return result, 2
     except Exception as exc:
         result.update(plan_fail_reason='pick_failed', plan_detail=str(exc))
+        if hasattr(exc, 'diagnostics'):
+            result['geometry_diagnostics'] = exc.diagnostics
         return result, 2

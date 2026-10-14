@@ -1,12 +1,5 @@
-# tools enabled for this task, one per line (shared tools/<name> or tasks/build_tower/tools/<name>)
+# RGB-only metrology and Cartesian execution
 precise_transfer
-
-color_region
-
 carry
-
-layered_geometry
-transfer_geometry
-primitive_skill
-contact_primitives
-skill_compositions
+table_plane
+rgb_geometry

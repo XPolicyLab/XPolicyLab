@@ -1,4 +1,4 @@
-"""Read-only near-vertical axis measurement from two selected depth sections."""
+"""Read-only near-vertical axis measurement from two selected RGB stereo sections."""
 import importlib.util
 import math
 from pathlib import Path

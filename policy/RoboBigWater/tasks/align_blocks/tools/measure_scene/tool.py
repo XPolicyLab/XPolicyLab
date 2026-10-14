@@ -1,4 +1,4 @@
-"""Read-only color geometry from calibrated RGB-D observations."""
+"""Read-only color geometry from calibrated RGB observations and measured horizontal planes."""
 import math
 
 import cv2
@@ -10,6 +10,8 @@ TOOL = {"name": "measure_scene", "commands": [{
     "name": "measure_scene", "budget": False,
     "help": "measure colored regions and an elongated reference in world coordinates",
     "args": [
+        {"name": "surface_z", "type": "float", "required": True, "help": "measured region surface world height in meters"},
+        {"name": "reference_z", "type": "float", "required": True, "help": "measured reference surface world height in meters"},
         {"name": "camera", "type": "str", "default": "head",
          "choices": ["head", "wrist_l", "wrist_r"]},
         {"name": "color", "type": "str", "default": "magenta", "choices": COLORS},
@@ -39,12 +41,14 @@ def regions(mask):
             if stats[i, cv2.CC_STAT_AREA] >= 16]
 
 
-def project(v, u, depth, k, transform):
-    z = depth[v, u]
-    valid = np.isfinite(z) & (z > 0)
-    rays = np.linalg.solve(k, np.array([u[valid], v[valid], np.ones(valid.sum())]))
-    points = (rays * z[valid]).T
-    return points @ transform[:3, :3].T + transform[:3, 3]
+def project(v, u, height, k, transform):
+    rays = (transform[:3, :3] @ np.linalg.solve(k, np.array([u, v, np.ones(len(u))]))).T
+    if np.any(np.abs(rays[:, 2]) < 1e-6):
+        raise ValueError("ray_parallel_to_surface")
+    distance = (height - transform[2, 3]) / rays[:, 2]
+    if not np.isfinite(distance).all() or np.any(distance <= 0):
+        raise ValueError("surface_behind_camera")
+    return transform[:3, 3] + rays * distance[:, None]
 
 
 def line_fit(xy):
@@ -81,68 +85,6 @@ def reference_geometry(points):
     return center, direction, normal, low, high, width, length
 
 
-def planar_reference(v, u, depth, k, transform, points, height=None):
-    """Recover thin horizontal surfaces distorted by estimated depth.
-
-    Require elongated RGB support and bounded depth relief before imposing a
-    horizontal plane. Its height is a region median, never a stored table pose.
-    This assumption is reported; downstream spatial association still applies.
-    """
-    if len(points) < .7 * len(u):
-        return None
-    rect = cv2.minAreaRect(np.column_stack([u, v]).astype(np.float32))
-    short, long = sorted(rect[1])
-    if long < 20 or long < 6 * max(short, 1):
-        return None
-    relief = float(np.ptp(np.percentile(points[:, 2], [5, 95])))
-    if relief > .08:
-        return None
-    z = float(np.median(points[:, 2])) if height is None else float(height)
-    valid = np.isfinite(depth[v, u]) & (depth[v, u] > 0)
-    rays = (transform[:3, :3] @ np.linalg.solve(
-        k, np.array([u[valid], v[valid], np.ones(valid.sum())]))).T
-    if np.any(np.abs(rays[:, 2]) < .1):
-        return None
-    distance = (z - transform[2, 3]) / rays[:, 2]
-    if not np.isfinite(distance).all() or np.any(distance <= 0):
-        return None
-    return transform[:3, 3] + rays * distance[:, None]
-
-
-def support_height(v, u, rgb, depth, k, transform, excluded, points, detections):
-    """Constrain an implausibly elevated thin surface using two-sided support.
-
-    A 15 mm surface allowance is a thin-reference assumption, not a table
-    coordinate. Require independent, flat support patches on both sides and
-    nearby elevated detections; otherwise retain the original measurement.
-    """
-    mask = np.zeros(depth.shape, np.uint8)
-    mask[v, u] = 1
-    outer = cv2.dilate(mask, np.ones((61, 61), np.uint8)).astype(bool)
-    inner = cv2.dilate(mask, np.ones((25, 25), np.uint8)).astype(bool)
-    rv, ru = np.nonzero(outer & ~inner & ~excluded & (rgb.max(axis=2) > 40))
-    if len(ru) < 160 or not detections:
-        return None
-    center, _, normal = line_fit(np.column_stack([u, v]))
-    side = (np.column_stack([ru, rv]) - center) @ normal
-    heights = []
-    for selected in (side < 0, side > 0):
-        patch = project(rv[selected], ru[selected], depth, k, transform)
-        if len(patch) < 80 or len(patch) < .7 * np.count_nonzero(selected):
-            return None
-        if np.ptp(np.percentile(patch[:, 2], [10, 90])) > .015:
-            return None
-        heights.append(float(np.median(patch[:, 2])))
-    if abs(heights[0] - heights[1]) > .01:
-        return None
-    table_z = float(np.mean(heights))
-    excess = float(np.median(points[:, 2])) - table_z
-    region_height = np.median([d['surface_center_m'][2] for d in detections]) - table_z
-    if not .035 < excess <= .09 or not .015 <= region_height <= .09:
-        return None
-    return table_z
-
-
 def contact_lanes(center, direction, low, high, z, detections):
     """Subtract padded region footprints projected along the reference axis.
 
@@ -175,13 +117,13 @@ def contact_lanes(center, direction, low, high, z, detections):
         "note": "Projected clearance from visible regions for translation normal to reference only; surface z is not TCP height. Occlusion and unseen obstacles are not checked."}
 
 
-def measure(rgb, depth, k, transform, color, reference, expected, line_tolerance=.002):
+def measure(rgb, surface_z, reference_z, k, transform, color, reference, expected, line_tolerance=.002):
     detections = []
     for v, u in regions(color_mask(rgb, color)):
-        points = project(v, u, depth, k, transform)
+        points = project(v, u, surface_z, k, transform)
         if len(points) < 12 or len(points) < 0.7 * len(u):
             continue
-        # Isolate the horizontal upper surface; side faces bias the visible centroid.
+        # All pixels lie on the supplied plane; silhouette side faces remain a bias.
         top_z = np.percentile(points[:, 2], 90)
         top = points[np.abs(points[:, 2] - top_z) <= 0.003]
         if len(top) < 8:
@@ -196,7 +138,7 @@ def measure(rgb, depth, k, transform, color, reference, expected, line_tolerance
     detections.sort(key=lambda d: d["surface_center_m"][0])
     result = {"plan_ok": True, "plan_fail_reason": None, "count": len(detections),
               "regions": detections,
-              "caveat": "Visible upper-surface estimates, not body centers; occlusion can bias results. Geometry is not a task-success verdict."}
+              "caveat": "Color silhouettes projected onto caller-supplied horizontal surface planes, not body centers; side faces and occlusion can bias results. Geometry is not a task-success verdict."}
     if not detections or (expected and len(detections) != expected):
         result.update(plan_ok=False, plan_fail_reason="region_count_mismatch")
     if len(detections) >= 2:
@@ -215,37 +157,22 @@ def measure(rgb, depth, k, transform, color, reference, expected, line_tolerance
                                    if result["plan_ok"] else None),
             criterion="Fitted-line residual only; neither world-y span nor completion. Surface orientation can offset centers even during edge contact.")
     references = []
-    excluded = color_mask(rgb, color) | color_mask(rgb, reference)
     for v, u in regions(color_mask(rgb, reference)):
-        points = project(v, u, depth, k, transform)
+        points = project(v, u, reference_z, k, transform)
         if len(points) < 30:
             continue
         geometry = reference_geometry(points)
-        source = "depth_region"
-        relief = float(np.ptp(np.percentile(points[:, 2], [5, 95])))
-        table_z = support_height(v, u, rgb, depth, k, transform, excluded, points, detections)
-        if geometry is None or relief > .02 or table_z is not None:
-            projected = planar_reference(v, u, depth, k, transform, points,
-                                         None if table_z is None else table_z + .015)
-            if projected is None:
-                continue
-            geometry = reference_geometry(projected)
-            if geometry is None:
-                continue
-            points = projected
-            source = "horizontal_median_plane" if table_z is None else "local_support_plane"
+        if geometry is None:
+            continue
         center, direction, normal, low, high, width, length = geometry
         z = float(np.median(points[:, 2]))
         endpoints = np.array([center + low * direction, center + high * direction])
         ref = {"endpoints_m": rounded(np.column_stack([endpoints, [z, z]])),
-               "geometry_source": source, "depth_height_relief_m": round(relief, 5),
+               "geometry_source": "supplied_horizontal_plane", "surface_z_m": reference_z,
                "yaw_deg": round(math.degrees(math.atan2(direction[1], direction[0])), 3),
                "length_m": round(length, 5), "width_m": round(width, 5),
                "normal_xy": rounded(normal),
                "signed_center_distances_m": [], "within_span": []}
-        if table_z is not None:
-            ref["support_height_m"] = round(table_z, 5)
-            ref["assumed_surface_offset_m"] = .015
         ref["region_edge_turn_deg_mod90"] = [
             round((ref["yaw_deg"] - d["edge_yaw_deg_mod90"] + 45) % 90 - 45, 3)
             if d["edge_yaw_deg_mod90"] is not None else None for d in detections]
@@ -288,21 +215,24 @@ def run(api, command, args):
         if isinstance(expected, bool) or int(expected) != expected or not 0 <= expected <= 100:
             raise ValueError("expected must be an integer between 0 and 100")
         source = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}[camera]
+        heights = [args.get("surface_z"), args.get("reference_z")]
+        if any(h is None or isinstance(h, bool) for h in heights):
+            raise ValueError("surface_z and reference_z must be measured and supplied")
+        surface_z, reference_z = map(float, heights)
+        if not all(math.isfinite(h) for h in (surface_z, reference_z)):
+            raise ValueError("nonfinite surface height")
         obs = api.observe()
-        depth = np.asarray(obs["depth"][source], dtype=float)
-        if depth.ndim == 3 and depth.shape[2] == 1:
-            depth = depth[:, :, 0]
         rgb = cv2.imdecode(np.frombuffer(obs["png"][source], np.uint8), cv2.IMREAD_COLOR)
         if rgb is None:
             raise ValueError("invalid RGB image")
         rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
         k = np.asarray(obs["cameras"][source]["intrinsics"], dtype=float)
         transform = np.asarray(obs["cameras"][source]["extrinsics_world"], dtype=float)
-        if depth.shape != rgb.shape[:2] or k.shape != (3, 3) or transform.shape != (4, 4):
-            raise ValueError("inconsistent RGB-D calibration")
+        if k.shape != (3, 3) or transform.shape != (4, 4):
+            raise ValueError("inconsistent RGB calibration")
         if not np.isfinite(k).all() or not np.isfinite(transform).all():
             raise ValueError("nonfinite calibration")
-        result = measure(rgb, depth, k, transform, color, reference, expected, line_tolerance)
+        result = measure(rgb, surface_z, reference_z, k, transform, color, reference, expected, line_tolerance)
         return result, 0 if result["plan_ok"] else 1
     except Exception as exc:
         return {"plan_ok": False, "plan_fail_reason": "measurement_unavailable",

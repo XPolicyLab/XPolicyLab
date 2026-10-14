@@ -4,8 +4,11 @@ import io
 import json
 import math
 
+import cv2
 import numpy as np
 from PIL import Image, ImageDraw
+
+CACHE_ATTR = "rgb_watch_frames_v1"
 
 TOOL = {"name": "rgb_watch", "commands": [{
     "name": "watch-rgb", "budget": True,
@@ -15,7 +18,35 @@ TOOL = {"name": "rgb_watch", "commands": [{
     {"name": "watch-check", "budget": False,
      "help": "Validate named RGB crops without advancing time",
      "args": [{"name": "regions", "required": True},
-              {"name": "images", "default": "no", "choices": ["no", "yes"]}]}]}
+              {"name": "images", "default": "no", "choices": ["no", "yes"]}]},
+    {"name": "watch-review", "budget": False,
+     "help": "Reprocess saved RGB frames with revised crops and optional live comparison crops",
+     "args": [{"name": "regions", "required": True}, {"name": "candidates", "default": "[]"}]}]}
+
+
+# Home reserve. The reserve is the
+# home cost measured in this episode (rgb_transfer stores the IK home estimates of its previews and transfers on the
+# episode's left arm handle, attribute HOME_ATTR) plus a design margin; with no measurement yet it is unknown and no
+# reserve is held (the result says so).
+HOME_ATTR = "rgbcode_home_steps"
+HOME_MARGIN_STEPS = 25           # design: 1 s on top of the largest measured home cost
+SAMPLE_STEPS = 5
+
+
+def home_reserve(api):
+    """{"steps": int | None, "measured_home_steps": int | None, "source": text}: measured home cost + margin, or unknown."""
+    try:
+        holder = api.arm("left")
+        record = list(getattr(holder, HOME_ATTR, None) or [])
+    except Exception:
+        record = []
+    record = [int(v) for v in record if isinstance(v, (int, float)) and v >= 0]
+    if not record:
+        return dict(steps=None, measured_home_steps=None,
+                    source="unknown: no home cost measured in this episode yet (rgb-check or rgb-transfer measures it); no reserve held")
+    home = max(record)
+    return dict(steps=home + HOME_MARGIN_STEPS, measured_home_steps=home,
+                source=f"largest home cost measured in this episode ({len(record)} IK estimate(s)) + {HOME_MARGIN_STEPS} steps design margin")
 
 
 def rgb(api):
@@ -154,6 +185,60 @@ def earlier_interaction(tracker):
             and tracker['first_activity'] < tracker['onset']-1e-8)
 
 
+def interaction_timeline(candidates, events, unresolved):
+    """Keep first appearance changes in the chronology even after failed lifts.
+
+    A departure rank is not an interaction rank. Preserve ties at the sampling
+    resolution and attach missing-prefix evidence directly to each departure.
+    None of this distinguishes an attempted grasp from an occlusion.
+    """
+    groups = []
+    for candidate in sorted(candidates, key=lambda e: e['activity_s']):
+        if not groups or candidate['activity_s'] - groups[-1][-1]['activity_s'] > .2+1e-8:
+            groups.append([])
+        groups[-1].append(candidate)
+    timeline = []
+    for index, group in enumerate(groups, 1):
+        timeline.append(dict(
+            group=index, timing_ambiguous=len(group) > 1,
+            entries=[dict(crop_id=e['crop_id'], name=e['name'],
+                          activity_s=e['activity_s'], evidence=e['evidence'],
+                          departure_s=next((d['departure_s'] for d in events
+                                            if d['crop_id'] == e['crop_id']), None))
+                     for e in group]))
+    for event in events:
+        event['interaction_group'] = next((g['group'] for g in timeline
+            if any(e['crop_id'] == event['crop_id'] for e in g['entries'])), None)
+        event['unresolved_prefix'] = [dict(item) for item in unresolved
+            if item['first_activity_s'] is not None
+            and item['first_activity_s'] <= event['departure_s'] + .2+1e-8]
+    return timeline
+
+
+def partial_idle(trackers, seconds, quiet_samples):
+    """Stop collecting settled partial evidence, never certify completion.
+
+    Touched crops use a two-second idle window. With untouched crops require
+    two temporally distinct departures and three seconds of whole-image idle.
+    Untouched crops remain unresolved: a pause is never completion evidence.
+    """
+    if not trackers or quiet_samples < 10:
+        return False
+    departed = [t for t in trackers if t['confirmed'] is not None]
+    if not departed:
+        return False
+    if len(departed) == len(trackers):
+        return False
+    untouched = any(t['first_activity'] is None for t in trackers)
+    window = 3 if untouched else 2
+    if untouched:
+        onsets = [t['onset'] for t in departed]
+        if len(onsets) < 2 or max(onsets)-min(onsets) <= .2+1e-8:
+            return False
+    latest = max(max(t['first_activity'] or 0, t['onset'] or 0) for t in trackers)
+    return quiet_samples >= window*5 and seconds - latest >= window - 1e-8
+
+
 def displacement_evidence(frames, tracker):
     """Look for a persistent local translation, not a pickup or delivery.
 
@@ -271,6 +356,113 @@ def review_sheet(frames, trackers, candidates):
     return base64.b64encode(stream.getvalue()).decode()
 
 
+def split_departures(frames, trackers):
+    """Find original pixels retained long after a crop's first departure, then lost.
+
+    This is an ambiguity detector, not an automatic object count: shadows, rotation
+    and partial occlusion can also divide a silhouette. No new frames are acquired.
+    """
+    warnings = []
+    for crop_id, tracker in enumerate(trackers, 1):
+        onset = tracker['onset']
+        if onset is None or tracker['confirmed'] is None:
+            continue
+        x0, y0, x1, y1 = tracker['roi']
+        middle = [f for t, f in frames if onset + .8 <= t <= onset + 1.6]
+        if len(middle) < 3:
+            continue
+        retained = tracker['mask'].copy()
+        for frame in middle:
+            patch = frame[y0:y1, x0:x1]
+            retained &= np.max(np.abs(patch-tracker['patch']), axis=2) < 35
+            retained &= np.max(np.abs(patch-tracker['background']), axis=2) > 55
+        count, components, stats, _ = cv2.connectedComponentsWithStats(retained.astype(np.uint8), 8)
+        for component in range(1, count):
+            if stats[component, cv2.CC_STAT_AREA] < max(16, .08*tracker['mask'].sum()):
+                continue
+            part = dict(tracker, mask=components == component, onset=None,
+                        clear_since=None, confirmed=None, activity_since=None, first_activity=None)
+            for seconds, frame in frames[1:]:
+                update(part, frame, seconds)
+            if part['confirmed'] is None or part['onset'] < onset + 2.:
+                continue
+            u, v, w, h, area = stats[component]
+            warnings.append(dict(crop_id=crop_id, name=tracker['name'],
+                                 reason='multiple_departures_in_crop', first_departure_s=onset,
+                                 later_departure_s=part['onset'], pixels=int(area),
+                                 residual_roi=[max(0, x0+int(u)-4), max(0, y0+int(v)-4),
+                                               min(frames[0][1].shape[1], x0+int(u+w)+4),
+                                               min(frames[0][1].shape[0], y0+int(v+h)+4)]))
+    return warnings
+
+
+def comparison_sheet(initial, references, current, candidates):
+    """Native-colour crops in two separate panels; never infer semantic identity."""
+    cols, cell_w, cell_h = 5, 200, 210
+    rows_a = math.ceil(len(references)/cols)
+    rows_b = math.ceil(len(candidates)/cols)
+    sheet = Image.new('RGB', (cols*cell_w, 44+(rows_a+rows_b)*cell_h), 'white')
+    draw = ImageDraw.Draw(sheet)
+    offset = 0
+    for title, frame, crops, prefix in [('Saved initial crops', initial, references, 'R'),
+                                        ('Live comparison crops', current, candidates, 'C')]:
+        draw.text((4, offset+2), title + '; identity unverified', fill='black')
+        offset += 22
+        for i, crop in enumerate(crops):
+            x, y = (i % cols)*cell_w, offset+(i//cols)*cell_h
+            caption = f"{prefix}{i+1}: {crop['name']}".encode('ascii', 'backslashreplace').decode()
+            draw.text((x+4, y), caption[:30], fill='black')
+            image = Image.fromarray(frame.astype(np.uint8)).crop(tuple(crop['roi']))
+            scale = min(5., 192/image.width, 180/image.height)
+            image = image.resize((max(1, round(image.width*scale)), max(1, round(image.height*scale))),
+                                 Image.Resampling.NEAREST)
+            sheet.paste(image, (x+4, y+22))
+        offset += math.ceil(len(crops)/cols)*cell_h
+    stream = io.BytesIO()
+    sheet.save(stream, format='PNG')
+    return base64.b64encode(stream.getvalue()).decode()
+
+
+def review(api, args):
+    """An episode-local RGB recording can be recropped after the objects disappear."""
+    saved = getattr(api.arm('left'), CACHE_ATTR, None)
+    if not saved or saved[0] is not api.arm('right') or api.sim_time_left() > saved[1]+1e-8:
+        raise ValueError('no_saved_frames')
+    frames = saved[2]
+    trackers, diagnostics = inspect_regions(frames[0][1], json.loads(args['regions']))
+    if any(not d['plan_ok'] for d in diagnostics):
+        return dict(plan_ok=False, plan_fail_reason='invalid_regions', action_steps=0,
+                    region_checks=diagnostics), 2
+    for seconds, frame in frames[1:]:
+        for tracker in trackers:
+            update(tracker, frame, seconds)
+    reason = None
+    if any(t['confirmed'] is None for t in trackers):
+        reason = 'departures_not_confirmed_before_timeout'
+    elif any(earlier_interaction(t) for t in trackers):
+        reason = 'earlier_interaction_before_departure'
+    elif any(len(g)>1 for g in event_groups([dict(departure_s=t['onset'])
+                                            for t in sorted(trackers, key=lambda t:t['onset'])])):
+        reason = 'ambiguous_departure_times'
+    out = artifacts(frames, trackers, reason)
+    candidates = json.loads(args.get('candidates', '[]'))
+    if candidates:
+        current = rgb(api)
+        _, checks = inspect_regions(current, candidates)
+        if any(not d['plan_ok'] for d in checks):
+            return dict(plan_ok=False, plan_fail_reason='invalid_candidates', action_steps=0,
+                        candidate_checks=checks), 2
+        out['comparison_sheet_b64'] = comparison_sheet(frames[0][1], trackers, current, candidates)
+        out['candidate_checks'] = checks
+    elif not isinstance(candidates, list):
+        raise ValueError('invalid_candidates')
+    reason = reason or ('multiple_departures_in_crop' if out['split_crop_warnings'] else None)
+    out.update(plan_ok=reason is None, plan_fail_reason=reason, action_steps=0,
+               region_checks=diagnostics, replayed=True, recording_duration_s=frames[-1][0])
+    setattr(api.arm('left'), CACHE_ATTR, (saved[0], saved[1], frames, trackers))
+    return out, 0 if reason is None else 2
+
+
 def artifacts(frames, trackers, reason):
     # Every 0.2-second sample appears, with timestamps and numbered input crops.
     cols, tw, th = 6, 200, 170
@@ -307,12 +499,40 @@ def artifacts(frames, trackers, reason):
                        else 'departure_not_confirmed')
                   for i,t in enumerate(trackers,1)
                   if t['confirmed'] is None or earlier_interaction(t)]
+    splits = split_departures(frames, trackers)
+    timeline = interaction_timeline(candidates, events, unresolved)
+    reason = reason or ('multiple_departures_in_crop' if splits else None)
     complete = reason is None and not unresolved and len(events) == len(trackers) and bool(trackers)
     notes = 'RGB departure timing\nResult: ' + (reason or 'complete; visual heuristic') + '\n'
+    notes += 'First-appearance chronology (includes returned/failed interactions and possible occlusions):\n'
+    for group in timeline:
+        notes += (f"Interaction group {group['group']}: " + ' / '.join(
+            f"{e['name']} (crop {e['crop_id']}, {e['activity_s']:.1f}s; " +
+            ('NO CONFIRMED DEPARTURE' if e['departure_s'] is None else
+             f"departure {e['departure_s']:.1f}s") + ')'
+            for e in group['entries']) + '\n')
+    if events and events[0]['unresolved_prefix']:
+        notes += ('MISSING PREFIX: the first confirmed departure is not established as the first interaction. '
+                  'Earlier or tied unresolved evidence: ' + ', '.join(
+                      f"crop {e['crop_id']} {e['name']} at {e['first_activity_s']:.1f}s"
+                      for e in events[0]['unresolved_prefix']) +
+                  '. Remaining visible does not erase that earlier interaction.\n')
+    if reason == 'quiet_with_unconfirmed_departures':
+        untouched = [t['name'] for t in trackers if t['first_activity'] is None]
+        notes += (('Sampling stopped after distinct departures and 3 s of image quietness; '
+                   'untouched crops remain unresolved: ' + ', '.join(untouched) + '. '
+                   if untouched else
+                   'Sampling stopped after all crops showed activity and the image stayed quiet for 2 s. ') +
+                  'This saves waiting time; quietness does not certify completion or exclude later motion.\n')
     if not complete:
         notes += ('INCOMPLETE: confirmed departures alone are not a complete chronology. '
                   'An unresolved crop may have been handled earlier and returned or displaced. '
                   'Review interaction.png and the full contact sheet; absence of departure does not mean absence of interaction.\n')
+    notes += 'Completion covers only supplied crops; unseen or merged items may be missing.\n'
+    for warning in splits:
+        notes += (f"Crop {warning['crop_id']} has distinct losses at {warning['first_departure_s']:.1f}s "
+                  f"and {warning['later_departure_s']:.1f}s; residual pixels {warning['residual_roi']}. "
+                  'Free watch-review can retime revised crops from the saved RGB recording.\n')
     notes += 'Names are user supplied; identity matching is unverified. See identity.png for native scene and enlarged crops.\n'
     notes += 'Braced crops have unresolved relative timing; they may be parts of one silhouette or distinct items.\n'
     notes += ('Full interaction chronology (appearance evidence, not verified deliveries):\n' +
@@ -336,9 +556,11 @@ def artifacts(frames, trackers, reason):
     notes += '\nImage crop IDs:\n' + '\n'.join(
         f"{i}: {t['name']} {t['roi']}" for i,t in enumerate(trackers,1)) + '\n'
     return dict(events=events, descriptions=[e['name'] for e in events] if complete else [],
-                complete=complete, review_required=not complete,
+                complete=complete, review_required=not complete, split_crop_warnings=splits,
+                coverage="supplied crops only; identity and total item count unverified",
                 unresolved_regions=unresolved,
                 interaction_candidates=candidates,
+                interaction_timeline=timeline, interaction_identity_verified=False,
                 interaction_sheet_b64=review_sheet(frames, trackers, candidates),
                 event_groups=groups, identity_verified=False,
                 identity_sheet_b64=identity_sheet(frames, trackers, candidates),
@@ -349,10 +571,13 @@ def artifacts(frames, trackers, reason):
 def run(api, command, args):
     frames, trackers, steps = [], [], 0
     reason = None
+    reserve = home_reserve(api)
     started = None
     diagnostics = []
     include_images = command != 'watch-check' or args.get('images', 'no') == 'yes'
     try:
+        if command == 'watch-review':
+            return review(api, args)
         if command not in ('watch-rgb', 'watch-check'):
             raise ValueError('unknown_command')
         if command == 'watch-check' and args.get('images', 'no') not in ('no', 'yes'):
@@ -375,10 +600,13 @@ def run(api, command, args):
                 out.update(artifacts(frames, trackers, 'crop check only; no departures timed'))
             return out, 0
         quiet = 0
+        quiet_anchor = frame
         for _ in range(math.ceil(timeout*5)):
             # Only hold public robot targets; never move either arm while filming.
-            if api.sim_time_left()*25 < 155:
+            if reserve['steps'] is not None and api.sim_time_left()*25 < reserve['steps'] + SAMPLE_STEPS:
                 raise ValueError('home_reserve_reached')
+            if api.sim_time_left()*25 < SAMPLE_STEPS:
+                raise ValueError('insufficient_time')
             if not api.hold(5) or api.over:
                 raise ValueError('episode_over')
             steps += 5
@@ -388,8 +616,14 @@ def run(api, command, args):
             frames.append((steps/25, current))
             for tracker in trackers:
                 update(tracker, current, steps/25)
-            changed = np.count_nonzero(np.max(np.abs(current-frame), axis=2) > 20)
-            quiet = quiet+1 if changed <= 12 else 0
+            # Keep a fixed anchor throughout each quiet interval so slow
+            # cumulative movement cannot masquerade as a settled image.
+            changed = np.count_nonzero(np.max(np.abs(current-quiet_anchor), axis=2) > 20)
+            if changed <= 12:
+                quiet += 1
+            else:
+                quiet = 0
+                quiet_anchor = current
             frame = current
             if all(t['confirmed'] is not None for t in trackers) and quiet >= 5:
                 if any(earlier_interaction(t) for t in trackers):
@@ -398,6 +632,8 @@ def run(api, command, args):
                 if any(b-a <= .2+1e-8 for a,b in zip(times,times[1:])):
                     raise ValueError('ambiguous_departure_times')
                 break
+            if partial_idle(trackers, steps/25, quiet):
+                raise ValueError('quiet_with_unconfirmed_departures')
         else:
             raise ValueError('departures_not_confirmed_before_timeout')
     except Exception as exc:
@@ -407,11 +643,18 @@ def run(api, command, args):
             steps = max(0, round((started-api.sim_time_left())*25))
         except Exception:
             pass
+    if command == 'watch-rgb' and len(frames) > 1:
+        try:
+            setattr(api.arm('left'), CACHE_ATTR, (api.arm('right'), api.sim_time_left(), frames, trackers))
+        except Exception:
+            pass
     out = dict(plan_ok=reason is None, plan_fail_reason=reason, action_steps=steps,
-               sample_period_s=.2, rgb_only=True, heuristic=True, region_checks=diagnostics)
+               sample_period_s=.2, rgb_only=True, heuristic=True, region_checks=diagnostics, home_reserve=reserve)
     if frames and include_images:
         try:
             out.update(artifacts(frames, trackers, reason))
+            if out['split_crop_warnings'] and out['plan_ok']:
+                out.update(plan_ok=False, plan_fail_reason='multiple_departures_in_crop')
         except Exception:
             out.update(plan_ok=False, plan_fail_reason='artifact_encoding_failed')
     return out, 0 if out['plan_ok'] else 2

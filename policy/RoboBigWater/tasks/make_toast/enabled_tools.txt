@@ -1,8 +1,11 @@
 # tools enabled for this task, one per line (shared tools/<name> or tasks/make_toast/tools/<name>)
-locate_pixel
+rgb_geometry
 guarded_grasp
 guarded_press
 frame_place
-surface_frame
+table_plane
+edge_grasp
+rgb_patch
+rgb_corners
+rgb_edges
 place_between
-carry_visible

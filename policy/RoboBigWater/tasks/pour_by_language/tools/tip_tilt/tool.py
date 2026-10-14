@@ -8,13 +8,17 @@ _spec = importlib.util.spec_from_file_location('tip_tilt_helpers', Path(__file__
 helper = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(helper)
 
+# Same nominal centering allowance as transfer-cycle; independent of scene size.
+XY_CHORD_BOUND = .0085
+
 TOOL = {'name': 'tip_tilt', 'commands': [{
     'name': name, 'budget': name == 'tip-tilt',
     'help': 'align a held tip, tilt with compensation, dwell and restore upright attitude',
     'args': [{'name': 'arm', 'positional': True, 'choices': ['left', 'right']}]
     + [helper.scalar(n, required=True) for n in ('tx', 'ty', 'tz', 'tip')]
     + [helper.scalar('pitch', 120), helper.scalar('offset_y', 0),
-       helper.scalar('dwell', .12), helper.scalar('reserve', 0)]
+       helper.scalar('dwell', .12), helper.scalar('reserve', 0),
+       helper.scalar('clearance', .06)]
 } for name in ('tip-tilt', 'tip-tilt-estimate')]}
 
 
@@ -24,9 +28,9 @@ def rotation(degrees):
 
 
 def path_for(start, args):
-    a = dict(pitch=120, offset_y=0, dwell=.12, reserve=0)
+    a = dict(pitch=120, offset_y=0, dwell=.12, reserve=0, clearance=.06)
     a.update(args)
-    for n in ('tx', 'ty', 'tz', 'tip', 'pitch', 'offset_y', 'dwell', 'reserve'):
+    for n in ('tx', 'ty', 'tz', 'tip', 'pitch', 'offset_y', 'dwell', 'reserve', 'clearance'):
         a[n] = float(a[n])
         if not math.isfinite(a[n]):
             raise ValueError('nonfinite ' + n)
@@ -34,6 +38,8 @@ def path_for(start, args):
         raise ValueError('tip must be .02.. .30 m and absolute pitch 120..140 degrees')
     if abs(a['offset_y']) > .05 or not .12 <= a['dwell'] <= 2 or a['reserve'] < 0:
         raise ValueError('invalid offset_y, dwell or reserve')
+    if not .02 <= a['clearance'] <= .15:
+        raise ValueError('clearance must be .02.. .15 m')
     start = np.asarray(start, dtype=float)
     if start.shape != (4, 4) or not np.isfinite(start).all():
         raise ValueError('invalid TCP pose')
@@ -42,25 +48,38 @@ def path_for(start, args):
     if abs(start[2, 2]) < math.cos(math.radians(2)):
         raise ValueError('requires initially upright side-held item')
     target = np.array([a[n] for n in ('tx', 'ty', 'tz')])
-    # A constant TCP altitude avoids dipping the held base into nearby support.
+    # The terminal height alone can leave the upright base at rim height,
+    # especially after axial slip shortens the measured tip offset. Clearance
+    # is a declared travel margin, not an inferred object size or scene plane.
     height = a['tz'] - a['tip'] * math.cos(math.radians(a['pitch']))
     if height < start[2, 3] - .002:
         raise ValueError('target requires lowering; position at a clear altitude first')
+    travel_height = max(height, start[2, 3] + a['clearance'])
     vector = np.array([0., a['offset_y'], a['tip']])
     signed = math.copysign(1., a['pitch'])
-    angles = [0., 60., 90.] + list(np.linspace(90., abs(a['pitch']), math.ceil((abs(a['pitch'])-90)/15)+1)[1:])
+    # Linear TCP translation cannot exactly follow the sinusoidal tip offset.
+    # Its interpolation error is <= tip * radians(delta_angle)**2 / 8.
+    # Size the segments from that bound instead of paying for fixed 15-degree
+    # stops. Keep horizontal as an explicit boundary: descent must never start
+    # early, including on the reversed path. Cap each rotation at 60 degrees.
+    max_angle = min(60., math.degrees(math.sqrt(8 * XY_CHORD_BOUND / a['tip'])))
+    angles = [0.]
+    for boundary in (90., abs(a['pitch'])):
+        count = math.ceil((boundary - angles[-1]) / max_angle)
+        angles.extend(np.linspace(angles[-1], boundary, count + 1)[1:])
     poses = []
     for angle in angles:
         r = rotation(signed * angle)
         p = target - r @ vector
-        p[2] = height
+        descent = max(0., (angle - 90.) / (abs(a['pitch']) - 90.))
+        p[2] = travel_height + descent * (height - travel_height)
         pose = start.copy()
         pose[:3, :3] = r @ start[:3, :3]
         pose[:3, 3] = p
         poses.append(pose)
     # Raise in place before lateral alignment; callers certify held-item clearance.
-    raised = start.copy(); raised[2, 3] = height
-    path = [('raise', raised)] if height > start[2, 3] + .002 else []
+    raised = start.copy(); raised[2, 3] = travel_height
+    path = [('raise', raised)]
     path += [('align' if i == 0 else 'tilt', p) for i, p in enumerate(poses)]
     peak = len(path)-1
     path += [('recover', p.copy()) for p in reversed(poses[:-1])]
@@ -92,6 +111,8 @@ def run(api, command, args):
         seconds = (sum(costs)+dwell_ticks)/25
         result.update(estimated_seconds=seconds, timing_model='Cartesian heuristic; not an IK or deadline guarantee',
                       waypoints=[dict(stage=n, tcp=p[:3, 3].tolist()) for n, p in path],
+                      travel_clearance_m=a['clearance'], scene_clearance_verified=False,
+                      nominal_xy_chord_bound_m=XY_CHORD_BOUND,
                       final_upright_tcp=path[-1][1][:3, 3].tolist())
         if seconds+a['reserve'] > api.sim_time_left()+1e-9:
             raise ValueError('insufficient estimated time including reserve')

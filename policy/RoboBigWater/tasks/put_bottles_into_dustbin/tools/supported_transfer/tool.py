@@ -56,7 +56,11 @@ def run(api, command, args):
             # Stay on the donor's side; avoid the long return to its pickup site.
             side = -1. if args["donor"] == "left" else 1.
             park += np.array([side * .25, -withdrawal, 0.])
-            park[2] = max(initial[2, 3], goal[2]+lift)
+            # Parking is lateral travel near the base even after a straight
+            # withdrawal. Its clearance must not shrink with receiver lift
+            # or inherit a low pickup height. This is a design clearance,
+            # not a measured support/object dimension.
+            park[2] = max(initial[2, 3], goal[2]+lift, goal[2]+.12)
         if not np.isfinite(np.r_[goal, park, clearance, withdrawal, lift, initial.ravel(), receiving.ravel()]).all():
             raise ValueError("coordinates and poses must be finite")
         if not .08 <= clearance <= .25 or not .08 <= withdrawal <= .25 or not .05 <= lift <= .25:
@@ -121,7 +125,9 @@ def run(api, command, args):
         # reach near the base. Use world Z independently of finger roll.
         withdrawn = goal-withdrawal*rot[:, 0]
         if retreat == "rising":
-            withdrawn[2] += lift
+            # Withdrawal clearance is independent of a short receiver lift.
+            # The 12 cm floor is a motion-design value, not scene geometry.
+            withdrawn[2] += max(lift, .12)
         for name, pos in (("withdraw", withdrawn), ("park", park)):
             failure = move(donor, name, pos, rot)
             if failure:

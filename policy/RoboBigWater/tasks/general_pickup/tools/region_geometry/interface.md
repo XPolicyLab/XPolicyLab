@@ -1,8 +1,8 @@
-`robo region_geometry --u0 INT --v0 INT --u1 INT --v1 INT [--camera head|wrist_l|wrist_r] [--inset METRES]`
-Read-only depth measurement of a caller-selected rectangle; no motion or action-budget cost.
-Pixel bounds are left/top inclusive, right/bottom exclusive; camera defaults to head.
-Estimates horizontal support from surrounding depth and isolates the largest connected raised surface inside the rectangle.
-Success returns plan_ok=true, plan_fail_reason=null, world surface center, estimated grasp point, support height, visible length/width, long/opening XY axes and nearest cardinal opening axis.
-Grasp height is central surface height minus inset (default 0.012 m, range 0–0.05), bounded at least 0.012 m above support.
-Returns warnings, identity_verified=false and an inspection_command for an enlarged RGB view; object identity, hidden thickness and grasp success are not verified.
-Fails with plan_ok=false, plan_fail_reason=region_geometry_failed and plan_detail for invalid arguments, missing depth/calibration, absent support, sparse or ambiguous surfaces, or a center in a gap.
+`robo region_geometry --u FLOAT --v FLOAT --u2 FLOAT --v2 FLOAT [--camera head|wrist_l|wrist_r] [--camera2 head|wrist_l|wrist_r]`
+Read-only RGB triangulation of one physical feature selected in two distinct current camera images; no motion or budget cost.
+Cameras default to head and wrist_r; coordinates refer to original image pixels, allowing subpixel values.
+Both pixel selections must depict the same physical feature, not separate silhouette centers; measurements use current camera matrices.
+Returns plan_ok, plan_fail_reason, point_world in metres, ray_gap_m, ray_angle_deg, reprojection_error_px and one_pixel_sensitivity_xyz_m.
+The result is a visible surface point, not a grasp center, hidden thickness, orientation or success certificate; identity and correspondence remain unverified.
+Sensitivity reports coordinate changes under individual ±1 pixel perturbations, not a statistical error bound.
+Fails for invalid inputs/calibration, missing RGB, points behind cameras, baseline <1 cm, ray angle <5°, ray gap >6 mm, reprojection >3 pixels or sensitivity >15 mm.

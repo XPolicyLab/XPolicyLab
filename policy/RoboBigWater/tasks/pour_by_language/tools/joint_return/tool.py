@@ -150,7 +150,7 @@ def run(api, command, args):
         reserve_steps = 1 if deadline_limited else RESERVE_STEPS
         minimum_steps = planned_steps - SETTLE_STEPS + MIN_SETTLE_STEPS if adaptive else planned_steps
         profile = "local_trapezoid"
-        # Match the base command's current timing when the historical local
+        # Match the base command's current timing when this tool's local
         # speed cap cannot meet the deadline. Only public joint paths are used;
         # select before motion, and retain measured settling and a live tick.
         time_path = getattr(getattr(api, "motion", None), "time_path", None)

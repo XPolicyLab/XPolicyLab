@@ -24,9 +24,10 @@ TOOL = dict(name='upright_insert', commands=[dict(name='upright_insert', budget=
     help='grasp a thin upright circular part, insert into a measured opening, and return both arms',
     args=[*[arg(k, required=True) for k in ('top', 'opening', 'end1', 'end2')],
           arg('mode', choices=['preview', 'move'], default='preview'),
-          arg('diameter', 'float', default=0.0285),
-          arg('thickness', 'float', default=0.0019),
-          arg('offset', 'float', default=0.020),
+          arg('diameter', 'float', required=True,
+              help='part diameter in m, measured this episode with rgb_geometry (triangulated rim points)'),
+          arg('thickness', 'float', required=True,
+              help='part thickness in m, measured this episode with rgb_geometry (two-view face edges)'),
           arg('depth', 'float', default=0.012),
           arg('pitch', 'float', default=-1.0)])])
 
@@ -54,13 +55,22 @@ def frame(direction, jaw):
 
 def geometry(args, tcps):
     top, jaw, a, b = [vector(args[k]) for k in ('top', 'opening', 'end1', 'end2')]
-    diameter, thickness, offset, depth, pitch = [float(args.get(k, d)) for k, d in
-        [('diameter', .0285), ('thickness', .0019), ('offset', .020), ('depth', .012), ('pitch', -1)]]
-    if (not np.isfinite([diameter, thickness, offset, depth, pitch]).all() or
-            not .015 <= diameter <= .05 or not .0005 <= thickness <= .005 or
-            not .008 <= offset <= .030 or not .010 <= depth <= diameter*.6 or
+    if args.get('diameter') is None or args.get('thickness') is None:
+        raise ValueError('diameter and thickness are required: measure them in this episode '
+                         'with rgb_geometry (triangulated rim points, face edges); no default exists')
+    if args.get('offset') is not None:
+        raise ValueError('offset is not accepted: the held center is predicted from the '
+                         'measured crest/diameter and must be fitted from RGB after the lift')
+    diameter, thickness = float(args['diameter']), float(args['thickness'])
+    depth, pitch = [float(args.get(k, d)) for k, d in [('depth', .012), ('pitch', -1)]]
+    # Generic plausibility bounds for a thin disk held across its faces
+    # (1-10 cm across, at most 2 cm thick). They do not describe any
+    # particular part; the caller's measurements supply the actual size.
+    if (not np.isfinite([diameter, thickness, depth, pitch]).all() or
+            not .01 <= diameter <= .10 or not .0002 <= thickness <= .02 or
+            not .010 <= depth <= diameter*.6 or
             not (pitch == -1 or 0 <= pitch <= 60)):
-        raise ValueError('invalid dimensions, offset, depth or pitch')
+        raise ValueError('invalid dimensions, depth or pitch')
     if abs(unit(jaw)[2]) > .15:
         raise ValueError('opening direction must be horizontal')
     jaw = unit(jaw * [1, 1, 0])
@@ -98,7 +108,27 @@ def geometry(args, tcps):
     final = frame(tangent if cross else np.array([0., 0., -1.]), target_jaw)
     return dict(top=top, target=target, jaw=jaw, initial=initial, final=final,
                 arm=arm, cross=cross, radius=diameter/2, thickness=thickness,
-                offset=offset, depth=depth, tangent=tangent, pitch=pitch)
+                depth=depth, tangent=tangent, pitch=pitch, length=float(length))
+
+
+def held_seed(g, contact_tcp):
+    """No-slip prediction of the held center in the contact TCP frame.
+
+    Built only from this call's measured crest and diameter and the reached
+    contact pose: the center lies one measured radius below the crest. It is
+    a search seed for the post-lift RGB circle fit, not a held pose.
+    """
+    center = np.asarray(g['top'], dtype=float) - [0., 0., g['radius']]
+    return contact_tcp[:3, :3].T @ (center-contact_tcp[:3, 3])
+
+
+def check_half_width(g):
+    """Half-width of the post-release search square around the mouth.
+
+    Derived from this call's measurements: half the measured aperture plus
+    one measured diameter covers a part that tipped over at the mouth.
+    """
+    return g['length']/2 + 2*g['radius']
 
 
 def color_match(rgb, color):
@@ -461,7 +491,7 @@ def rim_support(points, center, normal, radius, thickness):
                 np.linalg.norm(np.ptp(radial, axis=0)) <= 2*radius+.002)
 
 
-def inspect(obs, profiles, center, normal, radius, source, wrist, thickness=.0019):
+def inspect(obs, profiles, center, normal, radius, source, wrist, thickness):
     """Evidence only: never call a visible centroid a circular center."""
     checks, fits, planes = {}, [], {}
     references = dict(profiles)
@@ -547,14 +577,17 @@ def inspect(obs, profiles, center, normal, radius, source, wrist, thickness=.001
                 face_plane=planes.get(wrist))
 
 
-def surface_check(obs, profiles, mouth):
-    """Search above the receiving surface in 3-D, regardless of final orientation."""
+def surface_check(obs, profiles, mouth, half):
+    """Search above the receiving surface in 3-D, regardless of final orientation.
+
+    half is check_half_width(): measured aperture and diameter, no stored size.
+    """
     counts = {}
     for camera, (color, _) in profiles.items():
         try:
             rgb, xyz = vision.cloud(obs, camera)
             mask = (color_match(rgb, color) &
-                    (np.linalg.norm(xyz[..., :2]-mouth[:2], axis=-1) < .075) &
+                    (np.linalg.norm(xyz[..., :2]-mouth[:2], axis=-1) < half) &
                     (xyz[..., 2] >= mouth[2]-.003) & (xyz[..., 2] <= mouth[2]+.05))
             counts[camera] = int(mask.sum())
         except (KeyError, ValueError, TypeError):
@@ -638,10 +671,17 @@ def run(api, command, args):
         obs = api.observe()
         refinement = refine_source(obs, g)
         result['source_refinement'] = refinement
+        if '_rgb_source_diagnostics' in g:
+            result['source_geometry_diagnostics'] = g['_rgb_source_diagnostics']
         if refinement is not None:
             refined = dict(args, top=','.join(map(str, refinement['top'])),
                            opening=','.join(map(str, refinement['opening'])))
+            if 'radius_m' in refinement:
+                refined['diameter'] = 2*refinement['radius_m']
+            reference_rims = g.get('_rgb_reference_rims')
             g = geometry(refined, tcps)
+            if reference_rims:
+                g['_rgb_reference_rims'] = reference_rims
         parking = clearance_pose(tcps, g['arm'], g['target']) if g['cross'] else None
         profiles = appearances(obs, g['top'], g['jaw'], g['radius'])
         # Both vertical and tilted fingers can skim the crest at the higher
@@ -667,27 +707,86 @@ def run(api, command, args):
         pose[:3, :3] = g['initial']
         result['acquisition_checks'] = []
         for attempt in range(2):
+            # An empty pinch can disturb the source. Temporal silhouette
+            # constraints apply only before the first physical contact.
+            if attempt:
+                g.pop('_rgb_reference_rims', None)
+            inspection_obs = None
+            inspection_fit = None
+            # Keep a useful camera orientation while increasing
+            # image scale. The acquisition orientation can hide the source
+            # behind the open fingers; do not spend the view budget there first.
+            inspection = globals().get('source_inspection_pose')
+            # A resolved wrist silhouette can support a camera translation
+            # even when the independent view prevents a full initial fit.
+            # This is only view-selection evidence, never contact authority.
+            wrist_candidates = result.get('source_geometry_diagnostics', {}).get(
+                wrist, {}).get('candidates', [])
+            useful_wrist = (refinement is not None and
+                            wrist in refinement.get('camera', '').split(','))
+            useful_wrist = useful_wrist or any(
+                c.get('rim_pixels', 0) >= 8 for c in wrist_candidates)
+            if attempt == 0 and inspection is not None and useful_wrist:
+                inspection_pose = inspection(obs, g, wrist, active.tcp())
+                if inspection_pose is not None:
+                    if active.gripper() < .99:
+                        api.set_gripper(active, 1.)
+                        result['executed'] = True
+                    move('source_inspection', inspection_pose, allowance=1.2)
+                    inspection_obs = api.observe()
+                    alias = 'wrist_l' if g['arm'] == 'left' else 'wrist_r'
+                    inspection_fit = refine_source(inspection_obs, g, [(wrist, alias)])
+                    result['source_inspection_refinement'] = inspection_fit
+                    result['source_inspection_diagnostics'] = g.get('_rgb_source_diagnostics', {})
+                    if inspection_fit is None:
+                        raise Stop('source_geometry_unresolved_before_contact')
             contact = g['top'] + [0, 0, contact_heights[attempt]]
             pose[:3, 3] = contact - .05*g['initial'][:, 0]
             if active.gripper() < .99:
                 api.set_gripper(active, 1.)
                 result['executed'] = True
-            move('approach', pose)
-            approach_obs = api.observe()
+            if inspection_fit is None:
+                move('approach', pose)
+                approach_obs = api.observe()
+            else:
+                approach_obs = inspection_obs
             # A source-confirmed empty pinch may have nudged the exposed face.
-            # Refresh from the open wrist before the one allowed retry even
-            # when the original calibration succeeded. Never remeasure a
+            # Refresh from the open wrist before the one allowed retry.
+            # The RGB adapter also requires this on the first attempt. Never remeasure a
             # held/ambiguous acquisition or rotate a loaded hand to inspect.
-            if attempt == 1 or refinement is None:
+            close_refinement = None
+            # RGB silhouettes can fit an inaccurate distant crest with low
+            # residual. Require a fresh close-view fit even after initial success.
+            require_close = globals().get(
+                'REQUIRE_SOURCE_REFINEMENT', False)
+            if attempt == 1 or refinement is None or require_close:
                 alias = 'wrist_l' if g['arm'] == 'left' else 'wrist_r'
-                close_refinement = refine_source(approach_obs, g, [(wrist, alias)])
+                close_refinement = (inspection_fit if inspection_fit is not None else
+                                    refine_source(approach_obs, g, [(wrist, alias)]))
                 refinement_key = ('retry_source_refinement' if attempt else
                                   'approach_source_refinement')
                 result[refinement_key] = close_refinement
+                if '_rgb_source_diagnostics' in g:
+                    result[refinement_key+'_diagnostics'] = g['_rgb_source_diagnostics']
+                # A close approach can obscure the rim or make its face grazing.
+                # One unloaded, calibrated translation may restore visibility;
+                # never bypass fresh multi-view evidence or inspect a held part.
+                viewpoint = globals().get('source_view_pose')
+                if (close_refinement is None and attempt == 0 and viewpoint is not None
+                        and api.sim_time_left() >= 6.0):
+                    inspection_pose = viewpoint(approach_obs, g, wrist, active.tcp())
+                    if inspection_pose is not None:
+                        move('source_view_recovery', inspection_pose, allowance=1.2)
+                        approach_obs = api.observe()
+                        close_refinement = refine_source(approach_obs, g, [(wrist, alias)])
+                        result[refinement_key] = close_refinement
+                        result['source_view_recovery_diagnostics'] = g.get('_rgb_source_diagnostics', {})
                 if close_refinement is not None:
                     refined_args = dict(args,
                         top=','.join(map(str, close_refinement['top'])),
                         opening=','.join(map(str, close_refinement['opening'])))
+                    if 'radius_m' in close_refinement:
+                        refined_args['diameter'] = 2*close_refinement['radius_m']
                     corrected = geometry(refined_args, tcps)
                     if corrected['arm'] != g['arm'] or corrected['cross'] != g['cross']:
                         raise Stop('source_refinement_changes_route')
@@ -696,6 +795,7 @@ def run(api, command, args):
                     corrected_profiles = appearances(approach_obs, corrected['top'],
                                                      corrected['jaw'], corrected['radius'])
                     g, profiles = corrected, corrected_profiles
+                    refinement = close_refinement
                     contact = g['top'] + [0, 0, contact_heights[attempt]]
                     result['grasp_point'] = contact.tolist()
                     result['initial_rotation'] = g['initial'].tolist()
@@ -703,6 +803,9 @@ def run(api, command, args):
                     pose[:3, 3] = contact - .05*g['initial'][:, 0]
                     move('refined_approach', pose)
                     approach_obs = api.observe()
+            if (globals().get('REQUIRE_SOURCE_REFINEMENT', False) and
+                    (refinement is None or close_refinement is None)):
+                raise Stop('source_geometry_unresolved_before_contact')
             # Preserve unobstructed references. Close fingers may occlude the
             # face; only fill previously unavailable cameras at approach.
             try:
@@ -712,39 +815,30 @@ def run(api, command, args):
                 pass
             pose[:3, 3] = contact
             move('contact', pose)
+            # Rigid no-slip seed from the measured crest/diameter and the
+            # reached contact pose; the RGB fit after the lift must resolve it.
+            seed_local = held_seed(g, np.asarray(active.tcp(), dtype=float))
             api.set_gripper(active, 0.)
-            # set_gripper waits a fixed interval, not measured convergence.
-            # Do not accelerate a rim pinch while the fingers still close.
-            # Aperture is only a settling signal, never retention evidence.
-            closure = dict(attempt=attempt+1, samples=[], hold_steps=0)
+            # Arm.gripper() is the commanded target, not finger feedback.
+            # Its immediate zero cannot certify closure. Allow a bounded
+            # 240 ms dwell at the contact pose before accelerating the rim.
+            # This is a timing policy, not measured convergence or retention.
+            closure = dict(attempt=attempt+1, hold_steps=0,
+                           basis='fixed_dwell_command_only_api',
+                           convergence_measured=False)
             result.setdefault('closure_checks', []).append(closure)
-            previous = float(active.gripper())
-            if not np.isfinite(previous) or not 0 <= previous <= 1:
-                raise Stop('invalid_closure_measurement_keep_closed')
-            closure['samples'].append(previous)
-            stable = 0
-            # A fully closed measured aperture needs no additional wait.
-            while previous > .01 and stable < 2 and closure['hold_steps'] < 6:
+            for _ in range(3):
                 reserve = max(30, max(len(api.motion.time_path(np.stack([
                     api.arm(k).joints(), api.arm(k).home_joints])))
                     for k in ('left', 'right'))+5)/25
                 if api.over or api.sim_time_left() < reserve+.8+.08:
                     raise Stop('home_budget_reserve')
                 api.hold(2)
-                current = float(active.gripper())
                 closure['hold_steps'] += 2
-                closure['samples'].append(current)
-                if not np.isfinite(current) or not 0 <= current <= 1:
-                    raise Stop('invalid_closure_measurement_keep_closed')
-                stable = stable+1 if abs(current-previous) <= .005 else 0
-                previous = current
-            closure['settled'] = previous <= .01 or stable >= 2
-            if not closure['settled']:
-                raise Stop('closure_unsettled_keep_closed')
             pose[:3, 3] = np.asarray(active.tcp())[:3, 3] + [0, 0, .12]
             move('lift', pose)
             grasp_tcp = np.asarray(active.tcp()).copy()
-            center = grasp_tcp[:3, 3] + [0, 0, -g['offset']]
+            center = grasp_tcp[:3, 3] + grasp_tcp[:3, :3] @ seed_local
             check = inspect(api.observe(), profiles, center, g['jaw'], g['radius'], g['top'], wrist, g['thickness'])
             result['retention'] = check
             result['acquisition_checks'].append(dict(check, attempt=attempt+1))
@@ -753,6 +847,10 @@ def run(api, command, args):
             if attempt == 0 and check['source_present'] and api.sim_time_left() >= 7:
                 continue
             raise Stop('retention_unconfirmed_keep_closed')
+        # RGB ray/plane tracking must resolve the offset once in this run.
+        # The no-slip seed is not a measured insertion depth.
+        if check.get('geometry_basis') and check['center_fit'] is None:
+            raise Stop('held_offset_unresolved_keep_closed')
         if check['center_fit'] is not None:
             center = np.array(check['center_fit'])
         local = grasp_tcp[:3, :3].T @ (center-grasp_tcp[:3, 3])
@@ -891,7 +989,8 @@ def run(api, command, args):
         result['released'] = True
         pose[:3, 3] = np.asarray(active.tcp())[:3, 3]+[0,0,.06]
         move('retreat', pose, allowance=.4)
-        result['placement'] = surface_check(api.observe(), profiles, g['target'])
+        result['placement'] = surface_check(api.observe(), profiles, g['target'],
+                                            check_half_width(g))
         home()
         result['plan_ok'] = result['placement'] == 'not_visible_above_opening' and result['home_status'] == 'reached'
         result['plan_fail_reason'] = None if result['plan_ok'] else 'placement_or_home_unconfirmed'

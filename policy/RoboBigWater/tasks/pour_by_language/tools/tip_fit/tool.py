@@ -44,8 +44,18 @@ def run(api, command, args):
             raise ValueError('z must be finite')
         a = dict(camera='head', window=24, band=.02, reach=.04)
         a.update(args)
-        result = rim.axis.locate(api.observe(), a, fitter=fit_tip,
-                                 model_name='horizontal_annular_endpoint')
+        if not (.01 <= float(a['band']) <= .04 and .03 <= float(a['reach']) <= .12):
+            raise ValueError('band .01.. .04 and reach .03.. .12 required')
+        observation = api.observe()
+        try:
+            result = rim.axis.locate(observation, a, fitter=fit_tip,
+                                    model_name='horizontal_annular_endpoint')
+        except ValueError:
+            result = rim.axis.rgb.horizontal_ring(observation, a['u'], a['v'],
+                        a['camera'], a['window'], minimum_radius=.006, maximum_radius=.04)
+            result['endpoint_z'] = result.pop('rim_z')
+            result.pop('clearance_verified')
+            result['endpoint_verified'] = False
         length = result['endpoint_z'] - z
         if not .02 <= length <= .30:
             raise ValueError('measured endpoint must be 0.02..0.30 m above supplied z')

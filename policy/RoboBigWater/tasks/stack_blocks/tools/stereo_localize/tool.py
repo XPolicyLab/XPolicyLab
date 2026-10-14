@@ -1,4 +1,5 @@
 """Triangulate a caller-matched image point using public camera calibration."""
+import cv2
 import numpy as np
 
 CAMERAS = {'head': 'cam_head', 'wrist_l': 'cam_left_wrist', 'wrist_r': 'cam_right_wrist'}
@@ -51,9 +52,11 @@ def localize(observation, args):
                 or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-4)
                 or not np.isclose(np.linalg.det(t[:3, :3]), 1, atol=1e-4)):
             raise ValueError('invalid_calibration')
-        # Only the array dimensions are read; estimated depth values are unused.
-        shape = np.asarray(observation['depth'][name]).squeeze().shape
-        if len(shape) != 2 or not (0 <= u < shape[1] and 0 <= v < shape[0]):
+        gray = cv2.imdecode(np.frombuffer(observation['png'][name], np.uint8), cv2.IMREAD_GRAYSCALE)
+        if gray is None or gray.ndim != 2:
+            raise ValueError('invalid_rgb_image')
+        shape = gray.shape
+        if not (0 <= u < shape[1] and 0 <= v < shape[0]):
             raise ValueError('pixel_out_of_bounds_or_invalid_image_shape')
         calibrations.append((k, t))
     center, gap, angle = triangulate(pixels, calibrations)

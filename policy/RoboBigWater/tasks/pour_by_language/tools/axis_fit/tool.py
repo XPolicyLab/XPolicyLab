@@ -1,5 +1,17 @@
-"""Estimate a vertical circular axis from a local visible depth surface."""
+"""Estimate a vertical circular axis from a local RGB stereo surface."""
 import math
+import importlib.util
+from pathlib import Path
+import sys
+
+# Share the bounded, content-keyed RGB cache across dynamic tool imports.
+_name = "pour_rgb_stereo_backend"
+if _name not in sys.modules:
+    _spec = importlib.util.spec_from_file_location(_name, Path(__file__).parents[1] / "rgb_stereo/tool.py")
+    _module = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_module)
+    sys.modules[_name] = _module
+rgb = sys.modules[_name]
 import numpy as np
 
 # EpisodeAPI uses source names; the client's saved observations use aliases.
@@ -8,7 +20,7 @@ CAMERA_SOURCES = {"head": "cam_head", "wrist_l": "cam_left_wrist",
 
 TOOL = {"name": "axis_fit", "commands": [{
     "name": "axis-fit", "budget": False,
-    "help": "fit a vertical circular axis around a selected depth pixel, without motion",
+    "help": "fit a vertical circular axis around a selected RGB pixel, without motion",
     "args": [{"name": "u", "type": "int", "required": True},
              {"name": "v", "type": "int", "required": True},
              {"name": "camera", "default": "head"},
@@ -80,51 +92,24 @@ def fit(points):
 
 def locate(observation, args, fitter=fit, model_name="vertical_circular_surface"):
     camera = args.get("camera", "head")
-    source = CAMERA_SOURCES.get(camera, camera)
-    depths = observation.get("depth", {})
-    models = observation.get("cameras", {})
-    # Resolve both fields together: never combine one camera's depth with
-    # another camera's calibration. Prefer the actual API source when present.
-    if source not in depths or source not in models:
-        if source != camera and camera in depths and camera in models:
-            source = camera
-        else:
-            raise ValueError(f"missing paired depth and calibration for camera {camera!r} (source {source!r})")
-    depth = np.asarray(depths[source], dtype=float)
-    if depth.ndim == 3 and depth.shape[-1] == 1:
-        depth = depth[..., 0]
-    if depth.ndim != 2:
-        raise ValueError("depth must be a metric H by W image")
     u, v, window = (int(args[k]) for k in ("u", "v", "window"))
     if any(float(args[k]) != val for k, val in (("u", u), ("v", v), ("window", window))):
         raise ValueError("pixel arguments must be integers")
     band, reach = float(args["band"]), float(args["reach"])
     if not (8 <= window <= 100 and .01 <= band <= .04 and .03 <= reach <= .12):
         raise ValueError("window 8..100 px, band .01...04 m, reach .03...12 m required")
-    h, w = depth.shape
-    if not (0 <= u < w and 0 <= v < h) or not np.isfinite(depth[v, u]) or depth[v, u] <= 0:
-        raise ValueError("seed pixel has no valid depth")
-    model = models[source]
-    k = np.asarray(model["intrinsics"], dtype=float)
-    t = np.asarray(model["extrinsics_world"], dtype=float)
-    if k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all() or not np.isfinite(t).all():
-        raise ValueError("invalid camera matrices")
-    if not np.allclose(t[3], [0, 0, 0, 1]) or not np.allclose(t[:3, :3].T@t[:3, :3], np.eye(3), atol=1e-3):
-        raise ValueError("invalid camera transform")
-    inv = np.linalg.inv(k)
-    seed = t[:3, :3] @ (inv @ [u, v, 1] * depth[v, u]) + t[:3, 3]
-    vv, uu = np.mgrid[max(0, v-window):min(h, v+window+1), max(0, u-window):min(w, u+window+1)]
-    d = depth[vv, uu].ravel()
-    good = np.isfinite(d) & (d > 0)
-    pixels = np.column_stack((uu.ravel()[good], vv.ravel()[good], np.ones(good.sum())))
-    points = ((pixels @ inv.T) * d[good, None]) @ t[:3, :3].T + t[:3, 3]
-    points = points[(np.abs(points[:, 2]-seed[2]) <= band) &
-                    (np.linalg.norm(points[:, :2]-seed[:2], axis=1) <= reach)]
+    data = rgb.cloud(observation, camera)
+    seed = rgb.seed_point(data, u, v)
+    points, pixels = data['points'], data['pixels']
+    points = points[(np.max(np.abs(pixels-[u, v]), axis=1) <= window)
+                    & (np.abs(points[:, 2]-seed[2]) <= band)
+                    & (np.linalg.norm(points[:, :2]-seed[:2], axis=1) <= reach)]
     result = fitter(points)
     if np.linalg.norm(np.array(result["centre_xy"])-seed[:2]) > reach:
         raise ValueError("fitted axis outside local search region")
-    result.update(surface_world=seed.tolist(), camera=camera, camera_source=source,
-                  model=model_name, geometry_verified=False)
+    result.update(surface_world=seed.tolist(), camera=camera,
+                  camera_source=data['camera_source'], source=data['source'],
+                  stereo_pairs=data['pairs'], model=model_name, geometry_verified=False)
     return result
 
 
@@ -241,27 +226,11 @@ def support_profile(points, source, tip):
 
 
 def grasp_support(observation, source, tip):
-    """Read-only advisory geometry check from the calibrated head depth."""
+    """Read-only advisory geometry from calibrated RGB correspondences."""
     try:
-        depths, cameras = observation.get('depth', {}), observation.get('cameras', {})
-        name = next(n for n in ('cam_head', 'head') if n in depths and n in cameras)
-        depth = np.asarray(depths[name], dtype=float)
-        if depth.ndim == 3 and depth.shape[-1] == 1:
-            depth = depth[..., 0]
-        if depth.ndim != 2:
-            raise ValueError('invalid depth shape')
-        k = np.asarray(cameras[name]['intrinsics'], dtype=float)
-        t = np.asarray(cameras[name]['extrinsics_world'], dtype=float)
-        if (k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all()
-                or not np.isfinite(t).all() or not np.allclose(t[3], [0, 0, 0, 1])
-                or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)):
-            raise ValueError('invalid calibration')
-        v, u = np.nonzero(np.isfinite(depth) & (depth > 0))
-        pixels = np.column_stack((u, v, np.ones(len(u))))
-        points = ((pixels @ np.linalg.inv(k).T) * depth[v, u, None]) @ t[:3, :3].T + t[:3, 3]
-        return support_profile(points, source, tip)
-    except Exception:
-        return dict(checked=False, reason='paired head depth/calibration unavailable or invalid')
+        return support_profile(rgb.cloud(observation, 'head')['points'], source, tip)
+    except Exception as exc:
+        return dict(checked=False, reason='RGB stereo support unavailable: ' + str(exc))
 
 
 def run(api, command, args):

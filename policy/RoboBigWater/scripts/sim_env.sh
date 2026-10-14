@@ -8,7 +8,7 @@ export ROBODOJO_REPO
 
 if [ -n "${TMPDIR:-}" ]; then mkdir -p "$TMPDIR"; export TMPDIR; else unset TMPDIR; fi
 export ACCEPT_EULA=Y OMNI_KIT_ACCEPT_EULA=YES PRIVACY_CONSENT=N
-export PYTHONNOUSERSITE=1 PIP_NO_INDEX=1 PIP_DISABLE_PIP_VERSION_CHECK=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export PYTHONNOUSERSITE=1 PIP_NO_INDEX=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 # ffmpeg for the episode videos lives in the Isaac environment
 export PATH=$(dirname "$ISAAC_PYTHON"):$PATH
 if [ -n "${SIM_CACHE:-}" ]; then
@@ -18,17 +18,3 @@ if [ -n "${SIM_CACHE:-}" ]; then
 fi
 if [ -n "${EXTRA_LD_LIBRARY_PATH:-}" ]; then export LD_LIBRARY_PATH=$EXTRA_LD_LIBRARY_PATH${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}; fi
 export PYTHONPATH=$ROBOSHELL_ROOT:$ROBODOJO_REPO:$ROBODOJO_REPO/XPolicyLab${PYTHONPATH:+:$PYTHONPATH}
-KIT_ARGS="--enable isaacsim.replicator.behavior --enable isaacsim.sensors.camera"
-
-# run_on_gpu GPU OWNER MIN_FREE_MIB COMMAND...
-run_on_gpu() {
-  local gpu=$1 owner=$2 need=$3; shift 3
-  if [ -n "${GPU_LOCK:-}" ] && [ -x "$GPU_LOCK" ]; then
-    "$GPU_LOCK" "$gpu" "$owner" --min-free-mib "$need" -- "$@"
-    return
-  fi
-  local free
-  free=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits -i "$gpu" | tr -d ' ')
-  if [ "$free" -lt "$need" ]; then echo "GPU $gpu has $free MiB free, $need needed" >&2; return 75; fi
-  "$@"
-}

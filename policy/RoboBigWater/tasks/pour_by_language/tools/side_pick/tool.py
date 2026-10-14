@@ -18,22 +18,26 @@ TOOL = {'name': 'side_pick', 'commands': [{
 
 
 def top_height(observation, centre, tip, radius):
-    """Require a visible upper surface beyond the fingers, using metric depth."""
-    depths, models = observation.get('depth', {}), observation.get('cameras', {})
-    name = next(n for n in ('cam_head', 'head') if n in depths and n in models)
-    depth = np.asarray(depths[name], dtype=float)
-    if depth.ndim == 3 and depth.shape[-1] == 1:
-        depth = depth[..., 0]
-    k = np.asarray(models[name]['intrinsics'], dtype=float)
-    t = np.asarray(models[name]['extrinsics_world'], dtype=float)
-    if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
-            or not np.isfinite(k).all() or not np.isfinite(t).all()
-            or not np.allclose(t[3], [0, 0, 0, 1])
-            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-3)):
-        raise ValueError('invalid paired depth/calibration')
-    v, u = np.nonzero(np.isfinite(depth) & (depth > 0))
-    pixels = np.column_stack((u, v, np.ones(len(u))))
-    points = ((pixels @ np.linalg.inv(k).T) * depth[v, u, None]) @ t[:3, :3].T + t[:3, 3]
+    """Require a visible upper surface beyond the fingers using RGB stereo."""
+    try:
+        return dense_top_height(observation, centre, tip, radius)
+    except ValueError as exc:
+        if 'disagrees' in str(exc):
+            raise
+        # Smooth surfaces may have no dense correspondences. Recover metric
+        # geometry from calibrated edges, never from the supplied prediction.
+        expected = np.asarray(centre) + [0., 0., tip]
+        endpoint = _motion.observe_endpoint(observation, expected)
+        point = np.asarray(endpoint['centre_world'], dtype=float)
+        if (point.shape != (3,) or not np.all(np.isfinite(point))
+                or np.linalg.norm(point - expected) > .02
+                or not .006 <= float(endpoint['radius_m']) <= radius + .008):
+            raise ValueError('upper annulus disagrees with supplied geometry')
+        return float(point[2])
+
+
+def dense_top_height(observation, centre, tip, radius):
+    points = _motion._axis.rgb.cloud(observation, 'head')['points']
     local = points[(np.linalg.norm(points[:, :2]-centre[:2], axis=1) <= radius+.008)
                    & (points[:, 2] > centre[2]+.06)
                    & (points[:, 2] < centre[2]+tip+.03)]
@@ -106,10 +110,19 @@ def run(api, command, args):
             if error > .004 or angle > 1:
                 raise RuntimeError('endpoint_not_settled')
             if name == 'insert':
+                active = 'observe_insert'
+                evidence['insert_top_z'] = top_height(api.observe(), source, tip, radius)
+                if abs(evidence['insert_top_z'] - evidence['before_top_z']) > .02:
+                    raise RuntimeError('source_moved_during_insertion')
                 active = 'close'
                 closed = True
                 if api.set_gripper(arm, 0.) is False or api.over:
                     raise RuntimeError('close interrupted')
+            if name == 'lift':
+                active = 'observe_lift'
+                evidence['lift_top_z'] = top_height(api.observe(), pos, tip, radius)
+                if abs(evidence['lift_top_z'] - evidence['before_top_z'] - lift) > .02:
+                    raise RuntimeError('lift_not_observed')
         active = 'observe_after'
         evidence['after_top_z'] = top_height(api.observe(), high, tip, radius)
         evidence['rise_m'] = evidence['after_top_z'] - evidence['before_top_z']

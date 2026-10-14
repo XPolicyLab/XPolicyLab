@@ -1,7 +1,7 @@
 """Public-depth layout proposals and measured two-support landing checks.
 
-The contact gate is adapted from the verified URAI bridge_public_recipe.py.
-No historical coordinates, scene objects or evaluator state are inputs.
+The contact gate checks overlap, level and centre support margin.
+No stored coordinates, scene objects or evaluator state are inputs.
 """
 import importlib.util
 import json
@@ -71,7 +71,7 @@ def project_world(point, camera, shape):
 
 
 def contact_guard(size, axes, centres, heights, top_points):
-    """URAI's observed overlap/level/centre gate; never a physical stability claim."""
+    """Overlap/level/centre support gate; never a physical stability claim."""
     centres, heights = np.asarray(centres, float), np.asarray(heights, float)
     if (centres.shape != (2, 2) or heights.shape != (2,)
             or not np.isfinite(centres).all() or not np.isfinite(heights).all()):
@@ -107,8 +107,8 @@ def heading(axis):
 
 
 def grasp_height(top, support):
-    # Reuse the X5 calibration from the successful URAI primitive. The145mm TCP
-    # lies12.6mm behind the physical fingertips; this is not a layout height.
+    # X5 gripper geometry: the 145 mm TCP lies 12.6 mm behind the physical
+    # fingertips; a robot design value, not a scene height.
     height = max(support + .0126, top - min(.025, (top - support) * .45))
     if not np.isfinite(height) or height >= top:
         raise ValueError('source is too thin for the calibrated X5 fingertips')
@@ -187,7 +187,7 @@ def initial_from_inventory(observation, inventory):
 
 
 def initial_layout(parts, cloud, valid, camera=None):
-    """Transfer the observed successful support graph, recomputing its geometry."""
+    """Apply the fixed support graph, recomputing its geometry from current depth."""
     upright = sorted(parts['supports'], key=lambda p: p['top_center'][0])
     spans = sorted(parts['spans'], key=lambda p: p['length_m'], reverse=True)
     flat = upright + spans + [parts['cap']]
@@ -206,13 +206,13 @@ def initial_layout(parts, cloud, valid, camera=None):
     cross = np.array([-direction[1], direction[0]])
     if cross[1] < 0:
         cross = -cross
-    # Reorder by measured source projection, not by a layout index.
+    # Reorder by measured source projection, not by selection order.
     upright.sort(key=lambda p: np.dot(p['top_center'][:2], direction))
     lower, upper = [upright[1], upright[2]], [upright[0], upright[3]]
-    # Keep the proven support graph on the far side of the current long span.
-    # Near-body sites in v6/v9/v11 caused public approach/arrival failures.
-    # High-level reach is handled by the migrated recipe and public preflight,
-    # never by weakening this current-depth footprint check.
+    # Keep the support graph on the far side of the current long span;
+    # near-body sites risk approach/arrival failures. High-level reach is
+    # handled by public preflight, never by weakening this current-depth
+    # footprint check.
     site = np.asarray(spans[0]['top_center'][:2]) + cross * (
         spans[0]['width_m'] / 2 + max(p['length_m'] for p in lower) / 2 + .006)
     span_axes = np.column_stack([direction, cross])

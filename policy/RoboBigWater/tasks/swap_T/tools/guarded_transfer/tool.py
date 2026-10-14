@@ -85,30 +85,31 @@ class Stop(Exception):
 
 
 def surface_height(obs, goal):
-    """Measure a small, horizontal patch enclosing XY from calibrated depth.
-
-    No height filtering: mixed foreground/background must fail confidence,
-    rather than selecting whichever layer happens to support the request.
-    """
-    camera = obs["cameras"]["cam_head"]
-    depth = np.asarray(obs["depth"]["cam_head"], float)
-    vv, uu = np.nonzero(np.isfinite(depth) & (depth > 0))
-    k = np.asarray(camera["intrinsics"], float)
-    t = np.asarray(camera["extrinsics_world"], float)
-    rays = np.linalg.solve(k, np.stack([uu, vv, np.ones(len(uu))]))
-    points = (t[:3, :3] @ (rays * depth[vv, uu]) + t[:3, 3, None]).T
-    local = points[np.linalg.norm(points[:, :2] - goal[:2], axis=1) <= .006]
-    if len(local) < 12 or not np.isfinite(local).all():
+    """Measure the color patch at the requested XY from RGB camera pairs."""
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location(
+        "transfer_surface_rgb", Path(__file__).resolve().parents[1] / "surface_pair" / "tool.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    try:
+        all_views = module.views(obs)
+        view = all_views["cam_head"]
+        _, k, t = view
+        camera_point = t[:3, :3].T @ (goal-t[:3, 3])
+        if camera_point[2] <= 0:
+            return None
+        pixel = k @ camera_point
+        u, v = np.round(pixel[:2]/pixel[2]).astype(int)
+        xy, _, height, _, _ = module.region(all_views, "cam_head", u, v, 35)
+        # Require a supported interior neighborhood at the requested XY.
+        samples = goal[:2] + np.array([[x, y] for x in (-.004, 0, .004)
+                                             for y in (-.004, 0, .004)])
+        if module.cKDTree(xy).query(samples)[0].max() > .0015:
+            return None
+        return height
+    except (ValueError, KeyError, TypeError, np.linalg.LinAlgError):
         return None
-    relative = local[:, :2] - goal[:2]
-    # Require measured support on all sides, excluding an edge or occlusion.
-    if any(np.count_nonzero((relative[:, 0] * sx > .001)
-                            & (relative[:, 1] * sy > .001)) < 2
-           for sx in (-1, 1) for sy in (-1, 1)):
-        return None
-    if np.ptp(local[:, 2]) > .003:
-        return None
-    return float(np.median(local[:, 2]))
 
 
 def gripper_transition(api, arm, opening):
@@ -200,6 +201,7 @@ def carry_pair(api, args):
     """Fold the second directed turn into its closed-peer withdrawal."""
     results = []
     resume_args = None
+    requests, final_rotations = {}, {}
     try:
         first = args.get("first", "left")
         clearance, gap = float(args.get("clearance", .06)), float(args.get("gap", .12))
@@ -243,8 +245,25 @@ def carry_pair(api, args):
                 released_peer_rotation = np.asarray(result["release_retreat_rotation"], float)
         return dict(plan_ok=True, plan_fail_reason=None, transfers=results, released=True), 0
     except Exception as error:
+        remaining_transfers = []
+        # A peer may already have turned even when the active transfer failed.
+        # Report both residuals against the ORIGINAL requested attitudes.
+        for side in (args.get("first", "left"),
+                     "right" if args.get("first", "left") == "left" else "left"):
+            try:
+                if side not in final_rotations or api.arm(side).gripper() > .5 or api.over:
+                    continue
+                remaining = final_rotations[side] @ api.arm(side).tcp()[:3, :3].T
+                if np.rad2deg(np.arccos(np.clip(remaining[2, 2], -1, 1))) > 5:
+                    continue
+                request = {k: v for k, v in requests[side].items() if not k.startswith("_")}
+                request["yaw"] = float(np.rad2deg(np.arctan2(remaining[1, 0], remaining[0, 0])))
+                remaining_transfers.append(dict(command="carry_to", args=request))
+            except Exception:
+                pass
         return dict(plan_ok=False, plan_fail_reason=str(error) or type(error).__name__,
                     transfers=results, released=False,
+                    remaining_transfers=remaining_transfers,
                     resume_command="carry_to" if resume_args is not None else None,
                     resume_args=resume_args), 1
 
@@ -295,7 +314,7 @@ def run(api, command, args, *, lift_x=None, peer_rotation=None, vertical_peer=Fa
                                      applied=False)
                 # Only repair a small downward offset from a visible top.
                 # Never lower a request or follow a distant/occluding layer.
-                if height is not None and .004 < height - goal[2] <= .020:
+                if height is not None and .004 < height - goal[2] <= .040:
                     goal[2] = height
                     surface_check["applied"] = True
             across = yaw_rotation(angle) @ np.array([1., 0, 0])
@@ -335,11 +354,17 @@ def run(api, command, args, *, lift_x=None, peer_rotation=None, vertical_peer=Fa
             height = max(initial[2, 3], goal[2] + clearance)
             raised = initial[:3, 3].copy()
             raised[2] = height
-            # Start above the clearance plane, then descend continuously to
-            # touchdown while translating and turning. Requires a clear
-            # sloping corridor; avoids a stop and a second eased trajectory.
+            # Finish lateral travel and yaw before the support can contact
+            # the carried surface. The 20 mm terminal clearance is a motion
+            # design margin, not an assumed scene dimension. Non-release
+            # transport keeps the caller's exact endpoint.
+            transit_goal = goal.copy()
+            if release:
+                transit_goal[2] += .020
             targets = [("raise", raised, initial[:3, :3]),
-                       ("transit", goal, rotation)]
+                       ("transit", transit_goal, rotation)]
+            if release:
+                targets.append(("touchdown", goal, rotation))
         # Preflight both the transport and any idle-arm clearance motion.
         peer = other.tcp().copy()
         segments = []
@@ -673,7 +698,7 @@ def run(api, command, args, *, lift_x=None, peer_rotation=None, vertical_peer=Fa
                         or str(failure) != "ik_unreachable" or api.over
                         or not np.allclose(arm.tcp(), before, atol=1e-6, rtol=0)
                         or before[2, 3] < goal[2] + clearance - .002
-                        or np.linalg.norm(before[:3, 3] - goal) < .002
+                        or np.linalg.norm(before[:3, 3] - transit_goal) < .002
                         or np.trace(before[:3, :3].T @ rotation) > 2.999):
                     raise
                 check_peer()
@@ -696,11 +721,11 @@ def run(api, command, args, *, lift_x=None, peer_rotation=None, vertical_peer=Fa
                                 and np.allclose(other.joints(), peer_joints, atol=1e-6, rtol=0))
                     if not stationary():
                         raise
-                    above_goal = goal.copy()
+                    above_goal = transit_goal.copy()
                     above_goal[2] = before[2, 3]
                     route_clear = all(
                         segment_distance(a, b, peer_before[:3, 3]) >= peer_gap
-                        for a, b in ((before[:3, 3], above_goal), (above_goal, goal)))
+                        for a, b in ((before[:3, 3], above_goal), (above_goal, transit_goal)))
                     if route_clear:
                         try:
                             move("short_arc_translate", above_goal, before[:3, :3])
@@ -709,21 +734,48 @@ def run(api, command, args, *, lift_x=None, peer_rotation=None, vertical_peer=Fa
                             if str(translation_failure) != "ik_unreachable" or not stationary():
                                 raise
                         else:
-                            # Translation has executed: stop on any subsequent
-                            # failure with measured residual yaw; never restart
-                            # the opposite arc from this new state.
-                            move("short_arc_finish", goal, rotation)
+                            # The finish is a separate planning attempt. A
+                            # stationary rejection can take an opposite arc
+                            # from HERE, without repeating the translation or
+                            # reapplying the already executed peer turn.
+                            finish_pose = arm.tcp().copy()
+                            finish_joints = np.asarray(arm.joints()).copy()
+                            finish_peer = other.tcp().copy()
+                            finish_peer_joints = np.asarray(other.joints()).copy()
+                            try:
+                                move("short_arc_finish", transit_goal, rotation)
+                            except Stop as finish_failure:
+                                if (str(finish_failure) != "ik_unreachable" or api.over
+                                        or not np.allclose(arm.tcp(), finish_pose, atol=1e-6, rtol=0)
+                                        or not np.allclose(arm.joints(), finish_joints, atol=1e-6, rtol=0)
+                                        or not np.allclose(other.tcp(), finish_peer, atol=1e-6, rtol=0)
+                                        or not np.allclose(other.joints(), finish_peer_joints, atol=1e-6, rtol=0)):
+                                    raise
+                                relative_finish = rotation @ finish_pose[:3, :3].T
+                                if np.rad2deg(np.arccos(np.clip(relative_finish[2, 2], -1, 1))) > 1:
+                                    raise
+                                residual = float(np.rad2deg(np.arctan2(
+                                    relative_finish[1, 0], relative_finish[0, 0])))
+                                if abs(residual) < 1:
+                                    raise
+                                arc = residual - np.copysign(360., residual)
+                                midpoint = (finish_pose[:3, 3] + transit_goal) / 2
+                                move("finish_opposite_arc_midpoint", midpoint,
+                                     yaw_rotation(arc / 2) @ finish_pose[:3, :3])
+                                check_peer()
+                                release_retreat_rotation = arm.tcp()[:3, :3].copy()
+                                move("finish_opposite_arc_end", transit_goal, rotation)
                             check_peer()
                             continue
                 long_yaw = short_yaw - np.copysign(360., short_yaw)
-                midpoint = (before[:3, 3] + goal) / 2
+                midpoint = (before[:3, 3] + transit_goal) / 2
                 mid_rotation = yaw_rotation(long_yaw / 2) @ before[:3, :3]
                 move("opposite_arc_midpoint", midpoint, mid_rotation)
                 check_peer()
                 # Keep actual evidence of a reachable, less wound attitude,
                 # not a heading computed from the downward approach axis.
                 release_retreat_rotation = arm.tcp()[:3, :3].copy()
-                move("opposite_arc_finish", goal, rotation)
+                move("opposite_arc_finish", transit_goal, rotation)
             check_peer()
             if command == "grasp_at" and target[0] == "approach":
                 overhead_pose = arm.tcp().copy()

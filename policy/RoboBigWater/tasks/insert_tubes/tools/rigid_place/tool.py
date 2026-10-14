@@ -52,45 +52,215 @@ def active_hand_mask(points, tcp):
     return (np.linalg.norm(relative, axis=-1) <= .10) | (distance <= .065)
 
 
-def depth_obstacles(obs, destination, tcp, length):
-    """Visible elevated surfaces near the destination, from head depth only."""
-    camera = next((k for k in ('cam_head', 'head')
-                   if k in obs.get('depth', {}) and k in obs.get('cameras', {})), None)
-    if camera is None:
-        raise ValueError('head depth unavailable')
-    depth = np.asarray(obs['depth'][camera], dtype=float).squeeze()
-    K = np.asarray(obs['cameras'][camera]['intrinsics'], dtype=float)
-    T = np.asarray(obs['cameras'][camera]['extrinsics_world'], dtype=float)
-    if (depth.ndim != 2 or K.shape != (3, 3) or T.shape != (4, 4)
-            or not np.isfinite(K).all() or not np.isfinite(T).all()):
-        raise ValueError('invalid depth or camera matrices')
-    v, u = np.indices(depth.shape)
-    valid = np.isfinite(depth) & (depth > 0)
-    if valid.sum() < 20:
-        raise ValueError('insufficient valid depth')
-    rays = np.stack((u, v, np.ones_like(u)), -1) @ np.linalg.inv(K).T
-    points = (rays * np.where(valid, depth, 0)[..., None]) @ T[:3, :3].T + T[:3, 3]
-    radial = np.linalg.norm(points[..., :2] - destination[:2], axis=-1)
-    mask = (valid & (radial > .025) & (radial < .25)
-            & (points[..., 2] > destination[2] + .012)
-            & (points[..., 2] < destination[2] + max(length, .15) + .08))
-    # A TCP sphere alone leaves the rear palm/wrist in the obstacle cloud,
-    # causing a transit floor that rises with the very hand being lifted.
-    # Do not remove the peer or broadly discard elevated scene geometry.
-    mask &= ~active_hand_mask(points, tcp)
-    labels, _ = ndimage.label(mask)
+def clearance_mask(rgb, compact=True):
+    """Keep compact colored and pale silhouettes, separately from each other.
+
+    Neutral elongated surfaces provide clearance evidence even when a colored
+    extremity is hidden in a peer view. Separate labeling prevents touching
+    wood/background colors from swallowing a pale foreground component.
+    Thresholds describe appearance, not a scene class or physical dimension.
+    compact=False supplies only a corroborating appearance mask.
+    """
+    bright, dark = rgb.max(-1), rgb.min(-1)
+    masks = (((bright >= 170) & (bright-dark >= .25*bright), 25),
+             ((bright >= 150) & (bright-dark <= .22*bright), 100))
+    if not compact:
+        # Corroboration only: a close camera may magnify or merge a silhouette
+        # beyond the component limits. Never use this mask without a compact
+        # anchor in another calibrated view of the same world hypothesis.
+        return masks[0][0] | masks[1][0]
+    mask = np.zeros(bright.shape, bool)
+    for pixels, max_eigen_ratio in masks:
+        labels, _ = ndimage.label(pixels)
+        for label, box in enumerate(ndimage.find_objects(labels), 1):
+            if box is None:
+                continue
+            ys, xs = np.nonzero(labels[box] == label)
+            if not 5 <= len(xs) <= 1800:
+                continue
+            eigen = np.linalg.eigvalsh(np.cov(np.column_stack((xs, ys)).T))
+            if eigen[0] < .4 or eigen[1] > max_eigen_ratio*eigen[0]:
+                continue
+            mask[box] |= labels[box] == label
+    return mask
+
+
+def rgb_obstacles(obs, destination, tcp, length, ray_envelope=False):
+    """Intersect compact colored and neutral silhouettes in calibrated RGB views.
+
+    At least one view must supply a compact component; another may corroborate
+    it with a magnified/merged appearance region. A 4 mm voxel visual hull is
+    an occupied-volume hypothesis, not a surface
+    depth map. The caller's surface height and extent bound the search; no
+    scene dimensions or object locations are assumed. Repeated colors can
+    create conservative ghost volumes; dark/occluded geometry is missed.
+    ray_envelope=True instead retains every bounded ray from compact pixels:
+    these are possible occupancy, NOT measured heights or stereo geometry.
+    """
+    views = []
+    for name, calibration in obs.get('cameras', {}).items():
+        if name not in obs.get('png', {}):
+            continue
+        try:
+            K = np.asarray(calibration['intrinsics'], float)
+            T = np.asarray(calibration['extrinsics_world'], float)
+            if (K.shape != (3, 3) or T.shape != (4, 4)
+                    or not np.isfinite(K).all() or not np.isfinite(T).all()
+                    or abs(np.linalg.det(K)) < 1e-9
+                    or not np.allclose(T[3], [0, 0, 0, 1])
+                    or not np.allclose(T[:3, :3].T @ T[:3, :3], np.eye(3), atol=1e-5)
+                    or np.linalg.det(T[:3, :3]) < .999):
+                continue
+            rgb = np.asarray(Image.open(io.BytesIO(obs['png'][name])).convert('RGB'), float)
+            mask = clearance_mask(rgb)
+            views.append((K, T, rgb, mask, clearance_mask(rgb, compact=False)))
+        except (ValueError, KeyError, OSError, np.linalg.LinAlgError):
+            continue
+    pairs = [(i, j) for i, j in itertools.combinations(range(len(views)), 2)
+             if np.linalg.norm(views[i][1][:3, 3]-views[j][1][:3, 3]) >= .02]
+    if not views or (not pairs and not ray_envelope):
+        raise ValueError('RGB clearance requires two calibrated views with baseline >=20 mm')
+    step = .004
+    offsets = np.arange(-.248, .249, step)
+    heights = np.arange(.016, max(length, .15)+.08, step)
+    grid = np.stack(np.meshgrid(offsets, offsets, heights, indexing='ij'), -1)
+    shape = grid.shape[:3]
+    points = grid.reshape(-1, 3) + destination
+    occupied = np.zeros(len(points), bool)
+    for start in range(0, len(points), 50000):
+        p = points[start:start+50000]
+        radial = np.linalg.norm(p[:, :2]-destination[:2], axis=1)
+        eligible = (radial > .025) & (radial < .25) & ~active_hand_mask(p, tcp)
+        samples = []
+        for K, T, rgb, mask, support in views:
+            local = (p-T[:3, 3]) @ T[:3, :3]
+            q = local @ K.T
+            uv = np.rint(q[:, :2]/np.maximum(q[:, 2:3], 1e-9)).astype(np.int64)
+            valid = eligible & (local[:, 2] > .05) & (uv[:, 0] >= 1) & (uv[:, 1] >= 1)
+            valid &= (uv[:, 0] < rgb.shape[1]-1) & (uv[:, 1] < rgb.shape[0]-1)
+            u = np.clip(uv[:, 0], 0, rgb.shape[1]-1)
+            v = np.clip(uv[:, 1], 0, rgb.shape[0]-1)
+            samples.append((valid & mask[v, u], rgb[v, u], valid & support[v, u]))
+        accepted = np.zeros(len(p), bool)
+        if ray_envelope:
+            for compact, _, _ in samples:
+                accepted |= compact
+        for i, j in (() if ray_envelope else pairs):
+            a, b = views[i][1][:3, 3], views[j][1][:3, 3]
+            da, db = p-a, p-b
+            cosine = np.abs(np.sum(da*db, axis=1)) / np.maximum(
+                np.linalg.norm(da, axis=1)*np.linalg.norm(db, axis=1), 1e-12)
+            # At least one compact anchor, plus appearance support in a
+            # geometrically independent view. Two unfiltered backgrounds
+            # cannot create occupancy on their own.
+            anchored = ((samples[i][0] & samples[j][2]) |
+                        (samples[j][0] & samples[i][2]))
+            accepted |= (anchored &
+                         (cosine < np.cos(np.deg2rad(10))) &
+                         (np.linalg.norm(samples[i][1]-samples[j][1], axis=1) <= 60))
+        occupied[start:start+len(p)] = accepted
+    labels, _ = ndimage.label(occupied.reshape(shape))
     sizes = np.bincount(labels.ravel())
-    mask &= sizes[labels] >= 5
-    # Voxel reduction avoids weighting camera-near surfaces more heavily.
-    return np.unique(np.round(points[mask] / .003), axis=0) * .003
+    keep = occupied & (sizes[labels.ravel()] >= 5)
+    return points[keep]
+
+
+def refreshed_clearance(api, arm, initial, tcp, center, axis, length,
+                        destination, clearance, depth, tcp_clearance,
+                        retreat, floor, speed, original_remainder=None):
+    """One static-scene visual hull after a direct lift; no sensing motion.
+
+    Retain earlier calibrated views to exploit the wrist baseline supplied by
+    the lift. Mask the old active hand as well: it moved between observations
+    and cannot corroborate stationary occupancy. No cross-time held geometry
+    is used here. Occluded or moving surroundings remain uncertain.
+    """
+    current = api.observe()
+    combined = {'png': {}, 'cameras': {}}
+    for prefix, obs in (('before_', initial), ('after_', current)):
+        for name, calibration in obs.get('cameras', {}).items():
+            if name in obs.get('png', {}):
+                combined['cameras'][prefix+name] = calibration
+                combined['png'][prefix+name] = obs['png'][name]
+    actual = np.asarray(arm.tcp(), float)
+    cloud = rgb_obstacles(combined, destination, actual, length)
+    cloud = cloud[~active_hand_mask(cloud, tcp)]
+    uncertain = False
+    if not len(cloud):
+        # Empty stereo can mean peer occlusion, not empty surroundings. Use
+        # current compact silhouettes only: old views include a moved hand
+        # and held feature. The full bounded ray volume biases yaw away from
+        # possible occupancy without assigning a monocular depth or top.
+        cloud = rgb_obstacles(current, destination, actual, length, ray_envelope=True)
+        uncertain = True
+        if not len(cloud):
+            return None, {'status': 'no_new_obstacle_evidence'}, cloud, floor
+    approach, report = choose_approach(tcp, destination, cloud, retreat)
+    if uncertain:
+        report['status'] = 'single_view_ray_envelope'
+        report['depth_verified'] = False
+        report['height_bounds_m'] = [float(destination[2]+.016),
+                                     float(destination[2]+max(length, .15)+.08)]
+        new_floor, height_report = floor, {'status': 'unresolved_ray_depth'}
+    else:
+        new_floor, height_report = transit_height(
+            tcp, center, length, clearance, cloud, destination[:2])
+    floor = max(floor, new_floor)
+    report['transit_height'] = height_report
+    if not callable(getattr(api, 'estimate_tcp_chain', None)):
+        report['status'] = 'refresh_requires_preflight'
+        return [], report, cloud, floor
+    initial_poses = placement_poses(tcp, center, axis, length, destination,
+                                    clearance, depth, tcp_clearance, approach)
+    directions = [(approach, None)] + alternative_approaches(
+        destination, cloud, retreat, initial_poses[1][1][:3, :3],
+        actual[:3, :3], min(.065, report.get('rear_clearance_m', .065)))
+    report['attempts'] = []
+    for direction, _ in directions:
+        final = placement_poses(tcp, center, axis, length, destination,
+                                clearance, depth, tcp_clearance, direction)
+        rise = actual.copy()
+        rise[2, 3] = max(actual[2, 3], floor, final[0][1][2, 3])
+        final[1][1][2, 3] = max(final[1][1][2, 3], rise[2, 3])
+        chain = [('clearance_rise', rise)] if rise[2, 3]-actual[2, 3] > .001 else []
+        chain += final[1:]
+        try:
+            estimate = estimate_chain(api, arm, chain, speed)
+        except Exception as exc:
+            estimate = {'estimate_ok': False, 'reason': str(exc)}
+        report['attempts'].append(estimate)
+        if estimate.get('estimate_ok') is True:
+            report['selected_approach_xy'] = np.asarray(direction).tolist()
+            return chain, report, cloud, floor
+    report['status'] = 'refreshed_chain_unreachable'
+    if uncertain and original_remainder is not None:
+        # A monocular ray is possible occupancy, not a measured obstacle.
+        # Prefer its better-clearance headings, but do not strand a retained
+        # grasp solely because those headings reject. Recheck the exact
+        # original remainder from measured joints; an earlier ideal-chain
+        # estimate does not establish reachability after the physical lift.
+        original = [(name, target.copy()) for name, target in original_remainder
+                    if name != 'retreat']
+        try:
+            estimate = estimate_chain(api, arm, original, speed)
+        except Exception as exc:
+            estimate = {'estimate_ok': False, 'reason': str(exc)}
+        report['original_remainder_preflight'] = estimate
+        if original and estimate.get('estimate_ok') is True:
+            report['status'] = 'ray_preference_unreachable_original_rechecked'
+            report['selected_approach_xy'] = original[-1][1][:2, 0].tolist()
+            # Do not promote unverified ray occupancy into the downstream
+            # obstacle cloud or imply that this route has verified clearance.
+            return original, report, np.empty((0, 3)), floor
+    return [], report, cloud, floor
 
 
 def transit_height(tcp, center, length, clearance, obstacles, target_xy=None):
     """Observed neighborhood tops plus a rotation envelope, not just rim height.
 
-    Aggregate voxelized depth in planar cells so small coherent elevated
+    Aggregate RGB visual-hull voxels in planar cells so small coherent elevated
     features survive a large background cloud, but isolated spikes do not.
-    This remains a depth-based heuristic: occlusion and coherent bias remain.
+    Silhouette overlap is a heuristic: occlusion and false matches remain.
     """
     if obstacles is None or not len(obstacles):
         return 0., {'status': 'unavailable_or_empty'}
@@ -157,7 +327,7 @@ def choose_approach(tcp, destination, obstacles, retreat):
         best = min(.065, float(clearance[eligible].max()))
         candidates = eligible[clearance[eligible] >= best - 1e-9]
         selected = candidates[np.argmin(np.abs(offsets[candidates]))]
-    return -rear[selected], {'status': 'depth_selected',
+    return -rear[selected], {'status': 'rgb_silhouette_selected',
                             'yaw_offset_deg': float(np.rad2deg(offsets[selected])),
                             'rear_clearance_m': float(clearance[selected]),
                             'source_clearance_m': float(clearance[baseline]),
@@ -184,7 +354,7 @@ def alternative_approaches(destination, obstacles, retreat, failed_rotation,
                            current_rotation, minimum_clearance):
     """At most four separated, observed-clear yaw alternatives nearest the wrist.
 
-    Zero-motion IK rejections are the only reason to try these. Unknown depth
+    Zero-motion IK rejections are the only reason to try these. Unknown RGB geometry
     provides no evidence for changing the previously selected corridor.
     """
     if obstacles is None:
@@ -349,8 +519,17 @@ def terminal_reference(obs, expected):
 def terminal_correction(obs, expected, color):
     """Triangulate a matched face; never correct from estimated depth or one ray."""
     patches = terminal_patches(obs, expected, color)
+    return triangulated_terminal(patches, expected)
+
+
+def triangulated_terminal(patches, expected, cross_time=False):
+    """Fit calibrated rays, optionally requiring one ray from each time."""
     estimates = []
     for a, b in itertools.combinations(patches, 2):
+        if cross_time and a.get('historical', False) == b.get('historical', False):
+            continue
+        if np.linalg.norm(a['origin']-b['origin']) < .02:
+            continue
         da, db = a['ray'], b['ray']
         if abs(da @ db) > np.cos(np.deg2rad(10)):
             continue
@@ -381,6 +560,42 @@ def terminal_correction(obs, expected, color):
         report['status'] = 'geometry_mismatch'
         return None, report
     shift[2] = 0.
+    return shift, report
+
+
+def temporal_terminal_correction(obs, expected, color, source_patches, start_tcp, current_tcp):
+    """Use existing motion as parallax under an explicit rigid-grasp assumption.
+
+    Transport historical camera rays with the measured grasp transform. This
+    is equivalent to triangulation in the TCP frame, not static-world stereo.
+    It cannot independently detect slip or certify retained endpoint identity.
+    """
+    current = terminal_patches(obs, expected, color)
+    rotation = current_tcp[:3, :3] @ start_tcp[:3, :3].T
+    rotation_deg = float(np.rad2deg(Rotation.from_matrix(rotation).magnitude()))
+    # A segmented color centroid is not a tracked material point. A large
+    # reorientation exposes different faces: transporting its old ray can
+    # produce a low-reprojection-error but biased intersection. Ten degrees
+    # is a conservative design gate, not a measured correspondence guarantee.
+    if source_patches and current and rotation_deg > 10.:
+        return None, dict(status='view_change_unresolved',
+                          method='motion_compensated_rgb',
+                          rigid_grasp_assumed=True, source_views=len(source_patches),
+                          current_views=len(current), rotation_deg=rotation_deg,
+                          reason='region_centroid_not_tracked_across_reorientation')
+    translation = current_tcp[:3, 3] - rotation @ start_tcp[:3, 3]
+    historical = []
+    for patch in source_patches:
+        if np.linalg.norm(patch['color']-color) > 45:
+            continue
+        virtual = patch['T'].copy()
+        virtual[:3, :3] = rotation @ patch['T'][:3, :3]
+        virtual[:3, 3] = rotation @ patch['origin'] + translation
+        historical.append(dict(patch, T=virtual, origin=virtual[:3, 3],
+                               ray=rotation @ patch['ray'], historical=True))
+    shift, report = triangulated_terminal(historical + current, expected, cross_time=True)
+    report.update(method='motion_compensated_rgb', rigid_grasp_assumed=True,
+                  source_views=len(historical), current_views=len(current))
     return shift, report
 
 
@@ -437,6 +652,44 @@ def estimate_chain(api, arm, poses, speed):
     finally:
         for name, value in original.items():
             setattr(motion, name, value)
+
+
+def checked_reached_transfer(api, arm, actual, target, remaining, speed):
+    """Re-seed a rejected checked translation without changing its corridor.
+
+    Chained IK uses ideal endpoint joints; measured joints may select a different
+    branch after a small turn error. Only split the original line or remove a
+    small orientation residual at its start. Preflight through the same lower
+    target; the newly named stages cannot recursively enter this recovery.
+    """
+    delta = Rotation.from_matrix(target[:3, :3] @ actual[:3, :3].T)
+    report = {'selected': None, 'attempts': [], 'collision_checked': False,
+              'holding_verified': False}
+    if delta.magnitude() > .08:
+        report['reason'] = 'orientation_residual_too_large'
+        return [], report
+    midpoint = actual.copy()
+    midpoint[:3, 3] = (actual[:3, 3] + target[:3, 3]) / 2
+    midpoint[:3, :3] = Rotation.from_rotvec(.5*delta.as_rotvec()).as_matrix() @ actual[:3, :3]
+    finish = [('reached_transfer_finish', target.copy())]
+    candidates = [[('reached_transfer_half', midpoint)] + finish]
+    if delta.magnitude() > 1e-4:
+        align = actual.copy()
+        align[:3, :3] = target[:3, :3]
+        prefix = [('reached_transfer_align', align)]
+        aligned_midpoint = midpoint.copy()
+        aligned_midpoint[:3, :3] = target[:3, :3]
+        candidates += [prefix + finish,
+                       prefix + [('reached_transfer_half', aligned_midpoint)] + finish]
+    for candidate, prefix in enumerate(candidates):
+        estimate = estimate_chain(api, arm, prefix + remaining, speed)
+        report['attempts'].append({
+            'estimate_ok': estimate.get('estimate_ok') is True,
+            'failed_stage': estimate.get('failed_stage'), 'reason': estimate.get('reason')})
+        if estimate.get('estimate_ok') is True:
+            report['selected'] = candidate
+            return prefix, report
+    return [], report
 
 
 def recovery_motion_cost(report, chain):
@@ -640,6 +893,103 @@ def checked_transfer_first_recovery(api, arm, tcp, center, axis, length,
     return select_recovery_candidate(candidates, reports)
 
 
+def checked_transit_turn_recovery(api, arm, tcp, center, axis, length,
+                                 destination, clearance, depth, tcp_clearance,
+                                 approach, obstacles, retreat, threshold, floor, speed,
+                                 yaw_first=False):
+    """Try interior turn positions without lowering the transit envelope.
+
+    Endpoint rotations can be unreachable even when an interior rotation is
+    reachable. Fractions are dimensionless path samples, not scene positions.
+    Every candidate includes lowering and is estimated from the current state.
+    """
+    initial = placement_poses(tcp, center, axis, length, destination, clearance,
+                              depth, tcp_clearance, approach)
+    directions = [(approach, None)] + alternative_approaches(
+        destination, obstacles, retreat, initial[1][1][:3, :3],
+        upright_delta(axis) @ tcp[:3, :3], threshold)
+    reports, candidates = [], []
+    for fraction in (.5, .25, .75):
+        for direction, observed_clearance in directions:
+            final = placement_poses(tcp, center, axis, length, destination, clearance,
+                                    depth, tcp_clearance, direction)
+            height = max(floor, final[0][1][2, 3], final[1][1][2, 3])
+            final[0][1][2, 3] = final[1][1][2, 3] = height
+            translated = final[0][1].copy()
+            translated[:2, 3] += fraction * (final[1][1][:2, 3] - translated[:2, 3])
+            turned = translated.copy()
+            turned[:3, :3] = final[1][1][:3, :3]
+            turns = [('transit_turn', turned)]
+            if yaw_first:
+                # Q U = (Q U Q^-1) Q: preserve the rigid final transform,
+                # but separate yaw from tilt at the same cleared interior point.
+                upright = upright_delta(axis) @ tcp[:3, :3]
+                yawed = translated.copy()
+                yawed[:3, :3] = turned[:3, :3] @ upright.T @ tcp[:3, :3]
+                turns = [('transit_pre_yaw', yawed), ('transit_tilt', turned)]
+            chain = [final[0], ('transit_translate', translated)] + turns + final[1:]
+            estimate = estimate_chain(api, arm, chain, speed)
+            reports.append({'fraction': fraction,
+                            'estimate_ok': estimate.get('estimate_ok') is True,
+                            'failed_stage': estimate.get('failed_stage'),
+                            'reason': estimate.get('reason')})
+            if estimate.get('estimate_ok') is True:
+                cost = recovery_motion_cost(estimate, chain)
+                reports[-1]['motion_action_steps'] = cost
+                candidates.append((cost, chain, len(reports)-1, direction, observed_clearance))
+                if cost is None and len(candidates) == 1:
+                    return select_recovery_candidate(candidates, reports)
+    return select_recovery_candidate(candidates, reports)
+
+
+def checked_partial_turn_recovery(api, arm, tcp, center, axis, length,
+                                   destination, clearance, depth, tcp_clearance,
+                                   approach, obstacles, retreat, threshold, floor, speed):
+    """Transfer with an intermediate orientation, then finish the turn.
+
+    Straight TCP translation can reject at both endpoint orientations while
+    accepting a partial turn. Sample fractions of the relative rotation, not
+    scene coordinates. Keep a full rigid sweep above both supplied surfaces
+    and the observed transit floor, and preflight the entire lowering chain.
+    """
+    initial = placement_poses(tcp, center, axis, length, destination, clearance,
+                              depth, tcp_clearance, approach)
+    directions = [(approach, None)] + alternative_approaches(
+        destination, obstacles, retreat, initial[1][1][:3, :3],
+        upright_delta(axis) @ tcp[:3, :3], threshold)
+    reports, candidates = [], []
+    sweep = np.linalg.norm(center - tcp[:3, 3]) + length/2
+    for fraction in (1/3, 2/3):
+        for direction, observed_clearance in directions:
+            final = placement_poses(tcp, center, axis, length, destination, clearance,
+                                    depth, tcp_clearance, direction)
+            height = max(floor, final[0][1][2, 3], final[1][1][2, 3],
+                         max(center[2], destination[2]) + clearance + sweep)
+            final[0][1][2, 3] = final[1][1][2, 3] = height
+            delta = final[1][1][:3, :3] @ tcp[:3, :3].T
+            partial = final[0][1].copy()
+            partial[:3, :3] = (Rotation.from_rotvec(
+                fraction * Rotation.from_matrix(delta).as_rotvec()).as_matrix()
+                @ tcp[:3, :3])
+            translated = final[1][1].copy()
+            translated[:3, :3] = partial[:3, :3]
+            chain = [final[0], ('partial_turn', partial),
+                     ('partial_transfer', translated),
+                     ('complete_turn', final[1][1]), final[2]]
+            estimate = estimate_chain(api, arm, chain, speed)
+            reports.append({'rotation_fraction': fraction,
+                            'estimate_ok': estimate.get('estimate_ok') is True,
+                            'failed_stage': estimate.get('failed_stage'),
+                            'reason': estimate.get('reason')})
+            if estimate.get('estimate_ok') is True:
+                cost = recovery_motion_cost(estimate, chain)
+                reports[-1]['motion_action_steps'] = cost
+                candidates.append((cost, chain, len(reports)-1, direction, observed_clearance))
+                if cost is None and len(candidates) == 1:
+                    return select_recovery_candidate(candidates, reports)
+    return select_recovery_candidate(candidates, reports)
+
+
 def park_open_peer(api, active, destination, speed):
     """Withdraw a nearby open peer without rotating beside released geometry.
 
@@ -770,16 +1120,20 @@ def run(api, command, args):
         approach_xy = None
         obstacles = None
         terminal_color = None
+        source_patches = []
         terminal_checked = False
         try:
             observation = api.observe()
             try:
                 terminal_color = terminal_reference(
                     observation, center + length/2 * axis/np.linalg.norm(axis))
+                if terminal_color is not None:
+                    source_patches = terminal_patches(
+                        observation, center + length/2 * axis/np.linalg.norm(axis), terminal_color)
             except Exception:
                 # Optional RGB evidence must not disable geometry-only use.
                 pass
-            obstacles = depth_obstacles(observation, destination, tcp, length)
+            obstacles = rgb_obstacles(observation, destination, tcp, length)
             approach_xy, yaw_selection = choose_approach(tcp, destination, obstacles, retreat)
         except Exception as exc:
             yaw_selection = {'status': 'source_fallback', 'detail': str(exc)}
@@ -800,8 +1154,8 @@ def run(api, command, args):
                     "effective_depth_m": effective_depth, "minimum_release_depth_m": minimum_depth,
                     "stages": stages, "released": False, "yaw_selection": yaw_selection}, 1
         # A parked open peer is a removable obstacle, not a reason to ignore
-        # depth points or relax clearance. Move it once before committing to
-        # a poor corridor, then remeasure the entire scene from fresh depth.
+        # RGB geometry or relax clearance. Move it once before committing to
+        # a poor corridor, then remeasure the entire scene from fresh RGB.
         if yaw_selection.get('clearance_target_met') is False:
             if api.over:
                 return {"plan_ok": False, "plan_fail_reason": "episode_over",
@@ -814,7 +1168,8 @@ def run(api, command, args):
                             "stages": stages, "released": False, "yaw_selection": yaw_selection}, 1
                 previous_yaw = yaw_selection
                 # Sensing failure here is fatal: the old cloud is now stale.
-                obstacles = depth_obstacles(api.observe(), destination, tcp, length)
+                observation = api.observe()
+                obstacles = rgb_obstacles(observation, destination, tcp, length)
                 approach_xy, yaw_selection = choose_approach(tcp, destination, obstacles, retreat)
                 yaw_selection['peer_parked'] = parked['arm']
                 yaw_selection['before_parking'] = previous_yaw
@@ -875,6 +1230,26 @@ def run(api, command, args):
                         min(.065, yaw_selection.get('rear_clearance_m', .065)), transit_floor, speed)
                     yaw_selection['shifted_source_preflight'] = report
                 if not checked:
+                    checked, report = checked_transit_turn_recovery(
+                        api, arm, tcp, center, axis, length, destination, clearance,
+                        seating_depth, tcp_clearance, approach_xy, obstacles, retreat,
+                        min(.065, yaw_selection.get('rear_clearance_m', .065)), transit_floor, speed)
+                    yaw_selection['transit_turn_preflight'] = report
+                if not checked:
+                    checked, report = checked_transit_turn_recovery(
+                        api, arm, tcp, center, axis, length, destination, clearance,
+                        seating_depth, tcp_clearance, approach_xy, obstacles, retreat,
+                        min(.065, yaw_selection.get('rear_clearance_m', .065)),
+                        transit_floor, speed, yaw_first=True)
+                    yaw_selection['transit_yaw_first_preflight'] = report
+                if not checked:
+                    checked, report = checked_partial_turn_recovery(
+                        api, arm, tcp, center, axis, length, destination, clearance,
+                        seating_depth, tcp_clearance, approach_xy, obstacles, retreat,
+                        min(.065, yaw_selection.get('rear_clearance_m', .065)),
+                        transit_floor, speed)
+                    yaw_selection['partial_turn_preflight'] = report
+                if not checked:
                     return {'plan_ok': False, 'plan_fail_reason': 'placement_chain_unreachable',
                             'stages': stages, 'released': False,
                             'yaw_selection': yaw_selection}, 1
@@ -900,14 +1275,28 @@ def run(api, command, args):
                 report = {'status': 'source_patch_unresolved'}
                 shift = None
                 actual = np.asarray(arm.tcp()).copy()
-                if terminal_color is not None:
-                    predicted = reached_geometry(tcp, actual, center, axis, length, destination[2])
-                    endpoint = (np.asarray(predicted['predicted_center_world']) +
-                                length/2*np.asarray(predicted['predicted_axis_world']))
-                    try:
-                        shift, report = terminal_correction(api.observe(), endpoint, terminal_color)
-                    except Exception as exc:
-                        report = {'status': 'unavailable', 'detail': str(exc)}
+                predicted = reached_geometry(tcp, actual, center, axis, length, destination[2])
+                endpoint = (np.asarray(predicted['predicted_center_world']) +
+                            length/2*np.asarray(predicted['predicted_axis_world']))
+                try:
+                    observation = api.observe()
+                    current_color = terminal_color
+                    if current_color is None:
+                        # A face hidden at grasp can become visible upright.
+                        # Reacquire only from current calibrated views; never
+                        # transport a newly selected centroid back to source.
+                        current_color = terminal_reference(observation, endpoint)
+                    if current_color is not None:
+                        shift, report = terminal_correction(observation, endpoint, current_color)
+                        if report['status'] == 'unresolved' and source_patches:
+                            shift, report = temporal_terminal_correction(
+                                observation, endpoint, terminal_color, source_patches, tcp, actual)
+                        report['color_reference'] = ('source' if terminal_color is not None
+                                                     else 'current_views')
+                    else:
+                        report = {'status': 'source_and_current_patch_unresolved'}
+                except Exception as exc:
+                    report = {'status': 'unavailable', 'detail': str(exc)}
                 yaw_selection['terminal_alignment'] = report
                 if report['status'] == 'geometry_mismatch':
                     return {'plan_ok': False, 'plan_fail_reason': 'observed_geometry_mismatch',
@@ -977,6 +1366,20 @@ def run(api, command, args):
                 continue
             feedback = {}
             code = timed_move(api, arm, target.copy(), feedback, speed)
+            if (name == 'checked_transfer'
+                    and feedback.get('plan_ok') is False
+                    and feedback.get('plan_fail_reason') == 'ik_unreachable'
+                    and not api.over and np.allclose(arm.tcp(), actual, atol=1e-6)
+                    and callable(getattr(api, 'estimate_tcp_chain', None))):
+                remaining = [(n, p) for n, p in poses[index+1:] if p is not None]
+                replacement, report = checked_reached_transfer(
+                    api, arm, actual, target, remaining, speed)
+                yaw_selection['reached_transfer_preflight'] = report
+                if replacement:
+                    stages.append({'stage': 'checked_transfer_path_rejected',
+                                   'feedback': feedback})
+                    poses[index+1:index+1] = replacement
+                    continue
             if (name == 'checked_source_upright'
                     and feedback.get('plan_ok') is False
                     and feedback.get('plan_fail_reason') == 'ik_unreachable'
@@ -1117,7 +1520,7 @@ def run(api, command, args):
                 # an unreachable wrist path. First perform only the minimal
                 # signed-axis tilt at the already cleared height. The queued
                 # transfer then supplies yaw, preserving the original rigid
-                # offset and an observed-clear corridor when depth is known.
+                # offset and an observed-clear corridor when RGB geometry is available.
                 local_axis = tcp[:3, :3].T @ (axis / np.linalg.norm(axis))
                 tilt = actual.copy()
                 tilt[:3, :3] = upright_delta(actual[:3, :3] @ local_axis) @ actual[:3, :3]
@@ -1125,8 +1528,8 @@ def run(api, command, args):
                     # Local rejection is evidence against keeping this yaw.
                     # Select an observed-clear alternative nearest the pure
                     # upright orientation before executing a long transfer.
-                    # Previously the same rejected yaw was retried after tilt;
-                    # IK acceptance then did not imply physical tracking.
+                    # Do not retry the same rejected yaw after tilt: IK
+                    # acceptance does not imply physical tracking.
                     threshold = min(.065, yaw_selection.get('rear_clearance_m', .065))
                     yaw_recovery = alternative_approaches(
                         destination, obstacles, retreat, target[:3, :3],
@@ -1161,6 +1564,27 @@ def run(api, command, args):
                           ("episode_over" if api.over else "tracking_error"))
                 return {"plan_ok": False, "plan_fail_reason": reason, "stages": stages,
                         "released": released, "yaw_selection": yaw_selection}, code or 1
+            if (index == 0 and name == 'lift'
+                    and (obstacles is None or not len(obstacles))
+                    and [n for n, _ in poses[1:] if n != 'retreat'] == ['transfer', 'lower']
+                    and callable(getattr(api, 'observe', None))):
+                # Refresh only the direct route, once, after verified lift.
+                # Original tcp/center/axis preserve the measured grasp transform.
+                try:
+                    replacement, report, refreshed, new_floor = refreshed_clearance(
+                        api, arm, observation, tcp, center, axis, length,
+                        destination, clearance, seating_depth, tcp_clearance,
+                        retreat, transit_floor, speed, poses[index+1:])
+                except Exception as exc:
+                    replacement = None
+                    report = {'status': 'refresh_unresolved', 'detail': str(exc)}
+                yaw_selection['post_lift_clearance'] = report
+                if replacement == []:
+                    return {'plan_ok': False, 'plan_fail_reason': 'post_lift_clearance_unreachable',
+                            'stages': stages, 'released': False, 'yaw_selection': yaw_selection}, 1
+                if replacement is not None:
+                    obstacles, transit_floor = refreshed, new_floor
+                    poses[index+1:] = replacement + ([('retreat', None)] if release else [])
         if not release:
             release_geometry = reached_geometry(
                 tcp, arm.tcp(), center, axis, length, destination[2])

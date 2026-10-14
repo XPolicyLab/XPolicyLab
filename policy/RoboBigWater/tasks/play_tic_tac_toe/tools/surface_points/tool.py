@@ -3,6 +3,7 @@ import json
 import sys
 import types
 import numpy as np
+import cv2
 
 TOOL = {"name": "surface_points", "commands": [{
     "name": "surface-points", "budget": False,
@@ -12,6 +13,7 @@ TOOL = {"name": "surface_points", "commands": [{
          "help": "JSON [u0,v0,u1,v1], exclusive upper bounds of a visible flat region"},
         {"name": "pixels", "type": "str", "required": True,
          "help": "JSON array of [u,v] image coordinates"},
+        {"name": "plane_z", "type": "float", "required": True},
         {"name": "surface_offset", "type": "float", "default": 0.0},
         {"name": "tcp_offset", "type": "float", "default": 0.0},
     ]}]}
@@ -24,10 +26,73 @@ TOOL['commands'].append({
          'help': 'JSON four [u,v] corners in perimeter order'},
         {'name': 'rows', 'type': 'int', 'required': True},
         {'name': 'cols', 'type': 'int', 'required': True},
+        {'name': 'plane_z', 'type': 'float'},
         {'name': 'width', 'type': 'float', 'default': 0.0,
          'help': 'Known length in meters of edge 0 to 1; zero uses interior depth'},
         {'name': 'tcp_offset', 'type': 'float', 'default': 0.0},
     ]})
+
+
+TOOL['commands'].append(dict(name='triangulate-points', budget=False,
+    help='Triangulate corresponding RGB pixels from two calibrated cameras', args=[
+        dict(name='camera_a', type='str', required=True), dict(name='camera_b', type='str', required=True),
+        dict(name='pixels_a', type='str', required=True), dict(name='pixels_b', type='str', required=True)]))
+
+
+def triangulate(obs, args):
+    projections, points = [], []
+    aliases = {'head': 'cam_head', 'wrist_l': 'cam_left_wrist', 'wrist_r': 'cam_right_wrist'}
+    transforms = []
+    for suffix in ('a', 'b'):
+        name = args['camera_'+suffix]
+        key = name if name in obs['cameras'] else aliases.get(name, name)
+        camera = obs['cameras'][key]
+        k, t = np.asarray(camera['intrinsics'], float), np.asarray(camera['extrinsics_world'], float)
+        shape = range_frame(obs, key).shape
+        pixels = np.asarray(json.loads(args['pixels_'+suffix]), float)
+        if (k.shape != (3, 3) or t.shape != (4, 4) or not np.isfinite(k).all()
+                or not np.isfinite(t).all() or not np.allclose(t[:3,:3].T@t[:3,:3], np.eye(3), atol=1e-4)
+                or pixels.ndim != 2 or pixels.shape[1] != 2 or not 1 <= len(pixels) <= 128
+                or not np.isfinite(pixels).all() or np.any(pixels < 0)
+                or np.any(pixels[:,0] >= shape[1]) or np.any(pixels[:,1] >= shape[0])):
+            raise ValueError('invalid cameras or pixel pairs')
+        projections.append(k @ np.linalg.inv(t)[:3])
+        points.append(pixels)
+        transforms.append(t)
+    if points[0].shape != points[1].shape or np.linalg.norm(transforms[0][:3,3]-transforms[1][:3,3]) < .01:
+        raise ValueError('equal pair counts and camera baseline >= 0.01 m required')
+    h = cv2.triangulatePoints(*projections, points[0].T, points[1].T)
+    if np.any(np.abs(h[3]) < 1e-10):
+        raise ValueError('degenerate triangulation')
+    xyz = (h[:3]/h[3]).T
+    errors = []
+    rays = [xyz-t[:3,3] for t in transforms]
+    cosine = np.sum(rays[0]*rays[1],axis=1)/(np.linalg.norm(rays[0],axis=1)*np.linalg.norm(rays[1],axis=1))
+    angles = np.degrees(np.arccos(np.clip(cosine,-1,1)))
+    if not np.isfinite(xyz).all() or np.any(angles < 2):
+        raise ValueError('triangulation rays differ by less than two degrees')
+    for projection, pixels in zip(projections, points):
+        uvw = np.c_[xyz,np.ones(len(xyz))] @ projection.T
+        if np.any(uvw[:,2] <= 0):
+            raise ValueError('triangulated point behind camera')
+        errors.append(np.linalg.norm(uvw[:,:2]/uvw[:,2:3]-pixels,axis=1))
+    if np.max(errors) > 2:
+        raise ValueError('pixel pairs disagree by more than two reprojection pixels')
+    return dict(surface_xyz=xyz.tolist(), median_z=float(np.median(xyz[:,2])),
+                z_spread_m=float(np.ptp(xyz[:,2])), ray_angles_deg=angles.tolist(),
+                max_reprojection_error_px=float(np.max(errors)))
+
+
+def range_frame(obs, key):
+    if 'depth' in obs and key in obs['depth']:
+        return np.asarray(obs['depth'][key], dtype=float)
+    raw = obs.get('png', {}).get(key)
+    if raw is None:
+        raise ValueError('missing RGB image')
+    image = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+    if image is None:
+        raise ValueError('invalid RGB image')
+    return np.full(image.shape[:2], np.nan)
 
 
 def rectangle(obs, args):
@@ -35,7 +100,7 @@ def rectangle(obs, args):
     camera = obs['cameras'][key]
     k = np.asarray(camera['intrinsics'], dtype=float)
     t = np.asarray(camera['extrinsics_world'], dtype=float)
-    depth = np.asarray(obs['depth'][key], dtype=float)
+    depth = range_frame(obs, key)
     corners = np.asarray(json.loads(args['corners']), dtype=float)
     rows, cols = args['rows'], args['cols']
     width, offset = float(args.get('width', 0)), float(args.get('tcp_offset', 0))
@@ -91,12 +156,16 @@ def rectangle(obs, args):
                 heights.append(float(np.median(t[2, 3] + actual_rays[valid, 2]*d[valid])))
     spread = float(np.ptp(heights)) if heights else None
     depth_z = float(np.median(heights)) if heights else None
-    if width:
+    if args.get('plane_z') is not None:
+        z, method = float(args['plane_z']), 'caller_plane'
+        if not np.isfinite(z):
+            raise ValueError('plane_z must be finite')
+    elif width:
         z = t[2, 3] - width / float((lengths[0]+lengths[2])/2)
         method = 'known_width'
     else:
         if len(heights) < 7 or spread > .02:
-            raise ValueError('interior depth is missing or inconsistent; requires a visible flat rectangle or known width')
+            raise ValueError('interior depth is missing or inconsistent; supply measured plane_z or known metric width')
         z, method = depth_z, 'interior_depth'
     if z >= t[2, 3]:
         raise ValueError('inferred plane must be below camera')
@@ -115,14 +184,14 @@ def rectangle(obs, args):
                 tile_height_spread_m=spread, valid_tiles=len(heights),
                 geometry_relative_error=float(max(closure, orthogonal)),
                 note='Row-major centers; columns follow edge 0 to 1, rows edge 0 to 3. '
-                     'Depth may have centimetre bias; known width accuracy and corner selection affect metric accuracy. '
+                     'Caller plane/width accuracy and corner selection affect metric accuracy. '
                      'TCP offset changes Z only; contact height is not inferred.')
 
 
 def measure(obs, args):
     key = 'cam_head' if 'cam_head' in obs.get('cameras', {}) else 'head'
     camera = obs['cameras'][key]
-    depth = np.asarray(obs['depth'][key], dtype=float)
+    depth = range_frame(obs, key)
     k = np.asarray(camera['intrinsics'], dtype=float)
     t = np.asarray(camera['extrinsics_world'], dtype=float)
     if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
@@ -145,25 +214,32 @@ def measure(obs, args):
             or np.any(pixels[:, 0] > w-1) or np.any(pixels[:, 1] > h-1)
             or not np.isfinite(offsets).all() or np.any(np.abs(offsets) > .15)):
         raise ValueError('invalid pixels or offsets')
-    vv, uu = np.mgrid[v0:v1, u0:u1]
-    rays = np.stack([uu, vv, np.ones_like(uu)], -1) @ np.linalg.inv(k).T
-    rays = rays @ t[:3, :3].T
-    d = depth[v0:v1, u0:u1]
-    valid = np.isfinite(d) & (d > 0)
-    if valid.mean() < .8:
-        raise ValueError('insufficient valid depth')
-    heights = rays[..., 2] * d + t[2, 3]
-    heights[~valid] = np.nan
-    # Equal-weight spatial tiles prevent a dense foreground patch dominating
-    # an otherwise visible flat region. Outlying tiles contribute to spread.
-    tiles = [float(np.nanmedian(tile)) for row in np.array_split(heights, 3, axis=0)
-             for tile in np.array_split(row, 3, axis=1) if np.isfinite(tile).mean() >= .8]
-    if len(tiles) < 7:
-        raise ValueError('insufficient spatial depth coverage')
-    z = float(np.median(tiles))
-    spread = float(np.quantile(tiles, .9) - np.quantile(tiles, .1))
-    if spread > .02:
-        raise ValueError('region is not consistently horizontal; choose a flat unoccluded region')
+    if args.get('plane_z') is not None:
+        z = float(args['plane_z'])
+        if not np.isfinite(z):
+            raise ValueError('plane_z must be finite')
+        spread = None
+        valid = np.zeros((1,), bool)
+    else:
+        vv, uu = np.mgrid[v0:v1, u0:u1]
+        rays = np.stack([uu, vv, np.ones_like(uu)], -1) @ np.linalg.inv(k).T
+        rays = rays @ t[:3, :3].T
+        d = depth[v0:v1, u0:u1]
+        valid = np.isfinite(d) & (d > 0)
+        if valid.mean() < .8:
+            raise ValueError('insufficient valid depth')
+        heights = rays[..., 2] * d + t[2, 3]
+        heights[~valid] = np.nan
+        # Equal-weight spatial tiles prevent a dense foreground patch dominating
+        # an otherwise visible flat region. Outlying tiles contribute to spread.
+        tiles = [float(np.nanmedian(tile)) for row in np.array_split(heights, 3, axis=0)
+                 for tile in np.array_split(row, 3, axis=1) if np.isfinite(tile).mean() >= .8]
+        if len(tiles) < 7:
+            raise ValueError('insufficient spatial depth coverage')
+        z = float(np.median(tiles))
+        spread = float(np.quantile(tiles, .9) - np.quantile(tiles, .1))
+        if spread > .02:
+            raise ValueError('region is not consistently horizontal; choose a flat unoccluded region')
     surface_z = z + offsets[0]
     directions = np.c_[pixels, np.ones(len(pixels))] @ np.linalg.inv(k).T @ t[:3, :3].T
     if np.any(np.abs(directions[:, 2]) < .1):
@@ -179,16 +255,16 @@ def measure(obs, args):
     return dict(plane_z=z, surface_z=float(surface_z), tile_height_spread_m=spread,
                 valid_fraction=float(valid.mean()), surface_xyz=xyz.tolist(), tcp_xyz=tcp.tolist(),
                 xy_shift_per_1cm_height_error_m=(sensitivity * .01).tolist(),
-                note='Estimated depth can have systematic centimetre bias even with low spread. '
+                note='Caller plane height is an assumption, not measured by this projection command. '
                      'Offsets are caller geometry, not inferred contact heights; no grasp certification.')
 
 
 def run(api, command, args):
     try:
-        if command not in ('surface-points', 'rectangle-points'):
+        if command not in ('surface-points', 'rectangle-points', 'triangulate-points'):
             raise ValueError('unknown command')
         obs = api.observe()
-        result = (rectangle if command == 'rectangle-points' else measure)(obs, args)
+        result = {'rectangle-points': rectangle, 'surface-points': measure, 'triangulate-points': triangulate}[command](obs, args)
         if command == 'rectangle-points' and hasattr(api, 'arm'):
             # Public-observation-derived targets shared with the transfer module.
             # The owner identity prevents reuse by a subsequent episode.

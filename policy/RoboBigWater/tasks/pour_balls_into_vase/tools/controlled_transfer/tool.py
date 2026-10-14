@@ -941,8 +941,8 @@ def run(api, command, args):
                 result.update(restored_upright=False,
                               estimated_restore_seconds=sweep_seconds,
                               restore_completed_steps=0)
-                # Use measured forward execution time: nominal timing has
-                # repeatedly overestimated these small, already-reachable
+                # Use measured forward execution time: nominal timing can
+                # overestimate these small, already-reachable
                 # segments. Reverse retiming may differ; each move retains
                 # the normal budget and tracking checks.
                 if api.sim_time_left() < sweep_seconds + 1.5:

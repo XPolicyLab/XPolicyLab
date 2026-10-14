@@ -1,4 +1,4 @@
-"""Depth-backed surface selection and guarded grasp/release motions."""
+"""RGB geometry and guarded grasp/release motions."""
 import numpy as np
 
 PIXEL_ARGS = [
@@ -12,7 +12,7 @@ TOOL = {"name": "pixel_grasp", "commands": [
         {"name": "support", "type": "float", "help": "optional world-z support; omitted estimates a local horizontal plane"},
     ]},
     {"name": "surface", "budget": False, "help": "measure a visible surface in world coordinates", "args": PIXEL_ARGS},
-    {"name": "pixel-grasp", "budget": True, "help": "one depth-guided grasp and lift", "args": [
+    {"name": "pixel-grasp", "budget": True, "help": "one RGB-guided grasp and lift", "args": [
         {"name": "arm", "positional": True, "choices": ["left", "right"]},
         *PIXEL_ARGS,
         {"name": "u2", "type": "int", "help": "opposing edge pixel column; paired with v2"},
@@ -37,19 +37,20 @@ TOOL["commands"].append({"name": "pixel-place", "budget": True,
         {"name": "bearing", "type": "float", "default": 90.0},
         {"name": "orientation", "default": "tilted", "choices": ["tilted", "current"]},
         {"name": "height", "type": "float", "default": 0.10},
-        {"name": "plane", "type": "float", "help": "intersect the camera ray with this world-z plane instead of live depth"},
+        {"name": "plane", "type": "float", "help": "intersect the camera ray with this world-z plane for ray projection"},
         {"name": "clearance", "type": "float", "default": 0.08},
     ]})
 TOOL["commands"].append({"name": "pixel-transfer", "budget": True,
-    "help": "guarded depth-guided grasp, transfer, and release", "args": [
+    "help": "guarded RGB-guided grasp, transfer, and release", "args": [
         {"name": "arm", "positional": True, "choices": ["left", "right"]},
         *PIXEL_ARGS,
-        {"name": "du", "type": "int", "required": True, "help": "release pixel column"},
-        {"name": "dv", "type": "int", "required": True, "help": "release pixel row"},
+        {"name": "du", "type": "int", "required": True, "help": "absolute destination pixel column (not an offset from u)"},
+        {"name": "dv", "type": "int", "required": True, "help": "absolute destination pixel row (not an offset from v)"},
         {"name": "yaw", "type": "float", "default": 0.0},
         {"name": "tilt", "type": "float", "default": 0.0, "help": "grasp tilt from vertical, degrees"},
         {"name": "release_tilt", "type": "float", "default": 45.0, "help": "independent release tilt from vertical, 0..60 degrees"},
-        {"name": "travel_z", "type": "float", "help": "explicit world-z transit floor; requires plane, bypasses corridor inference; obstacle clearance is caller supplied"},
+        {"name": "release_yaw", "type": "float", "help": "release opening direction -180..180 degrees; omitted permits bounded IK yaw alternatives"},
+        {"name": "travel_z", "type": "float", "help": "explicit world-z transit floor; requires plane; obstacle clearance is caller supplied"},
         {"name": "release_path", "default": "auto", "choices": ["auto", "raised"], "help": "auto omits excess release clearance when the release height clears the measured source"},
         {"name": "bearing", "type": "float", "default": 90.0},
         {"name": "opening", "type": "float", "default": 0.65},
@@ -63,269 +64,49 @@ TOOL["commands"].append({"name": "pixel-transfer", "budget": True,
 SOURCES = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}
 
 
-def camera_data(obs, name):
-    source = SOURCES[name]
-    depth = np.asarray(obs.get("depth", {}).get(source), dtype=float)
-    camera = obs["cameras"][source]
-    k = np.asarray(camera["intrinsics"], dtype=float)
-    t = np.asarray(camera["extrinsics_world"], dtype=float)
-    if depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4):
-        raise ValueError("missing depth or invalid camera matrices")
-    if not np.isfinite(k).all() or not np.isfinite(t).all():
-        raise ValueError("nonfinite camera matrices")
-    return depth, k, t
+# Load the sibling geometry module without changing the server import path.
+import importlib.util
+from pathlib import Path
+_spec = importlib.util.spec_from_file_location('pixel_rgb_geometry', Path(__file__).with_name('rgb_geometry.py'))
+rgb = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(rgb)
+plane_surface = rgb.plane_surface
+source_evidence = rgb.source_evidence
+
+for _command in TOOL['commands']:
+    if _command['name'] != 'pixel-place':
+        _command['args'].extend([
+            {'name': 'surface_z', 'type': 'float', 'help': 'measured world-z surface for ray projection'},
+            {'name': 'match_camera', 'choices': ['head', 'wrist_l', 'wrist_r']},
+            {'name': 'mu', 'type': 'int'}, {'name': 'mv', 'type': 'int'},
+        ])
 
 
-def surface(obs, name, u, v):
-    depth, k, t = camera_data(obs, name)
-    if not (0 <= u < depth.shape[1] and 0 <= v < depth.shape[0]):
-        raise ValueError("pixel outside image")
-    z = depth[v, u]
-    if not np.isfinite(z) or z <= 0:
-        raise ValueError("selected pixel has no valid depth")
-    ray = np.linalg.solve(k, [u, v, 1.0])
-    point = t[:3, :3] @ (ray * (z / ray[2])) + t[:3, 3]
-    if not np.isfinite(point).all():
-        raise ValueError("invalid reconstructed point")
-    return point
+def measured_surface(obs, name, u, v, args):
+    return rgb.surface(obs, name, u, v, args.get('surface_z'),
+                       args.get('match_camera'), args.get('mu'), args.get('mv'))
 
 
-def plane_surface(obs, name, u, v, height):
-    """Intersect a calibrated pixel ray with a caller-specified horizontal plane."""
-    depth, k, t = camera_data(obs, name)
-    if not (0 <= u < depth.shape[1] and 0 <= v < depth.shape[0]):
-        raise ValueError("pixel outside image")
-    height = float(height)
-    if not np.isfinite(height):
-        raise ValueError("nonfinite plane height")
-    direction = t[:3, :3] @ np.linalg.solve(k, [u, v, 1.0])
-    if not np.isfinite(direction).all() or abs(direction[2]) < 1e-8:
-        raise ValueError("ray parallel to plane")
-    distance = (height - t[2, 3]) / direction[2]
-    if distance <= 0:
-        raise ValueError("plane behind camera")
-    point = t[:3, 3] + distance * direction
-    if not np.isfinite(point).all():
-        raise ValueError("invalid plane intersection")
-    return point
+def measured_support(api):
+    spec = importlib.util.spec_from_file_location('rgb_table_plane',
+        Path(__file__).resolve().parents[4] / 'tools/table_plane/tool.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.measure_table_z(api)
 
 
-def depth_points(obs, name):
-    """Calibrated world points, without simulator geometry."""
-    depth, k, t = camera_data(obs, name)
-    rows, cols = np.indices(depth.shape)
-    valid = np.isfinite(depth) & (depth > 0)
-    rays = np.linalg.solve(k, np.stack((cols[valid], rows[valid],
-                                      np.ones(valid.sum()))))
-    return (t[:3, :3] @ (rays * (depth[valid] / rays[2])) + t[:3, 3:4]).T
-
-
-def persistent_points(points, obs, name):
-    """Reject points only where another view positively observes free space.
-
-    A closer depth is occlusion, not evidence of disappearance. Require a
-    full valid 3x3 neighborhood and 15 mm depth separation at discontinuities.
-    Unknown/out-of-view geometry is retained, including for moving cameras.
-    """
-    depth, k, t = camera_data(obs, name)
-    camera = (points - t[:3, 3]) @ t[:3, :3]
-    projected = camera @ k.T
-    valid = np.isfinite(projected).all(axis=1) & (camera[:, 2] > 0)
-    indices = np.flatnonzero(valid)
-    pixels = np.rint(projected[valid, :2] / projected[valid, 2:3]).astype(int)
-    inside = ((pixels[:, 0] >= 1) & (pixels[:, 0] < depth.shape[1] - 1)
-              & (pixels[:, 1] >= 1) & (pixels[:, 1] < depth.shape[0] - 1))
-    indices, pixels = indices[inside], pixels[inside]
-    samples = np.stack([depth[pixels[:, 1] + dv, pixels[:, 0] + du]
-                        for dv in (-1, 0, 1) for du in (-1, 0, 1)], axis=1)
-    cleared = (np.isfinite(samples).all(axis=1) & (samples > 0).all(axis=1)
-               & (samples.min(axis=1) > camera[indices, 2] + .015))
-    keep = np.ones(len(points), dtype=bool)
-    keep[indices[cleared]] = False
-    return points[keep]
-
-
-def corridor_height(obs, name, source, destination, radius, reference=None, intermediate=None):
-    """Highest observed point in an XY capsule; unseen geometry is unresolved."""
-    views = [view for view in (reference, intermediate, obs) if view is not None]
-    clouds = []
-    for index, view in enumerate(views):
-        points = depth_points(view, name)
-        for other_index, other in enumerate(views):
-            if other_index != index:
-                points = persistent_points(points, other, name)
-        clouds.append(points)
-    points = np.concatenate(clouds)
-    delta = destination[:2] - source[:2]
-    length2 = float(delta @ delta)
-    fraction = (np.clip((points[:, :2] - source[:2]) @ delta / length2, 0, 1)
-                if length2 > 1e-12 else np.zeros(len(points)))
-    nearest = source[:2] + fraction[:, None] * delta
-    inside = np.linalg.norm(points[:, :2] - nearest, axis=1) <= radius
-    heights = points[inside & np.isfinite(points).all(axis=1), 2]
-    return max(float(source[2]), float(heights.max())) if len(heights) else float(source[2])
-
-
-def source_evidence(obs, name, original):
-    """Only report surface clearance; disappearance does not prove a retained grasp."""
-    depth, k, t = camera_data(obs, name)
-    p = np.linalg.solve(t, np.r_[original, 1.0])[:3]
-    if p[2] <= 0:
-        return "unknown"
-    uv = k @ p
-    u, v = np.rint(uv[:2] / uv[2]).astype(int)
-    if not (1 <= u < depth.shape[1]-1 and 1 <= v < depth.shape[0]-1):
-        return "unknown"
-    patch = depth[v-1:v+2, u-1:u+2]
-    valid = patch[np.isfinite(patch) & (patch > 0)]
-    if valid.size < 5:
-        return "unknown"
-    delta = float(np.median(valid) - p[2])
-    return "cleared" if delta > 0.012 else ("occluded" if delta < -0.012 else "surface_remains")
-
-
-def edge_grasp(obs, name, u, v, u2, v2):
-    """Measure opposite visible edges, without inferring identity or retention."""
-    if u2 is None or v2 is None:
-        raise ValueError("u2 and v2 must be supplied together")
-    if int(u2) != float(u2) or int(v2) != float(v2):
-        raise ValueError("edge pixel coordinates must be integers")
-    first = surface(obs, name, u, v)
-    second = surface(obs, name, int(u2), int(v2))
-    delta = second - first
-    width = float(np.linalg.norm(delta[:2]))
-    if not .002 <= width <= .076:
-        raise ValueError("edge span outside usable gripper width")
-    if abs(delta[2]) > .015:
-        raise ValueError("edge heights disagree")
-    return (first + second) / 2, float(np.degrees(np.arctan2(delta[1], delta[0]))), (width + .012) / .088, width
-
-
-def estimate_support(points, seed):
-    """Require a broad, dominant horizontal patch below the selected surface."""
-    delta = points[:, :, :2] - seed[:2]
-    distance = np.linalg.norm(delta, axis=2)
-    valid = (np.isfinite(points).all(axis=2) & (distance <= .18)
-             & (points[:, :, 2] <= seed[2] - .004)
-             & (points[:, :, 2] >= seed[2] - .15))
-    samples = points[valid]
-    if len(samples) < 80:
-        return None
-    # Seed-relative bins avoid dependence on any scene's absolute height.
-    bins = np.floor((seed[2] - samples[:, 2]) / .002).astype(int)
-    counts = np.bincount(bins)
-    peak = int(np.argmax(counts))
-    heights = samples[np.abs(bins - peak) <= 1, 2]
-    height = float(np.median(heights))
-    patch = samples[np.abs(samples[:, 2] - height) <= .0015]
-    if len(patch) < max(80, .45 * len(samples)):
-        return None
-    if np.linalg.eigvalsh(np.cov(patch[:, :2].T))[0] < .0001:
-        return None
-    return float(np.median(patch[:, 2]))
-
-
-def fit_grasp(obs, name, u, v, support=None):
-    """Fit visible, support-separated geometry; never infer hidden contact surfaces."""
-    seed = surface(obs, name, u, v)
-    if support is not None:
-        support = float(support)
-        if not np.isfinite(support) or not .004 <= seed[2] - support <= .15:
-            raise ValueError("seed must be .004...15 m above support")
-    depth, k, t = camera_data(obs, name)
-    rows, cols = np.indices(depth.shape)
-    rays = np.linalg.solve(k, np.stack((cols, rows, np.ones_like(rows))).reshape(3, -1))
-    with np.errstate(invalid="ignore", divide="ignore"):
-        points = (t[:3, :3] @ (rays * (depth.ravel() / rays[2])) + t[:3, 3:4]).T.reshape(*depth.shape, 3)
-    points[~np.isfinite(depth) | (depth <= 0)] = np.nan
-    measured_support = estimate_support(points, seed)
-    support_source = "specified" if support is not None else "estimated"
-    if support is None:
-        if measured_support is None:
-            raise ValueError("no broad horizontal support detected; supply support explicitly")
-        support = measured_support
-    elif measured_support is not None and abs(support - measured_support) > .004:
-        return {"plan_ok": False, "plan_fail_reason": "support_mismatch",
-                "specified_support_z": support, "estimated_support_z": measured_support,
-                "plan_detail": "Supplied support disagrees with local depth; omit support for an estimated fit."}
-    mask = (np.isfinite(points).all(axis=2) & (depth > 0)
-            & (points[:, :, 2] >= support + .004)
-            & (points[:, :, 2] <= support + .15))
-    seen = {(v, u)}
-    pending = [(v, u)]
-    component = []
-    while pending:
-        y, x = pending.pop()
-        if x == 0 or y == 0 or x == depth.shape[1]-1 or y == depth.shape[0]-1:
-            raise ValueError("footprint touches image boundary")
-        if np.linalg.norm(points[y, x, :2] - seed[:2]) > .20:
-            raise ValueError("connected footprint exceeds local extent")
-        component.append((y, x))
-        for yy, xx in ((y-1, x), (y+1, x), (y, x-1), (y, x+1)):
-            if (yy, xx) not in seen and mask[yy, xx]:
-                seen.add((yy, xx))
-                pending.append((yy, xx))
-    if len(component) < 12:
-        raise ValueError("insufficient connected depth samples")
-    indices = np.array(component)
-    xyz = points[indices[:, 0], indices[:, 1]]
-    xy = xyz[:, :2]
-    def footprint(samples):
-        _, axes = np.linalg.eigh(np.cov(samples.T))
-        local = samples @ axes
-        low, high = local.min(axis=0), local.max(axis=0)
-        spans = high - low
-        narrow = int(np.argmin(spans))
-        return axes @ ((low + high) / 2), axes[:, narrow], float(spans[narrow])
-
-    center, across, width = footprint(xy)
-    if not .002 <= width <= .076:
-        raise ValueError("footprint exceeds usable gripper width")
-    distances = np.linalg.norm(xy - center, axis=1)
-    selected = int(np.argmin(distances))
-    fit_mode = "whole_footprint"
-    patch_count = len(component)
-    if distances[selected] > .012:
-        # Hollow/concave silhouettes have empty bounding-box centers. Fit only
-        # the visible material connected to the supplied seed, not the hole or
-        # a remotely chosen part of the silhouette. Bound both 3-D adjacency
-        # and radius so image adjacency cannot bridge a depth discontinuity.
-        available = set(component)
-        patch = {(v, u)}
-        pending = [(v, u)]
-        while pending:
-            y, x = pending.pop()
-            for yy, xx in ((y-1, x), (y+1, x), (y, x-1), (y, x+1)):
-                if (yy, xx) not in available or (yy, xx) in patch:
-                    continue
-                if (np.linalg.norm(points[yy, xx] - seed) <= .012
-                        and np.linalg.norm(points[yy, xx] - points[y, x]) <= .006):
-                    patch.add((yy, xx))
-                    pending.append((yy, xx))
-        patch_indices = np.array(sorted(patch))
-        patch_count = len(patch)
-        if patch_count < 12:
-            raise ValueError("footprint center is empty and seed patch has insufficient samples")
-        patch_xyz = points[patch_indices[:, 0], patch_indices[:, 1]]
-        center, across, width = footprint(patch_xyz[:, :2])
-        distances = np.linalg.norm(patch_xyz[:, :2] - center, axis=1)
-        selected = int(np.argmin(distances))
-        if distances[selected] > .003 or not .002 <= width <= .020:
-            raise ValueError("footprint center is empty and seed patch has no usable local grasp")
-        indices, xyz = patch_indices, patch_xyz
-        fit_mode = "seed_surface_patch"
-    yaw = float(np.degrees(np.arctan2(across[1], across[0])))
-    yaw = (yaw + 90) % 180 - 90
-    y, x = indices[selected]
-    return {"support_z": support, "support_source": support_source,
-            "fit_mode": fit_mode, "fit_sample_count": patch_count,
-            "sample_count": len(component), "span_m": width,
-            "footprint_center_xy": center.tolist(), "surface_world": xyz[selected].tolist(),
-            "suggested_grasp": {"u": int(x), "v": int(y), "camera": name,
-                "yaw": yaw, "opening": (width + .012) / .088,
-                "support": support, "tilt": 0, "orientation": "tilted"},
-            "grasp_verified": False,
-            "fit_note": "Visible footprint only; touching regions, occlusion and underside geometry are unresolved."}
+def support_floor(api, result, support=None):
+    """RGB evidence constrains source geometry; never repair a pixel's height."""
+    floor = measured_support(api)
+    if floor is None or not np.isfinite(floor):
+        raise ValueError("RGB support measurement unavailable; refresh table_plane with visible support")
+    floor = float(floor)
+    result.update(measured_table_z=floor, support_tolerance_m=.004)
+    # Elevated supports are legitimate. Only values below the measured floor
+    # contradict the evidence. Four millimetres matches plane-pair consensus.
+    if support is not None and (not np.isfinite(float(support)) or float(support) < floor - .004):
+        raise ValueError(f"support below RGB table_z={floor:.4f}; remeasure source support")
+    return floor
 
 
 def orientation(yaw, tilt, current, bearing=90):
@@ -357,10 +138,18 @@ def run(api, command, args):
             du, dv = int(args["du"]), int(args["dv"])
             if du != float(args["du"]) or dv != float(args["dv"]):
                 raise ValueError("release pixel coordinates must be integers")
+            destination_image, _, _ = rgb.camera_data(api.observe(), name)
+            if not (0 <= du < destination_image.shape[1] and 0 <= dv < destination_image.shape[0]):
+                raise ValueError("du/dv must be absolute destination pixel coordinates inside the image, not offsets from u/v")
             # Validate the release-only angle before any grasp motion.
             release_tilt = float(args.get("release_tilt", 45.0))
             if not np.isfinite(release_tilt) or not 0 <= release_tilt <= 60:
                 raise ValueError("invalid release_tilt")
+            release_yaw = args.get("release_yaw")
+            if release_yaw is not None:
+                release_yaw = float(release_yaw)
+                if not np.isfinite(release_yaw) or not -180 <= release_yaw <= 180:
+                    raise ValueError("invalid release_yaw")
             release_path = args.get("release_path", "auto")
             if release_path not in ("auto", "raised"):
                 raise ValueError("invalid release_path")
@@ -373,7 +162,6 @@ def run(api, command, args):
             # standalone grasps retain their strict stop-on-descent-failure
             # behavior.
             grasp_args["_transfer_recovery"] = True
-            grasp_args["_blend_approach"] = True
             grasp_args.pop("plane", None)
             travel_z = args.get("travel_z")
             if travel_z is not None:
@@ -395,7 +183,10 @@ def run(api, command, args):
                 if not np.isfinite(clearance) or not .04 <= clearance <= .20:
                     raise ValueError("invalid clearance")
                 route_obs = api.observe()
-                source_surface = surface(route_obs, name, u, v)
+                source_surface = measured_surface(route_obs, name, u, v, args)
+                grasp_args["surface_z"] = float(source_surface[2])
+                for key in ("match_camera", "mu", "mv"):
+                    grasp_args.pop(key, None)
                 release_z = float(release_surface[2] + height)
                 opening = float(args.get("opening", .65))
                 if not np.isfinite(opening) or not .1 <= opening <= 1:
@@ -423,44 +214,14 @@ def run(api, command, args):
                                   requested_travel_z=travel_z, route_verified=False,
                                   estimated_load_below_tcp_m=overhang)
                 else:
-                    obstacle_z = corridor_height(route_obs, name, source_surface,
-                                                 release_surface, opening * .088 / 2 + .015)
-                    route_floor = obstacle_z + clearance + overhang
-                    direct_release = (release_path == "auto" and
-                                      release_z >= route_floor)
-                    grasp_args["_transfer_lift_floor"] = (release_z if direct_release else
-                                                           max(release_z + clearance, route_floor))
-                    result.update(observed_corridor_z=obstacle_z,
-                                  estimated_load_below_tcp_m=overhang,
-                                  route_clearance_z=route_floor)
-                    # Freeze the first view: some observation providers reuse arrays.
-                    depth, k, t = camera_data(route_obs, name)
-                    reference = {"depth": {SOURCES[name]: depth.copy()}, "cameras": {
-                        SOURCES[name]: {"intrinsics": k.copy(), "extrinsics_world": t.copy()}}}
-                    hover_view = None
-
-                    def capture_hover():
-                        nonlocal hover_view
-                        depth, k, t = camera_data(api.observe(), name)
-                        hover_view = {"depth": {SOURCES[name]: depth.copy()}, "cameras": {
-                            SOURCES[name]: {"intrinsics": k.copy(), "extrinsics_world": t.copy()}}}
-
-                    grasp_args["_capture_transfer_hover"] = capture_hover
-
-                    def refresh_route():
-                        nonlocal direct_release
-                        obstacle = corridor_height(api.observe(), name, source_surface,
-                                                   release_surface, opening * .088 / 2 + .015,
-                                                   reference=reference, intermediate=hover_view)
-                        floor = obstacle + clearance + overhang
-                        direct_release = release_path == "auto" and release_z >= floor
-                        result.update(initial_corridor_z=obstacle_z,
-                                      observed_corridor_z=obstacle,
-                                      route_clearance_z=floor,
-                                      route_observation="multi_view_persistent")
-                        return release_z if direct_release else max(release_z + clearance, floor)
-
-                    grasp_args["_refresh_transfer_route"] = refresh_route
+                    raise ValueError('RGB transfer requires travel_z; intermediate clearance is caller supplied')
+            else:
+                raise ValueError('RGB transfer requires measured destination plane and travel_z')
+            grasp_args["_preflight_release"] = {
+                "surface": release_surface.copy(), "height": height,
+                "tilt": release_tilt, "direct": direct_release,
+                "yaw": release_yaw,
+            }
             grasp_result, grasp_code = run(api, "pixel-grasp", grasp_args)
             if grasp_code != 0 or not grasp_result.get("plan_ok"):
                 for key in ("initial_corridor_z", "observed_corridor_z", "route_clearance_z",
@@ -468,11 +229,14 @@ def run(api, command, args):
                             "requested_travel_z", "route_verified"):
                     if key in result:
                         grasp_result[key] = result[key]
-                grasp_result["transfer_stage"] = "grasp"
+                grasp_result.setdefault("transfer_stage", "grasp")
                 return grasp_result, grasp_code
             place_args = dict(args)
             place_args.update({"u": du, "v": dv, "orientation": "tilted",
                                "tilt": release_tilt})
+            chosen = grasp_result["transfer_preflight"]["release_orientation"]
+            place_args.update(yaw=chosen["yaw"], tilt=chosen["tilt"], bearing=chosen["bearing"])
+            place_args["_release_rotation"] = grasp_result["transfer_preflight"]["release_rotation"]
             place_args["_directional_release_fallback"] = True
             place_args["_direct_release"] = direct_release
             if travel_z is not None:
@@ -489,7 +253,12 @@ def run(api, command, args):
                 result["released"] = True
             return result, place_code
         if command == "grasp-fit":
-            fit = fit_grasp(api.observe(), name, u, v, args.get("support"))
+            support = args.get("support")
+            floor = support_floor(api, result, support)
+            if support is None:
+                support = floor
+            fit = rgb.fit_grasp(api.observe(), name, u, v, support, args.get('surface_z'),
+                                args.get('match_camera'), args.get('mu'), args.get('mv'))
             result.update(fit)
             result["plan_ok"] = fit.get("plan_ok", True)
             return result, 0 if result["plan_ok"] else 2
@@ -520,13 +289,13 @@ def run(api, command, args):
                         if "_release_surface" in args else plane_surface(obs, name, u, v, plane))
             result["surface_source"] = "specified_plane"
         elif edge_mode:
-            original, values["yaw"], values["opening"], width = edge_grasp(
-                obs, name, u, v, args.get("u2"), args.get("v2"))
+            original, values["yaw"], values["opening"], width = rgb.edge_grasp(
+                obs, name, u, v, args.get("u2"), args.get("v2"), args.get("surface_z"))
             result.update(surface_source="edge_midpoint", span_m=width,
                           selected_yaw=values["yaw"], selected_opening=values["opening"])
         else:
-            original = surface(obs, name, u, v)
-            result["surface_source"] = "live_depth"
+            original = measured_surface(obs, name, u, v, args)
+            result["surface_source"] = "specified_surface_plane" if args.get("surface_z") is not None else "rgb_correspondence"
         result["surface_world"] = original.tolist()
         support = args.get("support")
         if support is not None:
@@ -546,16 +315,109 @@ def run(api, command, args):
         if support is not None:
             goal[2] = (original[2] + support) / 2
         result["target_world"] = goal.tolist()
+        if command == "pixel-grasp":
+            floor = support_floor(api, result, support)
+            if original[2] < floor - .004:
+                raise ValueError(f"surface below RGB table_z={floor:.4f}; remeasure surface_z or correspondence")
+            if goal[2] < floor - .004:
+                raise ValueError(f"grasp target below RGB table_z={floor:.4f}; revise inset or measured support")
         lift_floor = float(args.get("_transfer_lift_floor", goal[2] + values["lift"]))
         if not np.isfinite(lift_floor):
             raise ValueError("invalid lift clearance")
         if "_transfer_lift_floor" in args:
             result["transfer_clearance_z"] = lift_floor
+        approach_hover = max(goal[2] + values["clearance"], original[2] + .04)
+        if command == "pixel-grasp" and "_transfer_lift_floor" in args:
+            # A previous release can leave the hand below surrounding rims.
+            # Apply the caller's transit floor to the empty return as well as
+            # the loaded transfer. Raise in the existing frame before lateral
+            # travel/rotation, then descend vertically at the source.
+            approach_hover = max(approach_hover, lift_floor)
+            result["return_clearance_z"] = float(approach_hover)
         selected_rotation = arm.tcp()[:3, :3].copy()
         if orientation_mode == "tilted":
             selected_rotation = orientation(values["yaw"], values["tilt"],
                                             selected_rotation, values["bearing"])
+        if command == "pixel-place" and "_release_rotation" in args:
+            # Freeze the checked jaw-frame sign: tiny lift errors near an
+            # equal-distance orientation must not select its opposite frame.
+            selected_rotation = np.asarray(args["_release_rotation"], dtype=float).copy()
         result["approach_dir"] = selected_rotation[:, 0].tolist()
+
+        if "_preflight_release" in args:
+            # Use the public read-only IK estimator, never exported plans or
+            # simulator geometry. Check the entire nominal chain before even
+            # changing aperture, so an unreachable lift cannot strand a load.
+            release = args["_preflight_release"]
+            pose = arm.tcp().copy()
+            chain = []
+            hover_z = approach_hover
+            if pose[2, 3] < hover_z:
+                pose[2, 3] = hover_z
+                chain.append(("raise", pose.copy()))
+            pose[:3, :3] = selected_rotation
+            pose[:3, 3] = [goal[0], goal[1], hover_z]
+            chain.append(("above_orient", pose.copy()))
+            pose[:3, 3] = goal
+            chain.append(("descend", pose.copy()))
+            pose[2, 3] = max(goal[2] + values["lift"], lift_floor)
+            chain.append(("lift", pose.copy()))
+            destination = np.asarray(release["surface"], float).copy()
+            destination[2] += release["height"]
+            travel_height = destination[2] if release["direct"] else pose[2, 3]
+            delta = destination[:2] - goal[:2]
+            candidates = [(release["tilt"], values["bearing"])]
+            if np.linalg.norm(delta) > .005:
+                alternate = (60., float(np.degrees(np.arctan2(delta[1], delta[0]))))
+                if not np.allclose(alternate, candidates[0]):
+                    candidates.append(alternate)
+            attempts = []
+            # Preserve the original two release frames first. Only a release
+            # IK failure expands yaw; source geometry and all source poses stay
+            # fixed. These are angular search increments, not scene constants.
+            release_yaw = release.get("yaw")
+            yaws = ([release_yaw] if release_yaw is not None else
+                    [((values["yaw"] + offset + 180.) % 360.) - 180.
+                     for offset in (0., 45., -45., 90.)])
+            candidates = [(yaw, tilt, bearing) for yaw in yaws for tilt, bearing in candidates]
+            # Yaw changes the jaw axis, not the approach direction. A cross-body
+            # destination may require leaning the other way. Keep every legacy
+            # candidate first, then mirror its tilt direction without changing
+            # source geometry, transit height, or the destination point.
+            mirrored = []
+            for yaw, tilt, bearing in candidates:
+                candidate = (yaw, tilt, ((bearing + 360.) % 360.) - 180.)
+                if tilt > 0 and not any(np.allclose(candidate, old)
+                                        for old in candidates + mirrored):
+                    mirrored.append(candidate)
+            candidates += mirrored
+            for yaw, tilt, bearing in candidates:
+                travel = pose.copy()
+                travel[:3, :3] = orientation(yaw, tilt, selected_rotation, bearing)
+                travel[:3, 3] = [destination[0], destination[1], travel_height]
+                stages = chain + [("release_travel", travel.copy())]
+                if not release["direct"]:
+                    travel[:3, 3] = destination
+                    stages.append(("release_pose", travel.copy()))
+                estimate = api.estimate_tcp_chain(arm, stages)
+                attempts.append(dict(estimate, release_orientation={
+                    "yaw": yaw, "tilt": tilt, "bearing": bearing}))
+                result["transfer_preflight"] = {
+                    "attempts": attempts, "collision_checked": False,
+                    "release_orientation": {"yaw": yaw, "tilt": tilt, "bearing": bearing},
+                    "release_rotation": travel[:3, :3].tolist(),
+                }
+                if estimate.get("estimate_ok") is True:
+                    break
+                # A release-frame alternative cannot repair source reachability.
+                if (estimate.get("reason") != "ik_unreachable"
+                        or estimate.get("failed_stage") not in ("release_travel", "release_pose")):
+                    break
+            if estimate.get("estimate_ok") is not True:
+                result.update(plan_fail_reason=estimate.get("reason") or "transfer_preflight_failed",
+                              transfer_stage="preflight", plan_detail=
+                              "Nominal transfer path rejected before motion; revise arm, pose or transit height.")
+                return result, 2
 
         def move(label, target):
             if api.over:
@@ -594,6 +456,38 @@ def run(api, command, args):
                     raise ValueError("invalid refreshed lift clearance")
                 result["transfer_clearance_z"] = lift_floor
 
+        def stable_release():
+            # Position convergence during travel is not a velocity check.
+            # Hold the commanded pose before opening, then measure motion over
+            # a second window. Fixed design values: five steps (0.20 s at
+            # 25 Hz), <=1 mm translation and <=1 degree rotation. No retry.
+            if api.over:
+                result["plan_fail_reason"] = "episode_over"
+                return False
+            api.hold(3)
+            if api.over:
+                result["plan_fail_reason"] = "episode_over"
+                return False
+            before = arm.tcp().copy()
+            api.hold(2)
+            after = arm.tcp().copy()
+            drift = float(np.linalg.norm(after[:3, 3] - before[:3, 3]))
+            angle = float(np.degrees(np.arccos(np.clip(
+                (np.trace(before[:3, :3].T @ after[:3, :3])-1)/2, -1, 1))))
+            error = float(np.linalg.norm(after[:3, 3] - goal))
+            rotation_error = float(np.degrees(np.arccos(np.clip(
+                (np.trace(selected_rotation.T @ after[:3, :3])-1)/2, -1, 1))))
+            stable = (np.isfinite([drift, angle, error, rotation_error]).all()
+                      and drift <= .001 and angle <= 1 and error <= .01
+                      and rotation_error <= 8)
+            result["release_stability"] = dict(hold_steps=5, drift_m=drift,
+                drift_deg=angle, error_m=error, error_deg=rotation_error,
+                stable=bool(stable), retention_verified=False)
+            if api.over or not stable:
+                result["plan_fail_reason"] = "episode_over" if api.over else "release_unstable"
+                return False
+            return grip(1.0)
+
         if command == "pixel-place":
             # Clear the source with the measured rotation before tilting a load.
             # A caller may arrive here directly after closing near a surface.
@@ -610,6 +504,57 @@ def run(api, command, args):
                 travel_z = max(target[2, 3], float(args["_transfer_travel_z"]))
             result["travel_z"] = float(travel_z)
             result["release_path"] = "direct" if direct_release else "raised"
+            if "_release_rotation" not in args:
+                # Standalone placement must check the complete chain before
+                # raising a held load. Search frames only after release IK
+                # rejection; never retry physical contact or change geometry.
+                candidates = [(values["yaw"], values["tilt"], values["bearing"])]
+                if orientation_mode == "tilted":
+                    candidates = [(((values["yaw"] + offset + 180) % 360) - 180,
+                                   values["tilt"], bearing)
+                                  for bearing in (values["bearing"],
+                                      ((values["bearing"] + 360) % 360) - 180)
+                                  for offset in (0, 45, -45, 90)]
+                attempts, rotations = [], []
+                for yaw, tilt, bearing in candidates:
+                    rotation = (orientation(yaw, tilt, target[:3, :3], bearing)
+                                if orientation_mode == "tilted" else target[:3, :3].copy())
+                    if any(np.allclose(rotation, old) for old in rotations):
+                        continue
+                    rotations.append(rotation)
+                    pose = target.copy()
+                    chain = []
+                    if pose[2, 3] < travel_z - .005:
+                        pose[2, 3] = travel_z
+                        chain.append(("raise", pose.copy()))
+                    pose[:3, :3] = rotation
+                    pose[:3, 3] = [goal[0], goal[1], travel_z]
+                    chain.append(("above_orient" if orientation_mode == "tilted" else "above", pose.copy()))
+                    if not direct_release:
+                        pose[:3, 3] = goal
+                        chain.append(("release_pose", pose.copy()))
+                    estimate = api.estimate_tcp_chain(arm, chain)
+                    attempts.append(dict(estimate, release_orientation=dict(yaw=yaw, tilt=tilt, bearing=bearing)))
+                    result["place_preflight"] = dict(attempts=attempts, collision_checked=False)
+                    if estimate.get("estimate_ok") is True:
+                        break
+                    if (estimate.get("reason") != "ik_unreachable" or
+                            estimate.get("failed_stage") not in ("above", "above_orient", "release_pose")):
+                        break
+                if estimate.get("estimate_ok") is not True:
+                    result.update(plan_fail_reason=estimate.get("reason") or "place_preflight_failed",
+                                  place_stage="preflight")
+                    return result, 2
+                result["place_preflight"]["release_rotation"] = rotation.tolist()
+                selected_rotation = rotation
+                result["approach_dir"] = rotation[:, 0].tolist()
+                for label, pose in chain:
+                    if not move(label, pose):
+                        return result, 2
+                if not stable_release():
+                    return result, 2
+                result.update(plan_ok=True, released=True, placement_verified=False)
+                return result, 0
             if target[2, 3] < travel_z - .005:
                 target[2, 3] = travel_z
                 if not move("raise", target):
@@ -665,19 +610,19 @@ def run(api, command, args):
             # the direct path, including the fallback's selected rotation.
             if not direct_release and not move("release_pose", target):
                 return result, 2
-            if not grip(1.0):
+            if not stable_release():
                 return result, 2
             result.update(plan_ok=True, released=True, placement_verified=False)
             return result, 0
 
-        # Composite transfers combine empty-hand return and orientation at
-        # the local hover height. First clear a low starting pose vertically;
+        # Vertical/tilted grasps combine empty-hand return and orientation at
+        # the selected hover height. First clear a low starting pose vertically;
         # both endpoints of the blended segment remain above that hover.
-        blend_approach = bool(args.get("_blend_approach")) and orientation_mode == "tilted"
+        blend_approach = orientation_mode == "tilted"
         oriented_during_return = False
         opening_prepared = False
         if blend_approach:
-            hover_z = max(goal[2] + values["clearance"], original[2] + .04)
+            hover_z = approach_hover
             target = arm.tcp().copy()
             if target[2, 3] < hover_z:
                 target[2, 3] = hover_z
@@ -714,7 +659,8 @@ def run(api, command, args):
             # vertical wrist may be unreachable there even when the next grasp is
             # reachable. Rotate only after returning above the measured target.
             target = arm.tcp().copy()
-            hover_z = goal[2] + values["clearance"]
+            hover_z = (approach_hover if "_transfer_lift_floor" in args
+                       else goal[2] + values["clearance"])
             if target[2, 3] < hover_z - .005:
                 target[2, 3] = hover_z
                 if not move("raise", target):
@@ -789,9 +735,13 @@ def run(api, command, args):
             result["grasp_verified"] = False
             result["verification_note"] = "Partial descent was recovered by one close and lift; retention remains unverified."
             try:
-                result["source_evidence"] = source_evidence(api.observe(), name, original)
+                result["source_evidence"] = source_evidence(obs, api.observe(), original, floor)
             except Exception:
-                result["source_evidence"] = "unknown"
+                result["source_evidence"] = {"status": "unknown", "retention_verified": False}
+            if result["source_evidence"].get("status") == "source_material_remains":
+                result.update(plan_ok=False, plan_fail_reason="source_material_remains",
+                              plan_detail="RGB tracks remain near the source after lift; remeasure before another grasp.")
+                return result, 2
             return result, 0
         refresh_lift_floor()
         if not grip(0.0):
@@ -804,9 +754,13 @@ def run(api, command, args):
         result["grasp_verified"] = False
         result["verification_note"] = "Surface clearance is not proof of retention; inspect the updated wrist image."
         try:
-            result["source_evidence"] = source_evidence(api.observe(), name, original)
+            result["source_evidence"] = source_evidence(obs, api.observe(), original, floor)
         except Exception:
-            result["source_evidence"] = "unknown"
+            result["source_evidence"] = {"status": "unknown", "retention_verified": False}
+        if result["source_evidence"].get("status") == "source_material_remains":
+            result.update(plan_ok=False, plan_fail_reason="source_material_remains",
+                          plan_detail="RGB tracks remain near the source after lift; remeasure before another grasp.")
+            return result, 2
         return result, 0
     except Exception as exc:
         result.update(plan_ok=False, plan_fail_reason="tool_error", plan_detail=str(exc))

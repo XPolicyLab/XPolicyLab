@@ -1,4 +1,4 @@
-"""Locate a horizontal circular rim from calibrated depth, without motion."""
+"""Locate a horizontal circular rim from calibrated RGB stereo, without motion."""
 import importlib.util
 import math
 from pathlib import Path
@@ -10,7 +10,7 @@ _spec.loader.exec_module(axis)
 
 TOOL = {'name': 'rim_fit', 'commands': [{
     'name': 'rim-fit', 'budget': False,
-    'help': 'measure a horizontal circular rim centre and height from depth',
+    'help': 'measure a horizontal circular rim centre and height from RGB stereo',
     'args': [{'name': 'u', 'type': 'int', 'required': True},
              {'name': 'v', 'type': 'int', 'required': True},
              {'name': 'camera', 'default': 'head'},
@@ -81,7 +81,19 @@ def run(api, command, args):
                 raise ValueError('supported annular surface above candidate; '
                                  'upper rim is incomplete, widen the patch/band or change seed')
             return result
-        result = axis.locate(api.observe(), a, fitter=fit_unclipped, model_name='horizontal_circular_rim')
+        if not (.01 <= float(a['band']) <= .04 and .03 <= float(a['reach']) <= .12):
+            raise ValueError('band .01.. .04 and reach .03.. .12 required')
+        observation = api.observe()
+        try:
+            result = axis.locate(observation, a, fitter=fit_unclipped, model_name='horizontal_circular_rim')
+        except ValueError as exc:
+            if 'above candidate' in str(exc):
+                raise
+            result = axis.rgb.horizontal_ring(observation, a['u'], a['v'],
+                                              a['camera'], a['window'])
+            return dict(result, plan_ok=True, plan_fail_reason=None,
+                        search_upper_z=None, height_search=('matched_edge_arcs' if 'edge-arc' in result['source']
+                                                       else 'matched_complete_contours')), 0
         upper = result['surface_world'][2] + float(a['band'])
         if upper - result['rim_z'] <= .003:
             return dict(plan_ok=False, plan_fail_reason='rim_search_clipped',

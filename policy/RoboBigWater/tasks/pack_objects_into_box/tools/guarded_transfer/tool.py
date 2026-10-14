@@ -2,6 +2,12 @@
 import math
 import json
 import numpy as np
+import importlib.util
+from pathlib import Path
+
+_spec = importlib.util.spec_from_file_location("transfer_stereo", Path(__file__).parents[1] / "surface_region" / "stereo.py")
+stereo = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(stereo)
 
 
 def scalar(name, default=None, required=False):
@@ -15,19 +21,42 @@ def scalar(name, default=None, required=False):
 
 ARM = {"name": "arm", "positional": True, "choices": ["left", "right"]}
 XYZ = [scalar(k, required=True) for k in ("x", "y", "z")]
+GRASP_ROUTES = {
+    "retract": (False, False), "orient": (True, False),
+    "retract_tilt": (False, True), "orient_tilt": (True, True),
+}
 TOOL = {"name": "guarded_transfer", "commands": [
     {"name": "grasp_at", "budget": True, "help": "Vertical grasp and lift at absolute coordinates",
      "args": [ARM] + XYZ + [scalar("heading", 0), scalar("clearance", .10), scalar("lift", .10),
-                             scalar("backoff", .10), scalar("surface_allowance", .05)]},
+                             scalar("backoff", .10), scalar("surface_allowance", .05), scalar("travel_z"),
+                             {"name": "grip_branch", "type": "str", "choices": ["nearest", "opposite"], "default": "nearest"},
+                             {"name": "grasp_route", "type": "str", "choices": ["auto", *GRASP_ROUTES], "default": "auto"}]},
     {"name": "place_over", "budget": True, "help": "Lift, turn, traverse and release above a specified obstacle height",
      "args": [ARM] + XYZ + [scalar("rim_z", required=True), scalar("below", .05),
-                             scalar("margin", .03), scalar("yaw", 0), scalar("tilt", 0),
+                             scalar("margin", .05), scalar("yaw", 0), scalar("tilt", 0),
                              scalar("retreat", .05), scalar("backoff", .18), scalar("route_radius", .05), scalar("y_slack", 0),
                              {"name": "route_depth", "type": "str", "choices": ["advisory", "enforce"], "default": "advisory"},
                              {"name": "target_rotation", "type": "str", "default": ""},
                              {"name": "yaw_route", "type": "str", "choices": ["auto", "signed"], "default": "auto"},
                              {"name": "turn_order", "type": "str", "choices": ["tilt_first", "yaw_first"], "default": "tilt_first"}]},
 ]}
+
+
+def transit_clearance(rim_z, below, margin):
+    """Five centimetres is a design safety reserve, not measured geometry."""
+    effective_margin = max(.05, margin)
+    return rim_z + below + effective_margin, effective_margin
+
+
+def pickup_heights(goal, values):
+    """Caller-declared transit floor applies to approach AND extraction."""
+    floor = values.get('travel_z')
+    if floor is None:
+        return goal[2] + values['clearance'], goal[2] + values['lift']
+    floor = float(floor)
+    if not math.isfinite(floor):
+        raise ValueError('travel_z must be finite')
+    return max(goal[2] + values['clearance'], floor), max(goal[2] + values['lift'], floor)
 
 
 def rz(degrees):
@@ -50,7 +79,7 @@ def depth_points(observation):
     """Calibrated visible geometry, without semantic or robot segmentation."""
     name = "cam_head" if "cam_head" in observation.get("cameras", {}) else "head"
     camera = observation["cameras"][name]
-    depth = np.asarray(observation["depth"][name], dtype=float).squeeze()
+    depth = stereo.sparse_ranges(observation, name)
     k = np.asarray(camera["intrinsics"], dtype=float)
     t = np.asarray(camera["extrinsics_world"], dtype=float)
     if depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4):
@@ -131,7 +160,7 @@ def source_persistence(before, observation):
     camera = observation["cameras"][name]
     k = np.asarray(camera["intrinsics"], dtype=float)
     t = np.asarray(camera["extrinsics_world"], dtype=float)
-    depth = np.asarray(observation["depth"][name], dtype=float).squeeze()
+    depth = stereo.sparse_ranges(observation, name)
     if (depth.ndim != 2 or k.shape != (3, 3) or t.shape != (4, 4)
             or not np.isfinite(k).all() or not np.isfinite(t).all()
             or not np.allclose(t[3], [0, 0, 0, 1])
@@ -210,9 +239,9 @@ def carried_absence(before, observation, tcp):
     for name, camera in observation.get("cameras", {}).items():
         try:
             indices, pixels, matches = carried_view_evidence(
-                points, camera, observation["depth"][name])
+                points, camera, stereo.sparse_ranges(observation, name))
         except Exception:
-            diagnostics[name] = {"status": "unknown", "reason": "depth_unavailable_or_invalid"}
+            diagnostics[name] = {"status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
             continue
         absent[indices] = True
         matched[matches] = True
@@ -231,7 +260,7 @@ def carried_absence(before, observation, tcp):
     if count / len(local) >= .8 and pixel_count >= 24:
         result["status"] = "missing"
     if not views:
-        result["reason"] = "depth_unavailable_or_invalid"
+        result["reason"] = "rgb_correspondences_unavailable_or_invalid"
     return result
 
 
@@ -283,6 +312,9 @@ def run(api, command, args):
                 values[key] = value
                 continue
             # Registry payload keys retain hyphens; also accept normalized Python keys.
+            if key == 'travel_z' and args.get(key) is None:
+                values[key] = None
+                continue
             value = float(args.get(key, args.get(key.replace('-', '_'), field.get("default"))))
             if not math.isfinite(value):
                 raise ValueError(key + " must be finite")
@@ -301,8 +333,8 @@ def run(api, command, args):
                 before_source = select_source_samples(points, goal), name
                 result["target_check"] = target_surface_check(points, goal, values["surface_allowance"])
             except Exception:
-                result["source_check"] = {"status": "unknown", "reason": "depth_unavailable_or_invalid"}
-                result["target_check"] = {"status": "unknown", "reason": "depth_unavailable_or_invalid"}
+                result["source_check"] = {"status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
+                result["target_check"] = {"status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
             if result["target_check"]["status"] == "too_high":
                 result["plan_fail_reason"] = "target_surface_too_high"
                 result["verification"] = "Visible geometry exceeds the allowed top height at the selected XY; inspect current geometry and insertion height."
@@ -372,16 +404,25 @@ def run(api, command, args):
             check_time()
 
         if command == "grasp_at":
+            check_time()
+            try:
+                approach, attempts = preflight_grasp(api, arm, goal, values)
+            except Exception as exc:
+                result["plan_fail_reason"] = "preflight_unavailable"
+                result["plan_detail"] = str(exc)
+                raise Stopped()
+            result["preflight"] = attempts
+            if approach is None:
+                result["plan_fail_reason"] = "grasp_preflight_failed"
+                result["plan_detail"] = "No complete pickup fits reach and remaining action steps; no motion executed."
+                raise Stopped()
+            result["preflight_selection"] = approach
             # Opening direction is heading measured from +x toward +y.
-            a = math.radians(values["heading"])
-            down = np.array([0., 0., -1.])
-            across = np.array([math.cos(a), math.sin(a), 0.])
-            rot = np.column_stack((down, across, np.cross(down, across)))
-            alternate = rot @ np.diag([1., -1., -1.])
-            if np.trace(arm.tcp()[:3, :3].T @ alternate) > np.trace(arm.tcp()[:3, :3].T @ rot):
-                rot = alternate
+            rot = grasp_rotation(arm.tcp(), values)
             high = goal.copy()
-            high[2] += values["clearance"]
+            high[2], lift_z = pickup_heights(goal, values)
+            result['travel_z'] = values['travel_z']
+            result['lift_z'] = float(lift_z)
             start = arm.tcp()[:3, 3].copy()
             start[2] = max(start[2], high[2])
             move("raise", start)
@@ -396,7 +437,12 @@ def run(api, command, args):
             result["approach_y"] = float(rear[1])
             result["approach_route_used"] = "retract_first"
             try:
-                move("backoff", rear)
+                if approach["orient_first"]:
+                    result["approach_route_used"] = "orient_first_preflight"
+                    move("orient_before_backoff", rotation=rot)
+                    move("backoff_after_orient", rear)
+                else:
+                    move("backoff", rear)
             except Stopped:
                 # Some starting wrist orientations cannot retract even though
                 # the downward grasp orientation can. The default rearward
@@ -404,14 +450,15 @@ def run(api, command, args):
                 # path, never after contact/tracking failure or partial travel.
                 # Keep the raised position, target, and caller clearance. This
                 # bounded alternative is not a swept-volume collision check.
-                if (api.over or not stages or not motionless_ik_rejection(stages[-1])
+                if (values["grasp_route"] != "auto" or approach["orient_first"] or api.over or not stages or not motionless_ik_rejection(stages[-1])
                         or rotation_error(arm.tcp()[:3, :3], rot) <= .5):
                     raise
                 result["approach_route_used"] = "orient_first_after_ik_failure"
                 move("orient_before_backoff", rotation=rot)
                 move("backoff_after_orient", rear)
             else:
-                move("orient", rotation=rot)
+                if not approach["orient_first"]:
+                    move("orient", rotation=rot)
             # Cross laterally behind the scene, then approach along +y. Avoid
             # a diagonal sweep through intervening raised geometry.
             rear[0] = goal[0]
@@ -426,7 +473,13 @@ def run(api, command, args):
                 move("approach_height", rear)
             result["grasp_tilt_deg"] = 0.
             try:
-                move("above", high)
+                if approach["tilted"]:
+                    move("approach_tilt", rotation=rx(45.) @ rot)
+                    result["grasp_tilt_deg"] = 45.
+                    result["approach_route_used"] += "_tilted_preflight"
+                    move("above_after_tilt", high)
+                else:
+                    move("above", high)
             except Stopped:
                 # A downward wrist can exhaust forward reach even when a
                 # tilted wrist reaches the same TCP. Try once at the rear
@@ -434,7 +487,7 @@ def run(api, command, args):
                 # Positive global-x tilt keeps the wrist behind the TCP for
                 # either arm. The opening direction now has a vertical
                 # component; this changes grasp geometry, not the target.
-                if api.over or not motionless_ik_rejection(stages[-1]):
+                if values["grasp_route"] != "auto" or approach["tilted"] or api.over or not motionless_ik_rejection(stages[-1]):
                     raise
                 result["approach_route_used"] += "_tilted_after_forward_ik_failure"
                 move("approach_tilt", rotation=rx(45.) @ rot)
@@ -443,13 +496,13 @@ def run(api, command, args):
             grip(1.)
             move("descend", goal)
             grip(0.)
-            high[2] = goal[2] + values["lift"]
+            high[2] = lift_z
             move("lift", high)
             if before_source is not None:
                 try:
                     result["source_check"] = source_persistence(before_source, api.observe())
                 except Exception:
-                    result["source_check"] = {"status": "unknown", "reason": "depth_unavailable_or_invalid"}
+                    result["source_check"] = {"status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
                 if result["source_check"]["status"] == "unchanged":
                     result["grasp_verified"] = False
                     result["plan_fail_reason"] = "source_surface_unchanged"
@@ -468,9 +521,9 @@ def run(api, command, args):
             def check_carried(stage):
                 try:
                     evidence = carried_absence(carried, api.observe(), arm.tcp()) if carried is not None else {
-                        "status": "unknown", "reason": "depth_unavailable_or_invalid"}
+                        "status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
                 except Exception:
-                    evidence = {"status": "unknown", "reason": "depth_unavailable_or_invalid"}
+                    evidence = {"status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
                 evidence["stage"] = stage
                 result.setdefault("retention_checks", []).append(evidence)
                 if evidence["status"] == "missing":
@@ -485,7 +538,7 @@ def run(api, command, args):
                 result["route_check"] = route_surface_check(
                     points, start, goal, values["backoff"], values["route_radius"])
             except Exception:
-                result["route_check"] = {"status": "unknown", "reason": "depth_unavailable_or_invalid"}
+                result["route_check"] = {"status": "unknown", "reason": "rgb_correspondences_unavailable_or_invalid"}
             measured = result["route_check"].get("max_z")
             # An unsegmented observation contains the robot too. A local TCP
             # exclusion does not remove its forearm/elbow, so the raw maximum
@@ -504,11 +557,13 @@ def run(api, command, args):
                     "Visible route geometry exceeds rim_z; it may include robot geometry. "
                     "The scan does not identify obstacles or establish safe clearance.")
             result["effective_rim_z"] = float(effective_rim)
-            release_floor = effective_rim + values["below"] + values["margin"]
+            release_floor, effective_margin = transit_clearance(
+                effective_rim, values["below"], values["margin"])
+            result["requested_margin"] = values["margin"]
+            result["effective_margin"] = effective_margin
             result["requested_release_z"] = float(goal[2])
-            goal[2] = max(goal[2], release_floor)
             result["release_z"] = float(goal[2])
-            height = max(start[2], goal[2])
+            height = max(start[2], goal[2], release_floor)
             result["transit_z"] = height
             start[2] = height
             initial_rotation = arm.tcp()[:3, :3].copy()
@@ -518,6 +573,24 @@ def run(api, command, args):
                            tilt_rotation @ yaw_rotation @ initial_rotation)
             result["turn_target_rotation"] = turn_target.tolist()
             result["resume_rotation"] = json.dumps(turn_target.tolist(), separators=(",", ":"))
+            # Reject downstream IK failures before disturbing a held payload.
+            # Every candidate preserves clearance and the final rotation.
+            check_time()
+            try:
+                chosen, attempts = preflight_placement(api, arm, goal, height, values, absolute_rotation)
+            except Exception as exc:
+                result["plan_fail_reason"] = "preflight_unavailable"
+                result["plan_detail"] = str(exc)
+                raise Stopped()
+            result["preflight"] = attempts
+            if chosen is None:
+                result["plan_fail_reason"] = "placement_preflight_failed"
+                result["plan_detail"] = "No complete checked route fits reach and remaining action steps; no motion executed."
+                raise Stopped()
+            values, goal = chosen
+            yaw_rotation = rz(values["yaw"])
+            result["preflight_selection"] = dict(yaw=values["yaw"], turn_order=values["turn_order"],
+                                                  release_y=float(goal[1]))
             move("clearance", start)
             # Retract while preserving the grasp orientation, before rotating
             # the carried geometry or crossing laterally. This is staging,
@@ -649,3 +722,150 @@ def run(api, command, args):
 def rotation_error(actual, target):
     cosine = (np.trace(actual.T @ target) - 1.) / 2.
     return math.degrees(math.acos(float(np.clip(cosine, -1., 1.))))
+
+
+def placement_chain(initial, goal, height, values, absolute_rotation=None):
+    """Nominal full TCP route, including vertical retreat, for read-only IK."""
+    pose = initial.copy()
+    stages = []
+
+    def add(name, pos=None, rotation=None):
+        if pos is not None:
+            pose[:3, 3] = pos
+        if rotation is not None:
+            pose[:3, :3] = rotation
+        stages.append((name, pose.copy()))
+
+    start = initial[:3, 3].copy()
+    start[2] = height
+    add("clearance", start)
+    rear = start.copy()
+    rear[1] = min(start[1], goal[1] - values["backoff"])
+    add("transfer_backoff", rear)
+    initial_rotation = initial[:3, :3]
+    yaw = rz(values["yaw"])
+    tilt = rx(values["tilt"])
+    if absolute_rotation is not None:
+        if rotation_error(initial_rotation, absolute_rotation) > .5:
+            add("resume_turn", rotation=absolute_rotation)
+    else:
+        base = initial_rotation
+        if values["tilt"] and values["turn_order"] == "tilt_first":
+            base = yaw.T @ tilt @ yaw @ initial_rotation
+            add("tilt", rotation=base)
+        count = int(math.ceil(abs(values["yaw"]) / 90.))
+        for i in range(1, count + 1):
+            add("yaw_" + str(i), rotation=rz(values["yaw"] * i / count) @ base)
+        if values["tilt"] and values["turn_order"] == "yaw_first":
+            add("tilt", rotation=tilt @ yaw @ initial_rotation)
+    rear[0] = goal[0]
+    add("transfer_align", rear)
+    above = goal.copy()
+    above[2] = height
+    add("traverse", above)
+    add("lower", goal)
+    retreat = goal.copy()
+    retreat[2] = max(height, goal[2] + values["retreat"])
+    add("retreat", retreat)
+    return stages
+
+
+def preflight_placement(api, arm, goal, height, values, absolute_rotation):
+    """At most eight fresh IK estimates; no poses or plans survive this call."""
+    yaws = [values["yaw"]]
+    orders = [values["turn_order"]]
+    if absolute_rotation is None:
+        if values["yaw"] and values["yaw_route"] == "auto":
+            yaws.append(values["yaw"] - math.copysign(360., values["yaw"]))
+        if values["tilt"] and values["yaw"]:
+            orders.append("yaw_first" if orders[0] == "tilt_first" else "tilt_first")
+    offsets = [0.] + ([values["y_slack"]] if values["y_slack"] else [])
+    attempts = []
+    for offset in offsets:
+        for order in orders:
+            for yaw in yaws:
+                candidate = dict(values, yaw=yaw, turn_order=order)
+                target = goal.copy()
+                target[1] -= offset
+                chain = placement_chain(arm.tcp(), target, height, candidate, absolute_rotation)
+                estimate = api.estimate_tcp_chain(arm, chain)
+                affordable = (estimate.get("estimate_ok") is True and
+                              estimate["total_action_steps"] <= estimate["remaining_action_steps"])
+                attempts.append(dict(estimate, yaw=yaw, turn_order=order,
+                                     release_y=float(target[1]), budget_ok=affordable))
+                if affordable:
+                    # Never shift beyond the caller's originally allowed extent.
+                    candidate["y_slack"] = values["y_slack"] - offset
+                    return (candidate, target), attempts
+    return None, attempts
+
+
+def grasp_rotation(initial, values):
+    """Select one of two finger-swapped postures without changing opening line."""
+    angle = math.radians(values['heading'])
+    down = np.array([0., 0., -1.])
+    across = np.array([math.cos(angle), math.sin(angle), 0.])
+    rotation = np.column_stack((down, across, np.cross(down, across)))
+    alternate = rotation @ np.diag([1., -1., -1.])
+    if np.trace(initial[:3, :3].T @ alternate) > np.trace(initial[:3, :3].T @ rotation):
+        rotation = alternate
+    if values.get("grip_branch", "nearest") == "opposite":
+        rotation = rotation @ np.diag([1., -1., -1.])
+    return rotation
+
+
+def grasp_chain(initial, goal, values, orient_first=False, tilted=False):
+    """Complete prospective pickup; alternatives preserve position and clearance."""
+    pose = initial.copy()
+    chain = []
+    def add(name, pos=None, rotation=None):
+        if pos is not None:
+            pose[:3, 3] = pos
+        if rotation is not None:
+            pose[:3, :3] = rotation
+        chain.append((name, pose.copy()))
+    rotation = grasp_rotation(initial, values)
+    high = goal.copy()
+    high[2], lift_z = pickup_heights(goal, values)
+    rear = initial[:3, 3].copy()
+    rear[2] = max(rear[2], high[2])
+    add('raise', rear)
+    rear[1] = min(rear[1], goal[1] - values['backoff'])
+    if orient_first:
+        add('orient_before_backoff', rotation=rotation)
+        add('backoff_after_orient', rear)
+    else:
+        add('backoff', rear)
+        add('orient', rotation=rotation)
+    rear[0] = goal[0]
+    add('align', rear)
+    if rear[2] > high[2] + .001:
+        rear[2] = high[2]
+        add('approach_height', rear)
+    if tilted:
+        add('approach_tilt', rotation=rx(45.) @ rotation)
+    add('above_after_tilt' if tilted else 'above', high)
+    add('descend', goal)
+    high[2] = lift_z
+    add('lift', high)
+    return chain
+
+
+
+def preflight_grasp(api, arm, goal, values):
+    """Check existing approach alternatives before any motion or opening."""
+    attempts = []
+    initial = arm.tcp()
+    requested = values.get('grasp_route', 'auto')
+    routes = GRASP_ROUTES if requested == 'auto' else {requested: GRASP_ROUTES[requested]}
+    for route, (orient_first, tilted) in routes.items():
+        chain = grasp_chain(initial, goal, values, orient_first, tilted)
+        estimate = api.estimate_tcp_chain(arm, chain)
+        affordable = (estimate.get('estimate_ok') is True and
+                      estimate['total_action_steps'] <= estimate['remaining_action_steps'])
+        choice = dict(orient_first=orient_first, tilted=tilted, grasp_route=route,
+                      grip_branch=values.get("grip_branch", "nearest"))
+        attempts.append(dict(estimate, **choice, budget_ok=affordable))
+        if affordable:
+            return choice, attempts
+    return None, attempts

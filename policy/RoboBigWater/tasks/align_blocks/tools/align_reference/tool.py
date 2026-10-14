@@ -14,24 +14,13 @@ _spec.loader.exec_module(_measure)
 TOOL = {"name": "align_reference", "commands": [{
     "name": "align_reference", "budget": True,
     "help": "detect the visible guide and make one bounded perpendicular push",
-    "args": []
+    "args": [dict(a) for a in _measure.TOOL["commands"][0]["args"] if a["name"] in ("surface_z", "reference_z")]
 }]}
 
 
-def _observe_measure(api):
-    obs = api.observe()
-    source = "cam_head"
-    depth = np.asarray(obs["depth"][source], dtype=float)
-    if depth.ndim == 3:
-        depth = depth[:, :, 0]
-    rgb = cv2.imdecode(np.frombuffer(obs["png"][source], np.uint8), cv2.IMREAD_COLOR)
-    if rgb is None:
-        raise ValueError("invalid RGB image")
-    rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
-    cam = obs["cameras"][source]
-    return _measure.measure(rgb, depth, np.asarray(cam["intrinsics"], float),
-                            np.asarray(cam["extrinsics_world"], float),
-                            "magenta", "white", 3)
+def _observe_measure(api, args):
+    result, _ = _measure.run(api, "measure_scene", dict(args, camera="head", expected=3))
+    return result
 
 
 def select_reference(measurement):
@@ -112,7 +101,7 @@ def sweep_displacement(measurement, ref):
 
     A wrist turn is not evidence that a loosely held reference rotated. Use
     its observed axis without turning, and sweep past the farthest visible
-    region with a footprint allowance and 25 mm estimated-depth margin.
+    region with a footprint allowance and 25 mm margin.
     No world-coordinate datum or assumed transmission of wrist yaw is used.
     """
     ends = np.asarray(ref["endpoints_m"], float)
@@ -137,6 +126,61 @@ def sweep_displacement(measurement, ref):
     return np.r_[normal * distance, 0.]
 
 
+def finishing_displacement(measurement, contact, previous_ref):
+    """One measured, footprint-sized continuation; no reacquisition or turn.
+
+    The 30 mm lateral padding and 25 mm endpoint inset are the same design
+    clearances used by perception. Recheck them at the actual TCP because a
+    loose guide can rotate during the first push. Never extrapolate through
+    missing/occluded geometry or treat wrist tracking as payload tracking.
+    """
+    _, ref, _ = select_reference(measurement)
+    ends = np.asarray(ref["endpoints_m"], float)
+    old = np.asarray(previous_ref["endpoints_m"], float)
+    axis = ends[1, :2] - ends[0, :2]
+    length = np.linalg.norm(axis)
+    axis /= length
+    old_axis = old[1, :2] - old[0, :2]
+    old_length = np.linalg.norm(old_axis)
+    if (abs(length - old_length) > .15 * old_length
+            or np.linalg.norm(ends.mean(axis=0) - old.mean(axis=0)) > .25
+            or abs(axis @ (old_axis / old_length)) < math.cos(math.radians(30))):
+        raise ValueError("reference_identity_uncertain")
+    normal = np.array([-axis[1], axis[0]])
+    centers = np.asarray([r["surface_center_m"] for r in measurement["regions"]], float)
+    extents = np.asarray([r["surface_extent_m"] for r in measurement["regions"]], float)
+    contact = np.asarray(contact, float)
+    if contact.shape != (3,) or not np.isfinite(contact).all():
+        raise ValueError("invalid_contact")
+    along = (contact[:2] - ends[0, :2]) @ axis
+    if not .025 <= along <= length - .025:
+        raise ValueError("contact_outside_reference_span")
+    if (abs((contact[:2] - ends[0, :2]) @ normal) > .04
+            or abs(contact[2] - ends[:, 2].mean()) > .035):
+        raise ValueError("contact_no_longer_near_reference")
+    separation = np.abs((centers[:, :2] - contact[:2]) @ axis)
+    if np.any(separation < extents[:, :2] @ np.abs(axis) / 2 + .03):
+        raise ValueError("contact_lane_no_longer_clear")
+    offsets = (centers[:, :2] - ends[0, :2]) @ normal
+    if np.median(offsets) < 0:
+        normal, offsets = -normal, -offsets
+    if np.min(offsets) <= 0:
+        raise ValueError("regions_not_on_one_side_of_reference")
+    turns = ref.get("region_edge_turn_deg_mod90", [])
+    row = measurement.get("row", {})
+    if len(turns) != len(centers) or any(t is None or not math.isfinite(t) for t in turns):
+        raise ValueError("edge_orientation_unavailable")
+    error = float(row.get("max_line_error_m", float("nan")))
+    if not math.isfinite(error):
+        raise ValueError("line_error_unavailable")
+    if error <= .002 and max(abs(t) for t in turns) <= 6:
+        return None, ref
+    # Bounded surface-footprint allowance, split into at most two observed
+    # pulses by the caller. These are design travel limits, not scene sizes.
+    distance = float(np.clip(np.median(extents[:, :2] @ np.abs(normal)), .025, .045))
+    return np.r_[distance * normal, 0.], ref
+
+
 def run(api, command, args):
     stages = []
     selection = {}
@@ -146,8 +190,11 @@ def run(api, command, args):
             raise ValueError("unsupported command")
         if api.over or api.sim_time_left() <= 1.2:
             raise RuntimeError("episode_over_or_time_reserve")
-        before = _observe_measure(api)
-        if not before.get("plan_ok") or not before.get("references"):
+        before = _observe_measure(api, args)
+        if not before.get("plan_ok"):
+            raise RuntimeError("measurement_failed: " + str(
+                before.get("plan_detail") or before.get("plan_fail_reason") or "unknown"))
+        if not before.get("references"):
             raise RuntimeError("guide_or_regions_not_detected")
         index, ref, lanes = select_reference(before)
         selection = {"reference_index": index, "reference_endpoints_m": ref["endpoints_m"]}
@@ -205,17 +252,47 @@ def run(api, command, args):
         target = np.asarray(arm.tcp(), float).copy()
         target[:3, 3] += delta
         move("push", target)
+        # Observe before releasing: a correction now avoids a second approach,
+        # descent and closure. Missing evidence skips extra motion safely.
+        finishing = []
+        selection["finishing"] = finishing
+        previous_ref = ref
+        for pulse in range(2):
+            after = _observe_measure(api, args)
+            try:
+                extra, current_ref = finishing_displacement(
+                    after, np.asarray(arm.tcp(), float)[:3, 3], previous_ref)
+            except (ValueError, KeyError, TypeError) as exc:
+                finishing.append({"status": "skipped", "reason": str(exc)})
+                break
+            if extra is None:
+                finishing.append({"status": "within_geometric_tolerances"})
+                break
+            if pulse and np.linalg.norm(
+                    np.mean(current_ref["endpoints_m"], axis=0)
+                    - np.mean(previous_ref["endpoints_m"], axis=0)) < .005:
+                finishing.append({"status": "skipped", "reason": "no_observed_reference_progress"})
+                break
+            if api.over or api.sim_time_left() <= 2.5:
+                finishing.append({"status": "skipped", "reason": "release_withdraw_home_reserve"})
+                break
+            target = np.asarray(arm.tcp(), float).copy()
+            target[:3, 3] += extra
+            finishing.append({"status": "requested", "delta_m": extra.tolist(),
+                              "reference_yaw_deg": current_ref["yaw_deg"]})
+            move("finish_" + str(pulse + 1), target)
+            previous_ref = current_ref
         api.set_gripper(arm, 1.0)
         stages.append({"stage": "release"})
         # Retain fresh evidence even if the later withdrawal cannot be planned.
-        after = _observe_measure(api)
+        after = _observe_measure(api, args)
         target[:3, 3] = np.asarray(arm.tcp(), float)[:3, 3] + [0., 0., .06]
         move("withdraw", target)
-        after = _observe_measure(api)
+        after = _observe_measure(api, args)
         return {"plan_ok": True, "plan_fail_reason": None, "stages": stages,
                 "selection": selection,
                 "before": before, "after": after,
-                "note": "One push completed; after contains fresh geometric evidence."}, 0
+                "note": "Sweep and bounded observed continuations completed; after is geometric evidence, not a success verdict."}, 0
     except Exception as exc:
         return {"plan_ok": False, "plan_fail_reason": str(exc), "stages": stages,
                 "selection": selection, "before": before, "after": after}, 1

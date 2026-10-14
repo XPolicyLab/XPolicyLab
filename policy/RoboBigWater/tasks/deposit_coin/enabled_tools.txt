@@ -1,6 +1,4 @@
-# tools enabled for this task, one per line (shared tools/<name> or tasks/deposit_coin/tools/<name>)
-upright_insert
-feature_geometry
-visual_grasp
-rim_geometry
-surface_patch
+# RGB-only measurement and guarded execution
+rgb_geometry
+rgb_insert
+table_plane

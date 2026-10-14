@@ -1,5 +1,7 @@
 """Observation-only surface localization and checked Cartesian transfers."""
 import json
+import importlib.util
+from pathlib import Path
 from itertools import product
 import numpy as np
 from roboshell.server.core import tool_rotation
@@ -16,7 +18,7 @@ def arg(name, default=None, required=False, kind="float"):
 
 TOOL = {"name": "transfer", "commands": [
     {"name": "surface", "budget": False, "args": [arg("u", required=True), arg("v", required=True),
-        arg("camera", "head", kind="str")]},
+        arg("camera", "head", kind="str"), arg("plane_z", None)]},
     {"name": "transfer", "budget": True, "args": [
         {"name": "arm", "positional": True, "choices": ["left", "right"]},
         *[arg(k, required=True) for k in ("x", "y", "z", "to_x", "to_y", "to_z")],
@@ -38,16 +40,16 @@ TOOL["commands"].append({"name": "transfer_many", "budget": True, "args": [
 
 
 TOOL["commands"].append({"name": "solid", "budget": False, "args": [
-    arg("u", required=True), arg("v", required=True), arg("size", .035),
+    arg("u", required=True), arg("v", required=True), arg("size", None),
     arg("elevation", 0.), arg("plane_z", None), arg("camera", "head", kind="str")]})
 for command in TOOL["commands"]:
     if command["name"] in ("transfer", "transfer_many"):
-        command["args"].append(arg("z_mode", "surface", kind="str"))
+        command["args"].extend([arg("z_mode", "center", kind="str"), arg("size", None)])
 
 TOOL["commands"].append({"name": "transfer_pixels", "budget": True, "args": [
     {"name": "arm", "positional": True, "choices": ["left", "right"]},
     *[arg(k, required=True) for k in ("u", "v", "to_u", "to_v")],
-    arg("size", .035), arg("elevation", 0.), arg("to_elevation", 0.),
+    arg("size", required=True), arg("elevation", 0.), arg("to_elevation", 0.),
     arg("camera", "head", kind="str"), arg("clearance", .045),
     arg("carry_clearance", .01), arg("open", "x", kind="str"),
     arg("approach", "auto", kind="str"), arg("arm_policy", "auto", kind="str")
@@ -59,7 +61,7 @@ def transfer_pixels(api, args):
     measurements = []
     for prefix in ("", "to_"):
         result, code = solid(api, dict(u=args[prefix+"u"], v=args[prefix+"v"],
-            size=args.get("size", .035), elevation=args.get(prefix+"elevation", 0.),
+            size=args["size"], elevation=args.get(prefix+"elevation", 0.),
             camera=args.get("camera", "head")))
         if code:
             return dict(result, measurement=prefix or "source", released=False), code
@@ -78,40 +80,30 @@ def transfer_pixels(api, args):
     return result, code
 
 
-def support_height_check(api, source):
-    """Reject a TCP below a confidently observed local table, without motion.
+def measured_table(api):
+    """Shared RGB plane sweep; no guessed height when views are insufficient."""
+    global _plane_module
+    if "_plane_module" not in globals():
+        spec = importlib.util.spec_from_file_location(
+            "rgb_table_plane", Path(__file__).resolve().parents[4] / "tools/table_plane/tool.py")
+        _plane_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_plane_module)
+    return _plane_module.measure_table_z(api)
 
-    Missing/ambiguous depth leaves the legacy coordinate interface available;
-    this is a gross contact guard, not object localization or a grasp check.
-    """
-    import cv2
+
+def support_height_check(api, source):
     try:
-        obs = api.observe()
-        info = obs["cameras"]["cam_head"]
-        K = np.asarray(info["intrinsics"], float)
-        T = np.asarray(info["extrinsics_world"], float)
-        point = (source-T[:3, 3]) @ T[:3, :3]
-        if point[2] <= 0:
+        plane = measured_table(api)
+        if plane is None:
             return None
-        uv = K @ point
-        u, v = uv[:2]/uv[2]
-        rgb = cv2.imdecode(np.frombuffer(obs["png"]["cam_head"], np.uint8), cv2.IMREAD_COLOR)
-        if not (0 <= u < rgb.shape[1] and 0 <= v < rgb.shape[0]):
-            return None
-        hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-        # Exclude saturated foreground from the surrounding plane pool.
-        selected = (hsv[:, :, 1] > 65) & (hsv[:, :, 2] > 160)
-        mask = np.zeros(rgb.shape[:2], np.uint8)
-        cv2.circle(mask, (int(u), int(v)), 10, 1, -1)
-        plane, samples = table_plane(obs, "cam_head", K, T, mask, selected, u, v)
-        return dict(measured_plane_z=plane, plane_samples=samples,
+        return dict(measured_plane_z=plane,
                     source_above_plane_m=float(source[2]-plane))
-    except (AttributeError, KeyError, ValueError, TypeError, cv2.error):
+    except (AttributeError, KeyError, ValueError, TypeError):
         return None
 
 
 def fit_solid(mask, K, T, size, plane_z):
-    """Fit a known-size upright cube silhouette at a caller-constrained height."""
+    """Fit an upright silhouette on a constrained plane, optionally measuring size."""
     import cv2
     from scipy.optimize import least_squares
     rows, cols = np.where(mask)
@@ -121,14 +113,20 @@ def fit_solid(mask, K, T, size, plane_z):
     angles = np.linspace(0, 2*np.pi, 32, endpoint=False)
     directions = np.column_stack([np.cos(angles), np.sin(angles)])
     observed = np.max(outline @ directions.T, axis=0)
-    center_z = plane_z + size/2
+    auto_size = size is None
+    # Numerical initialization only; the optimized size comes from RGB.
+    initial_size = .05 if auto_size else size
+    center_z = plane_z + initial_size/2
     ray = T[:3, :3] @ np.linalg.solve(K, [np.mean(cols), np.mean(rows), 1.])
     if abs(ray[2]) < .1:
         raise ValueError("view too shallow")
     initial = T[:3, 3] + ray*((center_z-T[2, 3])/ray[2])
-    corners = np.array(list(product([-.5, .5], repeat=3)))*size
+    unit_corners = np.array(list(product([-.5, .5], repeat=3)))
     def project(params):
-        x, y, yaw = params
+        x, y, yaw = params[:3]
+        fitted_size = params[3] if auto_size else size
+        corners = unit_corners*fitted_size
+        center_z = plane_z + fitted_size/2
         c, sn = np.cos(yaw), np.sin(yaw)
         R = np.array([[c, -sn, 0], [sn, c, 0], [0, 0, 1.]])
         cam = (corners @ R.T + [x, y, center_z] - T[:3, 3]) @ T[:3, :3]
@@ -138,7 +136,11 @@ def fit_solid(mask, K, T, size, plane_z):
         return uv[:, :2]/uv[:, 2:3]
     def residual(params):
         return np.max(project(params) @ directions.T, axis=0)-observed
-    fits = [least_squares(residual, [*initial[:2], yaw], max_nfev=70)
+    fits = [least_squares(residual, [*initial[:2], yaw, initial_size] if auto_size
+                          else [*initial[:2], yaw], max_nfev=100,
+                          bounds=([-np.inf, -np.inf, -np.inf, .015],
+                                  [np.inf, np.inf, np.inf, .10]) if auto_size
+                          else (-np.inf, np.inf))
             for yaw in (-.65, -.3, 0., .3, .65)]
     best = min(fits, key=lambda f: np.sum(f.fun**2))
     fitted = np.zeros_like(mask, dtype=np.uint8)
@@ -147,38 +149,18 @@ def fit_solid(mask, K, T, size, plane_z):
     error = float(np.sqrt(np.mean(best.fun**2)))
     if not best.success or error > 1.5 or overlap < .85:
         raise ValueError("silhouette inconsistent with size/height or occluded")
-    return np.array([*best.x[:2], center_z]), overlap, error
+    fitted_size = float(best.x[3]) if auto_size else size
+    return np.array([*best.x[:2], plane_z+fitted_size/2]), overlap, error, fitted_size
 
-
-def table_plane(obs, camera, K, T, mask, selected, u, v):
-    """Pool a horizontal support estimate independently of caller height."""
-    depth = np.asarray(obs["depth"][camera], float).squeeze()
-    if depth.shape != mask.shape:
-        raise ValueError("depth/image shape mismatch")
-    vv, uu = np.indices(depth.shape)
-    rays = np.linalg.solve(K, np.stack([uu.ravel(), vv.ravel(), np.ones(depth.size)]))
-    heights = (T[2, :3] @ rays * depth.ravel() + T[2, 3]).reshape(depth.shape)
-    radius = np.hypot(uu-u, vv-v)
-    extent = max(np.ptp(np.where(mask)[0]), np.ptp(np.where(mask)[1]))
-    valid = ((radius > max(20, extent*1.5)) & (radius < max(100, extent*4))
-             & np.isfinite(depth) & (depth > 0) & np.isfinite(heights) & ~selected)
-    values = heights[valid]
-    if len(values) < 100:
-        raise ValueError("insufficient plane samples; supply plane_z")
-    bins = np.floor(values/.008).astype(int)
-    unique, counts = np.unique(bins, return_counts=True)
-    peak = unique[np.argmax(counts)]*.008+.004
-    values = values[np.abs(values-peak) < .012]
-    if len(values) < 100 or len(values) < .35*np.count_nonzero(valid):
-        raise ValueError("ambiguous plane; supply plane_z")
-    return float(np.median(values)), len(values)
 
 
 def solid(api, args):
     import cv2
-    size, elevation = float(args.get("size", .035)), float(args.get("elevation", 0.))
+    size = None if args.get("size") is None else float(args["size"])
+    elevation = float(args.get("elevation", 0.))
     u, v = float(args["u"]), float(args["v"])
-    if not np.isfinite([size, elevation, u, v]).all() or not .015 <= size <= .10 or not 0 <= elevation <= .4:
+    if (not np.isfinite([elevation, u, v]).all() or not 0 <= elevation <= .4
+            or (size is not None and (not np.isfinite(size) or not .015 <= size <= .10))):
         raise ValueError("invalid size, elevation or pixel")
     obs = api.observe()
     camera = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}.get(args.get("camera", "head"), args.get("camera"))
@@ -205,20 +187,22 @@ def solid(api, args):
     samples = 0
     measured_plane = None
     try:
-        measured_plane, samples = table_plane(obs, camera, K, T, mask, selected, u, v)
-    except (KeyError, ValueError):
+        measured_plane = measured_table(api)
+        if measured_plane is None:
+            raise ValueError("RGB table plane unavailable; supply plane_z")
+    except (AttributeError, KeyError, ValueError, TypeError):
         if plane is None:
             raise
     if plane is None:
         plane = measured_plane
     elif measured_plane is not None and abs(plane-measured_plane) > .012:
         return dict(plan_ok=False, plan_fail_reason="plane_height_conflict",
-                    plan_detail="supplied plane differs from pooled surrounding depth by more than 0.012 m",
+                    plan_detail="supplied plane differs from RGB table estimate by more than 0.012 m",
                     supplied_plane_z=plane, measured_plane_z=measured_plane,
                     plane_samples=samples), 2
     segmentation = "seed_brightness"
     try:
-        center, overlap, error = fit_solid(mask, K, T, size, plane+elevation)
+        center, overlap, error, fitted_size = fit_solid(mask, K, T, size, plane+elevation)
     except ValueError as original_error:
         # A bright face can exclude shaded faces of the same solid. Try one
         # bounded photometric expansion, retaining all geometric fit gates.
@@ -233,65 +217,81 @@ def solid(api, args):
         # Retain the original independently pooled plane: changing the mask
         # must not also tune the height to make an otherwise bad fit pass.
         try:
-            center, overlap, error = fit_solid(expanded_mask, K, T, size, plane+elevation)
+            center, overlap, error, fitted_size = fit_solid(expanded_mask, K, T, size, plane+elevation)
         except ValueError:
             raise original_error
         segmentation = "shaded_faces"
     return dict(plan_ok=True, plan_fail_reason=None, center_xyz=center.tolist(),
-                on_top_xyz=(center+[0, 0, size]).tolist(), plane_z=plane,
-                elevation=elevation, size=size, silhouette_iou=overlap,
+                on_top_xyz=(center+[0, 0, fitted_size]).tolist(), plane_z=plane,
+                elevation=elevation, size=fitted_size, size_measured=size is None, silhouette_iou=overlap,
                 fit_error_px=error, plane_samples=samples, segmentation=segmentation,
                 measured_plane_z=measured_plane, plane_checked=measured_plane is not None,
                 z_mode="center"), 0
 
 
-def surface(api, args):
-    import cv2
+def pickup_visual_check(api, source):
+    """Reject inconsistent nearby table-supported fits; never alter coordinates.
+
+    Elevated, hidden or non-cubic silhouettes are outside this guard's scope.
+    A failed fit supplies no authority to correct a caller's geometry.
+    """
+    if not hasattr(api, "observe"):
+        return None
     obs = api.observe()
-    camera = {"head": "cam_head", "wrist_l": "cam_left_wrist", "wrist_r": "cam_right_wrist"}.get(args["camera"], args["camera"])
-    depth = np.asarray(obs["depth"][camera]).squeeze()
-    rgb = cv2.imdecode(np.frombuffer(obs["png"][camera], np.uint8), cv2.IMREAD_COLOR)
-    hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV).astype(float)
+    for camera in ("cam_head", "cam_left_wrist", "cam_right_wrist"):
+        if camera not in obs.get("cameras", {}):
+            continue
+        info = obs["cameras"][camera]
+        K, T = np.asarray(info["intrinsics"]), np.asarray(info["extrinsics_world"])
+        point = (source-T[:3, 3]) @ T[:3, :3]
+        if point[2] <= 0:
+            continue
+        pixel = K @ point
+        try:
+            fit, code = solid(api, dict(u=pixel[0]/pixel[2], v=pixel[1]/pixel[2],
+                                       camera=camera))
+        except (ValueError, KeyError, TypeError):
+            continue
+        if code or not fit["plane_checked"]:
+            continue
+        error = float(np.linalg.norm(source-np.array(fit["center_xyz"])))
+        # Only associate a nearby fit. This avoids treating a lower support
+        # as the requested elevated payload when silhouettes overlap.
+        if (source[2]-fit["plane_z"] < .9*fit["size"]
+                and error < .8*fit["size"] and error > min(.006, .2*fit["size"])):
+            return dict(plan_ok=False, plan_fail_reason="pickup_visual_mismatch",
+                        plan_detail="pickup disagrees with RGB silhouette; use measured center or fresh pixel fits",
+                        measured_pickup=fit, pickup_error_m=error,
+                        stages=[], released=False, returned=False, grasp_verified=False)
+    return None
+
+
+def surface(api, args):
+    """Intersect a caller-selected image ray with a known horizontal plane."""
+    import cv2
     u, v = float(args["u"]), float(args["v"])
-    if not np.isfinite([u, v]).all() or not (0 <= u < depth.shape[1] and 0 <= v < depth.shape[0]):
+    if args.get("plane_z") is None:
+        raise ValueError("plane_z is required for RGB ray intersection")
+    z = float(args["plane_z"])
+    if not np.isfinite([u, v, z]).all():
+        raise ValueError("finite pixel and plane_z required")
+    obs = api.observe()
+    camera = {"head": "cam_head", "wrist_l": "cam_left_wrist",
+              "wrist_r": "cam_right_wrist"}.get(args.get("camera", "head"))
+    rgb = cv2.imdecode(np.frombuffer(obs["png"][camera], np.uint8), cv2.IMREAD_COLOR)
+    if rgb is None or not (0 <= u < rgb.shape[1] and 0 <= v < rgb.shape[0]):
         raise ValueError("pixel outside image")
-    u, v = int(round(u)), int(round(v))
-    u, v = min(u, depth.shape[1]-1), min(v, depth.shape[0]-1)
-    hue, sat, val = hsv[v, u]
-    if sat < 65 or val < 40:
-        raise ValueError("seed must be on a saturated visible surface")
-    delta = np.abs(hsv[:, :, 0] - hue)
-    camera_info = obs["cameras"][camera]
-    K = np.asarray(camera_info["intrinsics"], float)
-    T = np.asarray(camera_info["extrinsics_world"], float)
-    vv, uu = np.indices(depth.shape)
-    rays = np.linalg.solve(K, np.stack([uu.ravel(), vv.ravel(), np.ones(depth.size)]))
-    height = ((T[2, :3] @ rays) * depth.ravel() + T[2, 3]).reshape(depth.shape)
-    if not np.isfinite(depth[v, u]) or depth[v, u] <= 0:
-        raise ValueError("seed has invalid depth")
-    mask = ((np.minimum(delta, 180-delta) < 12) & (hsv[:, :, 1] > 65)
-            & (hsv[:, :, 2] > 40) & np.isfinite(depth) & (depth > 0)
-            & (np.abs(height-height[v, u]) < .006))
-    _, labels = cv2.connectedComponents(mask.astype(np.uint8))
-    label = labels[v, u]
-    if label == 0:
-        raise ValueError("seed has invalid depth")
-    rows, cols = np.where(labels == label)
-    if len(rows) < 15:
-        raise ValueError("insufficient visible surface")
-    camera_info = obs["cameras"][camera]
-    K = np.asarray(camera_info["intrinsics"], float)
-    T = np.asarray(camera_info["extrinsics_world"], float)
-    rays = np.linalg.solve(K, np.stack([cols, rows, np.ones_like(cols)]))
-    points = (T[:3, :3] @ (rays * depth[rows, cols]) + T[:3, 3:4]).T
-    top_z = np.percentile(points[:, 2], 90)
-    top = points[np.abs(points[:, 2] - top_z) < .003]
-    if len(top) < 8:
-        raise ValueError("insufficient horizontal surface")
-    lo, hi = np.percentile(top[:, :2], [2, 98], axis=0)
-    return {"plan_ok": True, "plan_fail_reason": None,
-            "surface_xyz": [*map(float, (lo+hi)/2), float(np.median(top[:, 2]))],
-            "visible_extent_xy": (hi-lo).tolist(), "pixels": len(top)}, 0
+    info = obs["cameras"][camera]
+    K, T = np.asarray(info["intrinsics"], float), np.asarray(info["extrinsics_world"], float)
+    ray = T[:3, :3] @ np.linalg.solve(K, [u, v, 1.])
+    if not np.isfinite(ray).all() or abs(ray[2]) < 1e-6:
+        raise ValueError("invalid or parallel ray")
+    distance = (z-T[2, 3])/ray[2]
+    if distance <= 0:
+        raise ValueError("plane behind camera")
+    point = T[:3, 3] + distance*ray
+    return dict(plan_ok=True, plan_fail_reason=None, surface_xyz=point.tolist(),
+                plane_z=z, method="pixel_ray_plane", plane_checked=False), 0
 
 
 class Stop(Exception):
@@ -350,7 +350,7 @@ def grasp_rotation(mode, opening, current, anchor, source, dest):
     return max(candidates, key=lambda frame: np.trace(current.T @ frame)), "reach"
 
 
-def empty_return(api, arm, saved, approach_pos, source_z, release_z, rotation):
+def empty_return(api, arm, saved, approach_pos, source_z, release_z, rotation, clearance=.045):
     """Reuse an observed empty approach posture, checking the withdrawal corridor.
 
     Joint interpolation is not Cartesian collision planning. Only reuse nearby
@@ -365,7 +365,7 @@ def empty_return(api, arm, saved, approach_pos, source_z, release_z, rotation):
         (np.trace(rotation.T @ pose[:3, :3])-1)/2, -1, 1)))
     if (np.linalg.norm(approach_pos[:2]-departure[:2]) < .30
             or np.linalg.norm(approach_pos[:2]-goal[:2]) > .18
-            or goal[2] < source_z+.035 or abs(goal[2]-approach_pos[2]) > .04
+            or goal[2] < source_z+.8*clearance or abs(goal[2]-approach_pos[2]) > .04
             or angle > 2 or np.max(np.abs(arm.joints()-joints)) > 1.5):
         return None
     seq = return_path(arm.joints(), joints, speed=3.)
@@ -374,7 +374,7 @@ def empty_return(api, arm, saved, approach_pos, source_z, release_z, rotation):
     # A joint chord can descend much faster than its endpoint line near the
     # release. Leave that local corridor at constant height before starting
     # the shortcut; retain the original departure for all clearance checks.
-    if departure[2] < release_z+.035:
+    if departure[2] < release_z+.8*clearance:
         raise Stop("empty_return_clearance_error")
     escape = arm.tcp().copy()
     direction = goal[:2]-departure[:2]
@@ -405,7 +405,7 @@ def empty_return(api, arm, saved, approach_pos, source_z, release_z, rotation):
         current = arm.tcp()[:3, 3]
         if (current[2] < floor or
                 (np.linalg.norm(current[:2]-departure[:2]) < .06
-                 and current[2] < release_z+.035)):
+                 and current[2] < release_z+.8*clearance)):
             raise Stop("empty_return_clearance_error")
     api.hold(4)
     if api.over:
@@ -522,11 +522,15 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
     # contact point is near the payload mid-plane.  Accept that common input
     # directly, but leave already-centered coordinates unchanged.
     source_input_z = float(source[2])
-    z_mode = args.get("z_mode", "surface")
+    z_mode = args.get("z_mode", "center")
     if z_mode not in ("surface", "center"):
         raise ValueError("z_mode must be surface or center")
-    if z_mode == "surface" and .79 <= source[2] <= .87:
-        source[2] -= .0175
+    size = args.get("size")
+    if z_mode == "surface":
+        size = float(size) if size is not None else float("nan")
+        if not np.isfinite(size) or not .015 <= size <= .10:
+            raise ValueError("surface mode requires measured size in [0.015, 0.10]")
+        source[2] -= size/2
     if args["open"] not in ("x", "y"):
         raise ValueError("open must be x or y")
     approach = args.get("approach", "auto")
@@ -545,6 +549,9 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
         return dict(plan_ok=False, plan_fail_reason="pickup_below_observed_support",
                     stages=[], released=False, returned=False, grasp_verified=False,
                     **height_check), 2
+    visual_failure = pickup_visual_check(api, source)
+    if visual_failure is not None:
+        return visual_failure, 2
     # Entry TCPs are observed anchors, not physical workspace boundaries.
     # Minimax selection accounts for BOTH endpoints before committing a grasp.
     def reach(candidate):
@@ -571,6 +578,27 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
     rotation, approach, estimates = preflight_frame(
         api, arm, source, dest, clearance, carry_clearance, lift_mode,
         args["open"], anchor, rotation, approach)
+    # If the geometric preference has no feasible route, inspect the other
+    # empty arm once before any parking, contact or physical motion.
+    if rotation is None and policy == "auto":
+        alternate = api.arm("right" if arm.tag == "left" else "left")
+        if alternate.tag != arm.tag and alternate.gripper() >= .9:
+            alt_anchor = (alternate.tcp()[:3, 3] if session is None
+                          else session["entry_tcp"][alternate.tag])
+            alt_rotation, alt_mode = grasp_rotation(
+                requested_approach, args["open"], alternate.tcp()[:3, :3],
+                alt_anchor, source, dest)
+            alt_rotation, alt_mode, alt_estimates = preflight_frame(
+                api, alternate, source, dest, clearance, carry_clearance,
+                lift_mode, args["open"], alt_anchor, alt_rotation, alt_mode)
+            selection["rejected_arm_estimates"] = estimates
+            estimates = alt_estimates
+            if alt_rotation is not None:
+                arm, anchor = alternate, alt_anchor
+                rotation, approach = alt_rotation, alt_mode
+                start_joints = (arm.joints().copy() if session is None
+                                else session["entry"][arm.tag])
+                selection["selected_arm"] = arm.tag
     selection["reachability_estimates"] = estimates
     if rotation is None:
         return dict(plan_ok=False, plan_fail_reason="no_reachable_transfer_frame",
@@ -586,7 +614,7 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
     peer_pose = peer.tcp()
     near_peer = (peer.tag != arm.tag and any(
         np.linalg.norm(p[:2]-peer_pose[:2, 3]) < .20
-        and 0 < peer_pose[2, 3]-p[2] < .22 for p in (source, dest)))
+        and abs(peer_pose[2, 3]-p[2]) < .22 for p in (source, dest)))
     # A preceding release may have combined withdrawal with this parking
     # move. Consume the certificate once, and only trust the measured pose.
     precleared = session.pop("precleared", None) if session is not None else None
@@ -643,7 +671,9 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
                 session["moved"].add(peer.tag)
             target = peer_pose.copy()
             parking_joints = peer.joints().copy()
-            target[2, 3] += .12
+            target[2, 3] = max(peer_pose[2, 3]+.12, max(
+                p[2]+.225 for p in (source, dest)
+                if np.linalg.norm(p[:2]-peer_pose[:2, 3]) < .20))
             # Reserve clearance for the remaining consecutive uses of this
             # active arm. Otherwise a rising destination can trigger another
             # full parking primitive on each row. Use the same XY/height
@@ -653,8 +683,8 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
                     if next_arm != arm.tag:
                         break
                     row = np.asarray(next_row, float).copy()
-                    if z_mode == "surface" and .79 <= row[2] <= .87:
-                        row[2] -= .0175
+                    if z_mode == "surface":
+                        row[2] -= size/2
                     for point in (row[:3], row[3:]):
                         if (np.linalg.norm(point[:2]-target[:2, 3]) < .20
                                 and 0 < target[2, 3]-point[2] < .225):
@@ -683,11 +713,11 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
         if session is not None and arm.tag in session["release_z"]:
             # Withdrawal already cleared contact. Permit descent on a long
             # traverse instead of imposing the tall retreat pose at a distant
-            # pickup. Keep at least 35 mm above the previous release throughout
+            # pickup. Keep 80% of the requested clearance above the previous release throughout
             # the first 60 mm of lateral travel (a geometric clearance margin).
             departure = arm.tcp()[:3, 3]
             distance = np.linalg.norm(approach_pos[:2]-departure[:2])
-            floor = session["release_z"][arm.tag] + .035
+            floor = session["release_z"][arm.tag] + .8*clearance
             if distance <= .06 or departure[2] < floor:
                 minimum = max(departure[2], floor)
             else:
@@ -698,7 +728,7 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
             if arm.tag in session["release_z"]:
                 stage = empty_return(api, arm, session.get("pickup", {}).get(arm.tag),
                                      approach_pos, source[2], session["release_z"][arm.tag],
-                                     rotation)
+                                     rotation, clearance)
                 if stage is not None:
                     stages.append(stage)
         approach_start = arm.tcp().copy()
@@ -797,8 +827,8 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
                 handoff_return = (np.linalg.norm(dest[:2]-next_anchor) + .05
                                   < np.linalg.norm(dest[:2]-own_anchor))
                 row = np.asarray(next_transfer[1], float).copy()
-                if z_mode == "surface" and .79 <= row[2] <= .87:
-                    row[2] -= .0175
+                if z_mode == "surface":
+                    row[2] -= size/2
                 handoff_return = handoff_return or any(
                     np.linalg.norm(dest[:2]-p[:2]) < .205
                     for p in (row[:3], row[3:]))
@@ -843,7 +873,7 @@ def transfer(api, args, session=None, finish=True, next_transfer=None):
                     candidate = return_path(arm.joints(), joints, speed=3.)
                     point = pose[:3, 3]
                     if (len(candidate)+4 <= len(path)
-                            and point[2] >= source[2]+.035
+                            and point[2] >= source[2]+.8*clearance
                             and all(np.linalg.norm(point[:2]-p[:2]) >= .205
                                     for p in (row[:3], row[3:]))
                             and np.linalg.norm(point[:2]-own_anchor)+.05
@@ -941,8 +971,6 @@ def batch_arms(points, requested, anchors, available):
     saving before changing the requested assignment.
     """
     points = np.asarray(points, float).copy()
-    visible = (points[:, 2] >= .79) & (points[:, 2] <= .87)
-    points[visible, 2] -= .0175
 
     def reach(tag, row):
         return max(np.linalg.norm(p-anchors[tag])
@@ -991,6 +1019,12 @@ def transfer_many(api, args):
     if (points.ndim != 2 or points.shape[1] != 6 or not 1 <= len(points) <= 8
             or not np.isfinite(points).all()):
         raise ValueError("points must be a finite JSON array of 1 to 8 six-coordinate rows")
+    if args.get("z_mode", "center") == "surface":
+        size = float(args["size"])
+        if not np.isfinite(size) or not .015 <= size <= .10:
+            raise ValueError("surface mode requires measured size in [0.015, 0.10]")
+        points[:, 2] -= size/2
+        args = dict(args, z_mode="center")
     arms_text = args.get("arms", "")
     if not isinstance(arms_text, str):
         raise ValueError("arms must be a comma-separated string")
