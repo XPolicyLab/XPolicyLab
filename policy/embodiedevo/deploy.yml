@@ -1,0 +1,47 @@
+policy_name: embodiedevo
+protocol: ws
+host: 127.0.0.1
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: embodiedevo_astra_xhigh
+env_cfg_type: arx_x5
+seed: 1
+action_type: ee
+gpu_id: null
+eval_batch: false
+model: gpt-6-astra
+reasoning_effort: xhigh
+agent_image: embodiedevo-agent:xpolicy
+agent_cpus: 4
+agent_memory_mb: 8192
+# Empty selects a fresh directory under XPolicyLab/runs/embodiedevo/.
+run_dir: null
+diagnostic: false
+execution_budget: 100
+submission_timeout_sec: 1200
+feedback_fps: 25
+agent_recovery:
+  max_restarts: 3
+  backoff_seconds: 60
+  max_backoff_seconds: 300
+  jitter_seconds: 20
+ws_ping_interval_s: 20.0
+ws_ping_timeout_s: 120.0
+# With task_name=all, route requests to these tasks; null enables all recipes.
+server_tasks: null
+# Count prepared environments, including workers waiting for their first frame.
+server_max_active_agents: 256
+# Preserve a disconnected case for the client's standard 15-minute retry budget.
+server_disconnect_grace_sec: 900
+server_max_sessions: 1024
+server_max_connections: 1024
+server_max_inflight_requests: 4096
+server_startup_parallelism: 16
+server_startup_timeout_sec: 120
+server_idle_session_sec: 1800
+server_episode_timeout_sec: 7200
+server_model_threads: 64
+server_cleanup_threads: 16
+server_poll_interval_sec: 0.05
+server_max_message_bytes: 67108864

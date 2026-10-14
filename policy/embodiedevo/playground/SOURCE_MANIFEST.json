@@ -1,0 +1,776 @@
+{
+  "source": "EmbodiedEvo (local EmbodiedRSI source checkout)",
+  "commit": "1fb171bbf91bdb96b41d12be60ce9c8202681905",
+  "scope": "Playground/session runtime, simulator adapters, optional native transport, task templates, provisioning, documentation and CPU tests. No environments, vendor assets, credentials or run outputs.",
+  "files": {
+    ".gitignore": {
+      "upstream_path": ".gitignore",
+      "upstream_sha256": "dd66da7c914160472285d7623d72a85706b354d1779518e3573f48f829e4ee2e",
+      "bundled_sha256": "dd66da7c914160472285d7623d72a85706b354d1779518e3573f48f829e4ee2e"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "upstream_path": "THIRD_PARTY_NOTICES.md",
+      "upstream_sha256": "f26b2782c4c7d7839004d906967ca9413722c3ab566c67811e87ad65d50cb005",
+      "bundled_sha256": "f26b2782c4c7d7839004d906967ca9413722c3ab566c67811e87ad65d50cb005"
+    },
+    "configs/codex.custom.example.toml": {
+      "upstream_path": "configs/codex.custom.example.toml",
+      "upstream_sha256": "b0263587b239b3edd32816073c9e5a2857c6618957fcd4e23aaecf8f2d370665",
+      "bundled_sha256": "b0263587b239b3edd32816073c9e5a2857c6618957fcd4e23aaecf8f2d370665"
+    },
+    "configs/codex.openai.example.toml": {
+      "upstream_path": "configs/codex.openai.example.toml",
+      "upstream_sha256": "079dfaafd6c69031fba775446eb14533ccde8bcbf21a9936dfac7256c062a1a4",
+      "bundled_sha256": "079dfaafd6c69031fba775446eb14533ccde8bcbf21a9936dfac7256c062a1a4"
+    },
+    "configs/runtime.example.json": {
+      "upstream_path": "configs/runtime.example.json",
+      "upstream_sha256": "97c179149878b498e9f4166989e149cc64df0c0a82c0fa2577fd2883a4f0e36e",
+      "bundled_sha256": "97c179149878b498e9f4166989e149cc64df0c0a82c0fa2577fd2883a4f0e36e"
+    },
+    "docker/agent/.dockerignore": {
+      "upstream_path": "docker/agent/.dockerignore",
+      "upstream_sha256": "dff903861d9f0c39b4b107cf206243154443e801c48042429b6eaeaa311c9f64",
+      "bundled_sha256": "dff903861d9f0c39b4b107cf206243154443e801c48042429b6eaeaa311c9f64"
+    },
+    "docker/agent/Dockerfile": {
+      "upstream_path": "docker/agent/Dockerfile",
+      "upstream_sha256": "5e1cbb7407206500b0d8c58c6a9db91fa804e473c25cc360de49c0aa3a131ccf",
+      "bundled_sha256": "5e1cbb7407206500b0d8c58c6a9db91fa804e473c25cc360de49c0aa3a131ccf"
+    },
+    "docs/CODEX_API.md": {
+      "upstream_path": "docs/CODEX_API.md",
+      "upstream_sha256": "b813cca07d7b48bef1e284e9e8a3cfa585f0f6c33bb055f31c290210d7167580",
+      "bundled_sha256": "b813cca07d7b48bef1e284e9e8a3cfa585f0f6c33bb055f31c290210d7167580"
+    },
+    "docs/INSTALL.md": {
+      "upstream_path": "docs/INSTALL.md",
+      "upstream_sha256": "ee8b3edfc58ddbf73582bc1c1c85e444ef33cb998c76163b8076b57856d22780",
+      "bundled_sha256": "0658e62cd73fcd95daaa085d1f7b6ed9029ddc2a5608d8d05cc67a05e74da52d"
+    },
+    "docs/PROTOCOL.md": {
+      "upstream_path": "docs/PROTOCOL.md",
+      "upstream_sha256": "4c7cebc61792fcac73945c8f624aedf1420da973781b4531ef81a0c77e3e19ea",
+      "bundled_sha256": "4c7cebc61792fcac73945c8f624aedf1420da973781b4531ef81a0c77e3e19ea"
+    },
+    "docs/RUNNING.md": {
+      "upstream_path": "docs/RUNNING.md",
+      "upstream_sha256": "2f4b43594cd5729655d330da85ab19659fffda8b86a5b270b06dedeb2314ec9a",
+      "bundled_sha256": "2f4b43594cd5729655d330da85ab19659fffda8b86a5b270b06dedeb2314ec9a"
+    },
+    "docs/SOURCE.md": {
+      "upstream_path": "docs/SOURCE.md",
+      "upstream_sha256": "f5b8482431bb6b2bae28066debe6222f3e0153d05270db6cf74d016146354e55",
+      "bundled_sha256": "15f5209ff9f3b06fd177bbf5b92d862daedafc5f3390b036275304f5a36eabab"
+    },
+    "environments/__init__.py": {
+      "upstream_path": "environments/__init__.py",
+      "upstream_sha256": "fafb1cfbb6943d4d44a469ff161c1b8d70bd181d65c5bce0e6f70dae4cff1441",
+      "bundled_sha256": "fafb1cfbb6943d4d44a469ff161c1b8d70bd181d65c5bce0e6f70dae4cff1441"
+    },
+    "environments/base.py": {
+      "upstream_path": "environments/base.py",
+      "upstream_sha256": "8f6bfc08f1d0bf9d3ba40cac5d620bb1d444dc76593561a450202bda7edd1c2a",
+      "bundled_sha256": "8f6bfc08f1d0bf9d3ba40cac5d620bb1d444dc76593561a450202bda7edd1c2a"
+    },
+    "integrations/__init__.py": {
+      "upstream_path": "integrations/__init__.py",
+      "upstream_sha256": "4c323f2cd60f5b40d3b9878ca96bd481cf3027b7b6b8db21827cfa14d2163453",
+      "bundled_sha256": "4c323f2cd60f5b40d3b9878ca96bd481cf3027b7b6b8db21827cfa14d2163453"
+    },
+    "integrations/robodojo_policy/README.md": {
+      "upstream_path": "integrations/robodojo_policy/README.md",
+      "upstream_sha256": "39fb1ee7e7e20440c798592cb71926da47d85bf6768727943eb17d3cc63babbf",
+      "bundled_sha256": "ab00e21bfea4c99931d77c40d4adedd3f8909c4083a04b3ba10fddf3231c3fe1"
+    },
+    "integrations/robodojo_policy/__init__.py": {
+      "upstream_path": "integrations/robodojo_policy/__init__.py",
+      "upstream_sha256": "fff23475b5ee4ac22fff96d9af59a3126d486974113b37a4c56a2634af919162",
+      "bundled_sha256": "fff23475b5ee4ac22fff96d9af59a3126d486974113b37a4c56a2634af919162"
+    },
+    "integrations/robodojo_policy/bootstrap.py": {
+      "upstream_path": "integrations/robodojo_policy/bootstrap.py",
+      "upstream_sha256": "8bfc7050e41a1be8cf188b1ba4681e9925ce3556c72d33766fd7b5be45d91f08",
+      "bundled_sha256": "202cccb8871372f85f2e96cdaf8a4d1f7b3b04b0cb58e766042fed262b65e364"
+    },
+    "integrations/robodojo_policy/bridge.py": {
+      "upstream_path": "integrations/robodojo_policy/bridge.py",
+      "upstream_sha256": "7ddaaaaa2ec82b8de32cf3dd36044e5b85140ab0487cdd94718a7b0d485df3ce",
+      "bundled_sha256": "7ddaaaaa2ec82b8de32cf3dd36044e5b85140ab0487cdd94718a7b0d485df3ce"
+    },
+    "integrations/robodojo_policy/debug.py": {
+      "upstream_path": "integrations/robodojo_policy/debug.py",
+      "upstream_sha256": "399a2eb3eb3ab2589967a07cbae85c2216b76d1b82d37a2dc7f2dc32f9d33bdd",
+      "bundled_sha256": "f3e30d9efb6b22e0d4725b796690fc350e9591717edf30f90646c0d778566dc6"
+    },
+    "integrations/robodojo_policy/execution.py": {
+      "upstream_path": "integrations/robodojo_policy/execution.py",
+      "upstream_sha256": "196a33e00b6ce2a2c99b6b41fffc97e399297a56d58ffad3d1696812024cb9f1",
+      "bundled_sha256": "196a33e00b6ce2a2c99b6b41fffc97e399297a56d58ffad3d1696812024cb9f1"
+    },
+    "integrations/robodojo_policy/pipe_capacity.py": {
+      "upstream_path": "integrations/robodojo_policy/pipe_capacity.py",
+      "upstream_sha256": "a91b6d8a83aa1cd450d019cc0ce8b0650245a151ac05e4c6506f69f97e9c2997",
+      "bundled_sha256": "a91b6d8a83aa1cd450d019cc0ce8b0650245a151ac05e4c6506f69f97e9c2997"
+    },
+    "integrations/robodojo_policy/policy/embodiedevo/__init__.py": {
+      "upstream_path": "integrations/robodojo_policy/policy/EmbodiedEvo/__init__.py",
+      "upstream_sha256": "d95cb240a327488cc428efcb81736bae73e61302257fd71ebce87b60a32a0070",
+      "bundled_sha256": "d95cb240a327488cc428efcb81736bae73e61302257fd71ebce87b60a32a0070"
+    },
+    "integrations/robodojo_policy/policy/embodiedevo/deploy.py": {
+      "upstream_path": "integrations/robodojo_policy/policy/EmbodiedEvo/deploy.py",
+      "upstream_sha256": "cbe2b149a7b91175e5e366370e10ae1ffb440f70790b328505a15e20f2ebd992",
+      "bundled_sha256": "cbe2b149a7b91175e5e366370e10ae1ffb440f70790b328505a15e20f2ebd992"
+    },
+    "integrations/robodojo_policy/policy/embodiedevo/deploy.yml": {
+      "upstream_path": "integrations/robodojo_policy/policy/EmbodiedEvo/deploy.yml",
+      "upstream_sha256": "cfd88cc9445d9e60eece8c40796de16636c327f2592eac690ebf3c3d9d1da364",
+      "bundled_sha256": "8ce872a8cdf2ca26fd89e30612241b0c7db87e5527459967c5175592e73a8f0d"
+    },
+    "integrations/robodojo_policy/policy/embodiedevo/model.py": {
+      "upstream_path": "integrations/robodojo_policy/policy/EmbodiedEvo/model.py",
+      "upstream_sha256": "40a948a4524da8242049c2f91d4877bc7baff5c67668130ce38406b574158f32",
+      "bundled_sha256": "40a948a4524da8242049c2f91d4877bc7baff5c67668130ce38406b574158f32"
+    },
+    "integrations/robodojo_policy/probe.py": {
+      "upstream_path": "integrations/robodojo_policy/probe.py",
+      "upstream_sha256": "a84eccb10a37f50f9a50484bcf7bd296a6d12ea8b2e12c1b9cdcb49fd0ae7f71",
+      "bundled_sha256": "a84eccb10a37f50f9a50484bcf7bd296a6d12ea8b2e12c1b9cdcb49fd0ae7f71"
+    },
+    "integrations/robodojo_policy/run.py": {
+      "upstream_path": "integrations/robodojo_policy/run.py",
+      "upstream_sha256": "5e23f68f8693cff95a616d261bc434495cf26d5beb99432cf8011e88e122331f",
+      "bundled_sha256": "5e23f68f8693cff95a616d261bc434495cf26d5beb99432cf8011e88e122331f"
+    },
+    "integrations/robodojo_policy/transport.py": {
+      "upstream_path": "integrations/robodojo_policy/transport.py",
+      "upstream_sha256": "e43d34cb11d4e1fd207d7230cdef6395a3fb401a20e9c5956ddf85e5fa6fe96f",
+      "bundled_sha256": "e43d34cb11d4e1fd207d7230cdef6395a3fb401a20e9c5956ddf85e5fa6fe96f"
+    },
+    "integrations/robodojo_policy/worker.py": {
+      "upstream_path": "integrations/robodojo_policy/worker.py",
+      "upstream_sha256": "c0427a1a6222fa2d0be1c664a8bc15b1129d8cc397c7ed5e2304c8c46001d1bf",
+      "bundled_sha256": "c0427a1a6222fa2d0be1c664a8bc15b1129d8cc397c7ed5e2304c8c46001d1bf"
+    },
+    "orchestrator/__init__.py": {
+      "upstream_path": "orchestrator/__init__.py",
+      "upstream_sha256": "6d933d415cd0a5c07afe26f29cd9fe2d901b9ded3b764fb3bd09d00837097090",
+      "bundled_sha256": "6d933d415cd0a5c07afe26f29cd9fe2d901b9ded3b764fb3bd09d00837097090"
+    },
+    "orchestrator/__main__.py": {
+      "upstream_path": "orchestrator/__main__.py",
+      "upstream_sha256": "12f8bbec810c5e1d963118b9e6b69428da1b78e368c40f99e614dd93c67d85be",
+      "bundled_sha256": "12f8bbec810c5e1d963118b9e6b69428da1b78e368c40f99e614dd93c67d85be"
+    },
+    "orchestrator/agent_recovery.py": {
+      "upstream_path": "orchestrator/agent_recovery.py",
+      "upstream_sha256": "7aa2bf93436a4bdcf2913679b3ac7a3b108134ba5e7bf385a91de97c6884f8da",
+      "bundled_sha256": "7aa2bf93436a4bdcf2913679b3ac7a3b108134ba5e7bf385a91de97c6884f8da"
+    },
+    "orchestrator/config.py": {
+      "upstream_path": "orchestrator/config.py",
+      "upstream_sha256": "64dd4f237fd58a96e1240708c806ac63c378f4842d1f47f7c0f708445eac302a",
+      "bundled_sha256": "74e5b9d4f7fafc79c9a17dc5901c5b58648002bba14fd6aba8d91095237e2aff"
+    },
+    "orchestrator/files.py": {
+      "upstream_path": "orchestrator/files.py",
+      "upstream_sha256": "9d094e4019a0979010948d1a9a2569baeea76116a75e4275f7757d5d7f5cb4fa",
+      "bundled_sha256": "9d094e4019a0979010948d1a9a2569baeea76116a75e4275f7757d5d7f5cb4fa"
+    },
+    "orchestrator/frozen_source.py": {
+      "upstream_path": "orchestrator/frozen_source.py",
+      "upstream_sha256": "64612d9b93c8ea252212bfad40949a8a1d29af71699402a78f89901d7be7bd13",
+      "bundled_sha256": "64612d9b93c8ea252212bfad40949a8a1d29af71699402a78f89901d7be7bd13"
+    },
+    "orchestrator/host_policy.py": {
+      "upstream_path": "orchestrator/host_policy.py",
+      "upstream_sha256": "81e24f732b6af56f30b37528e3697f26ed48c9d4b410eb603ef0f0941013ed5a",
+      "bundled_sha256": "81e24f732b6af56f30b37528e3697f26ed48c9d4b410eb603ef0f0941013ed5a"
+    },
+    "orchestrator/instructions/test_records.md": {
+      "upstream_path": "orchestrator/instructions/test_records.md",
+      "upstream_sha256": "648bc09446862dea68dd94edab2663bdd8a61976e7a912b3218b8b10edfa1bc0",
+      "bundled_sha256": "648bc09446862dea68dd94edab2663bdd8a61976e7a912b3218b8b10edfa1bc0"
+    },
+    "orchestrator/launch_agent.py": {
+      "upstream_path": "orchestrator/launch_agent.py",
+      "upstream_sha256": "5538b72f34b9d61d6f4fc2b63d3ad47d5fd74693613cdd9321f234229f244f68",
+      "bundled_sha256": "5538b72f34b9d61d6f4fc2b63d3ad47d5fd74693613cdd9321f234229f244f68"
+    },
+    "orchestrator/program_records.py": {
+      "upstream_path": "orchestrator/program_records.py",
+      "upstream_sha256": "8ee5fdecbd82f79637a169949b0333948350d5a807a654bb3074ae79cb62959e",
+      "bundled_sha256": "8ee5fdecbd82f79637a169949b0333948350d5a807a654bb3074ae79cb62959e"
+    },
+    "orchestrator/recipes.py": {
+      "upstream_path": "orchestrator/recipes.py",
+      "upstream_sha256": "5e4d705233c61d69635f417009f18793c05a418e93eba2177ada72d4b11cfe11",
+      "bundled_sha256": "5e4d705233c61d69635f417009f18793c05a418e93eba2177ada72d4b11cfe11"
+    },
+    "orchestrator/replay.py": {
+      "upstream_path": "orchestrator/replay.py",
+      "upstream_sha256": "4db6f4a01238ba2a47c03582b34ddd055d96ede750137f1f857777599e056910",
+      "bundled_sha256": "4db6f4a01238ba2a47c03582b34ddd055d96ede750137f1f857777599e056910"
+    },
+    "orchestrator/resources.py": {
+      "upstream_path": "orchestrator/resources.py",
+      "upstream_sha256": "a12b5ae2ba7c117a33f246fbeb661dc1e62c5a1ce927db10abd730710acbe236",
+      "bundled_sha256": "a12b5ae2ba7c117a33f246fbeb661dc1e62c5a1ce927db10abd730710acbe236"
+    },
+    "orchestrator/robodojo_apptainer.py": {
+      "upstream_path": "orchestrator/robodojo_apptainer.py",
+      "upstream_sha256": "68dccca9cbb2ddb6b4e3963fa17a55a44e63caeded3505f151d9825ec49c91d3",
+      "bundled_sha256": "68dccca9cbb2ddb6b4e3963fa17a55a44e63caeded3505f151d9825ec49c91d3"
+    },
+    "orchestrator/robodojo_image.py": {
+      "upstream_path": "orchestrator/robodojo_image.py",
+      "upstream_sha256": "4441ac8f2e6ca6c9acc2a9feff68c3177a7ebb4049d03c48cfb19f1872706664",
+      "bundled_sha256": "4441ac8f2e6ca6c9acc2a9feff68c3177a7ebb4049d03c48cfb19f1872706664"
+    },
+    "orchestrator/scoring.py": {
+      "upstream_path": "orchestrator/scoring.py",
+      "upstream_sha256": "4c74bb9bfbef5164c4cae284838863996c90027baa0f0c84d4eb757ee23eeade",
+      "bundled_sha256": "4c74bb9bfbef5164c4cae284838863996c90027baa0f0c84d4eb757ee23eeade"
+    },
+    "orchestrator/session.py": {
+      "upstream_path": "orchestrator/session.py",
+      "upstream_sha256": "246d8d9ba66c2324b10dc002adc3a31e369a81975c0de5b98b80b18827b886e4",
+      "bundled_sha256": "246d8d9ba66c2324b10dc002adc3a31e369a81975c0de5b98b80b18827b886e4"
+    },
+    "orchestrator/session_client.md": {
+      "upstream_path": "orchestrator/session_client.md",
+      "upstream_sha256": "7766ce597e604302bcd7fc69d833763eebc7e5dbf9b1fafee1a689c6bef0140b",
+      "bundled_sha256": "7766ce597e604302bcd7fc69d833763eebc7e5dbf9b1fafee1a689c6bef0140b"
+    },
+    "orchestrator/session_client.py": {
+      "upstream_path": "orchestrator/session_client.py",
+      "upstream_sha256": "f01b6302caf42b5a9733e0fa5539e69405c1b226994ee861234a98f7f2dfe946",
+      "bundled_sha256": "f01b6302caf42b5a9733e0fa5539e69405c1b226994ee861234a98f7f2dfe946"
+    },
+    "orchestrator/session_runner.py": {
+      "upstream_path": "orchestrator/session_runner.py",
+      "upstream_sha256": "4ec91bfc4b1b55d32d68a4d985fabc397ba56224b74e6d1889922e14477170b4",
+      "bundled_sha256": "4ec91bfc4b1b55d32d68a4d985fabc397ba56224b74e6d1889922e14477170b4"
+    },
+    "orchestrator/slurm.py": {
+      "upstream_path": "orchestrator/slurm.py",
+      "upstream_sha256": "d30f47169568babf3ba2e7aa658d211f7a0ab494f0aba61a3aedd6cc1c6a5f87",
+      "bundled_sha256": "d30f47169568babf3ba2e7aa658d211f7a0ab494f0aba61a3aedd6cc1c6a5f87"
+    },
+    "pyproject.toml": {
+      "upstream_path": "pyproject.toml",
+      "upstream_sha256": "448cc4d53255a33426c9b85cbd0373a74f8392d9f2b32372660f87a212991869",
+      "bundled_sha256": "3639fd374c8e62ce6935c3638cec285a5a8f90e8696dd00e4a7b3faff15dbcbf"
+    },
+    "requirements-host.txt": {
+      "upstream_path": "requirements-host.txt",
+      "upstream_sha256": "c6bb3193c7a66f83b07866f64dd8637b837d838e9e5ab519de84ea766e69a577",
+      "bundled_sha256": "c6bb3193c7a66f83b07866f64dd8637b837d838e9e5ab519de84ea766e69a577"
+    },
+    "scripts/__init__.py": {
+      "upstream_path": "scripts/__init__.py",
+      "upstream_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bundled_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scripts/build_agent_image.sh": {
+      "upstream_path": "scripts/build_agent_image.sh",
+      "upstream_sha256": "7d5b28c46055fd5a1ff38e723baa64203e2fb25de12c2b8763c08c87ede00dd9",
+      "bundled_sha256": "565d07d43925c7dc9f8cc453fa5b40626cac656c01434b26b66fe8d9f84cfd26"
+    },
+    "scripts/prepare_robodojo.sh": {
+      "upstream_path": "scripts/prepare_robodojo.sh",
+      "upstream_sha256": "a673d043f3b0991846ec9e2e774c8b7f849885c85d380a4f9f1146b9309e0030",
+      "bundled_sha256": "a673d043f3b0991846ec9e2e774c8b7f849885c85d380a4f9f1146b9309e0030"
+    },
+    "scripts/relocate_robodojo.py": {
+      "upstream_path": "scripts/relocate_robodojo.py",
+      "upstream_sha256": "a96fd7a45590a4fcdf72a9b7f5983b524f7ec7ba3a97d9c8002e9f9ffdaeaf1d",
+      "bundled_sha256": "a96fd7a45590a4fcdf72a9b7f5983b524f7ec7ba3a97d9c8002e9f9ffdaeaf1d"
+    },
+    "scripts/smoke_robodojo.py": {
+      "upstream_path": "scripts/smoke_robodojo.py",
+      "upstream_sha256": "7a8a4a150cb7c75e5773e11642fc3e3a47b019187bb1c7f6a3845c387fd6cb8f",
+      "bundled_sha256": "7a8a4a150cb7c75e5773e11642fc3e3a47b019187bb1c7f6a3845c387fd6cb8f"
+    },
+    "scripts/smoke_robodojo_capture.py": {
+      "upstream_path": "scripts/smoke_robodojo_capture.py",
+      "upstream_sha256": "1533759b73f7aa25742aee3911ed2153b1eeb3b1d28c0804784e9cbcc3eb2e9b",
+      "bundled_sha256": "1533759b73f7aa25742aee3911ed2153b1eeb3b1d28c0804784e9cbcc3eb2e9b"
+    },
+    "scripts/smoke_session.py": {
+      "upstream_path": "scripts/smoke_session.py",
+      "upstream_sha256": "dd858242b4d09848a6ecf2ef2992404b9d147097f3b8e45d7721b83377247302",
+      "bundled_sha256": "dd858242b4d09848a6ecf2ef2992404b9d147097f3b8e45d7721b83377247302"
+    },
+    "simulators/__init__.py": {
+      "upstream_path": "simulators/__init__.py",
+      "upstream_sha256": "59a187690496cdb1dd50fad9f7e448a883138982374e3ef7ac4fd89f91f5f3da",
+      "bundled_sha256": "59a187690496cdb1dd50fad9f7e448a883138982374e3ef7ac4fd89f91f5f3da"
+    },
+    "simulators/backend.py": {
+      "upstream_path": "simulators/backend.py",
+      "upstream_sha256": "d45dcfb1a412796b134af2a06294d04715c427559d24f2b9bbc6ba8ab74dc0c3",
+      "bundled_sha256": "d45dcfb1a412796b134af2a06294d04715c427559d24f2b9bbc6ba8ab74dc0c3"
+    },
+    "simulators/execution.py": {
+      "upstream_path": "simulators/execution.py",
+      "upstream_sha256": "cbf457bf8f60a1905a679c3b1eb9565086c27535b0364905d3f817e0d50a6df9",
+      "bundled_sha256": "cbf457bf8f60a1905a679c3b1eb9565086c27535b0364905d3f817e0d50a6df9"
+    },
+    "simulators/image_entrypoint.py": {
+      "upstream_path": "simulators/image_entrypoint.py",
+      "upstream_sha256": "d0a438d566415e68d4ac436e08603f16f4e74551c7ffc2215657170fe277fcea",
+      "bundled_sha256": "d0a438d566415e68d4ac436e08603f16f4e74551c7ffc2215657170fe277fcea"
+    },
+    "simulators/interactive.py": {
+      "upstream_path": "simulators/interactive.py",
+      "upstream_sha256": "474b6ad88a3fc00ac3d2ffb16f7f94d9d57cdd787e4e3c6eac6cb785dd595ea4",
+      "bundled_sha256": "474b6ad88a3fc00ac3d2ffb16f7f94d9d57cdd787e4e3c6eac6cb785dd595ea4"
+    },
+    "simulators/observations.py": {
+      "upstream_path": "simulators/observations.py",
+      "upstream_sha256": "d50a3265c5a630a0da9f7b412e0372810156cdd025e2eeb7a710d0388c6b7572",
+      "bundled_sha256": "d50a3265c5a630a0da9f7b412e0372810156cdd025e2eeb7a710d0388c6b7572"
+    },
+    "simulators/primitives.py": {
+      "upstream_path": "simulators/primitives.py",
+      "upstream_sha256": "575dbd52073a9a79a296e39ee87af7394b02729ecdf1dacfae4d5df7596b4046",
+      "bundled_sha256": "575dbd52073a9a79a296e39ee87af7394b02729ecdf1dacfae4d5df7596b4046"
+    },
+    "simulators/robodojo.py": {
+      "upstream_path": "simulators/robodojo.py",
+      "upstream_sha256": "9cd6c4c49a2330275181a2ef498cd66faaeea4a9ed32ef0e23879a3ae6ffa4d4",
+      "bundled_sha256": "f0d1a952aa9561d9dda899ab56215c54e13ce3cfa9a70bb31dc3e352879e3b77"
+    },
+    "simulators/robodojo_api.py": {
+      "upstream_path": "simulators/robodojo_api.py",
+      "upstream_sha256": "7b16b44f8ffe16e04fe0ff69001ec557fa454b0a94200bc783c2d179c784d60e",
+      "bundled_sha256": "7b16b44f8ffe16e04fe0ff69001ec557fa454b0a94200bc783c2d179c784d60e"
+    },
+    "simulators/robodojo_capture.py": {
+      "upstream_path": "simulators/robodojo_capture.py",
+      "upstream_sha256": "6581d45efceed18468779388c790bef1ebaee3858c734b95e4aea0973c7ed49b",
+      "bundled_sha256": "6581d45efceed18468779388c790bef1ebaee3858c734b95e4aea0973c7ed49b"
+    },
+    "simulators/robodojo_layouts.py": {
+      "upstream_path": "simulators/robodojo_layouts.py",
+      "upstream_sha256": "f45c3375151ad90fae2cdb5db1ab047432ffab739887aed08c64954ead309ce7",
+      "bundled_sha256": "f45c3375151ad90fae2cdb5db1ab047432ffab739887aed08c64954ead309ce7"
+    },
+    "simulators/robodojo_scoring.py": {
+      "upstream_path": "simulators/robodojo_scoring.py",
+      "upstream_sha256": "05866102d74c14af2d23dd2bf24028468fbeae3672a3f27ad965bdb165c17e08",
+      "bundled_sha256": "05866102d74c14af2d23dd2bf24028468fbeae3672a3f27ad965bdb165c17e08"
+    },
+    "simulators/robodojo_startup.py": {
+      "upstream_path": "simulators/robodojo_startup.py",
+      "upstream_sha256": "6ca254b25ae65c96e684c52b7d928d0f67d582499d41c5d262c91d3724478053",
+      "bundled_sha256": "6ca254b25ae65c96e684c52b7d928d0f67d582499d41c5d262c91d3724478053"
+    },
+    "simulators/robodojo_video.py": {
+      "upstream_path": "simulators/robodojo_video.py",
+      "upstream_sha256": "6cae5b192c7b537260c5c1b9bf2e1721c8d3e4bacb435dcb8fa7471bbde35483",
+      "bundled_sha256": "6cae5b192c7b537260c5c1b9bf2e1721c8d3e4bacb435dcb8fa7471bbde35483"
+    },
+    "simulators/vendor.py": {
+      "upstream_path": "simulators/vendor.py",
+      "upstream_sha256": "ee9796206fc0eafac51cfd1dc3b3200b095c950520de2afa99822e99aad0af30",
+      "bundled_sha256": "ee9796206fc0eafac51cfd1dc3b3200b095c950520de2afa99822e99aad0af30"
+    },
+    "simulators/video.py": {
+      "upstream_path": "simulators/video.py",
+      "upstream_sha256": "a7abc4f2d14dbd7b81c087d52f076f294b6fcc3f6551acf895a2230e57a21080",
+      "bundled_sha256": "a7abc4f2d14dbd7b81c087d52f076f294b6fcc3f6551acf895a2230e57a21080"
+    },
+    "tasks/RoboDojo/Workspace/lessons/example.md": {
+      "upstream_path": "tasks/RoboDojo/Workspace/lessons/example.md",
+      "upstream_sha256": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+      "bundled_sha256": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e"
+    },
+    "tasks/RoboDojo/Workspace/observations/.gitkeep": {
+      "upstream_path": "tasks/RoboDojo/Workspace/observations/.gitkeep",
+      "upstream_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bundled_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tasks/RoboDojo/Workspace/playground.md": {
+      "upstream_path": "tasks/RoboDojo/Workspace/playground.md",
+      "upstream_sha256": "98f18c8ccdd82762c7cbde5c60b9dcb5ef177601f15c134e579284e257cbf3cd",
+      "bundled_sha256": "98f18c8ccdd82762c7cbde5c60b9dcb5ef177601f15c134e579284e257cbf3cd"
+    },
+    "tasks/RoboDojo/Workspace/primitives/primitives.md": {
+      "upstream_path": "tasks/RoboDojo/Workspace/primitives/primitives.md",
+      "upstream_sha256": "2cf2705336c5548245c490140b727c46041046bd861fcb45765955bd0e9b9b6b",
+      "bundled_sha256": "2cf2705336c5548245c490140b727c46041046bd861fcb45765955bd0e9b9b6b"
+    },
+    "tasks/RoboDojo/Workspace/scratch/example.md": {
+      "upstream_path": "tasks/RoboDojo/Workspace/scratch/example.md",
+      "upstream_sha256": "d56657aba43c7a93322d4d1eaed6a3a693f58600e333a345b74277ff18fb553c",
+      "bundled_sha256": "d56657aba43c7a93322d4d1eaed6a3a693f58600e333a345b74277ff18fb553c"
+    },
+    "tasks/RoboDojo/Workspace/scripts/env.py": {
+      "upstream_path": "tasks/RoboDojo/Workspace/scripts/env.py",
+      "upstream_sha256": "f01b6302caf42b5a9733e0fa5539e69405c1b226994ee861234a98f7f2dfe946",
+      "bundled_sha256": "f01b6302caf42b5a9733e0fa5539e69405c1b226994ee861234a98f7f2dfe946"
+    },
+    "tasks/RoboDojo/Workspace/skills/example.md": {
+      "upstream_path": "tasks/RoboDojo/Workspace/skills/example.md",
+      "upstream_sha256": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+      "bundled_sha256": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58"
+    },
+    "tasks/RoboDojo/Workspace/submission/solution.py": {
+      "upstream_path": "tasks/RoboDojo/Workspace/submission/solution.py",
+      "upstream_sha256": "73b4763fe7817c0ff8fb16539a3ca3b0fba7bcec382ef4252a76226bed743537",
+      "bundled_sha256": "73b4763fe7817c0ff8fb16539a3ca3b0fba7bcec382ef4252a76226bed743537"
+    },
+    "tasks/RoboDojo/Workspace/test.md": {
+      "upstream_path": "tasks/RoboDojo/Workspace/test.md",
+      "upstream_sha256": "3038a262ee04f095ad2778d3462c45024c9114e80f2074706c6a9d01066d54a7",
+      "bundled_sha256": "3038a262ee04f095ad2778d3462c45024c9114e80f2074706c6a9d01066d54a7"
+    },
+    "tasks/RoboDojo/recipe/LICENSE": {
+      "upstream_path": "tasks/RoboDojo/recipe/LICENSE",
+      "upstream_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bundled_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "tasks/RoboDojo/recipe/README.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/README.md",
+      "upstream_sha256": "9df84020debd8aa59f5327444a30eeb21ffbaa142be90f756761125f4a246b7d",
+      "bundled_sha256": "9df84020debd8aa59f5327444a30eeb21ffbaa142be90f756761125f4a246b7d"
+    },
+    "tasks/RoboDojo/recipe/align_blocks.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/align_blocks.md",
+      "upstream_sha256": "4d00257cabdbd93d5d05b03fd2ad996aff11705e963ba9856f8e554b28e9f7f6",
+      "bundled_sha256": "4d00257cabdbd93d5d05b03fd2ad996aff11705e963ba9856f8e554b28e9f7f6"
+    },
+    "tasks/RoboDojo/recipe/arrange_largest_number.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/arrange_largest_number.md",
+      "upstream_sha256": "ba4b417f7c7a1bc342e6cfd58db5959ec1b60032f51369366c612ba51bfd0869",
+      "bundled_sha256": "ba4b417f7c7a1bc342e6cfd58db5959ec1b60032f51369366c612ba51bfd0869"
+    },
+    "tasks/RoboDojo/recipe/build_tower.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/build_tower.md",
+      "upstream_sha256": "24b704d4742fd33cdb9def2d8ffc8e4dd5967e54f89af77c4c0481b613275d35",
+      "bundled_sha256": "24b704d4742fd33cdb9def2d8ffc8e4dd5967e54f89af77c4c0481b613275d35"
+    },
+    "tasks/RoboDojo/recipe/classify_objects.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/classify_objects.md",
+      "upstream_sha256": "96134dc3decd5cc5e252c54937755deddb13eb6aa880d97ad05d2fdf8fad28f9",
+      "bundled_sha256": "96134dc3decd5cc5e252c54937755deddb13eb6aa880d97ad05d2fdf8fad28f9"
+    },
+    "tasks/RoboDojo/recipe/classify_objects_by_language.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/classify_objects_by_language.md",
+      "upstream_sha256": "3530200227ed6e177bc17d5f6c91da02f49f587953e22b890d3fe53c7a43b11e",
+      "bundled_sha256": "3530200227ed6e177bc17d5f6c91da02f49f587953e22b890d3fe53c7a43b11e"
+    },
+    "tasks/RoboDojo/recipe/cover_blocks.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/cover_blocks.md",
+      "upstream_sha256": "4b698369883233a66ad2b011fde1854b17e88560351138ad6e930b49b1dc374b",
+      "bundled_sha256": "4b698369883233a66ad2b011fde1854b17e88560351138ad6e930b49b1dc374b"
+    },
+    "tasks/RoboDojo/recipe/deposit_coin.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/deposit_coin.md",
+      "upstream_sha256": "7c987081bff9fb534e6f75470892e3eaed9c7549bd474d8d8cd922c8df686bbb",
+      "bundled_sha256": "7c987081bff9fb534e6f75470892e3eaed9c7549bd474d8d8cd922c8df686bbb"
+    },
+    "tasks/RoboDojo/recipe/fasten_screws.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/fasten_screws.md",
+      "upstream_sha256": "afb2434ff932d9166062065e1e0e1a6680cb51c3a6888ec27aac465085c0a94e",
+      "bundled_sha256": "afb2434ff932d9166062065e1e0e1a6680cb51c3a6888ec27aac465085c0a94e"
+    },
+    "tasks/RoboDojo/recipe/fill_egg_holder.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/fill_egg_holder.md",
+      "upstream_sha256": "a59a52424f0a835dc2c8c9267fa45fc393e8802c857737cce7f375c4f47438de",
+      "bundled_sha256": "a59a52424f0a835dc2c8c9267fa45fc393e8802c857737cce7f375c4f47438de"
+    },
+    "tasks/RoboDojo/recipe/fill_pen_holder.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/fill_pen_holder.md",
+      "upstream_sha256": "e551211d80274e3fd22f60fbbc2ed7f01f2f7eb5d5e0ffb7229beb50b36bdbdd",
+      "bundled_sha256": "e551211d80274e3fd22f60fbbc2ed7f01f2f7eb5d5e0ffb7229beb50b36bdbdd"
+    },
+    "tasks/RoboDojo/recipe/fold_clothes.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/fold_clothes.md",
+      "upstream_sha256": "70c8fec2c73f6b6cfb583532e7070b86151e755ef7194079757e60e5496644ff",
+      "bundled_sha256": "70c8fec2c73f6b6cfb583532e7070b86151e755ef7194079757e60e5496644ff"
+    },
+    "tasks/RoboDojo/recipe/general_pickup.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/general_pickup.md",
+      "upstream_sha256": "2d2b2d499f1ebc8b2effc947ee1983ed857626c29aa185643b0e9333b587dcda",
+      "bundled_sha256": "2d2b2d499f1ebc8b2effc947ee1983ed857626c29aa185643b0e9333b587dcda"
+    },
+    "tasks/RoboDojo/recipe/hang_mugs.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/hang_mugs.md",
+      "upstream_sha256": "31e253ff6a5240ae87f6ecd30d07b9cee553e695175649bb87965ab9230dd8d8",
+      "bundled_sha256": "31e253ff6a5240ae87f6ecd30d07b9cee553e695175649bb87965ab9230dd8d8"
+    },
+    "tasks/RoboDojo/recipe/imitate_sorting_sequence.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/imitate_sorting_sequence.md",
+      "upstream_sha256": "be26ff704e4dab7baec30aee02565fc6a22445ff72a025c19feb2f5d0b1f0e96",
+      "bundled_sha256": "be26ff704e4dab7baec30aee02565fc6a22445ff72a025c19feb2f5d0b1f0e96"
+    },
+    "tasks/RoboDojo/recipe/insert_key.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/insert_key.md",
+      "upstream_sha256": "2552829d48617e98da8a3159e1ccc814da67b4abb0f9da1d4285a092512166f6",
+      "bundled_sha256": "2552829d48617e98da8a3159e1ccc814da67b4abb0f9da1d4285a092512166f6"
+    },
+    "tasks/RoboDojo/recipe/insert_tubes.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/insert_tubes.md",
+      "upstream_sha256": "4828d8e10ae6d43b3ec2d61035ee8ce2d2670b80018d02ac6b5a0348d8b770ae",
+      "bundled_sha256": "4828d8e10ae6d43b3ec2d61035ee8ce2d2670b80018d02ac6b5a0348d8b770ae"
+    },
+    "tasks/RoboDojo/recipe/make_kong.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/make_kong.md",
+      "upstream_sha256": "3569b1cf8d3fbfe30d2432e4d7a891b0b170ee478318996f0f7908f099634dcb",
+      "bundled_sha256": "3569b1cf8d3fbfe30d2432e4d7a891b0b170ee478318996f0f7908f099634dcb"
+    },
+    "tasks/RoboDojo/recipe/make_toast.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/make_toast.md",
+      "upstream_sha256": "77dfd5e30b778d1774325ef38f649ef4311ba1872dbeb680619e303a842b5a0d",
+      "bundled_sha256": "77dfd5e30b778d1774325ef38f649ef4311ba1872dbeb680619e303a842b5a0d"
+    },
+    "tasks/RoboDojo/recipe/manifest.json": {
+      "upstream_path": "tasks/RoboDojo/recipe/manifest.json",
+      "upstream_sha256": "140a5a0939db2e7a7f740bea5b01d5bb1a2679804028253da5a7b86bd4bc323e",
+      "bundled_sha256": "140a5a0939db2e7a7f740bea5b01d5bb1a2679804028253da5a7b86bd4bc323e"
+    },
+    "tasks/RoboDojo/recipe/match_and_pick_from_conveyor.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/match_and_pick_from_conveyor.md",
+      "upstream_sha256": "77da76a4ed0dde958d2b0417815b25e5c8e2c56844a956486920271f7f0657dd",
+      "bundled_sha256": "77da76a4ed0dde958d2b0417815b25e5c8e2c56844a956486920271f7f0657dd"
+    },
+    "tasks/RoboDojo/recipe/organize_table.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/organize_table.md",
+      "upstream_sha256": "c5c50cac36596e616ee4a5380fef3d353b665b249435f0cdb665bf34f9dec048",
+      "bundled_sha256": "c5c50cac36596e616ee4a5380fef3d353b665b249435f0cdb665bf34f9dec048"
+    },
+    "tasks/RoboDojo/recipe/pack_objects_into_box.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/pack_objects_into_box.md",
+      "upstream_sha256": "32243dc60718e392d11ed0dfe11a558684bc0864ac36571ecb33a6aba9150df7",
+      "bundled_sha256": "32243dc60718e392d11ed0dfe11a558684bc0864ac36571ecb33a6aba9150df7"
+    },
+    "tasks/RoboDojo/recipe/pick_from_conveyor_by_image.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/pick_from_conveyor_by_image.md",
+      "upstream_sha256": "0c695e538f9d8b4323a0bc9e8844b6ee76ded2ad5d305d20d73d660883a6bcf7",
+      "bundled_sha256": "0c695e538f9d8b4323a0bc9e8844b6ee76ded2ad5d305d20d73d660883a6bcf7"
+    },
+    "tasks/RoboDojo/recipe/play_Xylophone.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/play_Xylophone.md",
+      "upstream_sha256": "5080922fffa994571b6455088226490232e42142b451f8adb75d2c22ce4cc9ea",
+      "bundled_sha256": "5080922fffa994571b6455088226490232e42142b451f8adb75d2c22ce4cc9ea"
+    },
+    "tasks/RoboDojo/recipe/play_stacking_toy.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/play_stacking_toy.md",
+      "upstream_sha256": "93baff4355c3828a567568bcde7b99a725a94d04def99bd21a8dc16e76a68b8a",
+      "bundled_sha256": "93baff4355c3828a567568bcde7b99a725a94d04def99bd21a8dc16e76a68b8a"
+    },
+    "tasks/RoboDojo/recipe/play_tic_tac_toe.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/play_tic_tac_toe.md",
+      "upstream_sha256": "828ff07a28af5c08f7b9ff8359bfd5794db2a07b6c201160f7baca787fac3e8a",
+      "bundled_sha256": "828ff07a28af5c08f7b9ff8359bfd5794db2a07b6c201160f7baca787fac3e8a"
+    },
+    "tasks/RoboDojo/recipe/plug_in_charger.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/plug_in_charger.md",
+      "upstream_sha256": "2f270f252ed3e68ccab6c70e982b8e8e361f51a9fbb8b93a1bb3c66066a4515c",
+      "bundled_sha256": "2f270f252ed3e68ccab6c70e982b8e8e361f51a9fbb8b93a1bb3c66066a4515c"
+    },
+    "tasks/RoboDojo/recipe/pour_balls_into_vase.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/pour_balls_into_vase.md",
+      "upstream_sha256": "cd9f12f920863ddc9e825c5689251e3d68a39bdfa4e7e30adbfb751933257d14",
+      "bundled_sha256": "cd9f12f920863ddc9e825c5689251e3d68a39bdfa4e7e30adbfb751933257d14"
+    },
+    "tasks/RoboDojo/recipe/pour_by_language.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/pour_by_language.md",
+      "upstream_sha256": "c704bc325b2a16c1840e92f674f9d406d497ba3ac336dd1236c4b16a350400b5",
+      "bundled_sha256": "c704bc325b2a16c1840e92f674f9d406d497ba3ac336dd1236c4b16a350400b5"
+    },
+    "tasks/RoboDojo/recipe/pour_liquid_into_cup.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/pour_liquid_into_cup.md",
+      "upstream_sha256": "c050da3884455eb2eaffa47eb7457e70aa1736c51f4c80efacf382f580dfebec",
+      "bundled_sha256": "c050da3884455eb2eaffa47eb7457e70aa1736c51f4c80efacf382f580dfebec"
+    },
+    "tasks/RoboDojo/recipe/press_by_number.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/press_by_number.md",
+      "upstream_sha256": "c58d619ee807ce0028ee987cb1bd0f8576a1d02302396f0973df1f6aed3852f6",
+      "bundled_sha256": "c58d619ee807ce0028ee987cb1bd0f8576a1d02302396f0973df1f6aed3852f6"
+    },
+    "tasks/RoboDojo/recipe/push_T.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/push_T.md",
+      "upstream_sha256": "2ac3bf768070cbad322b8deead6e894158648dbb9ecfafc3fee58d28820acad7",
+      "bundled_sha256": "2ac3bf768070cbad322b8deead6e894158648dbb9ecfafc3fee58d28820acad7"
+    },
+    "tasks/RoboDojo/recipe/put_bottles_into_dustbin.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/put_bottles_into_dustbin.md",
+      "upstream_sha256": "5044fbecbe0996592a8f63c2a3721dcd6753ea1255f2f757601f7b1ea1edc8ea",
+      "bundled_sha256": "5044fbecbe0996592a8f63c2a3721dcd6753ea1255f2f757601f7b1ea1edc8ea"
+    },
+    "tasks/RoboDojo/recipe/solve_equation.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/solve_equation.md",
+      "upstream_sha256": "d7f8a48b4d9aff4fd2192012262b31bc8535b86e8dea15caebc00e0f537b3694",
+      "bundled_sha256": "d7f8a48b4d9aff4fd2192012262b31bc8535b86e8dea15caebc00e0f537b3694"
+    },
+    "tasks/RoboDojo/recipe/sort_nesting_dolls_by_size.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/sort_nesting_dolls_by_size.md",
+      "upstream_sha256": "9e8267af65ed8053b00536607d312a40f2ca39dec19977818ac1ce74beb50c09",
+      "bundled_sha256": "9e8267af65ed8053b00536607d312a40f2ca39dec19977818ac1ce74beb50c09"
+    },
+    "tasks/RoboDojo/recipe/stack_blocks.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/stack_blocks.md",
+      "upstream_sha256": "b4800dcacd62530e450120ebe5d094a973793cbf73bb0fe2e66ece1bdfab1ed6",
+      "bundled_sha256": "b4800dcacd62530e450120ebe5d094a973793cbf73bb0fe2e66ece1bdfab1ed6"
+    },
+    "tasks/RoboDojo/recipe/stack_blocks_by_language.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/stack_blocks_by_language.md",
+      "upstream_sha256": "272d640a7c3d896240a60b3ab09f4ef436406e086e550a8f6a1c8cf9c087ae2c",
+      "bundled_sha256": "272d640a7c3d896240a60b3ab09f4ef436406e086e550a8f6a1c8cf9c087ae2c"
+    },
+    "tasks/RoboDojo/recipe/stack_bowls.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/stack_bowls.md",
+      "upstream_sha256": "abfc287ed9db110cf08b76dc20fd77f20808807b207a615ae1f475af74a0d0fa",
+      "bundled_sha256": "abfc287ed9db110cf08b76dc20fd77f20808807b207a615ae1f475af74a0d0fa"
+    },
+    "tasks/RoboDojo/recipe/store_laptop_and_headphones.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/store_laptop_and_headphones.md",
+      "upstream_sha256": "3133bf03129ea5d464f25202f347184f52438bb42395bb769c7234d1805b588f",
+      "bundled_sha256": "3133bf03129ea5d464f25202f347184f52438bb42395bb769c7234d1805b588f"
+    },
+    "tasks/RoboDojo/recipe/store_tools_in_toolbox.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/store_tools_in_toolbox.md",
+      "upstream_sha256": "8324a2df80e45e0aae9bc9aa4034ac1b132633630ea87e01fd629d22b75986d4",
+      "bundled_sha256": "8324a2df80e45e0aae9bc9aa4034ac1b132633630ea87e01fd629d22b75986d4"
+    },
+    "tasks/RoboDojo/recipe/swap_T.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/swap_T.md",
+      "upstream_sha256": "85625ae8e2352da32b72424bf05f97be29371bcf2fef9c3c51facdd13203b866",
+      "bundled_sha256": "85625ae8e2352da32b72424bf05f97be29371bcf2fef9c3c51facdd13203b866"
+    },
+    "tasks/RoboDojo/recipe/swap_blocks.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/swap_blocks.md",
+      "upstream_sha256": "da0264522daf6e79ec0b76260ab2366347cd3d2e5feb3e20072ec9fd0cc66302",
+      "bundled_sha256": "da0264522daf6e79ec0b76260ab2366347cd3d2e5feb3e20072ec9fd0cc66302"
+    },
+    "tasks/RoboDojo/recipe/sweep_blocks.md": {
+      "upstream_path": "tasks/RoboDojo/recipe/sweep_blocks.md",
+      "upstream_sha256": "200de7d6ff589ae8add6be59c41ba43df809eae0ef553074e6a4ff20729666cc",
+      "bundled_sha256": "200de7d6ff589ae8add6be59c41ba43df809eae0ef553074e6a4ff20729666cc"
+    },
+    "tasks/RoboDojo/task.toml": {
+      "upstream_path": "tasks/RoboDojo/task.toml",
+      "upstream_sha256": "507cfbb86963f2748faff61c891b880bc3ba1eef2d3685fd909a5df19449919b",
+      "bundled_sha256": "68b410ff51ed865708efe5215b95883f6b2e4a0aeb4c5ae8ccf043ffe135bb78"
+    },
+    "tasks_baseline/RoboDojo/Workspace/instruction.md": {
+      "upstream_path": "tasks_baseline/RoboDojo/Workspace/instruction.md",
+      "upstream_sha256": "52a2954031b0665e9d557a1ba2cd9c24aa5eb38c6c384cb8bd925680dc114f2d",
+      "bundled_sha256": "52a2954031b0665e9d557a1ba2cd9c24aa5eb38c6c384cb8bd925680dc114f2d"
+    },
+    "tasks_baseline/RoboDojo/Workspace/observations/.gitkeep": {
+      "upstream_path": "tasks_baseline/RoboDojo/Workspace/observations/.gitkeep",
+      "upstream_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bundled_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tasks_baseline/RoboDojo/Workspace/primitives/primitives.md": {
+      "upstream_path": "tasks_baseline/RoboDojo/Workspace/primitives/primitives.md",
+      "upstream_sha256": "569dd54601aafdd5497b27dbdcaaaee9c42ebaf8de8317c28c3a30b8c9dacfbe",
+      "bundled_sha256": "569dd54601aafdd5497b27dbdcaaaee9c42ebaf8de8317c28c3a30b8c9dacfbe"
+    },
+    "tasks_baseline/RoboDojo/Workspace/scratch/.gitkeep": {
+      "upstream_path": "tasks_baseline/RoboDojo/Workspace/scratch/.gitkeep",
+      "upstream_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bundled_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tasks_baseline/RoboDojo/Workspace/scripts/env.py": {
+      "upstream_path": "tasks_baseline/RoboDojo/Workspace/scripts/env.py",
+      "upstream_sha256": "dc5f1c99258a173c7c97a990042130ea1640a7d2a66e9f44debb71008483cf9f",
+      "bundled_sha256": "dc5f1c99258a173c7c97a990042130ea1640a7d2a66e9f44debb71008483cf9f"
+    },
+    "tasks_baseline/RoboDojo/Workspace/submission/solution.py": {
+      "upstream_path": "tasks_baseline/RoboDojo/Workspace/submission/solution.py",
+      "upstream_sha256": "063e158c3c20e584654d7baab3725a4b798d79340fa140842c0560cf04dcbd8b",
+      "bundled_sha256": "063e158c3c20e584654d7baab3725a4b798d79340fa140842c0560cf04dcbd8b"
+    },
+    "tasks_baseline/RoboDojo/task.toml": {
+      "upstream_path": "tasks_baseline/RoboDojo/task.toml",
+      "upstream_sha256": "ee651549e9ff25676a5a7297a7106c23ea2496243abca4fd38952c1bf667a619",
+      "bundled_sha256": "62125cca230957c1d15747c4fe66db1254fc70ef35dfe06ed435eb911d73b309"
+    },
+    "tests/__init__.py": {
+      "upstream_path": "tests/__init__.py",
+      "upstream_sha256": "915a2b96503089df7131e0569151a54b4d691051ef806e3b6079240e03926d7f",
+      "bundled_sha256": "915a2b96503089df7131e0569151a54b4d691051ef806e3b6079240e03926d7f"
+    },
+    "tests/fixtures.py": {
+      "upstream_path": "tests/fixtures.py",
+      "upstream_sha256": "1e0b3382a9141baa77acdd8c05b6c3a8d80474e2f87f781876b2cffbdf30bd6c",
+      "bundled_sha256": "1e0b3382a9141baa77acdd8c05b6c3a8d80474e2f87f781876b2cffbdf30bd6c"
+    },
+    "tests/test_baseline.py": {
+      "upstream_path": "tests/test_baseline.py",
+      "upstream_sha256": "e332e3d87418a57f7ab582b667f014f069a9da408c05273bf60af881057968f4",
+      "bundled_sha256": "e332e3d87418a57f7ab582b667f014f069a9da408c05273bf60af881057968f4"
+    },
+    "tests/test_environment_interface.py": {
+      "upstream_path": "tests/test_environment_interface.py",
+      "upstream_sha256": "c66e7d692fbdd4d018fdc0e93dc862fa188a2f337bb8ecf0a7063081eabb6e95",
+      "bundled_sha256": "c66e7d692fbdd4d018fdc0e93dc862fa188a2f337bb8ecf0a7063081eabb6e95"
+    },
+    "tests/test_files.py": {
+      "upstream_path": "tests/test_files.py",
+      "upstream_sha256": "38a8c5a7e30e4fcfab0d03610604d887b792018d923ad55301d52867d85e1d59",
+      "bundled_sha256": "38a8c5a7e30e4fcfab0d03610604d887b792018d923ad55301d52867d85e1d59"
+    },
+    "tests/test_launch_agent.py": {
+      "upstream_path": "tests/test_launch_agent.py",
+      "upstream_sha256": "a06ce34be43398fc0300980696257a1ae0812148bbdd35d8c08968b12738808a",
+      "bundled_sha256": "12ed7d3422ddbb6ec66823ef1334a7854ca1328fe67153ba9fe31bd753017247"
+    },
+    "tests/test_robodojo.py": {
+      "upstream_path": "tests/test_robodojo.py",
+      "upstream_sha256": "e504efdbb4fc935ffc677a5e4e2b12683f3ea0b661db71588b6cc91e006a71d9",
+      "bundled_sha256": "e504efdbb4fc935ffc677a5e4e2b12683f3ea0b661db71588b6cc91e006a71d9"
+    },
+    "tests/test_robodojo_capture.py": {
+      "upstream_path": "tests/test_robodojo_capture.py",
+      "upstream_sha256": "6b069b376b8ad757803ac6e0cd07bfa7ba6bb12ee6b0e3597ab02fd37ef9c8dd",
+      "bundled_sha256": "6b069b376b8ad757803ac6e0cd07bfa7ba6bb12ee6b0e3597ab02fd37ef9c8dd"
+    },
+    "tests/test_robodojo_image.py": {
+      "upstream_path": "tests/test_robodojo_image.py",
+      "upstream_sha256": "68409668d4cc788e50dd9b414a90532ca9a3ed8ca00d383b76337ade0bc62fad",
+      "bundled_sha256": "68409668d4cc788e50dd9b414a90532ca9a3ed8ca00d383b76337ade0bc62fad"
+    },
+    "tests/test_robodojo_policy.py": {
+      "upstream_path": "tests/test_robodojo_policy.py",
+      "upstream_sha256": "97a86b20b47ccd90a7c5f9dc71202799b1c52b46c50d3995703fd4ed068eaad7",
+      "bundled_sha256": "be6b71ef23d302be840c83527b3e6c59d9d6fcfc037d84e792896c1865de9270"
+    },
+    "tests/test_robodojo_policy_execution.py": {
+      "upstream_path": "tests/test_robodojo_policy_execution.py",
+      "upstream_sha256": "ac0ed8662b0e62b77778efe5bcb6764c27dceb96a6fc61f4440f809fa573f393",
+      "bundled_sha256": "ac0ed8662b0e62b77778efe5bcb6764c27dceb96a6fc61f4440f809fa573f393"
+    },
+    "tests/test_robodojo_video.py": {
+      "upstream_path": "tests/test_robodojo_video.py",
+      "upstream_sha256": "c21feef86bb05ba99c51538a52b0a7604d0a253a4f1dc396f8536866ca93505a",
+      "bundled_sha256": "c21feef86bb05ba99c51538a52b0a7604d0a253a4f1dc396f8536866ca93505a"
+    },
+    "tests/test_robodojo_worker_logs.py": {
+      "upstream_path": "tests/test_robodojo_worker_logs.py",
+      "upstream_sha256": "f464af62393751424941d3c29d5671c949837c5bb3188451c0d286a2e92555a5",
+      "bundled_sha256": "f464af62393751424941d3c29d5671c949837c5bb3188451c0d286a2e92555a5"
+    }
+  },
+  "bundled_on": "2026-10-14",
+  "adaptations": [
+    "Rename the bundled native transport policy identifier/imports to embodiedevo.",
+    "Align the agent image default with embodiedevo-agent:xpolicy.",
+    "Prefer the bundled native transport adapter over the outer Test adapter in its own subprocess.",
+    "Add a caller-relative launcher and verified frozen Skills/Lessons export into a fresh Test workspace.",
+    "Replace source-bundle documentation to describe this XPolicyLab integration."
+  ],
+  "added_files": {
+    "README.md": "683e01cdaa56837eb474bcb9ec9f15d8f3fd03f8a1ddca36b4df39256c3f9963",
+    "entrypoint.py": "d49cf6ae2cfddc7ea91c3e5879b4255cc223886c9479a658b2d34b0ce75b162d",
+    "export_workspace.py": "db871495fc41983028b8aa0cd2c91d1d77d1dc6c6f9a50cfeab9b62f3319b2ce",
+    "tests/test_export_workspace.py": "aa173606d166dbcf4b6977929d26edc2d90ceba3bd69a7f2cbcf20d488b8a28b"
+  }
+}

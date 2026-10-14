@@ -1,0 +1,8 @@
+# Copy to an external EMBODIEDEVO_CODEX_HOME/config.toml.
+# These model settings match the shipped tasks; choose a model your account supports.
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+model_provider = "openai"
+
+# The launcher copies auth.json into each isolated agent home.
+cli_auth_credentials_store = "file"
