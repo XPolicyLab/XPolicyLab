@@ -1,6 +1,6 @@
 # EmbodiedEvo
 
-**Contributor:** [EinsiaAI](https://lab.einsia.ai/) | **Paper:** Coming soon | **arXiv:** Submission in progress | **Original code:** [EmbodiedEvo](https://github.com/Einsia/EmbodiedRSI)
+**Contributor:** [Einsia.AI](https://lab.einsia.ai/) | **Paper:** [arXiv:2610.18867](https://arxiv.org/pdf/2610.18867) | **Project Page:** [EmbodiedEvo](https://lab.einsia.ai/embodiedevo/) | **Original code:** [EmbodiedEvo](https://github.com/Einsia/EmbodiedRSI)
 
 EmbodiedEvo is a **self-evolving robotic agent** operating in an **SWE-style workspace**. It writes, executes and revises Python programs to control robots.
 
