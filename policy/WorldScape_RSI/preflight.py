@@ -1,24 +1,19 @@
-"""Offline validation only. Does not start an environment, model service or API request."""
-import argparse,json,os,hashlib
+"""Verify the active release and optionally both external WAM checkpoints."""
 from pathlib import Path
-from .runtime import ROOT,configure,config
-from .jev.network import EpisodeRouter
-
-def main():
-    p=argparse.ArgumentParser();p.add_argument("--task",required=True);p.add_argument("--assets-only",action="store_true");a=p.parse_args()
-    configure();cfg=config({"task_name":a.task})
-    from .icl.loader import load_messages
-    load_messages(a.task)
-    if not a.assets_only:
-        checkpoint=os.environ.get("WRSI_JEV_CHECKPOINT") or str(ROOT/cfg["jev"]["checkpoint"])
-        route=EpisodeRouter(os.environ.get("WRSI_ROUTE_MODE",cfg["jev"]["mode"]),checkpoint)
-        if route.mode in ("learned","astra"):
-            from .harness.vlm_client import load_vlm_profile
-            load_vlm_profile(os.environ.get("VLM_AGENT_PROFILE") or cfg["vlm_agent"].get("vlm_profile"))
-        if route.mode in ("learned","wam"):
-            from .wam_backend import build_config
-            wam_cfg = build_config(cfg)
-            if not wam_cfg.get("checkpoint_path") and not wam_cfg.get("ckpt_name"):
-                raise ValueError("Set WRSI_WAM_CHECKPOINT or ckpt_name for WAM")
-    print(json.dumps({"offline_preflight":"passed","task":a.task,"assets_only":a.assets_only,"live_simulation_verified":False}))
-if __name__=="__main__":main()
+import sys
+checkout=Path(__file__).resolve().parents[2]
+sys.path[:0]=[str(checkout.parent),str(checkout)]
+from XPolicyLab.policy.WorldScape_RSI.harness.release import FrozenRelease, ROOT
+import argparse
+import json
+if __name__ == "__main__":
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check-checkpoints",action="store_true")
+    args=parser.parse_args()
+    release=FrozenRelease(ROOT/"release.json")
+    result={"release_sha256":release.sha256,"mode":release.data["mode"],
+            "official_single_entry_eligible":False,"checkpoint_inference":False}
+    if args.check_checkpoints:
+        from XPolicyLab.policy.WorldScape_RSI.harness.verify_checkpoints import verify
+        result["checkpoint_verification"]=verify()
+    print(json.dumps(result))

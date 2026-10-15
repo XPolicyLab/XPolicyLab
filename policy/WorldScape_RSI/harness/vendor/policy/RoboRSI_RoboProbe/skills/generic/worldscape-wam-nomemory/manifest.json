@@ -1,0 +1,13 @@
+{
+  "id": "worldscape-wam-nomemory",
+  "version": "1.1.0",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "artifact_type": "tool",
+  "stages": [
+    "predict"
+  ],
+  "dependencies": [],
+  "description": "Checkpoint-backed WorldScape WAM (no-memory) action chunk inside the inner Agent.",
+  "implementation": "reviewed_in_process_dispatch"
+}

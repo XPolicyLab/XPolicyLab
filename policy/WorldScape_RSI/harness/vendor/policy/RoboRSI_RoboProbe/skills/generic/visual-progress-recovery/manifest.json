@@ -1,0 +1,14 @@
+{
+  "id": "visual-progress-recovery",
+  "version": "0.1.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "重复接近、零执行或跟踪不足时，依据当前 RGB 与真实动作回执选择下一步，避免无信息的重复移动。",
+  "implementation": "text"
+}

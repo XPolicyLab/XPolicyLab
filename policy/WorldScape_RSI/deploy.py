@@ -1,26 +1,42 @@
-"""XPolicyLab simulation-side entry; retains our existing primitives and motion executor."""
-import os,uuid,json
-from pathlib import Path
-from .runtime import configure,config
+def eval_one_episode(TASK_ENV, model_client):
 
-def eval_one_episode(TASK_ENV,model_client):
-    configure()
-    cfg=config(getattr(TASK_ENV,"deploy_cfg",{}))
-    task=getattr(TASK_ENV,"task_name",None) or cfg["task_name"]
-    if task!=cfg["task_name"]:raise ValueError("Environment and policy task mismatch")
-    from .runtime import release_identity
-    metadata=model_client.call(func_name="release_metadata")
-    if metadata.get("release_sha256")!=release_identity() or metadata.get("task")!=task:
-        raise RuntimeError("Server/client release or task mismatch")
-    # Explicit episode boundary, before route selection and execution reports.
+    model_client.call(func_name="reset") # reset policy
+
+    while not TASK_ENV.is_episode_end(): # Check whether the episode ends
+        obs = TASK_ENV.get_obs() # Get Observation
+        model_client.call(func_name="update_obs", obs=obs)  # Update Observation
+        actions = model_client.call(func_name="get_action") # Get Action according to observation chunk
+
+        for action_idx, action in enumerate(actions):
+            TASK_ENV.take_action(action)
+
+            if TASK_ENV.is_episode_end() or action_idx + 1 == len(actions):
+                break
+
+            obs = TASK_ENV.get_obs()
+            model_client.call(func_name="update_obs", obs=obs)
+
+def eval_one_episode_batch(TASK_ENV, model_client):
+
     model_client.call(func_name="reset")
-    run=Path(os.environ.get("WRSI_OUTPUT_DIR","eval_result/WorldScape_RSI"))/task/uuid.uuid4().hex
-    run.mkdir(parents=True,exist_ok=False)
-    (run/"release.json").write_text(json.dumps(metadata,indent=2),encoding="utf-8")
-    os.environ["RDA_TASK"]=task;os.environ["RDA_RUN_DIR"]=str(run.resolve())
-    from .harness import deploy
-    # Keep server/client execution settings identical; no launch-directory dependent YAML.
-    TASK_ENV.deploy_cfg=cfg
-    deploy.eval_one_episode(TASK_ENV,model_client)
 
-def eval_batch(*args,**kwargs):raise NotImplementedError("One process per environment")
+    while not TASK_ENV.is_episode_end(): # Check whether the episode ends
+        env_idx_list = TASK_ENV.get_running_env_idx_list() # Get Running Environment Index List
+        obs_list = TASK_ENV.get_obs_batch(env_idx_list) # Get Observation
+        model_client.call(func_name="update_obs_batch", obs=obs_list)
+        actions = model_client.call(func_name="get_action_batch", obs=env_idx_list)  # Get Action according to observation chunk
+
+        chunk_size = len(actions[0]) # Get the chunk size
+        for action_idx in range(chunk_size): # Iterate over the action chunk
+            current_action_list = [env_actions[action_idx] for env_actions in actions] # Get the current action list
+            TASK_ENV.take_action_batch(current_action_list, env_idx_list) # Take the action
+
+            if TASK_ENV.is_episode_end() or action_idx + 1 == chunk_size: # Check whether the episode ends
+                break
+
+            running = set(TASK_ENV.get_running_env_idx_list()) # Get the running environment index list
+            active_batch_idx = [i for i, env_idx in enumerate(env_idx_list) if env_idx in running] # Get the active batch index
+
+            actions = [actions[i] for i in active_batch_idx] # Get the active action list
+            env_idx_list = [env_idx_list[i] for i in active_batch_idx] # Get the active environment index list
+            model_client.call(func_name="update_obs_batch", obs=TASK_ENV.get_obs_batch(env_idx_list)) # Update the observation

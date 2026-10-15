@@ -1,0 +1,18 @@
+{
+  "id": "pour-bottle-retention",
+  "version": "0.1.2-roboprobe-v17-r1-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "control",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control",
+    "other-arm-observer"
+  ],
+  "artifact_type": "skill",
+  "description": "倒液时的瓶身保持与液流对准",
+  "implementation": "text"
+}

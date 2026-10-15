@@ -1,0 +1,16 @@
+{
+  "id": "stack_blocks-dual-arm-coordination",
+  "version": "0.1.1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "双臂并行与交错叠放",
+  "implementation": "text"
+}

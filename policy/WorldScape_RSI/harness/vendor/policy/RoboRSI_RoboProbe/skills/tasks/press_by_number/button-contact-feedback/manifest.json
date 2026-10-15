@@ -1,0 +1,16 @@
+{
+  "id": "button-contact-feedback",
+  "version": "1.0.1-roboprobe-v17-r1-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "按钮接触反馈参考",
+  "implementation": "text"
+}

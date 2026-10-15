@@ -1,0 +1,12 @@
+{
+  "id": "arrange-largest-number-order-recovery",
+  "version": "2.4.0-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think"
+  ],
+  "dependencies": [],
+  "description": "Arrange largest number：逐牌摆放、恢复与原生结束确认",
+  "implementation": "text"
+}

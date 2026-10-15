@@ -1,0 +1,14 @@
+{
+  "id": "conveyor-grasp-retention",
+  "version": "1.6.0-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [],
+  "description": "传送带：接近、闭合与保持",
+  "implementation": "text"
+}

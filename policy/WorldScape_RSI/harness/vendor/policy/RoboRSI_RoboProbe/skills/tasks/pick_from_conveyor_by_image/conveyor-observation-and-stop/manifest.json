@@ -1,0 +1,13 @@
+{
+  "id": "conveyor-observation-and-stop",
+  "version": "0.1.0-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "传送带目标时效与终止回执处理",
+  "implementation": "text"
+}

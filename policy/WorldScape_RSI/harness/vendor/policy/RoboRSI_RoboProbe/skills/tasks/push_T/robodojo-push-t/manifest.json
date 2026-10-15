@@ -1,0 +1,17 @@
+{
+  "id": "robodojo-push-t",
+  "version": "0.9.0-rgb-r1-roboprobe-v17-r1-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "robot-action-timing",
+    "robot-action-timing-tool",
+    "tabletop-handoff"
+  ],
+  "description": "保持支撑完成 T 块对齐",
+  "implementation": "text"
+}

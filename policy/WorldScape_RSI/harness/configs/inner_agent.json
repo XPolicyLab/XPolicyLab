@@ -1,0 +1,8 @@
+{
+  "kind": "agent",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "memory": "full_episode",
+  "api_base_env": "R2SI_API_BASE",
+  "api_key_env": "R2SI_API_KEY"
+}

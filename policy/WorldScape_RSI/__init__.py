@@ -1,1 +1,1 @@
-"""WorldScape_RSI inference candidate: frozen episode routing."""
+"""WorldScape RSI Harness integration; external WAM is unchanged."""

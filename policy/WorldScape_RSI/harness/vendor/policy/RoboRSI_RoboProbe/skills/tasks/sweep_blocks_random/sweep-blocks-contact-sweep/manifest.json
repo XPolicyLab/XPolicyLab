@@ -1,0 +1,1 @@
+{"id": "sweep-blocks-contact-sweep", "version": "v-084d37690802", "interface": "roborsi.public.v1", "kind": "text", "implementation": "text", "stages": ["think", "control", "feedback"], "dependencies": [], "description": "---"}

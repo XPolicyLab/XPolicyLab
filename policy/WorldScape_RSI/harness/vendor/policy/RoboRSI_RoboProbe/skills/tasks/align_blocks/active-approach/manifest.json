@@ -1,0 +1,17 @@
+{
+  "id": "active-approach",
+  "version": "0.3.4-direct-push-r4-roboprobe-v17-frame-doc-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "control",
+    "feedback"
+  ],
+  "dependencies": [
+    "robot-action-timing",
+    "robot-action-timing-tool"
+  ],
+  "description": "开爪直接推尺，单手有效推进，脱离后完整归位",
+  "implementation": "text"
+}

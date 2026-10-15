@@ -1,0 +1,17 @@
+{
+  "id": "language-sort-evidence-checkpoints",
+  "version": "0.6.1-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [
+    "robot-action-timing",
+    "robot-action-timing-tool"
+  ],
+  "description": "语言分拣：视觉检查点、控制步预算与收尾",
+  "implementation": "text"
+}

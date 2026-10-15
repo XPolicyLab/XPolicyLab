@@ -1,0 +1,14 @@
+{
+  "id": "classify-grasp-orientation",
+  "version": "0.1.0-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [],
+  "description": "分类抓取前的角度检查",
+  "implementation": "text"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "public-task-instructions",
+  "version": "1.0.0",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "implementation": "text",
+  "stages": ["think", "feedback"],
+  "dependencies": [],
+  "load_mode": "on_demand",
+  "task_context_file": "references/tasks.json",
+  "description": "按需查询当前任务的公开 Instruction 和 Description；需要任务背景时调用 read_skill(id=public-task-instructions)，只返回本任务说明。"
+}

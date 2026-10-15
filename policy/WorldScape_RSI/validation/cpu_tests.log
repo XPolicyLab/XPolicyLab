@@ -1,0 +1,48 @@
+test_both_wam_configs_are_accepted_by_pinned_adapter (test_consistency.ConsistencyTests.test_both_wam_configs_are_accepted_by_pinned_adapter) ... ok
+test_nomemory_adapter_samples_latest_frame_and_resets_each_prediction (test_consistency.ConsistencyTests.test_nomemory_adapter_samples_latest_frame_and_resets_each_prediction) ... ok
+test_release_rejects_memory_semantic_drift (test_consistency.ConsistencyTests.test_release_rejects_memory_semantic_drift) ... ok
+test_tools_and_wait_are_identical_across_tasks (test_consistency.ConsistencyTests.test_tools_and_wait_are_identical_across_tasks) ... ok
+test_repeated_format_repairs_preserve_api_history (test_harness.ActualAgentRepairTests.test_repeated_format_repairs_preserve_api_history) ... ok
+test_private_fields_never_reach_executor (test_harness.ContractTests.test_private_fields_never_reach_executor) ... ok
+test_reject_encoded_colors_and_invalid_actions (test_harness.ContractTests.test_reject_encoded_colors_and_invalid_actions) ... ok
+test_batch_and_model_override_rejected (test_harness.CoreTests.test_batch_and_model_override_rejected) ... ok
+test_conflicting_case_metadata_rejected (test_harness.CoreTests.test_conflicting_case_metadata_rejected) ... ok
+test_failure_requires_reset_and_never_selects_fallback (test_harness.CoreTests.test_failure_requires_reset_and_never_selects_fallback) ... ok
+test_interrupt_discards_suffix_and_confirms_only_observed_action (test_harness.CoreTests.test_interrupt_discards_suffix_and_confirms_only_observed_action) ... ok
+test_large_hold_is_constant_space_and_stops_at_trial_end (test_harness.CoreTests.test_large_hold_is_constant_space_and_stops_at_trial_end) ... ok
+test_native_action_acknowledgement_and_chunk_reuse (test_harness.CoreTests.test_native_action_acknowledgement_and_chunk_reuse) ... ok
+test_new_public_task_uses_the_same_inner_agent (test_harness.CoreTests.test_new_public_task_uses_the_same_inner_agent) ... ok
+test_no_action_without_observation (test_harness.CoreTests.test_no_action_without_observation) ... ok
+test_no_cross_episode_queue_or_observation (test_harness.CoreTests.test_no_cross_episode_queue_or_observation) ... ok
+test_no_duplicate_get_action (test_harness.CoreTests.test_no_duplicate_get_action) ... ok
+test_no_duplicate_observation_ack (test_harness.CoreTests.test_no_duplicate_observation_ack) ... ok
+test_no_task_switch_within_active_trial (test_harness.CoreTests.test_no_task_switch_within_active_trial) ... ok
+test_observation_and_action_are_copied (test_harness.CoreTests.test_observation_and_action_are_copied) ... ok
+test_validate_whole_chunk_before_first_action (test_harness.CoreTests.test_validate_whole_chunk_before_first_action) ... ok
+test_legacy_external_provider_profile_preserves_frozen_model (test_harness.ProviderTests.test_legacy_external_provider_profile_preserves_frozen_model) ... ok
+test_sticky_session_and_context_integrity (test_harness.ProviderTests.test_sticky_session_and_context_integrity) ... ok
+test_decisions_without_matching_evidence_rejected (test_harness.ReleaseTests.test_decisions_without_matching_evidence_rejected) ... ok
+test_freeze_detects_skill_tampering_and_manifest_replacement (test_harness.ReleaseTests.test_freeze_detects_skill_tampering_and_manifest_replacement) ... ok
+test_path_traversal_and_symlink_rejected (test_harness.ReleaseTests.test_path_traversal_and_symlink_rejected) ... ok
+test_task_routing_and_extra_models_rejected (test_harness.ReleaseTests.test_task_routing_and_extra_models_rejected) ... ok
+test_curobo_resolves_from_the_migrated_policy (test_runtime_imports.RuntimeImportTests.test_curobo_resolves_from_the_migrated_policy) ... ok
+test_native_planner_does_not_import_top_level_utils_or_env (test_runtime_imports.RuntimeImportTests.test_native_planner_does_not_import_top_level_utils_or_env) ... ok
+test_adjacent_checkpoint_loading_is_pinned_and_explicit (test_wam_skills.WamSkillTests.test_adjacent_checkpoint_loading_is_pinned_and_explicit) ... ok
+test_both_models_are_skills_and_load_only_when_called (test_wam_skills.WamSkillTests.test_both_models_are_skills_and_load_only_when_called) ... ok
+test_consecutive_same_model_keeps_memory_without_duplicate_start_frame (test_wam_skills.WamSkillTests.test_consecutive_same_model_keeps_memory_without_duplicate_start_frame) ... ok
+test_final_unobserved_action_discards_instead_of_committing (test_wam_skills.WamSkillTests.test_final_unobserved_action_discards_instead_of_committing) ... ok
+test_full_commit_precedes_final_observation (test_wam_skills.WamSkillTests.test_full_commit_precedes_final_observation) ... ok
+test_inference_failure_has_cleanup_ownership_and_is_not_replayed (test_wam_skills.WamSkillTests.test_inference_failure_has_cleanup_ownership_and_is_not_replayed) ... ok
+test_interruption_discards_and_rebases_from_live_frame (test_wam_skills.WamSkillTests.test_interruption_discards_and_rebases_from_live_frame) ... ok
+test_invalid_chunk_is_rejected_before_execution (test_wam_skills.WamSkillTests.test_invalid_chunk_is_rejected_before_execution) ... ok
+test_missing_execution_acknowledgement_rejected (test_wam_skills.WamSkillTests.test_missing_execution_acknowledgement_rejected) ... ok
+test_native_motion_breaks_continuity_and_stale_history (test_wam_skills.WamSkillTests.test_native_motion_breaks_continuity_and_stale_history) ... ok
+test_no_switch_or_prediction_replay_while_pending (test_wam_skills.WamSkillTests.test_no_switch_or_prediction_replay_while_pending) ... ok
+test_real_agent_tool_loop_returns_to_agent_between_wam_chunks (test_wam_skills.WamSkillTests.test_real_agent_tool_loop_returns_to_agent_between_wam_chunks) ... ok
+test_variant_switch_resets_the_old_context (test_wam_skills.WamSkillTests.test_variant_switch_resets_the_old_context) ... ok
+test_wam_tool_dispatch_and_forbidden_overrides (test_wam_skills.WamSkillTests.test_wam_tool_dispatch_and_forbidden_overrides) ... ok
+
+----------------------------------------------------------------------
+Ran 43 tests in 2.224s
+
+OK

@@ -1,0 +1,4 @@
+[34m[1m[CONNECTING][0m websocket policy server ws://127.0.0.1:65372 (attempt 1/1, timeout=5s)
+[32m[1m[CONNECTED][0m websocket policy server connected: ws://127.0.0.1:65372
+policy server reset request failed: This process already owns another active trial
+{"official_ws_fixture_loop": "passed", "rgb_formats": ["array", "standard", "legacy"], "cross_trial_reset": "rejected", "task_success_measured": false, "real_model_inference": false}

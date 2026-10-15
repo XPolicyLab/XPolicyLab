@@ -1,0 +1,7 @@
+# CPU fixtures only; this does not install the WAM or CuRobo inference stack.
+-r requirements.txt
+numpy<2
+opencv-python-headless>=4.8,<4.12
+h5py>=3.8
+pydantic>=2.5
+torch>=2.2

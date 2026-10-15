@@ -1,4 +1,0 @@
-[
-  {"id":"wam_default","version":"template-1","goal":"Execute the current instruction with continuous WAM actions; escalate observed failures to Astra, then resume WAM after verification.","preconditions":[],"stages":[{"id":"execute","goal":"Complete the current instruction, including required release and return.","executor":"wam","skill":null,"completion":["task_goal_and_required_return_complete"],"recoveries":[],"max_blocks":96}]},
-  {"id":"astra_default","version":"template-1","goal":"Use the existing task-specific Astra agent, task program and ICL for semantic or procedural control; validate actual effects.","preconditions":[],"stages":[{"id":"execute","goal":"Complete the current instruction, including required release and return.","executor":"astra","skill":null,"completion":["task_goal_and_required_return_complete"],"recoveries":[],"max_blocks":96}]}
-]

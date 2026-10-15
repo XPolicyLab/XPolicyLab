@@ -1,0 +1,329 @@
+{
+  "source": "Official public RoboDojo task documentation",
+  "tasks": {
+    "align_blocks": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/align-blocks/",
+      "instruction": "Use the set square to push the three blocks into a straight, aligned row, then reset the robot arm.",
+      "description": "There is a set square and three blocks. The robot needs to use the set square to push the blocks until they are aligned in parallel in a straight row.",
+      "documentation_task": "align_blocks"
+    },
+    "arrange_largest_number": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/arrange-largest-number/",
+      "instruction": "Arrange the numbers from left to right to form the largest possible number, and place them on the pad.",
+      "description": "There are several number tiles on the table and a pad for placement. The robot needs to determine the order that forms the largest possible number, then place the four numbers on the pad from left to right in that order.",
+      "documentation_task": "arrange_largest_number"
+    },
+    "arrange_largest_number_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/arrange-largest-number/",
+      "instruction": "Arrange the numbers from left to right to form the largest possible number, and place them on the pad.",
+      "description": "There are several number tiles on the table and a pad for placement. The robot needs to determine the order that forms the largest possible number, then place the four numbers on the pad from left to right in that order.",
+      "documentation_task": "arrange_largest_number"
+    },
+    "build_tower": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/build-tower/",
+      "instruction": "Build a stable multi-layer tower with the wooden blocks and boards.",
+      "description": "There are wooden blocks and wooden boards on the table. The robot needs to place each board or block on the supports below it, keep each layer centered over the layer beneath it, and keep all pieces upright.",
+      "documentation_task": "build_tower"
+    },
+    "classify_objects": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/classify-objects/",
+      "instruction": "Sort the objects by category into the three baskets.",
+      "description": "There are three categories of objects and three baskets. The robot needs to group the objects by category and place each category into a separate basket. Any basket can be used for any category, as long as objects of the same category are placed together.",
+      "documentation_task": "classify_objects"
+    },
+    "classify_objects_by_language": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/classify-objects-by-language/",
+      "instruction": "Put category₁ objects into the left basket, category₂ objects into the middle basket, and category₃ objects into the right basket, then reset the robot arm.",
+      "description": "There are three baskets and three categories of unseen objects. The robot needs to understand the language instruction, identify the category of each object, and place the objects into the specified baskets from left to right.",
+      "documentation_task": "classify_objects_by_language"
+    },
+    "cover_blocks": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/cover-blocks/",
+      "instruction": "Cover the blocks from left to right, remember their colors, then uncover them in the order: red, green, and blue.",
+      "description": "There are three covers and three blocks arranged in a random order. The blocks are red, green, and blue. The robot needs to cover the blocks from left to right, remember the color under each cover, and then uncover the blocks in the order of red, green, and blue.",
+      "documentation_task": "cover_blocks"
+    },
+    "deposit_coin": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/deposit-coin/",
+      "instruction": "Pick up the coin from the holder and insert it precisely into the coin bank.",
+      "description": "There is a coin placed on a holder and a coin bank. The robot needs to pick up the coin and accurately insert it into the slot of the coin bank.",
+      "documentation_task": "deposit_coin"
+    },
+    "fasten_screws": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/fasten-screws/",
+      "instruction": "Insert and tighten each screw into the nut of the same color.",
+      "description": "There are three screws and three nuts on the table. The screws and nuts come from five possible colors: red, blue, gray, yellow, and purple. In each episode, three different colors are selected, and the robot needs to match each screw with the nut of the same color, insert it, and tighten it. The screw positions vary within a small range, while the nut positions vary within a larger range. If a handover is needed, the robot can first place the screw in the middle and then let the other arm pick it up and fasten it.",
+      "documentation_task": "fasten_screws"
+    },
+    "fill_egg_holder": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/fill-egg-holder/",
+      "instruction": "Place the four eggs from the basket into the egg holder, then close the lid.",
+      "description": "There is a woven basket containing four eggs and an egg holder. The robot needs to pick up the eggs one by one, place all four into the egg holder, and then close the lid.",
+      "documentation_task": "fill_egg_holder"
+    },
+    "fill_pen_holder": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/fill-pen-holder/",
+      "instruction": "Hold the pen holder with one hand, place all pens into it with the other hand, then put it back down.",
+      "description": "There is a pen holder and several pens. The robot needs to grasp the pen holder with one hand, use the other hand to place the pens into the holder one by one, and finally put the filled pen holder back on the table.",
+      "documentation_task": "fill_pen_holder"
+    },
+    "fold_clothes": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/fold-clothes/",
+      "instruction": "Fold the clothes neatly.",
+      "description": "There is a piece of clothing. The robot needs to fold it neatly.",
+      "documentation_task": "fold_clothes"
+    },
+    "fold_clothes_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/fold-clothes/",
+      "instruction": "Fold the clothes neatly.",
+      "description": "There is a piece of clothing. The robot needs to fold it neatly.",
+      "documentation_task": "fold_clothes"
+    },
+    "general_pickup": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/general-pickup/",
+      "instruction": "Pick up the target object by 10 cm.",
+      "description": "There are multiple objects. The robot needs to understand the language instruction, identify the target object, and pick it up.",
+      "documentation_task": "general_pickup"
+    },
+    "hang_mugs": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/hang-mugs/",
+      "instruction": "Hang all the mugs on the mug rack.",
+      "description": "There are three mugs and one mug rack. The robot needs to pick up each mug and hang all of them on the rack.",
+      "documentation_task": "hang_mugs"
+    },
+    "hang_mugs_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/hang-mugs/",
+      "instruction": "Hang all the mugs on the mug rack.",
+      "description": "There are three mugs and one mug rack. The robot needs to pick up each mug and hang all of them on the rack.",
+      "documentation_task": "hang_mugs"
+    },
+    "imitate_sorting_sequence": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/imitate-sorting-sequence/",
+      "instruction": "Observe the object placement order, remember it, then place the corresponding objects into the basket in the same order.",
+      "description": "There are five categories of objects, with five objects on each side. The opposite robot places its objects into the basket on the right side in a certain order. The robot needs to observe and remember this sequence, then place its corresponding objects into the basket in the same order. This is a memory-based imitation task.",
+      "documentation_task": "imitate_sorting_sequence"
+    },
+    "insert_key": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/insert-key/",
+      "instruction": "Pick up the key, hand it over to the other hand, insert it into the keyhole, then turn it.",
+      "description": "There is a key and a keyhole on the table. The robot needs to pick up the key, hand it over to the other hand for pose adjustment, insert it accurately into the keyhole, and then turn it.",
+      "documentation_task": "insert_key"
+    },
+    "insert_tubes": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/insert-tubes/",
+      "instruction": "Insert the three tubes into the rack one by one.",
+      "description": "There is a tube rack and three tubes. The robot needs to pick up each tube in sequence and insert all tubes into the rack.",
+      "documentation_task": "insert_tubes"
+    },
+    "make_kong": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/make-kong/",
+      "instruction": "Wait for the opponent to discard a tile, then declare a kong with the matching tiles.",
+      "description": "There is a Mahjong setup. The opponent first pushes out a tile. The robot needs to observe the discarded tile, identify the matching tiles on its side, and perform a valid kong action. The setup guarantees that a kong is possible.",
+      "documentation_task": "make_kong"
+    },
+    "make_toast": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/make-toast/",
+      "instruction": "Pick up two slices of bread, place them into the toaster, and press the lever down.",
+      "description": "There is a basket containing multiple slices of bread and a toaster. The robot needs to pick up two slices one by one, place them into the toaster, and then press the lever down to start toasting.",
+      "documentation_task": "make_toast"
+    },
+    "make_toast_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/make-toast/",
+      "instruction": "Pick up two slices of bread, place them into the toaster, and press the lever down.",
+      "description": "There is a basket containing multiple slices of bread and a toaster. The robot needs to pick up two slices one by one, place them into the toaster, and then press the lever down to start toasting.",
+      "documentation_task": "make_toast"
+    },
+    "match_and_pick_from_conveyor": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/match-and-pick-from-conveyor/",
+      "instruction": "Remember the first object on the conveyor, then pick the matching object when it appears again.",
+      "description": "An object first appears on the conveyor and is carried away. The robot needs to remember this object, observe the following objects on the conveyor, and pick the one that matches the first object.",
+      "documentation_task": "match_and_pick_from_conveyor"
+    },
+    "organize_table": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/organize-table/",
+      "instruction": "Place the mouse on the mouse pad, push the keyboard into the frame, put the figurine on the stand, place the alarm clock on the drawer, then open the drawer and put all remaining miscellaneous items inside.",
+      "description": "There are a computer, a keyboard, a mouse, an alarm clock, a cartoon figurine, three miscellaneous items, and a drawer. The robot needs to organize the table by placing the mouse on the mouse pad, pushing the keyboard into the frame, putting the figurine on the stand, placing the alarm clock on top of the drawer, opening the drawer, and putting all remaining miscellaneous items into it.",
+      "documentation_task": "organize_table"
+    },
+    "pack_objects_into_box": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pack-objects-into-box/",
+      "instruction": "Place all the objects into the box with their front sides facing left.",
+      "description": "There are several objects on the table and a box. The robot needs to pick up all the objects, place them into the box, and ensure that each object is oriented with its front side facing left.",
+      "documentation_task": "pack_objects_into_box"
+    },
+    "pack_objects_into_box_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pack-objects-into-box/",
+      "instruction": "Place all the objects into the box with their front sides facing left.",
+      "description": "There are several objects on the table and a box. The robot needs to pick up all the objects, place them into the box, and ensure that each object is oriented with its front side facing left.",
+      "documentation_task": "pack_objects_into_box"
+    },
+    "pick_from_conveyor_by_image": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pick-from-conveyor-by-image/",
+      "instruction": "Lift the basket more than 8 cm, identify the target object on the conveyor according to the image on the board, pick it up, and place it into the basket.",
+      "description": "There is a board displaying an image of the target object, a basket, and a conveyor carrying multiple objects. The robot needs to first lift the basket more than 8 cm, identify the target object on the conveyor based on the image shown on the board, pick up the target object, and place it into the basket.",
+      "documentation_task": "pick_from_conveyor_by_image"
+    },
+    "play_Xylophone": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/play-xylophone/",
+      "instruction": "Pick up the mallet and strike all xylophone keys from left to right.",
+      "description": "There is a xylophone and a mallet. The robot needs to pick up the mallet with one hand and strike all the xylophone keys from left to right.",
+      "documentation_task": "play_Xylophone"
+    },
+    "play_stacking_toy": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/play-stacking-toy/",
+      "instruction": "Place all stacking toy pieces onto the correct pegs.",
+      "description": "There is a stacking toy with four pegs and four types of pieces. The numbers of pieces in the four types are 4, 3, 2, and 1, and each peg matches one type. The robot needs to place all pieces onto their corresponding pegs correctly.",
+      "documentation_task": "play_stacking_toy"
+    },
+    "play_tic_tac_toe": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/play-tic-tac-toe/",
+      "instruction": "Play tic-tac-toe as the first player and fill the board with the opponent.",
+      "description": "There is a 3-by-3 tic-tac-toe board. The robot plays as the first player, while the opponent follows a random strategy. The robot and the opponent take turns placing their marks until the board is filled.",
+      "documentation_task": "play_tic_tac_toe"
+    },
+    "plug_in_charger": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/plug-in-charger/",
+      "instruction": "Plug the charger into the power strip.",
+      "description": "There is a charger plug and a power strip. The robot needs to pick up the charger plug and insert it into the power strip.",
+      "documentation_task": "plug_in_charger"
+    },
+    "pour_balls_into_vase": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pour-balls-into-vase/",
+      "instruction": "Pour all the balls from the cup into the vase.",
+      "description": "There is a cup containing many small balls and a vase. The robot needs to pick up the cup and pour all the balls into the vase.",
+      "documentation_task": "pour_balls_into_vase"
+    },
+    "pour_by_language": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pour-by-language/",
+      "instruction": "Pour the liquid from the first color₁ bottle into the first color₂ bowl, from the second color₃ bottle into the second color₄ bowl, and from the third color₅ bottle into the third color₆ bowl. Then reset the robot arm.",
+      "description": "There are three colored bottles and three colored bowls on the table. The robot needs to follow the language instruction and pour the liquid from each specified bottle into the corresponding specified bowl.",
+      "documentation_task": "pour_by_language"
+    },
+    "pour_liquid_into_cup": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pour-liquid-into-cup/",
+      "instruction": "Pour the liquid from the bottle into the cup.",
+      "description": "There is a bottle containing liquid and a cup. The robot needs to pick up the bottle and pour the liquid into the cup.",
+      "documentation_task": "pour_liquid_into_cup"
+    },
+    "pour_liquid_into_cup_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/pour-liquid-into-cup/",
+      "instruction": "Pour the liquid from the bottle into the cup.",
+      "description": "There is a bottle containing liquid and a cup. The robot needs to pick up the bottle and pour the liquid into the cup.",
+      "documentation_task": "pour_liquid_into_cup"
+    },
+    "press_by_number": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/press-by-number/",
+      "instruction": "Press the two red buttons the required number of times according to the number cards, then press the blue button to confirm.",
+      "description": "There are two number cards, two red buttons, and one blue confirmation button. The robot needs to read the numbers, press each red button the corresponding number of times, and then press the blue button to confirm. Pressing the blue button ends the task immediately.",
+      "documentation_task": "press_by_number"
+    },
+    "push_T": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/push-t/",
+      "instruction": "Push the T-shaped block to align it precisely with the gray T-shaped pad.",
+      "description": "There is a thin gray T-shaped pad and a T-shaped block. The robot needs to push the T-shaped block until it is precisely aligned with and fitted onto the gray pad.",
+      "documentation_task": "push_T"
+    },
+    "push_T_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/push-t/",
+      "instruction": "Push the T-shaped block to align it precisely with the gray T-shaped pad.",
+      "description": "There is a thin gray T-shaped pad and a T-shaped block. The robot needs to push the T-shaped block until it is precisely aligned with and fitted onto the gray pad.",
+      "documentation_task": "push_T"
+    },
+    "put_bottles_into_dustbin": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/put-bottles-into-dustbin/",
+      "instruction": "Pick up the bottles and throw them into the dustbin, using handover when needed.",
+      "description": "There are four bottles on the table, and they may be either standing or lying down. A dustbin is placed beside the table. The robot needs to pick up the bottles and throw them into the dustbin. Because of the shifted table layout, bottles on the right side require a handover between the two hands before being discarded.",
+      "documentation_task": "put_bottles_into_dustbin"
+    },
+    "solve_equation": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/solve-equation/",
+      "instruction": "Complete the equation by selecting the correct missing number or operator and placing it on the pad, then reset the robot arm.",
+      "description": "There is an arithmetic equation on the table and a pad for the answer. The equation is missing either a number or an operator. The robot needs to choose the correct missing item from the randomly arranged numbers and operators on the table and place it on the pad to complete the equation.",
+      "documentation_task": "solve_equation"
+    },
+    "sort_nesting_dolls_by_size": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/sort-nesting-dolls-by-size/",
+      "instruction": "Arrange the five nesting dolls in a row from left to right, from smallest to largest.",
+      "description": "There are five nesting dolls of different sizes on the table. The robot needs to sort them by size and arrange them in a straight row from left to right, from smallest to largest.",
+      "documentation_task": "sort_nesting_dolls_by_size"
+    },
+    "sort_nesting_dolls_by_size_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/sort-nesting-dolls-by-size/",
+      "instruction": "Arrange the five nesting dolls in a row from left to right, from smallest to largest.",
+      "description": "There are five nesting dolls of different sizes on the table. The robot needs to sort them by size and arrange them in a straight row from left to right, from smallest to largest.",
+      "documentation_task": "sort_nesting_dolls_by_size"
+    },
+    "stack_blocks": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/stack-blocks/",
+      "instruction": "Stack the three blocks with different textures.",
+      "description": "There are three blocks with different textures on the table. The robot needs to pick them up and stack them into a stable pile.",
+      "documentation_task": "stack_blocks"
+    },
+    "stack_blocks_by_language": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/stack-blocks-by-language/",
+      "instruction": "Stack the three blocks on top of each other in the order of color₁, color₂, and color₃, then reset the robot arm.",
+      "description": "There are several colored blocks. The robot needs to understand the language instruction and stack the blocks in the specified color order.",
+      "documentation_task": "stack_blocks_by_language"
+    },
+    "stack_blocks_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/stack-blocks/",
+      "instruction": "Stack the three blocks with different textures.",
+      "description": "There are three blocks with different textures on the table. The robot needs to pick them up and stack them into a stable pile.",
+      "documentation_task": "stack_blocks"
+    },
+    "stack_bowls": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/stack-bowls/",
+      "instruction": "Stack the three bowls together.",
+      "description": "There are three bowls. The robot needs to stack all the bowls together.",
+      "documentation_task": "stack_bowls"
+    },
+    "stack_bowls_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/stack-bowls/",
+      "instruction": "Stack the three bowls together.",
+      "description": "There are three bowls. The robot needs to stack all the bowls together.",
+      "documentation_task": "stack_bowls"
+    },
+    "store_laptop_and_headphones": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/store-laptop-and-headphones/",
+      "instruction": "Hang the headphones on the headphone stand, close the laptop, then place it into the vertical laptop stand.",
+      "description": "There is an open laptop on a laptop stand, a vertical laptop stand, a pair of headphones, and a headphone stand. The laptop opening angle is random but greater than 30 degrees. The robot needs to first hang the headphones on the headphone stand, then close the laptop, pick it up from the stand, and insert it into the vertical laptop stand.",
+      "documentation_task": "store_laptop_and_headphones"
+    },
+    "store_laptop_and_headphones_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/store-laptop-and-headphones/",
+      "instruction": "Hang the headphones on the headphone stand, close the laptop, then place it into the vertical laptop stand.",
+      "description": "There is an open laptop on a laptop stand, a vertical laptop stand, a pair of headphones, and a headphone stand. The laptop opening angle is random but greater than 30 degrees. The robot needs to first hang the headphones on the headphone stand, then close the laptop, pick it up from the stand, and insert it into the vertical laptop stand.",
+      "documentation_task": "store_laptop_and_headphones"
+    },
+    "store_tools_in_toolbox": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/store-tools-in-toolbox/",
+      "instruction": "Place each tool into its matching position in the toolbox, then reset the robot arm.",
+      "description": "There are several tools and a toolbox with designated slots. The robot needs to pick up each tool and place it into the corresponding position in the toolbox.",
+      "documentation_task": "store_tools_in_toolbox"
+    },
+    "swap_T": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/swap-t/",
+      "instruction": "Pick up the two T-shaped blocks, swap their positions, and place them back with the correct orientations.",
+      "description": "There are two T-shaped blocks on the table. The robot needs to grasp them with both hands, swap their positions, and place them back so that each block matches the original pose of the other one, including both position and orientation. This is a memory-based task.",
+      "documentation_task": "swap_T"
+    },
+    "swap_blocks": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/swap-blocks/",
+      "instruction": "Swap the two blocks using the empty mat, pressing the button after each move.",
+      "description": "There are three mats, two blocks placed on two of the mats, and one button. The robot needs to swap the positions of the two blocks by using the empty mat as a temporary place. After each move, the robot must press the button.",
+      "documentation_task": "swap_blocks"
+    },
+    "sweep_blocks": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/sweep-blocks/",
+      "instruction": "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.",
+      "description": "There is a broom and a dustpan on the left side, and the blocks are on the right side. The robot needs to pick up the broom, hand it over to the right hand, grasp the dustpan with the left hand, and sweep the blocks into the dustpan.",
+      "documentation_task": "sweep_blocks"
+    },
+    "sweep_blocks_random": {
+      "source": "https://robodojo-benchmark.com/doc/sim-tasks/sweep-blocks/",
+      "instruction": "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.",
+      "description": "There is a broom and a dustpan on the left side, and the blocks are on the right side. The robot needs to pick up the broom, hand it over to the right hand, grasp the dustpan with the left hand, and sweep the blocks into the dustpan.",
+      "documentation_task": "sweep_blocks"
+    }
+  }
+}

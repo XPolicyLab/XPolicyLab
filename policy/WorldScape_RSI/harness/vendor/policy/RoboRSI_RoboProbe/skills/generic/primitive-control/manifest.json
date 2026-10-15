@@ -1,0 +1,13 @@
+{
+  "id": "primitive-control",
+  "version": "1.1.0",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "stages": [
+    "control"
+  ],
+  "dependencies": [],
+  "artifact_type": "primitive",
+  "description": "RoboProbe \u52a8\u4f5c\u539f\u8bed",
+  "implementation": "reviewed_in_process_dispatch"
+}

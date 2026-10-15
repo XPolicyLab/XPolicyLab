@@ -27,7 +27,7 @@ conda activate "${policy_conda_env}"
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
-    python "${XPL_ROOT}/setup_policy_server.py" \
+    python "${SCRIPT_DIR}/server.py" \
         --config_path "${yaml_file}" \
         --overrides \
             port="${policy_server_port}" \

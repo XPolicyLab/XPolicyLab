@@ -1,0 +1,17 @@
+{
+  "id": "toolbox-demo-placement",
+  "version": "1.0.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "工具箱：从夹稳到入槽",
+  "implementation": "text"
+}

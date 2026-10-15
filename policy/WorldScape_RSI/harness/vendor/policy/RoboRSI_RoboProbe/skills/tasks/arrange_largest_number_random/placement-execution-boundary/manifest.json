@@ -1,0 +1,13 @@
+{
+  "id": "placement-execution-boundary",
+  "version": "0.2.0-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "数字摆放的执行与终止边界",
+  "implementation": "text"
+}

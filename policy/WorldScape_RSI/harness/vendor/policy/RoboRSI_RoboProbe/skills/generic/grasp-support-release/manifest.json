@@ -1,0 +1,14 @@
+{
+  "id": "grasp-support-release",
+  "version": "0.1.0-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "抓取搬运和放置时分别确认执行、物体随动、支撑与释放，避免将到位或闭爪误认为任务成功。",
+  "implementation": "text"
+}
