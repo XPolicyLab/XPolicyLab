@@ -1,0 +1,13 @@
+{
+  "id": "classify-evidence-checkpoints",
+  "version": "0.4.0-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "分类、持物与释放检查",
+  "implementation": "text"
+}

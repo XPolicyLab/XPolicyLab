@@ -1,0 +1,1 @@
+{"id": "robodojo-stack-bowls", "version": "v-084d37690802", "interface": "roborsi.public.v1", "kind": "text", "implementation": "text", "stages": ["think", "control", "feedback"], "dependencies": [], "description": "# \u4e09\u7897\u7a33\u5b9a\u53e0\u653e\u4e0e\u5f52\u4f4d"}

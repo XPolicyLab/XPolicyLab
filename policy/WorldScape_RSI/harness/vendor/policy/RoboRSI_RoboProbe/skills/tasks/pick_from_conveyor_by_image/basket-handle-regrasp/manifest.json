@@ -1,0 +1,14 @@
+{
+  "id": "basket-handle-regrasp",
+  "version": "0.4.1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "篮筐重抓、脱钩与装载后抬升",
+  "implementation": "text"
+}

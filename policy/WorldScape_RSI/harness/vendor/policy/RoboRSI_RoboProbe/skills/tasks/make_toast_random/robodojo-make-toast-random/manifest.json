@@ -1,0 +1,1 @@
+{"id": "robodojo-make-toast-random", "version": "v-084d37690802", "interface": "roborsi.public.v1", "kind": "text", "implementation": "text", "stages": ["think", "control", "feedback"], "dependencies": [], "description": "# \u4e24\u7247\u9762\u5305\u5165\u69fd\u3001\u538b\u6746\u5e76\u5f52\u4f4d"}

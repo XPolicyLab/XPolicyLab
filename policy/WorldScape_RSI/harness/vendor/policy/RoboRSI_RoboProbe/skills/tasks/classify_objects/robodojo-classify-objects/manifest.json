@@ -1,0 +1,13 @@
+{
+  "id": "robodojo-classify-objects",
+  "version": "0.2.0-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "RoboDojo 物体分类与双臂分工",
+  "implementation": "text"
+}

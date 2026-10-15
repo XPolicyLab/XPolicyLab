@@ -2,71 +2,14 @@ policy_name: WorldScape_RSI
 protocol: ws
 host: localhost
 port: null
-bench_name: null
+bench_name: RoboDojo
 task_name: null
 ckpt_name: null
-env_cfg_type: null
-seed: null
+env_cfg_type: arx_x5
+seed: 0
 action_type: joint
 gpu_id: null
 eval_batch: false
-request_timeout_s: 1200
-max_connect_attempts: 600
-connect_retry_delay_s: 1
-max_connect_seconds: 1200
-ws_ping_interval_s: 20
-ws_ping_timeout_s: 1200
-wam: {}
-vlm_agent:
-  vlm_profile: null
-  cameras:
-  - cam_head
-  - cam_left_wrist
-  - cam_right_wrist
-  image_max_width: 640
-  jpeg_quality: 80
-  max_tokens: 8000
-  temperature: null
-  reasoning_effort: high
-  request_timeout_s: 600.0
-  max_attempts: 6
-  retry_delay_s: 2.0
-  decision_budget_s: 660.0
-  max_decisions: 240
-  max_zero_progress: 5
-  max_consecutive_errors: 2
-  episode_budget_s: 9000.0
-  log_dir: eval_result/_vlm_logs
-  log_images: true
-  measure_gripper: true
-  grasp_open_threshold: 0.05
-  visual_aids:
-    markers: true
-    grid: true
-    enhance: true
-  main:
-    profile: null
-    max_commands_per_turn: 4
-    history_turns: 12
-    memory_history: true
-    memory_scratchpad: true
-    done_limit: 3
-    home_plan_steps: 10000
-    max_plan_steps: 10000
-    motion_settle_steps: 10
-    tcp_offset_m: 0.145
-  icl:
-    demo_bank: icl
-    demo_count: 1
-  curobo:
-    max_plan_steps: 60
-    stride: null
-  controller:
-    gripper_steps: 6
-    hold_steps: 3
-    table_z: 0.765
-    control_hz: 25.0
-
-jev:
-  mode: learned
-  checkpoint: checkpoints/jev.pt
+release_path: harness/release.json
+# Pin the release.json SHA256 when launching a reproducible campaign.
+release_sha256: null

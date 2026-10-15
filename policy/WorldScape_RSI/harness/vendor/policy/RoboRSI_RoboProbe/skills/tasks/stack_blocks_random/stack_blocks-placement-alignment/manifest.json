@@ -1,0 +1,16 @@
+{
+  "id": "stack_blocks-placement-alignment",
+  "version": "0.1.0-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "放置前的腕部视觉对齐",
+  "implementation": "text"
+}

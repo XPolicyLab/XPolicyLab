@@ -1,9 +1,0 @@
-# press_by_number — development v2
-
-Read and remember both number cards from current RGB before they disappear. Re-localize the two red caps and blue confirmation cap every episode. Never obtain required counts from layout/state internals.
-
-Use closed fingers as a pressing tool. Approach above the cap, align using wrist and head views, descend once, inspect cap displacement, then retract vertically to release. Maintain separate intended, visually confirmed, and uncertain press counts. Do not equate a failed endpoint or partial movement with no contact: a button may already have activated. Do not blindly retry an uncertain contact, especially when the required count is one. Verified task mechanics from read-only native task source: complete first red count with full release after each press, press and release blue once, complete second red count, then press and release blue again and return arms home. The brief language instruction omits the intermediate confirmation. Never inspect live internal counts or card values; read number cards from RGB. Preserve the native 700-step budget and actual per-control-step recording.
-
-Evidence: baseline press_by_number-s0-l0-5bb7217a55bb ended unsuccessfully at114/700 after two descents toward the first red button. First descent reported partial motion and next attempt terminated. Possible duplicate activation is a hypothesis, not a measured internal event. Changed strategy must be verified visually and by terminal native success.
-
-Current user authorizes self-success full-trajectory ICL. Build only after native success and valid budget-compliant recording; retain all decisions, real state/actions/effects and terminal three cameras. Do not fabricate clean status or discard recovery decisions. Prior official-only guidance is superseded by this current authorization.

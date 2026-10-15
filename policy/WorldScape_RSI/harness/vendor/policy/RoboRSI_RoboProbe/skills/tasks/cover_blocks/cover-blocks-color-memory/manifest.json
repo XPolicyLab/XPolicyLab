@@ -1,0 +1,13 @@
+{
+  "id": "cover-blocks-color-memory",
+  "version": "0.2.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "覆盖积木的颜色与顺序记忆",
+  "implementation": "text"
+}

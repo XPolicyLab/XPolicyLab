@@ -1,8 +1,9 @@
 numpy>=1.24
 Pillow>=10
 PyYAML>=6
-torch>=2.6
-websocket-client>=1.6
-msgpack>=1
+scipy>=1.10
+transforms3d>=0.4
+shapely>=2
+websockets>=15,<16
+msgpack>=1.1,<2
 msgpack-numpy>=0.4.8
-websockets>=12

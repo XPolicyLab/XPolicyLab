@@ -1,0 +1,12 @@
+{
+  "python_files": 684,
+  "shell_files": 4,
+  "passed": true,
+  "method": "compile(source, filename, exec) and bash -n",
+  "git_diff_check": "passed",
+  "deploy_schema": "passed",
+  "adjacent_wsp_files_verified_per_profile": 217,
+  "old_router_and_icl_removed": true,
+  "scope": "policy/WorldScape_RSI only",
+  "rgb_audit": "No runtime decoder/channel-swap hits; upstream CuRobo example decodes an in-memory plot, and protocol fixture generates legacy JPEG only for transport regression."
+}

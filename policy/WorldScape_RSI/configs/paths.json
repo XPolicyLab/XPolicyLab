@@ -1,6 +1,0 @@
-{
-  "benchmark": "/ML-vePFS/model_partner/ken/RoboDojo",
-  "experiment_root": "/ML-vePFS/model_partner/ken/RoboDojo/robodojo/recordings",
-  "final_root": "/ML-vePFS/model_partner/ken/RoboDojo/robodojo/final_eval_42tasks",
-  "runtime": "/ML-vePFS/model_partner/ken/RoboDojoAgent/runtime"
-}

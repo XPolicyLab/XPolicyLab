@@ -1,0 +1,13 @@
+{
+  "id": "fold-withdrawal-feedback",
+  "version": "0.8.0-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "折衣回执与条件性撤离",
+  "implementation": "text"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "conveyor-receipt-gate",
+  "version": "0.3.0-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "轨迹、夹爪回执与终止状态核对",
+  "implementation": "text"
+}

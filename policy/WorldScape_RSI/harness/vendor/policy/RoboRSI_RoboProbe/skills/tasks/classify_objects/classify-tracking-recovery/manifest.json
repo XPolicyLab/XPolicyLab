@@ -1,0 +1,13 @@
+{
+  "id": "classify-tracking-recovery",
+  "version": "0.4.0-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "分类搬运中的执行核对与停滞恢复",
+  "implementation": "text"
+}

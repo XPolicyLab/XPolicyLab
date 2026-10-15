@@ -1,0 +1,18 @@
+{
+  "id": "equation-tile-placement",
+  "version": "0.3.3-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "robot-action-timing",
+    "robot-action-timing-tool",
+    "tabletop-handoff"
+  ],
+  "artifact_type": "skill",
+  "description": "算式薄片选择与放置",
+  "implementation": "text"
+}

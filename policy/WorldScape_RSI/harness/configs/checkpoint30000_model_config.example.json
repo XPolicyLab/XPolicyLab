@@ -1,0 +1,52 @@
+{
+  "policy_name": "WorldScape_Policy_2",
+  "protocol": "ws",
+  "host": "127.0.0.1",
+  "port": 19090,
+  "bench_name": "RoboDojo",
+  "ckpt_name": "Pending: robodojo-nonmem-mixed-nextstate-zscore-clip5-h24-c1-nofpa-mosaic-gcoff-20261012-run01-checkpoint-30000-no-qwen",
+  "env_cfg_type": "arx_x5",
+  "seed": 0,
+  "action_type": "joint",
+  "eval_batch": false,
+  "runtime_profile": "robodojo",
+  "worldscape_root": "Pending: worldscape-policy",
+  "checkpoint_path": "Pending: robodojo-nonmem-mixed-nextstate-zscore-clip5-h24-c1-nofpa-mosaic-gcoff-20261012-run01-checkpoint-30000-no-qwen",
+  "device": "cuda",
+  "mode": "interactive",
+  "multi_gpu": {
+    "enabled": false
+  },
+  "input_color_order": "bgr",
+  "policy_image_interpolation": "bilinear_antialias",
+  "diffusion_view_layout": "mosaic_2x2",
+  "action_horizon": 24,
+  "replan_steps": 24,
+  "observation_interval": 3,
+  "observation_history_segments": 1,
+  "use_observation_history": false,
+  "use_causal_memory": false,
+  "wam_history_mode": "periodic",
+  "short_window_for_non_memory_tasks": false,
+  "memory_window_chunks": null,
+  "ordinary_window_chunks": null,
+  "reset_independent_blocks": true,
+  "single_window_reference": "latest",
+  "constrain_action_padding": true,
+  "default_instruction": "follow the instruction",
+  "t5_prompt_template": "A video shows that a robot {instruction} The robot {instruction}",
+  "interactive_qwen": {
+    "enabled": false
+  },
+  "press_by_number_prompt": {
+    "enabled": false
+  },
+  "validate_checkpoint_artifacts": true,
+  "request_timeout_s": 1200,
+  "max_connect_attempts": 600,
+  "connect_retry_delay_s": 1,
+  "max_connect_seconds": 1200,
+  "ws_ping_interval_s": 20,
+  "ws_ping_timeout_s": 1200,
+  "gpu_id": 0
+}

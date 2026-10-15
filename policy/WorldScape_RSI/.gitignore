@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-checkpoints/
-eval_result/
-secrets.json
-icl/**/*.jpg
-icl/**/*.jpeg
-icl/**/*.png
-icl/**/*.mp4

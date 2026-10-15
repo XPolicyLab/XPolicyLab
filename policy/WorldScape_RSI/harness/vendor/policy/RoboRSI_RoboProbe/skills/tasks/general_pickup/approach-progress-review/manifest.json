@@ -1,0 +1,14 @@
+{
+  "id": "approach-progress-review",
+  "version": "0.1.0-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [],
+  "description": "重复接近动作的进展复核",
+  "implementation": "text"
+}

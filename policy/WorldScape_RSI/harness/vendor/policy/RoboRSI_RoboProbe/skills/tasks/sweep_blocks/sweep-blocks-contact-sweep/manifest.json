@@ -1,0 +1,16 @@
+{
+  "id": "sweep-blocks-contact-sweep",
+  "version": "1.0.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "刷毛先行，保留已收集块",
+  "implementation": "text"
+}

@@ -1,155 +1,173 @@
-"""XPolicyLab policy-server entry point for the RoboDojo VLM agent.
-
-The policy server instantiates ``Model(deploy_cfg)`` from ``deploy.yml`` and
-then dispatches every ``model_client.call(func_name=...)`` onto a method of
-this class, each on a worker thread. All VLM traffic happens here, in a plain
-CPU process - the Isaac Sim client never talks to the VLM directly.
-"""
-
+"""Standard XPolicyLab adapter for a frozen development Harness release."""
 from __future__ import annotations
 
-import json
-import os
-import re
-import time
+from collections import deque
+from pathlib import Path
+import threading
 
 from XPolicyLab.model_template import ModelTemplate
 
-from .agent import AgentConfig, VLMAgent
-from .vlm_client import PROFILE_ENV_VAR, VLMClient, load_vlm_profile
-
-# JSON blob merged over the deploy.yml `vlm_agent` block, for one-off runs
-# (`VLM_AGENT_OVERRIDES='{"cameras": ["cam_head", "cam_left_wrist"]}'`).
-OVERRIDES_ENV_VAR = "VLM_AGENT_OVERRIDES"
+from . import contracts
+from .release import FrozenRelease, ROOT
+from .plans import RepeatedAction
 
 
 class Model(ModelTemplate):
-    """Closed-loop VLM policy: image and state in, one motion envelope out."""
+    def __init__(self, model_cfg):
+        super().__init__()
+        self.model_cfg = dict(model_cfg)
+        for key, expected in (("bench_name", "RoboDojo"), ("env_cfg_type", "arx_x5"),
+                              ("action_type", "joint"), ("policy_name", "WorldScape_RSI")):
+            if self.model_cfg.get(key) != expected:
+                raise ValueError("Unsupported deployment field: " + key)
+        if self.model_cfg.get("eval_batch"):
+            raise ValueError("Use one model process per environment; eval_batch=false")
+        forbidden = {"routes", "backends", "checkpoint_path", "model", "effort",
+                     "wam", "wam_skills", "route_mode", "jev", "jev_checkpoint"}
+        if forbidden.intersection(self.model_cfg):
+            raise ValueError("Change a release, not per-task model or routing overrides")
+        path = Path(self.model_cfg.get("release_path", "harness/release.json"))
+        self.release = FrozenRelease(path if path.is_absolute() else ROOT.parent / path,
+                                     self.model_cfg.get("release_sha256"))
+        if self.release.root != ROOT:
+            raise ValueError("Install and launch the frozen adapter beside its release manifest")
+        self.dims = contracts.action_dimensions(self.model_cfg["env_cfg_type"])
+        self._lock = threading.RLock()
+        self._task = self.model_cfg.get("task_name")
+        self._backend = None
+        self._backend_name = None
+        self._queue = deque()
+        self._repeat_action = None
+        self._repeat_remaining = 0
+        self._pending = None
+        self._observation = None
+        self._planned = self._executed = 0
+        self._failed = False
+        self._ready = False
 
-    def __init__(self, model_cfg: dict):
-        self.model_cfg = dict(model_cfg or {})
-        raw_cfg = dict(self.model_cfg.get("vlm_agent") or {})
-        raw_cfg.update(_env_overrides())
-
-        from . import open_restore
-        task_name = self.model_cfg.get("task_name") or os.environ.get("RDA_TASK", "task")
-        selected_agent = open_restore.module(task_name, "agent")
-        self.cfg = selected_agent.AgentConfig(raw_cfg)
-        desktop_root = os.environ.get('ROBODAWN_DESKTOP_BRIDGE')
-        profile = ({'name': 'codex-desktop'} if desktop_root else
-                   load_vlm_profile(os.environ.get(PROFILE_ENV_VAR) or self.cfg.vlm_profile))
-        self.cfg.vlm_profile = profile["name"]
-        if desktop_root:
-            from .desktop_client import DesktopClient
-            self.client = DesktopClient(desktop_root)
-        else:
-            self.client = VLMClient(
-            profile,
-            timeout_s=self.cfg.request_timeout_s,
-            max_attempts=self.cfg.max_attempts,
-            retry_delay_s=self.cfg.retry_delay_s,
-        )
-
-        task_name = self.model_cfg.get("task_name") or "task"
-        profile_tag = re.sub(r"[^A-Za-z0-9._-]", "_", profile["name"])
-        run_tag = os.environ.get("VLM_AGENT_RUN_TAG") or f"{task_name}_{profile_tag}_{time.strftime('%Y-%m-%d_%H-%M-%S')}"
-        if re.fullmatch(r"[A-Za-z0-9._-]+", run_tag) is None or run_tag in (".", ".."):
-            raise ValueError("VLM_AGENT_RUN_TAG must be a simple directory name")
-        from .attack_mode import AttackClient
-        self.client = AttackClient(self.client, task_name)
-        self.agent = selected_agent.VLMAgent(self.cfg, self.client, run_tag=run_tag, task_name=task_name)
-
-        # RoboDojo only uses action_type to label the result directory; the
-        # environment infers the real type from each action's keys. The planned
-        # trajectories are joint actions, so the label must say so.
-        action_type = self.model_cfg.get("action_type")
-        if action_type not in (None, "joint"):
-            print(
-                f"[vlm_agent] WARNING: action_type={action_type!r} but the policy emits joint actions; "
-                "run it with --action-type joint",
-                flush=True,
-            )
-
-        print(
-            "[vlm_agent] ready\n"
-            f"  profile    : {self.cfg.vlm_profile}\n"
-            f"  model      : {self.client.model}\n"
-            f"  task       : {task_name}\n"
-            f"  demo bank  : {self.cfg.icl['demo_bank']}\n"
-            f"  cameras    : {self.cfg.cameras}\n"
-            f"  logs       : {self.agent.run_root}",
-            flush=True,
-        )
-
-    # ------------------------------------------------- XPolicyLab model hooks
-
-    def update_obs(self, obs):
-        """Take one RoboDojo observation (images already decoded by the server)."""
-        self.agent.observe(obs)
-
-    def get_action(self):
-        """Return this decision's motion envelope (see ``motion.py``)."""
-        from .attack_mode import enabled
-        self.client.begin()
-        action = self.agent.act()
-        if enabled() and self.client.control:
-            action = dict(action)
-            action['attack_control'] = self.client.control
-        return action
-
-    def adaptive_call(self, obs):
-        from .adaptive.server import rpc
-        return rpc(self, obs)
-
-    def select_executor(self, obs):
-        from .execution_router import select
-        from .skill_pool import guidance
-        from .agent import encode_jpeg
-        if getattr(self, "_executor_decision", None) is None:
-            self.agent._ensure_icl()
-            self._executor_decision = select(self.client, obs,
-                lambda image: encode_jpeg(image, self.cfg.image_max_width, self.cfg.jpeg_quality),
-                self.cfg.decision_budget_s, demos=[d for d in (self.agent.icl_demos or ()) if d.kind != "rsi1_approved_release"])
-        from .open_restore import metadata
-        self._executor_decision['open_restoration'] = metadata(self.agent.task_name)
-        self.agent.execution_skill_text = guidance(self._executor_decision)
-        return self._executor_decision
+    def prepare_case(self, meta):
+        with self._lock:
+            task = meta.get("task_name")
+            case = meta.get("action_case_id")
+            if task is None and isinstance(case, str) and case.endswith("_case"):
+                task = case[:-5]
+            if task is None:
+                task = self._task
+            if task is None:
+                raise ValueError("Public task metadata is required for Skill loading")
+            if case is not None and case != task + "_case":
+                raise ValueError("Conflicting task and action-case metadata")
+            if self._ready and task != self._task:
+                raise RuntimeError("End the current trial before changing its task")
+            self._task = task
+            return {"ok": True}
 
     def reset(self):
-        """Clear history at the start of an episode."""
-        self._executor_decision = None
-        self.agent.reset()
-        print(f"[vlm_agent] episode {self.agent.episode_index} start", flush=True)
+        with self._lock:
+            self._ready = False
+            self._failed = True
+            self._queue.clear()
+            self._repeat_action = None
+            self._repeat_remaining = 0
+            self._pending = self._observation = None
+            old, self._backend = self._backend, None
+            if old is not None:
+                old.close()
+            self.release.verify()
+            if self._task is None:
+                raise ValueError("prepare_case or task_name is required before reset")
+            name, spec = "inner_agent", self.release.agent_spec()
+            from .backends import build_backend
+            backend = build_backend(name, spec, self._task, self.model_cfg)
+            try:
+                backend.reset()
+            except BaseException:
+                backend.close()
+                raise
+            self._backend, self._backend_name = backend, name
+            self._planned = self._executed = 0
+            self._failed = False
+            self._ready = True
+            return {"ok": True}
 
-    def report_execution(self, obs):
-        """Custom RPC: the sim client reports what it actually executed.
+    def _check(self):
+        if self._failed or not self._ready:
+            raise RuntimeError("Trial is unavailable; a confirmed reset is required")
+        self.release.verify()
 
-        Called by ``deploy.eval_one_episode`` after every chunk, so the next
-        prompt can mention IK failures, truncated chunks and the steps used.
-        """
-        self.client.feedback = obs.get('attack_feedback')
-        self.agent.note_execution(obs)
-        return {"ok": True}
+    def update_obs(self, raw):
+        with self._lock:
+            try:
+                self._check()
+                if self._observation is not None and self._pending is None:
+                    raise RuntimeError("Duplicate observation without an intervening action")
+                clean = contracts.observation(raw, self.dims)
+                interrupted = self._backend.observe(clean, self._pending)
+                if self._pending is not None:
+                    self._executed += 1
+                    if interrupted:
+                        self._queue.clear()
+                        self._repeat_remaining = 0
+                    if not self._queue and not self._repeat_remaining:
+                        self._backend.completed(self._executed, self._planned, interrupted)
+                self._pending = None
+                self._observation = clean
+            except BaseException:
+                self._failed = True
+                raise
 
-    # RoboDojo only calls these when deploy.yml sets eval_batch: true. The VLM
-    # loop is sequential by construction, so fail loudly instead of silently
-    # evaluating a single env.
-    def update_obs_batch(self, obs_list):
-        raise NotImplementedError("vlm_agent runs one env at a time; keep eval_batch: false")
+    def get_action(self):
+        with self._lock:
+            try:
+                self._check()
+                if self._observation is None or self._pending is not None:
+                    raise RuntimeError("A fresh execution observation is required")
+                if not self._queue and not self._repeat_remaining:
+                    chunk = self._backend.plan()
+                    if isinstance(chunk, RepeatedAction):
+                        self._repeat_action = contracts.action(chunk.action, self.dims)
+                        self._repeat_remaining = chunk.count
+                        self._planned, self._executed = chunk.count, 0
+                    else:
+                        if not isinstance(chunk, (list, tuple)) or not chunk:
+                            raise ValueError("Backend returned no native actions")
+                        # Validate the entire proposal before exposing its first action.
+                        self._queue.extend(contracts.action(item, self.dims) for item in chunk)
+                        self._planned, self._executed = len(self._queue), 0
+                if self._repeat_remaining:
+                    next_action = contracts.action(self._repeat_action, self.dims)
+                    self._repeat_remaining -= 1
+                else:
+                    next_action = self._queue.popleft()
+                self._backend.before(next_action)
+                self._pending = next_action
+                return [{key: value.copy() for key, value in next_action.items()}]
+            except BaseException:
+                self._failed = True
+                raise
 
-    def get_action_batch(self, env_idx_list=None):
-        raise NotImplementedError("vlm_agent runs one env at a time; keep eval_batch: false")
+    def update_obs_batch(self, *args, **kwargs):
+        raise NotImplementedError("One independent policy process per environment")
 
+    def get_action_batch(self, *args, **kwargs):
+        raise NotImplementedError("One independent policy process per environment")
 
-def _env_overrides() -> dict:
-    raw = os.environ.get(OVERRIDES_ENV_VAR)
-    if not raw:
-        return {}
-    try:
-        parsed = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"{OVERRIDES_ENV_VAR} is not valid JSON: {exc}") from exc
-    if not isinstance(parsed, dict):
-        raise TypeError(f"{OVERRIDES_ENV_VAR} must be a JSON object, got {type(parsed).__name__}")
-    print(f"[vlm_agent] applying {OVERRIDES_ENV_VAR}: {sorted(parsed)}", flush=True)
-    return parsed
+    def release_metadata(self):
+        return {"release_sha256": self.release.sha256, "task": self._task,
+                "executor": self._backend_name, "selection_scope": "agent_selected_skill",
+                "official_single_entry_eligible": False, "eligibility_status": "unverified"}
+
+    def close(self):
+        with self._lock:
+            self._ready = False
+            self._queue.clear()
+            self._repeat_action = None
+            self._repeat_remaining = 0
+            self._pending = self._observation = None
+            old, self._backend = self._backend, None
+            if old is not None:
+                old.close()
+
+    def on_trial_end(self, result):
+        self.close()
+        return {"ok": True, "session_released": True}

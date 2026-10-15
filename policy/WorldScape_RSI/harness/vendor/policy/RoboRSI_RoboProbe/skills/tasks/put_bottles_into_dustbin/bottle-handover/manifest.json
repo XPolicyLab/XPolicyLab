@@ -1,0 +1,17 @@
+{
+  "id": "bottle-handover",
+  "version": "0.2.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "robot-action-timing-tool",
+    "tabletop-handoff"
+  ],
+  "artifact_type": "skill",
+  "description": "瓶子抓取、换手与入桶核查",
+  "implementation": "text"
+}

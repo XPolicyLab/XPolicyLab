@@ -1,0 +1,16 @@
+{
+  "id": "robot-action-timing",
+  "version": "1.6.1-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "robot-action-timing-tool"
+  ],
+  "artifact_type": "skill",
+  "description": "按执行反馈安排移动、夹持、释放和撤离，减少无效等待；服从任务明确的接触、时长与顺序要求",
+  "implementation": "text"
+}

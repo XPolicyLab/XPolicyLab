@@ -1,0 +1,1 @@
+{"id": "number-order-recovery", "version": "v-084d37690802", "interface": "roborsi.public.v1", "kind": "text", "implementation": "text", "stages": ["think", "control", "feedback"], "dependencies": [], "description": "# Arrange largest number\uff1a\u9010\u724c\u6446\u653e\u3001\u6062\u590d\u4e0e\u539f\u751f\u7ed3\u675f\u786e\u8ba4"}

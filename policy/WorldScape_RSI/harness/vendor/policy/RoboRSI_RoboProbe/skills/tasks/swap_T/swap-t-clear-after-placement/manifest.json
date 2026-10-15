@@ -1,0 +1,16 @@
+{
+  "id": "swap-t-clear-after-placement",
+  "version": "0.1.2-rgb-r1-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "交换放置后的预算与清障",
+  "implementation": "text"
+}

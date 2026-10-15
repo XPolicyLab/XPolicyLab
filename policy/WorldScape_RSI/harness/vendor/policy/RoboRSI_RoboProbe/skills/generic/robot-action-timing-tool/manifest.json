@@ -1,0 +1,13 @@
+{
+  "id": "robot-action-timing-tool",
+  "version": "1.6.0-roboprobe-v17-frame-doc-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "stages": [
+    "control"
+  ],
+  "dependencies": [],
+  "artifact_type": "primitive",
+  "description": "基于 RoboProbe 的动作生成",
+  "implementation": "reviewed_in_process_dispatch"
+}

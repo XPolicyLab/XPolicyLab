@@ -1,0 +1,60 @@
+{
+  "runtime_profile": "robodojo",
+  "policy_name": "WorldScape_Policy_2",
+  "protocol": "ws",
+  "host": "127.0.0.1",
+  "port": 19090,
+  "bench_name": "RoboDojo",
+  "ckpt_name": "Pending: robodojo-joint-abs-mem-all-interactive-none-24chunks-2node-16gpu-checkpoint-20000-no-qwen",
+  "env_cfg_type": "arx_x5",
+  "seed": 0,
+  "action_type": "joint",
+  "eval_batch": false,
+  "multi_gpu": {
+    "enabled": false
+  },
+  "device": "cuda",
+  "input_color_order": "bgr",
+  "constrain_action_padding": true,
+  "observation_history_segments": 8,
+  "use_observation_history": true,
+  "use_causal_memory": true,
+  "wam_history_mode": "rolling",
+  "short_window_for_non_memory_tasks": false,
+  "reset_independent_blocks": false,
+  "default_instruction": "follow the instruction",
+  "t5_prompt_template": null,
+  "interactive_qwen": {
+    "enabled": false
+  },
+  "press_by_number_prompt": {
+    "enabled": false,
+    "batch_size": 4
+  },
+  "request_timeout_s": 1200,
+  "max_connect_attempts": 600,
+  "connect_retry_delay_s": 1,
+  "max_connect_seconds": 1200,
+  "ws_ping_interval_s": 20,
+  "ws_ping_timeout_s": 1200,
+  "worldscape_root": "Pending: worldscape-policy",
+  "mode": "interactive",
+  "action_horizon": 24,
+  "replan_steps": 24,
+  "observation_interval": 3,
+  "diffusion_view_layout": "mosaic_2x2",
+  "diffusion_concat_view_order": [
+    0,
+    2,
+    1
+  ],
+  "single_window_reference": "first",
+  "diffusion_concat_height": 256,
+  "diffusion_concat_width": 224,
+  "memory_window_chunks": null,
+  "ordinary_window_chunks": null,
+  "validate_checkpoint_artifacts": true,
+  "gpu_id": 0,
+  "checkpoint_path": "Pending: robodojo-joint-abs-mem-all-interactive-none-24chunks-2node-16gpu-checkpoint-20000-no-qwen",
+  "policy_image_interpolation": "area"
+}

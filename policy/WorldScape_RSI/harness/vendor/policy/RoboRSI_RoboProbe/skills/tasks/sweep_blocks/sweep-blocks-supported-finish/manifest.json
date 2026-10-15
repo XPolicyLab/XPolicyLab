@@ -1,0 +1,16 @@
+{
+  "id": "sweep-blocks-supported-finish",
+  "version": "1.0.0-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "受支撑的收尾与落块恢复",
+  "implementation": "text"
+}

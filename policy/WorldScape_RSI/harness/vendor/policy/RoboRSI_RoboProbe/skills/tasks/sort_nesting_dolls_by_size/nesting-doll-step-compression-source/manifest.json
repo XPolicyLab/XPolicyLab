@@ -1,0 +1,18 @@
+{
+  "id": "nesting-doll-step-compression-source",
+  "version": "0.6.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "robot-action-timing",
+    "robot-action-timing-tool",
+    "tabletop-handoff"
+  ],
+  "artifact_type": "skill",
+  "description": "双臂就近排列套娃",
+  "implementation": "text"
+}

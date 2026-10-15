@@ -1,0 +1,13 @@
+{
+  "id": "cover-blocks-cup-transfer",
+  "version": "0.3.0-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "覆盖积木的杯体搬运与双臂预定位",
+  "implementation": "text"
+}

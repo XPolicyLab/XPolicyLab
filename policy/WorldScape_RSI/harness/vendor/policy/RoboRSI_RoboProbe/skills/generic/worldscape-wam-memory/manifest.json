@@ -1,0 +1,13 @@
+{
+  "id": "worldscape-wam-memory",
+  "version": "1.0.0",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "artifact_type": "tool",
+  "stages": [
+    "predict"
+  ],
+  "dependencies": [],
+  "description": "Checkpoint-backed WorldScape WAM (memory) action chunk inside the inner Agent.",
+  "implementation": "reviewed_in_process_dispatch"
+}

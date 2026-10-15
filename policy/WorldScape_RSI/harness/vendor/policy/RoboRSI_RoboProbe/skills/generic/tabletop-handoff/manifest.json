@@ -1,0 +1,14 @@
+{
+  "id": "tabletop-handoff",
+  "version": "0.1.0-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "一臂无法独立完成搬运时，通过双方可达的稳定支撑区放下、退出并换臂重抓",
+  "implementation": "text"
+}

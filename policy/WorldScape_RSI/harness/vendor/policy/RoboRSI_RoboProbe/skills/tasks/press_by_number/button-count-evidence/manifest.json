@@ -1,0 +1,16 @@
+{
+  "id": "button-count-evidence",
+  "version": "1.0.1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "按放计数与流程参考",
+  "implementation": "text"
+}
