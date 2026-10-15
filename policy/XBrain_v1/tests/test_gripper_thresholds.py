@@ -23,7 +23,7 @@ EXPECTED_OVERRIDES = {
     ("piper_x", "sweep_blocks"): (0.35, 0.30, 1.3, 1.3),
     ("piper_x", "hang_mugs"): (0.15, 0.15, 1.15, 1.15),
     ("piper", "fill_pen_holder"): (0.20, 0.20, 1.0, 1.0),
-    ("piper", "put_objects_into_basket"): (0.25, 0.25, 1.0, 1.0),
+    ("piper", "put_objects_into_basket"): (0.22, 0.22, 1.0, 1.0),
     ("piper", "stack_bowls"): (0.25, 0.25, 1.5, 1.5),
     ("piper", "stand_up_bottles"): (0.70, 0.70, 1.2, 1.2),
     ("piper", "insert_charger"): (0.35, 0.35, 1.1, 1.1),

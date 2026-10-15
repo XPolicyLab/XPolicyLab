@@ -155,19 +155,19 @@ Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
 preserved, its prefix uses the default horizon, and the server logs a warning once.
 
-Task-specific settings updated on 2026-10-13:
+Task-specific settings updated on 2026-10-14:
 
 | Robot | Task | Left threshold | Right threshold | Left scale | Right scale | Returned steps |
 |---|---|---:|---:|---:|---:|---:|
 | PiperX | `cap_pen` | 0.15 | 0.15 | 1.3 | 1.3 | 30 |
-| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 | 20 |
+| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 | 30 |
 | PiperX | `disassemble_LEGO` | 0.25 | 0.25 | 1.3 | 1.3 | 30 |
 | PiperX | `hang_mugs` | 0.15 | 0.15 | 1.15 | 1.15 | 30 |
 | PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 | 20 |
-| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 30 |
+| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 40 |
 | Piper | `fill_pen_holder` | per-episode | per-episode | per-episode | per-episode | 40 |
 | Piper | `insert_charger` | 0.35 | 0.35 | 1.1 | 1.1 | 20 |
-| Piper | `put_objects_into_basket` | 0.25 | 0.25 | 1.0 | 1.0 | 30 |
+| Piper | `put_objects_into_basket` | 0.22 | 0.22 | 1.0 | 1.0 | 30 |
 | Piper | `stack_and_cover_blocks` | 0.45 | 0.45 | 1.1 | 1.1 | 40 |
 | Piper | `stack_bowls` | 0.25 | 0.25 | 1.5 | 1.5 | 30 |
 | Piper | `stand_up_bottles` | 0.70 | 0.70 | 1.2 | 1.2 | 30 |
