@@ -136,7 +136,7 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(model.env_order, [7, 2])
         chunks = model.get_action_batch([2, 7])
         self.assertEqual(len(chunks), 2)
-        self.assertEqual(len(chunks[0]), 10)
+        self.assertEqual(len(chunks[0]), 32)
         self.assertEqual(chunks[0][0]['left_arm_joint_state'].shape, (6,))
         self.assertEqual(chunks[0][0]['right_ee_joint_state'].shape, (1,))
         np.testing.assert_array_equal(model.env_obs[7][0]['observation']['head_camera']['rgb'], obs['vision']['cam_head']['color'])
@@ -361,23 +361,42 @@ class RealContractTests(unittest.TestCase):
             actual = (~self.backend._static_dimension_is_pad(self.processor, field)).nonzero().flatten().tolist()
             self.assertEqual(actual, self.backend.VALID_DIMS)
 
-    def test_rectangular_rgb_preserves_channels_views_and_edges(self):
-        image = np.full((480, 640, 3), [23, 81, 190], np.uint8)
-        image[:, :32] = [255, 0, 0]
-        image[:, -32:] = [0, 255, 0]
-        obs = {'observation': {name: {'rgb': image.copy()} for name in self.backend.CAMERAS}}
-        rgb = self.backend.current_rgb(self.processor, obs)
-        self.assertEqual(tuple(rgb.shape), (1, 3, 3, 256, 256))
-        for view in rgb[0]:
-            torch.testing.assert_close(view[:, 128, 0], torch.tensor([1., -1., -1.]))
-            torch.testing.assert_close(view[:, 128, -1], torch.tensor([-1., 1., -1.]))
-            torch.testing.assert_close(view[:, 128, 128], torch.tensor([23, 81, 190]) / 127.5 - 1)
-        np.testing.assert_array_equal(obs['observation']['head_camera']['rgb'], image)
+    def test_rectangular_rgb_matches_training_square_crop(self):
+        # The center is already 256x256, so crop correctness is independent
+        # of the resize implementation. Out-of-view border sentinels must vanish.
+        for height, width in ((256, 384), (384, 256), (256, 385), (385, 256)):
+            with self.subTest(shape=(height, width)):
+                square_obs, raw_obs = {'observation': {}}, {'observation': {}}
+                for index, name in enumerate(self.backend.CAMERAS):
+                    y, x = np.indices((256, 256))
+                    square = np.stack((x, y, np.full_like(x, 40 + index * 50)), -1).astype(np.uint8)
+                    image = np.full((height, width, 3), [255, 0, 255], np.uint8)
+                    top, left = (height - 256) // 2, (width - 256) // 2
+                    image[top:top + 256, left:left + 256] = square
+                    square_obs['observation'][name] = {'rgb': square}
+                    raw_obs['observation'][name] = {'rgb': image}
+                original = raw_obs['observation']['head_camera']['rgb'].copy()
+                actual = self.backend.current_rgb(self.processor, raw_obs)
+                expected = self.backend.current_rgb(self.processor, square_obs)
+                torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+                np.testing.assert_array_equal(raw_obs['observation']['head_camera']['rgb'], original)
+                for index, view in enumerate(actual[0]):
+                    torch.testing.assert_close(view[:, 100, 150],
+                        torch.tensor([150, 100, 40 + index * 50]) / 127.5 - 1)
+
+    def test_camera_640x480_equals_explicit_480_square(self):
+        rng = np.random.default_rng(42)
+        raw = {'observation': {name: {'rgb': rng.integers(0, 256, (480, 640, 3), dtype=np.uint8)}
+                              for name in self.backend.CAMERAS}}
+        square = {'observation': {name: {'rgb': raw['observation'][name]['rgb'][:, 80:560].copy()}
+                                 for name in self.backend.CAMERAS}}
+        torch.testing.assert_close(self.backend.current_rgb(self.processor, raw),
+                                   self.backend.current_rgb(self.processor, square), rtol=0, atol=0)
 
     def test_real_session_batch_isolation_acknowledgments_and_reset(self):
         runtime = SimpleNamespace(model=object(), processor=self.processor, device='cpu',
             model_dtype=torch.float32, action_dim_is_pad=self.backend._static_dimension_is_pad(self.processor, 'action'))
-        config = SimpleNamespace(num_inference_steps=10, replan_steps=10, seed=0, rand_device='cpu')
+        config = SimpleNamespace(num_inference_steps=10, replan_steps=32, seed=0, rand_device='cpu')
         dims = dict(arm_dim=[6, 6], ee_dim=[1, 1])
         with patch('XPolicyLab.policy.Phoenix_WAM._adapter_base.get_robot_action_dim_info', return_value=dims), patch.object(Model, '_load_real_policy'):
             model = Model(dict(runtime_mode='joint96_real'))
@@ -386,19 +405,19 @@ class RealContractTests(unittest.TestCase):
         with patch.object(self.backend.RoboDojoRealJoint96Session, '_infer_action_chunk',
                           return_value=(np.zeros((32, 14), np.float32), torch.zeros(32, 80))):
             model.update_obs(observation())
-            self.assertEqual(len(model.get_action()), 10)
+            self.assertEqual(len(model.get_action()), 32)
             with self.assertRaises(RuntimeError):
                 model.get_action()
-            for _ in range(10):
+            for _ in range(32):
                 model.update_obs(observation())
-            self.assertEqual(len(model.get_action()), 10)
+            self.assertEqual(len(model.get_action()), 32)
             model.update_obs_batch([observation(7), observation(2)])
             self.assertEqual(len(model.get_action_batch([2, 7])), 2)
             self.assertIsNot(model.env_sessions[7], model.env_sessions[2])
-            for _ in range(10):
+            for _ in range(32):
                 model.update_obs_batch([observation(7)])
             self.assertFalse(model.env_sessions[7].pending_model_actions)
-            self.assertEqual(len(model.env_sessions[2].pending_model_actions), 10)
+            self.assertEqual(len(model.env_sessions[2].pending_model_actions), 32)
             model.reset()
             self.assertFalse(model.session.pending_model_actions)
             self.assertTrue(all(not x.pending_model_actions for x in model.env_sessions.values()))

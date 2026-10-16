@@ -33,7 +33,7 @@ extra_overrides=()
 # Resolution belongs to model.py and XPolicyLab's shared checkpoint helper.
 # Empty explicit paths leave ckpt_name and the shared run naming in control.
 
-echo "[SERVER] policy=${policy_name} task=${task_name} replan=10"
+echo "[SERVER] policy=${policy_name} task=${task_name} replan=32"
 echo "[SERVER] checkpoint=${WAM_CHECKPOINT_PATH:-shared resolver; see ckpt_name}"
 
 exec env \

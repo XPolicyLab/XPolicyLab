@@ -107,7 +107,7 @@ class StatefulWAMAdapter(ModelTemplate):
         self.env_order: list[int] = []
         self.runtime = None
         self.action_horizon = int(self.model_cfg.get("action_horizon") or 32)
-        self.replan_steps = int(self.model_cfg.get("replan_steps") or 10)
+        self.replan_steps = int(self.model_cfg.get("replan_steps") or 32)
         if not 1 <= self.replan_steps <= self.action_horizon:
             raise ValueError(
                 f"replan_steps must be in [1, {self.action_horizon}], got {self.replan_steps}"

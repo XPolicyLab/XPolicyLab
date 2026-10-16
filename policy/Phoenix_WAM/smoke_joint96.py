@@ -32,7 +32,7 @@ def main():
         runtime_mode="joint96_real", checkpoint_path=str(args.weights.resolve()),
         expected_step=args.expected_step, audit_dir=str(args.audit_dir.resolve()),
         env_cfg_type=args.robot_type, action_type="joint", action_horizon=32,
-        replan_steps=10, num_inference_steps=10, mixed_precision="bf16",
+        replan_steps=32, num_inference_steps=10, mixed_precision="bf16",
         device="cuda:0", seed=0, allow_dummy_policy=False,
     ))
     loaded = time.perf_counter()

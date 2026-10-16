@@ -60,7 +60,8 @@ def current_rgb(processor, observation):
     """Adapt decoded RGB to stored training resolution, then preprocess it.
 
     The saved processor consumes uint8 256x256 source videos. Live cameras
-    may be rectangular: resize the entire view at this boundary (no crop).
+    may be rectangular: center-crop the largest square, then resize, matching
+    the geometry of the prepared training videos.
     After ToTensor, keep floating pixels between the training stages.
     This does not reproduce the training videos' H264 resampling numerically.
     Evaluation deliberately omits stochastic training-only augmentation.
@@ -72,6 +73,10 @@ def current_rgb(processor, observation):
                 or min(rgb.shape[:2]) <= 0):
             raise ValueError('Expected uint8 HWC RGB: ' + camera)
         frame = torch.from_numpy(rgb.copy()).permute(2, 0, 1).unsqueeze(0)
+        height, width = frame.shape[-2:]
+        side = min(height, width)
+        top, left = (height - side) // 2, (width - side) // 2
+        frame = frame[..., top:top + side, left:left + side]
         target_hw = list(meta['raw_shape'][-2:])
         if list(frame.shape[-2:]) != target_hw:
             frame = resize_rgb(frame, target_hw, interpolation=InterpolationMode.BILINEAR,
@@ -213,7 +218,7 @@ def verify_loaded_weight_paths(model, assets):
 
 
 def build_runtime(checkpoint, inference_config, stats_path, *, expected_step, output_dir, assets,
-                  device='cuda:0', denoise=10, replan=10, seed=0,
+                  device='cuda:0', denoise=10, replan=32, seed=0,
                   current_visual_mode='repeat9_full_stvae'):
     os.environ['DIFFSYNTH_SKIP_DOWNLOAD'] = 'true'
     os.environ['DIFFSYNTH_MODEL_BASE_PATH'] = str(assets['base_model_root'])

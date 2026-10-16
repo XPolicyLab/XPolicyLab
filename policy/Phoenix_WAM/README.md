@@ -56,7 +56,9 @@ WAM_AUDIT_DIR="$PWD/logs/piper_x" bash setup_eval_policy_server.sh \
 
 RoboDojo's official client connects to the GPU server's reachable IP on port `9000`, using `policy_name=Phoenix_WAM`, the matching `env_cfg_type`, and `action_type=joint`. For the standard client wrapper, use `EVAL_ENV_TYPE=real` and the official hardware configuration. Shared deployment conventions are in the [XPolicyLab README](../../README.md#-deployment-flow).
 
-The official client controls execution timing: ARX X5/Piper use a 30 Hz action timeline, Piper X uses 25 Hz. The policy returns 10 joint actions per call by default. Use the standard `deploy.py` loop, which acknowledges each executed action with an observation. Call `reset()` between episodes. If the official client uses the single-environment loop, set `eval_batch: false` in its copy of `deploy.yml`.
+The official client controls execution timing: ARX X5/Piper use a 30 Hz action timeline, Piper X uses 25 Hz. The policy returns 32 joint actions per call by default. Use the standard `deploy.py` loop, which acknowledges each executed action with an observation. Call `reset()` between episodes. If the official client uses the single-environment loop, set `eval_batch: false` in its copy of `deploy.yml`.
+
+Camera inputs are decoded RGB. Each view is center-cropped to a square and resized to 256×256 to match the prepared training images; 256×256 inputs retain their geometry. `replan_steps: 32` executes all 32 predicted actions before replanning; `num_inference_steps: 10` controls denoising.
 
 Optional offline GPU smoke test, from the **parent directory of `XPolicyLab`**:
 
