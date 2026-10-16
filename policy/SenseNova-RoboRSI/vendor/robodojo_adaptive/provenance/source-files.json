@@ -1,0 +1,953 @@
+{
+  "baseline_commit": "cfa591575172b638a8436fa95db28e9469785c9c",
+  "files": [
+    {
+      "bytes": 54,
+      "path": "source/code/policylab/__init__.py",
+      "sha256": "5d6bb09cc01444d9df023c61d5811b5685584d0da4c6cfa313eaf49b55b92b46",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/__init__.py"
+    },
+    {
+      "bytes": 1933,
+      "path": "source/code/policylab/api.py",
+      "sha256": "2fbf04d91249bac6e2c6bbd5420a79127270708ecfab1736d1e266a0fcb62cc8",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/api.py"
+    },
+    {
+      "bytes": 3473,
+      "path": "source/code/policylab/backend.py",
+      "sha256": "007de5f4ff953a180c123dfd8e02057aaf06bbed375e8663dbbe6c51444b6439",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/backend.py"
+    },
+    {
+      "bytes": 4086,
+      "path": "source/code/policylab/cli.py",
+      "sha256": "39bfdf151e884b1b973dce7dc20ae5c6a3bbaa6768a0688d809f74ce70dc4bfe",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/cli.py"
+    },
+    {
+      "bytes": 5791,
+      "path": "source/code/policylab/codex.py",
+      "sha256": "a7b3995d166b84c64b672acc7da009a398da1c210851a3cfa54ac22994da0d2c",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/codex.py"
+    },
+    {
+      "bytes": 5638,
+      "path": "source/code/policylab/common.py",
+      "sha256": "bcfdc49fb1073ce0dd757bff35fda8917a93b7e2f0ff333a7f89378a37c58bf7",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/common.py"
+    },
+    {
+      "bytes": 2696,
+      "path": "source/code/policylab/robot.py",
+      "sha256": "bc2f150a23e97e135b10e858ff7f6f2e39affee873502425f0f1b26bb178b656",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/robot.py"
+    },
+    {
+      "bytes": 44397,
+      "path": "source/code/policylab/runner.py",
+      "sha256": "770890be57d0f26fb9031863acbb606f22b5595223bfdce321801870c846cf7e",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/runner.py"
+    },
+    {
+      "bytes": 2682,
+      "path": "source/code/policylab/worker.py",
+      "sha256": "119c233450f01e3dd91fda4f281b2957ae056662bc49fc68edf609a8d982e750",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/policylab/worker.py"
+    },
+    {
+      "bytes": 7001,
+      "path": "source/hybrid_host.py",
+      "sha256": "d30233bb8eeaaec4f4e7b33f1c8e8ec995b6ea93d60c1b69bc85334871282628",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/hybrid_host.py"
+    },
+    {
+      "bytes": 5690,
+      "path": "source/hybrid_adapter.py",
+      "sha256": "35a63761959d10868c1d3cc913099b2e2eb17bab0f7e78611a1d7e7b5c6b624a",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/hybrid_adapter.py"
+    },
+    {
+      "bytes": 3792,
+      "path": "source/local_runtime.py",
+      "sha256": "a64c1ff433933953d149276f0a534dd0f14678e754b668b31849884a0e06c7c9",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/local_runtime.py"
+    },
+    {
+      "bytes": 6148,
+      "path": "source/recovery.py",
+      "sha256": "52daba98ec13b856f2a3433ae13e7cf38c598e601545803cc042a9746c7cdf48",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/source/recovery.py"
+    },
+    {
+      "bytes": 1052,
+      "path": "source/benchmark_bootstrap.py",
+      "sha256": "a3fadbcc4b0efb433e55e31640d6019fd6ec38a9c65398439cb040488f84eb47",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/benchmark_bootstrap.py"
+    },
+    {
+      "bytes": 373,
+      "path": "source/benchmark.sh",
+      "sha256": "0299d07c04d46ac7f1e844fe2d41daf9db0bcc9f1d879b1503779bd97e4b85a8",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/benchmark.sh"
+    },
+    {
+      "bytes": 179,
+      "path": "source/code/run.py",
+      "sha256": "6944dd2dbc5369397fe2788555c242ce26063128b5bb0985b16313a69f43a0ad",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/run.py"
+    },
+    {
+      "bytes": 13317,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/adapter.py",
+      "sha256": "bb311e45ee5cc93da1ea682b4e2d18af00717e9928b61f941bda02306d6cf0fe",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/configurations/robodojo/20261005_standard_1x_10x/adapters/adapter.py"
+    },
+    {
+      "bytes": 6765,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/eef_kinematics.py",
+      "sha256": "fffd0c6aa2207fdd551b0b92933daae938f1d3647b3a197aaf0457c8ebca22ad",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/configurations/robodojo/20261005_standard_1x_10x/adapters/eef_kinematics.py"
+    },
+    {
+      "bytes": 385,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/tenfold_horizon_adapter.py",
+      "sha256": "ddcf6e60fa15053c62bc5ddd3cd40e02a00da8907e1a01f18586fc19176d1eeb",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/tenfold_horizon_adapter.py"
+    },
+    {
+      "bytes": 6042,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/trial_adapter.py",
+      "sha256": "2d7d672f60fb6559c282fa12b77f48a152ea3870be5b54285f04a66a00e665aa",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/trial_adapter.py"
+    },
+    {
+      "bytes": 241,
+      "path": "source/waypoints.py",
+      "sha256": "e6965439b0279b3c5398ce6b89a995c7fa2758e9f05a72e82af4813757dca854",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/waypoints.py"
+    },
+    {
+      "bytes": 1572,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/align_blocks-s0.json",
+      "sha256": "aeedb220edeff30750407a869e506542a3673d7ea3ba24cc5fc1a0c94e9b5788",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/align_blocks-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/align_blocks-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1634,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/arrange_largest_number-s0.json",
+      "sha256": "7a19ae8e7ae75cea0cebccf5f40bef1694b67e655a44588c4ac2f4bfbe045d4d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/arrange_largest_number-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/arrange_largest_number-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1568,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/build_tower-s0.json",
+      "sha256": "804d04bc1e756722625f654c90eb0062dc6338fc93d7e0dddc68408b8950b457",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/build_tower-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/build_tower-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1598,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/classify_objects-s0.json",
+      "sha256": "f69698781a76b55be1180879c76c125d450938097330857be1ef9191161b4647",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/classify_objects-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1670,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/classify_objects_by_language-s0.json",
+      "sha256": "44864c32775ba15b891a523b1f864bdd42c9629e27ff5bb46926bfaee85e5d4d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects_by_language-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/classify_objects_by_language-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1572,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/cover_blocks-s0.json",
+      "sha256": "3fb9d755f6264797c0d5568b8a0129f2df8df2aaed3fc9d80cff19fbb4cc23dc",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/cover_blocks-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/cover_blocks-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1572,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/deposit_coin-s0.json",
+      "sha256": "3a7502782ca27f936b84bae6f4eb9abcc6b30f6ba7e961d33d2fa653244efa64",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/deposit_coin-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/deposit_coin-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1580,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/fasten_screws-s0.json",
+      "sha256": "8ac6f3815bf82518a0a76835c363ec13772770de0b0a8fe485809172d5e21288",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fasten_screws-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/fasten_screws-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1590,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/fill_egg_holder-s0.json",
+      "sha256": "e957a66d2f35cdf0cf6be826adc7edf9c559a1ff97d56462a6d8abbd50a57bdc",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_egg_holder-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/fill_egg_holder-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1592,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/fill_pen_holder-s0.json",
+      "sha256": "0ba29e5584fc07181d045312ec9f9235588d5d2a3bc63d0a6e209f912124d5b4",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_pen_holder-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/fill_pen_holder-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1572,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/fold_clothes-s0.json",
+      "sha256": "2012bccb99fb2fe04d2946907a484a1821d703c58a379dfafa2456fc09ca9f3c",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fold_clothes-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/fold_clothes-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1584,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/general_pickup-s0.json",
+      "sha256": "e565239734893c269592ea811ebee469c2a097731a5de80ff82881841f8cafff",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/general_pickup-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/general_pickup-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1554,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/hang_mugs-s0.json",
+      "sha256": "72b83102aea42d9aad1a9d811792270ebc853f47150383abf10b7f20153c229b",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/hang_mugs-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/hang_mugs-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1646,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json",
+      "sha256": "a93511706e2464f6afc8e87f0f2866e93408e79431a105403fa56272b2539d3b",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/imitate_sorting_sequence-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/imitate_sorting_sequence-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1560,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/insert_key-s0.json",
+      "sha256": "96eef74966c3b0adb81766f57cf9ec66fffff5bd5233bc9085173db4c10b0324",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_key-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/insert_key-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1572,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/insert_tubes-s0.json",
+      "sha256": "5fac5ba99efacc550f50fa1fcc00a8399d34894d9ac300fc81f840b3b7093439",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_tubes-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/insert_tubes-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1554,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/make_kong-s0.json",
+      "sha256": "b773c8f13a90551269b1b970c05a3f31acd00fd6e178781a8b8244c72839e98a",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_kong-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/make_kong-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1562,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/make_toast-s0.json",
+      "sha256": "d006c548536178319f3da7fed8660768a925cab0658b463c915470476ccb58fa",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_toast-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/make_toast-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1668,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json",
+      "sha256": "d0b90074312d03b615314c8ee3df4ca023633af6a78df6ddee85e2a3eab04fdb",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/match_and_pick_from_conveyor-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/match_and_pick_from_conveyor-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1586,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/organize_table-s0.json",
+      "sha256": "9d82c22b0862f90a6d752965a014397344c8b748d2c8968fa4e71cd770ed6250",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/organize_table-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/organize_table-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1628,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/pack_objects_into_box-s0.json",
+      "sha256": "23982b8e4741616be05be5fcc045f8a92f576b004f0724359b62e437c16e71ce",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pack_objects_into_box-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/pack_objects_into_box-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1662,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/pick_from_conveyor_by_image-s0.json",
+      "sha256": "0f478c887d9cf783ce3340d1f92e4d0d09ee321a3516286575dab9af6e91afb0",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pick_from_conveyor_by_image-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/pick_from_conveyor_by_image-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1584,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/play_Xylophone-s0.json",
+      "sha256": "9186dd6121028c900f4beb930e7be857829f2db77bf0a177f38ac34a6df28b66",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_Xylophone-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/play_Xylophone-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1604,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/play_stacking_toy-s0.json",
+      "sha256": "f20c9e0c4ffdd7d030b6db2a279f62f385eb593858dee201fa51cb59281c1206",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_stacking_toy-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/play_stacking_toy-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1598,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/play_tic_tac_toe-s0.json",
+      "sha256": "e7d5e50cef4b929970658b72a68218ac77536d4d61f9da293f95e76d745ae58c",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_tic_tac_toe-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/play_tic_tac_toe-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1590,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/plug_in_charger-s0.json",
+      "sha256": "ac288b6e80e7a16e2b3ce7b422fc376f2a6a758fe3fb439fdcd4030fb5a90423",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/plug_in_charger-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/plug_in_charger-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1620,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/pour_balls_into_vase-s0.json",
+      "sha256": "ac8a22c8d7f7d9798232f3f394a6be0bd48479760c2c234a341bb163d729eabc",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_balls_into_vase-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/pour_balls_into_vase-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1596,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/pour_by_language-s0.json",
+      "sha256": "b398bd8e8ea28f0d65eeb93515f1c2fbeb573bf4a52e43a6968e18c65b45cdc2",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_by_language-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/pour_by_language-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1620,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/pour_liquid_into_cup-s0.json",
+      "sha256": "c4ad892ad808bf239e6c6af18f4b8ad525ee2459b226591bda0001621555ca14",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_liquid_into_cup-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/pour_liquid_into_cup-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1590,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/press_by_number-s0.json",
+      "sha256": "862da7ab78b18c192095cf4df99425dca1fede069a8ee67fe0f0dabb8df0b331",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/press_by_number-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/press_by_number-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1536,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/push_T-s0.json",
+      "sha256": "a715297d708cc0a77aa18e2cead8067f11f811eaa5dab973d276f5720494dde8",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/push_T-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/push_T-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1644,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/put_bottles_into_dustbin-s0.json",
+      "sha256": "2841d062978d8c549bbfe590c3a1b02051f50dac1f8bed432cc3c3604db314e5",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/put_bottles_into_dustbin-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/put_bottles_into_dustbin-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1584,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/solve_equation-s0.json",
+      "sha256": "b37c5fe4caa13a3a69d5abe29f0e5011492e1a3db23a1957e80999fa7a29c598",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/solve_equation-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/solve_equation-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1658,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/sort_nesting_dolls_by_size-s0.json",
+      "sha256": "6ec866c85cf88f2d00c3a8bd8debc463c3b4401e387ccd09b7c3c7f03c7f9208",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/sort_nesting_dolls_by_size-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/sort_nesting_dolls_by_size-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1572,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/stack_blocks-s0.json",
+      "sha256": "b4fdd50d7eb70a91ccd2c07e4cde3956d81b0d77aecfea2e90a567973cb8f021",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/stack_blocks-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1644,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/stack_blocks_by_language-s0.json",
+      "sha256": "544de8c21e52a4ef5fc3f406baca6de0d700d7ed5ad1fd374c30a916351ff5b9",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks_by_language-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/stack_blocks_by_language-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1566,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/stack_bowls-s0.json",
+      "sha256": "3d1b5258328692fe15d22430fcad68f874931a8378440076ee5fd39aa5522c14",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_bowls-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/stack_bowls-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1662,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/store_laptop_and_headphones-s0.json",
+      "sha256": "ffcce173e758b36cab2d1b63b2c482b768f2d32fea76c5be2006f17448412f63",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_laptop_and_headphones-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/store_laptop_and_headphones-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1632,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/store_tools_in_toolbox-s0.json",
+      "sha256": "55d2be573a1c2435f247f099fafebeac77051d6a5e9339cc883ea0e112b5ca35",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_tools_in_toolbox-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/store_tools_in_toolbox-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1536,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/swap_T-s0.json",
+      "sha256": "70119dc858c232b0f1643d3feabdcc7bbd8ea387e5c129956377432bf16e98b0",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_T-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/swap_T-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1566,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/swap_blocks-s0.json",
+      "sha256": "c44998e0c45d97266d423f30475a85f1d1aafbded69a2d5885949bf418aa497b",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_blocks-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/swap_blocks-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 1574,
+      "derivation": "original task budget/material binding plus exact author adaptive options; eval/reset seed0/layout0",
+      "path": "resources/fresh-configs/sweep_blocks-s0.json",
+      "sha256": "e6013c431324d97d00d39bd3b5f2e954e7e771a917d1c1c67f6493040431faaa",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/sweep_blocks-s1.json"
+    },
+    {
+      "bytes": 6558,
+      "derivation": "author text unchanged except episode identity layout0/seed0",
+      "path": "resources/interfaces/sweep_blocks-s0.md",
+      "sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940",
+      "source": "robodojo/xuweiye-adaptive-code-20261014/icl-wp-auto/interfaces/align_blocks-s2-auto-l1.md"
+    },
+    {
+      "bytes": 12671,
+      "path": "resources/material-bindings.json",
+      "sha256": "ad464a9d15e9047fa642d0283c64677df3c0b7cb61b97b617d4f6f46b7c098ac",
+      "source": "derived from pinned baseline frozen-bundles.json and task templates"
+    }
+  ],
+  "policy_variant": "adaptive_5_50",
+  "portability": {
+    "patches": [
+      {
+        "after_sha256": "aeedb220edeff30750407a869e506542a3673d7ea3ba24cc5fc1a0c94e9b5788",
+        "before_sha256": "3e345585ddfa5393a70946345c169dcafcfc566057537296fe0f6c6d758201ce",
+        "path": "resources/fresh-configs/align_blocks-s0.json"
+      },
+      {
+        "after_sha256": "7a19ae8e7ae75cea0cebccf5f40bef1694b67e655a44588c4ac2f4bfbe045d4d",
+        "before_sha256": "61c68c2a4f850463bba4e31541a093cd86ac8ccec127f6c1eba15e1611f759e2",
+        "path": "resources/fresh-configs/arrange_largest_number-s0.json"
+      },
+      {
+        "after_sha256": "804d04bc1e756722625f654c90eb0062dc6338fc93d7e0dddc68408b8950b457",
+        "before_sha256": "4eb2f54e980e2d41cea75bb3d9dfa76c4cd89d8433a1dda4aa7b5bd75d1d15cf",
+        "path": "resources/fresh-configs/build_tower-s0.json"
+      },
+      {
+        "after_sha256": "f69698781a76b55be1180879c76c125d450938097330857be1ef9191161b4647",
+        "before_sha256": "7ddeed6516af17e59439dd0a34e57e9c0892589e689ce58f3a0411c4faf1791e",
+        "path": "resources/fresh-configs/classify_objects-s0.json"
+      },
+      {
+        "after_sha256": "44864c32775ba15b891a523b1f864bdd42c9629e27ff5bb46926bfaee85e5d4d",
+        "before_sha256": "7fd621cb9f2e166d3a247303c5b515644a6db60919f217bd0c8b13a8ac282a7c",
+        "path": "resources/fresh-configs/classify_objects_by_language-s0.json"
+      },
+      {
+        "after_sha256": "3fb9d755f6264797c0d5568b8a0129f2df8df2aaed3fc9d80cff19fbb4cc23dc",
+        "before_sha256": "fa647bdba9cd318795eff2d503966872c084096a3576d50c9c48777127ec1a9e",
+        "path": "resources/fresh-configs/cover_blocks-s0.json"
+      },
+      {
+        "after_sha256": "3a7502782ca27f936b84bae6f4eb9abcc6b30f6ba7e961d33d2fa653244efa64",
+        "before_sha256": "4fd1652f7c1546035c2db04ef2898a3f3eed7c04af4e33fdf7421d2a8aac4166",
+        "path": "resources/fresh-configs/deposit_coin-s0.json"
+      },
+      {
+        "after_sha256": "8ac6f3815bf82518a0a76835c363ec13772770de0b0a8fe485809172d5e21288",
+        "before_sha256": "d2b18a2cccbeb9284807da9b1ee14370b3445102930d8208f54cbfb29c15566f",
+        "path": "resources/fresh-configs/fasten_screws-s0.json"
+      },
+      {
+        "after_sha256": "e957a66d2f35cdf0cf6be826adc7edf9c559a1ff97d56462a6d8abbd50a57bdc",
+        "before_sha256": "2db8232928a8bd67e89c7d55da91f7455eec5c991dc6bf86eb4a61a012467782",
+        "path": "resources/fresh-configs/fill_egg_holder-s0.json"
+      },
+      {
+        "after_sha256": "0ba29e5584fc07181d045312ec9f9235588d5d2a3bc63d0a6e209f912124d5b4",
+        "before_sha256": "e1f0c087b3f970105beaa7fc7abdab3962f7241757d08708e656797555164f75",
+        "path": "resources/fresh-configs/fill_pen_holder-s0.json"
+      },
+      {
+        "after_sha256": "2012bccb99fb2fe04d2946907a484a1821d703c58a379dfafa2456fc09ca9f3c",
+        "before_sha256": "1a3ae5738671a3f53acf802311d7d63f04bc7a2ce3aeae23dfa56bf6027b6d67",
+        "path": "resources/fresh-configs/fold_clothes-s0.json"
+      },
+      {
+        "after_sha256": "e565239734893c269592ea811ebee469c2a097731a5de80ff82881841f8cafff",
+        "before_sha256": "fa61e6d09d086a627fc8316592f09690fd2d609ba5235f515d4771dd27a8bce8",
+        "path": "resources/fresh-configs/general_pickup-s0.json"
+      },
+      {
+        "after_sha256": "72b83102aea42d9aad1a9d811792270ebc853f47150383abf10b7f20153c229b",
+        "before_sha256": "d09d0f4ec0c4b1069a94d923fb733204a2312ccd9bda16b208ac5388d03a9e87",
+        "path": "resources/fresh-configs/hang_mugs-s0.json"
+      },
+      {
+        "after_sha256": "a93511706e2464f6afc8e87f0f2866e93408e79431a105403fa56272b2539d3b",
+        "before_sha256": "446fb91b696035ed793b515bfd46816802b75be140e738fa89bd84c79aac7089",
+        "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json"
+      },
+      {
+        "after_sha256": "96eef74966c3b0adb81766f57cf9ec66fffff5bd5233bc9085173db4c10b0324",
+        "before_sha256": "54a9610efb8c539e87cf7f0aa13e17b1b8c12460f6258e34b4e13cb3dabf1cb2",
+        "path": "resources/fresh-configs/insert_key-s0.json"
+      },
+      {
+        "after_sha256": "5fac5ba99efacc550f50fa1fcc00a8399d34894d9ac300fc81f840b3b7093439",
+        "before_sha256": "872e695084a956cd9899b24b69ebb8cee5bec5298f5edc463e47ad6bf971d143",
+        "path": "resources/fresh-configs/insert_tubes-s0.json"
+      },
+      {
+        "after_sha256": "b773c8f13a90551269b1b970c05a3f31acd00fd6e178781a8b8244c72839e98a",
+        "before_sha256": "6ae5752dc0df43a8226da8a8e88309d84644e27de81b5fd975d3b08ca743da1f",
+        "path": "resources/fresh-configs/make_kong-s0.json"
+      },
+      {
+        "after_sha256": "d006c548536178319f3da7fed8660768a925cab0658b463c915470476ccb58fa",
+        "before_sha256": "7b3c85e628763e0476aa1bea0005fda9179af2f83463d417268c0795ceea15ca",
+        "path": "resources/fresh-configs/make_toast-s0.json"
+      },
+      {
+        "after_sha256": "d0b90074312d03b615314c8ee3df4ca023633af6a78df6ddee85e2a3eab04fdb",
+        "before_sha256": "90cdc2e75c67bdbbec0bcd9816269ee2828ead3a439fb4c4bdf43a4fd6713c80",
+        "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json"
+      },
+      {
+        "after_sha256": "9d82c22b0862f90a6d752965a014397344c8b748d2c8968fa4e71cd770ed6250",
+        "before_sha256": "5d7108b9198c26d2ce9e86d2159e2ec881a2532cf0c8bc9bd7925d44f9220ad5",
+        "path": "resources/fresh-configs/organize_table-s0.json"
+      },
+      {
+        "after_sha256": "23982b8e4741616be05be5fcc045f8a92f576b004f0724359b62e437c16e71ce",
+        "before_sha256": "b1cda2739f2e63f47259a3721ff738f475dc17e5646b73a74cf80b787f803da1",
+        "path": "resources/fresh-configs/pack_objects_into_box-s0.json"
+      },
+      {
+        "after_sha256": "0f478c887d9cf783ce3340d1f92e4d0d09ee321a3516286575dab9af6e91afb0",
+        "before_sha256": "15e3ea8bd675d1c834c3a53a2bbc4124498a27c4b4a0af513780fbf96aa34481",
+        "path": "resources/fresh-configs/pick_from_conveyor_by_image-s0.json"
+      },
+      {
+        "after_sha256": "9186dd6121028c900f4beb930e7be857829f2db77bf0a177f38ac34a6df28b66",
+        "before_sha256": "3c2ec0d41daf2c0ce829c3522b586ea26dac9a3137188fe3de11c245a28dd179",
+        "path": "resources/fresh-configs/play_Xylophone-s0.json"
+      },
+      {
+        "after_sha256": "f20c9e0c4ffdd7d030b6db2a279f62f385eb593858dee201fa51cb59281c1206",
+        "before_sha256": "3fd5715674fcf9e1824ffff1047de9b5113aa2c877f785a92238cb8840e24003",
+        "path": "resources/fresh-configs/play_stacking_toy-s0.json"
+      },
+      {
+        "after_sha256": "e7d5e50cef4b929970658b72a68218ac77536d4d61f9da293f95e76d745ae58c",
+        "before_sha256": "dd9fcfc32f99772dc80fc66c454a126e4e62ac8a6f78b0e75d4fae5dbc145b80",
+        "path": "resources/fresh-configs/play_tic_tac_toe-s0.json"
+      },
+      {
+        "after_sha256": "ac288b6e80e7a16e2b3ce7b422fc376f2a6a758fe3fb439fdcd4030fb5a90423",
+        "before_sha256": "cbdc502a294bfa3ed3ce7456284bbb0e9afb2109803a2b65f101e9d9c569e72c",
+        "path": "resources/fresh-configs/plug_in_charger-s0.json"
+      },
+      {
+        "after_sha256": "ac8a22c8d7f7d9798232f3f394a6be0bd48479760c2c234a341bb163d729eabc",
+        "before_sha256": "4ddadcd6c4e71909ef642afae29ef0cd3d3df2e8b4ad58cf89c4ae41b4693c0b",
+        "path": "resources/fresh-configs/pour_balls_into_vase-s0.json"
+      },
+      {
+        "after_sha256": "b398bd8e8ea28f0d65eeb93515f1c2fbeb573bf4a52e43a6968e18c65b45cdc2",
+        "before_sha256": "bdf9633278591ecbce6bd7479911f43f05e5f8eef7a21824c43eb4cff6dbf4a6",
+        "path": "resources/fresh-configs/pour_by_language-s0.json"
+      },
+      {
+        "after_sha256": "c4ad892ad808bf239e6c6af18f4b8ad525ee2459b226591bda0001621555ca14",
+        "before_sha256": "948be3b5e3ceab0b21cb7542c7e2c9bb80cd5808c235d62f8c347dc000db609a",
+        "path": "resources/fresh-configs/pour_liquid_into_cup-s0.json"
+      },
+      {
+        "after_sha256": "862da7ab78b18c192095cf4df99425dca1fede069a8ee67fe0f0dabb8df0b331",
+        "before_sha256": "62c7c34f54ac5e72cf40e65d46db1ed6933d76ed2cc5da967461bf023be3be0b",
+        "path": "resources/fresh-configs/press_by_number-s0.json"
+      },
+      {
+        "after_sha256": "a715297d708cc0a77aa18e2cead8067f11f811eaa5dab973d276f5720494dde8",
+        "before_sha256": "dd016463cec570cdc23261f4727b144a019d87562190286c6f4f3e0d0ba53874",
+        "path": "resources/fresh-configs/push_T-s0.json"
+      },
+      {
+        "after_sha256": "2841d062978d8c549bbfe590c3a1b02051f50dac1f8bed432cc3c3604db314e5",
+        "before_sha256": "ee7258b512a25bad32582b35f5f74cb9cc0bcbeb84468c666d5ced32a38bde6c",
+        "path": "resources/fresh-configs/put_bottles_into_dustbin-s0.json"
+      },
+      {
+        "after_sha256": "b37c5fe4caa13a3a69d5abe29f0e5011492e1a3db23a1957e80999fa7a29c598",
+        "before_sha256": "9d7f298970b0f72907cd4e7fd8824d0a1b50ed99dce286c5a853367e09de1a1e",
+        "path": "resources/fresh-configs/solve_equation-s0.json"
+      },
+      {
+        "after_sha256": "6ec866c85cf88f2d00c3a8bd8debc463c3b4401e387ccd09b7c3c7f03c7f9208",
+        "before_sha256": "d3ea90164d2439805477a52b96f5fd301583f3ef93151a01a9412fafcb73478a",
+        "path": "resources/fresh-configs/sort_nesting_dolls_by_size-s0.json"
+      },
+      {
+        "after_sha256": "b4fdd50d7eb70a91ccd2c07e4cde3956d81b0d77aecfea2e90a567973cb8f021",
+        "before_sha256": "1b1e19bbfa2ba46f3eb20919a1021b36c3680ba4e06fcc731319a28019454753",
+        "path": "resources/fresh-configs/stack_blocks-s0.json"
+      },
+      {
+        "after_sha256": "544de8c21e52a4ef5fc3f406baca6de0d700d7ed5ad1fd374c30a916351ff5b9",
+        "before_sha256": "0ca16ebc793de34f5b1fa559203f755ebb3ff3544e8d59c6101baa848207d6be",
+        "path": "resources/fresh-configs/stack_blocks_by_language-s0.json"
+      },
+      {
+        "after_sha256": "3d1b5258328692fe15d22430fcad68f874931a8378440076ee5fd39aa5522c14",
+        "before_sha256": "4ebc9fcd613630bb57d1b292bd62f4dbc7836aea80f48871784c7e89afc5c4c6",
+        "path": "resources/fresh-configs/stack_bowls-s0.json"
+      },
+      {
+        "after_sha256": "ffcce173e758b36cab2d1b63b2c482b768f2d32fea76c5be2006f17448412f63",
+        "before_sha256": "b0e8cb67887270068f0af9e6f228b36ccdadfa0ef8af7fa862dab1413cc068c3",
+        "path": "resources/fresh-configs/store_laptop_and_headphones-s0.json"
+      },
+      {
+        "after_sha256": "55d2be573a1c2435f247f099fafebeac77051d6a5e9339cc883ea0e112b5ca35",
+        "before_sha256": "a39a3233825654358bf4eeed55bff1b9d708de49be55f8f58512dde72a51c5e9",
+        "path": "resources/fresh-configs/store_tools_in_toolbox-s0.json"
+      },
+      {
+        "after_sha256": "70119dc858c232b0f1643d3feabdcc7bbd8ea387e5c129956377432bf16e98b0",
+        "before_sha256": "f15261fce3ccead418d1b6da107848c2e5dbfadca896bea4c462f7799a8dc043",
+        "path": "resources/fresh-configs/swap_T-s0.json"
+      },
+      {
+        "after_sha256": "c44998e0c45d97266d423f30475a85f1d1aafbded69a2d5885949bf418aa497b",
+        "before_sha256": "53461810b925f7fd9bd8a209e0fdb7c0fdce8067867b09ab864e20c7220180b1",
+        "path": "resources/fresh-configs/swap_blocks-s0.json"
+      },
+      {
+        "after_sha256": "e6013c431324d97d00d39bd3b5f2e954e7e771a917d1c1c67f6493040431faaa",
+        "before_sha256": "a2ad2eb4d156119b5021e2987ba16aae61dd5283538acfb7482b6762acc58321",
+        "path": "resources/fresh-configs/sweep_blocks-s0.json"
+      },
+      {
+        "after_sha256": "0299d07c04d46ac7f1e844fe2d41daf9db0bcc9f1d879b1503779bd97e4b85a8",
+        "before_sha256": "c18c55399013c3c42812157642139c8eac4ae9c549351ac3427bb80c70e566b3",
+        "path": "source/benchmark.sh"
+      },
+      {
+        "after_sha256": "a64c1ff433933953d149276f0a534dd0f14678e754b668b31849884a0e06c7c9",
+        "before_sha256": "85db111be9d297e74b9213d8d2eb12e08fd6bf7241d36a387bee1eccaae78e29",
+        "path": "source/local_runtime.py"
+      }
+    ],
+    "scope": "Removed author metadata, replaced unused host interpreter default, omitted runtime-overridden host paths, and parameterized standalone wrapper locations.",
+    "upstream_manifest_sha256": "b48370daef6d1672349d548d6aa6eb48561d7dcf82126ae2195c795f04b22ddb"
+  },
+  "scope": "Adaptive controller snapshot with deployment-only path portability patches; original policy, model, budgets, task/control parameters and sandbox function preserved."
+}

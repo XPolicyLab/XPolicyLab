@@ -1,0 +1,333 @@
+{
+  "schema_version": 2,
+  "python_version": "3.11.13",
+  "python": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20250918/cpython-3.11.13%2B20250918-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+    "sha256": "511ceceeff184ad742a35583755f5070c0274cc0f0bb5c9218abd939240a2146",
+    "binary_sha256": "55e8f2734d0e882df2013e591fc2cd91fc31a4fc4d82dd0e78326af8fd3abdc1"
+  },
+  "paths": {
+    "runtime": "runtime/tool-deployment/agent-venv",
+    "base": "runtime/tool-deployment/tools-base",
+    "receipt": "runtime/tool-runtime.json",
+    "inventory": "runtime/tool-files.json"
+  },
+  "distributions": [
+    {
+      "name": "ImageIO",
+      "version": "2.38.0"
+    },
+    {
+      "name": "PyJWT",
+      "version": "2.15.1"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.3"
+    },
+    {
+      "name": "absl-py",
+      "version": "2.5.0"
+    },
+    {
+      "name": "annotated-doc",
+      "version": "0.0.5"
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.8.0"
+    },
+    {
+      "name": "anthropic",
+      "version": "1.11.0"
+    },
+    {
+      "name": "anyio",
+      "version": "4.15.1"
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.2"
+    },
+    {
+      "name": "claude-agent-sdk",
+      "version": "0.2.163"
+    },
+    {
+      "name": "click",
+      "version": "8.5.0"
+    },
+    {
+      "name": "cryptography",
+      "version": "50.0.2"
+    },
+    {
+      "name": "dm-tree",
+      "version": "0.1.10"
+    },
+    {
+      "name": "docstring_parser",
+      "version": "0.18.0"
+    },
+    {
+      "name": "fastapi",
+      "version": "0.142.2"
+    },
+    {
+      "name": "filelock",
+      "version": "4.0.8"
+    },
+    {
+      "name": "fsspec",
+      "version": "2026.9.0"
+    },
+    {
+      "name": "genai-prices",
+      "version": "0.1.9"
+    },
+    {
+      "name": "griffelib",
+      "version": "2.3.0"
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0"
+    },
+    {
+      "name": "h5py",
+      "version": "3.16.0"
+    },
+    {
+      "name": "hf-xet",
+      "version": "1.6.0"
+    },
+    {
+      "name": "httpcore",
+      "version": "1.0.9"
+    },
+    {
+      "name": "httpcore2",
+      "version": "2.13.1"
+    },
+    {
+      "name": "httpx",
+      "version": "0.28.1"
+    },
+    {
+      "name": "httpx-sse",
+      "version": "0.4.3"
+    },
+    {
+      "name": "httpx2",
+      "version": "2.13.1"
+    },
+    {
+      "name": "huggingface_hub",
+      "version": "2.1.1"
+    },
+    {
+      "name": "idna",
+      "version": "3.20"
+    },
+    {
+      "name": "jiter",
+      "version": "0.17.0"
+    },
+    {
+      "name": "json_repair",
+      "version": "0.63.5"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1"
+    },
+    {
+      "name": "logfire-api",
+      "version": "5.1.1"
+    },
+    {
+      "name": "mcp",
+      "version": "1.30.0"
+    },
+    {
+      "name": "msgpack",
+      "version": "1.2.3"
+    },
+    {
+      "name": "numpy",
+      "version": "1.26.4"
+    },
+    {
+      "name": "openai",
+      "version": "3.22.1"
+    },
+    {
+      "name": "openai-codex",
+      "version": "0.159.3"
+    },
+    {
+      "name": "openai-codex-cli-bin",
+      "version": "0.159.3"
+    },
+    {
+      "name": "openpi-client",
+      "version": "0.1.0"
+    },
+    {
+      "name": "opentelemetry-api",
+      "version": "1.45.0"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0"
+    },
+    {
+      "name": "pip",
+      "version": "24.0"
+    },
+    {
+      "name": "prompt_toolkit",
+      "version": "3.0.53"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.0"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.13.5"
+    },
+    {
+      "name": "pydantic-ai-harness",
+      "version": "0.34.0"
+    },
+    {
+      "name": "pydantic-ai-slim",
+      "version": "2.52.0"
+    },
+    {
+      "name": "pydantic-graph",
+      "version": "2.52.0"
+    },
+    {
+      "name": "pydantic-settings",
+      "version": "2.15.0"
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.46.5"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.2.4"
+    },
+    {
+      "name": "python-multipart",
+      "version": "0.0.32"
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0"
+    },
+    {
+      "name": "regex",
+      "version": "2026.9.29"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2"
+    },
+    {
+      "name": "rpds-py",
+      "version": "2026.6.3"
+    },
+    {
+      "name": "scipy",
+      "version": "1.17.1"
+    },
+    {
+      "name": "setuptools",
+      "version": "65.5.0"
+    },
+    {
+      "name": "sniffio",
+      "version": "1.3.1"
+    },
+    {
+      "name": "sse-starlette",
+      "version": "3.5.0"
+    },
+    {
+      "name": "starlette",
+      "version": "1.7.0"
+    },
+    {
+      "name": "tiktoken",
+      "version": "0.14.0"
+    },
+    {
+      "name": "tqdm",
+      "version": "4.70.1"
+    },
+    {
+      "name": "truststore",
+      "version": "0.10.4"
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.4"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0"
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.54.0"
+    },
+    {
+      "name": "wcwidth",
+      "version": "0.9.1"
+    },
+    {
+      "name": "websockets",
+      "version": "15.0.1"
+    },
+    {
+      "name": "wrapt",
+      "version": "2.5.0"
+    }
+  ],
+  "alignment": "B-region runtime distribution versions, excluding the unused historical heart-runtime editable and development-only pytest, pytest-timeout, iniconfig, pluggy, and Pygments; genuine original OpenPI client sources are built locally.",
+  "resources": {
+    "tools/requirements.in": "02d5f35d74f313c52d2a64f2b570b47a3d71542b54f4328b1c19798d728b29e9",
+    "tools/requirements.lock": "5addbe5d3d8daf8ddd51a33f2b5d0c8d9f65825397b0ac10a79eba70455ff994",
+    "tools/build.lock": "1b5e35106143f6cb96d4c5386589ee0b58ae2c3c342696ab6b88f6969d4d35df",
+    "tools/openpi-client-files.json": "f88644155c6e2f1adc85eac202daa57ef388e3ea2ef2122984b9a9927d346d7e",
+    "tools/openpi-client.pyproject.toml": "4c1fe34f31edea32c196afebf7f796c8e026f090e5e861769dd8d2053267c9cd"
+  }
+}

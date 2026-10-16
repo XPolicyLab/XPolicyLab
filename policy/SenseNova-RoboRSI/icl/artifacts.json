@@ -1,0 +1,280 @@
+{
+  "archive_recipe": {
+    "format": "PAX",
+    "gid": 0,
+    "gzip_level": 6,
+    "gzip_mtime": 0,
+    "mtime": 0,
+    "uid": 0
+  },
+  "artifacts": {
+    "arrange_largest_number": {
+      "archive_path": "assets/icl/arrange_largest_number.tar.gz",
+      "archive_sha256": "dbe3ee86d8e0fcebb5d31b1a5eb4c3593b2a43dbff1cf1d7f58d5d0455c30dbd",
+      "archive_size": 75821326,
+      "manifest_sha256": "b75a20fde6e05ad02d120c671b2c30a2066a3986445d3442a4f349a2e6f91b0f",
+      "payload_bytes": 80031715,
+      "payload_files": 1780,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/arrange_largest_number.tar.gz"
+    },
+    "build_tower": {
+      "archive_path": "assets/icl/build_tower.tar.gz",
+      "archive_sha256": "a8538699cec60096d9e734a94d8c8c0b09c4f62af764d01caf59c11ed31d7335",
+      "archive_size": 250826089,
+      "manifest_sha256": "415d5442d7c83d1f86bc6beeabb3ea536c8c29b39b672489daf9a1d0dd491254",
+      "payload_bytes": 252720543,
+      "payload_files": 3034,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/build_tower.tar.gz"
+    },
+    "classify_objects": {
+      "archive_path": "assets/icl/classify_objects.tar.gz",
+      "archive_sha256": "f24b9d27b48bfeaf42f5ef133cc6c480a8d636624b5519b8592a20156b546d5a",
+      "archive_size": 149593123,
+      "manifest_sha256": "58cdfa76e437f2bc41c12dda2003d68ea37a8ed43b804c028a95c16162974540",
+      "payload_bytes": 152620670,
+      "payload_files": 969,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/classify_objects.tar.gz"
+    },
+    "deposit_coin": {
+      "archive_path": "assets/icl/deposit_coin.tar.gz",
+      "archive_sha256": "a3828f24df3eab0a902f58229a832e170cfca331f88640a303db36cdc8836ff3",
+      "archive_size": 83551547,
+      "manifest_sha256": "6b8f61d17238bba5d9e2f96c50be0dbdae3a259e73ef084f93191d36249e03e0",
+      "payload_bytes": 86609563,
+      "payload_files": 704,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/deposit_coin.tar.gz"
+    },
+    "fasten_screws": {
+      "archive_path": "assets/icl/fasten_screws.tar.gz",
+      "archive_sha256": "beeb197cc76f3a4dc7be8c5df55e90106057fe6e52817cbcdaaf11d5a13a63cd",
+      "archive_size": 39423046,
+      "manifest_sha256": "48290cc333e40ffaa3d66900f7527665733d65d8b010406500d0f6a4248e94d7",
+      "payload_bytes": 41649546,
+      "payload_files": 325,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/fasten_screws.tar.gz"
+    },
+    "fill_egg_holder": {
+      "archive_path": "assets/icl/fill_egg_holder.tar.gz",
+      "archive_sha256": "124f0a3ad8505a779044bd1f7322a733769fc2558dc370a1e475a7fb1c751fc9",
+      "archive_size": 26990942,
+      "manifest_sha256": "d57b6a1b5cc12e7eddc1004446a047dc4002a68854a718ca0ea4aa128ed6c5ee",
+      "payload_bytes": 28822994,
+      "payload_files": 247,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/fill_egg_holder.tar.gz"
+    },
+    "fill_pen_holder": {
+      "archive_path": "assets/icl/fill_pen_holder.tar.gz",
+      "archive_sha256": "e4d8304e6e9096105473e91f4f2f5bcc8faae44efcdd7f4a4f6206b1b7a27152",
+      "archive_size": 46025204,
+      "manifest_sha256": "df2aa5163a031fb3d0f76ee31c075c9a266f023a67d2ebe1a1f4a08feb5ebcce",
+      "payload_bytes": 46903071,
+      "payload_files": 166,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/fill_pen_holder.tar.gz"
+    },
+    "fold_clothes": {
+      "archive_path": "assets/icl/fold_clothes.tar.gz",
+      "archive_sha256": "1d52b72b11a2e530dc19850ae745a8cea5f1d74feb88880a0ed3530e8439ee12",
+      "archive_size": 32648450,
+      "manifest_sha256": "a8cf17a36bf7161a5aefe842e1b636b824919ce940a3bed9440157744418557c",
+      "payload_bytes": 36873335,
+      "payload_files": 237,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/fold_clothes.tar.gz"
+    },
+    "hang_mugs": {
+      "archive_path": "assets/icl/hang_mugs.tar.gz",
+      "archive_sha256": "41d9844828d27204673d03bab001168f98228d36b5e9a3f32af71a7fe113835a",
+      "archive_size": 61605744,
+      "manifest_sha256": "1691c313f6c98fa738cdd1cac743dec3222353a9406822b5156dd352649ce64c",
+      "payload_bytes": 64040491,
+      "payload_files": 482,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/hang_mugs.tar.gz"
+    },
+    "insert_key": {
+      "archive_path": "assets/icl/insert_key.tar.gz",
+      "archive_sha256": "d9b4742e36ca05959fe3eefed9b9e0b9b995d65fddf8b83f3501a0660cd1dcfd",
+      "archive_size": 73230693,
+      "manifest_sha256": "88f9f7e026698d30082058756910856cc81abee83362b04e7053d3c4215ed213",
+      "payload_bytes": 74164688,
+      "payload_files": 798,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/insert_key.tar.gz"
+    },
+    "insert_tubes": {
+      "archive_path": "assets/icl/insert_tubes.tar.gz",
+      "archive_sha256": "cdee6892aca8691ae58ca2cce11e2dc5b68fa7f88d27ccabbd6138ed95ec5316",
+      "archive_size": 155348068,
+      "manifest_sha256": "3d14cdbba23d6a1b0135ec2f1c30f8e828900b8aa6bad8dcbcb0da316144a01f",
+      "payload_bytes": 156958924,
+      "payload_files": 1734,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/insert_tubes.tar.gz"
+    },
+    "make_kong": {
+      "archive_path": "assets/icl/make_kong.tar.gz",
+      "archive_sha256": "05ff1f9aa2533e8ee923c3f3171a239a2dc4f3c631f936f8a03362bae52c36e2",
+      "archive_size": 45574165,
+      "manifest_sha256": "78bf2e9b6d667240dd7bf9ee10bfd519e6aceb1c8cef88af6523f20e843e201e",
+      "payload_bytes": 47294855,
+      "payload_files": 288,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/make_kong.tar.gz"
+    },
+    "make_toast": {
+      "archive_path": "assets/icl/make_toast.tar.gz",
+      "archive_sha256": "41387cabbe2293c07b37e3fe4f1ccac7b3c6369f0a8dbff983794295f14a4c8c",
+      "archive_size": 37436412,
+      "manifest_sha256": "970861096901e01321496c0dd7e3a7cae877f9b3de36c9fcb98a62ab67c72c57",
+      "payload_bytes": 38614364,
+      "payload_files": 332,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/make_toast.tar.gz"
+    },
+    "pack_objects_into_box": {
+      "archive_path": "assets/icl/pack_objects_into_box.tar.gz",
+      "archive_sha256": "41ce6c381471430416fd01f23c65e0e15c1b0aeae7bf407c1213de4d3a009119",
+      "archive_size": 34378552,
+      "manifest_sha256": "701eeeae0900a6ae1f49289840c5f33756a2e96f77b397807027ca7a6b49c94d",
+      "payload_bytes": 35845876,
+      "payload_files": 130,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/pack_objects_into_box.tar.gz"
+    },
+    "play_Xylophone": {
+      "archive_path": "assets/icl/play_Xylophone.tar.gz",
+      "archive_sha256": "7c6e3ba050604118ccebddfac8a52f1fd3b4e7a9e4f30642f16036662807a5b5",
+      "archive_size": 90341953,
+      "manifest_sha256": "c6157c21d2a506fb8cf058c0afb59bea21b7be2a9f703c1528eb2be1545762c9",
+      "payload_bytes": 92080544,
+      "payload_files": 945,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/play_Xylophone.tar.gz"
+    },
+    "play_stacking_toy": {
+      "archive_path": "assets/icl/play_stacking_toy.tar.gz",
+      "archive_sha256": "10c9c6f0d4c511e3e09e438ed568f50f7747b036cc398e8bd9bfb09cc065e619",
+      "archive_size": 55610324,
+      "manifest_sha256": "a64a73cbb4760ae0e85344e554a45b7c034b32acce061d0d455936f48dd6bddc",
+      "payload_bytes": 57201581,
+      "payload_files": 366,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/play_stacking_toy.tar.gz"
+    },
+    "play_tic_tac_toe": {
+      "archive_path": "assets/icl/play_tic_tac_toe.tar.gz",
+      "archive_sha256": "a128abddf36ebc6fae3eb8e46a72d62a7997acd5acbff3d2471c29521421c53a",
+      "archive_size": 24017159,
+      "manifest_sha256": "52817b32bdf9f791b125b783d061db09d9c6fde2c2b7350711fcd33c2663c420",
+      "payload_bytes": 25875057,
+      "payload_files": 186,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/play_tic_tac_toe.tar.gz"
+    },
+    "plug_in_charger": {
+      "archive_path": "assets/icl/plug_in_charger.tar.gz",
+      "archive_sha256": "c35b150df19800c1c472bb1f7b0788d686b13acb5e0450d5e62564791d500631",
+      "archive_size": 51125025,
+      "manifest_sha256": "29f6535c5236df48641e247edd7c3c965fdb5df18a1b37d24a4462ca12cdfd99",
+      "payload_bytes": 52400804,
+      "payload_files": 420,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/plug_in_charger.tar.gz"
+    },
+    "pour_liquid_into_cup": {
+      "archive_path": "assets/icl/pour_liquid_into_cup.tar.gz",
+      "archive_sha256": "073cbfb8eced9da6214a0ffefdfbe36c62b145410200eeea084d785e542f63bf",
+      "archive_size": 48957467,
+      "manifest_sha256": "b5c42ded32581dfdda62a24150cb54500f07ddf4a62bd790ee24485149aa99d9",
+      "payload_bytes": 49955536,
+      "payload_files": 592,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/pour_liquid_into_cup.tar.gz"
+    },
+    "push_T": {
+      "archive_path": "assets/icl/push_T.tar.gz",
+      "archive_sha256": "39868072709680de16b567069369058aaf4f8c0c8a419cf96f5b981c99e9ae61",
+      "archive_size": 49465659,
+      "manifest_sha256": "73c21d3ea36c56322491611b2de2c1bba18d944bedc4538773d0378107d740f2",
+      "payload_bytes": 52025602,
+      "payload_files": 467,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/push_T.tar.gz"
+    },
+    "put_bottles_into_dustbin": {
+      "archive_path": "assets/icl/put_bottles_into_dustbin.tar.gz",
+      "archive_sha256": "ba6fcaa705bbd2174d1e489611d95dc208fd157b2586df4eee6db56b9a91031b",
+      "archive_size": 30250335,
+      "manifest_sha256": "0290ed8c6f76ae52be084b2ff1c819b80d7450ef91fde3d0fbfcb2b0444932b1",
+      "payload_bytes": 31900562,
+      "payload_files": 183,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/put_bottles_into_dustbin.tar.gz"
+    },
+    "shared_id_study": {
+      "archive_path": "assets/icl/shared_id_study.tar.gz",
+      "archive_sha256": "a37dfd49dcbbfb0fd7e2eaf2c72613b643ca43cbb3516888f994179026a4c615",
+      "archive_size": 439382038,
+      "manifest_sha256": "d73786b31c910bf59a07a3cc4cb5b9bcb72a07cbb658813f494056820c52ceac",
+      "payload_bytes": 494068731,
+      "payload_files": 2367,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/shared_id_study.tar.gz"
+    },
+    "sort_nesting_dolls_by_size": {
+      "archive_path": "assets/icl/sort_nesting_dolls_by_size.tar.gz",
+      "archive_sha256": "21f71ebb40ce1912f5ee585f09f590a4f9f19305f3a4aefc8604aeca728e9247",
+      "archive_size": 95247076,
+      "manifest_sha256": "d8f88a23e74305923d478dd7b8218fc74d897e1d2a5b4038daf8947d7486241a",
+      "payload_bytes": 97071069,
+      "payload_files": 1069,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/sort_nesting_dolls_by_size.tar.gz"
+    },
+    "stack_blocks": {
+      "archive_path": "assets/icl/stack_blocks.tar.gz",
+      "archive_sha256": "1d3fd55637e563bf735666353139f101ea18a9b915d171cf50055306680dad65",
+      "archive_size": 103173750,
+      "manifest_sha256": "f62ebd77e3656d64277e88dc7065944b6f865450f37e9416f5209f4284cfba6c",
+      "payload_bytes": 103632557,
+      "payload_files": 164,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/stack_blocks.tar.gz"
+    },
+    "stack_bowls": {
+      "archive_path": "assets/icl/stack_bowls.tar.gz",
+      "archive_sha256": "c55fb78c2dee96b4eeb7656781012bd5d9c52cd02b1f72de877fa8688961e82a",
+      "archive_size": 82009842,
+      "manifest_sha256": "1328f9f549e5554626ad4d3f2309abd312f59d5cf018f836a0e543e716e32675",
+      "payload_bytes": 83067763,
+      "payload_files": 984,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/stack_bowls.tar.gz"
+    },
+    "store_laptop_and_headphones": {
+      "archive_path": "assets/icl/store_laptop_and_headphones.tar.gz",
+      "archive_sha256": "6be565428511aaa8d3aa2efc8e2341e8765a160a627d1ab90b19b83a23a02bd4",
+      "archive_size": 83523023,
+      "manifest_sha256": "0c59c598215d819a67b64428bb5c1170e32e78dd9a6336bc55d64af67c46c8fa",
+      "payload_bytes": 84484563,
+      "payload_files": 727,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/store_laptop_and_headphones.tar.gz"
+    },
+    "sweep_blocks": {
+      "archive_path": "assets/icl/sweep_blocks.tar.gz",
+      "archive_sha256": "1e37e409c202c5da7ccc01aa7df73f76f7f34e598452007b951c314f2fa974d7",
+      "archive_size": 153062564,
+      "manifest_sha256": "40e322f822cc6434e760fc0830847c391a07d2300f7abf63743223bca7db637d",
+      "payload_bytes": 154940424,
+      "payload_files": 1691,
+      "url": "https://huggingface.co/datasets/sensenova/SenseNova-RoboRSI-Packages/resolve/d922d28766d11d761228a500ddb7a28abc1b121e/robodojo/v1.0.0/icl/sweep_blocks.tar.gz"
+    }
+  },
+  "credential_literal_scan": {
+    "binary_files_skipped": 19867,
+    "findings": [],
+    "scope": "inventory-declared text/code only; pattern-based, not proof of absence",
+    "text_files": 1520
+  },
+  "package_format": {
+    "exports": "none",
+    "package_type": "rpent.icl.context",
+    "schema_version": 1
+  },
+  "schema_version": 1,
+  "totals": {
+    "archive_bytes": 2418619576,
+    "bundles": 27,
+    "bytes": 2521855428,
+    "files": 21387
+  },
+  "upstream": {
+    "commit": "cfa591575172b638a8436fa95db28e9469785c9c",
+    "inventory_path": "robots/robodojo/agents/icl_pi05/resources/frozen-bundles.json",
+    "inventory_sha256": "0259fbe37861fbda09f67ea05c9fc9798c1acda1d4dc488e551675b527866608",
+    "repository": "https://github.com/SenseTime-FVG/RoboRSI.git",
+    "source_manifest_sha256": "cbf84e2a13447c9df426f15a79aa6e747913495e94b9fb57053d5263d0f81e30"
+  }
+}

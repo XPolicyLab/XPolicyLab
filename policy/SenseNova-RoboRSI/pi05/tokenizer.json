@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "PaliGemma SentencePiece tokenizer",
+  "upstream_uri": "gs://big_vision/paligemma_tokenizer.model",
+  "url": "https://storage.googleapis.com/big_vision/paligemma_tokenizer.model",
+  "cache_relative_path": "big_vision/paligemma_tokenizer.model",
+  "size": 4264023,
+  "sha256": "8986bb4f423f07f8c7f70d0dbe3526fb2316056c17bae71b1ea975e77a168fc6",
+  "identity_note": "Same bytes as the reference pi0.5 service cache; verified against its audited overlay. The public object URL has no revision component, so installation requires this exact content hash.",
+  "license_notice": "Preserve the OpenPI LICENSE_GEMMA.txt notice delivered in vendor/pi05/openpi."
+}

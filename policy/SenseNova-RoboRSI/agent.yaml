@@ -1,0 +1,37 @@
+schema_version: 1
+source_root: .
+factory: sense_nova_roborsi_factory:make_agent
+code:
+  - sense_nova_roborsi_factory.py
+  - hybrid_agent.py
+  - hybrid_launcher.py
+  - hybrid_backend.py
+agent:
+  planner: codex_cli
+  model: gpt-6-astra/azure_L/qwb
+  reasoning_effort: max
+  max_turns: null
+  max_tokens: null
+  planner_timeout_s: 0
+  action_timeout_s: null
+  codex_cli:
+    executable: runtime/codex/bin/codex
+    expected_version: codex-cli 0.160.1
+    expected_sha256: f34a4d2301892ae96c90097786bfe5dc269f187b6f69faf42a7b357b8c081e35
+    tools: external
+    inherit_env: false
+    env_vars:
+      - CODEX_API_KEY
+    cli_args: []
+    config_overrides:
+      approval_policy: never
+      model_auto_compact_token_limit: 60000
+      web_search: disabled
+      features.multi_agent: false
+      model_provider: tokenhub
+      model_providers.tokenhub.name: TokenHub
+      model_providers.tokenhub.base_url: https://tokenhub.sensetime.com/v1
+      model_providers.tokenhub.wire_api: responses
+      model_providers.tokenhub.env_key: CODEX_API_KEY
+      model_providers.tokenhub.stream_max_retries: 8
+      model_providers.tokenhub.request_max_retries: 8

@@ -1,0 +1,53 @@
+{
+  "adapter": "hybrid_adapter.py:Adapter",
+  "agent_workspace": "workspaces/pack_objects_into_box-s0",
+  "benchmark_python": "python3",
+  "codex_home": "",
+  "environment_revision": "Local installed RoboDojo; source driver SHA256 3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+  "episode_seconds": 86400,
+  "explore_seconds": 3600,
+  "local_integration": {
+    "derived_from": "pack_objects_into_box-s1.json",
+    "evaluation_state_imported": false,
+    "fresh_episode": true,
+    "policy": "Adaptive GPT review length 5..50, default 5; full 50-point proposal"
+  },
+  "model": "gpt-6-astra/azure_L/qwb",
+  "options": {
+    "action_mode": "eef",
+    "approved_steps_default": 5,
+    "approved_steps_max": 50,
+    "approved_steps_min": 5,
+    "codex_compact_tokens": 60000,
+    "evaluation_independent": true,
+    "gpu": 0,
+    "gripper_clip": true,
+    "live_context_recovery": true,
+    "max_repeat": 1,
+    "physical_gpu": 3,
+    "review_allow_reset": false,
+    "review_length_policy": "model_selected_prefix",
+    "review_max_windows": 1,
+    "review_window_steps": 1300,
+    "stop_min_steps": 1300,
+    "task": "pack_objects_into_box",
+    "vla_horizon": 50,
+    "vla_port": 19802
+  },
+  "public_instructions": "interfaces/pack_objects_into_box-s0.md",
+  "reasoning_effort": "max",
+  "request_seconds": 3600,
+  "terminal_feedback": false,
+  "test_episodes": [
+    {
+      "eval_seed": 0,
+      "id": "pack_objects_into_box-s0-eval0-layout0",
+      "layout_id": 0,
+      "reset_seed": 0,
+      "robot": "arx_x5",
+      "seed": 0,
+      "task": "pack_objects_into_box"
+    }
+  ],
+  "train_episodes": []
+}

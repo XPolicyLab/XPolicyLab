@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roborsi:schemas:roborsi_interaction_envelope:v1",
+  "title": "RoboRSI interaction envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "benchmark", "episode_id", "payload"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"enum": ["task", "start_result", "observation", "action", "episode_stop", "benchmark_query", "query_result", "step_result", "native_result", "evaluation_result", "error"]},
+    "benchmark": {"type": "string", "minLength": 1},
+    "episode_id": {"type": "string", "minLength": 1},
+    "request_id": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"}
+  }
+}
