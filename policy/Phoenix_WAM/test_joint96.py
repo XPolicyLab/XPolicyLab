@@ -198,7 +198,7 @@ class RealContractTests(unittest.TestCase):
                 self.backend.validate_contract(cfg, payload, assets['dataset_stats'], manifest['step'])
                 self.assertIn(robot.replace('_', '-'), assets['checkpoint'].name)
                 self.assertEqual(cfg.checkpoint_contract.expected_pretrain_step,
-                                 {'arx_x5': 175000, 'piper': 165000, 'piper_x': 180000}[robot])
+                                 {'arx_x5': 230000, 'piper': 235000, 'piper_x': 245000}[robot])
                 support = checkpoint_robot_support(payload, assets['robot_profile'])
                 self.assertEqual(support['embodiment_id'], slot)
                 self.assertTrue(support['posttrained'])

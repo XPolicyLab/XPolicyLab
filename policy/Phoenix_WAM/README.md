@@ -13,18 +13,20 @@ Run on the GPU server from `XPolicyLab/policy/Phoenix_WAM` (Linux, CUDA/BF16):
 ```bash
 bash install.sh phoenix-wam
 conda activate phoenix-wam
-bash download_checkpoint.sh checkpoints/phoenix-wam-step40000
+bash download_checkpoint.sh checkpoints/phoenix-wam-joint96-step40000
 ```
 
 The download script fetches all three policy checkpoints and the shared frozen-model dependencies from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-wam). Model configuration, tokenizer and all three robots' normalization statistics are included in this policy directory.
 
 To download only one robot and its shared dependencies, add `--robot-type arx_x5`, `--robot-type piper` or `--robot-type piper_x` to the download command.
 
-| `env_cfg_type` | Selected checkpoint | Soft prompt ID |
-| --- | --- | --- |
-| `arx_x5` | `phoenix-wam-arx-x5-step_040000.pt` | 2 |
-| `piper` | `phoenix-wam-piper-step_040000.pt` | 4 |
-| `piper_x` | `phoenix-wam-piper-x-step_040000.pt` | 15 |
+| `env_cfg_type` | Selected checkpoint | Pretraining initialization step | Soft prompt ID |
+| --- | --- | --- | --- |
+| `arx_x5` | `phoenix-wam-arx-x5-joint96-init230k-step_040000.pt` | 230000 | 2 |
+| `piper` | `phoenix-wam-piper-joint96-init235k-step_040000.pt` | 235000 | 4 |
+| `piper_x` | `phoenix-wam-piper-x-joint96-init245k-step_040000.pt` | 245000 | 15 |
+
+The `init` value identifies the pretraining checkpoint; all three policies then complete 40000 posttraining steps. `phoenix_release.json` pins each filename, SHA256, size and training metadata. When updating an older installation, rerun the download command to fetch these files.
 
 Keep the published filenames inside `WAM_CHECKPOINT_PATH`; do not rename or interchange the files. Loading verifies the selected checkpoint's SHA256 and training metadata. A missing or mismatched checkpoint stops startup.
 
@@ -33,7 +35,7 @@ Keep the published filenames inside `WAM_CHECKPOINT_PATH`; do not rename or inte
 Use the official RoboDojo workspace, including its external `env_cfg/` robot definitions, on the policy server. Prepare the checkpoint settings:
 
 ```bash
-export WAM_CHECKPOINT_PATH="$PWD/checkpoints/phoenix-wam-step40000"
+export WAM_CHECKPOINT_PATH="$PWD/checkpoints/phoenix-wam-joint96-step40000"
 export WAM_EXPECTED_STEP=40000
 export WAM_ALLOW_DUMMY_POLICY=false
 ```
@@ -43,15 +45,15 @@ Choose **one** server command below. Replace the example task with the official 
 ```bash
 # ARX X5
 WAM_AUDIT_DIR="$PWD/logs/arx_x5" bash setup_eval_policy_server.sh \
-  RoboDojo cover_blocks phoenix-wam-step40000 arx_x5 joint 0 0 phoenix-wam 9000 0.0.0.0
+  RoboDojo cover_blocks phoenix-wam-joint96-step40000 arx_x5 joint 0 0 phoenix-wam 9000 0.0.0.0
 
 # Piper
 WAM_AUDIT_DIR="$PWD/logs/piper" bash setup_eval_policy_server.sh \
-  RoboDojo fill_pen_holder phoenix-wam-step40000 piper joint 0 0 phoenix-wam 9000 0.0.0.0
+  RoboDojo fill_pen_holder phoenix-wam-joint96-step40000 piper joint 0 0 phoenix-wam 9000 0.0.0.0
 
 # Piper X
 WAM_AUDIT_DIR="$PWD/logs/piper_x" bash setup_eval_policy_server.sh \
-  RoboDojo cap_pen phoenix-wam-step40000 piper_x joint 0 0 phoenix-wam 9000 0.0.0.0
+  RoboDojo cap_pen phoenix-wam-joint96-step40000 piper_x joint 0 0 phoenix-wam 9000 0.0.0.0
 ```
 
 RoboDojo's official client connects to the GPU server's reachable IP on port `9000`, using `policy_name=Phoenix_WAM`, the matching `env_cfg_type`, and `action_type=joint`. For the standard client wrapper, use `EVAL_ENV_TYPE=real` and the official hardware configuration. Shared deployment conventions are in the [XPolicyLab README](../../README.md#-deployment-flow).
@@ -64,7 +66,7 @@ Optional offline GPU smoke test, from the **parent directory of `XPolicyLab`**:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python -m XPolicyLab.policy.Phoenix_WAM.smoke_joint96 \
-  XPolicyLab/policy/Phoenix_WAM/checkpoints/phoenix-wam-step40000 \
+  XPolicyLab/policy/Phoenix_WAM/checkpoints/phoenix-wam-joint96-step40000 \
   --expected-step 40000 --robot-type piper --rounds 3 --audit-dir logs/phoenix-smoke
 ```
 
