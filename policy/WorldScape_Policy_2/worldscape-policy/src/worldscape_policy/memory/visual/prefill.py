@@ -58,7 +58,10 @@ class VisualPrefillManager(nn.Module):
         encode_normalized = getattr(self.codec, "encode_normalized", None)
         if (
             images.ndim == 6
-            and images.shape[2] == 3
+            and (images.shape[2] == 3 or (
+                images.shape[2] == 1
+                and getattr(self.codec, "diffusion_view_layout", None) == "robotwin_concat"
+            ))
             and callable(prepare_diffusion_video)
             and callable(encode_normalized)
         ):

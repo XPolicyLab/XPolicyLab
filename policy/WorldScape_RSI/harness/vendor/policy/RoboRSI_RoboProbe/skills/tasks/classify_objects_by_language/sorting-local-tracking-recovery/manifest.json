@@ -1,0 +1,14 @@
+{
+  "id": "sorting-local-tracking-recovery",
+  "version": "0.9.2-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [],
+  "description": "分拣：跟踪恢复、载荷采样与执行诊断",
+  "implementation": "text"
+}

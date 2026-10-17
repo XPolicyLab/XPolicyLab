@@ -23,8 +23,8 @@ cd XPolicyLab/policy/WorldScape_Policy_2
 bash install.sh
 ```
 
-`install.sh` runs `pip install -e worldscape-policy[server]` followed by
-`pip install -e ../..`. Set `WORLDSCAPE_POLICY_ROOT` only if you want to use
+`install.sh` runs `pip install -e worldscape-policy[server] -e ../..`.
+Set `WORLDSCAPE_POLICY_ROOT` only if you want to use
 a WorldScape checkout other than `worldscape-policy/`. Keep
 RoboTwin/SAPIEN in its separate evaluation environment.
 
@@ -186,7 +186,7 @@ zeros for debug-only wiring checks, default `false`.
 Supported replan steps for horizon `24` (observation interval `3`) are
 `3, 6, 9, 12, 15, 18, 21, 24`.
 
-The adapter receives three already-decoded HWC `uint8` RGB arrays:
+The RoboTwin2 adapter receives three already-decoded HWC `uint8` RGB arrays:
 `cam_head`, `cam_left_wrist`, and `cam_right_wrist`. It performs no
 OpenCV/PIL decoding and no RGB/BGR channel swap. Robot state and action
 conversion use XPolicyLab's shared helpers in the dual-arm `6+1+6+1` packing
@@ -194,6 +194,34 @@ order.
 
 ## Limitations
 
-- `eval_batch` and both batch APIs are disabled. One policy-server instance
-owns one mutable rollout/history state and serves one active environment.
+- For RoboTwin2, `eval_batch` and both batch APIs are disabled. One policy-server
+instance owns one mutable rollout/history state and serves one active environment.
 
+## RoboDojo profile
+
+The default [deploy.yml](deploy.yml) uses RoboTwin2. For RoboDojo ARX-X5 joint
+inference, select [deploy_robodojo.yml](deploy_robodojo.yml).
+
+```bash
+cd XPolicyLab/policy/WorldScape_Policy_2
+WSP_DEPLOY_CONFIG=deploy_robodojo.yml \
+bash eval.sh \
+  RoboDojo stack_bowls /absolute/path/to/checkpoint \
+  arx_x5 joint 0 0 0 worldscape-policy robodojo
+```
+
+Supply a compatible RoboDojo checkpoint and replace the conda environment names
+with your installed policy and simulator environments. The benchmark's `env_cfg/`
+directory must be beside `XPolicyLab/`, following the shared workspace convention.
+For split deployment, set `WSP_DEPLOY_CONFIG` on both hosts.
+
+Adjust deployment settings in the selected YAML. For RoboDojo, `action_horizon`
+defaults to `24`; checkpoint metadata takes precedence when present. The example selects
+`input_color_order: bgr`; use `rgb` for checkpoints that expect RGB.
+
+For independent replicas on multiple GPUs, set `multi_gpu.enabled: true` in the
+RoboDojo YAML and pass a comma-separated `policy_gpu_id`, such as `0,1`, to the
+standard evaluation/server script. Each GPU loads a complete model; environments
+remain assigned to the same GPU until reset. `max_envs_per_gpu: null` leaves the
+per-GPU environment count uncapped; `worker_timeout_s` limits each worker call.
+Multi-GPU inference is disabled by default and only supported by the RoboDojo profile.

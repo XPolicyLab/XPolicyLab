@@ -46,6 +46,8 @@ class WanVisualCodec(nn.Module):
                 "'robotwin_concat'"
             )
         self.diffusion_view_layout = diffusion_view_layout
+        self.diffusion_concat_view_order = (0, 1, 2)
+        self.diffusion_concat_size = (384, 320)
 
     def encode_visual(self, video: torch.Tensor) -> torch.Tensor:
         if video.ndim == 6:
@@ -67,9 +69,18 @@ class WanVisualCodec(nn.Module):
 
     def prepare_diffusion_video(self, views: torch.Tensor) -> torch.Tensor:
         if self.diffusion_view_layout == "robotwin_concat":
+            if views.ndim == 6 and views.shape[2] == 1:
+                if tuple(views.shape[-2:]) != self.diffusion_concat_size:
+                    raise ValueError("Precomposed concat canvas has the wrong spatial size")
+                return normalize_visual(
+                    views[:, :, 0], input_range=self.visual_input_range,
+                ).clamp_(-1.0, 1.0)
+            if views.ndim != 6 or views.shape[2] != 3:
+                raise ValueError("concat views must have shape [B,T,3,C,H,W]")
             return prepare_diffusion_robotwin_concat(
-                views,
+                views[:, :, list(self.diffusion_concat_view_order)],
                 input_range=self.visual_input_range,
+                output_size=self.diffusion_concat_size,
             )
         return prepare_diffusion_mosaic(
             views,

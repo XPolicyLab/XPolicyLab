@@ -1,0 +1,17 @@
+{
+  "id": "stack-blocks-placement-stall",
+  "version": "0.3.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "primitive-control",
+    "other-arm-observer"
+  ],
+  "artifact_type": "skill",
+  "description": "放置受阻与空手撤臂",
+  "implementation": "text"
+}

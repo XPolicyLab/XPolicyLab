@@ -1,0 +1,16 @@
+{
+  "id": "wrench-head-regrasp",
+  "version": "0.3.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "扳手宽头重抓",
+  "implementation": "text"
+}

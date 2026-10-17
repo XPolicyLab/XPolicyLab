@@ -1,0 +1,16 @@
+{
+  "id": "stack_blocks-post-placement-review",
+  "version": "0.3.1-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "叠方块释放复核与撤臂",
+  "implementation": "text"
+}

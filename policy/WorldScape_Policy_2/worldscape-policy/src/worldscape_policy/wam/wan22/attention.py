@@ -52,6 +52,7 @@ def _sdpa_attention_fallback(
             'Padding mask is disabled when using scaled_dot_product_attention on this GPU. '
             'It can have a slight impact on quality.'
         )
+    out_dtype = q.dtype
     q = q.transpose(1, 2).to(dtype)
     k = k.transpose(1, 2).to(dtype)
     v = v.transpose(1, 2).to(dtype)
@@ -62,7 +63,7 @@ def _sdpa_attention_fallback(
     out = torch.nn.functional.scaled_dot_product_attention(
         q, k, v, attn_mask=None, is_causal=causal, dropout_p=dropout_p
     )
-    return out.transpose(1, 2).contiguous()
+    return out.transpose(1, 2).contiguous().to(out_dtype)
 
 
 def flash_attention(
@@ -247,6 +248,7 @@ def attention(
             )
         attn_mask = None
 
+        out_dtype = q.dtype
         q = q.transpose(1, 2).to(dtype)
         k = k.transpose(1, 2).to(dtype)
         v = v.transpose(1, 2).to(dtype)
@@ -255,4 +257,4 @@ def attention(
             q, k, v, attn_mask=attn_mask, is_causal=causal, dropout_p=dropout_p)
 
         out = out.transpose(1, 2).contiguous()
-        return out
+        return out.to(out_dtype)

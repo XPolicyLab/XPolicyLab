@@ -1,0 +1,16 @@
+{
+  "id": "hammer-support-recovery",
+  "version": "0.3.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "锤子支撑与掉落恢复",
+  "implementation": "text"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "bimanual-workspace-coordination",
+  "version": "0.1.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "两个机械臂可独立准备或搬运时，按实际通道安排并行、交错或串行，减少重复路段而不破坏任务顺序。",
+  "implementation": "text"
+}

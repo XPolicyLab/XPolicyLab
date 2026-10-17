@@ -1,0 +1,14 @@
+{
+  "id": "aspire-v6-catalog",
+  "version": "6.0.0-native.1-rgb-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [],
+  "description": "分阶段操作目录",
+  "implementation": "text"
+}

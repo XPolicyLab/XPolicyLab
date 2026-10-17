@@ -1,0 +1,13 @@
+{
+  "id": "nesting-doll-edge-recovery",
+  "version": "0.1.1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "description": "桌缘最大套娃的短段向内接触",
+  "implementation": "text"
+}

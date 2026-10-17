@@ -1,0 +1,10 @@
+{
+  "schema": "r2si.harness-integration.v2",
+  "active_manifest": "harness/release.json",
+  "active_release_sha256": "0ddf9a222453ab1241e3eaf5e593e79eb05d3b538af53aa6d713da5e9b9ddf79",
+  "architecture": "one inner Agent with WSP memory/no-memory WAM Skills",
+  "external_wam": "WorldScape_Policy_2 (unchanged)",
+  "official_single_entry_eligible": false,
+  "eligibility_status": "unverified",
+  "runtime_sources": "harness/vendor/runtime_support"
+}

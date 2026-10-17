@@ -1,0 +1,14 @@
+{
+  "id": "stack_blocks-fast-locate-frozen-reference",
+  "version": "1-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think"
+  ],
+  "dependencies": [
+    "robot-action-timing-tool"
+  ],
+  "description": "可见净空下的高位接近",
+  "implementation": "text"
+}

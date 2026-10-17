@@ -1,0 +1,16 @@
+{
+  "id": "sleeves-then-paired-hem",
+  "version": "1.7.0-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "fold-withdrawal-feedback",
+    "robot-action-timing-tool"
+  ],
+  "description": "逐袖内折，再折下摆",
+  "implementation": "text"
+}

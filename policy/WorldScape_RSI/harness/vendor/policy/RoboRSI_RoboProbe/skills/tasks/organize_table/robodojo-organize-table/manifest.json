@@ -1,0 +1,1 @@
+{"id": "robodojo-organize-table", "version": "v-084d37690802", "interface": "roborsi.public.v1", "kind": "text", "implementation": "text", "stages": ["think", "control", "feedback"], "dependencies": [], "description": "# \u6574\u7406\u684c\u9762\uff1a\u56db\u9879\u5bf9\u5e94\u4f4d\u7f6e\u4e0e\u5f52\u4f4d"}

@@ -1,0 +1,14 @@
+{
+  "id": "pickup-plan-before-action",
+  "version": "0.1.0-rgb-r1-roboprobe-v17-r1-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think",
+    "control"
+  ],
+  "dependencies": [],
+  "description": "拾取任务先规划再行动",
+  "implementation": "text"
+}

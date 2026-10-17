@@ -1,0 +1,16 @@
+{
+  "id": "stack-blocks-base-selection",
+  "version": "0.1.0-rgb-r1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "双臂可达的基座选择",
+  "implementation": "text"
+}

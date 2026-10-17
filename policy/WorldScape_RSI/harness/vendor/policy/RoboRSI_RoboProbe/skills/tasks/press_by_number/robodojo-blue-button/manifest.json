@@ -1,0 +1,16 @@
+{
+  "id": "robodojo-blue-button",
+  "version": "1.0.1-roboprobe-v17-rgb2-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "skill",
+  "description": "蓝按钮阶段与按放证据",
+  "implementation": "text"
+}

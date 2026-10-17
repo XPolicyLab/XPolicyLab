@@ -1,0 +1,16 @@
+{
+  "id": "other-arm-observer",
+  "version": "0.1.3-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "stages": [
+    "feedback",
+    "control"
+  ],
+  "dependencies": [
+    "primitive-control"
+  ],
+  "artifact_type": "tool",
+  "description": "用另一臂的公开视角观察",
+  "implementation": "reviewed_in_process_dispatch"
+}

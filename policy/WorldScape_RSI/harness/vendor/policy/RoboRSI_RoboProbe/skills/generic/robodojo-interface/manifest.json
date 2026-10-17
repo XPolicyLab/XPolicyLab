@@ -1,0 +1,14 @@
+{
+  "id": "robodojo-interface",
+  "version": "0.1.1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "feedback",
+    "think"
+  ],
+  "dependencies": [],
+  "artifact_type": "tool",
+  "description": "RoboDojo 官方观测与控制接口",
+  "implementation": "text"
+}

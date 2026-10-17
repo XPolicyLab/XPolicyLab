@@ -1,0 +1,17 @@
+{
+  "id": "robodojo-swap-t",
+  "version": "0.2.1-rgb-r1-roboprobe-v17-aligned-r1",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [
+    "primitive-control",
+    "swap-t-clear-after-placement"
+  ],
+  "artifact_type": "skill",
+  "description": "双 T 块视觉对位与分段交换",
+  "implementation": "text"
+}

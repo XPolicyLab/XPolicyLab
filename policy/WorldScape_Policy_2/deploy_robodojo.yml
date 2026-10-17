@@ -1,0 +1,58 @@
+# Select on both hosts with WSP_DEPLOY_CONFIG.
+policy_name: WorldScape_Policy_2
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+eval_batch: true
+multi_gpu:
+  enabled: false
+  max_envs_per_gpu: null
+  worker_timeout_s: 1200
+checkpoint_path: null
+device: cuda
+# Transport images are RGB; BGR is an explicit checkpoint choice.
+input_color_order: bgr
+constrain_action_padding: true
+observation_history_segments: 8
+use_observation_history: true
+use_causal_memory: true
+wam_history_mode: rolling
+short_window_for_non_memory_tasks: true
+reset_independent_blocks: false
+default_instruction: follow the instruction
+t5_prompt_template: null
+# Permit auxiliary Qwen loading when prompt enhancement is enabled.
+interactive_qwen:
+  enabled: true
+# Checkpoint provenance overrides this fallback.
+press_by_number_prompt:
+  enabled: false
+  batch_size: 4
+request_timeout_s: 1200
+max_connect_attempts: 600
+connect_retry_delay_s: 1
+max_connect_seconds: 1200
+ws_ping_interval_s: 20
+ws_ping_timeout_s: 1200
+runtime_profile: robodojo
+worldscape_root: null
+mode: null
+action_horizon: 24
+replan_steps: null
+observation_interval: null
+diffusion_view_layout: null
+# Indices into adapter views, placed as top / bottom-left / bottom-right.
+diffusion_concat_view_order: [0, 2, 1]
+single_window_reference: first
+# Output canvas in pixels; applies only to robotwin_concat. Match the checkpoint.
+diffusion_concat_height: 256
+diffusion_concat_width: 224
+memory_window_chunks: 24
+ordinary_window_chunks: 4
+validate_checkpoint_artifacts: true

@@ -1,0 +1,1 @@
+{"id": "fast-locate-frozen-reference", "version": "v-084d37690802", "interface": "roborsi.public.v1", "kind": "text", "implementation": "text", "stages": ["think", "control", "feedback"], "dependencies": [], "description": "# \u53ef\u89c1\u51c0\u7a7a\u4e0b\u7684\u9ad8\u4f4d\u63a5\u8fd1"}
