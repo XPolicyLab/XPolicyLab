@@ -1,0 +1,772 @@
+{
+  "model": "gpt-6-astra",
+  "playground_seed": 0,
+  "reasoning_effort": "xhigh",
+  "source_run": "202610052245_robodojo_D_recipe_astra_xhigh_v01_a01",
+  "tasks": {
+    "align_blocks": {
+      "files": {
+        "lessons/README.md": "2933059ca025c5fa8e41efb7517ccc9db4d782caae6bac4f29b265765bee4d43",
+        "lessons/approach_contact.md": "1158e0c9d9d7c0cf140273d19b0336ccaaaaa836238e3f12639a78b1e95f2a7f",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/planar_tool_push.md": "6a481ac934d55ef3e28de4466dfef35e193867d5b8d796fe09739ca2e25e2fa0",
+        "lessons/tool_grasp.md": "d308f2168dd446a5ce3877dd6f06a4cad390cd7c8d5d77b403f05106ccab1276",
+        "skills/ee_move.md": "4d829dcb523ad8dfe2e098c67d7aff64bcb51cc69708116b7b201d842903f917",
+        "skills/ee_move.py": "df6e96aea9eff6e26c8b11c5f2ade10b9cbb1cdc37ec15d3feb8627179a4bb09",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/planar_sweep.md": "8b18d77313a6faeae60c82b0e5117124339e14e6ca603fb3c33c87ee51f2b635",
+        "skills/planar_sweep.py": "73b793654cccae7b7c734b8b238e5bf29d9b084e7ac9447b6c274b9545711723"
+      },
+      "native_variants": [
+        "align_blocks"
+      ]
+    },
+    "arrange_largest_number": {
+      "files": {
+        "lessons/cartesian_contact.md": "86a896c676adae476fec748b450f1f86977375f0676e7ea2b0bc29c43e393bd9",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/number_tiles.md": "af1645d8ba45cc32847da63d7eda9520362cc0ecf2fa4c32f31e7d384d549646",
+        "lessons/restricted_runtime.md": "89731c0d55c8215b8373954244efa854c8d2e0f661feee976282c1fedd4131dc",
+        "skills/ee_motion.md": "3769fe66610bf8e38777f59946b7a6c74d3fb79a641324e4ff59e58d36f04256",
+        "skills/ee_motion.py": "2e2dbfbcbb2fd9617a04290a68f01205507e6eee362fb720823af465e4451fcd",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/home_motion.md": "0417f63743f7f6498d40cb38318b2ad732acb57cbde8ef0b4d5bad12f9220318",
+        "skills/home_motion.py": "be81fcfb7e1ee1d88813ead356a251911b1cb2d73c72f5838ced669adb7dccd1"
+      },
+      "native_variants": [
+        "arrange_largest_number",
+        "arrange_largest_number_random"
+      ]
+    },
+    "build_tower": {
+      "files": {
+        "lessons/README.md": "4d2f115c0c6209632163acbe49afd99d5426323e5ba540ef407eaed957b2e262",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/tool_frame.md": "87884c0fecbabfc4f0de67bf328d961b230282ec1592b36801e4a1a933fd7b58",
+        "skills/dual_ee_motion.md": "bb8c35f340b5d302fb515c134874454aeaa0a126597e6eab75e686ce95cf1f1a",
+        "skills/dual_ee_motion.py": "fd0c7a0170885146a506350e119b15b17195fb586f4f08d5a646484d66b7e2e0",
+        "skills/ee_motion.md": "f451a3fe9b8c98e02d073f9f75c120314b6374b1e1286d1c137db458df987421",
+        "skills/ee_motion.py": "8a8117e9f121249501eaaa86ee1193a534592bce457bd710fa9465d85824a4a7",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/pick_place.md": "07ffaf1c581ed917b239f385a1a71c16bfec0c9ce10a3075e51246548764df0c",
+        "skills/pick_place.py": "d358f0122adc9e54c0cf913d44903dedcdd1ce8fb78d8e9c129b3d270a2d9015"
+      },
+      "native_variants": [
+        "build_tower"
+      ]
+    },
+    "classify_objects": {
+      "files": {
+        "lessons/abort_propagation.md": "894454223b145efccfce3b5ed31fd36a2b8749d3ea78f6ba2b3902c63aa3212b",
+        "lessons/contact_view_alignment.md": "44ea1dcdd51863181f689d2b882ed5b624b98c51816f2fdde12b38492621928a",
+        "lessons/doll_grasp.md": "2d5e01dc269db9856c7a682e4616086431f4429c21e9992ebcedab76e4f8195d",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_height.md": "6b5256e082ce7fc283584dbce49776711a4cd6a7c818361e3588285b0b788b64",
+        "lessons/ik_stalls.md": "390da31ec9fc2a3a1d164a39257a857d110621b75eb1feaf3323c70c7152a9a5",
+        "lessons/orientation_convergence.md": "bf28a181c6cd8726f706d5889166bbf9e91108209a9c1ca418993be9b793c6bb",
+        "lessons/session_result.md": "082e8d1903b187c3d3cbd300f7fe88ef65b1b77e9b4a1372e32b3cad50d7be75",
+        "lessons/watch_grasp.md": "a7bec99a90c3cf71b3e3fec39fffe361a45161d2d45e81a86d4caf5a231eae2c",
+        "skills/ee_motion.md": "d46a6d1b71ac4bbdbf28925221017cfbce723b27932ac5088dbaa745e16e5577",
+        "skills/ee_motion.py": "57dbaddc3036999150767f72e384c3009d3ec738c9f17f3f303c669a03e3ef4c",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/settled_release.md": "6259a700b45104a035c44334dccbf50c78475462ba13132bf5ec72718a8cf11e",
+        "skills/settled_release.py": "6cac8162c9796de7b778e166a1344e5255663af0af4af4cffba7139ee7b7a2f2",
+        "skills/staged_carry.md": "31a09f3bd5cbc379fa49ab79c1bf430f1d99487605fedff170800be7a5517661",
+        "skills/staged_carry.py": "559ccb4b14e6c323f9adabdfbe8fef303d137c867caec8827f685c85f74226e1"
+      },
+      "native_variants": [
+        "classify_objects"
+      ]
+    },
+    "classify_objects_by_language": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/visual_control.md": "14a1e8e346fb3d476fd60adffc28333b8d9face219cf9f3f5d19a35080963279",
+        "skills/ee_motion.md": "3d486cf5a180239a208fe5927e84ab70244ed25bc2ca84a2f6a9de39deee89e7",
+        "skills/ee_motion.py": "1465b85e44f837126e917a04e82dd39d42e0aa33203a183d1621fba5c8e3ae5b",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/visual_pick_place.md": "8e3525c87be5c6031fad30a599ca42b0392ceeebeaf289ec211c6b2aa2f5b7b0"
+      },
+      "native_variants": [
+        "classify_objects_by_language"
+      ]
+    },
+    "cover_blocks": {
+      "files": {
+        "lessons/cover_blocks_control.md": "013b9bde0683d3fd9ea12644c385a138f128c3c82e9738b983f05c8565ef78b0",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "skills/README.md": "f7c165c6c50e48f584f7ecf65de5ee9159b93af2b0fb48d1afbac84a6f636802",
+        "skills/ee_move.md": "e1437fa11dc520804f822cc08ed15a58837da40ecf2c291291a414bd094571f5",
+        "skills/ee_move.py": "d6708c35089b2ad1d0fa3d20e85db5309520d6bb893ae6f752236da08a7f4605",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/return_joints.md": "213d6d8818acd45c72bfc83019eb608c90b647499e5a0e50354287b82f431d50",
+        "skills/return_joints.py": "23b03866ef638d3d71cc6a81c49ab0942b5f0057c293dc8e44e4f4e946f6210b",
+        "skills/upright_cover.md": "1d5b1d2cfc8b8a60ffb268e76dff04909b23b3a55dc8a6dae58329660a6ac51c",
+        "skills/upright_cover.py": "d047ecf2b87158ae67b520d8877ed64abf229d65c263170d4afd7ea35e2851e5"
+      },
+      "native_variants": [
+        "cover_blocks"
+      ]
+    },
+    "deposit_coin": {
+      "files": {
+        "lessons/cartesian_control.md": "401b8c2f2364d31d13b7c6f42113f50deb1321ce2160ff69968a6dd03d20a1a2",
+        "lessons/coin_grasp.md": "b9e20b3b47f295e0beac11cce75e47bdf9fe50ff6a388679773e217f47c3c7ec",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/session_summary.md": "4bb2e48080930f95406d117d7a72f6ce1f374d0fffd04b226d08c0da9cc203d9",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/move_line.md": "e2c4d437bcd67adf984b5d3eb13cff64197db9511c46b7b5c70897b3b221b71f",
+        "skills/move_line.py": "fc195211a562c4a7bf41922ff1208837bd8cf3ba77eac6c3244826cfc98d23de",
+        "skills/reach_ee.md": "4a5a73a34b09ab970d6f0365ba767538e463a97ca212e73504faad21f8f36e86",
+        "skills/reach_ee.py": "82b64b7326e0f09205ea7b4181eda7e7e813d2d6fee7c96fdab4c2871e353039"
+      },
+      "native_variants": [
+        "deposit_coin"
+      ]
+    },
+    "fasten_screws": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/fastening.md": "7ca823463d6b70955acc3348393f3434349131d5fde2398f14516d49a8c857fe",
+        "lessons/grasp_alignment.md": "de96cc71dde775f9c18190c3c8dddeaff4842e14a70a19463a21c974a6aff4e6",
+        "lessons/interface.md": "b5986ce82d062191792a160b042ea6501342ae09a83493cd77baa51f5779e12e",
+        "lessons/session_result.md": "21b25f8c3a7e829fced1d6b6f91ca2705ef646014d04cddb07001c952acc309e",
+        "skills/ee_motion.md": "443689ac77799679c7d723301a28e5580513af03906b4f41d6a0b7e18f91aaa2",
+        "skills/ee_motion.py": "c5d702a84699ae70e655f63a6255a6760613fc82d1186f8f4d25707ddd01d310",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/nut_manipulation.md": "16ed8ce211dcbe0447a93f169276246415d1101c6f1be86591546640000fe801"
+      },
+      "native_variants": [
+        "fasten_screws"
+      ]
+    },
+    "fill_egg_holder": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/runtime.md": "44907c888d192503ca6e129137fe3ed15290ffda7c609cd097aaa9b34ccefd80",
+        "skills/README.md": "b73546a16c18acdc7ed4da8f817c834259d90a6b1feaabf2175a5cbf46fa65d6",
+        "skills/egg_retention.md": "25c8fb0f55b44ca0954ed228b2f27d15fb415417b8d37ede88f46d6f258577b6",
+        "skills/egg_retention.py": "29b255f580474944da1a37bc54bf3433d1663183aca2782ba69de9940296cc89",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/fold_hinged_panel.md": "660be5a41fe7023ca4e1c968623734e53f9e134a58530ecd8013f1924eaf217a",
+        "skills/fold_hinged_panel.py": "1a9b95d9f69529b2aa6a8a40f36cf6e4dd89c090fe9da4db490648a4bbd0c750",
+        "skills/linear_transport.md": "18c8c73249bf7e9d550edd997d1b8373faf8e76343e91cc8af0ea1dfdcfd1345",
+        "skills/linear_transport.py": "2883f7dcfd4548f8d9c55a1ac4dcc57f3542c971a62eb04df3250e591e3c3e39",
+        "skills/rotate_retained.md": "1b054fd86219e0f403af9fa0ed0c78a201772b8b14a20ff685a89f7c5ae6f0c2",
+        "skills/rotate_retained.py": "933d51b1b3f7bb95f86ecbb5677481392684bf38c184fc86aab22acedd547ed1",
+        "skills/servo_pose.md": "899b141084fa7e8c8567537f789792d96a0a6bfaac5710f8c440f34b585a05db",
+        "skills/servo_pose.py": "cc5a605346a1a42fcfe5c72280251e6e627bb3768eb4d550096d61ac19d4e000"
+      },
+      "native_variants": [
+        "fill_egg_holder"
+      ]
+    },
+    "fill_pen_holder": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_geometry.md": "60c6b8a57be906d062ddea53799ad118cd39af3c611887adbf0f696dc20997d9",
+        "lessons/runtime.md": "8598951230b19c35ebbea26692403eb2fe977d5c4ba1840502c90c4f85b4b74e",
+        "lessons/session_outcome.md": "da4e969f8ea0b008f31d823661ac0cfcedbabaac82d90ca5662f40fb5778c416",
+        "skills/README.md": "8b994da988353b2c82a9da1562d298e0d9179e8ea45634586ef8f0476594e1fc",
+        "skills/ee_control.md": "83ec8ab7cf868337393068b103a1e5eda17e78b9208beb5f523a421eb75fd521",
+        "skills/ee_control.py": "afc616cf6075f18d743159214f3ef1699a5cf9931f712cd4f7f08178e65766a2",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/pen_manipulation.md": "c0c3aa1ec81bbd2f0883c21b3e03f887f22dd8b79749fa6909ba154b9c2cf3ba",
+        "skills/pose_path.md": "d31e4c6a60ba305f18c6a7d532372a71c6d19c12dbbb4a9417bf3dd136afbde5",
+        "skills/pose_path.py": "6e8a5f821f82f8209add833e2d273ae2b2a18b691d962c70733969bf619d3d3c"
+      },
+      "native_variants": [
+        "fill_pen_holder"
+      ]
+    },
+    "fold_clothes": {
+      "files": {
+        "lessons/cartesian_stalls.md": "e784cf62f638860b4a484f3da67c29e52994f6242963f609493046901be6d1c1",
+        "lessons/cloth_pickup.md": "7bc08e92e65be7aeb2abf07e929a1b42f23b2ecb3f1169dc097b4df3a3559078",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/folding_sequence.md": "81db4c93791d48e5296ac23176a25363e61576ba71fc095e11717b79e2e99e4f",
+        "skills/cloth_folding.md": "ec0e932b261e2be60d979bdccb000e92c1430ebeaffbf1b997462ef430964ac2",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/move_pair.md": "6fd8f83ddcadbd505ae3dbe860a32afc8e462da172cd9a9169aea3fa13b3b137",
+        "skills/move_pair.py": "57c0d4da23947016143371f0c7d71174dd4efef3f55ee6cfd7dfbaf17042db0f",
+        "skills/return_joints.md": "7ed64538f467ad715036f836fe07ac0f255f1c6db46082fc046f10ce525f3dd8",
+        "skills/return_joints.py": "b21cdd67ab5d7afc9dc7604f53ebdb0acdffdba5ed0f89d05601479eb509584b"
+      },
+      "native_variants": [
+        "fold_clothes",
+        "fold_clothes_random"
+      ]
+    },
+    "general_pickup": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/ik_stalls.md": "8a7de905f4d0af97a4d102517a73f2f40b8616123c3ed97dc7a20562cf08b18a",
+        "lessons/pinch_and_verify.md": "97376daa66c696985f548656669496ce50ff1cf5376d2c475ce7b19f1caf3ad6",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/move_ee.md": "dcccde78f389bfe5e0f78c3f48a0e839e8a7448b4782aa05637137453d0b7753",
+        "skills/move_ee.py": "759810180b72f3a6811ba9e1b750c8b2daf86b77dc5bcff169450a69d7dff10e",
+        "skills/visual_pinch_lift.md": "45e6b9d3f88ef69662d5ed2a9bee296f15de0a6456a7631555f1bb117a3e019b"
+      },
+      "native_variants": [
+        "general_pickup"
+      ]
+    },
+    "hang_mugs": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/hanging_alignment.md": "08c81c82bf98b5fe4649c15dd0e4f5e021f282194be107ceabd2aa00e77848df",
+        "lessons/session_summary.md": "e752990968a299cede9e66ba5b4cb5ac8c3cefedb208862713eebe3776e69f66",
+        "lessons/tool_alignment.md": "1c125d2874a7420d4ac5c8252a746aed25cba4ebc83c077ea07ff0483deb2061",
+        "skills/ee_servo.md": "b88df1e20a870b8e7084b8daf7cda1315f612d697d85d97dee6272fc40f282aa",
+        "skills/ee_servo.py": "b8382324448c8bc47f25c83de92bab916d0a48fcd5d31592e67f489b40b24623",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/grasp_probe.md": "e678470b1ecdd824c9bc7bf28c4e6671bdc1aff9c3eb2d476cb748a976e742cc",
+        "skills/grasp_probe.py": "6bb6936fc5aba0ee8e138b5a04025d8b42dea27571f41b593f67ead9eb80c170",
+        "skills/handle_insertion.md": "e8cceb9d9fb1e2ee3778b9e37f6441b5b46a05be2e3fec61decd555d59180ddf",
+        "skills/handle_insertion.py": "8ef9f8513b5a5bc4aea44a6d594af5584e018de7f22f0cf1952cdffa9830889c"
+      },
+      "native_variants": [
+        "hang_mugs",
+        "hang_mugs_random"
+      ]
+    },
+    "imitate_sorting_sequence": {
+      "files": {
+        "lessons/demonstration.md": "2773f4d787427b09c6ce41b54acb4f792f50fcb1f0ed88589b3c39f8059f00aa",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_geometry.md": "23c27597b23dfaaffa1ab792e4fd19b5e7fe33c590a9b5d2d925bf403eb8eb50",
+        "lessons/session_result.md": "ce1083df9270456721e356b2b6c8da9b74090e98040e2ea005a059e346e8872d",
+        "skills/ee_motion.md": "545f565adfcd45e556d39cd09b10654532d246581c1bd9f552ce34759daa109c",
+        "skills/ee_motion.py": "84e8ae6cad8e8a329a91ba95d7f06bec297ca38e1d8007efe42f21e50c21d193",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/stationary_watch.md": "125f8220f4c1aa77238999381cb279cd6ed1516c9098b2fdcb54617f510fce99",
+        "skills/stationary_watch.py": "5a3f2fb942a45818507fff4a6052de95f03f8ceb0733f390a36ca65f33cc7779"
+      },
+      "native_variants": [
+        "imitate_sorting_sequence"
+      ]
+    },
+    "insert_key": {
+      "files": {
+        "lessons/README.md": "d688d6475fab1368d891256072e622e2da1ff2f94818aa38dcf5d7d43ad6825a",
+        "lessons/ee_height_and_contacts.md": "b32863d726bf6e569d0a1ce7265288a103debbd9023093b11d180e9e0d91c2c3",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/gripper_command_preservation.md": "c02f2c04ced6f099533cef2bd37e414a76dc0b8752d26e1f4338f8a7d98e5f7e",
+        "lessons/lengthwise_key_grasp.md": "fcafec3c8360c7eb176d1742f20ae33d72e6f962658aad9f8a3be1a0bb298bb7",
+        "lessons/runtime_constraints.md": "71934516621332492895285756219dffedfcd7568d7a86806a79db54d61d54d9",
+        "skills/README.md": "2f4aee5992f4512c2694e7402c242da6159b3d5bd99dc4ebf269adb1520f65eb",
+        "skills/ee_rotate.md": "e90173c5b153f1648979ddc7af2ee71e51eee75571fcb69db12180285ce77e07",
+        "skills/ee_rotate.py": "c26a159c4f91863bbc8d8919dfb1924903b44c23c2c130819d71b3aaa5bf231b",
+        "skills/ee_stage.md": "fcec89e3cca1df702816c45a0e2d62ca88914fbaf7ccb3afe25668ced861d579",
+        "skills/ee_stage.py": "53372e4d16bb54e56727d933b354a37fb26a4f1c3a1e744a024137c353d4907f",
+        "skills/ee_translate.md": "443fe0d1ab06f4be9518cf64529ce61c97977c148c37e2358e0f950a9af03fd1",
+        "skills/ee_translate.py": "aad6186cf31163306ab385941fb6c695bdf3abd038b00aca002112f092ba75b4",
+        "skills/ee_yaw_pivot.md": "80b3eecae9c65d6edb46246240ed2ebf5e7303e0c57e3e770da97f17ef1c3c69",
+        "skills/ee_yaw_pivot.py": "7bc10cea141b7061fd93541e3eb7b748c37401ea435a4d470b502dc466cbafc6",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/guarded_descent.md": "f0d3caafa8be682463e6a16fcb504eee9d56cb84adca8a28423fce45d2cf9eb9",
+        "skills/guarded_descent.py": "360f89b0929b07db9414522339f17c856721d0e99487d0c9dad6a4d8f7d65bc1"
+      },
+      "native_variants": [
+        "insert_key"
+      ]
+    },
+    "insert_tubes": {
+      "files": {
+        "lessons/completion.md": "415f794cd89719ead069a3154336791aac15fbd6c0ea412ff40c1e98e066413f",
+        "lessons/ee_geometry.md": "918099b6719789e9797c9a49b63b3db75ae57ebb4f7db35b3778b06749ae4636",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_projection.md": "0c5e8658d32fb761acf5dc4d31750dfd6a757fc9de4110bdec8b3e680776ebf7",
+        "lessons/insertion_contact.md": "2ea1e62ae5d21ca3b0242466ab7e950c97acdd65e618cff9253f1ad66ec7c693",
+        "lessons/rack_hole_selection.md": "0c63588a2bf659a9028d1ebb0dbaa01c0a6c329828c5217b06a67d974457cdad",
+        "skills/ee_move.md": "429704b9b9a5175313b551c6591ca43e7d7b5d7dee5c7078622a72b4517a8048",
+        "skills/ee_move.py": "71c7958b441cbb705f351b27454f119151c5457ff05353e3f7778f023cfc11d7",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/guarded_descent.md": "1841e0dedb70948b70cfc6b7d4fcda6de0246856a8e968aa7ba0be24b98289c1",
+        "skills/guarded_descent.py": "1f859c7c05df35ce9fbbd7d5c3b66a7c6e695f6a7cfdb11afaccf9a37062d1fb",
+        "skills/smooth_ee.md": "82e0797f30e7b8dc0eefcad8d2ff713dcd8c9c0ea3c58eb05048ba894fd4f3f3",
+        "skills/smooth_ee.py": "2e435b564475e7fc2fd3a16535541ec30add2ee309b9584f52ab45fd05bedf6c",
+        "skills/tube_frames.md": "162b93aa8a1619a0ea3851f54c7c527a4686901c6f5f9b37ad8c2448f8b6941a",
+        "skills/tube_frames.py": "a49471ea6044477cfc298a82a20ef6c7e924491a099e7798b8adb6300e7c126d"
+      },
+      "native_variants": [
+        "insert_tubes"
+      ]
+    },
+    "make_kong": {
+      "files": {
+        "lessons/README.md": "f3c6438b6362cf4a50d531eff2753a74dab38c9d6dc70c7e01cd83ae32bc3101",
+        "lessons/cartesian_contact.md": "0214e13a68255052b01aeba7bd10fb1569338819901f2ba44edc295cf3fb81cc",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/perception_and_timing.md": "94f7191c3874d9193081902a46073222b651f1d1b9429751c1086c0eff0cc0ce",
+        "lessons/placement_orientation.md": "b10c1b10fbaf7c7304646956e224ab87d030e5ba29fa72abbd409d75cb08ca3e",
+        "lessons/selective_toppling.md": "4b7af7dca1ff61571b031509fbdecf10a9e970797963ec7d5d5c48c6c9a87588",
+        "lessons/stack_grasp.md": "009c74aa76ea5638800e2778da8dde087c8d4f364f52be091d5ab01934106053",
+        "lessons/wrist_alignment.md": "acc01b11695d62202303c1309eee137bd755e7614d8b2dcbfbb4394fbe840197",
+        "skills/README.md": "f0b3c0dba28c1344aa51f04039d23bc2f72134754992aae81023abcdcf914f02",
+        "skills/cartesian.md": "517400a55a353d62335d46afd8f2fc48f91306e0548150fac8a2fb44a0c02466",
+        "skills/cartesian.py": "c544bf341dc3e13e857def7ca86c5576325036a5cf69a46a8b11f7f8728a2b47",
+        "skills/cartesian_path.md": "e4d401e65399216bce49c33809eaa7f4b4208bfad59a9a6d09f40af5aff14ce1",
+        "skills/cartesian_path.py": "fee4d375819e905f118e6a5e838f1e15872490a089612c85e7a12bbd58bbaf9d",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/grasp_test.md": "e5ad006f2f7bccd670014740781ac58577009c4bf9a3197ae045e036a969259c",
+        "skills/grasp_test.py": "9ddc0760e9247c4a771792e946ae2dd5c6a2e810f9b738fdfa088d99cd35d503",
+        "skills/push_tiles.md": "c6bd061e11832387fee489030a867fbd5ba547b00609e3723fe22b33c8d11914",
+        "skills/push_tiles.py": "4cd4257f8afc4982657ef0b812f56933893ded3fb907aa3dea8658c576db4a44"
+      },
+      "native_variants": [
+        "make_kong"
+      ]
+    },
+    "make_toast": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/reach_and_grasp.md": "0458b466bcfb19486372910c83550b762035cd81b5e322b472ccb07f95c0c3a7",
+        "lessons/session_summary.md": "04f6967510a3145a099a67ac0d6925032fd22634f2d516ec989c27e752173103",
+        "skills/README.md": "2b27d5adbb3ba351a8501159d42de456dede4a827a2964e8afefa9807209e565",
+        "skills/cartesian_servo.md": "e1629c1ced9d169a204b7c6ee8ba06cf6d8758104f1c53ce852b60be7362b7a3",
+        "skills/cartesian_servo.py": "5d64ab474c2a02f81d3903bdec53f120e7ab9518eb5e1dfd04b31219f023339c",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/joint_waypoint.md": "e1a36d2988488bf548e8c1c4240b5615a18f8978ea85867919c366b11f000fd4",
+        "skills/joint_waypoint.py": "ba0612b3a67cc6a21ef31df9e60175212a042be5bf19758128c88fe674d9391a",
+        "skills/secure_lift_reorient.md": "2906e76e1612bac9f0cc8a80f0b8cc8b91cd5bc0535ff907ef090ccfb01a4fd9",
+        "skills/secure_lift_reorient.py": "b8b730b146c03e05e46ea00a464cf897fc05145dc3978a84703e1e452dd34ae8",
+        "skills/transfer_grasp.md": "8b5e1575e07acb78977b1a85b22301fdf38de4a54d94a20e134bd672861e50db",
+        "skills/transfer_grasp.py": "d6362ca9f5f2fa546918c44ef954cc9602a4774a2055dd673ddb3a71bbe6d4d5"
+      },
+      "native_variants": [
+        "make_toast",
+        "make_toast_random"
+      ]
+    },
+    "match_and_pick_from_conveyor": {
+      "files": {
+        "lessons/conveyor_motion.md": "e49ad33792f298c84549d71d9b1349a77c38f97f273bf33cf33ef75d4fc6e1c6",
+        "lessons/ee_control.md": "c9e175cf8306d875cb3a77f2d429c99d539895763cb38a971751b8d041101d34",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "skills/color_tracking.md": "0de19d594288b883fb9f8c7202a98880901d96dde1327e529dbeea033b42cf1c",
+        "skills/color_tracking.py": "be708672796059d2fb5e48ef3b924c94e380b37e3f8c61f120984641c785759a",
+        "skills/conveyor_grasp.md": "e05775f875be45b0fada828d937415707ad8bcc2a334f9abf565215561211497",
+        "skills/conveyor_grasp.py": "54b93eb1c27e273e30816561c8f1e34318c0a476e7927bc0390a2cb30289a7ca",
+        "skills/ee_servo.md": "57348ed14b6cb3a9ac9ce3b045ffab8bf0a91808414fc066d26cbeb085e7c225",
+        "skills/ee_servo.py": "bcf4dcf257a41493cb410be820f334228332fb1abddfdd512c794b5761e9b9f0",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58"
+      },
+      "native_variants": [
+        "match_and_pick_from_conveyor"
+      ]
+    },
+    "organize_table": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/ik_and_camera.md": "ee9b9aa777c87e7a4846f1e59dd6276025445da4256c1cd4bd49932406c649f5",
+        "lessons/keyboard_push.md": "85398be1f6fe9acd9498663c7dc8cbc05190775c54c07e0ee3bb480099daec00",
+        "lessons/task_order.md": "5c5f5a0b110f8755e1ca5f20e033fb95b32730a74f5b96e3364cac1bc1c559bf",
+        "lessons/top_down_grasp.md": "18bf74f857acc33118626809589fbfc3fb4b62555fc1b8cb826355a1152d98ab",
+        "lessons/validated_outcome.md": "cee0758a3fe34947e36b708353f90dec124feddf30004e58548bd0cc01e432eb",
+        "skills/ee_control.md": "50631a4fc3195c43d5f63ce459f66f9621e2e3cfb23cfe12462b0e6e09417210",
+        "skills/ee_control.py": "b7cb0876d8c01f76a55798edbb3e319559e7fe80d12589d6b264a1d7f7b1709b",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/placement_workflow.md": "05bbc72e5d05c41031559a22c6b0d2c8ddae7b6c44d4cfb6b95660d564017aeb"
+      },
+      "native_variants": [
+        "organize_table"
+      ]
+    },
+    "pack_objects_into_box": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/geometry.md": "d26d106fa902655a95437f7fe14bd1cba1c00ae73cd72d9a2e2ffeceff474a86",
+        "lessons/validated_summary.md": "baa14bd2956a4d8d1ccfd6071cf37ce8a71851dd1ec88061770c9ba9b3193cc7",
+        "skills/README.md": "d7bc9b27a07ed69b9c07a01565cdf54c4bdef52f76eb9f3d6bded7a5025eb4d0",
+        "skills/contact_grasp.md": "f9a5f2ad90ddcc2dc4364740dafbdf1a73d0245c4e00583f7206b48e3f79d921",
+        "skills/contact_grasp.py": "6ee3deaea92683cbe9e7925bd3e383d2979f0f03df78775f4a262f204b351923",
+        "skills/ee_motion.md": "153a792d613079a25fa220c43338a1ef1d72f33b12cd0d8c7ddfccd0de374b4c",
+        "skills/ee_motion.py": "8cf6b8808dcb59b2a2f864f873653d04aef561c1d06b920f1104e3a35bff778e",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/front_entry_place.md": "39f77b598f5557c82e68be15a2f826039dd8db94428cbf3c58e32bd15599f566",
+        "skills/front_entry_place.py": "a5072943656ba1c6e1d23038932600723a18fd9aef8f3da16e7209a5396eee13"
+      },
+      "native_variants": [
+        "pack_objects_into_box",
+        "pack_objects_into_box_random"
+      ]
+    },
+    "pick_from_conveyor_by_image": {
+      "files": {
+        "lessons/conveyor.md": "1d79debafb1ed5f1c88d8c76734d68782ad6712ed4ecb187582f7215952fd413",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "skills/README.md": "ab6c56b324373494b75e39ac79f41cccdc7347871fabf774b23599fcd8f97fd5",
+        "skills/conveyor_interception.md": "14a64e317ecf6e98a1354a1492bb33d60c420594e86fac8f1a77efcba20b72b7",
+        "skills/ee_control.md": "cb681fbf49ddfc4c438e460ecf6b8e58180460cd87a47d6099c31c8d47ec56ab",
+        "skills/ee_control.py": "56549267262f90ca80cb7176c8e2e75f02c32f622e2a558e0f8c57637beb6d8f",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/loaded_placement.md": "30de0cfe5660c85b4b470a29110a91d0b7f47ab1bd6f8310a8a20857c9d88687",
+        "skills/rim_grasp.md": "8a65fd1447497435e371a698c0b72a9320ee582edaab513d1aa501c028d688b4"
+      },
+      "native_variants": [
+        "pick_from_conveyor_by_image"
+      ]
+    },
+    "play_Xylophone": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/tool_pose.md": "5a67d78c915baf2fc8267148af22fe864332b433b30d2de08c6aaa094f4d932b",
+        "skills/ee_control.md": "73a31b6a3a821c528fe3c6cdc0ff40f995b5e4c8f76a27a950df0e7d11453607",
+        "skills/ee_control.py": "9ffc8968db1e85e2b23c751451a5d4b908c0a30a9254c9d8637b37fd351b50e8",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/mallet_workflow.md": "8c3397a574a6d7b64ddde3cf5bdd83bd0d63acf464535e72869e375f3de29612",
+        "skills/retreat_strokes.md": "40becfbb7fe2263d3a1ccd7888cdee544c3113d817bfead622e515343d982f9e",
+        "skills/retreat_strokes.py": "4c21981f7a54378b0a417f16acec6ac9063c2c276acd82452811679a4e664e7d",
+        "skills/tap_sequence.md": "6860befb240932134eecd99f2c6bcc2d1c6660e8c6cc8b7920214a45238e36f4",
+        "skills/tap_sequence.py": "2676d4207c331712a53d2b4ee2af7bb88297334d71492fcef5b2e5c322851d4f"
+      },
+      "native_variants": [
+        "play_Xylophone"
+      ]
+    },
+    "play_stacking_toy": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_alignment.md": "0afd68538f741a3a25ff82c70090f69ec9c4c1153437b122f88471c89fe77f90",
+        "lessons/session_summary.md": "37b4d310de9d066e78dec83bfb79f9f141d7c1c8335e79784612c85302e5a6d1",
+        "lessons/top_down_geometry.md": "e0d59f2c34eb6a8390fd226d92c2608e14f7b3268a0bbc94c3d4622cfc4993fa",
+        "skills/README.md": "14acffae72471c5a30f42d356f8c9b17f6832b7e91e7f9ad798d2951fbe712f4",
+        "skills/ee_servo.md": "ee54f2723486ecce8d21abf36aa87525a9720ebfa4d5644db0f8ab11483005b6",
+        "skills/ee_servo.py": "df06b4aa94b4f3e2a5f7bd8d50593161a4711d1bf9b0da052d645306bc40a92a",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/gradual_place.md": "82d695d7f5e516ec74ca30b18a7ff4f0a43a04b526f57cf3abae9f87b9dad47b",
+        "skills/gradual_place.py": "f8cb7ae5885a45700a8dcd1c69de4fd88123764af5f5f85ef1649cc4ec75226d",
+        "skills/rectangle_grasp.md": "f9d262fddaf27bb3fd030671d79a0255708af65a99243d74c354f898626d206a",
+        "skills/rectangle_grasp.py": "9fd8853aaaa4d715eda8afd132a490717effff4aa985ba6d6933229d32e83323",
+        "skills/wrist_color_servo.md": "a5de114aec027b14a7e23588ab575f07f0ec04e596c2e52d845e9ef7773d8e10",
+        "skills/wrist_color_servo.py": "eba131343731158d8c7098a6896bd0b2b1a99aeda7bc384f9184a6dbdbed675d"
+      },
+      "native_variants": [
+        "play_stacking_toy"
+      ]
+    },
+    "play_tic_tac_toe": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/final_check_failure.md": "3b82c0d5b6d6373e132a5280aec22a74064a7d64eb0bc9359aeee283c7d2398d",
+        "lessons/grasp_validation.md": "9a7d17949073ca7816a2c7c8cce53a5398534bf168a9c434c7a66021090c2abd",
+        "lessons/placement_tolerance.md": "bfdd986cf7e4c21bfaa90b16be2ed24ea6f44df3cc3a8badea7fc6d2c0f85bdd",
+        "lessons/pose_tracking.md": "84cb8d5041bd0cf6d7dc1015643bff60718c970c197c23043fc08b997f31a0c9",
+        "lessons/turn_handoff.md": "94536f413d29d01fa6e5c25523eaf57b4c2d3fe916ebc752a165920908515f85",
+        "skills/README.md": "4d680a02ab5eb02950e80191d0f21e0cf397fb7cb55f9015b2878387e3c3f142",
+        "skills/ee_motion.md": "64c89ca22c68fa5385855dc96bbf4659f6caf1528e126d2782d5b89b0fb4ee9d",
+        "skills/ee_motion.py": "835cb157bc44911ebfc69b2566e4c0ea46a83eba0b8129a4548768c88f5b3bb3",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/home_and_wait.md": "5fdf2b9ca6b2a91a1e70576c4e3dee0728449f316294d34b5ccb9e3a1aa8edc2",
+        "skills/home_and_wait.py": "a94cd0e647f90eae3cec6b2bf2709a51c832aa4f5be4256171ebc93d0bf958e7",
+        "skills/ring_turn.md": "67c20dd2441b339252a9888e632d4fd31962d13a725087d0f517a85407c76ce1",
+        "skills/ring_turn.py": "e149eea7291d528214a69a268959de5306c3a46b484c5b7b6a4511bb43ee16ba"
+      },
+      "native_variants": [
+        "play_tic_tac_toe"
+      ]
+    },
+    "plug_in_charger": {
+      "files": {
+        "lessons/controller_interface.md": "b4a0a5d49cc1ed0cf6233fbc297ee865ce0d64d0b5dab7e391854847102cdd9b",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/visual_alignment.md": "8c555def2fe60b5b3d2f6e63eca153c3dc5d2947ddeb81ae87604cafdb46a0fc",
+        "skills/ee_move.md": "ed62099f642da5883bbead8d6c9bc1e2af2a31843bb25e622705784394bb05ea",
+        "skills/ee_move.py": "e53740218b1923ce4b003bf7b18af97672bd1a0c5583060f2a9225adaad5c5cf",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/precision_insertion.md": "48664ce16ceb91fcd79f6d286b9e0f37f096123d88efadf57fba453919fcb145"
+      },
+      "native_variants": [
+        "plug_in_charger"
+      ]
+    },
+    "pour_balls_into_vase": {
+      "files": {
+        "lessons/cartesian_control.md": "2ad330bad704436cba4141124208ce7286d24d03f4dd89398c5ab05eb53b6fd5",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/summary.md": "60669531848625efdfb76c880d118a994f3bb2ee820a450994921d42ff82d1da",
+        "skills/cup_handling.md": "b4c33fc766427d38b667d4ce2610f3dfb517765306610ffbdb14f7f4b56a84c6",
+        "skills/ee_control.md": "9499b46b99d58499fd9afaf5232c077a14e58296feeffe575dfe11fac508746d",
+        "skills/ee_control.py": "dc7dde1135fe72465d106edc443d16d5a1c178fd1e247a387d6dae2235776e5e",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58"
+      },
+      "native_variants": [
+        "pour_balls_into_vase"
+      ]
+    },
+    "pour_by_language": {
+      "files": {
+        "lessons/current_findings.md": "7d95b19636f6d4fdedaf00337b04f5d22e6e4e70dacaa50e7a57f91ef5bfd8d9",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/visual_alignment.md": "5319d5656cbe14a4ecfb84d5e642787fbc859933aad45d0bdfe3530064da702d",
+        "skills/README.md": "0188de17075f991dffa08be36527643648fe8c0f4bcb428fde7f99f054e434ad",
+        "skills/dual_ee_motion.md": "53b79a6783ed1b0f11826859dea0c30e1f948085e898f6c663561a842fc6ce09",
+        "skills/dual_ee_motion.py": "f7197f2d1ed96ce9bef1da9cb0f602d8cafc4cffe531f8e7a77a5a920e096973",
+        "skills/ee_motion.md": "e6fd97fd142a29abb45c30e256f0598dcb2eaba72c17a43569868b60593812b7",
+        "skills/ee_motion.py": "e7e8a97661d720e4b8d2bc1f0f2ae5bc8f44f55f5101f9f39fc9c404154ce740",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/place_bottle.md": "ba994c7c06e9e20d37ddb444cfb31eec71345c9cd3b630f9d36fdad98b197c94",
+        "skills/place_bottle.py": "f6bf16d2a27e8ad7799d84cd8a2e3e0db818d0ea2a840bad16d5d4476285c653",
+        "skills/pour_arc.md": "9f0222632a19b0b1bb74f04c8246dc0f91a246ea9d6ae8208b12108d3da58ef6",
+        "skills/pour_arc.py": "75278f2eeec50c0a2adcff5970ee65af88c15fbcc302d00352327be12a3003fb",
+        "skills/pour_sequence.md": "2276737cd47c20d0c9845f69a575840a4a5e8bb09fc5c4f9f87e75df15812541",
+        "skills/pour_sequence.py": "d86519aa4af6e7d1cc12fac626d54550f4404371c71dd3394626d02b5cf81e62",
+        "skills/return_home_joints.md": "485e4482e4433911fca7f5299362c4b2c67d00ef7be393ac0dae6d5a30133561",
+        "skills/return_home_joints.py": "68ab56ac4f8db0a9e23905797fc888933d5e034f1abc22a9d67cc75ea23932fa",
+        "skills/side_pour.md": "b524af030fc3f750523b0229de4b5c619f63602718db488ae2590ee40a031565",
+        "skills/side_pour.py": "89b1010a07e548c34775736f0ca8e28b6b996c2c274240a928cd228d5f4fa686"
+      },
+      "native_variants": [
+        "pour_by_language"
+      ]
+    },
+    "pour_liquid_into_cup": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_alignment.md": "75be74d2149f3e1311cd45291db2b15b6cc162cc358230f137a16e90ec2d2e0b",
+        "skills/ee_motion.md": "94d7e907e0e317c9e074ec56f7b51a29e44daff84222ad00458bd7a393a3bd05",
+        "skills/ee_motion.py": "3f8b8c5385990889daa24ae0e0478feec10d57589b2ef346bd2a946cc83b9102",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/pouring.md": "d22940cc8ab09ac4d45cdaed439f77cbc57225654a23f5411f51cad7d08cd125"
+      },
+      "native_variants": [
+        "pour_liquid_into_cup",
+        "pour_liquid_into_cup_random"
+      ]
+    },
+    "press_by_number": {
+      "files": {
+        "lessons/button_pressing.md": "94f76f3a414eee2261fd6b92e2d0b560265fba3f3827d293f58387f6bbb89bb6",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "skills/counted_press.md": "17c9c251eed02ae96a48b7291b3aa1e6fa0e8b313c51d0669ebd9bc2c96ff826",
+        "skills/counted_press.py": "141e9acee31e5869b388b547a3ed99aac3241921ecd65448ea77e1fceaf9ed83",
+        "skills/ee_motion.md": "b6e0a4c3aba416eaa4d4e47e7c4d297ce6cbceb50cc2fcc36ad6a2a01abfb7d1",
+        "skills/ee_motion.py": "292596a1b2030c2dbaf718d5d1d132955778059fca04bffd93c053792cf2c42e",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58"
+      },
+      "native_variants": [
+        "press_by_number"
+      ]
+    },
+    "push_T": {
+      "files": {
+        "lessons/alignment_checks.md": "db0c16efcd87ba33ae4fd95e22ff66c45b5225b6c2e5e02e464753e4d6e8f8a4",
+        "lessons/contact_height.md": "5e7dfc86bbbbb4f3fcda57d5c58408743e60fbcf905db8b8d615455b31fe3703",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/offset_pushing.md": "1b56f5c7d3f26b2fa9b1fb8625a52056acf3a78bf6260a25e999b86d0cb49892",
+        "skills/ee_motion.md": "20302f650fd2d327240ce201a93fcbd666e78169d45238e3408b8e1aeb233ec0",
+        "skills/ee_motion.py": "76b968977fdf91ef1ada71a1c9719e7d4eb0cb0d86d3675343b2cd6d6a5e8775",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/planar_slide.md": "2c283708b0ef2089fd47af3855bacf8e84eac59b24282404d22bcc0a82760860",
+        "skills/planar_slide.py": "f918a55942e93e5270496f371452bd52def57c2177bb5dfadb9bc0e9f4dd8d6c"
+      },
+      "native_variants": [
+        "push_T",
+        "push_T_random"
+      ]
+    },
+    "put_bottles_into_dustbin": {
+      "files": {
+        "lessons/README.md": "578984f47e32c79278d7057b94a35fb427c931534790fb2e74479fcd4dd73aa1",
+        "lessons/approach_clearance.md": "0e2bd84d8dad15962e304fd008ed9e880ad97e6deed4fd2060284f9eea995853",
+        "lessons/budget_and_transfer.md": "970e51c4058125c1c60686404cb85632672d8a93458a402204402c131cf58ac1",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_validation.md": "f6e25b377eaad541e6ad1a16d4966c45abc889049a3f5298e8e9d40ebb762707",
+        "lessons/gripper_hold.md": "51a70dceb6c6d3876f8f1dd74b03217b09d7d16881e19347fac439ba0c9b5d12",
+        "lessons/visual_alignment.md": "469ada4c987c947aa40206fb1dbd04308abd4b61f952d82f0048ab0d9932f68e",
+        "skills/color_servo.md": "a74f3dd731738ec9b3783f08be2a97c520c10f6b21a220fb45f090d130dd8a39",
+        "skills/color_servo.py": "446a9449682207ec74d86cc2a4d8db5ed0d5adcfdb4d3134faef54fa03f26926",
+        "skills/ee_control.md": "b6b11ac72305c34028462b151fc9611b16f5ff29e980a269610a814943230cf6",
+        "skills/ee_control.py": "afb3e1cdc8b01d7a8ee4a99108257ceda3079ee26c89543e62ebc94bf9a0b553",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/supported_transfer.md": "4ac7d6314ca35c233c6b17e25405e3dd87d93beba7aff1549129941bfaa31fac",
+        "skills/supported_transfer.py": "71e69b26d1964c18fe9e316fd048a2d781f6430cc08638675bc8ca456a2b5736"
+      },
+      "native_variants": [
+        "put_bottles_into_dustbin"
+      ]
+    },
+    "solve_equation": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/visual_manipulation.md": "750fdbd2a3be7a9bbc55634f6d469e8d5d04b92e1d9c44636dea931baea96d7b",
+        "skills/ee_motion.md": "4f9c5c45ebc5713b6fc3f74e58ac61f806f7e6763e57358aa209007fbc4551c7",
+        "skills/ee_motion.py": "402d9d8fbb492783128d567c096b373b8252839b62b84e8d56c34700d820b1fc",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/flat_tile_transfer.md": "c5800f0eefd2c81db4cb78e7a499082b8044f7de52d711a7c9399fcbf9852dd6"
+      },
+      "native_variants": [
+        "solve_equation"
+      ]
+    },
+    "sort_nesting_dolls_by_size": {
+      "files": {
+        "lessons/completion.md": "c525be640e1fc8f690b846e1a6785f3192e7e0846030bd0ee1c1bb2c2d7acc78",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_geometry.md": "ec5cb7067d7eeb9de974b4a5b0334aa7d6e71fd715230409d22a7a721ee6d0ac",
+        "lessons/runtime.md": "8a8c99d50f33d7d7b4809998a6412be88e565ff81a09d34ab309d3df5d704f57",
+        "skills/ee_motion.md": "185e3da862746dae3662e923ccf6ac07382e907b92d6bab4c8a8f2770b09d825",
+        "skills/ee_motion.py": "29d514de1e4e7c4550665cb03decc4e98ae1a6e2a7ab8721ac99efb077f50595",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/pick_place.md": "efeb23c4689ff97fd34396b0f40e79e2500330f27a4de6e47021ac01ef0480df",
+        "skills/pick_place.py": "a244efed232347121bdf06dcfeb2b2a5dc483a0aefd35dd25451926027d96b05",
+        "skills/sorting_upright_objects.md": "fcf87866c40610dac43129609fa05092cd4150791f25626bae0bfac896217096"
+      },
+      "native_variants": [
+        "sort_nesting_dolls_by_size",
+        "sort_nesting_dolls_by_size_random"
+      ]
+    },
+    "stack_blocks": {
+      "files": {
+        "lessons/camera_and_pose.md": "878faff6e005aaeaef136ef5304b0922b5dfcd64eca0aa6a87b4c1ab41b96a2c",
+        "lessons/completion.md": "24d7293faf482f5f89a3b7f9662c2b0cb73572b9a06d0f1d483233511aa88345",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "skills/ee_motion.md": "1ca75d01a5179c62af071e565faeba46d65680fcd335e137a9d7267d9286716e",
+        "skills/ee_motion.py": "f2a19a64530572edaaa0c478a63ba7ec2a9d794611b5109a2ccd9567b279d64c",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/joint_return.md": "6bd25e44bd3e750c5061239a559e7b7d4a48f44093d94a15be56e128cad92a33",
+        "skills/joint_return.py": "0c84386ddc8c0bace5ee151f4b1266f6c9abf6ad869be1433fd3753a9823cf2c",
+        "skills/pick_place.md": "e25186990a65534e0a9a4c3345b86ebbb2ae21ee3c1796b740ebd4471ad5ae70",
+        "skills/pick_place.py": "c9f4eb0e6d0b352618a5a5be97e8ab46aee201548e7005a88e8c207d619c3eb8"
+      },
+      "native_variants": [
+        "stack_blocks",
+        "stack_blocks_random"
+      ]
+    },
+    "stack_blocks_by_language": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/overhead_geometry.md": "0cae391d3db0fd79d25d47568bec7c4ac7e10da2482f38633324dd4f31fc1d61",
+        "skills/ee_control.md": "dacc7e26b508ec0640078745204936a3f079c9f387358854743cc885ac251b1e",
+        "skills/ee_control.py": "9b7e6a020805123a2260dfee836574222c4ce9586a86496bb94cd9842206534b",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/pick_with_test_lift.md": "9b366b663001417e187f860fb38bf5d0d450907931fee7c9cd07579cad72a7d2",
+        "skills/pick_with_test_lift.py": "e63e36fa296a1e174c87e77cef6ba179bfb265ff147d3876268a59c7268c861a"
+      },
+      "native_variants": [
+        "stack_blocks_by_language"
+      ]
+    },
+    "stack_bowls": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/rim_grasp.md": "f20b12f486ee073506294ea5d00131240ef291a1946d58494085b84365bb313e",
+        "lessons/stack_transport.md": "a7d7ba5363a209740ace41d429290db7a912e33615494910052ac29e8ffae7a5",
+        "lessons/wrist_alignment.md": "accbc61c06ef6686b62a060c48624fc7bbf7431734dbe3c4c93912f59e9b7ca2",
+        "skills/cartesian_path.md": "4a3957dc012af31dcaee5129332d766711440c6d09acb3580d61755bb4b55bf8",
+        "skills/cartesian_path.py": "dfeff289ba9cd75ef12d45c86585cdf5e07855ebd90a77f4b5a60eea1b7f98f0",
+        "skills/ee_move.md": "b225ce582ee40d8f296afc23dd85e0d68fd6c46eb2b97a9ef52cd208e2ce750f",
+        "skills/ee_move.py": "d4c7700d893f85d0b86ceef06d0004b042101f72f23bae44178446e10adcb7a0",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/front_rim_stacking.md": "dfd979c585ade7a5a49dafdfc8b5941131884a3239c0a29ef35bf03234e2e9c5",
+        "skills/reorient_ee.md": "1fc44c7a541686d3393cf4ea42b2b5acf75555cd6682fdc2cbbe03be9aca863c",
+        "skills/reorient_ee.py": "761a36c09a8b1a0e9224b00b5b007b60b8a4974987be554bb59cb42c51dc4fa9",
+        "skills/servo_translation.md": "e017a8220158d40f354ed0d499156b1b0f9d47e6d458444720ffa7f79b5cd96e",
+        "skills/servo_translation.py": "0fa4e27d5276236b9f3cc0e13986df087e93522b960e0471dc4bacb21f370c07"
+      },
+      "native_variants": [
+        "stack_bowls",
+        "stack_bowls_random"
+      ]
+    },
+    "store_laptop_and_headphones": {
+      "files": {
+        "lessons/ee_control.md": "babec4aa275046f77c0de85eacca4de79f82ff1534df948171027a5a902d2029",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "skills/README.md": "c31b7bdae388d1762dce78c24eb4cdfeb893ab929435d5f95e2a4dc3009fd49e",
+        "skills/ee_move.md": "8cadadedd9b59849194e9e461bc473f3d89ebbbaec2d3fb1744deb46de095236",
+        "skills/ee_move.py": "8de5a4571077aaf37aa60da7ccadcf893c7b2f30035532dc938042a3a7cf7407",
+        "skills/ee_smooth.md": "7b07797f2b2b1dfd980c532162b7fb748ab84171d451477109652fe8ac4225b3",
+        "skills/ee_smooth.py": "b60b05667ede84738cb76c759a9bd27d64a34e2669e564c79446bfb9115bc2c2",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58"
+      },
+      "native_variants": [
+        "store_laptop_and_headphones",
+        "store_laptop_and_headphones_random"
+      ]
+    },
+    "store_tools_in_toolbox": {
+      "files": {
+        "lessons/ee_approach.md": "83f205bc78d116ea6331d131a1b56c398c044e3c3a22132001b5aeca7c114e26",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/gripper_feedback.md": "5ade22faa813a0e25fae6d94fcffa640effd0a577a0a56d3e97e0704fcb571c0",
+        "lessons/retained_grasp.md": "8cce8fd9cc1b67be20adab1a271c92f78d64a140404dd5d3d3a2751ee944537c",
+        "skills/README.md": "78a5c93a857db8a8123f8a908a3ecd89641fe932db37ba0b63b8013a9cffba47",
+        "skills/cartesian_servo.md": "d227c7d042841fde32f5b309e9fb72eaa75e1bd3b9ba51db409998fe8095db2c",
+        "skills/cartesian_servo.py": "427809b8d6776482536ea7e0414114acc556bbc67b909a17d9581c23da681983",
+        "skills/dual_pose_servo.md": "d89fc4da29e5d3a43729c818d03c14f10690224c6052531f26c0714e59a0d09b",
+        "skills/dual_pose_servo.py": "dcd48cf9d2443676e94baed849afca11c849b4a28ea7aab9c891a5c93361efab",
+        "skills/ee_motion.md": "e44628d2852b02997e4f071a0fa0f0af628ffb87d2471971bcdc3b8c6ced17b1",
+        "skills/ee_motion.py": "8c5c3421b4e472adb52ce6520d8009948fd85fec89c4b0f1783ccd3452c93c0b",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/pose_servo.md": "876c6feaf8bf46f0c5f2a7acaed808c910434c453187a43d5f7f00affdc69fbe",
+        "skills/pose_servo.py": "522007766df6e1361a55e31a38518ffaeecb9a61135409b8f7b96d98007cab65",
+        "skills/release_withdraw.md": "a9bf06bae9d57f04e74004ce737a6d1ff19ead8ba6180a0226beeeafd898eac7",
+        "skills/release_withdraw.py": "e7939bda68fe3b148edce08fba6fcc74eef0d4e7f031fe1fd6e2f8040d4caa44"
+      },
+      "native_variants": [
+        "store_tools_in_toolbox"
+      ]
+    },
+    "swap_T": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_verification.md": "02ae24869cb8d32338fdd34120db3816f15343ccf7ae91acb0c11b247614ffdc",
+        "lessons/ik_and_orientation.md": "ed14f6e8c6844579d9c11f8723f5b89cf6156e9213880857ab70e006ddd65aec",
+        "lessons/pose_accuracy.md": "64d54128ae754a826c7aec8318ba36d260a1ce69ddd0f970d956f864bb029468",
+        "lessons/visual_alignment.md": "3f189f89191cc0a225fdcc72d94cd26edfde804411b199ed74bea144e82020b9",
+        "skills/README.md": "80820eef038fc0c4710ec8112f8a662e886f41dfa6a2b51ec0e5413d35fb38ad",
+        "skills/ee_motion.md": "eed82f7b28efdfaa5872932e34f0659e43d6a02e757f2d5bd5d2fc0d14017343",
+        "skills/ee_motion.py": "faa4b9ea5f2c93029a152bf6c29e4f3dba2654f3eb0f7780e7c9a68e88d9f3d0",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58"
+      },
+      "native_variants": [
+        "swap_T"
+      ]
+    },
+    "swap_blocks": {
+      "files": {
+        "lessons/button_trials.md": "3dbc5fbbdd4408e1b259cbf3776582779634af7fa7ef7e335768782c30dc51ce",
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/pose_and_vision.md": "d59bdcf9eb5aa0b913be2fb826baee790a092ea36658259028004312990e4cf5",
+        "lessons/session_outcome.md": "1e820d7b5e8a9db96a02ec0691476cac4d23dd5d6968d360cbac1660684b5b8a",
+        "skills/README.md": "d658d895c16861715e0b10e1c131b6a47161b85b1e5e6232e0f5d27d28428343",
+        "skills/ee_motion.md": "297a4e6756d26afc7bd8556fa701248a057a296a86f6dc5b95809dfbd8bc20d4",
+        "skills/ee_motion.py": "3e71605db4d40dd37f066de9ff35c603062289538c8dd7b1e8602f1b5c2efc7a",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/joint_motion.md": "eb1c51050da4ac5e42fc34db5aa3cdabd11d2ff8580288ae111b310bdfdcf1f0",
+        "skills/joint_motion.py": "b5d41530ec5fbe638648e79cd26b38c47c72aea5164f633d1da80f0b588dbb7c",
+        "skills/manipulation.md": "0a576a8f94dd36cf09acebca200f0e7b6ae9565b85d846b7eb7bf1f33a3f3ab9"
+      },
+      "native_variants": [
+        "swap_blocks"
+      ]
+    },
+    "sweep_blocks": {
+      "files": {
+        "lessons/example.md": "f1b8c45748d5438e6b19f1e231ca2f006f11ba448a1c7a1c3ccd16634cfc933e",
+        "lessons/grasp_verification.md": "95ea3abcc617ec531fb9caf85da72c4e102aaab4d766afe650bf4d2afef914d0",
+        "lessons/placement_recovery.md": "5175bdaee0d9a3a657a4bf0b18a2ae6665d4e6aea786685aa0517d01ace7af1e",
+        "lessons/session_result.md": "a77d3cb07440a90618c5556430441d5539b837b66a0ecd040961406c26c2b906",
+        "lessons/sweeping.md": "f8419e86984cb5b5f93421562fb9a05534c11fe3b658280594fe05b1121b7101",
+        "lessons/transport.md": "6d5fe01499aa6f51941c02f04992aae657f7b48a508b2065287b985594594a66",
+        "lessons/visual_alignment.md": "28ff84d94c803ca027e2554f4490c289091979959d57e5f5a5b562bdec7840fb",
+        "skills/README.md": "4afaf58621416a4841613eca996bb0ac9da220fce627c426769cbca7d92f8e81",
+        "skills/example.md": "e6c8b4d4ad4d9bf74d4e2306cf024d0d3ad4802f5a3f4a829571a8a86a38be58",
+        "skills/place_release.md": "3f0f52f667ed9d023565676114bea70853dc463276bb170740cb2a28ad049b00",
+        "skills/place_release.py": "ac2bba93565aab8e621114becac1ae155b394555b9d2d3dde229c978b4f50e5b",
+        "skills/pose_servo.md": "a2abd66f7f44f1db72ade61ddb60ca6de21d06903d7edfcb1ecc67808421388e",
+        "skills/pose_servo.py": "b204e72b1dd1e71110043120feca7e4d90000dbba7af4a9094f11f91e96cb6f2",
+        "skills/slow_pose_servo.md": "c27ed2839788084c5582d8733ebf9b8affb78e9c9feae7de5919e08d07f12120",
+        "skills/slow_pose_servo.py": "67a9264717e250e13d9049266ffb2e2c324c7925ea0c96d5c266e5b4f2771b6a"
+      },
+      "native_variants": [
+        "sweep_blocks",
+        "sweep_blocks_random"
+      ]
+    }
+  }
+}
