@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="__DASHBOARD_LANGUAGE__">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RoboRSI · Live trajectory</title>
+  <link rel="stylesheet" href="/static/trajectory.css" />
+</head>
+<body>
+  <nav class="trajectory" aria-label="Dashboard navigation">
+    <a id="backToMonitor" href="/">Back to live monitor</a>
+    <span id="trajectoryConnection" role="status" aria-live="polite"></span>
+  </nav>
+  <main id="trajectory"></main>
+  <script src="/static/trajectory.js"></script>
+  <script type="module" src="/static/trajectory_live.js"></script>
+</body>
+</html>

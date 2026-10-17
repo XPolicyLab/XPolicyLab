@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "version": "3.11.17",
+  "distribution": "astral-sh/python-build-standalone",
+  "release": "20261003",
+  "target": "x86_64-unknown-linux-gnu",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261003/cpython-3.11.17%2B20261003-x86_64-unknown-linux-gnu-install_only.tar.gz",
+  "sha256": "c624af93ad62a596806bbd2404e1fb80744a407ca7279854445ede16d93858b8",
+  "size": 48919491,
+  "archive_prefix": "python",
+  "executable": "bin/python3.11"
+}
