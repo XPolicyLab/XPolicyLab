@@ -1,0 +1,12 @@
+{
+  "schema": "phoenix-inference-source-v1",
+  "sha256": {
+    "arx_x5.json": "39b89f3a07d4901a734806034f5d1572a186f54c8a10891b4bbc9502c2824073",
+    "index.json": "6ccfd83c9ab6b67a8276f551fbb9c63d8b11d492964961d7e27a1f811c3351e4",
+    "piper.json": "56680abf86e775169eda4240ff24ed7914b62a28b681dbb0f0d24015b50aa118",
+    "piper_x.json": "5325d9a0918b1f4bb625a0fc4b1f7392e23cb5f2d2d7572475c3c563f90d5c41",
+    "stats_slot15.json": "b524237488b564641399aea7bb2f7051c114f8434d81777cd56ce27cef9b4f19",
+    "stats_slot2.json": "25955346b26578e188f97946a0274c4184798a03c707b2d48f4610f05d3b6826",
+    "stats_slot4.json": "3854a1b178c0cd1d31b92ca0bca641ed2e0464166fa89f64794c64e2d4cc05e6"
+  }
+}
