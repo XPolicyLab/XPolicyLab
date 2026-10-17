@@ -1,0 +1,18 @@
+# Minimal runtime dependencies derived from open-gigaai/giga-brain-0.
+# torch/cuda is supplied by the selected conda environment.
+accelerate==1.13.0
+diffusers==0.34.0
+einops==0.8.0
+h5py
+huggingface_hub>=0.34.0,<1.0
+msgpack-numpy>=0.4.8
+numpy<2
+opencv-python-headless==4.11.0.86
+peft>=0.15.0
+Pillow==10.4.0
+PyYAML==6.0.2
+safetensors==0.5.2
+transformers==4.54.1
+tyro==0.9.13
+websockets>=14.0
+pydantic>=2.5
