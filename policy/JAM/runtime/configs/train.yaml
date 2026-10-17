@@ -1,0 +1,80 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: null
+  - model: null
+  - task: null
+
+
+output_dir: ./runs/train/${now:%Y-%m-%d}_${now:%H-%M-%S}
+
+# dataloading
+batch_size: 2
+num_workers: 2
+# PyAV/FFmpeg is not fork-safe on Miyabi and can randomly SIGSEGV inside a
+# DataLoader worker. Start clean Python worker processes instead.
+dataloader_multiprocessing_context: "spawn"
+persistent_workers: true
+# null preserves PyTorch's default (2 batches per worker). Long-running native
+# video-decode jobs may opt into 1 to reduce concurrent decoder work without
+# changing sample order or tensors.
+prefetch_factor: null
+
+# scheduler
+lr_scheduler_type: "cosine"
+learning_rate: 1.0e-4
+# null preserves PyTorch's default AdamW backend selection. Individual tasks
+# may set false when very large flattened optimizer tensors make foreach unsafe.
+optimizer_foreach: null
+# Optionally split the optimizer's parameter list into equal-hyperparameter
+# groups bounded by this many elements. null keeps the historical single group.
+optimizer_max_group_numel: null
+num_epochs: 1
+max_steps: null
+lr_schedule_steps: null # cosine horizon; null = max_steps. Set > max_steps to stop early but keep the full LR curve (for checkpoint-resume).
+# Optional continuation mode: allow max_steps to exceed lr_schedule_steps and
+# hold the LR at the scheduler's terminal value after that horizon.  This is
+# default-off so every existing training path keeps its historical behavior.
+lr_schedule_hold_after_end: false
+log_every: 10
+# Optional rank-0 CUDA allocator telemetry. Disabled by default so existing Wan
+# runs keep identical logging/overhead; Qwen enables it for MIYABI calibration.
+log_cuda_memory: false
+save_every: 100
+# Optional exact optimizer-step checkpoints in addition to `save_every`.
+# Accepts a YAML list or a colon/comma/space-separated string; null disables it.
+# The final checkpoint is always saved independently.
+save_steps: null
+save_full_state: true # false = save only weights .pt, skip the DeepSpeed resume state (~7-10x larger)
+# When true, retain only the newest full DeepSpeed state. Weights checkpoints
+# are not pruned, so selected intermediate steps remain available for eval.
+keep_latest_state_only: false
+eval_every: 50
+eval_num_inference_steps: 10
+
+# training
+gradient_accumulation_steps: 1
+mixed_precision: "bf16" # one of: [no, fp16, bf16]
+seed: 42
+max_grad_norm: 1.0
+weight_decay: 0.0
+resume: null
+
+# wandb (online; Miyabi compute nodes can reach api.wandb.ai).
+# Auth via the WANDB_API_KEY env var exported in the PBS script (-x'd through
+# mpirun to rank 0); the trainer's wandb.init() picks it up automatically.
+wandb:
+  enabled: true
+  workspace: y0urOy
+  project: fast-wam
+  name: train
+  group: null
+  mode: online
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null

@@ -1,0 +1,124 @@
+_target_: fastwam.runtime.create_fastwam
+model_id: Wan-AI/Wan2.2-TI2V-5B
+tokenizer_model_id: Wan-AI/Wan2.1-T2V-1.3B
+tokenizer_max_len: 128
+load_text_encoder: false
+proprio_dim: ${data.train.processor.proprio_output_dim}
+redirect_common_files: false
+mot_checkpoint_mixed_attn: true
+action_dit_pretrained_path: checkpoints/ActionDiT_linear_interp_Wan22_alphascale_1024hdim.pt
+skip_dit_load_from_pretrain: false
+# Optional video-only override for random policy-Wan ablations. null preserves
+# the legacy flag above; the ActionDiT remains independently controlled by the
+# legacy flag so it can stay pretrained in a clean student-Wan ablation.
+skip_video_dit_load_from_pretrain: null
+video_dit_random_seed: null
+
+video_dit_config:
+  has_image_input: false
+  patch_size: [1, 2, 2]
+  in_dim: 48
+  hidden_dim: 3072
+  ffn_dim: 14336
+  freq_dim: 256
+  text_dim: 4096
+  out_dim: 48
+  num_heads: 24
+  attn_head_dim: 128
+  num_layers: 30
+  eps: 1.0e-06
+  seperated_timestep: true
+  require_clip_embedding: false
+  require_vae_embedding: false
+  fuse_vae_embedding_in_latents: true
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+  video_attention_mask_mode: "first_frame_causal" # default
+  action_conditioned: false
+  action_dim: ${data.train.processor.action_output_dim}
+  action_group_causal_mask_mode: "group_diagonal"
+
+action_dit_config:
+  action_dim: ${data.train.processor.action_output_dim}
+  hidden_dim: 1024
+  ffn_dim: 4096
+  num_heads: 24
+  attn_head_dim: 128
+  num_layers: 30
+  text_dim: 4096
+  freq_dim: 256
+  eps: 1.0e-06
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+
+video_scheduler:
+  train_shift: 5.0
+  infer_shift: 5.0
+  num_train_timesteps: 1000
+
+action_scheduler:
+  train_shift: 5.0
+  infer_shift: 5.0
+  num_train_timesteps: 1000
+
+loss:
+  lambda_action: 1.0
+
+# Plan B: foresight-only (no video co-training). The video branch sees only the
+# clean first frame at t=0 during training, exactly matching the infer_action
+# deployment path; the generative video FM loss is dropped and replaced by the
+# foresight alignment loss.
+# A frozen pretrained copy of the video DiT encodes the clean GT clip at t=0;
+# the first-frame token hidden states at `layer` are pulled (cosine) toward the
+# encoder's hidden states fused over `offsets` latent frames. Training-only:
+# encoder and projector are discarded at inference.
+foresight:
+  # Training target representation. encoder_hidden is the historical/default
+  # Wan-teacher path. patch_embedding is the frozen-random Layer0 ablation;
+  # vae_direct uses deterministic frozen-VAE patches and no Wan teacher;
+  # teacher_mode selects pretrained vs independently random VAE weights.
+  target_type: encoder_hidden
+  # Precomputed teacher-feature cache roots (bf16+zstd, bit-exact). When set,
+  # the frozen 5B encoder is not instantiated and targets are read from disk.
+  target_cache_roots: null
+  # Optional bit-exact frozen-VAE latent caches for the policy's current frame.
+  # These remove the final train-time RGB/PyAV path. Validation uses separate
+  # roots because the 99/1 episode split has independent sample indices.
+  input_latent_cache_roots: null
+  val_target_cache_roots: null
+  val_input_latent_cache_roots: null
+  enabled: true
+  video_cotrain: false
+  # Target encoder ablation. frozen_pretrained is the historical bit-identical
+  # default. If the policy video Wan is random, this mode independently loads
+  # the pretrained teacher prefix instead of copying the random student.
+  # online_ema tracks the policy video expert after each successful optimizer
+  # step using an unregistered fp32 shadow; frozen_random is an independently
+  # initialized, fixed Wan control.
+  teacher_mode: frozen_pretrained
+  teacher_ema_decay: 0.995
+  teacher_random_seed: 42
+  layers: [12, 14, 16, 18]      # WAM4D-ablation-optimal middle-dense layers
+  encoder_layers: [12, 14, 16, 18]
+  offsets: [0, 1, 2]          # per-frame mode needs explicit offsets (3 latent frames)
+  offset_weights: null        # per-offset weighting (aligned to `offsets`); null=equal. Tilt toward
+                              # far future for long-horizon, e.g. [0.2,0.3,0.5]. Normalized to mean 1.
+  per_frame: true             # Idea 1: predict each future frame separately
+  shared_projector: true      # 解法1: shared backbone + light heads (avoid 12x projector blowup)
+  action_layers: [15]         # Idea 2: action-stream foresight (group i -> latent frame i+1)
+  action_per_token: false     # true = align action group to the future frame's FULL spatial token
+                              # map (per-token, like video stream) instead of a pooled single vector
+  action_per_step: false      # true = do NOT mean-pool the action steps of a transition; each step
+                              # separately predicts its frame target (temporal richness). XOR per_token
+  lambda_action_foresight: 0.2
+  lambda_foresight: 0.2
+  projector_type: transformer   # "transformer" = DiT-block trunk (default, ~0.45B at the settings
+                                # below); "mlp" = REPA-style wide 3-layer MLP (no attention),
+                                # sized by projector_mlp_hidden.
+  projector_mlp_hidden: 3072    # only used when projector_type=mlp: hidden for the shared 2-layer
+                                # SiLU trunk. 3072 = NO compression (trunk stays at the model dim, like
+                                # the transformer; isolates "attention trunk -> MLP trunk", ~132M).
+                                # 2048~86M (mild -33% compression) / 1024~42M / 256~10M (strong).
+  projector_hidden_dim: null     # transformer-projector trunk width; null keeps video hidden_dim=3072.
+                                # Use 1536 with projector_ffn_dim=6144 for the down-projected tiny head.
+  projector_num_layers: 3       # transformer-projector only
+  projector_num_heads: 24       # transformer-projector only (does NOT change param count)
+  projector_ffn_dim: 12288      # transformer-projector only

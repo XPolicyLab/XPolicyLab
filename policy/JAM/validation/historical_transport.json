@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-16",
+  "candidate_version": "piperx-local-20261016-b2cf99f5a4e2",
+  "historical_xpolicylab_commit": "f6e309e8ece20bfa33c0e5d7b05a5f3287522757",
+  "runtime_snapshot": "pipeline_logparse_20261014_180818",
+  "source_report_sha256": {
+    "jam_portable_gpu.json": "60f1f740257afde3c1e8d6c008699550aa23f69f940c644c7f59d50532791298",
+    "fastwam_portable_gpu.json": "6a014639af5d8f9e8d2c6fe35ee0b423508193ed0d6cde18dfff08f9f071bf61",
+    "gpu_job_summary.json": "e80b41daec6ce61cec4cdf652b0acaa145ae3da2147faabe0f2c612931355b72"
+  },
+  "models": {
+    "jam": {
+      "status": "passed",
+      "reference_key": "cap_pen_ep008_frame00000",
+      "raw_websocket": "passed",
+      "encoded_websocket": "passed",
+      "batch_websocket": "passed",
+      "raw_vs_saved_prediction_max_abs_diff": 0.0,
+      "absolute_tolerance": 1e-05,
+      "inference_chunks_checked": 4,
+      "robot_trials": 0,
+      "robot_success_rate": null,
+      "checkpoint_sha256": "9b8e4bbe1f8093d34886313ad2dd8a355276c660014bec84723c08d6d68c85a6"
+    },
+    "fastwam": {
+      "status": "passed",
+      "reference_key": "cap_pen_ep008_frame00000",
+      "raw_websocket": "passed",
+      "encoded_websocket": "passed",
+      "batch_websocket": "passed",
+      "raw_vs_saved_prediction_max_abs_diff": 0.0,
+      "absolute_tolerance": 1e-05,
+      "inference_chunks_checked": 4,
+      "robot_trials": 0,
+      "robot_success_rate": null,
+      "checkpoint_sha256": "383863b3c0f6d387e6a6cafcb34e2a65e52f11ebaf637d4ddf71b25cc9a86511"
+    }
+  },
+  "real_robot_trials": 0,
+  "real_robot_success_rate": null,
+  "scope": "Historical actual-weight local WebSocket/reference regression; not rerun on the PR head. No simulator or robot connected.",
+  "job": {
+    "job_id": "3569244.opbs",
+    "accelerator": "GH200",
+    "nodes": 1,
+    "exit_status": 0,
+    "walltime_seconds": 148,
+    "new_training": false,
+    "rendering": false,
+    "robot_connected": false
+  }
+}
