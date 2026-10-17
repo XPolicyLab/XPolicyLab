@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/arrange_largest_number/tools/<name>)
+precision_transfer
+metric_patch
+table_plane
+transfer_reach
+transfer_patch

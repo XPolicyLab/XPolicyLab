@@ -1,0 +1,7 @@
+# tools enabled for this task
+table_plane
+rgb_measure
+guarded_grip
+arc_push
+wrist_guard
+rgb_quad

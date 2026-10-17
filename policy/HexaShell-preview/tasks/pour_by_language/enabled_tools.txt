@@ -1,0 +1,15 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/pour_by_language/tools/<name>)
+transfer_cycle
+joint_return
+rim_fit
+
+side_pick
+
+tip_tilt
+tip_fit
+axis_pose
+axis_track
+table_plane
+
+rgb_stereo
+axis_fit

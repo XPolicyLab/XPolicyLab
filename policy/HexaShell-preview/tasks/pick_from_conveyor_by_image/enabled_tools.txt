@@ -1,0 +1,4 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/pick_from_conveyor_by_image/tools/<name>)
+release_retreat
+beltpick
+table_plane

@@ -1,0 +1,10 @@
+`robo visual_grasp left|right --u U --v V [--camera head|wrist_l|wrist_r] [--mode preview|move]`
+Connected RGB-D acquisition; camera=head, mode=preview (motionless, no reachability test). Move opens, approaches, descends, closes and lifts; no final release. Paths are not collision checked.
+Measurement options: --radius 5 (1–15 pixels), --color_tolerance 30 (1–80), --open auto|x|y, --anchor inset|upper|seed, --refine auto|none, --z_offset 0 (±0.02 m). Auto opening requires ≥4 mm span and PCA ratio ≥2.
+Paired --point=x,y,z and --opening=x,y,z override contact/direction; point must be within 0.03 m of selected surface, opening predominantly horizontal. Auto refinement permits one bounded wrist contact update for an unsupplied inset anchor.
+Motion: --approach=0,0,-1 (downward, ≤60° tilt, perpendicular to opening), --clearance 0.05 (0.025–0.15 m), --lift 0.06 (0.04–0.15 m). Lifts >0.06 m probe at 0.04 m before positive visual evidence permits continuation.
+--cross_body reject|allow defaults reject (>0.15 m peer reach advantage); --arm_fallback auto|none defaults auto and permits one nearer-arm attempt only after motionless IK rejection with both grippers open and TCPs unchanged.
+--retry_offset=x,y,z defaults zero, magnitude ≤0.015 m; one retry requires source persistence, no lifted support at the first probe and ≥4 s remaining. Ambiguous evidence never authorizes retry.
+Returns plan_ok/plan_fail_reason, stages, executed, active_arm, reachability_checked, geometry, grasp_point, opening/approach_direction, target_rotation, contact_refinement, fallback/retry flags and verification/lift_checks/camera_checks.
+Predicted/observed points are surface prediction/visible median, not centers. Optional supported held_geometry contains circular surface point/normal/radius/reference_tcp; failed fitting does not alter grasp status.
+Fails on invalid/ambiguous observations, reach >0.6 m, planning failure, unsettled motion, tracking error >3 mm or 2°, timeout, unchanged source or inconclusive lift. Stops with current gripper command; executed motion consumes time.

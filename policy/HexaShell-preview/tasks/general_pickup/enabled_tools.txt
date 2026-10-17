@@ -1,0 +1,5 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/general_pickup/tools/<name>)
+inspect_region
+table_plane
+region_geometry
+close_lift

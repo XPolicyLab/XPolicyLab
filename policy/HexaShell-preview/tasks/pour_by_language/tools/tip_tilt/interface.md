@@ -1,0 +1,9 @@
+`robo tip-tilt {left,right} --tx X --ty Y --tz Z --tip L [--pitch DEG] [--offset_y M] [--dwell S] [--reserve S] [--clearance M]`
+`robo tip-tilt-estimate` accepts the same arguments and returns geometry and heuristic timing without motion or command-budget cost.
+Requires an already held, upright rigid item and clear raised travel/rotation corridors. Preserves the gripper command throughout; attachment is not checked.
+World metres: tx/ty/tz is the desired tip at full tilt, not the TCP; tip is its vertical distance above the initial TCP (.02–.30); offset_y is its measured world-Y displacement from that TCP (default 0, ±.05).
+Pitch is signed world-Y rotation, magnitude 120–140°, default +120°; positive tips toward +X. Initial TCP local Z must be vertical within 2°.
+Raises before lateral alignment to at least initial TCP Z + clearance (.02–.15 m, default .06); holds that altitude through 90°, then descends to the full-tilt endpoint. Tip X/Y compensation uses adaptive segments with ≤8.5 mm nominal interpolation error, excluding tracking/geometry error. Reverses to elevated upright; full-tilt TCP below initial altitude fails before motion.
+Dwell .12–2 s (default .12) requires measured endpoints within 5 mm/1° before and after every tick; reserve is nonnegative seconds outside this operation. No retries or release.
+Returns plan_ok, plan_fail_reason, failed_stage on failure, stages, waypoints, final_upright_tcp, estimated_seconds, travel_clearance_m, nominal_xy_chord_bound_m and grasp_verified=false/transfer_verified=false/scene_clearance_verified=false. Timing is a Cartesian heuristic, not a deadline guarantee or IK check.
+Rejects invalid geometry, workspace limits, obstructing inactive hand, or insufficient estimated time; stops held on motion, tracking, dwell or time failure. Caller geometry, rigid attachment and scene clearance remain unverified.
