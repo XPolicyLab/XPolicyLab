@@ -217,7 +217,8 @@ def build_phoenix_runtime(config):
                  replan_steps=opts['replan'], num_inference_steps=opts['denoise'], seed=opts['seed'],
                  native_data_hz=checked['fps'], requested_action_hz=opts['hz'],
                  controller_rate_verified=False, input_color='RGB_uint8',
-                 input_geometry='PIL_aspect_bicubic_center_crop_256_float32',
+                 input_geometry='ffmpeg_scale_cuda_bicubic_even_size_nv12_crop_256_v1',
+                 input_geometry_640x480=dict(resize=[342, 256], crop_xy=[42, 0], output=[256, 256]),
                  cameras=['main', 'left', 'right'], canonical_active_dims=ACTIVE,
                  text_padding='zero_features_all_128_keys_visible',
                  text_mode='online_t5' if data['text'] is None else 'training_cache_only',
@@ -245,7 +246,11 @@ class PhoenixSession(RoboDojoRealJoint96Session):
         return super()._normalize_state(preprocess_state(state, self.runtime.robot_type))
 
     def _build_robotwin_image_tensor(self, observation):
-        return current_rgb(observation).to(device=self.runtime.device)
+        from .phoenix_rgb import CudaRGBPreprocessor
+        if not hasattr(self.runtime, 'rgb_preprocessor'):
+            device = torch.device(self.runtime.device)
+            self.runtime.rgb_preprocessor = CudaRGBPreprocessor(device.index or 0)
+        return current_rgb(observation, preprocessor=self.runtime.rgb_preprocessor).to(device=self.runtime.device)
 
     def _text_condition(self, instruction):
         if self.runtime.text is None:

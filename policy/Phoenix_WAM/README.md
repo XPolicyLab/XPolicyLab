@@ -8,7 +8,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ## Installation
 
-Linux, CUDA and BF16 support are required. From this directory:
+Linux, CUDA, BF16 support and an FFmpeg build with `scale_cuda` and `hwupload_cuda` are required. The installer checks those filters; a CPU-only FFmpeg build is insufficient. Set `PHOENIX_FFMPEG=/absolute/path/to/ffmpeg` if the CUDA-enabled binary is not first on PATH (including after activating conda). From this directory:
 
 ```bash
 bash install.sh phoenix-wam
@@ -75,7 +75,8 @@ The trained action and state layout is left arm 6 + left gripper 1 + right arm 6
 
 `deploy.yml` defaults to `runtime_mode=joint96_real_phoenix`, BF16, action horizon 32, replan 32, 10 denoising steps and CPU random noise. Seed comes from the standard launch arguments. `action_hz=null` records the native data rate above; actual hardware command timing is controlled by the client.
 
-- Inputs are RGB uint8 arrays supplied by XPolicyLab. The policy does not decode or swap channels. Three views are ordered main, left wrist, right wrist; the image path uses aspect-preserving bicubic resize and center crop to 256x256, then float32 normalization to [-1,1]. Prepared 256x256 training MP4 frames preserve their geometry; live-image processing is not claimed to be bitwise identical to compressed MP4 frames.
+- Inputs are RGB uint8 arrays supplied by XPolicyLab. The policy does not decode image bits or swap RGB/BGR channels. Three views are ordered main, left wrist, right wrist. Each view follows the training export's GPU geometry: convert raw RGB to NV12, upload to CUDA, run FFmpeg `scale_cuda` with explicit `interp_algo=bicubic`, download NV12 and crop on the 4:2:0 chroma grid, return RGB and normalize to float32 [-1,1]. A 640x480 input becomes 342x256 (long side rounded up to even), then crops x=42, y=0, width=256, height=256. Portrait inputs use the corresponding vertical crop. Input dimensions must be positive and even. Already-prepared 256x256 RGB frames bypass this conversion without changing pixels.
+- FFmpeg processes persist between action chunks, use the policy's CUDA device, and batch same-size views in camera order. Missing CUDA filters or processing errors fail explicitly; there is no PIL/CPU approximation. `PHOENIX_FFMPEG` selects the binary. This matches the upstream GPU resize/crop operations, not the export's CPU fallback. RGB-to-NV12 conversion and the training video's lossy H.264 encoding prevent claiming exact equality with the original compressed training frames. Inference does not re-encode H.264.
 - `current_visual_mode=repeat9_full_joint96`: repeat the current frame nine times, run both complete WAN and DINO/STVAE branches, concatenate Joint96 latents, then retain the first temporal latent. No future observation is required.
 - Action/state normalization uses each family's q01/q99 statistics, forward clipping to [-5,5] and no inverse normalization clip. Piper/Piper X input grippers are checked against [-0.05,1.05] and clipped to [0,1]; ARX inputs retain their raw values. Output grippers are clipped to [0,1] with an audit record; arm angles are not globally clipped.
 - Public inference encodes the instruction with the pinned T5 weights and tokenizer, using the training prompt template and 128-key padding convention. It does not download or require the training text cache.

@@ -4,7 +4,6 @@ import types
 
 import numpy as np
 import torch
-from PIL import Image
 from torchvision.transforms.functional import to_tensor
 
 from .joint96_assets import sha256
@@ -44,18 +43,22 @@ def preprocess_state(state, family):
     return result
 
 
-def current_rgb(observation):
-    from wam.datasets.dataset_utils import ResizeSmallestSideAspectPreserving, CenterCrop
-    resize = ResizeSmallestSideAspectPreserving({'img_w': 256, 'img_h': 256})
-    crop = CenterCrop({'img_w': 256, 'img_h': 256})
+def current_rgb(observation, *, preprocessor=None):
+    from .phoenix_rgb import CudaRGBPreprocessor
     frames = []
     for camera in ('head_camera', 'left_camera', 'right_camera'):
         rgb = np.asarray(observation['observation'][camera]['rgb'])
         if rgb.dtype != np.uint8 or rgb.ndim != 3 or rgb.shape[-1] != 3 or min(rgb.shape[:2]) <= 0:
             raise ValueError('Expected uint8 HWC RGB: ' + camera)
-        # Match prepare_rgb_frame's PIL path and float32 conversion exactly.
-        frames.append(to_tensor(crop(resize(Image.fromarray(rgb)))).mul(2).sub(1))
-    return torch.stack(frames).unsqueeze(0)
+        frames.append(rgb)
+    owned = preprocessor is None
+    preprocessor = preprocessor if preprocessor is not None else CudaRGBPreprocessor()
+    try:
+        processed = preprocessor(frames)
+        return torch.stack([to_tensor(rgb.copy()).mul(2).sub(1) for rgb in processed]).unsqueeze(0)
+    finally:
+        if owned:
+            preprocessor.close()
 
 
 def install_repeat9_joint(visual):

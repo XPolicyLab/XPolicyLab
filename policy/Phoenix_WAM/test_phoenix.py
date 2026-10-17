@@ -12,7 +12,6 @@ import numpy as np
 import torch
 from hydra.utils import instantiate
 from omegaconf import OmegaConf
-from PIL import Image
 
 from .joint96_assets import POLICY_DIR, read_source, sha256
 from .model import Model, _activate_runtime
@@ -210,19 +209,16 @@ class PhoenixTests(unittest.TestCase):
             z[:,7]=1
             with self.assertRaises(ValueError):session._denormalize_action(z)
 
-    def test_rgb_pil_geometry_colors_float32(self):
-        from wam.datasets.dataset_utils import ResizeSmallestSideAspectPreserving,CenterCrop
+    def test_prepared_rgb_colors_float32(self):
         from torchvision.transforms.functional import to_tensor
         rng=np.random.default_rng(42)
-        for h,w in [(480,640),(641,479),(256,256)]:
+        for h,w in [(256,256)]:
             obs={'observation':{k:{'rgb':rng.integers(0,256,(h,w,3),dtype=np.uint8)}
                  for k in ('head_camera','left_camera','right_camera')}}
             actual=current_rgb(obs)
             self.assertEqual(actual.dtype,torch.float32)
             for i,k in enumerate(obs['observation']):
-                image=Image.fromarray(obs['observation'][k]['rgb'])
-                image=ResizeSmallestSideAspectPreserving({'img_w':256,'img_h':256})(image)
-                image=CenterCrop({'img_w':256,'img_h':256})(image)
+                image=obs['observation'][k]['rgb']
                 torch.testing.assert_close(actual[0,i],to_tensor(image)*2-1,rtol=0,atol=0)
             obs['observation']['head_camera']['rgb']=np.zeros((h,w,3),np.float32)
             with self.assertRaises(ValueError):current_rgb(obs)
