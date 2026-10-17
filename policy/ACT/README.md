@@ -51,6 +51,10 @@ bash eval.sh RoboDojo stack_bowls RoboDojo-cotrain-arx_x5-joint-0 arx_x5 joint 0
 
 `EVAL_ENV_TYPE=debug` runs the offline wiring check (no simulator); leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation. For split-machine deployment via `setup_eval_policy_server.sh` / `setup_eval_env_client.sh`, follow the [Deployment Flow](../../README.md#-deployment-flow).
 
+`eval_batch` is `false` and must stay that way: ACT is stateful — temporal aggregation keeps the per-instance buffer `all_time_actions` and the step counter `t`, both cleared by `reset()` — so one policy-server instance can serve exactly one active environment. To run concurrent rollouts, start one policy server per rollout.
+
+`update_obs_batch` and `get_action_batch` raise `NotImplementedError`, but that is not a safety net: the simulator's batch mode drives every worker through the single-env `update_obs` / `get_action` pair against the one shared server, so a multi-worker run degrades silently instead of failing.
+
 ## Configuration
 
 `deploy.yml` keys to check before evaluation: `ckpt_setting`, `kl_weight`, `chunk_size`, `hidden_dim`, `dim_feedforward`, `temporal_agg`, `device`, `ckpt_dir`, `policy_class`, `num_epochs`, `position_embedding`, `lr_backbone`.
