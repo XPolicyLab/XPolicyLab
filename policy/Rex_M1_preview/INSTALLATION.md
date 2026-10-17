@@ -3,9 +3,8 @@
 Adapted for Rex-M1-preview from the `Xiaomi_Robotics_1` adapter in XPolicyLab.
 
 `install.sh` is the recommended path. This document provides the manual equivalent, checkpoint
-preparation, and smoke checks. This is an eval-only release: the vendored `rex_m1/`
-carries the inference code, and although the upstream training entrypoint is still present it does
-not implement this policy's history sampling — see the Training section of `README.md`.
+preparation, and smoke checks. The same environment runs `process_data.sh` and `train.sh`; see the
+Data Processing and Training sections of `README.md`.
 
 ## 1. One-command Install
 

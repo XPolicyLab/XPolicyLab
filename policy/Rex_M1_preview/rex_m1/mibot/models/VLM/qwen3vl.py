@@ -48,7 +48,8 @@ from transformers.utils import is_torchdynamo_compiling, TransformersKwargs
 
 # Modified by the Rex-M1-preview authors (2026): constant-budget pooling of history-frame
 # embeddings (_pool_image_blocks), image_pool_mask handling in get_rope_index,
-# get_image_features and _expand_inputs_for_generation.
+# get_image_features and _expand_inputs_for_generation; a no_grad vision pass for detached
+# history frames (_visual_history_no_grad).
 
 HISTORY_POOL_SIZE = 4
 HISTORY_TOKENS_PER_IMAGE = HISTORY_POOL_SIZE * HISTORY_POOL_SIZE
@@ -1067,16 +1068,23 @@ class Qwen3VLModel(Qwen3VLPreTrainedModel):
                 in step across the main path and the three deepstack sets.
         """
         pixel_values = pixel_values.type(self.visual.dtype)
-        image_embeds, deepstack_image_embeds = self.visual(pixel_values, grid_thw=image_grid_thw)
         split_sizes = (image_grid_thw.prod(-1) // self.visual.spatial_merge_size**2).tolist()
-        image_embeds = torch.split(image_embeds, split_sizes)
-
+        pool_mask = None
         if image_pool_mask is not None:
             pool_mask = [bool(flag) for flag in image_pool_mask.flatten().tolist()]
             if len(pool_mask) != len(split_sizes):
                 raise ValueError(
                     f"image_pool_mask has {len(pool_mask)} entries, expected {len(split_sizes)} images"
                 )
+        if pool_mask is not None and image_pool_detach and any(pool_mask) and torch.is_grad_enabled():
+            image_embeds, deepstack_image_embeds = self._visual_history_no_grad(
+                pixel_values, image_grid_thw, pool_mask, split_sizes
+            )
+        else:
+            image_embeds, deepstack_image_embeds = self.visual(pixel_values, grid_thw=image_grid_thw)
+        image_embeds = torch.split(image_embeds, split_sizes)
+
+        if pool_mask is not None:
             if any(pool_mask):
                 merge = self.visual.spatial_merge_size
                 llm_grids = [
@@ -1099,6 +1107,36 @@ class Qwen3VLModel(Qwen3VLPreTrainedModel):
                 ]
 
         return image_embeds, deepstack_image_embeds
+
+    def _visual_history_no_grad(self, pixel_values, image_grid_thw, pool_mask, split_sizes):
+        """Run the history frames (pool_mask true) through the vision tower under no_grad and the
+        current frames with gradients, then restore the original image order.
+
+        Used only with image_pool_detach, where the pooled history embeddings are detached anyway:
+        parameter gradients are unchanged, and the history frames' activations, recomputation and
+        backward pass are skipped. Returns the same shapes as self.visual.
+        """
+        n = len(pool_mask)
+        pixel_blocks = torch.split(pixel_values, image_grid_thw.prod(-1).tolist())
+        embed_blocks = [None] * n
+        deep_blocks = None
+        for is_hist in (False, True):
+            idx = [i for i, flag in enumerate(pool_mask) if flag == is_hist]
+            if not idx:
+                continue
+            sizes = [split_sizes[i] for i in idx]
+            with torch.set_grad_enabled(not is_hist):
+                embeds, deeps = self.visual(
+                    torch.cat([pixel_blocks[i] for i in idx], dim=0), grid_thw=image_grid_thw[idx]
+                )
+            if deep_blocks is None:
+                deep_blocks = [[None] * n for _ in deeps]
+            for i, block in zip(idx, torch.split(embeds, sizes)):
+                embed_blocks[i] = block
+            for level, feature in enumerate(deeps):
+                for i, block in zip(idx, torch.split(feature, sizes)):
+                    deep_blocks[level][i] = block
+        return torch.cat(embed_blocks, dim=0), [torch.cat(blocks, dim=0) for blocks in deep_blocks]
 
     def get_placeholder_mask(
         self,

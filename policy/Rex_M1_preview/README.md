@@ -2,7 +2,7 @@
 
 **Contributor:** Futian Lab & VisIncept | **Paper:** Not released | **arXiv:** Not released | **Original code:** See vendored `rex_m1/`.
 
-`Rex_M1_preview` adapts the Rex-M1-preview policy to XPolicyLab/RoboDojo for evaluation. Integration scripts live at this directory level; the vendored implementation lives in `rex_m1/`. It supports RoboDojo simulation with Dual ARX5 (`arx_x5`) and `action_type=ee`.
+`Rex_M1_preview` adapts the Rex-M1-preview policy to XPolicyLab/RoboDojo for training and evaluation. Integration scripts live at this directory level; the vendored implementation lives in `rex_m1/`. It supports RoboDojo simulation with Dual ARX5 (`arx_x5`) and `action_type=ee`.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -20,20 +20,54 @@ Set `REX_M1_PREVIEW_CONDA_ENV` before running `install.sh` to use a different en
 
 ## Data Processing
 
-No `process_data.sh` is provided. This is an eval-only adapter, and RoboDojo observations are consumed online through XPolicyLab.
+`process_data.sh` converts RoboDojo HDF5 episodes into the `rex_m1` JSON/MP4 training format, then precomputes the head-camera thumbnails the dataloader reads as history frames:
+
+```bash
+cd XPolicyLab/policy/Rex_M1_preview
+bash process_data.sh <bench_name> <task_names|all> <env_cfg_type> <action_type> [expert_data_num]
+
+# Example: convert every arx_x5 simulation task
+bash process_data.sh RoboDojo all arx_x5 ee
+```
+
+| Artifact | Path |
+| --- | --- |
+| Episode JSON | `rex_m1/data/<bench>-<ckpt_name>-<env_cfg_type>-<action_type>/data/chunk-XXXX/episode_*.json` |
+| Videos | the sibling `videos/` directory, three MP4s per episode (ego / wrist-left / wrist-right) |
+| History thumbnails | the sibling `thumbs/` directory, one `.ego400s5.npy` per episode |
+
+The training recipe is the checked-in `rex_m1/configs/data/robodojo_all_arx_x5.yaml`: the history settings plus normalization statistics computed by this script on the full current RoboDojo release. Converting `all` keeps that file. Any other task selection writes a new config with recomputed statistics; copy the `history_frames` through `ptp_steps` keys from the recipe into it, or the dataloader refuses to start. Optional overrides: `RAW_DATA_ROOT`, `OUTPUT_DIR`, `DATA_WORKERS`, `ACTION_LENGTH` (30), `BATCH_SIZE` (8), `HISTORY_RES` (400) and `THUMBS_STRIDE` (5), the last two matching `history_res` and `thumbs_stride` in the data config.
 
 ## Training
 
-The training pipeline for Rex-M1-preview is not included in this eval-only release (ETA: TBD).
+Training starts from the public [Xiaomi-Robotics-1-5B](https://huggingface.co/XiaomiRobotics/Xiaomi-Robotics-1-5B) weights. The repository ships `model_states.pt`, already in the format the training entry point loads:
 
-To be precise about what the vendored tree does and does not contain: upstream's training entry
-points are still present under `rex_m1/`, and `rex_m1/mibot/models/VLA/xr1.py` carries the
-past-reconstruction auxiliary-loss path (`ptp_length`, `ptp_loss_coefficient`). That path cannot be
-exercised here — the vendored collators never emit `past_action`, so any `ptp_length > 0` run raises
-— and the released checkpoint sets `ptp_length: 0`, which leaves it inert. What is genuinely absent
-is the history sampling and collation this policy's checkpoint was trained with: the vendored
-`json_dataset.py` and `custom_collate.py` are byte-identical to upstream, so running the vendored
-training entry point as-is trains a single-frame model, not this one.
+```bash
+cd XPolicyLab/policy/Rex_M1_preview
+hf download XiaomiRobotics/Xiaomi-Robotics-1-5B model_states.pt --local-dir checkpoints/pretrained_ckpt
+```
+
+`train.sh` wraps the vendored launcher (`rex_m1/scripts/train.sh`, DeepSpeed via Lightning):
+
+```bash
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [hydra_overrides...]
+
+# Example: the reference recipe, on each of 4 nodes with 8 GPUs
+WORLD_SIZE=4 RANK=<node_rank> MASTER_ADDR=<node0_ip> MASTER_PORT=29500 \
+  bash train.sh RoboDojo all arx_x5 ee 42 0,1,2,3,4,5,6,7
+```
+
+The reference recipe is 60000 steps at a global batch of 256 (4 nodes x 8 GPUs x `batch_size` 8), AdamW (DeepSpeed FusedAdam, betas 0.9/0.95, weight decay 0.1) with a cosine schedule from a peak learning rate of 1e-5 down to 5e-7 after 500 warmup steps, bf16 mixed precision. With fewer GPUs, keep the global batch through `trainer.accumulate_grad_batches`. History frames: 20 head-camera frames, one every 25 steps, each pooled to 16 tokens; their vision path receives no gradient and runs under `no_grad`.
+
+`bench_name`, `ckpt_name`, `env_cfg_type`, and `action_type` must match the `process_data.sh` call. Training writes `config.py` and `last.ckpt/` under `train_runs/<bench>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`, and `train.sh` links `checkpoints/<same name>/` to it, so that name is what `eval.sh` takes as `ckpt_name`.
+
+| Variable | Notes |
+| --- | --- |
+| `PRETRAINED_PATH` | Xiaomi-Robotics-1-5B `model_states.pt`; default `checkpoints/pretrained_ckpt/model_states.pt`. |
+| `OUTPUT_DIR`, `DATA_CONFIG_NAME` | Converted dataset root and data config basename; must match `process_data.sh`. |
+| `MAX_STEPS`, `SAVE_INTERVAL` | Step budget (60000) and checkpoint interval (20000). |
+| `MAX_LENGTH` | Per-sample token budget of the collate; default `20000`. Longer samples are dropped. |
+| `WANDB_MODE` | `offline` by default; `online` uploads after `wandb login`. |
 
 ## Model Assets
 
