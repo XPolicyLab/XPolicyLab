@@ -1,0 +1,13 @@
+policy_name: RoboDojoEndpoint
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: code
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+max_batch_size: 8
