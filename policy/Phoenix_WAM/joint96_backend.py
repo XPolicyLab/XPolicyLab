@@ -366,6 +366,15 @@ class RoboDojoRealJoint96Session:
     def _build_robotwin_image_tensor(self, observation):
         return current_rgb(self.processor, observation).to(device=self.runtime.device, dtype=self.runtime.model_dtype)
 
+    def _text_condition(self, instruction):
+        prompt = DEFAULT_PROMPT.format(task=instruction)
+        if prompt not in self._text_cache:
+            context, mask = self.model.encode_prompt(prompt)
+            if context.shape != (1, 128, 4096) or mask.shape != (1, 128) or not mask.bool().all():
+                raise ValueError('Online T5 differs from official training padding semantics')
+            self._text_cache[prompt] = (context, mask)
+        return self._text_cache[prompt]
+
     @torch.no_grad()
     def _infer_action_chunk(self, observation, instruction):
         if not isinstance(instruction, str) or not instruction.strip():
@@ -376,13 +385,7 @@ class RoboDojoRealJoint96Session:
         if joint.shape != (14,) or not np.isfinite(joint).all():
             raise ValueError('Expected finite native joint14 state')
         proprio = self._normalize_state(joint).to(device=self.runtime.device, dtype=self.runtime.model_dtype)
-        prompt = DEFAULT_PROMPT.format(task=instruction)
-        if prompt not in self._text_cache:
-            context, mask = self.model.encode_prompt(prompt)
-            if context.shape != (1, 128, 4096) or mask.shape != (1, 128) or not mask.bool().all():
-                raise ValueError('Online T5 differs from official training padding semantics')
-            self._text_cache[prompt] = (context, mask)
-        context, mask = self._text_cache[prompt]
+        context, mask = self._text_condition(instruction)
         result = infer_frame_joint_window(self.model, None, rgb, num_frames=9, action_horizon=32,
             proprio=proprio, context=context, context_mask=mask, num_inference_steps=self.num_inference_steps,
             seed=self.seed, rand_device=self.rand_device, tiled=False,
@@ -400,7 +403,7 @@ class RoboDojoRealJoint96Session:
         if not self.runtime.first_action_recorded:
             record = dict(step=self.runtime.posttrain_step, pretrain_step=self.runtime.pretrain_step,
                 robot_type=self.runtime.robot_type, embodiment_id=self.runtime.embodiment_id,
-                inference_current_visual_mode='repeat9_full_stvae', action_horizon=32,
+                inference_current_visual_mode=getattr(self.runtime, 'current_visual_mode', 'repeat9_full_stvae'), action_horizon=32,
                 replan_steps=self.replan_steps, finite_native_joint14=True)
             (self.runtime.audit_dir / 'FIRST_ACTION.json').write_text(json.dumps(record, indent=2) + '\n')
             self.runtime.first_action_recorded = True

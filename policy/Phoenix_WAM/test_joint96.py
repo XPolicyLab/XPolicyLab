@@ -1,4 +1,4 @@
-"""CPU adapter checks. Set JOINT96_TEST_WEIGHTS for saved-weight contract checks."""
+"""CPU adapter checks and optional historical z-score saved-weight tests."""
 import copy
 import json
 import os
@@ -119,8 +119,8 @@ class AdapterTests(unittest.TestCase):
                     {'ckpt_name': 'phoenix-wam-step10000'}), weights)
                 with self.assertRaises(FileNotFoundError):
                     checkpoint_paths.resolve_policy_checkpoint({'checkpoint_path': str(checkpoint)})
-        model = SimpleNamespace(model_cfg={}, _load_joint96_policy=lambda: 'loaded')
-        with patch.object(model, '_load_joint96_policy') as load:
+        model = SimpleNamespace(model_cfg={}, _load_phoenix_policy=lambda: 'loaded')
+        with patch.object(model, '_load_phoenix_policy') as load:
             Model._load_real_policy(model)
             load.assert_called_once_with()
         model.model_cfg['runtime_mode'] = 'official'
@@ -160,12 +160,15 @@ def observation(index=0):
                    right_arm_joint_state=np.zeros(6), right_ee_joint_state=np.array([.5])))
 
 
-@unittest.skipUnless(os.environ.get('JOINT96_TEST_WEIGHTS'), 'Set JOINT96_TEST_WEIGHTS for real saved-weight checks')
+@unittest.skipUnless(os.environ.get('JOINT96_LEGACY_TEST_WEIGHTS'), 'Legacy z-score release tests; current release tests are in test_phoenix')
 class RealContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from hydra.utils import instantiate
-        cls.releases = {robot: load_assets(os.environ['JOINT96_TEST_WEIGHTS'], robot_type=robot)
+        from .joint96_assets import read_release
+        if read_release().get('runtime_mode') == 'joint96_real_phoenix':
+            raise unittest.SkipTest('Requires a legacy z-score release manifest')
+        cls.releases = {robot: load_assets(os.environ['JOINT96_LEGACY_TEST_WEIGHTS'], robot_type=robot)
                         for robot in ('arx_x5', 'piper', 'piper_x')}
         cls.manifest, cls.assets = cls.releases['arx_x5']
         _activate_runtime(cls.assets['runtime_root'])

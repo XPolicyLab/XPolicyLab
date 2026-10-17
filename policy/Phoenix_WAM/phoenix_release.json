@@ -4,50 +4,68 @@
     "arx_x5": {
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "filename": "phoenix-wam-arx-x5-joint96-init230k-step_040000.pt",
-      "path": "phoenix-wam-arx-x5-joint96-init230k-step_040000.pt",
-      "sha256": "15ae38139a494cada8bce76cc0063f9b07d32f9293f71a5f6279fec1a9a69fe9",
-      "size": 12045482134,
+      "filename": "phoenix-wam-arx-x5-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt",
+      "path": "phoenix-wam-arx-x5-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt",
+      "sha256": "e81be9a072098e97ae7ca444ddd22c583fac2769894e69d42d034d9385812dd8",
+      "size": 12045485846,
       "step": 40000,
-      "pretrain_step": 230000,
+      "pretrain_step": 256013,
       "loss_recipe": "robodojo_real_standard_video_v1",
       "loss_weights": {
         "vae": 0.5,
         "stvae": 0.5,
         "action": 1.0
-      }
+      },
+      "normalization": "q01/q99",
+      "forward_clip": [
+        -5,
+        5
+      ],
+      "runtime_mode": "joint96_real_phoenix"
     },
     "piper": {
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "filename": "phoenix-wam-piper-joint96-init235k-step_040000.pt",
-      "path": "phoenix-wam-piper-joint96-init235k-step_040000.pt",
-      "sha256": "2f75beb5b3b923a2f7ee0367367e9e768fd85df244e4bd83262baa7ed870d3e0",
-      "size": 12045482134,
+      "filename": "phoenix-wam-piper-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt",
+      "path": "phoenix-wam-piper-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt",
+      "sha256": "3d9a5550ee3645ba618665ad21dec130b54229ba4c591cbafef46571016a2b5e",
+      "size": 12045485910,
       "step": 40000,
-      "pretrain_step": 235000,
+      "pretrain_step": 256013,
       "loss_recipe": "robodojo_real_standard_video_v1",
       "loss_weights": {
         "vae": 0.5,
         "stvae": 0.5,
         "action": 1.0
-      }
+      },
+      "normalization": "q01/q99",
+      "forward_clip": [
+        -5,
+        5
+      ],
+      "runtime_mode": "joint96_real_phoenix"
     },
     "piper_x": {
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "filename": "phoenix-wam-piper-x-joint96-init245k-step_040000.pt",
-      "path": "phoenix-wam-piper-x-joint96-init245k-step_040000.pt",
-      "sha256": "7c615547f757c0b281bb929fcbee3120e7369088729e3b0aca1f63033f7d63a5",
-      "size": 12045482134,
+      "filename": "phoenix-wam-piper-x-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt",
+      "path": "phoenix-wam-piper-x-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt",
+      "sha256": "8e3d3a856322db43b0b04dab1cd7572f2695a7f075699c93a24d34b9dad37612",
+      "size": 12045485910,
       "step": 40000,
-      "pretrain_step": 245000,
+      "pretrain_step": 256013,
       "loss_recipe": "robodojo_real_standard_video_v1",
       "loss_weights": {
         "vae": 0.5,
         "stvae": 0.5,
         "action": 1.0
-      }
+      },
+      "normalization": "q01/q99",
+      "forward_clip": [
+        -5,
+        5
+      ],
+      "runtime_mode": "joint96_real_phoenix"
     }
   },
   "weights": {
@@ -83,5 +101,6 @@
       "sha256": "d92de679881d38af9c89eff7bb1b6d6c9d96cb2b69831e4027e9ecabdd38eb23",
       "size": 11361845432
     }
-  }
+  },
+  "runtime_mode": "joint96_real_phoenix"
 }

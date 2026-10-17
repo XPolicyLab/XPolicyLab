@@ -16,3 +16,4 @@ tqdm>=4.66
 GitPython>=3.1
 imageio>=2.37
 imageio-ffmpeg>=0.6
+h5py>=3.11

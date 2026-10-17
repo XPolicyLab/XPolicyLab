@@ -29,7 +29,7 @@ def main():
         parser.error('--rounds must be positive')
     started = time.perf_counter()
     model = Model(dict(
-        runtime_mode="joint96_real", checkpoint_path=str(args.weights.resolve()),
+        runtime_mode="joint96_real_phoenix", checkpoint_path=str(args.weights.resolve()),
         expected_step=args.expected_step, audit_dir=str(args.audit_dir.resolve()),
         env_cfg_type=args.robot_type, action_type="joint", action_horizon=32,
         replan_steps=32, num_inference_steps=10, mixed_precision="bf16",

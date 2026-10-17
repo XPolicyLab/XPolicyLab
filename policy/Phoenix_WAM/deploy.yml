@@ -22,7 +22,7 @@ mixed_precision: bf16
 action_horizon: 32
 replan_steps: 32
 num_inference_steps: 10
-action_hz: 25.0
+action_hz: null
 text_cfg_scale: 1.0
 negative_prompt: ""
 rand_device: cpu
@@ -32,7 +32,7 @@ default_instruction: follow the instruction
 allow_dummy_policy: false
 
 # Each robot uses its own released Joint96 posttraining checkpoint.
-runtime_mode: joint96_real
-current_visual_mode: repeat9_full_stvae
-expected_step: null
-audit_dir: logs/joint96
+runtime_mode: joint96_real_phoenix
+current_visual_mode: repeat9_full_joint96
+expected_step: 40000
+audit_dir: logs/phoenix

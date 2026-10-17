@@ -35,23 +35,48 @@ class Model(ModelTemplate):
     """XPolicyLab model adapter with one stateful WAM session per RoboDojo environment."""
 
     __init__ = StatefulWAMAdapter.__init__
-    _adapt_obs = StatefulWAMAdapter._adapt_obs
     _ingest = StatefulWAMAdapter._ingest
     update_obs = StatefulWAMAdapter.update_obs
     _session_for = StatefulWAMAdapter._session_for
     update_obs_batch = StatefulWAMAdapter.update_obs_batch
     _dummy_actions = StatefulWAMAdapter._dummy_actions
-    _predict = StatefulWAMAdapter._predict
     get_action = StatefulWAMAdapter.get_action
     get_action_batch = StatefulWAMAdapter.get_action_batch
     get_timing_rollout = StatefulWAMAdapter.get_timing_rollout
     reset = StatefulWAMAdapter.reset
 
     def _load_real_policy(self) -> None:
-        mode = str(self.model_cfg.get("runtime_mode") or "joint96_real")
+        mode = str(self.model_cfg.get("runtime_mode") or "joint96_real_phoenix")
+        self.model_cfg['runtime_mode'] = mode
+        if mode == "joint96_real_phoenix":
+            return self._load_phoenix_policy()
         if mode != "joint96_real":
-            raise ValueError(f"Phoenix_WAM requires runtime_mode=joint96_real, got {mode}")
+            raise ValueError(f"Phoenix_WAM requires runtime_mode=joint96_real or joint96_real_phoenix, got {mode}")
         self._load_joint96_policy()
+
+    def _load_phoenix_policy(self) -> None:
+        from .joint96_assets import read_source
+        _, assets = read_source()
+        _activate_runtime(assets['runtime_root'])
+        from .phoenix_backend import PhoenixSession, build_phoenix_runtime
+        self.runtime, session_cfg = build_phoenix_runtime(self.model_cfg)
+        self.session_factory = partial(PhoenixSession, self.runtime, session_cfg)
+        self.session = self.session_factory()
+
+    def _adapt_obs(self, obs):
+        if self.model_cfg.get('runtime_mode') == 'joint96_real_phoenix':
+            import numpy as np
+            for camera in ('cam_head', 'cam_left_wrist', 'cam_right_wrist'):
+                image = np.asarray(obs['vision'][camera]['color'])
+                if image.dtype != np.uint8 or image.ndim != 3 or image.shape[-1] != 3:
+                    raise ValueError('New real training requires explicit uint8 RGB input: ' + camera)
+        return StatefulWAMAdapter._adapt_obs(self, obs)
+
+    def _predict(self, session, observation, instruction_text):
+        if self.model_cfg.get('runtime_mode') == 'joint96_real_phoenix' and not self.allow_dummy_policy:
+            from .phoenix_backend import predict_phoenix
+            return predict_phoenix(self, session, observation, instruction_text)
+        return StatefulWAMAdapter._predict(self, session, observation, instruction_text)
 
     def _load_joint96_policy(self) -> None:
         from .joint96_assets import load_assets

@@ -180,6 +180,16 @@ def download_weights(root, *, policy_dir=POLICY_DIR, robot_type=None, api=None, 
 
 def preflight(root, *, expected_step=None, robot_type="arx_x5"):
     from .model import _activate_runtime
+    if read_release().get('runtime_mode') == 'joint96_real_phoenix':
+        _, source = read_source()
+        _activate_runtime(source['runtime_root'])
+        from .phoenix_backend import prepare_release_inputs
+        checked = prepare_release_inputs(dict(checkpoint_path=str(root), env_cfg_type=robot_type,
+                                             expected_step=expected_step))
+        return dict(step=checked['step'], model_loaded=False,
+                    identity=checked['checked']['identity'],
+                    checkpoint_sha256=checked['checkpoint_sha256'],
+                    robot_support=checked['checked']['support'])
     manifest, paths = load_assets(root, robot_type=robot_type)
     if expected_step is not None and int(expected_step) != manifest['step']:
         raise ValueError('Requested step differs from pinned checkpoint')
