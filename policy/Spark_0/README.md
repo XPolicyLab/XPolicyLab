@@ -37,6 +37,12 @@ source_starvla/playground/Pretrained_models/
 └── DA3-LARGE/              # Depth-Anything-3 teacher, train-only: bash scripts/download_da3_large.sh
 ```
 
+Download these weights, plus the Spark-0 pretraining checkpoint, with:
+
+```bash
+bash scripts/download_pretrained_ckpt.sh
+```
+
 `scripts/finetune.sh` checks the DA3 teacher before launch (`scripts/check_da3_teacher.sh`); set `SKIP_DA3_CHECK=1` to skip. The teacher is never loaded at inference.
 
 ## Data Processing
@@ -143,7 +149,7 @@ Spark-0 specifics of the `Model` contract:
 
 - `get_action` returns **one action row per call**. The model re-infers once per chunk and serves the other rows from a cache, which keeps the state-history frames consecutive as in training.
 - **The policy server is single-tenant.** Per-episode buffers are keyed by `env_idx` only: run one server per eval client, or give each client a disjoint `env_idx` range.
-- With `FAST_OBS_UPDATE = True` (top of `deploy.py`), the client sends a full observation only on steps the model reads (the server reports `obs_due_in`) and keeps the state-history ring buffer itself.
+- With `FAST_OBS_UPDATE = True` (top of `deploy.py`), the client sends a full observation on a fixed period from the local model config (sync: `execute_horizon`; RTC: `action_horizon - fire_at_remaining`) and keeps the state-history ring buffer itself.
 - **Tactile input.** The bench publishes the current history window under `obs["tactile"]` in raw sensor units: `region_pressure` `[hands, regions, history]` (oldest → current) and/or `taxel_pressure_3d` `[hands, taxels, T, 4]` (xyz in metres in the training frame, plus pressure). A stream the bench omits falls back to the learned `no_tactile` token, so the same checkpoint runs vision-only.
 
 ## Configuration

@@ -4,9 +4,9 @@
 # layout is preserved below Spark_0/checkpoints/.
 #
 # Usage:
-#   bash scripts/download_pretrain_ckpt.sh
-#   HF_ENDPOINT=https://hf-mirror.com bash scripts/download_pretrain_ckpt.sh
-#   OUT_DIR=./checkpoints bash scripts/download_pretrain_ckpt.sh
+#   bash scripts/download_spark0_pretrained_ckpt.sh
+#   HF_ENDPOINT=https://hf-mirror.com bash scripts/download_spark0_pretrained_ckpt.sh
+#   OUT_DIR=./checkpoints bash scripts/download_spark0_pretrained_ckpt.sh
 #
 # Requires huggingface_hub (`hf` CLI preferred, or the Python package).
 # Authenticate first with `hf auth login` only if the repository requires it.
@@ -25,11 +25,11 @@ CHECKPOINT_DIR="${CHECKPOINT_ROOT}/${CHECKPOINT_NAME}"
 
 mkdir -p "${CHECKPOINT_ROOT}"
 
-echo "[download_pretrain_ckpt] repo=${REPO_ID}"
-echo "[download_pretrain_ckpt] subdirectory=${CHECKPOINT_NAME}"
-echo "[download_pretrain_ckpt] out=${CHECKPOINT_DIR}"
+echo "[download_spark0_pretrained_ckpt] repo=${REPO_ID}"
+echo "[download_spark0_pretrained_ckpt] subdirectory=${CHECKPOINT_NAME}"
+echo "[download_spark0_pretrained_ckpt] out=${CHECKPOINT_DIR}"
 if [[ -n "${HF_ENDPOINT:-}" ]]; then
-    echo "[download_pretrain_ckpt] HF_ENDPOINT=${HF_ENDPOINT}"
+    echo "[download_spark0_pretrained_ckpt] HF_ENDPOINT=${HF_ENDPOINT}"
 fi
 
 if command -v hf >/dev/null 2>&1; then
@@ -49,19 +49,19 @@ snapshot_download(
 )
 PY
 else
-    echo "[download_pretrain_ckpt] ERROR: need hf CLI or python package huggingface_hub" >&2
-    echo "[download_pretrain_ckpt]   install with: pip install -U 'huggingface_hub[cli]'" >&2
+    echo "[download_spark0_pretrained_ckpt] ERROR: need hf CLI or python package huggingface_hub" >&2
+    echo "[download_spark0_pretrained_ckpt]   install with: pip install -U 'huggingface_hub[cli]'" >&2
     exit 1
 fi
 
 if [[ ! -d "${CHECKPOINT_DIR}" ]]; then
-    echo "[download_pretrain_ckpt] ERROR: checkpoint directory was not created: ${CHECKPOINT_DIR}" >&2
+    echo "[download_spark0_pretrained_ckpt] ERROR: checkpoint directory was not created: ${CHECKPOINT_DIR}" >&2
     exit 1
 fi
 
 if ! find "${CHECKPOINT_DIR}" -type f -print -quit | grep -q .; then
-    echo "[download_pretrain_ckpt] ERROR: checkpoint directory is empty: ${CHECKPOINT_DIR}" >&2
+    echo "[download_spark0_pretrained_ckpt] ERROR: checkpoint directory is empty: ${CHECKPOINT_DIR}" >&2
     exit 1
 fi
 
-echo "[download_pretrain_ckpt] done -> ${CHECKPOINT_DIR}"
+echo "[download_spark0_pretrained_ckpt] done -> ${CHECKPOINT_DIR}"
