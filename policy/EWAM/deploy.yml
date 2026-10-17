@@ -1,0 +1,44 @@
+policy_name: EWAM
+protocol: ws
+# One env per call; get_action_batch loops over envs if eval_batch is enabled.
+eval_batch: false
+
+# Server transport: overridden by setup_eval_policy_server.sh per launch.
+port: null
+host: localhost
+
+# Identifiers + per-launch wiring (set via --overrides from the eval scripts).
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: joint
+seed: null
+gpu_id: null
+
+# --- EWAM-specific keys ---
+# Explicit path to mp_rank_00_model_states.pt (or its directory). null ->
+# XPolicyLab checkpoint resolution (ckpt_name path, 5-tuple run dir, or
+# checkpoints/<ckpt_name>/).
+checkpoint_path: null
+# Wan2.2-TI2V-5B dir (config.json, Wan2.2_VAE.pth, T5 encoder, google/umt5-xxl).
+# null -> checkpoints/Wan2.2-TI2V-5B
+wan_path: null
+# Qwen3-VL-2B-Instruct dir (processor + config; weights come from the EWAM checkpoint).
+# null -> checkpoints/Qwen3-VL-2B-Instruct
+vlm_path: null
+# EWAM source root. null -> the vendored copy at policy/EWAM/EWAM/.
+ewam_root: null
+# EWAM architecture yaml. null -> <ewam_root>/configs/ewam_robotwin.yaml
+ewam_config: null
+device: cuda
+# Flow-matching steps. null -> model.inference.num_inference_timesteps (10).
+num_inference_steps: null
+# Actions executed per chunk before re-planning. null -> full 16-step chunk.
+replan_steps: null
+# Prepended to every instruction; must match the training metas. null -> RoboTwin prefix.
+scene_prefix: null
+default_instruction: ""
+# true skips weight loading and returns hold-position chunks (protocol
+# debugging only; never valid for a real evaluation).
+allow_dummy_policy: false
