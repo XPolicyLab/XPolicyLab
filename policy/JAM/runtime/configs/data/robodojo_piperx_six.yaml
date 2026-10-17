@@ -1,0 +1,102 @@
+train:
+  _target_: fastwam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
+  dataset_dirs:
+    - ${oc.env:JAM_DATA_ROOT,./data_workspace}/ready/cap_pen
+    - ${oc.env:JAM_DATA_ROOT,./data_workspace}/ready/classify_objects
+    - ${oc.env:JAM_DATA_ROOT,./data_workspace}/ready/disassemble_LEGO
+    - ${oc.env:JAM_DATA_ROOT,./data_workspace}/ready/hang_mugs
+    - ${oc.env:JAM_DATA_ROOT,./data_workspace}/ready/pack_objects_into_backpack
+    - ${oc.env:JAM_DATA_ROOT,./data_workspace}/ready/sweep_blocks
+  shape_meta:
+    images:
+      - key: cam_high
+        raw_shape: [3, 480, 640]
+        shape: [3, 240, 320]
+      - key: cam_left_wrist
+        raw_shape: [3, 480, 640]
+        shape: [3, 240, 320]
+      - key: cam_right_wrist
+        raw_shape: [3, 480, 640]
+        shape: [3, 240, 320]
+    action:
+      - {key: default, raw_shape: 14, shape: 14}
+    state:
+      - {key: default, raw_shape: 14, shape: 14}
+  num_frames: 33
+  # RoboDojo real data: native 25 Hz, no temporal downsampling.
+  global_sample_stride: 1
+  action_video_freq_ratio: 4
+  video_future_frames: 0
+  video_size: [384, 320]
+  camera_key: null
+  val_set_proportion: 0.10
+  is_training_set: true
+  pretrained_norm_stats: ${oc.env:JAM_DATA_ROOT,./data_workspace}/stats/train90_seed42.json
+  skip_padding_as_possible: false
+  concat_multi_camera: robotwin
+  override_instruction: null
+  processor:
+    _target_: fastwam.datasets.lerobot.processors.fastwam_processor.FastWAMProcessor
+    shape_meta: ${data.train.shape_meta}
+    num_obs_steps: ${data.train.num_frames}
+    num_output_cameras: 3
+    action_output_dim: 14
+    proprio_output_dim: 14
+    delta_action_dim_mask: null
+    action_state_transforms: null
+    use_stepwise_action_norm: false
+    norm_default_mode: z-score
+    norm_exception_mode: null
+    action_state_merger:
+      _target_: fastwam.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+    train_transforms:
+      - _target_: fastwam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [240, 320]
+    val_transforms:
+      - _target_: fastwam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [240, 320]
+  text_embedding_cache_dir: ${oc.env:JAM_DATA_ROOT,./data_workspace}/cache/text
+  context_len: 128
+
+val:
+  _target_: fastwam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
+  dataset_dirs: ${data.train.dataset_dirs}
+  shape_meta: ${data.train.shape_meta}
+  num_frames: ${data.train.num_frames}
+  global_sample_stride: ${data.train.global_sample_stride}
+  action_video_freq_ratio: ${data.train.action_video_freq_ratio}
+  video_future_frames: 0
+  video_size: ${data.train.video_size}
+  camera_key: null
+  val_set_proportion: ${data.train.val_set_proportion}
+  is_training_set: false
+  pretrained_norm_stats: ${data.train.pretrained_norm_stats}
+  skip_padding_as_possible: false
+  concat_multi_camera: robotwin
+  override_instruction: ${data.train.override_instruction}
+  processor:
+    _target_: fastwam.datasets.lerobot.processors.fastwam_processor.FastWAMProcessor
+    shape_meta: ${data.train.shape_meta}
+    num_obs_steps: ${data.train.num_frames}
+    num_output_cameras: 3
+    action_output_dim: 14
+    proprio_output_dim: 14
+    delta_action_dim_mask: null
+    action_state_transforms: null
+    use_stepwise_action_norm: false
+    norm_default_mode: z-score
+    norm_exception_mode: null
+    action_state_merger:
+      _target_: fastwam.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+    train_transforms:
+      - _target_: fastwam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [240, 320]
+    val_transforms:
+      - _target_: fastwam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size: [240, 320]
+  text_embedding_cache_dir: ${data.train.text_embedding_cache_dir}
+  context_len: ${data.train.context_len}

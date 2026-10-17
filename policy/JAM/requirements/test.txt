@@ -1,0 +1,11 @@
+# CPU-only adapter/transport tests; does not install torch or load model assets.
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+h5py==3.14.0
+pyyaml==6.0.3
+websockets==15.0.1
+msgpack==1.2.1
+msgpack-numpy==0.4.8
+pydantic==2.13.4
+psutil==7.2.2
+huggingface-hub==0.29.2

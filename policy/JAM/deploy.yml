@@ -1,0 +1,14 @@
+policy_name: JAM
+protocol: ws
+host: 127.0.0.1
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: null
+env_cfg_type: piper_x
+seed: 42
+action_type: joint
+gpu_id: 0
+eval_batch: false
+replan_steps: 24
+request_timeout_s: 120
