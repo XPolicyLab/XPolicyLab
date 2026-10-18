@@ -26,7 +26,7 @@ from roboshell.contract import v0 as C
 from roboshell.server import geometry as geo
 from roboshell.server.core import NoDepth, CAMERA_NAMES, Episode, log
 from roboshell.server.http_api import dispatch, start_http
-from roboshell.server.tools import load_tools, schema
+from roboshell.server.tools import load_tools, schema, select_profile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 HOLD_S = 45.0  # answer the client with a one-step hold if the agent is silent this long (client timeout is 120 s)
@@ -118,6 +118,11 @@ class BridgeExecutor:
         value = self.obs["state"].get(f"{tag}_ee_joint_state")
         return float(value[0]) if value is not None else 1.0
 
+    def gripper_observed(self, tag):
+        """The official observation's gripper value: the finger target after the control's clamp (see core.py)."""
+        value = ((self.obs or {}).get("state") or {}).get(f"{tag}_ee_joint_state")
+        return float(value[0]) if value is not None else None
+
     def end_reason(self):
         return self.reason or "episode_over"
 
@@ -188,6 +193,7 @@ class Model:
         self.budget = int(cfg.get("command_budget", 0))
         self.executor = BridgeExecutor(cfg)
         self.executor.build_planner()
+        log(f"profile for {cfg['task_name']}: {'open (generic)' if select_profile(cfg['task_name']) else 'default'}")
         self.registry = load_tools(cfg["task_name"])
         if self.registry:
             log(f"tools for {cfg['task_name']}: {sorted(self.registry)}")

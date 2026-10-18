@@ -23,6 +23,9 @@ ARMS = ("left", "right")
 SERVER = os.environ.get("ROBO_SERVER", "http://127.0.0.1:28700").rstrip("/")
 OBS_DIR = os.environ.get("ROBO_OBS_DIR", "obs")
 TIMEOUT = float(os.environ.get("ROBO_TIMEOUT", "300"))
+# ROBO_PROFILE=open (generic profile): adds goto, reach, pixels and `robo py` (Python cells in a persistent kernel)
+OPEN = os.environ.get("ROBO_PROFILE", "") == "open"
+KERNEL_SOCKET = os.environ.get("ROBO_KERNEL_SOCKET", "/tmp/robo_kernel.sock")
 
 # never route robot traffic through an HTTP proxy
 _opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -80,6 +83,20 @@ def build_parser():
 
     wait = sub.add_parser("wait", help="let the simulation run")
     wait.add_argument("sec", type=float)
+    if OPEN:
+        for name, text in (("goto", "move the TCP to an absolute pose"), ("reach", "check whether a TCP pose is reachable (free, nothing moves)")):
+            cmd = sub.add_parser(name, help=text)
+            cmd.add_argument("arm", choices=ARMS)
+            for axis in ("x", "y", "z"):
+                cmd.add_argument(f"--{axis}", type=float, metavar="M", help="world coordinate; omitted: keep the current one")
+            cmd.add_argument("--approach", help="down, forward, down45 or a direction a,b,c; omitted: keep")
+            cmd.add_argument("--open", help="x, y, z, an angle in degrees about the approach direction, or a direction a,b,c; omitted: keep")
+            if name == "goto":
+                cmd.add_argument("--path", choices=("line", "joint"), default="line", help="line: straight TCP line (default); joint: joint interpolation")
+        pixels = sub.add_parser("pixels", help="write the latest images as numpy arrays obs/<camera>_rgb.npy (free)")
+        pixels.add_argument("--camera", choices=("head", "wrist_l", "wrist_r", "all"), default="all")
+        py = sub.add_parser("py", help="run Python code in the persistent kernel (from FILE, or from stdin)")
+        py.add_argument("file", nargs="?", help="file with the code; omitted: read the code from stdin")
     for command in extra_commands():
         extra = sub.add_parser(command["name"], help=command.get("help", f"tool {command.get('tool', '')}"))
         for arg in command.get("args", []):
@@ -133,8 +150,85 @@ def download_obs():
         os.replace(tmp, os.path.join(OBS_DIR, name))
 
 
+def write_files(reply):
+    """Files a command returns (base64 in `files`) go into the observation folder; the reply lists their paths."""
+    import base64
+
+    files = reply.pop("files", None)
+    if files:
+        os.makedirs(OBS_DIR, exist_ok=True)
+        reply["files"] = []
+        for name, data in files.items():
+            path = os.path.join(OBS_DIR, os.path.basename(name))
+            with open(path, "wb") as handle:
+                handle.write(base64.b64decode(data))
+            reply["files"].append(path)
+
+
+def run_python(file):
+    """`robo py`: send the code to the kernel (started on first use) and print its output."""
+    import signal
+    import subprocess
+    import time
+
+    code = open(file).read() if file else sys.stdin.read()
+    kernel = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kernel.py")
+
+    def connect():
+        conn = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        conn.connect(KERNEL_SOCKET)
+        return conn
+
+    try:
+        conn = connect()
+    except OSError:
+        log = open(os.path.join(os.path.dirname(KERNEL_SOCKET), "robo_kernel.log"), "a")
+        subprocess.Popen([sys.executable, kernel, KERNEL_SOCKET], stdin=subprocess.DEVNULL, stdout=log, stderr=log,
+                         start_new_session=True, env=dict(os.environ))
+        for _ in range(100):
+            time.sleep(0.1)
+            try:
+                conn = connect()
+                break
+            except OSError:
+                continue
+        else:
+            print("robo py: the Python kernel did not start (see /tmp/robo_kernel.log)")
+            return EXIT_EXEC_FAILED
+        print("[Python kernel started: variables from earlier cells, if any, are gone]")
+
+    def interrupt(signum, frame):
+        try:
+            os.kill(int(open(KERNEL_SOCKET + ".pid").read()), signal.SIGINT)
+        except (OSError, ValueError):
+            pass
+        sys.exit(130)
+
+    signal.signal(signal.SIGTERM, interrupt)
+    signal.signal(signal.SIGINT, interrupt)
+    with conn:
+        conn.sendall(json.dumps({"code": code}).encode())
+        conn.shutdown(socket.SHUT_WR)
+        chunks = []
+        while True:
+            data = conn.recv(65536)
+            if not data:
+                break
+            chunks.append(data)
+    try:
+        reply = json.loads(b"".join(chunks))
+    except ValueError:
+        print("robo py: the kernel stopped while running the cell; the next `robo py` starts a new one")
+        return EXIT_EXEC_FAILED
+    sys.stdout.write(reply.get("output", ""))
+    return EXIT_OK if reply.get("ok") else EXIT_EXEC_FAILED
+
+
 def main():
     args = vars(build_parser().parse_args())
+    if args.get("cmd") == "py":
+        return run_python(args.get("file"))
+    args = {k: v for k, v in args.items() if v is not None}   # omitted options: the server's defaults
     try:
         reply = post(args)
     except (socket.timeout, TimeoutError):
@@ -151,6 +245,7 @@ def main():
         return EXIT_EXEC_FAILED
 
     exit_code = int(reply.pop("exit_code", EXIT_OK))
+    write_files(reply)
     if reply.pop("obs_updated", False):
         try:
             download_obs()

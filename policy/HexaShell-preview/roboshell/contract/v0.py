@@ -28,6 +28,9 @@ EXIT_CLIENT_TIMEOUT = 4  # result can be fetched with `robo status`
 # commands that consume budget
 BUDGETED = ("move", "rotate", "point", "gripper", "home", "wait")
 FREE = ("obs", "status", "done")
+# commands of the generic profile (ROBOSHELL_PROFILE=open) only: absolute move, reachability check, raw image arrays
+OPEN_BUDGETED = ("goto",)
+OPEN_FREE = ("reach", "pixels")
 
 OBS_FILES = ("head.png", "wrist_l.png", "wrist_r.png", "state.json")
 # depth is optional: metres as float32 .npy plus a grayscale preview

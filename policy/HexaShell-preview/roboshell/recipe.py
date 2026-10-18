@@ -15,7 +15,7 @@ import argparse, hashlib, importlib.util, json, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-from roboshell.server.tools import base_task  # noqa: E402
+from roboshell.server.tools import base_task, open_profile, select_profile  # noqa: E402
 
 RECIPES = os.path.join(ROOT, "agent", "recipes")
 CHECK_NOTES = os.path.join(ROOT, "eval", "check_notes.py")
@@ -72,11 +72,16 @@ def load_notes(task):
     return path, text, hashlib.sha256(data).hexdigest()
 
 
+def notes_enabled():
+    """Task notes come from runs of the task's own tools: never in the generic profile."""
+    return switch("ROBOSHELL_NOTES") and not open_profile()
+
+
 def prompt(task, instruction):
     text = instruction.rstrip("\n")
     if enabled():
         text += MARKER + load(task)[1].rstrip()
-    if switch("ROBOSHELL_NOTES"):
+    if notes_enabled():
         notes = load_notes(task)
         if notes:
             text += NOTES_MARKER + notes[1].rstrip()
@@ -90,7 +95,7 @@ def info(task):
             manifest = json.load(handle)
         name, _, digest = load(task)
         result = {"recipe": True, "file": name, "sha256": digest, "source": manifest["repository"], "commit": manifest["commit"]}
-    notes = load_notes(task) if switch("ROBOSHELL_NOTES") else None
+    notes = load_notes(task) if notes_enabled() else None
     result["notes"] = {"file": notes[0], "sha256": notes[2]} if notes else False
     return result
 
@@ -101,6 +106,7 @@ if __name__ == "__main__":
     parser.add_argument("--task", required=True)
     parser.add_argument("--instruction-file")
     args = parser.parse_args()
+    select_profile(args.task)
     try:
         if args.action == "prompt":
             with open(args.instruction_file) as handle:

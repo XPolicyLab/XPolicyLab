@@ -25,6 +25,32 @@ import os
 from roboshell.contract import v0 as C
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OPEN_PROFILE_DIR = os.path.join(ROOT, "profiles", "open")
+
+
+def open_profile():
+    """ROBOSHELL_PROFILE=open: the generic agent for tasks it has never been developed on. Every task gets the same
+    tools (profiles/open/enabled_tools.txt, from tools/ and library/), the same manual (agent/INTERFACE_open.md) and no
+    task notes; nothing under tasks/ is read. Read at call time: config.env is loaded after this module is imported."""
+    value = os.environ.get("ROBOSHELL_PROFILE", "").strip()
+    if value not in ("", "default", "open"):
+        raise ValueError(f"ROBOSHELL_PROFILE must be default, open or empty, not {value!r}")
+    return value == "open"
+
+
+def open_tasks():
+    """The tasks of RoboDojo's Open capability dimension (profiles/open/tasks.txt)."""
+    with open(os.path.join(OPEN_PROFILE_DIR, "tasks.txt")) as handle:
+        return {line.strip() for line in handle if line.strip() and not line.startswith("#")}
+
+
+def select_profile(task):
+    """With ROBOSHELL_PROFILE empty, choose the profile from the task: the Open tasks get the generic profile, every
+    other task the default one. An explicit ROBOSHELL_PROFILE is kept. The choice is written to the environment, so
+    the manual, the prompt and the agent container started from this process use the same profile."""
+    if not os.environ.get("ROBOSHELL_PROFILE", "").strip():
+        os.environ["ROBOSHELL_PROFILE"] = "open" if base_task(task) in open_tasks() else "default"
+    return open_profile()
 
 
 def base_task(task):
@@ -35,8 +61,11 @@ def base_task(task):
 
 
 def tool_dirs(task):
-    """Directories that may hold tools, task-specific ones last so they can shadow shared ones."""
+    """Directories that may hold tools, task-specific ones last so they can shadow shared ones.
+    Generic profile: the shared tools and the library only."""
     dirs = [os.path.join(ROOT, "tools")]
+    if open_profile():
+        return dirs + [os.path.join(ROOT, "library")]
     if task:
         dirs.append(os.path.join(ROOT, "tasks", base_task(task), "tools"))
     return dirs
@@ -50,8 +79,11 @@ def enabled_tools(task):
     override = os.environ.get("ROBOSHELL_TOOLS")
     if override is not None:
         return [] if override.strip() in ("", "none") else [t.strip() for t in override.split(",") if t.strip()]
-    path = os.path.join(ROOT, "tasks", base_task(task) or "", "enabled_tools.txt")
-    if not task or not os.path.exists(path):
+    if open_profile():
+        path = os.path.join(OPEN_PROFILE_DIR, "enabled_tools.txt")   # the same for every task
+    else:
+        path = os.path.join(ROOT, "tasks", base_task(task) or "", "enabled_tools.txt")
+    if (not task and not open_profile()) or not os.path.exists(path):
         return []
     with open(path) as handle:
         return [line.strip() for line in handle if line.strip() and not line.startswith("#")]
@@ -74,7 +106,7 @@ def load_tools(task):
         spec.loader.exec_module(module)
         info = module.TOOL
         for command in info["commands"]:
-            if command["name"] in C.BUDGETED + C.FREE or command["name"] in registry:
+            if command["name"] in C.BUDGETED + C.FREE + C.OPEN_BUDGETED + C.OPEN_FREE or command["name"] in registry:
                 raise ValueError(f"tool {name}: command {command['name']!r} clashes with an existing command")
             registry[command["name"]] = {"tool": name, "module": module, "spec": command, "path": path}
     return registry
@@ -105,6 +137,14 @@ class EpisodeAPI:
         arm.gripper_target = float(min(1.0, max(0.0, value)))
         return self._episode.hold(self._episode.GRIPPER_STEPS)
 
+    def gripper_state(self, arm):
+        """What the official observation says about the fingers of `arm` (see Arm.gripper_state); {} if unknown."""
+        return arm.gripper_state()
+
+    def ik_solution(self, arm, target_tcp):
+        """Joints for a 4x4 TCP target (inverse kinematics only, nothing moves), or None."""
+        return self._episode.ik_solution(arm, target_tcp)
+
     def hold(self, steps):
         return self._episode.hold(int(steps))
 
@@ -117,6 +157,10 @@ class EpisodeAPI:
 
     def planner(self, tag):
         return self._episode.executor.planner(tag)
+
+    def robot_base_pose(self, tag):
+        """World pose [x y z qw qx qy qz] of the robot base of arm `tag` (the robot's own placement, no scene object)."""
+        return list(self._episode.executor.robot(tag).entity_origin_pose)
 
     @property
     def over(self):

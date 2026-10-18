@@ -5,6 +5,7 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from roboshell.contract import v0 as C
+from roboshell.server.tools import open_profile
 
 
 def start_http(session, host, port, admin_port):
@@ -89,6 +90,7 @@ def dispatch(session, episode_getter, kind, payload):
         return dict(episode.last_feedback or {"note": "no command yet"}, exit_code=C.EXIT_OK)
     if episode.over:
         return {"error": "the episode is over", "episode_over": True, "exit_code": C.EXIT_EPISODE_OVER}
-    if cmd not in C.BUDGETED + C.FREE and cmd not in episode.registry:
+    known = C.BUDGETED + C.FREE + (C.OPEN_BUDGETED + C.OPEN_FREE if open_profile() else ())
+    if cmd not in known and cmd not in episode.registry:
         return {"error": f"unknown command {cmd!r}", "exit_code": C.EXIT_BAD_ARGS}
     return episode.execute(payload)

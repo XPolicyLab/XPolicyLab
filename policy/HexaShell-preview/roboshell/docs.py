@@ -13,7 +13,7 @@ import argparse, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-from roboshell.server.tools import base_task, enabled_tools, find_tool  # noqa: E402
+from roboshell.server.tools import base_task, enabled_tools, find_tool, open_profile, select_profile  # noqa: E402
 
 
 def tool_doc(name, task):
@@ -23,6 +23,8 @@ def tool_doc(name, task):
 
 
 def build(task):
+    if open_profile():
+        return build_open()
     task = base_task(task)
     with open(os.path.join(ROOT, "agent", "INTERFACE.md")) as handle:
         text = handle.read().rstrip() + "\n"
@@ -35,6 +37,23 @@ def build(task):
         for name in names:
             text += "\n" + tool_doc(name, task) + "\n"
     out = os.path.join(ROOT, "agent", "build", f"AGENTS_{task}.md") if task else os.path.join(ROOT, "agent", "build", "AGENTS_base.md")
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    with open(out, "w") as handle:
+        handle.write(text)
+    return out
+
+
+def build_open():
+    """Generic profile: agent/INTERFACE_open.md + the interface.md of every tool in profiles/open/enabled_tools.txt.
+    The same file for every task: nothing in it depends on the task."""
+    with open(os.path.join(ROOT, "agent", "INTERFACE_open.md")) as handle:
+        text = handle.read().rstrip() + "\n"
+    names = enabled_tools(None)
+    if names:
+        text += "\n## Extra commands\n\nThese are robo commands too; in Python call them with `tool(name, ...)` (see above).\n"
+    for name in names:
+        text += "\n" + tool_doc(name, None) + "\n"
+    out = os.path.join(ROOT, "agent", "build", "AGENTS_open.md")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as handle:
         handle.write(text)
@@ -67,7 +86,11 @@ def banned_words(task):
 
 
 def check(task):
-    """Interface only: the tool descriptions must not name the task or its objects (whole words, plural included)."""
+    """Interface only: the tool descriptions must not name the task or its objects (whole words, plural included).
+    Generic profile: the manual is built without the task, so it is the same for every task."""
+    if open_profile():
+        print("generic manual, the same for every task:", build_open())
+        return 0
     task = base_task(task)
     text = open(build(task)).read().lower()
     base = open(os.path.join(ROOT, "agent", "INTERFACE.md")).read().lower()
@@ -82,6 +105,8 @@ if __name__ == "__main__":
     parser.add_argument("action", choices=["build", "check", "banned"])
     parser.add_argument("--task")
     args = parser.parse_args()
+    if args.task:
+        select_profile(args.task)
     if args.action == "build":
         print(build(args.task))
     elif args.action == "banned":

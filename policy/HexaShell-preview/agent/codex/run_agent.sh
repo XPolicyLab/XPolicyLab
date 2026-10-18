@@ -9,7 +9,9 @@
 # (printed by `run_agent.sh --gateway`).
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+PROFILE=${ROBOSHELL_PROFILE:-}   # chosen for this task by the caller (roboshell/server/tools.py select_profile)
 if [ -f "$ROOT/config.env" ]; then set -a; source "$ROOT/config.env"; set +a; fi
+[ -z "$PROFILE" ] || ROBOSHELL_PROFILE=$PROFILE
 LANE=${LANE:-0}
 IMAGE=${IMAGE:-roboshell/agent-codex:0.0.1}
 NET_INT=roboshell-int-$LANE
@@ -82,12 +84,19 @@ AGENT_CMD=(codex exec --json --skip-git-repo-check --dangerously-bypass-approval
   -C /work -m "$MODEL" -c "model_reasoning_effort=\"$EFFORT\"" -o /work/.last_message.txt "$PROMPT")
 fi
 
+# Generic profile: the Python kernel and library for `robo py`, and the extra commands of the robo client
+PROFILE_ARGS=()
+if [ "${ROBOSHELL_PROFILE:-}" = "open" ]; then
+  PROFILE_ARGS=(-e ROBO_PROFILE=open -v "$ROOT/roboshell/client/kernel.py:/opt/robo/kernel.py:ro"
+                -v "$ROOT/roboshell/client/robolib.py:/opt/robo/robolib.py:ro")
+fi
+
 START=$(date +%s)
 set +e
 timeout "${WALL:-3600}" docker run --rm --name "roboshell-agent-$LANE" --network "$NET_INT" \
   --user "$(id -u):$(id -g)" -e HOME=/tmp -e CODEX_HOME=/codex-home \
   -v "$RUN/work:/work" -v "$RUN/codex_home:/codex-home" \
-  -v "$ROOT/roboshell/client/robo.py:/opt/robo/robo.py:ro" \
+  -v "$ROOT/roboshell/client/robo.py:/opt/robo/robo.py:ro" "${PROFILE_ARGS[@]}" \
   "$IMAGE" "${AGENT_CMD[@]}" > "$RUN/codex_events.jsonl" 2> "$RUN/codex_stderr.log" < /dev/null
 RC=$?
 set -e
