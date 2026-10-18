@@ -1,62 +1,68 @@
-# Phoenix_WAM validation — 2026-10-17
+# H5 online-vision release validation
 
-Release: all three robot-specific `init256013-q01q99-clip5-step_040000-20261017.pt` checkpoints in `phoenix_release.json`. Checks used RTX PRO 5000 72GB Blackwell GPUs, PyTorch 2.7.1+cu128, BF16, seed 0, action horizon/replan 32 and 10 denoising steps. Dummy inference was disabled.
-
-## CUDA image preprocessing
-
-The current policy uses FFmpeg CUDA bicubic resizing and NV12-aligned cropping. For 640x480 RGB, the intermediate size is 342x256 and the crop starts at (42,0), producing 256x256. The previous PIL path produced 341x256 and used a different crop origin/interpolator.
-
-- 35 CPU regressions and one opt-in CUDA image comparison passed; 15 historical z-score tests were skipped. The comparison sends identical raw RGB inputs through an independent reference using the upstream default `scale_cuda` interpolation and its unmodified center-crop expression. Output bytes matched exactly for 640x480, 480x640 and 1280x720, including repeated calls with changing content and distinct camera colors. Mixed-size camera ordering and the unchanged 256x256 bypass were checked too.
-- All three latest checkpoints also produced finite 32x14 chunks from original 640x480 HDF5 camera frames, decoded through XPolicyLab's shared helper. Acknowledgment and reset passed. The official WebSocket server/debug client completed both plain and encoded 640x480 observation episodes with the new preprocessing and ARX checkpoint. An initial test-harness import-path error was corrected before the successful protocol run.
-- Tests used FFmpeg 4.4.2. Across the three model processes, first-use image processing took 0.44–1.18 seconds to start CUDA/FFmpeg; five subsequent three-view calls each took approximately 4.8–7.3 milliseconds, including normalization and transfer to the model device. These measurements cover preprocessing only, not action inference or controller timing.
-- To rerun the comparison on a CUDA host, from the XPolicyLab parent workspace:
-
-  ```bash
-  PHOENIX_FFMPEG=/usr/bin/ffmpeg PHOENIX_TEST_CUDA_RGB=1 \
-    python -m unittest XPolicyLab.policy.Phoenix_WAM.test_phoenix_rgb -v
-  ```
-
-This comparison verifies the resize/crop pipeline for the same RGB input. It does not reproduce the training MP4's compressed pixels or its CPU-fallback resize path. Already-prepared 256x256 replay frames bypass the new conversion; the earlier five-episode curves below do not validate preprocessing of raw 640x480 inputs.
-
-## Public release and portable inference
-
-- ModelScope metadata verified all three policy weights and all four shared weights against the release's exact SHA256 and size. Download tests cover selecting one robot, all robots, offline reuse, and rejecting missing/corrupt files. The large files were reused locally; a fresh full download was not repeated.
-- The current CPU suite has 35 passing tests. 15 historical z-score saved-weight tests are skipped; they are not tests of the new release. The CUDA image comparison skips unless explicitly enabled. Run from the XPolicyLab parent workspace:
-
-  ```bash
-  python -m unittest XPolicyLab.policy.Phoenix_WAM.test_joint96 \
-    XPolicyLab.policy.Phoenix_WAM.test_joint96_weights \
-    XPolicyLab.policy.Phoenix_WAM.test_phoenix \
-    XPolicyLab.policy.Phoenix_WAM.test_phoenix_rgb -v
-  ```
-
-- `bash -n`, Python compilation, required file/deploy-key checks, the RGB codec/channel-swap scan and `git diff --check` passed. `deploy.py` is identical to `demo_policy/deploy.py`.
-- Each public checkpoint loaded through the default release-directory path, using only the checked-in runtime/config/statistics and downloaded weight files. All 1,653 trainable tensors (1,650 MoT + 3 proprio encoder tensors) matched the checkpoint after restore. Each robot predicted a finite 32x14 action chunk from a real recorded observation, acknowledged all actions and reset successfully.
-- The actual current-frame visual wrapper recorded one input frame, nine encoded frames, full latent shape `[1,96,3,16,48]` and first-latent shape `[1,96,1,16,48]`.
-- The public path uses online T5. Compared with the training text cache on one real instruction/window per robot, text embedding mean absolute differences were approximately 0.001166 (ARX), 0.000294 (Piper), 0.000406 (Piper X). Maximum native Joint14 action differences were 0.004533, 0.004589 and 0.004202 respectively. These include gripper dimensions and are not arm-only radian metrics. The two text execution paths are not claimed to be bitwise identical.
-- The official WebSocket `PolicyServer` and batched `debug_env_client.py` completed both plain-array and encoded-image episodes with the new ARX checkpoint. Both client logs ended with:
-
-  ```text
-  [TestEnv] Action Step: 19 / 20 (step_limit)
-  [TestEnv] Check Episode End: True
-  [TestEnv] Check Episode End: True
-  [TestEnv] Episode finished
-  ```
-
-  This exercised the shared server decoder and real model output. The combined `eval.sh` convenience launcher was not rerun for this update.
+Release: the three `openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` files pinned in `phoenix_release.json`. These checks concern the H5 online-vision checkpoints and PIL preprocessing shipped in this revision.
 
 ## Recorded-observation replay
 
-The same q01/q99 backend with the training text cache completed five full training episodes, sampled before inference with seed 20261017: two uniformly sampled tasks per ARX/Piper, one for Piper X, then one random episode per selected task. There was no error-based reselection.
+On 2026-10-19, one task and one episode per robot were randomly selected before inference (seed 20261019), with no error-based reselection. All three requested 40000-step checkpoints were verified by SHA256. Full replay used seed 0, BF16, horizon/replan 32, 10 denoising steps, `training_cache` text and no outer autocast. Each chunk sees only its current recorded RGB/state. The last repeated terminal action was excluded.
 
-| Robot | Task | Episode | Valid action timestamps |
-| --- | --- | --- | --- |
-| ARX X5 | make_bread | 28 | 1081 |
-| ARX X5 | cover_blocks | 23 | 1128 |
-| Piper | stand_up_bottles | 62 | 765 |
-| Piper | fill_pen_holder | 67 | 943 |
-| Piper X | pack_objects_into_backpack | 66 | 663 |
+| Robot | Task / episode | Valid action timestamps | Chunks | Arm MAE (rad / degrees) | Arm RMSE (rad) | Max absolute error (rad) |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| ARX X5 | `pack_and_pour_fruit` / 41 | 935 | 30 | 0.01117 / 0.6401° | 0.05452 | 0.67900 |
+| Piper | `stand_up_bottles` / 15 | 609 | 20 | 0.00943 / 0.5405° | 0.04192 | 0.49682 |
+| Piper X | `classify_objects` / 60 | 940 | 30 | 0.00831 / 0.4759° | 0.04009 | 0.82988 |
 
-Total: 145 prediction calls and 4,580 valid action timestamps. Raw HDF5 and LeRobot numeric labels were exactly equal for the selected episodes. At each chunk start, only the current recorded RGB/state and instruction were passed to the policy. Predictions were compared with `action[t] = state[t+1]`; the final repeated terminal action was excluded. Full time-series plots were produced without smoothing.
+Metrics cover the 12 arm angles, excluding grippers. Total: **2,484 action timestamps / 80 inference calls**. Predictions were finite and curves were not smoothed. The mean errors are small, but transitions have large local discrepancies: ARX left joint 3 at 15.80 s, Piper right joint 2 at 18.97 s, and Piper X left joint 4 at 3.56 s. These are recorded training episodes, not held-out task success rates or physical closed-loop trials.
 
-This is training-pool recorded-observation inference, not held-out task-success evaluation or a physical closed loop. The five-episode curves used cached text; the separate public-path checks above used online T5. Simulator success rates, hardware control timing, device joint limits and fresh-environment installation remain unverified.
+## Training/inference alignment
+
+At the start, middle and tail of each episode (nine windows), deterministic image tensors, normalized state, cached text context/masks and current visual latents matched the actual training path exactly, with maximum absolute difference zero. Training-only random color jitter was disabled for this comparison. Shared XPolicyLab image decoding matched the legacy training JPEG decoding on these H5 observations.
+
+At the first window of each robot, actual training-loss/input-builder MoT inputs matched inference with the same controlled noise and timestep. Full ten-step sampling in train/eval mode also matched exactly for all nine windows. This scoped numerical comparison does not imply equality between stochastic training augmentation and inference, or between every possible input.
+
+The deployed visual path is PIL bicubic aspect resize **640×480 → 341×256**, then center crop **256×256**. The single current frame is repeated nine times through both complete WAN VAE and DINO/STVAE branches before taking the first temporal latent. Runtime initialization calls `set_runtime_device`, including BF16 WAN VAE mean/std/scale. Each checkpoint restores 1,650 MoT tensors and three proprio encoder tensors exactly.
+
+## Public adapter checks
+
+The portable package passed **38 current CPU tests**, including all three real H5 checkpoint metadata pairs; 15 historical z-score tests were skipped. Shell syntax, Python compilation, required deploy keys, source hashes, the codec/channel-swap scan and `deploy.py` parity with `demo_policy` passed.
+
+On RTX PRO 5000 72GB Blackwell GPUs, all three public-package loaders restored the pinned checkpoints and generated finite 32×14 actions. The first 32-action chunk per family was byte-for-byte equal to the corresponding audited H5 replay above (maximum difference zero); action acknowledgments and reset passed. These checks used only the portable policy source, the declared Python dependencies, weights and external robot definitions.
+
+The actual `eval.sh` completed **ten debug episodes with plain RGB arrays and ten with encoded observations**, using the official batched WebSocket server/client. Both runs exited zero, reached `[MAIN] eval finished`, and contained no traceback:
+
+```text
+[TestEnv] Episode finished
+[MAIN] eval finished
+```
+
+The reproducible commands are:
+
+```bash
+# From the parent of XPolicyLab; PHOENIX_H5_TEST_WEIGHTS is optional for CPU tests.
+PHOENIX_H5_TEST_WEIGHTS=/absolute/path/to/downloaded/weights python -m unittest \
+  XPolicyLab.policy.Phoenix_WAM.test_phoenix \
+  XPolicyLab.policy.Phoenix_WAM.test_joint96 \
+  XPolicyLab.policy.Phoenix_WAM.test_joint96_weights \
+  XPolicyLab.policy.Phoenix_WAM.test_h5 -v
+
+python -m XPolicyLab.policy.Phoenix_WAM.joint96_assets \
+  /absolute/path/to/downloaded/weights --verify-remote
+
+cd XPolicyLab/policy/Phoenix_WAM
+WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
+  phoenix-wam-h5-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+DEBUG_OBS_ENCODED=1 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
+  phoenix-wam-h5-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+```
+
+The validation host used the existing `fastwam-pretrain` environment for both the policy and client (PyTorch 2.7.1+cu128, torchvision 0.22.1, Pillow 12.0.0, NumPy 1.26.4 and transformers 5.12.1). It set `WAM_CHECKPOINT_PATH` to the prepared weights directory and ran the two commands above with `fastwam-pretrain fastwam-pretrain` as the final environment arguments and GPU 3.
+
+The debug client uses a synthetic instruction, so its tests explicitly use `online_t5`. Default `training_cache` accepts the shipped instruction list. The two modes are not claimed to generate bitwise-identical text features.
+
+## Published weights
+
+All seven files in `phoenix_release.json` are published in `ssuuuuu/phoenix-wam`; their ModelScope metadata matches the pinned SHA256 and byte sizes. Anonymous HTTP Range downloads of the first 64 KiB of each of the three new policy checkpoints returned HTTP 206, the expected full file size, and bytes identical to the local verified checkpoint. This checks public availability and sampled download bytes; it is not a fresh full download of all weights.
+
+## Limits
+
+No simulator success rate or real-robot closed-loop evaluation is claimed. Native data rates are ARX/Piper 30 Hz and Piper X 25 Hz; hardware timing and arm limits remain controller responsibilities. No training code, training trajectory dataset or optimizer state is included in the policy submission. A fresh conda installation has not been rerun for this release.

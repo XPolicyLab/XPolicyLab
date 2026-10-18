@@ -95,7 +95,7 @@ class PhoenixTests(unittest.TestCase):
         for family, spec in release['checkpoints'].items():
             self.assertEqual(spec['pretrain_step'], 256013)
             self.assertEqual(spec['step'], 40000)
-            self.assertEqual(spec['filename'], f"phoenix-wam-{family.replace('_','-')}-openwam-joint14-init256013-q01q99-clip5-step_040000-20261017.pt")
+            self.assertEqual(spec['filename'], f"phoenix-wam-{family.replace('_','-')}-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt")
             self.assertEqual(spec['path'], spec['filename'])
             cfg = (package/(family+'.json')).read_text()
             self.assertNotIn('/mnt/', cfg)
@@ -115,28 +115,14 @@ class PhoenixTests(unittest.TestCase):
             session._text_condition('test')
             self.assertEqual(calls, [PROMPT.format(task='test')])
 
-    def test_cached_release_contract_and_binding_rejection(self):
-        from .phoenix_contract import CACHED_LOADER, CACHE_SHA256, BINDING_SHA256
+    def test_cached_visual_checkpoint_is_rejected(self):
         for family in ROBOTS:
             with self.subTest(family=family), tempfile.TemporaryDirectory() as d:
                 cfg, payload, _ = fixture(Path(d), family)
-                cfg.joint96_posttrain.cached_visuals = True
-                cfg.data.train._target_ = 'wam.datasets.robodojo_openwam_cached.RoboDojoOpenWAMCachedDataset'
-                cfg.data.train.visual_cache = {'binding_path': 'binding.json'}
-                cfg.data.train.image_color_jitter = {'enabled': False}
                 contract = payload['joint96_metadata']['soft_prompt']['training_contract']
-                contract.update(cached_visuals=True, dataloader=CACHED_LOADER,
-                    rgb_geometry='legacy_cache_per_camera_256x256', rgb_decode='legacy_lerobot_mp4_rgb24',
-                    visual_source='legacy_lerobot_mp4_clean_features', cache_contract_sha256=CACHE_SHA256,
-                    raw_cache_binding_sha256=BINDING_SHA256, window_coverage='legacy_cache_L_minus_4',
-                    action_target_validity='next_state_exists_exclude_repeated_terminal_action_v1',
-                    image_color_jitter=False)
-                self.assertTrue(validate_training(cfg, payload, Path(d), family, 5000)['cached_visuals'])
-                for key in ('cache_contract_sha256', 'raw_cache_binding_sha256', 'rgb_decode'):
-                    invalid = copy.deepcopy(payload)
-                    invalid['joint96_metadata']['soft_prompt']['training_contract'][key] = 'wrong'
-                    with self.assertRaises(ValueError):
-                        validate_training(cfg, invalid, Path(d), family, 5000)
+                contract.update(cached_visuals=True, dataloader='openwam_joint14_with_legacy_clean_visual_cache')
+                with self.assertRaisesRegex(ValueError, 'H5-online'):
+                    validate_training(cfg, payload, Path(d), family, 5000)
 
     def test_contract_and_all_robot_slots(self):
         for family in ROBOTS:
@@ -295,7 +281,9 @@ class PhoenixTests(unittest.TestCase):
         for opts in (dict(current_visual_mode='repeat9_full_stvae'),dict(sigma_shift=6),dict(action_horizon=16),dict(replan_steps=33)):
             with self.assertRaises(ValueError):self.backend.validate_options(dict(env_cfg_type='arx_x5',**opts))
         fake=SimpleNamespace(model_cfg={'runtime_mode':'joint96_real_phoenix'},_load_phoenix_policy=lambda:'new')
-        self.assertEqual(Model._load_real_policy(fake),'new')
+        with patch.object(fake, '_load_phoenix_policy') as load:
+            Model._load_real_policy(fake)
+            load.assert_called_once_with()
 
     def test_phoenix_deploy_selects_new_route(self):
         config = OmegaConf.load(POLICY_DIR / 'deploy.yml')
@@ -306,12 +294,10 @@ class PhoenixTests(unittest.TestCase):
         config.action_type = 'joint'
         self.assertEqual(self.backend.validate_options(config)['replan'], 32)
         fake = SimpleNamespace(model_cfg=config, _load_phoenix_policy=lambda: 'new')
-        self.assertEqual(Model._load_real_policy(fake), 'new')
-        legacy = {'runtime_mode': 'joint96_real'}
-        calls = []
-        fake = SimpleNamespace(model_cfg=legacy, _load_joint96_policy=lambda: calls.append('legacy'))
         Model._load_real_policy(fake)
-        self.assertEqual(calls, ['legacy'])
+        fake = SimpleNamespace(model_cfg={'runtime_mode': 'joint96_real'})
+        with self.assertRaisesRegex(ValueError, 'H5'):
+            Model._load_real_policy(fake)
 
     def test_sampler_bridge_uses_cached_text_masks_shapes_and_reset(self):
         with tempfile.TemporaryDirectory() as d:

@@ -124,13 +124,17 @@ class AdapterTests(unittest.TestCase):
             Model._load_real_policy(model)
             load.assert_called_once_with()
         model.model_cfg['runtime_mode'] = 'official'
-        with self.assertRaisesRegex(ValueError, 'Phoenix_WAM requires'):
+        with self.assertRaisesRegex(ValueError, 'H5 Phoenix deployment'):
             Model._load_real_policy(model)
 
     def test_standard_model_batch_and_rgb(self):
         dims = dict(arm_dim=[6, 6], ee_dim=[1, 1])
         with patch('XPolicyLab.policy.Phoenix_WAM._adapter_base.get_robot_action_dim_info', return_value=dims):
-            model = Model(dict(allow_dummy_policy=True, runtime_mode='joint96_real'))
+            # Mock only neural inference; exercise the real adapter batch/observation logic.
+            with patch.object(Model, '_load_real_policy'):
+                model = Model(dict(runtime_mode='joint96_real_phoenix', env_cfg_type='arx_x5', action_type='joint'))
+            model.session_factory = lambda: SimpleNamespace(pending_model_actions=[], reset_model=lambda: None)
+            model._predict = lambda *_: [dict(left_arm_joint_state=np.zeros(6), left_ee_joint_state=np.zeros(1), right_arm_joint_state=np.zeros(6), right_ee_joint_state=np.zeros(1)) for _ in range(32)]
         obs = observation(7)
         model.update_obs_batch([obs, observation(2)])
         self.assertEqual(model.env_order, [7, 2])

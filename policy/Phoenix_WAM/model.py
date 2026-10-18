@@ -5,22 +5,11 @@ from __future__ import annotations
 import sys
 from functools import partial
 from pathlib import Path
-from typing import Any
-
-import torch
-
 from XPolicyLab.model_template import ModelTemplate
 
-from ._adapter_base import StatefulWAMAdapter, as_bool, optional_float, optional_int
-from .checkpoint_paths import resolve_policy_checkpoint
-from .robot_profiles import SUPPORTED_ROBOTS
+from ._adapter_base import StatefulWAMAdapter, as_bool
 
 POLICY_DIR = Path(__file__).resolve().parent
-
-
-def _local_path(value: Any) -> Path:
-    path = Path(str(value)).expanduser()
-    return path if path.is_absolute() else POLICY_DIR / path
 
 
 def _activate_runtime(runtime_root: Path) -> None:
@@ -34,7 +23,10 @@ def _activate_runtime(runtime_root: Path) -> None:
 class Model(ModelTemplate):
     """XPolicyLab model adapter with one stateful WAM session per RoboDojo environment."""
 
-    __init__ = StatefulWAMAdapter.__init__
+    def __init__(self, model_cfg):
+        if as_bool(model_cfg.get('allow_dummy_policy', False)):
+            raise ValueError('Dummy actions are disabled in the H5 deployment')
+        StatefulWAMAdapter.__init__(self, model_cfg)
     _ingest = StatefulWAMAdapter._ingest
     update_obs = StatefulWAMAdapter.update_obs
     _session_for = StatefulWAMAdapter._session_for
@@ -45,14 +37,12 @@ class Model(ModelTemplate):
     get_timing_rollout = StatefulWAMAdapter.get_timing_rollout
     reset = StatefulWAMAdapter.reset
 
-    def _load_real_policy(self) -> None:
-        mode = str(self.model_cfg.get("runtime_mode") or "joint96_real_phoenix")
+    def _load_real_policy(self):
+        mode = str(self.model_cfg.get('runtime_mode') or 'joint96_real_phoenix')
+        if mode != 'joint96_real_phoenix':
+            raise ValueError('Only the current H5 Phoenix deployment is supported')
         self.model_cfg['runtime_mode'] = mode
-        if mode == "joint96_real_phoenix":
-            return self._load_phoenix_policy()
-        if mode != "joint96_real":
-            raise ValueError(f"Phoenix_WAM requires runtime_mode=joint96_real or joint96_real_phoenix, got {mode}")
-        self._load_joint96_policy()
+        self._load_phoenix_policy()
 
     def _load_phoenix_policy(self) -> None:
         from .joint96_assets import read_source
@@ -77,50 +67,6 @@ class Model(ModelTemplate):
             from .phoenix_backend import predict_phoenix
             return predict_phoenix(self, session, observation, instruction_text)
         return StatefulWAMAdapter._predict(self, session, observation, instruction_text)
-
-    def _load_joint96_policy(self) -> None:
-        from .joint96_assets import load_assets
-
-        if self.env_cfg_type not in SUPPORTED_ROBOTS or self.action_type != "joint":
-            raise ValueError("Phoenix_WAM supports arx_x5, piper, piper_x / joint only")
-        if self.action_horizon != 32:
-            raise ValueError("The real Joint96 checkpoint requires action_horizon=32")
-        if str(self.model_cfg.get("mixed_precision") or "bf16") != "bf16":
-            raise ValueError("Joint96 real evaluation requires mixed_precision=bf16")
-        if str(self.model_cfg.get("rand_device") or "cpu") != "cpu":
-            raise ValueError("Joint96 real evaluation requires rand_device=cpu")
-        if float(self.model_cfg.get("action_hz") or 25.0) != 25.0:
-            raise ValueError("The Joint96 evaluation recipe uses action_hz=25")
-        if float(self.model_cfg.get("text_cfg_scale") or 1.0) != 1.0:
-            raise ValueError("Joint96 real evaluation requires text_cfg_scale=1")
-        if str(self.model_cfg.get("negative_prompt") or "") or as_bool(self.model_cfg.get("tiled")):
-            raise ValueError("Joint96 real evaluation uses no negative prompt or tiling")
-        if optional_float(self.model_cfg.get("sigma_shift")) is not None:
-            raise ValueError("Joint96 uses the saved training noise schedules")
-        if self.model_cfg.get("current_visual_mode", "repeat9_full_stvae") != "repeat9_full_stvae":
-            raise ValueError("Joint96 real requires repeat9_full_stvae")
-        print("[Joint96] Verifying source, metadata and policy checksum...", flush=True)
-        manifest, assets = load_assets(resolve_policy_checkpoint(self.model_cfg), robot_type=self.env_cfg_type)
-        requested_step = optional_int(self.model_cfg.get("expected_step"))
-        if requested_step is not None and requested_step != manifest["step"]:
-            raise ValueError("expected_step differs from pinned checkpoint")
-        _activate_runtime(assets["runtime_root"])
-        from .joint96_backend import RoboDojoRealJoint96Session, build_runtime
-
-        device = str(self.model_cfg.get("device") or "cuda")
-        device = "cuda:0" if device == "cuda" else device
-        if not device.startswith("cuda") or not torch.cuda.is_available():
-            raise RuntimeError("CUDA is required for real Joint96 evaluation; use CPU preflight for metadata")
-        self.runtime, session_cfg = build_runtime(
-            assets["checkpoint"], assets["inference_config"], assets["dataset_stats"],
-            expected_step=manifest["step"], assets=assets,
-            output_dir=_local_path(self.model_cfg.get("audit_dir") or "logs/joint96"),
-            device=device, denoise=int(self.model_cfg.get("num_inference_steps") or 10),
-            replan=self.replan_steps, seed=int(self.model_cfg.get("seed") or 0),
-        )
-        self.session_factory = partial(RoboDojoRealJoint96Session, self.runtime, session_cfg)
-        self.session = self.session_factory()
-        print(f"[Phoenix_WAM] Joint96 real robot={self.env_cfg_type} slot={self.runtime.embodiment_id} step={manifest['step']} repeat9_full_stvae", flush=True)
 
 
 __all__ = ["Model"]

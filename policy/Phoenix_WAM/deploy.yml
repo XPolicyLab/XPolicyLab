@@ -31,7 +31,11 @@ timing_enabled: false
 default_instruction: follow the instruction
 allow_dummy_policy: false
 
-# Each robot uses its own released Joint96 posttraining checkpoint.
+# Exact training instruction features ship in phoenix_source/text.pt.
+# Use online_t5 for arbitrary instructions (loads the pinned T5 encoder).
+text_mode: training_cache
+
+# Each robot uses its own released H5 online-vision posttraining checkpoint.
 runtime_mode: joint96_real_phoenix
 current_visual_mode: repeat9_full_joint96
 expected_step: 40000

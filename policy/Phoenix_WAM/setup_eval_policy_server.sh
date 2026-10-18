@@ -25,6 +25,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "${policy_conda_env}"
 
 extra_overrides=()
+[[ -z "${WAM_TEXT_MODE:-}" ]] || extra_overrides+=("text_mode=${WAM_TEXT_MODE}")
 [[ -z "${WAM_CKPT_SETTING:-}" ]] || extra_overrides+=("ckpt_name=${WAM_CKPT_SETTING}")
 [[ -z "${WAM_RUNTIME_MODE:-}" ]] || extra_overrides+=("runtime_mode=${WAM_RUNTIME_MODE}")
 [[ -z "${WAM_CHECKPOINT_PATH:-}" ]] || extra_overrides+=("checkpoint_path=${WAM_CHECKPOINT_PATH}")

@@ -1,4 +1,4 @@
-"""Inference for raw and audited cached-visual q01/q99 Phoenix real weights."""
+"""Inference for the current raw-H5 q01/q99 Phoenix real weights only."""
 import json
 import os
 from pathlib import Path
@@ -15,14 +15,6 @@ from .joint96_checkpoint import _load_joint96_checkpoint
 from .phoenix_contract import (ACTIVE, MODE, ROBOTS, CachedText, current_rgb,
                                install_repeat9_joint, preprocess_state, validate_training)
 from wam.utils.config_resolvers import register_default_resolvers
-
-
-def explicit_path(config, key):
-    value = config.get(key)
-    if not value:
-        raise ValueError('New real inference requires explicit ' + key)
-    path = Path(str(value)).expanduser()
-    return (path if path.is_absolute() else POLICY_DIR / path).resolve(strict=True)
 
 
 def validate_options(config):
@@ -50,66 +42,24 @@ def validate_options(config):
 
 
 def prepare_inputs(config):
-    """CPU identity gate. No training imports, downloads or device motion."""
-    if not config.get('training_config'):
-        return prepare_release_inputs(config)
-    options = validate_options(config)
-    register_default_resolvers()
-    checkpoint = explicit_path(config, 'checkpoint_path')
-    config_path = explicit_path(config, 'training_config')
-    package = explicit_path(config, 'stats_package')
-    root = explicit_path(config, 'resource_root')
-    expected_hash = str(config.get('checkpoint_sha256') or '').lower()
-    if len(expected_hash) != 64 or any(c not in '0123456789abcdef' for c in expected_hash):
-        raise ValueError('Pin checkpoint_sha256 from the actual posttraining file')
-    if not config.get('expected_step'):
-        raise ValueError('Pin the actual posttraining expected_step, not 256013')
-    step = int(config['expected_step'])
-    signature = checkpoint.stat()
-    cfg = OmegaConf.load(config_path)
-    payload = torch.load(checkpoint, map_location='cpu', mmap=True, weights_only=True)
-    checked = validate_training(cfg, payload, package, options['family'], step)
-    if sha256(checkpoint) != expected_hash:
-        raise ValueError('Checkpoint SHA256 mismatch')
-    after = checkpoint.stat()
-    if (signature.st_ino, signature.st_size, signature.st_mtime_ns) != (after.st_ino, after.st_size, after.st_mtime_ns):
-        raise ValueError('Checkpoint changed during loading; use an immutable step archive')
-    _, assets = read_source()
-    release = read_release()
-    weights = {}
-    # Reuse only the pinned frozen resources, NEVER the old release's policy or stats.
-    for key in ('wan_vae', 'dino_checkpoint', 'stvae_checkpoint'):
-        spec = release['weights'][key]
-        path = relative_path(root, spec['path'])
-        if sha256(path) != spec['sha256']:
-            raise ValueError('Frozen resource SHA256 mismatch: ' + key)
-        assets[key] = path
-        weights[key] = spec['sha256']
-    identity = checked['identity']
-    if (identity['teacher_sha256'] != weights['dino_checkpoint']
-            or identity['stvae_checkpoint_sha256'] != weights['stvae_checkpoint']):
-        raise ValueError('Checkpoint encoder resources differ from this source release')
-    from wam.model.modules.codecs.joint_visual_encoder import encoder_source_sha256
-    if encoder_source_sha256(assets['encoder_source_root']) != identity['source_sha256']:
-        raise ValueError('Frozen encoder source identity mismatch')
-    text = CachedText(package / 'text.pt', checked['index']['package_sha256']['text.pt'])
-    assets['base_model_root'] = root / 'base_models'
-    return dict(cfg=cfg, payload=payload, checked=checked, assets=assets, text=text,
-                checkpoint=checkpoint, config_path=config_path, package=package,
-                step=step, checkpoint_sha256=expected_hash, resources_sha256=weights,
-                options=options)
+    """Use only this package's pinned H5 checkpoint/config/statistics pairing."""
+    if config.get('training_config') or config.get('stats_package'):
+        raise ValueError('External training_config/stats_package overrides are not supported')
+    return prepare_release_inputs(config)
 
 
 def prepare_release_inputs(config):
-    """Portable public release: code/config/stats in Git, only weights downloaded."""
+    """Portable H5 release: Git supplies inference metadata; ModelScope supplies weights."""
     from .checkpoint_paths import resolve_policy_checkpoint
     options = validate_options(config)
     register_default_resolvers()
     release = read_release()
+    if release.get('training_route') != 'openwam_raw_hdf5_joint14':
+        raise ValueError('Expected an H5 online-vision release manifest')
     spec = release['checkpoints'][options['family']]
     root = resolve_policy_checkpoint(config).resolve(strict=True)
     if not root.is_dir():
-        raise ValueError('Public release checkpoint_path must be a downloaded weights directory')
+        raise ValueError('checkpoint_path must be this H5 release weights directory')
     if config.get('expected_step') is not None and int(config['expected_step']) != spec['step']:
         raise ValueError('expected_step differs from released checkpoint')
     if config.get('checkpoint_sha256') and config['checkpoint_sha256'] != spec['sha256']:
@@ -129,6 +79,9 @@ def prepare_release_inputs(config):
         raise ValueError('Released checkpoint size/SHA256 mismatch')
     payload = torch.load(checkpoint, map_location='cpu', mmap=True, weights_only=True)
     checked = validate_training(cfg, payload, package, options['family'], spec['step'], packaged=True)
+    text_mode = str(config.get('text_mode') or 'training_cache')
+    if text_mode not in ('training_cache', 'online_t5'):
+        raise ValueError('text_mode must be training_cache or online_t5')
     weights = {}
     for key, resource in release['weights'].items():
         path = relative_path(root, resource['path'])
@@ -144,7 +97,10 @@ def prepare_release_inputs(config):
         raise ValueError('Frozen encoder source identity mismatch')
     prepare_tokenizer(root, assets['tokenizer_root'])
     assets['base_model_root'] = root / 'base_models'
-    return dict(cfg=cfg, payload=payload, checked=checked, assets=assets, text=None,
+    text = None
+    if text_mode == 'training_cache':
+        text = CachedText(package / 'text.pt', checked['index']['package_sha256']['text.pt'])
+    return dict(cfg=cfg, payload=payload, checked=checked, assets=assets, text=text,
                 checkpoint=checkpoint, config_path=config_path, package=package,
                 step=spec['step'], checkpoint_sha256=spec['sha256'], resources_sha256=weights,
                 options=options)
@@ -157,7 +113,7 @@ def build_phoenix_runtime(config):
     device = str(config.get('device') or 'cuda:0')
     device = 'cuda:0' if device == 'cuda' else device
     if not device.startswith('cuda') or not torch.cuda.is_available():
-        raise RuntimeError('CUDA required; use preflight_phoenix for the CPU identity check')
+        raise RuntimeError('CUDA required; use joint96_assets for the CPU identity check')
     os.environ['DIFFSYNTH_SKIP_DOWNLOAD'] = 'true'
     os.environ['DIFFSYNTH_MODEL_BASE_PATH'] = str(assets['base_model_root'])
     torch.set_num_threads(1)
@@ -198,6 +154,9 @@ def build_phoenix_runtime(config):
             if not torch.equal(value, data['payload'][name][key].to(value)):
                 raise ValueError('Restored tensor mismatch: ' + name + '.' + key)
         counts[name] = len(tensors)
+    # Match the post-prepare training initialization. WAN VAE mean/std/scale
+    # are plain tensors: Module.to() alone leaves their FP32 initial values.
+    model.set_runtime_device(device)
     model.eval().requires_grad_(False)
     visual_evidence = install_repeat9_joint(model.joint_visual_encoder)
     audit_dir = Path(str(config.get('audit_dir') or POLICY_DIR / 'logs/phoenix'))
@@ -217,8 +176,8 @@ def build_phoenix_runtime(config):
                  replan_steps=opts['replan'], num_inference_steps=opts['denoise'], seed=opts['seed'],
                  native_data_hz=checked['fps'], requested_action_hz=opts['hz'],
                  controller_rate_verified=False, input_color='RGB_uint8',
-                 input_geometry='ffmpeg_scale_cuda_bicubic_even_size_nv12_crop_256_v1',
-                 input_geometry_640x480=dict(resize=[342, 256], crop_xy=[42, 0], output=[256, 256]),
+                 input_geometry='aspect_bicubic_center_crop_256_per_view',
+                 input_geometry_640x480=dict(resize=[341, 256], center_crop=[256, 256]),
                  cameras=['main', 'left', 'right'], canonical_active_dims=ACTIVE,
                  text_padding='zero_features_all_128_keys_visible',
                  text_mode='online_t5' if data['text'] is None else 'training_cache_only',
@@ -246,11 +205,7 @@ class PhoenixSession(RoboDojoRealJoint96Session):
         return super()._normalize_state(preprocess_state(state, self.runtime.robot_type))
 
     def _build_robotwin_image_tensor(self, observation):
-        from .phoenix_rgb import CudaRGBPreprocessor
-        if not hasattr(self.runtime, 'rgb_preprocessor'):
-            device = torch.device(self.runtime.device)
-            self.runtime.rgb_preprocessor = CudaRGBPreprocessor(device.index or 0)
-        return current_rgb(observation, preprocessor=self.runtime.rgb_preprocessor).to(device=self.runtime.device)
+        return current_rgb(observation).to(device=self.runtime.device)
 
     def _text_condition(self, instruction):
         if self.runtime.text is None:

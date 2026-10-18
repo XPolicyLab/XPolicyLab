@@ -13,10 +13,6 @@ ROBOTS = {'arx_x5': (2, 'arx_x5', 30), 'piper': (4, 'piper100', 30),
           'piper_x': (15, 'piperx', 25)}
 PROMPT = "A video recorded from a robot's point of view executing the following instruction: {task}"
 MODE = 'repeat9_full_joint96'
-CACHED_LOADER = 'openwam_joint14_with_legacy_clean_visual_cache'
-# Full raw-label/cache binding audit for the corrected 2026-10-17 release.
-CACHE_SHA256 = '1c588c645eb894a6b6c1283cded25e83407afe17d76562c642e6e1373d28642f'
-BINDING_SHA256 = 'b1a6e798c0059dd1abf7137bf2dc9c65f3dde2f3f4090d58b256727583d70890'
 
 
 def preprocessing_contract(family):
@@ -43,22 +39,24 @@ def preprocess_state(state, family):
     return result
 
 
-def current_rgb(observation, *, preprocessor=None):
-    from .phoenix_rgb import CudaRGBPreprocessor
+def current_rgb(observation):
+    """Match the current raw-H5 reader, without training-only color jitter."""
+    from PIL import Image
+    from wam.datasets.dataset_utils import ResizeSmallestSideAspectPreserving, CenterCrop
+
+    resize = ResizeSmallestSideAspectPreserving({'img_w': 256, 'img_h': 256})
+    crop = CenterCrop({'img_w': 256, 'img_h': 256})
     frames = []
     for camera in ('head_camera', 'left_camera', 'right_camera'):
         rgb = np.asarray(observation['observation'][camera]['rgb'])
         if rgb.dtype != np.uint8 or rgb.ndim != 3 or rgb.shape[-1] != 3 or min(rgb.shape[:2]) <= 0:
             raise ValueError('Expected uint8 HWC RGB: ' + camera)
-        frames.append(rgb)
-    owned = preprocessor is None
-    preprocessor = preprocessor if preprocessor is not None else CudaRGBPreprocessor()
-    try:
-        processed = preprocessor(frames)
-        return torch.stack([to_tensor(rgb.copy()).mul(2).sub(1) for rgb in processed]).unsqueeze(0)
-    finally:
-        if owned:
-            preprocessor.close()
+        image = crop(resize(Image.fromarray(rgb)))
+        frames.append(to_tensor(image).mul(2).sub(1))
+    result = torch.stack(frames).unsqueeze(0)
+    if result.shape != (1, 3, 3, 256, 256) or not torch.isfinite(result).all():
+        raise ValueError('Invalid processed current images')
+    return result
 
 
 def install_repeat9_joint(visual):
@@ -111,7 +109,7 @@ class CachedText:
     def get(self, instruction, *, device, dtype):
         prompt = PROMPT.format(task=instruction)
         if prompt not in self.rows:
-            raise ValueError('Unknown instruction: prepare a training-compatible T5 cache first')
+            raise ValueError('Unknown cached instruction: use text_mode=online_t5 for new instructions')
         context, mask = self.rows[prompt]
         return context.unsqueeze(0).to(device=device, dtype=dtype), mask.unsqueeze(0).to(device)
 
@@ -132,7 +130,9 @@ def validate_training(cfg, payload, package, family, expected_step, *, packaged=
     slot, registry_name, fps = ROBOTS[family]
     identity = _joint96_identity(payload.get('joint96_metadata'))
     contract = payload['joint96_metadata'].get('soft_prompt', {}).get('training_contract', {})
-    cached = contract.get('dataloader') == CACHED_LOADER
+    cached = False
+    if contract.get('dataloader') != 'openwam_raw_hdf5_joint14' or contract.get('cached_visuals') is not False:
+        raise ValueError('This deployment accepts only current H5-online checkpoints; cached-visual weights are incompatible')
     required = dict(domain='robodojo_real', embodiment_ids={family: slot},
                     action_space='native_joint14_to_canonical80', cached_visuals=False,
                     cached_text=True, dataloader='openwam_raw_hdf5_joint14',
@@ -141,16 +141,6 @@ def validate_training(cfg, payload, package, family, expected_step, *, packaged=
                     rgb_geometry='aspect_bicubic_center_crop_256_per_view',
                     rgb_decode='robodojo_cv2_no_channel_swap',
                     loss_weights={'vae': .5, 'stvae': .5, 'action': 1.})
-    if cached:
-        required.update(cached_visuals=True, dataloader=CACHED_LOADER,
-                        rgb_geometry='legacy_cache_per_camera_256x256',
-                        rgb_decode='legacy_lerobot_mp4_rgb24',
-                        visual_source='legacy_lerobot_mp4_clean_features',
-                        cache_contract_sha256=CACHE_SHA256,
-                        raw_cache_binding_sha256=BINDING_SHA256,
-                        window_coverage='legacy_cache_L_minus_4',
-                        action_target_validity='next_state_exists_exclude_repeated_terminal_action_v1',
-                        image_color_jitter=False)
     for key, value in required.items():
         if contract.get(key) != value:
             raise ValueError('New real checkpoint contract mismatch: ' + key)
@@ -173,14 +163,6 @@ def validate_training(cfg, payload, package, family, expected_step, *, packaged=
                     'data.train.processor.use_stepwise_action_norm': False,
                     'data.train.processor.normalization_passthrough_dims': None,
                     'data.train.processor.action_state_transforms': None}
-    if cached:
-        required_cfg.update({
-            'joint96_posttrain.cached_visuals': True,
-            'data.train._target_': 'wam.datasets.robodojo_openwam_cached.RoboDojoOpenWAMCachedDataset',
-            'data.train.image_color_jitter.enabled': False})
-        del required_cfg['data.train.visual_cache']
-        if not get('data.train.visual_cache.binding_path'):
-            raise ValueError('Cached training config lacks raw/cache binding')
     for key, value in required_cfg.items():
         if get(key) != value:
             raise ValueError('Saved training config mismatch: ' + key)

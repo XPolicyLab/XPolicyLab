@@ -1,8 +1,4 @@
-try:
-    from .deploy import *
-except ImportError as e:
-    pass
-try:
-    from .model import *
-except ImportError as e:
-    pass
+"""Phoenix deployment for the current raw-H5 RoboDojo checkpoints.
+
+Import Model explicitly from .model so dependency failures remain visible.
+"""

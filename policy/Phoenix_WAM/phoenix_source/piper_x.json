@@ -136,10 +136,10 @@
     "joint_visual_codec": {
       "source_root": "encoder_source",
       "source_sha256": "337de222f09fe0340cdd2292bdae77f90cd0a619d2c6b30087fc8e093b3c6dc3",
-      "stvae_checkpoint_path": "phoenix-wam-stvae-step_150000.pt",
+      "stvae_checkpoint_path": "weights/stvae.pt",
       "expected_stvae_step": 150000,
       "dino_kwargs": {
-        "checkpoint_path": "phoenix-wam-dino-step_110000.pt",
+        "checkpoint_path": "relocated_at_load/checkpoint_path",
         "checkpoint_state": "ema_student",
         "output_source": "backbone",
         "projection_mode": "raw",
@@ -147,8 +147,8 @@
         "projector_state_path": null,
         "feature_norm_state_path": null,
         "require_feature_norm": false,
-        "starvla_source_path": "encoder_source/third_party/dino90k_runtime",
-        "dinov3_source_path": "encoder_source/third_party/dino90k_runtime/dinov3",
+        "starvla_source_path": "relocated_at_load/starvla_source_path",
+        "dinov3_source_path": "relocated_at_load/dinov3_source_path",
         "dinov3_source_commit": "6876159a11b4df116f30f667f8c9888617df0751",
         "verify_source_commit": true,
         "strict_load": true,
@@ -160,7 +160,7 @@
   },
   "joint96_posttrain": {
     "enabled": true,
-    "cached_visuals": true,
+    "cached_visuals": false,
     "expected_pretrain_step": "256013",
     "evaluation_membership": "train_pool",
     "action_video_attention": "current_and_noisy_future_v1",
@@ -174,17 +174,90 @@
       "vae": 0.5,
       "stvae": 0.5,
       "action": 1.0
-    },
-    "robodojo_openwam_cached": true
+    }
   },
   "data": {
     "train": {
-      "_target_": "wam.datasets.robodojo_openwam_cached.RoboDojoOpenWAMCachedDataset",
-      "embodiment": "piper_x",
-      "gripper_preprocessing": "openwam_real_clip01_v1",
-      "visual_cache": {
-        "binding_path": "verified-in-checkpoint-metadata"
+      "_target_": "wam.datasets.robodojo_openwam_joint14.RoboDojoOpenWAMJoint14Dataset",
+      "dataset_dirs": [
+        "data/robodojo"
+      ],
+      "shape_meta": {
+        "images": [
+          {
+            "key": "cam_high",
+            "raw_shape": [
+              3,
+              256,
+              256
+            ],
+            "shape": [
+              3,
+              256,
+              256
+            ]
+          },
+          {
+            "key": "cam_left_wrist",
+            "raw_shape": [
+              3,
+              256,
+              256
+            ],
+            "shape": [
+              3,
+              256,
+              256
+            ]
+          },
+          {
+            "key": "cam_right_wrist",
+            "raw_shape": [
+              3,
+              256,
+              256
+            ],
+            "shape": [
+              3,
+              256,
+              256
+            ]
+          }
+        ],
+        "action": [
+          {
+            "key": "default",
+            "lerobot_key": "action.joint",
+            "raw_shape": 14,
+            "shape": 14
+          }
+        ],
+        "state": [
+          {
+            "key": "default",
+            "lerobot_key": "observation.joint_state",
+            "raw_shape": 14,
+            "shape": 14
+          }
+        ]
       },
+      "num_frames": 33,
+      "global_sample_stride": 1,
+      "memory_video_anchor_size": 0,
+      "memory_recent_frame_offset": 0,
+      "action_video_freq_ratio": 4,
+      "video_size": [
+        256,
+        256
+      ],
+      "camera_key": null,
+      "val_set_proportion": 0.0,
+      "is_training_set": true,
+      "pretrained_norm_stats": null,
+      "skip_padding_as_possible": false,
+      "concat_multi_camera": "latent_horizontal",
+      "single_canvas": false,
+      "return_vlm_current_images": false,
       "processor": {
         "_target_": "wam.datasets.lerobot.processors.wam_processor.WAMProcessor",
         "shape_meta": {
@@ -354,15 +427,31 @@
           }
         ]
       },
+      "text_embedding_cache_dir": ".cache/internw0/text_embed/robodojo",
+      "context_len": 128,
       "image_color_jitter": {
-        "enabled": false,
+        "enabled": true,
         "brightness": 0.2,
         "contrast": 0.2,
         "saturation": 0.2,
         "gamma": 0.0,
         "apply_to_vlm": true,
         "hue": 0.0
-      }
+      },
+      "domain": "robodojo",
+      "package_root": "audit_only/package_root",
+      "data_root": "audit_only/data_root",
+      "camera_slots": [
+        0,
+        1,
+        2
+      ],
+      "load_episode_stats": false,
+      "check_local_files": false,
+      "index_path": "audit_only/index_path",
+      "gripper_preprocessing": "openwam_real_clip01_v1",
+      "embodiment": "piper_x",
+      "visual_cache": null
     }
   }
 }
