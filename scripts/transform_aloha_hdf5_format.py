@@ -178,6 +178,18 @@ def _extract_qpos(data):
 
 def _extract_action(data, qpos):
     action = _get_nested(data, "action")
+    if isinstance(action, dict):
+        action = _concat_state_parts(
+            [
+                ("left_arm_joint_states", action.get("left_arm_joint_states")),
+                ("left_ee_joint_states", action.get("left_ee_joint_states")),
+                ("right_arm_joint_states", action.get("right_arm_joint_states")),
+                ("right_ee_joint_states", action.get("right_ee_joint_states")),
+            ],
+            "action",
+        )
+        if action is None:
+            raise ValueError("Cannot find joint action data in action group")
     if action is not None:
         action = _ensure_2d_float32(action, "action")
         if action.shape[0] != qpos.shape[0]:
