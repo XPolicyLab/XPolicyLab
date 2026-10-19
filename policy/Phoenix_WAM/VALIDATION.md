@@ -48,6 +48,12 @@ DEBUG_OBS_ENCODED=1 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh Rob
 
 The synthetic debug instruction requires `online_t5`; the default `training_cache` mode accepts the shipped instruction list. The two text modes are not claimed to generate bitwise-identical features.
 
+## Published weights
+
+All three 40000-step no-crop policy checkpoints and all four shared encoder weights are published in `ssuuuuu/phoenix-wam`. The public repository's SHA256 and byte size matched every entry in `phoenix_release.json`. Each new policy checkpoint is 12,045,488,406 bytes.
+
+Anonymous HTTP range downloads of the first 64 KiB of each new checkpoint returned HTTP 206, reported the expected full file size, and matched the corresponding local bytes exactly. This checks public access and sampled content; it is not a fresh full-file download. The download script verifies the full SHA256 after downloading. The updated ModelScope README was also read back anonymously and matched the published content.
+
 ## Limits
 
 No simulator success rate or physical robot evaluation is claimed. Native data rates are ARX/Piper 30 Hz and Piper X 25 Hz; controller timing and arm limits remain hardware-client responsibilities. No training entry point, trajectory dataset or optimizer state is included. A fresh conda installation has not been rerun for this release.
