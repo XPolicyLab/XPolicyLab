@@ -1,0 +1,14 @@
+InternW0-delta includes adapted third-party code:
+
+- Hugging Face LeRobot: src/wam/datasets/lerobot/lerobot/, under the
+  Apache License 2.0. Original copyright headers are retained.
+  https://github.com/huggingface/lerobot
+- PyTorch3D rotation conversions: src/wam/datasets/lerobot/utils/rotation.py,
+  under the BSD license in LICENSES/PyTorch3D.txt.
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+  https://github.com/facebookresearch/pytorch3d
+
+The Apache License 2.0 text is in LICENSES/Apache-2.0.txt. Component-specific
+attribution and licenses also accompany tools/4D_distillation,
+eval/robotwin and eval/robodojo. External models, datasets, simulators
+and robot assets retain their own licenses.

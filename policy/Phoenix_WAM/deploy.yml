@@ -1,0 +1,42 @@
+policy_name: Phoenix_WAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+# Selects the matching posttrained checkpoint, robot profile, statistics and soft prompt.
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: true
+
+# Weights are prepared by download_checkpoint.sh. Shared ckpt_name resolution
+# is used unless checkpoint_path is explicitly supplied.
+checkpoint_path: null
+
+# Checkpoint inference contract.
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 32
+num_inference_steps: 10
+action_hz: null
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false
+default_instruction: follow the instruction
+allow_dummy_policy: false
+
+# Exact training instruction features ship in phoenix_source/text.pt.
+# Use online_t5 for arbitrary instructions (loads the pinned T5 encoder).
+text_mode: training_cache
+
+# Each robot uses its own released H5 no-crop paired-cache posttraining checkpoint.
+runtime_mode: joint96_real_phoenix
+current_visual_mode: repeat9_full_joint96
+expected_step: 40000
+audit_dir: logs/phoenix
