@@ -8,7 +8,9 @@ The source deployment was audited on 2026-10-19 using the preceding 35000-step c
 
 Both complete visual branches encode nine repeated current frames before the first latent is selected. That first latent matched fresh encoding of the real nine-frame clip at all six windows. However, **persisted training-cache features did not exactly match online encoding**: maximum first-latent absolute differences were 0.046875 for WAN and 0.9873046875 for DINO/STVAE. At the first ARX window, the training-loss input builder and inference had equal action tokens, context, masks and timing inputs, but visual tokens had a relative L2 discrepancy of 1.71% (maximum absolute difference 1.259765625).
 
-Controlled tests using the actual cache encoder loader reproduced this residual. Changing TF32 or WAN VAE statistics precision did not remove it. The cause remains unresolved; strict numerical training/cache/inference equivalence is **not claimed**. The 40000-step checkpoints do not by themselves resolve this encoder discrepancy.
+Controlled tests using the actual cache encoder loader reproduced this residual. Changing TF32 or WAN VAE statistics precision did not remove it. Repeating the probe with the training launcher's CUDA/conda library paths reproduced the same residual. The cause remains unresolved; strict numerical training/cache/inference equivalence is **not claimed**. The 40000-step checkpoints do not by themselves resolve this encoder discrepancy.
+
+A controlled diagnostic on the **40000-step ARX** model substituted the stored current latent for the online current latent at four recorded windows, keeping RGB/state/text, seed and sampling settings fixed. Across each 32-action chunk's 12 arm joints, mean absolute action differences ranged from **0.000330 to 0.000906 rad**, with maximum **0.008831 rad** across the four windows. This measures the downstream effect on those inputs only; it neither identifies the cause nor establishes equivalence across tasks or robots.
 
 ## Earlier recorded-episode replay (35000 step)
 
@@ -18,7 +20,13 @@ Across 12 arm joints, excluding grippers: MAE **0.007423 rad**, RMSE **0.024002 
 
 ## Public adapter validation
 
-Release-specific test results are recorded below after execution. Commands from the parent of `XPolicyLab`:
+The portable package passed **42 current tests**, including all three real 40000-step checkpoint/configuration pairs; 15 historical z-score tests were skipped. Geometry tests verify retained image edges, RGB channel order and three separate camera views. Negative tests reject altered cache/trim identities, crop settings, camera order, family, step and normalization.
+
+All three actual GPU loaders restored the checkpoints and produced finite 32×14 actions. For each family, the public adapter's first chunk was exactly equal to the original server deployment using the same checkpoint/input (maximum difference **zero**). Action acknowledgments and reset passed. This is packaging parity, distinct from the unresolved training-cache discrepancy above.
+
+The actual `eval.sh` passed **10 plain-RGB debug episodes and 10 encoded-observation debug episodes** through the official batched WebSocket server/client. Both runs exited zero, reached `[MAIN] eval finished` and had no traceback. These used the existing `fastwam-pretrain` environment on RTX PRO 5000 72GB Blackwell GPUs, with PyTorch 2.7.1+cu128 and transformers 5.12.1. `WAM_CHECKPOINT_PATH` selected the verified weights directory; both environment arguments were `fastwam-pretrain`, using GPU 3. Shell syntax, Python compilation, whitespace, source/configuration hashes and `deploy.py` parity with the reference adapter passed.
+
+Commands from the parent of `XPolicyLab`:
 
 ```bash
 PHOENIX_H5_TEST_WEIGHTS=/absolute/path/to/weights python -m unittest \

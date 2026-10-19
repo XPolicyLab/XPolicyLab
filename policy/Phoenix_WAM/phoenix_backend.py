@@ -1,4 +1,4 @@
-"""Inference for the current raw-H5 q01/q99 Phoenix real weights only."""
+"""Inference for the pinned no-crop paired-cache q01/q99 Phoenix weights."""
 import json
 import os
 from pathlib import Path
@@ -154,8 +154,9 @@ def build_phoenix_runtime(config):
             if not torch.equal(value, data['payload'][name][key].to(value)):
                 raise ValueError('Restored tensor mismatch: ' + name + '.' + key)
         counts[name] = len(tensors)
-    # Match the post-prepare training initialization. WAN VAE mean/std/scale
-    # are plain tensors: Module.to() alone leaves their FP32 initial values.
+    # Preserve the source deployment initialization. WAN VAE mean/std/scale
+    # are plain tensors; this makes them BF16. The paired-cache encoder used
+    # FP32 statistics. See VALIDATION.md for the unresolved cache residual.
     model.set_runtime_device(device)
     model.eval().requires_grad_(False)
     visual_evidence = install_repeat9_joint(model.joint_visual_encoder)
