@@ -95,7 +95,7 @@ class PhoenixTests(unittest.TestCase):
         for family, spec in release['checkpoints'].items():
             self.assertEqual(spec['pretrain_step'], 256013)
             self.assertEqual(spec['step'], 40000)
-            self.assertEqual(spec['filename'], f"phoenix-wam-{family.replace('_','-')}-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt")
+            self.assertEqual(spec['filename'], f"phoenix-wam-{family.replace('_','-')}-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt")
             self.assertEqual(spec['path'], spec['filename'])
             cfg = (package/(family+'.json')).read_text()
             self.assertNotIn('/mnt/', cfg)

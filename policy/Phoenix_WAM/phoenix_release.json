@@ -2,7 +2,7 @@
   "schema": "phoenix-joint96-release-v2",
   "checkpoints": {
     "arx_x5": {
-      "path": "phoenix-wam-arx-x5-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt",
+      "path": "phoenix-wam-arx-x5-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt",
       "sha256": "fc7713041d23dd021c04145466bed275326cd9f3dc8e09198603e6a030410f49",
       "size": 12045485462,
       "step": 40000,
@@ -20,10 +20,10 @@
       ],
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "filename": "phoenix-wam-arx-x5-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt"
+      "filename": "phoenix-wam-arx-x5-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt"
     },
     "piper": {
-      "path": "phoenix-wam-piper-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt",
+      "path": "phoenix-wam-piper-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt",
       "sha256": "f501e025ff3101b19e4ec86d2aaefa5e7612e3fd1a8398ffe39ea91431539f84",
       "size": 12045485462,
       "step": 40000,
@@ -41,10 +41,10 @@
       ],
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "filename": "phoenix-wam-piper-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt"
+      "filename": "phoenix-wam-piper-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt"
     },
     "piper_x": {
-      "path": "phoenix-wam-piper-x-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt",
+      "path": "phoenix-wam-piper-x-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt",
       "sha256": "db26090aed2990f7d41bb4cdf3b70f726d508b289f07b5fad5caaf9118bcc83b",
       "size": 12045485462,
       "step": 40000,
@@ -62,7 +62,7 @@
       ],
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "filename": "phoenix-wam-piper-x-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt"
+      "filename": "phoenix-wam-piper-x-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt"
     }
   },
   "weights": {

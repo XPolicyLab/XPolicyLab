@@ -1,6 +1,6 @@
 # H5 online-vision release validation
 
-Release: the three `openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` files pinned in `phoenix_release.json`. These checks concern the H5 online-vision checkpoints and PIL preprocessing shipped in this revision.
+Release: the three `h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` files pinned in `phoenix_release.json`. These checks concern the H5 online-vision checkpoints and PIL preprocessing shipped in this revision.
 
 ## Recorded-observation replay
 
@@ -66,3 +66,7 @@ All seven files in `phoenix_release.json` are published in `ssuuuuu/phoenix-wam`
 ## Limits
 
 No simulator success rate or real-robot closed-loop evaluation is claimed. Native data rates are ARX/Piper 30 Hz and Piper X 25 Hz; hardware timing and arm limits remain controller responsibilities. No training code, training trajectory dataset or optimizer state is included in the policy submission. A fresh conda installation has not been rerun for this release.
+
+## H5 filename update (2026-10-19)
+
+The three checkpoint filenames were simplified to `phoenix-wam-<robot>-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt`. Checkpoint contents, SHA256 hashes and all inference settings are unchanged. The download manifest, README and filename assertions use the new names. After the rename, all seven published policy/shared files passed the manifest SHA256/size checks. The 38 current CPU tests passed again; 15 historical tests were skipped. This naming update does not constitute a new GPU inference evaluation.

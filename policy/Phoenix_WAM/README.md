@@ -66,9 +66,11 @@ Files are in ModelScope repository `ssuuuuu/phoenix-wam`, revision `master`. `ph
 
 | `env_cfg_type` | H5 online-vision checkpoint | Slot | Native data rate |
 | --- | --- | --- | --- |
-| `arx_x5` | `phoenix-wam-arx-x5-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 2 | 30 Hz |
-| `piper` | `phoenix-wam-piper-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 4 | 30 Hz |
-| `piper_x` | `phoenix-wam-piper-x-openwam-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 15 | 25 Hz |
+| `arx_x5` | `phoenix-wam-arx-x5-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 2 | 30 Hz |
+| `piper` | `phoenix-wam-piper-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 4 | 30 Hz |
+| `piper_x` | `phoenix-wam-piper-x-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 15 | 25 Hz |
+
+The three published checkpoint names use `h5-online`; the release manifest supplies the filenames to both download entry points. This naming update preserves checkpoint bytes, SHA256 hashes and inference settings.
 
 Each policy checkpoint is approximately 12.05 GB. Keep the downloaded filenames and nested `base_models/` layout. The loader validates the H5 training contract, selected robot, normalization, encoder resources and all restored trainable tensors. It does not import a training checkout or resolve server-specific paths. External `training_config` and `stats_package` overrides are rejected.
 
