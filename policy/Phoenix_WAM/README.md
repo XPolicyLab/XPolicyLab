@@ -66,9 +66,11 @@ Files are in ModelScope repository `ssuuuuu/phoenix-wam`, revision `master`. `ph
 
 | `env_cfg_type` | H5 no-crop checkpoint | Slot | Native data rate |
 | --- | --- | --- | --- |
-| `arx_x5` | `phoenix-wam-arx-x5-h5-nocrop-trim-cached-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 2 | 30 Hz |
-| `piper` | `phoenix-wam-piper-h5-nocrop-trim-cached-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 4 | 30 Hz |
-| `piper_x` | `phoenix-wam-piper-x-h5-nocrop-trim-cached-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 15 | 25 Hz |
+| `arx_x5` | `phoenix-wam-arx-x5-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt` | 2 | 30 Hz |
+| `piper` | `phoenix-wam-piper-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt` | 4 | 30 Hz |
+| `piper_x` | `phoenix-wam-piper-x-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt` | 15 | 25 Hz |
+
+The release manifest pins the canonical `h5-trim-cached-resize256-nocrop` filenames for run `20261019_01`. Duplicate aliases and the older center-crop weights have been retired from ModelScope. Both download entry points read this manifest.
 
 Each policy checkpoint is approximately 12.05 GB. Keep the downloaded filenames and nested `base_models/` layout. The loader validates the H5 training contract, selected robot, normalization, encoder resources and all restored trainable tensors. It does not import a training checkout or resolve server-specific paths. External `training_config` and `stats_package` overrides are rejected.
 

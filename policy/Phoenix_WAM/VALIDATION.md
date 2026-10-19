@@ -57,3 +57,7 @@ Anonymous HTTP range downloads of the first 64 KiB of each new checkpoint return
 ## Limits
 
 No simulator success rate or physical robot evaluation is claimed. Native data rates are ARX/Piper 30 Hz and Piper X 25 Hz; controller timing and arm limits remain hardware-client responsibilities. No training entry point, trajectory dataset or optimizer state is included. A fresh conda installation has not been rerun for this release.
+
+## Canonical filename cleanup (2026-10-19)
+
+The three checkpoint entries now use `h5-trim-cached-resize256-nocrop` and `run20261019_01`. Their SHA256 hashes and sizes are unchanged. Three duplicate aliases and three retired center-crop checkpoints were removed from ModelScope. After cleanup, the downloader verified all seven retained policy/shared files against the release manifest; the ModelScope README passed anonymous readback. The 42 current CPU tests passed again, with 15 historical tests skipped. This filename-only change did not rerun GPU inference or physical evaluation.
