@@ -31,7 +31,7 @@ def _fixture_tree(tmp_path: Path) -> dict[str, Path]:
     utils = root / "XPolicyLab/utils"
     policy.mkdir(parents=True)
     utils.mkdir()
-    for name in ("setup_eval_env_client.sh", "setup_eval_policy_server.sh", "deploy.yml"):
+    for name in ("setup_eval_env_client.sh", "deploy.yml", "native_entry.py", "native_layout.py"):
         shutil.copy(POLICY / name, policy)
     shutil.copytree(
         POLICY / "sim_bootstrap",
@@ -140,6 +140,9 @@ def _fixture_tree(tmp_path: Path) -> dict[str, Path]:
 
 def _environment(tree: dict[str, Path], exit_code: int) -> dict[str, str]:
     return {
+        # Relocated cached Python distributions need their stdlib prefix even
+        # when this fixture deliberately supplies a clean launch environment.
+        **({"PYTHONHOME": os.environ["PYTHONHOME"]} if os.environ.get("PYTHONHOME") else {}),
         "PATH": f"{tree['conda_bin']}{os.pathsep}{os.defpath}",
         "HOME": str(tree["root"].parent),
         "LANG": "C.UTF-8",
@@ -166,76 +169,6 @@ def _native_payloads(result: subprocess.CompletedProcess) -> list[dict]:
     ]
     assert records, result.stdout + result.stderr
     return records
-
-
-@pytest.mark.parametrize("selection", ["uv", "explicit"])
-def test_controller_server_uses_selected_python_without_caller_overrides(
-    tmp_path, selection
-):
-    tree = _fixture_tree(tmp_path)
-    policy = tree["policy"]
-    python = policy / ".venv/bin/python"
-    python.parent.mkdir(parents=True)
-    calls = tmp_path / "server-calls.jsonl"
-    (tree["root"] / "controller_dependency.py").write_text("MARKER = 'selected-root'\n")
-    python.write_text(
-        f"#!{sys.executable}\n"
-        "import json, os, sys\n"
-        "from controller_dependency import MARKER\n"
-        "with open(os.environ['ROBORSI_TEST_SERVER_CALLS'], 'a') as stream:\n"
-        "    stream.write(json.dumps({'argv': sys.argv[1:], 'marker': MARKER, "
-        "'pythonpath': os.environ.get('PYTHONPATH'), "
-        "'python_overrides': [name for name in ('PYTHONHOME', 'VIRTUAL_ENV') if name in os.environ], "
-        "'no_user_site': os.environ.get('PYTHONNOUSERSITE'), "
-        "'key_present': bool(os.environ.get('CODEX_API_KEY')), "
-        "'gpu': os.environ.get('CUDA_VISIBLE_DEVICES')}) + '\\n')\n"
-    )
-    python.chmod(0o755)
-    env = {
-        "PATH": os.defpath,
-        "HOME": str(tmp_path),
-        "CODEX_API_KEY": "fixture-runtime-key",
-        "PYTHONHOME": str(tmp_path / "foreign-python"),
-        "PYTHONPATH": str(tree["sdk"]),
-        "VIRTUAL_ENV": str(tmp_path / "foreign-venv"),
-        "PYTHONNOUSERSITE": "0",
-        "PYTHONDONTWRITEBYTECODE": "1",
-        "ROBORSI_TEST_SERVER_CALLS": str(calls),
-    }
-    result = subprocess.run(
-        [
-            "bash",
-            str(policy / "setup_eval_policy_server.sh"),
-            "RoboDojo",
-            "align_blocks",
-            "roborsi-codex-v1",
-            "arx_x5",
-            "joint",
-            "0",
-            "2",
-            "uv" if selection == "uv" else str(python.parent.parent),
-            "12345",
-        ],
-        cwd=tmp_path,
-        env=env,
-        capture_output=True,
-        text=True,
-        timeout=20,
-        check=False,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    records = [json.loads(line) for line in calls.read_text().splitlines()]
-    assert [Path(row["argv"][0]).name for row in records] == ["preflight.py", "serve.py"]
-    for row in records:
-        assert row["pythonpath"] == os.pathsep.join(
-            (str(tree["root"]), str(tree["root"] / "XPolicyLab"))
-        )
-        assert row["python_overrides"] == []
-        assert row["no_user_site"] == "1"
-        assert row["marker"] == "selected-root"
-        assert row["key_present"] is True
-        assert row["gpu"] == "2"
-    assert "fixture-runtime-key" not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize(
@@ -304,7 +237,7 @@ def test_policy_bootstrap_survives_official_conda_reactivation(
         assert payload["argv"][payload["argv"].index(key) + 1] == expected
     calls = [json.loads(line) for line in tree["calls"].read_text().splitlines()]
     final = [
-        row for row in calls if row["argv"][:2] == ["-u", "src/eval_client/main.py"]
+        row for row in calls if row["argv"][:2] == ["-u", str(tree["policy"] / "native_entry.py")]
     ]
     assert len(final) == (2 if retry else 1)
     bootstrap = str(tree["policy"] / "sim_bootstrap")

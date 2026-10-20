@@ -88,7 +88,7 @@ class _MaximumOpenAIThinking(AbstractCapability[Any]):
     id: str | None = "thinking"
 
     def get_model_settings(self) -> ModelSettings:
-        # TokenHub exposes ``max`` beyond pydantic-ai's portable ``xhigh``
+        # Some gateways expose ``max`` beyond pydantic-ai's portable ``xhigh``
         # ThinkingLevel. Preserve the exact gateway contract.
         return ModelSettings(
             openai_reasoning_effort="max"  # type: ignore[typeddict-item]

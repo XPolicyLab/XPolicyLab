@@ -30,10 +30,11 @@ def policy_copy(tmp_path, monkeypatch):
     return policy
 
 
-def test_base_url_default_ignores_sdk_environment(monkeypatch):
+def test_base_url_is_required_and_ignores_sdk_environment(monkeypatch):
     monkeypatch.delenv("ROBORSI_CODEX_BASE_URL", raising=False)
     monkeypatch.setenv("CODEX_BASE_URL", "https://ignored-sdk-setting.example/v1")
-    assert runtime_config.resolve_base_url() == "https://tokenhub.sensetime.com/v1"
+    with pytest.raises(ValueError, match="ROBORSI_CODEX_BASE_URL"):
+        runtime_config.resolve_base_url()
     monkeypatch.setenv("ROBORSI_CODEX_BASE_URL", "http://127.0.0.1:8080/v1")
     assert runtime_config.resolve_base_url() == "http://127.0.0.1:8080/v1"
 
@@ -102,3 +103,60 @@ def test_relative_preflight_state_fails_before_writing(policy_copy, monkeypatch)
     with pytest.raises(ValueError, match="must be an absolute path"):
         runtime_config.load_agent_config({}, require_key=False)
     assert not (policy_copy / "runtime").exists()
+
+
+@pytest.mark.parametrize("model", [None, "", "   ", "bad route", "bad\nroute", "bad\x7froute"])
+def test_model_is_required_without_echoing_invalid_value(monkeypatch, model):
+    if model is None:
+        monkeypatch.delenv("ROBORSI_CODEX_MODEL", raising=False)
+    else:
+        monkeypatch.setenv("ROBORSI_CODEX_MODEL", model)
+    monkeypatch.setenv("CODEX_MODEL", "ignored-sdk-model")
+    with pytest.raises(ValueError, match="ROBORSI_CODEX_MODEL") as stopped:
+        runtime_config.resolve_model()
+    assert "bad" not in str(stopped.value)
+
+
+@pytest.mark.parametrize("name", ["ROBORSI_CODEX_BASE_URL", "ROBORSI_CODEX_MODEL"])
+def test_missing_deployment_config_fails_before_creating_state(policy_copy, monkeypatch, name):
+    monkeypatch.delenv(name, raising=False)
+    with pytest.raises(ValueError, match=name):
+        runtime_config.load_agent_config({}, require_key=False)
+    assert not (policy_copy / "runtime").exists()
+
+
+def test_custom_routing_preserves_protocol_budgets_and_trajectory_header(policy_copy, monkeypatch):
+    endpoint = "https://provider.example.invalid/custom/v1/"
+    route = "model-family/deployment-a/route-b"
+    monkeypatch.setenv("ROBORSI_CODEX_BASE_URL", endpoint)
+    monkeypatch.setenv("ROBORSI_CODEX_MODEL", route)
+    monkeypatch.setenv("CODEX_API_KEY", "synthetic-offline-secret")
+    config = runtime_config.load_agent_config({}, trajectory_id="fixture-trajectory")
+    agent = config.document["agent"]
+    provider = agent["codex_cli"]["config_overrides"]
+    assert agent["model"] == route
+    assert agent["planner"] == "codex_cli" and agent["reasoning_effort"] == "max"
+    assert agent["max_turns"] is None and agent["max_tokens"] is None
+    assert agent["codex_cli"]["tools"] == "external"
+    assert provider["model_provider"] == "runtime"
+    assert provider["model_providers.runtime.base_url"] == endpoint
+    assert provider["model_providers.runtime.wire_api"] == "responses"
+    assert provider["model_providers.runtime.env_key"] == "CODEX_API_KEY"
+    assert provider["model_providers.runtime.stream_max_retries"] == 8
+    assert provider["model_providers.runtime.request_max_retries"] == 8
+    assert provider["model_providers.runtime.env_http_headers.X-Trajectory-Id"] == "ROBORSI_TRAJECTORY_ID"
+    assert "synthetic-offline-secret" not in repr(config.document)
+
+
+def test_installation_check_does_not_require_or_reuse_deployment_settings(policy_copy, monkeypatch):
+    for key in ("ROBORSI_CODEX_BASE_URL", "ROBORSI_CODEX_MODEL", "CODEX_API_KEY"):
+        monkeypatch.delenv(key, raising=False)
+    config = runtime_config.load_agent_config({}, require_key=False, installation_only=True)
+    assert config.document["agent"]["model"] == "installation-check"
+    with pytest.raises(ValueError, match="ROBORSI_CODEX_BASE_URL"):
+        runtime_config.load_agent_config({}, require_key=False)
+    with pytest.raises(ValueError, match="CODEX_API_KEY"):
+        runtime_config.load_agent_config({}, installation_only=True)
+    monkeypatch.setenv("CODEX_API_KEY", "synthetic-offline-secret")
+    with pytest.raises(ValueError, match="restricted to offline checks"):
+        runtime_config.load_agent_config({}, installation_only=True)

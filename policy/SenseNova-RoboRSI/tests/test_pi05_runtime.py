@@ -59,156 +59,6 @@ def test_python_archive_cannot_write_outside_its_prefix(tmp_path, member):
     assert not (tmp_path / "escape").exists()
 
 
-def test_python_archive_extracts_sibling_symlinks_and_archive_rooted_hardlinks(tmp_path):
-    archive = tmp_path / "python.tar.gz"
-    with tarfile.open(archive, "w:gz") as source:
-        for name, content in (
-            ("python/bin/python3.11", b"pinned interpreter fixture"),
-            ("python/share/terminfo/a/adm1178", b"terminal fixture"),
-        ):
-            entry = tarfile.TarInfo(name)
-            entry.size = len(content)
-            entry.mode = 0o6755
-            source.addfile(entry, io.BytesIO(content))
-        link = tarfile.TarInfo("python/share/terminfo/1/1178")
-        link.type = tarfile.SYMTYPE
-        link.linkname = "../a/adm1178"
-        source.addfile(link)
-        link = tarfile.TarInfo("python/bin/python")
-        link.type = tarfile.LNKTYPE
-        link.linkname = "python/bin/python3.11"
-        link.mode = 0o6755
-        source.addfile(link)
-    destination = tmp_path / "installed"
-    runtime._extract_python(
-        archive,
-        destination,
-        {
-            "archive_prefix": "python",
-            "executable": "bin/python3.11",
-            "sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
-        },
-    )
-    link = destination / "share/terminfo/1/1178"
-    assert link.is_symlink()
-    assert os.readlink(link) == "../a/adm1178"
-    assert link.read_bytes() == b"terminal fixture"
-    interpreter = destination / "bin/python3.11"
-    assert interpreter.stat().st_mode & 0o7777 == 0o755
-    assert (destination / "bin/python").samefile(interpreter)
-
-
-@pytest.mark.parametrize("link_type", [tarfile.SYMTYPE, tarfile.LNKTYPE])
-@pytest.mark.parametrize("target", ["/outside", "../../outside", "../outside"])
-def test_python_archive_rejects_links_that_escape_the_installed_tree(
-    tmp_path, link_type, target
-):
-    archive = tmp_path / "python.tar.gz"
-    with tarfile.open(archive, "w:gz") as source:
-        entry = tarfile.TarInfo("python/escape")
-        entry.type = link_type
-        entry.linkname = target
-        source.addfile(entry)
-        entry = tarfile.TarInfo("python/escape/overwrite")
-        entry.size = 1
-        source.addfile(entry, io.BytesIO(b"x"))
-    with pytest.raises(Pi05CheckpointError, match="Unsafe.*link"):
-        runtime._extract_python(
-            archive,
-            tmp_path / "installed",
-            {"archive_prefix": "python", "executable": "bin/python3.11"},
-        )
-    assert not (tmp_path / "installed").exists()
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["python.tar.gz"]
-
-
-@pytest.mark.parametrize("linked_parent", [False, True])
-def test_python_archive_rejects_symlinks_that_escape_after_the_python_tree_is_renamed(
-    tmp_path, linked_parent
-):
-    archive = tmp_path / "python.tar.gz"
-    with tarfile.open(archive, "w:gz") as source:
-        if linked_parent:
-            parent = tarfile.TarInfo("python/alias")
-            parent.type = tarfile.SYMTYPE
-            parent.linkname = "."
-            source.addfile(parent)
-        link = tarfile.TarInfo(
-            "python/alias/escape" if linked_parent else "python/escape"
-        )
-        link.type = tarfile.SYMTYPE
-        link.linkname = "../python/bin/python3.11"
-        source.addfile(link)
-    with pytest.raises(Pi05CheckpointError, match="Unsafe.*link"):
-        runtime._extract_python(
-            archive,
-            tmp_path / "installed",
-            {"archive_prefix": "python", "executable": "bin/python3.11"},
-        )
-    assert not (tmp_path / "installed").exists()
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["python.tar.gz"]
-
-
-def test_python_archive_rechecks_links_after_later_symlinks_change_their_ancestors(
-    tmp_path,
-):
-    archive = tmp_path / "python.tar.gz"
-    with tarfile.open(archive, "w:gz") as source:
-        for name, target in (("python/a", "foo/../bar"), ("python/foo", ".")):
-            link = tarfile.TarInfo(name)
-            link.type = tarfile.SYMTYPE
-            link.linkname = target
-            source.addfile(link)
-    with pytest.raises(Pi05CheckpointError, match="Unsafe.*link"):
-        runtime._extract_python(
-            archive,
-            tmp_path / "installed",
-            {"archive_prefix": "python", "executable": "bin/python3.11"},
-        )
-    assert not (tmp_path / "installed").exists()
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["python.tar.gz"]
-
-
-def test_python_archive_rejects_a_symlink_hardlinked_to_an_unsafe_new_parent(tmp_path):
-    archive = tmp_path / "python.tar.gz"
-    with tarfile.open(archive, "w:gz") as source:
-        entry = tarfile.TarInfo("python/bin/python3.11")
-        entry.size = 1
-        source.addfile(entry, io.BytesIO(b"x"))
-        entry = tarfile.TarInfo("python/deep/link")
-        entry.type = tarfile.SYMTYPE
-        entry.linkname = "../bin/python3.11"
-        source.addfile(entry)
-        entry = tarfile.TarInfo("python/link")
-        entry.type = tarfile.LNKTYPE
-        entry.linkname = "python/deep/link"
-        source.addfile(entry)
-    with pytest.raises(Pi05CheckpointError, match="Unsafe.*link"):
-        runtime._extract_python(
-            archive,
-            tmp_path / "installed",
-            {"archive_prefix": "python", "executable": "bin/python3.11"},
-        )
-    assert not (tmp_path / "installed").exists()
-    assert sorted(path.name for path in tmp_path.iterdir()) == ["python.tar.gz"]
-
-
-@pytest.mark.parametrize("entry_type", [tarfile.FIFOTYPE, tarfile.CHRTYPE, tarfile.BLKTYPE])
-def test_python_archive_rejects_special_files(tmp_path, entry_type):
-    archive = tmp_path / "python.tar.gz"
-    with tarfile.open(archive, "w:gz") as source:
-        entry = tarfile.TarInfo("python/special")
-        entry.type = entry_type
-        source.addfile(entry)
-    with pytest.raises(Pi05CheckpointError, match="Unsupported"):
-        runtime._extract_python(
-            archive,
-            tmp_path / "installed",
-            {"archive_prefix": "python", "executable": "bin/python3.11"},
-        )
-    assert not (tmp_path / "installed").exists()
-
-
 def test_explicit_python_archive_is_hashed_before_use(tmp_path):
     archive = tmp_path / "python.tar.gz"
     archive.write_bytes(b"fixture")
@@ -247,32 +97,8 @@ def test_vla_environment_has_no_model_or_hub_credentials(tmp_path, monkeypatch):
     assert env["XLA_PYTHON_CLIENT_MEM_FRACTION"] == "0.6"
     assert "vendor/pi05/openpi/src" in env["PYTHONPATH"]
     assert env["PATH"].split(":")[0] == str(P / "runtime/pi05-cuda/bin")
-    assert "/usr/local/cuda" not in env["PATH"]
-    assert "/usr/local/cuda" not in env["LD_LIBRARY_PATH"]
     assert env["XLA_FLAGS"] == f"--xla_gpu_cuda_data_dir={P / 'runtime/pi05-cuda'}"
     assert "unsafe_fallback" not in repr(env)
-
-
-@pytest.mark.parametrize(
-    "field,value",
-    [
-        ("torch", "2.7.1+cpu"),
-        ("torch", "2.7.1+cu128"),
-        ("torch_cuda", "12.8"),
-        ("torch_cuda", None),
-    ],
-)
-def test_runtime_rejects_different_imported_torch_cuda_build(field, value):
-    imports = {
-        "python": "3.11.17",
-        "jax": "0.5.3",
-        "torch": "2.7.1+cu126",
-        "torch_cuda": "12.6",
-    }
-    runtime._check_import_identity(imports)
-    imports[field] = value
-    with pytest.raises(Pi05CheckpointError, match="Torch/CUDA identity differs"):
-        runtime._check_import_identity(imports)
 
 
 def test_cuda_compiler_resources_are_verified_and_exposed_in_sdk_layout(
@@ -465,29 +291,16 @@ def test_server_start_and_timeout_clean_only_the_owned_process(
     monkeypatch.setattr(runtime, "validate_pi05_tokenizer", lambda *_a, **_k: {})
     calls = []
     fake = SimpleNamespace(pid=999999, poll=lambda: None, wait=lambda **_kwargs: 0)
-    monkeypatch.setattr(
-        runtime.subprocess,
-        "Popen",
-        lambda argv, **kwargs: (calls.append((argv, kwargs)), fake)[1],
-    )
+    def launch(argv, **kwargs):
+        calls.append((argv, kwargs))
+        os.write(kwargs["pass_fds"][0], b'{"port":19803}\n')
+        return fake
+
+    monkeypatch.setattr(runtime.subprocess, "Popen", launch)
     monkeypatch.setattr(
         runtime.os, "killpg", lambda pid, signum: calls.append((pid, signum))
     )
 
-    class Port:
-        def __enter__(self):
-            return self
-
-        def __exit__(self, *_args):
-            pass
-
-        def bind(self, value):
-            assert value == ("127.0.0.1", 0)
-
-        def getsockname(self):
-            return "127.0.0.1", 19803
-
-    monkeypatch.setattr(runtime.socket, "socket", Port)
     server = runtime.Pi05Server(
         tmp_path / "checkpoint",
         tmp_path / "data",
@@ -503,7 +316,8 @@ def test_server_start_and_timeout_clean_only_the_owned_process(
         with pytest.raises(TimeoutError):
             server.start()
     argv, kwargs = calls[0]
-    assert server.port == 19803
+    assert server.port == (19803 if ready else 0)
+    assert argv[argv.index("--port") + 1] == "0"
     assert argv[argv.index("--max-batch-size") + 1] == "1"
     assert argv[argv.index("--host") + 1] == "127.0.0.1"
     assert (

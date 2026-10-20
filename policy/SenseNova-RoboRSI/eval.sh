@@ -6,7 +6,9 @@ if [[ $# -ne 10 ]]; then
     exit 2
 fi
 : "${CODEX_API_KEY:?Set CODEX_API_KEY before running SenseNova-RoboRSI evaluation}"
-export CODEX_API_KEY
+: "${ROBORSI_CODEX_BASE_URL:?Set ROBORSI_CODEX_BASE_URL before evaluation}"
+: "${ROBORSI_CODEX_MODEL:?Set ROBORSI_CODEX_MODEL before evaluation}"
+export CODEX_API_KEY ROBORSI_CODEX_BASE_URL ROBORSI_CODEX_MODEL
 
 bench_name=$1
 task_name=$2
@@ -22,6 +24,11 @@ eval_env_conda_env=${10}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
+
+if [[ -z "${ROBORSI_RUNTIME_STATE_DIR:-}" ]]; then
+    ROBORSI_RUNTIME_STATE_DIR="$(mktemp -d)"
+    export ROBORSI_RUNTIME_STATE_DIR
+fi
 
 if ! command -v setsid >/dev/null 2>&1; then
     echo "[MAIN][ERROR] setsid is required to clean up the policy and Codex processes" >&2

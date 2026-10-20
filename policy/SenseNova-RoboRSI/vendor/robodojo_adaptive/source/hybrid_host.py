@@ -52,8 +52,8 @@ def request(self, req):
             raise InvalidAction('Stale proposal cannot execute')
         decision=req['decision']; supplied=req['targets']
         span=req.get('approved_steps',5)
-        if type(span) is not int or not 5<=span<=50:
-            raise InvalidAction('approved_steps must be an integer from 5 to 50; default is 5')
+        if type(span) is not int or not 2<=span<=50:
+            raise InvalidAction('approved_steps must be an integer from 2 to 50; default is 5')
         if not isinstance(req['reason'],str) or not req['reason'].strip(): raise InvalidAction('Evidence-based review reason required')
         assessment=req['assessment']
         if not isinstance(assessment,dict) or set(assessment)!={'current_subgoal'} or not isinstance(assessment['current_subgoal'],str) or not assessment['current_subgoal'].strip():

@@ -36,6 +36,7 @@ def main():
     from policylab import codex
     from policylab.runner import run_experiment
 
+    cfg = local_runtime.resolve_runtime_config(cfg, expected_model=cfg.get("model") or None)
     hybrid_host.install()
     local_runtime.BWRAP = Path(request["bubblewrap"])
     codex.command = local_runtime.command

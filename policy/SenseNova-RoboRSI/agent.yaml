@@ -8,7 +8,7 @@ code:
   - hybrid_backend.py
 agent:
   planner: codex_cli
-  model: gpt-6-astra/azure_L/qwb
+  model: ""  # Required at runtime: ROBORSI_CODEX_MODEL
   reasoning_effort: max
   max_turns: null
   max_tokens: null
@@ -28,10 +28,10 @@ agent:
       model_auto_compact_token_limit: 60000
       web_search: disabled
       features.multi_agent: false
-      model_provider: tokenhub
-      model_providers.tokenhub.name: TokenHub
-      model_providers.tokenhub.base_url: https://tokenhub.sensetime.com/v1
-      model_providers.tokenhub.wire_api: responses
-      model_providers.tokenhub.env_key: CODEX_API_KEY
-      model_providers.tokenhub.stream_max_retries: 8
-      model_providers.tokenhub.request_max_retries: 8
+      model_provider: runtime
+      model_providers.runtime.name: Runtime
+      model_providers.runtime.base_url: ""  # Required: ROBORSI_CODEX_BASE_URL
+      model_providers.runtime.wire_api: responses
+      model_providers.runtime.env_key: CODEX_API_KEY
+      model_providers.runtime.stream_max_retries: 8
+      model_providers.runtime.request_max_retries: 8

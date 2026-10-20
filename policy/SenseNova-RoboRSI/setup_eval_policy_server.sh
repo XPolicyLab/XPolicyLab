@@ -6,10 +6,9 @@ if [[ $# -lt 9 || $# -gt 10 ]]; then
     exit 2
 fi
 : "${CODEX_API_KEY:?Set CODEX_API_KEY before starting the SenseNova-RoboRSI policy server}"
-export CODEX_API_KEY
-# Keep controller startup independent of caller Python environment settings.
-unset PYTHONHOME PYTHONPATH VIRTUAL_ENV
-export PYTHONNOUSERSITE=1
+: "${ROBORSI_CODEX_BASE_URL:?Set ROBORSI_CODEX_BASE_URL before starting the policy server}"
+: "${ROBORSI_CODEX_MODEL:?Set ROBORSI_CODEX_MODEL before starting the policy server}"
+export CODEX_API_KEY ROBORSI_CODEX_BASE_URL ROBORSI_CODEX_MODEL
 
 bench_name=$1
 task_name=$2
@@ -61,10 +60,17 @@ if [[ ! -x "${policy_python}" ]]; then
 fi
 
 export PYTHONUNBUFFERED=1
-export PYTHONPATH="${BENCH_ROOT}:${XPL_ROOT}"
+export PYTHONPATH="${BENCH_ROOT}:${XPL_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
 export CUDA_VISIBLE_DEVICES="${policy_gpu_id}"
 export PATH="$(dirname "${policy_python}"):${PATH}"
 cd "${XPL_ROOT}"
+
+trajectory_overrides=()
+if [[ -n "${ROBORSI_TRAJECTORY_DIR:-}" ]]; then
+    trajectory_value="$("${policy_python}" -c \
+        'import json, sys; print(json.dumps(sys.argv[1]))' "${ROBORSI_TRAJECTORY_DIR}")"
+    trajectory_overrides+=("trajectory_dir=${trajectory_value}")
+fi
 
 # Preflight and server share the exact interpreter and fixed deployment config.
 "${policy_python}" "${SCRIPT_DIR}/preflight.py" \
@@ -81,4 +87,5 @@ exec "${policy_python}" "${SCRIPT_DIR}/serve.py" \
         env_cfg_type="${env_cfg_type}" \
         seed="${seed}" \
         policy_name="${policy_name}" \
-        action_type="${action_type}"
+        action_type="${action_type}" \
+        "${trajectory_overrides[@]}"

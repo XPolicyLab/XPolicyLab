@@ -42,11 +42,13 @@ def reference():
 
 @pytest.fixture
 def cfg():
-    return json.loads(
+    config = json.loads(
         (
             P / "vendor/robodojo_adaptive/resources/fresh-configs/align_blocks-s0.json"
         ).read_text()
     )
+    config["model"] = "fixture-model"
+    return config
 
 
 def cli_config(executable):
@@ -57,12 +59,12 @@ def cli_config(executable):
             "expected_sha256": "f34a4d2301892ae96c90097786bfe5dc269f187b6f69faf42a7b357b8c081e35",
             "tools": "external",
             "inherit_env": False,
-            "env_vars": ["CODEX_API_KEY"],
+            "env_vars": ["CODEX_API_KEY", "NO_PROXY", "no_proxy", "HTTPS_PROXY"],
             "config_overrides": {
-                "model_provider": "tokenhub",
-                "model_providers.tokenhub.base_url": "https://tokenhub.sensetime.com/v1",
-                "model_providers.tokenhub.wire_api": "responses",
-                "model_providers.tokenhub.env_key": "CODEX_API_KEY",
+                "model_provider": "runtime",
+                "model_providers.runtime.base_url": "https://provider.example.invalid/v1",
+                "model_providers.runtime.wire_api": "responses",
+                "model_providers.runtime.env_key": "CODEX_API_KEY",
                 "model_auto_compact_token_limit": 60000,
             },
         }
@@ -97,7 +99,7 @@ def test_agent_config_custom_factory_reaches_embodied_agent(tmp_path):
             ],
             "agent": {
                 "planner": "codex_cli",
-                "model": "gpt-6-astra/azure_L/qwb",
+                "model": "fixture-model",
                 "reasoning_effort": "max",
                 "max_turns": None,
                 "max_tokens": None,
@@ -168,6 +170,9 @@ def test_launcher_uses_original_mounts_and_hides_secrets_in_memfd(
     }
     monkeypatch.setattr(planner, "preflight", lambda: identity)
     monkeypatch.setenv("CODEX_API_KEY", "fixture-api-secret")
+    monkeypatch.setenv("NO_PROXY", "localhost,provider.example.invalid")
+    monkeypatch.setenv("no_proxy", "lowercase.example.invalid")
+    monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example.invalid:8080")
     seen = {}
 
     class Input(io.BytesIO):
@@ -184,6 +189,8 @@ def test_launcher_uses_original_mounts_and_hides_secrets_in_memfd(
 
     planner._spawn = spawn
     personal_home = os.environ.get("HOME")
+    # A stale template must never override the resolved model on the planner.
+    cfg["model"] = "stale-template-model"
     returned = planner.launch_segment(
         cfg,
         run,
@@ -197,6 +204,11 @@ def test_launcher_uses_original_mounts_and_hides_secrets_in_memfd(
     assert "fixture-api-secret" not in repr(seen["argv"])
     assert "fixture-api-secret" not in repr(seen["env"])
     assert b"fixture-api-secret" in seen["options"]
+    for name, value in ((b"NO_PROXY", b"localhost,provider.example.invalid"),
+                        (b"no_proxy", b"lowercase.example.invalid"),
+                        (b"HTTPS_PROXY", b"http://proxy.example.invalid:8080")):
+        index = seen["options"].index(name)
+        assert seen["options"][index + 1] == value
     assert not any(b"auth.json" in part for part in seen["options"])
     for mount in [
         b"/training",
@@ -216,7 +228,10 @@ def test_launcher_uses_original_mounts_and_hides_secrets_in_memfd(
     boundary = seen["argv"].index("--")
     command = seen["argv"][boundary + 1 :]
     assert command[:4] == ["/codex", "exec", "resume", "same-session"]
-    assert 'model_providers.tokenhub.env_key="CODEX_API_KEY"' in command
+    assert 'model_providers.runtime.env_key="CODEX_API_KEY"' in command
+    assert command[command.index("--model") + 1] == "fixture-model"
+    assert 'model_providers.runtime.base_url="https://provider.example.invalid/v1"' in command
+    assert "stale-template-model" not in command
     assert seen["prompt"] == b"original prompt"
     assert not (tmp_path / "private-home/auth.json").exists()
     assert os.environ.get("HOME") == personal_home
@@ -467,3 +482,32 @@ def test_cancel_releases_backend_before_agent_close_without_experiment_lock():
     controller.cancel()
     assert calls == ["backend", "agent"]
     assert controller.next_action() is None
+
+
+def test_controller_cleanup_allows_3600_seconds_without_sleeping():
+    waits = []
+    backend = SimpleNamespace(cancel=lambda: None)
+
+    class Agent:
+        def bind_reference(self, _context):
+            return self
+
+        def close(self):
+            return None
+
+    controller = hybrid_agent.HybridController(Agent(), SimpleNamespace(backend=backend))
+    controller._thread = SimpleNamespace(
+        ident=1,
+        join=lambda timeout: waits.append(timeout),
+        is_alive=lambda: False,
+    )
+    controller.close()
+    assert waits == [3600.0]
+
+
+def test_terminal_rpc_timeout_includes_cleanup_and_ack_margin():
+    import yaml
+
+    config = yaml.safe_load((P / "deploy.yml").read_text())
+    assert config["request_timeout_s"] == 3660.0
+    assert config["request_timeout_s"] >= hybrid_agent.CONTROLLER_CLEANUP_TIMEOUT_SECONDS + 60

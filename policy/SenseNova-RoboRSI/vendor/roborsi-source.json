@@ -1,5 +1,5 @@
 {
-  "export_method": "Selected baseline Git files; unused duplicate ICL launch data omitted for the standard XPL adapter.",
+  "export_method": "Selected baseline Git files with explicit deployment-sanitized derivatives; unused duplicate ICL launch data omitted for the standard XPL adapter.",
   "files": {
     "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
     "README.md": "b290901f1d87bf8bb212a9a5661b6b9ed85d1766546b90511a8bce283f947e56",
@@ -110,7 +110,7 @@
     "roborsi/memory/manager.py": "1933ef2528f764014d78a0a7e8400006b664af4c699de0fb13ffb692abd44d69",
     "roborsi/memory/tools.py": "5027dd7274b0582b96551b7b01dbcb4f115adefb627d01a6ece508ee22682801",
     "roborsi/planner/__init__.py": "cea682833e65def08ec8c6f7260dc49e011079265bf86b33e99d4483b21ab2db",
-    "roborsi/planner/api_loop.py": "0598bb18277dae79042c4405c4503a69390fd708717c92c8f7028539ec19c655",
+    "roborsi/planner/api_loop.py": "17c5d4e83df5afdc3b96e3962d632eec23d4434bd42b25650eebdfd7ad25c38e",
     "roborsi/planner/base.py": "8364c93661345f4eebcf644aeebd8774b810a032f1cd6114797d55a96073c650",
     "roborsi/planner/check.py": "a7b9ddc3a77534c56281478d03f03a4ddb0b0ecb01c646f03aa3e20ee6b1e108",
     "roborsi/planner/claude_code.py": "b576815d94b06a40a36cd3927c076b9c9aa2b8c6ce80472b8f93d9952c51d1cc",
@@ -192,8 +192,8 @@
     "robots/robodojo/agents/icl_pi05/bridge.py": "5cbf8691395d8f2761c5e532b7ed5fb63e0e983ba991794f94dfbb394bb14a8c",
     "robots/robodojo/agents/icl_pi05/bwrap_transport.py": "8d68de5f01b403e6fbfb0299e8ec46a488e48d393134fd0e5672026d9e384fe0",
     "robots/robodojo/agents/icl_pi05/execution.py": "72dcd1a8b7d23c1ac33eff2fcfbcb1e9263bec6eb92f5755dc6cb836a31d3064",
-    "robots/robodojo/agents/icl_pi05/factory.py": "f9460e75b509bb05deafb057ef63de756e7464dd7553ba852232e3744ba5addb",
-    "robots/robodojo/agents/icl_pi05/host.py": "81abcff193ec9ab0f3f23ed98b9188d39fded453db369d91714aba689fe13c23",
+    "robots/robodojo/agents/icl_pi05/factory.py": "0667ab62e1ae06c9e1776050fe8ea873d4a10cd7051c07ebd5a788e515d25d42",
+    "robots/robodojo/agents/icl_pi05/host.py": "d3f07de6a6088fe30cb86264829062d02832d1e4391b44af606790e51cffc2e7",
     "robots/robodojo/agents/icl_pi05/identity.py": "b101c6aef43cbba810a9b05455248d73ac5ced06fd70eac6ed99ec0f9860fad6",
     "robots/robodojo/agents/icl_pi05/preparation.py": "443dc0a6da204f0b8b128e3588c3ab3db34bbc78f77eb780fc2324f96ee80909",
     "robots/robodojo/agents/icl_pi05/resume.py": "60ede9577df27a8d7b4dc0918ed6aac015f63635c0facff776f035c8199ae573",
@@ -1002,10 +1002,32 @@
         "sha256": "52daba98ec13b856f2a3433ae13e7cf38c598e601545803cc042a9746c7cdf48"
       }
     ],
-    "scope": "Source subset only. Retained Python, native evaluator, planner and transport bytes are unchanged.",
+    "scope": "Source subset with deployment-sanitized legacy ICL factory/host. Native evaluator, planner, transport and algorithm bytes are unchanged.",
     "upstream_manifest_sha256": "a9bc490283e42712b1d30da1c06862e1b3bc33eec1eb4129c1a4d539bf13ca26"
   },
   "schema_version": 1,
   "source_commit": "cfa591575172b638a8436fa95db28e9469785c9c",
-  "source_url": "https://github.com/SenseTime-FVG/RoboRSI.git"
+  "source_url": "https://github.com/SenseTime-FVG/RoboRSI.git",
+  "deployment_sanitization": {
+    "parent_manifest_sha256": "26b97acb5d9e421bf8760a910242aff8e12aa57e1325e6e7d534f8a7df06b22b",
+    "scope": "Legacy ICL factory accepts any explicit nonempty model; host resolves service/model through required environment variables. Policy effort, budgets, transport and evaluator behavior are unchanged. Provider-specific comment generalized without changing executable statements.",
+    "patches": [
+      {
+        "path": "robots/robodojo/agents/icl_pi05/factory.py",
+        "before_sha256": "f9460e75b509bb05deafb057ef63de756e7464dd7553ba852232e3744ba5addb",
+        "after_sha256": "0667ab62e1ae06c9e1776050fe8ea873d4a10cd7051c07ebd5a788e515d25d42"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/host.py",
+        "before_sha256": "81abcff193ec9ab0f3f23ed98b9188d39fded453db369d91714aba689fe13c23",
+        "after_sha256": "d3f07de6a6088fe30cb86264829062d02832d1e4391b44af606790e51cffc2e7"
+      },
+      {
+        "path": "roborsi/planner/api_loop.py",
+        "before_sha256": "0598bb18277dae79042c4405c4503a69390fd708717c92c8f7028539ec19c655",
+        "after_sha256": "17c5d4e83df5afdc3b96e3962d632eec23d4434bd42b25650eebdfd7ad25c38e"
+      }
+    ],
+    "identity_contract": "Legacy factory requires the environment model to match its prepared identity; launch rejects subsequent model drift."
+  }
 }

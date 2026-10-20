@@ -1,6 +1,7 @@
 ImageIO==2.38.0
 PyJWT==2.15.1
 PyYAML==6.0.3
+Pygments==2.21.0
 absl-py==2.5.0
 annotated-doc==0.0.5
 annotated-types==0.8.0
@@ -30,6 +31,7 @@ httpx-sse==0.4.3
 httpx2==2.13.1
 huggingface_hub==2.1.1
 idna==3.20
+iniconfig==2.3.0
 jiter==0.17.0
 json_repair==0.63.5
 jsonschema==4.26.0
@@ -45,6 +47,7 @@ opentelemetry-api==1.45.0
 packaging==26.3
 pillow==12.3.0
 pip==24.0
+pluggy==1.6.0
 prompt_toolkit==3.0.53
 pycparser==3.0
 pydantic==2.13.5
@@ -53,6 +56,8 @@ pydantic-ai-slim==2.52.0
 pydantic-graph==2.52.0
 pydantic-settings==2.15.0
 pydantic_core==2.46.5
+pytest==9.1.1
+pytest-timeout==2.4.0
 python-dotenv==1.2.4
 python-multipart==0.0.32
 referencing==0.37.0

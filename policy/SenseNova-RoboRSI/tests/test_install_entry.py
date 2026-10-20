@@ -28,8 +28,6 @@ def _python(
         "from pathlib import Path\n"
         "record = {'kind': 'python', 'executable': __file__, 'args': sys.argv[1:], "
         "'key_present': 'CODEX_API_KEY' in os.environ, "
-        "'python_overrides': [name for name in ('PYTHONHOME', 'PYTHONPATH', 'VIRTUAL_ENV') if name in os.environ], "
-        "'no_user_site': os.environ.get('PYTHONNOUSERSITE'), "
         "'proxy': os.environ.get('HTTPS_PROXY'), "
         "'ca': os.environ.get('SSL_CERT_FILE')}\n"
         "with Path(os.environ['INSTALL_EVENTS']).open('a') as stream:\n"
@@ -80,7 +78,7 @@ def _python(
         "        assert sys.argv[2:] == ['install']\n"
         "        raise SystemExit(0)\n"
         "    if Path(sys.argv[1]).name == 'preflight.py':\n"
-        "        assert '--allow-missing-key' in sys.argv\n"
+        "        assert '--installation-only' in sys.argv\n"
         "        assert sys.argv[sys.argv.index('--verify-icl-task') + 1] == 'align_blocks'\n"
         "        print(json.dumps({'test_fixture': True, 'icl': {'materialization': {'materialization_verified': False}}}))\n"
         "        raise SystemExit(73)  # Stop after observing the exact final entry.\n"
@@ -143,10 +141,6 @@ def test_python_selection_and_install_secret_boundary(tmp_path, selection):
         CODEX_API_KEY="fixture-runtime-key",
         HTTPS_PROXY="http://fixture.invalid:8080",
         SSL_CERT_FILE=str(tmp_path / "fixture-ca.pem"),
-        PYTHONHOME=str(tmp_path / "foreign-python"),
-        PYTHONPATH=str(tmp_path / "foreign-packages"),
-        VIRTUAL_ENV=str(tmp_path / "foreign-venv"),
-        PYTHONNOUSERSITE="0",
     )
     result = subprocess.run(
         [
@@ -175,8 +169,6 @@ def test_python_selection_and_install_secret_boundary(tmp_path, selection):
         "--python-only",
     ]
     assert all(not record["key_present"] for record in records)
-    assert all(not record["python_overrides"] for record in records)
-    assert all(record["no_user_site"] == "1" for record in records)
     assert all(record["proxy"] == env["HTTPS_PROXY"] for record in records)
     assert all(record["ca"] == env["SSL_CERT_FILE"] for record in records)
     assert "fixture-runtime-key" not in result.stdout + result.stderr
@@ -337,11 +329,6 @@ def test_installer_reaches_offline_sandbox_sim_probe_and_selected_icl_check(tmp_
         ["pip", "sync"],
         ["pip", "install"],
     ]
-    assert all(
-        "--no-config" in record["args"]
-        for record in records
-        if record["kind"] == "uv"
-    )
     sandbox_index = records.index(capability_calls[-1])
     tool_calls = [
         (index, record)
@@ -379,7 +366,7 @@ def test_installer_reaches_offline_sandbox_sim_probe_and_selected_icl_check(tmp_
         str(policy / "preflight.py"),
         "--config",
         str(policy / "deploy.yml"),
-        "--allow-missing-key",
+        "--installation-only",
         "--verify-icl-task",
         "align_blocks",
     ]

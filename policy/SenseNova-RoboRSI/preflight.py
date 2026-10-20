@@ -130,7 +130,7 @@ def load_submission(policy_dir: Path = POLICY_DIR) -> dict[str, Any]:
 def validate_adaptive_profile(metadata: dict[str, Any], policy_dir: Path) -> None:
     """Verify the separately pinned adaptive snapshot, including public interfaces."""
     hybrid = metadata.get("hybrid", {})
-    if hybrid.get("variant") != "adaptive_5_50":
+    if hybrid.get("variant") != "adaptive_2_50":
         raise ValueError("The submission requires its explicit adaptive hybrid profile")
     root = policy_dir / relative_artifact_path(
         hybrid.get("profile_path"), "hybrid.profile_path"
@@ -388,6 +388,7 @@ def check_runtime(
     config_path: Path,
     *,
     require_key: bool,
+    installation_only: bool = False,
     task_name: str | None = None,
     verify_icl_task: str | None = None,
 ) -> dict[str, Any]:
@@ -404,7 +405,9 @@ def check_runtime(
     model_cfg = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if not isinstance(model_cfg, dict):
         raise ValueError("deploy config must contain a mapping")
-    agent_config = load_agent_config(model_cfg, require_key=require_key)
+    agent_config = load_agent_config(
+        model_cfg, require_key=require_key, installation_only=installation_only
+    )
     cli = CodexCliConfig.from_dict(agent_config.document["agent"]["codex_cli"])
     environment = None
     if not require_key:
@@ -476,14 +479,16 @@ def check_runtime(
     return {
         "source_commit": metadata["source"]["commit"],
         "agent_label": metadata["agent_label"],
-        "model": agent_config.document["agent"]["model"],
-        "base_url": provider["model_providers.tokenhub.base_url"],
-        "wire_api": provider["model_providers.tokenhub.wire_api"],
+        "model": None if installation_only else agent_config.document["agent"]["model"],
+        "base_url": None if installation_only else provider["model_providers.runtime.base_url"],
+        "deployment_configured": not installation_only,
+        "wire_api": provider["model_providers.runtime.wire_api"],
         "executable": identity["executable"],
         "version": identity["version"],
         "sha256": identity["sha256"],
         "source_files": "verified against the authenticated source artifact manifest",
-        "check": "offline CLI identity and configuration; model access was not tested",
+        "check": ("offline installation checks; deployment settings and model access were not tested"
+                  if installation_only else "offline CLI identity and configuration; model access was not tested"),
         "key_required": require_key,
         "runtime_capabilities": capabilities,
         "icl": icl,
@@ -504,6 +509,10 @@ def main() -> int:
         "--allow-missing-key",
         action="store_true",
         help="permit only this offline configuration/version check without CODEX_API_KEY",
+    )
+    parser.add_argument(
+        "--installation-only", action="store_true",
+        help="validate installed artifacts and CLI offline without deployment settings or credentials",
     )
     parser.add_argument(
         "--task-name",
@@ -557,7 +566,8 @@ def main() -> int:
         else:
             result = check_runtime(
                 args.config.resolve(),
-                require_key=not args.allow_missing_key,
+                require_key=not (args.allow_missing_key or args.installation_only),
+                installation_only=args.installation_only,
                 task_name=args.task_name,
                 verify_icl_task=args.verify_icl_task,
             )

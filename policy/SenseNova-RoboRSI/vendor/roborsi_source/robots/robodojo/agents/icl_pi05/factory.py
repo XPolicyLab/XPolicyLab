@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shlex
 import shutil
 from pathlib import Path
@@ -54,12 +55,16 @@ def prepare_case(case_dir: Path, *, config: AgentConfig) -> dict:
     options = document.get("agent", {})
     if (
         options.get("planner") != "codex_cli"
-        or options.get("model") != "gpt-6-astra/azure_L/qwb"
+        or not isinstance(options.get("model"), str)
+        or not options["model"].strip()
         or options.get("reasoning_effort") != "max"
         or options.get("max_turns") is not None
         or options.get("max_tokens") is not None
     ):
-        raise ValueError("Original ICL requires its unchanged CLI model/effort/budgets")
+        raise ValueError("Original ICL requires an explicit CLI model and unchanged effort/budgets")
+    runtime_model = os.environ.get("ROBORSI_CODEX_MODEL", "").strip()
+    if not runtime_model or options["model"] != runtime_model:
+        raise ValueError("ROBORSI_CODEX_MODEL must match the explicit prepared agent model")
     if (
         options.get("planner_timeout_s") != 0
         or options.get("action_timeout_s") is not None
@@ -150,6 +155,7 @@ def prepare_case(case_dir: Path, *, config: AgentConfig) -> dict:
         directory / "preparation",
     )
     cfg = json.loads(cfg_path.read_text())
+    cfg["model"] = options["model"]
     # Native service verifies and executes the immutable packaged adapter.
     # The controller process replaces only its own transport with worker_proxy.
     cfg["adapter"] = str(ROOT / "source/hybrid_adapter.py") + ":Adapter"

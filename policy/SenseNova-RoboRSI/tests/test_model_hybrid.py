@@ -179,7 +179,8 @@ def adapter_factory(monkeypatch):
         },
     )
     monkeypatch.setenv("CODEX_API_KEY", "synthetic-hybrid-offline-key")
-    monkeypatch.delenv("ROBORSI_CODEX_BASE_URL", raising=False)
+    monkeypatch.setenv("ROBORSI_CODEX_BASE_URL", "https://provider.example.invalid/v1")
+    monkeypatch.setenv("ROBORSI_CODEX_MODEL", "fixture-model")
     models, services, planners, connections = [], [], [], []
     identifiers = itertools.count()
     temporary = tempfile.TemporaryDirectory(
@@ -188,11 +189,12 @@ def adapter_factory(monkeypatch):
 
     class FakeServer:
         def __init__(self, **kwargs):
-            self.options, self.closed, self.started, self.port = kwargs, False, 0, 19802
+            self.options, self.closed, self.started, self.port = kwargs, False, 0, kwargs["port"]
             services.append(self)
 
         def start(self):
             self.started += 1
+            self.port = 19803
             return self
 
         def close(self):
@@ -226,7 +228,7 @@ def adapter_factory(monkeypatch):
     import websockets.sync.client
 
     def connect(uri, **kwargs):
-        assert uri == "ws://127.0.0.1:19802"
+        assert uri == "ws://127.0.0.1:19803"
         assert kwargs["compression"] is None
         connection = Connection()
         connections.append(connection)
@@ -294,7 +296,7 @@ def adapter_factory(monkeypatch):
                     "import json,sys",
                     "from pathlib import Path",
                     "sys.path.insert(0,sys.argv[1])",
-                    "from robot import observe,act,vla_propose,vla_review",
+                    "from robot import observe,act,vla_propose,vla_review,reset as reset_episode",
                     "trace=Path(sys.argv[2])",
                     "def record(event,**values):",
                     "    with trace.open('a') as f: f.write(json.dumps(dict(event=event,**values))+'\\n')",
@@ -303,6 +305,10 @@ def adapter_factory(monkeypatch):
                     "record('observe',result=initial)",
                     f"behavior={behavior!r}",
                     "if behavior=='exit': sys.exit(9)",
+                    "if behavior=='finish':",
+                    "    result=reset_episode()",
+                    "    record('finish',result=result)",
+                    "    sys.exit(0)",
                     "try:",
                     "    act({'mode':'eef'})",
                     "    raise AssertionError('raw action bypassed review')",
@@ -389,12 +395,38 @@ def assert_joint_chunk(chunk):
     assert all(np.isfinite(value).all() for value in chunk[0].values())
 
 
+def test_original_no_reset_finish_control_is_terminal_without_a_joint_step(adapter_factory):
+    adapter = adapter_factory(behavior="finish")
+    model = adapter.model
+    model.reset()
+    model.update_obs(observation())
+    assert model.get_action() == [{"_roborsi_control": "finish"}]
+    controller = model._connector
+    backend = controller.context.backend
+    assert model._pending.kind == "finish"
+    assert model._step == backend.control_step == 0
+    with pytest.raises(ValueError, match="fresh update_obs"):
+        model.get_action()
+    model.end_episode(observation())
+    assert controller.done and controller.error is None
+    assert model._step == backend.control_step == 0
+    assert backend._metrics == {
+        "success": None, "source": "not_exposed_to_policy"
+    }
+    assert adapter.processes[0].poll() == 0
+    assert adapter.connections == []  # Finish did not ask VLA for a candidate.
+    finish = next(item["result"] for item in records(adapter.traces[0])
+                  if item["event"] == "finish")
+    assert finish["done"] is True and "success" not in finish
+
+
 def test_formal_model_original_review_feedback_and_terminal_unknown(adapter_factory):
     adapter = adapter_factory()
     model = adapter.model
     assert isinstance(model._agent_config, AgentConfig)
     model.reset()
     directory = model._directory
+    trajectory = model._trajectory_directory
     initial = observation()
     for step in range(8):
         model.update_obs(initial if step == 0 else observation(step))
@@ -447,10 +479,53 @@ def test_formal_model_original_review_feedback_and_terminal_unknown(adapter_fact
         assert not initial["vision"][camera]["color"].flags.writeable
     assert adapter.connections[0].closed
     assert adapter.processes[0].poll() == 0
-    assert not directory.exists() and model._connector is None
+    assert directory.is_dir() and model._connector is None
+    assert directory.is_relative_to(trajectory)
+    assert (directory / "agent/workspace").is_dir()
+    record = trajectory / "controller/episodes/evaluation-0001"
+    assert records(record / "actions.jsonl")[-1]["status"] == "completed"
+    transitions = records(record / "transitions.jsonl")
+    assert transitions[-1]["done"] is True
+    assert transitions[-1]["observation"]["control_step"] == 8
+    assert records(record / "native/vla_proposals_private.jsonl")
+    assert records(record / "vla_review.jsonl")[-1]["executed_steps"] == 3
+    for camera in CAMERAS:
+        pictures = sorted((trajectory / "controller/observations/evaluation-0001").glob(f"*_{camera}.png"))
+        assert len(pictures) >= 9 and pictures[-1].stat().st_size > 0
+    assert (trajectory / "controller/observations/latest.json").is_file()
+    assert not any(path.is_symlink() for path in (trajectory / "controller").rglob("*"))
+    assert all(path.resolve().is_relative_to(trajectory)
+               for path in directory.rglob("*") if path.is_symlink())
+    assert (directory / "agent/controller/config.json").is_file()
+    assert (directory / "agent/controller/segments/evaluation-0001/result.json").is_file()
+    assert (directory / "agent/codex-home").is_dir()
     assert len(adapter.services) == 1 and not adapter.services[0].closed
+    assert adapter.services[0].options["port"] == 0
     model.shutdown()
     assert adapter.services[0].closed
+    assert record.is_dir()
+
+
+def test_reset_and_shutdown_retain_separate_episode_trajectories(adapter_factory, tmp_path):
+    adapter = adapter_factory(trajectory_dir=str(tmp_path / "shared trajectories"))
+    model = adapter.model
+    model.reset()
+    first = model._trajectory_directory
+    model.update_obs(observation())
+    assert_joint_chunk(model.get_action())
+    model.end_episode(observation(1))
+    first_records = (first / "controller/episodes/evaluation-0001/transitions.jsonl").read_bytes()
+    model.reset()
+    second = model._trajectory_directory
+    assert first != second and first.parent == second.parent
+    assert first.is_relative_to(tmp_path / "shared trajectories")
+    model.update_obs(observation())
+    assert_joint_chunk(model.get_action())
+    model.end_episode(observation(1))
+    model.shutdown()
+    assert (first / "controller/episodes/evaluation-0001/transitions.jsonl").read_bytes() == first_records
+    assert records(second / "controller/episodes/evaluation-0001/transitions.jsonl")[-1]["done"] is True
+    assert len(list((tmp_path / "shared trajectories/align_blocks/seed-0").iterdir())) == 2
 
 
 def test_formal_model_first_dls_action_matches_reference_public_oracle(adapter_factory):
@@ -488,7 +563,8 @@ def test_reset_cancels_pending_review_and_isolates_episode_workspace(adapter_fac
     assert old_controller.done and not old_controller._thread.is_alive()
     assert adapter.processes[0].poll() is not None
     assert adapter.connections[0].closed
-    assert not old_directory.exists()
+    assert old_directory.is_dir()
+    assert (old_directory / "agent/workspace/previous-episode.txt").read_text() == "private episode"
     assert model._directory != old_directory
     model.update_obs(observation())
     model.get_action()
@@ -564,7 +640,8 @@ def test_bad_terminal_observation_still_closes_active_review(adapter_factory):
     assert controller.done and not controller._thread.is_alive()
     assert adapter.processes[0].poll() is not None
     assert adapter.connections[0].closed
-    assert model._connector is None and not directory.exists()
+    assert model._connector is None and directory.is_dir()
+    assert (directory / "episode-owner.json").is_file()
 
 
 def test_server_shutdown_registry_releases_pending_cli_and_owned_vla(adapter_factory):
@@ -579,7 +656,8 @@ def test_server_shutdown_registry_releases_pending_cli_and_owned_vla(adapter_fac
     assert adapter.processes[0].poll() is not None
     assert adapter.connections[0].closed and adapter.services[0].closed
     assert model._vla is None and model._connector is None
-    assert not directory.exists()
+    assert directory.is_dir()
+    assert json.loads((directory / "episode-owner.json").read_text())["closed"] is True
 
 
 def test_cli_exit_before_action_is_an_interface_failure_with_cleanup(
@@ -606,7 +684,8 @@ def test_cli_exit_before_action_is_an_interface_failure_with_cleanup(
     with pytest.raises(RuntimeError, match="hybrid Agent failed"):
         model.get_action()
     assert adapter.processes[0].poll() == 9
-    assert model._connector is None and not directory.exists()
+    assert model._connector is None and directory.is_dir()
+    assert (directory / "episode-owner.json").is_file()
 
 
 @pytest.mark.parametrize(
@@ -652,4 +731,5 @@ def test_instruction_list_and_bad_public_state_cleanup(adapter_factory):
         model.get_action()
     assert controller.done and not controller._thread.is_alive()
     assert adapter.processes[0].poll() is not None
-    assert model._connector is None and not directory.exists()
+    assert model._connector is None and directory.is_dir()
+    assert (directory / "episode-owner.json").is_file()

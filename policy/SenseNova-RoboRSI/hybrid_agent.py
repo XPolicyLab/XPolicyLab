@@ -7,6 +7,7 @@ import copy
 import hashlib
 import inspect
 import json
+import os
 import queue
 import shutil
 import socketserver
@@ -45,21 +46,29 @@ class HybridRunContext:
     agent_python: Path
     bubblewrap: Path
     bubblewrap_sha256: str
+    resume: dict | None = None
+    trajectory_dir: Path | None = None
 
 
-def build_evaluation_prompt(reference, cfg: dict) -> str:
+def build_evaluation_prompt(reference, cfg: dict, *, own_resume: bool = False) -> str:
     """Extract the original prompt expressions, preserving their exact bytes."""
     options = cfg.get("options", {})
     if not options.get("evaluation_independent") or options.get("review_allow_reset"):
         raise ValueError(
             "Hybrid requires the reference independent no-reset evaluation"
         )
-    if cfg.get("continue_from_run") or options.get("replay"):
+    if (cfg.get("continue_from_run") or options.get("replay")) and not own_resume:
         raise ValueError("A new official episode cannot adopt author evaluation state")
     source = inspect.getsource(reference.runner.run_experiment)
     tree = ast.parse(source)
-    guidance, stop, prompt, prefix = [], [], [], []
+    guidance, stop, prompt, prefix, recovery = [], [], [], [], []
     for node in ast.walk(tree):
+        if isinstance(node, ast.If) and isinstance(node.test, ast.BoolOp):
+            condition = ast.get_source_segment(source, node.test) or ""
+            if "replay_fresh_session" in condition and isinstance(
+                node.body[0], ast.AugAssign
+            ):
+                recovery.append(node)
         if isinstance(node, ast.Assign) and len(node.targets) == 1:
             name = node.targets[0]
             if isinstance(name, ast.Name) and name.id == "review_guidance":
@@ -93,7 +102,11 @@ def build_evaluation_prompt(reference, cfg: dict) -> str:
             prefix.append(node.value)
     if not all(len(nodes) == 1 for nodes in (guidance, stop, prompt, prefix)):
         raise ValueError("Original evaluation prompt structure changed")
-    expressions = ast.Module(body=[guidance[0], stop[0], prompt[0]], type_ignores=[])
+    if len(recovery) != 1:
+        raise ValueError("Original recovery prompt structure changed")
+    expressions = ast.Module(
+        body=[guidance[0], stop[0], recovery[0], prompt[0]], type_ignores=[]
+    )
     namespace = {
         "options": options,
         "experiment": SimpleNamespace(
@@ -103,6 +116,9 @@ def build_evaluation_prompt(reference, cfg: dict) -> str:
         "index": 0,
         "repeat_limit": options["max_repeat"],
         "resume_seconds": cfg["episode_seconds"],
+        "continuation": cfg.get("continue_from_run") if own_resume else None,
+        "replay": options.get("replay") if own_resume else None,
+        "episode": cfg["test_episodes"][0],
     }
     exec(
         compile(
@@ -192,11 +208,18 @@ class HybridEmbodiedAgent(EmbodiedAgent):
             ):
                 raise ValueError("Hybrid requires a fresh writable workspace")
             workspace.rmdir()
-        source = Path(context.prepared_workspace)
+        source = (
+            Path(context.resume.get("workspace_source", context.resume["source"])) / "agent/workspace"
+            if context.resume
+            else Path(context.prepared_workspace)
+        )
         if (
             source.is_symlink()
             or not source.is_dir()
-            or any(p.is_symlink() for p in source.rglob("*"))
+            or (
+                context.resume is None
+                and any(p.is_symlink() for p in source.rglob("*"))
+            )
         ):
             raise ValueError("Hybrid requires a complete materialized ICL workspace")
         if (
@@ -204,11 +227,25 @@ class HybridEmbodiedAgent(EmbodiedAgent):
             or not Path(context.public_instructions).is_file()
         ):
             raise ValueError("Hybrid public training material and interface must exist")
-        shutil.copytree(source, workspace)
+        shutil.copytree(source, workspace, symlinks=True)
         run = root / "controller"
         run.mkdir(mode=0o700)
+        trajectory = None
+        if context.trajectory_dir is not None:
+            trajectory = Path(context.trajectory_dir).resolve() / "controller"
+            trajectory.mkdir(mode=0o700)
         for name in ("tools", "observations", "checkpoints", "episodes", "segments"):
-            (run / name).mkdir()
+            if trajectory is not None and name in {"observations", "episodes"}:
+                (trajectory / name).mkdir()
+                (run / name).symlink_to(trajectory / name, target_is_directory=True)
+            else:
+                (run / name).mkdir()
+        if trajectory is not None:
+            # The original append-only controller records remain unmodified.
+            # Config, CLI home, sessions, tools and model logs stay private.
+            for name in ("requests.jsonl", "responses.jsonl", "episodes.jsonl"):
+                (trajectory / name).touch(exist_ok=False)
+                (run / name).symlink_to(trajectory / name)
         (run / "workspace").symlink_to(workspace, target_is_directory=True)
         shutil.copy2(
             context.reference.source_dir / "code/policylab/robot.py",
@@ -216,6 +253,7 @@ class HybridEmbodiedAgent(EmbodiedAgent):
         )
         shutil.copy2(context.public_instructions, run / "tools/BENCHMARK.md")
         cfg = copy.deepcopy(context.cfg)
+        cfg["model"] = self.model
         if len(cfg.get("test_episodes", [])) != 1:
             raise ValueError("Hybrid Controller must own exactly one official episode")
         cfg.update(
@@ -229,7 +267,13 @@ class HybridEmbodiedAgent(EmbodiedAgent):
             + ":Adapter",
         )
         (run / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
-        prompt = build_evaluation_prompt(context.reference, cfg)
+        if trajectory is not None:
+            config_path = trajectory / "config.json"
+            config_path.write_text(json.dumps(cfg, indent=2) + "\n")
+            config_path.chmod(0o600)
+        prompt = build_evaluation_prompt(
+            context.reference, cfg, own_resume=context.resume is not None
+        )
         (run / "provenance.json").write_text(
             json.dumps(
                 {
@@ -250,6 +294,8 @@ class HybridEmbodiedAgent(EmbodiedAgent):
             )
             + "\n"
         )
+        if trajectory is not None:
+            shutil.copyfile(run / "provenance.json", trajectory / "provenance.json")
         planner = HybridCodexCliPlanner(
             reference=context.reference,
             bubblewrap=context.bubblewrap,
@@ -292,9 +338,64 @@ class HybridEmbodiedAgent(EmbodiedAgent):
             target=server.serve_forever, kwargs={"poll_interval": 0.1}, daemon=True
         )
         server_thread.start()
+        attempt_started = time.monotonic()
+        summary = None
+        failure = None
+        budget_marker = os.environ.get("ROBORSI_EXECUTION_BUDGET_FILE")
         try:
+            if context.resume and budget_marker:
+                from .case_budget import write_execution_budget
+
+                write_execution_budget(Path(budget_marker), cfg["episode_seconds"], phase="replay")
             with experiment.lock:
                 experiment.reset_episode(cfg["test_episodes"][0])
+            if context.resume:
+                # Physical replay is part of this episode's cumulative wall budget.
+                replay_seconds = time.monotonic() - attempt_started
+                cfg["episode_seconds"] -= replay_seconds
+                if cfg["episode_seconds"] <= 0:
+                    raise TimeoutError(
+                        "Original cumulative episode wall budget exhausted during replay"
+                    )
+                (run / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
+                prompt = build_evaluation_prompt(
+                    context.reference, cfg, own_resume=True
+                )
+                if trajectory is not None:
+                    shutil.copyfile(run / "config.json", trajectory / "config.json")
+                provenance_path = run / "provenance.json"
+                provenance = json.loads(provenance_path.read_text())
+                provenance.update(
+                    evaluation_prompt_bytes=len(prompt.encode()),
+                    evaluation_prompt_sha256=hashlib.sha256(
+                        prompt.encode()
+                    ).hexdigest(),
+                )
+                provenance_path.write_text(json.dumps(provenance, indent=2) + "\n")
+                if trajectory is not None:
+                    shutil.copyfile(provenance_path, trajectory / "provenance.json")
+                # Original replay must have validated before any CLI launch.
+                from .hybrid_resume import read_json
+
+                validation = (
+                    read_json(
+                        run / "episodes/evaluation-0001/native/replay_validation.json"
+                    )
+                    if context.resume["step_offset"]
+                    else {"matched": True, "replayed_steps": 0}
+                )
+                if (
+                    validation.get("matched") is not True
+                    or validation["replayed_steps"] != context.resume["step_offset"]
+                ):
+                    raise ValueError("Native replay validation did not pass")
+                (run / "resume-validation.json").write_text(
+                    json.dumps(validation, indent=2) + "\n"
+                )
+            if budget_marker:
+                from .case_budget import write_execution_budget
+
+                write_execution_budget(Path(budget_marker), cfg["episode_seconds"], phase="agent")
             summary = reference.runner.run_segment(
                 experiment,
                 {**cfg, "_observation_episode": experiment.active["name"]},
@@ -317,6 +418,11 @@ class HybridEmbodiedAgent(EmbodiedAgent):
                     and summary["status"] not in {"finished", "budget_exhausted"}
                 )
             )
+            failure = (
+                "Original hybrid controller interrupted before native termination"
+                if failed
+                else None
+            )
             return PlannerResult(
                 stats={"hybrid_segment": summary, "native_success": None},
                 error="Original hybrid controller interrupted before native termination"
@@ -325,16 +431,50 @@ class HybridEmbodiedAgent(EmbodiedAgent):
                 error_kind="hybrid_controller" if failed else None,
                 stop_reason=summary["status"],
             )
+        except BaseException as exc:
+            failure = type(exc).__name__ + ": " + str(exc)
+            if (
+                context.resume
+                and isinstance(exc, BackendClosed)
+                and not (run / "resume-validation.json").exists()
+            ):
+                # Deferred public actions report a broken native ACK channel
+                # as BackendClosed. Bind it to the original infrastructure
+                # recovery category; state/scene validation errors stay fatal.
+                failure = "Simulator exited during native replay: " + failure
+            raise
         finally:
-            # A handler may be waiting for an official action acknowledgement
-            # while holding Experiment.lock. Release backend waits before join.
-            context.backend.cancel()
-            planner.cancel()
-            server.shutdown()
-            server.server_close()
-            server_thread.join(2)
-            bridge_dir.unlink(missing_ok=True)
-            socket_directory.cleanup()
+            try:
+                from .hybrid_resume import write_json
+
+                if summary is None:
+                    # Record measured interruption evidence, not a fabricated native outcome.
+                    summary = {
+                        "status": "interrupted",
+                        "returncode": None,
+                        "wall_seconds": time.monotonic() - attempt_started,
+                        "measurement_source": "v4_controller_finally",
+                    }
+                    write_json(run / "segments/evaluation-0001/result.json", summary)
+                write_json(
+                    run / "summary.json",
+                    {
+                        "status": "error" if failure else "completed",
+                        "error": failure,
+                        "segments": [summary],
+                        "native_success": None,
+                    },
+                )
+            finally:
+                # A handler may be waiting for an official action acknowledgement
+                # while holding Experiment.lock. Release backend waits before join.
+                context.backend.cancel()
+                planner.cancel()
+                server.shutdown()
+                server.server_close()
+                server_thread.join(2)
+                bridge_dir.unlink(missing_ok=True)
+                socket_directory.cleanup()
 
     def close(self):
         self._cancelled.set()
@@ -350,7 +490,8 @@ def make_agent(case_dir: Path, *, config: AgentConfig) -> HybridEmbodiedAgent:
     options = config.document.get("agent", {})
     if (
         options.get("planner") != "codex_cli"
-        or options.get("model") != "gpt-6-astra/azure_L/qwb"
+        or not isinstance(options.get("model"), str)
+        or not options["model"].strip()
         or options.get("reasoning_effort") != "max"
         or options.get("max_turns") is not None
         or options.get("max_tokens") is not None
@@ -370,6 +511,9 @@ def make_agent(case_dir: Path, *, config: AgentConfig) -> HybridEmbodiedAgent:
     return HybridEmbodiedAgent(
         mcp_servers=(), output_dir=case_dir, local_tools=(), **options
     )
+
+
+CONTROLLER_CLEANUP_TIMEOUT_SECONDS = 3600.0
 
 
 class HybridController:
@@ -432,7 +576,7 @@ class HybridController:
     def acknowledge(self, *args, **kwargs):
         return self.context.backend.acknowledge(*args, **kwargs)
 
-    def cancel(self, timeout: float = 35.0):
+    def cancel(self, timeout: float = CONTROLLER_CLEANUP_TIMEOUT_SECONDS):
         self._cancelled.set()
         self.context.backend.cancel()
         self.agent.close()

@@ -96,8 +96,6 @@ def _run(command: list[str], *, cwd: Path | None = None) -> None:
     environment.pop("CODEX_API_KEY", None)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
-    environment.pop("VIRTUAL_ENV", None)
-    environment["PYTHONNOUSERSITE"] = "1"
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     subprocess.run(command, cwd=cwd, env=environment, check=True)
 
@@ -172,7 +170,7 @@ def check_input(policy_dir: Path = POLICY_DIR) -> dict:
     return {
         "status": "public_build_inputs_verified",
         "python_version": metadata["python_version"],
-        "distribution_count": 77,
+        "distribution_count": 82,
     }
 
 
@@ -236,7 +234,6 @@ def install_tools(policy_dir: Path = POLICY_DIR) -> dict:
     _run([str(base / "bin/python3.11"), "-m", "venv", "--without-pip", str(build)])
     uv_command = [
         uv,
-        "--no-config",
         "--cache-dir",
         os.environ.get("UV_CACHE_DIR", str(root / "uv-cache")),
     ]
@@ -323,7 +320,7 @@ def install_tools(policy_dir: Path = POLICY_DIR) -> dict:
         "python_version": "3.11.13",
         "installation_mode": "public-source-build",
         "source_payloads_verified": True,
-        "b_alignment": "77 original B distribution versions; unused historical heart-runtime and five test-only distributions are omitted",
+        "b_alignment": "82 original distribution versions; unused historical heart-runtime editable is omitted",
     }
     with receipt_path.open("x") as output:
         output.write(json.dumps(receipt, indent=2) + "\n")

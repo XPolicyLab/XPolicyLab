@@ -90,18 +90,16 @@ def test_resolver_keeps_independent_venv_spelling(installed_tools):
         == policy / metadata["paths"]["runtime"] / "bin/python"
     )
     receipt = tools.validate_tool_install(policy, full=True)
-    assert receipt["distribution_count"] == 77
+    assert receipt["distribution_count"] == 82
     assert receipt["full_payload_verified"] is True
     assert receipt["source_payloads_verified"] is True
 
 
-def test_public_recipe_keeps_runtime_versions_without_development_packages():
+def test_public_recipe_keeps_original_versions_without_unused_editable():
     metadata = tools.load_tool_metadata(Path(tools.__file__).parent)
     packages = tools._packages(metadata["distributions"])
-    assert len(packages) == 77
-    assert {
-        "heart-runtime", "pytest", "pytest-timeout", "iniconfig", "pluggy", "pygments"
-    }.isdisjoint(packages)
+    assert len(packages) == 82
+    assert "heart-runtime" not in packages
     assert packages["openpi-client"] == "0.1.0"
     assert packages["openai-codex-cli-bin"] == "0.159.3"
     assert metadata["python_version"] == "3.11.13"
@@ -172,7 +170,7 @@ def test_generated_bytecode_does_not_change_source_inventory(installed_tools):
     bytecode = site / "openpi_client/__pycache__/generated.cpython-311.pyc"
     bytecode.parent.mkdir()
     bytecode.write_bytes(os.urandom(16))
-    assert tools.validate_tool_install(policy)["distribution_count"] == 77
+    assert tools.validate_tool_install(policy)["distribution_count"] == 82
 
 
 def test_explicit_root_cannot_silently_reuse_another_install(

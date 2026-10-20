@@ -82,6 +82,7 @@ if [[ "${eval_env_mode}" == "sim" ]]; then
     export ROBORSI_SIM_BENCH_ROOT="${ROBORSI_CLIENT_BENCH_ROOT}"
     export ROBORSI_SIM_PYTHON_PREFIX="${sim_prefix}"
     export ROBORSI_SIM_BOOTSTRAP_DIR="${ROBORSI_CLIENT_SCRIPT_DIR}/sim_bootstrap"
+    export ROBORSI_NATIVE_ENTRY="${ROBORSI_CLIENT_SCRIPT_DIR}/native_entry.py"
     export PYTHONPATH="${ROBORSI_SIM_BOOTSTRAP_DIR}${PYTHONPATH:+:${PYTHONPATH}}"
     # Missing native files or incompatible startup hooks fail before Kit/App.
     "${sim_python}" "${ROBORSI_CLIENT_SCRIPT_DIR}/sim_bootstrap/probe.py" --workspace "${ROBORSI_CLIENT_BENCH_ROOT}"
@@ -93,7 +94,7 @@ if [[ "${eval_env_mode}" == "sim" ]]; then
     python() {
         if [[ $# -ge 2 && "$1" == "-u" && "$2" == "src/eval_client/main.py" ]]; then
             PYTHONPATH="${ROBORSI_SIM_BOOTSTRAP_DIR}${PYTHONPATH:+:${PYTHONPATH}}" \
-                command python "$@"
+                command python -u "${ROBORSI_NATIVE_ENTRY}" --official-entry "$2" -- "${@:3}"
         else
             command python "$@"
         fi

@@ -53,19 +53,14 @@ def test_runtime_endpoint_is_explicit_cli_provider_configuration(
     model = adapter_factory().model
     agent = model._agent_config.document["agent"]
     provider = agent["codex_cli"]["config_overrides"]
-    assert provider["model_providers.tokenhub.base_url"] == endpoint
-    assert provider["model_providers.tokenhub.wire_api"] == "responses"
-    assert provider["model_providers.tokenhub.env_key"] == "CODEX_API_KEY"
+    assert provider["model_providers.runtime.base_url"] == endpoint
+    assert provider["model_providers.runtime.wire_api"] == "responses"
+    assert provider["model_providers.runtime.env_key"] == "CODEX_API_KEY"
     assert agent["codex_cli"]["expected_version"] == "codex-cli 0.160.1"
     assert agent["codex_cli"]["tools"] == "external"
     monkeypatch.delenv("ROBORSI_CODEX_BASE_URL")
-    restored = runtime_config.load_agent_config(model.model_cfg)
-    assert (
-        restored.document["agent"]["codex_cli"]["config_overrides"][
-            "model_providers.tokenhub.base_url"
-        ]
-        == runtime_config.BASE_URL
-    )
+    with pytest.raises(ValueError, match="ROBORSI_CODEX_BASE_URL"):
+        runtime_config.load_agent_config(model.model_cfg)
 
 
 def test_episode_id_is_isolated_without_mutating_parent_environment(
@@ -82,7 +77,7 @@ def test_episode_id_is_isolated_without_mutating_parent_environment(
         )
         assert (
             cli.config_overrides[
-                "model_providers.tokenhub.env_http_headers.X-Trajectory-Id"
+                "model_providers.runtime.env_http_headers.X-Trajectory-Id"
             ]
             == "ROBORSI_TRAJECTORY_ID"
         )
@@ -115,3 +110,18 @@ def test_private_login_file_is_rejected_before_agent_creation(adapter_factory):
     (adapter.directory / "runtime/preflight/codex-home/auth.json").write_text("{}")
     with pytest.raises(ValueError, match="auth.json"):
         runtime_config.load_agent_config(adapter.model.model_cfg)
+
+
+@pytest.mark.parametrize("missing", ["ROBORSI_CODEX_BASE_URL", "ROBORSI_CODEX_MODEL"])
+def test_missing_route_fails_before_runtime_or_vla(monkeypatch, missing):
+    monkeypatch.setenv("CODEX_API_KEY", "synthetic-unused-offline-key")
+    monkeypatch.delenv(missing, raising=False)
+
+    def must_not_start(*_args, **_kwargs):
+        pytest.fail("Missing deployment config must fail before runtime or VLA startup")
+
+    monkeypatch.setattr(model_module, "resolve_tool_python", must_not_start)
+    monkeypatch.setattr(model_module.Model, "_ensure_vla", must_not_start)
+    with pytest.raises(ValueError, match=missing):
+        model_module.Model({"bench_name": "RoboDojo", "env_cfg_type": "arx_x5",
+                            "action_type": "joint", "eval_batch": False})

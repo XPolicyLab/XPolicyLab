@@ -248,7 +248,7 @@ def main() -> int:
         ROBORSI_PYTHON=str(python),
         PATH=str(uv.parent) + os.pathsep + environment.get("PATH", "/usr/bin:/bin"),
     )
-    # The original bubblewrap checks must not inherit an inaccessible AFS TMPDIR.
+    # The original bubblewrap checks need an accessible local temporary directory.
     with tempfile.TemporaryDirectory(prefix="roborsi-install-", dir="/tmp") as scratch:
         environment["TMPDIR"] = scratch
         return subprocess.call(["bash", str(POLICY / "install.sh")], env=environment)

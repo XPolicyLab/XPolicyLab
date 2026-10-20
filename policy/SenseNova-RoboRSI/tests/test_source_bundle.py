@@ -111,14 +111,14 @@ print(json.dumps({"source": str(root), "benchmark": "robodojo", "imports": "pass
     assert json.loads(result.stdout)["imports"] == "passed"
 
 
-def test_vendor_subset_has_no_author_mount_paths_and_keeps_transport():
+def test_vendor_subset_has_no_private_keys_and_keeps_transport():
     vendor = POLICY_DIR / "vendor"
     for path in vendor.rglob("*"):
         if not path.is_file() or "__pycache__" in path.parts:
             continue
         raw = path.read_bytes()
-        assert b"/mnt/afs/" not in raw, path.relative_to(vendor)
-        assert b"/mnt/afs_e/" not in raw, path.relative_to(vendor)
+        assert b"-----BEGIN PRIVATE KEY-----" not in raw, path.relative_to(vendor)
+        assert b"-----BEGIN OPENSSH PRIVATE KEY-----" not in raw, path.relative_to(vendor)
     legacy = vendor / "roborsi_source/robots/robodojo/agents/icl_pi05"
     assert not (legacy / "resources").exists()
     assert not (legacy / "source").exists()

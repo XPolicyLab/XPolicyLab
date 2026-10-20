@@ -1,10 +1,13 @@
 # Build and run
 
-Extract the installation source ZIP so `XPolicyLab/` is directly inside the
-official RoboDojo workspace. It preserves the full XPolicyLab source tree and
-adds this policy; the PR changes only `policy/SenseNova-RoboRSI/`.
-A policy-only directory requires an existing compatible
-XPolicyLab checkout: installation also installs that framework from source.
+RC1 adapter: real evaluation acceptance for one shared VLA and ten concurrent cases per GPU is pending. This PR does not claim that concurrency validation has passed.
+
+Deploy the XPolicyLab repository directly inside the official RoboDojo workspace.
+This adapter lives at `policy/SenseNova-RoboRSI/` inside that repository.
+Keep the `XPolicyLab/policy/SenseNova-RoboRSI` layout: installation also installs
+the framework from `../..`, and evaluation needs its shared server and utilities.
+This package contains the `adaptive_2_50` source, allowing 2–50 approved steps
+with default 5; it does not contain an installed environment.
 Keep the official simulator image/Conda environment and Assets unchanged.
 
 ## Prerequisites
@@ -30,13 +33,11 @@ The installer does not modify system Python or install system packages.
 ## Independent model tools
 
 The installer downloads the fixed Python 3.11.13 standalone release, installs
-76 hash-locked packages, and builds `openpi-client==0.1.0`
+81 hash-locked packages, and builds `openpi-client==0.1.0`
 from included, authenticated sources. Build dependencies
 stay in a separate build environment. The resulting tool environment must contain
-exactly 77 distributions with the B-region versions. From the original 83,
-the unused historical `heart-runtime==0.0.0` editable installation and the
-test-only packages `pytest`, `pytest-timeout`, `iniconfig`, `pluggy` and
-`Pygments` are omitted. Tests run in a separate development environment.
+exactly 82 distributions with the pinned versions. The unused historical
+`heart-runtime==0.0.0` editable installation is omitted from the original 83.
 
 `tools/runtime.json` pins the interpreter, package locks and source identities.
 The adapter retains its original tool scripts, OpenPI client and sandbox
@@ -57,49 +58,49 @@ bash install.sh
 compilation or environment creation. Installation downloads public dependencies;
 it uploads nothing and requires no credentials.
 
-The bootstrap returns to `install.sh`, which installs the B controller
+The bootstrap returns to `install.sh`, which installs the pinned controller
 baseline (71 locked distributions plus source RoboRSI), five XPolicyLab runtime
 additions, two build packages and XPolicyLab itself. It separately installs the
-model tools, the independent VLA runtime, CLI, ICL and model assets. Public downloads need access
+model tools, VLA157, CLI, ICL and model assets. Public downloads need access
 to Python.org, PyPI, GitHub, Hugging Face and Google Storage. No model key is
 needed. The resulting virtualenv, caches and internal validation state remain
 local under ignored runtime paths and are not part of the source package.
 
-Once installation succeeds, use the single-case command in [README.md](README.md).
+Once installation succeeds, configure `ROBORSI_CODEX_BASE_URL`,
+`ROBORSI_CODEX_MODEL` and `CODEX_API_KEY` in your runtime environment, then use
+the single-case command in [README.md](README.md). The service URL and model
+have no defaults; evaluation fails early if either is missing or empty.
+Installation does not require these runtime values.
 Run with the same OS user that installed the private tools, and retain their
 physical directory (`runtime/tool-deployment` points to it). The official
 simulator interpreter and its activation hooks must be readable/executable by
 that user. Installation never rewrites the benchmark image or its permissions.
 
-## B-region alignment and dependency cleanup
+## Installation and validation boundaries
 
-The baseline is `b-region-roborsi-runtime-environment-20261016.md` and its
-GM runtime receipt. Each interpreter owns a separate lock; never combine their
-requirements or install policy Torch/JAX into the benchmark environment.
+Run `bash install.sh` at the final physical policy path. This entry performs the
+legacy source installation directly; it is not the separate benchmark-image
+`--plan` / `--install` dispatcher. Installed interpreters, private tool symlinks,
+checkpoints and receipts must be generated or verified at the new location. Do
+not copy an old receipt or rewrite absolute paths to claim installation success.
+Keep the source locks and manifests under `vendor/`, `tools/`, `pi05/`, `icl/`
+and `submission.json`: they authenticate the exact installation inputs.
 
-| Process | Python | Runtime dependency policy |
-| --- | --- | --- |
-| Controller | 3.10.12 | All 72 B distributions, plus the documented XPolicyLab and build additions |
-| Model-tool sandbox | 3.11.13 | 77 B versions; omit the unused editable and five test-only distributions |
-| pi0.5 service | 3.11.17 | 142 B versions; original OpenPI/LeRobot/augmax/numpydantic source overlays |
-| Benchmark simulator | Benchmark-owned | Use the official benchmark environment and activation scripts |
+The official workspace, complete native Assets, simulator Python 3.11.17 and
+activation hooks, and matching Kit extension bundle remain external
+prerequisites. `install.sh` prepares the policy, model-tool and VLA environments;
+it does not assemble those native benchmark inputs. Finish installation and
+offline preflight before sharing the code and weights between evaluations.
 
-The pi0.5 service uses the fixed checkpoint and tokenizer downloaded by this
-installer. Its runtime omits the unused `gcsfs`/Google Cloud/OAuth dependency
-group (14 distributions). Three packages in that group require a newer protobuf
-than B's `protobuf==4.25.8`; removing the unused group preserves the B inference
-versions without upgrading protobuf. Arbitrary uncached `gs://` downloads and
-training environments are outside this adapter's fixed inference path.
+The optional `environment/run.py` namespace launcher is included in this policy
+directory, but this PR supplies no deployment plan. Pass a current verified plan
+explicitly to `environment/run.py --plan /absolute/current-plan.json` when using
+that launcher. Direct installation and evaluation use the official workspace
+layout described above and generate their own local installation state.
 
-The five original `lerobot-0.1.0.dist-info` files and complete B157 package
-snapshot remain under `pi05/lerobot-metadata/` as provenance. They are not
-installed: their historical dependency declarations describe another LeRobot
-code tree, require unused simulator/training packages, and conflict with B's
-torchvision and wandb. The authenticated LeRobot source overlay remains active.
-`pytest` stays in the VLA runtime because its actual model sources import it.
-
-Installation clears inherited Python paths and active virtualenv selection,
-disables user site packages, and ignores unrelated uv configuration. The VLA
-check also requires `torch==2.7.1+cu126` and CUDA build `12.6`. The adapter's
-separately pinned Triton assembler remains 12.4.99; the baseline document does
-not establish the historical system assembler version.
+Shared VLA evaluation is opt-in through `ROBORSI_SHARED_VLA_PORT`; each case
+otherwise starts its own VLA. Acceptance for one shared VLA and ten concurrent
+cases per GPU remains pending. This PR includes no ten-case orchestration harness
+or concurrency validation results. Source installation, native simulator startup,
+shared-service concurrency and full task success require their respective checks
+in the target workspace.

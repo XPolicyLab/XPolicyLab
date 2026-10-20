@@ -1,7 +1,6 @@
-"""Keep B157 provenance separate from the local inference distribution set.
+"""Preserve original LeRobot metadata separately from its source overlay.
 
-The old LeRobot metadata describes a replaced PyPI source tree and training extras.
-Keep it as evidence, without installing its conflicting dependency declarations.
+The historical RECORD describes the original distribution before source replacement.
 Executable source identity is checked by pi05_runtime's independent overlay manifest.
 """
 
@@ -10,6 +9,8 @@ from __future__ import annotations
 import importlib.metadata
 import json
 import re
+import shutil
+import tempfile
 from pathlib import Path
 
 try:
@@ -19,32 +20,10 @@ except ImportError:
 
 
 METADATA_MANIFEST_SHA256 = (
-    "ef63c367dcca34d570166f07b57553c4e694f9dbf9be618fb53cddaf495a19a5"
+    "0acf1e99148532f0d10c41daac386ac88c6474abec75ea5601c86e9e53409614"
 )
 _FILES = {"INSTALLER", "METADATA", "RECORD", "REQUESTED", "WHEEL"}
 _DIRECTORY = "lerobot-0.1.0.dist-info"
-# Public checkpoint/tokenizer fetching uses the adapter's urllib installers.
-# Local inference needs neither GCS/OAuth clients nor stale PyPI LeRobot metadata.
-# Every retained distribution remains at its authenticated B version.
-EXCLUDED_RUNTIME_DISTRIBUTIONS = frozenset(
-    {
-        "gcsfs",
-        "google-api-core",
-        "google-auth",
-        "google-auth-oauthlib",
-        "google-cloud-core",
-        "google-cloud-storage",
-        "google-crc32c",
-        "google-resumable-media",
-        "googleapis-common-protos",
-        "lerobot",
-        "oauthlib",
-        "proto-plus",
-        "pyasn1",
-        "pyasn1-modules",
-        "requests-oauthlib",
-    }
-)
 
 
 def _canonical(name):
@@ -75,7 +54,7 @@ def _check_files(directory, files):
 
 
 def validate_lerobot_metadata(policy_dir):
-    """Authenticate the committed original metadata and complete B157 versions."""
+    """Authenticate the committed original metadata and complete 157-package versions."""
     policy = Path(policy_dir).resolve()
     root = policy / "pi05/lerobot-metadata"
     path = root / "manifest.json"
@@ -109,7 +88,7 @@ def validate_lerobot_metadata(policy_dir):
 
 
 def expected_runtime_distributions(policy_dir):
-    """Require the explicit inference subset with unchanged B reference versions."""
+    """Require exactly156 unchanged artifact pins plus original LeRobot metadata."""
     policy = Path(policy_dir).resolve()
     metadata = validate_lerobot_metadata(policy)
     lock = policy / "pi05/requirements.lock"
@@ -123,28 +102,45 @@ def expected_runtime_distributions(policy_dir):
         if name in pins:
             raise Pi05CheckpointError("pi0.5 runtime hash lock has duplicate pins")
         pins[name] = version
-    reference = metadata["runtime_distributions"]
-    if not EXCLUDED_RUNTIME_DISTRIBUTIONS <= reference.keys():
-        raise Pi05CheckpointError("pi0.5 runtime exclusions differ from B157 identity")
-    expected = {
-        name: version
-        for name, version in reference.items()
-        if name not in EXCLUDED_RUNTIME_DISTRIBUTIONS
-    }
-    if pins != expected:
-        raise Pi05CheckpointError(
-            "pi0.5 runtime hash lock differs from B157 inference subset"
-        )
+    expected = metadata["runtime_distributions"]
+    if len(pins) != 156 or {**pins, "lerobot": "0.1.0"} != expected:
+        raise Pi05CheckpointError("pi0.5 runtime hash lock differs from 157-package identity")
     return expected
 
 
+def install_lerobot_metadata(policy_dir, site):
+    """Copy only five original dist-info files; never install LeRobot source."""
+    metadata = validate_lerobot_metadata(policy_dir)
+    site = Path(site)
+    if site.is_symlink() or not site.is_dir():
+        raise Pi05CheckpointError("pi0.5 metadata destination is missing or linked")
+    destination = site / _DIRECTORY
+    if destination.exists() or destination.is_symlink():
+        _check_files(destination, metadata["files"])
+        return
+    staging = Path(tempfile.mkdtemp(prefix=".pi05-metadata-", dir=site))
+    try:
+        for name in metadata["files"]:
+            shutil.copyfile(
+                Path(policy_dir) / "pi05/lerobot-metadata" / name, staging / name
+            )
+            (staging / name).chmod(0o644)
+        _check_files(staging, metadata["files"])
+        staging.chmod(0o755)
+        staging.rename(destination)
+    finally:
+        if staging.exists():
+            shutil.rmtree(staging)
+
+
 def check_runtime_distributions(policy_dir, site):
-    """Check historical provenance and the inference set without importing VLA."""
+    """Check original metadata and the full distribution set without importing VLA."""
     import hashlib
 
     expected = expected_runtime_distributions(policy_dir)
     metadata = validate_lerobot_metadata(policy_dir)
     site = Path(site)
+    _check_files(site / _DIRECTORY, metadata["files"])
     actual = {}
     duplicates = []
     for distribution in importlib.metadata.distributions(path=[str(site)]):
@@ -164,7 +160,7 @@ def check_runtime_distributions(policy_dir, site):
     }
     if missing or extra or mismatches or duplicates:
         raise Pi05CheckpointError(
-            "pi0.5 inference distribution inventory differs: "
+            "pi0.5 157-package distribution inventory differs: "
             + json.dumps(
                 {
                     "missing": missing,
@@ -184,10 +180,4 @@ def check_runtime_distributions(policy_dir, site):
         ).hexdigest(),
         "lerobot_metadata_manifest_sha256": METADATA_MANIFEST_SHA256,
         "historical_RECORD": metadata["historical_RECORD"]["note"],
-        "reference_distribution_count": len(metadata["runtime_distributions"]),
-        "excluded_distributions": {
-            name: metadata["runtime_distributions"][name]
-            for name in sorted(EXCLUDED_RUNTIME_DISTRIBUTIONS)
-        },
-        "lerobot_metadata_installed": False,
     }

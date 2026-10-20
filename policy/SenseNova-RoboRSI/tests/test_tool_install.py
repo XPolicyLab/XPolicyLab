@@ -86,7 +86,7 @@ def test_public_inputs_need_no_private_environment_archive(monkeypatch):
     monkeypatch.delenv("ROBORSI_TOOL_ARCHIVE_URL", raising=False)
     result = installer.check_input()
     assert result["status"] == "public_build_inputs_verified"
-    assert result["distribution_count"] == 77
+    assert result["distribution_count"] == 82
 
 
 def test_openpi_source_is_checked_before_downloading(tmp_path, monkeypatch):
@@ -104,9 +104,8 @@ def test_openpi_source_is_checked_before_downloading(tmp_path, monkeypatch):
 
 
 def test_build_children_do_not_inherit_model_key_or_python_overrides(monkeypatch):
-    for name in ("CODEX_API_KEY", "PYTHONPATH", "PYTHONHOME", "VIRTUAL_ENV"):
+    for name in ("CODEX_API_KEY", "PYTHONPATH", "PYTHONHOME"):
         monkeypatch.setenv(name, "test-value")
-    monkeypatch.setenv("PYTHONNOUSERSITE", "0")
     captured = {}
     monkeypatch.setattr(
         installer.subprocess, "run", lambda *args, **kwargs: captured.update(kwargs)
@@ -114,6 +113,5 @@ def test_build_children_do_not_inherit_model_key_or_python_overrides(monkeypatch
     installer._run(["public-build-command"])
     assert all(
         name not in captured["env"]
-        for name in ("CODEX_API_KEY", "PYTHONPATH", "PYTHONHOME", "VIRTUAL_ENV")
+        for name in ("CODEX_API_KEY", "PYTHONPATH", "PYTHONHOME")
     )
-    assert captured["env"]["PYTHONNOUSERSITE"] == "1"

@@ -393,7 +393,7 @@ def test_sandbox_check_uses_original_memfd_args_and_private_child_environment(
     assert receipt["proc_layout_verified"] is True
     assert "proc_dev_ro_bind_verified" not in receipt
     assert receipt["model_or_api_used"] is False
-    assert receipt["tool_distribution_count"] == 77
+    assert receipt["tool_distribution_count"] == 82
     assert receipt["tools"]["python"] == "3.11.13"
     assert "heart_runtime_verified" not in receipt["tools"]
     assert "TEST_SECRET" not in json.dumps(receipt)
@@ -595,7 +595,7 @@ def test_sandbox_marker_cannot_hide_wrong_tool_identity(
         )
 
     monkeypatch.setattr(subprocess, "run", incorrect)
-    with pytest.raises(capabilities.RuntimeCapabilityError, match="complete 77"):
+    with pytest.raises(capabilities.RuntimeCapabilityError, match="complete 82"):
         capabilities.check_sandbox_capabilities(sandbox_policy)
 
 
@@ -622,11 +622,11 @@ def test_cli_missing_tools_is_nonzero_without_unfiltered_traceback(
     monkeypatch, capsys, tmp_path
 ):
     def missing(_policy):
-        raise tool_runtime.ToolRuntimeError("Original B tools are missing")
+        raise tool_runtime.ToolRuntimeError("Original tools are missing")
 
     monkeypatch.setattr(tool_runtime, "resolve_tool_python", missing)
     assert capabilities.main(["--policy-dir", str(tmp_path)]) == 1
     captured = capsys.readouterr()
-    assert "Original B tools are missing" in captured.err
+    assert "Original tools are missing" in captured.err
     assert "Traceback" not in captured.err
     assert captured.out == ""

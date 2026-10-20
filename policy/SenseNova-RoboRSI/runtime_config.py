@@ -11,15 +11,14 @@ from typing import Any
 from urllib.parse import urlsplit
 
 POLICY_DIR = Path(__file__).resolve().parent
-MODEL = "gpt-6-astra/azure_L/qwb"
-BASE_URL = "https://tokenhub.sensetime.com/v1"
+MODEL_ENV = "ROBORSI_CODEX_MODEL"
 BASE_URL_ENV = "ROBORSI_CODEX_BASE_URL"
 TRAJECTORY_ID_ENV = "ROBORSI_TRAJECTORY_ID"
 
 
 def resolve_base_url() -> str:
     """Resolve the public endpoint before putting it into recorded CLI settings."""
-    value = os.environ.get(BASE_URL_ENV, BASE_URL).strip()
+    value = os.environ.get(BASE_URL_ENV, "").strip()
     message = (
         f"{BASE_URL_ENV} must be a nonempty HTTP(S) base URL "
         "without embedded credentials, query parameters or fragments"
@@ -33,13 +32,21 @@ def resolve_base_url() -> str:
             and not parsed.password
             and not parsed.query
             and not parsed.fragment
-            and not any(character.isspace() for character in value)
+            and not any(character.isspace() or ord(character) < 32 or ord(character) == 127 for character in value)
         )
         parsed.port  # Reject malformed ports without echoing the original URL.
     except ValueError:
         raise ValueError(message) from None
     if not valid:
         raise ValueError(message)
+    return value
+
+
+def resolve_model() -> str:
+    """Require an explicit model route without recording invalid input."""
+    value = os.environ.get(MODEL_ENV, "").strip()
+    if not value or any(character.isspace() or ord(character) < 32 or ord(character) == 127 for character in value):
+        raise ValueError(f"{MODEL_ENV} must be a nonempty model route without whitespace or control characters")
     return value
 
 
@@ -52,6 +59,7 @@ def load_agent_config(
     model_cfg: dict[str, Any],
     *,
     require_key: bool = True,
+    installation_only: bool = False,
     episode_dir: Path | None = None,
     trajectory_id: str | None = None,
 ):
@@ -60,7 +68,13 @@ def load_agent_config(
 
     if require_key and not os.environ.get("CODEX_API_KEY", "").strip():
         raise ValueError("CODEX_API_KEY is required; set it in the runtime environment")
-    base_url = resolve_base_url()
+    if installation_only:
+        if require_key:
+            raise ValueError("installation_only is restricted to offline checks without a key")
+        # Explicit offline template validation, never an evaluation default.
+        base_url, model = "https://installation.invalid/v1", "installation-check"
+    else:
+        base_url, model = resolve_base_url(), resolve_model()
     pins = submission()
     cli = pins["cli"]
     if not cli.get("version") or not cli.get("expected_version"):
@@ -120,6 +134,7 @@ def load_agent_config(
         if name in os.environ
     )
     overrides = {
+        "agent.model": model,
         "agent.codex_cli.executable": str(runtime / "codex/bin/codex"),
         "agent.codex_cli.expected_version": cli["expected_version"],
         "agent.codex_cli.expected_sha256": cli["sha256"],
@@ -127,16 +142,15 @@ def load_agent_config(
         "agent.codex_cli.env_vars": forwarded,
         "agent.working_dir": str(workspace),
     }
-    if BASE_URL_ENV in os.environ:
-        # This is a literal dotted TOML key inside config_overrides. A JSON
-        # pointer preserves that key instead of creating nested dictionaries.
-        overrides[
-            "/agent/codex_cli/config_overrides/model_providers.tokenhub.base_url"
-        ] = base_url
+    # A JSON pointer keeps the literal dotted TOML key intact. The YAML
+    # template has no deployment defaults; both values are resolved above.
+    overrides[
+        "/agent/codex_cli/config_overrides/model_providers.runtime.base_url"
+    ] = base_url
     if trajectory_id is not None:
         overrides[
             "/agent/codex_cli/config_overrides/"
-            "model_providers.tokenhub.env_http_headers.X-Trajectory-Id"
+            "model_providers.runtime.env_http_headers.X-Trajectory-Id"
         ] = TRAJECTORY_ID_ENV
     config = AgentConfig.from_file(
         POLICY_DIR / "agent.yaml",
@@ -145,13 +159,13 @@ def load_agent_config(
     options = config.document["agent"]
     provider = options["codex_cli"]["config_overrides"]
     expected = {
-        "model_provider": "tokenhub",
-        "model_providers.tokenhub.base_url": base_url,
-        "model_providers.tokenhub.wire_api": "responses",
-        "model_providers.tokenhub.env_key": "CODEX_API_KEY",
+        "model_provider": "runtime",
+        "model_providers.runtime.base_url": base_url,
+        "model_providers.runtime.wire_api": "responses",
+        "model_providers.runtime.env_key": "CODEX_API_KEY",
     }
-    if options["planner"] != "codex_cli" or options["model"] != MODEL:
-        raise ValueError("The submitted RoboDojo planner/model has changed")
+    if options["planner"] != "codex_cli" or options["model"] != model:
+        raise ValueError("The configured RoboDojo planner/model has changed")
     if any(provider.get(key) != value for key, value in expected.items()):
         raise ValueError("The submitted Codex responses provider has changed")
     return config

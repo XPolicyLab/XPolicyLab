@@ -222,6 +222,7 @@ class PendingJointAction:
     request_id: int
     step_index: int
     action: dict[str, list[float]]
+    kind: str = "joint"
     _event: threading.Event = field(default_factory=threading.Event, repr=False)
     _delivered: bool = field(default=False, repr=False)
     _error: BaseException | None = field(default=None, repr=False)
@@ -242,6 +243,7 @@ class HybridBackend:
         expected_metadata_sha256: str,
         resource_root: Path,
         vla_port: int,
+        replay: dict | None = None,
     ):
         import json
 
@@ -361,6 +363,7 @@ class HybridBackend:
                 return {0: root_poses[robot.arm_name.split("_")[0]]}
 
         class Environment:
+            step_lim = step_limit
             robot_manager = Manager()
 
             @property
@@ -383,6 +386,8 @@ class HybridBackend:
                 self.vla_horizon, self.vla_port = 50, vla_port
                 self.record_dir = self.observation_dir = None
                 self.frame = 0
+                self.replay = copy.deepcopy(replay)
+                self.replay_consumed = False
                 self.kinematics = reference.DualKinematics(self.env)
 
             @property
@@ -400,6 +405,20 @@ class HybridBackend:
                     raise BackendClosed("Hybrid episode closed during VLA connection")
 
             def reset(self, episode, record_dir, observation_dir):
+                if self.replay is not None:
+                    from .hybrid_resume import original_replay_reset
+
+                    return original_replay_reset(
+                        reference,
+                        self,
+                        self._begin_reset,
+                        episode=episode,
+                        record_dir=record_dir,
+                        observation_dir=observation_dir,
+                    )
+                return self._begin_reset(episode, record_dir, observation_dir)
+
+            def _begin_reset(self, episode, record_dir, observation_dir):
                 with owner._lock:
                     if owner._reset:
                         raise reference.InvalidAction(
@@ -458,9 +477,7 @@ class HybridBackend:
 
             def finish(self):
                 if not owner._terminated:
-                    raise reference.InvalidAction(
-                        "The official evaluator owns episode termination"
-                    )
+                    owner._submit_finish()
                 return self._transition()
 
             def close(self):
@@ -542,6 +559,21 @@ class HybridBackend:
         if pending._error is not None:
             raise pending._error
 
+    def _submit_finish(self) -> None:
+        """Ask the native deploy owner to finalize; spend no control step."""
+        with self._lock:
+            if self._closed:
+                raise BackendClosed("Hybrid episode closed before finalization")
+            if self._pending is not None:
+                raise RuntimeError("A native action already awaits acknowledgement")
+            self._serial += 1
+            pending = PendingJointAction(self._serial, self._step, {}, kind="finish")
+            self._pending = pending
+            self._actions.put(pending)
+        pending._event.wait()
+        if pending._error is not None:
+            raise pending._error
+
     def next_action(self, timeout: float | None = None) -> PendingJointAction:
         if self._closed:
             raise BackendClosed("Hybrid episode is closed")
@@ -593,8 +625,10 @@ class HybridBackend:
                 or not pending._delivered
             ):
                 raise ValueError("Acknowledge only the current delivered native action")
+            if pending.kind == "finish" and not terminated:
+                raise ValueError("Native finalization requires terminal acknowledgement")
             self._latest, self._terminated, self._metrics = latest, terminated, metrics
-            self._step += 1
+            self._step += int(pending.kind == "joint")
             self._pending = None
             pending._event.set()
 

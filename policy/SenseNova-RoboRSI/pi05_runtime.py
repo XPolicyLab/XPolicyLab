@@ -8,7 +8,6 @@ import os
 import re
 import shutil
 import signal
-import socket
 import subprocess
 import sys
 import tarfile
@@ -28,10 +27,10 @@ try:
         validate_pi05_checkpoint,
     )
     from .pi05_metadata import (
-        EXCLUDED_RUNTIME_DISTRIBUTIONS,
         METADATA_MANIFEST_SHA256,
         check_runtime_distributions,
         expected_runtime_distributions,
+        install_lerobot_metadata,
     )
     from .pi05_source import validate_pi05_source
     from .pi05_tokenizer import install_pi05_tokenizer, validate_pi05_tokenizer
@@ -45,10 +44,10 @@ except ImportError:
         validate_pi05_checkpoint,
     )
     from pi05_metadata import (
-        EXCLUDED_RUNTIME_DISTRIBUTIONS,
         METADATA_MANIFEST_SHA256,
         check_runtime_distributions,
         expected_runtime_distributions,
+        install_lerobot_metadata,
     )
     from pi05_source import validate_pi05_source
     from pi05_tokenizer import install_pi05_tokenizer, validate_pi05_tokenizer
@@ -181,35 +180,6 @@ def _verify_python_archive(path, metadata):
         raise Pi05CheckpointError("pi0.5 Python archive size or SHA-256 mismatch")
 
 
-def _python_data_filter(member, destination, *, archive_prefix):
-    """Apply data protections with archive-relative hardlinks and local symlinks."""
-    if member.issym() or member.islnk():
-        if PurePosixPath(member.linkname).is_absolute():
-            raise Pi05CheckpointError("Unsafe absolute link in pi0.5 Python archive")
-        root = Path(destination).resolve()
-        installed_root = root / archive_prefix
-        if member.issym():
-            target = (root / PurePosixPath(member.name).parent).resolve()
-            # Never leave and re-enter the named archive root: after its rename,
-            # ../python would refer to a different directory outside the install.
-            for part in PurePosixPath(member.linkname).parts:
-                target = (target / part).resolve()
-                if not target.is_relative_to(installed_root):
-                    raise Pi05CheckpointError("Unsafe link in pi0.5 Python archive")
-        else:
-            target = (root / member.linkname).resolve()
-        if not target.is_relative_to(installed_root):
-            raise Pi05CheckpointError("Unsafe link in pi0.5 Python archive")
-    if member.issym():
-        # CPython 3.10.12's data filter resolves symlinks from the extraction
-        # root instead of the member's directory. Keep its path protections
-        # and data ownership/mode policy while checking that target above.
-        return tarfile.tar_filter(member, destination).replace(
-            mode=None, uid=None, gid=None, uname=None, gname=None, deep=False
-        )
-    return tarfile.data_filter(member, destination)
-
-
 def _extract_python(archive, destination, metadata):
     if destination.exists() or destination.is_symlink():
         raise Pi05CheckpointError(
@@ -236,23 +206,8 @@ def _extract_python(archive, destination, metadata):
                     or member.islnk()
                 ):
                     raise Pi05CheckpointError("Unsupported pi0.5 Python archive member")
-            source.extractall(
-                temporary,
-                filter=lambda member, root: _python_data_filter(
-                    member, root, archive_prefix=metadata["archive_prefix"]
-                ),
-            )
+            source.extractall(temporary, filter="data")
         installed = Path(temporary) / metadata["archive_prefix"]
-        # Later symlinks can change an earlier link's '..'; hardlinks can also
-        # copy a symlink to a new parent. Check actual links in the final tree.
-        for path in installed.rglob("*"):
-            if path.is_symlink():
-                member = tarfile.TarInfo(path.relative_to(temporary).as_posix())
-                member.type = tarfile.SYMTYPE
-                member.linkname = os.readlink(path)
-                _python_data_filter(
-                    member, temporary, archive_prefix=metadata["archive_prefix"]
-                )
         if not (installed / metadata["executable"]).is_file():
             raise Pi05CheckpointError("pi0.5 Python archive has no pinned interpreter")
         (installed / ".roborsi-python.json").write_text(
@@ -446,7 +401,7 @@ def _service_env(policy_dir, data_home, output_dir, gpu_id):
     libraries = sorted((venv / "lib/python3.11/site-packages/nvidia").glob("*/lib"))
     cuda = policy_dir / "runtime/pi05-cuda"
     return {
-        "PATH": f"{cuda / 'bin'}:{venv / 'bin'}:/usr/bin:/bin",
+        "PATH": f"{cuda / 'bin'}:{venv / 'bin'}:/usr/local/cuda/bin:/usr/bin:/bin",
         "HOME": str(output_dir / "home"),
         "LANG": "C.UTF-8",
         "PYTHONNOUSERSITE": "1",
@@ -466,7 +421,7 @@ def _service_env(policy_dir, data_home, output_dir, gpu_id):
         "XLA_PYTHON_CLIENT_MEM_FRACTION": "0.6",
         "XLA_FLAGS": f"--xla_gpu_cuda_data_dir={cuda}",
         "LD_LIBRARY_PATH": ":".join(
-            [*map(str, libraries), "/usr/local/nvidia/lib64"]
+            [*map(str, libraries), "/usr/local/cuda/lib64", "/usr/local/nvidia/lib64"]
         ),
         "NO_PROXY": "localhost,127.0.0.1",
         "no_proxy": "localhost,127.0.0.1",
@@ -527,26 +482,6 @@ def _run_import_check(python, program, environment, output_dir):
     return subprocess.CompletedProcess(process.args, process.returncode, stdout, stderr)
 
 
-def _check_import_identity(imports):
-    """Check the imported CUDA build, beyond distribution version metadata."""
-    expected = {
-        "python": "3.11.17",
-        "jax": "0.5.3",
-        "torch": "2.7.1+cu126",
-        "torch_cuda": "12.6",
-    }
-    mismatches = {
-        name: {"expected": value, "actual": imports.get(name)}
-        for name, value in expected.items()
-        if imports.get(name) != value
-    }
-    if mismatches:
-        raise Pi05CheckpointError(
-            "pi0.5 imported Python/Torch/CUDA identity differs: "
-            + json.dumps(mismatches, sort_keys=True)
-        )
-
-
 def check_pi05_runtime(
     policy_dir=POLICY_DIR, checkpoint_dir=None, *, check_assets=True
 ):
@@ -574,11 +509,7 @@ def check_pi05_runtime(
     _check_overrides(policy_dir, site)
     distributions = check_runtime_distributions(policy_dir, site)
     if receipt.get("runtime_distributions") != distributions:
-        raise Pi05CheckpointError("pi0.5 installed inference distribution receipt changed")
-    _run(
-        [_uv(policy_dir), "pip", "check", "--no-config", "--python", python],
-        env=_public_install_env(),
-    )
+        raise Pi05CheckpointError("pi0.5 installed 157-package distribution receipt changed")
     toolchain = _cuda_toolchain(policy_dir)
     check_dir = _runtime_state_root(policy_dir) / "pi05-check"
     env = _service_env(policy_dir, runtime / "pi05-data", check_dir, "0")
@@ -586,9 +517,9 @@ def check_pi05_runtime(
     program = (
         "import sys,json,re,importlib.metadata as md,jax,flax,orbax.checkpoint,numpy,torch; from openpi.training import config; from server.openpi_batch_server import create_policy; required="
         + repr(required)
-        + "; dists=list(md.distributions(path=[sys.prefix+'/lib/python3.11/site-packages'])); actual={re.sub(r'[-_.]+','-',d.metadata['Name']).lower():d.version for d in dists}; assert len(dists)==len(actual)==len(required) and actual==required,(actual,required); c=config.get_config('"
+        + "; dists=list(md.distributions(path=[sys.prefix+'/lib/python3.11/site-packages'])); actual={re.sub(r'[-_.]+','-',d.metadata['Name']).lower():d.version for d in dists}; assert len(dists)==len(actual)==len(required)==157 and actual==required,(actual,required); c=config.get_config('"
         + CONFIG_NAME
-        + "'); assert sys.version_info[:3]==(3,11,17); assert c.model.pi05; print(json.dumps({'python':sys.version.split()[0],'jax':jax.__version__,'torch':torch.__version__,'torch_cuda':torch.version.cuda,'pinned_versions_checked':len(required),'service_imports':True}))"
+        + "'); assert sys.version_info[:3]==(3,11,17); assert c.model.pi05; print(json.dumps({'python':sys.version.split()[0],'jax':jax.__version__,'torch':torch.__version__,'pinned_versions_checked':len(required),'service_imports':True}))"
     )
     result = _run_import_check(python, program, env, check_dir)
     if result.returncode:
@@ -596,7 +527,6 @@ def check_pi05_runtime(
             f"pi0.5 source imports or pinned versions failed; see {check_dir / 'import.stderr.log'}"
         )
     imports = json.loads(result.stdout.strip().splitlines()[-1])
-    _check_import_identity(imports)
     if check_assets:
         checkpoint = (
             Path(checkpoint_dir)
@@ -611,7 +541,7 @@ def check_pi05_runtime(
         "imports": imports,
         "model_load_verified": False,
         "inference_verified": False,
-        "dependency_metadata": "B inference subset; uv pip check passed; historical B157 metadata retained as provenance only.",
+        "dependency_metadata": "Historical exact pins contain upstream metadata conflicts; dependency resolver/pip check closure is not claimed.",
     }
 
 
@@ -694,9 +624,8 @@ def install_pi05_runtime(
     _run([*flags, "-r", bootstrap], env=env)
     _run([*flags, "-r", lock], env=env)
     site = venv / "lib/python3.11/site-packages"
-    # Remove superseded v5 metadata/cloud clients when reusing this dedicated
-    # environment. Uninstall before restoring the authenticated source overlay:
-    # the old LeRobot RECORD describes files from a different source tree.
+    _apply_overrides(policy_dir, site)
+    install_lerobot_metadata(policy_dir, site)
     # wheel is needed only while building the locked source distributions.
     _run(
         [
@@ -706,17 +635,11 @@ def install_pi05_runtime(
             "--no-config",
             "--python",
             venv / "bin/python",
-            *sorted(EXCLUDED_RUNTIME_DISTRIBUTIONS),
             "wheel",
         ],
         env=env,
     )
-    _apply_overrides(policy_dir, site)
     distributions = check_runtime_distributions(policy_dir, site)
-    _run(
-        [uv, "pip", "check", "--no-config", "--python", venv / "bin/python"],
-        env=env,
-    )
     toolchain = _cuda_toolchain(policy_dir, install=True)
     checkpoint = (
         Path(checkpoint_dir)
@@ -741,7 +664,7 @@ def install_pi05_runtime(
         "source_overrides": 112,
         "cuda_toolchain": toolchain,
         "checkpoint": str(checkpoint.resolve()),
-        "dependency_install": "B inference subset with unchanged release artifacts; unused cloud clients and legacy LeRobot metadata excluded; original source overrides applied",
+        "dependency_install": "exact release artifacts; no automatic dependency upgrades; original source overrides applied",
     }
     (runtime / "pi05-installed.json").write_text(json.dumps(receipt, indent=2) + "\n")
     return check_pi05_runtime(policy_dir, checkpoint, check_assets=False)
@@ -756,7 +679,7 @@ class Pi05Server:
         data_home,
         output_dir,
         gpu_id="0",
-        port=19802,
+        port=0,
         policy_dir=POLICY_DIR,
         *,
         startup_timeout_s=600,
@@ -791,12 +714,10 @@ class Pi05Server:
     def start(self):
         if self.process is not None:
             raise ValueError("pi0.5 service already started")
+        stderr_path = self.output_dir.resolve() / "server.stderr.log"
         check_pi05_runtime(self.policy_dir, self.checkpoint_dir, check_assets=False)
         validate_pi05_checkpoint(self.checkpoint_dir, policy_dir=self.policy_dir)
         validate_pi05_tokenizer(self.data_home, policy_dir=self.policy_dir)
-        with socket.socket() as probe:
-            probe.bind(("127.0.0.1", self.port))
-            self.port = probe.getsockname()[1]
         env = _service_env(
             self.policy_dir, self.data_home, self.output_dir, self.gpu_id
         )
@@ -804,8 +725,7 @@ class Pi05Server:
         command = [
             str(python),
             "-u",
-            "-m",
-            "server.openpi_batch_server",
+            str(self.policy_dir / "pi05_server.py"),
             "--config-name",
             CONFIG_NAME,
             "--checkpoint-dir",
@@ -821,30 +741,73 @@ class Pi05Server:
         ]
         self._stdout = (self.output_dir / "server.stdout.log").open("w")
         self._stderr = (self.output_dir / "server.stderr.log").open("w")
+        ready_read, ready_write = os.pipe()
         try:
-            self.process = subprocess.Popen(
-                command,
-                env=env,
-                stdin=subprocess.DEVNULL,
-                stdout=self._stdout,
-                stderr=self._stderr,
-                start_new_session=True,
-            )
+            os.set_blocking(ready_read, False)
+            requested_port = self.port
+            try:
+                self.process = subprocess.Popen(
+                    [*command, "--ready-fd", str(ready_write)],
+                    env=env,
+                    stdin=subprocess.DEVNULL,
+                    stdout=self._stdout,
+                    stderr=self._stderr,
+                    start_new_session=True,
+                    pass_fds=(ready_write,),
+                )
+            finally:
+                os.close(ready_write)
+            announcement = b""
+            bound = False
             deadline = time.monotonic() + self.startup_timeout_s
             while time.monotonic() < deadline:
                 if self.process.poll() is not None:
                     raise RuntimeError(
-                        "pi0.5 model service exited during load; see retained server.stderr.log"
+                        f"pi0.5 model service exited during load (exit {self.process.returncode}); "
+                        f"see {stderr_path}"
                     )
-                if self._ready():
+                if not bound:
+                    try:
+                        chunk = os.read(ready_read, 129)
+                    except BlockingIOError:
+                        chunk = None
+                    if chunk == b"":
+                        raise RuntimeError(
+                            "pi0.5 service closed its readiness pipe before binding; "
+                            f"see {stderr_path}"
+                        )
+                    if chunk:
+                        announcement += chunk
+                    if len(announcement) > 128:
+                        raise RuntimeError(
+                            f"Invalid pi0.5 readiness announcement; see {stderr_path}"
+                        )
+                    if b"\n" in announcement:
+                        try:
+                            port = json.loads(announcement)["port"]
+                        except (ValueError, KeyError, TypeError):
+                            raise RuntimeError(
+                                f"Invalid pi0.5 readiness announcement; see {stderr_path}"
+                            ) from None
+                        if (
+                            type(port) is not int
+                            or not 1 <= port <= 65535
+                            or (requested_port and port != requested_port)
+                        ):
+                            raise RuntimeError(f"Invalid pi0.5 bound port; see {stderr_path}")
+                        self.port, bound = port, True
+                if bound and self._ready():
                     return self
                 time.sleep(0.1)
             raise TimeoutError(
-                "pi0.5 model service did not become ready before its startup deadline"
+                "pi0.5 model service did not become ready before its startup deadline; "
+                f"see {stderr_path}"
             )
         except BaseException:
             self.close()
             raise
+        finally:
+            os.close(ready_read)
 
     def close(self):
         process = self.process

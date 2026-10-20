@@ -23,9 +23,6 @@ HybridBackend = import_module("XPolicyLab.policy.SenseNova-RoboRSI.hybrid_backen
 load_reference_source = import_module("XPolicyLab.policy.SenseNova-RoboRSI.hybrid_backend").load_reference_source
 
 POLICY_DIR = Path(__file__).resolve().parents[1]
-REFERENCE_MANIFEST_SHA = (
-    "4b0e976419a897493f21b39eb770de1ff5c4c5b4a863d18878ff9c869b69b6ec"
-)
 
 
 def sha(path):
@@ -34,11 +31,12 @@ def sha(path):
 
 @pytest.fixture(scope="session")
 def reference():
-    root = POLICY_DIR / "vendor/robodojo_adaptive"
-    if not (root / "provenance/source-files.json").is_file():
+    pins = json.loads((POLICY_DIR / "submission.json").read_text())["hybrid"]
+    manifest = POLICY_DIR / pins["manifest_path"]
+    if not manifest.is_file():
         pytest.fail("Missing adaptive vendor snapshot; no checkout fallback")
     modules = load_reference_source(
-        root / "source", root / "provenance/source-files.json", REFERENCE_MANIFEST_SHA
+        POLICY_DIR / pins["source_path"], manifest, pins["manifest_sha256"]
     )
     modules.hybrid_host.install()
     return modules
@@ -341,12 +339,12 @@ def test_reject_moves_nothing_then_allows_new_proposal(experiment, backend, vla)
     assert propose(experiment)["proposal_id"] != proposal["proposal_id"]
 
 
-@pytest.mark.parametrize("span", [True, 4, 51, 5.0])
+@pytest.mark.parametrize("span", [True, 1, 51, 5.0])
 def test_original_invalid_review_span_keeps_unmoved_proposal(
     experiment, backend, reference, vla, span
 ):
     proposal = propose(experiment)
-    with pytest.raises(reference.InvalidAction, match="integer from 5 to 50"):
+    with pytest.raises(reference.InvalidAction, match="integer from 2 to 50"):
         experiment.request(review(proposal, approved_steps=span))
     assert (
         backend.control_step == 0
@@ -471,6 +469,22 @@ def test_native_owner_controls_reset_and_termination(experiment, backend, refere
             record_dir=backend.directory / "native",
             observation_dir=backend.directory / "observations",
         )
-    with pytest.raises(reference.InvalidAction, match="owns episode termination"):
-        backend.request(op="finish")
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        result = executor.submit(backend.request, op="finish")
+        try:
+            pending = backend.next_action(timeout=2)
+            assert pending.kind == "finish" and pending.action == {}
+            assert pending.step_index == 0 and not result.done()
+            with pytest.raises(ValueError, match="terminal acknowledgement"):
+                backend.acknowledge(pending.request_id, observation())
+            assert backend.control_step == 0 and not result.done()
+            backend.acknowledge(pending.request_id, observation(), terminated=True)
+            reply = result.result(timeout=2)
+        finally:
+            if not result.done():
+                backend.cancel()
+    assert reply["done"] is True
+    assert reply["metrics"] == {
+        "success": None, "source": "not_exposed_to_policy"
+    }
     assert backend.control_step == 0

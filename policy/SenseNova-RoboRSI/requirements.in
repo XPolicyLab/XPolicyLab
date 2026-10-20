@@ -1,5 +1,5 @@
-# B-region RoboRSI controller baseline, verified 2026-10-16; Python 3.10.12.
-# Source: b-runtime-environment-gm-20261016.json, environments.controller.
+# Pinned RoboRSI controller baseline; Python 3.10.12.
+# Source provenance: authenticated controller environment snapshot.
 # Reference SHA256: 14e8b6a7bba175ffd27ae65bd38299e0c8fcf3a6a66cb734e3ee8f8a61ebd074
 # All 71 published distributions retain their recorded versions.
 # The 72nd distribution, roborsi==0.0.0, is installed from the authenticated
@@ -76,8 +76,8 @@ urllib3==2.8.0
 uvicorn==0.54.0
 wcwidth==0.9.2
 
-# Required XPolicyLab runtime additions; absent from the B controller baseline.
-# Existing B controller versions above must not be upgraded to satisfy these.
+# Required XPolicyLab runtime additions; absent from the original controller baseline.
+# Existing controller versions above must not be upgraded to satisfy these.
 opencv-python-headless==4.11.0.86
 h5py==3.13.0
 websockets==15.0.1
@@ -85,6 +85,6 @@ msgpack==1.1.0
 msgpack-numpy==0.4.8
 
 # Build additions for authenticated RoboRSI and editable XPolicyLab installation.
-# These are installation tools, not original B controller distributions.
+# These are installation tools, not original controller distributions.
 setuptools==79.0.1
 wheel==0.48.0

@@ -26,6 +26,10 @@
       "version": "6.0.3"
     },
     {
+      "name": "Pygments",
+      "version": "2.21.0"
+    },
+    {
       "name": "absl-py",
       "version": "2.5.0"
     },
@@ -142,6 +146,10 @@
       "version": "3.20"
     },
     {
+      "name": "iniconfig",
+      "version": "2.3.0"
+    },
+    {
       "name": "jiter",
       "version": "0.17.0"
     },
@@ -206,6 +214,10 @@
       "version": "24.0"
     },
     {
+      "name": "pluggy",
+      "version": "1.6.0"
+    },
+    {
       "name": "prompt_toolkit",
       "version": "3.0.53"
     },
@@ -236,6 +248,14 @@
     {
       "name": "pydantic_core",
       "version": "2.46.5"
+    },
+    {
+      "name": "pytest",
+      "version": "9.1.1"
+    },
+    {
+      "name": "pytest-timeout",
+      "version": "2.4.0"
     },
     {
       "name": "python-dotenv",
@@ -322,10 +342,10 @@
       "version": "2.5.0"
     }
   ],
-  "alignment": "B-region runtime distribution versions, excluding the unused historical heart-runtime editable and development-only pytest, pytest-timeout, iniconfig, pluggy, and Pygments; genuine original OpenPI client sources are built locally.",
+  "alignment": "Pinned distribution versions, excluding the unused historical editable package; authenticated OpenPI client sources are built locally.",
   "resources": {
-    "tools/requirements.in": "02d5f35d74f313c52d2a64f2b570b47a3d71542b54f4328b1c19798d728b29e9",
-    "tools/requirements.lock": "5addbe5d3d8daf8ddd51a33f2b5d0c8d9f65825397b0ac10a79eba70455ff994",
+    "tools/requirements.in": "345102d60ecb34c9cec262938088edf61383a3d1ce2687e23ae2947b08cca278",
+    "tools/requirements.lock": "d5f1eae6f409a59c069e4b325dd9d028632b68ba6914217a281c4a35241cf0e8",
     "tools/build.lock": "1b5e35106143f6cb96d4c5386589ee0b58ae2c3c342696ab6b88f6969d4d35df",
     "tools/openpi-client-files.json": "f88644155c6e2f1adc85eac202daa57ef388e3ea2ef2122984b9a9927d346d7e",
     "tools/openpi-client.pyproject.toml": "4c1fe34f31edea32c196afebf7f796c8e026f090e5e861769dd8d2053267c9cd"

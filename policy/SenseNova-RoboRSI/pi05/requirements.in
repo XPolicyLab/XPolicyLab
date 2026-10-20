@@ -1,7 +1,6 @@
-# Runtime subset of the audited B VLA environment; every retained version is unchanged.
-# Original B157 metadata remains provenance in lerobot-metadata/manifest.json.
-# Exclude unused GCS/OAuth clients and obsolete LeRobot distribution metadata.
-# The authenticated LeRobot/augmax/numpydantic source overlays remain required.
+# Exact installed package versions from the audited reference VLA environment.
+# Original LeRobot metadata and source overlays are delivered separately.
+# These 156 artifacts plus the original lerobot==0.1.0 metadata form the 157-distribution VLA runtime.
 absl-py==2.5.1
 aiohappyeyeballs==2.7.1
 aiohttp==3.14.5
@@ -32,8 +31,17 @@ filelock==4.1.0
 flax==0.10.2
 frozenlist==1.8.0
 fsspec==2025.3.0
+gcsfs==2025.3.0
 gitdb==4.0.12
 GitPython==3.2.0
+google-api-core==2.42.0
+google-auth==2.61.0
+google-auth-oauthlib==1.5.0
+google-cloud-core==2.8.0
+google-cloud-storage==3.17.0
+google-crc32c==1.9.0
+google-resumable-media==2.11.0
+googleapis-common-protos==1.75.5
 h5py==3.13.0
 hf-xet==1.7.0
 huggingface-hub==0.32.3
@@ -78,6 +86,7 @@ nvidia-cusparselt-cu12==0.6.3
 nvidia-nccl-cu12==2.26.2
 nvidia-nvjitlink-cu12==12.6.85
 nvidia-nvtx-cu12==12.6.77
+oauthlib==4.0.0
 omegaconf==2.3.0
 opencv-python-headless==4.11.0.86
 opentelemetry-api==1.45.1
@@ -91,9 +100,12 @@ platformdirs==4.13.0
 pluggy==1.6.0
 polars==1.30.0
 propcache==0.5.4
+proto-plus==1.29.0
 protobuf==4.25.8
 psutil==7.2.2
 pyarrow==20.0.0
+pyasn1==0.6.4
+pyasn1_modules==0.4.2
 pycparser==3.11
 pydantic==2.11.5
 pydantic_core==2.33.2
@@ -105,6 +117,7 @@ PyYAML==6.0.3
 pyyaml-include==1.4.1
 regex==2026.9.29
 requests==2.34.2
+requests-oauthlib==2.0.0
 rich==14.0.0
 safetensors==0.5.3
 scipy==1.15.3

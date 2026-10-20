@@ -81,9 +81,9 @@ def load_tool_metadata(policy_dir: Path) -> dict:
             or metadata.get("python_version") != "3.11.13"
         ):
             raise ValueError
-        if len(_packages(metadata["distributions"])) != 77:
+        if len(_packages(metadata["distributions"])) != 82:
             raise ToolRuntimeError(
-                "The model-tool runtime requires its 77 fixed distribution versions"
+                "The model-tool runtime requires its 82 fixed distribution versions"
             )
         for relative, digest in metadata["resources"].items():
             resource = policy / _relative(relative)
@@ -145,7 +145,7 @@ def _critical(root: str, path: str) -> bool:
 
 
 def validate_tool_install(policy_dir: Path, *, full: bool = False) -> dict:
-    """Verify the fixed interpreter, all 77 versions and original OpenPI sources."""
+    """Verify the fixed interpreter, all 82 versions and original OpenPI sources."""
     policy = Path(policy_dir)
     metadata = load_tool_metadata(policy)
     roots = {
@@ -238,7 +238,7 @@ def validate_tool_install(policy_dir: Path, *, full: bool = False) -> dict:
         )
     if _packages(distributions) != _packages(metadata["distributions"]):
         raise ToolRuntimeError(
-            "Model tools do not contain exactly the 77 fixed distribution versions"
+            "Model tools do not contain exactly the 82 fixed distribution versions"
         )
     python = roots["runtime"] / "bin/python"
     if (

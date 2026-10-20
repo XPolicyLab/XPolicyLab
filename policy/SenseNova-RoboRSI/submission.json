@@ -30,7 +30,8 @@
     ],
     "bundle_path": "vendor/roborsi_source",
     "manifest_path": "vendor/roborsi-source.json",
-    "manifest_sha256": "26b97acb5d9e421bf8760a910242aff8e12aa57e1325e6e7d534f8a7df06b22b"
+    "manifest_sha256": "890e4225232278f6a694be2d4c8a534443215a6ab74f3cc3d68dfa81828f3ed1",
+    "derivation": "Deployment-sanitized derivative; see source manifest for parent hashes and exact changed files."
   },
   "agent_label": "roborsi-codex-v1",
   "cli": {
@@ -59,18 +60,18 @@
     "artifacts_sha256": "a2ba217bf091b0a6ec17881da89ee12fbc54b3492e3c82050e93024d542349c5"
   },
   "hybrid": {
-    "variant": "adaptive_5_50",
+    "variant": "adaptive_2_50",
     "source_path": "vendor/robodojo_adaptive/source",
     "profile_path": "vendor/robodojo_adaptive",
     "manifest_path": "vendor/robodojo_adaptive/provenance/source-files.json",
-    "manifest_sha256": "4b0e976419a897493f21b39eb770de1ff5c4c5b4a863d18878ff9c869b69b6ec",
-    "version_kind": "content-pinned adaptive snapshot on the declared RoboRSI baseline; not part of that Git commit",
+    "manifest_sha256": "fa1b32e0740920c73f4b5de3e6b02358a83790167d3465e50be8e1366294f2e9",
+    "version_kind": "Pinned local adaptive 2-50 derivative with environment-configured deployment; algorithm and budgets preserved",
     "public_task_configs": 42,
     "original_source_files": 21,
     "terminal_feedback": false,
     "vla_horizon": 50,
     "approved_steps_default": 5,
-    "approved_steps_min": 5,
+    "approved_steps_min": 2,
     "approved_steps_max": 50,
     "robot_metadata_path": "hybrid/robot-metadata.json",
     "robot_metadata_sha256": "38e792047747232933d250508d1c56e0845081a24d34b32328c701ff21d69bb8",
@@ -78,6 +79,6 @@
   },
   "tool_runtime": {
     "manifest_path": "tools/runtime.json",
-    "manifest_sha256": "0acdf21ef10477b24376ca60a4c08d0279ee3b57a20eebd292e4c9da9801f663"
+    "manifest_sha256": "fb14b393e9338ab6920d12dba88264e7c028efc4b66b12b41a5949191f16443a"
   }
 }

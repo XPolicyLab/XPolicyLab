@@ -1,4 +1,4 @@
-"""B157 provenance stays distinct from the consistent inference environment."""
+"""157-package metadata and source identity stay independent during installation."""
 
 from __future__ import annotations
 
@@ -36,18 +36,14 @@ def write_distributions(site, versions):
 
 def complete_site(site):
     versions = metadata.expected_runtime_distributions(P)
-    write_distributions(site, versions)
+    write_distributions(site, {n: v for n, v in versions.items() if n != "lerobot"})
+    metadata.install_lerobot_metadata(P, site)
     return versions
 
 
-def test_original_metadata_and_complete_B157_identity_are_pinned():
+def test_original_metadata_and_complete_157_package_identity_are_pinned():
     original = metadata.validate_lerobot_metadata(P)
-    expected = metadata.expected_runtime_distributions(P)
-    assert len(expected) == 142
-    assert set(original["runtime_distributions"]) - set(expected) == (
-        metadata.EXCLUDED_RUNTIME_DISTRIBUTIONS
-    )
-    assert all(original["runtime_distributions"][n] == v for n, v in expected.items())
+    assert len(metadata.expected_runtime_distributions(P)) == 157
     assert original["runtime_distributions"]["lerobot"] == "0.1.0"
     assert "wheel" not in original["runtime_distributions"]
     assert original["files"]["METADATA"]["sha256"] == (
@@ -61,7 +57,7 @@ def test_original_metadata_and_complete_B157_identity_are_pinned():
     assert sum(bool(r[1]) for r in source) == 34
 
 
-def test_source_overlay_preserves_all100_files_without_legacy_distribution(tmp_path):
+def test_metadata_install_preserves_original_RECORD_and_all100_source_files(tmp_path):
     site = tmp_path / "site-packages"
     site.mkdir()
     runtime._apply_overrides(P, site)
@@ -71,18 +67,22 @@ def test_source_overlay_preserves_all100_files_without_legacy_distribution(tmp_p
         if p.is_file()
     }
     assert len(before) == 100
-    metadata.validate_lerobot_metadata(P)
+    metadata.install_lerobot_metadata(P, site)
+    metadata.install_lerobot_metadata(P, site)
     assert before == {
         p.relative_to(site): p.read_bytes()
         for p in (site / "lerobot").rglob("*")
         if p.is_file()
     }
     runtime._check_overrides(P, site)
-    assert not (site / "lerobot-0.1.0.dist-info").exists()
+    assert (site / "lerobot-0.1.0.dist-info/RECORD").read_bytes() == (
+        P / "pi05/lerobot-metadata/RECORD"
+    ).read_bytes()
+    assert (site / "lerobot-0.1.0.dist-info").stat().st_mode & 0o777 == 0o755
 
 
 @pytest.mark.parametrize("mutation", ["changed", "extra", "symlink"])
-def test_committed_reference_tampering_is_rejected(tmp_path, mutation):
+def test_committed_metadata_tampering_is_rejected_before_copy(tmp_path, mutation):
     policy = copy_policy_metadata(tmp_path / "policy")
     source = policy / "pi05/lerobot-metadata"
     if mutation == "changed":
@@ -96,42 +96,41 @@ def test_committed_reference_tampering_is_rejected(tmp_path, mutation):
     site = tmp_path / "site"
     site.mkdir()
     with pytest.raises(Pi05CheckpointError, match="metadata"):
-        metadata.expected_runtime_distributions(policy)
+        metadata.install_lerobot_metadata(policy, site)
     assert not list(site.iterdir())
 
 
-@pytest.mark.parametrize("linked", [False, True])
-def test_legacy_distribution_metadata_cannot_reenter_runtime(tmp_path, linked):
+def test_existing_foreign_or_linked_metadata_is_not_overwritten(tmp_path):
     site = tmp_path / "site"
-    complete_site(site)
+    site.mkdir()
     target = site / "lerobot-0.1.0.dist-info"
-    if linked:
-        target.symlink_to(P / "pi05/lerobot-metadata", target_is_directory=True)
-    else:
-        write_distributions(site, {"lerobot": "0.1.0"})
+    target.symlink_to(P / "pi05/lerobot-metadata", target_is_directory=True)
+    with pytest.raises(Pi05CheckpointError, match="linked"):
+        metadata.install_lerobot_metadata(P, site)
+    target.unlink()
+    target.mkdir()
+    (target / "RECORD").write_text("foreign metadata")
     with pytest.raises(Pi05CheckpointError, match="inventory"):
-        metadata.check_runtime_distributions(P, site)
+        metadata.install_lerobot_metadata(P, site)
+    assert (target / "RECORD").read_text() == "foreign metadata"
 
 
-def test_runtime_lock_drift_cannot_silently_redefine_B157(tmp_path):
+def test_runtime_lock_drift_cannot_silently_redefine_157_packages(tmp_path):
     policy = copy_policy_metadata(tmp_path / "policy")
     lock = policy / "pi05/requirements.lock"
     lock.write_text(lock.read_text().replace("numpy==1.26.4", "numpy==2.5.4"))
-    with pytest.raises(Pi05CheckpointError, match="B157"):
+    with pytest.raises(Pi05CheckpointError, match="157-package"):
         metadata.expected_runtime_distributions(policy)
 
 
 def test_full_distribution_inventory_requires_exact_set_without_imports(tmp_path):
     expected = complete_site(tmp_path / "site")
     result = metadata.check_runtime_distributions(P, tmp_path / "site")
-    assert result["count"] == 142 and result["versions"] == expected
+    assert result["count"] == 157 and result["versions"] == expected
     assert (
         result["lerobot_metadata_manifest_sha256"] == metadata.METADATA_MANIFEST_SHA256
     )
     assert "does not attest" in result["historical_RECORD"]
-    assert result["reference_distribution_count"] == 157
-    assert not result["lerobot_metadata_installed"]
-    assert set(result["excluded_distributions"]) == metadata.EXCLUDED_RUNTIME_DISTRIBUTIONS
 
 
 def test_nested_vendor_metadata_does_not_redefine_runtime_distribution_scope(
@@ -142,11 +141,11 @@ def test_nested_vendor_metadata_does_not_redefine_runtime_distribution_scope(
     vendor = tmp_path / "nested-setuptools-vendor"
     write_distributions(vendor, {"wheel": "0.43.0"})
     monkeypatch.syspath_prepend(str(vendor))
-    assert metadata.check_runtime_distributions(P, site)["count"] == 142
+    assert metadata.check_runtime_distributions(P, site)["count"] == 157
 
 
 @pytest.mark.parametrize(
-    "mutation", ["wheel", "unknown", "missing", "version", "duplicate", "cloud"]
+    "mutation", ["wheel", "unknown", "missing", "version", "duplicate", "record"]
 )
 def test_runtime_inventory_rejects_extras_missing_duplicates_or_changed_metadata(
     tmp_path, mutation
@@ -164,12 +163,12 @@ def test_runtime_inventory_rejects_extras_missing_duplicates_or_changed_metadata
     elif mutation == "duplicate":
         write_distributions(site, {"NumPy": "1.26.4"})
     else:
-        write_distributions(site, {"gcsfs": "2025.3.0"})
+        (site / "lerobot-0.1.0.dist-info/RECORD").write_text("rewritten record")
     with pytest.raises(Pi05CheckpointError, match="metadata|inventory"):
         metadata.check_runtime_distributions(P, site)
 
 
-def test_installer_removes_legacy_cloud_distributions_and_preserves_source(
+def test_installer_keeps_wheel_build_only_and_receipts_exact_157_packages(
     tmp_path, monkeypatch
 ):
     policy = copy_policy_metadata(tmp_path / "policy")
@@ -202,19 +201,10 @@ def test_installer_removes_legacy_cloud_distributions_and_preserves_source(
         calls.append(argv)
         if "uninstall" in argv:
             assert argv[-1] == "wheel"
-            assert metadata.EXCLUDED_RUNTIME_DISTRIBUTIONS <= set(argv)
             shutil.rmtree(site / "wheel-0.48.0.dist-info")
-            for name in metadata.EXCLUDED_RUNTIME_DISTRIBUTIONS:
-                for directory in site.glob(f"{name.replace('-', '_')}-*.dist-info"):
-                    shutil.rmtree(directory)
         elif "-r" in argv:
             if argv[-1].endswith("pi05-bootstrap.lock"):
                 write_distributions(site, {"wheel": "0.48.0"})
-                original = metadata.validate_lerobot_metadata(policy)["runtime_distributions"]
-                write_distributions(
-                    site,
-                    {n: original[n] for n in metadata.EXCLUDED_RUNTIME_DISTRIBUTIONS},
-                )
             else:
                 versions = metadata.expected_runtime_distributions(policy)
                 write_distributions(
@@ -244,14 +234,10 @@ def test_installer_removes_legacy_cloud_distributions_and_preserves_source(
     result = runtime.install_pi05_runtime(
         policy, checkpoint_dir=tmp_path / "checkpoint"
     )
-    assert len(calls) == 4 and calls[2][-1] == "wheel"
-    assert calls[-1][1:3] == ["pip", "check"]
-    assert result["runtime_distributions"]["count"] == 142
+    assert len(calls) == 3 and calls[-1][-1] == "wheel"
+    assert result["runtime_distributions"]["count"] == 157
     assert "wheel" not in result["runtime_distributions"]["versions"]
-    assert not metadata.EXCLUDED_RUNTIME_DISTRIBUTIONS & (
-        result["runtime_distributions"]["versions"].keys()
-    )
-    assert not (site / "lerobot-0.1.0.dist-info").exists()
+    assert result["runtime_distributions"]["versions"]["lerobot"] == "0.1.0"
     assert (
         result["lerobot_metadata_manifest_sha256"] == metadata.METADATA_MANIFEST_SHA256
     )

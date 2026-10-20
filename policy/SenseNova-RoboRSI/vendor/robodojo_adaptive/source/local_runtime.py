@@ -1,8 +1,9 @@
-"""Machine-specific launcher only; use the supplied framework and adapter unchanged."""
+"""Portable deployment launcher; policy/controller behavior is unchanged."""
 import json
 import os
 from pathlib import Path
 import sys
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / 'code'))
@@ -12,15 +13,44 @@ BWRAP = ROOT.parents[2] / "runtime/codex/codex-resources/bwrap"
 ORIGINAL_COMMAND = codex.command
 
 
+def resolve_runtime_config(cfg, *, expected_model=None):
+    """Resolve required deployment settings without embedding service defaults."""
+    values = {}
+    for key, field in (("ROBORSI_CODEX_BASE_URL", "model_base_url"),
+                       ("ROBORSI_CODEX_MODEL", "model")):
+        value = os.environ.get(key, "").strip()
+        if not value or any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in value):
+            raise ValueError(f"{key} must be a nonempty value without whitespace")
+        values[field] = value
+    try:
+        endpoint = urlsplit(values["model_base_url"])
+        valid = (
+            endpoint.scheme in {"http", "https"}
+            and endpoint.hostname
+            and endpoint.username is None
+            and endpoint.password is None
+            and not endpoint.query
+            and not endpoint.fragment
+        )
+        endpoint.port
+    except ValueError:
+        valid = False
+    if not valid:
+        raise ValueError("ROBORSI_CODEX_BASE_URL must be an HTTP(S) URL without credentials, query or fragment")
+    if expected_model is not None and values["model"] != expected_model:
+        raise ValueError("ROBORSI_CODEX_MODEL differs from the prepared model identity")
+    return {**cfg, **values}
+
+
 def command(cfg, session=None):
     cmd = ORIGINAL_COMMAND(cfg, session)
-    extra = ['-c', 'features.multi_agent=false', '-c', 'model_provider="tokenhub"',
-             '-c', 'model_providers.tokenhub.name="TokenHub"',
-             '-c', 'model_providers.tokenhub.base_url="https://tokenhub.sensetime.com/v1"',
-             '-c', 'model_providers.tokenhub.env_key="ROBOPROBE_MODEL_KEY"',
-             '-c', 'model_providers.tokenhub.wire_api="responses"',
-             '-c', 'model_providers.tokenhub.stream_max_retries=8',
-             '-c', 'model_providers.tokenhub.request_max_retries=8']
+    extra = ['-c', 'features.multi_agent=false', '-c', 'model_provider="runtime"',
+             '-c', 'model_providers.runtime.name="Runtime"',
+             '-c', 'model_providers.runtime.base_url=' + json.dumps(cfg['model_base_url']),
+             '-c', 'model_providers.runtime.env_key="CODEX_API_KEY"',
+             '-c', 'model_providers.runtime.wire_api="responses"',
+             '-c', 'model_providers.runtime.stream_max_retries=8',
+             '-c', 'model_providers.runtime.request_max_retries=8']
     return cmd[:-1] + extra + cmd[-1:]
 
 
@@ -50,15 +80,18 @@ def sandbox_command(cfg, run, private_home, cmd):
              '--setenv', 'PATH', '/runtime/bin:/usr/bin:/bin',
              '--setenv', 'PYTHONPATH', '/tools', '--setenv', 'LANG', 'C.UTF-8',
              '--setenv', 'TERM', 'xterm',
-             '--setenv', 'ROBOPROBE_MODEL_KEY', os.environ['ROBOPROBE_MODEL_KEY'],
+             '--setenv', 'CODEX_API_KEY', os.environ['CODEX_API_KEY'],
              '--chdir', '/workspace']
     episode = cfg.get('_observation_episode')
     if episode:
         argv += ['--dir', '/observations', '--ro-bind', str(run/'observations'/episode), '/observations/'+episode]
     else:
         argv += ['--ro-bind', str(run/'observations'), '/observations']
-    for name in ['NO_PROXY', 'no_proxy']:
-        argv += ['--setenv', name, 'localhost,127.0.0.1,tokenhub.sensetime.com']
+    # Forward only caller-selected proxy behavior; no private routing defaults.
+    for name in ('HTTPS_PROXY', 'HTTP_PROXY', 'ALL_PROXY', 'NO_PROXY',
+                 'https_proxy', 'http_proxy', 'all_proxy', 'no_proxy'):
+        if name in os.environ:
+            argv += ['--setenv', name, os.environ[name]]
     return argv + ['--'] + cmd
 
 
@@ -69,7 +102,7 @@ def main():
     hybrid_host.install()
     codex.command = command
     codex.sandbox_command = sandbox_command
-    cfg = load_config(sys.argv[1])
+    cfg = resolve_runtime_config(load_config(sys.argv[1]))
     run,summary=run_experiment(cfg, sys.argv[2] if len(sys.argv)>2 else str(Path.cwd()/"runs"))
     print(json.dumps({'run': str(run), **summary}, indent=2), flush=True)
     return 0 if summary['status'] == 'completed' else 1

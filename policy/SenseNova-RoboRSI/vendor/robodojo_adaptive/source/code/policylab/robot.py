@@ -57,14 +57,14 @@ def vla_propose(subgoal):
 
 
 def vla_review(proposal_id, decision, reason, assessment, targets=None, approved_steps=5):
-    """GPT reviews the proposal: accept, modify or reject with replacement targets."""
+    """Review 2-50 targets: accept, modify or reject; omitted length defaults to 5."""
     return call({"op": "vla_review", "proposal_id": proposal_id,
                  "decision": decision, "reason": reason, "assessment": assessment,
                  "targets": targets, "approved_steps": approved_steps})
 
 
 def vla_review_and_propose(proposal_id, decision, reason, assessment, next_subgoal, targets=None, approved_steps=5):
-    """Batch the SAME reviewed waypoint execution and next unmoved proposal.
+    """Batch the SAME reviewed 2-50 targets and next unmoved proposal; default 5.
 
     No motion can skip GPT review. The next proposal uses updated measured state
     and cameras, and still requires a NEW GPT accept/modify/reject decision.

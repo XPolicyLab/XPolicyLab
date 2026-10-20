@@ -771,6 +771,10 @@ fsspec==2025.3.0 \
     --hash=sha256:a935fd1ea872591f2b5148907d103488fc523295e6c64b835cfad8c3eca44972 \
     --hash=sha256:efb87af3efa9103f94ca91a7f8cb7a4df91af9f74fc106c9c7ea0efd7277c1b3
     # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+gcsfs==2025.3.0 \
+    --hash=sha256:afbc2b26a481de66519e9cce7762340ef4781ce01c6663af0d63eda10f6d2c9c \
+    --hash=sha256:f68d7bc24bd4b944cd55a6963b9fd722c7bd5791f46c6aebacc380e648292c04
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
 gitdb==4.0.12 \
     --hash=sha256:5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571 \
     --hash=sha256:67073e15955400952c6565cc3e707c554a4eea2e428946f7a4c162fab9bd9bcf
@@ -778,6 +782,67 @@ gitdb==4.0.12 \
 gitpython==3.2.0 \
     --hash=sha256:bd70c5ec05cd2b797423e7eb312147d2458d3cca92085888fba2213f85905537 \
     --hash=sha256:fb92310af6844d96adc95ca066ed2e617c00e1dbd146a326626c81e72e18cc2e
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-api-core==2.42.0 \
+    --hash=sha256:82cf5daa2ef1b456d4e29ff1de1a5c2995c7be3ccf4fc608184326e03390c1ee \
+    --hash=sha256:b1bdf4f72dc4f910736ce4ba49038352effbbc309579215107649b22973a1317
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-auth==2.61.0 \
+    --hash=sha256:37f0815967322e8c32b12bf422531e8b637cafdaae0acbb9141117cfe6a96f23 \
+    --hash=sha256:ca60266a37475ae68b63bac007272f46094b3d571abe92aded329b6cfb568025
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-auth-oauthlib==1.5.0 \
+    --hash=sha256:71625fdea21c6c03217eb9ff13741c3096e6d257ebca0ad084dbd6e9f4aa4ef4 \
+    --hash=sha256:b351107c7dd9017f426cbb0272ea1bc04f469020fd18f4443c7d40362e0b1510
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-cloud-core==2.8.0 \
+    --hash=sha256:365f8e4518ae81c8101b8dea5fc1c32a960badedb8b511f19db2843cbbd285d2 \
+    --hash=sha256:e235b0952f7ffe7b9c71a4cf96b506d9cfb557e22557c412f0df9b7068b5d007
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-cloud-storage==3.17.0 \
+    --hash=sha256:0b89283fccf84745bae75bbefdbda8393e5323471071a2ba24ab437407141171 \
+    --hash=sha256:4373aa6328e070c31c97aa236f1600a239dfd3c85e5870cdf3dc2a928dfe0bca
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-crc32c==1.9.0 \
+    --hash=sha256:0568b17ed90ac596f29400d99e243fd0cc6276766183def888d1bf8d1dc13827 \
+    --hash=sha256:0abe7e202c25909869c35672ab0f2fe748a7acf276eb78577332a7c38999740f \
+    --hash=sha256:13179f7e3282617923e957b8e54b8f9c3968030f48640a9f47fd7c5c38c4a215 \
+    --hash=sha256:16865b477d7941712cb0e0aad8ad4815e984fb5fc16d3fdaef7d986e26e53c95 \
+    --hash=sha256:265233aff33d835f5b909584fe36ab29647b598c271b661a300001099109e53e \
+    --hash=sha256:280f3a3e47af0eeba3a3e5aa7d311af77001812b8df80fb8beafcd0b40eaf7f1 \
+    --hash=sha256:3abb18297d9ef0ab120531838be0e6d68c9fa876570e11c229c48f2edac23ce7 \
+    --hash=sha256:43a2dc26f9be213fbe0b4fc4a1088c5d45cbfcb3247420ccc820f0fc3edeea86 \
+    --hash=sha256:4488f1553a9ab7e86cdedc833374a7e904031803b995dc0bd0be48c271fa6556 \
+    --hash=sha256:457d0d9a4718fd52b1494eac5c200ad25beeadbdc91843d550a003910838589f \
+    --hash=sha256:51cb4e23a38ad4f495f35f87c233ca3ea6b9c4559e7ac383cdef786fab0f7977 \
+    --hash=sha256:53fdafef58e230d0c946ab5f8446d123d9f548230a73b29c8b41c9546f268bc1 \
+    --hash=sha256:56610f548f1b35c9568b9d1de30423480f505dae4991556072d5802820ff35c4 \
+    --hash=sha256:5695c8b9327e040b2aba12c6659b0acb5995314ef0af0192da66e662e011103b \
+    --hash=sha256:6a3b2c8a343c570ed8100a7627c20badfd92c6caa2067093a86be45af27f5b1b \
+    --hash=sha256:7b8c84c3d159ab6817fe3f74e6e6cef099c3f95dcec3abc0d8afb1404642efbe \
+    --hash=sha256:8535e75dfead304f30e9122b9ea2c0a570dbaa52c176a0a591540c7914c1e46d \
+    --hash=sha256:8583ec21d56b565d68ab2963cc7e21b3b271247c29b04286068255ef65f221bd \
+    --hash=sha256:86764b99e7a607830d93cb5b75e0ec3ff6cb06d3c274624418473cee701900d4 \
+    --hash=sha256:8b91f41645b15a720357183fa5716682ada441873e3c462c15f9714be36f146b \
+    --hash=sha256:af73200fa9791ccd380f3598235dba8d82b8af0905df045b3dc60b59836e8ddd \
+    --hash=sha256:ccfe40021fd6afe23361175cf7551e3cef5fd34dc1ebe319f14993a83579e0eb \
+    --hash=sha256:dee799544cae42a42b17a88e38b59cf2c271051dc001da2117a8ff240ffa0548 \
+    --hash=sha256:e6b529a6a287104ec79d281c411685231200ce954a29c28ab8e5093cb6e130fb \
+    --hash=sha256:e6e8be8a94436079cb5340f6d495d9d7ba30124d8b952703994c739c7c06e236 \
+    --hash=sha256:f1dc17d987ddcc5eba12a7ce48f0eb93141dea236b170c1101151396edf2f0cf \
+    --hash=sha256:f2b64641bca27497b986b9d87883014035aa904cb4fa333407c6752b3afee9ba \
+    --hash=sha256:f894a2877650b56201d26a012a257b76d54a68834dc3913a93830ca8a047b075 \
+    --hash=sha256:f97c3806dcea41c29c04965347b0e12481561b75e0045dc7a4f69d75dec5d9b1 \
+    --hash=sha256:fb63a8d7fa2e95dcff1ca16af2f4d88b526fa5ff72d1696285884ac2d49b6963 \
+    --hash=sha256:fbef61a3794e011c65fb4396a196cf123a7f474fe5a443db8e5dd7d751b9e6d4
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+google-resumable-media==2.11.0 \
+    --hash=sha256:f43d15e6a7f818f762eaead0f369c551f8275a4179c9d6225d0d259f49b87b5d \
+    --hash=sha256:febd83686752799661b4de575f0b993c5c25c349a5362556fc4d7be164056a37
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+googleapis-common-protos==1.75.5 \
+    --hash=sha256:c7a866fc34ed29a3b10af627a4b9b1dc2433313ca6e959f0ae4feb132047ed72 \
+    --hash=sha256:d7285525c23039db98f2463e6d5a4f9b958b94d497f03a844ece3259c4e72d5d
     # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
 h5py==3.13.0 \
     --hash=sha256:10894c55d46df502d82a7a4ed38f9c3fdbcb93efb42e25d275193e093071fade \
@@ -1482,6 +1547,10 @@ nvidia-nvtx-cu12==12.6.77 \
     --hash=sha256:b90bed3df379fa79afbd21be8e04a0314336b8ae16768b58f2d34cb1d04cd7d2 \
     --hash=sha256:f44f8d86bb7d5629988d61c8d3ae61dddb2015dee142740536bc7481b022fe4b
     # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+oauthlib==4.0.0 \
+    --hash=sha256:624c28c13a0a59cabf9747dfa52af63be3e512a7f2714df16e91b5b3a145e6cd \
+    --hash=sha256:efb274799819440f95b4ab3b818869f1ce9ae26c5beacba0201d1a1b76b54f86
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
 omegaconf==2.3.0 \
     --hash=sha256:7b4df175cdb08ba400f45cae3bdcae7ba8365db4d165fc65fd04b050ab63b46b \
     --hash=sha256:d5d4b6d29955cc50ad50c46dc269bcd92c6e00f5f90d23ab5fee7bfca4ba4cc7
@@ -1803,6 +1872,10 @@ propcache==0.5.4 \
     --hash=sha256:fc2461ecc45f17893f8207e73b46ea8ba93e33630e51cf4af3fbc21d47462b1a \
     --hash=sha256:ff6b113f50bc066a698db5d944d2c6dc7507168dd3341e255a8892fd0715a558
     # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+proto-plus==1.29.0 \
+    --hash=sha256:8acd070469a7aaf43f440b022ef9757c8cac1a9f866e933f59ae98669ddc6c8b \
+    --hash=sha256:cfb4e62ad7e13dd18f346cabbda00cab39930d36a05791fd81ddb074d6ee884f
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
 protobuf==4.25.8 \
     --hash=sha256:077ff8badf2acf8bc474406706ad890466274191a48d0abd3bd6987107c9cde5 \
     --hash=sha256:15a0af558aa3b13efef102ae6e4f3efac06f1eea11afb3a57db2901447d9fb59 \
@@ -1895,6 +1968,14 @@ pyarrow==20.0.0 \
     --hash=sha256:f2d67ac28f57a362f1a2c1e6fa98bfe2f03230f7e15927aecd067433b1e70ce8 \
     --hash=sha256:f3b117b922af5e4c6b9a9115825726cac7d8b1421c37c2b5e24fbacc8930612c \
     --hash=sha256:febc4a913592573c8d5805091a6c2b5064c8bd6e002131f01061797d91c783c1
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+pyasn1==0.6.4 \
+    --hash=sha256:9c447d8431c947fe4c8febc4ed9e760bc29011a5b01e5c74b67025bd9fb8ce81 \
+    --hash=sha256:deda9277cfd454080ec40b207fb6df82206a3a2688735233cdcd8d3d565f088b
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+pyasn1-modules==0.4.2 \
+    --hash=sha256:29253a9207ce32b64c3ac6600edc75368f98473906e8fd1043bd6b5b1de2c14a \
+    --hash=sha256:677091de870a80aae844b1ca6134f54652fa2c8c5a52aa396440ac3106e941e6
     # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
 pycparser==3.11 \
     --hash=sha256:51d5a8ba2be0bbe440b99d2112604c95bbbc3c2748a64260186c541e1729cd80 \
@@ -2235,6 +2316,10 @@ regex==2026.9.29 \
 requests==2.34.2 \
     --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0 \
     --hash=sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed
+    # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
+requests-oauthlib==2.0.0 \
+    --hash=sha256:7dd8a5c40426b779b0868c404bdef9768deccf22749cde15852df527e6269b36 \
+    --hash=sha256:b3dffaebd884d8cd778494369603a9e7b58d29111bf6b41bdc2dcd87203af4e9
     # via -r XPolicyLab/policy/SenseNova-RoboRSI/pi05/requirements.in
 rich==14.0.0 \
     --hash=sha256:1c9491e1951aac09caffd42f448ee3d04e58923ffe14993f6e83068dc395d7e0 \

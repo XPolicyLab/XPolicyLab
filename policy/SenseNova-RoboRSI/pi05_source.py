@@ -14,7 +14,7 @@ except ImportError:
 
 POLICY_DIR = Path(__file__).resolve().parent
 PI05_SOURCE_MANIFEST_SHA256 = (
-    "6749607936a25bb74884424c98066883674edc1dc49c488619f30a1c3d9a54ae"
+    "2dfd45f0b61835c57321adeb72948c055fe56eab18adbba5af2208a9181f2d5b"
 )
 
 

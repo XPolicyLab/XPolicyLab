@@ -4,9 +4,6 @@ set -euo pipefail
 
 # Installation makes no model request. The caller retains its runtime key.
 unset CODEX_API_KEY
-# Keep dependency installation independent of the launching Python environment.
-unset PYTHONHOME PYTHONPATH VIRTUAL_ENV
-export PYTHONNOUSERSITE=1
 
 POLICY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 POLICY_ENV="${ROBORSI_POLICY_ENV:-${POLICY_DIR}/.venv}"
@@ -164,10 +161,10 @@ print("Committed RoboRSI source and authenticated Codex artifact are ready.")
 PY
 
 if [[ ! -x "${POLICY_ENV}/bin/python" ]]; then
-    uv venv --no-config --python "${PYTHON_BIN}" "${POLICY_ENV}"
+    uv venv --python "${PYTHON_BIN}" "${POLICY_ENV}"
 fi
-uv pip sync --no-config --quiet --python "${POLICY_ENV}/bin/python" --require-hashes "${POLICY_DIR}/requirements.lock"
-uv pip install --no-config --quiet --python "${POLICY_ENV}/bin/python" --no-deps --no-build-isolation \
+uv pip sync --quiet --python "${POLICY_ENV}/bin/python" --require-hashes "${POLICY_DIR}/requirements.lock"
+uv pip install --quiet --python "${POLICY_ENV}/bin/python" --no-deps --no-build-isolation \
     "${POLICY_DIR}/runtime/RoboRSI" -e "${POLICY_DIR}/../.."
 
 # Build the B-aligned tools independently of the Python 3.10.12 policy host.
@@ -197,7 +194,7 @@ printf '%s\n' 'Installing the independent VLA runtime and model assets...'
 
 # Installation validates identity and configuration offline; eval.sh always requires the key.
 "${POLICY_ENV}/bin/python" "${POLICY_DIR}/preflight.py" \
-    --config "${POLICY_DIR}/deploy.yml" --allow-missing-key \
+    --config "${POLICY_DIR}/deploy.yml" --installation-only \
     --verify-icl-task align_blocks > "${POLICY_DIR}/runtime/install-preflight.json"
 "${POLICY_ENV}/bin/python" - "${POLICY_DIR}" "${POLICY_ENV}" <<'PY'
 import json

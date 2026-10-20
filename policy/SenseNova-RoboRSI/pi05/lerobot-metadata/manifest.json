@@ -8,12 +8,13 @@
     "archive_bytes": 7267420160,
     "archive_sha256": "dbc16612b276bfefa3cfb5f5e59493b3ef41da34198ef44b313dc75b21d78fc7",
     "archive_sha256_scope": "Previously authenticated source archive identity; metadata files freshly verified separately, no new full archive hash",
-    "member_prefix": "robodojo-dailinjun/pi05-env/lib/python3.11/site-packages/lerobot-0.1.0.dist-info",
-    "normalized_manifest": "b-environment-distributions-v2-20261015.json",
+    "member_prefix": "site-packages/lerobot-0.1.0.dist-info",
+    "normalized_manifest": "authenticated-distribution-inventory",
     "normalized_manifest_sha256": "12a374ae4782b3daf244e1fe6f4d46eeb4e91f59a97dfd84db1bcfe7e8684953",
-    "runtime_snapshot": "b-runtime-environment-gm-20261016.json",
+    "runtime_snapshot": "authenticated-runtime-snapshot",
     "runtime_snapshot_sha256": "14e8b6a7bba175ffd27ae65bd38299e0c8fcf3a6a66cb734e3ee8f8a61ebd074",
-    "checked_at_utc": "2026-10-15T19:41:40Z"
+    "checked_at_utc": "2026-10-15T19:41:40Z",
+    "path_labels_note": "Descriptive labels replace deployment-specific source paths and filenames; original content hashes are preserved."
   },
   "files": {
     "INSTALLER": {
@@ -197,7 +198,7 @@
     "zipp": "4.1.1"
   },
   "historical_RECORD": {
-    "note": "These original B distribution metadata bytes survived the original LeRobot source replacement. RECORD is retained unchanged as historical distribution provenance; it does not attest the overwritten runtime source. The separately pinned 100-file LeRobot source overlay remains authoritative for executable code. Do not pip-install the PyPI LeRobot payload or rewrite this RECORD to match the overlay.",
+    "note": "These original distribution metadata bytes survived the original LeRobot source replacement. RECORD is retained unchanged as historical distribution provenance; it does not attest the overwritten runtime source. The separately pinned 100-file LeRobot source overlay remains authoritative for executable code. Do not pip-install the PyPI LeRobot payload or rewrite this RECORD to match the overlay.",
     "hashed_original_source_entries": 34,
     "unchanged_current_source_entries": 0,
     "changed_current_source_entries": 11,
@@ -205,5 +206,9 @@
     "unhashed_generated_pyc_entries": 28,
     "overlay_source_files_not_in_RECORD": 89,
     "source_overlay_files": 100
+  },
+  "deployment_sanitization": {
+    "parent_manifest_sha256": "ef63c367dcca34d570166f07b57553c4e694f9dbf9be618fb53cddaf495a19a5",
+    "scope": "Source path labels and historical deployment wording only; all five original dist-info files, version inventory and archive hashes are unchanged."
   }
 }

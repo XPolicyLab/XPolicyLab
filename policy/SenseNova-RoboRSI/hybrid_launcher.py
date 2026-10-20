@@ -137,21 +137,21 @@ class HybridCodexCliPlanner(CodexCliPlanner):
             private_home / "auth.json"
         ).is_symlink():
             raise ValueError("Hybrid private Codex home must not contain auth.json")
-        cfg = {**cfg, "codex_binary": identity["executable"]}
+        cfg = {**cfg, "codex_binary": identity["executable"], "model": self.model}
         command = self.reference.runner.codex.command(cfg, session)
         if command[-1] != "-":
             raise ValueError("Original CLI must read its prompt from standard input")
         overrides = dict(self.config.config_overrides)
         required = {
-            "model_provider": "tokenhub",
-            "model_providers.tokenhub.wire_api": "responses",
-            "model_providers.tokenhub.env_key": "CODEX_API_KEY",
+            "model_provider": "runtime",
+            "model_providers.runtime.wire_api": "responses",
+            "model_providers.runtime.env_key": "CODEX_API_KEY",
         }
         if any(overrides.get(key) != value for key, value in required.items()):
             raise ValueError(
                 "Hybrid CLI needs the explicitly configured responses provider"
             )
-        if not overrides.get("model_providers.tokenhub.base_url"):
+        if not overrides.get("model_providers.runtime.base_url"):
             raise ValueError("Hybrid CLI provider base_url is required")
         extra = []
         for key, value in sorted(overrides.items()):
