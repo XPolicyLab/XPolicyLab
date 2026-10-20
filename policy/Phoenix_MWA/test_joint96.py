@@ -129,7 +129,7 @@ class AdapterTests(unittest.TestCase):
 
     def test_standard_model_batch_and_rgb(self):
         dims = dict(arm_dim=[6, 6], ee_dim=[1, 1])
-        with patch('XPolicyLab.policy.Phoenix_WAM._adapter_base.get_robot_action_dim_info', return_value=dims):
+        with patch('XPolicyLab.policy.Phoenix_MWA._adapter_base.get_robot_action_dim_info', return_value=dims):
             # Mock only neural inference; exercise the real adapter batch/observation logic.
             with patch.object(Model, '_load_real_policy'):
                 model = Model(dict(runtime_mode='joint96_real_phoenix', env_cfg_type='arx_x5', action_type='joint'))
@@ -405,7 +405,7 @@ class RealContractTests(unittest.TestCase):
             model_dtype=torch.float32, action_dim_is_pad=self.backend._static_dimension_is_pad(self.processor, 'action'))
         config = SimpleNamespace(num_inference_steps=10, replan_steps=32, seed=0, rand_device='cpu')
         dims = dict(arm_dim=[6, 6], ee_dim=[1, 1])
-        with patch('XPolicyLab.policy.Phoenix_WAM._adapter_base.get_robot_action_dim_info', return_value=dims), patch.object(Model, '_load_real_policy'):
+        with patch('XPolicyLab.policy.Phoenix_MWA._adapter_base.get_robot_action_dim_info', return_value=dims), patch.object(Model, '_load_real_policy'):
             model = Model(dict(runtime_mode='joint96_real'))
         model.session_factory = partial(self.backend.RoboDojoRealJoint96Session, runtime, config)
         model.session = model.session_factory()

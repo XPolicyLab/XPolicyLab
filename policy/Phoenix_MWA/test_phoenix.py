@@ -297,7 +297,7 @@ class PhoenixTests(unittest.TestCase):
 
     def test_phoenix_deploy_selects_new_route(self):
         config = OmegaConf.load(POLICY_DIR / 'deploy.yml')
-        self.assertEqual(config.policy_name, 'Phoenix_WAM')
+        self.assertEqual(config.policy_name, 'Phoenix_MWA')
         self.assertEqual(config.runtime_mode, 'joint96_real_phoenix')
         self.assertEqual(config.audit_dir, 'logs/phoenix')
         config.env_cfg_type = 'arx_x5'
@@ -321,7 +321,7 @@ class PhoenixTests(unittest.TestCase):
             observation={'observation':{k:{'rgb':np.zeros((480,640,3),np.uint8)}
                 for k in ('head_camera','left_camera','right_camera')},
                 'joint_action':{'vector':np.zeros(14,np.float32)}}
-            with patch('XPolicyLab.policy.Phoenix_WAM.joint96_backend.infer_frame_joint_window',
+            with patch('XPolicyLab.policy.Phoenix_MWA.joint96_backend.infer_frame_joint_window',
                        return_value={'action':torch.zeros(32,80)}) as call:
                 action=session.get_action({'observation':observation,'instruction':'test'})
                 self.assertEqual(action.shape,(32,14))

@@ -30,20 +30,20 @@ Commands from the parent of `XPolicyLab`:
 
 ```bash
 PHOENIX_H5_TEST_WEIGHTS=/absolute/path/to/weights python -m unittest \
-  XPolicyLab.policy.Phoenix_WAM.test_phoenix \
-  XPolicyLab.policy.Phoenix_WAM.test_joint96 \
-  XPolicyLab.policy.Phoenix_WAM.test_joint96_weights \
-  XPolicyLab.policy.Phoenix_WAM.test_h5 \
-  XPolicyLab.policy.Phoenix_WAM.test_resize_concat -v
+  XPolicyLab.policy.Phoenix_MWA.test_phoenix \
+  XPolicyLab.policy.Phoenix_MWA.test_joint96 \
+  XPolicyLab.policy.Phoenix_MWA.test_joint96_weights \
+  XPolicyLab.policy.Phoenix_MWA.test_h5 \
+  XPolicyLab.policy.Phoenix_MWA.test_resize_concat -v
 
-python -m XPolicyLab.policy.Phoenix_WAM.joint96_assets \
+python -m XPolicyLab.policy.Phoenix_MWA.joint96_assets \
   /absolute/path/to/weights --verify-remote
 
-cd XPolicyLab/policy/Phoenix_WAM
+cd XPolicyLab/policy/Phoenix_MWA
 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-mwa base
 DEBUG_OBS_ENCODED=1 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-mwa base
 ```
 
 The synthetic debug instruction requires `online_t5`; the default `training_cache` mode accepts the shipped instruction list. The two text modes are not claimed to generate bitwise-identical features.
@@ -61,3 +61,7 @@ No simulator success rate or physical robot evaluation is claimed. Native data r
 ## Canonical filename cleanup (2026-10-19)
 
 The three checkpoint entries now use `h5-trim-cached-resize256-nocrop` and `run20261019_01`. Their SHA256 hashes and sizes are unchanged. Three duplicate no-crop aliases were removed from ModelScope. The three separate center-crop checkpoints were restored with their original filenames and SHA256 hashes and remain available for PR #165. After cleanup, the downloader verified all seven retained policy/shared files against the release manifest; the ModelScope README passed anonymous readback. The 42 current CPU tests passed again, with 15 historical tests skipped. This filename-only change did not rerun GPU inference or physical evaluation.
+
+## Policy naming update (2026-10-20)
+
+Renamed the public package and deployment identifier to `Phoenix_MWA`; module imports, shell entry points and documented commands use the new name. ModelScope repository IDs, checkpoint filenames/hashes, inference configuration, normalization statistics and text features are unchanged. Under the renamed package, 42 current CPU tests passed with the actual checkpoint metadata; 15 historical tests were skipped. Shell syntax, Python parsing, source-manifest hashes and diff whitespace checks passed. GPU inference and debug episodes were not rerun for this naming-only update; the earlier results above remain historical validation.

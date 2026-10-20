@@ -1,4 +1,4 @@
-# Phoenix WAM Joint96 inference dependencies
+# Phoenix MWA Joint96 inference dependencies
 
 This directory is part of the XPolicyLab **policy** submission. It contains the WAM model and sampling code, frozen DINO/STVAE encoders, image/state processors, `inference.json`, embodiment registry, ARX X5/Piper/Piper X robot profiles and normalization, checkpoint provenance and UMT5 tokenizer. Model weights are downloaded individually by `../download_joint96_weights.sh`.
 

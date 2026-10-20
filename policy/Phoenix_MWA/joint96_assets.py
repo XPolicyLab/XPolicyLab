@@ -55,7 +55,7 @@ def prepare_tokenizer(root, source):
 def read_release(policy_dir=POLICY_DIR):
     release = json.loads((Path(policy_dir) / 'phoenix_release.json').read_text())
     if release.get('schema') != 'phoenix-joint96-release-v2':
-        raise ValueError('Expected robot-specific Phoenix_WAM release manifest')
+        raise ValueError('Expected robot-specific Phoenix_MWA release manifest')
     return release
 
 

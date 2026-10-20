@@ -1,18 +1,20 @@
-# Phoenix_WAM
+# Phoenix_MWA
 
-**Contributor:** Phoenix_WAM contributors | **Paper:** Not provided | **arXiv:** Not provided | **Original code:** [InternW0-Delta](https://github.com/InternRobotics/InternW0-Delta)
+**Contributor:** Phoenix_MWA contributors | **Paper:** Not provided | **arXiv:** Not provided | **Original code:** [InternW0-Delta](https://github.com/InternRobotics/InternW0-Delta)
 
-Phoenix_WAM is an **evaluation-only** adapter for RoboDojo real-robot ARX X5, Piper and Piper X, using absolute dual-arm joint actions (`action_type=joint`). The current **H5 no-crop paired-cache release** provides one **40000-step posttraining checkpoint per robot, initialized from step 256013**. `joint96_source/` contains the inference subset of the upstream runtime and encoders; `phoenix_source/` contains inference configuration, per-robot q01/q99 statistics and fixed task-instruction features. No training checkout or trajectory dataset is required.
+Phoenix_MWA is an **evaluation-only** adapter for RoboDojo real-robot ARX X5, Piper and Piper X, using absolute dual-arm joint actions (`action_type=joint`). The current **H5 no-crop paired-cache release** provides one **40000-step posttraining checkpoint per robot, initialized from step 256013**. `joint96_source/` contains the inference subset of the upstream runtime and encoders; `phoenix_source/` contains inference configuration, per-robot q01/q99 statistics and fixed task-instruction features. No training checkout or trajectory dataset is required.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
+
+The policy module is named `Phoenix_MWA` (previously `Phoenix_WAM`). Published ModelScope repository IDs and weight filenames retain `phoenix-wam`; use the download script and pinned release manifest as provided.
 
 ## Installation
 
 Linux, CUDA and BF16 support are required. The installer pins PyTorch 2.7.1 / torchvision 0.22.1 with CUDA 12.8. Image preprocessing uses PIL/torchvision; a CUDA-enabled FFmpeg build is not required. From this directory:
 
 ```bash
-bash install.sh phoenix-wam
-conda activate phoenix-wam
+bash install.sh phoenix-mwa
+conda activate phoenix-mwa
 bash download_checkpoint.sh checkpoints/phoenix-wam-h5-nocrop-init256013-step40000-20261019
 ```
 
@@ -40,20 +42,20 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
 
 # Offline protocol check; online_t5 accepts the debug client's synthetic instruction.
 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-mwa base
 DEBUG_OBS_ENCODED=1 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+  phoenix-wam-h5-nocrop-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-mwa base
 ```
 
 For real hardware, RoboDojo supplies the environment client and controller. Choose one matching policy server command:
 
 ```bash
 bash setup_eval_policy_server.sh RoboDojo cover_blocks phoenix-wam-h5-nocrop-init256013-step40000-20261019 \
-  arx_x5 joint 0 0 phoenix-wam 9000 0.0.0.0
+  arx_x5 joint 0 0 phoenix-mwa 9000 0.0.0.0
 bash setup_eval_policy_server.sh RoboDojo fill_pen_holder phoenix-wam-h5-nocrop-init256013-step40000-20261019 \
-  piper joint 0 0 phoenix-wam 9000 0.0.0.0
+  piper joint 0 0 phoenix-mwa 9000 0.0.0.0
 bash setup_eval_policy_server.sh RoboDojo cap_pen phoenix-wam-h5-nocrop-init256013-step40000-20261019 \
-  piper_x joint 0 0 phoenix-wam 9000 0.0.0.0
+  piper_x joint 0 0 phoenix-mwa 9000 0.0.0.0
 ```
 
 `env_cfg_type` selects the checkpoint, statistics and soft-prompt slot. The shared checkpoint resolver uses `ckpt_name`; `WAM_CHECKPOINT_PATH` may override it with an absolute weights directory. See the root README for client setup and split-machine deployment.
