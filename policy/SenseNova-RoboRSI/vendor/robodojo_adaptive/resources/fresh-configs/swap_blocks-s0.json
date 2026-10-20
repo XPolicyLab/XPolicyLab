@@ -34,7 +34,7 @@
     "vla_horizon": 50,
     "vla_port": 19802
   },
-  "public_instructions": "interfaces/swap_blocks-s0.md",
+  "public_instructions": "interfaces/BENCHMARK.md",
   "reasoning_effort": "max",
   "request_seconds": 3600,
   "terminal_feedback": false,

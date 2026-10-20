@@ -55,7 +55,7 @@ def test_replay_ack_loss_retries_verified_parent_without_new_budget(
     context = hybrid_agent.HybridRunContext(
         reference, backend, request["config"], agent_dir,
         source / "agent/workspace", source / "agent/workspace",
-        reference.source_dir.parent / "resources/interfaces/align_blocks-s0.md",
+        reference.source_dir.parent / "resources/interfaces/BENCHMARK.md",
         Path(sys.executable), Path("/not-used"), "0" * 64, request, None,
     )
     controller = hybrid_agent.HybridController(agent, context).start()

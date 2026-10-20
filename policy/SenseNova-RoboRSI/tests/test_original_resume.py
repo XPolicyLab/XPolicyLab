@@ -362,7 +362,7 @@ def test_resume_controller_launches_only_after_native_validation(
         max_tokens=None,
         codex_cli=cli_config(Path("/not-used")),
     )
-    interface = reference.source_dir.parent / "resources/interfaces/align_blocks-s0.md"
+    interface = reference.source_dir.parent / "resources/interfaces/BENCHMARK.md"
     context = hybrid_agent.HybridRunContext(
         reference,
         backend,
@@ -437,6 +437,56 @@ def bare_model(monkeypatch, trajectory_dir):
     value._resume = None
     value._awaiting_feedback = False
     return value
+
+
+@pytest.mark.parametrize("task_name", ["align_blocks", "build_tower", "stack_blocks"])
+def test_model_start_uses_shared_interface_for_each_task(tmp_path, monkeypatch, task_name):
+    value = bare_model(monkeypatch, tmp_path / "trajectory")
+    module = import_module("XPolicyLab.policy.SenseNova-RoboRSI.model")
+    backend_module = import_module("XPolicyLab.policy.SenseNova-RoboRSI.hybrid_backend")
+    policy_dir = Path(__file__).resolve().parents[1]
+    pins = json.loads((policy_dir / "submission.json").read_text())
+    value.model_cfg["task_name"] = task_name
+    value._directory = tmp_path / "episode"
+    value._directory.mkdir()
+    value._trajectory_directory = tmp_path / "trajectory"
+    value._trajectory_id = "shared-interface-fixture"
+    value._tool_python = Path(sys.executable)
+    value._obs = {}
+    value._agent_config = SimpleNamespace(
+        document={"agent": {"model": "fixture-model"}},
+        create_agent=lambda _case: object(),
+    )
+    workspace = value._directory / "workspace"
+    monkeypatch.setattr(module, "POLICY_DIR", policy_dir)
+    monkeypatch.setattr(module, "submission", lambda: pins)
+    monkeypatch.setattr(module, "load_agent_config", lambda *a, **k: value._agent_config)
+    monkeypatch.setattr(
+        module, "prepare_icl_context",
+        lambda *_args: SimpleNamespace(
+            source_identity={"mapping": {"base_task": task_name}}, workspace=workspace,
+        ),
+    )
+    monkeypatch.setattr(value, "_ensure_vla", lambda: 19803)
+    monkeypatch.setattr(value, "_claim_resume", lambda: None)
+    monkeypatch.setattr(backend_module, "load_reference_source", lambda *_args: object())
+    monkeypatch.setattr(backend_module, "HybridBackend", lambda *a, **k: object())
+    contexts = []
+
+    def controller(_agent, context):
+        contexts.append(context)
+        return SimpleNamespace(start=lambda: object())
+
+    monkeypatch.setattr(hybrid_agent, "HybridController", controller)
+    value._start()
+
+    assert len(contexts) == 1
+    context = contexts[0]
+    assert context.public_instructions == (
+        policy_dir / pins["hybrid"]["profile_path"] / "resources/interfaces/BENCHMARK.md"
+    )
+    assert context.cfg["options"]["task"] == task_name
+    assert context.cfg["test_episodes"][0]["task"] == task_name
 
 
 def test_model_request_consumed_once_and_source_preserved(

@@ -170,676 +170,348 @@
       "derivation": "unchanged copy"
     },
     {
-      "bytes": 1584,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/align_blocks-s0.json",
-      "sha256": "6f3877e190abc8813df57ec8e447b3e73f1d4ae323797508286d9889edc96115",
+      "sha256": "71ed730ea43246fd1244049b608ce41627ef5c88701e42366c552017e4da4006",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/align_blocks-s1.json",
-      "parent_sha256": "aeedb220edeff30750407a869e506542a3673d7ea3ba24cc5fc1a0c94e9b5788"
+      "parent_sha256": "6f3877e190abc8813df57ec8e447b3e73f1d4ae323797508286d9889edc96115"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/align_blocks-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
+      "path": "resources/interfaces/BENCHMARK.md",
+      "bytes": 6771,
+      "sha256": "01e75b48c00689d7030ab09560fd00200fae31903397edc31910c138b90c7637",
+      "parent_sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
+      "source": "resources/interfaces/align_blocks-s0.md in parent adaptive_2_50 manifest",
+      "derivation": "one shared interface for all tasks; remove fixed layout0/seed0 text only"
     },
     {
-      "bytes": 1646,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1630,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/arrange_largest_number-s0.json",
-      "sha256": "eb54e1d7cf934ec241cc90591aa7b3c81a46d0010a7f970a423881db6e8e5369",
+      "sha256": "a2c70f6c7de2494650de594f1d0bfe37894b482ba2e812eef66a66531156fd0f",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/arrange_largest_number-s1.json",
-      "parent_sha256": "7a19ae8e7ae75cea0cebccf5f40bef1694b67e655a44588c4ac2f4bfbe045d4d"
+      "parent_sha256": "eb54e1d7cf934ec241cc90591aa7b3c81a46d0010a7f970a423881db6e8e5369"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/arrange_largest_number-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1580,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1575,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/build_tower-s0.json",
-      "sha256": "c719bd1f6e723f781a19537947447dc542b85def2c6c16e707c923041cb1822b",
+      "sha256": "7749f141d72936fce487121af106a286fb2ba3dcbfbe3adcc5cc7167a292dd21",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/build_tower-s1.json",
-      "parent_sha256": "804d04bc1e756722625f654c90eb0062dc6338fc93d7e0dddc68408b8950b457"
+      "parent_sha256": "c719bd1f6e723f781a19537947447dc542b85def2c6c16e707c923041cb1822b"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/build_tower-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1610,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1600,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/classify_objects-s0.json",
-      "sha256": "d848d5cf409e5dac28722f2f9c8f582ee0c42307dc05f78e602195d2b7ee928d",
+      "sha256": "426a96c6a789528984ee27b6a09f908cac33ad839ce8c98b1200df99af68bfa2",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects-s1.json",
-      "parent_sha256": "f69698781a76b55be1180879c76c125d450938097330857be1ef9191161b4647"
+      "parent_sha256": "d848d5cf409e5dac28722f2f9c8f582ee0c42307dc05f78e602195d2b7ee928d"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/classify_objects-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1682,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1660,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/classify_objects_by_language-s0.json",
-      "sha256": "ba0748afa97b29d79f00006faf5e950c602b5531458c211827a6a765a2cb308c",
+      "sha256": "78ddba02c1d68061923292d336855e70df5ecc323d16afe5dc827fb5a2d744af",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects_by_language-s1.json",
-      "parent_sha256": "44864c32775ba15b891a523b1f864bdd42c9629e27ff5bb46926bfaee85e5d4d"
+      "parent_sha256": "ba0748afa97b29d79f00006faf5e950c602b5531458c211827a6a765a2cb308c"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/classify_objects_by_language-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1584,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/cover_blocks-s0.json",
-      "sha256": "d129128c04fd8918196c1f1e43e9ca85e4136fd8faa889b7f660df25f179c82c",
+      "sha256": "bce36b254eb4027393eccec9dd44924ede8aa3917dbe58b93b7d7a5dd9bded6d",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/cover_blocks-s1.json",
-      "parent_sha256": "3fb9d755f6264797c0d5568b8a0129f2df8df2aaed3fc9d80cff19fbb4cc23dc"
+      "parent_sha256": "d129128c04fd8918196c1f1e43e9ca85e4136fd8faa889b7f660df25f179c82c"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/cover_blocks-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1584,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/deposit_coin-s0.json",
-      "sha256": "79a90ac4a3012dce30effb5834919ec12b7c3810e239d9de95f5b4c6425312bf",
+      "sha256": "de7374ce739d128e1280bbb11891040b5b4b8de46a66ac0aa328277ab1c95645",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/deposit_coin-s1.json",
-      "parent_sha256": "3a7502782ca27f936b84bae6f4eb9abcc6b30f6ba7e961d33d2fa653244efa64"
+      "parent_sha256": "79a90ac4a3012dce30effb5834919ec12b7c3810e239d9de95f5b4c6425312bf"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/deposit_coin-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1592,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1585,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/fasten_screws-s0.json",
-      "sha256": "b2c3a3270b6692babad4a0e019161b49276724281b683a653f8163fb65ac5f74",
+      "sha256": "95851fc8616f96c13aa9856af51081839b54180348cd0874d27165dc72e96e80",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fasten_screws-s1.json",
-      "parent_sha256": "8ac6f3815bf82518a0a76835c363ec13772770de0b0a8fe485809172d5e21288"
+      "parent_sha256": "b2c3a3270b6692babad4a0e019161b49276724281b683a653f8163fb65ac5f74"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/fasten_screws-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1602,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1593,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/fill_egg_holder-s0.json",
-      "sha256": "2a9d6ac8eeec4f2dfb41806fbe01f46a7c2ace4f7137914927f67464526aaf73",
+      "sha256": "104bb47801cee9325205261869318474d3b7742192e4cbecb2712ce7e56d2eea",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_egg_holder-s1.json",
-      "parent_sha256": "e957a66d2f35cdf0cf6be826adc7edf9c559a1ff97d56462a6d8abbd50a57bdc"
+      "parent_sha256": "2a9d6ac8eeec4f2dfb41806fbe01f46a7c2ace4f7137914927f67464526aaf73"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/fill_egg_holder-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1604,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1595,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/fill_pen_holder-s0.json",
-      "sha256": "e6d4df49f4ea8a7d38af608fcfc6f89c36439bdf0f297bb4e41cddc4e794b8d8",
+      "sha256": "7c11cc8a650acce3358553806602ab1fe624d0659254caa977b8321ad442b604",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_pen_holder-s1.json",
-      "parent_sha256": "0ba29e5584fc07181d045312ec9f9235588d5d2a3bc63d0a6e209f912124d5b4"
+      "parent_sha256": "e6d4df49f4ea8a7d38af608fcfc6f89c36439bdf0f297bb4e41cddc4e794b8d8"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/fill_pen_holder-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1584,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/fold_clothes-s0.json",
-      "sha256": "41a31c66125a657e3988a1330154d11aa43f03322805350660758c5e37015ac4",
+      "sha256": "4c5d016da699600cbb47dfbfe9c826e56bb8a521a0d8b7f1ebda3856d837dc06",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fold_clothes-s1.json",
-      "parent_sha256": "2012bccb99fb2fe04d2946907a484a1821d703c58a379dfafa2456fc09ca9f3c"
+      "parent_sha256": "41a31c66125a657e3988a1330154d11aa43f03322805350660758c5e37015ac4"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/fold_clothes-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1596,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1588,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/general_pickup-s0.json",
-      "sha256": "270f6684b424e50bcfe6a17977e5590518a76e1b0bc27adc7f9ac3552bd506f4",
+      "sha256": "476528b2358a4ae883eee0d19286a03e402ab6bf2b69cee5d2d84efdb36cb8b3",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/general_pickup-s1.json",
-      "parent_sha256": "e565239734893c269592ea811ebee469c2a097731a5de80ff82881841f8cafff"
+      "parent_sha256": "270f6684b424e50bcfe6a17977e5590518a76e1b0bc27adc7f9ac3552bd506f4"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/general_pickup-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1566,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1563,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/hang_mugs-s0.json",
-      "sha256": "5852ec7e67d3de56d4fa30988fe5af4c3f77479baed78f69aee3127c1afd3696",
+      "sha256": "1b4657d4e894d52124b29984833719fcf524a67e8c0fa0820ab505bb1a54e14c",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/hang_mugs-s1.json",
-      "parent_sha256": "72b83102aea42d9aad1a9d811792270ebc853f47150383abf10b7f20153c229b"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/hang_mugs-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1658,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json",
-      "sha256": "97876ba9388ace61fb3562228d3c1561ed4ff5d87763622227acabd71211c3d4",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/imitate_sorting_sequence-s1.json",
-      "parent_sha256": "a93511706e2464f6afc8e87f0f2866e93408e79431a105403fa56272b2539d3b"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/imitate_sorting_sequence-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1572,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/insert_key-s0.json",
-      "sha256": "506421bbd248a7f282d2b985cc7fc532e5f00765ed05866c5ec3a7d1507e32ac",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_key-s1.json",
-      "parent_sha256": "96eef74966c3b0adb81766f57cf9ec66fffff5bd5233bc9085173db4c10b0324"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/insert_key-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1584,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/insert_tubes-s0.json",
-      "sha256": "c227686fe8a755525e9c05d4fb11df911bb6f8ee1d6b6f639f3d648457ade463",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_tubes-s1.json",
-      "parent_sha256": "5fac5ba99efacc550f50fa1fcc00a8399d34894d9ac300fc81f840b3b7093439"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/insert_tubes-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1566,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/make_kong-s0.json",
-      "sha256": "eca4d52b873dc1ebc72f5cca57e0bd9f5ac19ffd4078a7baba8061f0847b71bb",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_kong-s1.json",
-      "parent_sha256": "b773c8f13a90551269b1b970c05a3f31acd00fd6e178781a8b8244c72839e98a"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/make_kong-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1574,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/make_toast-s0.json",
-      "sha256": "32120d3a8c8cd1f4b5e88034b81b4c44923173c8e62d83b815f948f868dde331",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_toast-s1.json",
-      "parent_sha256": "d006c548536178319f3da7fed8660768a925cab0658b463c915470476ccb58fa"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/make_toast-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1680,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json",
-      "sha256": "ad2d9cc4b9485c99273feb23678d3e60210fa74604ac4d2efd29682b3ce137e6",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/match_and_pick_from_conveyor-s1.json",
-      "parent_sha256": "d0b90074312d03b615314c8ee3df4ca023633af6a78df6ddee85e2a3eab04fdb"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/match_and_pick_from_conveyor-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1598,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/organize_table-s0.json",
-      "sha256": "3728814eef97f05bfa6c0a494aae709d04f7b1e5d85d709fe7442668814c4b57",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/organize_table-s1.json",
-      "parent_sha256": "9d82c22b0862f90a6d752965a014397344c8b748d2c8968fa4e71cd770ed6250"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/organize_table-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
+      "parent_sha256": "5852ec7e67d3de56d4fa30988fe5af4c3f77479baed78f69aee3127c1afd3696"
     },
     {
       "bytes": 1640,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json",
+      "sha256": "3e47d9207804bfd3a2a354ff54f8056c3b29fbb1eddc19b48ba9b2e0e7560920",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/imitate_sorting_sequence-s1.json",
+      "parent_sha256": "97876ba9388ace61fb3562228d3c1561ed4ff5d87763622227acabd71211c3d4"
+    },
+    {
+      "bytes": 1568,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/insert_key-s0.json",
+      "sha256": "90abd7df46e3a68bacb79b09faaf532bdd547dfb09cd58a56fd25c5e4122f620",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_key-s1.json",
+      "parent_sha256": "506421bbd248a7f282d2b985cc7fc532e5f00765ed05866c5ec3a7d1507e32ac"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/insert_tubes-s0.json",
+      "sha256": "9d7b6e7c6180e5183fb73187a293b20917e6e1871d3385ca3b2112dbafa95603",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_tubes-s1.json",
+      "parent_sha256": "c227686fe8a755525e9c05d4fb11df911bb6f8ee1d6b6f639f3d648457ade463"
+    },
+    {
+      "bytes": 1563,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/make_kong-s0.json",
+      "sha256": "5ad4cb9c7f7904759a5ead727756ec51167c941dfb3bb1f40c6270820c8d6897",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_kong-s1.json",
+      "parent_sha256": "eca4d52b873dc1ebc72f5cca57e0bd9f5ac19ffd4078a7baba8061f0847b71bb"
+    },
+    {
+      "bytes": 1570,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/make_toast-s0.json",
+      "sha256": "99399f90818af1066aaa9ebb64c1e3fc31a34d77009eae56de468bb02863298d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_toast-s1.json",
+      "parent_sha256": "32120d3a8c8cd1f4b5e88034b81b4c44923173c8e62d83b815f948f868dde331"
+    },
+    {
+      "bytes": 1658,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json",
+      "sha256": "5a02b8afd27349fc9b674161e7d3aaeea6f9326416428e5ca3dbfe503c598183",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/match_and_pick_from_conveyor-s1.json",
+      "parent_sha256": "ad2d9cc4b9485c99273feb23678d3e60210fa74604ac4d2efd29682b3ce137e6"
+    },
+    {
+      "bytes": 1590,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/organize_table-s0.json",
+      "sha256": "64c0182790a09e8e20558b430f9173da0232e74de6c3780f9f437884e541a6ff",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/organize_table-s1.json",
+      "parent_sha256": "3728814eef97f05bfa6c0a494aae709d04f7b1e5d85d709fe7442668814c4b57"
+    },
+    {
+      "bytes": 1625,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/pack_objects_into_box-s0.json",
-      "sha256": "db7544a1f318504cec15dee498b0b7ca8a5750e0348bf3a7a01e96c24578c2e6",
+      "sha256": "6bbebf47e5cc6ce6d8134672fe81b39f00ad36a494ab1cbea5fba47e90c4494a",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pack_objects_into_box-s1.json",
-      "parent_sha256": "23982b8e4741616be05be5fcc045f8a92f576b004f0724359b62e437c16e71ce"
+      "parent_sha256": "db7544a1f318504cec15dee498b0b7ca8a5750e0348bf3a7a01e96c24578c2e6"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/pack_objects_into_box-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1674,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1653,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/pick_from_conveyor_by_image-s0.json",
-      "sha256": "210ee97898d492b2dbc33f55c762b2220ef5414ba2eb7cac76a5fbab51345495",
+      "sha256": "15bd34cadba87810bba3f0c5872da35d224abc8f62e3eefdf96b1a5b0d35bfbb",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pick_from_conveyor_by_image-s1.json",
-      "parent_sha256": "0f478c887d9cf783ce3340d1f92e4d0d09ee321a3516286575dab9af6e91afb0"
+      "parent_sha256": "210ee97898d492b2dbc33f55c762b2220ef5414ba2eb7cac76a5fbab51345495"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/pick_from_conveyor_by_image-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1596,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1588,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/play_Xylophone-s0.json",
-      "sha256": "5d3e8b23d8eae43e83dd19480baf578b2dc3e41ab9d02ef06069c4e9c9e2341a",
+      "sha256": "9e963535be3106bac348a5949662732a0df510a0745ba95cd19b4cb1575e409d",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_Xylophone-s1.json",
-      "parent_sha256": "9186dd6121028c900f4beb930e7be857829f2db77bf0a177f38ac34a6df28b66"
+      "parent_sha256": "5d3e8b23d8eae43e83dd19480baf578b2dc3e41ab9d02ef06069c4e9c9e2341a"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/play_Xylophone-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1616,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1605,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/play_stacking_toy-s0.json",
-      "sha256": "cab4aa40a9cb49db95f685056e74b7f25adea1ec12ee8af843d4be111163e7c7",
+      "sha256": "73b7a846efc6ce874094a3dc9e2269173a887aae3017a70c4950a4c807055797",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_stacking_toy-s1.json",
-      "parent_sha256": "f20c9e0c4ffdd7d030b6db2a279f62f385eb593858dee201fa51cb59281c1206"
+      "parent_sha256": "cab4aa40a9cb49db95f685056e74b7f25adea1ec12ee8af843d4be111163e7c7"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/play_stacking_toy-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1610,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1600,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/play_tic_tac_toe-s0.json",
-      "sha256": "6502c553a2daa7a2c7346252ca81413efb05ebc2508d1685ec0a5f9c57b04a00",
+      "sha256": "06f40e1ebb3782a9e70bf6bad2d2d01c13d1a9b53c50f87fba04c8934a5ebef2",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_tic_tac_toe-s1.json",
-      "parent_sha256": "e7d5e50cef4b929970658b72a68218ac77536d4d61f9da293f95e76d745ae58c"
+      "parent_sha256": "6502c553a2daa7a2c7346252ca81413efb05ebc2508d1685ec0a5f9c57b04a00"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/play_tic_tac_toe-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1602,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1593,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/plug_in_charger-s0.json",
-      "sha256": "b294cba64fc9953ef96c039b139f1bed8f056be763142a9aefb53b57ec524121",
+      "sha256": "1a0ad211d734be8103e0c4b6998d8c61acc2183e17ef4fd701bc81d5912f0b39",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/plug_in_charger-s1.json",
-      "parent_sha256": "ac288b6e80e7a16e2b3ce7b422fc376f2a6a758fe3fb439fdcd4030fb5a90423"
+      "parent_sha256": "b294cba64fc9953ef96c039b139f1bed8f056be763142a9aefb53b57ec524121"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/plug_in_charger-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1632,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1618,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/pour_balls_into_vase-s0.json",
-      "sha256": "cb90d715de32fa46fb81a1d1e781ced476d8f2bd07ec2f3000cbcde5b86a3992",
+      "sha256": "c781ae241af0d22631975b94826588da3b21821fbcd7bdae4d6c58d892b7eb9d",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_balls_into_vase-s1.json",
-      "parent_sha256": "ac8a22c8d7f7d9798232f3f394a6be0bd48479760c2c234a341bb163d729eabc"
+      "parent_sha256": "cb90d715de32fa46fb81a1d1e781ced476d8f2bd07ec2f3000cbcde5b86a3992"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/pour_balls_into_vase-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1608,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1598,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/pour_by_language-s0.json",
-      "sha256": "7a5000ac20c3965ddbcc02862a5d87f4d58195a6649596739dfb7ae11505982e",
+      "sha256": "13a2104a8d88481ebf79123cba77e72d48f01799fb6859a32b4bb26826e590b7",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_by_language-s1.json",
-      "parent_sha256": "b398bd8e8ea28f0d65eeb93515f1c2fbeb573bf4a52e43a6968e18c65b45cdc2"
+      "parent_sha256": "7a5000ac20c3965ddbcc02862a5d87f4d58195a6649596739dfb7ae11505982e"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/pour_by_language-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1632,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1618,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/pour_liquid_into_cup-s0.json",
-      "sha256": "22c9c9262d118baa543ba9583d5a5bc87804aa9a1ba85fe1a7b2581677cdf643",
+      "sha256": "bd85518e0ca73304a8ce72687318cfbb2f18bf0eec93bc9ad68453ebcf29bbed",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_liquid_into_cup-s1.json",
-      "parent_sha256": "c4ad892ad808bf239e6c6af18f4b8ad525ee2459b226591bda0001621555ca14"
+      "parent_sha256": "22c9c9262d118baa543ba9583d5a5bc87804aa9a1ba85fe1a7b2581677cdf643"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/pour_liquid_into_cup-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1602,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1593,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/press_by_number-s0.json",
-      "sha256": "6be9644d60f0777c223980a4d97ca3f786e464f9405b46a4fb8ee26387d1d9af",
+      "sha256": "d7be9d528e735f63816ad69f90e60d1f730dff10566ddafe1185f20631261e71",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/press_by_number-s1.json",
-      "parent_sha256": "862da7ab78b18c192095cf4df99425dca1fede069a8ee67fe0f0dabb8df0b331"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/press_by_number-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
+      "parent_sha256": "6be9644d60f0777c223980a4d97ca3f786e464f9405b46a4fb8ee26387d1d9af"
     },
     {
       "bytes": 1548,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/push_T-s0.json",
-      "sha256": "238742a6f55e350985825ea723ca40036bb47c367f9de1ea1a090559ef8eb903",
+      "sha256": "eeac0ffa61e3c3e8fd0a0211e20f62772ba20631a15a08bde995532de950c3b7",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/push_T-s1.json",
-      "parent_sha256": "a715297d708cc0a77aa18e2cead8067f11f811eaa5dab973d276f5720494dde8"
+      "parent_sha256": "238742a6f55e350985825ea723ca40036bb47c367f9de1ea1a090559ef8eb903"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/push_T-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1656,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1638,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/put_bottles_into_dustbin-s0.json",
-      "sha256": "fefc8c8baf33779aceecefd9c3013233f88b5dd63e9758661283fb787e251253",
+      "sha256": "df3abe35b6401051bd91c6ee2ef671b6c7e1a83fa868bc12522cff023515d570",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/put_bottles_into_dustbin-s1.json",
-      "parent_sha256": "2841d062978d8c549bbfe590c3a1b02051f50dac1f8bed432cc3c3604db314e5"
+      "parent_sha256": "fefc8c8baf33779aceecefd9c3013233f88b5dd63e9758661283fb787e251253"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/put_bottles_into_dustbin-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1596,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1588,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/solve_equation-s0.json",
-      "sha256": "30996dab66c26b98652d27db7f1f9e58e3fd33f1cbfd762c864d0a5af83cfc96",
+      "sha256": "d09087c8aff35bf9e315b09c0302044361031ecb67b7628f222b944179cd0790",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/solve_equation-s1.json",
-      "parent_sha256": "b37c5fe4caa13a3a69d5abe29f0e5011492e1a3db23a1957e80999fa7a29c598"
+      "parent_sha256": "30996dab66c26b98652d27db7f1f9e58e3fd33f1cbfd762c864d0a5af83cfc96"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/solve_equation-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1670,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1650,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/sort_nesting_dolls_by_size-s0.json",
-      "sha256": "51b8fa426bcfa2375c23dcf8c938404039d634902f864b5dbc6c94077205d4ce",
+      "sha256": "8c26b64e31e4eb965828b8f8cd64a4dd4a4f8d8a1c5ee0065932680008988f7e",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/sort_nesting_dolls_by_size-s1.json",
-      "parent_sha256": "6ec866c85cf88f2d00c3a8bd8debc463c3b4401e387ccd09b7c3c7f03c7f9208"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/sort_nesting_dolls_by_size-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1584,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/stack_blocks-s0.json",
-      "sha256": "959b9b640ac5eb7f5594e18d0a22c0d76dc5061b32f05f9027c074f215184f07",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks-s1.json",
-      "parent_sha256": "b4fdd50d7eb70a91ccd2c07e4cde3956d81b0d77aecfea2e90a567973cb8f021"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/stack_blocks-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1656,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
-      "path": "resources/fresh-configs/stack_blocks_by_language-s0.json",
-      "sha256": "b7a30052c742a7b3b076b1b82d98aa4565f466e3687729ff4dcea6849ffd57c0",
-      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks_by_language-s1.json",
-      "parent_sha256": "544de8c21e52a4ef5fc3f406baca6de0d700d7ed5ad1fd374c30a916351ff5b9"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/stack_blocks_by_language-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
+      "parent_sha256": "51b8fa426bcfa2375c23dcf8c938404039d634902f864b5dbc6c94077205d4ce"
     },
     {
       "bytes": 1578,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/stack_blocks-s0.json",
+      "sha256": "0bf6da0174973a4dea4fe8a36c2dbfacd8f10c4485fb47662c847f0baf66a4dc",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks-s1.json",
+      "parent_sha256": "959b9b640ac5eb7f5594e18d0a22c0d76dc5061b32f05f9027c074f215184f07"
+    },
+    {
+      "bytes": 1638,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/stack_blocks_by_language-s0.json",
+      "sha256": "0f1a8753f643d06e30ef0aa309320ed6bceacc932f29308de878ac343e34113d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks_by_language-s1.json",
+      "parent_sha256": "b7a30052c742a7b3b076b1b82d98aa4565f466e3687729ff4dcea6849ffd57c0"
+    },
+    {
+      "bytes": 1573,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/stack_bowls-s0.json",
-      "sha256": "73f17bef14443a8d56efcb150d1d82fb8b27db892ab1a2b45e84e64a2eb7c3c0",
+      "sha256": "d5c5a34c284b20fc0c4ef8ceb86059641e292bcfc2b2e97bd020c05d3bd76566",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_bowls-s1.json",
-      "parent_sha256": "3d1b5258328692fe15d22430fcad68f874931a8378440076ee5fd39aa5522c14"
+      "parent_sha256": "73f17bef14443a8d56efcb150d1d82fb8b27db892ab1a2b45e84e64a2eb7c3c0"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/stack_bowls-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1674,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1653,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/store_laptop_and_headphones-s0.json",
-      "sha256": "c2c86a9b85d8bdaaccfa20872d76914d94e0193d41d657a9da5afe112dde57c7",
+      "sha256": "07805d18ced27aa087198e5bee75e696ff839f44f65bb514c9df70883bd23cdb",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_laptop_and_headphones-s1.json",
-      "parent_sha256": "ffcce173e758b36cab2d1b63b2c482b768f2d32fea76c5be2006f17448412f63"
+      "parent_sha256": "c2c86a9b85d8bdaaccfa20872d76914d94e0193d41d657a9da5afe112dde57c7"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/store_laptop_and_headphones-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1644,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1628,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/store_tools_in_toolbox-s0.json",
-      "sha256": "967fd615674077959f34edeafca70bac853c58ce933c407432b8c98f33f8a1fc",
+      "sha256": "06ff7620220acef58999a2b1a4476caee5daea3edcc261908f6d22bf3cdefc92",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_tools_in_toolbox-s1.json",
-      "parent_sha256": "55d2be573a1c2435f247f099fafebeac77051d6a5e9339cc883ea0e112b5ca35"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/store_tools_in_toolbox-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
+      "parent_sha256": "967fd615674077959f34edeafca70bac853c58ce933c407432b8c98f33f8a1fc"
     },
     {
       "bytes": 1548,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/swap_T-s0.json",
-      "sha256": "ebe62cef45e26d9f4f975f286a502c4f7431c9dccaa7c1f2574e8249cba74afb",
+      "sha256": "93b95496d1cfa0db0498a59d46f44ea2766af39b9b79c9e5c3c4d457783bbed0",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_T-s1.json",
-      "parent_sha256": "70119dc858c232b0f1643d3feabdcc7bbd8ea387e5c129956377432bf16e98b0"
+      "parent_sha256": "ebe62cef45e26d9f4f975f286a502c4f7431c9dccaa7c1f2574e8249cba74afb"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/swap_T-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1578,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1573,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/swap_blocks-s0.json",
-      "sha256": "6884855f07dab2395b0d6bb4180335ac5f0ca231e8e9ce6e71d3774d94efcb14",
+      "sha256": "ea0b9b1ac27d4fa84f2814d3bd4b1223099c84c764f3fa8dfa1ecda5a777801f",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_blocks-s1.json",
-      "parent_sha256": "c44998e0c45d97266d423f30475a85f1d1aafbded69a2d5885949bf418aa497b"
+      "parent_sha256": "6884855f07dab2395b0d6bb4180335ac5f0ca231e8e9ce6e71d3774d94efcb14"
     },
     {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/swap_blocks-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
-    },
-    {
-      "bytes": 1586,
-      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable)",
+      "bytes": 1580,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
       "path": "resources/fresh-configs/sweep_blocks-s0.json",
-      "sha256": "9e543cdfcfbc3dc52fe8dac2c754ca687749b82f0caa6ab0ad3336b83adc1b8d",
+      "sha256": "2c46a48973dbd8e686a1e74027fe239968a3a9bf31c9080d30ad20e79b325729",
       "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/sweep_blocks-s1.json",
-      "parent_sha256": "e6013c431324d97d00d39bd3b5f2e954e7e771a917d1c1c67f6493040431faaa"
-    },
-    {
-      "bytes": 6787,
-      "derivation": "pinned 2–50 policy delta",
-      "path": "resources/interfaces/sweep_blocks-s0.md",
-      "sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
-      "source": "upstream/robodojo-adaptive/interfaces/align_blocks-s2-auto-l1.md",
-      "parent_sha256": "d5a0215c70699e8453ee27783cb6a9998e37d539647fd02c38d06d92feaab940"
+      "parent_sha256": "9e543cdfcfbc3dc52fe8dac2c754ca687749b82f0caa6ab0ad3336b83adc1b8d"
     },
     {
       "bytes": 12671,
@@ -1078,9 +750,9 @@
     "upstream_manifest_sha256": "b48370daef6d1672349d548d6aa6eb48561d7dcf82126ae2195c795f04b22ddb"
   },
   "scope": "Adaptive 2-50 controller snapshot with deployment-sanitized launcher/configs. Algorithm, control state machine, task parameters and budgets are unchanged; provider, model, proxy handling and host GPU defaults are deployment configuration.",
-  "parent_policy_variant": "adaptive_5_50",
-  "parent_manifest_sha256": "4b0e976419a897493f21b39eb770de1ff5c4c5b4a863d18878ff9c869b69b6ec",
-  "derivation": "Pinned local 2-50 policy delta plus explicit deployment sanitization; not a byte-identical upstream export",
+  "parent_policy_variant": "adaptive_2_50",
+  "parent_manifest_sha256": "fa1b32e0740920c73f4b5de3e6b02358a83790167d3465e50be8e1366294f2e9",
+  "derivation": "Pinned local 2-50 policy delta with deployment sanitization and shared public interface without static seed/layout, 2026-10-21",
   "overlay_manifest_sha256": "43f74deac39c7448ffbf1c7228e3d7e24d8d38f46b90e9a3fc662b49b68772ab",
   "deployment_sanitization": {
     "parent_manifest_sha256": "0a9a6af9cf888637f9e48f76965de61d4b615366b903968b3d028650f666c1c5",
@@ -1303,5 +975,14 @@
       }
     ],
     "identity_contract": "Legacy factory requires the environment model to match its prepared identity; launch rejects subsequent model drift."
+  },
+  "shared_public_interface": {
+    "parent_manifest_sha256": "fa1b32e0740920c73f4b5de3e6b02358a83790167d3465e50be8e1366294f2e9",
+    "previous_parent_manifest_sha256": "4b0e976419a897493f21b39eb770de1ff5c4c5b4a863d18878ff9c869b69b6ec",
+    "previous_parent_policy_variant": "adaptive_5_50",
+    "previous_derivation": "Pinned local 2-50 policy delta plus explicit deployment sanitization; not a byte-identical upstream export",
+    "scope": "Replace 42 identical public interfaces with BENCHMARK.md and remove fixed seed/layout text; preserve deployment sanitization, policy logic, task parameters and budgets.",
+    "replaced_interfaces": 42,
+    "public_task_configs": 42
   }
 }

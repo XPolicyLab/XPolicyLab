@@ -437,7 +437,7 @@ def test_original_tools_review_and_five_acknowledged_steps_close_without_self_sc
         episode,
         prepared,
         training,
-        P / "vendor/robodojo_adaptive/resources/interfaces/align_blocks-s0.md",
+        P / "vendor/robodojo_adaptive/resources/interfaces/BENCHMARK.md",
         Path(sys.executable),
         Path("/not-used"),
         "0" * 64,

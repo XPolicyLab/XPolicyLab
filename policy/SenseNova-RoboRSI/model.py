@@ -430,7 +430,7 @@ class Model(ModelTemplate):
             public_instructions=POLICY_DIR
             / profile["profile_path"]
             / "resources/interfaces"
-            / f"{base_task}-s0.md",
+            / "BENCHMARK.md",
             agent_python=self._tool_python,
             bubblewrap=POLICY_DIR / "runtime/codex/codex-resources/bwrap",
             bubblewrap_sha256=pins["cli"]["companion_sha256"]["codex-resources/bwrap"],

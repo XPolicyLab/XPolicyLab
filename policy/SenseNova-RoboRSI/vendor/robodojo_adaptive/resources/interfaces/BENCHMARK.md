@@ -17,7 +17,7 @@ Every target must lie within 5cm and 0.35rad of CURRENT measured end pose; the h
 Each approved target executes exactly ONE native control step through the original bounded EEF IK controller. A full reviewed trajectory executes at most approved_steps native steps, with no GPT call between them. Native done cancels the rest. On later validation failure the queue is cancelled; observe actual state before requesting a fresh proposal. On zero-motion validation failure repair the existing proposal.
 After every approved span inspect the updated cameras and measured state. Commands are not proof of object motion, grasp or task success. Do not blindly repeat calls on timeout.
 Observe returns images as /observations/... paths; use actual view_image calls.
-Native physics, layouts, horizon and evaluator are unchanged. One episode, layout0, seed0, 1x budget. Agent resets and early stopping are unavailable. Keep acting intelligently until native termination; do not consume steps with unchanged actions simply to reach the horizon.
+Native physics, layouts, horizon and evaluator are unchanged. One episode, 1x budget. Agent resets and early stopping are unavailable. Keep acting intelligently until native termination; do not consume steps with unchanged actions simply to reach the horizon.
 At a review_due boundary, call review with observed_state, demo_comparison, why_not_done, next_plan, ending_check; all five nonempty strings. Native done is termination, not proof of success. No hidden evaluator diagnostics are supplied.
 Save your own findings and programs in /workspace. Shared training artifacts are read-only under /training. Evaluation experience remains private to this episode.
 

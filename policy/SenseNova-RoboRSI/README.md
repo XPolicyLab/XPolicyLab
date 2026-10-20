@@ -6,10 +6,17 @@ RC1 adapter: real evaluation acceptance for one shared VLA and ten concurrent ca
 
 RoboDojo adapter for the original adaptive π0.5 hybrid. π0.5 proposes 50 actions;
 Codex CLI reviews and approves 2–50 steps (`adaptive_2_50`, default 5);
-2–4 step precision adjustments follow the reason requirement in each interface. The standard
-`Model/reset/update_obs/get_action` interface retains the original robot tools,
-ICL context, feedback and conversation recovery. Required RoboRSI, adaptive and
+2–4 step precision adjustments follow the reason requirement in the shared public
+interface. The standard `Model/reset/update_obs/get_action` interface retains the
+original robot tools, ICL context, feedback and conversation recovery. Required RoboRSI, adaptive and
 OpenPI sources are included under `vendor/`; model weights are downloaded.
+
+All 42 task templates use the same public interface,
+[`BENCHMARK.md`](vendor/robodojo_adaptive/resources/interfaces/BENCHMARK.md).
+It is copied unchanged to the model's read-only `/tools/BENCHMARK.md` at runtime.
+The interface describes one episode without fixing its seed or layout; the evaluator
+still selects both. Per-task configuration templates retain their existing action
+budgets, materials and adaptive review settings.
 
 ## Installation
 
