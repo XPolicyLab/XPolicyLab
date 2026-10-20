@@ -64,7 +64,7 @@ def resolve_resume_checkpoint(spec) -> Tuple[str, int]:
         return str(path), completed_steps
 
     if not path.is_file():
-        # train.sh absolutizes the YAML / STARVLA_RESUME_FROM value, but a CLI
+        # train.sh absolutizes the YAML / SPARK_0_RESUME_FROM value, but a CLI
         # dotlist override is merged after that and stays relative to the
         # training cwd (source_starvla), so report it.
         raise FileNotFoundError(

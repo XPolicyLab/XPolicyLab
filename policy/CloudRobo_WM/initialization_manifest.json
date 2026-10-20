@@ -1,0 +1,11 @@
+{
+  "pending": false,
+  "files": [
+    {
+      "path": "initialization_bf16.pt",
+      "bytes": 12088924377,
+      "sha256": "54f622a2eb99d1052f10625ceab83bbb198b4398c04b8c1a65943941df97d8f3",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/346ce69ad9004d4d0da6d60d8788ae388afca82f/initialization_bf16.pt"
+    }
+  ]
+}

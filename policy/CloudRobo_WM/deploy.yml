@@ -1,0 +1,19 @@
+policy_name: CloudRobo_WM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: 42
+action_type: joint
+gpu_id: null
+eval_batch: false
+# Optional explicit run directory; otherwise use the shared XPolicyLab resolver.
+# The directory must contain weights/cr_wm.pt and weights/third_party/.
+checkpoint_path: null
+device: cuda
+num_inference_steps: 4
+replan_steps: 32
+request_timeout_s: 120

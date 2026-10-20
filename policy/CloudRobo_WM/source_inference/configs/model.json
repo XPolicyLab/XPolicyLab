@@ -1,0 +1,80 @@
+{
+  "tokenizer_max_len": 128,
+  "proprio_dim": 96,
+  "dino_dim": 768,
+  "dino_model_name": "vit_base_patch16_dinov3.lvd1689m",
+  "dino_pixel_unshuffle": 2,
+  "dino_pred_x0": true,
+  "dino_cam_patches": null,
+  "dino_cam_regions": null,
+  "dino_temporal_stride": 1,
+  "dino_pool_mode": "avg",
+  "composite_layout": "tshape_robotwin_384x320_uniform",
+  "condition_count": 256,
+  "video_dit_config": {
+    "patch_size": [
+      1,
+      2,
+      2
+    ],
+    "in_dim": 48,
+    "hidden_dim": 3072,
+    "ffn_dim": 14336,
+    "freq_dim": 256,
+    "text_dim": 4096,
+    "out_dim": 48,
+    "num_heads": 24,
+    "attn_head_dim": 128,
+    "num_layers": 30,
+    "eps": 1e-06
+  },
+  "action_dit_config": {
+    "action_dim": 90,
+    "hidden_dim": 1024,
+    "ffn_dim": 4096,
+    "num_heads": 24,
+    "attn_head_dim": 128,
+    "num_layers": 30,
+    "text_dim": 4096,
+    "freq_dim": 256,
+    "eps": 1e-06
+  },
+  "video_infer_shift": 6.0,
+  "action_infer_shift": 1.0,
+  "dino_infer_shift": 6.0,
+  "pointmap_infer_shift": 6.0,
+  "timestep_scale": 1000,
+  "hbridge_enabled": true,
+  "hbridge_bottom_ratio": 0.25,
+  "hbridge_top_ratio": 0.25,
+  "observation_ablation": "pointmap_zero_latent",
+  "pointmap_encoding": {
+    "version": 2,
+    "calibrated_intrinsics": true,
+    "intrinsics_policy": "full_K_per_example",
+    "mode": "axiswise_linear_rational",
+    "alpha": 0.8,
+    "norm_bounds": {
+      "x": [
+        -0.5,
+        0.5
+      ],
+      "y": [
+        -0.5,
+        0.5
+      ],
+      "z": [
+        0.0,
+        1.5
+      ]
+    },
+    "coordinate_frame": "local_camera",
+    "units": "meters",
+    "depth_validity": "finite_positive",
+    "invalid_fill": [
+      0.0,
+      0.0,
+      -1.0
+    ]
+  }
+}

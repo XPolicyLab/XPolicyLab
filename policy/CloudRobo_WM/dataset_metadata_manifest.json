@@ -1,0 +1,23 @@
+{
+  "pending": false,
+  "files": [
+    {
+      "path": "meta/camera_intrinsics.json",
+      "bytes": 462,
+      "sha256": "ef42ccbf746e9b96017af8c2fd192d5c2fc8b3518dd93ee3c4eba7f2e56ad52e",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/61d0f3a6c6d2e87ebd716f6b34827ce0b1adf321/dataset_meta/meta/camera_intrinsics.json"
+    },
+    {
+      "path": "meta/episodes.jsonl",
+      "bytes": 259485070,
+      "sha256": "3699338bf3857199f81549c01e83b2816ccb0e401f1e8484485d1c92cab70754",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/61d0f3a6c6d2e87ebd716f6b34827ce0b1adf321/dataset_meta/meta/episodes.jsonl"
+    },
+    {
+      "path": "meta/info.json",
+      "bytes": 9626,
+      "sha256": "683355c394478e5c9c56bacedcc77f96f889848aa1a0c82dc4580e2c5b84d4aa",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/61d0f3a6c6d2e87ebd716f6b34827ce0b1adf321/dataset_meta/meta/info.json"
+    }
+  ]
+}

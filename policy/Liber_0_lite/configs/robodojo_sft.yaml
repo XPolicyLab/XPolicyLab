@@ -1,0 +1,18 @@
+seed: 42
+global_batch_size: 1024
+max_steps: 72000
+learning_rate: 0.0001
+min_learning_rate: null
+warmup_steps: 3600
+weight_decay: 0.01
+max_grad_norm: 1.0
+save_every: 5000
+log_every: 10
+gradient_checkpointing: false
+compile_dit: true
+color:
+  probability: 0.5
+  brightness: 0.3
+  contrast: 0.4
+  saturation: 0.5
+  hue: 0.05

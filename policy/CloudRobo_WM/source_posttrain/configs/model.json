@@ -1,0 +1,124 @@
+{
+  "proprio_dim": 96,
+  "mot_checkpoint_mixed_attn": true,
+  "dino_dim": 768,
+  "dino_model_name": "vit_base_patch16_dinov3.lvd1689m",
+  "composite_layout": "tshape_robotwin_384x320_uniform",
+  "dino_cam_patches": null,
+  "dino_cam_regions": null,
+  "dino_temporal_stride": 1,
+  "dino_stride_keep_far": true,
+  "dino_pred_x0": true,
+  "dino_pool_mode": "avg",
+  "freeze_dino_encoder": true,
+  "dino_pixel_unshuffle": 2,
+  "enable_pointmap": true,
+  "pointmap_max_depth_m": 2.0,
+  "pointmap_norm_bounds": {
+    "x": [
+      -0.5,
+      0.5
+    ],
+    "y": [
+      -0.5,
+      0.5
+    ],
+    "z": [
+      0.0,
+      1.5
+    ]
+  },
+  "pointmap_depth_vis_mode": "turbo",
+  "joint_video": true,
+  "joint_dino": true,
+  "joint_pointmap": true,
+  "video_dit_config": {
+    "has_image_input": false,
+    "patch_size": [
+      1,
+      2,
+      2
+    ],
+    "in_dim": 48,
+    "hidden_dim": 3072,
+    "ffn_dim": 14336,
+    "freq_dim": 256,
+    "text_dim": 4096,
+    "out_dim": 48,
+    "num_heads": 24,
+    "attn_head_dim": 128,
+    "num_layers": 30,
+    "eps": 1e-06,
+    "seperated_timestep": true,
+    "require_clip_embedding": false,
+    "require_vae_embedding": false,
+    "fuse_vae_embedding_in_latents": true,
+    "use_gradient_checkpointing": true,
+    "video_attention_mask_mode": "first_frame_causal",
+    "action_conditioned": false,
+    "action_dim": 90,
+    "action_group_causal_mask_mode": "group_diagonal"
+  },
+  "action_dit_config": {
+    "action_dim": 90,
+    "hidden_dim": 1024,
+    "ffn_dim": 4096,
+    "num_heads": 24,
+    "attn_head_dim": 128,
+    "num_layers": 30,
+    "text_dim": 4096,
+    "freq_dim": 256,
+    "eps": 1e-06,
+    "use_gradient_checkpointing": true
+  },
+  "video_scheduler": {
+    "train_shift": 6.0,
+    "infer_shift": 6.0,
+    "num_train_timesteps": 1000
+  },
+  "action_scheduler": {
+    "train_shift": 1.0,
+    "infer_shift": 1.0,
+    "num_train_timesteps": 1000
+  },
+  "dino_scheduler": {
+    "train_shift": 6.0,
+    "infer_shift": 6.0,
+    "num_train_timesteps": 1000
+  },
+  "pointmap_scheduler": {
+    "train_shift": 6.0,
+    "infer_shift": 6.0,
+    "num_train_timesteps": 1000
+  },
+  "loss": {
+    "lambda_action": 1.0,
+    "lambda_dino": 1.0,
+    "lambda_pointmap": 1.0
+  },
+  "hbridge": {
+    "enabled": true,
+    "bottom_ratio": 0.25,
+    "top_ratio": 0.25
+  },
+  "condition_count": 256,
+  "field_weights": null,
+  "horizon_weights": null,
+  "pointmap_contraction": {
+    "enabled": true,
+    "alpha": 0.8,
+    "calibrated_intrinsics": true
+  },
+  "modality_dropout": {
+    "enabled": true,
+    "p_present_video": 0.5,
+    "p_present_dino": 0.5,
+    "p_present_pointmap": 0.5,
+    "p_jv": 0.5,
+    "p_jd": 0.5,
+    "p_jp": 0.5,
+    "cross_modal_predict_video": true,
+    "cross_modal_predict_dino": true,
+    "cross_modal_predict_pointmap": true
+  }
+}

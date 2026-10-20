@@ -4,7 +4,7 @@
 
 `Spark_0` adapts Spark-0, a spatially aligned vision-tactile-language-action (VTLA) policy for bimanual dexterous hands, to XPolicyLab. Touch plays two roles in one pretraining run: image-space contact maps and a frozen Depth-Anything-3 teacher supervise the VLM's visual tokens on *where* contact occurs (train-only, removed at inference), and a tactile encoder conditions the action expert on *how* contact evolves. One checkpoint therefore serves both vision-only and tactile-conditioned deployment. The model code is a vendored, patched copy of StarVLA in `source_starvla/`.
 
-Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
+Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md).
 
 ## Installation
 
@@ -37,6 +37,12 @@ source_starvla/playground/Pretrained_models/
 └── DA3-LARGE/              # Depth-Anything-3 teacher, train-only: bash scripts/download_da3_large.sh
 ```
 
+Download these weights, plus the Spark-0 pretraining checkpoint, with:
+
+```bash
+bash scripts/download_pretrained_ckpt.sh
+```
+
 `scripts/finetune.sh` checks the DA3 teacher before launch (`scripts/check_da3_teacher.sh`); set `SKIP_DA3_CHECK=1` to skip. The teacher is never loaded at inference.
 
 ## Data Processing
@@ -46,9 +52,9 @@ Training reads **LeRobot v3** datasets in a Spark-specific layout, **not** the k
 ```bash
 bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]
 
-# Example: <workspace>/data/Tianji/sft_spark_0/tianji_marvin_wuji/data/*.hdf5
-#          -> data/Tianji-sft_spark_0-tianji_marvin_wuji-ee/
-bash process_data.sh Tianji sft_spark_0 tianji_marvin_wuji ee
+# Example: <workspace>/data/SparkArena/sft_spark_0/tianji_marvin_wuji/data/*.hdf5
+#          -> data/SparkArena-sft_spark_0-tianji_marvin_wuji-ee/
+bash process_data.sh SparkArena sft_spark_0 tianji_marvin_wuji ee
 ```
 
 `process_data.sh` runs `tools/transform_lerobot_v30_format_tianji_ee.py`. It reads `<workspace>/data/<bench_name>/<task>/<env_cfg_type>/data/*.hdf5` (`XPL_DATA_ROOT` overrides the `data/` location), where `<task>` is each entry of `raw_task_dirs` (comma-separated, default `ckpt_name`), and writes the LeRobot v3 dataset to `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/`, the path `train.sh` derives from the same four arguments. `action_type` must be `ee`. The converter requires `vision/cam_head/extrinsics` in every episode and exports tactile columns when the episodes carry them. Other sources:
@@ -90,7 +96,7 @@ Tactile columns are packed only when a tactile stem is on. Stored image bits are
 
 ## Training
 
-`train.sh` follows the standard signature plus a required recipe — a YAML stem under `model_configs/` or a path (also settable via `STARVLA_TRAIN_CONFIG`). Normalization statistics must be precomputed first (CPU only, once per data or stats-relevant config change):
+`train.sh` follows the standard signature plus a required recipe — a YAML stem under `model_configs/` or a path (also settable via `SPARK_0_TRAIN_CONFIG`). Normalization statistics must be precomputed first (CPU only, once per data or stats-relevant config change):
 
 ```bash
 bash scripts/precompute_stats.sh <recipe>
@@ -98,10 +104,10 @@ bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_
 
 # Example: finetune on four GPUs
 bash scripts/precompute_stats.sh sft_spark_0
-bash train.sh Tianji sft_spark_0 tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0
+bash train.sh SparkArena sft_spark_0 tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0
 ```
 
-`scripts/finetune.sh <recipe> [gpus] [overrides...]` is a shortcut that names the run after the recipe (`checkpoints/Tianji-<recipe>-tianji_marvin_wuji-ee-<seed>/`; override with `BENCH_NAME` / `CKPT_NAME` / `ENV_CFG_TYPE` / `SEED`, batch size with `PER_DEVICE_BS`):
+`scripts/finetune.sh <recipe> [gpus] [overrides...]` is a shortcut that names the run after the recipe (`checkpoints/SparkArena-<recipe>-tianji_marvin_wuji-ee-<seed>/`; override with `BENCH_NAME` / `CKPT_NAME` / `ENV_CFG_TYPE` / `SEED`, batch size with `PER_DEVICE_BS`):
 
 ```bash
 bash scripts/finetune.sh sft_spark_0                                   # GPUs 0-7
@@ -115,10 +121,10 @@ bash scripts/finetune.sh sft_spark_0 0,1 trainer.max_train_steps=20000
 
 Both recipes enable DA3 alignment, flexible views, action queries, `tactile_fusion: default`, and `tactile_align: default`, and leave `data_mixture: null` (the positional dataset path is used and must contain `meta/modality.json`). To start a new run, copy a recipe, set `data_mixture` and `trainer.pretrained_checkpoint`, and launch it by stem.
 
-- **Statistics.** `train.sh` sets `STARVLA_REQUIRE_PRECOMPUTED_STATS=1`; every rank reads content-addressed caches `<dataset>/meta/stats_xpolicy*__<hash>.json` and a missing cache fails the launch with its path. Changing data, pose formats, `state_history_frames`, `action_horizon`, `exclude_episodes`, or the embodiment produces a new hash.
+- **Statistics.** `train.sh` sets `SPARK_0_REQUIRE_PRECOMPUTED_STATS=1`; every rank reads content-addressed caches `<dataset>/meta/stats_xpolicy*__<hash>.json` and a missing cache fails the launch with its path. Changing data, pose formats, `state_history_frames`, `action_horizon`, `exclude_episodes`, or the embodiment produces a new hash.
 - **Warm start vs. resume.** `trainer.pretrained_checkpoint` loads weights with a fresh step counter; `trainer.resume_from` also continues the step counter. Optimizer moments are not saved.
-- **Multi-node.** Run the same command on every node with a unique `STARVLA_MACHINE_RANK` and the same `STARVLA_NUM_MACHINES`, `STARVLA_MAIN_PROCESS_IP` (rank-0's reachable address), `STARVLA_MAIN_PROCESS_PORT`. Set `STARVLA_GPUS_PER_NODE` to turn a GPU-count mismatch into a launch error instead of a hang.
-- **DeepSpeed.** `STARVLA_ACCELERATE_CONFIG` takes an accelerate YAML: `source_starvla/starVLA/config/deepseeds/zero2.yaml` or `accelerate_zero3.yaml` (not the raw `zero3.yaml`).
+- **Multi-node.** Run the same command on every node with a unique `SPARK_0_MACHINE_RANK` and the same `SPARK_0_NUM_MACHINES`, `SPARK_0_MAIN_PROCESS_IP` (rank-0's reachable address), `SPARK_0_MAIN_PROCESS_PORT`. Set `SPARK_0_GPUS_PER_NODE` to turn a GPU-count mismatch into a launch error instead of a hang.
+- **DeepSpeed.** `SPARK_0_ACCELERATE_CONFIG` takes an accelerate YAML: `source_starvla/starVLA/config/deepseeds/zero2.yaml` or `accelerate_zero3.yaml` (not the raw `zero3.yaml`).
 - **NaN fuse.** Training aborts every rank on a non-finite loss or gradient before the optimizer step; reload the last saved checkpoint.
 - **Monitoring.** `eval_train/fixed_batch_mse` is the fit on a fixed training batch, not a held-out metric. Read `tactile_gate` / `tactile_patch_gate` as on/off switches and `tactile_extra_temb_rel_norm` as the force-path amplitude; whether touch helps needs a paired eval of one checkpoint with and without tactile.
 
@@ -131,19 +137,19 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
 
 # Example: evaluate the SFT run on GPUs 0 (policy) and 1 (environment).
 # <ckpt_name> is the training CKPT_NAME; the run dir
-# checkpoints/Tianji-sft_spark_0-<env tag>-ee-0 is resolved for any env tag.
-bash eval.sh DexBench <task_name> sft_spark_0 tianji_marvin_wuji ee 0 0 1 spark_0 <eval_env_conda_env>
+# checkpoints/SparkArena-sft_spark_0-<env tag>-ee-0 is resolved for any env tag.
+bash eval.sh SparkArena <task_name> sft_spark_0 tianji_marvin_wuji ee 0 0 1 spark_0 <eval_env_conda_env>
 ```
 
 `EVAL_ENV_TYPE=debug` runs the offline wiring check, `sim` (or unset) a simulator, `real` the robot client. For split-machine deployment via `setup_eval_policy_server.sh` / `setup_eval_env_client.sh`, follow the [Deployment Flow](../../README.md#-deployment-flow).
 
-`ckpt_name` may be the short recipe name, the full run-directory name, or a path; `STARVLA_CKPT_PATH=/path/to/pytorch_model.pt` pins an explicit file. Eval replays the checkpoint's saved config (pose formats, normalization, cameras, state history, tactile layout), so keep `auto` in `deploy.yml`.
+`ckpt_name` may be the short recipe name, the full run-directory name, or a path; `SPARK_0_CKPT_PATH=/path/to/pytorch_model.pt` pins an explicit file. Eval replays the checkpoint's saved config (pose formats, normalization, cameras, state history, tactile layout), so keep `auto` in `deploy.yml`.
 
 Spark-0 specifics of the `Model` contract:
 
 - `get_action` returns **one action row per call**. The model re-infers once per chunk and serves the other rows from a cache, which keeps the state-history frames consecutive as in training.
 - **The policy server is single-tenant.** Per-episode buffers are keyed by `env_idx` only: run one server per eval client, or give each client a disjoint `env_idx` range.
-- With `FAST_OBS_UPDATE = True` (top of `deploy.py`), the client sends a full observation only on steps the model reads (the server reports `obs_due_in`) and keeps the state-history ring buffer itself.
+- With `FAST_OBS_UPDATE = True` (top of `deploy.py`), the client sends a full observation on a fixed period from the local model config (sync: `execute_horizon`; RTC: `action_horizon - fire_at_remaining`) and keeps the state-history ring buffer itself.
 - **Tactile input.** The bench publishes the current history window under `obs["tactile"]` in raw sensor units: `region_pressure` `[hands, regions, history]` (oldest → current) and/or `taxel_pressure_3d` `[hands, taxels, T, 4]` (xyz in metres in the training frame, plus pressure). A stream the bench omits falls back to the learned `no_tactile` token, so the same checkpoint runs vision-only.
 
 ## Configuration
@@ -152,7 +158,7 @@ A run is one recipe YAML plus shared stems that `train.sh` merges and freezes wi
 
 ```text
 model_configs/<recipe>.yaml
-├─ embodiment: wuji2_tianji        -> model_configs/embodiments/     (robot keys, dims, camera catalog)
+├─ embodiment: tianji_marvin_wuji  -> model_configs/embodiments/     (robot keys, dims, camera catalog)
 ├─ execute_horizon: null | N       deploy-time
 ├─ rtc: null | <stem>              -> model_configs/rtc/             deploy-time
 ├─ tactile_fusion: null | <stem>   -> model_configs/tactile_fusion/  (encoder + action-expert fusion)
@@ -174,13 +180,13 @@ model_configs/<recipe>.yaml
 
 For a vision-only run, set both tactile stems to `null` and `shortcut_mask_prob: 0`. The dataloader asserts that each dataset's tactile layout matches the selected stem. In `data_mixture`, weights are sampling probabilities; delete a member instead of setting `weight: 0` (which raises).
 
-Deploy-time knobs are read from the **live** model config, found via `STARVLA_MODEL_CONFIG`, then `model_configs/<ckpt_name>.yaml`, then the recipe stem recorded in the checkpoint: `execute_horizon: null` re-plans once per 50-row chunk, `N` every `N` rows; `rtc: default` prefetches the next chunk asynchronously (re-plans every 24 steps) and overrides `execute_horizon`.
+Deploy-time knobs are read from the **live** model config, found via `SPARK_0_MODEL_CONFIG`, then `model_configs/<ckpt_name>.yaml`, then the recipe stem recorded in the checkpoint: `execute_horizon: null` re-plans once per 50-row chunk, `N` every `N` rows; `rtc: default` prefetches the next chunk asynchronously (re-plans every 16 steps: `action_horizon` 50 minus `fire_at_remaining` 34) and overrides `execute_horizon`.
 
 `deploy.yml` keys beyond the standard set:
 
 | Key | Default | Purpose |
 | --- | --- | --- |
-| `starvla_server_port` | `5694` | Internal StarVLA server behind the XPolicyLab policy server (`port: 6000`) |
+| `Spark_0_server_port` | `5694` | Internal Spark_0 server behind the XPolicyLab policy server (`port: 6000`) |
 | `unnorm_key`, `image_size`, `include_state`, `state_history_frames`, `ee_in_camera_frame`, `max_infer_batch` | `auto` | Replayed from the checkpoint |
 | `flexible_views` / `required_views` | `auto` | Missing wrists are fine if training used `flexible_views` |
 | `ee_camera_pose`, `ee_camera_extrinsics_semantics`, `ee_camera_axes` | `auto` | Observation camera convention |
@@ -191,21 +197,20 @@ Environment variables:
 
 | Variable | Notes |
 | --- | --- |
-| `STARVLA_DATA_ROOT` / `STARVLA_CKPT_ROOT` | Data / checkpoint roots |
-| `STARVLA_TRAIN_CONFIG` | Recipe when `train.sh` gets no 7th argument |
-| `STARVLA_RESUME_FROM` | Override `trainer.resume_from` |
-| `STARVLA_ACCELERATE_CONFIG` | Accelerate YAML for DeepSpeed ZeRO-2 / ZeRO-3 |
-| `STARVLA_NUM_MACHINES`, `STARVLA_MACHINE_RANK`, `STARVLA_MAIN_PROCESS_IP`, `STARVLA_MAIN_PROCESS_PORT`, `STARVLA_GPUS_PER_NODE` | Multi-node launch |
+| `SPARK_0_DATA_ROOT` / `SPARK_0_CKPT_ROOT` | Data / checkpoint roots |
+| `SPARK_0_TRAIN_CONFIG` | Recipe when `train.sh` gets no 7th argument |
+| `SPARK_0_RESUME_FROM` | Override `trainer.resume_from` |
+| `SPARK_0_ACCELERATE_CONFIG` | Accelerate YAML for DeepSpeed ZeRO-2 / ZeRO-3 |
+| `SPARK_0_NUM_MACHINES`, `SPARK_0_MACHINE_RANK`, `SPARK_0_MAIN_PROCESS_IP`, `SPARK_0_MAIN_PROCESS_PORT`, `SPARK_0_GPUS_PER_NODE` | Multi-node launch |
 | `NCCL_TIMEOUT` | Collective watchdog in seconds (default 600) |
-| `STARVLA_REQUIRE_PRECOMPUTED_STATS` | `1` (default) requires stats caches; `0` computes them on rank 0 at launch |
-| `STARVLA_STATS_MODE` | `auto` / `memory` / `streaming` (streaming keeps RAM near 1 GB) |
-| `STARVLA_TACTILE_STATS_READ_WORKERS` | Read threads for tactile statistics (default 32) |
-| `STARVLA_CKPT_PATH` | Explicit eval checkpoint file |
-| `STARVLA_MODEL_CONFIG` / `SPARK0_MODEL_CONFIG` | Live model config for the eval server / client |
-| `STARVLA_CONFIG_OVERRIDE` | Eval-only inference overrides, e.g. `num_inference_timesteps`, `rtc.*` |
-| `STARVLA_WANDB_ENTITY` / `STARVLA_WANDB_PROJECT` / `WANDB_MODE` | Weights & Biases (offline by default) |
+| `SPARK_0_REQUIRE_PRECOMPUTED_STATS` | `1` (default) requires stats caches; `0` computes them on rank 0 at launch |
+| `SPARK_0_STATS_MODE` | `auto` / `memory` / `streaming` (streaming keeps RAM near 1 GB) |
+| `SPARK_0_TACTILE_STATS_READ_WORKERS` | Read threads for tactile statistics (default 32) |
+| `SPARK_0_CKPT_PATH` | Explicit eval checkpoint file |
+| `SPARK_0_MODEL_CONFIG` | Live model config for the eval server / client |
+| `SPARK_0_CONFIG_OVERRIDE` | Eval-only inference overrides, e.g. `num_inference_timesteps`, `rtc.*` |
+| `SPARK_0_WANDB_ENTITY` / `SPARK_0_WANDB_PROJECT` / `WANDB_MODE` | Weights & Biases (offline by default) |
 | `SKIP_DA3_CHECK` | `1` skips the DA3 teacher check |
-| `EGOVLA_COMPONENT`, `EGOVLA_POLICY_SERVER_HOST`, `EGOVLA_POLICY_SERVER_PORT` | Eval Web split runner (DexBench only): `eval.sh` starts just the `policy` or `environment` side against that address |
 | `XPL_DATA_ROOT` | `process_data.sh` input `data/` directory (default: `<workspace>/data`, beside `XPolicyLab/`) |
 | `SPARK_WORKSPACE_ROOT` | Root for relative paths in retarget run configs (default: this directory) |
 

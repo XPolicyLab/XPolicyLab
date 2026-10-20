@@ -1,0 +1,54 @@
+urdf_path: "./urdf/arx5_description_isaac.urdf"
+srdf_path: "./srdf/arx5_description_isaac.srdf"
+joint_stiffness: 1000
+joint_damping: 200
+gripper_stiffness: 1000
+gripper_damping: 200
+move_group: ["fl_link6","fr_link6"]
+ee_joints: ["fl_joint6", "fr_joint6"]
+arm_joints_name: [["fl_joint1", "fl_joint2", "fl_joint3", "fl_joint4", "fl_joint5", "fl_joint6"], ["fr_joint1", "fr_joint2", "fr_joint3", "fr_joint4", "fr_joint5", "fr_joint6"]]
+gripper_name:
+  - base: "fl_joint7"
+    mimic: [["fl_joint8", 1., 0.]]
+  - base: "fr_joint7"
+    mimic: [["fr_joint8", 1., 0.]]
+gripper_bias: 0.12
+gripper_scale: [-0.01, 0.045]
+homestate: [[0,0,0,0,0,0], [0,0,0,0,0,0]]
+delta_matrix: [[1,0,0],[0,1,0],[0,0,1]]
+global_trans_matrix: [[1,0,0],[0,-1,0],[0,0,-1]]
+robot_pose: [[0, -0.65, 0.0, 0.707, 0, 0, 0.707]]
+# planner: "mplib_screw"
+planner: "curobo"
+dual_arm: True
+rotate_lim: [0, 1]
+grasp_perfect_direction: ['front_right', 'front_left']
+static_camera_list: 
+- name: head_camera
+  type: D435
+  position:
+  - -0.032
+  - -0.45
+  - 1.35
+  forward:
+  - 0
+  - 0.6
+  - -0.8
+  left:
+  - -1
+  - 0
+  - 0
+- name: front_camera
+  type: D435
+  position:
+  - 0
+  - -0.45
+  - 0.85
+  forward:
+  - 0
+  - 1
+  - -0.1
+  left:
+  - -1
+  - 0
+  - 0

@@ -3,8 +3,8 @@ set -euo pipefail
 
 if [[ $# -lt 6 ]]; then
     echo "Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> <train_config> [extra_args...]"
-    echo "Example: bash train.sh Tianji my_run tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0"
-    echo "train_config is a YAML stem under model_configs/ or a path (also settable via STARVLA_TRAIN_CONFIG)."
+    echo "Example: bash train.sh SparkArena my_run tianji_marvin_wuji ee 0 0,1,2,3 sft_spark_0"
+    echo "train_config is a YAML stem under model_configs/ or a path (also settable via SPARK_0_TRAIN_CONFIG)."
     echo "The training YAML's 'embodiment' key selects the schema under model_configs/embodiments/."
     exit 1
 fi
@@ -21,9 +21,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STARVLA_ROOT="${SCRIPT_DIR}/source_starvla"
 
 # 7th positional: model config name (a YAML stem under model_configs/) or a
-# path to a YAML file. There is no default recipe — STARVLA_TRAIN_CONFIG is
+# path to a YAML file. There is no default recipe — SPARK_0_TRAIN_CONFIG is
 # the only way to omit it.
-train_config="${STARVLA_TRAIN_CONFIG:-}"
+train_config="${SPARK_0_TRAIN_CONFIG:-}"
 if [[ $# -ge 1 && ${1} != -* ]]; then
     train_config=${1}
     shift
@@ -32,13 +32,13 @@ fi
 list_model_configs() {
     for f in "${SCRIPT_DIR}/model_configs/"*.yaml; do
         [[ -e "${f}" ]] || continue
-        echo "[starVLA][ERROR]   $(basename "${f%.yaml}")" >&2
+        echo "[Spark_0][ERROR]   $(basename "${f%.yaml}")" >&2
     done
 }
 
 if [[ -z "${train_config}" ]]; then
-    echo "[starVLA][ERROR] train_config is required (7th positional or STARVLA_TRAIN_CONFIG)." >&2
-    echo "[starVLA][ERROR] available configs:" >&2
+    echo "[Spark_0][ERROR] train_config is required (7th positional or SPARK_0_TRAIN_CONFIG)." >&2
+    echo "[Spark_0][ERROR] available configs:" >&2
     list_model_configs
     exit 1
 fi
@@ -48,8 +48,8 @@ else
     base_config_yaml="${SCRIPT_DIR}/model_configs/${train_config%.yaml}.yaml"
 fi
 if [[ ! -f "${base_config_yaml}" ]]; then
-    echo "[starVLA][ERROR] model config not found: ${base_config_yaml}" >&2
-    echo "[starVLA][ERROR] available configs:" >&2
+    echo "[Spark_0][ERROR] model config not found: ${base_config_yaml}" >&2
+    echo "[Spark_0][ERROR] available configs:" >&2
     list_model_configs
     exit 1
 fi
@@ -58,36 +58,36 @@ config_stem="$(basename "${base_config_yaml%.yaml}")"
 data_dir_name="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}"
 run_id="${data_dir_name}-${seed}"
 
-# Multi-machine launch: set these on every node, with a unique STARVLA_MACHINE_RANK per node.
-# STARVLA_ACCELERATE_CONFIG can point to e.g. source_starvla/starVLA/config/deepseeds/zero2.yaml
+# Multi-machine launch: set these on every node, with a unique SPARK_0_MACHINE_RANK per node.
+# SPARK_0_ACCELERATE_CONFIG can point to e.g. source_starvla/starVLA/config/deepseeds/zero2.yaml
 # to enable DeepSpeed; CLI flags below still override values inside the config file.
 # Gradient accumulation comes from the training YAML
 # (trainer.gradient_accumulation_steps); see the resolution block further down.
-num_machines="${STARVLA_NUM_MACHINES:-1}"
-machine_rank="${STARVLA_MACHINE_RANK:-0}"
-main_process_ip="${STARVLA_MAIN_PROCESS_IP:-127.0.0.1}"
-main_process_port="${STARVLA_MAIN_PROCESS_PORT:-29500}"
+num_machines="${SPARK_0_NUM_MACHINES:-1}"
+machine_rank="${SPARK_0_MACHINE_RANK:-0}"
+main_process_ip="${SPARK_0_MAIN_PROCESS_IP:-127.0.0.1}"
+main_process_port="${SPARK_0_MAIN_PROCESS_PORT:-29500}"
 if [[ "${num_machines}" -gt 1 ]]; then
     case "${main_process_ip}" in
         127.0.0.1|localhost|::1)
-            echo "[starVLA][ERROR] STARVLA_NUM_MACHINES=${num_machines} but STARVLA_MAIN_PROCESS_IP is ${main_process_ip}." >&2
-            echo "                 Set STARVLA_MAIN_PROCESS_IP to the rank-0 node's reachable address;" >&2
+            echo "[Spark_0][ERROR] SPARK_0_NUM_MACHINES=${num_machines} but SPARK_0_MAIN_PROCESS_IP is ${main_process_ip}." >&2
+            echo "                 Set SPARK_0_MAIN_PROCESS_IP to the rank-0 node's reachable address;" >&2
             echo "                 loopback is not a multi-node rendezvous." >&2
             exit 1
             ;;
     esac
 fi
-accelerate_config="${STARVLA_ACCELERATE_CONFIG:-}"
+accelerate_config="${SPARK_0_ACCELERATE_CONFIG:-}"
 if [[ -n "${accelerate_config}" ]]; then
     # Resolve before `cd "${STARVLA_ROOT}"` below. Accept paths relative to
-    # either the caller's cwd (e.g. source_starvla/starVLA/...) or the StarVLA
+    # either the caller's cwd (e.g. source_starvla/starVLA/...) or the Spark_0
     # source root (e.g. starVLA/config/...).
     if [[ -f "${accelerate_config}" ]]; then
         accelerate_config="$(realpath "${accelerate_config}")"
     elif [[ -f "${STARVLA_ROOT}/${accelerate_config}" ]]; then
         accelerate_config="$(realpath "${STARVLA_ROOT}/${accelerate_config}")"
     else
-        echo "[starVLA][ERROR] accelerate config not found: ${accelerate_config}" >&2
+        echo "[Spark_0][ERROR] accelerate config not found: ${accelerate_config}" >&2
         exit 1
     fi
     # `accelerate launch --config_file` wants an ACCELERATE config (it requires
@@ -106,7 +106,7 @@ if not isinstance(cfg, dict) or "distributed_type" not in cfg:
     sys.exit(1)
 PY
     then
-        echo "[starVLA][ERROR] ${accelerate_config} is not an accelerate config" >&2
+        echo "[Spark_0][ERROR] ${accelerate_config} is not an accelerate config" >&2
         echo "                 (no top-level 'distributed_type'). It looks like a raw" >&2
         echo "                 DeepSpeed JSON; accelerate can only consume those via a" >&2
         echo "                 wrapper's deepspeed_config.deepspeed_config_file." >&2
@@ -118,25 +118,25 @@ fi
 
 gpus_per_node=$(awk -F',' '{print NF}' <<< "${gpu_id}")
 # world size is derived from THIS node's GPU list, so every node must launch
-# with the same count. A node that passes a shorter STARVLA_GPU_ID computes a
+# with the same count. A node that passes a shorter SPARK_0_GPU_ID computes a
 # smaller num_processes, the ranks never agree on the world size, and the job
 # hangs in the rendezvous with no error. Let the operator pin it explicitly.
-if [[ -n "${STARVLA_GPUS_PER_NODE:-}" ]]; then
-    if [[ "${STARVLA_GPUS_PER_NODE}" != "${gpus_per_node}" ]]; then
-        echo "[starVLA][ERROR] STARVLA_GPUS_PER_NODE=${STARVLA_GPUS_PER_NODE} but this node's" >&2
-        echo "                 STARVLA_GPU_ID='${gpu_id}' has ${gpus_per_node} GPU(s)." >&2
+if [[ -n "${SPARK_0_GPUS_PER_NODE:-}" ]]; then
+    if [[ "${SPARK_0_GPUS_PER_NODE}" != "${gpus_per_node}" ]]; then
+        echo "[Spark_0][ERROR] SPARK_0_GPUS_PER_NODE=${SPARK_0_GPUS_PER_NODE} but this node's" >&2
+        echo "                 SPARK_0_GPU_ID='${gpu_id}' has ${gpus_per_node} GPU(s)." >&2
         echo "                 Every node must contribute the same number of processes." >&2
         exit 1
     fi
 elif [[ "${num_machines}" -gt 1 ]]; then
-    echo "[starVLA][WARN] multi-node launch with ${gpus_per_node} GPU(s) from STARVLA_GPU_ID='${gpu_id}';" >&2
-    echo "                world size assumes every node matches. Set STARVLA_GPUS_PER_NODE to assert it." >&2
+    echo "[Spark_0][WARN] multi-node launch with ${gpus_per_node} GPU(s) from SPARK_0_GPU_ID='${gpu_id}';" >&2
+    echo "                world size assumes every node matches. Set SPARK_0_GPUS_PER_NODE to assert it." >&2
 fi
 num_processes=$((gpus_per_node * num_machines))
-data_root_dir="${STARVLA_DATA_ROOT:-${SCRIPT_DIR}/data}"
-ckpt_root_dir="${STARVLA_CKPT_ROOT:-${SCRIPT_DIR}/checkpoints}"
-data_mix="${STARVLA_DATA_MIX:-xpolicylab_runtime}"
-dataset_name="${STARVLA_XPOLICY_DATASET_NAME:-${data_dir_name}}"
+data_root_dir="${SPARK_0_DATA_ROOT:-${SCRIPT_DIR}/data}"
+ckpt_root_dir="${SPARK_0_CKPT_ROOT:-${SCRIPT_DIR}/checkpoints}"
+data_mix="${SPARK_0_DATA_MIX:-xpolicylab_runtime}"
+dataset_name="${SPARK_0_XPOLICY_DATASET_NAME:-${data_dir_name}}"
 config_yaml="${SCRIPT_DIR}/.generated/${config_stem}_${run_id}.yaml"
 dataset_path="${data_root_dir}/${dataset_name}"
 
@@ -151,13 +151,13 @@ if [[ ! -f "${dataset_path}/meta/modality.json" && -f "${dataset_path}/${env_cfg
 fi
 
 if [[ "${has_data_mixture}" != "1" && ! -f "${dataset_path}/meta/modality.json" ]]; then
-    echo "[starVLA][ERROR] LeRobot dataset not found or incomplete: ${dataset_path}" >&2
-    echo "[starVLA][ERROR] expected ${dataset_path}/meta/modality.json" >&2
-    echo "[starVLA][ERROR] Run process_data.sh first, or set STARVLA_DATA_ROOT/STARVLA_XPOLICY_DATASET_NAME." >&2
+    echo "[Spark_0][ERROR] LeRobot dataset not found or incomplete: ${dataset_path}" >&2
+    echo "[Spark_0][ERROR] expected ${dataset_path}/meta/modality.json" >&2
+    echo "[Spark_0][ERROR] Run process_data.sh first, or set SPARK_0_DATA_ROOT/SPARK_0_XPOLICY_DATASET_NAME." >&2
     exit 1
 fi
 
-embodiment_dir="${STARVLA_EMBODIMENT_DIR:-${SCRIPT_DIR}/model_configs/embodiments}"
+embodiment_dir="${SPARK_0_EMBODIMENT_DIR:-${SCRIPT_DIR}/model_configs/embodiments}"
 
 mkdir -p "$(dirname "${config_yaml}")"
 gen_output=$(python - "${base_config_yaml}" "${config_yaml}" "${data_root_dir}" "${data_mix}" "${run_id}" "${seed}" "${embodiment_dir}" "${ckpt_root_dir}" "${SCRIPT_DIR}" <<'PY'
@@ -225,16 +225,16 @@ for entry in cfg.get("data_mixture") or []:
             )
 
 # Embodiment schema selection: the training YAML's `embodiment` key picks a
-# spec under embodiments/ (STARVLA_XPOLICY_ROBOT_TYPE overrides it). The
+# spec under embodiments/ (SPARK_0_XPOLICY_ROBOT_TYPE overrides it). The
 # resolved name plus the full spec are recorded in the generated config, which
 # the trainer saves next to the checkpoint (config.yaml/config.full.yaml), so
 # every run is self-describing. action_dim/state_dim are synced FROM the spec
 # (the robot's key layout); the run-level knobs below are synced INTO it.
-embodiment = os.environ.get("STARVLA_XPOLICY_ROBOT_TYPE") or cfg.get("embodiment")
+embodiment = os.environ.get("SPARK_0_XPOLICY_ROBOT_TYPE") or cfg.get("embodiment")
 if not embodiment:
     raise ValueError(
         "top-level `embodiment` is required: it names the schema under "
-        f"{embodiment_dir} (or set STARVLA_XPOLICY_ROBOT_TYPE). Guessing a "
+        f"{embodiment_dir} (or set SPARK_0_XPOLICY_ROBOT_TYPE). Guessing a "
         "layout here would silently train on the wrong key order."
     )
 cfg["embodiment"] = embodiment
@@ -291,7 +291,7 @@ if tactile_ref is None and cfg.get("tactile") not in (None, "", "null", "None"):
         cfg.get("tactile"), key="tactile_fusion"
     )
     print(
-        "[starVLA][WARN] top-level `tactile:` is deprecated; rename to "
+        "[Spark_0][WARN] top-level `tactile:` is deprecated; rename to "
         "`tactile_fusion:` (model_configs/tactile_fusion/).",
         file=sys.stderr,
     )
@@ -460,8 +460,9 @@ if execute_horizon not in (None, "", "null", "None", "auto"):
 # forbidden otherwise. Resolved values are written into pose_representation.
 # {state,action} of the embedded embodiment_spec (checkpoints stay
 # self-describing and eval replays them) and exported to the dataloader
-# registry via STARVLA_XPOLICY_{STATE,ACTION}_POSE_FORMAT (shared across a
-# co-train mixture).
+# registry via SPARK_0_XPOLICY_{STATE,ACTION}_POSE_FORMAT (shared across a
+# co-train mixture). source_starvla still reads that name; train.sh copies
+# the resolved value across at launch.
 STATE_POSE_FORMATS = ("raw", "abs_xyz_rot6d", "cam_abs_xyz_rot6d")
 ACTION_POSE_FORMATS = ("raw", "abs_xyz_rot6d", "cam_abs_xyz_rot6d", "delta_xyz_rot6d")
 CAMERA_FRAME_POSE_FORMATS = ("cam_abs_xyz_rot6d",)
@@ -517,7 +518,7 @@ def _resolve_pose_format(key, value, allowed):
             # No embodiment YAML resolved under embodiment_dir (built-in
             # registry defaults, or a spec supplied elsewhere): forward
             # the value instead of blocking the launch.
-            print(f"[starVLA][WARN] no embodiment spec found under {embodiment_dir}; "
+            print(f"[Spark_0][WARN] no embodiment spec found under {embodiment_dir}; "
                   f"forwarding {key}={value}.", file=sys.stderr)
         return value
     if any_pose_repr:
@@ -597,8 +598,9 @@ if any_pose_repr and run_action_mode != "abs":
 # length, per-modality normalization and observation indices are decisions a
 # TRAINING RUN makes, so they live in the train config. Resolved values are
 # frozen into the embedded embodiment_spec (checkpoints stay self-describing
-# and eval replays them) and exported as STARVLA_XPOLICY_SPEC_OVERRIDES, which
-# the dataloader registry applies on top of model_configs/embodiments/*.yaml at train time.
+# and eval replays them) and passed to the dataloader as
+# SPARK_0_XPOLICY_SPEC_OVERRIDES. source_starvla still reads that name;
+# train.sh copies the resolved value across at launch.
 # The `hold_centered*` modes are deliberately absent: they need a per-key hold
 # vector and are reached only through datasets.vla_data.pose_normalization.
 NORMALIZATION_MODES = ("q99", "mean_std", "min_max", "binary")
@@ -731,7 +733,7 @@ if os.path.isfile(spec_path):
         and float(loss_weight.get("horizon_power") or 0.0) != 0.0
     ):
         print(
-            "[starVLA][WARN] framework.action_model.action_loss_weight.horizon_power="
+            "[Spark_0][WARN] framework.action_model.action_loss_weight.horizon_power="
             f"{loss_weight['horizon_power']} together with pose_normalization="
             "'hold_centered_perrow': the per-row scale already equalizes the "
             "target amplitude across the chunk, so this weights the near rows a "
@@ -844,7 +846,7 @@ else:
             "framework.action_model.action_loss_weight.keys needs an embodiment spec "
             f"to resolve the key -> dimension layout, but none was found at {spec_path}."
         )
-    print(f"[starVLA][WARN] embodiment spec not found at {spec_path}; "
+    print(f"[Spark_0][WARN] embodiment spec not found at {spec_path}; "
           "relying on built-in registry defaults, action_model left as-is.", file=sys.stderr)
 
 # Optional multi-dataset co-training mixture declared in the training YAML:
@@ -852,7 +854,9 @@ else:
 #     - {dataset: <dir under data_root_dir>, weight: 1.0, embodiment: <schema>}
 # Entries are normalized (weight defaults to 1.0, embodiment defaults to this
 # config's embodiment) and handed to the dataloader registry via
-# STARVLA_XPOLICY_MIXTURE_JSON, registered under datasets.vla_data.data_mix.
+# SPARK_0_XPOLICY_MIXTURE_JSON, registered under datasets.vla_data.data_mix.
+# source_starvla still reads that name; train.sh copies the resolved value
+# across at launch.
 mixture_entries = []
 for entry in cfg.get("data_mixture") or []:
     if not isinstance(entry, dict) or "dataset" not in entry:
@@ -873,19 +877,19 @@ if mixture_entries:
 
 # Optional environment overrides so per-user/per-cluster settings never
 # require editing the checked-in base yaml.
-if os.environ.get("STARVLA_WANDB_ENTITY"):
-    cfg["wandb_entity"] = os.environ["STARVLA_WANDB_ENTITY"]
-if os.environ.get("STARVLA_WANDB_PROJECT"):
-    cfg["wandb_project"] = os.environ["STARVLA_WANDB_PROJECT"]
-if os.environ.get("STARVLA_BASE_VLM"):
-    cfg.setdefault("framework", {}).setdefault("qwenvl", {})["base_vlm"] = os.environ["STARVLA_BASE_VLM"]
+if os.environ.get("SPARK_0_WANDB_ENTITY"):
+    cfg["wandb_entity"] = os.environ["SPARK_0_WANDB_ENTITY"]
+if os.environ.get("SPARK_0_WANDB_PROJECT"):
+    cfg["wandb_project"] = os.environ["SPARK_0_WANDB_PROJECT"]
+if os.environ.get("SPARK_0_BASE_VLM"):
+    cfg.setdefault("framework", {}).setdefault("qwenvl", {})["base_vlm"] = os.environ["SPARK_0_BASE_VLM"]
 
 # Continue a previous run (trainer.resume_from, default null): a steps_<N>
 # checkpoint file, a run directory, or a run's checkpoints/ directory. Training
 # runs with cwd=source_starvla, so a relative path is resolved here (against the
 # caller's cwd first, then the adapter dir) and checked before the multi-minute
 # model load.
-resume_from = os.environ.get("STARVLA_RESUME_FROM") or (cfg.get("trainer") or {}).get("resume_from")
+resume_from = os.environ.get("SPARK_0_RESUME_FROM") or (cfg.get("trainer") or {}).get("resume_from")
 if resume_from:
     resume_from = os.path.expanduser(str(resume_from))
     if not os.path.isabs(resume_from):
@@ -908,13 +912,12 @@ with open(tmp_dst, "w", encoding="utf-8") as fp:
     yaml.safe_dump(cfg, fp, sort_keys=False)
 os.replace(tmp_dst, dst)
 
-# Captured by train.sh: line 1 -> STARVLA_XPOLICY_ROBOT_TYPE, line 2 ->
-# STARVLA_XPOLICY_MIXTURE_JSON (empty when no mixture is declared), line 3 ->
-# the resolved trainer.resume_from (empty when starting from scratch), line 4
-# -> STARVLA_XPOLICY_STATE_POSE_FORMAT, line 5 ->
-# STARVLA_XPOLICY_ACTION_POSE_FORMAT (empty for non-pose embodiments), line 6
-# -> STARVLA_XPOLICY_POSE_NORMALIZATION, line 7 ->
-# STARVLA_XPOLICY_SPEC_OVERRIDES.
+# Captured by train.sh, then exported to source_starvla as SPARK_0_*:
+# line 1 -> XPOLICY_ROBOT_TYPE, line 2 -> XPOLICY_MIXTURE_JSON (empty when
+# no mixture is declared), line 3 -> the resolved trainer.resume_from (empty
+# when starting from scratch), line 4 -> XPOLICY_STATE_POSE_FORMAT, line 5 ->
+# XPOLICY_ACTION_POSE_FORMAT (empty for non-pose embodiments), line 6 ->
+# XPOLICY_POSE_NORMALIZATION, line 7 -> XPOLICY_SPEC_OVERRIDES.
 print(embodiment)
 print(json.dumps(mixture_entries, separators=(",", ":")) if mixture_entries else "")
 print(resume_from or "")
@@ -946,8 +949,8 @@ missing = [
     if not os.path.isfile(os.path.join(data_root_dir, entry["dataset"], "meta", "modality.json"))
 ]
 if missing:
-    print(f"[starVLA][ERROR] data_mixture datasets missing under {data_root_dir}: {missing}", file=sys.stderr)
-    print("[starVLA][ERROR] expected <dataset>/meta/modality.json for each entry.", file=sys.stderr)
+    print(f"[Spark_0][ERROR] data_mixture datasets missing under {data_root_dir}: {missing}", file=sys.stderr)
+    print("[Spark_0][ERROR] expected <dataset>/meta/modality.json for each entry.", file=sys.stderr)
     sys.exit(1)
 PY
 fi
@@ -959,8 +962,8 @@ if [[ "${base_vlm}" == /* || "${base_vlm}" == ./* ]]; then
     resolved_base_vlm="${base_vlm}"
     [[ "${base_vlm}" == ./* ]] && resolved_base_vlm="${STARVLA_ROOT}/${base_vlm#./}"
     if [[ ! -e "${resolved_base_vlm}" ]]; then
-        echo "[starVLA][ERROR] base_vlm path not found: ${resolved_base_vlm}" >&2
-        echo "[starVLA][ERROR] fix framework.qwenvl.base_vlm in ${base_config_yaml} or set STARVLA_BASE_VLM." >&2
+        echo "[Spark_0][ERROR] base_vlm path not found: ${resolved_base_vlm}" >&2
+        echo "[Spark_0][ERROR] fix framework.qwenvl.base_vlm in ${base_config_yaml} or set SPARK_0_BASE_VLM." >&2
         exit 1
     fi
 fi
@@ -973,7 +976,7 @@ fi
 # The resolved value is exported to accelerate/DeepSpeed AND passed back to the
 # trainer as an explicit override, so the run's config snapshot always records
 # the effective value and train_starvla.py can fail fast on any mismatch.
-grad_accum=$(STARVLA_GA_ENV="${ACCELERATE_GRADIENT_ACCUMULATION_STEPS:-}" python - "${config_yaml}" "$@" <<'PY'
+grad_accum=$(SPARK_0_GA_ENV="${ACCELERATE_GRADIENT_ACCUMULATION_STEPS:-}" python - "${config_yaml}" "$@" <<'PY'
 import os
 import sys
 import yaml
@@ -994,55 +997,55 @@ for i, arg in enumerate(args):
     elif stripped == KEY and i + 1 < len(args):
         ga = args[i + 1]
 
-if os.environ.get("STARVLA_GA_ENV"):
-    ga = os.environ["STARVLA_GA_ENV"]
+if os.environ.get("SPARK_0_GA_ENV"):
+    ga = os.environ["SPARK_0_GA_ENV"]
 
 try:
     ga = int(ga)
 except (TypeError, ValueError):
-    print(f"[starVLA][ERROR] invalid gradient_accumulation_steps: {ga!r}", file=sys.stderr)
+    print(f"[Spark_0][ERROR] invalid gradient_accumulation_steps: {ga!r}", file=sys.stderr)
     sys.exit(1)
 if ga < 1:
-    print(f"[starVLA][ERROR] gradient_accumulation_steps must be >= 1, got {ga}", file=sys.stderr)
+    print(f"[Spark_0][ERROR] gradient_accumulation_steps must be >= 1, got {ga}", file=sys.stderr)
     sys.exit(1)
 print(ga)
 PY
 )
 
-echo "[starVLA] train_config=${config_stem} (${base_config_yaml})"
-echo "[starVLA] config_yaml=${config_yaml}"
-echo "[starVLA] base_vlm=${base_vlm}"
-echo "[starVLA] run_id=${run_id}"
-echo "[starVLA] seed=${seed}"
-echo "[starVLA] data_root_dir=${data_root_dir}"
-echo "[starVLA] ckpt_root_dir=${ckpt_root_dir}"
+echo "[Spark_0] train_config=${config_stem} (${base_config_yaml})"
+echo "[Spark_0] config_yaml=${config_yaml}"
+echo "[Spark_0] base_vlm=${base_vlm}"
+echo "[Spark_0] run_id=${run_id}"
+echo "[Spark_0] seed=${seed}"
+echo "[Spark_0] data_root_dir=${data_root_dir}"
+echo "[Spark_0] ckpt_root_dir=${ckpt_root_dir}"
 if [[ -n "${mixture_json}" ]]; then
-    echo "[starVLA] data_mix=${data_mix} (multi-dataset co-train): ${mixture_json}"
+    echo "[Spark_0] data_mix=${data_mix} (multi-dataset co-train): ${mixture_json}"
 else
-    echo "[starVLA] data_mix=${data_mix}, dataset=${dataset_name}, dataset_path=${dataset_path}"
+    echo "[Spark_0] data_mix=${data_mix}, dataset=${dataset_name}, dataset_path=${dataset_path}"
 fi
-echo "[starVLA] embodiment=${embodiment} (embodiment_dir=${embodiment_dir})"
-echo "[starVLA] embodiment run overrides: ${spec_overrides}"
+echo "[Spark_0] embodiment=${embodiment} (embodiment_dir=${embodiment_dir})"
+echo "[Spark_0] embodiment run overrides: ${spec_overrides}"
 if [[ -n "${state_pose_format}" ]]; then
-    echo "[starVLA] state_pose_format=${state_pose_format} (datasets.vla_data.state_pose_format)"
+    echo "[Spark_0] state_pose_format=${state_pose_format} (datasets.vla_data.state_pose_format)"
 fi
 if [[ -n "${action_pose_format}" ]]; then
-    echo "[starVLA] action_pose_format=${action_pose_format} (datasets.vla_data.action_pose_format)"
+    echo "[Spark_0] action_pose_format=${action_pose_format} (datasets.vla_data.action_pose_format)"
 fi
 if [[ -n "${pose_normalization}" ]]; then
-    echo "[starVLA] pose_normalization=${pose_normalization} (datasets.vla_data.pose_normalization)"
+    echo "[Spark_0] pose_normalization=${pose_normalization} (datasets.vla_data.pose_normalization)"
 fi
 if [[ -n "${resume_from}" ]]; then
-    echo "[starVLA] resume_from=${resume_from} (continues the step counter + LR schedule; optimizer moments are not restored)"
+    echo "[Spark_0] resume_from=${resume_from} (continues the step counter + LR schedule; optimizer moments are not restored)"
 fi
-echo "[starVLA] train_entry=starVLA/training/train_starvla.py"
-echo "[starVLA] num_processes=${num_processes} (gpus_per_node=${gpus_per_node} x num_machines=${num_machines}), mixed_precision=bf16"
-echo "[starVLA] gradient_accumulation_steps=${grad_accum} (effective batch = per_device_bs x ${num_processes} x ${grad_accum})"
+echo "[Spark_0] train_entry=starVLA/training/train_starvla.py"
+echo "[Spark_0] num_processes=${num_processes} (gpus_per_node=${gpus_per_node} x num_machines=${num_machines}), mixed_precision=bf16"
+echo "[Spark_0] gradient_accumulation_steps=${grad_accum} (effective batch = per_device_bs x ${num_processes} x ${grad_accum})"
 
 launch_args=()
 if [[ -n "${accelerate_config}" ]]; then
     launch_args+=(--config_file "${accelerate_config}")
-    echo "[starVLA] accelerate_config=${accelerate_config}"
+    echo "[Spark_0] accelerate_config=${accelerate_config}"
 fi
 launch_args+=(
     --num_processes "${num_processes}"
@@ -1056,28 +1059,30 @@ if [[ "${num_machines}" -gt 1 ]]; then
         --main_process_ip "${main_process_ip}"
         --main_process_port "${main_process_port}"
     )
-    echo "[starVLA] machine_rank=${machine_rank}, main_process=${main_process_ip}:${main_process_port}"
+    echo "[Spark_0] machine_rank=${machine_rank}, main_process=${main_process_ip}:${main_process_port}"
 fi
 
-# Offline statistics precompute (STARVLA_PRECOMPUTE_STATS_ONLY=1, normally via
+# source_starvla reads SPARK_0_* directly. Stats knobs are inherited.
+# The XPOLICY_* and embodiment values are set on the command itself from
+# the resolved shell variables, and those two launches must stay identical —
+# the content-addressed stats cache names depend on them.
+# Offline statistics precompute (SPARK_0_PRECOMPUTE_STATS_ONLY=1, normally via
 # scripts/precompute_stats.sh): same resolved config + env as training, but
-# only the dataset statistics caches are built, then exit. The env exports
-# MUST stay identical to the training launch below — the content-addressed
-# cache file names depend on them.
-if [[ "${STARVLA_PRECOMPUTE_STATS_ONLY:-0}" == "1" ]]; then
-    echo "[starVLA] STARVLA_PRECOMPUTE_STATS_ONLY=1: building dataset statistics caches, no training"
+# only the dataset statistics caches are built, then exit.
+if [[ "${SPARK_0_PRECOMPUTE_STATS_ONLY:-0}" == "1" ]]; then
+    echo "[Spark_0] SPARK_0_PRECOMPUTE_STATS_ONLY=1: building dataset statistics caches, no training"
     cd "${STARVLA_ROOT}"
     PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
-    STARVLA_XPOLICY_DATASET_NAME="${dataset_name}" \
-    STARVLA_XPOLICY_DATA_MIX="${data_mix}" \
-    STARVLA_XPOLICY_MIXTURE_JSON="${mixture_json}" \
-    STARVLA_XPOLICY_ROBOT_TYPE="${embodiment}" \
-    STARVLA_XPOLICY_STATE_POSE_FORMAT="${state_pose_format}" \
-    STARVLA_XPOLICY_ACTION_POSE_FORMAT="${action_pose_format}" \
-    STARVLA_XPOLICY_POSE_NORMALIZATION="${pose_normalization}" \
-    STARVLA_XPOLICY_SPEC_OVERRIDES="${spec_overrides}" \
-    STARVLA_EMBODIMENT_DIR="${embodiment_dir}" \
-    STARVLA_REQUIRE_PRECOMPUTED_STATS=0 \
+    SPARK_0_XPOLICY_DATASET_NAME="${dataset_name}" \
+    SPARK_0_XPOLICY_DATA_MIX="${data_mix}" \
+    SPARK_0_XPOLICY_MIXTURE_JSON="${mixture_json}" \
+    SPARK_0_XPOLICY_ROBOT_TYPE="${embodiment}" \
+    SPARK_0_XPOLICY_STATE_POSE_FORMAT="${state_pose_format}" \
+    SPARK_0_XPOLICY_ACTION_POSE_FORMAT="${action_pose_format}" \
+    SPARK_0_XPOLICY_POSE_NORMALIZATION="${pose_normalization}" \
+    SPARK_0_XPOLICY_SPEC_OVERRIDES="${spec_overrides}" \
+    SPARK_0_EMBODIMENT_DIR="${embodiment_dir}" \
+    SPARK_0_REQUIRE_PRECOMPUTED_STATS=0 \
     python starVLA/training/precompute_stats.py --config_yaml "${config_yaml}" "$@"
     exit 0
 fi
@@ -1092,16 +1097,16 @@ bash "${SCRIPT_DIR}/scripts/check_da3_teacher.sh" "${config_yaml}"
 
 cd "${STARVLA_ROOT}"
 PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
-STARVLA_XPOLICY_DATASET_NAME="${dataset_name}" \
-STARVLA_XPOLICY_DATA_MIX="${data_mix}" \
-STARVLA_XPOLICY_MIXTURE_JSON="${mixture_json}" \
-STARVLA_XPOLICY_ROBOT_TYPE="${embodiment}" \
-STARVLA_XPOLICY_STATE_POSE_FORMAT="${state_pose_format}" \
-STARVLA_XPOLICY_ACTION_POSE_FORMAT="${action_pose_format}" \
-STARVLA_XPOLICY_POSE_NORMALIZATION="${pose_normalization}" \
-STARVLA_XPOLICY_SPEC_OVERRIDES="${spec_overrides}" \
-STARVLA_EMBODIMENT_DIR="${embodiment_dir}" \
-STARVLA_REQUIRE_PRECOMPUTED_STATS="${STARVLA_REQUIRE_PRECOMPUTED_STATS:-1}" \
+SPARK_0_XPOLICY_DATASET_NAME="${dataset_name}" \
+SPARK_0_XPOLICY_DATA_MIX="${data_mix}" \
+SPARK_0_XPOLICY_MIXTURE_JSON="${mixture_json}" \
+SPARK_0_XPOLICY_ROBOT_TYPE="${embodiment}" \
+SPARK_0_XPOLICY_STATE_POSE_FORMAT="${state_pose_format}" \
+SPARK_0_XPOLICY_ACTION_POSE_FORMAT="${action_pose_format}" \
+SPARK_0_XPOLICY_POSE_NORMALIZATION="${pose_normalization}" \
+SPARK_0_XPOLICY_SPEC_OVERRIDES="${spec_overrides}" \
+SPARK_0_EMBODIMENT_DIR="${embodiment_dir}" \
+SPARK_0_REQUIRE_PRECOMPUTED_STATS="${SPARK_0_REQUIRE_PRECOMPUTED_STATS:-1}" \
 WANDB_MODE="${WANDB_MODE:-offline}" \
 NO_ALBUMENTATIONS_UPDATE="${NO_ALBUMENTATIONS_UPDATE:-1}" \
 NCCL_DEBUG="${NCCL_DEBUG:-WARN}" \

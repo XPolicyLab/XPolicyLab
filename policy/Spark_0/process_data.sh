@@ -14,8 +14,8 @@ set -euo pipefail
 
 if [[ $# -lt 4 ]]; then
     echo "Usage: bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num] [raw_task_dirs]" >&2
-    echo "Example: bash process_data.sh Tianji sft_spark_0 tianji_marvin_wuji ee" >&2
-    echo "Example: bash process_data.sh Tianji sft_spark_0_50ep tianji_marvin_wuji ee 50 stack_bowls,pour_water" >&2
+    echo "Example: bash process_data.sh SparkArena sft_spark_0 tianji_marvin_wuji ee" >&2
+    echo "Example: bash process_data.sh SparkArena sft_spark_0_50ep tianji_marvin_wuji ee 50 stack_bowls,pour_water" >&2
     exit 1
 fi
 

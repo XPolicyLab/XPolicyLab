@@ -1,10 +1,11 @@
-"""XPolicyLab eval loops for the starVLA adapter.
+"""XPolicyLab eval loops for the Spark_0 adapter.
 
 Flip ``FAST_OBS_UPDATE`` below to skip ``update_obs`` on the control steps
 whose observation the model never reads (see ``_SyncObsSchedule``). The
-running cadence is the model's ``obs_due_in`` reply, so this covers the
-sync path and RTC. The eval entry points keep the XPolicyLab signature
-``(TASK_ENV, model_client)`` so the bench does not need to pass a flag.
+upload period is fixed from the local model config: sync uses
+``execute_horizon``, RTC uses ``action_horizon - fire_at_remaining``. The
+eval entry points keep the XPolicyLab signature ``(TASK_ENV, model_client)``
+so the bench does not need to pass a flag.
 """
 
 import os
@@ -15,50 +16,36 @@ import yaml
 
 # Explicit deploy-time switch (not a deploy.yml key, not a function arg).
 # False — original loop: one update_obs per control step.
-# True  — send obs only on the step the model actually reads it. The model
-#         answers every `update_obs` with `obs_due_in` (steps until it next
-#         reads one, per env; `Model._obs_due_in`), so the client follows the
-#         model's REAL schedule instead of an absolute `step % period` counter.
-#         Ships the client-side state_history window with it. Tactile is
+# True  — send a full observation every fixed period and keep the
+#         state-history ring buffer on the client. The period comes from
+#         the local model config (`_hints_from_model_config`), not from the
+#         server. Sync: `execute_horizon`, or `action_horizon` when that is
+#         unset. RTC: `action_horizon - fire_at_remaining`. Tactile is
 #         overwrite-from-obs: the payload must already be the current history
 #         window.
-#
-# Why the server has to answer rather than the client compute it: on the sync
-# path the cadence is exactly `step % execute_horizon`, but under RTC it is
-# not. `Model._rtc_fire_threshold` is raised at runtime by the observed
-# inference delay, and a drained queue is refilled with `consumed = 0` at
-# whatever step the drain happened — which shifts the fire phase for the rest
-# of the episode. A fixed client-side period then lands on steps the model
-# ignores while every inference runs on a stale observation.
-#
-# A server that does not answer (older `model.py`) keeps the fixed period on
-# the sync path and turns FAST off under RTC, where guessing is unsafe.
 FAST_OBS_UPDATE = True
 
 
 def _hints_from_model_config():
-    """(history_frames, obs_period, rtc_enabled) from the LIVE model config.
+    """(history_frames, obs_period, rtc_enabled) from the local model config.
 
-    Fallback for benches whose client cannot forward ``get_attr`` (the ws
-    ``WsModelClient``): the cadence hints live on the remote ``Model``, but
-    their source values live in ``model_configs/`` next to this file. Under
+    The upload period is read from ``model_configs/`` next to this file. Under
     RTC the obs period is NOT the sync ``execute_horizon`` — the prefetch
     fires exactly every ``action_horizon - fire_at_remaining`` steps in
     steady state (``(H - d_real - fire_at) + d_real`` steps from splice to
     fire, so the runtime delay cancels out).
 
-    ``SPARK0_MODEL_CONFIG`` names the config stem or a yaml path (the
+    ``SPARK_0_MODEL_CONFIG`` names the config stem or a yaml path (the
     real-robot client command line carries no ckpt name, so the stem
     cannot be inferred; the eval client script exports its ``ckpt_name``,
     which IS the stem under the finetune.sh naming convention). Returns
     None when the config is missing. RTC without a pinned
-    ``fire_at_remaining`` still returns a schedule: the running cadence
-    is ``obs_due_in``, and ``strict=True`` degrades to every-step if the
-    server does not report. The file read is the LOCAL copy — it only
-    matches the server's live config when both sides deploy from the
-    same repo state.
+    ``fire_at_remaining`` uses ``action_horizon - execution_horizon`` when
+    that is set, otherwise ``action_horizon``. The file read is the LOCAL
+    copy — it only matches the server's live config when both sides deploy
+    from the same repo state.
     """
-    stem = os.environ.get("SPARK0_MODEL_CONFIG")
+    stem = os.environ.get("SPARK_0_MODEL_CONFIG")
     if not stem:
         return None
     cfg_dir = Path(__file__).resolve().parent / "model_configs"
@@ -92,10 +79,9 @@ def _hints_from_model_config():
         return history_frames, sync_period, False
     fire_at = rtc_cfg.get("fire_at_remaining")
     if fire_at in (None, "", "null", "None", "auto"):
-        # Derived fire threshold: no fixed client period. FAST still
-        # turns on because the running cadence is obs_due_in; this
-        # number is only the fallback, and strict=True degrades to
-        # every-step if the server does not report.
+        # No pinned fire_at_remaining. The upload period is still fixed:
+        # action_horizon - execution_horizon when that is set, otherwise
+        # action_horizon.
         exec_h = rtc_cfg.get("execution_horizon")
         if exec_h not in (None, "", "null", "None", "auto"):
             period = max(1, action_horizon - int(exec_h))
@@ -113,11 +99,9 @@ class _SyncObsSchedule:
     (`obs_by_env` / `raw_state_by_env` / `camera_pose_by_env` are consulted
     only by `_infer_chunks`), so only the inferring steps need to send.
 
-    WHEN those are is the model's business, not the client's: every
-    `update_obs` response carries `obs_due_in` (see `Model._obs_due_in`) and
-    this class just honours it. `execute_horizon` here is only the fallback
-    period used when the server does not answer, and it is only trusted on the
-    sync path — see `_resolve_sync_schedule`.
+    The upload period is fixed on the client. `execute_horizon` here is that
+    period: sync uses `execute_horizon` (or `action_horizon` when unset), and
+    RTC uses `action_horizon - fire_at_remaining`. See `_resolve_sync_schedule`.
 
     The state history is what makes any of this non-trivial: the model needs
     the CONSECUTIVE frames training used (`delta_indices = range(1-N, 1)`),
@@ -131,14 +115,9 @@ class _SyncObsSchedule:
     `get_action`.
     """
 
-    def __init__(self, history_frames: int, execute_horizon: int, *, strict: bool = False):
+    def __init__(self, history_frames: int, execute_horizon: int):
         self.history_frames = history_frames
         self.execute_horizon = execute_horizon
-        # strict: a server that does not report `obs_due_in` must degrade to
-        # the every-step loop rather than fall back to the fixed period (RTC,
-        # where the period is not the model's real cadence).
-        self.strict = strict
-        self.degraded = False
         self._buffers: dict[int, deque] = {}
         self._steps: dict[int, int] = {}
         self._observed_step: dict[int, int] = {}
@@ -176,80 +155,34 @@ class _SyncObsSchedule:
     def needs_obs(self, env_idx) -> bool:
         # An env that just joined starts at 0, which is also the step where
         # the model has no chunk yet — the two `due` conditions coincide.
-        if self.degraded:
-            return True
         return self._steps[env_idx] >= self._due_step.get(env_idx, 0)
 
     def payload(self, env_idx, obs) -> dict:
         return {**obs, "state_history": list(self._buffers[env_idx])}
 
-    def note_response(self, response, sent_env_idx_list) -> None:
-        """Use the configured upload period; ignore server obs_due_in."""
+    def note_response(self, sent_env_idx_list) -> None:
+        """Next full upload is one period from the step just sent."""
         period = max(1, self.execute_horizon)
         for env_idx in sent_env_idx_list:
             self._due_step[env_idx] = self._steps[env_idx] + period
-
-    def _note_missing_schedule(self) -> None:
-        if self.degraded:
-            return
-        if self.strict:
-            self.degraded = True
-            print(
-                "[starVLA] FAST_OBS_UPDATE disabled mid-episode: the policy "
-                "server did not report obs_due_in and RTC has no fixed client-"
-                "side cadence (the fire phase moves with the observed delay "
-                "and with every queue drain). Falling back to the every-step "
-                "obs update."
-            )
-        elif not getattr(self, "_warned_fallback_period", False):
-            self._warned_fallback_period = True
-            print(
-                "[starVLA] FAST_OBS_UPDATE: the policy server did not report "
-                f"obs_due_in; using the fixed sync period of "
-                f"{self.execute_horizon} steps (exact on the sync path)."
-            )
 
     def advance(self, env_idx) -> None:
         """One `get_action` consumed for `env_idx`."""
         self._steps[env_idx] += 1
 
 
-def _obs_due_in_from_response(response):
-    """``obs_due_in`` from a Model return or a transport envelope.
-
-    ``Model.update_obs_batch`` returns ``{"obs_due_in": [[env, steps], ...]}``.
-    The XPolicyLab ws client already unwraps ``payload["result"]``; the TCP
-    client unwraps ``res``. Accept those envelopes too so a raw frame payload
-    (or a future wrapper) cannot silently drop the schedule.
-    """
-    if not isinstance(response, dict):
-        return None
-    if response.get("obs_due_in"):
-        return response.get("obs_due_in")
-    inner = response.get("result")
-    if inner is None:
-        inner = response.get("res")
-    if isinstance(inner, dict) and inner.get("obs_due_in"):
-        return inner.get("obs_due_in")
-    return None
-
-
 def _resolve_sync_schedule(model_client):
-    """A `_SyncObsSchedule` seeded from the LIVE model config, or None.
+    """A `_SyncObsSchedule` seeded from the local model config, or None.
 
-    The RUNNING cadence comes from the model, one `obs_due_in` per
-    `update_obs` (see `_SyncObsSchedule.note_response`). This function only
-    supplies what has to be known before the first send: how many state
-    frames to buffer, and the fallback period for a server that does not
-    report. Both come from ``model_configs/`` (see
-    :func:`_hints_from_model_config`) because a ws client cannot forward the
-    Model's attributes. ``SPARK0_MODEL_CONFIG`` unset keeps FAST off — the
-    original every-step ``update_obs`` loop.
+    The upload period and the state-history length both come from
+    ``model_configs/`` (see :func:`_hints_from_model_config`).
+    ``SPARK_0_MODEL_CONFIG`` unset keeps FAST off — the original every-step
+    ``update_obs`` loop.
     """
     hints = _hints_from_model_config()
     if hints is None:
         print(
-            "[starVLA] FAST_OBS_UPDATE disabled: SPARK0_MODEL_CONFIG is "
+            "[Spark_0] FAST_OBS_UPDATE disabled: SPARK_0_MODEL_CONFIG is "
             "unset or the config file is missing; using the every-step "
             "obs update."
         )
@@ -261,17 +194,15 @@ def _resolve_sync_schedule(model_client):
         return None
     if rtc_enabled:
         print(
-            "[starVLA] FAST_OBS_UPDATE: RTC is on; following the model's "
-            f"reported obs_due_in (nominal period {execute_horizon} steps). "
-            "A server that does not report it turns FAST off: the RTC fire "
-            "phase moves with the observed delay and with every queue drain."
+            "[Spark_0] FAST_OBS_UPDATE: RTC is on; uploading a full "
+            f"observation every {execute_horizon} control steps."
         )
     else:
         print(
-            f"[starVLA] FAST_OBS_UPDATE: RTC is off; following the model's "
-            f"reported obs_due_in (sync period {execute_horizon} steps)."
+            "[Spark_0] FAST_OBS_UPDATE: RTC is off; uploading a full "
+            f"observation every {execute_horizon} control steps."
         )
-    return _SyncObsSchedule(history_frames, execute_horizon, strict=rtc_enabled)
+    return _SyncObsSchedule(history_frames, execute_horizon)
 
 
 def eval_one_episode(TASK_ENV, model_client):
@@ -338,10 +269,8 @@ def _update_obs(model_client, schedule, obs):
     schedule.observe(env_idx, obs)
     if not schedule.needs_obs(env_idx):
         return
-    response = model_client.call(
-        func_name="update_obs", obs=schedule.payload(env_idx, obs)
-    )
-    schedule.note_response(response, [env_idx])
+    model_client.call(func_name="update_obs", obs=schedule.payload(env_idx, obs))
+    schedule.note_response([env_idx])
 
 
 def _update_obs_batch(model_client, schedule, env_idx_list, obs_list):
@@ -362,5 +291,5 @@ def _update_obs_batch(model_client, schedule, env_idx_list, obs_list):
             due.append(schedule.payload(env_idx, obs))
             due_env_idx.append(env_idx)
     if due:
-        response = model_client.call(func_name="update_obs_batch", obs=due)
-        schedule.note_response(response, due_env_idx)
+        model_client.call(func_name="update_obs_batch", obs=due)
+        schedule.note_response(due_env_idx)

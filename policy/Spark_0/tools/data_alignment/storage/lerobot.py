@@ -978,7 +978,7 @@ def write_modality_json(
     include_mano: bool = False,
     finger_only: bool = False,
 ) -> None:
-    """Write starVLA-compatible modality.json for the EE-pose layout."""
+    """Write Spark_0-compatible modality.json for the EE-pose layout."""
     state_ranges = _key_ranges(STATE_KEYS)
     action_ranges = _key_ranges(ACTION_KEYS)
 

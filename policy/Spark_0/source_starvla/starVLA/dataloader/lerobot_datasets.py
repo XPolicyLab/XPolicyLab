@@ -110,7 +110,7 @@ def get_vla_dataset(
         if dataset_key in included_datasets:
             raise ValueError(
                 f"duplicate mixture entry {(d_name, robot_type)!r}; weights "
-                "are not merged. Collapse the YAML / STARVLA_XPOLICY_MIXTURE_JSON "
+                "are not merged. Collapse the YAML / SPARK_0_XPOLICY_MIXTURE_JSON "
                 "to one row per (dataset, embodiment)."
             )
 

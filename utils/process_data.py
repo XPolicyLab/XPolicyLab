@@ -15,7 +15,8 @@ def _validate_config(action_type: str, robot_action_dim_info: dict, source_type:
         source_type: 'obs' or 'dataset'.
 
     Returns:
-        arm_dims, ee_dims, num_arms
+        arm_dims, ee_dims, num_arms. For action_type='ee', arm_dims holds the
+        7-value pose width per arm instead of the joint count.
     """
     if action_type not in {"joint", "ee"}:
         raise ValueError(
@@ -51,6 +52,10 @@ def _validate_config(action_type: str, robot_action_dim_info: dict, source_type:
 
     if any(d <= 0 for d in arm_dims) or any(d <= 0 for d in ee_dims):
         raise ValueError("All dimensions in 'arm_dim' and 'ee_dim' must be positive.")
+
+    # Cartesian poses are [x, y, z, qw, qx, qy, qz], independent of joint DOF.
+    if action_type == "ee":
+        arm_dims = [7] * len(arm_dims)
 
     return list(arm_dims), list(ee_dims), len(arm_dims)
 

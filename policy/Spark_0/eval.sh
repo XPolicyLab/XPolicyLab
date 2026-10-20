@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ $# -ne 10 ]]; then
     echo "Usage: bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <policy_gpu_id> <env_gpu_id> <policy_conda_env> <eval_env_conda_env>"
-    echo "Example: bash eval.sh RoboDojo stack_bowls RoboDojo-stack_bowls-arx_x5-joint-0 arx_x5 joint 0 0 1 XPolicyLab XPolicyLab"
+    echo "Example: bash eval.sh SparkArena <task_name> sft_spark_0 tianji_marvin_wuji ee 0 0 1 spark_0 <eval_env_conda_env>"
     exit 1
 fi
 
@@ -30,8 +30,8 @@ CLIENT_SCRIPT="${SCRIPT_DIR}/setup_eval_env_client.sh"
 # resolution are identical to same-node evaluation.
 component="${EGOVLA_COMPONENT:-}"
 if [[ -n "${component}" ]]; then
-    if [[ "${bench_name}" != "DexBench" ]]; then
-        echo "[MAIN][ERROR] Spark split components require DexBench" >&2
+    if [[ "${bench_name}" != "SparkArena" ]]; then
+        echo "[MAIN][ERROR] Spark split components require SparkArena" >&2
         exit 2
     fi
     policy_server_host="${EGOVLA_POLICY_SERVER_HOST:?policy server host is required}"
@@ -89,7 +89,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "[MAIN] start starVLA server, policy_server_port=${policy_server_port}"
+echo "[MAIN] start Spark_0 server, policy_server_port=${policy_server_port}"
 
 bash "${SERVER_SCRIPT}" \
     "${bench_name}" \

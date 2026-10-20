@@ -12,9 +12,10 @@ from .backbone import (
 from .scheduler import FlowScheduler
 from .vendor.qwen3_vl_transformers import Qwen3VLForConditionalGeneration
 from .vision_attention import install_grouped_vision_attention
+from .weights import load_weights
 
 
-def load_model(config, assets, checkpoint, device):
+def load_model(config, assets, checkpoint, device, *, pretrained=False):
     expected = {
         'mask_scheme': 'default', 'proprio_dim': 14, 'action_dim': 14,
         'model_dtype': 'bf16', 'numerical_mode': 'legacy_bf16',
@@ -41,7 +42,7 @@ def load_model(config, assets, checkpoint, device):
         setattr(tokenizer, name + '_token', '<|' + name + '_token|>')
     tokenizer.padding_side = 'left'
     backbone = Qwen3VLForConditionalGeneration.from_pretrained(
-        str(assets), dtype=torch.bfloat16, device_map={'': device.index or 0}, local_files_only=True,
+        str(assets), dtype=torch.bfloat16, device_map={'': str(device)}, local_files_only=True,
     )
     scale = _install_target_only_global_norm_patch16(backbone)
     backbone.model.patch_size = 16
@@ -63,11 +64,5 @@ def load_model(config, assets, checkpoint, device):
     install_grouped_vision_attention(backbone.model.visual, cache_geometry=True)
     backbone.gradient_checkpointing_disable()
     payload = torch.load(Path(checkpoint), map_location='cpu', weights_only=True, mmap=True)
-    contract = dict(action_expert_stability_fp32=True, action_backbone='shared',
-                    target_image_mode='mosaic', semantic_image_mode='legacy_384',
-                    joint_layout='legacy', numerical_mode='legacy_bf16')
-    for name, value in contract.items():
-        if payload[name] != value:
-            raise ValueError(f'Incompatible checkpoint: {name}')
-    model.dit.load_state_dict(payload['dit'], strict=True)
+    load_weights(model.dit, payload, pretrained=pretrained)
     return model.to(device).eval()

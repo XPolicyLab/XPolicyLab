@@ -41,7 +41,7 @@ _TAXEL_KEY = "taxel_pressure_3d"
 # 57k files, against ~150 files/s with a thread pool. Reads overlap but the
 # builders are still fed in path order, so every statistic stays
 # bit-identical to the serial scan.
-_READ_WORKERS_ENV = "STARVLA_TACTILE_STATS_READ_WORKERS"
+_READ_WORKERS_ENV = "SPARK_0_TACTILE_STATS_READ_WORKERS"
 _DEFAULT_READ_WORKERS = 32
 # One Tianji episode file holds 145k rows x 320 taxels, so the window has to
 # be bounded by decoded bytes rather than by file count.

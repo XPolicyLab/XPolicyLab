@@ -3,7 +3,7 @@ protocol: ws
 bench_name: null
 task_name: null
 env_cfg_type: null
-action_type: joint
+action_type: ee            # recipes train EE poses; eval.sh can still override
 gpu_id: null
 seed: null
 eval_batch: true
@@ -12,12 +12,12 @@ eval_batch: true
 host: localhost
 port: 6000
 
-# StarVLA runtime
+# Spark_0 runtime
 starvla_root: source_starvla
-checkpoint_path: null      # injected by the launcher: STARVLA_CKPT_PATH, else
+checkpoint_path: null      # injected by the launcher: SPARK_0_CKPT_PATH, else
                            # the final / highest-step checkpoint of the ckpt_name run
-starvla_server_host: 127.0.0.1
-starvla_server_port: 5694
+Spark_0_server_host: 127.0.0.1
+Spark_0_server_port: 5694
 
 # auto = replay the checkpoint's saved training config (see README Deployment)
 unnorm_key: auto
@@ -36,5 +36,5 @@ tactile_fast: auto         # false = drop the region (fast) stream
 tactile_slow: auto         # false = drop the 3D (slow) stream
 
 # execute_horizon and rtc are NOT set here: they are deploy-time knobs on the
-# live model config, which the launcher locates via STARVLA_MODEL_CONFIG,
+# live model config, which the launcher locates via SPARK_0_MODEL_CONFIG,
 # model_configs/<ckpt_name>.yaml, or the stem the checkpoint recorded.

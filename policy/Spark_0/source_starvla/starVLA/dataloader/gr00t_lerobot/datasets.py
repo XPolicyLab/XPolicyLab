@@ -1561,8 +1561,8 @@ def _wait_for_stats_cache(
     file itself is the synchronization primitive: it is published atomically,
     so readers either see no file or one complete payload.
     """
-    timeout_s = float(os.environ.get("STARVLA_STATS_CACHE_TIMEOUT_S", 6 * 60 * 60))
-    poll_s = float(os.environ.get("STARVLA_STATS_CACHE_POLL_S", 5.0))
+    timeout_s = float(os.environ.get("SPARK_0_STATS_CACHE_TIMEOUT_S", 6 * 60 * 60))
+    poll_s = float(os.environ.get("SPARK_0_STATS_CACHE_POLL_S", 5.0))
     if (
         not math.isfinite(timeout_s)
         or not math.isfinite(poll_s)
@@ -1570,7 +1570,7 @@ def _wait_for_stats_cache(
         or poll_s <= 0
     ):
         raise ValueError(
-            "STARVLA_STATS_CACHE_TIMEOUT_S and STARVLA_STATS_CACHE_POLL_S must be > 0"
+            "SPARK_0_STATS_CACHE_TIMEOUT_S and SPARK_0_STATS_CACHE_POLL_S must be > 0"
         )
     deadline = time.monotonic() + timeout_s
     while True:
@@ -1583,7 +1583,7 @@ def _wait_for_stats_cache(
             raise TimeoutError(
                 f"Timed out after {timeout_s:g}s waiting for {description}: {stats_path}. "
                 "Rank 0 may have failed while computing statistics; inspect its logs. "
-                "Increase STARVLA_STATS_CACHE_TIMEOUT_S for an intentionally longer scan."
+                "Increase SPARK_0_STATS_CACHE_TIMEOUT_S for an intentionally longer scan."
             )
         time.sleep(poll_s)
 
@@ -1592,7 +1592,7 @@ def _precomputed_stats_required(data_cfg=None) -> bool:
     """Whether statistics must come from a precomputed cache (never computed
     at training launch).
 
-    Enabled by ``STARVLA_REQUIRE_PRECOMPUTED_STATS=1`` (exported by default by
+    Enabled by ``SPARK_0_REQUIRE_PRECOMPUTED_STATS=1`` (exported by default by
     the Spark_0 adapter's train.sh) or ``datasets.vla_data.require_precomputed_stats:
     true``. The env var is tri-state and wins over the config key: ``1``
     forces on, ``0`` forces off (the offline precompute relies on this),
@@ -1601,7 +1601,7 @@ def _precomputed_stats_required(data_cfg=None) -> bool:
     ``scripts/precompute_stats.sh``), which runs the same code path with the
     same resolved config, so the content-addressed file names match.
     """
-    env = os.environ.get("STARVLA_REQUIRE_PRECOMPUTED_STATS")
+    env = os.environ.get("SPARK_0_REQUIRE_PRECOMPUTED_STATS")
     if env is not None:
         return env == "1"
     if data_cfg is not None and bool(data_cfg.get("require_precomputed_stats", False)):
@@ -1610,7 +1610,7 @@ def _precomputed_stats_required(data_cfg=None) -> bool:
 
 
 def _force_stats_recompute() -> bool:
-    """``STARVLA_STATS_FORCE_RECOMPUTE=1``: ignore existing caches and rebuild.
+    """``SPARK_0_STATS_FORCE_RECOMPUTE=1``: ignore existing caches and rebuild.
 
     Escape hatch for the offline precompute (implementation A/Bs, stale-cache
     suspicion). The rebuilt payload is published atomically under the same
@@ -1618,7 +1618,7 @@ def _force_stats_recompute() -> bool:
     ranks the non-zero ranks would read the pre-rebuild file while rank 0 is
     still computing.
     """
-    return os.environ.get("STARVLA_STATS_FORCE_RECOMPUTE", "0") == "1"
+    return os.environ.get("SPARK_0_STATS_FORCE_RECOMPUTE", "0") == "1"
 
 
 def _check_force_stats_recompute_allowed(data_cfg=None) -> None:
@@ -1630,15 +1630,15 @@ def _check_force_stats_recompute_allowed(data_cfg=None) -> None:
     """
     if _precomputed_stats_required(data_cfg):
         raise ValueError(
-            "STARVLA_STATS_FORCE_RECOMPUTE=1 is incompatible with "
-            "precomputed-statistics mode (STARVLA_REQUIRE_PRECOMPUTED_STATS=1): "
+            "SPARK_0_STATS_FORCE_RECOMPUTE=1 is incompatible with "
+            "precomputed-statistics mode (SPARK_0_REQUIRE_PRECOMPUTED_STATS=1): "
             "strict mode never computes, so the force flag would be silently "
             "ignored. Rebuild the caches offline with "
             "`bash scripts/precompute_stats.sh <config> --force-recompute`."
         )
     if _stats_world_size() > 1:
         raise RuntimeError(
-            "STARVLA_STATS_FORCE_RECOMPUTE=1 is single-process only: non-zero "
+            "SPARK_0_STATS_FORCE_RECOMPUTE=1 is single-process only: non-zero "
             "ranks would read the pre-rebuild statistics cache while rank 0 is "
             "still computing. Run the offline precompute instead "
             "(`bash scripts/precompute_stats.sh <config> --force-recompute`)."
@@ -1661,12 +1661,12 @@ def _load_precomputed_stats_or_raise(
         raise FileNotFoundError(
             f"Precomputed {description} not found (or cache config mismatch): "
             f"{stats_path}. Precomputed-statistics mode is on "
-            "(STARVLA_REQUIRE_PRECOMPUTED_STATS=1 or "
+            "(SPARK_0_REQUIRE_PRECOMPUTED_STATS=1 or "
             "datasets.vla_data.require_precomputed_stats: true), so training "
             "refuses to compute statistics at launch. Run the offline "
             "precompute first with the SAME training config, e.g. "
             "`bash scripts/precompute_stats.sh <train_config>` in the Spark_0 "
-            "adapter, or set STARVLA_REQUIRE_PRECOMPUTED_STATS=0 to let "
+            "adapter, or set SPARK_0_REQUIRE_PRECOMPUTED_STATS=0 to let "
             "rank 0 compute at launch."
         )
     return statistics
@@ -2752,8 +2752,8 @@ class LeRobotSingleDataset(Dataset):
     @staticmethod
     def _wait_for_steps_cache(steps_path: Path, load) -> list:
         """Poll for the rank-0-published step index (see _wait_for_stats_cache)."""
-        timeout_s = float(os.environ.get("STARVLA_STATS_CACHE_TIMEOUT_S", 6 * 60 * 60))
-        poll_s = float(os.environ.get("STARVLA_STATS_CACHE_POLL_S", 5.0))
+        timeout_s = float(os.environ.get("SPARK_0_STATS_CACHE_TIMEOUT_S", 6 * 60 * 60))
+        poll_s = float(os.environ.get("SPARK_0_STATS_CACHE_POLL_S", 5.0))
         if (
             not math.isfinite(timeout_s)
             or not math.isfinite(poll_s)
@@ -2761,7 +2761,7 @@ class LeRobotSingleDataset(Dataset):
             or poll_s <= 0
         ):
             raise ValueError(
-                "STARVLA_STATS_CACHE_TIMEOUT_S and STARVLA_STATS_CACHE_POLL_S must be > 0"
+                "SPARK_0_STATS_CACHE_TIMEOUT_S and SPARK_0_STATS_CACHE_POLL_S must be > 0"
             )
         deadline = time.monotonic() + timeout_s
         while True:
@@ -2771,7 +2771,7 @@ class LeRobotSingleDataset(Dataset):
             if time.monotonic() >= deadline:
                 raise TimeoutError(
                     f"Timed out after {timeout_s}s waiting for the step-index cache "
-                    f"at {steps_path}. Raise STARVLA_STATS_CACHE_TIMEOUT_S if rank 0 "
+                    f"at {steps_path}. Raise SPARK_0_STATS_CACHE_TIMEOUT_S if rank 0 "
                     "is still scanning the dataset."
                 )
             time.sleep(poll_s)

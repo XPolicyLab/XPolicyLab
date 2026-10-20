@@ -1,0 +1,21 @@
+# Python and runtime caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.triton_cache/
+
+# Local datasets, checkpoints, logs, and evaluation outputs
+/data/
+/checkpoints/
+/checkpoints-smoke/
+/logs/
+/eval_runs/
+/slurm-*.out
+
+# Downloaded model assets and upstream training outputs
+/uniwam/pretrained_models/
+/uniwam/checkpoints/
+/uniwam/runs/
+/uniwam/wandb/
+/uniwam/tensorboard_logs/
+/uniwam/.cache/

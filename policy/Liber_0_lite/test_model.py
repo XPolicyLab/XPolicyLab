@@ -13,6 +13,18 @@ adapter = importlib.import_module("XPolicyLab.policy.Liber_0_lite.model")
 from XPolicyLab.utils.process_data import decode_obs_images, encode_image_bit, pack_robot_state
 
 
+@pytest.mark.parametrize("policy_name", ["Liber_0_lite", "Liber_0_preview"])
+def test_deployment_options_are_documented(policy_name):
+    directory = Path(__file__).resolve().parent.parent / policy_name
+    config = yaml.safe_load((directory / "deploy.yml").read_text())
+    readme = (directory / "README.md").read_text()
+    standard = {"policy_name", "protocol", "host", "port", "bench_name", "task_name",
+                "ckpt_name", "env_cfg_type", "seed", "action_type", "gpu_id", "eval_batch"}
+    for key in config.keys() - standard:
+        default = "null" if config[key] is None else str(config[key])
+        assert f"| `{key}` | `{default}` |" in readme
+
+
 class Engine:
     action_horizon = 32
     robotwin_camera_layout = "four_grid_288x384"

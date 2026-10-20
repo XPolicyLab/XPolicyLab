@@ -1,0 +1,22 @@
+{
+  "batch_size": 48,
+  "num_workers": 8,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.01,
+  "num_epochs": 32,
+  "mixed_precision": "bf16",
+  "seed": 42,
+  "max_grad_norm": 1.0,
+  "gradient_accumulation_steps": 1,
+  "save_every": 172,
+  "full_layer_checkpointing": true,
+  "ddp_bucket_cap_mb": 16384,
+  "ddp_gradient_as_bucket_view": false,
+  "max_steps": 5504,
+  "warmup_steps": 275,
+  "reference_world_size": 68,
+  "adam_betas": [
+    0.9,
+    0.95
+  ]
+}

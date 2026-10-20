@@ -1,0 +1,19 @@
+{
+  "format": "crwm.xpolicylab.sources.v1",
+  "xpolicylab": {
+    "repository": "https://github.com/XPolicyLab/XPolicyLab.git",
+    "commit": "94dbf9505f2f87cf59c3ee8ba5912cd236781771"
+  },
+  "inference": {
+    "repository": "https://github.com/Liumouliu/CloudRobo-WM-0.git",
+    "branch": "robotwin_inference",
+    "commit": "08a2f621df09cc4a6e4910fec3602bc422e4afa0",
+    "directory": "source_inference"
+  },
+  "posttrain": {
+    "repository": "https://github.com/Liumouliu/CloudRobo-WM-0.git",
+    "branch": "robotwin_posttrain",
+    "commit": "4c3b80abbd8a3e0029bc509a9fedba45862b9c64",
+    "directory": "source_posttrain"
+  }
+}

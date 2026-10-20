@@ -5,7 +5,7 @@ EE poses) are defined in YAML files and loaded at import time, so a new robot
 only requires a new YAML — not a code change.
 
 Search order for the YAML folder:
-  1. ``STARVLA_EMBODIMENT_DIR`` environment variable
+  1. ``SPARK_0_EMBODIMENT_DIR`` environment variable
   2. ``<adapter root>/model_configs/embodiments/`` (the directory containing
      source_starvla, then its model_configs/embodiments)
   3. ``<this directory>/embodiments/``
@@ -18,8 +18,8 @@ A schema describes what the robot IS (including the camera *catalog*); what a
 TRAINING RUN decides about it (active cameras, chunk length, per-modality
 normalization, observation indices, pose formats) comes from the train config
 and reaches this module as environment variables that ``_apply_run_overrides``
-layers on top of every spec — see ``STARVLA_XPOLICY_SPEC_OVERRIDES`` and
-``STARVLA_XPOLICY_*_POSE_FORMAT``.
+layers on top of every spec — see ``SPARK_0_XPOLICY_SPEC_OVERRIDES`` and
+``SPARK_0_XPOLICY_*_POSE_FORMAT``.
 
 The XPolicyLab dual-arm joint layout is:
     [left_arm(6), left_gripper(1), right_arm(6), right_gripper(1)]
@@ -215,7 +215,7 @@ class YamlEmbodimentDataConfig:
             "action": _cumulative_ranges(action_items),
         }
 
-        # Run-level knobs (train config -> STARVLA_XPOLICY_SPEC_OVERRIDES ->
+        # Run-level knobs (train config -> SPARK_0_XPOLICY_SPEC_OVERRIDES ->
         # _apply_run_overrides). `action_horizon` has no safe default: a wrong
         # chunk length silently trains a different contract, so resolve it
         # lazily and fail where it is actually needed.
@@ -230,7 +230,7 @@ class YamlEmbodimentDataConfig:
             raise ValueError(
                 f"[{self.name}] no action horizon resolved for this embodiment. "
                 "Set framework.action_model.action_horizon in the train config "
-                "(train.sh forwards it as STARVLA_XPOLICY_SPEC_OVERRIDES)."
+                "(train.sh forwards it as SPARK_0_XPOLICY_SPEC_OVERRIDES)."
             )
         return list(range(int(self._action_horizon)))
 
@@ -418,7 +418,7 @@ _ARX_X5_BASE_SPEC = {
 # checkpoints still resolve their robot_type at eval, which makes them two
 # names for the same layout. Like every schema they pin NO run knob (the
 # chunk length they used to default to is now the run's to declare), so a
-# launch without STARVLA_XPOLICY_SPEC_OVERRIDES fails loudly instead of
+# launch without SPARK_0_XPOLICY_SPEC_OVERRIDES fails loudly instead of
 # guessing a horizon.
 _BUILTIN_SPECS = {
     "robodojo_arx_x5_h50_q99": dict(_ARX_X5_BASE_SPEC),
@@ -429,7 +429,7 @@ _BUILTIN_SPECS = {
 def _embodiment_dirs() -> list:
     here = Path(__file__).resolve()
     candidates = []
-    env_dir = os.environ.get("STARVLA_EMBODIMENT_DIR")
+    env_dir = os.environ.get("SPARK_0_EMBODIMENT_DIR")
     if env_dir:
         candidates.append(Path(env_dir))
     # data_registry -> train_files -> XPolicyLab -> examples -> source_starvla -> adapter root
@@ -457,13 +457,13 @@ def _apply_run_overrides(spec: dict) -> dict:
     Two environment payloads, both exported by train.sh (and replayed by
     setup_eval_policy_server.sh) and both shared across a co-train mixture:
 
-    * ``STARVLA_XPOLICY_SPEC_OVERRIDES`` — JSON with the top-level run knobs
+    * ``SPARK_0_XPOLICY_SPEC_OVERRIDES`` — JSON with the top-level run knobs
       (``action_horizon`` from ``framework.action_model``, plus
       ``state_normalization`` / ``action_normalization`` /
       ``observation_indices`` / ``video_keys`` from ``datasets.vla_data``;
       ``video_keys`` is the active-camera subset resolved by train.sh).
-    * ``STARVLA_XPOLICY_{STATE,ACTION}_POSE_FORMAT`` and
-      ``STARVLA_XPOLICY_POSE_NORMALIZATION`` — ``datasets.vla_data.
+    * ``SPARK_0_XPOLICY_{STATE,ACTION}_POSE_FORMAT`` and
+      ``SPARK_0_XPOLICY_POSE_NORMALIZATION`` — ``datasets.vla_data.
       {state_pose_format,action_pose_format,pose_normalization}``, applied to
       ``pose_representation.{state,action,normalization}`` for every
       embodiment that declares pose keys.
@@ -472,15 +472,15 @@ def _apply_run_overrides(spec: dict) -> dict:
     materializes the checkpoint's frozen embodiment_spec, which train.sh
     already wrote these values into), the spec values apply as-is.
     """
-    spec_overrides = os.environ.get("STARVLA_XPOLICY_SPEC_OVERRIDES")
+    spec_overrides = os.environ.get("SPARK_0_XPOLICY_SPEC_OVERRIDES")
     if spec_overrides:
         parsed = json.loads(spec_overrides)
         spec = {**spec, **{k: v for k, v in parsed.items() if k in _SPEC_OVERRIDE_KEYS}}
 
     pose_overrides = {
-        "state": os.environ.get("STARVLA_XPOLICY_STATE_POSE_FORMAT"),
-        "action": os.environ.get("STARVLA_XPOLICY_ACTION_POSE_FORMAT"),
-        "normalization": os.environ.get("STARVLA_XPOLICY_POSE_NORMALIZATION"),
+        "state": os.environ.get("SPARK_0_XPOLICY_STATE_POSE_FORMAT"),
+        "action": os.environ.get("SPARK_0_XPOLICY_ACTION_POSE_FORMAT"),
+        "normalization": os.environ.get("SPARK_0_XPOLICY_POSE_NORMALIZATION"),
     }
     pose_overrides = {field: value for field, value in pose_overrides.items() if value}
     pose_repr = spec.get("pose_representation") or {}
@@ -539,15 +539,15 @@ DATASET_NAMED_MIXTURES = {
 # ---------------------------------------------------------------------------
 # Runtime mixture registration (wired by train.sh through environment vars).
 #
-# Single dataset (the default): STARVLA_XPOLICY_DATASET_NAME names the LeRobot
-# dataset dir and STARVLA_XPOLICY_ROBOT_TYPE the embodiment schema; one entry
-# is registered under STARVLA_XPOLICY_DATA_MIX (default xpolicylab_runtime).
+# Single dataset (the default): SPARK_0_XPOLICY_DATASET_NAME names the LeRobot
+# dataset dir and SPARK_0_XPOLICY_ROBOT_TYPE the embodiment schema; one entry
+# is registered under SPARK_0_XPOLICY_DATA_MIX (default xpolicylab_runtime).
 #
 # Multi-dataset co-training: a training YAML's `data_mixture` list arrives as
-# STARVLA_XPOLICY_MIXTURE_JSON ([{dataset, weight, embodiment}, ...]) and
+# SPARK_0_XPOLICY_MIXTURE_JSON ([{dataset, weight, embodiment}, ...]) and
 # REPLACES the single-dataset entry under the same mixture name.
 # ---------------------------------------------------------------------------
-_runtime_mix_name = os.environ.get("STARVLA_XPOLICY_DATA_MIX", "xpolicylab_runtime")
+_runtime_mix_name = os.environ.get("SPARK_0_XPOLICY_DATA_MIX", "xpolicylab_runtime")
 
 
 def _require_robot_type(robot_type: str) -> str:
@@ -559,16 +559,16 @@ def _require_robot_type(robot_type: str) -> str:
     return robot_type
 
 
-_runtime_dataset_name = os.environ.get("STARVLA_XPOLICY_DATASET_NAME")
+_runtime_dataset_name = os.environ.get("SPARK_0_XPOLICY_DATASET_NAME")
 if _runtime_dataset_name:
     _runtime_robot_type = _require_robot_type(
-        os.environ.get("STARVLA_XPOLICY_ROBOT_TYPE", "robodojo_arx_x5_h50_q99")
+        os.environ.get("SPARK_0_XPOLICY_ROBOT_TYPE", "robodojo_arx_x5_h50_q99")
     )
     DATASET_NAMED_MIXTURES[_runtime_mix_name] = [
         (_runtime_dataset_name, 1.0, _runtime_robot_type),
     ]
 
-_runtime_mixture_json = os.environ.get("STARVLA_XPOLICY_MIXTURE_JSON")
+_runtime_mixture_json = os.environ.get("SPARK_0_XPOLICY_MIXTURE_JSON")
 if _runtime_mixture_json:
     DATASET_NAMED_MIXTURES[_runtime_mix_name] = [
         (

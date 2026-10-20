@@ -446,12 +446,12 @@ class Model(ModelTemplate):
         self.action_type = self.model_cfg.get("action_type", "joint")
         if self.action_type not in ("joint", "ee"):
             raise ValueError(
-                f"starVLA supports action_type 'joint' or 'ee', got {self.action_type!r}."
+                f"Spark_0 supports action_type 'joint' or 'ee', got {self.action_type!r}."
             )
 
         self.env_cfg_type = self.model_cfg.get("env_cfg_type")
         if self.env_cfg_type is None:
-            raise ValueError("starVLA requires env_cfg_type.")
+            raise ValueError("Spark_0 requires env_cfg_type.")
         self.robot_action_dim_info = _resolve_robot_action_dim_info(self.env_cfg_type)
         self.action_dim = sum(self.robot_action_dim_info["arm_dim"]) + sum(
             self.robot_action_dim_info["ee_dim"]
@@ -515,8 +515,8 @@ class Model(ModelTemplate):
         from deployment.model_server.tools.websocket_policy_client import WebsocketClientPolicy
 
         self.client = WebsocketClientPolicy(
-            self.model_cfg.get("starvla_server_host", "127.0.0.1"),
-            int(self.model_cfg.get("starvla_server_port", 5694)),
+            self.model_cfg.get("Spark_0_server_host", "127.0.0.1"),
+            int(self.model_cfg.get("Spark_0_server_port", 5694)),
         )
         server_meta = self.client.get_server_metadata()
         self.action_chunk_size = int(server_meta["action_chunk_size"])
@@ -531,7 +531,7 @@ class Model(ModelTemplate):
         # config: action_chunk_size comes from the checkpoint's saved
         # framework.action_model.action_horizon (via the server handshake).
         # An explicit number is injected from the LIVE model config's
-        # top-level execute_horizon (or STARVLA_EXECUTE_HORIZON) by the
+        # top-level execute_horizon (or SPARK_0_EXECUTE_HORIZON) by the
         # launcher — never from deploy.yml.
         execute_horizon = self.model_cfg.get("execute_horizon", "auto")
         self._execute_horizon_is_explicit = execute_horizon not in (
@@ -598,7 +598,7 @@ class Model(ModelTemplate):
             str(k) for k in self.video_keys
         ]:
             print(
-                f"[starVLA][WARN] camera contract mismatch: server trained on "
+                f"[Spark_0][WARN] camera contract mismatch: server trained on "
                 f"{server_video_keys} but this client resolved {self.video_keys} from "
                 f"checkpoint_path={checkpoint_path!r}. The server is likely serving a "
                 "different checkpoint; observations will be misaligned."
@@ -608,7 +608,7 @@ class Model(ModelTemplate):
             server_sizes = [tuple(int(v) for v in size) for size in server_image_sizes]
             if server_sizes != list(self.image_sizes):
                 print(
-                    f"[starVLA][WARN] image-size mismatch: server trained at "
+                    f"[Spark_0][WARN] image-size mismatch: server trained at "
                     f"{server_sizes} but this client resizes to {self.image_sizes}. "
                     "Eval frames will not match the training resolution."
                 )
@@ -616,7 +616,7 @@ class Model(ModelTemplate):
             server_flex = bool(server_meta.get("flexible_views"))
             if server_flex != self.flexible_views:
                 print(
-                    f"[starVLA][WARN] flexible_views mismatch: server="
+                    f"[Spark_0][WARN] flexible_views mismatch: server="
                     f"{server_flex} client={self.flexible_views}. "
                     "Keep deploy.yml at flexible_views: auto (checkpoint replay) "
                     "or the image-count / view_mask contract will disagree."
@@ -751,12 +751,12 @@ class Model(ModelTemplate):
             self.rtc_enabled = _parse_bool(deploy_rtc) and bool(server_rtc.get("enable", False))
             if _parse_bool(deploy_rtc) and not self.rtc_enabled:
                 print(
-                    "[starVLA][WARN] rtc=true but the checkpoint/server has "
+                    "[Spark_0][WARN] rtc=true but the checkpoint/server has "
                     "framework.action_model.rtc.enable=false; using the synchronous path."
                 )
         # The server-side pass-through keys (rtc_enable etc.) are applied by
         # the LAUNCHER (setup_eval_policy_server.sh translates the model
-        # config's rtc pointer into --config_override for the StarVLA server);
+        # config's rtc pointer into --config_override for the Spark_0 server);
         # nothing in this client consumes them. If the requested server state
         # disagrees with the handshake, the server was started another way
         # (manual server_policy.py, stale server) and the pass-through was
@@ -767,11 +767,11 @@ class Model(ModelTemplate):
             got_enable = bool(server_rtc.get("enable", False))
             if want_enable != got_enable:
                 print(
-                    f"[starVLA][WARN] rtc_enable={want_enable} but the server "
+                    f"[Spark_0][WARN] rtc_enable={want_enable} but the server "
                     f"handshake reports rtc.enable={got_enable}: the pass-through only "
                     "applies when the server is launched via setup_eval_policy_server.sh. "
                     "Restart the server through the launcher (or set "
-                    "STARVLA_CONFIG_OVERRIDE) for the model config's rtc value "
+                    "SPARK_0_CONFIG_OVERRIDE) for the model config's rtc value "
                     "to take effect."
                 )
         if self.rtc_enabled and self.chunk_offset != 0:
@@ -797,7 +797,7 @@ class Model(ModelTemplate):
         )
         if self.rtc_enabled and self.rtc_execution_horizon <= self.rtc_delay_init:
             print(
-                f"[starVLA][WARN] RTC fire threshold ({self.rtc_execution_horizon} rows) "
+                f"[Spark_0][WARN] RTC fire threshold ({self.rtc_execution_horizon} rows) "
                 f"does not exceed the inference-delay estimate ({self.rtc_delay_init} rows); "
                 "prefetches will overrun the queue and block like the synchronous path "
                 "until the runtime floor (observed delay + 1) raises it. Raise "
@@ -815,14 +815,14 @@ class Model(ModelTemplate):
         if self.rtc_enabled and self._execute_horizon_is_explicit:
             if execute_drives_rtc:
                 print(
-                    f"[starVLA] execute_horizon={self.execute_horizon} sets the RTC "
+                    f"[Spark_0] execute_horizon={self.execute_horizon} sets the RTC "
                     f"replan cadence: prefetch fires at {self.rtc_execution_horizon} "
                     "rows remaining (H - execute_horizon, floored at a 10-row guidance "
                     "window). Pin rtc_fire_at_remaining to override."
                 )
             else:
                 print(
-                    f"[starVLA][WARN] execute_horizon={self.execute_horizon} is ignored "
+                    f"[Spark_0][WARN] execute_horizon={self.execute_horizon} is ignored "
                     "while RTC is on: the async loop re-plans whenever the queue drops "
                     f"to {self.rtc_execution_horizon} rows (replan period "
                     f"{self.action_chunk_size - self.rtc_execution_horizon} steps). "
@@ -871,15 +871,9 @@ class Model(ModelTemplate):
         self.rtc_failed_envs: set[int] = set()
         self.rtc_saturated_warned_envs: set[int] = set()
 
-        # Cadence hints for deploy.py's FAST_OBS_UPDATE. Sync is
-        # `step % execute_horizon == 0`. RTC with a pinned fire_at_remaining
-        # uses period H - fire_at (deploy.py reads the live model config).
         # Tactile is overwrite-from-obs (the bench ships the current history
-        # window), so skipping intermediate update_obs does not thin the
-        # region history — only state still needs the client ring buffer.
-        self.deploy_obs_every_n_steps = self.execute_horizon
-        self.deploy_state_history_frames = self.state_history_frames
-        self.deploy_rtc_enabled = self.rtc_enabled
+        # window), so a client that skips intermediate update_obs does not
+        # thin the region history — only state still needs the client ring buffer.
         self._log_tactile_rtc_cadence()
 
         if self.tactile_runtime:
@@ -893,7 +887,7 @@ class Model(ModelTemplate):
             tactile_summary = "off"
 
         print(
-            f"[starVLA] connected to StarVLA server, action_type={self.action_type}, "
+            f"[Spark_0] connected to Spark-0 server, action_type={self.action_type}, "
             f"env_action_dim={self.action_dim}, model_action_dim={self.codec.model_action_dim}, "
             f"chunk={self.action_chunk_size} (identity_offset={self.chunk_offset}), "
             f"execute_horizon={self.execute_horizon}, include_state={self.include_state}, "
@@ -1017,55 +1011,7 @@ class Model(ModelTemplate):
         return converted_obs, raw_state_world, camera_pose
 
     def update_obs(self, obs):
-        return self.update_obs_batch([obs])
-
-    def _obs_due_in(self, env_idx: int) -> int:
-        """Control steps from now until this env next READS an observation.
-
-        A lower bound: too early wastes a few ``update_obs`` calls, too late
-        makes the next infer condition on a stale snapshot. Sync is exact
-        (``step % execute_horizon``). RTC cannot use a fixed period — the
-        fire threshold rises with the observed delay, a drain refills at
-        whatever step it happens, and an in-flight prefetch can splice (and
-        then fire) on this ``get_action`` because the worker thread may
-        finish between ``update_obs`` and ``get_action``.
-
-        So RTC only skips when the next read is deterministic: a chunk is
-        already queued, no prefetch is in flight, and ``remaining`` is still
-        above the live threshold. Fire, drain, and the prefetch window all
-        return 1 (keep sending until the splice lifts ``remaining`` back
-        above the threshold).
-        """
-        step = int(self.step_by_env.get(env_idx, 0))
-        if not self.rtc_enabled:
-            horizon = max(1, int(self.execute_horizon))
-            return horizon - (step % horizon)
-
-        horizon = int(self.action_chunk_size)
-        threshold = self._rtc_fire_threshold(env_idx)
-        chunk = self.action_chunks_by_env.get(env_idx)
-        if chunk is None:
-            # Cold start: this step refills; the first prefetch is
-            # ``H - threshold`` consumes later (no in-flight splice yet).
-            return max(1, horizon - threshold)
-        remaining = len(chunk) - int(self.rtc_consumed_by_env.get(env_idx, 0))
-        # A worker prefetch can finish between this reply and get_action;
-        # snapshots already taken this round fire as soon as the round ends.
-        pending = (
-            getattr(self, "_rtc_pending_future", None) is not None
-            or bool(getattr(self, "_rtc_pending_entries", None))
-        )
-        if remaining <= 0 or remaining <= threshold or pending:
-            return 1
-        return remaining - threshold
-
-    def obs_schedule(self, env_idx_list) -> list[list[int]]:
-        """``[[env_idx, steps_until_next_read], ...]`` — see :meth:`_obs_due_in`.
-
-        A list of pairs rather than a dict because this crosses a JSON
-        transport, which would turn integer keys into strings.
-        """
-        return [[int(env_idx), self._obs_due_in(int(env_idx))] for env_idx in env_idx_list]
+        self.update_obs_batch([obs])
 
     def update_obs_batch(self, obs_list):
         # Route the whole batch BEFORE converting anything: a missing
@@ -1109,7 +1055,6 @@ class Model(ModelTemplate):
                 self.camera_pose_by_env[env_idx] = camera_pose
             else:
                 self.camera_pose_by_env.pop(env_idx, None)
-        return {"obs_due_in": self.obs_schedule(env_idx_list)}
 
     def _log_tactile_rtc_cadence(self) -> None:
         """Log that ``slow_refresh_every`` is infer-count, not control steps."""
@@ -1119,20 +1064,20 @@ class Model(ModelTemplate):
         every = int(refresh["every"])
         if not self.rtc_enabled:
             print(
-                f"[starVLA] tactile slow 3D refresh every {every} infer call(s) "
+                f"[Spark_0] tactile slow 3D refresh every {every} infer call(s) "
                 "(slow_refresh_every is infer-count, not control steps)"
             )
             return
         rtc_period = self.action_chunk_size - self.rtc_execution_horizon
         control = tactile_slow_refresh_control_period(rtc_period, every)
         print(
-            f"[starVLA] tactile slow 3D refresh every {every} infer calls = "
+            f"[Spark_0] tactile slow 3D refresh every {every} infer calls = "
             f"{control} control steps (RTC period {rtc_period} × {every}). "
             "slow_refresh_every is infer-count, not control steps."
         )
         if every > 1 and every == rtc_period:
             print(
-                f"[starVLA][WARN] slow_refresh_every={every} equals the RTC "
+                f"[Spark_0][WARN] slow_refresh_every={every} equals the RTC "
                 f"replan period ({rtc_period} steps). Those are different units: "
                 f"3D refreshes every {control} control steps. Use "
                 "slow_refresh_every: 1 to refresh 3D on every RTC fire."
@@ -1367,7 +1312,7 @@ class Model(ModelTemplate):
         with self._rtc_ws_lock:
             response = self.client.predict_action(vla_input)
         if not response.get("ok", False):
-            raise RuntimeError(f"StarVLA inference failed: {response.get('error', response)}")
+            raise RuntimeError(f"Spark_0 inference failed: {response.get('error', response)}")
         data = response["data"]
         chunks_model = np.asarray(data["actions"], dtype=np.float64)
         if (
@@ -1519,12 +1464,12 @@ class Model(ModelTemplate):
     def _warn_on_stale_obs(self, env_idx_list: list[int]) -> None:
         """Report once per env when an inference runs on an old observation.
 
-        Only reachable under ``deploy.py``'s ``FAST_OBS_UPDATE``, which skips
-        ``update_obs`` on the steps the model is not expected to read. The
-        schedule is prediction-based (see :meth:`_obs_due_in`), so a
-        mispredicted read — an RTC fire brought forward by a rising delay
-        estimate, or a queue drain — conditions on a stale snapshot instead of
-        failing. Without this the only symptom is a worse success rate.
+        Only reachable under ``deploy.py``'s ``FAST_OBS_UPDATE``, which sends
+        a full observation on a fixed client period and skips the steps in
+        between. A fire that lands off that period — an RTC threshold raised
+        by the observed delay, or a queue drain — conditions on the last
+        uploaded snapshot instead of failing. Without this the only symptom
+        is a worse success rate.
         """
         obs_steps = getattr(self, "_obs_step_by_env", None) or {}
         warned = getattr(self, "_stale_obs_warned_envs", None)
@@ -1540,13 +1485,12 @@ class Model(ModelTemplate):
                 continue
             warned.add(env_idx)
             print(
-                f"[starVLA][WARN] env {env_idx} inferred on an observation "
-                f"{age} control step(s) old. The bench is skipping update_obs "
-                "(deploy.py FAST_OBS_UPDATE) on a step this model turned out "
-                "to need — an RTC fire pulled in by a rising delay estimate, "
-                "or a drained queue. The schedule re-locks on the next "
-                "update_obs; set FAST_OBS_UPDATE = False if this repeats. "
-                "Logged once per env."
+                f"[Spark_0][WARN] env {env_idx} inferred on an observation "
+                f"{age} control step(s) old. The bench uploads observations on "
+                "a fixed period (deploy.py FAST_OBS_UPDATE) and this inference "
+                "fell between uploads — an RTC fire pulled in by a rising "
+                "delay estimate, or a drained queue. Set FAST_OBS_UPDATE = "
+                "False if this repeats. Logged once per env."
             )
 
     def _infer_chunk(self, env_idx: int) -> np.ndarray:
@@ -1843,7 +1787,7 @@ class Model(ModelTemplate):
             self.rtc_fire_index_by_env[env_idx] = entry["consumed"]
             if self.rtc_debug:
                 print(
-                    f"[starVLA][RTC] env{env_idx} fire: remaining={entry['remaining']} "
+                    f"[Spark_0][RTC] env{env_idx} fire: remaining={entry['remaining']} "
                     f"threshold={entry['threshold']} leftover={len(entry['leftover_model'])} "
                     f"delay_sent={entry['delay']}"
                 )
@@ -1904,7 +1848,7 @@ class Model(ModelTemplate):
                 f"retrying on the next fire ({failures}/{self.rtc_max_failures} "
                 "consecutive failures)"
             )
-        print(f"[starVLA][WARN] RTC {what} ({exc}); {tail}.")
+        print(f"[Spark_0][WARN] RTC {what} ({exc}); {tail}.")
 
     def _rtc_splice(self, env_idx: int, decoded: np.ndarray) -> None:
         """Replace the queue with the new chunk, skipping the rows that were
@@ -1920,7 +1864,7 @@ class Model(ModelTemplate):
             window.append(observed)
             if self.rtc_debug:
                 print(
-                    f"[starVLA][RTC] env{env_idx} splice: d_real={d_real} "
+                    f"[Spark_0][RTC] env{env_idx} splice: d_real={d_real} "
                     f"observed={observed} window_max={max(window)} "
                     f"new_queue={len(decoded) - min(d_real, len(decoded))}"
                 )
@@ -1942,7 +1886,7 @@ class Model(ModelTemplate):
             return
         self.rtc_saturated_warned_envs.add(env_idx)
         print(
-            f"[starVLA][WARN] RTC guidance leftover saturated the normalized action "
+            f"[Spark_0][WARN] RTC guidance leftover saturated the normalized action "
             f"space (env {env_idx}, first row {rtc_meta.get('first_saturated_row')}, "
             f"{rtc_meta.get('saturated_cells')} cells): the frozen prefix is guided "
             "toward a clamped, SHORTENED target and the splice keeps part of the "

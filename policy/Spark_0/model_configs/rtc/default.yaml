@@ -8,7 +8,7 @@
 # For a variant, copy this file to a new stem and point `rtc:` at it.
 
 # ── Server: framework.action_model.rtc.* ──
-# Same allowlist validation as STARVLA_CONFIG_OVERRIDE; null leaves the
+# Same allowlist validation as SPARK_0_CONFIG_OVERRIDE; null leaves the
 # framework default untouched.
 enable: true
 inference_delay: 8

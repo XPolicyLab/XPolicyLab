@@ -1,0 +1,56 @@
+{
+  "format": "crwm.inference.weights.v1",
+  "native_tensors": 1674,
+  "native_elements": 6044187358,
+  "precision": "bfloat16",
+  "required_inputs": [
+    "rgb",
+    "joint14",
+    "instruction"
+  ],
+  "depth_required": false,
+  "current_pointmap": "zero_latent_invalid",
+  "future_pointmap_valid": true,
+  "files": [
+    {
+      "path": "weights/cr_wm.pt",
+      "bytes": 12088948709,
+      "sha256": "fb448d73f268f2615cf262a08b343cf70791f4642502f66df234871249832762"
+    },
+    {
+      "path": "weights/third_party/DiffSynth-Studio/Wan-Series-Converted-Safetensors/Wan2.2_VAE.safetensors",
+      "bytes": 1409401152,
+      "sha256": "0e913a2ca571c75fcb63385a8edadcca73454af5842596cb1ad11e4142590996"
+    },
+    {
+      "path": "weights/third_party/DiffSynth-Studio/Wan-Series-Converted-Safetensors/models_t5_umt5-xxl-enc-bf16.safetensors",
+      "bytes": 11361845432,
+      "sha256": "d92de679881d38af9c89eff7bb1b6d6c9d96cb2b69831e4027e9ecabdd38eb23"
+    },
+    {
+      "path": "weights/third_party/dinov3_vitb16_timm/model.safetensors",
+      "bytes": 342579728,
+      "sha256": "1f9ed8a2378d65e24bb710ba522ac9fa7be4e036d7aefb4384ce022833926332"
+    },
+    {
+      "path": "weights/third_party/Wan-AI/Wan2.1-T2V-1.3B/google/umt5-xxl/tokenizer_config.json",
+      "bytes": 61728,
+      "sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05"
+    },
+    {
+      "path": "weights/third_party/Wan-AI/Wan2.1-T2V-1.3B/google/umt5-xxl/tokenizer.json",
+      "bytes": 16837417,
+      "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+    },
+    {
+      "path": "weights/third_party/Wan-AI/Wan2.1-T2V-1.3B/google/umt5-xxl/special_tokens_map.json",
+      "bytes": 6623,
+      "sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d"
+    },
+    {
+      "path": "weights/third_party/Wan-AI/Wan2.1-T2V-1.3B/google/umt5-xxl/spiece.model",
+      "bytes": 4548313,
+      "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+    }
+  ]
+}

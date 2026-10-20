@@ -1,0 +1,28 @@
+{
+  "split": "train",
+  "horizon": 32,
+  "stride": 1,
+  "window_stride": 1,
+  "weights": null,
+  "mixture": null,
+  "samples_per_epoch": null,
+  "context_len": 128,
+  "text_model_id": "Wan-AI/Wan2.2-TI2V-5B",
+  "allow_legacy_text_cache": true,
+  "require_full_coverage": true,
+  "normalization_mode": "z-score",
+  "required_modalities": [
+    "pointmap"
+  ],
+  "pointmap_depth_validity": "finite_positive",
+  "augment_rgb_dino_depth": true,
+  "augment_camera_keys": [
+    "cam_high"
+  ],
+  "augment_crop_scale": 0.95,
+  "augment_rotate_degrees": 5.0,
+  "augment_color_jitter_brightness": 0.3,
+  "augment_color_jitter_contrast": 0.4,
+  "augment_color_jitter_saturation": 0.5,
+  "augment_color_jitter_hue": 0.0
+}

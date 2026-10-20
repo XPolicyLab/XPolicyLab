@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cr-wm"
+version = "1.0.0"
+description = "CR-WM RGB-only world/action inference with Joint14 prediction"
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.7.1",
+  "torchvision>=0.22.1",
+  "numpy==1.26.4",
+  "einops==0.8.1",
+  "timm==1.0.26",
+  "transformers==4.49.0",
+  "huggingface-hub==0.29.2",
+  "safetensors==0.5.3",
+  "pillow==12.0.0",
+  "regex==2025.11.3",
+  "ftfy==6.3.1",
+  "sentencepiece==0.2.0",
+  "PyYAML==6.0.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["crwm*"]

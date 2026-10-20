@@ -1,9 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-PYTHON_BIN="${STARVLA_PYTHON:-/personal/miniconda3/envs/starvla/bin/python3.10}"
-if [[ ! -x "${STARVLA_PYTHON:-/personal/miniconda3/envs/starvla/bin/python3.10}" ]]; then
-    echo "[check_da3_teacher] ERROR: Python interpreter not found: ${STARVLA_PYTHON:-/personal/miniconda3/envs/starvla/bin/python3.10}" >&2
+PYTHON_BIN="${SPARK_0_PYTHON:-python3}"
+if ! command -v "${PYTHON_BIN}" >/dev/null 2>&1; then
+    echo "[check_da3_teacher] ERROR: Python interpreter not found: ${PYTHON_BIN}" >&2
+    echo "[check_da3_teacher] Set SPARK_0_PYTHON to the training interpreter." >&2
     exit 1
 fi
 
@@ -38,7 +39,7 @@ fi
 # be a local dir or an HF hub id. Relative paths are resolved the way TRAINING
 # resolves them: train.sh cd's into source_starvla/ before launching, so
 # `./playground/...` in a recipe means source_starvla/playground/... .
-read -r da3_enabled teacher_path < <("${STARVLA_PYTHON:-/personal/miniconda3/envs/starvla/bin/python3.10}" - "$config_yaml" "$default_teacher_dir" <<'PY'
+read -r da3_enabled teacher_path < <("${PYTHON_BIN}" - "$config_yaml" "$default_teacher_dir" <<'PY'
 import os
 import sys
 
@@ -86,7 +87,7 @@ fail() {
 }
 
 # 1. The depth_anything_3 package must be importable in the training env.
-if ! "${STARVLA_PYTHON:-/personal/miniconda3/envs/starvla/bin/python3.10}" -c "import depth_anything_3" >/dev/null 2>&1; then
+if ! "${PYTHON_BIN}" -c "import depth_anything_3" >/dev/null 2>&1; then
     fail "the 'depth_anything_3' package is not installed in this environment (pip install 'git+https://github.com/ByteDance-Seed/Depth-Anything-3')."
 fi
 

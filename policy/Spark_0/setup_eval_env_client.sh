@@ -37,8 +37,8 @@ echo "[CLIENT] Python: $(command -v python) (Conda: ${CONDA_PREFIX})"
 
 # FAST_OBS_UPDATE (deploy.py) must read the SAME live model config as the
 # policy server. Copy of setup_eval_policy_server.sh checkpoint lookup +
-# _model_config_path. A pre-set SPARK0_MODEL_CONFIG (or STARVLA_MODEL_CONFIG)
-# wins; otherwise ckpt_name yaml, then the checkpoint's recorded model_config.
+# _model_config_path. A pre-set SPARK_0_MODEL_CONFIG wins; otherwise ckpt_name
+# yaml, then the checkpoint's recorded model_config.
 run_id="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${ckpt_name}"
 local_run_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
@@ -63,7 +63,7 @@ else
     )
 fi
 
-resolve_starvla_checkpoint() {
+resolve_Spark_0_checkpoint() {
     local run_dir=$1
     local candidates=()
 
@@ -88,17 +88,17 @@ resolve_starvla_checkpoint() {
     return 1
 }
 
-checkpoint_path="${STARVLA_CKPT_PATH:-}"
+checkpoint_path="${SPARK_0_CKPT_PATH:-}"
 if [[ -z "${checkpoint_path}" ]]; then
     for run_dir in "${candidate_run_dirs[@]}"; do
-        if checkpoint_path=$(resolve_starvla_checkpoint "${run_dir}"); then
+        if checkpoint_path=$(resolve_Spark_0_checkpoint "${run_dir}"); then
             break
         fi
         checkpoint_path=""
     done
 fi
 
-model_config_env="${SPARK0_MODEL_CONFIG:-${STARVLA_MODEL_CONFIG:-}}"
+model_config_env="${SPARK_0_MODEL_CONFIG:-}"
 spark0_resolved=$(python - "${SCRIPT_DIR}" "${ckpt_name}" "${checkpoint_path}" "${model_config_env}" <<'PY'
 import sys
 from pathlib import Path
@@ -141,12 +141,12 @@ def _model_config_path():
     if model_config_env:
         candidate = Path(model_config_env).expanduser()
         if candidate.is_file():
-            return candidate, "STARVLA_MODEL_CONFIG"
+            return candidate, "SPARK_0_MODEL_CONFIG"
         candidate = config_dir / f"{_stem(model_config_env)}.yaml"
         if candidate.is_file():
-            return candidate, "STARVLA_MODEL_CONFIG"
+            return candidate, "SPARK_0_MODEL_CONFIG"
         print(
-            f"[CLIENT][WARN] SPARK0/STARVLA_MODEL_CONFIG={model_config_env} not found; "
+            f"[CLIENT][WARN] SPARK_0_MODEL_CONFIG={model_config_env} not found; "
             "falling back to ckpt_name / the checkpoint's recorded model_config.",
             file=sys.stderr,
         )
@@ -174,9 +174,9 @@ PY
 )
 
 if [[ -n "${spark0_resolved}" ]]; then
-    export SPARK0_MODEL_CONFIG="${spark0_resolved}"
+    export SPARK_0_MODEL_CONFIG="${spark0_resolved}"
 else
-    unset SPARK0_MODEL_CONFIG || true
+    unset SPARK_0_MODEL_CONFIG || true
 fi
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, ckpt_name=${ckpt_name}, server=${policy_server_host}:${policy_server_port}"

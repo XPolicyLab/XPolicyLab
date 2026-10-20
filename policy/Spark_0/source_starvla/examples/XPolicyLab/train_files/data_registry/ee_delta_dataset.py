@@ -101,7 +101,7 @@ _STATS_VERSION = "7"
 # and looped tiny matmuls in different orders), and the pooled statistics
 # over a full dataset come out identical, so the cache hash deliberately
 # does NOT include the implementation and the two share caches.
-_STATS_IMPL_ENV = "STARVLA_STATS_IMPL"
+_STATS_IMPL_ENV = "SPARK_0_STATS_IMPL"
 
 
 def _stats_impl() -> str:
@@ -1047,7 +1047,7 @@ class EEPoseReprLeRobotDataset(LeRobotSingleDataset):
         is ``None`` when that modality's pose format is ``raw``.
 
         ``impl="loop"`` is the original per-base-index Python loop, kept for
-        A/B verification (``STARVLA_STATS_IMPL``); ``"vectorized"`` computes
+        A/B verification (``SPARK_0_STATS_IMPL``); ``"vectorized"`` computes
         the same values with whole-episode tensor ops. Values agree to within
         float64 round-off (batched vs looped BLAS matmuls accumulate in
         different orders; observed <= 1e-13, only at near-zero entries) —

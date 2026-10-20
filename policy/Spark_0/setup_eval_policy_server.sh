@@ -23,8 +23,7 @@ BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 UTILS_DIR="${XPL_ROOT}/utils"
 # Web / caller may pin STARVLA_ROOT. Otherwise default to this adapter copy,
 # then (after the checkpoint is resolved) prefer the training checkout that
-# owns the weights — Spark_0's registry is ARX 14-d, while SparkArena 7w
-# checkpoints register xpolicylab_sparkarena (54-d) in their source_starvla.
+# owns the weights.
 _explicit_starvla_root="${STARVLA_ROOT:-}"
 STARVLA_ROOT="${STARVLA_ROOT:-${SCRIPT_DIR}/source_starvla}"
 
@@ -45,7 +44,7 @@ action_dim=$(bash "${UTILS_DIR}/get_action_dim.sh" "${BENCH_ROOT}" "${env_cfg_ty
 # <bench>-<ckpt>-<env>-<action>-<seed> under results/Checkpoints/ or checkpoints/.
 # ckpt_name may also be a path (absolute, or relative containing '/', resolved
 # under this policy dir), and checkpoints/<ckpt_name> is kept as a verbatim
-# fallback. STARVLA_CKPT_PATH stays the highest-priority explicit override.
+# fallback. SPARK_0_CKPT_PATH stays the highest-priority explicit override.
 run_id="${bench_name}-${ckpt_name}-${env_cfg_type}-${action_type}-${seed}"
 result_run_dir="${SCRIPT_DIR}/results/Checkpoints/${ckpt_name}"
 local_run_dir="${SCRIPT_DIR}/checkpoints/${ckpt_name}"
@@ -56,11 +55,11 @@ elif [[ "${ckpt_name}" == */* ]]; then
     candidate_run_dirs=("${SCRIPT_DIR}/${ckpt_name}")
 else
     # Training run dirs embed the training env_cfg_type (tianji_marvin_wuji
-    # by default; older runs and the published pretrain checkpoint use the
-    # short tag "wuji"), so also glob any tag for the same
-    # <bench>-<ckpt>-*-<action>-<seed> tuple. This lets eval.sh take the
-    # short training CKPT_NAME (which scripts/finetune.sh defaults to the
-    # model config stem) directly.
+    # by default; older runs use the short tag "wuji"), so also glob any tag
+    # for the same <bench>-<ckpt>-*-<action>-<seed> tuple. This lets eval.sh
+    # take the short training CKPT_NAME (which scripts/finetune.sh defaults
+    # to the model config stem) directly. The published pretrain directory
+    # is checkpoints/pretrain_spark_0 and matches that short name.
     shopt -s nullglob
     tag_glob_dirs=(
         "${SCRIPT_DIR}/results/Checkpoints/${bench_name}-${ckpt_name}-"*"-${action_type}-${seed}"
@@ -76,7 +75,7 @@ else
     )
 fi
 
-resolve_starvla_checkpoint() {
+resolve_Spark_0_checkpoint() {
     local run_dir=$1
     local candidates=()
 
@@ -101,10 +100,10 @@ resolve_starvla_checkpoint() {
     return 1
 }
 
-checkpoint_path="${STARVLA_CKPT_PATH:-}"
+checkpoint_path="${SPARK_0_CKPT_PATH:-}"
 if [[ -z "${checkpoint_path}" ]]; then
     for run_dir in "${candidate_run_dirs[@]}"; do
-        if checkpoint_path=$(resolve_starvla_checkpoint "${run_dir}"); then
+        if checkpoint_path=$(resolve_Spark_0_checkpoint "${run_dir}"); then
             break
         fi
         checkpoint_path=""
@@ -115,7 +114,7 @@ if [[ -z "${checkpoint_path}" ]]; then
 fi
 if [[ ! -f "${checkpoint_path}" ]]; then
     echo "[SERVER][ERROR] checkpoint file does not exist: ${checkpoint_path}" >&2
-    echo "[SERVER][ERROR] set STARVLA_CKPT_PATH=/path/to/pytorch_model.pt to override checkpoint lookup" >&2
+    echo "[SERVER][ERROR] set SPARK_0_CKPT_PATH=/path/to/pytorch_model.pt to override checkpoint lookup" >&2
     echo "[SERVER][ERROR] expected a .pt or .safetensors file under one of:" >&2
     echo "[SERVER][ERROR]   ${result_run_dir}/final_model/" >&2
     echo "[SERVER][ERROR]   ${result_run_dir}/checkpoints/" >&2
@@ -124,13 +123,13 @@ if [[ ! -f "${checkpoint_path}" ]]; then
     exit 1
 fi
 checkpoint_path="$(realpath "${checkpoint_path}")"
-echo "[SERVER] resolved StarVLA checkpoint: ${checkpoint_path}"
+echo "[SERVER] resolved Spark_0 checkpoint: ${checkpoint_path}"
 if [[ -z "${_explicit_starvla_root}" ]]; then
     owner_cursor="$(dirname "${checkpoint_path}")"
     while [[ "${owner_cursor}" != "/" ]]; do
         if [[ -f "${owner_cursor}/eval.sh" && -d "${owner_cursor}/source_starvla" ]]; then
             STARVLA_ROOT="${owner_cursor}/source_starvla"
-            echo "[SERVER] using checkpoint-owner StarVLA checkout: ${STARVLA_ROOT}"
+            echo "[SERVER] using checkpoint-owner Spark_0 checkout: ${STARVLA_ROOT}"
             break
         fi
         owner_cursor="$(dirname "${owner_cursor}")"
@@ -139,7 +138,7 @@ fi
 
 # ---------------------------------------------------------------------------
 # Train/test consistency: replay the complete TRAINING config saved next to
-# the checkpoint. The StarVLA policy server
+# the checkpoint. The Spark_0 policy server
 # rebuilds the training-time normalization (q99 over converted values) through
 # the dataloader registry, which resolves `datasets.vla_data.data_mix` ->
 # robot_type -> embodiment DataConfig. Runtime mixes (e.g. xpolicylab_runtime)
@@ -149,7 +148,7 @@ fi
 #     embodiment dir so eval uses the exact training-time schema even if
 #     model_configs/embodiments/*.yaml changed since training;
 #   - a saved multi-dataset `data_mixture` is forwarded as mixture JSON.
-# Pre-set STARVLA_XPOLICY_* / STARVLA_EMBODIMENT_DIR values take precedence.
+# Pre-set SPARK_0_XPOLICY_* / SPARK_0_EMBODIMENT_DIR values take precedence.
 # ---------------------------------------------------------------------------
 ckpt_registry=$(python - "${checkpoint_path}" "${SCRIPT_DIR}" <<'PY'
 import json
@@ -249,7 +248,7 @@ pose_normalization = (
 # per-modality normalization, observation indices, active cameras). Same
 # reason as the pose formats above: the materialized spec already carries
 # them, but forwarding them keeps the registry correct when
-# STARVLA_EMBODIMENT_DIR is pre-set to the repo's model_configs/embodiments/. Legacy
+# SPARK_0_EMBODIMENT_DIR is pre-set to the repo's model_configs/embodiments/. Legacy
 # checkpoints have no keys -> empty payload, and the materialized spec's
 # own values apply. video_keys prefer the frozen embodiment_spec (train.sh
 # already filtered the catalog there) over a raw train-config list.
@@ -292,17 +291,17 @@ ckpt_action_pose_format=$(sed -n '6p' <<< "${ckpt_registry}")
 ckpt_pose_normalization=$(sed -n '7p' <<< "${ckpt_registry}")
 ckpt_spec_overrides=$(sed -n '8p' <<< "${ckpt_registry}")
 
-starvla_data_mix="${STARVLA_XPOLICY_DATA_MIX:-${ckpt_data_mix}}"
-starvla_robot_type="${STARVLA_XPOLICY_ROBOT_TYPE:-${ckpt_embodiment}}"
-starvla_embodiment_dir="${STARVLA_EMBODIMENT_DIR:-${ckpt_embodiment_dir}}"
-starvla_mixture_json="${STARVLA_XPOLICY_MIXTURE_JSON:-${ckpt_mixture_json}}"
+Spark_0_data_mix="${SPARK_0_XPOLICY_DATA_MIX:-${ckpt_data_mix}}"
+Spark_0_robot_type="${SPARK_0_XPOLICY_ROBOT_TYPE:-${ckpt_embodiment}}"
+Spark_0_embodiment_dir="${SPARK_0_EMBODIMENT_DIR:-${ckpt_embodiment_dir}}"
+Spark_0_mixture_json="${SPARK_0_XPOLICY_MIXTURE_JSON:-${ckpt_mixture_json}}"
 # Pose formats/normalization are training contracts, not safe eval knobs.
 # Preserve the old env entry points for launches without a saved config, but
 # when the checkpoint records a value an env override must be identical.
 for contract in \
-    "STARVLA_XPOLICY_STATE_POSE_FORMAT:${ckpt_state_pose_format}:state_pose_format" \
-    "STARVLA_XPOLICY_ACTION_POSE_FORMAT:${ckpt_action_pose_format}:action_pose_format" \
-    "STARVLA_XPOLICY_POSE_NORMALIZATION:${ckpt_pose_normalization}:pose_normalization"
+    "SPARK_0_XPOLICY_STATE_POSE_FORMAT:${ckpt_state_pose_format}:state_pose_format" \
+    "SPARK_0_XPOLICY_ACTION_POSE_FORMAT:${ckpt_action_pose_format}:action_pose_format" \
+    "SPARK_0_XPOLICY_POSE_NORMALIZATION:${ckpt_pose_normalization}:pose_normalization"
 do
     IFS=: read -r env_name ckpt_value label <<< "${contract}"
     env_value="${!env_name:-}"
@@ -312,38 +311,38 @@ do
         exit 1
     fi
 done
-starvla_state_pose_format="${STARVLA_XPOLICY_STATE_POSE_FORMAT:-${ckpt_state_pose_format}}"
-starvla_action_pose_format="${STARVLA_XPOLICY_ACTION_POSE_FORMAT:-${ckpt_action_pose_format}}"
-starvla_pose_normalization="${STARVLA_XPOLICY_POSE_NORMALIZATION:-${ckpt_pose_normalization}}"
-starvla_spec_overrides="${STARVLA_XPOLICY_SPEC_OVERRIDES:-${ckpt_spec_overrides}}"
+Spark_0_state_pose_format="${SPARK_0_XPOLICY_STATE_POSE_FORMAT:-${ckpt_state_pose_format}}"
+Spark_0_action_pose_format="${SPARK_0_XPOLICY_ACTION_POSE_FORMAT:-${ckpt_action_pose_format}}"
+Spark_0_pose_normalization="${SPARK_0_XPOLICY_POSE_NORMALIZATION:-${ckpt_pose_normalization}}"
+Spark_0_spec_overrides="${SPARK_0_XPOLICY_SPEC_OVERRIDES:-${ckpt_spec_overrides}}"
 # Any non-empty dataset name registers the runtime mix entry; only the
 # robot_type field is consumed for eval-time normalization.
-starvla_dataset_name="${STARVLA_XPOLICY_DATASET_NAME:-xpolicy_eval}"
-if [[ -z "${ckpt_data_mix}" && -z "${STARVLA_XPOLICY_DATA_MIX:-}" ]]; then
+Spark_0_dataset_name="${SPARK_0_XPOLICY_DATASET_NAME:-xpolicy_eval}"
+if [[ -z "${ckpt_data_mix}" && -z "${SPARK_0_XPOLICY_DATA_MIX:-}" ]]; then
     # No training config found: do not register a runtime mixture.
-    starvla_dataset_name="${STARVLA_XPOLICY_DATASET_NAME:-}"
+    Spark_0_dataset_name="${SPARK_0_XPOLICY_DATASET_NAME:-}"
 fi
 
-starvla_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
-starvla_server_host="127.0.0.1"
-starvla_include_state="${STARVLA_INCLUDE_STATE:-auto}"
+Spark_0_server_port=$(bash "${UTILS_DIR}/get_free_port.sh")
+Spark_0_server_host="127.0.0.1"
+Spark_0_include_state="${SPARK_0_INCLUDE_STATE:-auto}"
 # `auto` lets the wrapper pick the checkpoint's only stats key (self-trained
 # runs store them under the embodiment tag, e.g. new_embodiment). Set
-# STARVLA_UNNORM_KEY explicitly only for multi-embodiment checkpoints.
-starvla_unnorm_key="${STARVLA_UNNORM_KEY:-auto}"
+# SPARK_0_UNNORM_KEY explicitly only for multi-embodiment checkpoints.
+Spark_0_unnorm_key="${SPARK_0_UNNORM_KEY:-auto}"
 # execute_horizon is resolved with the model config below (same path as RTC).
-# Precedence: STARVLA_EXECUTE_HORIZON > model config execute_horizon > auto
+# Precedence: SPARK_0_EXECUTE_HORIZON > model config execute_horizon > auto
 # (model.py falls back to the training action_horizon — one infer per chunk).
 extra_overrides=()
 # `auto` replays the checkpoint's datasets.vla_data.obs_image_size (see
 # tools.runtime_config.resolve_image_size), so the eval resize always matches the
-# training resolution. Set STARVLA_IMAGE_SIZE=[W,H] only to diverge on purpose.
-starvla_image_size="${STARVLA_IMAGE_SIZE:-auto}"
+# training resolution. Set SPARK_0_IMAGE_SIZE=[W,H] only to diverge on purpose.
+Spark_0_image_size="${SPARK_0_IMAGE_SIZE:-auto}"
 
 cleanup() {
-    if [[ -n "${STARVLA_SERVER_PID:-}" ]]; then
-        echo "[SERVER] kill StarVLA websocket server ${STARVLA_SERVER_PID}"
-        kill "${STARVLA_SERVER_PID}" 2>/dev/null || true
+    if [[ -n "${SPARK_0_SERVER_PID:-}" ]]; then
+        echo "[SERVER] kill Spark_0 websocket server ${SPARK_0_SERVER_PID}"
+        kill "${SPARK_0_SERVER_PID}" 2>/dev/null || true
     fi
 }
 trap cleanup EXIT
@@ -351,13 +350,13 @@ trap cleanup EXIT
 # Deliberate divergence from the checkpoint's frozen training config, for
 # knobs that only exist at inference. Two entry points, SAME allowlist and
 # validation, precedence env > model config rtc > checkpoint:
-#   1. STARVLA_CONFIG_OVERRIDE accepts allowlisted OmegaConf dotlist items
+#   1. SPARK_0_CONFIG_OVERRIDE accepts allowlisted OmegaConf dotlist items
 #      (space-separated):
-#        STARVLA_CONFIG_OVERRIDE=framework.action_model.num_inference_timesteps=10
+#        SPARK_0_CONFIG_OVERRIDE=framework.action_model.num_inference_timesteps=10
 #      (more flow-matching Euler steps shrink the shrinkage-toward-the-prior
 #      term that drives wrist windup — the cheapest arm that needs no retrain).
 #      Real-time chunking (RTC) knobs — inference-time only, no retrain:
-#        STARVLA_CONFIG_OVERRIDE="framework.action_model.rtc.enable=true"
+#        SPARK_0_CONFIG_OVERRIDE="framework.action_model.rtc.enable=true"
 #      (optionally plus rtc.inference_delay / rtc.execution_horizon /
 #       rtc.prefix_attention_schedule / rtc.max_guidance_weight; rtc.mode
 #       accepts only pigdm — simulated_delay needs a training-time loss this
@@ -426,7 +425,7 @@ validate_config_override() {
 }
 
 # $1=KEY=VALUE dotlist item, $2=source label. First writer wins
-# (STARVLA_CONFIG_OVERRIDE is processed before the model config's rtc
+# (SPARK_0_CONFIG_OVERRIDE is processed before the model config's rtc
 # pointer, so env > YAML).
 add_config_override() {
     local override=$1 source=$2
@@ -436,7 +435,7 @@ add_config_override() {
             echo "[SERVER][ERROR] ${source} sets ${override_key} twice; remove the duplicate." >&2
             exit 1
         fi
-        echo "[SERVER][WARN] ${source} also sets ${override_key}; keeping the earlier value (precedence: STARVLA_CONFIG_OVERRIDE > model config rtc)." >&2
+        echo "[SERVER][WARN] ${source} also sets ${override_key}; keeping the earlier value (precedence: SPARK_0_CONFIG_OVERRIDE > model config rtc)." >&2
         return 0
     fi
     seen_override_keys["${override_key}"]="${source}"
@@ -445,13 +444,13 @@ add_config_override() {
     applied_config_overrides+=("${override} (${source})")
 }
 
-if [[ -n "${STARVLA_CONFIG_OVERRIDE:-}" ]]; then
-    for override in ${STARVLA_CONFIG_OVERRIDE}; do
+if [[ -n "${SPARK_0_CONFIG_OVERRIDE:-}" ]]; then
+    for override in ${SPARK_0_CONFIG_OVERRIDE}; do
         if [[ "${override}" != *=* ]]; then
-            echo "[SERVER][ERROR] STARVLA_CONFIG_OVERRIDE entries must be KEY=VALUE dotlist items, got: ${override}" >&2
+            echo "[SERVER][ERROR] SPARK_0_CONFIG_OVERRIDE entries must be KEY=VALUE dotlist items, got: ${override}" >&2
             exit 1
         fi
-        add_config_override "${override}" "STARVLA_CONFIG_OVERRIDE"
+        add_config_override "${override}" "SPARK_0_CONFIG_OVERRIDE"
     done
 fi
 
@@ -460,7 +459,7 @@ fi
 # model_configs/rtc/<stem>.yaml) and `execute_horizon` (null = sync uses the
 # training action_horizon; a positive int re-plans every N rows on the sync
 # path; ignored while RTC owns the async cadence). Pointer resolution order:
-#   1. STARVLA_MODEL_CONFIG (a stem under model_configs/ or a path);
+#   1. SPARK_0_MODEL_CONFIG (a stem under model_configs/ or a path);
 #   2. model_configs/<ckpt_name>.yaml (the finetune.sh default naming, where
 #      ckpt_name IS the config stem);
 #   3. model_configs/<the checkpoint's recorded `model_config`>.yaml — train.sh
@@ -474,7 +473,7 @@ fi
 # Output protocol: line 1 is the mode (off | auto | on:<rtc config path>);
 # later lines prefixed "S " are server dotlist overrides, "C " are client
 # overrides forwarded to the policy client.
-rtc_resolution=$(python - "${SCRIPT_DIR}" "${ckpt_name}" "${checkpoint_path}" "${STARVLA_MODEL_CONFIG:-}" <<'PY'
+rtc_resolution=$(python - "${SCRIPT_DIR}" "${ckpt_name}" "${checkpoint_path}" "${SPARK_0_MODEL_CONFIG:-}" <<'PY'
 import sys
 from pathlib import Path
 
@@ -522,12 +521,12 @@ def _model_config_path():
     if model_config_env:
         candidate = Path(model_config_env).expanduser()
         if candidate.is_file():
-            return candidate, "STARVLA_MODEL_CONFIG"
+            return candidate, "SPARK_0_MODEL_CONFIG"
         candidate = config_dir / f"{_stem(model_config_env)}.yaml"
         if candidate.is_file():
-            return candidate, "STARVLA_MODEL_CONFIG"
+            return candidate, "SPARK_0_MODEL_CONFIG"
         print(
-            f"[SERVER][WARN] STARVLA_MODEL_CONFIG={model_config_env} not found; "
+            f"[SERVER][WARN] SPARK_0_MODEL_CONFIG={model_config_env} not found; "
             "falling back to ckpt_name / the checkpoint's recorded model_config.",
             file=sys.stderr,
         )
@@ -662,31 +661,31 @@ while IFS= read -r line; do
     esac
 done <<< "${rtc_resolution}"
 
-# execute_horizon: STARVLA_EXECUTE_HORIZON > model config > auto (action_horizon).
+# execute_horizon: SPARK_0_EXECUTE_HORIZON > model config > auto (action_horizon).
 # Appended AFTER the model-config C lines so the env wins on collision.
-starvla_execute_horizon="${STARVLA_EXECUTE_HORIZON:-}"
+Spark_0_execute_horizon="${SPARK_0_EXECUTE_HORIZON:-}"
 model_execute_horizon=""
 for ov in ${extra_overrides[@]+"${extra_overrides[@]}"}; do
     if [[ "${ov}" == execute_horizon=* ]]; then
         model_execute_horizon="${ov#execute_horizon=}"
     fi
 done
-if [[ -n "${starvla_execute_horizon}" ]]; then
-    if [[ ! "${starvla_execute_horizon}" =~ ^[1-9][0-9]*$ ]]; then
-        echo "[SERVER][ERROR] STARVLA_EXECUTE_HORIZON must be a positive integer, got: ${starvla_execute_horizon}" >&2
+if [[ -n "${Spark_0_execute_horizon}" ]]; then
+    if [[ ! "${Spark_0_execute_horizon}" =~ ^[1-9][0-9]*$ ]]; then
+        echo "[SERVER][ERROR] SPARK_0_EXECUTE_HORIZON must be a positive integer, got: ${Spark_0_execute_horizon}" >&2
         exit 1
     fi
-    extra_overrides+=("execute_horizon=${starvla_execute_horizon}")
-    execute_horizon_log="${starvla_execute_horizon} (STARVLA_EXECUTE_HORIZON)"
+    extra_overrides+=("execute_horizon=${Spark_0_execute_horizon}")
+    execute_horizon_log="${Spark_0_execute_horizon} (SPARK_0_EXECUTE_HORIZON)"
 elif [[ -n "${model_execute_horizon}" ]]; then
     execute_horizon_log="${model_execute_horizon} (model config)"
 else
     execute_horizon_log="auto (training action_horizon; model config null/absent)"
 fi
 
-echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, starvla_port=${starvla_server_port}"
-echo "[SERVER] starVLA overrides: include_state=${starvla_include_state}, unnorm_key=${starvla_unnorm_key}, execute_horizon=${execute_horizon_log}, image_size=${starvla_image_size}"
-echo "[SERVER] training-config replay: data_mix=${starvla_data_mix:-<none>}, robot_type=${starvla_robot_type:-<none>}, embodiment_dir=${starvla_embodiment_dir:-<none>}, mixture=${starvla_mixture_json:-<none>}, state_pose_format=${starvla_state_pose_format:-<spec>}, action_pose_format=${starvla_action_pose_format:-<spec>}, pose_normalization=${starvla_pose_normalization:-<spec>}, spec_overrides=${starvla_spec_overrides:-<spec>}"
+echo "[SERVER] policy=${policy_name}, task=${task_name}, policy_server_port=${policy_server_port}, Spark_0_port=${Spark_0_server_port}"
+echo "[SERVER] Spark_0 overrides: include_state=${Spark_0_include_state}, unnorm_key=${Spark_0_unnorm_key}, execute_horizon=${execute_horizon_log}, image_size=${Spark_0_image_size}"
+echo "[SERVER] training-config replay: data_mix=${Spark_0_data_mix:-<none>}, robot_type=${Spark_0_robot_type:-<none>}, embodiment_dir=${Spark_0_embodiment_dir:-<none>}, mixture=${Spark_0_mixture_json:-<none>}, state_pose_format=${Spark_0_state_pose_format:-<spec>}, action_pose_format=${Spark_0_action_pose_format:-<spec>}, pose_normalization=${Spark_0_pose_normalization:-<spec>}, spec_overrides=${Spark_0_spec_overrides:-<spec>}"
 if (( ${#applied_config_overrides[@]} > 0 )); then
     echo "[SERVER][WARN] DIVERGING from the checkpoint config: ${applied_config_overrides[*]}"
 fi
@@ -694,23 +693,23 @@ fi
 (
     cd "${STARVLA_ROOT}"
     PYTHONPATH="${STARVLA_ROOT}:${PYTHONPATH:-}" \
-    STARVLA_XPOLICY_DATASET_NAME="${starvla_dataset_name}" \
-    STARVLA_XPOLICY_DATA_MIX="${starvla_data_mix}" \
-    STARVLA_XPOLICY_ROBOT_TYPE="${starvla_robot_type}" \
-    STARVLA_XPOLICY_MIXTURE_JSON="${starvla_mixture_json}" \
-    STARVLA_XPOLICY_STATE_POSE_FORMAT="${starvla_state_pose_format}" \
-    STARVLA_XPOLICY_ACTION_POSE_FORMAT="${starvla_action_pose_format}" \
-    STARVLA_XPOLICY_POSE_NORMALIZATION="${starvla_pose_normalization}" \
-    STARVLA_XPOLICY_SPEC_OVERRIDES="${starvla_spec_overrides}" \
-    STARVLA_EMBODIMENT_DIR="${starvla_embodiment_dir}" \
+    SPARK_0_XPOLICY_DATASET_NAME="${Spark_0_dataset_name}" \
+    SPARK_0_XPOLICY_DATA_MIX="${Spark_0_data_mix}" \
+    SPARK_0_XPOLICY_ROBOT_TYPE="${Spark_0_robot_type}" \
+    SPARK_0_XPOLICY_MIXTURE_JSON="${Spark_0_mixture_json}" \
+    SPARK_0_XPOLICY_STATE_POSE_FORMAT="${Spark_0_state_pose_format}" \
+    SPARK_0_XPOLICY_ACTION_POSE_FORMAT="${Spark_0_action_pose_format}" \
+    SPARK_0_XPOLICY_POSE_NORMALIZATION="${Spark_0_pose_normalization}" \
+    SPARK_0_XPOLICY_SPEC_OVERRIDES="${Spark_0_spec_overrides}" \
+    SPARK_0_EMBODIMENT_DIR="${Spark_0_embodiment_dir}" \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \
     python "${STARVLA_ROOT}/deployment/model_server/server_policy.py" \
         --ckpt_path "${checkpoint_path}" \
-        --port "${starvla_server_port}" \
+        --port "${Spark_0_server_port}" \
         ${config_override_args[@]+"${config_override_args[@]}"} \
         --use_bf16
 ) &
-STARVLA_SERVER_PID=$!
+SPARK_0_SERVER_PID=$!
 
 sleep 6
 
@@ -731,10 +730,10 @@ python "${XPL_ROOT}/setup_policy_server.py" \
         policy_name="${policy_name}" \
         action_type="${action_type}" \
         action_dim="${action_dim}" \
-        include_state="${starvla_include_state}" \
-        unnorm_key="${starvla_unnorm_key}" \
+        include_state="${Spark_0_include_state}" \
+        unnorm_key="${Spark_0_unnorm_key}" \
         ${extra_overrides[@]+"${extra_overrides[@]}"} \
-        image_size="${starvla_image_size}" \
+        image_size="${Spark_0_image_size}" \
         starvla_root="${STARVLA_ROOT}" \
-        starvla_server_host="${starvla_server_host}" \
-        starvla_server_port="${starvla_server_port}"
+        Spark_0_server_host="${Spark_0_server_host}" \
+        Spark_0_server_port="${Spark_0_server_port}"

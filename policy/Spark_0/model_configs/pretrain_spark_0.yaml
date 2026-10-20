@@ -14,7 +14,7 @@ run_root_dir: ../checkpoints
 seed: 0
 
 # Robot layout only (keys / dims / camera catalog): model_configs/embodiments/.
-embodiment: wuji2_tianji
+embodiment: tianji_marvin_wuji
 
 # ── Deploy-only (read from the live config at eval time) ─────────────────────
 execute_horizon: null      # sync path: rows executed per cycle; null = action_horizon
@@ -33,7 +33,7 @@ tactile_align: default     # train-only contact-region -> visual-token alignment
 data_mixture: null
 
 wandb_entity: null
-wandb_project: starvla-xpolicy
+wandb_project: Spark_0-xpolicy
 is_debug: false
 version_id: '0.21'         # config schema version; do not change
 
@@ -53,7 +53,7 @@ framework:
 
   action_model:
     action_model_type: LayerwiseFM # layerwise flow-matching DiT
-    action_dim: 58                 # model dims, see embodiments/wuji2_tianji.yaml
+    action_dim: 58                 # model dims, see embodiments/tianji_marvin_wuji.yaml
     state_dim: 58
     continuous_state: true
     action_horizon: 50

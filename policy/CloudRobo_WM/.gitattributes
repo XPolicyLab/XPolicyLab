@@ -1,0 +1,6 @@
+# Normalize packaged source text without changing code semantics.
+* text=auto eol=lf
+# These two strict-SHA assets intentionally retain upstream whitespace.
+# The exception is limited to their trailing whitespace and EOF blanks.
+source_inference/configs/kinematics/config.yml text eol=lf whitespace=-blank-at-eol,-blank-at-eof
+source_inference/configs/kinematics/arx5_description_isaac.urdf text eol=lf whitespace=-blank-at-eol,-blank-at-eof

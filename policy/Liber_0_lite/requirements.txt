@@ -13,3 +13,5 @@ msgpack-numpy==0.4.8
 pydantic==2.12.5
 opencv-python-headless==4.13.0.92
 h5py==3.14.0
+pyarrow==21.0.0
+torchcodec==0.13.0

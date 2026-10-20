@@ -11,7 +11,7 @@ from .batching import infer_actions
 
 
 class Policy:
-    def __init__(self, checkpoint_root, assets, device, weights_file, num_inference_steps):
+    def __init__(self, checkpoint_root, assets, device, weights_file, num_inference_steps, *, initialization_weights=None):
         cfg = OmegaConf.load(checkpoint_root / 'config.yaml')
         model = OmegaConf.to_container(cfg.model, resolve=False)
         for name in ('_target_', 'model_path', 'source_path'):
@@ -37,7 +37,8 @@ class Policy:
         with (checkpoint_root / 'dataset_stats.json').open() as handle:
             norm = build_norm(json.load(handle))
         self.norm = {key: value.to(self.device) if key.startswith('state') else value for key, value in norm.items()}
-        self.model = load_model(model, assets, checkpoint_root / weights_file, device)
+        weights = checkpoint_root / weights_file if initialization_weights is None else initialization_weights
+        self.model = load_model(model, assets, weights, device, pretrained=initialization_weights is not None)
 
     @torch.no_grad()
     def infer_action_chunk(self, observation, instruction, request_seed):

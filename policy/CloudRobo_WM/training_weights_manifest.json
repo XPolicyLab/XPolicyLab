@@ -1,0 +1,23 @@
+{
+  "pending": false,
+  "files": [
+    {
+      "path": "assets/dino.safetensors",
+      "bytes": 342579728,
+      "sha256": "1f9ed8a2378d65e24bb710ba522ac9fa7be4e036d7aefb4384ce022833926332",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/61d0f3a6c6d2e87ebd716f6b34827ce0b1adf321/assets/dino.safetensors"
+    },
+    {
+      "path": "assets/vae.safetensors",
+      "bytes": 299284424,
+      "sha256": "12fede49632648a3eac30a7f4a14e0219d1835aa33cd85a8277263fd53dc2fe6",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/61d0f3a6c6d2e87ebd716f6b34827ce0b1adf321/assets/vae.safetensors"
+    },
+    {
+      "path": "assets/vae_encoder_export.json",
+      "bytes": 114,
+      "sha256": "262c5f2a7fde7342fb674e1bbd63d66c5ba324790a247f35bc3115cb7e0e0ed8",
+      "url": "https://huggingface.co/datasets/liumouliu/cr-wm-posttrain-assets/resolve/61d0f3a6c6d2e87ebd716f6b34827ce0b1adf321/assets/vae_encoder_export.json"
+    }
+  ]
+}

@@ -3,14 +3,14 @@ set -euo pipefail
 
 # Offline precompute of state/action normalization statistics for a recipe.
 #
-# Training launched through train.sh runs with STARVLA_REQUIRE_PRECOMPUTED_STATS=1
+# Training launched through train.sh runs with SPARK_0_REQUIRE_PRECOMPUTED_STATS=1
 # by default: every rank READS the content-addressed stats caches under
 # <dataset>/meta/stats_xpolicy*__<hash>.json and fails fast when one is
 # missing, instead of scanning the dataset on rank 0 at launch. This script
 # builds those caches ahead of time.
 #
-# It reuses train.sh's config resolution, so the resolved YAML and every
-# STARVLA_XPOLICY_* env var are bit-identical to the training launch — the
+# It reuses train.sh's config resolution, so the resolved YAML and the
+# values passed into source_starvla are bit-identical to the training launch — the
 # cache hash covers pose formats, camera frame, history frames, action
 # indices, exclusions and the data/meta fingerprints, and all of them come
 # from the same code path here.
@@ -19,7 +19,7 @@ set -euo pipefail
 # precompute is a single CPU process that reads metadata + parquet only):
 #   bash scripts/precompute_stats.sh <train_config>
 #   bash scripts/precompute_stats.sh <train_config> 0
-#   STARVLA_DATA_ROOT=/path/to/data bash scripts/precompute_stats.sh <train_config>
+#   SPARK_0_DATA_ROOT=/path/to/data bash scripts/precompute_stats.sh <train_config>
 #
 # Re-run it whenever the data or any stats-relevant config knob changes
 # (pose formats, ee_in_camera_frame, state_history_frames, action_horizon,
@@ -57,7 +57,7 @@ config_stem="$(basename "${train_config}")"
 config_stem="${config_stem%.yaml}"
 ckpt_name="${CKPT_NAME:-${config_stem}}"
 seed="${SEED:-0}"
-bench_name="${BENCH_NAME:-Tianji}"
+bench_name="${BENCH_NAME:-SparkArena}"
 env_cfg_type="${ENV_CFG_TYPE:-tianji_marvin_wuji}"
 
 if [[ -f "${train_config}" ]]; then
@@ -78,8 +78,8 @@ if [[ -n "${PER_DEVICE_BS:-}" ]]; then
 fi
 
 echo "[precompute_stats] train_config=${train_config}"
-echo "[precompute_stats] building stats caches only (STARVLA_PRECOMPUTE_STATS_ONLY=1)"
+echo "[precompute_stats] building stats caches only (SPARK_0_PRECOMPUTE_STATS_ONLY=1)"
 
-exec env STARVLA_PRECOMPUTE_STATS_ONLY=1 bash "${ADAPTER_DIR}/train.sh" \
+exec env SPARK_0_PRECOMPUTE_STATS_ONLY=1 bash "${ADAPTER_DIR}/train.sh" \
     "${bench_name}" "${ckpt_name}" "${env_cfg_type}" ee "${seed}" "${gpus}" \
     "${train_config}" ${extra_args[@]+"${extra_args[@]}"}
