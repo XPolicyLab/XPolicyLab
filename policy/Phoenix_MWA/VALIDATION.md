@@ -40,19 +40,19 @@ The reproducible commands are:
 ```bash
 # From the parent of XPolicyLab; PHOENIX_H5_TEST_WEIGHTS is optional for CPU tests.
 PHOENIX_H5_TEST_WEIGHTS=/absolute/path/to/downloaded/weights python -m unittest \
-  XPolicyLab.policy.Phoenix_WAM.test_phoenix \
-  XPolicyLab.policy.Phoenix_WAM.test_joint96 \
-  XPolicyLab.policy.Phoenix_WAM.test_joint96_weights \
-  XPolicyLab.policy.Phoenix_WAM.test_h5 -v
+  XPolicyLab.policy.Phoenix_MWA.test_phoenix \
+  XPolicyLab.policy.Phoenix_MWA.test_joint96 \
+  XPolicyLab.policy.Phoenix_MWA.test_joint96_weights \
+  XPolicyLab.policy.Phoenix_MWA.test_h5 -v
 
-python -m XPolicyLab.policy.Phoenix_WAM.joint96_assets \
+python -m XPolicyLab.policy.Phoenix_MWA.joint96_assets \
   /absolute/path/to/downloaded/weights --verify-remote
 
-cd XPolicyLab/policy/Phoenix_WAM
+cd XPolicyLab/policy/Phoenix_MWA
 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-wam-h5-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+  phoenix-wam-h5-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-mwa base
 DEBUG_OBS_ENCODED=1 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-wam-h5-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-wam base
+  phoenix-wam-h5-init256013-step40000-20261019 arx_x5 joint 0 0 0 phoenix-mwa base
 ```
 
 The validation host used the existing `fastwam-pretrain` environment for both the policy and client (PyTorch 2.7.1+cu128, torchvision 0.22.1, Pillow 12.0.0, NumPy 1.26.4 and transformers 5.12.1). It set `WAM_CHECKPOINT_PATH` to the prepared weights directory and ran the two commands above with `fastwam-pretrain fastwam-pretrain` as the final environment arguments and GPU 3.
@@ -70,3 +70,7 @@ No simulator success rate or real-robot closed-loop evaluation is claimed. Nativ
 ## H5 filename update (2026-10-19)
 
 The three checkpoint filenames were simplified to `phoenix-wam-<robot>-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt`. Checkpoint contents, SHA256 hashes and all inference settings are unchanged. The download manifest, README and filename assertions use the new names. After the rename, all seven published policy/shared files passed the manifest SHA256/size checks. The 38 current CPU tests passed again; 15 historical tests were skipped. This naming update does not constitute a new GPU inference evaluation.
+
+## Policy naming update (2026-10-20)
+
+Renamed the public package and deployment identifier to `Phoenix_MWA`; module imports, shell entry points and documented commands use the new name. ModelScope repository IDs, checkpoint filenames/hashes, inference configuration, normalization statistics and text features are unchanged. Under the renamed package, 38 current CPU tests passed with the actual checkpoint metadata; 15 historical tests were skipped. Shell syntax, Python parsing, source-manifest hashes and diff whitespace checks passed. GPU inference and debug episodes were not rerun for this naming-only update; the earlier results above remain historical validation.

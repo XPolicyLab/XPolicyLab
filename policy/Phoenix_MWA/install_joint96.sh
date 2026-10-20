@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ENV_NAME="${1:-phoenix-wam}"
+ENV_NAME="${1:-phoenix-mwa}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 source "$(conda info --base)/etc/profile.d/conda.sh"

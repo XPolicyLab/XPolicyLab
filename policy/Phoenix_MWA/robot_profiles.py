@@ -8,7 +8,7 @@ PROMPT_KEY = 'mixtures.action.embodiment_prompt.embedding.weight'
 
 def select_robot_assets(paths, robot_type):
     if robot_type not in SUPPORTED_ROBOTS:
-        raise ValueError(f'Unsupported Phoenix_WAM robot: {robot_type}; expected {SUPPORTED_ROBOTS}')
+        raise ValueError(f'Unsupported Phoenix_MWA robot: {robot_type}; expected {SUPPORTED_ROBOTS}')
     profile_path = Path(paths['robot_profiles']) / f'{robot_type}.json'
     profile = json.loads(profile_path.read_text())
     if profile['robot_type'] != robot_type or profile['action_type'] != 'joint':

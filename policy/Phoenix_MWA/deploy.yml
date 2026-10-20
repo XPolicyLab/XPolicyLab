@@ -1,4 +1,4 @@
-policy_name: Phoenix_WAM
+policy_name: Phoenix_MWA
 protocol: ws
 host: localhost
 port: null

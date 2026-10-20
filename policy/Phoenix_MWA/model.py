@@ -1,4 +1,4 @@
-"""Training-faithful WAM bridge for the Phoenix_WAM RoboDojo evaluation."""
+"""Training-faithful WAM bridge for the Phoenix_MWA RoboDojo evaluation."""
 
 from __future__ import annotations
 

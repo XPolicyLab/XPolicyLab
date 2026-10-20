@@ -1,4 +1,4 @@
-"""Phoenix_WAM checkpoint directories use XPolicyLab's shared resolver."""
+"""Phoenix_MWA checkpoint directories use XPolicyLab's shared resolver."""
 from pathlib import Path
 from XPolicyLab.utils.checkpoint_resolver import resolve_checkpoint_root
 
@@ -11,5 +11,5 @@ def resolve_policy_checkpoint(config):
         explicit_keys=("checkpoint_path", "ckpt_path", "model_path"), must_exist=False,
     )
     if not root.is_dir():
-        raise FileNotFoundError(f"Phoenix_WAM requires a weights directory: {root}")
+        raise FileNotFoundError(f"Phoenix_MWA requires a weights directory: {root}")
     return root

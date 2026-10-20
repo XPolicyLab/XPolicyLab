@@ -1,7 +1,7 @@
 """Load a real Joint96 checkpoint and predict from synthetic RGB/state inputs.
 
 This does not connect to a robot or simulator and does not measure task success.
-Run as python -m XPolicyLab.policy.Phoenix_WAM.smoke_joint96 from the parent
+Run as python -m XPolicyLab.policy.Phoenix_MWA.smoke_joint96 from the parent
 workspace, which must contain the benchmark's env_cfg/ robot definitions.
 """
 
