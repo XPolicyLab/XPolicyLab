@@ -1,0 +1,12 @@
+# Public base-model snapshots and private post-training weights are local-only.
+/assets/
+/checkpoints/
+/data/
+/.cache/
+/InternW0-Delta/
+
+# Evaluation by-products.
+/logs/
+/runs/
+**/__pycache__/
+*.py[cod]
