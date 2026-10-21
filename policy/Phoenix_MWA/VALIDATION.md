@@ -61,7 +61,7 @@ The debug client uses a synthetic instruction, so its tests explicitly use `onli
 
 ## Published weights
 
-All seven files in `phoenix_release.json` are published in `ssuuuuu/phoenix-wam`; their ModelScope metadata matches the pinned SHA256 and byte sizes. Anonymous HTTP Range downloads of the first 64 KiB of each of the three new policy checkpoints returned HTTP 206, the expected full file size, and bytes identical to the local verified checkpoint. This checks public availability and sampled download bytes; it is not a fresh full download of all weights.
+All seven files in `phoenix_release.json` are published in `ssuuuuu/phoenix-mwa`; their ModelScope metadata matches the pinned SHA256 and byte sizes. Anonymous HTTP Range downloads of the first 64 KiB of each of the three new policy checkpoints returned HTTP 206, the expected full file size, and bytes identical to the local verified checkpoint. This checks public availability and sampled download bytes; it is not a fresh full download of all weights.
 
 ## Limits
 

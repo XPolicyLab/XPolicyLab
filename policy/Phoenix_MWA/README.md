@@ -18,7 +18,7 @@ conda activate phoenix-mwa
 bash download_checkpoint.sh checkpoints/phoenix-wam-h5-init256013-step40000-20261019
 ```
 
-The downloader fetches the three H5 policy weights and shared DINO, STVAE, WAN VAE and T5 weights from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-wam/files). For one robot plus shared weights, append `--robot-type piper` (or `arx_x5` / `piper_x`). It downloads individual weight files only. Configuration, tokenizer, statistics and the small instruction feature table are included in Git; no resource archive is needed.
+The downloader fetches the three H5 policy weights and shared DINO, STVAE, WAN VAE and T5 weights from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-mwa/files). For one robot plus shared weights, append `--robot-type piper` (or `arx_x5` / `piper_x`). It downloads individual weight files only. Configuration, tokenizer, statistics and the small instruction feature table are included in Git; no resource archive is needed.
 
 Use the new weights directory when upgrading. Cached-visual and legacy z-score policy checkpoints are incompatible and rejected. Existing files with incorrect hashes are rejected rather than silently replaced. Shared weights with matching hashes may be reused.
 
@@ -64,13 +64,13 @@ Default `text_mode=training_cache` preserves the exact training instruction feat
 
 ## Model Assets
 
-Files are in ModelScope repository `ssuuuuu/phoenix-wam`, revision `master`. `phoenix_release.json` pins every filename, size and SHA256. The `20261019` suffix identifies this publication; the H5 training runs began on 2026-10-17.
+Files are in ModelScope repository `ssuuuuu/phoenix-mwa`, revision `master`. `phoenix_release.json` pins every filename, size and SHA256. The `20261019` suffix identifies this publication; the H5 training runs began on 2026-10-17.
 
 | `env_cfg_type` | H5 online-vision checkpoint | Slot | Native data rate |
 | --- | --- | --- | --- |
-| `arx_x5` | `phoenix-wam-arx-x5-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 2 | 30 Hz |
-| `piper` | `phoenix-wam-piper-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 4 | 30 Hz |
-| `piper_x` | `phoenix-wam-piper-x-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 15 | 25 Hz |
+| `arx_x5` | `phoenix-mwa-arx-x5-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 2 | 30 Hz |
+| `piper` | `phoenix-mwa-piper-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 4 | 30 Hz |
+| `piper_x` | `phoenix-mwa-piper-x-h5-online-joint14-init256013-q01q99-clip5-step_040000-20261019.pt` | 15 | 25 Hz |
 
 The three published checkpoint names use `h5-online`; the release manifest supplies the filenames to both download entry points. This naming update preserves checkpoint bytes, SHA256 hashes and inference settings.
 
