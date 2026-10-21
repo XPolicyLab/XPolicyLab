@@ -84,7 +84,7 @@ The synthetic debug instruction requires `online_t5`; the default `training_cach
 
 ### Published weights
 
-All three 40000-step no-crop policy checkpoints and all four shared encoder weights are published in `ssuuuuu/phoenix-wam`. The public repository's SHA256 and byte size matched every entry in `phoenix_release.json`. Each new policy checkpoint is 12,045,488,406 bytes.
+All three 40000-step no-crop policy checkpoints and all four shared encoder weights are published in `ssuuuuu/phoenix-mwa`. The public repository's SHA256 and byte size matched every entry in `phoenix_release.json`. Each new policy checkpoint is 12,045,488,406 bytes.
 
 Anonymous HTTP range downloads of the first 64 KiB of each new checkpoint returned HTTP 206, reported the expected full file size, and matched the corresponding local bytes exactly. This checks public access and sampled content; it is not a fresh full-file download. The download script verifies the full SHA256 after downloading. The updated ModelScope README was also read back anonymously and matched the published content.
 

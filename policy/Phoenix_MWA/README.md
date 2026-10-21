@@ -6,7 +6,7 @@ Phoenix_MWA is an **evaluation-only** adapter for RoboDojo real-robot ARX X5, Pi
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
-The policy module is named `Phoenix_MWA` (previously `Phoenix_WAM`). The ModelScope repository remains `ssuuuuu/phoenix-wam`; the new policy filenames use `phoenix-mwa`. Shared encoder filenames are unchanged. Use the download script and pinned release manifest as provided.
+The policy module is named `Phoenix_MWA` (previously `Phoenix_WAM`). The ModelScope repository remains `ssuuuuu/phoenix-mwa`; the new policy filenames use `phoenix-mwa`. Shared encoder filenames are unchanged. Use the download script and pinned release manifest as provided.
 
 ## Installation
 
@@ -18,7 +18,7 @@ conda activate phoenix-mwa
 bash download_checkpoint.sh checkpoints/phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021
 ```
 
-The downloader fetches the three H5 policy weights and shared DINO, STVAE, WAN VAE and T5 weights from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-wam/files). For one robot plus shared weights, append `--robot-type piper` (or `arx_x5` / `piper_x`). It downloads individual weight files only. Configuration, tokenizer, statistics and the small instruction feature table are included in Git; no resource archive is needed.
+The downloader fetches the three H5 policy weights and shared DINO, STVAE, WAN VAE and T5 weights from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-mwa/files). For one robot plus shared weights, append `--robot-type piper` (or `arx_x5` / `piper_x`). It downloads individual weight files only. Configuration, tokenizer, statistics and the small instruction feature table are included in Git; no resource archive is needed.
 
 Use the new weights directory when upgrading. The release pins the three edge25 online 40000-step checkpoints. Older center-crop, paired-cache and z-score policy checkpoints are rejected. Existing files with incorrect hashes are rejected rather than silently replaced. Shared weights with matching hashes may be reused.
 
@@ -64,7 +64,7 @@ Default `text_mode=training_cache` preserves the exact training instruction feat
 
 ## Model Assets
 
-Files are in ModelScope repository `ssuuuuu/phoenix-wam`, revision `master`. `phoenix_release.json` pins every filename, size and SHA256. The `run20261021_edge25_01` suffix identifies the training batch; each checkpoint contains 40000 posttraining steps after initialization at step 256013. These filenames distinguish this release from the earlier center-crop H5 weights.
+Files are in ModelScope repository `ssuuuuu/phoenix-mwa`, revision `master`. `phoenix_release.json` pins every filename, size and SHA256. The `run20261021_edge25_01` suffix identifies the training batch; each checkpoint contains 40000 posttraining steps after initialization at step 256013. These filenames distinguish this release from the earlier center-crop H5 weights.
 
 | `env_cfg_type` | H5 no-crop checkpoint | Slot | Native data rate |
 | --- | --- | --- | --- |
