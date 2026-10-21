@@ -37,7 +37,7 @@ To create the task-indexed T5 cache, add `--build-text-cache --weights "$PWD/che
 
 ## Training
 
-The [Joint96 pretraining checkpoint (256013 steps)](https://www.modelscope.cn/api/v1/models/ssuuuuu/phoenix-wam/repo?Revision=master&FilePath=phoenix-mwa-pretrain-joint96-step_256013.pt) is available for training initialization. `--pretrain-only` downloads this file separately and verifies its size and SHA256; add `--verify-only` to check an existing copy. The default download command continues to retrieve the 35K evaluation policy and its dependencies.
+The [Joint96 pretraining checkpoint (256013 steps)](https://www.modelscope.cn/api/v1/models/ssuuuuu/phoenix-mwa/repo?Revision=master&FilePath=phoenix-mwa-pretrain-joint96-step_256013.pt) is available for training initialization. `--pretrain-only` downloads this file separately and verifies its size and SHA256; add `--verify-only` to check an existing copy. The default download command continues to retrieve the 35K evaluation policy and its dependencies.
 
 ```bash
 bash download_checkpoint.sh checkpoints/phoenix-pretrain-256013 --pretrain-only

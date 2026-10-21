@@ -54,7 +54,7 @@
   },
   "pretraining": {
     "provider": "modelscope",
-    "repo_id": "ssuuuuu/phoenix-wam",
+    "repo_id": "ssuuuuu/phoenix-mwa",
     "revision": "master",
     "filename": "phoenix-mwa-pretrain-joint96-step_256013.pt",
     "path": "phoenix-mwa-pretrain-joint96-step_256013.pt",
