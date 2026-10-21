@@ -38,9 +38,9 @@ class H5DeploymentTests(unittest.TestCase):
         for family, slot in [('arx_x5', 2), ('piper', 4), ('piper_x', 15)]:
             with self.subTest(family=family):
                 cfg, payload = self.load_pair(family)
-                result = self.contract.validate_training(cfg, payload, self.package, family, 40000, packaged=True)
+                result = self.contract.validate_training(cfg, payload, self.package, family, 35000, packaged=True)
                 self.assertEqual(result['support']['embodiment_id'], slot)
-                self.assertTrue(result['cached_visuals'])
+                self.assertFalse(result['cached_visuals'])
                 self.assertEqual(len(payload['mot']), 1650)
                 self.assertEqual(len(payload['proprio_encoder']), 3)
 
@@ -50,25 +50,30 @@ class H5DeploymentTests(unittest.TestCase):
         bad['joint96_metadata'] = copy.deepcopy(payload['joint96_metadata'])
         bad['joint96_metadata']['soft_prompt']['training_contract']['dataloader'] = 'openwam_joint14_with_legacy_clean_visual_cache'
         with self.assertRaisesRegex(ValueError, 'direct-resize'):
-            self.contract.validate_training(cfg, bad, self.package, 'piper', 40000, packaged=True)
+            self.contract.validate_training(cfg, bad, self.package, 'piper', 35000, packaged=True)
 
     def test_reject_wrong_family_step_and_normalization(self):
         cfg, payload = self.load_pair('arx_x5')
-        for family, step in [('piper', 40000), ('arx_x5', 35000)]:
+        for family, step in [('piper', 35000), ('arx_x5', 40000)]:
             with self.assertRaises(ValueError):
                 self.contract.validate_training(cfg, payload, self.package, family, step, packaged=True)
         for key, value in [('data.train.processor.norm_default_mode', 'z-score'),
+                           ('data.train.edge_manifest_sha256', '0' * 64),
+                           ('data.train.image_color_jitter.enabled', False),
+                           ('data.train.visual_cache', {'root': 'wrong-cache'}),
                            ('data.train.processor.action_state_merger.state_target_slices.0.source_slice', [7, 13])]:
             bad_cfg = copy.deepcopy(cfg)
             OmegaConf.update(bad_cfg, key, value)
             with self.assertRaises(ValueError):
-                self.contract.validate_training(bad_cfg, payload, self.package, 'arx_x5', 40000, packaged=True)
+                self.contract.validate_training(bad_cfg, payload, self.package, 'arx_x5', 35000, packaged=True)
 
-    def test_reject_changed_cache_geometry_and_trim_contracts(self):
+    def test_reject_changed_edge25_geometry_and_trim_contracts(self):
         cfg, payload = self.load_pair('arx_x5')
         for key, value in (
-            ('cache_contract_sha256', '0' * 64),
+            ('boundary_trim', {}),
             ('rgb_crop', [256, 256]),
+            ('image_augmentation', {'inference_enabled': True}),
+            ('boundary_trim_source_sha256', {}),
             ('rgb_camera_order', ['cam_left_wrist', 'cam_head', 'cam_right_wrist']),
             ('temporal_trim_source_sha256', {}),
             ('action_target_validity', 'terminal_action_repeated'),
@@ -77,7 +82,7 @@ class H5DeploymentTests(unittest.TestCase):
             bad['joint96_metadata'] = copy.deepcopy(payload['joint96_metadata'])
             bad['joint96_metadata']['soft_prompt']['training_contract'][key] = value
             with self.subTest(key=key), self.assertRaises(ValueError):
-                self.contract.validate_training(cfg, bad, self.package, 'arx_x5', 40000, packaged=True)
+                self.contract.validate_training(cfg, bad, self.package, 'arx_x5', 35000, packaged=True)
 
     def test_gripper_and_invalid_state(self):
         state = np.zeros(14, dtype=np.float32)

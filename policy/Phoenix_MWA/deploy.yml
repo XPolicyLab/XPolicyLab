@@ -35,8 +35,8 @@ allow_dummy_policy: false
 # Use online_t5 for arbitrary instructions (loads the pinned T5 encoder).
 text_mode: training_cache
 
-# Each robot uses its own released H5 no-crop paired-cache posttraining checkpoint.
+# Each robot uses its own released H5 no-crop edge25 online posttraining checkpoint.
 runtime_mode: joint96_real_phoenix
 current_visual_mode: repeat9_full_joint96
-expected_step: 40000
+expected_step: 35000
 audit_dir: logs/phoenix

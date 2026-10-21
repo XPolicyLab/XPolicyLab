@@ -1,14 +1,18 @@
 """Accept only explicitly reviewed direct-resize training data contracts."""
 
+import json
+
 from omegaconf import OmegaConf
 
-from .joint96_assets import read_release
+from .joint96_assets import POLICY_DIR, read_release, relative_path, sha256
 
 
 ONLINE = 'openwam_raw_hdf5_joint14_direct_resize256'
 TRIMMED = 'openwam_raw_hdf5_joint14_direct_resize256_static_trim_v1'
 CACHED = 'openwam_h5_joint14_static_trim_bicubic_paired_cache_v1'
+EDGE25 = 'openwam_raw_hdf5_joint14_resize256_parent_trim_edge25'
 ROUTES = {
+    EDGE25: ('wam.datasets.robodojo_h5_edge25.RoboDojoH5Edge25Dataset', False),
     ONLINE: ('wam.datasets.robodojo_h5_resize256.RoboDojoH5Resize256Dataset', False),
     TRIMMED: ('wam.datasets.robodojo_h5_static_trim.RoboDojoH5StaticTrimDataset', False),
     CACHED: ('wam.datasets.robodojo_h5_trim_cache.RoboDojoH5TrimCachedDataset', True),
@@ -33,6 +37,36 @@ def validate_route(cfg, contract, family):
         raise ValueError('Checkpoint visual-cache flag disagrees with its training route')
     get = lambda key, default=None: OmegaConf.select(cfg, key, default=default)
     release = read_release()
+    if dataloader == EDGE25:
+        # Pin the complete, family-specific contract from the published weights.
+        # This includes trim/augmentation provenance without shipping training code.
+        path = relative_path(POLICY_DIR / 'phoenix_source', release['training_contracts_file'])
+        if sha256(path) != release['training_contracts_sha256']:
+            raise ValueError('Changed edge25 training contracts')
+        expected = json.loads(path.read_text())[family]
+        if contract != expected:
+            raise ValueError('Unreviewed edge25 checkpoint training contract')
+        required = {
+            'joint96_posttrain.boundary_trim': expected['boundary_trim']['version'],
+            # The saved recipe retains the base trim version; boundary_trim
+            # separately selects the edge25 extension recorded in the checkpoint.
+            'joint96_posttrain.temporal_trim': TRIM_VERSION,
+            'joint96_posttrain.image_augmentation': expected['image_augmentation']['version'],
+            'data.train.edge_manifest_sha256': expected['boundary_trim']['manifest_sha256'],
+            'data.train.trim_manifest_sha256': expected['temporal_trim']['manifest_sha256'],
+            'data.train.image_color_jitter.enabled': True,
+            'data.train.image_color_jitter.brightness': 0.2,
+            'data.train.image_color_jitter.contrast': 0.2,
+            'data.train.image_color_jitter.saturation': 0.2,
+            'data.train.is_training_set': True,
+            'data.train.visual_cache': None,
+        }
+        for key, value in required.items():
+            if get(key) != value:
+                raise ValueError('Saved edge25 training config mismatch: ' + key)
+        if expected['image_augmentation']['inference_enabled']:
+            raise ValueError('Inference must not apply training color jitter')
+        return {'dataloader': dataloader, 'reader': reader, 'cached': False}
     if dataloader == ONLINE:
         if contract.get('temporal_trim') is not None or get('joint96_posttrain.temporal_trim') is not None:
             raise ValueError('Untrimmed route carries an unexpected trim contract')

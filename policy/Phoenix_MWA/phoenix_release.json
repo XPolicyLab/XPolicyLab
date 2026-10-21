@@ -2,13 +2,13 @@
   "schema": "phoenix-joint96-release-v2",
   "checkpoints": {
     "arx_x5": {
-      "path": "phoenix-wam-arx-x5-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt",
-      "filename": "phoenix-wam-arx-x5-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt",
+      "path": "phoenix-mwa-arx-x5-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt",
+      "filename": "phoenix-mwa-arx-x5-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt",
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "sha256": "2979c206d186ab62985e3342b95ea1ace267e752626880627bb4c378accb292d",
-      "size": 12045488406,
-      "step": 40000,
+      "sha256": "2265652e4048609d3b86d70bcd9bc244f84f9de5da072c6ec4bec81a5d0a688c",
+      "size": 12045490966,
+      "step": 35000,
       "pretrain_step": 256013,
       "runtime_mode": "joint96_real_phoenix",
       "normalization": "q01/q99",
@@ -23,13 +23,13 @@
       }
     },
     "piper": {
-      "path": "phoenix-wam-piper-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt",
-      "filename": "phoenix-wam-piper-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt",
+      "path": "phoenix-mwa-piper-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt",
+      "filename": "phoenix-mwa-piper-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt",
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "sha256": "4ffe21d3aecaceac53d6816439957034a864c4ccca9c4fcd7185818824873722",
-      "size": 12045488406,
-      "step": 40000,
+      "sha256": "e59102ddab81c624274f9c488fcb451c955bd58bffe6717d08fee39424970846",
+      "size": 12045491030,
+      "step": 35000,
       "pretrain_step": 256013,
       "runtime_mode": "joint96_real_phoenix",
       "normalization": "q01/q99",
@@ -44,13 +44,13 @@
       }
     },
     "piper_x": {
-      "path": "phoenix-wam-piper-x-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt",
-      "filename": "phoenix-wam-piper-x-h5-trim-cached-resize256-nocrop-joint14-init256013-q01q99-clip5-step_040000-run20261019_01.pt",
+      "path": "phoenix-mwa-piper-x-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt",
+      "filename": "phoenix-mwa-piper-x-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt",
       "repo_id": "ssuuuuu/phoenix-wam",
       "revision": "master",
-      "sha256": "86c68a041705f2da07bd14feae6954bd645b25f70fe2cbaed4287f2df26c3032",
-      "size": 12045488406,
-      "step": 40000,
+      "sha256": "27fe24df804c07eed8fc5fa629829593b09684671cd7d429f6c7ba5f4cc581e7",
+      "size": 12045491030,
+      "step": 35000,
       "pretrain_step": 256013,
       "runtime_mode": "joint96_real_phoenix",
       "normalization": "q01/q99",
@@ -100,9 +100,9 @@
     }
   },
   "runtime_mode": "joint96_real_phoenix",
-  "training_route": "openwam_h5_joint14_static_trim_bicubic_paired_cache_v1",
+  "training_route": "openwam_raw_hdf5_joint14_resize256_parent_trim_edge25",
   "distribution": "public_modelscope_weights",
-  "description": "No spatial crop: per-view direct bicubic resize, reviewed temporal trim and paired visual cache; init 256013, step 40000",
+  "description": "No spatial crop: per-view direct bicubic resize, online H5 encoding, edge25 temporal trimming and training-only color jitter; init 256013, step 35000",
   "resize_training_source_sha256": {
     "src/wam/datasets/robodojo_h5_resize256.py": "039ef7f3be952a20872b46baae40c4413d450ec779f90bd04cdcd26e4002c12c",
     "src/wam/datasets/robodojo_openwam_joint14.py": "f218f03ccffb4840a521c6770a371270c5c41e9c5474b81c6125689629b08915",
@@ -119,5 +119,6 @@
     "configs/task/robodojo_h5_static_trim.yaml": "9dd5a7245a29b4cf61cac17a5861f9f05292581e206864a2b84d57d73997965f",
     "configs/data/robodojo_h5_static_trim.yaml": "73a7398f63f508e5d85c68168db4ec7761d187d02ac6e463fce01c0f57a6f97c"
   },
-  "trim_cache_contract_sha256": "ddb9db7700ee7a8eb1f82a0f59967b6d137f3b937d15eefaa4a321e31fedd32b"
+  "training_contracts_file": "edge25_training_contracts.json",
+  "training_contracts_sha256": "1da5bf860943e07406ffc30747f453449a5eeb8a177b39a77798c04729847026"
 }

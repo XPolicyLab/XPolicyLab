@@ -160,7 +160,7 @@
   },
   "joint96_posttrain": {
     "enabled": true,
-    "cached_visuals": true,
+    "cached_visuals": false,
     "expected_pretrain_step": "256013",
     "evaluation_membership": "train_pool",
     "action_video_attention": "current_and_noisy_future_v1",
@@ -168,7 +168,7 @@
       "enabled": true
     },
     "robodojo_openwam_joint14": true,
-    "optimizer_recipe": "openwam_real_b256_zero1_v1",
+    "optimizer_recipe": "openwam_real_b320_zero1_80gpu_v1",
     "loss_recipe": "robodojo_real_standard_video_v1",
     "loss_weights": {
       "vae": 0.5,
@@ -176,11 +176,13 @@
       "action": 1.0
     },
     "rgb_geometry": "direct_bicubic_resize_256_per_view_horizontal_concat",
-    "temporal_trim": "conservative_pause_full_frame_audit_v2"
+    "temporal_trim": "conservative_pause_full_frame_audit_v2",
+    "image_augmentation": "shared_window_pil_color_jitter_02_v1",
+    "boundary_trim": "conservative_pause_v2_plus_boundary_cap31_then25_v1"
   },
   "data": {
     "train": {
-      "_target_": "wam.datasets.robodojo_h5_trim_cache.RoboDojoH5TrimCachedDataset",
+      "_target_": "wam.datasets.robodojo_h5_edge25.RoboDojoH5Edge25Dataset",
       "dataset_dirs": [
         "data/robodojo"
       ],
@@ -432,7 +434,7 @@
       "text_embedding_cache_dir": ".cache/internw0/text_embed/robodojo",
       "context_len": 128,
       "image_color_jitter": {
-        "enabled": false,
+        "enabled": true,
         "brightness": 0.2,
         "contrast": 0.2,
         "saturation": 0.2,
@@ -453,13 +455,11 @@
       "index_path": "audit_only/index_path",
       "gripper_preprocessing": "openwam_real_clip01_v1",
       "embodiment": "arx_x5",
-      "visual_cache": {
-        "root": "audit_only/robodojo_h5_static_trim_bicubic_joint96_clean_20261019_v1",
-        "initialization_checkpoint": "audit_only/step_256013.pt",
-        "max_open_shards": 4
-      },
+      "visual_cache": null,
       "trim_manifest_path": "audit_only/trim_manifest.json",
-      "trim_manifest_sha256": "26cbd91ee15c0c3b998b09ce15f0fdb0fff2d194f7876fce6e12ccb3f4898757"
+      "trim_manifest_sha256": "26cbd91ee15c0c3b998b09ce15f0fdb0fff2d194f7876fce6e12ccb3f4898757",
+      "edge_manifest_path": "audit_only/edge_manifest.json",
+      "edge_manifest_sha256": "5103f8723401f0250c0cf3f96e3ad3c30b98e0861bd9f9aa4bd95aa50ddf4be6"
     }
   }
 }

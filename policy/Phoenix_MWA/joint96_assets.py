@@ -49,7 +49,18 @@ def prepare_tokenizer(root, source):
             if sha256(destination) != sha256(path):
                 raise ValueError(f'Tokenizer copy differs from repository: {destination}')
         else:
-            shutil.copy2(path, destination)
+            # Multiple robot servers may initialize the same weights directory.
+            # Publish only a complete vocabulary file; another process must not
+            # observe a partially copied spiece.model and fail its checksum.
+            with tempfile.NamedTemporaryFile(dir=target, prefix='.tokenizer-', delete=False) as stream:
+                temporary = Path(stream.name)
+            try:
+                shutil.copy2(path, temporary)
+                if sha256(temporary) != sha256(path):
+                    raise ValueError(f'Tokenizer copy failed verification: {path.name}')
+                temporary.replace(destination)
+            finally:
+                temporary.unlink(missing_ok=True)
 
 
 def read_release(policy_dir=POLICY_DIR):

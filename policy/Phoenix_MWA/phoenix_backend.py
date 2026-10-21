@@ -1,4 +1,4 @@
-"""Inference for the pinned no-crop paired-cache q01/q99 Phoenix weights."""
+"""Inference for the pinned no-crop edge25 online q01/q99 Phoenix weights."""
 import json
 import os
 from pathlib import Path
@@ -54,8 +54,9 @@ def prepare_release_inputs(config):
     options = validate_options(config)
     register_default_resolvers()
     release = read_release()
-    if release.get('training_route') != 'openwam_h5_joint14_static_trim_bicubic_paired_cache_v1':
-        raise ValueError('Expected the no-crop paired-cache release manifest')
+    from .training_routes import EDGE25
+    if release.get('training_route') != EDGE25:
+        raise ValueError('Expected the no-crop edge25 online release manifest')
     spec = release['checkpoints'][options['family']]
     root = resolve_policy_checkpoint(config).resolve(strict=True)
     if not root.is_dir():
@@ -154,9 +155,8 @@ def build_phoenix_runtime(config):
             if not torch.equal(value, data['payload'][name][key].to(value)):
                 raise ValueError('Restored tensor mismatch: ' + name + '.' + key)
         counts[name] = len(tensors)
-    # Preserve the source deployment initialization. WAN VAE mean/std/scale
-    # are plain tensors; this makes them BF16. The paired-cache encoder used
-    # FP32 statistics. See VALIDATION.md for the unresolved cache residual.
+    # Preserve the online deployment initialization; WAN VAE mean/std/scale
+    # are plain tensors and move with the runtime to BF16.
     model.set_runtime_device(device)
     model.eval().requires_grad_(False)
     visual_evidence = install_repeat9_joint(model.joint_visual_encoder)
@@ -168,6 +168,9 @@ def build_phoenix_runtime(config):
                  normalization_contract=checked['contract']['normalization_contract'],
                  training_dataloader=checked['contract']['dataloader'],
                  training_rgb_geometry=checked['contract']['rgb_geometry'],
+                 training_boundary_trim=checked['contract'].get('boundary_trim'),
+                 training_image_augmentation=checked['contract'].get('image_augmentation'),
+                 inference_image_augmentation=False,
                  training_rgb_decode=checked['contract']['rgb_decode'],
                  cache_contract_sha256=checked['contract'].get('cache_contract_sha256'),
                  raw_cache_binding_sha256=checked['contract'].get('raw_cache_binding_sha256'),

@@ -5,11 +5,44 @@ from pathlib import Path
 import tempfile
 import unittest
 from types import SimpleNamespace
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
+from unittest.mock import patch
+import shutil
 
-from .joint96_assets import download_weights, sha256, verify_remote_weights
+from .joint96_assets import download_weights, sha256, verify_remote_weights, prepare_tokenizer, TOKENIZER_PATH
 
 
 class WeightDownloadTests(unittest.TestCase):
+    def test_parallel_tokenizer_initialization_never_exposes_partial_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'source'
+            source.mkdir()
+            (source / 'spiece.model').write_bytes(b'complete vocabulary')
+            started, release = Event(), Event()
+            copy = shutil.copy2
+
+            def delayed_copy(src, dst):
+                if not started.is_set():
+                    Path(dst).write_bytes(b'partial')
+                    started.set()
+                    if not release.wait(10):
+                        raise TimeoutError('Second initializer did not complete')
+                return copy(src, dst)
+
+            with patch('shutil.copy2', side_effect=delayed_copy), ThreadPoolExecutor(1) as pool:
+                first = pool.submit(prepare_tokenizer, root / 'weights', source)
+                try:
+                    self.assertTrue(started.wait(10))
+                    prepare_tokenizer(root / 'weights', source)
+                finally:
+                    release.set()
+                first.result()
+            target = root / 'weights' / TOKENIZER_PATH
+            self.assertEqual((target / 'spiece.model').read_bytes(), b'complete vocabulary')
+            self.assertFalse(list(target.glob('.tokenizer-*')))
+
     def fixture(self, root):
         policy = root / 'policy'
         source = policy / 'joint96_source'
