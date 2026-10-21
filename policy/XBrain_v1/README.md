@@ -155,16 +155,16 @@ Prompt matching ignores case, repeated whitespace, and a trailing period. An
 unknown prompt is not assigned a guessed task: its predicted gripper values are
 preserved, its prefix uses the default horizon, and the server logs a warning once.
 
-Task-specific settings updated on 2026-10-14:
+Task-specific settings updated on 2026-10-20:
 
 | Robot | Task | Left threshold | Right threshold | Left scale | Right scale | Returned steps |
 |---|---|---:|---:|---:|---:|---:|
 | PiperX | `cap_pen` | 0.15 | 0.15 | 1.3 | 1.3 | 30 |
-| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 | 30 |
+| PiperX | `classify_objects` | 0.25 | 0.25 | 1.3 | 1.3 | 20 |
 | PiperX | `disassemble_LEGO` | 0.25 | 0.25 | 1.3 | 1.3 | 30 |
 | PiperX | `hang_mugs` | 0.15 | 0.15 | 1.15 | 1.15 | 30 |
 | PiperX | `pack_objects_into_backpack` | 0.15 | 0.15 | 1.1 | 1.1 | 20 |
-| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 40 |
+| PiperX | `sweep_blocks` | 0.35 | 0.30 | 1.3 | 1.3 | 30 |
 | Piper | `fill_pen_holder` | per-episode | per-episode | per-episode | per-episode | 40 |
 | Piper | `insert_charger` | 0.35 | 0.35 | 1.1 | 1.1 | 20 |
 | Piper | `put_objects_into_basket` | 0.22 | 0.22 | 1.0 | 1.0 | 30 |
@@ -178,12 +178,32 @@ Task-specific settings updated on 2026-10-14:
 | ARX X5 | `pack_and_pour_fruit` | 0.30 | 0.30 | 1.1 | 1.1 | 20 |
 | ARX X5 | `store_in_safe` | 0.20 | 0.20 | 1.3 | 1.3 | 20 |
 
+`pack_and_pour_fruit` has an ARX X5 demonstration replay before normal VLA
+control. On the first observation of an episode, the adapter still runs one
+normal VLA inference to initialize the pipeline, but discards that predicted
+action. It detects whether the blue object is on the left or right side of the
+head-camera image. A unique left side selects the embedded trajectory 1; a
+unique right side selects trajectory 2. The selected 90-frame, 30 Hz action
+trajectory is returned in chunks of 50 and then 40 actions, using the embedded
+14-D action rows directly. The replay rows are not passed through the normal
+gripper threshold/scaling postprocessor. After all 90 rows are returned, the
+next observation resumes normal VLA inference and the task's configured
+20-step, threshold 0.30, scale 1.1 gripper postprocessing.
+
+The blue detector uses RGB color separation in the left and right image halves.
+For the vertically stitched reference-video layout, it analyzes the upper half
+where the head camera is located; normal wide head-camera frames use the full
+frame. If neither side is a unique blue match, the adapter skips replay and
+uses ordinary VLA inference rather than guessing a trajectory. `reset()`,
+`prepare_case()`, `trial_end`, or a prompt change clears replay state. A replay
+chunk already returned to the client is never changed by later observations.
+
 For `fill_pen_holder`, every received joint-state observation is checked until
 one arm is observed with joint2 strictly greater than 1.0. Use the second joint of each six-joint arm in the
 unnormalized 14-D observation: left is index 1 and right is index 8, in radians.
 Before a role is selected, both grippers use threshold 0.2 and scale 1.0. When
 an observation first identifies exactly one qualifying arm, that arm gets
-threshold 0.8 and scale 1.1; the other arm gets threshold 0.2 and scale 1.3.
+threshold 0.75 and scale 1.05; the other arm gets threshold 0.2 and scale 1.3.
 The triggering observation may arrive between action requests; it is processed
 by update_obs immediately, so a later observation cannot replace the first hit.
 The selection is fixed for all subsequent observations and 40-step chunks in
@@ -219,7 +239,8 @@ arms the correction when that arm's gripper state is strictly below 0.6 and its
 fifth joint is strictly below -1.1 radians. In the 14-D state/action layout,
 left joint5/gripper are indices 4/6, and right joint5/gripper are indices 11/13.
 While armed, each outgoing joint5 target is changed to
-`max(original_target - 0.05, -1.25)`. The first predicted joint5 target strictly
+`max(original_target - 0.05, -1.25)` for the left arm and
+`max(original_target - 0.05, -1.265)` for the right arm. The first predicted joint5 target strictly
 above -1.1 disables that arm's correction: that row and the remaining rows of
 the chunk stay unchanged, even if later targets fall below -1.1 again. A real
 gripper state strictly above 0.6 also disables correction. Equality alone does

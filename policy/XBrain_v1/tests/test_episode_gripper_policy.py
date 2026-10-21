@@ -41,7 +41,7 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
         model.update_obs(self.observation(1.2, .5))
         first = self.rows(model.get_action())
         self.assertEqual(first.shape, (40, 14))
-        np.testing.assert_allclose(first[:, 6], .99, rtol=1e-6)
+        np.testing.assert_allclose(first[:, 6], .945, rtol=1e-6)
         np.testing.assert_allclose(first[:, 13], .39, rtol=1e-6)
         # Both qualify now; the episode's first observed hit is already fixed.
         model.update_obs(self.observation(1.5, 1.6))
@@ -90,7 +90,7 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
         for selected_left in (True, False):
             with self.subTest(selected_left=selected_left):
                 model, pipe = self.make_model("piper")
-                left_threshold, right_threshold = (.8, .2) if selected_left else (.2, .8)
+                left_threshold, right_threshold = (.75, .2) if selected_left else (.2, .75)
                 pipe.prediction[:3, 6] = torch.tensor([
                     left_threshold - .01, left_threshold, left_threshold + .01])
                 pipe.prediction[:3, 13] = torch.tensor([
@@ -99,7 +99,7 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
                 model.update_obs(self.observation(1.2 if selected_left else .5,
                                                   .5 if selected_left else 1.2, structured=True))
                 actions = self.rows(model.get_action())
-                left_scale, right_scale = (1.1, 1.3) if selected_left else (1.3, 1.1)
+                left_scale, right_scale = (1.05, 1.3) if selected_left else (1.3, 1.05)
                 np.testing.assert_allclose(actions[:3, 6],
                     [0, left_threshold * left_scale, (left_threshold + .01) * left_scale], rtol=1e-6)
                 np.testing.assert_allclose(actions[:3, 13],
@@ -129,24 +129,24 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
         # Exactly 1.0 is not greater, so the right arm is the unique selected arm.
         model.update_obs(self.observation(1.0, 1.01))
         rule = model._episode_gripper_rules["single"]
-        self.assertEqual((rule.left, rule.right, rule.left_scale, rule.right_scale), (.2, .8, 1.3, 1.1))
+        self.assertEqual((rule.left, rule.right, rule.left_scale, rule.right_scale), (.2, .75, 1.3, 1.05))
 
     def test_prepare_case_trial_end_and_prompt_changes_reselect_without_restart(self):
         model, _ = self.make_model("piper")
         for boundary in (model.prepare_case, model.on_trial_end, model.reset):
             model.update_obs(self.observation(1.2, .5))
-            self.assertEqual(model._episode_gripper_rules["single"].left, .8)
+            self.assertEqual(model._episode_gripper_rules["single"].left, .75)
             boundary()
             self.assertFalse(model._episode_gripper_rules)
             self.assertIsNone(model._obs)
             model.update_obs(self.observation(.5, 1.2))
-            self.assertEqual(model._episode_gripper_rules["single"].right, .8)
+            self.assertEqual(model._episode_gripper_rules["single"].right, .75)
             model.reset()
         model.update_obs(self.observation(1.2, .5))
         model.update_obs(self.observation(.5, 1.2, prompt="Stack the bowls on the table."))
         self.assertFalse(model._episode_gripper_rules)
         model.update_obs(self.observation(.5, 1.2))
-        self.assertEqual(model._episode_gripper_rules["single"].right, .8)
+        self.assertEqual(model._episode_gripper_rules["single"].right, .75)
 
     def test_batch_arms_are_selected_separately_and_stay_with_environment_ids(self):
         model, pipe = self.make_model("piper")
@@ -154,7 +154,7 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
         pipe.prediction[:, 13] = .3
         model.update_obs_batch([self.observation(1.2, .5), self.observation(.5, 1.2)])
         first = model.get_action_batch([2, 9])
-        np.testing.assert_allclose(self.rows(first[0])[:, 6], .99, rtol=1e-6)
+        np.testing.assert_allclose(self.rows(first[0])[:, 6], .945, rtol=1e-6)
         np.testing.assert_allclose(self.rows(first[1])[:, 6], 1.17, rtol=1e-6)
         # The surviving environment moves to batch slot 0, but keeps its role.
         model.update_obs_batch([self.observation(1.2, .5)])
@@ -175,7 +175,7 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
         model.update_obs_batch([self.observation(1.2, .5), self.observation(.5, 1.2)])
         model.update_obs_batch([self.observation(.5, 1.2), self.observation(1.2, .5)])
         selected = model.get_action_batch([2, 9])
-        np.testing.assert_allclose(self.rows(selected[0])[:, 6], .99, rtol=1e-6)
+        np.testing.assert_allclose(self.rows(selected[0])[:, 6], .945, rtol=1e-6)
         np.testing.assert_allclose(self.rows(selected[1])[:, 6], 1.17, rtol=1e-6)
         self.assertEqual(pipe.calls, 4)
 
@@ -185,8 +185,8 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
         model.update_obs_batch([self.observation(1.2, .5), self.observation(.5, 1.2)])
         model.update_obs_batch([self.observation(.5, 1.2), self.observation(1.2, .5)])
         model.get_action_batch([2, 9])
-        self.assertEqual(model._episode_gripper_rules[("batch", 2)].left, .8)
-        self.assertEqual(model._episode_gripper_rules[("batch", 9)].right, .8)
+        self.assertEqual(model._episode_gripper_rules[("batch", 2)].left, .75)
+        self.assertEqual(model._episode_gripper_rules[("batch", 9)].right, .75)
 
     def test_new_static_task_parameters_return_exact_prefixes(self):
         model, pipe = self.make_model("piper")
@@ -221,11 +221,11 @@ class EpisodeGripperPolicyTests(unittest.TestCase):
                 return reply
             await rpc(MessageType.RESET, "reset-1")
             first = await rpc(MessageType.INFER, "infer-1", {"observation": self.observation(1.2, .5)})
-            np.testing.assert_allclose(self.rows(first.payload["actions"])[:, 6], .99, rtol=1e-6)
+            np.testing.assert_allclose(self.rows(first.payload["actions"])[:, 6], .945, rtol=1e-6)
             # A retry of that exact inference never reselects roles or reinfers.
             await rpc(MessageType.INFER, "infer-1", {"observation": self.observation(.5, 1.2)})
             self.assertEqual(pipe.calls, 1)
-            self.assertEqual(model._episode_gripper_rules["single"].left, .8)
+            self.assertEqual(model._episode_gripper_rules["single"].left, .75)
             await rpc(MessageType.TRIAL_END, "end-1", {"success": True})
             self.assertFalse(model._episode_gripper_rules)
             await rpc(MessageType.RESET, "reset-2")

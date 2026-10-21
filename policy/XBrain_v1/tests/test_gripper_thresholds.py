@@ -52,7 +52,7 @@ def main():
             rule, selected = resolve_episode_gripper_rule(rule, state)
             assert selected == "left"
             assert rule.action_horizon == 40
-            assert (rule.left, rule.right, rule.left_scale, rule.right_scale) == (0.8, 0.2, 1.1, 1.3)
+            assert (rule.left, rule.right, rule.left_scale, rule.right_scale) == (0.75, 0.2, 1.05, 1.3)
             expected = (rule.left, rule.right, rule.left_scale, rule.right_scale)
         left, right, left_scale, right_scale = expected
         values = np.zeros((3, 14), dtype=np.float32)

@@ -14,8 +14,8 @@ from XPolicyLab.policy.XBrain_v1.model import Model
 
 POLICY_ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_HORIZONS = {
-    "piper_x": {"cap_pen": 30, "classify_objects": 30, "disassemble_LEGO": 30,
-                "hang_mugs": 30, "pack_objects_into_backpack": 20, "sweep_blocks": 40},
+    "piper_x": {"cap_pen": 30, "classify_objects": 20, "disassemble_LEGO": 30,
+                "hang_mugs": 30, "pack_objects_into_backpack": 20, "sweep_blocks": 30},
     "piper": {"fill_pen_holder": 40, "insert_charger": 20, "put_objects_into_basket": 30,
               "stack_and_cover_blocks": 40, "stack_bowls": 30, "stand_up_bottles": 30},
     "arx_x5": {"cover_blocks": 20, "insert_tubes": 20, "make_bread": 30,
@@ -76,18 +76,18 @@ class ActionOutputTests(unittest.TestCase):
             action["right_arm_joint_state"], action["right_ee_joint_state"],
         ]) for action in actions])
 
-    def test_first_40_sweep_rows_and_task_grippers_are_sent_once(self):
+    def test_first_30_sweep_rows_and_task_grippers_are_sent_once(self):
         model, pipeline = self.make_model()
         prompt = next(rule.prompt for rule in model._gripper_thresholds.values()
                       if rule.task == "sweep_blocks")
         self.observe(model, prompt)
         original = pipeline.prediction.numpy().copy()
-        expected = original[:40].copy()
+        expected = original[:30].copy()
         expected[:, 6] = 0.455
         expected[:, 13] = 0.39
         first = self.rows(model.get_action())
         second = self.rows(model.get_action())
-        self.assertEqual(first.shape, (40, 14))
+        self.assertEqual(first.shape, (30, 14))
         np.testing.assert_allclose(first, expected)
         np.testing.assert_allclose(second, expected)
         np.testing.assert_array_equal(pipeline.prediction.numpy(), original)
@@ -110,7 +110,7 @@ class ActionOutputTests(unittest.TestCase):
                     np.testing.assert_array_equal(result[:, arm_columns],
                                                   pipeline.prediction.numpy()[:horizon, arm_columns])
                     # Predictions and postprocessing use float32 throughout.
-                    expected_right = 1.6 * 1.1 if rule.episode_joint2 else rule.right * 2 * rule.right_scale
+                    expected_right = 1.6 * 1.05 if rule.episode_joint2 else rule.right * 2 * rule.right_scale
                     np.testing.assert_allclose(result[:, 13], expected_right, rtol=1e-6)
 
     def test_unknown_prompt_preserves_both_grippers(self):
@@ -333,7 +333,7 @@ class ActionOutputTests(unittest.TestCase):
             cases = (
                 ("piper_x", "Hang the mugs on the mug rack.", 0.4025, 0.345, 30),
                 ("piper_x", "Place all the objects on the table into the backpack.", 0.385, 0.33, 20),
-                ("piper_x", "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.", 0.455, 0.39, 40),
+                ("piper_x", "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.", 0.455, 0.39, 30),
                 ("piper", "Place all the objects on the table into the basket.", 0.35, 0.30, 30),
                 ("piper", "Pick up the pen holder and place all the pens into it.", 0.455, 0.0, 40),
                 ("piper", "Stack the blocks on the table, then cover them with the cup.", 0.0, 0.0, 40),

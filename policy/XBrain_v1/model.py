@@ -20,6 +20,12 @@ from XPolicyLab.policy.XBrain_v1.piperx_fk_adapter import (
     fk_source_path,
     joints14_to_endpose16,
 )
+from XPolicyLab.policy.XBrain_v1.pack_and_pour_fruit import (
+    FruitReplayState,
+    detect_blue_side,
+    load_trajectories,
+    next_trajectory_chunk,
+)
 from XPolicyLab.policy.XBrain_v1.stand_up_bottles import BottleJoint5Correction
 from XPolicyLab.utils.process_data import get_batch_size, get_robot_action_dim_info, pack_robot_state
 
@@ -70,6 +76,10 @@ class Model(ModelTemplate):
         self._ambiguous_gripper_keys = set()
         self._batch_env_indices = None
         self._pending_batch_gripper_samples = []
+        self._fruit_trajectories = None
+        self._fruit_replay_states = {}
+        if self.env_cfg_type == "arx_x5":
+            self._fruit_trajectories = load_trajectories()
 
         # Get robot action dimension metadata
         # Example:
@@ -196,6 +206,21 @@ class Model(ModelTemplate):
             ])
 
     def get_action(self):
+        fruit_state = self._fruit_replay_states.get(self._gripper_episode_key)
+        if (
+            fruit_state is not None
+            and fruit_state.first_inference_done
+            and fruit_state.last_chunk is not None
+            and fruit_state.last_chunk_generation == fruit_state.observation_generation
+        ):
+            return self._format_pipeline_actions(
+                fruit_state.last_chunk.copy(), prompt=fruit_state.prompt_key
+            )
+        if fruit_state is not None and fruit_state.active and fruit_state.first_inference_done:
+            replay = next_trajectory_chunk(self._fruit_trajectories, fruit_state)
+            fruit_state.last_chunk = replay.copy()
+            fruit_state.last_chunk_generation = fruit_state.observation_generation
+            return self._format_pipeline_actions(replay, prompt=fruit_state.prompt_key)
         if self._pipe is not None:
             if self._obs is None:
                 raise RuntimeError("update_obs must be called before get_action")
@@ -228,6 +253,17 @@ class Model(ModelTemplate):
             predicted = np.asarray(predicted.detach().float().cpu())
             if predicted.shape != (50, 14) or not np.isfinite(predicted).all():
                 raise ValueError(f"pipeline returned unexpected action shape/values: {predicted.shape}")
+            if fruit_state is not None and fruit_state.active and not fruit_state.first_inference_done:
+                fruit_state.first_inference_done = True
+                replay = next_trajectory_chunk(self._fruit_trajectories, fruit_state)
+                fruit_state.last_chunk = replay.copy()
+                fruit_state.last_chunk_generation = fruit_state.observation_generation
+                print(
+                    f"[XBrain_v1] pack_and_pour_fruit replay selected={fruit_state.blue_side} "
+                    f"blue_pixels=({fruit_state.left_score},{fruit_state.right_score}) "
+                    f"returned_steps={len(replay)}; first VLA action discarded"
+                )
+                return self._format_pipeline_actions(replay, prompt=prompt)
             # Select the outgoing prefix for this request without changing the
             # fallback horizon used by subsequent tasks or batch items.
             predicted = predicted[:self._action_horizon_for_prompt(prompt)]
@@ -273,6 +309,7 @@ class Model(ModelTemplate):
         self._ambiguous_gripper_keys.clear()
         self._batch_env_indices = None
         self._pending_batch_gripper_samples.clear()
+        self._fruit_replay_states.clear()
         # Log the actual per-episode thresholds again after a new episode.
         self._reported_gripper_prompts.clear()
 
@@ -322,6 +359,7 @@ class Model(ModelTemplate):
         )
 
     def _observe_task_policies(self, prompt, obs):
+        self._observe_fruit_replay(prompt, obs)
         self._prepare_episode_gripper_rule(prompt, obs)
         rule = self._gripper_thresholds.get(normalize_prompt(prompt))
         if self.env_cfg_type != "piper" or rule is None or rule.task != "stand_up_bottles":
@@ -346,6 +384,44 @@ class Model(ModelTemplate):
                 f"left_gripper_state={state[6]:.6f} right_gripper_state={state[13]:.6f} "
                 f"left_joint5_state={state[4]:.6f} right_joint5_state={state[11]:.6f}"
             )
+
+    def _observe_fruit_replay(self, prompt, obs):
+        prompt_key = normalize_prompt(prompt)
+        key = self._gripper_episode_key
+        state = self._fruit_replay_states.get(key)
+        if self.env_cfg_type != "arx_x5" or prompt_key != normalize_prompt(
+            "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl."
+        ):
+            self._fruit_replay_states.pop(key, None)
+            return
+        if state is not None and state.prompt_key == prompt_key:
+            state.observation_generation += 1
+            return
+        vision = obs.get("vision", {})
+        head = vision.get("cam_head", {}).get("color")
+        if head is None:
+            if isinstance(key, tuple):
+                # Batch history replay stores state/prompt only until the
+                # actual indexed observation (with camera buffers) arrives.
+                return
+            raise ValueError("pack_and_pour_fruit requires vision.cam_head.color for trajectory selection")
+        side, left_score, right_score = detect_blue_side(head)
+        if side is None:
+            print(
+                f"[XBrain_v1] pack_and_pour_fruit blue-side ambiguous "
+                f"blue_pixels=({left_score},{right_score}); using normal VLA inference"
+            )
+        else:
+            print(
+                f"[XBrain_v1] pack_and_pour_fruit blue-side detected={side} "
+                f"blue_pixels=({left_score},{right_score}); replay trajectory selected"
+            )
+        self._fruit_replay_states[key] = FruitReplayState(
+            prompt_key=prompt_key,
+            blue_side=side,
+            left_score=left_score,
+            right_score=right_score,
+        )
 
     def _apply_prompt_joint_corrections(self, predicted, prompt):
         rule = self._gripper_thresholds.get(normalize_prompt(prompt))
@@ -483,6 +559,9 @@ class Model(ModelTemplate):
                 self._gripper_episode_key = ("batch", env_idx)
                 prompt = str(obs.get("instruction") or obs.get("task_instruction") or
                              self.model_cfg.get("default_prompt", "")).strip()
+                fruit_state = self._fruit_replay_states.get(self._gripper_episode_key)
+                if fruit_state is None or fruit_state.blue_side is None:
+                    self._observe_fruit_replay(prompt, obs)
                 self._prepare_episode_gripper_rule(prompt, obs)
                 self._obs = obs
                 action_batch.append(self.get_action())

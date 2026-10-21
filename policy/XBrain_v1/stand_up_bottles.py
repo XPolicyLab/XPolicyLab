@@ -9,7 +9,7 @@ class BottleJoint5Correction:
     GRIPPER_CUTOFF = np.float32(0.6)
     JOINT5_CUTOFF = np.float32(-1.1)
     JOINT5_OFFSET = np.float32(0.05)
-    JOINT5_MIN = np.float32(-1.25)
+    JOINT5_MIN_BY_ARM = (np.float32(-1.25), np.float32(-1.265))
     ARM_COLUMNS = ((4, 6), (11, 13))
 
     def __init__(self):
@@ -33,5 +33,5 @@ class BottleJoint5Correction:
                 if value > self.JOINT5_CUTOFF:
                     self.active[arm] = False
                     break
-                corrected[step, joint5] = max(value - self.JOINT5_OFFSET, self.JOINT5_MIN)
+                corrected[step, joint5] = max(value - self.JOINT5_OFFSET, self.JOINT5_MIN_BY_ARM[arm])
         return corrected

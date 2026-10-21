@@ -53,12 +53,14 @@ class BottleJoint5CorrectionTests(unittest.TestCase):
 
     def test_only_joint5_changes_and_floor_is_applied_without_accumulation(self):
         model, pipe = self.make_bottle_model()
-        pipe.prediction[:5, 4] = torch.tensor([-1.1, -1.15, -1.20, -1.24, -1.30])
+        targets = torch.tensor([-1.1, -1.15, -1.20, -1.24, -1.30])
+        pipe.prediction[:5, 4] = pipe.prediction[:5, 11] = targets
         model.update_obs(self.observation(right_gripper=.5))
         first = self.rows(model.get_action())
         second = self.rows(model.get_action())
         np.testing.assert_allclose(first[:5, 4], [-1.15, -1.20, -1.25, -1.25, -1.25], rtol=1e-6)
-        self.assertTrue(np.all(first[:, [4, 11]] >= np.float32(-1.25)))
+        np.testing.assert_allclose(first[:5, 11], [-1.15, -1.20, -1.25, -1.265, -1.265], rtol=1e-6)
+        self.assertTrue(np.all(first[:, [4, 11]] >= np.asarray([-1.25, -1.265], dtype=np.float32)))
         np.testing.assert_array_equal(first, second)
         untouched = [0, 1, 2, 3, 5, 7, 8, 9, 10, 12]
         np.testing.assert_array_equal(first[:, untouched], pipe.prediction.numpy()[:30, untouched])
