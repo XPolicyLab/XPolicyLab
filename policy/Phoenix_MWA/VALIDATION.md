@@ -1,18 +1,18 @@
 # Edge25 online release validation
 
-This revision downloads and loads three robot-specific **35000-step** checkpoints from `run20261021_edge25_01`, initialized at step 256013. The exported model architecture, processor and normalization are unchanged; the saved training configuration records online H5 visuals, edge25 temporal trimming and training-only shared color jitter. Inference keeps full-view bicubic resize256, repeat9 encoding, replan 32 and 10 denoising steps.
+This revision downloads and loads three robot-specific **40000-step** checkpoints from `run20261021_edge25_01`, initialized at step 256013. The exported model architecture, processor and normalization are unchanged; the saved training configuration records online H5 visuals, edge25 temporal trimming and training-only shared color jitter. Inference keeps full-view bicubic resize256, repeat9 encoding, replan 32 and 10 denoising steps.
 
 The loader pins the complete per-family training contracts in `phoenix_source/edge25_training_contracts.json`, including their trim/augmentation source identities. It checks the exported configuration, checkpoint step, family, normalization and exact restored tensors. It never instantiates the private training dataloader or applies training augmentation.
 
-## Current checks (2026-10-21)
+## Current 40000-step checks (2026-10-21)
 
 - **43 CPU tests passed**, with 15 historical tests skipped (58 total), including all three actual checkpoint/configuration pairs and rejection of altered family, step, normalization, geometry, trim and augmentation metadata.
 - **All three GPU policies loaded and generated finite 32×14 joint-action chunks** from recorded observations, using cached training text. Each loader verified all 1650 `mot` tensors and 3 `proprio_encoder` tensors against the checkpoint. Action acknowledgments and reset passed; replan=32 and denoising steps=10.
 - **Standard `eval.sh` passed 10 plain-RGB and 10 encoded-observation debug episodes** for ARX X5 with `online_t5`. Both exited zero, reached `[MAIN] eval finished` and had no traceback. These exercise the official WebSocket server/client and server-side decoding; they are synthetic protocol checks, not physical robot success evaluation.
-- **Concurrent tokenizer initialization regression passed.** The first concurrent startup exposed an existing partial-copy checksum race. Vocabulary files now use verified temporary copies and atomic replacement; all successful results above are from the corrected code.
+- **Concurrent tokenizer initialization regression passed.** The earlier 35000-step update fixed a partial-copy checksum race. This release retains verified temporary copies and atomic replacement and reruns the regression.
 - Shell syntax, Python parsing, whitespace and checked-in source/configuration hashes passed. All seven public ModelScope policy/shared files matched the pinned SHA256 and sizes. The three uploaded policy files previously passed anonymous first/last 64-KiB range checks; no fresh complete download was repeated.
 
-Machine-readable evidence: [edge25_20261021.json](validation_results/edge25_20261021.json). Tests used the existing `fastwam-pretrain` environment on NVIDIA RTX PRO 5000 72GB Blackwell GPUs (driver 580.126.09). No new environment installation, simulator success evaluation, physical rollout or strict numerical training/inference equivalence is claimed.
+Machine-readable evidence: [edge25_40000_20261021.json](validation_results/edge25_40000_20261021.json). Tests used the existing `fastwam-pretrain` environment on NVIDIA RTX PRO 5000 72GB Blackwell GPUs (driver 580.126.09). No new environment installation, simulator success evaluation, physical rollout or strict numerical training/inference equivalence is claimed.
 
 Reproduce CPU and public download checks from the parent of `XPolicyLab`:
 
@@ -27,6 +27,8 @@ python -m XPolicyLab.policy.Phoenix_MWA.joint96_assets /absolute/path/to/weights
 ```
 
 For current download and debug commands, see [README.md](README.md).
+
+The previous 35000-step smoke-test summary is retained in `validation_results/edge25_20261021.json` for history; it is not evidence for the current weights. This release supersedes only the three matching edge25 35000-step policy files in ModelScope; unrelated releases and shared encoders remain unchanged.
 
 ## Historical paired-cache release (2026-10-19/20)
 

@@ -38,5 +38,5 @@ text_mode: training_cache
 # Each robot uses its own released H5 no-crop edge25 online posttraining checkpoint.
 runtime_mode: joint96_real_phoenix
 current_visual_mode: repeat9_full_joint96
-expected_step: 35000
+expected_step: 40000
 audit_dir: logs/phoenix

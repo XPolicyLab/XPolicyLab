@@ -2,7 +2,7 @@
 
 **Contributor:** Phoenix_MWA contributors | **Paper:** Not provided | **arXiv:** Not provided | **Original code:** [InternW0-Delta](https://github.com/InternRobotics/InternW0-Delta)
 
-Phoenix_MWA is an **evaluation-only** adapter for RoboDojo real-robot ARX X5, Piper and Piper X, using absolute dual-arm joint actions (`action_type=joint`). The current **H5 no-crop edge25 online release** provides one **35000-step posttraining checkpoint per robot, initialized from step 256013**. `joint96_source/` contains the inference subset of the upstream runtime and encoders; `phoenix_source/` contains inference configuration, per-robot q01/q99 statistics and fixed task-instruction features. No training checkout or trajectory dataset is required.
+Phoenix_MWA is an **evaluation-only** adapter for RoboDojo real-robot ARX X5, Piper and Piper X, using absolute dual-arm joint actions (`action_type=joint`). The current **H5 no-crop edge25 online release** provides one **40000-step posttraining checkpoint per robot, initialized from step 256013**. `joint96_source/` contains the inference subset of the upstream runtime and encoders; `phoenix_source/` contains inference configuration, per-robot q01/q99 statistics and fixed task-instruction features. No training checkout or trajectory dataset is required.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -15,12 +15,12 @@ Linux, CUDA and BF16 support are required. The installer pins PyTorch 2.7.1 / to
 ```bash
 bash install.sh phoenix-mwa
 conda activate phoenix-mwa
-bash download_checkpoint.sh checkpoints/phoenix-mwa-h5-nocrop-edge25-aug-init256013-step35000-20261021
+bash download_checkpoint.sh checkpoints/phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021
 ```
 
 The downloader fetches the three H5 policy weights and shared DINO, STVAE, WAN VAE and T5 weights from [ModelScope](https://www.modelscope.cn/models/ssuuuuu/phoenix-wam/files). For one robot plus shared weights, append `--robot-type piper` (or `arx_x5` / `piper_x`). It downloads individual weight files only. Configuration, tokenizer, statistics and the small instruction feature table are included in Git; no resource archive is needed.
 
-Use the new weights directory when upgrading. The release pins the three edge25 online 35000-step checkpoints. Older center-crop, paired-cache and z-score policy checkpoints are rejected. Existing files with incorrect hashes are rejected rather than silently replaced. Shared weights with matching hashes may be reused.
+Use the new weights directory when upgrading. The release pins the three edge25 online 40000-step checkpoints. Older center-crop, paired-cache and z-score policy checkpoints are rejected. Existing files with incorrect hashes are rejected rather than silently replaced. Shared weights with matching hashes may be reused.
 
 ## Data Processing
 
@@ -42,19 +42,19 @@ bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <
 
 # Offline protocol check; online_t5 accepts the debug client's synthetic instruction.
 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-mwa-h5-nocrop-edge25-aug-init256013-step35000-20261021 arx_x5 joint 0 0 0 phoenix-mwa base
+  phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021 arx_x5 joint 0 0 0 phoenix-mwa base
 DEBUG_OBS_ENCODED=1 WAM_TEXT_MODE=online_t5 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo cover_blocks \
-  phoenix-mwa-h5-nocrop-edge25-aug-init256013-step35000-20261021 arx_x5 joint 0 0 0 phoenix-mwa base
+  phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021 arx_x5 joint 0 0 0 phoenix-mwa base
 ```
 
 For real hardware, RoboDojo supplies the environment client and controller. Choose one matching policy server command:
 
 ```bash
-bash setup_eval_policy_server.sh RoboDojo cover_blocks phoenix-mwa-h5-nocrop-edge25-aug-init256013-step35000-20261021 \
+bash setup_eval_policy_server.sh RoboDojo cover_blocks phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021 \
   arx_x5 joint 0 0 phoenix-mwa 9000 0.0.0.0
-bash setup_eval_policy_server.sh RoboDojo fill_pen_holder phoenix-mwa-h5-nocrop-edge25-aug-init256013-step35000-20261021 \
+bash setup_eval_policy_server.sh RoboDojo fill_pen_holder phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021 \
   piper joint 0 0 phoenix-mwa 9000 0.0.0.0
-bash setup_eval_policy_server.sh RoboDojo cap_pen phoenix-mwa-h5-nocrop-edge25-aug-init256013-step35000-20261021 \
+bash setup_eval_policy_server.sh RoboDojo cap_pen phoenix-mwa-h5-nocrop-edge25-aug-init256013-step40000-20261021 \
   piper_x joint 0 0 phoenix-mwa 9000 0.0.0.0
 ```
 
@@ -64,13 +64,13 @@ Default `text_mode=training_cache` preserves the exact training instruction feat
 
 ## Model Assets
 
-Files are in ModelScope repository `ssuuuuu/phoenix-wam`, revision `master`. `phoenix_release.json` pins every filename, size and SHA256. The `run20261021_edge25_01` suffix identifies the training batch; each checkpoint contains 35000 posttraining steps after initialization at step 256013. These filenames distinguish this release from the earlier center-crop H5 weights.
+Files are in ModelScope repository `ssuuuuu/phoenix-wam`, revision `master`. `phoenix_release.json` pins every filename, size and SHA256. The `run20261021_edge25_01` suffix identifies the training batch; each checkpoint contains 40000 posttraining steps after initialization at step 256013. These filenames distinguish this release from the earlier center-crop H5 weights.
 
 | `env_cfg_type` | H5 no-crop checkpoint | Slot | Native data rate |
 | --- | --- | --- | --- |
-| `arx_x5` | `phoenix-mwa-arx-x5-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt` | 2 | 30 Hz |
-| `piper` | `phoenix-mwa-piper-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt` | 4 | 30 Hz |
-| `piper_x` | `phoenix-mwa-piper-x-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_035000-run20261021_edge25_01.pt` | 15 | 25 Hz |
+| `arx_x5` | `phoenix-mwa-arx-x5-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_040000-run20261021_edge25_01.pt` | 2 | 30 Hz |
+| `piper` | `phoenix-mwa-piper-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_040000-run20261021_edge25_01.pt` | 4 | 30 Hz |
+| `piper_x` | `phoenix-mwa-piper-x-h5-online-resize256-nocrop-edge25-aug-joint14-init256013-q01q99-clip5-step_040000-run20261021_edge25_01.pt` | 15 | 25 Hz |
 
 Both download entry points read this manifest and select the new `h5-online-resize256-nocrop-edge25-aug` weights. The release also pins each robot's complete training contract and exported inference configuration. Older weights remain separate releases; PR #165 is unchanged.
 
@@ -80,7 +80,7 @@ The native layout is left arm 6 + left gripper 1 + right arm 6 + right gripper 1
 
 ## Configuration
 
-`deploy.yml` defaults to `expected_step=35000`, `runtime_mode=joint96_real_phoenix`, BF16, action horizon 32, replan 32, 10 denoising steps and CPU random noise. Seed comes from the standard launch arguments. `action_hz=null` records the native data rate above; actual command timing is controlled by the hardware client.
+`deploy.yml` defaults to `expected_step=40000`, `runtime_mode=joint96_real_phoenix`, BF16, action horizon 32, replan 32, 10 denoising steps and CPU random noise. Seed comes from the standard launch arguments. `action_hz=null` records the native data rate above; actual command timing is controlled by the hardware client.
 
 - Inputs are RGB uint8 arrays, ordered head, left wrist, right wrist. Each **full view is resized directly to 256×256** using PIL/torchvision bicubic interpolation with antialiasing, then normalized to float32 `[-1,1]`. A 640×480 input becomes **256×256**, changing aspect ratio and preserving the image edges. Views use a 256×768 horizontal transport layout and are split before visual encoding; their latents are joined horizontally. There is no spatial crop or image augmentation.
 - `current_visual_mode=repeat9_full_joint96`: repeat the current frame nine times, run both complete WAN VAE and DINO/STVAE branches, concatenate Joint96 latents, then retain the first temporal latent. No future observation is required.
