@@ -1,6 +1,6 @@
 # HexaShell-preview
 
-**Contributor:** HexaShell authors | **Paper:** not yet available | **arXiv:** not yet available | **Original code:** [HexaFuture/HexaShell](https://github.com/HexaFuture/HexaShell)
+**Contributor:** HexaFuture | **Paper:** HexaShell: A Thin Harness for Exploring the Limits of VLM Agents as Robot Coding Agents | **arXiv:** [2610.23479](https://arxiv.org/abs/2610.23479) | **Original code:** [HexaFuture/HexaShell](https://github.com/HexaFuture/HexaShell)
 
 Evaluation-only agent policy. An unmodified coding agent (Codex CLI, `gpt-6-astra`) operates the ARX X5 through one command-line program, `robo`; a server in this directory turns each command into a timed joint path with cuRobo inverse kinematics and streams it through the standard action contract. Task competence is in small Python tools under `tasks/<task>/tools/`, written by a second copy of the same model during development and frozen here; the acting agent only chooses which tool to call and with what arguments. The agent runs in a Docker container with no network beyond the model endpoint; the API key never enters the container.
 
@@ -12,7 +12,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ## Installation
 
-Requirements on the policy machine: the RoboDojo checkout this XPolicyLab lives in, with its Isaac Sim 5.1 Python environment (cuRobo is used for IK); Docker; the Codex CLI binaries (`codex` and `codex-code-mode-host` side by side; the standalone installer puts both under `~/.codex/packages/standalone/current/bin/` and `CODEX_BIN` may point to the `codex` symlink; `install.sh` records the version it builds with in `agent/codex/CODEX_VERSION`; the results below used Codex CLI 0.154.0 and 0.159.0); an OpenAI Responses API endpoint that serves `gpt-6-astra`, and its key in a file (the key is read by the egress proxy on the host and never enters the agent container).
+Requirements on the policy machine: the RoboDojo checkout this XPolicyLab lives in, with its Isaac Sim 5.1 Python environment (cuRobo is used for IK); Docker; the Codex CLI binaries (`codex` and `codex-code-mode-host` side by side; the standalone installer puts both under `~/.codex/packages/standalone/current/bin/` and `CODEX_BIN` may point to the `codex` symlink; `install.sh` records the version it builds with in `agent/codex/CODEX_VERSION`); an OpenAI Responses API endpoint that serves `gpt-6-astra`, and its key in a file (the key is read by the egress proxy on the host and never enters the agent container).
 
 ```bash
 cd XPolicyLab/policy/HexaShell-preview
@@ -29,22 +29,22 @@ Unsupported. This is an eval-only adapter: `process_data.sh` is omitted, and it 
 
 ## Training
 
-Unsupported. `train.sh` is omitted. There is no checkpoint: the tools in `tasks/` are the trained artefact, and the model is called through the provider API at evaluation time.
+Unsupported. `train.sh` is omitted. The policy has no weights: the model is called through the provider API at evaluation time, and the task tools in `tasks/` are frozen.
 
 ## Evaluation
 
-Results, all with frozen tools, one episode per layout and the official checkers (leaderboard formula):
+RoboDojo's official evaluation, run by RoboDojo on its own machines with a hidden seed: 50 episodes per task (Generalization tasks: 25 standard and 25 cluttered), scored by RoboDojo's checkers with the leaderboard formula. The 34 tasks outside Open use their tools in `tasks/`; the 8 Open tasks use the generic profile.
 
-| Run | Episodes | Success rate (%) | Progress score | File |
-| --- | ---: | ---: | ---: | --- |
-| Seed 0, layouts 10-19, which the tools were not built on; recipe and notes in the prompt | 420 | 39.7 | 48.0 | `eval/new_layouts_s0l10.md` |
-| Seed 0, development layouts 0-9; bare instruction, earlier manual rules | 420 | 38.3 | 43.6 | `eval/rgb_only_dev_layouts.md` |
+| Task type | Success rate (%) | Progress score |
+| --- | ---: | ---: |
+| Generalization | 34.50 | 39.22 |
+| Precision | 32.00 | 41.25 |
+| Long-Horizon | 31.50 | 42.91 |
+| Memory | 81.00 | 84.53 |
+| Open | 55.25 | 57.97 |
+| **Overall** | **46.85** | **53.18** |
 
-For Generalization tasks the 10 episodes are standard and cluttered (`_random`) layouts 5-9 in the first run and 0-4 in the second. Both runs drove the simulator in-process with the same episode logic, manual and tools (the development harness, not part of this directory) on RoboDojo `ee67a14`. That revision did not reset the `swap_blocks` button (fixed by RoboDojo PR #48), so `swap_blocks` scored 0 in both. Its tools were then developed again with the fix loaded and frozen, and `swap_blocks` was run again on layouts 10-19 with the fix loaded: 3/10, the value in the first row. `swap_blocks` has no `notes.md`, because its frozen tools have no runs on the development layouts to write notes from. The official three-seed evaluation through this `eval.sh` on RoboDojo `09bd5f5` has not finished yet.
-
-Both runs above include the 8 Open tasks with earlier task-specific tools that were developed on Open layouts; those tools are not in this directory, and the Open tasks now use the generic profile described below.
-
-`eval/robodojo_summary.md` shows the first run in RoboDojo's leaderboard format, made with RoboDojo's `summarize_result.py` (interim: 10 episodes per task instead of 50).
+Per task: `eval/official_robodojo.md`; the same numbers are in `eval/official_robodojo.json`.
 
 ```bash
 cd XPolicyLab/policy/HexaShell-preview
@@ -59,7 +59,7 @@ bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 unused /path/to
 - Cluttered Generalization variants are task names with the `_random` suffix (`stack_bowls_random`); they share the tools of the base task.
 - The policy server and the simulator may share one GPU (about 14 GB together). Batch evaluation is not supported (`eval_batch: false`).
 - The agent's full session for each episode (commands, observations, transcript) is written under `runs/bridge/<task>/`. `python3 eval/official_validate.py .` flags episodes in which the agent never issued a command (an infrastructure failure, not a result).
-- A typical episode takes 5 to 10 minutes of wall-clock time, almost all of it model latency.
+- Almost all of an episode's wall-clock time is model latency, and it grows with the reasoning effort; `agent_wall_s` caps the agent's session at one hour.
 
 Offline wiring check (no simulator). The policy server starts the real agent, so Docker, the Codex binaries and the endpoint are needed; the agent sees placeholder observations and the loop ends at the debug client's step limit:
 
@@ -87,11 +87,11 @@ bash eval.sh RoboDojo stack_bowls gpt-6-astra arx_x5 joint 0 0 0 unused <eval_en
 | `ROBOSHELL_NOTES` | `1` (default): append `tasks/<task>/notes.md` after the recipe; `0`: leave it out |
 | `ROBOSHELL_PROFILE` | unset (default): the Open tasks in `profiles/open/tasks.txt` use the generic profile, all other tasks the default one; `default` or `open` forces one profile for every task |
 
-Extra `deploy.yml` keys: `command_budget` (0 = only the official step limit), `agent_wall_s` (wall-clock cap per episode, 3600), `request_timeout_s` (120).
+Extra `deploy.yml` keys: `command_budget` (0 = only the official step limit), `agent_wall_s` (wall-clock cap on the agent's session, 3600 s), `request_timeout_s` (120).
 
 ## Notes
 
-- The agent's prompt is the official instruction followed by `TASK RECIPE:` and the task recipe from RoboProbe (commit `5230075`, Apache-2.0, copied unchanged into `agent/recipes/`, including RoboProbe's notes on six tasks), the same text the GPT-6 Astra baseline and EmbodiedEvo give their agents; `roboshell/recipe.py` refuses a recipe file whose SHA-256 differs from `agent/recipes/manifest.json`.
+- The agent's prompt is the official instruction followed by `TASK RECIPE:` and the task recipe from RoboProbe (commit `5230075`, Apache-2.0, copied unchanged into `agent/recipes/`, including RoboProbe's notes on six tasks), the same text the GPT-6 Astra baseline gives its agent; `roboshell/recipe.py` refuses a recipe file whose SHA-256 differs from `agent/recipes/manifest.json`.
 - After the recipe come `TASK NOTES (from earlier runs of the same tools in other scenes):` and `tasks/<task>/notes.md`: at most 20 lines under four fixed headings (time, failed commands, checks before stopping, known problems), written from the development-layout runs of the frozen tools. `eval/check_notes.py` rejects lengths, numbers with two or more decimals, coordinates, pixel positions and any mention of a layout; `roboshell/recipe.py` runs the same check before the notes reach the prompt.
 - `_random` variants use the recipe and the notes of the base task.
 - Open tasks (generic profile, chosen per task by `roboshell/server/tools.py` `select_profile`): the prompt is the official instruction and the task recipe, without notes. The manual `agent/INTERFACE_open.md` plus the `interface.md` of each tool in `profiles/open/enabled_tools.txt` is the same file for every Open task (`agent/build/AGENTS_open.md`). Besides the base commands the agent has `goto` (absolute pose, with nearby reachable poses when the target is not reachable), `reach` (inverse kinematics only, nothing moves), `pixels` (the images as arrays) and `robo py`, a persistent Python kernel with `roboshell/client/robolib.py` (robot commands, camera rays and projections, triangulation, image marking), mounted read-only into the agent container. Gripper feedback (`fingers_stopped`, `opening_m`) is read from the official observation. `tools/scene` finds object regions in one image and measures an object in 3D from two camera views (plane sweep of the two silhouettes; RGB, camera calibration, the measured table plane and the robot's own URDF only). `library/` holds 8 tools taken from the 34 non-Open tasks and rewritten without task terms (`library/README.md` lists sources and rejected candidates). No tool in this profile was taken from, tuned on or tested on an Open task.
@@ -100,7 +100,7 @@ Extra `deploy.yml` keys: `command_budget` (0 = only the official step limit), `a
 - Tools cannot import the simulator or read object poses: they see joint angles, TCP poses, the three RGB images with the calibration, and the same motion primitives as the base commands (`roboshell/server/tools.py`, `EpisodeAPI`). They hold no object dimensions or object positions: the sizes, heights and positions of task objects are measured in the episode, by the tool itself or by the agent, which passes them as arguments; the constants left in the code are robot and camera geometry, design margins and generic plausibility bounds.
 - `agent/INTERFACE.md` is the manual the agent reads; each enabled tool's `interface.md` is appended to it (`agent/build/AGENTS_<task>.md` shows the result for each task; `python3 roboshell/docs.py build --task <task>` regenerates it). The delivery check (`eval/check_task.py`) rejects tool text that names the task or its objects, and runs `eval/check_notes.py` on the notes.
 - In a few tasks some enabled tools still have a depth path; called without depth they stop with a readable error, and the results above were measured with exactly this tool set.
-- `tasks/<task>/` holds only what is used at evaluation time: `enabled_tools.txt`, the enabled tools with the modules they import, and `notes.md` (all tasks except `swap_blocks`). The Open tasks have no `tasks/<task>/`. Development records (playbooks, development logs, tests) are not part of this directory.
-- The server writes each decoded observation as PNG files for the agent (`obs/head.png`, ...), and the task tools decode the same PNG bytes in memory; this is HexaShell-preview's own archive inside one process, so the `cv2.imencode` / `cv2.imdecode` calls in `roboshell/server/`, `tools/table_plane/` and `tasks/*/tools/` never touch XPolicyLab trajectory bits. `model.py` decodes nothing.
+- `tasks/<task>/` holds only what is used at evaluation time: `enabled_tools.txt`, the enabled tools with the modules they import, and `notes.md` (all tasks except `swap_blocks`). The Open tasks have no `tasks/<task>/`.
+- Images: `model.py` decodes nothing; it receives the RGB arrays the policy server has decoded. The robo server writes each observation once as lossless PNG files for the agent to view (`obs/head.png`, ...), and the task tools read the same PNG bytes in memory. These PNGs are HexaShell-preview's own copies of the current observation inside the policy process: no XPolicyLab trajectory bits or datasets are decoded or written, so the `cv2.imencode` / `cv2.imdecode` calls in `roboshell/server/`, `tools/` and `tasks/*/tools/` never see the two stored byte formats.
 - The internal Python package, entry script and run directories keep the development name `roboshell` (`roboshell/`, `roboshell.sh`, `runs/`); the policy name is HexaShell-preview.
 - Data processing and training are unsupported.

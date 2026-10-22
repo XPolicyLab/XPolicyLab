@@ -12,5 +12,5 @@ Some notes name commands of RoboProbe's own agent (`give_up`, holding a dimensio
 they add no command or observation here, and the text is kept unchanged.
 
 The acting agent's prompt is the official instruction followed by `TASK RECIPE:` and the recipe of its task
-(`_random` variants use the base task's recipe), the same text the GPT-6 Astra L3 Inspect EEF baseline and EmbodiedEvo give their agents.
+(`_random` variants use the base task's recipe), the same text the GPT-6 Astra L3 Inspect EEF baseline gives its agent.
 `ROBOSHELL_RECIPE=0` leaves the prompt as the bare instruction. Do not edit these files.

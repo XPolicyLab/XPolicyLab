@@ -71,9 +71,9 @@ exit code 1 or 2 but never use budget; no motion tool checks collisions with obj
 
 ## Load test
 
-The development harness (not part of this directory) loads every `library/<name>/tool.py` the way the server does,
-checks the `TOOL` schema, name clashes, argument validation and the robo client's sub-commands, and runs each command
-once on a synthetic ray-traced scene through a stand-in EpisodeAPI (CPU only). Result on 2026-10-18: 8/8 tools
+The load test loads every `library/<name>/tool.py` the way the server does, checks the `TOOL` schema, name clashes,
+argument validation and the robo client's sub-commands, and runs each command once on a synthetic ray-traced scene
+through a stand-in EpisodeAPI (CPU only). Result on 2026-10-18: 8/8 tools
 loaded, 12 commands, 0 schema problems, smoke tests 20/20.
 
 ## Overlap with other commands

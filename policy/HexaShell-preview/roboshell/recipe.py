@@ -5,7 +5,7 @@
     recipe.py info --task TASK                             prints which recipe and notes the prompt carries, as JSON
 
 The recipes in agent/recipes/ are copied unchanged from RoboProbe (see agent/recipes/README.md) and appended after
-"TASK RECIPE:" as the GPT-6 Astra L3 Inspect EEF baseline and EmbodiedEvo append them. ROBOSHELL_RECIPE=0 leaves it out,
+"TASK RECIPE:" as the GPT-6 Astra L3 Inspect EEF baseline appends them. ROBOSHELL_RECIPE=0 leaves it out,
 the condition of every result before the recipes were added.
 The notes are tasks/<task>/notes.md, written from earlier runs of the task's frozen tools on the development layouts
 and checked by eval/check_notes.py (no object positions, sizes or layouts); a task without notes.md gets none.
