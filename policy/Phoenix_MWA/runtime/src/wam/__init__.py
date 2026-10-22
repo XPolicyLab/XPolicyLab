@@ -1,1 +1,0 @@
-"""Phoenix-MWA package."""
