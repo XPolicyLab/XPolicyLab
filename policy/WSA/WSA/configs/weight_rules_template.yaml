@@ -1,0 +1,182 @@
+# ============================================================
+# Dataset sampling weight rules (TEMPLATE)
+#
+# This file controls how multiple datasets (repo_ids) are mixed
+# during training.
+#
+# Two-level logic:
+#   1) Assign each repo_id to exactly one group by `match` (regex).
+#      - first match wins
+#      - if no group matches => goes to `default`
+#   2) Allocate sampling probability:
+#      - Each group gets `total_weight` (a global budget)
+#      - Inside the group, distribute that budget across repos
+#        using `inside` (+ optional `gamma`)
+#
+# Final output:
+#   repo_weight[rid] >= 0 and sum(repo_weight) == 1.
+# ============================================================
+
+groups:
+  # ----------------------------------------------------------
+  # Group: agibotworld
+  #
+  # Purpose:
+  #   Put all AgiBotWorld repos into a small fixed budget.
+  #
+  # match:
+  #   Regex over repo_id. "^agibotworld" means the repo_id starts
+  #   with "agibotworld" (prefix match).
+  #
+  # total_weight:
+  #   1% of ALL training samples come from this group (before
+  #   distributing inside the group).
+  #
+  # inside:
+  #   frames_pow => inside-group repo weight ∝ (#frames)^gamma
+  #
+  # gamma:
+  #   gamma=0.5 => sqrt scaling. Large repos are favored, but
+  #   the advantage is compressed compared to gamma=1.0.
+  # ----------------------------------------------------------
+  - name: agibotworld
+    match: "^agibotworld"
+    total_weight: 0.01
+    inside: frames_pow   # frames_pow | uniform | episodes_pow
+    gamma: 0.5
+
+  # ----------------------------------------------------------
+  # Group: interndata_a1
+  #
+  # Purpose:
+  #   Main training source; give it most of the sampling budget.
+  #
+  # match:
+  #   "a1" matches any repo_id that contains substring "a1"
+  #   (regex search). This is broad on purpose.
+  #
+  # total_weight:
+  #   80% of ALL training samples come from this group.
+  #
+  # inside:
+  #   frames_pow => weight ∝ (#frames)^gamma
+  #
+  # gamma:
+  #   gamma=1.0 => linear scaling. If repo A has 10x frames of B,
+  #   it will get ~10x sampling probability inside this group.
+  # ----------------------------------------------------------
+  - name: interndata_a1
+    match: "a1"
+    total_weight: 0.8
+    inside: frames_pow
+    gamma: 1.0
+
+  # ----------------------------------------------------------
+  # Group: robotwin
+  #
+  # Purpose:
+  #   Keep robotwin data present, but do NOT let bigger repos
+  #   dominate smaller ones within robotwin.
+  #
+  # match:
+  #   "robotwin" matches any repo_id containing "robotwin".
+  #
+  # total_weight:
+  #   15% global budget.
+  #
+  # inside:
+  #   uniform => all repos in this group get equal probability
+  #   (gamma is ignored).
+  # ----------------------------------------------------------
+  - name: robotwin
+    match: "robotwin"
+    total_weight: 0.15
+    inside: uniform
+
+  # ----------------------------------------------------------
+  # Group: robomind
+  #
+  # Purpose:
+  #   Example of episode-based balancing (good when episodes are
+  #   the meaningful unit, not raw frames).
+  #
+  # match:
+  #   "robomind" matches any repo_id containing "robomind".
+  #
+  # total_weight:
+  #   4% global budget.
+  #
+  # inside:
+  #   episodes_pow => weight ∝ (#episodes)^gamma
+  #
+  # gamma:
+  #   gamma=0.5 => sqrt scaling across episode counts.
+  # ----------------------------------------------------------
+  - name: robomind
+    match: "robomind"
+    total_weight: 0.04
+    inside: episodes_pow
+    gamma: 0.5
+
+  # ----------------------------------------------------------
+  # Group: a1_and_franka  (EXAMPLE)
+  #
+  # Purpose:
+  #   Match repos that contain BOTH "a1" and "franka" anywhere in
+  #   the path string (order does not matter).
+  #
+  # match:
+  #   (?=.*a1)(?=.*franka)
+  #     - must contain "a1"
+  #     - must contain "franka"
+  #
+  # Notes:
+  #   This is substring-level matching (no "path segment" constraint).
+  #   Put this group ABOVE a broader "a1" group if you want it to
+  #   take precedence (first match wins).
+  # ----------------------------------------------------------
+  - name: a1_and_franka
+    match: "(?=.*a1)(?=.*franka)"
+    total_weight: 0.05
+    inside: frames_pow
+    gamma: 0.5
+
+  # ----------------------------------------------------------
+  # Group: a1_without_franka  (EXAMPLE)
+  #
+  # Purpose:
+  #   Match repos that contain "a1" BUT do NOT contain "franka".
+  #
+  # match:
+  #   (?=.*a1)(?!.*franka)
+  #     - must contain "a1"
+  #     - must NOT contain "franka"
+  #
+  # Notes:
+  #   Also substring-level matching. If you want strict "path segment"
+  #   matching, use:
+  #     (?=.*(^|/)a1(/|$))(?!.*/franka(/|$))
+  # ----------------------------------------------------------
+  - name: a1_without_franka
+    match: "(?=.*a1)(?!.*franka)"
+    total_weight: 0.05
+    inside: frames_pow
+    gamma: 0.5
+
+# ------------------------------------------------------------
+# Default group
+#
+# Purpose:
+#   Catch-all. Any repo_id not matched by any group above will
+#   be assigned here automatically.
+#
+# total_weight:
+#   10% global budget reserved for "everything else".
+#
+# inside/gamma:
+#   frames_pow + gamma=1.0 => proportional to #frames.
+# ------------------------------------------------------------
+default:
+  total_weight: 0.1
+  inside: frames_pow
+  gamma: 1.0

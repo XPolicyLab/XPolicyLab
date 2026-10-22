@@ -1,0 +1,150 @@
+adjust_bottle:
+  infer_horizon: 16
+  binarize_gripper: false
+beat_block_hammer:
+  infer_horizon: 16
+  binarize_gripper: true
+blocks_ranking_rgb:
+  infer_horizon: 30
+  binarize_gripper: true
+blocks_ranking_size:
+  infer_horizon: 24
+  binarize_gripper: false
+click_alarmclock:
+  infer_horizon: 16
+  binarize_gripper: false
+click_bell:
+  infer_horizon: 16
+  binarize_gripper: false
+dump_bin_bigbin:
+  infer_horizon: 24
+  binarize_gripper: true
+grab_roller:
+  infer_horizon: 16
+  binarize_gripper: false
+handover_block:
+  infer_horizon: 16
+  binarize_gripper: false
+handover_mic:
+  infer_horizon: 30
+  binarize_gripper: false
+hanging_mug:
+  infer_horizon: 24
+  binarize_gripper: true
+lift_pot:
+  infer_horizon: 16
+  binarize_gripper: false
+move_can_pot:
+  infer_horizon: 16
+  binarize_gripper: false
+move_pillbottle_pad:
+  infer_horizon: 16
+  binarize_gripper: true
+move_playingcard_away:
+  infer_horizon: 16
+  binarize_gripper: false
+move_stapler_pad:
+  infer_horizon: 24
+  binarize_gripper: true
+open_laptop:
+  infer_horizon: 24
+  binarize_gripper: true
+open_microwave:
+  infer_horizon: 30
+  binarize_gripper: false
+pick_diverse_bottles:
+  infer_horizon: 16
+  binarize_gripper: true
+pick_dual_bottles:
+  infer_horizon: 30
+  binarize_gripper: false
+place_a2b_left:
+  infer_horizon: 16
+  binarize_gripper: false
+place_a2b_right:
+  infer_horizon: 30
+  binarize_gripper: true
+place_bread_basket:
+  infer_horizon: 16
+  binarize_gripper: true
+place_bread_skillet:
+  infer_horizon: 24
+  binarize_gripper: false
+place_burger_fries:
+  infer_horizon: 24
+  binarize_gripper: true
+place_can_basket:
+  infer_horizon: 16
+  binarize_gripper: false
+place_cans_plasticbox:
+  infer_horizon: 16
+  binarize_gripper: false
+place_container_plate:
+  infer_horizon: 16
+  binarize_gripper: false
+place_dual_shoes:
+  infer_horizon: 16
+  binarize_gripper: true
+place_empty_cup:
+  infer_horizon: 16
+  binarize_gripper: false
+place_fan:
+  infer_horizon: 24
+  binarize_gripper: true
+place_mouse_pad:
+  infer_horizon: 24
+  binarize_gripper: true
+place_object_basket:
+  infer_horizon: 24
+  binarize_gripper: true
+place_object_scale:
+  infer_horizon: 24
+  binarize_gripper: true
+place_object_stand:
+  infer_horizon: 30
+  binarize_gripper: true
+place_phone_stand:
+  infer_horizon: 24
+  binarize_gripper: false
+place_shoe:
+  infer_horizon: 16
+  binarize_gripper: false
+press_stapler:
+  infer_horizon: 30
+  binarize_gripper: true
+put_bottles_dustbin:
+  infer_horizon: 24
+  binarize_gripper: true
+put_object_cabinet:
+  infer_horizon: 30
+  binarize_gripper: true
+rotate_qrcode:
+  infer_horizon: 16
+  binarize_gripper: true
+scan_object:
+  infer_horizon: 24
+  binarize_gripper: false
+shake_bottle:
+  infer_horizon: 30
+  binarize_gripper: false
+shake_bottle_horizontally:
+  infer_horizon: 16
+  binarize_gripper: false
+stack_blocks_three:
+  infer_horizon: 30
+  binarize_gripper: false
+stack_blocks_two:
+  infer_horizon: 16
+  binarize_gripper: false
+stack_bowls_three:
+  infer_horizon: 16
+  binarize_gripper: true
+stack_bowls_two:
+  infer_horizon: 30
+  binarize_gripper: true
+stamp_seal:
+  infer_horizon: 16
+  binarize_gripper: false
+turn_switch:
+  infer_horizon: 24
+  binarize_gripper: true
