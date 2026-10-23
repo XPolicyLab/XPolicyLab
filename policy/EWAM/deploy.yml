@@ -1,0 +1,60 @@
+policy_name: EWAM
+protocol: ws
+# false: one env per sim process (the loop that produced the RoboDojo leaderboard results).
+# true: the sim client runs several envs per process (RoboDojo: sim.scene.num_envs) and
+# get_action_batch runs them in batched forwards (see max_batch_size).
+eval_batch: false
+
+# Server transport: overridden by setup_eval_policy_server.sh per launch.
+port: null
+host: localhost
+
+# Identifiers + per-launch wiring (set via --overrides from the eval scripts).
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: joint
+seed: null
+gpu_id: null
+
+# --- EWAM-specific keys ---
+# Explicit path to mp_rank_00_model_states.pt (or its directory). null ->
+# XPolicyLab checkpoint resolution (ckpt_name path, 5-tuple run dir, or
+# checkpoints/<ckpt_name>/).
+checkpoint_path: null
+# Wan2.2-TI2V-5B dir (config.json, Wan2.2_VAE.pth, T5 encoder, google/umt5-xxl).
+# null -> checkpoints/Wan2.2-TI2V-5B
+wan_path: null
+# Qwen3-VL-2B-Instruct dir (processor + config; weights come from the EWAM checkpoint).
+# null -> checkpoints/Qwen3-VL-2B-Instruct
+vlm_path: null
+# EWAM source root. null -> the vendored copy at policy/EWAM/EWAM/.
+ewam_root: null
+# EWAM architecture yaml. null -> <ewam_root>/configs/ewam_robotwin.yaml
+ewam_config: null
+device: cuda
+# Flow-matching steps. null -> model.inference.num_inference_timesteps (10).
+num_inference_steps: null
+# Actions executed per chunk before re-planning. null -> full 16-step chunk.
+replan_steps: null
+# Max envs per batched forward in get_action_batch (only envs whose VLM prompts have the
+# same token length share a forward). null -> no cap.
+max_batch_size: null
+# Prepended to every instruction; must match the training metas.
+# null -> per-bench default (RoboTwin: aloha scene prefix, RoboDojo: none).
+scene_prefix: null
+# Camera stitch. null -> per-bench default.
+#   robotwin: stitch then resize (RoboTwin)  |  robodojo: per-camera aspect resize onto the canvas (RoboDojo stage-2 loader)
+image_layout: null
+# Env steps per model action (training global_downsample_rate relative to the env control rate);
+# the chunk is linearly interpolated from the current state. null -> per-bench default
+# (RoboTwin: 1, RoboDojo: 3 = 25 Hz env with gds=3, i.e. 48 env steps per 16-action chunk).
+action_stride: null
+# Clip gripper actions to [0, 1]. null -> per-bench default (false for both).
+clip_gripper: null
+# Used when an observation carries no instruction.
+default_instruction: follow the instruction
+# true skips weight loading and returns hold-position chunks (protocol
+# debugging only; never valid for a real evaluation).
+allow_dummy_policy: false
