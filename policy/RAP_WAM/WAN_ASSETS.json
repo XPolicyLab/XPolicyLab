@@ -1,0 +1,63 @@
+{
+  "format": "rap-wam-wan-assets-v1",
+  "repo_id": "Wan-AI/Wan2.2-TI2V-5B",
+  "revision": "921dbaf3f1674a56f47e83fb80a34bac8a8f203e",
+  "source": "https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B/tree/921dbaf3f1674a56f47e83fb80a34bac8a8f203e",
+  "files": [
+    {
+      "path": "Wan2.2_VAE.pth",
+      "size_bytes": 2818839170,
+      "sha256": "20eb789667fa5e60e7516bf509512f6cb61f01b0aa0695eadaea930c13892b36"
+    },
+    {
+      "path": "config.json",
+      "size_bytes": 251,
+      "sha256": "d1fea36899d00c2501b836c13ad65af56e2f9529ba622e50886d3f5c3e6c02bc"
+    },
+    {
+      "path": "diffusion_pytorch_model-00001-of-00003.safetensors",
+      "size_bytes": 9825014472,
+      "sha256": "720b06c4ade5e87c1246bba8ac95b664c638749cd9b102cf84d823bb44c026a1"
+    },
+    {
+      "path": "diffusion_pytorch_model-00002-of-00003.safetensors",
+      "size_bytes": 9995661736,
+      "sha256": "09ec5ef720d8396f6cfa51fbdcbdb2327e37722afd6e89fd38f1e7e5e782c283"
+    },
+    {
+      "path": "diffusion_pytorch_model-00003-of-00003.safetensors",
+      "size_bytes": 178558176,
+      "sha256": "6306f7894c345de9093ad588771c2abfaeb668a81f7a6d9a918bd26ba3568e49"
+    },
+    {
+      "path": "diffusion_pytorch_model.safetensors.index.json",
+      "size_bytes": 72865,
+      "sha256": "bfa2337f1163e195d24151a72298daf34a620543898109be47e414c8daa5b3fe"
+    },
+    {
+      "path": "google/umt5-xxl/special_tokens_map.json",
+      "size_bytes": 6623,
+      "sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d"
+    },
+    {
+      "path": "google/umt5-xxl/spiece.model",
+      "size_bytes": 4548313,
+      "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+    },
+    {
+      "path": "google/umt5-xxl/tokenizer.json",
+      "size_bytes": 16837417,
+      "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+    },
+    {
+      "path": "google/umt5-xxl/tokenizer_config.json",
+      "size_bytes": 61728,
+      "sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05"
+    },
+    {
+      "path": "models_t5_umt5-xxl-enc-bf16.pth",
+      "size_bytes": 11361920418,
+      "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d"
+    }
+  ]
+}
