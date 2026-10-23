@@ -16,7 +16,7 @@ conda create -n runwu python=3.11 -y
 bash install.sh "$(conda run -n runwu which python)"
 ```
 
-`runwu_rsi` comes from `RUNWU_RSI_SRC` (a local checkout or a pip requirement) if set, otherwise from the source archive of the original repository at `RUNWU_RSI_REF` (a tag or commit; default `v0.1.0`). It is an archive and not a `git+https` requirement because pip would then also clone the repository's large submodules (RoboDojo, IsaacLab, cuRobo), which the policy server does not need. The simulation side needs only `deploy.py`, which does not import `runwu_rsi`.
+`runwu_rsi` comes from `RUNWU_RSI_SRC` (a local checkout or a pip requirement) if set, otherwise from the source archive of the original repository at `RUNWU_RSI_REF` (a tag or commit; default `v0.1.2`). It is an archive and not a `git+https` requirement because pip would then also clone the repository's large submodules (RoboDojo, IsaacLab, cuRobo), which the policy server does not need. The simulation side needs only `deploy.py`, which does not import `runwu_rsi`.
 
 ## Data Processing
 
@@ -24,7 +24,7 @@ Not required for this eval-only adapter; `process_data.sh` is omitted. The adapt
 
 ## Training
 
-Not supported by this integration; `train.sh` is omitted. There is no gradient training: the "weights" are PolicyBundles, produced by the generators in `runwu_rsi/bundles/` and improved offline by the evolution loop in `runwu_rsi/evolution/` of the original repository ([docs/system2.md](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.0/docs/system2.md)).
+Not supported by this integration; `train.sh` is omitted. There is no gradient training: the "weights" are PolicyBundles, produced by the generators in `runwu_rsi/bundles/` and improved offline by the evolution loop in `runwu_rsi/evolution/` of the original repository ([docs/system2.md](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.2/docs/system2.md)).
 
 ## Evaluation
 
@@ -42,7 +42,7 @@ bash eval.sh RoboDojo stack_bowls RunWu arx_x5 ee 0 0 0 <policy_conda_env> <eval
 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo stack_bowls RunWu arx_x5 ee 0 0 0 <policy_conda_env> base
 ```
 
-Use `ckpt_name=RunWu` and `action_type=ee` for every task. The original repository also contains a runner that evaluates many cases, including random layouts, in parallel and records the code version of each result ([docs/evaluation.md](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.0/docs/evaluation.md) section 4); it uses this same adapter.
+Use `ckpt_name=RunWu` and `action_type=ee` for every task. The original repository also contains a runner that evaluates many cases, including random layouts, in parallel and records the code version of each result ([docs/evaluation.md](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.2/docs/evaluation.md) section 4); it uses this same adapter.
 
 ## Model Assets
 
@@ -57,7 +57,7 @@ checkpoints/RunWu/<task_name>/
 
 The tasks are `align_blocks`, `arrange_largest_number`, `build_tower`, `classify_objects`, `classify_objects_by_language`, `cover_blocks`, `deposit_coin`, `fasten_screws`, `fill_egg_holder`, `fill_pen_holder`, `fold_clothes`, `general_pickup`, `hang_mugs`, `imitate_sorting_sequence`, `insert_key`, `insert_tubes`, `make_kong`, `make_toast`, `match_and_pick_from_conveyor`, `organize_table`, `pack_objects_into_box`, `pick_from_conveyor_by_image`, `play_Xylophone`, `play_stacking_toy`, `play_tic_tac_toe`, `plug_in_charger`, `pour_balls_into_vase`, `pour_by_language`, `pour_liquid_into_cup`, `press_by_number`, `push_T`, `put_bottles_into_dustbin`, `solve_equation`, `sort_nesting_dolls_by_size`, `stack_blocks`, `stack_blocks_by_language`, `stack_bowls`, `store_laptop_and_headphones`, `store_tools_in_toolbox`, `swap_T`, `swap_blocks` and `sweep_blocks`.
 
-`download_checkpoint.sh [task|all] [ref]` fetches only the requested `checkpoints/RunWu/<task>/` directories from the original repository (shallow, sparse git checkout) at `ref` (default `$RUNWU_RSI_REF`, else `v0.1.0`), and skips a directory that already exists. The 42 checkpoints are frozen at the release tag `v0.1.0`; a changed checkpoint has a new bundle id and a new release tag.
+`download_checkpoint.sh [task|all] [ref]` fetches only the requested `checkpoints/RunWu/<task>/` directories from the original repository (shallow, sparse git checkout) at `ref` (default `$RUNWU_RSI_REF`, else `v0.1.2`), and skips a directory that already exists. The 42 checkpoints are frozen at the release tag `v0.1.2`; a changed checkpoint has a new bundle id and a new release tag.
 
 `ckpt_name` is resolved with XPolicyLab's shared checkpoint resolver. A checkpoint directory that has no bundle file of its own but a subdirectory named after `task_name` serves all tasks, which is how `RunWu` works. A `ckpt_name` that is a path to a directory or to a bundle file also works, and so does a bundle id (or a unique prefix of at least 8 hex digits) together with `bundle_store`. If `demos/` exists and `RSI_DEMO_STORE` is not set, it is used as the demonstration store; likewise `resources/` becomes `RSI_TOOL_RESOURCE_ROOT`.
 
@@ -66,8 +66,8 @@ The tasks are `align_blocks`, `arrange_largest_number`, `build_tower`, `classify
 - **Layouts.** Development and tuning used the public RoboDojo layouts of seeds 0–2, so scores on those layouts are not held-out results.
 - **Object sizes.** Object dimensions in the policy text were taken from the simulator's asset files, with a tolerance of ±1 mm.
 - **Scoring.** The descriptions of how each task is scored were derived from RoboDojo's open-source evaluator code.
-- **Task texts.** The task descriptions and scoring conditions in the bundles are taken from RoboDojo's public task documentation. Part of the shared protocol text is adapted from RoboICL (MIT License). See [NOTICE](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.0/NOTICE).
-- **Training episodes.** 29 checkpoints carry `demos/`, which are keyframes of RoboDojo training episodes (dataset `RoboDojo_lerobot_v21_video`), and most bundles carry `priors`, which are statistics over the keyframes of the training set. That dataset is licensed under the Apache License 2.0; the attribution is in [NOTICE](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.0/NOTICE).
+- **Task texts.** The task descriptions and scoring conditions in the bundles are taken from RoboDojo's public task documentation. Part of the shared protocol text is adapted from RoboICL (MIT License). See [NOTICE](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.2/NOTICE).
+- **Training episodes.** 29 checkpoints carry `demos/`, which are keyframes of RoboDojo training episodes (dataset `RoboDojo_lerobot_v21_video`), and most bundles carry `priors`, which are statistics over the keyframes of the training set. That dataset is licensed under the Apache License 2.0; the attribution is in [NOTICE](https://github.com/RunWu-RSI/RunWu-RSI/blob/v0.1.2/NOTICE).
 - **At run time** the policy sees only the camera images and the proprioception that RoboDojo's client sends. It reads no simulator state; the only file it reads from the simulator's assets is the robot URDF, which its inverse-kinematics guard uses.
 
 ## Configuration
