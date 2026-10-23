@@ -142,6 +142,8 @@ class TestEnv:
             state[f"{prefix}arm_joint_state"] = np.zeros(arm_dims[i], dtype=np.float32)
             state[f"{prefix}ee_joint_state"] = np.zeros(ee_dims[i], dtype=np.float32)
             state[f"{prefix}ee_pose"] = np.ones(7, dtype=np.float32)
+            # Pose order is xyz + wxyz; preserve the placeholder rotation with a unit quaternion.
+            state[f"{prefix}ee_pose"][3:] *= 0.5
             state[f"{prefix}tcp_pose"] = np.zeros(7, dtype=np.float32)
             state[f"{prefix}delta_ee_pose"] = np.zeros(7, dtype=np.float32)
 
