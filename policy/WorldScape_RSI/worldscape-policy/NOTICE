@@ -1,0 +1,20 @@
+WorldScape Policy — XPolicyLab distribution
+
+Upstream: https://github.com/manifoldai-research/WorldScape-Policy
+License source revision: 2d60a5c0986df1d95d207586cc46bfd60b9a4035
+LICENSE is copied verbatim from that revision. This revision identifies the
+license source, not the revision of every file in this modified distribution.
+
+This downstream notice records the bundled WorldScape Policy source and the
+XPolicyLab adapter, RoboDojo training, and live-data-loading modifications.
+It is not an upstream NOTICE file. Existing source-level copyright and
+attribution notices remain applicable. See docs/provenance.md.
+
+Model weights, datasets, and simulator assets are separately distributed and
+are not covered merely by inclusion of this source-code license.
+
+Retained source attributions include:
+- Copyright 2024-2025 The Alibaba Wan Team Authors. All rights reserved.
+  (src/worldscape_policy/wam/wan22/{scheduler,blocks,lctx_attention,attention}.py)
+- Copyright (c) 2022-2025, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  (src/worldscape_policy/wam/wan22/cudnn_attention.py)

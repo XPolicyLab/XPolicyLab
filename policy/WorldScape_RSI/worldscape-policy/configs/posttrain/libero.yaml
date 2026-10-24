@@ -1,0 +1,85 @@
+# LIBERO post-training overlay for supported LeRobot prompt datasets.
+includes:
+  - common_wan22.yaml
+
+selectors:
+  task: ${oc.env:WSP_TASK,libero}
+  run_name: ${oc.env:RUN_NAME,baseline}
+  mode: ${oc.env:WSP_MODE,interactive}
+  visual_prompt: ${oc.env:VISUAL_PROMPT,demo}
+  dataset_name: ${oc.env:NATIVE_DATASET_NAME,worldscape_lerobot_demo}
+
+profiles:
+  dataset_name:
+    worldscape_lerobot_demo:
+      _requires_:
+        mode: [interactive, auto]
+        visual_prompt: demo
+    worldscape_lerobot_goal:
+      _requires_:
+        mode: [interactive, auto]
+        visual_prompt: goal
+    worldscape_lerobot_text:
+      _requires_:
+        mode: [interactive, auto]
+        visual_prompt: none
+
+batch_adapter:
+  embodiment_ids:
+    libero: 0
+
+native_export:
+  enabled: true
+  every_checkpoint: true
+  model_variant: wsp2-wan22-5b
+  tokenizer_source: ${model.tokenizer_path}
+  normalization:
+    schema_version: "1"
+    visual:
+      input_range: zero_one
+      model_range: minus_one_one
+    state: {kind: bundled, reference: transform_bundle.json}
+    action: {kind: bundled, reference: transform_bundle.json}
+  provenance:
+    exporter: worldscape-policy-native-training
+    task: ${selectors.task}
+  transform_bundle:
+    _target_: worldscape_policy.training.native_export.build_identity_transform_bundle
+    image_input_range: zero_one
+    action_mode: ${data_loader.action_mode}
+    relative_action: ${data_loader.relative_action}
+    provenance:
+      source: native-posttraining
+      normalization: identity
+    embodiments:
+      libero:
+        embodiment_id: 0
+        max_state_dim: 64
+        max_action_dim: 32
+        state_fields: [[state.vector, 64]]
+        action_fields: [[action.vector, 32]]
+
+model:
+  pretrained_action_adapter_index: ${pretrained_adapter_source_rows.libero}
+
+data_loader:
+  _target_: worldscape_policy.training.data.build_registered_loader
+  dataset_name: ${selectors.dataset_name}
+  batch_size: ${oc.decode:${oc.env:PER_DEVICE_TRAIN_BATCH_SIZE,8}}
+  shuffle: false
+  num_workers: ${oc.decode:${oc.env:DATALOADER_NUM_WORKERS,2}}
+  seed: ${oc.decode:${oc.env:SEED,62}}
+  augment_video: true
+  training: true
+  wo_norm: true
+  dataset_kwargs:
+    data_root: ${oc.env:DATA_ROOT}
+    embodiment: libero
+    action_horizon: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+    max_event_chunks: ${oc.decode:${oc.env:MAX_EVENT_CHUNKS,16}}
+    wo_norm: true
+    seed: ${oc.decode:${oc.env:SEED,62}}
+
+trainer:
+  t5_prompt_template: >-
+    A video shows that a robot {instruction} The robot {instruction}

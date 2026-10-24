@@ -1,0 +1,11 @@
+{
+  "id": "return-home",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [],
+  "dependencies": [],
+  "version": "0.6.0-general-control-20261023",
+  "load_mode": "always",
+  "description": "全场景统一收尾与归位"
+}

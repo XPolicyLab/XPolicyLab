@@ -1,0 +1,652 @@
+{
+  "schema": "r2si.trial-state-remediation.v1",
+  "validated_at_utc": "2026-10-24T09:30:48.025762+00:00",
+  "release_sha256": "f8b4924c606493bd28e50e0beca9cb64c42db92c819662d44d12ebe6b3d99926",
+  "official_baseline_commit": "7074afbcb2223caf21dcee9a803f1025b2c8c76b",
+  "official_single_entry_eligible": false,
+  "eligibility_status": "current_simulator_and_clean_environment_reproduction_not_completed",
+  "current_release_checks": {
+    "release_sha256": "f8b4924c606493bd28e50e0beca9cb64c42db92c819662d44d12ebe6b3d99926",
+    "cpu_regression": {
+      "exit_code": 0,
+      "elapsed_seconds": 163.40604066476226,
+      "release_sha256": "f8b4924c606493bd28e50e0beca9cb64c42db92c819662d44d12ebe6b3d99926",
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "XPolicyLab/policy/WorldScape_RSI/harness/tests",
+        "tests",
+        "-q"
+      ],
+      "real_robot_or_gpu": false,
+      "passed": 256,
+      "subtests_passed": 87,
+      "caller_pythonpath_includes_tests": false
+    },
+    "lifecycle_regression": {
+      "added_cases": 16,
+      "before_release": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+      "before_failed": 13,
+      "before_passed": 3,
+      "after_release": "f8b4924c606493bd28e50e0beca9cb64c42db92c819662d44d12ebe6b3d99926",
+      "after_passed": 16,
+      "combined_startup_protocol_passed": 28,
+      "real_local_websocket_cases": 3,
+      "model": "CPU fault-injection fixture",
+      "gpu_model_inference": false,
+      "native_robot_actions": 0,
+      "scenarios": [
+        "cleanup fails before first action; stale reset refused",
+        "cleanup retry recovery with new trial only",
+        "INFER success/update failure/action failure/missing observation",
+        "INFER before reset and cross-trial admission",
+        "read-only metadata preserves initial duplicate reset",
+        "concurrent RESET waits for INFER or cleanup; heartbeat remains available",
+        "official WS client INFER success/failure and cleanup failure"
+      ]
+    },
+    "source_scope": {
+      "source_release": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+      "final_release": "f8b4924c606493bd28e50e0beca9cb64c42db92c819662d44d12ebe6b3d99926",
+      "changed": [
+        "XPolicyLab/policy/WorldScape_RSI/MANIFEST.json",
+        "XPolicyLab/policy/WorldScape_RSI/VALIDATION.json",
+        "XPolicyLab/policy/WorldScape_RSI/harness/release.json",
+        "XPolicyLab/policy/WorldScape_RSI/harness/server.py"
+      ],
+      "added": [
+        "XPolicyLab/policy/WorldScape_RSI/validation/release-history/eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae.json",
+        "tests/test_trial_lifecycle.py",
+        "docs/TRIAL_STATE_FIXES_20261024.md"
+      ],
+      "removed": [],
+      "production_python_changes": [
+        "XPolicyLab/policy/WorldScape_RSI/harness/server.py"
+      ],
+      "model_prediction_weights_configuration_and_skills_unchanged": true,
+      "other_policy_files_unchanged": 1039,
+      "existing_services_restarted": false,
+      "historical_agent_and_gpu_records_not_relabelled": true
+    },
+    "official_pr_scope": {
+      "official_commit": "7074afbcb2223caf21dcee9a803f1025b2c8c76b",
+      "equal_shared_files": 341,
+      "changed_shared_files": [],
+      "additional_shared_files": [],
+      "official_submission_root": "policy/WorldScape_RSI",
+      "engineering_workspace_is_partial_official_checkout": true
+    },
+    "model_prediction_and_weights_changed": false,
+    "real_agent_debug_rerun": false,
+    "gpu_model_inference_rerun": false,
+    "robot_task_execution_rerun": false,
+    "existing_services_restarted": false
+  },
+  "historical_audits": [
+    {
+      "schema": "r2si.startup-state-remediation.v1",
+      "validated_at_utc": "2026-10-24T09:02:06.727582+00:00",
+      "release_sha256": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+      "official_single_entry_eligible": false,
+      "eligibility_status": "current_simulator_and_clean_environment_reproduction_not_completed",
+      "current_release_checks": {
+        "release_sha256": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+        "cpu_regression": {
+          "exit_code": 0,
+          "elapsed_seconds": 70.57658600527793,
+          "release_sha256": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+          "command": [
+            "python",
+            "-B",
+            "-m",
+            "pytest",
+            "-p",
+            "no:cacheprovider",
+            "XPolicyLab/policy/WorldScape_RSI/harness/tests",
+            "tests",
+            "-q"
+          ],
+          "real_robot_or_gpu": false,
+          "passed": 240,
+          "subtests_passed": 87,
+          "caller_pythonpath_includes_tests": false
+        },
+        "real_official_ws_agent_debug": {
+          "native_robot_actions": 0,
+          "passed": true,
+          "rows": [
+            {
+              "action_shape_checks": 20,
+              "client_exit": 0,
+              "explicit_agent_releases": 1,
+              "finished": true,
+              "format": "array",
+              "native_robot_actions": 0,
+              "passed": true,
+              "real_agent": true,
+              "real_pool_requests": 22,
+              "release_sha256": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+              "server_exit": -2,
+              "server_launched_without_B_or_bytecode_env": true,
+              "source_client_sha256": "005dab63b8bdc2e2cf0562cbb749326086769796552c1b1d1c2054cedf612805",
+              "synthetic_observations": true
+            },
+            {
+              "action_shape_checks": 20,
+              "client_exit": 0,
+              "explicit_agent_releases": 1,
+              "finished": true,
+              "format": "encoded",
+              "native_robot_actions": 0,
+              "passed": true,
+              "real_agent": true,
+              "real_pool_requests": 21,
+              "release_sha256": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+              "server_exit": -2,
+              "server_launched_without_B_or_bytecode_env": true,
+              "source_client_sha256": "005dab63b8bdc2e2cf0562cbb749326086769796552c1b1d1c2054cedf612805",
+              "synthetic_observations": true
+            }
+          ],
+          "synthetic_observations": true
+        },
+        "new_regression_cases": 17,
+        "regression_coverage": [
+          "Real Python bytecode cache generation after freezing",
+          "Package startup without -B or caller bytecode environment",
+          "Pinned file edits and directory/source injection still rejected",
+          "Concurrent prepare/reset success/failure, duplicate waiter cancellation and heartbeats",
+          "Two rounds retaining validation audit traces but excluding them from reflection",
+          "Legacy unlabelled records excluded and purpose conflicts rejected",
+          "Seven real child teardown variants without tests/ in caller PYTHONPATH"
+        ],
+        "source_scope": {
+          "source_release": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+          "final_release": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+          "runtime_changes": [
+            "tests/test_experience_commit.py",
+            "tests/test_recursion.py",
+            "XPolicyLab/policy/WorldScape_RSI/__init__.py",
+            "XPolicyLab/policy/WorldScape_RSI/VALIDATION.json",
+            "XPolicyLab/policy/WorldScape_RSI/MANIFEST.json",
+            "XPolicyLab/policy/WorldScape_RSI/harness/release.py",
+            "XPolicyLab/policy/WorldScape_RSI/harness/server.py",
+            "XPolicyLab/policy/WorldScape_RSI/harness/release.json",
+            "rsi/local_loop.py",
+            "rsi/evaluator.py",
+            "rsi/outer.py",
+            "rsi/episode_jobs.py",
+            "rsi/experience_publication.py",
+            "rsi/experience.py",
+            "rsi/reflection_context.py"
+          ],
+          "added": [
+            "tests/test_reflection_isolation.py",
+            "tests/test_startup_state.py",
+            "docs/STARTUP_STATE_FIXES_20261024.md",
+            "XPolicyLab/policy/WorldScape_RSI/validation/release-history/1c1c07401f3583513504bd043dc81e2760a2d489f8b41f01e804bf1f5e6a5ed5.json",
+            "XPolicyLab/policy/WorldScape_RSI/validation/release-history/f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69.json",
+            "XPolicyLab/policy/WorldScape_RSI/validation/release-history/b4469d195cdea35eb2820985ba6a6505eb41e884ce1bd4b529810dcf15568219.json"
+          ],
+          "prediction_weights_bindings_configuration_and_skills_unchanged": true,
+          "unchanged_model_skill_source_files": 969,
+          "historical_gpu_records_not_relabelled": true
+        },
+        "model_prediction_and_weights_changed": false,
+        "gpu_model_inference_rerun": false,
+        "robot_task_execution_rerun": false,
+        "debug_server_shutdown": "Owned servers stopped by SIGINT after successful clients; recorded exit -2 is controlled cleanup, not claimed zero."
+      },
+      "historical_audits": [
+        {
+          "schema": "r2si.remediation-validation.v1",
+          "validated_at_utc": "2026-10-24T08:14:38.818754+00:00",
+          "release_sha256": "eb98e3ed498912133564b0ecd13f1f3e70f7d64979f90f3e867895c0d12a2cae",
+          "official_baseline_commit": "7074afbcb2223caf21dcee9a803f1025b2c8c76b",
+          "official_single_entry_eligible": false,
+          "eligibility_status": "current_simulator_and_clean_environment_reproduction_not_completed",
+          "current_release_checks": {
+            "status": "requires_validation_for_new_identity"
+          },
+          "fixed_findings": [
+            "F01",
+            "F02",
+            "F03",
+            "F04",
+            "F05",
+            "F06",
+            "F07",
+            "F08 installation/debug portions",
+            "F09",
+            "F10 official startup reset"
+          ],
+          "not_run": [
+            "New simulator task rollout and full benchmark/routing parity on repaired release",
+            "Complete autonomous outer RSI cycle on repaired project",
+            "Fresh full Agent environment reconstruction from an empty environment",
+            "Native training checkpoint save/reload/resume on this revision",
+            "Skill/weight co-evolution ablations"
+          ],
+          "limitations": [
+            "Synthetic observations and proposed trajectories do not prove robot task success",
+            "Full official acceptance and absence of all possible bugs are not certified",
+            "GPU records retain their source release; only byte-identical runtime components are carried forward",
+            "Generic task-name guards are not a proof of arbitrary prose generality",
+            "Existing live services were not restarted or updated"
+          ],
+          "historical_audits": [
+            {
+              "schema": "r2si.independent-audit.v1",
+              "validated_at_utc": "2026-10-23T19:45:37.138888+00:00",
+              "source_commit": "58698743e713cd292ed669c1f4fd6192c7234636",
+              "official_baseline_commit": "7074afbcb2223caf21dcee9a803f1025b2c8c76b",
+              "scope": [
+                "policy/WorldScape_RSI only for official PR; outer RSI checked in companion project"
+              ],
+              "release_sha256": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+              "official_single_entry_eligible": false,
+              "eligibility_status": "unverified_pending_real_official_debug_and_simulator",
+              "cpu_contract_tests": {
+                "inner_passed": 108,
+                "outer_passed": 71,
+                "total_passed": 179,
+                "subtests_passed": 41,
+                "real_model_inference": false,
+                "release_sha256": "a5f98698cb698d09502e7bdc3a0db6726eea924fab4f9714e9c807f5570f10f9"
+              },
+              "official_ws_fixture_loop": {
+                "passed": true,
+                "rgb_formats": [
+                  "array",
+                  "standard_encoded",
+                  "legacy_encoded"
+                ],
+                "real_model_inference": false,
+                "native_robot_actions": false
+              },
+              "real_pool_tool_phase_contract": {
+                "passed": true,
+                "phases": [
+                  "normal_agent",
+                  "readonly_policy_review",
+                  "normal_agent"
+                ],
+                "explicit_session_release": true,
+                "synthetic_text_observations": true,
+                "native_robot_actions": false,
+                "policy_gpu_inference": false
+              },
+              "fixed_in_independent_copy": [
+                "Official shared shell files restored to upstream LF bytes",
+                "Episode results withheld until cleanup receipt and observed successful OS exit",
+                "Stable session tool declarations with restricted Policy-review tool choice"
+              ],
+              "prior_validation": "The original 2026-10-17 validation belonged to a different release and is retained in the private audit inputs, not current release evidence.",
+              "not_run": [
+                "Real official debug with both plain and encoded RGB through this repaired Agent and public checkpoints",
+                "Official simulator closed loop on this audited release",
+                "New 54-task score or routing/performance equivalence",
+                "Real autonomous outer RSI cycle using this repaired project",
+                "Checkpoint save/reload/resume after native training"
+              ],
+              "deployment_changed": false,
+              "github_pr_updated": false,
+              "prior_audited_release_sha256": "9056166154cc62997ab9748df5ad4f91478343d803d9ae09464b27b6b27b5847",
+              "post_audit_changes": [
+                {
+                  "kind": "documentation_removal",
+                  "description": "Removed the obsolete model architecture document and refreshed source/release manifests. Runtime code, model configuration and checkpoint hashes are unchanged. Earlier audit results refer to prior_audited_release_sha256; this change requires source-integrity and release validation only.",
+                  "validated_at_utc": "2026-10-24T00:06:44.480461+00:00",
+                  "checks": {
+                    "release_preflight": "passed",
+                    "both_wam_source_manifests": "passed",
+                    "remaining_source_files_per_variant": 237,
+                    "source_inventory": "passed",
+                    "source_binding_uniform_wsp_consistency_tests": {
+                      "passed": 21,
+                      "failed": 0
+                    },
+                    "review_documents_and_links": "passed",
+                    "gpu_model_loading_rerun": false
+                  }
+                },
+                {
+                  "kind": "documentation_reference_fixes",
+                  "description": "Corrected missing documentation links, training anchors and test instructions; synchronized Chinese review copies. Runtime code, model configuration and checkpoint hashes are unchanged.",
+                  "prior_release_sha256": "c37a776e63fb84186298603c1875af8a1376d4fb19ecfc088cdda50d1d1d302e",
+                  "changed_documents": [
+                    "harness/vendor/policy/RoboDojo_Agent_L3_Inspect_EEF/README.md",
+                    "harness/vendor/policy/RoboRSI_RoboProbe/README.md",
+                    "harness/vendor/runtime_support/curobo/curobo/examples/isaacsim/README.md",
+                    "robodojo_server/README.md",
+                    "worldscape-policy/MODEL_CARD.md",
+                    "worldscape-policy/docs/native_training.md",
+                    "worldscape-policy/docs/posttraining.md",
+                    "robodojo_server/WEBSOCKET_REPLAY.md"
+                  ],
+                  "checks": {
+                    "release_preflight": "passed",
+                    "both_wam_source_manifests": "passed",
+                    "source_inventory": "passed",
+                    "local_markdown_file_links": "passed",
+                    "training_anchors": "passed",
+                    "review_translation_hashes_and_code_blocks": "passed",
+                    "harness_cpu_tests": {
+                      "passed": 108,
+                      "failed": 0,
+                      "note": "Before the final replay-document clarification; runtime code unchanged."
+                    },
+                    "final_source_binding_uniform_wsp_consistency_tests": {
+                      "passed": 21,
+                      "failed": 0
+                    },
+                    "official_ws_cpu_fixture": "passed",
+                    "runtime_code_and_checkpoint_bindings_unchanged": true,
+                    "gpu_model_loading_rerun": false
+                  },
+                  "validated_at_utc": "2026-10-24T00:23:27.447517+00:00"
+                },
+                {
+                  "kind": "flash_checkpoint_rollout_alignment",
+                  "validated_at_utc": "2026-10-24T00:39:55.065889+00:00",
+                  "prior_release_sha256": "a5f98698cb698d09502e7bdc3a0db6726eea924fab4f9714e9c807f5570f10f9",
+                  "release_sha256": "cc13f775dded3de144f6a0a0a623313d313556a0679ce0c1b1fbf1776de1676f",
+                  "description": "Aligned the Agent Flash Skill and its active example with the published Flash checkpoint: rolling history, causal state enabled, eight observation segments at interval three, and no independent block reset. Capacity remains one. Updated release validation and load checks; retained execution acknowledgement, discard and Skill-switch cleanup. Checkpoint hashes and WAM model source are unchanged. Earlier CPU/GPU results remain historical and do not validate this runtime revision.",
+                  "checks": {
+                    "release_preflight": "passed",
+                    "both_wam_source_manifests": "passed",
+                    "flash_checkpoint_metadata_hashes": "passed (deployment, model, provenance and transforms)",
+                    "flash_checkpoint_inference_settings": {
+                      "matched": 11,
+                      "context_chunks": 1
+                    },
+                    "cpu_regression_tests": {
+                      "passed": 37,
+                      "failed": 0,
+                      "python": "3.10.12",
+                      "scope": [
+                        "test_consistency",
+                        "test_uniform_wsp",
+                        "test_wam_skills",
+                        "test_checkpoint_transforms"
+                      ],
+                      "note": "36 tests in the first run; the added direct-service configuration parity test passed separately. Dependencies installed under /tmp/r2si-flash-test-deps; no GPU model was loaded."
+                    },
+                    "gpu_model_loading_rerun": false,
+                    "action_inference": false,
+                    "simulator_evaluation": false
+                  }
+                }
+              ],
+              "current_release_checks": {
+                "status": "requires_validation_for_new_identity"
+              },
+              "independent_pick_review_20261024": {
+                "release_sha256": "cc13f775dded3de144f6a0a0a623313d313556a0679ce0c1b1fbf1776de1676f",
+                "source_commit": "740e82355b0bf284687b77d759f30d1370354c20",
+                "uncommitted_paths_reviewed": 27,
+                "cpu_tests_passed": 199,
+                "cpu_subtests_passed": 87,
+                "release_preflight": "passed",
+                "official_websocket_cpu_fixture": "passed",
+                "download_script_syntax": "passed",
+                "published_flash_metadata_files_verified": 4,
+                "published_flash_inference_fields_matched": 11,
+                "real_gpu_inference": false,
+                "simulator_execution": false,
+                "clean_environment_reproduction": false,
+                "documentation_repairs": [
+                  "restore required Data Processing section in both READMEs",
+                  "clarify default-branch download vs frozen checkpoint hashes",
+                  "synchronize separate Chinese Harness review copy",
+                  "supersede earlier unchanged-policy packaging note"
+                ],
+                "earlier_results_preserved_as_history": true
+              },
+              "superseded_checks": [
+                {
+                  "release_sha256": "cc13f775dded3de144f6a0a0a623313d313556a0679ce0c1b1fbf1776de1676f",
+                  "checks": {
+                    "release_preflight": "passed",
+                    "both_wam_source_manifests": "passed",
+                    "flash_checkpoint_metadata_hashes": "passed (deployment, model, provenance and transforms)",
+                    "flash_checkpoint_inference_settings": {
+                      "matched": 11,
+                      "context_chunks": 1
+                    },
+                    "cpu_regression_tests": {
+                      "passed": 37,
+                      "failed": 0,
+                      "python": "3.10.12",
+                      "scope": [
+                        "test_consistency",
+                        "test_uniform_wsp",
+                        "test_wam_skills",
+                        "test_checkpoint_transforms"
+                      ],
+                      "note": "36 tests in the first run; the added direct-service configuration parity test passed separately. Dependencies installed under /tmp/r2si-flash-test-deps; no GPU model was loaded."
+                    },
+                    "gpu_model_loading_rerun": false,
+                    "action_inference": false,
+                    "simulator_evaluation": false
+                  },
+                  "reason": "Source/documentation changed; earlier checks remain historical"
+                },
+                {
+                  "release_sha256": "8e5d2e96443371befb41c1f5423dda77dc4d56c2b8796ee0bf1d79bea21495f3",
+                  "checks": {
+                    "status": "requires_validation_for_new_identity"
+                  },
+                  "reason": "Source/documentation changed; earlier checks remain historical"
+                },
+                {
+                  "release_sha256": "e4e346dbcd69d0d220e8512a8507d2d95bba7c8164c03d61f08cf25da2bc26dc",
+                  "checks": {
+                    "status": "requires_validation_for_new_identity"
+                  },
+                  "reason": "Source/documentation changed; earlier checks remain historical"
+                },
+                {
+                  "release_sha256": "97a6f7144f617138fb2b46e5ecd1b045cfff01dede2c3a0ff53f89915abce957",
+                  "checks": {
+                    "status": "requires_validation_for_new_identity"
+                  },
+                  "reason": "Source/documentation changed; earlier checks remain historical"
+                }
+              ]
+            }
+          ],
+          "existing_services_restarted": false,
+          "github_pr_updated": false,
+          "continuous_monitoring_started": false,
+          "superseded_checks": [
+            {
+              "release_sha256": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+              "checks": {
+                "release_sha256": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+                "status": "listed_checks_passed_with_explicit_unrun_scope",
+                "cpu_regression": {
+                  "passed": 223,
+                  "subtests_passed": 87,
+                  "failed": 0,
+                  "scope": "inner Harness and companion outer RSI; real OS child boundary tests included",
+                  "release_sha256": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69"
+                },
+                "real_official_ws_agent_debug": {
+                  "native_robot_actions": 0,
+                  "passed": true,
+                  "rows": [
+                    {
+                      "action_shape_checks": 20,
+                      "client_exit": 0,
+                      "explicit_agent_releases": 1,
+                      "finished": true,
+                      "format": "array",
+                      "native_robot_actions": 0,
+                      "passed": true,
+                      "real_agent": true,
+                      "real_pool_requests": 23,
+                      "release_sha256": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+                      "server_exit": -2,
+                      "source_client_sha256": "005dab63b8bdc2e2cf0562cbb749326086769796552c1b1d1c2054cedf612805",
+                      "synthetic_observations": true
+                    },
+                    {
+                      "action_shape_checks": 20,
+                      "client_exit": 0,
+                      "explicit_agent_releases": 1,
+                      "finished": true,
+                      "format": "encoded",
+                      "native_robot_actions": 0,
+                      "passed": true,
+                      "real_agent": true,
+                      "real_pool_requests": 21,
+                      "release_sha256": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+                      "server_exit": -2,
+                      "source_client_sha256": "005dab63b8bdc2e2cf0562cbb749326086769796552c1b1d1c2054cedf612805",
+                      "synthetic_observations": true
+                    }
+                  ],
+                  "synthetic_observations": true
+                },
+                "public_checkpoint_gpu": {
+                  "flash": {
+                    "elapsed_seconds": 216.50115472637117,
+                    "existing_services_restarted": false,
+                    "gpu_prediction": true,
+                    "inference_seconds": 1.9175008414313197,
+                    "model_closed": true,
+                    "passed": true,
+                    "peak_bytes": 51266590720,
+                    "proposed_actions": 24,
+                    "release_sha256": "97a6f7144f617138fb2b46e5ecd1b045cfff01dede2c3a0ff53f89915abce957",
+                    "robot_actions_executed": 0,
+                    "runtime_info": {
+                      "multi_gpu": false,
+                      "requires_explicit_commit": true,
+                      "runtime_profile": "robodojo",
+                      "supports_batch": true
+                    },
+                    "synthetic_observation": true,
+                    "variant": "flash"
+                  },
+                  "memory": {
+                    "elapsed_seconds": 216.71452340483665,
+                    "existing_services_restarted": false,
+                    "gpu_prediction": true,
+                    "inference_seconds": 2.439378165639937,
+                    "model_closed": true,
+                    "passed": true,
+                    "peak_bytes": 51550623232,
+                    "proposed_actions": 24,
+                    "release_sha256": "97a6f7144f617138fb2b46e5ecd1b045cfff01dede2c3a0ff53f89915abce957",
+                    "robot_actions_executed": 0,
+                    "runtime_info": {
+                      "multi_gpu": false,
+                      "requires_explicit_commit": true,
+                      "runtime_profile": "robodojo",
+                      "supports_batch": true
+                    },
+                    "synthetic_observation": true,
+                    "variant": "memory"
+                  }
+                },
+                "native_cuda_planner": {
+                  "elapsed_seconds": 47.65439744759351,
+                  "finite_joint_points": 61,
+                  "native_cuda_planning": true,
+                  "passed": true,
+                  "peak_bytes": 2143839744,
+                  "release_sha256": "97a6f7144f617138fb2b46e5ecd1b045cfff01dede2c3a0ff53f89915abce957",
+                  "robot_actions_executed": 0,
+                  "scene_geometry_used": false,
+                  "task_success_measured": false
+                },
+                "component_equivalence": {
+                  "source_release": "97a6f7144f617138fb2b46e5ecd1b045cfff01dede2c3a0ff53f89915abce957",
+                  "final_release": "f1a81a0f63958b98b0bd26c532c3e06eaf749b235e8d3ec0edca4fec60cbce69",
+                  "changed_integration_files": [
+                    "requirements-runtime.txt",
+                    "preflight.py"
+                  ],
+                  "harness_code_and_skills_unchanged": true,
+                  "wam_code_weights_and_configuration_unchanged": true,
+                  "prior_gpu_results_retain_source_release": true
+                },
+                "final_runtime_preflight": {
+                  "passed": true,
+                  "checks": [
+                    "runtime imports",
+                    "CUDA device discovery",
+                    "official robot assets"
+                  ],
+                  "warp": "1.17.0",
+                  "torch": "2.8.0+cu126",
+                  "fresh_environment": false
+                },
+                "official_pr_scope": {
+                  "official_commit": "7074afbcb2223caf21dcee9a803f1025b2c8c76b",
+                  "equal_shared_files": 341,
+                  "changed_shared_files": [],
+                  "additional_shared_files": [],
+                  "official_submission_root": "policy/WorldScape_RSI",
+                  "engineering_workspace_is_partial_official_checkout": true
+                },
+                "skill_inventory": {
+                  "generic_skills": 34,
+                  "tools": 4,
+                  "primitives": 2,
+                  "total": 40,
+                  "old_task_files_reviewed": 92,
+                  "unique_old_bodies": 69,
+                  "method_gaps_repaired": 15,
+                  "physical_equivalence_verified": false
+                },
+                "zero_robot_actions_in_this_verification": true,
+                "protocol_server_shutdown_note": "Owned server stopped by SIGINT after the successful client check; server_exit=-2 is recorded, not misreported as zero."
+              },
+              "reason": "Source/documentation changed; earlier checks remain historical"
+            },
+            {
+              "release_sha256": "1c1c07401f3583513504bd043dc81e2760a2d489f8b41f01e804bf1f5e6a5ed5",
+              "checks": {
+                "status": "requires_validation_for_new_identity"
+              },
+              "reason": "Source/documentation changed; earlier checks remain historical"
+            },
+            {
+              "release_sha256": "b4469d195cdea35eb2820985ba6a6505eb41e884ce1bd4b529810dcf15568219",
+              "checks": {
+                "status": "requires_validation_for_new_identity"
+              },
+              "reason": "Source/documentation changed; earlier checks remain historical"
+            }
+          ]
+        }
+      ],
+      "not_run": [
+        "New robot task benchmark and routing/physical parity",
+        "Full autonomous real-robot RSI cycle",
+        "Fresh complete runtime installation",
+        "New training/resume or co-evolution ablations"
+      ],
+      "old_records_relabelled": false,
+      "existing_services_restarted": false,
+      "github_pr_updated": false,
+      "monitoring_started": false
+    }
+  ],
+  "not_run": [
+    "New robot task benchmark and routing/physical parity",
+    "Full autonomous real-robot RSI cycle",
+    "Fresh complete runtime installation",
+    "New training/resume or co-evolution ablations"
+  ],
+  "old_records_relabelled": false,
+  "github_pr_updated": false,
+  "monitoring_started": false
+}

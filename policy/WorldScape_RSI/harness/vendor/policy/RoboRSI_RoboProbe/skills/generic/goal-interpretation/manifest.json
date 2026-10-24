@@ -1,0 +1,15 @@
+{
+  "id": "goal-interpretation",
+  "version": "2.0.0-shared",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "description": "Use when the instruction contains several requirements, relations or restrictions.",
+  "implementation": "text",
+  "load_mode": "on_demand"
+}
