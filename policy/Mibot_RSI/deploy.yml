@@ -1,0 +1,34 @@
+policy_name: Mibot_RSI
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# Mibot-RSI agent settings (README, Configuration). The model endpoint and key are read only from the
+# environment: MIBOT_RSI_BASE_URL and the variable named by model_settings.api_key_env.
+max_model_calls: 300          # model calls per episode; at the cap the episode ends and is scored as it stands
+episode_wall_limit_s: 21600   # wall-clock watchdog per episode (6 h); reaching it stops the evaluation for a rerun
+runs_root: runs               # per-episode agent records, relative to this directory ($MIBOT_RSI_RUNS_ROOT)
+knowledge_dir: null           # default checkpoints/<bench>-<ckpt_name>-<env_cfg>-<action>-<seed>/ ($MIBOT_RSI_KNOWLEDGE_DIR)
+runner_python: null           # Python of the session subprocess; default: the evaluation client's Python
+model_api_waits_s: [60, 300, 900, 1800, 3600]   # waits after the client's own retries before a model API failure (HTTP 401–404 and quota errors included) stops the episode
+model_settings:               # model settings
+  model: gpt-6-astra
+  api_key_env: MIBOT_RSI_API_KEY
+  reasoning_effort: xhigh
+  reasoning_summary: detailed      # readable reasoning summaries, saved with each response (README)
+  request_timeout_s: 300
+  api_retries: 1799
+  api_retry_base_delay_s: 1
+  api_retry_max_delay_s: 2
+  api_retry_total_timeout_s: 3600
+  max_output_tokens: 16384
+  compact_threshold: 200000
+  prompt_cache_ttl: 30m
