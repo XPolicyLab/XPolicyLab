@@ -1,0 +1,556 @@
+{
+  "xpolicylab_commit": "e0f05c13de1671ba83b6e31ee6bd8a09c3b539b7",
+  "training_snapshot": "pipeline_logparse_20261014_180818",
+  "training_snapshot_manifest_sha256": "923d89fbd3f1bf1f9099e35171fc6ff223f71029105c00a4944e9b2a74bf07d1",
+  "fastwam_git_commit": null,
+  "fastwam_version_evidence": "Immutable training snapshot with per-file SHA-256; no invented Git commit.",
+  "runtime_config_changes": [
+    "Only configs/data/robodojo_piperx_six.yaml filesystem root changed to JAM_DATA_ROOT interpolation."
+  ],
+  "frozen_files": [
+    {
+      "path": "runtime/src/fastwam/__init__.py",
+      "snapshot_path": "src/fastwam/__init__.py",
+      "sha256": "c4149c5ff0f9abd1517360daf761e692feb8570eb7a0caa2dfde52d4412c3e23"
+    },
+    {
+      "path": "runtime/src/fastwam/runtime.py",
+      "snapshot_path": "src/fastwam/runtime.py",
+      "sha256": "a2c53ec26a1501f39fd89fc9715ddfa44ed3f59bdd5b5e696842f253da441004"
+    },
+    {
+      "path": "runtime/src/fastwam/trainer.py",
+      "snapshot_path": "src/fastwam/trainer.py",
+      "sha256": "862986e6ffbca835d761c46b02ac697a14c4fa675410cd09b57941a5652d7fcb"
+    },
+    {
+      "path": "runtime/src/fastwam/models/__init__.py",
+      "snapshot_path": "src/fastwam/models/__init__.py",
+      "sha256": "ae4c5733f4bbf7caf31df2ae6f789516f6a10cd84a321f7d0375a7034253ac6d"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/__init__.py",
+      "snapshot_path": "src/fastwam/models/wan22/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan_video_dit.py",
+      "snapshot_path": "src/fastwam/models/wan22/wan_video_dit.py",
+      "sha256": "d098ad77665feeefa81634f31f5bb1d5771c4556d1a67859135f0ed35f9eb6c2"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan_video_text_encoder.py",
+      "snapshot_path": "src/fastwam/models/wan22/wan_video_text_encoder.py",
+      "sha256": "aedf7f131556a39b99a273deec3a85d67f41b5367cef41f310f33a807ae60a87"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/success_distill.py",
+      "snapshot_path": "src/fastwam/models/wan22/success_distill.py",
+      "sha256": "e223b4846db7563ac5c60fff41873641b93da042ba15677e894caa26d3690eee"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/lora.py",
+      "snapshot_path": "src/fastwam/models/wan22/lora.py",
+      "sha256": "236f0c1e6e40de6a93cb88e342d53604920c453f3f5864c7fa1137a78f53b6db"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/fastwam_joint.py",
+      "snapshot_path": "src/fastwam/models/wan22/fastwam_joint.py",
+      "sha256": "35bf9bceba78b5c49b6655e5e103fce3566595fce31974a5da54a35ddc3a2ffb"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/fastwam_idm.py",
+      "snapshot_path": "src/fastwam/models/wan22/fastwam_idm.py",
+      "sha256": "aae332d17645a6744aafd85edde8e8d7dacbb8b110de3988015ca330146c3c65"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/foresight.py",
+      "snapshot_path": "src/fastwam/models/wan22/foresight.py",
+      "sha256": "1512b6b2b25b248b02b4db5a84d79014ba658411037bb1fa79250797ac4182a8"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/action_dit.py",
+      "snapshot_path": "src/fastwam/models/wan22/action_dit.py",
+      "sha256": "a539a1db99608111b392d751b267b122c4c05dc0c394f0c8559ec22c79199a5f"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/fastwam.py",
+      "snapshot_path": "src/fastwam/models/wan22/fastwam.py",
+      "sha256": "8ddc48d739c325f64da3c13899542fb242652532948d403f739f0d5fc0682a3f"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan22.py",
+      "snapshot_path": "src/fastwam/models/wan22/wan22.py",
+      "sha256": "b72998999b4b2c5096773092339b8ca81e9e7d96f398b81c57d3d22d14972ac4"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/mot.py",
+      "snapshot_path": "src/fastwam/models/wan22/mot.py",
+      "sha256": "1083516d53a20b374249d8c0668cfc747921de071acff6df50c2352c52e4d161"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan_video_vae.py",
+      "snapshot_path": "src/fastwam/models/wan22/wan_video_vae.py",
+      "sha256": "31b3fb9f844a76f5db5af4854e14802aae640b85b61d0de03a4b53b52515abb7"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/helpers/__init__.py",
+      "snapshot_path": "src/fastwam/models/wan22/helpers/__init__.py",
+      "sha256": "f26116de229557a37a4812dc4ee75971f5f9e8b80240786ea4d0e5b0ff703cbf"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/helpers/loader.py",
+      "snapshot_path": "src/fastwam/models/wan22/helpers/loader.py",
+      "sha256": "f816a996e2026cc9c8ec60f6ff3558934dd213bc9e61c6bd3f2312c7eb7d6510"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/helpers/io.py",
+      "snapshot_path": "src/fastwam/models/wan22/helpers/io.py",
+      "sha256": "1c6c1bc8a975b47092912833194fce25e2e3ac886fbab72d73af3ff5a00b3c62"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/helpers/gradient.py",
+      "snapshot_path": "src/fastwam/models/wan22/helpers/gradient.py",
+      "sha256": "ba5d8f7272eb029dc6cd2849ca99b70f6ad5abb838d21c818beb0590620dc793"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/helpers/state_dict_converters.py",
+      "snapshot_path": "src/fastwam/models/wan22/helpers/state_dict_converters.py",
+      "sha256": "81d213373e5056a8d8bf31768b9b04164138ea78d0b306e316334841499f4bf9"
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/schedulers/scheduler_continuous.py",
+      "snapshot_path": "src/fastwam/models/wan22/schedulers/scheduler_continuous.py",
+      "sha256": "2ececce284f7b9fe876965fbf5e11ca7b69caaf693979266b0f63062a589f181"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/__init__.py",
+      "snapshot_path": "src/fastwam/datasets/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/dataset_utils.py",
+      "snapshot_path": "src/fastwam/datasets/dataset_utils.py",
+      "sha256": "3bc17590049c7cb54061acf8d731b07892e7f530c5d7eeac2613fa77a285a392"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/foresight_cache.py",
+      "snapshot_path": "src/fastwam/datasets/foresight_cache.py",
+      "sha256": "508863fc69a82ee92a71d06ba7eb36ddcc6a82f34a9e7858c195661916e31d6b"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/robot_video_dataset.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/robot_video_dataset.py",
+      "sha256": "355968bdfbadc10ae319829cedbef2b55e134a8ca4c4e09164a39403ebd2e3cc"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/base_lerobot_dataset.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/base_lerobot_dataset.py",
+      "sha256": "c72d727f78eecd4611c358a8527a8ccf8bd96d77745b873dc1bedd3e8cd5cf18"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/constants.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/constants.py",
+      "sha256": "11ac9260341e1560c5eb0dd7acb79ed63c74180b8ab4113c27622ff213db417f"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/processors/fastwam_processor.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/processors/fastwam_processor.py",
+      "sha256": "9cfc735adb1e692ead52c14232f29f9e359da8a0f458cd83324cea6cdd950c95"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/processors/base_processor.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/processors/base_processor.py",
+      "sha256": "1f47bc85fee11e3d16714b2f1e3a2dc874f4609a1706a788617156d34b48b58e"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/utils/rotation.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/utils/rotation.py",
+      "sha256": "6169162f98faf02a3fe5201e2b8a1069fe299840d036ee7cad8af5fa8f561542"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/utils/normalizer.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/utils/normalizer.py",
+      "sha256": "5ac89a646cd6395e98feaa832f8fdf7c7e00857080af3d9c15710e243c43ad43"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/lerobot_dataset.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/lerobot/lerobot_dataset.py",
+      "sha256": "6abe9eccf17077eee478805b574c25980cedf7a4f673a3dee1cb7184db9126f8"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/datasets/utils.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/lerobot/datasets/utils.py",
+      "sha256": "40f1b94e6ceb50765fb8dfa3d498887c2a0fc2eb49f09770c5f36190e7110c98"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/datasets/compute_stats.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/lerobot/datasets/compute_stats.py",
+      "sha256": "7d7daab219332b5abdfd5ec67ccaf3502e8eb583a17a4e482c3f3d4f7a691e89"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/datasets/video_utils.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/lerobot/datasets/video_utils.py",
+      "sha256": "6eda3bb0927c2cb21de5d94282f03a7466fe0e63f32c567851cde508fd08f979"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/action_state_merger.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/transforms/action_state_merger.py",
+      "sha256": "669d6991415fc5eca44b32b129d15fee1e06e2f17d59d90350c252598033b427"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/rotation.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/transforms/rotation.py",
+      "sha256": "0de34b252d60b956cda07c0c19baebbd3c8a28916face700c6664c5815e11e91"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/misc.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/transforms/misc.py",
+      "sha256": "7bd5b0b0f6017f02cb84c254fa02a608d34217f34a94722262cd5feab2d01aeb"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/relative_action.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/transforms/relative_action.py",
+      "sha256": "e555e0558e948c4eea3d1119e274fa5d923af30862eec4380fb8528f4a319c47"
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/image.py",
+      "snapshot_path": "src/fastwam/datasets/lerobot/transforms/image.py",
+      "sha256": "4d7ab61d0844918525244db653831f0f632730046b2714a6163ff57c441a16fa"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/__init__.py",
+      "snapshot_path": "src/fastwam/utils/__init__.py",
+      "sha256": "2893c05b99b17162941c70a41859c2808f8ae390be367a26cac7d5ab93ee197b"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/video_metrics.py",
+      "snapshot_path": "src/fastwam/utils/video_metrics.py",
+      "sha256": "aaa37e458cc9e4bb79a17923b5ff5900c97b4309f7abd50db44cf76e9143ffd6"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/logging_config.py",
+      "snapshot_path": "src/fastwam/utils/logging_config.py",
+      "sha256": "cadc4f6ad487c3f37171a6defad36d23d9ab8bf262f73a461cd9ee9b03b757e7"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/fs.py",
+      "snapshot_path": "src/fastwam/utils/fs.py",
+      "sha256": "69e6df236b43360428a613686c8f37c531c0d16a3a2c5b06a725c46b49d657c5"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/config_resolvers.py",
+      "snapshot_path": "src/fastwam/utils/config_resolvers.py",
+      "sha256": "01c48cbd42b86e636b70ccc3e193a81147162ba890777102b2c61086fa415340"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/misc.py",
+      "snapshot_path": "src/fastwam/utils/misc.py",
+      "sha256": "05aa51247936a8d3faac27f90b78b65ff83a688259bed55d114b6a617ced532d"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/video_io.py",
+      "snapshot_path": "src/fastwam/utils/video_io.py",
+      "sha256": "9e9898b021a44e87aa1b4e6d13e3755a9869a2e27a7eb53c72a6802808d5bd80"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/pytorch_utils.py",
+      "snapshot_path": "src/fastwam/utils/pytorch_utils.py",
+      "sha256": "ffc483e7fb435cd654326750eaffdbfc9243837c3140dcc74e45b24abb751a33"
+    },
+    {
+      "path": "runtime/src/fastwam/utils/samplers.py",
+      "snapshot_path": "src/fastwam/utils/samplers.py",
+      "sha256": "4d3bd9b2d498f4ad8f2cf9765d60c4bf5368fa6fa2a7d42d0db6210f66899652"
+    },
+    {
+      "path": "runtime/scripts/infer_aloha_stationary.py",
+      "snapshot_path": "scripts/infer_aloha_stationary.py",
+      "sha256": "855943c51697f55ae888e04023ab6f0460b8ab41e427f9dfd47014fcabf73663"
+    },
+    {
+      "path": "runtime/scripts/robodojo_piperx_infer.py",
+      "snapshot_path": "scripts/robodojo_piperx_infer.py",
+      "sha256": "fe86c44d4e1047f766587e144bb1c770e64389962deea4aebe95178112757be2"
+    },
+    {
+      "path": "runtime/scripts/robodojo_piperx_download.py",
+      "snapshot_path": "scripts/robodojo_piperx_download.py",
+      "sha256": "4f66bcf315db1f2afebd77fd6b94063486f8c6b7a585661aebbdedc9eda7db44"
+    },
+    {
+      "path": "runtime/scripts/robodojo_piperx_prepare.py",
+      "snapshot_path": "scripts/robodojo_piperx_prepare.py",
+      "sha256": "8df1fe8030fe74bcd2ef4808012496607c589779a7b68358e405d6bbfc1ad842"
+    },
+    {
+      "path": "runtime/scripts/robodojo_piperx_stats.py",
+      "snapshot_path": "scripts/robodojo_piperx_stats.py",
+      "sha256": "d2994f15437ea24f64f20d4a79cae0ec0c73357f7d74b252d8756796ea4003dd"
+    },
+    {
+      "path": "runtime/scripts/build_aloha_stationary_fastwam_stats.py",
+      "snapshot_path": "scripts/build_aloha_stationary_fastwam_stats.py",
+      "sha256": "b96fe2ddc7e4180e3d45acb6d820691e2dec3cd69f803d9fda122c4c5ef565a1"
+    },
+    {
+      "path": "runtime/scripts/precompute_text_embeds.py",
+      "snapshot_path": "scripts/precompute_text_embeds.py",
+      "sha256": "6be7ade7c56287ee640683a2dceedaf0bb5fc1b783802ca6a81fe27a53017edc"
+    },
+    {
+      "path": "runtime/scripts/extract_foresight_cache.py",
+      "snapshot_path": "scripts/extract_foresight_cache.py",
+      "sha256": "974d68b1c2025ce22c6740f7e684af75d4809e1517420719c10aa17fc4a74ba6"
+    },
+    {
+      "path": "runtime/scripts/preprocess_action_dit_backbone.py",
+      "snapshot_path": "scripts/preprocess_action_dit_backbone.py",
+      "sha256": "0fb11f04756d71e6b1b1d26cdf9e5831dfead339da38aa25c02f171d7f484a94"
+    },
+    {
+      "path": "runtime/scripts/train.py",
+      "snapshot_path": "scripts/train.py",
+      "sha256": "9fb7bff4bcc0eb47294b6815c547e8cf47c02532da4d58bcb072e1f18ba67ef8"
+    },
+    {
+      "path": "runtime/scripts/train_zero1.sh",
+      "snapshot_path": "scripts/train_zero1.sh",
+      "sha256": "7be232fb6e212336d11e7945098adeb795d31afa29ad50d10126850a71e065ce"
+    },
+    {
+      "path": "runtime/scripts/__init__.py",
+      "snapshot_path": "scripts/__init__.py",
+      "sha256": "5a71e51c716ea7579151f36996bebb1ff82c6fedd0c45c68f2918cf5812f1053"
+    },
+    {
+      "path": "runtime/scripts/accelerate_configs/accelerate_zero1_ds.yaml",
+      "snapshot_path": "scripts/accelerate_configs/accelerate_zero1_ds.yaml",
+      "sha256": "5b9e24f38c199fdff6bbd17981d86e2624f855f707660094c99f711efc8e0833"
+    },
+    {
+      "path": "runtime/scripts/ds_configs/ds_zero1_config.json",
+      "snapshot_path": "scripts/ds_configs/ds_zero1_config.json",
+      "sha256": "fd3a365b87402f9a022c913787a1b6967698bebec480244d6739bdd4360b2068"
+    },
+    {
+      "path": "runtime/configs/train.yaml",
+      "snapshot_path": "configs/train.yaml",
+      "sha256": "93303dd3c0e47c440aff2b00d8ec1cc97dbf5a4c674e9e7e6f755ef2f590eff0"
+    },
+    {
+      "path": "runtime/configs/data/robodojo_piperx_six.yaml",
+      "snapshot_path": "configs/data/robodojo_piperx_six.yaml",
+      "sha256": "088309061fa75365945b5beeba4c4b904374b5dcf96fd473bd33ea80b07fc434"
+    },
+    {
+      "path": "runtime/configs/model/fastwam.yaml",
+      "snapshot_path": "configs/model/fastwam.yaml",
+      "sha256": "835b502538b27af5a4b02ecce67d0fdcb3df8f5442fa3b197a7d20810f0bd51d"
+    },
+    {
+      "path": "runtime/configs/model/fastwam_foresight_bplus.yaml",
+      "snapshot_path": "configs/model/fastwam_foresight_bplus.yaml",
+      "sha256": "2ff7d72855ae31c7205db6c25db8b3ed2d6235f3d771c3ef4d8825abe61bba62"
+    },
+    {
+      "path": "runtime/configs/task/robodojo_piperx_fastwam.yaml",
+      "snapshot_path": "configs/task/robodojo_piperx_fastwam.yaml",
+      "sha256": "a79c90d9c1ffad0205c928c8ffa9e4f13f518c0f8bde252980f6d72779e9afef"
+    },
+    {
+      "path": "runtime/configs/task/robodojo_piperx_jam_wan.yaml",
+      "snapshot_path": "configs/task/robodojo_piperx_jam_wan.yaml",
+      "sha256": "fa7638ef1d81b01350b3824d9fd82800f2551979dca8b4fae14bf3f3e86f91b9"
+    }
+  ],
+  "historical_validation_xpolicylab_commit": "f6e309e8ece20bfa33c0e5d7b05a5f3287522757",
+  "integration_base_commit": "e0f05c13de1671ba83b6e31ee6bd8a09c3b539b7",
+  "public_source_repository": "https://github.com/y0urOy/JAM",
+  "public_source_commit": "0eaec826faba36d6f2e447a3c7cc6d6db1dd1a71",
+  "frozen_files_hash_scope": "Original training-snapshot hashes before listed portability changes. PR runtime formatting deltas retain executable AST; original inference entry scripts remain byte-identical to public release.",
+  "portability_deltas": [
+    "runtime/scripts/infer_aloha_stationary.py",
+    "runtime/scripts/robodojo_piperx_download.py",
+    "runtime/scripts/robodojo_piperx_prepare.py",
+    "runtime/scripts/extract_foresight_cache.py",
+    "runtime/configs/data/robodojo_piperx_six.yaml"
+  ],
+  "adapter_only_changes": [
+    "public paper/contributor and protocol documentation",
+    "resumable commit-pinned downloader and dry-run",
+    "standard eval completion marker",
+    "CPU contract/transport tests; no production inference test switch"
+  ],
+  "formatting_only_deltas": [
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/base_lerobot_dataset.py",
+      "public_source_sha256": "c72d727f78eecd4611c358a8527a8ccf8bd96d77745b873dc1bedd3e8cd5cf18",
+      "pr_source_sha256": "e8eea0640e7ab07f86eccc958c488196efe0519a667ee6b7b9063253c7ef2806",
+      "full_ast_identical": false,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/datasets/utils.py",
+      "public_source_sha256": "40f1b94e6ceb50765fb8dfa3d498887c2a0fc2eb49f09770c5f36190e7110c98",
+      "pr_source_sha256": "4fdb4ac0653201e6743f2161c485213429948c1e1d5b068d03b4d97803254006",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/datasets/video_utils.py",
+      "public_source_sha256": "6eda3bb0927c2cb21de5d94282f03a7466fe0e63f32c567851cde508fd08f979",
+      "pr_source_sha256": "9b8a4a148fe81ade566d4c2a1c1775c92163610e027e4ec93247d01541e7aee5",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/lerobot/lerobot_dataset.py",
+      "public_source_sha256": "6abe9eccf17077eee478805b574c25980cedf7a4f673a3dee1cb7184db9126f8",
+      "pr_source_sha256": "5659e992010bb6674ec50ab0d33b28a8e9dab0ecc895c199662af4c40fe56629",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/processors/base_processor.py",
+      "public_source_sha256": "1f47bc85fee11e3d16714b2f1e3a2dc874f4609a1706a788617156d34b48b58e",
+      "pr_source_sha256": "47459b920e8c3674fd4cdaccdd7eccd4337b6f91b04a53c8549c820ba96cf2bc",
+      "full_ast_identical": false,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/processors/fastwam_processor.py",
+      "public_source_sha256": "9cfc735adb1e692ead52c14232f29f9e359da8a0f458cd83324cea6cdd950c95",
+      "pr_source_sha256": "afd7ccad1bdce9b2022de9c9b7dc80b1a6834cfdb563c00aa47d6dca987d72f2",
+      "full_ast_identical": false,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/robot_video_dataset.py",
+      "public_source_sha256": "355968bdfbadc10ae319829cedbef2b55e134a8ca4c4e09164a39403ebd2e3cc",
+      "pr_source_sha256": "edb8b57c534b367868ea0f4b98de924daa07fce9dbf8de83693b973be0862e57",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/action_state_merger.py",
+      "public_source_sha256": "669d6991415fc5eca44b32b129d15fee1e06e2f17d59d90350c252598033b427",
+      "pr_source_sha256": "3f4204c21519a3d449d8ae7430ba48e6e71397cbb509f975c90bccc47c6dd70f",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/image.py",
+      "public_source_sha256": "4d7ab61d0844918525244db653831f0f632730046b2714a6163ff57c441a16fa",
+      "pr_source_sha256": "01053413648e5238a89f4cb849f6f2c33094b8df54317e4e06b1ae7f893bacd7",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/misc.py",
+      "public_source_sha256": "7bd5b0b0f6017f02cb84c254fa02a608d34217f34a94722262cd5feab2d01aeb",
+      "pr_source_sha256": "8c60004c5d5de3b676a5f85de095a5a9d5764c0105c76c0f5f0f13ae182c13c8",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/relative_action.py",
+      "public_source_sha256": "e555e0558e948c4eea3d1119e274fa5d923af30862eec4380fb8528f4a319c47",
+      "pr_source_sha256": "f42e6125f8322073106602c7d51a8f70d463120383e24ca7eae35158f5ddf124",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/transforms/rotation.py",
+      "public_source_sha256": "0de34b252d60b956cda07c0c19baebbd3c8a28916face700c6664c5815e11e91",
+      "pr_source_sha256": "c28b770ecf0450870b782a1d9093fba47289ac5ecf2f5fe7fd4c3fd5b6a1e4fa",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/datasets/lerobot/utils/normalizer.py",
+      "public_source_sha256": "5ac89a646cd6395e98feaa832f8fdf7c7e00857080af3d9c15710e243c43ad43",
+      "pr_source_sha256": "1a14723f598bed582bef41041ff663a85f5d3184b3d56ee3cd7518b9b3e01a86",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/action_dit.py",
+      "public_source_sha256": "a539a1db99608111b392d751b267b122c4c05dc0c394f0c8559ec22c79199a5f",
+      "pr_source_sha256": "b5c63928643c5fba100fad1f420befcc5f7eb377ba91a53d22e0ccb7db7fd76c",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/fastwam.py",
+      "public_source_sha256": "8ddc48d739c325f64da3c13899542fb242652532948d403f739f0d5fc0682a3f",
+      "pr_source_sha256": "5472892cd34683d36c1f33a0b390d0cf057513bed0bd56a009927e9abf9da191",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/mot.py",
+      "public_source_sha256": "1083516d53a20b374249d8c0668cfc747921de071acff6df50c2352c52e4d161",
+      "pr_source_sha256": "c6e35cd4c674a75f7f46ba46fa316c5c80378214d8133252583dcda45790ce21",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan22.py",
+      "public_source_sha256": "b72998999b4b2c5096773092339b8ca81e9e7d96f398b81c57d3d22d14972ac4",
+      "pr_source_sha256": "e9de95c2b92444c5a5edbb7d1b72cb44a809f8b9bda7ab2e68b47e646bd86cc0",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan_video_dit.py",
+      "public_source_sha256": "d098ad77665feeefa81634f31f5bb1d5771c4556d1a67859135f0ed35f9eb6c2",
+      "pr_source_sha256": "c7ca713c101023d1944cc45ba9f83a4c8de52c6c030d84423e447481e6baa419",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/models/wan22/wan_video_text_encoder.py",
+      "public_source_sha256": "aedf7f131556a39b99a273deec3a85d67f41b5367cef41f310f33a807ae60a87",
+      "pr_source_sha256": "6e6abd6ea983027250236fd54cf565f3807e75f95bdfd6e8802dadb30de5e70f",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/runtime.py",
+      "public_source_sha256": "a2c53ec26a1501f39fd89fc9715ddfa44ed3f59bdd5b5e696842f253da441004",
+      "pr_source_sha256": "2d400cbb7bfb954ee8b75357bcc82089ed9cea96207caebe9df29c21a7581c9a",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/trainer.py",
+      "public_source_sha256": "862986e6ffbca835d761c46b02ac697a14c4fa675410cd09b57941a5652d7fcb",
+      "pr_source_sha256": "7a514a7ead46d2bb3fef498484e7dd093d42b655fca5acb21aff63526fc83f15",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/utils/config_resolvers.py",
+      "public_source_sha256": "01c48cbd42b86e636b70ccc3e193a81147162ba890777102b2c61086fa415340",
+      "pr_source_sha256": "de7f9c1ff4c038a0be4262ca935c0af19021f42184c4b4d98f0c5a6138bb0f72",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/utils/logging_config.py",
+      "public_source_sha256": "cadc4f6ad487c3f37171a6defad36d23d9ab8bf262f73a461cd9ee9b03b757e7",
+      "pr_source_sha256": "cd04f17bf4188e1a83856a5d28b438eb37312c1783341d1a31870a07f33d53c3",
+      "full_ast_identical": false,
+      "executable_ast_identical_excluding_docstrings": true
+    },
+    {
+      "path": "runtime/src/fastwam/utils/pytorch_utils.py",
+      "public_source_sha256": "ffc483e7fb435cd654326750eaffdbfc9243837c3140dcc74e45b24abb751a33",
+      "pr_source_sha256": "c37012924e3ef41b1190d96d602fc66bc06f0b41ddb57e2d443e9a7d1172e436",
+      "full_ast_identical": true,
+      "executable_ast_identical_excluding_docstrings": true
+    }
+  ],
+  "runtime_byte_identical_files_to_public_source": 49
+}

@@ -1,0 +1,10 @@
+# Separate conversion environment: not the fixed policy runtime.
+lerobot==0.3.3
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+av==16.0.1
+datasets==3.6.0
+huggingface-hub==0.34.2
+h5py==3.14.0
+pyarrow==23.0.0
+pandas==2.2.3

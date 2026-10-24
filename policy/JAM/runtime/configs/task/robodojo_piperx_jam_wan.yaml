@@ -1,0 +1,50 @@
+# @package _global_
+defaults:
+  - override /data: robodojo_piperx_six
+  - override /model: fastwam_foresight_bplus
+  - _self_
+
+batch_size: 16
+num_workers: 4
+prefetch_factor: 1
+persistent_workers: false
+log_cuda_memory: true
+override_instruction: null
+
+model:
+  mot_checkpoint_mixed_attn: false
+  foresight:
+    target_type: vae_direct
+    teacher_mode: frozen_pretrained
+    layers: [18]
+    encoder_layers: [0]
+    action_layers: null
+    offsets: [1, 2]
+    offset_weights: null
+    lambda_foresight: 0.6
+    projector_type: transformer
+    projector_hidden_dim: 1536
+    projector_ffn_dim: 6144
+    projector_num_layers: 2
+    target_cache_roots: null
+    input_latent_cache_roots: null
+    val_target_cache_roots: null
+    val_input_latent_cache_roots: null
+
+learning_rate: 1.0e-4
+lr_scheduler_type: cosine
+weight_decay: 1.0e-2
+num_epochs: 10
+max_steps: null
+gradient_accumulation_steps: 1
+log_every: 10
+eval_every: 0
+save_every: 5000
+save_full_state: true
+keep_latest_state_only: true
+resume: null
+
+wandb:
+  enabled: true
+  group: robodojo-piperx-six
+  name: robodojo-piperx-jam-wan
