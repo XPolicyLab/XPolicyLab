@@ -1,0 +1,991 @@
+"""Pose and frame helpers (pure numpy)."""
+import numpy as np
+from scipy.spatial.transform import Rotation
+
+# Top-down gripper quaternion (w, x, y, z): fingers point toward world -z and the
+# closing axis stays along world x.
+TOP_DOWN_QUAT = np.array([.5, -.5, .5, .5])
+
+
+def quat_to_rotation(q):
+    """Rotation matrix of a (w, x, y, z) quaternion (normalised internally).
+
+    Args:
+        q: length-4 quaternion, any non-zero norm.
+    Returns:
+        3x3 numpy rotation matrix; ``R @ v_local`` maps an EE-frame vector to world,
+        ``(p_world - ee_pos) @ R`` maps world points into the EE frame.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src: visibility.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: coin_tracking.py, policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 provenance (original source of this code):
+          - C3_lilo__match_and_pick_from_conveyor/src/interception.py ``rotation``, verbatim; fingertip contact and EE-frame point checks (success, hidden test 4/5, final dev 2/2)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fasten_screws/best_score_src nut_geometry.py, parts.py, policy.py (improvement, best native score 0.0->50.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__fill_pen_holder/best_score_src approach.py, entry.py, holder_tracking.py, motion.py, policy.py, scene.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__fold_clothes/best_score_src cloth_completion.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, insertion.py, key_vision.py, pickup_geometry.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__pack_objects_into_box/best_score_src motion.py, policy.py, scene.py, sensor_masks.py (improvement, best native score 0.0->10.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pour_balls_into_vase/src capture.py, contents.py, policy.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src deposit.py, policy.py, routing.py, scene.py, selection.py, transport.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py, terminal_route.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks_by_language/src motion.py, parallel_home.py, policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__stack_bowls/best_score_src bowl_contact.py, policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: match_and_pick_from_conveyor (EXP-0008, 2/2 dev success).
+          Used to project the fingertip contact (EE + R @ [0.14, 0, 0] m) and to
+          express RGB-D points in EE frames for robot self-filtering.
+          Precondition: quaternion order is (w, x, y, z) as in ``*_ee_pose[3:]``.
+    """
+    w, x, y, z = np.asarray(q, float)/np.linalg.norm(q)
+    return np.array([[1-2*(y*y+z*z), 2*(x*y-z*w), 2*(x*z+y*w)],
+                     [2*(x*y+z*w), 1-2*(x*x+z*z), 2*(y*z-x*w)],
+                     [2*(x*z-y*w), 2*(y*z+x*w), 1-2*(x*x+y*y)]])
+
+
+def rotation_to_quat(matrix):
+    """(w, x, y, z) quaternion of a 3x3 rotation matrix (inverse of ``quat_to_rotation``).
+
+    Args:
+        matrix: 3x3 rotation matrix, e.g. built from finger/closing axes
+            ``np.column_stack((forward, closing, cross(forward, closing)))`` or a
+            world-frame delta composed with a measured EE rotation.
+    Returns:
+        numpy quaternion (w, x, y, z), sign as returned by scipy (not hemisphere
+        aligned; use ``align_quat_sign`` before emitting).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src entry.py, motion.py, policy.py, scene.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, insertion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src manipulation.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pour_balls_into_vase/src policy.py, pour_geometry.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src deposit.py, policy.py, selection.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py (success, hidden test 1/5, final dev 2/2)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: sweep_blocks (EXP-0008, 0/2 dev overall; used for brush grasp poses,
+          receiver handover orientations and small inversion rolls that ran), stack_bowls
+          (EXP-final 1/2, ``delta @ R_hand`` re-grasp quats), classify_objects
+          (response retreat). Pure conversion; no failure modes beyond sign ambiguity.
+    """
+    q = Rotation.from_matrix(matrix).as_quat()
+    return np.r_[q[3], q[:3]]
+
+
+def measured_ee_pose(obs, arm):
+    """Measured 7-D EE pose [x, y, z, qw, qx, qy, qz] (m) of one arm as a float copy.
+
+    Args:
+        obs: observation dict with ``obs['state'][arm + '_ee_pose']``; arm: 'left'/'right'.
+    Returns:
+        new float numpy array (safe to modify, e.g. ``pose[2] += 0.012`` probes).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: policy.py, task_home.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src: completion.py, held_cover.py, policy.py, retreat_geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 provenance (same read as a method):
+          - C0_none__fill_pen_holder/best_score_src policy.py ``pose`` (improvement, best native score 10.0->25.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__fold_clothes/best_score_src policy.py ``actual`` (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__insert_key/best_score_src policy.py ``actual`` (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__imitate_sorting_sequence/best_score_src policy.py ``actual`` (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__fasten_screws/best_score_src policy.py ``ee`` (improvement, best native score 0.0->50.0 (EXP-0005), hidden test 0/5)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src policy.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src policy.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, held_geometry.py, insertion.py, pickup_geometry.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 provenance (same read as a method):
+          - C2_rawcode__stack_blocks/src policy.py ``actual`` (success, hidden test 5/5, final dev 2/2)
+          - C2_rawcode__pour_balls_into_vase/src policy.py ``actual`` (success, hidden test 2/5, final dev 0/2)
+          - C1_notes__pack_objects_into_box/best_score_src policy.py ``measured`` (improvement, best native score 10.0->25.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pack_objects_into_box/best_score_src policy.py ``measured`` (improvement, best native score 0.0->10.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__organize_table/best_score_src policy.py ``actual`` (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__put_bottles_into_dustbin/best_score_src policy.py ``actual`` (improvement, best native score 10.0->40.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src policy.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pour_balls_into_vase/src capture.py, contents.py, policy.py, vessel.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src policy.py, scene.py, selection.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 provenance (same read as a method):
+          - C2_rawcode__stack_blocks_by_language/src policy.py ``actual`` (success, hidden test 2/5, final dev 2/2)
+          - C2_rawcode__stack_bowls/best_score_src policy.py ``actual`` (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: sweep_blocks (EXP-0008, every gate/track step), pack_objects_into_box
+          (``measured``), store_tools_in_toolbox (``current``), stack_bowls/make_kong
+          (inline reads before raising). Pure read of measured state.
+    """
+    return np.array(obs['state'][arm+'_ee_pose'], float)
+
+
+def pose_error(measured, commanded):
+    """Position and orientation error between two 7-D poses [x, y, z, qw, qx, qy, qz].
+
+    Returns:
+        (position_error_m, angle_error_rad) as floats; the angle is sign-invariant
+        (q and -q are the same rotation).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: policy.py, task_home.py, task_transit.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src: policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src: completion.py, motion_timing.py, policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 provenance (original source of this code):
+          - C3_lilo__match_and_pick_from_conveyor/src/interception.py ``errors``, verbatim; pose gate before descent/closure (success, hidden test 4/5, final dev 2/2)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fasten_screws/best_score_src policy.py (improvement, best native score 0.0->50.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__fill_pen_holder/best_score_src approach.py, policy.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__fold_clothes/best_score_src policy.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src motion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, insertion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src policy.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pack_objects_into_box/best_score_src motion.py, policy.py (improvement, best native score 0.0->10.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pour_balls_into_vase/src policy.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src delivery.py, deposit.py, policy.py, selection.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py, terminal_route.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks_by_language/src parallel_home.py, policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__stack_bowls/best_score_src empty_home.py, policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: match_and_pick_from_conveyor (EXP-0008, 2/2 dev success).
+          Used as a pose gate before descent/closure and to check homing.
+    """
+    measured = np.asarray(measured, float)
+    commanded = np.asarray(commanded, float)
+    a = measured[3:]/np.linalg.norm(measured[3:])
+    b = commanded[3:]/np.linalg.norm(commanded[3:])
+    return (float(np.linalg.norm(measured[:3]-commanded[:3])),
+            float(2*np.arccos(np.clip(abs(np.dot(a, b)), 0., 1.))))
+
+
+def planar_rotation(angle):
+    """2x2 counter-clockwise rotation matrix for a yaw angle in the world XY plane.
+
+    Args:
+        angle: yaw in radians about world +z.
+    Returns:
+        (2, 2) array ``[[cos, -sin], [sin, cos]]``; ``local @ R.T + center`` maps
+        object-frame XY footprints (m) to world XY, ``(xy - center) @ R`` back.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Batch-4 provenance (same matrix):
+          - C2_rawcode__swap_T/src perception.py ``matrix`` (T footprint model) (success, hidden test 3/5, final dev 2/2)
+          - C0_none__swap_T/src policy.py ``Policy.planar`` (success, hidden test 3/5, final dev 2/2)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: swap_T (EXP-0008, 0/2 dev overall; T footprint model, grasp-point
+          offset along the stem and buffer footprints all ran with it), and the same
+          inline matrix in align_blocks (2/2 dev), arrange_largest_number (2/2 dev,
+          held-delta yaw turn), pack_objects_into_box, store_tools_in_toolbox (0/2 dev).
+          Pure math; no failure modes. Yaw of a top-down gripper relative to an
+          object still needs the +pi/2 closing-axis convention of the caller.
+    """
+    c, s = np.cos(angle), np.sin(angle)
+    return np.array([[c, -s], [s, c]])
+
+
+def top_down_quat_with_yaw(yaw):
+    """Top-down gripper quaternion rotated by ``yaw`` about world z.
+
+    Args:
+        yaw: rotation about world +z in radians, applied on top of ``TOP_DOWN_QUAT``
+            (yaw=0 returns TOP_DOWN_QUAT up to sign; the closing axis turns from world x).
+    Returns:
+        (w, x, y, z) numpy quaternion.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src: policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fold_clothes/best_score_src policy.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src motion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src policy.py, transitions.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pack_objects_into_box/best_score_src policy.py (improvement, best native score 0.0->10.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src policy.py, selection.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks_by_language/src policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__stack_bowls/best_score_src bowl_contact.py, jaw_geometry.py, policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: fasten_screws (EXP-0008, 0/2 dev overall, but grasps, lifts and
+          nut transport succeeded with it). Used for grasp yaw, +pi/6 per retry,
+          90-degree changed-yaw retries and incremental wrist turns while tightening.
+          Failure mode: for a large yaw change, the measured EE quaternion may switch
+          to the opposite sign. Compare with sign-invariant ``pose_error``, not by
+          element.
+    """
+    r = Rotation.from_euler('z', yaw)*Rotation.from_quat(np.r_[TOP_DOWN_QUAT[1:], TOP_DOWN_QUAT[0]])
+    q = r.as_quat()
+    return np.r_[q[3], q[:3]]
+
+
+def align_quat_sign(q, reference, normalize=True):
+    """Return quaternion ``q`` on the same hemisphere as ``reference``.
+
+    Args:
+        q: (w, x, y, z) commanded quaternion.
+        reference: (w, x, y, z) measured quaternion, usually ``*_ee_pose[3:]``.
+        normalize: divide ``q`` by its norm first (default True).
+    Returns:
+        float numpy quaternion; ``-q`` if ``dot(q, reference) < 0``, else ``q``.
+        Same rotation, but the controller does not take the long way round.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__pack_objects_into_box/best_score_src motion.py, policy.py (improvement, best native score 0.0->10.0 (EXP-0008), hidden test 0/5)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks_by_language/src motion.py, parallel_home.py (success, hidden test 1/5, final dev 2/2)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: fasten_screws (EXP-0008, 0/2 dev overall, motion itself worked),
+          solve_equation (EXP-0006, 2/2 dev success). Applied to every ``*_ee_pose``
+          target just before it is emitted, including the idle arm's pose in a
+          two-arm relay (normalize=False there, target was TOP_DOWN_QUAT).
+          Precondition: ``reference`` is the current measured pose of the same arm.
+          Note: normalize=True may differ from in-place ``pose[3:] /= norm`` in the
+          last ulp; fasten_screws keeps its own normalisation and passes normalize=False.
+    """
+    q = np.array(q, float)
+    if normalize:
+        q /= np.linalg.norm(q)
+    if np.dot(q, np.asarray(reference, float)) < 0:
+        q = -q
+    return q
+
+
+# Fingertip contact point in the EE frame: 0.14 m along local +x (fingers point
+# along local +x; with TOP_DOWN_QUAT that is world -z).
+FINGERTIP_OFFSET = np.array([.14, 0., 0.])
+
+
+def fingertip_point(pose, offset=FINGERTIP_OFFSET):
+    """World position of the fingertip contact point of a 7-D EE pose.
+
+    Args:
+        pose: [x, y, z, qw, qx, qy, qz] EE pose (m), usually ``*_ee_pose``.
+        offset: contact point in the EE frame (m), default 0.14 m along local +x.
+    Returns:
+        length-3 world position (m): ``pose[:3] + R(pose[3:]) @ offset``.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__arrange_largest_number/src: placement.py, policy.py, visibility.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src: policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: coin_tracking.py, policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 provenance (original source of this code):
+          - C3_lilo__match_and_pick_from_conveyor/src/interception.py ``contact(pose)``, verbatim with offset [.14, 0, 0]; thin-object belt picks (success, hidden test 4/5, final dev 2/2)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src approach.py, motion.py, policy.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__fold_clothes/best_score_src cloth_completion.py, cloth_quality.py, policy.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src motion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src policy.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src policy.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks_by_language/src policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__stack_bowls/best_score_src policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: match_and_pick_from_conveyor (EXP-0008, 2/2 dev success; thin
+          phone/cup grasps), pack_objects_into_box (EXP-0008, 0/2 dev overall, but
+          lifts and incremental contact-point transport worked with it).
+          fasten_screws uses the same transform with a calibrated rim offset.
+          Failure mode: the true contact depends on object thickness; match_and_pick
+          updates the offset per object after measuring section height.
+    """
+    p = np.asarray(pose, float)
+    return p[:3]+quat_to_rotation(p[3:])@offset
+
+
+def ee_position_for_fingertip(tip, q, offset=FINGERTIP_OFFSET):
+    """EE position that puts the fingertip contact point at ``tip`` (inverse of ``fingertip_point``).
+
+    Args:
+        tip: desired world contact position (m); q: (w, x, y, z) EE quaternion.
+        offset: contact point in the EE frame (m).
+    Returns:
+        length-3 EE position (m): ``tip - R(q) @ offset``; append q for a 7-D target.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: pack_objects_into_box (EXP-0008, 0/2 dev overall); used for every
+          incremental transport target, descent sweep and grasp approach there.
+          Precondition: q is the quaternion that will be commanded, not the measured one.
+    """
+    return np.asarray(tip, float)-quat_to_rotation(q)@np.asarray(offset, float)
+
+
+def ee_pose_for_fingertip(tip, q, offset=FINGERTIP_OFFSET):
+    """7-D EE target (x, y, z, w, qx, qy, qz) that puts the fingertip at ``tip`` with orientation q.
+
+    Args:
+        tip: desired world contact position (m); q: (w, x, y, z) quaternion to command.
+        offset: contact point in the EE frame (m).
+    Returns:
+        length-7 array ``np.r_[ee_position_for_fingertip(tip, q, offset), q]``.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src: policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src: policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src approach.py, motion.py, policy.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__fold_clothes/best_score_src policy.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src motion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, insertion.py, policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src figurine.py, policy.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pour_balls_into_vase/src policy.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src policy.py, selection.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks_by_language/src policy.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__stack_bowls/best_score_src policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: classify_objects (Policy.tip_pose, retreat/support_return goals),
+          make_kong (grasp/place targets), store_tools_in_toolbox (tip_pose for
+          approach, descent, routes, rotations about the fingertip, homing);
+          all three tasks were 0/2 dev overall, but fingertip-targeted poses did
+          reach and lift tools there (EXP-0001 lifted hammer/wrench/tape).
+          Precondition: q is the commanded quaternion; sign-align it to the
+          measured one (``align_quat_sign`` / ``arm_targets``) before emitting.
+    """
+    return np.r_[ee_position_for_fingertip(tip, q, offset), q]
+
+
+def world_to_ee_frame(points, pose):
+    """Express world points in the frame of a 7-D EE pose.
+
+    Args:
+        points: (..., 3) world points (m), NaN allowed; pose: [x, y, z, qw, qx, qy, qz].
+    Returns:
+        (..., 3) points in the EE frame (m): local x along the fingers, y across
+        the closing axis/palm width, z the palm thickness.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: policy.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src: completion.py, retreat_geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: coin_tracking.py, coin_vision.py, policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src entry.py, holder_tracking.py, motion.py, policy.py, scene.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__fold_clothes/best_score_src cloth_quality.py, cloth_vision.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, held_geometry.py, pickup_geometry.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src figurine.py, policy.py, scene.py, tracking.py, transitions.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src block_vision.py, low_route.py, policy.py, terminal_route.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_bowls/best_score_src bowl_vision.py, jaw_geometry.py, policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: pack_objects_into_box (EXP-0008) and, inline, fasten_screws
+          (EXP-0008) and match_and_pick_from_conveyor (EXP-0008, 2/2 dev) for robot
+          self-masking of RGB-D points. Validated palm boxes (m, EE frame):
+          pack x in (-0.28, 0.105), |y|<0.085, |z|<0.075 plus fingers x in
+          [0.105, 0.19), |y|<0.065, |z|<0.025; fasten_screws x in (-0.09, 0.105),
+          |y|,|z|<0.065; match_and_pick x in (-0.16, 0.09), |y|<0.12, |z|<0.10.
+          Held objects: stack_blocks_by_language (EXP-0006, 2/2 dev, ``HeldCube``)
+          stores a grasped cube centre in the EE frame at grasp, then tracks it with
+          ``fingertip_point(ee, local)`` and places it with
+          ``ee_pose_for_fingertip(center, q, local)``; fasten_screws ``rim_local`` same idiom.
+    """
+    p = np.asarray(pose, float)
+    return (points-p[:3])@quat_to_rotation(p[3:])
+
+
+def ee_frame_to_world(points, pose):
+    """Map points given in a 7-D EE frame to world coordinates (inverse of ``world_to_ee_frame``).
+
+    Args:
+        points: (N, 3) or (3,) EE-frame points (m): local x along the fingers,
+            y across the closing axis, z palm thickness; pose: [x, y, z, qw, qx, qy, qz].
+    Returns:
+        same-shape world points (m), ``points @ R.T + pose[:3]``.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__cover_blocks/src: retreat_geometry.py (success, hidden test 5/5, final dev 2/2)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src approach.py, holder_tracking.py, motion.py, policy.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src figurine.py, policy.py, tracking.py, transitions.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src low_route.py, policy.py, terminal_route.py (success, hidden test 1/5, final dev 2/2)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: fold_clothes (EXP-0008, 0/2 dev; palm/finger envelope samples
+          x in {-0.06..0.18}, |y|<=0.055, |z|<=0.025 for hand-clearance checks),
+          insert_key (held-key cloud prediction and palm/finger-rail corner points)
+          and deposit_coin (EXP-0008, 0/2 dev; held-coin cloud prediction), all inline;
+          swap_T (EXP-0008, 0/2 dev; held-T model prediction for retention checks
+          and swept palm/rail samples x in {-0.04..0.17}, |y|<=0.08, |z|<=0.028 for
+          transit clearance).
+          Precondition: the stored cloud must have been expressed in the same EE
+          frame (``world_to_ee_frame`` at grasp); slip after the grasp is not modelled.
+    """
+    p = np.asarray(pose, float)
+    return np.asarray(points)@quat_to_rotation(p[3:]).T+p[:3]
+
+
+def approach_tilt(q):
+    """Angle (rad) between the finger axis (EE local +x) and world -z.
+
+    Args:
+        q: (w, x, y, z) EE quaternion.
+    Returns:
+        float in [0, pi]; 0 for a perfectly top-down gripper (e.g. ``TOP_DOWN_QUAT``
+        with any yaw).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__imitate_sorting_sequence/best_score_src policy.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: pack_objects_into_box (EXP-0008, 0/2 dev overall); used as the
+          tilt gate before lowering, releasing and grasp retries.
+    """
+    return np.arccos(np.clip(-quat_to_rotation(q)[2, 0], -1, 1))
+
+
+def ee_pose_and_tip(obs, arm, offset=FINGERTIP_OFFSET):
+    """Measured EE pose of one arm and its world fingertip contact point.
+
+    Args:
+        obs: observation dict with ``obs['state'][arm + '_ee_pose']``.
+        arm: 'left' or 'right'; offset: fingertip in the EE frame (m).
+    Returns:
+        (pose: length-7 array [x, y, z, qw, qx, qy, qz] (m), tip: length-3 world point (m)).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: make_kong (EXP-0008, 0/2 dev; reach/alignment gates ran every
+          step), pack_objects_into_box (EXP-0008, ``ready_pose`` with its own
+          ``contact`` alias). Pure read of measured state; no failure modes beyond
+          the offset caveat of ``fingertip_point``.
+    """
+    pose = np.asarray(obs['state'][arm+'_ee_pose'])
+    return pose, fingertip_point(pose, offset)
+
+
+def ee_box_mask(points, pose, x_range, y_half, z_half, y_min=None):
+    """Boolean mask of points inside an axis-aligned box in an EE frame.
+
+    Args:
+        points: (..., 3) world points (m); pose: 7-D EE pose.
+        x_range: (x_min, x_max) along the fingers (m), strict bounds.
+        y_half, z_half: strict half-widths (m) across the closing axis / palm thickness.
+        y_min: optional strict lower bound on |y| (m). With it the region is the
+            two finger rails y_min < |y| < y_half, keeping the central closing gap
+            (object points held between the fingers stay visible).
+    Returns:
+        (...) bool array, True inside the box (NaN points are False).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__cover_blocks/src: held_cover.py, retreat_geometry.py (success, hidden test 5/5, final dev 2/2)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__pour_balls_into_vase/src capture.py, vessel.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src scene.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: make_kong (EXP-0008) robot self-masking of corridor clearance
+          (x in (-0.24, 0.20), |y|<0.09, |z|<0.075), released-tile measurement
+          (x in (-0.22, 0.19), |y|<0.055, |z|<0.045), other-arm exclusion
+          (x in (-0.20, 0.10), |y|<0.09, |z|<0.08) and the in-gripper gap region
+          (x in (0.113, 0.19), |y|<0.024, |z|<0.035). The same palm-box idiom ran
+          inline in pack_objects_into_box and fasten_screws (boxes in
+          ``world_to_ee_frame``). Combine boxes with | / ~ for palm+finger masks.
+          stack_bowls (EXP-0008, 1/2 dev) removed both palms from white-bowl points
+          with (x in (-0.30, 0.103), |y|<0.095, |z|<0.085) per arm.
+          sort_nesting_dolls_by_size (EXP-0008) removed both palms/wrists from yellow
+          doll points with (x in (-0.22, 0.075), |y|<0.09, |z|<0.065), keeping the
+          finger contact corridor visible.
+          plug_in_charger (EXP-0008, 0/2 dev) excluded the carrier hand from idle-arm
+          clearance points with (x in (-0.18, 0.20), |y|<0.085, |z|<0.07) and seeded
+          idle-arm components with (x in (-0.20, 0.09), |y|<0.10, |z|<0.09);
+          insert_key ran the same test inline for handover palm overlap
+          (x in (-0.08, 0.105), |y|<0.075, |z|<0.055). Use x_range=(-np.inf, x_max)
+          for a box open toward the wrist. See ``palms_box_mask`` for both arms.
+          Failure mode: boxes too tight leave white robot body in white-object masks.
+          Rails (y_min): fold_clothes (EXP-0008, 0/2 dev, 20% scores) x in (0.105, 0.20),
+          0.018<|y|<0.075, |z|<0.04 with palm box (-0.35, .105)/.09/.08;
+          store_laptop_and_headphones (EXP-0008, 0/2 dev) x in (0.105, 0.195),
+          0.024<|y|<0.075, |z|<0.035 with palm box (-0.28, .105)/.09/.085, and a
+          grip-dependent rail gap+.002<|y|<gap+.025 (gap=.003+.038*grip),
+          x in (0.108, 0.18), |z|<0.025. Same task: in-gap evidence box
+          x in (0.112, 0.175), |y|<0.012, |z|<0.023 and jaw exclusion
+          (0.085, 0.205)/.078/.043 for held-headphone identity.
+          Failure mode: rails assume parallel fingers; open-gripper rails need a
+          grip-dependent y_min (see above).
+    """
+    p = world_to_ee_frame(points, pose)
+    m = ((p[..., 0] > x_range[0])&(p[..., 0] < x_range[1])
+         &(abs(p[..., 1]) < y_half)&(abs(p[..., 2]) < z_half))
+    if y_min is not None:
+        m &= abs(p[..., 1]) > y_min
+    return m
+
+
+
+def palms_box_mask(points, obs, x_range, y_half, z_half, arms=('left', 'right'), y_min=None):
+    """Union of ``ee_box_mask`` over several arms' measured EE poses (robot self-masking).
+
+    Args:
+        points: (..., 3) world points (m), e.g. one camera's organised cloud.
+        obs: observation with ``state['<arm>_ee_pose']``.
+        x_range, y_half, z_half: EE-frame box, as in ``ee_box_mask`` (m).
+        arms: arm names to mask (default both).
+        y_min: optional |y| lower bound -> finger rails only (see ``ee_box_mask``).
+    Returns:
+        (...) bool array, True where a point lies in any arm's box; use
+        ``mask &= ~palms_box_mask(...)`` to drop robot hands from object masks.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: task_scene.py (success, hidden test 5/5, final dev 2/2)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fold_clothes/best_score_src cloth_quality.py, cloth_vision.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src verification.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__stack_blocks/src block_vision.py (success, hidden test 1/5, final dev 2/2)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: plug_in_charger (EXP-0008, 0/2 dev; pale charger/strip
+          segmentation with (x in (-0.30, 0.10), |y|<0.10, |z|<0.09), body tracking
+          with (x < 0.105, |y|<0.09, |z|<0.075) via x_range=(-np.inf, .105)). The same
+          per-arm loop ran inline in stack_bowls (-0.3, .103)/.095/.085,
+          sort_nesting_dolls_by_size (-0.22, .075)/.09/.065, make_kong
+          (-0.24, .20)/.09/.075, store_tools_in_toolbox (-0.30, .22)/.12/.12,
+          classify_objects (-0.28, .103)/.09/.08, pack_objects_into_box
+          (-0.28, .105)/.085/.075 and press_by_number (-0.28, .20)/.12/.14.
+          organize_table (EXP-0008, 0/2 dev) dropped palm (-0.17, .10)/.10/.075 plus
+          rails x in [0.10, 0.19), 0.035<|y|<0.07, |z|<0.035 from scene and figurine
+          masks (x_range=(np.nextafter(.10, 0), .19) reproduces the inclusive >= .10).
+          align_blocks (EXP-0007, 2/2 dev) dropped palm (-0.08, .105)/.085/.065 and rails
+          (.105, .19)/.065/.04 y_min=.025 from a white set-square mask held between the
+          fingers; fold_clothes and store_laptop_and_headphones use the same palm+rails
+          pair with their own sizes (see their sources).
+          Precondition: poses are the current measured ones (re-call each frame).
+          Failure mode: masks only hands/wrists; forearm links outside the box
+          remain in the cloud (plug_in_charger seed 1 confused a clipped strip
+          segment for the charger, not a robot patch).
+    """
+    mask = np.zeros(np.shape(points)[:-1], bool)
+    for arm in arms:
+        mask |= ee_box_mask(points, measured_ee_pose(obs, arm), x_range, y_half, z_half, y_min)
+    return mask
+
+def slerp_quat(a, b, fraction):
+    """Spherical interpolation between two (w, x, y, z) quaternions along the short arc.
+
+    Args:
+        a: start quaternion (normalised internally), usually the measured EE quaternion.
+        b: end quaternion; sign-aligned to ``a`` with ``align_quat_sign`` first.
+        fraction: 0 returns ``a``, 1 returns ``b`` (on a's hemisphere); 0.5 is the
+            rotation midpoint (equal to ``normalize(a + b)``).
+    Returns:
+        unit (w, x, y, z) numpy quaternion; ``a`` itself if the arc is < 1e-6 rad.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__arrange_largest_number/src/legacy_lilo_lib/geometry.py (success, hidden test 1/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Called in working programs:
+          - C3_lilo__align_blocks/src: task_home.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src: completion.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__deposit_coin/best_score_src: policy.py (improvement, best native score 0.0->20.0 (EXP-0003), hidden test 0/5)
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src approach.py, motion.py, policy.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+          - C3_lilo__fold_clothes/best_score_src policy.py (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__imitate_sorting_sequence/best_score_src motion.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C3_lilo__insert_key/best_score_src handover.py, insertion.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src policy.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src policy.py (success, hidden test 1/5, final dev 2/2)
+        Batch-4 callers (import it from the shipped library):
+          - C3_lilo__stack_bowls/best_score_src empty_home.py, policy.py (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: store_tools_in_toolbox (EXP-0008 ``blend_quat``, 0/2 dev overall;
+          staged wrist turns during transport), stack_blocks_by_language (EXP-0006,
+          2/2 dev; fraction 0.5 as the "partial rotation" stage of staged homing from
+          +/-pi/2 carry yaws, where a direct home command had stalled ~19 mm short).
+          Use to split large wrist rotations into controller-friendly steps.
+    """
+    a = np.asarray(a, float); a = a/np.linalg.norm(a)
+    b = align_quat_sign(b, a); dot = np.clip(a@b, -1., 1.)
+    angle = np.arccos(dot)
+    if angle < 1e-6:
+        return a
+    return (np.sin((1-fraction)*angle)*a+np.sin(fraction*angle)*b)/np.sin(angle)
+
+
+def wrist_turn_pose(pose, quat, fraction=.5):
+    """Copy of a 7-D EE pose with its orientation slerped toward ``quat`` in place.
+
+    Args:
+        pose: 7-D EE pose (x, y, z m; w, x, y, z); quat: target (w,x,y,z) quaternion,
+            usually the saved home orientation; fraction: 0 = unchanged, 0.5 = half turn.
+    Returns:
+        float 7-D pose with the same position and ``slerp_quat(pose_q, quat, fraction)``.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: align_blocks (EXP-0007, 2/2 dev; half wrist turn before the full
+          turn and final home of RecoveringHome and its swept-clearance check),
+          classify_objects_by_language (staged/revised homing turns) and stack_bowls
+          (empty-arm escape turn) used the same inline ``pose.copy(); [3:] = slerp``.
+          Only 0.5 was validated; for a full turn assign ``quat`` directly (slerp at 1
+          returns the sign-aligned target, not necessarily the identical array).
+          Failure mode: rotating in place near the table can sweep the fingers into it;
+          check with ``swept_finger_points`` first.
+    """
+    out = np.array(pose, float)
+    out[3:] = slerp_quat(out[3:], quat, fraction)
+    return out
+
+
+def interpolate_pose(start, goal, fraction):
+    """7-D EE pose a fraction of the way from ``start`` to ``goal``.
+
+    Position is blended linearly, orientation with ``slerp_quat`` (short arc).
+    Args:
+        start, goal: 7-D poses (x, y, z m, quaternion w, x, y, z).
+        fraction: 0 gives ``start`` (unit quaternion), 1 gives ``goal`` with its
+            quaternion on start's hemisphere.
+    Returns:
+        7-D numpy pose ``np.r_[(1-f)*start[:3]+f*goal[:3], slerp_quat(...)]``.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Batch-2 callers (import it from the shipped library):
+          - C3_lilo__fill_pen_holder/best_score_src motion.py (improvement, best native score 0.0->25.0 (EXP-0007), hidden test 0/5)
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src transitions.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__pour_balls_into_vase/src policy.py (success, hidden test 2/5, final dev 0/2)
+          - C3_lilo__put_bottles_into_dustbin/best_score_src deposit.py, policy.py, routing.py, transport.py (improvement, best native score 0.0->40.0 (EXP-0008), hidden test 0/5)
+          - C3_lilo__stack_blocks/src low_route.py, terminal_route.py (success, hidden test 1/5, final dev 2/2)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: classify_objects_by_language (EXP-0008, 0/2 dev; ``split_poses``
+          feedback-gated transport/retreat segments, ran hundreds of steps on seed 2
+          with five verified placements), insert_key (``handover.clear_path`` 9
+          samples, ``insertion`` 7 samples; 0/2 dev) and sweep_blocks
+          (``inversion.arc_clear`` 7 samples) sampling a commanded motion for
+          clearance checks. The controller does not follow this path exactly, so
+          sampled checks are a conservative proxy, not a guarantee.
+    """
+    start = np.asarray(start, float); goal = np.asarray(goal, float)
+    return np.r_[(1-fraction)*start[:3]+fraction*goal[:3],
+                 slerp_quat(start[3:], goal[3:], fraction)]
+
+
+def pose_segments(start, goal, linear=.07, angular=.55):
+    """Split a pose move into equal waypoints bounded in translation and rotation.
+
+    Args:
+        start, goal: 7-D poses (m, (w, x, y, z)).
+        linear: max translation per segment (m); angular: max rotation per segment (rad).
+    Returns:
+        list of ``count`` 7-D poses ``interpolate_pose(start, goal, t)`` for
+        t = 1/count .. 1, count = max(1, ceil(dist/linear), ceil(angle/angular));
+        the last element is the goal.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Batch-3 callers (import it from the shipped library):
+          - C3_lilo__organize_table/best_score_src policy.py (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Source: classify_objects_by_language (EXP-0008 ``waypoints.split_poses``,
+          0/2 dev overall) with defaults 70 mm / 0.55 rad, each waypoint gated by
+          measured convergence before the next. Seed 2 completed five verified basket
+          placements with it; seed 1 still saw a 0.23 rad departure on a basket
+          backoff, so small segments alone do not fix controller instability.
+    """
+    d, a = pose_error(start, goal)
+    count = max(1, int(np.ceil(d/linear)), int(np.ceil(a/angular)))
+    return [interpolate_pose(start, goal, t) for t in np.linspace(1/count, 1, count)]
+
+
+def bounded_step_pose(pose, delta, max_step):
+    """Copy of a 7-D EE pose translated along ``delta``, capped at ``max_step``.
+
+    Args:
+        pose: 7-D EE pose (x, y, z m, quaternion w, x, y, z), usually measured.
+        delta: 3-vector world translation still to go (m), non-zero.
+        max_step: maximum translation of this waypoint (m).
+    Returns:
+        new 7-D pose: position += delta * min(1, max_step / |delta|);
+        orientation unchanged. Callers stop stepping below their own
+        convergence tolerance (avoid |delta| == 0).
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: insert_key (EXP-0008, 0/2 dev; donor bow presentation at
+          25 mm/step with 3 mm tolerance and 6-frame moves, held-key tip-to-slot
+          approach at 50 mm/step with 4 mm tolerance, never reached on dev) and
+          sweep_blocks (receiver translate-only handover waypoints, 60 mm/step,
+          12 mm tolerance, 16 frames, max 8 steps). Combine with a stall check
+          (measured progress < 3 mm over two steps) and a path-clearance check
+          per waypoint; in insert_key small steps did not prevent the donor
+          losing a thin key during presentation transit.
+    """
+    goal = np.array(pose, float, copy=True)
+    distance = np.linalg.norm(delta)
+    goal[:3] += np.asarray(delta)*min(1., max_step/distance)
+    return goal
+
+
+def perpendicular_unit(vector, axis, min_norm=0.0):
+    """Unit component of ``vector`` orthogonal to ``axis`` (one Gram-Schmidt step).
+
+    Args:
+        vector: 3-vector to project (e.g. world up [0, 0, 1], a hinted normal).
+        axis: unit 3-vector to remove (must already be normalised).
+        min_norm: divisor floor; 0 (default) is a plain normalise, 1e-9 keeps a
+            degenerate (parallel) input finite (near-zero vector, no NaN).
+    Returns:
+        new float 3-vector ``v - axis*(v@axis)`` normalised to length 1; the
+        input is not modified. Builds frames from one measured direction:
+        ``side = cross(axis, perpendicular_unit(up, axis))``.
+
+    Experience:
+        Lifted from (verbatim code, programs that worked):
+          - C3_lilo__align_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+          - C3_lilo__cover_blocks/src/legacy_lilo_lib/geometry.py (success, hidden test 5/5, final dev 2/2)
+        Not called directly by the batch-1 working programs (helper of the above or kept for completeness).
+        Earlier-library notes (other tasks, outcomes as stated; parameters/failure modes):
+          Sources: deposit_coin (EXP-0008, 0/2 dev; in-plane "up" of a held
+          upright coin from its disk normal for relay contact planning and
+          rim-silhouette re-fitting; the coin was carried but never deposited),
+          insert_key (EXP-0008, 0/2 dev; key-blade normal orthogonal to the
+          bow-to-tip axis, receiver closing axis orthogonal to a tilted
+          forward), sweep_blocks (held tool "up" orthogonal to its axis).
+          plug_in_charger (EXP-0008, 0/2 dev; held-pin separation row orthogonal
+          to the pin direction with min_norm=1e-9, observed pin-lobe row from two
+          tip points).
+          Failure mode: vector (anti)parallel to axis gives a zero norm and NaN
+          output unless min_norm > 0; callers here only used directions far from parallel
+          (vertical up vs. a near-horizontal coin normal).
+    """
+    v = np.array(vector, float, copy=True)
+    v -= axis*(v @ axis)
+    v /= max(np.linalg.norm(v), min_norm)
+    return v
+
+
+def quat_to_scipy_rotation(q):
+    """scipy ``Rotation`` of a (w, x, y, z) quaternion (scipy normalises it).
+
+    Args:
+        q: length-4 quaternion (w, x, y, z), e.g. ``obs['state'][arm + '_ee_pose'][3:]``.
+    Returns:
+        ``scipy.spatial.transform.Rotation``; ``.apply(v_local)`` maps EE-frame
+        vectors (m) to world, ``.inv()`` back, ``.magnitude()`` gives radians.
+
+    Experience:
+        Lifted from (verbatim one-liner ``Rotation.from_quat(np.asarray(q)[[1, 2, 3, 0]])``):
+          - C2_rawcode__align_blocks/src/policy.py ``rotation`` (success, hidden test 1/5, final dev 0/2)
+          - C1_notes__deposit_coin/src/{policy,clearance,recovery}.py ``rotation`` and
+            transfer.py ``rot`` (success, hidden test 1/5, final dev 0/2)
+          - C2_rawcode__arrange_largest_number/best_score_src/policy.py ``rot``
+            (improvement, native score 0->100)
+          - C1/C2 classify_objects_by_language best_score_src ``rot`` (improvement, 0->40 / 0->10)
+        Used for fingertip offsets, held-object frames, slerp of wrist turns and
+        sign-invariant angle errors ``(r_a.inv() * r_b).magnitude()``.
+        Precondition: (w, x, y, z) order as in the observation; scipy is (x, y, z, w).
+        Batch-2 provenance (same one-liner):
+          - C1_notes__fasten_screws/best_score_src geometry.py ``rotation`` (improvement, best native score 0.0->20.0 (EXP-0008), hidden test 0/5)
+          - C1_notes__imitate_sorting_sequence/best_score_src manipulation_baseline.py ``rot`` (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C2_rawcode__insert_key/best_score_src policy.py ``rot`` (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+          - C0_none__fill_pen_holder/best_score_src policy.py ``rotation`` (adds a float cast) (improvement, best native score 10.0->25.0 (EXP-0008), hidden test 0/5)
+          - C0_none__imitate_sorting_sequence/best_score_src motion.py ``rotation`` (adds a float cast) (improvement, best native score 0.0->30.0 (EXP-0007), hidden test 0/5)
+        Batch-3 provenance (same one-liner):
+          - C2_rawcode__stack_blocks/src policy.py ``rotation`` (success, hidden test 5/5, final dev 2/2)
+          - C2_rawcode__pour_balls_into_vase/src policy.py ``rotation`` (success, hidden test 2/5, final dev 0/2)
+          - C2_rawcode__organize_table/best_score_src policy.py ``rot``, route_safety.py ``rotation`` (improvement, best native score 0.0->50.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__put_bottles_into_dustbin/best_score_src policy.py ``rotation`` (improvement, best native score 10.0->40.0 (EXP-0008), hidden test 0/5)
+        Batch-4 provenance (same one-liner):
+          - C1_notes__stack_blocks_by_language/src policy.py ``rotation`` (success, hidden test 3/5, final dev 2/2)
+          - C2_rawcode__stack_blocks_by_language/src policy.py ``rotation`` (success, hidden test 2/5, final dev 2/2)
+          - C2_rawcode__swap_T/src policy.py ``rotation`` (success, hidden test 3/5, final dev 2/2)
+          - C2_rawcode__stack_bowls/best_score_src policy.py ``rot`` (improvement, best native score 0.0->100.0 (EXP-0008), hidden test 0/5)
+    """
+    return Rotation.from_quat(np.asarray(q)[[1, 2, 3, 0]])
+
+
+def pose_scipy_rotation(pose):
+    """scipy ``Rotation`` of the quaternion part of a 7-D pose [x, y, z, qw, qx, qy, qz].
+
+    Args:
+        pose: 7-D EE pose (m + wxyz quaternion), list or array.
+    Returns:
+        ``scipy.spatial.transform.Rotation`` (same as ``quat_to_scipy_rotation(pose[3:])``).
+
+    Experience:
+        Lifted from:
+          - C0_none__arrange_largest_number/src/geometry.py ``rotation`` (success,
+            hidden test 1/5, final dev 1/2; held-digit centre and row yaw offsets)
+          - C0_none__cover_blocks/best_score_src/held_tracker.py ``rotation``
+            (improvement, native score 0->30; held-cover tracking in EE frame)
+        Precondition: pose[3:] is non-zero (scipy raises on a zero quaternion).
+    """
+    return quat_to_scipy_rotation(np.asarray(pose)[3:])
+
+
+def scipy_rotation_to_quat(r):
+    """(w, x, y, z) quaternion array of a scipy ``Rotation`` (inverse of ``quat_to_scipy_rotation``).
+
+    Args:
+        r: ``scipy.spatial.transform.Rotation``.
+    Returns:
+        numpy quaternion (w, x, y, z), scipy sign (use ``align_quat_sign`` before emitting).
+
+    Experience:
+        Lifted from ``quat`` in C2_rawcode__arrange_largest_number/best_score_src/policy.py
+        (improvement, native score 0->100), C1_notes__classify_objects_by_language/
+        best_score_src/policy.py (improvement, 0->40) and C2_rawcode__classify_objects_by_language/
+        best_score_src/manipulation.py (improvement, 0->10): composing yaw turns with
+        the measured hand rotation before commanding a pose.
+        Batch-2 provenance (same one-liner ``quat``):
+          - C1_notes__imitate_sorting_sequence/best_score_src manipulation_baseline.py (improvement, best native score 0.0->15.0 (EXP-0005), hidden test 0/5)
+          - C2_rawcode__imitate_sorting_sequence/best_score_src policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+          - C2_rawcode__insert_key/best_score_src policy.py (improvement, best native score 0.0->15.0 (EXP-0008), hidden test 0/5)
+        Batch-3 provenance (same conversion):
+          - C2_rawcode__stack_blocks/src policy.py ``quaternion`` (success, hidden test 5/5, final dev 2/2)
+          - C2_rawcode__pour_balls_into_vase/src policy.py ``quaternion`` (success, hidden test 2/5, final dev 0/2)
+          - C2_rawcode__put_bottles_into_dustbin/best_score_src policy.py ``quat`` (improvement, best native score 10.0->40.0 (EXP-0008), hidden test 0/5)
+        Batch-4 provenance (same conversion):
+          - C2_rawcode__swap_T/src policy.py ``quaternion`` (success, hidden test 3/5, final dev 2/2)
+    """
+    return r.as_quat()[[3, 0, 1, 2]]
+
+
+def wrap_angle(a):
+    """Wrap an angle (rad, scalar or array) into [-pi, pi).
+
+    Args:
+        a: angle(s) in radians.
+    Returns:
+        ``(a + pi) % (2 pi) - pi``, same shape/type as numpy arithmetic gives.
+
+    Experience:
+        Lifted verbatim (``wrap``) from:
+          - C1_notes__push_T/src/perception.py (success, hidden test 1/5, final dev 1/2; T yaw
+            residuals and pose search)
+          - C0_none__pack_objects_into_box/best_score_src/policy.py (improvement, native score 0->10)
+          - C3_lilo__pack_objects_into_box/best_score_src/policy.py (improvement, native score 0->10)
+        Use for yaw differences before thresholding; symmetric objects (cubes,
+        rectangles) also need a modulo of their symmetry period (pi/2, pi) first.
+        Batch-4 provenance (verbatim ``wrap``):
+          - C1_notes__swap_T/src vision.py (success, hidden test 3/5, final dev 2/2)
+    """
+    return (a + np.pi) % (2 * np.pi) - np.pi
+
+
+def halfway_quat(start, end):
+    """Midpoint orientation of two (w, x, y, z) quaternions as the normalised sum.
+
+    Args:
+        start: current quaternion (any non-zero norm); end: target quaternion.
+    Returns:
+        unit quaternion on ``start``'s hemisphere halfway between them; equals
+        ``slerp_quat(start, end, .5)`` up to float rounding (undefined for
+        opposite rotations, where the sum vanishes).
+
+    Experience:
+        Lifted verbatim (``halfway_quaternion``) from
+          - C3_lilo__stack_blocks_by_language/src/motion.py (success, hidden test 1/5,
+            final dev 2/2): the "rotate" stage of staged parallel homing after
+            +/-pi/2 carry yaws, and its stacking turns.
+        Used by ``homing.ParallelHome(half_turn=halfway_quat)`` to reproduce that program.
+    """
+    start = np.asarray(start, float)
+    start = start / np.linalg.norm(start)
+    end = align_quat_sign(end, start)
+    q = start + end
+    return q / np.linalg.norm(q)

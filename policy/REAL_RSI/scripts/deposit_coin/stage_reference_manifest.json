@@ -1,0 +1,62 @@
+[
+  {
+    "tag": "leaderboard_opt_v5_s0_33",
+    "seed": 33,
+    "step": 60,
+    "arm": "left",
+    "stage": "donor_held",
+    "centroid": [
+      -0.0038235294117647217,
+      -0.18294117647058825
+    ],
+    "area": 170
+  },
+  {
+    "tag": "leaderboard_opt_v5_s0_33",
+    "seed": 33,
+    "step": 80,
+    "arm": "left",
+    "stage": "donor_held",
+    "centroid": [
+      -0.0008720930232557933,
+      -0.187015503875969
+    ],
+    "area": 172
+  },
+  {
+    "tag": "leaderboard_opt_v5_remaining7_20261021",
+    "seed": 1,
+    "step": 60,
+    "arm": "left",
+    "stage": "donor_held",
+    "centroid": [
+      0.03163841807909602,
+      -0.09251412429378535
+    ],
+    "area": 118
+  },
+  {
+    "tag": "leaderboard_opt_v5_remaining7_20261021",
+    "seed": 2,
+    "step": 60,
+    "arm": "right",
+    "stage": "donor_held",
+    "centroid": [
+      0.003776978417266186,
+      -0.21372901678657072
+    ],
+    "area": 139
+  },
+  {
+    "tag": "leaderboard_opt_v5_remaining7_20261021",
+    "seed": 7,
+    "step": 60,
+    "arm": "right",
+    "stage": "donor_held",
+    "centroid": [
+      -0.002235772357723557,
+      -0.14583333333333334
+    ],
+    "area": 164
+  }
+]

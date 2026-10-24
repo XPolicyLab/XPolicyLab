@@ -1,0 +1,272 @@
+{
+  "swap_T": {
+    "program": "scripts/swap_T",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "swap_blocks": {
+    "program": "scripts/swap_blocks",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "cover_blocks": {
+    "program": "scripts/cover_blocks",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "align_blocks": {
+    "program": "scripts/align_blocks",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "arrange_largest_number": {
+    "program": "scripts/arrange_largest_number",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "arrange_largest_number_random": {
+    "program": "scripts/arrange_largest_number_random",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "build_tower": {
+    "program": "scripts/build_tower",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "classify_objects": {
+    "program": "scripts/classify_objects",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "classify_objects_by_language": {
+    "program": "scripts/classify_objects_by_language",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "deposit_coin": {
+    "program": "scripts/deposit_coin",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "fasten_screws": {
+    "program": "scripts/fasten_screws",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "fill_egg_holder": {
+    "program": "scripts/fill_egg_holder",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "fill_pen_holder": {
+    "program": "scripts/fill_pen_holder",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "fold_clothes": {
+    "program": "scripts/fold_clothes",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "fold_clothes_random": {
+    "program": "scripts/fold_clothes_random",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "general_pickup": {
+    "program": "scripts/general_pickup",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "hang_mugs": {
+    "program": "scripts/hang_mugs",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "hang_mugs_random": {
+    "program": "scripts/hang_mugs_random",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "imitate_sorting_sequence": {
+    "program": "scripts/imitate_sorting_sequence",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "insert_key": {
+    "program": "scripts/insert_key",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "insert_tubes": {
+    "program": "scripts/insert_tubes",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "make_kong": {
+    "program": "scripts/make_kong",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "make_toast": {
+    "program": "scripts/make_toast",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "make_toast_random": {
+    "program": "scripts/make_toast",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "match_and_pick_from_conveyor": {
+    "program": "scripts/match_and_pick_from_conveyor",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "organize_table": {
+    "program": "scripts/organize_table",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "pack_objects_into_box": {
+    "program": "scripts/pack_objects_into_box",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "pack_objects_into_box_random": {
+    "program": "scripts/pack_objects_into_box",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "pick_from_conveyor_by_image": {
+    "program": "scripts/pick_from_conveyor_by_image",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "play_Xylophone": {
+    "program": "scripts/play_Xylophone",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "play_stacking_toy": {
+    "program": "scripts/play_stacking_toy",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "play_tic_tac_toe": {
+    "program": "scripts/play_tic_tac_toe",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "plug_in_charger": {
+    "program": "scripts/plug_in_charger",
+    "action_type": "ee",
+    "depth_provider": "none"
+  },
+  "pour_balls_into_vase": {
+    "program": "scripts/pour_balls_into_vase",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "pour_by_language": {
+    "program": "scripts/pour_by_language",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "pour_liquid_into_cup": {
+    "program": "scripts/pour_liquid_into_cup",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "pour_liquid_into_cup_random": {
+    "program": "scripts/pour_liquid_into_cup_random",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "press_by_number": {
+    "program": "scripts/press_by_number",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "push_T": {
+    "program": "scripts/push_T",
+    "action_type": "ee",
+    "depth_provider": "none"
+  },
+  "push_T_random": {
+    "program": "scripts/push_T_random",
+    "action_type": "ee",
+    "depth_provider": "none"
+  },
+  "put_bottles_into_dustbin": {
+    "program": "scripts/put_bottles_into_dustbin",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "solve_equation": {
+    "program": "scripts/solve_equation",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "sort_nesting_dolls_by_size": {
+    "program": "scripts/sort_nesting_dolls_by_size",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "sort_nesting_dolls_by_size_random": {
+    "program": "scripts/sort_nesting_dolls_by_size",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "stack_blocks": {
+    "program": "scripts/stack_blocks",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "stack_blocks_random": {
+    "program": "scripts/stack_blocks_random",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "stack_blocks_by_language": {
+    "program": "scripts/stack_blocks_by_language",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "stack_bowls": {
+    "program": "scripts/stack_bowls",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "stack_bowls_random": {
+    "program": "scripts/stack_bowls_random",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "store_laptop_and_headphones": {
+    "program": "scripts/store_laptop_and_headphones",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "store_laptop_and_headphones_random": {
+    "program": "scripts/store_laptop_and_headphones",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "store_tools_in_toolbox": {
+    "program": "scripts/store_tools_in_toolbox",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "sweep_blocks": {
+    "program": "scripts/sweep_blocks",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  },
+  "sweep_blocks_random": {
+    "program": "scripts/sweep_blocks",
+    "action_type": "ee",
+    "depth_provider": "mono"
+  }
+}
