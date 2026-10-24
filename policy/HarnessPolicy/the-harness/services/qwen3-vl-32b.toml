@@ -1,0 +1,15 @@
+kind = "llm"
+summary = "Qwen3-VL-32B-Instruct in 4 bit, self-hosted: the development model that writes programs (and answers VLM questions)"
+protocol = "openai_chat"
+command = ["{python}", "-u", "services/servers/serve_vlm.py", "--model", "{weights}/qwen3-vl-32b",
+           "--name", "Qwen3-VL-32B-Instruct", "--quantize", "4bit", "--port", "{port}"]
+port = 8800
+# 4-bit on one 24 GB GPU; runs out of memory above about 7k prompt tokens.
+vram_gb = 21.0
+load_seconds = 300
+client = { backend = "openai_chat", base_url = "{url}/v1", model = "Qwen3-VL-32B-Instruct" }
+needs_files = ["{weights}/qwen3-vl-32b/config.json"]
+
+[[weights]]
+dir = "qwen3-vl-32b"
+modelscope_model = "Qwen/Qwen3-VL-32B-Instruct"

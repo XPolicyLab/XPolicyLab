@@ -1,0 +1,23 @@
+kind = "policy"
+summary = "pi0.5 VLA, RoboDojo's own checkpoint, through XPolicyLab's Pi_05 adapter (openpi, JAX)"
+protocol = "xpolicylab"
+port = 19007
+vram_gb = 16.0
+load_seconds = 300
+# openpi's own uv environment (XPolicyLab policy/Pi_05/openpi/.venv): JAX does not share the project's.
+python = "{xpolicylab}/policy/Pi_05/openpi/.venv/bin/python"
+env = { XLA_PYTHON_CLIENT_PREALLOCATE = "false" }
+client = { url = "{url}", description = "pi0.5 (RoboDojo's own checkpoint) trained on whole RoboDojo tasks: demonstrations from the start pose, with each task's own instruction (joint actions, both arms)" }
+needs_files = ["{weights}/pi05", "{xpolicylab}/policy/Pi_05/openpi/.venv/bin/python"]
+notes = "Set OPENPI_DATA_HOME in the deploy file's env for this service (openpi's cache)."
+
+[xpolicylab]
+policy = "Pi_05"
+ckpt_name = "{weights}/pi05"
+action_type = "joint"
+pythonpath = ["{xpolicylab_parent}", "{xpolicylab}/policy/Pi_05/openpi/src"]
+
+[[weights]]
+dir = "pi05"
+modelscope_dataset = "RoboDojo-Benchmark/RoboDojo"
+root = "ckpt/RoboDojo/Pi_05/RoboDojo-sim-arx_x5-joint-0"

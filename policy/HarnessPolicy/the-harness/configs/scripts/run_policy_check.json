@@ -1,0 +1,4 @@
+[
+ "<python>\nif 'start' in globals():\n    start('B', 'scripted check')\nprint(list_policies())\nname = list_policies()[0]['name']\non('TIMEOUT', lambda trace: True)\nimport time\nbegan = time.time()\nt = run_policy(name, 'Stack the three bowls together.', max_seconds=6)\nprint(t, 'wall', round(time.time() - began, 1))\nprint([round(v, 3) for v in get_state()['joint_position']])\nshow(get_observation(['cam_head']), 'after policy')\n</python>",
+ "<finish>run_policy check</finish>"
+]

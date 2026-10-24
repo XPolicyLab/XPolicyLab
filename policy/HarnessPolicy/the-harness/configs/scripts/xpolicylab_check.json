@@ -1,0 +1,4 @@
+[
+ "Check the wiring: state, cameras, ticks.\n<python>\ns = get_state()\nprint(s['step'], [round(v, 3) for v in s['joint_position']])\nobs = get_observation(['cam_head', 'cam_left_wrist'])\nprint(obs.images['cam_head'].shape, obs.camera_to_world['cam_left_wrist'][0][:3])\nprint(hold(0.2))\nprint('step', get_state()['step'])\n</python>",
+ "<finish>wiring check</finish>"
+]

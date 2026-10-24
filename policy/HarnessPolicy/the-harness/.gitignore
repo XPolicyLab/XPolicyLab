@@ -1,0 +1,22 @@
+__pycache__/
+local_*
+*.py[cod]
+.venv*/
+.env
+.env.*
+!.env.example
+*.egg-info/
+build/
+dist/
+.DS_Store
+/runs/
+data/
+third_party/RoboDojo/
+third_party/RoboLab/
+third_party/RoboDojo
+third_party/cuda-12.8
+third_party/sam3
+
+# Deploy files describe one machine; only the examples are part of the project.
+configs/deploy/*.toml
+!configs/deploy/example-*.toml
