@@ -1,0 +1,10 @@
+[
+ "Look first.\n<python>\nif 'start' in globals():\n    start('B', 'scripted check')\ns = get_state()\nprint(s['left_ee_pose'])\nobs = get_observation(['cam_head'])\nprint(obs, obs.images['cam_head'].shape)\nshow(obs, 'head')\n</python>",
+ "Lift the left wrist 5 cm.\n<python>\np = list(get_state()['left_ee_pose'])\np[2] += 0.05\nt = move_eef('left_arm', p, max_seconds=5)\nprint(t, round(get_state()['left_ee_pose'][2] - p[2], 4))\n</python>",
+ "A guard should stop a 10 cm lift after 3 cm.\n<python>\nwhen(lambda o: o['left_ee'][2] > p[2] + 0.03, 'TOO_HIGH', name='ceiling')\nq = list(p)\nq[2] += 0.10\nmove_eef('left_arm', q, max_seconds=5)\nprint('not reached')\n</python>",
+ "Handlers and grippers.\n<python>\nclear_guards()\nprint(close_gripper('left_arm'))\nprint(round(get_state()['joint_position'][6], 3))\nprint(open_gripper('left_arm'))\nprint(hold(0.2))\n</python>",
+ "Controller.\n<python>\nprint(run_controller(lambda o: {'left_gripper': 0.5}, max_seconds=0.4))\nprint(round(get_state()['joint_position'][6], 3))\n</python>",
+ "Errors are reported.\n<python>\n1 / 0\n</python>",
+ "<verify>The three bowls are stacked.</verify>",
+ "Done checking the pipeline.\n<finish>pipeline check</finish>"
+]

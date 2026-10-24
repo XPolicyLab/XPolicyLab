@@ -1,0 +1,17 @@
+# A machine with two 24 GB GPUs: the agent's models stay resident on GPU 1 (SAM 3 7.2 GB
+# and Simate 14 GB; started once with `harness up`), the simulator workers run on GPU 0.
+# Copy to configs/deploy/<your machine>.toml (git-ignored) and set the paths.
+weights = "~/harness-weights"
+state = "~/.cache/harness-policy/services"
+gpus = [0, 1]
+gpu_memory_gb = 24
+
+[sim]
+gpus = [0]
+workers_per_gpu = 2
+
+[services.sam3]
+gpu = 1
+
+[services.simate]
+gpu = 1

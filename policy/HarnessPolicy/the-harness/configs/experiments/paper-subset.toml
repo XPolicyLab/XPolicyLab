@@ -1,0 +1,15 @@
+# The paper's development subset (Sec. Experiments: any model, the ladder, the reactive
+# layer): the 8 tasks of subset8.toml on two development layouts each, with the agent as
+# it was submitted to the leaderboard (no pointer, no world model). One run per
+# configuration:
+#   harness run configs/experiments/paper-subset.toml --output runs/paper/base
+#   ... --model grok-low | --model qwen3.5-397b              (language models)
+#   ... --set 'agent.services.policies=["g05"]'              (learned policies)
+#   ... --agent configs/ablations/r1.toml | r2.toml           (the ladder)
+description = "the paper's development subset: 8 tasks x 2 development layouts, the submitted configuration"
+include = ["subset8.toml"]
+seeds = "0-1"
+
+[overrides.agent]
+roles = ["main", "vlm", "verifier"]
+services = { world_models = [] }
