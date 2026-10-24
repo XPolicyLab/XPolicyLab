@@ -1,0 +1,392 @@
+{
+  "task_mappings": [
+    {
+      "task_instance": "align_blocks-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "arrange_largest_number-s0",
+      "bundle": "arrange_largest_number"
+    },
+    {
+      "task_instance": "build_tower-s0",
+      "bundle": "build_tower"
+    },
+    {
+      "task_instance": "classify_objects-s0",
+      "bundle": "classify_objects"
+    },
+    {
+      "task_instance": "classify_objects_by_language-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "cover_blocks-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "deposit_coin-s0",
+      "bundle": "deposit_coin"
+    },
+    {
+      "task_instance": "fasten_screws-s0",
+      "bundle": "fasten_screws"
+    },
+    {
+      "task_instance": "fill_egg_holder-s0",
+      "bundle": "fill_egg_holder"
+    },
+    {
+      "task_instance": "fill_pen_holder-s0",
+      "bundle": "fill_pen_holder"
+    },
+    {
+      "task_instance": "fold_clothes-s0",
+      "bundle": "fold_clothes"
+    },
+    {
+      "task_instance": "general_pickup-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "hang_mugs-s0",
+      "bundle": "hang_mugs"
+    },
+    {
+      "task_instance": "imitate_sorting_sequence-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "insert_key-s0",
+      "bundle": "insert_key"
+    },
+    {
+      "task_instance": "insert_tubes-s0",
+      "bundle": "insert_tubes"
+    },
+    {
+      "task_instance": "make_kong-s0",
+      "bundle": "make_kong"
+    },
+    {
+      "task_instance": "make_toast-s0",
+      "bundle": "make_toast"
+    },
+    {
+      "task_instance": "match_and_pick_from_conveyor-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "organize_table-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "pack_objects_into_box-s0",
+      "bundle": "pack_objects_into_box"
+    },
+    {
+      "task_instance": "pick_from_conveyor_by_image-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "play_Xylophone-s0",
+      "bundle": "play_Xylophone"
+    },
+    {
+      "task_instance": "play_stacking_toy-s0",
+      "bundle": "play_stacking_toy"
+    },
+    {
+      "task_instance": "play_tic_tac_toe-s0",
+      "bundle": "play_tic_tac_toe"
+    },
+    {
+      "task_instance": "plug_in_charger-s0",
+      "bundle": "plug_in_charger"
+    },
+    {
+      "task_instance": "pour_balls_into_vase-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "pour_by_language-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "pour_liquid_into_cup-s0",
+      "bundle": "pour_liquid_into_cup"
+    },
+    {
+      "task_instance": "press_by_number-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "push_T-s0",
+      "bundle": "push_T"
+    },
+    {
+      "task_instance": "put_bottles_into_dustbin-s0",
+      "bundle": "put_bottles_into_dustbin"
+    },
+    {
+      "task_instance": "solve_equation-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "sort_nesting_dolls_by_size-s0",
+      "bundle": "sort_nesting_dolls_by_size"
+    },
+    {
+      "task_instance": "stack_blocks-s0",
+      "bundle": "stack_blocks"
+    },
+    {
+      "task_instance": "stack_blocks_by_language-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "stack_bowls-s0",
+      "bundle": "stack_bowls"
+    },
+    {
+      "task_instance": "store_laptop_and_headphones-s0",
+      "bundle": "store_laptop_and_headphones"
+    },
+    {
+      "task_instance": "store_tools_in_toolbox-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "swap_T-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "swap_blocks-s0",
+      "bundle": "shared_id_study"
+    },
+    {
+      "task_instance": "sweep_blocks-s0",
+      "bundle": "sweep_blocks"
+    }
+  ],
+  "derivations": [
+    {
+      "instance": "align_blocks-s0",
+      "base_template_sha256": "9612417ea71f269bf606582009c355424a39eee5259e9990b4cf541f4aa43bca",
+      "base_template": "align_blocks-s1.json"
+    },
+    {
+      "instance": "arrange_largest_number-s0",
+      "base_template_sha256": "ee2c602415766fdc30d71193e7508f068da38ff582f21645fd2e3c41e49b918c",
+      "base_template": "arrange_largest_number-s1.json"
+    },
+    {
+      "instance": "build_tower-s0",
+      "base_template_sha256": "049ce9e746d2dc19c91707c1461d545a2b7ec72d255d3e3bfa922a735359857c",
+      "base_template": "build_tower-s1.json"
+    },
+    {
+      "instance": "classify_objects-s0",
+      "base_template_sha256": "56f405032d60d93ce419be5d5fbe91e67d7ce19d40bda727f46489fd5d421a0d",
+      "base_template": "classify_objects-s1.json"
+    },
+    {
+      "instance": "classify_objects_by_language-s0",
+      "base_template_sha256": "62edfd861f19117bd56bf5194d0e9e4e0ea75ba3111a11dac1074ccb03888293",
+      "base_template": "classify_objects_by_language-s1.json"
+    },
+    {
+      "instance": "cover_blocks-s0",
+      "base_template_sha256": "90caf14976f6badb22cb06468eb55f43dc8a27e8bf6644b04ab7d884ba367537",
+      "base_template": "cover_blocks-s1.json"
+    },
+    {
+      "instance": "deposit_coin-s0",
+      "base_template_sha256": "38f63dff5ea499d138aa9ba1cae907e4125a4eb3bbe3755ff1bf475458c21826",
+      "base_template": "deposit_coin-s1.json"
+    },
+    {
+      "instance": "fasten_screws-s0",
+      "base_template_sha256": "e39553ec44bc2aa2d5eda1cf84912c245e52e8551a2ed32ba2dc4e4216c77a66",
+      "base_template": "fasten_screws-s1.json"
+    },
+    {
+      "instance": "fill_egg_holder-s0",
+      "base_template_sha256": "9183fadbe0b4209de9f41cf5e666414ddc8a900da42a5aa19478f0b465431f70",
+      "base_template": "fill_egg_holder-s1.json"
+    },
+    {
+      "instance": "fill_pen_holder-s0",
+      "base_template_sha256": "c815ea5a27da22cd1e6bd1d40f239098175984c261df864a59fdb1183d0c24fc",
+      "base_template": "fill_pen_holder-s1.json"
+    },
+    {
+      "instance": "fold_clothes-s0",
+      "base_template_sha256": "b7fcca519b414a3d395a2d9c003c84c3165a912a8a2d05b38955a16cd21ddd31",
+      "base_template": "fold_clothes-s1.json"
+    },
+    {
+      "instance": "general_pickup-s0",
+      "base_template_sha256": "0babd0f551c0a85d9c9d521d2e1befd0689c86822ee9cbff63104002cfee5f72",
+      "base_template": "general_pickup-s1.json"
+    },
+    {
+      "instance": "hang_mugs-s0",
+      "base_template_sha256": "75184bfb410e2d222a2cc67a3e8b2dc46d636f648332f628d907622488fcea2a",
+      "base_template": "hang_mugs-s1.json"
+    },
+    {
+      "instance": "imitate_sorting_sequence-s0",
+      "base_template_sha256": "749fc902c143c0dde834f34cecd4ab72aa28c40aba3fe7d50433416ff5fcd307",
+      "base_template": "imitate_sorting_sequence-s1.json"
+    },
+    {
+      "instance": "insert_key-s0",
+      "base_template_sha256": "0ce2cf9a502625c2ff8f68abfa03305f055877cbb826a6bd85b0c3776548b0af",
+      "base_template": "insert_key-s1.json"
+    },
+    {
+      "instance": "insert_tubes-s0",
+      "base_template_sha256": "b436030988b31610fc25078a8b654926f6ccd9f5af1a29ff6cc22723d31d2b62",
+      "base_template": "insert_tubes-s1.json"
+    },
+    {
+      "instance": "make_kong-s0",
+      "base_template_sha256": "891d306c97367a1a938643219e6706eef235bf4566b77930d772c2e1c721aed3",
+      "base_template": "make_kong-s1.json"
+    },
+    {
+      "instance": "make_toast-s0",
+      "base_template_sha256": "86235bbd48f490aa4439e281d1e41f2081a12144b658201fea0027f6573b6dc2",
+      "base_template": "make_toast-s1.json"
+    },
+    {
+      "instance": "match_and_pick_from_conveyor-s0",
+      "base_template_sha256": "e3855476a7e149b547a6007c90732e01d89e91511a33f6facc275d7748e0c261",
+      "base_template": "match_and_pick_from_conveyor-s1.json"
+    },
+    {
+      "instance": "organize_table-s0",
+      "base_template_sha256": "be009ed4f7f9740c144fdc3cf36f3b82ef9f9aa92a7e9f2ebc30b0a78a5d453d",
+      "base_template": "organize_table-s1.json"
+    },
+    {
+      "instance": "pack_objects_into_box-s0",
+      "base_template_sha256": "211802b97945e8d466ccc8102e0fb71500dfd697e9e9a876e8c866f0ca58f493",
+      "base_template": "pack_objects_into_box-s1.json"
+    },
+    {
+      "instance": "pick_from_conveyor_by_image-s0",
+      "base_template_sha256": "fb246b8faf0d9d995430b284aa739287ee19ffa153d43fcda883272caacc79dd",
+      "base_template": "pick_from_conveyor_by_image-s1.json"
+    },
+    {
+      "instance": "play_Xylophone-s0",
+      "base_template_sha256": "197f39e929217ae4693937da512f177fbb5c64fcec5d061e8782a4ab578e0e96",
+      "base_template": "play_Xylophone-s1.json"
+    },
+    {
+      "instance": "play_stacking_toy-s0",
+      "base_template_sha256": "2c5f4ce570ba0be6e660c83a7b43b320f2d02da777809e0cb5aa90090a345779",
+      "base_template": "play_stacking_toy-s1.json"
+    },
+    {
+      "instance": "play_tic_tac_toe-s0",
+      "base_template_sha256": "99107a6b739cec9c7d69b1d1f08cc464cbf77f18eda612182a55396686d2924f",
+      "base_template": "play_tic_tac_toe-s1.json"
+    },
+    {
+      "instance": "plug_in_charger-s0",
+      "base_template_sha256": "6c409173793abd456b6d719d0c5196edadd7b8a30ad0b8e2697ab7d204e5f1c1",
+      "base_template": "plug_in_charger-s1.json"
+    },
+    {
+      "instance": "pour_balls_into_vase-s0",
+      "base_template_sha256": "f8119df346111b7957fd6694df585d2123850c6265470571c8cf5705b9880f93",
+      "base_template": "pour_balls_into_vase-s1.json"
+    },
+    {
+      "instance": "pour_by_language-s0",
+      "base_template_sha256": "7fb9c0656892fe702b1f0e1562b7a0d54e78aa7b79dba6b531c44f8874e81228",
+      "base_template": "pour_by_language-s1.json"
+    },
+    {
+      "instance": "pour_liquid_into_cup-s0",
+      "base_template_sha256": "c91f7e801b970d69b899622adee1576d31adfd9543c848849506ff0567d3d858",
+      "base_template": "pour_liquid_into_cup-s1.json"
+    },
+    {
+      "instance": "press_by_number-s0",
+      "base_template_sha256": "3c796cb97c055dc6fa6397b82d7bf0b0d6e0ee4994675640939c070250e53c04",
+      "base_template": "press_by_number-s1.json"
+    },
+    {
+      "instance": "push_T-s0",
+      "base_template_sha256": "76b4021d2bb11d616703305ee628fb00f16c711b9945ed30f0f0a683beeb1c3e",
+      "base_template": "push_T-s1.json"
+    },
+    {
+      "instance": "put_bottles_into_dustbin-s0",
+      "base_template_sha256": "5dab13d998923e39967da23dffa44863e1010b56f85f32386d98ef974cbd5138",
+      "base_template": "put_bottles_into_dustbin-s1.json"
+    },
+    {
+      "instance": "solve_equation-s0",
+      "base_template_sha256": "e8dea53f409858e356f1c053828cf5223388ead2a5ee2dba351437d2fad533bf",
+      "base_template": "solve_equation-s1.json"
+    },
+    {
+      "instance": "sort_nesting_dolls_by_size-s0",
+      "base_template_sha256": "b731dd78f7f5bdc7bd30cbc30fedb4c06f299d6e8063099a68d3df7430f35fa7",
+      "base_template": "sort_nesting_dolls_by_size-s1.json"
+    },
+    {
+      "instance": "stack_blocks-s0",
+      "base_template_sha256": "42f59b7b630097f46a894144036fccf8ab5ba5b773345d43978f677adaf20840",
+      "base_template": "stack_blocks-s1.json"
+    },
+    {
+      "instance": "stack_blocks_by_language-s0",
+      "base_template_sha256": "409e068f08b96b2ad54b4ae39432087d790093770b27b9a2b934186ae1c01893",
+      "base_template": "stack_blocks_by_language-s1.json"
+    },
+    {
+      "instance": "stack_bowls-s0",
+      "base_template_sha256": "555ef1931a0582c0ebf1ca717a0781a39d6cd5e6a1743e17078530bea59e71c7",
+      "base_template": "stack_bowls-s1.json"
+    },
+    {
+      "instance": "store_laptop_and_headphones-s0",
+      "base_template_sha256": "9aaa5701d10e4a6ec699e3a176ea11c11b6297a1e1350e0f2c72800818209221",
+      "base_template": "store_laptop_and_headphones-s1.json"
+    },
+    {
+      "instance": "store_tools_in_toolbox-s0",
+      "base_template_sha256": "96e0842d43a2bdcdb0bdf2f9e9f823627c73ca6bdfc626e18294f3d76c88233c",
+      "base_template": "store_tools_in_toolbox-s1.json"
+    },
+    {
+      "instance": "swap_T-s0",
+      "base_template_sha256": "19a54eef93ba38558af677b52d8851e262fa0f307658841db00e0f145c95d3dd",
+      "base_template": "swap_T-s1.json"
+    },
+    {
+      "instance": "swap_blocks-s0",
+      "base_template_sha256": "4d5aff098b58be2241f56332a438a749f4402fcedf973749d2097e6896ceef41",
+      "base_template": "swap_blocks-s1.json"
+    },
+    {
+      "instance": "sweep_blocks-s0",
+      "base_template_sha256": "185a93dda7f322ca42f2515543778aff7037845542fa047a44609d16aec413ca",
+      "base_template": "sweep_blocks-s1.json"
+    }
+  ],
+  "author_policy_options": {
+    "vla_horizon": 50,
+    "gripper_clip": true,
+    "review_length_policy": "model_selected_prefix",
+    "approved_steps_default": 5,
+    "approved_steps_min": 5,
+    "approved_steps_max": 50
+  }
+}

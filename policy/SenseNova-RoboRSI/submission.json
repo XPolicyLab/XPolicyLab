@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "source": {
+    "url": "https://github.com/SenseTime-FVG/RoboRSI.git",
+    "commit": "cfa591575172b638a8436fa95db28e9469785c9c",
+    "paths": [
+      "pyproject.toml",
+      "README.md",
+      "LICENSE",
+      "roborsi",
+      "robots/__init__.py",
+      "robots/robodojo/benchmark_service.py",
+      "robots/robodojo/eef_contracts.py",
+      "robots/robodojo/eef_docs.py",
+      "robots/robodojo/eef_native.py",
+      "robots/robodojo/eef_pose.py",
+      "robots/robodojo/eef_queries.py",
+      "robots/robodojo/eef_trace.py",
+      "robots/robodojo/eef_types.py",
+      "robots/robodojo/episode.py",
+      "robots/robodojo/joint_docs.py",
+      "robots/robodojo/native.py",
+      "robots/robodojo/native_files.json",
+      "robots/robodojo/roborsi_adapter.py",
+      "robots/robodojo/worker.py",
+      "benchmarks/package.py",
+      "benchmarks/build_inputs.py",
+      "benchmarks/robodojo/prepare.py",
+      "robots/robodojo/agents/icl_pi05"
+    ],
+    "bundle_path": "vendor/roborsi_source",
+    "manifest_path": "vendor/roborsi-source.json",
+    "manifest_sha256": "890e4225232278f6a694be2d4c8a534443215a6ab74f3cc3d68dfa81828f3ed1",
+    "derivation": "Deployment-sanitized derivative; see source manifest for parent hashes and exact changed files."
+  },
+  "agent_label": "roborsi-codex-v1",
+  "cli": {
+    "distribution": "standalone",
+    "version": "0.160.1",
+    "expected_version": "codex-cli 0.160.1",
+    "target": "x86_64-unknown-linux-musl",
+    "sha256": "f34a4d2301892ae96c90097786bfe5dc269f187b6f69faf42a7b357b8c081e35",
+    "companion_sha256": {
+      "bin/codex-code-mode-host": "b33e8a5283f3c65c2a0aca6d43a59cfe850f624d8fa16992e3cad4fcc27c14e1",
+      "codex-resources/bwrap": "77360cb751ccedc5971391444ac86a8a33c15b04d6b4a6fe45f5d25496e62c4c"
+    },
+    "archive_path": "assets/openai_codex_cli_bin-0.160.1-py3-none-manylinux_2_17_x86_64.whl",
+    "archive_sha256": "dafe4e4fc0e560850fca28db8cd7e3c7263e22b764d57196c4854068ad17cc30",
+    "download": {
+      "url": "https://files.pythonhosted.org/packages/9d/30/f559a36b8adffbe164fc93417bba65ac20ba0e1652fd938cb327a4705fd3/openai_codex_cli_bin-0.160.1-py3-none-manylinux_2_17_x86_64.whl",
+      "sha256": "dafe4e4fc0e560850fca28db8cd7e3c7263e22b764d57196c4854068ad17cc30",
+      "path": "assets/openai_codex_cli_bin-0.160.1-py3-none-manylinux_2_17_x86_64.whl"
+    },
+    "archive_format": "wheel"
+  },
+  "icl": {
+    "catalog_path": "icl/catalog.json",
+    "catalog_sha256": "11135dcfa98771b0017f887c242ba9ab8adb3243e2a77c20de5a149d70b7a262",
+    "artifacts_path": "icl/artifacts.json",
+    "artifacts_sha256": "a2ba217bf091b0a6ec17881da89ee12fbc54b3492e3c82050e93024d542349c5"
+  },
+  "hybrid": {
+    "variant": "adaptive_2_50",
+    "source_path": "vendor/robodojo_adaptive/source",
+    "profile_path": "vendor/robodojo_adaptive",
+    "manifest_path": "vendor/robodojo_adaptive/provenance/source-files.json",
+    "manifest_sha256": "e875271f70af44aee59162c604398e292eb2e4a9a268dcb50d20c3cef6d60883",
+    "version_kind": "Pinned local adaptive 2-50 derivative with environment-configured deployment; algorithm and budgets preserved; shared public interface without static seed/layout",
+    "public_task_configs": 42,
+    "original_source_files": 21,
+    "terminal_feedback": false,
+    "vla_horizon": 50,
+    "approved_steps_default": 5,
+    "approved_steps_min": 2,
+    "approved_steps_max": 50,
+    "robot_metadata_path": "hybrid/robot-metadata.json",
+    "robot_metadata_sha256": "38e792047747232933d250508d1c56e0845081a24d34b32328c701ff21d69bb8",
+    "robot_source_manifest_sha256": "c265d6819b3e40e097b1ee99214c6b7bc5000d0ca1b79221943abd44127271a4"
+  },
+  "tool_runtime": {
+    "manifest_path": "tools/runtime.json",
+    "manifest_sha256": "fb14b393e9338ab6920d12dba88264e7c028efc4b66b12b41a5949191f16443a"
+  }
+}

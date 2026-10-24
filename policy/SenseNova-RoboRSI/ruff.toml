@@ -1,0 +1,10 @@
+line-length = 88
+target-version = "py312"
+exclude = ["runtime", ".venv", "assets", "vendor"]
+
+[lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[lint.isort]
+known-first-party = ["XPolicyLab"]

@@ -1,0 +1,1033 @@
+{
+  "export_method": "Selected baseline Git files with explicit deployment-sanitized derivatives; unused duplicate ICL launch data omitted for the standard XPL adapter.",
+  "files": {
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "README.md": "b290901f1d87bf8bb212a9a5661b6b9ed85d1766546b90511a8bce283f947e56",
+    "benchmarks/build_inputs.py": "5716867b6d58462293a4302a7cf4683d986cd98d6503a10c7957184aca749c13",
+    "benchmarks/package.py": "be09f1c40a5aac343779d4881ef299e56f70a8f651c80f5d0a598f0bca98cf0c",
+    "benchmarks/robodojo/prepare.py": "87e67442d8e1388fe3ecf5ae1ae625cec0897f4bc23235ef3608e446c02ecf6d",
+    "pyproject.toml": "0918f16c09c95f849ef849715372e32609453cba70cf4b285c4893b2095a514b",
+    "roborsi/__init__.py": "18d01ece1199dd24b8f2fe5fd17badb051d0f563f58bf37eafb5013fd2ba3084",
+    "roborsi/agents/__init__.py": "c3959c78eb907a9319859ecbbbedf2e5404cf7e316179d9cb872521faa1aa106",
+    "roborsi/agents/composition.py": "9ca3660de8ecea85e1d902d7308d326fc3f745a5c9b92e91b884bcdc5b33f9e2",
+    "roborsi/agents/config.py": "07d0b4f7dc81f87937ff797b554fb5bd22afb48c8372d7047da9ea3d95486cb1",
+    "roborsi/agents/context_package.py": "de1eef930ee9b43268e8fe8d8329b4df8e0774919615d384d4cf4bac14ebd16b",
+    "roborsi/agents/entrypoint.py": "ff75f74c6c547df51d564e641c0af6e1f495597faea31185315c1fcaff9b0df8",
+    "roborsi/agents/package.py": "8dfe184e0f8721dee70f201f16bf833e6c015e51bc4f9d458ae3444d56969a15",
+    "roborsi/benchmarks/__init__.py": "1dfb90ee1dd0a5aef769d1e1677c5514f01b0999a42f3958c8c0a7db2f126c69",
+    "roborsi/benchmarks/registry.py": "d4905cbff3cc47c8781772ad5591dabc5103e3ec86b62071c4bae4285bcdea2b",
+    "roborsi/benchmarks/robodojo.py": "0e3608eb09cda248e944e93de1a4c387bc7fceff0821afb1c29848b412bf76e1",
+    "roborsi/benchmarks/robodojo_mcp.py": "284fcaf0279bc1d6615da40c719c98f66fcd12468f6c10d56702c31baa002e03",
+    "roborsi/benchmarks/runtime_source.py": "45a3ca1a19ce2e00a2042fe3ad953013bff232d8cb44bcba5fa263a29c053385",
+    "roborsi/cli/__init__.py": "7c05a4fa2403442f9399fdf1e319b2281821ea61524bb3322e027c9fcd12333c",
+    "roborsi/cli/check_llm.py": "517b7979989382eac140fbae7202a87e710ba08277c8a04df278cc25409ac3aa",
+    "roborsi/cli/icl.py": "b86d92712201adb3707748bb830ec87911b5a17b9f72edb3eeaf199f0603621a",
+    "roborsi/cli/memory.py": "b1e147dbef467ca6089faa6f17f7f52f3f75d9f1257092ff550d5b9906296bae",
+    "roborsi/cli/trajectory.py": "2e11d04544fe8c41b2a09041afacfb8a7c3d86f586e4a88db72f0843f76d993b",
+    "roborsi/cli/tui.py": "a25414fe6663cf4fb135352393daebb7a3b278e86a216869e7757ede5235d692",
+    "roborsi/components/__init__.py": "80f889b7558c51a740422fe28473578b24132254de591610aba2e8cc6bd35f4c",
+    "roborsi/components/icl/__init__.py": "644dacc8b4efd3b16bc9e88d6101c4bb0aa838e8b27036b38507dd3937d45614",
+    "roborsi/components/icl/adapters.py": "c8e06b741e50d46159978a41e435f2d847031d7061a190467d5f8bde7fecc68c",
+    "roborsi/components/icl/build.py": "0d73515964cc7a31e13e76af8d41e4ccdae49cba2217091d15426f0efd75d8a4",
+    "roborsi/components/icl/importers.py": "69fe8efcae3a55cb235785b13084136730e9dbe44f6772c41407e6ec955d1a18",
+    "roborsi/components/icl/package.py": "0e5a5569e5e2a04986e32d57c7db76ad4c1fc2a42303ec84e15488ff169f61fb",
+    "roborsi/components/icl/sources.py": "6493c85b62ab1c818a18e8f33a796d2d520c529624a7235eebba7560b225697e",
+    "roborsi/components/icl/workspace.py": "d96f66ef77bf67acf06f2f6f005d1db114919be5f31af766024f183c4713ead8",
+    "roborsi/components/vla/__init__.py": "dd2272632cf070faac2fb6f9a2fbdf00ef01067b7f11d07d4acfaef097ef8198",
+    "roborsi/components/vla/adapters.py": "932f3123ae48ded94a169d39df7a931cb6d7f719888f26a324facd37c92483e0",
+    "roborsi/components/vla/errors.py": "55ca551d972876d91be12626a7debc03ad4e3a790a1b7980e7b5aa66a3fb7147",
+    "roborsi/components/vla/factory.py": "177552e4d21414e77c9861c5f4e43ae4afd97de5cecb52f06767f2172be3eaf9",
+    "roborsi/components/vla/providers/__init__.py": "5b53c5e18af8fe814ee06e2a84f7fa8ba9e5452581c4815f9a897b9e623c3be0",
+    "roborsi/components/vla/providers/pi05.py": "43767cf0af52f4e0639d12bba3a1fca364fffa3cd0265f11398c3b560c3be631",
+    "roborsi/components/vla/skills/vla/SKILL.md": "a3d1e0d636148b61b4a54187a81e2e0ab1b2ba9b3608d3320f671959c2c96da6",
+    "roborsi/components/vla/types.py": "54ae1258d38dd8fc1c96bba3091fc5fdc0bf685642e24a48332c08d9845ce2d9",
+    "roborsi/dashboard/__init__.py": "2e242d8db7c5919a98f532dd27eb989314089c9e53dab167a77549b0c61d87e0",
+    "roborsi/dashboard/events.py": "2ca95b48fbdc5c32c75764902cf24feab07353a4cd1e40a59dc80064a037ecb1",
+    "roborsi/dashboard/index.html": "eface7bbc812b318dd1f8f2ee112a476c682a5fdb6b0999427a63d947d09fb4e",
+    "roborsi/dashboard/interaction.py": "0d0f32eba7683d43e3fd7e70e1e0e1e043a26c69cfb819f58ad113eee2c8a20e",
+    "roborsi/dashboard/planner_control.py": "aae5a47d7b03e016f759beedd0f3e956ce1b4b9fcb4294e39421431a3f789bed",
+    "roborsi/dashboard/server.py": "5334694c44efee7552e1312a3c1e9b54c43f556dffb005924b3f687e12861dee",
+    "roborsi/dashboard/session.py": "7a330ea275c50b5405e0b07af8a4fb8e90d90b37ee655181e0c4bf7c3b64933b",
+    "roborsi/dashboard/spec.py": "d909a36664453435233bd87a7857af7fd8045067e6ad3c45bda6f5eb2641c1ba",
+    "roborsi/dashboard/state.py": "d01afefc9090c22c636e91381f8656f34265842655ab1e3698f014bcbd9a4516",
+    "roborsi/dashboard/static/dashboard.css": "1e48430bd769de3ae107f9c23cdf3e7aaa9433dd088cc07b274b21dca2df0456",
+    "roborsi/dashboard/static/dashboard.js": "67fa9b2eeca66e3593da75e18207695e245c7e709272291cd06940ed21a51351",
+    "roborsi/dashboard/static/http.js": "f9cbeeca96d16b58a699c2c088f8bd1a620517bd361d47ed04591171fca86905",
+    "roborsi/dashboard/static/interaction.js": "f690a862df735a522fcfe3516f99190f4ff959cfb32e39dab143848205a18076",
+    "roborsi/dashboard/static/markdown_table.js": "1ad3c41f098b8a75411d5990e5a18df89ec98e8d20ba3c05d5fd17a38a889941",
+    "roborsi/dashboard/static/primitive_controls.js": "b86ee66360a7826a65ff8f23291dfb7b5f84a4eaa2a366687f7d41e52b1b91b0",
+    "roborsi/dashboard/static/trajectory.css": "ad888550dc6f5e4739b71f2ef9e0336accdaa95a99c7f12bb8be46660286e1d1",
+    "roborsi/dashboard/static/trajectory.js": "8f8a55fd14a9bf826997e1763c34edf07cc794c4fce676ee23bc1458e814922e",
+    "roborsi/dashboard/static/trajectory_live.js": "a2536458350e9545011a1c14b682156028820f4fb99bd582b5f9d80919acd872",
+    "roborsi/dashboard/trajectory.html": "74fd1fef4bb76e9280ebb9a9064bf377c64667706c129e9df41128d7f90281ae",
+    "roborsi/data_convert.py": "47bd3ecde83b92091eab0244f921952b604510a4fb9c2647a4b72d3cd606bc07",
+    "roborsi/embodied_agent.py": "8dbc83cdb2b5805e4fc2049181c79248af4af4b79d8d9a624be6bd8af508e53c",
+    "roborsi/evaluation/__init__.py": "3b980e0fb015d7f22fea48732dff1a24ffb572cdfadaa2d45d028068272390ee",
+    "roborsi/evaluation/adapter_service.py": "a1ada4d1201a66443f78ea164462bcebaf30bd5c83936b02b1dafe01d104f922",
+    "roborsi/evaluation/agent_artifact.py": "46265260697ad15ff8c5a2318701f44b72bfa53bdee234d87afa397e5621e130",
+    "roborsi/evaluation/agent_environment.py": "c66830eafee1f1cfc427f96da55c1e6f1cf4b195bb21b4ea47153f78aee299d0",
+    "roborsi/evaluation/agent_process.py": "55e263c46236ff392917915fae180ade0a64f3da9aeba0c3659ecfc1ef998155",
+    "roborsi/evaluation/batch.py": "8f86548d9f974d9f8cf8d79b06e7abecdb477198213c13621256810528dfccbf",
+    "roborsi/evaluation/benchmark_client.py": "5a171183758d7c7cad71322edc05b32ed8a5d6c679ac2d6e6d563b7c1da18e1b",
+    "roborsi/evaluation/benchmark_http.py": "fef47f2d7fe5e5af7adec33105d0c1e361a01f253339c0cdd301f04bb0dd690c",
+    "roborsi/evaluation/case_status.py": "8326a80332f7303756d953b2b32c5d9c745bbc522138d3a4a69d002c9b7771fe",
+    "roborsi/evaluation/case_trace.py": "6e1306990443fc424c8dfd27c6c986ef9ffbc0acd5471954d8ef6e4e5d13671e",
+    "roborsi/evaluation/cli.py": "2da5ef55836c7ce2f3b50d2e860d34fa4f7a5ba083a68918520f7cb1763fdfcf",
+    "roborsi/evaluation/deadline.py": "34e6b5f271b9b1aad90a812cd2b243bc1fe153fcb58bb98aad818133430bf12f",
+    "roborsi/evaluation/docker_agent.py": "4792952d60b57d5cc378fd42cbb1491731566acc65c6ab20446d8f55021be390",
+    "roborsi/evaluation/docker_common.py": "2b5f2bdef401da041718689ced2e2973ca6069e08fc1afd5859a1f7ee7c08df8",
+    "roborsi/evaluation/docker_runtime.py": "d7e9c447d13f57a7964b3ac9abe8d0d3487769f5553b414ec1e2872861b1c1b4",
+    "roborsi/evaluation/embodied.py": "b4cd5c48bab8b5c87ae73db651a835d49bbb162651814201fbb8a0725c8f5d53",
+    "roborsi/evaluation/embodied_bridge.py": "d3deed2248e86173933c2fe79fd7b27e2e5441b388590fbd875e11e8a68f52e2",
+    "roborsi/evaluation/http_agent.py": "a6cb18c7c72499223342b6b315f0cc7594cf59acef9e7eb235e43ac825ec13f4",
+    "roborsi/evaluation/http_artifacts.py": "2c44013539fd2973d332130746525a485c15f9872bc0e7b00f179fb7b1f65dc5",
+    "roborsi/evaluation/http_benchmark.py": "bf70b3cd7b9a64d98948906154dc9de84087774a1e17bc63d0fcaff93f49d817",
+    "roborsi/evaluation/matrix.py": "ff7b3d94e28f80c3616eef4792292311d9f522a140c91f26d99099a0e8fea984",
+    "roborsi/evaluation/media.py": "63cb31e6c81b9100b604682456839b6058611f79b659dbb431e1d805f27e61ec",
+    "roborsi/evaluation/messages.py": "8f2a3c224afa1ae9a77f54d42822b2c70aad505e1690f6a2e1f88b9c552e2cf6",
+    "roborsi/evaluation/orchestration.py": "a0256755b48e8df4bb0decc4b1e0b89959dc5fcc2aa26e6ee0a9d06a0031d7ac",
+    "roborsi/evaluation/protocol.py": "b4fbbc48c3a767c84b662f4add57a98de6c0f48c5ed9f4906c66e0fb98491671",
+    "roborsi/evaluation/python_runtime.py": "f5d0d287d0ff22146fd98437b1b2c413aad5c4980fc4e8bcd3d49ede392334e9",
+    "roborsi/evaluation/result.py": "aa3fbd40e28266a2b3d3d0d0915b2a8bcfc5bd850b03a6186b89fb053f84decd",
+    "roborsi/evaluation/rsi.py": "1fa11456d3edf382c7aab8ab2afea1e553a8c12d7fd273e17523d8983944b647",
+    "roborsi/evaluation/rsi_cli.py": "824c40a67f9fa52f21f4a3bfe3176463c25bf3a9f16d2ceca0a202188ee7a9ca",
+    "roborsi/evaluation/runner.py": "fcbb4605a487e7c537cd4cd0fc3a342a66982f9eaaa5744643b1d3667692afce",
+    "roborsi/evaluation/sco_jobs.py": "988703990b0251f0bf3a401cdff13b1427d07b133c3e733a5a6196f0d1f068c0",
+    "roborsi/evaluation/sco_runtime.py": "26ecdb4cbbc74b06f2c1bdcc7e4500e7df77e98968836d2a69e523c209deb8e8",
+    "roborsi/evaluation/service_host.py": "5cd7fee30609640c8a2be3c414a4bdecc0abcb8557813ee62d0256ef5c231be2",
+    "roborsi/evaluation/service_protocol.py": "e4f76db06648de01794f65f24aeeb0f125bfdecfdd713212e91415a5e34fa9fd",
+    "roborsi/evaluation/services.py": "b8b68286b954fa69b9bad51fc2b79bc3ef18ec84a915a085e4bbf586a1d85798",
+    "roborsi/evaluation/store.py": "4b37ae35103925795576da7c59c87392ca41b277bcd41059e5dfa16e51bda5ac",
+    "roborsi/evaluation/trajectory.py": "36046754effa11e8ebf35f784af6d666c2b600b66a221814ea6394fc68c98544",
+    "roborsi/flywheel/__init__.py": "2615a6158795518ee939555ce5f6c31d1d9c62b1791d4ae450ce13290cd72386",
+    "roborsi/flywheel/cli.py": "ee349e766939543465e9848719089d757775540852c659573c5876fd0da9bd46",
+    "roborsi/flywheel/episode.py": "d393af742b3484e2bbd7038c60ff4c62d122171b84be407855f0826c2017bfd5",
+    "roborsi/flywheel/export.py": "1367c7657f6b208b4fb9ce9ffbf93afea5706b9c4a822bedceaab08da4745089",
+    "roborsi/llm/__init__.py": "3fd1d6d92b2054596b073dfdeb7e78563c55384f8fd75d44e8715c0700d09c16",
+    "roborsi/llm/client.py": "15474e4ab11800d829b83e7eda4606b22d626b747b368817b488e707c642bf9e",
+    "roborsi/llm/retry.py": "5f25586e4100db0314252c41da5afb65ee017ef21371d31bf217c75eb35f229f",
+    "roborsi/memory/__init__.py": "96d6417abc539d2a5132919f283ee0596c38d0b25f424828eaf23a87ed46b5c2",
+    "roborsi/memory/manager.py": "1933ef2528f764014d78a0a7e8400006b664af4c699de0fb13ffb692abd44d69",
+    "roborsi/memory/tools.py": "5027dd7274b0582b96551b7b01dbcb4f115adefb627d01a6ece508ee22682801",
+    "roborsi/planner/__init__.py": "cea682833e65def08ec8c6f7260dc49e011079265bf86b33e99d4483b21ab2db",
+    "roborsi/planner/api_loop.py": "17c5d4e83df5afdc3b96e3962d632eec23d4434bd42b25650eebdfd7ad25c38e",
+    "roborsi/planner/base.py": "8364c93661345f4eebcf644aeebd8774b810a032f1cd6114797d55a96073c650",
+    "roborsi/planner/check.py": "a7b9ddc3a77534c56281478d03f03a4ddb0b0ecb01c646f03aa3e20ee6b1e108",
+    "roborsi/planner/claude_code.py": "b576815d94b06a40a36cd3927c076b9c9aa2b8c6ce80472b8f93d9952c51d1cc",
+    "roborsi/planner/codex.py": "bfd955a0fb356314c7a1d83fea0d243a0a0fc83467971e2f89ae4772dc096ed7",
+    "roborsi/planner/codex_cli.py": "0c77c275cb6c22a1a0fee3f872198f1c707ed40bd7224495298c3e209348ad94",
+    "roborsi/planner/codex_cli_config.py": "5819f5cf4ed803270b57136e6c088e46ccaf27115223d221cb33f5c7b9c34c15",
+    "roborsi/planner/flash.py": "4ca20449caef9d3994f385a63eb841422ff8ffb23fe13540f4a23e3686602374",
+    "roborsi/planner/provider_capture.py": "afe57738c095864f0a29fe356a125e35cd10e75b2889fbbe52be3056fd12c410",
+    "roborsi/planner/sdk_episode.py": "25901cb00266b565f3ffb5ff2c090b1bd3a2eca449a629b6309e33c31738cf69",
+    "roborsi/planner/utils/__init__.py": "719170e2b2d91fe6fbb1840b0624531fb36f1934197afdb6f663d598bc58aeb6",
+    "roborsi/planner/utils/http_mcp_server.py": "32f28f511da36a5249d4dcef3ce6f063581bbd4dc874df2bb05bfad94a1babf9",
+    "roborsi/planner/utils/user_input.py": "8a08002ba0811a32fc1fbb6e92e28a06cc5d9cfd2fe72ec20bce6f8d8b85269a",
+    "roborsi/prompt/__init__.py": "d858fe5584a86990cae6ba43134f31a7191bad4857abde515b26a77bf7524b37",
+    "roborsi/prompt/common.py": "67d94d6694129d2ae74917ef50f83b0d6be79559c74f8b290544776e27839be9",
+    "roborsi/prompt/utils.py": "c963078fdada0d69d7f29d7c630bd90f0b21662ec15d47824cd57cfa1ce5d1e7",
+    "roborsi/robots/__init__.py": "71d5407a1e073d3c93766d40b3800fca2c29e19575b245b6990c5aaa84303996",
+    "roborsi/robots/base.py": "793594eda7a8f0b76d8be764d76ec699cbccd370ec60bd4664b4ebcfee0dd2ba",
+    "roborsi/robots/components/__init__.py": "dc09d7b13ad650fe5d3b1bcd60d95c07256b6f92344dca8f1df32131c9a82605",
+    "roborsi/robots/components/env_client_base.py": "13b5d5786e836b13c50264489566b3d63f4c99cd8a4e17ce3bd3691adb8447b4",
+    "roborsi/robots/components/env_facade_base.py": "91b9d67c0cc1405a3e97a3356a6373791e862ac9c5d38dc710432cd9f930cc1d",
+    "roborsi/robots/components/molmo_client.py": "f8a5d286bacb896b46b77b243f59ee2570ecde1e9a08f618800278c08dc748a0",
+    "roborsi/robots/components/molmo_server.py": "ec4edc2feb7b852b2b0019ff640be74451a1d9bb00ad87c7a0cce1bee43726ee",
+    "roborsi/robots/components/pi05_vla_client.py": "7d4a1dca1fcf30cb76db70667eb133952225b9a4b5c39adb9906212af806c267",
+    "roborsi/robots/components/pi05_vla_server.py": "98569bf5259a8460ddda054cb8fb7db3e9ac55530c333a314c6fcf16e2639ef8",
+    "roborsi/robots/components/sam3_client.py": "9f5294b0b220b4f0dcf8ddc59efd302bee2405acceee5676578bdb42e2a78298",
+    "roborsi/robots/components/sam3_server.py": "01f330594976c1d38aa9572cdbb1c46c4b50f05173b4d260930026ce793e6424",
+    "roborsi/robots/components/vla_client_base.py": "aa66de62daaa4e9f7a6eff5bc609d3bc3b205070562577a224a994db1ae59e99",
+    "roborsi/robots/components/vla_facade_base.py": "d4ea4eb2744737cc39357f76db64b8f9ca08f208c36b7bd9ba16de973a5a119b",
+    "roborsi/robots/prompt_bundle.py": "651cc7432f2ef86821475faa1cfe4dfe63cc7c224e2876135924bc44af7b2182",
+    "roborsi/robots/robot_spec.py": "416a3e40f827c9b485f9321a0ec94b16b044635f46444054dad69d501aad94c7",
+    "roborsi/robots/runtime.py": "ea728622d8988ec1370411a147923a7f2bd5f793d1a4216c5f6cf0defaa1663e",
+    "roborsi/runtime/__init__.py": "bea71255763291ba74999741da7d260158ab4d70fb137d0ee35efc3c03e70237",
+    "roborsi/runtime/cache_state.py": "4e0657eac3f1477e84e98107964b584fc6100d09b493146346722e4c9735ebba",
+    "roborsi/runtime/config.py": "5577df6cced7178d17535f45d123c511f7e7470c3cf6a5487e16b61c4699986d",
+    "roborsi/runtime/context_engine.py": "b7561d558543b1bf3e913702371b6893b124e41c302688a0a5beecbfc42ab6d9",
+    "roborsi/runtime/events.py": "e302eb708e5450966a1bf457c31db498806a155bad1204f38e5c00a4f8f9b481",
+    "roborsi/runtime/factory.py": "e4983b8d285a2825a3f82e619ed52404f47ae538b8d7dcae198b931bb5949c0c",
+    "roborsi/runtime/lifecycle.py": "7f53b260c8cda65b2b1ab066c6d41ffba1e9276da76384d3a16bc70a2f45d1f9",
+    "roborsi/runtime/response.py": "e96a5dc906943a728606a2d3f918bdc471e1bbd752d08c5be49e8af07ca82a62",
+    "roborsi/runtime/skills.py": "8351e820511ce0b55b75ffec4902d6b51059d1221b80a59717120f803e35bd1a",
+    "roborsi/runtime/summary_context.py": "002edfe7ae3543c150a0a96e28b26f372e66ad274f9494ab93ae23886ceca578",
+    "roborsi/runtime/trace.py": "be18a656ce07274dd9270fc999507b86fa57ca33f4a701eda51971f132f82a8a",
+    "roborsi/schemas/__init__.py": "392ee48f2afd52ea1f905a1a3a90f73addf25b93b63160eb8aed0bdce40bc274",
+    "roborsi/schemas/roborsi_benchmark_manifest.v1.json": "9c9d54c0c1f31a068a412eb87ccdf0f847c53ada8e31e36c3c3eccdeca7134b0",
+    "roborsi/schemas/roborsi_interaction_envelope.v1.json": "3e673f70b6ba4d725533a7256d7f50200105205a03ee5849c0f8f9b1b7bac0ca",
+    "roborsi/schemas/training_dataset.v1.json": "b3d57cde02eab50f5e66dc912861d4b92bc51a9951a1f16df5b9b3b2b3aec0e7",
+    "roborsi/schemas/training_episode.v1.json": "09d1b08ad190c81d76fcbf3c5e8977a2c985e00173ac9a1d29b4b49571efbf9f",
+    "roborsi/session/__init__.py": "bc61a8bc3abe7cb790d227811305f1c2a9c1e04e632f078766d41288b8d1c65c",
+    "roborsi/session/base.py": "f7f771e28587dde550c2251026fe42064c3bc19dee88892efce48689909038a9",
+    "roborsi/tools/__init__.py": "f8f5792c1dc3204461cb2b9a461689b1e88d525b7de53d40042c5924b8ead8dd",
+    "roborsi/tools/common.py": "38bd94b80888e82197884a1acbfb97177551c79ea897572612b065c20619d8a3",
+    "roborsi/tools/human_in_the_loop.py": "1430bc2aa8af0cd9438918e275868b826659d991f17969bbf4ca863452278d25",
+    "roborsi/tools/toolkit.py": "8fb2505d3d223e4322a4fcada1d3dc6e2efe0a276b8a631dee99291357df2b8d",
+    "roborsi/training_capture.py": "a0151d43e7b9d31e8f0853f938a986a418957c2270c603f2be81609f28b9598d",
+    "roborsi/training_data.py": "0cf2bf75f20f9b9291c867988c1c2691bf4262f2686b996e5024128c707561db",
+    "roborsi/training_dataset.py": "1507fc01cd64119854637763649e6b6407bb43154303cb73975521adec5e2a35",
+    "roborsi/training_trace.py": "3e09778bf7a5fdc1ce02a5e2c5a2fab1fbdbba01466a4fe10126d2823f563119",
+    "roborsi/utils/__init__.py": "699f0a8be3c72fb8273773f5b296bdb5acea9dcbac948b5b7469a1ae2fa7abff",
+    "roborsi/utils/config.py": "42af05f9b15a301359b5cc1afaef84470c9a5bd7c1d28c7d80efc04b6b10d378",
+    "roborsi/utils/config_values.py": "e4333960feb27b2c6af8aa47b67242aa85fdf606de7ecece04e0d1b18190475e",
+    "roborsi/utils/daemon.py": "e2f43f62691be09233388cb2685dbcf15017eda037863937ba8dadcb810c573e",
+    "roborsi/utils/egl.py": "7ddad47ddb2e27cd74847efa71798b323d020b3186849439ca6462b0852d1db8",
+    "roborsi/utils/logging.py": "5279fd8c1b0574a88a1b10654b7b9d696b65dbed9b8fa35bf1e2fcffec05451f",
+    "roborsi/utils/rpc/__init__.py": "a1659f69aecc9f3137530c3e81661593e37fc15d21bc2030d5e804c4384442f0",
+    "roborsi/utils/rpc/client_utils.py": "8b3101f90dfff5f07ddce7afe5d6164cf3fe8f9fbe350dcf55daf8aeb89e2445",
+    "roborsi/utils/rpc/http_abort.py": "37148666407bcb21ac3d794f2040489f0b89e948adc1667003424bb53a506de5",
+    "roborsi/utils/rpc/http_rpc.py": "67383618819f10aebc5bfe2993f7b68280229792e84b8a40e4125fda82a09f33",
+    "roborsi/utils/rpc/main_thread_serve.py": "7d6539aeb5b1055e5bd5b4f1cc5e70c0a51c86b8070c353b84a30c63269514f7",
+    "roborsi/utils/rpc/rpc_client.py": "5c8268bfd6e8ae20a7650232334a81feca263ecd99f6fec8a5d086b819f342b4",
+    "roborsi/utils/rpc/rpc_facade.py": "433a8676df774d2e3e2fb344f74c69afadfd7cffe96a06ff5392768e2d462e7e",
+    "roborsi/utils/rpc/socket_rpc.py": "2c1e62b8c0dca30a51a08df239194b0ec1d76079ecb57123313074c6bb44eb5b",
+    "roborsi/utils/rwlock.py": "39666e124bad17395b2a4051e21834f6d014c3cfd669f3d5157131601071d183",
+    "roborsi/utils/serialization.py": "a34a9332f585d60bec55768b627b23bff719d2f6a9777401c2946817b950345b",
+    "roborsi/utils/templates.py": "b7ef591f35736977e60f9772918f76b45e8c037e2a4a7bc70fd8be19444ac371",
+    "roborsi/utils/transforms.py": "ae2e3941d0966c4c421b77ae18962037cd5a2f402124e6a60c422d3492b389bb",
+    "robots/__init__.py": "242778abe72479774621019e30925c485d69da3d15f66cf0dc388b2723d0fbac",
+    "robots/robodojo/agents/icl_pi05/artifact_restore.py": "feb0bfa195c6ec6f4b86e0ebe6dd2c4eb6db43ad89e1d360e8cda2ed89af169d",
+    "robots/robodojo/agents/icl_pi05/benchmark.py": "a96e57c3dbb3d89ec1e279f84fa3126ce561be1b661118c8d1a2a864c0fe083a",
+    "robots/robodojo/agents/icl_pi05/bridge.py": "5cbf8691395d8f2761c5e532b7ed5fb63e0e983ba991794f94dfbb394bb14a8c",
+    "robots/robodojo/agents/icl_pi05/bwrap_transport.py": "8d68de5f01b403e6fbfb0299e8ec46a488e48d393134fd0e5672026d9e384fe0",
+    "robots/robodojo/agents/icl_pi05/execution.py": "72dcd1a8b7d23c1ac33eff2fcfbcb1e9263bec6eb92f5755dc6cb836a31d3064",
+    "robots/robodojo/agents/icl_pi05/factory.py": "0667ab62e1ae06c9e1776050fe8ea873d4a10cd7051c07ebd5a788e515d25d42",
+    "robots/robodojo/agents/icl_pi05/host.py": "d3f07de6a6088fe30cb86264829062d02832d1e4391b44af606790e51cffc2e7",
+    "robots/robodojo/agents/icl_pi05/identity.py": "b101c6aef43cbba810a9b05455248d73ac5ced06fd70eac6ed99ec0f9860fad6",
+    "robots/robodojo/agents/icl_pi05/preparation.py": "443dc0a6da204f0b8b128e3588c3ab3db34bbc78f77eb780fc2324f96ee80909",
+    "robots/robodojo/agents/icl_pi05/resume.py": "60ede9577df27a8d7b4dc0918ed6aac015f63635c0facff776f035c8199ae573",
+    "robots/robodojo/agents/icl_pi05/runtime_records.py": "a7f632ba50bb42952cd7ca1bd5bec81fa265f89d1737d44323b3d48c5889ef33",
+    "robots/robodojo/agents/icl_pi05/service.py": "bdd2e2964bb8959fe1c37f876f0822c3dffde7bc93318f1a02aaff35eeba5692",
+    "robots/robodojo/agents/icl_pi05/worker_proxy.py": "a5adca8dfa8e7ca43b541836682c263bc87fead5ec2c16278f68ff5f8205f896",
+    "robots/robodojo/benchmark_service.py": "c2d9b236c7ec71628934228ac99c2f65f8c9edf7769038d5f4b2776f086ebb74",
+    "robots/robodojo/eef_contracts.py": "afa94b3a274d9a6f48dfa4530b1dbd9f27606bc59373f43003913b1fbc115c87",
+    "robots/robodojo/eef_docs.py": "65ca0989148c5550d8379260140b6df99e2c484f46c1065b4d6dcf65c904aa1f",
+    "robots/robodojo/eef_native.py": "b7cc9732da789a92378fb41458762ebaf33e12ba95b0aa85d597638e13ee6710",
+    "robots/robodojo/eef_pose.py": "0a0f2ac17efdb60b15fac378d3adbd9ea2944868464fce2b0e06bf356a03f647",
+    "robots/robodojo/eef_queries.py": "d6ba71727031ad103c2757a583a34fff1de9ebaeb9b0c4785946ed8915b8944e",
+    "robots/robodojo/eef_trace.py": "05dca43062625782be02f7050853613ec4b1e6bcfb4c0a678d6525087202b60e",
+    "robots/robodojo/eef_types.py": "17806c2456a4a47f80afda43b465e229996e80dfe57e19aaaeb3ec0d45baaa0e",
+    "robots/robodojo/episode.py": "8bc1e0f29b92a85c210066379b01e9ab1ebf040877055d885ae6e3d9da5697b4",
+    "robots/robodojo/joint_docs.py": "e871eefff278f4e8cd99ed2b76152aebf3f40e874d75c740158a8051818ad5c7",
+    "robots/robodojo/native.py": "8edfc6e28ff2b7a4abbf5829ca4626c73de61763cf6e96f1522f3a55d869b981",
+    "robots/robodojo/native_files.json": "c4cd1df128aec7ec0f4859a3b43900cdbbaa73190747fd83b0f426dcb35948f3",
+    "robots/robodojo/roborsi_adapter.py": "2059d4952ee09bf32fa1ec5eaae56bfe480f927d816011aa07e35f2a79b932f1",
+    "robots/robodojo/worker.py": "2da37bc7e4a7c11e1dc14ba8bf48de1a495d1ba6d83b5f3834fb6330fd91de66"
+  },
+  "portability": {
+    "omitted_files": [
+      {
+        "path": "robots/robodojo/agents/icl_pi05/README.md",
+        "sha256": "8a87cfff04103581a28eaa0c7267ff9c142f22d4f4706d02d96afa8c390d6f8c"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/README_zh.md",
+        "sha256": "bbe001ab5321071e03a2765eaa3feec83fda71d83d44faad8119ca81fe4944cb"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/agent.yaml",
+        "sha256": "d6fbe62d2e0d43c3ad28ee402a57dd5fe5972eb676cf9e9c759a9828e106525e"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/provenance/README.md",
+        "sha256": "67c936c76ffa5f9497e008eaf191fa7061ca0b725705cb4026f6256d2f7a30e2"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/provenance/source-files.json",
+        "sha256": "6e5b8138c50c870cf10e915e8032f9e5f8e50269a1fcd03ee47037a91b3ac54c"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/align_blocks-s1.json",
+        "sha256": "9612417ea71f269bf606582009c355424a39eee5259e9990b4cf541f4aa43bca"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/align_blocks-s2.json",
+        "sha256": "e0a9d4199a64de7e37bde4f62dbbf9c309094a5e9e4e5b80fc4b35ed491faec2"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/arrange_largest_number-s1.json",
+        "sha256": "ee2c602415766fdc30d71193e7508f068da38ff582f21645fd2e3c41e49b918c"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/arrange_largest_number-s2.json",
+        "sha256": "97f06dd9a214ffd6aa838363a59aba93ba1dfca278d43a08ab137a85018b466f"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/build_tower-s1.json",
+        "sha256": "049ce9e746d2dc19c91707c1461d545a2b7ec72d255d3e3bfa922a735359857c"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/build_tower-s2.json",
+        "sha256": "e1cd73e5406208dc8b2d1f75a6ebc21259f5a7f4c766e41c644cd448282a1171"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects-s1.json",
+        "sha256": "56f405032d60d93ce419be5d5fbe91e67d7ce19d40bda727f46489fd5d421a0d"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects-s2.json",
+        "sha256": "758a568dbf548090a10863636923eb86353fe968c19a5d99e89208e030d4adcd"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects_by_language-s1.json",
+        "sha256": "62edfd861f19117bd56bf5194d0e9e4e0ea75ba3111a11dac1074ccb03888293"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects_by_language-s2.json",
+        "sha256": "edbb3bdcc2947e0769806d8da2d67e8a83ce6aae655aaca3b38dd896116f15c4"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/cover_blocks-s1.json",
+        "sha256": "90caf14976f6badb22cb06468eb55f43dc8a27e8bf6644b04ab7d884ba367537"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/cover_blocks-s2.json",
+        "sha256": "98b47db27edd5766470a4c5213d660a96ac606e81b5dd1e9dbaf387bce192b34"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/deposit_coin-s1.json",
+        "sha256": "38f63dff5ea499d138aa9ba1cae907e4125a4eb3bbe3755ff1bf475458c21826"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/deposit_coin-s2.json",
+        "sha256": "098bbee812f124f36973e2a5df5f2a29b558b8eec4c24ca9bd6d910b9bec6d20"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fasten_screws-s1.json",
+        "sha256": "e39553ec44bc2aa2d5eda1cf84912c245e52e8551a2ed32ba2dc4e4216c77a66"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fasten_screws-s2.json",
+        "sha256": "7072e6e8fd1878f80ddc1a9e8d3ef4e388c7827041d8550940b11f134bbf16e2"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_egg_holder-s1.json",
+        "sha256": "9183fadbe0b4209de9f41cf5e666414ddc8a900da42a5aa19478f0b465431f70"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_egg_holder-s2.json",
+        "sha256": "cec39af624a35ab1f003acdc2e5fc3c5604ebca64a346a62be8b3117a45369aa"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_pen_holder-s1.json",
+        "sha256": "c815ea5a27da22cd1e6bd1d40f239098175984c261df864a59fdb1183d0c24fc"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_pen_holder-s2.json",
+        "sha256": "7041b81e08fa297804035353cdb0eabd362ac6e7f2d0ecf392956723719989a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fold_clothes-s1.json",
+        "sha256": "b7fcca519b414a3d395a2d9c003c84c3165a912a8a2d05b38955a16cd21ddd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/fold_clothes-s2.json",
+        "sha256": "013d8b3ede992014a999a46c77a832dd81d857f4022a25c72be33fafb2aeab5f"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/general_pickup-s1.json",
+        "sha256": "0babd0f551c0a85d9c9d521d2e1befd0689c86822ee9cbff63104002cfee5f72"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/general_pickup-s2.json",
+        "sha256": "9bc20e8b15fc14343c8a76e5856ee70f58a7a1cf89b857794e821798563a7b55"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/hang_mugs-s1.json",
+        "sha256": "75184bfb410e2d222a2cc67a3e8b2dc46d636f648332f628d907622488fcea2a"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/hang_mugs-s2.json",
+        "sha256": "b8b7f3e634c3dca8b41f32cf2526e724996c779a9c3de5453d776478b56b435f"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/imitate_sorting_sequence-s1.json",
+        "sha256": "749fc902c143c0dde834f34cecd4ab72aa28c40aba3fe7d50433416ff5fcd307"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/imitate_sorting_sequence-s2.json",
+        "sha256": "1f0bb0e7d870cceac42c642ebf797396a1faeb7388f9219d0363d45d943f6b6a"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_key-s1.json",
+        "sha256": "0ce2cf9a502625c2ff8f68abfa03305f055877cbb826a6bd85b0c3776548b0af"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_key-s2.json",
+        "sha256": "6f21ca1eeb4c55f527ceed246ccef76db505088c279cba216c12d69296db2f1a"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_tubes-s1.json",
+        "sha256": "b436030988b31610fc25078a8b654926f6ccd9f5af1a29ff6cc22723d31d2b62"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_tubes-s2.json",
+        "sha256": "5aabbb47a9bcabc9517aa14e7cb86e120de7530fa9b23800871723255bb55236"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_kong-s1.json",
+        "sha256": "891d306c97367a1a938643219e6706eef235bf4566b77930d772c2e1c721aed3"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_kong-s2.json",
+        "sha256": "b3b5b6f24e9ba026aeef0d66867542b9186e5abb0926a9d3d41ce5baeef61883"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_toast-s1.json",
+        "sha256": "86235bbd48f490aa4439e281d1e41f2081a12144b658201fea0027f6573b6dc2"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_toast-s2.json",
+        "sha256": "99575010e76d5ab0c3ac9976eeffad0c64f0bae49bec60193c9714254833985a"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/match_and_pick_from_conveyor-s1.json",
+        "sha256": "e3855476a7e149b547a6007c90732e01d89e91511a33f6facc275d7748e0c261"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/match_and_pick_from_conveyor-s2.json",
+        "sha256": "5f29b2027d221fe1c5a324a84bcc505fa69853274ae64e0be82e9b9fb33f86fd"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/organize_table-s1.json",
+        "sha256": "be009ed4f7f9740c144fdc3cf36f3b82ef9f9aa92a7e9f2ebc30b0a78a5d453d"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/organize_table-s2.json",
+        "sha256": "980685c351a5622c9fe3c1242251380a4b4fb8a1da36d4083425ed0ddecba383"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pack_objects_into_box-s1.json",
+        "sha256": "211802b97945e8d466ccc8102e0fb71500dfd697e9e9a876e8c866f0ca58f493"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pack_objects_into_box-s2.json",
+        "sha256": "0512c8aab6bf510add6d8800426032c93a6ed47e674016bd81669a2010511881"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pick_from_conveyor_by_image-s1.json",
+        "sha256": "fb246b8faf0d9d995430b284aa739287ee19ffa153d43fcda883272caacc79dd"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pick_from_conveyor_by_image-s2.json",
+        "sha256": "ca1c809723f618d03b9da8b2f495324a5e4de8e5b28a308c528542d15e4aad48"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_Xylophone-s1.json",
+        "sha256": "197f39e929217ae4693937da512f177fbb5c64fcec5d061e8782a4ab578e0e96"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_Xylophone-s2.json",
+        "sha256": "25bc689a61a3092bfd2c9607c28cff057d166aede272ff04ca7aca67c949d95d"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_stacking_toy-s1.json",
+        "sha256": "2c5f4ce570ba0be6e660c83a7b43b320f2d02da777809e0cb5aa90090a345779"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_stacking_toy-s2.json",
+        "sha256": "2c3040c30628dd8f1e2d75f53ab99157f3fca01bfe7d54512a83e4c910fc7fcc"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_tic_tac_toe-s1.json",
+        "sha256": "99107a6b739cec9c7d69b1d1f08cc464cbf77f18eda612182a55396686d2924f"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_tic_tac_toe-s2.json",
+        "sha256": "c030c9574b0dd17e4fafdb463ad45e6ac1ee902a4eb8310102083728011e6747"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/plug_in_charger-s1.json",
+        "sha256": "6c409173793abd456b6d719d0c5196edadd7b8a30ad0b8e2697ab7d204e5f1c1"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/plug_in_charger-s2.json",
+        "sha256": "a0a1ca5e081dfb17e8ee3dfeb9518c2d0048d2df7204eb1468765e9e412fb19b"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_balls_into_vase-s1.json",
+        "sha256": "f8119df346111b7957fd6694df585d2123850c6265470571c8cf5705b9880f93"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_balls_into_vase-s2.json",
+        "sha256": "05c890d81a88cda37699f2e729d082e02790ddedd2411df1d95a5c1c84bf1027"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_by_language-s1.json",
+        "sha256": "7fb9c0656892fe702b1f0e1562b7a0d54e78aa7b79dba6b531c44f8874e81228"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_by_language-s2.json",
+        "sha256": "ca8c3827ae67ae11cb2737b47ec6629b99d87abafc6d8bffb7795aab09602398"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_liquid_into_cup-s1.json",
+        "sha256": "c91f7e801b970d69b899622adee1576d31adfd9543c848849506ff0567d3d858"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_liquid_into_cup-s2.json",
+        "sha256": "7b92fe39e0e9aca95288c0447e9e151cc1e32c1d955bc062764109a7348161e9"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/press_by_number-s1.json",
+        "sha256": "3c796cb97c055dc6fa6397b82d7bf0b0d6e0ee4994675640939c070250e53c04"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/press_by_number-s2.json",
+        "sha256": "bb3b4cb3dacf03005bb0fd4c6d7cac1b6efda3656a25dc7f15de276b96dbcca7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/push_T-s1.json",
+        "sha256": "76b4021d2bb11d616703305ee628fb00f16c711b9945ed30f0f0a683beeb1c3e"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/push_T-s2.json",
+        "sha256": "1192699ef60516da5d85b457b8e295eb33502c38e0af695b1c52b480aedcaa5d"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/put_bottles_into_dustbin-s1.json",
+        "sha256": "5dab13d998923e39967da23dffa44863e1010b56f85f32386d98ef974cbd5138"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/put_bottles_into_dustbin-s2.json",
+        "sha256": "8c347561fbdb3f8817f9852e8a0294570e952133edc874356b5d2b42af29d928"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/solve_equation-s1.json",
+        "sha256": "e8dea53f409858e356f1c053828cf5223388ead2a5ee2dba351437d2fad533bf"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/solve_equation-s2.json",
+        "sha256": "a1ef79e3ed7338720d69541227cf6984c2f98e2de8e2ac1529a8af5e1fc3a298"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/sort_nesting_dolls_by_size-s1.json",
+        "sha256": "b731dd78f7f5bdc7bd30cbc30fedb4c06f299d6e8063099a68d3df7430f35fa7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/sort_nesting_dolls_by_size-s2.json",
+        "sha256": "5b9d7c210ce9e18d119bf89d15deedf10a70573ef5a61d618a2400a34596241e"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks-s1.json",
+        "sha256": "42f59b7b630097f46a894144036fccf8ab5ba5b773345d43978f677adaf20840"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks-s2.json",
+        "sha256": "71f07af8a02ae3afafb3dd6887a7805602660264a4f3657883412b1954fea353"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks_by_language-s1.json",
+        "sha256": "409e068f08b96b2ad54b4ae39432087d790093770b27b9a2b934186ae1c01893"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks_by_language-s2.json",
+        "sha256": "6670e531a0e86fc112e57cca00b5a93d909909ad0a3ff44ab1909898876ac102"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_bowls-s1.json",
+        "sha256": "555ef1931a0582c0ebf1ca717a0781a39d6cd5e6a1743e17078530bea59e71c7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_bowls-s2.json",
+        "sha256": "7df1aeeab5e36cb9fe04bc86c0da394f8434e413814a407fd9b47ae1bb780909"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_laptop_and_headphones-s1.json",
+        "sha256": "9aaa5701d10e4a6ec699e3a176ea11c11b6297a1e1350e0f2c72800818209221"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_laptop_and_headphones-s2.json",
+        "sha256": "96b664c04e1c4f724d008d67e265e582de275c24b453543af78c6398d9731915"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_tools_in_toolbox-s1.json",
+        "sha256": "96e0842d43a2bdcdb0bdf2f9e9f823627c73ca6bdfc626e18294f3d76c88233c"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_tools_in_toolbox-s2.json",
+        "sha256": "f996922a0470e9b6ba38b1616a5241c505d87309b2d785f353d33c324d60a7cb"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_T-s1.json",
+        "sha256": "19a54eef93ba38558af677b52d8851e262fa0f307658841db00e0f145c95d3dd"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_T-s2.json",
+        "sha256": "3b1be151d010b48c193705f819cbc3b84367d09c43040ac7ce8efade2cfdac1d"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_blocks-s1.json",
+        "sha256": "4d5aff098b58be2241f56332a438a749f4402fcedf973749d2097e6896ceef41"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_blocks-s2.json",
+        "sha256": "a887debde10bb91666ab0440096214cf766b31cf9a63b7574279b43c8c0f33a1"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/sweep_blocks-s1.json",
+        "sha256": "185a93dda7f322ca42f2515543778aff7037845542fa047a44609d16aec413ca"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/fresh-configs/sweep_blocks-s2.json",
+        "sha256": "a27da75b448f31a9e0cea3027be01e413ee9d1a6be96acacca5561f685ee8b1f"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/frozen-bundles.json",
+        "sha256": "0259fbe37861fbda09f67ea05c9fc9798c1acda1d4dc488e551675b527866608"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/align_blocks-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/align_blocks-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/arrange_largest_number-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/arrange_largest_number-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/build_tower-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/build_tower-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/classify_objects-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/classify_objects-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/classify_objects_by_language-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/classify_objects_by_language-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/cover_blocks-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/cover_blocks-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/deposit_coin-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/deposit_coin-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fasten_screws-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fasten_screws-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fill_egg_holder-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fill_egg_holder-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fill_pen_holder-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fill_pen_holder-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fold_clothes-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/fold_clothes-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/general_pickup-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/general_pickup-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/hang_mugs-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/hang_mugs-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/imitate_sorting_sequence-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/imitate_sorting_sequence-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/insert_key-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/insert_key-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/insert_tubes-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/insert_tubes-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/make_kong-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/make_kong-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/make_toast-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/make_toast-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/match_and_pick_from_conveyor-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/match_and_pick_from_conveyor-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/organize_table-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/organize_table-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pack_objects_into_box-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pack_objects_into_box-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pick_from_conveyor_by_image-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pick_from_conveyor_by_image-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/play_Xylophone-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/play_Xylophone-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/play_stacking_toy-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/play_stacking_toy-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/play_tic_tac_toe-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/play_tic_tac_toe-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/plug_in_charger-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/plug_in_charger-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pour_balls_into_vase-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pour_balls_into_vase-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pour_by_language-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pour_by_language-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pour_liquid_into_cup-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/pour_liquid_into_cup-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/press_by_number-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/press_by_number-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/push_T-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/push_T-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/put_bottles_into_dustbin-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/put_bottles_into_dustbin-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/solve_equation-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/solve_equation-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/sort_nesting_dolls_by_size-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/sort_nesting_dolls_by_size-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/stack_blocks-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/stack_blocks-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/stack_blocks_by_language-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/stack_blocks_by_language-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/stack_bowls-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/stack_bowls-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/store_laptop_and_headphones-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/store_laptop_and_headphones-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/store_tools_in_toolbox-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/store_tools_in_toolbox-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/swap_T-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/swap_T-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/swap_blocks-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/swap_blocks-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/sweep_blocks-s1.md",
+        "sha256": "cb5d11e3345470de87d7915c759a4b88751dc6e79be01435bffde27251c7e3a7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/resources/interfaces/sweep_blocks-s2.md",
+        "sha256": "e9ccc341a7c98a5dd9ef29e49f54cf4b33d23735324d74cda8cc7eb4e20dfd31"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/service.md",
+        "sha256": "ab10b56bb7e94a4fd57ac3c4c2b03c5d5948a477e7cace3c0b645eabc5dbfe13"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/service_zh.md",
+        "sha256": "9370b7c0a67202dabc10281671851d3ba397e551ff314c6603e7b69519681ccf"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/benchmark.sh",
+        "sha256": "15fe7ce9f142e7e7f1279560293270af1070473d4ba482296af0e565fbcdeacd"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/benchmark_bootstrap.py",
+        "sha256": "9bee3e39a4d1d1c29e89ac9224a6f2b9bd9c698b5ea1ce0e43c159b62573df45"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/adapter.py",
+        "sha256": "bb311e45ee5cc93da1ea682b4e2d18af00717e9928b61f941bda02306d6cf0fe"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/eef_kinematics.py",
+        "sha256": "fffd0c6aa2207fdd551b0b92933daae938f1d3647b3a197aaf0457c8ebca22ad"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/tenfold_horizon_adapter.py",
+        "sha256": "ddcf6e60fa15053c62bc5ddd3cd40e02a00da8907e1a01f18586fc19176d1eeb"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/trial_adapter.py",
+        "sha256": "2d7d672f60fb6559c282fa12b77f48a152ea3870be5b54285f04a66a00e665aa"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/__init__.py",
+        "sha256": "5d6bb09cc01444d9df023c61d5811b5685584d0da4c6cfa313eaf49b55b92b46"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/api.py",
+        "sha256": "2fbf04d91249bac6e2c6bbd5420a79127270708ecfab1736d1e266a0fcb62cc8"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/backend.py",
+        "sha256": "56e8f7b73e6c3596ba366742e4abe92b13d7066a08bb52e76fbe64b6ae84a0ec"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/cli.py",
+        "sha256": "39bfdf151e884b1b973dce7dc20ae5c6a3bbaa6768a0688d809f74ce70dc4bfe"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/codex.py",
+        "sha256": "a7b3995d166b84c64b672acc7da009a398da1c210851a3cfa54ac22994da0d2c"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/common.py",
+        "sha256": "bcfdc49fb1073ce0dd757bff35fda8917a93b7e2f0ff333a7f89378a37c58bf7"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/robot.py",
+        "sha256": "a009ff051879c46c986bfe37e6b0cecce45be065ab544a3b2eead0799a60dbf9"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/runner.py",
+        "sha256": "770890be57d0f26fb9031863acbb606f22b5595223bfdce321801870c846cf7e"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/policylab/worker.py",
+        "sha256": "119c233450f01e3dd91fda4f281b2957ae056662bc49fc68edf609a8d982e750"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/code/run.py",
+        "sha256": "6944dd2dbc5369397fe2788555c242ce26063128b5bb0985b16313a69f43a0ad"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/hybrid_adapter.py",
+        "sha256": "43417aae977c65ab49c16ae8c19eb05661143c1251fbbaa2c4223d65245de6a5"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/hybrid_host.py",
+        "sha256": "5ad54cf38b5b9ee1902350472d1776cf48da734833980673c897d4b344ca7cff"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/local_runtime.py",
+        "sha256": "35f1ec7c979164efc9c94d911da94edbc17c8b95aebf2be8016c0c619f90d5c2"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/source/recovery.py",
+        "sha256": "52daba98ec13b856f2a3433ae13e7cf38c598e601545803cc042a9746c7cdf48"
+      }
+    ],
+    "scope": "Source subset with deployment-sanitized legacy ICL factory/host. Native evaluator, planner, transport and algorithm bytes are unchanged.",
+    "upstream_manifest_sha256": "a9bc490283e42712b1d30da1c06862e1b3bc33eec1eb4129c1a4d539bf13ca26"
+  },
+  "schema_version": 1,
+  "source_commit": "cfa591575172b638a8436fa95db28e9469785c9c",
+  "source_url": "https://github.com/SenseTime-FVG/RoboRSI.git",
+  "deployment_sanitization": {
+    "parent_manifest_sha256": "26b97acb5d9e421bf8760a910242aff8e12aa57e1325e6e7d534f8a7df06b22b",
+    "scope": "Legacy ICL factory accepts any explicit nonempty model; host resolves service/model through required environment variables. Policy effort, budgets, transport and evaluator behavior are unchanged. Provider-specific comment generalized without changing executable statements.",
+    "patches": [
+      {
+        "path": "robots/robodojo/agents/icl_pi05/factory.py",
+        "before_sha256": "f9460e75b509bb05deafb057ef63de756e7464dd7553ba852232e3744ba5addb",
+        "after_sha256": "0667ab62e1ae06c9e1776050fe8ea873d4a10cd7051c07ebd5a788e515d25d42"
+      },
+      {
+        "path": "robots/robodojo/agents/icl_pi05/host.py",
+        "before_sha256": "81abcff193ec9ab0f3f23ed98b9188d39fded453db369d91714aba689fe13c23",
+        "after_sha256": "d3f07de6a6088fe30cb86264829062d02832d1e4391b44af606790e51cffc2e7"
+      },
+      {
+        "path": "roborsi/planner/api_loop.py",
+        "before_sha256": "0598bb18277dae79042c4405c4503a69390fd708717c92c8f7028539ec19c655",
+        "after_sha256": "17c5d4e83df5afdc3b96e3962d632eec23d4434bd42b25650eebdfd7ad25c38e"
+      }
+    ],
+    "identity_contract": "Legacy factory requires the environment model to match its prepared identity; launch rejects subsequent model drift."
+  }
+}
