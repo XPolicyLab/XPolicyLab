@@ -1,0 +1,3 @@
+[
+ "Hand the learned policy the whole task from the start pose and let it run to the end of the episode, as RoboDojo's evaluation client does.\n<python>\nname = list_policies()[0]['name']\nprint(name, run_policy(name, stall_seconds=None))\n</python>"
+]

@@ -1,0 +1,61 @@
+kind = "policy"
+summary = "G0.5 VLA, RoboDojo's own checkpoint (joint actions, both arms), through XPolicyLab's G05 adapter"
+protocol = "xpolicylab"
+port = 19005
+# Measured on a 3090: 16.4 GB. The first request after a start takes 15-50 s.
+vram_gb = 16.4
+load_seconds = 120
+needs_files = ["{weights}/g05/checkpoints/checkpoint", "{weights}/g05-processor/tokenizer.json",
+               "{xpolicylab}/policy/G05/G05"]
+notes = """The checkpoint config points at a processor path that is not shipped; OpenGalaxea/G05 on Hugging Face \
+is gated, and its qwen3_5_2b_base_processor files match Qwen/Qwen3.5-2B-Base (ModelScope) byte for byte. \
+The description (what the model is told) names kinds of manipulation, never tasks: it generalises G0.5's \
+own scores run alone through run_policy on development layouts (configs/experiments/policy-alone-dev.toml; \
+scripts/policy_card.py sorts them), 2026-10-13: 2 layouts of each task, 4 for the five tasks whose kind moved \
+from the earlier description (derived from official evaluation pack 0); 2 reliable, 12 partial, 24 unreliable. \
+Not measured: cover_blocks, swap_blocks and play_tic_tac_toe (every arrangement is an evaluation layout, so \
+none is left for development) and imitate_sorting_sequence (RoboDojo marks both layouts unstable mid-episode)."""
+
+[client]
+url = "{url}"
+description = """A visuomotor policy trained on whole RoboDojo tasks: each demonstration starts at the start \
+pose and finishes the task, labelled with the task's own instruction; it moves both arms (joint actions) with \
+skilled contact, many times a second. It does best in exactly that setting: from the untouched start pose, with \
+the task's own instruction, left to run. It does not reason: it cannot read words, numbers or pictures to decide \
+what goes where, does not remember what it saw earlier, and does not notice its own mistakes. \
+Reliable (it usually finishes by itself): putting a few separate objects into a bin, case or box. \
+Partial (it often does part and leaves the rest): stacking blocks in a pile or tower; folding cloth; pouring a \
+liquid or small loose objects into a container; nesting bowls or cups; tidying objects onto their places; \
+filling a holder with several items; putting an item into an appliance; packing several objects into a box; \
+standing tubes upright in a rack or driving a screw (rarely all the way). \
+Unreliable (it rarely helps): hanging items on a hook or rack; sorting objects into groups; filling a tray of \
+small slots; building a shape from parts; pushing or sweeping objects to an exact pose; any task where what \
+goes where depends on reading words, numbers, an equation, a picture or a demonstration; remembering what \
+happened earlier (hidden, swapped or shown objects, buttons in order); catching objects on a moving conveyor; \
+small precise insertions (a key, coin or plug); ordering by size; playing notes or stacking a toy in a given \
+order. \
+Signs it is failing: the arms stop moving while objects are not where the task needs them; the same reach is \
+repeated; an object is knocked over or off the table; the jaws close fully on nothing after carrying something."""
+
+[xpolicylab]
+policy = "G05"
+ckpt_name = "RoboDojo-sim-arx_x5-joint-0"
+action_type = "joint"
+cwd = "{xpolicylab}/policy/G05/G05"
+pythonpath = ["{xpolicylab}/policy/G05/G05/src", "{xpolicylab}/policy/G05/G05", "{robodojo}", "{xpolicylab}"]
+
+[xpolicylab.overrides]
+ckpt_path = "{weights}/g05/checkpoints/checkpoint"
+g05_root = "{xpolicylab}/policy/G05/G05"
+action_source = "fm"
+hydra_overrides = "['model.model_arch.hf_processor_path={weights}/g05-processor','model.processor.tokenizer_params.pretrained_model_name_or_path={weights}/g05-processor']"
+
+[[weights]]
+dir = "g05"
+modelscope_dataset = "RoboDojo-Benchmark/RoboDojo"
+root = "ckpt/RoboDojo/G05/RoboDojo-sim-arx_x5-joint-0"
+
+[[weights]]
+dir = "g05-processor"
+modelscope_model = "Qwen/Qwen3.5-2B-Base"
+exclude = ["*.safetensors", "*.bin", "*.pt"]

@@ -1,0 +1,6 @@
+name = "reactive"
+summary = "Guards and controllers that run at every control tick."
+layer = "reactive"
+mixin = "skills.reactive:Reactive"
+exports = ["when", "watch", "clear_guards", "run_controller"]
+order = 110

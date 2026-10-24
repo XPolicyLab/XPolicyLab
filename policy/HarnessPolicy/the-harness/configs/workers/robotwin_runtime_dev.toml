@@ -1,0 +1,11 @@
+# RoboTwin 2.0 development worker (benches/robotwin/runtime.py). Development
+# seeds start at 10**7, disjoint from every evaluation seed; a seed counts only if
+# RoboTwin's expert solves it, and the valid ones are cached under seed_cache_dir
+# (default <RoboTwin>/harness_seeds).
+#   PYTHONPATH=third_party/curobo-0.7.8/src scripts/harness serve \
+#     --factory benches.robotwin.runtime:create_environment \
+#     --options configs/workers/robotwin_runtime_dev.toml --port 8772
+task = "stack_blocks_two"
+task_config = "demo_randomized"
+split = "dev"
+seed_group = 0

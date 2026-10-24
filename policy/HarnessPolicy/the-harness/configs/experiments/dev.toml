@@ -1,0 +1,15 @@
+# Development: the agent with its default model on one task and development layouts
+# (never evaluation layouts). `harness run configs/experiments/dev.toml
+# --deploy <machine>` starts the simulator workers itself; `harness program` uses the
+# worker at `endpoint`.
+description = "the agent, one task, development layouts"
+bench = "robodojo"
+tasks = ["general_pickup"]
+seeds = [0]
+layouts = "procedural"
+endpoint = "http://127.0.0.1:8771"
+
+[budget]
+max_wall_seconds = 5400
+# Cost guard for development checks; the paper runs set no cost cap.
+max_cost_usd = 4.0

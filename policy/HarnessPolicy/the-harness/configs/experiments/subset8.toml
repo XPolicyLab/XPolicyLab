@@ -1,0 +1,11 @@
+# The 8-task development subset (both conveyor tasks included) that ablations, model
+# comparisons and self-improvement share (App. A); 10 episodes each on development
+# layouts. An ablation runs it with --agent configs/ablations/<name>.toml.
+description = "the agent on the 8-task development subset"
+include = ["dev.toml"]
+tasks = ["general_pickup", "stack_blocks", "stack_bowls", "classify_objects", "deposit_coin", "insert_tubes",
+         "match_and_pick_from_conveyor", "pick_from_conveyor_by_image"]
+seeds = "0-9"
+
+[budget]
+max_total_cost_usd = 20.0

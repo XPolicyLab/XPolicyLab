@@ -1,0 +1,70 @@
+# The agent: what `harness run` runs unless an experiment names another agent file.
+# Every layer of the harness is on: programs over analytic and learned skills (Simate),
+# the reactive layer (guards and controllers every tick), handlers, and the success
+# verifier, above the fixed safety shield. It sees what RoboDojo's official client hands
+# a policy, nothing more (the leaderboard protocol), and it is the configuration
+# submitted to the leaderboard. The ablations of the paper (configs/ablations/) include
+# this file and switch parts off.
+description = "Harness Policy: programs over analytic and learned skills, reactive layer, handlers, verifier"
+prompt = "../prompts/robodojo"
+# The model roles (configs/models/<name>.toml); an experiment's `model` or --model NAME
+# picks another.
+model = "deepseek-flash"
+# No pointer role: the vlm role (the main model) points, as in every 1.4 evaluation run,
+# where Molmo2 was not running and programs pointed in 3 of 129 episodes.
+roles = ["main", "vlm", "verifier"]
+
+[skills]
+layers = { learned = true, reactive = true, handlers = true }
+
+[services]
+segmenter = "sam3"
+# The learned policy: Simate. Inside the agent it scored as G0.5 did on the development
+# comparison; alone it scored more over all 42 tasks (Long-Horizon 38.9 against 19.1).
+policies = ["simate"]
+# No world model: no 1.4 evaluation run had OpenWAM, and without it the models fit one
+# 24 GB GPU (kinematics, SAM 3, Simate: 23.2 GB). `--set 'agent.services.world_models=
+# ["openwam"]'` adds predict_future.
+world_models = []
+
+[runtime]
+# Long enough for pointing calls inside a program to wait out a network outage.
+# A cell that hands the task to the learned policy is not cut here: it runs for the
+# rest of the episode's wall time (package.py, 5400 s). Cutting it at 1800 s killed
+# the last batch of a task while the policy was still moving, and those episodes
+# scored 0.
+cell_timeout_seconds = 1800
+reactive_budget_ms = 20.0
+default_max_seconds = 30.0
+cameras = ["cam_head", "cam_left_wrist", "cam_right_wrist"]
+verifier = true
+# The first motion is start(strategy, kind): hand the task to the learned policy (A, C)
+# or not (B), decided from its description before anything moves (Z2's first call).
+strategy_first = true
+# The handed-over task runs uninterrupted: no progress watch (policy_progress_seconds
+# 0). Stopping the policy early bought nothing (the model's own tools after it added no
+# score), and measuring the scene while it ran may harm it: pour_liquid_into_cup,
+# development layouts 0-1, policy alone 4 of 4 (2 scripted now, 2 on 13 October), with
+# the watch measuring 1 of 4 (2 scripted, 2 of agent 1.4.0). The stall stop still ends
+# a run whose arms moved and then stopped.
+policy_progress_seconds = 0.0
+# After the handed-over task's first run the policy continues to the end of the episode.
+# 0 model calls: the calls after a handover were where a policy that had the task was
+# grasped again (play_tic_tac_toe 2% against the policy alone near 67% on this pin).
+post_policy_calls = 0
+# The XPolicyLab observation contract (core/contract.py): instruction, camera colors,
+# measured arm joints, link6 poses, the last gripper commands; camera calibration from
+# the embodiment; no depth, no step limit, no task name, so no task descriptions
+# (configs/ablations/with-task-description.toml adds them, Tab. 4's second row).
+# `--set agent.runtime.contract=native` shows a development run everything the
+# simulator worker measures.
+contract = "xpolicylab"
+# Programs run isolated where the machine allows user namespaces (an evaluation host
+# need not).
+isolation = "auto"
+
+[budget]
+# 30 model calls per episode (Zhang et al. 2026b ran 100). A handed-over task needs a
+# few; the model's own tools where they fail used the rest of 100: agent 1.4.0 on
+# evaluation layouts, pick_from_conveyor_by_image 98 calls ($0.38) for 0.
+max_model_calls = 30

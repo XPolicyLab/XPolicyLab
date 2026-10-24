@@ -1,0 +1,10 @@
+# No GPU for models: only the simulator runs here, every model is hosted (the main and
+# vlm roles). Without a segmenter, segmentation and the tools built on it (locate, pick,
+# release, ...) drop out of runs on this machine, and without a policy server the
+# learned skills: a smaller configuration with another identity.
+weights = "~/harness-weights"
+gpus = [0]
+
+[sim]
+gpus = [0]
+workers_per_gpu = 1

@@ -1,0 +1,20 @@
+policy_name: HarnessPolicy
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: true
+
+# Harness Policy. While the model writes a program, or a model loads, get_action returns
+# an empty chunk after poll_seconds (below the client's 120 s request limit); the
+# standard episode loop then takes no action and asks again.
+poll_seconds: 90
+# Traces of every episode (default: results/ in this folder).
+result_dir: null
+max_wall_seconds: 5400

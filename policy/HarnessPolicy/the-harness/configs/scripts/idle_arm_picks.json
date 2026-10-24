@@ -1,0 +1,5 @@
+[
+ "Locate the digit cards (arrange_largest_number).\n<python>\nif 'start' in globals():\n    start('B', 'pick check')\nr = locate('yellow digit')\nobjs = sorted(r['objects'], key=lambda o: o['position'][0])\nprint(len(objs), [(o['id'], [round(v, 3) for v in o['position']]) for o in objs])\n</python>",
+ "Pick every card with the nearer arm and set it back where it was.\n<python>\nfor o in objs:\n    arm = 'left' if o['position'][0] < 0 else 'right'\n    p = pick(arm, o['id'])\n    print('PICK', o['id'], arm, p['ok'], str(p.get('reason'))[:60], str(p.get('check'))[:70])\n    if p['ok']:\n        q = release(arm, x=o['position'][0], y=o['position'][1])\n        print('RELEASE', q['ok'], get_state()['step'])\n</python>",
+ "<finish>pick check</finish>"
+]
