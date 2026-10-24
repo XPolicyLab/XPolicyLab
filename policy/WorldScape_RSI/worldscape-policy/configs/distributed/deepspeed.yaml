@@ -1,0 +1,55 @@
+# Shared DeepSpeed runtime and ZeRO strategy profiles.
+selectors:
+  deepspeed_mode: ${oc.env:DEEPSPEED_MODE,zero2}
+
+profiles:
+  deepspeed_mode:
+    zero2:
+      distributed:
+        deepspeed_config:
+          zero_optimization:
+            stage: 2
+            overlap_comm: false
+            contiguous_gradients: true
+            sub_group_size: 1.0e9
+            reduce_bucket_size: 1.0e8
+    zero2_offload:
+      distributed:
+        deepspeed_config:
+          zero_force_ds_cpu_optimizer: false
+          zero_optimization:
+            stage: 2
+            offload_optimizer:
+              device: cpu
+              pin_memory: true
+            overlap_comm: false
+            contiguous_gradients: true
+            sub_group_size: 1.0e9
+            reduce_bucket_size: 1.0e8
+    zero3:
+      distributed:
+        deepspeed_config:
+          zero_optimization:
+            stage: 3
+            overlap_comm: true
+            contiguous_gradients: true
+            sub_group_size: 1.0e9
+            reduce_bucket_size: 5.0e8
+            stage3_prefetch_bucket_size: 5.0e8
+            stage3_param_persistence_threshold: 1.0e6
+            stage3_max_live_parameters: 1.0e9
+            stage3_max_reuse_distance: 1.0e9
+            stage3_gather_16bit_weights_on_model_save: true
+
+distributed:
+  backend: ${oc.env:DISTRIBUTED_BACKEND,deepspeed}
+  process_group_timeout_seconds: ${oc.decode:${oc.env:NCCL_TIMEOUT_SECONDS,3600}}
+  seed: ${oc.decode:${oc.env:SEED,62}}
+  device: cuda
+  deepspeed_config:
+    zero_allow_untested_optimizer: true
+    train_micro_batch_size_per_gpu: ${oc.decode:${oc.env:PER_DEVICE_TRAIN_BATCH_SIZE,8}}
+    gradient_accumulation_steps: ${oc.decode:${oc.env:GRADIENT_ACCUMULATION_STEPS,1}}
+    gradient_clipping: 1.0
+    bf16:
+      enabled: true

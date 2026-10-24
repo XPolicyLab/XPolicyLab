@@ -1,0 +1,47 @@
+# Persistent visual-prefill posttrain profiles.
+model:
+  image_encoder_pretrained_path: ${oc.decode:${oc.env:CLIP_CKPT_PATH,null}}
+  vae_pretrained_path: ${oc.decode:${oc.env:VAE_CKPT_PATH,null}}
+  model_config:
+    model:
+      visual_memory:
+        vae:
+          target: worldscape_policy.wam.wan22.vae.WanVideoVAE38
+          parameters:
+            z_dim: 48
+            dim: 160
+            vae_pretrained_path: null
+        image_encoder:
+          target: worldscape_policy.wam.wan22.image_encoder.WanImageEncoder
+          parameters:
+            image_encoder_pretrained_path: null
+        persistent_prompt: goal_or_demo
+        diffusion_view_layout: ${oc.env:WSP_DIFFUSION_VIEW_LAYOUT,mosaic_2x2}
+        view_index: 0
+        tiled: false
+        tile_size: [34, 34]
+        tile_stride: [18, 16]
+
+profiles:
+  visual_prompt:
+    none:
+      data_loader:
+        dataset_kwargs:
+          visual_prompt: none
+          context_sampling_mode: none
+          context_video_len: 1
+          ctx_head_only: false
+    goal:
+      data_loader:
+        dataset_kwargs:
+          visual_prompt: goal
+          context_sampling_mode: last
+          context_video_len: 1
+          ctx_head_only: true
+    demo:
+      data_loader:
+        dataset_kwargs:
+          visual_prompt: demo
+          context_sampling_mode: uniform
+          context_video_len: ${oc.decode:${oc.env:CONTEXT_VIDEO_LEN,50}}
+          ctx_head_only: true

@@ -1,0 +1,33 @@
+# Shared distributed defaults for mixed three-mode pretraining.
+includes:
+  - ../distributed/deepspeed.yaml
+  - ../embodiment/pretrain_multi_embodiment_adapter_ids.yaml
+
+data_loader:
+  # Current checkpoints use bimanual EEF6D actions only.
+  action_mode: ${oc.env:ACTION_MODE,eef}
+  # Pretraining predicts position/rotation deltas; gripper values stay absolute.
+  relative_action: ${oc.decode:${oc.env:RELATIVE_ACTION,true}}
+
+batch_adapter:
+  diffusion_view_layout: mosaic_2x2
+
+trainer:
+  # Used by the native optimizer path; DeepSpeed applies its own clipping.
+  max_grad_norm: 1.0
+  precision: bf16
+  gradient_accumulation_steps: ${oc.decode:${oc.env:GRADIENT_ACCUMULATION_STEPS,1}}
+  checkpoint_max_shard_size: ${oc.env:CHECKPOINT_MAX_SHARD_SIZE,5GB}
+
+logging:
+  wandb:
+    enabled: ${oc.decode:${oc.env:WANDB_ENABLED,true}}
+    project: ${oc.env:WANDB_PROJECT,worldscape_policy}
+    name: ${oc.env:WANDB_RUN_NAME,${oc.env:RUN_NAME,baseline}}
+    mode: ${oc.env:WANDB_MODE,offline}
+    entity: ${oc.decode:${oc.env:WANDB_ENTITY,null}}
+    run_id: ${oc.decode:${oc.env:WANDB_RUN_ID,null}}
+    group: ${oc.decode:${oc.env:WANDB_GROUP,null}}
+
+training:
+  log_every: ${oc.decode:${oc.env:LOG_STEPS,50}}

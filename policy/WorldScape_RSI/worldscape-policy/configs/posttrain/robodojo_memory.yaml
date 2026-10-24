@@ -1,0 +1,13 @@
+# Memory: H24/C24 absolute joints, z-score. All other defaults come from flash.
+includes:
+  - robodojo.yaml
+
+selectors:
+  robodojo_model: memory
+
+data_loader:
+  dataset_kwargs:
+    max_chunk_size: ${oc.decode:${oc.env:WAM_MAX_CHUNK_SIZE,24}}
+
+training:
+  gradient_checkpointing: ${oc.decode:${oc.env:WAM_GRADIENT_CHECKPOINTING,true}}
