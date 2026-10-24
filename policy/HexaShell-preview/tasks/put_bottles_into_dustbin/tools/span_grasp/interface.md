@@ -1,0 +1,8 @@
+## span_grasp
+`robo span_grasp ARM --u0 U --v0 V --u1 U --v1 V --u2 U --v2 V --u3 U --v3 V [--camera head|wrist_l|wrist_r] [--support_z Z] [--pixel_error PX] [--support_error M] [--release_x X --release_y Y --release_z Z]`
+Fits opposite straight silhouette sides 0→1 and 2→3 of a supported horizontal circular section in the current image, then executes axis_grasp horizontal mode. ARM=left|right; one command plus motion steps. Fitted XYZ/axis pass unchanged; overrides are rejected.
+Uses horizontal_span calibration/support/validity guards. Defaults: camera=head, pixel_error=2, support_error=0.02 m; support measured by cached RGB plane sweep if omitted. Mismatch returns full retry_args without support_z; unavailable automatic support or vertical-compatible sides stop before motion.
+Additional options: --clearance M (default max(0.04,fitted diameter+support_error), allowed 0.04–0.25), --lift M (0.10), --path direct|staged (staged), --reorient combined|separate (combined), --transit raised|direct (raised), --idle_clearance auto|off (auto), --carry_orientation auto|grasp|forward (auto).
+Release XYZ is all-or-none in world meters with Z≥fitted center Z+lift; omission retains grip after lift. All axis_grasp motion guards apply. Derived clearance is a heuristic; excessive clearance fails before motion.
+Returns plan_ok, plan_fail_reason, geometry, grasp_target, stages, released and grasp_verified=false. A motion attempt sets geometry_refresh_required=true; scene disturbance invalidates pixel selections. No retention/landing verification or automatic perception retry.
+Invalid geometry/arguments stop before motion; execution failure stops at its stage. Occlusion, taper, biased support and unclear swept volumes remain limitations.

@@ -1,0 +1,13 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/fill_pen_holder/tools/<name>)
+upright_transfer
+
+aperture_measure
+release_retract
+segment_measure
+side_grasp
+segment_find
+segment_grasp
+segment_insert
+segment_pull
+segment_upright
+table_plane

@@ -1,0 +1,10 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/plug_in_charger/tools/<name>)
+surface_points
+temporal_points
+stereo_guides
+mate_pair
+carry_offset
+axial_pick
+bounded_rotate
+table_plane
+plane_height

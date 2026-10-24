@@ -1,0 +1,8 @@
+## horizontal_span
+`robo horizontal_span --u0 U --v0 V --u1 U --v1 V --u2 U --v2 V --u3 U --v3 V [--camera head|wrist_l|wrist_r] [--support_z Z] [--pixel_error PX] [--support_error M]`
+Read-only horizontal circular-axis fit from opposite straight silhouette sides 0→1 and 2→3 of one untapered section, excluding end caps; no action steps. Assumes horizontal support contact; center Z=support+radius, axial midpoint comes from selected segment extent.
+Defaults: camera=head, pixel_error=2 (0–10), support_error=0.02 m (0–0.1). Omitted support uses the shared cached RGB plane sweep with a 0.008 m uncertainty floor. Explicit height disagreement >0.012 m returns support_height_mismatch and retry_args omitting support_z; unavailable measurement requires explicit measured height.
+The measured support is global; local surface identity remains a caller assumption. Measurement uncertainty is a design tolerance, not a certificate. No automatic height correction.
+Returns plan_ok, plan_fail_reason, axis_center, axis_direction, radius_m, edge_residual_px, vertical_edge_residual_px, support_z, support_estimate, sampled_center_bounds, sampled_radius_range_m, depth_used=false and geometry_verified=false; world units are meters.
+Sides also compatible with projected gravity within pixel_error+1 px return axis_orientation_ambiguous without a center; degenerate gravity also fails. Side selections do not establish physical base/top endpoints.
+Invalid calibration/pixels, short/crossing edges, inconsistent geometry, grazing/end-on views, radius outside 0.003–0.15 m or unstable sensitivity fail. Sampled perturbations are not certified simultaneous-error bounds; occlusion, taper and biased support remain limitations. No retention/reachability check.
