@@ -1,0 +1,59 @@
+policy_name: WSA
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# Increase this if the first WSA forward pass exceeds ten minutes.
+request_timeout_s: 600
+
+# WSA source/checkpoint resolution. null wsa_root uses policy/WSA/WSA.
+wsa_root: null
+checkpoint_path: null
+allow_dummy_policy: false
+
+# Shared RoboTwin runtime settings.
+stats_key: aloha
+device: cuda
+dtype: bfloat16
+# Avoid a full temporary safetensors copy on CUDA while restoring WSA-Base.
+load_checkpoint_on_cpu: true
+action_mode: delta
+infer_horizon: null
+binarize_gripper: null
+image_history_interval: 15
+resize_size: 224
+eval_config_path: null
+disable_3d_teacher_for_eval: true
+omit_visual_tokens_in_causal_inference: true
+num_inference_steps: null
+default_prompt: follow the instruction
+
+# Optional WSA-Base assets. null uses checkpoint defaults.
+qwen3_vl_pretrained_path: null
+qwen3_vl_processor_path: null
+cosmos_tokenizer_path_or_name: null
+da3_model_path_or_name: null
+da3_code_root: null
+
+# Optional WSA-Large assets/runtime settings.
+wsa_large_model_id: null
+wsa_large_tokenizer_model_id: null
+wsa_large_action_dit_pretrained_path: null
+wsa_large_future_3d_pretrained_path: null
+wsa_large_load_text_encoder: true
+wsa_large_redirect_common_files: true
+wsa_large_skip_dit_load_from_pretrain: true
+wsa_large_stats_path: null
+wsa_large_state_key: default
+wsa_large_video_height: 384
+wsa_large_video_width: 320
+wsa_large_standardize_video_size_by_cameras: true
+wsa_large_concat_multi_camera: robotwin
