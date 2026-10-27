@@ -473,7 +473,17 @@ def check_runtime(
         from pi05_source import load_openpi_client
 
     load_openpi_client(POLICY_DIR)
-    pi05 = check_pi05_runtime()
+    if model_cfg.get("vla_backend") == "simate_beta":
+        try:
+            from .simate_runtime import check_simate_runtime
+        except ImportError:
+            from simate_runtime import check_simate_runtime
+        checkpoint = Path(model_cfg["checkpoint_path"])
+        if not checkpoint.is_absolute():
+            checkpoint = POLICY_DIR / checkpoint
+        vla = check_simate_runtime(POLICY_DIR, checkpoint)
+    else:
+        vla = check_pi05_runtime()
     provider = cli.config_overrides
     # Deliberately print only an allowlist; never serialize AgentConfig or the environment.
     return {
@@ -492,7 +502,7 @@ def check_runtime(
         "key_required": require_key,
         "runtime_capabilities": capabilities,
         "icl": icl,
-        "pi05": pi05,
+        **({"vla": vla} if model_cfg.get("vla_backend") == "simate_beta" else {"pi05": vla}),
     }
 
 

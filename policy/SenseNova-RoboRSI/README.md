@@ -1,10 +1,11 @@
 # SenseNova-RoboRSI
 
-RC1 adapter: real evaluation acceptance for one shared VLA and ten concurrent cases per GPU is pending. This PR does not claim that concurrency validation has passed.
+Simate beta + adaptive 2–50 adapter. GPU evaluation acceptance is tracked separately; this source update does not claim a completed concurrency evaluation.
 
 **Contributor:** RoboRSI integration | **Original code:** [RoboRSI](https://github.com/SenseTime-FVG/RoboRSI)
 
-RoboDojo adapter for the original adaptive π0.5 hybrid. π0.5 proposes 50 actions;
+RoboDojo adapter for the original adaptive hybrid, with Simate beta selected
+by the submitted `deploy.yml`. Simate beta proposes 50 actions;
 Codex CLI reviews and approves 2–50 steps (`adaptive_2_50`, default 5);
 2–4 step precision adjustments follow the reason requirement in the shared public
 interface. The standard `Model/reset/update_obs/get_action` interface retains the
@@ -33,6 +34,12 @@ installed separately and keep their original dependencies.
 cd XPolicyLab/policy/SenseNova-RoboRSI
 bash install.sh
 ```
+
+The default Simate installation includes pinned model dependencies, source
+checks and checkpoint downloads. If the base RoboRSI runtime is already
+installed, run `bash install_simate.sh` to add Simate only. See
+[INSTALL.md](INSTALL.md#simate-backend-and-cached-assets) for existing-environment and cached-asset options.
+
 
 `install.sh` automatically builds Python 3.10.12 from fixed official source when
 needed, obtains fixed uv, then installs the environments. A C compiler, `make` and Python build

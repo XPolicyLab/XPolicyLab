@@ -248,8 +248,10 @@ def main() -> int:
         ROBORSI_PYTHON=str(python),
         PATH=str(uv.parent) + os.pathsep + environment.get("PATH", "/usr/bin:/bin"),
     )
-    # The original bubblewrap checks need an accessible local temporary directory.
-    with tempfile.TemporaryDirectory(prefix="roborsi-install-", dir="/tmp") as scratch:
+    # Keep install/build scratch with this installation, including on dev hosts.
+    scratch_root = root / "tmp"
+    scratch_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="roborsi-install-", dir=scratch_root) as scratch:
         environment["TMPDIR"] = scratch
         return subprocess.call(["bash", str(POLICY / "install.sh")], env=environment)
 

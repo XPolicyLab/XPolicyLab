@@ -7,3 +7,8 @@ __pycache__/
 /assets/*.whl
 /checkpoints/
 /outputs/
+
+# Machine-local Simate installation receipts and backups.
+/simate_backend.json
+/simate-install.json
+/.simate-backend-backups/

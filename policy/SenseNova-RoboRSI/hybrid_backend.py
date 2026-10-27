@@ -244,6 +244,7 @@ class HybridBackend:
         resource_root: Path,
         vla_port: int,
         replay: dict | None = None,
+        vla_session_id: str | None = None,
     ):
         import json
 
@@ -396,6 +397,10 @@ class HybridBackend:
 
             @connection.setter
             def connection(self, value):
+                if value is not None and vla_session_id is not None:
+                    from .simate_bridge import SimateConnection
+
+                    value = SimateConnection(value, vla_session_id, lambda: owner._step)
                 with owner._lock:
                     closed = owner._closed
                     if not closed:

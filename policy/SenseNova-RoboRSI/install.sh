@@ -187,10 +187,23 @@ BENCH_ROOT="$(cd "${POLICY_DIR}/../../.." && pwd)"
 printf '%s\n' 'Preparing the fixed ICL packages...'
 "${POLICY_ENV}/bin/python" "${POLICY_DIR}/icl_assets.py" install > /dev/null
 
-# The reference hybrid requires the public pi0.5 checkpoint and its separate
-# Python 3.11.17 environment. Model tools use their own Python 3.11.13.
-printf '%s\n' 'Installing the independent VLA runtime and model assets...'
-"${POLICY_ENV}/bin/python" "${POLICY_DIR}/pi05_runtime.py" install > /dev/null
+# Install only the selected VLA. The Simate path keeps the vendored OpenPI
+# wire codec but never downloads the unused pi0.5 weights/runtime.
+VLA_BACKEND="$("${POLICY_ENV}/bin/python" - "${POLICY_DIR}/deploy.yml" <<'PYBACKEND'
+import sys,yaml
+cfg=yaml.safe_load(open(sys.argv[1]))
+backend=cfg.get("vla_backend", "pi05")
+if backend not in ("pi05", "simate_beta"):
+    raise SystemExit("Unsupported vla_backend")
+print(backend)
+PYBACKEND
+)"
+printf 'Installing VLA backend: %s\n' "${VLA_BACKEND}"
+if [[ "${VLA_BACKEND}" == simate_beta ]]; then
+    bash "${POLICY_DIR}/install_simate.sh"
+else
+    "${POLICY_ENV}/bin/python" "${POLICY_DIR}/pi05_runtime.py" install > /dev/null
+fi
 
 # Installation validates identity and configuration offline; eval.sh always requires the key.
 "${POLICY_ENV}/bin/python" "${POLICY_DIR}/preflight.py" \
@@ -207,6 +220,8 @@ sys.path.insert(0, str(policy))
 from preflight import load_submission, sha256_file
 
 metadata = load_submission(policy)
+import yaml
+backend = yaml.safe_load((policy / "deploy.yml").read_text()).get("vla_backend", "pi05")
 receipt = {
     "schema_version": 1,
     "installed_at": datetime.now(timezone.utc).isoformat(),
@@ -220,8 +235,13 @@ receipt = {
     "icl_catalog_sha256": metadata["icl"]["catalog_sha256"],
     "icl_artifacts_sha256": metadata["icl"]["artifacts_sha256"],
     "hybrid_manifest_sha256": metadata["hybrid"]["manifest_sha256"],
-    "pi05_requirements_sha256": sha256_file(policy / "pi05/requirements.lock"),
-    "pi05_install_receipt": "runtime/pi05-installed.json",
+    "vla_backend": backend,
+    "vla_install_receipt": "simate-install.json" if backend == "simate_beta" else "runtime/pi05-installed.json",
+    **({"simate_requirements_sha256": sha256_file(policy / "simate/requirements.lock")}
+       if backend == "simate_beta" else {
+           "pi05_requirements_sha256": sha256_file(policy / "pi05/requirements.lock"),
+           "pi05_install_receipt": "runtime/pi05-installed.json",
+       }),
     "python": str(Path(sys.argv[2]) / "bin/python"),
     "tool_runtime": json.loads((policy / "runtime/tool-runtime.json").read_text()),
     "simulator_bootstrap": json.loads(

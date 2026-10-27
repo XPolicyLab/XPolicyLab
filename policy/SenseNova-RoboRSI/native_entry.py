@@ -9,6 +9,7 @@ import importlib.abc
 import importlib.machinery
 import os
 from pathlib import Path
+import re
 import runpy
 import stat
 import sys
@@ -61,6 +62,7 @@ class _Finder(importlib.abc.MetaPathFinder):
 
 NATIVE_KIT_EXTENSION_ENV = "ROBORSI_NATIVE_KIT_EXTENSION_PARENT"
 NATIVE_KIT_PORTABLE_ENV = "ROBORSI_NATIVE_KIT_PORTABLE_ROOT"
+NATIVE_KIT_DISABLE_CRASHREPORTER_ENV = "ROBORSI_KIT_DISABLE_CRASHREPORTER"
 NATIVE_KIT_EXTENSION_CONFIGS = {
     "isaacsim.asset.importer.urdf-2.4.31+107.3.3.lx64.r.cp311":
         "1984a4ecf3134745215638420e449c197083e97a3932901656479a7677f9a3fb",
@@ -85,6 +87,9 @@ def _check_native_extension_config(root, expected_sha256, error):
 
 def _native_kit_arguments(native_args):
     """Forward opt-in SDK discovery and per-run storage through official CLI."""
+    disable_crashreporter = os.environ.get(NATIVE_KIT_DISABLE_CRASHREPORTER_ENV)
+    if disable_crashreporter not in (None, "0", "1"):
+        raise ValueError(NATIVE_KIT_DISABLE_CRASHREPORTER_ENV + " must be 0 or 1")
     additions = []
     requested = os.environ.get(NATIVE_KIT_EXTENSION_ENV)
     if requested is not None:
@@ -113,14 +118,22 @@ def _native_kit_arguments(native_args):
                 raise ValueError("native Kit storage requires clean absolute paths without whitespace")
         if state.name != "state" or root != state.parent / "cache/native-kit":
             raise ValueError("native Kit storage must use RUN_ROOT/cache/native-kit")
-        for directory in (state.parent, state, root.parent, root):
+        for directory in (state.parent, state, root.parent):
             if directory.resolve(strict=True) != directory:
                 raise ValueError("native Kit storage must not traverse symbolic links")
             info = directory.lstat()
             if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid():
                 raise ValueError("native Kit storage requires owned real directories")
+        # The official helper creates run/state and run/cache, but reserves the
+        # native Kit child for this process. Create only that validated child.
+        root.mkdir(mode=0o700, exist_ok=True)
+        if root.resolve(strict=True) != root:
+            raise ValueError("native Kit storage must not traverse symbolic links")
+        info = root.lstat()
+        if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid():
+            raise ValueError("native Kit storage requires owned real directories")
         additions.append(("--portable-root", root))
-    if not additions:
+    if not additions and disable_crashreporter != "1":
         return native_args
 
     # Official main uses argparse.parse_args(), so raw Kit-only options cannot
@@ -134,6 +147,7 @@ def _native_kit_arguments(native_args):
         elif argument.startswith("--kit_args="):
             effective = (index, argument.split("=", 1)[1], True)
     existing = effective[1] if effective is not None else ""
+    original = existing
     tokens = existing.split()  # Exactly the official AppLauncher's splitting.
     extra = []
     for flag, path in additions:
@@ -157,15 +171,50 @@ def _native_kit_arguments(native_args):
                     raise ValueError("--kit_args conflicts with this run's owned Kit storage")
         if not present:
             extra.extend([flag, str(path)])
-    if not extra:
+    if disable_crashreporter == "1":
+        # Only change this setting, preserving all unrelated Kit text. The
+        # official AppLauncher splits --kit_args on whitespace, not shell quotes.
+        flag = "--/crashreporter/enabled"
+        matches = list(re.finditer(r"\S+", existing))
+        replacements = []
+        for index, match in enumerate(matches):
+            token = match.group()
+            if token == flag:
+                if index + 1 >= len(matches):
+                    raise ValueError(flag + " requires a value in --kit_args")
+                value = matches[index + 1].group()
+                end = matches[index + 1].end()
+            elif token.startswith(flag + "="):
+                value = token[len(flag) + 1:]
+                end = match.end()
+            else:
+                continue
+            if value not in {"false", "0"}:
+                raise ValueError("--kit_args conflicts with disabling the Kit crash reporter")
+            replacements.append((match.start(), end,
+                                 flag + "=false" if not replacements else ""))
+        for start, end, value in reversed(replacements):
+            existing = existing[:start] + value + existing[end:]
+        if not replacements:
+            extra.append(flag + "=false")
+    if (not extra and existing == original
+            and (disable_crashreporter != "1" or (effective is not None and effective[2]))):
         return native_args
     combined = existing + (" " if existing else "") + " ".join(extra)
     result = list(native_args)
     if effective is None:
-        result.extend(["--kit_args", combined])
+        if disable_crashreporter == "1":
+            # A lone Kit setting begins with "--" and has no spaces. Use the
+            # equals form so official argparse cannot mistake it for an option.
+            result.append("--kit_args=" + combined)
+        else:
+            result.extend(["--kit_args", combined])
     else:
         index, _, equals = effective
-        result[index] = ("--kit_args=" if equals else "") + combined
+        if disable_crashreporter == "1" and not equals:
+            result[index - 1:index + 1] = ["--kit_args=" + combined]
+        else:
+            result[index] = ("--kit_args=" if equals else "") + combined
     return result
 
 

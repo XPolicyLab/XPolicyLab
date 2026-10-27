@@ -75,8 +75,13 @@ class Model(ModelTemplate):
         # ICL or starting the expensive VLA service. Never substitute the host.
         self._tool_python = resolve_tool_python(POLICY_DIR)
         self.model_cfg = dict(model_cfg)
+        self.model_cfg.setdefault("vla_backend", "pi05")
+        if self.model_cfg["vla_backend"] not in ("pi05", "simate_beta"):
+            raise ValueError("vla_backend must be pi05 or simate_beta")
         self.model_cfg.setdefault(
-            "checkpoint_path", "checkpoints/pi05-arx-x5-seed0-step59999"
+            "checkpoint_path", "checkpoints/simate-beta-robodojo-eval"
+            if self.model_cfg["vla_backend"] == "simate_beta"
+            else "checkpoints/pi05-arx-x5-seed0-step59999"
         )
         self.action_type = "joint"
         self.robot_action_dim_info = get_robot_action_dim_info("arx_x5")
@@ -110,6 +115,7 @@ class Model(ModelTemplate):
         self._trajectory_directory = None
         self._trajectory_id = None
         self._vla = None
+        self._simate_observer = None
         self._step = 0
         self._resume = None
         self._unfinished_native = None
@@ -313,6 +319,15 @@ class Model(ModelTemplate):
             owner["native_identity"] = native
             write_json(owner_path, owner)
         self._obs = {**obs, "instruction": instruction}
+        if self.model_cfg.get("vla_backend") == "simate_beta":
+            from .simate_bridge import SimateObserver
+
+            observed_step = self._step + int(
+                self._pending is not None and getattr(self._pending, "kind", "joint") == "joint"
+            )
+            if self._simate_observer is None:
+                self._simate_observer = SimateObserver(self._ensure_vla(), self._episode_id)
+            self._simate_observer.observe(self._obs, observed_step)
 
     def _ensure_vla(self) -> int:
         if self._vla is None:
@@ -337,8 +352,6 @@ class Model(ModelTemplate):
                     ) from error
                 self._vla = _SharedVLA(port)
                 return port
-            from .pi05_runtime import Pi05Server
-
             checkpoint = resolve_checkpoint_root(
                 self.model_cfg, POLICY_DIR / "checkpoints", policy_dir=POLICY_DIR
             )
@@ -347,14 +360,19 @@ class Model(ModelTemplate):
             log_root = POLICY_DIR / "outputs/vla"
             log_root.mkdir(parents=True, exist_ok=True, mode=0o700)
             output_dir = Path(tempfile.mkdtemp(prefix="run-", dir=log_root)).resolve()
-            server = Pi05Server(
-                checkpoint_dir=checkpoint,
-                data_home=POLICY_DIR / "runtime/pi05-data",
-                output_dir=output_dir,
+            options = dict(
+                checkpoint_dir=checkpoint, output_dir=output_dir,
                 gpu_id=os.environ.get("CUDA_VISIBLE_DEVICES", "0"),
-                port=0,
-                policy_dir=POLICY_DIR,
+                port=0, policy_dir=POLICY_DIR,
             )
+            if self.model_cfg.get("vla_backend") == "simate_beta":
+                from .simate_runtime import SimateServer
+
+                server = SimateServer(seed=int(self.model_cfg.get("seed") or 0), **options)
+            else:
+                from .pi05_runtime import Pi05Server
+
+                server = Pi05Server(data_home=POLICY_DIR / "runtime/pi05-data", **options)
             try:
                 self._vla = server.start()
             except BaseException:
@@ -444,6 +462,8 @@ class Model(ModelTemplate):
             resource_root=POLICY_DIR / "hybrid",
             vla_port=cfg["options"]["vla_port"],
             replay=cfg["options"].get("replay"),
+            vla_session_id=self._episode_id
+            if self.model_cfg.get("vla_backend") == "simate_beta" else None,
         )
         agent = self._agent_config.create_agent(case)
         context = HybridRunContext(
@@ -591,6 +611,10 @@ class Model(ModelTemplate):
         try:
             if self._connector is not None:
                 self._connector.close()
+            observer = getattr(self, "_simate_observer", None)
+            if observer is not None:
+                observer.close()
+                self._simate_observer = None
             if self._temporary is not None:
                 from .hybrid_resume import read_json, write_json
 
