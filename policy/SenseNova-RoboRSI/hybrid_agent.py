@@ -17,7 +17,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, Callable
 
 from roborsi.agents.config import AgentConfig
 from roborsi.embodied_agent import EmbodiedAgent
@@ -48,6 +48,7 @@ class HybridRunContext:
     bubblewrap_sha256: str
     resume: dict | None = None
     trajectory_dir: Path | None = None
+    before_execution: Callable[[], None] | None = None
 
 
 def build_evaluation_prompt(reference, cfg: dict, *, own_resume: bool = False) -> str:
@@ -343,6 +344,8 @@ class HybridEmbodiedAgent(EmbodiedAgent):
         failure = None
         budget_marker = os.environ.get("ROBORSI_EXECUTION_BUDGET_FILE")
         try:
+            if context.before_execution is not None:
+                context.before_execution()
             if context.resume and budget_marker:
                 from .case_budget import write_execution_budget
 

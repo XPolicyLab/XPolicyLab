@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import atexit
 import copy
+import fcntl
 import json
 import logging
 import os
@@ -113,6 +114,7 @@ class Model(ModelTemplate):
         self._resume = None
         self._unfinished_native = None
         self._resume_request_path = None
+        self._resume_start_lock = None
         self._deferred_controller = None
         self._cleanup_issue = None
         self._awaiting_feedback = self._ended = False
@@ -213,10 +215,34 @@ class Model(ModelTemplate):
         self._obs = self._pending = None
         self._awaiting_feedback = self._ended = False
 
+    def _reserve_resume(self) -> None:
+        """Exclude other starters without consuming a request during initialization."""
+        if self._resume is None or getattr(self, "_resume_start_lock", None) is not None:
+            return
+        request_path = self._resume_request_path
+        # Keep this inode: unlinking a lock file permits competing inode locks.
+        descriptor = os.open(
+            request_path.with_suffix(request_path.suffix + ".startup.lock"),
+            os.O_CREAT | os.O_RDWR | os.O_CLOEXEC,
+            0o600,
+        )
+        try:
+            try:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError as error:
+                raise FileExistsError("Resume request has an active controller starter") from error
+            if request_path.with_suffix(request_path.suffix + ".claimed").exists():
+                raise FileExistsError("Resume request already started a controller")
+        except BaseException:
+            os.close(descriptor)
+            raise
+        self._resume_start_lock = descriptor
+
     def _claim_resume(self) -> None:
-        """Claim at controller startup; native initialization can reset repeatedly."""
+        """Consume only after controller initialization, just before execution."""
         if self._resume is None:
             return
+        self._reserve_resume()
         from .hybrid_resume import digest, process_identity
 
         request_path = self._resume_request_path
@@ -406,7 +432,7 @@ class Model(ModelTemplate):
         (case / "icl-source.json").write_text(
             json.dumps(self._icl.source_identity, indent=2) + "\n"
         )
-        self._claim_resume()
+        self._reserve_resume()
         backend = HybridBackend(
             reference,
             task_name=self.model_cfg["task_name"],
@@ -436,6 +462,7 @@ class Model(ModelTemplate):
             bubblewrap_sha256=pins["cli"]["companion_sha256"]["codex-resources/bwrap"],
             resume=self._resume,
             trajectory_dir=self._trajectory_directory,
+            before_execution=self._claim_resume,
         )
         self._connector = HybridController(agent, context).start()
 
@@ -599,6 +626,14 @@ class Model(ModelTemplate):
                 self._deferred_controller = self._connector
             raise
         finally:
+            # A failed controller cleanup keeps its reservation: its thread may
+            # still execute. Otherwise close (or process exit) releases startup
+            # failures without consuming the request or changing trajectory ID.
+            if getattr(self, "_deferred_controller", None) is None:
+                descriptor = getattr(self, "_resume_start_lock", None)
+                self._resume_start_lock = None
+                if descriptor is not None:
+                    os.close(descriptor)
             self._connector = self._icl = self._obs = self._pending = None
             self._awaiting_feedback = False
             if self._temporary is not None:

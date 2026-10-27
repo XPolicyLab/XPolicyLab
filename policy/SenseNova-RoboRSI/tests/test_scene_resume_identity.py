@@ -82,6 +82,7 @@ def _prepare_start(monkeypatch, boundary):
     monkeypatch.setattr(model_module, "prepare_icl_context", lambda *_: prepared)
     monkeypatch.setattr(hybrid_backend, "load_reference_source", lambda *_: SimpleNamespace())
     monkeypatch.setattr(boundary, "_ensure_vla", lambda: 19802)
+    monkeypatch.setattr(boundary, "_reserve_resume", lambda: None)
     monkeypatch.setattr(boundary, "_claim_resume", lambda: None)
     captured = {}
 
