@@ -1,0 +1,9 @@
+-r requirements-infer.txt
+decord==0.6.0
+deepspeed==0.16.9
+kornia==0.8.2
+pandas==2.2.3
+pyarrow==19.0.1
+jsonlines==4.0.0
+func-timeout==4.3.5
+tqdm==4.67.1

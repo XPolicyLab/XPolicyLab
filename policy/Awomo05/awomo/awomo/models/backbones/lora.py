@@ -13,7 +13,6 @@ class LoRALinear(nn.Module):
     """Low-rank adapter wrapper for an existing Linear layer."""
 
 def remap_plain_linear_keys_to_lora_base(module: nn.Module, state_dict: dict[str, torch.Tensor]) -> dict[str, torch.Tensor]:
-    """Map plain Linear checkpoint keys into LoRALinear `.base` keys for resume."""
     lora_names = {name for name, child in module.named_modules() if isinstance(child, LoRALinear)}
     if not lora_names:
         return state_dict
@@ -50,7 +49,6 @@ def merge_lora_state_dict_to_plain(state_dict: dict[str, torch.Tensor]) -> dict[
         base = state_dict[base_key]
         lora_a = state_dict[a_key]
         lora_b = state_dict[b_key]
-        # Historical FLUX.2 LoRA configs used alpha=rank, so alpha/rank=1.
         delta = lora_b.float() @ lora_a.float()
         merged[f"{prefix}.weight"] = (base.float() + delta).to(dtype=base.dtype)
         consumed.update({base_key, a_key, b_key})

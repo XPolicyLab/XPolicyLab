@@ -1,0 +1,13 @@
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: DEEPSPEED
+mixed_precision: bf16
+use_cpu: false
+deepspeed_config:
+  deepspeed_multinode_launcher: standard
+  zero_stage: 2
+  offload_optimizer_device: none
+  offload_param_device: none
+  gradient_accumulation_steps: auto
+  gradient_clipping: auto
+  zero3_init_flag: false

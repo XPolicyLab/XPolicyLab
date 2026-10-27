@@ -13,7 +13,7 @@ fi
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 DESTINATION="${1:-${SCRIPT_DIR}/checkpoints/simate-beta-robodojo-eval}"
 
-python - "${DESTINATION}" <<'PY'
+"${PYTHON:-python}" - "${DESTINATION}" <<'PY'
 import hashlib
 from pathlib import Path
 import shutil
@@ -25,7 +25,9 @@ from huggingface_hub.errors import GatedRepoError, RepositoryNotFoundError
 from safetensors import safe_open
 
 REPO_ID = "SIPAILab/sipai-robodojo-eval-ae"
-TOKENIZER_REPO = "google/paligemma-3b-pt-224"
+REVISION = "0738aab54e0c873db76d4d2aec7a467ca1b04120"
+TOKENIZER_REPO = "SIPAILab/simate-beta-init"
+TOKENIZER_REVISION = "c924b68d04828221ed1f11e2abc7fe8e7174c24d"
 TOKENIZER_SHA256 = "8986bb4f423f07f8c7f70d0dbe3526fb2316056c17bae71b1ea975e77a168fc6"
 
 
@@ -43,12 +45,12 @@ def require_ae_weights(path):
             raise SystemExit("The checkpoint is not an AE policy export. Use compatible AE weights; the existing destination was not replaced.")
 
 
-def fetch(repo, name, destination, expected=None, validate=None):
+def fetch(repo, name, destination, expected=None, validate=None, revision=REVISION):
     target = destination / name
     if expected and target.is_file() and sha256(target) == expected:
         print(f"Reusing verified file: {target}", flush=True)
         return
-    metadata = get_hf_file_metadata(hf_hub_url(repo, name, revision="main"))
+    metadata = get_hf_file_metadata(hf_hub_url(repo, name, revision=revision))
     checksum = expected or metadata.etag
     if not checksum or len(checksum) != 64:
         raise SystemExit(f"Missing SHA-256 metadata for {repo}/{name}.")
@@ -59,7 +61,6 @@ def fetch(repo, name, destination, expected=None, validate=None):
             validate(target)
         print(f"Reusing current file: {target}", flush=True)
         return
-    # Resolve main once, then use that same snapshot even if main changes mid-download.
     source = Path(hf_hub_download(repo_id=repo, filename=name, revision=metadata.commit_hash))
     if sha256(source) != checksum:
         raise SystemExit(f"Checksum mismatch for {name}; the existing destination was not replaced.")
@@ -74,13 +75,12 @@ def fetch(repo, name, destination, expected=None, validate=None):
 
 
 destination = Path(sys.argv[1]).expanduser().resolve()
-print(f"Downloading current Simate_beta checkpoint from {REPO_ID}", flush=True)
+print(f"Downloading evaluation checkpoint from {REPO_ID} @ {REVISION}", flush=True)
 try:
-    # Resolve tokenizer access before downloading the much larger model file.
-    fetch(TOKENIZER_REPO, "tokenizer.model", destination, TOKENIZER_SHA256)
+    fetch(TOKENIZER_REPO, "tokenizer.model", destination, TOKENIZER_SHA256, revision=TOKENIZER_REVISION)
     fetch(REPO_ID, "model.safetensors", destination, validate=require_ae_weights)
 except GatedRepoError:
-    raise SystemExit(f"Accept the access terms at https://huggingface.co/{TOKENIZER_REPO}, then run hf auth login or set HF_TOKEN.") from None
+    raise SystemExit(f"Cannot access a checkpoint asset. Check repository access and HF authentication.") from None
 except RepositoryNotFoundError:
     raise SystemExit("Cannot access the Hugging Face repository. If private, run hf auth login or set HF_TOKEN with read access.") from None
 print(f"Checkpoint directory: {destination}")

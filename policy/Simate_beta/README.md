@@ -1,145 +1,155 @@
 # Simate_beta
 
-**Contributor:** SIPAILab | **Paper:** Not provided | **arXiv:** Not provided | **Original code:** Inference implementation in this directory
+**Contributor:** SIPAILab | **Paper:** Not provided | **arXiv:** Not provided | **Original code:** [SIPAILab/simate-beta](https://github.com/SIPAILab/simate-beta)
 
-Self-contained, **eval-only** Simate_beta AE memory policy for XPolicyLab. This directory
-contains the inference implementation; no separate Simate_beta repository or runtime
-is required. Dependencies are PyTorch, standard public Python packages and the
-shared XPolicyLab server/client utilities.
+AE memory policy supporting native SiMate training and self-contained inference
+for `RoboDojo / arx_x5 / joint`. Training uses upstream revision
+`8ae595cda0eea1595afdb240749c7b595872f5c0`.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
-On Linux with Conda (Miniconda/Miniforge) and a compatible NVIDIA driver,
-run from this directory:
+Run from this directory on Linux with Conda and a compatible NVIDIA driver.
+Install the RoboDojo simulator environment separately.
+
+Evaluation:
 
 ```bash
 bash install.sh
 conda activate simate-beta-eval
 ```
 
-The script creates a Python 3.11 environment when needed, reuses installed CUDA
-PyTorch 2.6/2.7/2.8, installs the inference packages and XPolicyLab, and checks
-dependencies and model/server imports. When PyTorch is absent, it defaults to
-PyTorch 2.7.0 with CUDA 12.8 wheels. An existing unsupported or broken PyTorch
-installation reports an error instead of being automatically replaced. No preinstalled PyTorch or XPolicyLab is
-required. An existing environment must use Python 3.11. Matching installed
-packages are reused without forced upgrades. Pip uses its configured cache;
-set `PIP_CACHE_DIR=/path/to/pip-cache` to reuse a shared cache.
+The default environment is `simate-beta-eval` with Python 3.11. The installer
+reuses supported CUDA PyTorch 2.6–2.8, or installs 2.7.0/CUDA 12.8 when absent.
+An optional argument to `install.sh` selects another environment name or path;
+pass it to `eval.sh` as well. Set `CONDA_EXE` if Conda is not on PATH.
 
-For a fully offline installation, provide a directory of compatible wheels with
-`PIP_NO_INDEX=1 PIP_FIND_LINKS=/path/to/wheels` and set `CONDA_OFFLINE=true`.
-Conda must already have the Python environment or its packages cached. Missing
-packages cause an error instead of a download; pip's HTTP cache alone is not an
-offline wheel directory.
-
-To choose an environment name or path:
+Training:
 
 ```bash
-bash install.sh my-simate-beta-env
-# Or: bash install.sh /path/to/simate-beta-env
+conda create -n simate-beta-train python=3.11 pip -y
+conda activate simate-beta-train
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+bash install_training.sh
 ```
 
-Use that same name/path as the policy environment argument to `eval.sh`.
-If Conda is not on PATH, set `CONDA_EXE` to its executable. This installs the
-policy environment only; install the RoboDojo simulator environment separately.
-See the [XPolicyLab README](../../README.md) for shared deployment conventions.
+`install_training.sh` installs the pinned upstream source in `training_source/`
+and its dependencies, including the `hf` CLI. `SIMATE_TRAIN_ROOT` selects an
+existing clean checkout at that revision; `PYTHON` selects the interpreter for
+training and data scripts.
 
 ## Data Processing
 
-Not supported by this eval-only adapter; no training dataset is required.
+Use the prepared [SiMate dataset](https://huggingface.co/datasets/SIPAILab/simate-beta-training-data)
+and [initialization bundle](https://huggingface.co/SIPAILab/simate-beta-init).
+The dataset is native MP4/Parquet TAR with shard indexes, manifest and training
+annotations. Download the complete package; this entry point does not convert
+raw XPolicyLab HDF5 or LeRobot datasets.
+
+Download and prepare the data in the training environment:
+
+```bash
+hf download SIPAILab/simate-beta-training-data --repo-type dataset \
+  --revision ebcf1c15641c5b46eb1d7efef312e8ab567a3f4c --local-dir ./data/simate-beta-training-data
+bash download_initialization.sh
+
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [--verify]
+bash process_data.sh RoboDojo mem20-ae arx_x5 joint --verify
+```
+
+`SIMATE_DATA_ROOT` overrides the dataset location. `process_data.sh` links the
+prepared package into `data/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>/`;
+`--verify` checks packaged SHA-256 sums. The recipe uses the complete package,
+without an `expert_data_num` argument.
 
 ## Training
 
-Not included. This is an inference-only submission and needs no training data,
-training configuration, optimizer state or access to a training repository.
+The upstream `configs/simate-beta_mem20_ae_80k.yaml` defines the default recipe:
+80k updates, 4 × 8 GPUs, batch 4/GPU (global batch 128), BF16 HSDP,
+AdamW 1e-5 → 1e-6, 500 warmup updates and EMA 0.99. SigLIP and the AE encoder
+are frozen. Source weights are 5:0.7:1 for `robodojo_all`, `make_kong` and
+`play_tic_tac_toe`.
+
+```bash
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> \
+  [--dry-run] [-- dotlist overrides...]
+
+# Run on each node with NODE_RANK=0, 1, 2 or 3 and the same master address.
+export NODE_RANK=0 MASTER_ADDR=10.0.0.1 MASTER_PORT=29500
+export SIMATE_INIT_ROOT="$PWD/pretrained/simate-beta-init"
+bash train.sh RoboDojo mem20-ae arx_x5 joint 0 0,1,2,3,4,5,6,7
+```
+
+All nodes must use the same source, data, initialization and shared checkpoint
+root. `gpu_id` selects local GPUs. `--dry-run` checks the launch command;
+dotlist overrides modify the recipe, while run name, seed and output location
+come from the standard arguments. Use a new `ckpt_name` for each run.
+
+`SIMATE_CHECKPOINT_ROOT` overrides `checkpoints/`; `CACHE_ROOT` selects temporary
+training caches. Dataset paths and phase fingerprints come from
+`training_assets.json`; normalization statistics come from the initialization bundle.
+
+Each run writes its resolved configuration, `metrics.jsonl`, logs, distributed
+checkpoints and FP32 EMA exports under
+`checkpoints/<bench_name>-<ckpt_name>-<env_cfg_type>-<action_type>-<seed>/`.
+On completion, `model.safetensors` links to the final export and `tokenizer.model`
+is copied alongside it. Pass the training label to eval, or the absolute run
+directory for a custom checkpoint root. When copying a checkpoint, dereference
+the model symlink.
 
 ## Evaluation
 
-Supported target: `bench_name=RoboDojo`, `env_cfg_type=arx_x5`,
-`action_type=joint`. The checkpoint's two six-joint arms and scalar grippers are
-validated against XPolicyLab's shared robot configuration.
+Download the evaluation weights and run:
 
 ```bash
+bash download_checkpoint.sh
+
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
   <policy_gpu_id> <env_gpu_id> <policy_env_or_uv_path> <eval_env_conda_env>
-```
 
-```bash
 EVAL_ENV_TYPE=debug bash eval.sh RoboDojo stack_bowls simate-beta-robodojo-eval arx_x5 joint 0 0 1 simate-beta-eval RoboDojo
 EVAL_ENV_TYPE=sim bash eval.sh RoboDojo stack_bowls simate-beta-robodojo-eval arx_x5 joint 0 0 1 simate-beta-eval RoboDojo
 ```
 
-The ten positional arguments follow the standard XPolicyLab convention. For
-split-machine evaluation, use the shared policy server and simulator client.
+To evaluate your own completed training run, replace `simate-beta-robodojo-eval`
+with its training label (for example, `mem20-ae`) or absolute run directory.
 
-`deploy.py` updates observations once per action step, including steps inside a
-chunk. For N history frames at interval K, inference at step t uses exactly
-`t-N*K, ..., t-K`, oldest first. Missing pre-episode frames are masked; three
-current camera views are separate. History is isolated by evaluation and
-environment ID and cleared between episodes, including when evaluation fails.
-Each valid history image passes through SigLIP and the AE encoder, reducing its
-16 by 16 token grid to 4 by 4. Current camera images retain their full token grids.
+Set `DEBUG_OBS_ENCODED=1` with debug mode to check encoded camera observations.
+The shared server decodes RGB images; the adapter preserves their channel order.
 
-Batch calls execute inference sequentially and preserve requested environment
-order, following other XPolicyLab adapters. Finished environments leave the active
-batch. Actions are relative joint predictions decoded against the current joint
-state; grippers predict absolute openness and receive no added compensation.
+The deployment loop updates history every action step, including within a chunk.
+History is isolated per evaluation/environment and cleared between episodes.
+Batched inference is sequential and preserves active-environment order. Arm
+actions are relative to the current joint state; grippers use absolute openness.
 
 ## Model Assets
 
-The portable checkpoint directory requires these two files:
-
-- `model.safetensors`: complete FP32 AE policy weights, including SigLIP, the
-  history encoder and the action model. An encoder-only file is insufficient.
-- `tokenizer.model`: SentencePiece tokenizer.
-
-The download script reads the current weights from
-[SIPAILab/sipai-robodojo-eval-ae](https://huggingface.co/SIPAILab/sipai-robodojo-eval-ae):
+Use the [initialization bundle](https://huggingface.co/SIPAILab/simate-beta-init)
+for training. It contains the FP32 policy, history encoder, tokenizer,
+frozen normalization statistics and license files.
 
 ```bash
-# Run in the activated policy environment.
-bash download_checkpoint.sh
-# Or choose a checkpoint directory:
-bash download_checkpoint.sh /path/to/checkpoint
+bash download_initialization.sh [destination]
 ```
 
-The default destination is `checkpoints/simate-beta-robodojo-eval` under this adapter,
-independent of the working directory. Pass `simate-beta-robodojo-eval` as `ckpt_name`
-to `eval.sh` for that default, or pass the absolute path of a custom destination.
-The local directory name is independent of the Hugging Face repository name.
-Checkpoint lookup uses XPolicyLab's shared resolver.
+The default destination is `pretrained/simate-beta-init`. The downloader pins
+revision `c924b68d04828221ed1f11e2abc7fe8e7174c24d`, verifies all packaged
+SHA-256 sums and reuses matching local files. For a custom destination, set
+`SIMATE_INIT_ROOT` to that directory before training.
 
-This adapter requires an AE policy export. Pooling checkpoints are incompatible
-and are rejected by both the loader and download script. To use another compatible
-AE checkpoint, place the two files above in a local directory and pass its
-absolute path as `ckpt_name`.
+Use the [evaluation checkpoint](https://huggingface.co/SIPAILab/sipai-robodojo-eval-ae)
+for inference. `download_checkpoint.sh [destination]` pins
+revision `0738aab54e0c873db76d4d2aec7a467ca1b04120`, verifies SHA-256 and writes
+`model.safetensors` and `tokenizer.model` to
+`checkpoints/simate-beta-robodojo-eval`.
 
-Each run checks the current `main` branch. Matching local weights are reused;
-otherwise the script uses the Hugging Face cache or downloads the current weights.
-It verifies the model's SHA-256 against the remote metadata before replacing
-an existing file. Cache files are copied into the destination, so reserve space
-for both copies when the cache is on the same disk. Checking for updates requires
-network access.
-
-The script fetches only `model.safetensors` from the Simate_beta Hugging Face repository and
-`tokenizer.model` from
-[Google's official PaliGemma repository](https://huggingface.co/google/paligemma-3b-pt-224).
-A compatible existing tokenizer is reused, with its checksum verified.
-For an uncached tokenizer, first accept the Google repository's access terms
-and authenticate with `hf auth login` or `HF_TOKEN`.
-
-The public Simate_beta weights can be downloaded without logging in. Access to a
-private repository requires authentication with read access.
-Standard proxy and Hugging Face cache settings are honored; credentials are
-not stored in this script. No PaliGemma weights or extra inference JSON files
-are downloaded.
+For custom evaluation weights, provide a complete FP32 AE policy and its
+matching tokenizer. Encoder-only and pooling checkpoints are unsupported.
 
 ## Configuration
 
-`deploy.yml` contains all inference settings in addition to the standard
-XPolicyLab fields:
+Model-specific defaults in `deploy.yml`:
 
 ```yaml
 device: cuda:0
@@ -154,15 +164,8 @@ max_token_len: 200
 num_inference_steps: 10
 ```
 
-This selects 25 primary-camera history frames spaced 20 action steps apart, a
-4 by 4 AE history token grid with a 512-channel encoder, FP32 compute, and
-10 flow integration steps. Only the encoder is needed for inference; no decoder
-or separate AE checkpoint is loaded.
-`exec_chunk_size` must be between 1 and 50. Keep these settings aligned with the
-checkpoint when changing weights. The release's fixed state/action q01 and q99
-statistics are embedded in `processing.py` and used for state tokenization and
-action decoding. Checkpoints used with this adapter must share those statistics.
-Neither `inference.json` nor `normalization.json` is read or required.
-
-RGB decoding belongs to the shared server. This adapter preserves RGB ordering
-and applies the checkpoint's aspect-preserving image resize and padding.
+At action step t, history uses `t-N*K, ..., t-K`; unavailable frames are masked.
+The defaults encode 25 primary-camera history frames, spaced 20 steps apart,
+into 25 × 16 tokens using a 4 × 4 AE grid and a 512-channel encoder. Current
+camera views remain separate. `max_token_len` limits prompt tokens;
+`num_inference_steps` controls flow integration. `exec_chunk_size` must be 1–50.

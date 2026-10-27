@@ -1,0 +1,44 @@
+# @package data
+defaults:
+  - robotwin
+  - _self_
+
+# Preserve Joint96 three-view geometry; encode online with STVAE150k/DINO110k.
+video_size: [256, 256]
+processor:
+  num_output_cameras: 3
+sampling:
+  num_frames: 33
+  action_size: 32
+  action_video_freq_ratio: 4
+  memory_video_anchor_size: 0
+  memory_recent_frame_offset: 0
+train:
+  _target_: wam.datasets.robotwin_joint96_robot37.RobotwinJoint96OnlineDataset
+  domain: robotwin
+  camera_slots: [0, 1, 2]
+  text_cache_source_root: ${model.joint_visual_codec.source_root}
+  video_size: ${data.video_size}
+  memory_video_anchor_size: 0
+  memory_recent_frame_offset: 0
+  concat_multi_camera: latent_horizontal
+  single_canvas: false
+  return_vlm_current_images: false
+  load_episode_stats: false
+  check_local_files: false
+  image_sensor_noise: {enabled: false}
+  # Processor, canonical80 mapping, stats, clean selector and all RGB jitter
+  # parameters are inherited unmodified from the upstream data/robotwin.yaml.
+val:
+  _target_: ${data.train._target_}
+  domain: ${data.train.domain}
+  camera_slots: ${data.train.camera_slots}
+  text_cache_source_root: ${data.train.text_cache_source_root}
+  load_episode_stats: false
+  check_local_files: false
+  image_color_jitter: {enabled: false}
+  image_camera_jitter: {enabled: false}
+  image_sensor_noise: {enabled: false}
+  image_domain_jitter: {enabled: false}
+  # Official val_set_proportion=0 uses the clean training pool for diagnostics;
+  # is_training_set=false prevents all stochastic RGB augmentations.

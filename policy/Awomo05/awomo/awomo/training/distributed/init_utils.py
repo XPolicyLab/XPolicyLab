@@ -1,0 +1,122 @@
+# Copyright (c) 2025, NVIDIA CORPORATION.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import atexit
+import datetime
+import os
+import signal
+from dataclasses import dataclass
+
+import torch
+import torch.distributed
+
+
+def get_rank_safe() -> int:
+    if torch.distributed.is_initialized():
+        return torch.distributed.get_rank()
+    else:
+        return int(os.getenv("RANK", "0"))
+
+
+def get_world_size_safe() -> int:
+    if torch.distributed.is_initialized():
+        return torch.distributed.get_world_size()
+    else:
+        return int(os.getenv("WORLD_SIZE", "1"))
+
+
+def get_local_rank_preinit() -> int:
+    return int(os.getenv("LOCAL_RANK", "0"))
+
+
+def get_local_world_size_preinit() -> int:
+    return int(os.getenv("LOCAL_WORLD_SIZE", "1"))
+
+
+@dataclass
+class DistInfo:
+    """Holds information about the distributed training environment."""
+
+    backend: str
+    rank: int
+    world_size: int
+    device: torch.device
+    is_main: bool
+
+
+def initialize_distributed(
+    backend,
+    timeout_minutes=1,
+):
+    """Initialize the torch.distributed environment and core model parallel infrastructure.
+
+    This function sets the device based on the local rank, configures the process group,
+    and calls torch.distributed.init_process_group with the appropriate parameters.
+    It also registers a cleanup function to properly destroy the process group at exit.
+
+    Args:
+        backend (str): The backend to use for torch.distributed (e.g., 'nccl').
+        timeout_minutes (int, optional): Timeout (in minutes) for distributed initialization. Defaults to 1.
+
+    Returns:
+        DistInfo: An instance containing the distributed environment configuration.
+    """
+    device_count = torch.cuda.device_count()
+    device = None
+    if torch.distributed.is_initialized():
+        if get_rank_safe() == 0:
+            print(
+                "torch distributed is already initialized, skipping initialization.",
+                flush=True,
+            )
+        if device_count > 0:
+            device = torch.cuda.current_device()
+    else:
+        if get_rank_safe() == 0:
+            print("> initializing torch distributed with {} workers.".format(get_world_size_safe()), flush=True)
+
+        init_pg_kwargs = {
+            "backend": backend,
+            "world_size": get_world_size_safe(),
+            "rank": get_rank_safe(),
+            "timeout": datetime.timedelta(minutes=timeout_minutes),
+        }
+
+        device = None
+        if device_count > 0:
+            rank = get_local_rank_preinit()
+            device = torch.device("cuda", rank)
+            torch.cuda.set_device(device)
+
+        if get_world_size_safe() == 1:
+            init_pg_kwargs["world_size"] = 1
+            init_pg_kwargs["rank"] = 0
+            init_pg_kwargs["backend"] = "gloo"
+            init_pg_kwargs["store"] = torch.distributed.HashStore()
+
+        torch.distributed.init_process_group(**init_pg_kwargs)
+        atexit.register(destroy_global_state)
+        if get_world_size_safe() > 1:
+            torch.distributed.barrier(device_ids=[get_local_rank_preinit()])
+
+    rank = torch.distributed.get_rank()
+    world_size = torch.distributed.get_world_size()
+    return DistInfo(backend, rank, world_size, device, rank == 0)
+
+
+def destroy_global_state():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    if torch.distributed.is_available() and torch.distributed.is_initialized():
+        torch.distributed.destroy_process_group()
+    signal.signal(signal.SIGINT, signal.SIG_DFL)

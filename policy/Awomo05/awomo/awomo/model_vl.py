@@ -23,7 +23,7 @@ class VLPromptEncoder(nn.Module):
                  attn_implementation="sdpa",
                  image_size=(448, 448), history_image_size=(448, 448),
                  history_pool=(4, 4), history_num_slots=20, history_period_s=1.0, history_fps=25.0,
-                 max_new_tokens=24, decode_every=4):
+                 max_new_tokens=24, decode_every=4, gradient_checkpointing=False):
         super().__init__()
         from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
 
@@ -34,13 +34,17 @@ class VLPromptEncoder(nn.Module):
         full = Qwen3VLForConditionalGeneration.from_pretrained(
             vl_path, torch_dtype=torch_dtype, attn_implementation=attn_implementation
         )
-        full.requires_grad_(False)                   # freeze BEFORE injecting LoRA
+        full.requires_grad_(False)
 
         lora = dict(lora or {})
         self.lora_enabled = bool(lora.pop("enabled", False))
+        self.lora_lr = float(lora.pop("lr", 2e-5))
         if self.lora_enabled:
             from peft import LoraConfig, get_peft_model
 
+            if gradient_checkpointing:
+                full.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+                full.enable_input_require_grads()
             cfg = LoraConfig(
                 r=int(lora.pop("r", 64)),
                 lora_alpha=int(lora.pop("alpha", 128)),
@@ -51,7 +55,7 @@ class VLPromptEncoder(nn.Module):
             if lora:
                 raise ValueError(f"Unknown lora options: {sorted(lora)}")
             full = get_peft_model(full, cfg)
-        self.vl_model = full.to(device)              # peft-wrapped when LoRA is on
+        self.vl_model = full.to(device)
         self.image_token_id = int(self.base_model.config.image_token_id)
         self.qwen_layers = tuple(int(l) for l in qwen_layers)
         self.summary_layers = tuple(int(l) for l in summary_layers)
@@ -64,18 +68,18 @@ class VLPromptEncoder(nn.Module):
             if not 0 <= l <= n_layers:
                 raise ValueError(f"layer index {l} outside [0, {n_layers}] (hidden_states has {n_layers + 1} entries)")
         self.max_prompt_len = int(max_prompt_len)
-        hidden = int(self.vl.config.text_config.hidden_size)   # 2560
-        self.dim = hidden * len(self.qwen_layers)              # 7680
-        self.image_size = tuple(int(v) for v in image_size)          # = data.train.vlm.image_size
-        self.history_image_size = tuple(int(v) for v in history_image_size)   # what the ViT sees
-        self.history_pool = (int(history_pool[0]), int(history_pool[1]))     # tokens grid after pooling
+        hidden = int(self.vl.config.text_config.hidden_size)
+        self.dim = hidden * len(self.qwen_layers)
+        self.image_size = tuple(int(v) for v in image_size)
+        self.history_image_size = tuple(int(v) for v in history_image_size)
+        self.history_pool = (int(history_pool[0]), int(history_pool[1]))
         self.history_num_slots = int(history_num_slots)
         self.history_period_s = float(history_period_s)
         self.history_fps = float(history_fps)
         self.max_new_tokens = int(max_new_tokens)
         self.decode_every = int(decode_every)
         self.text_layout = TEXT_LAYOUT
-        self.loaded_text_layout = None               # set from the checkpoint payload
+        self.loaded_text_layout = None
         self._codec = None
         self.device = device
         self.torch_dtype = torch_dtype
@@ -93,10 +97,8 @@ class VLPromptEncoder(nn.Module):
             self.history_period_s, self.decode_every,
         )
 
-    # ------------------------------------------------------------------ views
     @property
     def base_model(self):
-        """Qwen3VLForConditionalGeneration, unwrapped from peft if needed."""
         m = self.vl_model
         return m.get_base_model() if hasattr(m, "get_base_model") else m
 
@@ -105,14 +107,12 @@ class VLPromptEncoder(nn.Module):
         return self.base_model.model
 
 
-
     def _inner(self):
         base = self.base_model
         return base.model, base.lm_head
 
     @property
     def codec(self):
-        """Tokenizer-side codec built from this encoder's processor."""
         if self._codec is None:
             from awomo.awomo.datasets.robodojo.vlm_prompt import VLMPromptCodec
 
@@ -133,35 +133,52 @@ class VLPromptEncoder(nn.Module):
         if not (len(instructions) == len(images) == len(histories)):
             raise ValueError(f"#instructions={len(instructions)} #images={len(images)} "
                              f"#histories={len(histories)} must agree")
-        items = [self.codec.encode_sample(str(i).strip(), "", img, list(h))
+        items = [self.codec.encode_sample(str(i).strip(), img, list(h))
                  for i, img, h in zip(instructions, images, histories)]
-        vb = collate_vlm(items, has_subtask_gt=[False] * len(items))
+        vb = collate_vlm(items)
         dev = next(self.vl.parameters()).device
         return {k: (v.to(dev) if torch.is_tensor(v) else v) for k, v in vb.items()}
 
-    # ------------------------------------------------------------- the gather
     def _gather_text(self, hs, vb):
-        pos = vb["instr_pos"]                                            # [B,Li], -1 = pad
+        pos = vb["instr_pos"]
         valid = pos >= 0
-        feats = torch.cat([hs[k] for k in self.qwen_layers], dim=-1)    # [B,L,7680]
+        feats = torch.cat([hs[k] for k in self.qwen_layers], dim=-1)
         text = torch.gather(feats, 1, pos.clamp(min=0).unsqueeze(-1).expand(-1, -1, feats.shape[-1]))
         text = text * valid.unsqueeze(-1).to(text.dtype)
         batch = int(pos.shape[0])
-        last = (vb["prompt_len"] - 1).clamp(min=0).to(pos.device)       # [B]
+        last = (vb["prompt_len"] - 1).clamp(min=0).to(pos.device)
         rows = torch.arange(batch, device=pos.device)
-        summary = torch.cat([hs[k][rows, last] for k in self.summary_layers], dim=-1)  # [B,7680]
+        summary = torch.cat([hs[k][rows, last] for k in self.summary_layers], dim=-1)
         text = torch.cat([text, summary.unsqueeze(1).to(text.dtype)], dim=1)
         valid = torch.cat([valid, torch.ones(batch, 1, dtype=torch.bool, device=pos.device)], dim=1)
         return text, valid
 
-    # ------------------------------------------------------------- checkpoint
 
     def load_lora_state_dict(self, state_dict):
         from peft import set_peft_model_state_dict
 
         return set_peft_model_state_dict(self.vl_model, state_dict)
 
-    # ------------------------------------------------- history pooling + forward
+
+    def trainable_parameters(self):
+        return [p for p in self.parameters() if p.requires_grad]
+
+
+    def lora_parameters(self):
+        return [p for n, p in self.named_parameters() if p.requires_grad and "lora_" in n]
+
+
+    def lora_state_dict(self):
+        from peft import get_peft_model_state_dict
+
+        return {k: v.detach().cpu() for k, v in get_peft_model_state_dict(self.vl_model).items()}
+
+
+    def forward_vlm(self, vb):
+        hs = self._run(vb)
+        text, valid = self._gather_text(hs, vb)
+        return text.to(self.torch_dtype), valid
+
     def _image_token_counts(self, grid):
         return ((grid[:, 0] * grid[:, 1] * grid[:, 2]) // (self.merge_size ** 2)).tolist()
 
@@ -180,10 +197,10 @@ class VLPromptEncoder(nn.Module):
                 raise ValueError(f"history frames must share one grid: {g_act[i]}/{g_llm[i]} vs {ref_act}/{ref_llm}")
         t, H, W = ref_act[0], ref_act[1] // m, ref_act[2] // m
         th, tw = ref_llm[1] // m, ref_llm[2] // m
-        x = torch.stack([chunks[i] for i in hist_idx], dim=0)             # [n, t*H*W, D]
+        x = torch.stack([chunks[i] for i in hist_idx], dim=0)
         n, _, D = x.shape
-        x = x.reshape(n * t, H, W, D).permute(0, 3, 1, 2)                 # [n*t, D, H, W]
-        x = F.adaptive_avg_pool2d(x.float(), (th, tw)).to(feats.dtype)    # [n*t, D, th, tw]
+        x = x.reshape(n * t, H, W, D).permute(0, 3, 1, 2)
+        x = F.adaptive_avg_pool2d(x.float(), (th, tw)).to(feats.dtype)
         x = x.permute(0, 2, 3, 1).reshape(n, t * th * tw, D)
         for j, i in enumerate(hist_idx):
             chunks[i] = x[j]
@@ -264,7 +281,7 @@ class VLPromptEncoder(nn.Module):
                                         past_key_values=DynamicCache())
             cache = out.past_key_values
             hidden = out.last_hidden_state[:, -1]
-            pos = pos[:, :, -1:]                                    # [3,1,1] last prompt position
+            pos = pos[:, :, -1:]
             tokens = []
             for step in range(max_new):
                 tok = int(lm_head(hidden).argmax(-1))
@@ -338,7 +355,7 @@ class ImageWAMActionPatchVL(ImageWAMActionPatch):
                 raise ValueError("VL eval needs the observation frame stashed as _infer_input_image.")
             if img.ndim == 3:
                 img = img.unsqueeze(0)
-            if img.ndim == 5:             # [B,V,3,H,W] -> cam_head
+            if img.ndim == 5:
                 img = img[:, 0]
             images = self._frame_to_pil(img)
         size = (int(enc.image_size[0]), int(enc.image_size[1]))
@@ -376,7 +393,6 @@ class ImageWAMActionPatchVL(ImageWAMActionPatch):
 
         vb = enc.build_infer_batch(prompts, images, histories)
         text, mask = enc.infer_vlm(vb)
-        # Logging-only subtask decode on a fixed cadence (0 = never).
         if enc.decode_every > 0 and self._infer_count % enc.decode_every == 0:
             self._last_subtasks = enc.generate_subtask(vb)
         self._infer_count += 1

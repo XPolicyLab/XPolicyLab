@@ -1,0 +1,28 @@
+{
+  "schema": "wam.embodiment_registry.v1",
+  "description": "Source/configuration-interface groups; not a verified cross-source hardware taxonomy.",
+  "num_embodiments": 11,
+  "embodiments": [
+    "intern_franka", "intern_split_aloha", "intern_lift2", "intern_genie1",
+    "agibot_gripper_a2d", "robocoin_cobot_magic", "robocoin_split_aloha",
+    "robocoin_galaxea_r1_lite", "robocoin_realman_rmc_aida_l",
+    "robomind2_franka", "robomind2_ur5"
+  ],
+  "profile_to_embodiment_id": {
+    "intern_data_a1_550a61f3d6a2fddd": 0,
+    "intern_data_a1_26d45a7f983c051c": 1,
+    "intern_data_a1_cf1e776937b08e52": 2,
+    "intern_data_a1_f99511415d0979fb": 3,
+    "agibot_gripper_f4eabd7373c819c9": 4,
+    "robocoin_7ff7d72c24c7d776": 5,
+    "robocoin_80795c4f5d71dc1e": 5,
+    "robocoin_80fd585bc41187bd": 5,
+    "robocoin_fb576061f505c294": 5,
+    "robocoin_5148166fac582c1e": 6,
+    "robocoin_a838ff2dac40c3a2": 6,
+    "robocoin_6c79eef52e049bda": 7,
+    "robocoin_30a60b1d10aaaad7": 8,
+    "robomind2_14736241f435644e": 9,
+    "robomind2_566f8283f7723748": 10
+  }
+}

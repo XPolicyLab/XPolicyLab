@@ -82,7 +82,6 @@ class ImageWAMActionPatch(ImageWAM):
             return img_len, horizon
         return total, 0
 
-    # ------------------------------------------------------ multi-view images
     def _view_time_value(self, view_index: int, base_time: float) -> float:
         return float(base_time) + float(view_index) * self.view_time_stride
 
@@ -124,7 +123,6 @@ class ImageWAMActionPatch(ImageWAM):
         device: torch.device,
         dtype: torch.dtype,
     ) -> torch.Tensor:
-        """Token ids for `view_indices` at `base_time` without running the VAE."""
         from awomo.awomo.models.backbones.flux2_video_expert import Flux2VideoExpert
 
         return torch.cat(
@@ -142,12 +140,11 @@ class ImageWAMActionPatch(ImageWAM):
             dim=1,
         )
 
-    # -------------------------------------------------------- pooled history
     def _pool_history_tokens(self, tokens: torch.Tensor, latent_h: int, latent_w: int) -> torch.Tensor:
         m, n, c = tokens.shape
         if n != latent_h * latent_w:
             raise ValueError(f"history tokens {n} != {latent_h}x{latent_w}")
-        grid = tokens.view(m, latent_h, latent_w, c).permute(0, 3, 1, 2)      # [M,C,h,w]
+        grid = tokens.view(m, latent_h, latent_w, c).permute(0, 3, 1, 2)
         pooled = F.adaptive_avg_pool2d(grid.float(), self.history_pool_grid).to(tokens.dtype)
         return pooled.permute(0, 2, 3, 1).reshape(m, self.history_tokens_per_frame, c)
 
@@ -212,8 +209,6 @@ class ImageWAMActionPatch(ImageWAM):
         return tokens, ids, valid.repeat_interleave(tpf, dim=1)
 
 
-    # ------------------------------------------------------------- fixed codec
-
     def _decode_action_tokens(self, tokens: torch.Tensor) -> torch.Tensor:
         used = tokens[..., : self.action_patch_used]
         b, h = used.shape[0], used.shape[1]
@@ -232,7 +227,6 @@ class ImageWAMActionPatch(ImageWAM):
         ids[..., 3] = torch.arange(horizon, device=device, dtype=dtype)[None, :]
         return ids
 
-    # ------------------------------------------------------- video-only forward
     def _forward_flux2_video_only(self, video_pre: dict, attention_mask: dict) -> dict:
         from awomo.flux2.model import apply_rope
 
@@ -275,7 +269,6 @@ class ImageWAMActionPatch(ImageWAM):
         txt_len = int(txt.shape[1])
         return {"txt": video_stream[:, :txt_len], "img": video_stream[:, txt_len:]}
 
-    # -------------------------------------------------------------- inference
     @torch.no_grad()
     def infer_action_flux2(
         self,
@@ -296,7 +289,7 @@ class ImageWAMActionPatch(ImageWAM):
         if input_image.ndim == 3:
             input_image = input_image.unsqueeze(0)
         if input_image.ndim == 4:
-            input_image = input_image.unsqueeze(1)          # [B,3,H,W] -> [B,1,3,H,W]
+            input_image = input_image.unsqueeze(1)
         if input_image.ndim != 5 or input_image.shape[0] != 1 or input_image.shape[2] != 3:
             raise ValueError(
                 f"`input_image` must be [1,V,3,H,W], [1,3,H,W] or [3,H,W], got {tuple(input_image.shape)}"
@@ -408,7 +401,6 @@ class ImageWAMActionPatch(ImageWAM):
         action = self._decode_action_tokens(latents[:, target_len:])
         return {"action": action[0].detach().to(device="cpu", dtype=torch.float32)}
 
-    # ------------------------------------------------------------------ build
     @classmethod
     def from_flux2_klein_actionpatch_pretrained(
         cls,
@@ -534,3 +526,162 @@ class ImageWAMActionPatch(ImageWAM):
         model.save_lora_merged = False
         model.save_trainable_only = False
         return model
+
+
+# Published checkpoint model and whole-image camera input.
+# Copyright (c) 2026 Awomo-WAM Team. SPDX-License-Identifier: Apache-2.0
+from diffusers import AutoencoderKLFlux2, Flux2KleinPipeline, Flux2Transformer2DModel
+from torch import nn
+import numpy as np
+from PIL import Image
+
+class ActionPatchModel(nn.Module):
+    def __init__(self, transformer: Flux2Transformer2DModel, action_dim: int, state_dim: int, action_scale: float):
+        super().__init__()
+        self.transformer = transformer
+        self.proprio_encoder = nn.Linear(state_dim, transformer.config.joint_attention_dim,
+                                         dtype=next(transformer.parameters()).dtype)
+        self.action_dim = action_dim
+        self.action_scale = action_scale
+        self.repeats = 128 // action_dim
+
+    def encode_action(self, action):
+        repeated = action.repeat_interleave(self.repeats, dim=-1) * self.action_scale
+        return F.pad(repeated, (0, 128 - repeated.shape[-1]))
+
+    def decode_action(self, tokens):
+        used = tokens[..., : self.action_dim * self.repeats]
+        return used.unflatten(-1, (self.action_dim, self.repeats)).mean(-1) / self.action_scale
+
+    def pack_state(self, context, text_mask, state):
+        """Compact valid text in order, then insert state; supports right-padding and prefix_v2 gaps."""
+        batch, length, dim = context.shape
+        counts = text_mask.sum(1)
+        valid_rank = text_mask.long().cumsum(1) - 1
+        invalid_rank = (~text_mask).long().cumsum(1) - 1
+        destinations = torch.where(text_mask, valid_rank, counts[:, None] + 1 + invalid_rank)
+        packed = context.new_zeros(batch, length + 1, dim)
+        packed.scatter_(1, destinations[..., None].expand(batch, length, dim), context)
+        packed[torch.arange(batch, device=context.device), counts] = self.proprio_encoder(state)
+        mask = torch.arange(length + 1, device=context.device)[None] <= counts[:, None]
+        return packed, mask
+
+    @staticmethod
+    def attention_mask(text_mask, condition_length, noisy_length, condition_image_mask):
+        batch, text_length = text_mask.shape
+        prefix = text_length + condition_length
+        total = prefix + noisy_length
+        mask = torch.ones(batch, 1, total, total, dtype=torch.bool, device=text_mask.device)
+        mask[:, :, :prefix, prefix:] = False
+        mask[:, :, :, :text_length] &= text_mask[:, None, None, :]
+        mask[:, :, :, text_length:prefix] &= condition_image_mask[:, None, None, :]
+        return mask
+
+    @staticmethod
+    def image_ids(height, width, time, device):
+        ids = torch.zeros(height, width, 4, device=device)
+        ids[..., 0] = time
+        ids[..., 1] = torch.arange(height, device=device)[:, None]
+        ids[..., 2] = torch.arange(width, device=device)[None, :]
+        return ids.reshape(-1, 4)
+
+    def forward(self, reference, noisy_image, noisy_action, context, text_mask, state, timestep, image_grid=None,
+                history=None, history_ids=None, history_valid=None, *, reference_ids=None, target_ids=None,
+                condition_mask=None):
+        batch, image_length, _ = reference.shape
+        horizon = noisy_action.shape[1]
+        packed_requested = any(value is not None for value in (reference_ids, target_ids, condition_mask))
+        if not packed_requested:
+            if any(value is None for value in (image_grid, history, history_ids, history_valid)):
+                raise ValueError("Separate conditions require image_grid, history, history_ids and history_valid")
+            image_ids = torch.cat([self.image_ids(*image_grid, 10.0, reference.device),
+                                   self.image_ids(*image_grid, 0.0, reference.device),
+                                   torch.zeros(horizon, 4, device=reference.device)])
+            image_ids[-horizon:, 0] = 20
+            image_ids[-horizon:, 3] = torch.arange(horizon, device=reference.device)
+            clean = torch.cat([history, reference], dim=1)
+            image_ids = torch.cat([history_ids.to(image_ids), image_ids])
+            reference_valid = torch.ones(batch, image_length, dtype=torch.bool, device=reference.device)
+            condition_mask = torch.cat([history_valid.to(torch.bool), reference_valid], dim=1)
+        else:
+            if any(value is None for value in (reference_ids, target_ids, condition_mask)):
+                raise ValueError("Packed conditions require reference_ids, target_ids and condition_mask together")
+            if any(value is not None for value in (image_grid, history, history_ids, history_valid)):
+                raise ValueError("Do not mix packed conditions with separate history/image-grid inputs")
+            assert reference_ids.shape == (image_length, 4) and target_ids.shape == (noisy_image.shape[1], 4)
+            assert condition_mask.shape == reference.shape[:2]
+            clean = reference
+            action_ids = reference_ids.new_zeros(horizon, 4)
+            action_ids[:, 0] = 20
+            action_ids[:, 3] = torch.arange(horizon, device=reference.device)
+            image_ids = torch.cat([reference_ids, target_ids, action_ids])
+        context, text_mask = self.pack_state(context, text_mask, state)
+        text_ids = image_ids.new_zeros(context.shape[1], 4)
+        text_ids[:, 3] = torch.arange(context.shape[1], device=reference.device)
+        clean_length = clean.shape[1]
+        mask = self.attention_mask(text_mask, clean_length, noisy_image.shape[1] + horizon, condition_mask)
+        prediction = self.transformer(
+            hidden_states=torch.cat([clean, noisy_image, self.encode_action(noisy_action)], dim=1),
+            encoder_hidden_states=context, timestep=timestep / 1000, img_ids=image_ids, txt_ids=text_ids,
+            joint_attention_kwargs={"attention_mask": mask}, return_dict=False)[0]
+        end = clean_length + noisy_image.shape[1]
+        return prediction[:, clean_length:end], self.decode_action(prediction[:, end:])
+
+class VideoVAE(nn.Module):
+    def __init__(self, vae: AutoencoderKLFlux2):
+        super().__init__()
+        self.vae = vae
+        self.requires_grad_(False).eval()
+
+    @torch.no_grad()
+    def encode(self, video):
+        """[B, 3, T, H, W] in [-1, 1] -> [B, 128, T, H/16, W/16]."""
+        batch, _, frames, height, width = video.shape
+        images = video.permute(0, 2, 1, 3, 4).reshape(batch * frames, 3, height, width)
+        images = images.to(device=self.vae.device, dtype=self.vae.dtype)
+        latent = Flux2KleinPipeline._patchify_latents(self.vae.encode(images).latent_dist.mode())
+        latent = F.batch_norm(latent, self.vae.bn.running_mean, self.vae.bn.running_var, training=False,
+                              eps=self.vae.config.batch_norm_eps)
+        return latent.unflatten(0, (batch, frames)).permute(0, 2, 1, 3, 4)
+
+# Copyright (c) 2026, NVIDIA CORPORATION. SPDX-License-Identifier: Apache-2.0
+def compose_robodojo_rgb_mosaic(frames: Sequence[np.ndarray], *, color_order: str = "rgb") -> np.ndarray:
+    """Compose RGB camera views with the head view above the two wrist views."""
+    if color_order not in ("rgb", "bgr"):
+        raise ValueError(f"Unsupported mosaic color_order={color_order!r}")
+    if len(frames) != 3:
+        raise ValueError("RoboDojo hero-top mosaic requires head/left-wrist/right-wrist views")
+    output = np.zeros((1120, 960, 3), dtype=np.uint8)
+    tiles = ((0, 0, 960, 736), (0, 736, 480, 384), (480, 736, 480, 384))
+    for frame, (x, y, width, height) in zip(frames, tiles, strict=True):
+        if frame.ndim != 3 or frame.shape[2] != 3 or frame.dtype != np.uint8:
+            raise ValueError("Each mosaic view must be a uint8 RGB array [H,W,3]")
+        if color_order == "bgr":
+            frame = np.ascontiguousarray(frame[..., ::-1])
+        source_height, source_width = frame.shape[:2]
+        if min(source_height, source_width) <= 0:
+            raise ValueError("Empty camera frame cannot be used for a mosaic")
+        source_aspect = source_width / source_height
+        target_aspect = width / height
+        anisotropy = min(max(target_aspect / source_aspect, 1.0 / 1.05), 1.05)
+        adjusted_aspect = source_aspect * anisotropy
+        if adjusted_aspect >= target_aspect:
+            resized_height = height
+            resized_width = max(width, int(np.ceil(height * adjusted_aspect)))
+        else:
+            resized_width = width
+            resized_height = max(height, int(np.ceil(width / adjusted_aspect)))
+        crop_left = (resized_width - width) // 2
+        crop_top = (resized_height - height) // 2
+        resized = np.asarray(Image.fromarray(frame).resize((resized_width, resized_height), Image.Resampling.LANCZOS))
+        output[y : y + height, x : x + width] = resized[crop_top : crop_top + height, crop_left : crop_left + width]
+    return output
+
+def resize_mosaic_for_vae(mosaic: np.ndarray, size_hw: tuple[int, int]) -> torch.Tensor:
+    """Resize the full mosaic to float32 [3,H,W] in [0,1]."""
+    if mosaic.shape != (1120, 960, 3) or mosaic.dtype != np.uint8:
+        raise ValueError("Expected the full uint8 RGB [1120,960,3] mosaic before resizing")
+    if len(size_hw) != 2 or min(size_hw) <= 0:
+        raise ValueError("Mosaic output height/width must be positive")
+    tensor = torch.from_numpy(mosaic.copy()).permute(2, 0, 1).float().unsqueeze(0) / 255.0
+    return F.interpolate(tensor, size=size_hw, mode="bilinear", align_corners=False, antialias=True)[0]

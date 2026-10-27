@@ -1,58 +1,47 @@
 #!/usr/bin/env bash
-# Download the released checkpoint and required base weights.
 set -euo pipefail
-
+case "${1:-prepared}" in
+    prepared) ;;
+    *) echo "Usage: download_weights.sh [prepared]" >&2; exit 2 ;;
+esac
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate awomo05
 WEIGHTS_DIR=${AWOMO05_WEIGHTS:-$(cd "$(dirname "$0")" && pwd)/weights}
 mkdir -p "$WEIGHTS_DIR"
-python -m pip install -q "huggingface_hub>=0.24"
-python - "$WEIGHTS_DIR" "${1:-all}" <<'PY'
+export AWOMO05_PREPARED_MODEL_REPO=${AWOMO05_PREPARED_MODEL_REPO:-Auwomo/Awomo-0.5I-Robodojo}
+export AWOMO05_PREPARED_MODEL_REVISION=${AWOMO05_PREPARED_MODEL_REVISION:-bb15096482e0e60a505e80953635d819802d9916}
+python - "$WEIGHTS_DIR" <<'PY'
+import hashlib
 import os
+from pathlib import Path
+import re
 import sys
-from huggingface_hub import hf_hub_download, snapshot_download
+from huggingface_hub import snapshot_download
 
-weights_dir = sys.argv[1]
-mode = sys.argv[2]
-if mode not in {"all", "checkpoint", "base"}:
-    raise SystemExit("Usage: download_weights.sh [all|checkpoint|base]")
-if mode in {"all", "checkpoint"}:
-    from pathlib import Path
-    import hashlib
-    snapshot_download(
-        "Auwomo/Awomo-0.5-Robodojo",
-        revision="5a3e043cba7932e55e759ccd3a7950340983bcae",
-        allow_patterns=["model.pt", "dataset_stats.json", "SHA256SUMS", "LICENSE.md"],
-        local_dir=weights_dir,
-    )
-    for line in (Path(weights_dir) / "SHA256SUMS").read_text().splitlines():
-        if not line.strip():
-            continue
-        expected, name = line.split(maxsplit=1)
-        name = name.lstrip("*")
-        file = (Path(weights_dir) / name).resolve()
-        if file.parent != Path(weights_dir).resolve():
-            raise ValueError("Unexpected path in SHA256SUMS")
-        digest = hashlib.sha256()
-        with file.open("rb") as stream:
-            for block in iter(lambda: stream.read(16 * 1024 * 1024), b""):
-                digest.update(block)
-        if digest.hexdigest() != expected:
-            raise ValueError(f"SHA256 mismatch: {name}")
-    print("Released checkpoint checksums verified")
-if mode == "checkpoint":
-    raise SystemExit(0)
-hf_hub_download(
-    "black-forest-labs/FLUX.2-klein-base-4B",
-    "flux-2-klein-base-4b.safetensors",
-    local_dir=os.path.join(weights_dir, "flux2-klein-base-4b"),
-)
-hf_hub_download(
-    "black-forest-labs/FLUX.2-dev",
-    "ae.safetensors",
-    local_dir=os.path.join(weights_dir, "flux2-dev"),
-)
-snapshot_download(
-    "Qwen/Qwen3-VL-4B-Instruct",
-    local_dir=os.path.join(weights_dir, "Qwen3-VL-4B-Instruct"),
-)
+revision = os.environ["AWOMO05_PREPARED_MODEL_REVISION"]
+if not re.fullmatch(r"[0-9a-f]{40}", revision):
+    raise ValueError("A full immutable model revision is required")
+directory = Path(sys.argv[1])
+snapshot_download(os.environ["AWOMO05_PREPARED_MODEL_REPO"], revision=revision,
+    allow_patterns=["model.pt", "awomo_config.json", "dataset_stats.json", "SHA256SUMS"], local_dir=directory)
+expected_names = {"model.pt", "awomo_config.json", "dataset_stats.json"}
+seen = set()
+for line in (directory / "SHA256SUMS").read_text().splitlines():
+    expected, name = line.split(maxsplit=1)
+    if name not in expected_names or name in seen or not re.fullmatch(r"[0-9a-f]{64}", expected):
+        raise ValueError("Invalid prepared checksum manifest")
+    seen.add(name)
+    digest = hashlib.sha256()
+    with (directory / name).open("rb") as stream:
+        for block in iter(lambda: stream.read(8 << 20), b""):
+            digest.update(block)
+    if digest.hexdigest() != expected:
+        raise ValueError(f"SHA256 mismatch: {name}")
+if seen != expected_names:
+    raise ValueError("Incomplete prepared checkpoint")
+snapshot_download("Qwen/Qwen3-VL-4B-Instruct",
+    local_dir=directory / "Qwen3-VL-4B-Instruct")
+snapshot_download("black-forest-labs/FLUX.2-klein-base-4B", allow_patterns=["vae/*"],
+    local_dir=directory / "FLUX.2-klein-base-4B")
+print(f"Downloaded SFT checkpoint, Qwen3-VL and VAE: {directory}")
 PY
-printf 'Requested weights downloaded to %s\n' "$WEIGHTS_DIR"

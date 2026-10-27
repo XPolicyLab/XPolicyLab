@@ -1,0 +1,6 @@
+# Optional policy-server boundary; base.txt supplies numpy/PyYAML/OpenCV/h5py.
+# Matched to the official adapter contract at ddf5dcfff5e089a323da1d22891909b72864647e.
+websockets==15.0.1
+msgpack==1.2.2
+msgpack-numpy==0.4.8
+pydantic==2.13.5

@@ -1,0 +1,17 @@
+policy_name: GO_3_Nano_preview
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+robot_name: robotwin
+camera_keys: [cam_head, cam_left_wrist, cam_right_wrist]
+image_size: [256, 384]
+action_horizon: 52
+num_ae_steps: 5

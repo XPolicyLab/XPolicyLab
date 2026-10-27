@@ -59,8 +59,6 @@ def _get_valid_obs_batch(task_env, env_idx_list, timeout=2.0, interval=0.05):
 
 
 def eval_one_episode(TASK_ENV, model_client):
-    # Clears the frame history AND the carried AR subtask; without it the subtask decoded for the
-    # previous episode conditions this one.
     model_client.call(func_name="reset")
 
     while not TASK_ENV.is_episode_end():

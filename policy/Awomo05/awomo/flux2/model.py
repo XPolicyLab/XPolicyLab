@@ -113,15 +113,6 @@ class Flux2(nn.Module):
         )
 
 
-
-
-
-
-
-
-
-
-
 class SelfAttention(nn.Module):
     def __init__(
         self,
@@ -234,8 +225,6 @@ class SingleStreamBlock(nn.Module):
         return x + mod_gate * output
 
 
-
-
 class DoubleStreamBlock(nn.Module):
     def __init__(
         self,
@@ -290,7 +279,6 @@ class DoubleStreamBlock(nn.Module):
         txt_mod1_shift, txt_mod1_scale, txt_mod1_gate = txt_mod1
         txt_mod2_shift, txt_mod2_scale, txt_mod2_gate = txt_mod2
 
-        # prepare image for attention
         img_modulated = self.img_norm1(img)
         img_modulated = (1 + img_mod1_scale) * img_modulated + img_mod1_shift
 
@@ -298,7 +286,6 @@ class DoubleStreamBlock(nn.Module):
         img_q, img_k, img_v = rearrange(img_qkv, "B L (K H D) -> K B H L D", K=3, H=self.num_heads)
         img_q, img_k = self.img_attn.norm(img_q, img_k, img_v)
 
-        # prepare txt for attention
         txt_modulated = self.txt_norm1(txt)
         txt_modulated = (1 + txt_mod1_scale) * txt_modulated + txt_mod1_shift
 
@@ -350,8 +337,6 @@ class DoubleStreamBlock(nn.Module):
         return img, txt
 
 
-
-
 class MLPEmbedder(nn.Module):
     def __init__(self, in_dim: int, hidden_dim: int, disable_bias: bool = False):
         super().__init__()
@@ -380,14 +365,6 @@ class EmbedND(nn.Module):
 
 
 def timestep_embedding(t: Tensor, dim, max_period=10000, time_factor: float = 1000.0):
-    """
-    Create sinusoidal timestep embeddings.
-    :param t: a 1-D Tensor of N indices, one per batch element.
-                      These may be fractional.
-    :param dim: the dimension of the output.
-    :param max_period: controls the minimum frequency of the embeddings.
-    :return: an (N, D) Tensor of positional embeddings.
-    """
     t = time_factor * t
     half = dim // 2
     freqs = torch.exp(
@@ -425,8 +402,6 @@ class QKNorm(torch.nn.Module):
         q = self.query_norm(q)
         k = self.key_norm(k)
         return q.to(v), k.to(v)
-
-
 
 
 def rope(pos: Tensor, dim: int, theta: int) -> Tensor:

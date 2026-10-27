@@ -1,0 +1,29 @@
+policy_name: PrismWAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# A released or exported PrismWAM model folder. Not downloaded automatically.
+model_path: null
+recipe: null
+device: cuda
+dtype: bfloat16
+# Null preserves evaluated runs: use the scene seed for model-noise sampling.
+inference_seed: null
+camera_map:
+  external: cam_head
+  left_wrist: cam_left_wrist
+  right_wrist: cam_right_wrist
+# Scale raw depth into the training unit (millimetres): mm=1, metres=1000.
+depth_scale: 1.0
+depth_key: depth
+# Model inference may be slow on a cold accelerator; do not replay timed-out calls.
+request_timeout_s: 300.0

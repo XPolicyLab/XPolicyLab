@@ -1,0 +1,7 @@
+# PyTorch for CUDA 12.8, installed before the packages that build against it.
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.10.0+cu128
+torchvision==0.25.0+cu128
+setuptools==80.9.0
+wheel==0.46.3
+ninja==1.11.1.4

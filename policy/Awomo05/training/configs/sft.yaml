@@ -1,0 +1,413 @@
+{
+  "seed": 42,
+  "wandb": {
+    "project": "Awomo-SFT",
+    "mode": "offline",
+    "name": "awomo-0.5i-sft",
+    "id": "${AWOMO_RUN_NAME}",
+    "resume": "never"
+  },
+  "dist_env": {
+    "backend": "nccl",
+    "timeout_minutes": 30
+  },
+  "model": {
+    "pretrained_model_name_or_path": null,
+    "model_type": "flux2",
+    "mode": "finetune"
+  },
+  "action_patch": {
+    "architecture": "flux2",
+    "noise_mode": "standard",
+    "video_beta_alpha": 3,
+    "high_noise_beta_alpha": 3,
+    "num_frame_per_block": 2,
+    "concat_first_frame_latent": false,
+    "tiled_vae": false,
+    "tile_size_height": 34,
+    "tile_size_width": 34,
+    "tile_stride_height": 18,
+    "tile_stride_width": 16,
+    "loss_lambda_action": 1,
+    "loss_lambda_video": 0.5,
+    "action_patch_scale": 1,
+    "self_flow_enabled": false,
+    "bsmntw_enabled": true,
+    "text_len": 128,
+    "dit": {
+      "model_type": "flux2",
+      "dim": 3072,
+      "ffn_dim": 9216,
+      "frame_seqlen": 768,
+      "text_len": 128,
+      "action_dim": 80,
+      "max_state_dim": 80,
+      "pretrained_path": "${AWOMO_FLUX2_TRANSFORMER}"
+    },
+    "encoders": {
+      "text_encoder_type": "qwen3_vl_prefix_v2",
+      "text_encoder_path": "${AWOMO_QWEN3_VL}",
+      "vae_path": "${AWOMO_FLUX2_VAE}",
+      "image_encoder_path": null
+    },
+    "vlm": {
+      "qwen_layers": [
+        9,
+        18,
+        27
+      ],
+      "summary_layers": [
+        18,
+        27,
+        36
+      ],
+      "max_prompt_len": 768,
+      "lora": {
+        "enabled": true,
+        "r": 64,
+        "alpha": 128,
+        "dropout": 0.05,
+        "lr": 0.0001,
+        "target_modules": ".*language_model.*\\.(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)$"
+      },
+      "gradient_checkpointing": true,
+      "attn_implementation": "sdpa",
+      "image_size": [
+        448,
+        448
+      ],
+      "history_image_size": [
+        448,
+        448
+      ],
+      "history_pool": [
+        4,
+        4
+      ],
+      "history_num_slots": 20,
+      "history_period_s": 1,
+      "history_fps": 25
+    },
+    "scheduler": {
+      "num_inference_steps": 10,
+      "num_train_timesteps": 1000,
+      "shift": 5
+    }
+  },
+  "data": {
+    "dataloader": {
+      "_target_": "awomo.awomo.datasets.robodojo.fixed_budget_dense.build_fixed_budget_dataloader",
+      "dataset": {
+        "_target_": "awomo.awomo.datasets.robodojo.dataset.RoboDojoHDF5Dataset",
+        "index_file": "${AWOMO_DATA_INDEX}",
+        "pretrained_norm_stats": "${AWOMO_DATA_STATS}",
+        "num_frames": 17,
+        "video_size": [
+          320,
+          288
+        ],
+        "cameras": [
+          "cam_head",
+          "cam_left_wrist",
+          "cam_right_wrist"
+        ],
+        "concat_multi_camera": null,
+        "is_training_set": true,
+        "val_set_proportion": 0,
+        "split_seed": 42,
+        "windows_per_episode": null,
+        "norm_default_mode": "z-score",
+        "action_dim": 80,
+        "action_output_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          16,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          45
+        ],
+        "action_gripper_indices": [
+          6,
+          13
+        ],
+        "action_gripper_source_semantics": "open_is_one",
+        "action_gripper_target_semantics": "closed_is_one",
+        "state_dim": 80,
+        "state_output_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          16,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          45
+        ],
+        "state_gripper_indices": [
+          6,
+          13
+        ],
+        "state_gripper_source_semantics": "open_is_one",
+        "state_gripper_target_semantics": "closed_is_one",
+        "handle_cache_size": 48,
+        "history": {
+          "enabled": true,
+          "camera": "cam_head",
+          "fps": 25,
+          "max_slots": 20,
+          "offset_bins_sec": [
+            [
+              0.6,
+              1.4
+            ],
+            [
+              1.6,
+              2.4
+            ],
+            [
+              2.6,
+              3.4
+            ],
+            [
+              3.6,
+              4.4
+            ],
+            [
+              4.6,
+              5.4
+            ],
+            [
+              5.6,
+              6.4
+            ],
+            [
+              6.6,
+              7.4
+            ],
+            [
+              7.6,
+              8.4
+            ],
+            [
+              8.6,
+              9.4
+            ],
+            [
+              9.6,
+              10.4
+            ],
+            [
+              10.6,
+              11.4
+            ],
+            [
+              11.6,
+              12.4
+            ],
+            [
+              12.6,
+              13.4
+            ],
+            [
+              13.6,
+              14.4
+            ],
+            [
+              14.6,
+              15.4
+            ],
+            [
+              15.6,
+              16.4
+            ],
+            [
+              16.6,
+              17.4
+            ],
+            [
+              17.6,
+              18.4
+            ],
+            [
+              18.6,
+              19.4
+            ],
+            [
+              19.6,
+              20.4
+            ]
+          ],
+          "slot_dropout_prob": 0.2,
+          "no_history_prob": 0.2,
+          "random_num_slots": true
+        },
+        "vlm": {
+          "enabled": true,
+          "model_path": "${AWOMO_QWEN3_VL}",
+          "image_size": [
+            448,
+            448
+          ],
+          "history": {
+            "enabled": true,
+            "camera": "cam_head",
+            "num_slots": 20,
+            "period_s": 1,
+            "fps": 25,
+            "jitter_frames": 1,
+            "image_size": [
+              448,
+              448
+            ],
+            "pool": [
+              4,
+              4
+            ]
+          }
+        },
+        "video_augmentation": {
+          "_target_": "awomo.awomo.datasets.robodojo.augmentation.VideoAugmentation",
+          "p": 0.5,
+          "augment_types": [
+            "corrupt_only",
+            "color_only",
+            "both"
+          ],
+          "color_jitter": {
+            "brightness": 0.2,
+            "contrast": 0.2,
+            "saturation": 0.2,
+            "hue": 0.03
+          },
+          "gamma": {
+            "range": [
+              0.9,
+              1.1
+            ]
+          },
+          "gaussian_noise": {
+            "std": 0.01
+          },
+          "random_resized_crop": {
+            "scale": [
+              0.95,
+              1
+            ],
+            "ratio": "preserve"
+          },
+          "rotate": {
+            "degrees": 5,
+            "fill": "mean"
+          },
+          "exposure": null
+        },
+        "window_stride": 1,
+        "max_missing_fraction": 0,
+        "image_layout": "hero_top",
+        "image_color_order": "bgr"
+      },
+      "num_workers": 12,
+      "prefetch_factor": 2,
+      "persistent_workers": true,
+      "seed": 42,
+      "steps_per_epoch": 6755
+    }
+  },
+  "step_scheduler": {
+    "global_batch_size": 256,
+    "local_batch_size": 8,
+    "num_epochs": 1,
+    "ckpt_every_steps": 1000,
+    "save_checkpoint_every_epoch": false,
+    "max_steps": 6755,
+    "log_every": 10
+  },
+  "optim": {
+    "learning_rate": 5e-06,
+    "clip_grad": 1,
+    "optimizer": {
+      "weight_decay": 0.01,
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "exclude_bias_and_norm_from_weight_decay": false
+    }
+  },
+  "lr_scheduler": {
+    "lr_decay_style": "cosine",
+    "lr_warmup_steps": 270,
+    "lr_decay_steps": 6755,
+    "init_lr": 0.0,
+    "max_lr": 5e-06,
+    "min_lr": 0.0,
+    "start_wd": 0.01,
+    "end_wd": 0.01,
+    "wd_incr_steps": 50000,
+    "wd_incr_style": "constant"
+  },
+  "ema": {
+    "decay": 0.999,
+    "restore_from_checkpoint": true
+  },
+  "fsdp": {
+    "enabled": true,
+    "dp_size": 32,
+    "dp_replicate_size": 4,
+    "tp_size": 1,
+    "cp_size": 1,
+    "pp_size": 1,
+    "reduce_dtype": "fp32",
+    "activation_checkpointing": true,
+    "activation_checkpointing_double_blocks": 5,
+    "activation_checkpointing_single_blocks": 20
+  },
+  "checkpoint": {
+    "enabled": true,
+    "checkpoint_dir": "${AWOMO_RUN_DIR}/checkpoints",
+    "model_save_format": "safetensors",
+    "restore_from": null,
+    "warm_start_from": null,
+    "hf_export": {
+      "enabled": true
+    },
+    "base_checkpoint": "${AWOMO_BASE_CHECKPOINT}"
+  },
+  "log": {
+    "log_dir": "${AWOMO_RUN_DIR}/logs"
+  },
+  "inference": {
+    "num_inference_steps": 10,
+    "seed": 42
+  },
+  "validation": {
+    "enabled": false,
+    "every_steps": 0
+  },
+  "gripper_experiment": {
+    "loss_multiplier": 2.0,
+    "sampling": "uniform",
+    "stride": 1,
+    "total_steps": 6755
+  },
+  "dataset_contract": {
+    "window_count": 1724338,
+    "last_batch_repeat_windows": 4942,
+    "episodes": 3200,
+    "tasks": 32
+  }
+}

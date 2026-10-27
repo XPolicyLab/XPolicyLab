@@ -7,8 +7,6 @@ from awomo.awomo.utils.logging_config import get_logger
 logger = get_logger(__name__)
 
 
-
-
 class ActionDiT(nn.Module):
     ACTION_BACKBONE_SKIP_PREFIXES = ("action_encoder.", "head.")
     ACTION_BACKBONE_META_KEYS = (

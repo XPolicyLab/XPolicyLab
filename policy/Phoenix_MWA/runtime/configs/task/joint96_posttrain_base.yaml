@@ -1,0 +1,24 @@
+# @package _global_
+defaults:
+  - joint96_model_base
+  - _self_
+
+local_robot_joint96:
+  enabled: false
+joint96_posttrain:
+  enabled: true
+  cached_visuals: false
+  expected_pretrain_step: null # deprecated; actual step is read from checkpoint
+init_checkpoint: ${oc.env:WAM_PRETRAIN_CHECKPOINT}
+resume: null
+max_steps: null
+learning_rate: 5.0e-5
+min_learning_rate: 5.0e-7
+# Generic posttraining derives warmup as 5% of its new schedule.
+warmup_steps: null
+num_workers: 4
+eval_every: 0
+save_training_state: true
+length_bucketed_sampling: false
+wandb:
+  name: ${oc.env:RUN_ID,joint96_posttrain}

@@ -31,18 +31,18 @@ class VLMPromptCodec:
         self.proc = processor
         self.tok = processor.tokenizer
         self.image_size = tuple(int(v) for v in image_size)
-        self.history_image_size = tuple(int(v) for v in history_image_size)   # what the ViT sees
-        self.history_pool = (int(history_pool[0]), int(history_pool[1]))       # (rows, cols) after pooling
+        self.history_image_size = tuple(int(v) for v in history_image_size)
+        self.history_pool = (int(history_pool[0]), int(history_pool[1]))
         self.history_period_s = float(history_period_s)
         self.max_history = int(max_history)
         ip = processor.image_processor
         self.patch_size = int(getattr(ip, "patch_size", 16))
         self.merge_size = int(getattr(ip, "merge_size", 2))
-        factor = self.patch_size * self.merge_size                              # 32 px per merged token
+        factor = self.patch_size * self.merge_size
         ph, pw = self.history_pool
-        self.history_llm_size = (pw * factor, ph * factor)                       # (W, H) = (128, 128)
+        self.history_llm_size = (pw * factor, ph * factor)
         self.history_llm_grid = torch.tensor([[1, ph * self.merge_size, pw * self.merge_size]],
-                                             dtype=torch.long)                  # [1, 8, 8]
+                                             dtype=torch.long)
 
         self.history_images_kwargs = {"size": {"shortest_edge": self.history_llm_size[0] * self.history_llm_size[1],
                                                "longest_edge": _MAX_LONGEST_EDGE}}
@@ -54,11 +54,11 @@ class VLMPromptCodec:
 
         self.tokens_per_image = self._count_tokens(ip(images=[Image.new("RGB", self.image_size)],
                                                       return_tensors="pt")["image_grid_thw"])
-        self.tokens_per_history_frame = self._count_tokens(self.history_llm_grid)              # 16
+        self.tokens_per_history_frame = self._count_tokens(self.history_llm_grid)
         vit_grid = ip(images=[Image.new("RGB", self.history_image_size)], return_tensors="pt",
                       **self.history_images_kwargs)["image_grid_thw"]
-        self.history_vit_grid = vit_grid[0].tolist()                                            # [1,16,16]
-        self.vit_tokens_per_history_frame = self._count_tokens(vit_grid)                        # 64
+        self.history_vit_grid = vit_grid[0].tolist()
+        self.vit_tokens_per_history_frame = self._count_tokens(vit_grid)
         if self.vit_tokens_per_history_frame < self.tokens_per_history_frame:
             raise ValueError(f"history_image_size={self.history_image_size} yields {self.vit_tokens_per_history_frame} "
                              f"ViT tokens, fewer than the {self.tokens_per_history_frame} pooled slots")
@@ -67,9 +67,7 @@ class VLMPromptCodec:
     def _count_tokens(self, grid) -> int:
         return int((grid[:, 0] * grid[:, 1] * grid[:, 2]).sum()) // (self.merge_size ** 2)
 
-    # ----------------------------------------------------------------- prompt
     def prompt(self, instruction: str, n_hist: int = 0):
-        """-> (prompt_ids [L], instr_pos [Li]). Cached per (instruction, n_hist)."""
         n_hist = int(n_hist)
         if not 0 <= n_hist <= self.max_history:
             raise ValueError(f"n_hist={n_hist} outside [0, {self.max_history}]")
@@ -80,7 +78,7 @@ class VLMPromptCodec:
         from PIL import Image
 
         cur = Image.new("RGB", self.image_size)
-        hist = [Image.new("RGB", self.history_llm_size) for _ in range(n_hist)]   # placeholder-sized dummies
+        hist = [Image.new("RGB", self.history_llm_size) for _ in range(n_hist)]
         text = self.proc.apply_chat_template(
             build_messages(instruction, cur, hist, self.history_period_s),
             tokenize=False, add_generation_prompt=True)
@@ -114,7 +112,6 @@ class VLMPromptCodec:
                 for i in range(len(ids) - n + 1):
                     if ids[i:i + n] == cand:
                         return i, i + n
-        # Preserve existing spans; allow exact matches for short instructions.
         for variant in (" " + s, s):
             cand = self.tok(variant, add_special_tokens=False)["input_ids"]
             if not 0 < len(cand) < 3:
@@ -124,9 +121,7 @@ class VLMPromptCodec:
                     return i, i + len(cand)
         return None
 
-    # ---------------------------------------------------------------- pieces
     def subtask_ids(self, subtask):
-        """-> [Ls+1] (subtask tokens + eos); empty subtask -> empty tensor."""
         s = (subtask or "").strip()
         if not s:
             return torch.zeros(0, dtype=torch.long)
@@ -156,29 +151,32 @@ class VLMPromptCodec:
         is_hist = torch.tensor([True] * len(history) + [False], dtype=torch.bool)
         return torch.cat(pvs, dim=0), torch.cat(grids, dim=0), torch.cat(grids_llm, dim=0), is_hist
 
-    def encode_sample(self, instruction, subtask, pil_image, history=()):
+    def encode_sample(self, instruction, pil_image, history=()):
         history = list(history)
         p_ids, instr_pos = self.prompt(instruction, len(history))
-        s_ids = self.subtask_ids(subtask)
-        ids = torch.cat([p_ids, s_ids])
-        labels = torch.full_like(ids, -100)
-        if s_ids.numel():
-            labels[p_ids.numel():] = s_ids                      # predict subtask tokens + eos
+        ids = p_ids
         pixel_values, grid, grid_llm, is_hist = self.image_inputs(pil_image, history)
         n_llm_tok = self._count_tokens(grid_llm)
         n_pad = int((p_ids == self.image_token_id).sum())
         if n_llm_tok != n_pad:
-            raise RuntimeError(f"language-tower image tokens {n_llm_tok} != prompt placeholders "
-                               f"{n_pad} (K={len(history)})")
-        return {"input_ids": ids, "labels": labels, "prompt_len": int(p_ids.numel()),
-                "instr_pos": instr_pos, "pixel_values": pixel_values, "image_grid_thw": grid,
-                "image_grid_thw_llm": grid_llm, "image_is_hist": is_hist,
-                "n_images": len(history) + 1,
-                "mm_token_type_ids": (ids == self.image_token_id).long(), "pad_id": self.pad_id}
+            raise RuntimeError(
+                f"language-tower image tokens {n_llm_tok} != prompt placeholders {n_pad} (K={len(history)})"
+            )
+        return {
+            "input_ids": ids,
+            "prompt_len": int(p_ids.numel()),
+            "instr_pos": instr_pos,
+            "pixel_values": pixel_values,
+            "image_grid_thw": grid,
+            "image_grid_thw_llm": grid_llm,
+            "image_is_hist": is_hist,
+            "n_images": len(history) + 1,
+            "mm_token_type_ids": (ids == self.image_token_id).long(),
+            "pad_id": self.pad_id,
+        }
 
 
-def collate_vlm(items, has_subtask_gt=None):
-    """Right-pad a list of `encode_sample` dicts (runs inside the dataloader workers)."""
+def collate_vlm(items):
     pad_id = items[0]["pad_id"]
     L = max(x["input_ids"].numel() for x in items)
     Li = max(x["instr_pos"].numel() for x in items)
@@ -189,7 +187,6 @@ def collate_vlm(items, has_subtask_gt=None):
     out = {
         "input_ids": torch.stack([pad1(x["input_ids"], L, pad_id) for x in items]),
         "attention_mask": torch.stack([pad1(torch.ones_like(x["input_ids"]), L, 0) for x in items]),
-        "labels": torch.stack([pad1(x["labels"], L, -100) for x in items]),
         "mm_token_type_ids": torch.stack([pad1(x["mm_token_type_ids"], L, 0) for x in items]),
         "prompt_len": torch.tensor([x["prompt_len"] for x in items], dtype=torch.long),
         "instr_pos": torch.stack([pad1(x["instr_pos"], Li, -1) for x in items]),
@@ -199,6 +196,4 @@ def collate_vlm(items, has_subtask_gt=None):
         "image_grid_thw_llm": torch.cat([x["image_grid_thw_llm"] for x in items], dim=0),
         "image_is_hist": torch.cat([x["image_is_hist"] for x in items], dim=0),
     }
-    if has_subtask_gt is not None:
-        out["has_subtask_gt"] = torch.as_tensor(has_subtask_gt, dtype=torch.bool)
     return out

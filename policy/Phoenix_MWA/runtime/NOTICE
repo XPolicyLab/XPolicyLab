@@ -1,0 +1,19 @@
+Phoenix-MWA includes adapted third-party code:
+
+- Hugging Face LeRobot: src/wam/datasets/lerobot/lerobot/, under the
+  Apache License 2.0. Original copyright headers are retained.
+  https://github.com/huggingface/lerobot
+- PyTorch3D rotation conversions: src/wam/datasets/lerobot/utils/rotation.py,
+  under the BSD license in LICENSES/PyTorch3D.txt.
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+  https://github.com/facebookresearch/pytorch3d
+
+The Apache License 2.0 text is in LICENSES/Apache-2.0.txt.
+FastWAM encoder attribution is retained in LICENSES/FastWAM-encoder-LICENSE.
+StarVLA attribution is retained in src/wam/third_party/dino_runtime/STARVLA-LICENSE.
+DINOv3 retains its own DINOv3 License at
+src/wam/third_party/dino_runtime/dinov3/LICENSE.md.
+LIBERO-Plus and RoboCasa integration components retain their accompanying
+licenses and notices. External models, datasets, simulators and robot assets
+retain their own licenses. Retaining source attribution does not grant
+additional redistribution rights for model weights or datasets.

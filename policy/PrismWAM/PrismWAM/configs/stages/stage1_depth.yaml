@@ -1,0 +1,50 @@
+# Stage 1: depth warm-up. From the current depth frame and the instruction, predict the next
+# 8 depth frames (stride 4, the whole 32-step action horizon). Depth loss only, no actions.
+# The result initialises the shared RGB/depth transformer of Stage 2.
+
+defaults: [../base.yaml]
+
+max_steps: 15000
+num_epochs: 20
+save_every: 1000
+eval_every: 500
+eval_samples_per_process: 1
+eval_time_budget_seconds: 180.0
+
+model:
+  _target_: prismwam.models.wan22.prismwam_sv.create_prismwam_sv
+  # Loaded from <paths.weights_root>/<model_id>.
+  model_id: Wan-AI/Wan2.2-TI2V-5B
+  tokenizer_model_id: Wan-AI/Wan2.1-T2V-1.3B
+  tokenizer_max_len: 128
+  load_text_encoder: false              # uses the precomputed text cache
+  video_use_text_embedding: true
+  redirect_common_files: true
+  mot_checkpoint_mixed_attn: false
+  skip_dit_load_from_pretrain: false
+  vae_variant: depth
+  vae_checkpoint_path: ${paths.weights_root}/init/depth_vae.pt
+  depth_vae_require_latent_stats: true
+  video_dit_config:
+    patch_size: [1, 2, 2]
+    in_dim: 48
+    hidden_dim: 3072
+    ffn_dim: 14336
+    freq_dim: 256
+    text_dim: 4096
+    out_dim: 48
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    eps: 1.0e-06
+    seperated_timestep: true
+    require_vae_embedding: false
+    fuse_vae_embedding_in_latents: true
+    use_gradient_checkpointing: false
+    video_attention_mask_mode: first_frame_causal   # the observed frame conditions the rest
+  video_scheduler:
+    train_shift: 5.0
+    infer_shift: 5.0
+    num_train_timesteps: 1000
+  loss:
+    lambda_video: 1.0

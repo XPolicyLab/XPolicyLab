@@ -1,0 +1,52 @@
+diff --git a/env_cfg/arx_x5.yml b/env_cfg/arx_x5.yml
+index bf2a3c5..9ad233f 100644
+--- a/env_cfg/arx_x5.yml
++++ b/env_cfg/arx_x5.yml
+@@ -12,7 +12,7 @@ observation:
+     joint_states: true
+     world_ee_state: true
+   vision:
+-    approximate_depth: false
++    approximate_depth: true
+     depth: false
+     intrinsic_matrix: false
+     extrinsic_matrix: false
+diff --git a/env_cfg/camera/camera_config.yml b/env_cfg/camera/camera_config.yml
+index 0255400..cc3074b 100644
+--- a/env_cfg/camera/camera_config.yml
++++ b/env_cfg/camera/camera_config.yml
+@@ -9,25 +9,25 @@ annotator:
+     rgb_capture:
+       type: rgb
+       device: cpu
+-    # distance_to_image_plane_capture:
+-    #   type: distance_to_image_plane
+-    #   device: cpu
++    distance_to_image_plane_capture:
++      type: distance_to_image_plane
++      device: cpu
+   cam_left_wrist:
+     enabled: True
+     rgb_capture:
+       type: rgb
+       device: cpu
+-    # distance_to_image_plane_capture:
+-    #   type: distance_to_image_plane
+-    #   device: cpu
++    distance_to_image_plane_capture:
++      type: distance_to_image_plane
++      device: cpu
+   cam_right_wrist:
+     enabled: True
+     rgb_capture:
+       type: rgb
+       device: cpu
+-    # distance_to_image_plane_capture:
+-    #   type: distance_to_image_plane
+-    #   device: cpu
++    distance_to_image_plane_capture:
++      type: distance_to_image_plane
++      device: cpu
+ 
+ cam_head:
+   camera:

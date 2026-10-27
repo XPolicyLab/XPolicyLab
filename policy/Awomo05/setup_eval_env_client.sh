@@ -23,6 +23,15 @@ yaml_file="${XPL_ROOT}/policy/${policy_name}/deploy.yml"
 
 echo "[CLIENT] policy=${policy_name}, task=${task_name}, server=${policy_server_ip}:${policy_server_port}"
 
+if [[ "${EVAL_ENV_TYPE:-sim}" == "debug" && "${eval_env_conda_env}" == "system" ]]; then
+    export PYTHONPATH="${XPL_ROOT}:${BENCH_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
+    exec "${AWOMO05_DEBUG_PYTHON:-python}" "${UTILS_DIR}/debug_env_client.py" \
+        --bench_name "${bench_name}" --task_name "${task_name}" \
+        --env_cfg_type "${env_cfg_type}" --policy_name "${policy_name}" \
+        --protocol ws --host "${policy_server_ip}" --port "${policy_server_port}" \
+        --eval_batch true --eval_episode_num "${AWOMO05_DEBUG_EPISODES:-1}"
+fi
+
 bash "${UTILS_DIR}/setup_env_client.sh" \
     "${UTILS_DIR}" \
     "${yaml_file}" \

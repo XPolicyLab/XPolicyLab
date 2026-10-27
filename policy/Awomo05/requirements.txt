@@ -1,5 +1,6 @@
 # Policy-server side (the simulator env is RoboDojo's own). Versions are what the release was verified with.
 torch==2.8.0
+diffusers==0.38.0
 transformers==5.5.0
 peft==0.5.0
 safetensors>=0.5

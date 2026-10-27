@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv*/
+worldla-src/
+checkpoints/
+logs/
+.pytest_cache/

@@ -90,8 +90,6 @@ class LinearNormalizer:
             batch[field][key] = x
 
 
-
-
 class SingleFieldLinearNormalizer:
     std_reg = 1e-8
     range_tol = 1e-4
@@ -111,7 +109,6 @@ class SingleFieldLinearNormalizer:
             elif mode == "q01/q99":
                 input_min, input_max = stats["q01"], stats["q99"]
             else:
-                # parse const_min/const_max
                 input_min, input_max = map(float, mode.split("/"))
                 input_min = torch.full_like(stats["min"], input_min)
                 input_max = torch.full_like(stats["max"], input_max)

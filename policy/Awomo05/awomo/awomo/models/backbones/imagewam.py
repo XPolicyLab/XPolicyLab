@@ -41,7 +41,6 @@ class ImageWAM(torch.nn.Module):
         self.video_expert = video_expert
         self.action_expert = action_expert
         self.mot = mot
-        # Keep the checkpoint's module layout.
         self.dit = self.mot
         self.lambda_concept = float(lambda_concept)
         self.concept_bottleneck = None
@@ -70,7 +69,6 @@ class ImageWAM(torch.nn.Module):
             num_train_timesteps=action_num_train_timesteps,
             shift=action_infer_shift,
         )
-        # Optional aliases for consistency with Wan22Core naming.
         self.infer_scheduler = self.infer_video_scheduler
 
         self.device = torch.device(device)
@@ -81,10 +79,6 @@ class ImageWAM(torch.nn.Module):
         self.pack_proprio_after_text = bool(pack_proprio_after_text)
 
         self.to(self.device)
-
-
-
-
 
 
     def to(self, *args, **kwargs):
@@ -99,7 +93,6 @@ class ImageWAM(torch.nn.Module):
             self.dim_projector.to(*args, **kwargs)
         self.vae.to(*args, **kwargs)
         return self
-
 
 
     @staticmethod
@@ -125,7 +118,7 @@ class ImageWAM(torch.nn.Module):
             )
         proprio_token = self.proprio_encoder(
             proprio.to(device=self.device, dtype=context.dtype).unsqueeze(1)
-        ).to(dtype=context.dtype) # [B, 1, D]
+        ).to(dtype=context.dtype)
         if not getattr(self, "pack_proprio_after_text", False):
             proprio_mask = torch.ones((context_mask.shape[0], 1), dtype=torch.bool, device=context_mask.device)
             return (
@@ -206,30 +199,6 @@ class ImageWAM(torch.nn.Module):
         )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @torch.no_grad()
     def _encode_flux2_image_tokens(
         self,
@@ -260,15 +229,6 @@ class ImageWAM(torch.nn.Module):
         return tokens, ids
 
 
-
-
-
-
-
-
-
-
-
     @torch.no_grad()
     def _build_mot_attention_mask_flux2(
         self,
@@ -287,12 +247,9 @@ class ImageWAM(torch.nn.Module):
         a0 = txt_len + cond_len + target_len
         total = a0 + action_len
         mask = torch.zeros(batch_size, total, total, dtype=torch.bool, device=device)
-        # Stable text/ref prefix cannot attend to noisy target/action tokens.
         mask[:, t0:r0, t0:x0] = True
         mask[:, r0:x0, t0:x0] = True
-        # Target/noisy image uses stable prefix and target self-context.
         mask[:, x0:a0, t0:a0] = True
-        # Action uses stable prefix and action self-context, not target/noisy image.
         mask[:, a0:total, t0:x0] = True
         mask[:, a0:total, a0:total] = True
         if text_attention_mask is not None:
@@ -304,11 +261,6 @@ class ImageWAM(torch.nn.Module):
             text_valid = text_attention_mask.to(device=device, dtype=torch.bool)
             mask[:, :, t0:r0] &= text_valid[:, None, :]
         if cond_attention_mask is not None:
-            # Per-token validity inside the clean conditioning block, used by the pooled
-            # long-horizon history: a dropped / out-of-episode slot still occupies its
-            # position (so slot identity stays stable for RoPE) but must be invisible.
-            # Only KEY columns are gated, exactly like text above, so no query row can end up
-            # entirely masked (an invalid cond token still sees the valid text tokens).
             if cond_attention_mask.ndim != 2 or tuple(cond_attention_mask.shape) != (batch_size, cond_len):
                 raise ValueError(
                     "`cond_attention_mask` must be [B,cond_len], "
@@ -317,29 +269,6 @@ class ImageWAM(torch.nn.Module):
             cond_valid = cond_attention_mask.to(device=device, dtype=torch.bool)
             mask[:, :, r0:x0] &= cond_valid[:, None, :]
         return {"double_joint": mask, "single": mask.clone()}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     def load_checkpoint(self, path, optimizer=None):

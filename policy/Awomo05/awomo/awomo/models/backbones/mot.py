@@ -153,8 +153,6 @@ class MoT(nn.Module):
             elif H_kv != H:
                 enable_gqa = True
             with _sdpa_context():
-                # torch<2.5 的 sdpa 无 enable_gqa 参数;仅真正需要 GQA(H_kv!=H 且非 repeat)时才传,
-                # 保持对 RoboTwin env(torch 2.4.1)兼容(H_kv==H 时 enable_gqa=False,不传即可)。
                 if enable_gqa:
                     out = F.scaled_dot_product_attention(q, k, v, attn_mask=attn_mask, enable_gqa=True)
                 else:
@@ -164,23 +162,6 @@ class MoT(nn.Module):
         if self.mot_checkpoint_mixed_attn and self.training:
             return torch.utils.checkpoint.checkpoint(_forward, q_cat, k_cat, v_cat, use_reentrant=False)
         return _forward(q_cat, k_cat, v_cat)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     def _flux2_flatten_heads(self, tensor: torch.Tensor) -> torch.Tensor:

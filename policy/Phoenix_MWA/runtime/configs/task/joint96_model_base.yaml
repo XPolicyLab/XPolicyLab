@@ -1,0 +1,122 @@
+# @package _global_
+defaults:
+  - override /model: wam
+  - _self_
+
+local_robot_joint96:
+  enabled: false
+  expected_world_size: 192
+  require_deepspeed: true
+  smoke_mode: false
+  allow_audit_package: false
+  allow_smoke_norm: false
+  validation_seed: 20260928
+
+batch_size: 16
+num_workers: 4
+prefetch_factor: 1
+pin_memory: false
+num_epochs: 1000000
+max_steps: 200000
+learning_rate: 1.0e-4
+min_learning_rate: 1.0e-6
+warmup_steps: 10000
+lr_scheduler_type: cosine
+weight_decay: 0.01
+gradient_accumulation_steps: 1
+max_grad_norm: 1.0
+mixed_precision: bf16
+seed: 42
+resume: null
+log_every: 10
+save_every: 5000
+eval_every: 5000
+save_training_state: true
+save_on_train_end: true
+video_latent_cache: 'off'
+eval_max_videos: 0
+
+model:
+  joint96_three_view: true
+  action_dit_pretrained_path: null
+  action_dit_use_interpolated_init: false
+  skip_dit_load_from_pretrain: false
+  load_text_encoder: false
+  proprio_dim: 80
+  mot_checkpoint_mixed_attn: true
+  mot_checkpoint_layer_stride: 1
+  mot_attention_backend: flex
+  mot_flex_masked_batches: true
+  mot_flex_block_size: 64
+  mot_flex_training_kernel_options:
+    fwd_BLOCK_M: 64
+    fwd_BLOCK_N: 64
+    fwd_num_stages: 2
+    bwd_BLOCK_M1: 64
+    bwd_BLOCK_N1: 64
+    bwd_BLOCK_M2: 64
+    bwd_BLOCK_N2: 64
+    bwd_num_stages: 2
+  video_dit_config:
+    in_dim: 96
+    out_dim: 96
+    action_dim: 80
+  action_dit_config:
+    action_dim: 80
+    training_time_rtc:
+      enabled: false
+  video_scheduler:
+    train_shift: 6.0
+    infer_shift: 6.0
+  action_scheduler:
+    train_shift: 1.0
+    infer_shift: 1.0
+  loss:
+    lambda_video: 1.0
+    lambda_action: 1.0
+  understanding:
+    enabled: false
+    train_vlm: false
+  future_delta:
+    enabled: false
+    video_size: ${data.video_size}
+    num_views: ${data.processor.num_output_cameras}
+    num_frames: ${data.sampling.num_frames}
+    action_video_freq_ratio: ${data.sampling.action_video_freq_ratio}
+    semantic_alignment:
+      enabled: false
+  memory:
+    enabled: false
+    video:
+      enabled: false
+      num_anchor_frames: 0
+      num_recent_frames: 0
+  distillation:
+    enabled: false
+  joint_visual_codec:
+    source_root: bundled://dino-stvae-v1
+    source_sha256: null
+    stvae_checkpoint_path: ${oc.env:STVAE_CHECKPOINT}
+    expected_stvae_step: null # deprecated; read from encoder checkpoint
+    dino_kwargs:
+      checkpoint_path: ${oc.env:DINO_ENCODER_CHECKPOINT}
+      checkpoint_state: ema_student
+      output_source: backbone
+      projection_mode: raw
+      projector_out_dim: 1024
+      projector_state_path: null
+      feature_norm_state_path: null
+      require_feature_norm: false
+      starvla_source_path: ${model.joint_visual_codec.source_root}/third_party/dino_runtime
+      dinov3_source_path: ${model.joint_visual_codec.source_root}/third_party/dino_runtime/dinov3
+      dinov3_source_commit: 6876159a11b4df116f30f667f8c9888617df0751
+      verify_source_commit: true
+      strict_load: true
+      image_size: 256
+      patch_size: 16
+
+wandb:
+  enabled: true
+  project: ${oc.env:WANDB_PROJECT,fastwam-cotrain}
+  mode: ${oc.env:WANDB_MODE,online}
+  name: ${oc.env:RUN_ID,local_robot_joint96}

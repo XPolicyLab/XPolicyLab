@@ -1,0 +1,51 @@
+# @package _global_
+defaults:
+  - joint96_posttrain_base
+  - override /data: robotwin_joint96_online_robot37
+  - _self_
+
+joint96_posttrain:
+  online_robotwin: true
+  cached_visuals: false
+  evaluation_membership: train_pool
+  action_video_attention: current_and_noisy_future_v1
+  robotwin_softprompt:
+    enabled: true
+    embodiment_id: 2
+local_robot_softprompt:
+  enabled: true
+  registry_path: ${oc.env:EMBODIMENT_REGISTRY,configs/embodiment_registry/local_robot37_arm18_capacity28_v1.json}
+  init_checkpoint: null
+  expected_init_step: null
+model:
+  mot_checkpoint_mixed_attn: false
+  mot_compile_gradient_checkpointing: false
+  video_dit_config:
+    use_gradient_checkpointing: false
+  action_dit_config:
+    use_gradient_checkpointing: false
+    num_embodiments: 28
+    soft_prompt_tokens: 8
+    embodiment_registry_path: ${local_robot_softprompt.registry_path}
+  joint_visual_codec:
+    expected_stvae_step: null # deprecated; read from encoder checkpoint
+  loss:
+    lambda_video: 1.0
+    lambda_action: 1.0
+batch_size: 8
+gradient_accumulation_steps: 1
+num_workers: 8
+prefetch_factor: 2
+pin_memory: true
+num_epochs: 50
+max_steps: null
+learning_rate: 5.0e-5
+min_learning_rate: 5.0e-7
+warmup_steps: null
+seed: 42
+log_every: 10
+save_every: 5000
+eval_every: 5000
+max_weight_checkpoints: 10
+save_training_state: true
+save_on_train_end: true

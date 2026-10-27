@@ -1,0 +1,192 @@
+train:
+  _target_: wam.datasets.lerobot.domain_aug_dataset.DomainAugmentedRobotVideoDataset
+  dataset_dirs:
+  - ${paths.robotwin}
+  shape_meta:
+    images:
+    - key: cam_high
+      raw_shape:
+      - 3
+      - 480
+      - 640
+      shape:
+      - 3
+      - 240
+      - 320
+    - key: cam_left_wrist
+      raw_shape:
+      - 3
+      - 480
+      - 640
+      shape:
+      - 3
+      - 240
+      - 320
+    - key: cam_right_wrist
+      raw_shape:
+      - 3
+      - 480
+      - 640
+      shape:
+      - 3
+      - 240
+      - 320
+    action:
+    - key: default
+      raw_shape: 14
+      shape: 14
+    state:
+    - key: default
+      raw_shape: 14
+      shape: 14
+  num_frames: 33
+  global_sample_stride: 1
+  memory_video_anchor_size: 1
+  memory_recent_frame_offset: 32
+  action_video_freq_ratio: 4
+  video_size:
+  - 384
+  - 256
+  camera_key: null
+  val_set_proportion: 0.0
+  is_training_set: true
+  pretrained_norm_stats: ${oc.env:ROBOTWIN_NORM_STATS,assets/stats/robotwin.json}
+  skip_padding_as_possible: false
+  concat_multi_camera: robotwin
+  single_canvas: true
+  return_vlm_current_images: true
+  processor:
+    _target_: wam.datasets.lerobot.processors.wam_processor.WAMProcessor
+    shape_meta: ${data.train.shape_meta}
+    num_obs_steps: ${data.train.num_frames}
+    num_output_cameras: 3
+    action_output_dim: 80
+    proprio_output_dim: 80
+    action_state_transforms: null
+    use_stepwise_action_norm: false
+    norm_default_mode: z-score
+    norm_exception_mode: null
+    action_state_merger:
+      _target_: wam.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+      action_target_dim: 80
+      state_target_dim: 80
+      action_target_slices:
+      - source_slice:
+        - 0
+        - 6
+        target_slice:
+        - 0
+        - 6
+      - source_slice:
+        - 6
+        - 7
+        target_slice:
+        - 16
+        - 17
+      - source_slice:
+        - 7
+        - 13
+        target_slice:
+        - 40
+        - 46
+      - source_slice:
+        - 13
+        - 14
+        target_slice:
+        - 56
+        - 57
+      state_target_slices:
+      - source_slice:
+        - 0
+        - 6
+        target_slice:
+        - 0
+        - 6
+      - source_slice:
+        - 6
+        - 7
+        target_slice:
+        - 16
+        - 17
+      - source_slice:
+        - 7
+        - 13
+        target_slice:
+        - 40
+        - 46
+      - source_slice:
+        - 13
+        - 14
+        target_slice:
+        - 56
+        - 57
+    train_transforms:
+    - _target_: wam.datasets.lerobot.transforms.image.ToTensor
+    - _target_: torchvision.transforms.Resize
+      size:
+      - 240
+      - 320
+    val_transforms:
+    - _target_: wam.datasets.lerobot.transforms.image.ToTensor
+    - _target_: torchvision.transforms.Resize
+      size:
+      - 240
+      - 320
+  text_embedding_cache_dir: ${oc.env:ROBOTWIN_TEXT_CACHE,${paths.cache}/text_embed/robotwin}
+  context_len: 128
+  episode_selection:
+    mode: periodic_prefix
+    period: 550
+    keep_first: 50
+  image_color_jitter:
+    enabled: true
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.25
+    gamma: 0.1
+    apply_to_vlm: true
+  image_domain_jitter:
+    enabled: true
+    rgb_prob: 0.7
+    rgb_gain_range:
+    - 0.8
+    - 1.2
+    shadow_prob: 0.7
+    shadow_depth_range:
+    - 0.15
+    - 0.35
+    shadow_sigma_range:
+    - 0.25
+    - 0.6
+  image_camera_jitter:
+    enabled: true
+    prob: 0.5
+    scale_min: 0.95
+    scale_max: 1.0
+    translate: 0.0
+    random_crop: true
+    views:
+    - cam_high
+    apply_to_vlm: true
+val:
+  _target_: wam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
+  dataset_dirs: ${data.train.dataset_dirs}
+  shape_meta: ${data.train.shape_meta}
+  num_frames: ${data.train.num_frames}
+  global_sample_stride: ${data.train.global_sample_stride}
+  memory_video_anchor_size: ${data.train.memory_video_anchor_size}
+  memory_recent_frame_offset: ${data.train.memory_recent_frame_offset}
+  action_video_freq_ratio: ${data.train.action_video_freq_ratio}
+  video_size: ${data.train.video_size}
+  camera_key: ${data.train.camera_key}
+  val_set_proportion: ${data.train.val_set_proportion}
+  is_training_set: false
+  pretrained_norm_stats: ${data.train.pretrained_norm_stats}
+  skip_padding_as_possible: ${data.train.skip_padding_as_possible}
+  concat_multi_camera: ${data.train.concat_multi_camera}
+  single_canvas: ${data.train.single_canvas}
+  return_vlm_current_images: ${data.train.return_vlm_current_images}
+  processor: ${data.train.processor}
+  text_embedding_cache_dir: ${data.train.text_embedding_cache_dir}
+  context_len: ${data.train.context_len}
+  episode_selection: ${data.train.episode_selection}

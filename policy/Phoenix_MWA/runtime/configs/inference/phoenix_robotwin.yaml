@@ -1,0 +1,264 @@
+# Phoenix-MWA RoboTwin inference configuration; not a training recipe.
+# Released policy: FT35k, DINO110k EMA + STVAE150k.
+# data.train contains only processor/compatibility fields; no dataset is loaded.
+# Paths are relative to the repository, with explicit environment overrides.
+# Preserve constructor checks; the evaluator skips Wan DiT initialization weights
+# and strictly restores the complete policy before serving any inference.
+
+init_checkpoint: null
+resume: null
+inference:
+  normalization_stats: assets/stats/robotwin.json
+local_robot_joint96:
+  enabled: false
+local_robot_softprompt:
+  enabled: true
+  registry_path: configs/embodiment_registry/local_robot37_arm18_capacity28_v1.json
+  init_checkpoint: null
+joint96_posttrain:
+  enabled: true
+  cached_visuals: false
+  online_robotwin: true
+  action_video_attention: current_and_noisy_future_v1
+  robotwin_softprompt:
+    enabled: true
+    embodiment_id: 2
+data:
+  train:
+    domain: robotwin
+    shape_meta:
+      images:
+      - key: cam_high
+        raw_shape:
+        - 3
+        - 480
+        - 640
+        shape:
+        - 3
+        - 240
+        - 320
+      - key: cam_left_wrist
+        raw_shape:
+        - 3
+        - 480
+        - 640
+        shape:
+        - 3
+        - 240
+        - 320
+      - key: cam_right_wrist
+        raw_shape:
+        - 3
+        - 480
+        - 640
+        shape:
+        - 3
+        - 240
+        - 320
+      action:
+      - key: default
+        raw_shape: 14
+        shape: 14
+      state:
+      - key: default
+        raw_shape: 14
+        shape: 14
+    num_frames: 33
+    action_video_freq_ratio: 4
+    video_size:
+    - 256
+    - 256
+    concat_multi_camera: latent_horizontal
+    single_canvas: false
+    context_len: 128
+    processor:
+      _target_: wam.datasets.lerobot.processors.wam_processor.WAMProcessor
+      shape_meta: ${data.train.shape_meta}
+      num_obs_steps: 33
+      num_output_cameras: 3
+      action_output_dim: 80
+      proprio_output_dim: 80
+      action_state_transforms: null
+      use_stepwise_action_norm: false
+      norm_default_mode: z-score
+      norm_exception_mode: null
+      action_state_merger:
+        _target_: wam.datasets.lerobot.transforms.action_state_merger.ConcatLeftAlign
+        action_target_dim: 80
+        state_target_dim: 80
+        action_target_slices:
+        - source_slice:
+          - 0
+          - 6
+          target_slice:
+          - 0
+          - 6
+        - source_slice:
+          - 6
+          - 7
+          target_slice:
+          - 16
+          - 17
+        - source_slice:
+          - 7
+          - 13
+          target_slice:
+          - 40
+          - 46
+        - source_slice:
+          - 13
+          - 14
+          target_slice:
+          - 56
+          - 57
+        state_target_slices:
+        - source_slice:
+          - 0
+          - 6
+          target_slice:
+          - 0
+          - 6
+        - source_slice:
+          - 6
+          - 7
+          target_slice:
+          - 16
+          - 17
+        - source_slice:
+          - 7
+          - 13
+          target_slice:
+          - 40
+          - 46
+        - source_slice:
+          - 13
+          - 14
+          target_slice:
+          - 56
+          - 57
+      train_transforms:
+      - _target_: wam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size:
+        - 240
+        - 320
+      val_transforms:
+      - _target_: wam.datasets.lerobot.transforms.image.ToTensor
+      - _target_: torchvision.transforms.Resize
+        size:
+        - 240
+        - 320
+model:
+  _target_: wam.model.factory.create_wam
+  model_id: Wan-AI/Wan2.2-TI2V-5B
+  tokenizer_model_id: Wan-AI/Wan2.1-T2V-1.3B
+  tokenizer_max_len: 128
+  load_text_encoder: false
+  proprio_dim: 80
+  redirect_common_files: true
+  mot_checkpoint_mixed_attn: false
+  mot_attention_backend: flex
+  mot_flex_block_size: 64
+  action_dit_pretrained_path: null
+  action_dit_use_interpolated_init: false
+  skip_dit_load_from_pretrain: false
+  video_dit_config:
+    has_image_input: false
+    patch_size:
+    - 1
+    - 2
+    - 2
+    in_dim: 96
+    hidden_dim: 3072
+    ffn_dim: 14336
+    freq_dim: 256
+    text_dim: 4096
+    out_dim: 96
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    eps: 1.0e-06
+    seperated_timestep: true
+    require_clip_embedding: false
+    require_vae_embedding: false
+    fuse_vae_embedding_in_latents: true
+    use_gradient_checkpointing: false
+    video_attention_mask_mode: first_frame_causal
+    action_conditioned: false
+    action_dim: 80
+    action_group_causal_mask_mode: group_diagonal
+  action_dit_config:
+    training_time_rtc:
+      enabled: false
+      max_delay_steps: 16
+    action_dim: 80
+    hidden_dim: 1024
+    ffn_dim: 4096
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    text_dim: 4096
+    freq_dim: 256
+    eps: 1.0e-06
+    use_gradient_checkpointing: false
+    num_embodiments: 28
+    soft_prompt_tokens: 8
+    embodiment_registry_path: ${local_robot_softprompt.registry_path}
+  video_scheduler:
+    train_shift: 6.0
+    infer_shift: 6.0
+    num_train_timesteps: 1000
+  action_scheduler:
+    train_shift: 1.0
+    infer_shift: 1.0
+    num_train_timesteps: 1000
+  loss:
+    lambda_video: 1.0
+    lambda_action: 1.0
+  future_delta:
+    enabled: false
+  understanding:
+    enabled: false
+  memory:
+    enabled: false
+    video:
+      enabled: false
+      num_anchor_frames: 0
+      num_recent_frames: 0
+      deduplicate_identical_anchor_batch: true
+  joint96_three_view: true
+  mot_checkpoint_layer_stride: 1
+  mot_flex_masked_batches: true
+  mot_flex_training_kernel_options:
+    fwd_BLOCK_M: 64
+    fwd_BLOCK_N: 64
+    fwd_num_stages: 2
+    bwd_BLOCK_M1: 64
+    bwd_BLOCK_N1: 64
+    bwd_BLOCK_M2: 64
+    bwd_BLOCK_N2: 64
+    bwd_num_stages: 2
+  distillation:
+    enabled: false
+  joint_visual_codec:
+    source_root: bundled://dino-stvae-v1
+    source_sha256: null
+    stvae_checkpoint_path: checkpoints/encoders/stvae150k.pt
+    expected_stvae_step: 150000
+    dino_kwargs:
+      checkpoint_path: checkpoints/encoders/dino110k.pt
+      checkpoint_state: ema_student
+      output_source: backbone
+      projection_mode: raw
+      projector_out_dim: 1024
+      projector_state_path: null
+      feature_norm_state_path: null
+      require_feature_norm: false
+      starvla_source_path: bundled://dino-stvae-v1/third_party/dino_runtime
+      dinov3_source_path: bundled://dino-stvae-v1/third_party/dino_runtime/dinov3
+      dinov3_source_commit: 6876159a11b4df116f30f667f8c9888617df0751
+      verify_source_commit: false
+      strict_load: true
+      image_size: 256
+      patch_size: 16
+  mot_compile_gradient_checkpointing: false

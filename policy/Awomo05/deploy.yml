@@ -1,4 +1,4 @@
-# XPolicyLab policy-server configuration
+# Prepared public weights. The server receives RGB; BGR models require explicit opt-in.
 policy_name: Awomo05
 protocol: ws
 host: localhost
@@ -9,51 +9,24 @@ ckpt_name: null
 env_cfg_type: null
 action_type: null
 action_dim: null
+gpu_id: null
 seed: null
-# The client can drive multiple environments through one policy server.
 eval_batch: true
-
-# --- Awomo05-specific ---------------------------------------------------
-# Architecture and preprocessing settings are loaded from model_config.yaml.
-
-# null -> policy/Awomo05/model_config.yaml
-model_config: null
-# Directory holding the selected checkpoint and matching dataset_stats.json.
-# null -> policy/Awomo05/weights (or $AWOMO05_WEIGHTS).
-weights_dir: null
-# Set this explicitly to a file under weights_dir or an absolute path.
 ckpt: null
-
-# Public base weights; see download_weights.sh. Environment alternatives:
-# AWOMO05_FLUX2_BASE / AWOMO05_FLUX2_AE / AWOMO05_QWEN_VL.
-flux2_base_path: null      # black-forest-labs/FLUX.2-klein-base-4B  -> flux-2-klein-base-4b.safetensors
-ae_path: null              # black-forest-labs/FLUX.2-dev            -> ae.safetensors
-qwen_vl_path: null         # Qwen/Qwen3-VL-4B-Instruct               -> directory
-
-# Node-local scratch for the staged checkpoint. Must NOT be on network storage.
+weights_dir: null
+qwen_vl_path: null
+vae_path: null
 local_dir: /tmp/Awomo05
-# Copy the checkpoint to local_dir before loading; network reads can be slow.
 ckpt_local_copy: true
-
-# Matching normalization statistics. null -> weights_dir/dataset_stats.json.
 dataset_stats_path: null
-
-action_horizon: null       # null -> data.train.num_frames - 1 (16 steps = 0.64 s at 25 Hz)
-replan_steps: 8            # actions executed per inference; <= action_horizon
-num_inference_steps: null  # null -> eval_num_inference_steps from model_config (10)
-sigma_shift: null          # null -> the model's own video_infer_shift
+action_horizon: null
+replan_steps: 8
+num_inference_steps: 10
+sigma_shift: null
 rand_device: cpu
 mixed_precision: bf16
 device: cuda
-
-# This released checkpoint requires BGR; standard evaluation scripts also select it explicitly.
-input_color_order: bgr
-
-# History switches. null or true = follow model_config.
-history_enabled: null
-history_fps: null          # null -> data.train.history.fps (25)
-# Optional diagnostic text decode; it does not condition the action model.
-vl_decode_every: null
-
-# Used only if obs carries no instruction; empty fails on missing instructions.
+input_color_order: rgb
+max_env_batch_size: 10
+dit_serial: true
 default_instruction: ""

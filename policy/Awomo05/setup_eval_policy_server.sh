@@ -26,6 +26,10 @@ if [[ "${policy_conda_env}" != "system" ]]; then
     conda activate "${policy_conda_env}"
 fi
 
+weights_dir=${AWOMO05_WEIGHTS:-$SCRIPT_DIR/weights}
+export AWOMO05_QWEN_VL=${AWOMO05_QWEN_VL:-${AWOMO_QWEN3_VL:-$weights_dir/Qwen3-VL-4B-Instruct}}
+export AWOMO05_FLUX2_VAE=${AWOMO05_FLUX2_VAE:-${AWOMO_FLUX2_VAE:-$weights_dir/FLUX.2-klein-base-4B/vae}}
+
 exec env \
     PYTHONWARNINGS=ignore::UserWarning \
     CUDA_VISIBLE_DEVICES="${policy_gpu_id}" \

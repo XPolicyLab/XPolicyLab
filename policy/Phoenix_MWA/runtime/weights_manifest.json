@@ -1,0 +1,66 @@
+{
+  "files": [
+    {
+      "provider": "hf",
+      "repo_id": "AnyverseDynamics/Phoenix-RoboTwin",
+      "revision": "7c7326e077e84d443a9632080f466cda40fae88d",
+      "filename": "policy.pt",
+      "path": "policy.pt",
+      "size": 12045458759,
+      "sha256": "692f4bb82af2f4da4c9fda586432dc5a032dbdbf9bb2a5e27806715d94c05337"
+    },
+    {
+      "provider": "hf",
+      "repo_id": "AnyverseDynamics/Phoenix-Encoders",
+      "revision": "23502a0a2158bbe9f17946c881d4285f2dc33538",
+      "filename": "dino110k.pt",
+      "path": "encoders/dino110k.pt",
+      "size": 2485491825,
+      "sha256": "81a0082487879332968b5ec458a8d493bf30da601b855cfbaf0e09e250619053"
+    },
+    {
+      "provider": "hf",
+      "repo_id": "AnyverseDynamics/Phoenix-Encoders",
+      "revision": "23502a0a2158bbe9f17946c881d4285f2dc33538",
+      "filename": "stvae150k.pt",
+      "path": "encoders/stvae150k.pt",
+      "size": 289373779,
+      "sha256": "7e41b75082444011bb6f6451c102e4a01bf2066faf20a7b0615fe05e0472d643"
+    },
+    {
+      "provider": "modelscope",
+      "repo_id": "DiffSynth-Studio/Wan-Series-Converted-Safetensors",
+      "revision": "master",
+      "filename": "Wan2.2_VAE.safetensors",
+      "path": "DiffSynth-Studio/Wan-Series-Converted-Safetensors/Wan2.2_VAE.safetensors",
+      "size": 1409401152,
+      "sha256": "0e913a2ca571c75fcb63385a8edadcca73454af5842596cb1ad11e4142590996"
+    },
+    {
+      "provider": "modelscope",
+      "repo_id": "DiffSynth-Studio/Wan-Series-Converted-Safetensors",
+      "revision": "master",
+      "filename": "models_t5_umt5-xxl-enc-bf16.safetensors",
+      "path": "DiffSynth-Studio/Wan-Series-Converted-Safetensors/models_t5_umt5-xxl-enc-bf16.safetensors",
+      "size": 11361845432,
+      "sha256": "d92de679881d38af9c89eff7bb1b6d6c9d96cb2b69831e4027e9ecabdd38eb23"
+    }
+  ],
+  "tokenizer": {
+    "repo_id": "Wan-AI/Wan2.1-T2V-1.3B",
+    "revision": "37ec512624d61f7aa208f7ea8140a131f93afc9a",
+    "pattern": "google/umt5-xxl/*",
+    "path": "Wan-AI/Wan2.1-T2V-1.3B"
+  },
+  "pretraining": {
+    "provider": "modelscope",
+    "repo_id": "ssuuuuu/phoenix-wam",
+    "revision": "master",
+    "filename": "phoenix-mwa-pretrain-joint96-step_256013.pt",
+    "path": "phoenix-mwa-pretrain-joint96-step_256013.pt",
+    "size": 12045482297,
+    "sha256": "f1a2749ff95253b098476b2b6bad9641b0ddea0183c4f366214a63d96bc29753",
+    "step": 256013,
+    "role": "pretraining"
+  }
+}
