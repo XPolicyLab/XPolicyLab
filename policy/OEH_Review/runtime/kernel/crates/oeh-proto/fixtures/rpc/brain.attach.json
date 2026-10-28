@@ -1,0 +1,12 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "brain/attach",
+    "params": {
+      "brain_id": "fast",
+      "wake_policy": { "default": "accumulate", "rules": { "obs/person": "wake" }, "budget": { "max_consecutive_wakes": 3, "min_interval_ms": 500 } }
+    }
+  },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": { "cursor": 41 } }
+}

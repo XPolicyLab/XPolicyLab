@@ -1,0 +1,15 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": "k1",
+    "method": "capability/execute",
+    "params": {
+      "exec_id": "exec-1",
+      "capability": "walk",
+      "params": { "vx": 0.5, "vy": 0.0, "yaw_rate": 0.0 },
+      "proposal": { "proposal_id": "t-7-3-120-p1", "brain_id": "fast", "turn": 3, "trace_id": "t-7-3-120", "capability": "walk", "params": { "vx": 0.5, "vy": 0.0, "yaw_rate": 0.0 } },
+      "lease_ttl_s": 5.0
+    }
+  },
+  "response": { "jsonrpc": "2.0", "id": "k1", "result": { "accepted": true } }
+}

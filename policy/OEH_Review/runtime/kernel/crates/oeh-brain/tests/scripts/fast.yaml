@@ -1,0 +1,23 @@
+# dev-native 快脑剧本（`profiles/dev-native.yaml` 的 `brain-native{brain_id: fast}`）。
+#
+# 两个 turn：前一个只问慢脑（`ask_slow_brain` 是 query，不受 `rule-scene` 管），后一个
+# 才 `robot_walk`——`rule-scene` 不知道地面是不是空的就一律拒（fail-closed），`walk` 不能
+# 是这个脑第一件做的事。
+#
+# 两个 turn 各自的唤醒来自 `scripts/smoke-native.sh` 喂的两条 `obs/gesture`
+# （`wake/fast.yaml` 里是 `wake`），中间隔够 1 秒——`wake/fast.yaml` 的唤醒预算
+# `min_interval_ms: 500` 要求两次真唤醒之间隔够 500 ms，隔太近的第二条会被压成
+# accumulate，`robot_walk` 那一步永远不会被排上。内核刚起来时 `safety/fsm`（wake/fast.yaml
+# 里是 `steer`，Idle 时等同 wake）会不会抢在两条 `obs/gesture` 之前先叫醒这个脑，纯属
+# FSM 转 STANDING 和 `brain-native` 的 `attach` 谁先谁后的时序竞争：抢到了，它就变成一次
+# 提前的、内容和第一条 `obs/gesture` 一样的"问"（第一条 `obs/gesture` 因为落在预算窗口
+# 内被压掉，第二条接着顶上"走"那一步）；没抢到，第一条 `obs/gesture` 自己就是那次"问"的
+# 唤醒。两条路径都会让这两个 turn 按顺序跑完，脚本不用关心是哪一条。
+- text: "站起来了，先问问慢脑要不要走一步。"
+  tool_calls:
+    - { name: ask_slow_brain, args: { q: "can I walk forward now?" } }
+- text: "问出去了，先等着，回答会自己找过来。"
+- text: "外面又有动静，慢脑说可以走，迈一步。"
+  tool_calls:
+    - { name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }
+- text: "走完了。"

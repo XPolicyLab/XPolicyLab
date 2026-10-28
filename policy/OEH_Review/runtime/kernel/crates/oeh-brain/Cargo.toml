@@ -1,0 +1,45 @@
+[package]
+name = "oeh-brain"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+oeh-kernel = { path = "../oeh-kernel" }
+oeh-admission = { path = "../oeh-admission" }
+oeh-proto = { path = "../oeh-proto" }
+oeh-rpc = { path = "../oeh-rpc" }
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml_ng.workspace = true
+sha2.workspace = true
+tokio.workspace = true
+futures-util.workspace = true
+inventory.workspace = true
+parking_lot.workspace = true
+thiserror.workspace = true
+libc.workspace = true
+tempfile.workspace = true
+tracing.workspace = true
+reqwest.workspace = true
+tokio-tungstenite.workspace = true
+
+[dev-dependencies]
+oeh-distill = { path = "../oeh-distill" }
+tempfile.workspace = true
+# 见下面的 `[features] test-hooks`：RSI 的故障注入点只给这个 crate 自己的集成测试用，
+# 自依赖是 cargo 里"给自己的测试目标打开一个 feature"的标准写法（`oeh-rpc` 同款）。
+oeh-brain = { path = ".", features = ["test-hooks"] }
+
+[features]
+default = []
+# RSI 的故障注入点（`rsi::FaultPoint` / `KnowledgeStore::__inject_fault`）。**只给这个
+# crate 自己的集成测试用**：没有这个 feature 时那两个符号根本不存在，所以生产构建里
+# 没有任何代码能把"写到一半失败"打开——这是护栏，不是约定。
+test-hooks = []
+# 本机没有 C 编译器（`cc` 只是转发到 `rust-lld` 的 shim），rustls/ring/aws-lc 编不过，
+# 所以 TLS 是默认关闭的 feature：传输测试全打本地 `http://127.0.0.1` mock，生产构建在有
+# `cc` 的机器上 `cargo build --features oeh-brain/tls`。未开这个 feature 时
+# `providers::build_model` 会对 `https://` / `wss://` 的 base_url 明确报错，而不是在运行时
+# 才发现握手不了。
+tls = ["reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-webpki-roots"]

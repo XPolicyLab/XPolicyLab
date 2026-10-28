@@ -1,0 +1,20 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "robot/health", "params": {} },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "fibers": [
+        { "fiber_id": 1, "plugin": "oeh-adapter-unitree", "state": "active" },
+        { "fiber_id": 2, "plugin": "oeh-distill-vision", "state": "failed", "error": "camera timeout" }
+      ],
+      "streams": [
+        { "stream_id": "lowstate", "schema": "oeh.LowState", "nominal_hz": 500.0, "frames": 128000, "age_ms": 2 },
+        { "stream_id": "head_rgb", "schema": "oeh.Image", "nominal_hz": 20.0, "frames": 5120, "age_ms": null }
+      ],
+      "log_sink_errors": 0,
+      "brains_dropped_events": 3,
+      "connections": 2
+    }
+  }
+}

@@ -1,0 +1,20 @@
+[package]
+name = "oeh-distill"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+oeh-proto = { path = "../oeh-proto" }
+oeh-kernel = { path = "../oeh-kernel" }
+oeh-predict = { path = "../oeh-predict" }
+serde.workspace = true
+serde_json.workspace = true
+inventory.workspace = true
+parking_lot.workspace = true
+tracing.workspace = true
+bytes.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true
+tempfile.workspace = true

@@ -1,0 +1,42 @@
+{
+  "schema": "oeh.policy.v1",
+  "mode": "fast",
+  "embodiment": "dual_arm_ee16",
+  "repository": "${ADAPTER}/runtime",
+  "kernel": "${ADAPTER}/runtime/kernel/target/release/oeh",
+  "output": "${ADAPTER}/runs/policy-runtime",
+  "model_id": "OpenWAM-Alpha-Sim-RoboDojo",
+  "identity_paths": [
+    "${XPL_ROOT}/policy/OpenWAM/model.py",
+    "${XPL_ROOT}/policy/OpenWAM/deploy.py",
+    "${XPL_ROOT}/policy/OpenWAM/OpenWAM/configs/deploy.yaml"
+  ],
+  "max_chunk_steps": 32,
+  "native_step_limit": "${STEP_LIMIT}",
+  "wall_seconds": 21600,
+  "decision_seconds": 60,
+  "first_decision_seconds": 300,
+  "first_decision_seconds_source": "XPolicyLab fa431ec policy/OpenWAM/OpenWAM/benchmarks/{libero,libero-plus,robocasa365}/policy_config.yml request_timeout: 300 (single_eval.py default 300): the official OpenWAM clients' per-request allowance, which covers the first inference's warm-up. The first decision of an episode gets it; every later one decision_seconds.",
+  "gripper_state_semantics": "previous_command",
+  "action_limits": {
+    "frame": "env_relative_world",
+    "quaternion": "wxyz",
+    "left_xyz_bounds": [[-1.212, 0.612], [-1.362, 0.462], [0.715, 1.677]],
+    "right_xyz_bounds": [[-0.612, 1.212], [-1.362, 0.462], [0.715, 1.677]],
+    "bounds_source": "Boxes from pinned RoboDojo ee67a14: arm bases env_cfg/robot/dual_x5.yml (left [-0.3,-0.45,0.765], right [0.3,-0.45,0.765]); reach 0.912 m = sum of X5A.urdf joint-origin offsets base_link->link6->finger joints (all-links-straight upper bound); z from 5 cm below the table top (env_cfg/scene/default.yml: table z 0.74 + 0.025) to base + reach. Gross-error gate, not a policy constraint."
+  },
+  "openwam": {
+    "ckpt_dir": "${OPENWAM_CKPT_DIR}",
+    "openwam_root": "${XPL_ROOT}/policy/OpenWAM/OpenWAM",
+    "openwam_deploy_config": "${XPL_ROOT}/policy/OpenWAM/OpenWAM/configs/deploy.yaml",
+    "bench_name": "RoboDojo",
+    "env_cfg_type": "arx_x5",
+    "action_type": "ee",
+    "action_dim": 14,
+    "replan_steps": null,
+    "allow_dummy_policy": false,
+    "device": "cuda"
+  },
+  "native_step_limit_source": "set per task by tools/freeze_config.py from configs/robodojo-step-limits.json",
+  "method_source": "OpenWAM-Alpha (official XPolicyLab adapter, unchanged) proposing every chunk through the OEH gateway: capability admission, numeric action validation against action_limits, native step and wall budgets, receipts for every native step. No LLM. The direct-condition reference of the OEH study (docs/agent-icl-study), not a leaderboard method of its own."
+}

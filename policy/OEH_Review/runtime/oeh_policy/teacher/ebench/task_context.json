@@ -1,0 +1,31 @@
+{
+  "source": "GenManip 1958e37: configs/tasks/ebench/<track>/test_mini/<family>.yml (instruction, object_config, generation goal) and genmanip/extensions/metrics/exciting_benchmark/*.py; EBench-doc 87b54eb src/data/taskShowcase.ts (score parts), restated. Each instance's own goal comes from its task data in EBench-Assets. Keyed by the task family the evaluator writes into review.task (the GenManip task name without its track and split)",
+  "notes": {
+    "apple_from_shelf": "Pick the apple up from the shelf and take it out past the shelf's front railing, toward the robot. Success: the apple stays out beyond the railing. One condition, all or nothing.",
+    "apple_to_fruit_bowl": "Pick the apple up from the dining table and leave it resting in the fruit bowl. One condition, all or nothing.",
+    "bookmark_on_book": "Pick the bookmark up and lay it on top of the book. Success: it rests on the book with at least 40% of its area over the book. All or nothing.",
+    "bowl_to_plate": "Take out one of the three bowls and set it on the plate. Success: any one bowl resting on the plate. All or nothing.",
+    "perfume_to_cosmetics_rack": "Pick the perfume bottle up from the vanity table and put it into the cosmetics rack. Two stages: first the bottle on the rack (half the score), then lowered into one of the rack's slots (the other half). Success needs the bottle down in a slot.",
+    "remote_to_holder": "Pick the remote control up from the coffee table and put it into the remote holder. Success: it rests in the holder with at least 40% overlap. All or nothing.",
+    "salt_to_spice_rack": "Pick the salt container up from the countertop and put it into the spice rack. Success: it rests in the rack. All or nothing.",
+    "soap_to_dish": "Pick the bar of soap up from the bathtub edge and leave it resting in the soap dish. All or nothing.",
+    "teacup_to_saucer_teapot_to_tray": "Put the teacup on the empty saucer and the teapot on the tray, in either order; each is half the score. Success needs both placements at once.",
+    "utensils_to_holder": "Put the fork and the spoon into the utensil holder, in either order; each is half the score. Success needs both in the holder at once.",
+    "bottle": "Sort all twelve bottles into the basket. Each bottle inside the basket counts 1/12. Success needs all twelve in the basket at once.",
+    "detergent": "Put all three detergent bottles into the basket. Each counts 1/3. Success needs all three in the basket at once.",
+    "dish": "Put the three dishes and the glass into the big basket and the spoon into the small basket. Each of the five counts 1/5. Success needs all five in place at once.",
+    "dishwasher": "Load both bowls into the dishwasher. Two stages: first open the dishwasher door (half the score); then, checked only after the door was opened, both bowls inside (1/6 each) and the door closed again (1/6), all three holding together (this stage is checked every 5 steps and met after about 40 steps in a row).",
+    "fruit": "Make a fruit milkshake: put the two apples and the orange into the container (1/5 each), and pour the cup's water into it: the cup held above the container (1/5) and tilted at least 40° relative to it (1/5). The mango is not part of the goal. Success needs all five conditions holding together, so keep pouring while the three fruits are in.",
+    "make_sandwich": "Stack a sandwich on the plate, in order: a slice of bread on the plate, the beef on that bread, the lettuce on the beef, the second slice of bread on the lettuce. Each layer counts 1/4. Success needs all four layers stacked at once.",
+    "microwave": "Heat the egg tarts with the microwave. Two stages: first open the microwave door (half the score); then, checked only after the door was opened, both egg tarts on the plate inside (1/6 each) and the door closed again (1/6), all three holding together.",
+    "pen": "Put the three pens into the pen holder. Each pen inside counts 1/3. Success needs all three in the holder at once.",
+    "shop": "Scan all six items (the milk, the bottle, two boxes and two cans) at the checkout counter: move each item into the checkout's scanning area until it has stayed there about 30 steps (once reached it stays counted, 1/12 each), and then on past it to the counter's left side, where it must stay (1/12 each). Success needs all twelve conditions met.",
+    "collect_coffee_beans": "Put the seven scattered coffee beans into the jar and close the jar with its lid. The lid counts half the score when it sits on the jar, centred on the jar's axis and level; each bean inside the jar counts 0.5/7. Success needs the lid closed and all seven beans inside.",
+    "flip_cup_collect_cookies": "Turn the cup upright and collect the cookies into the bowl. The cup counts half the score when its opening faces up with its axis within 10° of vertical; each of the five cookies in the bowl counts 0.5/5. Success needs the cup upright and all five cookies in the bowl.",
+    "frame_against_pen_holder": "Stand the picture frame up against the pen holder. First the frame must be lifted (its centre above where it started; 1/3 of the score); after that, the frame touching the pen holder (1/3) and leaning upright against it (1/3). Success needs the frame resting upright against the holder.",
+    "install_gear": "Install the loose gear between the two fixed gears. Placing it on its shaft between them counts half the score; meshing it with both at their height counts the other half. Success needs the gear down and meshed.",
+    "peg_in_hole": "Move the peg from the hole it starts in to the designated hole. Pulling it out of its starting hole counts half the score; inserting it, upright and centred, into the designated hole counts the other half. Success needs it inserted in the designated hole.",
+    "put_glass_in_glassbox": "Pack the glasses into their case. Folding both temples counts 1/3, the glasses inside the case 1/3 and the case closed 1/3. Success needs all three: temples folded, glasses inside, case closed.",
+    "tighten_nut": "Screw the nut onto the bolt. Two stages: first the nut on the top end of the bolt, centred on it (half the score); then, checked only after that, the nut screwed down until it lies within the bolt's length (the other half). Success needs the nut tightened down."
+  }
+}
