@@ -1,0 +1,36 @@
+policy_name: G07_preview
+protocol: ws
+eval_batch: false
+
+# Server transport and per-launch wiring: set via --overrides by setup_eval_policy_server.sh.
+port: null
+host: localhost
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: null
+seed: null
+
+device: cuda
+action_infer_mode: idm  # actions conditioned on the generated future video
+replan_steps: 16
+num_action_denoise_steps: 10
+num_video_denoise_steps: 10
+sigma_shift: null
+negative_prompt: ""
+rand_device: cpu
+compile_action_infer: true
+timing_enabled: false
+gripper_latch: true  # per-arm open/close latch; full range from the checkpoint stats
+
+# AR memory: attention window / cache reset period / chunks kept across a reset, in 16-action chunks.
+infer_sliding_window: 8
+infer_reset_every: 8
+infer_reset_keep_chunks: 0
+# Long memory, used for an episode when the policy's own Cosmos3 UND answers Yes to "does this instruction need
+# memory?" (src/galaxea_va/inference/memory_router.py); other episodes keep the setting above.
+memory_context:
+  infer_sliding_window: 38
+  infer_reset_every: 38
+  infer_reset_keep_chunks: 0
