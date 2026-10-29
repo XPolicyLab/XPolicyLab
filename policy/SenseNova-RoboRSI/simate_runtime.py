@@ -77,6 +77,14 @@ class SimateServer:
             raise ValueError("Simate service already started")
         check_simate_runtime(self.policy_dir, self.checkpoint_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        stderr_path = self.output_dir.resolve() / "server.stderr.log"
+
+        def diagnostic(message):
+            # Sample before close(): a cleanup signal is not a startup failure.
+            code = self.process.poll() if self.process is not None else None
+            status = f" (exit {code})" if code is not None else ""
+            return f"{message}{status}; see {stderr_path}"
+
         env = model_environment()
         env.update(CUDA_VISIBLE_DEVICES=self.gpu_id, PYTHONNOUSERSITE="1")
         # Remove inherited PI/JAX source overrides from the model interpreter.
@@ -99,22 +107,25 @@ class SimateServer:
             deadline = time.monotonic() + self.startup_timeout_s
             while time.monotonic() < deadline:
                 if self.process.poll() is not None:
-                    raise RuntimeError("Simate model service exited during load; see server.stderr.log")
+                    raise RuntimeError(diagnostic("Simate model service exited during load"))
                 if not self.port or not announcement.endswith(b"\n"):
                     try:
                         chunk = os.read(ready_read, 129)
                     except BlockingIOError:
                         chunk = None
                     if chunk == b"":
-                        raise RuntimeError("Simate closed readiness pipe before binding")
+                        raise RuntimeError(diagnostic("Simate closed readiness pipe before binding"))
                     if chunk:
                         announcement += chunk
                     if len(announcement) > 128:
-                        raise RuntimeError("Invalid Simate readiness announcement")
+                        raise RuntimeError(diagnostic("Invalid Simate readiness announcement"))
                     if announcement.endswith(b"\n"):
-                        bound = json.loads(announcement)["port"]
+                        try:
+                            bound = json.loads(announcement)["port"]
+                        except (ValueError, KeyError, TypeError):
+                            raise RuntimeError(diagnostic("Invalid Simate readiness announcement")) from None
                         if type(bound) is not int or not 1 <= bound <= 65535 or (requested and requested != bound):
-                            raise RuntimeError("Invalid Simate bound port")
+                            raise RuntimeError(diagnostic("Invalid Simate bound port"))
                         self.port = bound
                 if announcement.endswith(b"\n"):
                     try:
@@ -124,7 +135,7 @@ class SimateServer:
                     except (OSError, URLError):
                         pass
                 time.sleep(0.1)
-            raise TimeoutError("Simate service did not become ready before its startup deadline")
+            raise TimeoutError(diagnostic("Simate service did not become ready before its startup deadline"))
         except BaseException:
             self.close()
             raise
