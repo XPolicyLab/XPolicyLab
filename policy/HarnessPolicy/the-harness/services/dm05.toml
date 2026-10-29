@@ -1,0 +1,25 @@
+kind = "policy"
+summary = "DM0.5 VLA with a memory of past frames (Dexmal DM05-MEM-Robodojo-Sim), bf16, through XPolicyLab's OpenDM adapter"
+protocol = "xpolicylab"
+port = 19009
+# bf16: the released FP32 weights alone take 23.3 GB.
+vram_gb = 13.0
+load_seconds = 240
+env = { PYTHONDONTWRITEBYTECODE = "1" }
+client = { url = "{url}", scoped = true, description = "DM0.5 VLA (Dexmal DM05-MEM-Robodojo-Sim, with a memory of past camera frames) trained on whole RoboDojo tasks: demonstrations from the start pose, with each task own instruction (joint actions, both arms)" }
+needs_files = ["{weights}/dm05/model.safetensors", "{xpolicylab}/policy/OpenDM"]
+notes = "OpenDM needs torch 2.11 and transformers 5.3: give it its own interpreter with the deploy file's python for this service."
+
+[xpolicylab]
+policy = "OpenDM"
+ckpt_name = "DM05-MEM-Robodojo-Sim"
+action_type = "joint"
+
+[xpolicylab.overrides]
+model_path = "{weights}/dm05"
+norm_stats_path = "{weights}/dm05/norm_stats.json"
+bf16 = "true"
+
+[[weights]]
+dir = "dm05"
+modelscope_model = "Dexmal/DM05-MEM-Robodojo-Sim"

@@ -1,0 +1,25 @@
+# Self-hosted development model, no API spend: Qwen3-VL-32B-Instruct (4 bit, the
+# qwen3-vl-32b service) writes the programs, answers questions and points; Molmo2 for a pointer role.
+description = "Qwen3-VL-32B (self-hosted, 4 bit) writes programs, answers questions and points; Molmo2 for a pointer role"
+
+[main]
+service = "qwen3-vl-32b"
+max_output_tokens = 2048
+# Sampling breaks the exact-repeat loops a small model falls into at temperature 0.
+temperature = 0.6
+timeout_seconds = 600
+
+[vlm]
+service = "qwen3-vl-32b"
+timeout_seconds = 300
+
+[pointer]
+service = "molmo2"
+
+[runtime]
+keep_images = 1
+# The 32B model in 4 bit on one 24 GB GPU runs out of memory beyond about 7k prompt
+# tokens; with images downscaled by the server three turns fit.
+max_history_turns = 3
+# The task descriptions do not fit its context either.
+task_descriptions = false

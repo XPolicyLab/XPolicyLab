@@ -1,0 +1,12 @@
+# R2 programs (interface ladder, Tab. 3): the model writes programs that call the
+# analytic skills; handlers, no learned skills, no reactive layer (the programmable
+# interface of CaP-Agent0, Fu et al., 2026).
+description = "R2: programs over analytic skills, with handlers"
+include = ["../default.toml"]
+
+[skills]
+layers = { learned = false, reactive = false, handlers = true }
+
+[services]
+policies = []
+world_models = []

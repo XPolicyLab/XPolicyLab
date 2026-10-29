@@ -1,0 +1,9 @@
+# "Harness Policy, with task description" (Tab. 4, second row): the agent plus the
+# description Zhang et al. (2026b) derived from the RoboDojo documentation for each
+# task (prompts/robodojo_tasks/), appended to the first message. The runner, not the
+# policy, picks it by task name, so this configuration does not export to XPolicyLab.
+description = "with the task description of Zhang et al. (2026b)"
+include = ["../default.toml"]
+
+[runtime]
+task_descriptions = "../../prompts/robodojo_tasks"

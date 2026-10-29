@@ -1,0 +1,5 @@
+[
+ "A fresh run away from the start pose is refused; after home() it runs.\n<python>\nif 'start' in globals():\n    start('B', 'scripted check')\non('SKILL_ERROR', lambda trace: True)\nname = list_policies()[0]['name']\np = list(get_state()['left_ee_pose'])\np[2] += 0.04\nprint(move_eef('left_arm', p, max_seconds=5))\nt = run_policy(name, max_seconds=2)\nprint('away:', t.event.kind, t.event.detail)\nprint(home())\nt = run_policy(name, max_seconds=4)\nprint('from the start pose:', t.event.kind, t.event.detail, t.ticks)\n</python>",
+ "It continues from anywhere and stops when the arms stop.\n<python>\nt = run_policy(name, max_seconds=30, stall_seconds=1.0)\nprint('continued:', t.event.kind, t.event.detail, t.ticks)\n</python>",
+ "<finish>run_policy rules check</finish>"
+]

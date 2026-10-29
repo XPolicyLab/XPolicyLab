@@ -1,0 +1,14 @@
+# Keyword arguments for benches.robodojo.runtime:create_environment.
+# Pass with: scripts/harness serve --factory benches.robodojo.runtime:create_environment \
+#              --options configs/workers/robodojo_runtime.toml
+# One worker serves one task. Copy this file under configs/local/ for other tasks.
+task = "stack_bowls"
+layout_pack_seed = 0
+# Per-tick three-camera clips cost seconds per step; enable only for debugging.
+record_video = false
+
+[shield]
+# Commands that are bugs are rejected (see benches/robodojo/runtime.py).
+max_joint_jump_rad = 0.3
+max_cartesian_jump_m = 0.25
+workspace = { x = [-1.1, 1.1], y = [-1.25, 0.35], z = [0.70, 1.565] }

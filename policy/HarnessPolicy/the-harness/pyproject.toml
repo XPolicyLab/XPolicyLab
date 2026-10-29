@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "harness-policy"
+version = "0.1.0"
+description = "A development framework for robotics agent harnesses"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+openai = ["openai>=2,<3"]
+
+[project.scripts]
+harness = "harness_policy.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

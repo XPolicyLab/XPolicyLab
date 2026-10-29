@@ -1,0 +1,225 @@
+{
+ "bench": "robodojo",
+ "code": {
+  "files": 181,
+  "sha256": "eeda262f1eb3b62b198138a10c01ab1431dce9e8e26d254263dffbbe0540239b"
+ },
+ "commit": "32c267a7224576126a9e273f9b810ac6e0396a32",
+ "dirty": true,
+ "embodiment": "arx_x5",
+ "identity": "46fa75534bb496ae",
+ "lock": {
+  "agent": "default",
+  "agent_version": "1.10.0",
+  "budget": {
+   "max_model_calls": 30
+  },
+  "mode": "program",
+  "prompt_sha256": "2ed9d2c50d17d7eaa46be63eeb7e991f46f28328b08260a5bd89eb249bbd8f0f",
+  "prompt_sources": [
+   "prompts/robodojo"
+  ],
+  "roles": {
+   "main": {
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "https://api.deepseek.com",
+    "extra_body": {
+     "reasoning_effort": "medium",
+     "thinking": {
+      "type": "enabled"
+     }
+    },
+    "max_output_tokens": 16000,
+    "model": "deepseek-flash",
+    "reasoning_effort": "medium",
+    "retries": 3,
+    "retry_seconds": 1800,
+    "stream": true,
+    "timeout_seconds": 120
+   },
+   "vlm": {
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "https://api.deepseek.com",
+    "extra_body": {
+     "reasoning_effort": "medium",
+     "thinking": {
+      "type": "enabled"
+     }
+    },
+    "model": "deepseek-flash",
+    "reasoning_effort": "medium",
+    "retries": 3,
+    "retry_seconds": 300,
+    "stream": true,
+    "timeout_seconds": 120
+   }
+  },
+  "runtime": {
+   "cameras": [
+    "cam_head",
+    "cam_left_wrist",
+    "cam_right_wrist"
+   ],
+   "cell_timeout_seconds": 1800,
+   "contract": "xpolicylab",
+   "default_max_seconds": 30.0,
+   "isolation": "auto",
+   "keep_images": 2,
+   "layers": {
+    "handlers": true,
+    "learned": true,
+    "reactive": true
+   },
+   "policy_progress_seconds": 0.0,
+   "post_policy_calls": 0,
+   "reactive_budget_ms": 20.0,
+   "skills": [
+    "core",
+    "geometry",
+    "kinematics",
+    "pointing",
+    "vlm",
+    "segmentation",
+    "grasping",
+    "memory",
+    "verify",
+    "motion",
+    "eef",
+    "reactive",
+    "scene",
+    "handlers",
+    "vla"
+   ],
+   "skills_dropped": {
+    "wam": "no world_model service"
+   },
+   "strategy_first": true,
+   "verifier": true
+  },
+  "schema": 2,
+  "service_manifests": {
+   "sam3": "d9ce7f9939e593b8f7dc863b1957aadbb96cae42f1055698537d0504290e0075",
+   "simate": "7a8119eb8992c3b8f5b760ce9dc90244627670f11eb791b48854f674f47dc5af"
+  },
+  "services": {
+   "policies": [
+    "simate"
+   ],
+   "segmenter": "sam3"
+  },
+  "skills": [
+   "core",
+   "geometry",
+   "kinematics",
+   "pointing",
+   "vlm",
+   "segmentation",
+   "grasping",
+   "memory",
+   "verify",
+   "motion",
+   "eef",
+   "reactive",
+   "scene",
+   "handlers",
+   "vla"
+  ],
+  "skills_dropped": {
+   "wam": "no world_model service"
+  }
+ },
+ "name": "default",
+ "services": [
+  "kinematics",
+  "sam3",
+  "simate"
+ ],
+ "sources": {
+  "agent": {
+   "budget": {
+    "max_model_calls": 30
+   },
+   "description": "Harness Policy: programs over analytic and learned skills, reactive layer, handlers, verifier",
+   "prompt": "@HARNESS@/prompts/robodojo",
+   "roles": [
+    "main",
+    "vlm",
+    "verifier"
+   ],
+   "runtime": {
+    "cameras": [
+     "cam_head",
+     "cam_left_wrist",
+     "cam_right_wrist"
+    ],
+    "cell_timeout_seconds": 1800,
+    "contract": "xpolicylab",
+    "default_max_seconds": 30.0,
+    "isolation": "auto",
+    "policy_progress_seconds": 0.0,
+    "post_policy_calls": 0,
+    "reactive_budget_ms": 20.0,
+    "strategy_first": true,
+    "verifier": true
+   },
+   "services": {
+    "policies": [
+     "simate"
+    ],
+    "segmenter": "sam3",
+    "world_models": []
+   },
+   "skills": {
+    "layers": {
+     "handlers": true,
+     "learned": true,
+     "reactive": true
+    }
+   }
+  },
+  "model": {
+   "description": "DeepSeek V4.1 Flash writes programs, answers questions about images and points; Molmo2 for a pointer role",
+   "main": {
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "https://api.deepseek.com",
+    "extra_body": {
+     "reasoning_effort": "medium",
+     "thinking": {
+      "type": "enabled"
+     }
+    },
+    "max_output_tokens": 16000,
+    "model": "deepseek-flash",
+    "reasoning_effort": "medium",
+    "retries": 3,
+    "retry_seconds": 1800,
+    "stream": true,
+    "timeout_seconds": 120
+   },
+   "runtime": {
+    "keep_images": 2
+   },
+   "vlm": {
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "https://api.deepseek.com",
+    "extra_body": {
+     "reasoning_effort": "medium",
+     "thinking": {
+      "type": "enabled"
+     }
+    },
+    "model": "deepseek-flash",
+    "reasoning_effort": "medium",
+    "retries": 3,
+    "retry_seconds": 300,
+    "stream": true,
+    "timeout_seconds": 120
+   }
+  },
+  "runtime_overrides": {}
+ }
+}
