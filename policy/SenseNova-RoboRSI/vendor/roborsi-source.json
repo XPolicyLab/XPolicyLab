@@ -28,11 +28,11 @@
     "roborsi/components/__init__.py": "80f889b7558c51a740422fe28473578b24132254de591610aba2e8cc6bd35f4c",
     "roborsi/components/icl/__init__.py": "644dacc8b4efd3b16bc9e88d6101c4bb0aa838e8b27036b38507dd3937d45614",
     "roborsi/components/icl/adapters.py": "c8e06b741e50d46159978a41e435f2d847031d7061a190467d5f8bde7fecc68c",
-    "roborsi/components/icl/build.py": "0d73515964cc7a31e13e76af8d41e4ccdae49cba2217091d15426f0efd75d8a4",
+    "roborsi/components/icl/build.py": "bdfd1c2da22d273e646702b1af2724b29e775a243655fafde8246e7bc4b8964e",
     "roborsi/components/icl/importers.py": "69fe8efcae3a55cb235785b13084136730e9dbe44f6772c41407e6ec955d1a18",
     "roborsi/components/icl/package.py": "0e5a5569e5e2a04986e32d57c7db76ad4c1fc2a42303ec84e15488ff169f61fb",
     "roborsi/components/icl/sources.py": "6493c85b62ab1c818a18e8f33a796d2d520c529624a7235eebba7560b225697e",
-    "roborsi/components/icl/workspace.py": "d96f66ef77bf67acf06f2f6f005d1db114919be5f31af766024f183c4713ead8",
+    "roborsi/components/icl/workspace.py": "c4e57c1488e91615520a32d09373cf15e319a46525fb02a53d53342767d757e9",
     "roborsi/components/vla/__init__.py": "dd2272632cf070faac2fb6f9a2fbdf00ef01067b7f11d07d4acfaef097ef8198",
     "roborsi/components/vla/adapters.py": "932f3123ae48ded94a169d39df7a931cb6d7f719888f26a324facd37c92483e0",
     "roborsi/components/vla/errors.py": "55ca551d972876d91be12626a7debc03ad4e3a790a1b7980e7b5aa66a3fb7147",
@@ -1029,5 +1029,27 @@
       }
     ],
     "identity_contract": "Legacy factory requires the environment model to match its prepared identity; launch rejects subsequent model drift."
+  },
+  "icl_materialization_diagnostics": {
+    "parent_manifest_sha256": "890e4225232278f6a694be2d4c8a534443215a6ab74f3cc3d68dfa81828f3ed1",
+    "scope": "Failure-only bounded diagnostics for ICL materialization checksum mismatches, including relative paths and current source/target SHA256 and bytes. Copying, integrity rejection, publication, native evaluation and action algorithms are unchanged.",
+    "patches": [
+      {
+        "path": "roborsi/components/icl/workspace.py",
+        "before_sha256": "d96f66ef77bf67acf06f2f6f005d1db114919be5f31af766024f183c4713ead8",
+        "after_sha256": "c4e57c1488e91615520a32d09373cf15e319a46525fb02a53d53342767d757e9"
+      }
+    ]
+  },
+  "icl_copy_read_integrity": {
+    "parent_manifest_sha256": "4a28f42406be1e3c466b70b6bb335d7ad93d6fa7d4948b657df9600d572c3ddd",
+    "scope": "ICL copies hash actual target read bytes against the source file size observed immediately before copying. Only premature EOF retries from byte zero at most three times with 0.05-second intervals; oversized reads fail immediately, and each read rechecks independent regular-file identity without following links. Persistent short reads reject the copy. Manifest SHA comparison, motion algorithms and native evaluator are unchanged.",
+    "patches": [
+      {
+        "path": "roborsi/components/icl/build.py",
+        "before_sha256": "0d73515964cc7a31e13e76af8d41e4ccdae49cba2217091d15426f0efd75d8a4",
+        "after_sha256": "bdfd1c2da22d273e646702b1af2724b29e775a243655fafde8246e7bc4b8964e"
+      }
+    ]
   }
 }

@@ -5,11 +5,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
 import stat
 import tempfile
+import time
 import unicodedata
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -20,7 +22,6 @@ from roborsi.components.icl.package import (
     PACKAGE_TYPE,
     ContextPackage,
     _relative_path,
-    _sha256,
 )
 
 
@@ -188,6 +189,31 @@ def _tree_entries(source: Path) -> list[tuple[Path, bool]]:
     return entries
 
 
+def _copied_file_sha256(path: Path, expected_size: int) -> str:
+    """Hash all copied bytes, retrying bounded transient short filesystem reads."""
+    for attempt in range(3):
+        _checked_absolute(path)
+        info = path.lstat()
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+            raise ValueError(f"copied file is not an independent regular file: {path}")
+        digest = hashlib.sha256()
+        read_size = 0
+        with path.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                read_size += len(chunk)
+                digest.update(chunk)
+        if read_size == expected_size:
+            return digest.hexdigest()
+        if read_size > expected_size:
+            break
+        if attempt < 2:
+            time.sleep(0.05)
+    raise ValueError(
+        f"copied file read size differs after {attempt + 1} attempts: {path}; "
+        f"expected_bytes={expected_size}, read_bytes={read_size}"
+    )
+
+
 def _copy_tree(source: Path, destination: Path) -> dict[str, str]:
     entries = _tree_entries(source)
     if not any(not directory for _, directory in entries):
@@ -208,7 +234,7 @@ def _copy_tree(source: Path, destination: Path) -> dict[str, str]:
             shutil.copyfile(path, target, follow_symlinks=False)
             if target.is_symlink():
                 raise ValueError(f"source file became a link: {relative}")
-            files[relative.as_posix()] = _sha256(target)
+            files[relative.as_posix()] = _copied_file_sha256(target, info.st_size)
     return files
 
 

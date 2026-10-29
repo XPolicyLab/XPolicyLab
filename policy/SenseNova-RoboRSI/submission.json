@@ -30,7 +30,7 @@
     ],
     "bundle_path": "vendor/roborsi_source",
     "manifest_path": "vendor/roborsi-source.json",
-    "manifest_sha256": "890e4225232278f6a694be2d4c8a534443215a6ab74f3cc3d68dfa81828f3ed1",
+    "manifest_sha256": "6f61c66bc897fdeb5ddb9bbc796c4770905aeb7706dcc74408e93070a616d78b",
     "derivation": "Deployment-sanitized derivative; see source manifest for parent hashes and exact changed files."
   },
   "agent_label": "roborsi-codex-v1",

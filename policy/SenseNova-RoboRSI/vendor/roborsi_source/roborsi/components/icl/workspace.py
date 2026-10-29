@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import json
+import stat
 import tempfile
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -14,13 +15,14 @@ from typing import Any
 
 from roborsi.components.icl.build import (
     ContextExports,
+    _checked_absolute,
     _copy_tree,
     _json_object,
     _prepare_paths,
     _publish_directory,
     build_package,
 )
-from roborsi.components.icl.package import ContextPackage
+from roborsi.components.icl.package import ContextPackage, _sha256
 
 
 @dataclass(frozen=True)
@@ -75,6 +77,51 @@ def _package_exports(package: ContextPackage) -> ContextExports:
     )
 
 
+def _copy_mismatch_details(
+    source: Path,
+    staging: Path,
+    expected: dict[str, str],
+    copied: dict[str, str],
+) -> str:
+    """Preserve bounded evidence before failed staging directories are removed."""
+    missing = sorted(set(expected) - set(copied))
+    extra = sorted(set(copied) - set(expected))
+    changed = sorted(
+        name for name in set(expected) & set(copied)
+        if expected[name] != copied[name]
+    )
+
+    def current_file(path: Path) -> dict[str, Any]:
+        try:
+            _checked_absolute(path)
+            info = path.lstat()
+            if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                return {"error": "not an independent regular file"}
+            return {"bytes": info.st_size, "sha256": _sha256(path)}
+        except (OSError, ValueError) as exc:
+            # Diagnostic reads cannot replace the original integrity failure.
+            return {"error": type(exc).__name__}
+
+    details = []
+    for kind, names in (("missing", missing), ("extra", extra), ("changed", changed)):
+        for name in names:
+            if len(details) == 20:
+                break
+            details.append({
+                "kind": kind,
+                "path": name,
+                "expected_sha256": expected.get(name),
+                "copied_sha256": copied.get(name),
+                "source_current": current_file(source / name),
+                "target_current": current_file(staging / name),
+            })
+    return json.dumps({
+        "missing": len(missing), "extra": len(extra), "changed": len(changed),
+        "omitted": len(missing) + len(extra) + len(changed) - len(details),
+        "details": details,
+    }, sort_keys=True)
+
+
 def materialize_package(package: ContextPackage, destination: Path) -> IclWorkspace:
     """Reverify and copy every payload file into a new independent directory.
 
@@ -103,7 +150,10 @@ def materialize_package(package: ContextPackage, destination: Path) -> IclWorksp
         staging = Path(temporary) / "workspace"
         copied = _copy_tree(verified.root / "payload", staging)
         if copied != expected:
-            raise ValueError("source package changed during materialization")
+            raise ValueError(
+                "source package changed during materialization; "
+                + _copy_mismatch_details(verified.root / "payload", staging, expected, copied)
+            )
         _publish_directory(staging, destination)
     return IclWorkspace(
         destination, verified.package_id, verified.manifest_sha256, exports
