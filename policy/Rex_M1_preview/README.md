@@ -1,6 +1,6 @@
 # Rex_M1_preview
 
-**Contributor:** Futian Lab & VisIncept | **Paper:** Not released | **arXiv:** Not released | **Original code:** See vendored `rex_m1/`.
+**Contributor:** Futian Lab & VisIncept | **Paper:** Not released | **arXiv:** Not released | **Original code:** [rex-m1](https://github.com/gzx2019/rex-m1)
 
 `Rex_M1_preview` adapts the Rex-M1-preview policy to XPolicyLab/RoboDojo for training and evaluation. Integration scripts live at this directory level; the vendored implementation lives in `rex_m1/`. It supports RoboDojo simulation with Dual ARX5 (`arx_x5`) and `action_type=ee`.
 
