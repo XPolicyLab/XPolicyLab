@@ -8,7 +8,7 @@ RC1 适配器：每卡 1 个共享 VLA、每卡 10 路的真实评测验收尚�
 policy/SenseNova-RoboRSI
 ```
 
-该版本使用 `adaptive_2_50`：π0.5 仍提出 50 步，允许批准 2–50 步，默认 5 步；2–4 步精调遵守对应接口中的理由约束。保留原始 agent 执行流程、真实 layout 透传、跨进程动作回放恢复和完整轨迹。本 PR 的修改限于此策略目录。
+该版本保留 `adaptive_2_50` 源码基线，运行时默认允许批准 5–50 步。策略服务启动前设置 `ROBORSI_ADAPTIVE_MIN_STEPS`（2–50整数，未设置为5）可改变下限，设置为2可恢复之前的2–50范围；上限及VLA预测长度仍为50。省略批准步数时使用 `max(5, 下限)`，显式低于下限的值会被拒绝。实际范围写入配置、提示词和proposal；恢复中断任务需使用原范围。保留原始 agent 执行流程、真实 layout 透传、跨进程动作回放恢复和完整轨迹。本 PR 的修改限于此策略目录。
 
 ## 1. 工作目录与运行前提
 
@@ -146,7 +146,7 @@ bash eval.sh RoboDojo align_blocks roborsi-codex-v1 arx_x5 joint 0 0 0 uv "$SIM_
 | --- | --- |
 | 每任务动作步数 | fresh config 的 `review_window_steps`；当前 42 项范围 200–1900，`align_blocks` 为 200；必须与原生收据的 `step_limit` 相等 |
 | 实际已完成步数 | 以模拟器 `take_action_cnt` 和 action ACK 为准；VLA 候选不算已执行 |
-| 自适应动作 | π0.5 proposal 为 50 步，允许批准 2–50 步，默认接受 5 步；2–4 步按接口要求说明精调理由 |
+| 自适应动作 | VLA proposal为50步；批准范围默认5–50，环境变量 `ROBORSI_ADAPTIVE_MIN_STEPS` 可设置下限，省略长度时为 `max(5, 下限)` |
 | agent 累计时间 | `episode_seconds=86400`，是原始 adaptive agent 的 wall-time 预算，不是官方通用时间上限 |
 | 技术恢复 | 初次运行之外最多 4 次恢复；准备恢复时剩余不足 300 秒会拒绝 |
 | agent 轮数/token | `agent.yaml` 的 `max_turns=null`、`max_tokens=null`，未另加固定上限 |

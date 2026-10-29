@@ -97,6 +97,7 @@ def load_reference_source(
         verified.add(relative.as_posix())
     adapters = "code/configurations/robodojo/20261005_standard_1x_10x/adapters"
     modules = {
+        "adaptive_steps": "adaptive_steps.py",
         "policylab": "code/policylab/__init__.py",
         **{
             f"policylab.{name}": f"code/policylab/{name}.py"

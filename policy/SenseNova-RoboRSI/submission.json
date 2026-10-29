@@ -64,8 +64,8 @@
     "source_path": "vendor/robodojo_adaptive/source",
     "profile_path": "vendor/robodojo_adaptive",
     "manifest_path": "vendor/robodojo_adaptive/provenance/source-files.json",
-    "manifest_sha256": "e875271f70af44aee59162c604398e292eb2e4a9a268dcb50d20c3cef6d60883",
-    "version_kind": "Pinned local adaptive 2-50 derivative with environment-configured deployment; algorithm and budgets preserved; shared public interface without static seed/layout",
+    "manifest_sha256": "d11efdde1dd6c5dd1cd131ef042a14aff5a724c1576bb29d104090e33305906a",
+    "version_kind": "Pinned adaptive_2_50 source baseline with runtime-configurable approved-step minimum (ROBORSI_ADAPTIVE_MIN_STEPS, default5); upper bound50 and action budgets preserved; effective limits recorded per episode.",
     "public_task_configs": 42,
     "original_source_files": 21,
     "terminal_feedback": false,
@@ -75,7 +75,18 @@
     "approved_steps_max": 50,
     "robot_metadata_path": "hybrid/robot-metadata.json",
     "robot_metadata_sha256": "38e792047747232933d250508d1c56e0845081a24d34b32328c701ff21d69bb8",
-    "robot_source_manifest_sha256": "c265d6819b3e40e097b1ee99214c6b7bc5000d0ca1b79221943abd44127271a4"
+    "robot_source_manifest_sha256": "c265d6819b3e40e097b1ee99214c6b7bc5000d0ca1b79221943abd44127271a4",
+    "runtime_approval": {
+      "minimum_env": "ROBORSI_ADAPTIVE_MIN_STEPS",
+      "minimum_default": 5,
+      "minimum_supported_range": [
+        2,
+        50
+      ],
+      "maximum": 50,
+      "omitted_length": "max(5, minimum)",
+      "baseline_templates": "Preserved authenticated adaptive_2_50 templates; runtime overlay recorded per episode."
+    }
   },
   "tool_runtime": {
     "manifest_path": "tools/runtime.json",

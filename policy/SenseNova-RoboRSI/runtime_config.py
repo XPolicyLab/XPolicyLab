@@ -10,6 +10,20 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+if __package__:
+    from .vendor.robodojo_adaptive.source.adaptive_steps import resolve_adaptive_steps
+else:
+    # preflight.py also imports this file directly from the policy directory.
+    # Bind its helper by file path instead of selecting an unrelated top-level
+    # vendor/adaptive_steps module from the caller's Python path.
+    import importlib.util
+
+    _steps_path = Path(__file__).resolve().parent / "vendor/robodojo_adaptive/source/adaptive_steps.py"
+    _steps_spec = importlib.util.spec_from_file_location("_roborsi_adaptive_steps", _steps_path)
+    _steps_module = importlib.util.module_from_spec(_steps_spec)
+    _steps_spec.loader.exec_module(_steps_module)
+    resolve_adaptive_steps = _steps_module.resolve_adaptive_steps
+
 POLICY_DIR = Path(__file__).resolve().parent
 MODEL_ENV = "ROBORSI_CODEX_MODEL"
 BASE_URL_ENV = "ROBORSI_CODEX_BASE_URL"

@@ -71,14 +71,27 @@ def cli_config(executable):
     )
 
 
-def test_prompt_is_byte_exact_against_reference_align_blocks(reference, cfg):
+def test_prompt_preserves_reference_and_reports_episode_limits(reference, cfg):
     prompt = hybrid_agent.build_evaluation_prompt(reference, cfg)
-    assert len(prompt.encode()) == 8498
+    limits = (
+        "Adaptive approved_steps must be an integer from 2 to 50; if omitted, use 5. "
+        "These recorded episode limits override historical skill examples; every VLA proposal also reports them. "
+    )
+    assert prompt.count(limits) == 1
+    original = prompt.replace(limits, "")
+    assert len(original.encode()) == 8498
     assert (
-        hashlib.sha256(prompt.encode()).hexdigest()
+        hashlib.sha256(original.encode()).hexdigest()
         == "20b1fbf3327208c9e7143a4c6574e730ad59186844f51745579fb60d0e005132"
     )
     assert "roborsi_action" not in prompt and "MCP" not in prompt
+
+
+@pytest.mark.parametrize("minimum,default", [(5, 5), (10, 10), (50, 50)])
+def test_prompt_uses_resolved_runtime_limits(reference, cfg, minimum, default):
+    cfg["options"].update(approved_steps_min=minimum, approved_steps_default=default)
+    prompt = hybrid_agent.build_evaluation_prompt(reference, cfg)
+    assert f"integer from {minimum} to 50; if omitted, use {default}." in prompt
 
 
 def test_agent_config_custom_factory_reaches_embodied_agent(tmp_path):

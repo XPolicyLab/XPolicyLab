@@ -1,14 +1,14 @@
 # SenseNova-RoboRSI
 
-Simate beta + adaptive 2–50 adapter. GPU evaluation acceptance is tracked separately; this source update does not claim a completed concurrency evaluation.
+Simate beta + adaptive execution adapter (default 5–50 steps, configurable minimum). GPU evaluation acceptance is tracked separately; this source update does not claim a completed concurrency evaluation.
 
 **Contributor:** RoboRSI integration | **Original code:** [RoboRSI](https://github.com/SenseTime-FVG/RoboRSI)
 
 RoboDojo adapter for the original adaptive hybrid, with Simate beta selected
 by the submitted `deploy.yml`. Simate beta proposes 50 actions;
-Codex CLI reviews and approves 2–50 steps (`adaptive_2_50`, default 5);
-2–4 step precision adjustments follow the reason requirement in the shared public
-interface. The standard `Model/reset/update_obs/get_action` interface retains the
+Codex CLI reviews and approves 5–50 steps by default. Set
+`ROBORSI_ADAPTIVE_MIN_STEPS` to an integer from 2 to 50 to change the minimum;
+the maximum remains 50. The standard `Model/reset/update_obs/get_action` interface retains the
 original robot tools, ICL context, feedback and conversation recovery. Required RoboRSI, adaptive and
 OpenPI sources are included under `vendor/`; model weights are downloaded.
 
@@ -17,7 +17,8 @@ All 42 task templates use the same public interface,
 It is copied unchanged to the model's read-only `/tools/BENCHMARK.md` at runtime.
 The interface describes one episode without fixing its seed or layout; the evaluator
 still selects both. Per-task configuration templates retain their existing action
-budgets, materials and adaptive review settings.
+budgets and materials. Their authenticated `adaptive_2_50` settings remain the
+source baseline; runtime configuration overlays and records the selected limits.
 
 ## Installation
 
@@ -82,6 +83,25 @@ and released π0.5 inference weights.
 This is an evaluation adapter; no additional policy training is provided.
 
 ## Evaluation
+
+Set the adaptive minimum on the policy-server process before evaluation:
+
+```bash
+export ROBORSI_ADAPTIVE_MIN_STEPS=5  # optional; unset also selects 5–50
+# export ROBORSI_ADAPTIVE_MIN_STEPS=2  # reproduce the earlier 2–50 range
+```
+
+Empty, noninteger or out-of-range values fail before model startup. Omitting
+`approved_steps` uses `max(5, minimum)`; an explicit value below the minimum
+is rejected without movement. VLA prediction horizon remains 50. The resolved
+limits are fixed per Model instance and recorded in controller `config.json`,
+the evaluation prompt and each proposal. Resume requires the same limits as
+the interrupted episode; use `ROBORSI_ADAPTIVE_MIN_STEPS=2` for a 2–50 source.
+The standalone launcher uses the same environment setting. Parallel orchestration
+is maintained separately and is not included in this submission.
+After updating installed source, rerun `bash install_simate.sh` to regenerate
+the verified installation receipt before evaluation; do not rewrite
+historical experiment receipts.
 
 Set the service URL and model explicitly, and enter the runtime key privately.
 Replace the placeholder URL and model below with your intended Responses-compatible

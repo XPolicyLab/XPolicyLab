@@ -27,7 +27,7 @@ from XPolicyLab.utils.process_data import get_robot_action_dim_info
 
 from .icl_context import prepare_icl_context
 from .runtime_config import (
-    POLICY_DIR, load_agent_config, resolve_base_url, resolve_model, submission,
+    POLICY_DIR, load_agent_config, resolve_adaptive_steps, resolve_base_url, resolve_model, submission,
 )
 from .tool_runtime import resolve_tool_python
 
@@ -71,6 +71,7 @@ class Model(ModelTemplate):
             raise ValueError("SenseNova-RoboRSI requires eval_batch=false")
         resolve_base_url()
         resolve_model()
+        self._adaptive_steps = resolve_adaptive_steps()
         # Validate the independent original tool payload before materializing
         # ICL or starting the expensive VLA service. Never substitute the host.
         self._tool_python = resolve_tool_python(POLICY_DIR)
@@ -406,6 +407,7 @@ class Model(ModelTemplate):
         cfg["model"] = self._agent_config.document["agent"]["model"]
         cfg.pop("continue_from_run", None)
         cfg["options"]["task"] = self.model_cfg["task_name"]
+        cfg["options"].update(self._adaptive_steps)
         cfg["options"]["gpu"] = cfg["options"]["physical_gpu"] = 0
         cfg["options"]["vla_port"] = self._ensure_vla()
         episode = cfg["test_episodes"][0]

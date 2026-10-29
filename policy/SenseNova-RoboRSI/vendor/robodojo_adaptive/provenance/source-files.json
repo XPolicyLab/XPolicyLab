@@ -50,20 +50,20 @@
       "derivation": "unchanged copy"
     },
     {
-      "bytes": 2701,
+      "bytes": 2773,
       "path": "source/code/policylab/robot.py",
-      "sha256": "020528aa82a61a5ea6c775885ee4b8c38ba7e9d6a3a940676fb6dc5ef444ee70",
+      "sha256": "f5ef8c523bf37e67955cf59bbca271be4e207dbaa129944527b1e6612d58783c",
       "source": "upstream/robodojo-adaptive/code/policylab/robot.py",
       "parent_sha256": "bc2f150a23e97e135b10e858ff7f6f2e39affee873502425f0f1b26bb178b656",
-      "derivation": "pinned 2–50 policy delta"
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
     },
     {
-      "bytes": 44397,
+      "bytes": 44812,
       "path": "source/code/policylab/runner.py",
-      "sha256": "770890be57d0f26fb9031863acbb606f22b5595223bfdce321801870c846cf7e",
+      "sha256": "eee7325c3fe838263c589715eba1baa8efecc9083cdb6b8cd9690605a3ba4389",
       "source": "upstream/robodojo-adaptive/code/policylab/runner.py",
       "parent_sha256": "770890be57d0f26fb9031863acbb606f22b5595223bfdce321801870c846cf7e",
-      "derivation": "unchanged copy"
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
     },
     {
       "bytes": 2682,
@@ -74,12 +74,12 @@
       "derivation": "unchanged copy"
     },
     {
-      "bytes": 7001,
+      "bytes": 7371,
       "path": "source/hybrid_host.py",
-      "sha256": "88d893bbc68aa61ba095c9805e28390cbdc8d8e0169b51f6bd225384b73bfb73",
+      "sha256": "bd380c1798e48bf22ff27b75cf00f7bc610eb899df1e88ab6cdbc90092414db6",
       "source": "upstream/robodojo-adaptive/hybrid_host.py",
       "parent_sha256": "d30233bb8eeaaec4f4e7b33f1c8e8ec995b6ea93d60c1b69bc85334871282628",
-      "derivation": "pinned 2–50 policy delta"
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
     },
     {
       "bytes": 5690,
@@ -90,12 +90,12 @@
       "derivation": "unchanged copy"
     },
     {
-      "bytes": 5257,
+      "bytes": 5357,
       "path": "source/local_runtime.py",
-      "sha256": "21a53868a0cfc5a275f0ce7290d6b2ac1d62512cf0afb3ba47a31d3adfd1cd4f",
+      "sha256": "81467b46a61430fd0d9a3d86efc084f4f493f60884ffce3018e970e0bd77f9f4",
       "source": "upstream/robodojo-adaptive/local_runtime.py",
       "parent_sha256": "a64c1ff433933953d149276f0a534dd0f14678e754b668b31849884a0e06c7c9",
-      "derivation": "Deployment-sanitized derivative: required environment-based provider/model settings and explicit caller proxy forwarding; policy controller unchanged."
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
     },
     {
       "bytes": 6148,
@@ -179,11 +179,11 @@
     },
     {
       "path": "resources/interfaces/BENCHMARK.md",
-      "bytes": 6771,
-      "sha256": "01e75b48c00689d7030ab09560fd00200fae31903397edc31910c138b90c7637",
+      "bytes": 7128,
+      "sha256": "b3a7a7cab83dbc7f667cefa8672ce45f87c762155bc2384b4d210012fd2e5f29",
       "parent_sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
       "source": "resources/interfaces/align_blocks-s0.md in parent adaptive_2_50 manifest",
-      "derivation": "one shared interface for all tasks; remove fixed layout0/seed0 text only"
+      "derivation": "Runtime-configurable approval limits with default minimum 5; retain the original advisory precision guidance (shorter prefixes, typically 5) without adding a shortest-permitted-span requirement."
     },
     {
       "bytes": 1630,
@@ -520,6 +520,13 @@
       "source": "derived from pinned baseline frozen-bundles.json and task templates",
       "parent_sha256": "ad464a9d15e9047fa642d0283c64677df3c0b7cb61b97b617d4f6f46b7c098ac",
       "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 1751,
+      "path": "source/adaptive_steps.py",
+      "sha256": "6532ca6895ce96778e9d4db001931757e25e842441a3e31b97df432d84d923ae",
+      "source": "local/SenseNova-RoboRSI/adaptive_steps.py",
+      "derivation": "Local stdlib runtime limit resolver; minimum defaults to5 and can be set from2 to50; maximum50; omitted approval max(5,minimum). Do not change authenticated baseline task templates."
     }
   ],
   "policy_variant": "adaptive_2_50",
@@ -984,5 +991,16 @@
     "scope": "Replace 42 identical public interfaces with BENCHMARK.md and remove fixed seed/layout text; preserve deployment sanitization, policy logic, task parameters and budgets.",
     "replaced_interfaces": 42,
     "public_task_configs": 42
+  },
+  "runtime_approval": {
+    "minimum_env": "ROBORSI_ADAPTIVE_MIN_STEPS",
+    "minimum_default": 5,
+    "minimum_supported_range": [
+      2,
+      50
+    ],
+    "maximum": 50,
+    "omitted_length": "max(5, minimum)",
+    "baseline_templates": "Preserved authenticated adaptive_2_50 templates; runtime overlay recorded per episode."
   }
 }

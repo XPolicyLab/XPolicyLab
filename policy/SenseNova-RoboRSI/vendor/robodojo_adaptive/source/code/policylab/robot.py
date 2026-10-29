@@ -56,15 +56,18 @@ def vla_propose(subgoal):
     return call({"op": "vla_propose", "subgoal": subgoal})
 
 
-def vla_review(proposal_id, decision, reason, assessment, targets=None, approved_steps=5):
-    """Review 2-50 targets: accept, modify or reject; omitted length defaults to 5."""
-    return call({"op": "vla_review", "proposal_id": proposal_id,
-                 "decision": decision, "reason": reason, "assessment": assessment,
-                 "targets": targets, "approved_steps": approved_steps})
+def vla_review(proposal_id, decision, reason, assessment, targets=None, approved_steps=None):
+    """Review targets within this proposal's limits; omission uses its default."""
+    request = {"op": "vla_review", "proposal_id": proposal_id,
+               "decision": decision, "reason": reason, "assessment": assessment,
+               "targets": targets}
+    if approved_steps is not None:
+        request["approved_steps"] = approved_steps
+    return call(request)
 
 
-def vla_review_and_propose(proposal_id, decision, reason, assessment, next_subgoal, targets=None, approved_steps=5):
-    """Batch the SAME reviewed 2-50 targets and next unmoved proposal; default 5.
+def vla_review_and_propose(proposal_id, decision, reason, assessment, next_subgoal, targets=None, approved_steps=None):
+    """Batch the SAME reviewed targets and next proposal using configured limits.
 
     No motion can skip GPT review. The next proposal uses updated measured state
     and cameras, and still requires a NEW GPT accept/modify/reject decision.

@@ -4,6 +4,7 @@ import time
 from policylab.api import InvalidAction
 from policylab.common import event
 from policylab import runner
+from adaptive_steps import configured_adaptive_steps
 
 ORIGINAL=runner.Experiment.request
 
@@ -27,6 +28,7 @@ def request(self, req):
         if self.review_status(self.latest).get('review_due'):
             raise InvalidAction('Call review(analysis) at the checkpoint first')
         pending=getattr(self,'vla_pending',None)
+        limits=configured_adaptive_steps(self.cfg.get('options',{}))
         if op=='vla_propose':
             if set(req)!={'op','subgoal'}: raise InvalidAction('Use vla_propose(subgoal)')
             if pending is not None: raise InvalidAction('Review the pending proposal first')
@@ -41,6 +43,7 @@ def request(self, req):
                 raise
             if proposal['control_step']!=self.latest['observation']['control_step'] or len(proposal['targets'])!=self.cfg['options']['vla_horizon']:
                 raise RuntimeError('Invalid proposal provenance/span')
+            proposal.update(limits)
             self.vla_pending=proposal
             event(self.active['record_dir']/'vla_review.jsonl',event='proposal',**proposal)
             return dict(status='awaiting_review',**deepcopy(proposal))
@@ -51,9 +54,11 @@ def request(self, req):
         if pending['control_step']!=self.latest['observation']['control_step']:
             raise InvalidAction('Stale proposal cannot execute')
         decision=req['decision']; supplied=req['targets']
-        span=req.get('approved_steps',5)
-        if type(span) is not int or not 2<=span<=50:
-            raise InvalidAction('approved_steps must be an integer from 2 to 50; default is 5')
+        span=req.get('approved_steps',limits['approved_steps_default'])
+        if type(span) is not int or not limits['approved_steps_min']<=span<=limits['approved_steps_max']:
+            raise InvalidAction(
+                f"approved_steps must be an integer from {limits['approved_steps_min']} to {limits['approved_steps_max']}; "
+                f"default is {limits['approved_steps_default']}")
         if not isinstance(req['reason'],str) or not req['reason'].strip(): raise InvalidAction('Evidence-based review reason required')
         assessment=req['assessment']
         if not isinstance(assessment,dict) or set(assessment)!={'current_subgoal'} or not isinstance(assessment['current_subgoal'],str) or not assessment['current_subgoal'].strip():

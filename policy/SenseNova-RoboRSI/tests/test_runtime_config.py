@@ -1,6 +1,7 @@
 """Check endpoint and private runtime paths without opening a connection."""
 
 from importlib import import_module
+from importlib import util
 
 import shutil
 from pathlib import Path
@@ -10,6 +11,17 @@ import pytest
 runtime_config = import_module("XPolicyLab.policy.SenseNova-RoboRSI.runtime_config")
 
 P = Path(__file__).resolve().parents[1]
+
+
+def test_direct_preflight_import_can_resolve_adaptive_limits():
+    spec = util.spec_from_file_location("_direct_roborsi_runtime_config", P / "runtime_config.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.resolve_adaptive_steps({}) == {
+        "approved_steps_min": 5,
+        "approved_steps_max": 50,
+        "approved_steps_default": 5,
+    }
 
 
 @pytest.fixture

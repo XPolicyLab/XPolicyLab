@@ -73,8 +73,13 @@ def test_standalone_only_changes_deployment_and_preserves_cli_contract(runtime, 
     cfg = runtime.resolve_runtime_config(original)
     assert cfg["model"] == model and cfg["model_base_url"] == endpoint
     assert original["model"] == ""
-    assert {k: v for k, v in cfg.items() if k not in {"model", "model_base_url"}} == {
-        k: v for k, v in original.items() if k != "model"
+    assert original["options"]["approved_steps_min"] == 2
+    assert cfg["options"]["approved_steps_min"] == 5
+    assert {k: v for k, v in cfg.items() if k not in {"model", "model_base_url", "options"}} == {
+        k: v for k, v in original.items() if k not in {"model", "options"}
+    }
+    assert {k: v for k, v in cfg["options"].items() if k != "approved_steps_min"} == {
+        k: v for k, v in original["options"].items() if k != "approved_steps_min"
     }
     base = runtime.ORIGINAL_COMMAND(cfg, "same-session")
     command = runtime.command(cfg, "same-session")

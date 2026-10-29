@@ -1,13 +1,14 @@
 # Build and run
 
-Simate beta + adaptive 2–50 submission. Native simulator acceptance must be checked in the target official environment. This source update does not claim a new GPU evaluation has completed.
+Simate beta + adaptive execution submission (default 5–50, configurable minimum). Native simulator acceptance must be checked in the target official environment. This source update does not claim a new GPU evaluation has completed.
 
 Deploy the XPolicyLab repository directly inside the official RoboDojo workspace.
 This adapter lives at `policy/SenseNova-RoboRSI/` inside that repository.
 Keep the `XPolicyLab/policy/SenseNova-RoboRSI` layout: installation also installs
 the framework from `../..`, and evaluation needs its shared server and utilities.
-This package contains the `adaptive_2_50` source, allowing 2–50 approved steps
-with default 5; it does not contain an installed environment.
+This package contains the authenticated `adaptive_2_50` source baseline. Runtime
+approval limits default to 5–50; `ROBORSI_ADAPTIVE_MIN_STEPS` selects a minimum
+from 2 to 50. It does not contain an installed environment.
 Keep the official simulator image/Conda environment and Assets unchanged.
 
 ## Prerequisites
@@ -146,5 +147,7 @@ simulator or call an LLM API.
 
 Start individual evaluations through this policy's standard `eval.sh` entry
 described in [README.md](README.md). Concurrent scheduling is supplied as a
-separate package. The adaptive controller permits 2–50 approved action steps
-(default 5), while Simate proposals retain horizon 50.
+separate package. The adaptive controller permits 5–50 approved action steps by
+default. Set `ROBORSI_ADAPTIVE_MIN_STEPS=2` to restore 2–50; the omitted approval
+length is `max(5, minimum)`, while Simate proposals retain horizon 50. See the
+policy README for per-instance configuration, resume and receipt requirements.

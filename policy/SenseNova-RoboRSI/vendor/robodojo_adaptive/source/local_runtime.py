@@ -6,8 +6,10 @@ import sys
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'code'))
 from policylab import codex
+from adaptive_steps import apply_adaptive_steps
 
 BWRAP = ROOT.parents[2] / "runtime/codex/codex-resources/bwrap"
 ORIGINAL_COMMAND = codex.command
@@ -39,7 +41,7 @@ def resolve_runtime_config(cfg, *, expected_model=None):
         raise ValueError("ROBORSI_CODEX_BASE_URL must be an HTTP(S) URL without credentials, query or fragment")
     if expected_model is not None and values["model"] != expected_model:
         raise ValueError("ROBORSI_CODEX_MODEL differs from the prepared model identity")
-    return {**cfg, **values}
+    return apply_adaptive_steps({**cfg, **values})
 
 
 def command(cfg, session=None):

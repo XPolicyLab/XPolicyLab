@@ -339,12 +339,12 @@ def test_reject_moves_nothing_then_allows_new_proposal(experiment, backend, vla)
     assert propose(experiment)["proposal_id"] != proposal["proposal_id"]
 
 
-@pytest.mark.parametrize("span", [True, 1, 51, 5.0])
+@pytest.mark.parametrize("span", [True, 1, 2, 4, 51, 5.0])
 def test_original_invalid_review_span_keeps_unmoved_proposal(
     experiment, backend, reference, vla, span
 ):
     proposal = propose(experiment)
-    with pytest.raises(reference.InvalidAction, match="integer from 2 to 50"):
+    with pytest.raises(reference.InvalidAction, match="integer from 5 to 50"):
         experiment.request(review(proposal, approved_steps=span))
     assert (
         backend.control_step == 0
