@@ -1,0 +1,138 @@
+# Configuration for EWAM (WAN Backbone + Action Expert + VLM Direct MoT)
+# WAN 5B + Action Expert + Qwen3-VL Direct (no Understanding Expert)
+
+common:
+  # Robot dimensions
+  action_dim: 16         # Robot action dimension (unified to 16, aligned with pretrain)
+  state_dim: 16          # Robot state dimension (unified to 16, aligned with pretrain)
+  max_action_dim: 16     # Max action dimension for padding
+
+  # Video settings (for WAN 5B)
+  num_video_frames: 8    # Number of video frames
+  video_height: 384      # Video frame height
+  video_width: 320       # Video frame width
+
+  # Sampling strategy parameters
+  global_downsample_rate: 3
+  video_action_freq_ratio: 2
+
+# Dataset configuration
+dataset:
+  type: "robotwin_dim16"             # RoboTwin dim16 dataset (provides T5 language_embedding)
+  dataset_dir: "/path/to/RoboTwin_emb"
+
+  # RobotWin specific parameters
+  data_mode: "both"
+  task_mode: "multi"
+  task_name: ''
+
+  max_episodes: null
+  image_aug: false
+
+# Model configuration
+model:
+  # WAN Video Model settings
+  wan:
+    checkpoint_path: "/path/to/ewam_weights/Wan2.2-TI2V-5B"
+    vae_path: "/path/to/ewam_weights/Wan2.2-TI2V-5B/Wan2.2_VAE.pth"
+    config_path: "/path/to/ewam_weights/Wan2.2-TI2V-5B"
+    precision: "bfloat16"
+
+  # VLM settings (Qwen3-VL-2B - trainable)
+  vlm:
+    checkpoint_path: "/path/to/ewam_weights/Qwen3-VL-2B-Instruct"
+    precision: "bfloat16"
+    frozen: false             # VLM is trainable (not frozen)
+
+  # Qwen3-VL Expert settings (per-layer QKV projections for direct MoT)
+  qwen3_expert:
+    vlm_dim: 2048             # Qwen3-VL-2B hidden size
+    head_dim: 128             # Head dimension (matches WAN)
+    num_heads: 24             # Number of heads (matches WAN 5B)
+    num_layers: 30            # Number of layers (matches WAN)
+    norm_eps: 1e-5
+
+  # Action Expert configuration
+  action_expert:
+    hidden_size: 1024        # Hidden dimension (same as the original design)
+    ffn_dim_multiplier: 4    # FFN = hidden_size * multiplier
+    norm_eps: 1e-5
+
+  # Time distribution settings
+  time_distribution:
+    timestep_sample_method: "logit_normal"
+    sigmoid_scale: 1.0
+    min_t: 0.0
+    max_t: 1.0
+
+  # Training mode
+  training_mode: "finetune"   # "pretrain" (action only) or "finetune" (state+action)
+
+  # Inference settings
+  inference:
+    num_inference_timesteps: 10
+
+  # Loss weights
+  loss_weights:
+    video_loss_weight: 1.0
+    action_loss_weight: 1.0
+
+  # Reweighted flow-matching loss (Gaussian timestep weighting +
+  # shifted timestep sampling). false -> plain uniform-mean-MSE loss.
+  loss_reweight: true
+
+  # EMA settings
+  ema:
+    enabled: false
+    update_after_step: 0
+    inv_gamma: 1.0
+    power: 0.75
+    min_value: 0.0
+    max_value: 0.9999
+
+# Training configuration
+training:
+  batch_size: 8
+  max_steps: 120000
+  learning_rate: 5.0e-5
+  wan_learning_rate: 5.0e-5      # WAN backbone LR
+  vlm_learning_rate: 5.0e-5       # VLM LR (50% of main)
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1  # Effective batch size = batch_size * gradient_accumulation_steps * num_gpus
+
+  scheduler_type: "linear"
+  warmup_steps: 200
+  cycle_length: 5000000   # Total cycle length for scheduler (same as the original design)
+  f_max: 0.99           # Maximum learning rate multiplier after warmup (same as the original design)
+  f_min: 0.4            # Minimum learning rate multiplier at end (same as the original design)
+
+  grad_clip_norm: 0.5
+  use_amp: true
+  find_unused_parameters: false
+
+# System settings
+system:
+  checkpoint_dir: "/path/to/ewam/checkpoints_robotwin"
+  log_level: "INFO"
+
+  log_interval: 10
+  save_interval: 20000
+  val_interval: 500
+
+  num_workers: 16
+  pin_memory: true
+
+# Logging settings
+logging:
+  report_to: "tensorboard"  # Options: "wandb", "tensorboard", "all", "none" - use tensorboard for no internet
+  wandb_project: "ewam"
+  tensorboard_log_dir: "/path/to/ewam/tensorboard_robotwin"
+  run_name: null  # Will use timestamp if null
+
+# Resume training settings
+resume:
+  checkpoint_path: null
+
+# Finetune settings
+finetune:
+  checkpoint_path: "/path/to/ewam_weights/pretrain/pytorch_model"  # Path to pre-trained model (dim16 pretrain)
