@@ -83,7 +83,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 
 ## 🧭 已接入策略
 
-当前已接入 69 个策略，覆盖 VLA、world-action、模仿学习与记忆增强等家族，另加 [demo_policy](policy/demo_policy/README.md) 作为最小参考 adapter。顶层 adapter 位于 `policy/`；每个策略 README 记录该模型的论文/仓库链接、环境、数据格式、训练入口与 checkpoint 布局。
+当前已接入 70 个策略，覆盖 VLA、world-action、模仿学习与记忆增强等家族，另加 [demo_policy](policy/demo_policy/README.md) 作为最小参考 adapter。顶层 adapter 位于 `policy/`；每个策略 README 记录该模型的论文/仓库链接、环境、数据格式、训练入口与 checkpoint 布局。
 
 
 | Policy                                   | Policy                                               | Policy                                      | Policy                                                     | Policy                                                         | Policy                                            |
@@ -99,7 +99,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 | [Awomo-0.5](policy/Awomo05/README.md) | [MoPA](policy/MoPA/README.md) | [PhysicalRSI](policy/physicalRSI/README.md) | [Simate-beta](policy/Simate_beta/README.md) | [SimpleMemVLA](policy/SimpleMemVLA/README.md) | [WorldScape Policy 2.0](policy/WorldScape_Policy_2/README.md) |
 | [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [VPP2](policy/VPP2/README.md) | [Liber-0 Lite](policy/Liber_0_lite/README.md) | [Liber-0 Preview](policy/Liber_0_preview/README.md) | [Discrete Forcing](policy/Discrete_Forcing/README.md) | [EgoVLA](policy/EgoVLA/README.md) |
 | [MM-ABC](policy/MM_ABC/README.md) | [HWM-CogWAM](policy/HWM_CogWAM/README.md) | [ME-Brain-1.0](policy/ME_Brain_1/README.md) | [MachEmbodied-U0](policy/MachEmbodied-U0/README.md) | [ME-Dex-1.0](policy/ME_Dex_1_0/README.md) | [Rex_M1_preview](policy/Rex_M1_preview/README.md) |
-| [Spark_0](policy/Spark_0/README.md) | [ViGAR](policy/ViGAR/README.md) | [CloudRobo-WM](policy/CloudRobo_WM/README.md) | | | |
+| [Spark_0](policy/Spark_0/README.md) | [ViGAR](policy/ViGAR/README.md) | [CloudRobo-WM](policy/CloudRobo_WM/README.md) | [G07-preview](policy/G07_preview/README.md) | | |
 | [demo_policy](policy/demo_policy/README.md) | | | | | |
 
 
