@@ -1,0 +1,352 @@
+{
+  "dataset": {
+    "repo": "ffanyt/Mibot-RSI-knowledge",
+    "revision": "4b573266ae67c6c2d25ab2bb04de22d0d1c219a2"
+  },
+  "knowledge": {
+    "ckpt_name": "eval",
+    "tasks": {
+      "align_blocks": {
+        "archive": "knowledge/eval/align_blocks.tar.gz",
+        "bytes": 5851266,
+        "files": 32,
+        "manifest_sha256": "0d59e2cbd3b7c98ad83f5c3cd4fea67d088b9b1838e6a4750bd3036aaf75c430",
+        "sha256": "93c095f795ac765c6dbe5c2c5417d19c6bff8382568f12325e581224090d11fb",
+        "snapshot_id": "549a42195bad9d8c"
+      },
+      "arrange_largest_number": {
+        "archive": "knowledge/eval/arrange_largest_number.tar.gz",
+        "bytes": 16041626,
+        "files": 48,
+        "manifest_sha256": "63c40ff1864ce7f5bdb0920fb6b0462001e469a5ca863d038e21333d64c33da7",
+        "sha256": "09df693fa639cfe506ea4a0d75c981843363854312e22fac54ef2c021936774e",
+        "snapshot_id": "9712ead55e5b1268"
+      },
+      "build_tower": {
+        "archive": "knowledge/eval/build_tower.tar.gz",
+        "bytes": 12675583,
+        "files": 69,
+        "manifest_sha256": "32999b368c3130876200b7f178747d09cc165f98e808ca4a1683eec9275f7f2c",
+        "sha256": "86d9ba7e79afe6ed46c0be07f24ba5887e7883321bfb22b376ab97805d137251",
+        "snapshot_id": "45650a372d780dad"
+      },
+      "classify_objects": {
+        "archive": "knowledge/eval/classify_objects.tar.gz",
+        "bytes": 20625161,
+        "files": 65,
+        "manifest_sha256": "18a5e8ea456f5a657db238daac70030cc0b66d05f3a89483f090abbc543bc492",
+        "sha256": "47a359b32724d8933f886a76cfb70471547f6fa7acfd05f4d35f68f1f6d47ebc",
+        "snapshot_id": "b8535b15348183ac"
+      },
+      "classify_objects_by_language": {
+        "archive": "knowledge/eval/classify_objects_by_language.tar.gz",
+        "bytes": 26014417,
+        "files": 66,
+        "manifest_sha256": "2d334870019c03c7c2f1786a9030db3cafbacae58d8656808e8326f198ed1346",
+        "sha256": "f6cf6214ea8cfaeb6c7fb235fb5176718905778ec33b5fc9e2a35153c5966823",
+        "snapshot_id": "ae432290ba6abbb5"
+      },
+      "cover_blocks": {
+        "archive": "knowledge/eval/cover_blocks.tar.gz",
+        "bytes": 12670479,
+        "files": 37,
+        "manifest_sha256": "4d3c25c6e712bc5616f01562951b22d2f9d1978ea894dbef98b70e2db6251e79",
+        "sha256": "53d0ccd5672fb1370fe587739fe51712127236574a8a899ea330c9e04fdb0211",
+        "snapshot_id": "cb4b1e987a5868f1"
+      },
+      "deposit_coin": {
+        "archive": "knowledge/eval/deposit_coin.tar.gz",
+        "bytes": 10696185,
+        "files": 50,
+        "manifest_sha256": "232b8c3fdde3c5acb4b8605798131591cafec2528833be62f6ea4168f93b2c54",
+        "sha256": "58974cd6d2482f24d4412ec6c0dcf3f6af7516d5cc62d8d2ff3375d5a5281d26",
+        "snapshot_id": "9f3173d6488bd108"
+      },
+      "fasten_screws": {
+        "archive": "knowledge/eval/fasten_screws.tar.gz",
+        "bytes": 9369398,
+        "files": 37,
+        "manifest_sha256": "14617ed679496768db6193b89913ee7b562cba5a0526ff379274fcef7f21c58a",
+        "sha256": "a52a35beefe30c553922d4cffca1ef00c27ffa1e9465d616521aba72f8aaac2c",
+        "snapshot_id": "604ae96bcaaa1f45"
+      },
+      "fill_egg_holder": {
+        "archive": "knowledge/eval/fill_egg_holder.tar.gz",
+        "bytes": 21367382,
+        "files": 76,
+        "manifest_sha256": "9b91a1ea4a8dc82c116f84ee72941253eb8ec8349e3b6d686ef96356079e2cb2",
+        "sha256": "552e2250291d4ea5b5fc1187858792f9b8395d243c8a2f72e25c5ce0c929935a",
+        "snapshot_id": "0185650c6689fa59"
+      },
+      "fill_pen_holder": {
+        "archive": "knowledge/eval/fill_pen_holder.tar.gz",
+        "bytes": 22816938,
+        "files": 77,
+        "manifest_sha256": "aca69c898c990e73fd6e00999035a3b25aac023fc83f9d2288c6083b7c5c7823",
+        "sha256": "f41adad7fb51903f4cc3ab28dc9ed6701d60f3d54538eac7d7ed431d1575c1d8",
+        "snapshot_id": "5c38f00ae616b630"
+      },
+      "fold_clothes": {
+        "archive": "knowledge/eval/fold_clothes.tar.gz",
+        "bytes": 14455758,
+        "files": 43,
+        "manifest_sha256": "1dfe94806f1abb307ff04cdacd7b833431ddd9001b2648bdc83c42e4624cba3b",
+        "sha256": "e02486a57a3587f99a4765a1c81eed0b4a24151acf7d99be20b9b3432a383a4f",
+        "snapshot_id": "ccdd260bdb844f1a"
+      },
+      "general_pickup": {
+        "archive": "knowledge/eval/general_pickup.tar.gz",
+        "bytes": 5545796,
+        "files": 38,
+        "manifest_sha256": "9ba2348c0a1a153f9b1990332e863fc7f414adf351a155e43f597a00da44d053",
+        "sha256": "d3f31f8026b0e9f4c40da2b494a5b0ed808782f4b77644246db7887a1a150b7c",
+        "snapshot_id": "4c09c7b1768084d4"
+      },
+      "hang_mugs": {
+        "archive": "knowledge/eval/hang_mugs.tar.gz",
+        "bytes": 9676764,
+        "files": 61,
+        "manifest_sha256": "847b73b24eb6ebe12fd8341807c64e5809224ce8d4df724104fb650dcfc91fae",
+        "sha256": "9165137663fb54466a9425284bfc84c6a8b7c037a0d8db162761bd257ec8cef2",
+        "snapshot_id": "89efce4f5d067886"
+      },
+      "imitate_sorting_sequence": {
+        "archive": "knowledge/eval/imitate_sorting_sequence.tar.gz",
+        "bytes": 11360087,
+        "files": 58,
+        "manifest_sha256": "f2bdd479673590f0fc8d252441b73318d544f473c663921cce46c4882afedd18",
+        "sha256": "6e88bb555810b0571e426fbe607e8bdd21d16f9889b8920d4b7edcdc9eba13f2",
+        "snapshot_id": "217e31b90475145e"
+      },
+      "insert_key": {
+        "archive": "knowledge/eval/insert_key.tar.gz",
+        "bytes": 6173723,
+        "files": 59,
+        "manifest_sha256": "6af5bcab5e6c2f185b9bf3462e8c01253408d6178ebba16f5167a42a3648d588",
+        "sha256": "52bb64369616781e016f960f9d5aa72fa6fb706a7aa4565e26ef40f3f09535c9",
+        "snapshot_id": "9cc5b49916b9c30c"
+      },
+      "insert_tubes": {
+        "archive": "knowledge/eval/insert_tubes.tar.gz",
+        "bytes": 7753573,
+        "files": 38,
+        "manifest_sha256": "bf73b35fd37d7dfb230fc6d51c5a56c3bb8481f5485060f98af323a5e70c3af8",
+        "sha256": "82dbb2be8de51b0b25526bdadaeab688be9d2d2776cd9756369994b9cb4dbf7a",
+        "snapshot_id": "b7275d411e167ca9"
+      },
+      "make_kong": {
+        "archive": "knowledge/eval/make_kong.tar.gz",
+        "bytes": 7417217,
+        "files": 58,
+        "manifest_sha256": "3a69886c3de3744a58135dc114e773a0909022998233aae8acd0493eaae10b60",
+        "sha256": "98812772a3a3b78aa3f53c23252235a331217245082aa0e18816179b8466d8a7",
+        "snapshot_id": "1f7b453ba22acfa6"
+      },
+      "make_toast": {
+        "archive": "knowledge/eval/make_toast.tar.gz",
+        "bytes": 9316434,
+        "files": 53,
+        "manifest_sha256": "dc12c3d767caac64a577faec35bd9592af9e0fc3b9925c174828b6de55a815fb",
+        "sha256": "4310a9839c85bc1694832cc8c21906c3488fba6c8ca271725213f55332ab551e",
+        "snapshot_id": "d7d9cad928647095"
+      },
+      "match_and_pick_from_conveyor": {
+        "archive": "knowledge/eval/match_and_pick_from_conveyor.tar.gz",
+        "bytes": 5062890,
+        "files": 34,
+        "manifest_sha256": "0685ef9f45da7bc3cdc54d5023594e00acfc6d21ede2f8e38aa14407c7029088",
+        "sha256": "14ede74eae28a167e5815c4fae9526f10e6d80bddcc81b540200702b74853d3f",
+        "snapshot_id": "28f82883cb5d7d24"
+      },
+      "organize_table": {
+        "archive": "knowledge/eval/organize_table.tar.gz",
+        "bytes": 11862062,
+        "files": 58,
+        "manifest_sha256": "1288b40db41c4c55904c47148e7d33a52adb33db549260eda30538259e6b18e5",
+        "sha256": "797ef4652006ae14c4c6944e11c40067d50d56a8b4fa2f3c18cb9d2833b16e1d",
+        "snapshot_id": "ff7f0361d5d7e401"
+      },
+      "pack_objects_into_box": {
+        "archive": "knowledge/eval/pack_objects_into_box.tar.gz",
+        "bytes": 8078927,
+        "files": 63,
+        "manifest_sha256": "148ddf1a903234c59de1ec384ca5c80eb7e4e8d5a654158cb568b1c31dce9a99",
+        "sha256": "84a73f0368e8dfa4120ef37b3d0c21fbbaec0593b3770b9cc3983ab32abdf780",
+        "snapshot_id": "c64361ee44140ea2"
+      },
+      "pick_from_conveyor_by_image": {
+        "archive": "knowledge/eval/pick_from_conveyor_by_image.tar.gz",
+        "bytes": 9227750,
+        "files": 43,
+        "manifest_sha256": "c7d4ee82db4dbb5561f5e26f1b731819c69e4e48825c1acbda190a4ad8ce9a30",
+        "sha256": "71986b0321d45d3c6fa6fc55b33d1dbe99ba3740ee1723d5414ee901a0dc04a0",
+        "snapshot_id": "2ca3502aef637009"
+      },
+      "play_Xylophone": {
+        "archive": "knowledge/eval/play_Xylophone.tar.gz",
+        "bytes": 10676476,
+        "files": 38,
+        "manifest_sha256": "a566650a83287372a866366630de9caacf7721aa4b14cfbce69e6d32e30c4621",
+        "sha256": "362b288d7506a7e4e668ad5e376a515bfd6ed9bd344649dd1ceddba702c2b6a7",
+        "snapshot_id": "ec7044c1b2eb8563"
+      },
+      "play_stacking_toy": {
+        "archive": "knowledge/eval/play_stacking_toy.tar.gz",
+        "bytes": 14614622,
+        "files": 66,
+        "manifest_sha256": "581f439a25ed3edfe5a44b981de46c61c94d7892707186997f67d0b4b857e8ff",
+        "sha256": "15b87c8cca9152bdd87b55537df7e1aeeb2653622cd282aecd66dff02a87beb4",
+        "snapshot_id": "9a5c733c785c4eae"
+      },
+      "play_tic_tac_toe": {
+        "archive": "knowledge/eval/play_tic_tac_toe.tar.gz",
+        "bytes": 14369536,
+        "files": 38,
+        "manifest_sha256": "17cc03539976de36595bd40fbee0d19ab8379ef10901ab08f3f304dbaaa3a4e8",
+        "sha256": "4aba080b369d12bf90c4505f04e269487794a4aae58cec921bf8dda97f730712",
+        "snapshot_id": "c3d41601fa0a483e"
+      },
+      "plug_in_charger": {
+        "archive": "knowledge/eval/plug_in_charger.tar.gz",
+        "bytes": 15257422,
+        "files": 77,
+        "manifest_sha256": "3df60eb9d2b3c8ac9aa6effdfe6073d0cee4a92c13a4d5a36295303d06e83bb1",
+        "sha256": "0aae908dea2ac761f0fedae81468c5646ccf163f0980622e2509a2ededfe715e",
+        "snapshot_id": "79ecd4bd3ebb53a8"
+      },
+      "pour_balls_into_vase": {
+        "archive": "knowledge/eval/pour_balls_into_vase.tar.gz",
+        "bytes": 9062129,
+        "files": 60,
+        "manifest_sha256": "f97cb789cfa03cb1b92f4aac4b75128a9f56f2c7b937bfb8dec390908ab658ca",
+        "sha256": "bf9ab7a9cd805134a07658dfc00b99cd2c4f707f9dad7f283c9d28f611a135ba",
+        "snapshot_id": "795e3b4dd02e214a"
+      },
+      "pour_by_language": {
+        "archive": "knowledge/eval/pour_by_language.tar.gz",
+        "bytes": 10715499,
+        "files": 41,
+        "manifest_sha256": "cf6e7d69acd80efa169a01b246edd087f596bac74202f66ce8aef717df80e408",
+        "sha256": "efe1a438e6d015a898b3292f66966bebfd368869cf6244ef55c8dd31ef38631a",
+        "snapshot_id": "c015256ef0a1be81"
+      },
+      "pour_liquid_into_cup": {
+        "archive": "knowledge/eval/pour_liquid_into_cup.tar.gz",
+        "bytes": 7506702,
+        "files": 39,
+        "manifest_sha256": "a41d18b0844d3bde7b0c84e76a38784c96f67b9bbc1bfef4fb1904f63b24ae8d",
+        "sha256": "9e8ca47e407611568f466960598f2dbfac12a2c13e681e8e9727a6465bec26ab",
+        "snapshot_id": "b03fb441a0eab9d9"
+      },
+      "press_by_number": {
+        "archive": "knowledge/eval/press_by_number.tar.gz",
+        "bytes": 8249104,
+        "files": 32,
+        "manifest_sha256": "db1b22c7bd5f9f511f77c49167aa8154aaf4330814e8e57e9368ed98704e234d",
+        "sha256": "f83fdcbec73e643e8cd281eb84d1b4f9b5f1061aa6ddb9f998da4495f7df92e1",
+        "snapshot_id": "463a852b5a195a5c"
+      },
+      "push_T": {
+        "archive": "knowledge/eval/push_T.tar.gz",
+        "bytes": 6212476,
+        "files": 31,
+        "manifest_sha256": "e1ad65c8eae1c745ff5d54d975294a0668ff6ec26e2d891fc5678037829b8359",
+        "sha256": "168e5de764731464d416103afcf791d3d3a0a868acdf3254cd60b2f1da914786",
+        "snapshot_id": "36737c4be1ca8a35"
+      },
+      "put_bottles_into_dustbin": {
+        "archive": "knowledge/eval/put_bottles_into_dustbin.tar.gz",
+        "bytes": 11875476,
+        "files": 52,
+        "manifest_sha256": "25a5ade0b58777863949baf4e7ef9e4c29230633fd8d5f68793f17263a93e6d8",
+        "sha256": "658655668d647481f366c72adbaa6e477a8e6426657a76612f26fb37247a23de",
+        "snapshot_id": "449ce755869e9891"
+      },
+      "solve_equation": {
+        "archive": "knowledge/eval/solve_equation.tar.gz",
+        "bytes": 15122753,
+        "files": 48,
+        "manifest_sha256": "167f66ec80d89e8b49453cccd3401b45225b0f515ced5b8f0987fd4d6f212397",
+        "sha256": "733ea01cf8254237d7c5851d5f5a8dfb50c696b52198f007fa681d951e892c05",
+        "snapshot_id": "5765db2c18fd9113"
+      },
+      "sort_nesting_dolls_by_size": {
+        "archive": "knowledge/eval/sort_nesting_dolls_by_size.tar.gz",
+        "bytes": 11908273,
+        "files": 38,
+        "manifest_sha256": "b67c347c5f4d7c3d64f6f88aa250f6e298e193b28be86346447ad66d7600863c",
+        "sha256": "29439c90936f72bb83796c0f07aa49c0bbbce585ccfd854fa3011b31507b43c7",
+        "snapshot_id": "4c423ec2ca2307e3"
+      },
+      "stack_blocks": {
+        "archive": "knowledge/eval/stack_blocks.tar.gz",
+        "bytes": 10986870,
+        "files": 56,
+        "manifest_sha256": "12e21f13279fdff3c3beb8d5b8ac21ad180f60c940a7fddbf7219cdefe4b830b",
+        "sha256": "089252359c6457ad0fc543b0916b6cc7eb48c6a8aaf0f55d49e48c1f23c1d106",
+        "snapshot_id": "d793267d8709ac6e"
+      },
+      "stack_blocks_by_language": {
+        "archive": "knowledge/eval/stack_blocks_by_language.tar.gz",
+        "bytes": 9932268,
+        "files": 35,
+        "manifest_sha256": "f2bbe0f321600a0b6add13eb6169fd923f54dc2548bcfec4d610d34febfa11c6",
+        "sha256": "d16f138efa2c9825dee4340b8bb1730379c53058d82df5a5b4bd10fdf974cccb",
+        "snapshot_id": "5b0c047d7178e25b"
+      },
+      "stack_bowls": {
+        "archive": "knowledge/eval/stack_bowls.tar.gz",
+        "bytes": 10284284,
+        "files": 32,
+        "manifest_sha256": "1c7c13d4a2cb6907e9ffd7830430291f9a913a569f208a193e306808a2e77d45",
+        "sha256": "c9bae51763fa21e7780673119d0e6050af1fb4b13803a11bc3fca8b026a05d8f",
+        "snapshot_id": "c08b6aa8c3169ffa"
+      },
+      "store_laptop_and_headphones": {
+        "archive": "knowledge/eval/store_laptop_and_headphones.tar.gz",
+        "bytes": 15929966,
+        "files": 69,
+        "manifest_sha256": "2a24f85f14bbec7dc07cf472e39dc2a27fcea22e2d5d7ccb9142dcfef86ee966",
+        "sha256": "5cba540505e6b62ebcd695ff4788981c557b79ac29387d2498a3ba7c2c5a12a4",
+        "snapshot_id": "2d2dd4a3b0d1c1cb"
+      },
+      "store_tools_in_toolbox": {
+        "archive": "knowledge/eval/store_tools_in_toolbox.tar.gz",
+        "bytes": 14510725,
+        "files": 65,
+        "manifest_sha256": "ff9bd8400468ade29a244cc157c8fa57d7f278a6c281f3e77c9ce020b38183a8",
+        "sha256": "83358b89251bbf919d12bf76c99504b152a4a04a3fbd5c38efc263e1e4f8641f",
+        "snapshot_id": "93064c61a5af40a3"
+      },
+      "swap_T": {
+        "archive": "knowledge/eval/swap_T.tar.gz",
+        "bytes": 10328528,
+        "files": 37,
+        "manifest_sha256": "922d571ef7e5558231ab34e90e253cb41851d7a0792e31bc1929999d97186cc3",
+        "sha256": "9fc57858d0d3b5b5e8cc82ddbe3a018ce9b3269f218de39ef8454a134b247eb9",
+        "snapshot_id": "d3476ad284771be0"
+      },
+      "swap_blocks": {
+        "archive": "knowledge/eval/swap_blocks.tar.gz",
+        "bytes": 7533900,
+        "files": 40,
+        "manifest_sha256": "62c38461f76cd8573be0c7e9e9a39747936f35d1bffd33e766215b205d1564f6",
+        "sha256": "b4f47e1d2ad764b74ea002df83092ff60b7548fa8d8d9988c0dbd2b4749747fd",
+        "snapshot_id": "e3642779f8524d4c"
+      },
+      "sweep_blocks": {
+        "archive": "knowledge/eval/sweep_blocks.tar.gz",
+        "bytes": 21660593,
+        "files": 71,
+        "manifest_sha256": "e712a708c5daa36b2c2ae58f27122249dad32172fefa69232aaf94d0c922ea59",
+        "sha256": "7a70b5b75eec1f291872000d3146f35a15379f5b03b3a90e62a001ebc8a3d48a",
+        "snapshot_id": "a7c4d27ef762abd8"
+      }
+    }
+  },
+  "runtime": {
+    "commit": "5c103cc09e92905beba36ad6fa674560dc00e2d0",
+    "files": 36
+  },
+  "schema": "mibot_rsi_release/2"
+}
