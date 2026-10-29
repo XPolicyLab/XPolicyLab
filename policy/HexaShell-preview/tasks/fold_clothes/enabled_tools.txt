@@ -1,0 +1,7 @@
+# Task-local tool registry names
+panel_cycle
+crease_transfer
+cloth_view
+table_plane
+surface_outline
+view_reacquire

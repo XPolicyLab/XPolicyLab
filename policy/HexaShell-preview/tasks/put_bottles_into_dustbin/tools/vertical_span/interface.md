@@ -1,0 +1,9 @@
+## vertical_span
+`robo vertical_span --base_u U --base_v V --top_u U --top_v V [--support_z Z] [--fraction 0.5] [--camera head|wrist_l|wrist_r] [--pixel_error 3] [--support_error 0.02]`
+Read-only reconstruction of one world-vertical axis from calibrated lower/upper endpoint rays; no action steps. Base lies on horizontal support; meters in world coordinates.
+Omitted support uses the shared cached RGB plane-sweep measurement. Explicit height differing from that measurement by >0.012 m returns support_height_mismatch and retry_args without support_z; no automatic correction. Unavailable measurement permits explicit measured height only.
+The measured plane is global: local support identity remains a caller assumption. Inferred-height uncertainty has a 0.008 m design floor; this is not a certified bound. Legacy support rectangle arguments are rejected.
+Returns plan_ok, plan_fail_reason, point at fraction (0–1; default 0.5), base, top, height_m, top_residual_px, support_z, support_estimate with RGB receipt, support_check_detail, depth_used=false and geometry_verified=false.
+Inconsistent endpoints fail before support inference with endpoint_diagnostics: gravity lines, perpendicular pixel distances and nearest projections. Projections are diagnostics, not corrected coordinates.
+Sampled point/height bounds perturb endpoints and support; horizontal_sensitivity_m above the fixed 0.040 m design ceiling returns vertical_span_uncertain without point/base/top targets. Calibration error, occlusion, surface offset and wrong identity are excluded. Pixel_error=0–25; support_error=0–0.1 m; uncertainty must reflect measurement evidence.
+Invalid calibration/pixels, short/ill-conditioned span, nonpositive height, inconsistent endpoints or unavailable automatic support fail. No retention/reachability verification.

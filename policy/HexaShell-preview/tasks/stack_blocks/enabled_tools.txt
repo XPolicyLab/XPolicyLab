@@ -1,0 +1,12 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/stack_blocks/tools/<name>)
+top_pick
+
+top_place
+plane_localize
+
+prism_localize
+
+settled_pick
+
+stereo_localize
+table_plane

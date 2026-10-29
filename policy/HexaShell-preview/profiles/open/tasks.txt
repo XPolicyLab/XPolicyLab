@@ -1,0 +1,11 @@
+# The tasks of RoboDojo's Open capability dimension. With ROBOSHELL_PROFILE empty (the default) these tasks run with the
+# generic profile (same tools, same manual, no task notes, nothing under tasks/) and every other task with the default
+# profile; see roboshell/server/tools.py select_profile.
+align_blocks
+classify_objects_by_language
+general_pickup
+pick_from_conveyor_by_image
+pour_by_language
+solve_equation
+stack_blocks_by_language
+store_tools_in_toolbox

@@ -1,0 +1,419 @@
+{
+ "source": "RoboDojo official evaluation summary (HexaShell-preview), hidden seed, 50 episodes per task",
+ "types": {
+  "Generalization": {
+   "success_rate": 34.5,
+   "progress_score": 39.22
+  },
+  "Precision": {
+   "success_rate": 32.0,
+   "progress_score": 41.25
+  },
+  "Long-Horizon": {
+   "success_rate": 31.5,
+   "progress_score": 42.91
+  },
+  "Memory": {
+   "success_rate": 81.0,
+   "progress_score": 84.53
+  },
+  "Open": {
+   "success_rate": 55.25,
+   "progress_score": 57.97
+  },
+  "Overall": {
+   "success_rate": 46.85,
+   "progress_score": 53.18
+  }
+ },
+ "generalization_halves": {
+  "standard": {
+   "success_rate": 38.0,
+   "progress_score": 43.28
+  },
+  "cluttered": {
+   "success_rate": 31.0,
+   "progress_score": 35.15
+  }
+ },
+ "variants": [
+  {
+   "task": "arrange_largest_number",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 12.0,
+   "progress_score": 17.8
+  },
+  {
+   "task": "arrange_largest_number",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 32.0,
+   "progress_score": 42.6
+  },
+  {
+   "task": "fold_clothes",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 56.0,
+   "progress_score": 64.0
+  },
+  {
+   "task": "fold_clothes",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 24.0,
+   "progress_score": 31.2
+  },
+  {
+   "task": "hang_mugs",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 4.0,
+   "progress_score": 22.4
+  },
+  {
+   "task": "hang_mugs",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 4.0,
+   "progress_score": 15.6
+  },
+  {
+   "task": "make_toast",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 0.0,
+   "progress_score": 3.0
+  },
+  {
+   "task": "make_toast",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 0.0,
+   "progress_score": 0.0
+  },
+  {
+   "task": "pack_objects_into_box",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 20.0,
+   "progress_score": 38.4
+  },
+  {
+   "task": "pack_objects_into_box",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 12.0,
+   "progress_score": 27.8
+  },
+  {
+   "task": "pour_liquid_into_cup",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 4.0,
+   "progress_score": 4.0
+  },
+  {
+   "task": "pour_liquid_into_cup",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 0.0,
+   "progress_score": 0.0
+  },
+  {
+   "task": "push_T",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 100.0,
+   "progress_score": 100.0
+  },
+  {
+   "task": "push_T",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 92.0,
+   "progress_score": 92.0
+  },
+  {
+   "task": "sort_nesting_dolls_by_size",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 72.0,
+   "progress_score": 72.0
+  },
+  {
+   "task": "sort_nesting_dolls_by_size",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 32.0,
+   "progress_score": 32.0
+  },
+  {
+   "task": "stack_blocks",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 88.0,
+   "progress_score": 89.8
+  },
+  {
+   "task": "stack_blocks",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 88.0,
+   "progress_score": 89.2
+  },
+  {
+   "task": "stack_bowls",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 92.0,
+   "progress_score": 92.0
+  },
+  {
+   "task": "stack_bowls",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 80.0,
+   "progress_score": 81.8
+  },
+  {
+   "task": "store_laptop_and_headphones",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 0.0,
+   "progress_score": 8.0
+  },
+  {
+   "task": "store_laptop_and_headphones",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 0.0,
+   "progress_score": 1.6
+  },
+  {
+   "task": "sweep_blocks",
+   "variant": "std",
+   "type": "Generalization",
+   "success_rate": 8.0,
+   "progress_score": 8.0
+  },
+  {
+   "task": "sweep_blocks",
+   "variant": "random",
+   "type": "Generalization",
+   "success_rate": 8.0,
+   "progress_score": 8.0
+  },
+  {
+   "task": "classify_objects",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 78.0,
+   "progress_score": 85.3
+  },
+  {
+   "task": "fill_egg_holder",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 0.0,
+   "progress_score": 8.8
+  },
+  {
+   "task": "fill_pen_holder",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 0.0,
+   "progress_score": 6.1
+  },
+  {
+   "task": "make_kong",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 2.0,
+   "progress_score": 2.0
+  },
+  {
+   "task": "organize_table",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 0.0,
+   "progress_score": 14.0
+  },
+  {
+   "task": "play_stacking_toy",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 18.0,
+   "progress_score": 57.6
+  },
+  {
+   "task": "play_tic_tac_toe",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 96.0,
+   "progress_score": 99.0
+  },
+  {
+   "task": "put_bottles_into_dustbin",
+   "variant": "all",
+   "type": "Long-Horizon",
+   "success_rate": 58.0,
+   "progress_score": 70.5
+  },
+  {
+   "task": "cover_blocks",
+   "variant": "all",
+   "type": "Memory",
+   "success_rate": 100.0,
+   "progress_score": 100.0
+  },
+  {
+   "task": "imitate_sorting_sequence",
+   "variant": "all",
+   "type": "Memory",
+   "success_rate": 42.0,
+   "progress_score": 63.2
+  },
+  {
+   "task": "match_and_pick_from_conveyor",
+   "variant": "all",
+   "type": "Memory",
+   "success_rate": 74.0,
+   "progress_score": 74.0
+  },
+  {
+   "task": "press_by_number",
+   "variant": "all",
+   "type": "Memory",
+   "success_rate": 96.0,
+   "progress_score": 96.0
+  },
+  {
+   "task": "swap_T",
+   "variant": "all",
+   "type": "Memory",
+   "success_rate": 96.0,
+   "progress_score": 96.0
+  },
+  {
+   "task": "swap_blocks",
+   "variant": "all",
+   "type": "Memory",
+   "success_rate": 78.0,
+   "progress_score": 78.0
+  },
+  {
+   "task": "align_blocks",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 78.0,
+   "progress_score": 78.0
+  },
+  {
+   "task": "classify_objects_by_language",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 72.0,
+   "progress_score": 79.4
+  },
+  {
+   "task": "general_pickup",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 82.0,
+   "progress_score": 82.0
+  },
+  {
+   "task": "pick_from_conveyor_by_image",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 28.0,
+   "progress_score": 28.0
+  },
+  {
+   "task": "pour_by_language",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 0.0,
+   "progress_score": 0.0
+  },
+  {
+   "task": "solve_equation",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 86.0,
+   "progress_score": 86.0
+  },
+  {
+   "task": "stack_blocks_by_language",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 96.0,
+   "progress_score": 96.4
+  },
+  {
+   "task": "store_tools_in_toolbox",
+   "variant": "all",
+   "type": "Open",
+   "success_rate": 0.0,
+   "progress_score": 14.0
+  },
+  {
+   "task": "build_tower",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 30.0,
+   "progress_score": 48.0
+  },
+  {
+   "task": "deposit_coin",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 16.0,
+   "progress_score": 26.4
+  },
+  {
+   "task": "fasten_screws",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 18.0,
+   "progress_score": 29.8
+  },
+  {
+   "task": "insert_key",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 0.0,
+   "progress_score": 15.0
+  },
+  {
+   "task": "insert_tubes",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 22.0,
+   "progress_score": 40.8
+  },
+  {
+   "task": "play_Xylophone",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 58.0,
+   "progress_score": 58.0
+  },
+  {
+   "task": "plug_in_charger",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 32.0,
+   "progress_score": 32.0
+  },
+  {
+   "task": "pour_balls_into_vase",
+   "variant": "all",
+   "type": "Precision",
+   "success_rate": 80.0,
+   "progress_score": 80.0
+  }
+ ]
+}

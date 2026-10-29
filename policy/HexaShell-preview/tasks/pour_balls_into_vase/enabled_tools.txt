@@ -1,0 +1,7 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/pour_balls_into_vase/tools/<name>)
+
+controlled_transfer
+release_retreat
+planned_transfer
+table_plane
+rim_geometry
