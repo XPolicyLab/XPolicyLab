@@ -1,0 +1,7 @@
+# Release and short withdrawal
+
+Include `dual_pose_servo.py`, `pose_servo.py`, then `release_withdraw.py`. The helper opens the selected gripper at its measured pose while explicitly commanding the other grip. It then computes a short withdrawal from the new measured pose using a supplied world-frame delta. The total actions are bounded by max_steps. The other arm holds its measured pose. It stops on episode end, an opening warning, motion failure, or budget exhaustion.
+
+Preconditions: the object is supported at its destination, the withdrawal direction is chosen from observed geometry, and the caller has reserved enough live native actions. A nonzero open command alone does not prove detachment. After this helper, inspect the current head frame before any large retreat or joint-origin return. The helper deliberately does not perform that final retreat automatically.
+
+Evidence: direct origin return after opening dragged a bridged hammer out of the box in 000085. In 000098, opening, lowering about 15 mm, withdrawing about 60 mm rearward, and then retreating left the hammer in the box. Intermediate motions reported collision/budget limits; this is not a universal collision-free recipe. In 000099, the parameterized wrapper opened the tape-measure grip and completed a 60 mm upward withdrawal in 26 actions, returning withdraw_reached with the gripper fully open. That result establishes controller convergence, not exact slot acceptance. Transfer across scenes has not been tested. Official matching-slot success was not established.
