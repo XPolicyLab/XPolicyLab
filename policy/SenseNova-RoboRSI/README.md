@@ -209,6 +209,22 @@ wait "${case_pid_b}" || case_exit=$?
 test "${case_exit}" -eq 0
 ```
 
+## Native diagnostics
+
+Periodic native-client thread dumps are disabled by default, including when a
+launcher sets `ROBORSI_NATIVE_DIAGNOSTICS_DIR`. Setting an output directory alone
+does not start the 120-second watchdog. The official client's fatal-signal
+handler and stderr logging remain in effect.
+
+For an isolated diagnostic run, explicitly set
+`ROBORSI_NATIVE_PERIODIC_TRACEBACK=1` together with
+`ROBORSI_RUNTIME_STATE_DIR=RUN_ROOT/state` and
+`ROBORSI_NATIVE_DIAGNOSTICS_DIR=RUN_ROOT/state/native-infrastructure`.
+Use an absolute, owned run directory and create both directories before launch.
+Unset the switch or set it to `0` for ordinary evaluation; other switch values
+are rejected. The watchdog traverses live thread frames and has been implicated
+in native-client SIGSEGVs, so enabling it is reserved for diagnosis.
+
 ## VLA diagnostics
 
 Each policy-owned VLA launch keeps its logs under this policy's

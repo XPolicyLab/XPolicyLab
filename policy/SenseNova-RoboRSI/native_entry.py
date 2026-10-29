@@ -219,10 +219,17 @@ def _native_kit_arguments(native_args):
 
 
 def _open_native_diagnostics():
-    """Open an opt-in infrastructure-only stack sink inside this run's state."""
+    """Open a stack sink only for explicitly requested periodic diagnostics."""
+    periodic = os.environ.get("ROBORSI_NATIVE_PERIODIC_TRACEBACK")
+    if periodic not in (None, "0", "1"):
+        raise ValueError("ROBORSI_NATIVE_PERIODIC_TRACEBACK must be 0 or 1")
+    # The watchdog walks live native-client frames. A directory alone must not
+    # enable this crash-prone diagnostic during ordinary evaluation.
+    if periodic != "1":
+        return None
     requested = os.environ.get("ROBORSI_NATIVE_DIAGNOSTICS_DIR")
     if not requested:
-        return None
+        raise ValueError("Periodic native tracebacks require ROBORSI_NATIVE_DIAGNOSTICS_DIR")
     state_value = os.environ.get("ROBORSI_RUNTIME_STATE_DIR")
     if not state_value:
         raise ValueError("Native diagnostics requires ROBORSI_RUNTIME_STATE_DIR")
