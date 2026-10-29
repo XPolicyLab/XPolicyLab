@@ -1,0 +1,97 @@
+# Stage 2: joint RGB / depth / action training (the full PrismWAM model).
+# RGB predicts one goal frame 32 steps ahead, depth the 8 future frames, and a separate action
+# expert the 32-step chunk; attention is RGB -> depth -> action. RGB and depth share blocks,
+# initialised from the Stage-1 checkpoint. At inference only depth and action are denoised.
+
+defaults: [../base.yaml]
+
+max_steps: 15000
+num_epochs: 20
+save_every: 1000
+eval_every: 500
+eval_samples_per_process: 1
+eval_time_budget_seconds: 300.0
+
+model:
+  _target_: prismwam.models.wan22.rgb_depth_action_depth_parent.create_prismwam_rgb_depth_action
+  architecture_name: PrismWAM
+  model_id: Wan-AI/Wan2.2-TI2V-5B       # initialises the RGB input/output layers
+  tokenizer_model_id: Wan-AI/Wan2.1-T2V-1.3B
+  tokenizer_max_len: 128
+  load_text_encoder: false
+  video_use_text_embedding: true
+  redirect_common_files: true
+  mot_checkpoint_mixed_attn: true
+
+  # Init: shared blocks from Stage 1 (depth_dit_checkpoint_path, set per benchmark),
+  # action expert from its initializer.
+  depth_vae_checkpoint_path: ${paths.weights_root}/init/depth_vae.pt
+  rgb_vae_checkpoint_path: ${paths.weights_root}/init/rgb_vae.safetensors
+  action_dit_pretrained_path: ${paths.weights_root}/init/action_initializer.pt
+  depth_parent_expected_step: 15000
+  action_init_source: wan
+  skip_depth_dit_load_from_pretrain: true
+  skip_rgb_dit_load_from_pretrain: false
+  skip_action_dit_load_from_pretrain: false
+  checkpoint_init_only: false
+  lr_schedule_steps: 15000              # keep equal to max_steps
+
+  # Observations and targets.
+  rgb_input_size: [384, 320]
+  rgb_target_mode: f8                   # RGB goal frame 32 steps ahead
+  rgb_history_num_frames: 5
+  rgb_history_frame_stride: 4
+  rgb_fast: true                        # encode observed RGB once per inference call
+  depth_vae_require_latent_stats: true
+  proprio_dim: 14
+
+  # Architecture.
+  share_rgb_depth_blocks: true
+  rgb_depth_attention_mode: rgb_to_depth_to_action
+  depth_dit_config: &visual_transformer
+    patch_size: [1, 2, 2]
+    in_dim: 48
+    hidden_dim: 3072
+    ffn_dim: 14336
+    freq_dim: 256
+    text_dim: 4096
+    out_dim: 48
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    eps: 1.0e-06
+    seperated_timestep: true
+    require_vae_embedding: false
+    fuse_vae_embedding_in_latents: true
+    use_gradient_checkpointing: true
+    video_attention_mask_mode: first_frame_causal
+  rgb_dit_config: *visual_transformer
+  action_dit_config:
+    action_dim: 14
+    hidden_dim: 1024
+    ffn_dim: 4096
+    num_heads: 24
+    attn_head_dim: 128
+    num_layers: 30
+    text_dim: 4096
+    freq_dim: 256
+    eps: 1.0e-06
+    use_gradient_checkpointing: true
+  rgb_scheduler: &flow_matching
+    train_shift: 5.0
+    infer_shift: 5.0
+    num_train_timesteps: 1000
+  depth_scheduler: *flow_matching
+  action_scheduler: *flow_matching
+  loss:
+    lambda_rgb: 1.0
+    lambda_depth: 1.0
+    lambda_action: 1.0
+
+# Inference settings, exported with the bundle by scripts/export_model.py.
+deployment:
+  action_horizon: 32
+  num_inference_steps: 10
+  inference_shifts:
+    depth: 5.0
+    action: 5.0

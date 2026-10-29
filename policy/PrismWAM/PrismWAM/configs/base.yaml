@@ -1,0 +1,37 @@
+# Defaults for every recipe. Inheritance: configs/<benchmark>/stage*.yaml -> configs/stages/stage*.yaml
+# -> this file. Child keys win over parents; command-line key=value wins over all.
+
+paths:                                  # set by scripts/<benchmark>/*.sh
+  data_root: ./data                     # see docs/data.md
+  weights_root: ./weights               # see docs/models.md
+  output_root: ./outputs
+  robodojo_root: ./external/RoboDojo    # RoboDojo checkout, needed to decode its RGB
+  robotwin_root: ./external/RoboTwin    # RoboTwin checkout with XPolicyLab/, needed to decode its RGB
+
+# Optimisation. Gradient accumulation = global_batch_size / (batch_size x GPUs), set at launch.
+learning_rate: 1.0e-4
+lr_scheduler_type: cosine
+weight_decay: 0.01
+max_grad_norm: 1.0
+mixed_precision: bf16
+seed: 42
+distributed_config: configs/distributed/zero2.yaml   # DeepSpeed ZeRO-2
+
+# Data loading.
+sampling_mode: task_balanced
+pin_memory: true
+persistent_workers: true
+prefetch_factor: 1
+
+# Logging, validation and checkpoints.
+log_every: 10
+eval_seed: 42
+state_save_every: 5000                  # full training state, for resume
+save_at_end: true
+resume: null                            # <output_dir>/checkpoints/state/step_XXXXXX
+wandb:
+  enabled: false
+  project: prismwam
+  workspace: null
+  name: null
+  mode: offline

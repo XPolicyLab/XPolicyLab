@@ -1,0 +1,63 @@
+# RoboDojo, Stage 1: depth warm-up on the 35 training tasks (ARX X5, all episodes).
+# Launch: bash scripts/robodojo/stage1_depth.sh
+
+defaults: [../stages/stage1_depth.yaml]
+
+global_batch_size: 1024
+batch_size: 32                          # per GPU
+num_workers: 16
+eval_sampling_mode: robodojo_episode_random
+# Validation episodes are also in the training set.
+output_dir: ${paths.output_root}/robodojo/stage1_depth
+wandb:
+  name: robodojo-stage1-depth
+
+data:
+  train: &train
+    _target_: prismwam.datasets.robodojo_rgb_depth_action_dataset.RoboDojoRGBDepthActionVideoDataset
+    root_dir: ${paths.data_root}/robodojo
+    episode_index_path: ${paths.data_root}/robodojo/index.json
+    episode_split: full
+    xpolicylab_parent: ${paths.robodojo_root}
+    phases: [arx_x5]
+    task_names: null
+    exclude_task_names: []
+    # Head + two wrist views tiled into one 384x320 frame.
+    cameras: [cam_head, cam_left_wrist, cam_right_wrist]
+    layout: robotwin
+    video_size: [384, 320]
+    num_video_frames: 9
+    frame_stride: 4
+    sample_stride: 1
+    drop_incomplete_windows: false
+    depth_min: 0.0
+    depth_max: 1500.0
+    rgb_target_mode: f8
+    rgb_history_num_frames: 5
+    rgb_history_frame_stride: 4
+    instruction_source: hdf5
+    instruction_type: seen
+    instruction_selection: episode_hash
+    prompt_policy_id: robodojo_hdf5_instruction_v1
+    prompt_template: "A video recorded from a robot's point of view executing the following instruction: {task}"
+    text_embedding_cache_dir: ${paths.data_root}/robodojo/text_cache
+    text_encoder_id: wan22ti2v5b
+    context_len: 128
+    # Actions: absolute 14-D joints.
+    action_key: action/joint_vector
+    proprio_key: state/joint_vector
+    action_dim: 14
+    action_horizon: 32
+    action_start_offset: 1
+    proprio_start_offset: 0
+    normalize_actions: true
+    action_std_floor: 1.0e-06
+    action_stats_cache_path: ${paths.data_root}/robodojo/action_stats.pt
+    action_stats_cache_policy: fixed
+    dataset_uid: robodojo_sim_arx_x5_35task_full_v1
+  val:
+    <<: *train
+    episode_index_path: ${paths.data_root}/robodojo/holdout/val.json
+    episode_split: val
+    drop_incomplete_windows: true
+    dataset_uid: robodojo_sim_arx_x5_35task_val_v1

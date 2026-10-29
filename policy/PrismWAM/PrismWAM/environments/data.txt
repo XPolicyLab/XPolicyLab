@@ -1,0 +1,2 @@
+# Required for real-world Parquet episode metadata.
+pyarrow==24.0.0

@@ -1,0 +1,8 @@
+# The validated RoboTwin run uses direct WAM only.
+memory_enabled: false
+memory_n_previous: 8
+bbox_enabled: false
+ttc_enabled: false
+rcs_num_proposals: 8
+rcs_timestep_ratios: [0.25, 0.5, 0.75]
+rcs_noise_seed: null

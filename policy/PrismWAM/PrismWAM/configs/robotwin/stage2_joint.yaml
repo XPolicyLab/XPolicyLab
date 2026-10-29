@@ -1,0 +1,68 @@
+# RoboTwin, Stage 2: joint RGB / depth / action training on the clean scenes.
+# Launch after Stage 1: bash scripts/robotwin/stage2_joint.sh
+
+defaults: [../stages/stage2_joint.yaml]
+
+global_batch_size: 256
+batch_size: 8                           # per GPU
+num_workers: 16
+eval_sampling_mode: auto
+output_dir: ${paths.output_root}/robotwin/stage2_joint
+wandb:
+  name: robotwin-stage2-joint
+
+data:
+  train: &train
+    _target_: prismwam.datasets.robotwin_rgb_depth_action_dataset.RobotWinRGBDepthActionVideoDataset
+    root_dir: ${paths.data_root}/robotwin
+    xpolicylab_parent: ${paths.robotwin_root}
+    phases: [demo_clean]
+    task_names: null
+    exclude_task_names: []
+    cameras: [head_camera, left_camera, right_camera]
+    layout: robotwin
+    video_size: [384, 320]
+    num_video_frames: 9
+    frame_stride: 4
+    sample_stride: 1
+    drop_incomplete_windows: false
+    depth_min: 0.0
+    depth_max: 1500.0
+    rgb_target_mode: f8
+    rgb_history_num_frames: 5
+    rgb_history_frame_stride: 4
+    instruction_source: scene_info
+    instruction_type: seen
+    instruction_selection: episode_hash
+    task_instruction_dir: ${paths.data_root}/robotwin/instructions
+    objects_description_dir: ${paths.data_root}/robotwin/object_descriptions
+    humanize_task_name: false
+    prompt_policy_id: raw_robotwin_scene_info_seen_v1
+    prompt_template: "A video recorded from a robot's point of view executing the following instruction: {task}"
+    text_embedding_cache_dir: ${paths.data_root}/robotwin/text_cache
+    text_encoder_id: wan22ti2v5b
+    context_len: 128
+    action_key: joint_action/vector
+    proprio_key: joint_action/vector
+    action_dim: 14
+    action_horizon: 32
+    action_start_offset: 1
+    proprio_start_offset: 0
+    normalize_actions: true
+    action_std_floor: 1.0e-06
+    action_stats_cache_path: ${paths.data_root}/robotwin/action_stats.pt
+    action_stats_cache_policy: fixed
+    dataset_uid: robotwin_public_data_v1
+  val:
+    <<: *train
+    phases: [demo_clean_val]
+    max_episodes_per_dir: 10
+    drop_incomplete_windows: true
+    dataset_uid: robotwin_clean_val_50task_10ep_seed42_v1
+
+model:
+  depth_dit_checkpoint_path: ${paths.output_root}/robotwin/stage1_depth/checkpoints/weights/step_015000.pt
+
+deployment:
+  benchmark: robotwin
+  replan_steps: 24                      # execute 24 of the 32 predicted actions

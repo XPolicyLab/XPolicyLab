@@ -1,0 +1,90 @@
+# RoboDojo, Stage 2: joint RGB / depth / action training with sparse RGB memory.
+# For the long-horizon and memory tasks, the RGB tower sees the episode's first frame, the
+# frame 32 steps ago and the current frame instead of a short history.
+# Launch after Stage 1: bash scripts/robodojo/stage2_joint.sh
+
+defaults: [../stages/stage2_joint.yaml]
+
+global_batch_size: 1024
+batch_size: 16                          # per GPU
+max_steps: 40000
+num_workers: 16
+eval_sampling_mode: robodojo_episode_random
+output_dir: ${paths.output_root}/robodojo/stage2_joint
+wandb:
+  name: robodojo-stage2-joint
+
+data:
+  train: &train
+    _target_: prismwam.datasets.robodojo_rgb_memory_dataset.RoboDojoSparseRGBMemoryDataset
+    root_dir: ${paths.data_root}/robodojo
+    episode_index_path: ${paths.data_root}/robodojo/index.json
+    episode_split: full
+    xpolicylab_parent: ${paths.robodojo_root}
+    phases: [arx_x5]
+    task_names: null
+    exclude_task_names: []
+    cameras: [cam_head, cam_left_wrist, cam_right_wrist]
+    layout: robotwin
+    video_size: [384, 320]
+    num_video_frames: 9
+    frame_stride: 4
+    sample_stride: 1
+    drop_incomplete_windows: false
+    depth_min: 0.0
+    depth_max: 1500.0
+    # Sparse RGB memory.
+    rgb_target_mode: f8
+    rgb_history_num_frames: 3
+    rgb_history_frame_stride: 4
+    sparse_recent_action_offset: 32
+    sparse_frame_encoding: independent
+    instruction_source: hdf5
+    instruction_type: seen
+    instruction_selection: episode_hash
+    prompt_policy_id: robodojo_hdf5_instruction_v1
+    prompt_template: "A video recorded from a robot's point of view executing the following instruction: {task}"
+    text_embedding_cache_dir: ${paths.data_root}/robodojo/text_cache
+    text_encoder_id: wan22ti2v5b
+    context_len: 128
+    action_key: action/joint_vector
+    proprio_key: state/joint_vector
+    action_dim: 14
+    action_horizon: 32
+    action_start_offset: 1
+    proprio_start_offset: 0
+    normalize_actions: true
+    action_std_floor: 1.0e-06
+    action_stats_cache_path: ${paths.data_root}/robodojo/action_stats.pt
+    action_stats_cache_policy: fixed
+    dataset_uid: robodojo_sim_arx_x5_35task_full_v1
+  val:
+    <<: *train
+    episode_index_path: ${paths.data_root}/robodojo/holdout/val.json
+    episode_split: val
+    drop_incomplete_windows: true
+    dataset_uid: robodojo_sim_arx_x5_35task_val_v1
+
+model:
+  _target_: prismwam.models.wan22.rgb_memory.create_prismwam_rgb_depth_action
+  lr_schedule_steps: 40000
+  rgb_history_num_frames: 3
+  rgb_memory:
+    sparse_context_mode: anchor_recent_current
+    anchor_frames: 1                    # the episode's first frame
+    recent_frames: 3
+    sparse_recent_action_offset: 32
+    sparse_frame_encoding: independent
+    raw_frame_stride: 4
+    vae_temporal_stride: 4
+    # Training-time noise on the RGB memory latents.
+    conditioning_latent_noise_prob: 0.2
+    conditioning_latent_noise_stream: rgb
+    rgb_conditioning_latent_noise_prob: 0.2
+    depth_conditioning_latent_noise_prob: 0.0
+    rgb_proprio_context: false
+  depth_dit_checkpoint_path: ${paths.output_root}/robodojo/stage1_depth/checkpoints/weights/step_015000.pt
+
+deployment:
+  benchmark: robodojo
+  replan_steps: 16

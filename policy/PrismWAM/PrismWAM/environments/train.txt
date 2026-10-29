@@ -1,0 +1,5 @@
+-r base.txt
+accelerate==1.14.0
+deepspeed==0.18.7
+ninja==1.11.1.4
+wandb==0.28.0

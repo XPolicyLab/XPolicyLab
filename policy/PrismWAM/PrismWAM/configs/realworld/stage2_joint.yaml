@@ -1,0 +1,136 @@
+# Real robot, Stage 2: joint RGB / depth / action training on six recorded tasks.
+# Launch after Stage 1: bash scripts/realworld/stage2_joint.sh
+
+defaults: [../stages/stage2_joint.yaml]
+
+global_batch_size: 256
+batch_size: 8                           # per GPU
+eval_samples_per_process: 4
+eval_sampling_mode: rank_stratified
+eval_time_budget_seconds: null
+num_workers: 8
+output_dir: ${paths.output_root}/realworld/stage2_joint
+save_every: 5000
+wandb:
+  name: realworld-stage2-joint
+
+# Shared by every source below.
+source_defaults: &source
+  split: train
+  validation_modulus: 20
+  validation_remainder: 0
+  num_video_frames: 9
+  frame_stride: 4
+  sample_stride: 1
+  drop_incomplete_windows: true
+  video_size: [384, 320]
+  depth_namespace: depth_lingbot_smooth_v05
+  depth_min: 0.0
+  depth_max: 1500.0
+  action_horizon: 32
+  action_start_offset: 1
+  proprio_start_offset: 0
+  normalize_actions: true
+  action_std_floor: 1.0e-06
+  action_stats_cache_policy: fixed
+  context_len: 128
+  text_encoder_id: wan22ti2v5b
+  prompt_template: "A video recorded from a robot's point of view executing the following instruction: {task}"
+  max_episodes_per_task: null
+  require_refined_depth: true
+  rgb_target_mode: f8
+  rgb_history_num_frames: 5
+  rgb_history_frame_stride: 4
+  action_source: action
+  preserve_root_alias: true
+  instruction_type: seen
+  instruction_selection: episode_hash
+
+data:
+  train: &train
+    _target_: prismwam.datasets.real_world_mixed_dataset.RealWorldMixedDataset
+    sources:
+      - &move_plate
+        <<: *source
+        root_dir: ${paths.data_root}/realworld/sources/four_task_follower
+        task_names: [move_plate]
+        action_dim: 7
+        action_stats_cache_path: ${paths.data_root}/realworld/move_plate/move_plate.pt
+        text_embedding_cache_dir: ${paths.data_root}/realworld/text_cache
+        episode_frame_bounds_path: ${paths.data_root}/realworld/move_plate/episode_frame_bounds.json
+        episode_filter_path: ${paths.data_root}/realworld/move_plate/episode_filter.json
+        task_instruction_dir: ${paths.data_root}/realworld/instructions
+      - &grab_plate
+        <<: *source
+        root_dir: ${paths.data_root}/realworld/sources/data
+        task_names: [grab_plate]
+        action_dim: 7
+        action_stats_cache_path: ${paths.data_root}/realworld/grab_plate/grab_plate.pt
+        text_embedding_cache_dir: ${paths.data_root}/realworld/text_cache
+        episode_frame_bounds_path: ${paths.data_root}/realworld/grab_plate/episode_frame_bounds.json
+        episode_filter_path: ${paths.data_root}/realworld/grab_plate/episode_filter.json
+        task_instruction_dir: ${paths.data_root}/realworld/instructions
+      - &pickup_plate
+        <<: *source
+        root_dir: ${paths.data_root}/realworld/sources/data_variant2
+        task_names: [pickup_plate]
+        rgb_path_overrides_path: ${paths.data_root}/realworld/rgb/pickup_rgb_paths.json
+        action_dim: 14
+        action_stats_cache_path: ${paths.data_root}/realworld/pickup_plate/pickup_plate.pt
+        text_embedding_cache_dir: ${paths.data_root}/realworld/text_cache
+        episode_frame_bounds_path: ${paths.data_root}/realworld/pickup_plate/episode_frame_bounds.json
+        episode_filter_path: ${paths.data_root}/realworld/pickup_plate/episode_filter.json
+        task_instruction_dir: ${paths.data_root}/realworld/instructions
+      - &reorder_cubes
+        <<: *source
+        root_dir: ${paths.data_root}/realworld/sources/data
+        task_names: [reorder_cubes]
+        action_dim: 7
+        action_stats_cache_path: ${paths.data_root}/realworld/reorder_cubes/reorder_cubes.pt
+        text_embedding_cache_dir: ${paths.data_root}/realworld/text_cache
+        episode_frame_bounds_path: ${paths.data_root}/realworld/reorder_cubes/episode_frame_bounds.json
+        episode_filter_path: ${paths.data_root}/realworld/reorder_cubes/episode_filter.json
+        task_instruction_dir: ${paths.data_root}/realworld/instructions
+      - &microwave
+        <<: *source
+        root_dir: ${paths.data_root}/realworld/sources/four_task_follower
+        task_names: [microwave]
+        action_dim: 14
+        action_stats_cache_path: ${paths.data_root}/realworld/microwave/microwave.pt
+        text_embedding_cache_dir: ${paths.data_root}/realworld/text_cache
+        episode_frame_bounds_path: ${paths.data_root}/realworld/microwave/episode_frame_bounds.json
+        episode_filter_path: ${paths.data_root}/realworld/microwave/episode_filter.json
+        task_instruction_dir: ${paths.data_root}/realworld/instructions
+      - &rgb
+        <<: *source
+        root_dir: ${paths.data_root}/realworld/sources/data_variant3
+        task_names: [rgb]
+        action_dim: 7
+        action_stats_cache_path: ${paths.data_root}/realworld/rgb/rgb.pt
+        text_embedding_cache_dir: ${paths.data_root}/realworld/text_cache_variant2
+        episode_frame_bounds_path: ${paths.data_root}/realworld/rgb/episode_frame_bounds.json
+        episode_filter_path: ${paths.data_root}/realworld/rgb/episode_filter.json
+        task_instruction_dir: ${paths.data_root}/realworld/instructions_variant2
+  val:
+    _target_: prismwam.datasets.real_world_mixed_dataset.RealWorldMixedDataset
+    sources:
+      - <<: *move_plate
+        split: val
+      - <<: *grab_plate
+        split: val
+      - <<: *pickup_plate
+        split: val
+      - <<: *reorder_cubes
+        split: val
+      - <<: *microwave
+        split: val
+      - <<: *rgb
+        split: val
+
+model:
+  depth_vae_checkpoint_path: ${paths.weights_root}/init/depth_vae_realworld.pt   # its own depth VAE
+  depth_dit_checkpoint_path: ${paths.output_root}/realworld/stage1_depth/checkpoints/weights/step_015000.pt
+
+deployment:
+  benchmark: realworld
+  replan_steps: 24
