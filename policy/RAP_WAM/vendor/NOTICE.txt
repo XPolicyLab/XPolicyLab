@@ -1,0 +1,15 @@
+Historical RAP-WAM / v58_light policy implementation: RAP-WAM contributors, MIT.
+Wan runtime: Copyright 2024-2025 The Alibaba Wan Team Authors, Apache-2.0.
+Diffusion Policy-derived normalization, module and checkpoint utilities under
+psi_policy/: Copyright (c) 2023 Columbia Artificial Intelligence and Robotics Lab, MIT.
+The upstream notice is preserved in LICENSE.diffusion-policy, copied verbatim from
+the RAP-WAM public release at commit cd32fba405b26f8c3e4ee29120ffc7432a126f47:
+https://github.com/heyuanpengpku/RAP-WAM/blob/cd32fba405b26f8c3e4ee29120ffc7432a126f47/third_party/licenses/diffusion_policy.txt
+Original project: https://github.com/real-stanford/diffusion_policy
+License texts are included alongside this notice. Existing source headers are retained.
+SOURCE_MANIFEST.json records the SHA-256 of each source module captured
+from the historical inference dependency closure on 2026-10-21. Dataset modules
+are retained only because the original package initializers import their symbols;
+this adapter never instantiates those datasets or reads XPolicyLab trajectories.
+Whitespace-only packaging changes are listed separately; executable Python ASTs
+were verified identical (ignoring docstring whitespace).
