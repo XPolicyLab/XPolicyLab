@@ -1,0 +1,12 @@
+{
+  "RoboDojo": {
+    "url": "https://github.com/RoboDojo-Benchmark/RoboDojo.git",
+    "commit": "cb2a37d58dbbeb2777b0c2b30e97ecb8ab91095c"
+  },
+  "XPolicyLab": {
+    "url": "https://github.com/XPolicyLab/XPolicyLab.git",
+    "commit": "24c527f5ca753749dff0cb9d089badb22b59f112"
+  },
+  "IsaacSim": "component-library installed environment; record package versions in each job",
+  "provenance": "Fresh public source downloads, not contributor implementations. CPU transport subset of XPolicyLab included."
+}

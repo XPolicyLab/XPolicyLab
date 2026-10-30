@@ -1,0 +1,36 @@
+{
+  "source": "PhysicalRSI XPolicyLab physicalrsi-skill-assets-v4 public model assets",
+  "models": {
+    "grounding": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny",
+    "clip": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32",
+    "depth": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/depth-anything-v2-metric-indoor-small/1bf8ab4268a28b9b/depth-anything-v2-metric-indoor-small"
+  },
+  "sha256": {
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/added_tokens.json": "909e96cb32d92ce728a01bc99850cbba26196d74115c17ebeb019275412588f2",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/config.json": "eec82c5ab66e16df12a9a212e68ac011779927c2536cf9078658e35d85f0c67a",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/model.safetensors": "1a2412ef99bd74bcd3c2a246fa1e48581f8889a1300c9051974741314fc042f3",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/preprocessor_config.json": "8454179ba95e2ad22947835aad7b45862a601fc0055ab88bf1ee70892d3aea60",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/pytorch_model.bin": "f4d69c8403b9a569d90362c5fe8c6ea93dee4c8f08166df5b39e5eca8d227bbe",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/special_tokens_map.json": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/tokenizer.json": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/tokenizer_config.json": "d40ab645b68211910b9170d22433d43186a6ec8ee6fd10ba170524b25bf4fb56",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/grounding-dino-tiny/074cad48ab8387c7/grounding-dino-tiny/vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/config.json": "b575ef3c36f2a057fa19e221650105052d61cc9c1a972ec15019c6261ec98770",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/merges.txt": "f526393189112391ce6f9795d4695f704121ce452c3aad1f5335cc41337eba85",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/preprocessor_config.json": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/pytorch_model.bin": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/special_tokens_map.json": "f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/tokenizer.json": "b556ac8c99757ffb677208af34bc8c6721572114111a6e0aaf5fa69ff0b8d842",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/tokenizer_config.json": "34b7336e4bee12e0a9730eaf5189f582ef3c3eea5027f65730e5717256755aad",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/clip-vit-base-patch32/5be8cdefa7ef9c95/clip-vit-base-patch32/vocab.json": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/depth-anything-v2-metric-indoor-small/1bf8ab4268a28b9b/depth-anything-v2-metric-indoor-small/config.json": "0b1d9fc591693d16b864249a9cfcf5264c8c00be999c1643fa1c64dc105d55f8",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/depth-anything-v2-metric-indoor-small/1bf8ab4268a28b9b/depth-anything-v2-metric-indoor-small/model.safetensors": "e990eb82fbf11b05b7813261196a2b841bdcf5a05f64396724a8987fa90504a3",
+    "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/perception_models/depth-anything-v2-metric-indoor-small/1bf8ab4268a28b9b/depth-anything-v2-metric-indoor-small/preprocessor_config.json": "533b16a60445d7cab5086d39b45f92be45624b977972c62d5984d93e98366063"
+  },
+  "forbidden_reference_data_not_loaded": [
+    "rgb_grasp_skills.json",
+    "object_contact_records.json",
+    "simulator_bridge.py",
+    "privileged calibration offsets"
+  ]
+}

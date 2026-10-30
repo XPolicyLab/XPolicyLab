@@ -1,0 +1,14 @@
+policy_name: XQAUX8Z9
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: baseline-v0.1
+env_cfg_type: arx_x5
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false
+calibration_path: null
+trace_path: null

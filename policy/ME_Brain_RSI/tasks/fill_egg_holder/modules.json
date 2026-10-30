@@ -1,0 +1,236 @@
+{
+  "b88r42wq.tasks.long_horizon": {
+    "file": "capabilities/control/long_horizon.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/long_horizon.py",
+    "package": false,
+    "sha256": "ae2c07393b771347b82dcaa9f51edc6e4f6b4bf35bc33dec1f003d6fe3f207cb"
+  },
+  "b88r42wq.public_mesh": {
+    "file": "capabilities/geometry/public_mesh.py",
+    "resource": "resources/fill_egg_holder/coap/public_mesh.py",
+    "package": false,
+    "sha256": "f41f6f935a4da430235242805001e2b596236d8f10662347f5eeb7c572d891de"
+  },
+  "b88r42wq.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/fill_egg_holder/coap/kinematics.py",
+    "package": false,
+    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+  },
+  "b88r42wq.motion": {
+    "file": "capabilities/motion/motion.py",
+    "resource": "resources/fill_egg_holder/coap/motion.py",
+    "package": false,
+    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290"
+  },
+  "b88r42wq.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/fill_egg_holder/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+  },
+  "b88r42wq": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/fill_egg_holder/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "b88r42wq.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "8c5437f89366013391816df74e0377f82f4303b1af55c3688d8d264951938ba2"
+  },
+  "b88r42wq.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444"
+  },
+  "b88r42wq.tasks.pen_source": {
+    "file": "capabilities/control/pen_source.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/pen_source.py",
+    "package": false,
+    "sha256": "0d95758d4cc63fe4b2f0a627805641b8e806767f57a985edeb318c0f5aa10b34"
+  },
+  "b88r42wq.tasks.pen_holder_visibility": {
+    "file": "capabilities/control/pen_holder_visibility.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/pen_holder_visibility.py",
+    "package": false,
+    "sha256": "71ebee09f977538522553b44dea99e5febd49d8e864d389b98cb5439587742dc"
+  },
+  "b88r42wq.visibility": {
+    "file": "capabilities/control/visibility.py",
+    "resource": "resources/fill_egg_holder/coap/visibility.py",
+    "package": false,
+    "sha256": "7a81173b85ce4c6ad88b14b60df57e5f9bcc42282dc258e03f290ade1af4cf0f"
+  },
+  "b88r42wq.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "e68d1c7eb4e7200ecd831214f7d206ced1e2dfc34d739fe00ae6561969f0ddca"
+  },
+  "b88r42wq.tasks.egg_source": {
+    "file": "capabilities/control/egg_source.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_source.py",
+    "package": false,
+    "sha256": "af39e7f3d18806667356bd9fbd7f3f80f824131e315e2155e8f36a9f8e4b0da7"
+  },
+  "b88r42wq.tasks.egg_model_fit": {
+    "file": "capabilities/control/egg_model_fit.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_model_fit.py",
+    "package": false,
+    "sha256": "b79b2b62c2c354377ff308ca5d431f5963b5589b966af62824fe27715d928443"
+  },
+  "b88r42wq.tasks.garment": {
+    "file": "capabilities/control/garment.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/garment.py",
+    "package": false,
+    "sha256": "45033cabd73d747e5daa66bdb0739736f45fd0b2905f3c7c53fd114e24dc7f5e"
+  },
+  "b88r42wq.tasks.garment_schedule": {
+    "file": "capabilities/control/garment_schedule.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/garment_schedule.py",
+    "package": false,
+    "sha256": "34e34c03365e6e41b88ba1d2d27d2152177e2b95cb1a17cfaef42120467ec95a"
+  },
+  "b88r42wq.manipulation": {
+    "file": "capabilities/control/manipulation.py",
+    "resource": "resources/fill_egg_holder/coap/manipulation.py",
+    "package": false,
+    "sha256": "d4720b66e4935684c68b60fe6d31e27aae41c8177044060338b2df4c77e5a18b"
+  },
+  "b88r42wq.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/fill_egg_holder/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c"
+  },
+  "b88r42wq.tasks.pen_holder_support": {
+    "file": "capabilities/control/pen_holder_support.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/pen_holder_support.py",
+    "package": false,
+    "sha256": "be77d159476de1e3497d52dad418c2a31e2932046d25343d5fe5885003a20dd6"
+  },
+  "b88r42wq.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/fill_egg_holder/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0"
+  },
+  "b88r42wq.context": {
+    "file": "capabilities/control/context.py",
+    "resource": "resources/fill_egg_holder/coap/context.py",
+    "package": false,
+    "sha256": "98e63f6fb900cc8a8ce5972e81aecce60c8a40d7ce477aa961b0ab56e766b314"
+  },
+  "b88r42wq.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/fill_egg_holder/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3"
+  },
+  "b88r42wq.perception": {
+    "file": "capabilities/perception/perception.py",
+    "resource": "resources/fill_egg_holder/coap/perception.py",
+    "package": false,
+    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c"
+  },
+  "b88r42wq.tasks.egg_lid": {
+    "file": "capabilities/control/egg_lid.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_lid.py",
+    "package": false,
+    "sha256": "5454a47c51d58b5262dc24d2e5184c805726bdcd78685b90a9593e21c54b7273"
+  },
+  "b88r42wq.tasks.egg_geometry": {
+    "file": "capabilities/geometry/egg_geometry.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_geometry.py",
+    "package": false,
+    "sha256": "f4805dc3307bee552e48edbfbb78d73a9f5dce70fe71e900a6483bfbc230b6db"
+  },
+  "b88r42wq.tasks.egg_single_arm": {
+    "file": "capabilities/control/egg_single_arm.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_single_arm.py",
+    "package": false,
+    "sha256": "78897d3baaddaf3117f005ac214043315eb3dc275f5523633032f504a08302ed"
+  },
+  "b88r42wq.tasks.egg_initial": {
+    "file": "capabilities/control/egg_initial.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_initial.py",
+    "package": false,
+    "sha256": "0df7a6fdbe05a06275d3e5e30070149a0eb9fbafbb3ed767f89ef84411a05012"
+  },
+  "b88r42wq.tasks.egg_policy": {
+    "file": "capabilities/control/egg_policy.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_policy.py",
+    "package": false,
+    "sha256": "6ea1070b7738facafca23eae527bd4637290bf1921519e2b4bf3afced9682020"
+  },
+  "b88r42wq.tasks.egg_carry": {
+    "file": "capabilities/control/egg_carry.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_carry.py",
+    "package": false,
+    "sha256": "bccfd914c65f1c5aaac9f474d6194d8509e71bf12fcdc0ff7f6318e574d787c2"
+  },
+  "b88r42wq.tasks.egg_motion": {
+    "file": "capabilities/motion/egg_motion.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/egg_motion.py",
+    "package": false,
+    "sha256": "fd934dcd86a28a534bb2be32f7b9cf39fdfb0ba054207789dbbb9d35309ef54a"
+  },
+  "b88r42wq.tasks.finite_ik": {
+    "file": "capabilities/motion/finite_ik.py",
+    "resource": "resources/fill_egg_holder/coap/tasks/finite_ik.py",
+    "package": false,
+    "sha256": "4c08657fdb23733618da0f9ed204882fd4ef8bfaf741f28b53729a59c8836480"
+  },
+  "b88r42wq.policy": {
+    "file": "capabilities/control/policy.py",
+    "resource": "resources/fill_egg_holder/coap/policy.py",
+    "package": false,
+    "sha256": "0186af5c966d7566a7ba0c3a4509a1ce692e1d64e72d6ee274ee2af71a1f1819"
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy.py",
+    "resource": "resources/fill_egg_holder/deploy.py",
+    "package": false,
+    "sha256": "6d1ae0060344845b8dbc61753f18817fdc998d6bdaeccbbaeee1444a3043de34"
+  },
+  "b88r42wq.lxm6wuec_native": {
+    "file": "capabilities/control/native_native.py",
+    "resource": "resources/fill_egg_holder/coap/lxm6wuec_native.py",
+    "package": false,
+    "sha256": "b4ea67b5ec06d871996bbe85344e6242be91c972812c2dd0f4ddfeb317b9a341"
+  },
+  "b88r42wq.lxm6wuec_bridge": {
+    "file": "capabilities/control/native_bridge.py",
+    "resource": "resources/fill_egg_holder/coap/lxm6wuec_bridge.py",
+    "package": false,
+    "sha256": "2bcbdae44578eee4e542f18417aaa0cad5dfd78c2df8cfd43e1d8ad3283670c6"
+  },
+  "b88r42wq.native_action_stream": {
+    "file": "capabilities/control/native_action_stream.py",
+    "resource": "resources/fill_egg_holder/coap/native_action_stream.py",
+    "package": false,
+    "sha256": "9c2e212c0a94f0343aad45e4db8fb08b75952eaeeab0729febd514ea0d0373c3"
+  },
+  "b88r42wq.report": {
+    "file": "capabilities/observation/report.py",
+    "resource": "resources/fill_egg_holder/coap/report.py",
+    "package": false,
+    "sha256": "4e8c92b91b7e3fddd2bf2cb0be48a4eb8a6ba5d0911125fb0be32f24fad23845"
+  },
+  "b88r42wq.audit": {
+    "file": "capabilities/observation/audit.py",
+    "resource": "resources/fill_egg_holder/coap/audit.py",
+    "package": false,
+    "sha256": "7cd7da9749413800248d6390d0db42c4c8b757458e2d2f2f100496cdc468fab0"
+  },
+  "model": {
+    "file": "capabilities/control/model.py",
+    "resource": "resources/fill_egg_holder/model.py",
+    "package": false,
+    "sha256": "81a5f93c57069743b3a195059975a1cdeb4bdba1e19839450398f501ce50b1a2"
+  }
+}

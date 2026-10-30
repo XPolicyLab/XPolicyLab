@@ -1,0 +1,17 @@
+{
+  "source": "RoboDojo/Assets/Object/RoboDojo/Rigid/egg/00000/object.usdz",
+  "public_asset_sha256": "867733884c64ee06b16374c7228e328824a16538d780f2ed2f61b889a8fc872d",
+  "hull_sha256": "bdedb709c95d901cb2893a048d160a864a78a4dd430b5fb308fb862af963edeb",
+  "units": "m",
+  "bounds_center": [
+    1.8655071680778734e-05,
+    -4.6566128730773926e-09,
+    -0.00099264676420973
+  ],
+  "dimensions": [
+    0.04113849066197872,
+    0.04215876944363117,
+    0.05761402100324631
+  ],
+  "use": "Static public shape for RGB silhouette fitting; no episode pose, layout, or reward data"
+}

@@ -1,0 +1,368 @@
+{
+  "coap.tasks.sorting_r10_e": {
+    "file": "capabilities/control/sorting_e.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r10_e.py",
+    "package": false,
+    "sha256": "49ab43a010ba2a9b180e56d4f1bd5d7a9e8a52eb70871e6f4066649bf0a8f34c"
+  },
+  "coap.tasks.sorting_phone_side_role": {
+    "file": "capabilities/control/sorting_phone_side_role.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_phone_side_role.py",
+    "package": false,
+    "sha256": "33325693acb0e89a683fe923c01b61da68577669994fdae2e24612688e796f02"
+  },
+  "coap.tasks.sorting_paired_car_semantics": {
+    "file": "capabilities/perception/sorting_paired_car_semantics.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_paired_car_semantics.py",
+    "package": false,
+    "sha256": "e82b962b59347799301dfc5a6b9d44479bdc7483098467bcba983d2fe923d010"
+  },
+  "coap.tasks.sorting_r03_dino": {
+    "file": "capabilities/control/sorting_dino.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r03_dino.py",
+    "package": false,
+    "sha256": "d553a27b4dc24746e4556d22dd016564e0dc3b79a9daaaae265d469025f07441"
+  },
+  "coap.tasks.sorting_r01_d": {
+    "file": "capabilities/control/sorting_d.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r01_d.py",
+    "package": false,
+    "sha256": "dc11b87d1e005db82ffba012971ad47c1fdc89718c3e371d7c9a5d8e7e47249a"
+  },
+  "coap.tasks.memory_initial": {
+    "file": "capabilities/planning/memory_initial.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_initial.py",
+    "package": false,
+    "sha256": "7e34b40b2af7fb627fd6c094981686fb4aa6a1cf2e9a3d4c972d4ec9422a69ba"
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444"
+  },
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/imitate_sorting_sequence/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "coap.tasks.memory": {
+    "file": "capabilities/planning/memory.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory.py",
+    "package": false,
+    "sha256": "652e0a63f3157bbbf19087c6d197f898e71918eed95a29b1086fc9a564169a3c"
+  },
+  "coap.tasks.memory_geometry": {
+    "file": "capabilities/geometry/memory_geometry.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_geometry.py",
+    "package": false,
+    "sha256": "94933d41c2f465141798ac66ea4f92f6c4a03997e598d165b8d14bc994665467"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/model.py",
+    "package": false,
+    "sha256": "cfbd21dcd3e33a9133b5e607e6d07de7f5732478e2969e79e0d5cdc5cc340692"
+  },
+  "coap.physicalrsi_native": {
+    "file": "capabilities/control/native_native_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/physicalrsi_native.py",
+    "package": false,
+    "sha256": "e549187d60f3108cb5a8216db8936ced17449aa402804a2ec593be7cb9efdfb8"
+  },
+  "coap.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/imitate_sorting_sequence/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/imitate_sorting_sequence/coap/kinematics.py",
+    "package": false,
+    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion.py",
+    "resource": "resources/imitate_sorting_sequence/coap/motion.py",
+    "package": false,
+    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290"
+  },
+  "coap.public_mesh": {
+    "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/public_mesh.py",
+    "package": false,
+    "sha256": "dc43e2e4032ec4612a4cbcfdcc95b5ec30e59c0d610665d4cd27de8ace4e34c1"
+  },
+  "coap.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "ee18f724e4171ce07efa790296c7e550d5b431d7065417e0cec0ca7b31750193"
+  },
+  "coap.physicalrsi_bridge": {
+    "file": "capabilities/control/native_bridge_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/physicalrsi_bridge.py",
+    "package": false,
+    "sha256": "ca19a7367c0eea130e916874f04eb16a9da59af9e854b28b189046aa20b58e5a"
+  },
+  "coap.native_action_stream": {
+    "file": "capabilities/control/native_action_stream_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/native_action_stream.py",
+    "package": false,
+    "sha256": "990ddd545faed68e026eb49999a697e29d9c023674f000150ea8d9d6d8e0f117"
+  },
+  "coap.tasks.memory_motion": {
+    "file": "capabilities/motion/memory_motion.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_motion.py",
+    "package": false,
+    "sha256": "e01c31a87606ca2bed84d0c88aa6a0d47c25c8043c170d128034bb3002ec62eb"
+  },
+  "coap.tasks.memory_timing": {
+    "file": "capabilities/planning/memory_timing.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_timing.py",
+    "package": false,
+    "sha256": "1915db9209814b6c701c9db5218db989db4cc2006484372d462cebb8a0c8c289"
+  },
+  "coap.tasks.memory_routes": {
+    "file": "capabilities/planning/memory_routes.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_routes.py",
+    "package": false,
+    "sha256": "d2b6aa48f06258d6f629291741c8163edf398f737c46445471ad1a9273434274"
+  },
+  "coap.tasks.memory_unchecked": {
+    "file": "capabilities/planning/memory_unchecked.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_unchecked.py",
+    "package": false,
+    "sha256": "145ff9ec6df5a0e9aa1bfe4480db646abc6adc8825115a36c3de9053cbd52acb"
+  },
+  "coap.tasks.memory_identity": {
+    "file": "capabilities/planning/memory_identity.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_identity.py",
+    "package": false,
+    "sha256": "c077616f31e236701ed7af79460f9c3d0b24ab0c37be4a37c81bdf6d6cecd3ad"
+  },
+  "coap.tasks.finite_ik": {
+    "file": "capabilities/motion/finite_ik_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/finite_ik.py",
+    "package": false,
+    "sha256": "b6c70bf4c726d580c7628b372a672a443245d2d034640ae14b6ac7beae219941"
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/context.py",
+    "package": false,
+    "sha256": "e43c0bd2981f05158877ce9d222c7bebaef9732c57ab5cf7bacd61ad2a95c6f2"
+  },
+  "coap.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/imitate_sorting_sequence/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0"
+  },
+  "coap.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "5076be430569c49a885df6fafbbcb8aa6aff0091a5376f5285d431f9de491345"
+  },
+  "coap.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/imitate_sorting_sequence/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3"
+  },
+  "coap.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/imitate_sorting_sequence/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception.py",
+    "resource": "resources/imitate_sorting_sequence/coap/perception.py",
+    "package": false,
+    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c"
+  },
+  "coap.tasks.memory_approach": {
+    "file": "capabilities/planning/memory_approach.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_approach.py",
+    "package": false,
+    "sha256": "3649463b799926fa945b2b09437f7cbb64224d55e3a80c0d900eabaf7296e2e5"
+  },
+  "coap.tasks.memory_toy": {
+    "file": "capabilities/planning/memory_toy.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_toy.py",
+    "package": false,
+    "sha256": "3d3c2b9dc59173cf4865badbb24b43667d392d65fcefdb2f9760dc085c3d1966"
+  },
+  "coap.tasks.memory_queue": {
+    "file": "capabilities/planning/memory_queue.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_queue.py",
+    "package": false,
+    "sha256": "517a6341078e20c0ab09c724572c2a498a0519e7cc0d4d0191a0eaa2579c777e"
+  },
+  "coap.tasks.memory_semantics": {
+    "file": "capabilities/perception/memory_semantics.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_semantics.py",
+    "package": false,
+    "sha256": "928d8d2636faa08431141a2b0799b49a739d279a57f9211ce2645a23fb82acdf"
+  },
+  "coap.tasks.memory_protocol": {
+    "file": "capabilities/planning/memory_protocol.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_protocol.py",
+    "package": false,
+    "sha256": "998ef2f811be3a218ac32245b650cf70bca935df0cae2b93061c90d63bcb5651"
+  },
+  "coap.tasks.memory_sequence": {
+    "file": "capabilities/planning/memory_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/memory_sequence.py",
+    "package": false,
+    "sha256": "41bbbf5636491d7da08ff7f1fa4193e28cf79f6d3e88a0596f098e1a5531401c"
+  },
+  "coap.manipulation": {
+    "file": "capabilities/control/manipulation.py",
+    "resource": "resources/imitate_sorting_sequence/coap/manipulation.py",
+    "package": false,
+    "sha256": "d4720b66e4935684c68b60fe6d31e27aae41c8177044060338b2df4c77e5a18b"
+  },
+  "coap.tasks.sorting_r03_views": {
+    "file": "capabilities/control/sorting_views.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r03_views.py",
+    "package": false,
+    "sha256": "cbcb7713ed5b60aa181dd84ee0ce19a2566e206c51e3363a6fdea9e0b53f7a8d"
+  },
+  "coap.tasks.sorting_demo_color_bridge": {
+    "file": "capabilities/control/sorting_demo_color_bridge.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_demo_color_bridge.py",
+    "package": false,
+    "sha256": "90711902bcd819c9f7d7a08c1d6dad423dcf3084bab7b006b578b6feacb42bd9"
+  },
+  "coap.tasks.sorting_demo_fragments": {
+    "file": "capabilities/control/sorting_demo_fragments.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_demo_fragments.py",
+    "package": false,
+    "sha256": "4a68ef45f04cb3cf6e73740630377a540a23bbdc6e3050f118648229a2c3c1a7"
+  },
+  "coap.tasks.sorting_demo_boundary_fragments": {
+    "file": "capabilities/control/sorting_demo_boundary_fragments.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_demo_boundary_fragments.py",
+    "package": false,
+    "sha256": "45d1ccb63ebb2d596b8b00c20142e74f7d06d2c2bdd18f12d8f4f0670ee66f07"
+  },
+  "coap.tasks.sorting_car_route_alignment": {
+    "file": "capabilities/control/sorting_car_route_alignment.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_car_route_alignment.py",
+    "package": false,
+    "sha256": "5c56a1bc15234d6cb24b627bfd05b985f76a79b44da82b39cb77e566592c316e"
+  },
+  "coap.tasks.sorting_r04_bridge": {
+    "file": "capabilities/control/sorting_bridge.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r04_bridge.py",
+    "package": false,
+    "sha256": "324fb8f1291c243b953c55ab90c3b79fc7777d190641e7658c9426bced0f1f7c"
+  },
+  "coap.tasks.sorting_r09_c": {
+    "file": "capabilities/control/sorting_c.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r09_c.py",
+    "package": false,
+    "sha256": "ea9f3bdeff518f4bca7488093940b5294d2d0f32b92bfcf8445d8ac74a3b56ea"
+  },
+  "coap.tasks.sorting_car_loaded_timing": {
+    "file": "capabilities/control/sorting_car_loaded_timing.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_car_loaded_timing.py",
+    "package": false,
+    "sha256": "62b54d02311043b911bcd7b5b829b4ac3529e9e4c74e24214e39d7d185bd1f82"
+  },
+  "coap.tasks.sorting_r08_f": {
+    "file": "capabilities/control/sorting_f.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r08_f.py",
+    "package": false,
+    "sha256": "ce894511735dd0b48d609974b8387294c92cebd7ea837123e549b751ed5b94fc"
+  },
+  "coap.tasks.sorting_initial_color": {
+    "file": "capabilities/control/sorting_initial_color.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_initial_color.py",
+    "package": false,
+    "sha256": "1efc0553d4a36db7c94f20121c42a6e302114309ccdbc89b0cef1cfff022ec9a"
+  },
+  "coap.tasks.sorting_r07_d": {
+    "file": "capabilities/control/sorting_d_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r07_d.py",
+    "package": false,
+    "sha256": "7392365c10d426bf355bf4c813bbd3064fd6d13c14246c388fbd39dee4383964"
+  },
+  "coap.tasks.sorting_toy_loaded_timing": {
+    "file": "capabilities/control/sorting_toy_loaded_timing.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_toy_loaded_timing.py",
+    "package": false,
+    "sha256": "fc3caf3e7c27e015d5416af75c15b9fdde5d34797f4f97a3d586b9fced377bfb"
+  },
+  "coap.tasks.sorting_continuous_heading": {
+    "file": "capabilities/control/sorting_continuous_heading.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_continuous_heading.py",
+    "package": false,
+    "sha256": "feb0f121fb95aa7b3ef70cfebb83df2c024d9524fa5bb43d2da7aebfbf1a52a3"
+  },
+  "coap.tasks.sorting_current_car_body_fallback": {
+    "file": "capabilities/control/sorting_current_car_body_fallback.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_current_car_body_fallback.py",
+    "package": false,
+    "sha256": "1c1b53a7993c8dd3d1dc5f20351b81d383513c50a8840a5b4163c32c5e0be76b"
+  },
+  "coap.tasks.sorting_r06_watch_ranking": {
+    "file": "capabilities/control/sorting_watch_ranking.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r06_watch_ranking.py",
+    "package": false,
+    "sha256": "2d2b740610aa2cb788a463b00cdc41d0c7f9cb6c40243299de26a06e60abb6b2"
+  },
+  "coap.tasks.sorting_r04_f": {
+    "file": "capabilities/control/sorting_f_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r04_f.py",
+    "package": false,
+    "sha256": "6209c1745fe64d2c6f108530861617abdc8e6c916a28c9d5589e11498155235c"
+  },
+  "coap.tasks.sorting_r04_d": {
+    "file": "capabilities/control/sorting_d_for_imitate_sorting_sequence_helper_2.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r04_d.py",
+    "package": false,
+    "sha256": "d4c460cb81a097863b1df20a1e1a8becd1e5ea20f40319e42790646a88d0ddd9"
+  },
+  "coap.tasks.sorting_r04_wrist": {
+    "file": "capabilities/control/sorting_wrist.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_r04_wrist.py",
+    "package": false,
+    "sha256": "564dd3d9c978df6bbc81ff391fac251a87bb917e1621c934ed3c447cd573626e"
+  },
+  "coap.tasks.sorting_toy_onepixel": {
+    "file": "capabilities/control/sorting_toy_onepixel.py",
+    "resource": "resources/imitate_sorting_sequence/coap/tasks/sorting_toy_onepixel.py",
+    "package": false,
+    "sha256": "7f855e334b7a450be2153fcc876508d7bff7a936a385a9199174ea757351ce90"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/policy.py",
+    "package": false,
+    "sha256": "76ac8bfd2d0f13cd637c3ea73608584418006c35aa0596642eb6c16b798658e7"
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/deploy.py",
+    "package": false,
+    "sha256": "fc406ba88b4201502a41b1eb3c7e829122b720235dd767ba22f098163ec47000"
+  },
+  "coap.report": {
+    "file": "capabilities/observation/report_for_imitate_sorting_sequence.py",
+    "resource": "resources/imitate_sorting_sequence/coap/report.py",
+    "package": false,
+    "sha256": "809383609f98e50fb9ffd6c92cdb51bb1941e0e2e94ce3907ffb4dc83f8b851d"
+  },
+  "coap.audit": {
+    "file": "capabilities/observation/audit.py",
+    "resource": "resources/imitate_sorting_sequence/coap/audit.py",
+    "package": false,
+    "sha256": "7cd7da9749413800248d6390d0db42c4c8b757458e2d2f2f100496cdc468fab0"
+  }
+}

@@ -1,0 +1,7 @@
+Focus-VLWA
+Copyright 2026 FocusEmbodied contributors
+
+Portions of this software are derived from the openpi project and the Big Vision Gemma implementation, licensed under
+the Apache License, Version 2.0. The versioned transformers compatibility files contain portions derived from Hugging
+Face Transformers, licensed under the Apache License, Version 2.0. Gemma-derived components are additionally governed
+by the terms in LICENSE_GEMMA.txt.

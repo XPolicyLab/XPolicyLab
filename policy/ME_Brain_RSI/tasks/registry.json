@@ -1,0 +1,603 @@
+{
+  "schema": 2,
+  "tasks": {
+    "fill_egg_holder": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "B88R42WQ",
+      "modules": "tasks/fill_egg_holder/modules.json"
+    },
+    "imitate_sorting_sequence": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/imitate_sorting_sequence/modules.json"
+    },
+    "insert_key": {
+      "action_type": "ee",
+      "eval_batch": true,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "native",
+      "model": "insert_key.model:Model",
+      "deploy": "insert_key.deploy",
+      "constructor": "empty",
+      "defaults": {
+        "ckpt_name": "fe01638a0e5da7c6b005ba2071e0c20d0e7593fbbc89af049cdfc8865fc954d3",
+        "policy_name": "rdj_rgb",
+        "protocol": "ws",
+        "task_name": "insert_key",
+        "env_cfg_type": "arx_x5",
+        "action_type": "ee",
+        "eval_batch": true,
+        "seed": 0,
+        "bench_name": "RoboDojo"
+      },
+      "modules": "tasks/insert_key/modules.json"
+    },
+    "insert_tubes": {
+      "action_type": "joint",
+      "eval_batch": true,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "native",
+      "model": "rdj_rgb_adapters.insert_tubes:Model",
+      "deploy": "rdj_insert_policy.deploy",
+      "constructor": "config",
+      "defaults": {
+        "ckpt_name": "2beff0202299d1db23c69c7ca60ef8882b74c578bf8b0514a7f15b18fbde9e02",
+        "policy_name": "rdj_rgb",
+        "protocol": "ws",
+        "task_name": "insert_tubes",
+        "env_cfg_type": "arx_x5",
+        "action_type": "joint",
+        "eval_batch": true,
+        "seed": 0,
+        "bench_name": "RoboDojo"
+      },
+      "modules": "tasks/insert_tubes/modules.json"
+    },
+    "make_kong": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": false,
+      "environment_prefix": "B88R42WQ",
+      "modules": "tasks/make_kong/modules.json"
+    },
+    "play_tic_tac_toe": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": false,
+      "environment_prefix": "B88R42WQ",
+      "modules": "tasks/play_tic_tac_toe/modules.json"
+    },
+    "match_and_pick_from_conveyor": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": false,
+      "environment_prefix": "B88R42WQ",
+      "modules": "tasks/match_and_pick_from_conveyor/modules.json"
+    },
+    "play_stacking_toy": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": true,
+      "environment_prefix": "B88R42WQ",
+      "modules": "tasks/play_stacking_toy/modules.json"
+    },
+    "press_by_number": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.XQAUX8Z9.model:Model",
+      "deploy": "adapters.XQAUX8Z9.deploy",
+      "calibrated": true,
+      "modules": "tasks/press_by_number/modules.json"
+    },
+    "push_T": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.XQAUX8Z9.model:Model",
+      "deploy": "adapters.XQAUX8Z9.deploy",
+      "calibrated": true,
+      "modules": "tasks/push_T/modules.json"
+    },
+    "play_Xylophone": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/play_Xylophone/modules.json"
+    },
+    "plug_in_charger": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapter.model:Model",
+      "deploy": "adapter.deploy",
+      "numeric_ik": false,
+      "calibrated": true,
+      "modules": "tasks/plug_in_charger/modules.json"
+    },
+    "sort_nesting_dolls_by_size": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapter.model:Model",
+      "deploy": "adapter.deploy",
+      "numeric_ik": false,
+      "calibrated": true,
+      "modules": "tasks/sort_nesting_dolls_by_size/modules.json"
+    },
+    "swap_blocks": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "step",
+      "model": "policy.physicalrsi_swap_blocks_v1_21.adapter:create_policy",
+      "deploy": null,
+      "modules": "tasks/swap_blocks/modules.json"
+    },
+    "swap_T": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "step",
+      "model": "policy.lxm6wuec_swap_t.adapter:create_policy",
+      "deploy": null,
+      "modules": "tasks/swap_T/modules.json"
+    },
+    "stack_bowls_random": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "step",
+      "model": "policy.stack_bowls_rgb_v7.adapter:create_policy",
+      "deploy": null,
+      "modules": "tasks/stack_bowls_random/modules.json"
+    },
+    "push_T_random": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/push_T_random/modules.json"
+    },
+    "pack_objects_into_box": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/pack_objects_into_box/modules.json"
+    },
+    "pack_objects_into_box_random": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/pack_objects_into_box_random/modules.json"
+    },
+    "fold_clothes": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/fold_clothes/modules.json"
+    },
+    "fold_clothes_random": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/fold_clothes_random/modules.json"
+    },
+    "hang_mugs": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/hang_mugs/modules.json"
+    },
+    "hang_mugs_random": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/hang_mugs_random/modules.json"
+    },
+    "pour_liquid_into_cup": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/pour_liquid_into_cup/modules.json"
+    },
+    "pour_liquid_into_cup_random": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/pour_liquid_into_cup_random/modules.json"
+    },
+    "make_toast": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/make_toast/modules.json"
+    },
+    "make_toast_random": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "model:Model",
+      "deploy": null,
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/make_toast_random/modules.json"
+    },
+    "arrange_largest_number": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/arrange_largest_number/modules.json"
+    },
+    "arrange_largest_number_random": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/arrange_largest_number_random/modules.json"
+    },
+    "stack_blocks_random": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "step",
+      "model": "policy.stack_blocks_rgb_v6.adapter:create_policy",
+      "deploy": null,
+      "modules": "tasks/stack_blocks_random/modules.json"
+    },
+    "classify_objects": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/classify_objects/modules.json"
+    },
+    "align_blocks": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/align_blocks/modules.json"
+    },
+    "solve_equation": {
+      "action_type": "joint",
+      "eval_batch": true,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "equation",
+      "model": "rdj_equation.model:Model",
+      "deploy": null,
+      "service": "rdj_equation.perception_services.perception.sam3_server",
+      "dependency_paths": [
+        "{equation_assets_root}/dependencies/sam3/aabc0fda2f22118a/sam3",
+        "{equation_assets_root}/dependencies/curobo/9077c9afff1c3fda/curobo",
+        "{equation_assets_root}/dependencies/curobo/9077c9afff1c3fda",
+        "{equation_assets_root}/dependencies/sam3/aabc0fda2f22118a"
+      ],
+      "package_resource": "{equation_assets_root}/resources/68f08b08211ab2e3",
+      "modules": "tasks/solve_equation/modules.json"
+    },
+    "stack_blocks_by_language": {
+      "action_type": "joint",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "step",
+      "model": "policy.stack_blocks_lang_v5.adapter:create_policy",
+      "deploy": null,
+      "modules": "tasks/stack_blocks_by_language/modules.json"
+    },
+    "general_pickup": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/general_pickup/modules.json"
+    },
+    "classify_objects_by_language": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/classify_objects_by_language/modules.json"
+    },
+    "pick_from_conveyor_by_image": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapters.COAP_ZYR.model:Model",
+      "deploy": "adapters.COAP_ZYR.deploy",
+      "calibrated": true,
+      "modules": "tasks/pick_from_conveyor_by_image/modules.json"
+    },
+    "store_tools_in_toolbox": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/store_tools_in_toolbox/modules.json"
+    },
+    "pour_by_language": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "generator",
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/pour_by_language/modules.json"
+    },
+    "stack_bowls": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "sweep_blocks": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "sweep_blocks_random": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "store_laptop_and_headphones": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "store_laptop_and_headphones_random": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "stack_blocks": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "fasten_screws": {
+      "action_type": "joint",
+      "eval_batch": true,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "native",
+      "model": "rdj_v1_fasten_screws.model:Model",
+      "deploy": "screws_deploy",
+      "numeric_ik": false,
+      "modules": "tasks/fasten_screws/modules.json",
+      "request_timeout_s": 1800
+    },
+    "pour_balls_into_vase": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "deposit_coin": {
+      "action_type": "joint",
+      "eval_batch": true,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "native",
+      "model": "rdj_v1_deposit_coin.model:Model",
+      "deploy": "coin_deploy",
+      "numeric_ik": false,
+      "modules": "tasks/deposit_coin/modules.json",
+      "request_timeout_s": 1800
+    },
+    "build_tower": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapter.model:Model",
+      "deploy": "adapter.deploy",
+      "numeric_ik": false,
+      "calibrated": true,
+      "modules": "tasks/build_tower/modules.json"
+    },
+    "put_bottles_into_dustbin": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "fill_pen_holder": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "organize_table": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "cover_blocks": {
+      "driver": "vla",
+      "action_type": "joint",
+      "eval_batch": true,
+      "max_envs": null,
+      "aliases": []
+    },
+    "sort_nesting_dolls_by_size_random": {
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapter.model:Model",
+      "deploy": "adapter.deploy",
+      "numeric_ik": false,
+      "calibrated": true,
+      "modules": "tasks/sort_nesting_dolls_by_size_random/modules.json"
+    }
+  }
+}

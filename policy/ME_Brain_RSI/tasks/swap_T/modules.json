@@ -1,0 +1,74 @@
+{
+  "policy.lxm6wuec_swap_t.adapter": {
+    "file": "capabilities/control/adapter_for_swap_t.py",
+    "resource": "resources/swap_T/coap/adapter.py",
+    "package": false,
+    "sha256": "be9ca7beaae01c3f957d0df1b5e34911961bb52cf92456d59afcad3d8bdd1b35"
+  },
+  "policy.lxm6wuec_swap_t.grasp_rgb": {
+    "file": "capabilities/perception/grasp_rgb.py",
+    "resource": "resources/swap_T/coap/grasp_rgb.py",
+    "package": false,
+    "sha256": "dca7c8fc46c9f9e2971ce3eb8acaa21ac2e8966a9534ef7e86888a9835895591"
+  },
+  "policy.lxm6wuec_swap_t.calibration": {
+    "file": "capabilities/control/calibration_for_swap_t.py",
+    "resource": "resources/swap_T/coap/calibration.py",
+    "package": false,
+    "sha256": "43e32ee6c80e0d3de75c6e49de200fd759dc84b2616d457b401e49cee1bfb131"
+  },
+  "policy.lxm6wuec_swap_t": {
+    "file": "capabilities/control/native_swap_t.py",
+    "resource": "resources/swap_T/coap/__init__.py",
+    "package": true,
+    "sha256": "0a46c42da76b0c7c211ba618d9da335ff90139e09324502b1282e87e725c71c6"
+  },
+  "policy": {
+    "file": "capabilities/control/policy_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/swap_T/coap/shared/__init__.py",
+    "package": true,
+    "sha256": "aa16f70a86af54190494ac1386265c926f8f0ca8775ef8a900189f5df525d2e5"
+  },
+  "policy.lxm6wuec_swap_t.model": {
+    "file": "capabilities/control/model_for_swap_t.py",
+    "resource": "resources/swap_T/coap/model.py",
+    "package": false,
+    "sha256": "04ffd3e6312be3369cd27f13d71ff8c0b00fb2a2f45d10e7935e9e8caff5e31a"
+  },
+  "policy.lxm6wuec_swap_t.collision_gate": {
+    "file": "capabilities/motion/collision_gate_for_swap_t.py",
+    "resource": "resources/swap_T/coap/collision_gate.py",
+    "package": false,
+    "sha256": "be9db89d509cd09b64f14b01e12808378be65e8aab4c943f2773c9c3c0781848"
+  },
+  "policy.lxm6wuec_swap_t.skill_choices": {
+    "file": "capabilities/planning/skill_choices_for_swap_t.py",
+    "resource": "resources/swap_T/coap/skill_choices.py",
+    "package": false,
+    "sha256": "4990c00b6ec2c0937af3529eca62381871fa533d29ba777115f0e34ae35bc68d"
+  },
+  "policy.x5_kinematics": {
+    "file": "capabilities/motion/x5_kinematics.py",
+    "resource": "resources/swap_T/coap/shared/x5_kinematics.py",
+    "package": false,
+    "sha256": "11f11f235b78440ab9d6afd292a72cb07a1af702667724e772da4ce16937d229"
+  },
+  "policy.lxm6wuec_swap_t.skill_choice_targets": {
+    "file": "capabilities/planning/skill_choice_targets.py",
+    "resource": "resources/swap_T/coap/skill_choice_targets.py",
+    "package": false,
+    "sha256": "81e32beaef1b4344089a6490a2359dcfd14b9a8be3e0dbb8a312602f949c1a93"
+  },
+  "policy.lxm6wuec_swap_t.core": {
+    "file": "capabilities/control/core_for_swap_t.py",
+    "resource": "resources/swap_T/coap/core.py",
+    "package": false,
+    "sha256": "c904e6b8c9af4d925bd18ebe6ef022154890338abed1becf233710b8107d890e"
+  },
+  "policy.lxm6wuec_swap_t.geometry": {
+    "file": "capabilities/geometry/geometry_for_swap_t.py",
+    "resource": "resources/swap_T/coap/geometry.py",
+    "package": false,
+    "sha256": "cbb8b582c53a05b76210da85ebb7eddd399ed6b6344e226960aad759f6b4c4cd"
+  }
+}

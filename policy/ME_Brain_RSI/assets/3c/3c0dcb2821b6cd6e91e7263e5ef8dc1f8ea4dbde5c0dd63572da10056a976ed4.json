@@ -1,0 +1,651 @@
+{
+  "schema": "coap.public_native_mug_thread/v1",
+  "peg": {
+    "public_endpoint_ring_radius_m": 0.0035009842758602213,
+    "scale_max": 1.1,
+    "bounded_peg_radius_m": 0.003853082703446244,
+    "source_sha256": "fdb08a057fccefa627f8e896b94ac616c3b747236d1eebef94bf15e2901764b5",
+    "derivation": "Complete native positive-X lower-peg end ring, PCA plane, maximum radial distance; registration axis mismatch remains task-local path evidence."
+  },
+  "models": {
+    "10": {
+      "thread_local": [
+        0.027149999514222145,
+        9.99999901978299e-05,
+        0.003693076316267252
+      ],
+      "thread_frames": [
+        [
+          0.027149999514222145,
+          9.99999901978299e-05,
+          0.003693076316267252,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.027149999514222145,
+          9.99999901978299e-05,
+          0.003693076316267252,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "functional_handle_frames": [
+        [
+          0.045,
+          0.0,
+          -0.0,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.045,
+          0.0,
+          -0.0,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "rejected_functional_frames": [],
+      "handle_grasp_local": [
+        0.045,
+        0.0,
+        -0.0
+      ],
+      "thread_geometry": {
+        "accepted": true,
+        "private_task_state_used": false,
+        "native_central_hole_margin_m": 0.01145000010728836,
+        "all_surface_axis_channel_clearance_lower_bound_m": 0.011403846398721761,
+        "peg_radius_bound_m": 0.003853082703446244,
+        "required_radial_gap_m": 0.001,
+        "functional_to_thread_distance_m": 0.018228311222328944,
+        "functional_success_tolerance_m": 0.045,
+        "axis_channel_derivation": "Minimum projected XZ distance across every transformed native mesh triangle, with Y aperture normal",
+        "complete_native_triangles_checked": 328262,
+        "surface_sampling_margin_m": 0.0,
+        "mesh_member_sha256": "c2fe3f475163bbe8a4b2d5853986d94a022a15ec0fa9e6b846e88fd0970f4394",
+        "thread_axis_local": [
+          0,
+          1,
+          0
+        ],
+        "entry_audit": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02818687806812031,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.014359911978244787,
+                0.07535991266369822
+              ],
+              [
+                0.04440158280171454,
+                0.08175158175267279
+              ],
+              [
+                -0.012569997012615214,
+                0.07343000497668982
+              ]
+            ]
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.028280208191399047,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.014359854236245154,
+                0.0753598549216986
+              ],
+              [
+                -0.08175558224879205,
+                -0.044405583297833784
+              ],
+              [
+                -0.012569997012615214,
+                0.07343000497668982
+              ]
+            ]
+          }
+        ],
+        "static_closure_contact_candidates": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_inside_closed_finger": 4825
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_inside_closed_finger": 4811
+          }
+        ],
+        "closure_retention_verified": false,
+        "limits": "Static complete native triangles and complete convex open fingers; does not prove live pose error, closure, retention, continuous carried mesh clearance or hanging success."
+      }
+    },
+    "11": {
+      "thread_local": [
+        0.037982553243637085,
+        9.99999901978299e-05,
+        0.012797092087566853
+      ],
+      "thread_frames": [
+        [
+          0.037982553243637085,
+          9.99999901978299e-05,
+          0.012797092087566853,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.037982553243637085,
+          9.99999901978299e-05,
+          0.012797092087566853,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "functional_handle_frames": [
+        [
+          0.055,
+          0.0,
+          0.015,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.055,
+          0.0,
+          0.015,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "rejected_functional_frames": [],
+      "handle_grasp_local": [
+        0.055,
+        0.0,
+        0.015
+      ],
+      "thread_geometry": {
+        "accepted": true,
+        "private_task_state_used": false,
+        "native_central_hole_margin_m": 0.013817438445607321,
+        "all_surface_axis_channel_clearance_lower_bound_m": 0.0138317746281892,
+        "peg_radius_bound_m": 0.003853082703446244,
+        "required_radial_gap_m": 0.001,
+        "functional_to_thread_distance_m": 0.017159728942333172,
+        "functional_success_tolerance_m": 0.045,
+        "axis_channel_derivation": "Minimum projected XZ distance across every transformed native mesh triangle, with Y aperture normal",
+        "complete_native_triangles_checked": 384922,
+        "surface_sampling_margin_m": 0.0,
+        "mesh_member_sha256": "ec22bb8cc7ca32a4a5518513a77bedc86489606b88d36a2eef00ad384a2ccdec",
+        "thread_axis_local": [
+          0,
+          1,
+          0
+        ],
+        "entry_audit": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.028186783290650753,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.02435991197824479,
+                0.08535991266369822
+              ],
+              [
+                0.04440158280171454,
+                0.08175158175267279
+              ],
+              [
+                0.0024300029873847995,
+                0.08843000497668983
+              ]
+            ]
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.020574753333372702,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.024359854236245156,
+                0.08535985492169859
+              ],
+              [
+                -0.08175558224879205,
+                -0.044405583297833784
+              ],
+              [
+                0.0024300029873847995,
+                0.08843000497668983
+              ]
+            ]
+          }
+        ],
+        "static_closure_contact_candidates": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_inside_closed_finger": 2961
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_inside_closed_finger": 2978
+          }
+        ],
+        "closure_retention_verified": false,
+        "limits": "Static complete native triangles and complete convex open fingers; does not prove live pose error, closure, retention, continuous carried mesh clearance or hanging success."
+      }
+    },
+    "12": {
+      "thread_local": [
+        0.042480096220970154,
+        0.0,
+        0.005601797252893448
+      ],
+      "thread_frames": [
+        [
+          0.042480096220970154,
+          0.0,
+          0.005601797252893448,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.042480096220970154,
+          0.0,
+          0.005601797252893448,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "functional_handle_frames": [
+        [
+          0.058,
+          0.0,
+          0.01,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.058,
+          0.0,
+          0.01,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "rejected_functional_frames": [],
+      "handle_grasp_local": [
+        0.058,
+        0.0,
+        0.01
+      ],
+      "thread_geometry": {
+        "accepted": true,
+        "private_task_state_used": false,
+        "native_central_hole_margin_m": 0.012609365910182078,
+        "all_surface_axis_channel_clearance_lower_bound_m": 0.012582877034044643,
+        "peg_radius_bound_m": 0.003853082703446244,
+        "required_radial_gap_m": 0.001,
+        "functional_to_thread_distance_m": 0.016131075621761887,
+        "functional_success_tolerance_m": 0.045,
+        "axis_channel_derivation": "Minimum projected XZ distance across every transformed native mesh triangle, with Y aperture normal",
+        "complete_native_triangles_checked": 491064,
+        "surface_sampling_margin_m": 0.0,
+        "mesh_member_sha256": "c50dc36a4f8df27c5197ceb95c4f6df3114eaccb831c443a997e45ed3f167912",
+        "thread_axis_local": [
+          0,
+          1,
+          0
+        ],
+        "entry_audit": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02595225729955853,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.02735991197824479,
+                0.08835991266369822
+              ],
+              [
+                0.04440158280171454,
+                0.08175158175267279
+              ],
+              [
+                -0.002569997012615205,
+                0.08343000497668983
+              ]
+            ]
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02609707135795375,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.02735985423624516,
+                0.0883598549216986
+              ],
+              [
+                -0.08175558224879205,
+                -0.044405583297833784
+              ],
+              [
+                -0.002569997012615205,
+                0.08343000497668983
+              ]
+            ]
+          }
+        ],
+        "static_closure_contact_candidates": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_inside_closed_finger": 2852
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_inside_closed_finger": 2857
+          }
+        ],
+        "closure_retention_verified": false,
+        "limits": "Static complete native triangles and complete convex open fingers; does not prove live pose error, closure, retention, continuous carried mesh clearance or hanging success."
+      }
+    },
+    "13": {
+      "thread_local": [
+        0.042480096220970154,
+        0.0,
+        0.005601797252893448
+      ],
+      "thread_frames": [
+        [
+          0.042480096220970154,
+          0.0,
+          0.005601797252893448,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.042480096220970154,
+          0.0,
+          0.005601797252893448,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "functional_handle_frames": [
+        [
+          0.058,
+          0.0,
+          0.01,
+          0.5000000000000001,
+          0.5,
+          0.4999999999999999,
+          0.5
+        ],
+        [
+          0.058,
+          0.0,
+          0.01,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "rejected_functional_frames": [],
+      "handle_grasp_local": [
+        0.058,
+        0.0,
+        0.01
+      ],
+      "thread_geometry": {
+        "accepted": true,
+        "private_task_state_used": false,
+        "native_central_hole_margin_m": 0.012609365910182078,
+        "all_surface_axis_channel_clearance_lower_bound_m": 0.012582877034044643,
+        "peg_radius_bound_m": 0.003853082703446244,
+        "required_radial_gap_m": 0.001,
+        "functional_to_thread_distance_m": 0.016131075621761887,
+        "functional_success_tolerance_m": 0.045,
+        "axis_channel_derivation": "Minimum projected XZ distance across every transformed native mesh triangle, with Y aperture normal",
+        "complete_native_triangles_checked": 491064,
+        "surface_sampling_margin_m": 0.0,
+        "mesh_member_sha256": "dca2cd39928768a6b28092a98000f2dc89cec9c030004dba21c95d967bdeeaf2",
+        "thread_axis_local": [
+          0,
+          1,
+          0
+        ],
+        "entry_audit": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02595225729955853,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.02735991197824479,
+                0.08835991266369822
+              ],
+              [
+                0.04440158280171454,
+                0.08175158175267279
+              ],
+              [
+                -0.002569997012615205,
+                0.08343000497668983
+              ]
+            ]
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02609707135795375,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.02735985423624516,
+                0.0883598549216986
+              ],
+              [
+                -0.08175558224879205,
+                -0.044405583297833784
+              ],
+              [
+                -0.002569997012615205,
+                0.08343000497668983
+              ]
+            ]
+          }
+        ],
+        "static_closure_contact_candidates": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_inside_closed_finger": 2852
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_inside_closed_finger": 2857
+          }
+        ],
+        "closure_retention_verified": false,
+        "limits": "Static complete native triangles and complete convex open fingers; does not prove live pose error, closure, retention, continuous carried mesh clearance or hanging success."
+      }
+    },
+    "14": {
+      "thread_local": [
+        0.046351358294487,
+        9.99999901978299e-05,
+        0.0029307142831385136
+      ],
+      "thread_frames": [
+        [
+          0.046351358294487,
+          9.99999901978299e-05,
+          0.0029307142831385136,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "functional_handle_frames": [
+        [
+          0.06,
+          0.0,
+          0.01,
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.06,
+          0.0,
+          0.01,
+          0.49999999999999994,
+          -0.49999999999999994,
+          0.5000000000000001,
+          -0.49999999999999994
+        ]
+      ],
+      "rejected_functional_frames": [
+        {
+          "frame": [
+            0.06,
+            0.0,
+            0.01,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "reason": "Functional X axis does not match the native handle aperture Y normal",
+          "axis": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "handle_grasp_local": [
+        0.06,
+        0.0,
+        0.01
+      ],
+      "thread_geometry": {
+        "accepted": true,
+        "private_task_state_used": false,
+        "native_central_hole_margin_m": 0.011737742102770456,
+        "all_surface_axis_channel_clearance_lower_bound_m": 0.011709312081126971,
+        "peg_radius_bound_m": 0.003853082703446244,
+        "required_radial_gap_m": 0.001,
+        "functional_to_thread_distance_m": 0.015371083922421676,
+        "functional_success_tolerance_m": 0.045,
+        "axis_channel_derivation": "Minimum projected XZ distance across every transformed native mesh triangle, with Y aperture normal",
+        "complete_native_triangles_checked": 320916,
+        "surface_sampling_margin_m": 0.0,
+        "mesh_member_sha256": "4385d27c761cdab99c13ff7cfcffb0ecc6beaf5992d95a3dd56345c40cba510a",
+        "thread_axis_local": [
+          0,
+          1,
+          0
+        ],
+        "entry_audit": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02425495198548761,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.029359911978244786,
+                0.09035991266369822
+              ],
+              [
+                0.04440158280171454,
+                0.08175158175267279
+              ],
+              [
+                -0.002569997012615205,
+                0.08343000497668983
+              ]
+            ]
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_in_or_within_voxel_of_finger": 0,
+            "all_native_triangles_separating_finger_plane_margin_m": 0.02439494865029575,
+            "full_open_command_prior": 1.0,
+            "finger_bbox_local": [
+              [
+                0.029359854236245153,
+                0.0903598549216986
+              ],
+              [
+                -0.08175558224879205,
+                -0.044405583297833784
+              ],
+              [
+                -0.002569997012615205,
+                0.08343000497668983
+              ]
+            ]
+          }
+        ],
+        "static_closure_contact_candidates": [
+          {
+            "mesh": "link7",
+            "native_surface_samples_inside_closed_finger": 2560
+          },
+          {
+            "mesh": "link8",
+            "native_surface_samples_inside_closed_finger": 2688
+          }
+        ],
+        "closure_retention_verified": false,
+        "limits": "Static complete native triangles and complete convex open fingers; does not prove live pose error, closure, retention, continuous carried mesh clearance or hanging success."
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/PhysicalRSI/PhysicalRSI",
+  "main_commit": "3c8cf7f12d4041babe30bab98854cc504a5afe88",
+  "xpolicylab_commit": "393f730788e7277c7d86829dd5806a924ac31e74",
+  "release_manifest_url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/assets.json",
+  "release_manifest_sha256": "0eed83202427dc6b4c75cde613246f8f6e606cac6c8da3bd71ebc6798d6963d2",
+  "descriptor": "runtime/descriptors/swap_T.json",
+  "implementation": "implementations/rdj_swap_t/14d69d4d118fb34d/rdj_swap_t",
+  "verification": "Selected release blobs individually matched tree hashes; complete 7GB archive was not downloaded or whole-archive verified.",
+  "source_sha256": {
+    "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core.py": "d0b28d2652adeb960408d38b6045697527b10a141fca6c43a27f9a7ba91fc0ee",
+    "model.py": "c61bf76e5139992d85ea948e4160ec77f9cf73f236728628a4888acf6624cb70",
+    "geometry.py": "25abfd6aefe40333ac2dfc704ab2d297205f634c4c61d7c2822616a8a7668dcf",
+    "grasp_rgb.py": "f728b57b882b1dfe64a23799b864ae5543840c256113944e18973fd41976a976",
+    "skill_choices.py": "a303e69807b5b89dd85c82996cd0e1722fddeb9cb32bba968f7a5966e18ad65c",
+    "skill_choice_targets.py": "81e32beaef1b4344089a6490a2359dcfd14b9a8be3e0dbb8a312602f949c1a93",
+    "collision_gate.py": "60e99cea9e6ff2a17b74d84513085c8f206a67ad2928c5fa37a250ca8f09fb78",
+    "gripper_geometry.json": "0c2a205a8eaac0176e0fdae356eb5c1a545004acbc61c25eb7617612b421c44d",
+    "structured_memory.json": "da016406d664a903c654239cee47f8f4349e3871a2975e9e32136d3f5d866efb",
+    "assets/camera_colliders.json": "fd8d0deeb70ea6bf76039b12767e8061bcd53f9cfec474ee2dc975fd50e18a68",
+    "assets/contact_support.json": "612d9a4c9475bb1dc6465823ef9f30334709bd8613eb9266892ee1f516670ba8"
+  }
+}

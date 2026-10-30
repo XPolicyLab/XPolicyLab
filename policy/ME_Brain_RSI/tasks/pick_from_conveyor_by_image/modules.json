@@ -1,0 +1,65 @@
+{
+  "adapters.COAP_ZYR.deploy": {
+    "file": "capabilities/control/deploy_for_play_xylophone.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/contracts_for_press_by_number.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "coap": {
+    "file": "capabilities/control/coap_for_pick_from_conveyor_by_image.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/__init__.py",
+    "package": true,
+    "sha256": "d0def34b9104a9efd750536e91927680a42d583952b591f86436536987bbb750"
+  },
+  "adapters.COAP_ZYR": {
+    "file": "capabilities/control/xqaux8z9.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapters.COAP_ZYR.model": {
+    "file": "capabilities/control/model_for_pick_from_conveyor_by_image.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/adapter/model.py",
+    "package": false,
+    "sha256": "5541b2dd90d8dd123a66bd3d6e6f1ea5f4c29f2718d0d6d09490bf12430299c9"
+  },
+  "coap.vision": {
+    "file": "capabilities/perception/vision.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/vision.py",
+    "package": false,
+    "sha256": "3b71ac1bbd831eb9586a014a89b09d79dee4c2019f9f9bed3ec3d753b25a7e9d"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/geometry_for_push_t.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_pick_from_conveyor_by_image.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/policy.py",
+    "package": false,
+    "sha256": "899c78863f46b6b496c12f6b4aaaa96a66b90fa50dd72575a07bf47ce594009b"
+  },
+  "coap.intercept": {
+    "file": "capabilities/control/intercept.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/intercept.py",
+    "package": false,
+    "sha256": "56d1d271b0e24c158cf605528b145d3419cc75b1804126d64a8c755b0da93d4d"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_play_xylophone.py",
+    "resource": "resources/pick_from_conveyor_by_image/coap/kinematics.py",
+    "package": false,
+    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7"
+  },
+  "adapters": {
+    "namespace": true
+  }
+}

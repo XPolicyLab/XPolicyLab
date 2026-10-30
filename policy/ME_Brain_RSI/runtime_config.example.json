@@ -1,0 +1,31 @@
+{
+  "includes": [],
+  "common": {
+    "config": {
+      "model_path": "model_assets/focus-vlwa-checkpoint",
+      "tokenizer_path": "model_assets/tokenizer.model",
+      "robot_static_path": "model_assets/robot_static.json",
+      "stack_assets_root": "model_assets/stack",
+      "equation_assets_root": "model_assets/equation",
+      "perception_assets_root": "model_assets/perception"
+    },
+    "environment": {
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    }
+  },
+  "tasks": {
+    "deposit_coin": {
+      "config": {
+        "coin_assets_root": "model_assets/coin/code-skills",
+        "strategy_evidence_dir": "../../../eval_runs/deposit_coin"
+      }
+    },
+    "fasten_screws": {
+      "config": {
+        "screws_assets_root": "model_assets/screws/code-skills",
+        "strategy_evidence_dir": "../../../eval_runs/fasten_screws"
+      }
+    }
+  }
+}

@@ -1,0 +1,473 @@
+{
+  "policy.stack_blocks_rgb_v6.adapter": {
+    "file": "capabilities/perception/adapter_for_stack_blocks_random.py",
+    "resource": "resources/stack_blocks_random/coap/adapter.py",
+    "package": false,
+    "sha256": "d6d7a7d2d3ab101d990b194cd598c0cc8789d750d691d32a7262893389bb4656"
+  },
+  "policy.stack_blocks_rgb_v6.sam3_segment_text": {
+    "file": "capabilities/perception/sam3_segment_text.py",
+    "resource": "resources/stack_blocks_random/coap/sam3_segment_text.py",
+    "package": false,
+    "sha256": "ac4a5917d71753b34799cafca68afa875c7e02aaebd2a8aa251e0eb04eb16340"
+  },
+  "sam3": {
+    "file": "capabilities/control/sam3.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/__init__.py",
+    "package": true,
+    "sha256": "ca3821a125f767e6a35188603b51ef2501b1e7c3d1a90546ac567c5d2a80b9fb"
+  },
+  "sam3.model_builder": {
+    "file": "capabilities/control/model_builder.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model_builder.py",
+    "package": false,
+    "sha256": "d71d6d3e485ec3eae48bbc2ba676f401b5853d65c4195a91d077b04da38121c2"
+  },
+  "sam3.train.matcher": {
+    "file": "capabilities/control/matcher.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/matcher.py",
+    "package": false,
+    "sha256": "31d8c49b773a229b558a229204111c7dab09a8a9ec09a070e74e92008c2c4a83"
+  },
+  "sam3.model.box_ops": {
+    "file": "capabilities/control/box_ops.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/box_ops.py",
+    "package": false,
+    "sha256": "2d1a11337f1db93ccd87132319716cf68b215c59fa51e43416bdad7ab30c8151"
+  },
+  "sam3.model": {
+    "file": "capabilities/control/model_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/__init__.py",
+    "package": true,
+    "sha256": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6"
+  },
+  "sam3.train": {
+    "file": "capabilities/control/model_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/__init__.py",
+    "package": true,
+    "sha256": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6"
+  },
+  "sam3.model.sam3_multiplex_video_predictor": {
+    "file": "capabilities/control/sam3_multiplex_video_predictor.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_multiplex_video_predictor.py",
+    "package": false,
+    "sha256": "15abe64bff63c95b8bcb67b5af0818b1b3783eb6537ec4d8b3a5e6b56915d1c1"
+  },
+  "sam3.model.sam3_base_predictor": {
+    "file": "capabilities/control/sam3_base_predictor.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_base_predictor.py",
+    "package": false,
+    "sha256": "e6ac612276ab208fa486499507175acc3f93fd6aab753dd553468b3330ad536b"
+  },
+  "sam3.logger": {
+    "file": "capabilities/control/logger.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/logger.py",
+    "package": false,
+    "sha256": "886d7b6101ab3cc07f40348a67054101ad87ca2ab9b3546fef1113f3e19db51e"
+  },
+  "sam3.model.sam3_multiplex_tracking": {
+    "file": "capabilities/control/sam3_multiplex_tracking.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_multiplex_tracking.py",
+    "package": false,
+    "sha256": "1de03dae26a3e3b73076e5933b06b0a41cb4c0441f9e3893b2d68090d53b9794"
+  },
+  "sam3.model.io_utils": {
+    "file": "capabilities/control/io_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/io_utils.py",
+    "package": false,
+    "sha256": "8bf0d036bc616a2429a258fa3a91d733e7c64621fe1616fa0c129c29c0fca637"
+  },
+  "sam3.model.geometry_encoders": {
+    "file": "capabilities/geometry/geometry_encoders.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/geometry_encoders.py",
+    "package": false,
+    "sha256": "02c50b9ba5caf1c51c472a78a98b5b943cba6b480a1157485eb74c59c08d7680"
+  },
+  "sam3.model.model_misc": {
+    "file": "capabilities/control/model_misc.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/model_misc.py",
+    "package": false,
+    "sha256": "1dbd1160c8093a60f1fea956db66f34e0edbc184d71e6caa9bbd7f492f2dde49"
+  },
+  "sam3.perflib.fa3": {
+    "file": "capabilities/control/fa3.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/fa3.py",
+    "package": false,
+    "sha256": "3b7292118f30f3fdea9850f16e27a6cf0cd8b7b2d427bc1dd8be2abceeb28fe0"
+  },
+  "sam3.perflib": {
+    "file": "capabilities/control/perflib.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/__init__.py",
+    "package": true,
+    "sha256": "e25fa5fb31908e816f0ce0f55dae8715076f47ca9ffcbc34335e60cf74bfbd21"
+  },
+  "sam3.model.act_ckpt_utils": {
+    "file": "capabilities/control/act_ckpt_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/act_ckpt_utils.py",
+    "package": false,
+    "sha256": "913317a663cf0f19317feb66ea43ff7a86e44393f39af3731ba3d33dfff93a82"
+  },
+  "sam3.model.data_misc": {
+    "file": "capabilities/control/data_misc.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/data_misc.py",
+    "package": false,
+    "sha256": "2de49374056d39398f6d90f0326d0ebe75c4c0890a7a0ff281da704ed5ccaa34"
+  },
+  "sam3.perflib.masks_ops": {
+    "file": "capabilities/control/masks_ops.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/masks_ops.py",
+    "package": false,
+    "sha256": "b1b6fae420565315dd434d4efb9a6f76fe0fc2959a8c30f2f1120a0a25e80a55"
+  },
+  "sam3.perflib.compile": {
+    "file": "capabilities/control/compile.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/compile.py",
+    "package": false,
+    "sha256": "403f2b91771e5b0c05c6b623bb5d032765c788cb9674136cbdeb0be628fafbfe"
+  },
+  "sam3.model.sam3_video_inference": {
+    "file": "capabilities/control/sam3_video_inference.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_video_inference.py",
+    "package": false,
+    "sha256": "70d32ec094b3151aa5b5e73e1c0dd13bc5e7a06ab51fc6b1776909e9ad501aef"
+  },
+  "sam3.model.utils.misc": {
+    "file": "capabilities/control/misc.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/utils/misc.py",
+    "package": false,
+    "sha256": "912509e3a04139a3dfd2d98b91662ae37d1dea4d2122166f6603a35cba8e2acf"
+  },
+  "sam3.model.utils": {
+    "file": "capabilities/control/utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/utils/__init__.py",
+    "package": true,
+    "sha256": "dbc5c8475ec79c2980b95cb09862887052cbabd49bc7fe22f2014d0a2b836609"
+  },
+  "sam3.model.sam3_video_base": {
+    "file": "capabilities/control/sam3_video_base.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_video_base.py",
+    "package": false,
+    "sha256": "7ffae0a8c15f17814ce438078b6a00cc052be21ad16c8a59205df859c3df52c4"
+  },
+  "sam3.train.masks_ops": {
+    "file": "capabilities/control/masks_ops_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/masks_ops.py",
+    "package": false,
+    "sha256": "e2a63a1858b31df93792f7ea0f1d0a19fb0c1f833d886642c26267d016456455"
+  },
+  "sam3.model.sam3_tracker_utils": {
+    "file": "capabilities/control/sam3_tracker_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_tracker_utils.py",
+    "package": false,
+    "sha256": "dc5fdeba2d4416f273394a9bd4450dff050608db6009a4546ca68adbaa24a640"
+  },
+  "sam3.perflib.connected_components": {
+    "file": "capabilities/control/connected_components.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/connected_components.py",
+    "package": false,
+    "sha256": "f09bb5b905a12e0aeb6e7f1096af839015230f007dc47c43a1de7893a355dbd1"
+  },
+  "sam3.perflib.triton.connected_components": {
+    "file": "capabilities/control/connected_components_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/triton/connected_components.py",
+    "package": false,
+    "sha256": "4326366c3575aa29c23ea4c4060534361d2920492312a20ad5138ac3dcf45c48"
+  },
+  "sam3.model.edt": {
+    "file": "capabilities/control/edt.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/edt.py",
+    "package": false,
+    "sha256": "8670420b27afac42b7cd838469a8c412693a9e01f47dc4abd5d13b5f46b3f688"
+  },
+  "sam3.model.sam3_multiplex_base": {
+    "file": "capabilities/control/sam3_multiplex_base.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_multiplex_base.py",
+    "package": false,
+    "sha256": "c9f8846ece90f839e07ebf090b7fe44ec4e2e8eb50e3933fc7e39fcfaaed6fe2"
+  },
+  "sam3.model.sam3_multiplex_detector": {
+    "file": "capabilities/control/sam3_multiplex_detector.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_multiplex_detector.py",
+    "package": false,
+    "sha256": "dcd71c7f5509628ca02e2c205dbce6767145130865bb47d2dfd5cbba2b1974e7"
+  },
+  "sam3.model.vl_combiner": {
+    "file": "capabilities/control/vl_combiner.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/vl_combiner.py",
+    "package": false,
+    "sha256": "59377a3147bf7751e620df75b777afcc584f36985fe99469b8275fc7cdab1071"
+  },
+  "sam3.model.necks": {
+    "file": "capabilities/control/necks.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/necks.py",
+    "package": false,
+    "sha256": "0caaefd34e8674973d28b7afde9d87abaaa2eda00d977a592923fe9eeb1cbc05"
+  },
+  "sam3.model.sam3_multiplex_detector_utils": {
+    "file": "capabilities/control/sam3_multiplex_detector_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_multiplex_detector_utils.py",
+    "package": false,
+    "sha256": "f1be3a25cd71f15bd509543d1b9f95bad8a8d57a36a79cface7616292ac5ba4d"
+  },
+  "sam3.perflib.iou": {
+    "file": "capabilities/control/iou.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/iou.py",
+    "package": false,
+    "sha256": "a99a3de83115ca96bc6b100f7d80cea18f23cb65d0f174a7896af8abacd94311"
+  },
+  "sam3.model.sam3_image": {
+    "file": "capabilities/perception/sam3_image.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_image.py",
+    "package": false,
+    "sha256": "2c20de90fb0b76b01dd437385eb7226f8c3cd4757a4c80cc8dec943dcf46a4a0"
+  },
+  "sam3.train.data.collator": {
+    "file": "capabilities/control/collator.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/data/collator.py",
+    "package": false,
+    "sha256": "37cabf60e4aabb1f0c7ee6b30d09cb4662da78f908f810c497aaa456f9e9fd94"
+  },
+  "sam3.train.data.sam3_image_dataset": {
+    "file": "capabilities/perception/sam3_image_dataset.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/data/sam3_image_dataset.py",
+    "package": false,
+    "sha256": "fb3f31bde13729af81394ad6df50c3257cd397db93ea3e7e2f567bdf1d3e0915"
+  },
+  "sam3.train.data.coco_json_loaders": {
+    "file": "capabilities/control/coco_json_loaders.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/data/coco_json_loaders.py",
+    "package": false,
+    "sha256": "5a11f1f571ac6902c6aebdd2d469a1ece4b507d4a62322cb5e2d4beea40349dc"
+  },
+  "sam3.train.data": {
+    "file": "capabilities/control/model_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/train/data/__init__.py",
+    "package": true,
+    "sha256": "5737b3ba20d7549b2fce53c995fa80c331b116d1f958980d99bf6f161e28e3a6"
+  },
+  "sam3.perflib.nms": {
+    "file": "capabilities/control/nms.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/nms.py",
+    "package": false,
+    "sha256": "21c5fd8c12f9a8bacf5b17be1c0a0027533f9f7dca31392a0c90fc0df2d25eb4"
+  },
+  "sam3.perflib.triton.nms": {
+    "file": "capabilities/control/nms_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/triton/nms.py",
+    "package": false,
+    "sha256": "e9749ee2e49acf3665e7aade92acbdbff7e0685d2c1feae40f2c231a94e5c8c3"
+  },
+  "sam3.model.sam1_task_predictor": {
+    "file": "capabilities/control/sam1_task_predictor.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam1_task_predictor.py",
+    "package": false,
+    "sha256": "64346a8dcad8dfdb997e4cb0871e2d5c0658ab247ca2816f7f60aa0d0878ab9d"
+  },
+  "sam3.model.utils.sam1_utils": {
+    "file": "capabilities/control/sam1_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/utils/sam1_utils.py",
+    "package": false,
+    "sha256": "3eb335d6eb447e117eb079136cb897475a0210d41b3990edb830c5866b587c2a"
+  },
+  "sam3.model.sam3_tracker_base": {
+    "file": "capabilities/control/sam3_tracker_base.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_tracker_base.py",
+    "package": false,
+    "sha256": "b2b52409c002e1590262375aa794f8ab67e7476f42f8fee41a76de0c14aa62e2"
+  },
+  "sam3.sam.transformer": {
+    "file": "capabilities/control/transformer.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/sam/transformer.py",
+    "package": false,
+    "sha256": "4885315b97577a5ece6ab53f45318fb629b16c240d96315064bf71a152effc6e"
+  },
+  "sam3.sam.common": {
+    "file": "capabilities/control/common_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/sam/common.py",
+    "package": false,
+    "sha256": "e64cb707f7c332761b34ac1135718e699a8271d4c5c4f42831d5fa393d2edc86"
+  },
+  "sam3.sam": {
+    "file": "capabilities/control/sam.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/sam/__init__.py",
+    "package": true,
+    "sha256": "9fd565929cc73505a78397f87c558d721b4df92a279551a4860bf8947baa8ae0"
+  },
+  "sam3.sam.prompt_encoder": {
+    "file": "capabilities/control/prompt_encoder.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/sam/prompt_encoder.py",
+    "package": false,
+    "sha256": "7c4f4b2187d3e0e9590d2a8258702ee4491a67175076e7af2b45cf6e328101f3"
+  },
+  "sam3.sam.mask_decoder": {
+    "file": "capabilities/control/mask_decoder.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/sam/mask_decoder.py",
+    "package": false,
+    "sha256": "8ab5dc1fe9443ce31deadd69c3666470af89dc6d6f3dec678bf962c5deec111d"
+  },
+  "sam3.sam.rope": {
+    "file": "capabilities/control/rope.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/sam/rope.py",
+    "package": false,
+    "sha256": "23e98df94c938a5f52b30447a0a32dccf21e292ef9cd0d5b9029ca9728dad174"
+  },
+  "sam3.model.memory": {
+    "file": "capabilities/planning/memory_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/memory.py",
+    "package": false,
+    "sha256": "6712af0db3bed4e2dffd812884d42db48e6d3572bb1273505745dda8b900e0e3"
+  },
+  "sam3.model.video_tracking_multiplex_demo": {
+    "file": "capabilities/control/video_tracking_multiplex_demo.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/video_tracking_multiplex_demo.py",
+    "package": false,
+    "sha256": "d57ac540b400d5cb37377fc84810f75c2721f1b6e6ee9c8f119b5d6af7a6a80c"
+  },
+  "sam3.model.video_tracking_multiplex": {
+    "file": "capabilities/control/video_tracking_multiplex.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/video_tracking_multiplex.py",
+    "package": false,
+    "sha256": "5a6309684a9a3615819f65cad1d2fbd8139a6ceeaa14b2583057d695fc781f1c"
+  },
+  "sam3.model.multiplex_utils": {
+    "file": "capabilities/control/multiplex_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/multiplex_utils.py",
+    "package": false,
+    "sha256": "d568cc1e87dc65dfe76104946eb0fa143bcf1a3eba79ac7467f022a73482f680"
+  },
+  "sam3.model.multiplex_mask_decoder": {
+    "file": "capabilities/control/multiplex_mask_decoder.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/multiplex_mask_decoder.py",
+    "package": false,
+    "sha256": "412cdbdb329ac5dc85d0d2e19ffb1eec472663f6f5a2b8672f7dd9d397ac8846"
+  },
+  "sam3.model.vitdet": {
+    "file": "capabilities/control/vitdet.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/vitdet.py",
+    "package": false,
+    "sha256": "aceeaca8e9fff31917d1293235fb284d5518288d00c562f95eecf47212796e1b"
+  },
+  "sam3.perflib.fused": {
+    "file": "capabilities/control/fused.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/perflib/fused.py",
+    "package": false,
+    "sha256": "f528109e043331da4c240741d1403812b2020801d8f01af0b5fbf0c6e93c1af6"
+  },
+  "sam3.model.tokenizer_ve": {
+    "file": "capabilities/control/tokenizer_ve.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/tokenizer_ve.py",
+    "package": false,
+    "sha256": "2e42bb558c95903c3425a372c3d336cecd95cde7e5f32b4f7611855c99ea4328"
+  },
+  "sam3.model.text_encoder_ve": {
+    "file": "capabilities/control/text_encoder_ve.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/text_encoder_ve.py",
+    "package": false,
+    "sha256": "d4a9dc4bd7aded73c5fb05760060944d022656eb8849b5abb1faf93241c1a733"
+  },
+  "sam3.model.sam3_video_predictor": {
+    "file": "capabilities/control/sam3_video_predictor.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_video_predictor.py",
+    "package": false,
+    "sha256": "9714ac8adbce442bfd05b795cb7b53eab6ac455487df31d7b8ae442675a4b9ea"
+  },
+  "sam3.model.sam3_tracking_predictor": {
+    "file": "capabilities/control/sam3_tracking_predictor.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_tracking_predictor.py",
+    "package": false,
+    "sha256": "145df76a5c045605d4d15360456015adb4f987c4b18e82f4f4876a63e6a32345"
+  },
+  "sam3.model.utils.sam2_utils": {
+    "file": "capabilities/control/sam2_utils.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/utils/sam2_utils.py",
+    "package": false,
+    "sha256": "78048b7b131250ac14b19c0c6f5fdb21402542b281964af675247e19734e5b2e"
+  },
+  "sam3.model.position_encoding": {
+    "file": "capabilities/control/position_encoding.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/position_encoding.py",
+    "package": false,
+    "sha256": "6ec4e053bad5d17035f9ea8f60a032f60c51ba5ce5a5a174b4b2fe0de62749f6"
+  },
+  "sam3.model.maskformer_segmentation": {
+    "file": "capabilities/perception/maskformer_segmentation.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/maskformer_segmentation.py",
+    "package": false,
+    "sha256": "955c8754b178ea51f5c727dfa51cfadba95eef9c237d5ba27cb4de1cef322732"
+  },
+  "sam3.model.encoder": {
+    "file": "capabilities/control/encoder.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/encoder.py",
+    "package": false,
+    "sha256": "e4c94c74ade9ea390b7c2d37dec4e6c14aa443d2532abd4507018476876f72b4"
+  },
+  "sam3.model.decoder": {
+    "file": "capabilities/control/decoder.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/decoder.py",
+    "package": false,
+    "sha256": "3a2bfb30f0f4b5405a0c9a27dc21aed71aa6691032a56fa8d96b3f9af3a15b96"
+  },
+  "sam3.model.sam3_image_processor": {
+    "file": "capabilities/perception/sam3_image_processor.py",
+    "resource": "resources/stack_blocks_random/vendor/sam3/model/sam3_image_processor.py",
+    "package": false,
+    "sha256": "d8738a0efb6138b01c0dc5deceffd29de9e675860a9a1ed3822b08766373333b"
+  },
+  "policy.stack_blocks_rgb_v6": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/stack_blocks_random/coap/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "policy": {
+    "file": "capabilities/control/policy_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/stack_blocks_random/coap/shared/__init__.py",
+    "package": true,
+    "sha256": "aa16f70a86af54190494ac1386265c926f8f0ca8775ef8a900189f5df525d2e5"
+  },
+  "policy.stack_blocks_rgb_v6.model": {
+    "file": "capabilities/perception/model_for_stack_blocks_random.py",
+    "resource": "resources/stack_blocks_random/coap/model.py",
+    "package": false,
+    "sha256": "51bffa83d05f3fe4a3affb3c985c85edbca7928b5c52cf5439617fd66fdc67c9"
+  },
+  "policy.stack_blocks_rgb_v6.perception": {
+    "file": "capabilities/perception/perception_for_stack_blocks_random.py",
+    "resource": "resources/stack_blocks_random/coap/perception.py",
+    "package": false,
+    "sha256": "a0b88f236636e2c6f85bc704b8917b6e707024108cc839d501d1fd59534a6dae"
+  },
+  "policy.stack_blocks_rgb_v6.calibration": {
+    "file": "capabilities/control/calibration.py",
+    "resource": "resources/stack_blocks_random/coap/calibration.py",
+    "package": false,
+    "sha256": "24bb1d14759fc731e1c1bef1ecc182b21a6897568e5776d44fedd11c705c7e11"
+  },
+  "policy.stack_blocks_rgb_v6.robot_geometry": {
+    "file": "capabilities/geometry/robot_geometry.py",
+    "resource": "resources/stack_blocks_random/coap/robot_geometry.py",
+    "package": false,
+    "sha256": "a67f90e81ff27dbcb886f223dba986b227c4bd6fa64318e07a4cfff58d50b209"
+  },
+  "policy.stack_blocks_rgb_v6.skill_choices": {
+    "file": "capabilities/perception/skill_choices.py",
+    "resource": "resources/stack_blocks_random/coap/skill_choices.py",
+    "package": false,
+    "sha256": "999301f076eb56afec1f85d36a0e8d1b8049f84f39967d24e023af2e819a12c1"
+  },
+  "policy.stack_blocks_rgb_v6.x5_kinematics": {
+    "file": "capabilities/motion/x5_kinematics.py",
+    "resource": "resources/stack_blocks_random/coap/x5_kinematics.py",
+    "package": false,
+    "sha256": "11f11f235b78440ab9d6afd292a72cb07a1af702667724e772da4ce16937d229"
+  },
+  "policy.stack_blocks_rgb_v6.collision_gate": {
+    "file": "capabilities/perception/collision_gate.py",
+    "resource": "resources/stack_blocks_random/coap/collision_gate.py",
+    "package": false,
+    "sha256": "d8bcb0159b6141cc28e2477444a112d598fc9387eb932edc1f5c102fab86c0b7"
+  },
+  "sam3.perflib.triton": {
+    "namespace": true
+  }
+}

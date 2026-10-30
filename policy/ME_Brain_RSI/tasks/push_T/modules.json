@@ -1,0 +1,95 @@
+{
+  "adapters.XQAUX8Z9.deploy": {
+    "file": "capabilities/control/deploy_for_press_by_number.py",
+    "resource": "resources/push_T/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "8dea2892f71b8acd91c74c259bdf8c0d567cf37c3efca1424dad50bc2f772b00"
+  },
+  "b88r42wq.contracts": {
+    "file": "capabilities/observation/contracts_for_press_by_number.py",
+    "resource": "resources/push_T/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "b88r42wq": {
+    "file": "capabilities/control/robot_for_press_by_number.py",
+    "resource": "resources/push_T/coap/__init__.py",
+    "package": true,
+    "sha256": "3859b6dbbc42e387cd4dcb849ed7b15b57b12d99b60f36f82da688fc0f4a09ca"
+  },
+  "adapters.XQAUX8Z9": {
+    "file": "capabilities/control/xqaux8z9.py",
+    "resource": "resources/push_T/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapters.XQAUX8Z9.model": {
+    "file": "capabilities/control/model_for_push_t.py",
+    "resource": "resources/push_T/coap/adapter/model.py",
+    "package": false,
+    "sha256": "39295e2c2b3112fb8cdd7fe69ae3e37c44e026afa59ffc8252d0300728a12145"
+  },
+  "b88r42wq.observation_audit": {
+    "file": "capabilities/observation/observation_audit.py",
+    "resource": "resources/push_T/coap/observation_audit.py",
+    "package": false,
+    "sha256": "1a23538876c849ad985c89adb70d2b7f5f54e57a38caa513cc6bd42f939ea04f"
+  },
+  "b88r42wq.drag_policy": {
+    "file": "capabilities/control/drag_policy.py",
+    "resource": "resources/push_T/coap/drag_policy.py",
+    "package": false,
+    "sha256": "3991102ab2a1f672b90125109e4240526c63025f79261d93f196886d0b051ae5"
+  },
+  "b88r42wq.geometry": {
+    "file": "capabilities/geometry/geometry_for_push_t.py",
+    "resource": "resources/push_T/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "b88r42wq.planar_drag": {
+    "file": "capabilities/planning/planar_drag.py",
+    "resource": "resources/push_T/coap/planar_drag.py",
+    "package": false,
+    "sha256": "5f23e3fce86d369329dad421640076383b49173016e5b07aeca7e42e0a459f71"
+  },
+  "b88r42wq.policy": {
+    "file": "capabilities/control/policy_for_push_t.py",
+    "resource": "resources/push_T/coap/policy.py",
+    "package": false,
+    "sha256": "8a49df1d66d76b1d62edb0d9d392927c2a4b217324c84ef3f800d03c026af259"
+  },
+  "b88r42wq.perception": {
+    "file": "capabilities/perception/perception_for_push_t.py",
+    "resource": "resources/push_T/coap/perception.py",
+    "package": false,
+    "sha256": "12e75449ab1992d742a06b096f45ffc325d08ff59383903ab3915eb1f6937e64"
+  },
+  "b88r42wq.t_shape": {
+    "file": "capabilities/control/t_shape.py",
+    "resource": "resources/push_T/coap/t_shape.py",
+    "package": false,
+    "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
+  },
+  "b88r42wq.t_projection": {
+    "file": "capabilities/control/t_projection.py",
+    "resource": "resources/push_T/coap/t_projection.py",
+    "package": false,
+    "sha256": "6e5a0b6bedda52385c5281a562e414bea4edc329f1bfbd99f671ea49a39ea0e1"
+  },
+  "b88r42wq.mug_geometry": {
+    "file": "capabilities/geometry/mug_geometry.py",
+    "resource": "resources/push_T/coap/mug_geometry.py",
+    "package": false,
+    "sha256": "cfb40bc21cd91e11fbba9349a89c54da38aceaf504238bcce6b93452237e0e2d"
+  },
+  "b88r42wq.vase_geometry": {
+    "file": "capabilities/geometry/vase_geometry.py",
+    "resource": "resources/push_T/coap/vase_geometry.py",
+    "package": false,
+    "sha256": "98e606b8018a7905da00efc81d372ba67966d0f73e64b4a18677be2faf8c547c"
+  },
+  "adapters": {
+    "namespace": true
+  }
+}

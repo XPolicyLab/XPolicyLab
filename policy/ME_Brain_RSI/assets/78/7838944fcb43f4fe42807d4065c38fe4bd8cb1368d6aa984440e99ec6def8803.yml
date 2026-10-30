@@ -1,0 +1,10 @@
+policy_name: nesting_rgb
+protocol: ws
+host: localhost
+port: 19491
+bench_name: RoboDojo
+task_name: sort_nesting_dolls_by_size
+ckpt_name: 955c322f007b10e322bfc37d7a3582b5360678fcd3b9fcd7d6ab2148980f2058
+env_cfg_type: arx_x5
+action_type: ee
+eval_batch: true

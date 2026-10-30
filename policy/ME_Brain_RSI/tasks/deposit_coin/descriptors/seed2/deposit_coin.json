@@ -1,0 +1,54 @@
+{
+  "schema": "physicalrsi.skill-worker/v1",
+  "name": "deposit_coin",
+  "implementation": {
+    "module": "rdj_v1_deposit_coin.model",
+    "class": "Model",
+    "source": "{assets}/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/model.py",
+    "sha256": "89e8340a0f31c5d5ed2c7be21a03bf22a36f4b8b3e535e9d5811bf178003c53f",
+    "implementation_revision": "coin_rgb_r12_20261027"
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "RDJ_OUTPUT_DIR": "{output}",
+    "RDJ_V1_OUTPUT": "{output}/runtime",
+    "RDJ_CONFIG": "deposit_coin",
+    "RDJ_SEED": "2"
+  },
+  "model_config": {
+    "ckpt_name": "89e8340a0f31c5d5ed2c7be21a03bf22a36f4b8b3e535e9d5811bf178003c53f",
+    "policy_name": "rdj_rgb",
+    "protocol": "ws",
+    "task_name": "deposit_coin",
+    "env_cfg_type": "arx_x5",
+    "action_type": "joint",
+    "eval_batch": true,
+    "seed": 2,
+    "bench_name": "RoboDojo"
+  },
+  "external_services": [],
+  "directories": [],
+  "transport": {
+    "batch_wire": true,
+    "isolated_environments": 1,
+    "allowed_methods": [
+      "get_action",
+      "get_action_batch",
+      "reset",
+      "update_obs",
+      "update_obs_batch"
+    ],
+    "compatibility": "",
+    "diagnostic_environment": {}
+  },
+  "pythonpath": [
+    "{assets}/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f",
+    "{assets}/dependencies/curobo/9077c9afff1c3fda/curobo",
+    "{assets}",
+    "{xpolicylab_parent}",
+    "{xpolicylab}"
+  ],
+  "services": []
+}

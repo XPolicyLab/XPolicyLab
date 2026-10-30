@@ -1,0 +1,7 @@
+{
+  "surface_m": 0.82,
+  "tabletop_prior_m": 0.765,
+  "slot_visual_and_collision_height_m": 0.055,
+  "slot_asset": "Assets/Object/RoboDojo/Geometry/key_slot/00000/object.usdz",
+  "root_above_surface_m": 0.02325
+}

@@ -1,0 +1,14 @@
+policy_name: COAP_ZYR
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: general_pickup
+ckpt_name: GP2
+env_cfg_type: arx_x5
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false
+calibration_path: null
+trace_path: null

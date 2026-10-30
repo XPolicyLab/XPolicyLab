@@ -1,0 +1,170 @@
+{
+  "insert_key.deploy": {
+    "file": "capabilities/control/deploy_for_insert_key.py",
+    "resource": "resources/insert_key/coap/deploy.py",
+    "package": false,
+    "sha256": "34fc33a1735060b68b9cb14252fb9b2c84df5ac0ee581ee1461e12a9af85aaf3"
+  },
+  "insert_key": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "insert_key.model": {
+    "file": "capabilities/control/model_for_insert_key.py",
+    "resource": "resources/insert_key/coap/model.py",
+    "package": false,
+    "sha256": "c8f041e755a344c249dc080cf53737ae43bd602d6a56fa6ffec243bc63fbe5a1"
+  },
+  "lxm6wuec_skill_library.block_programs": {
+    "file": "capabilities/planning/block_programs.py",
+    "resource": "resources/insert_key/coap/runtime/skills/block_programs.py",
+    "package": false,
+    "sha256": "a58b8c20a97778618126f4acd2351ecdec97cda2541331e167366c6234e4902c"
+  },
+  "lxm6wuec_structured_blocks.plan_transfer": {
+    "file": "capabilities/planning/plan_transfer.py",
+    "resource": "resources/insert_key/coap/runtime/blocks/plan_transfer.py",
+    "package": false,
+    "sha256": "cf266823b7cfbfddb405e0670ca2e62eeb95b42718f5afa84877222230c78354"
+  },
+  "Lxm6wuec.Embodied_Harness.skills.episode_plan": {
+    "file": "capabilities/planning/episode_plan.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/skills/episode_plan.py",
+    "package": false,
+    "sha256": "4872e3037fda7fae0128e53558e269554e931f36f05f0d92b570ad6d822e02ac"
+  },
+  "Lxm6wuec_core.infra.storage": {
+    "file": "capabilities/control/storage.py",
+    "resource": "resources/insert_key/coap/runtime/core/infra/storage.py",
+    "package": false,
+    "sha256": "4e52799a7c4e9f30454aecb0d696eb6b5bbf6772294f9f0653dcdbfb51cee4ea"
+  },
+  "Lxm6wuec_core.infra": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/runtime/core/infra/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec_core": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/runtime/core/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec.Embodied_Harness.skills": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/skills/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec.Embodied_Harness": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/runtime/harness/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lxm6wuec_structured_blocks": {
+    "file": "capabilities/control/native_structured_blocks.py",
+    "resource": "resources/insert_key/coap/runtime/blocks/__init__.py",
+    "package": true,
+    "sha256": "2de1162f8b9bffb5b24cda8016e8002b974c30325a793229849bcd8d059a01c8"
+  },
+  "Lxm6wuec.Embodied_Harness.skills.memory_program": {
+    "file": "capabilities/planning/memory_program.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/skills/memory_program.py",
+    "package": false,
+    "sha256": "ef25516ceec0f8c9a16faa558649f99fec91ea0a6a2efbfd2480f56ca3d21a77"
+  },
+  "Lxm6wuec.Embodied_Harness.skills.composition": {
+    "file": "capabilities/planning/composition.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/skills/composition.py",
+    "package": false,
+    "sha256": "b01f52ae30b0c7f217837ca8276e53d309336b6876943f9c693626b26ef6bcb3"
+  },
+  "Lxm6wuec_core.infra.executor": {
+    "file": "capabilities/control/executor.py",
+    "resource": "resources/insert_key/coap/runtime/core/infra/executor.py",
+    "package": false,
+    "sha256": "6fda2ecfe534b53edf4b0fcd080ff90ed15bc6998f17ffabc06e2226cdef071b"
+  },
+  "Lxm6wuec_core.infra.resources": {
+    "file": "capabilities/control/resources.py",
+    "resource": "resources/insert_key/coap/runtime/core/infra/resources.py",
+    "package": false,
+    "sha256": "09816be9b72b33f06afc85673cb3b375b1afa65b9ae8dc603c6cd21613242332"
+  },
+  "Lxm6wuec_core.contracts": {
+    "file": "capabilities/observation/contracts.py",
+    "resource": "resources/insert_key/coap/runtime/core/contracts.py",
+    "package": false,
+    "sha256": "bbc9216a293dd7fd8949d9db5c61f554e77ab5746a0597d93615dd4b09bc3651"
+  },
+  "Lxm6wuec.Embodied_Harness.memory.store": {
+    "file": "capabilities/planning/store.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/memory/store.py",
+    "package": false,
+    "sha256": "ec2232417415debab2c1204d80d3a4c1259e974caeaa8fc0254435ec7c162109"
+  },
+  "Lxm6wuec.Embodied_Harness.memory": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_key/coap/runtime/harness/Embodied_Harness/memory/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lxm6wuec_skill_library": {
+    "file": "capabilities/planning/native_skill_library.py",
+    "resource": "resources/insert_key/coap/runtime/skills/__init__.py",
+    "package": true,
+    "sha256": "54c8ce11dbde46c2d9c4db22561f2740bcd8cae5a482ae06b8d625e7ba5c73ae"
+  },
+  "insert_key.side_visible": {
+    "file": "capabilities/control/side_visible.py",
+    "resource": "resources/insert_key/coap/side_visible.py",
+    "package": false,
+    "sha256": "e0500ae64340df4a9bbbd5680724d6f916f603b805f1e4a5107a026e35eac22f"
+  },
+  "insert_key.hole_servo": {
+    "file": "capabilities/control/hole_servo.py",
+    "resource": "resources/insert_key/coap/hole_servo.py",
+    "package": false,
+    "sha256": "85bd6a3769587aeb0bafe9102e2f02a4657a1bad984099af4c89cb0843cbd386"
+  },
+  "insert_key.lobe_rim": {
+    "file": "capabilities/control/lobe_rim.py",
+    "resource": "resources/insert_key/coap/lobe_rim.py",
+    "package": false,
+    "sha256": "f3c1b7dbb01da3d568f41790b983ecbc63859cec7d4b9e360ac457e8474cf401"
+  },
+  "insert_key.tooth_pose": {
+    "file": "capabilities/geometry/tooth_pose.py",
+    "resource": "resources/insert_key/coap/tooth_pose.py",
+    "package": false,
+    "sha256": "92ed973803a4bb33d42ae85ca10b9c474b3a50877df85f447561dee775dcb0ba"
+  },
+  "insert_key.metric_lobe": {
+    "file": "capabilities/control/metric_lobe.py",
+    "resource": "resources/insert_key/coap/metric_lobe.py",
+    "package": false,
+    "sha256": "a1302e05644f0cbcef8326e1c15276c1b2835e621a5312431ac83c080285a472"
+  },
+  "insert_key.tail_yaw": {
+    "file": "capabilities/control/tail_yaw.py",
+    "resource": "resources/insert_key/coap/tail_yaw.py",
+    "package": false,
+    "sha256": "d3e38461a82aba9097cacf159eb732ed9256541d53f833fbbb09ef4438191412"
+  },
+  "insert_key.yaw_lobe": {
+    "file": "capabilities/control/yaw_lobe.py",
+    "resource": "resources/insert_key/coap/yaw_lobe.py",
+    "package": false,
+    "sha256": "d176c3b77124898a6f3ead8238dc9bf5ab5e85e43eb12d091206a66368309181"
+  }
+}

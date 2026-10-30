@@ -1,0 +1,77 @@
+{
+  "adapters.COAP_ZYR.deploy": {
+    "file": "capabilities/control/deploy_for_play_xylophone.py",
+    "resource": "resources/general_pickup/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/contracts_for_general_pickup.py",
+    "resource": "resources/general_pickup/coap/contracts.py",
+    "package": false,
+    "sha256": "9b03944f09d09f914275c007aff4f17dc004e391f1e472292cb7e660c13aa89c"
+  },
+  "coap": {
+    "file": "capabilities/control/coap.py",
+    "resource": "resources/general_pickup/coap/__init__.py",
+    "package": true,
+    "sha256": "e8a4fe6bbdea3dbbf841a2cad67af43080550e251781c38792fc51118adc0b00"
+  },
+  "adapters.COAP_ZYR": {
+    "file": "capabilities/control/xqaux8z9.py",
+    "resource": "resources/general_pickup/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapters.COAP_ZYR.model": {
+    "file": "capabilities/control/model_for_general_pickup.py",
+    "resource": "resources/general_pickup/coap/adapter/model.py",
+    "package": false,
+    "sha256": "d01f0238a05cc9b0dfe7535b6bb1259cb824f05d00bbe446bf931479815ab6d2"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_general_pickup.py",
+    "resource": "resources/general_pickup/coap/perception.py",
+    "package": false,
+    "sha256": "730e9189ebea371b0d8464d47557167a9590458806fae83ae1cf38debe628e64"
+  },
+  "coap.instance": {
+    "file": "capabilities/control/instance.py",
+    "resource": "resources/general_pickup/coap/instance.py",
+    "package": false,
+    "sha256": "2aa4a17c8723be1b83ed26ab33510fc1558026252c16d2b0bc8ed76ed7cc160a"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/geometry_for_push_t.py",
+    "resource": "resources/general_pickup/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "coap.controller": {
+    "file": "capabilities/control/controller.py",
+    "resource": "resources/general_pickup/coap/controller.py",
+    "package": false,
+    "sha256": "f769f1c95c8f22980758435f00f4d9edfc91d869a51e46565041f2d81293f37c"
+  },
+  "coap.feedback": {
+    "file": "capabilities/control/feedback.py",
+    "resource": "resources/general_pickup/coap/feedback.py",
+    "package": false,
+    "sha256": "f4badbf7159eb8545476ad0baf0fa3add6316ea6f344afd7968b8da6265f53a0"
+  },
+  "coap.reachability": {
+    "file": "capabilities/control/reachability.py",
+    "resource": "resources/general_pickup/coap/reachability.py",
+    "package": false,
+    "sha256": "2827aef516bf7a6ed73a349d2971734e96d0772607c41f9c65a88a7add533305"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_play_xylophone.py",
+    "resource": "resources/general_pickup/coap/kinematics.py",
+    "package": false,
+    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7"
+  },
+  "adapters": {
+    "namespace": true
+  }
+}

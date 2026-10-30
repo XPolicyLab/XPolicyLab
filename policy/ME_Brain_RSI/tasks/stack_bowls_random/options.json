@@ -1,0 +1,43 @@
+{
+  "rgb_calibration": {
+    "source": "rgb_fingertip_fk",
+    "source_run_id": "20261009_104612_astra_swap_T_rgb_calibration_v1b_edea1162",
+    "projection": [
+      [
+        288.154683959748,
+        158.32888355315407,
+        -278.61167781505105,
+        429.1758973602098
+      ],
+      [
+        0.024396456843063068,
+        -134.55583273825246,
+        -353.5297045650145,
+        407.9198180121204
+      ],
+      [
+        0.0026242835739548926,
+        0.4924124892522537,
+        -0.8703580031022421,
+        1.3400683556959856
+      ]
+    ],
+    "quality": {
+      "accepted": true,
+      "reprojection_rmse_px": 0.24903881863844943,
+      "max_error_px": 0.4771017340897934,
+      "point_count": 14,
+      "condition": 24.574790294831672,
+      "nullspace_gap": 101.0679219404375,
+      "image_size": [
+        640,
+        480
+      ],
+      "rgb_tip_visual_review": "Distal upper gripper edges confirmed in head RGB snapshots at steps 10,20,30,60; no camera or object ground truth used.",
+      "scope": "Camera calibration only. Reuse requires the same fixed head camera and robot/world frame; object poses are re-estimated from current RGB."
+    }
+  },
+  "wrist_camera_model": {
+    "mode": "upstream_static_prior"
+  }
+}
