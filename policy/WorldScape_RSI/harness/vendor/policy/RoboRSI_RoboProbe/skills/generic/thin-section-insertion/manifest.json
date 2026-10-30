@@ -1,0 +1,15 @@
+{
+  "id": "thin-section-insertion",
+  "version": "0.7.0-general-control-20261024",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "薄截面与狭缝方向匹配",
+  "implementation": "text",
+  "load_mode": "always"
+}

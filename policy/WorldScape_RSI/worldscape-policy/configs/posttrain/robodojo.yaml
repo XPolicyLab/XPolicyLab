@@ -1,0 +1,247 @@
+# RoboDojo flash post-training; shared base for memory. Absolute 14-D joints.
+includes:
+  - common_wan22.yaml
+  - ../augmentation/robodojo.yaml
+
+# Training defaults live here; environment values and trailing CLI overrides win.
+# Memory includes this file and changes only chunk capacity and checkpointing.
+robodojo_dataset_names:
+  none: worldscape_robodojo_joint_hdf5_text
+  initial: worldscape_robodojo_joint_hdf5_initial
+  goal: worldscape_robodojo_joint_hdf5_goal
+  demo: worldscape_robodojo_joint_hdf5_demo
+
+profile_order: [mode, visual_prompt, dataset_name, deepspeed_mode, chunk_policy]
+
+selectors:
+  robodojo_model: flash
+  task: ${oc.env:WSP_TASK,robodojo-joint}
+  run_name: ${oc.env:RUN_NAME,baseline}
+  mode: ${oc.env:WSP_MODE,interactive}
+  visual_prompt: ${oc.env:VISUAL_PROMPT,none}
+  dataset_name: ${oc.env:NATIVE_DATASET_NAME,${oc.select:robodojo_dataset_names.${selectors.visual_prompt}}}
+  chunk_policy: ${oc.env:ROBODOJO_CHUNK_POLICY,uniform}
+
+profiles:
+  mode:
+    interactive:
+      trainer:
+        t5_prompt_template: null
+    auto:
+      trainer:
+        t5_prompt_template: >-
+          A video shows that a robot {instruction} The robot {instruction}
+  chunk_policy:
+    uniform: {}
+    task_aware:
+      model:
+        model_config:
+          model:
+            shape:
+              num_frames: 193
+            wam:
+              core:
+                parameters:
+                  max_chunk_size: 24
+      data_loader:
+        bucket_by_length: true
+        dataset_kwargs:
+          chunk_policy: task_aware
+          max_chunk_size: 24
+  visual_prompt:
+    # Initial context uses the current episode's first head-camera frame. The
+    # dataset maps it onto the existing persistent single-image model input.
+    initial: {}
+  dataset_name:
+    worldscape_robodojo_joint_hdf5_text:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: none
+    worldscape_robodojo_joint_hdf5_goal:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: goal
+    worldscape_robodojo_joint_hdf5_initial:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: initial
+    worldscape_robodojo_joint_hdf5_demo:
+      _requires_:
+        mode: [auto, interactive]
+        visual_prompt: demo
+
+batch_adapter:
+  embodiment_ids:
+    arx_x5_joint: 0
+  diffusion_view_layout: ${oc.env:WSP_DIFFUSION_VIEW_LAYOUT,mosaic_2x2}
+  diffusion_image_key: null
+
+native_export:
+  enabled: true
+  every_checkpoint: true
+  model_variant: wsp2-wan22-5b
+  tokenizer_source: ${model.tokenizer_path}
+  normalization:
+    schema_version: "1"
+    visual:
+      input_range: uint8
+      model_range: minus_one_one
+    state: {kind: bundled, reference: transform_bundle.json}
+    action: {kind: bundled, reference: transform_bundle.json}
+  provenance:
+    exporter: worldscape-policy-native-training
+    task: ${selectors.task}
+    benchmark: robodojo
+    action_space: robodojo_joint_14d
+    robodojo_model: ${selectors.robodojo_model}
+    # Export fills deployment_config and history windows from resolved training
+    # settings. Only the gripper enable flag belongs in checkpoint metadata;
+    # thresholds and hysteresis timing remain in the deployment YAML.
+    gripper_discretization:
+      enabled: false
+  transform_bundle:
+    _target_: worldscape_policy.robodojo_joint.build_robodojo_joint_transform_bundle
+    stats_path: ${data_loader.dataset_kwargs.stats_path}
+    normalization: zscore
+    image_input_range: uint8
+    embodiment_id: 0
+    max_state_dim: 64
+    max_action_dim: 32
+    include_joint_velocity: ${data_loader.dataset_kwargs.include_joint_velocity}
+    velocity_stats_path: ${data_loader.dataset_kwargs.velocity_stats_path}
+
+model:
+  initialization: ${oc.env:WSP_INITIALIZATION,checkpoint}
+  # Copy shared pretrained bimanual adapter row 4 into local RoboDojo row 0.
+  pretrained_action_adapter_index: ${pretrained_adapter_source_rows.robodojo}
+  model_config:
+    model:
+      shape:
+        num_frames: ${oc.decode:${oc.env:WAM_NUM_FRAMES,${wsp.video_frames:${data_loader.dataset_kwargs.max_chunk_size}}}}
+        actions_per_block: ${data_loader.dataset_kwargs.action_horizon}
+        action_horizon: ${data_loader.dataset_kwargs.action_horizon}
+      wam:
+        core:
+          parameters:
+            max_chunk_size: ${data_loader.dataset_kwargs.max_chunk_size}
+            num_action_per_block: ${data_loader.dataset_kwargs.action_horizon}
+            frame_seqlen: 50
+            merge_teacher_forcing_attention: ${oc.decode:${oc.env:WAM_MERGE_TEACHER_FORCING_ATTENTION,true}}
+            gather_teacher_forcing_qkv: ${oc.decode:${oc.env:WAM_GATHER_TEACHER_FORCING_QKV,true}}
+      visual_memory:
+        diffusion_view_layout: ${batch_adapter.diffusion_view_layout}
+
+noise_kernel:
+  config:
+    num_action_per_block: ${data_loader.dataset_kwargs.action_horizon}
+    action_horizon: ${data_loader.dataset_kwargs.action_horizon}
+
+data_loader:
+  _target_: worldscape_policy.training.data.build_registered_loader
+  hotload:
+    enabled: ${oc.decode:${oc.env:ROBODOJO_HOTLOAD,false}}
+    manifest_dir: ${oc.env:ROBODOJO_HOTLOAD_DIR,data/robodojo_hotload}
+    journal_dir: ${training.checkpoint_dir}/data_versions
+    prepare_timeout_seconds: ${oc.decode:${oc.env:ROBODOJO_HOTLOAD_PREPARE_TIMEOUT,120}}
+  dataset_name: ${selectors.dataset_name}
+  batch_size: ${oc.decode:${oc.env:PER_DEVICE_TRAIN_BATCH_SIZE,8}}
+  shuffle: false
+  bucket_by_length: true
+  global_bucket_by_length: ${oc.decode:${oc.env:DATALOADER_GLOBAL_BUCKETING,true}}
+  global_bucket_window_batches: ${oc.decode:${oc.env:DATALOADER_GLOBAL_BUCKET_WINDOW_BATCHES,128}}
+  # Parallelize samples within the current batch (memory and flash); 1 is serial.
+  global_bucket_sample_workers: ${oc.decode:${oc.env:DATALOADER_GLOBAL_BUCKET_SAMPLE_WORKERS,4}}
+  # Sparse video payloads preserve the global plan; require compressed caching.
+  global_bucket_selected_frames: ${oc.decode:${oc.env:DATALOADER_GLOBAL_BUCKET_SELECTED_FRAMES,true}}
+  metadata_bucket_cache_shards: ${oc.decode:${oc.env:DATALOADER_METADATA_CACHE_SHARDS,2}}
+  num_workers: ${oc.decode:${oc.env:DATALOADER_NUM_WORKERS,4}}
+  prefetch_factor: ${oc.decode:${oc.env:DATALOADER_PREFETCH_FACTOR,4}}
+  persistent_workers: ${oc.decode:${oc.env:DATALOADER_PERSISTENT_WORKERS,true}}
+  pin_memory: ${oc.decode:${oc.env:DATALOADER_PIN_MEMORY,false}}
+  seed: ${oc.decode:${oc.env:SEED,62}}
+  raw_video_observation_key: null
+  video_augmentation_config:
+    input_color_order: ${data_loader.dataset_kwargs.input_color_order}
+  training: true
+  # The dataset applies the configured joint action semantics and normalization
+  # before the generic transform, so keep the generic path in pass-through mode.
+  action_mode: joint
+  relative_action: false
+  wo_norm: true
+  dataset_kwargs:
+    chunk_policy: uniform
+    data_root: ${oc.env:DATA_ROOT}
+    stats_path: ${oc.env:ROBODOJO_ZSCORE_STATS}
+    normalization: zscore
+    # Explicit legacy-checkpoint compatibility after the shared RGB decoder.
+    input_color_order: ${oc.env:ROBODOJO_INPUT_COLOR_ORDER,BGR}
+    relative_joint_action: false
+    normalize_state: true
+    normalize_action: true
+    include_joint_velocity: false
+    velocity_stats_path: ${oc.env:ROBODOJO_VELOCITY_STATS,null}
+    embodiment: arx_x5_joint
+    action_horizon: ${oc.decode:${oc.env:ACTION_HORIZON,24}}
+    max_event_chunks: ${oc.decode:${oc.env:MAX_EVENT_CHUNKS,16}}
+    history_num_frames: ${oc.decode:${oc.env:HISTORY_NUM_FRAMES,8}}
+    history_stride: ${oc.decode:${oc.env:HISTORY_STRIDE,48}}
+    history_window: ${oc.decode:${oc.env:HISTORY_WINDOW,384}}
+    temporal_packing: true
+    temporal_anchor_index: 0
+    max_chunk_size: ${oc.decode:${oc.env:WAM_MAX_CHUNK_SIZE,1}}
+    respect_trajectory_segments: false
+    context_video_len: ${oc.decode:${oc.env:CONTEXT_VIDEO_LEN,50}}
+    wo_norm: true
+    seed: ${oc.decode:${oc.env:SEED,62}}
+    shard_size: ${oc.decode:${oc.env:DATASET_SHARD_SIZE,10000}}
+    shard_sampling_rate: ${oc.decode:${oc.env:DATASET_SHARD_SAMPLING_RATE,0.1}}
+    num_shards_to_sample: ${oc.decode:${oc.env:NUM_SHARDS_TO_SAMPLE,1048576}}
+    step_stride: ${oc.decode:${oc.env:DATASET_STEP_STRIDE,1}}
+    precomputed_index_path: ${oc.env:ROBODOJO_INDEX_PATH,null}
+    verify_index_files: ${oc.decode:${oc.env:ROBODOJO_INDEX_VERIFY_FILES,false}}
+    index_cache: ${oc.decode:${oc.env:DATASET_INDEX_CACHE,false}}
+    index_cache_dir: ${oc.decode:${oc.env:DATASET_INDEX_CACHE_DIR,null}}
+    cache_video_resize_width: ${wsp.when:${data_loader.dataset_kwargs.cache_video_decode},320,null}
+    cache_video_resize_height: ${wsp.when:${data_loader.dataset_kwargs.cache_video_decode},160,null}
+    cache_video_decode: ${oc.decode:${oc.env:CACHE_VIDEO_DECODE,false}}
+    cache_video_resize_interpolation: ${oc.env:CACHE_VIDEO_RESIZE_INTERPOLATION,area}
+    training: true
+    max_episodes: ${oc.decode:${oc.env:MAX_EPISODES,null}}
+
+freeze:
+  config:
+    image_encoder: true
+
+trainer:
+  # RoboDojo uses ordinary optimizer clipping and DeepSpeed overflow handling.
+  gradient_health_checks: false
+  skip_grad_norm_threshold: null
+  skip_grad_norm_threshold_start_ratio: 0.0
+  log_prompt_text: ${oc.decode:${oc.env:LOG_PROMPT_TEXT,false}}
+  t5_prompt_template: null
+  vlm_prompt_template: ${model.vlm_cot_prompt}
+
+# Optimizer details and warmup ratio are inherited from common_wan22.yaml.
+logging:
+  wandb:
+    mode: ${oc.env:WANDB_MODE,online}
+    project: ${oc.env:WANDB_PROJECT,worldscape-policy-robodojo}
+    run_id: ${oc.env:WANDB_RUN_ID,${selectors.run_name}}
+    name: ${oc.env:WANDB_RUN_NAME,${logging.wandb.run_id}}
+
+training:
+  max_steps: ${oc.decode:${oc.env:MAX_STEPS,50000}}
+  lr_schedule: ${oc.env:LR_SCHEDULE,cosine}
+  gradient_checkpointing: ${oc.decode:${oc.env:WAM_GRADIENT_CHECKPOINTING,false}}
+  gradient_checkpointing_blocks: ${oc.decode:${oc.env:WAM_GRADIENT_CHECKPOINTING_BLOCKS,null}}
+  vae_encode_microbatch_size: ${oc.decode:${oc.env:VAE_ENCODE_MICROBATCH_SIZE,8}}
+  skip_unused_i2v_vae: ${oc.decode:${oc.env:SKIP_UNUSED_I2V_VAE,true}}
+
+training_plugin: null
+
+distributed:
+  deepspeed_config:
+    train_micro_batch_size_per_gpu: ${data_loader.batch_size}
+    gradient_accumulation_steps: ${trainer.gradient_accumulation_steps}
+    bf16:
+      check_grad_overflow: true

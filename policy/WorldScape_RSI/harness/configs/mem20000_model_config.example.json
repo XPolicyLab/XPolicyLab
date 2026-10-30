@@ -1,0 +1,30 @@
+{
+  "runtime_profile": "robodojo",
+  "policy_name": "WorldScape_RSI",
+  "bench_name": "RoboDojo",
+  "env_cfg_type": "arx_x5",
+  "seed": 0,
+  "action_type": "joint",
+  "eval_batch": false,
+  "multi_gpu": {
+    "enabled": false
+  },
+  "device": "cuda",
+  "input_color_order": "bgr",
+  "constrain_action_padding": true,
+  "observation_history_segments": 8,
+  "use_observation_history": true,
+  "use_causal_memory": true,
+  "wam_history_mode": "rolling",
+  "reset_independent_blocks": false,
+  "default_instruction": "follow the instruction",
+  "t5_prompt_template": null,
+  "mode": "interactive",
+  "action_horizon": 24,
+  "replan_steps": 24,
+  "observation_interval": 3,
+  "diffusion_view_layout": "mosaic_2x2",
+  "single_window_reference": "first",
+  "validate_checkpoint_artifacts": true,
+  "policy_image_interpolation": "area"
+}

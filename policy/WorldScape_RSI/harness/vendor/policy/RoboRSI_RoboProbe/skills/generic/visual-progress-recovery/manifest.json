@@ -1,0 +1,15 @@
+{
+  "id": "visual-progress-recovery",
+  "version": "0.6.0-general-control-20261023",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "公开进展与纠偏",
+  "implementation": "text",
+  "load_mode": "always"
+}

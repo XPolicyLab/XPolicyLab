@@ -1,0 +1,15 @@
+{
+  "id": "behavioral-checkpoints",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "implementation": "text",
+  "version": "0.6.0-general-control-20261023",
+  "description": "公开约束与行为检查点",
+  "load_mode": "always"
+}
