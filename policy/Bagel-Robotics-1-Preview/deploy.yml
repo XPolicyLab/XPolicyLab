@@ -1,0 +1,29 @@
+policy_name: Bagel-Robotics-1-Preview
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: bagel_robotics_1_preview
+env_cfg_type: arx_x5
+seed: 1
+action_type: ee
+gpu_id: null
+eval_batch: false
+
+action_dim: 16
+deployment_adapter: robodojo_ee16
+checkpoint_path: null
+video_checkpoint_path: null
+dataset_stats_path: null
+wan_model_dir: null
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 16
+temporal_ensemble_mode: fixed90
+num_inference_steps: 10
+sigma_shift: 1.0
+default_instruction: follow the instruction
+history_stride: 25
+video_seed_offset: 1000003
