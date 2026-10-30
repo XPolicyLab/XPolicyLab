@@ -1,0 +1,41 @@
+policy_name: go3_agent_preview
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: joint
+seed: 0
+gpu_id: null
+eval_batch: true
+
+geact_robot_name: sl_arxvr
+
+geact_server_host: 127.0.0.1
+geact_server_port: 8001
+geact_connect_timeout_s: 30
+geact_request_timeout_s: 600
+image_size: [256, 384]
+camera_names: [cam_head, cam_left_wrist, cam_right_wrist]
+action_horizon: 30
+num_ae_steps: 5
+
+memory_enabled: false
+memory_n_previous: 8
+memory_config_path: null
+ttc_enabled: false
+rcs_num_proposals: 8
+rcs_timestep_ratios: [0.25, 0.5, 0.75]
+rcs_noise_seed: null
+
+bbox_enabled: false
+bbox_vlm_fixed_sequence_length: 384
+bbox_missing_policy: full_image
+bbox_cache_mode: instruction
+bbox_artifact_dir: null
+
+code:
+  out_dir: null
+  worker_startup_timeout_s: 30

@@ -1,0 +1,4 @@
+# Dependencies of the code branch (gm/programs) that the shared XPolicyLab
+# package does not declare. Install into the policy-server environment:
+#   python -m pip install -r policy/go3_agent_preview/requirements-code.txt
+scipy==1.15.3
