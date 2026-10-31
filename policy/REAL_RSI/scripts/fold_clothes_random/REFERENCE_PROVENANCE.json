@@ -1,0 +1,21 @@
+{
+  "source": "Public legal head-camera RGB images; no simulator depth, object IDs, poses or layout files loaded. GrabCut outlines manually reviewed; all source images were development evidence.",
+  "references": [
+    {
+      "seed": 3,
+      "source": "eval_result/lilo_gen4_20261016/trials/fold_clothes_random/v1_s0full/raw/fold_clothes_random/seed_03/frames/00000_cam_head.jpg",
+      "mask": "/home/pc/workspace/RoboDojo/eval_result/lilo_servo_20261020/fold_clothes/work/joint120_20261022/offline/v1/seed_03.npz"
+    },
+    {
+      "seed": 4,
+      "source": "eval_result/lilo_gen4_20261016/trials/fold_clothes_random/v1_s0full/raw/fold_clothes_random/seed_04/frames/00000_cam_head.jpg",
+      "mask": "/home/pc/workspace/RoboDojo/eval_result/lilo_servo_20261020/fold_clothes/work/joint120_20261022/offline/v1/seed_04.npz"
+    },
+    {
+      "seed": 5,
+      "source": "eval_result/lilo_gen4_20261016/trials/fold_clothes_random/v1_s0full/raw/fold_clothes_random/seed_05/frames/00000_cam_head.jpg",
+      "mask": "/home/pc/workspace/RoboDojo/eval_result/lilo_servo_20261020/fold_clothes/work/joint120_20261022/offline/v1/seed_05.npz"
+    }
+  ],
+  "purpose": "Appearance-independent shape priors fitted to runtime RGB edges; selection by edge agreement only."
+}

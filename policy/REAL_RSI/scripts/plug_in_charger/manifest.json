@@ -1,0 +1,5 @@
+{
+  "small_models": true,
+  "action_type": "ee",
+  "depth_provider": "none"
+}

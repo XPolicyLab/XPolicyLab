@@ -1,0 +1,9 @@
+{
+  "action_type": "ee",
+  "depth_provider": "mono",
+  "version": "joint120_v3",
+  "routing": "task.endswith(_random)",
+  "standard_origin": "f9958236154301c5",
+  "random_origin": "83fae2a1ee437d1c",
+  "random_change": "Bottle-only penalty for <50% visible boundary; .35 maximum. Cup fitting and all motion unchanged."
+}
