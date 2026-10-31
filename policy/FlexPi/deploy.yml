@@ -1,0 +1,226 @@
+# --- XPolicyLab wiring -------------------------------------------------------
+# Must equal the directory name: setup_policy_server.py imports
+# XPolicyLab.policy.<policy_name>.model.Model.
+policy_name: FlexPi
+protocol: ws
+host: localhost
+port: null
+eval_batch: true
+
+# Per-run identifiers, overridden at launch by setup_eval_policy_server.sh.
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+# What the adapter SENDS; the launcher's --action-type replaces it, and RoboDojo's
+# robodojo.sh defaults that flag to ee when it is omitted.
+#   joint  the checkpoint's joint half: [L_arm6 L_grip R_arm6 R_grip] targets.
+#   ee     its EEF half: pose targets [x,y,z,qw,qx,qy,qz] in the frame RoboDojo reports (sim: X5 link6) + gripper per arm.
+#          RoboDojo solves cuRobo IK per arm per step and SILENTLY holds an arm
+#          whose IK fails; deploy.py counts those into _timing.jsonl ("ik").
+#          Needs a checkpoint with the EEF block (state_bridge yam32).
+# The simulator tells the two apart by the action keys; the client's
+# --action-type only labels its result dir, so it must match (deploy.py exits
+# the client if it does not).
+action_type: joint
+action_dim: null
+seed: 42
+gpu_id: null
+
+# No per-call deadline: the first call carries model warmup (~3 s), and full
+# joint generation is ~1.0 s/call after that (eager bf16, 10 steps, RTX 5090).
+# Set a number of seconds to cap it.
+request_timeout_s: null
+
+# --- Policy artefacts --------------------------------------------------------
+# Both resolved from ckpt_name in setup_eval_policy_server.sh.
+checkpoint_path: null
+dataset_stats_path: null
+
+# --- Upstream flex-pi config -------------------------------------------------
+# sim_cfg_name stays the RoboTwin sim config: it only supplies the EVALUATION
+# defaults, and sim_task is passed to hydra as `task=`, which is what selects
+# the RoboDojo data/model preset. At eval time the model architecture and
+# processor are reloaded from the config.yaml saved next to the checkpoint, so
+# this preset is a fallback, not the source of truth.
+sim_cfg_name: sim_robotwin.yaml
+sim_task: robodojo_unified_flex_3cam_384_1e-4
+device: cuda
+mixed_precision: bf16
+
+# Action inference. null -> upstream default (num_frames - 1, i.e. 32 here).
+action_horizon: null
+replan_steps: 32
+# Seed for the diffusion noise, independent of the eval/layout `seed` above.
+# null -> fresh noise on every inference, as the real-robot YAM serve does
+# (--seed None). An integer re-seeds identically on EVERY call, so an unchanged
+# observation (e.g. a robot idling at its start pose) gets the same sample
+# forever; set one only for reproducible offline debugging. It also seeds all
+# four stream generators (video/action/DINO/pointmap) identically, so pointmap
+# noise == video noise bit-for-bit -- a structure training never produced.
+# Unset (fresh, independent noise per stream) to match training. Paired offline
+# replays need it pinned: pass `--set diffusion_seed=42`.
+# diffusion_seed: 42
+# 10, the setting every RoboDojo_real checkpoint check ran with. 4 measured
+# equivalent in-sample (pooled checkpoint, piper episode 1005, full joint,
+# diffusion_seed 0: joint MAE 0.0144 rad against 0.0180 at 10 steps, holding
+# still 0.0735) at ~0.39 s/call; pass num_inference_steps=4 for shorter pauses
+# between chunks.
+num_inference_steps: 10
+sigma_shift: null
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false
+# Inference speed-ups, all off: every RoboDojo_real checkpoint check ran without
+# them. A key left out here falls back to sim_cfg_name's EVALUATION block, so
+# each one is pinned. attn_backend auto + glue_cache true + encoder_cuda_graph
+# true gave bit-identical chunks (pooled checkpoint, full joint, diffusion_seed
+# 0) at ~938 instead of ~953 ms/call on torch 2.7.1.
+torch_compile: false
+compile_encoders: false
+quantization: null
+attn_backend: sdpa
+solver: euler
+glue_cache: false
+encoder_cuda_graph: false
+joint_loop_cuda_graph: false
+# true -> the ~11 GB umt5-xxl text encoder stays on CPU (backbone.to() skips it);
+# only the once-per-episode prompt encode runs there. Frees ~11 GB VRAM for
+# Isaac Sim when policy and simulator share one GPU.
+offload_text_encoder: true
+# true -> per-camera RGB (head 256x320, wrists 224x224, one antialiased resize
+# from native) is built and passed as `per_cam`, feeding the DINO stream and the
+# composite exactly as training did. null auto-detects from the checkpoint's
+# data.train._target_, which only recognises RobotVideoDataset / RobotPerCam* and
+# so resolves to false for checkpoints trained with other dataset classes
+# (e.g. MolmoAct2 YAM); those were trained per-cam (the real-robot YAM deploy always passes per_cam), so
+# this is pinned true. false -> legacy composite-only path.
+use_per_cam: true
+# true -> build the per-cam model inputs exactly as the training loader did:
+# RGB through the checkpoint processor's own image transforms (ToTensor +
+# Resize([256, 320]) for the RoboDojo runs) and then the per-cam resize, so the
+# 224x224 wrists are resized twice as in training (head: 256x320, unchanged);
+# depth resampled onto the processor's shape_meta.depth grid (round-linspace
+# nearest) with K endpoint-rescaled to match. false -> one native->per-cam RGB
+# resize and depth + K at native resolution (upstream RoboTwin deploy).
+obs_train_parity: true
+
+# --- Observation handling (this adapter) -------------------------------------
+# Resolution incoming camera frames are resized to before the upstream deploy
+# path. [240, 320] matches checkpoints trained on RoboDojo data converted by
+# process_data.sh. null passes native frames through, so the per-cam path does
+# its single antialiased resize from native as in training — use it for
+# checkpoints trained on native-resolution data (e.g. MolmoAct2 YAM 360x640).
+obs_image_hw: null
+
+# Depth / pointmap stream. Off as shipped, matching what the evaluation sides
+# send: RoboDojo's env_cfg/arx_x5.yml ships observation.vision with depth,
+# approximate_depth, intrinsic_matrix and extrinsic_matrix ALL false, and the
+# RoboDojo_real data carries no depth or intrinsics. Turning this on without
+# depth + intrinsic_matrix in the observation raises at the adapter boundary
+# instead of failing silently.
+use_depth: false
+# Multiplier applied to the raw `depth` key to reach uint16 millimetres, which
+# is what the upstream pointmap encoder assumes. RoboDojo's `depth` is float32
+# metres -> 1000.0. The sibling `approximate_depth` key is already uint16 mm
+# (obs_manager does the *1000 itself); the adapter detects that key and ignores
+# this scale, so there is nothing to change when switching between them.
+depth_input_scale: 1000.0
+
+# --- State/action layout bridge ---------------------------------------------
+# RoboDojo's joint contract is 14D: [L_arm6 L_grip R_arm6 R_grip]. A checkpoint on
+# flex-pi's YAM 32D layout [L_pos3 L_rot6d6 R_pos3 R_rot6d6 L_grip R_grip
+# L_joint6 R_joint6] is bridged in state_bridge.py:
+#   state : joints/grippers permuted into 20:32 / 18:20; EEF block 0:18 from
+#           obs {left,right}_ee_pose (the pose RoboDojo reports: X5 link6 in
+#           sim, the robot's own EE pose on RoboDojo_real), in the frame
+#           eef_frame names.
+#   action: joint -> slots 20:32 + 18:20 gathered back to 14D.
+#           ee    -> slots 0:18 back through eef_frame to pose targets in the
+#                    frame RoboDojo reports, + 18:20.
+#           Grippers clipped to [0,1] either way.
+# Relative actions are decoded against the real current state (anchor) by the
+# checkpoint's own Yam32DRelativeAction.
+# auto -> none when checkpoint state dim == robot dim, yam32 for 32 vs 14.
+# Under allow_dummy_policy there is no checkpoint, so auto means none; set
+# yam32 explicitly to exercise the state-building path.
+state_bridge: auto
+# Frame for the EEF block (32D dims 0:18). RoboDojo hands the same observed
+# pose whatever this says (sim: the world-frame X5 link6 pose; RoboDojo_real:
+# each robot's EE pose as it records it); this says what the CHECKPOINT was
+# trained on.
+#   world_link6    the observed pose, passed through unchanged — what
+#                  the RoboDojo 34D sim dataset stores (e.g. the 0920
+#                  34D-relative run) and what the raw RoboDojo_real corpus
+#                  (robodojo_realworld_34d) stores.
+#   arm_base_grasp re-express in each arm's base frame, then offset link6 ->
+#                  YAM grasp_site. For flex-pi's real-robot YAM lineage. The
+#                  only option that reads the arm mount poses from env_cfg.
+#   relabeled      (shipped) the observed position, and the rotation turned
+#                  onto the YAM grasp_site axes by one constant per
+#                  env_cfg_type (arx_x5, piper, piper_x; any other type fails at
+#                  init) — what the relabeled RoboDojo_real corpus
+#                  (robodojo_realworld_34d_relabeled) stores, and so what the
+#                  released RoboDojo_real checkpoints were trained on.
+# Under action_type ee the EEF targets go back through the same frame (the exact
+# inverse), so every convention sends RoboDojo a pose in the frame it reports.
+# Getting this wrong is silent: it moved the EEF 0.64 m (the table height) with
+# a 90 deg rotation error and scored 0.0 on all 40 tasks while every other check
+# passed. state_bridge.py now prints a NOTE when arm_base_grasp puts both arms at
+# one point, which is the signature of a per-arm frame.
+eef_frame: relabeled
+# true -> refuse to start when dataset_stats.json's `coverage` names a corpus the
+# settings contradict: the relabeled RoboDojo_real corpus needs eef_frame
+# relabeled, and a per-robot checkpoint (`..._relabeled_<robot>`) needs that
+# robot's env_cfg_type; the sim (`robodojo_34d`) and raw-frame
+# (`robodojo_realworld_34d`) corpora need world_link6. Each mistake otherwise
+# serves without an error. Stats without `coverage` are not checked. false only
+# for deliberate negative controls.
+check_stats_coverage: true
+# Zero the action-latent pad channels (34D slots 26/33, each arm's absent 7th
+# joint) at init and after every denoise step?
+#   null  -> auto: arm whenever the processor pads (AlignTo34DByWidth / scatter ids)
+#   false -> never. Right for checkpoints whose TRAINING processor used an
+#            identity merger, e.g. the 0920 34D-native RoboDojo run: it emitted an
+#            all-False action_dim_is_pad, so 26/33 trained as ordinary noised
+#            channels with a constant target, and zeroing them is off-distribution.
+#   true  -> arm (mixed-embodiment checkpoints trained with AlignTo34DByWidth, e.g. 0909).
+action_dim_mask: false
+# true -> one summary per inference (yam32 bridge only): max |joint delta| over
+# the whole chunk, step 0 / last step deltas, gripper range, and tracking error
+# of the previous chunk's last target. On: the RoboDojo_real test guide reads
+# these lines from the server log.
+log_action_chunk: true
+
+# --- Flex runtime stream selection ------------------------------------------
+# One checkpoint serves every observed/generated stream combination; null means
+# "use whatever the checkpoint's own config chose". Set explicitly to trade
+# latency for accuracy, e.g. infer_joint_video: false for the action-only path.
+# The two pointmap flags ship false, to go with use_depth: false: with
+# present_pointmap false no depth or K is read, and flex checkpoints trained
+# with p_present_pointmap > 0 have seen the stream dropped. To use the 3D stream,
+# turn on depth + intrinsic_matrix in the env_cfg, set use_depth: true and set
+# both pointmap flags to null (the checkpoint's choice) or true.
+infer_joint_video: null
+infer_joint_dino: null
+infer_joint_pointmap: false
+infer_present_video: null
+infer_present_dino: null
+infer_present_pointmap: false
+
+# --- Debug -------------------------------------------------------------------
+# On RoboDojo_real the server warns (once per instruction) when the instruction
+# is not one of the robot's six training sentences (robodojo_real_tasks.py);
+# this fallback, used when the observation carries none, is not one of them.
+default_instruction: complete the task
+# true -> a no-motion pass on a new robot: every call still runs the model, so
+# the chunk summaries and FLEXPI_DUMP_OBS show what it would do, but each chunk
+# sent is the state measured at the episode's first call, so the arms stay put.
+# The state is latched, not re-read, so a sag under gravity is never commanded
+# back. Leave false for evaluation.
+hold: false
+# true -> skip checkpoint loading and return zero actions, so the server/client
+# wiring can be exercised with EVAL_ENV_TYPE=debug and no weights.
+allow_dummy_policy: false
