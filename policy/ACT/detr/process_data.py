@@ -55,6 +55,10 @@ def data_transform(path, episode_num, load_data_dir, save_dir, robot_action_dim_
         hdf5path = os.path.join(save_dir, f"episode_{current_episode}.hdf5")
 
         with h5py.File(hdf5path, "w") as f:
+            # Standard trajectories pair state[t] with its action target at t.
+            f.attrs["action_alignment"] = "next_state"
+            if "sim" in data.get("_attrs", {}):
+                f.attrs["sim"] = data["_attrs"]["sim"]
             f.create_dataset("action", data=np.array(actions, dtype=np.float32))
             obs = f.create_group("observations")
             obs.create_dataset("qpos", data=np.array(qpos, dtype=np.float32))
