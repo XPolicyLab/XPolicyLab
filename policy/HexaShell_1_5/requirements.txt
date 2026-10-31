@@ -1,0 +1,16 @@
+# The policy environment (POLICY_ENV), Python 3.11. Versions are the ones R0 ran with.
+numpy==1.26.4
+opencv-python-headless==4.11.0.86
+pillow==13.0.0
+httpx==0.28.1
+# RoboDojo's XPolicyLab policy server (ws protocol)
+PyYAML==6.0.3
+websockets==17.3
+msgpack==1.2.3
+# tests
+pytest==9.1.1
+
+# The SAM3 service (services/sam3_server.py; it may run from the same environment, as on our
+# machines): torch 2.7 with CUDA, plus SAM3 itself, installed from Meta's repository with its
+# checkpoint (sam3.pt) downloaded separately:
+#   torch==2.7.0  torchvision==0.22.0  timm  sam3 (0.1.0)
