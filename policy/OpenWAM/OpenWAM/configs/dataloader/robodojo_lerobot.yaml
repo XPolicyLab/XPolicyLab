@@ -5,7 +5,10 @@ type: robodojo_lerobot
 # `robodojo` HDF5 reader: EEF20 is rebuilt from the joint states by X5 forward
 # kinematics (openwam/dataloader/robodojo_lerobot.py); images are decoded video.
 # dataset_dir: one dataset dir or a list of them (e.g. one per round).
+# episode_allowlist: null = every episode; else a JSON file
+# {dataset dir basename: [episode_index, ...]} naming the episodes to train on.
 dataset_dir: /path/to/robodojo_lerobot_dataset
+episode_allowlist: null
 embodiment: arx_x5               # real: arx_x5, piper, piper_x; sim: arx_x5
 variant: sim                     # simulation releases only
 

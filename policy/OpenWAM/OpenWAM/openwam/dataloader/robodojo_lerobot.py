@@ -18,10 +18,16 @@ RSI round). Tasks come from the release's ``rsi_episodes.json`` (or the
 neither is one task named after its directory. Samples are grouped by task in
 sorted order like ``MultiTaskRoboDojoDataset``; within a task, episodes follow
 the ``dataset_dir`` order, then ``episode_index``.
+
+``episode_allowlist`` (a JSON file or mapping) restricts training to listed
+episodes: ``{dataset dir name: [episode_index, ...]}``, keyed by the
+directory's basename so the list survives copying the datasets elsewhere.
+Every dataset in ``dataset_dir`` needs an entry; ``[]`` drops a dataset.
 """
 
 from __future__ import annotations
 
+import functools
 import json
 import math
 from collections.abc import Mapping, Sequence
@@ -38,6 +44,7 @@ from openwam.dataloader.robodojo import (
     DEPLOY_ACTION_MODE,
     MultiTaskRoboDojoDataset,
     RoboDojoDataset,
+    _config_get,
     _decode_instruction,
     _normalize_mode,
     calibrated_eef20,
@@ -317,8 +324,29 @@ class RoboDojoLeRobotDataset(RoboDojoDataset):
         ]
 
 
+def _select_episodes(
+    episodes: list[LeRobotEpisode], directory: str | Path, allowlist: Mapping[str, Sequence[int]] | None
+) -> list[LeRobotEpisode]:
+    if allowlist is None:
+        return episodes
+    name = Path(directory).name
+    if name not in allowlist:
+        raise ValueError(f"episode_allowlist has no entry for dataset {name!r}")
+    keep = {int(index) for index in allowlist[name]}
+    unknown = sorted(keep - {episode.episode_index for episode in episodes})
+    if unknown:
+        raise ValueError(f"episode_allowlist lists episodes {unknown[:5]} that {directory} does not have")
+    return [episode for episode in episodes if episode.episode_index in keep]
+
+
 class MultiTaskRoboDojoLeRobotDataset(MultiTaskRoboDojoDataset):
     """RoboDojo tasks from one or more LeRobot v3 datasets, with shared calibration and stats."""
+
+    @classmethod
+    def from_config(cls, config, split: str = "train"):
+        # The parent passes a fixed set of config keys to the constructor.
+        build = functools.partial(cls, episode_allowlist=_config_get(config, "episode_allowlist", None))
+        return MultiTaskRoboDojoDataset.from_config.__func__(build, config, split=split)
 
     def __init__(
         self,
@@ -331,6 +359,7 @@ class MultiTaskRoboDojoLeRobotDataset(MultiTaskRoboDojoDataset):
         normalization_stats_path: str | Path | None = None,
         action_mode: str = DEPLOY_ACTION_MODE,
         robot: str | None = None,
+        episode_allowlist: str | Path | Mapping[str, Sequence[int]] | None = None,
         **dataset_kwargs: Any,
     ):
         if dataset_dir is None:
@@ -339,9 +368,11 @@ class MultiTaskRoboDojoLeRobotDataset(MultiTaskRoboDojoDataset):
         if not dirs:
             raise ValueError("RoboDojo LeRobot dataset_dir is an empty list")
         validate_embodiment(embodiment, variant=variant)
+        if isinstance(episode_allowlist, (str, Path)):
+            episode_allowlist = json.loads(Path(episode_allowlist).read_text())
         by_task: dict[str, list[LeRobotEpisode]] = {}
         for directory in dirs:
-            for episode in load_lerobot_episodes(str(directory)):
+            for episode in _select_episodes(load_lerobot_episodes(str(directory)), directory, episode_allowlist):
                 by_task.setdefault(episode.task, []).append(episode)
 
         self.dataset_dir = ",".join(str(directory) for directory in dirs)

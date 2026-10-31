@@ -242,3 +242,20 @@ def test_dropped_video_frames_are_rejected(tmp_path, release):
     _write_lerobot(tmp_path / "dropped", episodes, drop_last_frame_of=1)
     with pytest.raises(ValueError, match="dropped"):
         load_lerobot_episodes(tmp_path / "dropped")
+
+
+def test_episode_allowlist_keeps_listed_episodes(tmp_path, release):
+    root, _ = release
+    common = dict(normalize_mode=None, unify_action_map=UNIFY, split="val", num_frames=5, video_stride=2)
+    allow = tmp_path / "allow.json"
+    allow.write_text(json.dumps({"lerobot": [0, 1]}))
+    lr = MultiTaskRoboDojoLeRobotDataset.from_config(
+        dict(type="robodojo_lerobot", dataset_dir=[str(root / "lerobot")], episode_allowlist=str(allow), **common),
+        split="val",
+    )
+    kept = {task: d._episode_lengths for task, d in zip(lr.tasks, lr._sub_datasets)}
+    assert kept == {"hang_mugs": [7], "stack_bowls": [9]}
+    with pytest.raises(ValueError, match="no entry"):
+        MultiTaskRoboDojoLeRobotDataset([root / "lerobot"], episode_allowlist={"other": []}, **common)
+    with pytest.raises(ValueError, match="does not have"):
+        MultiTaskRoboDojoLeRobotDataset([root / "lerobot"], episode_allowlist={"lerobot": [3]}, **common)
