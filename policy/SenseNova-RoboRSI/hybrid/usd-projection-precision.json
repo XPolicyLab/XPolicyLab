@@ -1,0 +1,558 @@
+{
+  "type": "done",
+  "data": {
+    "passed": true,
+    "scope": "Static fixed official X5 USD only; no app, task, scorer, credentials or live environment",
+    "usd_path": "/heart/assets/robodojo/Robots/x5/ARX.usd",
+    "usd_sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+    "usd_bytes": 28300821,
+    "pxr_usd_version": [
+      0,
+      24,
+      5
+    ],
+    "default_prim_path": "/X5A",
+    "default_prim_orient": {
+      "exists": true,
+      "type": "quatd"
+    },
+    "meters_per_unit": 1.0,
+    "up_axis": "Z",
+    "joints": [
+      {
+        "path": "/X5A/joints/joint1",
+        "name": "joint1",
+        "type": "PhysicsRevoluteJoint",
+        "attributes": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875,
+          "physics:axis": "Z",
+          "physics:localPos0": [
+            0.0,
+            0.0,
+            0.060499999672174454
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 57295.77734375
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/base_link"
+          ],
+          "physics:body1": [
+            "/X5A/link1"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint2",
+        "name": "joint2",
+        "type": "PhysicsRevoluteJoint",
+        "attributes": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875,
+          "physics:axis": "Y",
+          "physics:localPos0": [
+            0.019999999552965164,
+            0.0,
+            0.03999999910593033
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 57295.77734375
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link1"
+          ],
+          "physics:body1": [
+            "/X5A/link2"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint3",
+        "name": "joint3",
+        "type": "PhysicsRevoluteJoint",
+        "attributes": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875,
+          "physics:axis": "Y",
+          "physics:localPos0": [
+            -0.2639999985694885,
+            0.0,
+            0.0
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            -3.6199901387590216e-06,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 57295.77734375
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link2"
+          ],
+          "physics:body1": [
+            "/X5A/link3"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint4",
+        "name": "joint4",
+        "type": "PhysicsRevoluteJoint",
+        "attributes": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875,
+          "physics:axis": "Y",
+          "physics:localPos0": [
+            0.24500000476837158,
+            0.0,
+            -0.0560000017285347
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 57295.77734375
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link3"
+          ],
+          "physics:body1": [
+            "/X5A/link4"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint5",
+        "name": "joint5",
+        "type": "PhysicsRevoluteJoint",
+        "attributes": {
+          "physics:lowerLimit": -572.957763671875,
+          "physics:upperLimit": 572.957763671875,
+          "physics:axis": "Z",
+          "physics:localPos0": [
+            0.0677499994635582,
+            0.0005000000237487257,
+            -0.08649999648332596
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 57295.77734375
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link4"
+          ],
+          "physics:body1": [
+            "/X5A/link5"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint6",
+        "name": "joint6",
+        "type": "PhysicsRevoluteJoint",
+        "attributes": {
+          "physics:lowerLimit": -179.9087371826172,
+          "physics:upperLimit": 179.9087371826172,
+          "physics:axis": "X",
+          "physics:localPos0": [
+            0.028950000181794167,
+            0.0,
+            0.08649999648332596
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            -3.6199901387590216e-06,
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 57295.77734375
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link5"
+          ],
+          "physics:body1": [
+            "/X5A/link6"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/hand_to_camera_mount",
+        "name": "hand_to_camera_mount",
+        "type": "PhysicsFixedJoint",
+        "attributes": {
+          "physics:localPos0": [
+            0.05700000002980232,
+            0.0,
+            0.0
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            -3.6199901387590216e-06,
+            0.0,
+            -0.0,
+            -1.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link6"
+          ],
+          "physics:body1": [
+            "/X5A/camera_base"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/camera_joint",
+        "name": "camera_joint",
+        "type": "PhysicsFixedJoint",
+        "attributes": {
+          "physics:localPos0": [
+            -0.027499999850988388,
+            0.0,
+            0.05000000074505806
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            -4.30471871482041e-08,
+            -0.17366498708724976,
+            -7.591137496376632e-09,
+            0.9848048090934753
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/camera_base"
+          ],
+          "physics:body1": [
+            "/X5A/camera"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint7",
+        "name": "joint7",
+        "type": "PhysicsPrismaticJoint",
+        "attributes": {
+          "physics:lowerLimit": 0.0,
+          "physics:upperLimit": 0.04399999976158142,
+          "physics:axis": "Y",
+          "physics:localPos0": [
+            0.08657000213861465,
+            0.02489599958062172,
+            -0.00024360000679735094
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 1000.0
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link6"
+          ],
+          "physics:body1": [
+            "/X5A/link7"
+          ]
+        }
+      },
+      {
+        "path": "/X5A/joints/joint8",
+        "name": "joint8",
+        "type": "PhysicsPrismaticJoint",
+        "attributes": {
+          "physics:lowerLimit": 0.0,
+          "physics:upperLimit": 0.04399999976158142,
+          "physics:axis": "Y",
+          "physics:localPos0": [
+            0.08657000213861465,
+            -0.024900000542402267,
+            -0.0002436600043438375
+          ],
+          "physics:localPos1": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot0": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "physics:localRot1": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "physics:jointEnabled": true,
+          "physxJoint:maxJointVelocity": 1000.0
+        },
+        "relationships": {
+          "physics:body0": [
+            "/X5A/link6"
+          ],
+          "physics:body1": [
+            "/X5A/link8"
+          ]
+        }
+      }
+    ],
+    "root_transforms": [
+      {
+        "path": "/X5A",
+        "name": "X5A",
+        "local_to_asset_world_row_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "path": "/X5A/base_link",
+        "name": "base_link",
+        "local_to_asset_world_row_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "path": "/X5A/base_link/visuals/base_link",
+        "name": "base_link",
+        "local_to_asset_world_row_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "path": "/X5A/base_link/collisions/base_link",
+        "name": "base_link",
+        "local_to_asset_world_row_matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    ]
+  }
+}

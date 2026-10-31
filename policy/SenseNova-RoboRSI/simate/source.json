@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/XPolicyLab/XPolicyLab",
+  "revision": "562c14cf08b9e6e411e7d76f192740afced77160",
+  "relative_root": "../Simate_beta",
+  "files": {
+    "__init__.py": {
+      "bytes": 41,
+      "sha256": "503ef68b4ae1230dab8eb6d6dbc973e18bc34ace326844010d6ffbf1d3066c87"
+    },
+    "model.py": {
+      "bytes": 6579,
+      "sha256": "42dac8bd3c996b9059806c5c019947ab62ba4a2c8da227204638a1a9a7990548"
+    },
+    "network.py": {
+      "bytes": 5044,
+      "sha256": "b840df554cd1ae855df1d916beac010f863b3b6380879f17b66c800c447f282d"
+    },
+    "gemma.py": {
+      "bytes": 10799,
+      "sha256": "a4406430c4d7cb906d09bdc39523a390b0ebea8afca276ce755c62b0c63971d2"
+    },
+    "siglip.py": {
+      "bytes": 5840,
+      "sha256": "d93d2040d53a546f2d9b008d82013b170d337f3a3138bc046e6667e101c487b0"
+    },
+    "history.py": {
+      "bytes": 1419,
+      "sha256": "ef734ea6c922b7ef3a6d4cbd98c5adda9e02b57088337993ad4bfe58809fed83"
+    },
+    "history_encoder.py": {
+      "bytes": 2102,
+      "sha256": "67a82121d08374c46f2ecad575ea15a8a349a035c10d94b345bf3732cf1c206f"
+    },
+    "processing.py": {
+      "bytes": 7108,
+      "sha256": "d1888f9e32b223a04a3a654ea838f8853c17f0fb864ab6037a526908ef280c68"
+    },
+    "deploy.yml": {
+      "bytes": 429,
+      "sha256": "1f9d9e92fe6917d4971727d66fdfb6aaf3a4e346e56f14a39d1283be4de36848"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+policy_name: SenseNova-RoboRSI
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: roborsi-codex-v1
+env_cfg_type: arx_x5
+seed: 0
+action_type: joint
+gpu_id: null
+eval_batch: false
+ws_ping_interval_s: 20.0
+ws_ping_timeout_s: 20.0
+checkpoint_path: "checkpoints/simate-beta-robodojo-eval"
+# Allow terminal ACK processing and transport around the 3600-second cleanup join.
+request_timeout_s: 3660.0
+trajectory_dir: null
+vla_backend: "simate_beta"

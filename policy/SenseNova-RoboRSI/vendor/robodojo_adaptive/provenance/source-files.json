@@ -1,0 +1,1006 @@
+{
+  "baseline_commit": "cfa591575172b638a8436fa95db28e9469785c9c",
+  "files": [
+    {
+      "bytes": 54,
+      "path": "source/code/policylab/__init__.py",
+      "sha256": "5d6bb09cc01444d9df023c61d5811b5685584d0da4c6cfa313eaf49b55b92b46",
+      "source": "upstream/robodojo-adaptive/code/policylab/__init__.py",
+      "parent_sha256": "5d6bb09cc01444d9df023c61d5811b5685584d0da4c6cfa313eaf49b55b92b46",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 1933,
+      "path": "source/code/policylab/api.py",
+      "sha256": "2fbf04d91249bac6e2c6bbd5420a79127270708ecfab1736d1e266a0fcb62cc8",
+      "source": "upstream/robodojo-adaptive/code/policylab/api.py",
+      "parent_sha256": "2fbf04d91249bac6e2c6bbd5420a79127270708ecfab1736d1e266a0fcb62cc8",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 3473,
+      "path": "source/code/policylab/backend.py",
+      "sha256": "007de5f4ff953a180c123dfd8e02057aaf06bbed375e8663dbbe6c51444b6439",
+      "source": "upstream/robodojo-adaptive/code/policylab/backend.py",
+      "parent_sha256": "007de5f4ff953a180c123dfd8e02057aaf06bbed375e8663dbbe6c51444b6439",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 4086,
+      "path": "source/code/policylab/cli.py",
+      "sha256": "39bfdf151e884b1b973dce7dc20ae5c6a3bbaa6768a0688d809f74ce70dc4bfe",
+      "source": "upstream/robodojo-adaptive/code/policylab/cli.py",
+      "parent_sha256": "39bfdf151e884b1b973dce7dc20ae5c6a3bbaa6768a0688d809f74ce70dc4bfe",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 5791,
+      "path": "source/code/policylab/codex.py",
+      "sha256": "a7b3995d166b84c64b672acc7da009a398da1c210851a3cfa54ac22994da0d2c",
+      "source": "upstream/robodojo-adaptive/code/policylab/codex.py",
+      "parent_sha256": "a7b3995d166b84c64b672acc7da009a398da1c210851a3cfa54ac22994da0d2c",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 5638,
+      "path": "source/code/policylab/common.py",
+      "sha256": "bcfdc49fb1073ce0dd757bff35fda8917a93b7e2f0ff333a7f89378a37c58bf7",
+      "source": "upstream/robodojo-adaptive/code/policylab/common.py",
+      "parent_sha256": "bcfdc49fb1073ce0dd757bff35fda8917a93b7e2f0ff333a7f89378a37c58bf7",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 2773,
+      "path": "source/code/policylab/robot.py",
+      "sha256": "f5ef8c523bf37e67955cf59bbca271be4e207dbaa129944527b1e6612d58783c",
+      "source": "upstream/robodojo-adaptive/code/policylab/robot.py",
+      "parent_sha256": "bc2f150a23e97e135b10e858ff7f6f2e39affee873502425f0f1b26bb178b656",
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
+    },
+    {
+      "bytes": 44812,
+      "path": "source/code/policylab/runner.py",
+      "sha256": "eee7325c3fe838263c589715eba1baa8efecc9083cdb6b8cd9690605a3ba4389",
+      "source": "upstream/robodojo-adaptive/code/policylab/runner.py",
+      "parent_sha256": "770890be57d0f26fb9031863acbb606f22b5595223bfdce321801870c846cf7e",
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
+    },
+    {
+      "bytes": 2682,
+      "path": "source/code/policylab/worker.py",
+      "sha256": "119c233450f01e3dd91fda4f281b2957ae056662bc49fc68edf609a8d982e750",
+      "source": "upstream/robodojo-adaptive/code/policylab/worker.py",
+      "parent_sha256": "119c233450f01e3dd91fda4f281b2957ae056662bc49fc68edf609a8d982e750",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 7371,
+      "path": "source/hybrid_host.py",
+      "sha256": "bd380c1798e48bf22ff27b75cf00f7bc610eb899df1e88ab6cdbc90092414db6",
+      "source": "upstream/robodojo-adaptive/hybrid_host.py",
+      "parent_sha256": "d30233bb8eeaaec4f4e7b33f1c8e8ec995b6ea93d60c1b69bc85334871282628",
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
+    },
+    {
+      "bytes": 5690,
+      "path": "source/hybrid_adapter.py",
+      "sha256": "35a63761959d10868c1d3cc913099b2e2eb17bab0f7e78611a1d7e7b5c6b624a",
+      "source": "upstream/robodojo-adaptive/hybrid_adapter.py",
+      "parent_sha256": "35a63761959d10868c1d3cc913099b2e2eb17bab0f7e78611a1d7e7b5c6b624a",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 5357,
+      "path": "source/local_runtime.py",
+      "sha256": "81467b46a61430fd0d9a3d86efc084f4f493f60884ffce3018e970e0bd77f9f4",
+      "source": "upstream/robodojo-adaptive/local_runtime.py",
+      "parent_sha256": "a64c1ff433933953d149276f0a534dd0f14678e754b668b31849884a0e06c7c9",
+      "derivation": "Runtime-configurable adaptive minimum via ROBORSI_ADAPTIVE_MIN_STEPS, default 5; configured host validation, agent interface and prompt agree; VLA horizon and action budgets preserved."
+    },
+    {
+      "bytes": 6148,
+      "path": "source/recovery.py",
+      "sha256": "52daba98ec13b856f2a3433ae13e7cf38c598e601545803cc042a9746c7cdf48",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/source/recovery.py",
+      "parent_sha256": "52daba98ec13b856f2a3433ae13e7cf38c598e601545803cc042a9746c7cdf48",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 1052,
+      "path": "source/benchmark_bootstrap.py",
+      "sha256": "a3fadbcc4b0efb433e55e31640d6019fd6ec38a9c65398439cb040488f84eb47",
+      "source": "upstream/robodojo-adaptive/benchmark_bootstrap.py",
+      "parent_sha256": "a3fadbcc4b0efb433e55e31640d6019fd6ec38a9c65398439cb040488f84eb47",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 373,
+      "path": "source/benchmark.sh",
+      "sha256": "0299d07c04d46ac7f1e844fe2d41daf9db0bcc9f1d879b1503779bd97e4b85a8",
+      "source": "upstream/robodojo-adaptive/benchmark.sh",
+      "parent_sha256": "0299d07c04d46ac7f1e844fe2d41daf9db0bcc9f1d879b1503779bd97e4b85a8",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 179,
+      "path": "source/code/run.py",
+      "sha256": "6944dd2dbc5369397fe2788555c242ce26063128b5bb0985b16313a69f43a0ad",
+      "source": "upstream/robodojo-adaptive/code/run.py",
+      "parent_sha256": "6944dd2dbc5369397fe2788555c242ce26063128b5bb0985b16313a69f43a0ad",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 13317,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/adapter.py",
+      "sha256": "bb311e45ee5cc93da1ea682b4e2d18af00717e9928b61f941bda02306d6cf0fe",
+      "source": "upstream/robodojo-adaptive/code/configurations/robodojo/20261005_standard_1x_10x/adapters/adapter.py",
+      "parent_sha256": "bb311e45ee5cc93da1ea682b4e2d18af00717e9928b61f941bda02306d6cf0fe",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 6765,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/eef_kinematics.py",
+      "sha256": "fffd0c6aa2207fdd551b0b92933daae938f1d3647b3a197aaf0457c8ebca22ad",
+      "source": "upstream/robodojo-adaptive/code/configurations/robodojo/20261005_standard_1x_10x/adapters/eef_kinematics.py",
+      "parent_sha256": "fffd0c6aa2207fdd551b0b92933daae938f1d3647b3a197aaf0457c8ebca22ad",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 385,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/tenfold_horizon_adapter.py",
+      "sha256": "ddcf6e60fa15053c62bc5ddd3cd40e02a00da8907e1a01f18586fc19176d1eeb",
+      "source": "upstream/robodojo-adaptive/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/tenfold_horizon_adapter.py",
+      "parent_sha256": "ddcf6e60fa15053c62bc5ddd3cd40e02a00da8907e1a01f18586fc19176d1eeb",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 6042,
+      "path": "source/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/trial_adapter.py",
+      "sha256": "2d7d672f60fb6559c282fa12b77f48a152ea3870be5b54285f04a66a00e665aa",
+      "source": "upstream/robodojo-adaptive/code/configurations/robodojo/20261005_standard_1x_10x/adapters/timeout_chunk_trials/trial_adapter.py",
+      "parent_sha256": "2d7d672f60fb6559c282fa12b77f48a152ea3870be5b54285f04a66a00e665aa",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 241,
+      "path": "source/waypoints.py",
+      "sha256": "e6965439b0279b3c5398ce6b89a995c7fa2758e9f05a72e82af4813757dca854",
+      "source": "upstream/robodojo-adaptive/waypoints.py",
+      "parent_sha256": "e6965439b0279b3c5398ce6b89a995c7fa2758e9f05a72e82af4813757dca854",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/align_blocks-s0.json",
+      "sha256": "71ed730ea43246fd1244049b608ce41627ef5c88701e42366c552017e4da4006",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/align_blocks-s1.json",
+      "parent_sha256": "6f3877e190abc8813df57ec8e447b3e73f1d4ae323797508286d9889edc96115"
+    },
+    {
+      "path": "resources/interfaces/BENCHMARK.md",
+      "bytes": 7128,
+      "sha256": "b3a7a7cab83dbc7f667cefa8672ce45f87c762155bc2384b4d210012fd2e5f29",
+      "parent_sha256": "97c583ddf286c8a9a7da2f96d47a1355d6990741f6217126669f97641c195623",
+      "source": "resources/interfaces/align_blocks-s0.md in parent adaptive_2_50 manifest",
+      "derivation": "Runtime-configurable approval limits with default minimum 5; retain the original advisory precision guidance (shorter prefixes, typically 5) without adding a shortest-permitted-span requirement."
+    },
+    {
+      "bytes": 1630,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/arrange_largest_number-s0.json",
+      "sha256": "a2c70f6c7de2494650de594f1d0bfe37894b482ba2e812eef66a66531156fd0f",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/arrange_largest_number-s1.json",
+      "parent_sha256": "eb54e1d7cf934ec241cc90591aa7b3c81a46d0010a7f970a423881db6e8e5369"
+    },
+    {
+      "bytes": 1575,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/build_tower-s0.json",
+      "sha256": "7749f141d72936fce487121af106a286fb2ba3dcbfbe3adcc5cc7167a292dd21",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/build_tower-s1.json",
+      "parent_sha256": "c719bd1f6e723f781a19537947447dc542b85def2c6c16e707c923041cb1822b"
+    },
+    {
+      "bytes": 1600,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/classify_objects-s0.json",
+      "sha256": "426a96c6a789528984ee27b6a09f908cac33ad839ce8c98b1200df99af68bfa2",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects-s1.json",
+      "parent_sha256": "d848d5cf409e5dac28722f2f9c8f582ee0c42307dc05f78e602195d2b7ee928d"
+    },
+    {
+      "bytes": 1660,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/classify_objects_by_language-s0.json",
+      "sha256": "78ddba02c1d68061923292d336855e70df5ecc323d16afe5dc827fb5a2d744af",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/classify_objects_by_language-s1.json",
+      "parent_sha256": "ba0748afa97b29d79f00006faf5e950c602b5531458c211827a6a765a2cb308c"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/cover_blocks-s0.json",
+      "sha256": "bce36b254eb4027393eccec9dd44924ede8aa3917dbe58b93b7d7a5dd9bded6d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/cover_blocks-s1.json",
+      "parent_sha256": "d129128c04fd8918196c1f1e43e9ca85e4136fd8faa889b7f660df25f179c82c"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/deposit_coin-s0.json",
+      "sha256": "de7374ce739d128e1280bbb11891040b5b4b8de46a66ac0aa328277ab1c95645",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/deposit_coin-s1.json",
+      "parent_sha256": "79a90ac4a3012dce30effb5834919ec12b7c3810e239d9de95f5b4c6425312bf"
+    },
+    {
+      "bytes": 1585,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/fasten_screws-s0.json",
+      "sha256": "95851fc8616f96c13aa9856af51081839b54180348cd0874d27165dc72e96e80",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fasten_screws-s1.json",
+      "parent_sha256": "b2c3a3270b6692babad4a0e019161b49276724281b683a653f8163fb65ac5f74"
+    },
+    {
+      "bytes": 1593,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/fill_egg_holder-s0.json",
+      "sha256": "104bb47801cee9325205261869318474d3b7742192e4cbecb2712ce7e56d2eea",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_egg_holder-s1.json",
+      "parent_sha256": "2a9d6ac8eeec4f2dfb41806fbe01f46a7c2ace4f7137914927f67464526aaf73"
+    },
+    {
+      "bytes": 1595,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/fill_pen_holder-s0.json",
+      "sha256": "7c11cc8a650acce3358553806602ab1fe624d0659254caa977b8321ad442b604",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fill_pen_holder-s1.json",
+      "parent_sha256": "e6d4df49f4ea8a7d38af608fcfc6f89c36439bdf0f297bb4e41cddc4e794b8d8"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/fold_clothes-s0.json",
+      "sha256": "4c5d016da699600cbb47dfbfe9c826e56bb8a521a0d8b7f1ebda3856d837dc06",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/fold_clothes-s1.json",
+      "parent_sha256": "41a31c66125a657e3988a1330154d11aa43f03322805350660758c5e37015ac4"
+    },
+    {
+      "bytes": 1588,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/general_pickup-s0.json",
+      "sha256": "476528b2358a4ae883eee0d19286a03e402ab6bf2b69cee5d2d84efdb36cb8b3",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/general_pickup-s1.json",
+      "parent_sha256": "270f6684b424e50bcfe6a17977e5590518a76e1b0bc27adc7f9ac3552bd506f4"
+    },
+    {
+      "bytes": 1563,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/hang_mugs-s0.json",
+      "sha256": "1b4657d4e894d52124b29984833719fcf524a67e8c0fa0820ab505bb1a54e14c",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/hang_mugs-s1.json",
+      "parent_sha256": "5852ec7e67d3de56d4fa30988fe5af4c3f77479baed78f69aee3127c1afd3696"
+    },
+    {
+      "bytes": 1640,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json",
+      "sha256": "3e47d9207804bfd3a2a354ff54f8056c3b29fbb1eddc19b48ba9b2e0e7560920",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/imitate_sorting_sequence-s1.json",
+      "parent_sha256": "97876ba9388ace61fb3562228d3c1561ed4ff5d87763622227acabd71211c3d4"
+    },
+    {
+      "bytes": 1568,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/insert_key-s0.json",
+      "sha256": "90abd7df46e3a68bacb79b09faaf532bdd547dfb09cd58a56fd25c5e4122f620",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_key-s1.json",
+      "parent_sha256": "506421bbd248a7f282d2b985cc7fc532e5f00765ed05866c5ec3a7d1507e32ac"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/insert_tubes-s0.json",
+      "sha256": "9d7b6e7c6180e5183fb73187a293b20917e6e1871d3385ca3b2112dbafa95603",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/insert_tubes-s1.json",
+      "parent_sha256": "c227686fe8a755525e9c05d4fb11df911bb6f8ee1d6b6f639f3d648457ade463"
+    },
+    {
+      "bytes": 1563,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/make_kong-s0.json",
+      "sha256": "5ad4cb9c7f7904759a5ead727756ec51167c941dfb3bb1f40c6270820c8d6897",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_kong-s1.json",
+      "parent_sha256": "eca4d52b873dc1ebc72f5cca57e0bd9f5ac19ffd4078a7baba8061f0847b71bb"
+    },
+    {
+      "bytes": 1570,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/make_toast-s0.json",
+      "sha256": "99399f90818af1066aaa9ebb64c1e3fc31a34d77009eae56de468bb02863298d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/make_toast-s1.json",
+      "parent_sha256": "32120d3a8c8cd1f4b5e88034b81b4c44923173c8e62d83b815f948f868dde331"
+    },
+    {
+      "bytes": 1658,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json",
+      "sha256": "5a02b8afd27349fc9b674161e7d3aaeea6f9326416428e5ca3dbfe503c598183",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/match_and_pick_from_conveyor-s1.json",
+      "parent_sha256": "ad2d9cc4b9485c99273feb23678d3e60210fa74604ac4d2efd29682b3ce137e6"
+    },
+    {
+      "bytes": 1590,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/organize_table-s0.json",
+      "sha256": "64c0182790a09e8e20558b430f9173da0232e74de6c3780f9f437884e541a6ff",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/organize_table-s1.json",
+      "parent_sha256": "3728814eef97f05bfa6c0a494aae709d04f7b1e5d85d709fe7442668814c4b57"
+    },
+    {
+      "bytes": 1625,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/pack_objects_into_box-s0.json",
+      "sha256": "6bbebf47e5cc6ce6d8134672fe81b39f00ad36a494ab1cbea5fba47e90c4494a",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pack_objects_into_box-s1.json",
+      "parent_sha256": "db7544a1f318504cec15dee498b0b7ca8a5750e0348bf3a7a01e96c24578c2e6"
+    },
+    {
+      "bytes": 1653,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/pick_from_conveyor_by_image-s0.json",
+      "sha256": "15bd34cadba87810bba3f0c5872da35d224abc8f62e3eefdf96b1a5b0d35bfbb",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pick_from_conveyor_by_image-s1.json",
+      "parent_sha256": "210ee97898d492b2dbc33f55c762b2220ef5414ba2eb7cac76a5fbab51345495"
+    },
+    {
+      "bytes": 1588,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/play_Xylophone-s0.json",
+      "sha256": "9e963535be3106bac348a5949662732a0df510a0745ba95cd19b4cb1575e409d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_Xylophone-s1.json",
+      "parent_sha256": "5d3e8b23d8eae43e83dd19480baf578b2dc3e41ab9d02ef06069c4e9c9e2341a"
+    },
+    {
+      "bytes": 1605,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/play_stacking_toy-s0.json",
+      "sha256": "73b7a846efc6ce874094a3dc9e2269173a887aae3017a70c4950a4c807055797",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_stacking_toy-s1.json",
+      "parent_sha256": "cab4aa40a9cb49db95f685056e74b7f25adea1ec12ee8af843d4be111163e7c7"
+    },
+    {
+      "bytes": 1600,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/play_tic_tac_toe-s0.json",
+      "sha256": "06f40e1ebb3782a9e70bf6bad2d2d01c13d1a9b53c50f87fba04c8934a5ebef2",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/play_tic_tac_toe-s1.json",
+      "parent_sha256": "6502c553a2daa7a2c7346252ca81413efb05ebc2508d1685ec0a5f9c57b04a00"
+    },
+    {
+      "bytes": 1593,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/plug_in_charger-s0.json",
+      "sha256": "1a0ad211d734be8103e0c4b6998d8c61acc2183e17ef4fd701bc81d5912f0b39",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/plug_in_charger-s1.json",
+      "parent_sha256": "b294cba64fc9953ef96c039b139f1bed8f056be763142a9aefb53b57ec524121"
+    },
+    {
+      "bytes": 1618,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/pour_balls_into_vase-s0.json",
+      "sha256": "c781ae241af0d22631975b94826588da3b21821fbcd7bdae4d6c58d892b7eb9d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_balls_into_vase-s1.json",
+      "parent_sha256": "cb90d715de32fa46fb81a1d1e781ced476d8f2bd07ec2f3000cbcde5b86a3992"
+    },
+    {
+      "bytes": 1598,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/pour_by_language-s0.json",
+      "sha256": "13a2104a8d88481ebf79123cba77e72d48f01799fb6859a32b4bb26826e590b7",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_by_language-s1.json",
+      "parent_sha256": "7a5000ac20c3965ddbcc02862a5d87f4d58195a6649596739dfb7ae11505982e"
+    },
+    {
+      "bytes": 1618,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/pour_liquid_into_cup-s0.json",
+      "sha256": "bd85518e0ca73304a8ce72687318cfbb2f18bf0eec93bc9ad68453ebcf29bbed",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/pour_liquid_into_cup-s1.json",
+      "parent_sha256": "22c9c9262d118baa543ba9583d5a5bc87804aa9a1ba85fe1a7b2581677cdf643"
+    },
+    {
+      "bytes": 1593,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/press_by_number-s0.json",
+      "sha256": "d7be9d528e735f63816ad69f90e60d1f730dff10566ddafe1185f20631261e71",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/press_by_number-s1.json",
+      "parent_sha256": "6be9644d60f0777c223980a4d97ca3f786e464f9405b46a4fb8ee26387d1d9af"
+    },
+    {
+      "bytes": 1548,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/push_T-s0.json",
+      "sha256": "eeac0ffa61e3c3e8fd0a0211e20f62772ba20631a15a08bde995532de950c3b7",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/push_T-s1.json",
+      "parent_sha256": "238742a6f55e350985825ea723ca40036bb47c367f9de1ea1a090559ef8eb903"
+    },
+    {
+      "bytes": 1638,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/put_bottles_into_dustbin-s0.json",
+      "sha256": "df3abe35b6401051bd91c6ee2ef671b6c7e1a83fa868bc12522cff023515d570",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/put_bottles_into_dustbin-s1.json",
+      "parent_sha256": "fefc8c8baf33779aceecefd9c3013233f88b5dd63e9758661283fb787e251253"
+    },
+    {
+      "bytes": 1588,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/solve_equation-s0.json",
+      "sha256": "d09087c8aff35bf9e315b09c0302044361031ecb67b7628f222b944179cd0790",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/solve_equation-s1.json",
+      "parent_sha256": "30996dab66c26b98652d27db7f1f9e58e3fd33f1cbfd762c864d0a5af83cfc96"
+    },
+    {
+      "bytes": 1650,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/sort_nesting_dolls_by_size-s0.json",
+      "sha256": "8c26b64e31e4eb965828b8f8cd64a4dd4a4f8d8a1c5ee0065932680008988f7e",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/sort_nesting_dolls_by_size-s1.json",
+      "parent_sha256": "51b8fa426bcfa2375c23dcf8c938404039d634902f864b5dbc6c94077205d4ce"
+    },
+    {
+      "bytes": 1578,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/stack_blocks-s0.json",
+      "sha256": "0bf6da0174973a4dea4fe8a36c2dbfacd8f10c4485fb47662c847f0baf66a4dc",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks-s1.json",
+      "parent_sha256": "959b9b640ac5eb7f5594e18d0a22c0d76dc5061b32f05f9027c074f215184f07"
+    },
+    {
+      "bytes": 1638,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/stack_blocks_by_language-s0.json",
+      "sha256": "0f1a8753f643d06e30ef0aa309320ed6bceacc932f29308de878ac343e34113d",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_blocks_by_language-s1.json",
+      "parent_sha256": "b7a30052c742a7b3b076b1b82d98aa4565f466e3687729ff4dcea6849ffd57c0"
+    },
+    {
+      "bytes": 1573,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/stack_bowls-s0.json",
+      "sha256": "d5c5a34c284b20fc0c4ef8ceb86059641e292bcfc2b2e97bd020c05d3bd76566",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/stack_bowls-s1.json",
+      "parent_sha256": "73f17bef14443a8d56efcb150d1d82fb8b27db892ab1a2b45e84e64a2eb7c3c0"
+    },
+    {
+      "bytes": 1653,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/store_laptop_and_headphones-s0.json",
+      "sha256": "07805d18ced27aa087198e5bee75e696ff839f44f65bb514c9df70883bd23cdb",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_laptop_and_headphones-s1.json",
+      "parent_sha256": "c2c86a9b85d8bdaaccfa20872d76914d94e0193d41d657a9da5afe112dde57c7"
+    },
+    {
+      "bytes": 1628,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/store_tools_in_toolbox-s0.json",
+      "sha256": "06ff7620220acef58999a2b1a4476caee5daea3edcc261908f6d22bf3cdefc92",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/store_tools_in_toolbox-s1.json",
+      "parent_sha256": "967fd615674077959f34edeafca70bac853c58ce933c407432b8c98f33f8a1fc"
+    },
+    {
+      "bytes": 1548,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/swap_T-s0.json",
+      "sha256": "93b95496d1cfa0db0498a59d46f44ea2766af39b9b79c9e5c3c4d457783bbed0",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_T-s1.json",
+      "parent_sha256": "ebe62cef45e26d9f4f975f286a502c4f7431c9dccaa7c1f2574e8249cba74afb"
+    },
+    {
+      "bytes": 1573,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/swap_blocks-s0.json",
+      "sha256": "ea0b9b1ac27d4fa84f2814d3bd4b1223099c84c764f3fa8dfa1ecda5a777801f",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/swap_blocks-s1.json",
+      "parent_sha256": "6884855f07dab2395b0d6bb4180335ac5f0ca231e8e9ce6e71d3774d94efcb14"
+    },
+    {
+      "bytes": 1580,
+      "derivation": "pinned 2–50 policy delta; deployment-sanitized derivative (environment-based provider/model and portable GPU default as applicable); shared public interface selection (other configuration unchanged)",
+      "path": "resources/fresh-configs/sweep_blocks-s0.json",
+      "sha256": "2c46a48973dbd8e686a1e74027fe239968a3a9bf31c9080d30ad20e79b325729",
+      "source": "robodojo/RoboRSI/robots/robodojo/agents/icl_pi05/resources/fresh-configs/sweep_blocks-s1.json",
+      "parent_sha256": "9e543cdfcfbc3dc52fe8dac2c754ca687749b82f0caa6ab0ad3336b83adc1b8d"
+    },
+    {
+      "bytes": 12671,
+      "path": "resources/material-bindings.json",
+      "sha256": "ad464a9d15e9047fa642d0283c64677df3c0b7cb61b97b617d4f6f46b7c098ac",
+      "source": "derived from pinned baseline frozen-bundles.json and task templates",
+      "parent_sha256": "ad464a9d15e9047fa642d0283c64677df3c0b7cb61b97b617d4f6f46b7c098ac",
+      "derivation": "unchanged copy"
+    },
+    {
+      "bytes": 1751,
+      "path": "source/adaptive_steps.py",
+      "sha256": "6532ca6895ce96778e9d4db001931757e25e842441a3e31b97df432d84d923ae",
+      "source": "local/SenseNova-RoboRSI/adaptive_steps.py",
+      "derivation": "Local stdlib runtime limit resolver; minimum defaults to5 and can be set from2 to50; maximum50; omitted approval max(5,minimum). Do not change authenticated baseline task templates."
+    }
+  ],
+  "policy_variant": "adaptive_2_50",
+  "portability": {
+    "patches": [
+      {
+        "after_sha256": "aeedb220edeff30750407a869e506542a3673d7ea3ba24cc5fc1a0c94e9b5788",
+        "before_sha256": "3e345585ddfa5393a70946345c169dcafcfc566057537296fe0f6c6d758201ce",
+        "path": "resources/fresh-configs/align_blocks-s0.json"
+      },
+      {
+        "after_sha256": "7a19ae8e7ae75cea0cebccf5f40bef1694b67e655a44588c4ac2f4bfbe045d4d",
+        "before_sha256": "61c68c2a4f850463bba4e31541a093cd86ac8ccec127f6c1eba15e1611f759e2",
+        "path": "resources/fresh-configs/arrange_largest_number-s0.json"
+      },
+      {
+        "after_sha256": "804d04bc1e756722625f654c90eb0062dc6338fc93d7e0dddc68408b8950b457",
+        "before_sha256": "4eb2f54e980e2d41cea75bb3d9dfa76c4cd89d8433a1dda4aa7b5bd75d1d15cf",
+        "path": "resources/fresh-configs/build_tower-s0.json"
+      },
+      {
+        "after_sha256": "f69698781a76b55be1180879c76c125d450938097330857be1ef9191161b4647",
+        "before_sha256": "7ddeed6516af17e59439dd0a34e57e9c0892589e689ce58f3a0411c4faf1791e",
+        "path": "resources/fresh-configs/classify_objects-s0.json"
+      },
+      {
+        "after_sha256": "44864c32775ba15b891a523b1f864bdd42c9629e27ff5bb46926bfaee85e5d4d",
+        "before_sha256": "7fd621cb9f2e166d3a247303c5b515644a6db60919f217bd0c8b13a8ac282a7c",
+        "path": "resources/fresh-configs/classify_objects_by_language-s0.json"
+      },
+      {
+        "after_sha256": "3fb9d755f6264797c0d5568b8a0129f2df8df2aaed3fc9d80cff19fbb4cc23dc",
+        "before_sha256": "fa647bdba9cd318795eff2d503966872c084096a3576d50c9c48777127ec1a9e",
+        "path": "resources/fresh-configs/cover_blocks-s0.json"
+      },
+      {
+        "after_sha256": "3a7502782ca27f936b84bae6f4eb9abcc6b30f6ba7e961d33d2fa653244efa64",
+        "before_sha256": "4fd1652f7c1546035c2db04ef2898a3f3eed7c04af4e33fdf7421d2a8aac4166",
+        "path": "resources/fresh-configs/deposit_coin-s0.json"
+      },
+      {
+        "after_sha256": "8ac6f3815bf82518a0a76835c363ec13772770de0b0a8fe485809172d5e21288",
+        "before_sha256": "d2b18a2cccbeb9284807da9b1ee14370b3445102930d8208f54cbfb29c15566f",
+        "path": "resources/fresh-configs/fasten_screws-s0.json"
+      },
+      {
+        "after_sha256": "e957a66d2f35cdf0cf6be826adc7edf9c559a1ff97d56462a6d8abbd50a57bdc",
+        "before_sha256": "2db8232928a8bd67e89c7d55da91f7455eec5c991dc6bf86eb4a61a012467782",
+        "path": "resources/fresh-configs/fill_egg_holder-s0.json"
+      },
+      {
+        "after_sha256": "0ba29e5584fc07181d045312ec9f9235588d5d2a3bc63d0a6e209f912124d5b4",
+        "before_sha256": "e1f0c087b3f970105beaa7fc7abdab3962f7241757d08708e656797555164f75",
+        "path": "resources/fresh-configs/fill_pen_holder-s0.json"
+      },
+      {
+        "after_sha256": "2012bccb99fb2fe04d2946907a484a1821d703c58a379dfafa2456fc09ca9f3c",
+        "before_sha256": "1a3ae5738671a3f53acf802311d7d63f04bc7a2ce3aeae23dfa56bf6027b6d67",
+        "path": "resources/fresh-configs/fold_clothes-s0.json"
+      },
+      {
+        "after_sha256": "e565239734893c269592ea811ebee469c2a097731a5de80ff82881841f8cafff",
+        "before_sha256": "fa61e6d09d086a627fc8316592f09690fd2d609ba5235f515d4771dd27a8bce8",
+        "path": "resources/fresh-configs/general_pickup-s0.json"
+      },
+      {
+        "after_sha256": "72b83102aea42d9aad1a9d811792270ebc853f47150383abf10b7f20153c229b",
+        "before_sha256": "d09d0f4ec0c4b1069a94d923fb733204a2312ccd9bda16b208ac5388d03a9e87",
+        "path": "resources/fresh-configs/hang_mugs-s0.json"
+      },
+      {
+        "after_sha256": "a93511706e2464f6afc8e87f0f2866e93408e79431a105403fa56272b2539d3b",
+        "before_sha256": "446fb91b696035ed793b515bfd46816802b75be140e738fa89bd84c79aac7089",
+        "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json"
+      },
+      {
+        "after_sha256": "96eef74966c3b0adb81766f57cf9ec66fffff5bd5233bc9085173db4c10b0324",
+        "before_sha256": "54a9610efb8c539e87cf7f0aa13e17b1b8c12460f6258e34b4e13cb3dabf1cb2",
+        "path": "resources/fresh-configs/insert_key-s0.json"
+      },
+      {
+        "after_sha256": "5fac5ba99efacc550f50fa1fcc00a8399d34894d9ac300fc81f840b3b7093439",
+        "before_sha256": "872e695084a956cd9899b24b69ebb8cee5bec5298f5edc463e47ad6bf971d143",
+        "path": "resources/fresh-configs/insert_tubes-s0.json"
+      },
+      {
+        "after_sha256": "b773c8f13a90551269b1b970c05a3f31acd00fd6e178781a8b8244c72839e98a",
+        "before_sha256": "6ae5752dc0df43a8226da8a8e88309d84644e27de81b5fd975d3b08ca743da1f",
+        "path": "resources/fresh-configs/make_kong-s0.json"
+      },
+      {
+        "after_sha256": "d006c548536178319f3da7fed8660768a925cab0658b463c915470476ccb58fa",
+        "before_sha256": "7b3c85e628763e0476aa1bea0005fda9179af2f83463d417268c0795ceea15ca",
+        "path": "resources/fresh-configs/make_toast-s0.json"
+      },
+      {
+        "after_sha256": "d0b90074312d03b615314c8ee3df4ca023633af6a78df6ddee85e2a3eab04fdb",
+        "before_sha256": "90cdc2e75c67bdbbec0bcd9816269ee2828ead3a439fb4c4bdf43a4fd6713c80",
+        "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json"
+      },
+      {
+        "after_sha256": "9d82c22b0862f90a6d752965a014397344c8b748d2c8968fa4e71cd770ed6250",
+        "before_sha256": "5d7108b9198c26d2ce9e86d2159e2ec881a2532cf0c8bc9bd7925d44f9220ad5",
+        "path": "resources/fresh-configs/organize_table-s0.json"
+      },
+      {
+        "after_sha256": "23982b8e4741616be05be5fcc045f8a92f576b004f0724359b62e437c16e71ce",
+        "before_sha256": "b1cda2739f2e63f47259a3721ff738f475dc17e5646b73a74cf80b787f803da1",
+        "path": "resources/fresh-configs/pack_objects_into_box-s0.json"
+      },
+      {
+        "after_sha256": "0f478c887d9cf783ce3340d1f92e4d0d09ee321a3516286575dab9af6e91afb0",
+        "before_sha256": "15e3ea8bd675d1c834c3a53a2bbc4124498a27c4b4a0af513780fbf96aa34481",
+        "path": "resources/fresh-configs/pick_from_conveyor_by_image-s0.json"
+      },
+      {
+        "after_sha256": "9186dd6121028c900f4beb930e7be857829f2db77bf0a177f38ac34a6df28b66",
+        "before_sha256": "3c2ec0d41daf2c0ce829c3522b586ea26dac9a3137188fe3de11c245a28dd179",
+        "path": "resources/fresh-configs/play_Xylophone-s0.json"
+      },
+      {
+        "after_sha256": "f20c9e0c4ffdd7d030b6db2a279f62f385eb593858dee201fa51cb59281c1206",
+        "before_sha256": "3fd5715674fcf9e1824ffff1047de9b5113aa2c877f785a92238cb8840e24003",
+        "path": "resources/fresh-configs/play_stacking_toy-s0.json"
+      },
+      {
+        "after_sha256": "e7d5e50cef4b929970658b72a68218ac77536d4d61f9da293f95e76d745ae58c",
+        "before_sha256": "dd9fcfc32f99772dc80fc66c454a126e4e62ac8a6f78b0e75d4fae5dbc145b80",
+        "path": "resources/fresh-configs/play_tic_tac_toe-s0.json"
+      },
+      {
+        "after_sha256": "ac288b6e80e7a16e2b3ce7b422fc376f2a6a758fe3fb439fdcd4030fb5a90423",
+        "before_sha256": "cbdc502a294bfa3ed3ce7456284bbb0e9afb2109803a2b65f101e9d9c569e72c",
+        "path": "resources/fresh-configs/plug_in_charger-s0.json"
+      },
+      {
+        "after_sha256": "ac8a22c8d7f7d9798232f3f394a6be0bd48479760c2c234a341bb163d729eabc",
+        "before_sha256": "4ddadcd6c4e71909ef642afae29ef0cd3d3df2e8b4ad58cf89c4ae41b4693c0b",
+        "path": "resources/fresh-configs/pour_balls_into_vase-s0.json"
+      },
+      {
+        "after_sha256": "b398bd8e8ea28f0d65eeb93515f1c2fbeb573bf4a52e43a6968e18c65b45cdc2",
+        "before_sha256": "bdf9633278591ecbce6bd7479911f43f05e5f8eef7a21824c43eb4cff6dbf4a6",
+        "path": "resources/fresh-configs/pour_by_language-s0.json"
+      },
+      {
+        "after_sha256": "c4ad892ad808bf239e6c6af18f4b8ad525ee2459b226591bda0001621555ca14",
+        "before_sha256": "948be3b5e3ceab0b21cb7542c7e2c9bb80cd5808c235d62f8c347dc000db609a",
+        "path": "resources/fresh-configs/pour_liquid_into_cup-s0.json"
+      },
+      {
+        "after_sha256": "862da7ab78b18c192095cf4df99425dca1fede069a8ee67fe0f0dabb8df0b331",
+        "before_sha256": "62c7c34f54ac5e72cf40e65d46db1ed6933d76ed2cc5da967461bf023be3be0b",
+        "path": "resources/fresh-configs/press_by_number-s0.json"
+      },
+      {
+        "after_sha256": "a715297d708cc0a77aa18e2cead8067f11f811eaa5dab973d276f5720494dde8",
+        "before_sha256": "dd016463cec570cdc23261f4727b144a019d87562190286c6f4f3e0d0ba53874",
+        "path": "resources/fresh-configs/push_T-s0.json"
+      },
+      {
+        "after_sha256": "2841d062978d8c549bbfe590c3a1b02051f50dac1f8bed432cc3c3604db314e5",
+        "before_sha256": "ee7258b512a25bad32582b35f5f74cb9cc0bcbeb84468c666d5ced32a38bde6c",
+        "path": "resources/fresh-configs/put_bottles_into_dustbin-s0.json"
+      },
+      {
+        "after_sha256": "b37c5fe4caa13a3a69d5abe29f0e5011492e1a3db23a1957e80999fa7a29c598",
+        "before_sha256": "9d7f298970b0f72907cd4e7fd8824d0a1b50ed99dce286c5a853367e09de1a1e",
+        "path": "resources/fresh-configs/solve_equation-s0.json"
+      },
+      {
+        "after_sha256": "6ec866c85cf88f2d00c3a8bd8debc463c3b4401e387ccd09b7c3c7f03c7f9208",
+        "before_sha256": "d3ea90164d2439805477a52b96f5fd301583f3ef93151a01a9412fafcb73478a",
+        "path": "resources/fresh-configs/sort_nesting_dolls_by_size-s0.json"
+      },
+      {
+        "after_sha256": "b4fdd50d7eb70a91ccd2c07e4cde3956d81b0d77aecfea2e90a567973cb8f021",
+        "before_sha256": "1b1e19bbfa2ba46f3eb20919a1021b36c3680ba4e06fcc731319a28019454753",
+        "path": "resources/fresh-configs/stack_blocks-s0.json"
+      },
+      {
+        "after_sha256": "544de8c21e52a4ef5fc3f406baca6de0d700d7ed5ad1fd374c30a916351ff5b9",
+        "before_sha256": "0ca16ebc793de34f5b1fa559203f755ebb3ff3544e8d59c6101baa848207d6be",
+        "path": "resources/fresh-configs/stack_blocks_by_language-s0.json"
+      },
+      {
+        "after_sha256": "3d1b5258328692fe15d22430fcad68f874931a8378440076ee5fd39aa5522c14",
+        "before_sha256": "4ebc9fcd613630bb57d1b292bd62f4dbc7836aea80f48871784c7e89afc5c4c6",
+        "path": "resources/fresh-configs/stack_bowls-s0.json"
+      },
+      {
+        "after_sha256": "ffcce173e758b36cab2d1b63b2c482b768f2d32fea76c5be2006f17448412f63",
+        "before_sha256": "b0e8cb67887270068f0af9e6f228b36ccdadfa0ef8af7fa862dab1413cc068c3",
+        "path": "resources/fresh-configs/store_laptop_and_headphones-s0.json"
+      },
+      {
+        "after_sha256": "55d2be573a1c2435f247f099fafebeac77051d6a5e9339cc883ea0e112b5ca35",
+        "before_sha256": "a39a3233825654358bf4eeed55bff1b9d708de49be55f8f58512dde72a51c5e9",
+        "path": "resources/fresh-configs/store_tools_in_toolbox-s0.json"
+      },
+      {
+        "after_sha256": "70119dc858c232b0f1643d3feabdcc7bbd8ea387e5c129956377432bf16e98b0",
+        "before_sha256": "f15261fce3ccead418d1b6da107848c2e5dbfadca896bea4c462f7799a8dc043",
+        "path": "resources/fresh-configs/swap_T-s0.json"
+      },
+      {
+        "after_sha256": "c44998e0c45d97266d423f30475a85f1d1aafbded69a2d5885949bf418aa497b",
+        "before_sha256": "53461810b925f7fd9bd8a209e0fdb7c0fdce8067867b09ab864e20c7220180b1",
+        "path": "resources/fresh-configs/swap_blocks-s0.json"
+      },
+      {
+        "after_sha256": "e6013c431324d97d00d39bd3b5f2e954e7e771a917d1c1c67f6493040431faaa",
+        "before_sha256": "a2ad2eb4d156119b5021e2987ba16aae61dd5283538acfb7482b6762acc58321",
+        "path": "resources/fresh-configs/sweep_blocks-s0.json"
+      },
+      {
+        "after_sha256": "0299d07c04d46ac7f1e844fe2d41daf9db0bcc9f1d879b1503779bd97e4b85a8",
+        "before_sha256": "c18c55399013c3c42812157642139c8eac4ae9c549351ac3427bb80c70e566b3",
+        "path": "source/benchmark.sh"
+      },
+      {
+        "after_sha256": "a64c1ff433933953d149276f0a534dd0f14678e754b668b31849884a0e06c7c9",
+        "before_sha256": "85db111be9d297e74b9213d8d2eb12e08fd6bf7241d36a387bee1eccaae78e29",
+        "path": "source/local_runtime.py"
+      }
+    ],
+    "scope": "Removed author metadata, replaced unused host interpreter default, omitted runtime-overridden host paths, and parameterized standalone wrapper locations.",
+    "upstream_manifest_sha256": "b48370daef6d1672349d548d6aa6eb48561d7dcf82126ae2195c795f04b22ddb"
+  },
+  "scope": "Adaptive 2-50 controller snapshot with deployment-sanitized launcher/configs. Algorithm, control state machine, task parameters and budgets are unchanged; provider, model, proxy handling and host GPU defaults are deployment configuration.",
+  "parent_policy_variant": "adaptive_2_50",
+  "parent_manifest_sha256": "fa1b32e0740920c73f4b5de3e6b02358a83790167d3465e50be8e1366294f2e9",
+  "derivation": "Pinned local 2-50 policy delta with deployment sanitization and shared public interface without static seed/layout, 2026-10-21",
+  "overlay_manifest_sha256": "43f74deac39c7448ffbf1c7228e3d7e24d8d38f46b90e9a3fc662b49b68772ab",
+  "deployment_sanitization": {
+    "parent_manifest_sha256": "0a9a6af9cf888637f9e48f76965de61d4b615366b903968b3d028650f666c1c5",
+    "scope": "Removed private service/model defaults and personal source-path labels; required ROBORSI_CODEX_BASE_URL and ROBORSI_CODEX_MODEL, runtime provider, CODEX_API_KEY, caller-selected proxy environment, and portable physical GPU default. Parent file hashes retain source traceability.",
+    "patches": [
+      {
+        "path": "source/local_runtime.py",
+        "before_sha256": "a64c1ff433933953d149276f0a534dd0f14678e754b668b31849884a0e06c7c9",
+        "after_sha256": "21a53868a0cfc5a275f0ce7290d6b2ac1d62512cf0afb3ba47a31d3adfd1cd4f"
+      },
+      {
+        "path": "resources/fresh-configs/align_blocks-s0.json",
+        "before_sha256": "86099575d0080f7658ec361b7946a72675d12fad3b05e1b1ededfbe5fa8b3c3b",
+        "after_sha256": "6f3877e190abc8813df57ec8e447b3e73f1d4ae323797508286d9889edc96115"
+      },
+      {
+        "path": "resources/fresh-configs/arrange_largest_number-s0.json",
+        "before_sha256": "043d6ec96306d8001364db0486cd4458b19333a7dd2d20047213a2404c37478e",
+        "after_sha256": "eb54e1d7cf934ec241cc90591aa7b3c81a46d0010a7f970a423881db6e8e5369"
+      },
+      {
+        "path": "resources/fresh-configs/build_tower-s0.json",
+        "before_sha256": "f3046fb8ccb5c7c3ed23d091c09bce9bdf8818e0385e869b2916d55aa742851e",
+        "after_sha256": "c719bd1f6e723f781a19537947447dc542b85def2c6c16e707c923041cb1822b"
+      },
+      {
+        "path": "resources/fresh-configs/classify_objects-s0.json",
+        "before_sha256": "abd81008820fb05d1cef6dba556badc5a3057bd3303cdaa7b64ebfbad6ba704b",
+        "after_sha256": "d848d5cf409e5dac28722f2f9c8f582ee0c42307dc05f78e602195d2b7ee928d"
+      },
+      {
+        "path": "resources/fresh-configs/classify_objects_by_language-s0.json",
+        "before_sha256": "d4ede8dc8e61e45e7fa0d858ec9074829b6179a7496d807e2dc31a80eafd8910",
+        "after_sha256": "ba0748afa97b29d79f00006faf5e950c602b5531458c211827a6a765a2cb308c"
+      },
+      {
+        "path": "resources/fresh-configs/cover_blocks-s0.json",
+        "before_sha256": "c5b694e9035f70a11d3e252f8f943cd45671787d7081129590b1233055e3f090",
+        "after_sha256": "d129128c04fd8918196c1f1e43e9ca85e4136fd8faa889b7f660df25f179c82c"
+      },
+      {
+        "path": "resources/fresh-configs/deposit_coin-s0.json",
+        "before_sha256": "a0b01effaa5281b5324597e05bcb53e088a0347281d55b67f475ce130894a3df",
+        "after_sha256": "79a90ac4a3012dce30effb5834919ec12b7c3810e239d9de95f5b4c6425312bf"
+      },
+      {
+        "path": "resources/fresh-configs/fasten_screws-s0.json",
+        "before_sha256": "d0413ba9b31ffdfe8bcb7dd143523de97a539b6d7d6d600c8d622fa3e9ccd273",
+        "after_sha256": "b2c3a3270b6692babad4a0e019161b49276724281b683a653f8163fb65ac5f74"
+      },
+      {
+        "path": "resources/fresh-configs/fill_egg_holder-s0.json",
+        "before_sha256": "ae48c44777438be69c779139bc34d72e6c4a8672df820dce9f7a4fed95b9e4be",
+        "after_sha256": "2a9d6ac8eeec4f2dfb41806fbe01f46a7c2ace4f7137914927f67464526aaf73"
+      },
+      {
+        "path": "resources/fresh-configs/fill_pen_holder-s0.json",
+        "before_sha256": "28e32f75aaedba0ec785ec02ac1da53c96c9507ab231c39fb588043f401b4da6",
+        "after_sha256": "e6d4df49f4ea8a7d38af608fcfc6f89c36439bdf0f297bb4e41cddc4e794b8d8"
+      },
+      {
+        "path": "resources/fresh-configs/fold_clothes-s0.json",
+        "before_sha256": "0ae718f75a95dbb19802d87926d4b7a475bdb4fff62a7def61e21b6ff81ff0a6",
+        "after_sha256": "41a31c66125a657e3988a1330154d11aa43f03322805350660758c5e37015ac4"
+      },
+      {
+        "path": "resources/fresh-configs/general_pickup-s0.json",
+        "before_sha256": "12ca0d6f31d6dda2212b8875cac5ccd455ce5ee8cee46b3ca3e380d8f7e4e878",
+        "after_sha256": "270f6684b424e50bcfe6a17977e5590518a76e1b0bc27adc7f9ac3552bd506f4"
+      },
+      {
+        "path": "resources/fresh-configs/hang_mugs-s0.json",
+        "before_sha256": "88facc3beeb87ccad22b853b72c998042e0279dcf9c4df8d10d1c4ef461fe984",
+        "after_sha256": "5852ec7e67d3de56d4fa30988fe5af4c3f77479baed78f69aee3127c1afd3696"
+      },
+      {
+        "path": "resources/fresh-configs/imitate_sorting_sequence-s0.json",
+        "before_sha256": "8323773c06271e34f02c6ec5246f66de850678c42f2a4654781463450c42da8d",
+        "after_sha256": "97876ba9388ace61fb3562228d3c1561ed4ff5d87763622227acabd71211c3d4"
+      },
+      {
+        "path": "resources/fresh-configs/insert_key-s0.json",
+        "before_sha256": "ac5aabb18bece59ad198962225f54d239be63a96751874786e02e9537617f7d6",
+        "after_sha256": "506421bbd248a7f282d2b985cc7fc532e5f00765ed05866c5ec3a7d1507e32ac"
+      },
+      {
+        "path": "resources/fresh-configs/insert_tubes-s0.json",
+        "before_sha256": "9b233e467d04c3fb35616a27f5cf3811e4fa1ab668ca7708606dcca759e0b862",
+        "after_sha256": "c227686fe8a755525e9c05d4fb11df911bb6f8ee1d6b6f639f3d648457ade463"
+      },
+      {
+        "path": "resources/fresh-configs/make_kong-s0.json",
+        "before_sha256": "8a8655dfd2656e36e80da8b1afa53b38ab906c36447f133b417f25c11425b3d1",
+        "after_sha256": "eca4d52b873dc1ebc72f5cca57e0bd9f5ac19ffd4078a7baba8061f0847b71bb"
+      },
+      {
+        "path": "resources/fresh-configs/make_toast-s0.json",
+        "before_sha256": "10376f674385a5bb808e7b62d5bdd247f9b89820465f93075399aa32296bc646",
+        "after_sha256": "32120d3a8c8cd1f4b5e88034b81b4c44923173c8e62d83b815f948f868dde331"
+      },
+      {
+        "path": "resources/fresh-configs/match_and_pick_from_conveyor-s0.json",
+        "before_sha256": "918ab716839ecbf8b48e31aeb4d0c531924731f5d52afbf0c995d44e2470b770",
+        "after_sha256": "ad2d9cc4b9485c99273feb23678d3e60210fa74604ac4d2efd29682b3ce137e6"
+      },
+      {
+        "path": "resources/fresh-configs/organize_table-s0.json",
+        "before_sha256": "369f94b4f05ef73baca30348225a34423ea0256a1e11dc9e0b810e05a892156f",
+        "after_sha256": "3728814eef97f05bfa6c0a494aae709d04f7b1e5d85d709fe7442668814c4b57"
+      },
+      {
+        "path": "resources/fresh-configs/pack_objects_into_box-s0.json",
+        "before_sha256": "7c12074f7fa6ff6236eb3caec65338d347788bc9a282ddee9953a9c959c7bc37",
+        "after_sha256": "db7544a1f318504cec15dee498b0b7ca8a5750e0348bf3a7a01e96c24578c2e6"
+      },
+      {
+        "path": "resources/fresh-configs/pick_from_conveyor_by_image-s0.json",
+        "before_sha256": "7f571f6f38eb9a6a527f4335d5d3044ad411505ecb596352ad16ca4b8548a540",
+        "after_sha256": "210ee97898d492b2dbc33f55c762b2220ef5414ba2eb7cac76a5fbab51345495"
+      },
+      {
+        "path": "resources/fresh-configs/play_Xylophone-s0.json",
+        "before_sha256": "9ff51af73a95de231969cc6e6a8ee49960b382283bb79dc641753b6c3121794b",
+        "after_sha256": "5d3e8b23d8eae43e83dd19480baf578b2dc3e41ab9d02ef06069c4e9c9e2341a"
+      },
+      {
+        "path": "resources/fresh-configs/play_stacking_toy-s0.json",
+        "before_sha256": "4a064c23bcfad466c736f3e33d32e0662b5eb583d47601e91057bb442c1cea84",
+        "after_sha256": "cab4aa40a9cb49db95f685056e74b7f25adea1ec12ee8af843d4be111163e7c7"
+      },
+      {
+        "path": "resources/fresh-configs/play_tic_tac_toe-s0.json",
+        "before_sha256": "1d83731b5e0e8f3a13623f9e724350f2535026b59349556a47b1058e82794370",
+        "after_sha256": "6502c553a2daa7a2c7346252ca81413efb05ebc2508d1685ec0a5f9c57b04a00"
+      },
+      {
+        "path": "resources/fresh-configs/plug_in_charger-s0.json",
+        "before_sha256": "52d19627fc090b1f36e7e8e791a3bfcfce2a51b06785d767a46315340e527d76",
+        "after_sha256": "b294cba64fc9953ef96c039b139f1bed8f056be763142a9aefb53b57ec524121"
+      },
+      {
+        "path": "resources/fresh-configs/pour_balls_into_vase-s0.json",
+        "before_sha256": "9ae148de88e14a6f4ff967be5d86616a2e25eecfe797941268ce9bf32e89f123",
+        "after_sha256": "cb90d715de32fa46fb81a1d1e781ced476d8f2bd07ec2f3000cbcde5b86a3992"
+      },
+      {
+        "path": "resources/fresh-configs/pour_by_language-s0.json",
+        "before_sha256": "411dd08a19d3a83658b31eb938aeac6b1927ef3f4dd81bb2f75858933aa1f1e8",
+        "after_sha256": "7a5000ac20c3965ddbcc02862a5d87f4d58195a6649596739dfb7ae11505982e"
+      },
+      {
+        "path": "resources/fresh-configs/pour_liquid_into_cup-s0.json",
+        "before_sha256": "c66e9ffe6f77faa85f40368b9c4badd6ded02164163f3860ff572cc102d0f76b",
+        "after_sha256": "22c9c9262d118baa543ba9583d5a5bc87804aa9a1ba85fe1a7b2581677cdf643"
+      },
+      {
+        "path": "resources/fresh-configs/press_by_number-s0.json",
+        "before_sha256": "f15d36975490ba0bc5a28f87de9c71193a1810e750dcc74610240cd16fd2bdd1",
+        "after_sha256": "6be9644d60f0777c223980a4d97ca3f786e464f9405b46a4fb8ee26387d1d9af"
+      },
+      {
+        "path": "resources/fresh-configs/push_T-s0.json",
+        "before_sha256": "f8e4e6c712612df7d940aeab7ba706386381e03971e7059b7832564c838ca591",
+        "after_sha256": "238742a6f55e350985825ea723ca40036bb47c367f9de1ea1a090559ef8eb903"
+      },
+      {
+        "path": "resources/fresh-configs/put_bottles_into_dustbin-s0.json",
+        "before_sha256": "69bd7957227f1605ac15445a852d1231ee3e54b2a14099f4e8ca22f1a0897fc9",
+        "after_sha256": "fefc8c8baf33779aceecefd9c3013233f88b5dd63e9758661283fb787e251253"
+      },
+      {
+        "path": "resources/fresh-configs/solve_equation-s0.json",
+        "before_sha256": "30d8164a9c6e093ed92c82b617ec229e2f05685a7ab4656f7d091ae378e29ca8",
+        "after_sha256": "30996dab66c26b98652d27db7f1f9e58e3fd33f1cbfd762c864d0a5af83cfc96"
+      },
+      {
+        "path": "resources/fresh-configs/sort_nesting_dolls_by_size-s0.json",
+        "before_sha256": "0c47c83083456e1f8a454079481a4134deafe8c1d315f69a5a0ba9aaeff52747",
+        "after_sha256": "51b8fa426bcfa2375c23dcf8c938404039d634902f864b5dbc6c94077205d4ce"
+      },
+      {
+        "path": "resources/fresh-configs/stack_blocks-s0.json",
+        "before_sha256": "3a584d0682cc21af523cc4c4a5b112aaa45a0ccc3292584171349b84aede0f03",
+        "after_sha256": "959b9b640ac5eb7f5594e18d0a22c0d76dc5061b32f05f9027c074f215184f07"
+      },
+      {
+        "path": "resources/fresh-configs/stack_blocks_by_language-s0.json",
+        "before_sha256": "afee6d8bf997306bcbd8972d573f271e74a6731cf11ef9a211c1acc53f3089bf",
+        "after_sha256": "b7a30052c742a7b3b076b1b82d98aa4565f466e3687729ff4dcea6849ffd57c0"
+      },
+      {
+        "path": "resources/fresh-configs/stack_bowls-s0.json",
+        "before_sha256": "e60b4be18d7ee611806621508eb5383cab5b6fa202d0d6b58bc1708157c5ce99",
+        "after_sha256": "73f17bef14443a8d56efcb150d1d82fb8b27db892ab1a2b45e84e64a2eb7c3c0"
+      },
+      {
+        "path": "resources/fresh-configs/store_laptop_and_headphones-s0.json",
+        "before_sha256": "072399cc131eaa7db3903939b54807b29aac8a151ea086475e005015b084b065",
+        "after_sha256": "c2c86a9b85d8bdaaccfa20872d76914d94e0193d41d657a9da5afe112dde57c7"
+      },
+      {
+        "path": "resources/fresh-configs/store_tools_in_toolbox-s0.json",
+        "before_sha256": "baceb0b18acfc6cd5d1b9aff194540636809288b4bd9b930429e6346a6b86163",
+        "after_sha256": "967fd615674077959f34edeafca70bac853c58ce933c407432b8c98f33f8a1fc"
+      },
+      {
+        "path": "resources/fresh-configs/swap_T-s0.json",
+        "before_sha256": "cce2e83fec47ef8bf87627a96f21f27d88e190f6ea1edf308d56d0b8636603c3",
+        "after_sha256": "ebe62cef45e26d9f4f975f286a502c4f7431c9dccaa7c1f2574e8249cba74afb"
+      },
+      {
+        "path": "resources/fresh-configs/swap_blocks-s0.json",
+        "before_sha256": "87115ce7b7bd51677bbd77908eafec500c2635c10af128b374eaca2501aa99db",
+        "after_sha256": "6884855f07dab2395b0d6bb4180335ac5f0ca231e8e9ce6e71d3774d94efcb14"
+      },
+      {
+        "path": "resources/fresh-configs/sweep_blocks-s0.json",
+        "before_sha256": "e203b34847d7d482241467537cf707da030b2777696ee32dbbd868f3ad0d7f55",
+        "after_sha256": "9e543cdfcfbc3dc52fe8dac2c754ca687749b82f0caa6ab0ad3336b83adc1b8d"
+      }
+    ],
+    "identity_contract": "Legacy factory requires the environment model to match its prepared identity; launch rejects subsequent model drift."
+  },
+  "shared_public_interface": {
+    "parent_manifest_sha256": "fa1b32e0740920c73f4b5de3e6b02358a83790167d3465e50be8e1366294f2e9",
+    "previous_parent_manifest_sha256": "4b0e976419a897493f21b39eb770de1ff5c4c5b4a863d18878ff9c869b69b6ec",
+    "previous_parent_policy_variant": "adaptive_5_50",
+    "previous_derivation": "Pinned local 2-50 policy delta plus explicit deployment sanitization; not a byte-identical upstream export",
+    "scope": "Replace 42 identical public interfaces with BENCHMARK.md and remove fixed seed/layout text; preserve deployment sanitization, policy logic, task parameters and budgets.",
+    "replaced_interfaces": 42,
+    "public_task_configs": 42
+  },
+  "runtime_approval": {
+    "minimum_env": "ROBORSI_ADAPTIVE_MIN_STEPS",
+    "minimum_default": 5,
+    "minimum_supported_range": [
+      2,
+      50
+    ],
+    "maximum": 50,
+    "omitted_length": "max(5, minimum)",
+    "baseline_templates": "Preserved authenticated adaptive_2_50 templates; runtime overlay recorded per episode."
+  }
+}

@@ -1,0 +1,27 @@
+urdf_path: "./X5A.urdf"
+# srdf_path: "./X5A.srdf"
+ee_joints: "joint6"
+ee_link: "link6"
+ee_type: "gripper"
+base_link: "base_link"
+arm_joints_name: ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
+gripper_joints_name: ['joint7', 'joint8']
+save_gripper_joints_name: ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6', 'joint7', 'joint8']
+gripper_move: 
+    base: "joint7"
+    sign : 1.0
+    mimic: ["joint8", 1., 0.]
+gripper_bias: 0.145
+gripper_scale: [-0.01, 0.044]
+delta_matrix: [[1,0,0],[0,1,0],[0,0,1]]
+global_trans_matrix: [[1,0,0],[0,-1,0],[0,0,-1]] # for curobo
+dual_arm: False
+grasp_camera_reference_axis: [1, 0, 0] # in base_link frame
+camera:
+  -
+    link: "camera"
+    name: "cam_wrist"
+    type: d435
+    mesh: pinhole
+    pos: [0, 0, 0.001]
+    ori: [0, -80, -90]
