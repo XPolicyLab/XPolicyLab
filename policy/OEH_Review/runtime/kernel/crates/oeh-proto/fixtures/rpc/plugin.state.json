@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "jsonrpc": "2.0",
+    "method": "plugin/state",
+    "params": { "fiber_id": 7, "plugin": "oeh-adapter-unitree", "state": "active" }
+  }
+}

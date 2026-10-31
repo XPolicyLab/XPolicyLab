@@ -1,0 +1,9 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "turn/done",
+    "params": { "brain_id": "fast", "turn": 3, "reason": "observation exhausted" }
+  },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": {} }
+}

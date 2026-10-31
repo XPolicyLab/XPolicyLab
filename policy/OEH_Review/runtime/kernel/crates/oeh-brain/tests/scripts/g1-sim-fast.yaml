@@ -1,0 +1,39 @@
+# g1-sim-scripted 快脑剧本（`profiles/g1-sim-scripted.yaml` 的 `brain-native{brain_id: fast}`，
+# `scripts/smoke-g1-sim.sh` 跑的就是它）。
+#
+# 和 `g1-mock-fast.yaml` 一样每个 turn 都干同一件事——调 `robot_walk`——理由也一样：哪一次
+# 唤醒接住外面那条 `obs/gesture` 由世界决定，不由剧本决定，每个 turn 都提一次 walk，
+# 断言就能靠 trace_id 认出那一次。
+#
+# 差别只有数字：`vx: 0.3, duration_s: 2.0`。mock 那份是 `0.2 / 0.3 s`，因为 mock 里没有
+# 东西真的在动；这份要证明的是**物理里的机器人真的走了**（适配器在 walk 结束时用共享内存
+# 里的 base_pos 算位移，冒烟断言 > 0.2 m），0.3 s 的一步只有几厘米、还在策略的步态起振
+# 里，2 s 才是一段能量出来的路。两个数都在 `rule-clamp` 的包络内（vx ±0.3，duration_s
+# [0.2, 60]），所以被拒的理由只会是场景本身。
+#
+# 十二对足够跑满 `--for 45`（`wake/fast.yaml` 的 min_interval_ms 是 500，慢脑 5 s 一次），
+# 剧本用完之后每次调用还一条空文本的 `Done`。
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "路是空的，往前走两秒。", tool_calls: [{ name: robot_walk, args: { vx: 0.3, duration_s: 2.0 } }] }
+- { text: "这一轮到此为止。" }

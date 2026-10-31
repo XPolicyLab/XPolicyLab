@@ -1,0 +1,13 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "turn/propose",
+    "params": { "brain_id": "fast", "turn": 3, "capability": "walk", "params": { "vx": 0.5, "vy": 0.0, "yaw_rate": 0.0 } }
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": { "proposal_id": "t-7-3-120-p1", "outcome": { "outcome": "executed", "result": { "duration_ms": 1200 } } }
+  }
+}

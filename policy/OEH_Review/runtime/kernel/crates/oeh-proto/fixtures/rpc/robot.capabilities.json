@@ -1,0 +1,13 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "robot/capabilities", "params": {} },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "capabilities": [
+        { "name": "walk", "class": "motion", "risk_level": "medium", "params_schema": { "type": "object", "properties": { "vx": { "type": "number" } } }, "lease_ttl_s": 5.0, "provider": "py-arm", "overridable": false },
+        { "name": "say", "class": "speech", "risk_level": "none", "params_schema": {}, "lease_ttl_s": 2.0, "provider": "kernel", "overridable": true }
+      ]
+    }
+  }
+}

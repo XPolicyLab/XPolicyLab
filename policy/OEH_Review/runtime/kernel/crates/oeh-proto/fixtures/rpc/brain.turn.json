@@ -1,0 +1,32 @@
+{
+  "notification": {
+    "jsonrpc": "2.0",
+    "method": "brain/turn",
+    "params": {
+      "brain_id": "fast",
+      "turn": 3,
+      "trace_id": "t-7-3-120",
+      "observation": {
+        "t_kernel": 1200,
+        "wake_reason": { "kind": "obs/person", "seq": 120, "action": "wake" },
+        "state": { "fsm": "STANDING", "battery_pct": 87 },
+        "events": [
+          {
+            "kind": "obs/person",
+            "collapse_key": "person:nearest",
+            "first_seq": 118,
+            "last_seq": 120,
+            "count": 2,
+            "salience": 180,
+            "first": { "nearest_person_m": 1.2 },
+            "last": { "nearest_person_m": 0.9 },
+            "first_frame_refs": [],
+            "last_frame_refs": [{ "stream_id": "head_rgb", "frame_seq": 8812, "t_kernel": 1199 }]
+          }
+        ],
+        "source_seq_range": [100, 120],
+        "truncated": 0
+      }
+    }
+  }
+}

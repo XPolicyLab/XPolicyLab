@@ -1,0 +1,17 @@
+policy_name: OEH_Review
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false
+
+# OEH_Review keys (README, Configuration).
+# One policy call may wait for the LLM's review of a chunk: the OEH runtime bounds every call itself
+# (review.call_seconds + 15 s; the first OpenWAM call adds its warm-up), this is only XPolicyLab's transport net.
+request_timeout_s: 900.0

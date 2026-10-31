@@ -1,0 +1,9 @@
+{
+  "name": "oeh-adapter-unitree",
+  "inject": ["clock"],
+  "provide": ["adapter.unitree"],
+  "streams": [
+    { "stream_id": "lowstate", "schema": "oeh.LowState", "nominal_hz": 500.0, "tier": "small" },
+    { "stream_id": "head_rgb", "schema": "oeh.Image", "nominal_hz": 20.0, "tier": "large" }
+  ]
+}

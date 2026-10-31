@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "jsonrpc": "2.0",
+    "method": "capability/result",
+    "params": { "exec_id": "exec-1", "ok": true, "result": { "duration_ms": 1200 } }
+  }
+}

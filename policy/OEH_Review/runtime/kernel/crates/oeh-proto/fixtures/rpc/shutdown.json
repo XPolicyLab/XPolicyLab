@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "jsonrpc": "2.0",
+    "method": "shutdown",
+    "params": { "reason": "operator requested restart" }
+  }
+}
