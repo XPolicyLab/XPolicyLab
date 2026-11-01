@@ -1,0 +1,33 @@
+# GPT 6.1 Sol through the local Codex relay (Chat Completions). The relay is
+# http://127.0.0.1:18087/v1; CODEX_BASE_URL overrides it. The key is
+# PROXY_OPENAI_API_KEY, never written here.
+description = "GPT 6.1 Sol writes programs and answers questions about images"
+
+[main]
+backend = "openai_chat"
+base_url = "http://127.0.0.1:18087/v1"
+base_url_env = "CODEX_BASE_URL"
+model = "gt-6.1-sol-a"
+api_key_env = "PROXY_OPENAI_API_KEY"
+max_output_tokens = 8192
+timeout_seconds = 300
+retries = 2
+retry_seconds = 300
+
+[vlm]
+backend = "openai_chat"
+base_url = "http://127.0.0.1:18087/v1"
+base_url_env = "CODEX_BASE_URL"
+model = "gt-6.1-sol-a"
+api_key_env = "PROXY_OPENAI_API_KEY"
+max_output_tokens = 2048
+timeout_seconds = 300
+retries = 2
+retry_seconds = 300
+# The relay rejects temperature 0. VisionModel would otherwise send 0.
+temperature = 1
+
+[verifier]
+# Overrides on top of main. verify() goes through VisionModel, which sends
+# temperature 0 unless this role sets one. This model accepts only the default.
+temperature = 1

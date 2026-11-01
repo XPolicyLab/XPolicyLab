@@ -80,3 +80,13 @@ stays off: a crash ends the worker, the driver records the error, and `harness r
   `speed=0.3`.
 - The camera calibration is the same for every task, layout and arm pose (head camera
   fixed in the world, wrist cameras fixed on link6): `embodiments/arx_x5`.
+
+## RoboTwin 2.0
+
+`benches/robotwin/runtime.py`: the same robot API at 10 Hz, 50 tasks, seeds checked by
+RoboTwin's expert, its own cuRobo 0.7.8. [Run on RoboTwin 2.0](../how-to/robotwin.md).
+
+```bash
+harness serve --factory benches.robotwin.runtime:create_environment \
+  --options configs/workers/robotwin_runtime_dev.toml --port 8772
+```

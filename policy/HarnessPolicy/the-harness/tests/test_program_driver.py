@@ -13,13 +13,26 @@ from harness_policy.cli import parser
 from harness_policy.core.contracts import Observation
 from harness_policy.runtime.chat import ScriptedChat
 from harness_policy.runtime.driver import (
-    TaskConfig, _window, assemble_prompt, layer_settings, load_task_config, run_program_episode)
+    TaskConfig, _shutdown_ends_the_episode, _window, assemble_prompt, layer_settings,
+    load_task_config, run_program_episode)
 from harness_policy.runtime.skills import skills_for_layers  # noqa: E402
 
 PROMPTS = Path(__file__).resolve().parents[1] / "prompts" / "robodojo"
 
 
 PIXEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+
+
+class ShutdownStatusTests(unittest.TestCase):
+    def test_a_scored_sigterm_ends_the_episode(self):
+        killed = {"status": "error", "error": "KernelDied: Kernel exited with code -15"}
+        self.assertTrue(_shutdown_ends_the_episode(killed, {"closed": True}))
+        self.assertFalse(_shutdown_ends_the_episode(killed, {"closed": False}))
+        self.assertFalse(_shutdown_ends_the_episode(
+            {"status": "error", "error": "KernelDied: Kernel exited with code 1"}, {"closed": True}))
+        self.assertFalse(_shutdown_ends_the_episode(
+            {"status": "error", "error": "KernelDied: Kernel did not answer within 1800 s; it was killed"},
+            {"closed": True}))
 
 
 class FakeEnvironment:
@@ -429,7 +442,8 @@ class PromptLayerTests(unittest.TestCase):
         learned = assemble_prompt(PROMPTS, skills_for_layers({"learned": True}))
         self.assertIn("run_policy(", learned)
         self.assertIn("Your first motion is start(strategy, kind)", learned)
-        self.assertIn("unless the instruction asks for a read", learned)
+        self.assertIn("unless the task needs what it cannot do", learned)
+        self.assertIn("The runtime enforces this split", learned)
         with tempfile.TemporaryDirectory() as root:
             (Path(root) / "core.md").write_text("core")
             with self.assertRaises(ValueError):

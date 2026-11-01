@@ -9,6 +9,7 @@ from harness_policy.runtime.events import Event, ExecutionTrace
 from harness_policy.services.broker import ensure
 from harness_policy.services.policy_server import policy_server_lock
 from harness_policy.runtime.session import ARMS
+from .kfmem import KFMemClientState, face_image
 
 
 # run_policy keeps the unused rest of an action chunk for the next call with the same
@@ -40,26 +41,20 @@ UNBOUNDED_STEPS = 100_000
 STRATEGIES = {"A": "hand the whole task to the learned policy and supervise it",
               "B": "your own tools only",
               "C": "the learned policy first, then finish what it leaves"}
-# Own tools, or the Simate base. Matched on the instruction text the official
-# observation carries. A task name is not used, and two layouts that share an
-# instruction take the same route.
+# A read the learned policy does not do stays on the agent's tools. Matched on
+# the instruction text the official observation carries. A task name is not used,
+# and two layouts that share an instruction take the same route. Anything else,
+# including an order, a size, a picture, or a whole task the policy was trained on,
+# is handed to the policy.
 _OWN_TOOLS = re.compile(
     r"number cards|required number of times|missing number or operator|"
-    r"largest possible number|by 10 cm|"
-    r"sort the objects by category into the three baskets|"
-    r"stack the three blocks with different textures|"
-    r"from bottom to top in the order|"
-    r"nesting dolls|smallest to largest|"
-    r"into the keyhole|"
-    r"dustpan to sweep|"
-    r"declare a kong|"
-    r"in the same order",
+    r"largest possible number|by 10 cm",
     re.IGNORECASE,
 )
 
 
 def route_instruction(instruction: str) -> str:
-    """`own` keeps the agent's tools. `simate` hands the task to the Simate base.
+    """`own` keeps the agent's tools for a read. `simate` hands the task to the policy.
 
     Empty text is `simate` (nothing asked for a read). The caller leaves a missing
     observation alone, so a fixture with no instruction is not rewritten.
@@ -71,26 +66,37 @@ def route_instruction(instruction: str) -> str:
 
 class LearnedPolicies:
     def start(self, strategy, kind, policy=None):
-        """Your first motion, once (Z2's first call): the strategy for this task, from the
-        learned policy's description (list_policies()), and the line of it the task
-        matches (`kind`, in your words). "A": hand the whole task to the policy and
-        supervise; "C": the policy first, then finish what it leaves; "B": your own tools
-        only. A and C run the policy at once, as run_policy(policy) from the untouched
-        start pose with the task's own instruction and both arms, and return its trace; B
-        returns None. Before start nothing that moves the arms runs; looking does
-        (get_observation, locate, segment_text, point_to, watch_scene). Called again with
-        the same strategy (a program run again from its top) it does nothing. After B, A
-        or C hands the task over after all (the policy's fresh run needs the start pose:
-        home() first); other changes are refused."""
+        """Your first motion, once: the strategy for this task, from the learned policy's
+        description (list_policies()), and the line of it the task matches (`kind`, in
+        your words). "A": hand the whole task to the policy and supervise; "C": the policy
+        first, then finish what it leaves; "B": your own tools only. The instruction
+        decides which of these runs: a read the policy cannot do stays on your tools, and
+        any other B is run as A. A and C run the policy at once, as run_policy from the
+        untouched start pose with the task's own instruction and both arms, and return
+        its trace; B returns None. Before start nothing that moves the arms runs; looking
+        does (get_observation, locate, segment_text, point_to, watch_scene). Called again
+        with the same strategy (a program run again from its top) it does nothing. After
+        B, A or C hands the task over after all (the policy's fresh run needs the start
+        pose: home() first); other changes are refused. After A or C, later motions are
+        refused and the policy runs on to the end of the episode."""
         choice = str(strategy).strip().upper()
         if choice not in STRATEGIES:
             raise ValueError(f"strategy must be one of {sorted(STRATEGIES)}: "
                              + "; ".join(f"{k}: {v}" for k, v in STRATEGIES.items()))
         instruction = self._task_instruction()
         chosen = self.__dict__.get("_strategy")
+        fixed = getattr(self, "_fixed_task_route", None)
+        cell = getattr(self, "_policy_span", "episode") == "cell"
         # The instruction picks own tools or Simate on the first motion. A later call
         # after B is the program handing over because its own tools failed; that one stands.
-        if instruction and not chosen:
+        # A cell span keeps the episode: the read gate still forces own tools, and
+        # nothing else is rewritten into a handover.
+        if cell and instruction and not chosen and route_instruction(instruction) == "own":
+            choice = "B"
+        elif fixed is not None:
+            choice = "B" if fixed == "own" else "A"
+            policy = fixed if choice == "A" else None
+        elif instruction and not chosen and not cell:
             written = choice
             if route_instruction(instruction) == "own":
                 choice = "B"
@@ -103,7 +109,9 @@ class LearnedPolicies:
         if chosen and not (chosen["strategy"] == "B" and choice in ("A", "C")):
             raise ValueError(f"start was already called (strategy {chosen['strategy']}); call run_policy to "
                              "hand over again, or go on with your own tools")
-        if choice != "B" and "simate" in self.policies:
+        if fixed not in (None, "own"):
+            name = fixed
+        elif choice != "B" and "simate" in self.policies:
             name = "simate"
         elif policy is not None:
             name = policy
@@ -116,9 +124,9 @@ class LearnedPolicies:
         if chosen:  # B, then the policy after all (own tools failed at a task it does)
             record["after"] = {"strategy": "B", "kind": chosen["kind"], "step": chosen["step"]}
         self.__dict__["_strategy"] = record
-        if choice == "B":
+        if choice == "B" or cell:
             return None
-        trace = self.run_policy(name)
+        trace = self.run_policy(name, stall_seconds=None) if fixed else self.run_policy(name)
         # The rest of this program, and later model calls, do not move the arms:
         # a handover that then grasps again is how a finished policy run was undone.
         self.__dict__["_handover_locked"] = True
@@ -175,9 +183,22 @@ class LearnedPolicies:
         after holding something steadily."""
         if name not in self.policies:
             raise ValueError(f"Unknown policy {name!r}; available: {sorted(self.policies)}")
+        fixed = getattr(self, "_fixed_task_route", None)
+        if fixed == "own":
+            raise ValueError("fixed ablation route uses own tools only")
+        if fixed is not None and name != fixed:
+            raise ValueError("fixed ablation route cannot change policy")
+        native_ee = getattr(self, "_policy_action_mode", "joint") == "ee_passthrough"
         arms = [arms] if isinstance(arms, str) else list(arms)
         for arm in arms:
             self._arm(arm)
+        if native_ee and set(arms) != set(ARMS):
+            raise ValueError("native EE passthrough requires both arms")
+        if fixed not in (None, "own"):
+            # Whole-task strategy A: no rewritten instruction or early stop.
+            if instruction is not None or max_seconds is not None or region is not None or until is not None:
+                raise ValueError("fixed policy route must run the whole task to episode end")
+            stall_seconds = None
         parameters = {"name": name, "instruction": instruction, "arms": arms}
         runs = self.__dict__.setdefault("_policy_runs", {})
         key = (None if instruction is None else str(instruction), tuple(arms))
@@ -197,16 +218,26 @@ class LearnedPolicies:
         # A policy with memory (scoped = true) keeps it per evaluation id, as RoboDojo's
         # client for it does: this episode's frames never mix with another's on the same
         # server, and starting afresh clears only this episode's memory.
-        scope = {"evaluation_id": f"harness-{self.episode_id}"} if config.get("scoped") else None
+        # WALL-OSS keeps keyframe memory in the request, not on the server. It has no
+        # reset_evaluation, so a scoped call would fail.
+        kfmem = config.get("memory") == "kfmem"
+        scope = None if kfmem else (
+            {"evaluation_id": f"harness-{self.episode_id}"} if config.get("scoped") else None)
         # The unused rest of the last action chunk, for a call that continues the run:
         # slices of max_seconds then execute what one long call would.
         rests = self.__dict__.setdefault("_policy_rests", {})
         if fresh:
             with policy_server_lock(config["url"]):
-                if scope is None:
+                if kfmem:
+                    initial = client.call("reset")
+                elif scope is None:
                     client.call("reset")
                 else:
                     client.call("reset_evaluation", scope)
+            if kfmem:
+                memory = KFMemClientState(f"harness-{self.episode_id}")
+                memory.reset(initial if isinstance(initial, dict) else {})
+                self._kfmem = memory
             runs[name] = key
             rests.pop(name, None)
         execute = config.get("execute_steps")  # None: the whole chunk, as RoboDojo's client
@@ -230,7 +261,7 @@ class LearnedPolicies:
         # took over early (classify_objects 20 against Simate alone's 61.6, build_tower 30
         # against 87.4); a policy left to run with no check sorted for the whole 1100 steps
         # of classify_objects, leaving the tools nothing.
-        progress = self._progress_watch()
+        progress = None if fixed not in (None, "own") else self._progress_watch()
         checks = progress.checks if progress is not None else None
         # Arms still from the start are waiting, not stalled (Simate watches the conveyor
         # of match_and_pick_from_conveyor before it reaches; the stall stop ended it at
@@ -259,20 +290,49 @@ class LearnedPolicies:
             if stopped is not None:
                 return Event(ev.COMPLETED, "run_policy", {"stopped": "no_progress", **stopped}, state["step"])
             # RoboDojo's client sends the observation after every action and asks for a
-            # chunk only when the previous one is used up.
+            # chunk only when the previous one is used up. WALL-OSS records every head
+            # frame locally and sends a request only when the chunk is used up: the
+            # server rejects an observation that does not carry the memory state.
             ensure(config)  # an on-demand policy server is started (and kept) by the broker
             observation = self._policy_observation(instruction)
-            if scope is not None:
-                observation.update(scope)
-            with policy_server_lock(config["url"]):
-                client.call("update_obs", observation)
-                chunk = None if queue else (client.call("get_action") if scope is None
-                                            else client.call("get_action", scope))
+            if kfmem:
+                frame = int(self.state["step"])
+                self._kfmem.record_frame(frame, face_image(observation))
+                chunk = None
+                if not queue:
+                    request = dict(observation)
+                    request["task_id"] = observation.get("task_id") or self._kfmem.context_key
+                    request["sim_frame"] = frame
+                    request["kfmem_client_state_v1"] = self._kfmem.request_state(frame)
+                    request["kfmem_history"] = self._kfmem.history(frame)
+                    with policy_server_lock(config["url"]):
+                        result = client.call("infer", request)
+                    if not isinstance(result, dict) or not isinstance(result.get("kfmem_state"), dict):
+                        raise RuntimeError("WALL-OSS infer did not return kfmem_state")
+                    self._kfmem.accept_result(result["kfmem_state"])
+                    chunk = result.get("actions")
+                    if native_ee and chunk is None:
+                        raise RuntimeError("WALL-OSS infer did not return an action chunk")
+            else:
+                if scope is not None:
+                    observation.update(scope)
+                with policy_server_lock(config["url"]):
+                    client.call("update_obs", observation)
+                    chunk = None if queue else (client.call("get_action") if scope is None
+                                                else client.call("get_action", scope))
             if chunk is not None:
+                if native_ee and kfmem:
+                    horizon = config.get("action_chunk_length", 32)
+                    if not isinstance(chunk, (list, tuple)) or len(chunk) != horizon:
+                        raise RuntimeError(f"WALL-OSS infer must return the full {horizon}-step action chunk")
                 if not chunk:
                     return None
                 queue.extend(chunk if execute is None else chunk[:int(execute)])
             action = queue.pop(0)
+            if native_ee:
+                # Preserve poses, quaternions and gripper commands; the official
+                # RoboDojo take_action EE branch owns IK and gripper clipping.
+                return {key: [float(v) for v in value] for key, value in action.items()}
             target = self._base_command(state)
             for arm in arms:
                 side = arm.split("_")[0]
@@ -296,10 +356,12 @@ class LearnedPolicies:
         # an event for the model: the program reads the trace and checks the scene itself.
         # The trace then ends with COMPLETED whose detail gives max_seconds (or stopped =
         # "stalled" or "no_progress").
+        self.__dict__["_policy_ticking"] = True
         try:
             trace = self._execute("run_policy", parameters, command, max_seconds, region, until,
                                   timeout_is_nominal=True)
         finally:
+            self.__dict__["_policy_ticking"] = False
             if queue:
                 rests[name] = {"actions": list(queue), "joints": self._arm_joints(arms)}
             # What a pick recorded about a held object no longer holds after the policy moved.
@@ -308,7 +370,8 @@ class LearnedPolicies:
                 held.pop(arm, None)
             # The driver counts the model's calls from the first run of the handed-over task.
             chosen = self.__dict__.get("_strategy")
-            if (chosen and chosen["strategy"] in ("A", "C") and instruction is None and not from_anywhere
+            if (getattr(self, "_policy_span", "episode") != "cell"
+                    and chosen and chosen["strategy"] in ("A", "C") and instruction is None and not from_anywhere
                     and len(arms) == len(ARMS)):
                 chosen["policy_ran"] = True
         if drops:
@@ -322,6 +385,8 @@ class LearnedPolicies:
         (runtime option post_policy_calls): the task handed over by start's A or C runs on
         from where it is until the episode ends, with no stall stop and no progress watch.
         Nothing without a handover (B)."""
+        if getattr(self, "_policy_span", "episode") == "cell":
+            return None
         chosen = self.__dict__.get("_strategy") or {}
         if chosen.get("strategy") not in ("A", "C") or chosen.get("policy") not in self.policies:
             return None

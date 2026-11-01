@@ -39,7 +39,7 @@ default_max_seconds = 30.0
 cameras = ["cam_head", "cam_left_wrist", "cam_right_wrist"]
 verifier = true
 # The first motion is start(strategy, kind): hand the task to the learned policy (A, C)
-# or not (B), decided from its description before anything moves (Z2's first call).
+# or not (B). The instruction keeps own tools only for a read; any other B runs as A.
 strategy_first = true
 # The handed-over task runs uninterrupted: no progress watch (policy_progress_seconds
 # 0). Stopping the policy early bought nothing (the model's own tools after it added no

@@ -5,7 +5,8 @@
 These are the repository's rules (`AGENTS.md`), with the reasons behind them:
 
 - **One agent, versioned.** `configs/default.toml` and the code it runs are the agent;
-  `AGENT_VERSION` goes into every lock and result. Variants are ablations (`configs/ablations/`) or
+  `AGENT_VERSION` goes into every lock and result, and `docs/changelog.md` says what each
+  version changed and on what evidence. Variants are ablations (`configs/ablations/`) or
   experiment overrides, never copies; retired harnesses go to archive tags, and no code,
   config or directory is named after a harness or an iteration.
 - **Capabilities are plugins**: skills, service manifests and prompt sections, turned on

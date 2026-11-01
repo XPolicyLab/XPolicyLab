@@ -238,6 +238,51 @@ class BridgeTests(unittest.TestCase):
         self.assertFalse(thread.is_alive())
         self.assertTrue(results[-1]["state"]["ended"])
 
+    def test_the_policys_own_actions_are_not_cut_off_by_the_jump_check(self):
+        """1.9.3: a Simate action 0.34 rad away from the arm ended its run under 1.9.2."""
+        self.bridge.host_reset()
+        self.bridge.host_update_obs(FakeHost(None).obs())
+        observation = self.bridge.reset("task", 0)
+        jump = [0.0] * 14
+        jump[5] = 0.5
+        results = {}
+
+        def program():
+            results["program"] = self.bridge.call("tick", {"episode_id": observation.episode_id, "step": 0,
+                                                           "command": jump})
+            results["policy"] = self.bridge.call("tick", {"episode_id": observation.episode_id, "step": 0,
+                                                          "command": jump, "source": "policy"})
+            self.bridge.program_over()
+
+        host = FakeHost(None)
+        host.step = 0
+        thread = threading.Thread(target=program)
+        thread.start()
+        deadline = time.monotonic() + 10
+        while "policy" not in results and time.monotonic() < deadline:
+            for action in self.bridge.host_get_action():
+                host.take_action(action)
+                self.bridge.host_update_obs(host.obs())
+        thread.join(10)
+        self.assertEqual(results["program"]["shield"]["reasons"][0]["check"], "joint_jump")
+        self.assertFalse(results["program"]["executed"])
+        self.assertEqual(results["policy"]["shield"]["verdict"], "pass")
+        self.assertEqual(results["policy"]["shield"]["command"], jump)
+
+    def test_outcome_keeps_the_step_count_after_the_host_resets(self):
+        """The next wave's reset zeroes `step`; the ended episode's count is the one it had."""
+        self.bridge.host_reset()
+        self.bridge.host_update_obs(FakeHost(None).obs())
+        observation = self.bridge.reset("task", 0)
+        self.bridge.step = 1000
+        self.bridge.host_reset()
+        outcome = self.bridge.call("outcome", {"token": "x"})
+        self.assertEqual(outcome["steps"], 1000)
+        self.assertFalse(outcome["closed"])
+        self.bridge.close()
+        self.assertTrue(self.bridge.call("outcome", {"token": "x"})["closed"])
+        self.assertEqual(observation.episode_id[:4], "xpl-")
+
     def test_profile_and_outcome_follow_the_contract(self):
         profile = self.bridge.call("profile", {})
         self.assertEqual(profile["observation_contract"], "xpolicylab")
@@ -291,7 +336,40 @@ class ExportTests(unittest.TestCase):
         self.assertNotIn("Molmo2", (self.package / "README.md").read_text())
         readme = (self.package / "README.md").read_text()
         self.assertIn("{name} arx_x5 joint <seed>".format(name="HarnessPolicy"), readme)
+        self.assertIn("`action_type` must be `joint`", readme)
         self.assertIn("(`the-harness/embodiments/arx_x5`, RoboDojo's own cuRobo planner)", readme)
+
+    def test_wall_oss_exports_native_ee(self):
+        from harness_policy.export.xpolicylab import export
+
+        root = Path(self.directory.name)
+        demo = root / "RoboDojo" / "XPolicyLab" / "policy" / "demo_policy"
+        package = demo.parent / "HarnessPolicyWall"
+        export(ABLATIONS / "wall-oss.toml", name="HarnessPolicyWall", out=package,
+               deploy=str(ROOT / "configs" / "deploy" / "wall-oss-1gpu.toml"),
+               xpolicylab=demo.parents[1], allow_dirty=True)
+        text = (package / "deploy.yml").read_text()
+        self.assertIn("action_type: ee", text)
+        readme = (package / "README.md").read_text()
+        self.assertIn("HarnessPolicyWall arx_x5 ee <seed>", readme)
+        self.assertIn("no task-name router", readme)
+        agent = json.loads((package / "agent.json").read_text())
+        self.assertNotIn("task_routing", json.dumps(agent))
+
+    def test_vendor_skips_cluster_submit(self):
+        from harness_policy.export.xpolicylab import VENDOR_SKIP, export
+
+        self.assertIn("cluster_submit", VENDOR_SKIP)
+        root = Path(self.directory.name) / "vendored"
+        demo = root / "RoboDojo" / "XPolicyLab" / "policy" / "demo_policy"
+        demo.mkdir(parents=True)
+        from harness_policy.export.xpolicylab import STANDARD_SCRIPTS
+        for script in STANDARD_SCRIPTS:
+            (demo / script).write_text("#!/bin/bash\ntrue\n" if script.endswith(".sh") else "\n")
+        package = demo.parent / "HarnessPolicy"
+        export(DEFAULT, name="HarnessPolicy", out=package, deploy=str(TEST_DEPLOY),
+               xpolicylab=demo.parents[1], allow_dirty=True, vendor=True)
+        self.assertFalse((package / "the-harness" / "cluster_submit").exists())
 
     def test_agent_json_is_machine_independent(self):
         from harness_policy.connectors.package import relocate
@@ -422,6 +500,15 @@ class ExportTests(unittest.TestCase):
                 held = model.get_action_batch([0, 1])
                 self.assertEqual(held, [[], []])
                 self.assertIsNotNone(ready.bridge.pending)
+                # An environment the client dropped has finished: end it instead of
+                # leaving its tick to wait out the observation timeout.
+                dropped = model._slot(1)
+                dropped.started_wave = model.wave
+                dropped.bridge.idle = False
+                before = dropped.bridge.episode
+                model.update_obs_batch([hosts[0].obs()])
+                model.get_action_batch([0])
+                self.assertEqual(dropped.bridge.episode, before + 1)
                 model.close()
         finally:
             __import__("signal").signal(__import__("signal").SIGTERM, handler)

@@ -98,6 +98,9 @@ RUNTIME_KEYS = {
     "skills_dropped": "written by the resolution: skills left out, and why",
     "post_policy_calls": "with learned policies: model calls after the first run of a handed-over task, then the policy runs on to the end of the episode (0: it runs on at once)",
     "policy_progress_seconds": "a run of a learned policy also ends when no object the last locate tracks has moved 3 cm for this many seconds, measured every half of it (default none: only when it stops)",
+    "policy_action_mode": "joint (default, including EE-to-joint IK) or ee_passthrough (ablation: native EE dictionary to the XPolicyLab client, no harness IK)",
+    "policy_span": "episode (default: A/C hand the task to the policy until the episode ends) or cell (ablation: the program keeps the episode and run_policy is one bounded call)",
+    "task_routing": "ablation only: {default = enabled policy, tasks = {base task = own or that policy}}; _random inherits base, fixed before model calls, default agent uses instruction text",
     "strategy_first": "with learned policies: nothing moves before start(strategy, kind) (default false; the agent sets it)",
     "strict_skills": "driver-built configurations: fail instead of dropping a skill",
     "task_descriptions": "a directory of task descriptions (<task>.md) added to the first message, or false",
@@ -305,6 +308,17 @@ def resolve_agent(agent=None, *, model=None, deploy=None, strict: bool = False, 
                 chosen[service] = config
         if entries:
             runtime[key] = chosen
+    if runtime.get("policy_action_mode", "joint") not in ("joint", "ee_passthrough"):
+        raise ValueError("runtime.policy_action_mode must be joint or ee_passthrough")
+    if runtime.get("policy_span", "episode") not in ("episode", "cell"):
+        raise ValueError("runtime.policy_span must be episode or cell")
+    from ..runtime.routing import validate_task_routing
+
+    # Non-strict resolution may drop an unavailable service (configuration previews).
+    # Validate against the declared services here; the driver checks actual clients.
+    declared_policies = {entry if isinstance(entry, str) else entry["service"]
+                         for entry in services.get("policies", [])}
+    validate_task_routing(runtime.get("task_routing"), declared_policies | set(runtime.get("policies", {})))
     # Skills: the interface layers' (R0-R4) or a list, without the disabled ones.
     skills = tree.get("skills", {})
     unknown = set(skills) - {"layers", "names", "enable", "disable"}

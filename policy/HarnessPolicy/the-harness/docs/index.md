@@ -35,10 +35,10 @@ programs did themselves, from the first model request to the outcome.
 | | |
 |---|---|
 | **One agent** | `configs/default.toml` (prompt pack, skills, services, budget) with a model of `configs/models/`, resolved per machine into a lock whose hash is the identity; the paper's ablations include it. Evaluation runs resolve strictly. |
-| **Division of labor** | `start(strategy, kind)` is the first motion: A or C hands the task to the learned policy (Simate by default) from the untouched start pose; B keeps it for the programs. After the policy's run the model has 4 calls, then the policy runs on to the end of the episode. |
+| **Division of labor** | `start(strategy, kind)` is the first motion. B stays on the programs only when the instruction is a read the learned policy cannot do; any other B runs as A. A or C hands the task to the policy (Simate by default) from the start pose, and the policy then runs to the end of the episode. Later motions in that program are refused. |
 | **Skills** | perception (SAM 3 segmentation, pointing by the VLM or Molmo2, questions about images), geometry, kinematics and planning, motion, the tools by object id (`locate`, `pick`, `release`, `transfer`, `push`, `move_tip`, with a scene measured again after every program), learned policies (`run_policy`: any XPolicyLab policy), a world-action model (`predict_future`, OpenWAM, for experiments), guards and controllers every tick, event handlers. The agent turns them on by interface layer or by name. |
 | **Services** | each model behind a skill is a service with a manifest: how to start it, its port, its VRAM and where its weights come from. `harness up` starts them; on a small machine they load on demand and share a GPU. |
-| **Benches** | RoboDojo (dual-arm ARX X5; 42 scored tasks in five dimensions; development layouts disjoint from the evaluation packs). |
+| **Benches** | RoboDojo (dual-arm ARX X5; 42 scored tasks in five dimensions; development layouts disjoint from the evaluation packs) and RoboTwin 2.0. |
 | **Ladder** | R0 (one action per model call) to R4 (programs, learned skills, reactive layer, handlers). |
 | **Evaluation by others** | develop under XPolicyLab's observation contract and export a policy folder RoboDojo's leaderboard runs. |
 | **Traces** | every model request, program, event and action, an HTML viewer, and RoboDojo scores. |

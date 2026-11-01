@@ -204,8 +204,8 @@ class HarnessModel:
         self.package = Path(package_dir).resolve()
         self.cfg = dict(model_cfg)
         document = json.loads((self.package / "agent.json").read_text())
-        # The task name only labels traces: the policy runs the same for every task (the
-        # official client does not tell it the task).
+        # Default: the task name labels traces, not routing. An explicitly configured
+        # ablation may also use it for its fixed table; it is not shown to the model.
         task = str(self.cfg.get("task_name") or "")
         self.task = None if task in ("", "any", "None", "null") else task
         stamp = time.strftime("%Y%m%d-%H%M%S")
@@ -311,6 +311,13 @@ class HarnessModel:
         indices = list(range(len(obs_list))) if env_idx_list is None else [int(i) for i in env_idx_list]
         if len(obs_list) != len(indices):
             raise RuntimeError(f"update_obs_batch got {len(obs_list)} observations for {len(indices)} environments")
+        # An environment the client dropped has finished: its tick would otherwise wait
+        # out the observation timeout (600 s) and the trace would say the run failed.
+        # Ending it here is the same signal as the client's next reset.
+        running = set(indices)
+        for index, slot in self.slots.items():
+            if index not in running and slot.started_wave == self.wave and not slot.bridge.idle:
+                slot.bridge.host_reset()
         slots = [self._slot(index) for index in indices]
         # An action already waiting was computed from the previous observation. Take it
         # before publishing this one, so the tick sees this observation as the next one.
@@ -376,7 +383,8 @@ class HarnessModel:
         from ..core.worker import create_server
         from .xpolicylab import Bridge
 
-        bridge = Bridge(self._embodiment, kinematics_url=self._kinematics_url, poll_seconds=self.poll_seconds)
+        bridge = Bridge(self._embodiment, kinematics_url=self._kinematics_url, poll_seconds=self.poll_seconds,
+                        ee_passthrough=self.agent.runtime.get("policy_action_mode") == "ee_passthrough")
         server = create_server(bridge, "127.0.0.1", 0)
         threading.Thread(target=server.serve_forever, daemon=True).start()
         return _Slot(bridge, server, f"http://127.0.0.1:{server.server_port}")

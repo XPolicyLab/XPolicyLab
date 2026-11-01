@@ -1,4 +1,4 @@
-"""The harness as an XPolicyLab policy: evaluated by RoboDojo's (or a real
+"""The harness as an XPolicyLab policy: evaluated by RoboDojo's (or RoboTwin's, or a real
 robot's) own client through XPolicyLab's policy-server protocol.
 
 XPolicyLab drives: its client calls reset(), then update_obs(obs) and get_action() ->
@@ -29,6 +29,7 @@ before it leaves.
 
 import base64
 import json
+import math
 import secrets
 import threading
 import time
@@ -73,7 +74,7 @@ class Bridge:
     """The rendezvous between XPolicyLab's calls and the session's ticks."""
 
     def __init__(self, embodiment: dict, *, kinematics_url: str | None, poll_seconds: float = 90.0,
-                 shield: dict | None = None, obs_timeout: float = 600.0):
+                 shield: dict | None = None, obs_timeout: float = 600.0, ee_passthrough: bool = False):
         from ..embodiments import profile as embodiment_profile
 
         self.embodiment = embodiment
@@ -84,7 +85,12 @@ class Bridge:
         self.kinematics_url = kinematics_url
         self.poll_seconds = float(poll_seconds)
         self.obs_timeout = float(obs_timeout)
-        options = {**embodiment.get("shield", {}), **(shield or {})}
+        self.ee_passthrough = bool(ee_passthrough)
+        self.native_commanded = None
+        # The learned policy's actions here are what XPolicyLab's own client would execute:
+        # only a malformed one is rejected (Shield.check, source "policy"). The model's
+        # programs keep every check.
+        options = {"policy_native": True, **embodiment.get("shield", {}), **(shield or {})}
         shield_profile = {"groups": {n: {"joints": g["joints"], "gripper": g["gripper"]} for n, g in self.groups.items()},
                           "control_hz": float(embodiment["control_hz"]), **options}
         self.shield = Shield(ShieldProfile.from_dict(shield_profile, embodiment["action_low"], embodiment["action_high"]))
@@ -102,6 +108,7 @@ class Bridge:
         self.token = None
         self.closed = False
         self._episode_of_id = None
+        self._steps_at_reset = 0   # the step count of the episode host_reset just ended
 
     # -- the XPolicyLab side -------------------------------------------------------
 
@@ -109,11 +116,13 @@ class Bridge:
         """The client started a new episode: the session's episode ends, the observation and
         any pending action are dropped, and the shield forgets its last command."""
         with self.lock:
+            self._steps_at_reset = self.step
             self.episode += 1
             self.last_obs = self.obs if self.obs is not None else self.last_obs
             self.obs, self.pending, self.step = None, None, 0
             self.idle = False
             self.commanded = None
+            self.native_commanded = None
             self.shield.reset()
             self.lock.notify_all()
 
@@ -156,6 +165,11 @@ class Bridge:
     def _hold_action(self):
         if self.obs is None:
             return None
+        if self.native_commanded is not None:
+            # Once a native policy ran, idle holds remain EE actions, not invented
+            # joint targets. Its grippers hold the original commands.
+            return {**{key: _vector(self.obs["state"][key]) for key in POSE_KEYS.values()},
+                    **{key: list(value) for key, value in self.native_commanded.items() if "joint_state" in key}}
         command = list(self.commanded) if self.commanded is not None else self._joints(self.obs)
         state_joints = self._joints(self.obs)
         for group in self.groups.values():
@@ -240,6 +254,9 @@ class Bridge:
                 self.lock.wait(timeout=1.0)
             self.episode_id = f"xpl-{self.episode}-{secrets.token_hex(4)}"
             self._episode_of_id = self.episode
+            # The host's task name. The model is not told it; a policy whose memory
+            # depends on the task id (WALL-OSS box cropping) reads it from policy_obs.
+            self.task_name = None if task in (None, "", "any", "task") else str(task)
             self.token = None
             obs = self.obs
             images = {camera: _data_url(item["color"]) for camera, item in (obs.get("vision") or {}).items()
@@ -260,7 +277,7 @@ class Bridge:
             ended = episode_id != self.episode_id or self._episode_of_id != self.episode
             return self._state(ended=ended)
 
-    def _call_tick(self, episode_id, step, command, cameras=None):
+    def _call_tick(self, episode_id, step, command, cameras=None, source=None):
         with self.lock:
             if episode_id != self.episode_id or self._episode_of_id != self.episode:
                 return {"executed": False, "shield": {"verdict": "rejected", "reasons": [{"check": "episode_over"}],
@@ -268,14 +285,43 @@ class Bridge:
             if step != self.step:
                 raise ValueError(f"Stale tick: step {step}, the episode is at {self.step}")
             current = self._joints(self.obs)
-        decision = self.shield.check([float(v) for v in command], current,
-                                     fk=self._fk_positions if self.kinematics_url else None)
-        if decision.command is None:
+        native = isinstance(command, dict)
+        if native:
+            if not self.ee_passthrough or source != "policy":
+                raise ValueError("native EE actions require the ablation's policy passthrough")
+            expected = {"left_ee_pose": 7, "right_ee_pose": 7,
+                        "left_ee_joint_state": 1, "right_ee_joint_state": 1}
+            if set(command) != set(expected):
+                raise ValueError("invalid native EE action keys")
+            for key, size in expected.items():
+                values = command[key]
+                if not isinstance(values, (list, tuple)) or len(values) != size or any(
+                    isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in values
+                ):
+                    raise ValueError(f"invalid native EE action entry: {key}")
+            # Same validation as WallX: finite values and exact keys/dimensions.
+            # No IK, joint bounds, quaternion rewriting or gripper clipping here.
+            receipt = {"verdict": "pass", "reasons": [], "command": {k: list(v) for k, v in command.items()}}
+        else:
+            receipt = self.shield.check([float(v) for v in command], current, source=source,
+                                        fk=self._fk_positions if self.kinematics_url else None).to_dict()
+        if receipt["command"] is None:
             with self.lock:
-                return {"executed": False, "shield": decision.to_dict(), "state": self._state()}
+                return {"executed": False, "shield": receipt, "state": self._state()}
         with self.lock:
-            self.commanded = list(decision.command)
-            self.pending = self._action(decision.command)
+            if native:
+                # A reset while validation ran must not publish a stale EE motion.
+                if episode_id != self.episode_id or self._episode_of_id != self.episode:
+                    return {"executed": False, "shield": {"verdict": "rejected", "reasons": [{"check": "episode_over"}],
+                                                          "command": None}, "state": self._state(ended=True)}
+                if step != self.step:
+                    raise ValueError(f"Stale tick: step {step}, the episode is at {self.step}")
+                self.native_commanded = receipt["command"]
+                self.pending = {k: list(v) for k, v in command.items()}
+            else:
+                self.native_commanded = None
+                self.commanded = list(receipt["command"])
+                self.pending = self._action(receipt["command"])
             self.lock.notify_all()
             deadline = time.monotonic() + self.obs_timeout
             # The host takes the action (get_action), executes it and sends the next
@@ -288,7 +334,7 @@ class Bridge:
                 self.lock.wait(timeout=1.0)
             ended = self._episode_of_id != self.episode or self.closed
             state = self._state(ended=ended)
-        result = {"executed": True, "shield": decision.to_dict(), "state": state}
+        result = {"executed": True, "shield": receipt, "state": state}
         if cameras and not ended:
             result["observation"] = self._call_observe(episode_id, cameras=cameras)
         return result
@@ -320,9 +366,12 @@ class Bridge:
             state = self._state(obs)
         vision = {camera: _data_url(item["color"], ".png") for camera, item in (obs.get("vision") or {}).items()
                   if "color" in item}
-        return {"vision": vision, "state": {key: _vector(value) for key, value in (obs.get("state") or {}).items()},
-                "instruction": obs.get("instruction"), "additional_info": obs.get("additional_info") or {},
-                "data_format_version": obs.get("data_format_version"), "robot_state": state}
+        result = {"vision": vision, "state": {key: _vector(value) for key, value in (obs.get("state") or {}).items()},
+                  "instruction": obs.get("instruction"), "additional_info": obs.get("additional_info") or {},
+                  "data_format_version": obs.get("data_format_version"), "robot_state": state}
+        if getattr(self, "task_name", None):
+            result["task_id"] = self.task_name
+        return result
 
     def _call_fk(self, command=None):
         if command is None:
@@ -345,9 +394,13 @@ class Bridge:
         return {"token": self.token}
 
     def _call_outcome(self, token):
-        # The host evaluates; a policy never learns the outcome.
+        # The host evaluates; a policy never learns the outcome. A reset already zeroed
+        # `step` for the next episode, so the ended episode's count is the one saved then.
+        with self.lock:
+            steps = self.step if self._episode_of_id == self.episode else self._steps_at_reset
+            closed = self.closed
         return {"success": None, "reward": None, "process_score": None, "terminated": None, "truncated": None,
-                "steps": self.step, "host_scored": True}
+                "steps": steps, "host_scored": True, "closed": closed}
 
     def program_over(self, episode=None):
         """The driver of host episode `episode` (default: the current one) finished: hold
@@ -363,4 +416,3 @@ class Bridge:
         with self.lock:
             self.closed = True
             self.lock.notify_all()
-

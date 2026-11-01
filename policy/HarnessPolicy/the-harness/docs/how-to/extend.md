@@ -109,7 +109,7 @@ The agent names the prompt pack, the skills, the services the skills use, runtim
 settings and the budget. Model roles live in `configs/models/` so the agent runs with
 any model. `harness config <experiment or agent file> --deploy <machine>` shows what it
 resolves to; `harness lock` writes its identity. A change to what the agent does goes
-into `configs/default.toml` itself, with a new `AGENT_VERSION`.
+into `configs/default.toml` itself, with a new `AGENT_VERSION` and a changelog entry.
 
 ## A machine
 
@@ -123,7 +123,8 @@ git-ignored. `harness doctor --deploy <machine>` checks it.
 
 A bench is a worker that serves the robot API (`profile`, `reset`, `tick`, `state`,
 `observe`, `fk`, `ik`, `plan`, outcome) through `harness serve --factory
-module:create_environment`; see `benches/robodojo/runtime.py`. A robot's description (joint groups, limits, cameras,
+module:create_environment`; see `benches/robodojo/runtime.py` and
+`benches/robotwin/runtime.py`. A robot's description (joint groups, limits, cameras,
 calibration, gripper, mount poses) goes to `embodiments/<name>/embodiment.toml`; a
 prompt pack goes to `prompts/<bench>/`.
 

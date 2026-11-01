@@ -42,11 +42,11 @@ MANIFEST_KEYS = {
     "command": "argv that starts it, with {python} {port} {weights} {repo} {robodojo} {xpolicylab} ... "
                "(protocol xpolicylab: optional, in place of XPolicyLab's setup_policy_server.py)",
     "xpolicylab": "for protocol xpolicylab: policy folder, ckpt_name, action_type (joint, or ee: link6 poses "
-                  "that run_policy solves by IK), action_dim, cwd, pythonpath, overrides",
+                  "that run_policy solves by IK unless runtime.policy_action_mode = ee_passthrough), action_dim, cwd, pythonpath, overrides",
     "env": "environment variables of the process",
     "python": "interpreter (default {python}: the project environment's)",
     "cwd": "working directory (default {repo})",
-    "client": "the config its users get: url = \"{url}\" and what the model is told about it (description)",
+    "client": "the config its users get: url = \"{url}\", description; policies may set memory = kfmem, execute_steps (replay prefix) and action_chunk_length (required full returned chunk in native EE mode)",
     "weights": "[[weights]] entries: dir below the deploy's weights root and one source "
                f"({', '.join(WEIGHT_SOURCES)}); `harness fetch` downloads them",
     "needs_files": "paths that must exist before it can start (checked by harness doctor and up)",

@@ -61,6 +61,9 @@ class RobotSession(EpisodeCore):
                      "policy starts from the untouched start pose")
 
     def _embodiment_setup(self, options):
+        self._policy_action_mode = options.get("policy_action_mode", "joint")
+        self._policy_span = options.get("policy_span", "episode")
+        self._fixed_task_route = options.get("fixed_task_route")
         # Motions are timed as the planner times them (its joint velocity and acceleration).
         planner = self.profile.get("planner_limits") or {}
         self.joint_speed_limit = planner.get("joint_velocity")
@@ -91,10 +94,13 @@ class RobotSession(EpisodeCore):
         for camera, url in raw["vision"].items():
             data = np.frombuffer(base64.b64decode(url.split(",", 1)[1]), dtype=np.uint8)
             vision[camera] = {"color": cv2.cvtColor(cv2.imdecode(data, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)}
-        return {"vision": vision, "state": {key: np.asarray(value) for key, value in raw["state"].items()},
-                "instruction": raw.get("instruction") if instruction is None else str(instruction),
-                "additional_info": raw.get("additional_info") or {"frequency": self.hz},
-                "data_format_version": raw.get("data_format_version"), "env_idx": 0}
+        observation = {"vision": vision, "state": {key: np.asarray(value) for key, value in raw["state"].items()},
+                       "instruction": raw.get("instruction") if instruction is None else str(instruction),
+                       "additional_info": raw.get("additional_info") or {"frequency": self.hz},
+                       "data_format_version": raw.get("data_format_version"), "env_idx": 0}
+        if raw.get("task_id"):
+            observation["task_id"] = raw["task_id"]
+        return observation
 
     def _guard_command(self, action, state):
         """hold: the measured joints with the grippers as commanded; open_gripper: the
@@ -124,16 +130,30 @@ class RobotSession(EpisodeCore):
 
     def _tick(self, command, cameras=None):
         extra = {"cameras": list(cameras)} if cameras else {}
+        # The commands of a run_policy are the learned policy's own actions: the worker may
+        # judge them as the evaluator's client would (shield.py, policy_native).
+        if self.__dict__.get("_policy_ticking"):
+            extra["source"] = "policy"
+        native = isinstance(command, dict)
+        if native and (not self.__dict__.get("_policy_ticking")
+                       or getattr(self, "_policy_action_mode", "joint") != "ee_passthrough"):
+            raise ValueError("native EE commands require the policy's ee_passthrough mode")
+        payload = command if native else [float(v) for v in command]
         result = self.env.call("tick", episode_id=self.episode_id, step=self.state["step"],
-                               command=[float(v) for v in command], **extra)
+                               command=payload, **extra)
         if result.get("observation") is not None:
             self._live = Observation(result["observation"])
         if result["executed"]:
             executed = result["shield"]["command"]
             commands = self.__dict__.setdefault("_arm_commands", {})
             for arm, group in self.groups.items():
-                self._gripper_commands[arm] = float(executed[group["gripper"]])
-                commands[arm] = [float(executed[i]) for i in group["joints"]]
+                if native:
+                    # No joint target is known: only RoboDojo solves the EE pose.
+                    self._gripper_commands[arm] = float(executed[f"{arm.split('_')[0]}_ee_joint_state"][0])
+                    commands.pop(arm, None)
+                else:
+                    self._gripper_commands[arm] = float(executed[group["gripper"]])
+                    commands[arm] = [float(executed[i]) for i in group["joints"]]
         self.state = result["state"]
         return result
 
@@ -143,6 +163,9 @@ class RobotSession(EpisodeCore):
     def _motion_ticked(self, command):
         motion = self.__dict__.get("_arm_motion")
         if motion is not None:
+            if isinstance(command, dict):
+                motion["moved"].update(self.groups)
+                return
             motion["moved"].update(arm for arm, group in self.groups.items()
                                    if any(abs(command[i] - motion["holding"][i]) > 1e-9 for i in group["joints"]))
 

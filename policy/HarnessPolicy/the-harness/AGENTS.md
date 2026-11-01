@@ -4,7 +4,8 @@
 
 - There is one agent: `configs/default.toml` with the code it runs. Its version is
   `AGENT_VERSION` (`src/harness_policy/__init__.py`): raise the minor version for a change
-  in what it does (prompt, skills, defaults, high-level loop), the patch version for a fix.
+  in what it does (prompt, skills, defaults, high-level loop), the patch version for a fix,
+  and say in `docs/changelog.md` what changed and the evidence for it.
 - No named harnesses. Code, configs and directories carry no harness or iteration names
   (z1, z2, r4, v03, ...). A variant is an ablation (`configs/ablations/<what it changes>.toml`,
   including `../default.toml`) or an experiment override, never a copy. A retired harness

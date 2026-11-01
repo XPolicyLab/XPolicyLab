@@ -79,7 +79,7 @@ tests check that each public function of an enabled skill appears as a call). In
 <!-- end -->
 ```
 
-A configuration that should not have the skill
+and the same in `prompts/robotwin/core.md`. A configuration that should not have the skill
 lists it in `[skills] disable = ["wiggle"]`; one that names its skills explicitly
 (`names = [...]`) gets it only when named.
 

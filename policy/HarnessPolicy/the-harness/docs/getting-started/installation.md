@@ -29,6 +29,7 @@ Optional checkouts, also in `third_party/sources.toml`:
 | Checkout | For |
 |---|---|
 | SAM 3 (`SAM3_ROOT`) | the `sam3` segmentation service |
+| RoboTwin 2.0 (`HARNESS_ROBOTWIN_ROOT`) | the RoboTwin bench |
 
 ## 2. The environment
 
@@ -38,7 +39,7 @@ bash environment/setup.sh
 
 The script creates `harness-policy` (Python 3.11) and installs it in layers: PyTorch
 2.7 (CUDA 12.8), Isaac Sim 5.1, Isaac Lab and cuRobo from the RoboDojo checkout,
-RoboDojo's runtime and the XPolicyLab client, this
+RoboDojo's runtime and the XPolicyLab client, RoboTwin (when checked out), this
 repository (editable), the inference dependencies of the learned skills and perception,
 and this documentation's tools. Every layer installs under
 `environment/constraints.txt`, so nothing can move torch, numpy or Isaac Sim.
@@ -48,7 +49,7 @@ bash environment/setup.sh --from project    # resume at a step
 bash environment/setup.sh --only lock       # refresh environment/lock/
 ```
 
-Steps: `conda torch isaacsim isaaclab curobo robodojo project skills docs
+Steps: `conda torch isaacsim isaaclab curobo robodojo robotwin project skills docs
 verify lock`. The [environment reference](../reference/environment.md) lists the pins,
 the lock files and the known deviations from upstream.
 

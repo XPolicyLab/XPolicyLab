@@ -33,7 +33,9 @@ environment variables, never in these files.
 --8<-- "configs/default.toml"
 ```
 
-The agent's code version is `AGENT_VERSION` in `src/harness_policy/__init__.py`. Every key is in the
+The agent's code version is `AGENT_VERSION` in `src/harness_policy/__init__.py`; what
+changed between versions, and the evidence for it, is in the
+[changelog](../changelog.md). Every key is in the
 [configuration reference](../reference/configuration.md).
 
 ## Ablations

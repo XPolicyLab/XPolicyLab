@@ -88,6 +88,27 @@ class ShieldTests(unittest.TestCase):
         self.assertEqual(Shield(_profile()).check([float("nan"), 0, 0], [0, 0, 0]).verdict, REJECTED)
         self.assertEqual(Shield(_profile()).check([0, 0], [0, 0, 0]).verdict, REJECTED)
 
+    def test_policy_actions_pass_only_where_the_profile_says_so(self):
+        jump = [0.5, 0.0, 1.0]       # 0.5 rad against a 0.1 limit, and a joint beyond its bounds below
+        beyond = [0.0, 0.0, 3.0]
+        # Without policy_native a policy's action is judged like any command.
+        self.assertEqual(Shield(_profile()).check(jump, [0, 0, 0], _fk, source="policy").reasons[0]["check"],
+                         "joint_jump")
+        native = _profile(policy_native=True)
+        for command in (jump, beyond):
+            result = Shield(native).check(command, [0, 0, 0], _fk, source="policy")
+            self.assertEqual((result.verdict, result.command), (PASS, command))
+        # A program's command and a malformed action are still rejected.
+        self.assertEqual(Shield(native).check(jump, [0, 0, 0], _fk).reasons[0]["check"], "joint_jump")
+        self.assertEqual(Shield(native).check([0, 0], [0, 0, 0], source="policy").reasons[0]["check"], "shape")
+        self.assertEqual(Shield(native).check([float("nan"), 0, 0], [0, 0, 0], source="policy").verdict, REJECTED)
+
+    def test_a_policy_action_becomes_the_previous_command(self):
+        shield = Shield(_profile(policy_native=True, max_cartesian_jump_m=None))
+        shield.check([0.5, 0.0, 1.0], [0.5, 0.0, 0.0], source="policy")
+        # The program's next command is judged from the policy's last one and the arm.
+        self.assertEqual(shield.check([0.55, 0.0, 1.0], [0.5, 0.0, 0.0]).verdict, PASS)
+
 
 class ReactiveTests(unittest.TestCase):
     def test_when_and_watch_fire_in_order(self):

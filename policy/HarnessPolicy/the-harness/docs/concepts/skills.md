@@ -91,6 +91,7 @@ as `undocumented`), no function of a disabled skill may, and no marker may remai
 | Pack | Used by |
 |---|---|
 | `prompts/robodojo/` | the agent and the program ablations (R2, R3) on RoboDojo |
+| `prompts/robotwin/` | the agent on RoboTwin (its own `core.md`, the other sections shared) |
 | `prompts/robodojo_direct*.md` | R0 and R1 (files, not a pack) |
 | `prompts/robodojo_tasks/` | task descriptions (`runtime.task_descriptions`) |
 

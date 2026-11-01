@@ -43,7 +43,7 @@ bash environment/setup.sh --from project    # resume
 bash environment/setup.sh --only lock       # refresh the lock files
 ```
 
-Steps: `conda torch isaacsim isaaclab curobo robodojo project skills docs verify lock`.
+Steps: `conda torch isaacsim isaaclab curobo robodojo robotwin project skills docs verify lock`.
 A different environment name can be chosen with `HARNESS_ENV`.
 
 ## Lock files

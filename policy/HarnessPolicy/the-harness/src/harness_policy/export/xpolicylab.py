@@ -26,8 +26,8 @@ from ..connectors.package import relative_tree
 
 REPO = Path(__file__).resolve().parents[3]
 STANDARD_SCRIPTS = ("deploy.py", "eval.sh", "setup_eval_policy_server.sh", "setup_eval_env_client.sh", "__init__.py")
-# Not copied by --vendor: the external checkouts.
-VENDOR_SKIP = ("third_party",)
+# Not copied by --vendor: external checkouts, and machine submit scripts.
+VENDOR_SKIP = ("third_party", "cluster_submit")
 
 
 def _git(*args) -> str:
@@ -86,7 +86,7 @@ task_name: null
 ckpt_name: null
 env_cfg_type: null
 seed: null
-action_type: joint
+action_type: {action_type}
 gpu_id: null
 eval_batch: true
 
@@ -192,7 +192,7 @@ HARNESS_SCRIPT=$PWD/the-harness/configs/scripts/xpolicylab_check.json EVAL_ENV_T
 `policy_gpu_ids` may list several GPUs (`2,3`): the services ({service_list}) take
 about {vram:.0f} GB in all; when they do not fit at once, the learned policies and the
 world model load on demand, one at a time (the simulator waits while a model loads, so
-only wall time changes). `action_type` must be `joint`; `ckpt_name` is not read.
+only wall time changes). `action_type` must be `{action_type}`; `ckpt_name` is not read.
 
 ## Configuration
 
@@ -218,6 +218,20 @@ instead of calling the model (wiring checks).
   description (`the-harness/embodiments/{embodiment}`, {kinematics_note}).
 - The policy never reads the outcome: an episode that continues after the program
   finished is not taken as a failure; the arms hold until the client ends it.
+'''
+
+CELL_NOTE = '''
+## This version
+
+One fixed system on every task. The program keeps the episode, and
+`run_policy("wall-oss")` is one bounded call inside it. WALL-OSS 1.0 lite is the
+only learned policy. Its native end-effector actions are passed through, and
+RoboDojo's client does the IK (`action_type=ee`), the same action path as official
+WallX. There is no task-name router: `task_name` only labels traces. Five
+instruction phrasings the policy cannot read stay on the agent's own tools.
+Image questions and `verify` send temperature 1, which this model accepts. A later
+policy slice continues from the frames that were stored when steps in between were
+not recorded.
 '''
 
 
@@ -289,12 +303,12 @@ def check_embodiment(embodiment: str) -> dict:
     data = load_embodiment(embodiment)
     if data.get("calibrated", True) is not True:
         raise ValueError(f"Embodiment {embodiment} is not calibrated: measure its rig and set calibrated = true "
-                         "before export")
+                         "(docs/how-to/real-robot.md)")
     if data["name"] != KINEMATICS_EMBODIMENT and not data.get("kinematics_service"):
         raise ValueError(f"Embodiment {embodiment} has no kinematics service: services/kinematics.toml is the "
                          f"{KINEMATICS_EMBODIMENT}'s, and the shield and the tools by pose would run its fk and ik "
                          "on this robot's joints; give the robot its own (kind kinematics) and name it in "
-                         "kinematics_service")
+                         "kinematics_service (docs/how-to/real-robot.md)")
     return data
 
 
@@ -346,7 +360,9 @@ def export(source=None, *, name: str, out, deploy=None, model=None, sets=(), ven
                 "sources": relative_tree(sources, REPO)}
     (out / "agent.json").write_text(json.dumps(document, indent=1, sort_keys=True) + "\n")
     (out / "model.py").write_text(MODEL_PY)
-    (out / "deploy.yml").write_text(DEPLOY_YML.format(name=name))
+    action_type = ("ee" if agent.runtime.get("policy_action_mode") == "ee_passthrough"
+                   else robot["xpolicylab"]["action_type"])
+    (out / "deploy.yml").write_text(DEPLOY_YML.format(name=name, action_type=action_type))
     (out / "deploy.toml").write_text(DEPLOY_TOML)
     (out / "install.sh").write_text(INSTALL_SH.format(remote=remote, commit=commit))
     downloads = [s for s in services if registry[s].weights and not all(w.get("local") for w in registry[s].weights)]
@@ -364,14 +380,17 @@ def export(source=None, *, name: str, out, deploy=None, model=None, sets=(), ven
                    f"({commit[:12]}); install.sh uses it as it is." if vendor else
                    f"install.sh clones the-harness at the exported commit ({commit[:12]}) into `the-harness/`.")
     environment, environment_note = hosted_environment(agent)
-    (out / "README.md").write_text(README.format(
+    readme = README.format(
         name=name, contributor=contributor, remote=remote.removesuffix(".git"), model=agent.main.get("model"),
         policies=policies or "none", identity=agent.identity, vendor_note=vendor_note,
         service_list=", ".join(services), vram=vram, perception=perception, embodiment=embodiment,
-        env_cfg=robot["xpolicylab"]["env_cfg_type"], action_type=robot["xpolicylab"]["action_type"],
+        env_cfg=robot["xpolicylab"]["env_cfg_type"], action_type=action_type,
         environment=environment, environment_note=environment_note,
         kinematics_note=("RoboDojo's own cuRobo planner" if kinematics == "kinematics"
-                         else f"its kinematics service `{kinematics}`")))
+                         else f"its kinematics service `{kinematics}`"))
+    if agent.runtime.get("policy_span") == "cell":
+        readme += CELL_NOTE
+    (out / "README.md").write_text(readme)
     if vendor:
         # The files the agent was resolved from: tracked and untracked, not ignored.
         target = out / "the-harness"
@@ -409,8 +428,13 @@ def check(folder, *, gpu: str, env: str, eval_env: str | None = None, task: str 
     from ..embodiments import load_embodiment
 
     robot = load_embodiment(json.loads((folder / "agent.json").read_text()).get("embodiment", "arx_x5"))
+    action_type = robot["xpolicylab"]["action_type"]
+    for line in (folder / "deploy.yml").read_text().splitlines():
+        if line.startswith("action_type:"):
+            action_type = line.split(":", 1)[1].strip() or action_type
+            break
     command = ["bash", "eval.sh", "RoboDojo", task, folder.name, robot["xpolicylab"]["env_cfg_type"],
-               robot["xpolicylab"]["action_type"], "0", str(gpu), str(gpu), env, eval_env or env]
+               action_type, "0", str(gpu), str(gpu), env, eval_env or env]
     log(f"check: {' '.join(command)} (in {folder})")
     try:
         run = subprocess.run(command, cwd=folder, env=env_vars, capture_output=True, text=True, timeout=timeout)

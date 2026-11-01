@@ -12,7 +12,7 @@ they describe the code of the version you are reading.
 | [The agent](agent.md) *(generated)* | the agent and each ablation resolved: skills on and off, services, identity |
 | [Models, experiments and deploys](configs.md) *(generated)* | the other files under `configs/` |
 | [Embodiments](embodiments.md) *(generated)* | the robots: joint groups, cameras, calibration, shield |
-| [Benches](benches.md) | the RoboDojo worker, layouts, measured facts |
+| [Benches](benches.md) | the RoboDojo and RoboTwin workers, layouts, measured facts |
 | [Worker protocol](worker-protocol.md) | the robot API a worker serves |
 | [Traces](traces.md) | `manifest.json`, `events.jsonl`, `summary.json` |
 | [Environment](environment.md) | the conda environment, its pins and lock files |

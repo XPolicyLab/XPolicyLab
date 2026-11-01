@@ -2,6 +2,7 @@
 """Download a Hugging Face repo through hf-mirror.com with parallel ranges.
 
     python3 scripts/hf_mirror_download.py OpenWAM/OpenWAM-Alpha-Sim-RoboDojo /mnt/.../OpenWAM-Alpha-Sim-RoboDojo
+    python3 scripts/hf_mirror_download.py TianxingChen/RoboTwin2.0 DEST --repo-type dataset --include "*.zip"
 
 For GPU hosts that reach hf-mirror.com (and the Xet bridge it redirects to) but
 not huggingface.co. A single connection runs at about 1.6 MB/s from the lab, so

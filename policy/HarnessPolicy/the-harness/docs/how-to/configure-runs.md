@@ -43,7 +43,7 @@ changes are `[overrides.agent]` and `[overrides.model]` tables.
 
 | Name | Tasks |
 |---|---|
-| `all` | the 42 scored RoboDojo tasks |
+| `all` | the 42 scored RoboDojo tasks (RoboTwin: the 50 tasks of its step-limit file) |
 | `Generalization`, `Memory`, `Precision`, `Long-Horizon`, `Open` | the tasks of one dimension |
 | `moving` | the two conveyor tasks |
 
@@ -77,6 +77,10 @@ ground_truth = false         # write the simulator's object poses to truth/<task
 [suite]
 boot_timeout = 600           # seconds a worker may take to start
 ```
+
+RoboTwin's worker also takes `task_config` and `seed_cache_dir` (default
+`<RoboTwin>/harness_seeds`)
+([RoboTwin](robotwin.md)).
 
 ## Against a worker that already runs: harness program
 

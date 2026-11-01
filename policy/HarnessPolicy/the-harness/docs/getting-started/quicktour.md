@@ -110,10 +110,9 @@ the program, 173 s after it started, so no model call followed:
               "step": 0, "policy_ran": true}}
 ```
 
-Had the policy stopped with the task undone (its arms still for 5 s), the program would
-have ended there and the model would have seen the scene measured again, with 4 calls
-left (`post_policy_calls`) for what is clearly left; after them the policy runs on to
-the end of the episode.
+After A or C the policy runs on to the end of the episode. Later motions in that
+program are refused (`post_policy_calls` is 0). A stall, arms still for 5 s once
+they have moved, ends the run.
 
 ## Episode 2: a task the programs keep
 

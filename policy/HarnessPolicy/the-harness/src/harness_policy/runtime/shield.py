@@ -61,6 +61,10 @@ class ShieldProfile:
     max_cartesian_jump_m: float | None = None
     # A measured joint resting at a limit reads slightly past it; holding it is not a bug.
     joint_limit_tolerance_rad: float = 1e-3
+    # When an evaluator runs the learned policy's own actions (a tick whose source is
+    # "policy"), only a malformed command is rejected: its limits are the evaluator's, and a
+    # rejected action of the policy's stream ends the run its score depends on.
+    policy_native: bool = False
 
     @classmethod
     def from_dict(cls, data: dict, joint_lower, joint_upper) -> "ShieldProfile":
@@ -93,7 +97,8 @@ class ShieldProfile:
         if not (math.isfinite(tolerance) and tolerance >= 0):
             raise ValueError("joint_limit_tolerance_rad must be a non-negative number")
         return cls(groups, [float(v) for v in joint_lower], [float(v) for v in joint_upper],
-                   float(jump), workspace, None if cartesian is None else float(cartesian), tolerance)
+                   float(jump), workspace, None if cartesian is None else float(cartesian), tolerance,
+                   bool(data.get("policy_native", False)))
 
 
 @dataclass
@@ -139,11 +144,18 @@ class Shield:
         """Forget the last accepted command: the next is judged from the measured state."""
         self._previous = None
 
-    def check(self, command, current, fk: Kinematics | None = None) -> ShieldResult:
+    def check(self, command, current, fk: Kinematics | None = None, source: str | None = None) -> ShieldResult:
         """Judge an absolute joint command against the measured joints `current`: shape,
         finiteness, joint limits and joint jumps, and with `fk` (joints to each group's
         end-effector position) the workspace box and Cartesian jumps. The first failed check
-        rejects it; a passed command becomes the previous command."""
+        rejects it; a passed command becomes the previous command.
+
+        `source` "policy" marks an action of the learned policy that the session runs as the
+        evaluator's own client would. With the profile's `policy_native` only shape and
+        finiteness are judged then (1.9.3): the 1.9.2 run lost `fasten_screws` episodes
+        when the shield rejected a Simate action whose wrist moved 0.34 rad against the
+        0.3 limit, which ended the run (and with it the episode's remaining steps) where
+        the evaluator's own client would have gone on."""
         profile = self.profile
         size = len(profile.joint_lower)
         if len(command) != size or len(current) != size:
@@ -152,6 +164,9 @@ class Shield:
             return self._reject({"check": "finite"})
         command = [float(v) for v in command]
         current = [float(v) for v in current]
+        if source == "policy" and profile.policy_native:
+            self._previous = command
+            return ShieldResult(PASS, list(command))
         tolerance = profile.joint_limit_tolerance_rad
         for index, value in enumerate(command):
             low, high = profile.joint_lower[index], profile.joint_upper[index]

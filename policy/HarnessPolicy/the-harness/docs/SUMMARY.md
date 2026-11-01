@@ -17,6 +17,8 @@
     - [Check a change without a model](how-to/pipeline-checks.md)
     - [Grow a library by self-improvement](how-to/self-improvement.md)
     - [Isolate programs](how-to/isolation.md)
+    - [Run on RoboTwin 2.0](how-to/robotwin.md)
+    - [Run on a real robot](how-to/real-robot.md)
     - [Use an OpenRouter key from another machine](how-to/openrouter-relay.md)
     - [Extend The Harness](how-to/extend.md)
 - Concepts
@@ -41,4 +43,5 @@
     - [Traces](reference/traces.md)
     - [Environment](reference/environment.md)
     - [Python API](reference/api/)
+- [Changelog](changelog.md)
 - [Contributing](contributing.md)

@@ -21,8 +21,11 @@ from harness_policy.runtime.skills import (  # noqa: E402
 ALL_SERVICES = {"segmenter", "pointer", "vlm", "verifier", "policy", "world_model"}
 # Every skill of the full configuration (every layer on; optional skills only by name).
 EVERYTHING = skills_for_layers({"learned": True, "reactive": True, "handlers": True})
-PACKS = [ROOT / "prompts" / "robodojo"]
-PACK_SKILLS = {"robodojo": list(EVERYTHING)}
+PACKS = [ROOT / "prompts" / "robodojo", ROOT / "prompts" / "robotwin"]
+# The skills each pack is used with: RoboTwin's experiments swap in the manipulation
+# skill (configs/experiments/robotwin-dev.toml).
+PACK_SKILLS = {"robodojo": list(EVERYTHING),
+               "robotwin": [name for name in EVERYTHING if name != "eef"] + ["manipulation"]}
 PROFILE = {"control_hz": 25.0, "groups": [{"name": "left_arm", "joints": [0, 1, 2, 3, 4, 5], "gripper": 6},
                                          {"name": "right_arm", "joints": [7, 8, 9, 10, 11, 12], "gripper": 13}],
            "arm_bases": {"left_arm": [-0.3, -0.45, 0.765, 1, 0, 0, 0], "right_arm": [0.3, -0.45, 0.765, 1, 0, 0, 0]},

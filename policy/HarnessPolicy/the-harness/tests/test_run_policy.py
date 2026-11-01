@@ -132,6 +132,27 @@ class RunPolicyTests(unittest.TestCase):
         s.run_policy("g05", "Pick up the bowl.", max_seconds=0.2, reset=True)
         self.assertEqual(policy.calls.count("reset"), 3)
 
+    def test_only_the_policys_ticks_are_marked_as_its_own(self):
+        """The worker may judge a policy's actions as the evaluator's client would
+        (shield policy_native); a program's own motion is never marked."""
+        class Marked(Worker):
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                self.sources = []
+
+            def call(self, name, **arguments):
+                if name == "tick":
+                    self.sources.append(arguments.get("source"))
+                return super().call(name, **arguments)
+
+        worker, policy = Marked(), Policy()
+        s = session(worker, policy)
+        s.run_policy("g05", max_seconds=4 / 25.0)
+        self.assertEqual(worker.sources, ["policy"] * 4)
+        worker.sources.clear()
+        s._tick(worker.joints)
+        self.assertEqual(worker.sources, [None])
+
     def test_runs_to_the_end_of_the_episode_by_default(self):
         from harness_policy.runtime.events import EpisodeEnded
 
@@ -210,7 +231,7 @@ class RunPolicyTests(unittest.TestCase):
 
 
 class StartTests(unittest.TestCase):
-    """start(strategy, kind): Z2's first call, before which nothing moves."""
+    """start(strategy, kind) is the first motion; nothing moves before it."""
 
     def setUp(self):
         self.locks = tempfile.TemporaryDirectory()
@@ -282,6 +303,8 @@ class StartTests(unittest.TestCase):
                 "Complete the equation by selecting the correct missing number or operator and placing it on the pad, then reset the robot arm.",
                 "Arrange the numbers from left to right to form the largest possible number, and place them on the pad.",
                 "Pick up the blue race toy car by 10 cm.",
+            ],
+            "simate": [
                 "Sort the objects by category into the three baskets.",
                 "Stack the three blocks with different textures.",
                 "stack the blocks from bottom to top in the order ofblue, green, and red, then reset the robot arm.",
@@ -291,8 +314,6 @@ class StartTests(unittest.TestCase):
                 "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the objects.",
                 "Wait for the opponent to discard a tile, then declare a kong with the matching tiles.",
                 "Observe the object placement order, remember it, then place the corresponding objects into the basket in the same order.",
-            ],
-            "simate": [
                 "Use the set square to push the three blocks into a straight, aligned row, then reset the robot arm.",
                 "Build a tower using the wooden blocks and wooden boards.",
                 "Put fruit objects into the left basket, tool objects into the middle basket, and food objects into the right basket, then reset the robot arm.",

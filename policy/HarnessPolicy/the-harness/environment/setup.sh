@@ -11,7 +11,7 @@
 #   bash environment/setup.sh --from project  # resume at a step
 #   bash environment/setup.sh --only lock     # one step
 #
-# Steps: conda torch isaacsim isaaclab curobo robodojo project skills docs verify lock
+# Steps: conda torch isaacsim isaaclab curobo robodojo robotwin project skills docs verify lock
 #
 # Requires a RoboDojo checkout with submodules at HARNESS_ROBODOJO_ROOT
 # (default third_party/RoboDojo); see third_party/sources.toml for revisions.
@@ -23,7 +23,7 @@ ENV_NAME="${HARNESS_ENV:-harness-policy}"
 ROBODOJO_ROOT="$(cd "${HARNESS_ROBODOJO_ROOT:-$ROOT/third_party/RoboDojo}" 2>/dev/null && pwd || true)"
 CONSTRAINTS="$ROOT/environment/constraints.txt"
 TORCH_INDEX="https://download.pytorch.org/whl/cu128"
-STEPS=(conda torch isaacsim isaaclab curobo robodojo project skills docs verify lock)
+STEPS=(conda torch isaacsim isaaclab curobo robodojo robotwin project skills docs verify lock)
 
 export PIP_USER=0 PYTHONNOUSERSITE=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 export OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y TERM="${TERM:-xterm-256color}"
@@ -85,6 +85,31 @@ step_robodojo() {
   # Overrides the websockets==12.0 pin of isaacsim-kernel; see constraints.txt.
   pip_c websockets
   pip_c -e "$ROBODOJO_ROOT/XPolicyLab"
+}
+
+step_robotwin() {
+  # RoboTwin 2.0 (SAPIEN) for the RoboTwin benchmark, in the same environment. Upstream
+  # pins torch 2.4.1 / sapien 3.0.0b1 / its own cuRobo 0.7.8; the simulator and planners
+  # run on the pinned core, sapien 3.0.1 (cp311) and the cuRobo already installed.
+  # sapien's opencv-python requirement would add a second cv2 next to
+  # opencv-python-headless, so the three wheels go in without dependencies (their other
+  # requirements are in the environment already).
+  local root="${HARNESS_ROBOTWIN_ROOT:-$ROOT/third_party/RoboTwin}"
+  if [ ! -d "$root" ]; then
+    info "RoboTwin not found at $root; skipping (see third_party/sources.toml)"
+    return
+  fi
+  info "RoboTwin simulator dependencies"
+  pip_c --no-deps sapien==3.0.1 mplib==0.2.1 toppra==0.6.10
+  # The two source edits RoboTwin's scripts/_install.sh makes (UTF-8 URDF reads; mplib
+  # screw plans that touch an object are allowed, as RoboTwin's grasps need).
+  local site
+  site="$(python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+  sed -i -E 's/("r")(\))( as)/\1, encoding="utf-8") as/g' "$site/sapien/wrapper/urdf_loader.py"
+  sed -i -E 's/(if np.linalg.norm\(delta_twist\) < 1e-4 )(or collide )(or not within_joint_limit:)/\1\3/g' \
+    "$site/mplib/planner.py"
+  # RoboTwin's cuRobo v0.7.8, built in place for RoboTwin processes only.
+  bash "$ROOT/environment/robotwin_curobo.sh"
 }
 
 step_project() {

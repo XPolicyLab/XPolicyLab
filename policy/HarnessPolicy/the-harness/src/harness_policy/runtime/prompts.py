@@ -1,6 +1,6 @@
 """System prompts assembled from a prompt pack for the skills a run enables.
 
-A pack is a directory of Markdown sections (prompts/robodojo). Its
+A pack is a directory of Markdown sections (prompts/robodojo, prompts/robotwin). Its
 pack.toml lists the sections in order; a section with `skills` is included only when
 one of them is enabled:
 

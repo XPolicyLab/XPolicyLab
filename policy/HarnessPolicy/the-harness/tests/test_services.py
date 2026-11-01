@@ -79,6 +79,28 @@ gpu = 2
         self.assertEqual(environment["CUDA_VISIBLE_DEVICES"], "2")
         self.assertEqual(cwd, "/rd/XPolicyLab/policy/G05/G05")
 
+    def test_wall_oss_is_an_end_effector_policy(self):
+        spec = load_services()["wall-oss"]
+        self.assertEqual(spec.xpolicylab["policy"], "WallX")
+        self.assertEqual(spec.xpolicylab["action_type"], "ee")
+        self.assertEqual(spec.client["execute_steps"], 16)
+        self.assertEqual(spec.client["memory"], "kfmem")
+        self.assertFalse(spec.client["scoped"])
+        with tempfile.TemporaryDirectory() as directory:
+            deploy = load_deploy(write_deploy(directory, """
+weights = "/w"
+robodojo = "/rd"
+gpus = [0]
+gpu_memory_gb = 140
+[services.wall-oss]
+gpu = 0
+"""))
+        argv, environment, _cwd = launch(deploy, "wall-oss")
+        self.assertEqual(argv[0], "/pfs/echo_folder/weiyang/conda-envs/wall-oss/bin/python")
+        self.assertIn("action_type=ee", argv)
+        self.assertIn("checkpoint_path=/w/wall-oss/checkpoint", argv)
+        self.assertEqual(environment["CUDA_VISIBLE_DEVICES"], "0")
+
     def test_an_xpolicylab_policy_with_its_own_server(self):
         # OpenWAM-alpha: XPolicyLab's protocol, served by our loader instead of setup_policy_server.py.
         with tempfile.TemporaryDirectory() as directory:

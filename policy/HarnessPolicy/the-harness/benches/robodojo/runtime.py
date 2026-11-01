@@ -163,7 +163,7 @@ class RoboDojoRuntimeEnvironment(RoboDojoTaskEnvironment):
         self._check_episode(episode_id)
         return self._robot_state()
 
-    def _call_tick(self, episode_id, step, command, cameras=None):
+    def _call_tick(self, episode_id, step, command, cameras=None, source=None):
         """One policy step; with `cameras`, the result also carries the camera views
         after the step (as observe returns them), for controllers that servo on images."""
         self._raise_if_unscorable(episode_id)

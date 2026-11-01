@@ -308,6 +308,14 @@ def _wrap_up(kernel, trace):
         trace.emit("cleanup_error", message=f"wrap_up: {type(error).__name__}: {error}")
 
 
+def _shutdown_ends_the_episode(summary, outcome) -> bool:
+    """The eval client stops the policy server with SIGTERM after scoring. The kernel
+    then exits -15 and the bridge is already closed: the episode ended, it did not fail."""
+    return (summary.get("status") == "error" and bool(outcome.get("closed"))
+            and str(summary.get("error", "")).startswith("KernelDied:")
+            and "code -15" in summary["error"])
+
+
 def run_program_episode(config: TaskConfig, seed: int, directory: Path, *,
                         chat=None, verifier=None, environment=None) -> dict:
     """Run one episode of `config.task` with `seed` and return its summary (status,
@@ -369,6 +377,10 @@ def run_program_episode(config: TaskConfig, seed: int, directory: Path, *,
             if library.version() != frozen:
                 raise RuntimeError(f"Library {library.directory} changed after the configuration was loaded "
                                    f"(expected version {frozen[:12]}); evaluation needs a frozen library")
+        from .routing import task_route, validate_task_routing
+
+        validate_task_routing(runtime.get("task_routing"), runtime.get("policies", {}))
+        fixed_route = task_route(runtime.get("task_routing"), config.task)
         kernel = Kernel(runtime.get("bootstrap", DEFAULT_BOOTSTRAP), {
             "endpoint": config.environment["endpoint"], "episode_id": episode, "embodiment": embodiment,
             "reactive_budget_ms": runtime.get("reactive_budget_ms", 5.0),
@@ -381,6 +393,9 @@ def run_program_episode(config: TaskConfig, seed: int, directory: Path, *,
             "isolation": runtime.get("isolation", True),
             "strategy_first": bool(runtime.get("strategy_first", False)),
             "policy_progress_seconds": float(runtime.get("policy_progress_seconds") or 0.0),
+            "policy_action_mode": runtime.get("policy_action_mode", "joint"),
+            "policy_span": runtime.get("policy_span", "episode"),
+            "fixed_task_route": fixed_route,
         }, python=runtime.get("python", __import__("sys").executable), log_path=directory / "kernel.log")
         if library is not None:
             code = library.kernel_code("reactive" in skills)
@@ -415,7 +430,23 @@ def run_program_episode(config: TaskConfig, seed: int, directory: Path, *,
         # are used up the policy runs on to the end of the episode.
         post_calls = int(runtime.get("post_policy_calls") or 0)
         post_from = None
-        for _ in range(config.max_model_calls):
+        # Only the explicit ablation uses the task id. A policy route is executed
+        # before any model call; own routes establish B before the model uses skills.
+        if fixed_route is not None:
+            code = "start('B', 'fixed ablation route')" if fixed_route == "own" else (
+                f"start('A', 'fixed ablation route', policy={fixed_route!r})")
+            result = kernel.run(code, timeout=_kernel_timeout(code, runtime, config, started))
+            trace.emit("task_route", route=fixed_route, code=code, result=result)
+            _cell_usage(summary, result)
+            if result.get("strategy"):
+                summary["strategy"] = result["strategy"]
+            if fixed_route != "own":
+                if result["status"] != "episode_ended":
+                    raise RuntimeError(f"fixed policy route stopped before episode end: {result.get('error') or result['status']}")
+                summary["status"] = "episode_ended"
+            elif result["status"] != "ok":
+                raise RuntimeError(f"fixed own-tools route failed: {result.get('error') or result['status']}")
+        for _ in range(0 if fixed_route not in (None, "own") else config.max_model_calls):
             # 0 means the policy runs on at once: the model's next calls were where a
             # finished handover got grasped again. A positive count is the old bound.
             if post_from is not None and summary["model_calls"] - post_from >= post_calls:
@@ -603,6 +634,12 @@ def run_program_episode(config: TaskConfig, seed: int, directory: Path, *,
                         trace.emit("cleanup_error", message=f"video: {type(error).__name__}: {error}")
                 summary.update(success=outcome["success"], reward=outcome["reward"],
                                process_score=outcome["process_score"], steps=outcome["steps"])
+                # The eval client kills the policy server (SIGTERM, -15) after it has
+                # scored the episode. That is the episode ending, not an agent error;
+                # the trace still has the kernel_died event.
+                if _shutdown_ends_the_episode(summary, outcome):
+                    summary["status"] = "episode_ended"
+                    summary.pop("error", None)
                 if outcome.get("unscorable") and summary["status"] != "interrupted":
                     # The environment dropped this episode (e.g. RoboDojo marked it unstable
                     # mid-way): neither a success nor a failure of the policy.

@@ -39,6 +39,9 @@ Rules every worker keeps:
   retried silently.
 - **The shield runs here.** Every `tick` command is checked before it reaches the robot
   ([The episode runtime](../concepts/runtime.md#the-shield)); programs cannot bypass it.
+  A `tick` may carry `source = "policy"` (the actions of a learned policy); a worker that
+  runs the evaluator's own policy loop (the XPolicyLab connector) then checks only shape
+  and finiteness, and every other worker ignores the field.
 - **The outcome is guarded.** Only the holder of the token (the driver) reads it;
   programs and the model never see it.
 
@@ -55,4 +58,5 @@ official client hands a policy: grippers as their last commands, intrinsics and
 | Factory | Bench |
 |---|---|
 | `benches.robodojo.runtime:create_environment` | RoboDojo, one task per process ([Benches](benches.md)) |
+| `benches.robotwin.runtime:create_environment` | RoboTwin 2.0, one task per process |
 | `harness_policy.connectors.xpolicylab.Bridge` | not served by `harness serve`: the XPolicyLab connector, a worker whose robot is XPolicyLab's client |

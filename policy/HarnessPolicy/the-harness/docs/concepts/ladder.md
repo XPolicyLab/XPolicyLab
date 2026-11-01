@@ -18,7 +18,8 @@ verifier). `with-task-description` adds the task descriptions of Zhang et al. (2
 (Tab. 4's second row). `analytic-manipulation` replaces the default tools by object id
 (`skills/eef`: `locate` by SAM 3 with object ids, `pick`, `release`, `transfer`, `push`)
 with the manipulation skill's `pick` and `place` by name and its straight-line `push`;
-R1's fixed skills are those too.
+R1's fixed skills are those too. On RoboTwin 2.0 the agent runs without learned skills
+and with the manipulation skill (`configs/experiments/robotwin-dev.toml`).
 
 Every rung inherits the agent's model, prompt pack (R0 and R1 have their own action
 prompts), pointing by the VLM, SAM 3 segmenter, observation contract (XPolicyLab's:

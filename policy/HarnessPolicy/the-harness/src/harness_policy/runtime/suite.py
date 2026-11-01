@@ -1,6 +1,6 @@
 """Run an experiment over many tasks and seeds: `harness run EXPERIMENT.toml`.
 
-One RoboDojo worker serves one task, so each slot (a GPU of the
+One RoboDojo (or RoboTwin) worker serves one task, so each slot (a GPU of the
 deploy's [sim] x workers_per_gpu) starts a worker for its next task, runs that
 task's seeds, then stops the worker. Finished episodes (summary.json present) are
 skipped, so a rerun resumes. Results go to OUTPUT/<task>/seed-<n>/; summarize with
@@ -39,10 +39,21 @@ def log(output, message):
             handle.write(line + "\n")
 
 
+def robotwin_tasks():
+    """The 50 RoboTwin 2.0 tasks, from the official per-task step limits."""
+    import yaml
+
+    root = Path(os.environ.get("HARNESS_ROBOTWIN_ROOT", ROOT / "third_party" / "RoboTwin"))
+    return sorted(yaml.safe_load((root / "env_cfg" / "task_config" / "_eval_step_limit.yml").read_text()))
+
+
 def expand_tasks(spec, benchmark="robodojo"):
-    """The task names of a comma-separated spec, in order and without repeats. An item is a
-    task, a dimension name, "moving" (the moving-target tasks) or "all"."""
-    del benchmark
+    """The task names of a comma-separated spec, in order and without repeats. On RoboDojo an
+    item is a task, a dimension name, "moving" (the moving-target tasks) or "all"; on
+    RoboTwin a task or "all" (its 50 tasks)."""
+    if benchmark == "robotwin":
+        return list(dict.fromkeys(t for item in spec.split(",") if item.strip()
+                                  for t in (robotwin_tasks() if item.strip() == "all" else [item.strip()])))
     tasks = []
     for item in spec.split(","):
         item = item.strip()
@@ -84,7 +95,19 @@ def _toml_inline(value):
 
 def worker_options(args, task, directory):
     """Write the worker's options for `task` to `<directory>/worker-<task>.toml` and return
-    the path: video, ground truth, shield and layout settings."""
+    the path: RoboTwin's task config, split and seed group, or RoboDojo's video, ground
+    truth, shield and layout settings."""
+    if args.benchmark == "robotwin":
+        # Evaluation seeds are the official ones (expert-checked from 100000 * (1 + group));
+        # development seeds start at 10**7.
+        lines = [f'task = "{task}"', f'task_config = "{args.robotwin_task_config}"',
+                 f'split = "{"dev" if args.layout_source == "procedural" else "eval"}"',
+                 f"seed_group = {args.layout_pack_seed}"]
+        if args.robotwin_seed_dir:
+            lines.append(f'seed_cache_dir = "{args.robotwin_seed_dir}"')
+        path = directory / f"worker-{task}.toml"
+        path.write_text("\n".join(lines) + "\n")
+        return path
     lines = [f'task = "{task}"', f"record_video = {'true' if args.record_video else 'false'}"]
     if args.ground_truth:
         lines.append(f'ground_truth_log = "{directory.parent / "truth" / f"{task}.jsonl"}"')
@@ -112,6 +135,12 @@ def start_worker(args, task, gpu, port, output):
     env = dict(os.environ, HARNESS_ROBODOJO_RUNTIME="1", CUDA_VISIBLE_DEVICES=str(gpu), PYTHONUNBUFFERED="1",
                TMPDIR=str(tmpdir))
     factory = "benches.robodojo.runtime:create_environment"
+    if args.benchmark == "robotwin":
+        factory = "benches.robotwin.runtime:create_environment"
+        # RoboTwin needs its own cuRobo v0.7.8 first (environment/robotwin_curobo.sh).
+        curobo = os.environ.get("HARNESS_ROBOTWIN_CUROBO", str(ROOT / "third_party" / "curobo-0.7.8"))
+        env["PYTHONPATH"] = os.pathsep.join([str(Path(curobo) / "src"), str(ROOT), str(ROOT / "src")]
+                                            + [p for p in [os.environ.get("PYTHONPATH")] if p])
     log_file = open(output / "workers" / f"worker-{task}.log", "ab")
     process = subprocess.Popen(
         [sys.executable, "-u", str(ROOT / "scripts" / "harness"), "serve",
@@ -335,7 +364,7 @@ def suite_arguments(run, *, gpus=None, workers_per_gpu=None, base_port=None, rer
     return SimpleNamespace(
         benchmark=run.bench, seed_list=list(run.seeds), layout_source=run.layouts,
         layout_pack_seed=run.layout_pack_seed,
-        # Without one, the worker uses its checkout's harness_dev_layouts.
+        # Without one, the worker uses its checkout's (RoboDojo harness_dev_layouts, RoboTwin harness_seeds).
         dev_layout_dir=run.tree.get("dev_layout_dir"),
         gpus=",".join(str(g) for g in gpu_list),
         workers_per_gpu=int(workers_per_gpu or sim.get("workers_per_gpu", 1)),
@@ -347,6 +376,8 @@ def suite_arguments(run, *, gpus=None, workers_per_gpu=None, base_port=None, rer
         unstable_spares=int(suite.get("unstable_spares", 5)),
         record_video=bool(worker.get("record_video", False)), shield=json.dumps(worker["shield"]) if worker.get("shield") else None,
         ground_truth=bool(worker.get("ground_truth", False)),
+        robotwin_task_config=worker.get("task_config", "demo_randomized"),
+        robotwin_seed_dir=worker.get("seed_cache_dir"),
         contract=contract, embodiment=BENCH_EMBODIMENT.get(run.bench),
         script_replies=script)
 

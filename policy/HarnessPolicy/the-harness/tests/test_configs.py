@@ -14,6 +14,8 @@ from helpers import TEST_DEPLOY, agent_file, load_test_experiment  # noqa: E402
 from harness_policy import AGENT_VERSION  # noqa: E402
 from harness_policy.config import apply_sets, deep_merge, load_layered, parse_set  # noqa: E402
 from harness_policy.config.agent import DEFAULT_AGENT, model_names, resolve_agent  # noqa: E402
+from harness_policy.runtime.driver import model_services  # noqa: E402
+from harness_policy.services.clients import VisionModel  # noqa: E402
 
 
 class LayeredTomlTests(unittest.TestCase):
@@ -70,6 +72,34 @@ class AgentTests(unittest.TestCase):
         for skill in ("vla", "reactive", "handlers", "verify", "eef", "scene", "pointing"):
             self.assertIn(skill, agent.runtime["skills"])
         self.assertNotIn("wam", agent.runtime["skills"])
+
+    def test_wall_oss_round_uses_codex(self):
+        tree = load_layered(ROOT / "configs" / "ablations" / "wall-oss.toml")
+        self.assertEqual(tree["model"], "codex")
+        self.assertEqual(tree["services"]["policies"], ["wall-oss"])
+        agent = resolve_agent(ROOT / "configs" / "ablations" / "wall-oss.toml",
+                              deploy=ROOT / "configs" / "deploy" / "wall-oss-1gpu.toml")
+        self.assertEqual(agent.main["model"], "gt-6.1-sol-a")
+        self.assertEqual(agent.main["api_key_env"], "PROXY_OPENAI_API_KEY")
+        self.assertEqual(agent.main["base_url"], "http://127.0.0.1:18087/v1")
+        self.assertEqual(agent.main["backend"], "openai_chat")
+        self.assertEqual(agent.runtime["vlm"]["model"], "gt-6.1-sol-a")
+        self.assertEqual(agent.runtime["vlm"]["temperature"], 1)
+        self.assertEqual(agent.verifier["temperature"], 1)
+        self.assertNotIn("temperature", agent.main)
+        services = model_services(agent.runtime, agent.main, agent.verifier)
+        self.assertEqual(VisionModel(services["verifier"]).chat.temperature, 1)
+        self.assertEqual(VisionModel(agent.runtime["vlm"]).chat.temperature, 1)
+        self.assertEqual(agent.runtime["policy_action_mode"], "ee_passthrough")
+        self.assertEqual(agent.runtime["policy_span"], "cell")
+        self.assertEqual(agent.max_model_calls, 100)
+        self.assertIn("You keep this episode", agent.system_prompt)
+        self.assertNotIn("task_routing", agent.runtime)
+        default = load_layered(DEFAULT_AGENT)
+        self.assertEqual(default["model"], "deepseek-flash")
+        self.assertEqual(default["services"]["policies"], ["simate"])
+        self.assertNotIn("task_routing", default["runtime"])
+        self.assertNotIn("policy_action_mode", default["runtime"])
 
     def test_task_descriptions_are_an_ablation(self):
         run = load_test_experiment("with-task-description")
@@ -195,7 +225,7 @@ class AgentTests(unittest.TestCase):
                 resolve_agent(model=path.stem, deploy=str(TEST_DEPLOY))
         for path in sorted((ROOT / "configs" / "experiments").glob("*.toml")):
             with self.subTest(experiment=path.name):
-                if "eval" in path.name:
+                if "robotwin" in path.name or "eval" in path.name:
                     continue  # task lists come from the benchmark checkouts
                 load_experiment(path, deploy=str(TEST_DEPLOY))
         for path in sorted((ROOT / "configs" / "deploy").glob("*.toml")):

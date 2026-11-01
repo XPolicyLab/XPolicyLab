@@ -33,31 +33,26 @@ A learned visuomotor policy (Simate in the default agent) was trained on whole R
 tasks, each demonstration starting at the start pose with the task's own instruction.
 It does best in exactly that setting, and it does what the programs' tools do badly:
 skilled contact, many times a second, with a memory of past frames. What it cannot do is
-read: pick the one object out of several that a name, a number or label written on it,
-or a picture shown as the target identifies. So the model's first motion is a choice,
-`start(strategy, kind)`, made from the policy's description (`list_policies()`) and the
-first images:
+read a counted press, a missing number or operator, digits arranged into the
+largest number, or a 10 cm lift of one named object. The model's first motion is `start(strategy, kind)`.
+The runtime enforces the split on the instruction text, not on a task name:
 
-| Strategy | When (the prompt's rule) | What happens |
+| Strategy | When | What happens |
 |---|---|---|
-| A | a task the policy learned, of a kind its description says it usually finishes | the policy runs the whole task at once, from the untouched start pose; the model supervises |
-| C | a task the policy learned, of any other kind | the policy runs first, then the programs finish what it leaves |
-| B | picking one object out of several by what identifies it (a name, a number or label, a picture), among objects that stand still | the programs' own tools only |
+| B | the instruction is one of those reads | the programs' own tools. A first `start` that says otherwise is rewritten to B |
+| A | any other instruction | the policy runs the whole task from the start pose. A first `start("B")` on these instructions is rewritten to A |
+| C | the model asks the policy to begin a task it can do only partly | the policy runs, and later motions in that program are refused |
 
-Everything else goes to the policy, also when the instruction names colours, an order
-or categories, or when objects are matched to each other by how they look: those
-conditions are part of what it learned. Moving objects go to the policy whatever
-identifies the target (the tools are too slow for a conveyor). After B, the model may
-still hand the task over (`start("A" or "C", kind)` from the start pose) when its own
-tools fail early at a task the policy learned.
+A picture of the target, including one on a conveyor, stays with the policy. After
+A or C the model cannot take the task back.
 
-The handed-over task runs uninterrupted until the episode ends or the policy stops (its
-arms still for 5 s once they have moved). Then the model has 4 calls
-(`post_policy_calls`) for what is clearly left, after which the policy runs on by itself
-to the end of the episode. Watching the policy and taking over early bought nothing:
+The handed-over task runs to the end of the episode. After A or C, later motions
+in that program are refused (`post_policy_calls` is 0), and the cell uses the
+time the episode has left. A stall (arms still for 5 s once they have moved)
+ends a run. Watching the policy and taking over early bought nothing:
 1.3.0, which ran the handed-over task in 10 s slices with a look between them, averaged
 31.9 on those tasks against Simate alone's 42.4, and the model's own tools after a run
-added cost, not score.
+added cost, not score. The [changelog](../changelog.md) has the evidence for each rule.
 
 The result is few model calls: on RoboDojo's evaluation pack 0 (agent 1.4.1, 42 tasks,
 three layouts each) 113 of 125 episodes were handed over, at 2.3 calls and $0.003 an

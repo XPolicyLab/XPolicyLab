@@ -34,7 +34,7 @@ bounded executions like every other skill, for programs:
 Positions are the jaws' centre (the fingertips), in the env frame. These are the default
 tools for handling objects; configs/ablations/analytic-manipulation.toml puts the
 manipulation skill's pick, place and push in their place (the direct-control rung R1
-uses those).
+and RoboTwin use those).
 """
 
 import json

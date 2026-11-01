@@ -1,11 +1,11 @@
 # Two AgileX PiPER arms with parallel grippers (RoboDojo-Real's Piper platform): what a
 # policy may know about the robot without asking a simulator. The kinematic facts come
-# from AgileX's PiPER description URDF
-# (embodiments/piper/urdf/piper_description.urdf): six revolute
+# from AgileX's PiPER description URDF (RoboTwin 2.0 assets,
+# embodiments/piper/urdf/piper_description.urdf): six revolute
 # joints per arm and two prismatic fingers of 0-0.04 m.
 #
 # NOT CALIBRATED: the arm mounts, the table height, the workspace and the cameras below
-# belong to a rig, and must be measured on it before
+# belong to a rig, and must be measured on it (docs/how-to/real-robot.md) before
 # `calibrated = true`. Export refuses an uncalibrated embodiment.
 name = "piper"
 robot = "AgileX PiPER, two arms with parallel grippers (RoboDojo-Real)"
@@ -15,7 +15,8 @@ control_hz = 25.0
 cameras = ["cam_head", "cam_left_wrist", "cam_right_wrist"]
 image_size = [640.0, 480.0]
 # Joint commands: per arm 6 joints (URDF limits), then the gripper (0 closed .. 1 open).
-# joint3 stops at 0 as in piper_description.urdf; these are the shield's joint bounds.
+# joint3 stops at 0 as in piper_description.urdf (RoboTwin's simplified piper.urdf lets
+# it reach +2.697, past the real arm's stop); these are the shield's joint bounds.
 action_low = [-2.618, 0.0, -2.697, -1.832, -1.22, -3.14, 0.0, -2.618, 0.0, -2.697, -1.832, -1.22, -3.14, 0.0]
 action_high = [2.618, 3.14, 0.0, 1.832, 1.22, 3.14, 1.0, 2.618, 3.14, 0.0, 1.832, 1.22, 3.14, 1.0]
 # The fingers sit 0.135 m from link6 along link6's z axis (URDF joint7/joint8). The

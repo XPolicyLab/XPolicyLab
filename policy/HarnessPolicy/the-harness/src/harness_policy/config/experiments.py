@@ -3,7 +3,7 @@ describes it.
 
     agent = "../ablations/r2.toml"          optional: the agent file (default configs/default.toml)
     model = "grok-low"                      optional: configs/models/<name>.toml (default the agent's)
-    bench = "robodojo"
+    bench = "robodojo"                      robodojo | robotwin
     tasks = ["general_pickup"]              names, dimension names, "moving", "all"
     seeds = [0]
     layouts = "procedural"                  procedural (development) | eval
@@ -38,9 +38,9 @@ from .agent import DEFAULT_AGENT, ResolvedAgent, load_model, resolve_agent
 from ..services.deploy import load_deploy
 
 
-BENCHES = ("robodojo",)
+BENCHES = ("robodojo", "robotwin")
 # The embodiment kind each bench's worker drives (embodiments.KINDS).
-BENCH_EMBODIMENT = {"robodojo": "robot"}
+BENCH_EMBODIMENT = {"robodojo": "robot", "robotwin": "robot"}
 LAYOUTS = ("procedural", "eval")
 EXPERIMENT_KEYS = {
     "description": "one line",

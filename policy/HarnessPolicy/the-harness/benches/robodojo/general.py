@@ -63,7 +63,7 @@ def create_environment(**options):
 
 
 LAYOUT_SOURCES = ("eval", "procedural")
-# Development layouts of a checkout when no dev_layout_dir is given.
+# Development layouts of a checkout when no dev_layout_dir is given, like RoboTwin's harness_seeds.
 DEV_LAYOUT_SUBDIR = "harness_dev_layouts"
 
 

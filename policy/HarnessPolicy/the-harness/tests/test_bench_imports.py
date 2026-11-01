@@ -14,7 +14,7 @@ class BenchImportTests(unittest.TestCase):
     def test_every_bench_module_imports(self):
         modules = sorted(path.relative_to(ROOT).with_suffix("").as_posix().replace("/", ".")
                          for path in (ROOT / "benches").glob("*/*.py"))
-        self.assertIn("benches.robodojo.runtime", modules)
+        self.assertIn("benches.robotwin.runtime", modules)
         for name in modules:
             with self.subTest(module=name):
                 importlib.import_module(name)

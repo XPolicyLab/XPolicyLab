@@ -65,11 +65,12 @@ motion: until it is called, every execution that moves the arms ends with `SKILL
 ([the division of labor](design.md#division-of-labor-the-program-and-the-learned-policy)).
 
 **After the policy's run.** Once the task handed over with `start("A" or "C")` has run,
-the model has `post_policy_calls` more calls (4 in the agent; each turn says how many are
-left). When they are used up the driver runs the kernel's `__policy_to_end__()` hook
-(event `policy_to_end`): the policy runs on from where it is to the end of the episode,
-with no stall stop. If the episode is still running after that, the driver finishes it
-(`finish` with `source: "driver"`) and runs the wrap-up.
+later motions in that program are refused. The agent sets `post_policy_calls` to 0,
+so the driver runs the kernel's `__policy_to_end__()` hook at once (event
+`policy_to_end`): the policy runs on from where it is to the end of the episode.
+That cell uses the episode's remaining wall time. Other cells stop at
+`cell_timeout_seconds` (1800 s). If the episode is still running after that, the
+driver finishes it (`finish` with `source: "driver"`) and runs the wrap-up.
 
 **Budgets and statuses.** Per episode: `max_model_calls` (the agent's budget: 30),
 `max_wall_seconds` (checked before each model call; a running cell is bounded by
@@ -118,7 +119,7 @@ the command that leaves everything as it is, what guards observe, when a command
 an execution's scope, and which guard actions it takes itself. The robot's is
 `RobotSession` (`runtime/session.py`): a command is the joint vector of both arms, the
 scope a region one arm's link6 must stay in, and a guard may also open the grippers. The
-bench decides the kind (RoboDojo drives a robot), the worker reports it in
+bench decides the kind (RoboDojo and RoboTwin drive robots), the worker reports it in
 its profile (`kind`, default robot), and a run whose worker drives another kind stops
 with an error. Every motion is a **bounded execution**: it runs tick by tick until it
 completes, a predicate or guard fires, it leaves its scope, or `max_seconds` passes, and
@@ -176,3 +177,10 @@ nothing else: it never clamps, shortens or slows a command.
 A rejected command is not executed; the execution ends with `SHIELD_REJECTED` and the
 reasons, so the program learns that its command was wrong. The RoboDojo limits are in
 the embodiment (`embodiments/arx_x5`): 0.3 rad, 0.25 m, and the workspace box.
+
+The actions of a learned policy (`run_policy`, and the run to the episode's end after a
+handover) are marked `source = "policy"` on the tick. The XPolicyLab worker judges those
+as the evaluator's own client would: only shape and finiteness (profile option
+`policy_native`, on in the XPolicyLab connector). The policy's limits are the evaluator's,
+and a rejected action of its stream ended the run its score depends on (agent 1.9.3).
+Every command of a program keeps all the checks.
