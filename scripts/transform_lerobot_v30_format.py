@@ -21,6 +21,7 @@ from lerobot.datasets.lerobot_dataset import LeRobotDataset
 from XPolicyLab.utils.data_loader import load
 from XPolicyLab.utils.load_file import load_json, load_yaml
 from XPolicyLab.utils.process_data import decode_image_bit
+from XPolicyLab.utils import wuji58
 
 
 DEFAULT_DATASET_NAME = "RoboDojo"
@@ -28,6 +29,14 @@ DEFAULT_DATASET_NAME = "RoboDojo"
 DATA_ROOT = PROJECT_ROOT / "data"
 ENV_CFG_ROOT = PROJECT_ROOT / "env_cfg"
 ROBOT_INFO_PATH = ENV_CFG_ROOT / "robot" / "_robot_info.json"
+
+# --representation: how observation.state / action are laid out.
+#   joint  - concatenated *_arm_joint_states + *_ee_joint_states per arm, zero-padded
+#            to the widest robot in the run (the default, unchanged behaviour).
+#   wuji58 - the WUJI SimBench hybrid for tianji_wuji: 20 absolute hand joints + a
+#            9-D xyz+rot6d wrist pose per side (state absolute, action relative),
+#            58 columns named wuji58.MOTOR_NAMES; see XPolicyLab/utils/wuji58.py.
+REPRESENTATIONS = ("joint", "wuji58")
 
 DEFAULT_IMAGE_WIDTH = 640
 DEFAULT_IMAGE_HEIGHT = 480
@@ -664,6 +673,8 @@ def convert_one(
     target_dims,
     image_height,
     image_width,
+    representation="joint",
+    wrist_frame=None,
 ):
 
     data = load(
@@ -672,28 +683,33 @@ def convert_one(
         data_version=data_version,
     )
 
-    state = _extract_qpos(data)
-    action = _extract_action(data)
+    if representation == "wuji58":
+        state, action = wuji58.trajectory58_from_data(data, wrist_frame)
+        state = state.astype(np.float32)
+        action = action.astype(np.float32)
+    else:
+        state = _extract_qpos(data)
+        action = _extract_action(data)
 
-    if state.shape != action.shape:
-        raise ValueError(
-            f"state/action mismatch: "
-            f"{state.shape} vs {action.shape}"
+        if state.shape != action.shape:
+            raise ValueError(
+                f"state/action mismatch: "
+                f"{state.shape} vs {action.shape}"
+            )
+
+        state = _pad_state_to_target_dims(
+            state,
+            current_dims,
+            target_dims,
+            "state",
         )
 
-    state = _pad_state_to_target_dims(
-        state,
-        current_dims,
-        target_dims,
-        "state",
-    )
-
-    action = _pad_state_to_target_dims(
-        action,
-        current_dims,
-        target_dims,
-        "action",
-    )
+        action = _pad_state_to_target_dims(
+            action,
+            current_dims,
+            target_dims,
+            "action",
+        )
 
     instruction = _choose_instruction(data)
 
@@ -818,6 +834,37 @@ def _print_matched_targets(target_inputs):
         )
 
 
+
+# ============================================================
+# wuji58 representation
+# ============================================================
+
+def _require_wuji58_targets(metadata_by_target):
+    """Every target of a wuji58 run must be a 20-joint-hand dual-arm robot."""
+    for (bench_name, task_name, env_cfg_type), meta in metadata_by_target.items():
+        info = meta["robot_action_dim_info"]
+        if not wuji58.is_wuji58(info, "ee"):
+            raise ValueError(
+                f"--representation wuji58 needs ee_dim == [20, 20] on every target, "
+                f"but {bench_name}/{task_name}/{env_cfg_type} resolves to "
+                f"robot {meta['robot_name']!r} with {info}"
+            )
+
+
+def _stamp_wuji58_info(dataset_root, wrist_frame_name):
+    """Record the layout in meta/info.json so a loader can refuse a mismatched export."""
+    info_path = Path(dataset_root) / "meta" / "info.json"
+    if not info_path.is_file():
+        print(f"[warn] {info_path} not found; repr_mode not stamped")
+        return
+    info = load_json(str(info_path))
+    info["repr_mode"] = wuji58.REPR_MODE
+    info["robot"] = "tianji_wuji"
+    info["wrist_frame"] = str(wrist_frame_name)
+    import json
+    info_path.write_text(json.dumps(info, indent=4) + "\n")
+
+
 # ============================================================
 # Main
 # ============================================================
@@ -858,6 +905,20 @@ def main():
         default=200,
     )
     parser.add_argument(
+        "--representation",
+        choices=REPRESENTATIONS,
+        default="joint",
+        help="State/action layout: 'joint' (default) or 'wuji58' "
+        "(tianji_wuji hybrid: 20 hand joints + 9-D wrist pose per side).",
+    )
+    parser.add_argument(
+        "--wrist_frame",
+        choices=wuji58.WRIST_FRAMES,
+        default="te2",
+        help="wuji58 only: frame the wrist poses are expressed in "
+        "(default te2, the WUJI SimBench head camera).",
+    )
+    parser.add_argument(
         "--resolution",
         type=str,
         default=None,
@@ -890,6 +951,11 @@ def main():
         _plan_target_metadata(targets)
     )
 
+    wrist_frame = None
+    if args.representation == "wuji58":
+        wrist_frame = wuji58.WristFrame.from_name(args.wrist_frame)
+        _require_wuji58_targets(metadata_by_target)
+
     target_inputs = _collect_target_input_files(targets)
 
     _print_matched_targets(target_inputs)
@@ -902,11 +968,16 @@ def main():
         or f"unified_{'_'.join(pattern.replace('*', 'all').replace('.', '_') for pattern in args.patterns)}".lower()
     )
 
-    motors = _build_motor_names_from_dims(target_dims)
+    if args.representation == "wuji58":
+        motors = list(wuji58.MOTOR_NAMES)
+        robot_type = "tianji_wuji"
+    else:
+        motors = _build_motor_names_from_dims(target_dims)
+        robot_type = "unified_robot"
 
     dataset = create_empty_dataset(
         repo_id=repo_id,
-        robot_type="unified_robot",
+        robot_type=robot_type,
         motors=motors,
         fps=max_fps or 50,
 
@@ -982,6 +1053,8 @@ def main():
                         target_dims,
                         image_height,
                         image_width,
+                        representation=args.representation,
+                        wrist_frame=wrist_frame,
                     )
 
                     task_success += 1
@@ -1002,7 +1075,11 @@ def main():
 
         finalize_dataset(dataset)
 
-    print(f"Unified target dims per arm: {target_dims}")
+    if args.representation == "wuji58":
+        _stamp_wuji58_info(Path(HF_LEROBOT_HOME) / repo_id, args.wrist_frame)
+        print(f"Representation: wuji58 ({wuji58.REPR_MODE}, wrist_frame={args.wrist_frame})")
+    else:
+        print(f"Unified target dims per arm: {target_dims}")
 
     print(
         f"Converted {total_success}/{total_files} "

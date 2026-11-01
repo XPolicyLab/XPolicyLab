@@ -134,6 +134,49 @@ Adapter-specific `deploy.yml` keys, resolved from this directory:
 
 Evaluation uses the checkpoint z-score stats, RGB input with no training-time color jitter, discrete Action RoPE, physical-time RoPE off, and fan-in calibration off.
 
+## WUJI 58-D hybrid (tianji_wuji)
+
+The adapter also serves checkpoints trained for the WUJI dual-arm dexterous-hand
+platform (`env_cfg_type=tianji_wuji`, registered as `arm_dim=[7, 7]`,
+`ee_dim=[20, 20]`) in the 58-D hybrid layout defined by WUJI SimBench and
+implemented once in `XPolicyLab.utils.wuji58`:
+
+```text
+[ 0:20]  left hand joints   absolute, finger-major
+[20:29]  left wrist         xyz + rot6d; state absolute in the wrist frame,
+                            action = camera-frame delta vs. the live wrist
+[29:49]  right hand joints
+[49:58]  right wrist
+```
+
+Run evaluation with `action_type=ee`; the observation keys consumed are
+`left_ee_pose` / `right_ee_pose` (7, `[x y z qw qx qy qz]`) and
+`left_ee_joint_state` / `right_ee_joint_state` (20), and the returned action
+dicts carry the same four keys as absolute targets:
+
+```bash
+bash policy/InternW0_delta/eval.sh RoboDojo <task_name> <ckpt_name> tianji_wuji ee <seed> \
+  <policy_gpu_id> <env_gpu_id> <policy_env_or_uv_path> <eval_env_conda_env>
+```
+
+Requirements and keys:
+
+- A checkpoint post-trained on 58-D hybrid data plus its matching
+  `dataset_stats.json` (58-wide `action` / `state` stats). The adapter checks the
+  stats width at load and refuses a 14-D arx_x5 stats file for a `tianji_wuji` run.
+  The bundled `config/dataset_stats.json` is the 14-D arx_x5 file.
+- `wrist_frame` (`deploy.yml`, default `te2`): the fixed frame wrist poses are
+  expressed in. `te2` is the WUJI SimBench head camera the public WUJI data was
+  encoded with; `world` keeps world coordinates. It must match training.
+- Each predicted chunk is decoded with the shared `decode_action_chunk58` default
+  (`iterative`): element 0 against the observation it was predicted from, each
+  later element against the pose decoded before it, matching the per-frame
+  deltas the official converters write. With `allow_dummy_policy: true` the
+  adapter returns a hold-position chunk.
+
+The arx_x5 joint contract (`action_type=joint`, 14-D) is unchanged; any other
+embodiment is rejected at construction.
+
 ## Notes
 
 - Supported target is `RoboDojo` + `arx_x5` + `joint` only.

@@ -8,6 +8,8 @@ ckpt_name: null
 env_cfg_type: arx_x5
 seed: null
 action_type: joint
+# Unused by model.py; dims come from get_robot_action_dim_info(env_cfg_type)
+# (14 for arx_x5 joint, 58 for the tianji_wuji ee hybrid).
 action_dim: 14
 eval_batch: true
 ws_ping_timeout_s: 120.0
@@ -15,7 +17,10 @@ ws_ping_interval_s: 120.0
 
 g05_root: null
 ckpt_path: null
-eval_embodiment: robodojo
+# null = auto: robodojo for joint checkpoints, robodojo_wuji58 for the tianji_wuji hybrid.
+eval_embodiment: null
+# Frame of the 58-D wrist blocks (tianji_wuji only): te2 (WUJI SimBench head camera) or world.
+wrist_frame: te2
 action_steps: 16
 frequency: 30
 # The launcher passes action_source=ar or action_source=fm.  The adapter derives

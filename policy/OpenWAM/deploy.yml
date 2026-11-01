@@ -31,6 +31,11 @@ ckpt_dir: null
 openwam_deploy_config: null
 device: cuda
 
+# WUJI 58-D hybrid runs only (env_cfg_type=tianji_wuji, action_type=ee): the
+# fixed frame wrist poses are expressed in — te2 (WUJI SimBench head camera,
+# default) or world. Must equal the checkpoint's dataloader.wrist_frame.
+wrist_frame: te2
+
 # Actions executed per generated chunk before the client requests a new one.
 # null -> OpenWAM inference.inference_horizon (null there = full 32-step chunk).
 replan_steps: null

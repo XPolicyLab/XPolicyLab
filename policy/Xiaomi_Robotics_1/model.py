@@ -39,6 +39,11 @@ Vector layouts (from ``mibot/utils/io.py``; note state and action differ):
 
 Only ``action_type="ee"`` is supported: the packed action carries no arm-joint
 slots, so joint targets cannot be recovered from the model output.
+
+WUJI 58-D hybrid (``env_cfg_type=tianji_wuji``, two 20-DOF Wuji hands): the
+60-slot space instead carries the ``XPolicyLab.utils.wuji58`` vector in slots
+[0:58] for both state and action (see ``wuji58_layout.py``); the arx_x5 path
+above is unchanged.
 """
 
 from __future__ import annotations
@@ -53,6 +58,8 @@ from PIL import Image
 from scipy.spatial.transform import Rotation
 
 from XPolicyLab.model_template import ModelTemplate
+from XPolicyLab.policy.Xiaomi_Robotics_1 import wuji58_layout
+from XPolicyLab.utils.wuji58 import WristFrame
 
 _SUPPORTED_BENCH_NAMES = ("RoboDojo", "RoboDojo_real")
 
@@ -202,8 +209,22 @@ class Model(ModelTemplate):
             )
         self.env_cfg_type = model_cfg["env_cfg_type"]
         self.bench_name = model_cfg["bench_name"]
-        self._eef_reframe_p = _get_eef_reframe_p(self.bench_name, self.env_cfg_type)
-        self._eef_reframe_p_inv = self._eef_reframe_p.T
+        # WUJI 58-D hybrid: tianji_wuji (ee_dim [20, 20]) driven in ee space.
+        # The robot registry is consulted; an env_cfg_type unknown to it keeps
+        # the arx_x5-style path and its own bench/robot checks below.
+        try:
+            self.wuji58 = wuji58_layout.is_wuji58_run(self.env_cfg_type, self.action_type)
+        except KeyError:
+            self.wuji58 = False
+        if self.wuji58:
+            # The MiBot ee reframe only applies to the ACTION_PARTS layout.
+            self._eef_reframe_p = None
+            self._eef_reframe_p_inv = None
+            self.wrist_frame = WristFrame.from_name(model_cfg.get("wrist_frame"))
+        else:
+            self._eef_reframe_p = _get_eef_reframe_p(self.bench_name, self.env_cfg_type)
+            self._eef_reframe_p_inv = self._eef_reframe_p.T
+            self.wrist_frame = None
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         self.default_prompt = model_cfg.get(
@@ -235,6 +256,12 @@ class Model(ModelTemplate):
         )
         # (action_length, 60): the chunk shape the DiT head was trained to emit.
         self.action_shape = tuple(self.mean.shape)
+        if self.wuji58:
+            # load_stats builds the ACTION_PARTS mask; the wuji58 layout trains
+            # (and must be decoded) on slots [0:58].
+            self.action_mask = torch.from_numpy(
+                wuji58_layout.action_mask58(self.action_shape[0])
+            ).to(self.device)
         self._state_valid = self.q99 > self.q01
 
         self.processor = self._build_processor(model_cfg)
@@ -244,7 +271,8 @@ class Model(ModelTemplate):
 
         print(
             f"[Xiaomi_Robotics_1] Model loaded. action_shape={self.action_shape}, "
-            f"action_type={self.action_type}, device={self.device}",
+            f"action_type={self.action_type}, device={self.device}, "
+            f"layout={'wuji58' if self.wuji58 else 'arx_x5'}",
             flush=True,
         )
 
@@ -402,6 +430,15 @@ class Model(ModelTemplate):
         ]
 
         state = obs.get("state", {})
+        if self.wuji58:
+            return {
+                "messages": self._messages(self._get_instruction(obs), *pil_images),
+                "state": torch.from_numpy(
+                    wuji58_layout.compose_state58(state, self.wrist_frame)
+                )[None],  # (1, 1, 60)
+                # The chunk's wrist deltas are decoded against this observation.
+                "current_state": wuji58_layout.snapshot_obs_state(state),
+            }
         left_arm_joint = np.asarray(
             state["left_arm_joint_state"], dtype=np.float32
         ).reshape(-1)
@@ -641,9 +678,16 @@ class Model(ModelTemplate):
             actions = raw_actions[index]
             if 0 < self.action_length < actions.shape[0]:
                 actions = actions[: self.action_length]
-            chunks.append(
-                self._actions_to_xpl_format(actions, encoded_obs["current_state"])
-            )
+            if self.wuji58:
+                chunks.append(
+                    wuji58_layout.decode_actions58(
+                        actions, encoded_obs["current_state"], self.wrist_frame
+                    )
+                )
+            else:
+                chunks.append(
+                    self._actions_to_xpl_format(actions, encoded_obs["current_state"])
+                )
         return chunks
 
     def reset(self):

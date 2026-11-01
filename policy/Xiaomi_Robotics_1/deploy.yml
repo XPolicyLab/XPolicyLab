@@ -17,6 +17,11 @@ eval_env: debug
 action_type: ee
 model_dir: null
 
+# WUJI 58-D hybrid (env_cfg_type: tianji_wuji, two 20-DOF Wuji hands): frame
+# the wrist poses are expressed in, te2 (WUJI SimBench head camera) or world.
+# Must match the WRIST_FRAME the dataset was converted with. Ignored for arx_x5.
+wrist_frame: te2
+
 # Number of leading steps of each predicted chunk to execute.
 # 0 (or null) executes the whole chunk, whose length comes from the checkpoint.
 action_length: 30

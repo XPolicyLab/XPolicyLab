@@ -1,0 +1,4 @@
+# @package _global_
+defaults:
+  - /task/robodojo_tianji_wuji_ee
+  - _self_

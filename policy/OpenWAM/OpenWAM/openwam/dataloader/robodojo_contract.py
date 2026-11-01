@@ -24,6 +24,15 @@ ROBODOJO_SIM_VARIANT = "sim"
 ROBODOJO_REAL_VARIANT = "real"
 ROBODOJO_DATASET_VARIANTS = (ROBODOJO_SIM_VARIANT, ROBODOJO_REAL_VARIANT)
 ROBODOJO_REAL_EMBODIMENTS = ("arx_x5", "piper", "piper_x")
+# 58-D WUJI hybrid (two 20-DOF Wuji hands + 9-D wrist poses), ``action_mode: wuji58``.
+# Layout, rotation conventions and the wrist camera frame are owned by
+# ``XPolicyLab.utils.wuji58``; this module only names the embodiment and contract.
+ROBODOJO_EEF_ACTION_MODE = "eef"
+ROBODOJO_WUJI58_ACTION_MODE = "wuji58"
+ROBODOJO_WUJI58_EMBODIMENT = "tianji_wuji"
+ROBODOJO_WUJI58_CONTRACT_ID = "robodojo-wuji58-wrist_rel_te2-v1"
+ROBODOJO_WUJI58_SOURCE_FRAME = "env_origin_relative_position_world_orientation_wxyz"
+WUJI58_DIM = 58
 CALIBRATION_SCHEMA_VERSION = 1
 REAL_FRAME_SCHEMA_VERSION = 1
 ENDPOINT_LINK_NAME = "link6"
@@ -72,13 +81,37 @@ def validate_dataset_variant(variant: str) -> None:
         raise ValueError(f"RoboDojo variant must be one of {list(ROBODOJO_DATASET_VARIANTS)}, got {variant!r}")
 
 
+def validate_action_mode(action_mode: str) -> None:
+    """Validate the RoboDojo action representation selector."""
+    if action_mode not in (ROBODOJO_EEF_ACTION_MODE, ROBODOJO_WUJI58_ACTION_MODE):
+        raise ValueError(
+            f"RoboDojo action_mode must be {ROBODOJO_EEF_ACTION_MODE!r} or "
+            f"{ROBODOJO_WUJI58_ACTION_MODE!r}, got {action_mode!r}"
+        )
+
+
 def validate_embodiment(
     embodiment: str,
     *,
     variant: str = ROBODOJO_SIM_VARIANT,
+    action_mode: str = ROBODOJO_EEF_ACTION_MODE,
 ) -> None:
-    """Validate an embodiment against the selected RoboDojo release."""
+    """Validate an embodiment against the selected RoboDojo release.
+
+    ``action_mode`` defaults to the EEF20 path, whose rules are unchanged. The
+    ``wuji58`` representation is sim-only and accepts only ``tianji_wuji``.
+    """
     validate_dataset_variant(variant)
+    validate_action_mode(action_mode)
+    if action_mode == ROBODOJO_WUJI58_ACTION_MODE:
+        if variant != ROBODOJO_SIM_VARIANT:
+            raise ValueError(f"RoboDojo action_mode='wuji58' is simulation-only, got variant {variant!r}")
+        if embodiment != ROBODOJO_WUJI58_EMBODIMENT:
+            raise ValueError(
+                f"RoboDojo action_mode='wuji58' supports only embodiment "
+                f"{ROBODOJO_WUJI58_EMBODIMENT!r}, got {embodiment!r}"
+            )
+        return
     supported = (ROBODOJO_EMBODIMENT,) if variant == ROBODOJO_SIM_VARIANT else ROBODOJO_REAL_EMBODIMENTS
     if embodiment not in supported:
         if variant == ROBODOJO_SIM_VARIANT:
@@ -119,13 +152,14 @@ def discover_episodes(
     *,
     embodiment: str = ROBODOJO_EMBODIMENT,
     variant: str = ROBODOJO_SIM_VARIANT,
+    action_mode: str = ROBODOJO_EEF_ACTION_MODE,
 ) -> list[Path]:
     """Discover only the formal ``<root>/<task>/<embodiment>/data`` layout.
 
     The historical flat demo layout at ``<root>/arx_x5/data`` is deliberately
     rejected rather than used as a fallback.
     """
-    validate_embodiment(embodiment, variant=variant)
+    validate_embodiment(embodiment, variant=variant, action_mode=action_mode)
     _validate_task_name(task)
     root = Path(dataset_root)
     data_dir = root / task / embodiment / "data"
@@ -331,6 +365,39 @@ def save_calibration(value: Any, path: str | Path) -> dict[str, Any]:
     return calibration
 
 
+def wuji58_frame_contract(wrist_frame: str = "te2") -> dict[str, Any]:
+    """Return the canonical frame/representation contract of the ``wuji58`` mode.
+
+    The numbers themselves (TE2 camera eye/look-at, rot6d convention, delta
+    definition) live in ``XPolicyLab.utils.wuji58``; this payload names them so
+    a stats file records which representation it was computed under and the
+    reader can refuse a mismatch.
+    """
+    from XPolicyLab.utils import wuji58 as _w
+
+    frame = str(wrist_frame or "te2").strip().lower()
+    if frame not in _w.WRIST_FRAMES:
+        raise ValueError(f"wuji58 wrist_frame must be one of {list(_w.WRIST_FRAMES)}, got {wrist_frame!r}")
+    return {
+        "schema_version": 1,
+        "variant": ROBODOJO_SIM_VARIANT,
+        "embodiment": ROBODOJO_WUJI58_EMBODIMENT,
+        "action_mode": ROBODOJO_WUJI58_ACTION_MODE,
+        "repr_mode": _w.REPR_MODE,
+        "dim": WUJI58_DIM,
+        "layout": "left_hand20,left_wrist9,right_hand20,right_wrist9",
+        "wrist_frame": frame,
+        "te2_eye": list(_w.TE2_EYE) if frame == "te2" else None,
+        "te2_look": list(_w.TE2_LOOK) if frame == "te2" else None,
+        "rotation": "rot6d_first_two_rows",
+        "state_wrist": "absolute_in_wrist_frame",
+        "action_wrist": "camera_frame_delta_vs_same_frame_measured_wrist",
+        "hand_joints": "absolute_finger_major",
+        "source_frame": ROBODOJO_WUJI58_SOURCE_FRAME,
+        "contract_id": ROBODOJO_WUJI58_CONTRACT_ID,
+    }
+
+
 __all__ = [
     "ARM_NAMES",
     "CALIBRATION_SCHEMA_VERSION",
@@ -355,6 +422,12 @@ __all__ = [
     "ROBODOJO_SIM_SOURCE_FRAME",
     "ROBODOJO_SIM_VARIANT",
     "ROBODOJO_TARGET_FRAME",
+    "ROBODOJO_EEF_ACTION_MODE",
+    "ROBODOJO_WUJI58_ACTION_MODE",
+    "ROBODOJO_WUJI58_CONTRACT_ID",
+    "ROBODOJO_WUJI58_EMBODIMENT",
+    "ROBODOJO_WUJI58_SOURCE_FRAME",
+    "WUJI58_DIM",
     "REAL_ENDPOINT_NAME",
     "REAL_FRAME_SCHEMA_VERSION",
     "arx_x5_calibration",
@@ -364,6 +437,8 @@ __all__ = [
     "resolve_robodojo_calibration",
     "save_calibration",
     "validate_calibration",
+    "validate_action_mode",
     "validate_dataset_variant",
     "validate_embodiment",
+    "wuji58_frame_contract",
 ]

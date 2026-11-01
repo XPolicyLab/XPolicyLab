@@ -18,6 +18,9 @@ from XPolicyLab.utils.process_data import (
     pack_robot_state,
     unpack_robot_state,
 )
+from XPolicyLab.utils.wuji58 import WristFrame, is_wuji58
+
+from . import wuji58_layout
 
 
 IMAGE_CANDIDATES = {
@@ -34,11 +37,22 @@ class Model(ModelTemplate):
     def __init__(self, model_cfg):
         self.model_cfg = model_cfg
         self.action_type = str(model_cfg.get("action_type", "joint"))
-        if self.action_type != "joint":
-            raise ValueError(f"G0.5 RoboDojo adapter supports action_type=joint, got {self.action_type}")
-
         self.env_cfg_type = str(model_cfg.get("env_cfg_type", "arx_x5"))
-        self.embodiment_type = str(model_cfg.get("eval_embodiment") or "robodojo")
+        self.robot_action_dim_info = self._resolve_robot_action_dim_info()
+        # WUJI 58-D hybrid (tianji_wuji, action_type=ee): hands as absolute joints, wrists as
+        # xyz+rot6d poses in the fixed TE2 camera frame; see XPolicyLab/utils/wuji58.py.
+        self.wuji58 = is_wuji58(self.robot_action_dim_info, self.action_type)
+        if self.wuji58:
+            self.wrist_frame = WristFrame.from_name(model_cfg.get("wrist_frame"))
+        elif self.action_type != "joint":
+            raise ValueError(
+                "G0.5 RoboDojo adapter supports action_type=joint, or action_type=ee for the "
+                f"tianji_wuji 58-D hybrid; got action_type={self.action_type} with {self.robot_action_dim_info}"
+            )
+        self.embodiment_type = str(
+            model_cfg.get("eval_embodiment")
+            or (wuji58_layout.WUJI58_EMBODIMENT if self.wuji58 else "robodojo")
+        )
         self.action_steps = int(model_cfg.get("action_steps") or 16)
         self.default_frequency = float(model_cfg.get("frequency") or 30)
         self.inference_batch_size = max(
@@ -49,7 +63,6 @@ class Model(ModelTemplate):
             ),
         )
 
-        self.robot_action_dim_info = self._resolve_robot_action_dim_info()
         self.batch_size = self._resolve_batch_size()
         self._obs: dict[str, Any] | None = None
         self._obs_batch: list[dict[str, Any]] = []
@@ -146,6 +159,7 @@ class Model(ModelTemplate):
         print(
             f"[G05] loaded ckpt={ckpt_path} run_dir={run_dir} "
             f"embodiment={self.embodiment_type} "
+            f"layout={'wuji58' if self.wuji58 else self.action_type} "
             f"inference_batch_size={self.inference_batch_size} "
             f"num_obs_steps={getattr(self.processor, 'num_obs_steps', 1)} "
             f"action_source={self.action_source} "
@@ -294,7 +308,7 @@ class Model(ModelTemplate):
         actions = []
         for start in range(0, len(obs_dicts), batch_size):
             actions.extend(self.inferencer.infer(obs_dicts[start : start + batch_size]))
-        return [self._format_action_chunk(action) for action in actions]
+        return [self._format_action_chunk(action, obs) for action, obs in zip(actions, observations)]
 
     def _explicit_history_buffers_from_obs(
         self, obs: dict[str, Any], current_raw_obs: dict[str, Any]
@@ -405,11 +419,17 @@ class Model(ModelTemplate):
 
         return entry["frames"], entry["states"]
 
-    def _format_action_chunk(self, action) -> list[dict[str, np.ndarray]]:
+    def _format_action_chunk(self, action, obs: dict[str, Any] | None = None) -> list[dict[str, np.ndarray]]:
         action.pop("_cot_text", None)
         action.pop("_absent_keys", None)
 
         parts = {key: _to_horizon_array(value) for key, value in action.items()}
+        if self.wuji58:
+            # Relative wrist deltas are decoded against the observation the chunk was
+            # predicted from (per env in batch mode), as WUJI SimBench's runner does.
+            if obs is None:
+                raise ValueError("wuji58 action decoding needs the observation the chunk was predicted from")
+            return wuji58_layout.decode_chunk(parts, obs["state"], self.wrist_frame, self.action_steps)
         left_key = "left_arm" if "left_arm" in parts else "left_control"
         right_key = "right_arm" if "right_arm" in parts else "right_control"
         required = [left_key, "left_gripper", right_key, "right_gripper"]
@@ -439,13 +459,17 @@ class Model(ModelTemplate):
         return result
 
     def _to_g05_raw_obs(self, obs: dict[str, Any]) -> dict[str, Any]:
-        packed_state = pack_robot_state(
-            obs,
-            self.action_type,
-            self.robot_action_dim_info,
-            source_type="obs",
-            state_type="state",
-        ).astype(np.float32)
+        if self.wuji58:
+            state = wuji58_layout.build_raw_state(obs["state"], self.wrist_frame)
+        else:
+            packed_state = pack_robot_state(
+                obs,
+                self.action_type,
+                self.robot_action_dim_info,
+                source_type="obs",
+                state_type="state",
+            ).astype(np.float32)
+            state = self._build_raw_state(packed_state)
 
         instruction = obs.get("instruction", obs.get("instructions", self.model_cfg.get("task_name", "")))
         if isinstance(instruction, (list, tuple)):
@@ -453,7 +477,6 @@ class Model(ModelTemplate):
 
         additional_info = obs.get("additional_info") or {}
         images = self._build_raw_images(obs)
-        state = self._build_raw_state(packed_state)
         return {
             "images": images,
             "state": state,

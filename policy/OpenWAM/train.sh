@@ -13,6 +13,7 @@ set -euo pipefail
 #   OPENWAM_DATASET_DIR   native RoboDojo HDF5 root
 # Optional:
 #   OPENWAM_TRAIN_OVERRIDES   extra Hydra overrides (word-split)
+#   OPENWAM_WRIST_FRAME       tianji_wuji only: te2 (default) | world
 #   OPENWAM_FINETUNE_CKPT_PATH / OPENWAM_RESUME_CKPT_PATH
 
 bench_name=${1:?Usage: bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id> [num_gpus]}
@@ -62,12 +63,30 @@ echo "[OpenWAM train] bench=${bench_name} ckpt=${ckpt_name} env=${env_cfg_type} 
 echo "[OpenWAM train] dataset_dir=${dataset_dir}"
 echo "[OpenWAM train] output_path=${ckpt_dir}"
 echo "[OpenWAM train] gpus=${gpu_id} nproc_per_node=${num_gpus}"
+if [[ "${env_cfg_type}" == "tianji_wuji" ]]; then
+    echo "[OpenWAM train] representation=wuji58 (58-D hybrid, wrist_frame=${OPENWAM_WRIST_FRAME:-te2}, unify off)"
+fi
+
+# tianji_wuji (dual 20-DOF Wuji hands) trains the 58-D WUJI hybrid representation:
+# its own dataloader config, no unify scatter, raw 58-D model width.
+if [[ "${env_cfg_type}" == "tianji_wuji" ]]; then
+    dataloader_cfg="robodojo_wuji58"
+    extra_args=(
+        "model.architecture.action_dim=58"
+        "model.architecture.state_dim=58"
+        "dataloader.wrist_frame=${OPENWAM_WRIST_FRAME:-te2}"
+    )
+else
+    dataloader_cfg="robodojo"
+    extra_args=()
+fi
 
 train_args=(
-    "dataloader=robodojo"
+    "dataloader=${dataloader_cfg}"
     "dataloader.dataset_dir=${dataset_dir}"
     "training.output_path=${ckpt_dir}"
     "project.seed=${seed}"
+    "${extra_args[@]}"
 )
 
 if [[ -n "${OPENWAM_FINETUNE_CKPT_PATH:-}" ]]; then

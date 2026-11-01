@@ -7,6 +7,12 @@ from pathlib import Path
 
 from XPolicyLab.utils.checkpoint_resolver import build_run_dir_name
 from .recipe import accumulation_steps, scheduler_kwargs
+from .schema import contract_name
+
+# Shared latent action width per contract. The released DM0.5-Mem is 32 wide, which
+# holds 14-D joints; the 58-D WUJI hybrid needs the wider head (new projections are
+# initialized when the base checkpoint is narrower).
+DEFAULT_LATENT_ACTION_DIM = {"joint14": 32, "wuji58": 64}
 
 
 def main():
@@ -18,6 +24,17 @@ def main():
     parser.add_argument("--data-root", type=Path)
     parser.add_argument("--base-model", type=Path)
     parser.add_argument("--norm-stats-root", type=Path)
+    parser.add_argument(
+        "--latent-action-dim",
+        type=int,
+        help="DM0.5 shared latent action width (default: 32 for joint14, 64 for wuji58)",
+    )
+    parser.add_argument(
+        "--compute-norm-stats",
+        action="store_true",
+        help="Compute q01/q99 normalization statistics from the converted dataset "
+        "(always on for wuji58, which has no released statistics)",
+    )
     parser.add_argument("--per-device-batch", type=int, default=8)
     parser.add_argument("--global-batch", type=int, default=1024)
     parser.add_argument("--steps", type=int, default=100000)
@@ -39,7 +56,13 @@ def main():
         help="Print the complete resolved recipe without loading weights",
     )
     args = parser.parse_args()
-    assert (args.bench_name, args.env_cfg_type, args.action_type) == ("RoboDojo", "arx_x5", "joint")
+    contract = contract_name(args.bench_name, args.env_cfg_type, args.action_type)
+    latent_action_dim = args.latent_action_dim or DEFAULT_LATENT_ACTION_DIM[contract]
+    if latent_action_dim < args.action_dim:
+        parser.error(
+            f"--latent-action-dim {latent_action_dim} is narrower than the robot's "
+            f"{args.action_dim}-D action"
+        )
     root = Path(__file__).resolve().parent.parent
     data_root = args.data_root or root / "data" / build_run_dir_name(vars(args), include_seed=False)
     output = root / "checkpoints" / build_run_dir_name(vars(args))
@@ -49,10 +72,18 @@ def main():
     exp.model_config.model_name_or_path = str(
         (args.base_model or root / "checkpoints/DM05-MEM").resolve()
     )
+    exp.model_config.latent_action_dim = latent_action_dim
     exp.data_config.data_root = str(data_root.resolve())
-    exp.data_config.norm_stats_root = str(
-        (args.norm_stats_root or root / "checkpoints/robodojo-norm").resolve()
-    )
+    if contract == "wuji58":
+        # No released statistics exist for this embodiment; keep them apart from the
+        # 14-D RoboDojo joint statistics so the two can never be mixed up.
+        default_norm_root = root / "checkpoints/robodojo-norm-tianji_wuji-ee"
+        exp.data_config.robot_type = "Tianji Wuji"
+        exp.data_config.compute_norm_stats_if_missing = True
+    else:
+        default_norm_root = root / "checkpoints/robodojo-norm"
+        exp.data_config.compute_norm_stats_if_missing = args.compute_norm_stats
+    exp.data_config.norm_stats_root = str((args.norm_stats_root or default_norm_root).resolve())
     trainer = exp.trainer_config
     trainer.output_dir = str(output)
     trainer.run_name = output.name
@@ -84,6 +115,9 @@ def main():
     assert (
         manifest["action_dim"] == args.action_dim
     ), "Training and conversion robot dimensions disagree"
+    assert manifest.get("contract", "joint14") == contract, (
+        f"Dataset was converted for {manifest.get('contract', 'joint14')}, training asks for {contract}"
+    )
     exp.train_release(stop_after=args.stop_after)
 
 

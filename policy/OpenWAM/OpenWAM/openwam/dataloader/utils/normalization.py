@@ -41,7 +41,10 @@ STAT_KEYS = ("mean", "std", "min", "max", "q01", "q99")
 # when it loads a stats file that predates the pinning.
 ROT6D_DIMS_ARM10 = (3, 4, 5, 6, 7, 8)
 ROT6D_DIMS_EEF20 = (3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18)
-_ROT6D_DIMS_BY_WIDTH = {10: ROT6D_DIMS_ARM10, 20: ROT6D_DIMS_EEF20}
+# 58-D WUJI hybrid [L_hand(0:20), L_wrist xyz(20:23) rot6d(23:29), R_hand(29:49), R_wrist xyz(49:52) rot6d(52:58)]
+# (RoboDojo ``action_mode: wuji58``; layout owned by ``XPolicyLab.utils.wuji58``).
+ROT6D_DIMS_WUJI58 = (23, 24, 25, 26, 27, 28, 52, 53, 54, 55, 56, 57)
+_ROT6D_DIMS_BY_WIDTH = {10: ROT6D_DIMS_ARM10, 20: ROT6D_DIMS_EEF20, 58: ROT6D_DIMS_WUJI58}
 
 # Identity stat values that make every normalize mode a pass-through.
 _ROT6D_IDENTITY = {"min": -1.0, "max": 1.0, "q01": -1.0, "q99": 1.0, "mean": 0.0, "std": 1.0}
@@ -297,6 +300,7 @@ __all__ = [
     "pin_rot6d_identity",
     "ROT6D_DIMS_ARM10",
     "ROT6D_DIMS_EEF20",
+    "ROT6D_DIMS_WUJI58",
     "NORM_EPS",
     "STAT_KEYS",
 ]

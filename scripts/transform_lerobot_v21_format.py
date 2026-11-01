@@ -25,6 +25,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from XPolicyLab.utils.data_loader import load
 from XPolicyLab.utils.load_file import load_json, load_yaml
 from XPolicyLab.utils.process_data import decode_image_bit
+from XPolicyLab.utils import wuji58
 
 
 DEFAULT_DATASET_NAME = "RoboDojo"
@@ -566,15 +567,22 @@ def convert_one(
     target_dims,
     image_height,
     image_width,
+    representation="joint",
+    wrist_frame=None,
 ):
     data = load(str(input_path), data_type=data_type, data_version=data_version)
 
-    state = _extract_qpos(data)
-    action = _extract_action(data)
-    if state.shape != action.shape:
-        raise ValueError(f"state/action shape mismatch: {state.shape} vs {action.shape}")
-    state = _pad_state_to_target_dims(state, current_dims, target_dims, "state")
-    action = _pad_state_to_target_dims(action, current_dims, target_dims, "action")
+    if representation == "wuji58":
+        state, action = wuji58.trajectory58_from_data(data, wrist_frame)
+        state = state.astype(np.float32)
+        action = action.astype(np.float32)
+    else:
+        state = _extract_qpos(data)
+        action = _extract_action(data)
+        if state.shape != action.shape:
+            raise ValueError(f"state/action shape mismatch: {state.shape} vs {action.shape}")
+        state = _pad_state_to_target_dims(state, current_dims, target_dims, "state")
+        action = _pad_state_to_target_dims(action, current_dims, target_dims, "action")
     instruction = _choose_instruction(data)
     if not instruction:
         raise ValueError("No instruction found in data")
@@ -648,6 +656,19 @@ def main():
     parser.add_argument("--data_version", type=str, default="v1.0", help="Dataset version, e.g. v1.0")
     parser.add_argument("--max_episode", type=int, default=200, help="Max episodes per task/env")
     parser.add_argument(
+        "--representation",
+        choices=("joint", "wuji58"),
+        default="joint",
+        help="State/action layout: 'joint' (default) or 'wuji58' "
+        "(tianji_wuji hybrid: 20 hand joints + 9-D wrist pose per side; see utils/wuji58.py).",
+    )
+    parser.add_argument(
+        "--wrist_frame",
+        choices=wuji58.WRIST_FRAMES,
+        default="te2",
+        help="wuji58 only: frame the wrist poses are expressed in (default te2).",
+    )
+    parser.add_argument(
         "--resolution",
         type=str,
         default=None,
@@ -674,16 +695,31 @@ def main():
         raise FileNotFoundError(f"No matching dataset/task/env_cfg targets found for patterns: {args.patterns}")
 
     metadata_by_target, target_dims, max_fps = _plan_target_metadata(targets)
+    wrist_frame = None
+    if args.representation == "wuji58":
+        wrist_frame = wuji58.WristFrame.from_name(args.wrist_frame)
+        for (bench_name, task_name, env_cfg_type), meta in metadata_by_target.items():
+            if not wuji58.is_wuji58(meta["robot_action_dim_info"], "ee"):
+                raise ValueError(
+                    f"--representation wuji58 needs ee_dim == [20, 20] on every target, but "
+                    f"{bench_name}/{task_name}/{env_cfg_type} resolves to robot "
+                    f"{meta['robot_name']!r} with {meta['robot_action_dim_info']}"
+                )
     target_inputs = _collect_target_input_files(targets)
     _print_matched_targets(target_inputs)
     image_height, image_width = _resolve_image_hw(args, target_inputs)
     print(f"Image size: {image_height}x{image_width}")
     repo_id = args.repo_id or f"unified_{'_'.join(pattern.replace('*', 'all').replace('.', '_') for pattern in args.patterns)}".lower()
-    motors = _build_motor_names_from_dims(target_dims)
-    
+    if args.representation == "wuji58":
+        motors = list(wuji58.MOTOR_NAMES)
+        robot_type = "tianji_wuji"
+    else:
+        motors = _build_motor_names_from_dims(target_dims)
+        robot_type = "unified_robot"
+
     dataset = create_empty_dataset(
                 repo_id,
-                robot_type="unified_robot",
+                robot_type=robot_type,
                 motors=motors,
                 fps=max_fps or 50,
                 mode="video",
@@ -722,6 +758,8 @@ def main():
                     target_dims,
                     image_height,
                     image_width,
+                    representation=args.representation,
+                    wrist_frame=wrist_frame,
                 )
                 task_success += 1
                 total_success += 1
@@ -729,7 +767,18 @@ def main():
                 print(exc)
                 failures.append((str(input_path), str(exc)))
 
-    print(f"Unified target dims per arm: {target_dims}")
+    if args.representation == "wuji58":
+        info_path = Path(HF_LEROBOT_HOME) / repo_id / "meta" / "info.json"
+        if info_path.is_file():
+            import json
+            info = load_json(str(info_path))
+            info["repr_mode"] = wuji58.REPR_MODE
+            info["robot"] = "tianji_wuji"
+            info["wrist_frame"] = args.wrist_frame
+            info_path.write_text(json.dumps(info, indent=4) + "\n")
+        print(f"Representation: wuji58 ({wuji58.REPR_MODE}, wrist_frame={args.wrist_frame})")
+    else:
+        print(f"Unified target dims per arm: {target_dims}")
     print(f"Converted {total_success}/{total_files} files to {HF_LEROBOT_HOME / repo_id}")
     if failures:
         print("Failed files:")

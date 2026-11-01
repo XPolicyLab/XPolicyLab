@@ -49,6 +49,7 @@ from openwam.dataloader.robodojo_contract import (
     EEF20_DIM,
     GRIPPER_CONVENTION,
     ROBODOJO_CONTRACT_ID,
+    ROBODOJO_EEF_ACTION_MODE,
     ROBODOJO_EMBODIMENT,
     ROBODOJO_REAL_CONTRACT_ID,
     ROBODOJO_REAL_GRIPPER_SENSOR_ATOL,
@@ -56,12 +57,26 @@ from openwam.dataloader.robodojo_contract import (
     ROBODOJO_REAL_VARIANT,
     ROBODOJO_SIM_SOURCE_FRAME,
     ROBODOJO_SIM_VARIANT,
+    ROBODOJO_WUJI58_ACTION_MODE,
+    ROBODOJO_WUJI58_CONTRACT_ID,
+    ROBODOJO_WUJI58_SOURCE_FRAME,
+    WUJI58_DIM,
     discover_episodes,
     resolve_robodojo_calibration,
     robodojo_real_frame_contract,
+    validate_action_mode,
     validate_calibration,
     validate_dataset_variant,
     validate_embodiment,
+    wuji58_frame_contract,
+)
+from openwam.dataloader.robodojo_wuji58 import (
+    DEFAULT_WRIST_FRAME,
+    read_wuji58,
+    resolve_wrist_frame,
+    validate_wuji58_state_action_datasets,
+    validate_wuji58_stats_payload,
+    wuji58_frame_contract_fingerprint,
 )
 from openwam.dataloader.transforms.multiview import (
     assemble_multiview_layout,
@@ -78,6 +93,7 @@ from openwam.dataloader.utils.poses import (
     arms_to_eef20,
     env_relative_world_to_robot_base,
 )
+from XPolicyLab.utils import wuji58 as _wuji58
 from openwam.dataloader.utils.unify_action import (
     UNIFY_DIM,
     map_to_unify,
@@ -85,7 +101,10 @@ from openwam.dataloader.utils.unify_action import (
     unmap_from_unify,
 )
 
-DEPLOY_ACTION_MODE = "eef"
+DEPLOY_ACTION_MODE = ROBODOJO_EEF_ACTION_MODE
+# ``action_mode: wuji58`` — the 58-D WUJI hybrid for ``tianji_wuji``; reader
+# contract in ``openwam.dataloader.robodojo_wuji58`` (torch-free).
+WUJI58_ACTION_MODE = ROBODOJO_WUJI58_ACTION_MODE
 DEFAULT_ROBODOJO_CAMERA_LAYOUT = (
     "cam_head",
     "cam_left_wrist",
@@ -104,6 +123,7 @@ _GRIPPER_KEYS = (
 )
 _CAMERA_DATASETS = {camera: f"vision/{camera}/colors" for camera in DEFAULT_ROBODOJO_CAMERA_LAYOUT}
 _REQUIRED_DATASETS = (*_POSE_KEYS, *_GRIPPER_KEYS, *_CAMERA_DATASETS.values(), "instruction")
+_SHARED_REQUIRED_DATASETS = (*_CAMERA_DATASETS.values(), "instruction")
 _QUATERNION_ATOL = 1e-6
 # Official HDF5 occasionally stores a closed gripper as ~-3e-17.
 _GRIPPER_ATOL = 1e-8
@@ -265,15 +285,60 @@ def _decode_instruction(value: Any, *, source: str) -> str:
     return instruction
 
 
+def _validate_camera_datasets(handle: h5py.File, episode_path: Path) -> dict[str, int]:
+    """Validate the JPEG camera datasets and return their lengths (shared by both modes)."""
+    for key in _SHARED_REQUIRED_DATASETS:
+        if key not in handle:
+            raise KeyError(f"{episode_path}: missing required dataset {key!r}")
+    for key in _CAMERA_DATASETS.values():
+        dataset = handle[key]
+        shape = dataset.shape
+        is_padded_uint8 = len(shape) == 2 and shape[1] > 0 and dataset.dtype == np.dtype(np.uint8)
+        if len(shape) != 1 and not is_padded_uint8:
+            raise ValueError(
+                f"{episode_path}:{key} must have shape (T,) for fixed/vlen "
+                f"JPEG entries or (T, max_jpeg_bytes) for padded uint8, got {shape}"
+            )
+        variable_dtype = h5py.check_dtype(vlen=dataset.dtype)
+        is_fixed_bytes = dataset.dtype.kind == "S"
+        is_vlen_uint8 = variable_dtype is not None and np.dtype(variable_dtype) == np.dtype(np.uint8)
+        if not is_fixed_bytes and not is_vlen_uint8 and not is_padded_uint8:
+            raise ValueError(
+                f"{episode_path}:{key} must use fixed byte-string dtype or "
+                f"HDF5 vlen/padded uint8 storage, got dtype {dataset.dtype}"
+            )
+    return {key: int(handle[key].shape[0]) for key in _CAMERA_DATASETS.values()}
+
+
+def _validate_wuji58_episode(handle: h5py.File, episode_path: Path) -> dict[str, Any]:
+    """wuji58 variant of :func:`validate_robodojo_episode` (cameras + 58-D state/action)."""
+    camera_lengths = _validate_camera_datasets(handle, episode_path)
+    length = validate_wuji58_state_action_datasets(handle, source=str(episode_path))
+    if set(camera_lengths.values()) != {length}:
+        raise ValueError(
+            f"{episode_path}: camera datasets must have the same T as the state datasets ({length}); "
+            f"got {camera_lengths}"
+        )
+    instruction_dataset = handle["instruction"]
+    if instruction_dataset.shape != ():
+        raise ValueError(f"{episode_path}:instruction must be scalar, got shape {instruction_dataset.shape}")
+    instruction = _decode_instruction(instruction_dataset[()], source=str(episode_path))
+    return {"length": length, "instruction": instruction}
+
+
 def validate_robodojo_episode(
     path: str | Path,
     *,
     variant: str = ROBODOJO_SIM_VARIANT,
+    action_mode: str = DEPLOY_ACTION_MODE,
 ) -> dict[str, Any]:
     """Validate every binding HDF5 field and return index-time metadata."""
     validate_dataset_variant(variant)
+    validate_action_mode(action_mode)
     episode_path = Path(path)
     with h5py.File(episode_path, "r") as handle:
+        if action_mode == WUJI58_ACTION_MODE:
+            return _validate_wuji58_episode(handle, episode_path)
         for key in _REQUIRED_DATASETS:
             if key not in handle:
                 raise KeyError(f"{episode_path}: missing required dataset {key!r}")
@@ -382,9 +447,10 @@ def discover_robodojo_tasks(
     *,
     embodiment: str = ROBODOJO_EMBODIMENT,
     variant: str = ROBODOJO_SIM_VARIANT,
+    action_mode: str = DEPLOY_ACTION_MODE,
 ) -> list[str]:
     """Discover sorted task directories under the formal RoboDojo root."""
-    validate_embodiment(embodiment, variant=variant)
+    validate_embodiment(embodiment, variant=variant, action_mode=action_mode)
     root = Path(dataset_dir)
     flat_data = root / embodiment / "data"
     if flat_data.is_dir() and any(flat_data.glob("episode_*.hdf5")):
@@ -411,12 +477,14 @@ def resolve_robodojo_tasks(
     tasks: Sequence[str] | None = None,
     embodiment: str = ROBODOJO_EMBODIMENT,
     variant: str = ROBODOJO_SIM_VARIANT,
+    action_mode: str = DEPLOY_ACTION_MODE,
 ) -> list[str]:
     """Discover all formal tasks, optionally restricting an internal scan."""
     available = discover_robodojo_tasks(
         dataset_dir,
         embodiment=embodiment,
         variant=variant,
+        action_mode=action_mode,
     )
     if not available:
         raise FileNotFoundError(f"no formal RoboDojo task directories found in {dataset_dir}")
@@ -434,15 +502,19 @@ def default_robodojo_stats_path(
     *,
     variant: str,
     embodiment: str,
+    action_mode: str = DEPLOY_ACTION_MODE,
 ) -> Path:
     """Return the canonical in-dataset stats path.
 
     Stats are always pooled over EVERY task the corpus holds for the variant
     (task selections share the same file). The real corpus mixes embodiments
     under one root, so its filename keeps the embodiment; sim is arx_x5-only.
+    The wuji58 representation has its own file (its rows are not EEF20).
     """
-    validate_embodiment(embodiment, variant=variant)
-    if variant == ROBODOJO_REAL_VARIANT:
+    validate_embodiment(embodiment, variant=variant, action_mode=action_mode)
+    if action_mode == WUJI58_ACTION_MODE:
+        filename = "robodojo_wuji58_normalization_stats.npy"
+    elif variant == ROBODOJO_REAL_VARIANT:
         filename = f"robodojo_real_{embodiment}_normalization_stats.npy"
     else:
         filename = "robodojo_normalization_stats.npy"
@@ -454,6 +526,8 @@ def ensure_robodojo_stats(
     *,
     variant: str,
     embodiment: str,
+    action_mode: str = DEPLOY_ACTION_MODE,
+    wrist_frame: Any = DEFAULT_WRIST_FRAME,
 ) -> Path:
     """Find or auto-build release/embodiment-matched pooled stats.
 
@@ -466,6 +540,7 @@ def ensure_robodojo_stats(
         dataset_dir,
         variant=variant,
         embodiment=embodiment,
+        action_mode=action_mode,
     )
     if stats_path.is_file():
         return stats_path
@@ -500,10 +575,12 @@ def ensure_robodojo_stats(
                 dataset_dir,
                 embodiment=embodiment,
                 variant=variant,
+                action_mode=action_mode,
             ),
             embodiment=embodiment,
             variant=variant,
-            action_mode=DEPLOY_ACTION_MODE,
+            action_mode=action_mode,
+            wrist_frame=wrist_frame,
         )
         print(
             f"[RoboDojo] wrote normalization stats to {stats_path}",
@@ -652,6 +729,33 @@ def _load_validated_stats(
     return validated
 
 
+def _load_validated_wuji58_stats(
+    path: str | Path,
+    *,
+    wrist_frame: Any,
+    expected_tasks: Sequence[str] | None = None,
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray]]:
+    """wuji58 counterpart of :func:`_load_validated_stats` → ``(action_stats, state_stats)``."""
+    stats_path = Path(path)
+    try:
+        payload = np.load(stats_path, allow_pickle=True).item()
+    except (OSError, ValueError, EOFError) as error:
+        raise ValueError(f"could not read RoboDojo normalization stats from {stats_path}") from error
+    return validate_wuji58_stats_payload(
+        payload,
+        source=str(stats_path),
+        wrist_frame=wrist_frame,
+        expected_tasks=expected_tasks,
+    )
+
+
+def _wuji58_hold_row(action58_last: np.ndarray) -> np.ndarray:
+    """Padding row for a wuji58 action window: keep the hands, zero wrist delta."""
+    lh, _lw, rh, _rw = _wuji58.unpack58(action58_last)
+    hold = np.concatenate([np.zeros(3), np.eye(3)[:2].reshape(6)])
+    return _wuji58.pack58(lh, hold, rh, hold).astype(np.float32)
+
+
 class RoboDojoDataset(BaseDataset):
     """One formal RoboDojo task rooted at ``<task>/<embodiment>/data``."""
 
@@ -685,13 +789,14 @@ class RoboDojoDataset(BaseDataset):
         unify_action_map: Any = None,
         unify_state_map: Any = None,
         color_jitter: Any = None,
+        wrist_frame: Any = DEFAULT_WRIST_FRAME,
     ):
         super().__init__()
-        if action_mode != DEPLOY_ACTION_MODE:
-            raise ValueError(f"RoboDojo supports only action_mode='eef', got {action_mode!r}")
+        validate_action_mode(action_mode)
         if robot is not None and robot != embodiment:
             raise ValueError(f"RoboDojo robot and embodiment disagree: {robot!r} != {embodiment!r}")
-        validate_embodiment(embodiment, variant=variant)
+        validate_embodiment(embodiment, variant=variant, action_mode=action_mode)
+        self._wuji58 = action_mode == WUJI58_ACTION_MODE
         if num_frames < 2:
             raise ValueError(f"num_frames must be >= 2, got {num_frames}")
         if int(window_stride) < 1:
@@ -703,7 +808,7 @@ class RoboDojoDataset(BaseDataset):
         if height <= 0 or width <= 0:
             raise ValueError(f"height and width must be positive, got {height}x{width}")
 
-        self.action_mode = DEPLOY_ACTION_MODE
+        self.action_mode = action_mode
         self.embodiment = embodiment
         self.variant = variant
         self.num_frames = int(num_frames)
@@ -745,7 +850,17 @@ class RoboDojoDataset(BaseDataset):
             raise ValueError(f"target_camera must be one of {list(_CAMERA_DATASETS)}, got {self.target_camera!r}")
 
         _reject_calibration_path(calibration_path)
-        if variant == ROBODOJO_REAL_VARIANT:
+        self.wrist_frame = resolve_wrist_frame(wrist_frame) if self._wuji58 else None
+        if self._wuji58:
+            if calibration is not None:
+                raise ValueError("RoboDojo wuji58 keeps poses in the env world frame; calibration must be None")
+            self.calibration = None
+            self.frame_contract = wuji58_frame_contract(self.wrist_frame)
+            self.frame_contract_fingerprint = wuji58_frame_contract_fingerprint(self.wrist_frame)
+            self.calibration_fingerprint = self.frame_contract_fingerprint
+            self.source_frame = ROBODOJO_WUJI58_SOURCE_FRAME
+            self.contract_id = ROBODOJO_WUJI58_CONTRACT_ID
+        elif variant == ROBODOJO_REAL_VARIANT:
             if calibration is not None:
                 raise ValueError("RoboDojo_real uses native per-arm base poses; calibration must be None")
             self.calibration = None
@@ -787,6 +902,7 @@ class RoboDojoDataset(BaseDataset):
                 self.task_name,
                 embodiment=embodiment,
                 variant=variant,
+                action_mode=action_mode,
             )
             self.data_root = str(supplied_root)
         else:
@@ -804,12 +920,15 @@ class RoboDojoDataset(BaseDataset):
                 self.task_name,
                 embodiment=embodiment,
                 variant=variant,
+                action_mode=action_mode,
             )
             self.data_root = str(episode_paths[0].parent)
         self.dataset_root = str(formal_dataset_root)
 
         # Validate the complete discovered corpus before split/index selection.
-        all_metadata = [validate_robodojo_episode(path, variant=variant) for path in episode_paths]
+        all_metadata = [
+            validate_robodojo_episode(path, variant=variant, action_mode=action_mode) for path in episode_paths
+        ]
         selected_indices = list(range(len(episode_paths)))
         if not selected_indices:
             raise ValueError(f"no RoboDojo episodes selected for split={split!r}")
@@ -829,8 +948,14 @@ class RoboDojoDataset(BaseDataset):
         if not self._window_index:
             raise ValueError("no RoboDojo windows contain a real next-state action target")
 
-        self._raw_action_dim_value = EEF20_DIM
+        self._raw_action_dim_value = WUJI58_DIM if self._wuji58 else EEF20_DIM
         self._unify_action = bool(unify_action)
+        if self._wuji58 and (self._unify_action or unify_action_map is not None or unify_state_map is not None):
+            raise ValueError(
+                "RoboDojo action_mode='wuji58' has no slot in the unified 80-D layout; "
+                "set unify_action=false and leave unify_action_map/unify_state_map null "
+                "(the model's action_dim/state_dim are the raw width 58)"
+            )
         if unify_state_map is not None and list(unify_state_map) != ["0-9", "34-43"]:
             raise ValueError(
                 'unify_state_map must be null or the canonical ["0-9", "34-43"]: '
@@ -858,11 +983,15 @@ class RoboDojoDataset(BaseDataset):
                 raise ValueError('RoboDojo requires the canonical unify_action_map ["0-9", "34-43"] exactly')
             self._action_dim_value = UNIFY_DIM
         else:
-            self._action_dim_value = EEF20_DIM
+            self._action_dim_value = self._raw_action_dim_value
 
         self.normalize_mode = _normalize_mode(normalize_mode)
         self._mode_stats: dict[str, np.ndarray] | None = None
+        self._state_stats: dict[str, np.ndarray] | None = None
         self._normalizer: Normalizer | None = None
+        # wuji58 only: state rows (absolute wrists) and action rows (wrist deltas)
+        # have different statistics, so proprio gets its own normalizer.
+        self._state_normalizer: Normalizer | None = None
         self.normalization_stats_path: str | None = None
         if self.normalize_mode is not None:
             if normalization_stats_path is None:
@@ -870,18 +999,31 @@ class RoboDojoDataset(BaseDataset):
                     self.dataset_root,
                     variant=self.variant,
                     embodiment=self.embodiment,
+                    action_mode=self.action_mode,
+                    wrist_frame=self.wrist_frame,
                 )
             else:
                 stats_path = Path(normalization_stats_path)
             if not stats_path.is_file():
                 raise FileNotFoundError(f"RoboDojo normalization stats do not exist: {stats_path}")
-            self._mode_stats = _load_validated_stats(
-                stats_path,
-                self.calibration,
-                variant=self.variant,
-                embodiment=self.embodiment,
-                expected_tasks=normalization_stats_tasks,
-            )
+            if self._wuji58:
+                self._mode_stats, self._state_stats = _load_validated_wuji58_stats(
+                    stats_path,
+                    wrist_frame=self.wrist_frame,
+                    expected_tasks=normalization_stats_tasks,
+                )
+                self._state_normalizer = Normalizer(
+                    mode=YAML_TO_NORM_MODE[self.normalize_mode],
+                    stats=self._state_stats,
+                )
+            else:
+                self._mode_stats = _load_validated_stats(
+                    stats_path,
+                    self.calibration,
+                    variant=self.variant,
+                    embodiment=self.embodiment,
+                    expected_tasks=normalization_stats_tasks,
+                )
             self._normalizer = Normalizer(
                 mode=YAML_TO_NORM_MODE[self.normalize_mode],
                 stats=self._mode_stats,
@@ -897,6 +1039,13 @@ class RoboDojoDataset(BaseDataset):
         if self._mode_stats is None:
             return None
         return {key: np.asarray(value).copy() for key, value in self._mode_stats.items()}
+
+    @property
+    def state_normalization_stats(self) -> dict[str, np.ndarray] | None:
+        """wuji58 only: the proprio (state-row) stats block; ``None`` otherwise."""
+        if self._state_stats is None:
+            return None
+        return {key: np.asarray(value).copy() for key, value in self._state_stats.items()}
 
     def denormalize_action(self, action) -> np.ndarray:
         """Gather unified output to EEF20, then invert raw-space normalization."""
@@ -951,54 +1100,88 @@ class RoboDojoDataset(BaseDataset):
             )
 
         with h5py.File(path, "r") as handle:
-            states = read_calibrated_eef20(
-                handle,
-                self.calibration,
-                start,
-                start + actual_length,
-                variant=self.variant,
-                embodiment=self.embodiment,
-            )
+            if self._wuji58:
+                states, wuji_actions = read_wuji58(
+                    handle,
+                    start,
+                    start + actual_length,
+                    wrist_frame=self.wrist_frame,
+                    embodiment=self.embodiment,
+                    variant=self.variant,
+                )
+            else:
+                states = read_calibrated_eef20(
+                    handle,
+                    self.calibration,
+                    start,
+                    start + actual_length,
+                    variant=self.variant,
+                    embodiment=self.embodiment,
+                )
             sampled_video = []
             for relative_index in self._video_sample_indices:
                 source_index = start + relative_index if relative_index < actual_length else episode_length - 1
                 sampled_video.append(self._video_at(handle, source_index))
 
-        if actual_length < self.num_frames:
-            states = np.concatenate(
-                [
-                    states,
-                    np.repeat(
-                        states[-1:],
-                        self.num_frames - actual_length,
-                        axis=0,
-                    ),
-                ],
-                axis=0,
-            )
-
         if self._color_jitter is not None:
             sampled_video = self._color_jitter.apply({"video": sampled_video})["video"]
 
-        # Binding order: raw EEF20 -> normalize -> unified 80-D scatter.
-        transformed = states
-        if self._normalizer is not None:
-            transformed = self._normalizer.normalize(transformed)
-        dim_mask = np.ones(EEF20_DIM, dtype=bool)
-        if self._unify_dst_index is not None:
-            transformed, dim_mask = map_to_unify(
-                np.asarray(transformed, dtype=np.float32),
-                self._unify_dst_index,
-                UNIFY_DIM,
+        if self._wuji58:
+            # wuji58: proprio = measured frame 0 (absolute wrists, state stats);
+            # action k = target of frame k encoded relative to frame k's measured
+            # wrist (action stats). No unify scatter: raw width is the model width.
+            valid_steps = min(int(wuji_actions.shape[0]), self.num_action_steps)
+            if valid_steps < 1:
+                raise IndexError(f"RoboDojo wuji58 window start={start} has no real action target")
+            action_rows = np.asarray(wuji_actions[:valid_steps], dtype=np.float32)
+            if valid_steps < self.num_action_steps:
+                pad = np.repeat(_wuji58_hold_row(action_rows[-1])[None], self.num_action_steps - valid_steps, axis=0)
+                action_rows = np.concatenate([action_rows, pad], axis=0)
+            state_row = np.asarray(states[0:1], dtype=np.float32)
+            if self._state_normalizer is not None:
+                state_row = self._state_normalizer.normalize(state_row)
+            if self._normalizer is not None:
+                action_rows = self._normalizer.normalize(action_rows)
+            dim_mask = np.ones(WUJI58_DIM, dtype=bool)
+            proprio = torch.from_numpy(np.asarray(state_row, dtype=np.float32))
+            action = torch.from_numpy(np.asarray(action_rows, dtype=np.float32))
+            time_validity = torch.tensor(
+                [action_index < valid_steps for action_index in range(self.num_action_steps)],
+                dtype=torch.bool,
             )
+        else:
+            if actual_length < self.num_frames:
+                states = np.concatenate(
+                    [
+                        states,
+                        np.repeat(
+                            states[-1:],
+                            self.num_frames - actual_length,
+                            axis=0,
+                        ),
+                    ],
+                    axis=0,
+                )
 
-        transformed = np.asarray(transformed, dtype=np.float32)
-        proprio = torch.from_numpy(transformed[0:1])
-        action = torch.from_numpy(transformed[1 : self.num_frames])
-        time_validity = torch.tensor(
-            [action_index + 1 < actual_length for action_index in range(self.num_action_steps)],
-            dtype=torch.bool,
-        )
+            # Binding order: raw EEF20 -> normalize -> unified 80-D scatter.
+            transformed = states
+            if self._normalizer is not None:
+                transformed = self._normalizer.normalize(transformed)
+            dim_mask = np.ones(EEF20_DIM, dtype=bool)
+            if self._unify_dst_index is not None:
+                transformed, dim_mask = map_to_unify(
+                    np.asarray(transformed, dtype=np.float32),
+                    self._unify_dst_index,
+                    UNIFY_DIM,
+                )
+
+            transformed = np.asarray(transformed, dtype=np.float32)
+            proprio = torch.from_numpy(transformed[0:1])
+            action = torch.from_numpy(transformed[1 : self.num_frames])
+            time_validity = torch.tensor(
+                [action_index + 1 < actual_length for action_index in range(self.num_action_steps)],
+                dtype=torch.bool,
+            )
         dimension_validity = torch.from_numpy(dim_mask)
         action_mask = (time_validity[:, None] & dimension_validity[None, :]).contiguous()
         proprio_mask = dimension_validity[None, :].clone()
@@ -1081,6 +1264,7 @@ class MultiTaskRoboDojoDataset(BaseDataset):
             unify_action_map=_config_get(config, "unify_action_map", None),
             unify_state_map=_config_get(config, "unify_state_map", None),
             color_jitter=_config_get(config, "color_jitter", None),
+            wrist_frame=_config_get(config, "wrist_frame", DEFAULT_WRIST_FRAME),
         )
 
     def __init__(
@@ -1102,7 +1286,12 @@ class MultiTaskRoboDojoDataset(BaseDataset):
         if "calibration_path" in dataset_kwargs:
             _reject_calibration_path(dataset_kwargs.pop("calibration_path"))
 
-        validate_embodiment(embodiment, variant=variant)
+        validate_action_mode(action_mode)
+        validate_embodiment(embodiment, variant=variant, action_mode=action_mode)
+        is_wuji58 = action_mode == WUJI58_ACTION_MODE
+        wrist_frame = resolve_wrist_frame(dataset_kwargs.get("wrist_frame", DEFAULT_WRIST_FRAME)) if is_wuji58 else None
+        if is_wuji58 and calibration is not None:
+            raise ValueError("RoboDojo wuji58 keeps poses in the env world frame; calibration must be None")
         if variant == ROBODOJO_REAL_VARIANT and calibration is not None:
             raise ValueError("RoboDojo_real uses native per-arm base poses; calibration must be None")
 
@@ -1110,6 +1299,7 @@ class MultiTaskRoboDojoDataset(BaseDataset):
             dataset_dir,
             embodiment=embodiment,
             variant=variant,
+            action_mode=action_mode,
         )
         self.dataset_dir = str(Path(dataset_dir))
         self.tasks = selected_tasks
@@ -1117,7 +1307,13 @@ class MultiTaskRoboDojoDataset(BaseDataset):
         self.action_mode = action_mode
         self.embodiment = embodiment
         self.variant = variant
-        if variant == ROBODOJO_REAL_VARIANT:
+        self.wrist_frame = wrist_frame
+        if is_wuji58:
+            self.calibration = None
+            self.frame_contract = wuji58_frame_contract(wrist_frame)
+            self.frame_contract_fingerprint = wuji58_frame_contract_fingerprint(wrist_frame)
+            self.calibration_fingerprint = self.frame_contract_fingerprint
+        elif variant == ROBODOJO_REAL_VARIANT:
             self.calibration = None
             self.frame_contract = robodojo_real_frame_contract(embodiment)
             self.frame_contract_fingerprint = real_frame_contract_fingerprint(embodiment)
@@ -1134,6 +1330,8 @@ class MultiTaskRoboDojoDataset(BaseDataset):
                 dataset_dir,
                 variant=variant,
                 embodiment=embodiment,
+                action_mode=action_mode,
+                wrist_frame=wrist_frame if wrist_frame is not None else DEFAULT_WRIST_FRAME,
             )
         self.normalization_stats_path = (
             str(Path(normalization_stats_path)) if normalization_stats_path is not None else None
@@ -1148,6 +1346,7 @@ class MultiTaskRoboDojoDataset(BaseDataset):
                 task,
                 embodiment=embodiment,
                 variant=variant,
+                action_mode=action_mode,
             )
             dataset = RoboDojoDataset(
                 data_root=episodes[0].parent,
@@ -1179,6 +1378,7 @@ class MultiTaskRoboDojoDataset(BaseDataset):
         self.source_frame = first.source_frame
         self.contract_id = first.contract_id
         self._normalization_stats_shared = first.normalization_stats
+        self._state_normalization_stats_shared = first.state_normalization_stats
         # Keep the resolved active path, which is None when normalization is off.
         self.normalization_stats_path = first.normalization_stats_path
 
@@ -1191,6 +1391,12 @@ class MultiTaskRoboDojoDataset(BaseDataset):
         if self._normalization_stats_shared is None:
             return None
         return {key: np.asarray(value).copy() for key, value in self._normalization_stats_shared.items()}
+
+    @property
+    def state_normalization_stats(self) -> dict[str, np.ndarray] | None:
+        if self._state_normalization_stats_shared is None:
+            return None
+        return {key: np.asarray(value).copy() for key, value in self._state_normalization_stats_shared.items()}
 
     def denormalize_action(self, action) -> np.ndarray:
         return self._sub_datasets[0].denormalize_action(action)
@@ -1220,11 +1426,13 @@ __all__ = [
     "ROBODOJO_SIM_VARIANT",
     "ROBODOJO_SOURCE_FRAME",
     "RoboDojoDataset",
+    "WUJI58_ACTION_MODE",
     "calibration_fingerprint",
     "default_robodojo_stats_path",
     "discover_robodojo_tasks",
     "ensure_robodojo_stats",
     "read_calibrated_eef20",
+    "read_wuji58",
     "real_frame_contract_fingerprint",
     "resolve_robodojo_tasks",
     "validate_robodojo_episode",

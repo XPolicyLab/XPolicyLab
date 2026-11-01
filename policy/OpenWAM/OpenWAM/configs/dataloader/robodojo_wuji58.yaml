@@ -1,0 +1,49 @@
+type: robodojo
+
+# RoboDojo ``tianji_wuji`` (dual 7-DOF arms + dual 20-DOF Wuji hands) in the
+# 58-D WUJI hybrid representation (XPolicyLab.utils.wuji58 / WUJI SimBench
+# ``wrist_rel_te2``). Formal layout only:
+#   <dataset_dir>/<task>/tianji_wuji/data/episode_*.hdf5
+# with state/{left,right}_ee_poses (T,7) and state/{left,right}_ee_joint_states (T,20)
+# (+ the same keys under action/ when recorded targets exist).
+dataset_dir: /path/to/robodojo_data
+embodiment: tianji_wuji
+variant: sim
+
+# ── Action space ─────────────────────────────────────────────────────────────
+# [0:20] L hand | [20:29] L wrist xyz+rot6d | [29:49] R hand | [49:58] R wrist.
+# State wrists are absolute in the wrist frame; action wrists are per-frame
+# deltas vs. that frame's measured wrist. Hands are absolute joints.
+# No unify: the raw width (58) is the model width — train with
+#   model.architecture.action_dim=58 model.architecture.state_dim=58
+action_mode: wuji58
+wrist_frame: te2                 # te2 (WUJI SimBench head camera, default) | world
+unify_action: false
+unify_action_map: null
+unify_state_map: null
+
+# ── Frame sampling ───────────────────────────────────────────────────────────
+num_frames: 33
+video_stride: 4
+window_stride: 1
+split: train
+
+# ── Rendering (3-slot L-shape canvas) ────────────────────────────────────────
+height: 384
+width: 320
+multiview: true
+camera_layout: [cam_head, cam_left_wrist, cam_right_wrist]
+target_camera: cam_head
+
+# ── Normalization ────────────────────────────────────────────────────────────
+# Auto-built at <dataset_dir>/meta/robodojo_wuji58_normalization_stats.npy with
+# two blocks: ``wuji58`` (action rows) and ``wuji58_state`` (state rows).
+normalize_mode: min-max
+
+# ── Video augmentation (optional) ────────────────────────────────────────────
+color_jitter:
+  enabled: true
+  brightness: 0.2
+  contrast: 0.2
+  saturation: 0.2
+  hue: 0.0

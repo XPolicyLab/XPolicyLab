@@ -36,3 +36,8 @@ tiled: false
 timing_enabled: false
 default_instruction: follow the instruction
 allow_dummy_policy: false
+
+# WUJI 58-D hybrid runs only (env_cfg_type=tianji_wuji, action_type=ee): the frame
+# wrist poses are expressed in. te2 = the fixed WUJI SimBench head camera (what a
+# checkpoint trained on WUJI data expects); world = identity. Ignored for arx_x5.
+wrist_frame: te2

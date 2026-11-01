@@ -178,6 +178,45 @@ bash eval.sh RoboDojo stack_bowls checkpoint arx_x5 joint 0 0 0 \
 
 For split-machine deployment via `setup_eval_policy_server.sh` and `setup_eval_env_client.sh`, follow the [Deployment Flow](../../README.md#-deployment-flow).
 
+## WUJI 58-D hybrid (tianji_wuji)
+
+The adapter also serves the WUJI dual-arm dexterous-hand platform (`env_cfg_type=tianji_wuji`, two 7-DOF arms with 20-DOF Wuji hands) in the WUJI SimBench `wrist58` hybrid layout, selected by `action_type=ee`. The 58-D state/action vector is, per side, 20 absolute hand joints followed by a 9-D `xyz + rot6d` palm pose; state wrists are absolute in the fixed TE2 head-camera frame and action wrists are camera-frame deltas against the live wrist. The layout and every convention live in `XPolicyLab/utils/wuji58.py`; the adapter never spells them out.
+
+```text
+[ 0:20]  left_hand    [20:29]  left_wrist    [29:49]  right_hand    [49:58]  right_wrist
+```
+
+G05 sees these four blocks as its state/action keys (`left_hand`, `left_wrist`, `right_hand`, `right_wrist`), configured by `G05/configs/task/robodojo_tianji_wuji_ee.yaml` (`action_dim: 58`, `proprio_dim: 58`, q01/q99 normalization, `GroupedPaddingMerger` over `configs/data/parts_meta/wuji58.yaml`), `configs/data/robodojo_wuji58.yaml` (embodiment `robodojo_wuji58`, slicing the flat 58-D LeRobot columns) and `configs/tokenizer/actioncodec_wuji58.yaml` (`max_component_dim: 20`). The arx_x5 joint path is untouched.
+
+Data — export the tianji_wuji trajectories with the official converter in the hybrid representation; `train.sh` refuses an export whose `meta/info.json` is not stamped `repr_mode: wrist_rel_te2` with 58-D columns:
+
+```bash
+python XPolicyLab/scripts/transform_lerobot_v30_format.py --representation wuji58 \
+  <converter arguments>   # see Official LeRobot conversion in the XPolicyLab README
+export ROBODOJO_LEROBOT_V30_ROOT=/path/to/RoboDojo_tianji_wuji_lerobot_v30_wuji58
+```
+
+Training — `train.sh` picks `G05_TASK_CONFIG=robodojo_tianji_wuji_ee` automatically for `tianji_wuji ee`:
+
+```bash
+export G05_PYTHON=/path/to/python
+export G05_TRAIN_MODE=fm_only
+export G05_MAX_STEPS=<num_training_steps>
+bash train.sh RoboDojo wuji tianji_wuji ee 0 0,1,2,3,4,5,6,7
+```
+
+Use `fm_only` unless you also train an ActionCodec tokenizer with `actioncodec_wuji58.yaml`: the released `action_tokenizer.pt` was trained with `max_component_dim: 9` and cannot tokenize the 20-wide hand blocks, so `ar_only` / `ar_fm` need a matching tokenizer checkpoint.
+
+Evaluation — the standard entrypoint with `tianji_wuji ee`; `eval_embodiment` resolves to `robodojo_wuji58` when left `null` in `deploy.yml`:
+
+```bash
+export G05_CKPT_PATH=/path/to/wuji58/checkpoint
+export ROBODOJO_G05_ACTION_SOURCE=fm
+bash eval.sh RoboDojo <task_name> wuji tianji_wuji ee 0 0 0 "$G05_PYTHON" sim
+```
+
+`deploy.yml` keys for this mode: `wrist_frame` (`te2`, the WUJI SimBench head camera the checkpoints are trained in, or `world` for data recorded in world coordinates) and `eval_embodiment`. The robot must be registered as `tianji_wuji` (`arm_dim: [7, 7]`, `ee_dim: [20, 20]`) in both robot-info files (see the XPolicyLab README).
+
 ## Notes
 
 - Use `ROBODOJO_G05_ACTION_SOURCE=fm` for FM-style continuous action inference.

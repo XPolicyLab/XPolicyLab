@@ -82,6 +82,13 @@ rules follow `scripts/compute_robodojo_stats.py`:
 Only whole frames are sampled (a full action_length horizon), so tail-padded
 frames stay out of the statistics. Everything runs in float64 and is written
 as .16e so the YAML round trip is lossless.
+
+WUJI 58-D hybrid layout (`--layout wuji58`, auto-detected from 20-wide
+`*_ee_joint_states`): the JSON instead carries `proprios.wuji58_state` and
+`actions.wuji58_target` (T, 58) and is stamped `"layout": "wuji58"` plus the
+`wrist_frame` it was encoded in; packing and statistics come from the adapter's
+`wuji58_layout.py` so training and `model.py` share one definition. No EE
+reframe applies in this layout.
 """
 
 from __future__ import annotations
@@ -127,6 +134,14 @@ from mibot.utils.io import (  # noqa: E402  (import needs the sys.path tweak abo
     STATE_DIM,
     rotm2aa_batch,
 )
+
+# WUJI 58-D hybrid layout, shared with model.py and the JsonDataset branch.
+from XPolicyLab.policy.Xiaomi_Robotics_1 import wuji58_layout  # noqa: E402
+from XPolicyLab.utils.wuji58 import HAND_DIM as WUJI_HAND_DIM, WristFrame  # noqa: E402
+
+LAYOUT_ARX = "arx_x5"
+LAYOUT_WUJI58 = wuji58_layout.LAYOUT_NAME
+LAYOUTS = ("auto", LAYOUT_ARX, LAYOUT_WUJI58)
 
 # Benches this script understands. RoboDojo is simulation, RoboDojo_real is the
 # real-robot release; they differ in the EE reframe, whether an end-effector
@@ -567,7 +582,19 @@ def discover_jobs(src_root: Path, env_cfg_type: str, tasks_filter, episodes_per_
 # --- Conversion -------------------------------------------------------------
 
 
-def read_episode(src_hdf5: Path):
+def detect_layout_from_hdf5(src_hdf5: Path) -> str:
+    """wuji58 when the end-effector joint state is a 20-DOF Wuji hand, else arx_x5."""
+    with h5py.File(src_hdf5, "r") as handle:
+        width = int(handle["state/left_ee_joint_states"].shape[-1])
+    return LAYOUT_WUJI58 if width == WUJI_HAND_DIM else LAYOUT_ARX
+
+
+def detect_layout_from_json(json_path: str) -> str:
+    with open(json_path, "r") as handle:
+        return LAYOUT_WUJI58 if json.load(handle).get("layout") == LAYOUT_WUJI58 else LAYOUT_ARX
+
+
+def read_episode(src_hdf5: Path, layout: str = LAYOUT_ARX):
     """Read one RoboDojo HDF5 into plain arrays plus decoded video frames."""
     with h5py.File(src_hdf5, "r") as handle:
         instruction = handle["instruction"][()]
@@ -587,11 +614,13 @@ def read_episode(src_hdf5: Path):
             "right_pose": state["right_ee_poses"][:],
             "left_grip_state": state["left_ee_joint_states"][:],
             "right_grip_state": state["right_ee_joint_states"][:],
-            "left_arm_state": state["left_arm_joint_states"][:],
-            "right_arm_state": state["right_arm_joint_states"][:],
             "left_grip_action": action["left_ee_joint_states"][:],
             "right_grip_action": action["right_ee_joint_states"][:],
         }
+        # The wuji58 layout never packs arm joints; tianji_wuji data may omit them.
+        if layout != LAYOUT_WUJI58:
+            arrays["left_arm_state"] = state["left_arm_joint_states"][:]
+            arrays["right_arm_state"] = state["right_arm_joint_states"][:]
 
         # RoboDojo_real records a real end-effector action; simulation does not,
         # and there the pose action is emulated by a next-state shift instead.
@@ -620,6 +649,55 @@ def read_episode(src_hdf5: Path):
             frames_by_cam[cam_key] = frames
 
     return instruction, fps, num_frames, arrays, frames_by_cam
+
+
+def build_trajectory58(job: Job, dst_root: Path, instruction, num_frames, arrays, wrist_frame_name: str):
+    """JSON payload for one episode in the WUJI 58-D hybrid layout.
+
+    Hands are the 20-DOF Wuji joints; wrists are the 7-D poses re-encoded as
+    absolute xyz+rot6d in the wrist frame. The relative wrist deltas are formed
+    per chunk at load time (wuji58_layout.training_sample).
+    """
+    frame = WristFrame.from_name(wrist_frame_name)
+    if "left_pose_action" in arrays:
+        left_pose_action, right_pose_action = arrays["left_pose_action"], arrays["right_pose_action"]
+    else:
+        left_pose_action = np.asarray(next_state_repeat(arrays["left_pose"]), dtype=np.float64)
+        right_pose_action = np.asarray(next_state_repeat(arrays["right_pose"]), dtype=np.float64)
+    state58, target58 = wuji58_layout.encode_episode(
+        {
+            "left_ee_poses": arrays["left_pose"],
+            "left_ee_joint_states": arrays["left_grip_state"],
+            "right_ee_poses": arrays["right_pose"],
+            "right_ee_joint_states": arrays["right_grip_state"],
+        },
+        {
+            "left_ee_poses": left_pose_action,
+            "left_ee_joint_states": arrays["left_grip_action"],
+            "right_ee_poses": right_pose_action,
+            "right_ee_joint_states": arrays["right_grip_action"],
+        },
+        frame,
+    )
+    observations = {
+        cam_key: [{
+            "path": video_path_for_json(job.dst_video(dst_root, cam_key)),
+            "start": 0,
+            "crop_bbox": None,
+        }]
+        for cam_key, _ in CAM_MAP
+    }
+    return {
+        "layout": LAYOUT_WUJI58,
+        "wrist_frame": str(wrist_frame_name or "te2").lower(),
+        "trajectory_type": "success",
+        "time": datetime.now().strftime("%Y-%m-%d_%H_%M_%S"),
+        "num_frames": num_frames,
+        "instruction": {"general": build_general_prompt(normalize_instruction(instruction))},
+        "observations": observations,
+        "proprios": {"wuji58_state": state58.tolist()},
+        "actions": {"wuji58_target": target58.tolist()},
+    }
 
 
 def build_trajectory(job: Job, dst_root: Path, instruction, num_frames, arrays, reframe_p):
@@ -700,14 +778,17 @@ def build_trajectory(job: Job, dst_root: Path, instruction, num_frames, arrays, 
     }
 
 
-def convert_one(job: Job, dst_root: Path, fps_override, reframe_p):
+def convert_one(job: Job, dst_root: Path, fps_override, reframe_p, layout=LAYOUT_ARX, wrist_frame="te2"):
     """Convert a single episode. Returns (global_index, num_frames, error)."""
     try:
-        instruction, fps, num_frames, arrays, frames_by_cam = read_episode(job.src_hdf5)
+        instruction, fps, num_frames, arrays, frames_by_cam = read_episode(job.src_hdf5, layout)
         if fps_override:
             fps = float(fps_override)
 
-        traj = build_trajectory(job, dst_root, instruction, num_frames, arrays, reframe_p)
+        if layout == LAYOUT_WUJI58:
+            traj = build_trajectory58(job, dst_root, instruction, num_frames, arrays, wrist_frame)
+        else:
+            traj = build_trajectory(job, dst_root, instruction, num_frames, arrays, reframe_p)
 
         for cam_key, _ in CAM_MAP:
             write_video(frames_by_cam[cam_key], job.dst_video(dst_root, cam_key), fps)
@@ -839,8 +920,14 @@ def stats_worker(json_path: str, action_length: int):
     try:
         with open(json_path, "r") as handle:
             traj = json.load(handle)
-        actions = episode_action_deltas(traj, action_length)
-        state = episode_state_matrix(traj, action_length)
+        if traj.get("layout") == LAYOUT_WUJI58:
+            state58 = traj["proprios"]["wuji58_state"]
+            target58 = traj["actions"]["wuji58_target"]
+            actions = wuji58_layout.episode_action_samples(state58, target58, action_length)
+            state = wuji58_layout.episode_state_samples(state58, action_length)
+        else:
+            actions = episode_action_deltas(traj, action_length)
+            state = episode_state_matrix(traj, action_length)
         return actions, state, None
     except Exception as exc:
         return None, None, f"{json_path}: {type(exc).__name__}: {exc}"
@@ -872,7 +959,7 @@ def step_gaussian(samples, columns):
     return mean, std, report
 
 
-def compute_stats(json_files, action_length: int, workers: int):
+def compute_stats(json_files, action_length: int, workers: int, layout: str = LAYOUT_ARX):
     """Normalization statistics, following scripts/compute_robodojo_stats.py."""
     action_chunks = []
     state_chunks = []
@@ -913,6 +1000,16 @@ def compute_stats(json_files, action_length: int, workers: int):
     actions = np.concatenate(action_chunks, axis=0)
     states = np.concatenate(state_chunks, axis=0)
     print(f"[process_data] collected {actions.shape[0]} whole frames", flush=True)
+
+    if layout == LAYOUT_WUJI58:
+        mean, std, q01, q99 = wuji58_layout.compute_stats58(actions, states)
+        print(
+            "[process_data]   wuji58: wrist deltas gaussian over moving frames, "
+            "hand targets gaussian over all frames, state 1st/99th percentiles "
+            f"({int((q99 <= q01)[0, wuji58_layout.WUJI_SLOTS].sum())} constant state slots zeroed)",
+            flush=True,
+        )
+        return mean, std, q01, q99
 
     parts = dict(ACTION_PARTS)
 
@@ -1006,6 +1103,7 @@ def write_data_config(
     q99,
     action_length: int,
     batch_size: int,
+    layout: str = LAYOUT_ARX,
 ):
     """Emit a hydra data config wired to the converted dataset."""
     config_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1013,6 +1111,7 @@ def write_data_config(
 
     content = f"""# @package _global_
 # Generated by scripts/process_data.py from the RoboDojo official HDF5 release.
+# layout: {layout} ({"WUJI 58-D hybrid in slots [0:58]: hands absolute, wrists xyz+rot6d deltas" if layout == LAYOUT_WUJI58 else "arx_x5 compose_state / ACTION_PARTS"}).
 # mean/std: packed relative actions, shape ({action_length}, {ACTION_DIM}).
 #   EE dims are gaussian per (step, dim) over moving frames only (|x| >= {MOTION_EPS:g});
 #   gripper dims are hard-coded to mean = {GRIPPER_ACTION_MEAN}, std = {GRIPPER_ACTION_STD}, mapping the
@@ -1106,6 +1205,17 @@ def parse_args(argv=None):
         help="basename of the generated config under configs/data (default: robodojo)",
     )
     parser.add_argument(
+        "--layout", default="auto", choices=list(LAYOUTS),
+        help="packed 60-slot layout: arx_x5 (compose_state/ACTION_PARTS) or "
+             "wuji58 (WUJI 58-D hybrid for 20-DOF Wuji hands); auto detects "
+             "wuji58 from a 20-wide *_ee_joint_states (default: auto)",
+    )
+    parser.add_argument(
+        "--wrist-frame", default="te2",
+        help="wuji58 only: frame the wrist poses are expressed in, te2 or world; "
+             "must match wrist_frame in deploy.yml (default: te2)",
+    )
+    parser.add_argument(
         "--overwrite", action="store_true",
         help="reconvert episodes whose JSON and videos already exist",
     )
@@ -1143,6 +1253,9 @@ def run_conversion(args, src_root: Path, dst_root: Path, workers: int):
             f"[process_data] no episodes found under {src_root} "
             f"with env_cfg_type={args.env_cfg_type!r}"
         )
+    if args.layout == "auto":
+        args.layout = detect_layout_from_hdf5(jobs[0].src_hdf5)
+        print(f"[process_data] layout      = {args.layout} (auto-detected)", flush=True)
     names = sorted({job.task_name for job in jobs})
     suffix = (
         f" (capped at {args.episodes_per_task} per task)"
@@ -1181,13 +1294,14 @@ def run_conversion(args, src_root: Path, dst_root: Path, workers: int):
         return planned
 
     fps_override = args.fps if args.fps > 0 else None
-    reframe_p = eef_reframe_p(args.bench_name, args.env_cfg_type)
+    # The MiBot ee reframe belongs to the ACTION_PARTS layout only.
+    reframe_p = None if args.layout == LAYOUT_WUJI58 else eef_reframe_p(args.bench_name, args.env_cfg_type)
     failures = []
     total_frames = 0
 
     with ProcessPoolExecutor(max_workers=workers) as pool:
         futures = [
-            pool.submit(convert_one, job, dst_root, fps_override, reframe_p)
+            pool.submit(convert_one, job, dst_root, fps_override, reframe_p, args.layout, args.wrist_frame)
             for job in jobs
         ]
         with tqdm(total=len(futures), desc="convert", unit="ep", smoothing=0.05) as bar:
@@ -1218,8 +1332,11 @@ def main(argv=None):
     args = parse_args(argv)
     workers = resolve_workers(args.workers)
 
-    # Fail before any conversion work if the bench/robot pair has no matrix.
-    eef_reframe_p(args.bench_name, args.env_cfg_type)
+    # Fail before any conversion work if the bench/robot pair has no matrix
+    # (the wuji58 layout needs none; its wrist frame is validated instead).
+    if args.layout == LAYOUT_ARX:
+        eef_reframe_p(args.bench_name, args.env_cfg_type)
+    WristFrame.from_name(args.wrist_frame)
 
     dst_root = resolve_dest_root(args.dst, args.bench_name)
     print(f"[process_data] xr1 dir     = {XR1_DIR}", flush=True)
@@ -1235,6 +1352,9 @@ def main(argv=None):
                 f"[process_data] --stats-only found no JSON under {dst_root / 'data'}"
             )
         print(f"[process_data] --stats-only: {len(json_files)} existing episodes", flush=True)
+        if args.layout == "auto":
+            args.layout = detect_layout_from_json(json_files[0])
+            print(f"[process_data] layout      = {args.layout} (from existing JSON)", flush=True)
     else:
         src_root = resolve_source_root(args.src, args.bench_name)
         print(f"[process_data] source      = {src_root}", flush=True)
@@ -1253,7 +1373,7 @@ def main(argv=None):
     if not json_files:
         raise SystemExit("[process_data] no converted episodes available for statistics")
 
-    mean, std, q01, q99 = compute_stats(json_files, args.action_length, workers)
+    mean, std, q01, q99 = compute_stats(json_files, args.action_length, workers, args.layout)
 
     config_path = CONFIG_DATA_DIR / f"{args.config_name}.yaml"
     # Absolute, so the config does not depend on where training is launched.
@@ -1261,7 +1381,7 @@ def main(argv=None):
 
     write_data_config(
         config_path, [config_data_path], mean, std, q01, q99,
-        args.action_length, args.batch_size,
+        args.action_length, args.batch_size, args.layout,
     )
 
     rel_config = os.path.relpath(config_path, XR1_DIR)

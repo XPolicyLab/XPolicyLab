@@ -1,4 +1,8 @@
-"""Lossless LeRobot v2.1/v3.0 joint+gripper -> OpenDM video-backed JSONL.
+"""Lossless LeRobot v2.1/v3.0 -> OpenDM video-backed JSONL.
+
+Two contracts: the 14-D joint+gripper export (arx_x5 / joint) and the 58-D WUJI hybrid
+export written by the official converters with ``--representation wuji58``
+(tianji_wuji / ee; ``XPolicyLab.utils.wuji58``).
 
 Numeric rows and source videos are kept unchanged for all selected tasks except dlc.
 No decoding, re-encoding, resampling, terminal-row insertion or train/val shuffle.
@@ -16,8 +20,10 @@ import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
 from XPolicyLab.utils.checkpoint_resolver import build_run_dir_name
+from XPolicyLab.utils import wuji58
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
 from .recipe import CAMERAS, IMAGE_KEYS
+from .schema import contract_name, validate_source_info
 
 POLICY_DIR = Path(__file__).resolve().parent.parent
 # Official dlc instruction in both LeRobot exports. Resolve its index from
@@ -112,17 +118,28 @@ def write_episode(rows, task, videos, target, action_dim):
             stream.write(json.dumps(record, allow_nan=False) + "\n")
 
 
-def convert(source, output, *, env_cfg_type="arx_x5", source_revision=None, tasks=None):
+def convert(
+    source,
+    output,
+    *,
+    env_cfg_type="arx_x5",
+    action_type="joint",
+    bench_name="RoboDojo",
+    source_revision=None,
+    tasks=None,
+):
     source, output = Path(source).resolve(), Path(output).resolve()
     info_path = source / "meta/info.json"
     info = json.loads(info_path.read_text())
-    assert info["fps"] == 25, "The released history recipe requires 25 Hz data"
-    names = [f"{side}_joint_{i}" for side in ("left", "right") for i in range(7)]
-    for key in ("observation.state", "action"):
-        assert info["features"][key]["names"] == [names], "Use the joint+gripper LeRobot export"
+    contract = contract_name(bench_name, env_cfg_type, action_type)
     dims = get_robot_action_dim_info(env_cfg_type)
-    action_dim = sum(dims["arm_dim"]) + sum(dims["ee_dim"])
-    assert info["features"]["action"]["shape"] == [action_dim]
+    if contract == "wuji58":
+        if not wuji58.is_wuji58(dims, action_type):
+            raise ValueError(f"{env_cfg_type} is not a 20-joint dexterous-hand robot: {dims}")
+        action_dim = wuji58.WUJI58_DIM
+    else:
+        action_dim = sum(dims["arm_dim"]) + sum(dims["ee_dim"])
+    validate_source_info(info, contract, action_dim)
     task_prompts = source_tasks(source, info)
     excluded_indices = excluded_dlc_task_indices(task_prompts)
     selected_tasks = None if tasks is None else {int(index) for index in tasks}
@@ -200,9 +217,15 @@ def convert(source, output, *, env_cfg_type="arx_x5", source_revision=None, task
         "source_info_sha256": hashlib.sha256(info_path.read_bytes()).hexdigest(),
         "fps": info["fps"],
         "env_cfg_type": env_cfg_type,
-        "action_type": "joint",
+        "action_type": action_type,
+        "contract": contract,
         "robot_action_dim_info": dims,
         "action_dim": action_dim,
+        # wuji58 provenance: the wrist blocks are TE2-camera-frame deltas, so a loader
+        # must not guess the semantics from the 58-dim width alone.
+        "repr_mode": info.get("repr_mode") if contract == "wuji58" else None,
+        "robot": info.get("robot", env_cfg_type) if contract == "wuji58" else None,
+        "wrist_frame": "te2" if contract == "wuji58" else None,
         "image_dir": str(media),
         "selected_task_indices": None if selected_tasks is None else sorted(selected_tasks),
         "excluded_tasks": ["dlc"],
@@ -238,12 +261,14 @@ def main():
     parser.add_argument("--source-revision", help="Optional source revision label for provenance only")
     parser.add_argument("--tasks", nargs="+", type=int, help="Source task indices to include; dlc is always excluded")
     args = parser.parse_args()
-    assert (args.bench_name, args.env_cfg_type, args.action_type) == ("RoboDojo", "arx_x5", "joint")
+    contract_name(args.bench_name, args.env_cfg_type, args.action_type)
     output = args.output or POLICY_DIR / "data" / build_run_dir_name(vars(args), include_seed=False)
     convert(
         args.source,
         output,
         env_cfg_type=args.env_cfg_type,
+        action_type=args.action_type,
+        bench_name=args.bench_name,
         source_revision=args.source_revision,
         tasks=args.tasks,
     )

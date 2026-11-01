@@ -12,6 +12,8 @@ gpu_id: null
 eval_batch: false
 
 # DM0.5-Mem RoboDojo sim inference contract.
+# Two embodiments: arx_x5/joint (14-D, released checkpoint) and tianji_wuji/ee
+# (58-D WUJI hybrid; needs a checkpoint trained with that contract).
 model_path: null
 norm_stats_path: null
 experiment_path: scripts/robodojo_dm05_history.py
@@ -29,7 +31,8 @@ history_tokens_per_slot: 16
 diffusion_steps: 10
 diffusion_noise_seed: null
 prompt: null
-robot_type: null
+robot_type: null  # null -> "Dual ARX5" (joint) or "Tianji Wuji" (wuji58)
+wrist_frame: te2  # wuji58 only: frame of the 9-D wrist blocks (te2 | world)
 control_mode: null
 speed: "0.5"
 add_state: true

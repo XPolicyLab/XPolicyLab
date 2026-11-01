@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import copy
 import glob
+import importlib.util
 import json
 import os
 import random
 import re
 from functools import lru_cache
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -19,6 +21,7 @@ from transformers.utils import logging
 from tqdm import tqdm
 
 from mibot.utils.io import (
+    ACTION_EPS,
     build_action_mask,
     compose_action,
     compose_state,
@@ -33,6 +36,25 @@ from mibot.utils.io import (
 
 logger = logging.get_logger(__name__)
 PROMPT_RE = re.compile(r"(<image>|<video>)")
+
+# XPolicyLab adapter module defining the WUJI 58-D slot layout
+# (policy/Xiaomi_Robotics_1/wuji58_layout.py). Loaded lazily and only for
+# trajectories stamped ``"layout": "wuji58"`` by scripts/process_data.py, so
+# the arx_x5 path never touches it.
+_WUJI58_LAYOUT_PATH = Path(__file__).resolve().parents[5] / "wuji58_layout.py"
+_wuji58_layout = None
+
+
+def _load_wuji58_layout():
+    global _wuji58_layout
+    if _wuji58_layout is None:
+        spec = importlib.util.spec_from_file_location("xr1_wuji58_layout", _WUJI58_LAYOUT_PATH)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"wuji58 layout module not found at {_WUJI58_LAYOUT_PATH}")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        _wuji58_layout = module
+    return _wuji58_layout
 
 
 class JsonDataset(Dataset):
@@ -58,6 +80,8 @@ class JsonDataset(Dataset):
             raise IndexError(f"invalid sample at index={index}: frame_index={frame}")
 
         prompt = self._prompt(traj)
+        if traj.get("layout") == "wuji58":
+            return self._wuji58_item(traj, prompt, frame, steps)
         left = self._arm_action(traj, "left", frame, steps)
         right = self._arm_action(traj, "right", frame, steps)
         waist = self._delta(traj, "proprios.waist_pos", "actions.waist_pos", frame, steps)
@@ -71,6 +95,36 @@ class JsonDataset(Dataset):
             {"from": "gpt", "value": "".join(f"<a_{index}>" for index in range(steps)) + "<score>"},
         ]
 
+        return {
+            "messages": self._messages(
+                prompt["conversations"],
+                self._augment(self._images(traj, prompt["images"], frame)),
+            ),
+            "action": torch.from_numpy(action),
+            "action_mask": torch.from_numpy(action_mask),
+            "state": torch.from_numpy(state),
+            "vlm_action_target": torch.from_numpy(action[:steps]),
+            "vlm_action_mask": torch.from_numpy(action_mask[:steps]),
+            "vlm_action_actual_length": steps,
+        }
+
+    def _wuji58_item(self, traj, prompt, frame, steps):
+        """WUJI 58-D hybrid sample: slots [0:58] carry the wuji58 vector.
+
+        Same normalization as the arx_x5 path (gaussian action, quantile
+        state, padded slots stay zero); the packing itself lives in the
+        adapter's wuji58_layout.training_sample.
+        """
+        layout = _load_wuji58_layout()
+        raw_state, raw_action, action_mask = layout.training_sample(
+            traj, frame, steps, self.action_length
+        )
+        action = ((raw_action - self.mean) / (self.std + ACTION_EPS)).astype(np.float32)
+        state = normalize_quantile(raw_state.astype(np.float32), self.q01, self.q99)
+        prompt["conversations"] += [
+            {"from": "human", "value": "Robot state: <state>"},
+            {"from": "gpt", "value": "".join(f"<a_{index}>" for index in range(steps)) + "<score>"},
+        ]
         return {
             "messages": self._messages(
                 prompt["conversations"],

@@ -39,6 +39,7 @@ Start here for repo-level concepts and integration steps. For install commands, 
 - [Standard Data Formats](#-standard-data-formats)
   - [Decode only through `decode_image_bit`](#decode-only-through-decode_image_bit)
   - [Official LeRobot conversion](#official-lerobot-conversion)
+  - [WUJI 58-D hybrid (tianji_wuji)](#wuji-58-d-hybrid-tianji_wuji)
 - [Data And Checkpoints](#-data-and-checkpoints)
 - [Add Your Own Policy](#-add-your-own-policy)
 - [Coding Agents](#-coding-agents)
@@ -487,13 +488,50 @@ python scripts/transform_lerobot_v21_format.py "<bench_name>.*.*" \
 - **`D` is padded, not per-robot.** Each arm is zero-padded to the widest dimensions among the matched targets, so one dataset can mix robots; `robot_type` is `unified_robot` and motors are named `left_joint_<i>` / `right_joint_<i>`.
 - **All three camera keys always exist.** A camera missing from the source is filled with black frames, so features stay stable across robots.
 - **Images are RGB**, decoded through `decode_image_bit` and never swapped afterwards ([above](#decode-only-through-decode_image_bit)).
-- **Joint-space bimanual only.** Both read the `*_arm_joint_states` / `*_ee_joint_states` keys and fail on a trajectory that carries only pose or single-arm keys.
+- **Joint-space bimanual by default.** Both read the `*_arm_joint_states` / `*_ee_joint_states` keys and fail on a trajectory that carries only pose or single-arm keys. The one alternative is `--representation wuji58` ([below](#wuji-58-d-hybrid-tianji_wuji)), which reads the pose and 20-D hand keys instead.
 - **Video is AV1 by default.** `DatasetConfig.vcodec` picks the encoder: `libsvtav1` for AV1, `h264_nvenc` for H.264.
 - The two differ beyond dataset version only in encoding throughput: v3.0 writes images from 8 worker processes and streams video at CRF 18.
 
 </details>
 
 
+
+
+### WUJI 58-D hybrid (tianji_wuji)
+
+The `tianji_wuji` robot — two 7-DOF arms, each carrying a 20-DOF Wuji dexterous hand — is driven in **end-effector space** with the hybrid representation defined by [WUJI SimBench](https://github.com/SomaStacks/WUJI_SimBench): per side, 20 absolute hand joints plus a 9-D `xyz + rot6d` wrist (palm) pose. The shared codec `XPolicyLab.utils.wuji58` (`utils/wuji58.py`) is the single implementation of that layout; adapters never spell the slices, the rotation convention, or the camera frame out themselves.
+
+<details>
+<summary>Layout and conventions</summary>
+
+| Slice | Content | State | Action |
+| --- | --- | --- | --- |
+| `[0:20]` | left hand joints, finger-major (`finger1_joint1` … `finger5_joint4`) | absolute | absolute target |
+| `[20:29]` | left wrist `x y z` + rot6d | absolute, in the wrist frame | delta vs. the live measured wrist |
+| `[29:49]` | right hand joints | absolute | absolute target |
+| `[49:58]` | right wrist `x y z` + rot6d | absolute, in the wrist frame | delta vs. the live measured wrist |
+
+- Quaternions are `wxyz` (the XPolicyLab pose convention); rot6d is the first two **rows** of the rotation matrix, flattened.
+- The wrist frame defaults to the WUJI SimBench **TE2** head camera (`wrist_frame: te2`); `world` keeps world coordinates. It is a `deploy.yml` key on every adapter that supports this layout, and a converter flag.
+- The relative wrist action is a spatial delta in that frame: `dp = p_target - p_current`, `dR = R_target @ R_current.T`, formed **per frame** against that frame's measured wrist (what WUJI SimBench records and the converters write). Because XPolicyLab hands a whole chunk to the environment, `decode_action_chunk58` decodes element 0 against the observation and each later element against the pose decoded before it (`reference="iterative"`, the default); `Wuji58ChunkDecoder` is the exact per-step variant against the live wrist, and `reference="chunk_start"` exists only for a dataloader that forms deltas against the chunk's first frame (Xiaomi-Robotics-1).
+
+</details>
+
+**Wire format is unchanged.** The environment client still sends the standard keys — `left_ee_pose` / `right_ee_pose` `(7,)` and `left_ee_joint_state` / `right_ee_joint_state` `(20,)` — and gets the same keys back as absolute targets, so with `action_type=ee` the packed contract from `get_robot_action_dim_info` is 54-D (`arm_dim: [7, 7]`, `ee_dim: [20, 20]`). The 58-D vector exists only inside the policy, where `wuji58.is_wuji58(robot_action_dim_info, action_type)` selects it.
+
+Registration follows the usual two-file rule: `utils/robot/_robot_info.json` ships `tianji_wuji`; the parent workspace must add the same entry to `env_cfg/robot/_robot_info.json` and an `env_cfg/tianji_wuji.yml` whose `config.robot` is `tianji_wuji`, and its environment client must publish the 20-D hand keys. Run with:
+
+```bash
+bash policy/<POLICY>/eval.sh RoboDojo <task_name> <ckpt_name> tianji_wuji ee <seed> ...
+```
+
+Both official converters emit this layout with `--representation wuji58` (optionally `--wrist_frame te2|world`): `observation.state` / `action` become 58 float32 columns named `wuji58.MOTOR_NAMES` (`left_hand_finger1_joint1` … `right_wrist_r12`), `robot_type` is `tianji_wuji`, and `meta/info.json` is stamped with `repr_mode: wrist_rel_te2`, `robot` and `wrist_frame` so a loader can refuse a mismatched export instead of guessing from the width. Simulator exports that record no pose targets get them emulated as next-step states, per key.
+
+```bash
+python scripts/transform_lerobot_v30_format.py "RoboDojo.*.tianji_wuji" --repo_id wuji58_v30 --representation wuji58
+```
+
+Adapters that implement the layout — each documents it under a "WUJI 58-D hybrid" heading in its README: [InternW0_delta](policy/InternW0_delta/README.md), [Xiaomi-Robotics-1](policy/Xiaomi_Robotics_1/README.md), [OpenDM](policy/OpenDM/README.md), [G0.5](policy/G05/README.md), [OpenWAM](policy/OpenWAM/README.md). The codec contract is pinned by `tests/test_wuji58.py`; the adapter-side pieces by each adapter's own CPU tests (`policy/<POLICY>/tests/`, or `policy/InternW0_delta/test_wuji58_adapter.py`).
 
 ## 💾 Data And Checkpoints
 

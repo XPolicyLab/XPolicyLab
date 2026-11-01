@@ -126,6 +126,33 @@ bash eval.sh RoboDojo stack_bowls RoboDojo-all-arx_x5-ee-0 arx_x5 ee 0 0 0 <poli
 
 `EVAL_ENV_TYPE=debug` runs the offline wiring check (no simulator); leave it unset or set `EVAL_ENV_TYPE=sim` for RoboDojo simulation. For split-machine deployment via `setup_eval_policy_server.sh` / `setup_eval_env_client.sh`, follow the [Deployment Flow](../../README.md#-deployment-flow).
 
+## WUJI 58-D hybrid (tianji_wuji)
+
+The adapter also drives the WUJI dual-arm dexterous-hand platform (`env_cfg_type: tianji_wuji`, two 7-DOF arms each carrying a 20-DOF Wuji hand, registered as `arm_dim [7, 7]` / `ee_dim [20, 20]`). The run is selected automatically when the robot registry reports two 20-DOF hands and `action_type` is `ee`; nothing changes for `arx_x5`.
+
+In this mode the 60-slot state and action space carries the WUJI SimBench `wrist58` vector from `XPolicyLab.utils.wuji58` in slots `[0:58]`, with slots `[58:60]` zero and masked. State and action share the layout:
+
+| Slots | Content | State | Action |
+| --- | --- | --- | --- |
+| `[0:20]` | left hand joints (finger-major) | absolute | absolute target |
+| `[20:29]` | left wrist `xyz + rot6d` | absolute, in the wrist frame | delta vs. the wrist observed at the chunk start |
+| `[29:49]` | right hand joints | absolute | absolute target |
+| `[49:58]` | right wrist `xyz + rot6d` | absolute, in the wrist frame | delta vs. the wrist observed at the chunk start |
+
+Wrist deltas are spatial deltas in the wrist frame (`dp = p_target - p_current`, `dR = R_target @ R_currentᵀ`, rot6d = first two rows), the WUJI SimBench `wrist_rel_te2` convention; the MiBot end-effector reframe does not apply. The wrist frame is `te2` (the WUJI SimBench head camera) by default or `world`, set by `wrist_frame` in `deploy.yml` and by `WRIST_FRAME` at conversion time — the two must match. The adapter restores absolute `left_ee_pose` / `right_ee_pose` (7-D, wxyz) and the 20-D `*_ee_joint_state` hand targets through the shared `decode_action_chunk58` with `reference="chunk_start"`: every chunk element is decoded against the observation the chunk was predicted from, because `chunk_actions` formed the training deltas that way (XR-1's native convention). This differs from the per-frame deltas the official converters write, so a WUJI SimBench or converter-made dataset is not interchangeable with this adapter's JSON export without re-running `process_data.sh`.
+
+```bash
+cd XPolicyLab/policy/Xiaomi_Robotics_1
+# conversion: the layout is auto-detected from the 20-wide hand joint state
+bash process_data.sh RoboDojo all tianji_wuji ee
+# training: lifts freq_excluded_dims (slots 17-19 are left-wrist dims here)
+bash train.sh RoboDojo all tianji_wuji ee 0 0,1,2,3
+# evaluation
+bash eval.sh RoboDojo <task_name> RoboDojo-all-tianji_wuji-ee-0 tianji_wuji ee 0 0 0 <policy_conda_env> <eval_env_conda_env>
+```
+
+Conversion reads the standard trajectory keys `state/{left,right}_ee_poses` (T, 7), `state/{left,right}_ee_joint_states` (T, 20) and the matching `action/` groups (simulation data without recorded `action/*_ee_poses` emulates them by the usual next-state shift) and writes `proprios.wuji58_state` / `actions.wuji58_target` (T, 58) stamped with `"layout": "wuji58"`; the loader forms the chunk-relative wrist deltas at sample time (`wuji58_layout.training_sample`). Statistics follow the arx_x5 rules — wrist deltas: per-(step, dim) gaussian over moving frames; hand targets: per-(step, dim) gaussian over every frame; state: 1st/99th percentiles — with the two padding slots written as identity / `0/0`. The robot must be registered in both `XPolicyLab/utils/robot/_robot_info.json` (read by `train.sh`) and the parent `env_cfg/robot/_robot_info.json` (read at runtime). `tests/test_wuji58_layout.py` pins the packing, the chunk decode round-trip and the statistics shapes on CPU.
+
 ## Configuration
 
 `deploy.yml` keys to check before evaluation:
@@ -139,6 +166,7 @@ bash eval.sh RoboDojo stack_bowls RoboDojo-all-arx_x5-ee-0 arx_x5 ee 0 0 0 <poli
 | `image_factor`, `image_max_pixels` | Image preprocessing, matching `mibot.utils.io.resize_image`. Defaults `32` / `160000`. |
 | `vlm_processor_path` | HuggingFace repo id or local path; default `Qwen/Qwen3-VL-4B-Instruct`. |
 | `default_prompt` | Instruction used when the observation carries none. |
+| `wrist_frame` | WUJI 58-D hybrid only: `te2` (default) or `world`; must match the `WRIST_FRAME` the dataset was converted with. Ignored for `arx_x5`. |
 
 Script environment variables, all optional:
 
@@ -150,6 +178,7 @@ Script environment variables, all optional:
 | `DATA_CONFIG_NAME` | `train.sh` | Data config basename under `configs/data`; default is the name `process_data.sh` generates. |
 | `DATA_WORKERS` | `process_data.sh` | Conversion worker processes; default `os.cpu_count() // 2`. |
 | `ACTION_LENGTH`, `BATCH_SIZE` | `process_data.sh` | Written into the generated data config; defaults `30` / `16`. |
+| `WRIST_FRAME` | `process_data.sh` | WUJI 58-D hybrid only: wrist frame, `te2` (default) or `world`. |
 | `EXTRA_ARGS` | `process_data.sh` | Flags forwarded to `scripts/process_data.py`, e.g. `--overwrite`, `--stats-only`. |
 | `PRETRAINED_PATH` | `train.sh` | Converted release weights; default `checkpoints/pretrained_ckpt/model_states.pt`. |
 | `RUN_ROOT`, `PROJECT` | `train.sh` | Training output root and project segment of the artifact path. |

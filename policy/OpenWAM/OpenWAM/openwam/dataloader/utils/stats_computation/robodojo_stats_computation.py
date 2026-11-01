@@ -21,6 +21,7 @@ from omegaconf import OmegaConf
 
 from openwam.dataloader.robodojo import (
     DEPLOY_ACTION_MODE,
+    WUJI58_ACTION_MODE,
     GRIPPER_CONVENTION,
     ROBODOJO_CONTRACT_ID,
     ROBODOJO_REAL_CONTRACT_ID,
@@ -40,9 +41,23 @@ from openwam.dataloader.robodojo_contract import (
     REAL_ENDPOINT_NAME,
     ROBODOJO_EMBODIMENT,
     ROBODOJO_TARGET_FRAME,
+    ROBODOJO_WUJI58_CONTRACT_ID,
+    ROBODOJO_WUJI58_EMBODIMENT,
+    ROBODOJO_WUJI58_SOURCE_FRAME,
+    WUJI58_DIM,
     discover_episodes,
     resolve_robodojo_calibration,
     validate_embodiment,
+    wuji58_frame_contract,
+)
+from openwam.dataloader.robodojo_wuji58 import (
+    DEFAULT_WRIST_FRAME,
+    WUJI58_STATE_STATS_KEY,
+    WUJI58_STATS_KEY,
+    iter_episode_wuji58,
+    pin_wuji58_rot6d_identity,
+    resolve_wrist_frame,
+    wuji58_frame_contract_fingerprint,
 )
 from openwam.dataloader.utils.normalization import (
     ROT6D_DIMS_EEF20,
@@ -128,6 +143,98 @@ def _metadata(
     return metadata
 
 
+def compute_robodojo_wuji58_stats(
+    dataset_dir: str | Path,
+    *,
+    tasks: Sequence[str] | None = None,
+    embodiment: str = ROBODOJO_WUJI58_EMBODIMENT,
+    variant: str = ROBODOJO_SIM_VARIANT,
+    wrist_frame: str = DEFAULT_WRIST_FRAME,
+    reservoir_cap: int = DEFAULT_RESERVOIR_CAP,
+) -> dict:
+    """Pooled 58-D statistics for ``action_mode: wuji58`` (two blocks).
+
+    ``wuji58`` pools the action rows (hand targets + wrist DELTAS) and feeds
+    deploy unnormalization; ``wuji58_state`` pools the state rows (hand qpos +
+    ABSOLUTE wrists) and feeds proprio normalization. Both pin the rot6d dims
+    (23..28, 52..57) to identity. Conversion goes through the reader's
+    ``read_wuji58`` so stats and training inputs cannot drift.
+    """
+    validate_embodiment(embodiment, variant=variant, action_mode=WUJI58_ACTION_MODE)
+    wrist_frame = resolve_wrist_frame(wrist_frame)
+    if int(reservoir_cap) < 1:
+        raise ValueError(f"reservoir_cap must be >= 1, got {reservoir_cap}")
+    tasks = resolve_robodojo_tasks(
+        dataset_dir,
+        tasks=tasks,
+        embodiment=embodiment,
+        variant=variant,
+        action_mode=WUJI58_ACTION_MODE,
+    )
+    action_acc = Accumulator(dim=WUJI58_DIM, reservoir_cap=int(reservoir_cap), seed=0)
+    state_acc = Accumulator(dim=WUJI58_DIM, reservoir_cap=int(reservoir_cap), seed=0)
+    state_rows = 0
+    action_rows = 0
+    for task in tasks:
+        episode_paths = discover_episodes(
+            dataset_dir,
+            task,
+            embodiment=embodiment,
+            variant=variant,
+            action_mode=WUJI58_ACTION_MODE,
+        )
+        for states, actions in iter_episode_wuji58(
+            episode_paths,
+            wrist_frame=wrist_frame,
+            embodiment=embodiment,
+            variant=variant,
+        ):
+            states = np.asarray(states, dtype=np.float32).reshape(-1, WUJI58_DIM)
+            actions = np.asarray(actions, dtype=np.float32).reshape(-1, WUJI58_DIM)
+            if states.shape[0] < 1 or actions.shape[0] < 1:
+                raise ValueError("cannot compute RoboDojo wuji58 stats from an episode without action targets")
+            state_acc.update_batch(states)
+            action_acc.update_batch(actions)
+            state_rows += states.shape[0]
+            action_rows += actions.shape[0]
+    if state_rows == 0 or action_rows == 0:
+        raise ValueError("cannot compute RoboDojo wuji58 stats from an empty dataset")
+
+    def _finalize(acc: Accumulator) -> dict:
+        block = {key: np.asarray(value, dtype=np.float32) for key, value in acc.finalize().items() if key in STAT_KEYS}
+        pin_wuji58_rot6d_identity(block)
+        return block
+
+    action_block = _finalize(action_acc)
+    state_block = _finalize(state_acc)
+    metadata = {
+        "pool": "action_and_state_separately",
+        "action_rows": int(action_rows),
+        "state_rows": int(state_rows),
+        "num_timesteps": int(action_rows + state_rows),
+        "variant": variant,
+        "embodiment": embodiment,
+        "action_mode": WUJI58_ACTION_MODE,
+        "tasks": list(tasks),
+        "action_target": "action/ group when recorded, else state[t+1]; wrists relative to state[t]",
+        "reservoir_cap": int(reservoir_cap),
+        "reservoir_rows": min(action_acc.count, int(reservoir_cap)),
+        "source_frame": ROBODOJO_WUJI58_SOURCE_FRAME,
+        "wrist_frame": wrist_frame,
+        "frame_contract": wuji58_frame_contract(wrist_frame),
+        "frame_contract_fingerprint": wuji58_frame_contract_fingerprint(wrist_frame),
+        "contract_id": ROBODOJO_WUJI58_CONTRACT_ID,
+    }
+    metadata["repr_mode"] = metadata["frame_contract"]["repr_mode"]
+    action_block.update(metadata)
+    return {
+        WUJI58_STATS_KEY: action_block,
+        WUJI58_STATE_STATS_KEY: state_block,
+        "metadata": metadata,
+        "num_timesteps": metadata["num_timesteps"],
+    }
+
+
 def compute_robodojo_stats(
     dataset_dir: str | Path,
     *,
@@ -138,10 +245,26 @@ def compute_robodojo_stats(
     variant: str = ROBODOJO_SIM_VARIANT,
     action_mode: str = DEPLOY_ACTION_MODE,
     reservoir_cap: int = DEFAULT_RESERVOIR_CAP,
+    wrist_frame: str = DEFAULT_WRIST_FRAME,
 ) -> dict:
-    """Compute bounded pooled raw-20D statistics across selected formal tasks."""
+    """Compute bounded pooled raw statistics across selected formal tasks.
+
+    ``action_mode='eef'`` (default): raw EEF20, unchanged. ``'wuji58'``: see
+    :func:`compute_robodojo_wuji58_stats`.
+    """
+    if action_mode == WUJI58_ACTION_MODE:
+        if calibration is not None or calibration_path is not None:
+            raise ValueError("RoboDojo wuji58 stats take no calibration (poses stay in the env world frame)")
+        return compute_robodojo_wuji58_stats(
+            dataset_dir,
+            tasks=tasks,
+            embodiment=embodiment,
+            variant=variant,
+            wrist_frame=wrist_frame,
+            reservoir_cap=reservoir_cap,
+        )
     if action_mode != DEPLOY_ACTION_MODE:
-        raise ValueError(f"RoboDojo stats support only action_mode='eef', got {action_mode!r}")
+        raise ValueError(f"RoboDojo stats support only action_mode='eef' or 'wuji58', got {action_mode!r}")
     validate_embodiment(embodiment, variant=variant)
     if int(reservoir_cap) < 1:
         raise ValueError(f"reservoir_cap must be >= 1, got {reservoir_cap}")
@@ -303,18 +426,21 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     # Deliberately do not construct a normalizing reader here: scans consume the
     # shared raw conversion function and never load or auto-build stats.
+    action_mode = str(config.get("action_mode", DEPLOY_ACTION_MODE))
     build_and_save_robodojo_stats(
         dataset_dir=dataset_dir,
         output=output,
         embodiment=str(config.get("embodiment", ROBODOJO_EMBODIMENT)),
         variant=str(config.get("variant", ROBODOJO_SIM_VARIANT)),
-        action_mode=str(config.get("action_mode", DEPLOY_ACTION_MODE)),
+        action_mode=action_mode,
         reservoir_cap=args.reservoir_cap,
+        wrist_frame=str(config.get("wrist_frame", DEFAULT_WRIST_FRAME)),
     )
     payload = np.load(output, allow_pickle=True).item()
     metadata = payload["metadata"]
+    dim = WUJI58_DIM if action_mode == WUJI58_ACTION_MODE else EEF20_DIM
     print(
-        f"wrote {output} mode=eef pool=action_state dim={EEF20_DIM} "
+        f"wrote {output} mode={action_mode} pool={metadata['pool']} dim={dim} "
         f"action_rows={metadata['action_rows']} "
         f"state_rows={metadata['state_rows']} "
         f"total_rows={metadata['num_timesteps']}"
@@ -332,6 +458,7 @@ __all__ = [
     "build_and_save_robodojo_stats",
     "compute_normalization_stats",
     "compute_robodojo_stats",
+    "compute_robodojo_wuji58_stats",
     "iter_episode_eef20",
     "main",
 ]

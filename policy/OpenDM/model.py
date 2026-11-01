@@ -20,12 +20,14 @@ from XPolicyLab.utils.process_data import (
     pack_robot_state,
     unpack_robot_state,
 )
+from XPolicyLab.utils import wuji58
 
 _POLICY_DIR = Path(__file__).resolve().parent
 _UPSTREAM_ROOT = _POLICY_DIR / "opendm"
 _CHECKPOINTS_DIR = _POLICY_DIR / "checkpoints"
 _MODEL_MARKERS = ("config.json", "adapter_config.json")
 _DEFAULT_ROBOT_TYPE = "Dual ARX5"
+_WUJI58_ROBOT_TYPE = "Tianji Wuji"
 
 _CAMERA_CANDIDATES = {
     "images_1": ("cam_head", "cam_high", "cam_third_view"),
@@ -158,31 +160,144 @@ def _normalize_prompt(observation: dict, default_prompt: str) -> str:
     return default_prompt if not instruction or not str(instruction).strip() else str(instruction)
 
 
+# ---------------------------------------------------------------------------
+# Embodiment contract (pure numpy; shared by model.py, the converter and tests)
+# ---------------------------------------------------------------------------
+
+
+def resolve_embodiment(env_cfg_type: str, action_type: str, robot_action_dim_info: dict) -> dict:
+    """Validate one of the two supported RoboDojo contracts and describe it.
+
+    * ``arx_x5`` / ``joint``: 14-D absolute joint+gripper vector (released checkpoint).
+    * ``tianji_wuji`` / ``ee``: the 58-D WUJI hybrid ``[L hand 20 | L wrist 9 | R hand 20 | R wrist 9]``
+      from ``XPolicyLab.utils.wuji58`` (hands absolute, wrists as camera-frame deltas).
+    """
+    dims = {
+        "arm_dim": [int(v) for v in robot_action_dim_info["arm_dim"]],
+        "ee_dim": [int(v) for v in robot_action_dim_info["ee_dim"]],
+    }
+    if len(dims["arm_dim"]) != len(dims["ee_dim"]):
+        raise ValueError("arm_dim and ee_dim must describe the same number of arms")
+    if wuji58.is_wuji58(dims, action_type):
+        return {"name": "wuji58", "action_dim": wuji58.WUJI58_DIM, "robot_action_dim_info": dims}
+    if action_type != "joint":
+        raise ValueError(
+            "OpenDM supports action_type=joint (arx_x5) or action_type=ee on a 20-joint "
+            f"dexterous-hand robot (tianji_wuji); got action_type={action_type!r} on {env_cfg_type!r}"
+        )
+    if env_cfg_type != "arx_x5":
+        raise ValueError("The joint checkpoint supports RoboDojo sim env_cfg_type=arx_x5 only")
+    action_dim = sum(dims["arm_dim"]) + sum(dims["ee_dim"])
+    if action_dim != 14:
+        raise ValueError(
+            "DM0.5-Mem expects left 6+1 and right 6+1 joint actions; "
+            f"the shared robot configuration reports {action_dim} dimensions"
+        )
+    return {"name": "joint14", "action_dim": action_dim, "robot_action_dim_info": dims}
+
+
+def build_state_desc(embodiment: dict) -> list[str]:
+    """Per-dimension state description strings (``RobotStateDesc`` values)."""
+    if embodiment["name"] == "wuji58":
+        per_side = ["joint"] * wuji58.HAND_DIM + ["eef"] * wuji58.WRIST_DIM
+        return per_side * 2
+    desc = []
+    for arm_dim, ee_dim in zip(
+        embodiment["robot_action_dim_info"]["arm_dim"],
+        embodiment["robot_action_dim_info"]["ee_dim"],
+    ):
+        desc.extend(["joint"] * arm_dim + ["gripper"] * ee_dim)
+    return desc
+
+
+def build_state(observation: dict, embodiment: dict, action_type: str, frame) -> np.ndarray:
+    """The model's state vector for one observation (float32, ``action_dim`` wide)."""
+    if embodiment["name"] == "wuji58":
+        state = wuji58.state58_from_obs(observation["state"], frame)
+    else:
+        state = pack_robot_state(
+            observation,
+            action_type,
+            embodiment["robot_action_dim_info"],
+            source_type="obs",
+            state_type="state",
+        )
+    state = np.asarray(state, dtype=np.float32)
+    if state.shape != (embodiment["action_dim"],) or not np.isfinite(state).all():
+        raise ValueError(f"Expected a finite {embodiment['action_dim']}-D state, got {state.shape}")
+    return state
+
+
+def decode_action_chunk(
+    action_chunk: np.ndarray, observation: dict, embodiment: dict, action_type: str, frame, steps: int
+) -> list[dict[str, np.ndarray]]:
+    """Model output ``(horizon, action_dim)`` → the first ``steps`` XPolicyLab action dicts.
+
+    wuji58 rows are decoded against the observation they were predicted from, so every
+    element of the chunk shares the same reference wrist (as WUJI SimBench's runner does).
+    """
+    action_chunk = np.asarray(action_chunk, dtype=np.float32)
+    if action_chunk.ndim == 1:
+        action_chunk = action_chunk[None, :]
+    if action_chunk.ndim != 2 or action_chunk.shape[1] != embodiment["action_dim"]:
+        raise ValueError(
+            f"OpenDM returned {action_chunk.shape}; expected (horizon, {embodiment['action_dim']})"
+        )
+    chunk = action_chunk[:steps]
+    if embodiment["name"] == "wuji58":
+        return wuji58.decode_action_chunk58(chunk, observation["state"], frame)
+    return [
+        unpack_robot_state(action, action_type, embodiment["robot_action_dim_info"], source_type="obs")
+        for action in chunk
+    ]
+
+
+def check_latent_action_width(robot_action_dim: int, latent_action_dim: int) -> None:
+    """The DM0.5 latent action width must hold the whole robot vector.
+
+    ``PadAction`` truncates silently past the latent width, so a 58-D robot on the
+    released 32-wide model would train and serve on 32 of its 58 dimensions.
+    """
+    if int(latent_action_dim) < int(robot_action_dim):
+        raise ValueError(
+            f"DM0.5 latent action width {latent_action_dim} is narrower than the robot's "
+            f"{robot_action_dim}-D action; train with a wider --latent-action-dim"
+        )
+
+
+def norm_stats_action_width(path) -> int:
+    """Action vector width stored in an OpenDM ``norm_stats.json`` (legacy or multi-robot layout)."""
+    import json
+
+    payload = json.loads(Path(path).read_text())
+    profiles = [payload["norm_stats"]]
+    profiles.extend((payload.get("norm_stats_by_robot") or {}).values())
+    widths = set()
+    for profile in profiles:
+        action = profile["action"]
+        for key in ("q01", "q99", "mean", "std", "min", "max"):
+            if action.get(key) is not None:
+                widths.add(int(np.asarray(action[key]).size))
+                break
+    if len(widths) != 1:
+        raise ValueError(f"Cannot infer one action width from {path}: {sorted(widths)}")
+    return widths.pop()
+
+
 class Model(ModelTemplate):
     """Run DM0.5-Mem inference in the XPolicyLab policy-server process."""
 
     def __init__(self, model_cfg: dict):
         self.model_cfg = model_cfg
         self.action_type = str(model_cfg.get("action_type") or "joint")
-        if self.action_type != "joint":
-            raise ValueError("OpenDM RoboDojo sim supports action_type=joint only")
-
         self.env_cfg_type = str(model_cfg.get("env_cfg_type") or "arx_x5")
-        if self.env_cfg_type != "arx_x5":
-            raise ValueError("This checkpoint supports RoboDojo sim env_cfg_type=arx_x5 only")
-        shared_dim_info = get_robot_action_dim_info(self.env_cfg_type)
-        self.robot_action_dim_info = {
-            "arm_dim": list(shared_dim_info["arm_dim"]),
-            "ee_dim": list(shared_dim_info["ee_dim"]),
-        }
-        if len(self.robot_action_dim_info["arm_dim"]) != len(self.robot_action_dim_info["ee_dim"]):
-            raise ValueError("arm_dim and ee_dim must describe the same number of arms")
-        self.action_dim = sum(self.robot_action_dim_info["arm_dim"]) + sum(self.robot_action_dim_info["ee_dim"])
-        if self.action_dim != 14:
-            raise ValueError(
-                "DM0.5-Mem expects left 6+1 and right 6+1 joint actions; "
-                f"the shared robot configuration reports {self.action_dim} dimensions"
-            )
+        self.embodiment = resolve_embodiment(
+            self.env_cfg_type, self.action_type, get_robot_action_dim_info(self.env_cfg_type)
+        )
+        self.robot_action_dim_info = self.embodiment["robot_action_dim_info"]
+        self.action_dim = self.embodiment["action_dim"]
+        self.is_wuji58 = self.embodiment["name"] == "wuji58"
+        self.wrist_frame = wuji58.WristFrame.from_name(model_cfg.get("wrist_frame"))
         launcher_action_dim = model_cfg.get("action_dim")
         if launcher_action_dim is not None and int(launcher_action_dim) != self.action_dim:
             raise ValueError(
@@ -197,6 +312,8 @@ class Model(ModelTemplate):
         self.default_prompt = str(
             model_cfg.get("prompt") or model_cfg.get("task_name") or "Perform the instructed manipulation task."
         )
+        # wuji58 keeps "absolute" too: the wrist delta is baked into the 58-D
+        # representation itself (as WUJI SimBench trains), not into the model's action mode.
         self.model_action_mode = str(model_cfg.get("model_action_mode") or "absolute").lower()
         if self.model_action_mode != "absolute":
             raise ValueError("The RoboDojo sim checkpoint requires absolute actions")
@@ -204,6 +321,13 @@ class Model(ModelTemplate):
         self._configure_history(model_cfg)
 
         model_path, norm_stats_path = _resolve_model_assets(model_cfg)
+        stats_width = norm_stats_action_width(norm_stats_path)
+        if stats_width != self.action_dim:
+            raise ValueError(
+                f"{norm_stats_path} normalizes a {stats_width}-D action but the "
+                f"{self.embodiment['name']} contract is {self.action_dim}-D; use a checkpoint "
+                f"trained for env_cfg_type={self.env_cfg_type} action_type={self.action_type}"
+            )
         self._initialize_runtime(model_path, norm_stats_path)
         self._observations: dict[Any, dict] = {}
         self._history_by_env: dict[Any, deque[tuple[int, int, np.ndarray]]] = {}
@@ -212,7 +336,8 @@ class Model(ModelTemplate):
         self._latest_env_idx_by_evaluation: dict[str, list[Any]] = {}
 
         print(
-            f"[OpenDM] checkpoint={model_path} action_dim={self.action_dim} "
+            f"[OpenDM] checkpoint={model_path} embodiment={self.embodiment['name']} "
+            f"action_dim={self.action_dim} latent={self._latent_action_dim} "
             f"chunk={self.action_chunk_size} execute={self.action_steps} "
             f"history={self.history_slots}@{self.history_fps:g}Hz"
         )
@@ -312,6 +437,8 @@ class Model(ModelTemplate):
         runtime_model_cfg.liger_kernel = _as_bool(self.model_cfg.get("liger_kernel"), default=True)
 
         model = runtime_model_cfg.build_model(use_lora=False)
+        self._latent_action_dim = int(self._unwrap_latent_action_dim(model))
+        check_latent_action_width(self.action_dim, self._latent_action_dim)
         inference = experiment.inference_config
         inference.diffusion_steps = int(self.model_cfg.get("diffusion_steps") or 10)
         noise_seed = self.model_cfg.get("diffusion_noise_seed")
@@ -332,17 +459,23 @@ class Model(ModelTemplate):
             is_history=True,
         )
 
-        state_desc = []
-        for arm_dim, ee_dim in zip(
-            self.robot_action_dim_info["arm_dim"],
-            self.robot_action_dim_info["ee_dim"],
-        ):
-            state_desc.extend([RobotStateDesc.JOINT] * arm_dim)
-            state_desc.extend([RobotStateDesc.GRIPPER] * ee_dim)
+        state_desc = [RobotStateDesc(value) for value in build_state_desc(self.embodiment)]
 
         self._inference = inference
-        self._robot_type = str(self.model_cfg.get("robot_type") or _DEFAULT_ROBOT_TYPE)
+        default_robot_type = _WUJI58_ROBOT_TYPE if self.is_wuji58 else _DEFAULT_ROBOT_TYPE
+        self._robot_type = str(self.model_cfg.get("robot_type") or default_robot_type)
         self._state_desc = state_desc
+
+    @staticmethod
+    def _unwrap_latent_action_dim(model) -> int:
+        from opendm.model.dm05.dm05_arch import DM05ForConditionalGeneration
+
+        inner = model
+        while not isinstance(inner, DM05ForConditionalGeneration):
+            inner = getattr(inner, "model", None)
+            if inner is None:
+                raise TypeError(f"Cannot find the DM05 model inside {type(model).__name__}")
+        return int(inner.config.action_dim)
 
     def update_obs(self, obs: dict) -> None:
         evaluation_id = self._evaluation_id(obs)
@@ -455,13 +588,7 @@ class Model(ModelTemplate):
 
         evaluation_id = self._evaluation_id(observation)
         env_idx = observation.get("env_idx", 0)
-        state = pack_robot_state(
-            observation,
-            self.action_type,
-            self.robot_action_dim_info,
-            source_type="obs",
-            state_type="state",
-        ).astype(np.float32)
+        state = build_state(observation, self.embodiment, self.action_type, self.wrist_frame)
         payload = {"images": [
             Image.fromarray(_extract_rgb_image(observation, image_key)) for image_key in _CAMERA_CANDIDATES
         ]}
@@ -480,20 +607,14 @@ class Model(ModelTemplate):
             }
         )
 
-        action_chunk = np.asarray(self._inference._predict(payload), dtype=np.float32)
-        if action_chunk.ndim == 1:
-            action_chunk = action_chunk[None, :]
-        if action_chunk.ndim != 2 or action_chunk.shape[1] != self.action_dim:
-            raise ValueError(f"OpenDM returned {action_chunk.shape}; expected (horizon, {self.action_dim})")
-        return [
-            unpack_robot_state(
-                action,
-                self.action_type,
-                self.robot_action_dim_info,
-                source_type="obs",
-            )
-            for action in action_chunk[: self.action_steps]
-        ]
+        return decode_action_chunk(
+            self._inference._predict(payload),
+            observation,
+            self.embodiment,
+            self.action_type,
+            self.wrist_frame,
+            self.action_steps,
+        )
 
     def reset(self) -> None:
         self._observations.clear()

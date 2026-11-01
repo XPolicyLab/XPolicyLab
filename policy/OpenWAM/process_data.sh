@@ -25,6 +25,11 @@ fi
 
 echo "[OpenWAM] native RoboDojo HDF5 — no conversion."
 echo "[OpenWAM] dataset_dir=${dataset_dir}"
+if [[ "${env_cfg_type}" == "tianji_wuji" ]]; then
+    echo "[OpenWAM] tianji_wuji: expects <dataset_dir>/<task>/tianji_wuji/data/episode_*.hdf5 with"
+    echo "[OpenWAM]   state/{left,right}_ee_poses (T,7) and state/{left,right}_ee_joint_states (T,20)"
+    echo "[OpenWAM]   (+ the same keys under action/ when recorded targets exist); trained as the 58-D WUJI hybrid."
+fi
 if [[ -n "${expert_data_num}" ]]; then
     echo "[OpenWAM] expert_data_num=${expert_data_num} is ignored (upstream-native data)."
 fi

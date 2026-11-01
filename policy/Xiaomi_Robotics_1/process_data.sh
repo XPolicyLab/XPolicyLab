@@ -25,12 +25,18 @@
 #   DATA_WORKERS    worker processes   (default: auto)
 #   ACTION_LENGTH   action chunk length for the statistics (default: 30)
 #   BATCH_SIZE      batch_size written into the generated config (default: 16)
+#   WRIST_FRAME     wuji58 layout only: wrist frame, te2 or world (default: te2);
+#                   must match wrist_frame in deploy.yml
 #   EXTRA_ARGS      extra flags forwarded verbatim to process_data.py
+#
+# The packed layout is auto-detected: a 20-wide *_ee_joint_states (tianji_wuji,
+# two Wuji hands) selects the WUJI 58-D hybrid layout, anything else the
+# arx_x5 layout. Pass --layout in EXTRA_ARGS to force one.
 
 set -euo pipefail
 
 usage() {
-    sed -n '2,28p' "${BASH_SOURCE[0]}" | sed 's/^#\{1\} \{0,1\}//'
+    sed -n '2,34p' "${BASH_SOURCE[0]}" | sed 's/^#\{1\} \{0,1\}//'
 }
 
 if [[ "$#" -lt 4 || "$#" -gt 5 ]]; then
@@ -92,6 +98,9 @@ if [[ -n "${RAW_DATA_ROOT:-}" ]]; then
 fi
 if [[ -n "${DATA_WORKERS:-}" ]]; then
     args+=(--workers "${DATA_WORKERS}")
+fi
+if [[ -n "${WRIST_FRAME:-}" ]]; then
+    args+=(--wrist-frame "${WRIST_FRAME}")
 fi
 if [[ -n "${EXTRA_ARGS:-}" ]]; then
     # Intentionally word-split so callers can pass several flags in one string.

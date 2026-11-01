@@ -2,7 +2,7 @@
 
 **Contributor:** DM0.5 team | **Paper:** [DM0.5 technical blog](https://www.dexmal.com/blog/dm0.5) | **arXiv:** TBD | **Original code:** [dexmal/opendm](https://github.com/dexmal/opendm)
 
-OpenDM fine-tunes the initial [Dexmal/DM05-MEM](https://huggingface.co/Dexmal/DM05-MEM) memory model on RoboDojo; the released policy is [Dexmal/DM05-MEM-Robodojo-Sim](https://huggingface.co/Dexmal/DM05-MEM-Robodojo-Sim). This adapter supports data conversion, full supervised fine-tuning, resumable checkpoints, export and XPolicyLab evaluation for **RoboDojo / `arx_x5` / `joint`**. State and action are 14D absolute joint/gripper vectors. Memory uses 20 head-camera frames at 1 Hz; the model predicts 50 actions and evaluation executes 25 at 25 Hz.
+OpenDM fine-tunes the initial [Dexmal/DM05-MEM](https://huggingface.co/Dexmal/DM05-MEM) memory model on RoboDojo; the released policy is [Dexmal/DM05-MEM-Robodojo-Sim](https://huggingface.co/Dexmal/DM05-MEM-Robodojo-Sim). This adapter supports data conversion, full supervised fine-tuning, resumable checkpoints, export and XPolicyLab evaluation for **RoboDojo / `arx_x5` / `joint`**. State and action are 14D absolute joint/gripper vectors. Memory uses 20 head-camera frames at 1 Hz; the model predicts 50 actions and evaluation executes 25 at 25 Hz. A second contract, **`tianji_wuji` / `ee`**, trains and serves the 58D WUJI dexterous-hand hybrid layout — see [WUJI 58-D hybrid](#wuji-58-d-hybrid-tianji_wuji).
 
 `opendm/` contains source from [dexmal/opendm at `fbab441`](https://github.com/dexmal/opendm/tree/fbab441b63c789e5c37f7293e61fea9ed356c6c5) under the [Apache-2.0 license](opendm/LICENSE). Consult each public model repository for its model asset license.
 
@@ -146,4 +146,44 @@ History is always enabled for this memory checkpoint. Model-specific keys in [de
 | `action_attn_implementation` | `sdpa` | Action-expert attention backend. |
 | `liger_kernel` | `true` | Apply the upstream Liger kernels when CUDA is available. |
 
+| `wrist_frame` | `te2` | wuji58 only: frame of the 9-D wrist blocks, `te2` (WUJI SimBench head camera) or `world`. Must match the converted data. |
+
 The effective history rate is `runtime_fps / history_action_interval` (25 / 25 = 1 Hz by default). History settings and prompt fields should match those used for training.
+
+## WUJI 58-D hybrid (`tianji_wuji`)
+
+`env_cfg_type=tianji_wuji action_type=ee` selects the 58-D hybrid representation of the WUJI dual-arm dexterous-hand platform, byte-identical to WUJI SimBench's `wrist58` layout and implemented once in `XPolicyLab.utils.wuji58`:
+
+```text
+0..19   left hand joints, absolute, finger-major      (left_hand_finger1_joint1 .. finger5_joint4)
+20..28  left wrist xyz + rot6d in the TE2 camera frame (state: absolute; action: delta vs. the live wrist)
+29..48  right hand joints
+49..57  right wrist xyz + rot6d
+```
+
+The robot is registered as `{"arm_dim": [7, 7], "ee_dim": [20, 20]}` in both robot-info files (the parent workspace's `env_cfg/robot/_robot_info.json` keyed by robot name, and `utils/robot/_robot_info.json` keyed by `env_cfg_type`), and the parent workspace needs an `env_cfg/tianji_wuji.yml` whose `config.robot` is `tianji_wuji`. Observations carry `left/right_ee_pose` (7, `xyz + wxyz`) and `left/right_ee_joint_state` (20); the adapter returns the same keys as absolute targets through `decode_action_chunk58` (default `iterative` reference: element 0 against the observation, each later element against the pose decoded before it, matching the per-frame deltas the converter writes).
+
+Differences from the joint path:
+
+| | `arx_x5` / `joint` | `tianji_wuji` / `ee` |
+| --- | --- | --- |
+| Robot vector | 14-D absolute joints | 58-D hybrid (hands absolute, wrists camera-frame deltas) |
+| Language prompt | `Robot: Dual ARX5`, `joint`/`gripper` state tags | `Robot: Tianji Wuji`, `joint`/`eef` state tags |
+| Latent action width | 32 (released head) | 64 (`--latent-action-dim`; the base head is re-initialized) |
+| Normalization statistics | released `checkpoints/robodojo-norm/norm_stats.json` | computed from the converted dataset into `checkpoints/robodojo-norm-tianji_wuji-ee/` |
+| Model action mode | `absolute` | `absolute` (the wrist delta lives in the representation, not the action mode) |
+
+`PadAction` pads the robot vector to the latent width and would silently truncate anything wider, so both training and evaluation refuse a latent narrower than the robot (`check_latent_action_width`). Evaluation also refuses a `norm_stats.json` whose action width is not 58.
+
+```bash
+# 1. Convert the trajectory data with the official converter in the wuji58 representation
+python ../../scripts/transform_lerobot_v30_format.py --representation wuji58 ...   # writes 58 columns + repr_mode
+# 2. OpenDM JSONL (checks names == MOTOR_NAMES and repr_mode == wrist_rel_te2)
+bash process_data.sh RoboDojo robodojo-wuji tianji_wuji ee --source <lerobot_v30_wuji58_root>
+# 3. Train (latent 64, statistics computed on first run)
+bash train.sh RoboDojo robodojo-wuji tianji_wuji ee 0 0,1,2,3,4,5,6,7
+# 4. Evaluate
+bash eval.sh RoboDojo <task> robodojo-wuji tianji_wuji ee 0 0 1 opendm robodojo
+```
+
+Keep `wrist_frame` in [deploy.yml](deploy.yml) equal to the frame the data was converted with (`te2` by default). The released `DM05-MEM-Robodojo-Sim` checkpoint is 14-D and does not serve this contract.

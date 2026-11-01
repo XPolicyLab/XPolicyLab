@@ -41,6 +41,28 @@ def _require_dir(value: Any, name: str) -> Path:
     return path
 
 
+def _stats_action_width(stats_path: Path) -> int:
+    """Width of the ``action`` stats in a WAM ``dataset_stats.json`` (``global_min`` length)."""
+    import json
+
+    with open(stats_path, "r", encoding="utf-8") as handle:
+        stats = json.load(handle)
+    try:
+        return len(stats["action"]["default"]["global_min"])
+    except (KeyError, TypeError) as exc:
+        raise ValueError(f"Cannot read action width from {stats_path}: {exc}") from exc
+
+
+def _require_stats_width(stats_path: Path, expected: int) -> None:
+    width = _stats_action_width(stats_path)
+    if width != expected:
+        raise ValueError(
+            f"dataset_stats_path {stats_path} carries {width}-D action stats, but this run "
+            f"expects {expected}-D actions (env_cfg_type / action_type contract). "
+            "Point dataset_stats_path and checkpoint_path at a checkpoint trained for this embodiment."
+        )
+
+
 def _activate_runtime(runtime_root: Path) -> None:
     source = str(runtime_root / "src")
     sys.path[:] = [source] + [entry for entry in sys.path if entry != source]
@@ -138,6 +160,7 @@ class Model(ModelTemplate):
             self.model_cfg.get("dataset_stats_path", "config/dataset_stats.json"),
             "dataset_stats_path",
         )
+        _require_stats_width(stats_path, self.action_dim)
         config_path = _require_file(
             self.model_cfg.get("train_config_path", "config/eval_model.yaml"),
             "train_config_path",
@@ -272,4 +295,4 @@ class Model(ModelTemplate):
         )
 
 
-__all__ = ["Model", "build_training_exact_canvas"]
+__all__ = ["Model", "build_training_exact_canvas", "_stats_action_width", "_require_stats_width"]

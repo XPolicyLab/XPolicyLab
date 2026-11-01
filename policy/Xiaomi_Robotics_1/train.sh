@@ -30,13 +30,19 @@
 #   WANDB_MODE       wandb mode (default: offline; set to online to upload)
 #   ALLOW_NON_EE_ACTION  set to 1 to train with action_type != ee anyway
 #
+# WUJI 58-D hybrid: when env_cfg_type is registered with two 20-DOF hands
+# (tianji_wuji in XPolicyLab/utils/robot/_robot_info.json) and action_type is
+# ee, the run uses the wuji58 slot layout written by process_data.sh and the
+# frequency-loss exclusion of the base-velocity slots [17:20] is lifted, since
+# those slots now carry left-wrist dims (model.params.model.freq_excluded_dims=[]).
+#
 # Multi-node: WORLD_SIZE, RANK, MASTER_ADDR, and MASTER_PORT are read by the
 # vendored launcher; gpu_id sets the per-node GPU count.
 
 set -euo pipefail
 
 usage() {
-    sed -n '2,34p' "${BASH_SOURCE[0]}" | sed 's/^#\{1\} \{0,1\}//'
+    sed -n '2,41p' "${BASH_SOURCE[0]}" | sed 's/^#\{1\} \{0,1\}//'
 }
 
 if [[ "$#" -lt 6 ]]; then
@@ -75,6 +81,20 @@ fi
 
 POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XR1_DIR="${POLICY_DIR}/xiaomi_robotics_1/xr1"
+ROBOT_INFO="${POLICY_DIR}/../../utils/robot/_robot_info.json"
+
+# WUJI 58-D hybrid detection from the shared robot registry (stdlib json only,
+# like utils/get_action_dim.sh): ee_dim == [20, 20] with action_type == ee.
+layout_overrides=()
+if [[ "${action_type}" == "ee" && -f "${ROBOT_INFO}" ]] && python3 - "${ROBOT_INFO}" "${env_cfg_type}" <<'PY'
+import json, sys
+info = json.load(open(sys.argv[1], encoding="utf-8")).get(sys.argv[2])
+sys.exit(0 if info and list(info.get("ee_dim", [])) == [20, 20] and len(info.get("arm_dim", [])) == 2 else 1)
+PY
+then
+    layout_overrides+=("model.params.model.freq_excluded_dims=[]")
+    echo "[Xiaomi_Robotics_1] layout      : wuji58 (freq_excluded_dims lifted)"
+fi
 
 # Naming mirrors process_data.sh so a converted dataset is found without
 # repeating any path: commas in a multi-task ckpt_name become underscores.
@@ -155,6 +175,7 @@ bash scripts/train.sh \
     "model.params.pretrained=${pretrained_path}" \
     "model.params.model.async_train=${ASYNC_TRAIN:-true}" \
     "hydra.run.dir=${run_root}/hydra/rank_\${oc.env:RANK,0}" \
+    ${layout_overrides[@]+"${layout_overrides[@]}"} \
     ${hydra_overrides[@]+"${hydra_overrides[@]}"}
 
 echo "[Xiaomi_Robotics_1] training finished. Evaluate with:"

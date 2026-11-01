@@ -9,10 +9,17 @@ seed=${5:?seed required}
 gpu_id=${6:?gpu_id required}
 shift 6 || true
 
-if [[ "${action_type}" != "joint" ]]; then
-  echo "G05 train.sh currently supports action_type=joint, got ${action_type}" >&2
-  exit 2
-fi
+# WUJI 58-D hybrid (tianji_wuji, action_type=ee): hands as absolute joints, wrists as
+# xyz+rot6d poses in the TE2 camera frame. Layout: XPolicyLab/utils/wuji58.py.
+wuji58=0
+case "${env_cfg_type}:${action_type}" in
+  tianji_wuji:ee) wuji58=1 ;;
+  *:joint) ;;
+  *)
+    echo "G05 train.sh supports action_type=joint, or action_type=ee for env_cfg_type=tianji_wuji; got ${env_cfg_type} ${action_type}" >&2
+    exit 2
+    ;;
+esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 G05_ROOT="${G05_ROOT:-${SCRIPT_DIR}/G05}"
@@ -64,6 +71,25 @@ for required in meta data videos; do
     exit 3
   fi
 done
+
+if [[ "${wuji58}" == "1" ]]; then
+  # The export must be the 58-D hybrid layout, stamped by the official converter.
+  "${PYTHON_BIN}" - "${ROBODOJO_LEROBOT_V30_ROOT}/meta/info.json" <<'PY' || exit 3
+import json, sys
+path = sys.argv[1]
+try:
+    info = json.load(open(path, encoding="utf-8"))
+except Exception as exc:
+    sys.exit(f"Cannot read {path}: {exc}")
+mode = info.get("repr_mode")
+width = (info.get("features", {}).get("action", {}) or {}).get("shape")
+if mode != "wrist_rel_te2" or list(width or []) != [58]:
+    sys.exit(
+        f"{path}: expected repr_mode=wrist_rel_te2 with a 58-D action column, got repr_mode={mode!r} shape={width!r}.\n"
+        "Build the dataset with: python XPolicyLab/scripts/transform_lerobot_v30_format.py --representation wuji58 ..."
+    )
+PY
+fi
 
 if [[ "${gpu_id}" == *","* ]]; then
   IFS=',' read -r -a _gpus <<< "${gpu_id}"
@@ -137,9 +163,15 @@ case "${train_mode}" in
     ;;
 esac
 
+if [[ "${wuji58}" == "1" ]]; then
+  default_task_config="robodojo_tianji_wuji_ee"
+else
+  default_task_config="robodojo_arx_x5_joint"
+fi
+
 exec bash scripts/run/finetune.sh \
   "${num_gpus}" \
-  "${G05_TASK_CONFIG:-robodojo_arx_x5_joint}" \
+  "${G05_TASK_CONFIG:-${default_task_config}}" \
   "seed=${seed}" \
   "exp_name=${EXP_NAME}" \
   "logger.mode=${G05_LOGGER_MODE:-online}" \

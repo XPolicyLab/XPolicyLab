@@ -1,0 +1,30 @@
+# WUJI 58-D hybrid parts_meta for GroupedPaddingMerger (tianji_wuji, action_type=ee).
+#
+# Layout is the WUJI SimBench `wrist58` representation, byte for byte
+# (XPolicyLab/utils/wuji58.py): per side 20 absolute hand joints + a 9-D xyz+rot6d
+# palm pose in the fixed TE2 head-camera frame (state absolute, action relative).
+#
+# 4 groups in flat tensor order, one key per group, so nothing is padded:
+#   left_hand(20) | left_wrist(9) | right_hand(20) | right_wrist(9) = 58D
+#
+# Tokenizer parts_meta must match this layout (configs/tokenizer/actioncodec_wuji58.yaml):
+#   parts_meta: {left_hand: 20, left_wrist: 9, right_hand: 20, right_wrist: 9}
+#
+# Usage (action_state_merger in task config):
+#   _target_: g05.data_processor.transforms.action_state_merger.GroupedPaddingMerger
+#   max_action_shape_meta: ${oc.load:configs/data/parts_meta/wuji58.yaml,parts_meta}
+#   max_state_shape_meta:  ${oc.load:configs/data/parts_meta/wuji58.yaml,parts_meta}
+#   merge_spec:            ${oc.load:configs/data/parts_meta/wuji58.yaml,merge_spec}
+#   merge: true
+
+parts_meta:
+  left_hand: 20
+  left_wrist: 9
+  right_hand: 20
+  right_wrist: 9
+
+merge_spec:
+  left_hand: [left_hand]
+  left_wrist: [left_wrist]
+  right_hand: [right_hand]
+  right_wrist: [right_wrist]

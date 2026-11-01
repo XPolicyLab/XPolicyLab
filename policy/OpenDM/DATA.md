@@ -77,3 +77,18 @@ The array strings above are schematic; actual rows contain 14 numbers. Relative 
 Rerunning conversion removes obsolete generated episode files and rebuilds the index. Source videos remain unchanged.
 
 After relocating the source, remove the output directory's old `media` symlink (only the link, leaving the source videos intact), then rerun conversion with the new `--source` path and the intended `--output` path. The converter does not replace an existing or broken `media` symlink. If only the output moves, rerun conversion with its new `--output` path to refresh the generated absolute paths. Preserve the original task selection when reconverting.
+
+## WUJI 58-D hybrid contract (`tianji_wuji` / `ee`)
+
+Source: a LeRobot v2.1/v3.0 export written by the official XPolicyLab converters with `--representation wuji58` (`scripts/transform_lerobot_v{21,30}_format.py`). The converter only accepts it when `meta/info.json` carries `"repr_mode": "wrist_rel_te2"` (and `"robot": "tianji_wuji"` when present) and both `observation.state` and `action` have shape `[58]` with `names` equal to `XPolicyLab.utils.wuji58.MOTOR_NAMES`:
+
+```text
+0..19   left_hand_finger{1..5}_joint{1..4}   absolute joint positions, radians (finger-major)
+20..28  left_wrist_{x,y,z,r00,r01,r02,r10,r11,r12}
+        state : palm pose in the TE2 head-camera frame (xyz + first two rows of R)
+        action: camera-frame delta of the recorded target vs. that frame's measured wrist
+29..48  right_hand_finger{1..5}_joint{1..4}
+49..57  right_wrist_{...}
+```
+
+Rows are copied unchanged (`state[t]`, `action[t]`, no temporal shift), exactly as for the joint export; only the schema check and the manifest differ. `dataset.json` records `contract: wuji58`, `action_type: ee`, `repr_mode`, `robot` and `wrist_frame: te2`, and training refuses a dataset whose contract differs from the launch arguments. Everything else in this document — selection, `dlc` exclusion, cameras, time alignment, history, output layout — applies unchanged; each row simply holds 58 numbers.

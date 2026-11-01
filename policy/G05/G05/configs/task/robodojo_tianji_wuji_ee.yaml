@@ -1,0 +1,94 @@
+# @package _global_
+# RoboDojo tianji_wuji (dual 7-DOF arms + dual 20-DOF Wuji hands) in the WUJI 58-D hybrid
+# layout: 20 absolute hand joints + 9-D xyz+rot6d wrist pose per side, action_type=ee.
+# Layout and conventions: XPolicyLab/utils/wuji58.py; parts: configs/data/parts_meta/wuji58.yaml.
+defaults:
+  - override /model: g05
+  - override /tokenizer: actioncodec_wuji58
+  - override /data: robodojo_wuji58
+  - _self_
+
+datastatics_path: null
+exp_name: g05_robodojo_tianji_wuji_ee
+eval_steps: 500
+checkpointing_steps: 1000
+
+model:
+  pretrained_ckpt: ${oc.env:G05_PRETRAINED_CKPT,checkpoints/g05-base/checkpoints/model_state_dict.pt}
+  use_torch_compile: false
+  use_8bit_optimizer: false
+  backbone_lr_multiplier: 1.0
+  batch_size: 2
+  # pi0.5 uses global batch_size=256. In G0.5 this is per-GPU batch,
+  # so 2 * 16 GPUs * 8 grad-accum steps = 256 effective global batch.
+  grad_accumulation_steps: 8
+  max_epochs: null
+  max_steps: null
+  learning_rate: 1.0e-04
+  warmup_steps: 250
+  constant_end_ratio: 0.95
+  lr_min_ratio: 0.90
+  weight_decay: 1.0e-10
+  betas:
+    - 0.9
+    - 0.95
+  num_workers: 8
+  find_unused_parameters: true
+  model_arch:
+    hf_processor_path: ${oc.env:G05_HF_PROCESSOR_PATH,checkpoints/g05-base/hf_processor}
+    position_ids_type: pi0fast
+    checkpoint_joint: false
+    checkpoint_vision: true
+    checkpoint_action_decoder: true
+    action_dim: 58
+    proprio_dim: 58
+    discrete_action: true
+    continuous_action: true
+    fm:
+      joint_training: true
+      fm_weight: 1.0
+      num_flow_samples: 8
+    ar:
+      block_wise_autoregressive: false
+      ce_weight: 1.0
+  processor:
+    num_output_cameras: 3
+    num_input_cameras: 3
+    camera_size_config:
+      exterior: [256, 256]
+      wrist_left: [256, 256]
+      wrist_right: [256, 256]
+    norm_default_mode: q01/q99
+    norm_exception_mode: null
+    vlm_input_action_norm_default_mode: null
+    vlm_input_action_norm_exception_mode: null
+    tokenizer_params:
+      local_files_only: true
+    action_state_merger:
+      _target_: g05.data_processor.transforms.action_state_merger.GroupedPaddingMerger
+      max_action_shape_meta: ${oc.load:configs/data/parts_meta/wuji58.yaml,parts_meta}
+      max_state_shape_meta: ${oc.load:configs/data/parts_meta/wuji58.yaml,parts_meta}
+      merge_spec: ${oc.load:configs/data/parts_meta/wuji58.yaml,merge_spec}
+      merge: true
+  tokenizer:
+    vq_config:
+      ckpt_dir: ${oc.env:G05_ACTION_TOKENIZER_CKPT,checkpoints/g05-base/action_tokenizer_hf/model.safetensors}
+
+tokenizer:
+  vq_config:
+    ckpt_dir: ${oc.env:G05_ACTION_TOKENIZER_CKPT,checkpoints/g05-base/action_tokenizer_hf/model.safetensors}
+    block_wise_autoregressive: false
+    model_arch:
+      codebook_size: 4096
+    num_residuals: 2
+    rule_based_key_patterns: []
+    rule_based_binarize_threshold: 0.0
+    use_group_markers: true
+    group_order_shuffle: false
+    absent_key_fill_value: -100.0
+    dropout_noop_parts: false
+
+logger:
+  type: wandb
+  mode: disabled
+  project: g05_robodojo

@@ -41,6 +41,7 @@ XPolicyLab 是策略代码与评测环境之间的共享层。每个模型的依
 - [标准数据格式](#-标准数据格式)
   - [图像解码只能走 `decode_image_bit`](#图像解码只能走-decode_image_bit)
   - [官方 LeRobot 转换](#官方-lerobot-转换)
+  - [WUJI 58 维混合表示（tianji_wuji）](#wuji-58-维混合表示tianji_wuji)
 - [数据与 Checkpoint](#-数据与-checkpoint)
 - [接入你自己的策略](#-接入你自己的策略)
 - [编程 Agent](#-编程-agent)
@@ -490,13 +491,50 @@ python scripts/transform_lerobot_v21_format.py "<bench_name>.*.*" \
 - **`D` 是按最宽维度 padding，不是按机器人。** 每条臂会零填充到匹配目标中最宽的维度，因此一个数据集可混多种机器人；`robot_type` 为 `unified_robot`，电机名为 `left_joint_<i>` / `right_joint_<i>`。
 - **三个相机键始终存在。** 源数据缺失的相机会用黑帧填充，使特征跨机器人稳定。
 - **图像为 RGB**，经 `decode_image_bit` 解码后不再交换通道（见[上文](#图像解码只能走-decode_image_bit)）。
-- **仅支持关节空间双臂。** 二者读取 `*_arm_joint_states` / `*_ee_joint_states`，对仅含位姿或单臂键的轨迹会失败。
+- **默认为关节空间双臂。** 二者读取 `*_arm_joint_states` / `*_ee_joint_states`，对仅含位姿或单臂键的轨迹会失败。唯一的替代是 `--representation wuji58`（[见下文](#wuji-58-维混合表示tianji_wuji)），它改读位姿与 20 维手部键。
 - **视频默认为 AV1。** `DatasetConfig.vcodec` 选择编码器：`libsvtav1` 为 AV1，`h264_nvenc` 为 H.264。
 - 两个版本除数据集版本外，只在编码吞吐上不同：v3.0 用 8 个 worker 写图，并以 CRF 18 流式写视频。
 
 </details>
 
 
+
+
+### WUJI 58 维混合表示（tianji_wuji）
+
+`tianji_wuji` 机器人 —— 双 7 自由度机械臂，各带一只 20 自由度 Wuji 灵巧手 —— 以**末端空间**驱动，采用 [WUJI SimBench](https://github.com/SomaStacks/WUJI_SimBench) 定义的混合表示：每侧 20 个绝对手部关节，加一个 9 维 `xyz + rot6d` 腕部（手掌）位姿。共享编解码器 `XPolicyLab.utils.wuji58`（`utils/wuji58.py`）是该布局的唯一实现；适配器不得自行写出切片、旋转约定或相机坐标系。
+
+<details>
+<summary>布局与约定</summary>
+
+| 切片 | 内容 | State | Action |
+| --- | --- | --- | --- |
+| `[0:20]` | 左手关节，按手指优先排序（`finger1_joint1` … `finger5_joint4`） | 绝对值 | 绝对目标 |
+| `[20:29]` | 左腕 `x y z` + rot6d | 绝对值，在腕部坐标系中 | 相对当前实测腕部的增量 |
+| `[29:49]` | 右手关节 | 绝对值 | 绝对目标 |
+| `[49:58]` | 右腕 `x y z` + rot6d | 绝对值，在腕部坐标系中 | 相对当前实测腕部的增量 |
+
+- 四元数为 `wxyz`（XPolicyLab 的位姿约定）；rot6d 是旋转矩阵前两**行**展平。
+- 腕部坐标系默认为 WUJI SimBench 的 **TE2** 头部相机（`wrist_frame: te2`）；`world` 保持世界坐标。支持该布局的每个适配器都有这个 `deploy.yml` 键，转换器也有同名参数。
+- 腕部相对动作是该坐标系下的空间增量：`dp = p_target - p_current`，`dR = R_target @ R_current.T`，**逐帧**相对该帧实测腕部形成（WUJI SimBench 的记录方式，也是转换器的输出方式）。由于 XPolicyLab 把整个动作块一次交给环境，`decode_action_chunk58` 把第 0 个元素相对观测解码，之后每个元素相对前一个已解码的位姿解码（`reference="iterative"`，默认）；`Wuji58ChunkDecoder` 是逐步相对实时腕部解码的精确版本，`reference="chunk_start"` 仅供把增量相对块首帧形成的数据加载器使用（Xiaomi-Robotics-1）。
+
+</details>
+
+**通信格式不变。** 环境客户端仍发送标准键 —— `left_ee_pose` / `right_ee_pose` `(7,)` 与 `left_ee_joint_state` / `right_ee_joint_state` `(20,)` —— 并以相同的键收回绝对目标，因此在 `action_type=ee` 下 `get_robot_action_dim_info` 给出的打包契约是 54 维（`arm_dim: [7, 7]`，`ee_dim: [20, 20]`）。58 维向量只存在于策略内部，由 `wuji58.is_wuji58(robot_action_dim_info, action_type)` 选择。
+
+注册遵循通常的双文件规则：`utils/robot/_robot_info.json` 已随仓库附带 `tianji_wuji`；父工作区必须在 `env_cfg/robot/_robot_info.json` 中加入相同条目，并提供 `config.robot` 为 `tianji_wuji` 的 `env_cfg/tianji_wuji.yml`，其环境客户端必须发布 20 维手部键。运行方式：
+
+```bash
+bash policy/<POLICY>/eval.sh RoboDojo <task_name> <ckpt_name> tianji_wuji ee <seed> ...
+```
+
+两个官方转换器用 `--representation wuji58`（可选 `--wrist_frame te2|world`）输出该布局：`observation.state` / `action` 变为 58 个 float32 列，列名为 `wuji58.MOTOR_NAMES`（`left_hand_finger1_joint1` … `right_wrist_r12`），`robot_type` 为 `tianji_wuji`，`meta/info.json` 会盖上 `repr_mode: wrist_rel_te2`、`robot` 与 `wrist_frame`，让加载器能拒绝不匹配的导出，而不是靠宽度猜测。未记录位姿目标的仿真导出会按键用下一步状态模拟目标。
+
+```bash
+python scripts/transform_lerobot_v30_format.py "RoboDojo.*.tianji_wuji" --repo_id wuji58_v30 --representation wuji58
+```
+
+已实现该布局的适配器 —— 各自 README 中有"WUJI 58-D hybrid"小节：[InternW0_delta](policy/InternW0_delta/README.md)、[Xiaomi-Robotics-1](policy/Xiaomi_Robotics_1/README.md)、[OpenDM](policy/OpenDM/README.md)、[G0.5](policy/G05/README.md)、[OpenWAM](policy/OpenWAM/README.md)。编解码器契约由 `tests/test_wuji58.py` 固定；适配器侧的部分由各适配器自己的 CPU 测试固定（`policy/<POLICY>/tests/`，或 `policy/InternW0_delta/test_wuji58_adapter.py`）。
 
 ## 💾 数据与 Checkpoint
 

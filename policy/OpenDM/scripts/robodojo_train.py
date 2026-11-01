@@ -32,6 +32,7 @@ from opendm.exp.dm05_exp import DM05Exp as BaseExp
 from opendm.exp.dm05_exp import DM05ModelConfig as BaseModelConfig
 from opendm.exp.dm05_exp import DM05OptimizerConfig as BaseOptimizerConfig
 from opendm.exp.dm05_exp import DM05TrainerConfig as BaseTrainerConfig
+from XPolicyLab.policy.OpenDM.model import build_state_desc, check_latent_action_width, resolve_embodiment
 
 from .recipe import (
     BASE_LR,
@@ -73,11 +74,33 @@ class HistoryPixelTransform:
 @dataclass
 class DM05ModelConfig(BaseModelConfig):
     chunk_size: int = 50
+    # Shared latent action width (``DM05Config.action_dim``). 32 is the released
+    # DM0.5-Mem head and holds the 14-D joint vector; the 58-D WUJI hybrid trains with 64.
+    latent_action_dim: int = 32
     precision_policy: str = "fp32_mixed"
     bf16: bool = True
     llm_attn_implementation: str = "flex_attention"
     vision_attn_implementation: str = "flash_attention_2"
     action_attn_implementation: str = "sdpa"
+
+    def _config_overrides(self) -> dict:
+        return {**super()._config_overrides(), "action_dim": int(self.latent_action_dim)}
+
+    def _load_base_checkpoint_model(self):
+        from opendm.model.dm05.dm05_arch import DM05Config, DM05ForConditionalGeneration
+
+        config = DM05Config.from_pretrained(self.model_name_or_path)
+        base_width = int(config.action_dim)
+        for attr, value in self._config_overrides().items():
+            setattr(config, attr, value)
+        # A wider head than the base checkpoint re-initializes action_in_proj /
+        # action_out_proj; every other weight loads unchanged.
+        return DM05ForConditionalGeneration.from_pretrained(
+            self.model_name_or_path,
+            config=config,
+            dtype=self._torch_dtype(),
+            ignore_mismatched_sizes=base_width != int(self.latent_action_dim),
+        )
 
 
 @dataclass
@@ -109,14 +132,29 @@ class DM05DataConfig(BaseDataConfig):
     data_root: str = ""
     action_mode: ActionMode = ActionMode.ABSOLUTE
     is_history: bool = True
+    robot_type: str = "Dual ARX5"
+    # Set by the launcher from the model config; PadAction pads (never truncates) to it.
+    latent_action_dim: int = 32
+    compute_norm_stats_if_missing: bool = False
+
+    def manifest(self):
+        return json.loads((Path(self.data_root) / "dataset.json").read_text())
+
+    def embodiment(self):
+        manifest = self.manifest()
+        return resolve_embodiment(
+            manifest["env_cfg_type"], manifest.get("action_type", "joint"), manifest["robot_action_dim_info"]
+        )
 
     def _dataset_info(self):
         root = Path(self.data_root)
-        manifest = json.loads((root / "dataset.json").read_text())
-        dims = manifest["robot_action_dim_info"]
-        state_desc = []
-        for arm, ee in zip(dims["arm_dim"], dims["ee_dim"], strict=True):
-            state_desc.extend(["joint"] * arm + ["gripper"] * ee)
+        manifest = self.manifest()
+        embodiment = self.embodiment()
+        if manifest["action_dim"] != embodiment["action_dim"]:
+            raise ValueError(
+                f"dataset.json action_dim={manifest['action_dim']} but the "
+                f"{embodiment['name']} contract is {embodiment['action_dim']}-D"
+            )
         register_dataset(
             {
                 self.dataset_name: {
@@ -124,8 +162,8 @@ class DM05DataConfig(BaseDataConfig):
                     "image_dir": manifest["image_dir"],
                     "image_keys": IMAGE_KEYS,
                     "image_prompts": IMAGE_PROMPTS,
-                    "robot_type": "Dual ARX5",
-                    "state_desc": state_desc,
+                    "robot_type": self.robot_type,
+                    "state_desc": build_state_desc(embodiment),
                     "fps": manifest["fps"],
                     "speed": "0.5",
                 }
@@ -161,9 +199,9 @@ class DM05DataConfig(BaseDataConfig):
                     is_history=True,
                     max_history_images=20,
                 ),
-                PadAction(
-                    32
-                ),  # The model's shared latent action width; robot width is read from metadata.
+                # The model's shared latent action width; the robot width comes from
+                # metadata and train_release() refuses a latent narrower than it.
+                PadAction(int(self.latent_action_dim)),
             ]
         )
         dataset = JsonlDataset(
@@ -226,13 +264,23 @@ class DM05Exp(BaseExp):
 
     def train_release(self, *, stop_after=None):
         set_seed(self.trainer_config.seed)
-        # Always use the released RoboDojo stats, never the EEF pretraining stats.
+        root = Path(self.data_config.data_root)
+        embodiment = self.data_config.embodiment()
+        self.data_config.latent_action_dim = int(self.model_config.latent_action_dim)
+        check_latent_action_width(embodiment["action_dim"], self.data_config.latent_action_dim)
+        # Statistics: the released 14-D RoboDojo joint stats for arx_x5 (never the EEF
+        # pretraining stats); for wuji58, or on request, q01/q99 computed from this dataset.
         stats = self.data_config.norm_stats_path(self.model_config.chunk_size)
+        if not stats.is_file() and self.data_config.compute_norm_stats_if_missing:
+            self.data_config.compute_norm_stats(
+                self.model_config.chunk_size,
+                num_workers=self.trainer_config.dataloader_num_workers,
+            )
+            stats = self.data_config.norm_stats_path(self.model_config.chunk_size)
         if not stats.is_file():
             raise FileNotFoundError(
                 f"Download the RoboDojo normalization statistics first: {stats}"
             )
-        root = Path(self.data_config.data_root)
         config = {
             "experiment": asdict(self),
             "upstream_commit": UPSTREAM_COMMIT,
@@ -253,6 +301,8 @@ class DM05Exp(BaseExp):
                 self.trainer_config.num_train_steps, self.trainer_config.num_train_steps
             ),
             "packages": {d.metadata["Name"]: d.version for d in distributions()},
+            "embodiment": embodiment["name"],
+            "latent_action_dim": self.data_config.latent_action_dim,
             "data_recipe": {
                 "history_slots": 20,
                 "history_fps": 1,
