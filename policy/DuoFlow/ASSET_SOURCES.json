@@ -1,0 +1,56 @@
+{
+  "model": {
+    "repo_id": "open-gigaai/GigaBrain-0.7-3.5B-RoboTwin2.0-Clean",
+    "revision": "3de7c7e60e5779d016c8f148eed19c4b99cd2a95",
+    "files": [
+      "config.json",
+      "inference_config.json",
+      "norm_stats.json",
+      "diffusion_pytorch_model.bin"
+    ]
+  },
+  "native_release": {
+    "repository": "https://github.com/open-gigaai/giga-brain-0",
+    "base_commit": "5f450a9d3368876ddb6e4b5bd7134afba1801fb9",
+    "source": "exact full50 runtime snapshot; see vendor notices"
+  },
+  "backbone_lib": {
+    "repository": "https://github.com/open-gigaai/giga-models",
+    "version": "1.1.0",
+    "source": "exact full50 runtime snapshot with compatibility changes"
+  },
+  "xpolicylab": {
+    "repository": "https://github.com/XPolicyLab/XPolicyLab",
+    "reference": "main files retrieved 2026-10-19",
+    "commit": null
+  },
+  "paligemma2_tokenizer": {
+    "repository": "onnx-community/paligemma2-3b-pt-224",
+    "revision": "b0a2d6f61eff89480380bd1714ea5c43aadc35b5",
+    "files": [
+      "config.json",
+      "preprocessor_config.json",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ]
+  },
+  "fast_tokenizer": {
+    "repository": "physical-intelligence/fast",
+    "revision": "ec4d7aa71691cac0b8bed6942be45684db2110f4",
+    "files": [
+      "processing_action_tokenizer.py",
+      "processor_config.json",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ]
+  },
+  "adapter": {
+    "repo_id": "Sva1in/DuoFlow",
+    "revision": "889544d8c10ab3c7cfba7f8a7bba35b405a16149",
+    "files": [
+      "duoflow_adapter.safetensors"
+    ]
+  }
+}
