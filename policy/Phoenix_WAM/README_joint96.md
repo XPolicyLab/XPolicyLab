@@ -1,3 +1,3 @@
-# Phoenix_WAM Joint96
+# Phoenix-MWA Joint96
 
-See [Phoenix_WAM policy instructions](README.md) for installation, data, training status, evaluation and checkpoint downloads.
+See [Phoenix-MWA policy instructions](README.md) for installation, data, training status, evaluation and checkpoint downloads.
