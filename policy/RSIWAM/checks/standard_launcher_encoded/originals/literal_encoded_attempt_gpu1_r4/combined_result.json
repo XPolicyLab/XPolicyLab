@@ -1,0 +1,66 @@
+{
+  "status": "DERIVED_LITERAL_PLAIN_AND_ENCODED_10X20_PASS",
+  "commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "prior_plain": {
+    "status": "PRIOR_PLAIN_FULL10X20_PRESERVED_AND_RELEASED",
+    "counts": {
+      "episode_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "episodes_finished": 10,
+      "action_steps": 200,
+      "eval_finished": true,
+      "traceback": false
+    },
+    "source_hashes": {
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_config_r2.json": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/status.json": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/guardian_result.json": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/release_receipt.json": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_plain_orphan_reconciliation_r1/receipt.json": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e"
+    },
+    "reconciliation_receipt_sha256": "b3076e5d7686577089a82bc70f7e05cd2b6c258ac478075edef2071a51324e5e",
+    "original_overall_status": "FAILED",
+    "original_plain_cleanup_failure_preserved": [
+      "reservation: Busy('Inherited lifetime FD still held; reservation retained')"
+    ],
+    "plain_will_not_run_again": true,
+    "encoded_previously_started": false
+  },
+  "encoded": {
+    "counts": {
+      "episode_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "episodes_finished": 10,
+      "action_steps": 200,
+      "eval_finished": true,
+      "traceback": false
+    },
+    "result_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/guardian_result.json",
+    "result_sha256": "d706231f5c199c228870fc1b15856fb670009ec8ce6c8f68a6838e799865de46",
+    "release_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/release_receipt.json",
+    "release_sha256": "1dc72284467a275077e9ff67b1d8ea6c4d61b9fdb24d5a3bc80a48b199ef281e"
+  },
+  "original_plain_overall_failure_rewritten": false,
+  "plain_executed_in_this_continuation": false,
+  "finished_at": 1793596203.9333491
+}

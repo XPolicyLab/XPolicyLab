@@ -1,0 +1,66 @@
+{
+  "status": "PASS_STANDARD_LITERAL_PLAIN_AND_ENCODED_WITH_PRESERVED_PRIOR_PLAIN_CLEANUP_FAILURE",
+  "commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "mode": "encoded",
+  "reported_encoded_debug_loop": {
+    "episodes": 10,
+    "actions": 200,
+    "literal_exit_code": 0,
+    "guardian_exit_code": 0,
+    "eval_finished": true,
+    "traceback": false
+  },
+  "owner_reported_release": {
+    "initializer_released": true,
+    "reservation_released": true,
+    "cleanup_errors": [],
+    "reservation_release_retry_count": 2
+  },
+  "root_final_verification": {
+    "status": "PASS_INDEPENDENT_LOCAL_LITERAL_ENCODED_AND_PRESERVED_PLAIN",
+    "source": "source_review/OWNER_CAPTURE_LOCAL_VERIFICATION.json",
+    "remote_fresh_audit_collector": "owner",
+    "root_verification_method": "independent local archive/hash/count/exact-lease/kernel-lock/owned-process evidence verification",
+    "not_root_remote_captured": true,
+    "additional_actual_root_remote_scoped_check": "ROOT_SCOPED_CLEANUP_PROJECTION.json"
+  },
+  "overall_independent_acceptance": "STANDARD_SYNTHETIC_DEBUG_ENTRY_ACCEPTED",
+  "plain_original_overall_status_preserved": "FAILED",
+  "plain_debug_loop_previously_completed": {
+    "episodes": 10,
+    "actions": 200
+  },
+  "plain_cleanup_independently_reconciled": true,
+  "recorded_combined_result_status": "DERIVED_LITERAL_PLAIN_AND_ENCODED_10X20_PASS",
+  "combined_source_status_not_substitute_for_final_independent_verification": true,
+  "mode_evidence_scope": "Actual live server selected environment records DEBUG_OBS_ENCODED=1; no independent client environment/wire payload capture.",
+  "limitations": [
+    "Official debug TestEnv uses synthetic inputs; these are interface/launcher checks, not task success rate or native RoboDojo parity.",
+    "No new numerical plain/encoded action-byte parity check is established by this 10x20 evidence.",
+    "The earlier plain cleanup failure and its independent reconciliation remain visible; no old failure is rewritten.",
+    "Full 6300 benchmark and official leaderboard review are separate, unfinished work.",
+    "Cleanup acceptance combines the owner-captured exact-lease/owned-process/kernel-lock evidence independently verified locally and a separate root actual scoped cleanup check. Three extra global scans remain incomplete; no successful full-host FD scan is claimed."
+  ],
+  "owner_capture_local_verification": {
+    "status": "PASS_INDEPENDENT_LOCAL_LITERAL_ENCODED_AND_PRESERVED_PLAIN",
+    "source": "source_review/OWNER_CAPTURE_LOCAL_VERIFICATION.json",
+    "remote_audit_collector": "owner",
+    "independent_root_check": "local only",
+    "owned_identities_absent": 338,
+    "actual_private_exclusive_lock_probe_succeeded": true
+  },
+  "acceptance_scope": "Standard literal entry, plain and encoded 10 episodes x20 actions each, with plain original cleanup failure and later independent closure preserved; not a full-host process-visibility claim.",
+  "extra_root_global_scans": "Three incomplete original attempts remain unchanged with hashes in AUDIT_HISTORY_PROJECTION.json. They are not relabelled PASS.",
+  "root_scoped_actual_cleanup": {
+    "status": "SCOPED_CLEANUP_CHECKS_COMPLETE",
+    "projection": "ROOT_SCOPED_CLEANUP_PROJECTION.json",
+    "source_sha256": "cb8146d1d8ae64feb754e36cea11941e6ee4d558c61b1f772bb201f1e12e9183",
+    "recorded_identities_absent": 339,
+    "same_private_lock_exclusive_probe_performed": true,
+    "probe_released_immediately": true,
+    "database_modified": false,
+    "signals_sent": [],
+    "gpu_operations": 0,
+    "full_host_fd_scan_claimed": false
+  }
+}
