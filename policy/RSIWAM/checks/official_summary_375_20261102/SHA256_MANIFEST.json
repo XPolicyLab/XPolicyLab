@@ -1,0 +1,42 @@
+[
+  {
+    "path": "README.txt",
+    "bytes": 2266,
+    "sha256": "8d50d634174845774a336911109f56de92d7f695d49391280a0d19923f544fb4"
+  },
+  {
+    "path": "_summary.md",
+    "bytes": 6023,
+    "sha256": "961d63a2e5332bfcc6112743bdbf96f095e76be9b831ff8eae93fbfa002d52ad"
+  },
+  {
+    "path": "official_summary375_20261102T083348.921499Z.tar.gz",
+    "bytes": 107032,
+    "sha256": "b107a3272f59edd460fdc9e2e558ec6f6c9f34bfaa77eaaa19e250869e1b1ee0"
+  },
+  {
+    "path": "official_summary375_20261102T083348.921499Z.tar.gz.sha256",
+    "bytes": 117,
+    "sha256": "e5f4a4f427e6a2b2ae0a9c5d1295b58d7f331363b0ebe44aa7679c385699d6d0"
+  },
+  {
+    "path": "run_receipt.json",
+    "bytes": 2489,
+    "sha256": "06b519d37b66334232549a08ac3d88dd6e760885263b27cc92a01e3bfd7c66d5"
+  },
+  {
+    "path": "summarize.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "summarize.stdout.txt",
+    "bytes": 329,
+    "sha256": "3467ab8cea811f55e8e3f4f4a3cffd4cdd441c8f5a9bdf95441576fec432b3cf"
+  },
+  {
+    "path": "summary_explained.json",
+    "bytes": 6422,
+    "sha256": "d00c882cd885092277a98bbb8b6e9dac08d3c51284cda3beda1f99c96ad8d601"
+  }
+]
