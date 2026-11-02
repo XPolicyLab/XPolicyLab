@@ -1,0 +1,24 @@
+{
+  "status": "FOCUSED_REVIEW_NO_MATCHES",
+  "scope": "Only public_payload/; source_configs and collection working materials are not in the publication candidate.",
+  "reviewed_patterns": [
+    "private-key headers",
+    "GitHub access-token patterns",
+    "URL username/password userinfo",
+    "bearer credentials",
+    "nonempty password/secret/api_key/access_token/refresh_token/authorization/lease_token fields",
+    "email contact strings",
+    "known unrelated task recharge32",
+    "full policy/simulation environment fields"
+  ],
+  "matches": [],
+  "structural_review": "Selected originals contain this task's results, completion metadata, native observation/load evidence and policy identity. No broker configuration, full environment, full process inventory or unrelated task logs are included.",
+  "retained_metadata": [
+    "own-task runtime paths",
+    "ordinary PIDs",
+    "GPU UUIDs",
+    "recorded native observation metadata/hashes",
+    "existing video paths and SHA records"
+  ],
+  "limitations": "Focused pattern and structural review, not exhaustive secret detection. No content was silently redacted from files labelled originals."
+}

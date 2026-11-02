@@ -1,0 +1,132 @@
+{
+  "success_rate": 0.04,
+  "eval_time": 25,
+  "score": 12.199999999999992,
+  "details": {
+    "0": {
+      "layout_id": 0,
+      "success": false,
+      "score": 0.15
+    },
+    "1": {
+      "layout_id": 1,
+      "success": true,
+      "score": 1.0
+    },
+    "2": {
+      "layout_id": 2,
+      "success": false,
+      "score": 0.15
+    },
+    "3": {
+      "layout_id": 3,
+      "success": false,
+      "score": 0.15
+    },
+    "4": {
+      "layout_id": 4,
+      "success": false,
+      "score": 0.05
+    },
+    "5": {
+      "layout_id": 5,
+      "success": false,
+      "score": 0.15
+    },
+    "6": {
+      "layout_id": 6,
+      "success": false,
+      "score": 0.05
+    },
+    "7": {
+      "layout_id": 7,
+      "success": false,
+      "score": 0.0
+    },
+    "8": {
+      "layout_id": 8,
+      "success": false,
+      "score": 0.15
+    },
+    "9": {
+      "layout_id": 9,
+      "success": false,
+      "score": 0.3
+    },
+    "10": {
+      "layout_id": 10,
+      "success": false,
+      "score": 0.0
+    },
+    "11": {
+      "layout_id": 11,
+      "success": false,
+      "score": 0.05
+    },
+    "12": {
+      "layout_id": 12,
+      "success": false,
+      "score": 0.05
+    },
+    "13": {
+      "layout_id": 13,
+      "success": false,
+      "score": 0.05
+    },
+    "14": {
+      "layout_id": 14,
+      "success": false,
+      "score": 0.15
+    },
+    "15": {
+      "layout_id": 15,
+      "success": false,
+      "score": 0.15
+    },
+    "16": {
+      "layout_id": 16,
+      "success": false,
+      "score": 0.15
+    },
+    "17": {
+      "layout_id": 17,
+      "success": false,
+      "score": 0.0
+    },
+    "18": {
+      "layout_id": 18,
+      "success": false,
+      "score": 0.05
+    },
+    "19": {
+      "layout_id": 19,
+      "success": false,
+      "score": 0.15
+    },
+    "20": {
+      "layout_id": 20,
+      "success": false,
+      "score": 0.05
+    },
+    "21": {
+      "layout_id": 21,
+      "success": false,
+      "score": 0.0
+    },
+    "22": {
+      "layout_id": 22,
+      "success": false,
+      "score": 0.0
+    },
+    "23": {
+      "layout_id": 23,
+      "success": false,
+      "score": 0.05
+    },
+    "24": {
+      "layout_id": 24,
+      "success": false,
+      "score": 0.0
+    }
+  }
+}

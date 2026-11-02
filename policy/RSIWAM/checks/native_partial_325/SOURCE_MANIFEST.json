@@ -1,0 +1,159 @@
+{
+  "schema": "rsiwam-accepted325-source-manifest-v1",
+  "collected_at_utc": "2026-11-02T05:05:44.887584+00:00",
+  "source_host": "a800-vpp2-secondary",
+  "collection_method": "read-only bounded exact-file Python reads over SSH; base64 transport; no GPU or process controls",
+  "original_files": [
+    {
+      "source_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/RoboDojo/eval_result/RoboDojo/general_pickup/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_general_pickup_seed0_r2/_result.json",
+      "expected_sha256": null,
+      "bytes": 4301,
+      "sha256": "20eb100d67119822963938b014f5af69978ad0c3165c361f2577025596aff09f",
+      "local_path": "originals/general_pickup_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/retry_r2/runs/general_pickup_seed0_r2/completion.json",
+      "expected_sha256": null,
+      "bytes": 73684,
+      "sha256": "86fd26ad5d145a4a3ddd0719e8349aa38ac1943801ee0c23fef8cfd35a8524a3",
+      "local_path": "originals/general_pickup_seed0/completion.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/retry_r2/runs/general_pickup_seed0_r2/status.json",
+      "expected_sha256": null,
+      "bytes": 741,
+      "sha256": "c695675760e9bedd9b7400be00ce82b846281eb07e592526ced24c8a4f220ed0",
+      "local_path": "originals/general_pickup_seed0/status.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/retry_r2/runs/general_pickup_seed0_r2/policy/evidence/policy_loaded.json",
+      "expected_sha256": null,
+      "bytes": 1035,
+      "sha256": "9502b82e132800b961ea04e7060b38366acb1fb6a1acf4c4abc3e4e151ba211a",
+      "local_path": "originals/general_pickup_seed0/policy_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/share_data/xuzhuoran/lsaac_sim/RSIWAM-official6300-20261101-r1/retry_r2/runs/general_pickup_seed0_r2/simulation/evidence/native_loaded.json",
+      "expected_sha256": null,
+      "bytes": 2887,
+      "sha256": "0a277194da4ffc560e16e4e133066831dc9744422fb8fa5939e52623a8a96bae",
+      "local_path": "originals/general_pickup_seed0/native_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/align_blocks/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_align_blocks_seed0/_result.json",
+      "expected_sha256": "7a2d317fe33e9423f5ac1bad25fb197b3fb0a09afa51be9ea0c620eb8f325445",
+      "bytes": 4310,
+      "sha256": "7a2d317fe33e9423f5ac1bad25fb197b3fb0a09afa51be9ea0c620eb8f325445",
+      "local_path": "originals/align_blocks_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/arrange_largest_number/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_arrange_largest_number_seed0/_result.json",
+      "expected_sha256": "c33af0ffd3be4736f0d7420042d3bcaeddbde13ce22135951651a8ed4bd6a88b",
+      "bytes": 2217,
+      "sha256": "c33af0ffd3be4736f0d7420042d3bcaeddbde13ce22135951651a8ed4bd6a88b",
+      "local_path": "originals/arrange_largest_number_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/build_tower/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_build_tower_seed0/_result.json",
+      "expected_sha256": "46a3cd9531578f1e9c7bda061e4d1175f70cbb232302bbf4c60956d123483794",
+      "bytes": 4281,
+      "sha256": "46a3cd9531578f1e9c7bda061e4d1175f70cbb232302bbf4c60956d123483794",
+      "local_path": "originals/build_tower_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/cover_blocks/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_cover_blocks_seed0/_result.json",
+      "expected_sha256": "8e5db84a75b1d94fccb9a0bbf0a1e10110295ddb41de34aafabca20a9936a29b",
+      "bytes": 4262,
+      "sha256": "8e5db84a75b1d94fccb9a0bbf0a1e10110295ddb41de34aafabca20a9936a29b",
+      "local_path": "originals/cover_blocks_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/deposit_coin/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_deposit_coin_seed0/_result.json",
+      "expected_sha256": "ad3a857d1906919d179a6696fcf1cb1721502b0e12b1675e42ba51e91951d824",
+      "bytes": 4317,
+      "sha256": "ad3a857d1906919d179a6696fcf1cb1721502b0e12b1675e42ba51e91951d824",
+      "local_path": "originals/deposit_coin_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/RoboDojo/eval_result/RoboDojo/classify_objects/RSIWAM/arx_x5/0_ckpt_name=rsiwam-original32-lora33-step400,action_type=ee/2026-11-01_RSIWAM_queue_r3_classify_objects_seed0/_result.json",
+      "expected_sha256": "47671e5f0e2ada1663ce42ac016fc05772376b0a06c1f11fed2e184fefbda6d9",
+      "bytes": 4316,
+      "sha256": "47671e5f0e2ada1663ce42ac016fc05772376b0a06c1f11fed2e184fefbda6d9",
+      "local_path": "originals/classify_objects_seed0/_result.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/seed0_policy/policy/evidence/policy_loaded.json",
+      "expected_sha256": "f07d0c0bacd43455a9c629a0b9ca06ce2c4724561ca1c2e34b3854261bdb0094",
+      "bytes": 1863,
+      "sha256": "f07d0c0bacd43455a9c629a0b9ca06ce2c4724561ca1c2e34b3854261bdb0094",
+      "local_path": "originals/shared_policy/policy_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/blocks/align_blocks_seed0/simulation/evidence/native_loaded.json",
+      "expected_sha256": "1a4ee120c75c2bc6ba9c2f295760fd69d0d12c70f19e4dec4b5bd1ce2ea99624",
+      "bytes": 2843,
+      "sha256": "1a4ee120c75c2bc6ba9c2f295760fd69d0d12c70f19e4dec4b5bd1ce2ea99624",
+      "local_path": "originals/align_blocks_seed0/native_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/blocks/arrange_largest_number_seed0/simulation/evidence/native_loaded.json",
+      "expected_sha256": "ff353b1680fe2a67790d81c77cfaac490e47b394a828516797e486bb19342ac5",
+      "bytes": 2884,
+      "sha256": "ff353b1680fe2a67790d81c77cfaac490e47b394a828516797e486bb19342ac5",
+      "local_path": "originals/arrange_largest_number_seed0/native_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/blocks/build_tower_seed0/simulation/evidence/native_loaded.json",
+      "expected_sha256": "ac62457cd12aba30589ed1ea6f8937c727ab12f4f8ede837bc7fe9dad220d04e",
+      "bytes": 2839,
+      "sha256": "ac62457cd12aba30589ed1ea6f8937c727ab12f4f8ede837bc7fe9dad220d04e",
+      "local_path": "originals/build_tower_seed0/native_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/blocks/classify_objects_seed0/simulation/evidence/native_loaded.json",
+      "expected_sha256": "1233f7e595d274acc4e58348e88721046eef314233736d595594e709104ad18c",
+      "bytes": 2860,
+      "sha256": "1233f7e595d274acc4e58348e88721046eef314233736d595594e709104ad18c",
+      "local_path": "originals/classify_objects_seed0/native_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/blocks/cover_blocks_seed0/simulation/evidence/native_loaded.json",
+      "expected_sha256": "570566cb785557a7bf7ddc9a47ea79e6a87f74b98974f1891ca9386eb29bf4cd",
+      "bytes": 2842,
+      "sha256": "570566cb785557a7bf7ddc9a47ea79e6a87f74b98974f1891ca9386eb29bf4cd",
+      "local_path": "originals/cover_blocks_seed0/native_loaded.json",
+      "byte_preserved": true
+    },
+    {
+      "source_path": "/run/ti/RSIWAM-official6300-queue-20261101-r3/run/blocks/deposit_coin_seed0/simulation/evidence/native_loaded.json",
+      "expected_sha256": "9f431958a31c41eaf25db8019b7a695782534d4802626e274077e05117f4595f",
+      "bytes": 2843,
+      "sha256": "9f431958a31c41eaf25db8019b7a695782534d4802626e274077e05117f4595f",
+      "local_path": "originals/deposit_coin_seed0/native_loaded.json",
+      "byte_preserved": true
+    }
+  ],
+  "snapshot_reference": {
+    "path": "/home/songziying/vpp2-supervision/rsiwam_queue_acceleration_20261101/r3_progress/20261102T045501Z.json",
+    "sha256": "0aedb132a26140160c7a9fe72a5b8a28ce691fc7dbbe3cc4daa3f5eed52d0296",
+    "snapshot_at_utc": "2026-11-02T04:54:56.236969+00:00",
+    "full_snapshot_included": false,
+    "reason": "Only selected task evidence is included; the full infrastructure snapshot contains unrelated/active runtime metadata."
+  }
+}
