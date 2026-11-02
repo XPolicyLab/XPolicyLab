@@ -1,0 +1,10 @@
+{
+  "name": "ablate-budget-off",
+  "description": "No budget governance: no budget panel and no refusals.",
+  "experiments": [
+    "E7"
+  ],
+  "switches": {
+    "budget.mode": "off"
+  }
+}

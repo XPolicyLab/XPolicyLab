@@ -1,0 +1,16 @@
+{
+  "name": "single-scene-baseline",
+  "description": "Per-task self-evolution baseline: one practice scene, no review merge, no validation, no shared library or trajectory mining; perception and execution modules stay on; same practice budget.",
+  "experiments": [
+    "E2",
+    "E3",
+    "E4"
+  ],
+  "switches": {
+    "evolution.practice_scenes": 1,
+    "evolution.review_merge": false,
+    "evolution.validation": false,
+    "evolution.shared_library": "off",
+    "evolution.trajectory_mining": false
+  }
+}

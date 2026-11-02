@@ -1,0 +1,14 @@
+policy_name: KnowinAgent
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+# KnowinAgent sends joint actions (and end-effector actions where a skill asks for them) from the client process;
+# the policy server holds no model.
+action_type: joint
+gpu_id: null
+eval_batch: false
