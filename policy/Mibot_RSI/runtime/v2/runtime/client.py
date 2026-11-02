@@ -230,9 +230,17 @@ class ResponsesClient:
         maximum = float(self.config['api_retry_max_delay_s'])
         requested = self._retry_after(headers)
         if requested is not None:
-            return min(requested, maximum), 'retry-after'
-        base = float(self.config['api_retry_base_delay_s']) * (2 ** attempt)
-        return min(base * (0.75 + 0.5 * self.random_value()), maximum), 'exponential-jitter'
+            return requested, 'retry-after'  # post() still caps waiting to its remaining total retry budget
+        base = float(self.config['api_retry_base_delay_s'])
+        jitter = 0.75 + 0.5 * self.random_value()
+        if base <= 0 or maximum <= 0:
+            return 0.0, 'exponential-jitter'
+        # Saturate before exponentiation: long outages must not overflow at attempt 1024.
+        for _ in range(attempt):
+            if base >= maximum / jitter:
+                return maximum, 'exponential-jitter'
+            base *= 2.0
+        return min(base * jitter, maximum), 'exponential-jitter'
 
     def _error_detail(self, exc):
         try:

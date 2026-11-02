@@ -60,7 +60,7 @@ Unlike demo_policy, `deploy.py` runs the agent inside the evaluation client. Rob
 
 **Failures and restarts**
 
-- **Model API errors** (outage, timeout, HTTP 429/5xx, and also HTTP 401–404 and quota errors) are first waited out inside the episode, as set by `model_api_waits_s`. Each wait is shown on the console.
+- **Model API errors** (outage, timeout, HTTP 429/5xx, and also HTTP 401–404 and quota errors) are first waited out inside the episode, as set by `model_api_waits_s`. Each wait is shown on the console. Server `Retry-After` delays are respected within the total retry time budget; exponential backoff saturates at its configured cap without overflowing during long outages.
 - **Infrastructure failures** are not scored. This covers an API that still fails after the waits, a crashed agent session, a hung simulator (no progress for 10 minutes during a robot command, or a fatal simulator log line), and the 6-hour episode limit. The process exits with code 99, the code RoboDojo's own monitor uses, and `scripts/eval_policy.sh` restarts it with the same `ROBODOJO_RUN_ID` (at most `ROBODOJO_MAX_BASH_RETRIES` − 1 times, 9 by default, shared with RoboDojo's own PhysX restarts). The interrupted layout is then played again from its initial state. Each of these is logged in `runs/submission_reruns.jsonl`.
 - **Setup problems** (a missing endpoint or key, invalid settings, a knowledge snapshot that fails its check) exit with code 1 and are printed on the console. Fix the problem, export the same `ROBODOJO_RUN_ID` (printed by `scripts/eval_policy.sh`) and run the same command to continue.
 
