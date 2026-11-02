@@ -27,7 +27,7 @@ DEFAULTS = {
     'model': 'gpt-6-astra',
     'api_key_env': 'OPENAI_API_KEY',
     'reasoning_effort': 'high',
-    'request_timeout_s': 300,
+    'request_timeout_s': 600,
     'api_retries': 6,
     'api_retry_base_delay_s': 2,
     'api_retry_max_delay_s': 60,

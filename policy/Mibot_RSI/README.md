@@ -100,6 +100,8 @@ Keys of `deploy.yml` beyond the standard set:
 | `knowledge_dir` | `null` | Another knowledge folder; its snapshots must still be the ones `release.json` pins. |
 | `runner_python` | `null` | Python of the agent session subprocess; by default the evaluation client's. |
 
+The per-request timeout is 600 seconds, allowing time for relay queueing and slow model responses. A response returns as soon as it is received. The total retry time budget remains 3600 seconds.
+
 Optional environment variables: `MIBOT_RSI_KNOWLEDGE_DIR` and `MIBOT_RSI_RUNS_ROOT` override `knowledge_dir` and `runs_root`; `MIBOT_RSI_HARNESS` names a runtime directory instead of `runtime/` (only a directory with its own `EXPORT.json` is checked file by file); `MIBOT_RSI_ARTIFACTS_DIR` reads a local copy of the dataset instead of Hugging Face.
 
 ## Notes

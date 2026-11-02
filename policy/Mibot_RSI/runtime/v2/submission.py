@@ -63,7 +63,7 @@ DEFAULT_KEY_ENV = 'MIBOT_RSI_API_KEY'
 # The default model settings (as run.json model_config records them), without the endpoint. deploy.yml may
 # add reasoning_summary (auto, concise or detailed): readable reasoning summaries, only logged; off by default.
 MODEL_DEFAULTS = {'model': 'gpt-6-astra', 'api_key_env': DEFAULT_KEY_ENV, 'reasoning_effort': 'xhigh',
-                  'request_timeout_s': 300, 'api_retries': 1799, 'api_retry_base_delay_s': 1,
+                  'request_timeout_s': 600, 'api_retries': 1799, 'api_retry_base_delay_s': 1,
                   'api_retry_max_delay_s': 2, 'api_retry_total_timeout_s': 3600, 'max_output_tokens': 16384,
                   'compact_threshold': 200000, 'prompt_cache_ttl': '30m'}
 # episode_wall_limit_s: a watchdog against a stuck episode, set well above a slow legitimate one (300 calls at xhigh
