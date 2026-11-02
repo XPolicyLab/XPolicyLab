@@ -1,0 +1,5 @@
+config.env
+results/
+third_party/
+__pycache__/
+vendor/robodojo_planner/Assets/Robots/x5/meshes/
