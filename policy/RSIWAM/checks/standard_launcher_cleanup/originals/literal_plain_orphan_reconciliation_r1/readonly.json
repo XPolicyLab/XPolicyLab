@@ -1,0 +1,85 @@
+{
+  "schema": "literal-exact-orphan-admin-v1",
+  "before": {
+    "token": "d553115613c44a6b8c7ad3fc445968ed",
+    "owner_id": "RSIWAM:literal-776c9f3:primary:r2:plain",
+    "owner_pid": 123977,
+    "owner_starttime": "1549968232",
+    "gpu_index": 6,
+    "gpu_uuid": "GPU-6184aa9d-b4ee-a1b8-2f50-faf2dccd7f8f",
+    "budget_mib": 71680,
+    "headroom_mib": 8192,
+    "private_path": "/tmp/codex-shared-gpu-budget-v1/leases/d553115613c44a6b8c7ad3fc445968ed.lock",
+    "created_at": 1793547651.2486596,
+    "worker_pid": 124001,
+    "worker_starttime": "1549968288",
+    "persistent_floor_bytes": 0,
+    "storage_json": "[]",
+    "peak_mib": 0,
+    "published_at": null,
+    "released_at": null
+  },
+  "private_lock": {
+    "device": 1048692,
+    "inode": 38711216296
+  },
+  "database_identity": {
+    "device": 1048692,
+    "inode": 40893983439
+  },
+  "host": {
+    "hostname": "nb-1673254030349584384-crf5y8zsdpmo",
+    "boot_id": "abb2d59e-3a77-4e2e-b29d-2e2229d6c793",
+    "pid_namespace_inode": 4026556616
+  },
+  "source_hashes": {
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/encoded_continuation_20261102_r2/diagnostic_actual.json": "7584b2a5b4b9b647ee01d542d360e7999265e2ff86723a938beb49771e3788b8",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_config_r2.json": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+    "/run/ti/codex-shared-gpu-budget-v1/gpu_budget.py": "928fad0473d97083ce1d5046438bb950801ae38fe93d3ff961c42c764ca78cda",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/guardian_result.json": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/status.json": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/release_receipt.json": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/bind.json": "e94e09bee27e8194e207c060e8b786500060813c61f0e7768134d0bd66aaa6cd"
+  },
+  "source_checks": {
+    "known_identity_count": 333,
+    "exact_live": [],
+    "session_live": [],
+    "sessions_checked": [
+      123977,
+      124001
+    ],
+    "zombies_have_no_live_process_credit": true
+  },
+  "other_private_fd_holders": [],
+  "exclusive_private_lock_held": true,
+  "after": {
+    "token": "d553115613c44a6b8c7ad3fc445968ed",
+    "owner_id": "RSIWAM:literal-776c9f3:primary:r2:plain",
+    "owner_pid": 123977,
+    "owner_starttime": "1549968232",
+    "gpu_index": 6,
+    "gpu_uuid": "GPU-6184aa9d-b4ee-a1b8-2f50-faf2dccd7f8f",
+    "budget_mib": 71680,
+    "headroom_mib": 8192,
+    "private_path": "/tmp/codex-shared-gpu-budget-v1/leases/d553115613c44a6b8c7ad3fc445968ed.lock",
+    "created_at": 1793547651.2486596,
+    "worker_pid": 124001,
+    "worker_starttime": "1549968288",
+    "persistent_floor_bytes": 0,
+    "storage_json": "[]",
+    "peak_mib": 0,
+    "published_at": null,
+    "released_at": null
+  },
+  "at": 1793594198.1941962,
+  "administrator_pid": 31155,
+  "original_owner_impersonated": false,
+  "signals_sent": [],
+  "gpu_operations": 0,
+  "non_target_rows_unchanged": true,
+  "non_target_rows_sha256": "a47300bd4eeabc51d3083bea69e3bfc1867a3639e678312b9b2225f4a5d43d0e",
+  "status": "EXACT_PLAIN_ORPHAN_READONLY_READY",
+  "database_events_modified": false,
+  "reservation_fields_modified": []
+}
