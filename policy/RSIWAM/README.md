@@ -4,6 +4,8 @@
 
 RSIWAM is a recovery-adapted robot policy that combines a frozen world-model foundation, a gated recovery module, and success133 Action LoRA. This **eval-only** RoboDojo adapter supports `env_cfg_type=arx_x5`, `action_type=ee`, absolute world-frame poses and native gripper values. `bundle/` contains the vendored runtime, observation-history wrapper, identity-checking loader, exact learned adaptation weights and upstream notices; the [model card](MODEL_CARD.md) documents component provenance and the fixed evaluated candidate.
 
+The [method review note](checks/method_review_20261102/METHOD_REVIEW_NOTE.txt) explains the frozen-branch gradient coupling, fixed inference settings and supervision scope. It includes a later partial paired development comparison, clearly separated from the official local summary; neither architectural novelty nor certified recovery capability is assumed from that comparison.
+
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
@@ -59,6 +61,8 @@ Real CUDA debug validation passed for commit `7e5def6e61435e823f5b346f2b9d2dd5a7
 The standard positional `seed` controls environment evaluation and checkpoint-directory resolution. The model's sampling seed is separately fixed at `model_seed: 1`; changing the evaluation seed never changes the candidate or its inference seed. The server launcher sets `CUBLAS_WORKSPACE_CONFIG=:4096:8` before Python starts. Direct server launches must set the same variable.
 
 The [partial native evaluation attachment](checks/native_partial_325/README.txt) preserves 325 accepted episodes from seven completed task blocks at evaluation seed 0, with original results, candidate identity records and existing video SHA references. Their episode-weighted SR is 137/325 (42.15%) and mean Score is 45.38/100. This is the set of completed blocks at a fixed progress snapshot, not a representative sample or the complete 6,300-episode benchmark. Pending blocks are excluded; no paired baseline or recovery-specific success rate is claimed. These native runs used the recorded queue and model constructor, separately from the literal standard-launcher checks above.
+
+The unchanged official `bash scripts/robodojo.sh summarize` output and raw-result snapshot are available in [official local summary](checks/official_summary_20261102/README.txt). At its 2026-11-02 13:55:54 SGT cut, 6/126 task-seed cells are complete (300 episodes, evaluation seed 0 only); the additional accepted 25-episode standard half does not complete its paired Generalization task. The partial dimension-balanced Overview is SR 52.25% / Score 55.55. These figures use a different aggregation from the 325-episode pooled result above. Neither is a complete three-seed benchmark or an official leaderboard score. Full local evaluation is still in progress.
 
 ## Model Assets
 

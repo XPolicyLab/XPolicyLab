@@ -1,0 +1,8 @@
+{
+  "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/COMMON_143_SR_SCORE_20261102.json",
+  "source_sha256": "65cf5bda9ef366ce1b9c1a51dacd5e1cc1abe75d6519ddd639243e025c8b335a",
+  "underlying_snapshot_sha256": "1e33f5233aa4f9676f3244b0f003825277bf861efda1b7be369be4242f8982f1",
+  "success_transition_identity_verified": true,
+  "report_draft": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/submission_materials/method_evidence/TECHNICAL_REPORT_DRAFT.txt",
+  "status": "PREPARED_FOR_REVIEW_NOT_NEW_OFFICIAL_SCORE"
+}
