@@ -25,7 +25,7 @@ Building Scalable Infrastructure for Robot Learning Workshop，授予全体 XPol
 
 
 
-XPolicyLab 是策略代码与评测环境之间的共享层。每个模型的依赖、权重与训练配方放在 `policy/<POLICY>/`；XPolicyLab 负责那些枯燥但容易出错的部分 —— 服务化、观测/动作契约，以及评测接线。截至 2026 年 10 月，生态已接入 **69 个机器人策略**，覆盖 VLA、world-action、模仿学习与记忆增强等家族；同一套 adapter 可服务 RoboTwin、RoboDojo 仿真，以及标准化真机评测。
+XPolicyLab 是策略代码与评测环境之间的共享层。每个模型的依赖、权重与训练配方放在 `policy/<POLICY>/`；XPolicyLab 负责那些枯燥但容易出错的部分 —— 服务化、观测/动作契约，以及评测接线。截至 2026 年 10 月，生态已接入 **70 个机器人策略**，覆盖 VLA、world-action、模仿学习与记忆增强等家族；同一套 adapter 可服务 RoboTwin、RoboDojo 仿真，以及标准化真机评测。
 
 仓库级概念与接入步骤从本文开始。安装命令、权重布局与训练细节以各策略自己的 README 为准。
 
@@ -83,7 +83,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 
 ## 🧭 已接入策略
 
-当前已接入 69 个策略，覆盖 VLA、world-action、模仿学习与记忆增强等家族，另加 [demo_policy](policy/demo_policy/README.md) 作为最小参考 adapter。顶层 adapter 位于 `policy/`；每个策略 README 记录该模型的论文/仓库链接、环境、数据格式、训练入口与 checkpoint 布局。
+当前已接入 70 个策略，覆盖 VLA、world-action、模仿学习与记忆增强等家族，另加 [demo_policy](policy/demo_policy/README.md) 作为最小参考 adapter。顶层 adapter 位于 `policy/`；每个策略 README 记录该模型的论文/仓库链接、环境、数据格式、训练入口与 checkpoint 布局。
 
 
 | Policy                                   | Policy                                               | Policy                                      | Policy                                                     | Policy                                                         | Policy                                            |
@@ -100,7 +100,7 @@ XPolicyLab 与具体 benchmark 解耦：任意 benchmark、仿真器或真机方
 | [GPT-6-Astra-Direct-EEF](policy/GPT_6_Astra_Direct_EEF/README.md) | [VPP2](policy/VPP2/README.md) | [Liber-0 Lite](policy/Liber_0_lite/README.md) | [Liber-0 Preview](policy/Liber_0_preview/README.md) | [Discrete Forcing](policy/Discrete_Forcing/README.md) | [EgoVLA](policy/EgoVLA/README.md) |
 | [MM-ABC](policy/MM_ABC/README.md) | [HWM-CogWAM](policy/HWM_CogWAM/README.md) | [ME-Brain-1.0](policy/ME_Brain_1/README.md) | [MachEmbodied-U0](policy/MachEmbodied-U0/README.md) | [ME-Dex-1.0](policy/ME_Dex_1_0/README.md) | [Rex_M1_preview](policy/Rex_M1_preview/README.md) |
 | [Spark_0](policy/Spark_0/README.md) | [ViGAR](policy/ViGAR/README.md) | [CloudRobo-WM](policy/CloudRobo_WM/README.md) | | | |
-| [demo_policy](policy/demo_policy/README.md) | | | | | |
+| [RAP-WAM](policy/RAP_WAM/README.md) | [demo_policy](policy/demo_policy/README.md) | | | | |
 
 
 接入自有策略，或报名排行榜，都通过 PR —— 见 [接入你自己的策略](#-接入你自己的策略)。
