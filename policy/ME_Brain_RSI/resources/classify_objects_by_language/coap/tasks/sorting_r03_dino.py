@@ -1,4 +1,5 @@
 """Use fixed pretrained RGB cosine matching inside the retained sorting program."""
+import os
 from pathlib import Path
 from types import FunctionType, SimpleNamespace
 import time
@@ -18,7 +19,7 @@ def _load_encoder():
     global _MODEL, _PROCESSOR
     if _MODEL is None:
         from transformers import Dinov2Model, AutoImageProcessor
-        folder = Path(__file__).resolve().parents[1] / 'assets' / 'sorting_dinov2_small'
+        folder = Path(os.environ['SORTING_DINO_PATH']) if os.environ.get('SORTING_DINO_PATH') else Path(__file__).resolve().parents[1] / 'assets' / 'sorting_dinov2_small'
         _PROCESSOR = AutoImageProcessor.from_pretrained(str(folder), local_files_only=True,
                                                       trust_remote_code=False)
         _MODEL = Dinov2Model.from_pretrained(str(folder), local_files_only=True,

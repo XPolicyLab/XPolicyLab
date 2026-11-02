@@ -26,6 +26,18 @@
         "screws_assets_root": "model_assets/screws/code-skills",
         "strategy_evidence_dir": "../../../eval_runs/fasten_screws"
       }
+    },
+    "imitate_sorting_sequence": {
+      "environment": {
+        "SORTING_DINO_PATH": "model_assets/dinov2-small"
+      }
+    },
+    "classify_objects_by_language": {
+      "environment": {
+        "SORTING_DINO_PATH": "model_assets/dinov2-small",
+        "CLASSIFY_CLIP_PATH": "model_assets/clip-vit-base-patch32",
+        "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
+      }
     }
   }
 }

@@ -13,3 +13,9 @@ capabilities/**/fasten_screws_*.py -text
 resources/fasten_screws/coap/vendor/code-skills/** -text
 resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/assets/x5/X5A.urdf whitespace=cr-at-eol,-blank-at-eol
 resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/assets/x5/robot_config.yml whitespace=-blank-at-eol
+
+# Preserve original EOF formatting in the selected task sources.
+capabilities/control/imitate_sorting_sequence_coap_tasks_sorting_tri80_r07_render.py whitespace=-blank-at-eof
+resources/imitate_sorting_sequence/coap/tasks/sorting_tri80_r07_render.py whitespace=-blank-at-eof
+capabilities/perception/classify_objects_by_language_coap_tasks_classify_r05_grounded_clip.py whitespace=-blank-at-eof
+resources/classify_objects_by_language/coap/tasks/classify_r05_grounded_clip.py whitespace=-blank-at-eof

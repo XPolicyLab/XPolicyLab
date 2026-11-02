@@ -23,7 +23,8 @@
       "deploy": "deploy",
       "numeric_ik": true,
       "environment_prefix": "COAP",
-      "modules": "tasks/imitate_sorting_sequence/modules.json"
+      "modules": "tasks/imitate_sorting_sequence/modules.json",
+      "program": "coap.tasks.sorting_tri80_r13_vcombo:run"
     },
     "insert_key": {
       "action_type": "ee",
@@ -437,7 +438,8 @@
       "deploy": "deploy",
       "numeric_ik": true,
       "environment_prefix": "COAP",
-      "modules": "tasks/classify_objects_by_language/modules.json"
+      "modules": "tasks/classify_objects_by_language/modules.json",
+      "program": "coap.tasks.classify_tri80_r05_lowdrop:entry"
     },
     "pick_from_conveyor_by_image": {
       "action_type": "ee",
@@ -460,7 +462,8 @@
       "deploy": "deploy",
       "numeric_ik": true,
       "environment_prefix": "COAP",
-      "modules": "tasks/store_tools_in_toolbox/modules.json"
+      "modules": "tasks/store_tools_in_toolbox/modules.json",
+      "program": "coap.tasks.toolbox_tri80_r07_shiftup:run"
     },
     "pour_by_language": {
       "action_type": "ee",
@@ -581,11 +584,17 @@
       "aliases": []
     },
     "cover_blocks": {
-      "driver": "vla",
-      "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
+      "driver": "generator",
+      "action_type": "ee",
+      "eval_batch": false,
+      "max_envs": 1,
+      "aliases": [],
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/cover_blocks/modules.json",
+      "program": "coap.tasks.cover_blocks_r01_a:run"
     },
     "sort_nesting_dolls_by_size_random": {
       "action_type": "ee",

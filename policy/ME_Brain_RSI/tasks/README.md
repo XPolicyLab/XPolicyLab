@@ -42,7 +42,7 @@
 | `organize_table` | `vla` | `joint` | `true` |
 | `play_stacking_toy` | `model` | `joint` | `false` |
 | `make_kong` | `model` | `ee` | `false` |
-| `cover_blocks` | `vla` | `joint` | `true` |
+| `cover_blocks` | `generator` | `ee` | `false` |
 | `match_and_pick_from_conveyor` | `model` | `ee` | `false` |
 | `swap_T` | `step` | `joint` | `false` |
 | `press_by_number` | `model` | `ee` | `false` |

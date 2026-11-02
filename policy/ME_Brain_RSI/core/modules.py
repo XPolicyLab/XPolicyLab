@@ -39,7 +39,8 @@ class ModuleLoader(importlib.abc.Loader):
         return None
 
     def get_filename(self, fullname):
-        return str(ROOT / self.record['file'])
+        key = 'resource' if self.record.get('resource_identity') else 'file'
+        return str(ROOT / self.record[key])
 
     def get_source(self, fullname):
         return (ROOT / self.record['file']).read_text()
@@ -52,14 +53,15 @@ class ModuleLoader(importlib.abc.Loader):
         raw = path.read_bytes()
         if hashlib.sha256(raw).hexdigest() != self.record['sha256']:
             raise ValueError('Implementation checksum mismatch: ' + self.name)
-        module.__file__ = str(path)
+        filename = self.get_filename(module.__name__)
+        module.__file__ = filename
         module.__policy_root__ = str(ROOT)
         module.__resource_file__ = str(ROOT / self.record['resource'])
         if self.record['package']:
             module.__path__ = []
         module.__builtins__ = dict(vars(builtins), __import__=self.scope.import_hook)
-        tree = ResourceNames().visit(ast.parse(raw, filename=str(path)))
-        exec(compile(ast.fix_missing_locations(tree), str(path), 'exec'), module.__dict__)
+        tree = ResourceNames().visit(ast.parse(raw, filename=filename))
+        exec(compile(ast.fix_missing_locations(tree), filename, 'exec'), module.__dict__)
 
 
 class ScopeFinder(importlib.abc.MetaPathFinder):
