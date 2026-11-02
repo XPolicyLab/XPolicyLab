@@ -1,0 +1,32 @@
+{
+  "robot_type": "piper_x",
+  "embodiment_id": 15,
+  "registry_name": "piperx",
+  "action_type": "joint",
+  "dataset_stats": "normalization/stats_slot15.json",
+  "native_action_dim": 14,
+  "canonical_valid_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    16,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    56
+  ],
+  "camera_order": [
+    "cam_high",
+    "cam_left_wrist",
+    "cam_right_wrist"
+  ],
+  "dataset_fps": 25,
+  "action_hz": 25.0,
+  "checkpoint_posttrained": true
+}
