@@ -1,0 +1,91 @@
+{
+  "schema": "rsiwam-public-original-evidence-selection-v1",
+  "record_kind": "DERIVED_SELECTION_MANIFEST",
+  "source_collection_index_sha256": "03fdb8688942834eb4be0926f7c8c24ee3a0acfa92d6b6653e20495b0b48459c",
+  "source_original_count": 12,
+  "selected_raw_count": 8,
+  "files": [
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/stdout.log",
+      "source_file": "literal_attempt_r2/plain/stdout.log",
+      "bytes": 18505,
+      "sha256": "0cca3aeb39fd1e99c383a84f9eb98becece886439a147034e7756ec04c08509c",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/stderr.log",
+      "source_file": "literal_attempt_r2/plain/stderr.log",
+      "bytes": 41,
+      "sha256": "f86eb8b25f81c0d81b4e0fbe622dbe3863aad3b733479923b73b9ce9d22dac48",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/guardian_result.json",
+      "source_file": "literal_attempt_r2/plain/guardian_result.json",
+      "bytes": 52017,
+      "sha256": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/release_receipt.json",
+      "source_file": "literal_attempt_r2/plain/release_receipt.json",
+      "bytes": 54284,
+      "sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/initialization_closed.json",
+      "source_file": "literal_attempt_r2/plain/initialization_closed.json",
+      "bytes": 1570,
+      "sha256": "f437cdbfa42318d6869927f0964e260c643158a386e54e40e574285f9fd13cb0",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/status.json",
+      "source_file": "literal_attempt_r2/status.json",
+      "bytes": 403,
+      "sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/literal_cpu_receipt_r2.json",
+      "source_file": "literal_cpu_receipt_r2.json",
+      "bytes": 944,
+      "sha256": "d5c35a95aeca36da317cf9c96ad17d0a9b2e897a3e3f9863ea5d66949e31307b",
+      "copied_byte_for_byte": true
+    },
+    {
+      "file": "plain_r2/root_literal_launch_r2/owner.log",
+      "source_file": "root_literal_launch_r2/owner.log",
+      "bytes": 553,
+      "sha256": "fe905e2ccb4d36a6cc663471b52aa9c67d770b12234f6ca04d883e774873fd41",
+      "copied_byte_for_byte": true
+    }
+  ],
+  "omitted_original_files": [
+    {
+      "path": "literal_attempt_r2/plain/bind.json",
+      "bytes": 2232,
+      "sha256": "e94e09bee27e8194e207c060e8b786500060813c61f0e7768134d0bd66aaa6cd",
+      "reason": "Duplicate intermediate status or operational binding/launch record; retained unchanged in the original source collection."
+    },
+    {
+      "path": "literal_attempt_r2/plain/guardian_status.json",
+      "bytes": 51926,
+      "sha256": "ed4db8f0092dcb019231bb3599f03cf73d7634f45a1401cfcb4f89aa45fbb194",
+      "reason": "Duplicate intermediate status or operational binding/launch record; retained unchanged in the original source collection."
+    },
+    {
+      "path": "literal_attempt_r2/plain/status.json",
+      "bytes": 54284,
+      "sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+      "reason": "Duplicate intermediate status or operational binding/launch record; retained unchanged in the original source collection."
+    },
+    {
+      "path": "root_literal_launch_r2/launch.json",
+      "bytes": 565,
+      "sha256": "623bd807bb882a684d2e666ea54b14ffdc912f2522e7cb39c843d08943469e40",
+      "reason": "Duplicate intermediate status or operational binding/launch record; retained unchanged in the original source collection."
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schema": "rsiwam-public-literal-validation-summary-v1",
+  "record_kind": "DERIVED_SUMMARY_NOT_AN_ORIGINAL_RESULT",
+  "prepared_at_utc": "2026-11-01T15:50:47.500958+00:00",
+  "status": "PLAIN_LOOP_PASSED_CLEANUP_FAILED_ENCODED_PENDING",
+  "complete_two_mode_acceptance": false,
+  "evaluated_code_commit": "776c9f3b177427c1078ee31daaa4db93f922008b",
+  "configuration_sha256": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+  "source_collection_index_sha256": "03fdb8688942834eb4be0926f7c8c24ee3a0acfa92d6b6653e20495b0b48459c",
+  "r5_installation_input_hashes_verified": {
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/evidence_r5/installation_receipt.json": "67c4455b4d7e86b36dd7e2ea615d273c49ea065d20f509edc6e5ae1c02e73326",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/evidence_r5/clean_cpu.json": "40f8bd38c1f1e48decaf1ff76a5f2dbbe66dc2eeddec5179d387304b248ed420",
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/evidence_r5/requirements.json": "c3ef28c2b7d69d9c6b93c0e4ebe54d6d41b6c0bff52d74e355424672bd364f73"
+  },
+  "plain": {
+    "status": "LOOP_PASSED_RESOURCE_CLEANUP_FAILED",
+    "original_guardian_status": "LITERAL_FULL10X20_PASSED",
+    "original_release_receipt_status": "LITERAL_MODE_PASS",
+    "counts": {
+      "episode_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "episodes_finished": 10,
+      "action_steps": 200,
+      "eval_finished": true,
+      "traceback": false
+    },
+    "literal_exit_code": 0,
+    "guardian_exit_code": 0,
+    "literal_command_unmodified": true,
+    "argv": [
+      "bash",
+      "eval.sh",
+      "RoboDojo",
+      "stack_bowls",
+      "rsiwam-original32-lora33-step400",
+      "arx_x5",
+      "ee",
+      "7",
+      "GPU-6184aa9d-b4ee-a1b8-2f50-faf2dccd7f8f",
+      "GPU-6184aa9d-b4ee-a1b8-2f50-faf2dccd7f8f",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean",
+      "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean"
+    ],
+    "server": {
+      "identity": {
+        "pid": 124010,
+        "starttime": "1549968296",
+        "state": "S",
+        "ppid": 124002,
+        "pgrp": 124001,
+        "session": 124001
+      },
+      "argv": [
+        "python",
+        "-u",
+        "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/setup_policy_server.py",
+        "--config_path",
+        "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/deploy.yml",
+        "--overrides",
+        "port=37995",
+        "host=localhost",
+        "bench_name=RoboDojo",
+        "task_name=stack_bowls",
+        "ckpt_name=rsiwam-original32-lora33-step400",
+        "env_cfg_type=arx_x5",
+        "seed=7",
+        "policy_name=RSIWAM",
+        "action_type=ee",
+        ""
+      ],
+      "port": 37995,
+      "executable": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/bin/python3.10",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "GPU-6184aa9d-b4ee-a1b8-2f50-faf2dccd7f8f",
+        "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+        "CONDA_PREFIX": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean",
+        "PYTHONPATH": null,
+        "PYTHONNOUSERSITE": "1"
+      }
+    },
+    "initializer_released": true,
+    "cleanup_errors": [
+      "reservation: Busy('Inherited lifetime FD still held; reservation retained')"
+    ],
+    "reservation_released_at_in_original_receipt": null,
+    "original_stdout_bytes": 18505,
+    "original_stderr_bytes": 41,
+    "started_at_utc": "2026-11-01T15:40:51.302434+00:00",
+    "finished_at_utc": "2026-11-01T15:45:53.168383+00:00",
+    "client_log_traceback": false,
+    "owner_cleanup_traceback": true
+  },
+  "overall_historical_attempt": {
+    "status": "FAILED",
+    "error": "RuntimeError('Exact owned cleanup incomplete')",
+    "modes_recorded": {},
+    "cleanup_failure_preserved": true
+  },
+  "encoded": {
+    "status": "PENDING_SEPARATE_CONTINUATION_EVIDENCE",
+    "started_in_original_attempt": false,
+    "success_claimed": false
+  },
+  "independent_cleanup_closure": {
+    "status": "PENDING_SEPARATE_RECEIPT",
+    "included": false,
+    "original_cleanup_failure_will_remain_unchanged": true
+  },
+  "scope": {
+    "unmodified_standard_plain_eval_sh_loop": "PASSED_10_EPISODES_200_ACTIONS",
+    "plain_resource_cleanup": "FAILED_IN_ORIGINAL_ATTEMPT",
+    "overall_two_mode_literal_acceptance": "NOT_PASSED",
+    "synthetic_debug_only": true,
+    "task_or_recovery_success": "NOT_ESTABLISHED",
+    "plain_encoded_action_byte_equality": "NOT_TESTED_IN_THIS_ATTEMPT",
+    "full_native_episode_parity": "NOT_TESTED",
+    "complete_6300_evaluation": "NOT_ESTABLISHED_BY_THIS_EVIDENCE",
+    "official_leaderboard_acceptance": "NOT_CLAIMED",
+    "actual_transient_fd_holder_or_root_cause": "NOT_ESTABLISHED_BY_THIS_EVIDENCE"
+  }
+}

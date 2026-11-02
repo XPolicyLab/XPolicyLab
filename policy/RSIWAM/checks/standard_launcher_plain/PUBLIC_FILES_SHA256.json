@@ -1,0 +1,71 @@
+{
+  "schema": "rsiwam-public-files-sha256-v1",
+  "self_excluded": "PUBLIC_FILES_SHA256.json",
+  "files": [
+    {
+      "file": "PREPARATION_VALIDATION.json",
+      "bytes": 697,
+      "sha256": "54c15288d6bc6d74941ea7d2f1c63135d13694e0fa1b7c14208933e30b61979c"
+    },
+    {
+      "file": "PUBLIC_SELECTION_REVIEW.json",
+      "bytes": 3584,
+      "sha256": "3c48dcf02df93390d9895c2fded22ade383bc44a482ffc479797909cef21122b"
+    },
+    {
+      "file": "README.txt",
+      "bytes": 3402,
+      "sha256": "5cb5391b70fe6ba4b86827304ad83ff78723326003e35bacd33a8ab54d3713c0"
+    },
+    {
+      "file": "SOURCE_SELECTION_SHA256.json",
+      "bytes": 3815,
+      "sha256": "2add2b78a55420c60ccadf005492e026f71de6753b7a4cce67d75723a500eb47"
+    },
+    {
+      "file": "SUMMARY.json",
+      "bytes": 4848,
+      "sha256": "9aa39243a6595e8ad38112d59acb2298c49e5b5435424c1ca0d0e615351a762d"
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/guardian_result.json",
+      "bytes": 52017,
+      "sha256": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb"
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/initialization_closed.json",
+      "bytes": 1570,
+      "sha256": "f437cdbfa42318d6869927f0964e260c643158a386e54e40e574285f9fd13cb0"
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/release_receipt.json",
+      "bytes": 54284,
+      "sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9"
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/stderr.log",
+      "bytes": 41,
+      "sha256": "f86eb8b25f81c0d81b4e0fbe622dbe3863aad3b733479923b73b9ce9d22dac48"
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/plain/stdout.log",
+      "bytes": 18505,
+      "sha256": "0cca3aeb39fd1e99c383a84f9eb98becece886439a147034e7756ec04c08509c"
+    },
+    {
+      "file": "plain_r2/literal_attempt_r2/status.json",
+      "bytes": 403,
+      "sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934"
+    },
+    {
+      "file": "plain_r2/literal_cpu_receipt_r2.json",
+      "bytes": 944,
+      "sha256": "d5c35a95aeca36da317cf9c96ad17d0a9b2e897a3e3f9863ea5d66949e31307b"
+    },
+    {
+      "file": "plain_r2/root_literal_launch_r2/owner.log",
+      "bytes": 553,
+      "sha256": "fe905e2ccb4d36a6cc663471b52aa9c67d770b12234f6ca04d883e774873fd41"
+    }
+  ]
+}
