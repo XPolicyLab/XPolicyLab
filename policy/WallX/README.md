@@ -1,6 +1,6 @@
 # Wall-X
 
-**Contributor:** Starrick Liu | **Original code:** https://github.com/X-Square-Robot/wall-x
+**Contributor:** X Square Robot | **Original code:** https://github.com/X-Square-Robot/wall-x
 
 `WallX` adapts [Wall-X](https://github.com/X-Square-Robot/wall-x), a
 Qwen3.5-based vision-language-action policy, to XPolicyLab/RoboDojo. The
@@ -14,10 +14,12 @@ Shared conventions — argument meanings, checkpoint naming, split-machine
 deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md).
 Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
-This is an **eval-only** submission: the adapter, deployment loop and checkpoint
-export are open source here and in the wall-x repository; the in-house training
-pipeline and data converter are being prepared for release (tracked in the
-PR), so `process_data.sh` and `train.sh` are stubs for now.
+The adapter, the deployment loop, the checkpoint export, the training recipe and
+the base model our checkpoint was fine-tuned from are all published — here, in
+the wall-x repository, and as
+[`x-square-robot/wall-oss-1.0-lite-robodojo-base`](https://huggingface.co/x-square-robot/wall-oss-1.0-lite-robodojo-base)
+— a preview of Wall-OSS-1.0-lite, published ahead of that release and trained
+for a different number of iterations.
 
 ## Installation
 
@@ -32,6 +34,12 @@ cd XPolicyLab/policy/WallX
 WALLX_REPO=<bench_root>/wall-x bash install.sh
 conda activate <policy_env>
 ```
+
+That commit is the serving checkout the published numbers were produced with.
+The training code is on the same fork's `starrick/oss-training` branch, which
+carries the RoboDojo data pipeline, the two example configs and the calibration
+script the [Training](#training) section uses; check that branch out instead if
+you intend to train.
 
 `install.sh` installs XPolicyLab (editable) and, when `WALLX_REPO` is set, the
 wall-x serving package from that checkout (default `<bench_root>/wall-x`, a
@@ -51,18 +59,93 @@ Install wall-x with its CUDA operators compiled (`MAX_JOBS=8 pip install
 fallbacks, which agree within floating-point tolerance but are not bit-identical
 to the run behind the published numbers.
 
+## Training data
+
+Both stages read exactly two inputs, and the code refuses to start if either is
+not what it expects:
+
+* **`data/RoboDojo_ee_lerobot_v30_video`** — the official end-effector export,
+  read as published. Every observation and every action in training comes from
+  decoding it. There is no conversion step, no dataset mixing, and no second
+  corpus; an unrecognised key under `data.robodojo` is rejected rather than
+  ignored.
+* **[`x-square-robot/robodojo-memory-annotations`](https://huggingface.co/datasets/x-square-robot/robodojo-memory-annotations)**
+  — frame-level labels we produced over those same episodes, and publish: which
+  frames of a memory task made visible progress, an optional box around the
+  object the progress was about, and the interval of frames in which recording
+  that keyframe counts as correct. 600 files, one per episode, covering all 100
+  episodes of each of the six memory tasks. They carry no pixels, no states and
+  no actions. Training binds each one to its episode by task instruction and
+  then checks the episode lengths agree, and stops if they do not.
+
+No other demonstrations, teleoperation or simulator-generated trajectories were
+used in either stage.
+
 ## Data Processing
 
-Not released yet. The checkpoint was trained on RoboDojo demonstrations
-converted by the in-house pipeline into the same `vision` / `state` / native EE
-action layout seen at evaluation; the converter ships with the training code.
-`process_data.sh` is a stub until then: once a wall-x checkout provides
-`tools/convert_robodojo.py` it forwards to it, otherwise it only prints the
-target directory.
+```bash
+bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
+```
+
+This fetches those two things and checks that they agree.
+
+**The episodes.** RoboDojo publishes an end-effector LeRobot export,
+`data/RoboDojo_ee_lerobot_v30_video`, alongside the joint-space one. It already
+carries what this policy acts in — a position, a `wxyz` quaternion and a
+gripper value per arm — so it is read as published and there is no conversion
+step:
 
 ```bash
-WALLX_REPO=/path/to/wall-x bash process_data.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> [expert_data_num]
+bash ../../scripts/RoboDojo/download_robodojo_data.sh lerobot_ee
 ```
+
+Its videos are lossy, so a decoded frame differs slightly from what the
+simulator rendered. That is what everyone trains on and the policy is trained
+through it, but pixel-exact comparisons against a lossless source will not
+match.
+
+**The memory annotations.** The memory-dependent tasks turn on earlier frames:
+a block whose colour was seen before it was covered, a slot that was already
+filled. Which frames those are is not in the demonstration, so we annotated it,
+and publish the annotations as
+[`x-square-robot/robodojo-memory-annotations`](https://huggingface.co/datasets/x-square-robot/robodojo-memory-annotations).
+Per episode they record
+
+* the **keyframes** — the frames at which the task made visible progress, which
+  are the frames the policy is trained to have in its memory;
+* an optional **box** around the object that progress was about, so a recalled
+  frame can be cropped to it and the memory carries the object rather than the
+  whole scene;
+* an acceptance **window** per keyframe. A keyframe is a moment, and several
+  consecutive frames show that same moment equally well, so the selector is
+  trained against the interval of frames that would be a correct answer rather
+  than against one index. Scoring a single index would punish a right answer
+  for being one frame early.
+
+They annotate the official episodes rather than replacing them: every pixel and
+every action still comes from the export above.
+
+**The check.** An episode bound to the wrong annotation trains the policy to
+recall the wrong frames, and nothing about the loss curve says so. The script
+therefore binds every annotation to its episode and compares the lengths before
+it exits — the one historical numbering drift in this dataset showed up exactly
+as an episode length differing by one.
+
+**Normalisation statistics** are not measured: they come with the weights. The
+base model ships the pair it was pretrained with, and stage 2 inherits them
+from the stage-1 checkpoint it refines. The model learned robot control reading
+those numbers, and measuring new ones over RoboDojo alone would
+shift the inputs every pretrained layer sees — with nothing in the loss to say
+so.
+
+To check the wiring before downloading 200 GB, `scripts/robodojo_smoke.py`
+writes a two-episode stand-in of the whole setup — export, annotations, a
+normalizer, both configs — and pushes a few batches through the real processor.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `WALLX_ANNOTATIONS` | `<bench_root>/data/robodojo_memory_annotations` | where the annotations are unpacked |
+| `WALLX_ANNOTATION_REPO` | `x-square-robot/robodojo-memory-annotations` | the dataset to fetch them from |
 
 ## Model Assets
 
@@ -91,14 +174,87 @@ process uses about 19 GB of GPU memory with ten environments batched.
 
 ## Training
 
-Not released yet (eval-only submission; the release is tracked in the PR).
-`train.sh` is a stub with the standard arguments: once a wall-x checkout
-provides `tools/train.py` it forwards to it, otherwise it only prints the
-checkpoint directory it would write.
+Two stages, because the second needs the first to exist:
 
 ```bash
-WALLX_REPO=/path/to/wall-x bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
+WALLX_STAGE=refiner bash train.sh <bench_name> <ckpt_name> <env_cfg_type> <action_type> <seed> <gpu_id>
 ```
+
+**Stage 1 — keyframe memory.** Trains the policy that reads a memory of
+recalled keyframes, and the selector that decides which recent frames to
+record, on the same episodes: most samples are action samples that read a
+memory built from the annotation, and interleaved among them are selection
+samples that ask which of sixteen candidate frames to keep. Both are needed.
+A policy trained only to read a memory depends at inference on a memory nobody
+writes.
+
+**Stage 2 — residual refiner.** A flow-matching policy is near a fixed point
+of its own denoiser: feeding its output back in returns roughly the same thing,
+so it cannot correct itself, and spending more integration steps does not help.
+What it never sees while training is the mapping it actually needs — from *its
+own output* to the demonstration. Stage 2 adds a second copy of the action
+branch that learns exactly that, over a frozen stage 1, applying a quarter of
+its residual on each of four chained passes. Its output head starts at zero, so
+an untrained refiner changes nothing — the `correction` the run logs starts at
+exactly 0 and grows.
+
+A step samples a candidate from the frozen policy first, through the same
+integration budget and the same cached observation that serving uses, so the
+residual is fitted to the distribution that is actually served. Of the four
+chained passes only the last is trained; the earlier ones build the estimate it
+starts from and run without gradients, as they do at inference.
+
+Stage 2 is only scored on candidates that are close enough to the demonstration
+to be worth correcting; a sample that chose a different reasonable way to do the
+task would otherwise teach the refiner to undo a decision. "Close enough" is a
+property of the policy being refined, not of the task, so it is measured rather
+than shipped:
+
+```bash
+cd <bench_root>/wall-x
+python scripts/calibrate_refiner_margins.py \
+  --train-config <stage-2 run config> --out <policy/WallX>/margins.json
+```
+
+`train.sh` writes that run config next to the checkpoint, with this run's seed,
+output path and — for stage 2 — the stage-1 checkpoint it is refining written
+in, so the config beside a checkpoint is the one that produced it. It refuses to
+start stage 2 without a stage-1 checkpoint or without the margins, and says
+which is missing.
+
+### What these configs are, and what they are not
+
+They are the recipe. They are not a bit-exact reproduction of the leaderboard
+run, and the differences are these — all of them, as far as we know:
+
+1. **`data.memory.short_term`** is `0` here. The published run enabled recent
+   head-camera frames for the conveyor task only; the configs do not carry
+   per-task overrides.
+2. **Attention kernel.** The published run used a masked-attention kernel that
+   is not one of this package's dependencies. These configs use `sdpa`, which
+   is numerically equivalent but slower.
+3. **How the two objectives meet.** The published run packed samples of both
+   kinds into one sequence, so every step carried both. Packing needs that
+   kernel, so these configs reach the same place by accumulating four
+   micro-batches per update, with the sampler dealing the kinds at their own
+   spacing. One consequence: a packed step weights the two objectives
+   `ar_loss_weight` to one whatever the mix, while accumulation weights them by
+   their share of the samples. Multiply `ar_loss_weight` by the ratio of action
+   samples to selection samples -- both printed at startup -- to train with the
+   published balance.
+
+The training data is the same in both: the official end-effector export plus the
+published memory annotations, and nothing else.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `WALLX_STAGE` | `memory` | `memory` or `refiner` |
+| `WALLX_REPO` | `<bench_root>/wall-x` | the wall-x checkout holding the trainer |
+| `WALLX_CONFIG` | the stage's example config | a config of your own |
+| `WALLX_STAGE1_CKPT` | the stage-1 run of the same setting | which policy stage 2 refines |
+| `WALLX_MARGINS` | `policy/WallX/margins.json` | the calibrated margins |
+| `WALLX_NPROC` | the number of GPUs in `<gpu_id>` | processes per node |
 
 ## Evaluation
 

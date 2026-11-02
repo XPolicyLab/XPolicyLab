@@ -26,7 +26,8 @@ usage() {
 Usage: bash scripts/RoboDojo/download_robodojo_data.sh <type>
 
 Types:
-  lerobot_v3.0   -> RoboDojo_lerobot_v30_video
+  lerobot_v3.0   -> RoboDojo_lerobot_v30_video      (joint space)
+  lerobot_ee     -> RoboDojo_ee_lerobot_v30_video   (end-effector poses)
   lerobot_v2.1   -> RoboDojo_lerobot_v21_video
   hdf5           -> RoboDojo
   demo           -> demo
@@ -34,7 +35,7 @@ Types:
 
 Example:
   bash scripts/RoboDojo/download_robodojo_data.sh hdf5
-  bash scripts/RoboDojo/download_robodojo_data.sh real
+  bash scripts/RoboDojo/download_robodojo_data.sh lerobot_ee
 
 Environment:
   HF_REPO_ID            default: RoboDojo-Benchmark/Robodojo
@@ -58,6 +59,12 @@ resolve_data_paths() {
 	case "${DATA_TYPE}" in
 		lerobot_v3.0)
 			DATA_DIR_NAME="RoboDojo_lerobot_v30_video"
+			;;
+		lerobot_ee|lerobot_ee_v3.0)
+			# The same episodes as lerobot_v3.0, with end-effector poses --
+			# position, wxyz quaternion and gripper per arm -- instead of
+			# joint angles, for policies that act in end-effector space.
+			DATA_DIR_NAME="RoboDojo_ee_lerobot_v30_video"
 			;;
 		lerobot_v2.1)
 			DATA_DIR_NAME="RoboDojo_lerobot_v21_video"
