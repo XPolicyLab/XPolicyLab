@@ -1,0 +1,13 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "stream/list", "params": {} },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "streams": [
+        { "stream_id": "lowstate", "schema": "oeh.LowState", "nominal_hz": 500.0, "tier": "small" },
+        { "stream_id": "head_rgb", "schema": "oeh.Image", "nominal_hz": 20.0, "tier": "large" }
+      ]
+    }
+  }
+}

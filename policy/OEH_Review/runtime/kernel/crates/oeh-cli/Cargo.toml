@@ -1,0 +1,24 @@
+[package]
+name = "oeh-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "oeh"
+path = "src/main.rs"
+
+[dependencies]
+oeh-kernel = { path = "../oeh-kernel" }
+oeh-proto = { path = "../oeh-proto" }
+oeh-distill = { path = "../oeh-distill" }
+oeh-admission = { path = "../oeh-admission" }
+oeh-rpc = { path = "../oeh-rpc" }
+oeh-brain = { path = "../oeh-brain" }
+oeh-predict = { path = "../oeh-predict" }
+clap = { workspace = true, features = ["env"] }
+tokio.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

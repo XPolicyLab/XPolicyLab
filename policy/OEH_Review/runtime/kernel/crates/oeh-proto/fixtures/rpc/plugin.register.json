@@ -1,0 +1,36 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "plugin/register",
+    "params": {
+      "manifest": {
+        "name": "oeh-adapter-unitree",
+        "inject": ["clock"],
+        "provide": ["adapter.unitree"],
+        "streams": [
+          { "stream_id": "lowstate", "schema": "oeh.LowState", "nominal_hz": 500.0, "tier": "small" },
+          { "stream_id": "head_rgb", "schema": "oeh.Image", "nominal_hz": 20.0, "tier": "large" }
+        ]
+      },
+      "capabilities": [
+        { "name": "walk", "class": "motion", "risk_level": "medium", "params_schema": {}, "lease_ttl_s": 5.0 }
+      ],
+      "config": { "body_type": "go2" },
+      "heartbeat_ms": 1000
+    }
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "fiber_id": 7,
+      "state": "active",
+      "streams": [
+        { "stream_id": "lowstate", "channel": "oeh/run-1789928604191/lowstate", "schema_id": "oeh.LowState@json" },
+        { "stream_id": "head_rgb", "channel": "oeh/run-1789928604191/head_rgb", "schema_id": "oeh.Image@json" }
+      ],
+      "heartbeat_ms": 1000
+    }
+  }
+}

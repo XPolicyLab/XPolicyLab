@@ -1,0 +1,47 @@
+# g1-mock 快脑剧本（`profiles/g1-mock.yaml` 的 `brain-native{brain_id: fast}`，
+# `scripts/smoke-g1-mock.sh` 跑的就是它）。
+#
+# 每个 turn 两步，一直重复同一件事：**调 `robot_walk`**，然后收尾。
+#
+# 为什么每个 turn 都一样，而不是像 `fast.yaml` 那样写一条有情节的剧本：这条冒烟要断言
+# 的是规格 §13 的那条链（人靠近 → `obs/person` → 快脑 wake → `walk` 提案 →
+# `rule-scene` deny），而"哪一次唤醒是那条链的"由外面的世界决定，不由剧本决定——适配器
+# 第一帧 lowstate 的 `safety/fsm`、每一条被拒之后回头 steer 的 `act/refused`，都可能先
+# 开掉一个 turn。每个 turn 都走同一步，于是**无论**是第几个 turn 接住那条 `obs/person`，
+# 它都会提一次 `walk`；断言靠 trace_id 把那一次认出来。
+#
+# `vx` / `duration_s` 两个数都在 `rule-clamp` 的包络内（`vx ±0.3`、`duration_s
+# [0.2, 60]`），所以被拒的理由只会是场景本身——人在 0.6 m，`rule-scene` 的 `person_m`
+# 是 0.8 m。
+#
+# 适配器连上来**之前**的那几个 turn 里 `robot_walk` 还不在工具表上（那八条能力是适配器
+# 注册的），模型会收到一条 `unknown tool: robot_walk` 然后照常收尾。那不是失败，正是
+# 这条冒烟要证明的事情的另一半：工具表是活的，适配器一连上来，**下一个** turn 就有
+# `robot_walk` 了（`crates/oeh-brain/src/native/mod.rs` 的 `Projection`）。
+#
+# 十二对足够跑满 `--for 12`：剧本用完之后每次调用还一条空文本的 `Done`，一个跑过头的
+# turn 会干净地收尾，所以长度不是一条隐式的断言。
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }
+- { text: "前面有人，迈一步看看。", tool_calls: [{ name: robot_walk, args: { vx: 0.2, duration_s: 0.3 } }] }
+- { text: "这一轮到此为止。" }

@@ -1,0 +1,4 @@
+{
+  "request": { "jsonrpc": "2.0", "id": 1, "method": "plugin/unregister", "params": { "fiber_id": 7 } },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": {} }
+}

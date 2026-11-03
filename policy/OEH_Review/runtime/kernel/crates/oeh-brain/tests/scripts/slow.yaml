@@ -1,0 +1,9 @@
+# dev-native 慢脑剧本（`profiles/dev-native.yaml` 的 `brain-native{brain_id: slow}`）。
+#
+# 唯一的唤醒源是 `brain/ask`（wake/slow.yaml 里是 `wake`）：快脑一问，这一turn就开。
+# `robot_say` 是唯一被 `NativeBrain` 认作"回答"的工具（成功执行、且这个 turn 是被
+# `brain/ask` 叫醒的）——回答记一条 `brain/answer`，快脑的 wake 策略负责接住它。
+- text: "收到快脑的提问，看一眼再回。"
+  tool_calls:
+    - { name: robot_say, args: { text: "yes, go ahead" } }
+- text: "回答完了。"

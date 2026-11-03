@@ -1,0 +1,76 @@
+{
+  "schema": "oeh.policy.v1",
+  "mode": "review",
+  "embodiment": "dual_arm_ee16",
+  "repository": "${ADAPTER}/runtime",
+  "kernel": "${ADAPTER}/runtime/kernel/target/release/oeh",
+  "output": "${ADAPTER}/runs/policy-runtime",
+  "model_id": "OpenWAM-Alpha-Sim-RoboDojo",
+  "identity_paths": [
+    "${XPL_ROOT}/policy/OpenWAM/model.py",
+    "${XPL_ROOT}/policy/OpenWAM/deploy.py",
+    "${XPL_ROOT}/policy/OpenWAM/OpenWAM/configs/deploy.yaml"
+  ],
+  "max_chunk_steps": 32,
+  "native_step_limit": "${STEP_LIMIT}",
+  "wall_seconds": 21600,
+  "decision_seconds": 60,
+  "gripper_state_semantics": "previous_command",
+  "action_limits": {
+    "frame": "env_relative_world",
+    "quaternion": "wxyz",
+    "left_xyz_bounds": [[-1.212, 0.612], [-1.362, 0.462], [0.715, 1.677]],
+    "right_xyz_bounds": [[-0.612, 1.212], [-1.362, 0.462], [0.715, 1.677]],
+    "bounds_source": "Boxes from pinned RoboDojo ee67a14: arm bases env_cfg/robot/dual_x5.yml (left [-0.3,-0.45,0.765], right [0.3,-0.45,0.765]); reach 0.912 m = sum of X5A.urdf joint-origin offsets base_link->link6->finger joints (all-links-straight upper bound); z from 5 cm below the table top (env_cfg/scene/default.yml: table z 0.74 + 0.025) to base + reach. Gross-error gate, not a policy constraint."
+  },
+  "openwam": {
+    "ckpt_dir": "${OPENWAM_CKPT_DIR}",
+    "openwam_root": "${XPL_ROOT}/policy/OpenWAM/OpenWAM",
+    "openwam_deploy_config": "${XPL_ROOT}/policy/OpenWAM/OpenWAM/configs/deploy.yaml",
+    "bench_name": "RoboDojo",
+    "env_cfg_type": "arx_x5",
+    "action_type": "ee",
+    "action_dim": 14,
+    "replan_steps": null,
+    "allow_dummy_policy": false,
+    "device": "cuda"
+  },
+  "native_step_limit_source": "set per task by tools/freeze_config.py from configs/robodojo-step-limits.json",
+  "review": {
+    "call_seconds": 90,
+    "hold_reserve_s": 12,
+    "first_call_extra_seconds": 0,
+    "teacher_max_wait_s": 900,
+    "turn_seconds": 1800,
+    "empty_candidate_holds": 3,
+    "max_decisions": 0,
+    "control_hz": 25,
+    "limits": {
+      "student_max_steps": 32,
+      "correction_max_steps": 5,
+      "home_max_steps": 32,
+      "correction_max_translation_m": 0.05,
+      "correction_max_rotation_rad": 0.35,
+      "row_max_translation_m": 0.02,
+      "row_max_rotation_rad": 0.1,
+      "home_open_threshold": 0.8
+    },
+    "teacher": {
+      "api": "openai_responses",
+      "base_url": "https://api.openai.com/v1",
+      "request_timeout_s": 150,
+      "image_max_edge": 480,
+      "max_attempts": 4,
+      "retry_delays_s": [5, 15, 30],
+      "max_invalid": 6,
+      "prune_above_tokens": 180000,
+      "context_images": 6,
+      "max_output_tokens": null,
+      "prices_usd_per_million": {"input": 10, "cached_input": 1, "output": 50},
+      "model": "gpt-6-astra",
+      "reasoning_effort": "xhigh",
+      "api_key_file": "${ADAPTER}/state/openai-api-key.env"
+    }
+  },
+  "review_source": "OEH review mode (runtime/oeh_policy/review.py, teacher.py; prompts in runtime/oeh_policy/teacher/): gpt-6-astra at reasoning effort xhigh reviews every OpenWAM-Alpha chunk from the three camera views, the end-effector state and the proposal, and answers with one robodojo_execute call (accept the chunk, a bounded correction, hold, or home); the OEH gateway admits and executes the decision. The reference configuration R0 of the OEH study (docs/agent-icl-study: review template openwam-review.template.json with the campaign matrix's decision_seconds 60 and wall_seconds 21600). The study ran the same model through the Codex app-server (ChatGPT login); this submission calls the OpenAI Responses API with a key read from api_key_file (NAME=value or a bare key, never in a configuration)."
+}

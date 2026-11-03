@@ -1,0 +1,16 @@
+{
+  "source": "GPT-as-Policy 79f8be5 hybrid_rollout/robodojo/prompt_context.py CONTEXT_VERSION v3 (verbatim notes)",
+  "notes": {
+    "organize_table": "Place the named desk items at their instructed destinations, then put the remaining items inside the drawer.",
+    "classify_objects_by_language": "Follow this episode's language-specified category-to-basket mapping for every object.",
+    "imitate_sorting_sequence": "Observe and remember the demonstration before placing the corresponding objects in the same order.",
+    "arrange_largest_number": "Arrange the digits left to right as the largest number, correctly oriented and placed on their pads.",
+    "pack_objects_into_box": "Place every object inside the box with its front facing left, as instructed.",
+    "classify_objects": "Group all objects by category into the three baskets.",
+    "build_tower": "Build the supported tower layers using the wooden blocks and boards.",
+    "make_kong": "Wait for the discard, expose the matching tiles, and finish the tile-handling sequence without disturbing the other tiles.",
+    "fold_clothes": "Fold the sleeves inward and the lower garment upward into a neat folded shape.",
+    "put_bottles_into_dustbin": "Put all bottles inside the dustbin."
+  },
+  "no_arm_return": ["make_kong"]
+}

@@ -1,0 +1,9 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "brain/inject",
+    "params": { "brain_id": "fast", "text": "look left" }
+  },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": { "seq": 141 } }
+}

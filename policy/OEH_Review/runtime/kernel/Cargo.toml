@@ -1,0 +1,31 @@
+[workspace]
+members = ["crates/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.1.2"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml_ng = "0.10"
+sha2 = "0.10"
+bytes = "1"
+thiserror = "2"
+anyhow = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync", "signal", "net", "io-util", "io-std", "process"] }
+inventory = "0.3"
+# 只为 `oeh-rpc::transport::current_uid()`（`geteuid(2)`）。不是新依赖：`tokio` 在
+# unix 上本来就依赖 libc，这里只是把它从传递依赖抬成直接依赖。
+libc = "0.2"
+parking_lot = "0.12"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+clap = { version = "4", features = ["derive"] }
+tempfile = "3"
+futures-util = "0.3"
+tokio-tungstenite = "0.30"
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream"] }
+iceoryx2 = "0.10"

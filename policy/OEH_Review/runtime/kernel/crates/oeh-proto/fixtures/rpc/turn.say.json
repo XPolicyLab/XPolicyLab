@@ -1,0 +1,13 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "turn/say",
+    "params": { "brain_id": "fast", "turn": 3, "text": "Hello! How can I help?" }
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": { "proposal_id": "t-7-3-120-p2", "outcome": { "outcome": "executed", "result": {} } }
+  }
+}

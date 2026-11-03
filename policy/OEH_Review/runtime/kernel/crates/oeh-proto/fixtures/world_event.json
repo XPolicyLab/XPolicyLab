@@ -1,0 +1,12 @@
+{
+  "seq": 1234,
+  "t_kernel": 987654321,
+  "kind": "obs/person",
+  "source": "oeh-distill-vision",
+  "frame_refs": [{ "stream_id": "head_rgb", "frame_seq": 8812, "t_kernel": 987600000 }],
+  "salience": 180,
+  "collapse_key": "person:nearest",
+  "trace_id": "t-0001",
+  "payload": { "nearest_person_m": 0.9, "count": 1 },
+  "required": true
+}

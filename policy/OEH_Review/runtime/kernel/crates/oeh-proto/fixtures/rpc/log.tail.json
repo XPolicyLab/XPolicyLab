@@ -1,0 +1,9 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "log/tail",
+    "params": { "after": 1000, "prefixes": ["obs", "act"] }
+  },
+  "response": { "jsonrpc": "2.0", "id": 1, "result": { "from": 1000 } }
+}

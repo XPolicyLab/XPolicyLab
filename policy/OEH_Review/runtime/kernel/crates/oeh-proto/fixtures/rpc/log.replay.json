@@ -1,0 +1,29 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "log/replay",
+    "params": { "dir": "2026-09-18T00-00-00Z", "after": 1000, "limit": 2 }
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+      "events": [
+        {
+          "seq": 1001,
+          "t_kernel": 987654400,
+          "kind": "obs/person",
+          "source": "oeh-distill-vision",
+          "frame_refs": [{ "stream_id": "head_rgb", "frame_seq": 8813, "t_kernel": 987654390 }],
+          "salience": 180,
+          "collapse_key": "person:nearest",
+          "trace_id": "t-0001",
+          "payload": { "nearest_person_m": 0.9 },
+          "required": true
+        }
+      ],
+      "done": false
+    }
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "notification": { "jsonrpc": "2.0", "method": "brain/interrupt", "params": { "brain_id": "fast" } }
+}

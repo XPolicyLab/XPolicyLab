@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "jsonrpc": "2.0",
+    "method": "capability/cancel",
+    "params": { "exec_id": "exec-1", "reason": "estop" }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "request": {
+    "jsonrpc": "2.0",
+    "id": "k1",
+    "method": "approval/request",
+    "params": {
+      "ask_id": "ask-77",
+      "proposal": { "proposal_id": "t-7-3-120-p1", "brain_id": "fast", "turn": 3, "trace_id": "t-7-3-120", "capability": "walk", "params": { "vx": 0.5 } },
+      "spec": { "name": "walk", "class": "motion", "risk_level": "high", "params_schema": {}, "lease_ttl_s": 5.0 },
+      "reason": "risk_level high requires approval",
+      "trace": [
+        {
+          "rule": "whitelist",
+          "incoming": { "verdict": "allow" },
+          "outgoing": { "verdict": "ask", "reason": "risk_level high requires approval" },
+          "tamper": false,
+          "panicked": false,
+          "clamped": null
+        }
+      ]
+    }
+  },
+  "response": {
+    "jsonrpc": "2.0",
+    "id": "k1",
+    "result": { "decision": "allow", "by": "operator-1", "reason": "looks safe" }
+  }
+}

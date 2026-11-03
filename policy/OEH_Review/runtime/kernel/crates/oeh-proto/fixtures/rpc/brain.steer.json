@@ -1,0 +1,17 @@
+{
+  "notification": {
+    "jsonrpc": "2.0",
+    "method": "brain/steer",
+    "params": {
+      "brain_id": "fast",
+      "observation": {
+        "t_kernel": 1300,
+        "wake_reason": { "kind": "obs/loud_noise", "seq": 140, "action": "steer" },
+        "state": { "fsm": "ACTING" },
+        "events": [],
+        "source_seq_range": [121, 140],
+        "truncated": 0
+      }
+    }
+  }
+}

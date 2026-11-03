@@ -1,0 +1,21 @@
+[package]
+name = "oeh-admission"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+oeh-kernel = { path = "../oeh-kernel" }
+oeh-proto = { path = "../oeh-proto" }
+oeh-predict = { path = "../oeh-predict" }
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+parking_lot.workspace = true
+thiserror.workspace = true
+inventory.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+oeh-distill = { path = "../oeh-distill" }
+tempfile.workspace = true

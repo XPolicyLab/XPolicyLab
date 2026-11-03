@@ -1,0 +1,2 @@
+- Example lesson (test fixture): after a release above a container, lift straight up before any lateral move.
+- Example lesson (test fixture): when a grasp slips twice at the same spot, re-approach from a different side.
