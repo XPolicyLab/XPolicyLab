@@ -1,0 +1,30 @@
+{
+  "purpose": "Generic scale-free typography for identity recognition; no RoboDojo assets or metric dimensions",
+  "fonts": [
+    {
+      "file": "DejaVuSans.ttf",
+      "sha256": "690243adfefe0ce154b547db6205794bd30ac4277275179517a90994f4980648",
+      "source": "Debian fonts-dejavu-core system package, unmodified font"
+    },
+    {
+      "file": "DejaVuSans-Bold.ttf",
+      "sha256": "d1c3ff99f1e1ce1827a33efd4dad81f40babda06bff9e43bd7591c86662a287b",
+      "source": "Debian fonts-dejavu-core system package, unmodified font"
+    },
+    {
+      "file": "DejaVuSansCondensed-Bold.ttf",
+      "sha256": "7d89d85f537dd4a84aedfbfb83a949513badb4eefc93813fdc3f15a07e911e66",
+      "source": "Debian fonts-dejavu-core system package, unmodified font"
+    },
+    {
+      "file": "DejaVuSerif-Bold.ttf",
+      "sha256": "f81ce497906182460f9a4beb89bec7c1265af2182f8110c25821dfc88486942e",
+      "source": "Debian fonts-dejavu-core system package, unmodified font"
+    },
+    {
+      "file": "DejaVuSansMono-Bold.ttf",
+      "sha256": "f8aa70b5d4210d77624f5b5b5cf094fadf9fd019caf5b528fa5af42fc4ac43a5",
+      "source": "Debian fonts-dejavu-core system package, unmodified font"
+    }
+  ]
+}

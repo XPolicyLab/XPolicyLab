@@ -29,6 +29,18 @@ def _indices(env):
     return indices
 
 
+def _native_action(action):
+    """Preserve the insert-key deploy.py gripper alias at the evaluator boundary."""
+    result = dict(action)
+    for arm in ('left', 'right'):
+        old, new = arm + '_gripper', arm + '_ee_joint_state'
+        if old in result:
+            if new in result:
+                raise ValueError('Ambiguous gripper action: both alias and native field')
+            result[new] = result.pop(old)
+    return result
+
+
 def eval_one_episode_batch(TASK_ENV, model_client):
     env = TASK_ENV
     if env.is_episode_end():
@@ -60,7 +72,7 @@ def eval_one_episode_batch(TASK_ENV, model_client):
             active = _indices(env)
             if not set(active) <= set(indices):
                 raise RuntimeError("Unexpected environment during action chunk")
-            actions = [by_index[i][step] for i in active]
+            actions = [_native_action(by_index[i][step]) for i in active]
             env.take_action_batch(actions, active)
             # The public observation API returns the environments still running.
             if env.is_episode_end():
@@ -80,7 +92,7 @@ def eval_one_episode(TASK_ENV, model_client):
         if not isinstance(actions, list) or not actions:
             raise ValueError("Skill returned an empty action chunk")
         for index, action in enumerate(actions):
-            env.take_action(action)
+            env.take_action(_native_action(action))
             if env.is_episode_end() or index + 1 == len(actions):
                 break
             model_client.call(func_name="update_obs", obs=env.get_obs())
