@@ -1,0 +1,43 @@
+# @package _global_
+#
+# YAM real-world deploy knobs — the runtime half of `sim_libero.yaml` /
+# `sim_robotwin.yaml`, for a physical robot instead of a simulator.
+#
+# RUNTIME-ONLY, deliberately: no `defaults:` and no model / data keys. Unlike
+# the sim yamls, `build_policy_from_checkpoint` takes model and processor from
+# the checkpoint's own saved `config.yaml`, because an eval-side preset drifts
+# the moment the training recipe moves. Adding a `model:` or `data:` key here
+# has no effect — change the training config and retrain.
+#
+# Explicit call-site arguments win over this file, so it sets the floor rather
+# than pinning behavior. Consumed by deploy_policy.py
+# (build_policy_from_checkpoint) and yam_raiden_bridge.py (replan_steps).
+
+EVALUATION:
+  # Device / precision.
+  device: cuda
+  mixed_precision: bf16
+
+  # `action_horizon: null` derives (num_frames - 1) from the trained config;
+  # `sigma_shift: null` keeps the trained flow-matching shift.
+  action_horizon: null
+  num_inference_steps: 4
+  sigma_shift: null
+  seed: null
+  text_cfg_scale: 1.0
+  negative_prompt: ""
+  rand_device: cpu
+  tiled: false
+  offload_text_encoder: true  # keep T5 on CPU: ~10 GB of VRAM back, ~200-300 ms/call
+
+  # Commands the bridge executes per inference before re-observing. 32 = the
+  # full chunk, what the real-robot runs used. Environment-specific, so the sim
+  # presets carry their own values.
+  replan_steps: 32
+
+  # Inference optimization.
+  torch_compile: true
+  torch_compile_mode: "reduce-overhead"  # default, reduce-overhead, max-autotune
+  quantization: null  # null, "int8" (weight-only) or "fp8" (dynamic act+weight, SM89+)
+
+  dynamic_step_skip: false

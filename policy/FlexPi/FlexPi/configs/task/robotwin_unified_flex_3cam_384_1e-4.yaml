@@ -1,0 +1,35 @@
+# @package _global_
+#
+# FlexPi (flex_joint) — RoboTwin 3-cam 384 preset. One checkpoint serves all 8
+# inference regimes via per-call joint_video / joint_dino / joint_pointmap on
+# infer_action. See docs/ROBOTWIN.md.
+
+defaults:
+  - override /data: robotwin
+  - override /model: flexpi
+  - _self_
+
+batch_size: 8
+num_workers: 8
+
+model:
+  mot_checkpoint_mixed_attn: false
+  composite_layout: "tshape_robotwin_384x320_uniform"
+
+data:
+  train:
+    concat_multi_camera: ${model.composite_layout}
+  val:
+    concat_multi_camera: ${model.composite_layout}
+
+learning_rate: 1e-4
+num_epochs: 20
+max_steps: null
+log_every: 2
+save_every: 500
+eval_every: 500
+
+gradient_accumulation_steps: 8
+weight_decay: 1e-2
+resume: null
+pretrained_ckpt: null
