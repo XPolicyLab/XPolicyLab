@@ -1,0 +1,8 @@
+# Bounded Cartesian arm motion
+Use `ee_move(arm, xyz, quat, grip, max_steps, remaining, tolerance, settle_steps, stall_steps)` for a dual ARX arm in EE mode. Coordinates are absolute world meters and quaternion order is qw,qx,qy,qz. Grip is 0 closed, 1 open. Pass the live remaining action budget. The return value reports steps spent, measured pose, tolerance, termination and success. Stop subsequent stages on `halted` and subtract spent steps from the budget.
+
+The helper holds the other arm's measured pose, monitors translational and rotational error, gives commands time to settle, and stops on convergence, lack of measured progress, budget exhaustion, or episode end. It does not plan collision-free paths or detect a held object. Use visually chosen high approach, vertical descent, lift, and transfer waypoints; inspect after grasping.
+
+Evidence: observations/000002, 000006, 000008 and 000009 show downward poses converging within 8-10 steps. Observation/000005 demonstrates repeated commands at an unreachable target leaving the arm unchanged; the stall check addresses that pattern. Tested only on this scene; camera-to-world mapping and contact heights must be calibrated separately.
+
+The `orientation_tolerance_degrees` parameter defaults to 2 degrees. Earlier experiments used a quaternion dot threshold of 0.995, which permits about 11.5 degrees of angular error. Observations 000048 and 000056 show a move reported reached while a visible yaw error remained. Such premature convergence can make a subsequent low descent sweep fingers across a nearby object. The tighter default is a correction based on those measurements; validate its cost and convergence in each new scene.

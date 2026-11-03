@@ -1,0 +1,11 @@
+# Guarded upright-object pickup and placement
+
+Include `ee_motion.py` followed by `pick_place.py`. `guarded_pick` and `guarded_place` take an arm, explicit grasp/release world xyz, carry height, scalar-first quaternion, action cap, Cartesian increment, and minimum loaded aperture. They return stage, status, and actions used; never assume success without checking the result and a current image.
+
+Preconditions: calibrated object center and grasp plane, clear vertical approach, reachable carry path, and destination footprint clear of every other object. These helpers do not perceive objects. Pose and aperture feedback gate successive stages. Placement accepts at most `contact_tolerance` metres residual on the final descent, because table contact may prevent reaching the exact requested point. All calls share the episode's action budget, so subtract reported actions and consult live status.
+
+Evidence: 000021-000025 validated medium and second-largest carry/release. 000038-000041 validated a deeper largest-doll grasp, central set-down, and regrasp after visual recentering. 000042 demonstrates that aperture checking cannot prevent every collision if the destination footprint was selected poorly. These composed helpers are first exercised in 000045. Transfer beyond the current scene remains untested.
+
+Final validation: `guarded_pick` and `guarded_place` completed repeated middle-doll transfers in 000045 and 000058, the second-largest transfer in 000059, and rotated-jaw largest pickup/set-down/regrasp in 000053-000055. The final official success was reported in 000060. At 000056, the helper correctly stopped on a 5 mm carry residual near the reach boundary; the operator inspected and completed descent at the reached xy pose in 000057. The procedure therefore still requires observation and judgment for reach-boundary recovery.
+
+Budgeting limitation: the carry stage can consume the full supplied cap; allocate travel distance / increment plus descent, release, and retreat, and retain an episode-level recovery reserve. A returned `episode` status is terminal even when the wrapper does not copy the success field; consult the environment response. These wrappers have no top-level actions.

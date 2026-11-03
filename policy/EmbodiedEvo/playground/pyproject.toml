@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "embodiedevo"
+version = "0.1.0"
+description = "EmbodiedEvo: persistent coding agents with frozen skills and lessons on RoboDojo"
+readme = "README.md"
+requires-python = ">=3.11"
+
+# Isaac Sim and RoboDojo dependencies belong to a separate simulator environment.
+dependencies = ["gymnasium>=1.0", "numpy", "pillow", "pyyaml", "imageio[ffmpeg]"]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.4"]
+policy = ["websockets==15.0.1"]
+
+[project.scripts]
+embodiedevo = "orchestrator.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["simulators*", "environments*", "orchestrator*", "integrations*", "scripts*"]
+
+[tool.setuptools.package-data]
+orchestrator = ["*.md", "instructions/*.md"]
+"integrations.robodojo_policy.policy.EmbodiedEvo" = ["deploy.yml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# vendor/ is upstream's code. We do not lint it and we do not reformat it.
+extend-exclude = ["vendor"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# The simulator injects the four handwritten primitives into submitted programs.
+"tasks/**/Workspace/submission/*.py" = ["F821"]
+"tasks_baseline/**/Workspace/submission/*.py" = ["F821"]

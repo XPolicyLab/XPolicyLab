@@ -1,0 +1,48 @@
+# Runtime evidence and local scratch data
+/runs/
+/archives/
+/logs/
+/videos/
+/outputs/
+/debug/
+*.log
+nohup.out
+*.mp4
+*.webm
+*.avi
+*.mkv
+
+# Install the simulator and assets locally; never publish them with the harness.
+/vendor/
+/assets/
+/checkpoints/
+*.sif
+*.pt
+*.pth
+*.npy
+*.npz
+
+# Environments, caches and build products
+/.venv*/
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/dist/
+.ruff_cache/
+.pytest_cache/
+.coverage*
+htmlcov/
+.DS_Store
+/.vscode/
+/.idea/
+
+# Operator credentials and site-specific settings
+.env
+.env.*
+!.env.example
+auth.json
+*.pem
+*.key
+/.codex/
+/configs/*.local.*

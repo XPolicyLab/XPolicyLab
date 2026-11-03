@@ -1,0 +1,6 @@
+# Smooth pose transport
+`smooth_ee` interpolates absolute translation and normalized quaternions, with explicit maximum actions, metres per target increment, and radians per target increment. It reads feedback after each action and holds the other arm; it stops on episode end. Callers must inspect final tracking, budget the whole sequence, and plan collision-free waypoints. This is not a collision planner and its initial target count does not guarantee tracking every intermediate point. Use slower motion for a long object held near one end.
+
+Motivation: 000054-000056 showed tube tilt after a large lateral carry, even with an empty rack in 000056. Inertial slip is a competing explanation to obstacle contact. Implementation is being tested next.
+
+Validation update: 000057 used 8 mm translation increments and 0.08 rad rotation increments through lift, rotation, and a 26 cm carry. The tube remained retained. This helper was also used in the final accepted episode, including the left tube in 000062-000065 and center carry in 000067. `max_steps` must be positive. Large values of translation_step/angular_step can still cause slip. Official success in 000068 validates the complete episode, not universal safety of every interpolated path.

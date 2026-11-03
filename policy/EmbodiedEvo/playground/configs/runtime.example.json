@@ -1,0 +1,12 @@
+{
+  "image": "sha256:REPLACE_WITH_FULL_64_HEX_IMAGE_ID",
+  "sif": "/path/to/robodojo.sif",
+  "python": "/path/in/image/to/RoboDojo/bin/python",
+  "source_root": "/workspace/RoboDojo",
+  "kit_ext_cache": "/path/in/image/to/kit-ext-cache/3",
+  "cache_dir": "/path/to/local/embodiedevo/nv-cache",
+  "temporary_root": "/path/to/local/embodiedevo/runtime",
+  "kit_usd_threads": 8,
+  "video_threads": 2,
+  "episode_timeout": 28800
+}

@@ -1,0 +1,13 @@
+# Playground result and next steps
+
+Final observation: 000100. All 100 execution slots were used. The final attempt used 1100 native actions, reached its limit, and returned reward 0, success false, truncated true. Both arms returned to their saved zero-joint origin with open grippers. The final head image shows both watches in blue, both pens in red, one doll in white, and two dolls outside white. The task is not solved; no partial-credit score was exposed.
+
+The strongest reusable results are bounded measured-pose motion, failure-aware waypoint following, compensated forward wrist tilting, and low release with a stationary wait and vertical retreat. These are implemented in skills/ee_motion.py, skills/staged_carry.py, and skills/settled_release.py with companion usage notes. All evidence is from this one scene, not unseen-scene validation.
+
+The clean replay in 000088 placed both upright watches and both pens in their assigned baskets; these remained there through 000100. Pen and watch grasp evidence, including contact poses and limitations, is in watch_grasp.md and contact_view_alignment.md. Sideways-watch recovery is unresolved and should not be treated as validated.
+
+Doll head grasps succeeded several times (000061, 000065, 000071, 000076, 000090, 000098), but many similar-looking grasps pushed, rotated, or ejected the doll. Some held dolls slipped during orientation changes, and an immediate release/retreat ejected one behind the baskets. The successful final sequence used a secure head/neck grip, central table staging from right to left (000099), a compensated tilt, and low settled release into white (000100). Do not claim a reliable general doll controller. See doll_grasp.md for successes and failures.
+
+Priority for a future session: calibrate the wrist camera's actual pad contact region at known object heights, infer local pixel-to-world directions from measured test motions, and derive a robust head/neck grasp that avoids the torso and ears. Verify every lift and orientation change before spending a carry sequence. Preserve carried-object clearance over rims. Stop the entire stage when a waypoint fails, keeping the current grip command. Use the center basket for a category present on both sides if cross-arm staging is undesirable.
+
+Orientation convergence was tightened from an approximately 11.5-degree allowance to 2 degrees after 000088. This correction was exercised in 000089 onward, but it did not by itself solve doll manipulation. Recording exact object pose changes and actual grasp retention matters more than merely checking end-effector convergence.

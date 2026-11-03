@@ -1,0 +1,15 @@
+# Sort upright objects while preserving useful initial structure
+
+Goal: arrange several upright objects in increasing size order using native dual-arm EE control. This is an observation-guided procedure, not an autonomous visual detector. Use current native camera frames and explicit world-coordinate targets; image pixels are not world coordinates.
+
+1. Rank the visible objects by size. Identify any already ordered, approximately collinear subset. Test reachability of proposed extensions in clear space before moving objects. Preserving the initial two-smallest pair avoided two complete pick/place operations in this scene.
+2. Calibrate the object centers and grasp heights with small, safe motions. At fixed height, a lateral wrist displacement establishes the sign and approximate scale of image motion. Repeat alignment checks after lowering because perspective and camera-to-fingertip offset change the apparent center.
+3. Choose a downward jaw orientation appropriate to the carry direction. In this scene, [0.7071068, 0, 0.7071068, 0] worked for medium dolls; [0.5, -0.5, 0.5, 0.5] greatly improved the largest doll's lateral transport. These are scalar-first world quaternions, not universal grasp poses.
+4. Use `guarded_pick`, inspect retention, and perform a short lateral test after any difficult pickup or regrasp. Aperture that decreases rapidly during lift indicates slipping even if the object temporarily rises.
+5. Plan the carried object's whole footprint. Route large objects around occupied source positions and destination rows. If both arms are needed, place upright in their shared reachable area, retreat one arm, visually recenter, and regrasp with the other. Settling can shift the object enough to invalidate the previous wrist target.
+6. Use `guarded_place` and inspect upright settling. A retreat failure after release does not imply the placement failed: read the reported stage and the image before repeating anything.
+7. Reserve native actions to return to the saved initial joint action. Stop immediately when step reports termination or truncation. Official success can arrive before exhausting the native action allowance; do not continue after it.
+
+Inputs: size ranking, current images, calibrated grasp and placement targets, arm choice, orientations, path clearances, tolerances, and remaining native action budget. Require positive `max_steps` and `speed` for the motion helpers. Include `ee_motion.py` before `pick_place.py`. All Python files are definition-only and can be safely included without initiating movement.
+
+Evidence: 000045-000046 and 000058-000059 demonstrate preserving an ordered pair and extending the row. 000053-000057 demonstrate rotated-jaw large-object transfer through a shared placement. 000060 returned official reward 1.0, success true, terminated true after return-to-origin commands. The successful attempt used 812 of 1050 native actions, with 238 left. These results are from one scene; visual generalization and transfer to other embodiments remain untested.

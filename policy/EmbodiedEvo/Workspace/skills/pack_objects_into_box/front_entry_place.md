@@ -1,0 +1,11 @@
+# Tilted front entry into a box
+
+Include `ee_motion.py` before this helper. Call `configure_control` with the current remaining action allowance. `front_entry_place(arm, stage_xyz, release_xyz, entry_quat, grip=0, motion_steps=45, opening_steps=16, dwell=10)` moves a held object through an explicit safe staging pose, changes orientation while clear of the box, advances/lowers through the front opening, releases with a dwell, and retreats to the stage. Every motion checks measured convergence; a failed approach leaves the jaws closed. It shares termination and action-budget guards with the motion helper.
+
+Inputs are absolute native world EE poses in metres and scalar-first quaternion. The caller must establish attachment, choose a collision-free front approach, preserve the object's desired front axis, and compensate the offset between the EE frame and the held object. This helper does not infer box position or validate containment. Inspect at most the task-permitted number of current camera frames after release.
+
+Preconditions: aligned open box, front rim lower than side flaps, held object small enough for the opening, staging pose clear of all flaps. Do not apply to a closed box or assume reported EE xyz is the object's center. An oblique grasp may change object yaw during closure.
+
+Evidence for the pattern: hammer release in 000035; shoe in 000047 confirmed contained/toe-left in 000048; direct right-arm diagonal car release in 000056. Typical left entry tilts the downward tool 45 degrees toward world +y. A box-center EE y=0 overshot the box (000032-000033); front-offset EE y=-0.15 succeeded in the unchanged scene. These numbers are scene-specific evidence, not universal targets. The component motion sequence and the extracted wrapper have both been exercised; see the wrapper evidence below. Official success remains unconfirmed during these intermediate observations.
+
+Wrapper execution evidence: 000062 ran the extracted helper through all checked stages and withdrew the left arm. Later low-opening experiments (000069-000070) displaced the box, so clearance of the **fully open** pads is a mandatory caller precondition, not a property guaranteed by pose convergence. This is a motion procedure, not a validated full packing policy.

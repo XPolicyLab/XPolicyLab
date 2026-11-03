@@ -1,0 +1,15 @@
+# Copy to an external EMBODIEDEVO_CODEX_HOME/config.toml, then edit base_url.
+# These model settings match the shipped tasks; choose a model your provider supports.
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+model_provider = "compatible"
+cli_auth_credentials_store = "file"
+
+[model_providers.compatible]
+name = "Responses API gateway"
+base_url = "https://your-api-provider.example.invalid/v1"
+wire_api = "responses"
+# Use the API key saved by codex login in this dedicated home's auth.json.
+requires_openai_auth = true
+# Enable only if the gateway supports Responses API WebSocket transport.
+supports_websockets = false
