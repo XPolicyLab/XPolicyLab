@@ -27,7 +27,7 @@ The adapter accepts three RGB camera views and Cartesian observations. It includ
 
 Evaluation code lives in the [XPolicyLab policy directory](https://github.com/Zheng-Liming/XPolicyLab/tree/feature/era0_preview/policy/Era0_Preview). Use this checkout directly; no code archive is needed.
 
-The model repository currently contains only its model card; weights and inference assets must be available before running evaluation. The commands below describe the expected model layout. Download the model from this policy directory once those assets are available:
+Model weights, tokenizer/processor assets and the exact normalization file are provided in the model repository. Download them from this policy directory:
 
 ```bash
 bash download_checkpoint.sh
@@ -41,7 +41,7 @@ bash download_checkpoint.sh roboterax/Era0-Preview-5B-RoboDojo \
   checkpoints/era0-preview main
 ```
 
-The expected checkpoint uses a flat layout:
+The published checkpoint uses a flat layout:
 
 ```text
 checkpoints/era0-preview/
@@ -124,7 +124,7 @@ Time RoPE is loaded **from checkpoint `config.json`** and retained unchanged acr
 
 ## Submission status and verification
 
-The model repository link above is the distribution location; its current main revision contains only the model card, so model assets are not yet downloadable there. Expected model/normalization fingerprints are retained in `checkpoint_release.json`. This directory contains evaluation code only. The plain/encoded debug transport checks and full three-seed evaluation remain pending; the single-task smoke test is documented in [SUBMISSION.md](SUBMISSION.md).
+Model weights and inference assets are available at the model repository link above. Model/normalization fingerprints are retained in `checkpoint_release.json`. This directory contains evaluation code only. The plain/encoded debug transport checks and full three-seed evaluation remain pending; the single-task smoke test is documented in [SUBMISSION.md](SUBMISSION.md).
 
 Reference standards: [XPolicyLab CONTRIBUTING](../../CONTRIBUTING.md), [official quick evaluation and complete protocol](https://robodojo-benchmark.com/doc/usage/quick-evaluation/), [official policy integration](https://robodojo-benchmark.com/doc/usage/xpolicylab/).
 
