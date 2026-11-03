@@ -1,18 +1,18 @@
 # Era0-Preview submission checklist
 
-The [model and normalization](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/tree/eval-v1) are published. The model-upload PR was merged; no XPolicyLab code PR or cloud evaluation request has been submitted.
+The [model repository](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo) currently contains its model card only; model weights and inference assets must be available before evaluation. Evaluation code is maintained in the XPolicyLab policy directory.
 
 - Model display name: **Era0-Preview**. Import/policy directory: **Era0_Preview**.
 - Scope: eval-only, RoboDojo / arx_x5 / ee, single and vectorized environments.
 - Complete protocol: installed SDK default all-task inventory, seeds 0/1/2, native counts; no local task extensions.
 - Runtime: included under `runtime/`, self-contained inference code with no policy symlink.
-- Download: `bash download_checkpoint.sh`; pinned repository/revision and weight/norm hashes are in [checkpoint_release.json](checkpoint_release.json). The publication uses a flat layout and includes `norm_stats.pkl`.
+- Download: `bash download_checkpoint.sh`; pinned repository/revision and weight/norm hashes are in [checkpoint_release.json](checkpoint_release.json). The expected model assets use a flat layout including `norm_stats.pkl`.
 - Preserve the selected checkpoint's `config.json`, `hy_xvla_adapter.json`, processor/tokenizer files, all safetensors, and exact normalization pickle.
 - Preserve the saved time-RoPE configuration. Do not switch action coordinates, normalization, chunk horizon, color order or prompt placement.
 - Defaults use policy-side image delay (`HY_OBS_LAG=1`) with SDK rendering, and retain local IK protection. For the audited official execution/render combination, select `--execution-profile official --render-mode sdk`, or `ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0` on standard entries. The official profile adds only output/resume path plumbing. Setting the rendering switch alone retains IK protection. Disclose compatibility settings; see [SDK_COMPATIBILITY.md](SDK_COMPATIBILITY.md).
 - Missing trajectories remain incomplete, including unstable `make_toast_random`; no 520-episode acceptance shortcut.
 
-Publication completed: model, normalization and inference assets; revision `eval-v1`; 16 uploaded files verified.
+Code distribution: use the XPolicyLab `feature/era0_preview` branch directly. No code archive is required.
 
 Pending before an official submission:
 

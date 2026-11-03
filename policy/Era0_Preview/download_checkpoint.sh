@@ -26,7 +26,8 @@ print(json.dumps(dict(repo_id=repo, revision=revision, local_dir=str(destination
 if dry_run:
     raise SystemExit(0)
 from huggingface_hub import snapshot_download
-snapshot_download(repo_id=repo, local_dir=destination, revision=revision)
+snapshot_download(repo_id=repo, local_dir=destination, revision=revision,
+                  ignore_patterns=['*.tar.gz', '*.tgz', '*.zip'])
 if repo == release['repo_id'] and revision == release['revision']:
     norm = destination/release['norm_filename']
     if hashlib.sha256(norm.read_bytes()).hexdigest() != release['norm_sha256']:

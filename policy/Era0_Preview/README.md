@@ -4,7 +4,7 @@
 
 Era0-Preview uses a Qwen3.5-4B visual language backbone and a G0.5 prefix-KV action expert. This eval-only adapter vendors the inference runtime and supports RoboDojo `arx_x5`, Cartesian `ee` actions, and batched simulation. The import/directory name is `Era0_Preview`.
 
-**Published weights:** [roboterax/Era0-Preview-5B-RoboDojo](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo) · **Release:** [weights and assets](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/tree/eval-v1) · **Model card:** [README](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/blob/main/README.md).
+**Model repository:** [roboterax/Era0-Preview-5B-RoboDojo](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo) · **Files:** [repository files](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/tree/main) · **Model card:** [README](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/blob/main/README.md).
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -25,21 +25,23 @@ The adapter accepts three RGB camera views and Cartesian observations. It includ
 
 ## Evaluation
 
-Download the published model from this policy directory:
+Evaluation code lives in the [XPolicyLab policy directory](https://github.com/Zheng-Liming/XPolicyLab/tree/feature/era0_preview/policy/Era0_Preview). Use this checkout directly; no code archive is needed.
+
+The model repository currently contains only its model card; weights and inference assets must be available before running evaluation. The commands below describe the expected model layout. Download the model from this policy directory once those assets are available:
 
 ```bash
 bash download_checkpoint.sh
 ```
 
-The script defaults to `roboterax/Era0-Preview-5B-RoboDojo` at release tag `eval-v1`, writing into this policy's `checkpoints/era0-preview/`. Use `POLICY_ENV=/path/to/venv` if the environment is not `.venv`; pass `--dry-run` to inspect without downloading. A custom destination or the previous explicit repository syntax also works:
+The script defaults to `roboterax/Era0-Preview-5B-RoboDojo` at revision `main`, writing into this policy's `checkpoints/era0-preview/`. Use `POLICY_ENV=/path/to/venv` if the environment is not `.venv`; pass `--dry-run` to inspect without downloading. A custom destination or the previous explicit repository syntax also works:
 
 ```bash
 bash download_checkpoint.sh /path/to/checkpoints/era0-preview
 bash download_checkpoint.sh roboterax/Era0-Preview-5B-RoboDojo \
-  checkpoints/era0-preview eval-v1
+  checkpoints/era0-preview main
 ```
 
-The public repository has a flat layout:
+The expected checkpoint uses a flat layout:
 
 ```text
 checkpoints/era0-preview/
@@ -54,12 +56,11 @@ checkpoints/era0-preview/
   chat_template.jinja
   deploy.yml
   SHA256SUMS
-  Era0-Preview-evaluation-code.tar.gz
 ```
 
-The required [norm_stats.pkl](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/blob/eval-v1/norm_stats.pkl) is included. Its SHA256 is `f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285`; the downloader checks this value. [checkpoint_release.json](checkpoint_release.json) pins repository, revision and weight/normalization fingerprints. The weight is approximately 11.9 GB; the repository also provides a [file checksum list](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/blob/eval-v1/SHA256SUMS) and a [standalone evaluation code archive](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/blob/main/Era0-Preview-evaluation-code.tar.gz).
+Evaluation requires the exact `norm_stats.pkl` alongside the model. Its expected SHA256 is `f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285`; the downloader checks this value. [checkpoint_release.json](checkpoint_release.json) records the repository, revision and expected weight/normalization fingerprints. The weight is approximately 11.9 GB. Evaluation code is obtained from XPolicyLab, independently of model assets.
 
-Explicit checkpoint/model paths and XPolicyLab's standard checkpoint names are supported through the shared resolver. The legacy bundle layout with a `model/` subdirectory is also supported. The same checkpoint and normalization are used for all three evaluation seeds. Use this adapter/runtime to load the custom VLA architecture; the public checkpoint does not provide generic `AutoModel(..., trust_remote_code=True)` loading. To verify every downloaded file:
+Explicit checkpoint/model paths and XPolicyLab's standard checkpoint names are supported through the shared resolver. The legacy bundle layout with a `model/` subdirectory is also supported. The same checkpoint and normalization are used for all three evaluation seeds. Use this adapter/runtime to load the custom VLA architecture; the public checkpoint does not provide generic `AutoModel(..., trust_remote_code=True)` loading. If the release includes `SHA256SUMS`, verify it after downloading:
 
 ```bash
 (cd checkpoints/era0-preview && sha256sum -c SHA256SUMS)
@@ -123,7 +124,7 @@ Time RoPE is loaded **from checkpoint `config.json`** and retained unchanged acr
 
 ## Submission status and verification
 
-The checkpoint and normalization are published at the pinned Hugging Face release above. All 16 published files were verified against local hashes or remote LFS SHA256 metadata. This directory remains an eval-only XPolicyLab submission candidate; no XPolicyLab PR or official evaluation request has been submitted. Before an official listing, run both official debug transport checks plus a simulator smoke test and full three-seed evaluation. No new benchmark scores are asserted by this package.
+The model repository link above is the distribution location; its current main revision contains only the model card, so model assets are not yet downloadable there. Expected model/normalization fingerprints are retained in `checkpoint_release.json`. This directory contains evaluation code only. The plain/encoded debug transport checks and full three-seed evaluation remain pending; the single-task smoke test is documented in [SUBMISSION.md](SUBMISSION.md).
 
 Reference standards: [XPolicyLab CONTRIBUTING](../../CONTRIBUTING.md), [official quick evaluation and complete protocol](https://robodojo-benchmark.com/doc/usage/quick-evaluation/), [official policy integration](https://robodojo-benchmark.com/doc/usage/xpolicylab/).
 
