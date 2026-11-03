@@ -1,0 +1,243 @@
+diff --git a/env/environment/base_env.py b/env/environment/base_env.py
+index bcde808..b85bcb7 100644
+--- a/env/environment/base_env.py
++++ b/env/environment/base_env.py
+@@ -156,9 +156,10 @@ class BaseEnv(gym.Env):
+         self.env_origins = self.sim.scene.env_origins
+ 
+     def render(self):
+-        """
+-        Render the simulation. This will call the render function of the simulation backend.
+-        """
++        """Render the simulation unless state-only replay disables it."""
++        import os
++        if os.environ.get("ROBODOJO_DISABLE_RENDER", "0") == "1":
++            return
+         if self.sim is not None:
+             self.sim.sim.render()
+ 
+diff --git a/env/environment/task_env.py b/env/environment/task_env.py
+index 228ddc8..5d3f059 100644
+--- a/env/environment/task_env.py
++++ b/env/environment/task_env.py
+@@ -1,4 +1,5 @@
+ from typing import Any, List
++import os
+ 
+ from env.camera_manager.camera_manager import CameraManager
+ from env.environment.base_env import BaseEnv
+@@ -19,6 +20,7 @@ class TaskEnv(BaseEnv):
+         # RobotManager must be created before BaseEnv.__init__ because it
+         # provides the InteractiveSceneCfg used to launch the simulation.
+         self.robot_config = config.robot
++        self.disable_cameras = os.environ.get("ROBODOJO_DISABLE_CAMERAS", "0") == "1"
+         self.robot_manager = RobotManager(
+             num_envs=self.num_envs,
+             env_spacing=self.env_spacing,
+@@ -42,23 +44,29 @@ class TaskEnv(BaseEnv):
+             task_config=config.task_env,
+         )
+ 
+-        self.robot_manager._load_camera_cfg(config.camera)
+-        self.capture_config = config.camera
+-        self.camera_config = config.camera
+-        self.camera_manager = CameraManager(
+-            self.num_envs,
+-            self.camera_config,
+-            self.device,
+-            seeds_per_env=self.env_seed_list,
+-        )
+-        from env.camera_manager.capture.tiled_capture_manager import TiledCaptureManager
++        if self.disable_cameras:
++            self.capture_config = None
++            self.camera_config = None
++            self.camera_manager = None
++            self.capture_manager = None
++        else:
++            self.robot_manager._load_camera_cfg(config.camera)
++            self.capture_config = config.camera
++            self.camera_config = config.camera
++            self.camera_manager = CameraManager(
++                self.num_envs,
++                self.camera_config,
++                self.device,
++                seeds_per_env=self.env_seed_list,
++            )
++            from env.camera_manager.capture.tiled_capture_manager import TiledCaptureManager
+ 
+-        self.capture_manager = TiledCaptureManager(
+-            self.num_envs,
+-            self.capture_config,
+-            self.camera_manager,
+-            self.device,
+-        )
++            self.capture_manager = TiledCaptureManager(
++                self.num_envs,
++                self.capture_config,
++                self.camera_manager,
++                self.device,
++            )
+ 
+     def _setup_scene(self, sim):
+         self.robot_manager.initialize(sim)
+@@ -67,9 +75,10 @@ class TaskEnv(BaseEnv):
+     def _post_setup_scene(self, sim):
+         self.scene_manager.initialize(sim)
+         super()._post_setup_scene(sim)
+-        self.camera_manager.initialize(sim)
+-        self.capture_manager.initialize(sim)
+-        self.camera_manager.post_init()
++        if not self.disable_cameras:
++            self.camera_manager.initialize(sim)
++            self.capture_manager.initialize(sim)
++            self.camera_manager.post_init()
+ 
+     def update_seed(self, seed: Any | None = None):
+         super().update_seed(seed)
+@@ -77,7 +86,7 @@ class TaskEnv(BaseEnv):
+             self.scene_manager.update_env_seeds(self.env_seeds)
+         if hasattr(self, "robot_manager") and self.robot_manager is not None:
+             self.robot_manager.update_env_seeds(self.env_seeds)
+-        if hasattr(self, "camera_manager") and self.camera_manager is not None:
++        if not self.disable_cameras and hasattr(self, "camera_manager") and self.camera_manager is not None:
+             self.camera_manager.update_env_seeds(self.env_seeds)
+ 
+     def reset(self, seed: Any | None = None, options: dict[str, Any] | None = None):
+@@ -86,15 +95,17 @@ class TaskEnv(BaseEnv):
+         self.robot_manager.reset()
+         for _ in range(300):
+             self.sim_step(render=False)
+-        self.camera_manager.reset()
+-        self.capture_manager.reset()
++        if not self.disable_cameras:
++            self.camera_manager.reset()
++            self.capture_manager.reset()
+ 
+     def step(self, meta_control_list: List[ControlSeq]):
+         self.robot_manager.control_robot(meta_control_list=meta_control_list)
+ 
+     def close(self):
+-        self.capture_manager.destroy()
+-        self.camera_manager.destroy()
++        if not self.disable_cameras:
++            self.capture_manager.destroy()
++            self.camera_manager.destroy()
+         self.robot_manager.close()
+         self.scene_manager.close()
+         super().close()
+diff --git a/scripts/eval_policy.sh b/scripts/eval_policy.sh
+index b86c88e..55e96f1 100755
+--- a/scripts/eval_policy.sh
++++ b/scripts/eval_policy.sh
+@@ -6,6 +6,11 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ export PYTHONPATH="${PROJECT_ROOT}:${PROJECT_ROOT}/XPolicyLab:${PYTHONPATH:-}"
+ echo "[INFO] PYTHONPATH=${PYTHONPATH}"
+ 
++# Python interpreter for the sim client (Isaac Sim / IsaacLab environment).
++# ROBODOJO_PYTHON can be overridden by the caller; defaults to the RoboDojo
++# conda env python so this script works without `conda activate`.
++ROBODOJO_PYTHON="${ROBODOJO_PYTHON:-/path/to/simulator/python}"
++
+ # Usage:
+ #   bash eval_policy.sh <task_name> <env_cfg_type> <device_id> <policy_name> <port> [extra-args...]
+ 
+@@ -75,7 +80,7 @@ if [[ ! -f "$cfg_file" ]]; then
+ fi
+ 
+ # Resolve sim config file from cfg_file: env_cfg/<name>.yml -> config.sim
+-sim_cfg_name="$(python3 -c "import sys,yaml;print(yaml.safe_load(open(sys.argv[1]))['config']['sim'])" "$cfg_file")"
++sim_cfg_name="$(${ROBODOJO_PYTHON} -c "import sys,yaml;print(yaml.safe_load(open(sys.argv[1]))['config']['sim'])" "$cfg_file")"
+ sim_cfg_file="./env_cfg/sim/${sim_cfg_name}.yml"
+ if [[ ! -f "$sim_cfg_file" ]]; then
+   echo "[ERROR] Sim config file not found: $sim_cfg_file" >&2
+@@ -85,7 +90,7 @@ fi
+ if [[ -z "${protocol}" ]]; then
+   policy_deploy_file="./XPolicyLab/policy/${policy_name}/deploy.yml"
+   if [[ -f "$policy_deploy_file" ]]; then
+-    protocol="$(python3 -c "import sys,yaml;print((yaml.safe_load(open(sys.argv[1])) or {}).get('protocol','ws'))" "$policy_deploy_file")"
++    protocol="$(${ROBODOJO_PYTHON} -c "import sys,yaml;print((yaml.safe_load(open(sys.argv[1])) or {}).get('protocol','ws'))" "$policy_deploy_file")"
+   else
+     protocol="ws"
+   fi
+@@ -112,8 +117,22 @@ if [[ -n "${eval_batch}" ]]; then
+ fi
+ 
+ # Read render_interval / env.num_envs from yaml (fallback if missing)
+-render_interval="$(python3 -c "import sys,yaml;print(yaml.safe_load(open(sys.argv[1])).get('render_interval',1))" "$sim_cfg_file")"
+-num_envs="$(python3 -c "import sys,yaml;print(yaml.safe_load(open(sys.argv[1])).get('scene',{}).get('num_envs',1))" "$sim_cfg_file")"
++render_interval="$(${ROBODOJO_PYTHON} -c "import sys,yaml;print(yaml.safe_load(open(sys.argv[1])).get('render_interval',1))" "$sim_cfg_file")"
++num_envs="$(${ROBODOJO_PYTHON} -c "import sys,yaml;print(yaml.safe_load(open(sys.argv[1])).get('scene',{}).get('num_envs',1))" "$sim_cfg_file")"
++
++# Env override: ROBODOJO_NUM_ENVS lets callers request a different sim batch
++# size without editing env_cfg/sim/*.yml (which would leak into every task and
++# every policy). main.py already accepts --num_envs and updates sim.scene.num_envs
++# at runtime, so we only need to forward the value here.
++# Silently ignored when eval_batch=false downstream (main.py forces num_envs=1).
++if [[ -n "${ROBODOJO_NUM_ENVS:-}" ]]; then
++  if ! [[ "${ROBODOJO_NUM_ENVS}" =~ ^[1-9][0-9]*$ ]]; then
++    echo "[ERROR] ROBODOJO_NUM_ENVS must be a positive integer, got: ${ROBODOJO_NUM_ENVS}" >&2
++    exit 1
++  fi
++  echo "[INFO] ROBODOJO_NUM_ENVS override: ${num_envs} -> ${ROBODOJO_NUM_ENVS}"
++  num_envs="${ROBODOJO_NUM_ENVS}"
++fi
+ 
+ echo "[INFO] render_interval = ${render_interval}"
+ echo "[INFO] num_envs        = ${num_envs}"
+@@ -139,15 +158,20 @@ if [[ -z "${ROBODOJO_RUN_ID:-}" ]]; then
+ fi
+ echo "[eval_policy] ROBODOJO_RUN_ID=${ROBODOJO_RUN_ID}"
+ 
++export OMNI_KIT_ACCEPT_EULA=YES
+ MAX_BASH_RETRIES="${ROBODOJO_MAX_BASH_RETRIES:-10}"
+ attempt=0
+ while : ; do
+   set +e
+-  python -u src/eval_client/main.py \
++  CAMERA_ARGS=()
++  if [[ "${ROBODOJO_DISABLE_CAMERAS:-0}" != "1" ]]; then
++    CAMERA_ARGS+=(--enable_cameras)
++  fi
++  ${ROBODOJO_PYTHON} -u src/eval_client/main.py \
+     --task_name "$task_name" \
+     --env_cfg_type "$env_cfg_type" \
+     --num_envs "$num_envs" \
+-    --enable_cameras \
++    "${CAMERA_ARGS[@]}" \
+     --kit_args "$KIT_ARGS" \
+     --device_id "$device_id" \
+     --policy_name "$policy_name" \
+diff --git a/task/RoboDojo/config/_task.yml b/task/RoboDojo/config/_task.yml
+index 236d82e..5522f52 100644
+--- a/task/RoboDojo/config/_task.yml
++++ b/task/RoboDojo/config/_task.yml
+@@ -60,6 +60,9 @@ tasks:
+   
+   stack_blocks:
+     eval_nums: 25
++
++  stack_blocks_xshift2m:
++    eval_nums: 25
+   
+   stack_blocks_random:
+     eval_nums: 25
+diff --git a/utils/pipeline_utils.py b/utils/pipeline_utils.py
+index 2c4341c..a96b2d5 100644
+--- a/utils/pipeline_utils.py
++++ b/utils/pipeline_utils.py
+@@ -55,13 +55,8 @@ def process_randomization(env_cfg):
+ 
+ 
+ def resolve_random_task_num_envs(task_name, num_envs, sim_cfg):
+-    """Cap parallel env count for *_random tasks using sim.scene.clutter_env_limit."""
+-    if not str(task_name).endswith("_random"):
+-        return int(num_envs)
+-
+-    scene_cfg = sim_cfg.get("scene", {}) if sim_cfg is not None else {}
+-    limit = scene_cfg.get("clutter_env_limit", 5)
+-    return min(int(num_envs), int(limit))
++    """Keep the caller-requested parallel environment count for every task."""
++    return int(num_envs)
+ 
+ def _task_setting(task_info, common_info, key, default):
+     return task_info.get(key, common_info.get(key, default))

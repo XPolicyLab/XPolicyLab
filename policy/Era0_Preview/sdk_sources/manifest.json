@@ -1,0 +1,62 @@
+{
+  "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "local_revision": "fcd09556957a834233e09e78704e0db43a705c3e",
+  "host_files": {
+    "src/eval_client/main.py": [
+      "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff",
+      "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
+    ],
+    "src/eval_client/eval_env.py": [
+      "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f",
+      "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88"
+    ],
+    "utils/pipeline_utils.py": [
+      "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b",
+      "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+    ],
+    "src/eval_client/ik_guard.py": [
+      null,
+      "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
+    ]
+  },
+  "profiles": {
+    "local": {
+      "src/eval_client/main.py": {
+        "file": "sdk_sources/local/src/eval_client/main.py",
+        "sha256": "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff"
+      },
+      "src/eval_client/eval_env.py": {
+        "file": "sdk_sources/local/src/eval_client/eval_env.py",
+        "sha256": "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f"
+      },
+      "utils/pipeline_utils.py": {
+        "file": "sdk_sources/local/utils/pipeline_utils.py",
+        "sha256": "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b"
+      },
+      "src/eval_client/ik_guard.py": {
+        "file": "sdk_sources/local/src/eval_client/ik_guard.py",
+        "sha256": "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
+      }
+    },
+    "official": {
+      "src/eval_client/main.py": {
+        "file": "sdk_sources/official/src/eval_client/main.py",
+        "sha256": "6a66dfc3d63f2137b3084f19625895da74c49a03dd20ba3c692db513cffa7ac0"
+      },
+      "src/eval_client/eval_env.py": {
+        "file": "sdk_sources/official/src/eval_client/eval_env.py",
+        "sha256": "367fa10fe8d874cd1ad201b426cb3e83570668f51a4c52610870b7558ca2d057"
+      },
+      "utils/pipeline_utils.py": {
+        "file": "sdk_sources/official/utils/pipeline_utils.py",
+        "sha256": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+      }
+    }
+  },
+  "curobo": {
+    "official_revision": "d17b54ce32cba095c0b000c4c58777075d11de0e",
+    "local_revision": "895c6517243f8cb091c73c018c8167192d39599a",
+    "auto_apply": false,
+    "runtime_src_identical": true
+  }
+}

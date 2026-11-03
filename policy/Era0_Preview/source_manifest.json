@@ -1,0 +1,313 @@
+{
+  "source_revision": "8e459d37a42d220a66f1d3441fb1436436128154",
+  "note": "Evaluation-only runtime with namespaced imports, checkpoint-compatible model structure, observation/action transforms, and audited SDK execution profiles. Auxiliary supervision modules and policy loss entry points are excluded.",
+  "files": {
+    "runtime/models/__init__.py": {
+      "source": "models/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runtime/models/action_conditioning.py": {
+      "source": "models/action_conditioning.py",
+      "source_sha256": "17aa912d6831634f60f0dea02ec73af4a28420a85c7c3fb97a96638e4b52c035",
+      "packaged_sha256": "17aa912d6831634f60f0dea02ec73af4a28420a85c7c3fb97a96638e4b52c035"
+    },
+    "runtime/models/action_hub.py": {
+      "source": "models/action_hub.py",
+      "source_sha256": "9fb0ea22d95d0334fb1ffe9d9ae58a3494232bef1ad89ef03c817be5fb0a497d",
+      "packaged_sha256": "6805efa0c7782a87c028c8bc327c6bb3c79a7ec89c73526969b344e258090c2f"
+    },
+    "runtime/models/action_norm_routing.py": {
+      "source": "models/action_norm_routing.py",
+      "source_sha256": "70538217109ebfe88d3043bf18a25b5892f0886dacc8c8450d3ffa31219ce145",
+      "packaged_sha256": "70538217109ebfe88d3043bf18a25b5892f0886dacc8c8450d3ffa31219ce145"
+    },
+    "runtime/models/architecture_contract.py": {
+      "source": "models/architecture_contract.py",
+      "source_sha256": "51cebd488542635335555436aa8b640d359d8a4e48ebb9e82664e3bc12be6b4e",
+      "packaged_sha256": "51cebd488542635335555436aa8b640d359d8a4e48ebb9e82664e3bc12be6b4e"
+    },
+    "runtime/models/configuration_florence2.py": {
+      "source": "models/configuration_florence2.py",
+      "source_sha256": "8f0539cffe6a91375cad8e337cb7443848529936650d98f7d245e14c4b0d47e4",
+      "packaged_sha256": "eaf041ba845c1d5e43e91f719e3c79f0266471bcea57e85fae2926e7a02fd1ff"
+    },
+    "runtime/models/configuration_xvla.py": {
+      "source": "models/configuration_xvla.py",
+      "source_sha256": "f711783cfe3c048348860a2a2c6a62025e2290840b6458e80b5653237c9e0769",
+      "packaged_sha256": "39b06afc1191b2bfee85e6c9b35abf240537a2d3e1f1d63f6ef9982521d62d3a"
+    },
+    "runtime/models/image_preprocessing.py": {
+      "source": "models/image_preprocessing.py",
+      "source_sha256": "6f94e2166968d42a75dadded50990164683d86164f0dcf8ef7f5a2c792d6ce94",
+      "packaged_sha256": "6f94e2166968d42a75dadded50990164683d86164f0dcf8ef7f5a2c792d6ce94"
+    },
+    "runtime/models/inference_batcher.py": {
+      "source": "models/inference_batcher.py",
+      "source_sha256": "c2a0ea8c60ce5669d16eba59d748e32b4d1f55a1f1c02160942f3d604257f903",
+      "packaged_sha256": "c2a0ea8c60ce5669d16eba59d748e32b4d1f55a1f1c02160942f3d604257f903"
+    },
+    "runtime/models/modeling_xvla.py": {
+      "source": "models/modeling_xvla.py",
+      "source_sha256": "4a5db77ab5ea89f61d2202075ba9ce8c6e1b3aa8fdc8c8d2b9df660db66cec05",
+      "packaged_sha256": "3a2a8a34defbd48d9a257765f30f5db73b87e6e7159b75b786a1f3848440d057"
+    },
+    "runtime/models/processing_xvla.py": {
+      "source": "models/processing_xvla.py",
+      "source_sha256": "e549c825a33b80ba40e01c15c555b3f20d57c01798153f0b51c30abdae1e2521",
+      "packaged_sha256": "e549c825a33b80ba40e01c15c555b3f20d57c01798153f0b51c30abdae1e2521"
+    },
+    "runtime/models/qwen_fixed_vision.py": {
+      "source": "models/qwen_fixed_vision.py",
+      "source_sha256": "35bdebe4b207114b4ff3813ac031d3d0c0fc00608ce0d7149cbc6c805f960aa3",
+      "packaged_sha256": "35bdebe4b207114b4ff3813ac031d3d0c0fc00608ce0d7149cbc6c805f960aa3"
+    },
+    "runtime/models/qwen_history_time_rope.py": {
+      "source": "models/qwen_history_time_rope.py",
+      "source_sha256": "e4f76ddc5c9499f807391461f2178d15f73ac1e7eb725c0375333ddc412c18d2",
+      "packaged_sha256": "e4f76ddc5c9499f807391461f2178d15f73ac1e7eb725c0375333ddc412c18d2"
+    },
+    "runtime/models/qwen_history_value.py": {
+      "source": "models/qwen_history_value.py",
+      "source_sha256": "182b1d1769c0800ef0dcd2a6b4bab1208b44556e8c734524ed6036c707987628",
+      "packaged_sha256": "acb2652475cf3cd5a3a78932851ace7ab8226428ea183b12eb21fecd5a63c724"
+    },
+    "runtime/models/qwen_image_attention.py": {
+      "source": "models/qwen_image_attention.py",
+      "source_sha256": "01dbdfd75d81426f9ec8d70b5557892fb893a6a20944cef0e7c2b6aaa9db04e6",
+      "packaged_sha256": "01dbdfd75d81426f9ec8d70b5557892fb893a6a20944cef0e7c2b6aaa9db04e6"
+    },
+    "runtime/models/qwen_spacetime.py": {
+      "source": "models/qwen_spacetime.py",
+      "source_sha256": "86299a0a7323134086b68dfc9e8e09f9cfa6fcf2108567898133aa0c1b7f8c9a",
+      "packaged_sha256": "86299a0a7323134086b68dfc9e8e09f9cfa6fcf2108567898133aa0c1b7f8c9a"
+    },
+    "runtime/models/transformer.py": {
+      "source": "models/transformer.py",
+      "source_sha256": "0637b29ebaf54b924c90368fb8aeab880f7c0f0a2df4d3685ecb153d76b5b1cd",
+      "packaged_sha256": "0637b29ebaf54b924c90368fb8aeab880f7c0f0a2df4d3685ecb153d76b5b1cd"
+    },
+    "runtime/models/vlm_backends/__init__.py": {
+      "source": "models/vlm_backends/__init__.py",
+      "source_sha256": "6f13d2313beede108dcf4730f74bf808c4da9fea783b642adc517971914a244a",
+      "packaged_sha256": "6f13d2313beede108dcf4730f74bf808c4da9fea783b642adc517971914a244a"
+    },
+    "runtime/models/vlm_backends/base.py": {
+      "source": "models/vlm_backends/base.py",
+      "source_sha256": "7b32252cca73135a404f3764d35ac4ef86a77ed3a0853c8d5118c41f708e8583",
+      "packaged_sha256": "85a78838a353841e617609dc8a28281e2a14ade02e108d419464e848de9f0f0a"
+    },
+    "runtime/models/vlm_backends/qwen3_5.py": {
+      "source": "models/vlm_backends/qwen3_5.py",
+      "source_sha256": "123cfa1b19ec5b3fdb68774bcf37395d9ac36b2a2457a531efbf7c35c94e3159",
+      "packaged_sha256": "fa1560f773b4cc29915e384ae5bf53ebb28a453fae14eac973ad93201f105d6a"
+    },
+    "runtime/models/vlm_backends/registry.py": {
+      "source": "models/vlm_backends/registry.py",
+      "source_sha256": "be3f8f47c69a96a35c39e2bc96331ce70ebe400b4d0eb470cec889af638cac79",
+      "packaged_sha256": "98f5e65ccd96f07e93ccf30f44cdcb96d840f15e5eec19f2ec1dec8871e65679"
+    },
+    "runtime/models/vlm_lora.py": {
+      "source": "models/vlm_lora.py",
+      "source_sha256": "ec7d3063ccc49c9c4b09b7f37eb922a91c2b1618397aa5816720d536d3ceb2b9",
+      "packaged_sha256": "ec7d3063ccc49c9c4b09b7f37eb922a91c2b1618397aa5816720d536d3ceb2b9"
+    },
+    "runtime/hy_vla/modeling_xvla_adapter.py": {
+      "source": "hy_vla/modeling_xvla_adapter.py",
+      "source_sha256": "287a8239225da7aac2433da62abf0b19595279f5d26f3b5d8cc4525cfce72cb8",
+      "packaged_sha256": "fbc0984a8b1cf871281e78c5ff2fb456b576ac25df8cfb1f733692d50238188c"
+    },
+    "runtime/hy_vla/utils/transform_utils.py": {
+      "source": "hy_vla/utils/transform_utils.py",
+      "source_sha256": "59b22974052e39249e8ef019d57204a6c863e926f03d3357d31cfe5d1926636d",
+      "packaged_sha256": "59b22974052e39249e8ef019d57204a6c863e926f03d3357d31cfe5d1926636d"
+    },
+    "runtime/robotwin_eval/transforms.py": {
+      "source": "robotwin_eval/transforms.py",
+      "source_sha256": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181",
+      "packaged_sha256": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181"
+    },
+    "runtime/robodojo_eval/gripper_control.py": {
+      "source": "robodojo_eval/gripper_control.py",
+      "source_sha256": "d6515bc87aec15cd47928720a15047d0f937b2f93fca29697ec900bb6330171b",
+      "packaged_sha256": "d6515bc87aec15cd47928720a15047d0f937b2f93fca29697ec900bb6330171b"
+    },
+    "deploy.py": {
+      "source": "XPolicyLab/policy/Hy_XVLA_RoboDojo/deploy.py",
+      "source_sha256": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
+      "packaged_sha256": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0"
+    },
+    "simulator_entry.py": {
+      "source": "robodojo_eval/simulator_entry.py",
+      "source_sha256": "4ef39bda5f4a7cc3cb690057a3b0ac325f4dbe57eb7062c48f3d49e93ad15517",
+      "packaged_sha256": "7a924d4ee6f051ba99b0ba04688541faf58cf346478ab7c2db81c305cf8e0654"
+    },
+    "native_protocol.py": {
+      "source": "robodojo_eval/native_protocol.py",
+      "source_sha256": "5e590b604a1135d6fed8b32e5d009858eebcd8b922f9af4343e165ba762dbcce",
+      "packaged_sha256": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094"
+    },
+    "summarize.py": {
+      "source": "scripts/summarize_robodojo.py",
+      "source_sha256": "059740ccfa8703d5075e2609723995a47eb0ac6e47451e41ffb5e81863069620",
+      "packaged_sha256": "059740ccfa8703d5075e2609723995a47eb0ac6e47451e41ffb5e81863069620"
+    }
+  },
+  "model_name": "Era0-Preview",
+  "packaged_files": {
+    ".gitignore": "781b1801fe2fd470a9744f4acb8792ffd9cd677baaacd0cd42c7e3426f81cb55",
+    "README.md": "d9494752110345347e529693ef7fe84c99d1091723cc51ee235910fb8a194f11",
+    "SDK_COMPATIBILITY.md": "10f0315d04fe09fbd6b5d488fa9e3e1149b9766a64f2beb4a52134e36cf7083b",
+    "SUBMISSION.md": "69f463b53f63666c1c08a91e8505d58e4d72f83c39b788615f805497e14a150c",
+    "__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "checkpoint.py": "f71498d6ebfe33eabfae46554b47995778022af3db66e86809e3175542cc8662",
+    "checkpoint_release.json": "c180340d16952a5e4aa2d4c9bdcdc443dfdb8eb9e2cd8530b839b97710bd90aa",
+    "common.sh": "45f4d33a110cca6c81c23fbb0094f00891ab76cba983e2c1a0357311e04ff3e0",
+    "deploy.py": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
+    "deploy.yml": "d62d9d67e983373160bbe264b19b66e62f9d06bc0c56b2c6b8d336270294d057",
+    "download_checkpoint.sh": "b37db01b15cc0c481fb71b60a338caa9e6335bf956bf623c398e42d518819aa6",
+    "eval.sh": "b6ca89052497515556dcf9b359e192bcb23e30762ecf89000094c8a3efd3308e",
+    "eval_three_seeds.sh": "fcf7484a215affae2fd931e72aabc8386329e41732ed993705367be2691e123f",
+    "evaluate.py": "4a69bcd6484f76c3ec9295033c18dd972ec5bb83bac399f7feaf06ae8510dde4",
+    "install.sh": "cf3e2a95083f5b3c142f270d287a4df21cc2887f9fb412bb6ec1dea9e3370993",
+    "model.py": "8db43c2899756a5271c5637db132a6eb6486ac228ba481f0624ab8606349092f",
+    "native_protocol.py": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094",
+    "obs_lag.py": "903f939deff6a3bd89f20fbcdf6eba1928f79462f35473480de880f08662e096",
+    "requirements.txt": "31ab76592be268d09066e3780e2d40f1fb3ded0d7d4d19481ac5372e824ff6bf",
+    "runtime/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/hy_vla/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/hy_vla/modeling_xvla_adapter.py": "fbc0984a8b1cf871281e78c5ff2fb456b576ac25df8cfb1f733692d50238188c",
+    "runtime/hy_vla/utils/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/hy_vla/utils/transform_utils.py": "59b22974052e39249e8ef019d57204a6c863e926f03d3357d31cfe5d1926636d",
+    "runtime/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime/models/action_conditioning.py": "17aa912d6831634f60f0dea02ec73af4a28420a85c7c3fb97a96638e4b52c035",
+    "runtime/models/action_hub.py": "6805efa0c7782a87c028c8bc327c6bb3c79a7ec89c73526969b344e258090c2f",
+    "runtime/models/action_norm_routing.py": "70538217109ebfe88d3043bf18a25b5892f0886dacc8c8450d3ffa31219ce145",
+    "runtime/models/architecture_contract.py": "51cebd488542635335555436aa8b640d359d8a4e48ebb9e82664e3bc12be6b4e",
+    "runtime/models/configuration_florence2.py": "eaf041ba845c1d5e43e91f719e3c79f0266471bcea57e85fae2926e7a02fd1ff",
+    "runtime/models/configuration_xvla.py": "39b06afc1191b2bfee85e6c9b35abf240537a2d3e1f1d63f6ef9982521d62d3a",
+    "runtime/models/image_preprocessing.py": "6f94e2166968d42a75dadded50990164683d86164f0dcf8ef7f5a2c792d6ce94",
+    "runtime/models/inference_batcher.py": "c2a0ea8c60ce5669d16eba59d748e32b4d1f55a1f1c02160942f3d604257f903",
+    "runtime/models/modeling_xvla.py": "3a2a8a34defbd48d9a257765f30f5db73b87e6e7159b75b786a1f3848440d057",
+    "runtime/models/processing_xvla.py": "e549c825a33b80ba40e01c15c555b3f20d57c01798153f0b51c30abdae1e2521",
+    "runtime/models/qwen_fixed_vision.py": "35bdebe4b207114b4ff3813ac031d3d0c0fc00608ce0d7149cbc6c805f960aa3",
+    "runtime/models/qwen_history_time_rope.py": "e4f76ddc5c9499f807391461f2178d15f73ac1e7eb725c0375333ddc412c18d2",
+    "runtime/models/qwen_history_value.py": "acb2652475cf3cd5a3a78932851ace7ab8226428ea183b12eb21fecd5a63c724",
+    "runtime/models/qwen_image_attention.py": "01dbdfd75d81426f9ec8d70b5557892fb893a6a20944cef0e7c2b6aaa9db04e6",
+    "runtime/models/qwen_spacetime.py": "86299a0a7323134086b68dfc9e8e09f9cfa6fcf2108567898133aa0c1b7f8c9a",
+    "runtime/models/transformer.py": "0637b29ebaf54b924c90368fb8aeab880f7c0f0a2df4d3685ecb153d76b5b1cd",
+    "runtime/models/vlm_backends/__init__.py": "6f13d2313beede108dcf4730f74bf808c4da9fea783b642adc517971914a244a",
+    "runtime/models/vlm_backends/base.py": "85a78838a353841e617609dc8a28281e2a14ade02e108d419464e848de9f0f0a",
+    "runtime/models/vlm_backends/qwen3_5.py": "fa1560f773b4cc29915e384ae5bf53ebb28a453fae14eac973ad93201f105d6a",
+    "runtime/models/vlm_backends/registry.py": "98f5e65ccd96f07e93ccf30f44cdcb96d840f15e5eec19f2ec1dec8871e65679",
+    "runtime/models/vlm_lora.py": "ec7d3063ccc49c9c4b09b7f37eb922a91c2b1618397aa5816720d536d3ceb2b9",
+    "runtime/robodojo_eval/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/robodojo_eval/gripper_control.py": "d6515bc87aec15cd47928720a15047d0f937b2f93fca29697ec900bb6330171b",
+    "runtime/robodojo_eval/io.py": "6a4b590767cc78075f1146295dfc98be43e6bcc36400640c34e1b868aa128be4",
+    "runtime/robotwin_eval/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
+    "runtime/robotwin_eval/transforms.py": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181",
+    "sdk_compat.py": "9a03e99ab663975335202ad22504de43603235e3b6f6ab2bc3ff55c5bb5b705b",
+    "sdk_sources/LICENSE.RoboDojo": "4f2b6958d25115c1bc461044e022889852d9e3a9bb854ab581c416514b9984a0",
+    "sdk_sources/audit_patches/src/eval_client/eval_env.py.patch": "ac9b8137bb7e505252a5fac1613bf900dca5aa8f4a32e02454c9f4a552d32c9a",
+    "sdk_sources/audit_patches/src/eval_client/main.py.patch": "1df34535bdb45c26b4834110f13923019901d031bc5940beee905a50cc195166",
+    "sdk_sources/audit_patches/utils/pipeline_utils.py.patch": "0b55929566a559902ae41481e2d516ca3fd1363ac05da75864f1cbe441cde72c",
+    "sdk_sources/base/src/eval_client/eval_env.py": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+    "sdk_sources/base/src/eval_client/main.py": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8",
+    "sdk_sources/base/utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
+    "sdk_sources/change_inventory.json": "d820a10daf9b78dddfb955be64e3eaf9b01ab091dfc77bf4924141ad09758b24",
+    "sdk_sources/curobo_revision_diff.txt": "c086e80d7f3d33f164c02098a9a97d910cf19971cad9efdd9808c186d323388a",
+    "sdk_sources/local/src/eval_client/eval_env.py": "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f",
+    "sdk_sources/local/src/eval_client/ik_guard.py": "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46",
+    "sdk_sources/local/src/eval_client/main.py": "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff",
+    "sdk_sources/local/utils/pipeline_utils.py": "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b",
+    "sdk_sources/manifest.json": "df9350b6abb0b4a911277c356a9ce46ba10ac672a0b1094f2c1ee4e04d13ae8d",
+    "sdk_sources/official/src/eval_client/eval_env.py": "367fa10fe8d874cd1ad201b426cb3e83570668f51a4c52610870b7558ca2d057",
+    "sdk_sources/official/src/eval_client/main.py": "6a66dfc3d63f2137b3084f19625895da74c49a03dd20ba3c692db513cffa7ac0",
+    "sdk_sources/official/utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
+    "sdk_sources/other_local_changes.patch": "4857340eff1c7715312aac0e0486506eb94de5fde15cb0222bcf58a8bfb87615",
+    "setup_eval_env_client.sh": "8c71d326e7bc89d95b16745a50901557789c4f7db63417caf8e0bc122ad7658a",
+    "setup_eval_policy_server.sh": "43295c406d44e674f3b0d2fd5bac51e81cf45fe4e76e3dd8924df75332d13589",
+    "simulator_entry.py": "7a924d4ee6f051ba99b0ba04688541faf58cf346478ab7c2db81c305cf8e0654",
+    "summarize.py": "059740ccfa8703d5075e2609723995a47eb0ac6e47451e41ffb5e81863069620",
+    "tests/test_ik_guard.py": "0c0de58bac9bc722ec87111bfb15d7f597168337e975a30daa7e8c983f890b10",
+    "tests/test_inference_scope.py": "4c28aebf713121c7b84851fe0ecd8ef3594d1c7ca00bfe4416ecca6e84f74a92",
+    "tests/test_obs_lag.py": "a9c133257d1a471d0d841deaa4c0e5d5b173254717027f28f2892f9f174160bf",
+    "tests/test_package.py": "75b7e55b87f1c6f7a6b4b5e720e0b70120f322889acc6e8aaf3cefff18f23d38",
+    "tests/test_sdk_compat.py": "f751a027599977df3ac782736d1cdec83de4753cac0dd63efbaf0911f9ea1f68"
+  },
+  "sdk_compatibility": {
+    "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+    "local_revision": "fcd09556957a834233e09e78704e0db43a705c3e",
+    "host_files": {
+      "src/eval_client/main.py": [
+        "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff",
+        "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
+      ],
+      "src/eval_client/eval_env.py": [
+        "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f",
+        "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88"
+      ],
+      "utils/pipeline_utils.py": [
+        "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b",
+        "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+      ],
+      "src/eval_client/ik_guard.py": [
+        null,
+        "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
+      ]
+    },
+    "profiles": {
+      "local": {
+        "src/eval_client/main.py": {
+          "file": "sdk_sources/local/src/eval_client/main.py",
+          "sha256": "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff"
+        },
+        "src/eval_client/eval_env.py": {
+          "file": "sdk_sources/local/src/eval_client/eval_env.py",
+          "sha256": "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f"
+        },
+        "utils/pipeline_utils.py": {
+          "file": "sdk_sources/local/utils/pipeline_utils.py",
+          "sha256": "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b"
+        },
+        "src/eval_client/ik_guard.py": {
+          "file": "sdk_sources/local/src/eval_client/ik_guard.py",
+          "sha256": "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
+        }
+      },
+      "official": {
+        "src/eval_client/main.py": {
+          "file": "sdk_sources/official/src/eval_client/main.py",
+          "sha256": "6a66dfc3d63f2137b3084f19625895da74c49a03dd20ba3c692db513cffa7ac0"
+        },
+        "src/eval_client/eval_env.py": {
+          "file": "sdk_sources/official/src/eval_client/eval_env.py",
+          "sha256": "367fa10fe8d874cd1ad201b426cb3e83570668f51a4c52610870b7558ca2d057"
+        },
+        "utils/pipeline_utils.py": {
+          "file": "sdk_sources/official/utils/pipeline_utils.py",
+          "sha256": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
+        }
+      }
+    },
+    "curobo": {
+      "official_revision": "d17b54ce32cba095c0b000c4c58777075d11de0e",
+      "local_revision": "895c6517243f8cb091c73c018c8167192d39599a",
+      "auto_apply": false,
+      "runtime_src_identical": true
+    }
+  },
+  "checkpoint_release": {
+    "model_name": "Era0-Preview",
+    "repo_id": "roboterax/Era0-Preview-5B-RoboDojo",
+    "url": "https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo",
+    "revision": "eval-v1",
+    "revision_url": "https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/tree/eval-v1",
+    "layout": "flat",
+    "norm_filename": "norm_stats.pkl",
+    "norm_sha256": "f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285",
+    "weights_filename": "model.safetensors",
+    "weights_size_bytes": 11885672542,
+    "weights_sha256": "9eb231ef6303395d22c39d8e57ba107c99e4f76fb5bfd1ae187ce3cbbc9b1383"
+  }
+}
