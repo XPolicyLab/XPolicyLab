@@ -1,0 +1,4 @@
+# RGB-only measurement and guarded execution
+rgb_geometry
+rgb_insert
+table_plane

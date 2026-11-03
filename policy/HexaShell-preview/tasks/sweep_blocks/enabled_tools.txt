@@ -1,0 +1,8 @@
+# tools enabled for this task
+table_plane
+rgb_manipulation
+rgb_place
+rgb_regrasp
+rgb_align
+rgb_entry_path
+rgb_entry_stroke

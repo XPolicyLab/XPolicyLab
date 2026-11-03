@@ -1,0 +1,9 @@
+`robo part_pose --x X --y Y --z Z [--shape annular|solid]`
+Read-only RGB measurement of a horizontal circular or convex symmetric boundary within 0.040 m XY/Z of XYZ (metres); defaults to annular. Returns centre, radius, measured boundary hue (degrees, -1 neutral), views, model, segmentation pass, residual and fit uncertainty; no motion or budget cost.
+`robo pick_part left|right --x X --y Y [--camera head|wrist_l|wrist_r] [--shape annular|any] [--support Z] [--open x|y] [--lift D]`
+Selects within 0.025 m of XY and fits unknown height from at least two calibrated RGB views; uses separate inner/outer boundaries and bounded local brightness fallback. Partial inner perimeters require ≥70% support and ≥18/24 angular bins per view; faceted fusion requires symmetry and evidence on every edge. `any` selects an outer boundary; neither shape certifies mobility.
+Support defaults to RGB table_plane; a supplied value >0.004 m below the measured table is replaced by that measurement, with requested/used heights and support_corrected returned. Elevated supplied supports are retained. Grasp height is midway between support and measured top; requires height 0.006–0.065 m and assumes rest on support.
+Defaults: annular, x opening axis, 0.08 m lift (0.04–0.15); camera is accepted for compatibility, all available views are considered.
+Raises to clearance, points down, opens, approaches, descends, closes and lifts once; charges one command and all motion steps.
+Returns selected geometry including height, stages, reached TCP and measured lift; plan_ok requires observed upward displacement, never disappearance alone.
+Both commands reject missing/ambiguous boundaries, weak calibration or conflicting views, with candidate/fit diagnostics on measurement failure; pick also stops on planning/tracking failure or episode end and retains the grasp after an unverified lift.

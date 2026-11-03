@@ -1,0 +1,6 @@
+# tools enabled for this task, one per line (shared tools/<name> or tasks/play_stacking_toy/tools/<name>)
+precision_transfer
+rgb_geometry
+table_plane
+
+rgb_silhouette
