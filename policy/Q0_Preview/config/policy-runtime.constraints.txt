@@ -1,0 +1,18 @@
+# Optional Linux GPU planning-stack constraints; see ../INSTALLATION.md.
+# Applied only when explicitly passed to pip; not loaded by the policy.
+# This constrains package versions; it does not install a complete environment.
+torch==2.7.0+cu128
+numpy==1.26.4
+scipy==1.15.3
+cuda-core==1.2.1
+cuda-bindings==12.9.9
+cuda-pathfinder==1.8.3
+nvidia-cuda-runtime-cu12==12.8.57
+nvidia-cuda-nvrtc-cu12==12.8.61
+warp-lang==1.11.0
+numpy-quaternion==2024.0.13
+numba==0.59.1
+transforms3d==0.4.2
+trimesh==4.5.1
+yourdfpy==0.0.60
+viser==1.1.1
