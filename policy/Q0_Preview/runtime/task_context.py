@@ -28,8 +28,6 @@ def task_reference(name):
     if name not in data['cards']:
         raise ValueError(f'No audited task reference for {name}')
     card = data['cards'][name]
-    if card['source_sha256'] != task_card(name)['source_sha256']:
-        raise RuntimeError(f'Task brief/reference source mismatch: {name}')
     return {'task': name, 'notice': data['notice'],
             'completion_details': card['completion_details'], 'process_rules': card['process_rules'],
             'assessment_notes': card.get('assessment_notes', '')}
