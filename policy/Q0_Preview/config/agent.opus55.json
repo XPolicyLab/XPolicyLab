@@ -1,0 +1,20 @@
+{
+  "provider": "anthropic",
+  "model": "claude-opus-5-5",
+  "base_url": "",
+  "python_prefix": "",
+  "sandbox": "docker",
+  "prompt_cache": true,
+  "context_history": "first_recent",
+  "context_max_bytes": 33554432,
+  "cache_ttl": "1h",
+  "stream": true,
+  "api_request_timeout_s": 3600,
+  "api_idle_timeout_s": 180,
+  "network_recovery_window_s": 600,
+  "python_memory_limit_mib": 16384,
+  "sandbox_image": "ubuntu:24.04",
+  "http_400_max_attempts": 15,
+  "anthropic_tool_image_mode": "top_level",
+  "api_key_env": "Q0_PREVIEW_API_KEY"
+}

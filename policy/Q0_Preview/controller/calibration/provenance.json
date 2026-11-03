@@ -1,0 +1,12 @@
+{
+  "X5A.urdf": {
+    "source": "RoboDojo/third_party/curobo/robot/x5_v2/X5A.urdf",
+    "source_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "change": "CRLF normalized to LF and trailing whitespace removed; kinematic values unchanged; exporter contact/build comment removed for distribution"
+  },
+  "collision_spheres.json": {
+    "source": "RoboDojo/third_party/curobo/robot/x5_v2/x5.yml",
+    "source_sha256": "10239eb14b0db3d806ec771d37ee4556400f24e2956dd952261cf4492aaba52f",
+    "extraction": "kinematics.collision_spheres"
+  }
+}

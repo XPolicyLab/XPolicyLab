@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+*.log
+.env
+*.env
+config/agent.local.json
+runs/
