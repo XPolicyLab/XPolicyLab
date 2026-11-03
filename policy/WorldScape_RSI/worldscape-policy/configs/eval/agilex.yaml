@@ -1,0 +1,68 @@
+# Common guarded AgileX evaluation configuration. Task recipes select profiles.
+selectors:
+  task: ${oc.env:WSP_TASK,agilex-validation}
+  mode: ${oc.env:WSP_MODE,interactive}
+  visual_prompt: ${oc.env:VISUAL_PROMPT,none}
+
+profile_order: [mode, visual_prompt]
+profiles:
+  mode:
+    interactive:
+      mode: interactive
+    auto:
+      mode: auto
+  visual_prompt:
+    none:
+      visual_prompt:
+        kind: text
+        source: none
+    goal:
+      _requires_:
+        mode: [auto, interactive]
+      visual_prompt:
+        kind: goal
+        source: path
+        path: ${oc.env:WSP_GOAL_IMAGE}
+        context_frames: 1
+        ctx_head_only: true
+        goal_from_first_observation: false
+    demo:
+      _requires_:
+        mode: [auto, interactive]
+      visual_prompt:
+        kind: uniform
+        source: ${oc.env:WSP_DEMO_SOURCE,hdf5}
+        context_frames: ${oc.decode:${oc.env:CONTEXT_VIDEO_LEN,50}}
+        ctx_head_only: true
+        poll_transport: ${oc.decode:${oc.env:WSP_DEMO_POLL_TRANSPORT,false}}
+
+backend: agilex
+checkpoint: ${oc.env:WORLDSCAPE_CHECKPOINT}
+output_dir: ${oc.env:WORLDSCAPE_EVAL_OUTPUT,outputs/eval/${selectors.task}}
+device: ${oc.env:WSP_DEVICE,cuda}
+visual_input_range: uint8
+dry_run: true
+seed: 62
+episodes_per_task: 1
+max_steps: ${oc.decode:${oc.env:WSP_MAX_STEPS,0}}
+backend_config:
+  transport: ${oc.env:AGILEX_TRANSPORT,hdf5}
+  path: ${oc.decode:${oc.env:WORLDSCAPE_HDF5_EPISODE,null}}
+  host: ${oc.env:WSP_SERVER_HOST,0.0.0.0}
+  port: ${oc.decode:${oc.env:WSP_SERVER_PORT,11451}}
+  node_name: ${oc.env:WSP_NODE_NAME,wsp}
+  model_width: ${oc.decode:${oc.env:WSP_MODEL_WIDTH,640}}
+  model_height: ${oc.decode:${oc.env:WSP_MODEL_HEIGHT,480}}
+  use_wma_layout: ${oc.decode:${oc.env:USE_WMA_LAYOUT,false}}
+  use_history: ${oc.decode:${oc.env:USE_HISTORY,false}}
+  num_history_frames: ${oc.decode:${oc.env:NUM_HISTORY_FRAMES,4}}
+  observation_timeout_s: ${oc.decode:${oc.env:OBSERVATION_TIMEOUT_S,20.0}}
+  action_mode: ${oc.env:ACTION_MODE,eef}
+  # Native post-training uses physical-unit state/action values without q99 scaling.
+  state_action_normalization: identity
+  action_rate: ${oc.decode:${oc.env:ACTION_RATE,24}}
+  rollout_steps: ${oc.decode:${oc.env:ROLLOUT_STEPS,8}}
+  refresh_horizon: ${oc.decode:${oc.env:POLICY_REFRESH_HORIZON,0}}
+tasks:
+  - id: ${selectors.task}
+    instruction: ${oc.env:WSP_INSTRUCTION,complete the demonstrated task}

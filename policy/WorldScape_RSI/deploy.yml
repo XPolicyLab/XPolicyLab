@@ -1,0 +1,15 @@
+policy_name: WorldScape_RSI
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: 0
+action_type: joint
+gpu_id: null
+eval_batch: false
+release_path: harness/release.json
+# Pin the release.json SHA256 when launching a reproducible campaign.
+release_sha256: null

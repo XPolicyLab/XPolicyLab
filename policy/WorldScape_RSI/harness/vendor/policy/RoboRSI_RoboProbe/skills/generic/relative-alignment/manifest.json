@@ -1,0 +1,15 @@
+{
+  "id": "relative-alignment",
+  "version": "0.7.0-general-control-20261024",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "artifact_type": "skill",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "description": "相对对齐与支撑几何",
+  "implementation": "text",
+  "load_mode": "always"
+}

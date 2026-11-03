@@ -1,0 +1,35 @@
+# Event-memory posttrain mode profiles.
+model:
+  model_config:
+    model:
+      event_memory:
+        enabled: false
+        history_steps: 8
+        global_slots: 1
+        local_steps: 4
+        boundary_steps: 8
+        boundary_min_gap: 1
+        perception_gist_tokens: 8
+        residual_scale: 0.1
+        dropout: 0.0
+
+profiles:
+  mode:
+    interactive:
+      freeze:
+        config:
+          event_memory: true
+      model:
+        model_config:
+          model:
+            event_memory:
+              enabled: false
+    auto:
+      model:
+        model_config:
+          model:
+            event_memory:
+              enabled: true
+      freeze:
+        config:
+          event_memory: false

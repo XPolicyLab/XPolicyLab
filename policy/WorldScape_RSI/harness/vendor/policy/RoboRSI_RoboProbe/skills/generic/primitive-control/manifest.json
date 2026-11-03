@@ -1,0 +1,14 @@
+{
+  "id": "primitive-control",
+  "version": "2.0.0-shared",
+  "interface": "roborsi.public.v1",
+  "kind": "code",
+  "stages": [
+    "control"
+  ],
+  "dependencies": [],
+  "artifact_type": "primitive",
+  "description": "RoboProbe 动作原语",
+  "implementation": "reviewed_in_process_dispatch",
+  "load_mode": "on_demand"
+}

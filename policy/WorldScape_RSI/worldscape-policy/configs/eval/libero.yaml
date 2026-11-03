@@ -1,0 +1,43 @@
+# LIBERO evaluation. Select inference mode through WSP_MODE=interactive|auto.
+selectors:
+  mode: ${oc.env:WSP_MODE,interactive}
+
+profile_order: [mode]
+profiles:
+  mode:
+    interactive:
+      mode: interactive
+    auto:
+      mode: auto
+
+backend: libero
+checkpoint: ${oc.env:WORLDSCAPE_CHECKPOINT}
+output_dir: ${oc.env:WORLDSCAPE_EVAL_OUTPUT,outputs/eval/libero}
+device: ${oc.env:WSP_DEVICE,cuda}
+visual_input_range: zero_one
+seed: 1140
+episodes_per_task: 50
+max_steps: 600
+control_frequency_hz: 20
+video_fps: 20
+backend_config:
+  module_name: libero.libero.envs
+  factory_name: OffScreenRenderEnv
+  capture_frames: true
+  environment_kwargs:
+    camera_heights: 256
+    camera_widths: 256
+  metadata_to_factory:
+    bddl_file_name: bddl_file_name
+suite:
+  id: libero-spatial
+  metadata:
+    benchmark: LIBERO
+    suite_name: libero_spatial
+  tasks:
+    - id: libero-spatial-0
+      instruction: pick up the black bowl and place it on the plate
+      metadata:
+        suite_name: libero_spatial
+        task_index: 0
+        bddl_file_name: ${oc.env:LIBERO_BDDL_FILE}

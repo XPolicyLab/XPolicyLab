@@ -1,0 +1,15 @@
+{
+  "id": "far-reach-load-retraction",
+  "version": "0.7.0-general-control-20261024",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "远端已持载荷的回收路径",
+  "implementation": "text",
+  "load_mode": "always"
+}

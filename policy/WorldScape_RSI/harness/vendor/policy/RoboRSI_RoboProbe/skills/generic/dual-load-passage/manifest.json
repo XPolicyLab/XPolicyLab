@@ -1,0 +1,15 @@
+{
+  "id": "dual-load-passage",
+  "version": "0.7.0-general-control-20261024",
+  "interface": "roborsi.public.v1",
+  "kind": "text",
+  "stages": [
+    "think",
+    "feedback"
+  ],
+  "dependencies": [],
+  "artifact_type": "skill",
+  "description": "双持载荷的串行让行",
+  "implementation": "text",
+  "load_mode": "always"
+}

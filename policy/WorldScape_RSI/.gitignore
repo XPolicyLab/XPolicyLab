@@ -1,0 +1,3 @@
+# XPolicyLab convention (mirrors policy/DP/.gitignore)
+data/*
+checkpoints/*

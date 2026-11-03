@@ -1,0 +1,7 @@
+# 连续视觉上下文动作技能
+
+先用assess_control作当前观察下的能力和约束判断，再call_tool，id=worldscape-wam-memory，arguments必须为{}。不接受Agent生成的instruction、subgoal、prompt、target、memory或动作参数。输入沿实际WSP适配器使用官方环境instruction；仅检查点明确配置的模板可按既定实现格式化，Agent不改写。
+
+本Skill只提议固定检查点动作块，逐步执行由官方接口负责。每个动作回执后的新RGB/state先交Agent审阅；takeover将丢弃未执行后缀，部分执行不会作为整块commit。连续无进展、错误方向或不确定时转原生控制，禁止轮换模型规避冷却。
+
+Agent的策略文本和记忆不在WAM输入内；需要它们的阶段使用原生工具。Mem只有连续调用期间积累实际收到的历史，首次或切换后不含先前Agent历史。归位阶段使用原生return_home和公开状态核验。

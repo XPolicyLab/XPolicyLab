@@ -1,0 +1,132 @@
+# Stage2: Auto graph with dual Auto/Interactive prompts and event memory.
+includes:
+  - common_wan22.yaml
+  - ../model/wsp2_wan22_5b.yaml
+  - ../conditioning/interactive_t5.yaml
+  - ../conditioning/auto_qwen3vl.yaml
+  - ../memory/event_default.yaml
+  - ../memory/visual_prefill_default.yaml
+  - ../wam/wan22_5b.yaml
+
+profile_order: [mode, stage, deepspeed_mode]
+selectors:
+  mode: auto
+  stage: stage2
+profiles:
+  stage:
+    stage2:
+      model:
+        initialization: checkpoint_overlay
+
+model:
+  initialization: checkpoint_overlay
+  expected_mode: auto
+  expected_num_frames: 33
+  expected_action_horizon: 24
+  expected_semantic_gate_only: true
+  expected_semantic_grad_clip_norm: 0.5
+  model_config:
+    model:
+      mode: auto
+
+data_loader:
+  _target_: worldscape_policy.training.data.build_registered_loader
+  dataset_name: worldscape_hdf5_mixed_pretrain
+  mode: auto
+  batch_size: ${oc.decode:${oc.env:PER_DEVICE_TRAIN_BATCH_SIZE,8}}
+  shuffle: true
+  num_workers: 0
+  bucket_by_length: true
+  seed: ${oc.decode:${oc.env:SEED,62}}
+  augment_video: true
+  training: true
+  wo_norm: true
+  dataset_kwargs:
+    text_data_root: ${oc.env:T2VA_DATA_ROOT}
+    goal_data_root: ${oc.env:GOAL_IMAGE_DATA_ROOT}
+    video_data_root: ${oc.env:VIDEO_DATA_ROOT}
+    mixture_weights:
+      - ${oc.decode:${oc.env:T2VA_MIX_WEIGHT,1.0}}
+      - ${oc.decode:${oc.env:GOAL_IMAGE_MIX_WEIGHT,1.0}}
+      - ${oc.decode:${oc.env:VIDEO_MIX_WEIGHT,1.0}}
+    action_horizon: 24
+    max_event_chunks: 16
+    history_num_frames: ${oc.decode:${oc.env:HISTORY_NUM_FRAMES,8}}
+    history_stride: ${oc.decode:${oc.env:HISTORY_STRIDE,24}}
+    temporal_packing: true
+    max_chunk_size: 4
+    goal_context_video_len: 1
+    video_context_video_len: ${oc.decode:${oc.env:VIDEO_CONTEXT_VIDEO_LEN,50}}
+    shard_size: ${oc.decode:${oc.env:SHARD_SIZE,10000}}
+    shard_sampling_rate: ${oc.decode:${oc.env:SHARD_SAMPLING_RATE,0.1}}
+    num_shards_to_sample: ${oc.decode:${oc.env:NUM_SHARDS_TO_SAMPLE,1048576}}
+    training: true
+    seed: ${oc.decode:${oc.env:SEED,62}}
+
+batch_adapter:
+  _target_: worldscape_policy.training.trainer.NativeWan22BatchAdapter
+  embodiment_ids:
+    agilex: ${pretrained_adapter_source_rows.agilex}
+  image_key: video
+  channels_last: true
+
+freeze:
+  strict: true
+  config:
+    _target_: worldscape_policy.training.freezing.NativeFreezeConfig
+    vlm: true
+    qformer: ${oc.decode:${oc.env:FREEZE_QFORMER,null}}
+    t5: true
+    vae: true
+    image_encoder: true
+    wam: false
+    action_adapters: false
+    condition_projector: false
+    event_memory: false
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: ${oc.decode:${oc.env:LEARNING_RATE,6e-5}}
+  weight_decay: ${oc.decode:${oc.env:WEIGHT_DECAY,1e-5}}
+
+objective:
+  _target_: worldscape_policy.training.objective.CompositeObjective
+  world_flow_weight: 1.0
+  semantic_forcing_weight: ${oc.decode:${oc.env:ALIGN_LOSS_WEIGHT,0.001}}
+  planning_ce_weight: ${oc.decode:${oc.env:PLANNING_CE_LOSS_WEIGHT,0.0}}
+  semantic_loss:
+    _target_: worldscape_policy.training.objective.SemanticForcingLoss
+    cosine_weight: 1.0
+    mse_weight: 0.0
+
+prompt_schedule:
+  enabled: true
+  projector_only_end: 0.03
+  schedule:
+    _target_: worldscape_policy.training.prompt_schedule.PromptSchedule
+    stages:
+      - _target_: worldscape_policy.training.prompt_schedule.Stage
+        end: 0.05
+        auto_ratio: 0.3
+        name: stage_a
+      - _target_: worldscape_policy.training.prompt_schedule.Stage
+        end: 0.30
+        auto_ratio: 0.5
+        name: stage_b
+      - _target_: worldscape_policy.training.prompt_schedule.Stage
+        end: 1.0
+        auto_ratio: 0.7
+        name: stage_c
+
+trainer:
+  prompt_schedule_per_sample: true
+
+training:
+  max_steps: ${oc.decode:${oc.env:MAX_STEPS,50000}}
+  warmup_ratio: ${oc.decode:${oc.env:OPTIMIZER_WARMUP_RATIO,0.05}}
+  lr_schedule: linear
+  checkpoint_dir: ${oc.env:OUTPUT_DIR,checkpoints/worldscape-mixed-pretrain-stage2}
+  save_every: ${oc.decode:${oc.env:SAVE_STEPS,2000}}
+  save_at_end: true
+  resume: null
+  resume_mode: ${oc.env:RESUME_MODE,fast}

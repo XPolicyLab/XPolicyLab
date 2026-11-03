@@ -1,0 +1,108 @@
+# Shared Wan2.2 posttrain defaults. Platform recipes overlay this composition.
+includes:
+  - ../distributed/deepspeed.yaml
+  - ../embodiment/pretrain_multi_embodiment_adapter_ids.yaml
+  - ../model/wsp2_wan22_5b.yaml
+  - ../conditioning/interactive_t5.yaml
+  - ../conditioning/auto_qwen3vl.yaml
+  - ../memory/event_default.yaml
+  - ../memory/visual_prefill_default.yaml
+  - ../wam/wan22_5b.yaml
+
+profile_order: [mode, visual_prompt, dataset_name, deepspeed_mode]
+
+data_loader:
+  # Current checkpoints use bimanual EEF6D actions only.
+  action_mode: ${oc.env:ACTION_MODE,eef}
+  # Platform posttraining predicts absolute EEF poses.
+  relative_action: ${oc.decode:${oc.env:RELATIVE_ACTION,false}}
+
+model:
+  text_encoder_pretrained_path: ${oc.env:T5_CKPT_PATH,${oc.env:WAN_CKPT_DIR}/models_t5_umt5-xxl-enc-bf16.pth}
+  image_encoder_pretrained_path: ${oc.env:CLIP_CKPT_PATH,${oc.env:CLIP_CKPT_DIR}/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth}
+  vae_pretrained_path: ${oc.env:VAE_CKPT_PATH,${oc.env:WAN_CKPT_DIR}/Wan2.2_VAE.pth}
+  model_config:
+    model:
+      wam:
+        core:
+          parameters:
+            # A posttrained expert owns one local adapter. Its row is selected
+            # once from the multi-adapter pretraining checkpoint at cold start.
+            max_num_embodiments: 1
+
+batch_adapter:
+  _target_: worldscape_policy.training.trainer.NativeWan22BatchAdapter
+  diffusion_view_layout: ${oc.env:WSP_DIFFUSION_VIEW_LAYOUT,mosaic_2x2}
+  image_key: video
+  diffusion_image_key: ${oc.decode:${oc.env:DIFFUSION_IMAGE_KEY,null}}
+  channels_last: true
+  action_dim: 32
+  state_dim: 64
+
+freeze:
+  strict: true
+  config:
+    _target_: worldscape_policy.training.freezing.NativeFreezeConfig
+    vlm: true
+    # QFormer inherits the frozen VLM rule unless explicitly overridden.
+    # It is absent entirely when VLM_TOKEN_MODE=last.
+    qformer: ${oc.decode:${oc.env:FREEZE_QFORMER,null}}
+    t5: true
+    vae: true
+    image_encoder: ${oc.decode:${oc.env:FREEZE_IMAGE_ENCODER,true}}
+    wam: false
+    action_adapters: false
+    condition_projector: ${oc.decode:${oc.env:FREEZE_CONDITION_PROJECTOR,false}}
+    event_memory: true
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: ${oc.decode:${oc.env:LEARNING_RATE,6e-5}}
+  betas:
+    - ${oc.decode:${oc.env:ADAM_BETA1,0.95}}
+    - ${oc.decode:${oc.env:ADAM_BETA2,0.999}}
+  eps: ${oc.decode:${oc.env:ADAM_EPSILON,1e-8}}
+  weight_decay: ${oc.decode:${oc.env:WEIGHT_DECAY,1e-5}}
+  hf_trainer_decay_groups: true
+
+objective:
+  _target_: worldscape_policy.training.objective.CompositeObjective
+  world_flow_weight: 1.0
+  semantic_forcing_weight: 0.0
+  planning_ce_weight: 0.0
+
+trainer:
+  # Used by the native optimizer path; DeepSpeed applies its own clipping.
+  max_grad_norm: 1.0
+  # Optional fail-safe for finite gradient spikes. The start ratio allows
+  # normal warmup gradients through before anomalous updates are rejected.
+  skip_grad_norm_threshold: ${oc.decode:${oc.env:SKIP_GRAD_NORM_THRESHOLD,null}}
+  skip_grad_norm_threshold_start_ratio: ${oc.decode:${oc.env:SKIP_GRAD_NORM_THRESHOLD_START_RATIO,0.0}}
+  precision: bf16
+  gradient_accumulation_steps: ${oc.decode:${oc.env:GRADIENT_ACCUMULATION_STEPS,1}}
+  checkpoint_max_shard_size: ${oc.env:CHECKPOINT_MAX_SHARD_SIZE,5GB}
+  prompt_schedule_per_sample: false
+  t5_high_level_prompt_prob: 0.0
+
+logging:
+  wandb:
+    enabled: ${oc.decode:${oc.env:WANDB_ENABLED,true}}
+    project: ${oc.env:WANDB_PROJECT,worldscape_policy}
+    name: ${oc.env:WANDB_RUN_NAME,${oc.env:RUN_NAME,baseline}}
+    mode: ${oc.env:WANDB_MODE,offline}
+    entity: ${oc.decode:${oc.env:WANDB_ENTITY,null}}
+    run_id: ${oc.decode:${oc.env:WANDB_RUN_ID,null}}
+    group: ${oc.decode:${oc.env:WANDB_GROUP,null}}
+
+training:
+  max_steps: ${oc.decode:${oc.env:MAX_STEPS,100000}}
+  warmup_ratio: ${oc.decode:${oc.env:OPTIMIZER_WARMUP_RATIO,0.05}}
+  lr_schedule: ${oc.env:LR_SCHEDULE,linear}
+  checkpoint_dir: ${oc.env:OUTPUT_DIR,checkpoints/${selectors.task}/${selectors.mode}-${selectors.visual_prompt}/${selectors.run_name}}
+  save_every: ${oc.decode:${oc.env:SAVE_STEPS,5000}}
+  log_every: ${oc.decode:${oc.env:LOG_STEPS,1}}
+  save_at_end: true
+  resume: null
+  resume_mode: ${oc.env:RESUME_MODE,fast}
+  # Optional per-process cap for smoke tests; global max_steps/schedules stay fixed.
+  run_steps: ${oc.decode:${oc.env:RUN_STEPS,null}}
