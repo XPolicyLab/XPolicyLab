@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roborsi:schemas:training_episode:v1",
+  "title": "RoboRSI agent training episode v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "episode_id", "task", "outcome", "calls"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "episode_id": {"type": "string", "minLength": 1},
+    "task": {"$ref": "#/$defs/task"},
+    "outcome": {"$ref": "#/$defs/outcome"},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "calls": {"type": "array", "items": {"$ref": "#/$defs/call"}}
+  },
+  "$defs": {
+    "json_object": {"type": "object"},
+    "content": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "text"],
+          "properties": {"type": {"const": "text"}, "text": {"type": "string"}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "text"],
+          "properties": {
+            "type": {"const": "reasoning"},
+            "text": {"type": "string"},
+            "encrypted_content": {"type": "string"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "provider", "item"],
+          "properties": {
+            "type": {"const": "provider_item"},
+            "provider": {"const": "openai.responses"},
+            "item": {"$ref": "#/$defs/json_object"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "ttl"],
+          "properties": {"type": {"const": "cache_point"}, "ttl": {"enum": ["5m", "1h"]}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "media_type", "asset_ref", "sha256"],
+          "properties": {
+            "type": {"const": "image"},
+            "media_type": {"type": "string", "pattern": "^image/"},
+            "asset_ref": {"type": "string", "pattern": "^assets/[a-f0-9]{64}\\.[a-z0-9]+$"},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+          }
+        }
+      ]
+    },
+    "tool_call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "arguments"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "arguments": {"$ref": "#/$defs/json_object"}
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content", "tool_calls"],
+      "properties": {
+        "role": {"enum": ["system", "developer", "user", "assistant", "tool"]},
+        "content": {"type": "array", "items": {"$ref": "#/$defs/content"}},
+        "tool_calls": {"type": "array", "items": {"$ref": "#/$defs/tool_call"}},
+        "tool_call_id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1}
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "input_schema"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "input_schema": {"$ref": "#/$defs/json_object"}
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["benchmark", "task_id", "instruction", "metadata"],
+      "properties": {
+        "benchmark": {"type": "string", "minLength": 1},
+        "benchmark_version": {"type": ["string", "null"]},
+        "task_id": {"type": "string", "minLength": 1},
+        "instruction": {"type": "string", "minLength": 1},
+        "seed": {"type": ["integer", "null"]},
+        "metadata": {"$ref": "#/$defs/json_object"}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "success", "score", "metadata"],
+      "properties": {
+        "status": {"enum": ["success", "failure", "error", "incomplete", "unknown"]},
+        "success": {"type": ["boolean", "null"]},
+        "score": {"type": ["number", "null"]},
+        "metadata": {"$ref": "#/$defs/json_object"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_kind", "source_run_id", "source_manifest_sha256", "captured_at", "exported_at", "versions", "metadata"],
+      "properties": {
+        "source_kind": {"enum": ["benchmark", "roborsi_trace", "codex_provider_capture"]},
+        "source_run_id": {"type": ["string", "null"]},
+        "source_manifest_sha256": {"oneOf": [{"type": "string", "pattern": "^[a-f0-9]{64}$"}, {"type": "null"}]},
+        "captured_at": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+        "exported_at": {"type": "string", "format": "date-time"},
+        "versions": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "metadata": {"$ref": "#/$defs/json_object"}
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system_prompt", "messages", "tools", "settings"],
+      "properties": {
+        "model": {"type": ["string", "null"]},
+        "provider": {"type": ["string", "null"]},
+        "system_prompt": {"type": "string"},
+        "messages": {"type": "array", "items": {"$ref": "#/$defs/message"}},
+        "tools": {"type": "array", "items": {"$ref": "#/$defs/tool"}},
+        "settings": {"$ref": "#/$defs/json_object"}
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["message"],
+      "properties": {
+        "message": {"$ref": "#/$defs/message"},
+        "finish_reason": {"type": ["string", "null"]}
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "output_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "cache_read_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "cache_write_tokens": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number", "status"],
+      "properties": {
+        "number": {"type": "integer", "minimum": 1},
+        "status": {"enum": ["completed", "error", "cancelled", "timeout", "limit"]},
+        "error_type": {"type": ["string", "null"]},
+        "usage": {"$ref": "#/$defs/usage"}
+      }
+    },
+    "call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["call_id", "purpose", "request", "response", "tool_results", "status", "attempts"],
+      "properties": {
+        "call_id": {"type": "string", "minLength": 1},
+        "agent_id": {"type": ["string", "null"]},
+        "parent_agent_id": {"type": ["string", "null"]},
+        "turn_id": {"type": ["string", "null"]},
+        "purpose": {"type": "string", "minLength": 1},
+        "request": {"$ref": "#/$defs/request"},
+        "response": {"oneOf": [{"$ref": "#/$defs/response"}, {"type": "null"}]},
+        "tool_results": {"type": "array", "items": {"$ref": "#/$defs/message"}},
+        "status": {"enum": ["completed", "error", "cancelled", "timeout", "limit", "partial"]},
+        "usage": {"$ref": "#/$defs/usage"},
+        "attempts": {"type": "array", "items": {"$ref": "#/$defs/attempt"}}
+      }
+    }
+  }
+}

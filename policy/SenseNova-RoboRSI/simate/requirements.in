@@ -1,0 +1,8 @@
+numpy==1.26.4
+sentencepiece==0.2.2
+safetensors==0.8.0
+websockets==15.0.1
+msgpack==1.1.1
+PyYAML==6.0.2
+opencv-python-headless==4.11.0.86
+pillow==11.3.0

@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "robot": "arx_x5",
+  "sources": {
+    "X5A_urdf_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "robot_config_yml_sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+    "ARX_usd_sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+    "env_cfg_robot_dual_x5_yml_sha256": "4eefaccc75c5f83443b7bb85ef1de68ee7a3772e27af2b04a5e8d8769ab9baa1",
+    "env_robot_manager_robot_class_x5_py_sha256": "107274d0944a4416a1b5216b3ebf05e5f6e96c17eb8a50e4bcd3e134db20ce0f",
+    "env_robot_manager_robot_config_x5_py_sha256": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+    "env_robot_manager_robot_manager_py_sha256": "1306cb6d17b58a04ad8fc298edb6eb9122469048dbc9717dcf246f4f985d9974",
+    "isaaclab_assets_articulation_articulation_cfg_py_sha256": "a80e979d069f6abf6b87c41ae79926b70185b13a9e64f62829002bc7ed5e27ad",
+    "isaaclab_assets_articulation_articulation_py_sha256": "fb179aacdd848906367d01105020e1d36412bd0f1da7187be09f0781ff589309",
+    "isaaclab_sim_utils_transforms_py_sha256": "5ec30a60599aff82725f43c8968c3d8619adb4b94ccc141f552bf69b683371d0",
+    "usd_projection_precision_json_sha256": "d4fe810a8d9458c6f5bf781f60a6c5e34904c02eee7fc30cf40abc32998f3830",
+    "gf_orient_op_json_sha256": "f6e0f018fe0f6b71d92f3ce31e0303206fae35fad23afba16eb2dc27048cd11a"
+  },
+  "arms": {
+    "left": {
+      "urdf_path": "X5A.urdf",
+      "urdf_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "joint_names": [
+        "joint1",
+        "joint2",
+        "joint3",
+        "joint4",
+        "joint5",
+        "joint6"
+      ],
+      "base_link": "base_link",
+      "ee_link": "link6",
+      "root_pose": [
+        -0.3,
+        -0.45,
+        0.765,
+        0.707,
+        0.0,
+        0.0,
+        0.7072135462503529
+      ],
+      "soft_joint_pos_limits": [
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -3.1399998664855957,
+          3.1399998664855957
+        ]
+      ]
+    },
+    "right": {
+      "urdf_path": "X5A.urdf",
+      "urdf_sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "joint_names": [
+        "joint1",
+        "joint2",
+        "joint3",
+        "joint4",
+        "joint5",
+        "joint6"
+      ],
+      "base_link": "base_link",
+      "ee_link": "link6",
+      "root_pose": [
+        0.3,
+        -0.45,
+        0.765,
+        0.707,
+        0.0,
+        0.0,
+        0.7072135462503529
+      ],
+      "soft_joint_pos_limits": [
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -9.999999046325684,
+          9.999999046325684
+        ],
+        [
+          -3.1399998664855957,
+          3.1399998664855957
+        ]
+      ]
+    }
+  },
+  "derivation": {
+    "root": "Fixed dual_x5 entity translation and existing quatd USD orient-op semantics; asset base_link is identity; no reference-state fitting",
+    "joint_order": "Public robot_config arm_joints_name and verified USD body0/body1 six-joint chain",
+    "soft_limits": "Actual fixed USD RevoluteJoint degree limits -> radians -> float32; IsaacLab soft limit factor 1.0, no X5 override",
+    "precision_scope": "Static public asset derivation. No live PhysX manager values have been read; native float rounding remains a real-run verification item.",
+    "pxr_usd_version": [
+      0,
+      24,
+      5
+    ],
+    "no_task_or_scoring_data": true
+  }
+}

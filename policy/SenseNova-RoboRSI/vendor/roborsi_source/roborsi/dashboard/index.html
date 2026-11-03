@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="__DASHBOARD_LANGUAGE__">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title data-i18n="pageTitle">RoboRSI · Live Monitor</title>
+<link rel="stylesheet" href="/static/dashboard.css" />
+</head>
+<body>
+  <header>
+    <h1><span class="dot">●</span> RoboRSI <span class="meta" data-i18n="liveMonitor">Live Monitor</span></h1>
+    <span id="statusBadge" class="badge b-stale">—</span>
+    <span id="resultBadge" class="badge b-fail" style="display:none"></span>
+    <div id="runtimeStatus" class="runtime-status" aria-live="polite"></div>
+    <span class="meta planner-meta" id="plannerMeta"></span>
+    <span class="meta" id="taskMeta"></span>
+    <span class="grow"></span>
+    <a href="/trajectory" class="meta" data-i18n="trajectory">Trajectory</a>
+    <span class="meta" id="usageMeta"></span>
+    <span class="meta" id="connMeta"></span>
+  </header>
+
+  <main>
+    <div class="col left">
+      <div class="panel-title">
+        <span data-i18n="reasoning">Agent reasoning &amp; tool calls</span>
+        <span class="count" id="evCount"></span>
+        <span class="grow"></span>
+        <label class="meta" style="text-transform:none;letter-spacing:0">
+          <input type="checkbox" id="showtools" /> <span data-i18n="expandTools">expand tool calls</span>
+        </label>
+        <label class="meta" style="text-transform:none;letter-spacing:0">
+          <input type="checkbox" id="autoscroll" checked /> <span data-i18n="autoScroll">auto-scroll</span>
+        </label>
+      </div>
+      <div id="transcript"><div class="empty" data-i18n="noTranscript">No transcript events yet.</div></div>
+      <section id="composer" class="composer" aria-label="Agent message composer" data-i18n-aria-label="composerLabel" hidden>
+        <div
+          class="gutter gutter-h composer-grip"
+          id="composerGrip"
+          title="Drag to resize composer height"
+          data-i18n-title="resizeComposer"
+        ></div>
+        <div id="interactionStatus" class="composer-status" role="status" aria-live="polite"></div>
+        <div id="pendingArea" class="pending-area" hidden>
+          <div class="pending-heading">
+            <span id="pendingHeading"></span>
+            <span class="count" id="pendingCount"></span>
+          </div>
+          <div id="pendingMessages" class="pending-messages"></div>
+        </div>
+        <textarea
+          id="chatInput"
+          rows="2"
+          placeholder="Message the agent…"
+          data-i18n-placeholder="composerPlaceholder"
+          aria-describedby="chatHint interactionStatus taskSuggestions"
+          aria-keyshortcuts="Enter Shift+Enter Escape"
+          disabled
+        ></textarea>
+        <div
+          id="taskSuggestions"
+          class="task-suggestions"
+          role="listbox"
+          aria-label="Task value suggestions"
+          data-i18n-aria-label="taskSuggestionsLabel"
+          hidden
+        ></div>
+        <div class="composer-row">
+          <span class="composer-hint" id="chatHint" data-i18n="composerKeys">Enter to send · Shift+Enter for newline · Esc to interrupt the agent</span>
+        </div>
+      </section>
+    </div>
+
+    <div class="gutter gutter-v" id="gutterV" title="Drag to resize columns" data-i18n-title="resizeColumns"></div>
+
+    <div class="col right">
+      <div class="framewrap">
+        <div class="frame-tabs"></div>
+        <img class="frame-media" id="frame-a" alt="" />
+        <img class="frame-media" id="frame-b" alt="" />
+        <video class="frame-media" id="video-a" controls playsinline></video>
+        <video class="frame-media" id="video-b" controls playsinline></video>
+        <div class="frame-cap" id="frameCap" data-i18n="waitingFrame">waiting for first frame…</div>
+      </div>
+      <div class="gutter gutter-h" id="gutterH" title="Drag to resize frame height" data-i18n-title="resizeFrame"></div>
+      <div class="col" style="min-height:0">
+        <details class="primitive-panel">
+          <summary>
+            <span data-i18n="primitiveControls">Primitive controls</span>
+            <span id="primitiveAvailability" class="primitive-availability" data-i18n="primitiveWaiting">waiting for TaskRun</span>
+          </summary>
+          <div class="primitive-panel-body">
+            <div id="primitiveButtons" class="primitive-buttons" role="tablist"></div>
+            <form id="primitiveForm" novalidate>
+              <div id="primitiveRequiredFields" class="primitive-fields"></div>
+              <details id="primitiveAdvanced" class="primitive-advanced" hidden>
+                <summary data-i18n="advanced">Advanced</summary>
+                <div id="primitiveOptionalFields" class="primitive-fields"></div>
+              </details>
+              <div class="primitive-actions">
+                <button id="executePrimitive" type="submit" disabled data-i18n="executePrimitive">Execute</button>
+                <span id="primitiveStatus" class="primitive-status" role="status" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+        </details>
+        <div class="panel-title"><span data-i18n="actionTimeline">Action timeline</span> <span class="count" id="stepCount"></span></div>
+        <div id="timeline"><div class="empty" data-i18n="noActions">No actions yet.</div></div>
+      </div>
+    </div>
+  </main>
+
+<script type="module" src="/static/dashboard.js"></script>
+</body>
+</html>

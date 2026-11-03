@@ -1,0 +1,74 @@
+# Copyright 2026 The HEART Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Robot registry: maps robot name to its ``get_robot_spec`` / ``get_toolkit`` factories.
+
+Robot implementations live in the top-level ``robots/`` directory (a sibling of
+the ``roborsi`` package); a robot is resolved by importing ``robots.<name>``. The
+``RobotSpec`` / ``PromptBundle`` / ``RunConfig`` contract types themselves live in
+:mod:`roborsi.robots` so planners and robots share the same contract types without
+crossing module layers. ``RobotSpec`` also carries the runner hooks that keep
+CLI orchestration independent of concrete robot implementations.
+"""
+
+from __future__ import annotations
+
+import importlib
+import pkgutil
+import sys
+from typing import Any
+
+from roborsi.robots.robot_spec import RobotSpec
+from roborsi.tools.toolkit import Toolkit
+from roborsi.utils.config import get_repo_root
+
+# Robot packages live under ``<repo>/robots/``, which is not part of the installed
+# ``roborsi`` distribution. Ensure the repo root is importable so ``robots.<name>``
+# resolves regardless of the process's current working directory.
+_REPO_ROOT = str(get_repo_root())
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+
+def _resolve_robot(name: str) -> Any:
+    """Import ``robots.<name>`` lazily and return the module."""
+    if not name:
+        raise ValueError("robot name must be non-empty")
+    robot_name = name.lower()
+    try:
+        return importlib.import_module(f"robots.{robot_name}")
+    except ModuleNotFoundError as e:
+        raise ValueError(f"unknown robot: {robot_name!r}") from e
+
+
+def enumerate_robots() -> tuple[str, ...]:
+    """Return the names of importable robot packages under ``robots``."""
+    import robots
+
+    return tuple(
+        sorted(
+            module.name
+            for module in pkgutil.iter_modules(robots.__path__)
+            if module.ispkg and not module.name.startswith("_")
+        )
+    )
+
+
+def get_robot_spec(name: str) -> RobotSpec:
+    return _resolve_robot(name).get_robot_spec()
+
+
+def get_toolkit(name: str, **kwargs) -> Toolkit:
+    """Build the robot toolkit (common tools + robot-specific tools)."""
+    return _resolve_robot(name).get_toolkit(**kwargs)

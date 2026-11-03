@@ -1,0 +1,1730 @@
+{
+  "environment": {
+    "freeze_note": "Historical actual versions, not a complete install recipe or upstream package source identity. Apply the authenticated source overrides after installing dependencies; do not use the newer OpenPI pyproject dependency versions.",
+    "freeze_path": "provenance/requirements.verified.txt",
+    "python": "3.11.17"
+  },
+  "file_count": 197,
+  "files": {
+    "licenses/Apache-2.0.txt": {
+      "origin": {
+        "kind": "license_copy",
+        "source": "openpi/LICENSE"
+      },
+      "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "size": 11356
+    },
+    "licenses/numpydantic-MIT.txt": {
+      "origin": {
+        "kind": "original_environment_license",
+        "original_member": "site-packages/numpydantic-1.6.9.dist-info/licenses/LICENSE"
+      },
+      "sha256": "c03e015c0e540dea26387b9984235581d1838d5fb0b1417267bc92605b2d88bf",
+      "size": 1071
+    },
+    "openpi/LICENSE": {
+      "origin": {
+        "git_blob_sha1": "f49a4e16e68b128803cc2dcea614603632b04eac",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/LICENSE"
+      },
+      "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "size": 11356
+    },
+    "openpi/LICENSE_GEMMA.txt": {
+      "origin": {
+        "git_blob_sha1": "e0f8930d83fe9eef924c0eed50ee0e572eb471fa",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/LICENSE_GEMMA.txt"
+      },
+      "sha256": "3e2c24001f9ef57bf7ec959a3658fbb49cdad113cdf394c264da9d16f9bdd132",
+      "size": 8431
+    },
+    "openpi/packages/openpi-client/src/openpi_client/__init__.py": {
+      "origin": {
+        "git_blob_sha1": "3dc1f76bc69e3f559bee6253b24fc93acee9e1f9",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/__init__.py"
+      },
+      "sha256": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+      "size": 22
+    },
+    "openpi/packages/openpi-client/src/openpi_client/action_chunk_broker.py": {
+      "origin": {
+        "git_blob_sha1": "8fa9d83d023b7c0c60a1d05531343af01e72d09b",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/action_chunk_broker.py"
+      },
+      "sha256": "019b9d69cb26cc681331a2f95dbe60a2cc7b02d6d309c5d15b6457ab39798234",
+      "size": 1404
+    },
+    "openpi/packages/openpi-client/src/openpi_client/base_policy.py": {
+      "origin": {
+        "git_blob_sha1": "2f4290651b1b7bab3bd9549b47876838f5b51629",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/base_policy.py"
+      },
+      "sha256": "88e98e0f06293f3c4767db675061664c4bba12f87242ba1e64377d1b8de8069e",
+      "size": 271
+    },
+    "openpi/packages/openpi-client/src/openpi_client/image_tools.py": {
+      "origin": {
+        "git_blob_sha1": "7a971b9d5f6b1495fd6cdea202ffa607d8b34bf0",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/image_tools.py"
+      },
+      "sha256": "d48b4bd7f44e79fe6db8a8e07c9161144fa250be686e1245014a8b47e6171977",
+      "size": 2426
+    },
+    "openpi/packages/openpi-client/src/openpi_client/image_tools_test.py": {
+      "origin": {
+        "git_blob_sha1": "8d4b4b92030ea869712b312581e26243035aafba",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/image_tools_test.py"
+      },
+      "sha256": "4df4b0ba0b95ba5e47160039c3e837a64d50c802b419a588211dffbaa732589c",
+      "size": 1411
+    },
+    "openpi/packages/openpi-client/src/openpi_client/msgpack_numpy.py": {
+      "origin": {
+        "git_blob_sha1": "007f755edf54565579376b077eec7f7f715e1b96",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/msgpack_numpy.py"
+      },
+      "sha256": "c04568948fcee52b691e3be4b6cffb759f7e79ad67530fcd5d23095a0d13c057",
+      "size": 1944
+    },
+    "openpi/packages/openpi-client/src/openpi_client/msgpack_numpy_test.py": {
+      "origin": {
+        "git_blob_sha1": "4c774ba468aa6948e154cb2008bac8f6128a4593",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/msgpack_numpy_test.py"
+      },
+      "sha256": "2c6dd236720dae716d7bdf842b7d506a165e9563bf9d4376c95289269adcb973",
+      "size": 1643
+    },
+    "openpi/packages/openpi-client/src/openpi_client/runtime/agent.py": {
+      "origin": {
+        "git_blob_sha1": "a2c3ab66ef618ad9ecbff7b81ad9340a4604128c",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/runtime/agent.py"
+      },
+      "sha256": "b559885afd9645a91b9b6ee12a28513295474f987d11b16610fc0479dbe6de5b",
+      "size": 465
+    },
+    "openpi/packages/openpi-client/src/openpi_client/runtime/agents/policy_agent.py": {
+      "origin": {
+        "git_blob_sha1": "65227c44dae667d9b2743b6bc1026e791cec35c4",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/runtime/agents/policy_agent.py"
+      },
+      "sha256": "c4d63952d1954bd4b72a3122223df36794812fea74cf1c7023433b5a90473c1c",
+      "size": 509
+    },
+    "openpi/packages/openpi-client/src/openpi_client/runtime/environment.py": {
+      "origin": {
+        "git_blob_sha1": "664ac4678aaaa3aecf52268a6a09d1d1fc974226",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/runtime/environment.py"
+      },
+      "sha256": "1c12e5054b3401dec5f1f8b71eef0f625cb60e2b50784dcf19afa32c77107a7e",
+      "size": 1044
+    },
+    "openpi/packages/openpi-client/src/openpi_client/runtime/runtime.py": {
+      "origin": {
+        "git_blob_sha1": "9552be091a26e163d60cab8071df4716524bf2e8",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/runtime/runtime.py"
+      },
+      "sha256": "3daa242a9ce61ffb210789ef3ba6b1e3cade9de757fcd36af7b174c530345ea8",
+      "size": 3049
+    },
+    "openpi/packages/openpi-client/src/openpi_client/runtime/subscriber.py": {
+      "origin": {
+        "git_blob_sha1": "7c69edaa8e814dfcfe56b78b774578fe37f79428",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/runtime/subscriber.py"
+      },
+      "sha256": "d269a2af8ec4056beb310e5c3c97d4468af01549c7ef80dd905652d8ac64f85b",
+      "size": 500
+    },
+    "openpi/packages/openpi-client/src/openpi_client/websocket_client_policy.py": {
+      "origin": {
+        "git_blob_sha1": "466685e00d004ff8c7dd5694636a8ec3e6439d11",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/packages/openpi-client/src/openpi_client/websocket_client_policy.py"
+      },
+      "sha256": "36557cb0b91ccf31cd4fb4b508306850d76ed0feb4028dac5182d0f5a5d88005",
+      "size": 2131
+    },
+    "openpi/scripts/__init__.py": {
+      "origin": {
+        "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/__init__.py"
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "openpi/scripts/compute_norm_stats.py": {
+      "origin": {
+        "git_blob_sha1": "c8aef8722210e21b2de41c315e2ce840f8b35e4e",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/compute_norm_stats.py"
+      },
+      "sha256": "8a64773495b714d6b18eded99d7cf87eb19d1bb3dd4a9fb47172b03de5d56a38",
+      "size": 4042
+    },
+    "openpi/scripts/process_data.py": {
+      "origin": {
+        "git_blob_sha1": "fa166f57f023f8b3034a9567e641920ea3eda70c",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/process_data.py"
+      },
+      "sha256": "d804129c9c755bf4de57cd1db63f4f1e9136dd0d090564dfec74b4701229eaf7",
+      "size": 8159
+    },
+    "openpi/scripts/serve_policy.py": {
+      "origin": {
+        "git_blob_sha1": "30f121a60ba6af3d21c287e5c5582da54072ea62",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/serve_policy.py"
+      },
+      "sha256": "eccc0448b4873fd30a1fff3355c5de7a7c227138e6db04b7dcaa5bb38a6a5809",
+      "size": 3687
+    },
+    "openpi/scripts/train.py": {
+      "origin": {
+        "git_blob_sha1": "de23e1758e693edff90e2d65b586532d0d47d4e7",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/train.py"
+      },
+      "sha256": "629089c7c1cb0ba7101aa44eea4a01d700a2de97df12d48c5548e37b5912f9f6",
+      "size": 10577
+    },
+    "openpi/scripts/train_pytorch.py": {
+      "origin": {
+        "git_blob_sha1": "c7ddd2b5950bd4d208e4831a3abab42dcf2ccee7",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/train_pytorch.py"
+      },
+      "sha256": "baa66f1642e955d5cc2ec3f54d9495035df61d71b028b98ab4ebb1e240548311",
+      "size": 25938
+    },
+    "openpi/scripts/train_test.py": {
+      "origin": {
+        "git_blob_sha1": "9e0bb7bcfdab3ca5855794fc604dac597d96d8c8",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/scripts/train_test.py"
+      },
+      "sha256": "48398805809df6a07ce613d9060ab7e4e64fab60d573f79d16a7ba59a48219f6",
+      "size": 718
+    },
+    "openpi/src/openpi/__init__.py": {
+      "origin": {
+        "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/__init__.py"
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "openpi/src/openpi/conftest.py": {
+      "origin": {
+        "git_blob_sha1": "5002b629de77953e03f24157f6ba4c88fc448468",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/conftest.py"
+      },
+      "sha256": "626672e385fb276396c119e2220421065c58f8ec602401e8bf2ae509f9fffaf3",
+      "size": 339
+    },
+    "openpi/src/openpi/models/__init__.py": {
+      "origin": {
+        "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/__init__.py"
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "openpi/src/openpi/models/gemma.py": {
+      "origin": {
+        "git_blob_sha1": "d1623d19d12517977d55e193361c5ced481efbc8",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/gemma.py"
+      },
+      "sha256": "7e42ada4ae7e9995f0ef3e33a0c224758323c2015e2d9d72ec15726a8a001d2a",
+      "size": 17146
+    },
+    "openpi/src/openpi/models/gemma_fast.py": {
+      "origin": {
+        "git_blob_sha1": "eee39b4317dd3f42aa4d73e11dceee37e394c39d",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/gemma_fast.py"
+      },
+      "sha256": "563c6e1ffd8afa31c406bcb8894a605e87df88f6c075d398d97a57af6bc3aefa",
+      "size": 15643
+    },
+    "openpi/src/openpi/models/lora.py": {
+      "origin": {
+        "git_blob_sha1": "3dfff5b4f22ff42f73298037a77df900c6b11d75",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/lora.py"
+      },
+      "sha256": "ced28716950c34d84a1a6d0b03b1d9550000732721df884818080b6e78cb3289",
+      "size": 5342
+    },
+    "openpi/src/openpi/models/lora_test.py": {
+      "origin": {
+        "git_blob_sha1": "48b65b6ae282c6bb0e6a410ee71204a4837ffc48",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/lora_test.py"
+      },
+      "sha256": "a0f10525de7773310402b3ffa636e88ffff7035f3179b140aacc6809c122f085",
+      "size": 3138
+    },
+    "openpi/src/openpi/models/model.py": {
+      "origin": {
+        "git_blob_sha1": "29618b49453742266fe6e4a5815ceee06d815f3b",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/model.py"
+      },
+      "sha256": "0d74bc1d8f4623ac3d8e543710b8bf75f9b95e588a3ebf6127c659e001385cff",
+      "size": 12270
+    },
+    "openpi/src/openpi/models/model_test.py": {
+      "origin": {
+        "git_blob_sha1": "495dc18b5f0fbb4405a49d33d676b0ef31e2aeef",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/model_test.py"
+      },
+      "sha256": "f8e71f195045d4e3ef1ddfafb2337fa52e5aa2f89bce1fde62f5cbfb67121f21",
+      "size": 2966
+    },
+    "openpi/src/openpi/models/pi0.py": {
+      "origin": {
+        "git_blob_sha1": "ae7c4590f330f160aa9baa713d5b77fc060120de",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/pi0.py"
+      },
+      "sha256": "24b32d7c6ed5e409459afa8ca5af96a4dae09c2dcdf48e828907e411f4f12342",
+      "size": 12887
+    },
+    "openpi/src/openpi/models/pi0_config.py": {
+      "origin": {
+        "git_blob_sha1": "584d83f199e092203b59861a861c64768a4e0300",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/pi0_config.py"
+      },
+      "sha256": "d321858c30b398126035ea2b6da09e1c422eeeebb5ebf8df631daf9dc77647fa",
+      "size": 4435
+    },
+    "openpi/src/openpi/models/pi0_fast.py": {
+      "origin": {
+        "git_blob_sha1": "e6b5bd15e27a58a37e8db3f9f9b9707806fec7a5",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/pi0_fast.py"
+      },
+      "sha256": "627332a555046f2744ef144c45f8bd3361a9820cf68854a4528d0fdbba7e9aa3",
+      "size": 13209
+    },
+    "openpi/src/openpi/models/pi0_test.py": {
+      "origin": {
+        "git_blob_sha1": "e5f0f84e7e831db37883ec3181eadf6e175840ef",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/pi0_test.py"
+      },
+      "sha256": "5082873014a7fc45fb8414f517909e1c24cdafea980a1fb612e0aea6058ed0fe",
+      "size": 1631
+    },
+    "openpi/src/openpi/models/siglip.py": {
+      "origin": {
+        "git_blob_sha1": "c74c99e75fa45308fcadff115a7fd4ed12c9e96c",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/siglip.py"
+      },
+      "sha256": "14b4df0be280d5769fb0dc31a40cde27525dbb1980cc998c28475d62fa3cad32",
+      "size": 12078
+    },
+    "openpi/src/openpi/models/tokenizer.py": {
+      "origin": {
+        "git_blob_sha1": "8a4966d6298619e52c7ba53359ccbbb8ba0b8cf6",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/tokenizer.py"
+      },
+      "sha256": "965be8b3c393a6811875bbc32da9e01a5d01cc2f87802de801cf7293e049748c",
+      "size": 17517
+    },
+    "openpi/src/openpi/models/tokenizer_test.py": {
+      "origin": {
+        "git_blob_sha1": "092c4ae3b2330db9f89344dc4bae150457fa4310",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/tokenizer_test.py"
+      },
+      "sha256": "5abd179ce883420e39d4d18b33d0123290af752da243003aa48a3bc06dbb9517",
+      "size": 807
+    },
+    "openpi/src/openpi/models/utils/fsq_tokenizer.py": {
+      "origin": {
+        "git_blob_sha1": "574d7733de0ebd25898d8f82fdc6e37bd0aa75ab",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/utils/fsq_tokenizer.py"
+      },
+      "sha256": "88866638ee4775f46a222561a957bd35e20600fe38c5888b587016ad77b1065f",
+      "size": 15928
+    },
+    "openpi/src/openpi/models/vit.py": {
+      "origin": {
+        "git_blob_sha1": "b7901d097b86d36e3564d2b664ed50af8a194080",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models/vit.py"
+      },
+      "sha256": "d285d057636c3cba2d1fd3b37693b18075ad4b9c3b47bbde807c34c6c376ac93",
+      "size": 10266
+    },
+    "openpi/src/openpi/models_pytorch/gemma_pytorch.py": {
+      "origin": {
+        "git_blob_sha1": "203b36be8ae4c525422c93aa50926c03ded7deb5",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/gemma_pytorch.py"
+      },
+      "sha256": "08fd8d750519f0fb44fc5173311e50a30f4c8f32c02e51244b4f8e47b32cd52f",
+      "size": 13509
+    },
+    "openpi/src/openpi/models_pytorch/pi0_pytorch.py": {
+      "origin": {
+        "git_blob_sha1": "e68ddb7cc02c2fd256e9b48ac9d0fb9df966536a",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/pi0_pytorch.py"
+      },
+      "sha256": "dcd7b6f508808ce4b7170a1720a4c62c6da04edae3652d16c94a469dca924e16",
+      "size": 19128
+    },
+    "openpi/src/openpi/models_pytorch/preprocessing_pytorch.py": {
+      "origin": {
+        "git_blob_sha1": "33c94a59b18a7e45732a02200f0daef5b0f93018",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/preprocessing_pytorch.py"
+      },
+      "sha256": "6a44e91be2d7a724c6140d2cc98ed0a631b8d38bbb29f63b380a0a19f903bbf6",
+      "size": 7264
+    },
+    "openpi/src/openpi/models_pytorch/transformers_replace/models/gemma/configuration_gemma.py": {
+      "origin": {
+        "git_blob_sha1": "a42abe1341d4cf30574cc5f239369cb5e55bfdbb",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/transformers_replace/models/gemma/configuration_gemma.py"
+      },
+      "sha256": "26fd0d0f52730ab32b6f337eb73ae9a26cb71ae0915bc49eced1d0e2ed8d0ec6",
+      "size": 8958
+    },
+    "openpi/src/openpi/models_pytorch/transformers_replace/models/gemma/modeling_gemma.py": {
+      "origin": {
+        "git_blob_sha1": "d0529778bba56e0a45279aa44e29ef9a379026d9",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/transformers_replace/models/gemma/modeling_gemma.py"
+      },
+      "sha256": "17eeb54e277939e58cd6f8a92719a275e36baf0c9f463b2754227d42f87aedde",
+      "size": 36392
+    },
+    "openpi/src/openpi/models_pytorch/transformers_replace/models/paligemma/modeling_paligemma.py": {
+      "origin": {
+        "git_blob_sha1": "fbf0e948909044f1f97ce053cce4ff0fee0378e8",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/transformers_replace/models/paligemma/modeling_paligemma.py"
+      },
+      "sha256": "c945d330b829264f927f3ee5339f977238631772de07a28e855e265bb85fd53c",
+      "size": 27688
+    },
+    "openpi/src/openpi/models_pytorch/transformers_replace/models/siglip/check.py": {
+      "origin": {
+        "git_blob_sha1": "4bb3c96aa57aea42b20452d35eb5ecd9f50d4d59",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/transformers_replace/models/siglip/check.py"
+      },
+      "sha256": "466e8eb7887ac5ccc98118a3169298d6ab65a284d834bae74751e3854dbc4245",
+      "size": 133
+    },
+    "openpi/src/openpi/models_pytorch/transformers_replace/models/siglip/modeling_siglip.py": {
+      "origin": {
+        "git_blob_sha1": "3ea8acdb31ab5f29de86f4452942137ecb788a1b",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/models_pytorch/transformers_replace/models/siglip/modeling_siglip.py"
+      },
+      "sha256": "ef2e99500f263fdd78db9d4d9a255e29d844eb92f53c25ad640f8056700ef84b",
+      "size": 50231
+    },
+    "openpi/src/openpi/policies/aloha_policy.py": {
+      "origin": {
+        "git_blob_sha1": "94d7064332345c73fd603eace21dc5bed3418b4f",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/aloha_policy.py"
+      },
+      "sha256": "c37aa90797665b1ec57cd5286fa5d6cbf29af0559ffce36d3fed98c02329eaea",
+      "size": 7853
+    },
+    "openpi/src/openpi/policies/droid_policy.py": {
+      "origin": {
+        "git_blob_sha1": "666b7f76fecb2decacc60df09c577c086df76f1d",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/droid_policy.py"
+      },
+      "sha256": "7d0893555964d485e231f70084125084a99495705ddd74b29461229d524fff26",
+      "size": 3186
+    },
+    "openpi/src/openpi/policies/libero_policy.py": {
+      "origin": {
+        "git_blob_sha1": "10611f61bed1d7d3a9ca49e6ac455829fda9b61d",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/libero_policy.py"
+      },
+      "sha256": "ad01e5be74516d9ec9aeb1f76294d5c9f7f7179a60f1f7fbbb35e7646534f81a",
+      "size": 4320
+    },
+    "openpi/src/openpi/policies/policy.py": {
+      "origin": {
+        "git_blob_sha1": "7154530d56ab5bf5d65cb2261b713a682348214b",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/policy.py"
+      },
+      "sha256": "5a19b73e8d9c60a9e21849bf482c0e9c72f454c3aa88f2de544a24f209913b99",
+      "size": 6065
+    },
+    "openpi/src/openpi/policies/policy_config.py": {
+      "origin": {
+        "git_blob_sha1": "6570df05ed068f297d48326990a1cd10ee68ac5a",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/policy_config.py"
+      },
+      "sha256": "aaf42ab04a33b6c91d2447926211646c33ebd8ebfa427f026d7b6c4f7c45ec52",
+      "size": 4107
+    },
+    "openpi/src/openpi/policies/policy_test.py": {
+      "origin": {
+        "git_blob_sha1": "5808e5274a9d19384d4277ccbde113926da65a50",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/policy_test.py"
+      },
+      "sha256": "9dbb20963600367a7e7abfc97d1e326916777c57a87b39b1bc4070ba64676683",
+      "size": 1127
+    },
+    "openpi/src/openpi/policies/wuji_policy.py": {
+      "origin": {
+        "git_blob_sha1": "ab0775b4c3bf2b0fbeb6169c318fd415a1c3a5e6",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/policies/wuji_policy.py"
+      },
+      "sha256": "98046d038740dff6ebf41b0e3bf59674ac30246332a33cfc0624e5a06c855310",
+      "size": 2839
+    },
+    "openpi/src/openpi/serving/websocket_policy_server.py": {
+      "origin": {
+        "git_blob_sha1": "bdefa98b879323aca449550bf1985ae877eddd83",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/serving/websocket_policy_server.py"
+      },
+      "sha256": "1370d345e6c3c5b8f15573050e485e60a5b423d1df33e24b237805e6b442b026",
+      "size": 3051
+    },
+    "openpi/src/openpi/shared/__init__.py": {
+      "origin": {
+        "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/__init__.py"
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "openpi/src/openpi/shared/array_typing.py": {
+      "origin": {
+        "git_blob_sha1": "569eafef1401d4a34b0289c0efb2125f71d21dfb",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/array_typing.py"
+      },
+      "sha256": "6524945566eab3eb97b75a6280ba4724617b4d028c55f05172b283c3de68a026",
+      "size": 3402
+    },
+    "openpi/src/openpi/shared/download.py": {
+      "origin": {
+        "git_blob_sha1": "582f8392df2a337fdba79f6f20babdb6fa76a321",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/download.py"
+      },
+      "sha256": "a12054a6ddaab4efa833c4ff49a1aba00c63759e4e88d6be21c1e0b3307fd9b2",
+      "size": 8862
+    },
+    "openpi/src/openpi/shared/download_test.py": {
+      "origin": {
+        "git_blob_sha1": "ecb92bbe4d8e5a909bc9dc3ac86c7eb38868b7ba",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/download_test.py"
+      },
+      "sha256": "234ee70ab2501a1421f6c44cbd83c1e16747597023319ae1446bed9d44f17072",
+      "size": 1490
+    },
+    "openpi/src/openpi/shared/image_tools.py": {
+      "origin": {
+        "git_blob_sha1": "8cde35352021de1e66b5856eb1a18bf2dff61ee7",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/image_tools.py"
+      },
+      "sha256": "0f8fcb355288119e56acb56d550c1cc1f3a9edddceb0dc5b319f955943ef7767",
+      "size": 4665
+    },
+    "openpi/src/openpi/shared/image_tools_test.py": {
+      "origin": {
+        "git_blob_sha1": "c19bee2ed1ca8aacb1f29cb8c7154037c7ce8d0c",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/image_tools_test.py"
+      },
+      "sha256": "842374579dc9f4c2907da5e8bb555efe5a3f4902b659720c8e90115863dd59fe",
+      "size": 1418
+    },
+    "openpi/src/openpi/shared/nnx_utils.py": {
+      "origin": {
+        "git_blob_sha1": "29df222bcbc0e815d0b6bec046a2893e3b2b18a5",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/nnx_utils.py"
+      },
+      "sha256": "4da7111ba3011c4d1c381c9ed17257771df6a50ed89182647c3fb6f79208005e",
+      "size": 2844
+    },
+    "openpi/src/openpi/shared/normalize.py": {
+      "origin": {
+        "git_blob_sha1": "5a75faecfbf4267329824b103e4cdd091d729840",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/normalize.py"
+      },
+      "sha256": "6c2cea4946fb07e51801530400d2b2fd94730e195cd290d6b6960114eca9739d",
+      "size": 5529
+    },
+    "openpi/src/openpi/shared/normalize_test.py": {
+      "origin": {
+        "git_blob_sha1": "9c36bd9abff6c74e7fa844383cf5abbe1bc5ce26",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/shared/normalize_test.py"
+      },
+      "sha256": "fda27a21cf37f337b12bcab71229407c2a349c5965c33f278bdc468ed03f58af",
+      "size": 1521
+    },
+    "openpi/src/openpi/training/checkpoints.py": {
+      "origin": {
+        "git_blob_sha1": "f32a8313979dffe39e831e2c9910d17677ba3c47",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/checkpoints.py"
+      },
+      "sha256": "3cc32682ec3609e9075dabd991488edb9d7f6c045443f58963d733f99c468dbd",
+      "size": 5763
+    },
+    "openpi/src/openpi/training/config.py": {
+      "origin": {
+        "git_blob_sha1": "c6babbc0983f96e868c0aa8d631fc2682b99b504",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/config.py"
+      },
+      "sha256": "9d4d131807ebcdc91845288f6012124ca3fc43f5faf9d79ee1f4d681a4e0eff9",
+      "size": 35315
+    },
+    "openpi/src/openpi/training/data_loader.py": {
+      "origin": {
+        "git_blob_sha1": "bf67dd135012b9f48fda337e151556be60e386c4",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/data_loader.py"
+      },
+      "sha256": "c7c0633b96b675616f5ba54728b40ceb867b6519cb356b519107fb27c440e5da",
+      "size": 20187
+    },
+    "openpi/src/openpi/training/data_loader_test.py": {
+      "origin": {
+        "git_blob_sha1": "d15a73529ef4df3262e925b7c0b05d6a51b71d84",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/data_loader_test.py"
+      },
+      "sha256": "a0cf1bc293e8b0eb9bc5516bc05d30d9940da06c94fcfa1addca7267f8358815",
+      "size": 2487
+    },
+    "openpi/src/openpi/training/droid_rlds_dataset.py": {
+      "origin": {
+        "git_blob_sha1": "2cb08a16ac1817dd271fb2e2750fc3aa1a079bd4",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/droid_rlds_dataset.py"
+      },
+      "sha256": "1d3a057a040240218234d7dbc6680ee4fe8256f2058531a0f9fefd3f7ee995a4",
+      "size": 10886
+    },
+    "openpi/src/openpi/training/misc/polaris_config.py": {
+      "origin": {
+        "git_blob_sha1": "873beb22fec30e216997ba2455d44a3cb1b304dd",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/misc/polaris_config.py"
+      },
+      "sha256": "c2ab92efb5e0d675118ad812113fd1c3cb3a62cdab5d79066014266e82df12d8",
+      "size": 9624
+    },
+    "openpi/src/openpi/training/misc/roboarena_config.py": {
+      "origin": {
+        "git_blob_sha1": "0795bae87be86fc463298cfb008ab393e037353d",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/misc/roboarena_config.py"
+      },
+      "sha256": "914acdd74ccf90e6779c13a5093140595c7e4f687e9e0b167439446a81d74c01",
+      "size": 4804
+    },
+    "openpi/src/openpi/training/optimizer.py": {
+      "origin": {
+        "git_blob_sha1": "1d1cc9d7e53656f671468054be45f09b97529b96",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/optimizer.py"
+      },
+      "sha256": "cfb5d6f6aec61fbe961287b4015c652260628a0ed4682a0dbdc271b8e65431fa",
+      "size": 3202
+    },
+    "openpi/src/openpi/training/sharding.py": {
+      "origin": {
+        "git_blob_sha1": "344c5509bea53fb8e9352279a2df9930baa09d8c",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/sharding.py"
+      },
+      "sha256": "c67c4112a126ab097571c8a882fd1ee3f106b15b6e608e7205ac7f29b44ca985",
+      "size": 4099
+    },
+    "openpi/src/openpi/training/utils.py": {
+      "origin": {
+        "git_blob_sha1": "fe7f94db1843b4b817cf24a007ca0b400946a066",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/utils.py"
+      },
+      "sha256": "b684e674343f86ef5e976f279a586d3fe2f885e901f396ac899ed136abc7eca6",
+      "size": 1217
+    },
+    "openpi/src/openpi/training/weight_loaders.py": {
+      "origin": {
+        "git_blob_sha1": "7c4eb37fee8630d0cbebf2d412e2d27024523469",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/training/weight_loaders.py"
+      },
+      "sha256": "ef98cee058972ef54269c2a41f81ad265bc3f137432044824c09e1a0462ef714",
+      "size": 6314
+    },
+    "openpi/src/openpi/transforms.py": {
+      "origin": {
+        "git_blob_sha1": "b01e9db4178d3392e212c2df834ed9920dce14ce",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/transforms.py"
+      },
+      "sha256": "7feaa7189bfcac3e3d205484ce9b3fd74fcf597cedc48e74e6d39c4bdffaa0e6",
+      "size": 17093
+    },
+    "openpi/src/openpi/transforms_test.py": {
+      "origin": {
+        "git_blob_sha1": "706633179a0196b6dcecef5eb2167862cef44135",
+        "kind": "xpolicylab_git_blob",
+        "path": "policy/Pi_05/openpi/src/openpi/transforms_test.py"
+      },
+      "sha256": "b72bec3b12429dc47c7ff1e1f581d471009097d5298a3a8bf809a01e1e37cc5d",
+      "size": 4410
+    },
+    "provenance/openpi-inventory.json": {
+      "origin": {
+        "kind": "source_inventory"
+      },
+      "sha256": "7e87a9bfe91acf2134eb7984972a9216e955faf216b8444806aa8363fd845437",
+      "size": 8462
+    },
+    "provenance/requirements.verified.txt": {
+      "origin": {
+        "kind": "historical_inference_environment_freeze"
+      },
+      "sha256": "8710391e750a140c32b55b69f4d9ca9cc9a8f5cbf27bf2a1d58cb58fc9d0c3cd",
+      "size": 2924
+    },
+    "server/__init__.py": {
+      "origin": {
+        "kind": "original_pi05_service_snapshot",
+        "path": "server/__init__.py"
+      },
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "server/openpi_batch_server.py": {
+      "origin": {
+        "kind": "original_pi05_service_snapshot",
+        "path": "server/openpi_batch_server.py"
+      },
+      "sha256": "d3f55cb7318e390741f98ff23e7895870d4aa2be297cd75fd270e77d97f0c2b1",
+      "size": 21458
+    },
+    "server/protocol.py": {
+      "origin": {
+        "kind": "original_pi05_service_snapshot",
+        "path": "server/protocol.py"
+      },
+      "sha256": "b84ffb434c3d6b09af9325bea7d85b2977d57a41c02180dfba9682a338072368",
+      "size": 17007
+    },
+    "site-packages/augmax-0.4.1.dist-info/METADATA": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax-0.4.1.dist-info/METADATA"
+      },
+      "sha256": "01ce08dbb27610123f88e90704f36387ebeb28894544b2a8ab2cdba6d9811816",
+      "size": 2885
+    },
+    "site-packages/augmax-0.4.1.dist-info/WHEEL": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax-0.4.1.dist-info/WHEEL"
+      },
+      "sha256": "11319513b72fe7d4379f6f9f7984b3cca85f688201c09325839a04908e107b75",
+      "size": 78
+    },
+    "site-packages/augmax/__init__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/__init__.py"
+      },
+      "sha256": "86b22c45f793d8038838c4561ee01f014e7604fad0b9bb538e5f0440b03e4909",
+      "size": 1404
+    },
+    "site-packages/augmax/base.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/base.py"
+      },
+      "sha256": "eab29ac85eaeffc6696661799b22edc1ad240605aeea82136b9f89b3433f565e",
+      "size": 3786
+    },
+    "site-packages/augmax/colorspace.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/colorspace.py"
+      },
+      "sha256": "23f9cd15389cb039e5fdecc37a771b4e577974b929f8f5c57a039a32a2932069",
+      "size": 14122
+    },
+    "site-packages/augmax/functional/__init__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/functional/__init__.py"
+      },
+      "sha256": "3a8fe1fed50cedb0bc1651c18b60016179fb4d62ca98fff73b4c0fcc1be2145c",
+      "size": 25
+    },
+    "site-packages/augmax/functional/colorspace.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/functional/colorspace.py"
+      },
+      "sha256": "3808087c7ff52578e36276c1b1ea6c78e3f7d8c6ee33983f7130fa0fcbedc643",
+      "size": 1103
+    },
+    "site-packages/augmax/geometric.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/geometric.py"
+      },
+      "sha256": "07cb87add2e1cff1f7798528f0b49b3483a2b92fb628b29370a54726f9caca94",
+      "size": 19804
+    },
+    "site-packages/augmax/imagelevel.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/imagelevel.py"
+      },
+      "sha256": "73ac636b8173e884cc1d40063690e41270e7eac99945d4c3a07f338ddf54e717",
+      "size": 5530
+    },
+    "site-packages/augmax/optimized.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/optimized.py"
+      },
+      "sha256": "3ac27f3338be443d7d2e3ca1677b13182ece9ccc50588e0dc714a0128ffe7d04",
+      "size": 3199
+    },
+    "site-packages/augmax/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/augmax/utils.py"
+      },
+      "sha256": "0fda539e990e6d621faed610a3ad56f0fa95445154a8bce1a54c627d34d80193",
+      "size": 2880
+    },
+    "site-packages/lerobot/__init__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/__init__.py"
+      },
+      "sha256": "9746c22f7a9cdcf885408cbf8c8e94cafa9b80ed1d5a0d9d9538710cf3139b21",
+      "size": 7577
+    },
+    "site-packages/lerobot/__version__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/__version__.py"
+      },
+      "sha256": "beb2aa5d785c7e7ccbcb910ec4688e2868423458e2a1aac7fd76c1e1a182a470",
+      "size": 834
+    },
+    "site-packages/lerobot/common/constants.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/constants.py"
+      },
+      "sha256": "e76383969fa50b9b4b0deeafef11a049bcdcbbbc744ac1de32522b3f81c1b3a9",
+      "size": 1625
+    },
+    "site-packages/lerobot/common/datasets/backward_compatibility.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/backward_compatibility.py"
+      },
+      "sha256": "cfe568207eed7c2eb656de952aeee8362bebec4334f61ccc32b0bcb5b657e01d",
+      "size": 3021
+    },
+    "site-packages/lerobot/common/datasets/card_template.md": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/card_template.md"
+      },
+      "sha256": "0a60fe690d5c06d817fe6b968f71f7d50e3f5411d6e95372403347249d2e9072",
+      "size": 780
+    },
+    "site-packages/lerobot/common/datasets/compute_stats.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/compute_stats.py"
+      },
+      "sha256": "9afd2da5f91d646e90cdacf9d9ab638e6d7c846fe8b82eb7630d5115fce30466",
+      "size": 6949
+    },
+    "site-packages/lerobot/common/datasets/factory.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/factory.py"
+      },
+      "sha256": "9ad5c3023d0a7b58efa28df3fbbf665e1f31d36fe8cfe275cca47a39680992b4",
+      "size": 4604
+    },
+    "site-packages/lerobot/common/datasets/image_writer.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/image_writer.py"
+      },
+      "sha256": "44f057d19b1036a5e64d67503a073c9c256ed956005fcefce51902b05c5e231c",
+      "size": 6284
+    },
+    "site-packages/lerobot/common/datasets/lerobot_dataset.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/lerobot_dataset.py"
+      },
+      "sha256": "2c56f002392d15f41147f0e635d53cdc31cd04fe676bec6f329206bbea622a0d",
+      "size": 51001
+    },
+    "site-packages/lerobot/common/datasets/online_buffer.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/online_buffer.py"
+      },
+      "sha256": "d249b0d221418e7538bba8e20b4f46b44f6c144c84463b3c15921eda70903a19",
+      "size": 17708
+    },
+    "site-packages/lerobot/common/datasets/push_dataset_to_hub/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/push_dataset_to_hub/utils.py"
+      },
+      "sha256": "4aa7b52060ffde829bc736a0c5525f0dc6d6edfff4ec64616934b396acb7d66f",
+      "size": 5022
+    },
+    "site-packages/lerobot/common/datasets/sampler.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/sampler.py"
+      },
+      "sha256": "a093a78002b5e5a5d460566e060e2acbc9aa5e9f2e283dac128985c499679397",
+      "size": 2377
+    },
+    "site-packages/lerobot/common/datasets/transforms.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/transforms.py"
+      },
+      "sha256": "347e95d505e53973b9178e9c07fad966624171fb3bb0d8e96c8b40096379088a",
+      "size": 9685
+    },
+    "site-packages/lerobot/common/datasets/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/utils.py"
+      },
+      "sha256": "ecb63a1d84610f36dda78047058ef2e8c7b840544fef262baad7ccc2142ad031",
+      "size": 29692
+    },
+    "site-packages/lerobot/common/datasets/v2/batch_convert_dataset_v1_to_v2.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/v2/batch_convert_dataset_v1_to_v2.py"
+      },
+      "sha256": "c142827674743599d3e9a5a5d6818dbdc085eabfeb50c6324e55047aa3ef689d",
+      "size": 43024
+    },
+    "site-packages/lerobot/common/datasets/v2/convert_dataset_v1_to_v2.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/v2/convert_dataset_v1_to_v2.py"
+      },
+      "sha256": "6c00ec375e07481a3a5b6b833cacc06b04951520210090df35c79c3116ea0ba8",
+      "size": 24961
+    },
+    "site-packages/lerobot/common/datasets/v21/_remove_language_instruction.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/v21/_remove_language_instruction.py"
+      },
+      "sha256": "41929fa6389b493ec15beaea83acc39c2c74e34fe8210c767eea70e4526ccdce",
+      "size": 3225
+    },
+    "site-packages/lerobot/common/datasets/v21/batch_convert_dataset_v20_to_v21.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/v21/batch_convert_dataset_v20_to_v21.py"
+      },
+      "sha256": "faef9ce957a1ef43326b579c3f33236bbe8c9e369cdd8c826d6256c0f5f3e1c6",
+      "size": 1833
+    },
+    "site-packages/lerobot/common/datasets/v21/convert_dataset_v20_to_v21.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/v21/convert_dataset_v20_to_v21.py"
+      },
+      "sha256": "0c58d8290af74df5a26cf08360586a440f0ff8561b46929adf210fafcb8e044e",
+      "size": 3725
+    },
+    "site-packages/lerobot/common/datasets/v21/convert_stats.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/v21/convert_stats.py"
+      },
+      "sha256": "f1ff6f7f6e192dad238a74edaaaab209006d7f80f05cebf872b3932dff5ee99e",
+      "size": 4230
+    },
+    "site-packages/lerobot/common/datasets/video_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/datasets/video_utils.py"
+      },
+      "sha256": "0bcc946fb5e176aa0a8f547db81f6ad725746aa799f481a7c66160b2fce10e1b",
+      "size": 16915
+    },
+    "site-packages/lerobot/common/envs/__init__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/envs/__init__.py"
+      },
+      "sha256": "4109273a32977e5edd453b67dfd40b5feaafdc452d60347bff7fdf3edae0a983",
+      "size": 686
+    },
+    "site-packages/lerobot/common/envs/configs.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/envs/configs.py"
+      },
+      "sha256": "c6f67dc5fb17b41e09ab14e899363d270170f2033130d128d9e127447403ba25",
+      "size": 5237
+    },
+    "site-packages/lerobot/common/envs/factory.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/envs/factory.py"
+      },
+      "sha256": "fdec0adfc28e13b19e61a365645bb17b33e4271ef02558de87d07a883862ccf6",
+      "size": 2459
+    },
+    "site-packages/lerobot/common/envs/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/envs/utils.py"
+      },
+      "sha256": "033eec2ec5114065f3826cdfa0f7e86a04ca32e61a5ea9765da82fd4fa7aaa63",
+      "size": 5385
+    },
+    "site-packages/lerobot/common/optim/__init__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/optim/__init__.py"
+      },
+      "sha256": "4f485904e4eca422d708f5507810d51ae99a614dd41aac98127ed6019b9b3cc5",
+      "size": 671
+    },
+    "site-packages/lerobot/common/optim/factory.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/optim/factory.py"
+      },
+      "sha256": "02bd16a99e9daf896b4a0ef2857852ffdd6729099c253475558708ad9c5e448c",
+      "size": 1659
+    },
+    "site-packages/lerobot/common/optim/optimizers.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/optim/optimizers.py"
+      },
+      "sha256": "a0f4aa72b3f455bf23e22f50f60c14d15908cf1937a264a0dc28f3e38ea0cc21",
+      "size": 3700
+    },
+    "site-packages/lerobot/common/optim/schedulers.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/optim/schedulers.py"
+      },
+      "sha256": "8fb1d655106e00dda643a3e75798715a3e3a0d89c5682dfd9a277bc26400173e",
+      "size": 4490
+    },
+    "site-packages/lerobot/common/policies/__init__.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/__init__.py"
+      },
+      "sha256": "fb4a673dfe6fce2bea2ffbe902d1e7500a37e442026ddeea01ca40d949ee96ce",
+      "size": 942
+    },
+    "site-packages/lerobot/common/policies/act/configuration_act.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/act/configuration_act.py"
+      },
+      "sha256": "14b9059881f0b79d595147fc8596bc4ace21d028f1a933beab72bfe4bffb594d",
+      "size": 9558
+    },
+    "site-packages/lerobot/common/policies/act/modeling_act.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/act/modeling_act.py"
+      },
+      "sha256": "b0464e05914c3fc4cff8ac89d4ae1d5e84c8355c968bf63062d1fc42f1320241",
+      "size": 35947
+    },
+    "site-packages/lerobot/common/policies/diffusion/configuration_diffusion.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/diffusion/configuration_diffusion.py"
+      },
+      "sha256": "3de30b72c0539269a854518b780101908675e370f12f20fefe80e0fb021221da",
+      "size": 12326
+    },
+    "site-packages/lerobot/common/policies/diffusion/modeling_diffusion.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/diffusion/modeling_diffusion.py"
+      },
+      "sha256": "badee75c1a1597e5664756c1e9dbbfe7b5599ac98b656a2fd14b42a36178f87a",
+      "size": 33294
+    },
+    "site-packages/lerobot/common/policies/factory.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/factory.py"
+      },
+      "sha256": "335585213af9269aa095b922dda0aad69ae263649ce570bbe599faf4f2dacb11",
+      "size": 6788
+    },
+    "site-packages/lerobot/common/policies/normalize.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/normalize.py"
+      },
+      "sha256": "b266de275633ae8b636b59cb563b55b36a50d48ad8637e686a82fed72cffed56",
+      "size": 12578
+    },
+    "site-packages/lerobot/common/policies/pi0/configuration_pi0.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/configuration_pi0.py"
+      },
+      "sha256": "ee04b129b452faffb2262d485e6754ab61f5fb93303e818ee082f0b52bb72b97",
+      "size": 5141
+    },
+    "site-packages/lerobot/common/policies/pi0/conversion_scripts/benchmark.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/conversion_scripts/benchmark.py"
+      },
+      "sha256": "c6d22a0a0213cfb085552b841518bad98cdfbc90fb5408869eac2a613a465681",
+      "size": 2502
+    },
+    "site-packages/lerobot/common/policies/pi0/conversion_scripts/compare_with_jax.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/conversion_scripts/compare_with_jax.py"
+      },
+      "sha256": "6ccc1def64bd18de0454b97640cec7be582cfb6e1031589a41434101a13508e8",
+      "size": 4576
+    },
+    "site-packages/lerobot/common/policies/pi0/conversion_scripts/conversion_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/conversion_scripts/conversion_utils.py"
+      },
+      "sha256": "5ae68dcea45c8542a986d1e4ce81ea59c089e5ad30f63c173c1016b19a8050ff",
+      "size": 2660
+    },
+    "site-packages/lerobot/common/policies/pi0/conversion_scripts/convert_pi0_to_hf_lerobot.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/conversion_scripts/convert_pi0_to_hf_lerobot.py"
+      },
+      "sha256": "5b6d791b16dce9deb6d976b1feb7bade64913c2e60c0a125bc6ca53be01f6958",
+      "size": 21618
+    },
+    "site-packages/lerobot/common/policies/pi0/flex_attention.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/flex_attention.py"
+      },
+      "sha256": "879be3dd236ff12734668f6abf01fed6c0a68dfa08c8b2b78cafdb45f8725de8",
+      "size": 4807
+    },
+    "site-packages/lerobot/common/policies/pi0/modeling_pi0.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/modeling_pi0.py"
+      },
+      "sha256": "eb46b08bc3fee78a15cc6218d78cc187e25d60d247b2e433c630377a85378d3e",
+      "size": 28551
+    },
+    "site-packages/lerobot/common/policies/pi0/paligemma_with_expert.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0/paligemma_with_expert.py"
+      },
+      "sha256": "1aba460337aacf005fd1da9396a320febb22491b383e3ad76f3636f1f33ce8ae",
+      "size": 16937
+    },
+    "site-packages/lerobot/common/policies/pi0fast/configuration_pi0fast.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0fast/configuration_pi0fast.py"
+      },
+      "sha256": "5e30a88314fae75b303814092cd1d51148593e4f45f74b3805d2a2ef39448341",
+      "size": 4516
+    },
+    "site-packages/lerobot/common/policies/pi0fast/modeling_pi0fast.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pi0fast/modeling_pi0fast.py"
+      },
+      "sha256": "eee56837bf171e90b24cc881657027779ac92cb7114a39f5eb31a1a78cadd28c",
+      "size": 40204
+    },
+    "site-packages/lerobot/common/policies/pretrained.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/pretrained.py"
+      },
+      "sha256": "f39d72b37c12c7d206e73b2983c740663b5ef0ba51c7628248f26fb57f9cda45",
+      "size": 7940
+    },
+    "site-packages/lerobot/common/policies/tdmpc/configuration_tdmpc.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/tdmpc/configuration_tdmpc.py"
+      },
+      "sha256": "93d0842b0525122113bf09d72b4a6a58e56a1fcad88a637f6ef4abd70be439b2",
+      "size": 11884
+    },
+    "site-packages/lerobot/common/policies/tdmpc/modeling_tdmpc.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/tdmpc/modeling_tdmpc.py"
+      },
+      "sha256": "b4fdbbf7a77af837ee4dc8ac8881fd7cc195bde68354df8b431cdd58756bdd77",
+      "size": 38120
+    },
+    "site-packages/lerobot/common/policies/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/utils.py"
+      },
+      "sha256": "8c917a23d6b19c43de623b47e6d080b00e7d86b683661e95ca240e9e7df53e95",
+      "size": 2354
+    },
+    "site-packages/lerobot/common/policies/vqbet/configuration_vqbet.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/vqbet/configuration_vqbet.py"
+      },
+      "sha256": "1bc458d457d3a4de491ecfa156333fad651bd331a242bbfb2d8503b639cc8575",
+      "size": 9932
+    },
+    "site-packages/lerobot/common/policies/vqbet/modeling_vqbet.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/vqbet/modeling_vqbet.py"
+      },
+      "sha256": "4cc82a91c34342343922b19a20b777d5afeb79c29c7b497a5a4e674601d8916a",
+      "size": 45498
+    },
+    "site-packages/lerobot/common/policies/vqbet/vqbet_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/policies/vqbet/vqbet_utils.py"
+      },
+      "sha256": "c240c24a79a64a0cb4d6abb7299755a59dd08b136fc8c15590c219c46b308ec1",
+      "size": 54106
+    },
+    "site-packages/lerobot/common/robot_devices/cameras/configs.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/cameras/configs.py"
+      },
+      "sha256": "082b3c37671abe297c99d543e4cf55bf5afcf60a89ddc4c556ca399d526131e2",
+      "size": 3933
+    },
+    "site-packages/lerobot/common/robot_devices/cameras/intelrealsense.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/cameras/intelrealsense.py"
+      },
+      "sha256": "7e8ad387721b45b20f65fd1580beb0f7c83552923d4269bcef0078b72cbcd4b4",
+      "size": 20336
+    },
+    "site-packages/lerobot/common/robot_devices/cameras/opencv.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/cameras/opencv.py"
+      },
+      "sha256": "fe5c3c55e53ae4659210a59a6cf441259f302b87bb2ae9809cc4d3fac05daf84",
+      "size": 19890
+    },
+    "site-packages/lerobot/common/robot_devices/cameras/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/cameras/utils.py"
+      },
+      "sha256": "960531ca13073268f2f52806aa54837cc5d4bcbc4f4a86ae89f8b9d12de6a78e",
+      "size": 2203
+    },
+    "site-packages/lerobot/common/robot_devices/control_configs.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/control_configs.py"
+      },
+      "sha256": "b6091e8d1d9c407beec1fc59407e88e657bcca8b6f4df703bab4a5126e8ad7c7",
+      "size": 5429
+    },
+    "site-packages/lerobot/common/robot_devices/control_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/control_utils.py"
+      },
+      "sha256": "edaf60274fdb7e613847876625cbdcd3051ed7d78ed194657835ad5876a268ee",
+      "size": 11948
+    },
+    "site-packages/lerobot/common/robot_devices/motors/configs.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/motors/configs.py"
+      },
+      "sha256": "ff68e57aeb494466306557aaf6cab84eab0647bdb517fb14499b21c1eda2802b",
+      "size": 1203
+    },
+    "site-packages/lerobot/common/robot_devices/motors/dynamixel.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/motors/dynamixel.py"
+      },
+      "sha256": "b458906d4bce9462c17dcdc2ef6a53c4227bde396364331c5f19047f5c7b1306",
+      "size": 36303
+    },
+    "site-packages/lerobot/common/robot_devices/motors/feetech.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/motors/feetech.py"
+      },
+      "sha256": "0c75f275693ff0e2f81d725db32057d7f649e95b703160af3d184f4d254681e2",
+      "size": 36990
+    },
+    "site-packages/lerobot/common/robot_devices/motors/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/motors/utils.py"
+      },
+      "sha256": "6741d163c145ae3374fd6af73ad0496a1f013bf44ec0433acde8e18c8493a6aa",
+      "size": 2217
+    },
+    "site-packages/lerobot/common/robot_devices/robots/configs.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/configs.py"
+      },
+      "sha256": "3ec2f2861dec4e5bc29dba04727cf8a044050dbc97cf1b8b7c6fa04ae40d7c94",
+      "size": 25078
+    },
+    "site-packages/lerobot/common/robot_devices/robots/dynamixel_calibration.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/dynamixel_calibration.py"
+      },
+      "sha256": "d86b65846f03e95d51daa7cc7ddfc3639d592c9a7b0cdce74db1a63349b3cbe3",
+      "size": 7319
+    },
+    "site-packages/lerobot/common/robot_devices/robots/feetech_calibration.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/feetech_calibration.py"
+      },
+      "sha256": "4991c7b68481ba380040d549a00f3fca7dead33722558bbd69e9ed092cc5273b",
+      "size": 21176
+    },
+    "site-packages/lerobot/common/robot_devices/robots/lekiwi_remote.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/lekiwi_remote.py"
+      },
+      "sha256": "79b12d2bb2666a44e7314b57043908026c125121ad7b81be225a619987545e00",
+      "size": 8893
+    },
+    "site-packages/lerobot/common/robot_devices/robots/manipulator.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/manipulator.py"
+      },
+      "sha256": "61166144b141f1ffd70fceb8acc6e54f9419428cb4a8b7de70ef32467a372c4e",
+      "size": 27715
+    },
+    "site-packages/lerobot/common/robot_devices/robots/mobile_manipulator.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/mobile_manipulator.py"
+      },
+      "sha256": "03ec409f872c6d390aa64974d55063f8a516de50b908b1d5b8365146e6fb3bcf",
+      "size": 27269
+    },
+    "site-packages/lerobot/common/robot_devices/robots/stretch.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/stretch.py"
+      },
+      "sha256": "c795a10ca386f6974bffb7c45bcf358cfba342137dbf3ee9236c63c1a38019e8",
+      "size": 7559
+    },
+    "site-packages/lerobot/common/robot_devices/robots/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/robots/utils.py"
+      },
+      "sha256": "f202c12b4d57d591fe7d3ed102ce1e08c074abfa25cd04ffbdbd1c951052957d",
+      "size": 3024
+    },
+    "site-packages/lerobot/common/robot_devices/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/robot_devices/utils.py"
+      },
+      "sha256": "285fafa465d53997b0a5ba21c06a323b6087f9f48508ba6dfad95355f392579d",
+      "size": 2216
+    },
+    "site-packages/lerobot/common/utils/benchmark.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/benchmark.py"
+      },
+      "sha256": "cf57a55c92a84e393d273f6665876b24d9db5341f178614e9e9c1186a2dbc065",
+      "size": 2732
+    },
+    "site-packages/lerobot/common/utils/hub.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/hub.py"
+      },
+      "sha256": "45c01ace4553748c11bf5870b6d48a0be4847695ff754e459be6f85e1b4a178f",
+      "size": 9013
+    },
+    "site-packages/lerobot/common/utils/import_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/import_utils.py"
+      },
+      "sha256": "30bb90a03feefe1dc350e1c4853e3d98efd1fb39c58021a54dd38f8a924dc352",
+      "size": 2648
+    },
+    "site-packages/lerobot/common/utils/io_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/io_utils.py"
+      },
+      "sha256": "3c04da95df2f211faefec3527603596bcf4231072919d6a8d4bcaa3436a14d5c",
+      "size": 4414
+    },
+    "site-packages/lerobot/common/utils/logging_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/logging_utils.py"
+      },
+      "sha256": "31077aa0d6881fcbd5a4339412e539a932bf8e9b39a09d0f8394de9518dab5cd",
+      "size": 5237
+    },
+    "site-packages/lerobot/common/utils/random_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/random_utils.py"
+      },
+      "sha256": "ff80dbacd959631924d21d129a1fe9b4435ddbe02b94fc1d26d05be420ef1fe1",
+      "size": 7097
+    },
+    "site-packages/lerobot/common/utils/train_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/train_utils.py"
+      },
+      "sha256": "f1ffb366ba4691f74bd073c324ab70e948d219b2f6ec23e3f4d54c5ba0317a2a",
+      "size": 6211
+    },
+    "site-packages/lerobot/common/utils/utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/utils.py"
+      },
+      "sha256": "6fefb94793c65cfacff464e2139398288cf87cd118758cd1ab37ab51a4cd3876",
+      "size": 7255
+    },
+    "site-packages/lerobot/common/utils/wandb_utils.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/common/utils/wandb_utils.py"
+      },
+      "sha256": "9c28f4b1f94f479de87b3f4451882048680ae612f3edc0b2cf4842e63eebe876",
+      "size": 4797
+    },
+    "site-packages/lerobot/configs/default.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/configs/default.py"
+      },
+      "sha256": "6f1c007df428d1cb59b5c0d9cd9a4577748cc1f29d5e837435ffd15e8f45193c",
+      "size": 3069
+    },
+    "site-packages/lerobot/configs/eval.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/configs/eval.py"
+      },
+      "sha256": "4cf992109d0219b402837a3052e94cbc7f7f903e1f9a12ec13360e1915e07a52",
+      "size": 2637
+    },
+    "site-packages/lerobot/configs/parser.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/configs/parser.py"
+      },
+      "sha256": "6ebf70c974c366f0ee1d873f2fd40ef9bb259b95ec944dc6d37b50364908a823",
+      "size": 9428
+    },
+    "site-packages/lerobot/configs/policies.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/configs/policies.py"
+      },
+      "sha256": "9c062f04140d214f81e245e537bc2b50d8f237ab65deaeab361ec2d0d31aaedc",
+      "size": 6836
+    },
+    "site-packages/lerobot/configs/train.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/configs/train.py"
+      },
+      "sha256": "d85129260d623ddecddfc2996a3a8519e804715761c3a2449a8793131a3b4794",
+      "size": 7614
+    },
+    "site-packages/lerobot/configs/types.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/configs/types.py"
+      },
+      "sha256": "dc105f31de06a06c5cf150dc0c40b623f2a0be7b9f0a5374e385bc3d7db18823",
+      "size": 1222
+    },
+    "site-packages/lerobot/scripts/configure_motor.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/configure_motor.py"
+      },
+      "sha256": "0e186a531e349970a3266efccae8a6eac3b9c125d64cf7eeb4ea0bd267ed6694",
+      "size": 7247
+    },
+    "site-packages/lerobot/scripts/control_robot.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/control_robot.py"
+      },
+      "sha256": "7c96faf04fd1d7d50d3e88185928d042c75f68f8d2fe497bf5af9049f7bbe007",
+      "size": 15293
+    },
+    "site-packages/lerobot/scripts/control_sim_robot.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/control_sim_robot.py"
+      },
+      "sha256": "2c368c396b481b512f81acd7c20749cd68a85f06070cda451a290d36597f030f",
+      "size": 19589
+    },
+    "site-packages/lerobot/scripts/display_sys_info.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/display_sys_info.py"
+      },
+      "sha256": "2489004a336847fccedaae560a241041fec964ad9042590b3b7e1d4d97795b66",
+      "size": 2772
+    },
+    "site-packages/lerobot/scripts/eval.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/eval.py"
+      },
+      "sha256": "db4fa8266d4640e06a6b9922117887d30c4d9b70ed4a0b8a7d958aa438a4d86f",
+      "size": 19996
+    },
+    "site-packages/lerobot/scripts/find_motors_bus_port.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/find_motors_bus_port.py"
+      },
+      "sha256": "369ea515ca3e9259614d1872f2400e93bad05a1d29f07856f50e40654a5a9fd6",
+      "size": 2032
+    },
+    "site-packages/lerobot/scripts/push_pretrained.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/push_pretrained.py"
+      },
+      "sha256": "ed8bb24b2df7c0dc8aae7c864aa3171321572f6652285c0378dc0090a58830f3",
+      "size": 1885
+    },
+    "site-packages/lerobot/scripts/train.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/train.py"
+      },
+      "sha256": "004433933b37ff7295614fc1e800eec8f4abbb4a6e284ff02caeb5b95efaf919",
+      "size": 10752
+    },
+    "site-packages/lerobot/scripts/visualize_dataset.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/visualize_dataset.py"
+      },
+      "sha256": "dad5da1cc62458fc27f2434059b68db9dde4fdef7a6fda09b791ab018c94ad9c",
+      "size": 9945
+    },
+    "site-packages/lerobot/scripts/visualize_dataset_html.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/visualize_dataset_html.py"
+      },
+      "sha256": "bd55140e6ab8d35ff74ba04a93f2715b87aeacfa56cbf6234599fdb7a010da17",
+      "size": 17159
+    },
+    "site-packages/lerobot/scripts/visualize_image_transforms.py": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/scripts/visualize_image_transforms.py"
+      },
+      "sha256": "356a89f9fa05281575e4056d58dc67c61a4398f5f704fdaccc08eea9bb69acc3",
+      "size": 4981
+    },
+    "site-packages/lerobot/templates/visualize_dataset_homepage.html": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/templates/visualize_dataset_homepage.html"
+      },
+      "sha256": "f1d8a75a1ef757bd5ed6b265c26f8d44be0f9e83c7427c577e4c66045516b833",
+      "size": 3183
+    },
+    "site-packages/lerobot/templates/visualize_dataset_template.html": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/lerobot/templates/visualize_dataset_template.html"
+      },
+      "sha256": "4d3ecc293e9873c8243dcd073a6ebc9e2c8aa653c37ece7f51ec188f13225407",
+      "size": 27103
+    },
+    "site-packages/numpydantic/ndarray.pyi": {
+      "origin": {
+        "kind": "authenticated_source_override",
+        "original_member": "site-packages/numpydantic/ndarray.pyi"
+      },
+      "sha256": "954af1cf45ab82657347f8155fb26eef2ed6996e4a9dda915f9f83186a314cc4",
+      "size": 452
+    }
+  },
+  "openpi": {
+    "additional_cli_files": 7,
+    "inventory_files": 76,
+    "inventory_sha256": "7e87a9bfe91acf2134eb7984972a9216e955faf216b8444806aa8363fd845437",
+    "license_files": [
+      "openpi/LICENSE",
+      "openpi/LICENSE_GEMMA.txt"
+    ],
+    "runtime_files": 69,
+    "source_repository": "https://github.com/Physical-Intelligence/openpi",
+    "upstream_git_commit": null,
+    "version_note": "Original RoboDojo-modified snapshot; the upstream OpenPI git revision was not recorded. XPolicyLab git objects and the original per-file inventory identify these exact bytes.",
+    "xpolicylab_commit": "34d6135d609d46a10ccb81da24d5ddad0b4c1f7a",
+    "xpolicylab_prefix": "policy/Pi_05/openpi"
+  },
+  "payload_bytes": 1878844,
+  "portability": {
+    "patches": [
+      {
+        "after_sha256": "5b6d791b16dce9deb6d976b1feb7bade64913c2e60c0a125bc6ca53be01f6958",
+        "before_sha256": "c08f9e966cd7bda39be681a34262517dc49a4198b619a44702b0e0456d9fea3c",
+        "path": "site-packages/lerobot/common/policies/pi0/conversion_scripts/convert_pi0_to_hf_lerobot.py"
+      }
+    ],
+    "scope": "Relative paths in one conversion-script documentation example only; executable AST unchanged.",
+    "upstream_manifest_sha256": "3a537eb0d12333c12b3246bb8bad726869a56c31efc035dcade0ad3eb6e2eb33"
+  },
+  "schema_version": 1,
+  "scope": "Original RoboDojo pi0.5 JAX inference dependencies and websocket service source only; no weights, simulator, task data, benchmark results, credentials, or binary environment.",
+  "service": {
+    "license_note": "No separate license statement was present in the collected original service files; source text and headers are preserved without attributing a new license.",
+    "protocol_sha256": "b84ffb434c3d6b09af9325bea7d85b2977d57a41c02180dfba9682a338072368",
+    "server_sha256": "d3f55cb7318e390741f98ff23e7895870d4aa2be297cd75fd270e77d97f0c2b1",
+    "upstream_git_commit": null
+  },
+  "source_overrides": {
+    "authenticated_subset_manifest_sha256": "520fe7cbc6f84163102f04105afe083d3e50ade8eb84e266774622307931648a",
+    "files": 112,
+    "license_note": "LeRobot and augmax original source headers declare Apache-2.0 and are preserved. The residual PyPI lerobot 0.1.0 metadata does not identify the original overwritten source; it is not included as license evidence. numpydantic MIT license is preserved.",
+    "replace_exact_tree": "lerobot",
+    "replace_regular_files": [
+      "augmax-0.4.1.dist-info/METADATA",
+      "augmax-0.4.1.dist-info/WHEEL",
+      "augmax/__init__.py",
+      "augmax/base.py",
+      "augmax/colorspace.py",
+      "augmax/functional/__init__.py",
+      "augmax/functional/colorspace.py",
+      "augmax/geometric.py",
+      "augmax/imagelevel.py",
+      "augmax/optimized.py",
+      "augmax/utils.py",
+      "numpydantic/ndarray.pyi"
+    ],
+    "source_archive_sha256": "3f07f26011c21a2244b182675875b5a37a94fcde3486adf3c42ae27e19fb0b5e",
+    "source_git_commits": null,
+    "source_receipt_sha256": "d3f77c3b98cf0e35079208a0f1ff92ce43c08d970fe2d7cae2f1e2f869850782",
+    "versions": {
+      "augmax": "0.4.1",
+      "lerobot": "0.1.0",
+      "numpydantic": "1.6.9"
+    }
+  },
+  "source_root": "vendor/pi05",
+  "deployment_sanitization": {
+    "parent_manifest_sha256": "6749607936a25bb74884424c98066883674edc1dc49c488619f30a1c3d9a54ae",
+    "scope": "Personal deployment prefixes in original_member labels redacted to site-packages-relative paths. All 197 original source files, byte counts, SHA pins, archive identities and licenses are unchanged."
+  }
+}

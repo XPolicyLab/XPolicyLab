@@ -1,0 +1,14 @@
+/.venv/
+/runtime/
+/assets/*.tar.gz
+/assets/icl/
+__pycache__/
+.pytest_cache/
+/assets/*.whl
+/checkpoints/
+/outputs/
+
+# Machine-local Simate installation receipts and backups.
+/simate_backend.json
+/simate-install.json
+/.simate-backend-backups/

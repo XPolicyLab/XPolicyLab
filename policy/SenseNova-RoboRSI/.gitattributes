@@ -1,0 +1,2 @@
+# Preserve source manifests and Linux shell scripts byte-for-byte on checkout.
+* -text

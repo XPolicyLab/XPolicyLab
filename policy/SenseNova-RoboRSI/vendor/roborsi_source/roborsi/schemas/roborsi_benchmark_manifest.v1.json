@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roborsi:schemas:roborsi_benchmark_manifest:v1",
+  "title": "RoboRSI benchmark manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "benchmark", "benchmark_version", "benchmark_commit", "image_repository", "image_digest", "assets_version", "assets", "adapter_version", "adapter_command", "service_port", "resources", "capabilities", "evaluation", "tasks"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "benchmark_version": {"type": "string", "minLength": 1},
+    "benchmark_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "image_repository": {"type": "string", "pattern": "^[^@\\s]+$"},
+    "image_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "assets_version": {"type": "string", "minLength": 1},
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "version", "path", "sha256"],
+        "properties": {
+          "name": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+          "version": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["file", "directory"]},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "adapter_version": {"type": "string", "minLength": 1},
+    "adapter_command": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "service_port": {"type": "integer", "minimum": 1, "maximum": 65535},
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gpus", "cpus", "memory_mb", "startup_timeout_s"],
+      "properties": {
+        "gpus": {"type": "integer", "minimum": 0},
+        "cpus": {"type": "number", "exclusiveMinimum": 0},
+        "memory_mb": {"type": "integer", "minimum": 1},
+        "startup_timeout_s": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action_schema", "observation_channels"],
+      "properties": {
+        "action_schema": {"type": "object"},
+        "observation_channels": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["success_metric", "score_metric", "aggregation", "error_denominator"],
+      "properties": {
+        "success_metric": {"type": "string", "minLength": 1},
+        "score_metric": {"type": "string", "minLength": 1},
+        "aggregation": {"enum": ["case_mean", "task_weighted_success_rate", "task_weighted_mean"]},
+        "error_denominator": {"enum": ["expected", "valid"]}
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["task_id", "seeds", "native", "instruction", "max_steps"],
+        "properties": {
+          "task_id": {"type": "string", "minLength": 1},
+          "seeds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+          "native": {"type": "object"},
+          "instruction": {"type": "string", "minLength": 1},
+          "instructions_by_seed": {
+            "type": "object",
+            "minProperties": 1,
+            "propertyNames": {"pattern": "^(0|[1-9][0-9]*)$"},
+            "additionalProperties": {"type": "string", "minLength": 1}
+          },
+          "native_by_seed": {
+            "type": "object",
+            "minProperties": 1,
+            "propertyNames": {"pattern": "^(0|[1-9][0-9]*)$"},
+            "additionalProperties": {"type": "object"}
+          },
+          "max_steps": {"type": "integer", "minimum": 1}
+        }
+      }
+    }
+  }
+}

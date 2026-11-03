@@ -1,0 +1,43 @@
+/* Copyright 2026 The RoboRSI Authors. Licensed under the Apache License, Version 2.0. */
+:root { color-scheme: light; }
+body { margin: 0; background: #f6f1e8; color: #3b3934; font: 15px/1.55 "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+.trajectory { max-width: 1500px; margin: auto; padding: 24px; }
+.trajectory * { box-sizing: border-box; }
+.tr-header { display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid #d8cfbe; }
+.tr-header h1 { margin: 0; font-size: 25px; font-weight: 650; }
+.tr-status, .tr-notice, .tr-metric span { color: #716a5e; }
+.tr-metrics { display: flex; flex-wrap: wrap; gap: 30px; padding: 20px 0 6px; }
+.tr-metric { display: flex; flex-direction: column; min-width: 135px; }
+.tr-metric strong { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tr-notice { min-height: 1em; font-size: 13px; }
+.tr-chart { display: flex; align-items: center; gap: 22px; padding: 10px 0; }
+.tr-chart span { flex: 0 0 150px; font-size: 13px; }
+.tr-chart svg { width: min(800px, 80%); height: 90px; }
+.tr-workspace { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 440px; border: 1px solid #d8cfbe; background: #fffdf8; margin-top: 20px; border-radius: 8px; overflow: hidden; }
+.tr-nav { border-right: 1px solid #d8cfbe; padding: 16px 0; }
+.tr-nav label { display: block; padding: 0 16px 16px; font-weight: 600; }
+.tr-nav select { display: block; width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #d8cfbe; background: #fffdf8; border-radius: 4px; color: inherit; font: inherit; }
+.tr-turns { max-height: 650px; overflow-y: auto; }
+.tr-turn { display: flex; flex-direction: column; text-align: left; gap: 5px; background: transparent; color: inherit; border: 0; border-left: 3px solid transparent; border-bottom: 1px solid #e9e2d5; padding: 14px 16px; width: 100%; font: inherit; cursor: pointer; }
+.tr-turn span { color: #716a5e; font-size: 12px; }
+.tr-turn:hover { background: #f4f0e8; }
+.tr-turn.selected { border-left-color: #2f6fd6; background: #e9eff9; }
+.trajectory :focus-visible { outline: 2px solid #2f6fd6; outline-offset: 2px; }
+.tr-detail { min-width: 0; padding: 22px; max-height: 760px; overflow: auto; }
+.tr-detail h2, .tr-media h2 { font-size: 18px; margin: 0 0 16px; }
+.tr-event { margin-bottom: 12px; border-bottom: 1px solid #e9e2d5; padding-bottom: 12px; }
+.tr-event summary, .tr-breakdown summary { cursor: pointer; color: #215ca9; font-weight: 600; }
+.tr-event pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.65 Consolas, "SFMono-Regular", monospace; padding: 14px; background: #f4f0e8; border-radius: 4px; max-height: 460px; overflow: auto; }
+.tr-image { max-width: min(420px, 100%); max-height: 320px; object-fit: contain; margin: 4px; }
+.tr-empty { padding: 16px; color: #716a5e; }
+.tr-error { color: #a62520; }
+.tr-play { padding: 6px 10px; margin: 5px 5px 5px 0; color: #215ca9; border: 1px solid #b5c8e4; border-radius: 4px; background: #eef3fc; cursor: pointer; font: inherit; font-size: 13px; }
+.tr-breakdown { overflow-x: auto; }
+.tr-breakdown table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+.tr-breakdown th, .tr-breakdown td { text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid #d8cfbe; }
+.tr-media { margin-top: 26px; }
+.tr-media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.tr-media figure { margin: 0; min-width: 0; }
+.tr-media video, .tr-media img { width: 100%; max-height: 350px; background: #e8e2d7; object-fit: contain; border-radius: 6px; }
+.tr-media figcaption { font-size: 12px; color: #716a5e; overflow-wrap: anywhere; }
+@media (max-width: 760px) { .trajectory { padding: 14px; } .tr-workspace { grid-template-columns: 1fr; } .tr-nav { border-right: 0; border-bottom: 1px solid #d8cfbe; } .tr-turns { max-height: 220px; } .tr-metrics { gap: 14px; } .tr-chart { display: block; } .tr-chart svg { width: 100%; } }
