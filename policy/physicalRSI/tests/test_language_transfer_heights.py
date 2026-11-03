@@ -7,7 +7,7 @@ import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import GeometryUnavailable
 from physicalrsi_observed_geometry.language_transfer import observed_basket_top,observed_transfer_heights
-from classify_language_transfer_edits import replace_language_transfer_heights,replace_language_relay_transfer
+from classify_language_transfer import replace_language_transfer_heights,replace_language_relay_transfer
 
 
 def test_basket_upper_surface_comes_only_from_current_matched_mask(monkeypatch):
@@ -54,8 +54,8 @@ def test_release_motion_executes_the_planned_heights(tmp_path):
 
 
 def test_relay_exports_the_same_carry_height_it_qualifies():
-    from classify_language_camera_edits import bind_language_camera_calls
-    from classify_language_relay_edits import replace_language_relay_plane
+    from classify_language_camera import bind_language_camera_calls
+    from classify_language_relay import replace_language_relay_plane
     root=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_v1_classify_objects_by_language')
     paths=list(root.glob('*/rdj_v1_classify_objects_by_language/relay.py'))
     if not paths:pytest.skip('Release fixture unavailable')

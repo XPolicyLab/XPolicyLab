@@ -2,7 +2,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'asset_revision'))
-from source_edits import retain_insert_pose_choices, insert_revision_imports
+from source import retain_insert_pose_choices, insert_revision_imports
 from physicalrsi_observed_geometry.insert_obstacles import choose_order, activate_completed_placements
 
 

@@ -4,7 +4,7 @@ from types import SimpleNamespace as NS
 import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from source_edits import STAGING_DEFINITION
+from source import STAGING_DEFINITION
 
 
 def staging(translation):

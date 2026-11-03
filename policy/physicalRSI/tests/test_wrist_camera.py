@@ -5,7 +5,7 @@ import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import GeometryUnavailable
 from physicalrsi_observed_geometry.wrist_camera import current_wrist_camera
-from source_edits import controller_edit
+from source import controller_edit
 
 
 def observation():

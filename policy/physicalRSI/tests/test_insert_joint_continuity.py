@@ -6,7 +6,7 @@ import pytest
 from scipy.spatial.transform import Rotation
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry.robot import nearest_revolute_equivalents
-from source_edits import CONTINUOUS_INSERT_SOLVE
+from source import CONTINUOUS_INSERT_SOLVE
 
 
 def test_equivalent_angles_preserve_rotation_and_honor_robot_limits():

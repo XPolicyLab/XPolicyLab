@@ -6,7 +6,7 @@ import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import GeometryUnavailable
 from physicalrsi_observed_geometry.slot_servo import stage_window
-from source_edits import DEPOSIT_NEAR_FEEDBACK, deposit_preinsert_feedback
+from source import DEPOSIT_NEAR_FEEDBACK, deposit_preinsert_feedback
 
 
 def plan():

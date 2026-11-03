@@ -5,7 +5,7 @@ import sys
 import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from classify_language_depth_edits import edit_language_depth_perception,bind_language_depth_observation,remove_language_surface_height_clamp
+from classify_language_depth import edit_language_depth_perception,bind_language_depth_observation,remove_language_surface_height_clamp
 from physicalrsi_observed_geometry import Camera,GeometryUnavailable
 from physicalrsi_observed_geometry import calibrated_depth_scene as geometry
 
@@ -58,7 +58,7 @@ def test_release_fork_preserves_planning_and_binds_calibration():
 
 
 def test_final_language_model_uses_unclamped_measurement_without_old_plane_probe():
-    from classify_language_camera_edits import bind_language_camera_calls
+    from classify_language_camera import bind_language_camera_calls
     root=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_v1_classify_objects_by_language')
     if not root.exists():pytest.skip('Release fixture unavailable')
     paths=list(root.glob('*/rdj_v1_classify_objects_by_language/model.py'));assert paths

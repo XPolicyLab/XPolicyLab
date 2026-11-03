@@ -7,7 +7,7 @@ import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import GeometryUnavailable
 from physicalrsi_observed_geometry.pickup_target import select_target_region
-from pickup_geometry_edits import replace_pickup_depth_scale,replace_pickup_target_region
+from pickup_geometry import replace_pickup_depth_scale,replace_pickup_target_region
 
 
 def test_target_scope_excludes_neighbor_and_rejects_ambiguity():

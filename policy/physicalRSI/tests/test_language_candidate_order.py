@@ -4,7 +4,7 @@ import ast
 import sys
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from source_edits import controller_edit
+from source import controller_edit
 
 @pytest.mark.parametrize('target_index', [0,1,2,3])
 def test_executor_preserves_geometry_rank_over_grasp_family(target_index):

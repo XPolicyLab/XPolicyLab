@@ -4,7 +4,7 @@ import ast
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'asset_revision'))
-from pour_language_profile_edits import edit_profile_model
+from pour_language_profile import edit_profile_model
 
 
 def test_structured_execution_receives_episode_shape_and_camera():

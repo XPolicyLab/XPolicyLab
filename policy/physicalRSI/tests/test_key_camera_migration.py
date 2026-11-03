@@ -6,7 +6,7 @@ from scipy.spatial.transform import Rotation
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry.wrist_camera import ee_relative_camera
 from physicalrsi_observed_geometry import GeometryUnavailable
-from key_camera_edits import edit_key_camera
+from key_camera import edit_key_camera
 
 
 def observed(translation):

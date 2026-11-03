@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry.finger_support_clearance import observed_finger_clearance
-from classify_language_recovery_edits import replace_language_return_floor,replace_language_open_recovery
+from classify_language_recovery import replace_language_return_floor,replace_language_open_recovery
 ROTATION=np.array([[0.,0,1],[0,1,0],[-1,0,0]])
 ROOT=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_v1_classify_objects_by_language')
 

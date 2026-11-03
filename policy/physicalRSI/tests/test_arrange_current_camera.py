@@ -5,8 +5,8 @@ import sys
 import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from arrange_camera_edits import edit_arrange_camera
-from arrange_support_edits import edit_arrange_support
+from arrange_camera import edit_arrange_camera
+from arrange_support import edit_arrange_support
 from physicalrsi_observed_geometry import Camera,GeometryUnavailable
 from physicalrsi_observed_geometry.planar_rectification import rectify_support
 

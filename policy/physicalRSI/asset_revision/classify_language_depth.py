@@ -1,6 +1,6 @@
 """Remove fixed table-based depth scale from the language classification fork."""
 import ast
-from pickup_geometry_edits import replace_pickup_depth_scale
+from pickup_geometry import replace_pickup_depth_scale
 
 
 def edit_language_depth_perception(text):

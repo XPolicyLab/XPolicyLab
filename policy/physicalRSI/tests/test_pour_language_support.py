@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'asset_revision'))
-from pour_language_support_edits import edit_finger_geometry, bind_finger_clearance
+from pour_language_support import edit_finger_geometry, bind_finger_clearance
 from physicalrsi_observed_geometry import GeometryUnavailable
 
 

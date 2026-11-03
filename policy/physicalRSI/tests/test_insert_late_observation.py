@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import sys
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from source_edits import LATE_INSERT_OBSERVATION
+from source import LATE_INSERT_OBSERVATION
 
 
 @pytest.mark.parametrize('guide_only,expected',[(False,('realign','guide','retreat')),(True,('guide','retreat'))])

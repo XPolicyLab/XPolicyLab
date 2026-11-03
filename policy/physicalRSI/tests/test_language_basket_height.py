@@ -7,8 +7,8 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import Camera, GeometryUnavailable
 from physicalrsi_observed_geometry.calibrated_depth_scene import observed_pixel_height
 from physicalrsi_observed_geometry.camera_projection import pixel_to_world_on_height
-from classify_language_camera_edits import bind_language_camera_calls
-from classify_language_depth_edits import replace_language_basket_projection_height
+from classify_language_camera import bind_language_camera_calls
+from classify_language_depth import replace_language_basket_projection_height
 
 
 def test_basket_ray_follows_observed_surface_under_world_translation():

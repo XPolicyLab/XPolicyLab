@@ -37,8 +37,8 @@ def test_depth_support_handoff_reuses_exact_observation_geometry(monkeypatch):
 
 
 def test_release_model_contact_floor_and_cache_are_wired():
-    from classify_language_depth_edits import bind_language_depth_observation,bind_language_support_segmentation,replace_language_contact_floor
-    from classify_language_camera_edits import bind_language_camera_calls
+    from classify_language_depth import bind_language_depth_observation,bind_language_support_segmentation,replace_language_contact_floor
+    from classify_language_camera import bind_language_camera_calls
     root=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_v1_classify_objects_by_language')
     paths=list(root.glob('*/rdj_v1_classify_objects_by_language/model.py'))
     if not paths:pytest.skip('Release fixture unavailable')

@@ -6,7 +6,7 @@ import sys
 import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from pickup_geometry_edits import replace_pickup_depth_scale
+from pickup_geometry import replace_pickup_depth_scale
 from physicalrsi_observed_geometry import Camera, GeometryUnavailable
 import physicalrsi_observed_geometry.calibrated_depth_scene as calibrated
 SOURCE=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_master')

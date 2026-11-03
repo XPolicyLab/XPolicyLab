@@ -9,7 +9,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import Camera,GeometryUnavailable
 from physicalrsi_observed_geometry import pickup_target
 from physicalrsi_observed_geometry.camera_projection import pixel_to_world_on_height
-from pickup_geometry_edits import remove_pickup_geometry_overrides,replace_pickup_projection,replace_pickup_skill_offsets
+from pickup_geometry import remove_pickup_geometry_overrides,replace_pickup_projection,replace_pickup_skill_offsets
 
 
 def setup_scene(monkeypatch):

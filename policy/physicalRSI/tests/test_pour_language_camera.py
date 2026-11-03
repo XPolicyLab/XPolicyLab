@@ -6,7 +6,7 @@ import pytest
 from scipy.spatial.transform import Rotation
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'asset_revision'))
-from pour_language_camera_edits import edit_language_head_camera, edit_observer_wrist_camera
+from pour_language_camera import edit_language_head_camera, edit_observer_wrist_camera
 from physicalrsi_observed_geometry import Camera, GeometryUnavailable
 
 

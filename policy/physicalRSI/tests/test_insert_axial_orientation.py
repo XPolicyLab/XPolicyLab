@@ -4,7 +4,7 @@ import sys
 import numpy as np
 from scipy.spatial.transform import Rotation
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from source_edits import SLOT_ORIENTATIONS
+from source import SLOT_ORIENTATIONS
 
 
 def test_axial_search_preserves_tilted_slot_geometry_and_input():

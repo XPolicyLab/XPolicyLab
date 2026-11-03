@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import sys
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from pickup_geometry_edits import remove_pickup_geometry_overrides
+from pickup_geometry import remove_pickup_geometry_overrides
 SOURCE=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_master')
 
 @pytest.mark.skipif(not SOURCE.exists(),reason='Release fixture not installed')

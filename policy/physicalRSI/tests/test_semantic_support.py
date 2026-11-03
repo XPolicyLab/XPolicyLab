@@ -56,7 +56,7 @@ def test_semantic_multistart_requires_independent_texture(monkeypatch, plane, ha
 
 
 def test_language_model_passes_its_resident_segmenter():
-    from classify_language_depth_edits import bind_language_depth_observation, bind_language_support_segmentation
+    from classify_language_depth import bind_language_depth_observation, bind_language_support_segmentation
     import ast
     root=Path('/cpfs/physicalrsi-asset-audit/v4/implementations/code-skills/implementations/rdj_v1_classify_objects_by_language')
     paths=list(root.glob('*/rdj_v1_classify_objects_by_language/model.py'))

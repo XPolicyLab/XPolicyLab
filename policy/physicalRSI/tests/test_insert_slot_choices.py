@@ -5,7 +5,7 @@ from itertools import product
 import sys
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from source_edits import retain_insert_slot_choices
+from source import retain_insert_slot_choices
 
 
 def compress(group):

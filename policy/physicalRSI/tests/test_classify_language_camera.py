@@ -6,8 +6,8 @@ import numpy as np
 import cv2
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
-from classify_language_depth_edits import edit_language_depth_perception,bind_language_depth_observation
-from classify_language_camera_edits import replace_language_camera_helpers,bind_language_camera_calls,PROJECTIONS
+from classify_language_depth import edit_language_depth_perception,bind_language_depth_observation
+from classify_language_camera import replace_language_camera_helpers,bind_language_camera_calls,PROJECTIONS
 from physicalrsi_observed_geometry import Camera,GeometryUnavailable
 from physicalrsi_observed_geometry.camera_projection import pixel_to_world_on_height,world_to_pixel_on_height
 

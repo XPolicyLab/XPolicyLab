@@ -8,8 +8,8 @@ import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import Camera,GeometryUnavailable
 from physicalrsi_observed_geometry import language_support as module
-from classify_language_camera_edits import bind_language_camera_calls
-from classify_language_relay_edits import replace_language_relay_plane
+from classify_language_camera import bind_language_camera_calls
+from classify_language_relay import replace_language_relay_plane
 
 
 def support(height):

@@ -5,7 +5,7 @@ import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'asset_revision'))
 from physicalrsi_observed_geometry import Camera,GeometryUnavailable
 from physicalrsi_observed_geometry.delivery_observability import centerline_condition
-from source_edits import SLOT_ORIENTATIONS
+from source import SLOT_ORIENTATIONS
 
 
 def camera(position):
