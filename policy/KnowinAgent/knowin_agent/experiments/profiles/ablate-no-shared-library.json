@@ -1,0 +1,12 @@
+{
+  "name": "ablate-no-shared-library",
+  "description": "Full system without the cross-task shared library.",
+  "experiments": [
+    "E2",
+    "E4",
+    "E5"
+  ],
+  "switches": {
+    "evolution.shared_library": "off"
+  }
+}

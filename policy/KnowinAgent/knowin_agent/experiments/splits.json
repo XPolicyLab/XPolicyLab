@@ -1,0 +1,1366 @@
+{
+ "schema": "knowin_agent.splits/1",
+ "rule": "explore and validate come from layout bank 0 and are disjoint; test-dev comes from banks 1-2; validation and version selection never use test-dev or banks 1-2",
+ "seed_encoding": "bank * 1000000 + ordinal",
+ "rng_seed": 20261028,
+ "counts": {
+  "explore": 6,
+  "validate": 3,
+  "test-dev": 3
+ },
+ "source": "robodojo_root",
+ "bank_sizes": {
+  "align_blocks": [
+   55,
+   55,
+   55
+  ],
+  "arrange_largest_number": [
+   30,
+   30,
+   30
+  ],
+  "arrange_largest_number_random": [
+   30,
+   30,
+   30
+  ],
+  "build_tower": [
+   55,
+   55,
+   55
+  ],
+  "classify_objects": [
+   55,
+   55,
+   55
+  ],
+  "classify_objects_by_language": [
+   55,
+   55,
+   55
+  ],
+  "cover_blocks": [
+   55,
+   55,
+   55
+  ],
+  "deposit_coin": [
+   60,
+   60,
+   60
+  ],
+  "fasten_screws": [
+   55,
+   55,
+   55
+  ],
+  "fill_egg_holder": [
+   65,
+   65,
+   65
+  ],
+  "fill_pen_holder": [
+   55,
+   55,
+   55
+  ],
+  "fold_clothes": [
+   55,
+   55,
+   55
+  ],
+  "fold_clothes_random": [
+   30,
+   30,
+   30
+  ],
+  "general_pickup": [
+   55,
+   55,
+   55
+  ],
+  "hang_mugs": [
+   30,
+   30,
+   30
+  ],
+  "hang_mugs_random": [
+   30,
+   30,
+   30
+  ],
+  "imitate_sorting_sequence": [
+   65,
+   65,
+   65
+  ],
+  "insert_key": [
+   55,
+   55,
+   55
+  ],
+  "insert_tubes": [
+   55,
+   55,
+   55
+  ],
+  "make_kong": [
+   65,
+   65,
+   65
+  ],
+  "make_toast": [
+   70,
+   70,
+   70
+  ],
+  "make_toast_random": [
+   45,
+   45,
+   45
+  ],
+  "match_and_pick_from_conveyor": [
+   55,
+   55,
+   55
+  ],
+  "organize_table": [
+   55,
+   55,
+   55
+  ],
+  "pack_objects_into_box": [
+   55,
+   55,
+   55
+  ],
+  "pack_objects_into_box_random": [
+   30,
+   30,
+   30
+  ],
+  "pick_from_conveyor_by_image": [
+   55,
+   55,
+   55
+  ],
+  "play_Xylophone": [
+   55,
+   55,
+   55
+  ],
+  "play_stacking_toy": [
+   55,
+   55,
+   55
+  ],
+  "play_tic_tac_toe": [
+   75,
+   75,
+   75
+  ],
+  "plug_in_charger": [
+   55,
+   55,
+   55
+  ],
+  "pour_balls_into_vase": [
+   55,
+   55,
+   55
+  ],
+  "pour_by_language": [
+   55,
+   55,
+   55
+  ],
+  "pour_liquid_into_cup": [
+   55,
+   55,
+   55
+  ],
+  "pour_liquid_into_cup_random": [
+   30,
+   30,
+   30
+  ],
+  "press_by_number": [
+   65,
+   65,
+   65
+  ],
+  "push_T": [
+   55,
+   55,
+   55
+  ],
+  "push_T_random": [
+   30,
+   30,
+   30
+  ],
+  "put_bottles_into_dustbin": [
+   55,
+   55,
+   55
+  ],
+  "solve_equation": [
+   55,
+   55,
+   55
+  ],
+  "sort_nesting_dolls_by_size": [
+   30,
+   30,
+   30
+  ],
+  "sort_nesting_dolls_by_size_random": [
+   30,
+   30,
+   30
+  ],
+  "stack_blocks": [
+   55,
+   55,
+   55
+  ],
+  "stack_blocks_by_language": [
+   55,
+   55,
+   55
+  ],
+  "stack_blocks_random": [
+   30,
+   30,
+   30
+  ],
+  "stack_bowls": [
+   55,
+   55,
+   55
+  ],
+  "stack_bowls_random": [
+   30,
+   30,
+   30
+  ],
+  "store_laptop_and_headphones": [
+   55,
+   55,
+   55
+  ],
+  "store_laptop_and_headphones_random": [
+   30,
+   30,
+   30
+  ],
+  "store_tools_in_toolbox": [
+   55,
+   55,
+   55
+  ],
+  "swap_T": [
+   55,
+   55,
+   55
+  ],
+  "swap_blocks": [
+   55,
+   55,
+   55
+  ],
+  "sweep_blocks": [
+   55,
+   55,
+   55
+  ],
+  "sweep_blocks_random": [
+   30,
+   30,
+   30
+  ]
+ },
+ "tasks": {
+  "align_blocks": {
+   "explore": [
+    17,
+    23,
+    24,
+    26,
+    37,
+    52
+   ],
+   "validate": [
+    5,
+    31,
+    51
+   ],
+   "test-dev": [
+    1000017,
+    1000022,
+    2000050
+   ]
+  },
+  "arrange_largest_number": {
+   "explore": [
+    2,
+    11,
+    15,
+    16,
+    22,
+    28
+   ],
+   "validate": [
+    8,
+    18,
+    27
+   ],
+   "test-dev": [
+    1000007,
+    1000024,
+    2000024
+   ]
+  },
+  "arrange_largest_number_random": {
+   "explore": [
+    3,
+    9,
+    10,
+    16,
+    24,
+    26
+   ],
+   "validate": [
+    4,
+    12,
+    15
+   ],
+   "test-dev": [
+    1000000,
+    1000002,
+    2000024
+   ]
+  },
+  "build_tower": {
+   "explore": [
+    3,
+    6,
+    9,
+    34,
+    43,
+    48
+   ],
+   "validate": [
+    8,
+    18,
+    25
+   ],
+   "test-dev": [
+    1000004,
+    1000009,
+    2000043
+   ]
+  },
+  "classify_objects": {
+   "explore": [
+    9,
+    18,
+    36,
+    41,
+    48,
+    50
+   ],
+   "validate": [
+    24,
+    33,
+    37
+   ],
+   "test-dev": [
+    1000000,
+    1000037,
+    2000022
+   ]
+  },
+  "classify_objects_by_language": {
+   "explore": [
+    2,
+    17,
+    33,
+    44,
+    45,
+    46
+   ],
+   "validate": [
+    15,
+    18,
+    20
+   ],
+   "test-dev": [
+    1000012,
+    1000039,
+    2000047
+   ]
+  },
+  "cover_blocks": {
+   "explore": [
+    8,
+    10,
+    22,
+    23,
+    28,
+    43
+   ],
+   "validate": [
+    18,
+    41,
+    54
+   ],
+   "test-dev": [
+    1000000,
+    1000027,
+    2000035
+   ]
+  },
+  "deposit_coin": {
+   "explore": [
+    0,
+    31,
+    36,
+    37,
+    39,
+    49
+   ],
+   "validate": [
+    9,
+    43,
+    55
+   ],
+   "test-dev": [
+    1000033,
+    1000054,
+    2000056
+   ]
+  },
+  "fasten_screws": {
+   "explore": [
+    4,
+    9,
+    22,
+    30,
+    48,
+    51
+   ],
+   "validate": [
+    8,
+    29,
+    52
+   ],
+   "test-dev": [
+    1000017,
+    1000036,
+    2000025
+   ]
+  },
+  "fill_egg_holder": {
+   "explore": [
+    15,
+    24,
+    27,
+    34,
+    45,
+    62
+   ],
+   "validate": [
+    19,
+    30,
+    41
+   ],
+   "test-dev": [
+    1000026,
+    1000041,
+    2000022
+   ]
+  },
+  "fill_pen_holder": {
+   "explore": [
+    0,
+    14,
+    41,
+    43,
+    47,
+    54
+   ],
+   "validate": [
+    8,
+    29,
+    44
+   ],
+   "test-dev": [
+    1000000,
+    1000050,
+    2000009
+   ]
+  },
+  "fold_clothes": {
+   "explore": [
+    5,
+    13,
+    15,
+    35,
+    43,
+    47
+   ],
+   "validate": [
+    29,
+    38,
+    40
+   ],
+   "test-dev": [
+    1000017,
+    1000023,
+    2000028
+   ]
+  },
+  "fold_clothes_random": {
+   "explore": [
+    4,
+    10,
+    13,
+    23,
+    24,
+    26
+   ],
+   "validate": [
+    2,
+    11,
+    18
+   ],
+   "test-dev": [
+    1000020,
+    1000022,
+    2000010
+   ]
+  },
+  "general_pickup": {
+   "explore": [
+    0,
+    8,
+    9,
+    12,
+    22,
+    31
+   ],
+   "validate": [
+    7,
+    40,
+    47
+   ],
+   "test-dev": [
+    1000026,
+    1000030,
+    2000007
+   ]
+  },
+  "hang_mugs": {
+   "explore": [
+    5,
+    6,
+    17,
+    22,
+    27,
+    28
+   ],
+   "validate": [
+    1,
+    16,
+    19
+   ],
+   "test-dev": [
+    1000017,
+    1000019,
+    2000002
+   ]
+  },
+  "hang_mugs_random": {
+   "explore": [
+    1,
+    2,
+    7,
+    11,
+    22,
+    26
+   ],
+   "validate": [
+    6,
+    13,
+    28
+   ],
+   "test-dev": [
+    1000000,
+    1000003,
+    2000004
+   ]
+  },
+  "imitate_sorting_sequence": {
+   "explore": [
+    11,
+    26,
+    28,
+    40,
+    45,
+    59
+   ],
+   "validate": [
+    8,
+    16,
+    37
+   ],
+   "test-dev": [
+    1000033,
+    1000039,
+    2000042
+   ]
+  },
+  "insert_key": {
+   "explore": [
+    0,
+    4,
+    36,
+    41,
+    45,
+    54
+   ],
+   "validate": [
+    22,
+    39,
+    43
+   ],
+   "test-dev": [
+    1000023,
+    1000049,
+    2000030
+   ]
+  },
+  "insert_tubes": {
+   "explore": [
+    3,
+    18,
+    24,
+    29,
+    35,
+    42
+   ],
+   "validate": [
+    10,
+    26,
+    51
+   ],
+   "test-dev": [
+    1000023,
+    1000038,
+    2000021
+   ]
+  },
+  "make_kong": {
+   "explore": [
+    9,
+    10,
+    18,
+    21,
+    55,
+    60
+   ],
+   "validate": [
+    19,
+    26,
+    52
+   ],
+   "test-dev": [
+    1000019,
+    1000057,
+    2000060
+   ]
+  },
+  "make_toast": {
+   "explore": [
+    0,
+    24,
+    31,
+    34,
+    54,
+    57
+   ],
+   "validate": [
+    23,
+    30,
+    51
+   ],
+   "test-dev": [
+    1000061,
+    1000064,
+    2000011
+   ]
+  },
+  "make_toast_random": {
+   "explore": [
+    0,
+    5,
+    10,
+    11,
+    33,
+    38
+   ],
+   "validate": [
+    6,
+    16,
+    41
+   ],
+   "test-dev": [
+    1000006,
+    1000009,
+    2000002
+   ]
+  },
+  "match_and_pick_from_conveyor": {
+   "explore": [
+    3,
+    7,
+    20,
+    27,
+    37,
+    40
+   ],
+   "validate": [
+    8,
+    14,
+    38
+   ],
+   "test-dev": [
+    1000026,
+    1000041,
+    2000008
+   ]
+  },
+  "organize_table": {
+   "explore": [
+    0,
+    1,
+    3,
+    7,
+    10,
+    53
+   ],
+   "validate": [
+    9,
+    24,
+    45
+   ],
+   "test-dev": [
+    1000004,
+    1000050,
+    2000010
+   ]
+  },
+  "pack_objects_into_box": {
+   "explore": [
+    12,
+    23,
+    27,
+    34,
+    37,
+    45
+   ],
+   "validate": [
+    7,
+    9,
+    42
+   ],
+   "test-dev": [
+    1000009,
+    1000054,
+    2000032
+   ]
+  },
+  "pack_objects_into_box_random": {
+   "explore": [
+    0,
+    5,
+    6,
+    8,
+    16,
+    19
+   ],
+   "validate": [
+    10,
+    14,
+    20
+   ],
+   "test-dev": [
+    1000001,
+    1000004,
+    2000000
+   ]
+  },
+  "pick_from_conveyor_by_image": {
+   "explore": [
+    6,
+    14,
+    23,
+    43,
+    46,
+    51
+   ],
+   "validate": [
+    9,
+    10,
+    13
+   ],
+   "test-dev": [
+    1000006,
+    1000015,
+    2000003
+   ]
+  },
+  "play_Xylophone": {
+   "explore": [
+    1,
+    12,
+    22,
+    38,
+    39,
+    43
+   ],
+   "validate": [
+    19,
+    23,
+    26
+   ],
+   "test-dev": [
+    1000030,
+    1000054,
+    2000046
+   ]
+  },
+  "play_stacking_toy": {
+   "explore": [
+    18,
+    29,
+    31,
+    36,
+    39,
+    45
+   ],
+   "validate": [
+    3,
+    41,
+    49
+   ],
+   "test-dev": [
+    1000000,
+    1000019,
+    2000001
+   ]
+  },
+  "play_tic_tac_toe": {
+   "explore": [
+    12,
+    28,
+    29,
+    34,
+    58,
+    74
+   ],
+   "validate": [
+    4,
+    6,
+    47
+   ],
+   "test-dev": [
+    1000010,
+    1000044,
+    2000021
+   ]
+  },
+  "plug_in_charger": {
+   "explore": [
+    20,
+    22,
+    23,
+    28,
+    45,
+    47
+   ],
+   "validate": [
+    46,
+    49,
+    50
+   ],
+   "test-dev": [
+    1000008,
+    1000021,
+    2000009
+   ]
+  },
+  "pour_balls_into_vase": {
+   "explore": [
+    12,
+    24,
+    27,
+    42,
+    46,
+    52
+   ],
+   "validate": [
+    3,
+    33,
+    49
+   ],
+   "test-dev": [
+    1000023,
+    1000025,
+    2000040
+   ]
+  },
+  "pour_by_language": {
+   "explore": [
+    6,
+    10,
+    39,
+    45,
+    47,
+    53
+   ],
+   "validate": [
+    1,
+    2,
+    4
+   ],
+   "test-dev": [
+    1000025,
+    1000054,
+    2000000
+   ]
+  },
+  "pour_liquid_into_cup": {
+   "explore": [
+    2,
+    10,
+    18,
+    38,
+    44,
+    47
+   ],
+   "validate": [
+    5,
+    26,
+    28
+   ],
+   "test-dev": [
+    1000015,
+    1000043,
+    2000018
+   ]
+  },
+  "pour_liquid_into_cup_random": {
+   "explore": [
+    3,
+    5,
+    11,
+    12,
+    22,
+    26
+   ],
+   "validate": [
+    4,
+    10,
+    24
+   ],
+   "test-dev": [
+    1000003,
+    1000016,
+    2000022
+   ]
+  },
+  "press_by_number": {
+   "explore": [
+    8,
+    20,
+    30,
+    36,
+    43,
+    45
+   ],
+   "validate": [
+    9,
+    26,
+    62
+   ],
+   "test-dev": [
+    1000024,
+    1000025,
+    2000062
+   ]
+  },
+  "push_T": {
+   "explore": [
+    2,
+    15,
+    33,
+    34,
+    49,
+    54
+   ],
+   "validate": [
+    4,
+    8,
+    17
+   ],
+   "test-dev": [
+    1000042,
+    1000050,
+    2000024
+   ]
+  },
+  "push_T_random": {
+   "explore": [
+    0,
+    2,
+    15,
+    21,
+    24,
+    28
+   ],
+   "validate": [
+    6,
+    9,
+    26
+   ],
+   "test-dev": [
+    1000009,
+    1000029,
+    2000027
+   ]
+  },
+  "put_bottles_into_dustbin": {
+   "explore": [
+    14,
+    17,
+    37,
+    41,
+    48,
+    50
+   ],
+   "validate": [
+    13,
+    28,
+    31
+   ],
+   "test-dev": [
+    1000003,
+    1000019,
+    2000018
+   ]
+  },
+  "solve_equation": {
+   "explore": [
+    1,
+    20,
+    21,
+    27,
+    45,
+    54
+   ],
+   "validate": [
+    13,
+    17,
+    36
+   ],
+   "test-dev": [
+    1000016,
+    1000035,
+    2000024
+   ]
+  },
+  "sort_nesting_dolls_by_size": {
+   "explore": [
+    2,
+    14,
+    17,
+    18,
+    25,
+    26
+   ],
+   "validate": [
+    7,
+    8,
+    27
+   ],
+   "test-dev": [
+    1000012,
+    1000021,
+    2000014
+   ]
+  },
+  "sort_nesting_dolls_by_size_random": {
+   "explore": [
+    0,
+    1,
+    5,
+    15,
+    20,
+    27
+   ],
+   "validate": [
+    24,
+    25,
+    29
+   ],
+   "test-dev": [
+    1000002,
+    1000013,
+    2000011
+   ]
+  },
+  "stack_blocks": {
+   "explore": [
+    9,
+    12,
+    24,
+    38,
+    46,
+    49
+   ],
+   "validate": [
+    10,
+    16,
+    41
+   ],
+   "test-dev": [
+    1000028,
+    1000052,
+    2000041
+   ]
+  },
+  "stack_blocks_by_language": {
+   "explore": [
+    8,
+    13,
+    18,
+    26,
+    43,
+    52
+   ],
+   "validate": [
+    0,
+    29,
+    39
+   ],
+   "test-dev": [
+    1000019,
+    1000043,
+    2000012
+   ]
+  },
+  "stack_blocks_random": {
+   "explore": [
+    2,
+    4,
+    16,
+    18,
+    23,
+    25
+   ],
+   "validate": [
+    1,
+    14,
+    29
+   ],
+   "test-dev": [
+    1000007,
+    1000027,
+    2000006
+   ]
+  },
+  "stack_bowls": {
+   "explore": [
+    2,
+    6,
+    17,
+    42,
+    51,
+    54
+   ],
+   "validate": [
+    0,
+    8,
+    23
+   ],
+   "test-dev": [
+    1000020,
+    1000049,
+    2000054
+   ]
+  },
+  "stack_bowls_random": {
+   "explore": [
+    7,
+    13,
+    17,
+    19,
+    28,
+    29
+   ],
+   "validate": [
+    4,
+    16,
+    18
+   ],
+   "test-dev": [
+    1000003,
+    1000016,
+    2000009
+   ]
+  },
+  "store_laptop_and_headphones": {
+   "explore": [
+    3,
+    14,
+    27,
+    39,
+    46,
+    53
+   ],
+   "validate": [
+    4,
+    19,
+    38
+   ],
+   "test-dev": [
+    1000007,
+    1000032,
+    2000047
+   ]
+  },
+  "store_laptop_and_headphones_random": {
+   "explore": [
+    3,
+    8,
+    9,
+    12,
+    15,
+    21
+   ],
+   "validate": [
+    14,
+    18,
+    25
+   ],
+   "test-dev": [
+    1000017,
+    1000020,
+    2000026
+   ]
+  },
+  "store_tools_in_toolbox": {
+   "explore": [
+    6,
+    12,
+    19,
+    20,
+    28,
+    52
+   ],
+   "validate": [
+    3,
+    21,
+    42
+   ],
+   "test-dev": [
+    1000004,
+    1000015,
+    2000011
+   ]
+  },
+  "swap_T": {
+   "explore": [
+    13,
+    14,
+    17,
+    25,
+    27,
+    39
+   ],
+   "validate": [
+    3,
+    22,
+    44
+   ],
+   "test-dev": [
+    1000017,
+    1000043,
+    2000042
+   ]
+  },
+  "swap_blocks": {
+   "explore": [
+    5,
+    6,
+    19,
+    20,
+    24,
+    28
+   ],
+   "validate": [
+    9,
+    40,
+    43
+   ],
+   "test-dev": [
+    1000016,
+    1000030,
+    2000051
+   ]
+  },
+  "sweep_blocks": {
+   "explore": [
+    16,
+    21,
+    22,
+    41,
+    44,
+    46
+   ],
+   "validate": [
+    4,
+    29,
+    38
+   ],
+   "test-dev": [
+    1000007,
+    1000028,
+    2000036
+   ]
+  },
+  "sweep_blocks_random": {
+   "explore": [
+    0,
+    3,
+    19,
+    21,
+    24,
+    26
+   ],
+   "validate": [
+    4,
+    12,
+    15
+   ],
+   "test-dev": [
+    1000006,
+    1000018,
+    2000019
+   ]
+  }
+ }
+}
