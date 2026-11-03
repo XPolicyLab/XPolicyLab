@@ -4,6 +4,7 @@ import fnmatch
 import random
 import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Any, Literal
 
@@ -639,6 +640,20 @@ def configure_video_encoding(dataset: Any, dataset_config: DatasetConfig) -> Non
 
     streaming_encoder.crf = dataset_config.video_crf
 
+    # LeRobot 0.4.4 drops a frame (and only logs a warning) when a camera's
+    # encoder queue stays full for 0.1 s, which a busy host hits; the episode
+    # then has fewer video frames than rows. Wait for room instead.
+    feed_frame = streaming_encoder.feed_frame
+
+    def blocking_feed_frame(video_key, image):
+        frames = streaming_encoder._frame_queues.get(video_key)
+        thread = streaming_encoder._threads.get(video_key)
+        while frames is not None and frames.full() and thread.is_alive():
+            time.sleep(0.005)
+        feed_frame(video_key, image)
+
+    streaming_encoder.feed_frame = blocking_feed_frame
+
 
 def finalize_dataset(dataset: Any) -> None:
 
@@ -747,6 +762,11 @@ def convert_one(
             frame[f"observation.images.{image_name}"] = image_array[index]
 
         dataset.add_frame(frame)
+
+    dropped = getattr(getattr(dataset, "_streaming_encoder", None), "_dropped_frames", {})
+    if any(dropped.values()):
+        dataset.clear_episode_buffer()
+        raise RuntimeError(f"video encoder dropped frames: {dropped}")
 
     dataset.save_episode()
 

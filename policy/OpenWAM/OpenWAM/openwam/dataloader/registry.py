@@ -85,11 +85,13 @@ def _register_builtins():
     from openwam.dataloader.robocasa_gr1 import MultiRoboCasaGR1Dataset
     from openwam.dataloader.robocoin import MultiRobotCOINDataset
     from openwam.dataloader.robodojo import MultiTaskRoboDojoDataset
+    from openwam.dataloader.robodojo_lerobot import MultiTaskRoboDojoLeRobotDataset
     from openwam.dataloader.robotwin import MultiTaskRoboTwinDataset
     from openwam.dataloader.vlabench import VLABenchDataset
 
     register_dataset("robotwin")(MultiTaskRoboTwinDataset)
     register_dataset("robodojo")(MultiTaskRoboDojoDataset)
+    register_dataset("robodojo_lerobot")(MultiTaskRoboDojoLeRobotDataset)
     register_dataset("agibotworld")(MultiAgiBotWorldDataset)
     register_dataset("mixture")(MixtureDataset)
     register_dataset("robocasa_gr1")(MultiRoboCasaGR1Dataset)
