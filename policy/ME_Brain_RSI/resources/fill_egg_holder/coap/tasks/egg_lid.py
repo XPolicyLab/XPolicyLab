@@ -9,7 +9,7 @@ import numpy as np
 from scipy.optimize import minimize_scalar
 from scipy.spatial.transform import Rotation
 
-from b88r42wq.tasks.egg_geometry import _edge_samples, _public_body_geometry
+from coap.tasks.egg_geometry import _edge_samples, _public_body_geometry
 
 
 @lru_cache(maxsize=1)

@@ -10,8 +10,9 @@
       "model": "model:Model",
       "deploy": "deploy",
       "numeric_ik": true,
-      "environment_prefix": "B88R42WQ",
-      "modules": "tasks/fill_egg_holder/modules.json"
+      "environment_prefix": "COAP",
+      "modules": "tasks/fill_egg_holder/modules.json",
+      "program": "coap.tasks.egg_quad_r03_diagfill:run"
     },
     "imitate_sorting_sequence": {
       "action_type": "ee",
@@ -274,7 +275,8 @@
       "deploy": "deploy",
       "numeric_ik": true,
       "environment_prefix": "COAP",
-      "modules": "tasks/hang_mugs/modules.json"
+      "modules": "tasks/hang_mugs/modules.json",
+      "program": "coap.tasks.hang_std_sem_r44_rank:run_standard"
     },
     "hang_mugs_random": {
       "action_type": "ee",
@@ -286,7 +288,8 @@
       "deploy": "deploy",
       "numeric_ik": true,
       "environment_prefix": "COAP",
-      "modules": "tasks/hang_mugs_random/modules.json"
+      "modules": "tasks/hang_mugs_random/modules.json",
+      "program": "coap.tasks.hangrand_quad_r04_seatsafe:run_random"
     },
     "pour_liquid_into_cup": {
       "action_type": "ee",
@@ -532,11 +535,16 @@
       "request_timeout_s": 1800
     },
     "pour_balls_into_vase": {
-      "driver": "vla",
-      "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
+      "action_type": "ee",
+      "eval_batch": false,
+      "aliases": [],
+      "max_envs": 1,
+      "driver": "model",
+      "model": "adapter.model:Model",
+      "deploy": "adapter.deploy",
+      "numeric_ik": false,
+      "calibrated": true,
+      "modules": "tasks/pour_balls_into_vase/modules.json"
     },
     "deposit_coin": {
       "action_type": "joint",

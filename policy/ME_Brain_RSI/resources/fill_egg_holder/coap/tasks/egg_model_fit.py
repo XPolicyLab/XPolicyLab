@@ -23,7 +23,7 @@ def _sample(image,pixels):
 
 
 def fit_visible_shell(ctx,egg,arm,index,head_reference):
-    from b88r42wq.tasks.egg_source import complete_shell_contour
+    from coap.tasks.egg_source import complete_shell_contour
     camera=f'cam_{arm}_wrist'
     if camera not in ctx.vision:
         return None

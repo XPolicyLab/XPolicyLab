@@ -38,6 +38,17 @@
         "CLASSIFY_CLIP_PATH": "model_assets/clip-vit-base-patch32",
         "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
       }
+    },
+    "hang_mugs": {
+      "environment": {
+        "HANG_SAM3_PATH": "model_assets/hang/sam3"
+      }
+    },
+    "hang_mugs_random": {
+      "environment": {
+        "HANG_SAM3_PATH": "model_assets/hang/sam3",
+        "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
+      }
     }
   }
 }

@@ -153,3 +153,6 @@ def _geometric_review(measurements):
             score_head_pixel_equivalent=float(np.mean(np.minimum(np.concatenate(values), 8.))),
             pixel_scale_relative_to_head=measurement['pixel_scale_relative_to_head'])
     return coverage, counts, score, camera_reviews
+
+
+

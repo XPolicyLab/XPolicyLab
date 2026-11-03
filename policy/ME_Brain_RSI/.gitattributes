@@ -19,3 +19,20 @@ capabilities/control/imitate_sorting_sequence_coap_tasks_sorting_tri80_r07_rende
 resources/imitate_sorting_sequence/coap/tasks/sorting_tri80_r07_render.py whitespace=-blank-at-eof
 capabilities/perception/classify_objects_by_language_coap_tasks_classify_r05_grounded_clip.py whitespace=-blank-at-eof
 resources/classify_objects_by_language/coap/tasks/classify_r05_grounded_clip.py whitespace=-blank-at-eof
+
+# Preserve the selected egg and mug source byte identities.
+capabilities/control/fill_egg_holder_coap_tasks_egg_budget_r02_empty_only_empty.py whitespace=-blank-at-eof
+capabilities/geometry/hang_mugs_coap_tasks_hang_candidate_g_cad.py whitespace=-blank-at-eof
+capabilities/geometry/hang_mugs_coap_tasks_hang_candidate_h_cad.py whitespace=-blank-at-eof
+capabilities/motion/hang_mugs_coap_tasks_hang_candidate_motion.py whitespace=-blank-at-eof
+capabilities/motion/hang_mugs_coap_tasks_hang_std_sem_r44_rank_motion.py whitespace=-blank-at-eof
+capabilities/perception/fill_egg_holder_coap_tasks_egg_grasp_lookahead_r19_full_chain_pick_base_measure.py whitespace=-blank-at-eof
+resources/fill_egg_holder/coap/tasks/egg_budget_r02_empty_only_empty.py whitespace=-blank-at-eof
+resources/fill_egg_holder/coap/tasks/egg_grasp_lookahead_r19_full_chain_pick_base_measure.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_candidate_g_cad.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_candidate_h_cad.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_candidate_motion.py whitespace=-blank-at-eof
+resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_motion.py whitespace=-blank-at-eof
+resources/hang_mugs_random/coap/tasks/hang_candidate_g_cad.py whitespace=-blank-at-eof
+resources/hang_mugs_random/coap/tasks/hang_candidate_h_cad.py whitespace=-blank-at-eof
+resources/hang_mugs_random/coap/tasks/hang_candidate_motion.py whitespace=-blank-at-eof

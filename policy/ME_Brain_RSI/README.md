@@ -16,9 +16,11 @@ bash install.sh code
 bash install.sh inference
 ```
 
-搭塔、充电器、标准套娃和随机套娃只需脚本基础环境，无需 CuRobo、SAM3 或外部模型权重，分别见 [搭塔任务说明](tasks/build_tower/README.md)、[充电器任务说明](tasks/plug_in_charger/README.md)、[标准套娃任务说明](tasks/sort_nesting_dolls_by_size/README.md) 与 [随机套娃任务说明](tasks/sort_nesting_dolls_by_size_random/README.md)。
+倒球入花瓶、搭塔、充电器、标准套娃和随机套娃只需脚本基础环境，无需 CuRobo、SAM3 或外部模型权重，分别见 [倒球任务说明](tasks/pour_balls_into_vase/README.md)、[搭塔任务说明](tasks/build_tower/README.md)、[充电器任务说明](tasks/plug_in_charger/README.md)、[标准套娃任务说明](tasks/sort_nesting_dolls_by_size/README.md) 与 [随机套娃任务说明](tasks/sort_nesting_dolls_by_size_random/README.md)。
 
 工具箱和盖方块任务仅使用脚本环境与随附静态几何，见 [工具箱任务说明](tasks/store_tools_in_toolbox/README.md) 与 [盖方块任务说明](tasks/cover_blocks/README.md)。模仿排序使用 DINOv2；语言分类使用 CUDA 上的 DINOv2、CLIP 和 Grounding DINO。这两个任务的模型依赖位于环境客户端，分别见 [模仿排序任务说明](tasks/imitate_sorting_sequence/README.md) 与 [语言分类任务说明](tasks/classify_objects_by_language/README.md)。
+
+填蛋托盘使用脚本基础环境与公开静态几何，见 [填蛋托盘任务说明](tasks/fill_egg_holder/README.md)。标准挂杯和随机挂杯使用独立的 SAM3 感知及原有数值运动学，随机挂杯还保留本地 Grounding DINO 回退，见 [标准挂杯任务说明](tasks/hang_mugs/README.md) 与 [随机挂杯任务说明](tasks/hang_mugs_random/README.md)。
 
 插管、投币和拧螺丝任务需要相应的 CuRobo 环境；堆叠和方程任务需要 SAM3、DINO、Pinocchio 及其资源。投币任务使用 CUDA 专用环境及 `websockets==14.2`，详见 [投币任务说明](tasks/deposit_coin/README.md)。拧螺丝使用相同的专用环境版本要求，见 [拧螺丝任务说明](tasks/fasten_screws/README.md)。
 
@@ -88,6 +90,7 @@ VLA 检查点通过 XPolicyLab 公共解析器定位。可以指定 `model_path`
 | `coin_assets_root`                                     | 投币任务的外部 CuRobo`code-skills` 根目录 |
 | `screws_assets_root` | 拧螺丝任务的外部 CuRobo `code-skills` 根目录 |
 | `perception_assets_root`                               | 图像匹配任务的感知权重                    |
+| `HANG_SAM3_PATH`（环境变量） | 挂杯任务的外部固定 SAM3 资源目录 |
 | `focus_vlwa_source`、`policy_uv_env_path`              | VLA 源码与环境                            |
 | `model_path`、`tokenizer_path`、`asset_id`             | VLA 检查点、tokenizer 与机器人标识        |
 | `history_mode`、`max_token_len`、`num_inference_steps` | VLA 推理参数                              |

@@ -61,7 +61,7 @@ class ModuleLoader(importlib.abc.Loader):
             module.__path__ = []
         module.__builtins__ = dict(vars(builtins), __import__=self.scope.import_hook)
         tree = ResourceNames().visit(ast.parse(raw, filename=filename))
-        exec(compile(ast.fix_missing_locations(tree), filename, 'exec'), module.__dict__)
+        exec(compile(ast.fix_missing_locations(tree), filename, 'exec', dont_inherit=True), module.__dict__)
 
 
 class ScopeFinder(importlib.abc.MetaPathFinder):

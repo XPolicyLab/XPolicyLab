@@ -29,7 +29,7 @@
 | `fasten_screws` | `native` | `joint` | `true` |
 | `insert_tubes` | `native` | `joint` | `true` |
 | `plug_in_charger` | `model` | `ee` | `false` |
-| `pour_balls_into_vase` | `vla` | `joint` | `true` |
+| `pour_balls_into_vase` | `model` | `ee` | `false` |
 | `play_Xylophone` | `model` | `ee` | `false` |
 | `deposit_coin` | `native` | `joint` | `true` |
 | `insert_key` | `native` | `ee` | `true` |

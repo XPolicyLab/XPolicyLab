@@ -11,9 +11,9 @@ import numpy as np
 from scipy.optimize import least_squares, linear_sum_assignment
 from scipy.spatial.transform import Rotation
 
-from b88r42wq.motion import (quat_matrix, quat_multiply, tcp_to_link, down_quat,
+from coap.motion import (quat_matrix, quat_multiply, tcp_to_link, down_quat,
                          time_parameterize_joint_path, MotionProfile)
-from b88r42wq.tasks.egg_geometry import tray_geometry
+from coap.tasks.egg_geometry import tray_geometry
 
 
 EGG_CARRY_PROFILE = MotionProfile('task_egg_carry', .015, math.pi/36, 1, 1.6, 1, False, .030)
@@ -128,7 +128,7 @@ def select_visible_holder(ctx, slot_detector):
     geometry.update({"root": fitted["root"].tolist(), "yaw": fitted["yaw"],
                      "candidate_index": index, "well_association_source": source})
     # Keep the hinge attached to the refined rigid root rather than the initial detection.
-    from b88r42wq.tasks.egg_geometry import _public_body_geometry
+    from coap.tasks.egg_geometry import _public_body_geometry
     _, local_hinge = _public_body_geometry()
     geometry["hinge"] = (fitted["root"] + fitted["rotation"] @ local_hinge).tolist()
     ctx.memory["egg_holder_geometry"] = geometry
@@ -193,7 +193,7 @@ def initialize_target_queue(ctx, holder, slots):
                    bounds[0] < item["pixel"][0] < bounds[2] and
                    bounds[1] < item["pixel"][1] < bounds[3]]
         if len(sources) != 4:
-            from b88r42wq.tasks.egg_initial import complete_initial_sources
+            from coap.tasks.egg_initial import complete_initial_sources
             sources = complete_initial_sources(ctx, sources)
         valid = (len(sources) == 4 and all(
             np.asarray(item.get("position", [])).shape == (3,) and
@@ -263,7 +263,7 @@ def initialize_target_queue(ctx, holder, slots):
 
 def preview_arm_goals(ctx, arm, goals):
     """Check full robot paths with the exact live profiles and ideal measured FK."""
-    from b88r42wq.debug_thresholds import disabled, audit_bypass
+    from coap.debug_thresholds import disabled, audit_bypass
     if disabled(ctx):
         return audit_bypass(ctx, 'preview_arm_goals')
     preview = copy.copy(ctx)
@@ -294,7 +294,7 @@ def preview_arm_goals(ctx, arm, goals):
 
 def estimate_arm_goals(ctx, arm, goals):
     """Rank equivalent poses before their complete live-profile geometry checks."""
-    from b88r42wq.debug_thresholds import disabled
+    from coap.debug_thresholds import disabled
     if disabled(ctx):
         return sum(int(goal[3]) for goal in goals)
     joints = np.asarray(ctx.state[f"{arm}_arm_joint_state"], float).copy()
@@ -431,7 +431,7 @@ def _lid_press_points():
 
 def _lid_press_goals(ctx, arm, root, root_rotation, start_angle, quat):
     """Keep the wrist above the table while pushing the cover to its full range."""
-    from b88r42wq.tasks.egg_geometry import _public_body_geometry
+    from coap.tasks.egg_geometry import _public_body_geometry
     _, hinge = _public_body_geometry()
     panel = _lid_press_points()[arm]
     goals = []
@@ -454,13 +454,13 @@ def _lid_press_goals(ctx, arm, root, root_rotation, start_angle, quat):
 
 def _static_press_goal_audit(ctx, arm, goals):
     """Filter impossible static tool poses before expensive complete-chain replay."""
-    from b88r42wq.debug_thresholds import disabled, audit_bypass
+    from coap.debug_thresholds import disabled, audit_bypass
     if disabled(ctx):
         return audit_bypass(ctx, '_static_press_goal_audit')
-    from b88r42wq.tasks.mesh_kinematics import MeshFilteredKinematics
-    from b88r42wq.public_mesh import PublicRobotConvexGeometry
-    from b88r42wq.robot_motion_geometry import check_joint_path
-    from b88r42wq.motion import WRIST_MARGIN
+    from coap.tasks.mesh_kinematics import MeshFilteredKinematics
+    from coap.public_mesh import PublicRobotConvexGeometry
+    from coap.robot_motion_geometry import check_joint_path
+    from coap.motion import WRIST_MARGIN
     planner = MeshFilteredKinematics(ctx.kinematics, PublicRobotConvexGeometry())
     joints = np.asarray(ctx.state[f"{arm}_arm_joint_state"], float).copy()
     others = {side: np.asarray(ctx.state[f"{side}_arm_joint_state"], float).copy()
@@ -527,7 +527,7 @@ def _execute_lid_operations(ctx, arm, operations):
 
 def _preview_lid_chain(ctx, arm, guide, press):
     """Audit every emitted chord, fixed grip dwell, and required home together."""
-    from b88r42wq.debug_thresholds import disabled, audit_bypass
+    from coap.debug_thresholds import disabled, audit_bypass
     if disabled(ctx):
         return audit_bypass(ctx, '_preview_lid_chain')
     preview = copy.copy(ctx)
@@ -559,8 +559,8 @@ def _preview_lid_chain(ctx, arm, guide, press):
 
 def close_lid(ctx, arm, root, root_rotation):
     """Choose a complete edge-guide, top-push, retreat, and home chain."""
-    from b88r42wq.tasks.egg_geometry import _public_body_geometry
-    from b88r42wq.tasks.egg_lid import observe_lid_angle
+    from coap.tasks.egg_geometry import _public_body_geometry
+    from coap.tasks.egg_lid import observe_lid_angle
     _, local_hinge = _public_body_geometry()
     hinge = np.asarray(root) + root_rotation @ local_hinge
     angle = observe_lid_angle(ctx, root, root_rotation)
@@ -709,14 +709,14 @@ def close_lid(ctx, arm, root, root_rotation):
 
 def finish_egg_arm(ctx, arm):
     """Reserve the official 700-action budget for filling and the cover first."""
-    from b88r42wq.debug_thresholds import disabled
+    from coap.debug_thresholds import disabled
     if disabled(ctx):
         ctx.stage = 'home'
         yield from ctx.home(arm=arm, duration=8, motion_profile=EGG_EMPTY_PROFILE)
         return
     estimate = 8
     if ctx.numeric_ik:
-        from b88r42wq.kinematics import nearest_periodic
+        from coap.kinematics import nearest_periodic
         commanded = {side: np.asarray(ctx.joint_targets[side], float).copy()
                      for side in ("left", "right")}
         goal = dict(commanded)

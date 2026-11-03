@@ -60,7 +60,7 @@ class PublicRobotConvexGeometry:
     def check(self, kinematics, arm, joints, grip=1.0, pairs=None):
         planes = self.world_planes(kinematics, arm, joints, grip)
         if pairs is None:
-            from b88r42wq.kinematics import COLLISION_IGNORE
+            from coap.kinematics import COLLISION_IGNORE
             names = list(self.meshes)
             pairs = [(first, second) for i, first in enumerate(names) for second in names[i+1:]
                      if self.meshes[first][0] != self.meshes[second][0]
