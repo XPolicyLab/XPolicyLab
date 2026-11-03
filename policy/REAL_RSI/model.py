@@ -18,6 +18,9 @@ RGB in the policy child (stereo.MonoPlaneDepth: Depth Anything V2 Large + table-
 
 After a policy stops (or raises), the adapter holds the current pose until the environment ends the
 episode, because success is only decided by the environment's own episode-end check.
+
+Routes with `engine: pyrua` run a PyRUA-Lean program instead (pyrua_engine.py): the model forwards every call
+to that engine, which emits native joint targets.
 """
 import json
 import os
@@ -150,15 +153,20 @@ class Model(ModelTemplate):
         if self.task_name not in routes:
             raise ValueError(f'Unsupported REAL_RSI task: {self.task_name}')
         route = routes[self.task_name]
+        required_action = route['action_type']
+        if self.action_type != required_action:
+            raise ValueError(f'Checkpoint requires action_type={required_action}, got {self.action_type}')
+        self.engine = None
+        if route.get('engine') == 'pyrua':
+            from .pyrua_engine import PyruaEngine
+            self.engine = PyruaEngine(model_cfg, self.task_name, root / route['program'])
+            return
         task_dir = root / route['program']
         self.policy_path = task_dir / 'policy.py'
         if not self.policy_path.is_file():
             raise FileNotFoundError(f'no frozen policy for {self.task_name} under {root}')
         manifest_path = task_dir / 'manifest.json'
         manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
-        required_action = route['action_type']
-        if self.action_type != required_action:
-            raise ValueError(f'Checkpoint requires action_type={required_action}, got {self.action_type}')
         self.calib = json.loads((POLICY_DIR / model_cfg.get('camera_calib', 'camera_calib.json')).read_text())
         self.depth_provider = route['depth_provider']
         if self.depth_provider not in ('none', 'mono'):
@@ -189,6 +197,8 @@ class Model(ModelTemplate):
         return dict(obs, vision=vision)
 
     def update_obs(self, obs):
+        if self.engine is not None:
+            return self.engine.update_obs(obs)
         self.obs = self._augment(obs)
         if self.started or self.failed:
             return
@@ -224,6 +234,8 @@ class Model(ModelTemplate):
             raise RuntimeError(f'REAL_RSI policy {self.task_name} failed: {exc}') from exc
 
     def get_action(self):
+        if self.engine is not None:
+            return self.engine.get_action()
         if self.stopped or self.failed:
             return self._hold()
         try:
@@ -265,7 +277,14 @@ class Model(ModelTemplate):
     def get_action_batch(self, env_idx_list=None):
         raise NotImplementedError('REAL_RSI runs with eval_batch: false')
 
+    def on_trial_end(self, result=None):
+        if self.engine is not None:
+            return self.engine.on_trial_end(result)
+        return True
+
     def reset(self):
+        if self.engine is not None:
+            return self.engine.reset()
         if self.process is not None:
             self.process.close()
         self.process = None

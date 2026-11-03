@@ -1,3 +1,4 @@
 model_assets/
 __pycache__/
 *.pyc
+pyrua_results/
