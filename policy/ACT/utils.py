@@ -30,7 +30,18 @@ class EpisodicDataset(torch.utils.data.Dataset):
         episode_id = self.episode_ids[index]
         dataset_path = os.path.join(self.dataset_dir, f"episode_{episode_id}.hdf5")
         with h5py.File(dataset_path, "r") as root:
-            is_sim = None
+            is_sim = root.attrs.get("sim", None)
+            if is_sim is not None:
+                if not isinstance(is_sim, (bool, np.bool_, int, np.integer)) or is_sim not in (0, 1):
+                    raise ValueError(f"Unsupported ACT sim attribute: {is_sim!r}; expected a boolean or 0/1")
+                is_sim = bool(is_sim)
+            action_alignment = root.attrs.get("action_alignment", None)
+            if isinstance(action_alignment, bytes):
+                action_alignment = action_alignment.decode("utf-8")
+            if not isinstance(action_alignment, (str, type(None))) or action_alignment not in (
+                None, "next_state", "legacy_previous"
+            ):
+                raise ValueError(f"Unsupported ACT action_alignment: {action_alignment!r}")
             original_action_shape = root["/action"].shape
             episode_len = original_action_shape[0]
             if sample_full_episode:
@@ -43,12 +54,13 @@ class EpisodicDataset(torch.utils.data.Dataset):
             for cam_name in self.camera_names:
                 image_dict[cam_name] = root[f"/observations/images/{cam_name}"][start_ts]
             # get all actions after and including start_ts
-            if is_sim:
-                action = root["/action"][start_ts:]
-                action_len = episode_len - start_ts
+            # Explicit alignment takes precedence over the original ACT sim convention.
+            if action_alignment == "next_state" or (action_alignment is None and is_sim):
+                action_start = start_ts
             else:
-                action = root["/action"][max(0, start_ts - 1):]  # hack, to make timesteps more aligned
-                action_len = episode_len - max(0, start_ts - 1)  # hack, to make timesteps more aligned
+                action_start = max(0, start_ts - 1)
+            action = root["/action"][action_start:]
+            action_len = episode_len - action_start
 
         self.is_sim = is_sim
         padded_action = np.zeros((self.max_action_len, action.shape[1]), dtype=np.float32)

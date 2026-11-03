@@ -1,0 +1,58 @@
+# @package _global_
+
+defaults:
+- _self_
+- data: null
+- model: null
+- task: null
+- override hydra/job_logging: stdout
+output_dir: ${paths.output}/train/${now:%Y%m%d_%H%M%S}
+video_latent_cache: 'off'
+video_latent_cache_fields:
+- current
+- memory_anchor
+- memory_recent
+batch_size: 2
+num_workers: 4
+lr_scheduler_type: cosine
+learning_rate: 0.0001
+vlm_learning_rate: 5.0e-05
+num_epochs: 1
+max_steps: null
+log_every: 10
+save_every: 100
+max_weight_checkpoints: 5
+eval_every: 50
+eval_num_inference_steps: 10
+eval_loss_samples_per_rank: 2
+eval_max_videos: null
+gradient_accumulation_steps: 1
+mixed_precision: bf16
+seed: 42
+max_grad_norm: 1.0
+weight_decay: 0.0
+resume: null
+wandb:
+  enabled: false
+  workspace: null
+  project: InternW0-delta
+  name: train
+  group: null
+  mode: offline
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null
+paths:
+  data: ${oc.env:WAM_DATA_ROOT,data}
+  cache: ${oc.env:WAM_CACHE_ROOT,.cache/internw0}
+  checkpoints: ${oc.env:WAM_CHECKPOINT_ROOT,checkpoints}
+  output: ${oc.env:WAM_OUTPUT_ROOT,runs}
+  robotwin: ${oc.env:ROBOTWIN_DATA_ROOT,${paths.data}/robotwin}
+  robodojo: ${oc.env:ROBODOJO_DATA_ROOT,${paths.data}/robodojo}
+  libero: ${oc.env:LIBERO_DATA_ROOT,${paths.data}/libero}
+  ebench: ${oc.env:EBENCH_DATA_ROOT,${paths.data}/ebench}
+save_on_train_end: true
+save_training_state: true

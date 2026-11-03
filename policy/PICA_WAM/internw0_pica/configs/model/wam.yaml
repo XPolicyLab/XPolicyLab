@@ -1,0 +1,99 @@
+_target_: wam.model.factory.create_wam
+model_id: Wan-AI/Wan2.2-TI2V-5B
+tokenizer_model_id: Wan-AI/Wan2.1-T2V-1.3B
+tokenizer_max_len: 128
+load_text_encoder: false
+proprio_dim: ${data.train.processor.proprio_output_dim}
+redirect_common_files: true
+mot_checkpoint_mixed_attn: false
+mot_attention_backend: flex
+mot_flex_block_size: 64
+action_dit_pretrained_path: ${paths.checkpoints}/action_dit.pt
+action_dit_use_interpolated_init: false
+skip_dit_load_from_pretrain: false
+video_dit_config:
+  has_image_input: false
+  patch_size:
+  - 1
+  - 2
+  - 2
+  in_dim: 48
+  hidden_dim: 3072
+  ffn_dim: 14336
+  freq_dim: 256
+  text_dim: 4096
+  out_dim: 48
+  num_heads: 24
+  attn_head_dim: 128
+  num_layers: 30
+  eps: 1.0e-06
+  seperated_timestep: true
+  require_clip_embedding: false
+  require_vae_embedding: false
+  fuse_vae_embedding_in_latents: true
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+  video_attention_mask_mode: first_frame_causal
+  action_conditioned: false
+  action_dim: ${data.train.processor.action_output_dim}
+  action_group_causal_mask_mode: group_diagonal
+action_dit_config:
+  training_time_rtc:
+    enabled: false
+    max_delay_steps: 16
+  action_dim: ${data.train.processor.action_output_dim}
+  hidden_dim: 1024
+  ffn_dim: 4096
+  num_heads: 24
+  attn_head_dim: 128
+  num_layers: 30
+  text_dim: 4096
+  freq_dim: 256
+  eps: 1.0e-06
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+video_scheduler:
+  train_shift: 6.0
+  infer_shift: 6.0
+  num_train_timesteps: 1000
+action_scheduler:
+  train_shift: 1.0
+  infer_shift: 1.0
+  num_train_timesteps: 1000
+loss:
+  lambda_video: 0.5
+  lambda_action: 1.0
+future_delta:
+  enabled: true
+  num_tokens: null
+  video_size: ${data.train.video_size}
+  num_views: ${data.train.processor.num_output_cameras}
+  num_frames: ${data.train.num_frames}
+  action_video_freq_ratio: ${data.train.action_video_freq_ratio}
+  loss_weight: 0.5
+  semantic_alignment:
+    enabled: true
+    student_layer: 8
+    teacher_layer: 20
+    loss_weight: 0.1
+    max_sigma: 0.5
+understanding:
+  enabled: false
+  vlm_model_path: ${oc.env:WAM_VLM_PATH,${paths.checkpoints}/RynnBrain1.1-2B}
+  trust_remote_code: true
+  train_vlm: false
+  vlm_gradient_checkpointing: false
+  vlm_batch_size: 0
+  max_pixels: 65536
+  prompt_cache_size: 256
+  precompute_metadata: true
+  save_vlm_weights: null
+  interval_chunks: 1
+  prompt: null
+  default_view_layout: auto
+  default_view_names: ''
+memory:
+  enabled: false
+  video:
+    enabled: true
+    num_anchor_frames: 1
+    num_recent_frames: 1
+    deduplicate_identical_anchor_batch: true

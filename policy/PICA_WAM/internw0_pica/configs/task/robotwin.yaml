@@ -1,0 +1,30 @@
+# @package _global_
+
+defaults:
+- override /data: robotwin
+- override /model: wam
+- _self_
+batch_size: 16
+num_workers: 8
+lr_scheduler_type: cosine
+learning_rate: 5.0e-05
+num_epochs: 10
+max_steps: null
+log_every: 10
+save_every: 500
+max_weight_checkpoints: 4
+eval_every: 500
+eval_max_videos: 0
+gradient_accumulation_steps: 2
+weight_decay: 0.01
+model:
+  mot_checkpoint_mixed_attn: true
+  mot_checkpoint_layer_stride: 1
+  action_dit_pretrained_path: null
+  skip_dit_load_from_pretrain: true
+  understanding:
+    enabled: true
+  future_delta:
+    num_views: 1
+resume: ${oc.env:ROBOTWIN_INIT_CHECKPOINT,${oc.env:WAM_PRETRAIN_CHECKPOINT,${paths.checkpoints}/pretrain.pt}}
+video_latent_cache: 'off'

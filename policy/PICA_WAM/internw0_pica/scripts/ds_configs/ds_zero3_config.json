@@ -1,0 +1,24 @@
+{
+  "train_batch_size": "auto",
+  "train_micro_batch_size_per_gpu": "auto",
+  "gradient_accumulation_steps": "auto",
+  "zero_optimization": {
+    "stage": 3,
+    "offload_optimizer": {
+      "device": "none"
+    },
+    "offload_param": {
+      "device": "none"
+    },
+    "overlap_comm": false,
+    "contiguous_gradients": true,
+    "reduce_bucket_size": 50000000,
+    "allgather_bucket_size": 50000000,
+    "stage3_prefetch_bucket_size": 50000000,
+    "stage3_param_persistence_threshold": 100000,
+    "stage3_model_persistence_threshold": 10000000,
+    "stage3_max_live_parameters": 1000000000,
+    "stage3_max_reuse_distance": 1000000000,
+    "gather_16bit_weights_on_model_save": true
+  }
+}

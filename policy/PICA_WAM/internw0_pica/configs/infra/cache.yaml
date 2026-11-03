@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- compile
+- _self_
+video_latent_cache: read
+video_latent_cache_fields:
+- current
+- memory_anchor
+- memory_recent
+- vlm
+data:
+  video_latent_cache:
+    root: ${oc.env:WAM_LATENT_CACHE,${paths.cache}/latents}
+    max_cached_shards: 4
+    validation_mode: meta-only
+    validation_workers: 8
+precompute:
+  batch_size: 8
+  num_workers: 4
+  shard_size: 32
+  max_samples: null
+  overwrite: false
+  frame_cache_capacity: 96
+  prefetch_factor: 2
+  in_order: false

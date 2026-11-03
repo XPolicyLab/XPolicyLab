@@ -1,0 +1,48 @@
+# Wall-X deployment config.
+# policy_name MUST equal the policy folder/import name. Values set to null are
+# filled in by setup_eval_policy_server.sh --overrides at launch time.
+policy_name: WallX
+protocol: ws
+host: localhost
+port: null
+
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+
+# Run the simulator's environments together. Each environment keeps its own
+# keyframe memory on the client; due requests go to the server as one batch.
+eval_batch: true
+
+# Runtime
+device: cuda:0
+
+# Checkpoint. checkpoint_path takes precedence; otherwise resolve_checkpoint_root
+# looks under policy/WallX/checkpoints/. train_config_path defaults to
+# <checkpoint_path>/config.yml when null.
+checkpoint_path: null
+train_config_path: null
+norm_key: ex_normal
+robot_type: desktop
+
+# Inference. The checkpoint predicts 32 steps and the simulator replays 16 of
+# them, matching the reference evaluation.
+num_inference_timesteps: 10
+action_start_index: 0
+action_chunk_length: 32
+replan_steps: 16
+default_instruction: ""
+
+# Preprocessing. "serving" reproduces the two-stage resize the checkpoint was
+# evaluated with; "training" is the single-resize data-pipeline path.
+image_resize: serving
+
+# Keyframe memory. null keeps whatever the checkpoint config declares.
+capacity: 22
+num_candidates: 16
+select_stride: 48
+write_tail: null

@@ -1,0 +1,41 @@
+policy_name: PICA_WAM
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: true
+
+# Local-only weights, resolved relative to this policy directory and fetched by
+# download_assets.sh / download_checkpoint.sh (excluded from Git).
+# null: resolve ckpt_name (a run directory or a .pt path), else checkpoints/robotwin.pt.
+checkpoint_path: null
+base_model_dir: assets/Wan-AI/Wan2.2-TI2V-5B
+vlm_model_path: assets/Alibaba-DAMO-Academy/RynnBrain1.1-2B
+
+# Vendored InternW0-Delta + PICA-WAM source used for inference and training.
+wam_root: internw0_pica
+# null: internw0_pica/assets/stats/robotwin.json, the statistics used in training.
+dataset_stats_path: null
+# null: <run_dir>/config.yaml for a training run, else the vendored
+# robotwin_pica training task (the release checkpoint's recipe).
+train_config_path: null
+
+# Checkpoint inference contract.
+device: cuda
+mixed_precision: bf16
+action_horizon: 32
+replan_steps: 10
+num_inference_steps: 10
+action_hz: 50.0
+sigma_shift: null
+rand_device: cpu
+tiled: false
+timing_enabled: false
+default_instruction: follow the instruction
+allow_dummy_policy: false

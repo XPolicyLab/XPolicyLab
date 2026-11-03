@@ -1,0 +1,10 @@
+# Adapter and Python-tool dependencies installed by install.sh.
+# GPU stack and sandbox setup: INSTALLATION.md.
+numpy==1.26.4
+scipy==1.15.3
+Pillow>=10,<13
+matplotlib>=3.8,<4
+opencv-python-headless==4.11.0.86
+PyYAML>=6,<7
+certifi
+transforms3d

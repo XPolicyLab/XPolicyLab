@@ -1,0 +1,6 @@
+# @package _global_
+pin_memory: true
+model:
+  understanding:
+    defer_image_transfer: true
+    precompute_metadata: true

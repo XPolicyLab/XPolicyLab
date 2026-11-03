@@ -1,0 +1,17 @@
+{
+  "provider": "openai",
+  "model": "gpt-6-astra",
+  "base_url": "https://api.openai.com/v1",
+  "python_prefix": "",
+  "sandbox": "docker",
+  "context_history": "first_recent",
+  "context_max_bytes": 33554432,
+  "stream": false,
+  "api_request_timeout_s": 3600,
+  "api_idle_timeout_s": 3600,
+  "network_recovery_window_s": 600,
+  "python_memory_limit_mib": 16384,
+  "sandbox_image": "ubuntu:24.04",
+  "http_400_max_attempts": 15,
+  "api_key_env": "Q0_PREVIEW_API_KEY"
+}

@@ -1,0 +1,30 @@
+# @package _global_
+defaults:
+  - robotwin
+  - /infra: compile
+  - override /data: robotwin_pica
+  - _self_
+
+# Four nodes x eight GPUs x 32 samples; no gradient accumulation.
+batch_size: 32
+gradient_accumulation_steps: 1
+num_epochs: 10
+save_every: 5000
+# With 549787 selected samples: step 5000 plus the final step 5370.
+max_weight_checkpoints: 4
+save_training_state: false
+output_dir: ${paths.output}/robotwin_pica/${now:%Y%m%d_%H%M%S}
+paths:
+  robotwin: ${oc.env:ROBOTWIN_DATA_ROOT,${paths.data}/robotwin_clean}
+
+model:
+  pica_alignment:
+    enabled: true
+    loss_weight: 0.05
+    student_layer: 8
+    teacher_layer: 20
+    sigma_gap_max: 0.2
+    head_hidden: 512
+    ema_decay: 0.9999
+wandb:
+  name: robotwin_pica

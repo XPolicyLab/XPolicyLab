@@ -1,0 +1,16 @@
+This vendored InternW0-delta source (with the PICA-WAM cross-appearance self-alignment)
+includes adapted third-party code:
+
+- Hugging Face LeRobot: src/wam/datasets/lerobot/lerobot/, under the
+  Apache License 2.0. Original copyright headers are retained.
+  https://github.com/huggingface/lerobot
+- PyTorch3D rotation conversions: src/wam/datasets/lerobot/utils/rotation.py,
+  under the BSD license in LICENSES/PyTorch3D.txt.
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+  https://github.com/facebookresearch/pytorch3d
+- RoboTwin evaluation session: ../robotwin_session.py, ported from
+  eval/robotwin/policy.py under the MIT license in LICENSES/RoboTwin-eval-MIT.txt.
+  Copyright (c) 2025 Tianxing Chen.
+
+The Apache License 2.0 text is in LICENSES/Apache-2.0.txt. External models,
+datasets, simulators and robot assets retain their own licenses.

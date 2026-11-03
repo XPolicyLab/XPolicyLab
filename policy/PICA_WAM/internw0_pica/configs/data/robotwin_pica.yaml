@@ -1,0 +1,41 @@
+# PICA-WAM paired nominal/perturbed views on InternW0-Delta's 14D joint data.
+defaults:
+  - robotwin
+  - _self_
+
+train:
+  _target_: wam.datasets.lerobot.cross_appearance_dataset.CrossAppearanceDataset
+  emit_canonical_video: true
+  # The prepared export already contains only the 2500 clean episodes.
+  # For a merged clean/random export, restore robotwin.yaml's periodic selection.
+  episode_selection: null
+  text_embedding_cache_dir: ${oc.env:ROBOTWIN_TEXT_CACHE,${paths.cache}/text_embed/robotwin_clean}
+  image_color_jitter:
+    enabled: false
+  image_camera_jitter:
+    enabled: false
+  image_sensor_noise:
+    enabled: false
+  image_domain_jitter:
+    enabled: false
+  sync_vlm_color_jitter: false
+  sync_vlm_camera_jitter: false
+  video_augmentation:
+    _target_: wam.datasets.lerobot.transforms.appearance_perturbation.VideoAugmentation
+    p: 1.0
+    geometric_p: 0.25
+    canonical_geometry: none
+    augment_types: [corrupt_only, color_only, both, both]
+    color_jitter: {brightness: 0.3, contrast: 0.3, saturation: 0.25, hue: 0.04}
+    gamma: {range: [0.8, 1.25]}
+    gaussian_noise: {std: 0.015}
+    random_resized_crop: {scale: [0.92, 1.0], ratio: preserve}
+    rotate: {degrees: 8.0, fill: mean}
+    exposure: {ev_range: [-0.25, 0.25]}
+    optical_corruption:
+      p: 0.5
+      families: [isotropic_blur, directional_blur, zoom_blur, fog]
+      isotropic_blur: {sigma: [0.4, 5.0]}
+      directional_blur: {length: [3, 21]}
+      zoom_blur: {max_zoom: [1.02, 1.20], steps: 5}
+      fog: {strength: [0.3, 2.5], decay: [1.3, 3.0]}

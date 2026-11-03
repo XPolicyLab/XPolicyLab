@@ -1,0 +1,3 @@
+# These files are model inputs. Preserve their original spacing and final blank lines.
+assets/prompts/prompt.md whitespace=-blank-at-eol,-blank-at-eof
+assets/geometry/calibration_notes.md whitespace=-blank-at-eof

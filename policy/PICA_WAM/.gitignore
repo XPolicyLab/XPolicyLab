@@ -1,0 +1,12 @@
+# Base-model snapshots, released and trained weights are local-only.
+/assets
+/checkpoints
+/data
+/.cache
+
+# Evaluation by-products.
+/logs
+/runs
+**/__pycache__/
+*.py[cod]
+*.egg-info/
