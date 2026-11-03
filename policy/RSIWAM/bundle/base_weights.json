@@ -1,0 +1,70 @@
+{
+  "schema": "rsiwam-base-assets-v1",
+  "repository": "Haodong082399/VPP2",
+  "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+  "base_identity": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+  "files": [
+    {
+      "relative_path": "joint2b_s100000/action.pt",
+      "sha256": "e3c8bb0e787c6f10e38afc154c75855a0f8b90d747fc5d8767c367d2050e8933",
+      "bytes": 4057916513,
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/action.pt"
+    },
+    {
+      "relative_path": "joint2b_s100000/video.pt",
+      "sha256": "89139f7d043e7c9ad9d24f394e442ce23291e06ef63d1aa44eea1594665e08c4",
+      "bytes": 32790155854,
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/video.pt"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/Wan2.1_VAE.pth",
+      "sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+      "bytes": 507609880,
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/Wan2.1_VAE.pth"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth",
+      "sha256": "628c9998b613391f193eb67ff68da9667d75f492911e4eb3decf23460a158c38",
+      "bytes": 4772359047,
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/models_t5_umt5-xxl-enc-bf16.pth",
+      "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d",
+      "bytes": 11361920418,
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/models_t5_umt5-xxl-enc-bf16.pth"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/special_tokens_map.json",
+      "sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/special_tokens_map.json"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/spiece.model",
+      "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/spiece.model"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer.json",
+      "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer.json"
+    },
+    {
+      "relative_path": "Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer_config.json",
+      "sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer_config.json"
+    },
+    {
+      "relative_path": "joint2b_s100000/manifest.json",
+      "sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/manifest.json"
+    },
+    {
+      "relative_path": "joint2b_s100000/dataset_stats.json",
+      "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16",
+      "url": "https://huggingface.co/Haodong082399/VPP2/resolve/04824ddb3aae11f13db50984ed7d540c3b77dd9f/checkpoints/joint2b_s100000/dataset_stats.json"
+    }
+  ],
+  "url_status": "Repository/revision locators derived from frozen runtime provenance; URLs not fetched during this preparation.",
+  "weights_not_included": true
+}

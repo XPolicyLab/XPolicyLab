@@ -1,0 +1,46 @@
+[34m[1m[CONNECTING][0m websocket policy server ws://127.0.0.1:20763 (attempt 1/180, timeout=30s)
+[32m[1m[CONNECTED][0m websocket policy server connected: ws://127.0.0.1:20763
+[94m🚀 Running Episode 0[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished

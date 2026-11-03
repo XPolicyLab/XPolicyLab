@@ -1,0 +1,103 @@
+{
+  "schema": "rsiwam-public-gpu-validation-summary-v1",
+  "record_kind": "DERIVED_SUMMARY_NOT_ORIGINAL_RESULT_JSON",
+  "prepared_at_utc": "2026-11-01T14:46:17.976660+00:00",
+  "status": "REAL_CUDA_PLAIN_AND_ENCODED_DEBUG_PASSED",
+  "evaluated_code_commit": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+  "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+  "parent_checkpoint_sha256": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3",
+  "action_lora_sha256": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361",
+  "base_manifest_sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+  "optimizer_step": 400,
+  "model_seed": 1,
+  "environment_seed_recorded": 7,
+  "debug_started_at_utc": "2026-11-01T13:50:54.582780+00:00",
+  "debug_finished_at_utc": "2026-11-01T13:55:51.610533+00:00",
+  "real_cuda_model_loaded": true,
+  "gpu_model": "NVIDIA A800-SXM4-80GB",
+  "torch_version": "2.5.1+cu118",
+  "torch_cuda_version": "11.8",
+  "all_parameters_frozen": true,
+  "full_weight_identity_checks_completed": true,
+  "one_model_load": true,
+  "modes": {
+    "plain": {
+      "client_exit_code": 0,
+      "client_exit_receipt_original_sha256": "c1894443d0548bb4778fb35dcda569328a5c05799a9a9d338bfdc8c7221df3cd",
+      "completed_episodes": 1,
+      "executed_actions": 20,
+      "inference_calls": 1,
+      "returned_action_chunk_shape": [
+        24,
+        16
+      ],
+      "action_array_sha256": "834b52f9aa05c5e53681971483f97bc7bd0b361c8e53e5733d0f04b70ffffe6a",
+      "stderr_bytes": 0
+    },
+    "encoded": {
+      "client_exit_code": 0,
+      "client_exit_receipt_original_sha256": "af865864ae0a6fadaeea048fd8342e67d034ce377ad5d3748d80b2f4fbaaf210",
+      "completed_episodes": 1,
+      "executed_actions": 20,
+      "inference_calls": 1,
+      "returned_action_chunk_shape": [
+        24,
+        16
+      ],
+      "action_array_sha256": "834b52f9aa05c5e53681971483f97bc7bd0b361c8e53e5733d0f04b70ffffe6a",
+      "stderr_bytes": 0
+    }
+  },
+  "plain_encoded_actions_bitwise_equal": true,
+  "distinct_actual_deployment_clients": true,
+  "history_guard_mismatches": [
+    0,
+    0
+  ],
+  "phase_label_source": "Sequential runner sidecar; actual RPC client IDs are independently recorded. Native request context was not modified.",
+  "server_exit_code_after_owned_cleanup": -15,
+  "original_debug_source_files_verified": 18,
+  "original_files_not_copied": {
+    "RESULT.json": {
+      "sha256": "d76040ab2fa8c4e5b662471c152af0f4b8ad78da136fd53af3a29ad9eccaa8ee",
+      "reason": "Contains owner tag and runtime execution paths; this public summary selects the verification facts."
+    },
+    "plan.json": {
+      "sha256": "9e355cabfc8bb370cf1ba06b64fed7f31a7d7988e1ffcfb554a6bab256907e11",
+      "reason": "Private operational plan retained at original location."
+    }
+  },
+  "scope": {
+    "real_gpu_synthetic_plain_and_encoded_debug": "PASSED",
+    "official_debug_client_used": true,
+    "legal_debug_episode_count_per_mode": 1,
+    "unchanged_official_episode_action_limit": 20,
+    "full_native_episode_output_parity": "NOT_TESTED",
+    "clean_environment_installation": "NOT_TESTED",
+    "standard_eval_sh_launch_path": "NOT_TESTED_BY_THIS_HARNESS",
+    "complete_6300_evaluation": "NOT_COMPLETED_IN_THIS_EVIDENCE",
+    "organizer_hidden_layout_or_official_leaderboard_result": "NOT_CLAIMED"
+  },
+  "native_first_block_followup": {
+    "record_kind": "DERIVED_FROM_PRIVATE_NATIVE_RECEIPTS",
+    "actual_candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+    "constructor": "UNCHANGED_XPL7e5def6_RSIWAM_Model",
+    "actual_optimizer_step": 400,
+    "model_seed": 1,
+    "evaluation_seed": 0,
+    "cuda_initialized": true,
+    "candidate_identity_canonical_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+    "native_first_episode_audit_status": "FIRST_NATIVE_EPISODE_AND_THREE_VIDEOS_VERIFIED_NOT_FULL50",
+    "native_first_episode_and_three_videos_verified": true,
+    "latest_local_snapshot_at_utc": "2026-11-01T14:27:20.346828+00:00",
+    "native_results_at_snapshot": 2,
+    "planned_first_block_episodes": 50,
+    "complete_first_block_claimed": false,
+    "complete_6300_claimed": false,
+    "original_source_sha256": {
+      "policy_loaded.json": "9502b82e132800b961ea04e7060b38366acb1fb6a1acf4c4abc3e4e151ba211a",
+      "r2_first_episode_audit.json": "fdb930a0ba27c713ca6514e1a5099ad5cfc18389edf78f8bb8ce950a1b56a56c",
+      "summary_20261101T142733Z.json": "eac36fae23ede35c5c6e1f6ec841aef75f677dea888923c1474ca7410e0ce3f4"
+    }
+  }
+}

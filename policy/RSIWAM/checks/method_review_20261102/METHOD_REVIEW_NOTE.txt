@@ -1,0 +1,56 @@
+RSIWAM: methodological review note (2026-11-02)
+Model category: WAM with imitation-learning adaptation; no external online Agent
+or task-based policy/checkpoint router is claimed.
+
+Motivation and contribution to be reviewed
+The research problem is adapting corrective behavior in off-demonstration states
+while retaining a pretrained policy's ordinary behavior. The submitted system
+freezes its foundation and world features, uses an observation-conditioned gate
+to select an action-attention residual, and trains Action LoRA while retaining
+the fixed residual branch's derivative with respect to action hidden states.
+Thus the LoRA update accounts for the composed action generator when the gate
+opens; it is not trained against a detached recovery-branch input. This coupling
+and the explicitly separated normal/handback/Agent-proxy supervision are the
+methodological claims presented for review. The names and component combination
+alone are not offered as novelty evidence or as a new pretrained foundation.
+
+At inference, the gated residual and Action LoRA form one fixed system. The
+pretrained VPP2 world/action foundation, original RecoverWAM parent seed20261032
+and Action LoRA seed20261033 step400 retain their published identities. All tasks
+use the same weights, hard gate threshold0.9, ten denoising steps, 32-action
+horizon and 24 actions per replan. Normal/recovery balancing is a training
+sampling policy, not a task-dependent selection of inference checkpoints.
+
+Training and limitations
+The frozen original bridge predates success133 adaptation. During the subsequent
+400-step Action LoRA stage, base and bridge weights remain frozen; q/v LoRA is
+trained using the existing masked action flow-matching objective. Agent repair
+and finish action labels are screened forward-kinematics proxies, not certified
+execution-equivalent labels. A successful source trajectory does not make every
+prefix action a correct recovery target. The report and training supplement
+state the exact split, masks, label scopes and continuation limitations.
+
+Existing empirical evidence
+The public technical-report draft freezes an earlier46-scene comparison. A later
+2026-11-02 development snapshot contains143 aligned initial-state cases across
+35 tasks:135 exact raw initial-state matches and8 asset-root-only differences
+with matched referenced asset hashes. VPP2 succeeds46/143 (32.17%), ordinary
+Action LoRA46/143 (32.17%), and RSIWAM51/143 (35.66%). Mean episode Score/100 is
+40.00,39.37,42.24 respectively. Against VPP2, RSIWAM has12 failure-to-success and
+7 success-to-failure changes; the net5 equals the success-count difference.
+This is a completion-selected partial development subset, not the official
+three-seed result or a certified within-episode recovery rate. Cross-hardware
+RGB/dynamics equivalence remains unverified. No statistical significance claim,
+architectural priority claim or comprehensive no-regression claim is made.
+
+The current full local campaign uses the same RSIWAM candidate and native
+RoboDojo task rules. Its official summarize output is separately attached;
+dimension-balanced partial summaries and development pooled episode scores
+are not interchangeable. Official eligibility and hidden-layout acceptance
+must be determined by the organizers. Further ablations and recovery-state
+criteria would be required to attribute a specific recovery benefit.
+
+Technical-report public release plan:2026-11-25.
+Training/deployment artifact publication follows the declared three-day
+post-listing commitment. The present materials do not claim all local evaluation
+or exact historical retraining reproduction is already complete.

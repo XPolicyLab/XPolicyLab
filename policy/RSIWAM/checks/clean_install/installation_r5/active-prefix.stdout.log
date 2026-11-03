@@ -1,0 +1,1 @@
+{"prefix": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean", "python": "3.10.22 | packaged by conda-forge | (main, Oct  6 2026, 23:02:24) [GCC 14.4.0]", "numpy_before": "2.2.6", "torch": "2.5.1+cu118", "torchvision": "0.20.1+cu118"}

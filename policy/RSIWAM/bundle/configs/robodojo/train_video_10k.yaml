@@ -1,0 +1,162 @@
+# RecoverWAM Stage-2 Video -> RoboDojo history-conditioned Video-10k.
+# 7 past frames + current + episode anchor = 9 conditioning RGB frames.
+# The 25-frame video contains that prefix and 16 future RGB frames.
+# num_frames=97 is the native-grid length before stride-4 frame sampling.
+output_dir: runs/robodojo_video_10k
+batch_size: 26
+num_workers: 8
+lr_scheduler_type: cosine
+learning_rate: 5.0e-06
+warmup_steps: 200
+num_epochs: 1
+max_steps: 10000
+log_every: 10
+save_every: 2000
+save_final_checkpoint: true
+eval_every: 0
+eval_num_inference_steps: 10
+train_mode: video_only
+optimizer_betas:
+- 0.9
+- 0.999
+checkpoint_mode: full
+gradient_accumulation_steps: 1
+mixed_precision: bf16
+seed: 100008
+max_grad_norm: 1.0
+weight_decay: 0.01
+resume: null
+resume_ckpt: null
+resume_ckpt_load_video: true
+preflight:
+  enabled: false
+profiling:
+  enabled: false
+wandb:
+  enabled: false
+  project: recoverwam-robodojo
+  workspace: null
+  name: video-10k
+  group: null
+  mode: online
+data:
+  train:
+    _target_: recoverwam.datasets.lerobot.video_event_dataset.VideoEventDataset
+    metadata_path: ${paths.data}/all.csv
+    video_root: ${paths.media}
+    balance_column: task_name
+    shape_meta:
+      images:
+      - key: image
+        raw_shape:
+        - 3
+        - 480
+        - 880
+        shape:
+        - 3
+        - 480
+        - 880
+      action:
+      - key: default
+        raw_shape: 16
+        shape: 16
+      state:
+      - key: default
+        raw_shape: 16
+        shape: 16
+    num_frames: 97
+    action_horizon: 32
+    global_sample_stride: 1
+    action_video_freq_ratio: 4
+    video_size:
+    - 240
+    - 416
+    video_resize_mode: direct
+    val_set_proportion: 0.0
+    is_training_set: true
+    seed: 100008
+    skip_padding_as_possible: false
+    max_padding_retry: 10
+    processor: null
+    pretrained_norm_stats: null
+    use_relative_action: false
+    video_path_column: video_path
+    parquet_path_column: parquet_path
+    instruction_column: training_prompt
+    fallback_instruction_column: high_level_instruction
+    action_column: action
+    proprio_column: observation.state
+    trim_start_column: trim_start
+    trim_end_column: trim_end
+    context_len: 128
+    text_embedding_cache_dir: null
+    text_embedding_cache_tag: wan21i2v14b480p
+    allow_missing_text_embeddings: false
+    condition_history_frames: 8
+    condition_history_stride: 25
+    condition_history_stride_choices:
+    - 21
+    - 23
+    - 25
+    - 27
+    - 29
+    condition_history_stride_probs:
+    - 0.07
+    - 0.07
+    - 0.72
+    - 0.07
+    - 0.07
+    condition_history_jitter_probability: 0.1
+    condition_history_jitter_max_native_steps: 1
+    condition_history_jitter_oldest_frame: true
+    condition_include_episode_first: true
+    condition_history_target_prefix: true
+    text_embedding_path_column: text_embedding_path
+  val: null
+model:
+  _target_: recoverwam.video_training.create_model
+  model_id: ${paths.wan}
+  dit_checkpoint_path: ${paths.video_init}
+  tokenizer_model_id: ${paths.wan}/google/umt5-xxl
+  tokenizer_max_len: 128
+  load_text_encoder: false
+  load_clip_encoder: true
+  redirect_common_files: false
+  condition_latent_loss_weight: 1.0
+  video_dit_config:
+    model_type: i2v
+    patch_size:
+    - 1
+    - 2
+    - 2
+    text_len: 128
+    in_dim: 36
+    dim: 5120
+    hidden_dim: 5120
+    ffn_dim: 13824
+    freq_dim: 256
+    text_dim: 4096
+    out_dim: 16
+    num_heads: 40
+    attn_head_dim: 128
+    num_layers: 40
+    eps: 1.0e-06
+    qk_norm: true
+    cross_attn_norm: true
+    use_gradient_checkpointing: true
+    video_attention_mask_mode: bidirectional
+  video_scheduler:
+    train_shift: 3.0
+    infer_shift: 3.0
+    num_train_timesteps: 1000
+    train_sampling_strategy: shifted_uniform
+    beta_alpha: 7.0
+    beta_beta: 1.0
+  condition_clip_frame: first
+lr_min_ratio: 0.01
+paths:
+  wan: weights/checkpoints/Wan2.1-I2V-14B-480P
+  video_init: weights/checkpoints_video/recoverwam-video-stage2-17f.pth
+  data: data/robodojo
+  media: data/robodojo
+reference_global_batch_size: 832

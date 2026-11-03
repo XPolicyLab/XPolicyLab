@@ -1,0 +1,49 @@
+RSIWAM 本地评测交接说明
+快照：2026-11-02 13:55:54（Asia/Singapore，UTC+8）
+
+可交付文件：official_summary_20261102T055554.189936Z/eval_result/RoboDojo/_summary.md
+这是原版 bash scripts/robodojo.sh summarize 的真实输出，未手工改表。
+命令、返回码、脚本 SHA、源 JSON SHA 和三相机视频检查保存在同目录的
+run_receipt.json、source_result_manifest.json、summarize.stdout.txt。
+
+本次为部分本地结果，不是完整榜单成绩：
+- 官方完整单元：6/126（4.8%），全部为 evaluation seed 0，共 300 回合。
+- 六个完整单元：align_blocks、build_tower、classify_objects、cover_blocks、
+  deposit_coin、general_pickup。
+- arrange_largest_number 的标准半块 25 回合已完成，但随机半块仅有 6 条，
+  未满足 25+25，故官方任务总表保持空白；标准半块单列展示。
+- 队列验收计数 325 包含上述额外 25 条标准半块。外部首块 general_pickup
+  由 first_external_credit 单独计入一次，没有重复计数。
+- 13 份原始结果 JSON 共记录 446 条 outcome。其余 121 条属于尚未完成/验收
+  的块，仅作为原始记录保留，不能把 446 称为完整验收回合或计入官方总表。
+- 缺少的任务、seed 1/2、无效或未完成回合没有填成失败。
+
+为什么几个汇总数字不同：
+1. 官方 Overview：局部 SR 52.25%，Score 55.55/100。
+   算法是先平均已有任务，形成能力维度分数，再对已出现的维度等权平均，
+   最后在已有 evaluation seeds 间汇总。目前没有完整 Generalization 单元。
+2. 六个完整任务直接等权/300 回合池化：SR 45.3333%，Score 48.15/100。
+   这对应任务表末尾 Avg(per seed)，不是 Overview 的维度均衡分数。
+3. 325 已验收回合（包含25标准半块）池化：SR 42.1538%，Score 45.3846/100。
+   这是此前进度汇总口径，不能替代官方 Overview。
+
+± 的准确含义：
+- Overview 使用 statistics.pstdev，对已有 seed 计算总体标准差。
+- 下方任务表/Generalization表的 Avg 行使用 mean_with_spread，± 是
+  (最大值－最小值)/2，属于半极差，不是标准差。
+- 当前只有 seed 0，因此这些位置出现 ±0。它不能证明三 seed 稳定性，
+  不能声称已完成官方要求的三 seed 均值与标准差。原报告按原脚本保留。
+
+视频检查与交接：
+- 官方脚本检查达到各块数量门槛的 7 个 timestamp 文件夹：325 个记录、
+  975 个真实视频文件，全部具备 head/left_wrist/right_wrist，0 mismatch。
+- 这7块中有1个仅为 Generalization 标准半块，因此视频7块不等于7完整单元。
+- 共索引到1350个真实源视频（包含运行中部分）；官方0 mismatch结论仅针对
+  上述7个满足检查门槛的文件夹，不扩展到所有运行中片段。
+- 汇总在远端独立快照目录中使用指向真实源视频的符号链接。小交接包不包含
+  视频字节，也不包含假视频或占位文件。video_manifest.json 给出精确源路径；
+  需要视频时可在授权的源服务器上提供对应文件。报告中通过的视频检查仅
+  对快照时的源服务器成立。本地不带视频重新运行会正确提示视频缺失。
+
+全过程没有启停 GPU、控制器或已有回合，没有修改源结果，没有重复计算。
+部分完成的任务具有选择性，不能据此判断完整42任务性能或失败状态恢复SR。

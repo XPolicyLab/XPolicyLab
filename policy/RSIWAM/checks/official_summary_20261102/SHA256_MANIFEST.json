@@ -1,0 +1,35 @@
+{
+  "excludes_self": true,
+  "files": [
+    {
+      "path": "README.txt",
+      "bytes": 2137,
+      "sha256": "749bd57a2fdc38f044690d4b02349557d6a11602737c31491b84a17cbf415dbc"
+    },
+    {
+      "path": "RSIWAM_local_official_summary_partial_20261102_135554.zip",
+      "bytes": 117167,
+      "sha256": "bc9d21268b8318e6edac2c8e151a285019bdebbb4c668c31ecc9a2459ffa5d28"
+    },
+    {
+      "path": "SCOPE_ZH.txt",
+      "bytes": 3476,
+      "sha256": "e63612cf01962bcdefbedb3386a0131507129760684f9bb6cb9e311199fd79f8"
+    },
+    {
+      "path": "_summary.md",
+      "bytes": 6018,
+      "sha256": "2fe3511cee69259e9841d62158f336f63a03241c8c0b56a8ea692f22aad63f4b"
+    },
+    {
+      "path": "run_receipt.json",
+      "bytes": 2102,
+      "sha256": "020930cb4c76182278d61ea9ac485ad7768b7ffcb89521cccd1826da03574ba7"
+    },
+    {
+      "path": "summarize.stdout.txt",
+      "bytes": 326,
+      "sha256": "ba4d0d81841b505146285e2bc6357059130d1d1a70c76902a36a8eb83f12978e"
+    }
+  ]
+}

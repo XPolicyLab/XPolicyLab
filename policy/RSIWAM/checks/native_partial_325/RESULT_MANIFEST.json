@@ -1,0 +1,92 @@
+{
+  "schema": "rsiwam-accepted325-results-v1",
+  "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+  "checkpoint": "rsiwam-original32-lora33-step400",
+  "candidate_identity_sha256": "0cff5681ebedfb413130b91bb63feaa0bb223669c2388b6d700486c3e05d212e",
+  "recorded_adapter_revision": "7e5def6e61435e823f5b346f2b9d2dd5a7a78256",
+  "model_seed": 1,
+  "evaluation_seeds": [
+    0
+  ],
+  "expected_total_episodes": 325,
+  "expected_block_count": 7,
+  "blocks": [
+    {
+      "task": "general_pickup",
+      "task_seed_id": "RSIWAM/general_pickup/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 50,
+      "source_group": "external_first_block",
+      "result_file": "originals/general_pickup_seed0/_result.json",
+      "result_sha256": "20eb100d67119822963938b014f5af69978ad0c3165c361f2577025596aff09f",
+      "policy_identity_file": "originals/general_pickup_seed0/policy_loaded.json",
+      "native_identity_file": "originals/general_pickup_seed0/native_loaded.json"
+    },
+    {
+      "task": "align_blocks",
+      "task_seed_id": "RSIWAM/align_blocks/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 50,
+      "source_group": "queue_completed",
+      "result_file": "originals/align_blocks_seed0/_result.json",
+      "result_sha256": "7a2d317fe33e9423f5ac1bad25fb197b3fb0a09afa51be9ea0c620eb8f325445",
+      "policy_identity_file": "originals/shared_policy/policy_loaded.json",
+      "native_identity_file": "originals/align_blocks_seed0/native_loaded.json"
+    },
+    {
+      "task": "arrange_largest_number",
+      "task_seed_id": "RSIWAM/arrange_largest_number/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 25,
+      "source_group": "queue_completed",
+      "result_file": "originals/arrange_largest_number_seed0/_result.json",
+      "result_sha256": "c33af0ffd3be4736f0d7420042d3bcaeddbde13ce22135951651a8ed4bd6a88b",
+      "policy_identity_file": "originals/shared_policy/policy_loaded.json",
+      "native_identity_file": "originals/arrange_largest_number_seed0/native_loaded.json"
+    },
+    {
+      "task": "build_tower",
+      "task_seed_id": "RSIWAM/build_tower/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 50,
+      "source_group": "queue_completed",
+      "result_file": "originals/build_tower_seed0/_result.json",
+      "result_sha256": "46a3cd9531578f1e9c7bda061e4d1175f70cbb232302bbf4c60956d123483794",
+      "policy_identity_file": "originals/shared_policy/policy_loaded.json",
+      "native_identity_file": "originals/build_tower_seed0/native_loaded.json"
+    },
+    {
+      "task": "cover_blocks",
+      "task_seed_id": "RSIWAM/cover_blocks/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 50,
+      "source_group": "queue_completed",
+      "result_file": "originals/cover_blocks_seed0/_result.json",
+      "result_sha256": "8e5db84a75b1d94fccb9a0bbf0a1e10110295ddb41de34aafabca20a9936a29b",
+      "policy_identity_file": "originals/shared_policy/policy_loaded.json",
+      "native_identity_file": "originals/cover_blocks_seed0/native_loaded.json"
+    },
+    {
+      "task": "deposit_coin",
+      "task_seed_id": "RSIWAM/deposit_coin/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 50,
+      "source_group": "queue_completed",
+      "result_file": "originals/deposit_coin_seed0/_result.json",
+      "result_sha256": "ad3a857d1906919d179a6696fcf1cb1721502b0e12b1675e42ba51e91951d824",
+      "policy_identity_file": "originals/shared_policy/policy_loaded.json",
+      "native_identity_file": "originals/deposit_coin_seed0/native_loaded.json"
+    },
+    {
+      "task": "classify_objects",
+      "task_seed_id": "RSIWAM/classify_objects/seed-0",
+      "evaluation_seed": 0,
+      "expected_episodes": 50,
+      "source_group": "queue_completed",
+      "result_file": "originals/classify_objects_seed0/_result.json",
+      "result_sha256": "47671e5f0e2ada1663ce42ac016fc05772376b0a06c1f11fed2e184fefbda6d9",
+      "policy_identity_file": "originals/shared_policy/policy_loaded.json",
+      "native_identity_file": "originals/classify_objects_seed0/native_loaded.json"
+    }
+  ]
+}

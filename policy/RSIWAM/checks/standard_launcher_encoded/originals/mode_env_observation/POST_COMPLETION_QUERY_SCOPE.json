@@ -1,0 +1,16 @@
+{
+  "records": [
+    {
+      "stdout": "/home/songziying/vpp2-supervision/rsiwam_standard_launcher_cpu_r5/literal_encoded_gpu1_20261102_r1/mode_env_observation/20261102T051024.135877Z.json",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "/home/songziying/vpp2-supervision/rsiwam_standard_launcher_cpu_r5/literal_encoded_gpu1_20261102_r1/mode_env_observation/20261102T051024.135877Z.stderr.txt",
+      "stderr_sha256": "2c4cf6ee3fb84976c844e0c6002b84fb287a30845e628c228ba12ddf533560d9",
+      "classification": "READONLY_PROCESS_ENV_QUERY_AFTER_ENCODED_TERMINATED",
+      "expected_live_guardian_assertion_failed": true,
+      "not_policy_eval_stdout_or_stderr": true,
+      "gpu_launches": 0
+    }
+  ],
+  "preserved_unmodified": true,
+  "successful_encoded_environment_observation": "20261102T050811.770044Z.json"
+}

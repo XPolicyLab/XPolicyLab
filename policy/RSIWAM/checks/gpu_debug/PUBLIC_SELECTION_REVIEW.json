@@ -1,0 +1,97 @@
+{
+  "schema": "rsiwam-public-evidence-selection-review-v1",
+  "source_copy_policy": "Original files unchanged; selected raw files copied byte for byte. Operational result and plan represented by labelled derived summary plus original SHA256.",
+  "reviewed_files": [
+    {
+      "file": "server.stdout.log",
+      "sha256": "74e18a61190cf4b3c3c1831ad06bea0c495570ff8f4849440ca8900a5ed858a6",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "server.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "plain.stdout.log",
+      "sha256": "0ecef98518abb2aa5339d2938ce13c79689a5430dc12b3632971ea12bd727dcc",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "plain.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "encoded.stdout.log",
+      "sha256": "0ecef98518abb2aa5339d2938ce13c79689a5430dc12b3632971ea12bd727dcc",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "encoded.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "load_identity.json",
+      "sha256": "a745d832e493da6806ca23a4d5b4ce7cc1f54c9843763f27804992a48c728d49",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "action_events.jsonl",
+      "sha256": "ea5c2a2fe902cf39a75e9c590e8182d1de502d823a6fc7b1f70f68249d67e929",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "actions_001.npy",
+      "sha256": "e343e29b07077542c46ebbec2e6d646626a287e460a1d9696cf972a0babc571a",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    },
+    {
+      "file": "actions_002.npy",
+      "sha256": "e343e29b07077542c46ebbec2e6d646626a287e460a1d9696cf972a0babc571a",
+      "copied_byte_for_byte": true,
+      "private_key_or_credential_pattern_found": false,
+      "private_phone_pattern_found": false,
+      "disposition": "PUBLIC_SELECTED_RAW_EVIDENCE"
+    }
+  ],
+  "normal_paths_process_ids_hostnames_and_gpu_metadata": "Retained where present; not treated as credentials.",
+  "checked_patterns": [
+    "private-key blocks",
+    "GitHub/HuggingFace token values",
+    "explicit password/API-key/access-token/auth assignments",
+    "URL credentials",
+    "labelled phone numbers",
+    "standalone Chinese mobile-number pattern"
+  ],
+  "findings": [],
+  "limitations": "Focused publication selection review, not a comprehensive proof that arbitrary secret formats cannot be present."
+}

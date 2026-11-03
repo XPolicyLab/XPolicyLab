@@ -1,0 +1,461 @@
+[MAIN] start server, policy_server_port=37995
+[34m[1m[CONNECTING][0m Policy server -> localhost:37995 (PID=124010, timeout=1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (30/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (60/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (90/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (120/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (150/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (180/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (210/1200s)
+[34m[1m[CONNECTING][0m Policy server still waiting for localhost:37995 (240/1200s)
+[32m[1m[CONNECTED][0m Policy server ready on localhost:37995 (PID=124010)
+[MAIN] start client, server=localhost:37995
+[CLIENT] policy=RSIWAM, task=stack_bowls, server=localhost:37995
+[CLIENT] EVAL_ENV_TYPE=debug -> debug
+[34m[CLIENT] Activating Conda environment: /run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean[0m
+[34m[CLIENT] Connecting to server localhost:37995...[0m
+[34m[CLIENT] Watch for green [CONNECTED]; yellow [RECONNECT] means the client is retrying.[0m
+[34m[1m[CONNECTING][0m websocket policy server ws://localhost:37995 (attempt 1/180, timeout=30s)
+[32m[1m[CONNECTED][0m websocket policy server connected: ws://localhost:37995
+[94m🚀 Running Episode 0[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 1[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 2[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 3[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 4[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 5[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 6[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 7[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 8[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[94m🚀 Running Episode 9[0m
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 0 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 1 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 2 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 3 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 4 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 5 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 6 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 7 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 8 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 9 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 10 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 11 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 12 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 13 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 14 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 15 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 16 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 17 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 18 / 20 (step_limit)
+[TestEnv] Check Episode End: False
+[TestEnv] Action Step: 19 / 20 (step_limit)
+[TestEnv] Check Episode End: True
+[TestEnv] Check Episode End: True
+[TestEnv] Episode finished
+[MAIN] eval finished
+[MAIN] kill server 124010

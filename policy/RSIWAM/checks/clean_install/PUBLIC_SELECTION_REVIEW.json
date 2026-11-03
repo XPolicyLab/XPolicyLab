@@ -1,0 +1,315 @@
+{
+  "schema": "rsiwam-public-evidence-selection-review-v1",
+  "reviewed_at_utc": "2026-11-01T15:43:44.122468+00:00",
+  "source_copy_policy": "All 46 selected original files copied byte for byte. No original log was sanitized, truncated, relabelled or overwritten. README and SUMMARY are explicitly derived.",
+  "reviewed_files": [
+    {
+      "file": "installation_r5/active-prefix.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/active-prefix.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/active-prefix.stdout.log",
+      "sha256": "fc007b327bdc97108cbd56f2f8d720081a121aec11b76593f46214b336433dbb",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/clean-boundary.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/clean-boundary.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/clean-boundary.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/clean_cpu.json",
+      "sha256": "40f8bd38c1f1e48decaf1ff76a5f2dbbe66dc2eeddec5179d387304b248ed420",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-bundle-verify.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-bundle-verify.stderr.log",
+      "sha256": "ce3f3b1fa58ba6bdbd4d8d9300392d5246f308d242d24d9f17dd5af2d318e8c1",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-bundle-verify.stdout.log",
+      "sha256": "d50606c592bd6bfd348e240f468af922b7173e17021c300758705b0d10826594",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-checkout.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-checkout.stderr.log",
+      "sha256": "986e25a64cefccb46c6554e816d92a894b43152b36ac57f08a61fd463b61215c",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-checkout.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-fetch.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-fetch.stderr.log",
+      "sha256": "22c945018342b2b5201b2b4740cbfa8f0845563603e13a15f317c64201999f78",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/git-fetch.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/installation_receipt.json",
+      "sha256": "67c4455b4d7e86b36dd7e2ea615d273c49ea065d20f509edc6e5ae1c02e73326",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/installed-metadata.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/installed-metadata.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/installed-metadata.stdout.log",
+      "sha256": "a9dc6668780d4eaf5224ee7f07bb3c79e2916a099319073d29cd6fbc513c707e",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-check.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-check.stdout.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-freeze.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-freeze.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-freeze.stdout.log",
+      "sha256": "4f886ffb9b6db937c5457761a2824196ad190efc16a94d77986642a803f3ca9a",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-inspect.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/pip-inspect.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/prior-scope.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/prior-scope.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/prior-scope.stdout.log",
+      "sha256": "76ec46d0d8666c48977a9dbc48a65018fa8b46b0f3204cba24b1c5e2175ceb2e",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/prior_r4_scope.json",
+      "sha256": "2d75f74237a7c7d7954c105904d8fe1cf0e04414c4c4c5b19171addcd381eafd",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/reference-metadata.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/reference-metadata.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/reference-metadata.stdout.log",
+      "sha256": "a9dc6668780d4eaf5224ee7f07bb3c79e2916a099319073d29cd6fbc513c707e",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/reference_distribution_receipt.json",
+      "sha256": "7d194104bfc72307073b94e760a7c46c7c07d77622f9466100d7a199d64e3d0d",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/requirements-check.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/requirements-check.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/requirements-check.stdout.log",
+      "sha256": "97cdc29a171a5b2065eb14337691c29b688afcce93fbe83c3400c790b51f51ad",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/requirements.json",
+      "sha256": "c3ef28c2b7d69d9c6b93c0e4ebe54d6d41b6c0bff52d74e355424672bd364f73",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/rsiwam-install.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/rsiwam-install.stderr.log",
+      "sha256": "7cfdd45a2741c6322ea1a45e28412e8a298c904fd15ffde9be86da8d1a53f7d5",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/rsiwam-install.stdout.log",
+      "sha256": "2ef2d8da4eb3f2ef2b554b540e044b0f0c65bb352fb9fd0f11edfef4baaa280b",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/source-identity.exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/source-identity.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    },
+    {
+      "file": "installation_r5/source-identity.stdout.log",
+      "sha256": "f69ca53e7bd15317e36c738d3e4eb61b938b35549173cfaf0fb610b967f5952c",
+      "copied_byte_for_byte": true,
+      "credential_or_private_phone_pattern_found": false
+    }
+  ],
+  "checked_patterns": [
+    "private_key",
+    "github_token",
+    "huggingface_token",
+    "cloud_access_key",
+    "url_credentials",
+    "auth_bearer",
+    "secret_assignment",
+    "phone_label",
+    "cn_mobile"
+  ],
+  "findings": [],
+  "retained_operational_context": "Normal filesystem paths, process-free source checkout identifiers, public mirror URLs, package versions and public Git origin metadata are retained where present; these are not authentication credentials.",
+  "manual_context_review": [
+    "Original receipt, prior r4 scope, CPU report and all requirement rows reviewed.",
+    "Install stderr conflict is explained by the subsequent headless downgrade in original stdout and final clean pip check.",
+    "pip freeze contains machine-local wheel/editable/build-origin references and is documented as an observed inventory, not a portable installation lock."
+  ],
+  "limitations": "Focused publication selection review, not a comprehensive proof that arbitrary secret formats cannot be present. No remote access or installation/GPU test was performed while preparing this public selection.",
+  "independent_read_only_review": {
+    "status": "NO_BLOCKING_FINDINGS",
+    "completed_at_utc": "2026-11-01T15:44:42.316336+00:00",
+    "scope": [
+      "README and SUMMARY checked against original r5 receipts and logs.",
+      "Repair-continuation, r4 limitation, nonempty stderr and literal/GPU scope confirmed.",
+      "Public manifest 51 entries and selected-original manifest 46 entries verified, with no duplicates or missing files.",
+      "Focused privacy review found no apparent credentials, private keys, private email addresses or phone numbers; version-like IPv4 regex matches were inspected as package versions."
+    ],
+    "original_files_changed": false,
+    "network_tests_or_gpu_used": false,
+    "limitations": "Focused review, not an exhaustive secret-detection guarantee."
+  }
+}

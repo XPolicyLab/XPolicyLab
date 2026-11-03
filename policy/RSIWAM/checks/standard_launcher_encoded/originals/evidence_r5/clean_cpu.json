@@ -1,0 +1,122 @@
+{
+  "candidate": {
+    "action_lora_sha256": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361",
+    "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+    "parent_sha256": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3",
+    "step": 400
+  },
+  "configuration": {
+    "action_dim": 16,
+    "evaluation_seed": 7,
+    "model_seed": 1,
+    "robot_dimensions": {
+      "arm_dim": [
+        6,
+        6
+      ],
+      "ee_dim": [
+        1,
+        1
+      ]
+    }
+  },
+  "cuda_initialized": false,
+  "literal_eval_sh_executed": false,
+  "model_constructed": false,
+  "modules": {
+    "XPolicyLab": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/XPolicyLab.py",
+      "version": "not_exposed"
+    },
+    "XPolicyLab.utils.debug_env_client": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/utils/debug_env_client.py",
+      "version": "not_exposed"
+    },
+    "accelerate": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/accelerate/__init__.py",
+      "version": "1.15.0"
+    },
+    "av": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/av/__init__.py",
+      "version": "17.1.0"
+    },
+    "client_server.ws.model_server": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/client_server/ws/model_server.py",
+      "version": "not_exposed"
+    },
+    "cv2": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/cv2/__init__.py",
+      "version": "4.11.0"
+    },
+    "datasets": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/datasets/__init__.py",
+      "version": "3.6.0"
+    },
+    "hydra": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/hydra/__init__.py",
+      "version": "1.3.2"
+    },
+    "msgpack": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/msgpack/__init__.py",
+      "version": "1.2.4"
+    },
+    "msgpack_numpy": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/msgpack_numpy.py",
+      "version": "not_exposed"
+    },
+    "numpy": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/numpy/__init__.py",
+      "version": "1.26.4"
+    },
+    "omegaconf": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/omegaconf/__init__.py",
+      "version": "2.3.0"
+    },
+    "pydantic": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/pydantic/__init__.py",
+      "version": "2.14.2"
+    },
+    "recoverwam": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/src/recoverwam/__init__.py",
+      "version": "not_exposed"
+    },
+    "recoverwam.policy": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/workspace/XPolicyLab/policy/RSIWAM/bundle/src/recoverwam/policy.py",
+      "version": "not_exposed"
+    },
+    "safetensors": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/safetensors/__init__.py",
+      "version": "0.8.0"
+    },
+    "torch": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/torch/__init__.py",
+      "version": "2.5.1+cu118"
+    },
+    "torchvision": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/torchvision/__init__.py",
+      "version": "0.20.1+cu118"
+    },
+    "transformers": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/transformers/__init__.py",
+      "version": "4.57.6"
+    },
+    "websockets": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/websockets/__init__.py",
+      "version": "16.1.1"
+    },
+    "yaml": {
+      "path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean/lib/python3.10/site-packages/yaml/__init__.py",
+      "version": "6.0.3"
+    }
+  },
+  "pip_check": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "No broken requirements found.\n"
+  },
+  "prefix": "/run/ti/RSIWAM-standard-launcher-20261101-r1/envs/rsiwam-clean",
+  "python": "3.10.22 | packaged by conda-forge | (main, Oct  6 2026, 23:02:24) [GCC 14.4.0]",
+  "scope": "CLEAN_ENV_CPU_IMPORT_AND_CONFIG_ONLY",
+  "server_started": false,
+  "status": "PASS"
+}

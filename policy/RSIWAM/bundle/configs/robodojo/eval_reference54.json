@@ -1,0 +1,346 @@
+{
+  "run_id": "recoverwam_joint2b_100k_seed1_shift1",
+  "output_root": "runs/eval_joint2b100k",
+  "robodojo_root": "/path/to/RoboDojo",
+  "tasks_file": "configs/robodojo/tasks54.txt",
+  "official_tasks_file": "configs/robodojo/tasks54.txt",
+  "ckpt_name": "joint2b_s100000",
+  "action_type": "ee",
+  "seed": 1,
+  "env_cfg": "arx_x5",
+  "policy_name": "RecoverWAM",
+  "session_prefix": "recoverwam_eval",
+  "chunk_layouts": 12,
+  "max_job_attempts": 5,
+  "slots": [
+    {
+      "gpu": 4,
+      "policy_port": 19960
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19961
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19962
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19963
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19960
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19961
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19962
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19963
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19960
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19961
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19962
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19963
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19960
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19961
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19962
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19963
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19960,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19961,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19962,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 4,
+      "policy_port": 19963,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19960,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19961,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19962,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 5,
+      "policy_port": 19963,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19960,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19961,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19962,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 6,
+      "policy_port": 19963,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19960,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19961,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19962,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 7,
+      "policy_port": 19963,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "dev03"
+    },
+    {
+      "gpu": 0,
+      "policy_port": 19970,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 0,
+      "policy_port": 19971,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 1,
+      "policy_port": 19972,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 1,
+      "policy_port": 19973,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 2,
+      "policy_port": 19974,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 2,
+      "policy_port": 19975,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 3,
+      "policy_port": 19976,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 3,
+      "policy_port": 19977,
+      "host_label": "dev02x"
+    },
+    {
+      "gpu": 0,
+      "policy_port": 19970,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 0,
+      "policy_port": 19971,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 1,
+      "policy_port": 19972,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 1,
+      "policy_port": 19973,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 2,
+      "policy_port": 19974,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 2,
+      "policy_port": 19975,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 3,
+      "policy_port": 19976,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 3,
+      "policy_port": 19977,
+      "host_label": "dev03x",
+      "ssh_host": "sim-b",
+      "ssh_port": 22
+    },
+    {
+      "gpu": 0,
+      "policy_port": 19980,
+      "ssh_host": "sim-a",
+      "ssh_port": 22,
+      "host_label": "extra_5791"
+    },
+    {
+      "gpu": 2,
+      "policy_port": 19982,
+      "ssh_host": "sim-a",
+      "ssh_port": 22,
+      "host_label": "extra_5791"
+    },
+    {
+      "gpu": 3,
+      "policy_port": 19983,
+      "ssh_host": "sim-a",
+      "ssh_port": 22,
+      "host_label": "extra_5791"
+    },
+    {
+      "gpu": 0,
+      "policy_port": 19980,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "extra_1204"
+    },
+    {
+      "gpu": 2,
+      "policy_port": 19982,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "extra_1204"
+    },
+    {
+      "gpu": 3,
+      "policy_port": 19983,
+      "ssh_host": "sim-b",
+      "ssh_port": 22,
+      "host_label": "extra_1204"
+    }
+  ],
+  "save_eval_videos": true,
+  "save_eval_videos_max_layouts": 5,
+  "sim_python": "/path/to/robodojo-env/bin/python",
+  "sim_ssh_host": "sim-a",
+  "sim_ssh_port": 22,
+  "sim_bin_dirs": [],
+  "checkpoint_step": 100000,
+  "inference": {
+    "shift": 1,
+    "steps": 10,
+    "horizon": 32,
+    "replan": 24,
+    "history_stride": 25,
+    "seed": 1
+  }
+}

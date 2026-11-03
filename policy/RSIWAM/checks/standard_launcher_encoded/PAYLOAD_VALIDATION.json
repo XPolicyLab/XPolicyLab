@@ -1,0 +1,15 @@
+{
+  "status": "PASS_PUBLIC_SELECTION_AND_SOURCE_BINDINGS",
+  "selected_byte_preserved_source_files": 11,
+  "selected_original_bytes": 138417,
+  "all_selected_source_bytes_and_sha_match": true,
+  "both_private_audit_source_hashes_match": true,
+  "private_raw_cleanup_process_inventories_published": false,
+  "three_extra_incomplete_attempts_preserved_by_source_sha": true,
+  "standard_entry_status_final_not_pending": true,
+  "actual_server_encoded_observation_identity_bound": true,
+  "root_local_verification_of_owner_capture_distinct_from_actual_root_scoped_check": true,
+  "root_actual_scoped_identities_absent": 339,
+  "owner_capture_identities_absent": 338,
+  "scope": "Artifact/source consistency checks only. No evaluation, GPU work, remote reads or publication performed by this payload preparation."
+}

@@ -1,0 +1,858 @@
+{
+  "schema": "rsiwam-runtime-package-v1",
+  "display_name": "RSIWAM",
+  "candidate_id": "recoverwam_success133_original_parent20261032_lora20261033",
+  "created_at_utc": "2026-11-01T13:03:15.104570+00:00",
+  "status": "LOCAL_REVIEW_CANDIDATE_NOT_DEPLOYMENT_VALIDATED",
+  "composition": [
+    "frozen official VPP2 joint2b_s100000",
+    "frozen RecoverWAM original recovery parent20261032",
+    "success133 Action-LoRA20261033 step400"
+  ],
+  "base": {
+    "repository": "Haodong082399/VPP2",
+    "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+    "manifest_sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba",
+    "assets_manifest": "base_weights.json",
+    "assets_manifest_sha256": "955de560be7d371e2df31434c754c8332363d68525856a1da11db56f462c43da"
+  },
+  "weights": {
+    "weights/parent/adapter_final.pt": {
+      "bytes": 6400187,
+      "sha256": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3"
+    },
+    "weights/parent/recipe.json": {
+      "bytes": 631,
+      "sha256": "2fc3c45ca18ee67fc6e491518a8a8c1b350b364fd508f5a59d20dc1ac2aafb2d"
+    },
+    "weights/step000400/adapter.pt": {
+      "bytes": 15797823,
+      "sha256": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361"
+    },
+    "weights/step000400/checkpoint.json": {
+      "bytes": 10172,
+      "sha256": "38b9eaa31383a8a098dc68e568c125d5d22d3bb749742145ac38d7c2a5d3dbb6"
+    }
+  },
+  "source": {
+    "consumer_tree_sha256": "95feb351fc1211318d7edec9e3814679835029b7ba4314d04d25464b6a4691f0",
+    "tree_hash_method": "SHA256(compact sorted JSON of relative-to-src/recoverwam Python path -> file SHA256)",
+    "python_files": {
+      "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "benchmark/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "benchmark/audit.py": "be93a9136e4519bbc23649269c4285fd3bd8e08acce5badc9aad0ef4aa523e5f",
+      "benchmark/packed.py": "562541926b67bc52cf8121240591432ff0160146675a8f98b4f16930eda0b31c",
+      "benchmark/scheduler_io.py": "5abc0168e518b0fa700977e0abbb050b1406f0d02faa8002552449d33cc471fc",
+      "checkpoint_compat.py": "0fa70efe6a2ad21638c5be0ff44650095a5046a281f483ad4a3277df3fdab1e0",
+      "cli.py": "e5188d658b81c1e17956b5bdd9cf0e73f637a95fd9a44eb4655d5e0bfcbde66b",
+      "convert_robodojo.py": "cebddfc912d229c3577d54bc5258bbfeb2286dcd2771aea289b8c397ac3af126",
+      "data.py": "8574e1ae3c6ca6e4b84633ee1815f2b3f2ea17c1e55f12fda0b00c5c5a6a7b53",
+      "datasets/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "datasets/dataset_utils.py": "e1a1471b0aa70917eaf699f85a9acf3ac70d9fb6eb9ebaf02d2bf2f218d6ab2f",
+      "datasets/lerobot/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "datasets/lerobot/base_lerobot_dataset.py": "2df8a9f528a3b51ae8293bf15fc74dd9dd9576bb0674c2820fa6e25f7168a1a0",
+      "datasets/lerobot/constants.py": "11ac9260341e1560c5eb0dd7acb79ed63c74180b8ab4113c27622ff213db417f",
+      "datasets/lerobot/critical_phase_dataset.py": "bfe75bb9593ec646236777d90d9fa309fa0e1188db07e07a3be0810edbe3da56",
+      "datasets/lerobot/critical_phase_sampling.py": "266b0b7b023f014f4ccd935b6015b0a05b4659f372264fdefd997ea9692b244a",
+      "datasets/lerobot/episode_instruction.py": "74767839a813c7902861f4561101541c282b72e261df1fd28fe8d06c91231b69",
+      "datasets/lerobot/lerobot/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "datasets/lerobot/lerobot/datasets/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "datasets/lerobot/lerobot/datasets/compute_stats.py": "7d7daab219332b5abdfd5ec67ccaf3502e8eb583a17a4e482c3f3d4f7a691e89",
+      "datasets/lerobot/lerobot/datasets/utils.py": "4fdb4ac0653201e6743f2161c485213429948c1e1d5b068d03b4d97803254006",
+      "datasets/lerobot/lerobot/datasets/video_utils.py": "4f66c410ae6aa5a98acfc3320f3dd7b017d0285117054f14226f9e5d82395087",
+      "datasets/lerobot/lerobot/lerobot_dataset.py": "5659e992010bb6674ec50ab0d33b28a8e9dab0ecc895c199662af4c40fe56629",
+      "datasets/lerobot/processors/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "datasets/lerobot/processors/base_processor.py": "46876bb7579c80a9300fe36f5e37438dc92c1c45ac09d02952416f0d246b4e51",
+      "datasets/lerobot/processors/recoverwam_processor.py": "c43bf89a25c595e4b3be6bca75e9305b66be9c8dcb322cf53d328aef5a1a7138",
+      "datasets/lerobot/robot_video_dataset.py": "13d7eeb56ed524d96545bd9a414149ac3659586d2e20af6b6c96208bd0c201c9",
+      "datasets/lerobot/transforms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "datasets/lerobot/transforms/action_state_merger.py": "39fd44f254bd7fb71b9269d75d8f9b5a5bbbe167ea438dda92d40eda1d256734",
+      "datasets/lerobot/transforms/image.py": "f494d262ce29770e959bdff60b997f7a07e5f00d10ef515eee7be813d1db038f",
+      "datasets/lerobot/transforms/rotation.py": "feb59d26539be6cfdb86488f0c10c11488ed73901658bc657e67a755ddb9e67e",
+      "datasets/lerobot/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "datasets/lerobot/utils/normalizer.py": "169909ace982c9bfa3ab565756d50c1b330cb35d9660413f61c1284c6a3f052b",
+      "datasets/lerobot/utils/rotation.py": "8ea2c72565707f5979967a1abeb5edf1eaa2c3fec55a7b50e640de869fc9fbcf",
+      "datasets/lerobot/video_event_dataset.py": "463e93fec2978ab4aa22d02338ee07f7c750e53f814230334c224c5151b756e6",
+      "enhance_prompt.py": "d0df0e76c5489f707e4f1b1363d29dc6f79def6e684949ffa800009ac31500e2",
+      "evaluation.py": "9b76882149e3c3a8c417a0e23514af1bb305c01bf0b6d21fff1f70bc9843f55a",
+      "inference.py": "5c05a5199000c350005c66654d76cb5ca874d02fd430f7f70faaaa1a38f52e1b",
+      "libero/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "libero/action_model.py": "f981c5a18cd27c3de6ba8fb4185bad48ada91aae4d3a8a9b5e90e61664d4cd97",
+      "libero/cli.py": "85c7e6e59351307066c3c53703df3b9bea01f834493423cbd3c8608baed3016a",
+      "libero/data.py": "b7762070985b7009bbfe8b03a3979393440df156ad9971ddf398876894311af6",
+      "libero/diagnostics.py": "d1bc683679a90068775e1d43452bf34fbc35572d12cbfffc24d9b8a5bab9ab5a",
+      "libero/eval_helpers.py": "ac338d4ade195ceb3a87620d162befa9679e2d7ed3d91b09927e5d59d86d97f4",
+      "libero/eval_libero_single.py": "c43c92a86707a2a7ad6480c79925ce15b9a3bdef24dd4571f89072631b4d9c9d",
+      "libero/eval_libero_task_manifest.py": "d55b483a00518a3c3e9f47ae7d55f557165d96d7766e75f08321f77f9212ca06",
+      "libero/evaluate.py": "a9d09f9ae608988086006f2aaecdd0f332ce421bcf72d84d601388473a5f0cc6",
+      "libero/libero_utils.py": "5a211464fe1860e48c8e56e26f67f2b17fde7a1df949ad111cdeb3636ace1680",
+      "libero/prepare_pro.py": "0999050352d924c11d29b22f63e902162d8cfb23f94815c93c01295c11ed81ae",
+      "libero/pro_alias.py": "90b5c8c8061bc727a6e413a8746fcc98cbd06e1c7c4175fd223b45af4f10b700",
+      "libero/pro_runtime.py": "adf94ed64b032aaeb0d88391e7b653f88f67e76b9411419ece25faa31ccc1340",
+      "libero/protocols.py": "68225c95eeeee25032966a7f90c1ba18067c53225397f59a463d764030fd0d93",
+      "libero/runtime.py": "f1db6b734ede70f6292e0ebfaf7a0dc4ff49dd5d58e77dfb4af19d10356dd4b5",
+      "libero/trainer.py": "1cecc2f21e8db8f8891ea6987f76349a9b7f9aeebb0cf109fdd6bd0dba2d27c6",
+      "libero/worker.py": "9df6350c4ab92dea70863c08f1bdcebd0d77574a3a2d8d7ac9899a5a825be6b0",
+      "models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "models/wan21_14b/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "models/wan21_14b/action_dit.py": "4a105855d86a82692f9e54982cdc3daa8ab66fdc7ce923cd947f0c495ed645d4",
+      "models/wan21_14b/helpers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "models/wan21_14b/helpers/gradient.py": "594249b6eb931048e352fd3ffef9b1ac1db9e4fc74659e04216d6b823dd174f3",
+      "models/wan21_14b/helpers/io.py": "f417a0469d4e512c9977fc0684a960b3d2c2965566a56aea212aecf4b11791f4",
+      "models/wan21_14b/helpers/loader.py": "212de6de11cc0111a2e31509212ca57ff561214aea6b3916bd594b0a8ee9c9b7",
+      "models/wan21_14b/mot.py": "0a1dc7970162e425ae00e6432ee21154a708ffca99f52b32f96f18c6ce757995",
+      "models/wan21_14b/recoverwam.py": "581eac5a418aaf6adfee22db5a288d2543f52a6f28f48db8d70992b60bc96b8c",
+      "models/wan21_14b/schedulers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "models/wan21_14b/schedulers/scheduler_continuous.py": "15de04574c1d8ccb794ca6560b1e501e5c83cc86104bb80f1eb3cc3b0324ffe0",
+      "models/wan21_14b/wan21.py": "ec3b28e8ae5637b3eb6906a65e4c048f2035fcf77319abe9e498f1198288f788",
+      "models/wan21_14b/wan_video_clip.py": "f65e44c9d1b7811d2996b3fa22e6fe4c2ac5e6edf1fc2c14251cf582bf8d1f05",
+      "models/wan21_14b/wan_video_dit.py": "d1f7b2c64c7af684496467e5016fc7652b9e40a620b4bcaa5f2222769968ee33",
+      "models/wan21_14b/wan_video_text_encoder.py": "902a1e46b21b5c48e166fe03defabb94b3773c6bbe836fc09b9a0d0894eb1f6e",
+      "models/wan21_14b/wan_video_vae.py": "33f7d804677b44a6f3ab334684017dcdb1e9dfb748279de76ad94a5bb71a7e51",
+      "policy.py": "1c0e24ea5d71533dd48645290bc32fa18e377233a3dc72b53ea5073990cde95f",
+      "preflight.py": "7a91e486675a4cdf38565e0f4b58e60a68bba7de5654cfff736b5df58f5c53a6",
+      "recovery/__init__.py": "ddbdf4e5e3daf4a747c3939a3eec0ba15213d4e4404fa646fe7dc1f2f25697ae",
+      "recovery/bridge.py": "31ce06aeeea63ead9d83a92af058b778540b7a3de123d297052e36a156215eea",
+      "recovery/evaluate.py": "5860c14ef44ae599feff78a413f9422681d7b40ddc150769c38749d42aea51fb",
+      "recovery/local_events.py": "58a4350be6201028196063d6bc3c52367c731e0a57a655be13917b3b3f8cf16b",
+      "recovery/lora.py": "321c5d37beb38932bb6db2eead82c96bd9b87e480dd0d37975afdcb3ea6206a4",
+      "recovery/policy.py": "1823a63f71174c0e17fc60534deb7976c0e9f6fba7c490493d973860baf616d1",
+      "recovery/predicates.py": "e13852f5167e73012978eed15e054bbac46578aec9f6382602ef52088cc03fdb",
+      "recovery/protocol.py": "9f377557379210ef944494a186c23a904c38529b538a276002f031a12180fdaf",
+      "recovery/retention.py": "54526fda9533dcd073f6eb125a63e717bdaaea6bbe76a03c8af469f4c93b93fa",
+      "robodojo.py": "94103f16a9686b5691d7432b7be96052740b8eb2a76937bf82e7c2bed56d0462",
+      "runtime.py": "b291ad9bbf48eb8ca726fc11702850e640e01ee85ebcb010f3937c7870260966",
+      "trainer.py": "30439c6123442311d93559209f14947f3ea29edb9972162cf9ec8158d1c1e420",
+      "utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "utils/conditioning.py": "43d43f0f3ca0add64498c3d64a3791513a53e3fce0ea53f77ef09580a86b7b2d",
+      "utils/fs.py": "69e6df236b43360428a613686c8f37c531c0d16a3a2c5b06a725c46b49d657c5",
+      "utils/logging_config.py": "2aa63a2a50eee7fb370c49820c08477b5abfeec946fcc687b2d99699d46e92ad",
+      "utils/lr_continuation.py": "72ea9f2af52041db19aab681d7a99fdf6d87d5ed5486f2499383a211c6c1ab76",
+      "utils/misc.py": "7e42c330c24604e118f1878473dc804aa8a272944df502ef1414c05be4d5bba2",
+      "utils/pytorch_utils.py": "9b0ba19de9a64458b12a0fb24f0811f49d9e9fca5d8b815f5f5ecd3b7886fd63",
+      "utils/samplers.py": "4d3bd9b2d498f4ad8f2cf9765d60c4bf5368fa6fa2a7d42d0db6210f66899652",
+      "utils/training_profiler.py": "b41a7837ed319f11e5cb4198784d7c1fbd6ce86878d9933e1db403e284188478",
+      "utils/video_caption.py": "d9572deb3690aecb0f16c052016cedc5f94da8ce8f016b4dff1a4e358e18d5e5",
+      "utils/video_io.py": "9e9898b021a44e87aa1b4e6d13e3755a9869a2e27a7eb53c72a6802808d5bd80",
+      "utils/video_metrics.py": "1840a37685d686336c7326a2a3d4fbe048d1e8e7e431fb14519d360a8b7aaae8",
+      "video_training.py": "602f93f7e0a31c2db4205cae5d046a84d7c2c0d6808edfef6f1365f36c0c6b22",
+      "weight_resize.py": "269edd4b9d32a1c7f363ee082dde7ce57f2176190daab6d5bf4a1c98ab43f0b4",
+      "weights.py": "6c07b7e2e2c4491e123a9be158a64f4d8be9f4d0186d57780b42735a2f8e167b"
+    },
+    "exact_helper_sha256": "946f25497835c4a18a74731058b7dec25fa1acaf2aad4a4b4f78814cca2a735d",
+    "exact_original_switch_sha256": "09fcaf16bcd249b800909ef6011f389289c47d1179aa532f0dd1ccbfde1624ca",
+    "exact_native_wrapper_sha256": "3e99077acecc2a32abd41549a2c3434c8b5b0bc30b49e19a5c0dc8242bd3a00a",
+    "exact_native_deploy_sha256": "c789cb63bc2be5214472ff290c86219b4886751d25ebdc022044786848656ec1",
+    "native_wrapper_and_deploy_checked_against_existing_h800": true,
+    "reference_switch_complete_service": false
+  },
+  "new_portability_files": [
+    "runtime/rsiwam_loader.py",
+    "policy/RSIWAM/model.py",
+    "policy/RSIWAM/__init__.py",
+    "policy/RSIWAM/deploy.yml",
+    "policy/RSIWAM/launch_policy.py",
+    "policy/RSIWAM/setup_eval_policy_server.sh",
+    "policy/RSIWAM/install.sh",
+    "checks/check_structure.py",
+    "checks/check_adapter_cpu.py",
+    "checks/check_launch_contract.py"
+  ],
+  "adapted_scripts": {
+    "policy/RSIWAM/eval.sh": "VPP2 eval.sh: XPolicyLab root is explicit RSIWAM_XPL_ROOT",
+    "policy/RSIWAM/setup_eval_env_client.sh": "VPP2 setup_eval_env_client.sh: XPolicyLab root is explicit RSIWAM_XPL_ROOT"
+  },
+  "training": {
+    "parent_updates": 160,
+    "parent_recipe": "original",
+    "parent_seed": 20261032,
+    "lora_seed": 20261033,
+    "init_seed": 7352668825695186212,
+    "online_prefix_updates": 119,
+    "continuation_updates": 281,
+    "total_updates": 400,
+    "training_state_included": false,
+    "continuation_sidecars_included": false
+  },
+  "inference": {
+    "action_representation": "absolute EE16",
+    "action_horizon": 32,
+    "executed_actions_per_replan": 24,
+    "num_inference_steps": 10,
+    "sigma_shift": 1,
+    "model_seed": 1,
+    "environment_seed_independent": true,
+    "history_frames": 8,
+    "history_stride": 25,
+    "mixed_precision": "bf16",
+    "recovery_mode": "auto",
+    "gate_threshold": 0.9,
+    "lora_rank": 8,
+    "lora_alpha": 8,
+    "lora_parameters": 3932160,
+    "parent_parameters": 1597697,
+    "all_parameters_frozen": true,
+    "cublas_workspace_config": ":4096:8"
+  },
+  "installation": {
+    "complete_package_required": true,
+    "policy_symlink_required": true,
+    "xpolicylab_reference_head": "183b11a9528f2aa1dc6ca295480dcf2772b3bd7f",
+    "xpolicylab_clean_checkout_verified": false,
+    "dependencies": "requirements.txt",
+    "partial_reference_constraints": "constraints-reference.txt"
+  },
+  "verification": "checks/verification.json",
+  "remaining_work": [
+    "Fetch external base artifacts using locators and verify every SHA256",
+    "Build and validate intended full policy environment; current constraints are partial",
+    "Run new standard XPolicyLab adapter with intended real checkpoint in debug and simulator workflows",
+    "Run CUDA reference action/history/client isolation parity",
+    "Review source/weights redistribution terms before public release",
+    "Publish reviewed repository/commit and complete submission workflow; no publication performed"
+  ],
+  "licenses": [
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.txt",
+    "licenses/Apache-2.0.txt",
+    "licenses/RoboDojo-MIT.txt",
+    "licenses/XPolicyLab.txt"
+  ],
+  "results_scope": "No leaderboard or simulator result is generated or claimed by this runtime package.",
+  "privacy_review": {
+    "text_private_ipv4_or_credential_pattern_findings": [],
+    "no_private_server_endpoint_in_runtime_config": true,
+    "historical_filesystem_paths_retained_in_checkpoint_provenance": true,
+    "scope": "Automated text scan and deliberate file selection; not a guarantee against all possible secrets."
+  },
+  "files": {
+    "CITATION.bib": {
+      "bytes": 587,
+      "sha256": "24eedf14daa2f5df4559e485c860aa8ed6335e51d3c09edb7eb8fb66587c9b08"
+    },
+    "LICENSE": {
+      "bytes": 1210,
+      "sha256": "8379dddfbbb1154ad9cc57f008f1f8d4a8d26c3de99bd6b36aa4d8067888aa92"
+    },
+    "README.txt": {
+      "bytes": 9704,
+      "sha256": "907a43e39013743ecf986d32406f5c266c98a8df8b9f9949f088d9cbbabecfc4"
+    },
+    "THIRD_PARTY_NOTICES.txt": {
+      "bytes": 2034,
+      "sha256": "2cff1990fe025b3ef1fcec817ee4e5780a1d3d54e698dbf3bf83ebbc988047d4"
+    },
+    "base_weights.json": {
+      "bytes": 4183,
+      "sha256": "955de560be7d371e2df31434c754c8332363d68525856a1da11db56f462c43da"
+    },
+    "checks/check_adapter_cpu.py": {
+      "bytes": 4484,
+      "sha256": "98653f420352b47d79684487a19035aa17f5a3f5b3d161a27006763e0c38bb7a"
+    },
+    "checks/check_launch_contract.py": {
+      "bytes": 3134,
+      "sha256": "1e6ff253c59f3802ecd20bfe93cc21f6c685436600192ed667e0167e54f5ee17"
+    },
+    "checks/check_structure.py": {
+      "bytes": 1566,
+      "sha256": "ac7c551ff7edf3dbdd9b2fc221979fe8c443ea5653818a1a5ed1bfeeca856ca2"
+    },
+    "checks/verification.json": {
+      "bytes": 2439,
+      "sha256": "2fa0b0f4e0f32b298e3144768f2f39d34e7709e2f3ccaf85086fd6ab0c3e8ba8"
+    },
+    "configs/libero/accelerate_zero2.yaml": {
+      "bytes": 492,
+      "sha256": "f0f265e577da2492d785dfd5a7031cacb833235ccefd8c07aa048ff42002e242"
+    },
+    "configs/libero/dataset_stats.json": {
+      "bytes": 40964,
+      "sha256": "4717a109760fcd1d504c7d301ff95106b14446a89b019a026427ddbbcc866d1b"
+    },
+    "configs/libero/deepspeed_zero2.json": {
+      "bytes": 400,
+      "sha256": "57a47cd51dc5434250e2975ab46fe6f9f0e742f5e5b6ae50a587368959bae77a"
+    },
+    "configs/libero/eval_ood.yaml": {
+      "bytes": 494,
+      "sha256": "d1ee29118dad9d0117b7fc6c4a6a4d40025239af2cfc73e861c269b1ee69b773"
+    },
+    "configs/libero/eval_pro.yaml": {
+      "bytes": 469,
+      "sha256": "aba2f40cb089993a73901c081c059730a140f7d7ce0059f2cd5ee9d4f8541082"
+    },
+    "configs/libero/eval_standard.yaml": {
+      "bytes": 475,
+      "sha256": "45a5d165d8fb92f392a278bf8a9713d49db55f12e45c60e66b8c7462359cf4d0"
+    },
+    "configs/libero/requirements_pro.txt": {
+      "bytes": 269,
+      "sha256": "f0710d60127cec28c84015205f1ab9c8b97be8f89c959dfa35392a4b264a7cd7"
+    },
+    "configs/libero/requirements_standard.txt": {
+      "bytes": 218,
+      "sha256": "f103e8f7af8f4b0075806884291409597a844a60d324352608fe4cd982d443a6"
+    },
+    "configs/libero/train_action.yaml": {
+      "bytes": 5219,
+      "sha256": "1c9dd72fac17b0d4ba13655602e0944745718cd1db03e95ee301e1b17d2e44e8"
+    },
+    "configs/libero/train_video.yaml": {
+      "bytes": 4604,
+      "sha256": "7da27676148fb101252a03c5595719224867f27c30a3f40dc25153db1943324b"
+    },
+    "configs/robodojo/accelerate.yaml": {
+      "bytes": 337,
+      "sha256": "0a0535e4c3e35016d0176370167fb435b1c59e15921fc8d4037ab509ff9dd467"
+    },
+    "configs/robodojo/deepspeed_zero1.json": {
+      "bytes": 416,
+      "sha256": "9ef633d5a346924567ae18a801945389ee037136a4ff8ca46bce99ab3c926b58"
+    },
+    "configs/robodojo/eval_reference54.json": {
+      "bytes": 6461,
+      "sha256": "3fcfbea24c5673cb967af2d587cb3dc3042b243149228521bd73d911a0fac56d"
+    },
+    "configs/robodojo/holdout.json": {
+      "bytes": 3675,
+      "sha256": "7bf4892dc9271c6aea6fa20acdc5f76057b35851097c152e3cff44a3c959a0e0"
+    },
+    "configs/robodojo/normalization_ee16.json": {
+      "bytes": 100256,
+      "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16"
+    },
+    "configs/robodojo/source_tasks.csv": {
+      "bytes": 3939,
+      "sha256": "19137ffb1d34b65f56c9cbaf68c20a75d329b26a3a7d5e4f5daafa6469e84d58"
+    },
+    "configs/robodojo/tasks54.txt": {
+      "bytes": 1000,
+      "sha256": "27bcc9619c32029032ddbcbf4ca419e7f6c177d12c534d615778ea69498c9b72"
+    },
+    "configs/robodojo/train_100k.yaml": {
+      "bytes": 6961,
+      "sha256": "a2ad257e79bb1a49e17f59bfe16af6d7c024450006762ab220d7c674b5c6a5b0"
+    },
+    "configs/robodojo/train_video_10k.yaml": {
+      "bytes": 4000,
+      "sha256": "201319d32649769d51f00405c2144fcf7c208fbbcb11f03253a92824c069bef6"
+    },
+    "constraints-reference.txt": {
+      "bytes": 531,
+      "sha256": "2f8ae4a46dcc01a3b0f8ed924212448d2ed4a92f102f750737e0548b3d4e3eea"
+    },
+    "environment-reference.txt": {
+      "bytes": 360,
+      "sha256": "ed65258fafd268a354925665a29f22388b3b1e0851e604b99db0e281048585c0"
+    },
+    "evidence/dataset_stats.json": {
+      "bytes": 100256,
+      "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16"
+    },
+    "licenses/Apache-2.0.txt": {
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "licenses/RoboDojo-MIT.txt": {
+      "bytes": 1091,
+      "sha256": "7794bb06af8fe5485ca912454ad1665ccd7846c45f9c2b1258658e480948cdbe"
+    },
+    "licenses/XPolicyLab.txt": {
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "policy/RSIWAM/__init__.py": {
+      "bytes": 81,
+      "sha256": "570b13950a71ae664cd3cff0b8bd772dc41200ce3b1ed1c652c5652d5a0a1526"
+    },
+    "policy/RSIWAM/deploy.py": {
+      "bytes": 1385,
+      "sha256": "c789cb63bc2be5214472ff290c86219b4886751d25ebdc022044786848656ec1"
+    },
+    "policy/RSIWAM/deploy.yml": {
+      "bytes": 434,
+      "sha256": "662d5efa74df258d28898223d24ab3427e716f5b2b5484e03e17d4fee9c4ab5b"
+    },
+    "policy/RSIWAM/eval.sh": {
+      "bytes": 1955,
+      "sha256": "52f443571e914a69402fe68dc8827ea144d8019669d040b71d25357005bd62f9"
+    },
+    "policy/RSIWAM/install.sh": {
+      "bytes": 718,
+      "sha256": "18ba3300b4b29b8136119e03afd567f874c99f6ec79d3ee865ce327a11af2da7"
+    },
+    "policy/RSIWAM/launch_policy.py": {
+      "bytes": 2293,
+      "sha256": "0864508650d3cb72830e68918b3052d4fe7e7c40180f091ec2e8e1843c29c6bd"
+    },
+    "policy/RSIWAM/model.py": {
+      "bytes": 2440,
+      "sha256": "3b52c37ed369b8dcfa45d5e8aa885dcc3a33301e2757cd1258baa63d33d3bbdc"
+    },
+    "policy/RSIWAM/setup_eval_env_client.sh": {
+      "bytes": 1279,
+      "sha256": "65cb5312d9628a5a16f0b94405695e70dda8e0507567c8338a7c88ba8d1cc028"
+    },
+    "policy/RSIWAM/setup_eval_policy_server.sh": {
+      "bytes": 1156,
+      "sha256": "5564f9df2b0e10ddbd1c59ffdbd35ef628d4426a480b8ff16904fd8f244f4f81"
+    },
+    "provenance/UPSTREAM_CITATION.bib": {
+      "bytes": 587,
+      "sha256": "24eedf14daa2f5df4559e485c860aa8ed6335e51d3c09edb7eb8fb66587c9b08"
+    },
+    "provenance/upstream_files.json": {
+      "bytes": 22045,
+      "sha256": "c1ed1b0fc0ecce6090fa6287c2c615c872b13bd1e0c90592605a5fe4f0231202"
+    },
+    "provenance/upstream_identity.json": {
+      "bytes": 286,
+      "sha256": "d2191b325f3a662110c35ea92af44b6dbcaddf3fbf49f1c63dc3ac1b9161f50d"
+    },
+    "reference_switch/continuation_contract.py": {
+      "bytes": 27354,
+      "sha256": "fa217b6299b682cfce7497da2b96407d42a928a94d47748c365df43794e1476a"
+    },
+    "reference_switch/switch_runtime.py": {
+      "bytes": 15969,
+      "sha256": "09fcaf16bcd249b800909ef6011f389289c47d1179aa532f0dd1ccbfde1624ca"
+    },
+    "requirements.txt": {
+      "bytes": 516,
+      "sha256": "2098e0ae61a82c2025648d57323f9c7ef88aad4d22d87e15eed6ccff91db34f8"
+    },
+    "runtime/recovery_action_lora.py": {
+      "bytes": 12721,
+      "sha256": "946f25497835c4a18a74731058b7dec25fa1acaf2aad4a4b4f78814cca2a735d"
+    },
+    "runtime/rsiwam_loader.py": {
+      "bytes": 4981,
+      "sha256": "1d564a26f9cf707dafb2182250f7015e08cb2603ad7137729a6231a614adefc4"
+    },
+    "runtime/rsiwam_native_wrapper.py": {
+      "bytes": 14764,
+      "sha256": "3e99077acecc2a32abd41549a2c3434c8b5b0bc30b49e19a5c0dc8242bd3a00a"
+    },
+    "src/recoverwam/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/benchmark/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/benchmark/audit.py": {
+      "bytes": 11440,
+      "sha256": "be93a9136e4519bbc23649269c4285fd3bd8e08acce5badc9aad0ef4aa523e5f"
+    },
+    "src/recoverwam/benchmark/packed.py": {
+      "bytes": 13181,
+      "sha256": "562541926b67bc52cf8121240591432ff0160146675a8f98b4f16930eda0b31c"
+    },
+    "src/recoverwam/benchmark/scheduler_io.py": {
+      "bytes": 7768,
+      "sha256": "5abc0168e518b0fa700977e0abbb050b1406f0d02faa8002552449d33cc471fc"
+    },
+    "src/recoverwam/checkpoint_compat.py": {
+      "bytes": 2847,
+      "sha256": "0fa70efe6a2ad21638c5be0ff44650095a5046a281f483ad4a3277df3fdab1e0"
+    },
+    "src/recoverwam/cli.py": {
+      "bytes": 16763,
+      "sha256": "e5188d658b81c1e17956b5bdd9cf0e73f637a95fd9a44eb4655d5e0bfcbde66b"
+    },
+    "src/recoverwam/convert_robodojo.py": {
+      "bytes": 10098,
+      "sha256": "cebddfc912d229c3577d54bc5258bbfeb2286dcd2771aea289b8c397ac3af126"
+    },
+    "src/recoverwam/data.py": {
+      "bytes": 8046,
+      "sha256": "8574e1ae3c6ca6e4b84633ee1815f2b3f2ea17c1e55f12fda0b00c5c5a6a7b53"
+    },
+    "src/recoverwam/datasets/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/datasets/dataset_utils.py": {
+      "bytes": 3735,
+      "sha256": "e1a1471b0aa70917eaf699f85a9acf3ac70d9fb6eb9ebaf02d2bf2f218d6ab2f"
+    },
+    "src/recoverwam/datasets/lerobot/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/datasets/lerobot/base_lerobot_dataset.py": {
+      "bytes": 24070,
+      "sha256": "2df8a9f528a3b51ae8293bf15fc74dd9dd9576bb0674c2820fa6e25f7168a1a0"
+    },
+    "src/recoverwam/datasets/lerobot/constants.py": {
+      "bytes": 1915,
+      "sha256": "11ac9260341e1560c5eb0dd7acb79ed63c74180b8ab4113c27622ff213db417f"
+    },
+    "src/recoverwam/datasets/lerobot/critical_phase_dataset.py": {
+      "bytes": 4119,
+      "sha256": "bfe75bb9593ec646236777d90d9fa309fa0e1188db07e07a3be0810edbe3da56"
+    },
+    "src/recoverwam/datasets/lerobot/critical_phase_sampling.py": {
+      "bytes": 16648,
+      "sha256": "266b0b7b023f014f4ccd935b6015b0a05b4659f372264fdefd997ea9692b244a"
+    },
+    "src/recoverwam/datasets/lerobot/episode_instruction.py": {
+      "bytes": 2127,
+      "sha256": "74767839a813c7902861f4561101541c282b72e261df1fd28fe8d06c91231b69"
+    },
+    "src/recoverwam/datasets/lerobot/lerobot/__init__.py": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "src/recoverwam/datasets/lerobot/lerobot/datasets/__init__.py": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "src/recoverwam/datasets/lerobot/lerobot/datasets/compute_stats.py": {
+      "bytes": 7067,
+      "sha256": "7d7daab219332b5abdfd5ec67ccaf3502e8eb583a17a4e482c3f3d4f7a691e89"
+    },
+    "src/recoverwam/datasets/lerobot/lerobot/datasets/utils.py": {
+      "bytes": 33437,
+      "sha256": "4fdb4ac0653201e6743f2161c485213429948c1e1d5b068d03b4d97803254006"
+    },
+    "src/recoverwam/datasets/lerobot/lerobot/datasets/video_utils.py": {
+      "bytes": 22200,
+      "sha256": "4f66c410ae6aa5a98acfc3320f3dd7b017d0285117054f14226f9e5d82395087"
+    },
+    "src/recoverwam/datasets/lerobot/lerobot/lerobot_dataset.py": {
+      "bytes": 55524,
+      "sha256": "5659e992010bb6674ec50ab0d33b28a8e9dab0ecc895c199662af4c40fe56629"
+    },
+    "src/recoverwam/datasets/lerobot/processors/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/datasets/lerobot/processors/base_processor.py": {
+      "bytes": 10872,
+      "sha256": "46876bb7579c80a9300fe36f5e37438dc92c1c45ac09d02952416f0d246b4e51"
+    },
+    "src/recoverwam/datasets/lerobot/processors/recoverwam_processor.py": {
+      "bytes": 14006,
+      "sha256": "c43bf89a25c595e4b3be6bca75e9305b66be9c8dcb322cf53d328aef5a1a7138"
+    },
+    "src/recoverwam/datasets/lerobot/robot_video_dataset.py": {
+      "bytes": 13457,
+      "sha256": "13d7eeb56ed524d96545bd9a414149ac3659586d2e20af6b6c96208bd0c201c9"
+    },
+    "src/recoverwam/datasets/lerobot/transforms/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/datasets/lerobot/transforms/action_state_merger.py": {
+      "bytes": 2502,
+      "sha256": "39fd44f254bd7fb71b9269d75d8f9b5a5bbbe167ea438dda92d40eda1d256734"
+    },
+    "src/recoverwam/datasets/lerobot/transforms/image.py": {
+      "bytes": 2538,
+      "sha256": "f494d262ce29770e959bdff60b997f7a07e5f00d10ef515eee7be813d1db038f"
+    },
+    "src/recoverwam/datasets/lerobot/transforms/rotation.py": {
+      "bytes": 5666,
+      "sha256": "feb59d26539be6cfdb86488f0c10c11488ed73901658bc657e67a755ddb9e67e"
+    },
+    "src/recoverwam/datasets/lerobot/utils/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/datasets/lerobot/utils/normalizer.py": {
+      "bytes": 7513,
+      "sha256": "169909ace982c9bfa3ab565756d50c1b330cb35d9660413f61c1284c6a3f052b"
+    },
+    "src/recoverwam/datasets/lerobot/utils/rotation.py": {
+      "bytes": 21040,
+      "sha256": "8ea2c72565707f5979967a1abeb5edf1eaa2c3fec55a7b50e640de869fc9fbcf"
+    },
+    "src/recoverwam/datasets/lerobot/video_event_dataset.py": {
+      "bytes": 100139,
+      "sha256": "463e93fec2978ab4aa22d02338ee07f7c750e53f814230334c224c5151b756e6"
+    },
+    "src/recoverwam/enhance_prompt.py": {
+      "bytes": 20482,
+      "sha256": "d0df0e76c5489f707e4f1b1363d29dc6f79def6e684949ffa800009ac31500e2"
+    },
+    "src/recoverwam/evaluation.py": {
+      "bytes": 15378,
+      "sha256": "9b76882149e3c3a8c417a0e23514af1bb305c01bf0b6d21fff1f70bc9843f55a"
+    },
+    "src/recoverwam/inference.py": {
+      "bytes": 15492,
+      "sha256": "5c05a5199000c350005c66654d76cb5ca874d02fd430f7f70faaaa1a38f52e1b"
+    },
+    "src/recoverwam/libero/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/libero/action_model.py": {
+      "bytes": 29106,
+      "sha256": "f981c5a18cd27c3de6ba8fb4185bad48ada91aae4d3a8a9b5e90e61664d4cd97"
+    },
+    "src/recoverwam/libero/cli.py": {
+      "bytes": 7960,
+      "sha256": "85c7e6e59351307066c3c53703df3b9bea01f834493423cbd3c8608baed3016a"
+    },
+    "src/recoverwam/libero/data.py": {
+      "bytes": 4121,
+      "sha256": "b7762070985b7009bbfe8b03a3979393440df156ad9971ddf398876894311af6"
+    },
+    "src/recoverwam/libero/diagnostics.py": {
+      "bytes": 9794,
+      "sha256": "d1bc683679a90068775e1d43452bf34fbc35572d12cbfffc24d9b8a5bab9ab5a"
+    },
+    "src/recoverwam/libero/eval_helpers.py": {
+      "bytes": 13115,
+      "sha256": "ac338d4ade195ceb3a87620d162befa9679e2d7ed3d91b09927e5d59d86d97f4"
+    },
+    "src/recoverwam/libero/eval_libero_single.py": {
+      "bytes": 15252,
+      "sha256": "c43c92a86707a2a7ad6480c79925ce15b9a3bdef24dd4571f89072631b4d9c9d"
+    },
+    "src/recoverwam/libero/eval_libero_task_manifest.py": {
+      "bytes": 12346,
+      "sha256": "d55b483a00518a3c3e9f47ae7d55f557165d96d7766e75f08321f77f9212ca06"
+    },
+    "src/recoverwam/libero/evaluate.py": {
+      "bytes": 13512,
+      "sha256": "a9d09f9ae608988086006f2aaecdd0f332ce421bcf72d84d601388473a5f0cc6"
+    },
+    "src/recoverwam/libero/libero_utils.py": {
+      "bytes": 3939,
+      "sha256": "5a211464fe1860e48c8e56e26f67f2b17fde7a1df949ad111cdeb3636ace1680"
+    },
+    "src/recoverwam/libero/prepare_pro.py": {
+      "bytes": 2277,
+      "sha256": "0999050352d924c11d29b22f63e902162d8cfb23f94815c93c01295c11ed81ae"
+    },
+    "src/recoverwam/libero/pro_alias.py": {
+      "bytes": 565,
+      "sha256": "90b5c8c8061bc727a6e413a8746fcc98cbd06e1c7c4175fd223b45af4f10b700"
+    },
+    "src/recoverwam/libero/pro_runtime.py": {
+      "bytes": 1789,
+      "sha256": "adf94ed64b032aaeb0d88391e7b653f88f67e76b9411419ece25faa31ccc1340"
+    },
+    "src/recoverwam/libero/protocols.py": {
+      "bytes": 2003,
+      "sha256": "68225c95eeeee25032966a7f90c1ba18067c53225397f59a463d764030fd0d93"
+    },
+    "src/recoverwam/libero/runtime.py": {
+      "bytes": 11421,
+      "sha256": "f1db6b734ede70f6292e0ebfaf7a0dc4ff49dd5d58e77dfb4af19d10356dd4b5"
+    },
+    "src/recoverwam/libero/trainer.py": {
+      "bytes": 3489,
+      "sha256": "1cecc2f21e8db8f8891ea6987f76349a9b7f9aeebb0cf109fdd6bd0dba2d27c6"
+    },
+    "src/recoverwam/libero/worker.py": {
+      "bytes": 3938,
+      "sha256": "9df6350c4ab92dea70863c08f1bdcebd0d77574a3a2d8d7ac9899a5a825be6b0"
+    },
+    "src/recoverwam/models/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/models/wan21_14b/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/models/wan21_14b/action_dit.py": {
+      "bytes": 18505,
+      "sha256": "4a105855d86a82692f9e54982cdc3daa8ab66fdc7ce923cd947f0c495ed645d4"
+    },
+    "src/recoverwam/models/wan21_14b/helpers/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/models/wan21_14b/helpers/gradient.py": {
+      "bytes": 566,
+      "sha256": "594249b6eb931048e352fd3ffef9b1ac1db9e4fc74659e04216d6b823dd174f3"
+    },
+    "src/recoverwam/models/wan21_14b/helpers/io.py": {
+      "bytes": 2236,
+      "sha256": "f417a0469d4e512c9977fc0684a960b3d2c2965566a56aea212aecf4b11791f4"
+    },
+    "src/recoverwam/models/wan21_14b/helpers/loader.py": {
+      "bytes": 8647,
+      "sha256": "212de6de11cc0111a2e31509212ca57ff561214aea6b3916bd594b0a8ee9c9b7"
+    },
+    "src/recoverwam/models/wan21_14b/mot.py": {
+      "bytes": 41877,
+      "sha256": "0a1dc7970162e425ae00e6432ee21154a708ffca99f52b32f96f18c6ce757995"
+    },
+    "src/recoverwam/models/wan21_14b/recoverwam.py": {
+      "bytes": 92413,
+      "sha256": "581eac5a418aaf6adfee22db5a288d2543f52a6f28f48db8d70992b60bc96b8c"
+    },
+    "src/recoverwam/models/wan21_14b/schedulers/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/models/wan21_14b/schedulers/scheduler_continuous.py": {
+      "bytes": 5915,
+      "sha256": "15de04574c1d8ccb794ca6560b1e501e5c83cc86104bb80f1eb3cc3b0324ffe0"
+    },
+    "src/recoverwam/models/wan21_14b/wan21.py": {
+      "bytes": 32411,
+      "sha256": "ec3b28e8ae5637b3eb6906a65e4c048f2035fcf77319abe9e498f1198288f788"
+    },
+    "src/recoverwam/models/wan21_14b/wan_video_clip.py": {
+      "bytes": 6221,
+      "sha256": "f65e44c9d1b7811d2996b3fa22e6fe4c2ac5e6edf1fc2c14251cf582bf8d1f05"
+    },
+    "src/recoverwam/models/wan21_14b/wan_video_dit.py": {
+      "bytes": 23914,
+      "sha256": "d1f7b2c64c7af684496467e5016fc7652b9e40a620b4bcaa5f2222769968ee33"
+    },
+    "src/recoverwam/models/wan21_14b/wan_video_text_encoder.py": {
+      "bytes": 11240,
+      "sha256": "902a1e46b21b5c48e166fe03defabb94b3773c6bbe836fc09b9a0d0894eb1f6e"
+    },
+    "src/recoverwam/models/wan21_14b/wan_video_vae.py": {
+      "bytes": 29980,
+      "sha256": "33f7d804677b44a6f3ab334684017dcdb1e9dfb748279de76ad94a5bb71a7e51"
+    },
+    "src/recoverwam/policy.py": {
+      "bytes": 20216,
+      "sha256": "1c0e24ea5d71533dd48645290bc32fa18e377233a3dc72b53ea5073990cde95f"
+    },
+    "src/recoverwam/preflight.py": {
+      "bytes": 4510,
+      "sha256": "7a91e486675a4cdf38565e0f4b58e60a68bba7de5654cfff736b5df58f5c53a6"
+    },
+    "src/recoverwam/recovery/__init__.py": {
+      "bytes": 66,
+      "sha256": "ddbdf4e5e3daf4a747c3939a3eec0ba15213d4e4404fa646fe7dc1f2f25697ae"
+    },
+    "src/recoverwam/recovery/bridge.py": {
+      "bytes": 9645,
+      "sha256": "31ce06aeeea63ead9d83a92af058b778540b7a3de123d297052e36a156215eea"
+    },
+    "src/recoverwam/recovery/evaluate.py": {
+      "bytes": 1162,
+      "sha256": "5860c14ef44ae599feff78a413f9422681d7b40ddc150769c38749d42aea51fb"
+    },
+    "src/recoverwam/recovery/local_events.py": {
+      "bytes": 7271,
+      "sha256": "58a4350be6201028196063d6bc3c52367c731e0a57a655be13917b3b3f8cf16b"
+    },
+    "src/recoverwam/recovery/lora.py": {
+      "bytes": 26248,
+      "sha256": "321c5d37beb38932bb6db2eead82c96bd9b87e480dd0d37975afdcb3ea6206a4"
+    },
+    "src/recoverwam/recovery/policy.py": {
+      "bytes": 2147,
+      "sha256": "1823a63f71174c0e17fc60534deb7976c0e9f6fba7c490493d973860baf616d1"
+    },
+    "src/recoverwam/recovery/predicates.py": {
+      "bytes": 4340,
+      "sha256": "e13852f5167e73012978eed15e054bbac46578aec9f6382602ef52088cc03fdb"
+    },
+    "src/recoverwam/recovery/protocol.py": {
+      "bytes": 5677,
+      "sha256": "9f377557379210ef944494a186c23a904c38529b538a276002f031a12180fdaf"
+    },
+    "src/recoverwam/recovery/retention.py": {
+      "bytes": 9852,
+      "sha256": "54526fda9533dcd073f6eb125a63e717bdaaea6bbe76a03c8af469f4c93b93fa"
+    },
+    "src/recoverwam/robodojo.py": {
+      "bytes": 5162,
+      "sha256": "94103f16a9686b5691d7432b7be96052740b8eb2a76937bf82e7c2bed56d0462"
+    },
+    "src/recoverwam/runtime.py": {
+      "bytes": 16315,
+      "sha256": "b291ad9bbf48eb8ca726fc11702850e640e01ee85ebcb010f3937c7870260966"
+    },
+    "src/recoverwam/trainer.py": {
+      "bytes": 54121,
+      "sha256": "30439c6123442311d93559209f14947f3ea29edb9972162cf9ec8158d1c1e420"
+    },
+    "src/recoverwam/utils/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/recoverwam/utils/conditioning.py": {
+      "bytes": 3440,
+      "sha256": "43d43f0f3ca0add64498c3d64a3791513a53e3fce0ea53f77ef09580a86b7b2d"
+    },
+    "src/recoverwam/utils/fs.py": {
+      "bytes": 76,
+      "sha256": "69e6df236b43360428a613686c8f37c531c0d16a3a2c5b06a725c46b49d657c5"
+    },
+    "src/recoverwam/utils/logging_config.py": {
+      "bytes": 5270,
+      "sha256": "2aa63a2a50eee7fb370c49820c08477b5abfeec946fcc687b2d99699d46e92ad"
+    },
+    "src/recoverwam/utils/lr_continuation.py": {
+      "bytes": 2638,
+      "sha256": "72ea9f2af52041db19aab681d7a99fdf6d87d5ed5486f2499383a211c6c1ab76"
+    },
+    "src/recoverwam/utils/misc.py": {
+      "bytes": 176,
+      "sha256": "7e42c330c24604e118f1878473dc804aa8a272944df502ef1414c05be4d5bba2"
+    },
+    "src/recoverwam/utils/pytorch_utils.py": {
+      "bytes": 5036,
+      "sha256": "9b0ba19de9a64458b12a0fb24f0811f49d9e9fca5d8b815f5f5ecd3b7886fd63"
+    },
+    "src/recoverwam/utils/samplers.py": {
+      "bytes": 1339,
+      "sha256": "4d3bd9b2d498f4ad8f2cf9765d60c4bf5368fa6fa2a7d42d0db6210f66899652"
+    },
+    "src/recoverwam/utils/training_profiler.py": {
+      "bytes": 11705,
+      "sha256": "b41a7837ed319f11e5cb4198784d7c1fbd6ce86878d9933e1db403e284188478"
+    },
+    "src/recoverwam/utils/video_caption.py": {
+      "bytes": 2108,
+      "sha256": "d9572deb3690aecb0f16c052016cedc5f94da8ce8f016b4dff1a4e358e18d5e5"
+    },
+    "src/recoverwam/utils/video_io.py": {
+      "bytes": 819,
+      "sha256": "9e9898b021a44e87aa1b4e6d13e3755a9869a2e27a7eb53c72a6802808d5bd80"
+    },
+    "src/recoverwam/utils/video_metrics.py": {
+      "bytes": 3458,
+      "sha256": "1840a37685d686336c7326a2a3d4fbe048d1e8e7e431fb14519d360a8b7aaae8"
+    },
+    "src/recoverwam/video_training.py": {
+      "bytes": 2489,
+      "sha256": "602f93f7e0a31c2db4205cae5d046a84d7c2c0d6808edfef6f1365f36c0c6b22"
+    },
+    "src/recoverwam/weight_resize.py": {
+      "bytes": 2818,
+      "sha256": "269edd4b9d32a1c7f363ee082dde7ce57f2176190daab6d5bf4a1c98ab43f0b4"
+    },
+    "src/recoverwam/weights.py": {
+      "bytes": 6263,
+      "sha256": "6c07b7e2e2c4491e123a9be158a64f4d8be9f4d0186d57780b42735a2f8e167b"
+    },
+    "weights/parent/adapter_final.pt": {
+      "bytes": 6400187,
+      "sha256": "861529eb89e4279e4490d6156bf04a335eee410f6c02842d0ac3db2dc90431d3"
+    },
+    "weights/parent/recipe.json": {
+      "bytes": 631,
+      "sha256": "2fc3c45ca18ee67fc6e491518a8a8c1b350b364fd508f5a59d20dc1ac2aafb2d"
+    },
+    "weights/step000400/adapter.pt": {
+      "bytes": 15797823,
+      "sha256": "eec21ec2834ef95bffdac7b3df0b48092a215aa67e7bf6952ec1643ab511b361"
+    },
+    "weights/step000400/checkpoint.json": {
+      "bytes": 10172,
+      "sha256": "38b9eaa31383a8a098dc68e568c125d5d22d3bb749742145ac38d7c2a5d3dbb6"
+    },
+    "evidence/manifest.json": {
+      "bytes": 417,
+      "sha256": "ae66dbfc16eb3c75fa89111501412ecb14cd3ab62ce02ff9fc8a457bb3b19aba"
+    }
+  }
+}

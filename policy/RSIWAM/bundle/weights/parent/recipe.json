@@ -1,0 +1,23 @@
+{
+  "mode": "bridge",
+  "recipe": "original",
+  "max_steps": 160,
+  "lr": 0.0001,
+  "retention_weight": 3,
+  "normal_bc_weight": 0.1,
+  "gate_bce_weight": 0.1,
+  "gate_threshold": 0.9,
+  "seed": 20261032,
+  "onset_weight": 2,
+  "selection": "fixed before predictions",
+  "separate_proprio": false,
+  "retention_input": "noised demonstration",
+  "recovery_sampling": "80% local, 20% later completion",
+  "gate_label": "reviewed intervention window vs normal demo; NOT object failure truth",
+  "absent_supervision": [
+    "object relations",
+    "dependency graph",
+    "recovery completion"
+  ],
+  "training_updates_per_task": 40
+}

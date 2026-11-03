@@ -1,0 +1,13 @@
+benchmark: pro
+action_checkpoint: weights/libero/action_step030000.pt
+video_checkpoint: weights/libero/video_step010000.pt
+dataset_stats: data/libero/dataset_stats.json
+wan_model_dir: weights/Wan2.1-I2V-14B-480P
+training_config: configs/libero/train_action.yaml
+benchmark_root: third_party/libero_pro_runtime
+runtime_config_dir: runs/libero/runtime/pro
+output_dir: runs/libero/eval/pro
+protocol: public800
+action_step: 30000
+video_step: 10000
+save_rollout_videos: true

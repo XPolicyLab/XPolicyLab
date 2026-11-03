@@ -1,0 +1,131 @@
+{
+  "schema": "RSIWAM_ENCODED_PUBLIC_SELECTION_V1",
+  "source_download_receipt_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/DOWNLOAD_RECEIPT.json",
+  "source_download_receipt_sha256": "b518185b432b2e08f1471b22bedb074cae109a0d1383e609269eabc817f677df",
+  "source_download_receipt_files_verified": 35,
+  "selected_originals": [
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/stdout.log",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/stdout.log",
+      "public_path": "originals/literal_encoded_attempt_gpu1_r4/encoded/stdout.log",
+      "bytes": 18502,
+      "sha256": "52e2af2ac37b9d4057d76a29a38fa40d29cbc9e47f445b1da73699042292ce4f",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/stderr.log",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/stderr.log",
+      "public_path": "originals/literal_encoded_attempt_gpu1_r4/encoded/stderr.log",
+      "bytes": 41,
+      "sha256": "2fce9b0407c968db6fec11f19e6294bffbb4e4c77ce6cc286cb5fe30d5c81a6d",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/guardian_result.json",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/guardian_result.json",
+      "public_path": "originals/literal_encoded_attempt_gpu1_r4/encoded/guardian_result.json",
+      "bytes": 49974,
+      "sha256": "d706231f5c199c228870fc1b15856fb670009ec8ce6c8f68a6838e799865de46",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/release_receipt.json",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/release_receipt.json",
+      "public_path": "originals/literal_encoded_attempt_gpu1_r4/encoded/release_receipt.json",
+      "bytes": 51793,
+      "sha256": "1dc72284467a275077e9ff67b1d8ea6c4d61b9fdb24d5a3bc80a48b199ef281e",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/encoded/initialization_closed.json",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/encoded/initialization_closed.json",
+      "public_path": "originals/literal_encoded_attempt_gpu1_r4/encoded/initialization_closed.json",
+      "bytes": 1563,
+      "sha256": "02c2344cdb885b86f09050b8e02e4411cfcf6d6fc767259489ee9ec6165bf196",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_attempt_gpu1_r4/combined_result.json",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_attempt_gpu1_r4/combined_result.json",
+      "public_path": "originals/literal_encoded_attempt_gpu1_r4/combined_result.json",
+      "bytes": 2560,
+      "sha256": "796f7334cec4530fc58a8f2a41576651ce8ff1fb199c3546ec31a39ea5c3084e",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/literal_encoded_cpu_receipt_gpu1_r4.json",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_encoded_cpu_receipt_gpu1_r4.json",
+      "public_path": "originals/literal_encoded_cpu_receipt_gpu1_r4.json",
+      "bytes": 2355,
+      "sha256": "a1bc0cb1df236743dedb45ed282bac276cdd3e45175ee9e597d2096b2777dc63",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/evidence_r5/clean_cpu.json",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/evidence_r5/clean_cpu.json",
+      "public_path": "originals/evidence_r5/clean_cpu.json",
+      "bytes": 4831,
+      "sha256": "40f8bd38c1f1e48decaf1ff76a5f2dbbe66dc2eeddec5179d387304b248ed420",
+      "byte_preserved": true,
+      "source_download_receipt_verified": true
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_standard_launcher_cpu_r5/literal_encoded_gpu1_20261102_r1/mode_env_observation/20261102T050811.770044Z.json",
+      "public_path": "originals/mode_env_observation/20261102T050811.770044Z.json",
+      "bytes": 1175,
+      "sha256": "f9dfa7ad1c900100f5af0cac1a4488b70d040ef129d9dc43244d5d57d14bd917",
+      "byte_preserved": true,
+      "source_download_receipt_verified": false,
+      "source_kind": "Separately retained local read-only observation original supplied by the collector"
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_standard_launcher_cpu_r5/literal_encoded_gpu1_20261102_r1/mode_env_observation/POST_COMPLETION_QUERY_SCOPE.json",
+      "public_path": "originals/mode_env_observation/POST_COMPLETION_QUERY_SCOPE.json",
+      "bytes": 877,
+      "sha256": "418fc0a3af0beb31feca1515b63cd2e3662344ef31d991a1fa339175f934a710",
+      "byte_preserved": true,
+      "source_download_receipt_verified": false,
+      "source_kind": "Separately retained local read-only observation original supplied by the collector"
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/OWNER_CAPTURE_LOCAL_VERIFICATION.json",
+      "public_path": "source_review/OWNER_CAPTURE_LOCAL_VERIFICATION.json",
+      "bytes": 4746,
+      "sha256": "4f8ef3e56463f100fce279f9ed88c31b4fa3755b6d3279615ff260e04fb02ab9",
+      "byte_preserved": true,
+      "source_role": "ROOT_INDEPENDENT_LOCAL_VERIFICATION_OF_OWNER_CAPTURE"
+    }
+  ],
+  "full_config_included": false,
+  "full_environment_included": false,
+  "whole_machine_process_inventory_included": false,
+  "originals_are_unredacted_byte_copies": true,
+  "omitted_raw_sources": [
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/encoded_gpu1_final_readonly_r1/fresh_audit.json",
+      "bytes": 82388,
+      "sha256": "f003bac409ef8d454c692b08fa8e34040f530d7171dcd4e93fd192c96549eda4",
+      "byte_preserved": true,
+      "source_role": "OWNER_REMOTE_READONLY_CAPTURE",
+      "remote_path": "/run/ti/RSIWAM-standard-launcher-20261101-r1/encoded_gpu1_final_readonly_r1/fresh_audit.json",
+      "source_download_receipt_verified": true,
+      "public_projection": "OWNER_AUDIT_PROJECTION.json",
+      "omission_reason": "Do not publish the raw process-check inventory; retain source SHA and a precise own-cleanup projection."
+    },
+    {
+      "source_path": "/home/songziying/vpp2-supervision/rsiwam_pr_preparation_20261101/review/literal_encoded_gpu1_20261102/raw/scoped_cleanup_audit.json",
+      "sha256": "cb8146d1d8ae64feb754e36cea11941e6ee4d558c61b1f772bb201f1e12e9183",
+      "bytes": 52814,
+      "source_role": "ROOT_REMOTE_SCOPED_POST_COMPLETION_CHECK",
+      "public_projection": "ROOT_SCOPED_CLEANUP_PROJECTION.json",
+      "omission_reason": "Publish exact scoped results and source hashes without the full recorded process-check inventory."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "rsiwam-public-evidence-preparation-validation-v1",
+  "status": "LOCAL_COPY_HASH_AND_SCOPE_REVIEW_PASSED",
+  "checked_at_utc": "2026-11-01T15:43:44.122468+00:00",
+  "source_index_sha256": "3a9c24ce6a3cd435b45cb9d55326aad05a473fe097a0d230999188ed221ccf10",
+  "source_files_rehashed": 50,
+  "source_index_bytes_total_verified": 1330419,
+  "original_r5_receipt_hash_entries_verified": 46,
+  "selected_original_files_rehashed_after_copy": 46,
+  "stage_exit_receipts_zero": 14,
+  "requirements_receipt_entries_consistent": 27,
+  "requirements_source_file_hash_matches_local_revision": true,
+  "privacy_pattern_findings": [],
+  "historical_r4_receipts_not_presented_as_final_pass": true,
+  "literal_or_gpu_success_not_claimed": true,
+  "tests_installation_and_gpu_executed_during_preparation": false,
+  "remote_access_during_preparation": false,
+  "independent_read_only_review": "NO_BLOCKING_FINDINGS"
+}

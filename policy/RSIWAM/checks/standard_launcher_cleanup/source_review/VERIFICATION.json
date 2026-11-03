@@ -1,0 +1,121 @@
+{
+  "schema": "RSIWAM_INDEPENDENT_CLOSURE_REVIEW_V1",
+  "checked_at_utc": "2026-11-02T04:41:31.278148+00:00",
+  "status": "PASS",
+  "remote_root": "/run/ti/RSIWAM-standard-launcher-20261101-r1",
+  "scope": "Read-only independent receipt/source-hash/exact-ledger-row verification. No repeated process/FD scan; historical 333 identities and holder results checked for internal consistency only. Old overall FAILED remains unchanged. Encoded is a separate continuation.",
+  "changed_fields": [
+    "released_at"
+  ],
+  "checks": {
+    "receipt_status_reconciled": true,
+    "before_unreleased": true,
+    "after_released": true,
+    "only_released_at_changed": true,
+    "readonly_no_row_change": true,
+    "readonly_before_matches_actual_receipt_before": true,
+    "identity_matches_original_plain_lease": {
+      "token": true,
+      "owner_id": true,
+      "owner_pid": true,
+      "owner_starttime": true,
+      "worker_pid": true,
+      "worker_starttime": true,
+      "gpu_uuid": true,
+      "gpu_index": true,
+      "budget_mib": true,
+      "headroom_mib": true
+    },
+    "source_hashes_still_match": true,
+    "database_current_row_matches_receipt_after": true,
+    "historical_plain_raws_unchanged": {
+      "literal_attempt_r2/plain/bind.json": true,
+      "literal_attempt_r2/plain/guardian_result.json": true,
+      "literal_attempt_r2/plain/release_receipt.json": true,
+      "literal_attempt_r2/status.json": true
+    },
+    "historical_overall_failed_preserved": true,
+    "plain_counts_full10x20": true,
+    "reported_historical_identity_count_matches": true,
+    "historical_identity_count": 333,
+    "recorded_exact_live_empty": true,
+    "recorded_session_live_empty": true,
+    "recorded_holder_list_empty": true,
+    "recorded_no_signals_gpu": true,
+    "owner_not_impersonated": true,
+    "recorded_non_target_rows_unchanged": true
+  },
+  "source_hash_checks": {
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/encoded_continuation_20261102_r2/diagnostic_actual.json": {
+      "exists": true,
+      "expected_sha256": "7584b2a5b4b9b647ee01d542d360e7999265e2ff86723a938beb49771e3788b8",
+      "actual_sha256": "7584b2a5b4b9b647ee01d542d360e7999265e2ff86723a938beb49771e3788b8"
+    },
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_config_r2.json": {
+      "exists": true,
+      "expected_sha256": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7",
+      "actual_sha256": "57c70f73d079319156214d700f5e8e8eae50a497ce48e8f6e76eab556b924fa7"
+    },
+    "/run/ti/codex-shared-gpu-budget-v1/gpu_budget.py": {
+      "exists": true,
+      "expected_sha256": "928fad0473d97083ce1d5046438bb950801ae38fe93d3ff961c42c764ca78cda",
+      "actual_sha256": "928fad0473d97083ce1d5046438bb950801ae38fe93d3ff961c42c764ca78cda"
+    },
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/guardian_result.json": {
+      "exists": true,
+      "expected_sha256": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb",
+      "actual_sha256": "d9502d4e398c0ea372377b83ce2d187f1e611b3087ba6d9a30bef0c6428495bb"
+    },
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/status.json": {
+      "exists": true,
+      "expected_sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934",
+      "actual_sha256": "fb88c67c84d2bce121fabaf4cf7e9e588ea24feb78e949d03c6384a5e90cf934"
+    },
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/release_receipt.json": {
+      "exists": true,
+      "expected_sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9",
+      "actual_sha256": "4712a4b03a9db3b09eee7af8562880fb1199c871b619fbd2d88db367f49d6ce9"
+    },
+    "/run/ti/RSIWAM-standard-launcher-20261101-r1/literal_attempt_r2/plain/bind.json": {
+      "exists": true,
+      "expected_sha256": "e94e09bee27e8194e207c060e8b786500060813c61f0e7768134d0bd66aaa6cd",
+      "actual_sha256": "e94e09bee27e8194e207c060e8b786500060813c61f0e7768134d0bd66aaa6cd"
+    }
+  },
+  "encoded_at_collection": {
+    "literal_encoded_attempt_r3/status.json": {
+      "exists": false
+    },
+    "literal_encoded_attempt_r3/encoded/status.json": {
+      "exists": true,
+      "status": "WAITING_RESOURCE",
+      "mode": "encoded",
+      "counts": null,
+      "error": null,
+      "literal_exit_code": null,
+      "owner_current": {
+        "pid": 34837,
+        "starttime": "1554649153",
+        "exact_alive": true
+      }
+    },
+    "literal_encoded_attempt_r3/encoded/guardian_result.json": {
+      "exists": false
+    }
+  },
+  "probe_consistency_checks": {
+    "readonly_status_ready": true,
+    "schema_same": true,
+    "binding_proof_same": {
+      "host": true,
+      "private_lock": true,
+      "database_identity": true,
+      "source_hashes": true
+    },
+    "readonly_exact_live_empty": true,
+    "readonly_session_live_empty": true,
+    "readonly_holder_list_empty": true,
+    "sessions_checked_same": true,
+    "both_report_exclusive_lock": true
+  }
+}

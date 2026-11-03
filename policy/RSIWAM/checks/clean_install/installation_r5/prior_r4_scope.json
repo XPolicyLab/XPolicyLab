@@ -1,0 +1,7 @@
+{
+  "status": "R4_IMPORT_CHECK_ONLY_NOT_FULL_REQUIREMENTS_ACCEPTANCE",
+  "prior_receipt": "/run/ti/RSIWAM-standard-launcher-20261101-r1/evidence_r4/installation_receipt.json",
+  "prior_receipt_sha256": "8c72c23137c9f4b01328b2f110ec536c861ad549280f321d0b6f8f4ea22b62cb",
+  "reason": "Actual NumPy2.2.6 violated bundle numpy>=1.26,<2; original receipt retained unchanged",
+  "new_attempt": "r5"
+}

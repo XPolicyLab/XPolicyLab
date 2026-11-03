@@ -1,0 +1,15 @@
+{
+  "algorithm_review": "Read-only inspection of frozen runtime and training sources; no new GPU execution.",
+  "checks": [
+    "action_tokens input gradient retained through frozen bridge",
+    "base/bridge frozen; only Q/V LoRA A/B trainable",
+    "hard sigmoid gate threshold 0.9; auto mode",
+    "masked action flow-matching uses composed predictor"
+  ],
+  "numerical_review": "143-case source hash and success-transition net count checked; no new evaluation.",
+  "limits": [
+    "Historical native run authenticity not reaudited by this source-code check.",
+    "Methodological novelty and eligibility require organizer review.",
+    "Paired outcome changes are not within-episode recovery evidence."
+  ]
+}
