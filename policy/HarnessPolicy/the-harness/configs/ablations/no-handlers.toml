@@ -1,0 +1,6 @@
+# Ablation (Tab. 5): the agent without handlers; every unhandled event goes to the model.
+description = "without handlers"
+include = ["../default.toml"]
+
+[skills]
+layers = { handlers = false }

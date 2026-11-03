@@ -1,0 +1,7 @@
+name = "pointing"
+summary = "Open-vocabulary pointing and 3D localization from one or more cameras."
+layer = "base"
+mixin = "skills.pointing:Pointing"
+exports = ["point_to", "localize", "localize_3d"]
+needs_any = ["pointer", "vlm"]
+order = 30

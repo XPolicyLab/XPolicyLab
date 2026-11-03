@@ -1,0 +1,9 @@
+name = "eef"
+summary = "Tools by object id: locate (SAM 3: positions, footprints, reach; the located objects measured again after every program), pick, release, transfer, push, and move_tip for free motion."
+layer = "base"
+mixin = "skills.eef:EefTools"
+exports = ["locate", "pick", "release", "transfer", "push", "move_tip"]
+needs = ["segmenter"]
+requires = ["segmentation"]
+conflicts = ["manipulation"]
+order = 105

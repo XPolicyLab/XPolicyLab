@@ -1,0 +1,12 @@
+# The paper's main model (Sec. 5): Claude Opus 5.5 through OpenRouter. It refuses
+# requests from our region (HTTP 403): run it from a machine in a supported region.
+description = "Claude Opus 5.5 writes programs, answers questions about images and points; Molmo2 for a pointer role"
+include = ["grok-medium.toml"]
+
+[main]
+model = "anthropic/claude-opus-5.5"
+
+# The same model answers questions about images inside programs (see grok-medium.toml).
+[vlm]
+model = "anthropic/claude-opus-5.5"
+reasoning_effort = "low"

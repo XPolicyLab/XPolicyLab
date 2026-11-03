@@ -1,0 +1,14 @@
+kind = "vlm"
+summary = "Qwen3-VL-8B-Instruct, self-hosted: questions about images and pointing for development runs without API spend"
+protocol = "openai_chat"
+command = ["{python}", "-u", "services/servers/serve_vlm.py", "--model", "{weights}/qwen3-vl-8b",
+           "--name", "Qwen3-VL-8B-Instruct", "--port", "{port}"]
+port = 8801
+vram_gb = 18.0
+load_seconds = 120
+client = { backend = "openai_chat", base_url = "{url}/v1", model = "Qwen3-VL-8B-Instruct" }
+needs_files = ["{weights}/qwen3-vl-8b/config.json"]
+
+[[weights]]
+dir = "qwen3-vl-8b"
+modelscope_model = "Qwen/Qwen3-VL-8B-Instruct"

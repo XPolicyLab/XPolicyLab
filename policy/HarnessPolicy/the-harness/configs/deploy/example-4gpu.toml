@@ -1,0 +1,31 @@
+# A machine with four 24 GB GPUs: the agent's models resident on GPU 0 (SAM 3 and
+# Simate), Molmo2 and OpenWAM on demand in one swap group on GPU 1 for experiments that
+# turn them on (a pointer role, `--set 'agent.services.world_models=["openwam"]'`), and
+# the simulator workers on the other two, two per GPU.
+# Copy to configs/deploy/<your machine>.toml (git-ignored) and set the paths and GPUs.
+weights = "~/harness-weights"
+state = "~/.cache/harness-policy/services"
+gpus = [0, 1, 2, 3]
+gpu_memory_gb = 24
+
+# Simulator workers of `harness run`: two RoboDojo workers per GPU (6-9 GB each).
+[sim]
+gpus = [2, 3]
+workers_per_gpu = 2
+base_port = 8771
+
+[services.sam3]
+gpu = 0
+
+[services.simate]
+gpu = 0
+
+[services.molmo2]
+gpu = 1
+mode = "on_demand"
+swap = "experiments"
+
+[services.openwam]
+gpu = 1
+mode = "on_demand"
+swap = "experiments"

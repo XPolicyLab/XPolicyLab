@@ -1,0 +1,211 @@
+{
+ "bench": "robodojo",
+ "code": {
+  "files": 186,
+  "sha256": "af73a28f03762236d0d8bd89a89b6eebcc299962d2e1d642f232ea84bdd65059"
+ },
+ "commit": "eb936793fa762128a134ce5d2cd3c69789783371",
+ "dirty": true,
+ "embodiment": "arx_x5",
+ "identity": "4b97417504695258",
+ "lock": {
+  "agent": "wall-oss",
+  "agent_version": "1.9.10",
+  "budget": {
+   "max_model_calls": 100
+  },
+  "mode": "program",
+  "prompt_sha256": "082a74077cc0946be7c7ea086283e3e21c29fc65444ef614cf792ea6abecb83d",
+  "prompt_sources": [
+   "prompts/robodojo",
+   "prompts/robodojo/wall_cell.md"
+  ],
+  "roles": {
+   "main": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 8192,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "timeout_seconds": 300
+   },
+   "verifier": {
+    "temperature": 1
+   },
+   "vlm": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 2048,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "temperature": 1,
+    "timeout_seconds": 300
+   }
+  },
+  "runtime": {
+   "cameras": [
+    "cam_head",
+    "cam_left_wrist",
+    "cam_right_wrist"
+   ],
+   "cell_timeout_seconds": 1800,
+   "contract": "xpolicylab",
+   "default_max_seconds": 30.0,
+   "isolation": "auto",
+   "layers": {
+    "handlers": true,
+    "learned": true,
+    "reactive": true
+   },
+   "policy_action_mode": "ee_passthrough",
+   "policy_progress_seconds": 0.0,
+   "policy_span": "cell",
+   "post_policy_calls": 0,
+   "reactive_budget_ms": 20.0,
+   "skills": [
+    "core",
+    "geometry",
+    "kinematics",
+    "pointing",
+    "vlm",
+    "segmentation",
+    "grasping",
+    "memory",
+    "verify",
+    "motion",
+    "eef",
+    "reactive",
+    "scene",
+    "handlers",
+    "vla"
+   ],
+   "skills_dropped": {
+    "wam": "no world_model service"
+   },
+   "strategy_first": true,
+   "verifier": true
+  },
+  "schema": 2,
+  "service_manifests": {
+   "sam3": "d9ce7f9939e593b8f7dc863b1957aadbb96cae42f1055698537d0504290e0075",
+   "wall-oss": "05e58926b300e5587cc067621c0476562b80686ab58b18953baaaf30939da990"
+  },
+  "services": {
+   "policies": [
+    "wall-oss"
+   ],
+   "segmenter": "sam3"
+  },
+  "skills": [
+   "core",
+   "geometry",
+   "kinematics",
+   "pointing",
+   "vlm",
+   "segmentation",
+   "grasping",
+   "memory",
+   "verify",
+   "motion",
+   "eef",
+   "reactive",
+   "scene",
+   "handlers",
+   "vla"
+  ],
+  "skills_dropped": {
+   "wam": "no world_model service"
+  }
+ },
+ "name": "wall-oss",
+ "services": [
+  "kinematics",
+  "sam3",
+  "wall-oss"
+ ],
+ "sources": {
+  "agent": {
+   "budget": {
+    "max_model_calls": 100
+   },
+   "description": "Harness Policy calling WALL-OSS 1.0 lite, with GPT 6.1 Sol writing programs",
+   "prompt": [
+    "@HARNESS@/prompts/robodojo",
+    "@HARNESS@/prompts/robodojo/wall_cell.md"
+   ],
+   "roles": [
+    "main",
+    "vlm",
+    "verifier"
+   ],
+   "runtime": {
+    "cameras": [
+     "cam_head",
+     "cam_left_wrist",
+     "cam_right_wrist"
+    ],
+    "cell_timeout_seconds": 1800,
+    "contract": "xpolicylab",
+    "default_max_seconds": 30.0,
+    "isolation": "auto",
+    "policy_action_mode": "ee_passthrough",
+    "policy_progress_seconds": 0.0,
+    "policy_span": "cell",
+    "post_policy_calls": 0,
+    "reactive_budget_ms": 20.0,
+    "strategy_first": true,
+    "verifier": true
+   },
+   "services": {
+    "policies": [
+     "wall-oss"
+    ],
+    "segmenter": "sam3",
+    "world_models": []
+   },
+   "skills": {
+    "layers": {
+     "handlers": true,
+     "learned": true,
+     "reactive": true
+    }
+   }
+  },
+  "model": {
+   "description": "GPT 6.1 Sol writes programs and answers questions about images",
+   "main": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 8192,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "timeout_seconds": 300
+   },
+   "verifier": {
+    "temperature": 1
+   },
+   "vlm": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 2048,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "temperature": 1,
+    "timeout_seconds": 300
+   }
+  },
+  "runtime_overrides": {}
+ }
+}

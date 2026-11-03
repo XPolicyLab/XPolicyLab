@@ -1,0 +1,11 @@
+# Where this policy's services run. At start the policy server writes a deploy of its
+# own (results/<task>-<time>-<pid>/deploy.toml): every service on the GPUs it sees
+# (policy_gpu_id; several, comma-separated, give each model room), placed by their free
+# memory, on ports of its own. Paths here are relative to this folder.
+weights = "checkpoints"          # download_checkpoints.sh puts the weights here
+# robodojo = "../../.."          # the RoboDojo checkout (default: the one around XPolicyLab)
+
+# A service may run elsewhere, or with another python, as in a deploy file:
+# [services.molmo2]
+# mode = "external"
+# url = "http://10.0.0.7:8830"

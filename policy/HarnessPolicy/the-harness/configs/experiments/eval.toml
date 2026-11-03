@@ -1,0 +1,12 @@
+# The agent on RoboDojo's official evaluation layouts (pack 0), all tasks, two layouts
+# each (raise seeds to "0-49" for the full protocol). Evaluation resolves strictly: a
+# skill or service the agent names that cannot run on this machine stops the run.
+description = "the agent on official evaluation layouts"
+bench = "robodojo"
+tasks = "all"
+seeds = "0-1"
+layouts = "eval"
+layout_pack_seed = 0
+
+[budget]
+max_wall_seconds = 5400

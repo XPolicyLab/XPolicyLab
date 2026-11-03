@@ -1,0 +1,19 @@
+# Prompt pack of the dual-arm ARX X5 on RoboDojo (runtime/prompts.py). Sections in
+# order; a section with `skills` is included when one of them is enabled.
+sections = [
+  { file = "core.md" },
+  { file = "learned.md", skills = ["vla", "wam"] },
+  { file = "reactive.md", skills = ["reactive"] },
+  { file = "reflexes.md", skills = ["reflexes"] },
+  { file = "events.md" },
+  { file = "handlers.md", skills = ["handlers"] },
+  { file = "mcp.md", skills = ["mcp"] },
+  { file = "method.md", skills = ["eef"] },
+  { file = "rules.md" },
+  { file = "rules_learned.md", skills = ["vla"], optional = true },
+  { file = "rules_reactive.md", skills = ["reactive"], optional = true },
+  { file = "rules_handlers.md", skills = ["handlers"], optional = true },
+]
+# Names the skills export that the prompt does not describe (direct-control programs
+# use fingertip_of; models compute fingertips with link6_for_tip instead).
+undocumented = ["fingertip_of"]

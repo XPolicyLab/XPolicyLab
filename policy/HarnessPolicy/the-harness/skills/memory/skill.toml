@@ -1,0 +1,7 @@
+name = "memory"
+summary = "Read-only entries of the library's memory (empty without a library)."
+layer = "base"
+mixin = "skills.memory:Memory"
+exports = ["recall"]
+required = true
+order = 70

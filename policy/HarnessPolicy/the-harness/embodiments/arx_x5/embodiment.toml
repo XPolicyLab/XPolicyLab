@@ -1,0 +1,70 @@
+# The dual-arm ARX X5 of RoboDojo (env_cfg_type arx_x5): what a policy may know about
+# it without asking the simulator. Values from RoboDojo 726e9aa (assets f8862d5),
+# measured with the runtime worker's profile and observe on 2026-10-12: the camera
+# calibration is the same for every task, layout and arm pose (head camera fixed in the
+# world; wrist cameras fixed on link6; spread below 1e-7).
+name = "arx_x5"
+robot = "ARX X5, two arms with parallel grippers (RoboDojo, X5A.urdf)"
+robot_model = "x5"
+control_hz = 25.0
+physics_steps_per_tick = 10
+cameras = ["cam_head", "cam_left_wrist", "cam_right_wrist"]
+image_size = [640.0, 480.0]
+# Joint commands: per arm 6 joints, then the gripper (0 closed .. 1 open).
+action_low = [-9.999999, -9.999999, -9.999999, -9.999999, -9.999999, -3.14, 0.0, -9.999999, -9.999999, -9.999999, -9.999999, -9.999999, -3.14, 0.0]
+action_high = [9.999999, 9.999999, 9.999999, 9.999999, 9.999999, 3.14, 1.0, 9.999999, 9.999999, 9.999999, 9.999999, 9.999999, 3.14, 1.0]
+# "Fingertips" = centre of the gripping faces, 0.150 m from link6 along its +x (X5A.urdf).
+tip_offset_m = 0.150
+# Measured opening of an empty closed gripper (normalized), fingers fully open apart,
+# and the time a gripper command needs for the full stroke and a firm grip (at most
+# 20 % of the range per tick).
+gripper_empty_opening = 0.185
+gripper_open_width_m = 0.088
+gripper_full_stroke_seconds = 0.4
+# Table top (the table box is centred at z = 0.74 and 0.05 thick).
+table_z = 0.765
+# Most RoboDojo tasks count success only with both arms back at their start pose.
+return_to_start = true
+# The planner's joint velocity (URDF) and acceleration: how the skills time motions.
+planner_limits = { joint_velocity = 3.14, joint_acceleration = 10.0 }
+planner_world = "self collision and table only; scene objects and the other arm are not modeled"
+
+[groups.left_arm]
+joints = [0, 1, 2, 3, 4, 5]
+gripper = 6
+
+[groups.right_arm]
+joints = [7, 8, 9, 10, 11, 12]
+gripper = 13
+
+# Mount poses [x, y, z, qw, qx, qy, qz] in the env frame.
+[arm_bases]
+left_arm = [-0.3, -0.45, 0.765, 0.707, 0.0, 0.0, 0.707]
+right_arm = [0.3, -0.45, 0.765, 0.707, 0.0, 0.0, 0.707]
+
+# Commands that are bugs (runtime/shield.py); the same values as the RoboDojo worker's.
+[shield]
+max_joint_jump_rad = 0.3
+max_cartesian_jump_m = 0.25
+workspace = { x = [-1.1, 1.1], y = [-1.25, 0.35], z = [0.70, 1.565] }
+
+# XPolicyLab's protocol for this robot (action_type joint).
+[xpolicylab]
+env_cfg_type = "arx_x5"
+action_type = "joint"
+action_dim = 14
+
+# Camera calibration, OpenCV convention (x right, y down, z forward), env frame.
+[calibration.cam_head]
+intrinsics = [[288.13254096884566, 0.0, 320.0], [0.0, 288.13254096884566, 240.0], [0.0, 0.0, 1.0]]
+camera_to_world = [[1.0, 0.0, 0.0, 0.0], [0.0, -0.8660253435950835, 0.5000001052916332, -0.4099999964237213], [0.0, -0.5000001052916332, -0.8660253435950835, 1.3079999685287476], [0.0, 0.0, 0.0, 1.0]]
+
+[calibration.cam_left_wrist]
+link = "left_link6"
+intrinsics = [[397.04127893104277, 0.0, 320.0], [0.0, 397.04127893104277, 240.0], [0.0, 0.0, 1.0]]
+camera_on_link6 = [[-7.216501643037608e-06, -0.5000295730826618, 0.8660083153236539, 0.08484203124619338], [-0.9999999999739603, 3.6093405923748063e-06, -6.249040374600022e-06, -2.1041652409348188e-07], [-1.0079051063958558e-09, -0.8660083153462, -0.5000295730956893, 0.050939677140083406], [0.0, 0.0, 0.0, 1.0]]
+
+[calibration.cam_right_wrist]
+link = "right_link6"
+intrinsics = [[397.04127893104277, 0.0, 320.0], [0.0, 397.04127893104277, 240.0], [0.0, 0.0, 1.0]]
+camera_on_link6 = [[-7.216501643037608e-06, -0.5000295730826618, 0.8660083153236539, 0.08484203124619338], [-0.9999999999739603, 3.6093405923748063e-06, -6.249040374600022e-06, -2.1041652403797073e-07], [-1.0079051063958558e-09, -0.8660083153462, -0.5000295730956893, 0.050939677140083406], [0.0, 0.0, 0.0, 1.0]]

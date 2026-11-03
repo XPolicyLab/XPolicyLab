@@ -1,0 +1,7 @@
+name = "core"
+summary = "Robot state, camera views, show() and finish(): what every program needs."
+layer = "base"
+mixin = "skills.core:Core"
+exports = ["finish", "__wrap_up__", "get_state", "get_observation", "show", "ARMS", "CONTROL_HZ"]
+required = true
+order = 0

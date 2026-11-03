@@ -1,0 +1,7 @@
+name = "geometry"
+summary = "Frames, link6 and fingertip poses, camera geometry; no model, no motion."
+layer = "base"
+mixin = "skills.geometry:Geometry"
+exports = ["transform", "mask_to_plane", "down_with_yaw", "project", "pixel_ray", "pixel_to_plane", "triangulate", "TABLE_Z", "FORWARD", "DOWN", "link6_for_tip", "fingertip_of"]
+required = true
+order = 10

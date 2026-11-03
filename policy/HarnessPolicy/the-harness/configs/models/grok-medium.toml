@@ -1,0 +1,45 @@
+# Hosted models through OpenRouter (the key from OPENROUTER_API_KEY; never write it
+# here). OpenAI, Anthropic and Google models refuse requests from our region (HTTP
+# 403), so development runs use x-ai/grok-4.7. Zhang et al. (2026b) run their models at
+# medium reasoning effort.
+description = "grok-4.7 (medium) writes programs, answers questions about images and points; Molmo2 for a pointer role"
+
+[main]
+backend = "openrouter"
+model = "x-ai/grok-4.7"
+reasoning_effort = "medium"
+# On OpenRouter the limit covers reasoning tokens too.
+max_output_tokens = 16000
+# Streamed: keep-alive chunks arrive while the model thinks, so a dead connection
+# shows up within the read timeout (the link to OpenRouter drops now and then).
+stream = true
+timeout_seconds = 120
+# Completions have no side effects; retry dropped connections and rate limits for up to
+# 30 minutes (the simulator waits while the model is called).
+retries = 3
+retry_seconds = 1800
+
+# Questions about images inside programs (query_vlm, holding() without a measured
+# gripper, pointing when there is no pointer) go to the main model itself: one model
+# sees the task and the images, as in Z2_v01, instead of a second, weaker model
+# answering for it (1.1.0 asked qwen3.8-flash, whose answers about what an object is
+# changed from one question to the next).
+[vlm]
+backend = "openrouter"
+model = "x-ai/grok-4.7"
+reasoning_effort = "low"
+stream = true
+timeout_seconds = 120
+# The link drops now and then; give up after about 5 minutes so the program sees an
+# error instead of the kernel being killed.
+retries = 3
+retry_seconds = 300
+
+# Open-vocabulary pointing (point_to) with Molmo2 (Clark et al., 2026), self-hosted, for
+# agents that take the pointer role; the default agent's vlm role points instead.
+[pointer]
+service = "molmo2"
+
+[runtime]
+# Images of the two most recent turns, as in Zhang et al. (2026b); text history is kept.
+keep_images = 2

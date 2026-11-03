@@ -1,0 +1,7 @@
+name = "grasping"
+summary = "Grasp planning on a mask: top-down, pitched, side, part and rim grasps."
+layer = "base"
+mixin = "skills.grasping:Grasping"
+exports = ["plan_grasp"]
+required = true
+order = 60

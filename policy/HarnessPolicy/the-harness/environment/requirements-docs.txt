@@ -1,0 +1,13 @@
+# The documentation site (mkdocs.yml): MkDocs with the Material theme, generated
+# reference pages, API pages from docstrings (static analysis: nothing is imported),
+# versions. Pure Python; installed under constraints.txt like every other layer, and in
+# CI (.github/workflows/docs.yml) from this same file.
+mkdocs==1.6.1
+mkdocs-material==9.7.7
+mkdocstrings==1.0.7
+mkdocstrings-python==2.0.9
+griffe==2.3.2
+mkdocs-gen-files==0.6.1
+mkdocs-literate-nav==0.6.3
+mkdocs-section-index==0.3.12
+mike==2.2.0

@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""Run from a checkout without installing any packages."""
+
+from pathlib import Path
+import sys
+
+root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(root))
+sys.path.insert(0, str(root / "src"))
+
+from harness_policy.cli import main
+
+raise SystemExit(main())
