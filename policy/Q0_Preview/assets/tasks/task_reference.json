@@ -4,553 +4,271 @@
     "align_blocks": {
       "completion_details": "Final line tolerance: 8 mm; orientation tolerance: 8 degrees.",
       "process_rules": "Do not lift a block: a rise greater than 7 mm can immediately fail the task.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/align_blocks.py": "c8597e96132cd7c9d30f3ae101f7bbe8ac28597b629599d75d442bbea4c6e74c",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "arrange_largest_number": {
       "completion_details": "Final digit centers are within 2 cm of their corresponding pad centers. Readability uses 45-degree axis tolerances, allowing the specified symmetries of 0 and 8.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/arrange_largest_number.py": "277acd20ae4345dc71267762e588b7b0343387c71685183890f044a4808b7a20",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "arrange_largest_number_random": {
       "completion_details": "Final digit centers are within 2 cm of their corresponding pad centers. Readability uses 45-degree axis tolerances, allowing the specified symmetries of 0 and 8.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/arrange_largest_number.py": "277acd20ae4345dc71267762e588b7b0343387c71685183890f044a4808b7a20",
-        "task/RoboDojo/tasks/arrange_largest_number_random.py": "01757509978663bf7c0c95059e8ae18d45b8fe0953f6b54540e2bd6bf141182e",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "build_tower": {
       "completion_details": "Final upright-axis tolerance is 5 degrees for all pieces; the thin top board's long edge must be parallel to the small board's long edge within 20 degrees. The bottom edge of the green block's triangular end face must be parallel to the thin top board's long edge within 20 degrees. The small board is within the large board's 4.3 cm support circle; the two upper placements use 2.3 cm support circles.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/build_tower.py": "814cf6ffb459871e5cf49f4e127903dbfbc30926f33db71de0b84a71ab235d6e",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. The first two tower-stage scores also check the supporting board has settled within a 2 mm movement tolerance."
     },
     "classify_objects": {
       "completion_details": "Settled object reference heights are below the basket rim plus 1 cm.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/classify_objects.py": "aef4333c088766375e21a928d53a9a93aaee285fecae41e22385acdc74dd11ac",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Each scored basket group excludes objects from other categories."
     },
     "classify_objects_by_language": {
       "completion_details": "Settled object reference heights are below the assigned basket rim plus 1 cm.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/classify_objects_by_language.py": "242a8f048f487eb174ef246be78613bbb5f153549ee11a2650412718cf3b36c9",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Each scored basket group excludes objects from other categories."
     },
     "cover_blocks": {
       "completion_details": "At each checked stage, all three cups are inverted within 10 degrees.",
       "process_rules": "The intermediate states and their order count; cups must be upside-down at each checked state. Displacing any block by more than 5 cm can fail.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/cover_blocks.py": "9d14931b16842b93bea8abf9a07991a93a7e663b93c5fd1695108c8b922ab862",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "deposit_coin": {
       "completion_details": "The whole coin bounding volume must be contained in the bank's defined interior.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/deposit_coin.py": "f9868ef827ec17b8db6c4650cc5d9a9e593d20d00ee822e2212ce229ec01fb61",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "fasten_screws": {
       "completion_details": "Final nut upright tolerance: 10 degrees; planar center tolerance: 1 mm; insertion depth greater than 9 mm. Depth means bolt TOP minus nut BOTTOM using world vertical bounding extents, not travel from an arbitrary starting pose. Final gripper opening is at least 0.9. These are evaluator definitions, not directly observed object measurements.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/fasten_screws.py": "2e187a28e33e44efb87baae6463b3ec35264ccd41e35c21a1be44f6361675185",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "fill_egg_holder": {
       "completion_details": "Each egg reference is 1-4 cm above the holder bottom reference. Final closed-lid hinge ratio is above 0.9.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/fill_egg_holder.py": "506dfb772f8882ae53966e3580affde19c3c0f11591c78cc5f5b1d997ba04f7e",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "fill_pen_holder": {
       "completion_details": "Final designated-end reference is within 3.5 cm of the holder axis in the holder frame and below the object root; insertion depth is greater than 35 mm. Holder upright tolerance is 15 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/fill_pen_holder.py": "8706dce239487e078b21af0b95bcc5cd4eabdcdadcdcbc6400d6b138d982f1e6",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Scoring also checks each designated-end frame within 45 degrees of vertical and the holder upright within 45 degrees."
     },
     "fold_clothes": {
       "completion_details": "",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/fold_clothes.py": "ecea9c287d0579605330168e6f36734704fb14a6b1e5dec82b6f2ee3a56ec20a",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "fold_clothes_random": {
       "completion_details": "",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/fold_clothes.py": "ecea9c287d0579605330168e6f36734704fb14a6b1e5dec82b6f2ee3a56ec20a",
-        "task/RoboDojo/tasks/fold_clothes_random.py": "9e40abe3f7201a8c13961edc1ca8075260c315584d3d6b93fa1df966d13d1e88",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "general_pickup": {
       "completion_details": "",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/general_pickup.py": "1a9eef7fe518f9d2c6805ad1a8f97c1045fa83726f84b9c63f67ffdfabbc40a7",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "hang_mugs": {
       "completion_details": "Final handle references are above world z=0.9 m and within 4.5 cm of any rack support reference. The evaluator compares handle-frame z and x axes with the first rack support reference, with 60-degree tolerances and either sign accepted for x. Each mug must finish more than 4.5 cm above its initial height.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/hang_mugs.py": "4bc6586bd87de030b9c580fea2a45e7977c3b6a4d75cf3c43b546d349d42e906",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Scoring also checks each handle reference has settled within a 5 mm movement tolerance. One, two and three qualifying mugs receive 15%, 40% and 100% credit, respectively."
     },
     "hang_mugs_random": {
       "completion_details": "Final handle references are above world z=0.9 m and within 4.5 cm of any rack support reference. The evaluator compares handle-frame z and x axes with the first rack support reference, with 60-degree tolerances and either sign accepted for x. Each mug must finish more than 4.5 cm above its initial height.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/hang_mugs.py": "4bc6586bd87de030b9c580fea2a45e7977c3b6a4d75cf3c43b546d349d42e906",
-        "task/RoboDojo/tasks/hang_mugs_random.py": "ebfa4a95deb954aa7a9063a07fe366cb5ea1835d3f52342b10d531225dfeee92",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Scoring also checks each handle reference has settled within a 5 mm movement tolerance. One, two and three qualifying mugs receive 15%, 40% and 100% credit, respectively."
     },
     "imitate_sorting_sequence": {
       "completion_details": "The process failure condition combines either main arm outside its home tolerance with the demonstrator outside its own tolerance. Main arms: 0.3 m / 30 degrees; demonstrator: 0.3 m / 40 degrees.",
       "process_rules": "While the demonstrator is away from home, keep both main arms at their initial poses; moving away then can fail the task. Placing and releasing a later object before an earlier one can also fail once the misplaced object settles.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/imitate_sorting_sequence.py": "18400cb3c5f5103492819df2dcdf05a77916106e8a503cb62b4ee6cdbaa9305b",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Later items stay outside your basket until their turn; demonstrated items remain in the demonstration basket."
     },
     "insert_key": {
       "completion_details": "Final insertion depth greater than 25 mm; planar center error below 7 mm; upright tolerance 7 degrees. Final orientation is about 60 degrees clockwise from the slot direction viewed from above, with 30-degree tolerance.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/insert_key.py": "180978a2915744f0596fbca4ea0ad6dcb47dce005d43f06807249bc8b4d1a828",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "insert_tubes": {
       "completion_details": "Final insertion depth is greater than 45 mm; upright tolerance is 30 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/insert_tubes.py": "9a68795ddbd0b816ffd7627e673390ecd83594c0e9d374d4e3abf3435ad439e1",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "make_kong": {
       "completion_details": "Replacement tile final target: world x=0.319, y=-0.15 m, within 15 mm. The matching face-up triplet has 30-degree orientation tolerance; the other tiles and both replacement-tile stages use 7 degrees. Final normalized measured gripper-opening threshold is 0.6. Opponent-overlap failure uses main home tolerance 0.3 m / 30 degrees and opponent 0.3 m / 40 degrees.",
       "process_rules": "Keep both main arms at their initial poses while the opponent is away. The kong and replacement-tile states must occur in that order.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/make_kong.py": "b9266689d65f9213b05219ad952344f9fd63be8892097ec0103af99791b245d5",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "make_toast": {
       "completion_details": "The selected bread reference settles 3-6.5 cm above its slot reference. All four slices satisfy the final upright checks within 30 degrees; the lever travel ratio is above 0.85.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/make_toast.py": "1047f484a73d1f92304393879b51f87e33d661b6ad7937198352fe37a0d3233d",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "make_toast_random": {
       "completion_details": "The selected bread reference settles between 5 cm below and 6.8 cm above its slot reference. All four slices satisfy the final upright checks within 30 degrees; the lever travel ratio is above 0.85.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/make_toast.py": "1047f484a73d1f92304393879b51f87e33d661b6ad7937198352fe37a0d3233d",
-        "task/RoboDojo/tasks/make_toast_random.py": "69fb879b89e98f7369971834eb6d1b95c5a65f5ffe978b2cffae0b12c6b756ca",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "match_and_pick_from_conveyor": {
       "completion_details": "",
       "process_rules": "Do not substitute the first occurrence for its later match.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/match_and_pick_from_conveyor.py": "53110b8a0c971bd3ae8878bfb7d0dcd9626bd9b610d4e7fc91772313b435a5c0",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "organize_table": {
       "completion_details": "The keyboard footprint covers the marked rectangle; its orientation and the mouse facing direction use 45-degree tolerances. Keyboard, figurine and clock upright tolerance is 15 degrees. Each placed object must settle within a 2 mm movement tolerance. Figurine centering tolerance varies with its shape (2-4.5 cm); reference-height ranges above their supports are 0.5-10 cm for the figurine and 22.5-30 cm for the clock.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/organize_table.py": "9e3057e70b8ad0b8cb553be6dec00d2b71fada6f4087edcb38fc56508f572dbd",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "pack_objects_into_box": {
       "completion_details": "Final box upright tolerance is 15 degrees and left-right alignment tolerance is 40 degrees. Each object aligns with the box long axis within 45 degrees and faces left within 60 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pack_objects_into_box.py": "84a1cf1dd5e166f36291130f9d8cb5dfe4b3f4732a46674bef6374a7ea2d66be",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "pack_objects_into_box_random": {
       "completion_details": "Final box upright tolerance is 15 degrees and left-right alignment tolerance is 40 degrees. Each object aligns with the box long axis within 45 degrees and faces left within 60 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pack_objects_into_box.py": "84a1cf1dd5e166f36291130f9d8cb5dfe4b3f4732a46674bef6374a7ea2d66be",
-        "task/RoboDojo/tasks/pack_objects_into_box_random.py": "4db259a1b97cdcc39ebc9794244fadc79d31c4ae64069c9b11a233356fcb655c",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "pick_from_conveyor_by_image": {
       "completion_details": "The instruction specifies lifting the basket more than 8 cm. The completion check requires the target more than 8 cm above its initial height and within the basket footprint, with its bottom -1 to 4 cm relative to the basket bottom.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pick_from_conveyor_by_image.py": "a0d29576d0aab8232d2fd3ebcc8c510e81c70b4cc04602a5be3e99ee2275e01d",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "play_Xylophone": {
       "completion_details": "The mallet striking point must enter the key target region and the vertical band 1-3.6 cm above the defined key hit point.",
       "process_rules": "Between strikes, the mallet must rise more than 35 mm above its height when the preceding strike was first registered, which may be higher than the lowest point of the stroke.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/play_Xylophone.py": "b7a4b0bc0457bcf55d714ca1867476fc4aabc53084adfc78d3ff5d1437bf7847",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "The evaluator requires a rise of more than 25 mm; the 35 mm guidance adds clearance."
     },
     "play_stacking_toy": {
       "completion_details": "The seating predicate checks approximately 1 mm planar alignment and at least 5 mm insertion.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/play_stacking_toy.py": "23361329ee7efe330da1f1c241415205bafed2b6c082a913659d868a80d338c3",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Each scored group is a fully populated peg, rather than an individual piece."
     },
     "play_tic_tac_toe": {
       "completion_details": "Final cell-center tolerance is 15 mm and piece references are 0-2 cm above the board reference. Overlap failure combines either main arm outside home tolerance with the opponent outside its own tolerance. Main arms: 0.3 m / 30 degrees; opponent: 0.3 m / 40 degrees.",
       "process_rules": "You move first. Return both arms home to trigger each opponent move, and remain there until the opponent returns. Moving or pre-grasping during its turn can fail the task.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/play_tic_tac_toe.py": "8f75ebfe55c997ad9bd3b342db46e843e87397db94356f31cadcbe0cb483bca7",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "plug_in_charger": {
       "completion_details": "Final prong insertion depth is greater than 15 mm; charger upright tolerance is 10 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/plug_in_charger.py": "aaa59ade46dc54f430e1148e3f6fae487970cd29eb2c07b5ff7b4045edb831b6",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "pour_balls_into_vase": {
       "completion_details": "Final pouring-cup upright tolerance is 15 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pour_balls_into_vase.py": "eae388b93ec196c401f76bbab3b0119cb2164f90bece0225d4fb925d3f2b73ab",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "pour_by_language": {
       "completion_details": "Each bottle is restored upright after at least 95% of its poured liquid is in the assigned bowl and at most 10% remains in the bottle. These are assessment criteria, not measured feedback. The bottle-upright trigger uses 30 degrees.",
       "process_rules": "Restoring each bottle upright triggers its transfer check. Returning an arm home after later pairs while an earlier pair is incomplete can fail the task.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pour_by_language.py": "f7a15a7fca2c649a7918d68960ede27e667f409a339b668dd9876db890724cfb",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Transfer scores are checked when an arm returns home; completed pairs must form the specified ordered prefix."
     },
     "pour_liquid_into_cup": {
       "completion_details": "The upright check uses 30 degrees. At least 97% of counted liquid must be in the cup and bottle residual below 15%. No final arm-home requirement.",
       "process_rules": "Returning the bottle upright triggers the transfer check; assess the pour before triggering it.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pour_liquid_into_cup.py": "73f8c91b57c352fdc1e7ba3fe5354b3c10e4156d8e5ba777762ad0fa1aff5663",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "pour_liquid_into_cup_random": {
       "completion_details": "The upright check uses 30 degrees. At least 97% of counted liquid must be in the cup and bottle residual below 15%. No final arm-home requirement.",
       "process_rules": "Returning the bottle upright triggers the transfer check; assess the pour before triggering it.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/pour_liquid_into_cup.py": "73f8c91b57c352fdc1e7ba3fe5354b3c10e4156d8e5ba777762ad0fa1aff5663",
-        "task/RoboDojo/tasks/pour_liquid_into_cup_random.py": "a1c4097b6e34b2c62885b3a9c7d2584a93d9e296dc41d311a80c2e6d541d53af",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "press_by_number": {
       "completion_details": "Press detection crosses below 0.5 travel ratio; release crosses above 0.9. These are button state thresholds, not commanded gripper values.",
       "process_rules": "Blue is pressed exactly twice in total. Extra blue presses or red over-counting fail. Each press must be followed by full release.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/press_by_number.py": "006f969087c00c417a63875a9de153f698c52d1f1ca0caf0aa16076aa15059c5",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "push_T": {
       "completion_details": "Final planar tolerance: 7 mm; orientation tolerance: 7 degrees.",
       "process_rules": "Do not pick-and-place: lifting the block more than 1 cm immediately fails.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/push_T.py": "a01d753bc320ffbf492ccc29e5f7ab3b39e6c7d255cd25804db1934a30fa5b41",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "push_T_random": {
       "completion_details": "Final planar tolerance: 7 mm; orientation tolerance: 7 degrees.",
       "process_rules": "Do not pick-and-place: lifting the block more than 1 cm immediately fails.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/push_T.py": "a01d753bc320ffbf492ccc29e5f7ab3b39e6c7d255cd25804db1934a30fa5b41",
-        "task/RoboDojo/tasks/push_T_random.py": "dc8d9c8e0d2e8dfffa2b7d433a8278c0eaf707cc4861b15035364c2e70061dab",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "put_bottles_into_dustbin": {
       "completion_details": "Each bottle footprint is inside the bin footprint, with its bottom 0-40 cm above the bin bottom.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/put_bottles_into_dustbin.py": "3ba6e19df0c5ff19ba961092f031ce14e91e72a9a4a5934eece6000a1ffa1c48",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "solve_equation": {
       "completion_details": "Final planar center error is below 18 mm; readable-axis tolerances are 45 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/solve_equation.py": "e287a2f36b82b28e8ca7824f63b1b723b02972ea6dfc115ff32b2882729751f7",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "sort_nesting_dolls_by_size": {
       "completion_details": "Final front-back spread tolerance: 3.5 cm; adjacent centers separated by at least 3 cm horizontally. Final upright tolerance is 15 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/sort_nesting_dolls_by_size.py": "1838fa6b515bad3796895cb5c1883c6a42789b7dada5434765764600e70beb49",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "sort_nesting_dolls_by_size_random": {
       "completion_details": "Final front-back spread tolerance: 3.5 cm; adjacent centers separated by at least 3 cm horizontally. Final upright tolerance is 15 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/sort_nesting_dolls_by_size.py": "1838fa6b515bad3796895cb5c1883c6a42789b7dada5434765764600e70beb49",
-        "task/RoboDojo/tasks/sort_nesting_dolls_by_size_random.py": "b793ab5bd32bd2c10bd46874440904837f9c4e290e7508b06426e2e96425709a",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "stack_blocks": {
       "completion_details": "Final planar centering tolerance varies with block size (15, 17.5 or 20 mm).",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/stack_blocks.py": "50bd388f9e47002966fbb0146742467a820295b8686e0f86379f0efbcfffcc1b",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "stack_blocks_by_language": {
       "completion_details": "Final centering tolerance is 17.5 mm.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/stack_blocks_by_language.py": "36a83925f35c7a4caac5add328dd35cb1d346bad833d3064f455d88221e7a41e",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores require both grippers open, with a normalized measured-opening threshold of 0.92. The two-block milestone additionally checks center-height separation of at most 4 cm and the bottom block no more than 1 cm above its initial height."
     },
     "stack_blocks_random": {
       "completion_details": "Final planar centering tolerance is 15 mm.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/stack_blocks.py": "50bd388f9e47002966fbb0146742467a820295b8686e0f86379f0efbcfffcc1b",
-        "task/RoboDojo/tasks/stack_blocks_random.py": "19d4e5cd693e068ad64de75cbcd24977ab8d39e22fa17362a391dcd733bc9bb5",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8. Scoring uses the size-dependent centering tolerances of 15, 17.5 or 20 mm."
     },
     "stack_bowls": {
       "completion_details": "At completion, the bottom bowl is upright within 7 degrees, upper bowls within 45 degrees, and planar stack tolerance is 4 cm.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/stack_bowls.py": "022c129ec3493183b1a26688a0402f5a00a1546ae011999e9c19f4c0029e2b7d",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "stack_bowls_random": {
       "completion_details": "At completion, the bottom bowl is upright within 7 degrees, upper bowls within 45 degrees, and planar stack tolerance is 4 cm.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/stack_bowls.py": "022c129ec3493183b1a26688a0402f5a00a1546ae011999e9c19f4c0029e2b7d",
-        "task/RoboDojo/tasks/stack_bowls_random.py": "a0e20469eb44a9ee98650d09386814c1df5264c68ec139f06aabf0c86f092514",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "store_laptop_and_headphones": {
       "completion_details": "Headphones final tolerance: 5 cm / 30 degrees. Laptop closed-lid hinge ratio greater than 0.85; upright tolerance 10 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/store_laptop_and_headphones.py": "2bee4e31f0594900629fe7f43266e16fecb310b152930ce51524507136809a92",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "The headphone and laptop placements are scored separately, with both grippers open at normalized measured-opening thresholds of 0.8 and 0.7 respectively."
     },
     "store_laptop_and_headphones_random": {
       "completion_details": "Headphones final tolerance: 5 cm / 30 degrees. Laptop closed-lid hinge ratio greater than 0.85; upright tolerance 10 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/store_laptop_and_headphones.py": "2bee4e31f0594900629fe7f43266e16fecb310b152930ce51524507136809a92",
-        "task/RoboDojo/tasks/store_laptop_and_headphones_random.py": "58c3c5113054a379214d64ae406ed8dde99603cf684ce9cd8c7bcb72ed334382",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "The headphone and laptop placements are scored separately, with both grippers open at normalized measured-opening thresholds of 0.8 and 0.7 respectively."
     },
     "store_tools_in_toolbox": {
       "completion_details": "Final reference-point tolerances: position below 5 cm and orientation below 10 degrees. Pliers accept either of two designated reference orientations. Toolbox containment and final arm-home conditions also apply.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/store_tools_in_toolbox.py": "2969fc3eb171560b3c0bcea62b9f38b8b35f3aecc9bcc7085c3b1cec365b48fc",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": "Placement scores additionally require both grippers open, with a normalized measured-opening threshold of 0.8."
     },
     "swap_T": {
       "completion_details": "Final planar tolerance: 2 cm; orientation tolerance: 3 degrees.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/swap_T.py": "57fc289b3957caa454e1d8e005e3a57c973d6ab40121845c94799e61e4bfafdf",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "swap_blocks": {
       "completion_details": "Each placement is checked within 3 cm of its mat center. Button press ratio below 0.5; full release above 0.9. The evaluator requires exactly three confirmations.",
       "process_rules": "Move one block to the empty mat and confirm once; move the other to the vacated mat and confirm once; move the buffered block to the final vacated mat and confirm once. Each transfer includes a lift of more than 3 cm before placement. Press and fully release for each confirmation; no extra confirmations.",
-      "source_sha256": {
-        "task/RoboDojo/tasks/swap_blocks.py": "08ed24ae9dff27f4e5c850161a02f62ce237859c096d9b06a853a7890e0ad4ed",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "sweep_blocks": {
       "completion_details": "At completion the pan is upright within 5 degrees and no more than 1 cm above its initial height. The source checks these at completion, not as continuous immediate-failure conditions.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/sweep_blocks.py": "65786217e199c1e2b26ec8e2c232bf98ecb304a20939d0908fe12bc41e990614",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     },
     "sweep_blocks_random": {
       "completion_details": "At completion the pan is upright within 5 degrees and no more than 1 cm above its initial height. The source checks these at completion, not as continuous immediate-failure conditions.",
       "process_rules": "",
-      "source_sha256": {
-        "task/RoboDojo/tasks/sweep_blocks.py": "65786217e199c1e2b26ec8e2c232bf98ecb304a20939d0908fe12bc41e990614",
-        "task/RoboDojo/tasks/sweep_blocks_random.py": "68b6127038322cf001d5f614060b8a1d96e64a49efddfcdcae91127d5c206bc5",
-        "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
-        "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41"
-      },
       "assessment_notes": ""
     }
   },
