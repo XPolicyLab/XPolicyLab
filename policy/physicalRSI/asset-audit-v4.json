@@ -1,0 +1,1886 @@
+{
+  "schema": "physicalrsi.legacy-geometry-audit/v1",
+  "program_templates_sha256": "a181e22312fd65c53590c8e040da804158eb01115c9337633bf576daa66ef2fa",
+  "scope": "Targeted static evidence; neither proof of runtime reachability for every hit nor compliance certification.",
+  "qualified": false,
+  "programs": [
+    "align-blocks",
+    "arrange-largest-number-random",
+    "classify-objects",
+    "classify-objects-by-language",
+    "cover-blocks",
+    "deposit-coin",
+    "general-pickup",
+    "insert-key",
+    "insert-tubes",
+    "make-kong",
+    "play-tic-tac-toe",
+    "plug-in-charger",
+    "pour-balls-into-vase",
+    "pour-by-language",
+    "pour-liquid-into-cup",
+    "press-by-number",
+    "push-t",
+    "solve-equation",
+    "sort-nesting-dolls-by-size",
+    "stack-blocks-by-language",
+    "store-tools-in-toolbox",
+    "swap-t"
+  ],
+  "sources": [
+    {
+      "sha256": "ee27884eac16c99552b04635171efd387986ebb3dad6f305d104c4f72ee926a0",
+      "paths": [
+        "runtime/descriptors/press_by_number.json"
+      ],
+      "programs": [
+        "press-by-number"
+      ],
+      "importable_by": [],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 49,
+          "excerpt": "\"plane_z\": 0.765,"
+        }
+      ]
+    },
+    {
+      "sha256": "387758a08f7839de7732d7193a704859d474a1570f9f338ebdbb48f8f65d7a53",
+      "paths": [
+        "implementations/CoverHarnessRGB/6ac4cd972b4b48dc/CoverHarnessRGB/model.py",
+        "implementations/CoverHarnessRGB/a535ef5c8f951896/CoverHarnessRGB/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "align-blocks",
+        "arrange-largest-number-random",
+        "classify-objects",
+        "classify-objects-by-language",
+        "deposit-coin",
+        "general-pickup",
+        "insert-key",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "pour-balls-into-vase",
+        "pour-by-language",
+        "pour-liquid-into-cup",
+        "press-by-number",
+        "push-t",
+        "solve-equation",
+        "sort-nesting-dolls-by-size",
+        "stack-blocks-by-language",
+        "store-tools-in-toolbox",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 10,
+          "excerpt": "BASE={'left':[-.3,-.45,.765,.707,0,0,.707],'right':[.3,-.45,.765,.707,0,0,.707]}"
+        }
+      ]
+    },
+    {
+      "sha256": "0b48b8a5effed82dc25fa298391c3b990492dd906591933e44e86183ea33f42a",
+      "paths": [
+        "implementations/CoverHarnessRGB/6ac4cd972b4b48dc/CoverHarnessRGB/perception.py",
+        "implementations/CoverHarnessRGB/a535ef5c8f951896/CoverHarnessRGB/perception.py",
+        "implementations/CoverHarnessRGB/ea16ca19ec827b31/CoverHarnessRGB/perception.py",
+        "implementations/CoverHarnessRGB/eea8a504a9442332/CoverHarnessRGB/perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "align-blocks",
+        "arrange-largest-number-random",
+        "classify-objects",
+        "classify-objects-by-language",
+        "cover-blocks",
+        "deposit-coin",
+        "general-pickup",
+        "insert-key",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "pour-balls-into-vase",
+        "pour-by-language",
+        "pour-liquid-into-cup",
+        "press-by-number",
+        "push-t",
+        "solve-equation",
+        "sort-nesting-dolls-by-size",
+        "stack-blocks-by-language",
+        "store-tools-in-toolbox",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "asset_shape_template",
+          "line": 7,
+          "excerpt": "SHAPES=dict(np.load(Path(__file__).with_name('public_shapes.npz')))"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 33,
+          "excerpt": "guess=ORIGIN+ray*((.765+SHAPES[kind][:,2].max()/2-ORIGIN[2])/ray[2])"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 34,
+          "excerpt": "def residual(xy):return features(project(SHAPES[kind]+np.r_[xy,.765]))-observed"
+        }
+      ]
+    },
+    {
+      "sha256": "8898d7fd42d0b3959290d6b67bbb85822b8f4f837207dfad8413bd0c97843729",
+      "paths": [
+        "implementations/CoverHarnessRGB/ea16ca19ec827b31/CoverHarnessRGB/model.py",
+        "implementations/CoverHarnessRGB/eea8a504a9442332/CoverHarnessRGB/model.py"
+      ],
+      "programs": [
+        "cover-blocks"
+      ],
+      "importable_by": [
+        "cover-blocks"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 10,
+          "excerpt": "BASE={'left':[-.3,-.45,.765,.707,0,0,.707],'right':[.3,-.45,.765,.707,0,0,.707]}"
+        }
+      ]
+    },
+    {
+      "sha256": "cf33a75309f4677484c390949564430a44b2d72834520257c58400f4eb44fef1",
+      "paths": [
+        "implementations/PourBallsRGB/5b6cc7e6885017b9/PourBallsRGB/kinematics.py",
+        "implementations/PourBallsRGB/82ff12a1d0edb44b/PourBallsRGB/kinematics.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-balls-into-vase"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 82,
+          "excerpt": "gap=float(np.min(points[:,2]-radii))-.765;ee=base@self.fk(q)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 86,
+          "excerpt": "gap=min(gap,float((rel@ee[:3,:3].T+ee[:3,3])[:,2].min())-.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "6ffa3bad44a0bc88f711eec5c9c35d66c7f718ff42ebdf39fa18de35315249a9",
+      "paths": [
+        "implementations/PourBallsRGB/5b6cc7e6885017b9/PourBallsRGB/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-balls-into-vase"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 253,
+          "excerpt": "vfits=[registration(m,vf['key'],prior=np.asarray(vf['pose']),visibility=PixelOcclusion(occ|mask),support_z=.765) for m in vase_masks]"
+        }
+      ]
+    },
+    {
+      "sha256": "5f0b4f1e228692f4f60d0bd99f0af1a6ac47a9c384c9cc4203a00856afba9be2",
+      "paths": [
+        "implementations/PourBallsRGB/5b6cc7e6885017b9/PourBallsRGB/perception.py",
+        "implementations/PourBallsRGB/82ff12a1d0edb44b/PourBallsRGB/perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-balls-into-vase"
+      ],
+      "findings": [
+        {
+          "rule": "asset_shape_template",
+          "line": 10,
+          "excerpt": "ROOT=Path(__file__).parent;SHAPES=dict(np.load(ROOT/'shapes.npz'));META=json.loads((ROOT/'shapes.json').read_text())"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 30,
+          "excerpt": "t[:3,:3]=Rot.from_euler('z',v[2]).as_matrix()@rest;t[:2,3]=v[:2];t[2,3]=v[3] if key=='bin' else .765-(points@t[:3,:3].T)[:,2].min()"
+        }
+      ]
+    },
+    {
+      "sha256": "53733d4aed99c4a4aea236106f64a4da557ab5e54a76c1ae236d20c59fef80aa",
+      "paths": [
+        "implementations/PourBallsRGB/82ff12a1d0edb44b/PourBallsRGB/model.py"
+      ],
+      "programs": [
+        "pour-balls-into-vase"
+      ],
+      "importable_by": [
+        "pour-balls-into-vase"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 253,
+          "excerpt": "vfits=[registration(m,vf['key'],prior=np.asarray(vf['pose']),visibility=PixelOcclusion(occ|mask),support_z=.765) for m in vase_masks]"
+        }
+      ]
+    },
+    {
+      "sha256": "094d161c0c80f5a833433b3f60dc9e65131af9521f003748e8271647b2053b02",
+      "paths": [
+        "implementations/align_blocks_rgb_straightedge/57d3530f5fd5bdd2/align_blocks_rgb_straightedge/align_policy/perception.py",
+        "implementations/align_blocks_rgb_straightedge/8f4dd9a66b463155/align_blocks_rgb_straightedge/align_policy/perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "align-blocks"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 8,
+          "excerpt": "TABLE_SURFACE_Z_M = 0.765"
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 28,
+          "excerpt": "use_known_square_scale: bool = True"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 78,
+          "excerpt": "ALIGN_BLOCKS = TaskPerceptionSpec(**{'task_name': 'align_blocks', 'group_counts': {'cube': 3, 'target': 1}, 'camera_name': 'cam_head', 'table_z_m': 0.765, 'sam3_max_side': 640, 'support_local': {}, 'support_radii_m': {}, 'functional_local': {}}, labels=tuple((LabelSpec(**x) for x in [{'label': 'cube0', 'prompt': 'cube', 'model_name': 'cube', 'model_id': 0, 'object_z_m': 0.7825, 'bbox_size_m': (0.035, 0.035, 0.035), 'group': 'cube', 'confidence_threshold': 0.3, 'bbox_vertices_local_m': None, 'extra_prompts': (), 'yaw_mode': 'mask', 'mask_center_local_xy_m': (0.0, 0.0), 'mask_projection_z_m': 0."
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 78,
+          "excerpt": "ALIGN_BLOCKS = TaskPerceptionSpec(**{'task_name': 'align_blocks', 'group_counts': {'cube': 3, 'target': 1}, 'camera_name': 'cam_head', 'table_z_m': 0.765, 'sam3_max_side': 640, 'support_local': {}, 'support_radii_m': {}, 'functional_local': {}}, labels=tuple((LabelSpec(**x) for x in [{'label': 'cube0', 'prompt': 'cube', 'model_name': 'cube', 'model_id': 0, 'object_z_m': 0.7825, 'bbox_size_m': (0.035, 0.035, 0.035), 'group': 'cube', 'confidence_threshold': 0.3, 'bbox_vertices_local_m': None, 'extra_prompts': (), 'yaw_mode': 'mask', 'mask_center_local_xy_m': (0.0, 0.0), 'mask_projection_z_m': 0."
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 185,
+          "excerpt": "estimated = mask_to_table_pose(mask, scaled_k, transform, table_z=task_spec.table_z_m if label_spec.mask_projection_z_m is None else label_spec.mask_projection_z_m, object_z=label_spec.object_z_m, sample_stride=2 if square else 8, known_side_m=float(label_spec.bbox_size_m[0]) if square else None, filter_near_extrusion=label_spec.filter_near_extrusion, near_extrusion_quantile=label_spec.near_extrusion_quantile)"
+        }
+      ]
+    },
+    {
+      "sha256": "8ef579cb6c595b65af5ad1f4ef919cd0e915dba601c77ebc1404e3196dd93a91",
+      "paths": [
+        "implementations/align_blocks_rgb_straightedge/57d3530f5fd5bdd2/align_blocks_rgb_straightedge/align_policy/robot.py",
+        "implementations/align_blocks_rgb_straightedge/8f4dd9a66b463155/align_blocks_rgb_straightedge/align_policy/robot.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "align-blocks"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 9,
+          "excerpt": "self.bases = {a: [x, -.45, .765, .707, 0., 0., .707] for a,x in [('left',-.3),('right',.3)]}"
+        }
+      ]
+    },
+    {
+      "sha256": "4c0f8fc9dcbfd2b6ab1330956f5e0f24aa5adfd385397758f8b4268feb02dc78",
+      "paths": [
+        "implementations/arrange_rgb/7990151605e857df/arrange_rgb/collision_gate.py",
+        "implementations/arrange_rgb/8f3f2aab6a15eac1/arrange_rgb/collision_gate.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "arrange-largest-number-random"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 65,
+          "excerpt": "table_gap=min(float(o[4][:,2].min())-.765 for o in objects if o[1]>=2)"
+        }
+      ]
+    },
+    {
+      "sha256": "4c2212d0e2a8f3c7a58e48b0e021c8089634a44bebece90725f555c9c1765ef2",
+      "paths": [
+        "implementations/arrange_rgb/7990151605e857df/arrange_rgb/projected_digit.py",
+        "implementations/arrange_rgb/8f3f2aab6a15eac1/arrange_rgb/projected_digit.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "arrange-largest-number-random"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 4,
+          "excerpt": "CAM=np.array([0.,-.41,1.308]);PLANE=.780;TABLE=.765"
+        }
+      ]
+    },
+    {
+      "sha256": "7cf57fa4689e5741bdaf462aee81d16ca2d9a3531271ee9e2dd1b80219bff6f1",
+      "paths": [
+        "implementations/arrange_rgb/7990151605e857df/arrange_rgb/single_env.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "arrange-largest-number-random"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 350,
+          "excerpt": "z = 0.765 + 0.003 + TIP_OFFSET"
+        }
+      ]
+    },
+    {
+      "sha256": "bf06d6c7868c69835aab0c6b4a14ab2047966a91e206813507d9090f6e078f4c",
+      "paths": [
+        "implementations/arrange_rgb/7990151605e857df/arrange_rgb/skill_choices.py",
+        "implementations/arrange_rgb/8f3f2aab6a15eac1/arrange_rgb/routes.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "arrange-largest-number-random"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 19,
+          "excerpt": "base=base if base is not None else pin.SE3(Rotation.from_quat([0,0,.707,.707]).as_matrix(),np.array([-.3 if arm=='left' else .3,-.45,.765]))"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 76,
+          "excerpt": "free=(rectify(table.astype(np.uint8)*255,z=.765)>127).astype(np.uint8)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 81,
+          "excerpt": "top=rectify(rgb,z=.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "a8195588b62c34c263c3af313d6e3808896e1c287d5f0a45d49917fb283efa83",
+      "paths": [
+        "implementations/arrange_rgb/8f3f2aab6a15eac1/arrange_rgb/single_env.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "arrange-largest-number-random"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 57,
+          "excerpt": "z=.765+.003+TIP_OFFSET;high=z+.060;destination_high=z+.035"
+        }
+      ]
+    },
+    {
+      "sha256": "65b6663325ab5a81790d659a093a6c09c8dd2a2389d402b7a6839410107f35de",
+      "paths": [
+        "implementations/deposit_policy/38d2895d72c01634/deposit_policy/policy_ik.py",
+        "implementations/deposit_policy/80ab0f01212c0341/deposit_policy/policy_ik.py",
+        "implementations/deposit_policy/c4ca4e52e95e23c2/deposit_policy/policy_ik.py",
+        "implementations/rdj_plug_policy/1c46a389f0225e62/rdj_plug_policy/policy_ik.py",
+        "implementations/rdj_plug_policy/db749cb087911eae/rdj_plug_policy/policy_ik.py",
+        "implementations/rdj_plug_policy/eb0036595f3b1f25/rdj_plug_policy/policy_ik.py",
+        "implementations/rdj_plug_policy/f38a483b7631a0e5/rdj_plug_policy/policy_ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects-by-language",
+        "cover-blocks",
+        "deposit-coin",
+        "general-pickup",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "press-by-number",
+        "push-t",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 22,
+          "excerpt": "self.robot_cfg, self.scene_model = self._build_robot_and_scene_cfg(data, 0.74-0.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "d18bc25a1a0258aeb0beceae8589006422e5914d411cc48ec4038df975c75d37",
+      "paths": [
+        "implementations/deposit_policy/38d2895d72c01634/deposit_policy/rgb_perception.py",
+        "implementations/deposit_policy/80ab0f01212c0341/deposit_policy/rgb_perception.py",
+        "implementations/deposit_policy/c4ca4e52e95e23c2/deposit_policy/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "deposit-coin"
+      ],
+      "findings": [
+        {
+          "rule": "exact_coin_height",
+          "line": 20,
+          "excerpt": "_COIN_Z_M = 0.7803999822616577"
+        }
+      ]
+    },
+    {
+      "sha256": "bd425872457e31e19347c94791ef3e1a4df83fe94ed12ed0ca45435b66df2830",
+      "paths": [
+        "implementations/deposit_policy/38d2895d72c01634/deposit_policy/robot_frames.py",
+        "implementations/deposit_policy/80ab0f01212c0341/deposit_policy/robot_frames.py",
+        "implementations/deposit_policy/c4ca4e52e95e23c2/deposit_policy/robot_frames.py",
+        "implementations/rdj_plug_policy/1c46a389f0225e62/rdj_plug_policy/robot_frames.py",
+        "implementations/rdj_plug_policy/db749cb087911eae/rdj_plug_policy/robot_frames.py",
+        "implementations/rdj_plug_policy/eb0036595f3b1f25/rdj_plug_policy/robot_frames.py",
+        "implementations/rdj_plug_policy/f38a483b7631a0e5/rdj_plug_policy/robot_frames.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects-by-language",
+        "cover-blocks",
+        "deposit-coin",
+        "general-pickup",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "press-by-number",
+        "push-t",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 14,
+          "excerpt": "self.robots = {arm: SimpleNamespace(arm=arm, gripper_bias=0.145, delta_matrix=np.eye(3), inv_delta_matrix=np.eye(3), entity_origin_pose=[x, -0.45, 0.765, 0.707, 0, 0, 0.707]) for arm, x in [('left', -0.3), ('right', 0.3)]}"
+        }
+      ]
+    },
+    {
+      "sha256": "d0a5f3475488487cc2ca11483c0d44cfab6ed1becdd2c2b3cbfc34244358f706",
+      "paths": [
+        "implementations/insert_key/cf205b4840295111/insert_key/calibration_provenance.json"
+      ],
+      "programs": [],
+      "importable_by": [
+        "insert-key"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 3,
+          "excerpt": "\"tabletop_prior_m\": 0.765,"
+        }
+      ]
+    },
+    {
+      "sha256": "4fc53f35ba2bd35d328e4ea6eb288b4a09680a53c8232261724adb230eb1ded2",
+      "paths": [
+        "implementations/pour_by_language/b50c0200475f3dc6/pour_by_language/core/geometry.py",
+        "implementations/pour_by_language/e1a400361bdafb0f/pour_by_language/core/geometry.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 19,
+          "excerpt": "return float((finger_vertices()@ee[:3,:3].T+ee[:3,3])[:,2].min()-.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "6fea7990e5c3ecb982a46ebb5a3e4759187bf01c0f8e4c604220477cbdb40630",
+      "paths": [
+        "implementations/pour_by_language/b50c0200475f3dc6/pour_by_language/core/model.py",
+        "implementations/pour_by_language/e1a400361bdafb0f/pour_by_language/core/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 20,
+          "excerpt": "TABLE=0.765"
+        }
+      ]
+    },
+    {
+      "sha256": "bd5cba09228028f9c24bd0060d502b161c74cde4044e28b3d51b394538cffdc2",
+      "paths": [
+        "implementations/pour_by_language/b50c0200475f3dc6/pour_by_language/core/motion.py",
+        "implementations/pour_by_language/e1a400361bdafb0f/pour_by_language/core/motion.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 5,
+          "excerpt": "TABLE=.765"
+        }
+      ]
+    },
+    {
+      "sha256": "9c9137cc417d429ab354bb610f2903f5d0f3ccbf316cf96c7aef4651a4ccc4e0",
+      "paths": [
+        "implementations/pour_by_language/b50c0200475f3dc6/pour_by_language/core/rdj_insert_policy/ik.py",
+        "implementations/pour_by_language/e1a400361bdafb0f/pour_by_language/core/rdj_insert_policy/ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 62,
+          "excerpt": "base_p = np.asarray([-.3 if arm == 'left' else .3, -.45, .765])"
+        }
+      ]
+    },
+    {
+      "sha256": "12334f6c5b222f7db0228daaf07aba66893b94ea0a24bc92f8934955e8f41395",
+      "paths": [
+        "implementations/pour_by_language/b50c0200475f3dc6/pour_by_language/core/review_saved_rgb.py",
+        "implementations/pour_by_language/e1a400361bdafb0f/pour_by_language/core/review_saved_rgb.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 20,
+          "excerpt": "initial=np.eye(4);initial[:3,3]=[*ground['bottle_xy'],.765]"
+        }
+      ]
+    },
+    {
+      "sha256": "1df8bb05a49fb8d191f970ff5612a8866905744f446f5f87d1451d40c197b9ce",
+      "paths": [
+        "implementations/pour_by_language/b50c0200475f3dc6/pour_by_language/core/review_tilt_rgb.py",
+        "implementations/pour_by_language/e1a400361bdafb0f/pour_by_language/core/review_tilt_rgb.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 20,
+          "excerpt": "initial=np.eye(4);initial[:3,3]=[*ground['bottle_xy'],.765]"
+        }
+      ]
+    },
+    {
+      "sha256": "5f4132934d6f843e669123aacf20e5598f4216010c4c9f37a8581ba5abc6d395",
+      "paths": [
+        "implementations/rdj_equation/37e48efe180a01c1/rdj_equation/equation_rgb/kinematics.py",
+        "implementations/rdj_equation/7a06db6c2e20266c/rdj_equation/equation_rgb/kinematics.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "solve-equation"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 45,
+          "excerpt": "if low<.765:raise ValueError(f'planned_finger_envelope_below_table:{low}')"
+        }
+      ]
+    },
+    {
+      "sha256": "1cd3676c7543e2fe1a1c61add88bb8d5c7369370733f0be1df28fd79cb32dea6",
+      "paths": [
+        "implementations/rdj_equation/37e48efe180a01c1/rdj_equation/equation_rgb/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "solve-equation"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 202,
+          "excerpt": "source = np.array([*p['source'], 0.765 + p['height'] / 2])"
+        }
+      ]
+    },
+    {
+      "sha256": "809a26c9d2b4c1f5194193c41aa903bf2bd19137b0a4663e2b50f4a25fcb4c6a",
+      "paths": [
+        "implementations/rdj_equation/37e48efe180a01c1/rdj_equation/equation_rgb/relation.py",
+        "implementations/rdj_equation/7a06db6c2e20266c/rdj_equation/equation_rgb/relation.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "solve-equation"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 16,
+          "excerpt": "self.initial_root_z=.765+height/2"
+        }
+      ]
+    },
+    {
+      "sha256": "4f0788c08a381103a8c18ef958eba09a761bc55deb13acf3c9bd44f2c5875213",
+      "paths": [
+        "implementations/rdj_equation/37e48efe180a01c1/rdj_equation/equation_rgb/vision_gate.py",
+        "implementations/rdj_equation/7a06db6c2e20266c/rdj_equation/equation_rgb/vision_gate.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "solve-equation"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 71,
+          "excerpt": "self.z=.765+height;self.source=np.array(source);self.pose=np.array(pose)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 121,
+          "excerpt": "z=.765+thick;u,v=project(x,y,z)"
+        }
+      ]
+    },
+    {
+      "sha256": "2ab20599f2be5b51b04d6fc22313372d71e12960dbcffa5d0f8079f32e85fae1",
+      "paths": [
+        "implementations/rdj_equation/37e48efe180a01c1/rdj_equation/rgb_reader/geometry.py",
+        "implementations/rdj_equation/7a06db6c2e20266c/rdj_equation/rgb_reader/geometry.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "solve-equation"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 1,
+          "excerpt": "TABLE_TOP = .765"
+        }
+      ]
+    },
+    {
+      "sha256": "f9475a894195e76edb16d4e92dc0a262151e2fd9ee1ffc64ca0239ec3049512c",
+      "paths": [
+        "implementations/rdj_equation/7a06db6c2e20266c/rdj_equation/equation_rgb/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "solve-equation"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 61,
+          "excerpt": "source=np.array([*p['source'],.765+p['height']/2]);self.destination=np.array([*p['dest'],source[2]+.004]);self.source=source"
+        }
+      ]
+    },
+    {
+      "sha256": "f2ac97d07a41c22c4b2b45c0e1df2ee44ed90e41806d73b65edfc9298a2dfb63",
+      "paths": [
+        "implementations/rdj_insert_policy/48da5d4aa7120221/rdj_insert_policy/ik.py",
+        "implementations/rdj_insert_policy/81f53abbd29e281e/rdj_insert_policy/ik.py",
+        "implementations/rdj_insert_policy/8207fa72edbfb5ec/rdj_insert_policy/ik.py",
+        "implementations/rdj_insert_policy/bdf13004bd71d1c3/rdj_insert_policy/ik.py",
+        "implementations/rdj_insert_policy/d73c0b14f4a25b17/rdj_insert_policy/ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects",
+        "classify-objects-by-language",
+        "cover-blocks",
+        "general-pickup",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "pour-balls-into-vase",
+        "pour-by-language",
+        "pour-liquid-into-cup",
+        "press-by-number",
+        "push-t",
+        "stack-blocks-by-language",
+        "store-tools-in-toolbox",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 37,
+          "excerpt": "# Identical fixed tabletop in robot-base coordinates: 0.74 - 0.765."
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 52,
+          "excerpt": "base_p = np.asarray([-.3 if arm == 'left' else .3, -.45, .765])"
+        }
+      ]
+    },
+    {
+      "sha256": "5b1d450b0996c98eb4e1f7c6baff82562b75c1beb4fde9c891db04ba3cacf548",
+      "paths": [
+        "implementations/rdj_insert_policy/48da5d4aa7120221/rdj_insert_policy/rgb_perception.py",
+        "implementations/rdj_insert_policy/81f53abbd29e281e/rdj_insert_policy/rgb_perception.py",
+        "implementations/rdj_insert_policy/8207fa72edbfb5ec/rdj_insert_policy/rgb_perception.py",
+        "implementations/rdj_insert_policy/bdf13004bd71d1c3/rdj_insert_policy/rgb_perception.py",
+        "implementations/rdj_insert_policy/d73c0b14f4a25b17/rdj_insert_policy/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects",
+        "classify-objects-by-language",
+        "cover-blocks",
+        "general-pickup",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "pour-balls-into-vase",
+        "pour-by-language",
+        "pour-liquid-into-cup",
+        "press-by-number",
+        "push-t",
+        "stack-blocks-by-language",
+        "store-tools-in-toolbox",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "exact_tube_height",
+          "line": 20,
+          "excerpt": "_TUBE_ROOT_Z = 0.7808752236133516"
+        }
+      ]
+    },
+    {
+      "sha256": "a12f02296691598f9cc58dab252905044d41a327778f4d5c98b64ec30eccd115",
+      "paths": [
+        "implementations/rdj_kong/b44fea680452539a/rdj_kong/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "make-kong"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 178,
+          "excerpt": "self.bases={a:[x,-.45,.765,.707,0,0,.707] for a,x in [('left',-.3),('right',.3)]}"
+        }
+      ]
+    },
+    {
+      "sha256": "35c094a5ca586c7ec011602b054dc5c9a159430db01ff864cf9fee9d34878f34",
+      "paths": [
+        "implementations/rdj_kong/b44fea680452539a/rdj_kong/policy_ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "make-kong"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 22,
+          "excerpt": "self.robot_cfg, self.scene_model = self._build_robot_and_scene_cfg(data, 0.74-0.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "c72dd36116f6421bcf3efd056aff1c0df8198dba94f9f8f385a92a53412b1c50",
+      "paths": [
+        "implementations/rdj_kong/b44fea680452539a/rdj_kong/vision.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "make-kong"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 13,
+          "excerpt": "TABLE=.765"
+        }
+      ]
+    },
+    {
+      "sha256": "c661a991193c386303160d6d49aff5a222bfe6a75063acaf8816dbeeec4c7238",
+      "paths": [
+        "implementations/rdj_master/1d98bdcb0b377cb4/rdj_master/tasks/general_pickup/rgb_cap.py",
+        "implementations/rdj_master/80ceae4b08eb07bd/rdj_master/tasks/general_pickup/rgb_cap.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects-by-language",
+        "cover-blocks",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "pour-liquid-into-cup",
+        "press-by-number",
+        "push-t",
+        "stack-blocks-by-language",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 508,
+          "excerpt": "height = max(0.01, detection.surface_z - 0.765)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 509,
+          "excerpt": "contact_z = min(0.86, max(0.805, 0.765 + 0.45 * height + 0.035))"
+        }
+      ]
+    },
+    {
+      "sha256": "31ed657afb869971d9f5dda45a1c8d215479faaed946599bc03c56a24a574e25",
+      "paths": [
+        "implementations/rdj_master/1d98bdcb0b377cb4/rdj_master/tasks/general_pickup/rgb_perception.py",
+        "implementations/rdj_master/7ad18230694dd7d4/rdj_master/tasks/general_pickup/rgb_perception.py",
+        "implementations/rdj_master/80ceae4b08eb07bd/rdj_master/tasks/general_pickup/rgb_perception.py",
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/tasks/general_pickup/rgb_perception.py",
+        "implementations/rdj_master/b0250d517778b347/rdj_master/tasks/general_pickup/rgb_perception.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/tasks/general_pickup/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects-by-language",
+        "cover-blocks",
+        "general-pickup",
+        "insert-tubes",
+        "make-kong",
+        "play-tic-tac-toe",
+        "plug-in-charger",
+        "pour-liquid-into-cup",
+        "press-by-number",
+        "push-t",
+        "stack-blocks-by-language",
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 23,
+          "excerpt": "_TABLE_FORWARD_DISTANCE = (0.765 - 1.308) / _RAY_Z"
+        }
+      ]
+    },
+    {
+      "sha256": "10660be8123d15d2f8e5eea3d50a183a4f3f99452b36bfd0e8a6975b0e43c201",
+      "paths": [
+        "implementations/rdj_master/7ad18230694dd7d4/rdj_master/tasks/general_pickup/rgb_cap.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "general-pickup"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 508,
+          "excerpt": "height = max(0.01, detection.surface_z - 0.765)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 509,
+          "excerpt": "contact_z = min(0.86, max(0.805, 0.765 + 0.45 * height + 0.035))"
+        }
+      ]
+    },
+    {
+      "sha256": "0b9a287a8c6c6f4be5a98e6a7ec09a72ea551d014008f037d0aec5a323b21276",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/evaluation/policy_ik.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/evaluation/policy_ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 22,
+          "excerpt": "self.robot_cfg, self.scene_model = self._build_robot_and_scene_cfg(data, 0.74-0.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "16a1349a3c175570eb854a38303a13e9e31be716a74e13b32efef0c3b078f09f",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/evaluation/robot_frames.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/evaluation/robot_frames.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 52,
+          "excerpt": "entity_origin_pose=[x,-0.45,0.765,0.707,0,0,0.707])"
+        }
+      ]
+    },
+    {
+      "sha256": "1e873b3befbb4f3863b208f2f9c3643c75c34377e5ffb343591c5b12e08adc59",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/perception/stack_blocks.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/perception/stack_blocks.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 18,
+          "excerpt": "_TABLE_Z = 0.74"
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 19,
+          "excerpt": "_BLOCK_HALF_SIZES = (0.015, 0.0175, 0.020)"
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 20,
+          "excerpt": "_BLOCK_HALF_HEIGHTS = (0.040, 0.0425, 0.045)"
+        }
+      ]
+    },
+    {
+      "sha256": "f0fb027483dbfcaddfc171c556df6787ad7374db916f71d55cd19a2fc3eee330",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/tasks/deposit_coin/rgb_perception.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/tasks/deposit_coin/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "exact_coin_height",
+          "line": 20,
+          "excerpt": "_COIN_Z_M = 0.7803999822616577"
+        }
+      ]
+    },
+    {
+      "sha256": "e7746157f547ebbddf9a9b748eff6307dd6b616656ead1224b7711e15e338517",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/tasks/general_pickup/rgb_cap.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 494,
+          "excerpt": "height = max(0.01, detection.surface_z - 0.765)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 495,
+          "excerpt": "contact_z = min(0.86, max(0.805, 0.765 + 0.45 * height + 0.035))"
+        }
+      ]
+    },
+    {
+      "sha256": "bf51ab1e29da6b9cf7c07af28a465981c8604132cc9897df817a2ec72a0b28cd",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/tasks/push_t/rgb_perception.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/tasks/push_t/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 17,
+          "excerpt": "_TARGET_Z_M = 0.765"
+        }
+      ]
+    },
+    {
+      "sha256": "541aca83d13aab89251814c827fcbd636fec91e85609de2d90abe6256cc757ec",
+      "paths": [
+        "implementations/rdj_master/aefb1120448eb822/rdj_master/tasks/push_t_random/rgb_perception.py",
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/tasks/push_t_random/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 25,
+          "excerpt": "_TARGET_Z_M = 0.765"
+        }
+      ]
+    },
+    {
+      "sha256": "a322538b3976cb27cadcb992e256b7d61c9decd10a1c3ac30a11fa10f0f86ebd",
+      "paths": [
+        "implementations/rdj_master/b0250d517778b347/rdj_master/tasks/general_pickup/rgb_cap.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "press-by-number"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 508,
+          "excerpt": "height = max(0.01, detection.surface_z - 0.765)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 509,
+          "excerpt": "contact_z = min(0.86, max(0.805, 0.765 + 0.45 * height + 0.035))"
+        }
+      ]
+    },
+    {
+      "sha256": "b432bf880fb348a9e3029622d0e9c66dfdeb067957495224784e53991f6ab958",
+      "paths": [
+        "implementations/rdj_master/f32c6b4e0e8acefa/rdj_master/tasks/general_pickup/rgb_cap.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 494,
+          "excerpt": "height = max(0.01, detection.surface_z - 0.765)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 495,
+          "excerpt": "contact_z = min(0.86, max(0.805, 0.765 + 0.45 * height + 0.035))"
+        }
+      ]
+    },
+    {
+      "sha256": "05e9746d868fe110476d2bfdc779a8f7dcbc6e422537c1d48e7088ccc0783642",
+      "paths": [
+        "implementations/rdj_pour/2a7b80f914e85dd1/rdj_pour/perception.py",
+        "implementations/rdj_pour/a31a6c93bd6c8c93/rdj_pour/perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "pour-liquid-into-cup"
+      ],
+      "findings": [
+        {
+          "rule": "asset_shape_template",
+          "line": 10,
+          "excerpt": "ROOT=Path(__file__).parent;SHAPES=dict(np.load(ROOT/'shapes.npz'));META=json.loads((ROOT/'shapes.json').read_text())"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 30,
+          "excerpt": "t[:3,:3]=Rot.from_euler('z',v[2]).as_matrix()@rest;t[:2,3]=v[:2];t[2,3]=v[3] if key=='bin' else .765-(points@t[:3,:3].T)[:,2].min()"
+        }
+      ]
+    },
+    {
+      "sha256": "a8dfc7ed3d42e83573c74fc67314031654485f2923a74118c4f5e965a257ca13",
+      "paths": [
+        "implementations/rdj_push_submission/25753cde8a67f38d/rdj_push_submission/model.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "push-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 31,
+          "excerpt": "self.bases = {arm: [x,-.45,.765,.707,0,0,.707] for arm,x in [('left',-.3),('right',.3)]}"
+        }
+      ]
+    },
+    {
+      "sha256": "b20bd45558c386efd731667c3c925550425e87edff146c1a334bc7b86e892be4",
+      "paths": [
+        "implementations/rdj_push_submission/25753cde8a67f38d/rdj_push_submission/policy_ik.py",
+        "implementations/rdj_push_submission/8396ae3b355aa65d/rdj_push_submission/policy_ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "push-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 22,
+          "excerpt": "self.robot_cfg, self.scene_model = self._build_robot_and_scene_cfg(data, 0.74-0.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "a32828e8733e6687379303005df0535a2d6d52a9164731cc2012104ca91a7434",
+      "paths": [
+        "implementations/rdj_push_submission/25753cde8a67f38d/rdj_push_submission/random_perception.py",
+        "implementations/rdj_push_submission/8396ae3b355aa65d/rdj_push_submission/random_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "push-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 25,
+          "excerpt": "_TARGET_Z_M = 0.765"
+        }
+      ]
+    },
+    {
+      "sha256": "608e9252e38b6f486e3f901931361423c043663e5b949b9b5c8361b1dc128677",
+      "paths": [
+        "implementations/rdj_push_submission/25753cde8a67f38d/rdj_push_submission/rgb_perception.py",
+        "implementations/rdj_push_submission/8396ae3b355aa65d/rdj_push_submission/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "push-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 17,
+          "excerpt": "_TARGET_Z_M = 0.765"
+        }
+      ]
+    },
+    {
+      "sha256": "a3f589ab717cfeb172ef65aaeb8f433722aded5207ee095c8e84956e9ddbe048",
+      "paths": [
+        "implementations/rdj_push_submission/8396ae3b355aa65d/rdj_push_submission/model.py"
+      ],
+      "programs": [
+        "push-t"
+      ],
+      "importable_by": [
+        "push-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 31,
+          "excerpt": "self.bases = {arm: [x,-.45,.765,.707,0,0,.707] for arm,x in [('left',-.3),('right',.3)]}"
+        }
+      ]
+    },
+    {
+      "sha256": "f5281a5e666f63f408158f8791d5d66844186bcd70e0eff6372396ea50fa83cf",
+      "paths": [
+        "implementations/rdj_store_tools/0b3dbb71e19f8b84/rdj_store_tools/box_registration.py",
+        "implementations/rdj_store_tools/65839747fdb3fe17/rdj_store_tools/box_registration.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "store-tools-in-toolbox"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 10,
+          "excerpt": "Z=.765-(POINTS@REST.T)[:,2].min()"
+        }
+      ]
+    },
+    {
+      "sha256": "43902bbded2a17d32f47f7a40b4e67dc21ef1dfedf118ac10a0cf84a42f7cdc3",
+      "paths": [
+        "implementations/rdj_store_tools/0b3dbb71e19f8b84/rdj_store_tools/perception.py",
+        "implementations/rdj_store_tools/65839747fdb3fe17/rdj_store_tools/perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "store-tools-in-toolbox"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 70,
+          "excerpt": "moves=[{'label':'tape_measure','source_uv':tape['uv'],'source':xyz(tape['uv'],.765+.0308/2).tolist(),'destination':target.tolist(),'grasp_height':.017,'footprint':tape['bbox']}]"
+        }
+      ]
+    },
+    {
+      "sha256": "4c77d85bf9abcdf8e97602c09f56b219c61287451086d76431ff0d4079530824",
+      "paths": [
+        "implementations/rdj_store_tools/0b3dbb71e19f8b84/rdj_store_tools/reachability.py",
+        "implementations/rdj_store_tools/65839747fdb3fe17/rdj_store_tools/reachability.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "store-tools-in-toolbox"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 16,
+          "excerpt": "target=pin.SE3(base_rotation,np.array([-.3 if arm=='left' else .3,-.45,.765])).inverse()*pin.SE3(Rotation.from_quat(np.asarray(pose)[[4,5,6,3]]).as_matrix(),np.asarray(pose[:3]))"
+        }
+      ]
+    },
+    {
+      "sha256": "15aa58fcf155e9199fc8603a496c025ac5f84acb3d32fb6ab758b96343d5e091",
+      "paths": [
+        "implementations/rdj_store_tools/0b3dbb71e19f8b84/rdj_store_tools/transport.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "store-tools-in-toolbox"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 28,
+          "excerpt": "grasp=np.array([source[0],source[1],.765+.017+GRASP_CENTER])"
+        }
+      ]
+    },
+    {
+      "sha256": "0fb0bc26dcd164bc8a5e80133c7ee471900b02b16c3ec32ae34c9b96d02746d6",
+      "paths": [
+        "implementations/rdj_store_tools/65839747fdb3fe17/rdj_store_tools/transport.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "store-tools-in-toolbox"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 28,
+          "excerpt": "grasp=np.array([source[0],source[1],.765+.017+GRASP_CENTER])"
+        }
+      ]
+    },
+    {
+      "sha256": "60e99cea9e6ff2a17b74d84513085c8f206a67ad2928c5fa37a250ca8f09fb78",
+      "paths": [
+        "implementations/rdj_swap_t/14d69d4d118fb34d/rdj_swap_t/collision_gate.py",
+        "implementations/rdj_swap_t/c2047cc507cc7149/rdj_swap_t/collision_gate.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 58,
+          "excerpt": "table_gap=min(float(o[4][:,2].min())-.765 for o in objects if o[1]>=2)"
+        }
+      ]
+    },
+    {
+      "sha256": "f728b57b882b1dfe64a23799b864ae5543840c256113944e18973fd41976a976",
+      "paths": [
+        "implementations/rdj_swap_t/14d69d4d118fb34d/rdj_swap_t/grasp_rgb.py",
+        "implementations/rdj_swap_t/c2047cc507cc7149/rdj_swap_t/grasp_rgb.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 10,
+          "excerpt": "TABLE=.765"
+        }
+      ]
+    },
+    {
+      "sha256": "a303e69807b5b89dd85c82996cd0e1722fddeb9cb32bba968f7a5966e18ad65c",
+      "paths": [
+        "implementations/rdj_swap_t/14d69d4d118fb34d/rdj_swap_t/skill_choices.py",
+        "implementations/rdj_swap_t/c2047cc507cc7149/rdj_swap_t/routes.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "swap-t"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 18,
+          "excerpt": "base=base if base is not None else pin.SE3(Rotation.from_quat([0,0,.707,.707]).as_matrix(),np.array([-.3 if arm=='left' else .3,-.45,.765]))"
+        }
+      ]
+    },
+    {
+      "sha256": "bc5a693d8c208585420e179eba7d34c3e87b9b495d8ee1324727395c4a2d1755",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/axis_ik.py",
+        "implementations/rdj_v1_classify_objects/d971ca486c6e4801/rdj_v1_classify_objects/axis_ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 18,
+          "excerpt": "base=pin.SE3(Rotation.from_quat([0,0,.707,.707]).as_matrix(),np.array([-.3 if arm=='left' else .3,-.45,.765]))"
+        }
+      ]
+    },
+    {
+      "sha256": "f0a91c54c0507549a8fa965d842549a34913f0f97fa10a602e6d4bebaf1a0815",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/grasp_shape.py",
+        "implementations/rdj_v1_classify_objects/d971ca486c6e4801/rdj_v1_classify_objects/grasp_shape.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 28,
+          "excerpt": "p0=ray(center-10*axis,.765+height/2);p1=ray(center+10*axis,.765+height/2)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 31,
+          "excerpt": "contact=ray(center,.765+height/2);contact[2]=.765+height*.65"
+        }
+      ]
+    },
+    {
+      "sha256": "4c2ae641c55d60e1b650b6b6d3b5090da48e22480a8f6dba5d37619c6af06855",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/motion.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 11,
+          "excerpt": "BASE = {'left': [-0.3, -0.45, 0.765, 0.707, 0, 0, 0.707], 'right': [0.3, -0.45, 0.765, 0.707, 0, 0, 0.707]}"
+        }
+      ]
+    },
+    {
+      "sha256": "1e6b77c65f24340423f7d0662bd467bad3dc25655980fb4312afda711d9420e6",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/perception.py",
+        "implementations/rdj_v1_classify_objects/d971ca486c6e4801/rdj_v1_classify_objects/perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 66,
+          "excerpt": "center=(box[:2]+box[2:])/2;xyz=ray(center,.765+HEIGHT[cat]/2)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 86,
+          "excerpt": "xyz=ray((box[:2]+box[2:])/2,.765+HEIGHT[source.category]/2)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 130,
+          "excerpt": "x['score']=float(sim[self.classes.index(cat)]);x['xyz']=ray((x['box'][:2]+x['box'][2:])/2,.765+HEIGHT.get(cat,.04)/2)"
+        }
+      ]
+    },
+    {
+      "sha256": "a82df3412184d4bd412d3469fadb3a408f1393c5bd1ce26855316d0c860bb9b4",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/reach.py",
+        "implementations/rdj_v1_classify_objects/d971ca486c6e4801/rdj_v1_classify_objects/reach.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 11,
+          "excerpt": "base=pin.SE3(Rotation.from_quat([0,0,.707,.707]).as_matrix(),np.array([-.3 if arm=='left' else .3,-.45,.765]))"
+        }
+      ]
+    },
+    {
+      "sha256": "95716624d29e97eac7fd75587baeb09e85229c09bcea6728d61b3e6cf1c4cb20",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/6bb861ace4b706d9/rdj_v1_classify_objects/robot_mask.py",
+        "implementations/rdj_v1_classify_objects/d971ca486c6e4801/rdj_v1_classify_objects/robot_mask.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 29,
+          "excerpt": "np.array([-.3 if arm=='left' else .3,-.45,.765]))"
+        }
+      ]
+    },
+    {
+      "sha256": "7e87c875f77515e3bb837967f00c89a36641edb07bff074ea052cc352a4b4438",
+      "paths": [
+        "implementations/rdj_v1_classify_objects/d971ca486c6e4801/rdj_v1_classify_objects/motion.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 11,
+          "excerpt": "BASE={'left':[-.3,-.45,.765,.707,0,0,.707],'right':[.3,-.45,.765,.707,0,0,.707]}"
+        }
+      ]
+    },
+    {
+      "sha256": "f2aac62f51a06e7fabf19789dc9c8b2ca2f1a454e140011cf2d24566a97854d9",
+      "paths": [
+        "implementations/rdj_v1_classify_objects_by_language/d1a86f0841981f1d/rdj_v1_classify_objects_by_language/branch.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 26,
+          "excerpt": "base = pin.SE3(self.base_rotation, np.array([-.3 if arm=='left' else .3, -.45, .765]))"
+        }
+      ]
+    },
+    {
+      "sha256": "4ef1924c38373ce556edf487627d0af1a813c4c7ee3626f6c860c9a27d0d9de5",
+      "paths": [
+        "implementations/rdj_v1_classify_objects_by_language/d1a86f0841981f1d/rdj_v1_classify_objects_by_language/model.py"
+      ],
+      "programs": [
+        "classify-objects-by-language"
+      ],
+      "importable_by": [
+        "classify-objects-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 327,
+          "excerpt": "contact = max(0.765 + 0.15757000232458113 + 0.003, min(0.98, z + 0.13257000232458113 - 0.008))"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 363,
+          "excerpt": "self.record(event='rgb_grasp_geometry', retry_yaw=retry_yaw, retry_adjustment=retry_adjustment, uv=uv.tolist(), surface_z=z, mask_axis=axis.tolist(), ee_z=contact, tip_clearance=contact - 0.15757000232458113 - 0.765)"
+        }
+      ]
+    },
+    {
+      "sha256": "c60072018020be839c028ca0650002d51181f7d8f064e0cd0e87f6ad233aa64f",
+      "paths": [
+        "implementations/rdj_v1_classify_objects_by_language/d1a86f0841981f1d/rdj_v1_classify_objects_by_language/rgb_perception.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "classify-objects-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 23,
+          "excerpt": "_TABLE_FORWARD_DISTANCE = (0.765 - 1.308) / _RAY_Z"
+        }
+      ]
+    },
+    {
+      "sha256": "b883e4e838ba52624b56da7d68ecfa19b61c9a9c58eabdbce6e0819abbdbf42c",
+      "paths": [
+        "implementations/rdj_v1_stack_blocks_by_language/27527cf590532e17/rdj_v1_stack_blocks_by_language/ik.py",
+        "implementations/rdj_v1_stack_blocks_by_language/3c314aae3fbd9201/rdj_v1_stack_blocks_by_language/ik.py",
+        "implementations/rdj_v1_stack_blocks_by_language/751bac6645394afc/rdj_v1_stack_blocks_by_language/ik.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger",
+        "pour-liquid-into-cup",
+        "stack-blocks-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 37,
+          "excerpt": "# Identical fixed tabletop in robot-base coordinates: 0.74 - 0.765."
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 52,
+          "excerpt": "base_p = np.asarray([-.3 if arm == 'left' else .3, -.45, .765])"
+        }
+      ]
+    },
+    {
+      "sha256": "9e785d1cb59058ea5cddaa70008371f2ff57b8bc11e8c02ba5f0a51a7ecf3737",
+      "paths": [
+        "implementations/rdj_v1_stack_blocks_by_language/27527cf590532e17/rdj_v1_stack_blocks_by_language/vendor/rdj_master/perception/stack_blocks.py",
+        "implementations/rdj_v1_stack_blocks_by_language/3c314aae3fbd9201/rdj_v1_stack_blocks_by_language/vendor/rdj_master/perception/stack_blocks.py",
+        "implementations/rdj_v1_stack_blocks_by_language/751bac6645394afc/rdj_v1_stack_blocks_by_language/vendor/rdj_master/perception/stack_blocks.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "plug-in-charger",
+        "pour-liquid-into-cup",
+        "stack-blocks-by-language"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 18,
+          "excerpt": "_TABLE_Z = 0.74"
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 19,
+          "excerpt": "_BLOCK_HALF_SIZES = (0.015, 0.0175, 0.020)"
+        },
+        {
+          "rule": "known_object_scale",
+          "line": 20,
+          "excerpt": "_BLOCK_HALF_HEIGHTS = (0.040, 0.0425, 0.045)"
+        }
+      ]
+    },
+    {
+      "sha256": "a6ec92e0535c753c25bac62999bdceed3319bb9536b0cc2bebd2735e5f43bb74",
+      "paths": [
+        "implementations/sort_nesting_dolls/1822568979fc251c/sort_nesting_dolls/nesting_rgb/contours.py",
+        "implementations/sort_nesting_dolls/73180bfd0621b79e/sort_nesting_dolls/nesting_rgb/contours.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "sort-nesting-dolls-by-size"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 8,
+          "excerpt": "TABLE=.765"
+        }
+      ]
+    },
+    {
+      "sha256": "aee55643ea2936405afb46232c3a4759169838239ff59a94e6a8bb27c3e2e1ff",
+      "paths": [
+        "implementations/sort_nesting_dolls/1822568979fc251c/sort_nesting_dolls/nesting_rgb/joint_control.py",
+        "implementations/sort_nesting_dolls/73180bfd0621b79e/sort_nesting_dolls/nesting_rgb/joint_control.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "sort-nesting-dolls-by-size"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 15,
+          "excerpt": "p=np.array([-.3 if arm=='left' else .3,-.45,.765]);rot=Rotation.from_euler('z',np.pi/2).as_matrix()"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 19,
+          "excerpt": "p=np.array([-.3 if arm=='left' else .3,-.45,.765]);rot=Rotation.from_euler('z',np.pi/2).as_matrix();origins=[];axes=[]"
+        }
+      ]
+    },
+    {
+      "sha256": "1b931db7a176b2785e144eb8168459928cf382131c2b046ce97f139a55596340",
+      "paths": [
+        "implementations/sort_nesting_dolls/1822568979fc251c/sort_nesting_dolls/nesting_rgb/wrist_geometry.py",
+        "implementations/sort_nesting_dolls/73180bfd0621b79e/sort_nesting_dolls/nesting_rgb/wrist_geometry.py"
+      ],
+      "programs": [],
+      "importable_by": [
+        "sort-nesting-dolls-by-size"
+      ],
+      "findings": [
+        {
+          "rule": "fixed_table_height",
+          "line": 18,
+          "excerpt": "pts=self.points[rank]+np.array([xy[0],xy[1],xy[2] if len(xy)>2 else .765]);local=(pts-camera)@camera_rot;depth=-local[:,2]"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 48,
+          "excerpt": "initial=np.r_[xy,.765+rise];initial[2]=np.clip(initial[2],.756,1.004)"
+        },
+        {
+          "rule": "fixed_table_height",
+          "line": 54,
+          "excerpt": "valid=bool(pred is not None and fit.x[2]>.845 and center_error<8 and size_error<.3 and abs(fit.x[2]-(.765+rise))<.04 and np.linalg.norm(fit.x[:2]-xy)<.06)"
+        }
+      ]
+    }
+  ],
+  "official_bbox_comparison": [
+    {
+      "label": "cup",
+      "shape_sha256": "039b6c8724ce0e7925356087877819ac3332e62ba752769759bcb5ba3475160e",
+      "exact_matches": [
+        {
+          "path": "Assets/Object/RoboDojo/Rigid/cup/00001/metadata.json",
+          "sha256": "d7dd85a2bc84ee0d9705776bd83c10c6aca53cd58b5b4e5474397d4bec940a37"
+        },
+        {
+          "path": "Assets/Object/RoboDojo/Rigid/cup/00006/metadata.json",
+          "sha256": "02983a69c9f6121398308941db912b250b07879b8a99be89092d9d5ad5fba328"
+        }
+      ]
+    },
+    {
+      "label": "vase0",
+      "shape_sha256": "039b6c8724ce0e7925356087877819ac3332e62ba752769759bcb5ba3475160e",
+      "exact_matches": [
+        {
+          "path": "Assets/Object/RoboDojo/Geometry/vase/00000/metadata.json",
+          "sha256": "91672687d4547ed7110622b9246b75a90074925d06c6fd2d231a2147c36b5fa8"
+        }
+      ]
+    },
+    {
+      "label": "vase1",
+      "shape_sha256": "039b6c8724ce0e7925356087877819ac3332e62ba752769759bcb5ba3475160e",
+      "exact_matches": [
+        {
+          "path": "Assets/Object/RoboDojo/Geometry/vase/00001/metadata.json",
+          "sha256": "6463cb1d667965975e0fef01fbc22ba73b0c4ae1f8486f773e6c13b7440f9175"
+        }
+      ]
+    },
+    {
+      "label": "vase2",
+      "shape_sha256": "039b6c8724ce0e7925356087877819ac3332e62ba752769759bcb5ba3475160e",
+      "exact_matches": [
+        {
+          "path": "Assets/Object/RoboDojo/Geometry/vase/00002/metadata.json",
+          "sha256": "b4a66b75f5c3ad151c83444d691f8247a3782deebd559de77591bf9238f6f4e4"
+        }
+      ]
+    },
+    {
+      "label": "vase3",
+      "shape_sha256": "039b6c8724ce0e7925356087877819ac3332e62ba752769759bcb5ba3475160e",
+      "exact_matches": [
+        {
+          "path": "Assets/Object/RoboDojo/Geometry/vase/00003/metadata.json",
+          "sha256": "8753bc042306ed4c012aceb1efcd7d726244f3888e0b9993d50f6ce38caa2a98"
+        }
+      ]
+    },
+    {
+      "label": "vase4",
+      "shape_sha256": "039b6c8724ce0e7925356087877819ac3332e62ba752769759bcb5ba3475160e",
+      "exact_matches": [
+        {
+          "path": "Assets/Object/RoboDojo/Geometry/vase/00004/metadata.json",
+          "sha256": "58784ad560fb89ba4bb09ff3e178e0b551b58cdcea556ebdbe3f523fb0498995"
+        }
+      ]
+    }
+  ],
+  "release_verification": {
+    "schema": "physicalrsi.archive-verification/v1",
+    "manifest_sha256": "0eed83202427dc6b4c75cde613246f8f6e606cac6c8da3bd71ebc6798d6963d2",
+    "tree_sha256": "c331662ae272c3f51679be78a533d06d2219c2c9ea0d20781988afa58e93604f",
+    "parts": [
+      {
+        "name": "code-skills.tar.part000",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part000",
+        "size": 1073741824,
+        "sha256": "179454be574728da79701d6bd526fd037fa1b3bc07d0b317c81f4d98ce0cc87f"
+      },
+      {
+        "name": "code-skills.tar.part001",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part001",
+        "size": 1073741824,
+        "sha256": "167715cfd169851c982b523b1dc46b779b5e541d905351972605ee8143c20405"
+      },
+      {
+        "name": "code-skills.tar.part002",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part002",
+        "size": 1073741824,
+        "sha256": "269a4ecb5557ad2d3d3be7d84598c5f0317373dacf6737690d9a73f94d53840a"
+      },
+      {
+        "name": "code-skills.tar.part003",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part003",
+        "size": 1073741824,
+        "sha256": "eb9caef1b466a472cacc320ed60e68af5648dd9b624624e63b7c0b74df278045"
+      },
+      {
+        "name": "code-skills.tar.part004",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part004",
+        "size": 1073741824,
+        "sha256": "23b60039349a32f79ef261edd2efdb51b62d173d6d0c52924f29f76a27d94547"
+      },
+      {
+        "name": "code-skills.tar.part005",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part005",
+        "size": 1073741824,
+        "sha256": "4d668949917b8438452df2d20ed5be9be5ffa1e99a074d5bb63731edc07831c1"
+      },
+      {
+        "name": "code-skills.tar.part006",
+        "url": "https://github.com/PhysicalRSI/XPolicyLab/releases/download/physicalrsi-skill-assets-v4/code-skills.tar.part006",
+        "size": 570546176,
+        "sha256": "419da39f5d5d5e4b761a152235f1f99e21f7cf22d676fdbcc82c31dd80f1da13"
+      }
+    ],
+    "verification": "All seven parts were SHA-256 verified against the pinned manifest before placement into .downloads. Tree compared with the verified final part; extracted source blobs individually SHA-256 verified.",
+    "archive_size": 7012997120
+  },
+  "official_metadata_provenance": {
+    "revision": "269457a3b42d8d0ae69898a601f2c1487c2f826e",
+    "files": [
+      {
+        "path": "Assets/Object/RoboDojo/Rigid/cup/00001/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Rigid/cup/00001/metadata.json",
+        "sha256": "d7dd85a2bc84ee0d9705776bd83c10c6aca53cd58b5b4e5474397d4bec940a37"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Rigid/cup/00006/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Rigid/cup/00006/metadata.json",
+        "sha256": "02983a69c9f6121398308941db912b250b07879b8a99be89092d9d5ad5fba328"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Rigid/cup/00007/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Rigid/cup/00007/metadata.json",
+        "sha256": "d74f8b7f7c1c6d5704c93aec53d4612baefa33e985105457e0c74f4f710f6243"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Geometry/vase/00000/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Geometry/vase/00000/metadata.json",
+        "sha256": "91672687d4547ed7110622b9246b75a90074925d06c6fd2d231a2147c36b5fa8"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Geometry/vase/00001/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Geometry/vase/00001/metadata.json",
+        "sha256": "6463cb1d667965975e0fef01fbc22ba73b0c4ae1f8486f773e6c13b7440f9175"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Geometry/vase/00002/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Geometry/vase/00002/metadata.json",
+        "sha256": "b4a66b75f5c3ad151c83444d691f8247a3782deebd559de77591bf9238f6f4e4"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Geometry/vase/00003/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Geometry/vase/00003/metadata.json",
+        "sha256": "8753bc042306ed4c012aceb1efcd7d726244f3888e0b9993d50f6ce38caa2a98"
+      },
+      {
+        "path": "Assets/Object/RoboDojo/Geometry/vase/00004/metadata.json",
+        "url": "https://huggingface.co/datasets/RoboDojo-Benchmark/RoboDojo/resolve/269457a3b42d8d0ae69898a601f2c1487c2f826e/Assets/Object/RoboDojo/Geometry/vase/00004/metadata.json",
+        "sha256": "58784ad560fb89ba4bb09ff3e178e0b551b58cdcea556ebdbe3f523fb0498995"
+      }
+    ]
+  },
+  "text_files_verified": 9663,
+  "shape_clouds": {
+    "source_sha256": "2eedea5394e25ccbd2989a3664f24b145d6dc1a2bbdb65dbfcae4b52c089dde8",
+    "arrays": {
+      "cup": [
+        12000,
+        3
+      ],
+      "vase0": [
+        12000,
+        3
+      ],
+      "vase1": [
+        12000,
+        3
+      ],
+      "vase2": [
+        12000,
+        3
+      ],
+      "vase3": [
+        12000,
+        3
+      ],
+      "vase4": [
+        12000,
+        3
+      ]
+    },
+    "scope": "Static bundled point clouds; not evidence of byte-for-byte equality to an official mesh."
+  }
+}
