@@ -31,9 +31,32 @@ class SDKCompatTests(unittest.TestCase):
                 spec=sdk_compat.validate(root,profile)
                 self.assertEqual(spec['ik_guard_enabled'],profile=='local')
                 self.assertEqual(spec['unsupported_sdk_files'],[])
-                self.assertIn(b'ROBODOJO_EVAL_OUTPUT_DIR',sdk_compat.source(root,'src/eval_client/eval_env.py',profile))
+                self.assertNotIn(b'ROBODOJO_EVAL_OUTPUT_DIR',sdk_compat.source(root,'src/eval_client/eval_env.py',profile))
+                self.assertEqual(spec['output_paths'],'sdk_native_eval_result')
+                if profile=='official':
+                    self.assertEqual(sdk_compat.source(root,'src/eval_client/eval_env.py',profile),
+                                     (root/'src/eval_client/eval_env.py').read_bytes())
             self.assertEqual(before,{str(p.relative_to(root)):p.read_bytes() for p in root.rglob('*.py')})
             self.assertFalse((root/'src/eval_client/ik_guard.py').exists())
+
+    def test_native_video_and_result_paths_are_preserved(self):
+        base=(POLICY/'sdk_sources/base/src/eval_client/eval_env.py').read_text()
+        def members(text):
+            cls=next(n for n in ast.walk(ast.parse(text)) if isinstance(n,ast.ClassDef) and n.name=='EvalEnv')
+            return {n.name:n for n in cls.body if isinstance(n,ast.FunctionDef)}
+        original=members(base)
+        for profile in ('local','official'):
+            text=(POLICY/'sdk_sources'/profile/'src/eval_client/eval_env.py').read_text()
+            current=members(text)
+            for name in ('_stream_vision','save_video','resume_manifest_path'):
+                self.assertEqual(ast.dump(current[name]),ast.dump(original[name]),(profile,name))
+            def save_assignment(method):
+                return next(n for n in ast.walk(method) if isinstance(n,ast.Assign) and
+                            any(isinstance(t,ast.Attribute) and t.attr=='save_dir' for t in n.targets))
+            self.assertEqual(ast.dump(save_assignment(current['__init__'])),
+                             ast.dump(save_assignment(original['__init__'])))
+            self.assertNotIn('ROBODOJO_EVAL_OUTPUT_DIR',text)
+            self.assertNotIn('_annotate_policy_subtask',text)
 
     def test_unknown_sdk_fails_before_loading_simulator(self):
         with tempfile.TemporaryDirectory() as d:
@@ -66,19 +89,19 @@ class SDKCompatTests(unittest.TestCase):
     def test_resume_paths_match_in_both_profiles(self):
         # Execute the exact main.py and EvalEnv path functions without importing Isaac.
         for profile in ['local','official']:
-            main=sdk_compat.source(POLICY,'src/eval_client/main.py',profile).decode()
+            main=sdk_compat.source(POLICY/'sdk_sources/base','src/eval_client/main.py',profile).decode()
             tree=ast.parse(main);func=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='_resume_manifest_path')
-            env=sdk_compat.source(POLICY,'src/eval_client/eval_env.py',profile).decode()
+            env=sdk_compat.source(POLICY/'sdk_sources/base','src/eval_client/eval_env.py',profile).decode()
             tree2=ast.parse(env);method=next(n for n in ast.walk(tree2) if isinstance(n,ast.FunctionDef) and n.name=='resume_manifest_path')
             ns=dict(os=os,BENCHMARK='RoboDojo')
             exec(compile(ast.Module(body=[func],type_ignores=[]),'<resume-main>','exec'),ns)
             ns2=dict(os=os,BENCHMARK='RoboDojo')
             exec(compile(ast.Module(body=[method],type_ignores=[]),'<resume-env>','exec'),ns2)
-            cfg=dict(task_name='stack_bowls',policy_name='Era0_Preview',config_name='arx_x5',seed=2,additional_info='private/path')
+            cfg=dict(task_name='stack_bowls',policy_name='Era0_Preview',config_name='arx_x5',seed=2,additional_info='ckpt_name=era0-preview,action_type=ee')
             from types import SimpleNamespace
-            obj=SimpleNamespace(task_name=cfg['task_name'],policy_name=cfg['policy_name'],config_name=cfg['config_name'],eval_seed=2,run_id='run')
+            obj=SimpleNamespace(task_name=cfg['task_name'],policy_name=cfg['policy_name'],config_name=cfg['config_name'],eval_seed=2,run_id='run',additional_info=cfg['additional_info'])
             with patch.dict(os.environ,{'ROBODOJO_EVAL_OUTPUT_DIR':'/portable/output'}):
-                expected='/portable/output/RoboDojo/stack_bowls/Era0_Preview/arx_x5/2/_resume_run.json'
+                expected='eval_result/RoboDojo/stack_bowls/Era0_Preview/arx_x5/2_ckpt_name=era0-preview,action_type=ee/_resume_run.json'
                 self.assertEqual(ns['_resume_manifest_path'](cfg,'run'),expected)
                 self.assertEqual(ns2['resume_manifest_path'](obj),expected)
 
@@ -104,7 +127,7 @@ if os.environ.get('TEST_RESTARTED') != '1':
     os.execv(sys.executable, [sys.executable, '-P', sys.argv[0]])
 '''
                 for name in ['src/eval_client/main.py','src/eval_client/eval_env.py']:
-                    host=sdk/name;host.write_text('# host remains untouched\n')
+                    host=sdk/name;host.write_text(code if name.endswith('/main.py') else 'value="official"\n')
                     host_files[name]=[hashlib.sha256(host.read_bytes()).hexdigest()]
                     for p in profiles:
                         snapshot=sources/(p+'_'+Path(name).name)
@@ -121,6 +144,6 @@ if os.environ.get('TEST_RESTARTED') != '1':
                 rows=[json.loads(line) for line in trace.read_text().splitlines()]
                 self.assertEqual(rows,[[profile,str(sdk/'src/eval_client/main.py'),
                                        str(policy/'simulator_entry.py')]]*2)
-                self.assertEqual((sdk/'src/eval_client/eval_env.py').read_text(),'# host remains untouched\n')
+                self.assertEqual((sdk/'src/eval_client/eval_env.py').read_text(),'value="official"\n')
 
 if __name__=='__main__':unittest.main()

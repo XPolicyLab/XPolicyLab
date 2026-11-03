@@ -1,37 +1,14 @@
 {
-  "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
-  "local_revision": "fcd09556957a834233e09e78704e0db43a705c3e",
+  "sdk_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "scope": "SDK-native results, videos, summary and concurrency; optional policy-bundled IK guard only.",
   "paths": [
     {
-      "status": "M",
       "path": "src/eval_client/eval_env.py",
-      "disposition": "local execution snapshot; see profile manifest",
-      "local_sha256": "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f"
+      "disposition": "local profile adds IK rejection/hold and diagnostics only"
     },
     {
-      "status": "A",
       "path": "src/eval_client/ik_guard.py",
-      "disposition": "local execution snapshot; see profile manifest",
-      "local_sha256": "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46"
-    },
-    {
-      "status": "M",
-      "path": "src/eval_client/main.py",
-      "disposition": "local execution snapshot; see profile manifest",
-      "local_sha256": "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff"
-    },
-    {
-      "status": "A",
-      "path": "tests/test_ik_guard.py",
-      "disposition": "ported into policy tests with packaged source paths",
-      "local_sha256": "a2ce42c9ac788c7930d910a254c905392696085fc6afff685c0e97f46c0b0b92"
-    },
-    {
-      "status": "M",
-      "path": "utils/pipeline_utils.py",
-      "disposition": "local execution snapshot; see profile manifest",
-      "local_sha256": "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b"
+      "disposition": "local profile guard implementation"
     }
-  ],
-  "scope": "Bundled evaluation runtime changes only."
+  ]
 }

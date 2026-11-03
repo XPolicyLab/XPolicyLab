@@ -146,29 +146,24 @@
       "source": "robodojo_eval/native_protocol.py",
       "source_sha256": "5e590b604a1135d6fed8b32e5d009858eebcd8b922f9af4343e165ba762dbcce",
       "packaged_sha256": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094"
-    },
-    "summarize.py": {
-      "source": "scripts/summarize_robodojo.py",
-      "source_sha256": "059740ccfa8703d5075e2609723995a47eb0ac6e47451e41ffb5e81863069620",
-      "packaged_sha256": "059740ccfa8703d5075e2609723995a47eb0ac6e47451e41ffb5e81863069620"
     }
   },
   "model_name": "Era0-Preview",
   "packaged_files": {
     ".gitignore": "781b1801fe2fd470a9744f4acb8792ffd9cd677baaacd0cd42c7e3426f81cb55",
-    "README.md": "ba6e35de33607961d4f02ebc30ac4db2351a07d13294322028ffeb43e3f25e27",
-    "SDK_COMPATIBILITY.md": "10f0315d04fe09fbd6b5d488fa9e3e1149b9766a64f2beb4a52134e36cf7083b",
-    "SUBMISSION.md": "15c9defe95f9cafc6e5f291f5bb42e75a0726bc2c3bc3b1619a48f2871d49d0e",
+    "README.md": "1364f1eb4db06e3aabe2fbb23467c814cad80b5b679ada9bd83614db61541db9",
+    "SDK_COMPATIBILITY.md": "c4e57c162954a3b59a9f69a764848292109be082066a363b1eabc511e67b945a",
+    "SUBMISSION.md": "52b46a9445a5083657fc5ac6726a9c6a3d10c717940a3e2e056dc6e49812c525",
     "__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
     "checkpoint.py": "f71498d6ebfe33eabfae46554b47995778022af3db66e86809e3175542cc8662",
     "checkpoint_release.json": "628f07a37619f66434abc2630eec77dfd6cabffd37694a5bad3692bcd1f562ec",
-    "common.sh": "45f4d33a110cca6c81c23fbb0094f00891ab76cba983e2c1a0357311e04ff3e0",
+    "common.sh": "9a36137210829006c29322b78c33569d180f8a002dd9854eb5721ccdce28d113",
     "deploy.py": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
     "deploy.yml": "d62d9d67e983373160bbe264b19b66e62f9d06bc0c56b2c6b8d336270294d057",
     "download_checkpoint.sh": "698619478fe10dc68d8a29ee837ca44a4c5e28f630ada376734e7d645f0b1dc6",
     "eval.sh": "b6ca89052497515556dcf9b359e192bcb23e30762ecf89000094c8a3efd3308e",
     "eval_three_seeds.sh": "fcf7484a215affae2fd931e72aabc8386329e41732ed993705367be2691e123f",
-    "evaluate.py": "4a69bcd6484f76c3ec9295033c18dd972ec5bb83bac399f7feaf06ae8510dde4",
+    "evaluate.py": "eed6ca9eca665e10b51c5d6b82daa6714f1997c4f1661f494b16449967c448fd",
     "install.sh": "cf3e2a95083f5b3c142f270d287a4df21cc2887f9fb412bb6ec1dea9e3370993",
     "model.py": "8db43c2899756a5271c5637db132a6eb6486ac228ba481f0624ab8606349092f",
     "native_protocol.py": "001bf92480b19b93a8aa739a948eee489a57ab497af47b11361806e9f047d094",
@@ -206,49 +201,40 @@
     "runtime/robodojo_eval/io.py": "6a4b590767cc78075f1146295dfc98be43e6bcc36400640c34e1b868aa128be4",
     "runtime/robotwin_eval/__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
     "runtime/robotwin_eval/transforms.py": "efccc16b8d655aa3f4843494963a4ee06e2aa238561d0dc0e66b8777b7d88181",
-    "sdk_compat.py": "9a03e99ab663975335202ad22504de43603235e3b6f6ab2bc3ff55c5bb5b705b",
+    "sdk_compat.py": "c05f4a52e15617f81762823a1ab6b41d69a7013ae2fd4daf2af752ac0d4e1581",
     "sdk_sources/LICENSE.RoboDojo": "4f2b6958d25115c1bc461044e022889852d9e3a9bb854ab581c416514b9984a0",
-    "sdk_sources/audit_patches/src/eval_client/eval_env.py.patch": "ac9b8137bb7e505252a5fac1613bf900dca5aa8f4a32e02454c9f4a552d32c9a",
-    "sdk_sources/audit_patches/src/eval_client/main.py.patch": "1df34535bdb45c26b4834110f13923019901d031bc5940beee905a50cc195166",
-    "sdk_sources/audit_patches/utils/pipeline_utils.py.patch": "0b55929566a559902ae41481e2d516ca3fd1363ac05da75864f1cbe441cde72c",
+    "sdk_sources/audit_patches/src/eval_client/eval_env.py.patch": "0cefda1a38371faca16f84d048a521c4fe792f109dbbbd2b91cf4705b627e068",
     "sdk_sources/base/src/eval_client/eval_env.py": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
     "sdk_sources/base/src/eval_client/main.py": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8",
     "sdk_sources/base/utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
-    "sdk_sources/change_inventory.json": "d820a10daf9b78dddfb955be64e3eaf9b01ab091dfc77bf4924141ad09758b24",
-    "sdk_sources/curobo_revision_diff.txt": "c086e80d7f3d33f164c02098a9a97d910cf19971cad9efdd9808c186d323388a",
-    "sdk_sources/local/src/eval_client/eval_env.py": "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f",
+    "sdk_sources/change_inventory.json": "d5751b1def43cbaa2a79f50300d7149328df5237d3c58346d50776cb8b2db7a8",
+    "sdk_sources/local/src/eval_client/eval_env.py": "08a49bafda13dc186993c36950fc1f81decfaf3837ab8395872b72e973687d0c",
     "sdk_sources/local/src/eval_client/ik_guard.py": "f3e499e71b21d8e9281f1ac2b2ddcc152e7a2df1af4cb3bcc882c8a167a3bc46",
-    "sdk_sources/local/src/eval_client/main.py": "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff",
-    "sdk_sources/local/utils/pipeline_utils.py": "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b",
-    "sdk_sources/manifest.json": "df9350b6abb0b4a911277c356a9ce46ba10ac672a0b1094f2c1ee4e04d13ae8d",
-    "sdk_sources/official/src/eval_client/eval_env.py": "367fa10fe8d874cd1ad201b426cb3e83570668f51a4c52610870b7558ca2d057",
-    "sdk_sources/official/src/eval_client/main.py": "6a66dfc3d63f2137b3084f19625895da74c49a03dd20ba3c692db513cffa7ac0",
+    "sdk_sources/local/src/eval_client/main.py": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8",
+    "sdk_sources/local/utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
+    "sdk_sources/manifest.json": "7c84040b189eed4fcd38fbab3d96547e9525fa7de3d7b7a2ffb10e58860e6ab1",
+    "sdk_sources/official/src/eval_client/eval_env.py": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+    "sdk_sources/official/src/eval_client/main.py": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8",
     "sdk_sources/official/utils/pipeline_utils.py": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae",
-    "sdk_sources/other_local_changes.patch": "4857340eff1c7715312aac0e0486506eb94de5fde15cb0222bcf58a8bfb87615",
-    "setup_eval_env_client.sh": "8c71d326e7bc89d95b16745a50901557789c4f7db63417caf8e0bc122ad7658a",
-    "setup_eval_policy_server.sh": "43295c406d44e674f3b0d2fd5bac51e81cf45fe4e76e3dd8924df75332d13589",
+    "setup_eval_env_client.sh": "00c4ea7ef0d025a793fbe9fa1735412aa99cf88343349b16e5d6b8d07ae1d6e9",
+    "setup_eval_policy_server.sh": "9beec4ca705b51e91f0500fa929f1ff1f94748c6ae80324d54c4b48b474029df",
     "simulator_entry.py": "7a924d4ee6f051ba99b0ba04688541faf58cf346478ab7c2db81c305cf8e0654",
-    "summarize.py": "059740ccfa8703d5075e2609723995a47eb0ac6e47451e41ffb5e81863069620",
     "tests/test_ik_guard.py": "0c0de58bac9bc722ec87111bfb15d7f597168337e975a30daa7e8c983f890b10",
     "tests/test_inference_scope.py": "4c28aebf713121c7b84851fe0ecd8ef3594d1c7ca00bfe4416ecca6e84f74a92",
     "tests/test_obs_lag.py": "a9c133257d1a471d0d841deaa4c0e5d5b173254717027f28f2892f9f174160bf",
-    "tests/test_package.py": "75b7e55b87f1c6f7a6b4b5e720e0b70120f322889acc6e8aaf3cefff18f23d38",
-    "tests/test_sdk_compat.py": "f751a027599977df3ac782736d1cdec83de4753cac0dd63efbaf0911f9ea1f68"
+    "tests/test_package.py": "a60e63f095c357f6d51f09c3a417ca4728ec33bc91c7e8730ddce2f927187996",
+    "tests/test_sdk_compat.py": "6fc42122694f2f3ccdbaebecf8fa945a3ac731afcd8d6fc35ab1966374d907d1"
   },
   "sdk_compatibility": {
     "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
-    "local_revision": "fcd09556957a834233e09e78704e0db43a705c3e",
     "host_files": {
       "src/eval_client/main.py": [
-        "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff",
         "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
       ],
       "src/eval_client/eval_env.py": [
-        "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f",
         "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88"
       ],
       "utils/pipeline_utils.py": [
-        "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b",
         "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
       ],
       "src/eval_client/ik_guard.py": [
@@ -260,15 +246,15 @@
       "local": {
         "src/eval_client/main.py": {
           "file": "sdk_sources/local/src/eval_client/main.py",
-          "sha256": "21ec29b54d6f53dd35ec0488da8dc6019dcf240d70d2e461140dfb41e00377ff"
+          "sha256": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
         },
         "src/eval_client/eval_env.py": {
           "file": "sdk_sources/local/src/eval_client/eval_env.py",
-          "sha256": "74d98d29a454edd01f9984cf197732e18406dd5de9ddb6903d02dfd7d4ec392f"
+          "sha256": "08a49bafda13dc186993c36950fc1f81decfaf3837ab8395872b72e973687d0c"
         },
         "utils/pipeline_utils.py": {
           "file": "sdk_sources/local/utils/pipeline_utils.py",
-          "sha256": "276269e0cc387c8cd408c07d0af4d193db178eee8618c246bbf9e3853b82da0b"
+          "sha256": "d5d8da29e6ca84ab04323a2f79130f930572785b4399634e06a42834ed4087ae"
         },
         "src/eval_client/ik_guard.py": {
           "file": "sdk_sources/local/src/eval_client/ik_guard.py",
@@ -278,11 +264,11 @@
       "official": {
         "src/eval_client/main.py": {
           "file": "sdk_sources/official/src/eval_client/main.py",
-          "sha256": "6a66dfc3d63f2137b3084f19625895da74c49a03dd20ba3c692db513cffa7ac0"
+          "sha256": "ca6ba652b6f123506370f1907b1d88060d83f56c9e91ce6e6930f63d9f2b71a8"
         },
         "src/eval_client/eval_env.py": {
           "file": "sdk_sources/official/src/eval_client/eval_env.py",
-          "sha256": "367fa10fe8d874cd1ad201b426cb3e83570668f51a4c52610870b7558ca2d057"
+          "sha256": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88"
         },
         "utils/pipeline_utils.py": {
           "file": "sdk_sources/official/utils/pipeline_utils.py",
@@ -290,12 +276,7 @@
         }
       }
     },
-    "curobo": {
-      "official_revision": "d17b54ce32cba095c0b000c4c58777075d11de0e",
-      "local_revision": "895c6517243f8cb091c73c018c8167192d39599a",
-      "auto_apply": false,
-      "runtime_src_identical": true
-    }
+    "local_profile": "Audited SDK with IK protection only"
   },
   "checkpoint_release": {
     "model_name": "Era0-Preview",

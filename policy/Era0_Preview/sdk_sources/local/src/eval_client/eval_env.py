@@ -3,12 +3,9 @@ from datetime import datetime
 import importlib
 import inspect
 import json
-import logging
 import os
-import subprocess
 
 from client_server.ws.model_client import WsModelClient
-import cv2
 import numpy as np
 import transforms3d as t3d
 import websockets
@@ -21,8 +18,6 @@ from src.eval_client.ik_guard import IKGuard
 from utils.cluttered_generator import UnStableError
 from utils.pipeline_utils import get_robot_action_dim_info
 from utils.save_file import VideoStreamWriter, format_video_saved_message, save_json
-
-logger = logging.getLogger(__name__)
 
 
 def _patch_websockets_proxy_compat():
@@ -86,12 +81,12 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                 os.environ["ROBODOJO_RUN_ID"] = run_id
             self.run_id = run_id
             self.save_dir = os.path.join(
-                os.environ.get("ROBODOJO_EVAL_OUTPUT_DIR", "eval_result"),
+                "eval_result",
                 f"{BENCHMARK}",
                 self.task_name,
                 self.policy_name,
                 self.config_name,
-                str(self.eval_seed),
+                str(self.eval_seed) + "_" + self.additional_info,
                 run_id,
             )
 
@@ -135,16 +130,12 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
 
             self.success = [True] * self.num_envs
             self.end_flag = [False] * self.num_envs
+            self.ik_rejections = [{} for _ in range(self.num_envs)]
             self.take_action_cnt = [0] * self.num_envs
             # Per-env streaming video writers: {env_idx: {camera_key: writer}}.
             # Replaces the old full-episode frame cache; only vision frames are
             # streamed to disk as they arrive instead of buffered in RAM.
             self.video_writers: dict[int, dict[str, VideoStreamWriter]] = {}
-            # Deployment policies can report their currently executed subtask
-            # after every action chunk.  Keep the timeline in the simulator so
-            # its video stream and saved episode metadata share one clock.
-            self._current_policy_subtask: dict[int, str] = {}
-            self._policy_subtask_trace: dict[int, list[dict]] = {}
             self.episode_nums = self.num_envs
             self.unstable_nums = 0
             self.unstable_envs: set[int] = set()
@@ -218,13 +209,8 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                 trial_id=trial_id,
                 action_case_id=action_case_id,
                 repeat_index=self.deploy_cfg.get("repeat_index"),
-                # NOTE(merge 2026-08-01): upstream c8c7189 forwards
-                # ws_ping_interval_s / ws_ping_timeout_s here, but that requires
-                # XPolicyLab >= 72b3a52. Our submodule pin (766e807) instead reads
-                # ROBODOJO_WS_PING_INTERVAL / ROBODOJO_WS_PING_TIMEOUT env vars
-                # (60s / 300s defaults) inside WsModelClient, which is what the
-                # slow X-VLA server needs. Re-enable the kwargs only together with
-                # a submodule bump.
+                ws_ping_interval_s=self.deploy_cfg.get("ws_ping_interval_s", 20.0),
+                ws_ping_timeout_s=self.deploy_cfg.get("ws_ping_timeout_s", 20.0),
             )
             self.robot_action_dim_info = get_robot_action_dim_info(env_cfg=self.eval_cfg)
 
@@ -249,10 +235,8 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
 
             self.success = [True] * self.num_envs
             self.end_flag = [False] * self.num_envs
-            self.take_action_cnt = [0] * self.num_envs
-            self._current_policy_subtask.clear()
-            self._policy_subtask_trace.clear()
             self.ik_rejections = [{} for _ in range(self.num_envs)]
+            self.take_action_cnt = [0] * self.num_envs
             # Discard any writers left open by a previous (e.g. crashed or
             # unstable) batch before starting a fresh one.
             self._abort_video_writers()
@@ -391,27 +375,6 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
             self.take_action_batch([action], env_idx_list=[0])
 
         def take_action_batch(self, actions_list, env_idx_list=None):
-            if os.environ.get("ROBODOJO_TIMING"):
-                import time
-                now = time.perf_counter()
-                stats = getattr(self, "_step_timing", None)
-                if stats is None:
-                    stats = {"sim_s": 0.0, "sim_n": 0}
-                    self._step_timing = stats
-                last = stats.get("last_return_ts")
-                if last is not None:
-                    gap = now - last
-                    stats.setdefault("gap_s", 0.0)
-                    stats.setdefault("gap_n", 0)
-                    stats["gap_s"] += gap
-                    stats["gap_n"] += 1
-                    if stats["gap_n"] % 50 == 0:
-                        print(
-                            f"[EvalEnv][timing] policy+ws gap avg over last {stats['gap_n']}: "
-                            f"{stats['gap_s'] / stats['gap_n'] * 1000:.1f} ms/call "
-                            f"(time between take_action_batch calls minus sim step)"
-                        )
-                stats["_take_action_start"] = now
             if self.physx_monitor_enabled:
                 self._check_physx_broken_envs()
             control_info_list = []
@@ -532,11 +495,6 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                     for env_idx in env_idx_list:
                         self.check_support_arm_stable(env_idx=env_idx)
             self.is_episode_end()
-            if os.environ.get("ROBODOJO_TIMING"):
-                import time
-                stats = getattr(self, "_step_timing", None)
-                if stats is not None:
-                    stats["last_return_ts"] = time.perf_counter()
 
         def mark_env_unstable(self, env_idx):
             """Flag an env as unstable so run_eval drops it from the eval set.
@@ -711,30 +669,9 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
 
         def step(self, env_idx_list, decimation=1):
             meta_control_list = self.robot_manager.control_manager.pop(env_idx_list)
-            if os.environ.get("ROBODOJO_TIMING"):
-                import time
-                t0 = time.perf_counter()
-                for _ in range(decimation):
-                    super().step(meta_control_list=meta_control_list)
-                    self.sim_step(render=False)
-                dt = time.perf_counter() - t0
-                # Accumulate per-step timing; flush every 50 steps.
-                stats = getattr(self, "_step_timing", None)
-                if stats is None:
-                    stats = {"sim_s": 0.0, "sim_n": 0}
-                    self._step_timing = stats
-                stats["sim_s"] += dt
-                stats["sim_n"] += 1
-                if stats["sim_n"] % 50 == 0:
-                    print(
-                        f"[EvalEnv][timing] sim.step avg over last {stats['sim_n']}: "
-                        f"{stats['sim_s'] / stats['sim_n'] * 1000:.1f} ms/call "
-                        f"(decimation={decimation}, num_envs={self.num_envs})"
-                    )
-            else:
-                for _ in range(decimation):
-                    super().step(meta_control_list=meta_control_list)
-                    self.sim_step(render=False)
+            for _ in range(decimation):
+                super().step(meta_control_list=meta_control_list)
+                self.sim_step(render=False)
 
         def _align_layout_success(self):
             for env_idx in range(self.num_envs):
@@ -754,12 +691,12 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
             locate by humans.
             """
             return os.path.join(
-                os.environ.get("ROBODOJO_EVAL_OUTPUT_DIR", "eval_result"),
+                "eval_result",
                 f"{BENCHMARK}",
                 self.task_name,
                 self.policy_name,
                 self.config_name,
-                str(self.eval_seed),
+                str(self.eval_seed) + "_" + self.additional_info,
                 f"_resume_{self.run_id}.json",
             )
 
@@ -912,9 +849,6 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                     "ik_rejections": dict(self.ik_rejections[env_idx]),
                 }
                 video_path = os.path.join(self.save_dir, f"episode_{index:07d}.mp4")
-                trace_path = self._save_policy_subtask_trace(env_idx, video_path, tag)
-                if trace_path is not None:
-                    self.eval_result["details"][index]["subtask_trace"] = trace_path
                 self.save_video(env_idx, video_path, tag)
 
             # Drop streams for envs not saved this batch (e.g. unstable ones).
@@ -984,7 +918,7 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                 color = cam_data.get("color") if isinstance(cam_data, dict) else None
                 if color is None:
                     continue
-                color = self._annotate_policy_subtask(env_idx, color)
+                color = np.ascontiguousarray(color)
                 if color.ndim != 3 or color.shape[2] not in (3, 4):
                     continue
                 if cam_key not in writers:
@@ -992,78 +926,6 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                     tmp_path = os.path.join(self._stream_dir, f"env{env_idx}_{cam_key}.tmp.mp4")
                     writers[cam_key] = VideoStreamWriter(tmp_path, height, width, channels, fps=fps)
                 writers[cam_key].append(color)
-
-        def record_policy_subtasks(self, env_idx_list, subtasks):
-            """Record the predicted text that conditions each fresh action chunk."""
-            if len(env_idx_list) != len(subtasks):
-                raise ValueError(
-                    "env_idx_list and subtasks must have the same length: "
-                    f"{len(env_idx_list)} != {len(subtasks)}"
-                )
-            for env_idx, subtask in zip(env_idx_list, subtasks):
-                env_idx = int(env_idx)
-                text = " ".join(str(subtask or "").split())
-                self._current_policy_subtask[env_idx] = text
-                self._policy_subtask_trace.setdefault(env_idx, []).append(
-                    {
-                        "action_step": int(self.take_action_cnt[env_idx]),
-                        "subtask": text,
-                    }
-                )
-
-        def _annotate_policy_subtask(self, env_idx, color):
-            """Burn the current predicted subtask into a video-only RGB copy."""
-            text = self._current_policy_subtask.get(int(env_idx), "")
-            frame = np.ascontiguousarray(color.copy())
-            if not text or frame.ndim != 3 or frame.shape[2] not in (3, 4):
-                return frame
-            height, width = frame.shape[:2]
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            scale = max(0.35, min(0.65, width / 1600.0))
-            thickness = max(1, int(round(scale * 2)))
-            max_chars = max(24, int(width / max(7.0, 14.0 * scale)))
-            words = ("Subtask: " + text).split()
-            lines, current = [], ""
-            for word in words:
-                candidate = word if not current else current + " " + word
-                if len(candidate) > max_chars and current:
-                    lines.append(current)
-                    current = word
-                else:
-                    current = candidate
-            if current:
-                lines.append(current)
-            line_height = max(18, int(round(28 * scale)))
-            banner_height = min(height, 10 + line_height * len(lines))
-            cv2.rectangle(frame, (0, 0), (width, banner_height), (0, 0, 0), -1)
-            for line_idx, line in enumerate(lines):
-                y = min(height - 4, 5 + (line_idx + 1) * line_height)
-                cv2.putText(
-                    frame,
-                    line,
-                    (8, y),
-                    font,
-                    scale,
-                    (255, 255, 255),
-                    thickness,
-                    cv2.LINE_AA,
-                )
-            return frame
-
-        def _save_policy_subtask_trace(self, env_idx, video_path, tag):
-            trace = self._policy_subtask_trace.get(int(env_idx), [])
-            if not trace:
-                return None
-            trace_path = video_path.replace(".mp4", f"_{tag}_subtasks.json")
-            save_json(
-                {
-                    "env_idx": int(env_idx),
-                    "layout_id": int(self.env_seeds[env_idx]),
-                    "events": trace,
-                },
-                trace_path,
-            )
-            return trace_path
 
         def _sweep_stream_dir(self):
             """Remove orphan temp videos left by a previous hard kill/crash."""
@@ -1090,114 +952,27 @@ def create_eval_env(config, app, resume_state=None, **kwargs):
                         pass
 
         def save_video(self, env_idx, video_path, tag):
-            """Finalize per-camera streams, then h-stack them into one mp4.
-
-            Layout (left → head → right); any additional camera keys are appended
-            in sorted order after the preferred three. When only one camera is
-            available we skip the ffmpeg hstack and just rename the tmp file.
-            The per-camera source mp4s are deleted after a successful merge; on
-            merge failure they are kept as a fallback so we never lose footage.
-
-            The tmp filenames still encode the camera key so multiple envs and
-            multiple cameras don't collide inside `_stream/`; only the final,
-            user-facing name is `episode_<idx>_<tag>.mp4`.
-            """
             writers = self.video_writers.pop(env_idx, {})
-            per_cam_paths: dict[str, str] = {}
-            reference_writer = None
             for cam_key, writer in writers.items():
                 tmp_path = writer.out_path
+                final_path = video_path.replace(".mp4", f"_{cam_key}_{tag}.mp4")
                 try:
                     writer.close(announce=False)
                 except Exception as e:
                     print(f"[EvalEnv] Failed to finalize video for env {env_idx} cam {cam_key}: {e}")
                     writer.abort()
                     continue
-                per_cam_paths[cam_key] = tmp_path
-                reference_writer = reference_writer or writer
-
-            if not per_cam_paths:
-                return
-
-            # Ordering: left, head, right first (as available); any extra
-            # cameras (e.g. cam_third_view for interact_scene tasks) appended
-            # in sorted order so the layout stays deterministic.
-            preferred_order = ("cam_left_wrist", "cam_head", "cam_right_wrist")
-            ordered_keys = [k for k in preferred_order if k in per_cam_paths]
-            extras = sorted(k for k in per_cam_paths if k not in preferred_order)
-            ordered_keys.extend(extras)
-            ordered_paths = [per_cam_paths[k] for k in ordered_keys]
-
-            final_path = video_path.replace(".mp4", f"_{tag}.mp4")
-            os.makedirs(os.path.dirname(final_path), exist_ok=True)
-
-            if len(ordered_paths) == 1:
-                # Nothing to stack: promote the single tmp to the final name.
-                os.replace(ordered_paths[0], final_path)
+                os.makedirs(os.path.dirname(final_path), exist_ok=True)
+                os.replace(tmp_path, final_path)
                 print(
                     format_video_saved_message(
                         final_path,
-                        reference_writer.n_frames,
-                        reference_writer.width,
-                        reference_writer.height,
-                        reference_writer.fps,
+                        writer.n_frames,
+                        writer.width,
+                        writer.height,
+                        writer.fps,
                     )
                 )
-                return
-
-            # ffmpeg hstack: one -i per source, then filter_complex to
-            # horizontally concatenate. Re-encode to H.264 yuv420p so the
-            # combined stream stays compatible with browsers / desktop players.
-            cmd = ["ffmpeg", "-y", "-loglevel", "error"]
-            for path in ordered_paths:
-                cmd.extend(["-i", path])
-            cmd.extend(
-                [
-                    "-filter_complex",
-                    f"hstack=inputs={len(ordered_paths)}",
-                    "-pix_fmt",
-                    "yuv420p",
-                    "-vcodec",
-                    "libx264",
-                    "-crf",
-                    "23",
-                    final_path,
-                ]
-            )
-            try:
-                subprocess.run(cmd, check=True)
-            except Exception as e:
-                print(
-                    f"[EvalEnv] hstack merge failed for env {env_idx} "
-                    f"(cams={ordered_keys}): {e}; keeping per-camera tmp files"
-                )
-                # Move the tmp files to per-camera named final files so the
-                # user still gets footage even when merge fails.
-                for cam_key, tmp_path in per_cam_paths.items():
-                    fallback = video_path.replace(".mp4", f"_{cam_key}_{tag}.mp4")
-                    try:
-                        os.replace(tmp_path, fallback)
-                    except Exception as move_err:
-                        print(f"[EvalEnv]   fallback move failed for {cam_key}: {move_err}")
-                return
-
-            # Merge succeeded: remove the per-camera tmp files.
-            for tmp_path in ordered_paths:
-                try:
-                    os.remove(tmp_path)
-                except OSError:
-                    pass
-
-            total_width = reference_writer.width * len(ordered_paths)
-            print(
-                format_video_saved_message(
-                    final_path,
-                    reference_writer.n_frames,
-                    total_width,
-                    reference_writer.height,
-                    reference_writer.fps,
-                )
-            )
 
         def have_empty(self, env_idx_list=None):
             if env_idx_list is None:

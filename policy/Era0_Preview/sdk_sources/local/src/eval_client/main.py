@@ -2,10 +2,8 @@ import argparse
 from datetime import datetime
 import importlib
 import json
-import math
 import os
 import sys
-import time
 
 from isaaclab.app import AppLauncher
 
@@ -154,12 +152,12 @@ def _resume_manifest_path(eval_cfg, run_id):
     the writer and reader paths.
     """
     return os.path.join(
-        os.environ.get("ROBODOJO_EVAL_OUTPUT_DIR", "eval_result"),
+        "eval_result",
         BENCHMARK,
         eval_cfg["task_name"],
         eval_cfg["policy_name"],
         eval_cfg["config_name"],
-        str(eval_cfg.get("seed", 0)),
+        f"{eval_cfg.get('seed', 0)}_{eval_cfg.get('additional_info', '')}",
         f"_resume_{run_id}.json",
     )
 
@@ -257,7 +255,6 @@ def main():
     """Assemble the env config, build the eval env, and run the eval loop with
     PhysX crash/resume recovery until the requested episode count is reached.
     """
-    main_started_at = time.monotonic()
     task_name = args_cli.task_name
     num_envs = args_cli.num_envs
     eval_cfg_name = args_cli.env_cfg_type
@@ -330,41 +327,11 @@ def main():
     env_cfg = process_randomization(env_cfg)
     env_cfg, eval_num = process_config(env_cfg, task_name=task_name)
 
-    sample_ratio_value = os.environ.get("ROBODOJO_SAMPLE_RATIO")
-    if sample_ratio_value:
-        try:
-            sample_ratio = float(sample_ratio_value)
-        except ValueError as exc:
-            raise ValueError(
-                "ROBODOJO_SAMPLE_RATIO must be a float in (0, 1], "
-                f"got {sample_ratio_value!r}"
-            ) from exc
-        if not 0.0 < sample_ratio <= 1.0:
-            raise ValueError(
-                "ROBODOJO_SAMPLE_RATIO must be in (0, 1], "
-                f"got {sample_ratio_value!r}"
-            )
-        native_eval_num = eval_num
-        eval_num = max(1, math.ceil(native_eval_num * sample_ratio))
-        print(
-            f"[main] sample_ratio={sample_ratio:g}: "
-            f"native episodes {native_eval_num} -> {eval_num}",
-            flush=True,
-        )
-
     if os.environ.get("EVAL_NUM"):
         _env_eval_num = os.environ.get("EVAL_NUM")
         if str(_env_eval_num).lower() != "native":
             eval_num = min(int(_env_eval_num), int(eval_num))
     eval_cfg["eval_num"] = eval_num
-
-    task_timeout_s = os.environ.get("ROBODOJO_TASK_TIMEOUT_S", "0")
-    expected_batches = (eval_num + num_envs - 1) // num_envs
-    print(
-        f"[DIAG] task={task_name} target_episodes={eval_num} num_envs={num_envs} "
-        f"expected_batches={expected_batches} task_timeout_s={task_timeout_s}",
-        flush=True,
-    )
 
     OmegaConf.update(
         env_cfg,
@@ -376,30 +343,14 @@ def main():
     env_cfg.sim.seed = [0 for _ in range(num_envs)]
     run_id = os.environ["ROBODOJO_RUN_ID"]
     resume_state = _load_resume_manifest(eval_cfg, run_id)
-    environment_started_at = time.monotonic()
     env = create_eval_env(env_cfg, simulation_app, resume_state=resume_state)
     eval_time = env.success_nums + env.fail_nums
-    print(
-        f"[DIAG] environment ready elapsed={time.monotonic() - environment_started_at:.1f}s "
-        f"resumed_completed={eval_time}/{eval_num}",
-        flush=True,
-    )
     if eval_time >= eval_num:
         # Already complete on resume - nothing left to do.
         env.env_seeds = None
     else:
         env.env_seeds = env.seed_manager.get_seeds(max_count=eval_num - eval_time)
-    batch_index = 0
     while env.env_seeds is not None:
-        batch_index += 1
-        batch_started_at = time.monotonic()
-        batch_seed_count = sum(seed is not None for seed in env.env_seeds)
-        print(
-            f"[DIAG] batch={batch_index}/{expected_batches} start "
-            f"completed={eval_time}/{eval_num} seeds={batch_seed_count} "
-            f"remaining={eval_num - eval_time}",
-            flush=True,
-        )
         retry_round = False
         if enable_monitor:
             get_monitor().reset()
@@ -422,8 +373,7 @@ def main():
             # Monitor caught the warning in time.
             bad_envs = sorted(e.broken_envs)
 
-        except UnStableError as e:
-            print(f"[DIAG] UnStableError caught in main loop: {e!r}", flush=True)
+        except UnStableError:
             env.seed_manager.eval_step()
         except Exception as e:
             import traceback
@@ -481,19 +431,9 @@ def main():
         if retry_round:
             continue
 
-        batch_elapsed_s = time.monotonic() - batch_started_at
-        print(
-            f"[DIAG] batch={batch_index}/{expected_batches} end "
-            f"elapsed={batch_elapsed_s:.1f}s success={env.success_nums} "
-            f"fail={env.fail_nums} unstable={env.unstable_nums}",
-            flush=True,
-        )
+        print(f"Success nums: {env.success_nums}, Fail nums: {env.fail_nums}, Unstable nums: {env.unstable_nums}")
         eval_time = env.success_nums + env.fail_nums
         if eval_time >= eval_num:
-            print(
-                f"[DIAG] evaluation complete completed={eval_time}/{eval_num}",
-                flush=True,
-            )
             break
 
         env.env_seeds = env.seed_manager.get_seeds(max_count=eval_num - eval_time)
@@ -506,11 +446,6 @@ def main():
     _delete_resume_manifest(env)
     _close_model_client(env)
     env.close()
-    print(
-        f"[DIAG] client complete total_elapsed={time.monotonic() - main_started_at:.1f}s "
-        f"completed={eval_time}/{eval_num}",
-        flush=True,
-    )
     simulation_app.close()
 
 

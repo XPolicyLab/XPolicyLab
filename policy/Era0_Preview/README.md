@@ -10,7 +10,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ## Installation
 
-Install RoboDojo's Isaac Sim environment and assets following the [official installation guide](https://robodojo-benchmark.com/doc/usage/installation/). Keep the policy and simulator in separate environments. The policy environment needs Python 3.11, a compatible CUDA 12.9 driver, and FlashAttention-2/FLA; the known working versions are in `requirements.txt` and `install.sh`.
+Install RoboDojo's Isaac Sim environment and assets following the [official installation guide](https://robodojo-benchmark.com/doc/usage/installation/). Keep the policy and simulator in separate environments. Use a real XPolicyLab checkout under the SDK workspace; the shared robot-dimension helper resolves `env_cfg/` relative to the checkout and does not support linking an external checkout into the SDK. The policy environment needs Python 3.11, a compatible CUDA 12.9 driver, and FlashAttention-2/FLA; the known working versions are in `requirements.txt` and `install.sh`.
 
 ```bash
 cd RoboDojo/XPolicyLab/policy/Era0_Preview
@@ -60,7 +60,7 @@ checkpoints/era0-preview/
 
 Evaluation requires the exact `norm_stats.pkl` alongside the model. Its expected SHA256 is `f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285`; the downloader checks this value. [checkpoint_release.json](checkpoint_release.json) records the repository, revision and expected weight/normalization fingerprints. The weight is approximately 11.9 GB. Evaluation code is obtained from XPolicyLab, independently of model assets.
 
-Explicit checkpoint/model paths and XPolicyLab's standard checkpoint names are supported through the shared resolver. The legacy bundle layout with a `model/` subdirectory is also supported. The same checkpoint and normalization are used for all three evaluation seeds. Use this adapter/runtime to load the custom VLA architecture; the public checkpoint does not provide generic `AutoModel(..., trust_remote_code=True)` loading. If the release includes `SHA256SUMS`, verify it after downloading:
+Use the logical checkpoint name `era0-preview` on standard SDK entries. The shared resolver finds `checkpoints/era0-preview/`. For an external model directory, set `ERA0_CHECKPOINT_PATH=/path/to/model` on the policy server while retaining a path-safe checkpoint name; this keeps the SDK result directory readable by its official summarizer. The three-seed driver accepts an explicit `--checkpoint` directory and forwards it separately from `--checkpoint-name` (default `era0-preview`). The legacy bundle layout with a `model/` subdirectory is also supported. The same checkpoint and normalization are used for all three evaluation seeds. Use this adapter/runtime to load the custom VLA architecture; the public checkpoint does not provide generic `AutoModel(..., trust_remote_code=True)` loading. If the release includes `SHA256SUMS`, verify it after downloading:
 
 ```bash
 (cd checkpoints/era0-preview && sha256sum -c SHA256SUMS)
@@ -70,7 +70,7 @@ Standard ten-argument XPolicyLab entry (one task / seed):
 
 ```bash
 ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0 bash eval.sh RoboDojo stack_bowls \
-  "$(pwd)/checkpoints/era0-preview" arx_x5 ee 0 0 0 .venv RoboDojo
+  era0-preview arx_x5 ee 0 0 0 .venv RoboDojo
 ```
 
 The split-machine `setup_eval_policy_server.sh` / `setup_eval_env_client.sh` use the standard XPolicyLab arguments; see the shared Deployment Flow. `EVAL_ENV_TYPE=debug` uses the official debug client; set `DEBUG_OBS_ENCODED=1` for its encoded RGB transport check. Actual model loading still requires the selected weights and a free GPU.
@@ -89,32 +89,45 @@ The same adapter is recognized by RoboDojo's official CLI (run from the RoboDojo
 ```bash
 ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0 bash scripts/robodojo.sh benchmark \
   --policy-dir XPolicyLab/policy/Era0_Preview \
-  --ckpt "$(pwd)/XPolicyLab/policy/Era0_Preview/checkpoints/era0-preview" \
+  --ckpt era0-preview \
   --policy-env /path/to/policy-venv --eval-env RoboDojo --eval-num native --seed 0 \
   --gpu-ids 0,1,2,3
 ```
 
-Append `--run` to start simulation. Tasks are read from the installed SDK default all-dimensions runnable inventory (`task_inventory.py --only-runnable --dimension all`), including its random variants. No task list is bundled or pinned. Seeds are fixed to 0/1/2. Episode counts come from the installed SDK's `_task.yml` using `EVAL_NUM=native` (current official protocol: 2,100 per seed, 6,300 total). The selected SDK counts/revision, checkpoint metadata, normalization hash, rendering mode and execution contract are recorded before launch. Each available GPU receives tasks from a shared queue. The output directory must be fresh to prevent mixed checkpoints or render modes.
+Append `--run` to start simulation. Tasks are read from the installed SDK default all-dimensions runnable inventory (`task_inventory.py --only-runnable --dimension all`), including its random variants. No task list is bundled or pinned. Seeds are fixed to 0/1/2. Episode counts come from the installed SDK's `_task.yml` using `EVAL_NUM=native` (current official protocol: 2,100 per seed, 6,300 total). The selected SDK counts/revision, checkpoint metadata, normalization hash, rendering mode and execution contract are recorded before launch. With a separately located SDK, pass `--robodojo-root /path/to/RoboDojo` (or export `ROBODOJO_ROOT` for standard entries). Each available GPU receives tasks from a shared queue. `--output` must be a fresh directory for launch logs and metadata. It does not relocate simulator results or videos; the SDK writes those to its normal `eval_result/` tree.
 
 Use `--tasks-file /path/to/subset.txt` only for diagnostics; the plan explicitly labels subsets. Missing trials fail completeness checks even for `make_toast_random`; that task is not automatically retried. Other SDK in-process failure recovery is retained. There is no task-specific action tuning, no gripper postprocess, no layout/seed-based action branch, and no evaluation-data subsampling.
 
-Outputs:
+Result JSON and videos are written by the installed SDK, with exactly the same layout as other policies:
 
-- `evaluation_contract.json`: pinned protocol and asset fingerprints.
-- `RoboDojo/<task>/Era0_Preview/arx_x5/<seed>/<run_id>/_result.json` and SDK artifacts.
-- `logs/<task>_seed<seed>.log`: policy + simulator output for each task.
-- `render_config.json` / `render_modes/`: camera timing provenance.
-- Local profile: `ik_guard_config.json` and per-episode `details[].ik_rejections` record execution protection.
-- `evaluation_summary.json`: all task/seed cells selected by the SDK and exact expected/actual episode counts.
-- `aggregated_summary.md`: the original report's **Overview / Avg Score** is the primary metric, with Generalization standard/random merged as before.
+```text
+RoboDojo/eval_result/RoboDojo/<task>/Era0_Preview/arx_x5/
+  <seed>_ckpt_name=<checkpoint-name>,action_type=ee/<run_id>/
+    _result.json
+    episode_0000000_cam_head_success.mp4
+    episode_0000000_cam_left_wrist_success.mp4
+    episode_0000000_cam_right_wrist_success.mp4
+```
+
+Video outcome suffixes and camera files are controlled by the SDK. Both profiles preserve its stream, final video and resume-manifest paths; the adapter adds no combined video, text overlay or alternate video directory.
+
+Use the SDK's official summary command from the RoboDojo root:
+
+```bash
+bash scripts/robodojo.sh summarize
+```
+
+This invokes `scripts/internal/summarize_result.py` and writes `eval_result/RoboDojo/_summary.md`. **Overview / Avg Score** in that file is the primary metric. The three-seed driver calls this installed script after evaluation; it contains no copied score aggregation. The official script also checks the three camera filenames against result records.
+
+The driver stores only `evaluation_contract.json`, execution completeness in `evaluation_summary.json`, and `logs/<task>_seed<seed>.log` under `--output`. These are launch metadata, not a second score report. Use a separate SDK workspace or logical checkpoint name when isolating evaluations: the SDK summarizer follows its own latest-run selection across the native result tree.
 
 ### Local execution, camera timing and official submissions
 
-The default `--execution-profile local` (`ERA0_EXECUTION_PROFILE=local` on standard entries) bundles the local SDK's IK protection: solver failure, invalid targets or any joint jump above 0.5 rad holds that arm at its live measured position. Other arms/grippers continue, and the step still counts. It also preserves requested random-task concurrency and local diagnostics/videos. Both execution profiles include portable result/resume paths, without editing installed SDK files. See [SDK_COMPATIBILITY.md](SDK_COMPATIBILITY.md) for the full local change audit and tests.
+The default `--execution-profile local` (`ERA0_EXECUTION_PROFILE=local` on standard entries) bundles the local SDK's IK protection: solver failure, invalid targets or any joint jump above 0.5 rad holds that arm at its live measured position. Other arms/grippers continue, and the step still counts. Only IK protection and its diagnostics differ from the selected SDK; random-task concurrency, result/resume paths and video handling stay SDK-native. Neither profile edits installed SDK files. See [SDK_COMPATIBILITY.md](SDK_COMPATIBILITY.md) for the full local change audit and tests.
 
 The default is **policy-side image delay with SDK rendering** (`HY_OBS_LAG=1`, `ROBODOJO_EVAL_LEGACY_RENDER=0`; driver: `--obs-lag 1 --render-mode sdk`). To opt into the earlier renderer compatibility instead, explicitly disable policy delay and select legacy rendering (`--obs-lag 0 --render-mode legacy`, or `HY_OBS_LAG=0 ROBODOJO_EVAL_LEGACY_RENDER=1` on the standard entry). It uses a single `env.render()` and skips zero-delay Kit flags, without changing physics, reset-drive fixes, rewards, layouts or action semantics. It is not a full historical SDK rollback. Both modes keep their configuration in the result artifacts.
 
-**Use explicit `--execution-profile official --render-mode sdk` for the audited official execution/render combination**, or `ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0` on standard entries. This disables local IK/concurrency/video changes and rendering overrides; output-root/numeric-seed path plumbing remains. Setting only the rendering switch retains local IK protection. Compatibility-mode results must be disclosed; acceptance is up to benchmark maintainers. Unknown SDK versions fail before simulator startup rather than silently replacing newer client code. The default dry run never starts a simulation. `install.sh` only installs the policy environment.
+**Use explicit `--execution-profile official --render-mode sdk` for the audited official execution/render combination**, or `ERA0_EXECUTION_PROFILE=official ROBODOJO_EVAL_LEGACY_RENDER=0` on standard entries. This uses the installed, hash-validated SDK execution code and renderer; policy-side image lag remains enabled. No result/video path plumbing or renderer override is installed. Setting only the rendering switch retains local IK protection. Compatibility-mode results must be disclosed; acceptance is up to benchmark maintainers. Unknown SDK versions fail before simulator startup rather than silently replacing newer client code. The default dry run never starts a simulation. `install.sh` only installs the policy environment.
 
 ## Configuration
 
@@ -146,7 +159,7 @@ For a standard single-task launch from this policy directory:
 
 ```bash
 HY_OBS_LAG=1 ROBODOJO_EVAL_LEGACY_RENDER=0 ERA0_EXECUTION_PROFILE=official \
-  bash eval.sh RoboDojo stack_bowls /path/to/checkpoint arx_x5 ee 0 0 0 /path/to/policy-env RoboDojo
+  bash eval.sh RoboDojo stack_bowls era0-preview arx_x5 ee 0 0 0 /path/to/policy-env RoboDojo
 ```
 
 For an all-task, native-count, three-seed preview:

@@ -29,8 +29,8 @@ def describe(root, profile=None):
     incompatible = [name for name,value in hashes.items() if value not in manifest['host_files'][name]]
     spec = dict(execution_profile=profile, ik_guard_enabled=profile=='local',
         ik_max_joint_delta_rad_default=0.5 if profile=='local' else None,
-        random_env_limit='requested_num_envs' if profile=='local' else 'sdk_clutter_env_limit',
-        output_paths='portable_output_root_and_numeric_seed',
+        random_env_limit='sdk_clutter_env_limit',
+        output_paths='sdk_native_eval_result',
         sdk_disk_modified=False, sdk_host_file_sha256=hashes, unsupported_sdk_files=incompatible,
         source_manifest_sha256=hashlib.sha256((SOURCES/'manifest.json').read_bytes()).hexdigest(),
         overlay_sha256={name:row['sha256'] for name,row in manifest['profiles'][profile].items()})
@@ -52,6 +52,8 @@ def validate(root, profile=None):
 def source(root, name, profile=None):
     profile = profile or profile_name()
     manifest = json.loads((SOURCES/'manifest.json').read_text())
+    if profile == 'official':
+        return (Path(root)/name).read_bytes()
     return (POLICY/manifest['profiles'][profile][name]['file']).read_bytes()
 
 

@@ -4,7 +4,7 @@ POLICY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "${POLICY_DIR}/../.." && pwd)"
 BENCH_ROOT="$(cd "${XPL_ROOT}/.." && pwd)"
 export ROBODOJO_ROOT="${ROBODOJO_ROOT:-${BENCH_ROOT}}"
-export PYTHONPATH="${BENCH_ROOT}:${XPL_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH="${ROBODOJO_ROOT}:${BENCH_ROOT}:${XPL_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTHONNOUSERSITE=1
 # Image timing compatibility lives in the policy; SDK rendering stays unchanged.
 export HY_OBS_LAG="${HY_OBS_LAG:-1}"

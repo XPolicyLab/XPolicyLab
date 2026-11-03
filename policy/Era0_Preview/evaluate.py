@@ -20,12 +20,12 @@ sys.path.insert(0, str(BENCH))
 from XPolicyLab.policy.Era0_Preview.checkpoint import resolve_assets
 from XPolicyLab.policy.Era0_Preview.native_protocol import native_counts, default_tasks
 from XPolicyLab.policy.Era0_Preview.sdk_compat import describe as execution_spec, validate as validate_sdk
-from XPolicyLab.policy.Era0_Preview.summarize import scan, merge_data, render
 
 
-def result_status(output, task, seed, expected):
-    root = Path(output) / 'RoboDojo' / task / POLICY.name / 'arx_x5' / str(seed)
-    files = list(root.glob('*/_result.json'))
+def result_status(sdk_root, task, seed, expected, checkpoint_name, run_id):
+    root = Path(sdk_root) / 'eval_result' / 'RoboDojo' / task / POLICY.name / 'arx_x5'
+    run = root / f'{seed}_ckpt_name={checkpoint_name},action_type=ee' / run_id
+    files = [run / '_result.json'] if (run / '_result.json').is_file() else []
     if len(files) != 1:
         return dict(actual=0, valid=False, reason=f'Expected one result file, found {len(files)}')
     try:
@@ -52,13 +52,14 @@ from XPolicyLab.policy.Era0_Preview.obs_lag import observation_lag
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', required=True, help='Portable bundle root, model directory, or checkpoint name')
-    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--output', type=Path, required=True, help='Fresh directory for launch logs and protocol metadata; SDK result/video paths are unchanged')
+    parser.add_argument('--checkpoint-name', default='era0-preview', help='Path-safe checkpoint label used in the SDK result directory')
     parser.add_argument('--policy-env', default=os.environ.get('POLICY_ENV', str(POLICY/'.venv')))
     parser.add_argument('--sim-env', default='RoboDojo', help='Conda env, venv directory, or Python executable')
     parser.add_argument('--robodojo-root', type=Path, default=Path(os.environ.get('ROBODOJO_ROOT', BENCH)))
     parser.add_argument('--gpu-ids', default='0,1,2,3,4,5,6,7')
     parser.add_argument('--execution-profile', choices=['local','official'], default='local',
-                        help='local: reproduce IK guard and random concurrency; official: SDK execution + output plumbing only')
+                        help='local: SDK execution with IK guard; official: unmodified SDK execution')
     parser.add_argument('--render-mode', choices=['legacy', 'sdk'], default=None)
     parser.add_argument('--obs-lag', type=observation_lag, default=observation_lag(),
                         help='Image-only delay in observation updates; default HY_OBS_LAG or 1')
@@ -78,6 +79,10 @@ def main():
     else:
         tasks = all_tasks
     import re
+    if not re.fullmatch('[A-Za-z0-9_.-]+', args.checkpoint_name) or args.checkpoint_name in {'.', '..'}:
+        parser.error('--checkpoint-name must be a path-safe identifier')
+    summarizer = args.robodojo_root / 'scripts/internal/summarize_result.py'
+    if not summarizer.is_file(): parser.error('Selected SDK is missing scripts/internal/summarize_result.py')
     if not tasks or len(set(tasks)) != len(tasks) or not all(re.fullmatch('[A-Za-z0-9_]+', t) for t in tasks):
         parser.error('Task list must contain unique task identifiers')
     if not set(tasks).issubset(all_tasks):
@@ -103,15 +108,21 @@ def main():
         adapter_sha256=fingerprint(assets['model']/'hy_xvla_adapter.json'),
         qwen_history_time_rope=assets['config'].get('qwen_history_time_rope'),
         history=[8,1,1], history_interval=40, execute_slots=[1,10], denoise_steps=10,
-        gpu_ids=gpus, primary_metric='aggregated_summary.md Overview Avg Score')
+        gpu_ids=gpus, checkpoint_name=args.checkpoint_name,
+        result_root=str(args.robodojo_root/'eval_result/RoboDojo'),
+        summary_script_sha256=fingerprint(summarizer),
+        primary_metric='eval_result/RoboDojo/_summary.md Overview Avg Score')
     print(json.dumps(plan, indent=2), flush=True)
     if not args.run: return
     args.output.mkdir(parents=True, exist_ok=False)
     (args.output/'evaluation_contract.json').write_text(json.dumps(plan,indent=2)+'\n')
+    run_id = time.strftime('%Y-%m-%d_%H-%M-%S')
     base_env = dict(os.environ, ROBODOJO_ROOT=str(args.robodojo_root),
-        ROBODOJO_EVAL_OUTPUT_DIR=str(args.output), ROBODOJO_RUN_ID=time.strftime('%Y%m%dT%H%M%SZ',time.gmtime()),
+        ERA0_CHECKPOINT_PATH=str(assets['model']), ROBODOJO_RUN_ID=run_id,
         ROBODOJO_NUM_ENVS='10', ROBODOJO_EVAL_LEGACY_RENDER=str(int(args.render_mode=='legacy')),
         HY_OBS_LAG=str(args.obs_lag), ERA0_EXECUTION_PROFILE=args.execution_profile, EVAL_NUM='native', PYTHONNOUSERSITE='1', OMP_NUM_THREADS='4', MKL_NUM_THREADS='4', WANDB_MODE='disabled')
+    base_env.pop('ROBODOJO_EVAL_OUTPUT_DIR', None)
+    base_env.pop('ROBODOJO_EVAL_ROOT', None)
     # A caller's local debug/subsample settings must not reduce the full benchmark.
     for key in ('ROBODOJO_SAMPLE_RATIO','ROBODOJO_FATAL_RESTART_COUNT','EVAL_ENV_TYPE',
                 'ROBODOJO_DISABLE_CAMERAS','ROBODOJO_DISABLE_RENDER'):
@@ -157,7 +168,7 @@ def main():
             env=dict(base_env)
             # Preserve the user's no-retry exception for unstable toast scenes.
             if task=='make_toast_random': env['ROBODOJO_FATAL_RESTART_COUNT']='3'
-            command=['bash',str(POLICY/'eval.sh'),'RoboDojo',task,str(assets['model']),
+            command=['bash',str(POLICY/'eval.sh'),'RoboDojo',task,args.checkpoint_name,
                      'arx_x5','ee',str(seed),gpu,gpu,args.policy_env,args.sim_env]
             with log_path.open('w') as log:
                 proc=subprocess.Popen(command,env=env,cwd=args.robodojo_root,stdout=log,
@@ -168,7 +179,7 @@ def main():
                     while proc.poll() is None and not cancelled.wait(5):
                         size=log_path.stat().st_size
                         if size!=last_size: last_size=size;last_activity=time.monotonic()
-                        status=result_status(args.output,task,seed,n)
+                        status=result_status(args.robodojo_root,task,seed,n,args.checkpoint_name,run_id)
                         if status['valid']:
                             completed_at=completed_at or time.monotonic()
                             if time.monotonic()-completed_at>60: grace_terminated=True;terminate(proc);break
@@ -177,7 +188,7 @@ def main():
                 finally:
                     terminate(proc)
                     with lock:children.discard(proc)
-            status=result_status(args.output,task,seed,n)
+            status=result_status(args.robodojo_root,task,seed,n,args.checkpoint_name,run_id)
             if proc.returncode != 0 and not grace_terminated:
                 status['valid']=False
                 status['reason']=f'Launcher exited {proc.returncode}: '+status.get('reason','')
@@ -194,11 +205,9 @@ def main():
     report=dict(plan,cells=rows,valid_episodes=sum(r['actual'] for r in rows if r['valid']),
                 complete=len(rows)==len(cells) and not incomplete,incomplete=incomplete)
     (args.output/'evaluation_summary.json').write_text(json.dumps(report,indent=2)+'\n')
-    raw,seeds=scan(args.output/"RoboDojo")
-    if raw:
-        data,seeds,policies=merge_data(raw,seeds)
-        # Use the exact original report implementation and primary Score metric.
-        (args.output/'aggregated_summary.md').write_text(render(data, seeds, policies))
+    # The installed SDK owns score aggregation and video inventory checks.
+    subprocess.run([sys.executable, str(summarizer)], cwd=args.robodojo_root,
+                   env=base_env, check=True)
     if not report['complete']: raise SystemExit(1)
 
 if __name__=='__main__':

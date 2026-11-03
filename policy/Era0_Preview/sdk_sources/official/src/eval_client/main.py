@@ -152,12 +152,12 @@ def _resume_manifest_path(eval_cfg, run_id):
     the writer and reader paths.
     """
     return os.path.join(
-        os.environ.get("ROBODOJO_EVAL_OUTPUT_DIR", "eval_result"),
+        "eval_result",
         BENCHMARK,
         eval_cfg["task_name"],
         eval_cfg["policy_name"],
         eval_cfg["config_name"],
-        str(eval_cfg.get("seed", 0)),
+        f"{eval_cfg.get('seed', 0)}_{eval_cfg.get('additional_info', '')}",
         f"_resume_{run_id}.json",
     )
 

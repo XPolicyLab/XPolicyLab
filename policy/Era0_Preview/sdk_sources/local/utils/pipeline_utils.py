@@ -55,8 +55,13 @@ def process_randomization(env_cfg):
 
 
 def resolve_random_task_num_envs(task_name, num_envs, sim_cfg):
-    """Keep the caller-requested parallel environment count for every task."""
-    return int(num_envs)
+    """Cap parallel env count for *_random tasks using sim.scene.clutter_env_limit."""
+    if not str(task_name).endswith("_random"):
+        return int(num_envs)
+
+    scene_cfg = sim_cfg.get("scene", {}) if sim_cfg is not None else {}
+    limit = scene_cfg.get("clutter_env_limit", 5)
+    return min(int(num_envs), int(limit))
 
 def _task_setting(task_info, common_info, key, default):
     return task_info.get(key, common_info.get(key, default))
