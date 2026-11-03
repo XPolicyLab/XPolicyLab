@@ -22,7 +22,7 @@ class Conversation:
         tool = dict(
             name="application_command",
             description=(
-                "Execute one physicalRSI command. No shell commands. Available commands: "
+                "Execute one PhysicalRSI command. No shell commands. Available commands: "
                 + json.dumps(allowed, ensure_ascii=False)
             ),
             parameters={
@@ -37,7 +37,7 @@ class Conversation:
                 dict(
                     role="system",
                     content=(
-                        "You operate physicalRSI through application tools. Respond in the user's language. "
+                        "You operate PhysicalRSI through application tools. Respond in the user's language. "
                         "Use tool evidence for claims about execution. Distinguish software checks from "
                         "physical qualification. Ask for missing task/budget choices. Never request API "
                         "secrets in conversation; users configure environment variables. Never invent results. "

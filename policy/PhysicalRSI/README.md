@@ -8,7 +8,7 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ## Installation
 
-From `policy/physicalRSI`:
+From `policy/PhysicalRSI`:
 
 ```bash
 python download_assets.py --output skill-assets

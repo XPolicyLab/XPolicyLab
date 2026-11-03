@@ -76,9 +76,9 @@ class NativeRuntime:
     def check(self):
         try:
             self._verify()
-            if self.config["initialization_policy_name"] != "physicalRSI":
+            if self.config["initialization_policy_name"] != "PhysicalRSI":
                 raise ValueError(
-                    "Native initialization must use the physicalRSI adapter"
+                    "Native initialization must use the PhysicalRSI adapter"
                 )
             for path, sha in client_files(self.config["simulator_root"]).items():
                 if self.config["files"].get(path) != sha:

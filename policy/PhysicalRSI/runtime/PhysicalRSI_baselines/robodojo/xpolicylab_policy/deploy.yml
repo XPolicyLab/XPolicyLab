@@ -1,4 +1,4 @@
-policy_name: physicalRSI
+policy_name: PhysicalRSI
 protocol: ws
 host: localhost
 port: 6000

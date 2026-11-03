@@ -381,9 +381,9 @@ a clean audit. A separate hardlinked smoke installation passed the unmodified
 entries. That checks packaging and registry integrity, not full skill execution.
 
 ```bash
-python policy/physicalRSI/asset_revision/apply_revision.py \
+python policy/PhysicalRSI/asset_revision/apply_revision.py \
   /path/to/untouched/v4/code-skills /path/to/new/candidate
-python -m pytest policy/physicalRSI/tests -q
+python -m pytest policy/PhysicalRSI/tests -q
 ```
 
 In this workspace the candidate is `/cpfs/physicalrsi-code-skills-observed`, and
@@ -397,7 +397,7 @@ Use an untouched extraction of the historical archive, not a prepared installati
 whose template placeholders have been relocated:
 
 ```bash
-python policy/physicalRSI/audit_legacy_assets.py /path/to/v4/code-skills \
+python policy/PhysicalRSI/audit_legacy_assets.py /path/to/v4/code-skills \
   --official-objects /path/to/official-metadata \
   --output /tmp/physicalrsi-asset-audit.json
 ```

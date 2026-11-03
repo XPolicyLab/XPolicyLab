@@ -21,9 +21,9 @@ def client_files(simulator_root):
     bundle = files("PhysicalRSI_baselines.robodojo.xpolicylab_policy")
     selected = [main]
     for name in ("__init__.py", "deploy.py", "deploy.yml"):
-        target = root / "XPolicyLab/policy/physicalRSI" / name
+        target = root / "XPolicyLab/policy/PhysicalRSI" / name
         if target.read_bytes() != (bundle / name).read_bytes():
-            raise ValueError("Native physicalRSI client differs from installed adapter")
+            raise ValueError("Native PhysicalRSI client differs from installed adapter")
         selected.append(target)
     return {str(path): file_digest(path) for path in selected}
 
@@ -33,7 +33,7 @@ def worker(root, output):
     sys.path.insert(0, str(Path(root).resolve()))
     # This matches native_worker's import precedence, but deliberately does not
     # import the environment, AppLauncher or any policy/model factory.
-    deploy = importlib.import_module("XPolicyLab.policy.physicalRSI.deploy")
+    deploy = importlib.import_module("XPolicyLab.policy.PhysicalRSI.deploy")
     from . import evaluation
 
     if (

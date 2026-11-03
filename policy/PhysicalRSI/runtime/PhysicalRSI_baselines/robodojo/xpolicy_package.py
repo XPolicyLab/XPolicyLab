@@ -14,7 +14,7 @@ def install(checkout, *, native_client=False):
         checkout = checkout / "XPolicyLab"
     elif not (checkout / "model_template.py").is_file():
         raise ValueError("Expected an XPolicyLab checkout")
-    destination = checkout / "policy/physicalRSI"
+    destination = checkout / "policy/PhysicalRSI"
     source = files("PhysicalRSI_baselines.robodojo.xpolicylab_policy")
     entries = [
         entry

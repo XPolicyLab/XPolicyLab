@@ -1,4 +1,4 @@
-"""Minimal physicalRSI command line entry point."""
+"""Minimal PhysicalRSI command line entry point."""
 
 import argparse
 from pathlib import Path
@@ -6,7 +6,7 @@ from pathlib import Path
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
-        prog="physicalrsi", description="physicalRSI · composable embodied intelligence"
+        prog="physicalrsi", description="PhysicalRSI · composable embodied intelligence"
     )
     parser.add_argument("--workspace", type=Path, default=Path(".physicalrsi"))
     parser.add_argument("--plain", action="store_true", help="Plain terminal text")

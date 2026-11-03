@@ -7,9 +7,9 @@ This builder revises the published `physicalrsi-skill-assets-v4` code-skills pac
 Use a fresh destination on the same filesystem as the extracted original package:
 
 ```bash
-python policy/physicalRSI/asset_revision/apply_revision.py /path/to/v4/code-skills /path/to/revised-code-skills
-python policy/physicalRSI/audit_legacy_assets.py /path/to/revised-code-skills --output /path/to/review.json
-PYTHONPATH=policy/physicalRSI/runtime python -m PhysicalRSI_baselines.robodojo.prepare_code_programs /path/to/revised-code-skills
+python policy/PhysicalRSI/asset_revision/apply_revision.py /path/to/v4/code-skills /path/to/revised-code-skills
+python policy/PhysicalRSI/audit_legacy_assets.py /path/to/revised-code-skills --output /path/to/review.json
+PYTHONPATH=policy/PhysicalRSI/runtime python -m PhysicalRSI_baselines.robodojo.prepare_code_programs /path/to/revised-code-skills
 ```
 
 The builder hardlinks unchanged files and atomically replaces edits. Do not edit linked asset files in place. Preserve the original package and use a separate unprepared snapshot for repeatable builds. Preparation binds installation paths and must run only on a fresh installation.

@@ -14,7 +14,7 @@ class Model(ModelTemplate):
             "arx_x5",
             "joint",
         ):
-            raise ValueError("physicalRSI currently supports arx_x5 joint actions")
+            raise ValueError("PhysicalRSI currently supports arx_x5 joint actions")
         if model_cfg.get("task_name") != model_cfg["physicalrsi"]["task"]:
             raise ValueError("Deployment task differs from frozen policy task")
         dimensions = get_robot_action_dim_info(model_cfg["env_cfg_type"])

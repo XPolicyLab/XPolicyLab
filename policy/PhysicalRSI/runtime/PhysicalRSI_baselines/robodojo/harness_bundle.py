@@ -48,7 +48,7 @@ def install(checkout: str | Path, *, bundle: str | Path = DEFAULT_BUNDLE) -> Pat
         raise ValueError("Expected an XPolicyLab checkout")
     source = Path(bundle).resolve()
     validate(source)
-    destination = checkout / "policy/physicalRSI/harness"
+    destination = checkout / "policy/PhysicalRSI/harness"
     if destination.exists():
         for incoming in source.rglob("*"):
             if "compatibility" in incoming.relative_to(source).parts:

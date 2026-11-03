@@ -1,6 +1,6 @@
 """Configuration-only model entrypoint for pinned VLA/code-policy execution.
 
-Pass the physicalRSI configuration under the deploy config's `physicalrsi` key.
+Pass the PhysicalRSI configuration under the deploy config's `physicalrsi` key.
 This is trusted local deployment configuration, not generated policy input.
 """
 
@@ -19,7 +19,7 @@ class Model:
     def __init__(self, config):
         settings = deepcopy(config["physicalrsi"])
         if settings.get("schema") != "physicalrsi.robodojo.policy/v1":
-            raise ValueError("Versioned physicalRSI policy configuration required")
+            raise ValueError("Versioned PhysicalRSI policy configuration required")
         mode = settings["mode"]
         if mode not in {"committed", "candidate"}:
             raise ValueError("Policy mode must be committed or candidate")

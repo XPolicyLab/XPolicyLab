@@ -1,4 +1,4 @@
-"""XPolicyLab entrypoint using physicalRSI Operations and immutable memory."""
+"""XPolicyLab entrypoint using PhysicalRSI Operations and immutable memory."""
 import os
 import uuid
 from copy import deepcopy

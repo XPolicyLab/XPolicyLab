@@ -56,7 +56,7 @@ def main(argv=None):
 
     from PhysicalRSI.application import Application
 
-    parser = argparse.ArgumentParser(description="physicalRSI MCP stdio server")
+    parser = argparse.ArgumentParser(description="PhysicalRSI MCP stdio server")
     parser.add_argument("--workspace", type=Path, default=Path(".physicalrsi"))
     parser.add_argument("--demo", action="store_true")
     args = parser.parse_args(argv)

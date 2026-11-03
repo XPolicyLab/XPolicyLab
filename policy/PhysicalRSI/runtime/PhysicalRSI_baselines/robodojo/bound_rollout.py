@@ -94,7 +94,7 @@ def execute(
                 endpoint=service.ready["endpoint"],
                 host=endpoint.hostname,
                 port=endpoint.port,
-                policy_name="physicalRSI",
+                policy_name="PhysicalRSI",
                 policy_service_identity=service.identity,
             )
             atomic_json(root / "bound-request.json", request)

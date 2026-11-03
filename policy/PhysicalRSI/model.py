@@ -1,4 +1,4 @@
-"""Public XPolicyLab model contract with an owned physicalRSI runtime."""
+"""Public XPolicyLab model contract with an owned PhysicalRSI runtime."""
 from XPolicyLab.model_template import ModelTemplate
 from PhysicalRSI_baselines.robodojo.skill_model import Model as SkillModel
 
