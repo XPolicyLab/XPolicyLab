@@ -1,0 +1,18 @@
+# Synthetic debug-client fixture only; not a robot or simulator deployment.
+config_name: piper
+config:
+  sim: sim_config
+  scene: default
+  robot: phoenix_debug_piper
+  camera: camera_config
+observation:
+  collect_freq: 25
+  robot:
+    joint_states: true
+    world_ee_state: true
+  vision:
+    approximate_depth: false
+    depth: false
+    intrinsic_matrix: false
+    extrinsic_matrix: false
+    shape: true
