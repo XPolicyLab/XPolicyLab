@@ -89,3 +89,47 @@ The tasks are `align_blocks`, `arrange_largest_number`, `build_tower`, `classify
 - **Single environment.** `eval_batch` stays `false`; `update_obs_batch` and `get_action_batch` raise `NotImplementedError`.
 - **Latency.** If the model endpoint stays unreachable past the decision deadline, `get_action` raises and RoboDojo moves on to the next layout.
 - **Scripts.** `eval.sh`, `setup_eval_policy_server.sh` and `setup_eval_env_client.sh` are copied verbatim from `policy/demo_policy`. `deploy.py` is its loop plus one `end_episode` call at the end, because XPolicyLab does not call the policy's `close()`.
+
+## Known Issues
+
+The two issues below occur in the simulator process, not in this adapter or in the checkpoints, so they can affect any policy. They were found in a test of RunWu-RSI `v0.8.1`: 756 episodes (42 tasks × 18 layouts, seeds 0–2) through RoboDojo `09bd5f5`, the version pinned by `v0.8.1`, with Isaac Sim 5.1 on RTX 5090 and RTX 6000 Ada machines. Each hung episode was stopped and its layout rerun; hung episodes are not counted in our results.
+
+### `make_toast` hangs at "Starting the simulation" on some machines
+
+- **Symptom.** No step runs. The log stops after the toaster's collision-cooking and joint warnings, `kit.log` reports `Hang detected` every two minutes, and the process does not recover.
+- **Cause.** For tasks whose config has an `Articulation` section (`fill_egg_holder`, `make_toast`, `press_by_number`, `store_laptop_and_headphones`, `swap_blocks` and their `_random` variants), RoboDojo's [`src/eval_client/physx_warning_monitor.py`](https://github.com/RoboDojo-Benchmark/RoboDojo/blob/09bd5f5e762b949f5858ece31347ce62057b3a5e/src/eval_client/physx_warning_monitor.py) does two things before Kit starts:
+  - it routes the simulator's stdout and stderr through pipes that Python threads in the same process read;
+  - it tries to enlarge those pipes (`_enlarge_pipe`, which ignores a failure).
+
+  While the scene starts, Kit's main thread holds the Python GIL and writes its warnings to stdout. Once the pipe is full, the main thread blocks in `pipe_write`, and the reader thread cannot take the GIL to drain it. At this point `make_toast` writes 13–28 KB of warnings, `store_laptop_and_headphones` about 8.6 KB, and the other monitored tasks 6–7 KB.
+- **Affected machines.**
+  - Linux counts pipe buffers per user. When one user's processes already hold more than `fs.pipe-user-pages-soft` pages (default 16384) and a process has neither `CAP_SYS_RESOURCE` nor `CAP_SYS_ADMIN`, its new pipes get 8 KB and cannot be enlarged.
+  - In containers that run as root, the count covers every root process on the node, including those of other containers.
+  - On three such Kubernetes machines, `make_toast` hung in 13 of 13 attempts and `store_laptop_and_headphones` in 1 of 14. On the machines whose pipes could be enlarged to 1 MiB, neither task hung. The GPU driver version was not the cause.
+- **Check before an evaluation.** Run the command below as the user that runs the evaluation. It prints `1048576` on a machine that is not affected. `8192`, or a `PermissionError`, means the machine is affected.
+
+  ```bash
+  python3 -c "import fcntl,os; r,w=os.pipe(); fcntl.fcntl(r,1031,1<<20); print(fcntl.fcntl(r,1032))"
+  ```
+
+- **Workarounds.** Use any one of these:
+  - run the evaluation as a non-root user, which has its own pipe budget;
+  - give the container `CAP_SYS_RESOURCE`;
+  - raise `fs.pipe-user-pages-soft` on the host.
+
+  We verified the first one: on an affected machine, the same `make_toast` case on the same GPU hung as root and ran to completion as a non-root user.
+
+### Startup stalls while Kit downloads materials
+
+- **What happens.** The camera model `Assets/Sensor/Camera/realsense.usd` uses three materials from NVIDIA's online material library: Aluminum_Cast, Aluminum_Anodized and Plastic_ABS. When they are not in Kit's cache, Kit downloads 3 MDL files and 6 textures from `omniverse-content-production.s3.us-west-2.amazonaws.com` while the scene loads, and the main thread waits for them.
+- **What we saw.**
+  - The downloads took 37–125 s per start (median for each machine) and at most 443 s.
+  - In 6 of the 756 counted episodes, Kit reported `Hang detected` for 2–5 minutes and then continued normally.
+  - In one start a texture arrived incomplete (`Texture upload failed`), and the camera body was rendered without it; that episode was not affected otherwise.
+  - The machine has to reach this server. We did not test a machine without access to it.
+- **How to read the logs.**
+  - `Hang detected` during this phase is not a reason to stop the process.
+  - On machines without `zenity`, Kit's hang dialog writes `sh: zenity: not found` to the log every two minutes. A log file that keeps changing is therefore not a sign of progress; the step counter (`step: N / M`) is.
+- **One stop of unknown cause.** One of the 756 episodes (`match_and_pick_from_conveyor`, seed 0, layout 42, RTX 6000 Ada) stopped at step 0, at the first render after reset, and did not recover within two hours. The rerun of that layout succeeded.
+  - It was not the pipe issue above: this task does not use the monitor.
+  - It was not the material download: all 9 files had already arrived.
