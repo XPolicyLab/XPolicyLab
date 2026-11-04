@@ -1,0 +1,43 @@
+policy_name: REAL_RSI
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: "."
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+camera_calib: camera_calib.json
+depth_provider: mono
+mono_model_dir: null
+hold_chunk: 50
+reset_timeout_s: 240
+act_timeout_s: 120
+policy_python: null
+# Surface runtime failures to the evaluator instead of silently producing holds.
+strict_errors: true
+# Routes with engine: pyrua (pyrua_engine.py). PyRUA-Lean episode settings, as in its PyRUA_RSI adapter;
+# openai_options are sent to the local program endpoint, which ignores them.
+pyrua:
+  robot: robodojo_xpl_rgb
+  primitives: no-vla
+  runtime: openai
+  model: offline-program
+  max_turns: 100
+  budget_s: 5400
+  images: on-demand
+  feedback: pure
+  poll_s: 20.0
+  wrap_up_s: 30.0
+  result_dir: ./pyrua_results
+  openai_options:
+    max_tokens: 8192
+    tool_choice: required
+    temperature: 1.0
+    nudges: 20
+    extra_body:
+      top_p: 0.95
+      top_k: 20

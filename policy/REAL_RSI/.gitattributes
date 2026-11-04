@@ -1,0 +1,2 @@
+# Preserve imported task source and asset whitespace.
+*/** -whitespace
