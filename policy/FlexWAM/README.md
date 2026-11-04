@@ -8,12 +8,13 @@ Shared conventions — argument meanings, checkpoint naming, split-machine deplo
 
 ## Installation
 
-Create a Python >= 3.10 environment, then install a CUDA PyTorch wheel before the adapter packages. `install.sh` editable-installs the vendored `flexwam/` package. `deepspeed` compiles during that install. The script uses `gcc` and `g++` when they are already on the system, and otherwise installs them into the active conda environment. Run the `cd` from the parent of this checkout.
+Create a Python >= 3.10 environment, then install a CUDA PyTorch wheel before the adapter packages:
 
 ```bash
-conda create -n flexwam python=3.10
+conda create -n flexwam python=3.10 -y
 conda activate flexwam
-pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128
+pip install -U pip
+pip install torch==2.7.0+cu128 torchvision==0.22.0+cu128 --extra-index-url https://download.pytorch.org/whl/cu128
 
 cd XPolicyLab/policy/FlexWAM
 bash install.sh

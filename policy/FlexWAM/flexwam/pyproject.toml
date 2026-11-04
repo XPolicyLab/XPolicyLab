@@ -23,6 +23,7 @@ dependencies = [
   "imageio==2.37.0",
   "imageio-ffmpeg==0.6.0",
   "jsonlines==4.0.0",
+  "matplotlib==3.10.9",
   "modelscope==1.34.0",
   "msgpack>=1.0.5",
   "numpy==1.26.4",

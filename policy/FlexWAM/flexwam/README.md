@@ -144,4 +144,4 @@ FlexWAM uses code and designs from the projects below.
 - [OpenPI](https://github.com/Physical-Intelligence/openpi). `deploy/client/` is the OpenPI WebSocket policy protocol used by the deployment server.
 - [FastWAM](https://github.com/yuantianyuan01/FastWAM). The WAN2.2 path — Hydra task configs, ActionDiT backbone preprocessing, text-embedding caches, and open-loop evaluation — follows FastWAM.
 - [LingBot-Video](https://github.com/Robbyant/lingbot-video). The LingBot video expert lives in `src/flexwam/models/backbone/lingbot_video/` and loads LingBot-Video weights.
-- [OpenWAM](https://github.com/OpenWAM-Official/OpenWAM). Image transforms and the prompt-embedding cache follow OpenWAM.
+- [OpenWAM](https://github.com/OpenWAM-Official/OpenWAM). Image transforms and color jitter follow OpenWAM.
