@@ -1,0 +1,57 @@
+{
+  "runtime_name": "xbrain-v1-inference-runtime",
+  "runtime_version": "0.1.0",
+  "snapshot_date": "2026-09-19",
+  "source_package": "modified giga_models inference package",
+  "source_python_tree_sha256": "d7c8dcb506ce83b459147f37b9a2774949f2d0e9404294ae4b163b3e55368e22",
+  "supported_vlm_type": "paligemma2",
+  "checkpoint_contract": {
+    "state_input_mode": "proprio_anchor",
+    "state_max_dim": 32,
+    "action_max_dim": 32,
+    "action_horizon": 50,
+    "vision_in_channels": 3,
+    "image_size": [224, 224],
+    "fast_token_vocab_mode": "tail",
+    "fast_token_tail_skip_tokens": 128
+  },
+  "supported_robot_contracts": {
+    "piper_x": {
+      "embodiment_id": 6,
+      "control_frequency_hz": 25,
+      "runtime_state_dim": 14,
+      "runtime_action_dim": 14,
+      "checkpoint_env": "XBRAIN_PIPERX_CHECKPOINT_PATH",
+      "norm_env": "XBRAIN_PIPERX_NORM_STATS_PATH",
+      "norm_filename": "robodojo_piperx_0902.json"
+    },
+    "piper": {
+      "embodiment_id": 6,
+      "control_frequency_hz": 30,
+      "runtime_state_dim": 14,
+      "runtime_action_dim": 14,
+      "checkpoint_env": "XBRAIN_PIPER_CHECKPOINT_PATH",
+      "norm_env": "XBRAIN_PIPER_NORM_STATS_PATH",
+      "norm_filename": "robodojo_piper_0903.json"
+    },
+    "arx_x5": {
+      "embodiment_id": 0,
+      "control_frequency_hz": 30,
+      "runtime_state_dim": 14,
+      "runtime_action_dim": 14,
+      "checkpoint_env": "XBRAIN_ARX_X5_CHECKPOINT_PATH",
+      "norm_env": "XBRAIN_ARX_X5_NORM_STATS_PATH",
+      "norm_filename": "robodojo_arx5_0903.json"
+    }
+  },
+  "resource_config": "resources/robodojo_models.yaml",
+  "required_checkpoint_files": [
+    "config.json",
+    "inference_config.json",
+    "diffusion_pytorch_model.bin"
+  ],
+  "required_shared_resources": [
+    "tokenizer/config.json",
+    "fast_tokenizer/tokenizer.json"
+  ]
+}
