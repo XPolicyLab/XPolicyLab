@@ -1,7 +1,7 @@
 {
   "dataset": {
     "repo": "ffanyt/Mibot-RSI-knowledge",
-    "revision": "1924cf22c7ab2c50b824788c8839a78f7c6802b7"
+    "revision": "ef3dee8272931faf37dadb04bdad9a7988150763"
   },
   "knowledge": {
     "ckpt_name": "eval",
@@ -64,11 +64,11 @@
       },
       "fasten_screws": {
         "archive": "knowledge/eval/fasten_screws.tar.gz",
-        "bytes": 9369398,
-        "files": 37,
-        "manifest_sha256": "14617ed679496768db6193b89913ee7b562cba5a0526ff379274fcef7f21c58a",
-        "sha256": "a52a35beefe30c553922d4cffca1ef00c27ffa1e9465d616521aba72f8aaac2c",
-        "snapshot_id": "604ae96bcaaa1f45"
+        "bytes": 9464336,
+        "files": 59,
+        "manifest_sha256": "5553c6988e6ea8878fa28af658ed035228b045f873a1f176f1c7bac920336fdc",
+        "sha256": "3a43ed4ecdee202e3c0471e6ffe4069a14e542a044b899d4318bd4541b288537",
+        "snapshot_id": "a88593ed1afed021"
       },
       "fill_egg_holder": {
         "archive": "knowledge/eval/fill_egg_holder.tar.gz",
