@@ -488,11 +488,16 @@
       "aliases": []
     },
     "sweep_blocks": {
-      "driver": "vla",
-      "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
+      "driver": "model",
+      "action_type": "ee",
+      "eval_batch": false,
+      "max_envs": 1,
+      "aliases": [],
+      "model": "adapter.model:Model",
+      "deploy": "adapter.deploy",
+      "numeric_ik": false,
+      "calibrated": true,
+      "modules": "tasks/sweep_blocks/modules.json"
     },
     "sweep_blocks_random": {
       "driver": "vla",
@@ -502,18 +507,30 @@
       "aliases": []
     },
     "store_laptop_and_headphones": {
-      "driver": "vla",
-      "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
+      "driver": "generator",
+      "action_type": "ee",
+      "eval_batch": false,
+      "max_envs": 1,
+      "aliases": [],
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/store_laptop_and_headphones/modules.json",
+      "program": "coap.tasks.laptop_r10_carry10:run"
     },
     "store_laptop_and_headphones_random": {
-      "driver": "vla",
-      "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
+      "driver": "generator",
+      "action_type": "ee",
+      "eval_batch": false,
+      "max_envs": 1,
+      "aliases": [],
+      "model": "model:Model",
+      "deploy": "deploy",
+      "numeric_ik": true,
+      "environment_prefix": "COAP",
+      "modules": "tasks/store_laptop_and_headphones_random/modules.json",
+      "program": "coap.tasks.laptop_r14_merge14:run_random"
     },
     "stack_blocks": {
       "driver": "vla",

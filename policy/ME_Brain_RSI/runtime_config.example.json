@@ -55,6 +55,16 @@
         "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models",
         "COAP_SNAPSHOT_INTERVAL": "50"
       }
+    },
+    "store_laptop_and_headphones": {
+      "environment": {
+        "LAPTOP_SAM3_PATH": "model_assets/laptop/sam3"
+      }
+    },
+    "store_laptop_and_headphones_random": {
+      "environment": {
+        "LAPTOP_SAM3_PATH": "model_assets/laptop/sam3"
+      }
     }
   }
 }

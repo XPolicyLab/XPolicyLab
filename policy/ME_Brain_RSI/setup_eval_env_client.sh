@@ -25,7 +25,7 @@ action_type="$("${ROUTE_PYTHON}" "${SCRIPT_DIR}/routing.py" --task "${task_name}
 
 
 # These generator policies execute in the environment client process.
-if [[ "${backend}" == "auto" && ( "${task_name}" == "imitate_sorting_sequence" || "${task_name}" == "store_tools_in_toolbox" || "${task_name}" == "classify_objects_by_language" || "${task_name}" == "cover_blocks" || "${task_name}" == "fill_egg_holder" || "${task_name}" == "hang_mugs" || "${task_name}" == "hang_mugs_random" ) ]]; then
+if [[ "${backend}" == "auto" && ( "${task_name}" == "imitate_sorting_sequence" || "${task_name}" == "store_tools_in_toolbox" || "${task_name}" == "classify_objects_by_language" || "${task_name}" == "cover_blocks" || "${task_name}" == "fill_egg_holder" || "${task_name}" == "hang_mugs" || "${task_name}" == "hang_mugs_random" || "${task_name}" == "store_laptop_and_headphones" || "${task_name}" == "store_laptop_and_headphones_random" ) ]]; then
     export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 fi
 
