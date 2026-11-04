@@ -16,20 +16,20 @@ Code distribution: use the XPolicyLab `feature/era0_preview` branch directly. No
 
 Pending before an official submission:
 
-1. Run the official plain and encoded debug loops on the selected weights and attach their successful log tails. These checks are not yet recorded as passing.
+1. Plain and encoded debug loops passed on the released weights. Attach the successful log tails in [DEBUG_VERIFICATION.md](DEBUG_VERIFICATION.md).
 2. Attach download instructions, environment details, protocol/mode provenance, and the measured results below to the standard XPolicyLab PR template. A complete local three-seed run is not stated as a prerequisite to opening the PR; the existing multi-task campaign is incomplete and uses compatibility settings.
 
 ## Test evidence for the submission PR
 
-The official [Testing and PR standard](../../CONTRIBUTING.md#testing) asks for test evidence and a checkpoint download command. Copy the measured results and limitations into the PR's Testing and Limitations sections; do not mark pending debug checks as passed.
+The official [Testing and PR standard](../../CONTRIBUTING.md#testing) asks for test evidence and a checkpoint download command. Copy the measured results and limitations into the PR's Testing and Limitations sections; debug evidence is recorded in [DEBUG_VERIFICATION.md](DEBUG_VERIFICATION.md).
 
 | Test | Recorded result | Scope / limitation |
 | --- | --- | --- |
 | Local multi-task simulation | Overview Score **33.16 ± 0.35**; SR **27.96 ± 0.47%**; 1,716 successes / 6,225 episodes | Seeds 0/1/2; native target 6,300; mixed SDK versions, legacy rendering and local IK protection; incomplete reference result |
 | Packaged adapter simulation, GPU 1 | `press_by_number`, seed 0: **9/10** successes, Score **90** | Policy image lag 1, SDK rendering/physics, official execution profile |
 | Packaged adapter simulation, GPU 2 | `press_by_number`, seed 0: **8/10** successes, Score **80** | Same settings, independent ten-episode run |
-| Plain-image debug loop | Pending | Attach log tail reaching `[MAIN] eval finished` without tracebacks |
-| Encoded-image debug loop | Pending | Repeat with `DEBUG_OBS_ENCODED=1`; attach successful log tail |
+| Plain-image debug loop | PASS | 10 rounds × 20 action steps; 10 environments; `[MAIN] eval finished`, no tracebacks |
+| Encoded-image debug loop | PASS | `DEBUG_OBS_ENCODED=1`; same round/step counts; successful final log, no tracebacks |
 | Complete native three-seed run with packaged official profile | Pending | Existing local reference results do not establish this result |
 
 The [evaluation report](EVALUATION_RESULTS.md) contains capability scores, per-task/per-seed results and the 75 missing trials. The multi-task campaign combines older-SDK results with newer-SDK legacy-render additions and is not a uniform SDK run. Its local Overview uses available episodes without a minimum per-task threshold; do not label it as an official leaderboard result or as complete native evaluation.
@@ -43,17 +43,21 @@ bash download_checkpoint.sh
 
 The [public model card](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo#local-reference-results) also documents the local reference results. The packaged current-chain single-task tests support adapter functionality, not full-suite equivalence to that campaign.
 
+## Official CLI smoke test
+
+Two native simulator tasks completed through the official CLI, with two seed-0 episodes each, valid result records and all twelve camera videos. See [SIMULATOR_SMOKE_TEST.md](SIMULATOR_SMOKE_TEST.md) for measured results and the launch command. This does not replace a complete three-seed evaluation.
+
 ## Code validation
 
 The local package was checked with:
 
 ```bash
-python -m unittest discover -s policy/Era0_Preview/tests -v
+python -m py_compile policy/Era0_Preview/model.py policy/Era0_Preview/deploy.py
 python -m compileall -q policy/Era0_Preview
 for script in policy/Era0_Preview/*.sh; do bash -n "$script"; done
 ```
 
-The CPU tests exercise the real subprocess queue and SDK summary invocation with a fake simulator, including all three seeds, native-count forwarding, environment-subsampling removal, missing/incorrect result rejection, and observation/action shapes. They also cover actual packaged IK call sites, hold behavior, clean/unknown SDK versions, native result/video/resume paths and real `execv` restart with profile reinstallation. The plain/encoded debug loops and full simulator suite remain pending.
+The plain and encoded debug loops, plus focused observation-delay regression, passed; see [DEBUG_VERIFICATION.md](DEBUG_VERIFICATION.md). A complete three-seed simulator run with the packaged official execution profile remains pending.
 
 Additional local checks: isolated package model import, local checkpoint processor load without downloading weights, 54-task/6,300-trial preview against existing checkpoint metadata, and official RoboDojo `eval` / native `benchmark` dry-run resolution. A separate simulator smoke test completed two independent ten-episode `press_by_number`, seed-0 runs with policy image lag 1, SDK rendering/physics and the official execution profile: Scores 90 and 80. This checks one task only and does not establish full-suite equivalence.
 

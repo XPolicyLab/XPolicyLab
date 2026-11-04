@@ -1,6 +1,8 @@
 # Era0-Preview
 
-Evaluation-only policy for RoboDojo `arx_x5`, Cartesian `ee` actions.
+**Contributor:** RobotEra Team | **Paper:** Not available | **arXiv:** Not available | **Original code:** Inference runtime included in `runtime/`.
+
+Evaluation-only policy for RoboDojo `arx_x5`, Cartesian `ee` actions, with three RGB camera views and batched simulation.
 
 **Weights and results:** [roboterax/Era0-5B-Preview-RoboDojo](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo).
 
@@ -15,6 +17,10 @@ bash download_checkpoint.sh
 ```
 
 Model assets are downloaded to `checkpoints/era0-preview/`. Keep all supplied files, including `norm_stats.pkl`.
+
+## Input format
+
+Observations use the standard XPolicyLab schema: `cam_head`, `cam_left_wrist` and `cam_right_wrist` RGB images, a language instruction, and robot state. Actions use Cartesian end-effector poses and gripper values. Use the supplied normalization file unchanged.
 
 ## Evaluation
 
@@ -39,3 +45,5 @@ POLICY_ENV=.venv bash eval_three_seeds.sh \
 Use a fresh output directory and replace the simulator environment and GPU IDs as needed. Omit `--run` to preview the plan.
 
 Local reference Score: **33.16 ± 0.35**, across three seeds with **6,225/6,300** episodes completed. See [evaluation results](EVALUATION_RESULTS.md) for the full tables; official scores are published on the [RoboDojo leaderboard](https://robodojo-benchmark.com/LeaderBoard).
+
+Debug transport and observation-delay checks: [verification results](DEBUG_VERIFICATION.md).

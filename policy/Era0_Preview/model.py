@@ -274,7 +274,7 @@ class Model(ModelTemplate):
                     f"absolute_chunk_ee_RT z-score evaluation requires action_mean_abs/std_abs in {norm_path!r}"
                 )
         self.policy.preserve_padding_noise_inference = self.preserve_padding_noise_inference
-        self.policy.cuda().eval().to(torch.bfloat16)
+        self.policy.to(torch.bfloat16).cuda().eval()
         # The model adapter owns the network itself; observation encoding,
         # coordinate conversion, and optional per-view history mirror the
         # Hy-VLA RoboDojo training contract.
