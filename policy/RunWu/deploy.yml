@@ -1,0 +1,24 @@
+# XPolicyLab/policy/RunWu/deploy.yml. The first half of the fields is the same as policy/demo_policy/deploy.yml;
+# task_name, seed, action_type and so on are passed in as overrides by the launcher (RoboDojo's scripts, or the RunWu-RSI runner).
+# Only action_type=ee is supported; a null action_type is read as ee.
+policy_name: RunWu         # equals the directory name under XPolicyLab/policy/
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null                  # the checkpoint (bundle) to load: a directory under checkpoints/, a path, or a bundle id; see README.md
+env_cfg_type: null
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false                # one background thread per episode; single env only
+
+# Fields added by this policy
+request_timeout_s: 1800          # per-call limit; must cover the longest single decision; the client must pass it through (the RunWu-RSI runner does)
+get_action_timeout_s: 100        # get_action returns a hold of the observed pose after this long and hands the decision's action out on the next call;
+                                 # keep below the 120 s limit that RoboDojo's client applies to every call (0 disables)
+bundle_id: null                  # optional, explicit: the PolicyBundle to load (content digest); wins over ckpt_name
+bundle_store: null               # bundle store directory containing <bundle_id>.json; prefer an absolute path (a relative path is resolved against the policy directory)
+result_dir: null                 # ExecutionTrace output directory (a field common to XPolicyLab policies); one run subdirectory per server process;
+                                 # leave null when the launcher overrides it per case (the RunWu-RSI runner does)
