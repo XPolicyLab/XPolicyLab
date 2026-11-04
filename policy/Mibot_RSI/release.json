@@ -1,7 +1,7 @@
 {
   "dataset": {
     "repo": "ffanyt/Mibot-RSI-knowledge",
-    "revision": "a48538e9b6cfe6d8a880b102c07801ce1a66f31e"
+    "revision": "1924cf22c7ab2c50b824788c8839a78f7c6802b7"
   },
   "knowledge": {
     "ckpt_name": "eval",
@@ -80,11 +80,11 @@
       },
       "fill_pen_holder": {
         "archive": "knowledge/eval/fill_pen_holder.tar.gz",
-        "bytes": 22816938,
-        "files": 77,
-        "manifest_sha256": "aca69c898c990e73fd6e00999035a3b25aac023fc83f9d2288c6083b7c5c7823",
-        "sha256": "f41adad7fb51903f4cc3ab28dc9ed6701d60f3d54538eac7d7ed431d1575c1d8",
-        "snapshot_id": "5c38f00ae616b630"
+        "bytes": 22898807,
+        "files": 93,
+        "manifest_sha256": "10d81a32df01ec8236ec5734e819d966a32734711ba4cbabf081de08d2a57a47",
+        "sha256": "0780ae1812983a205361c1ea83ed24f05e1f90f72a771a71ec3f5498279436cd",
+        "snapshot_id": "01caa65a9cbdc6e2"
       },
       "fold_clothes": {
         "archive": "knowledge/eval/fold_clothes.tar.gz",
