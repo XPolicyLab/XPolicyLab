@@ -1,0 +1,22 @@
+{
+  "phoenix_debug_piper": {
+    "arm_dim": [
+      6,
+      6
+    ],
+    "ee_dim": [
+      1,
+      1
+    ]
+  },
+  "phoenix_debug_piper_x": {
+    "arm_dim": [
+      6,
+      6
+    ],
+    "ee_dim": [
+      1,
+      1
+    ]
+  }
+}

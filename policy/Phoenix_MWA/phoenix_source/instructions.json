@@ -1,0 +1,26 @@
+{
+  "arx_x5": [
+    "Cover the three blocks from left to right, then uncover them again in the order of red, green, and blue.",
+    "Pick up the test tubes on the table and insert them into the test tube rack.",
+    "Pick up the two slices of bread from the bowl and place them into the toaster, then place the two small bowls on the plate.",
+    "Place all the fruits into the blue bowl, then pour the fruits from the blue bowl into the large white bowl.",
+    "Place all the objects into the safe, then close the safe.",
+    "Take the cutting board out and place it on the table. Then place the steak and the knife on the cutting board, put the vegetables and shrimp into the pot, place the pot on the stove, and finally cover it with the lid."
+  ],
+  "piper": [
+    "Insert the charger plug into the power strip, then connect the charging cable to the plug.",
+    "Pick up the pen holder and place all the pens into it.",
+    "Place all the objects on the table into the basket.",
+    "Stack the blocks on the table, then cover them with the cup.",
+    "Stack the bowls on the table.",
+    "Stand the bottle upright."
+  ],
+  "piper_x": [
+    "Classify the two types of objects on the table and place them into the two baskets.",
+    "Hang the mugs on the mug rack.",
+    "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks.",
+    "Pick up the pen and the pen cap, then put the cap on the pen.",
+    "Place all the objects on the table into the backpack.",
+    "Take apart the assembled LEGO structure and place all the pieces into the bowl."
+  ]
+}
