@@ -1,0 +1,70 @@
+# XPolicyLab's standard keys first, then HexaShell-1.5's own settings (read by hexashell/runtime).
+# Every setting from api on can be overridden per run by a HEXASHELL_<NAME> environment variable,
+# e.g. HEXASHELL_API_BASE=..., HEXASHELL_MODEL=... (booleans: 1, true, yes or on); config.env is the
+# place for them. Two more are left at their defaults here: request_timeout_s (900) and script (a file
+# of cells run instead of asking the model, for offline tests; hexashell/runtime/script.py).
+policy_name: HexaShell_1_5
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: joint
+gpu_id: null
+eval_batch: false
+
+# -- the agent ----------------------------------------------------------------------------------
+# api: openai = an OpenAI-compatible chat endpoint (<api_base>/chat/completions); anthropic = an
+# Anthropic Messages endpoint (<api_base>/messages, streamed).
+# The key is read from api_key_file when it exists, else from $OPENAI_API_KEY; it never reaches the
+# process that runs the model's code.  ca_file: a private CA for the endpoint's certificate.
+api: openai
+api_base: https://api.openai.com/v1
+api_key_file: ~/.config/hexashell/api-key
+ca_file: ""
+model: gpt-6-astra
+reasoning_effort: high
+thinking_display: summarized
+max_tokens: 8192
+stream: true
+# only for a self-hosted model on vLLM: send each reply's reasoning back with it in the history.
+# Keep it off for gpt-6-astra.
+history_reasoning: false
+# whether the task's note is added (skills/robodojo/<task>.md, sent separately; none for the Open tasks)
+skills: true
+# the task's description and scoring table in the task card (prompts/ladders/<task>.md)
+ladder: true
+
+# -- limits of one episode ----------------------------------------------------------------------
+max_turns: 100
+budget_s: 5400
+nudges: 3
+# the conversation keeps at most images_max pictures and images_bytes_max bytes of them as sent
+# (base64, 4/3 of the JPEG; keep it under the endpoint's request size limit); beyond either the
+# oldest go, down to images_low and 70% of the bytes. The 3 start pictures stay.
+images_max: 90
+images_low: 60
+images_bytes_max: 10000000
+jpeg_quality: 90
+# one cell: CPU seconds, seconds without a robot call, seconds in all
+cell_cpu_s: 120
+cell_idle_s: 150
+cell_total_s: 1800
+# motion speed profile
+motion: v2
+
+# -- perception ---------------------------------------------------------------------------------
+# the local SAM3 service (services/sam3_server.py); setup_eval_policy_server.sh starts it when nothing
+# answers here (port from SAM3_PORT in config.env, default 18300)
+sam3_url: http://127.0.0.1:18300
+
+# -- plumbing -----------------------------------------------------------------------------------
+# get_action answers "wait" after poll_s seconds without an action (deploy.py asks again)
+poll_s: 20.0
+# on_trial_end waits at most this long for the episode's record (below the client's 120 s timeout)
+wrap_up_s: 30.0
+# per-episode records, relative to this directory ($HEXASHELL_RESULT_DIR overrides)
+result_dir: results
