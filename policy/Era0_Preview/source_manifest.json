@@ -151,12 +151,12 @@
   "model_name": "Era0-Preview",
   "packaged_files": {
     ".gitignore": "781b1801fe2fd470a9744f4acb8792ffd9cd677baaacd0cd42c7e3426f81cb55",
-    "README.md": "1364f1eb4db06e3aabe2fbb23467c814cad80b5b679ada9bd83614db61541db9",
+    "README.md": "24d215bcb525bd781001e6d967d34a54b5067ccc3c9bad780863e89d9f3294a2",
     "SDK_COMPATIBILITY.md": "c4e57c162954a3b59a9f69a764848292109be082066a363b1eabc511e67b945a",
-    "SUBMISSION.md": "52b46a9445a5083657fc5ac6726a9c6a3d10c717940a3e2e056dc6e49812c525",
+    "SUBMISSION.md": "e7e7b2c2ea0ca950b9d89473bfad3ec2fdf80f8db5c9e25e626c3a96b35a3de2",
     "__init__.py": "daf518f1abe58b40b45e4c1e625514982fd4a427efcbc0857e971d47c5eb0c66",
     "checkpoint.py": "f71498d6ebfe33eabfae46554b47995778022af3db66e86809e3175542cc8662",
-    "checkpoint_release.json": "628f07a37619f66434abc2630eec77dfd6cabffd37694a5bad3692bcd1f562ec",
+    "checkpoint_release.json": "47a8120adb37c70c2acc4394b15b29e0c55a1b4dce14fa4f821db5d98524c259",
     "common.sh": "9a36137210829006c29322b78c33569d180f8a002dd9854eb5721ccdce28d113",
     "deploy.py": "38821ae07832f700b0a87d4cb21ed5d213c11b97410a764612dd9660bff0a3c0",
     "deploy.yml": "d62d9d67e983373160bbe264b19b66e62f9d06bc0c56b2c6b8d336270294d057",
@@ -219,11 +219,7 @@
     "setup_eval_env_client.sh": "00c4ea7ef0d025a793fbe9fa1735412aa99cf88343349b16e5d6b8d07ae1d6e9",
     "setup_eval_policy_server.sh": "9beec4ca705b51e91f0500fa929f1ff1f94748c6ae80324d54c4b48b474029df",
     "simulator_entry.py": "7a924d4ee6f051ba99b0ba04688541faf58cf346478ab7c2db81c305cf8e0654",
-    "tests/test_ik_guard.py": "0c0de58bac9bc722ec87111bfb15d7f597168337e975a30daa7e8c983f890b10",
-    "tests/test_inference_scope.py": "4c28aebf713121c7b84851fe0ecd8ef3594d1c7ca00bfe4416ecca6e84f74a92",
-    "tests/test_obs_lag.py": "a9c133257d1a471d0d841deaa4c0e5d5b173254717027f28f2892f9f174160bf",
-    "tests/test_package.py": "a60e63f095c357f6d51f09c3a417ca4728ec33bc91c7e8730ddce2f927187996",
-    "tests/test_sdk_compat.py": "6fc42122694f2f3ccdbaebecf8fa945a3ac731afcd8d6fc35ab1966374d907d1"
+    "EVALUATION_RESULTS.md": "332915e26edac6a40307bc819fb61341d7ddcd9975226d256436a926683c6cda"
   },
   "sdk_compatibility": {
     "official_revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
@@ -280,10 +276,10 @@
   },
   "checkpoint_release": {
     "model_name": "Era0-Preview",
-    "repo_id": "roboterax/Era0-Preview-5B-RoboDojo",
-    "url": "https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo",
+    "repo_id": "roboterax/Era0-5B-Preview-RoboDojo",
+    "url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo",
     "revision": "main",
-    "revision_url": "https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo/tree/main",
+    "revision_url": "https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo/tree/main",
     "layout": "flat",
     "norm_filename": "norm_stats.pkl",
     "norm_sha256": "f0d1a21fc63e778ef5d75799073a719470b507f96f3822a905b4195ed755b285",

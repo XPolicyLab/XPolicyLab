@@ -1,6 +1,6 @@
 # Era0-Preview submission checklist
 
-The [model repository](https://huggingface.co/roboterax/Era0-Preview-5B-RoboDojo) provides model weights, inference assets and exact normalization. Evaluation code is maintained in the XPolicyLab policy directory.
+The [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo) provides model weights, inference assets and exact normalization. Evaluation code is maintained in the XPolicyLab policy directory.
 
 - Model display name: **Era0-Preview**. Import/policy directory: **Era0_Preview**.
 - Scope: eval-only, RoboDojo / arx_x5 / ee, single and vectorized environments.
@@ -16,8 +16,32 @@ Code distribution: use the XPolicyLab `feature/era0_preview` branch directly. No
 
 Pending before an official submission:
 
-1. Run the official plain and encoded debug loops on the selected weights; complete the full three-seed evaluation.
-2. Attach download instructions, environment details, protocol/mode provenance, and measured results to the standard XPolicyLab PR template.
+1. Run the official plain and encoded debug loops on the selected weights and attach their successful log tails. These checks are not yet recorded as passing.
+2. Attach download instructions, environment details, protocol/mode provenance, and the measured results below to the standard XPolicyLab PR template. A complete local three-seed run is not stated as a prerequisite to opening the PR; the existing multi-task campaign is incomplete and uses compatibility settings.
+
+## Test evidence for the submission PR
+
+The official [Testing and PR standard](../../CONTRIBUTING.md#testing) asks for test evidence and a checkpoint download command. Copy the measured results and limitations into the PR's Testing and Limitations sections; do not mark pending debug checks as passed.
+
+| Test | Recorded result | Scope / limitation |
+| --- | --- | --- |
+| Local multi-task simulation | Overview Score **33.16 ± 0.35**; SR **27.96 ± 0.47%**; 1,716 successes / 6,225 episodes | Seeds 0/1/2; native target 6,300; mixed SDK versions, legacy rendering and local IK protection; incomplete reference result |
+| Packaged adapter simulation, GPU 1 | `press_by_number`, seed 0: **9/10** successes, Score **90** | Policy image lag 1, SDK rendering/physics, official execution profile |
+| Packaged adapter simulation, GPU 2 | `press_by_number`, seed 0: **8/10** successes, Score **80** | Same settings, independent ten-episode run |
+| Plain-image debug loop | Pending | Attach log tail reaching `[MAIN] eval finished` without tracebacks |
+| Encoded-image debug loop | Pending | Repeat with `DEBUG_OBS_ENCODED=1`; attach successful log tail |
+| Complete native three-seed run with packaged official profile | Pending | Existing local reference results do not establish this result |
+
+The [evaluation report](EVALUATION_RESULTS.md) contains capability scores, per-task/per-seed results and the 75 missing trials. The multi-task campaign combines older-SDK results with newer-SDK legacy-render additions and is not a uniform SDK run. Its local Overview uses available episodes without a minimum per-task threshold; do not label it as an official leaderboard result or as complete native evaluation.
+
+Include this checkpoint download command in the PR:
+
+```bash
+cd policy/Era0_Preview
+bash download_checkpoint.sh
+```
+
+The [public model card](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo#local-reference-results) also documents the local reference results. The packaged current-chain single-task tests support adapter functionality, not full-suite equivalence to that campaign.
 
 ## Code validation
 
