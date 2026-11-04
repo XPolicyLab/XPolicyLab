@@ -153,7 +153,7 @@ class ActionDiT(nn.Module):
             raise ValueError(
                 f"Invalid action backbone payload type from {action_dit_pretrained_path}: {type(payload)}"
             )
-        
+
         policy = payload.get("policy", {})
         if policy:
             logger.info(f"ActionDiT backbone payload policy: {policy}")

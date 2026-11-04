@@ -14,22 +14,22 @@ class FlexWAMProcessor(BaseProcessor):
         # keys
         shape_meta: Dict[str, Any],
         num_obs_steps: int,
-        num_output_cameras: int, 
+        num_output_cameras: int,
         action_output_dim: int,
         proprio_output_dim: int,
 
-        action_state_transforms: Optional[List[Any]], 
+        action_state_transforms: Optional[List[Any]],
 
         # action & state normalization
         use_stepwise_action_norm: bool,
         norm_default_mode: NormMode,
         norm_exception_mode: Dict[str, Dict[str, NormMode]],
 
-        action_state_merger, 
+        action_state_merger,
 
         # image transform
         train_transforms: List[Any] | None,
-        val_transforms: List[Any] | None, 
+        val_transforms: List[Any] | None,
 
         tokenizer: Optional[Any] = None,
         delta_action_dim_mask: Optional[Dict[str, List[bool]]] = None,
@@ -135,36 +135,36 @@ class FlexWAMProcessor(BaseProcessor):
                 actual_shape = batch["action"][k].shape[-1]
                 assert actual_shape == meta_shape, \
                     f"Action key {k} actual raw shape {actual_shape} mismatch with meta raw shape {meta_shape}."
-                    
+
         for meta in self.shape_meta["state"]:
             k, meta_shape = meta["key"], meta["raw_shape"]
             actual_shape = batch["state"][k].shape[-1]
             assert actual_shape == meta_shape, \
                 f"State key {k} actual raw shape {actual_shape} mismatch with meta raw shape {meta_shape}."
-        
-        if self.action_state_transforms is not None: 
+
+        if self.action_state_transforms is not None:
             for trans in self.action_state_transforms:
                 batch = trans.forward(batch)
-        
+
         if "action" in batch:
             for meta in self.shape_meta["action"]:
                 k, meta_shape = meta["key"], meta["shape"]
                 actual_shape = batch["action"][k].shape[-1]
                 assert actual_shape == meta_shape, \
                     f"Action key {k} actual transformed shape {actual_shape} mismatch with meta shape {meta_shape}."
-        
+
         for meta in self.shape_meta["state"]:
             k, meta_shape = meta["key"], meta["shape"]
             actual_shape = batch["state"][k].shape[-1]
             assert actual_shape == meta_shape, \
                 f"State key {k} actual transformed shape {actual_shape} mismatch with meta raw shape {meta_shape}."
-        
+
         return batch
 
     def preprocess(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Preprocess the data for the policy model.
-        
+
         Args:
             Data: Dict[str, Any], lerobot sample in raw mcap obtained from dataset __getitem__:
                 - "action": Optional, Dict[str, torch.Tensor] -> [action_horizon, action_dim]
@@ -174,7 +174,7 @@ class FlexWAMProcessor(BaseProcessor):
                 - "state_is_pad": torch.Tensor -> [num_obs_steps,]
                 - "image_is_pad": torch.Tensor -> [num_obs_steps,]
                 - "idx": int, sample index
-                
+
         Returns:
             Sample: Dict[str, Any], which can collated:
                 - "input_ids": torch.Tensor -> [max_image_text_tokens,]
@@ -204,7 +204,7 @@ class FlexWAMProcessor(BaseProcessor):
             assert image.ndim == 4, f"Expected 4 dimensions (num_obs_steps, C, H, W), got shape {image.shape}"
             if jitter_factors is not None:
                 image = self.color_jitter(image, factors=jitter_factors)
-            
+
             # Apply transforms efficiently on the merged batch
             transforms = self.train_transforms if self.is_train else self.val_transforms
             if isinstance(transforms, Mapping):
@@ -215,7 +215,7 @@ class FlexWAMProcessor(BaseProcessor):
                 raise TypeError("train_transforms/val_transforms is required.")
             for trans in transforms:
                 image = trans(image)
-            
+
             meta_shape = [self.num_obs_steps] + shape
             assert image.shape == meta_shape, \
                 f"Expected shape {meta_shape}, got {image.shape} after transforms for key {key}"
@@ -228,7 +228,7 @@ class FlexWAMProcessor(BaseProcessor):
             )
         sample["pixel_values"] = pixel_values
 
-        # Copy action before transform for open-loop evaluation, 
+        # Copy action before transform for open-loop evaluation,
         # disabled for training dataset as it may cause collating key problem.
         if not self.is_train and "action" in data:
             sample["gt_action"] = deepcopy(data["action"])
@@ -254,7 +254,7 @@ class FlexWAMProcessor(BaseProcessor):
             assert sample["action"].shape[-1] == self.action_output_dim
             # sample["action"][sample["action_is_pad"], :-1] = 0.0 # NOTE: we assume use delta_eef_pose + gripper, so pad action is 0
 
-        
+
         # TODO: rename all "state" into "proprio"
         sample["proprio"] = data["state"] # [num_obs_steps, proprio_dim]
         sample["proprio_is_pad"] = data["state_is_pad"] # [num_obs_steps,]
@@ -264,13 +264,13 @@ class FlexWAMProcessor(BaseProcessor):
         sample["idx"] = data["idx"]
 
         # sample = self.tokenizer(sample)
-        
+
         return sample
 
     def postprocess(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Postprocess the data for the policy model.
-        
+
         Args:
             data: Dict[str, Any], lerobot sample in raw mcap
 

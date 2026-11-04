@@ -6,8 +6,8 @@ from torch.nn.functional import pad
 
 class ConcatLeftAlign:
     def __init__(
-        self, 
-        action_target_dim: int | None = None, 
+        self,
+        action_target_dim: int | None = None,
         state_target_dim: int | None = None
     ):
         self.action_target_dim = action_target_dim
@@ -32,7 +32,7 @@ class ConcatLeftAlign:
             assert batch["state"].shape[-1] == self.state_target_dim
         batch["state"] = self._crop(batch["state"], self.state_meta)
         batch["state"] = self._split(batch["state"], self.state_meta)
-        
+
         if self.action_target_dim is not None:
             assert batch["action"].shape[-1] == self.action_target_dim
         batch["action"] = self._crop(batch["action"], self.action_meta)
@@ -44,7 +44,7 @@ class ConcatLeftAlign:
     def _pad(x: torch.Tensor, dim: int):
         if dim is None:
             dim = x.shape[-1]
-        
+
         assert x.ndim in {2, 3} and x.shape[-1] <= dim
         pad_dim = dim - x.shape[-1]
         x_padded = pad(x, (0, pad_dim))
@@ -58,7 +58,7 @@ class ConcatLeftAlign:
         dim = sum([m["shape"] for m in meta])
         x = x[:, :, :dim]
         return x
-    
+
     @staticmethod
     def _concat(x: Dict[str, torch.Tensor], meta: Dict[str, Dict]):
         x = torch.cat([x[m["key"]] for m in meta], dim=-1)

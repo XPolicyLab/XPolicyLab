@@ -117,11 +117,11 @@ class RunningQuantileStats:
 
 class LinearNormalizer:
     def __init__(
-            self, 
-            shape_meta, 
+            self,
+            shape_meta,
             use_stepwise_action_norm,
-            default_mode: NormMode, 
-            exception_mode: Dict[str, Dict[str, NormMode]], 
+            default_mode: NormMode,
+            exception_mode: Dict[str, Dict[str, NormMode]],
             stats: Dict[str, Dict[str, Dict[str, torch.Tensor]]],
             clip_to_unit_range: bool = False,
         ):
@@ -132,7 +132,7 @@ class LinearNormalizer:
 
         for meta in shape_meta["action"]:
             key = meta["key"]
-            
+
             if use_stepwise_action_norm:
                 cur_stats = {k.removeprefix("stepwise_"): v for k, v in stats["action"][key].items() if k.startswith("stepwise_")}
             else:
@@ -144,7 +144,7 @@ class LinearNormalizer:
                 cur_mode = default_mode
 
             self.normalizers["action"][key] = SingleFieldLinearNormalizer(
-                stats=cur_stats, 
+                stats=cur_stats,
                 mode=cur_mode,
                 clip_to_unit_range=self.clip_to_unit_range,
             )
@@ -159,7 +159,7 @@ class LinearNormalizer:
                 cur_mode = default_mode
 
             self.normalizers["state"][key] = SingleFieldLinearNormalizer(
-                stats=cur_stats, 
+                stats=cur_stats,
                 mode=cur_mode,
                 clip_to_unit_range=self.clip_to_unit_range,
             )
@@ -170,7 +170,7 @@ class LinearNormalizer:
             "state": {key: norm.get_stats() for key, norm in self.normalizers["state"].items()}
         }
         return stats
-                
+
     def forward(self, batch: Dict[str, Dict[str, torch.Tensor]]) -> torch.Tensor:
         if "action" in batch:
             for key, norm in self.normalizers["action"].items():
@@ -180,14 +180,14 @@ class LinearNormalizer:
             batch["state"][key] = norm.forward(batch["state"][key])
 
         return batch
-    
+
     def backward(self, batch: Dict[str, Dict[str, torch.Tensor]]) -> torch.Tensor:
         for key, norm in self.normalizers["action"].items():
             batch["action"][key] = norm.backward(batch["action"][key])
 
         for key, norm in self.normalizers["state"].items():
             batch["state"][key] = norm.backward(batch["state"][key])
-        
+
         return batch
 
 
@@ -330,7 +330,7 @@ def save_dataset_stats_to_json(dataset_stats: dict, file_path: str):
             return obj
         else:
             return str(obj)
-    
+
     serializable_stats = convert_tensor(dataset_stats)
 
     path = Path(file_path)
@@ -342,13 +342,13 @@ def save_dataset_stats_to_json(dataset_stats: dict, file_path: str):
         os.fsync(f.fileno())
     os.replace(tmp_path, path)
 
-def load_dataset_stats_from_json(file_path: str, 
+def load_dataset_stats_from_json(file_path: str,
                                  try_convert_tensor: bool = True) -> Dict[str, Any]:
 
     def is_numeric_list(obj):
         if isinstance(obj, list):
             if not obj:
-                return True  
+                return True
             first = obj[0]
             if isinstance(first, (int, float)):
                 return all(isinstance(x, (int, float)) for x in obj)
@@ -455,7 +455,7 @@ def search_dataset_stats_cache_json(cache_dir: str | Path, data_config: DictConf
         return normalize_transforms(transforms)
 
     signature = {
-        "action_size": data_config.dataset.action_size, 
+        "action_size": data_config.dataset.action_size,
         "dataset_dirs": normalize_dataset_dirs(data_config),
         "action_state_transforms": normalize_action_state_transforms(data_config),
     }
@@ -468,7 +468,7 @@ def search_dataset_stats_cache_json(cache_dir: str | Path, data_config: DictConf
     if precise.exists():
         logger.info(f"Found dataset stats cache with precisely matching dataset and git hash: {precise_name}.")
         return True, str(precise)
-    
+
     candidates = sorted(cache_dir.glob(f"dataset_stats_{dataset_hash}_*.json"))
     if not candidates:
         logger.info(f"No dataset stats cache found for dataset hash {dataset_hash}")

@@ -89,7 +89,7 @@ class TrainingObjectiveMixin:
             raise ValueError(
                 f"`sample['video_is_pad']` must be 2D [B, T_latent_loss], got shape {tuple(video_is_pad.shape)}"
             )
-        
+
         input_video = video.to(device=self.device, dtype=self.torch_dtype, non_blocking=True)
         input_latents = self._encode_video_latents(input_video, tiled=tiled)
 

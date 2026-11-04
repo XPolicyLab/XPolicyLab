@@ -16,10 +16,10 @@ def setup_logging(
 ) -> None:
     """
     Configure the logging system for the entire codebase with Rich formatting.
-    
+
     In distributed training, only the main process outputs logs while other processes are silenced.
     This function configures the root logger so all child loggers inherit the same configuration.
-    
+
     Args:
         log_level: Logging level (default INFO), only applies to main process
         is_main_process: Whether this is the main process. If None, infer automatically.
@@ -32,11 +32,11 @@ def setup_logging(
         # In a single-machine script
         from flexwam.utils.logging_config import setup_logging
         setup_logging()
-        
+
         # In a distributed training script
         from accelerate import PartialState
         from flexwam.utils.logging_config import setup_logging
-        
+
         distributed_state = PartialState()
         setup_logging(
             log_level=logging.INFO,
@@ -48,19 +48,19 @@ def setup_logging(
         is_main_process = _is_main_process()
 
     root_logger = logging.getLogger()
-    
+
     if is_main_process:
         # Save existing FileHandlers (e.g., from Hydra) if requested
         existing_file_handlers = []
         if preserve_hydra_handlers:
             existing_file_handlers = [
-                h for h in root_logger.handlers 
+                h for h in root_logger.handlers
                 if isinstance(h, logging.FileHandler)
             ]
-        
+
         # Clear all default handlers on the root logger
         root_logger.handlers.clear()
-        
+
         # Configure RichHandler parameters
         default_rich_kwargs = {
             "markup": True,
@@ -71,10 +71,10 @@ def setup_logging(
         }
         if rich_handler_kwargs:
             default_rich_kwargs.update(rich_handler_kwargs)
-        
+
         # Create RichHandler
         rich_handler = RichHandler(**default_rich_kwargs)
-        
+
         # Configure Formatter
         default_formatter_kwargs = {
             "fmt": "| >> %(message)s",
@@ -82,10 +82,10 @@ def setup_logging(
         }
         if formatter_kwargs:
             default_formatter_kwargs.update(formatter_kwargs)
-        
+
         formatter = logging.Formatter(**default_formatter_kwargs)
         rich_handler.setFormatter(formatter)
-        
+
         # Add handler and set logging level
         root_logger.addHandler(rich_handler)
 
@@ -94,7 +94,7 @@ def setup_logging(
             root_logger.addHandler(handler)
 
         root_logger.setLevel(log_level)
-        
+
     else:
         # In non-main processes, set root logger level to ERROR to silence all logs
         root_logger.setLevel(logging.ERROR)

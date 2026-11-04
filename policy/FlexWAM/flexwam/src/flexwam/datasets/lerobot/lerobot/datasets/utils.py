@@ -85,9 +85,9 @@ DEFAULT_FEATURES = {
     "frame_index": {"dtype": "int64", "shape": (1,), "names": None},
     "episode_index": {"dtype": "int64", "shape": (1,), "names": None},
     "index": {"dtype": "int64", "shape": (1,), "names": None},
-    "coarse_task_index": {"dtype": "int64", "shape": (1,), "names": None}, 
+    "coarse_task_index": {"dtype": "int64", "shape": (1,), "names": None},
     "task_index": {"dtype": "int64", "shape": (1,), "names": None},
-    "coarse_quality_index": {"dtype": "int64", "shape": (1,), "names": None}, 
+    "coarse_quality_index": {"dtype": "int64", "shape": (1,), "names": None},
     "quality_index": {"dtype": "int64", "shape": (1,), "names": None},
 }
 

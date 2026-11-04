@@ -51,11 +51,11 @@ class RobotVideoDataset(torch.utils.data.Dataset):
             is_training_set=is_training_set,
             global_sample_stride=global_sample_stride,
         )
-    
+
         self.num_frames = num_frames
         self.global_sample_stride = global_sample_stride
         self.action_video_freq_ratio = action_video_freq_ratio
-        
+
         assert (num_frames - 1) % self.action_video_freq_ratio == 0, \
             f"num_frames-1 must be divisible by action_video_freq_ratio, got {num_frames - 1} and {self.action_video_freq_ratio}"
         assert ((num_frames - 1) // self.action_video_freq_ratio) % 4 == 0, \
@@ -108,7 +108,7 @@ class RobotVideoDataset(torch.utils.data.Dataset):
 
             processor.set_normalizer_from_stats(dataset_stats)
             self.lerobot_dataset.set_processor(processor)
-        
+
     def __len__(self):
         return len(self.lerobot_dataset)
 
@@ -153,7 +153,7 @@ class RobotVideoDataset(torch.utils.data.Dataset):
             video = self._resize_and_normalize(video)  # [T_video, C, H, W]
             video = video.permute(1, 0, 2, 3) # [C, T_video, H, W], range [-1, 1]
 
-        # Proxy (from lerobot): 
+        # Proxy (from lerobot):
         #   action: [num_frames-1, action_dim] # start from t0, except the last frame
         #   proprio: [num_frames, proprio_dim] # start from t0 to the last frame, aligned with video frames
         action = sample["action"] # [T-1, action_dim]

@@ -219,7 +219,7 @@ class LeRobotDatasetMetadata:
         episode_length: int,
         episode_tasks: list[str],
         episode_stats: dict[str, dict],
-        raw_file_name: str | None = None, 
+        raw_file_name: str | None = None,
     ) -> None:
         self.info["total_episodes"] += 1
         self.info["total_frames"] += episode_length
@@ -315,7 +315,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         force_cache_sync: bool = False,
         download_videos: bool = True,
         video_backend: str | None = None,
-        video_codec: Literal["h264", "hevc", "libsvtav1", "h264_nvenc"] = "libsvtav1", 
+        video_codec: Literal["h264", "hevc", "libsvtav1", "h264_nvenc"] = "libsvtav1",
         is_compute_episode_stats_image: bool = True,
     ):
         """
@@ -673,7 +673,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
                     selected_data = index_to_selected[q_idx_tuple]
                 result[key] = torch.stack(selected_data[key])
         return result
-    
+
     # no videos
     def get_episode_data(self, episode_id: int) -> dict:
         ep_start = self.episode_data_index["from"][episode_id].item()
@@ -741,15 +741,15 @@ class LeRobotDataset(torch.utils.data.Dataset):
         if "operating_hand_index" in item:
             operating_hand_index = item["operating_hand_index"].item()
             item["operating_hand"] = self.meta.tasks[operating_hand_index]
-        
+
         if "subtask_annotation" in item and hasattr(self.meta, "annotations"):
             index = item["subtask_annotation"][0].item()
             item["subtask"] = self.meta.annotations["subtask"][index]
-        
+
         if "atomic_task_index" in item and item["atomic_task_index"] is not None:
             atomic_task_index = item["atomic_task_index"].item()
             item["subtask"] = self.meta.tasks[int(atomic_task_index)]
-            
+
         return item
 
     def __repr__(self):
@@ -1000,7 +1000,7 @@ class LeRobotDataset(torch.utils.data.Dataset):
         image_writer_processes: int = 0,
         image_writer_threads: int = 0,
         video_backend: str | None = None,
-        video_codec: Literal["h264", "hevc", "libsvtav1", "h264_nvenc"] = "libsvtav1", 
+        video_codec: Literal["h264", "hevc", "libsvtav1", "h264_nvenc"] = "libsvtav1",
         is_compute_episode_stats_image = True,
     ) -> "LeRobotDataset":
         """Create a LeRobot Dataset from scratch in order to record data."""
@@ -1195,7 +1195,7 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
         """
         # 1e-4 to account for possible numerical error
         return 1 / self.fps - 1e-4
-    
+
     def get_episode_data(self, episode_idx: int) -> dict:
         for dataset in self._datasets:
             if episode_idx < dataset.num_episodes:
@@ -1217,7 +1217,7 @@ class MultiLeRobotDataset(torch.utils.data.Dataset):
                             category=UserWarning,
                         )
                         # deal with string in parquet file
-                        if np_arr.dtype == 'O':                        
+                        if np_arr.dtype == 'O':
                             result_dict[col_name] = np_arr
                         else:
                             result_dict[col_name] = torch.from_numpy(np_arr)

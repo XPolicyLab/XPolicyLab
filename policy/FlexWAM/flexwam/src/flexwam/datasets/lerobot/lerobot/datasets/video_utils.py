@@ -354,17 +354,17 @@ def encode_video_frames_ffmpeg(
 ) -> None:
     import subprocess
     import shutil
-    
+
     video_path = Path(video_path)
     imgs_dir = Path(imgs_dir)
-    
+
     video_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Check if ffmpeg is available
     ffmpeg_path = shutil.which("ffmpeg")
     if ffmpeg_path is None:
         raise RuntimeError("ffmpeg is not installed or not in system PATH")
-    
+
     # Build ffmpeg command
     cmd = [
         ffmpeg_path,
@@ -375,20 +375,20 @@ def encode_video_frames_ffmpeg(
         "-vcodec", vcodec,
         "-pix_fmt", pix_fmt,
     ]
-    
+
     if g is not None:
         cmd.extend(["-g", str(g)])
-        
+
     if crf is not None:
         cmd.extend(["-crf", str(crf)])
-        
+
     cmd.append(str(video_path))
-    
+
     try:
         result = subprocess.run(
-            cmd, 
-            capture_output=True, 
-            text=True, 
+            cmd,
+            capture_output=True,
+            text=True,
             check=True
         )
     except subprocess.CalledProcessError as e:

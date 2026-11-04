@@ -61,7 +61,7 @@ class FlexWAMTrainer:
         self.gradient_accumulation_steps = int(cfg.gradient_accumulation_steps)
         self.max_grad_norm = float(cfg.max_grad_norm)
         self.seed = int(cfg.seed)
-        
+
         self.resume = cfg.resume
         self.mixed_precision = str(cfg.mixed_precision).strip().lower()
         if self.mixed_precision not in {"no", "fp16", "bf16"}:
@@ -79,7 +79,7 @@ class FlexWAMTrainer:
         )
         configure_deepspeed_clipping(self.accelerator, self.max_grad_norm)
         ds_plugin = self.accelerator.state.deepspeed_plugin
-        
+
         logger.info(
             "Accelerate training: distributed_type=%s zero_stage=%s world_size=%d process_index=%d cfg_mixed_precision=%s accelerator_mixed_precision=%s grad_accum=%d grad_clip=%.4f",
             self.accelerator.distributed_type,
@@ -131,7 +131,7 @@ class FlexWAMTrainer:
         self.optimizer = torch.optim.AdamW(
             param_groups, weight_decay=self.weight_decay, betas=(0.9, 0.95),
         )
-        
+
         self.train_loader = self._build_loader(self.train_dataset, worker_init_fn=worker_init_fn)
         total_train_steps = self._estimate_total_train_steps()
         self.max_steps = total_train_steps
@@ -581,7 +581,7 @@ class FlexWAMTrainer:
             return critic_end_ratio + (1.0 - critic_end_ratio) * (1.0 + math.cos(math.pi * t)) / 2.0
 
         return LambdaLR(self.optimizer, lr_lambda=[main_lambda, critic_lambda])
-    
+
     def _estimate_eta(self):
         elapsed = max(time.perf_counter() - self.run_start_time, 1e-6)
         done_steps = max(self.global_step - self.run_start_step, 1)
@@ -677,7 +677,7 @@ class FlexWAMTrainer:
             raise TypeError(f"Expected prompt type str/list[str], got {type(prompt)}")
         if len(prompt) != video.shape[0]:
             raise ValueError(f"Prompt batch mismatch: len(prompt)={len(prompt)} vs video batch={video.shape[0]}")
-        
+
         action_horizon = None
         action = None
         if "action" in sample:
@@ -781,7 +781,7 @@ class FlexWAMTrainer:
             val_loss, _ = model.training_loss(sample)
             val_loss = val_loss.float().item()
         self._release_cached_cuda()
-        
+
         prompt = sample["prompt"][0]
         video0 = sample["video"][0] # Tensor [3,T,H,W] or [T,V,3,H,W] in (-1, 1)
         action = sample["action"][0] if "action" in sample and sample["action"] is not None else None
@@ -824,7 +824,7 @@ class FlexWAMTrainer:
         pred = model.infer(
             **infer_kwargs,
         )
-        
+
         pred_video = pred["video"]
         pred_action = pred.get("action", None)
 
@@ -845,7 +845,7 @@ class FlexWAMTrainer:
             if sample["proprio"] is None:
                 raise ValueError("Eval sample must contain `proprio` for action denormalization.")
             proprio = sample["proprio"].detach().to(device="cpu", dtype=torch.float32)
-            
+
             processor = self.val_dataset.lerobot_dataset.processor
 
             denorm_actions = {}
@@ -1216,4 +1216,3 @@ class FlexWAMTrainer:
                 ckpt_info["weights_path"],
                 ckpt_info["state_path"],
             )
-        

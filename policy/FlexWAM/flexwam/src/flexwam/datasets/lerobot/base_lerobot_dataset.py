@@ -35,13 +35,13 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
 
         # shapes
         shape_meta: Dict[str, Any],
-        action_size: int = 1, 
+        action_size: int = 1,
         past_action_size: int = 0, # Excludes the current frame
-        obs_size: int = 1, # should be 
+        obs_size: int = 1, # should be
         past_obs_size: int = 0,
 
         # train vs val
-        val_set_proportion: float = 0.05, 
+        val_set_proportion: float = 0.05,
         is_training_set: bool = False,
         seed: int = 42,
 
@@ -52,7 +52,7 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
         assert past_action_size == 0
         assert past_obs_size == 0
         assert action_size == obs_size - 1, "In this dataset, action_size should be obs_size - 1"
-        
+
         self.dataset_dirs = dataset_dirs
         self.shape_meta = shape_meta
         self.action_size = action_size
@@ -69,7 +69,7 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
         fps_list = [m.fps for m in metas]
         assert len(set(fps_list)) == 1, f"All dataset_dirs must have the same fps, got {fps_list}"
         fps = fps_list[0]
-        
+
         self.global_sample_stride = global_sample_stride
 
         self.val_set_proportion = val_set_proportion
@@ -85,13 +85,13 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
             delta_timestamps[meta["lerobot_key"]] = [
                 (t * global_sample_stride) / fps for t in range(-past_obs_size, -past_obs_size + obs_size)
             ]
-        
+
         for meta in self.state_meta:
             meta["lerobot_key"] = _resolve_lerobot_key(meta, "observation.state")
             delta_timestamps[meta["lerobot_key"]] = [
                 (t * global_sample_stride) / fps for t in range(-past_obs_size, -past_obs_size + obs_size)
             ]
-        
+
         for meta in self.action_meta:
             meta["lerobot_key"] = _resolve_lerobot_key(meta, "action")
             delta_timestamps[meta["lerobot_key"]] = [(t * global_sample_stride) / fps for t in range(-past_action_size, -past_action_size + action_size)]
@@ -117,7 +117,7 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
             episodes=episodes,
             delta_timestamps=delta_timestamps,
         )
-        
+
         # HACK: lerobot 3.0 will fix this
         episode_data_index = []
         end_index = 0
@@ -150,12 +150,12 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
         # state = state[..., :-1, :]  # use state_{t} as observation_t
         assert state.shape[-1] == raw_shape, f"State '{key}' shape {state.shape[-1]} mismatch with meta {raw_shape}."
         return state
-    
+
     def _get_image(self, meta, lerobot_sample) -> torch.Tensor:
         key, lerobot_key, raw_shape = meta["key"], meta["lerobot_key"], meta["raw_shape"]
         image: torch.Tensor = lerobot_sample[lerobot_key]
         if image.ndim == 3: # time dim will lost when obs_size is 1
-            image = image.unsqueeze(0)        
+            image = image.unsqueeze(0)
         image = (image * 255).to(torch.uint8) # (1, 3, H, W)
         # For config simplication
         # assert image.shape[1:] == raw_shape, f"Image '{key}' shape {image.shape[1:]} mismatch with {raw_shape}."
@@ -163,7 +163,7 @@ class BaseLerobotDataset(torch.utils.data.Dataset):
 
     def _split_lerobot_sample(self, lerobot_sample) -> Dict[str, Any]:
         return lerobot_sample
-    
+
     def _get_episode_data(self, episode_idx):
         """Rebuild every training sample window in an episode, matching `__getitem__`.
 
@@ -417,24 +417,24 @@ def sliding_window_with_replication(x: torch.Tensor, window_size: int) -> torch.
     """
     Construct a sliding-window tensor from the input tensor x (shape: [N, D]).
     The output shape is [N, window_size, D].
-    
+
     For each starting index i:
         out[i, j, :] =
             x[i + j, :]      if i + j < N
             x[-1, :]         otherwise (replicate the last row when out of bounds)
-    
+
     Args:
         x (torch.Tensor): Input tensor of shape [N, D]
         window_size (int): Size of the sliding window
-    
+
     Returns:
         torch.Tensor: Tensor of shape [N, window_size, D]
     """
     assert x.dim() == 2
     assert window_size > 0
-    
+
     N, D = x.shape
-    
+
     # shape [N, window_size]
     # indices[i, j] = i + j
     i_indices = torch.arange(N).unsqueeze(1)            # [N, 1]

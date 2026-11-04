@@ -317,7 +317,7 @@ class WanVideoDiT(CrossViewAttentionMixin, torch.nn.Module):
             raise ValueError(
                 f"`attn_head_dim` must be even for RoPE, got {attn_head_dim}"
             )
-        
+
         self.action_conditioned = action_conditioned
         self.action_dim = action_dim
         assert has_image_input == False
@@ -362,11 +362,11 @@ class WanVideoDiT(CrossViewAttentionMixin, torch.nn.Module):
         if self.action_conditioned:
             self.action_embedding = nn.Linear(action_dim, hidden_dim)
             self.action_group_causal_mask_mode = action_group_causal_mask_mode
-        
+
         self.use_gradient_checkpointing = use_gradient_checkpointing
         if self.use_gradient_checkpointing:
             logger.info("Using gradient checkpointing for DiT blocks. This will save memory but use more computation.")
-            
+
 
     def configure_state_conditioning(self, proprio_dim: int, config: dict | None = None, *, shared: bool = False) -> None:
         self.state_conditioning = state_config(config, video=True)
@@ -388,7 +388,7 @@ class WanVideoDiT(CrossViewAttentionMixin, torch.nn.Module):
     def unpatchify(self, x: torch.Tensor, grid_size: torch.Tensor):
         return rearrange(
             x, 'b (f h w) (x y z c) -> b c (f x) (h y) (w z)',
-            f=grid_size[0], h=grid_size[1], w=grid_size[2], 
+            f=grid_size[0], h=grid_size[1], w=grid_size[2],
             x=self.patch_size[0], y=self.patch_size[1], z=self.patch_size[2]
         )
 

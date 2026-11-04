@@ -195,7 +195,7 @@ def run_inference(cfg: DictConfig):
         else:
             logger.warning("Checkpoint not found, skipping load: %s", checkpoint_path)
     model.eval()
-    
+
     def center_crop_resize(img: Image, width: int, height: int) -> Image.Image:
         src_w, src_h = img.size
         scale = max(width / src_w, height / src_h)

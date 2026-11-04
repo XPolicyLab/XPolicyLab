@@ -285,7 +285,7 @@ class MoT(nn.Module):
                     "All experts must have same attn_head_dim; "
                     f"got {self.attn_head_dim} and {expert.attn_head_dim}"
                 )
-        
+
         logger.info(f"Initialized MoT with experts: {self.expert_order}, num_layers={self.num_layers}")
         for name in self.expert_order:
             expert = self.mixtures[name]
