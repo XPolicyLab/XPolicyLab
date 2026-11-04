@@ -46,3 +46,9 @@ Both plain and encoded input cases passed:
 - Lag 0 uses current images; combining image delay with legacy render delay is rejected.
 
 These checks verify transport and adapter behavior, not simulation success rates.
+
+## Clean installation verification
+
+On 2026-11-04 the corrected `install.sh` completed in a fresh Python 3.11 environment with system site packages disabled. Both CUDA extensions were built from source using CUDA 12.8 and GCC 11.4. The installer dependency/import checks passed, and FlashAttention and causal convolution matched PyTorch reference computations on an NVIDIA L20.
+
+Using that new environment and the released weights, the unchanged official debug client passed one round of 20 action steps with 10 environments for each of plain and encoded RGB observations. The observation-delay checks above also passed. This verifies the policy environment; the separate RoboDojo/Isaac Sim environment was not reinstalled.

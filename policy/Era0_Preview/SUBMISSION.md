@@ -2,6 +2,10 @@
 
 The [model repository](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo) provides model weights, inference assets and exact normalization. Evaluation code is maintained in the XPolicyLab policy directory.
 
+- Contributor: **RobotEra Team**; organization: **RobotEra**.
+- Model type: **VLA**; evaluation type: **simulation**; release scope: **evaluation only**.
+- Contact: **Liming Zheng**, **liming.zheng@robotera.com**.
+- Technical report: planned for public release within two weeks, by **2026-11-18**. No broader artifact-release commitment is implied.
 - Model display name: **Era0-Preview**. Import/policy directory: **Era0_Preview**.
 - Scope: eval-only, RoboDojo / arx_x5 / ee, single and vectorized environments.
 - Complete protocol: installed SDK default all-task inventory, seeds 0/1/2, native counts; no local task extensions.
@@ -28,6 +32,7 @@ The official [Testing and PR standard](../../CONTRIBUTING.md#testing) asks for t
 | Local multi-task simulation | Overview Score **33.16 ± 0.35**; SR **27.96 ± 0.47%**; 1,716 successes / 6,225 episodes | Seeds 0/1/2; native target 6,300; mixed SDK versions, legacy rendering and local IK protection; incomplete reference result |
 | Packaged adapter simulation, GPU 1 | `press_by_number`, seed 0: **9/10** successes, Score **90** | Policy image lag 1, SDK rendering/physics, official execution profile |
 | Packaged adapter simulation, GPU 2 | `press_by_number`, seed 0: **8/10** successes, Score **80** | Same settings, independent ten-episode run |
+| Clean policy environment installation | PASS | Fresh venv, source-built CUDA extensions, dependency/import and GPU checks; see [DEBUG_VERIFICATION.md](DEBUG_VERIFICATION.md) |
 | Plain-image debug loop | PASS | 10 rounds × 20 action steps; 10 environments; `[MAIN] eval finished`, no tracebacks |
 | Encoded-image debug loop | PASS | `DEBUG_OBS_ENCODED=1`; same round/step counts; successful final log, no tracebacks |
 | Complete native three-seed run with packaged official profile | Pending | Existing local reference results do not establish this result |

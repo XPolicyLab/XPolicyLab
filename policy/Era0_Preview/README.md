@@ -1,14 +1,16 @@
 # Era0-Preview
 
-**Contributor:** RobotEra Team | **Paper:** Not available | **arXiv:** Not available | **Original code:** Inference runtime included in `runtime/`.
+**Contributor:** RobotEra Team | **Paper:** Technical report planned by 2026-11-18 | **arXiv:** Not available | **Original code:** Inference runtime included in `runtime/`.
 
-Evaluation-only policy for RoboDojo `arx_x5`, Cartesian `ee` actions, with three RGB camera views and batched simulation.
+Evaluation-only VLA policy for RoboDojo simulation: `arx_x5`, Cartesian `ee` actions, three RGB camera views and batched simulation.
+
+**Release scope:** evaluation code and model assets only. A technical report is planned for public release within two weeks (by 2026-11-18).
 
 **Weights and results:** [roboterax/Era0-5B-Preview-RoboDojo](https://huggingface.co/roboterax/Era0-5B-Preview-RoboDojo).
 
 ## Installation
 
-Install [RoboDojo](https://robodojo-benchmark.com/doc/usage/installation/) and place this XPolicyLab checkout inside its workspace. The policy environment requires Python 3.11; the installer creates `.venv` with the dependencies.
+Install [RoboDojo](https://robodojo-benchmark.com/doc/usage/installation/) and place this XPolicyLab checkout inside its workspace. The policy environment requires Python 3.11, a CUDA 12.x toolkit with `nvcc`, and a C++ compiler; the installer creates `.venv` with the dependencies. Install the simulator in its separate RoboDojo environment.
 
 ```bash
 cd RoboDojo/XPolicyLab/policy/Era0_Preview
