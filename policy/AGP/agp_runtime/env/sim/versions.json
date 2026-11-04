@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-09-21T16:53:06.666791",
+  "os": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+  "repositories": {
+    "RoboDojo": "09bd5f5e762b949f5858ece31347ce62057b3a5e",
+    "RoboDojo/third_party/IsaacLab": "afca7b09d60d8beb9c1cb28b43066499940b969b",
+    "RoboDojo/third_party/curobo": "d17b54ce32cba095c0b000c4c58777075d11de0e",
+    "RoboDojo/XPolicyLab": "53c5da5a01bc720d1cf0e6ab6ed212e8cef0eda2"
+  },
+  "assets": {
+    "revision": "91f76c28d93dd20c5fa46ce6a5a1d96a4f384acd",
+    "files": 15365,
+    "bytes": 41269513111
+  },
+  "checkout_note": "RoboDojo main 09bd5f5e (upstream PR #48, articulation reset fix: swap_blocks' button rests at 100% with one environment). Same commits as agp_core/paths.py CHECKOUT_COMMIT / CHECKOUT_SUBMODULES"
+}
