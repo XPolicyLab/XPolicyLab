@@ -2,97 +2,97 @@
   "swap_T": {
     "engine": "pyrua",
     "program": "pyrua_programs/swap_T.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "swap_blocks": {
     "engine": "pyrua",
     "program": "pyrua_programs/swap_blocks.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "cover_blocks": {
     "engine": "pyrua",
     "program": "pyrua_programs/cover_blocks.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "align_blocks": {
     "engine": "pyrua",
     "program": "pyrua_programs/align_blocks.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "arrange_largest_number": {
     "engine": "pyrua",
     "program": "pyrua_programs/arrange_largest_number.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "arrange_largest_number_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/arrange_largest_number_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "build_tower": {
     "engine": "pyrua",
     "program": "pyrua_programs/build_tower.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "classify_objects": {
     "engine": "pyrua",
     "program": "pyrua_programs/classify_objects.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "classify_objects_by_language": {
     "engine": "pyrua",
     "program": "pyrua_programs/classify_objects_by_language.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "deposit_coin": {
     "engine": "pyrua",
     "program": "pyrua_programs/deposit_coin.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "fasten_screws": {
     "engine": "pyrua",
     "program": "pyrua_programs/fasten_screws.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "fill_egg_holder": {
     "engine": "pyrua",
     "program": "pyrua_programs/fill_egg_holder.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "fill_pen_holder": {
     "engine": "pyrua",
     "program": "pyrua_programs/fill_pen_holder.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "fold_clothes": {
     "engine": "pyrua",
     "program": "pyrua_programs/fold_clothes.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "fold_clothes_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/fold_clothes_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "general_pickup": {
     "engine": "pyrua",
     "program": "pyrua_programs/general_pickup.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "hang_mugs": {
     "engine": "pyrua",
     "program": "pyrua_programs/hang_mugs.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "hang_mugs_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/hang_mugs_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "imitate_sorting_sequence": {
     "engine": "pyrua",
     "program": "pyrua_programs/imitate_sorting_sequence.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "insert_key": {
     "program": "scripts/insert_key",
@@ -102,171 +102,171 @@
   "insert_tubes": {
     "engine": "pyrua",
     "program": "pyrua_programs/insert_tubes.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "make_kong": {
     "engine": "pyrua",
     "program": "pyrua_programs/make_kong.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "make_toast": {
     "engine": "pyrua",
     "program": "pyrua_programs/make_toast.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "make_toast_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/make_toast_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "match_and_pick_from_conveyor": {
     "engine": "pyrua",
     "program": "pyrua_programs/match_and_pick_from_conveyor.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "organize_table": {
     "engine": "pyrua",
     "program": "pyrua_programs/organize_table.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pack_objects_into_box": {
     "engine": "pyrua",
     "program": "pyrua_programs/pack_objects_into_box.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pack_objects_into_box_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/pack_objects_into_box_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pick_from_conveyor_by_image": {
     "engine": "pyrua",
     "program": "pyrua_programs/pick_from_conveyor_by_image.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "play_Xylophone": {
     "engine": "pyrua",
     "program": "pyrua_programs/play_Xylophone.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "play_stacking_toy": {
     "engine": "pyrua",
     "program": "pyrua_programs/play_stacking_toy.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "play_tic_tac_toe": {
     "engine": "pyrua",
     "program": "pyrua_programs/play_tic_tac_toe.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "plug_in_charger": {
     "engine": "pyrua",
     "program": "pyrua_programs/plug_in_charger.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pour_balls_into_vase": {
     "engine": "pyrua",
     "program": "pyrua_programs/pour_balls_into_vase.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pour_by_language": {
     "engine": "pyrua",
     "program": "pyrua_programs/pour_by_language.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pour_liquid_into_cup": {
     "engine": "pyrua",
     "program": "pyrua_programs/pour_liquid_into_cup.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "pour_liquid_into_cup_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/pour_liquid_into_cup_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "press_by_number": {
     "engine": "pyrua",
     "program": "pyrua_programs/press_by_number.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "push_T": {
     "engine": "pyrua",
     "program": "pyrua_programs/push_T.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "push_T_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/push_T_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "put_bottles_into_dustbin": {
     "engine": "pyrua",
     "program": "pyrua_programs/put_bottles_into_dustbin.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "solve_equation": {
     "engine": "pyrua",
     "program": "pyrua_programs/solve_equation.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "sort_nesting_dolls_by_size": {
     "engine": "pyrua",
     "program": "pyrua_programs/sort_nesting_dolls_by_size.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "sort_nesting_dolls_by_size_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/sort_nesting_dolls_by_size_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "stack_blocks": {
     "engine": "pyrua",
     "program": "pyrua_programs/stack_blocks.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "stack_blocks_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/stack_blocks_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "stack_blocks_by_language": {
     "engine": "pyrua",
     "program": "pyrua_programs/stack_blocks_by_language.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "stack_bowls": {
     "engine": "pyrua",
     "program": "pyrua_programs/stack_bowls.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "stack_bowls_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/stack_bowls_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "store_laptop_and_headphones": {
     "engine": "pyrua",
     "program": "pyrua_programs/store_laptop_and_headphones.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "store_laptop_and_headphones_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/store_laptop_and_headphones_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "store_tools_in_toolbox": {
     "engine": "pyrua",
     "program": "pyrua_programs/store_tools_in_toolbox.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "sweep_blocks": {
     "engine": "pyrua",
     "program": "pyrua_programs/sweep_blocks.py",
-    "action_type": "ee"
+    "action_type": "joint"
   },
   "sweep_blocks_random": {
     "engine": "pyrua",
     "program": "pyrua_programs/sweep_blocks_random.py",
-    "action_type": "ee"
+    "action_type": "joint"
   }
 }

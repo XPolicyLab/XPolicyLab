@@ -4,8 +4,8 @@ The program of a task is its route's `program`, `pyrua_programs/<task>.py` in th
 integrations/xpolicylab/PyRUA_RSI at 20dbb21e; Apache-2.0, see pyrua_programs/LICENSE and NOTICE). It runs in
 PyRUA-Lean's runtime and sandbox against the `robo` API: a small chat-completions endpoint on 127.0.0.1 answers
 the runtime's first request of an episode with the whole program as one `python` tool call and every later
-request with `finish`. Motion calls become native joint targets for the ARX-X5 pair (RoboDojo dispatches each
-action by its keys, so this works under either CLI `action_type`). SAM3 is the only model loaded; its checkpoint
+request with `finish`. Motion calls become native joint targets for the ARX-X5 pair, so these routes declare
+`action_type: joint` in routes.json and run with CLI `action_type=joint`. SAM3 is the only model loaded; its checkpoint
 is `SAM3_CHECKPOINT_PATH`, by default `<model dir>/facebook__sam3/sam3.pt`.
 
 Episode flow (driven by deploy.py): `update_obs` hands the program its next observation, `get_action` answers

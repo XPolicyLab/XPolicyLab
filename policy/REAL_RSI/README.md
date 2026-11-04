@@ -3,15 +3,7 @@
 **Contributor:** PUK DAGroup | **Paper:** REAL_RSI | **arXiv:** Not provided | **Original code:** Frozen programs included here
 
 Evaluation-only controllers for 42 RoboDojo base tasks and 12 official `_random`
-variants. All 54 task names use the `REAL_RSI` adapter; `routes.json` maps each task
-name to its program:
-
-- `insert_key`: a frozen LILO controller, `scripts/insert_key/policy.py`.
-- the other 53 task names (`engine: pyrua`): a fixed PyRUA-Lean program,
-  `pyrua_programs/<task>.py`, from PyRUA-RSI
-  ([PyRUA-Lean](https://github.com/DAGroup-PKU/PyRUA-Lean) `integrations/xpolicylab/PyRUA_RSI`
-  at `20dbb21e`, Apache-2.0; see `pyrua_programs/LICENSE` and `NOTICE`). No language
-  model runs at evaluation time; SAM3 is the only model these routes load.
+variants. 
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -54,19 +46,29 @@ in `models.lock.json`. There is no `train.sh`.
 
 ## Evaluation
 
-Use `env_cfg_type=arx_x5`, `ckpt_name=.` and `action_type=ee` for every task.
-RoboDojo infers each action's type from its keys: the PyRUA routes send native joint
-targets, the frozen route sends end-effector poses, both under the same arguments.
+Use `env_cfg_type=arx_x5` and `ckpt_name=.` for every task. The `action_type`
+argument follows the action each route sends, and the adapter rejects any other value:
+
+| Task names |`action_type` |
+| :-- | :-- |
+| `insert_key` |`ee` |
+| the others |`joint` |
+
 The standard interface is:
 
 ```bash
 bash eval.sh <bench_name> <task_name> <ckpt_name> <env_cfg_type> <action_type> <seed> \
   <policy_gpu_id> <env_gpu_id> <policy_env_or_python> <eval_env_conda_env>
 
-# Example
-bash eval.sh RoboDojo stack_blocks . arx_x5 ee 0 0 0 real-rsi RoboDojo
+# example
+bash eval.sh RoboDojo stack_blocks . arx_x5 joint 0 0 0 real-rsi RoboDojo
 
+# insert_key
+bash eval.sh RoboDojo insert_key . arx_x5 ee 0 0 0 real-rsi RoboDojo
 ```
+
+The `action_type` argument is also part of the result directory name
+(`<seed>_ckpt_name=.,action_type=<action_type>`).
 
 Use the required benchmark seed in the sixth argument. Set `EVAL_ENV_TYPE=sim` or
 leave it unset for simulation; unset `EVAL_NUM` to retain native episode counts.
