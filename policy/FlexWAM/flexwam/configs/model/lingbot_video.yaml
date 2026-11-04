@@ -1,0 +1,119 @@
+# LingBotVideo with independent router/critic; task files only override differences.
+_target_: flexwam.models.architectures.builder.create_lingbot_flexwam
+model_path: ${oc.env:FLEXWAM_LINGBOT_PATH,./checkpoints/lingbot-video}
+load_text_encoder: false
+context_input_dim: 2560
+proprio_dim: ${data.robot.state_dim}
+mot_checkpoint_mixed_attn: false
+action_dit_pretrained_path: ${oc.env:FLEXWAM_ACTION_DIT_PATH,${model.model_path}/LingBotActionDiT_backbone_2048hdim.pt}
+skip_dit_load_from_pretrain: false
+state_conditioning:
+  mode: separate  # separate per-expert state, or one shared leading state token
+  drop_prob: 0.0
+action_attention:
+  mode: additive  # additive: per-camera softmax, then scale and add; logit_bias: one softmax with log(scale) bias
+  bias_strength: 1.0
+video:
+  state_conditioning:
+    enabled: false
+    mode: prefix
+    num_tokens: 1
+  patch_size:
+  - 1
+  - 2
+  - 2
+  in_channels: 16
+  out_channels: 16
+  hidden_size: 2048
+  intermediate_size: 6144
+  depth: 24
+  num_attention_heads: 16
+  freq_dim: 256
+  text_dim: 2560
+  axes_dims:
+  - 32
+  - 48
+  - 48
+  axes_lens:
+  - 8192
+  - 1024
+  - 1024
+  rope_theta: 256.0
+  norm_eps: 1.0e-06
+  qkv_bias: false
+  out_bias: true
+  patch_embed_bias: true
+  timestep_mlp_bias: true
+  num_views: ${len:${data.observation.cameras}}
+  use_camera_embedding: true
+  video_attention_mask_mode: first_frame_causal
+  prefix_layout: global
+  # Every Nth block (zero-based N-1, 2N-1, ...) lets each view attend to all views;
+  # other blocks stay view-local. A list in cross_view_attention_layers overrides it.
+  cross_view_attention_interval: 4
+  cross_view_attention_layers: null
+action_dit:
+  action_dim: ${data.robot.action_dim}
+  hidden_size: 2048
+  intermediate_size: 6144
+  depth: 24
+  num_attention_heads: 16
+  freq_dim: 256
+  axes_dims:
+  - 32
+  - 48
+  - 48
+  axes_lens:
+  - 8192
+  - 1024
+  - 1024
+  rope_theta: 256.0
+  norm_eps: 1.0e-06
+  qkv_bias: false
+  out_bias: true
+  timestep_mlp_bias: true
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+video_scheduler:
+  train_shift: 5.0
+  infer_shift: 5.0
+  num_train_timesteps: 1000
+action_scheduler:
+  train_shift: 5.0
+  infer_shift: 5.0
+  num_train_timesteps: 1000
+use_cuda_graph: false
+loss:
+  lambda_action: 1.0
+  lambda_video: 1.0
+router:
+  state_conditioning:
+    enabled: false
+    mode: late_concat
+    hidden_dim: 512
+  arch: spatial_query_v1
+  feature_layer_index: 18
+  feature_dim: 512
+  pool_grid:
+  - 4
+  - 4
+  num_queries: 4
+  num_heads: 8
+  spatial_hidden_dim: 2048
+  branch_output_dim: 1024
+  head_hidden_dim: 1024
+critic:
+  state_conditioning:
+    enabled: false
+    mode: late_concat
+    hidden_dim: 512
+  arch: spatial_query_v1
+  feature_layer_index: 18
+  feature_dim: 512
+  pool_grid:
+  - 4
+  - 4
+  num_queries: 4
+  num_heads: 8
+  spatial_hidden_dim: 2048
+  branch_output_dim: 1024
+  head_hidden_dim: 1024

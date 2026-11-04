@@ -1,0 +1,64 @@
+# Select one task: python scripts/train.py task=penbox
+defaults:
+- data: piper
+- model: lingbot_video
+- _self_
+- task: null
+config_version: 2
+output_dir: ./runs/train/${now:%Y-%m-%d}_${now:%H-%M-%S}
+train:
+  batch_size: 2
+  num_workers: 4
+  prefetch_factor: 1
+  lr_scheduler_type: cosine
+  learning_rate: 0.0001
+  epochs: 1
+  max_steps: null
+  log_every: 10
+  save_every: 100
+  save_weights: true
+  save_training_state: false
+  eval_every: 50
+  eval_num_inference_steps: 10
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  weight_decay: 0.0
+  resume: null
+  migrate_state_conditioning: false
+  counterfactual:
+    intervention: router_zero  # pixel or router_zero
+    kl_temperature_start: 2.0
+    action_sigma_min: 0.6
+    uniform_probe: true
+    interval: 5
+    kl_lambda_end: 0.5
+    kl_temperature_end: 1.0
+    action_sigma_max: 1.0
+    kl_lambda_start: 0.33
+    critic_lr_end: 5.0e-05
+    critic_lr: 0.0001
+  stages:
+    enabled: true
+    unit: steps
+    stage1_ratio: 0.1
+    stage2_ratio: 0.2
+    stage3_ratio: 0.3
+    stage4_ratio: 0.4
+    stage5_ratio: 0  # no CF, no KL; router and action loss only
+runtime:
+  mixed_precision: bf16
+  seed: 42
+wandb:
+  enabled: false
+  workspace: null
+  project: flexwam
+  name: train
+  group: null
+  mode: online
+  init_timeout: 30
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null

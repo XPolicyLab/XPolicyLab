@@ -1,0 +1,62 @@
+# Robot/data contract. Camera order is the model/router order.
+# Each camera is stretched from raw_shape to image_size in one PIL BILINEAR resize.
+format: lerobot
+roots:
+- ${oc.env:FLEXWAM_PIPER_3CAM_DATASET_DIR}
+val_roots: null
+robot:
+  action_dim: 14
+  state_dim: 14
+  action_source: actions
+  state_source: state
+observation:
+  image_size:
+  - 192
+  - 224
+  cameras:
+  - name: global
+    source: images.global
+    raw_shape:
+    - 3
+    - 224
+    - 224
+  - name: left_wrist
+    source: images.left_wrist
+    raw_shape:
+    - 3
+    - 224
+    - 224
+  - name: right_wrist
+    source: images.right_wrist
+    raw_shape:
+    - 3
+    - 224
+    - 224
+action:
+  representation: joint_delta
+  absolute_indices:
+  - 6
+  - 13
+sampling:
+  action_horizon: 32
+  video_stride: 4
+  global_stride: 1
+normalization:
+  mode: q01/q99
+  exceptions: null
+  stepwise: false
+  clip: false
+  stats: null
+split:
+  val_ratio: 0.01
+text:
+  cache_dir: ./data/text_embeds_cache/piper_3cam
+  encoder_id: lingbotqwen3vl
+  context_len: 128
+augmentation:
+  color_jitter:
+    enabled: true
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.0

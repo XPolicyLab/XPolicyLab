@@ -1,0 +1,103 @@
+# RoboDojo unified LeRobot (Piper / ARX5): 20D ee_pose, two 10D Flexiv-style arms.
+# Each arm: [xyz(3), rot6D(6), gripper(1)]; delta semantics via pose6d_delta_bimanual.
+format: lerobot
+roots:
+- ${oc.env:FLEXWAM_ROBODOJO_DATASET_DIR,/path/to/robodojo_data}
+val_roots: null
+robot:
+  action_dim: 20
+  state_dim: 20
+  action_source: action.ee_pose
+  state_source: observation.ee_pose
+observation:
+  image_size:
+  - 192
+  - 224
+  cameras:
+  - name: global
+    source: observation.images.cam_high
+    raw_shape:
+    - 3
+    - 240
+    - 320
+  - name: left_wrist
+    source: observation.images.cam_left_wrist
+    raw_shape:
+    - 3
+    - 240
+    - 320
+  - name: right_wrist
+    source: observation.images.cam_right_wrist
+    raw_shape:
+    - 3
+    - 240
+    - 320
+action:
+  representation: pose6d_delta_bimanual
+sampling:
+  action_horizon: 32
+  video_stride: 4
+  global_stride: 1
+normalization:
+  mode: q01/q99
+  exceptions:
+    action:
+      default:
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - q01/q99
+    state:
+      default:
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - q01/q99
+  stepwise: false
+  clip: false
+  stats: null
+split:
+  val_ratio: 0.00
+text:
+  cache_dir: ./data/text_embeds_cache/robodojo_3cam_lingbotqwen
+  encoder_id: lingbotqwen3vl
+  context_len: 128
+augmentation:
+  color_jitter:
+    enabled: true
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.0
