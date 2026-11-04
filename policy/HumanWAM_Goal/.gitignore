@@ -1,0 +1,9 @@
+# Local release downloads, the installed code and environment, and run outputs (see README).
+OpenHumanWAM/
+env/
+assets/
+hf_release/
+checkpoints/
+eval_result/
+workspace/
+runtime/
