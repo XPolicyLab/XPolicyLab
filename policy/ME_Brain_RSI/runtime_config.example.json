@@ -49,6 +49,12 @@
         "HANG_SAM3_PATH": "model_assets/hang/sam3",
         "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
       }
+    },
+    "organize_table": {
+      "environment": {
+        "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models",
+        "COAP_SNAPSHOT_INTERVAL": "50"
+      }
     }
   }
 }

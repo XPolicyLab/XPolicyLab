@@ -39,7 +39,7 @@
 | `classify_objects` | `generator` | `ee` | `false` |
 | `fill_pen_holder` | `vla` | `joint` | `true` |
 | `fill_egg_holder` | `generator` | `ee` | `false` |
-| `organize_table` | `vla` | `joint` | `true` |
+| `organize_table` | `model` | `ee` | `false` |
 | `play_stacking_toy` | `model` | `joint` | `false` |
 | `make_kong` | `model` | `ee` | `false` |
 | `cover_blocks` | `generator` | `ee` | `false` |
