@@ -1,0 +1,46 @@
+policy_name: FlexWAM
+protocol: ws
+# The Isaac client may run several envs at once. FlexWAM infer_action is
+# batch-1, so get_action_batch runs those envs one after another.
+eval_batch: true
+
+# Server transport: overridden by setup_eval_policy_server.sh per launch.
+port: null
+host: localhost
+
+# Identifiers + per-launch wiring (set via --overrides from the eval scripts).
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+action_type: ee
+action_dim: null
+seed: 42
+gpu_id: null
+
+# --- FlexWAM-specific keys (resolved in setup_eval_policy_server.sh) ---
+# Vendored source root. null -> policy/FlexWAM/flexwam.
+flexwam_root: null
+# Run directory with checkpoints/weights/step_*.pt and dataset_stats.json.
+# null -> XPolicyLab checkpoints/ resolution.
+ckpt_dir: null
+# Frozen VAE, UMT5 encoder, and tokenizer. arx_x5, piper, and piper_x share
+# checkpoints/FlexWAM-base unless FLEXWAM_MODEL_BASE_PATH is set.
+# https://huggingface.co/Zzming/FlexWAM-base
+checkpoint_path: null
+dataset_stats_path: null
+# Hydra task. null -> wan/robodojo_{arx5,piper,piperx} from env_cfg_type.
+task: null
+device: cuda
+# Trained action is pose6d_delta_bimanual. Keep true for those checkpoints.
+delta: true
+# Model still predicts the full horizon (32). Only this prefix is executed.
+replan_steps: 12
+num_inference_steps: null
+sigma_shift: null
+# Real-robot eval is one environment, three cameras, 192x224. Set
+# FLEXWAM_CUDA_GRAPH=false to disable the captured graph.
+cuda_graph: true
+default_instruction: follow the instruction
+# true skips checkpoint loading and returns hold-position chunks.
+allow_dummy_policy: false

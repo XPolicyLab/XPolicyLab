@@ -1,0 +1,27 @@
+# @package _global_
+defaults:
+- override /data: piper
+- override /model: lingbot_video
+- _self_
+train:
+  batch_size: 12
+  num_workers: 6
+  epochs: 15
+  learning_rate: 1e-4
+  weight_decay: 1e-2
+  save_every: 30000
+  eval_every: 200
+  save_training_state: true
+model:
+  action_attention:
+    mode: logit_bias
+    bias_strength: 1.0
+  video:
+    cross_view_attention_interval: 2
+
+data:
+  roots:
+  - /path/to/piper/conveyor
+  text:
+    cache_dir: ./data/text_embeds_cache/piper_conveyor_3cam_lingbotqwen
+    encoder_id: lingbotqwen3vl

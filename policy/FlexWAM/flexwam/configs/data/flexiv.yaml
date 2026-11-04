@@ -1,0 +1,83 @@
+# Robot/data contract. Camera order is the model/router order.
+# Each camera is stretched from raw_shape to image_size in one PIL BILINEAR resize.
+format: lerobot
+roots:
+- ${oc.env:FLEXWAM_FLEXIV_3CAM_DATASET_DIR}
+val_roots: null
+robot:
+  action_dim: 10
+  state_dim: 10
+  action_source: actions
+  state_source: state
+observation:
+  image_size:
+  - 192
+  - 224
+  cameras:
+  - name: global
+    source: images.global
+    raw_shape:
+    - 3
+    - 224
+    - 224
+  - name: global2
+    source: images.global2
+    raw_shape:
+    - 3
+    - 224
+    - 224
+  - name: left_wrist
+    source: images.left_wrist
+    raw_shape:
+    - 3
+    - 224
+    - 224
+action:
+  representation: pose6d_delta
+sampling:
+  action_horizon: 32
+  video_stride: 4
+  global_stride: 1
+normalization:
+  mode: q01/q99
+  exceptions:
+    action:
+      default:
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - q01/q99
+    state:
+      default:
+      - q01/q99
+      - q01/q99
+      - q01/q99
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - identity
+      - q01/q99
+  stepwise: false
+  clip: null
+  stats: null
+split:
+  val_ratio: 0.01
+text:
+  cache_dir: ./data/text_embeds_cache/flexiv_3cam_lingbotqwen
+  encoder_id: lingbotqwen3vl
+  context_len: 128
+augmentation:
+  color_jitter:
+    enabled: false
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.0

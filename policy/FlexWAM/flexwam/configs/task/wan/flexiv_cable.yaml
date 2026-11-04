@@ -1,0 +1,33 @@
+# @package _global_
+defaults:
+- override /data: flexiv
+- override /model: wan22
+- _self_
+train:
+  batch_size: 12
+  num_workers: 6
+  epochs: 15
+  learning_rate: 1e-4
+  weight_decay: 1e-2
+  save_every: 30000
+  eval_every: 200
+  save_training_state: true
+model:
+  action_attention:
+    mode: logit_bias
+    bias_strength: 1.0
+  video:
+    cross_view_attention_interval: 2
+  action_scheduler:
+    train_shift: 1.0
+    infer_shift: 1.0
+
+data:
+  roots:
+  - /path/to/flexiv_cable
+  augmentation:
+    color_jitter:
+      enabled: false
+  text:
+    cache_dir: ./data/text_embeds_cache/flexiv_cable_v2_no_static_3cam_wan22ti2v5b
+    encoder_id: wan22ti2v5b

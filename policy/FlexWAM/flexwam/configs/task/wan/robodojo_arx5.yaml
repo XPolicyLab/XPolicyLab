@@ -1,0 +1,30 @@
+# @package _global_
+defaults:
+- override /data: robodojo
+- override /model: wan22
+- _self_
+train:
+  batch_size: 12
+  num_workers: 4
+  epochs: 15
+  learning_rate: 1e-4
+  weight_decay: 1e-2
+  save_every: 10000
+  eval_every: 500
+  save_training_state: true
+model:
+  action_attention:
+    mode: logit_bias
+    bias_strength: 1.0
+  video:
+    cross_view_attention_interval: 2
+  action_scheduler:
+    train_shift: 1.0
+    infer_shift: 1.0
+
+data:
+  roots:
+  - /path/to/robodojo/arx5
+  text:
+    cache_dir: ./data/text_embeds_cache/robodojo_arx5_3cam_wan22ti2v5b
+    encoder_id: wan22ti2v5b
