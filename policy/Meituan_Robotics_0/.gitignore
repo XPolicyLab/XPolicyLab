@@ -1,3 +1,5 @@
-checkpoints/
 __pycache__/
 *.pyc
+checkpoints/
+runs/
+*.download.part
