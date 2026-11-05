@@ -54,6 +54,9 @@ DEVELOPER_SECTIONS = ('Task instruction', 'Authorized priors')
 BRIEF_LIMIT = 20000           # about 5k tokens
 VIDEO_SECTION_LIMIT = 1200    # about 300 tokens
 INDEX_BUDGET = 12000          # about 3k tokens per task; more triggers curation
+# The tool folder of general tools (tools/general/): tools the model distilled across tasks, such as a camera model.
+# A task reads them when it has no tool of that name itself.
+GENERAL_TOOLS = 'general'
 
 
 def video_time(t):
@@ -273,14 +276,30 @@ def check_body(body):
     return body
 
 
-def evidence_summary(evidence):
-    """`judged effective on layouts 0,1; failed on 2` from evidence entries."""
+def evidence_summary(evidence, compact=False):
+    """`judged effective on layouts 0,1; failed on 2` from evidence entries. Evidence from several tasks (a general
+    skill's) names each task with its layouts: `judged effective on layouts a 1,3 / b 0;
+    failed on a 2`; with compact (an index line) it is counted instead: `judged effective on 3 layouts of 2 tasks;
+    failed on 1 layout of 1 task`."""
+    several = len({entry.get('task') for entry in evidence}) > 1
+    if several and compact:
+        parts = []
+        for verdict, label in (('effective', 'judged effective on'), ('failed', 'failed on')):
+            pairs = {(entry.get('task'), entry.get('layout')) for entry in evidence if entry.get('verdict') == verdict}
+            if pairs:
+                tasks = len({task for task, _ in pairs})
+                parts.append(f"{label} {len(pairs)} layout{'s' if len(pairs) != 1 else ''} of "
+                             f"{tasks} task{'s' if tasks != 1 else ''}")
+        return '; '.join(parts) or 'no evidence yet'
+
     def layouts(verdict):
         values = sorted({(entry.get('task'), entry.get('layout')) for entry in evidence
                          if entry.get('verdict') == verdict}, key=lambda value: (str(value[0]), value[1] or 0))
-        tasks = {task for task, _ in values}
-        if len(tasks) > 1:
-            return ', '.join(f'{task} {layout}' for task, layout in values)
+        if several:
+            groups = {}
+            for task, layout in values:
+                groups.setdefault(task, []).append(str(layout))
+            return ' / '.join(f'{task} {",".join(items)}' for task, items in groups.items())
         return ','.join(str(layout) for _, layout in values)
     effective, failed = layouts('effective'), layouts('failed')
     parts = []
@@ -427,7 +446,7 @@ class Knowledge:
             scope = '' if meta['tasks'] else ' (general)'
             valid = self.valid_evidence(meta['evidence'])
             sources = evidence_sources(valid, self.run_kinds, self.run.get('run_id'))
-            lines.append(f"- {meta['name']} [{meta['type']}]{scope} {meta['when']} — {evidence_summary(valid)}"
+            lines.append(f"- {meta['name']} [{meta['type']}]{scope} {meta['when']} — {evidence_summary(valid, compact=True)}"
                          + (f' ({sources})' if sources else ''))
         return lines
 
@@ -453,15 +472,19 @@ class Knowledge:
 
     # ------------------------------------------------------- tools
 
-    def tool_paths(self, name, task=None):
-        """(code, metadata) paths of a tool of `task`, this session's task by default: tools belong to one task."""
+    def tool_paths(self, name, task=None, resolve=False):
+        """(code, metadata) paths of a tool of `task`, this session's task by default: tools belong to one task, or
+        are general (tools/general/). resolve=True: a general tool when the task has no tool of that name."""
         try:
             task_tools.check_name(name)
         except ToolError as exc:
             raise KnowledgeError(str(exc)) from None
         task = task or self.run.get('task')
-        if task not in TASKS:
+        if task not in TASKS and task != GENERAL_TOOLS:
             raise KnowledgeError(f'a tool belongs to a task; unknown task {task!r}')
+        if (resolve and task != GENERAL_TOOLS and not (self.root / 'tools' / task / f'{name}.json').is_file()
+                and (self.root / 'tools' / GENERAL_TOOLS / f'{name}.json').is_file()):
+            task = GENERAL_TOOLS
         folder = self.root / 'tools' / task
         return folder / f'{name}.py', folder / f'{name}.json'
 
@@ -470,8 +493,9 @@ class Knowledge:
         return sorted(path.stem for path in folder.glob('*.json')) if folder.is_dir() else []
 
     def read_tool(self, name, task=None):
-        """(metadata, code) of a tool; the code must match the sha256 in its metadata."""
-        code_path, meta_path = self.tool_paths(name, task)
+        """(metadata, code) of a tool of the task, or of a general tool of that name; the code must match the sha256 in
+        its metadata."""
+        code_path, meta_path = self.tool_paths(name, task, resolve=True)
         if not meta_path.is_file():
             raise KnowledgeError(f'no tool named {name} for {task or self.run.get("task")}; the tools are listed '
                                  'after the skills')
@@ -485,14 +509,17 @@ class Knowledge:
         return meta, data.decode('utf-8')
 
     def tools_for(self, task, include_retired=False):
-        rows = []
-        for name in self.tool_names(task):
-            try:
-                meta = json.loads((self.root / 'tools' / task / f'{name}.json').read_text(encoding='utf-8'))
-            except (OSError, ValueError):
-                continue  # reported by problems()
-            if include_retired or meta.get('status') == 'active':
-                rows.append(meta)
+        """The task's tools, then the general tools it has no tool of the same name for."""
+        rows, own = [], set(self.tool_names(task))
+        for folder, names in ((task, sorted(own)), (GENERAL_TOOLS, [n for n in self.tool_names(GENERAL_TOOLS)
+                                                                    if n not in own and task != GENERAL_TOOLS])):
+            for name in names:
+                try:
+                    meta = json.loads((self.root / 'tools' / str(folder) / f'{name}.json').read_text(encoding='utf-8'))
+                except (OSError, ValueError):
+                    continue  # reported by problems()
+                if include_retired or meta.get('status') == 'active':
+                    rows.append(meta)
         return rows
 
     def tool_lines(self, task):
@@ -504,7 +531,8 @@ class Knowledge:
             first = ' '.join(str(meta.get('doc') or '').strip().split('\n', 1)[0].split())
             first = first if len(first) <= 200 else first[:199] + '…'
             names = ', '.join(meta.get('functions') or [])
-            lines.append(f"- {meta['name']} [{names}] {first} — {evidence_summary(valid)}"
+            scope = ' (general)' if meta.get('task') == GENERAL_TOOLS else ''
+            lines.append(f"- {meta['name']}{scope} [{names}] {first} — {evidence_summary(valid, compact=True)}"
                          + (f' ({sources})' if sources else ''))
         return lines
 
@@ -679,6 +707,8 @@ class Knowledge:
         self._require_writable()
         reason = _text('reason', reason, 1000)
         code_path, meta_path = self.tool_paths(name)
+        if not meta_path.is_file():
+            raise KnowledgeError(f'no tool named {name} for {self.run.get("task")}')
         meta, _ = self.read_tool(name)
         if meta['status'] == 'retired':
             return f'Tool {name} is already retired.'
@@ -1030,7 +1060,8 @@ class Knowledge:
         problems = []
         folder = self.root / 'tools'
         for task_folder in sorted(folder.iterdir()) if folder.is_dir() else []:
-            if not task_folder.is_dir() or task_folder.name not in TASKS:
+            general = task_folder.name == GENERAL_TOOLS and self.run.get('task') == GENERAL_TOOLS
+            if not task_folder.is_dir() or (task_folder.name not in TASKS and not general):
                 problems.append(f'tools/{task_folder.name} is not the folder of a task')
                 continue
             for path in sorted(task_folder.iterdir()):
@@ -1047,7 +1078,7 @@ class Knowledge:
                 if last.get(relative) != sha256_file(path):
                     problems.append(f'{relative} was changed without the knowledge helpers')
                 try:
-                    meta, code = self.read_tool(path.stem, task_folder.name)
+                    meta, code = self.read_tool(path.stem, task_folder.name)  # its own folder: it exists there
                     problem = tool_meta_problem(meta, path.stem, task_folder.name)
                     if problem:
                         raise KnowledgeError(problem)
@@ -1130,7 +1161,8 @@ class Knowledge:
                     excluded_skills.append({'skill': meta['name'], 'reason': 'no valid evidence'})
                     continue
                 copy(path)
-            # Tools: a release holds only the active tools of the released task with valid evidence.
+            # Tools: a release holds only the active tools of the released task with valid evidence (general
+            # knowledge: the general tools).
             for meta_path in sorted((self.root / 'tools').glob('*/*.json')):
                 meta = json.loads(meta_path.read_text(encoding='utf-8'))
                 reason = None
@@ -1159,7 +1191,7 @@ class Knowledge:
                     target_file.parent.mkdir(parents=True, exist_ok=True)
                     target_file.write_text(''.join(json.dumps(row, ensure_ascii=False) + '\n' for row in rows),
                                            encoding='utf-8')
-            frozen = Knowledge(staging)
+            frozen = type(self)(staging)  # the same kind of knowledge writes the frozen index
             frozen.invalid = dict(self.invalid)
             frozen.run_kinds = dict(self.run_kinds)
             frozen.build_generated(admitted_rows)

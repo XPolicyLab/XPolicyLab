@@ -40,8 +40,14 @@ def read_prompt(name):
     return (PROMPTS / name).read_text().strip()
 
 
-def load_priors():
-    path = PROMPTS / 'priors.json'
+def load_priors(split='evaluation'):
+    """The task priors of an actor's task section. An evaluation reads prompts/priors.json: what the scene and the
+    other actors do, no scoring rule. Development reads prompts/priors_development.json, which also states each
+    task's scoring rule in plain words (owner 2026-11-05: the rules are dropped from evaluation only); that file is not
+    part of a runtime export, and development refuses to run without it."""
+    path = PROMPTS / ('priors_development.json' if split == 'development' else 'priors.json')
+    if split == 'development' and not path.is_file():
+        raise FileNotFoundError(f'{path} is missing: development reads the scoring rules from it')
     return json.loads(path.read_text()) if path.is_file() else {}
 
 

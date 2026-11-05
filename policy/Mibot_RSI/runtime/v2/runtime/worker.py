@@ -175,6 +175,11 @@ class Session:
             self.namespace.update(write_skill=self.write_skill, retire_skill=self.retire_skill,
                                   add_evidence=self.add_evidence, update_brief=self.update_brief,
                                   write_tool=self.write_tool, retire_tool=self.retire_tool)
+        if settings.get('sources'):
+            # A cross-task session (development only): general knowledge and the
+            # read-only sources it is distilled from. An evaluation never sets `sources`.
+            from v2.knowledge.general import attach
+            attach(self, settings)
 
     @contextlib.contextmanager
     def _write_window(self, root):
@@ -383,7 +388,7 @@ class Session:
         cached = self._tools.get(name)
         if cached is not None and cached[0] == meta['sha256']:
             return cached[1]
-        path = self.knowledge.tool_paths(name, self.knowledge_task)[0]
+        path = self.knowledge.tool_paths(name, self.knowledge_task, resolve=True)[0]
         module = task_tools.load(name, code, path, meta['doc'], refuse=self._refuse_tool_argument)
         self._tools[name] = (meta['sha256'], module)
         self.displayed.append(self.knowledge.show_tool(name, self.knowledge_task))

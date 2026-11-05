@@ -436,14 +436,21 @@ def knowledge_root(task_env, settings, environ):
     return policy_dir / 'checkpoints' / name, ckpt
 
 
+# The release folder of the general knowledge: skills distilled from the practised tasks, read by the tasks its pin
+# lists (those evaluated without practice), which have no knowledge of their own.
+GENERAL_KNOWLEDGE = 'general'
+
+
 def release_knowledge(policy_dir):
-    """The knowledge release pinned in the policy's release.json: {ckpt_name, tasks: {standard task: pin}}."""
+    """The knowledge release pinned in the policy's release.json: {ckpt_name, tasks: {standard task: pin},
+    general: pin or None}."""
     path = Path(policy_dir) / 'release.json'
     if not path.is_file():
-        return {'ckpt_name': None, 'tasks': {}}
+        return {'ckpt_name': None, 'tasks': {}, 'general': None}
     try:
         knowledge = json.loads(path.read_text()).get('knowledge') or {}
-        return {'ckpt_name': knowledge.get('ckpt_name'), 'tasks': dict(knowledge.get('tasks') or {})}
+        return {'ckpt_name': knowledge.get('ckpt_name'), 'tasks': dict(knowledge.get('tasks') or {}),
+                'general': knowledge.get('general') or None}
     except (OSError, ValueError, AttributeError) as exc:
         raise InfrastructureFailure(f'{path} is unreadable: {exc}') from exc
 
@@ -455,9 +462,10 @@ def snapshot_files(folder):
 
 
 def load_knowledge(task, root, policy_dir, ckpt=None):
-    """Verify the task's frozen release snapshot and return {root, snapshot_id, task}: every file against its
+    """Verify the task's frozen release snapshot and return {root, snapshot_id, task, scope}: every file against its
     manifest, and the manifest against the snapshot release.json pins for the task (its id and the manifest's
-    sha256), however the folder was found. A `_random` variant reads its standard task's snapshot. Knowledge found
+    sha256), however the folder was found. A `_random` variant reads its standard task's snapshot; a task with no
+    snapshot of its own reads the general snapshot when release.json pins one (scope 'general'). Knowledge found
     through the checkpoint layout (`ckpt`, the evaluator's ckpt_name) must also be the pinned release. A missing,
     unpinned or modified snapshot is an infrastructure failure: an episode never runs with empty, unknown or
     altered knowledge."""
@@ -473,7 +481,10 @@ def load_knowledge(task, root, policy_dir, ckpt=None):
     if ckpt is not None and ckpt != release['ckpt_name']:
         raise InfrastructureFailure(f"ckpt_name {ckpt} is not the knowledge release {release['ckpt_name']} "
                                     'pinned in release.json')
-    pin = release['tasks'].get(knowledge_task) or {}
+    pin, scope = release['tasks'].get(knowledge_task) or {}, 'task'
+    if not pin and release['general'] and knowledge_task in (release['general'].get('tasks') or ()):
+        pin, scope = release['general'], 'general'
+        folder = (Path(root) / GENERAL_KNOWLEDGE).resolve()
     if not pin.get('snapshot_id') or not pin.get('manifest_sha256'):
         raise InfrastructureFailure(f"release.json pins no snapshot of {knowledge_task} in {release['ckpt_name']}")
     if ckpt is not None and Path(root).is_dir() and Path(root).resolve().name == Path(root).name:
@@ -483,7 +494,8 @@ def load_knowledge(task, root, policy_dir, ckpt=None):
     manifest_path = folder / 'manifest.json'
     if not manifest_path.is_file():
         raise InfrastructureFailure(f'no knowledge snapshot for {knowledge_task} at {folder} '
-                                    '(see the policy README: download_checkpoint.sh)')
+                                    + ('(the general knowledge) ' if scope == 'general' else '')
+                                    + '(see the policy README: download_checkpoint.sh)')
     try:
         manifest = verify_snapshot(folder)
     except (KnowledgeError, OSError, ValueError, KeyError) as exc:
@@ -500,7 +512,7 @@ def load_knowledge(task, root, policy_dir, ckpt=None):
                                     f"release.json pins {pin['snapshot_id']}")
     if sha256_file(manifest_path) != pin['manifest_sha256']:
         raise InfrastructureFailure(f'the manifest of {knowledge_task} differs from the pinned release')
-    return {'root': str(folder), 'snapshot_id': manifest['id'], 'task': knowledge_task}
+    return {'root': str(folder), 'snapshot_id': manifest['id'], 'task': knowledge_task, 'scope': scope}
 
 
 # ------------------------------------------------------------------ runtime identity
@@ -652,6 +664,8 @@ class AttachedService:
                        'evaluator_pid': os.getpid(), 'evaluator_identity': process_identity(),
                        'evaluator_kit_log': kit_log_path(),
                        'official_physx_monitor': official_physx_monitor(task_env)[0]}
+        if knowledge.get('scope') == 'general':
+            self.record['knowledge_scope'] = 'general'  # the task has no knowledge of its own
 
     # -- lifecycle
 

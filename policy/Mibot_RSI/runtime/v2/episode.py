@@ -590,7 +590,7 @@ class Episode:
             from v2 import history
             handoff = history.opening_section(self.campaign_dir, self.history_records)
         instructions = context.actor_instructions(
-            episode, instruction, prior=context.load_priors().get(spec['task']),
+            episode, instruction, prior=context.load_priors(spec['split']).get(spec['task']),
             knowledge=(self.knowledge or {}).get('text'), handoff=handoff)
         source_dir = self.campaign_dir / self.replay_report['source'] if self.replay_report else None
         hooks = {}

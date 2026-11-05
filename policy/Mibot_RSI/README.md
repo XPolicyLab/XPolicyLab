@@ -2,7 +2,7 @@
 
 **Contributor:** Mibot-RSI team | **Original code:** Mibot-RSI (released within three days of the leaderboard listing)
 
-Mibot-RSI is an eval-only agent entry: GPT-6-Astra (Responses API) sees the three RGB cameras and the robot state, writes Python against a small robot SDK and moves the ARX X5 arms (`bench_name=RoboDojo`, `env_cfg_type=arx_x5`, `action_type=joint`, `eval_batch=false`). What it learned while practising on the public seed-0 layouts is a frozen, read-only knowledge snapshot per task, downloaded as the checkpoint `eval`. `runtime/` holds the agent code; `runtime/EXPORT.json` pins every file by sha256, and an evaluation refuses to run if a file differs.
+Mibot-RSI is an eval-only agent entry: GPT-6-Astra (Responses API) sees the three RGB cameras and the robot state, writes Python against a small robot SDK and moves the ARX X5 arms (`bench_name=RoboDojo`, `env_cfg_type=arx_x5`, `action_type=joint`, `eval_batch=false`). What it learned while practising on the public seed-0 layouts is a frozen, read-only knowledge snapshot per practised task. The eight Open tasks are never practised: they read only a general snapshot of skills distilled from the other tasks' knowledge. Both are downloaded as the checkpoint `eval`. `runtime/` holds the agent code; `runtime/EXPORT.json` pins every file by sha256, and an evaluation refuses to run if a file differs.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -70,14 +70,14 @@ Unlike demo_policy, `deploy.py` runs the agent inside the evaluation client. Rob
 - arm joint positions, gripper state and end-effector poses;
 - the task instruction and name;
 - the task's `step_lim` and the steps left;
-- a plain-language text of the task's scoring rule, written by hand from RoboDojo's public reward code (`task/RoboDojo/tasks/<task>.py`);
-- the task's knowledge snapshot.
+- for some practised tasks, a short hand-written note on the scene and the other actors (which fixtures are fixed in place; how a demonstrator, an opponent or a conveyor moves), taken from RoboDojo's public task code; it states no scoring condition. An Open task gets no task-specific text;
+- the task's knowledge snapshot (for an Open task, the general snapshot).
 
 It does not see the seed, the layout, simulator object states or the reward code.
 
 ## Model Assets
 
-The checkpoint `eval` is the knowledge: one snapshot per task for the 42 tasks (a `_random` task uses its standard task's snapshot). It is in the private Hugging Face dataset `ffanyt/Mibot-RSI-knowledge`, and `release.json` pins the dataset commit and every archive's sha256.
+The checkpoint `eval` is the knowledge: one snapshot per practised task (a `_random` task uses its standard task's snapshot), and the general snapshot that every task without a snapshot of its own reads. The general snapshot holds only general skills, written by the model from the practised tasks' knowledge; no Open task's environment, instruction or scoring rule was used to make it. It is in the private Hugging Face dataset `ffanyt/Mibot-RSI-knowledge`, and `release.json` pins the dataset commit and every archive's sha256.
 
 ```bash
 huggingface-cli login                       # or export HF_TOKEN=...; needs access to the dataset

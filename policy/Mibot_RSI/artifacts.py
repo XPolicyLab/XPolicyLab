@@ -203,16 +203,24 @@ def knowledge_store(ckpt):
     return CHECKPOINTS / f'mibot-rsi-knowledge-{ckpt}'
 
 
+# The tasks its pin lists (those evaluated without practice, with no snapshot of their own) read this one: skills
+# and tools distilled from the practised tasks.
+GENERAL = 'general'
+
+
 def install_knowledge(ckpt, seeds, tasks=None):
     pins = release().get('knowledge') or {}
     if pins.get('ckpt_name') != ckpt:
         raise ArtifactError(f"release.json pins knowledge release {pins.get('ckpt_name')!r}, not {ckpt!r}")
-    entries = pins.get('tasks') or {}
-    wanted = sorted(entries) if not tasks else sorted({t[:-len(STANDARD_VARIANT_SUFFIX)] if
-                                                      t.endswith(STANDARD_VARIANT_SUFFIX) else t for t in tasks})
-    missing = [task for task in wanted if task not in entries]
-    if missing or not wanted:
-        raise ArtifactError('release.json pins no snapshot for ' + (', '.join(missing) or 'any task'))
+    entries, general = pins.get('tasks') or {}, pins.get('general')
+    requested = sorted(entries) if not tasks else sorted({t[:-len(STANDARD_VARIANT_SUFFIX)] if
+                                                         t.endswith(STANDARD_VARIANT_SUFFIX) else t for t in tasks})
+    missing = [task for task in requested if task not in entries]
+    readers = set((general or {}).get('tasks') or ())
+    unknown = [task for task in missing if task not in readers]
+    if unknown or not requested:
+        raise ArtifactError('release.json pins no snapshot for ' + (', '.join(unknown) or 'any task'))
+    wanted = [task for task in requested if task in entries]
     store = knowledge_store(ckpt)
     store.mkdir(parents=True, exist_ok=True)
     for task in wanted:
@@ -220,6 +228,11 @@ def install_knowledge(ckpt, seeds, tasks=None):
         archive = fetch(pin['archive'], pin)
         unpack(archive, store / task, lambda folder, pin=pin: verify_snapshot(folder, pin))
         print(f"[artifacts] {task}: snapshot {pin['snapshot_id']} verified")
+    if general and (missing or not tasks):
+        archive = fetch(general['archive'], general)
+        unpack(archive, store / GENERAL, lambda folder: verify_snapshot(folder, general))
+        print(f"[artifacts] general knowledge: snapshot {general['snapshot_id']} verified"
+              + (f" (for {', '.join(missing)})" if missing else ''))
     # Knowledge does not depend on the evaluation seed: each seed's checkpoint folder (XPolicyLab's layout) links to
     # the one seed-free folder, and the harness resolves the link, so no path the agent sees names the seed.
     for seed in seeds:
@@ -229,8 +242,9 @@ def install_knowledge(ckpt, seeds, tasks=None):
         elif link.exists():
             raise ArtifactError(f'{link} exists and is not a link to {store.name}')
         link.symlink_to(store.name)
-    print(f'[artifacts] knowledge {ckpt}: {len(wanted)} task(s) in {store}, linked for seeds '
-          + ', '.join(map(str, seeds)))
+    print(f'[artifacts] knowledge {ckpt}: {len(wanted)} task(s)' + (' and the general knowledge' if general and
+                                                                    (missing or not tasks) else '')
+          + f' in {store}, linked for seeds ' + ', '.join(map(str, seeds)))
     return store
 
 
