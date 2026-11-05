@@ -41,14 +41,16 @@ dataset_statistics.json
 
 These assets are required. The complete VLA checkpoint includes the VLM parameters; `base_vlm/` contains only configuration, tokenizer and processor files. The VLM is restored directly from `checkpoints/model.pt` through the same Hugging Face loader before the complete policy state is strictly loaded. The 200k training initialization is not needed for inference.
 
-The repository ID and commit are pending author upload. Run all commands below from the `XPolicyLab/` root. After activating the existing policy environment, download once:
+Model repository: [MeituanRobotics/Meituan-Robotics-0-RoboDojo](https://huggingface.co/MeituanRobotics/Meituan-Robotics-0-RoboDojo). Run all commands below from the `XPolicyLab/` root. After activating the existing policy environment, resolve a full commit and download that fixed revision:
 
 ```bash
 conda activate meituan_robotics_0
-bash policy/Meituan_Robotics_0/download_checkpoint.sh owner/repository COMMIT_SHA
+HF_COMMIT="$(python -c 'from huggingface_hub import HfApi; print(HfApi().model_info("MeituanRobotics/Meituan-Robotics-0-RoboDojo").sha)')"
+bash policy/Meituan_Robotics_0/download_checkpoint.sh \
+  MeituanRobotics/Meituan-Robotics-0-RoboDojo "$HF_COMMIT"
 ```
 
-Use a full commit SHA. The optional third argument sets the destination; the default is `checkpoints/mr0_width_130k/`. For existing local assets, set `ROBODOJO_ASSET_ROOT=/path/to/assets`.
+Retain `HF_COMMIT` with evaluation results and reuse it for subsequent downloads. The optional third argument sets the destination; the default is `checkpoints/mr0_width_130k/`. For existing local assets, set `ROBODOJO_ASSET_ROOT=/path/to/assets`. The released `checkpoints/model.pt` has SHA256 `c847f6df3aa7954541d09960a12620dd5dbf5b796b3e5861db0c629744f9d496`.
 
 ## Evaluation
 
