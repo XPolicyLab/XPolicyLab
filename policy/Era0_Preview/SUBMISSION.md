@@ -29,7 +29,7 @@ The official [Testing and PR standard](../../CONTRIBUTING.md#testing) asks for t
 
 | Test | Recorded result | Scope / limitation |
 | --- | --- | --- |
-| Local multi-task simulation | Overview Score **33.16 ± 0.35**; SR **27.96 ± 0.47%**; 1,716 successes / 6,225 episodes | Seeds 0/1/2; native target 6,300; mixed SDK versions, legacy rendering and local IK protection; incomplete reference result |
+| Local multi-task simulation, official SDK summary | Partial Overview Score **33.44 ± 0.42**; SR **28.35 ± 0.45%**; 122/126 complete task–seed cells | 6,225/6,300 episodes available; incomplete cells excluded; mixed SDK versions, legacy rendering and local IK protection; historical reference only |
 | Packaged adapter simulation, GPU 1 | `press_by_number`, seed 0: **9/10** successes, Score **90** | Policy image lag 1, SDK rendering/physics, official execution profile |
 | Packaged adapter simulation, GPU 2 | `press_by_number`, seed 0: **8/10** successes, Score **80** | Same settings, independent ten-episode run |
 | Clean policy environment installation | PASS | Fresh venv, source-built CUDA extensions, dependency/import and GPU checks; see [DEBUG_VERIFICATION.md](DEBUG_VERIFICATION.md) |
@@ -37,7 +37,7 @@ The official [Testing and PR standard](../../CONTRIBUTING.md#testing) asks for t
 | Encoded-image debug loop | PASS | `DEBUG_OBS_ENCODED=1`; same round/step counts; successful final log, no tracebacks |
 | Complete native three-seed run with packaged official profile | Pending | Existing local reference results do not establish this result |
 
-The [evaluation report](EVALUATION_RESULTS.md) contains capability scores, per-task/per-seed results and the 75 missing trials. The multi-task campaign combines older-SDK results with newer-SDK legacy-render additions and is not a uniform SDK run. Its local Overview uses available episodes without a minimum per-task threshold; do not label it as an official leaderboard result or as complete native evaluation.
+The [evaluation report](EVALUATION_RESULTS.md) is the unmodified official SDK summary of the historical results, retaining the historical policy label `Hy_XVLA_RoboDojo`. Only directory indices were arranged for SDK discovery; result JSON and videos were unchanged. It includes 122/126 completed task–seed cells and excludes incomplete cells. There are 75 missing episodes: `make_toast_random` seeds 0/1/2 lack 10/25/25, and `store_laptop_and_headphones_random` seed 2 lacks 15. The SDK media check reports mismatches in all 158 checked result directories because the historical videos are combined views rather than separately named camera videos. The campaign combines older-SDK results with newer-SDK legacy-render additions and local IK protection; it is not a uniform run of the submitted official execution profile. Do not label it as an official leaderboard result or complete native evaluation.
 
 Include this checkpoint download command in the PR:
 

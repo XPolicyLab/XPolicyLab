@@ -46,6 +46,6 @@ POLICY_ENV=.venv bash eval_three_seeds.sh \
 
 Use a fresh output directory and replace the simulator environment and GPU IDs as needed. Omit `--run` to preview the plan.
 
-Local reference Score: **33.16 ± 0.35**, across three seeds with **6,225/6,300** episodes completed. See [evaluation results](EVALUATION_RESULTS.md) for the full tables; official scores are published on the [RoboDojo leaderboard](https://robodojo-benchmark.com/LeaderBoard).
+Partial local Score from the official SDK summarizer: **33.44 ± 0.42**, with **122/126** task–seed cells complete and **6,225/6,300** episodes available. Incomplete cells are excluded. See [evaluation results](EVALUATION_RESULTS.md) for the unmodified SDK summary (historical policy label: `Hy_XVLA_RoboDojo`). Evaluation remains incomplete; these are not official leaderboard results. Official scores are published on the [RoboDojo leaderboard](https://robodojo-benchmark.com/LeaderBoard).
 
 Debug transport and observation-delay checks: [verification results](DEBUG_VERIFICATION.md).
