@@ -362,7 +362,9 @@
     "stack_blocks_random": {
       "action_type": "joint",
       "eval_batch": false,
-      "aliases": [],
+      "aliases": [
+        "stack_blocks"
+      ],
       "max_envs": 1,
       "driver": "step",
       "model": "policy.stack_blocks_rgb_v6.adapter:create_policy",
@@ -500,11 +502,15 @@
       "modules": "tasks/sweep_blocks/modules.json"
     },
     "sweep_blocks_random": {
-      "driver": "vla",
+      "driver": "model",
       "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
+      "eval_batch": false,
+      "max_envs": 1,
+      "aliases": [],
+      "model": "model:Model",
+      "deploy": "deploy",
+      "modules": "tasks/sweep_blocks_random/modules.json",
+      "numeric_ik": false
     },
     "store_laptop_and_headphones": {
       "driver": "generator",
@@ -531,13 +537,6 @@
       "environment_prefix": "COAP",
       "modules": "tasks/store_laptop_and_headphones_random/modules.json",
       "program": "coap.tasks.laptop_r14_merge14:run_random"
-    },
-    "stack_blocks": {
-      "driver": "vla",
-      "action_type": "joint",
-      "eval_batch": true,
-      "max_envs": null,
-      "aliases": []
     },
     "fasten_screws": {
       "action_type": "joint",

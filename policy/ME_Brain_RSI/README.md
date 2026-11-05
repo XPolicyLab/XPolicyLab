@@ -18,6 +18,8 @@ bash install.sh inference
 
 扫方块、倒球入花瓶、搭塔、充电器、标准套娃和随机套娃只需脚本基础环境，无需 CuRobo、SAM3 或外部模型权重，分别见 [扫方块任务说明](tasks/sweep_blocks/README.md)、[倒球任务说明](tasks/pour_balls_into_vase/README.md)、[搭塔任务说明](tasks/build_tower/README.md)、[充电器任务说明](tasks/plug_in_charger/README.md)、[标准套娃任务说明](tasks/sort_nesting_dolls_by_size/README.md) 与 [随机套娃任务说明](tasks/sort_nesting_dolls_by_size_random/README.md)。
 
+随机扫方块使用独立的 SAM3、Grounding DINO 感知与关节空间脚本控制，需要 GPU 和外部感知权重，见 [随机扫方块任务说明](tasks/sweep_blocks_random/README.md)。
+
 工具箱和盖方块任务仅使用脚本环境与随附静态几何，见 [工具箱任务说明](tasks/store_tools_in_toolbox/README.md) 与 [盖方块任务说明](tasks/cover_blocks/README.md)。模仿排序使用 DINOv2；语言分类使用 CUDA 上的 DINOv2、CLIP 和 Grounding DINO。这两个任务的模型依赖位于环境客户端，分别见 [模仿排序任务说明](tasks/imitate_sorting_sequence/README.md) 与 [语言分类任务说明](tasks/classify_objects_by_language/README.md)。
 
 整理桌面使用独立 RGB 几何策略及外部 Grounding DINO、SAM ViT-B，见 [整理桌面任务说明](tasks/organize_table/README.md)。
@@ -25,6 +27,8 @@ bash install.sh inference
 笔记本和耳机收纳的标准、随机任务使用各自独立的 SAM3 感知和固定控制策略，见 [标准任务说明](tasks/store_laptop_and_headphones/README.md) 与 [随机任务说明](tasks/store_laptop_and_headphones_random/README.md)。
 
 填蛋托盘使用脚本基础环境与公开静态几何，见 [填蛋托盘任务说明](tasks/fill_egg_holder/README.md)。标准挂杯和随机挂杯使用独立的 SAM3 感知及原有数值运动学，随机挂杯还保留本地 Grounding DINO 回退，见 [标准挂杯任务说明](tasks/hang_mugs/README.md) 与 [随机挂杯任务说明](tasks/hang_mugs_random/README.md)。
+
+标准叠方块复用随机叠方块的 SAM3 感知和脚本控制策略，两项任务均使用 `joint` 动作，每个进程运行一个环境。评测仍加载各自的任务场景和指令；资源通过 `robot_static_path` 与 `stack_assets_root` 配置。
 
 插管、投币和拧螺丝任务需要相应的 CuRobo 环境；堆叠和方程任务需要 SAM3、DINO、Pinocchio 及其资源。投币任务使用 CUDA 专用环境及 `websockets==14.2`，详见 [投币任务说明](tasks/deposit_coin/README.md)。拧螺丝使用相同的专用环境版本要求，见 [拧螺丝任务说明](tasks/fasten_screws/README.md)。
 

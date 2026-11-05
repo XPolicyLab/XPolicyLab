@@ -36,3 +36,7 @@ resources/hang_mugs/coap/tasks/hang_std_sem_r44_rank_motion.py whitespace=-blank
 resources/hang_mugs_random/coap/tasks/hang_candidate_g_cad.py whitespace=-blank-at-eof
 resources/hang_mugs_random/coap/tasks/hang_candidate_h_cad.py whitespace=-blank-at-eof
 resources/hang_mugs_random/coap/tasks/hang_candidate_motion.py whitespace=-blank-at-eof
+
+# Preserve the frozen sweep model EOF and public robot resource formatting.
+capabilities/control/sweep_blocks_random_model.py -text whitespace=-blank-at-eof
+assets/10/10c76daa3eae501199335a2a53c5c629fba93611faf2cd2a46ac2dd566535057.urdf -text whitespace=-blank-at-eol

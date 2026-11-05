@@ -13,7 +13,7 @@
 | `hang_mugs` | `generator` | `ee` | `false` |
 | `hang_mugs_random` | `generator` | `ee` | `false` |
 | `sweep_blocks` | `model` | `ee` | `false` |
-| `sweep_blocks_random` | `vla` | `joint` | `true` |
+| `sweep_blocks_random` | `model` | `joint` | `false` |
 | `pour_liquid_into_cup` | `model` | `ee` | `false` |
 | `pour_liquid_into_cup_random` | `model` | `ee` | `false` |
 | `make_toast` | `model` | `joint` | `false` |
@@ -24,7 +24,7 @@
 | `sort_nesting_dolls_by_size_random` | `model` | `ee` | `false` |
 | `store_laptop_and_headphones` | `generator` | `ee` | `false` |
 | `store_laptop_and_headphones_random` | `generator` | `ee` | `false` |
-| `stack_blocks` | `vla` | `joint` | `true` |
+| `stack_blocks` | `step` | `joint` | `false` |
 | `stack_blocks_random` | `step` | `joint` | `false` |
 | `fasten_screws` | `native` | `joint` | `true` |
 | `insert_tubes` | `native` | `joint` | `true` |

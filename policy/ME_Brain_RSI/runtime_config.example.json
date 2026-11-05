@@ -65,6 +65,16 @@
       "environment": {
         "LAPTOP_SAM3_PATH": "model_assets/laptop/sam3"
       }
+    },
+    "sweep_blocks_random": {
+      "environment": {
+        "ME_BRAIN_ROBOT_STATIC": "resources/sweep_blocks_random/assets/robot_static.json",
+        "ME_BRAIN_NESTING_ASSETS": "model_assets/sweep_blocks_random",
+        "ME_BRAIN_EVIDENCE_DIR": "../../../runs/ME_Brain_RSI/sweep_blocks_random",
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "TOKENIZERS_PARALLELISM": "false"
+      }
     }
   }
 }

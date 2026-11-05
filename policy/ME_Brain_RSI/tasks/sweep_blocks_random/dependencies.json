@@ -1,0 +1,9 @@
+{
+  "sam3_source": "vendor/sam3_source",
+  "sam3_license": "resources/sweep_blocks_random/vendor/sam3_source/LICENSE",
+  "external_models": [
+    "assets/sam3.pt",
+    "assets/grounding-dino-tiny"
+  ],
+  "resources_root_environment": "ME_BRAIN_NESTING_ASSETS"
+}
