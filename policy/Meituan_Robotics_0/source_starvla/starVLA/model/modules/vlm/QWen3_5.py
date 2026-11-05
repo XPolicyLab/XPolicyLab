@@ -9,7 +9,7 @@ import torch
 from starVLA.visual_inputs import first_role_mask, detach_first_vision
 from starVLA.lam_memory import limit_memory_window, MEMORY_MARKER, LAMMemoryProjection, validate_memory, inject_memory_embeddings
 from starVLA.visual_history import VisualHistoryConfig, HistoryContractError, history_label, prepare_history_images
-from transformers import AutoProcessor
+from transformers import AutoConfig, AutoProcessor
 from transformers.modeling_outputs import CausalLMOutputWithPast
 
 try:
@@ -47,8 +47,18 @@ class _QWen3_5_VL_Interface(nn.Module):
         model_id = qwenvl_config.get("base_vlm", "Qwen/Qwen3.5-VL-4B-Instruct")
         attn_implementation = qwenvl_config.get("attn_implementation", "sdpa")
 
+        prefix = "qwen_vl_interface.model."
+        vlm_state = {
+            key.removeprefix(prefix): value
+            for key, value in torch.load(
+                qwenvl_config.checkpoint_path, map_location="cpu", mmap=True, weights_only=True,
+            ).items()
+            if key.startswith(prefix)
+        }
         model = Qwen3_5ForConditionalGeneration.from_pretrained(
-            model_id,
+            None,
+            config=AutoConfig.from_pretrained(model_id),
+            state_dict=vlm_state,
             attn_implementation=attn_implementation,
             torch_dtype=torch.bfloat16,
         )

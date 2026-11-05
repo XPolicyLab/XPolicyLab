@@ -97,10 +97,10 @@ class Model(ModelTemplate):
             selection['checkpoint_path'] = str(paths['checkpoint'])
         self.checkpoint_path = resolve_checkpoint_root(selection, policy_dir / 'checkpoints', policy_dir=policy_dir)
         if self.checkpoint_path.resolve() != paths['checkpoint']:
-            raise ValueError('The checkpoint must be Meituan_Robotics_0/model.ckpt under the asset root')
+            raise ValueError('The checkpoint must be checkpoints/model.pt under the asset root')
 
-        config = yaml.safe_load((policy_dir / 'config.yaml').read_text())
-        statistics = json.loads((policy_dir / 'dataset_statistics.json').read_text())
+        config = yaml.safe_load((paths['assets'] / 'config.yaml').read_text())
+        statistics = json.loads((paths['assets'] / 'dataset_statistics.json').read_text())
         self.data_config = config['datasets']['vla_data']
         if (self.data_config['lam_memory']['window_sec'] != 3
                 or self.data_config['normalization_mode'] != 'q99'
@@ -129,6 +129,7 @@ class Model(ModelTemplate):
             raise RuntimeError('Meituan_Robotics_0 evaluation requires CUDA')
         self.device = torch.device('cuda')
         config['framework']['qwenvl']['base_vlm'] = str(paths['base_vlm'])
+        config['framework']['qwenvl']['checkpoint_path'] = str(self.checkpoint_path)
         # Keep initialization order: action model first, then the frozen teacher.
         # This also preserves the generator state used by diffusion inference.
         torch.manual_seed(int(model_cfg.get('seed', 0)))

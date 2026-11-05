@@ -10,8 +10,8 @@ def install_paths(assets, runs=None):
     runs = Path(runs or policy / 'runs').expanduser().resolve()
     paths = dict(
         assets=assets, runs=runs, source=policy / 'source_starvla',
-        checkpoint=assets / 'Meituan_Robotics_0/model.ckpt',
-        base_vlm=assets / 'base_vlm/Qwen3.5-4B-Action',
+        checkpoint=assets / 'checkpoints/model.pt',
+        base_vlm=assets / 'base_vlm',
         teacher=assets / 'cdlam/model.pt', teacher_code=policy / 'source_cdlam',
     )
     cache = runs / 'cache'

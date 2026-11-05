@@ -32,12 +32,14 @@ Not included in this eval-only adapter. Training release date: not announced.
 Download these assets from the model repository:
 
 ```text
-Meituan_Robotics_0/model.ckpt
+checkpoints/model.pt
 cdlam/model.pt
-base_vlm/Qwen3.5-4B-Action/
+base_vlm/
+config.yaml
+dataset_statistics.json
 ```
 
-All three are required. The base VLM directory includes weights, tokenizer and processor assets. The 200k training initialization is not needed for inference.
+These assets are required. The complete VLA checkpoint includes the VLM parameters; `base_vlm/` contains only configuration, tokenizer and processor files. The VLM is restored directly from `checkpoints/model.pt` through the same Hugging Face loader before the complete policy state is strictly loaded. The 200k training initialization is not needed for inference.
 
 The repository ID and commit are pending author upload. Run all commands below from the `XPolicyLab/` root. After activating the existing policy environment, download once:
 
@@ -66,7 +68,7 @@ Simulation uses the native task budget by default. Set `EVAL_EPISODES=1` for one
 
 - `ROBODOJO_ASSET_ROOT` / `asset_root`: directory containing the three model assets.
 - `ROBODOJO_RUN_ROOT` / `run_root`: writable runtime caches, defaulting to `runs/` here.
-- `config.yaml` and `dataset_statistics.json`: inference configuration and q99 statistics for this checkpoint.
+- `config.yaml` and `dataset_statistics.json` in the asset root: inference configuration and q99 statistics for this checkpoint.
 
 Environment variables take precedence over YAML values. Images are 640×480 RGB, ordered head, left wrist, right wrist. State/action order is left arm 6, left gripper 1, right arm 6, right gripper 1.
 

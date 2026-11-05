@@ -15,9 +15,12 @@ snapshot_download(
     revision=sys.argv[2],
     local_dir=str(Path(sys.argv[3]).expanduser().resolve()),
     allow_patterns=[
-        'Meituan_Robotics_0/model.ckpt',
+        'checkpoints/model.pt',
         'cdlam/model.pt',
-        'base_vlm/Qwen3.5-4B-Action/*',
+        'base_vlm/*.json',
+        'base_vlm/chat_template.jinja',
+        'config.yaml',
+        'dataset_statistics.json',
     ],
 )
 PY
