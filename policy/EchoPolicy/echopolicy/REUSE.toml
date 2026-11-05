@@ -1,0 +1,8 @@
+version = 1
+SPDX-PackageName = "EchoPolicy"
+SPDX-PackageDownloadLocation = "NOASSERTION"
+
+[[annotations]]
+path = ["**"]
+precedence = "aggregate"
+SPDX-License-Identifier = "Apache-2.0"
