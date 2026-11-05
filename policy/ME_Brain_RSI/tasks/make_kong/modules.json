@@ -1,0 +1,68 @@
+{
+  "b88r42wq.policy": {
+    "file": "capabilities/control/policy_for_make_kong.py",
+    "resource": "resources/make_kong/coap/policy.py",
+    "package": false,
+    "sha256": "b52bbe7e5ee87671bea962724c47268df36f6adaaf724f5df0b1c774869d93e0"
+  },
+  "b88r42wq.tasks.games": {
+    "file": "capabilities/control/games.py",
+    "resource": "resources/make_kong/coap/tasks/games.py",
+    "package": false,
+    "sha256": "cd71e5d2dd1a2023272fa03d1cf3c53fc37156c1836dc23f2ea7586536624baa"
+  },
+  "b88r42wq.tasks.games_perception": {
+    "file": "capabilities/perception/games_perception.py",
+    "resource": "resources/make_kong/coap/tasks/games_perception.py",
+    "package": false,
+    "sha256": "705b8d08edc1a00cc451f7800ba0483dbfd7b4bd701432927eb25072eefac008"
+  },
+  "b88r42wq.tasks": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/make_kong/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "b88r42wq": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/make_kong/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_make_kong.py",
+    "resource": "resources/make_kong/model.py",
+    "package": false,
+    "sha256": "d5636bce739df89da3aaa7a07faa9b5a7f62f968368cb3455e28dd2ec1c04cc7"
+  },
+  "b88r42wq.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/make_kong/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7"
+  },
+  "b88r42wq.context": {
+    "file": "capabilities/control/context_for_make_kong.py",
+    "resource": "resources/make_kong/coap/context.py",
+    "package": false,
+    "sha256": "8fcd3d2ea9432be8d546b27b41595427f49a3953a34d2e4fe4dfa13bceeb9eae"
+  },
+  "b88r42wq.kinematics": {
+    "file": "capabilities/motion/kinematics_for_make_kong.py",
+    "resource": "resources/make_kong/coap/kinematics.py",
+    "package": false,
+    "sha256": "07499aba5bfc38357bf490524271300c313acc2f8ea926a086dff1e62c17a84e"
+  },
+  "b88r42wq.motion": {
+    "file": "capabilities/motion/motion_for_make_kong.py",
+    "resource": "resources/make_kong/coap/motion.py",
+    "package": false,
+    "sha256": "72a9b426ef1067e868e950ace3eb32133ba65f3ab5cd6aa6270e85132a1938bd"
+  },
+  "b88r42wq.perception": {
+    "file": "capabilities/perception/perception_for_make_kong.py",
+    "resource": "resources/make_kong/coap/perception.py",
+    "package": false,
+    "sha256": "09ea72c892256d9d51ffd0d6d84b5d5f5a904cccd0f0588db0ab879ca03c9fc9"
+  }
+}

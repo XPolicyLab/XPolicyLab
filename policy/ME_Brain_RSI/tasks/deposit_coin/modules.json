@@ -1,0 +1,68 @@
+{
+  "rdj_v1_deposit_coin": {
+    "file": "capabilities/control/deposit_coin_package.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rdj_v1_deposit_coin.camera_binding": {
+    "file": "capabilities/observation/deposit_coin_camera_binding.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/camera_binding.py",
+    "package": false,
+    "sha256": "7da7b20cd5085317206b2a7d1f67b8119bbebfa5fa765f60b83139d0e783406d"
+  },
+  "rdj_v1_deposit_coin.controller": {
+    "file": "capabilities/control/deposit_coin_controller.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/controller.py",
+    "package": false,
+    "sha256": "4783a61d24024a76afd94349e4261eeeda556b1465071c4f8e48b7682fd1dc00"
+  },
+  "rdj_v1_deposit_coin.geometry": {
+    "file": "capabilities/geometry/deposit_coin_geometry.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/geometry.py",
+    "package": false,
+    "sha256": "b7081be26ca27f3ba6de5e38cafb5560e06a7acfcfbceb51812297cb8b9e9689"
+  },
+  "rdj_v1_deposit_coin.ik": {
+    "file": "capabilities/motion/deposit_coin_ik.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/ik.py",
+    "package": false,
+    "sha256": "f707bd349c5d849e21f2370de0d364f9a751ba245bbbf9c366b4ff20dd97bd96"
+  },
+  "rdj_v1_deposit_coin.joint_action": {
+    "file": "capabilities/motion/deposit_coin_joint_action.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/joint_action.py",
+    "package": false,
+    "sha256": "2e292a97c910778504427e6d0d5a61b9d8b35984a70a2b54919f3207aec823a1"
+  },
+  "rdj_v1_deposit_coin.model": {
+    "file": "capabilities/control/deposit_coin_model.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/model.py",
+    "package": false,
+    "sha256": "89e8340a0f31c5d5ed2c7be21a03bf22a36f4b8b3e535e9d5811bf178003c53f"
+  },
+  "rdj_v1_deposit_coin.perception": {
+    "file": "capabilities/perception/deposit_coin_perception.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/perception.py",
+    "package": false,
+    "sha256": "da6a7c9b9eb0583718cdc9174586d2a883475fd6018999992f039a453b5b6a03"
+  },
+  "rdj_v1_deposit_coin.robot_occlusion": {
+    "file": "capabilities/perception/deposit_coin_robot_occlusion.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/robot_occlusion.py",
+    "package": false,
+    "sha256": "ea0ac4466301a2ca03affb39516e803b9b9d5c0f52ee154becf1632ba85b2244"
+  },
+  "rdj_v1_deposit_coin.trace_io": {
+    "file": "capabilities/observation/deposit_coin_trace_io.py",
+    "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/trace_io.py",
+    "package": false,
+    "sha256": "01047861ac38c92b0366d8595ed48608efe002fce20d3dc3aad104a9a463a6db"
+  },
+  "coin_deploy": {
+    "file": "capabilities/control/deposit_coin_deploy.py",
+    "resource": "resources/deposit_coin/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "4ce7ac892b92ce5eae7d17b94108e7a66f69bcca121bf0cea7b53f5414133680"
+  }
+}

@@ -1,0 +1,11 @@
+policy_name: equation_rgb
+protocol: ws
+host: localhost
+port: 19638
+bench_name: RoboDojo
+task_name: solve_equation
+env_cfg_type: arx_x5
+eval_batch: true
+action_type: joint
+seed: 1
+ckpt_name: ce1b62e0cfba6cb1c16b0b409b85a26545025d875da0de3d8902afc199dd37b6

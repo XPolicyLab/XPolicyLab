@@ -1,0 +1,194 @@
+{
+  "rdj_insert_policy.deploy": {
+    "file": "capabilities/control/deploy_for_insert_tubes.py",
+    "resource": "resources/insert_tubes/coap/deploy.py",
+    "package": false,
+    "sha256": "276cb92842ec42bfa2253d32ac479c9d20fd12edbefdcad8d669fba1bcd516e7"
+  },
+  "rdj_insert_policy": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rdj_rgb_adapters.insert_tubes": {
+    "file": "capabilities/perception/insert_tubes.py",
+    "resource": "resources/insert_tubes/coap/native_adapter/insert_tubes.py",
+    "package": false,
+    "sha256": "2beff0202299d1db23c69c7ca60ef8882b74c578bf8b0514a7f15b18fbde9e02"
+  },
+  "rdj_insert_policy.policy": {
+    "file": "capabilities/control/policy_for_insert_tubes.py",
+    "resource": "resources/insert_tubes/coap/policy.py",
+    "package": false,
+    "sha256": "61127ecd82cfa91859a6b1e329160ca81c9ee025600fa4595f94168eb141c832"
+  },
+  "lxm6wuec_skill_library.block_programs": {
+    "file": "capabilities/planning/block_programs.py",
+    "resource": "resources/insert_tubes/coap/runtime/skills/block_programs.py",
+    "package": false,
+    "sha256": "a58b8c20a97778618126f4acd2351ecdec97cda2541331e167366c6234e4902c"
+  },
+  "lxm6wuec_structured_blocks.plan_transfer": {
+    "file": "capabilities/planning/plan_transfer.py",
+    "resource": "resources/insert_tubes/coap/runtime/blocks/plan_transfer.py",
+    "package": false,
+    "sha256": "cf266823b7cfbfddb405e0670ca2e62eeb95b42718f5afa84877222230c78354"
+  },
+  "Lxm6wuec.Embodied_Harness.skills.episode_plan": {
+    "file": "capabilities/planning/episode_plan.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/skills/episode_plan.py",
+    "package": false,
+    "sha256": "4872e3037fda7fae0128e53558e269554e931f36f05f0d92b570ad6d822e02ac"
+  },
+  "Lxm6wuec_core.infra.storage": {
+    "file": "capabilities/control/storage.py",
+    "resource": "resources/insert_tubes/coap/runtime/core/infra/storage.py",
+    "package": false,
+    "sha256": "4e52799a7c4e9f30454aecb0d696eb6b5bbf6772294f9f0653dcdbfb51cee4ea"
+  },
+  "Lxm6wuec_core.infra": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/runtime/core/infra/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec_core": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/runtime/core/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec.Embodied_Harness.skills": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/skills/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec.Embodied_Harness": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Lxm6wuec": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lxm6wuec_structured_blocks": {
+    "file": "capabilities/control/native_structured_blocks.py",
+    "resource": "resources/insert_tubes/coap/runtime/blocks/__init__.py",
+    "package": true,
+    "sha256": "2de1162f8b9bffb5b24cda8016e8002b974c30325a793229849bcd8d059a01c8"
+  },
+  "Lxm6wuec.Embodied_Harness.skills.memory_program": {
+    "file": "capabilities/planning/memory_program.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/skills/memory_program.py",
+    "package": false,
+    "sha256": "ef25516ceec0f8c9a16faa558649f99fec91ea0a6a2efbfd2480f56ca3d21a77"
+  },
+  "Lxm6wuec.Embodied_Harness.skills.composition": {
+    "file": "capabilities/planning/composition.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/skills/composition.py",
+    "package": false,
+    "sha256": "b01f52ae30b0c7f217837ca8276e53d309336b6876943f9c693626b26ef6bcb3"
+  },
+  "Lxm6wuec_core.infra.executor": {
+    "file": "capabilities/control/executor.py",
+    "resource": "resources/insert_tubes/coap/runtime/core/infra/executor.py",
+    "package": false,
+    "sha256": "6fda2ecfe534b53edf4b0fcd080ff90ed15bc6998f17ffabc06e2226cdef071b"
+  },
+  "Lxm6wuec_core.infra.resources": {
+    "file": "capabilities/control/resources.py",
+    "resource": "resources/insert_tubes/coap/runtime/core/infra/resources.py",
+    "package": false,
+    "sha256": "09816be9b72b33f06afc85673cb3b375b1afa65b9ae8dc603c6cd21613242332"
+  },
+  "Lxm6wuec_core.contracts": {
+    "file": "capabilities/observation/contracts.py",
+    "resource": "resources/insert_tubes/coap/runtime/core/contracts.py",
+    "package": false,
+    "sha256": "bbc9216a293dd7fd8949d9db5c61f554e77ab5746a0597d93615dd4b09bc3651"
+  },
+  "Lxm6wuec.Embodied_Harness.memory.store": {
+    "file": "capabilities/planning/store.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/memory/store.py",
+    "package": false,
+    "sha256": "ec2232417415debab2c1204d80d3a4c1259e974caeaa8fc0254435ec7c162109"
+  },
+  "Lxm6wuec.Embodied_Harness.memory": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/runtime/harness/Embodied_Harness/memory/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "lxm6wuec_skill_library": {
+    "file": "capabilities/planning/native_skill_library.py",
+    "resource": "resources/insert_tubes/coap/runtime/skills/__init__.py",
+    "package": true,
+    "sha256": "54c8ce11dbde46c2d9c4db22561f2740bcd8cae5a482ae06b8d625e7ba5c73ae"
+  },
+  "rdj_insert_policy.ik": {
+    "file": "capabilities/motion/ik.py",
+    "resource": "resources/insert_tubes/coap/ik.py",
+    "package": false,
+    "sha256": "f2ac97d07a41c22c4b2b45c0e1df2ee44ed90e41806d73b65edfc9298a2dfb63"
+  },
+  "rdj_insert_policy.geometry": {
+    "file": "capabilities/geometry/geometry.py",
+    "resource": "resources/insert_tubes/coap/geometry.py",
+    "package": false,
+    "sha256": "ce241fde55e48401a921256ed23649bb60766fc24613372c6a859027b74d4eaa"
+  },
+  "lxm6wuec_skill_library.pose_skills": {
+    "file": "capabilities/geometry/pose_skills.py",
+    "resource": "resources/insert_tubes/coap/runtime/skills/pose_skills.py",
+    "package": false,
+    "sha256": "53b5bffdc36b4560c92d01ed45d64859909f9704a650ac949d4c1a597451fdce"
+  },
+  "rdj_insert_policy.contract": {
+    "file": "capabilities/observation/contract.py",
+    "resource": "resources/insert_tubes/coap/contract.py",
+    "package": false,
+    "sha256": "1f63952b1974c812f7f4a93752a27d3184dd3f9c7b7f34ac6af6067e0caa0059"
+  },
+  "rdj_insert_policy.refresh": {
+    "file": "capabilities/control/refresh.py",
+    "resource": "resources/insert_tubes/coap/refresh.py",
+    "package": false,
+    "sha256": "939357e9dd5d5da6e6af2bccd3e197cb892f685d6d4d20a37a0584f9e122c68f"
+  },
+  "rdj_insert_policy.planning": {
+    "file": "capabilities/planning/planning.py",
+    "resource": "resources/insert_tubes/coap/planning.py",
+    "package": false,
+    "sha256": "92bca4f99b383a02b14e2ca22ea60e21aafc650cbdd9304d3d0e8ea8d40e5396"
+  },
+  "rdj_insert_policy.stage_controller": {
+    "file": "capabilities/control/stage_controller.py",
+    "resource": "resources/insert_tubes/coap/stage_controller.py",
+    "package": false,
+    "sha256": "28383a4c70bf1aa7802f29fa2b2d256084c39075eca983935e0ef166840c0379"
+  },
+  "rdj_insert_policy.rgb_perception": {
+    "file": "capabilities/perception/rgb_perception.py",
+    "resource": "resources/insert_tubes/coap/rgb_perception.py",
+    "package": false,
+    "sha256": "5b1d450b0996c98eb4e1f7c6baff82562b75c1beb4fde9c891db04ba3cacf548"
+  },
+  "rdj_insert_policy.observation": {
+    "file": "capabilities/control/observation.py",
+    "resource": "resources/insert_tubes/coap/observation.py",
+    "package": false,
+    "sha256": "8f379ce39e19179ee684c22c87946d60366e711a24aad463e3a682c07672740a"
+  },
+  "rdj_rgb_adapters": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/insert_tubes/coap/native_adapter/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

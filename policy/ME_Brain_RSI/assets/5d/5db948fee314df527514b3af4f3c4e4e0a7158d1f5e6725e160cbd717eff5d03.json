@@ -1,0 +1,22 @@
+{
+  "python": "CPython3.11/Linux-x86_64",
+  "wheel_directory": "../../../.me_brain_runtime/ME_Brain_RSI_2_1/assets/reference_028",
+  "sha256": {
+    "PyYAML-6.0.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "3ad2a3decf9aaba3d29c8f537ac4b243e36bef957511b4766cb0057d32b0be85",
+    "certifi-2024.12.14-py3-none-any.whl": "1275f7a45be9464efc1173084eaa30f866fe2e47d389406136d332ed4967ec56",
+    "charset_normalizer-3.4.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "3710a9751938947e6327ea9f3ea6332a09bf0ba0c09cae9cb1f250bd1f1549bc",
+    "filelock-3.16.1-py3-none-any.whl": "2082e5703d51fbf98ea75855d9d5527e33d8ff23099bec374a134febee6946b0",
+    "fsspec-2024.10.0-py3-none-any.whl": "03b9a6785766a4de40368b88906366755e2819e758b83705c88cd7cb5fe81871",
+    "huggingface_hub-0.26.5-py3-none-any.whl": "fb7386090bbe892072e64b85f7c4479fd2d65eea5f2543327c970d5169e83924",
+    "idna-3.10-py3-none-any.whl": "946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3",
+    "packaging-24.2-py3-none-any.whl": "09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759",
+    "pillow-10.4.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "5e84b6cc6a4a3d76c153a6b19270b3526a5a8ed6b09501d3af891daa2a9de7d6",
+    "regex-2024.11.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "f2a19f302cd1ce5dd01a9099aaa19cae6173306d1302a43b627f62e21cf18ac0",
+    "requests-2.32.3-py3-none-any.whl": "70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6",
+    "safetensors-0.4.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "a6c19feda32b931cae0acd42748a670bdf56bee6476a046af20181ad3fee4090",
+    "tokenizers-0.20.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "453c7769d22231960ee0e883d1005c93c68015025a5e4ae56275406d94a3c907",
+    "tqdm-4.67.1-py3-none-any.whl": "26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2",
+    "transformers-4.46.3-py3-none-any.whl": "a12ef6f52841fd190a3e5602145b542d03507222f2c64ebb7ee92e8788093aef",
+    "urllib3-2.2.3-py3-none-any.whl": "ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac"
+  }
+}

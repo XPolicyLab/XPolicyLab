@@ -1,0 +1,98 @@
+{
+  "coap.tasks.toast_random": {
+    "file": "capabilities/control/toast_random.py",
+    "resource": "resources/make_toast/coap/tasks/toast_random.py",
+    "package": false,
+    "sha256": "c3681c6c208b8e0cfe4f1b421b874bb0feb37805a351ba8297ff3218b6062842"
+  },
+  "coap.tasks.toast_vision": {
+    "file": "capabilities/perception/toast_vision.py",
+    "resource": "resources/make_toast/coap/tasks/toast_vision.py",
+    "package": false,
+    "sha256": "dd0f8f34657e814f10f7296946a8ad89b7cc517f1e329ef9065dde4628b30000"
+  },
+  "coap.tasks.containers_vision": {
+    "file": "capabilities/perception/containers_vision_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/coap/tasks/containers_vision.py",
+    "package": false,
+    "sha256": "a05d11626485e0091b728d3d95cf0b7fc8c673483158575dcd747227c8eb6c3e"
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/make_toast/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/make_toast/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "coap.tasks.toast_conveyor_vision": {
+    "file": "capabilities/perception/toast_conveyor_vision.py",
+    "resource": "resources/make_toast/coap/tasks/toast_conveyor_vision.py",
+    "package": false,
+    "sha256": "8bf4b1ceb1e8223cc15c015ad7eca68097c02f6b2fb278ef06e06cc2537a3d8e"
+  },
+  "coap.executor": {
+    "file": "capabilities/control/executor_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/coap/executor.py",
+    "package": false,
+    "sha256": "2683f32df02aa8ff986aed763ca2a92a5809758f1fdaded7e94372843ef38d90"
+  },
+  "coap.dual": {
+    "file": "capabilities/control/dual.py",
+    "resource": "resources/make_toast/coap/dual.py",
+    "package": false,
+    "sha256": "dcf62bc21db55349dda319dabc9d4e6b848cde95ed88ecd734564a179f593d36"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/coap/kinematics.py",
+    "package": false,
+    "sha256": "3b22a8f022cdad5a92e302f4054917bee6b450a0baeb03e7673b874a349ba002"
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/coap/motion.py",
+    "package": false,
+    "sha256": "67a279ee5f05f10a39e4e4a7a2db6885437e5b45c74c0b210f01c71e8ef3a2d9"
+  },
+  "coap.robot_collision": {
+    "file": "capabilities/motion/robot_collision.py",
+    "resource": "resources/make_toast/coap/robot_collision.py",
+    "package": false,
+    "sha256": "179d4a220b38a8bfb0d360d0d724bd7da1a5882af0e996a0d834e27ebb05257a"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_make_toast.py",
+    "resource": "resources/make_toast/coap/policy.py",
+    "package": false,
+    "sha256": "90aed152721b1e6a1af1514e4d688345ce0fa619f757a891e8462e5004eebf10"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/model.py",
+    "package": false,
+    "sha256": "ef958ef8aa129c523786084e4fad963deb5c87282d3da46aca42bbea7fe7b066"
+  },
+  "coap.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/make_toast/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7"
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/coap/context.py",
+    "package": false,
+    "sha256": "ff095e227e3f78dec6daed8724fa6f3ae85b2f45a1c2bb413186d905d595840f"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_pack_objects_into_box.py",
+    "resource": "resources/make_toast/coap/perception.py",
+    "package": false,
+    "sha256": "1f67abb7a89cc94b94a2d7f53e7dd8560ce40f3b954228660c4e7a3255137f93"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "package": "rdj_v1_deposit_coin",
+  "revision": "coin_rgb_r12_20261027",
+  "task": "deposit_coin",
+  "inputs": "head/wrist RGB, public camera calibration, proprioception only",
+  "reused_from_stack_package": {
+    "public_camera_calibration.json": "459dc09f5ad6d80d9dbe20141d8c94a8e5a8a052a472f8ad9c4aefc129d87eb4",
+    "robot_geometry.npz": "3127fcea180619e3c10947e362de6229053473b8ed97b273cb385b45d6871382",
+    "camera_colliders.json": "621e243d5b6a5de45e9c856e761df477d61ac6f7cbe2b0cb2d331cdff37d690b",
+    "ik.py": "b883e4e838ba52624b56da7d68ecfa19b61c9a9c58eabdbce6e0819abbdbf42c",
+    "joint_action.py": "2e292a97c910778504427e6d0d5a61b9d8b35984a70a2b54919f3207aec823a1",
+    "trace_io.py": "01047861ac38c92b0366d8595ed48608efe002fce20d3dc3aad104a9a463a6db",
+    "camera_binding.py": "b081e577bfd9dde325af2e940b408dffc1d808fa84ede5d518201b0d277e191e",
+    "robot_occlusion.py": "eab20223df68f19d3c48f36f3e2cd07ae3bb49824978cfdb72a616065e26aa6e"
+  },
+  "ik_changes": "import path only (planning -> geometry) and log prefix",
+  "robot_occlusion_changes": "import path; non-finite projections dropped before hull"
+}

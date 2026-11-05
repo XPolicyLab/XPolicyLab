@@ -1,0 +1,278 @@
+{
+  "rdj_equation.perception_services.perception.sam3_server": {
+    "file": "capabilities/perception/sam3_server.py",
+    "resource": "resources/solve_equation/coap/perception_services/perception/sam3_server.py",
+    "package": false,
+    "sha256": "9ca9e18450c68232d8a7dec241509c7a2c86ae7ebdaa50e50605a123bb0df674"
+  },
+  "rdj_equation.perception_services.perception.sam3_segment_text": {
+    "file": "capabilities/perception/sam3_segment_text_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/perception_services/perception/sam3_segment_text.py",
+    "package": false,
+    "sha256": "410dd620b36f5403f92ea60a786e2bdf02fdcf973199a130cb4df5321f6def11"
+  },
+  "rdj_equation": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rdj_equation.model": {
+    "file": "capabilities/control/model_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/model.py",
+    "package": false,
+    "sha256": "2469c0210d28068cf23434666dca2b77fdeeeb94db724961b8cb7d3f24ebe124"
+  },
+  "rdj_equation.equation_rgb.model": {
+    "file": "capabilities/perception/model_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/model.py",
+    "package": false,
+    "sha256": "d42fdf34c22044e712ec820de00324516ab0600cb82dfa4c552d3f1a04bd06bc"
+  },
+  "rdj_equation.equation_rgb.vision_gate": {
+    "file": "capabilities/perception/vision_gate.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/vision_gate.py",
+    "package": false,
+    "sha256": "0af8a7da3fb661a4b787f4fe4df955e112950b4d240ab2088151135487b467f6"
+  },
+  "rdj_equation.equation_rgb.reference_tracks": {
+    "file": "capabilities/perception/reference_tracks.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/reference_tracks.py",
+    "package": false,
+    "sha256": "d99255dfdba96a463239ae0878e5a3aa6d869be2e977d42dcf9e63a5fa0d05ba"
+  },
+  "rdj_equation.equation_rgb": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rdj_equation.rgb_reader.reader": {
+    "file": "capabilities/perception/reader.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/reader.py",
+    "package": false,
+    "sha256": "a5e4805d1f17e9e29eb2ddb8b52c4ba3d98dfaa019eeb77064d8f7a00d2d8744"
+  },
+  "rdj_equation.rgb_reader.action_consensus": {
+    "file": "capabilities/perception/action_consensus.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/action_consensus.py",
+    "package": false,
+    "sha256": "f861e5e6e732e27dc04e8a3c6489c91f91da15b0bf399bee654fb0479e5a3658"
+  },
+  "rdj_equation.rgb_reader": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rdj_equation.perception_services.perception.sam3_http": {
+    "file": "capabilities/perception/sam3_http.py",
+    "resource": "resources/solve_equation/coap/perception_services/perception/sam3_http.py",
+    "package": false,
+    "sha256": "1ad6d79ed5079799c722c0e032f8c812d6bc2bead28f3ddb2ccb60ab81286b4e"
+  },
+  "rdj_equation.rgb_reader.pad_boundary": {
+    "file": "capabilities/perception/pad_boundary.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/pad_boundary.py",
+    "package": false,
+    "sha256": "9e4fd4316ddc67837a9073aea59add71c0d71d8c9c871e2c750fb37d2a91a9f5"
+  },
+  "rdj_equation.rgb_reader.topology": {
+    "file": "capabilities/perception/topology.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/topology.py",
+    "package": false,
+    "sha256": "baeda60493b6e10f20eecded7ce7240a29d8b1fb33d89a75a865379a580b25c7"
+  },
+  "rdj_equation.rgb_reader.interior": {
+    "file": "capabilities/perception/interior.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/interior.py",
+    "package": false,
+    "sha256": "09a3024e1345ee1429b36fdfe77ad4a9aec1f3e65451b7db0bbeb40a9b4dfc3e"
+  },
+  "rdj_equation.rgb_reader.inventory": {
+    "file": "capabilities/perception/inventory.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/inventory.py",
+    "package": false,
+    "sha256": "b11d23ecc65382bedbc6268181f5230671df3af0c3f9918b7eb2445c4d7127ff"
+  },
+  "rdj_equation.rgb_reader.number_support": {
+    "file": "capabilities/perception/number_support.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/number_support.py",
+    "package": false,
+    "sha256": "4a677e1c10164fe751bb2f6af653547adc52489fbefed4a2e42dc40d9a57a095"
+  },
+  "rdj_equation.rgb_reader.pad_surface": {
+    "file": "capabilities/perception/pad_surface.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/pad_surface.py",
+    "package": false,
+    "sha256": "18a858525d14d070ac38d93622303c9bc65982c7dac0467724e339713a9bf0cb"
+  },
+  "rdj_equation.rgb_reader.geometry": {
+    "file": "capabilities/perception/geometry.py",
+    "resource": "resources/solve_equation/coap/rgb_reader/geometry.py",
+    "package": false,
+    "sha256": "2ab20599f2be5b51b04d6fc22313372d71e12960dbcffa5d0f8079f32e85fae1"
+  },
+  "rdj_equation.equation_rgb.corridor": {
+    "file": "capabilities/perception/corridor.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/corridor.py",
+    "package": false,
+    "sha256": "fb607438d5561615a5f5345ac990bf437e335c13a59a9e06713b2069c4a0ccf8"
+  },
+  "rdj_equation.equation_rgb.relation": {
+    "file": "capabilities/perception/relation.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/relation.py",
+    "package": false,
+    "sha256": "809a26c9d2b4c1f5194193c41aa903bf2bd19137b0a4663e2b50f4a25fcb4c6a"
+  },
+  "rdj_equation.equation_rgb.object_pose": {
+    "file": "capabilities/perception/object_pose.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/object_pose.py",
+    "package": false,
+    "sha256": "ea80bd33b782e4b47f490a98b2a5888e6e1cc5a53391c38b5cbc65cd2c801d6a"
+  },
+  "rdj_equation.equation_rgb.silhouette": {
+    "file": "capabilities/perception/silhouette.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/silhouette.py",
+    "package": false,
+    "sha256": "c18b8e8cac1b3828a1639261a56da032c98b90de24e0da711f1795f48b9fa984"
+  },
+  "rdj_equation.equation_rgb.contour": {
+    "file": "capabilities/perception/contour.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/contour.py",
+    "package": false,
+    "sha256": "2a1b51dcb76be29837ce83cb2c9ae71f562978b72dca083edb7b9b8b66c24540"
+  },
+  "rdj_equation.equation_rgb.source_surface": {
+    "file": "capabilities/perception/source_surface.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/source_surface.py",
+    "package": false,
+    "sha256": "6bf116e7f9a28b9b7e2ee96963901cae9df0f90eab5805a896cd865cdd5da77c"
+  },
+  "rdj_equation.equation_rgb.kinematics": {
+    "file": "capabilities/perception/kinematics.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/kinematics.py",
+    "package": false,
+    "sha256": "ba8eda510bb5ff0df70bc681297b8dc4e95538f16768db355c15538ceee08d55"
+  },
+  "rdj_equation.equation_rgb.geometry": {
+    "file": "capabilities/perception/geometry_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/equation_rgb/geometry.py",
+    "package": false,
+    "sha256": "b9685bbd3f47247f0a8afff7f17927fa87755285a99e2a09026013e6aeca821a"
+  },
+  "physicalrsi_skill_library.stage_programs": {
+    "file": "capabilities/planning/stage_programs_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/skills/stage_programs.py",
+    "package": false,
+    "sha256": "2d41ab7e4e2b53aaa51615aa6bbee6a8e3fd2d86050b4a8a7d1c52ea9e90ac82"
+  },
+  "PhysicalRSI.Embodied_Harness.skills.memory_program": {
+    "file": "capabilities/planning/memory_program_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/skills/memory_program.py",
+    "package": false,
+    "sha256": "9a4fd76ae2cf88b3134045ea1271230a53ef6fa1f7022973407536c105851f0f"
+  },
+  "PhysicalRSI.Embodied_Harness.skills.composition": {
+    "file": "capabilities/planning/composition_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/skills/composition.py",
+    "package": false,
+    "sha256": "601dbc8490382b5ed704f9b3021d7ead365d4be37ef15aa17743fa85c11bd1b9"
+  },
+  "PhysicalRSI_core.infra.storage": {
+    "file": "capabilities/control/storage.py",
+    "resource": "resources/solve_equation/coap/runtime/core/infra/storage.py",
+    "package": false,
+    "sha256": "4e52799a7c4e9f30454aecb0d696eb6b5bbf6772294f9f0653dcdbfb51cee4ea"
+  },
+  "PhysicalRSI_core.infra": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/runtime/core/infra/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "PhysicalRSI_core": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/runtime/core/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "PhysicalRSI_core.infra.executor": {
+    "file": "capabilities/control/executor_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/core/infra/executor.py",
+    "package": false,
+    "sha256": "6d463b86a7030a35e3b57e4c96bf0c2875cf438f23aec0b95bce7a14bea8c920"
+  },
+  "PhysicalRSI_core.infra.resources": {
+    "file": "capabilities/control/resources.py",
+    "resource": "resources/solve_equation/coap/runtime/core/infra/resources.py",
+    "package": false,
+    "sha256": "09816be9b72b33f06afc85673cb3b375b1afa65b9ae8dc603c6cd21613242332"
+  },
+  "PhysicalRSI_core.contracts": {
+    "file": "capabilities/observation/contracts_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/core/contracts.py",
+    "package": false,
+    "sha256": "9863d9b9c36c9584fb35ba56a4a854427044d78c0db121d3a740fa35418b9d64"
+  },
+  "PhysicalRSI.Embodied_Harness.skills": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/skills/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "PhysicalRSI.Embodied_Harness": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "PhysicalRSI": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "PhysicalRSI.Embodied_Harness.memory.store": {
+    "file": "capabilities/planning/store_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/memory/store.py",
+    "package": false,
+    "sha256": "7dd58dc04428f6727a89ae86f882353d43cfa8806b36c599f45de071ace5427d"
+  },
+  "PhysicalRSI.Embodied_Harness.memory": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/memory/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "physicalrsi_structured_blocks.plan_transfer": {
+    "file": "capabilities/planning/plan_transfer_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/blocks/plan_transfer.py",
+    "package": false,
+    "sha256": "2d4859d2da77bd050ebfd28dbe63b13bbaa8742bdd0b63381b7c94147b30a36e"
+  },
+  "PhysicalRSI.Embodied_Harness.skills.episode_plan": {
+    "file": "capabilities/planning/episode_plan_for_solve_equation.py",
+    "resource": "resources/solve_equation/coap/runtime/harness/Embodied_Harness/skills/episode_plan.py",
+    "package": false,
+    "sha256": "01bfc55d69853cd4b482909e169b2e8f549abe1a1f94813445e60c848e69b20c"
+  },
+  "physicalrsi_structured_blocks": {
+    "file": "capabilities/control/native_structured_blocks.py",
+    "resource": "resources/solve_equation/coap/runtime/blocks/__init__.py",
+    "package": true,
+    "sha256": "2de1162f8b9bffb5b24cda8016e8002b974c30325a793229849bcd8d059a01c8"
+  },
+  "physicalrsi_skill_library": {
+    "file": "capabilities/planning/native_skill_library.py",
+    "resource": "resources/solve_equation/coap/runtime/skills/__init__.py",
+    "package": true,
+    "sha256": "54c8ce11dbde46c2d9c4db22561f2740bcd8cae5a482ae06b8d625e7ba5c73ae"
+  },
+  "rdj_equation.perception_services": {
+    "namespace": true
+  },
+  "rdj_equation.perception_services.perception": {
+    "namespace": true
+  }
+}

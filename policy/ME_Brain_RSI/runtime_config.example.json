@@ -1,0 +1,80 @@
+{
+  "includes": [],
+  "common": {
+    "config": {
+      "model_path": "model_assets/focus-vlwa-checkpoint",
+      "tokenizer_path": "model_assets/tokenizer.model",
+      "robot_static_path": "model_assets/robot_static.json",
+      "stack_assets_root": "model_assets/stack",
+      "equation_assets_root": "model_assets/equation",
+      "perception_assets_root": "model_assets/perception"
+    },
+    "environment": {
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    }
+  },
+  "tasks": {
+    "deposit_coin": {
+      "config": {
+        "coin_assets_root": "model_assets/coin/code-skills",
+        "strategy_evidence_dir": "../../../eval_runs/deposit_coin"
+      }
+    },
+    "fasten_screws": {
+      "config": {
+        "screws_assets_root": "model_assets/screws/code-skills",
+        "strategy_evidence_dir": "../../../eval_runs/fasten_screws"
+      }
+    },
+    "imitate_sorting_sequence": {
+      "environment": {
+        "SORTING_DINO_PATH": "model_assets/dinov2-small"
+      }
+    },
+    "classify_objects_by_language": {
+      "environment": {
+        "SORTING_DINO_PATH": "model_assets/dinov2-small",
+        "CLASSIFY_CLIP_PATH": "model_assets/clip-vit-base-patch32",
+        "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
+      }
+    },
+    "hang_mugs": {
+      "environment": {
+        "HANG_SAM3_PATH": "model_assets/hang/sam3"
+      }
+    },
+    "hang_mugs_random": {
+      "environment": {
+        "HANG_SAM3_PATH": "model_assets/hang/sam3",
+        "CLASSIFY_DINO_PATH": "model_assets/grounding-dino-tiny"
+      }
+    },
+    "organize_table": {
+      "environment": {
+        "COAP_PUBLIC_RGB_MODELS": "model_assets/organize/models",
+        "COAP_SNAPSHOT_INTERVAL": "50"
+      }
+    },
+    "store_laptop_and_headphones": {
+      "environment": {
+        "LAPTOP_SAM3_PATH": "model_assets/laptop/sam3"
+      }
+    },
+    "store_laptop_and_headphones_random": {
+      "environment": {
+        "LAPTOP_SAM3_PATH": "model_assets/laptop/sam3"
+      }
+    },
+    "sweep_blocks_random": {
+      "environment": {
+        "ME_BRAIN_ROBOT_STATIC": "resources/sweep_blocks_random/assets/robot_static.json",
+        "ME_BRAIN_NESTING_ASSETS": "model_assets/sweep_blocks_random",
+        "ME_BRAIN_EVIDENCE_DIR": "../../../runs/ME_Brain_RSI/sweep_blocks_random",
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "TOKENIZERS_PARALLELISM": "false"
+      }
+    }
+  }
+}

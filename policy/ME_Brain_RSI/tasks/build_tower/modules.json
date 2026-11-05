@@ -1,0 +1,62 @@
+{
+  "coap": {
+    "file": "capabilities/control/build_tower_package.py",
+    "resource": "resources/build_tower/coap/__init__.py",
+    "package": true,
+    "sha256": "a3945a9de48558032d6555be82ab8a99426d3608757d858d2f59fee2ceb73f54"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/build_tower_contracts.py",
+    "resource": "resources/build_tower/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/build_tower_geometry.py",
+    "resource": "resources/build_tower/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/build_tower_kinematics.py",
+    "resource": "resources/build_tower/coap/kinematics.py",
+    "package": false,
+    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/build_tower_policy.py",
+    "resource": "resources/build_tower/coap/policy.py",
+    "package": false,
+    "sha256": "06b8570711edc0f7e5f53ef900c5172145affe6cb4bb3f46a5aa1ec575525810"
+  },
+  "coap.vision": {
+    "file": "capabilities/perception/build_tower_vision.py",
+    "resource": "resources/build_tower/coap/vision.py",
+    "package": false,
+    "sha256": "94312610449c7364a53a45a4cf16d213f9fe6bb086f6fca907c34d754a2c8f66"
+  },
+  "coap.wristcam": {
+    "file": "capabilities/observation/build_tower_wristcam.py",
+    "resource": "resources/build_tower/coap/wristcam.py",
+    "package": false,
+    "sha256": "5ed8b1dee23c2887bc735312a8e316b9fc62e9bee505ed372a7163898bbd3f5c"
+  },
+  "adapter": {
+    "file": "capabilities/control/build_tower_adapter_package.py",
+    "resource": "resources/build_tower/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapter.model": {
+    "file": "capabilities/control/build_tower_model.py",
+    "resource": "resources/build_tower/coap/adapter/model.py",
+    "package": false,
+    "sha256": "f9d934bc655b0f0d181b8d671118bb6924c2b67483a384bd600b23dcbe833104"
+  },
+  "adapter.deploy": {
+    "file": "capabilities/control/build_tower_deploy.py",
+    "resource": "resources/build_tower/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  }
+}

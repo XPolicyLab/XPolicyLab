@@ -1,0 +1,13 @@
+{
+  "model": "facebook/dinov2-small",
+  "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+  "sha256": {
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "README.md": "4c20dca454a8e5c670e8de5c7e6040f512aeca5438516f7623eedc4e3b00599c",
+    "SOURCE.json": "50b3cc6edd6dceec03a14db5ab83f3cabfb460f4d610c2ba4fff31326d3e5fa1",
+    "config.json": "1809f83e3bdb1609a501a610ad4a742f4fd8ae44d72ca4aa0df52d1f2ac8628d",
+    "model.safetensors": "ae1e99fcefd534ed978cdeb8326f08030c96e28b7a81ffcbc98a857c84d14be1",
+    "official-lfs-entry.json": "6d65b8f728fb34ff1f0207c303037bfd87893da56a524dc3d3495fd199eedb99",
+    "preprocessor_config.json": "14e780d86fa1861f8751f868d7f45425b5feb55c38ca26f152ca5097ab30f828"
+  }
+}

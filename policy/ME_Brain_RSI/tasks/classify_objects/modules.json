@@ -1,0 +1,356 @@
+{
+  "coap.tasks.classify_r32_normal_watch_material": {
+    "file": "capabilities/control/classify_normal_watch_material.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r32_normal_watch_material.py",
+    "package": false,
+    "sha256": "2e45ca73dc4e4fd390ee6af91a879b7039061243bbd58c3f9f526e35fc61e571"
+  },
+  "coap.tasks.classify_r07_wrist_pose": {
+    "file": "capabilities/geometry/classify_wrist_pose.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r07_wrist_pose.py",
+    "package": false,
+    "sha256": "87d2dee7cf81bdc8bdfee3a644c5771a6df1e710001a9e402deb7a4f2a1a8f3c"
+  },
+  "coap.tasks.classify_r07_periodic_ik": {
+    "file": "capabilities/motion/classify_periodic_ik.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r07_periodic_ik.py",
+    "package": false,
+    "sha256": "fc1e03b6bf8a320850447a78ead2b094a3b5e4563079bac4309746cee095e0eb"
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion.py",
+    "resource": "resources/classify_objects/coap/motion.py",
+    "package": false,
+    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290"
+  },
+  "coap.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/classify_objects/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/classify_objects/coap/kinematics.py",
+    "package": false,
+    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+  },
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/classify_objects/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "coap.public_mesh": {
+    "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/public_mesh.py",
+    "package": false,
+    "sha256": "dc43e2e4032ec4612a4cbcfdcc95b5ec30e59c0d610665d4cd27de8ace4e34c1"
+  },
+  "coap.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "ee18f724e4171ce07efa790296c7e550d5b431d7065417e0cec0ca7b31750193"
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/classify_objects/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444"
+  },
+  "coap.tasks.classify_r28_normal_camera_camera": {
+    "file": "capabilities/perception/classify_normal_camera_camera.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r28_normal_camera_camera.py",
+    "package": false,
+    "sha256": "40ed1ff328c7f09402e433171b70aee88f773eedce53e7f9616cc6583731efce"
+  },
+  "coap.tasks.classify_r32_normal_watch_material_material": {
+    "file": "capabilities/control/classify_normal_watch_material_material.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r32_normal_watch_material_material.py",
+    "package": false,
+    "sha256": "49f655164a0c69c0e9f814d34a39f2bed284804d44bbc34a8cfe05bd89026e93"
+  },
+  "coap.tasks.classify_r07_n2_material_centroid": {
+    "file": "capabilities/control/classify_n2_material_centroid.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r07_n2_material_centroid.py",
+    "package": false,
+    "sha256": "c52be24f403ff5e4cb117a0dffe42b82eb50356a14ab618d40db559b4e950e1f"
+  },
+  "coap.tasks.sorting_r03_dino": {
+    "file": "capabilities/control/sorting_dino.py",
+    "resource": "resources/classify_objects/coap/tasks/sorting_r03_dino.py",
+    "package": false,
+    "sha256": "d553a27b4dc24746e4556d22dd016564e0dc3b79a9daaaae265d469025f07441"
+  },
+  "coap.tasks.sorting_r01_d": {
+    "file": "capabilities/control/sorting_d.py",
+    "resource": "resources/classify_objects/coap/tasks/sorting_r01_d.py",
+    "package": false,
+    "sha256": "dc11b87d1e005db82ffba012971ad47c1fdc89718c3e371d7c9a5d8e7e47249a"
+  },
+  "coap.tasks.memory_initial": {
+    "file": "capabilities/planning/memory_initial.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_initial.py",
+    "package": false,
+    "sha256": "7e34b40b2af7fb627fd6c094981686fb4aa6a1cf2e9a3d4c972d4ec9422a69ba"
+  },
+  "coap.tasks.memory": {
+    "file": "capabilities/planning/memory.py",
+    "resource": "resources/classify_objects/coap/tasks/memory.py",
+    "package": false,
+    "sha256": "652e0a63f3157bbbf19087c6d197f898e71918eed95a29b1086fc9a564169a3c"
+  },
+  "coap.tasks.memory_geometry": {
+    "file": "capabilities/geometry/memory_geometry.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_geometry.py",
+    "package": false,
+    "sha256": "94933d41c2f465141798ac66ea4f92f6c4a03997e598d165b8d14bc994665467"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/model.py",
+    "package": false,
+    "sha256": "cfbd21dcd3e33a9133b5e607e6d07de7f5732478e2969e79e0d5cdc5cc340692"
+  },
+  "coap.physicalrsi_native": {
+    "file": "capabilities/control/native_native_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/physicalrsi_native.py",
+    "package": false,
+    "sha256": "e549187d60f3108cb5a8216db8936ced17449aa402804a2ec593be7cb9efdfb8"
+  },
+  "coap.physicalrsi_bridge": {
+    "file": "capabilities/control/native_bridge_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/physicalrsi_bridge.py",
+    "package": false,
+    "sha256": "ca19a7367c0eea130e916874f04eb16a9da59af9e854b28b189046aa20b58e5a"
+  },
+  "coap.native_action_stream": {
+    "file": "capabilities/control/native_action_stream_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/native_action_stream.py",
+    "package": false,
+    "sha256": "990ddd545faed68e026eb49999a697e29d9c023674f000150ea8d9d6d8e0f117"
+  },
+  "coap.tasks.memory_motion": {
+    "file": "capabilities/motion/memory_motion.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_motion.py",
+    "package": false,
+    "sha256": "e01c31a87606ca2bed84d0c88aa6a0d47c25c8043c170d128034bb3002ec62eb"
+  },
+  "coap.tasks.memory_timing": {
+    "file": "capabilities/planning/memory_timing.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_timing.py",
+    "package": false,
+    "sha256": "1915db9209814b6c701c9db5218db989db4cc2006484372d462cebb8a0c8c289"
+  },
+  "coap.tasks.memory_routes": {
+    "file": "capabilities/planning/memory_routes.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_routes.py",
+    "package": false,
+    "sha256": "d2b6aa48f06258d6f629291741c8163edf398f737c46445471ad1a9273434274"
+  },
+  "coap.tasks.memory_unchecked": {
+    "file": "capabilities/planning/memory_unchecked.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_unchecked.py",
+    "package": false,
+    "sha256": "145ff9ec6df5a0e9aa1bfe4480db646abc6adc8825115a36c3de9053cbd52acb"
+  },
+  "coap.tasks.memory_identity": {
+    "file": "capabilities/planning/memory_identity.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_identity.py",
+    "package": false,
+    "sha256": "c077616f31e236701ed7af79460f9c3d0b24ab0c37be4a37c81bdf6d6cecd3ad"
+  },
+  "coap.tasks.finite_ik": {
+    "file": "capabilities/motion/finite_ik_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/tasks/finite_ik.py",
+    "package": false,
+    "sha256": "b6c70bf4c726d580c7628b372a672a443245d2d034640ae14b6ac7beae219941"
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/context.py",
+    "package": false,
+    "sha256": "e43c0bd2981f05158877ce9d222c7bebaef9732c57ab5cf7bacd61ad2a95c6f2"
+  },
+  "coap.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/classify_objects/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0"
+  },
+  "coap.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "5076be430569c49a885df6fafbbcb8aa6aff0091a5376f5285d431f9de491345"
+  },
+  "coap.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/classify_objects/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3"
+  },
+  "coap.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/classify_objects/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception.py",
+    "resource": "resources/classify_objects/coap/perception.py",
+    "package": false,
+    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c"
+  },
+  "coap.tasks.memory_approach": {
+    "file": "capabilities/planning/memory_approach.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_approach.py",
+    "package": false,
+    "sha256": "3649463b799926fa945b2b09437f7cbb64224d55e3a80c0d900eabaf7296e2e5"
+  },
+  "coap.tasks.memory_toy": {
+    "file": "capabilities/planning/memory_toy.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_toy.py",
+    "package": false,
+    "sha256": "3d3c2b9dc59173cf4865badbb24b43667d392d65fcefdb2f9760dc085c3d1966"
+  },
+  "coap.tasks.memory_queue": {
+    "file": "capabilities/planning/memory_queue.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_queue.py",
+    "package": false,
+    "sha256": "517a6341078e20c0ab09c724572c2a498a0519e7cc0d4d0191a0eaa2579c777e"
+  },
+  "coap.tasks.memory_semantics": {
+    "file": "capabilities/perception/memory_semantics.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_semantics.py",
+    "package": false,
+    "sha256": "928d8d2636faa08431141a2b0799b49a739d279a57f9211ce2645a23fb82acdf"
+  },
+  "coap.tasks.memory_protocol": {
+    "file": "capabilities/planning/memory_protocol.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_protocol.py",
+    "package": false,
+    "sha256": "998ef2f811be3a218ac32245b650cf70bca935df0cae2b93061c90d63bcb5651"
+  },
+  "coap.tasks.memory_sequence": {
+    "file": "capabilities/planning/memory_sequence.py",
+    "resource": "resources/classify_objects/coap/tasks/memory_sequence.py",
+    "package": false,
+    "sha256": "41bbbf5636491d7da08ff7f1fa4193e28cf79f6d3e88a0596f098e1a5531401c"
+  },
+  "coap.manipulation": {
+    "file": "capabilities/control/manipulation.py",
+    "resource": "resources/classify_objects/coap/manipulation.py",
+    "package": false,
+    "sha256": "d4720b66e4935684c68b60fe6d31e27aae41c8177044060338b2df4c77e5a18b"
+  },
+  "coap.tasks.sorting_paired_car_semantics": {
+    "file": "capabilities/perception/sorting_paired_car_semantics.py",
+    "resource": "resources/classify_objects/coap/tasks/sorting_paired_car_semantics.py",
+    "package": false,
+    "sha256": "e82b962b59347799301dfc5a6b9d44479bdc7483098467bcba983d2fe923d010"
+  },
+  "coap.tasks.classify_r06_robot_projection": {
+    "file": "capabilities/control/classify_robot_projection.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r06_robot_projection.py",
+    "package": false,
+    "sha256": "e4a3dbc3ee0bd000a4e740099d7e7e5f35df8f519065f04692120f5b77c4992e"
+  },
+  "coap.tasks.classify_r05_grounded_clip": {
+    "file": "capabilities/control/classify_grounded_clip.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r05_grounded_clip.py",
+    "package": false,
+    "sha256": "6b51568a77df556193a74e1f133cf225c8eb207324ed2c86283f94e08284e997"
+  },
+  "coap.tasks.classify_grounding_dino": {
+    "file": "capabilities/control/classify_grounding_dino.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_grounding_dino.py",
+    "package": false,
+    "sha256": "69bc7d8be8899ed4b3577caeacbe9fa6e3f7210b21b203934eb2cec94421ea18"
+  },
+  "coap.tasks.classify_r05_grounded_perception": {
+    "file": "capabilities/perception/classify_grounded_perception.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r05_grounded_perception.py",
+    "package": false,
+    "sha256": "3f356347fef0ff69181fc0ddc983c734ec33b2979192880705fd03137e343be4"
+  },
+  "coap.tasks.classify_r02b2_perception": {
+    "file": "capabilities/perception/classifyb2_perception.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r02b2_perception.py",
+    "package": false,
+    "sha256": "8ac2d0432c25b23858c9e1b04876e5a731e497f1544912c28cdbfadadd89e6b3"
+  },
+  "coap.tasks.classify_r28_normal_camera_transport": {
+    "file": "capabilities/perception/classify_normal_camera_transport.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r28_normal_camera_transport.py",
+    "package": false,
+    "sha256": "d99fed390deb7c22e5546bc3a803dec53d441bc9bd8c69d64ecaa586b85b9cf9"
+  },
+  "coap.tasks.classify_r28_cuda_observers": {
+    "file": "capabilities/perception/classify_cuda_observers.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r28_cuda_observers.py",
+    "package": false,
+    "sha256": "9410719f7615005c2334f04636c169533c6c90996832bee62ad054356aafc2c3"
+  },
+  "coap.tasks.classify_r28_cuda_device": {
+    "file": "capabilities/control/classify_cuda_device.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r28_cuda_device.py",
+    "package": false,
+    "sha256": "d9838fedd945226c88c87d59d2f6bdc380bacc240ad866766c2518a482239e0f"
+  },
+  "coap.tasks.classify_r25_b_language": {
+    "file": "capabilities/control/classify_b_language.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r25_b_language.py",
+    "package": false,
+    "sha256": "4d78e899ceee97ca71e1f7d20b3a6be9a5211ca81a43f1c0afbcf2dddeddeabe"
+  },
+  "coap.tasks.open_motion": {
+    "file": "capabilities/motion/open_motion.py",
+    "resource": "resources/classify_objects/coap/tasks/open_motion.py",
+    "package": false,
+    "sha256": "08f730dba5c050e0f1c3a2172153217d18993c85fa29433c67aac825af83febe"
+  },
+  "coap.tasks.classify_r30_normal_pen_source_objective_observer": {
+    "file": "capabilities/perception/classify_normal_pen_source_objective_observer.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r30_normal_pen_source_objective_observer.py",
+    "package": false,
+    "sha256": "634e6311d69ecf9d8e0890f79dd18cd6476c8ceb30a98843df92078202127fa1"
+  },
+  "coap.tasks.classify_r29_pen_stability": {
+    "file": "capabilities/control/classify_pen_stability.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r29_pen_stability.py",
+    "package": false,
+    "sha256": "a34abc838a758ebdfa16c0a96528c483d40fbf65f14394a9cbb5e831d940a028"
+  },
+  "coap.tasks.classify_r30_normal_pen_source_objective_source_objective": {
+    "file": "capabilities/control/classify_normal_pen_source_objective_source_objective.py",
+    "resource": "resources/classify_objects/coap/tasks/classify_r30_normal_pen_source_objective_source_objective.py",
+    "package": false,
+    "sha256": "1db1384ca7037dd93a6c0a14ab8ec99a509d485b13fb39ef6fcedf7bc48c1c84"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_classify_objects.py",
+    "resource": "resources/classify_objects/coap/policy.py",
+    "package": false,
+    "sha256": "e36cd2da43c3ce94e45fc0571564c82fb2762d35ded73f53fc675d8e8a51ddf9"
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy_for_imitate_sorting_sequence.py",
+    "resource": "resources/classify_objects/deploy.py",
+    "package": false,
+    "sha256": "fc406ba88b4201502a41b1eb3c7e829122b720235dd767ba22f098163ec47000"
+  },
+  "coap.report": {
+    "file": "capabilities/observation/report_for_classify_objects.py",
+    "resource": "resources/classify_objects/coap/report.py",
+    "package": false,
+    "sha256": "3c8799da685858b0c108f377ffd70a9145de17a82f29a0763d1390d20ebac434"
+  },
+  "coap.audit": {
+    "file": "capabilities/observation/audit.py",
+    "resource": "resources/classify_objects/coap/audit.py",
+    "package": false,
+    "sha256": "7cd7da9749413800248d6390d0db42c4c8b757458e2d2f2f100496cdc468fab0"
+  }
+}

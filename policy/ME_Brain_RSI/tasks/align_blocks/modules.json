@@ -1,0 +1,56 @@
+{
+  "adapters.COAP_ZYR.deploy": {
+    "file": "capabilities/control/deploy_for_push_t_random.py",
+    "resource": "resources/align_blocks/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "33b7c518a8cc4aabcf30177efc929d966388bd1e4f6f580f929a9724bf0c6855"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/contracts_for_press_by_number.py",
+    "resource": "resources/align_blocks/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "coap": {
+    "file": "capabilities/control/robot_for_press_by_number.py",
+    "resource": "resources/align_blocks/coap/__init__.py",
+    "package": true,
+    "sha256": "3859b6dbbc42e387cd4dcb849ed7b15b57b12d99b60f36f82da688fc0f4a09ca"
+  },
+  "adapters.COAP_ZYR.model": {
+    "file": "capabilities/control/model_for_align_blocks.py",
+    "resource": "resources/align_blocks/coap/adapter/model.py",
+    "package": false,
+    "sha256": "0a521480e953f0ee706c850f95446d0ec7cf12428791fdd77a8bff0f0e0a76c3"
+  },
+  "coap.observation_audit": {
+    "file": "capabilities/observation/observation_audit_for_play_xylophone.py",
+    "resource": "resources/align_blocks/coap/observation_audit.py",
+    "package": false,
+    "sha256": "ce7a024c5f837d4d610589b9497f49d694833366a43437a108128ac02e1ccf39"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_align_blocks.py",
+    "resource": "resources/align_blocks/coap/policy.py",
+    "package": false,
+    "sha256": "948ac8c238e4cc337c09e25ab9da04fe9b5a234a4269d1fc9dd16c405576670e"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception_for_align_blocks.py",
+    "resource": "resources/align_blocks/coap/perception.py",
+    "package": false,
+    "sha256": "0dffd064ee945337ab577c230372c207b7b438941c4fc355fbda2294b33d659a"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/geometry_for_push_t.py",
+    "resource": "resources/align_blocks/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "adapters": {
+    "namespace": true
+  },
+  "adapters.COAP_ZYR": {
+    "namespace": true
+  }
+}

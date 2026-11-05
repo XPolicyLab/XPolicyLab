@@ -1,0 +1,68 @@
+{
+  "rdj_v1_fasten_screws": {
+    "file": "capabilities/control/fasten_screws_package.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rdj_v1_fasten_screws.camera_binding": {
+    "file": "capabilities/observation/fasten_screws_camera_binding.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/camera_binding.py",
+    "package": false,
+    "sha256": "7da7b20cd5085317206b2a7d1f67b8119bbebfa5fa765f60b83139d0e783406d"
+  },
+  "rdj_v1_fasten_screws.controller": {
+    "file": "capabilities/control/fasten_screws_controller.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/controller.py",
+    "package": false,
+    "sha256": "627a4af4c834317dbe20775683ac82e560868ec6712d85db51bf750d3541078c"
+  },
+  "rdj_v1_fasten_screws.geometry": {
+    "file": "capabilities/geometry/fasten_screws_geometry.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/geometry.py",
+    "package": false,
+    "sha256": "bdae50b96d5e49580586126b9c8ffd4bc1338253ebc10cac13afba9164822f19"
+  },
+  "rdj_v1_fasten_screws.ik": {
+    "file": "capabilities/motion/fasten_screws_ik.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/ik.py",
+    "package": false,
+    "sha256": "a90df5f9bf71cbb175a9d05b3aa8c49f37bf70dffd758db29502e52a3b20a333"
+  },
+  "rdj_v1_fasten_screws.joint_action": {
+    "file": "capabilities/motion/fasten_screws_joint_action.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/joint_action.py",
+    "package": false,
+    "sha256": "2e292a97c910778504427e6d0d5a61b9d8b35984a70a2b54919f3207aec823a1"
+  },
+  "rdj_v1_fasten_screws.model": {
+    "file": "capabilities/control/fasten_screws_model.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/model.py",
+    "package": false,
+    "sha256": "e9f5934437e891614e140a6c78b8b5bda3136e23779551aa068a90a54ed55a3f"
+  },
+  "rdj_v1_fasten_screws.perception": {
+    "file": "capabilities/perception/fasten_screws_perception.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/perception.py",
+    "package": false,
+    "sha256": "7cc5575891e09210eca7eb8cedbf5d3c5ea3c615786d636ff43c91baf9c8b5e5"
+  },
+  "rdj_v1_fasten_screws.robot_occlusion": {
+    "file": "capabilities/perception/fasten_screws_robot_occlusion.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/robot_occlusion.py",
+    "package": false,
+    "sha256": "ea0ac4466301a2ca03affb39516e803b9b9d5c0f52ee154becf1632ba85b2244"
+  },
+  "rdj_v1_fasten_screws.trace_io": {
+    "file": "capabilities/observation/fasten_screws_trace_io.py",
+    "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/trace_io.py",
+    "package": false,
+    "sha256": "01047861ac38c92b0366d8595ed48608efe002fce20d3dc3aad104a9a463a6db"
+  },
+  "screws_deploy": {
+    "file": "capabilities/control/fasten_screws_deploy.py",
+    "resource": "resources/fasten_screws/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "4ce7ac892b92ce5eae7d17b94108e7a66f69bcca121bf0cea7b53f5414133680"
+  }
+}

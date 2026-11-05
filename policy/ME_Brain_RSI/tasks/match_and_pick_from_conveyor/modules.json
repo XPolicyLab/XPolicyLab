@@ -1,0 +1,80 @@
+{
+  "b88r42wq.policy": {
+    "file": "capabilities/control/policy_for_match_and_pick_from_conveyor.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/policy.py",
+    "package": false,
+    "sha256": "0b49a94377ffe424009040bf82e550ec84c19ae74f84ff4382077e4fb1410103"
+  },
+  "b88r42wq.tasks.conveyor": {
+    "file": "capabilities/control/conveyor.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/tasks/conveyor.py",
+    "package": false,
+    "sha256": "f48ca2ac75129ca93346e702ef45ff454d7c35a723f27ee1d1573df1c2e7a132"
+  },
+  "b88r42wq.tasks.conveyor_vision": {
+    "file": "capabilities/perception/conveyor_vision.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/tasks/conveyor_vision.py",
+    "package": false,
+    "sha256": "66efd61ee8716a29574f32000126a3c15a3f1dbaee6d53657a02887e1b82bd05"
+  },
+  "b88r42wq.tasks.conveyor_landmarks": {
+    "file": "capabilities/control/conveyor_landmarks.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/tasks/conveyor_landmarks.py",
+    "package": false,
+    "sha256": "9192fad12629fd729f16999ad495d36b9526fb0aa32f019ff87a4a2a4743cc08"
+  },
+  "b88r42wq.tasks": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "b88r42wq": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "b88r42wq.motion": {
+    "file": "capabilities/motion/motion_for_make_kong.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/motion.py",
+    "package": false,
+    "sha256": "72a9b426ef1067e868e950ace3eb32133ba65f3ab5cd6aa6270e85132a1938bd"
+  },
+  "b88r42wq.robot_collision": {
+    "file": "capabilities/motion/robot_collision.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/robot_collision.py",
+    "package": false,
+    "sha256": "179d4a220b38a8bfb0d360d0d724bd7da1a5882af0e996a0d834e27ebb05257a"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_make_kong.py",
+    "resource": "resources/match_and_pick_from_conveyor/model.py",
+    "package": false,
+    "sha256": "d5636bce739df89da3aaa7a07faa9b5a7f62f968368cb3455e28dd2ec1c04cc7"
+  },
+  "b88r42wq.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7"
+  },
+  "b88r42wq.context": {
+    "file": "capabilities/control/context_for_make_kong.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/context.py",
+    "package": false,
+    "sha256": "8fcd3d2ea9432be8d546b27b41595427f49a3953a34d2e4fe4dfa13bceeb9eae"
+  },
+  "b88r42wq.kinematics": {
+    "file": "capabilities/motion/kinematics_for_make_kong.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/kinematics.py",
+    "package": false,
+    "sha256": "07499aba5bfc38357bf490524271300c313acc2f8ea926a086dff1e62c17a84e"
+  },
+  "b88r42wq.perception": {
+    "file": "capabilities/perception/perception_for_make_kong.py",
+    "resource": "resources/match_and_pick_from_conveyor/coap/perception.py",
+    "package": false,
+    "sha256": "09ea72c892256d9d51ffd0d6d84b5d5f5a904cccd0f0588db0ab879ca03c9fc9"
+  }
+}

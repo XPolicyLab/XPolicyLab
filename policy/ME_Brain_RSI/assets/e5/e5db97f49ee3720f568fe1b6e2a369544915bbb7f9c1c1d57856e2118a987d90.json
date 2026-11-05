@@ -1,0 +1,152 @@
+{
+  "0": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.017662003934383386,
+    "local_y": 0.0001,
+    "outer_rear_x": -0.0728209,
+    "inner_rear_x": -0.0689824,
+    "wall_midpoint_local_x": -0.07090165,
+    "body_center_local": [
+      -0.015,
+      0.0001,
+      -0.0373
+    ],
+    "source_sha256": "2cc169f5c8e93e8ed373500cf4b48814fdcf535e38cfb18f020603e32455eef0",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "1": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.014709999203681948,
+    "local_y": 0.0,
+    "outer_rear_x": -0.0634714,
+    "inner_rear_x": -0.0603198,
+    "wall_midpoint_local_x": -0.061895599999999995,
+    "body_center_local": [
+      -0.0135,
+      0.0,
+      -0.0343
+    ],
+    "source_sha256": "a1f285e2de5397833de86a986102dd7e85c613b5307dbe2286f014712ffb40c0",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "2": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.01470999547839165,
+    "local_y": 0.0,
+    "outer_rear_x": -0.0484757,
+    "inner_rear_x": -0.04587,
+    "wall_midpoint_local_x": -0.04717285,
+    "body_center_local": [
+      -0.0127,
+      0.0,
+      -0.0343
+    ],
+    "source_sha256": "d1e9be0d3630e0cbe6c011defd474e270b8ec828be7b169f038ad3cd4b86b1ee",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "3": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.014710002928972246,
+    "local_y": 0.0,
+    "outer_rear_x": -0.0497392,
+    "inner_rear_x": -0.0477416,
+    "wall_midpoint_local_x": -0.0487404,
+    "body_center_local": [
+      -0.0088,
+      0.0,
+      -0.0343
+    ],
+    "source_sha256": "3c7c793b922c681cdeaab8267e33400fd93e9c999baab59108c9520f16c5cb0a",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "4": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.017899999529123314,
+    "local_y": 0.0,
+    "outer_rear_x": -0.0455012,
+    "inner_rear_x": -0.0425833,
+    "wall_midpoint_local_x": -0.04404225,
+    "body_center_local": [
+      -0.0136,
+      0.0,
+      -0.0381
+    ],
+    "source_sha256": "b04c5a6e35a697018cbd488a6fcf72e0cd7523ac00004f3e564e0e5d4aa836a3",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "5": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.014709999203681934,
+    "local_y": 0.0002,
+    "outer_rear_x": -0.0491908,
+    "inner_rear_x": -0.0458488,
+    "wall_midpoint_local_x": -0.0475198,
+    "body_center_local": [
+      -0.013,
+      0.0002,
+      -0.0343
+    ],
+    "source_sha256": "af8164c080fa8413e1a42821a909381c6ef22050a1eaa8bfc0b92b037bef5d0f",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "6": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.01470999547839165,
+    "local_y": -0.0,
+    "outer_rear_x": -0.0504636,
+    "inner_rear_x": -0.0469493,
+    "wall_midpoint_local_x": -0.04870645,
+    "body_center_local": [
+      -0.0143,
+      -0.0,
+      -0.0343
+    ],
+    "source_sha256": "ea3b6613741a9b8ef2c32f970fe69c93d16fee576180d0a92790eb3684ca8378",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "7": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.014709999203681948,
+    "local_y": 0.0001,
+    "outer_rear_x": -0.0575834,
+    "inner_rear_x": -0.0542799,
+    "wall_midpoint_local_x": -0.05593165,
+    "body_center_local": [
+      -0.0219,
+      0.0001,
+      -0.0343
+    ],
+    "source_sha256": "56c4ccd99056761ac5bc1017294d216fbc7d28c69db39561d3252912fb20ec1c",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "8": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.014710002928972274,
+    "local_y": 0.0001,
+    "outer_rear_x": -0.0553212,
+    "inner_rear_x": -0.0517836,
+    "wall_midpoint_local_x": -0.0535524,
+    "body_center_local": [
+      -0.0147,
+      0.0001,
+      -0.0343
+    ],
+    "source_sha256": "b03015142a220d1a15c87477f49be911aada48f68617428837075a5026833580",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  },
+  "9": {
+    "contact_depth_m": 0.02,
+    "local_z": 0.0178999995291233,
+    "local_y": 0.0001,
+    "outer_rear_x": -0.0407491,
+    "inner_rear_x": -0.038483,
+    "wall_midpoint_local_x": -0.03961605,
+    "body_center_local": [
+      -0.0113,
+      0.0001,
+      -0.0381
+    ],
+    "source_sha256": "8e5b30b8908d9de36ce1251478180d749bd1d99093a8a852376624904ece8660",
+    "derivation": "Public native collision triangle intersection at current fixed grasp height and body center Y"
+  }
+}

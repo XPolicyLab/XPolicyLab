@@ -1,0 +1,53 @@
+{
+  "adapters.XQAUX8Z9.deploy": {
+    "file": "capabilities/control/deploy_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "8dea2892f71b8acd91c74c259bdf8c0d567cf37c3efca1424dad50bc2f772b00"
+  },
+  "b88r42wq.contracts": {
+    "file": "capabilities/observation/contracts_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "b88r42wq": {
+    "file": "capabilities/control/robot_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/__init__.py",
+    "package": true,
+    "sha256": "3859b6dbbc42e387cd4dcb849ed7b15b57b12d99b60f36f82da688fc0f4a09ca"
+  },
+  "adapters.XQAUX8Z9": {
+    "file": "capabilities/control/xqaux8z9.py",
+    "resource": "resources/press_by_number/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapters.XQAUX8Z9.model": {
+    "file": "capabilities/control/model_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/adapter/model.py",
+    "package": false,
+    "sha256": "b752a2ee635792da037a9bb2332cb52a291927f57f044e02f5543bdaab7182f8"
+  },
+  "b88r42wq.policy": {
+    "file": "capabilities/control/policy_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/policy.py",
+    "package": false,
+    "sha256": "d978e4cb555fd299db3289a61af269442a97e37a67f767be368690687dc80006"
+  },
+  "b88r42wq.perception": {
+    "file": "capabilities/perception/perception_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/perception.py",
+    "package": false,
+    "sha256": "d09881edd87ad3245f7e91d0d4c4c8b2b3d5b498e48d06341a05032d781b0e93"
+  },
+  "b88r42wq.geometry": {
+    "file": "capabilities/geometry/geometry_for_press_by_number.py",
+    "resource": "resources/press_by_number/coap/geometry.py",
+    "package": false,
+    "sha256": "6a8204b1eddc6239f95fd6ab63555d8f7aa7a98bc0206b81a68c277d816d9a26"
+  },
+  "adapters": {
+    "namespace": true
+  }
+}

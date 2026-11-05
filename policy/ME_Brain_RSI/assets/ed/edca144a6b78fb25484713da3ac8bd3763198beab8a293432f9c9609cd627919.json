@@ -1,0 +1,54 @@
+{
+  "schema": "lxm6wuec.skill-program-memory/v1",
+  "programs": {
+    "EpisodePolicy.get_action": {
+      "steps": [
+        {
+          "operation": "sort_nesting_dolls_by_size.vision.initialize_or_acquire",
+          "revision": "955c322f007b10e322bfc37d7a3582b5360678fcd3b9fcd7d6ab2148980f2058"
+        },
+        {
+          "operation": "sort_nesting_dolls_by_size.motion.track_and_advance",
+          "revision": "955c322f007b10e322bfc37d7a3582b5360678fcd3b9fcd7d6ab2148980f2058"
+        },
+        {
+          "operation": "sort_nesting_dolls_by_size.motion.interpolate",
+          "revision": "955c322f007b10e322bfc37d7a3582b5360678fcd3b9fcd7d6ab2148980f2058"
+        },
+        {
+          "operation": "sort_nesting_dolls_by_size.action.record_and_emit",
+          "revision": "955c322f007b10e322bfc37d7a3582b5360678fcd3b9fcd7d6ab2148980f2058"
+        }
+      ]
+    }
+  },
+  "bindings": {
+    "EpisodePolicy.get_action": [
+      {
+        "operation": "sort_nesting_dolls_by_size.vision.initialize_or_acquire",
+        "method": "_memory_get_action_0",
+        "input": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.0",
+        "output": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.1"
+      },
+      {
+        "operation": "sort_nesting_dolls_by_size.motion.track_and_advance",
+        "method": "_memory_get_action_1",
+        "input": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.1",
+        "output": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.2"
+      },
+      {
+        "operation": "sort_nesting_dolls_by_size.motion.interpolate",
+        "method": "_memory_get_action_2",
+        "input": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.2",
+        "output": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.3"
+      },
+      {
+        "operation": "sort_nesting_dolls_by_size.action.record_and_emit",
+        "method": "_memory_get_action_3",
+        "input": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.3",
+        "output": "sort_nesting_dolls_by_size.EpisodePolicy.get_action.4"
+      }
+    ]
+  },
+  "revision": "955c322f007b10e322bfc37d7a3582b5360678fcd3b9fcd7d6ab2148980f2058"
+}

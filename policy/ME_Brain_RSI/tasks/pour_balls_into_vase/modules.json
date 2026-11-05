@@ -1,0 +1,50 @@
+{
+  "coap": {
+    "file": "capabilities/control/pour_balls_into_vase_package.py",
+    "resource": "resources/pour_balls_into_vase/coap/__init__.py",
+    "package": true,
+    "sha256": "a3945a9de48558032d6555be82ab8a99426d3608757d858d2f59fee2ceb73f54"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/pour_balls_into_vase_contracts.py",
+    "resource": "resources/pour_balls_into_vase/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/pour_balls_into_vase_geometry.py",
+    "resource": "resources/pour_balls_into_vase/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/pour_balls_into_vase_policy.py",
+    "resource": "resources/pour_balls_into_vase/coap/policy.py",
+    "package": false,
+    "sha256": "2d60933dc36cc439bc725cc90a031190b5e9953fdb8484f8d3ace1b3bcdd5ecb"
+  },
+  "coap.vision": {
+    "file": "capabilities/perception/pour_balls_into_vase_vision.py",
+    "resource": "resources/pour_balls_into_vase/coap/vision.py",
+    "package": false,
+    "sha256": "18523c9d019eada2dd3d57254627db2378ac401a89bb962b450c0c549373b776"
+  },
+  "adapter": {
+    "file": "capabilities/control/pour_balls_into_vase_adapter_package.py",
+    "resource": "resources/pour_balls_into_vase/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapter.model": {
+    "file": "capabilities/control/pour_balls_into_vase_model.py",
+    "resource": "resources/pour_balls_into_vase/coap/adapter/model.py",
+    "package": false,
+    "sha256": "7b13aeb610fea3fa3999ebb75c8358ca19f7621d70a1bf08e36be49109bcfe7c"
+  },
+  "adapter.deploy": {
+    "file": "capabilities/control/pour_balls_into_vase_deploy.py",
+    "resource": "resources/pour_balls_into_vase/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  }
+}

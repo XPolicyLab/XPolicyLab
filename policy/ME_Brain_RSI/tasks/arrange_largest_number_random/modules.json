@@ -1,0 +1,209 @@
+{
+  "adapters.COAP_ZYR.deploy": {
+    "file": "capabilities/control/deploy_for_play_xylophone.py",
+    "resource": "resources/arrange_largest_number_random/coap/adapter/deploy.py",
+    "package": false,
+    "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  },
+  "coap.contracts": {
+    "file": "capabilities/observation/contracts_for_press_by_number.py",
+    "resource": "resources/arrange_largest_number_random/coap/contracts.py",
+    "package": false,
+    "sha256": "4bf9c1cbeaeb0424994cc2e3b5038f7a6872fb66b8c906e29ad88282d8e3a7f2"
+  },
+  "coap": {
+    "file": "capabilities/control/robot_for_press_by_number.py",
+    "resource": "resources/arrange_largest_number_random/coap/__init__.py",
+    "package": true,
+    "sha256": "3859b6dbbc42e387cd4dcb849ed7b15b57b12d99b60f36f82da688fc0f4a09ca"
+  },
+  "adapters.COAP_ZYR": {
+    "file": "capabilities/control/xqaux8z9.py",
+    "resource": "resources/arrange_largest_number_random/coap/adapter/__init__.py",
+    "package": true,
+    "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
+  },
+  "adapters.COAP_ZYR.model": {
+    "file": "capabilities/control/model_for_arrange_largest_number.py",
+    "resource": "resources/arrange_largest_number_random/coap/adapter/model.py",
+    "package": false,
+    "sha256": "63eb607f7cacf66e07482cbc0267c9a20cda97936b9e508581d721e93ab40454"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_arrange_largest_number_random.py",
+    "resource": "resources/arrange_largest_number_random/coap/policy.py",
+    "package": false,
+    "sha256": "7fd3f94224a6047415b84b9d02f7cbc6e0c7c5c535d54572ddff1e866fb801ae"
+  },
+  "coap.ans7_supervisor": {
+    "file": "capabilities/control/ans7_supervisor.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans7_supervisor.py",
+    "package": false,
+    "sha256": "7627d41ba85df3c3b016b06b86a30f8cf39302c29e6a8ce89ef967cd89a7350d"
+  },
+  "coap.ans18_policy": {
+    "file": "capabilities/control/ans18_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans18_policy.py",
+    "package": false,
+    "sha256": "ab474a923242869df4d474f7caf8d6ee3f7f4600a21f0df5440095e02148712d"
+  },
+  "coap.ans17_policy": {
+    "file": "capabilities/control/ans17_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans17_policy.py",
+    "package": false,
+    "sha256": "0e1ee74874f3ef095e229c3687bfa5113a91f178a6ed8cf734e0b306eda5899e"
+  },
+  "coap.ans16_policy": {
+    "file": "capabilities/control/ans16_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans16_policy.py",
+    "package": false,
+    "sha256": "eae87a472725d093e961e8d9d2c15f48d16d7ebf0a8d583b1258cd84e3fef5d0"
+  },
+  "coap.ans15_policy": {
+    "file": "capabilities/control/ans15_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans15_policy.py",
+    "package": false,
+    "sha256": "5616b0419e01f52221c01718dd96a9805d2b053514a3cdb9b9d053da73238d8f"
+  },
+  "coap.identity_check": {
+    "file": "capabilities/control/identity_check.py",
+    "resource": "resources/arrange_largest_number_random/coap/identity_check.py",
+    "package": false,
+    "sha256": "fc76338d5f8287711e28c0c068b25c5f41aed8b63f8e13755f975816904c547a"
+  },
+  "coap.ans14_policy": {
+    "file": "capabilities/control/ans14_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans14_policy.py",
+    "package": false,
+    "sha256": "98fb1dead24a12500ad77c90cdda886a51eec6c274d628117f270d2e88e04747"
+  },
+  "coap.geometry": {
+    "file": "capabilities/geometry/geometry_for_push_t.py",
+    "resource": "resources/arrange_largest_number_random/coap/geometry.py",
+    "package": false,
+    "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
+  },
+  "coap.ans11_policy": {
+    "file": "capabilities/control/ans11_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans11_policy.py",
+    "package": false,
+    "sha256": "6f05ab7c6af43e69fcfa771370efd1af4d2b242276e60f188901fa828dcb3809"
+  },
+  "coap.ans10_policy": {
+    "file": "capabilities/control/ans10_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans10_policy.py",
+    "package": false,
+    "sha256": "a61feb23c3fb84e9a43d0d0136c7eb78a239ef96e4c8b875c73eedade1a6340c"
+  },
+  "coap.ans9_policy": {
+    "file": "capabilities/control/ans9_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans9_policy.py",
+    "package": false,
+    "sha256": "51c0afebefc9776b162f6e70e6bd00100ee2c19d15cf2f7f39908015b44bdbe4"
+  },
+  "coap.ans1_policy": {
+    "file": "capabilities/control/ans1_policy_for_arrange_largest_number_random.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans1_policy.py",
+    "package": false,
+    "sha256": "6e2a07f49c127a62e92c64aaabe2ad54f067437e0a610aef6455985d611c4d85"
+  },
+  "coap.execution_order": {
+    "file": "capabilities/control/execution_order.py",
+    "resource": "resources/arrange_largest_number_random/coap/execution_order.py",
+    "package": false,
+    "sha256": "31d26a7d6af7dbae6b6cf221e753da83315486d85cf41b8759fb8cb5b06cf41b"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics_for_play_xylophone.py",
+    "resource": "resources/arrange_largest_number_random/coap/kinematics.py",
+    "package": false,
+    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7"
+  },
+  "coap.random_perception": {
+    "file": "capabilities/perception/random_perception.py",
+    "resource": "resources/arrange_largest_number_random/coap/random_perception.py",
+    "package": false,
+    "sha256": "0344d81890c3a89238e5574955611e73c624355ed80b8b902aa306f715ba41cc"
+  },
+  "coap.standard_perception": {
+    "file": "capabilities/perception/standard_perception.py",
+    "resource": "resources/arrange_largest_number_random/coap/standard_perception.py",
+    "package": false,
+    "sha256": "c37749b91a546b9b921bed80355f991440e30638e97ba737bbe9a1df34e73165"
+  },
+  "coap.number_perception": {
+    "file": "capabilities/perception/number_perception.py",
+    "resource": "resources/arrange_largest_number_random/coap/number_perception.py",
+    "package": false,
+    "sha256": "581d01f49f2c6715004b64f914f0e3d80bb81ba2960be7f5cbd3d077ee3601ae"
+  },
+  "coap.ans8_policy": {
+    "file": "capabilities/control/ans8_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans8_policy.py",
+    "package": false,
+    "sha256": "005f8f5b6ca52a868b4323985f8abe41c160450216a34deed37aacf1604857b8"
+  },
+  "coap.ans6_policy": {
+    "file": "capabilities/control/ans6_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans6_policy.py",
+    "package": false,
+    "sha256": "2b905c7e554b5cbced1500f22f35970075b5baecccc7626627d2a0b4be80be84"
+  },
+  "coap.wrist_grasp": {
+    "file": "capabilities/control/wrist_grasp.py",
+    "resource": "resources/arrange_largest_number_random/coap/wrist_grasp.py",
+    "package": false,
+    "sha256": "2a41092a03883e1e6f44486a544faf13ca634b8b65525720dc705c5121951bc5"
+  },
+  "coap.placement_feedback": {
+    "file": "capabilities/control/placement_feedback.py",
+    "resource": "resources/arrange_largest_number_random/coap/placement_feedback.py",
+    "package": false,
+    "sha256": "68cfbe0a666985f9f16011a023fde62797ba61f14b807d217351bb214ace247a"
+  },
+  "coap.ans6_supervisor": {
+    "file": "capabilities/control/ans6_supervisor.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans6_supervisor.py",
+    "package": false,
+    "sha256": "4d85e42705042b0e1dbcbffd09193a3d01879987be2cd27c409ab431e9a46913"
+  },
+  "coap.ans4_policy": {
+    "file": "capabilities/control/ans4_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans4_policy.py",
+    "package": false,
+    "sha256": "cdb2e29d3725365bdc60bc82da67f6e52b78769ed8d2ef2a9c42267218bb9c3e"
+  },
+  "coap.ans5_policy": {
+    "file": "capabilities/control/ans5_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans5_policy.py",
+    "package": false,
+    "sha256": "d3a8c1d63d422113d03fd5eb5d46d848ef24d0533c4462bd3c2996bbc42cbce6"
+  },
+  "coap.astra_supervisor": {
+    "file": "capabilities/control/astra_supervisor.py",
+    "resource": "resources/arrange_largest_number_random/coap/astra_supervisor.py",
+    "package": false,
+    "sha256": "a37870907a3daae32330f469d08e567fea3d3c3d95f69a7a15683cf1e5fa9c2a"
+  },
+  "coap.ans7_policy": {
+    "file": "capabilities/control/ans7_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans7_policy.py",
+    "package": false,
+    "sha256": "7226566a33a647f05ed445fe64cd5e9dc44468ef305417a8f8e3e010f7be72cd"
+  },
+  "coap.ans13_policy": {
+    "file": "capabilities/control/ans13_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans13_policy.py",
+    "package": false,
+    "sha256": "2f789ee42b4619358db7e1bbe79993aaa71aab3c7be94071e0ad904219c442a6"
+  },
+  "coap.ans12_policy": {
+    "file": "capabilities/control/ans12_policy.py",
+    "resource": "resources/arrange_largest_number_random/coap/ans12_policy.py",
+    "package": false,
+    "sha256": "79cc8ed7a6b628d0ea33f907319d1dcb5b7e7416ccc7d11923dd82e1ff462a7a"
+  },
+  "adapters": {
+    "namespace": true
+  }
+}

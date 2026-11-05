@@ -1,0 +1,98 @@
+{
+  "policy.physicalrsi_swap_blocks_v1_21.adapter": {
+    "file": "capabilities/control/adapter_for_swap_blocks.py",
+    "resource": "resources/swap_blocks/coap/adapter.py",
+    "package": false,
+    "sha256": "e8545ee5bdfbec149b84bfcf79604c30550883e8e90ba1ccba05758faba2a6d5"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.perception": {
+    "file": "capabilities/perception/perception_for_swap_blocks.py",
+    "resource": "resources/swap_blocks/coap/perception.py",
+    "package": false,
+    "sha256": "1dd9141701ba68da5aa2ee14f0a2947c4f2589e1742fde101db197ee1664af0a"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.robot_geometry": {
+    "file": "capabilities/geometry/robot_geometry.py",
+    "resource": "resources/swap_blocks/coap/robot_geometry.py",
+    "package": false,
+    "sha256": "a67f90e81ff27dbcb886f223dba986b227c4bd6fa64318e07a4cfff58d50b209"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.calibration": {
+    "file": "capabilities/control/calibration.py",
+    "resource": "resources/swap_blocks/coap/calibration.py",
+    "package": false,
+    "sha256": "24bb1d14759fc731e1c1bef1ecc182b21a6897568e5776d44fedd11c705c7e11"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21": {
+    "file": "capabilities/control/native_swap_blocks.py",
+    "resource": "resources/swap_blocks/coap/__init__.py",
+    "package": true,
+    "sha256": "190cf5b29878f11def436e7d813fca4a8e659a77a7045ebf0b244d48e5756b62"
+  },
+  "policy": {
+    "file": "capabilities/control/policy_for_sort_nesting_dolls_by_size.py",
+    "resource": "resources/swap_blocks/coap/shared/__init__.py",
+    "package": true,
+    "sha256": "aa16f70a86af54190494ac1386265c926f8f0ca8775ef8a900189f5df525d2e5"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.button_material": {
+    "file": "capabilities/control/button_material.py",
+    "resource": "resources/swap_blocks/coap/button_material.py",
+    "package": false,
+    "sha256": "2864dff6bf3f26b5706feab519323d9ff4d25f54f62e1a16a78bf9c03dfbb107"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.model": {
+    "file": "capabilities/control/model_for_swap_blocks.py",
+    "resource": "resources/swap_blocks/coap/model.py",
+    "package": false,
+    "sha256": "f0808e0827fa51fc35b5500006f3948a82dbc0b32d8d5941f3602391663a746e"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.closure_rgb": {
+    "file": "capabilities/perception/closure_rgb.py",
+    "resource": "resources/swap_blocks/coap/closure_rgb.py",
+    "package": false,
+    "sha256": "6bd304f3338bb5f36ae995895577266b6e221915f0de9917f97091d48a6baee6"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.destination_rgb": {
+    "file": "capabilities/perception/destination_rgb.py",
+    "resource": "resources/swap_blocks/coap/destination_rgb.py",
+    "package": false,
+    "sha256": "2b35c4591e4afcb20ea51d6329cb8449f3508fad698517963b790070e6d932eb"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.placement_rgb": {
+    "file": "capabilities/perception/placement_rgb.py",
+    "resource": "resources/swap_blocks/coap/placement_rgb.py",
+    "package": false,
+    "sha256": "a6fd1e883e790741deb827e15855d64685da87bdf725d49305003749553480f3"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.transfer_rgb": {
+    "file": "capabilities/perception/transfer_rgb.py",
+    "resource": "resources/swap_blocks/coap/transfer_rgb.py",
+    "package": false,
+    "sha256": "a9d1526d964153a16c33628ae77c1c7807b15226989eb3112d54e66f4b50984d"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.visible_grasp": {
+    "file": "capabilities/control/visible_grasp.py",
+    "resource": "resources/swap_blocks/coap/visible_grasp.py",
+    "package": false,
+    "sha256": "b7ab6b128bade993f69601cb9c32ccea8b333a8746da4ec6f1d008ba47d053e9"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.skill_choices": {
+    "file": "capabilities/planning/skill_choices.py",
+    "resource": "resources/swap_blocks/coap/skill_choices.py",
+    "package": false,
+    "sha256": "a1587b87fd2f1912071fee940b6e2030b622d1ddf10f30f6f3ee5ad982ebd090"
+  },
+  "policy.x5_kinematics": {
+    "file": "capabilities/motion/x5_kinematics.py",
+    "resource": "resources/swap_blocks/coap/shared/x5_kinematics.py",
+    "package": false,
+    "sha256": "11f11f235b78440ab9d6afd292a72cb07a1af702667724e772da4ce16937d229"
+  },
+  "policy.physicalrsi_swap_blocks_v1_21.collision_gate": {
+    "file": "capabilities/motion/collision_gate.py",
+    "resource": "resources/swap_blocks/coap/collision_gate.py",
+    "package": false,
+    "sha256": "242331b9cbb7f9e020610310725c76e1a649a52c561747fa56298e74dee33974"
+  }
+}

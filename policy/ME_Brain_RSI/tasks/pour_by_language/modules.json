@@ -1,0 +1,140 @@
+{
+  "coap.tasks.pour_candidate_r01_a": {
+    "file": "capabilities/control/pour_candidate_a.py",
+    "resource": "resources/pour_by_language/coap/tasks/pour_candidate_r01_a.py",
+    "package": false,
+    "sha256": "46ee6d33d0f455494568afa2a6acbb8d85539ac33454f95a94d424378764ea2d"
+  },
+  "coap.context": {
+    "file": "capabilities/control/context_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/context.py",
+    "package": false,
+    "sha256": "e43c0bd2981f05158877ce9d222c7bebaef9732c57ab5cf7bacd61ad2a95c6f2"
+  },
+  "coap.robot_motion_geometry": {
+    "file": "capabilities/motion/robot_motion_geometry.py",
+    "resource": "resources/pour_by_language/coap/robot_motion_geometry.py",
+    "package": false,
+    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+  },
+  "coap.kinematics": {
+    "file": "capabilities/motion/kinematics.py",
+    "resource": "resources/pour_by_language/coap/kinematics.py",
+    "package": false,
+    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+  },
+  "coap.motion": {
+    "file": "capabilities/motion/motion.py",
+    "resource": "resources/pour_by_language/coap/motion.py",
+    "package": false,
+    "sha256": "446e21c59ea4dcea011b3010c8fd9006bf103207f1b3a0673bf1bb3ae0a5f290"
+  },
+  "coap.public_mesh": {
+    "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/public_mesh.py",
+    "package": false,
+    "sha256": "dc43e2e4032ec4612a4cbcfdcc95b5ec30e59c0d610665d4cd27de8ace4e34c1"
+  },
+  "coap": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/pour_by_language/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "coap.tasks.mesh_kinematics": {
+    "file": "capabilities/motion/mesh_kinematics_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/tasks/mesh_kinematics.py",
+    "package": false,
+    "sha256": "ee18f724e4171ce07efa790296c7e550d5b431d7065417e0cec0ca7b31750193"
+  },
+  "coap.tasks": {
+    "file": "capabilities/control/tasks.py",
+    "resource": "resources/pour_by_language/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "5d5d455874ce30ed67d2dacda03ae4e3e89bc9ccf68cc29d42e81643186e7444"
+  },
+  "coap.debug_thresholds": {
+    "file": "capabilities/control/debug_thresholds.py",
+    "resource": "resources/pour_by_language/coap/debug_thresholds.py",
+    "package": false,
+    "sha256": "aa9c1c978dead20c132eec86382a3ef20a30c25b001d53ddf3b419eb548a67b0"
+  },
+  "coap.tasks.garment_contact": {
+    "file": "capabilities/control/garment_contact_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/tasks/garment_contact.py",
+    "package": false,
+    "sha256": "5076be430569c49a885df6fafbbcb8aa6aff0091a5376f5285d431f9de491345"
+  },
+  "coap.measurement": {
+    "file": "capabilities/control/measurement.py",
+    "resource": "resources/pour_by_language/coap/measurement.py",
+    "package": false,
+    "sha256": "7eb45a2115cb25deef10c6e99e6d950fb101a2724436dbefda26b402866a20c3"
+  },
+  "coap.world": {
+    "file": "capabilities/planning/world.py",
+    "resource": "resources/pour_by_language/coap/world.py",
+    "package": false,
+    "sha256": "df1fb658d828db286d0bde2ea64b1a83d0e6f2adda3ed88d54c34722cda95b4c"
+  },
+  "coap.perception": {
+    "file": "capabilities/perception/perception.py",
+    "resource": "resources/pour_by_language/coap/perception.py",
+    "package": false,
+    "sha256": "eb51934df88e4c926ebd88af3b89e2f001b721b69168b8c54143aabd2b5e370c"
+  },
+  "coap.tasks.pour_support": {
+    "file": "capabilities/control/pour_support.py",
+    "resource": "resources/pour_by_language/coap/tasks/pour_support.py",
+    "package": false,
+    "sha256": "2b649d96801623400558f7fd14a0ddd2be302e9faa3b2f4d024dff4f1abb1abb"
+  },
+  "coap.policy": {
+    "file": "capabilities/control/policy_for_pour_by_language.py",
+    "resource": "resources/pour_by_language/coap/policy.py",
+    "package": false,
+    "sha256": "2d8fd405b853fd93628744711b2777a1e85d49b9344c9cb711cacb091b47b4c1"
+  },
+  "deploy": {
+    "file": "capabilities/control/deploy_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/deploy.py",
+    "package": false,
+    "sha256": "fc406ba88b4201502a41b1eb3c7e829122b720235dd767ba22f098163ec47000"
+  },
+  "coap.physicalrsi_native": {
+    "file": "capabilities/control/native_native_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/physicalrsi_native.py",
+    "package": false,
+    "sha256": "e549187d60f3108cb5a8216db8936ced17449aa402804a2ec593be7cb9efdfb8"
+  },
+  "coap.physicalrsi_bridge": {
+    "file": "capabilities/control/native_bridge_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/physicalrsi_bridge.py",
+    "package": false,
+    "sha256": "ca19a7367c0eea130e916874f04eb16a9da59af9e854b28b189046aa20b58e5a"
+  },
+  "coap.native_action_stream": {
+    "file": "capabilities/control/native_action_stream_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/native_action_stream.py",
+    "package": false,
+    "sha256": "990ddd545faed68e026eb49999a697e29d9c023674f000150ea8d9d6d8e0f117"
+  },
+  "coap.report": {
+    "file": "capabilities/observation/report_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/coap/report.py",
+    "package": false,
+    "sha256": "809383609f98e50fb9ffd6c92cdb51bb1941e0e2e94ce3907ffb4dc83f8b851d"
+  },
+  "coap.audit": {
+    "file": "capabilities/observation/audit.py",
+    "resource": "resources/pour_by_language/coap/audit.py",
+    "package": false,
+    "sha256": "7cd7da9749413800248d6390d0db42c4c8b757458e2d2f2f100496cdc468fab0"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
+    "resource": "resources/pour_by_language/model.py",
+    "package": false,
+    "sha256": "cfbd21dcd3e33a9133b5e607e6d07de7f5732478e2969e79e0d5cdc5cc340692"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "b88r42wq.policy": {
+    "file": "capabilities/control/policy_for_play_stacking_toy.py",
+    "resource": "resources/play_stacking_toy/coap/policy.py",
+    "package": false,
+    "sha256": "51e08ca5710e56e8d2c52f1518ac043a988fd2069205690b4f6d0b7a77647e34"
+  },
+  "b88r42wq.tasks.containers": {
+    "file": "capabilities/control/containers.py",
+    "resource": "resources/play_stacking_toy/coap/tasks/containers.py",
+    "package": false,
+    "sha256": "62371d67f338f794fd097f1ae9001249cff651b6233ea658ecdf1224158fbf0c"
+  },
+  "b88r42wq.motion": {
+    "file": "capabilities/motion/motion_for_make_kong.py",
+    "resource": "resources/play_stacking_toy/coap/motion.py",
+    "package": false,
+    "sha256": "72a9b426ef1067e868e950ace3eb32133ba65f3ab5cd6aa6270e85132a1938bd"
+  },
+  "b88r42wq": {
+    "file": "capabilities/control/robot.py",
+    "resource": "resources/play_stacking_toy/coap/__init__.py",
+    "package": true,
+    "sha256": "0d5ab17fdb679b7515310cbf23a56079be09c65016ddcc46a3e1a7c44a05926e"
+  },
+  "b88r42wq.kinematics": {
+    "file": "capabilities/motion/kinematics_for_make_kong.py",
+    "resource": "resources/play_stacking_toy/coap/kinematics.py",
+    "package": false,
+    "sha256": "07499aba5bfc38357bf490524271300c313acc2f8ea926a086dff1e62c17a84e"
+  },
+  "b88r42wq.tasks.organize": {
+    "file": "capabilities/control/organize.py",
+    "resource": "resources/play_stacking_toy/coap/tasks/organize.py",
+    "package": false,
+    "sha256": "549aab11e9990a6b458e4eaa185fdd567149f342f4bf4667a494ce91738a5c74"
+  },
+  "b88r42wq.tasks.organize_vision": {
+    "file": "capabilities/perception/organize_vision.py",
+    "resource": "resources/play_stacking_toy/coap/tasks/organize_vision.py",
+    "package": false,
+    "sha256": "208339b1216fd093403e0864df4bd143269e8358c45a3ebb0341d28ab99e7940"
+  },
+  "b88r42wq.tasks.containers_vision": {
+    "file": "capabilities/perception/containers_vision.py",
+    "resource": "resources/play_stacking_toy/coap/tasks/containers_vision.py",
+    "package": false,
+    "sha256": "e60c4eafb69ff0861dacd56927c373f912be2ed00d1218877ad1dd7738f32513"
+  },
+  "b88r42wq.tasks": {
+    "file": "capabilities/control/insert_key.py",
+    "resource": "resources/play_stacking_toy/coap/tasks/__init__.py",
+    "package": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "b88r42wq.robot_collision": {
+    "file": "capabilities/motion/robot_collision.py",
+    "resource": "resources/play_stacking_toy/coap/robot_collision.py",
+    "package": false,
+    "sha256": "179d4a220b38a8bfb0d360d0d724bd7da1a5882af0e996a0d834e27ebb05257a"
+  },
+  "model": {
+    "file": "capabilities/control/model_for_make_kong.py",
+    "resource": "resources/play_stacking_toy/model.py",
+    "package": false,
+    "sha256": "d5636bce739df89da3aaa7a07faa9b5a7f62f968368cb3455e28dd2ec1c04cc7"
+  },
+  "b88r42wq.evidence": {
+    "file": "capabilities/observation/evidence.py",
+    "resource": "resources/play_stacking_toy/coap/evidence.py",
+    "package": false,
+    "sha256": "c7ffd03aeec0986c62469e5823493a4fb2ed12ff759ee718f1914469c2039da7"
+  },
+  "b88r42wq.context": {
+    "file": "capabilities/control/context_for_make_kong.py",
+    "resource": "resources/play_stacking_toy/coap/context.py",
+    "package": false,
+    "sha256": "8fcd3d2ea9432be8d546b27b41595427f49a3953a34d2e4fe4dfa13bceeb9eae"
+  },
+  "b88r42wq.perception": {
+    "file": "capabilities/perception/perception_for_make_kong.py",
+    "resource": "resources/play_stacking_toy/coap/perception.py",
+    "package": false,
+    "sha256": "09ea72c892256d9d51ffd0d6d84b5d5f5a904cccd0f0588db0ab879ca03c9fc9"
+  }
+}

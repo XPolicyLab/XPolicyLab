@@ -1,0 +1,24 @@
+{
+  "source": "work/conveyor-public-assets/Rigid/camera/00002/object.usdz",
+  "sha256": "01a120e80eed8719a7aeb5f2dc66d23d05ba7ba4457688ff1ba17ca4ca0a4a86",
+  "subset": "/World/visual/Material_015",
+  "material": "/World/Looks/Material_015",
+  "base_color_factor": [
+    0.8000001,
+    0.05971681,
+    0.033635292
+  ],
+  "point_count": 896,
+  "bounds": [
+    [
+      -0.06758406473162881,
+      -0.13605529418154858,
+      0.00042785568493232395
+    ],
+    [
+      0.004199597275100408,
+      -0.13099101445793296,
+      0.07210105196426447
+    ]
+  ]
+}
