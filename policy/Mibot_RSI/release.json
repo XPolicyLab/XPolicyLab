@@ -1,7 +1,7 @@
 {
   "dataset": {
     "repo": "ffanyt/Mibot-RSI-knowledge",
-    "revision": null
+    "revision": "36cabc689dfb8d38cecf1c80583e8c4fa245c6aa"
   },
   "knowledge": {
     "ckpt_name": "eval",
