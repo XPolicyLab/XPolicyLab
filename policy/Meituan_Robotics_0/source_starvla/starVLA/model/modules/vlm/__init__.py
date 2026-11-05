@@ -1,5 +1,9 @@
 def get_vlm_model(config):
-    """Build the only VLM supported by this evaluation-only adapter."""
-    from .QWen3_5 import _QWen3_5_VL_Interface
+    vlm_name = config.framework.qwenvl.base_vlm
 
-    return _QWen3_5_VL_Interface(config)
+    if "Qwen3.5" in vlm_name:
+        from .QWen3_5 import _QWen3_5_VL_Interface
+
+        return _QWen3_5_VL_Interface(config)
+    else:
+        raise NotImplementedError(f"VLM model {vlm_name} not implemented")

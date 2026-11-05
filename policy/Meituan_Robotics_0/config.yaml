@@ -1,0 +1,47 @@
+seed: 0
+framework:
+  name: QwenMMDiT
+  qwenvl:
+    base_vlm: Qwen3.5-4B-Action
+    attn_implementation: flash_attention_2
+    vl_hidden_dim: 2560
+  action_model:
+    action_model_type: MMDiT-Psi0
+    action_dim: 14
+    state_dim: 14
+    action_horizon: 50
+    future_action_window_size: 49
+    past_action_window_size: 0
+    vl_feature_dim: 2560
+    num_timestep_buckets: 1000
+    num_inference_timesteps: 10
+    state_placement: condition
+    prediction_type: sample
+    compute_dtype: float32
+datasets:
+  vla_data:
+    include_state: true
+    action_layout: interleaved
+    action_type: abs_qpos
+    action_mode: abs
+    normalization_mode: q99
+    obs_image_size: null
+    min_pixels: 307200
+    max_pixels: 307200
+    visual_history:
+      enabled: true
+      window_sec: 16.0
+      sample_fps: 0.0
+      include_first: true
+      main_camera: cam_high
+      src_fps: 25
+      image_size_hw:
+      - 480
+      - 640
+    lam_memory:
+      enabled: true
+      stride: 4
+      sample_fps: 1
+      aggregation: mean
+      window_sec: 3
+    first_frame_encoder_detach: true

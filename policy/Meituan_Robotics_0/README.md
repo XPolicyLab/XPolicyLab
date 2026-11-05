@@ -1,25 +1,23 @@
 # Meituan Robotics 0
 
-**Contributor:** Meituan Robotics | **Paper:** Not released | **arXiv:** Not released | **Original code:** [StarVLA](https://github.com/starVLA/starVLA)
+**Contributor:** Meituan Robotics | **Paper / arXiv:** Not released | **Original code:** inference source included here.
 
-Evaluation-only adapter for one RoboDojo StarVLA checkpoint family: Qwen3.5-4B
-with MMDiT-Psi0, 640x480 RGB, and 14D dual-arm absolute joint actions. The
-minimal inference runtime vendored in `source_starvla/` is copied from the
-open-source StarVLA checkout; `policy/starVLA` is neither imported nor changed.
+Evaluation-only RoboDojo policy using Qwen3.5-4B and MMDiT-Psi0, with episode-first RGB and three completed one-second CD-LAM memory buckets. It predicts 50 actions and executes 16 with continuous gripper widths.
+
+The policy network is in `source_starvla/`; the frozen CD-LAM network is in `source_cdlam/`.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
 ## Installation
 
+Activate a dedicated Python 3.11 environment on Linux x86_64, with a compatible CUDA 12.x toolkit (`nvcc`), NVIDIA driver and C++ compiler. Keep a CUDA GPU visible for the final FLA/Triton import check. From the `XPolicyLab/` root, install the pinned policy dependencies:
+
 ```bash
-conda create -n meituan_robotics_0 python=3.11 -y
 conda activate meituan_robotics_0
-bash policy/Meituan_Robotics_0/install.sh
+CUDA_HOME=/usr/local/cuda bash policy/Meituan_Robotics_0/install.sh
 ```
 
-The tested runtime is Python 3.11, PyTorch 2.7.1, torchvision 0.22.1,
-transformers 5.7.0, flash-attn 2.8.3, flash-linear-attention 0.5.1,
-and causal-conv1d 1.6.2.post1.
+Adjust `CUDA_HOME` to your toolkit location. The script pins the tested CUDA 12.6 PyTorch build, model kernels, image processing and transport packages, including the public `safetensors==0.8.0rc0` prerelease. CUDA extensions may compile during installation. CD-LAM source and its inference attention adaptation are included in this policy; no external source checkout or site-packages patch is needed. The simulator uses its existing RoboDojo environment with XPolicyLab's dependencies from `pyproject.toml`; run this installer only in the policy environment.
 
 ## Data Processing
 
@@ -27,55 +25,51 @@ Not included in this eval-only adapter.
 
 ## Training
 
-Not included in this eval-only adapter.
+Not included in this eval-only adapter. Training release date: not announced.
 
 ## Model Assets
 
-Download the evaluated checkpoint, its resolved training configuration and
-normalization statistics, and the Qwen3.5 tokenizer/processor assets together:
+Download these assets from the model repository:
 
-```bash
-hf download wz7in/mr0 \
-  --local-dir policy/Meituan_Robotics_0/checkpoints/mr0
+```text
+Meituan_Robotics_0/model.ckpt
+cdlam/model.pt
+base_vlm/Qwen3.5-4B-Action/
 ```
 
-The adapter resolves `pytorch_model.pt`, `config.full.yaml`,
-`dataset_statistics.json`, and `base_vlm/` from that directory. The released
-checkpoint contains the complete VLM and action-head weights; `base_vlm/`
-contains configuration and preprocessing assets only, so no second copy of the
-Qwen weights is required.
+All three are required. The base VLM directory includes weights, tokenizer and processor assets. The 200k training initialization is not needed for inference.
+
+The repository ID and commit are pending author upload. Run all commands below from the `XPolicyLab/` root. After activating the existing policy environment, download once:
+
+```bash
+conda activate meituan_robotics_0
+bash policy/Meituan_Robotics_0/download_checkpoint.sh owner/repository COMMIT_SHA
+```
+
+Use a full commit SHA. The optional third argument sets the destination; the default is `checkpoints/mr0_width_130k/`. For existing local assets, set `ROBODOJO_ASSET_ROOT=/path/to/assets`.
 
 ## Evaluation
 
-Keep `config.full.yaml`, `dataset_statistics.json`, and `base_vlm/` beside the
-checkpoint, as produced by the download command above. The legacy training
-layout with the checkpoint inside `checkpoints/` or `final_model/` is also
-supported. Startup rejects checkpoints whose framework, data mix, resolution,
-action mode, normalization, horizon, or noise settings differ from this
-profile.
+Place this directory at `XPolicyLab/policy/Meituan_Robotics_0` inside a complete official RoboDojo workspace. Its `env_cfg/` and `scripts/eval_policy.sh` must be alongside `XPolicyLab/` in the parent directory; RoboDojo simulator Assets must already be installed. Use the official XPolicyLab shared layer with RGB-marked JPEG support (validated reference: `6baccd57ff958570d0db1588370289ee36c8bb70`). Pass existing policy and simulator environments to the launcher:
 
 ```bash
-bash policy/Meituan_Robotics_0/eval.sh \
+EVAL_ENV_TYPE=sim bash policy/Meituan_Robotics_0/eval.sh \
   RoboDojo stack_bowls mr0 arx_x5 joint 0 \
   0 1 meituan_robotics_0 robodojo
 ```
 
-Supported settings are `bench_name=RoboDojo`,
-`env_cfg_type=arx_x5`, and `action_type=joint`. The checkpoint predicts 50
-steps with 10 Euler denoising steps; the adapter returns the first 16 actions.
+Supported settings: `bench_name=RoboDojo`, `env_cfg_type=arx_x5`, `action_type=joint`. Replace `meituan_robotics_0` and `robodojo` with the actual policy and simulator environments. The environment arguments accept a conda name, environment directory or Python executable; the example selects policy GPU 0 and simulator GPU 1, which can also be adjusted. Use `EVAL_ENV_TYPE=debug` for the official debug client.
+
+Simulation uses the native task budget by default. Set `EVAL_EPISODES=1` for one episode; an explicit `EVAL_NUM` takes precedence, and `EVAL_NUM=native` restores the native budget.
 
 ## Configuration
 
-- `checkpoint_path`: exact checkpoint file or run directory; the
-  `MEITUAN_ROBOTICS_CKPT_PATH` environment variable overrides it.
-- `base_vlm`: automatically resolves to `base_vlm/` beside the released
-  checkpoint; `STARVLA_BASE_VLM` can override it.
-- `image_size`: fixed at `[640, 480]`.
-- `execute_horizon`: fixed at `16`.
+- `ROBODOJO_ASSET_ROOT` / `asset_root`: directory containing the three model assets.
+- `ROBODOJO_RUN_ROOT` / `run_root`: writable runtime caches, defaulting to `runs/` here.
+- `config.yaml` and `dataset_statistics.json`: inference configuration and q99 statistics for this checkpoint.
 
-Images passed to `model.py` are already decoded RGB arrays and are never
-channel-swapped. State order is left arm 6, left gripper 1, right arm 6, right
-gripper 1. State uses the training q01/q99 transform with clipping to
-`[-1.0, 1.0]`; actions use its inverse. Grippers remain continuous. Relative
-or delta conversion, correlated noise, gripper thresholds, temporal smoothing,
-and overlap blending are not enabled.
+Environment variables take precedence over YAML values. Images are 640×480 RGB, ordered head, left wrist, right wrist. State/action order is left arm 6, left gripper 1, right arm 6, right gripper 1.
+
+`deploy.py` collects every 25 Hz observation between action requests to supply causal history. The model uses ten Euler steps, an outer BF16 context and an FP32 action head. Episode reset clears memory without reseeding. Preserve this behavior when integrating another client.
+
+Upstream licenses are retained in `LICENSE`, `source_starvla/LICENSE` and `source_cdlam/LICENSE`.
