@@ -1,0 +1,18 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a15-original-three-20261030",
+  "files": {
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Exact original fixed public X5 URDF; shared numerical identity 7aaa308a"
+    },
+    "curobo.yml": {
+      "path": "curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Current exact official f57 fixed X5 cuRobo config; only resource pathname is adapted at planner construction"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "task": "make_toast",
+  "entry": "entry.py",
+  "evaluation_enabled": true,
+  "backend": "rule",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

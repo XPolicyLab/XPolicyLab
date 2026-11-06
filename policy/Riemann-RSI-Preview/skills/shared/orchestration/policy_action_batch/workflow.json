@@ -1,0 +1,11 @@
+{
+  "schema": "riemann-executable-workflow-v1",
+  "symbol": "Model.get_action_batch",
+  "nodes": [
+    {
+      "kind": "return",
+      "value": "[self.get_action()]"
+    }
+  ],
+  "scope": "frozen trusted policy control flow; never interpreted from observations or external logs"
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "canonical-public-random-stack-assets-v1",
+  "public_robot_urdf": {
+    "path": "resource://official_assets/Robots/x5/X5A.urdf",
+    "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423"
+  },
+  "public_robot_usd": {
+    "path": "resource://official_assets/Robots/x5/ARX.usd",
+    "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63"
+  },
+  "public_robot_config": {
+    "path": "resource://official_assets/Robots/x5/robot_config.yml",
+    "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9"
+  },
+  "public_robot_meshes": {
+    "meshes/base_link.STL": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+    "meshes/camera.glb": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+    "meshes/camera_base.glb": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+    "meshes/link1.STL": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+    "meshes/link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "meshes/link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "meshes/link4.STL": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "meshes/link5.STL": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "meshes/link6.STL": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "meshes/link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "meshes/link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+  },
+  "public_cube_templates": {
+    "path": "resource://mature_assets/b21-original-random-stack-20261030/resources/stack_blocks_templates_v5",
+    "remote_path_binding_status": "source_reference_hashes_verified_before_native_pair",
+    "source_manifest_sha256": "480ba5f8645112bfd53437b9f16a46de7f168fbd82ea8981479197b5bfc2cd4b",
+    "files": {
+      "gray_0.png": "68e82564e4c2249a2e1dd3466e8b53dbde40ec7faa631c5e30f99436355b0a26",
+      "gray_1.png": "94903e8249aec88e7e9c7f31bd58267594c07205bae060cb7c326f85d8eafdd7",
+      "gray_2.png": "5ed9e8a78c1134ed65b44415120862bf480d6523e55a1c7696ec507e0ff7b50e",
+      "gray_rgb_10.png": "e7522514e94379f63a7fc71ea528eb463e59136806ef21c8c9155a6ca017f285",
+      "gray_rgb_11.png": "ae64c4102f444a3580f0b7ad27dca09c79f54023d5847a31c235566fee09b1ea",
+      "gray_rgb_12.png": "e7deab77f9c0ae93d14c9b6e31dcd3ee0710a35fed7c3816efa5855b0647b727",
+      "gray_rgb_13.png": "8cab13cb7a717786142504d0cea4a47e73ba13ef138b1f933176b351ac140729",
+      "gray_rgb_14.png": "0ccc7e503fbdd043b739fcade5719b09d1b2dc7106a181507d2cd8147311825e",
+      "gray_rgb_15.png": "471cc11f71504f42e878db33882e397ebf6cd29ca10cc94b413f51bb882e2912",
+      "gray_rgb_16.png": "48b3e286463310034712b7c0f6dcd6c72deb2510ae3dfca28bfdec16092c7fbb",
+      "gray_rgb_17.png": "731312bcc518cb0e3cb56232e5cfc87d4f634fee13cf699364fb5c13f65af3fd",
+      "gray_rgb_18.png": "7a8e34b37a13f145d8482de92828517fe5adce790447bb7a3ecec662c45f6e95",
+      "gray_rgb_19.png": "3625ad182c2fe431be4cbad14204a2c0fe956e8d3365fc30fcbd4d8e4b99b9ab",
+      "orange_0.png": "4ffee27e9875b144494ec6442888e2f7609c1d8969b359d9fdb160f9cff2a71c",
+      "orange_1.png": "48aafc88f0a4251002b164aef401c10779e06f86387bb05f74e267156079ba44",
+      "orange_2.png": "a3158ad7cede3a6770d11a79842b5b79d71a9c11169527db4152e7d12155db70",
+      "orange_rgb_10.png": "09e0215f1f49c3838dff65d81691042daca3116dbe0f700e925f37d810140821",
+      "orange_rgb_11.png": "3dee75764b3b99232e6a1974880fdc89e27bca3a6b411c5b321aa6141663cb0f",
+      "orange_rgb_12.png": "b70b4222fbb7f895bdd543f50160c3a724290bb22708aacef23f6ca42f28fd00",
+      "orange_rgb_13.png": "f446f87c6fa3a1a8976eca9a0ca48000b9466d85c6a38486ebc80379140d4f88",
+      "orange_rgb_14.png": "541ee462fb18b93c52324772337286e5ee68655609499c56a36c5d0b8f4bdfc5",
+      "orange_rgb_15.png": "233c39375b8f47b3761442b20db6b1ef78a774a92f7525458f6903bff3399fcf",
+      "orange_rgb_16.png": "a358fcf7336cb52e3d52eaec398c138c0f6ade55f8853dee444193843ee00fab",
+      "orange_rgb_17.png": "745a16fe474eac34ef9d11e2a5d479ea8502c0cc9f4e3d706d227400316e560d",
+      "orange_rgb_18.png": "40e4089930498422c440b2772f6004afd803977aec5d47bcfc657aaa298eb09c",
+      "orange_rgb_19.png": "877f00bf07cc8b07bb96c131d51f39f8b3b2d100ffacf8958c0bca627ffef82e",
+      "red_0.png": "6bc9bd7bc8e384719be851fa1fb82acd872e694c7f7948aec4ff1833fa31cb31",
+      "red_1.png": "589ba120184009c97d5b0056fc0e685ed3844f28ea2632768965ebd011866866",
+      "red_2.png": "fcd31a2f4ffc675faf1fb2a2786917b45b855473509cd8b47215034c87546184",
+      "red_rgb_10.png": "8289ac3b050457ae5576339c06d8ee57283f989d441640bd0043d5f68329fe08",
+      "red_rgb_11.png": "13af15f87fdc75721245d0dcd643993dfd231f0eafa32c3d22cd9a3001662d21",
+      "red_rgb_12.png": "e13a12294120c2aab6fb37b835b4264cfa790d3a9154c90343977f826b28362e",
+      "red_rgb_13.png": "9260ae47a1a3857bc77af7bc0ab96dad1204a4c4d0c2452768999e87f8daebcc",
+      "red_rgb_14.png": "7919aef7506dfcd0e93319355b4f6f26a78261f916ab829f3910bfc9d58f2b63",
+      "red_rgb_15.png": "660715bf812d39b24f1920562ba92d7a1a4caa097135b448a0e17a2ed19f6701",
+      "red_rgb_16.png": "73f6956d0d3ff5922b4c52dfaedb69d0e34e9dfb0c578c1b39cb763b6f471c8c",
+      "red_rgb_17.png": "6434c77233a25c6ee6dc856018e61cc3bfc45e5f133fec447ceccf00d8ae3b88",
+      "red_rgb_18.png": "642cdf032b281bf8828a243862c3bd55703994b4092275e6e2d4b531badc8057",
+      "red_rgb_19.png": "7b182aec8505ec26aefb254a2b3d29933ddfe49791979b5d4d8098cad1f8ad17",
+      "runtime_index.json": "24c12a986e1e2c81546116e030b83c160db4cd3713c0c19c705e2a810e0fb0ae"
+    }
+  },
+  "public_robot_parameters": {
+    "gripper_scale": [
+      -0.01,
+      0.044
+    ],
+    "sign": 1,
+    "mimic": [
+      "joint8",
+      1,
+      0
+    ]
+  },
+  "planner_robot_names": {
+    "left_arm": "x5",
+    "right_arm": "x5"
+  },
+  "public_joint_limits": [
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -3.1399998664855957,
+      3.1399998664855957
+    ]
+  ],
+  "joint_limit_source": "Public ARX.usd authored revolute limits converted from degrees to float32 radians. Native binding checks exact equality, never chooses limits from live state.",
+  "layout_information_included": false
+}

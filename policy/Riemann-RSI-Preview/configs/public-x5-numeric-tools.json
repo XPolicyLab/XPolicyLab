@@ -1,0 +1,87 @@
+{
+  "public_robot_urdf": {
+    "path": "resource://official_assets/Robots/x5/X5A.urdf",
+    "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "bytes": 9218
+  },
+  "public_robot_config": {
+    "path": "resource://official_assets/Robots/x5/robot_config.yml",
+    "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+    "bytes": 794
+  },
+  "public_planner_robot_config": {
+    "path": "resource://official_assets/Robots/x5/curobo_tmp.yml",
+    "sha256": "5eea08bf7ef276bf9dfd078ef9f69221e9a67c8cf6cd19fce5ef66d42e96b3f2",
+    "bytes": 12526
+  },
+  "public_robot_parameters": {
+    "gripper_scale": [
+      -0.01,
+      0.044
+    ],
+    "sign": 1,
+    "mimic": [
+      "joint8",
+      1,
+      0
+    ],
+    "ee_link": "link6",
+    "ee_joint": "joint6",
+    "arm_joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "finger_joint_names": [
+      "joint7",
+      "joint8"
+    ]
+  },
+  "planner_robot_names": {
+    "left_arm": "x5",
+    "right_arm": "x5"
+  },
+  "public_joint_limits": [
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -3.14,
+      3.14
+    ]
+  ],
+  "public_robot_meshes": {
+    "meshes/base_link.STL": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+    "meshes/link1.STL": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+    "meshes/link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "meshes/link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "meshes/link4.STL": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "meshes/link5.STL": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "meshes/link6.STL": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "meshes/camera_base.glb": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+    "meshes/camera.glb": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+    "meshes/link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "meshes/link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+  },
+  "schema": "public-x5-numeric-tool-resources-v1"
+}

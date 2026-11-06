@@ -1,0 +1,125 @@
+{
+  "schema": "riemann-language-rear-table-episode-graph-v8",
+  "rule_only": true,
+  "learned_fallback": false,
+  "official_action_horizon": 1100,
+  "maximum_transitions": 4096,
+  "entry": "initial_observation",
+  "states": {
+    "initial_observation": {
+      "call": "skills.episode_queue.implementation:initial_observation",
+      "next": {
+        "observed": "initial_open"
+      }
+    },
+    "initial_open": {
+      "call": "skills.episode_queue.implementation:open_initial",
+      "next": {
+        "select": "select"
+      }
+    },
+    "select": {
+      "call": "skills.item_selection.implementation:run",
+      "next": {
+        "locate": "locate",
+        "retry_pass": "select",
+        "home": "home"
+      }
+    },
+    "locate": {
+      "call": "skills.episode_queue.implementation:locate",
+      "next": {
+        "capture": "capture",
+        "defer": "defer"
+      }
+    },
+    "capture": {
+      "call": "skills.episode_queue.implementation:capture",
+      "next": {
+        "place": "place",
+        "defer": "defer"
+      }
+    },
+    "place": {
+      "call": "skills.episode_queue.implementation:place",
+      "next": {
+        "select": "select",
+        "recovery_next": "recovery_next",
+        "lost_relocalize": "observed_source_recovery",
+        "defer": "defer"
+      }
+    },
+    "lost_relocalize": {
+      "call": "skills.episode_queue.implementation:lost_relocalize",
+      "next": {
+        "capture": "capture",
+        "defer": "defer"
+      }
+    },
+    "defer": {
+      "call": "skills.episode_queue.implementation:defer",
+      "next": {
+        "select": "select"
+      }
+    },
+    "home": {
+      "call": "skills.episode_queue.implementation:home",
+      "next": {
+        "recovery_scan": "recovery_scan"
+      }
+    },
+    "recovery_scan": {
+      "call": "skills.rear_table_recovery.implementation:run",
+      "next": {
+        "recovery_next": "recovery_next",
+        "done": null
+      }
+    },
+    "recovery_next": {
+      "call": "skills.episode_queue.implementation:recovery_next",
+      "next": {
+        "locate": "locate",
+        "recovery_home": "recovery_home",
+        "done": null
+      }
+    },
+    "recovery_home": {
+      "call": "skills.episode_queue.implementation:recovery_home",
+      "next": {
+        "done": null
+      }
+    },
+    "observed_source_recovery": {
+      "call": "skills.observed_source_recovery.implementation:run",
+      "next": {
+        "lost_relocalize": "lost_relocalize"
+      }
+    }
+  },
+  "nominal_tool_forward_m": 0.145,
+  "own_finger_floor_clearance_m": 0.002,
+  "source_reassociation": {
+    "skill": "source_reassociation",
+    "maximum_centroid_shift_px": 40.0,
+    "maximum_appearance_distance": 1.0
+  },
+  "observed_source_recovery": {
+    "skill": "observed_source_recovery",
+    "search_radius_px": 40.0,
+    "original_retry_grasp_fractions": {
+      "wooden_toy": 0.22,
+      "car": 0.35
+    }
+  },
+  "source_instance_ambiguity": {
+    "skill": "source_instance_ambiguity",
+    "stationary_radius_px": 9.0,
+    "minimum_area_ratio": 0.55,
+    "maximum_appearance_distance": 1.0
+  },
+  "rear_table_recovery": {
+    "skill": "rear_table_recovery",
+    "support": "same_frame_connected_wood_surface",
+    "maximum_total_recovery_candidates": 2
+  }
+}

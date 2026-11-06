@@ -1,0 +1,154 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "execution": {
+    "executor": "deterministic_native",
+    "maximum_recovery_attempts_per_stage": 2,
+    "partial_irreversible_replay": false
+  },
+  "public_instruction_applicability": "A tic-tac-toe game or an explicitly turn-based public board instruction.",
+  "stage_template": [
+    "public_minimax_place",
+    "return_own_joints",
+    "wait_public_opponent_stable"
+  ],
+  "turns": 5,
+  "wait_after_final_turn": false,
+  "opening": "Original simultaneous both-open command dwell before the first placement.",
+  "decision": "Centre opening, then mature minimax with a nearest current visible unused source tie break.",
+  "winning_line_stops_task": false,
+  "maximum_robot_actions": 1100,
+  "completion_is_official_success": false,
+  "task_id_routing": false,
+  "legacy_controller_called": false,
+  "view_skill": "board_scene_view",
+  "stages": [
+    {
+      "id": "turn0_place",
+      "skill": "board_turn_stage",
+      "turn": 0,
+      "operation": "place",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn0_home",
+      "skill": "board_turn_stage",
+      "turn": 0,
+      "operation": "home",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn0_idle_wrist_home",
+      "skill": "board_return_idle_wrist",
+      "turn": 0,
+      "operation": "conditional_own_home",
+      "decision_source": "Actual own command receipt and current own wrist displacement from initial public home"
+    },
+    {
+      "id": "turn0_wait",
+      "skill": "board_wait_opponent",
+      "turn": 0,
+      "operation": "wait",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn1_place",
+      "skill": "board_turn_stage",
+      "turn": 1,
+      "operation": "place",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn1_home",
+      "skill": "board_turn_stage",
+      "turn": 1,
+      "operation": "home",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn1_idle_wrist_home",
+      "skill": "board_return_idle_wrist",
+      "turn": 1,
+      "operation": "conditional_own_home",
+      "decision_source": "Actual own command receipt and current own wrist displacement from initial public home"
+    },
+    {
+      "id": "turn1_wait",
+      "skill": "board_wait_opponent",
+      "turn": 1,
+      "operation": "wait",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn2_place",
+      "skill": "board_turn_stage",
+      "turn": 2,
+      "operation": "place",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn2_home",
+      "skill": "board_turn_stage",
+      "turn": 2,
+      "operation": "home",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn2_idle_wrist_home",
+      "skill": "board_return_idle_wrist",
+      "turn": 2,
+      "operation": "conditional_own_home",
+      "decision_source": "Actual own command receipt and current own wrist displacement from initial public home"
+    },
+    {
+      "id": "turn2_wait",
+      "skill": "board_wait_opponent",
+      "turn": 2,
+      "operation": "wait",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn3_place",
+      "skill": "board_turn_stage",
+      "turn": 3,
+      "operation": "place",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn3_home",
+      "skill": "board_turn_stage",
+      "turn": 3,
+      "operation": "home",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn3_idle_wrist_home",
+      "skill": "board_return_idle_wrist",
+      "turn": 3,
+      "operation": "conditional_own_home",
+      "decision_source": "Actual own command receipt and current own wrist displacement from initial public home"
+    },
+    {
+      "id": "turn3_wait",
+      "skill": "board_wait_opponent",
+      "turn": 3,
+      "operation": "wait",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn4_place",
+      "skill": "board_turn_stage",
+      "turn": 4,
+      "operation": "place",
+      "decision_source": "current public board or own completed placement receipt"
+    },
+    {
+      "id": "turn4_home",
+      "skill": "board_turn_stage",
+      "turn": 4,
+      "operation": "home",
+      "decision_source": "current public board or own completed placement receipt"
+    }
+  ],
+  "idle_wrist_reset_skill": "board_return_idle_wrist",
+  "idle_wrist_reset": "Restore any idle own wrist displaced for public viewing before the original nonfinal opponent wait; do not advance the game cursor."
+}

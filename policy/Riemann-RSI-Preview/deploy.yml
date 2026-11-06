@@ -1,0 +1,14 @@
+policy_name: Riemann-RSI-Preview
+protocol: ws
+host: localhost
+port: null
+bench_name: RoboDojo
+task_name: null
+ckpt_name: null
+env_cfg_type: arx_x5
+seed: null
+action_type: null
+gpu_id: null
+eval_batch: false
+# Optional existing WAM asset overrides: wam_checkpoint, encoder_path,
+# device, t5_device. Rule policies do not initialize WAM or Qwen.

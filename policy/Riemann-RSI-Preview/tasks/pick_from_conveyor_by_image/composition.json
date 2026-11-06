@@ -1,0 +1,29 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "pick_from_conveyor_by_image",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "state": "skills/state/implementation.py",
+    "transport": "skills/transport/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py"
+  },
+  "selection": "fixed_mature_rule_workflow",
+  "backend": "rule",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "tasks/pick_from_conveyor_by_image/controller.py",
+    "tasks/pick_from_conveyor_by_image/entry.py",
+    "tasks/pick_from_conveyor_by_image/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

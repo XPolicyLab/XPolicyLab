@@ -1,0 +1,1 @@
+"""Task-local functional capabilities."""

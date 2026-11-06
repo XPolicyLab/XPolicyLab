@@ -1,0 +1,310 @@
+{
+  "schema": "riemann-skill-composition-v1",
+  "task_mode": "sweep_blocks_random",
+  "backend": "learned_policy",
+  "selection": "explicit_frozen_bindings",
+  "modules": [
+    {
+      "scaffold": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py",
+      "slots": [
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:_resolve_model_path:46",
+          "symbol": "_resolve_model_path",
+          "interface_sha256": "80a10f1bdfba0b51729528c2fc5973383fc49c52e7b8e560e430d5073ef3540a",
+          "allowed": [
+            "policy_checkpoint_resolution"
+          ],
+          "default": "policy_checkpoint_resolution",
+          "calls": [
+            "FileNotFoundError",
+            "ValueError",
+            "cfg.get",
+            "ckpt.startswith",
+            "d.startswith",
+            "int",
+            "max",
+            "os.listdir",
+            "os.path.isdir",
+            "os.path.join",
+            "s.split",
+            "str"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:_load_train_config:85",
+          "symbol": "_load_train_config",
+          "interface_sha256": "9ffb6ed43f1f4f98f397583ac1d8c1265700a428d6e9e3f0965a3bf8773a39ae",
+          "allowed": [
+            "policy_inference_configuration"
+          ],
+          "default": "policy_inference_configuration",
+          "calls": [
+            "FileNotFoundError",
+            "glob.glob",
+            "open",
+            "os.path.dirname",
+            "os.path.join",
+            "os.path.normpath",
+            "print",
+            "seen.append",
+            "sorted",
+            "str",
+            "tomllib.load"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:_verify_norm_stats:119",
+          "symbol": "_verify_norm_stats",
+          "interface_sha256": "04f55bbad217d144141bc122b50825dd08306921fa997730801fc12c62376c0a",
+          "allowed": [
+            "policy_normalization_validation"
+          ],
+          "default": "policy_normalization_validation",
+          "calls": [
+            "Path",
+            "Path(path).read_bytes",
+            "ValueError",
+            "hashlib.sha256",
+            "hashlib.sha256(Path(path).read_bytes()).hexdigest"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.__init__:130",
+          "symbol": "Model.__init__",
+          "interface_sha256": "706a8e63534e556697fe212dd7b4b616555d013b7d551dbf8af9dfe2567625ef",
+          "allowed": [
+            "policy_model_initialization"
+          ],
+          "default": "policy_model_initialization",
+          "calls": [
+            "RoboDojoCfg",
+            "SkyrobotWAMPolicy",
+            "ValueError",
+            "_dev.split",
+            "_dev.startswith",
+            "_load_train_config",
+            "_resolve_model_path",
+            "_verify_norm_stats",
+            "bool",
+            "data.get",
+            "float",
+            "int",
+            "model_cfg.get",
+            "model_cfg.get('t5_warmup_prompts_by_task', {}).get",
+            "open",
+            "os.environ.get",
+            "os.path.isdir",
+            "os.path.join",
+            "os.path.normpath",
+            "print",
+            "self.policy._encode_text_cached",
+            "self.policy._wrap_prompt",
+            "self.policy.infer_model.unload_text_encoder",
+            "str",
+            "sys.path.insert",
+            "tomllib.load",
+            "torch.cuda.device_count",
+            "train.get",
+            "train_cfg.get"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model._stitch_image:258",
+          "symbol": "Model._stitch_image",
+          "interface_sha256": "c7cd4db951aedc80347b88840de5d1bad15298fdf0bee7bd25895256b4d547af",
+          "allowed": [
+            "policy_camera_composition"
+          ],
+          "default": "policy_camera_composition",
+          "calls": [
+            "KeyError",
+            "ValueError",
+            "_CAM_ENV_TO_DS.items",
+            "arr.clip",
+            "arr.clip(0, 255).astype",
+            "arr.max",
+            "combined[0].clamp",
+            "combined[0].clamp(0, 1).mul_",
+            "combined[0].clamp(0, 1).mul_(255).to",
+            "combined[0].clamp(0, 1).mul_(255).to(torch.uint8).permute",
+            "combined[0].clamp(0, 1).mul_(255).to(torch.uint8).permute(1, 2, 0).cpu",
+            "combined[0].clamp(0, 1).mul_(255).to(torch.uint8).permute(1, 2, 0).cpu().numpy",
+            "img.astype",
+            "isinstance",
+            "list",
+            "np.asarray",
+            "np.ascontiguousarray",
+            "obs.get",
+            "self.data_cfg.combine_views",
+            "self.data_cfg.resize",
+            "torch.from_numpy",
+            "torch.from_numpy(np.ascontiguousarray(img)).permute",
+            "torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).unsqueeze",
+            "torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).unsqueeze(0).float",
+            "torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).unsqueeze(0).float().div_",
+            "vision.get"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model._state_from_obs:296",
+          "symbol": "Model._state_from_obs",
+          "interface_sha256": "4d9e4d02a27000d6579fd58cfa9d022418db7d4431369cb28c1de66c1ae9f1fa",
+          "allowed": [
+            "policy_robot_state_encoding"
+          ],
+          "default": "policy_robot_state_encoding",
+          "calls": [
+            "KeyError",
+            "ValueError",
+            "list",
+            "np.asarray",
+            "np.asarray(st['left_ee_joint_state'], np.float32).reshape",
+            "np.asarray(st['left_ee_pose'], np.float32).reshape",
+            "np.asarray(st['right_ee_joint_state'], np.float32).reshape",
+            "np.asarray(st['right_ee_pose'], np.float32).reshape",
+            "np.concatenate",
+            "obs.get"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model._task_text:317",
+          "symbol": "Model._task_text",
+          "interface_sha256": "032c46e67d8da4f0253fee2e831d4abbffd8cccc8559aa95ae0fe6be5f5f486f",
+          "allowed": [
+            "policy_instruction_text"
+          ],
+          "default": "policy_instruction_text",
+          "calls": [
+            "isinstance",
+            "len",
+            "obs.get",
+            "str"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.update_obs:327",
+          "symbol": "Model.update_obs",
+          "interface_sha256": "9d18e2b3e249864257c050405368378a07b9521ebb4823693c9279e1a64b310c",
+          "allowed": [
+            "policy_observation_update"
+          ],
+          "default": "policy_observation_update",
+          "calls": [
+            "self._state_from_obs",
+            "self._stitch_image",
+            "self._task_text",
+            "self.policy.reset"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.get_action:335",
+          "symbol": "Model.get_action",
+          "interface_sha256": "673815fbdf3dcdd8c260e3fb7591c4d35cfb3f11a29123474db4bffa76fd9654",
+          "allowed": [
+            "policy_action_step"
+          ],
+          "default": "policy_action_step",
+          "calls": [
+            "RuntimeError",
+            "ValueError",
+            "np.asarray",
+            "np.asarray(self.policy.act(img, state), np.float32).reshape",
+            "np.asarray(self.policy.act(img, state), np.float32).reshape(-1).copy",
+            "np.clip",
+            "np.linalg.norm",
+            "self.policy.act"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.update_obs_batch:360",
+          "symbol": "Model.update_obs_batch",
+          "interface_sha256": "5d6fc99f4600c66df633b4ef3d7ea08e9812eaa85b95eb476439eadf0a7be888",
+          "allowed": [
+            "policy_observation_batch_update"
+          ],
+          "default": "policy_observation_batch_update",
+          "calls": [
+            "NotImplementedError",
+            "len",
+            "self.update_obs"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.get_action_batch:367",
+          "symbol": "Model.get_action_batch",
+          "interface_sha256": "4268b21ccf87c9b1046c9665d11c8671266fb3b4a7f9faca0b0df5350861b0e0",
+          "allowed": [
+            "policy_action_batch"
+          ],
+          "default": "policy_action_batch",
+          "calls": [
+            "self.get_action"
+          ]
+        },
+        {
+          "id": "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.reset:370",
+          "symbol": "Model.reset",
+          "interface_sha256": "701f1d2d047361710e074a1c424c4053319fa4c8e458a4d6b2dcde359d097140",
+          "allowed": [
+            "policy_episode_reset"
+          ],
+          "default": "policy_episode_reset",
+          "calls": [
+            "print"
+          ]
+        }
+      ],
+      "source_sha256": "2de7301ece560338b98b8dea119e65de437c0b66246df783455be59ffdbd645b"
+    }
+  ],
+  "bindings": {
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:_resolve_model_path:46": "policy_checkpoint_resolution",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:_load_train_config:85": "policy_inference_configuration",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:_verify_norm_stats:119": "policy_normalization_validation",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.__init__:130": "policy_model_initialization",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model._stitch_image:258": "policy_camera_composition",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model._state_from_obs:296": "policy_robot_state_encoding",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model._task_text:317": "policy_instruction_text",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.update_obs:327": "policy_observation_update",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.get_action:335": "policy_action_step",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.update_obs_batch:360": "policy_observation_batch_update",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.get_action_batch:367": "policy_action_batch",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.reset:370": "policy_episode_reset"
+  },
+  "context_contract": "original policy-visible observations and measured robot state; no additional task/layout/reward inputs",
+  "dispatch": "Every extracted callable is routed through a registered skill; controller state/branches remain in independently replaceable orchestration skills.",
+  "official_action_budget_changed": false,
+  "orchestration_graphs": [
+    {
+      "skill": "policy_action_batch",
+      "graph": "skills/shared/orchestration/policy_action_batch/workflow.json",
+      "nodes": 1
+    },
+    {
+      "skill": "policy_action_step",
+      "graph": "skills/shared/orchestration/policy_action_step/workflow.json",
+      "nodes": 14
+    },
+    {
+      "skill": "policy_observation_update",
+      "graph": "skills/shared/orchestration/policy_observation_update/workflow.json",
+      "nodes": 6
+    },
+    {
+      "skill": "policy_observation_batch_update",
+      "graph": "skills/shared/orchestration/policy_observation_batch_update/workflow.json",
+      "nodes": 3
+    },
+    {
+      "skill": "policy_episode_reset",
+      "graph": "skills/shared/orchestration/policy_episode_reset/workflow.json",
+      "nodes": 3
+    }
+  ],
+  "controller_entry_slots": [
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.get_action:335",
+    "policies/riemann_1/adapter/riemann_1.0_robodojo/model.py:Model.get_action_batch:367"
+  ],
+  "runtime_layout": "repository-flat-v1",
+  "source_versioning": "git"
+}

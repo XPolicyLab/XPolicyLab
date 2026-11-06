@@ -1,0 +1,8 @@
+{
+  "task": "build_tower",
+  "backend": "learned_policy",
+  "policy_id": "riemann_1",
+  "entry": "entry.py",
+  "evaluation_enabled": true,
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

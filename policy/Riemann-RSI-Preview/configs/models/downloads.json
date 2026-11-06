@@ -1,0 +1,408 @@
+{
+  "schema": "riemann-public-downloads-v1",
+  "status": "public_downloads_available",
+  "files": [
+    {
+      "id": "riemann1.0:model/config.json",
+      "path": "Riemann1.0/model/config.json",
+      "bytes": 412,
+      "sha256": "6ed4a92e67a4931ea2dd94c4993903dc8263d75354438c94873941e5b8f4edf2",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/model/config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "riemann1.0:model/diffusion_pytorch_model.safetensors.index.json",
+      "path": "Riemann1.0/model/diffusion_pytorch_model.safetensors.index.json",
+      "bytes": 74521,
+      "sha256": "0b1c8c78f8f0a00a9ab6d498c63362f2e3db21babdf768b347e8b56d93402481",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/model/diffusion_pytorch_model.safetensors.index.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "riemann1.0:model/diffusion_pytorch_model-00001-of-00003.safetensors",
+      "path": "Riemann1.0/model/diffusion_pytorch_model-00001-of-00003.safetensors",
+      "bytes": 4953403512,
+      "sha256": "0e214878026b9777411df5ea7533c04293fb331fe5e62267f9005112d5f3f1d3",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/model/diffusion_pytorch_model-00001-of-00003.safetensors",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "riemann1.0:model/diffusion_pytorch_model-00002-of-00003.safetensors",
+      "path": "Riemann1.0/model/diffusion_pytorch_model-00002-of-00003.safetensors",
+      "bytes": 4997866304,
+      "sha256": "38e921eb20775577fc2e4dc2aee2895932b8b663bbc385445cbfebd7a427d5ca",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/model/diffusion_pytorch_model-00002-of-00003.safetensors",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "riemann1.0:model/diffusion_pytorch_model-00003-of-00003.safetensors",
+      "path": "Riemann1.0/model/diffusion_pytorch_model-00003-of-00003.safetensors",
+      "bytes": 334777840,
+      "sha256": "6eb300bc82fff9330c1f762e98443d4d88774a11c7eb78f1f59552c22e5eba71",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/model/diffusion_pytorch_model-00003-of-00003.safetensors",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "riemann1.0:action_norm_stats.jsonl",
+      "path": "Riemann1.0/action_norm_stats.jsonl",
+      "bytes": 3905,
+      "sha256": "b9352f1b08c58b50f527b99e6adcd02b87bbdbafcb664b9b93a35041a491c3a7",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/action_norm_stats.jsonl",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "riemann1.0:train_config.toml",
+      "path": "Riemann1.0/train_config.toml",
+      "bytes": 314,
+      "sha256": "17724cb9b16040377cbf10ebb618da0ffff658a517c76c6420837308568c39c9",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/Riemann1.0/train_config.toml",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "public-encoder:Wan2.2_VAE.pth",
+      "path": "encoder/Wan2.2_VAE.pth",
+      "bytes": 2818839170,
+      "sha256": "20eb789667fa5e60e7516bf509512f6cb61f01b0aa0695eadaea930c13892b36",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/wan2.2/Wan2.2_VAE.pth",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "public-encoder:models_t5_umt5-xxl-enc-bf16.pth",
+      "path": "encoder/models_t5_umt5-xxl-enc-bf16.pth",
+      "bytes": 11361920418,
+      "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/wan2.2/models_t5_umt5-xxl-enc-bf16.pth",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "public-encoder:google/umt5-xxl/tokenizer_config.json",
+      "path": "encoder/google/umt5-xxl/tokenizer_config.json",
+      "bytes": 61728,
+      "sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/wan2.2/google/umt5-xxl/tokenizer_config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "public-encoder:google/umt5-xxl/spiece.model",
+      "path": "encoder/google/umt5-xxl/spiece.model",
+      "bytes": 4548313,
+      "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/wan2.2/google/umt5-xxl/spiece.model",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "public-encoder:google/umt5-xxl/special_tokens_map.json",
+      "path": "encoder/google/umt5-xxl/special_tokens_map.json",
+      "bytes": 6623,
+      "sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/wan2.2/google/umt5-xxl/special_tokens_map.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "public-encoder:google/umt5-xxl/tokenizer.json",
+      "path": "encoder/google/umt5-xxl/tokenizer.json",
+      "bytes": 16837417,
+      "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/wan2.2/google/umt5-xxl/tokenizer.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/config.json",
+      "path": "models/clip-vit-base-patch32/config.json",
+      "bytes": 4186,
+      "sha256": "b575ef3c36f2a057fa19e221650105052d61cc9c1a972ec15019c6261ec98770",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/pytorch_model.bin",
+      "path": "models/clip-vit-base-patch32/pytorch_model.bin",
+      "bytes": 605247071,
+      "sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/pytorch_model.bin",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/preprocessor_config.json",
+      "path": "models/clip-vit-base-patch32/preprocessor_config.json",
+      "bytes": 316,
+      "sha256": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/preprocessor_config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/tokenizer.json",
+      "path": "models/clip-vit-base-patch32/tokenizer.json",
+      "bytes": 2224041,
+      "sha256": "b556ac8c99757ffb677208af34bc8c6721572114111a6e0aaf5fa69ff0b8d842",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/tokenizer.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/vocab.json",
+      "path": "models/clip-vit-base-patch32/vocab.json",
+      "bytes": 862328,
+      "sha256": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/vocab.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/merges.txt",
+      "path": "models/clip-vit-base-patch32/merges.txt",
+      "bytes": 524657,
+      "sha256": "f526393189112391ce6f9795d4695f704121ce452c3aad1f5335cc41337eba85",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/merges.txt",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/tokenizer_config.json",
+      "path": "models/clip-vit-base-patch32/tokenizer_config.json",
+      "bytes": 592,
+      "sha256": "34b7336e4bee12e0a9730eaf5189f582ef3c3eea5027f65730e5717256755aad",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/tokenizer_config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/special_tokens_map.json",
+      "path": "models/clip-vit-base-patch32/special_tokens_map.json",
+      "bytes": 389,
+      "sha256": "f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/special_tokens_map.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/added_tokens.json",
+      "path": "models/grounding-dino-tiny/added_tokens.json",
+      "bytes": 82,
+      "sha256": "909e96cb32d92ce728a01bc99850cbba26196d74115c17ebeb019275412588f2",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/added_tokens.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/config.json",
+      "path": "models/grounding-dino-tiny/config.json",
+      "bytes": 1644,
+      "sha256": "eec82c5ab66e16df12a9a212e68ac011779927c2536cf9078658e35d85f0c67a",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/model.safetensors",
+      "path": "models/grounding-dino-tiny/model.safetensors",
+      "bytes": 689359096,
+      "sha256": "1a2412ef99bd74bcd3c2a246fa1e48581f8889a1300c9051974741314fc042f3",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/model.safetensors",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/preprocessor_config.json",
+      "path": "models/grounding-dino-tiny/preprocessor_config.json",
+      "bytes": 457,
+      "sha256": "8454179ba95e2ad22947835aad7b45862a601fc0055ab88bf1ee70892d3aea60",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/preprocessor_config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/special_tokens_map.json",
+      "path": "models/grounding-dino-tiny/special_tokens_map.json",
+      "bytes": 125,
+      "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/special_tokens_map.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/tokenizer.json",
+      "path": "models/grounding-dino-tiny/tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/tokenizer.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/tokenizer_config.json",
+      "path": "models/grounding-dino-tiny/tokenizer_config.json",
+      "bytes": 1237,
+      "sha256": "d40ab645b68211910b9170d22433d43186a6ec8ee6fd10ba170524b25bf4fb56",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/tokenizer_config.json",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/vocab.txt",
+      "path": "models/grounding-dino-tiny/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/vocab.txt",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/sam3/sam3.pt",
+      "path": "models/sam3-robodojo-v21/sam3.pt",
+      "bytes": 3450062241,
+      "sha256": "9999e2341ceef5e136daa386eecb55cb414446a00ac2b55eb2dfd2f7c3cf8c9e",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/sam3/sam3.pt",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/sam3/LICENSE",
+      "path": "models/sam3-robodojo-v21/LICENSE",
+      "bytes": 7353,
+      "sha256": "4dea99bfaa016e21bc860d73f344236bd1e5c4977d1a9a8fd32f822b500ae1be",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/sam3/LICENSE",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:task_detectors/match_and_pick_from_conveyor/model.pt",
+      "path": "task_detectors/match_and_pick_from_conveyor/model.pt",
+      "bytes": 674745,
+      "sha256": "084e18fed9ffc8fd1e3c873510474b016cde0fab7144dc6fda360e5c9b2bb3e8",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/task_detectors/match_and_pick_from_conveyor/model.pt",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:task_detectors/imitate_sorting_sequence/model.pt",
+      "path": "task_detectors/imitate_sorting_sequence/model.pt",
+      "bytes": 373975,
+      "sha256": "b5e4637a0b6f7785bb5861617a39dba12d4f2f2e16d65c94bda8ee3e735ee9d0",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/task_detectors/imitate_sorting_sequence/model.pt",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/clip-vit-base-patch32/LICENSE",
+      "path": "models/clip-vit-base-patch32/LICENSE",
+      "bytes": 1064,
+      "sha256": "987e63b32f6c89ff5160e429458a872ff048e6860b590a3912e938f9da8f14db",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/clip-vit-base-patch32/LICENSE",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:common_visual_models/grounding-dino-tiny/LICENSE",
+      "path": "models/grounding-dino-tiny/LICENSE",
+      "bytes": 11355,
+      "sha256": "b403c98ec1ffaccb0124632592a3d99642cddc3031ca412b402568e6c06c202a",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/grounding-dino-tiny/LICENSE",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "vision:task_detectors/README.md",
+      "path": "task_detectors/README.md",
+      "bytes": 754,
+      "sha256": "762ad2bbaae7d7d77362d0cfd8b4a6d715f4cb11d9c26584202a9810c5db19a7",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/task_detectors/README.md",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "runtime:common_visual_models/sam3/runtime.tar.gz",
+      "path": "downloads/sam3-runtime.tar.gz",
+      "bytes": 18560515,
+      "sha256": "5a5f4e6b5991cadf79dfe0271a4e36e860eefd888bdf20fb879c2d537714443e",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/sam3/runtime.tar.gz",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "runtime:common_visual_models/sam3/THIRD_PARTY_NOTICES.txt",
+      "path": "models/sam3-robodojo-v21/THIRD_PARTY_NOTICES.txt",
+      "bytes": 26168,
+      "sha256": "889b46ed20840e639795aaa1b8040ea3814365e2e79a005340c873070190d3f3",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/common_visual_models/sam3/THIRD_PARTY_NOTICES.txt",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "id": "runtime:resources/templates.tar.gz",
+      "path": "downloads/templates.tar.gz",
+      "bytes": 303497675,
+      "sha256": "39b7c9cb89dd8bce9e2e4c9cc1aaf1cdc17f9204d26f2bd2a1cee22083543c41",
+      "url": "https://huggingface.co/bolwang/Riemann-RSI-Preview_robodojo/resolve/e0fa3f2a920eb74ae105194829e13cb07b861c08/resources/templates.tar.gz",
+      "access_status": "public",
+      "author_model": "bolwang/Riemann-RSI-Preview_robodojo",
+      "author_revision": "e0fa3f2a920eb74ae105194829e13cb07b861c08"
+    },
+    {
+      "path": "protocol_dependencies/wheels/websockets-14.2-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 169911,
+      "sha256": "22441c81a6748a53bfcb98951d58d1af0661ab47a536af08920d129b4d1c3473",
+      "id": "protocol:websockets14.2",
+      "url": "https://files.pythonhosted.org/packages/6b/a9/37531cb5b994f12a57dec3da2200ef7aadffef82d888a4c29a0d781568e4/websockets-14.2-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    }
+  ],
+  "weights_changed": false,
+  "notes": [
+    "All HF files pin one immutable author mirror revision; exact model and numeric resource identities remain checked.",
+    "Download and prepare using download_checkpoints.sh --prepare; the SDK and shared environments remain read-only."
+  ]
+}

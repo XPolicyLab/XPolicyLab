@@ -1,0 +1,100 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1600,
+  "wam_reselection": false,
+  "max_operations": 128,
+  "bindings": {
+    "pick_primary": "skills.stage.implementation:pick_primary",
+    "prepare_retry": "skills.stage.implementation:prepare_retry",
+    "pick_same_arm": "skills.stage.implementation:pick_same_arm",
+    "same_arm_failed": "skills.stage.implementation:same_arm_failed",
+    "pick_alternate": "skills.stage.implementation:pick_alternate"
+  },
+  "errors": {
+    "runtime_failure": "skills.stage.implementation:RuntimeError"
+  },
+  "steps": [
+    {
+      "id": "primary_grasp_error_boundary",
+      "try": [
+        {
+          "id": "pick_primary",
+          "call": "pick_primary",
+          "args": {
+            "verify_initial": false,
+            "max_physical_attempts": 4
+          }
+        }
+      ],
+      "catch": [
+        {
+          "errors": [
+            "runtime_failure"
+          ],
+          "as": "first_error",
+          "do": [
+            {
+              "id": "prepare_retry",
+              "call": "prepare_retry",
+              "args": {
+                "error": {
+                  "var": "first_error"
+                }
+              },
+              "store": "same_arm_retry"
+            },
+            {
+              "id": "bounded_arm_retry_choice",
+              "if": {
+                "var": "same_arm_retry"
+              },
+              "then": [
+                {
+                  "id": "same_arm_retry_error_boundary",
+                  "try": [
+                    {
+                      "id": "pick_same_arm",
+                      "call": "pick_same_arm",
+                      "args": {
+                        "verify_initial": false
+                      }
+                    }
+                  ],
+                  "catch": [
+                    {
+                      "errors": [
+                        "runtime_failure"
+                      ],
+                      "as": "retry_error",
+                      "do": [
+                        {
+                          "id": "same_arm_failed",
+                          "call": "same_arm_failed",
+                          "args": {
+                            "error": {
+                              "var": "retry_error"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "else": [
+                {
+                  "id": "pick_alternate",
+                  "call": "pick_alternate",
+                  "args": {
+                    "verify_initial": false
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

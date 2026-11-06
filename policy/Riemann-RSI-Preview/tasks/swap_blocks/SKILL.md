@@ -1,0 +1,3 @@
+# Original swap rule composition
+
+`entry.py` starts the common official client; `composition.json` declares the actor bindings. Inputs: current six arm joints, seven-value EE poses, normalized public SDK execution feedback, decoded head/wrist RGB, static hash-pinned public geometry and own command history. Outputs: public commands and control progression; official success comes only from the external evaluator. Fixed `workflow.json` preserves stage/skill continuity and original transfer/press/home order; no WAM, Qwen or resolver decisions occur during motions. CPU evidence does not establish native performance.

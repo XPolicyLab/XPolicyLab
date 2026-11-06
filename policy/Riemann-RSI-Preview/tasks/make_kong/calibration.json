@@ -1,0 +1,31 @@
+{
+  "schema": "public-mahjong-nominal-geometry-v1",
+  "head_origin_m": [
+    0.0,
+    -0.41,
+    1.308
+  ],
+  "head_euler_deg": [
+    30.0,
+    0.0,
+    0.0
+  ],
+  "head_focal_pixels": 288.13254186835945,
+  "nominal_tile_height_m": 0.0648,
+  "nominal_tile_depth_m": 0.0328,
+  "dimensions_are_nominal": true,
+  "dynamic_positions": "Reconstructed from current public RGB; no rack/discard slot coordinates",
+  "source": "Public fixed-head model and static tile hypotheses in GO-3 PR214; resource locks recorded separately",
+  "wrist_focal_pixels": 397.04127893104277,
+  "wrist_sensor_origin_m": [
+    0,
+    0,
+    0.001
+  ],
+  "wrist_sensor_euler_deg": [
+    0,
+    -80,
+    -90
+  ],
+  "wrist_mount_source": "Fixed camera joints in declared own X5 URDF; optical convention from public X5 sensor calibration"
+}

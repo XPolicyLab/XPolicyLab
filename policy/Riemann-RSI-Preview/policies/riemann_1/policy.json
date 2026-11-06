@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "policy_id": "riemann_1",
+  "backend": "learned_policy",
+  "adapter_name": "Riemann_1.0",
+  "step": 312000,
+  "variant": "ema",
+  "norm_stats": "action_norm_stats.jsonl",
+  "train_config": "train_config.toml",
+  "checkpoint_files": {
+    "model/config.json": {
+      "bytes": 412,
+      "sha256": "6ed4a92e67a4931ea2dd94c4993903dc8263d75354438c94873941e5b8f4edf2"
+    },
+    "model/diffusion_pytorch_model.safetensors.index.json": {
+      "bytes": 74521,
+      "sha256": "0b1c8c78f8f0a00a9ab6d498c63362f2e3db21babdf768b347e8b56d93402481"
+    },
+    "model/diffusion_pytorch_model-00001-of-00003.safetensors": {
+      "bytes": 4953403512,
+      "sha256": "0e214878026b9777411df5ea7533c04293fb331fe5e62267f9005112d5f3f1d3"
+    },
+    "model/diffusion_pytorch_model-00002-of-00003.safetensors": {
+      "bytes": 4997866304,
+      "sha256": "38e921eb20775577fc2e4dc2aee2895932b8b663bbc385445cbfebd7a427d5ca"
+    },
+    "model/diffusion_pytorch_model-00003-of-00003.safetensors": {
+      "bytes": 334777840,
+      "sha256": "6eb300bc82fff9330c1f762e98443d4d88774a11c7eb78f1f59552c22e5eba71"
+    },
+    "action_norm_stats.jsonl": {
+      "bytes": 3905,
+      "sha256": "b9352f1b08c58b50f527b99e6adcd02b87bbdbafcb664b9b93a35041a491c3a7"
+    },
+    "train_config.toml": {
+      "bytes": 314,
+      "sha256": "17724cb9b16040377cbf10ebb618da0ffff658a517c76c6420837308568c39c9"
+    }
+  },
+  "tasks": {
+    "stack_bowls": {
+      "official_episodes": 25
+    },
+    "put_bottles_into_dustbin": {
+      "official_episodes": 50
+    },
+    "build_tower": {
+      "official_episodes": 50
+    },
+    "hang_mugs_random": {
+      "official_episodes": 25
+    },
+    "pack_objects_into_box_random": {
+      "official_episodes": 25
+    },
+    "store_laptop_and_headphones": {
+      "official_episodes": 25
+    },
+    "store_laptop_and_headphones_random": {
+      "official_episodes": 25
+    },
+    "sweep_blocks": {
+      "official_episodes": 25
+    },
+    "sweep_blocks_random": {
+      "official_episodes": 25
+    },
+    "align_blocks": {
+      "official_episodes": 50
+    }
+  },
+  "inference": {
+    "protocol": "ws",
+    "eval_batch": false,
+    "num_inference_steps": 20,
+    "cfg_scale": 1.0,
+    "num_latents": 16,
+    "t5_cpu": false,
+    "t5_lazy": false,
+    "t5_unload_after_encode": true,
+    "verbose": false,
+    "request_timeout_s": 600.0,
+    "norm_stats_sha256": "b9352f1b08c58b50f527b99e6adcd02b87bbdbafcb664b9b93a35041a491c3a7",
+    "norm_mode": "minmax_quantile",
+    "t5_warmup_prompts_by_task": {
+      "pour_liquid_into_cup_random": [
+        "Pour the liquid from the bottle into the cup."
+      ]
+    }
+  },
+  "assets": {
+    "checkpoint": "policies/riemann_1/checkpoint",
+    "encoder": "resource://encoder/"
+  },
+  "display_name": "Riemann1.0",
+  "model_directory": "model"
+}

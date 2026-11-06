@@ -1,0 +1,19 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a9-public-egg-original-20261030-r2",
+  "files": {
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Read-only official public X5 robot model; no episode or scene state"
+    },
+    "curobo.yml": {
+      "path": "curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Read-only official public X5 robot model; no episode or scene state"
+    }
+  },
+  "scope": "Public own-robot model for the original v107 RPC planner; mesh loading disabled; no scene lookup"
+}

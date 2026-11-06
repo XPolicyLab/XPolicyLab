@@ -1,0 +1,37 @@
+{
+  "root": "resource://official_runtime",
+  "commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "python": "resource://eval_environment/bin/python",
+  "python_version": [
+    3,
+    11,
+    15
+  ],
+  "files": {
+    "src/eval_client/eval_env.py": "3ae75304d8a840ede2589441f987824f50b2a89cc2ef37f4d43ce0a8dbc4fd88",
+    "env/global_configs.py": "e96f6141b42e635d69bba5b4727fb1fec54f8965431b3a70d95fe5dcd3d0ee45",
+    "env/observation_manager/obs_manager.py": "771d6cda443b591f3e7850b901a06b4e653a2feefcbabd23608042377fe9be4b",
+    "env/robot_manager/robot_manager.py": "1306cb6d17b58a04ad8fc298edb6eb9122469048dbc9717dcf246f4f985d9974",
+    "env/robot_manager/robot_config/x5.py": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+    "env/scene_manager/layout_manager.py": "7f244bec972e09236a94d8b4761b248ba19ec3f61c631d3c83c00b82912a14b8",
+    "env/reward_manager/reward_manager.py": "bc56efd3aaa861b4b38960dc4fb7778a9b4da9cf131f815ac3170300dd233a41",
+    "env/reward_manager/func_parser.py": "eb928a05c3eb6bae429a922c59e64272c2c3851c22d779143d45627e47b3a504",
+    "env/camera_manager/capture/render_sync.py": "48d70e9a95f3445ae464ab7ea00a00c0d4829752eb55c4ce52ef73ab1f453cae",
+    "env/planner_manager/curobo_planner.py": "3cd830c002901959409ef6f64d54106d8106b48471b266409abc2199f3cb33e1",
+    "utils/transformer.py": "73de4f5e1e0ff60d4f2e1aaf6104368e8f919269facb68b4fa0344d35bc08cbe",
+    "task/RoboDojo/tasks/push_T_random.py": "dc8d9c8e0d2e8dfffa2b7d433a8278c0eaf707cc4861b15035364c2e70061dab",
+    "task/RoboDojo/config/push_T_random.yml": "07609ec20cea40afa1d5720e895fb1b445411f261b2e5b6850e75d0f1930d32d"
+  },
+  "separately_installed_bootstrap_files": {
+    "deployment/runtime.sh": "2b3b96528a795f22990e2688c44a6084caf5228b123c074c8ace460c1e69bf07"
+  },
+  "bootstrap_not_claimed_in_f57_tree": true,
+  "schema": "a18-public-native-development-runtime-lock-v1",
+  "task": "push_T_random",
+  "native_evaluation_enabled": true,
+  "native_planner_bootstrap_verified": true,
+  "evaluation_scope": "fixed50_predeclared_official_layouts",
+  "public_factory_CPU_contract_verified": true,
+  "current_success_rate": null,
+  "public_robot_resource_manifest_sha256": "f79eafcca5df4c5bc6374f5efdbbac421ab4bb025152b30448ec037c9dcf1e5f"
+}

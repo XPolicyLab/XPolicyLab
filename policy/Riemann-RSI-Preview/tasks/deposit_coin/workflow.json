@@ -1,0 +1,957 @@
+{
+  "schema": "riemann-current-observation-programs-v1",
+  "package": "tasks.deposit_coin",
+  "initial_phase": "initial",
+  "programs": {
+    "decide": {
+      "schema": "riemann-declarative-skill-workflow-v1",
+      "mode": "rule_only",
+      "official_action_horizon": 300,
+      "wam_reselection": false,
+      "max_operations": 4096,
+      "bindings": {
+        "coin_self_done_001": "skills.motion.implementation:coin_self_done_001",
+        "coin_self_done_002": "skills.motion.implementation:coin_self_done_002",
+        "coin_obs_control_step_self_last_control_003": "skills.motion.implementation:coin_obs_control_step_self_last_control_003",
+        "coin_obs_control_step_self_last_control_004": "skills.motion.implementation:coin_obs_control_step_self_last_control_004",
+        "coin_len_self_summary_5000_005": "skills.motion.implementation:coin_len_self_summary_5000_005",
+        "coin_len_self_summary_5000_006": "skills.motion.implementation:coin_len_self_summary_5000_006",
+        "coin_motion_007": "skills.motion.implementation:coin_motion_007",
+        "coin_self_phase_in_source_handoff_prebank_clear_view__008": "skills.transport.implementation:coin_self_phase_in_source_handoff_prebank_clear_view__008",
+        "coin_self_phase_in_source_handoff_prebank_clear_view__009": "skills.transport.implementation:coin_self_phase_in_source_handoff_prebank_clear_view__009",
+        "coin_insertion_complete_and_not_receipt_grasp_confirm_010": "skills.insertion.implementation:coin_insertion_complete_and_not_receipt_grasp_confirm_010",
+        "coin_insertion_complete_and_not_receipt_grasp_confirm_011": "skills.insertion.implementation:coin_insertion_complete_and_not_receipt_grasp_confirm_011",
+        "coin_position_error_0_015_or_rotation_error_0_06_012": "skills.motion.implementation:coin_position_error_0_015_or_rotation_error_0_06_012",
+        "coin_position_error_0_015_or_rotation_error_0_06_013": "skills.motion.implementation:coin_position_error_0_015_or_rotation_error_0_06_013",
+        "coin_insertion_complete_and_not_receipt_grasp_confirm_014": "skills.insertion.implementation:coin_insertion_complete_and_not_receipt_grasp_confirm_014",
+        "coin_self_phase_initial_015": "skills.sensing.implementation:coin_self_phase_initial_015",
+        "coin_self_phase_initial_016": "skills.sensing.implementation:coin_self_phase_initial_016",
+        "coin_self_phase_remaining_0_017": "skills.motion.implementation:coin_self_phase_remaining_0_017",
+        "coin_self_phase_remaining_0_018": "skills.motion.implementation:coin_self_phase_remaining_0_018",
+        "coin_target_in_previous_019": "skills.motion.implementation:coin_target_in_previous_019",
+        "coin_target_in_previous_020": "skills.motion.implementation:coin_target_in_previous_020",
+        "coin_self_phase_slot_insert_and_0_006_position_error__021": "skills.insertion.implementation:coin_self_phase_slot_insert_and_0_006_position_error__021",
+        "coin_self_phase_slot_insert_and_0_006_position_error__022": "skills.insertion.implementation:coin_self_phase_slot_insert_and_0_006_position_error__022",
+        "coin_position_error_0_006_or_rotation_error_0_065_023": "skills.motion.implementation:coin_position_error_0_006_or_rotation_error_0_065_023",
+        "coin_position_error_0_006_or_rotation_error_0_065_024": "skills.motion.implementation:coin_position_error_0_006_or_rotation_error_0_065_024",
+        "coin_count_3_025": "skills.motion.implementation:coin_count_3_025",
+        "coin_count_3_026": "skills.motion.implementation:coin_count_3_026",
+        "coin_position_error_0_006_or_rotation_error_0_065_027": "skills.motion.implementation:coin_position_error_0_006_or_rotation_error_0_065_027",
+        "coin_self_phase_remaining_0_028": "skills.motion.implementation:coin_self_phase_remaining_0_028",
+        "coin_self_phase_remaining_0_029": "skills.motion.implementation:coin_self_phase_remaining_0_029",
+        "coin_self_phase_active_coin_clearance_030": "skills.pickup.implementation:coin_self_phase_active_coin_clearance_030",
+        "coin_self_phase_active_coin_clearance_031": "skills.pickup.implementation:coin_self_phase_active_coin_clearance_031",
+        "coin_self_phase_active_coin_clearance_032": "skills.pickup.implementation:coin_self_phase_active_coin_clearance_032",
+        "coin_self_phase_active_bank_clearance_033": "skills.pickup.implementation:coin_self_phase_active_bank_clearance_033",
+        "coin_self_phase_active_bank_clearance_034": "skills.pickup.implementation:coin_self_phase_active_bank_clearance_034",
+        "coin_self_phase_pregrasp_035": "skills.pickup.implementation:coin_self_phase_pregrasp_035",
+        "coin_self_phase_pregrasp_036": "skills.pickup.implementation:coin_self_phase_pregrasp_036",
+        "coin_diagnostics_close_view_holder_refinement_get_hol_037": "skills.pickup.implementation:coin_diagnostics_close_view_holder_refinement_get_hol_037",
+        "coin_diagnostics_close_view_holder_refinement_get_hol_038": "skills.pickup.implementation:coin_diagnostics_close_view_holder_refinement_get_hol_038",
+        "coin_diagnostics_close_view_holder_refinement_get_hol_039": "skills.pickup.implementation:coin_diagnostics_close_view_holder_refinement_get_hol_039",
+        "coin_diagnostics_close_view_holder_refinement_get_hol_040": "skills.pickup.implementation:coin_diagnostics_close_view_holder_refinement_get_hol_040",
+        "coin_fresh_diagnostics_get_holder_confirmation_and_fr_041": "skills.motion.implementation:coin_fresh_diagnostics_get_holder_confirmation_and_fr_041",
+        "coin_fresh_diagnostics_get_holder_confirmation_and_fr_042": "skills.motion.implementation:coin_fresh_diagnostics_get_holder_confirmation_and_fr_042",
+        "coin_self_phase_pregrasp_043": "skills.pickup.implementation:coin_self_phase_pregrasp_043",
+        "coin_self_plan_044": "skills.motion.implementation:coin_self_plan_044",
+        "coin_self_phase_pregrasp_045": "skills.pickup.implementation:coin_self_phase_pregrasp_045",
+        "coin_planned_name_contact_046": "skills.motion.implementation:coin_planned_name_contact_046",
+        "coin_planned_name_contact_047": "skills.motion.implementation:coin_planned_name_contact_047",
+        "coin_planned_name_clearance_048": "skills.pickup.implementation:coin_planned_name_clearance_048",
+        "coin_planned_name_clearance_049": "skills.pickup.implementation:coin_planned_name_clearance_049",
+        "coin_planned_name_lift_050": "skills.pickup.implementation:coin_planned_name_lift_050",
+        "coin_planned_name_lift_051": "skills.pickup.implementation:coin_planned_name_lift_051",
+        "coin_self_phase_in_close_relay_repick_close_052": "skills.transport.implementation:coin_self_phase_in_close_relay_repick_close_052",
+        "coin_self_phase_in_close_relay_repick_close_053": "skills.transport.implementation:coin_self_phase_in_close_relay_repick_close_053",
+        "coin_self_phase_clearance_and_self_arm_left_054": "skills.pickup.implementation:coin_self_phase_clearance_and_self_arm_left_054",
+        "coin_self_phase_clearance_and_self_arm_left_055": "skills.pickup.implementation:coin_self_phase_clearance_and_self_arm_left_055",
+        "coin_self_phase_lift_056": "skills.pickup.implementation:coin_self_phase_lift_056",
+        "coin_self_phase_lift_057": "skills.pickup.implementation:coin_self_phase_lift_057",
+        "coin_self_stop_after_lift_058": "skills.pickup.implementation:coin_self_stop_after_lift_058",
+        "coin_self_stop_after_lift_059": "skills.pickup.implementation:coin_self_stop_after_lift_059",
+        "coin_self_arm_self_slot_bank_side_060": "skills.motion.implementation:coin_self_arm_self_slot_bank_side_060",
+        "coin_self_transfer_table_061": "skills.motion.implementation:coin_self_transfer_table_061",
+        "coin_self_transfer_table_062": "skills.motion.implementation:coin_self_transfer_table_062",
+        "coin_self_arm_self_slot_bank_side_063": "skills.motion.implementation:coin_self_arm_self_slot_bank_side_063",
+        "coin_self_phase_lift_064": "skills.pickup.implementation:coin_self_phase_lift_064",
+        "coin_self_phase_relay_clear_view_065": "skills.transport.implementation:coin_self_phase_relay_clear_view_065",
+        "coin_self_phase_relay_clear_view_066": "skills.transport.implementation:coin_self_phase_relay_clear_view_066",
+        "coin_self_phase_relay_repick_lift_067": "skills.transport.implementation:coin_self_phase_relay_repick_lift_067",
+        "coin_self_phase_relay_repick_lift_068": "skills.transport.implementation:coin_self_phase_relay_repick_lift_068",
+        "coin_self_phase_prebank_clear_view_069": "skills.insertion.implementation:coin_self_phase_prebank_clear_view_069",
+        "coin_self_phase_prebank_clear_view_070": "skills.insertion.implementation:coin_self_phase_prebank_clear_view_070",
+        "coin_self_phase_receiver_close_071": "skills.transport.implementation:coin_self_phase_receiver_close_071",
+        "coin_self_phase_receiver_close_072": "skills.transport.implementation:coin_self_phase_receiver_close_072",
+        "coin_self_phase_source_handoff_073": "skills.transport.implementation:coin_self_phase_source_handoff_073",
+        "coin_self_phase_source_handoff_074": "skills.transport.implementation:coin_self_phase_source_handoff_074",
+        "coin_self_phase_source_release_075": "skills.transport.implementation:coin_self_phase_source_release_075",
+        "coin_self_phase_source_release_076": "skills.transport.implementation:coin_self_phase_source_release_076",
+        "coin_self_phase_source_clear_view_077": "skills.transport.implementation:coin_self_phase_source_clear_view_077",
+        "coin_self_phase_source_clear_view_078": "skills.transport.implementation:coin_self_phase_source_clear_view_078",
+        "coin_self_phase_remaining_0_079": "skills.motion.implementation:coin_self_phase_remaining_0_079",
+        "coin_self_done_080": "skills.motion.implementation:coin_self_done_080",
+        "coin_self_done_081": "skills.motion.implementation:coin_self_done_081",
+        "coin_motion_082": "skills.motion.implementation:coin_motion_082",
+        "coin_motion_083": "skills.motion.implementation:coin_motion_083"
+      },
+      "errors": {
+        "PerceptionError": "skills.state.implementation:PerceptionError"
+      },
+      "steps": [
+        {
+          "call": "coin_self_done_001",
+          "store": "condition_1"
+        },
+        {
+          "if": {
+            "var": "condition_1"
+          },
+          "then": [
+            {
+              "call": "coin_self_done_002"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "coin_obs_control_step_self_last_control_003",
+          "store": "condition_3"
+        },
+        {
+          "if": {
+            "var": "condition_3"
+          },
+          "then": [
+            {
+              "call": "coin_obs_control_step_self_last_control_004"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "coin_len_self_summary_5000_005",
+          "store": "condition_5"
+        },
+        {
+          "if": {
+            "var": "condition_5"
+          },
+          "then": [
+            {
+              "call": "coin_len_self_summary_5000_006"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "coin_motion_007"
+        },
+        {
+          "call": "coin_self_phase_in_source_handoff_prebank_clear_view__008",
+          "store": "condition_8"
+        },
+        {
+          "if": {
+            "var": "condition_8"
+          },
+          "then": [
+            {
+              "call": "coin_self_phase_in_source_handoff_prebank_clear_view__009"
+            },
+            {
+              "call": "coin_insertion_complete_and_not_receipt_grasp_confirm_010",
+              "store": "condition_10"
+            },
+            {
+              "if": {
+                "var": "condition_10"
+              },
+              "then": [
+                {
+                  "call": "coin_insertion_complete_and_not_receipt_grasp_confirm_011"
+                },
+                {
+                  "call": "coin_position_error_0_015_or_rotation_error_0_06_012",
+                  "store": "condition_12"
+                },
+                {
+                  "if": {
+                    "var": "condition_12"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_position_error_0_015_or_rotation_error_0_06_013"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_insertion_complete_and_not_receipt_grasp_confirm_014"
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "coin_self_phase_initial_015",
+          "store": "condition_15"
+        },
+        {
+          "if": {
+            "var": "condition_15"
+          },
+          "then": [
+            {
+              "call": "coin_self_phase_initial_016"
+            }
+          ],
+          "else": [
+            {
+              "call": "coin_self_phase_remaining_0_017",
+              "store": "condition_17"
+            },
+            {
+              "if": {
+                "var": "condition_17"
+              },
+              "then": [
+                {
+                  "call": "coin_self_phase_remaining_0_018"
+                },
+                {
+                  "call": "coin_target_in_previous_019",
+                  "store": "condition_19"
+                },
+                {
+                  "if": {
+                    "var": "condition_19"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_target_in_previous_020"
+                    },
+                    {
+                      "call": "coin_self_phase_slot_insert_and_0_006_position_error__021",
+                      "store": "condition_21"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_21"
+                      },
+                      "then": [
+                        {
+                          "call": "coin_self_phase_slot_insert_and_0_006_position_error__022"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "coin_position_error_0_006_or_rotation_error_0_065_023",
+                      "store": "condition_23"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_23"
+                      },
+                      "then": [
+                        {
+                          "call": "coin_position_error_0_006_or_rotation_error_0_065_024"
+                        },
+                        {
+                          "call": "coin_count_3_025",
+                          "store": "condition_25"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_25"
+                          },
+                          "then": [
+                            {
+                              "call": "coin_count_3_026"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "coin_position_error_0_006_or_rotation_error_0_065_027"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_remaining_0_028",
+                  "store": "condition_28"
+                },
+                {
+                  "if": {
+                    "var": "condition_28"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_remaining_0_029",
+                      "store": "result_29"
+                    },
+                    {
+                      "return": {
+                        "var": "result_29"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_active_coin_clearance_030",
+                  "store": "condition_30"
+                },
+                {
+                  "if": {
+                    "var": "condition_30"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_active_coin_clearance_031",
+                      "args": {
+                        "phase_0": "initial"
+                      }
+                    },
+                    {
+                      "call": "coin_self_phase_active_coin_clearance_032",
+                      "store": "result_32"
+                    },
+                    {
+                      "return": {
+                        "var": "result_32"
+                      }
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_active_bank_clearance_033",
+                  "store": "condition_33"
+                },
+                {
+                  "if": {
+                    "var": "condition_33"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_active_bank_clearance_034"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_pregrasp_035",
+                  "store": "condition_35"
+                },
+                {
+                  "if": {
+                    "var": "condition_35"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_pregrasp_036"
+                    },
+                    {
+                      "call": "coin_diagnostics_close_view_holder_refinement_get_hol_037",
+                      "store": "condition_37"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_37"
+                      },
+                      "then": [
+                        {
+                          "try": [
+                            {
+                              "call": "coin_diagnostics_close_view_holder_refinement_get_hol_040"
+                            },
+                            {
+                              "call": "coin_fresh_diagnostics_get_holder_confirmation_and_fr_041",
+                              "store": "condition_41"
+                            },
+                            {
+                              "if": {
+                                "var": "condition_41"
+                              },
+                              "then": [
+                                {
+                                  "call": "coin_fresh_diagnostics_get_holder_confirmation_and_fr_042"
+                                }
+                              ],
+                              "else": []
+                            }
+                          ],
+                          "catch": [
+                            {
+                              "errors": [
+                                "PerceptionError"
+                              ],
+                              "as": "caught_error",
+                              "do": [
+                                {
+                                  "call": "coin_diagnostics_close_view_holder_refinement_get_hol_038",
+                                  "args": {
+                                    "__workflow_error": {
+                                      "var": "caught_error"
+                                    }
+                                  }
+                                },
+                                {
+                                  "call": "coin_diagnostics_close_view_holder_refinement_get_hol_039"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "coin_self_phase_pregrasp_043"
+                    },
+                    {
+                      "call": "coin_self_plan_044",
+                      "store": "items_44"
+                    },
+                    {
+                      "for_each": {
+                        "var": "items_44"
+                      },
+                      "as": "loop_item_45",
+                      "max_items": 64,
+                      "do": [
+                        {
+                          "call": "coin_self_phase_pregrasp_045",
+                          "args": {
+                            "__workflow_item": {
+                              "var": "loop_item_45"
+                            }
+                          }
+                        },
+                        {
+                          "call": "coin_planned_name_contact_046",
+                          "store": "condition_46"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_46"
+                          },
+                          "then": [
+                            {
+                              "call": "coin_planned_name_contact_047"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "coin_planned_name_clearance_048",
+                          "store": "condition_48"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_48"
+                          },
+                          "then": [
+                            {
+                              "call": "coin_planned_name_clearance_049"
+                            }
+                          ],
+                          "else": []
+                        },
+                        {
+                          "call": "coin_planned_name_lift_050",
+                          "store": "condition_50"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_50"
+                          },
+                          "then": [
+                            {
+                              "call": "coin_planned_name_lift_051"
+                            }
+                          ],
+                          "else": []
+                        }
+                      ]
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_in_close_relay_repick_close_052",
+                  "store": "condition_52"
+                },
+                {
+                  "if": {
+                    "var": "condition_52"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_in_close_relay_repick_close_053"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_clearance_and_self_arm_left_054",
+                  "store": "condition_54"
+                },
+                {
+                  "if": {
+                    "var": "condition_54"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_clearance_and_self_arm_left_055"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_lift_056",
+                  "store": "condition_56"
+                },
+                {
+                  "if": {
+                    "var": "condition_56"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_lift_057"
+                    },
+                    {
+                      "call": "coin_self_stop_after_lift_058",
+                      "store": "condition_58"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_58"
+                      },
+                      "then": [
+                        {
+                          "call": "coin_self_stop_after_lift_059"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "coin_self_arm_self_slot_bank_side_060",
+                      "store": "condition_60"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_60"
+                      },
+                      "then": [
+                        {
+                          "call": "coin_self_transfer_table_061",
+                          "store": "condition_61"
+                        },
+                        {
+                          "if": {
+                            "var": "condition_61"
+                          },
+                          "then": [
+                            {
+                              "call": "coin_self_transfer_table_062"
+                            }
+                          ],
+                          "else": [
+                            {
+                              "call": "coin_self_arm_self_slot_bank_side_063"
+                            }
+                          ]
+                        }
+                      ],
+                      "else": [
+                        {
+                          "call": "coin_self_phase_lift_064"
+                        }
+                      ]
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_relay_clear_view_065",
+                  "store": "condition_65"
+                },
+                {
+                  "if": {
+                    "var": "condition_65"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_relay_clear_view_066"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_relay_repick_lift_067",
+                  "store": "condition_67"
+                },
+                {
+                  "if": {
+                    "var": "condition_67"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_relay_repick_lift_068"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_prebank_clear_view_069",
+                  "store": "condition_69"
+                },
+                {
+                  "if": {
+                    "var": "condition_69"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_prebank_clear_view_070"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_receiver_close_071",
+                  "store": "condition_71"
+                },
+                {
+                  "if": {
+                    "var": "condition_71"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_receiver_close_072"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_source_handoff_073",
+                  "store": "condition_73"
+                },
+                {
+                  "if": {
+                    "var": "condition_73"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_source_handoff_074"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_source_release_075",
+                  "store": "condition_75"
+                },
+                {
+                  "if": {
+                    "var": "condition_75"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_source_release_076"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_source_clear_view_077",
+                  "store": "condition_77"
+                },
+                {
+                  "if": {
+                    "var": "condition_77"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_phase_source_clear_view_078"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "coin_self_phase_remaining_0_079"
+                },
+                {
+                  "call": "coin_self_done_080",
+                  "store": "condition_80"
+                },
+                {
+                  "if": {
+                    "var": "condition_80"
+                  },
+                  "then": [
+                    {
+                      "call": "coin_self_done_081",
+                      "args": {
+                        "phase_0": "native_budget_hold"
+                      }
+                    }
+                  ],
+                  "else": []
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "coin_motion_082"
+        },
+        {
+          "call": "coin_motion_083",
+          "store": "result_83"
+        },
+        {
+          "return": {
+            "var": "result_83"
+          }
+        }
+      ]
+    }
+  },
+  "plans": {
+    "active_coin_clearance_1": {
+      "name": "active_coin_clearance",
+      "target": {
+        "argument": 0
+      },
+      "controls": 16
+    },
+    "pregrasp_contact_2": [
+      {
+        "name": "pregrasp",
+        "target": {
+          "argument": 0
+        },
+        "controls": 16
+      },
+      {
+        "name": "contact",
+        "target": {
+          "argument": 1
+        },
+        "controls": 16
+      },
+      {
+        "name": "close",
+        "grip": 0.18,
+        "controls": 16
+      },
+      {
+        "name": "clearance",
+        "target": {
+          "argument": 2
+        },
+        "controls": 16
+      },
+      {
+        "name": "lift",
+        "target": {
+          "argument": 3
+        },
+        "controls": 16
+      }
+    ],
+    "active_bank_clearance_3": {
+      "name": "active_bank_clearance",
+      "target": {
+        "argument": 0
+      },
+      "arm": {
+        "argument": 1
+      },
+      "controls": 16
+    },
+    "prebank_clear_view_4": {
+      "name": "prebank_clear_view",
+      "target": {
+        "argument": 0
+      },
+      "controls": 32
+    },
+    "slot_align_slot_insert_5": [
+      {
+        "name": "slot_align",
+        "target": {
+          "argument": 0
+        },
+        "controls": 16,
+        "allow_bank": true
+      },
+      {
+        "name": "slot_insert",
+        "target": {
+          "argument": 1
+        },
+        "controls": 16,
+        "allow_bank": true
+      },
+      {
+        "name": "release",
+        "grip": 1.0,
+        "retreat_target": {
+          "argument": 2
+        },
+        "controls": 16,
+        "allow_bank": true
+      },
+      {
+        "name": "home",
+        "goals": {
+          "argument": 3
+        },
+        "controls": 16
+      },
+      {
+        "name": "settle_home",
+        "controls": 16
+      },
+      {
+        "name": "final_budget_settle",
+        "controls": 16
+      },
+      {
+        "name": "native_budget_hold",
+        "controls": 64
+      }
+    ],
+    "relay_carry_relay_place_6": [
+      {
+        "name": "relay_carry",
+        "target": {
+          "argument": 0
+        },
+        "controls": 16
+      },
+      {
+        "name": "relay_place",
+        "target": {
+          "argument": 1
+        },
+        "controls": 16
+      },
+      {
+        "name": "relay_release",
+        "grip": 1.0,
+        "controls": 16
+      },
+      {
+        "name": "relay_clear_view",
+        "goals": {
+          "argument": 2
+        },
+        "controls": 16
+      }
+    ],
+    "source_handoff_receiver_contact_7": [
+      {
+        "name": "source_handoff",
+        "target": {
+          "argument": 0
+        },
+        "arm": {
+          "argument": 1
+        },
+        "controls": 32
+      },
+      {
+        "name": "receiver_contact",
+        "target": {
+          "argument": 2
+        },
+        "arm": {
+          "argument": 3
+        },
+        "controls": 16
+      },
+      {
+        "name": "receiver_close",
+        "grip": 0.18,
+        "arm": {
+          "argument": 4
+        },
+        "controls": 16
+      },
+      {
+        "name": "source_release",
+        "grip": 1.0,
+        "target": {
+          "argument": 5
+        },
+        "arm": {
+          "argument": 6
+        },
+        "controls": 16
+      },
+      {
+        "name": "source_clear_view",
+        "goals": {
+          "argument": 7
+        },
+        "controls": 16
+      }
+    ],
+    "relay_repick_pregrasp_relay_repick_contact_8": [
+      {
+        "name": "relay_repick_pregrasp",
+        "target": {
+          "argument": 0
+        },
+        "controls": 16
+      },
+      {
+        "name": "relay_repick_contact",
+        "target": {
+          "argument": 1
+        },
+        "controls": 16
+      },
+      {
+        "name": "relay_repick_close",
+        "grip": 0.18,
+        "controls": 16
+      },
+      {
+        "name": "relay_repick_lift",
+        "target": {
+          "argument": 2
+        },
+        "controls": 16
+      }
+    ],
+    "release_retreat_9": {
+      "name": "release_retreat",
+      "target": {
+        "argument": 0
+      },
+      "controls": 16,
+      "allow_bank": true
+    },
+    "native_budget_hold_10": {
+      "name": "native_budget_hold",
+      "controls": 16
+    }
+  },
+  "execution": {
+    "output": "joint_state",
+    "controls_per_decision": 16,
+    "official_action_horizon": 300
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "organize-original-native-profile-v1",
+  "workflow": "workflow.json",
+  "execution": "deterministic_closed_loop_mature_rule",
+  "official_action_horizon": 1000,
+  "learned_fallback": false,
+  "parameters": {
+    "motion_speed": 1.8,
+    "motion_speedup": 1.0,
+    "full_curobo_warmup": false,
+    "own_robot_root": "resource://official_assets/Robots/x5",
+    "model_bank_root": "resource://table_models",
+    "official_eval": true
+  },
+  "validation_scope": "bounded_same_layout_native_probe_not_performance_promotion"
+}

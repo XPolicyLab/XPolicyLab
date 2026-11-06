@@ -1,0 +1,12 @@
+{
+  "schema": "tube-direct-native-profile-v1",
+  "execution": "deterministic_closed_loop_mature_rule",
+  "workflow": "workflow.json",
+  "official_action_horizon": 500,
+  "learned_fallback": false,
+  "parameters": {
+    "motion_speed": 1.8,
+    "full_curobo_warmup": false
+  },
+  "validation_scope": "bounded_native_probe_not_performance_promotion"
+}

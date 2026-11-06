@@ -1,0 +1,38 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "deposit_coin",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "bimanual_geometry": "skills/bimanual_geometry/implementation.py",
+    "geometry": "skills/geometry/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "observation": "skills/observation/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "sensing": "skills/sensing/implementation.py",
+    "state": "skills/state/implementation.py",
+    "transport": "skills/transport/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py"
+  },
+  "shared_skills": [],
+  "program_runtime": [
+    "harness/runtime/declarative_workflow.py",
+    "harness/runtime/packet_workflow.py"
+  ],
+  "source_manifest": "SOURCE_MANIFEST.json",
+  "online_model_dependencies": [],
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/deposit_coin/controller.py",
+    "tasks/deposit_coin/entry.py",
+    "tasks/deposit_coin/resources.py"
+  ],
+  "source_versioning": "git",
+  "backend": "rule",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "make_kong",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "public_observation": "skills/public_observation/implementation.py",
+    "geometry": "skills/geometry/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "vision": "skills/vision/implementation.py",
+    "interaction": "skills/interaction/implementation.py",
+    "reveal": "skills/reveal/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "transfer": "skills/transfer/implementation.py",
+    "placement": "skills/placement/implementation.py",
+    "recovery": "skills/recovery/implementation.py"
+  },
+  "controller": "controller.py",
+  "shared_skills": {
+    "public_planar_stereo": "skills/shared/perception/public_planar_stereo/implementation.py"
+  },
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [
+    "workflow.json"
+  ],
+  "resource_files": [
+    "calibration.json",
+    "resources.json"
+  ],
+  "python_entry_files": [
+    "tasks/make_kong/entry.py",
+    "tasks/make_kong/controller.py",
+    "tasks/make_kong/bindings/official_policy.py"
+  ]
+}

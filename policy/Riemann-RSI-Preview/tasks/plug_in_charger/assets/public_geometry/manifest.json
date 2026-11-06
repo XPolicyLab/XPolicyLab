@@ -1,0 +1,4765 @@
+{
+  "schema": "public-static-numeric-tree-v1",
+  "archive": "arrays.npz",
+  "archive_sha256": "3cf67b0df668f7d08582bac591cc279c1a14f61ead38b3e792b03912891ee9ae",
+  "arrays": {
+    "a_9dfd92d050b14e72b9b8ed6c7bfbdf7b672099fedb0c22c6b468a931e55718e1": {
+      "dtype": "<f8",
+      "shape": [
+        384,
+        3
+      ]
+    },
+    "a_1c9eeeb4453c117f91457ee8ba8c55e30872e49ec20a1f4576f7c6bf107c94d6": {
+      "dtype": "<f8",
+      "shape": [
+        2119,
+        3
+      ]
+    },
+    "a_ae33aa0758418c40b4bde6d43114b883be4b6323d4ade5e7ef37953461d2f15e": {
+      "dtype": "<f8",
+      "shape": [
+        3116,
+        3
+      ]
+    },
+    "a_44924e4e94bee1e5d1cd55e5e2e7669b17077053719601eda18538f69c08862b": {
+      "dtype": "<f8",
+      "shape": [
+        3679,
+        3
+      ]
+    },
+    "a_d54b150e8953fa0ba6a085d70d0284d0cc3b33524de52be4fadae59be55d9c47": {
+      "dtype": "<f8",
+      "shape": [
+        504,
+        3
+      ]
+    },
+    "a_a4eec1ae92f6cf71883c47874e19f55f38af4852a13b65b1c73ccad743adcb13": {
+      "dtype": "<f8",
+      "shape": [
+        493,
+        3
+      ]
+    },
+    "a_6885e44ee3a092fd89fcb290c465572ee7ead8fb0b213ec7c28677c12e268916": {
+      "dtype": "<f8",
+      "shape": [
+        499,
+        3
+      ]
+    },
+    "a_a4e90ea24d5c1ec29f43bf0fff42ba94db62564761c10ce82a2040d2d98c95ba": {
+      "dtype": "<f8",
+      "shape": [
+        501,
+        3
+      ]
+    },
+    "a_6e5bc604d8727051b0d938f0035459a5e48d54c7f6d52705ad7c540dfc9cf5e6": {
+      "dtype": "<f8",
+      "shape": [
+        504,
+        3
+      ]
+    },
+    "a_c710621e9645c5dcf07ef9badaa5cf6cc3133cdf9c7e5449564c60cab4102fed": {
+      "dtype": "<f8",
+      "shape": [
+        490,
+        3
+      ]
+    },
+    "a_6f7e03e2deed001a7a9cfdba459524d34dea7b36ad6cc5375e472919f6e4ad36": {
+      "dtype": "<f8",
+      "shape": [
+        195,
+        3
+      ]
+    },
+    "a_bf031a83ca74d84244768767d42b8b7a132989eb09fb0df6a189432124ef8486": {
+      "dtype": "<f8",
+      "shape": [
+        195,
+        3
+      ]
+    },
+    "a_23567de5459d99ad5c6825f1a55c2cca17716d2a76303e32f492df4479513859": {
+      "dtype": "<f8",
+      "shape": [
+        195,
+        3
+      ]
+    },
+    "a_b7b22861386e3301bcce4ceadaebe2d1cc31116bf5b1367a1112d727662bf36a": {
+      "dtype": "<f8",
+      "shape": [
+        171,
+        3
+      ]
+    },
+    "a_e53e0f0c2f8086dd812be72951501a4d37ca435a30f09239c1c9fc88f4f6b6f9": {
+      "dtype": "<f8",
+      "shape": [
+        171,
+        3
+      ]
+    },
+    "a_ff15862778046cf0e8dc1c7e0ea3b11a6928eebe00a85034a58c19799f372c28": {
+      "dtype": "<f8",
+      "shape": [
+        176,
+        3
+      ]
+    },
+    "a_d0937910f46fdc72fbc972013c0e9a27386c0644179db80064d5331a426e6135": {
+      "dtype": "<f8",
+      "shape": [
+        171,
+        3
+      ]
+    },
+    "a_3c3f07d92f07d6aac281ab81bae377efcacc9d8d1d03e71ca24354dffc6d0f4a": {
+      "dtype": "<f8",
+      "shape": [
+        171,
+        3
+      ]
+    },
+    "a_68437ca6d1b08e479ae7d2d26585fd525a0722cd7742f09ce0d952fc358219d8": {
+      "dtype": "<f8",
+      "shape": [
+        171,
+        3
+      ]
+    },
+    "a_598846d81b2a6945fad0961c146c1e16d3e0889762e0f68af0fbec09ce471699": {
+      "dtype": "<f8",
+      "shape": [
+        252,
+        3
+      ]
+    },
+    "a_83d34eefb31c16f69b99409fea39a64f53fbcf0e399acda25f35c58c5403309c": {
+      "dtype": "<f8",
+      "shape": [
+        250,
+        3
+      ]
+    },
+    "a_27771d032bbd07031e0a1350892b424b3b984b0c8191c04b0a49ce39a5ac047c": {
+      "dtype": "<f8",
+      "shape": [
+        250,
+        3
+      ]
+    },
+    "a_363e52a0dfb8a65deeb34a1f8f3dcdbd68be1a2d62eba2f372a3e8872746c4fd": {
+      "dtype": "<f8",
+      "shape": [
+        252,
+        3
+      ]
+    },
+    "a_48af0358aa4e1eeba54e2869e4ad72eb6e626858305c3e0ca3cc06c8936b19a4": {
+      "dtype": "<f8",
+      "shape": [
+        252,
+        3
+      ]
+    },
+    "a_3992ab9d1ed58158f98deb02c31ae50db3dd4930590f00a2c93ed6de75ddbed7": {
+      "dtype": "<f8",
+      "shape": [
+        250,
+        3
+      ]
+    },
+    "a_0816559f799e8564e25cfe1435f159dd249480fd50aaa00b0490b9dda0f7d06f": {
+      "dtype": "<f8",
+      "shape": [
+        180,
+        3
+      ]
+    },
+    "a_6d8abd82e6cf39fcdc541d0fd07e34b6f7281ba8f91b0c44564333f5b751fe35": {
+      "dtype": "<f8",
+      "shape": [
+        180,
+        3
+      ]
+    },
+    "a_42c06050f3e7c37eacfcbb452b442c314f39f74a6b8bd84c3829a01ce5cb810a": {
+      "dtype": "<f8",
+      "shape": [
+        180,
+        3
+      ]
+    },
+    "a_868d18b45cc49c33bc2e817b8822e75dda398f4f899308bd2b0f6b055d111b28": {
+      "dtype": "<f8",
+      "shape": [
+        230,
+        3
+      ]
+    },
+    "a_f249b50d4ef15cd69549fa8d2483ac60b262da07171b9ee7a49e654e604ece66": {
+      "dtype": "<f8",
+      "shape": [
+        230,
+        3
+      ]
+    },
+    "a_1fd525a7f60ce500c857882cf05090a0286b3f3d27516f6f2c71d90a9ae8b41d": {
+      "dtype": "<f8",
+      "shape": [
+        232,
+        3
+      ]
+    },
+    "a_b3d76fc3705d45fc2791f6d3166e0440e9faa1bc10ab788825986efcdf5d1016": {
+      "dtype": "<f8",
+      "shape": [
+        230,
+        3
+      ]
+    },
+    "a_893f3aa3784f3a78681fd58e10b29d8f4a2cdb23516c054459838a644fb6a679": {
+      "dtype": "<f8",
+      "shape": [
+        230,
+        3
+      ]
+    },
+    "a_62bb0d6f7948399e828e67ca29f0cb80a68a365dadb83e858a4e2036381acf53": {
+      "dtype": "<f8",
+      "shape": [
+        230,
+        3
+      ]
+    },
+    "a_0f54a0efbe3bd48c31505489592f6aac59ae1d233daee1ff234371acd24d0d17": {
+      "dtype": "<f8",
+      "shape": [
+        228,
+        3
+      ]
+    },
+    "a_e9751942104a18d4742a8b323381b4d6f50ae3fe3042c760e26b84f339641c47": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_634ad2a182a62cf77ff02fd9e6ad73a5ce71549e31e3f70854bd4563c9718b1b": {
+      "dtype": "<f8",
+      "shape": [
+        224,
+        3
+      ]
+    },
+    "a_4e937122f7296a19bde934176dd49b10206048dd3aa4186d9ae09a2ffd951be0": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_58ccd1d6a8ada830054237e16601a48d86cd92c6df00fde17ad546c42c3b64d0": {
+      "dtype": "<f8",
+      "shape": [
+        226,
+        3
+      ]
+    },
+    "a_2b67dd1b65e47dbdaa087d9074e4df17e5e1270dd52d0eb0343009d77b2db906": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_774f9e925bec12579b2a52a4184cec6c976947b52b14fc9e5232fb5046435ab8": {
+      "dtype": "<f8",
+      "shape": [
+        226,
+        3
+      ]
+    },
+    "a_92318aa3e316c7cf88d4d606f0a3af0b465272a234567bdbf07740b9a99614e6": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_f47f62323192ba06c04bf60c8154d74ee8a688c8c052d09ac7bd2f27467ea70e": {
+      "dtype": "<f8",
+      "shape": [
+        228,
+        3
+      ]
+    },
+    "a_3f8af02f171a72bc6124aee6208b71d17330f24d3c804bb7764c87c7e67259db": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_39240c592cfb3149dedf93435958bd18d42c0951c4f1acd35be7d1aa5516eabb": {
+      "dtype": "<f8",
+      "shape": [
+        224,
+        3
+      ]
+    },
+    "a_54e2d8e327be6325f11585b86633a265eeb6990ffd4e8ef1edc22f743f648984": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_15ed60ad87e2226f788546f1048e26813eeb741a5eb65207c9a5fa7df6ca947b": {
+      "dtype": "<f8",
+      "shape": [
+        172,
+        3
+      ]
+    },
+    "a_955bc4a458e32727db10518d8c7c3dab169d7f1665390b3a59fd7f162a75e1de": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_2fa72512ae8d66514d0196a7ee130f8e2de8f3459509bdbf5721807aff85b1ec": {
+      "dtype": "<f8",
+      "shape": [
+        172,
+        3
+      ]
+    },
+    "a_99b0cda06be5cda9e39ec0c563f57ebdc657c3cdca29d60e4e9fab48c211d3ab": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_3ee9326a2b434701f2d1cab62fe2e48ad59efcbd080d444c7a53c8f226c89fd5": {
+      "dtype": "<f8",
+      "shape": [
+        172,
+        3
+      ]
+    },
+    "a_b11acbdc70723afb82bf15b6b68779891c2ba3f16a378c31cb66e0cb68c7c753": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_3e836f9355d8462f54bfb379de053c0a1c5e64e77bb471077fb682735255b28a": {
+      "dtype": "<f8",
+      "shape": [
+        139,
+        3
+      ]
+    },
+    "a_03286160eced29b1f921759392ec79ba8cb87c914de19b7723aa9a42c9a3d3c8": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_fdea727da43024b30adfc4fdb88a831dcfb68e934d4f56dbce7df53b3e887427": {
+      "dtype": "<f8",
+      "shape": [
+        139,
+        3
+      ]
+    },
+    "a_6789d56f32dc74d8a8a15fb7a7aeee10a784b57e30351c03727816206adb8c15": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_9ad756a2034123b276b2cd32d77c8861f453839a4ed4ce765ab495c3a62c9ea6": {
+      "dtype": "<f8",
+      "shape": [
+        140,
+        3
+      ]
+    },
+    "a_4c4e9afa19a5d1047cfd4b748e164bbb6fda819549454f96c2e868bfa21d8289": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_1ed279cc0049e8c312032c15f54e05201f47a410f1eb1fc1c87f827e1e39c147": {
+      "dtype": "<f8",
+      "shape": [
+        139,
+        3
+      ]
+    },
+    "a_99acdf79c046b00a5723057446218034f899f80c84ef0afb7baaf74a25fcdd6c": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_737efdc9cd548f039453e287777d7fb6929529e8c6e90f59bb633fdf2d2d47d4": {
+      "dtype": "<f8",
+      "shape": [
+        139,
+        3
+      ]
+    },
+    "a_0d0aad9fbe46cb2880b87d3e6f8598d1a765df74ddac13c4df5a68ccb7bf8b93": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_7dab5f7d3cbbed530ae549044933ed44fd150d13579b18bb5e555103e40ce59f": {
+      "dtype": "<f8",
+      "shape": [
+        139,
+        3
+      ]
+    },
+    "a_efb58074805b526aee1a9edfd5aadb87f89f335693d900c544e52057b7174180": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_e3495995cd3852a4111774dafb8a986f0510cbb6940651a111bc5e09d57b844c": {
+      "dtype": "<f8",
+      "shape": [
+        3658,
+        3
+      ]
+    },
+    "a_5e79a0d7f88cee2f02fbd8973f9c951559feef1b5690d4365de2773aa7fbeb17": {
+      "dtype": "<f8",
+      "shape": [
+        10748,
+        3
+      ]
+    },
+    "a_ede797686113eb1525a5d2f2a62d552ea35e67989c14c733e3e72ceea877f2be": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_294c9f863fea96f8d4fb5f1dc93e4c81cf40078bf63e26b3312539f2bc1e7a77": {
+      "dtype": "<f8",
+      "shape": [
+        3912,
+        3
+      ]
+    },
+    "a_1d0b2bf32c4cae1adcbac2d8ae296517773feb3bf880a12636670701156b5aaf": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_24bf9d316c299c970aa54add39c8fbf6a77f70a1181d9c1c59dbe5d113060c6c": {
+      "dtype": "<f8",
+      "shape": [
+        3912,
+        3
+      ]
+    },
+    "a_7e8302f4753309a28ee96d1eb05b9f6606f6ad5703748087d5180b8aa1c9cca9": {
+      "dtype": "<f8",
+      "shape": [
+        3
+      ]
+    },
+    "a_a91f35cddc08364bf321cbbf9ef25a04662a7816f113031ae6614187d92d810b": {
+      "dtype": "<f8",
+      "shape": [
+        7270,
+        3,
+        3
+      ]
+    },
+    "a_0e49133a50913e9b014416bdc21ff4606523319d194e5fd4e21c698a21808eb4": {
+      "dtype": "|u1",
+      "shape": [
+        7270
+      ]
+    }
+  },
+  "trees": {
+    "load_body_models": {
+      "kind": "dict",
+      "items": {
+        "charger": {
+          "kind": "dict",
+          "items": {
+            "metadata": {
+              "kind": "dict",
+              "items": {
+                "uuid": {
+                  "kind": "value",
+                  "value": "5e057918-c4c7-45a7-b346-6ef7ea01e414"
+                },
+                "physics": {
+                  "kind": "dict",
+                  "items": {
+                    "mass": {
+                      "kind": "value",
+                      "value": 0.03
+                    },
+                    "friction": {
+                      "kind": "value",
+                      "value": 0.45
+                    },
+                    "size": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.041993668374983625
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.06306500350970716
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.026999999999999996
+                        }
+                      ]
+                    }
+                  }
+                },
+                "geometry": {
+                  "kind": "dict",
+                  "items": {
+                    "faces": {
+                      "kind": "value",
+                      "value": 4000
+                    },
+                    "vertices": {
+                      "kind": "value",
+                      "value": 12000
+                    },
+                    "aligned_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.0466
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.07
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.03
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "oriented_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.0466
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.07
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.03
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "radius": {
+                      "kind": "value",
+                      "value": 0.0357522043528696
+                    },
+                    "bbox": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.041993668374983625
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.06306500350970716
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.026999999999999996
+                        }
+                      ]
+                    },
+                    "center": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 1.669795898659485e-05
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.016346881346099077
+                        },
+                        {
+                          "kind": "value",
+                          "value": -2.0346330797306093e-06
+                        }
+                      ]
+                    }
+                  }
+                },
+                "active": {
+                  "kind": "dict",
+                  "items": {
+                    "place": {
+                      "kind": "dict",
+                      "items": {
+                        "up": {
+                          "kind": "dict",
+                          "items": {
+                            "orientation": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 1.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0019
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0001
+                                }
+                              ]
+                            },
+                            "projection_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0195
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0136
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.001
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0019
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0001
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0354
+                                }
+                              }
+                            },
+                            "contact_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0239
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0136
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.001
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0019
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0001
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0295
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "functional": {
+                      "kind": "dict",
+                      "items": {
+                        "insert": {
+                          "kind": "dict",
+                          "items": {
+                            "frame": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.014
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.7071067811865476
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.7071067811865475
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "passive": {
+                  "kind": "dict",
+                  "items": {
+                    "functional": {
+                      "kind": "dict",
+                      "items": {}
+                    },
+                    "support": {
+                      "kind": "dict",
+                      "items": {}
+                    }
+                  }
+                }
+              }
+            },
+            "points": {
+              "kind": "array",
+              "name": "a_9dfd92d050b14e72b9b8ed6c7bfbdf7b672099fedb0c22c6b468a931e55718e1"
+            },
+            "all_points": {
+              "kind": "array",
+              "name": "a_1c9eeeb4453c117f91457ee8ba8c55e30872e49ec20a1f4576f7c6bf107c94d6"
+            }
+          }
+        },
+        "socket": {
+          "kind": "dict",
+          "items": {
+            "metadata": {
+              "kind": "dict",
+              "items": {
+                "uuid": {
+                  "kind": "value",
+                  "value": "9104de4d-74d9-49bb-a611-e69849299e82"
+                },
+                "geometry": {
+                  "kind": "dict",
+                  "items": {
+                    "faces": {
+                      "kind": "value",
+                      "value": 7270
+                    },
+                    "vertices": {
+                      "kind": "value",
+                      "value": 4996
+                    },
+                    "aligned_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.1572
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0363
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0208
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "oriented_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0215
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0215
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.1572
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0363
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0208
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "radius": {
+                      "kind": "value",
+                      "value": 0.08061449798799587
+                    },
+                    "bbox": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.1586687078252984
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.03667060473130968
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.021
+                        }
+                      ]
+                    },
+                    "center": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": -1.3660991285439197e-18
+                        },
+                        {
+                          "kind": "value",
+                          "value": -3.4152478213597993e-19
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.011271722771375704
+                        }
+                      ]
+                    }
+                  }
+                },
+                "physics": {
+                  "kind": "dict",
+                  "items": {
+                    "size": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.1586687078252984
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.03667060473130968
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.021
+                        }
+                      ]
+                    },
+                    "mass": {
+                      "kind": "value",
+                      "value": 0.0
+                    },
+                    "friction": {
+                      "kind": "value",
+                      "value": 0.0
+                    }
+                  }
+                },
+                "active": {
+                  "kind": "dict",
+                  "items": {
+                    "place": {
+                      "kind": "dict",
+                      "items": {
+                        "up": {
+                          "kind": "dict",
+                          "items": {
+                            "orientation": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 1.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0003
+                                }
+                              ]
+                            },
+                            "projection_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0003
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0792
+                                }
+                              }
+                            },
+                            "contact_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0003
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0792
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "functional": {
+                      "kind": "dict",
+                      "items": {}
+                    }
+                  }
+                },
+                "passive": {
+                  "kind": "dict",
+                  "items": {
+                    "functional": {
+                      "kind": "dict",
+                      "items": {}
+                    },
+                    "support": {
+                      "kind": "dict",
+                      "items": {
+                        "socket/1": {
+                          "kind": "dict",
+                          "items": {
+                            "center": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 6.123233995736766e-17
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "radius": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "socket/0": {
+                          "kind": "dict",
+                          "items": {
+                            "center": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.044
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.005
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.044
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.005
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "radius": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "socket/2": {
+                          "kind": "dict",
+                          "items": {
+                            "center": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": -0.03
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": -0.03
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 6.123233995736766e-17
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "radius": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "points": {
+              "kind": "array",
+              "name": "a_ae33aa0758418c40b4bde6d43114b883be4b6323d4ade5e7ef37953461d2f15e"
+            },
+            "all_points": {
+              "kind": "array",
+              "name": "a_44924e4e94bee1e5d1cd55e5e2e7669b17077053719601eda18538f69c08862b"
+            }
+          }
+        }
+      }
+    },
+    "load_head_hole_models": {
+      "kind": "dict",
+      "items": {
+        "charger": {
+          "kind": "dict",
+          "items": {
+            "metadata": {
+              "kind": "dict",
+              "items": {
+                "uuid": {
+                  "kind": "value",
+                  "value": "5e057918-c4c7-45a7-b346-6ef7ea01e414"
+                },
+                "physics": {
+                  "kind": "dict",
+                  "items": {
+                    "mass": {
+                      "kind": "value",
+                      "value": 0.03
+                    },
+                    "friction": {
+                      "kind": "value",
+                      "value": 0.45
+                    },
+                    "size": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.041993668374983625
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.06306500350970716
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.026999999999999996
+                        }
+                      ]
+                    }
+                  }
+                },
+                "geometry": {
+                  "kind": "dict",
+                  "items": {
+                    "faces": {
+                      "kind": "value",
+                      "value": 4000
+                    },
+                    "vertices": {
+                      "kind": "value",
+                      "value": 12000
+                    },
+                    "aligned_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.0466
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.07
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.03
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "oriented_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0531
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0233
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0169
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.015
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.0466
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.07
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.03
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "radius": {
+                      "kind": "value",
+                      "value": 0.0357522043528696
+                    },
+                    "bbox": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.041993668374983625
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.06306500350970716
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.026999999999999996
+                        }
+                      ]
+                    },
+                    "center": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 1.669795898659485e-05
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.016346881346099077
+                        },
+                        {
+                          "kind": "value",
+                          "value": -2.0346330797306093e-06
+                        }
+                      ]
+                    }
+                  }
+                },
+                "active": {
+                  "kind": "dict",
+                  "items": {
+                    "place": {
+                      "kind": "dict",
+                      "items": {
+                        "up": {
+                          "kind": "dict",
+                          "items": {
+                            "orientation": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 1.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0019
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0001
+                                }
+                              ]
+                            },
+                            "projection_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0195
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0136
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.001
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0019
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0001
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0354
+                                }
+                              }
+                            },
+                            "contact_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0239
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0136
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.001
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0019
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0001
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0295
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "functional": {
+                      "kind": "dict",
+                      "items": {
+                        "insert": {
+                          "kind": "dict",
+                          "items": {
+                            "frame": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.014
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.7071067811865476
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.7071067811865475
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "passive": {
+                  "kind": "dict",
+                  "items": {
+                    "functional": {
+                      "kind": "dict",
+                      "items": {}
+                    },
+                    "support": {
+                      "kind": "dict",
+                      "items": {}
+                    }
+                  }
+                }
+              }
+            },
+            "points": {
+              "kind": "array",
+              "name": "a_9dfd92d050b14e72b9b8ed6c7bfbdf7b672099fedb0c22c6b468a931e55718e1"
+            },
+            "all_points": {
+              "kind": "array",
+              "name": "a_1c9eeeb4453c117f91457ee8ba8c55e30872e49ec20a1f4576f7c6bf107c94d6"
+            }
+          }
+        },
+        "socket": {
+          "kind": "dict",
+          "items": {
+            "metadata": {
+              "kind": "dict",
+              "items": {
+                "uuid": {
+                  "kind": "value",
+                  "value": "9104de4d-74d9-49bb-a611-e69849299e82"
+                },
+                "geometry": {
+                  "kind": "dict",
+                  "items": {
+                    "faces": {
+                      "kind": "value",
+                      "value": 7270
+                    },
+                    "vertices": {
+                      "kind": "value",
+                      "value": 4996
+                    },
+                    "aligned_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.1572
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0363
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0208
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "oriented_bbox": {
+                      "kind": "dict",
+                      "items": {
+                        "vertices": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0216
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0215
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0215
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0182
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": -0.0786
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": -0.0181
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0008
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "extents": {
+                          "kind": "list",
+                          "items": [
+                            {
+                              "kind": "value",
+                              "value": 0.1572
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0363
+                            },
+                            {
+                              "kind": "value",
+                              "value": 0.0208
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "radius": {
+                      "kind": "value",
+                      "value": 0.08061449798799587
+                    },
+                    "bbox": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.1586687078252984
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.03667060473130968
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.021
+                        }
+                      ]
+                    },
+                    "center": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": -1.3660991285439197e-18
+                        },
+                        {
+                          "kind": "value",
+                          "value": -3.4152478213597993e-19
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.011271722771375704
+                        }
+                      ]
+                    }
+                  }
+                },
+                "physics": {
+                  "kind": "dict",
+                  "items": {
+                    "size": {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.1586687078252984
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.03667060473130968
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.021
+                        }
+                      ]
+                    },
+                    "mass": {
+                      "kind": "value",
+                      "value": 0.0
+                    },
+                    "friction": {
+                      "kind": "value",
+                      "value": 0.0
+                    }
+                  }
+                },
+                "active": {
+                  "kind": "dict",
+                  "items": {
+                    "place": {
+                      "kind": "dict",
+                      "items": {
+                        "up": {
+                          "kind": "dict",
+                          "items": {
+                            "orientation": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 1.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0003
+                                }
+                              ]
+                            },
+                            "projection_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0003
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0792
+                                }
+                              }
+                            },
+                            "contact_circle": {
+                              "kind": "dict",
+                              "items": {
+                                "center": {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": -0.0003
+                                    }
+                                  ]
+                                },
+                                "radius": {
+                                  "kind": "value",
+                                  "value": 0.0792
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "functional": {
+                      "kind": "dict",
+                      "items": {}
+                    }
+                  }
+                },
+                "passive": {
+                  "kind": "dict",
+                  "items": {
+                    "functional": {
+                      "kind": "dict",
+                      "items": {}
+                    },
+                    "support": {
+                      "kind": "dict",
+                      "items": {
+                        "socket/1": {
+                          "kind": "dict",
+                          "items": {
+                            "center": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.008
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 6.123233995736766e-17
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "radius": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "socket/0": {
+                          "kind": "dict",
+                          "items": {
+                            "center": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.044
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.005
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": 0.044
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.005
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "radius": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "socket/2": {
+                          "kind": "dict",
+                          "items": {
+                            "center": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": -0.03
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "list",
+                                  "items": [
+                                    {
+                                      "kind": "value",
+                                      "value": -0.03
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.007
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.02
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 6.123233995736766e-17
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "kind": "value",
+                                      "value": 1.0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "radius": {
+                              "kind": "list",
+                              "items": [
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                },
+                                {
+                                  "kind": "value",
+                                  "value": 0.0001
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "points": {
+              "kind": "array",
+              "name": "a_ae33aa0758418c40b4bde6d43114b883be4b6323d4ade5e7ef37953461d2f15e"
+            },
+            "all_points": {
+              "kind": "array",
+              "name": "a_44924e4e94bee1e5d1cd55e5e2e7669b17077053719601eda18538f69c08862b"
+            },
+            "rgb_hole_groups": {
+              "kind": "list",
+              "items": [
+                {
+                  "kind": "array",
+                  "name": "a_d54b150e8953fa0ba6a085d70d0284d0cc3b33524de52be4fadae59be55d9c47"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_a4eec1ae92f6cf71883c47874e19f55f38af4852a13b65b1c73ccad743adcb13"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_6885e44ee3a092fd89fcb290c465572ee7ead8fb0b213ec7c28677c12e268916"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_a4e90ea24d5c1ec29f43bf0fff42ba94db62564761c10ce82a2040d2d98c95ba"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_6e5bc604d8727051b0d938f0035459a5e48d54c7f6d52705ad7c540dfc9cf5e6"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_c710621e9645c5dcf07ef9badaa5cf6cc3133cdf9c7e5449564c60cab4102fed"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_6f7e03e2deed001a7a9cfdba459524d34dea7b36ad6cc5375e472919f6e4ad36"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_bf031a83ca74d84244768767d42b8b7a132989eb09fb0df6a189432124ef8486"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_23567de5459d99ad5c6825f1a55c2cca17716d2a76303e32f492df4479513859"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_b7b22861386e3301bcce4ceadaebe2d1cc31116bf5b1367a1112d727662bf36a"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_e53e0f0c2f8086dd812be72951501a4d37ca435a30f09239c1c9fc88f4f6b6f9"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_ff15862778046cf0e8dc1c7e0ea3b11a6928eebe00a85034a58c19799f372c28"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_d0937910f46fdc72fbc972013c0e9a27386c0644179db80064d5331a426e6135"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_3c3f07d92f07d6aac281ab81bae377efcacc9d8d1d03e71ca24354dffc6d0f4a"
+                },
+                {
+                  "kind": "array",
+                  "name": "a_68437ca6d1b08e479ae7d2d26585fd525a0722cd7742f09ce0d952fc358219d8"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "_public_wrist_groups": {
+      "kind": "list",
+      "items": [
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_d54b150e8953fa0ba6a085d70d0284d0cc3b33524de52be4fadae59be55d9c47"
+            },
+            {
+              "kind": "array",
+              "name": "a_598846d81b2a6945fad0961c146c1e16d3e0889762e0f68af0fbec09ce471699"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_a4eec1ae92f6cf71883c47874e19f55f38af4852a13b65b1c73ccad743adcb13"
+            },
+            {
+              "kind": "array",
+              "name": "a_83d34eefb31c16f69b99409fea39a64f53fbcf0e399acda25f35c58c5403309c"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_6885e44ee3a092fd89fcb290c465572ee7ead8fb0b213ec7c28677c12e268916"
+            },
+            {
+              "kind": "array",
+              "name": "a_27771d032bbd07031e0a1350892b424b3b984b0c8191c04b0a49ce39a5ac047c"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_a4e90ea24d5c1ec29f43bf0fff42ba94db62564761c10ce82a2040d2d98c95ba"
+            },
+            {
+              "kind": "array",
+              "name": "a_363e52a0dfb8a65deeb34a1f8f3dcdbd68be1a2d62eba2f372a3e8872746c4fd"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_6e5bc604d8727051b0d938f0035459a5e48d54c7f6d52705ad7c540dfc9cf5e6"
+            },
+            {
+              "kind": "array",
+              "name": "a_48af0358aa4e1eeba54e2869e4ad72eb6e626858305c3e0ca3cc06c8936b19a4"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_c710621e9645c5dcf07ef9badaa5cf6cc3133cdf9c7e5449564c60cab4102fed"
+            },
+            {
+              "kind": "array",
+              "name": "a_3992ab9d1ed58158f98deb02c31ae50db3dd4930590f00a2c93ed6de75ddbed7"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_6f7e03e2deed001a7a9cfdba459524d34dea7b36ad6cc5375e472919f6e4ad36"
+            },
+            {
+              "kind": "array",
+              "name": "a_0816559f799e8564e25cfe1435f159dd249480fd50aaa00b0490b9dda0f7d06f"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_bf031a83ca74d84244768767d42b8b7a132989eb09fb0df6a189432124ef8486"
+            },
+            {
+              "kind": "array",
+              "name": "a_6d8abd82e6cf39fcdc541d0fd07e34b6f7281ba8f91b0c44564333f5b751fe35"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_23567de5459d99ad5c6825f1a55c2cca17716d2a76303e32f492df4479513859"
+            },
+            {
+              "kind": "array",
+              "name": "a_42c06050f3e7c37eacfcbb452b442c314f39f74a6b8bd84c3829a01ce5cb810a"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_b7b22861386e3301bcce4ceadaebe2d1cc31116bf5b1367a1112d727662bf36a"
+            },
+            {
+              "kind": "array",
+              "name": "a_868d18b45cc49c33bc2e817b8822e75dda398f4f899308bd2b0f6b055d111b28"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_e53e0f0c2f8086dd812be72951501a4d37ca435a30f09239c1c9fc88f4f6b6f9"
+            },
+            {
+              "kind": "array",
+              "name": "a_f249b50d4ef15cd69549fa8d2483ac60b262da07171b9ee7a49e654e604ece66"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_ff15862778046cf0e8dc1c7e0ea3b11a6928eebe00a85034a58c19799f372c28"
+            },
+            {
+              "kind": "array",
+              "name": "a_1fd525a7f60ce500c857882cf05090a0286b3f3d27516f6f2c71d90a9ae8b41d"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_d0937910f46fdc72fbc972013c0e9a27386c0644179db80064d5331a426e6135"
+            },
+            {
+              "kind": "array",
+              "name": "a_b3d76fc3705d45fc2791f6d3166e0440e9faa1bc10ab788825986efcdf5d1016"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_3c3f07d92f07d6aac281ab81bae377efcacc9d8d1d03e71ca24354dffc6d0f4a"
+            },
+            {
+              "kind": "array",
+              "name": "a_893f3aa3784f3a78681fd58e10b29d8f4a2cdb23516c054459838a644fb6a679"
+            }
+          ]
+        },
+        {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "array",
+              "name": "a_68437ca6d1b08e479ae7d2d26585fd525a0722cd7742f09ce0d952fc358219d8"
+            },
+            {
+              "kind": "array",
+              "name": "a_62bb0d6f7948399e828e67ca29f0cb80a68a365dadb83e858a4e2036381acf53"
+            }
+          ]
+        }
+      ]
+    },
+    "socket_correspondence_load_public_geometry": {
+      "kind": "dict",
+      "items": {
+        "holes": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 0
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_0f54a0efbe3bd48c31505489592f6aac59ae1d233daee1ff234371acd24d0d17"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_e9751942104a18d4742a8b323381b4d6f50ae3fe3042c760e26b84f339641c47"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.171e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 1
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_634ad2a182a62cf77ff02fd9e6ad73a5ce71549e31e3f70854bd4563c9718b1b"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_4e937122f7296a19bde934176dd49b10206048dd3aa4186d9ae09a2ffd951be0"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.105e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 2
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_58ccd1d6a8ada830054237e16601a48d86cd92c6df00fde17ad546c42c3b64d0"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_2b67dd1b65e47dbdaa087d9074e4df17e5e1270dd52d0eb0343009d77b2db906"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.137e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 3
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_774f9e925bec12579b2a52a4184cec6c976947b52b14fc9e5232fb5046435ab8"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_92318aa3e316c7cf88d4d606f0a3af0b465272a234567bdbf07740b9a99614e6"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.151e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 4
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_f47f62323192ba06c04bf60c8154d74ee8a688c8c052d09ac7bd2f27467ea70e"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_3f8af02f171a72bc6124aee6208b71d17330f24d3c804bb7764c87c7e67259db"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.171e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 5
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_39240c592cfb3149dedf93435958bd18d42c0951c4f1acd35be7d1aa5516eabb"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_54e2d8e327be6325f11585b86633a265eeb6990ffd4e8ef1edc22f743f648984"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.087e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 6
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_15ed60ad87e2226f788546f1048e26813eeb741a5eb65207c9a5fa7df6ca947b"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_955bc4a458e32727db10518d8c7c3dab169d7f1665390b3a59fd7f162a75e1de"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.258e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 7
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_2fa72512ae8d66514d0196a7ee130f8e2de8f3459509bdbf5721807aff85b1ec"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_99b0cda06be5cda9e39ec0c563f57ebdc657c3cdca29d60e4e9fab48c211d3ab"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.258e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 8
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_3ee9326a2b434701f2d1cab62fe2e48ad59efcbd080d444c7a53c8f226c89fd5"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_b11acbdc70723afb82bf15b6b68779891c2ba3f16a378c31cb66e0cb68c7c753"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.258e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 9
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_3e836f9355d8462f54bfb379de053c0a1c5e64e77bb471077fb682735255b28a"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_03286160eced29b1f921759392ec79ba8cb87c914de19b7723aa9a42c9a3d3c8"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 10
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_fdea727da43024b30adfc4fdb88a831dcfb68e934d4f56dbce7df53b3e887427"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_6789d56f32dc74d8a8a15fb7a7aeee10a784b57e30351c03727816206adb8c15"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 11
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_9ad756a2034123b276b2cd32d77c8861f453839a4ed4ce765ab495c3a62c9ea6"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_4c4e9afa19a5d1047cfd4b748e164bbb6fda819549454f96c2e868bfa21d8289"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.215e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 12
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_1ed279cc0049e8c312032c15f54e05201f47a410f1eb1fc1c87f827e1e39c147"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_99acdf79c046b00a5723057446218034f899f80c84ef0afb7baaf74a25fcdd6c"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 13
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_737efdc9cd548f039453e287777d7fb6929529e8c6e90f59bb633fdf2d2d47d4"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_0d0aad9fbe46cb2880b87d3e6f8598d1a765df74ddac13c4df5a68ccb7bf8b93"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 14
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_7dab5f7d3cbbed530ae549044933ed44fd150d13579b18bb5e555103e40ce59f"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_efb58074805b526aee1a9edfd5aadb87f89f335693d900c544e52057b7174180"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            }
+          ]
+        },
+        "top_outline": {
+          "kind": "array",
+          "name": "a_e3495995cd3852a4111774dafb8a986f0510cbb6940651a111bc5e09d57b844c"
+        },
+        "charger_points": {
+          "kind": "array",
+          "name": "a_5e79a0d7f88cee2f02fbd8973f9c951559feef1b5690d4365de2773aa7fbeb17"
+        },
+        "charger_body_center": {
+          "kind": "array",
+          "name": "a_ede797686113eb1525a5d2f2a62d552ea35e67989c14c733e3e72ceea877f2be"
+        },
+        "fingers": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "dict",
+              "items": {
+                "name": {
+                  "kind": "value",
+                  "value": "link7"
+                },
+                "points_at_zero": {
+                  "kind": "array",
+                  "name": "a_294c9f863fea96f8d4fb5f1dc93e4c81cf40078bf63e26b3312539f2bc1e7a77"
+                },
+                "axis": {
+                  "kind": "array",
+                  "name": "a_1d0b2bf32c4cae1adcbac2d8ae296517773feb3bf880a12636670701156b5aaf"
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "name": {
+                  "kind": "value",
+                  "value": "link8"
+                },
+                "points_at_zero": {
+                  "kind": "array",
+                  "name": "a_24bf9d316c299c970aa54add39c8fbf6a77f70a1181d9c1c59dbe5d113060c6c"
+                },
+                "axis": {
+                  "kind": "array",
+                  "name": "a_7e8302f4753309a28ee96d1eb05b9f6606f6ad5703748087d5180b8aa1c9cca9"
+                }
+              }
+            }
+          ]
+        },
+        "sources": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "source_path",
+              "relative": "Object/RoboDojo/Rigid/socket/00000/object.usdz"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Object/RoboDojo/Rigid/charger/00000/object.usdz"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Robots/x5/X5A.urdf"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Robots/x5/meshes/link7.STL"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Robots/x5/meshes/link8.STL"
+            }
+          ]
+        },
+        "mesh_resolution_m": {
+          "kind": "value",
+          "value": 0.0001
+        },
+        "no_mean_sampling_substitution": {
+          "kind": "value",
+          "value": true
+        }
+      }
+    },
+    "visible_socket_material_load_public_geometry": {
+      "kind": "dict",
+      "items": {
+        "holes": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 0
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_0f54a0efbe3bd48c31505489592f6aac59ae1d233daee1ff234371acd24d0d17"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_e9751942104a18d4742a8b323381b4d6f50ae3fe3042c760e26b84f339641c47"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.171e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 1
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_634ad2a182a62cf77ff02fd9e6ad73a5ce71549e31e3f70854bd4563c9718b1b"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_4e937122f7296a19bde934176dd49b10206048dd3aa4186d9ae09a2ffd951be0"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.105e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 2
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_58ccd1d6a8ada830054237e16601a48d86cd92c6df00fde17ad546c42c3b64d0"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_2b67dd1b65e47dbdaa087d9074e4df17e5e1270dd52d0eb0343009d77b2db906"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.137e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 3
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_774f9e925bec12579b2a52a4184cec6c976947b52b14fc9e5232fb5046435ab8"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_92318aa3e316c7cf88d4d606f0a3af0b465272a234567bdbf07740b9a99614e6"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.151e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 4
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_f47f62323192ba06c04bf60c8154d74ee8a688c8c052d09ac7bd2f27467ea70e"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_3f8af02f171a72bc6124aee6208b71d17330f24d3c804bb7764c87c7e67259db"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.171e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 5
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_39240c592cfb3149dedf93435958bd18d42c0951c4f1acd35be7d1aa5516eabb"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_54e2d8e327be6325f11585b86633a265eeb6990ffd4e8ef1edc22f743f648984"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 3.087e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 6
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_15ed60ad87e2226f788546f1048e26813eeb741a5eb65207c9a5fa7df6ca947b"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_955bc4a458e32727db10518d8c7c3dab169d7f1665390b3a59fd7f162a75e1de"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.258e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 7
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_2fa72512ae8d66514d0196a7ee130f8e2de8f3459509bdbf5721807aff85b1ec"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_99b0cda06be5cda9e39ec0c563f57ebdc657c3cdca29d60e4e9fab48c211d3ab"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.258e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 8
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_3ee9326a2b434701f2d1cab62fe2e48ad59efcbd080d444c7a53c8f226c89fd5"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_b11acbdc70723afb82bf15b6b68779891c2ba3f16a378c31cb66e0cb68c7c753"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.258e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 9
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_3e836f9355d8462f54bfb379de053c0a1c5e64e77bb471077fb682735255b28a"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_03286160eced29b1f921759392ec79ba8cb87c914de19b7723aa9a42c9a3d3c8"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 10
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_fdea727da43024b30adfc4fdb88a831dcfb68e934d4f56dbce7df53b3e887427"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_6789d56f32dc74d8a8a15fb7a7aeee10a784b57e30351c03727816206adb8c15"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 11
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_9ad756a2034123b276b2cd32d77c8861f453839a4ed4ce765ab495c3a62c9ea6"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_4c4e9afa19a5d1047cfd4b748e164bbb6fda819549454f96c2e868bfa21d8289"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.215e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 12
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_1ed279cc0049e8c312032c15f54e05201f47a410f1eb1fc1c87f827e1e39c147"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_99acdf79c046b00a5723057446218034f899f80c84ef0afb7baaf74a25fcdd6c"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 13
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_737efdc9cd548f039453e287777d7fb6929529e8c6e90f59bb633fdf2d2d47d4"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_0d0aad9fbe46cb2880b87d3e6f8598d1a765df74ddac13c4df5a68ccb7bf8b93"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "id": {
+                  "kind": "value",
+                  "value": 14
+                },
+                "outline": {
+                  "kind": "array",
+                  "name": "a_7dab5f7d3cbbed530ae549044933ed44fd150d13579b18bb5e555103e40ce59f"
+                },
+                "local_center": {
+                  "kind": "array",
+                  "name": "a_efb58074805b526aee1a9edfd5aadb87f89f335693d900c544e52057b7174180"
+                },
+                "area_m2": {
+                  "kind": "value",
+                  "value": 1.1825e-05
+                }
+              }
+            }
+          ]
+        },
+        "top_outline": {
+          "kind": "array",
+          "name": "a_e3495995cd3852a4111774dafb8a986f0510cbb6940651a111bc5e09d57b844c"
+        },
+        "charger_points": {
+          "kind": "array",
+          "name": "a_5e79a0d7f88cee2f02fbd8973f9c951559feef1b5690d4365de2773aa7fbeb17"
+        },
+        "charger_body_center": {
+          "kind": "array",
+          "name": "a_ede797686113eb1525a5d2f2a62d552ea35e67989c14c733e3e72ceea877f2be"
+        },
+        "fingers": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "dict",
+              "items": {
+                "name": {
+                  "kind": "value",
+                  "value": "link7"
+                },
+                "points_at_zero": {
+                  "kind": "array",
+                  "name": "a_294c9f863fea96f8d4fb5f1dc93e4c81cf40078bf63e26b3312539f2bc1e7a77"
+                },
+                "axis": {
+                  "kind": "array",
+                  "name": "a_1d0b2bf32c4cae1adcbac2d8ae296517773feb3bf880a12636670701156b5aaf"
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "name": {
+                  "kind": "value",
+                  "value": "link8"
+                },
+                "points_at_zero": {
+                  "kind": "array",
+                  "name": "a_24bf9d316c299c970aa54add39c8fbf6a77f70a1181d9c1c59dbe5d113060c6c"
+                },
+                "axis": {
+                  "kind": "array",
+                  "name": "a_7e8302f4753309a28ee96d1eb05b9f6606f6ad5703748087d5180b8aa1c9cca9"
+                }
+              }
+            }
+          ]
+        },
+        "sources": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "source_path",
+              "relative": "Object/RoboDojo/Rigid/socket/00000/object.usdz"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Object/RoboDojo/Rigid/charger/00000/object.usdz"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Robots/x5/X5A.urdf"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Robots/x5/meshes/link7.STL"
+            },
+            {
+              "kind": "source_path",
+              "relative": "Robots/x5/meshes/link8.STL"
+            }
+          ]
+        },
+        "mesh_resolution_m": {
+          "kind": "value",
+          "value": 0.0001
+        },
+        "no_mean_sampling_substitution": {
+          "kind": "value",
+          "value": true
+        },
+        "triangles": {
+          "kind": "array",
+          "name": "a_a91f35cddc08364bf321cbbf9ef25a04662a7816f113031ae6614187d92d810b"
+        },
+        "triangle_material": {
+          "kind": "array",
+          "name": "a_0e49133a50913e9b014416bdc21ff4606523319d194e5fd4e21c698a21808eb4"
+        },
+        "dark_z": {
+          "kind": "value",
+          "value": 0.002339750006903708
+        },
+        "public_mesh_records": {
+          "kind": "list",
+          "items": [
+            {
+              "kind": "dict",
+              "items": {
+                "path": {
+                  "kind": "value",
+                  "value": "/root/E_body_3/P_3b880443a15aabc4"
+                },
+                "faces": {
+                  "kind": "value",
+                  "value": 6204
+                },
+                "material_id": {
+                  "kind": "value",
+                  "value": 1
+                },
+                "bounds_m": {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": -0.07859492301940918
+                        },
+                        {
+                          "kind": "value",
+                          "value": -0.018164409324526787
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.0007645299774594605
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.07859492301940918
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.018164409324526787
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.020165640860795975
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "diffuseColor": {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "value",
+                      "value": 0.8745098114013672
+                    },
+                    {
+                      "kind": "value",
+                      "value": 0.8745098114013672
+                    },
+                    {
+                      "kind": "value",
+                      "value": 0.8745098114013672
+                    }
+                  ]
+                },
+                "double_sided": {
+                  "kind": "value",
+                  "value": true
+                },
+                "subdivision_scheme": {
+                  "kind": "value",
+                  "value": "none"
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "path": {
+                  "kind": "value",
+                  "value": "/root/E_body_3/E_part01_25/P_89e168adb9a23b3c"
+                },
+                "faces": {
+                  "kind": "value",
+                  "value": 52
+                },
+                "material_id": {
+                  "kind": "value",
+                  "value": 2
+                },
+                "bounds_m": {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": -0.07743044666481018
+                        },
+                        {
+                          "kind": "value",
+                          "value": -0.016950420224666595
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.002339750006903708
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": 0.0774305564956665
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.016996939545869828
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.002339750006903708
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "diffuseColor": {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "value",
+                      "value": 0.21568627655506134
+                    },
+                    {
+                      "kind": "value",
+                      "value": 0.21568627655506134
+                    },
+                    {
+                      "kind": "value",
+                      "value": 0.21568627655506134
+                    }
+                  ]
+                },
+                "double_sided": {
+                  "kind": "value",
+                  "value": true
+                },
+                "subdivision_scheme": {
+                  "kind": "value",
+                  "value": "none"
+                }
+              }
+            },
+            {
+              "kind": "dict",
+              "items": {
+                "path": {
+                  "kind": "value",
+                  "value": "/root/E_button_6/P_80c68b0c268ffcdd"
+                },
+                "faces": {
+                  "kind": "value",
+                  "value": 1014
+                },
+                "material_id": {
+                  "kind": "value",
+                  "value": 1
+                },
+                "bounds_m": {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": -0.06026967001374662
+                        },
+                        {
+                          "kind": "value",
+                          "value": -0.007701630268847942
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.015204229997378589
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "list",
+                      "items": [
+                        {
+                          "kind": "value",
+                          "value": -0.05319353999797106
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.008238819863045215
+                        },
+                        {
+                          "kind": "value",
+                          "value": 0.02156879999665618
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "diffuseColor": {
+                  "kind": "list",
+                  "items": [
+                    {
+                      "kind": "value",
+                      "value": 0.8745098114013672
+                    },
+                    {
+                      "kind": "value",
+                      "value": 0.8745098114013672
+                    },
+                    {
+                      "kind": "value",
+                      "value": 0.8745098114013672
+                    }
+                  ]
+                },
+                "double_sided": {
+                  "kind": "value",
+                  "value": true
+                },
+                "subdivision_scheme": {
+                  "kind": "value",
+                  "value": "none"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "source_files": {
+    "Object/RoboDojo/Rigid/charger/00000/object.usdz": "50532876b868d0cc5a0add9c35be0aa8b72f89e02e06e04a6fd021de95b1ecd0",
+    "Object/RoboDojo/Rigid/charger/00000/metadata.json": "3a462763b4f0922067d5df8fcdb78b26bb566afb1af7cc831d7e27af16dbd59f",
+    "Object/RoboDojo/Rigid/socket/00000/object.usdz": "3539a25ac55c7379d35ac547734fc7a6b573e14615e55fae89a11d2176e78e92",
+    "Object/RoboDojo/Rigid/socket/00000/metadata.json": "7b9afc3bc8aa2d46844447a33f4cc623a80618970aaa599e074f6b0f145d14ba",
+    "Robots/x5/X5A.urdf": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "Robots/x5/meshes/link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "Robots/x5/meshes/link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+  },
+  "provenance": {
+    "extractor_sha256": "b4ad195c9a5f946ecde3931445c01f133bb119408c06321d9c7014fb403ebeb5",
+    "original_loader_AST_sha256": {
+      "load_body_models": "04f82a22ae2235fd13c4cf986dd456d99d368132d4a99def4d52c921ed08ec37",
+      "load_head_hole_models": "e9501d3d9d09a05586d0ffde759afda5f59044093230509069297c049d9a3fd4",
+      "_public_wrist_groups": "d4b32bad27acc3658dc43ebb91875468a1fd55fc80bad6f3b3f1aa851238422c",
+      "socket_correspondence_load_public_geometry": "ff6fa7da946f06e00dfcecf62a9581440680ec63baecb7888b9776392edc598c",
+      "visible_socket_material_load_public_geometry": "9acb54c68589a1d8af26b3f8d152882bfa20f7d35a05bd36e363d9d8aa1c187c"
+    },
+    "public_CAD_only": true
+  },
+  "public_static_data_only": true,
+  "scene_layout_or_observation_included": false
+}

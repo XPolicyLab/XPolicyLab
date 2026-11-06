@@ -1,0 +1,14 @@
+{
+  "schema": "a18-Hang-public-planner-binding-v1",
+  "official_root": "resource://official_runtime",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "source": "env/planner_manager/curobo_planner.py",
+  "source_sha256": "3cd830c002901959409ef6f64d54106d8106b48471b266409abc2199f3cb33e1",
+  "scope": "Bounded native probe of own public planner; no task performance acceptance",
+  "robot_origin": "Identity planning frame; actual base pose inferred from public joints/EE and fixed public FK by original source309 constructor",
+  "planner_dt": 0.004,
+  "table_top_relative_to_X5_base_m": -0.025,
+  "native_enabled": true,
+  "native_scope": "bounded_native_probe",
+  "native_planner_bootstrap_verified": true
+}

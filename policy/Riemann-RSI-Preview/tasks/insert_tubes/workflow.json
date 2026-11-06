@@ -1,0 +1,97 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "instruction_predicate": "insert_visible_test_tubes_into_holder",
+  "stages": [
+    {
+      "id": "grasp",
+      "skill": "grasp_tube"
+    },
+    {
+      "id": "lift",
+      "skill": "lift_tube"
+    },
+    {
+      "id": "upright",
+      "skill": "upright_tube"
+    },
+    {
+      "id": "seat",
+      "skill": "seat_tube"
+    },
+    {
+      "id": "reseat",
+      "skill": "reseat_tube"
+    },
+    {
+      "id": "home_left",
+      "skill": "finish_tube_sequence"
+    },
+    {
+      "id": "home_right",
+      "skill": "finish_tube_sequence"
+    },
+    {
+      "id": "settle",
+      "skill": "finish_tube_sequence"
+    }
+  ],
+  "source_order": [
+    1,
+    0,
+    2
+  ],
+  "view_skill": "tube_scene_view",
+  "maximum_uncertain_attempts": 2,
+  "initial_receiving_view_required": false,
+  "view_policy": "only_for_unqualified_public_geometry",
+  "maximum_same_stage_uncertain_attempts": 2,
+  "maximum_fallen_recoveries": 1,
+  "preference": "public_grounded_mature_rule_before_learned_recovery",
+  "completion_is_official_success": false,
+  "official_action_budget_changed": false,
+  "execution": {
+    "executor": "deterministic_native",
+    "maximum_recovery_attempts_per_stage": 2,
+    "partial_irreversible_replay": false
+  },
+  "execution_program": {
+    "family": "ordered_insertion",
+    "execution": {
+      "executor": "deterministic_native",
+      "maximum_recovery_attempts_per_stage": 2,
+      "partial_irreversible_replay": false
+    },
+    "maximum_tool_boundaries": 512,
+    "stages": [
+      {
+        "id": "tube_scene_view",
+        "skill": "tube_scene_view"
+      },
+      {
+        "id": "grasp_tube",
+        "skill": "grasp_tube"
+      },
+      {
+        "id": "lift_tube",
+        "skill": "lift_tube"
+      },
+      {
+        "id": "upright_tube",
+        "skill": "upright_tube"
+      },
+      {
+        "id": "seat_tube",
+        "skill": "seat_tube"
+      },
+      {
+        "id": "reseat_tube",
+        "skill": "reseat_tube"
+      },
+      {
+        "id": "finish_tube_sequence",
+        "skill": "finish_tube_sequence"
+      }
+    ],
+    "completion_is_official_success": false
+  }
+}

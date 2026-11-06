@@ -1,0 +1,370 @@
+{
+  "schema": "official-default-rule-evaluation-plan-v1",
+  "official_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "official_task_index_sha256": "655a87cd59fa6272bf352d32deb8ade162737b49a9824e16d428fecf0803380b",
+  "official_eval": true,
+  "policy_name": "Riemann-RSI-Preview",
+  "evaluator_entry": "src/eval_client/main.py",
+  "layout_selection": "unmodified official SeedManager",
+  "policy_source_count": 44,
+  "expected_qualified_episodes": 1775,
+  "official_reward_only": true,
+  "success_rate_and_mean_score_required": true,
+  "independent_mode_versions": true,
+  "no_cross_version_score_merging": true,
+  "tasks": {
+    "plug_in_charger": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 400,
+      "official_task_sha256": "aaa59ade46dc54f430e1148e3f6fae487970cd29eb2c07b5ff7b4045edb831b6",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.plug_in_charger.controller",
+      "profile": "native-profile.json"
+    },
+    "insert_key": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 300,
+      "official_task_sha256": "180978a2915744f0596fbca4ea0ad6dcb47dce005d43f06807249bc8b4d1a828",
+      "adapter_family": "public_observation_policy",
+      "controller": "tasks.insert_key.controller",
+      "profile": "workflow.json"
+    },
+    "deposit_coin": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 300,
+      "official_task_sha256": "f9868ef827ec17b8db6c4650cc5d9a9e593d20d00ee822e2212ce229ec01fb61",
+      "adapter_family": "public_observation_policy",
+      "controller": "tasks.deposit_coin.controller",
+      "profile": "workflow.json"
+    },
+    "pick_from_conveyor_by_image": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 700,
+      "official_task_sha256": "a0d29576d0aab8232d2fd3ebcc8c510e81c70b4cc04602a5be3e99ee2275e01d",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.pick_from_conveyor_by_image.controller",
+      "profile": "workflow.json"
+    },
+    "pour_liquid_into_cup": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 400,
+      "official_task_sha256": "73f8c91b57c352fdc1e7ba3fe5354b3c10e4156d8e5ba777762ad0fa1aff5663",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.pour_liquid_into_cup.controller",
+      "profile": "workflow.json"
+    },
+    "pour_liquid_into_cup_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 400,
+      "official_task_sha256": "a1c4097b6e34b2c62885b3a9c7d2584a93d9e296dc41d311a80c2e6d541d53af",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.pour_liquid_into_cup_random.controller",
+      "profile": "workflow.json"
+    },
+    "pour_balls_into_vase": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 600,
+      "official_task_sha256": "eae388b93ec196c401f76bbab3b0119cb2164f90bece0225d4fb925d3f2b73ab",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.pour_balls_into_vase.controller",
+      "profile": "workflow.json"
+    },
+    "fasten_screws": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1900,
+      "official_task_sha256": "2e187a28e33e44efb87baae6463b3ec35264ccd41e35c21a1be44f6361675185",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.fasten_screws.controller",
+      "profile": "workflow.json"
+    },
+    "general_pickup": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 200,
+      "official_task_sha256": "1a9eef7fe518f9d2c6805ad1a8f97c1045fa83726f84b9c63f67ffdfabbc40a7",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.general_pickup.controller",
+      "profile": "workflow.json"
+    },
+    "classify_objects": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1100,
+      "official_task_sha256": "aef4333c088766375e21a928d53a9a93aaee285fecae41e22385acdc74dd11ac",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.classify_objects.controller",
+      "profile": "workflow.json"
+    },
+    "push_T": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 600,
+      "official_task_sha256": "a01d753bc320ffbf492ccc29e5f7ab3b39e6c7d255cd25804db1934a30fa5b41",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.push_T.controller",
+      "profile": "native_profile.json"
+    },
+    "push_T_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 600,
+      "official_task_sha256": "dc8d9c8e0d2e8dfffa2b7d433a8278c0eaf707cc4861b15035364c2e70061dab",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.push_T_random.controller",
+      "profile": "native_profile.json"
+    },
+    "insert_tubes": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 500,
+      "official_task_sha256": "9a68795ddbd0b816ffd7627e673390ecd83594c0e9d374d4e3abf3435ad439e1",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.insert_tubes.controller",
+      "profile": "native-profile.json"
+    },
+    "fold_clothes": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 500,
+      "official_task_sha256": "ecea9c287d0579605330168e6f36734704fb14a6b1e5dec82b6f2ee3a56ec20a",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.fold_clothes.controller",
+      "profile": "native-profile.json"
+    },
+    "fold_clothes_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 500,
+      "official_task_sha256": "9e40abe3f7201a8c13961edc1ca8075260c315584d3d6b93fa1df966d13d1e88",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.fold_clothes_random.controller",
+      "profile": "native-profile.json"
+    },
+    "match_and_pick_from_conveyor": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 700,
+      "official_task_sha256": "53110b8a0c971bd3ae8878bfb7d0dcd9626bd9b610d4e7fc91772313b435a5c0",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.match_and_pick_from_conveyor.controller",
+      "profile": "workflow.json"
+    },
+    "pack_objects_into_box": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1300,
+      "official_task_sha256": "84a1cf1dd5e166f36291130f9d8cb5dfe4b3f4732a46674bef6374a7ea2d66be",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.pack_objects_into_box.controller",
+      "profile": "workflow.json"
+    },
+    "fill_egg_holder": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 700,
+      "official_task_sha256": "506dfb772f8882ae53966e3580affde19c3c0f11591c78cc5f5b1d997ba04f7e",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.fill_egg_holder.controller",
+      "profile": "workflow.json"
+    },
+    "fill_pen_holder": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1100,
+      "official_task_sha256": "8706dce239487e078b21af0b95bcc5cd4eabdcdadcdcbc6400d6b138d982f1e6",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.fill_pen_holder.controller",
+      "profile": "workflow.json"
+    },
+    "hang_mugs": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 800,
+      "official_task_sha256": "4bc6586bd87de030b9c580fea2a45e7977c3b6a4d75cf3c43b546d349d42e906",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.hang_mugs.controller",
+      "profile": "native_profile.json"
+    },
+    "store_tools_in_toolbox": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 900,
+      "official_task_sha256": "2969fc3eb171560b3c0bcea62b9f38b8b35f3aecc9bcc7085c3b1cec365b48fc",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.store_tools_in_toolbox.controller",
+      "profile": "workflow.json"
+    },
+    "stack_blocks": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 550,
+      "official_task_sha256": "50bd388f9e47002966fbb0146742467a820295b8686e0f86379f0efbcfffcc1b",
+      "adapter_family": "public_stack_workflow",
+      "controller": "tasks.stack_blocks.controller",
+      "profile": "workflow.json"
+    },
+    "stack_blocks_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 550,
+      "official_task_sha256": "19d4e5cd693e068ad64de75cbcd24977ab8d39e22fa17362a391dcd733bc9bb5",
+      "adapter_family": "public_stack_workflow",
+      "controller": "tasks.stack_blocks_random.controller",
+      "profile": "workflow.json"
+    },
+    "stack_bowls_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 800,
+      "official_task_sha256": "a0e20469eb44a9ee98650d09386814c1df5264c68ec139f06aabf0c86f092514",
+      "adapter_family": "public_stack_workflow",
+      "controller": "tasks.stack_bowls_random.controller",
+      "profile": "workflow.json"
+    },
+    "arrange_largest_number": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1050,
+      "official_task_sha256": "277acd20ae4345dc71267762e588b7b0343387c71685183890f044a4808b7a20",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.arrange_largest_number.controller",
+      "profile": "workflow.json"
+    },
+    "play_Xylophone": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 500,
+      "official_task_sha256": "b7a4b0bc0457bcf55d714ca1867476fc4aabc53084adfc78d3ff5d1437bf7847",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.play_Xylophone.controller",
+      "profile": "workflow.json"
+    },
+    "stack_blocks_by_language": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 400,
+      "official_task_sha256": "36a83925f35c7a4caac5add328dd35cb1d346bad833d3064f455d88221e7a41e",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.stack_blocks_by_language.controller",
+      "profile": "workflow.json"
+    },
+    "arrange_largest_number_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1050,
+      "official_task_sha256": "01757509978663bf7c0c95059e8ae18d45b8fe0953f6b54540e2bd6bf141182e",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.arrange_largest_number_random.controller",
+      "profile": "workflow.json"
+    },
+    "make_toast": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1400,
+      "official_task_sha256": "1047f484a73d1f92304393879b51f87e33d661b6ad7937198352fe37a0d3233d",
+      "adapter_family": "public_toast_workflow",
+      "controller": "tasks.make_toast.controller",
+      "profile": "workflow.json"
+    },
+    "make_toast_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1400,
+      "official_task_sha256": "69fb879b89e98f7369971834eb6d1b95c5a65f5ffe978b2cffae0b12c6b756ca",
+      "adapter_family": "public_toast_workflow",
+      "controller": "tasks.make_toast_random.controller",
+      "profile": "workflow.json"
+    },
+    "sort_nesting_dolls_by_size": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1050,
+      "official_task_sha256": "1838fa6b515bad3796895cb5c1883c6a42789b7dada5434765764600e70beb49",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.sort_nesting_dolls_by_size.controller",
+      "profile": "workflow.json"
+    },
+    "classify_objects_by_language": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1100,
+      "official_task_sha256": "242a8f048f487eb174ef246be78613bbb5f153549ee11a2650412718cf3b36c9",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.classify_objects_by_language.controller",
+      "profile": "native-profile.json"
+    },
+    "organize_table": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1000,
+      "official_task_sha256": "9e3057e70b8ad0b8cb553be6dec00d2b71fada6f4087edcb38fc56508f572dbd",
+      "adapter_family": "public_mature_workflow",
+      "controller": "tasks.organize_table.controller",
+      "profile": "native-profile.json"
+    },
+    "swap_T": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 400,
+      "official_task_sha256": "57fc289b3957caa454e1d8e005e3a57c973d6ab40121845c94799e61e4bfafdf",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.swap_T.controller",
+      "profile": "workflow.json"
+    },
+    "cover_blocks": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 800,
+      "official_task_sha256": "9d14931b16842b93bea8abf9a07991a93a7e663b93c5fd1695108c8b922ab862",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.cover_blocks.controller",
+      "profile": "workflow.json"
+    },
+    "press_by_number": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 700,
+      "official_task_sha256": "006f969087c00c417a63875a9de153f698c52d1f1ca0caf0aa16076aa15059c5",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.press_by_number.controller",
+      "profile": "workflow.json"
+    },
+    "play_tic_tac_toe": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1100,
+      "official_task_sha256": "8f75ebfe55c997ad9bd3b342db46e843e87397db94356f31cadcbe0cb483bca7",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.play_tic_tac_toe.controller",
+      "profile": "workflow.json"
+    },
+    "solve_equation": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 300,
+      "official_task_sha256": "e287a2f36b82b28e8ca7824f63b1b723b02972ea6dfc115ff32b2882729751f7",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.solve_equation.controller",
+      "profile": "workflow.json"
+    },
+    "swap_blocks": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 700,
+      "official_task_sha256": "08ed24ae9dff27f4e5c850161a02f62ce237859c096d9b06a853a7890e0ad4ed",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.swap_blocks.controller",
+      "profile": "workflow.json"
+    },
+    "play_stacking_toy": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1200,
+      "official_task_sha256": "23361329ee7efe330da1f1c241415205bafed2b6c082a913659d868a80d338c3",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.play_stacking_toy.controller",
+      "profile": "workflow.json"
+    },
+    "imitate_sorting_sequence": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 1600,
+      "official_task_sha256": "18400cb3c5f5103492819df2dcdf05a77916106e8a503cb62b4ee6cdbaa9305b",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.imitate_sorting_sequence.controller",
+      "profile": "workflow.json"
+    },
+    "sort_nesting_dolls_by_size_random": {
+      "official_eval_nums": 25,
+      "official_action_horizon": 1050,
+      "official_task_sha256": "b793ab5bd32bd2c10bd46874440904837f9c4e290e7508b06426e2e96425709a",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.sort_nesting_dolls_by_size.controller",
+      "profile": "workflow.json"
+    },
+    "make_kong": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 600,
+      "official_task_sha256": "b9266689d65f9213b05219ad952344f9fd63be8892097ec0103af99791b245d5",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.make_kong.controller",
+      "profile": "workflow.json"
+    },
+    "pour_by_language": {
+      "official_eval_nums": 50,
+      "official_action_horizon": 800,
+      "official_task_sha256": "f7a15a7fca2c649a7918d68960ede27e667f409a339b668dd9876db890724cfb",
+      "adapter_family": "public_command_workflow",
+      "controller": "tasks.pour_by_language.controller",
+      "profile": "workflow.json"
+    }
+  },
+  "official_python_version": "3.11.15"
+}

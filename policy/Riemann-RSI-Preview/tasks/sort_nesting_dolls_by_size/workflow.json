@@ -1,0 +1,64 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1050,
+  "wam_reselection": false,
+  "max_operations": 3180,
+  "bindings": {
+    "require_control_mode": "skills.workflow_routing.implementation:require_control_mode",
+    "recover_initial_scene": "skills.workflow_routing.implementation:recover_initial_scene",
+    "reinspect_initial_scene": "skills.workflow_routing.implementation:reinspect_initial_scene",
+    "prepare_placement_state": "skills.workflow_routing.implementation:prepare_placement_state",
+    "iteration_groups": "skills.workflow_routing.implementation:iteration_groups",
+    "select_or_park": "skills.workflow_routing.implementation:select_or_park",
+    "stage_selected_transfer": "skills.workflow_routing.implementation:stage_selected_transfer",
+    "place_and_reconcile": "skills.workflow_routing.implementation:place_and_reconcile",
+    "require_iteration_completion": "skills.workflow_routing.implementation:require_iteration_completion",
+    "finish_placement": "skills.workflow_routing.implementation:finish_placement"
+  },
+  "errors": {
+    "PlacementFinished": "skills.workflow_routing.implementation:PlacementFinished",
+    "IterationBoundExceeded": "skills.workflow_routing.implementation:IterationBoundExceeded"
+  },
+  "steps": [
+    {"id": "inspection_only_guard", "call": "require_control_mode"},
+    {"id": "initial_detection_recovery", "call": "recover_initial_scene"},
+    {"id": "initial_low_score_reinspection", "call": "reinspect_initial_scene"},
+    {"id": "five_pending_and_collision_clear_row", "call": "prepare_placement_state", "store": "placement_state"},
+    {"id": "bounded_iteration_slots", "call": "iteration_groups", "store": "iteration_groups"},
+    {
+      "id": "mature_placement_iterations",
+      "try": [
+        {
+          "id": "iteration_groups",
+          "for_each": {"var": "iteration_groups"},
+          "as": "iteration_group",
+          "max_items": 17,
+          "do": [
+            {
+              "id": "iteration_slots",
+              "for_each": {"var": "iteration_group"},
+              "as": "iteration_slot",
+              "max_items": 64,
+              "do": [
+                {"id": "cycle_deferred_home_selection_and_parking", "call": "select_or_park", "args": {"state": {"var": "placement_state"}}},
+                {"id": "placement_order_and_handover_refresh_replan", "call": "stage_selected_transfer", "args": {"state": {"var": "placement_state"}}},
+                {"id": "placement_transfer_refresh_reconcile", "call": "place_and_reconcile", "args": {"state": {"var": "placement_state"}}}
+              ]
+            }
+          ]
+        },
+        {"id": "pending_empty_after_slot_inventory", "call": "require_iteration_completion", "args": {"state": {"var": "placement_state"}}}
+      ],
+      "catch": [
+        {
+          "errors": ["PlacementFinished"],
+          "as": "placement_finished",
+          "do": []
+        }
+      ]
+    },
+    {"id": "home_after_pending_completion", "call": "finish_placement", "store": "teacher_result"},
+    {"id": "return_after_pending_completion", "return": {"var": "teacher_result"}}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "public-own-camera-calibration-v1",
+  "head_origin_m": [
+    0.0,
+    -0.41,
+    1.308
+  ],
+  "head_euler_deg": [
+    30.0,
+    0.0,
+    0.0
+  ],
+  "head_focal_pixels": 288.13254186835945,
+  "dimensions_are_nominal": true,
+  "dynamic_positions": "Current public RGB plane and bottle/bowl silhouettes",
+  "source": "Declared public X5 head/wrist camera calibration, own-URDF mount",
+  "wrist_focal_pixels": 397.04127893104277,
+  "wrist_sensor_origin_m": [
+    0,
+    0,
+    0.001
+  ],
+  "wrist_sensor_euler_deg": [
+    0,
+    -80,
+    -90
+  ],
+  "wrist_mount_source": "Fixed camera joints in declared own X5 URDF; optical convention from public X5 sensor calibration"
+}

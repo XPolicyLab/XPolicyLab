@@ -1,0 +1,9 @@
+# Policy-side server + WAM only. Install in a new venv, never the simulator env.
+-r policies/riemann_1/implementation/requirements.txt
+h5py==3.16.0
+scipy==1.15.3
+omegaconf==2.3.1
+PyYAML==6.0.3
+pydantic==2.11.10
+# The admitted protocol overlay is websockets 14.2.
+websockets==14.2

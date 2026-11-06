@@ -1,0 +1,19 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "instruction_predicate": "two_visible_T_silhouettes_exchange",
+  "stages": [
+    {"id": "pick_left", "skill": "t_transfer_stage", "side": "left"},
+    {"id": "park_left", "skill": "t_transfer_stage", "side": "left"},
+    {"id": "pick_right", "skill": "t_transfer_stage", "side": "right"},
+    {"id": "place_right", "skill": "t_transfer_stage", "side": "right"},
+    {"id": "clear_right", "skill": "t_transfer_stage", "side": "right"},
+    {"id": "place_left", "skill": "t_transfer_stage", "side": "left"},
+    {"id": "clear_left", "skill": "t_transfer_stage", "side": "left"},
+    {"id": "settle", "skill": "t_transfer_stage", "side": "left"}
+  ],
+  "view_skill": "t_scene_view",
+  "maximum_uncertain_attempts": 2,
+  "preference": "public_grounded_mature_rule_before_learned_recovery",
+  "completion_is_official_success": false,
+  "official_action_budget_changed": false
+}

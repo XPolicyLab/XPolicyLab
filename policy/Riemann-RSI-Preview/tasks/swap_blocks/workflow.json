@@ -1,0 +1,179 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 700,
+  "wam_reselection": false,
+  "max_operations": 64,
+  "bindings": {
+    "public_grasp_reference": "skills.grasp_reference.implementation:run",
+    "retain_grip_intent": "skills.grip_intent.implementation:run",
+    "sequence": "skills.sequence_state.implementation:run",
+    "select_move": "skills.sequence_state.implementation:select_move",
+    "localize_source": "skills.source_qualification.implementation:run",
+    "transfer": "skills.placement_reference.implementation:run",
+    "press": "skills.press_feedback.implementation:run",
+    "home": "skills.motion.implementation:run",
+    "result": "skills.grasp_reference.implementation:result"
+  },
+  "errors": {},
+  "steps": [
+    {
+      "call": "public_grasp_reference",
+      "id": "declare_public_collision_contact_reference"
+    },
+    {
+      "call": "retain_grip_intent",
+      "id": "retain_issued_targets_during_continuous_motion"
+    },
+    {
+      "call": "sequence",
+      "store": "sequence",
+      "id": "original_holder_and_arm_choice"
+    },
+    {
+      "call": "select_move",
+      "args": {
+        "index": 0
+      },
+      "store": "move",
+      "id": "select_move1"
+    },
+    {
+      "call": "localize_source",
+      "args": {
+        "move": {
+          "var": "move"
+        }
+      },
+      "store": "source",
+      "id": "current_rgb_source1"
+    },
+    {
+      "call": "transfer",
+      "args": {
+        "verify_lift": true,
+        "maximum_attempts": 2,
+        "retry_contact_drop_m": 0.01,
+        "move": {
+          "var": "move"
+        },
+        "source": {
+          "var": "source"
+        }
+      },
+      "id": "continuous_original_transfer1"
+    },
+    {
+      "call": "press",
+      "args": {
+        "correct_public_endpoint": true,
+        "move": {
+          "var": "move"
+        },
+        "retract_home": true
+      },
+      "id": "original_press1"
+    },
+    {
+      "call": "select_move",
+      "args": {
+        "index": 1
+      },
+      "store": "move",
+      "id": "select_move2"
+    },
+    {
+      "call": "localize_source",
+      "args": {
+        "move": {
+          "var": "move"
+        }
+      },
+      "store": "source",
+      "id": "current_rgb_source2"
+    },
+    {
+      "call": "transfer",
+      "args": {
+        "verify_lift": true,
+        "maximum_attempts": 2,
+        "retry_contact_drop_m": 0.01,
+        "move": {
+          "var": "move"
+        },
+        "source": {
+          "var": "source"
+        }
+      },
+      "id": "continuous_original_transfer2"
+    },
+    {
+      "call": "press",
+      "args": {
+        "correct_public_endpoint": true,
+        "move": {
+          "var": "move"
+        },
+        "retract_home": true
+      },
+      "id": "original_press2"
+    },
+    {
+      "call": "select_move",
+      "args": {
+        "index": 2
+      },
+      "store": "move",
+      "id": "select_move3"
+    },
+    {
+      "call": "localize_source",
+      "args": {
+        "move": {
+          "var": "move"
+        }
+      },
+      "store": "source",
+      "id": "current_rgb_source3"
+    },
+    {
+      "call": "transfer",
+      "args": {
+        "verify_lift": true,
+        "maximum_attempts": 2,
+        "retry_contact_drop_m": 0.01,
+        "move": {
+          "var": "move"
+        },
+        "source": {
+          "var": "source"
+        }
+      },
+      "id": "continuous_original_transfer3"
+    },
+    {
+      "call": "press",
+      "args": {
+        "correct_public_endpoint": true,
+        "move": {
+          "var": "move"
+        },
+        "retract_home": false
+      },
+      "id": "original_press3"
+    },
+    {
+      "call": "home",
+      "id": "merged_both_home"
+    },
+    {
+      "call": "result",
+      "store": "result"
+    },
+    {
+      "return": {
+        "var": "result"
+      }
+    }
+  ]
+}

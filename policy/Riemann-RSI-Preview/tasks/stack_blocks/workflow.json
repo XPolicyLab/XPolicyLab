@@ -1,0 +1,119 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 550,
+  "wam_reselection": false,
+  "max_operations": 1024,
+  "bindings": {
+    "hold_both_grippers": "skills.stack_state.implementation:hold_both_grippers",
+    "home": "skills.stack_state.implementation:home",
+    "reraise_native_terminal": "skills.stack_state.implementation:reraise_native_terminal",
+    "observe_scene": "skills.stack_state.implementation:observe_scene",
+    "initialize": "skills.stack_state.implementation:initialize",
+    "continue_primitives": "skills.stack_state.implementation:continue_primitives",
+    "locate_source": "skills.stack_state.implementation:locate_source",
+    "record_placement": "skills.stack_state.implementation:record_placement",
+    "note_primitive_failure": "skills.stack_state.implementation:note_primitive_failure",
+    "episode_result": "skills.stack_state.implementation:episode_result",
+    "prepare_move": "skills.source_grasp.implementation:prepare_move",
+    "execute_source_program": "skills.stack_state.implementation:execute_source_program",
+    "close": "skills.source_grasp.implementation:close",
+    "qualify_grasp": "skills.source_grasp.implementation:qualify_grasp",
+    "prepare_transfer": "skills.loaded_transport.implementation:prepare_transfer",
+    "low_source_used": "skills.loaded_transport.implementation:low_source_used",
+    "low_source_lift": "skills.loaded_transport.implementation:low_source_lift",
+    "low_retract": "skills.loaded_transport.implementation:low_retract",
+    "staging_lift": "skills.loaded_transport.implementation:staging_lift",
+    "direct_lift": "skills.loaded_transport.implementation:direct_lift",
+    "needs_reorientation": "skills.loaded_transport.implementation:needs_reorientation",
+    "clearance_lift": "skills.loaded_transport.implementation:clearance_lift",
+    "loaded_reorient": "skills.loaded_transport.implementation:loaded_reorient",
+    "carry": "skills.loaded_transport.implementation:carry",
+    "place": "skills.placement.implementation:place",
+    "release": "skills.placement.implementation:release",
+    "retreat": "skills.placement.implementation:retreat",
+    "snapshot_after": "skills.placement.implementation:snapshot_after",
+    "placed_size": "skills.placement.implementation:placed_size"
+  },
+  "errors": {
+    "runtime_failure": "skills.stack_state.implementation:RuntimeFailure"
+  },
+  "steps": [
+    {
+      "id": "initial_open",
+      "call": "hold_both_grippers",
+      "args": {"value": 1.0, "phase": "initial_open", "seconds": 0.3}
+    },
+    {"id": "observe_open_rgb", "call": "observe_scene", "args": {"label": "open"}, "store": "blocks"},
+    {"id": "initialize_original_stack", "call": "initialize", "args": {"blocks": {"var": "blocks"}}, "store": "primitives"},
+    {
+      "id": "original_three_block_loop",
+      "for_each": {"var": "primitives"},
+      "as": "primitive",
+      "max_items": 3,
+      "do": [
+        {"call": "continue_primitives", "store": "continue_stack"},
+        {
+          "id": "suppress_remaining_blocks_after_original_break",
+          "if": {"var": "continue_stack"},
+          "then": [
+            {
+              "id": "original_primitive_failure_boundary",
+              "try": [
+                {"call": "locate_source", "args": {"primitive": {"var": "primitive"}}, "store": "source"},
+                {"call": "prepare_move", "args": {"source": {"var": "source"}, "primitive": {"var": "primitive"}}},
+                {"id": "external_source_attempt_program", "call": "execute_source_program"},
+                {"id": "original_48_frame_close", "call": "close", "args": {"frames": 48}},
+                {"id": "public_tristate_grasp_evidence", "call": "qualify_grasp"},
+                {"call": "prepare_transfer"},
+                {"call": "low_source_used", "store": "low_source"},
+                {
+                  "id": "original_low_or_high_source_lift",
+                  "if": {"var": "low_source"},
+                  "then": [
+                    {"call": "low_source_lift"},
+                    {"call": "low_retract"},
+                    {"call": "staging_lift"}
+                  ],
+                  "else": [{"call": "direct_lift"}]
+                },
+                {"call": "needs_reorientation", "store": "reorient"},
+                {
+                  "id": "original_loaded_yaw_reorientation",
+                  "if": {"var": "reorient"},
+                  "then": [{"call": "clearance_lift"}, {"call": "loaded_reorient"}],
+                  "else": []
+                },
+                {"call": "carry"},
+                {"call": "place"},
+                {"id": "original_30_frame_release", "call": "release", "args": {"frames": 30}},
+                {"call": "retreat"},
+                {"id": "original_per_block_home", "call": "home"},
+                {"call": "snapshot_after"},
+                {"call": "placed_size", "store": "size"},
+                {"call": "record_placement", "args": {"size": {"var": "size"}}}
+              ],
+              "catch": [
+                {
+                  "errors": ["runtime_failure"],
+                  "as": "primitive_error",
+                  "do": [
+                    {"call": "reraise_native_terminal", "args": {"error": {"var": "primitive_error"}}},
+                    {"call": "note_primitive_failure", "args": {"error": {"var": "primitive_error"}}},
+                    {"id": "original_recovery_open", "call": "hold_both_grippers", "args": {"value": 1.0, "phase": "recovery_open", "seconds": 0.3}},
+                    {"id": "original_recovery_home_then_break", "call": "home"}
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": []
+        }
+      ]
+    },
+    {"id": "original_final_settle", "call": "hold_both_grippers", "args": {"value": 1.0, "phase": "final_settle", "seconds": 0.6}},
+    {"id": "original_final_home", "call": "home"},
+    {"call": "episode_result", "store": "result"},
+    {"return": {"var": "result"}}
+  ]
+}

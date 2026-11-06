@@ -1,0 +1,7 @@
+{
+  "task": "pour_balls_into_vase",
+  "backend": "rule",
+  "evaluation_enabled": true,
+  "entry": "tasks/pour_balls_into_vase/entry.py",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

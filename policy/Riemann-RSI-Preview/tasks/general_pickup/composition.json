@@ -1,0 +1,32 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "general_pickup",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "collision": "skills/collision/implementation.py",
+    "command_execution": "skills/command_execution/implementation.py",
+    "feedback": "skills/feedback/implementation.py",
+    "geometry": "skills/geometry/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "public_observation": "skills/public_observation/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "state": "skills/state/implementation.py",
+    "transport": "skills/transport/implementation.py"
+  },
+  "validation": "R6 targeted10 CPU checks and exact installed native closure; bounded new probes required; no new task performance accepted",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/general_pickup/controller.py",
+    "tasks/general_pickup/entry.py",
+    "tasks/general_pickup/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

@@ -1,0 +1,8 @@
+{
+  "task": "plug_in_charger",
+  "entry": "entry.py",
+  "evaluation_enabled": true,
+  "backend": "rule",
+  "native_evaluation_profile": "bindings/profile.json",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

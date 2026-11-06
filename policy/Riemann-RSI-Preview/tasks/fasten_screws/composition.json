@@ -1,0 +1,34 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "fasten_screws",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "home": "skills/home/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "lid": "skills/lid/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "relay_path_qualification": "skills/relay_path_qualification/implementation.py",
+    "relay_planning": "skills/relay_planning/implementation.py",
+    "state": "skills/state/implementation.py"
+  },
+  "validation": "Original source/13 core CPU checks/exact installed closure; fixed probes only; no current performance accepted",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/fasten_screws/controller.py",
+    "tasks/fasten_screws/entry.py",
+    "tasks/fasten_screws/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

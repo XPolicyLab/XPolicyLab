@@ -1,0 +1,12 @@
+{
+  "schema": "riemann-rule-reuse-v1",
+  "task_mode": "sort_nesting_dolls_by_size_random",
+  "backend": "rule",
+  "source_versioning": "git",
+  "implementation_mode": "sort_nesting_dolls_by_size",
+  "parameter_overrides": {
+    "public_shape_profile": "random"
+  },
+  "workflow_overrides": {},
+  "description": "Original nesting motion workflow with current public random shape and size profile"
+}

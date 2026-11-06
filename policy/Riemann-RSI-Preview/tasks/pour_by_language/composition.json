@@ -1,0 +1,44 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "pour_by_language",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "bowl_vision": "skills/bowl_vision/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "language": "skills/language/implementation.py",
+    "public_observation": "skills/public_observation/implementation.py",
+    "path_execution": "skills/path_execution/implementation.py",
+    "pour": "skills/pour/implementation.py",
+    "surface_geometry": "skills/surface_geometry/implementation.py",
+    "grasp": "skills/grasp/implementation.py",
+    "return_bottle": "skills/return_bottle/implementation.py",
+    "bottle_vision": "skills/bottle_vision/implementation.py",
+    "pour_geometry": "skills/pour_geometry/implementation.py",
+    "observed_geometry": "skills/observed_geometry/implementation.py"
+  },
+  "shared_skills": {
+    "public_frames": "skills/shared/observability/detached_rgb_joint_frame/implementation.py",
+    "own_joint_planning": "skills/shared/planning/public_urdf_joint_planning/implementation.py",
+    "rgb_rays": "skills/shared/perception/calibrated_rgb_rays/implementation.py",
+    "planar_stereo": "skills/shared/perception/public_planar_stereo/implementation.py",
+    "table_appearance": "skills/shared/perception/public_table_appearance/implementation.py",
+    "components": "skills/shared/perception/rgb_components/implementation.py",
+    "public_silhouette_geometry": "skills/shared/perception/public_silhouette_geometry/implementation.py"
+  },
+  "controller": "controller.py",
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [
+    "workflow.json"
+  ],
+  "resource_files": [
+    "calibration.json",
+    "resources.json"
+  ],
+  "python_entry_files": [
+    "tasks/pour_by_language/entry.py",
+    "tasks/pour_by_language/controller.py",
+    "tasks/pour_by_language/bindings/official_policy.py"
+  ]
+}

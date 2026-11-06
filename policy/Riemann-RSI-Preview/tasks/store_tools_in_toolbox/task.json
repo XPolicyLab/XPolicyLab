@@ -1,0 +1,8 @@
+{
+  "task": "store_tools_in_toolbox",
+  "entry": "entry.py",
+  "evaluation_enabled": true,
+  "backend": "rule",
+  "native_evaluation_profile": "workflow.json",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

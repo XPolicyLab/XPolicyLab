@@ -1,0 +1,46 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "stack_blocks_random",
+  "backend": "rule",
+  "native_workflow": "workflow.json",
+  "source_attempt_workflow": "workflows/source.json",
+  "task_skills": {
+    "motion_math": "skills/motion_math/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "robot_calibration": "skills/robot_calibration/implementation.py",
+    "source_grasp": "skills/source_grasp/implementation.py",
+    "loaded_transport": "skills/loaded_transport/implementation.py",
+    "placement": "skills/placement/implementation.py",
+    "cube_perception": "skills/cube_perception/implementation.py",
+    "template_matching": "skills/template_matching/implementation.py",
+    "stack_state": "skills/stack_state/implementation.py",
+    "source_recovery": "skills/source_recovery/implementation.py",
+    "payload_confirmation": "skills/payload_confirmation/implementation.py",
+    "cube_instances": "skills/cube_instances/implementation.py",
+    "source_arm_recovery": "skills/source_arm_recovery/implementation.py"
+  },
+  "shared_skills": {
+    "public_sam3_image_model": "skills/shared/perception/sam3_nesting_image_model/implementation.py"
+  },
+  "teacher_composition": "CalibratedStackContext: Perception + PhysicalLimitsMotion -> ObservedBaseMotion -> GrippedMotion -> SampledMotion",
+  "dispatch": "Fixed original external workflows with bounded source recovery; no learned fallback or resolver",
+  "official_action_budget_changed": false,
+  "native_acceptance": "paired50_pending",
+  "context": "controller:CalibratedStackContext",
+  "executor": "harness.runtime.declarative_workflow:execute",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/native_rule_evaluation/binding.py",
+    "harness/runtime/native_rule_evaluation/planner.py",
+    "harness/runtime/native_rule_evaluation/recording.py",
+    "tasks/stack_blocks_random/bindings/official_policy.py",
+    "tasks/stack_blocks_random/controller.py",
+    "tasks/stack_blocks_random/entry.py"
+  ],
+  "graph_files": [
+    "workflows/source.json"
+  ],
+  "source_versioning": "git",
+  "resource_files": []
+}
