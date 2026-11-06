@@ -104,12 +104,15 @@ the environment client takes the single simulator GPU index.
 
 ### Results
 
-Local RoboDojo evaluation, averaged over episodes. Score is the mean official
-reward on a 0–100 scale.
+Local RoboDojo evaluation, summarized with `robodojo.sh summarize`. Avg SR and
+Avg Score use equal weight for the five capability dimensions; score is shown
+on a 0–100 scale.
 
 | Success rate | Score / 100 |
 |---:|---:|
-| 64.14% | 69.86 |
+| 65.86% | 71.57 |
+
+Full official per-task summary: [summary.md](summary.md).
 
 ## Model Assets
 

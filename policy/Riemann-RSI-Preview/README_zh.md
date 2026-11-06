@@ -101,11 +101,14 @@ bash eval.sh RoboDojo stack_bowls "$RIEMANN_RESOURCES_BASE/Riemann1.0" arx_x5 ee
 
 ### 结果
 
-RoboDojo 本地评测结果，按回合加权。Score 为官方 reward 的均值，按 0–100 展示。
+RoboDojo 本地评测结果，由 `robodojo.sh summarize` 汇总。Avg SR 和 Avg Score
+按五个能力维度等权计算，Score 按 0–100 展示。
 
 | 成功率 | Score / 100 |
 |---:|---:|
-| 64.14% | 69.86 |
+| 65.86% | 71.57 |
+
+官方逐任务汇总见 [summary.md](summary.md)。
 
 ## 模型和资源
 
