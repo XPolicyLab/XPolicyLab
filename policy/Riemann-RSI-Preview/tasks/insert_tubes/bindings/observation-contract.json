@@ -1,0 +1,16 @@
+{
+  "schema": "tube-direct-native-public-contract-v1",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "gripper_state_semantics": "one normalized applied target with indirect feedback; exact current aperture and contact unavailable",
+  "policy_inputs": [
+    "current three-camera RGB",
+    "own six arm joints",
+    "own wrist pose",
+    "own one normalized jaw target",
+    "own acknowledged commands"
+  ],
+  "no_task_layout_reward_or_scene_input": true,
+  "official_action_horizon": 500
+}

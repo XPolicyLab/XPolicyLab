@@ -1,0 +1,37 @@
+{
+  "schema": "a9-task-public-observation-contract-v1",
+  "task": "pack_objects_into_box",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "status": "visual_uncertainty_continuation_candidate_pending_CPU_and_bounded_probe",
+  "allowed_fields": {
+    "vision": [
+      "cam_head.color",
+      "cam_left_wrist.color",
+      "cam_right_wrist.color"
+    ],
+    "state": [
+      "left_arm_joint_state",
+      "left_ee_joint_state",
+      "left_ee_pose",
+      "right_arm_joint_state",
+      "right_ee_joint_state",
+      "right_ee_pose"
+    ],
+    "instruction": "Official public task instruction"
+  },
+  "gripper_observation_semantics": "Normalized previous commanded target; not measured jaw aperture",
+  "planner_inputs": "Current public own-arm state and fixed declared X5 URDF/YAML",
+  "evaluation_enabled": true,
+  "formal_gt_free_or_performance_certified": false,
+  "gpu_review_hold": false,
+  "get_normalized_gripper_target": "Public previous normalized command echo only; shape (1), finite [0,1]. Not contact/aperture.",
+  "grasp_evidence": "Visual present/absent/unknown at original feedback checkpoints; zero close commands are intent only",
+  "blocked_original_finger_dependencies": "Replaced in CPU candidate; no runtime measurement adapter is requested",
+  "shared_runtime_integration": "46d68d561bb31328973db3071f340a0c021329fa",
+  "public_factory": "controller.create_public_environment",
+  "native_runtime_contract": "NATIVE_RUNTIME_LOCK.json",
+  "command_generation": "Original v107 own-target interpolation and continuous target holding; does not query measured fingers or infer aperture from command echoes",
+  "unknown_handling": "Visual occlusion/weak features remain unknown, with payload_verified=false; original motion continues without a successful-grasp/contact claim. Invalid observations or commands abort.",
+  "confirmed_absence_recovery": "Original open75/park/RGB-reacquire, three attempts total"
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a12-original-pour-20261030",
+  "files": {
+    "X5A.urdf": {
+      "path": "resource://rule_assets/a12-original-pour-20261030/pour_balls_into_vase/X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "curobo.yml": {
+      "path": "resource://rule_assets/a12-original-pour-20261030/pour_balls_into_vase/curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Original hash-pinned static X5/model-local geometry; independent fixed USD audit. No runtime scene/object pose."
+    },
+    "official/Object/RoboDojo/Rigid/charger/00000/metadata.json": {
+      "path": "resource://official_assets/Object/RoboDojo/Rigid/charger/00000/metadata.json",
+      "sha256": "3a462763b4f0922067d5df8fcdb78b26bb566afb1af7cc831d7e27af16dbd59f",
+      "bytes": 4377,
+      "provenance": "Current official static public model; no live scene or layout"
+    },
+    "official/Object/RoboDojo/Rigid/charger/00000/object.usdz": {
+      "path": "resource://official_assets/Object/RoboDojo/Rigid/charger/00000/object.usdz",
+      "sha256": "50532876b868d0cc5a0add9c35be0aa8b72f89e02e06e04a6fd021de95b1ecd0",
+      "bytes": 762980,
+      "provenance": "Current official static public model; no live scene or layout"
+    },
+    "official/Object/RoboDojo/Rigid/socket/00000/metadata.json": {
+      "path": "resource://official_assets/Object/RoboDojo/Rigid/socket/00000/metadata.json",
+      "sha256": "7b9afc3bc8aa2d46844447a33f4cc623a80618970aaa599e074f6b0f145d14ba",
+      "bytes": 6025,
+      "provenance": "Current official static public model; no live scene or layout"
+    },
+    "official/Object/RoboDojo/Rigid/socket/00000/object.usdz": {
+      "path": "resource://official_assets/Object/RoboDojo/Rigid/socket/00000/object.usdz",
+      "sha256": "3539a25ac55c7379d35ac547734fc7a6b573e14615e55fae89a11d2176e78e92",
+      "bytes": 423696,
+      "provenance": "Current official static public model; no live scene or layout"
+    },
+    "official/Robots/x5/X5A.urdf": {
+      "path": "resource://official_assets/Robots/x5/X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Current official static public model; no live scene or layout"
+    },
+    "official/Robots/x5/meshes/link7.STL": {
+      "path": "resource://official_assets/Robots/x5/meshes/link7.STL",
+      "sha256": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+      "bytes": 65284,
+      "provenance": "Current official static public model; no live scene or layout"
+    },
+    "official/Robots/x5/meshes/link8.STL": {
+      "path": "resource://official_assets/Robots/x5/meshes/link8.STL",
+      "sha256": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60",
+      "bytes": 65284,
+      "provenance": "Current official static public model; no live scene or layout"
+    }
+  }
+}

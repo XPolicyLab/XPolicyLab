@@ -1,0 +1,6 @@
+{
+  "task": "swap_T",
+  "entry": "entry.py",
+  "backend": "rule",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

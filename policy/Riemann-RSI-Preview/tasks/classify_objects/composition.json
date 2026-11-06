@@ -1,0 +1,32 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "classify_objects",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "command_execution": "skills/command_execution/implementation.py",
+    "feedback": "skills/feedback/implementation.py",
+    "geometry": "skills/geometry/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "public_observation": "skills/public_observation/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "state": "skills/state/implementation.py",
+    "transport": "skills/transport/implementation.py"
+  },
+  "validation": "R6 targeted10 CPU checks and exact installed native closure; bounded new probes required; no new task performance accepted",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "tasks/classify_objects/controller.py",
+    "tasks/classify_objects/entry.py",
+    "tasks/classify_objects/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

@@ -1,0 +1,7 @@
+{
+  "task": "align_blocks",
+  "backend": "learned_policy",
+  "entry": "entry.py",
+  "runtime_config": "configs/official-rule-evaluation.json",
+  "policy_id": "riemann_1"
+}

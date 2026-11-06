@@ -1,0 +1,33 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "store_tools_in_toolbox",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "home": "skills/home/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "state": "skills/state/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py",
+    "failure_continuation": "skills/failure_continuation/implementation.py",
+    "support_contact_depth": "skills/support_contact_depth/implementation.py"
+  },
+  "selection": "fixed_mature_rule_workflow",
+  "backend": "rule",
+  "shared_skills": [
+    "skills/shared/geometry/own_finger_sweep_support/implementation.py",
+    "skills/shared/motion/nominal_linear_step_profile/implementation.py"
+  ],
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "tasks/store_tools_in_toolbox/controller.py",
+    "tasks/store_tools_in_toolbox/entry.py",
+    "tasks/store_tools_in_toolbox/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

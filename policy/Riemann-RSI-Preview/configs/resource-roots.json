@@ -1,0 +1,50 @@
+{
+  "schema": "riemann-resource-roots-v2",
+  "roots": {
+    "official_assets": {
+      "default": "official_assets"
+    },
+    "mature_assets": {
+      "default": "mature_assets"
+    },
+    "rule_assets": {
+      "default": "rule_assets"
+    },
+    "intake_assets": {
+      "default": "intake_assets"
+    },
+    "imitation_assets": {
+      "default": "imitation_assets"
+    },
+    "models": {
+      "default": "models"
+    },
+    "protocol_dependencies": {
+      "default": "protocol_dependencies"
+    },
+    "official_runtime": {
+      "default": "deployment:official_root"
+    },
+    "eval_environment": {
+      "default": "deployment:eval_prefix"
+    },
+    "policy_environment": {
+      "default": "deployment:policy_prefix"
+    },
+    "encoder": {
+      "default": "deployment:encoder_path"
+    },
+    "category_models": {
+      "default": "category_models"
+    },
+    "table_models": {
+      "default": "table_models"
+    },
+    "intake_b_assets": {
+      "default": "intake_b_assets"
+    },
+    "number_assets": {
+      "default": "number_assets"
+    }
+  }
+}

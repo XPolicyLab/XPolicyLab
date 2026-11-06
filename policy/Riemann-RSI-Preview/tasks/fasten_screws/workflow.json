@@ -1,0 +1,517 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.fasten_screws",
+  "task": "fasten_screws",
+  "official_action_horizon": 1900,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U31_FastenTeacherCore_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1900,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U31_FastenTeacherCore_run_motion_001": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_001",
+        "U31_FastenTeacherCore_run_getattr_self_official_bridge_none_is_none_002": "skills.motion.implementation:U31_FastenTeacherCore_run_getattr_self_official_bridge_none_is_none_002",
+        "U31_FastenTeacherCore_run_getattr_self_official_bridge_none_is_none_003": "skills.motion.implementation:U31_FastenTeacherCore_run_getattr_self_official_bridge_none_is_none_003",
+        "U31_FastenTeacherCore_run_motion_004": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_004",
+        "U31_FastenTeacherCore_run_motion_005": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_005",
+        "U31_FastenTeacherCore_run_indices_006": "skills.motion.implementation:U31_FastenTeacherCore_run_indices_006",
+        "U31_FastenTeacherCore_run_motion_007": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_007",
+        "U31_FastenTeacherCore_run_motion_008": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_008",
+        "U31_FastenTeacherCore_run_self_placed_label_009": "skills.motion.implementation:U31_FastenTeacherCore_run_self_placed_label_009",
+        "U31_FastenTeacherCore_run_self_remaining_self_args_home_reserve_actions_se_010": "skills.home.implementation:U31_FastenTeacherCore_run_self_remaining_self_args_home_reserve_actions_se_010",
+        "U31_FastenTeacherCore_run_self_remaining_self_args_home_reserve_actions_se_011": "skills.home.implementation:U31_FastenTeacherCore_run_self_remaining_self_args_home_reserve_actions_se_011",
+        "U31_FastenTeacherCore_run_motion_012": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_012",
+        "U31_FastenTeacherCore_run_motion_013": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_013",
+        "U31_FastenTeacherCore_run_motion_014": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_014",
+        "U31_FastenTeacherCore_run_motion_015": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_015",
+        "U31_FastenTeacherCore_run_motion_016": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_016",
+        "U31_FastenTeacherCore_run_motion_017": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_017",
+        "U31_FastenTeacherCore_run_self_active_arm_018": "skills.motion.implementation:U31_FastenTeacherCore_run_self_active_arm_018",
+        "U31_FastenTeacherCore_run_self_active_arm_019": "skills.motion.implementation:U31_FastenTeacherCore_run_self_active_arm_019",
+        "U31_FastenTeacherCore_run_self_active_arm_020": "skills.motion.implementation:U31_FastenTeacherCore_run_self_active_arm_020",
+        "U31_FastenTeacherCore_run_motion_021": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_021",
+        "U31_FastenTeacherCore_run_motion_022": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_022",
+        "U31_FastenTeacherCore_run_motion_023": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_023",
+        "U31_FastenTeacherCore_run_self_robots_024": "skills.motion.implementation:U31_FastenTeacherCore_run_self_robots_024",
+        "U31_FastenTeacherCore_run_motion_025": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_025",
+        "U31_FastenTeacherCore_run_motion_026": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_026",
+        "U31_FastenTeacherCore_run_motion_027": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_027",
+        "U31_FastenTeacherCore_run_motion_028": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_028",
+        "U31_FastenTeacherCore_run_motion_029": "skills.motion.implementation:U31_FastenTeacherCore_run_motion_029"
+      },
+      "errors": {
+        "U30_HomeBudgetReached": "skills.state.implementation:U30_HomeBudgetReached",
+        "U30_GraspFailure": "skills.state.implementation:U30_GraspFailure",
+        "U33_PosePlanningError": "skills.state.implementation:U33_PosePlanningError",
+        "U33_PoseFeedbackError": "skills.state.implementation:U33_PoseFeedbackError"
+      },
+      "steps": [
+        {
+          "call": "U31_FastenTeacherCore_run_motion_001"
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_getattr_self_official_bridge_none_is_none_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U31_FastenTeacherCore_run_getattr_self_official_bridge_none_is_none_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_motion_004",
+          "args": {
+            "phase_0": "initial_open"
+          }
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_motion_005"
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_indices_006",
+          "store": "items_6"
+        },
+        {
+          "for_each": {
+            "var": "items_6"
+          },
+          "as": "loop_item_7",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U31_FastenTeacherCore_run_motion_007",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_7"
+                }
+              }
+            },
+            {
+              "call": "U31_FastenTeacherCore_run_motion_008"
+            },
+            {
+              "call": "U31_FastenTeacherCore_run_self_placed_label_009",
+              "store": "condition_9"
+            },
+            {
+              "if": {
+                "var": "condition_9"
+              },
+              "then": [
+                {
+                  "continue": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U31_FastenTeacherCore_run_self_remaining_self_args_home_reserve_actions_se_010",
+              "store": "condition_10"
+            },
+            {
+              "if": {
+                "var": "condition_10"
+              },
+              "then": [
+                {
+                  "call": "U31_FastenTeacherCore_run_self_remaining_self_args_home_reserve_actions_se_011"
+                },
+                {
+                  "break": true
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U31_FastenTeacherCore_run_motion_012"
+            },
+            {
+              "try": [
+                {
+                  "call": "U31_FastenTeacherCore_run_motion_021"
+                },
+                {
+                  "call": "U31_FastenTeacherCore_run_motion_022"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U30_HomeBudgetReached"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U31_FastenTeacherCore_run_motion_013",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U31_FastenTeacherCore_run_motion_014"
+                    },
+                    {
+                      "call": "U31_FastenTeacherCore_run_motion_015"
+                    },
+                    {
+                      "break": true
+                    }
+                  ]
+                },
+                {
+                  "errors": [
+                    "U30_GraspFailure",
+                    "U33_PosePlanningError",
+                    "U33_PoseFeedbackError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U31_FastenTeacherCore_run_motion_016",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U31_FastenTeacherCore_run_motion_017"
+                    },
+                    {
+                      "call": "U31_FastenTeacherCore_run_self_active_arm_018",
+                      "store": "condition_18"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_18"
+                      },
+                      "then": [
+                        {
+                          "call": "U31_FastenTeacherCore_run_self_active_arm_019"
+                        },
+                        {
+                          "call": "U31_FastenTeacherCore_run_self_active_arm_020"
+                        }
+                      ],
+                      "else": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_motion_023"
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_self_robots_024",
+          "store": "items_24"
+        },
+        {
+          "for_each": {
+            "var": "items_24"
+          },
+          "as": "loop_item_25",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U31_FastenTeacherCore_run_motion_025",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_25"
+                }
+              }
+            },
+            {
+              "call": "U31_FastenTeacherCore_run_motion_026"
+            },
+            {
+              "call": "U31_FastenTeacherCore_run_motion_027"
+            }
+          ]
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_motion_028",
+          "args": {
+            "phase_0": "await_native_terminal"
+          }
+        },
+        {
+          "call": "U31_FastenTeacherCore_run_motion_029",
+          "store": "result_29"
+        },
+        {
+          "return": {
+            "var": "result_29"
+          }
+        }
+      ]
+    },
+    "U32_VisionFastenTeacher_run": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 1900,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U32_VisionFastenTeacher_run_motion_001": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_001",
+        "U32_VisionFastenTeacher_run_self_needs_preclear_002": "skills.motion.implementation:U32_VisionFastenTeacher_run_self_needs_preclear_002",
+        "U32_VisionFastenTeacher_run_self_needs_preclear_003": "skills.motion.implementation:U32_VisionFastenTeacher_run_self_needs_preclear_003",
+        "U32_VisionFastenTeacher_run_self_needs_preclear_004": "skills.motion.implementation:U32_VisionFastenTeacher_run_self_needs_preclear_004",
+        "U32_VisionFastenTeacher_run_motion_005": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_005",
+        "U32_VisionFastenTeacher_run_motion_006": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_006",
+        "U32_VisionFastenTeacher_run_motion_007": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_007",
+        "U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_008": "skills.motion.implementation:U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_008",
+        "U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_009": "skills.motion.implementation:U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_009",
+        "U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_010": "skills.motion.implementation:U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_010",
+        "U32_VisionFastenTeacher_run_motion_011": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_011",
+        "U32_VisionFastenTeacher_run_motion_012": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_012",
+        "U32_VisionFastenTeacher_run_self_labels_013": "skills.motion.implementation:U32_VisionFastenTeacher_run_self_labels_013",
+        "U32_VisionFastenTeacher_run_motion_014": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_014",
+        "U32_VisionFastenTeacher_run_motion_015": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_015",
+        "U32_VisionFastenTeacher_run_nut_area_px_260_or_nut_bbox_xywh_3_19_or_nut_col_016": "skills.motion.implementation:U32_VisionFastenTeacher_run_nut_area_px_260_or_nut_bbox_xywh_3_19_or_nut_col_016",
+        "U32_VisionFastenTeacher_run_nut_area_px_260_or_nut_bbox_xywh_3_19_or_nut_col_017": "skills.motion.implementation:U32_VisionFastenTeacher_run_nut_area_px_260_or_nut_bbox_xywh_3_19_or_nut_col_017",
+        "U32_VisionFastenTeacher_run_bolt_area_px_350_or_bolt_color_white_and_bolt_bb_018": "skills.motion.implementation:U32_VisionFastenTeacher_run_bolt_area_px_350_or_bolt_color_white_and_bolt_bb_018",
+        "U32_VisionFastenTeacher_run_bolt_area_px_350_or_bolt_color_white_and_bolt_bb_019": "skills.motion.implementation:U32_VisionFastenTeacher_run_bolt_area_px_350_or_bolt_color_white_and_bolt_bb_019",
+        "U32_VisionFastenTeacher_run_weak_020": "skills.motion.implementation:U32_VisionFastenTeacher_run_weak_020",
+        "U32_VisionFastenTeacher_run_weak_021": "skills.motion.implementation:U32_VisionFastenTeacher_run_weak_021",
+        "U32_VisionFastenTeacher_run_weak_022": "skills.motion.implementation:U32_VisionFastenTeacher_run_weak_022",
+        "U32_VisionFastenTeacher_run_motion_023": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_023",
+        "U32_VisionFastenTeacher_run_motion_024": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_024",
+        "U32_VisionFastenTeacher_run_motion_025": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_025",
+        "U32_VisionFastenTeacher_run_motion_026": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_026",
+        "U32_VisionFastenTeacher_run_motion_027": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_027",
+        "U32_VisionFastenTeacher_run_motion_028": "skills.motion.implementation:U32_VisionFastenTeacher_run_motion_028"
+      },
+      "errors": {},
+      "steps": [
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_001"
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_self_needs_preclear_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U32_VisionFastenTeacher_run_self_needs_preclear_003"
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_self_needs_preclear_004"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_005"
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_006"
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_007"
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_008",
+          "store": "condition_8"
+        },
+        {
+          "if": {
+            "var": "condition_8"
+          },
+          "then": [
+            {
+              "call": "U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_009"
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_long_transfers_2_or_max_transfer_0_35_010"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_011"
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_012"
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_self_labels_013",
+          "store": "items_13"
+        },
+        {
+          "for_each": {
+            "var": "items_13"
+          },
+          "as": "loop_item_14",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_014",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_14"
+                }
+              }
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_015"
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_nut_area_px_260_or_nut_bbox_xywh_3_19_or_nut_col_016",
+              "store": "condition_16"
+            },
+            {
+              "if": {
+                "var": "condition_16"
+              },
+              "then": [
+                {
+                  "call": "U32_VisionFastenTeacher_run_nut_area_px_260_or_nut_bbox_xywh_3_19_or_nut_col_017"
+                }
+              ],
+              "else": []
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_bolt_area_px_350_or_bolt_color_white_and_bolt_bb_018",
+              "store": "condition_18"
+            },
+            {
+              "if": {
+                "var": "condition_18"
+              },
+              "then": [
+                {
+                  "call": "U32_VisionFastenTeacher_run_bolt_area_px_350_or_bolt_color_white_and_bolt_bb_019"
+                }
+              ],
+              "else": []
+            }
+          ]
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_weak_020",
+          "store": "condition_20"
+        },
+        {
+          "if": {
+            "var": "condition_20"
+          },
+          "then": [
+            {
+              "call": "U32_VisionFastenTeacher_run_weak_021",
+              "args": {
+                "phase_0": "vision_clear_open"
+              }
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_weak_022",
+          "store": "items_22"
+        },
+        {
+          "for_each": {
+            "var": "items_22"
+          },
+          "as": "loop_item_23",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_023",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_23"
+                }
+              }
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_024"
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_025"
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_026"
+            },
+            {
+              "call": "U32_VisionFastenTeacher_run_motion_027"
+            }
+          ]
+        },
+        {
+          "call": "U32_VisionFastenTeacher_run_motion_028",
+          "store": "result_28"
+        },
+        {
+          "return": {
+            "var": "result_28"
+          }
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "seed": 0,
+    "eval_seed": 0,
+    "device_id": 0,
+    "min_free_gpu_mib": 12000,
+    "num_episodes": 1,
+    "episode_index": 0,
+    "full_curobo_warmup": false,
+    "motion_speed": 1.6,
+    "max_grasp_width": 0.085,
+    "gripper_forward_offset": 0.154,
+    "gripper_settle_seconds": 0.24,
+    "approach_clearance": 0.085,
+    "lift_height": 0.085,
+    "max_grasp_slip": 0.03,
+    "pose_tolerance": 0.001,
+    "pose_corrections": 4,
+    "max_attempts": 4,
+    "home_reserve_actions": 64,
+    "min_pick_budget": 60,
+    "grasp_height": 0.003,
+    "insert_step": 0.003,
+    "seat_depth": 0.014,
+    "only_pair": null,
+    "screw_cycles": 9,
+    "thread_step_degrees": 60.0,
+    "screw_pair_actions": 650,
+    "screw_pose_tolerance": 0.0013,
+    "tabletop_relay": true,
+    "regrasp_lift": 0.0,
+    "official_eval": true,
+    "headless": true,
+    "enable_cameras": true,
+    "images_in_hdf5": false,
+    "save_npz": false,
+    "no_video": false,
+    "planner_pose_frame": "world",
+    "debug_fk": false,
+    "insertion_tolerance": 0.0005
+  },
+  "environment": {
+    "control_frequency_hz": 25,
+    "physics_dt": 0.004,
+    "sdk_commit": "f57e1633ffed59761bc8e568cfe7530c4b33381c"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "imitate_sorting_sequence",
+  "backend": "rule",
+  "controller": "controller.py",
+  "context": "skills.public_context.implementation:create",
+  "workflow": "workflow.json",
+  "selection": "fixed_original_demonstrated_order",
+  "task_skills": {
+    "calibration": "skills/calibration/implementation.py",
+    "delivery": "skills/delivery/implementation.py",
+    "delivery_recovery": "skills/delivery_recovery/implementation.py",
+    "demo_completion": "skills/demo_completion/implementation.py",
+    "demonstration": "skills/demonstration/implementation.py",
+    "demonstrator_return": "skills/demonstrator_return/implementation.py",
+    "execution": "skills/execution/implementation.py",
+    "fallback_ik": "skills/fallback_ik/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "planning": "skills/planning/implementation.py",
+    "possession_evidence": "skills/possession_evidence/implementation.py",
+    "public_context": "skills/public_context/implementation.py",
+    "recovery_grasp": "skills/recovery_grasp/implementation.py",
+    "rgb_perception": "skills/rgb_perception/implementation.py",
+    "scene": "skills/scene/implementation.py",
+    "source_anchor_qualification": "skills/source_anchor_qualification/implementation.py",
+    "source_reveal": "skills/source_reveal/implementation.py",
+    "stage": "skills/stage/implementation.py",
+    "watch_release_evidence": "skills/watch_release_evidence/implementation.py",
+    "phone_source_evidence": "skills/phone_source_evidence/implementation.py",
+    "watch_source_evidence": "skills/watch_source_evidence/implementation.py",
+    "phone_carry_evidence": "skills/phone_carry_evidence/implementation.py",
+    "car_source_evidence": "skills/car_source_evidence/implementation.py"
+  },
+  "native_binding": "numeric_public_tools",
+  "official_action_budget_changed": false,
+  "native_adapter_integration": "CPU_integrated_GPU_unverified",
+  "support_progress_interface": "request-only command; RGB completion",
+  "shared_skills": [
+    "skills/shared/perception/masked_rgb_context/implementation.py",
+    "skills/shared/motion/official_tick_hold/implementation.py",
+    "skills/shared/perception/rgb_text_masks/implementation.py",
+    "skills/shared/perception/paired_mask_geometry/implementation.py"
+  ],
+  "python_entry_files": [
+    "tasks/imitate_sorting_sequence/bindings/official_policy.py",
+    "tasks/imitate_sorting_sequence/controller.py",
+    "tasks/imitate_sorting_sequence/entry.py",
+    "tasks/imitate_sorting_sequence/resources.py",
+    "tasks/imitate_sorting_sequence/skills/instance_stage_recovery/implementation.py"
+  ],
+  "graph_files": [
+    "workflows/recovery-grasp.json"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "resource_files": []
+}

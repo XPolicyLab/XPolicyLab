@@ -1,0 +1,154 @@
+{
+  "schema": "canonical-public-stack-assets-v1",
+  "public_robot_urdf": {
+    "path": "resource://official_assets/Robots/x5/X5A.urdf",
+    "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423"
+  },
+  "public_robot_usd": {
+    "path": "resource://official_assets/Robots/x5/ARX.usd",
+    "sha256": "5723a835bf5627a935a8dabb3a44447725bd1465243ce791e221b3e990121d63"
+  },
+  "public_robot_config": {
+    "path": "resource://official_assets/Robots/x5/robot_config.yml",
+    "sha256": "9de4f63b84c0f730623c09af7a2d530d84973981397280b6e4b626b50ba6f1c9"
+  },
+  "public_robot_meshes": {
+    "meshes/base_link.STL": "898dbe3af3a98857358ac5a3d74e085ec9c69946737e767dad139776761cbd92",
+    "meshes/camera.glb": "9833e436988bcd83f3113ab1071428427c80d6a1392d9e0b7cf35d2b6e949d7c",
+    "meshes/camera_base.glb": "d771a24ab886166536ffe4a0719af1163e44fac4067e07110cf72a7a01d260b0",
+    "meshes/link1.STL": "04a52b86a5b28c847377a9167e7effab0478fa591052e83b0b32cf8709bb3885",
+    "meshes/link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "meshes/link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0",
+    "meshes/link4.STL": "3447ddef920c22e4607b887e1cc588037dfb51c37825c4cac86a5391425469c4",
+    "meshes/link5.STL": "934b3e70ce2987f8de999de29d8ef72c8370dced8e9fdf6f9ddd3e7e24c1e464",
+    "meshes/link6.STL": "32dca4ededcf3215163207b9aea1046114ae59921555d1e068ee46fa6e53915e",
+    "meshes/link7.STL": "ec3d40b39cccde0075ca3d16603f14f180fce41a46b446473d384def7a1b0be0",
+    "meshes/link8.STL": "29f7a8379cad81797e82e4ba099455cc275ac6ac5bb9e264ce46719fd7d2bb60"
+  },
+  "public_cube_templates": {
+    "path": "resource://mature_assets/b21-original-stack-v7-20261030/resources/stack_blocks_public75",
+    "sha256": "47068af05513f04700bfb3d039ff8456e5d9fd7d55caec37b099f26356ac3fd1",
+    "files": {
+      "asset_00006_y00_x00.png": "0017dbbda15737100d521b645e19b9c6d185211025c930f2be562981d3fd5506",
+      "asset_00006_y00_x01.png": "75684dc31959daf289b49e357b7997b17431fc9bafcdfb6faea3e8e3434c4746",
+      "asset_00006_y00_x02.png": "7695d7be3e75df9e20a76ece2b67cd2e4a4cbe162d37c15417fb8c18b329d1ea",
+      "asset_00006_y00_x03.png": "01cd548d910936e0d33a551492fdf9d2fd7d368e181862f8eb5c88fed11029a3",
+      "asset_00006_y00_x04.png": "793222706b0924866ddbb551396e26d0ab79f4d79c78acea673dbb82515c828a",
+      "asset_00006_y01_x00.png": "3a0e6e5dae8251d09219ed567597b9ba8a415a24ea3c831bdd16c173a5475f07",
+      "asset_00006_y01_x01.png": "f2576ae44997b3af388f4d599942a8c187f7d9ea085f05c8f285a0cbdb1a13f0",
+      "asset_00006_y01_x02.png": "b1d99b847f1209b5b745343d85a323142c57abfdea1f590181edf8c3a9d87915",
+      "asset_00006_y01_x03.png": "de95268ba83541138add6f07d07f520884839eab6f2e52f6c48bd893bed5446b",
+      "asset_00006_y01_x04.png": "4e94d7c1785406a6d31e325c442f7a5f7c20b8509b99082e0f66837fb882f0c1",
+      "asset_00006_y02_x00.png": "4120e4a8f28c084462fe8bc70ad9aea5b98148f3f23db597146e72ff59d764b0",
+      "asset_00006_y02_x01.png": "7eae856dfb4e6e6b421138526f41ba54e384108fd4c790dd4f2ffd69239255c0",
+      "asset_00006_y02_x02.png": "60e8d940d665e8d3f28398c1b4534af20c6361579628de5c649a1402ea497cc7",
+      "asset_00006_y02_x03.png": "b59d57558ec78fe007cae63c28ce01026eecc8bd790ba412d048b4978082e0e8",
+      "asset_00006_y02_x04.png": "286980e208c17458baaee0ed37b2b66a9503372d5314c6775d738d5e10137da1",
+      "asset_00009_y00_x00.png": "89bb7a12c8ab5c853db0afa35ed17704267e1c803519ca2340d694811f6f14a1",
+      "asset_00009_y00_x01.png": "6ee9ec2b0c48fc7979c296b594397cf22705e5fb3ae06d88e4de303559e11575",
+      "asset_00009_y00_x02.png": "405463a44d5664ccd73e05726dcc73a29836bf65ce390b11d0f6954c224ff691",
+      "asset_00009_y00_x03.png": "63442fbaeb67a119b7dc881d3d281f0077c7be05c362b262ffccf1a35bd4b03c",
+      "asset_00009_y00_x04.png": "ac7a3a4d45ec68043420c2d802dba693a76b8ea7b662cb793c1fdc9a295534a6",
+      "asset_00009_y01_x00.png": "5020e747f59554c7ca8ed914a00dd9c36dffcc0d803b5438e6ed0bab8b745054",
+      "asset_00009_y01_x01.png": "b2d196071eb82f992f4dfac6efa00b00b10ca45e05669ff2edba9de4aedd62f0",
+      "asset_00009_y01_x02.png": "863e4a63ab94a9efa46278a7745c9f8b101b621abeb7ed7616e65974b03c45b2",
+      "asset_00009_y01_x03.png": "4003cb4174b824ec7e74c2638afe53aab61705e641d5c7e6bf89634b4af96490",
+      "asset_00009_y01_x04.png": "3d01a77d468c0034acac623fba2b36df86a2b71438c32cbba284569cd7a5b898",
+      "asset_00009_y02_x00.png": "c48ce5a338fd6dae70ce4e8f1138fa7b74af87f0dcb85d00f6cbceea87dfae2f",
+      "asset_00009_y02_x01.png": "e2b28684b2137ff50ec2f13b057bbabb4a75cbd565091dd9361f577fbd8c31fb",
+      "asset_00009_y02_x02.png": "7c593ccc98e12a9de41ce7793df2b187f53265c49b92943e9929df60b881d10a",
+      "asset_00009_y02_x03.png": "31f1bd5dea997f749a0d81038668a7fd727fa36ced7d7031931a3e621c1bee1e",
+      "asset_00009_y02_x04.png": "4b81158180c42f9caa4ecbcea622ec93829b3ff41dbb719bce87bd4829c55955",
+      "asset_00012_y00_x00.png": "ef31bccd1d8832133572e98d4f617b0c140203b1a20af278b7660f48d5515132",
+      "asset_00012_y00_x01.png": "6945695b7e4df352c4b7477b9a4689b7d6268ccd6d39f5445429813de7e4c758",
+      "asset_00012_y00_x02.png": "2e2c9e9218c58c6556cc514c0e588c41502cbb86fc3ecb3c456f4cb7883ba590",
+      "asset_00012_y00_x03.png": "0aa996ccdff7661fe842ba6fc5937516b0c9a8df2ae92966f9a5e5510147e164",
+      "asset_00012_y00_x04.png": "47ab53739ed37d59d42653c7a8ee6fc51059cf6a461c95b908bae662cec8e046",
+      "asset_00012_y01_x00.png": "5a8adb92bbabc1ca22ffae74376e38924a82f12fa34b306d987f7e1484ebab45",
+      "asset_00012_y01_x01.png": "2f77266965412ca645791e7dfd72b1ea415b4bbc09aa21ccecc9b8b3c8d7a8cf",
+      "asset_00012_y01_x02.png": "b4d590737ac6e57dcc1498740291c39efe417e42353ad1707110d92b849c85b3",
+      "asset_00012_y01_x03.png": "e05fd4ce10a9bf86b4ae5c0038103718b1b0277763e0ea0cdf6e0fe05153b825",
+      "asset_00012_y01_x04.png": "cd936d8c48b0741726afd13993122adeac41c93fd5b339af1bb0d600dd23ce82",
+      "asset_00012_y02_x00.png": "dbba845b4120e11768faf0cebda71a631e4779f16d8d02a42c416adcc85ee338",
+      "asset_00012_y02_x01.png": "0775b6def4c9c93d185ed0ad7353f27d773c25c4516322dc2552f79dd18d2361",
+      "asset_00012_y02_x02.png": "2435ca4481c71b88d7f0ce9905c0df9e7487cdeb237d97c019bcfc4fa6eb1266",
+      "asset_00012_y02_x03.png": "6b508b0d009fbc24e6104e492111a25fcfccecdd42ead00551fd782e661a88c8",
+      "asset_00012_y02_x04.png": "fe12c3033179403d607cc8c314d99601681581d3ab17ecd42b80b299b6366791",
+      "asset_00015_y00_x00.png": "22520a67e5dee4fd1b19653196349a7eefcdc1be229f77d4c1d779950a439b49",
+      "asset_00015_y00_x01.png": "9a54a2e15c1050c0afe2c9efdc67caacd5a9effbba91d62fcd3ec03699cca98b",
+      "asset_00015_y00_x02.png": "91c4614c58838afed179133b81d8b915ea47fa42f81e57519d8b671e754953a7",
+      "asset_00015_y00_x03.png": "c3d67fba41bd357ee9d6e78f215fc550ab8dbcb60a1a1fe278d977d21d08085e",
+      "asset_00015_y00_x04.png": "476729c9b0cd3498c7394d8d31949e40d2df9c8ef51d995a1c65154d7c84a6bd",
+      "asset_00015_y01_x00.png": "9b057437e8793e3819c024fe6772c8e4ef47618a3e3b2ded2295c926edf52bbd",
+      "asset_00015_y01_x01.png": "5d7495d276c2cb187fbc601935eb6acd5d0f302a44a2025c078796623571d2a6",
+      "asset_00015_y01_x02.png": "625f71a991c37f2c6f5baf76b5da49d2b7ab67c4dfc4e462d8c196ff7b01e1eb",
+      "asset_00015_y01_x03.png": "adc298288901f9696548d4f7d2906c518b4673ae871b366b14fbb9175d955706",
+      "asset_00015_y01_x04.png": "2af945d970ad63e82c608110ad792d045d08dc1927df8313d440f4d7ae5b358f",
+      "asset_00015_y02_x00.png": "2b9590e23044f2777539e2d0a0eb7c70c4fa62d9e27e886d611975db8b02bbc1",
+      "asset_00015_y02_x01.png": "67f8ed9c64b1813c16493f971c7e37b819d945bd7a302fbd9711f329956e0bcf",
+      "asset_00015_y02_x02.png": "413894cb9d26d066d91d785259fc1e5e85f650b2d0d3f8c7302e4012ad47a472",
+      "asset_00015_y02_x03.png": "355046b9912efadd352dc879bdc68e7ed5951e38a5d8d530a9d3b645c4eb7cc6",
+      "asset_00015_y02_x04.png": "c204ebb3c848b336cd2f8e0bffa466b2eb82503dd7de3ed402b3143403118a8e",
+      "asset_00018_y00_x00.png": "e35339aa5f8b77750c7834c00a60f4a043e97a28d0c189c4f7989c71797e8c9f",
+      "asset_00018_y00_x01.png": "a6b18008ba16b6442e7c0052bb5cc3a49c1cb8dcc7c90943c7616434c771f01d",
+      "asset_00018_y00_x02.png": "6c9aba6fd3bfc0e2753ffd6dfc8c29d07ce85a72b92ed1db65a77ec8846f4127",
+      "asset_00018_y00_x03.png": "9d600573c6ed8b5be6107c9465d8dae9ba842ff367cb64486046fc053a7454c3",
+      "asset_00018_y00_x04.png": "e4427284581b75f68799b7889a20b1493f6413854ad1658c54a20860b6aab98d",
+      "asset_00018_y01_x00.png": "3e43cd4f2fcc31c589c1ee0fb71dff2c1ba5b9ade1ecd19bb44319fa5065cddc",
+      "asset_00018_y01_x01.png": "bafaca929f24c55b4706d3e1ac20455f4c69f803b2b071630c522d40efe97b4d",
+      "asset_00018_y01_x02.png": "b046fc48a0bacafa759748b5c07d29afe21da66ac504082eac12918eaf888a99",
+      "asset_00018_y01_x03.png": "408e464158c607108628d063e6a3e5a91c79dc7c9a4d4a5425504dabad2601e8",
+      "asset_00018_y01_x04.png": "40be1d79ec7ab4a17203856ec412386d14ef695f0fe176c793183ef6e7fbc0c3",
+      "asset_00018_y02_x00.png": "f6bdcd593f444097003c2be17446dfaf311568b10e2256bf46472cb5872f5fd3",
+      "asset_00018_y02_x01.png": "0c0ab971893eeb5b2bd00f5f7032c42ad104c19a655d07a843ac0499f549bc25",
+      "asset_00018_y02_x02.png": "c3c19c4b3cc324ca794f17a3775bb64036aca27b4fe1c5e99699846f4691f257",
+      "asset_00018_y02_x03.png": "31090aeedf4d5f3ec95ab8366b903f46021b71df7757b87f6ae282678433147b",
+      "asset_00018_y02_x04.png": "3b83f2b1360439d7275106182a62aea9ae657f82f798bb155cfd6fa0f9e33ac9",
+      "runtime_index.json": "47068af05513f04700bfb3d039ff8456e5d9fd7d55caec37b099f26356ac3fd1"
+    }
+  },
+  "public_robot_parameters": {
+    "gripper_scale": [
+      -0.01,
+      0.044
+    ],
+    "sign": 1.0,
+    "mimic": [
+      "joint8",
+      1.0,
+      0.0
+    ]
+  },
+  "planner_robot_names": {
+    "left_arm": "x5",
+    "right_arm": "x5"
+  },
+  "public_joint_limits": [
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -9.999999046325684,
+      9.999999046325684
+    ],
+    [
+      -3.1399998664855957,
+      3.1399998664855957
+    ]
+  ],
+  "joint_limit_source": "Public ARX.usd authored revolute limits converted from degrees to float32 radians. Native binding checks exact equality, never chooses limits from live state.",
+  "layout_information_included": false
+}

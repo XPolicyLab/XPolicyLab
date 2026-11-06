@@ -1,0 +1,6 @@
+{
+  "task": "sort_nesting_dolls_by_size_random",
+  "backend": "rule",
+  "entry": "entry.py",
+  "runtime_config": "configs/official-rule-evaluation.json"
+}

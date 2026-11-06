@@ -1,0 +1,39 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "stack_bowls_random",
+  "backend": "rule",
+  "controller": "controller.py:CalibratedBowlContext",
+  "entry": "entry.py",
+  "workflow": "workflow.json",
+  "transfer_workflow": "workflows/transfer.json",
+  "task_skills": {
+    "bowl_perception": "skills/bowl_perception/implementation.py",
+    "bowl_state": "skills/bowl_state/implementation.py",
+    "loaded_transport": "skills/loaded_transport/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "motion_math": "skills/motion_math/implementation.py",
+    "placement": "skills/placement/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py",
+    "robot_calibration": "skills/robot_calibration/implementation.py",
+    "source_grasp": "skills/source_grasp/implementation.py",
+    "source_recovery": "skills/source_recovery/implementation.py"
+  },
+  "shared_interpreter": "harness/runtime/declarative_workflow.py",
+  "shared_native_evaluator": "harness/runtime/native_rule_evaluation",
+  "policy_reselection": false,
+  "learned_fallback": false,
+  "full_environment_to_actor": false,
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/stack_bowls_random/bindings/official_policy.py",
+    "tasks/stack_bowls_random/controller.py",
+    "tasks/stack_bowls_random/entry.py"
+  ],
+  "graph_files": [
+    "workflows/transfer.json"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "resource_files": []
+}

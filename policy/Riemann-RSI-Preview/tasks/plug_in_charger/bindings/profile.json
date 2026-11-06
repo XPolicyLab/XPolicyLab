@@ -1,0 +1,26 @@
+{
+  "schema": "riemann-native-mature-profile-v1",
+  "parameters": {
+    "motion_speed": 1.8,
+    "motion_speedup": 1.0,
+    "planner_pose_frame": "world",
+    "gripper_forward_offset": 0.155,
+    "max_grasp_width": 0.085,
+    "gripper_settle_seconds": 0.24,
+    "approach_clearance": 0.07,
+    "lift_height": 0.1,
+    "max_grasp_slip": 0.018,
+    "pose_tolerance": 0.007,
+    "insertion_tolerance": 0.003,
+    "pose_corrections": 3,
+    "insertion_depth": 0.012,
+    "preinsert_clearance": 0.025,
+    "insertion_step": 0.009,
+    "home_reserve_actions": 60,
+    "allow_table_regrasp": true,
+    "debug_fk": false,
+    "full_curobo_warmup": false,
+    "official_eval": true
+  },
+  "scope": "Native binding only; execution graph remains unchanged external workflow.json"
+}

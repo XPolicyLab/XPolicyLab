@@ -1,0 +1,43 @@
+{
+  "schema": "riemann-static-public-rule-models-v1",
+  "default_root": "resource://rule_assets/a9-pack-pen-public-models-20261030-r1",
+  "files": {
+    "geometry.json": {
+      "path": "geometry.json",
+      "sha256": "167b7d9e4808d385395f2d21f4502a747f306f91303fb7196f84575474db725e",
+      "bytes": 76999,
+      "source": "Historical frozen public asset rendering catalog; evaluation_layouts_used=false"
+    },
+    "shapes.npz": {
+      "path": "shapes.npz",
+      "sha256": "7e36306b3c87402490ac71c279e49b5eb0238133c1c4ecc348e257f50a5badbb",
+      "bytes": 7347057,
+      "source": "Historical frozen public asset rendering catalog; evaluation_layouts_used=false"
+    },
+    "catalog_v2/catalog.json": {
+      "path": "catalog_v2/catalog.json",
+      "sha256": "965338275be07ee5b43e5c72044b62b45436058f61225fffe7aaf5b4f6844ca6",
+      "bytes": 285602,
+      "source": "Historical frozen public asset rendering catalog; evaluation_layouts_used=false"
+    },
+    "catalog_v2/catalog.npz": {
+      "path": "catalog_v2/catalog.npz",
+      "sha256": "e67924fb1205e3684d90a0f07d2e3319b771bbc199c3f78d65dcf40fdb3e2222",
+      "bytes": 780088,
+      "source": "Historical frozen public asset rendering catalog; evaluation_layouts_used=false"
+    },
+    "X5A.urdf": {
+      "path": "X5A.urdf",
+      "sha256": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+      "bytes": 9218,
+      "provenance": "Read-only official public X5 robot model; no episode or scene state"
+    },
+    "curobo.yml": {
+      "path": "curobo.yml",
+      "sha256": "7e28b2a617369d0b4b381d77224ccb43069816acb24c5c6c49235126f8fc459a",
+      "bytes": 12536,
+      "provenance": "Read-only official public X5 robot model; no episode or scene state"
+    }
+  },
+  "scope": "Existing public CAD/RGB models plus pinned public X5 URDF/YAML; no layouts or episode state"
+}

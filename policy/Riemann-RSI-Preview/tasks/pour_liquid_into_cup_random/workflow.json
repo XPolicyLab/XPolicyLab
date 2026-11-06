@@ -1,0 +1,478 @@
+{
+  "schema": "riemann-mature-teacher-programs-v1",
+  "package": "tasks.pour_liquid_into_cup_random",
+  "task": "pour_liquid_into_cup_random",
+  "official_action_horizon": 400,
+  "mode": "rule_only",
+  "wam_reselection": false,
+  "programs": {
+    "U01_PourController_program": {
+      "schema": "riemann-declarative-skill-workflow-v2",
+      "mode": "rule_only",
+      "official_action_horizon": 400,
+      "wam_reselection": false,
+      "max_operations": 65536,
+      "bindings": {
+        "U01_PourController_program_motion_001": "skills.motion.implementation:U01_PourController_program_motion_001",
+        "U01_PourController_program_self_cup_key_cup6_002": "skills.motion.implementation:U01_PourController_program_self_cup_key_cup6_002",
+        "U01_PourController_program_self_cup_key_cup6_003": "skills.motion.implementation:U01_PourController_program_self_cup_key_cup6_003",
+        "U01_PourController_program_motion_004": "skills.motion.implementation:U01_PourController_program_motion_004",
+        "U01_PourController_program_motion_005": "skills.motion.implementation:U01_PourController_program_motion_005",
+        "U01_PourController_program_motion_006": "skills.motion.implementation:U01_PourController_program_motion_006",
+        "U01_PourController_program_motion_007": "skills.motion.implementation:U01_PourController_program_motion_007",
+        "U01_PourController_program_motion_008": "skills.motion.implementation:U01_PourController_program_motion_008",
+        "U01_PourController_program_motion_009": "skills.motion.implementation:U01_PourController_program_motion_009",
+        "U01_PourController_program_motion_010": "skills.motion.implementation:U01_PourController_program_motion_010",
+        "U01_PourController_program_motion_011": "skills.motion.implementation:U01_PourController_program_motion_011",
+        "U01_PourController_program_motion_012": "skills.motion.implementation:U01_PourController_program_motion_012",
+        "U01_PourController_program_grasp_state_absent_013": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_013",
+        "U01_PourController_program_grasp_state_absent_014": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_014",
+        "U01_PourController_program_grasp_state_absent_015": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_015",
+        "U01_PourController_program_grasp_state_absent_016": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_016",
+        "U01_PourController_program_grasp_state_absent_017": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_017",
+        "U01_PourController_program_grasp_state_absent_018": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_018",
+        "U01_PourController_program_grasp_state_absent_019": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_019",
+        "U01_PourController_program_grasp_state_absent_020": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_020",
+        "U01_PourController_program_grasp_state_absent_021": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_021",
+        "U01_PourController_program_grasp_state_absent_022": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_022",
+        "U01_PourController_program_grasp_state_absent_023": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_023",
+        "U01_PourController_program_grasp_state_absent_024": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_024",
+        "U01_PourController_program_grasp_state_absent_025": "skills.pickup.implementation:U01_PourController_program_grasp_state_absent_025",
+        "U01_PourController_program_motion_026": "skills.motion.implementation:U01_PourController_program_motion_026",
+        "U01_PourController_program_motion_027": "skills.motion.implementation:U01_PourController_program_motion_027",
+        "U01_PourController_program_motion_028": "skills.motion.implementation:U01_PourController_program_motion_028",
+        "U01_PourController_program_motion_029": "skills.motion.implementation:U01_PourController_program_motion_029",
+        "U01_PourController_program_motion_030": "skills.motion.implementation:U01_PourController_program_motion_030",
+        "U01_PourController_program_range_3_031": "skills.motion.implementation:U01_PourController_program_range_3_031",
+        "U01_PourController_program_motion_032": "skills.motion.implementation:U01_PourController_program_motion_032",
+        "U01_PourController_program_motion_033": "skills.motion.implementation:U01_PourController_program_motion_033",
+        "U01_PourController_program_confirm_attempt_2_034": "skills.motion.implementation:U01_PourController_program_confirm_attempt_2_034",
+        "U01_PourController_program_confirm_attempt_2_035": "skills.motion.implementation:U01_PourController_program_confirm_attempt_2_035",
+        "U01_PourController_program_motion_036": "skills.motion.implementation:U01_PourController_program_motion_036",
+        "U01_PourController_program_motion_037": "skills.motion.implementation:U01_PourController_program_motion_037",
+        "U01_PourController_program_motion_038": "skills.motion.implementation:U01_PourController_program_motion_038",
+        "U01_PourController_program_motion_039": "skills.motion.implementation:U01_PourController_program_motion_039",
+        "U01_PourController_program_motion_040": "skills.motion.implementation:U01_PourController_program_motion_040",
+        "U01_PourController_program_motion_041": "skills.motion.implementation:U01_PourController_program_motion_041",
+        "U01_PourController_program_motion_042": "skills.motion.implementation:U01_PourController_program_motion_042",
+        "U01_PourController_program_displacement_0_07_043": "skills.motion.implementation:U01_PourController_program_displacement_0_07_043",
+        "U01_PourController_program_displacement_0_07_044": "skills.motion.implementation:U01_PourController_program_displacement_0_07_044",
+        "U01_PourController_program_motion_045": "skills.motion.implementation:U01_PourController_program_motion_045",
+        "U01_PourController_program_motion_046": "skills.motion.implementation:U01_PourController_program_motion_046",
+        "U01_PourController_program_not_self_cup_support_arm_047": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_047",
+        "U01_PourController_program_not_self_cup_support_arm_048": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_048",
+        "U01_PourController_program_not_self_cup_support_arm_049": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_049",
+        "U01_PourController_program_not_self_cup_support_arm_050": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_050",
+        "U01_PourController_program_not_self_cup_support_arm_051": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_051",
+        "U01_PourController_program_not_self_cup_support_arm_052": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_052",
+        "U01_PourController_program_not_self_cup_support_arm_053": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_053",
+        "U01_PourController_program_not_self_cup_support_arm_054": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_054",
+        "U01_PourController_program_applied_055": "skills.motion.implementation:U01_PourController_program_applied_055",
+        "U01_PourController_program_applied_056": "skills.motion.implementation:U01_PourController_program_applied_056",
+        "U01_PourController_program_not_self_cup_support_arm_057": "skills.motion.implementation:U01_PourController_program_not_self_cup_support_arm_057",
+        "U01_PourController_program_motion_058": "skills.motion.implementation:U01_PourController_program_motion_058",
+        "U01_PourController_program_motion_059": "skills.motion.implementation:U01_PourController_program_motion_059",
+        "U01_PourController_program_motion_060": "skills.motion.implementation:U01_PourController_program_motion_060",
+        "U01_PourController_program_self_cup_support_arm_061": "skills.motion.implementation:U01_PourController_program_self_cup_support_arm_061",
+        "U01_PourController_program_self_cup_support_arm_062": "skills.motion.implementation:U01_PourController_program_self_cup_support_arm_062",
+        "U01_PourController_program_zip_targets_1_targets_1_063": "skills.motion.implementation:U01_PourController_program_zip_targets_1_targets_1_063",
+        "U01_PourController_program_self_cup_support_arm_064": "skills.motion.implementation:U01_PourController_program_self_cup_support_arm_064",
+        "U01_PourController_program_self_cup_support_arm_065": "skills.motion.implementation:U01_PourController_program_self_cup_support_arm_065",
+        "U01_PourController_program_self_cup_support_arm_066": "skills.motion.implementation:U01_PourController_program_self_cup_support_arm_066",
+        "U01_PourController_program_motion_067": "skills.motion.implementation:U01_PourController_program_motion_067",
+        "U01_PourController_program_motion_068": "skills.motion.implementation:U01_PourController_program_motion_068",
+        "U01_PourController_program_motion_069": "skills.motion.implementation:U01_PourController_program_motion_069",
+        "U01_PourController_program_motion_070": "skills.motion.implementation:U01_PourController_program_motion_070",
+        "U01_PourController_program_motion_071": "skills.motion.implementation:U01_PourController_program_motion_071",
+        "U01_PourController_program_true_072": "skills.motion.implementation:U01_PourController_program_true_072",
+        "U01_PourController_program_motion_073": "skills.motion.implementation:U01_PourController_program_motion_073"
+      },
+      "errors": {
+        "U04_PerceptionError": "skills.state.implementation:U04_PerceptionError"
+      },
+      "steps": [
+        {
+          "call": "U01_PourController_program_motion_001"
+        },
+        {
+          "call": "U01_PourController_program_self_cup_key_cup6_002",
+          "store": "condition_2"
+        },
+        {
+          "if": {
+            "var": "condition_2"
+          },
+          "then": [
+            {
+              "call": "U01_PourController_program_self_cup_key_cup6_003"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U01_PourController_program_motion_004"
+        },
+        {
+          "call": "U01_PourController_program_motion_005"
+        },
+        {
+          "call": "U01_PourController_program_motion_006"
+        },
+        {
+          "call": "U01_PourController_program_motion_007"
+        },
+        {
+          "call": "U01_PourController_program_motion_008"
+        },
+        {
+          "call": "U01_PourController_program_motion_009"
+        },
+        {
+          "call": "U01_PourController_program_motion_010"
+        },
+        {
+          "call": "U01_PourController_program_motion_011"
+        },
+        {
+          "call": "U01_PourController_program_motion_012"
+        },
+        {
+          "call": "U01_PourController_program_grasp_state_absent_013",
+          "store": "condition_13"
+        },
+        {
+          "if": {
+            "var": "condition_13"
+          },
+          "then": [
+            {
+              "call": "U01_PourController_program_grasp_state_absent_014"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_015"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_016"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_017"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_018"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_019"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_020"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_021"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_022"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_023"
+            },
+            {
+              "call": "U01_PourController_program_grasp_state_absent_024",
+              "store": "condition_24"
+            },
+            {
+              "if": {
+                "var": "condition_24"
+              },
+              "then": [
+                {
+                  "call": "U01_PourController_program_grasp_state_absent_025"
+                }
+              ],
+              "else": []
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U01_PourController_program_motion_026"
+        },
+        {
+          "call": "U01_PourController_program_motion_027"
+        },
+        {
+          "call": "U01_PourController_program_motion_028"
+        },
+        {
+          "call": "U01_PourController_program_motion_029"
+        },
+        {
+          "call": "U01_PourController_program_motion_030"
+        },
+        {
+          "call": "U01_PourController_program_range_3_031",
+          "store": "items_31"
+        },
+        {
+          "for_each": {
+            "var": "items_31"
+          },
+          "as": "loop_item_32",
+          "max_items": 4096,
+          "do": [
+            {
+              "call": "U01_PourController_program_motion_032",
+              "args": {
+                "__workflow_item": {
+                  "var": "loop_item_32"
+                }
+              }
+            },
+            {
+              "try": [
+                {
+                  "call": "U01_PourController_program_motion_041"
+                },
+                {
+                  "break": true
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U04_PerceptionError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U01_PourController_program_motion_033",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U01_PourController_program_confirm_attempt_2_034",
+                      "store": "condition_34"
+                    },
+                    {
+                      "if": {
+                        "var": "condition_34"
+                      },
+                      "then": [
+                        {
+                          "call": "U01_PourController_program_confirm_attempt_2_035"
+                        }
+                      ],
+                      "else": []
+                    },
+                    {
+                      "call": "U01_PourController_program_motion_036",
+                      "args": {
+                        "phase_0": "held_confirmation"
+                      }
+                    },
+                    {
+                      "call": "U01_PourController_program_motion_037"
+                    },
+                    {
+                      "call": "U01_PourController_program_motion_038"
+                    },
+                    {
+                      "call": "U01_PourController_program_motion_039"
+                    },
+                    {
+                      "call": "U01_PourController_program_motion_040"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call": "U01_PourController_program_motion_042"
+        },
+        {
+          "call": "U01_PourController_program_displacement_0_07_043",
+          "store": "condition_43"
+        },
+        {
+          "if": {
+            "var": "condition_43"
+          },
+          "then": [
+            {
+              "call": "U01_PourController_program_displacement_0_07_044"
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U01_PourController_program_motion_045"
+        },
+        {
+          "call": "U01_PourController_program_motion_046"
+        },
+        {
+          "call": "U01_PourController_program_not_self_cup_support_arm_047",
+          "store": "condition_47"
+        },
+        {
+          "if": {
+            "var": "condition_47"
+          },
+          "then": [
+            {
+              "call": "U01_PourController_program_not_self_cup_support_arm_048"
+            },
+            {
+              "try": [
+                {
+                  "call": "U01_PourController_program_not_self_cup_support_arm_051"
+                },
+                {
+                  "call": "U01_PourController_program_not_self_cup_support_arm_052"
+                },
+                {
+                  "call": "U01_PourController_program_not_self_cup_support_arm_053"
+                },
+                {
+                  "call": "U01_PourController_program_not_self_cup_support_arm_054"
+                },
+                {
+                  "call": "U01_PourController_program_applied_055",
+                  "store": "condition_55"
+                },
+                {
+                  "if": {
+                    "var": "condition_55"
+                  },
+                  "then": [
+                    {
+                      "call": "U01_PourController_program_applied_056"
+                    }
+                  ],
+                  "else": []
+                },
+                {
+                  "call": "U01_PourController_program_not_self_cup_support_arm_057"
+                }
+              ],
+              "catch": [
+                {
+                  "errors": [
+                    "U04_PerceptionError"
+                  ],
+                  "as": "caught_error",
+                  "do": [
+                    {
+                      "call": "U01_PourController_program_not_self_cup_support_arm_049",
+                      "args": {
+                        "__workflow_error": {
+                          "var": "caught_error"
+                        }
+                      }
+                    },
+                    {
+                      "call": "U01_PourController_program_not_self_cup_support_arm_050"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": []
+        },
+        {
+          "call": "U01_PourController_program_motion_058"
+        },
+        {
+          "call": "U01_PourController_program_motion_059"
+        },
+        {
+          "call": "U01_PourController_program_motion_060"
+        },
+        {
+          "call": "U01_PourController_program_self_cup_support_arm_061",
+          "store": "condition_61"
+        },
+        {
+          "if": {
+            "var": "condition_61"
+          },
+          "then": [
+            {
+              "call": "U01_PourController_program_self_cup_support_arm_062"
+            },
+            {
+              "call": "U01_PourController_program_zip_targets_1_targets_1_063",
+              "store": "items_63"
+            },
+            {
+              "for_each": {
+                "var": "items_63"
+              },
+              "as": "loop_item_64",
+              "max_items": 4096,
+              "do": [
+                {
+                  "call": "U01_PourController_program_self_cup_support_arm_064",
+                  "args": {
+                    "__workflow_item": {
+                      "var": "loop_item_64"
+                    }
+                  }
+                },
+                {
+                  "call": "U01_PourController_program_self_cup_support_arm_065"
+                }
+              ]
+            },
+            {
+              "call": "U01_PourController_program_self_cup_support_arm_066"
+            }
+          ],
+          "else": [
+            {
+              "call": "U01_PourController_program_motion_067"
+            }
+          ]
+        },
+        {
+          "call": "U01_PourController_program_motion_068"
+        },
+        {
+          "call": "U01_PourController_program_motion_069"
+        },
+        {
+          "call": "U01_PourController_program_motion_070"
+        },
+        {
+          "call": "U01_PourController_program_motion_071"
+        },
+        {
+          "while": "U01_PourController_program_true_072",
+          "args": {},
+          "max_iterations": 4096,
+          "do": [
+            {
+              "call": "U01_PourController_program_motion_073"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "motion_speed": 1.0,
+    "full_curobo_warmup": false,
+    "inspect_only": false
+  },
+  "environment": {
+    "python_prefix": "resource://eval_environment",
+    "physics_dt": 0.004,
+    "control_frequency_hz": 25,
+    "native_action_budget": 400
+  }
+}

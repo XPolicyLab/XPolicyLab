@@ -1,0 +1,80 @@
+{
+  "schema": "organize-reachable-side-push-workflow-r31",
+  "nominal_grasp_points_m": {
+    "alarm": [
+      0.11965,
+      0.0,
+      -0.00489
+    ]
+  },
+  "grasp_tilts_deg": {
+    "alarm": 35.0
+  },
+  "official_action_horizon": 1000,
+  "rule_only": true,
+  "learned_fallback": false,
+  "initial_open_seconds": 0.2,
+  "recovery_open_seconds": 0.3,
+  "final_settle_seconds": 1.0,
+  "primitives": [
+    {
+      "name": "alarm",
+      "capability": "alarm_transfer",
+      "arguments": []
+    },
+    {
+      "name": "mouse",
+      "capability": "mouse_transfer",
+      "arguments": [
+        "mouse",
+        "mousemat",
+        0.022,
+        0.032
+      ]
+    },
+    {
+      "name": "figurine",
+      "capability": "figurine_transfer",
+      "arguments": [
+        "figurine",
+        "stand",
+        0.105,
+        0.11
+      ]
+    },
+    {
+      "name": "figurine_base_push",
+      "capability": "figurine_base_push",
+      "arguments": []
+    },
+    {
+      "name": "keyboard",
+      "capability": "keyboard_seating",
+      "arguments": []
+    }
+  ],
+  "released_tool_retraction": {
+    "skill": "released_tool_retraction",
+    "allowed_models": [
+      "00006"
+    ],
+    "distance_m": 0.08,
+    "minimum_remaining_controls": 120
+  },
+  "figurine_base_push": {
+    "allowed_models": [
+      "00006"
+    ],
+    "maximum_shift_m": 0.07,
+    "minimum_remaining_controls": 350,
+    "nominal_tool_point_m": [
+      0.15257,
+      0.009594417011737825,
+      -0.00489
+    ],
+    "tool_axis_xy": [
+      0.0,
+      1.0
+    ]
+  }
+}

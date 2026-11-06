@@ -1,0 +1,262 @@
+from __future__ import annotations
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U64_AlignBlocksTeacher_State
+from skills.shared.motion.own_arm_command_sequences.implementation import OwnArmCommandSequences
+
+class U64_AlignBlocksTeacher(U64_AlignBlocksTeacher_State, OwnArmCommandSequences):
+    pass
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U69_SwapTTeacher_State
+
+class U69_SwapTTeacher(U69_SwapTTeacher_State, U64_AlignBlocksTeacher):
+    """Strictly serialized physical swap with the first arm parked at home."""
+    teacher_version = 'official_strict_serial_left_home_holding_v16'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U68_PushTTeacher_Motion
+
+class U68_PushTTeacher(U68_PushTTeacher_Motion, U69_SwapTTeacher):
+    teacher_version = 'official_tabletop_contact_v9'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U66_ConveyorTeacher_Motion
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U66_ConveyorTeacher_Perception
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U66_ConveyorTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U66_ConveyorTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U66_ConveyorTeacher_Transport
+
+class U66_ConveyorTeacher(U66_ConveyorTeacher_Motion, U66_ConveyorTeacher_Perception, U66_ConveyorTeacher_Pickup, U66_ConveyorTeacher_State, U66_ConveyorTeacher_Transport, U68_PushTTeacher):
+    teacher_version = 'conveyor_high_release_slow_carry_v40'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U67_VisionImageConveyorTeacher_Motion
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U67_VisionImageConveyorTeacher_Perception
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U67_VisionImageConveyorTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.recovery.implementation import U67_VisionImageConveyorTeacher_Recovery
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U67_VisionImageConveyorTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U67_VisionImageConveyorTeacher_Transport
+
+class U67_VisionImageConveyorTeacher(U67_VisionImageConveyorTeacher_Motion, U67_VisionImageConveyorTeacher_Perception, U67_VisionImageConveyorTeacher_Pickup, U67_VisionImageConveyorTeacher_Recovery, U67_VisionImageConveyorTeacher_State, U67_VisionImageConveyorTeacher_Transport, U66_ConveyorTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v29'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U15_CenterWallTeacher_Pickup
+
+class U15_CenterWallTeacher(U15_CenterWallTeacher_Pickup, U67_VisionImageConveyorTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v32_center_wall_candidate'
+    wall_contact_depth = -0.03
+
+class U13_CenterShallowTeacher(U15_CenterWallTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v37_center_shallow_candidate'
+    wall_contact_depth = -0.02
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U42_RegraspTeacher_Motion
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U42_RegraspTeacher_Pickup
+
+class U42_RegraspTeacher(U42_RegraspTeacher_Motion, U42_RegraspTeacher_Pickup, U67_VisionImageConveyorTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v35_bounded_regrasp_candidate'
+from tasks.pick_from_conveyor_by_image.skills.recovery.implementation import U38_ReacquireTeacher_Recovery
+
+class U38_ReacquireTeacher(U38_ReacquireTeacher_Recovery, U42_RegraspTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v38_tracked_reacquisition_candidate'
+
+class U19_CombinedTeacher(U38_ReacquireTeacher, U13_CenterShallowTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v39_centered_reacquire_candidate'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U57_TargetPurchaseTeacher_Pickup
+
+class U57_TargetPurchaseTeacher(U57_TargetPurchaseTeacher_Pickup, U19_CombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v91_v39_target_only_toy_purchase'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U36_PayloadHoldTeacher_Motion
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U36_PayloadHoldTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U36_PayloadHoldTeacher_Transport
+
+class U36_PayloadHoldTeacher(U36_PayloadHoldTeacher_Motion, U36_PayloadHoldTeacher_State, U36_PayloadHoldTeacher_Transport, U57_TargetPurchaseTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v92_v39_toy_purchase_clearance_hold'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U27_DropSettleTeacher_State
+
+class U27_DropSettleTeacher(U27_DropSettleTeacher_State, U36_PayloadHoldTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v93_v92_rgb_gated_drop_settle'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U50_SlipFinishTeacher_Motion
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U50_SlipFinishTeacher_Transport
+
+class U50_SlipFinishTeacher(U50_SlipFinishTeacher_Motion, U50_SlipFinishTeacher_Transport, U27_DropSettleTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v97_v96_finish_release_after_rgb_settled_slip'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U54_SupportedFigurineTeacher_Pickup
+
+class U54_SupportedFigurineTeacher(U54_SupportedFigurineTeacher_Pickup, U50_SlipFinishTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v99_v97_supported_figurine_purchase'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U53_SupportedAnnularTeacher_Pickup
+
+class U53_SupportedAnnularTeacher(U53_SupportedAnnularTeacher_Pickup, U54_SupportedFigurineTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v101_v99_finite_finger_annular_chord'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U04_AnnularTraceTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.planning.implementation import U04_AnnularTraceTeacher_Planning
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U04_AnnularTraceTeacher_Transport
+
+class U04_AnnularTraceTeacher(U04_AnnularTraceTeacher_Pickup, U04_AnnularTraceTeacher_Planning, U04_AnnularTraceTeacher_Transport, U53_SupportedAnnularTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v103_v101_native_rejection_audit'
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U73_AcquisitionTraceMixin_Perception
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U73_AcquisitionTraceMixin_State
+
+class U73_AcquisitionTraceMixin(U73_AcquisitionTraceMixin_Perception, U73_AcquisitionTraceMixin_State):
+    pass
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U34_ObliqueAnnularPurchaseTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U34_ObliqueAnnularPurchaseTeacher_State
+
+class U34_ObliqueAnnularPurchaseTeacher(U34_ObliqueAnnularPurchaseTeacher_Pickup, U34_ObliqueAnnularPurchaseTeacher_State, U73_AcquisitionTraceMixin, U04_AnnularTraceTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v105_v102_screened_oblique_annular_purchase'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U47_RetreatingAnnularLiftTeacher_Motion
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U47_RetreatingAnnularLiftTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U47_RetreatingAnnularLiftTeacher_State
+
+class U47_RetreatingAnnularLiftTeacher(U47_RetreatingAnnularLiftTeacher_Motion, U47_RetreatingAnnularLiftTeacher_Pickup, U47_RetreatingAnnularLiftTeacher_State, U34_ObliqueAnnularPurchaseTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v109_v105_inward_retained_annular_lift'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U05_AnnularTubeTeacher_Pickup
+
+class U05_AnnularTubeTeacher(U05_AnnularTubeTeacher_Pickup, U47_RetreatingAnnularLiftTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v115_v109_inner_outer_tube_pinch_4mm'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U26_DiagonalTubeTeacher_Pickup
+
+class U26_DiagonalTubeTeacher(U26_DiagonalTubeTeacher_Pickup, U05_AnnularTubeTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v129_v115_screened_diagonal_tube'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U55_SupportedObservationTeacher_State
+
+class U55_SupportedObservationTeacher(U55_SupportedObservationTeacher_State, U73_AcquisitionTraceMixin, U54_SupportedFigurineTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v102_v99_confirmed_appearance_recovery'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U17_CloserBasketTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U17_CloserBasketTeacher_Transport
+
+class U17_CloserBasketTeacher(U17_CloserBasketTeacher_State, U17_CloserBasketTeacher_Transport, U55_SupportedObservationTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v111_v102_shorter_payload_transfer'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U39_RefinedSupportedFigurineTeacher_State
+
+class U39_RefinedSupportedFigurineTeacher(U39_RefinedSupportedFigurineTeacher_State, U55_SupportedObservationTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v110_v102_aligned_figurine_yaw_and_purchase'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U23_ConservativeCombinedTeacher_State
+
+class U23_ConservativeCombinedTeacher(U23_ConservativeCombinedTeacher_State, U39_RefinedSupportedFigurineTeacher, U17_CloserBasketTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v117_v110_fig_v111_toy_v108_cup'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U49_SeparatedBasketTeacher_Pickup
+
+class U49_SeparatedBasketTeacher(U49_SeparatedBasketTeacher_Pickup, U23_ConservativeCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v126_v117_flat_object_basket_separation'
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U61_WristRefinedFigurineTeacher_Perception
+
+class U61_WristRefinedFigurineTeacher(U61_WristRefinedFigurineTeacher_Perception, U39_RefinedSupportedFigurineTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v119_v110_wrist_rgb_realign'
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U22_ConnectedWristTeacher_Perception
+
+class U22_ConnectedWristTeacher(U22_ConnectedWristTeacher_Perception, U61_WristRefinedFigurineTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v121_v119_connected_wrist_parts'
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U62_WristSeparatedCombinedTeacher_Perception
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U62_WristSeparatedCombinedTeacher_State
+
+class U62_WristSeparatedCombinedTeacher(U62_WristSeparatedCombinedTeacher_Perception, U62_WristSeparatedCombinedTeacher_State, U22_ConnectedWristTeacher, U49_SeparatedBasketTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v127_v121_wrist_v126_flat_v116_car_v117_rest'
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U12_CenterPreservingTrackTeacher_Perception
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U12_CenterPreservingTrackTeacher_Pickup
+
+class U12_CenterPreservingTrackTeacher(U12_CenterPreservingTrackTeacher_Perception, U12_CenterPreservingTrackTeacher_Pickup, U62_WristSeparatedCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v131_v127_flat_pose_center_preservation'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U59_TexturedRemoteTeacher_State
+
+class U59_TexturedRemoteTeacher(U59_TexturedRemoteTeacher_State, U12_CenterPreservingTrackTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v132_v131_dark_remote_texture'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U58_TexturedDiagonalCombinedTeacher_State
+
+class U58_TexturedDiagonalCombinedTeacher(U58_TexturedDiagonalCombinedTeacher_State, U59_TexturedRemoteTeacher, U26_DiagonalTubeTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v136_v132_textured_remote_v129_diagonal_donut'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U82_FiniteCarPurchaseMixin_Pickup
+
+class U82_FiniteCarPurchaseMixin(U82_FiniteCarPurchaseMixin_Pickup):
+    pass
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U10_CarRimCombinedTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U10_CarRimCombinedTeacher_Transport
+
+class U10_CarRimCombinedTeacher(U10_CarRimCombinedTeacher_State, U10_CarRimCombinedTeacher_Transport, U82_FiniteCarPurchaseMixin, U58_TexturedDiagonalCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v139_v136_v138_car_rim_clearance'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U31_LateralCarClearanceTeacher_State
+
+class U31_LateralCarClearanceTeacher(U31_LateralCarClearanceTeacher_State, U10_CarRimCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v141_v139_baseward_car_clearance'
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U09_CarNativeEntryTeacher_Transport
+
+class U09_CarNativeEntryTeacher(U09_CarNativeEntryTeacher_Transport, U31_LateralCarClearanceTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v145_v141_car_native_entry_preflight'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U52_SlowNativeCarEntryTeacher_Motion
+
+class U52_SlowNativeCarEntryTeacher(U52_SlowNativeCarEntryTeacher_Motion, U09_CarNativeEntryTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v154_v145_slow_native_car_entry'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U43_RemoteBasketVelocityTeacher_State
+
+class U43_RemoteBasketVelocityTeacher(U43_RemoteBasketVelocityTeacher_State, U09_CarNativeEntryTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v148_v145_remote_basket_rgb_velocity'
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U25_CorrectionNativeEntryTeacher_Transport
+
+class U25_CorrectionNativeEntryTeacher(U25_CorrectionNativeEntryTeacher_Transport, U43_RemoteBasketVelocityTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v149_v148_correction_native_entry'
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U48_SelectiveCarEntryTeacher_Transport
+
+class U48_SelectiveCarEntryTeacher(U48_SelectiveCarEntryTeacher_Transport, U25_CorrectionNativeEntryTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v150_v149_selective_car_entry_preflight'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U28_FigurineColorTeacher_State
+
+class U28_FigurineColorTeacher(U28_FigurineColorTeacher_State, U58_TexturedDiagonalCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v140_v136_chromatic_figurine_acquisition'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U18_ColorRimCombinedTeacher_State
+
+class U18_ColorRimCombinedTeacher(U18_ColorRimCombinedTeacher_State, U28_FigurineColorTeacher, U10_CarRimCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v144_v139_v140_figurine_color'
+from tasks.pick_from_conveyor_by_image.skills.perception.implementation import U41_ReframedWristTeacher_Perception
+
+class U41_ReframedWristTeacher(U41_ReframedWristTeacher_Perception, U18_ColorRimCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v147_v144_native_wrist_reframe'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U40_ReframedSelectiveCombinedTeacher_State
+
+class U40_ReframedSelectiveCombinedTeacher(U40_ReframedSelectiveCombinedTeacher_State, U41_ReframedWristTeacher, U48_SelectiveCarEntryTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v151_v147_v150_reframed_selective_combined'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U46_RestoredCarCombinedTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U46_RestoredCarCombinedTeacher_Transport
+
+class U46_RestoredCarCombinedTeacher(U46_RestoredCarCombinedTeacher_State, U46_RestoredCarCombinedTeacher_Transport, U40_ReframedSelectiveCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v152_v151_restored_v139_car'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U44_RemoteBlockedRecoveryTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U44_RemoteBlockedRecoveryTeacher_State
+
+class U44_RemoteBlockedRecoveryTeacher(U44_RemoteBlockedRecoveryTeacher_Pickup, U44_RemoteBlockedRecoveryTeacher_State, U46_RestoredCarCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v155_v152_remote_blocked_approach_recovery'
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U11_CarTranslationClearanceTeacher_Transport
+
+class U11_CarTranslationClearanceTeacher(U11_CarTranslationClearanceTeacher_Transport, U46_RestoredCarCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v153_v152_car_translation_clearance'
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U16_ClearanceSlowCombinedTeacher_State
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U16_ClearanceSlowCombinedTeacher_Transport
+
+class U16_ClearanceSlowCombinedTeacher(U16_ClearanceSlowCombinedTeacher_State, U16_ClearanceSlowCombinedTeacher_Transport, U11_CarTranslationClearanceTeacher, U44_RemoteBlockedRecoveryTeacher, U52_SlowNativeCarEntryTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v156_v153_v154_v155_clearance_slow_recovery'
+from tasks.pick_from_conveyor_by_image.skills.transport.implementation import U45_RemoteReleaseSettleTeacher_Transport
+
+class U45_RemoteReleaseSettleTeacher(U45_RemoteReleaseSettleTeacher_Transport, U16_ClearanceSlowCombinedTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v157_v156_remote0_pre_retreat_settle'
+from tasks.pick_from_conveyor_by_image.skills.motion.implementation import U51_SlowBasketCenterTeacher_Motion
+
+class U51_SlowBasketCenterTeacher(U51_SlowBasketCenterTeacher_Motion, U45_RemoteReleaseSettleTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v161_v157_slow_car_basket_center'
+from tasks.pick_from_conveyor_by_image.skills.recovery.implementation import U33_LoadedCarLiftMarginTeacher_Recovery
+
+class U33_LoadedCarLiftMarginTeacher(U33_LoadedCarLiftMarginTeacher_Recovery, U51_SlowBasketCenterTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v164_v161_loaded_car_lift_margin'
+from tasks.pick_from_conveyor_by_image.skills.pickup.implementation import U60_ValidatedLoadRecoveryTeacher_Pickup
+from tasks.pick_from_conveyor_by_image.skills.state.implementation import U60_ValidatedLoadRecoveryTeacher_State
+
+class U60_ValidatedLoadRecoveryTeacher(U60_ValidatedLoadRecoveryTeacher_Pickup, U60_ValidatedLoadRecoveryTeacher_State, U33_LoadedCarLiftMarginTeacher):
+    teacher_version = 'pick_from_conveyor_by_image_rgb_v166_v164_toy_only_reinforced_basket'
+
+
+def create(env, recorder, args, clock):
+    import json
+    from pathlib import Path
+    context = U60_ValidatedLoadRecoveryTeacher.__new__(U60_ValidatedLoadRecoveryTeacher)
+    context._workflow = json.loads(Path(__file__).with_name('workflow.json').read_text())
+    context._official_bridge = clock
+    U60_ValidatedLoadRecoveryTeacher.__init__(context, env, recorder, args)
+    return context
+
+
+def describe():
+    import json
+    from pathlib import Path
+    return {'task_mode':'pick_from_conveyor_by_image', 'backend':'native_mature_rule',
+            'workflow':json.loads(Path(__file__).with_name('workflow.json').read_text()),
+            'historical_success_is_current_acceptance':False}
+
+from tasks.pick_from_conveyor_by_image.skills.public_robot.implementation import create_public_environment

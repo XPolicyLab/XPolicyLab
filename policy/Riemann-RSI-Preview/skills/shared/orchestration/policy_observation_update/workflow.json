@@ -1,0 +1,34 @@
+{
+  "schema": "riemann-executable-workflow-v1",
+  "symbol": "Model.update_obs",
+  "nodes": [
+    {
+      "kind": "operation",
+      "code": "img = self._stitch_image(obs)"
+    },
+    {
+      "kind": "operation",
+      "code": "state = self._state_from_obs(obs)"
+    },
+    {
+      "kind": "if",
+      "condition": "self._pending_reset",
+      "then": [
+        {
+          "kind": "operation",
+          "code": "self.policy.reset(img, state, self._task_text(obs))"
+        },
+        {
+          "kind": "operation",
+          "code": "self._pending_reset = False"
+        }
+      ],
+      "else": []
+    },
+    {
+      "kind": "operation",
+      "code": "self._latest = (img, state)"
+    }
+  ],
+  "scope": "frozen trusted policy control flow; never interpreted from observations or external logs"
+}

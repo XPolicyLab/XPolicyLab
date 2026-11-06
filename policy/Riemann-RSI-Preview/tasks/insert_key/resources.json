@@ -1,0 +1,11 @@
+{
+  "schema": "external-public-rule-resources-v1",
+  "default_root": "resource://mature_assets/a3-mature-original-20261029",
+  "files": {
+    "key_visual_mesh.npz": {
+      "path": "key_visual_mesh.npz",
+      "sha256": "4b9e1272805a89b2b06ae54b560b9e33ed8492509bfa03c9fca7b7847ed92fd9",
+      "purpose": "public static calibration or object/own-robot geometry; no instance pose"
+    }
+  }
+}

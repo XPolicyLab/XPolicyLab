@@ -1,0 +1,11 @@
+{
+  "schema": "riemann-public-observation-contract-v1",
+  "task": "plug_in_charger",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "gripper_semantics": "normalized feedback-limited applied target; exact width/contact unknown",
+  "evaluation_enabled": true,
+  "gpu_review_hold": false,
+  "status": "development callable; public adaptation fixed0 failed; performance not restored"
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "insert_key",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "hole_servo": "skills/hole_servo/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "lobe_rim": "skills/lobe_rim/implementation.py",
+    "metric_lobe": "skills/metric_lobe/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "side_visible": "skills/side_visible/implementation.py",
+    "state": "skills/state/implementation.py",
+    "tail_yaw": "skills/tail_yaw/implementation.py",
+    "tooth_pose": "skills/tooth_pose/implementation.py",
+    "transport": "skills/transport/implementation.py",
+    "yaw_lobe": "skills/yaw_lobe/implementation.py",
+    "native_binding": "skills/native_binding/implementation.py"
+  },
+  "shared_skills": [],
+  "program_runtime": [
+    "harness/runtime/declarative_workflow.py",
+    "harness/runtime/packet_workflow.py"
+  ],
+  "source_manifest": "SOURCE_MANIFEST.json",
+  "online_model_dependencies": [],
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/insert_key/controller.py",
+    "tasks/insert_key/entry.py",
+    "tasks/insert_key/resources.py"
+  ],
+  "source_versioning": "git",
+  "backend": "rule",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

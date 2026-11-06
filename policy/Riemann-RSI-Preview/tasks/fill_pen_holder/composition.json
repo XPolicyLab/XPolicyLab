@@ -1,0 +1,31 @@
+{
+  "schema": "riemann-rule-composition-v1",
+  "task_mode": "fill_pen_holder",
+  "backend": "rule",
+  "workflow": "workflow.json",
+  "task_skills": {
+    "geometry": "skills/geometry/implementation.py",
+    "home": "skills/home/implementation.py",
+    "insertion": "skills/insertion/implementation.py",
+    "lid": "skills/lid/implementation.py",
+    "motion": "skills/motion/implementation.py",
+    "perception": "skills/perception/implementation.py",
+    "pickup": "skills/pickup/implementation.py",
+    "recovery": "skills/recovery/implementation.py",
+    "state": "skills/state/implementation.py",
+    "grasp_evidence": "skills/grasp_evidence/implementation.py",
+    "public_robot": "skills/public_robot/implementation.py"
+  },
+  "validation": "bounded_public_native_factory_CPU_pending",
+  "python_entry_files": [
+    "harness/runtime/mature_teacher_boundary.py",
+    "harness/runtime/mature_teacher_clock.py",
+    "tasks/fill_pen_holder/controller.py",
+    "tasks/fill_pen_holder/entry.py",
+    "tasks/fill_pen_holder/resources.py"
+  ],
+  "source_versioning": "git",
+  "native_workflow": "workflow.json",
+  "graph_files": [],
+  "resource_files": []
+}

@@ -1,0 +1,187 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 1600,
+  "wam_reselection": false,
+  "max_operations": 128,
+  "bindings": {
+    "initialize_scene": "skills.scene.implementation:initialize_scene",
+    "request_demo": "skills.demonstration.implementation:request",
+    "observe_demo": "skills.demonstration.implementation:observe",
+    "decode_demo": "skills.demonstration.implementation:decode",
+    "begin_stage": "skills.stage.implementation:begin",
+    "pick_primary": "skills.stage.implementation:pick_primary",
+    "prepare_retry": "skills.stage.implementation:prepare_retry",
+    "pick_same_arm": "skills.stage.implementation:pick_same_arm",
+    "same_arm_failed": "skills.stage.implementation:same_arm_failed",
+    "pick_alternate": "skills.stage.implementation:pick_alternate",
+    "place_stage": "skills.stage.implementation:place",
+    "open_both": "skills.stage.implementation:open_both",
+    "home_both": "skills.stage.implementation:home_both",
+    "complete": "skills.stage.implementation:complete",
+    "require_demo_completion": "skills.demo_completion.implementation:require",
+    "require_demonstrator_return": "skills.demonstrator_return.implementation:require",
+    "recover_visible_release": "skills.delivery_recovery.implementation:run",
+    "recover_visible_watch_release": "skills.watch_release_evidence.implementation:run",
+    "capture_stage_instance": "skills.instance_stage_recovery.implementation:capture",
+    "recover_persistent_source": "skills.instance_stage_recovery.implementation:run"
+  },
+  "errors": {
+    "runtime_failure": "skills.stage.implementation:RuntimeError"
+  },
+  "steps": [
+    {
+      "id": "initialize_scene",
+      "call": "initialize_scene"
+    },
+    {
+      "id": "request_demo",
+      "call": "request_demo"
+    },
+    {
+      "id": "observe_demo",
+      "call": "observe_demo"
+    },
+    {
+      "id": "require_public_visual_demo_completion",
+      "call": "require_demo_completion"
+    },
+    {
+      "id": "require_public_visual_demonstrator_return",
+      "call": "require_demonstrator_return"
+    },
+    {
+      "id": "decode_demo",
+      "call": "decode_demo",
+      "store": "items"
+    },
+    {
+      "id": "five_demonstrated_items",
+      "for_each": {
+        "var": "items"
+      },
+      "as": "item",
+      "max_items": 5,
+      "do": [
+        {
+          "id": "begin_stage",
+          "call": "begin_stage",
+          "args": {
+            "item": {
+              "var": "item"
+            }
+          }
+        },
+        {
+          "id": "capture_stage_instance",
+          "call": "capture_stage_instance"
+        },
+        {
+          "id": "primary_grasp_error_boundary",
+          "try": [
+            {
+              "id": "pick_primary",
+              "call": "pick_primary"
+            }
+          ],
+          "catch": [
+            {
+              "errors": [
+                "runtime_failure"
+              ],
+              "as": "first_error",
+              "do": [
+                {
+                  "id": "prepare_retry",
+                  "call": "prepare_retry",
+                  "args": {
+                    "error": {
+                      "var": "first_error"
+                    }
+                  },
+                  "store": "same_arm_retry"
+                },
+                {
+                  "id": "bounded_arm_retry_choice",
+                  "if": {
+                    "var": "same_arm_retry"
+                  },
+                  "then": [
+                    {
+                      "id": "same_arm_retry_error_boundary",
+                      "try": [
+                        {
+                          "id": "pick_same_arm",
+                          "call": "pick_same_arm"
+                        }
+                      ],
+                      "catch": [
+                        {
+                          "errors": [
+                            "runtime_failure"
+                          ],
+                          "as": "retry_error",
+                          "do": [
+                            {
+                              "id": "same_arm_failed",
+                              "call": "same_arm_failed",
+                              "args": {
+                                "error": {
+                                  "var": "retry_error"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "else": [
+                    {
+                      "id": "pick_alternate",
+                      "call": "pick_alternate"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "place_stage",
+          "call": "place_stage"
+        },
+        {
+          "id": "recover_visible_release",
+          "call": "recover_visible_release"
+        },
+        {
+          "id": "recover_visible_watch_release",
+          "call": "recover_visible_watch_release"
+        },
+        {
+          "id": "recover_persistent_source",
+          "call": "recover_persistent_source"
+        }
+      ]
+    },
+    {
+      "id": "open_both",
+      "call": "open_both"
+    },
+    {
+      "id": "home_both",
+      "call": "home_both"
+    },
+    {
+      "id": "complete",
+      "call": "complete",
+      "store": "result"
+    },
+    {
+      "return": {
+        "var": "result"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Preserve the public URDF bytes, including CRLF and its trailing XML space.
+assets/robots/x5/X5A.urdf -text whitespace=-blank-at-eol,cr-at-eol

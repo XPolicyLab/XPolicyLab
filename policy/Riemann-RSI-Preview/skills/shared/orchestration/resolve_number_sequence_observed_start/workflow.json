@@ -1,0 +1,26 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "instruction_predicate": "form_largest_number_from_visible_digits",
+  "stages": [
+    {"id": "grasp", "skill": "grasp_number"},
+    {"id": "lift", "skill": "lift_number"},
+    {"id": "carry", "skill": "carry_number"},
+    {"id": "place", "skill": "place_number"},
+    {"id": "placement", "skill": "verify_number_placement"},
+    {"id": "recover", "skill": "recover_number_grasp"},
+    {"id": "relay", "skill": "relay_number"},
+    {"id": "home_left", "skill": "number_home"},
+    {"id": "home_right", "skill": "number_home"}
+  ],
+  "view_skill": "number_scene_view",
+  "initial_actual_wrist_view_required": true,
+  "initial_view_families": ["targets", "left_numerals", "right_numerals"],
+  "maximum_uncertain_attempts": 2,
+  "maximum_orthogonal_retries": 1,
+  "maximum_relay_attempts": 1,
+  "observed_row_count_only": true,
+  "robot_mount_reference_is_object_measurement": false,
+  "preference": "public_grounded_mature_rule_before_learned_recovery",
+  "completion_is_official_success": false,
+  "official_action_budget_changed": false
+}

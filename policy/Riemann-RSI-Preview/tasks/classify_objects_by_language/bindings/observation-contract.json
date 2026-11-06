@@ -1,0 +1,19 @@
+{
+  "schema": "riemann-language-public-native-observation-contract-v1",
+  "standard_observation_only": true,
+  "measured_finger_joints_required": false,
+  "public_factory": "controller.create_public_environment",
+  "instruction_source": "official_same_frame_get_obs_instruction",
+  "state": "current_six_joint_arms_seven_value_wrist_poses_normalized_applied_jaw_targets_not_current_finger_width",
+  "vision": "current_three_standard_RGB_cameras",
+  "action_fields": [
+    "left_arm_joint_state", "left_ee_joint_state",
+    "right_arm_joint_state", "right_ee_joint_state"
+  ],
+  "privileged_policy_inputs": [],
+  "opening_feedback": "current_RGB_opening_hypotheses_for_defer; controller_limiter_candidate_is_previous_first_only; current_total_width_and_contact_unknown",
+  "execution_hz": 25,
+  "official_substeps": 10,
+  "horizon": 1100,
+  "native_performance_accepted": false
+}

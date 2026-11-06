@@ -1,0 +1,7 @@
+{
+  "schema": "riemann-public-command-binding-v1",
+  "official_horizon": 700,
+  "public_api_module": "skills.shared.motion.observed_start_phase_execution.implementation",
+  "motion_module": "skills.shared.motion.observed_start_joint_planning.implementation",
+  "contract_module": "skills.shared.orchestration.observed_start_action_dispatch.implementation"
+}

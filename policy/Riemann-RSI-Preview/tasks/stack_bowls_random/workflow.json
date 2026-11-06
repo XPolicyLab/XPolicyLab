@@ -1,0 +1,79 @@
+{
+  "schema": "riemann-declarative-skill-workflow-v1",
+  "mode": "rule_only",
+  "official_action_horizon": 800,
+  "wam_reselection": false,
+  "max_operations": 256,
+  "bindings": {
+    "hold_both_grippers": "skills.bowl_state.implementation:hold_both_grippers",
+    "home": "skills.bowl_state.implementation:home",
+    "observe_scene": "skills.bowl_state.implementation:observe_scene",
+    "initialize": "skills.bowl_state.implementation:initialize",
+    "begin_transfer": "skills.bowl_state.implementation:begin_transfer",
+    "execute_transfer_program": "skills.bowl_state.implementation:execute_transfer_program",
+    "record_transfer": "skills.bowl_state.implementation:record_transfer",
+    "episode_result": "skills.bowl_state.implementation:episode_result",
+    "note_strategy_failure": "skills.bowl_state.implementation:note_strategy_failure",
+    "note_recovery_failure": "skills.bowl_state.implementation:note_recovery_failure",
+    "current_result": "skills.bowl_state.implementation:current_result"
+  },
+  "errors": {
+    "runtime_failure": "skills.bowl_state.implementation:RuntimeFailure"
+  },
+  "steps": [
+    {
+      "id": "original_three_bowl_sequence",
+      "try": [
+        {
+          "call": "hold_both_grippers",
+          "args": {"value": 1.0, "phase": "initial_open", "seconds": 0.25}
+        },
+        {"call": "observe_scene", "args": {"label": "before_action"}, "store": "bowls"},
+        {"call": "initialize", "args": {"bowls": {"var": "bowls"}}, "store": "primitives"},
+        {
+          "for_each": {"var": "primitives"},
+          "as": "primitive",
+          "max_items": 3,
+          "do": [
+            {"call": "begin_transfer", "args": {"primitive": {"var": "primitive"}}},
+            {"call": "execute_transfer_program"},
+            {"call": "record_transfer"}
+          ]
+        },
+        {
+          "call": "hold_both_grippers",
+          "args": {"value": 1.0, "phase": "final_settle", "seconds": 0.8}
+        },
+        {"call": "episode_result", "store": "result"},
+        {"return": {"var": "result"}}
+      ],
+      "catch": [
+        {
+          "errors": ["runtime_failure"],
+          "as": "strategy_error",
+          "do": [
+            {"call": "note_strategy_failure", "args": {"error": {"var": "strategy_error"}}},
+            {
+              "try": [
+                {
+                  "call": "hold_both_grippers",
+                  "args": {"value": 1.0, "phase": "failure_release", "seconds": 0.5}
+                },
+                {"call": "home"}
+              ],
+              "catch": [
+                {
+                  "errors": ["runtime_failure"],
+                  "as": "recovery_error",
+                  "do": [{"call": "note_recovery_failure", "args": {"error": {"var": "recovery_error"}}}]
+                }
+              ]
+            },
+            {"call": "current_result", "store": "failure_result"},
+            {"return": {"var": "failure_result"}}
+          ]
+        }
+      ]
+    }
+  ]
+}

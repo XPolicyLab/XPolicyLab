@@ -1,0 +1,31 @@
+{
+  "schema": "riemann-public-command-workflow-v1",
+  "execution": {
+    "executor": "deterministic_native",
+    "maximum_recovery_attempts_per_stage": 2,
+    "partial_irreversible_replay": false
+  },
+  "instruction_predicate": "visible_equation_missing_number_or_operator",
+  "stages": [
+    {
+      "id": "pick_source",
+      "skill": "equation_rule_boundary"
+    },
+    {
+      "id": "place_solution",
+      "skill": "equation_rule_boundary"
+    },
+    {
+      "id": "return_home",
+      "skill": "equation_rule_boundary"
+    }
+  ],
+  "view_skill": "equation_rule_boundary",
+  "recovery_skills": [],
+  "reference_source": "reset_head_rgb_fixed_camera_projection",
+  "model_reselection": false,
+  "original_execution_clocks_preserved": true,
+  "completion_is_official_success": false,
+  "official_action_budget_changed": false,
+  "official_action_limit": 300
+}

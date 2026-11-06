@@ -1,0 +1,22 @@
+{
+  "schema": "riemann-executable-workflow-v1",
+  "symbol": "Model.update_obs_batch",
+  "nodes": [
+    {
+      "kind": "if",
+      "condition": "len(obs_list) != 1",
+      "then": [
+        {
+          "kind": "operation",
+          "code": "raise NotImplementedError(f'SkyRobot_WAM runs with eval_batch: false (batch size 1); got batch of {len(obs_list)}')"
+        }
+      ],
+      "else": []
+    },
+    {
+      "kind": "operation",
+      "code": "self.update_obs(obs_list[0])"
+    }
+  ],
+  "scope": "frozen trusted policy control flow; never interpreted from observations or external logs"
+}
