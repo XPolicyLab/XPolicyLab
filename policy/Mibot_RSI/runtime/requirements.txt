@@ -1,0 +1,5 @@
+# Harness analysis/controller dependencies; RoboDojo/Isaac Lab are installed separately.
+numpy>=1.24,<3
+scipy>=1.10,<2
+Pillow>=10,<13
+opencv-python-headless>=4.8,<5
