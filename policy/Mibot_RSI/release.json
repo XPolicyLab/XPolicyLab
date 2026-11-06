@@ -1,17 +1,17 @@
 {
   "dataset": {
     "repo": "ffanyt/Mibot-RSI-knowledge",
-    "revision": "36cabc689dfb8d38cecf1c80583e8c4fa245c6aa"
+    "revision": "d6f8fd708fc6c1e4fcb57104754e8025b9d927e2"
   },
   "knowledge": {
     "ckpt_name": "eval",
     "general": {
       "archive": "knowledge/eval/general.tar.gz",
-      "bytes": 927330,
+      "bytes": 927432,
       "files": 50,
-      "manifest_sha256": "ad0e8997051fa067c009b8c3e2770c36f3bb43c6510c42a7cf1c038e2db89add",
-      "sha256": "499312c640a329ef2766b2c9881358ffd04673eb7a18f6d5f0250eaf8da7ed01",
-      "snapshot_id": "74d754fefa79f01e",
+      "manifest_sha256": "7898822ea386ae830744aa7c4245472f99dd0bd6733b7dd83b6967443ea9dbfc",
+      "sha256": "82707ebd1344a3dbc0830ec80689e5442adf6200be6bc8c56e327d2eb528216a",
+      "snapshot_id": "6c7e26c003443b68",
       "tasks": [
         "align_blocks",
         "classify_objects_by_language",
