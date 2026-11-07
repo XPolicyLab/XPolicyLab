@@ -1,14 +1,14 @@
 # Bagel-Robotics-1
 
-**Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [VPP2](https://github.com/roboterax/video-prediction-policy-2)
+**Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [Bagel-Robotics-1 implementation](.) · [Implementation source notices](THIRD_PARTY_NOTICES.md)
 
-Evaluation-only adapter for Bagel-Robotics-1 checkpoint 1000, combining mask-based
-structured pruning and recovery with a dataset subset focused on critically
-important segments of each task. We evaluate the approach using VPP2 as the base
-model; `runtime/` contains an adapted VPP2 inference runtime and compact loader,
-with upstream attribution retained. The video expert has 12,468,409,664 parameters,
-23.95% fewer than the recorded 16,394,878,784-parameter parent video expert,
-while Action2B remains unchanged.
+Bagel-Robotics-1 is Bagel Labs' approach to inference-friendly compact world-action
+models (WAMs), combining mask-based structured pruning and recovery training with
+effective selection of critically important task segments. We use VPP2 as the
+base model to validate this training and data-selection approach; bundled base-model
+components in `runtime/` are identified in the [source notices](THIRD_PARTY_NOTICES.md).
+The exported video expert has 12,468,409,664 parameters, 23.95% fewer than the
+recorded 16,394,878,784-parameter base video expert, while Action2B is retained.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](https://github.com/XPolicyLab/XPolicyLab/blob/main/README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -218,6 +218,11 @@ See [VALIDATION.md](VALIDATION.md) for capture/replay scope.
 
 ## Notes
 
+**Method contribution:** our training procedure combines structured pruning,
+recovery of the compact model, and effective selection of task-critical training
+data to produce an inference-friendly compact WAM. VPP2 serves as the validation
+base model for this approach.
+
 The approach combines two key components:
 
 - **Mask-based structured pruning and recovery:** produce physically smaller,
@@ -225,9 +230,8 @@ The approach combines two key components:
 - **Task-focused data selection:** use a subset containing critically important
   segments from each task for recovery, instead of the complete training dataset.
 
-The approach is intended for compatible WAM backbones; VPP2 is the base model used
-for this evaluation. The technical report will describe pruning, segment selection
-and recovery in detail.
+The approach is intended for compatible WAM backbones. The technical report will
+describe the pruning, segment-selection and recovery-training methodology in detail.
 
 The recorded research results cover all five suites:
 
