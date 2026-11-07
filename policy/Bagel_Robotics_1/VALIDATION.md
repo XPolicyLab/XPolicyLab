@@ -1,6 +1,6 @@
 # Adapter validation
 
-Status: **Technical qualification passed: 15 CPU tests, both real-checkpoint debug transports, four valid native simulator episodes, and all eight exact replay/backend checks. [PR #234](https://github.com/XPolicyLab/XPolicyLab/pull/234) is open. The dedicated private read credential is verified; delivery to an assigned evaluator remains a separate handoff. The technical report and training/pruning/export code are planned for November 20, 2026. Full official benchmark verification remains pending.**
+Status: **Technical qualification passed: 15 CPU tests, both real-checkpoint debug transports, four valid native simulator episodes, and all eight exact replay/backend checks. [PR #234](https://github.com/XPolicyLab/XPolicyLab/pull/234) is open. The checkpoint is public and ungated; no evaluator credential handoff is required. The technical report and training/pruning/export code are planned for November 20, 2026. Full official benchmark verification remains pending.**
 
 | Check | Evidence and scope |
 |---|---|
@@ -37,10 +37,20 @@ audit. CPU checks used Python 3.12.7 / PyTorch 2.11.0+cpu with existing test
 dependencies; they do not replace the earlier fresh Python 3.10.21 / CUDA 13.0
 installation and GPU qualification. Inference code and settings are unchanged.
 
-The reviewer guide now explicitly fetches the PR source and explains private
-authentication. A complete fresh-machine simulator/assets installation, different
+That audit used private authentication; the checkpoint is now public, as verified
+below. A complete fresh-machine simulator/assets installation, different
 GPU types, and a full five-suite packaged-adapter run have not been qualified by
 this audit.
+
+## Public checkpoint access (November 7, 2026)
+
+The checkpoint and all required encoder/tokenizer assets are publicly accessible
+without authentication. The published metadata downloader passed in an isolated
+empty cache with the submission-pinned `huggingface-hub==0.36.0` and no token.
+All four checkpoint JSON files matched their SHA-256 checksums; all 15 asset URLs
+passed anonymous ranged downloads and matched pinned remote identities and sizes.
+The checkpoint revision, hashes and inference settings are unchanged. Evidence:
+[public-checkpoint-access.json](evidence/public-checkpoint-access.json).
 
 ## Reproduce the transport checks
 

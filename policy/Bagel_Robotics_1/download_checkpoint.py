@@ -1,4 +1,4 @@
-"""Download the pinned existing private CP1000 artifact and public encoder assets."""
+"""Download the pinned public CP1000 artifact and encoder assets; no token required."""
 from pathlib import Path
 import argparse
 import json

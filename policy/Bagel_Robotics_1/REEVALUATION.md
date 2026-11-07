@@ -10,11 +10,10 @@ The only policy checkpoint is `cp1000`, from
 revision `2651631c5d08819088475e8778676f5cf6d9afcf`. The downloader and loader reject
 files that do not match `artifact-manifest.json`. The VAE, image/text encoders and
 tokenizer are downloaded automatically at their separately pinned public revision.
-The checkpoint is currently private. Obtain the dedicated repository-only read
-credential through the agreed private channel and set `HF_TOKEN` securely as
-shown in the README before running the downloader. Public release is pending an
-organization administrator visibility change; anonymous checkpoint access will
-work only after that change. The required encoder assets are public.
+The checkpoint and required encoder assets are public and ungated. No Hugging
+Face account, access token or evaluator access approval is required. Run the
+downloader directly as shown in the README; the pinned revisions and checksum
+checks are unchanged.
 
 ## What a reviewer can reproduce
 
@@ -140,7 +139,7 @@ by these commands. Official verification and acceptance remain with RoboDojo.
 
 | Symptom | Check |
 |---|---|
-| HTTP 401/403 or repository not found | The checkpoint repository is currently private. Set the supplied repository-only read token as `HF_TOKEN` and use the canonical repository and pinned revision. Removing authentication will not fix private access. After public release, anonymous access can be checked with the token unset. |
+| HTTP 401/403 or repository not found | Confirm the canonical repository and pinned revision above. Both repositories are public; no token is required. Retry with `HF_HUB_DISABLE_IMPLICIT_TOKEN=1` to exclude stale cached credentials, and check network/proxy access if the error persists. |
 | Hash/size mismatch | Check the pinned revision and local file completeness; do not disable verification. |
 | Missing encoder or tokenizer | Run the full downloader; `--metadata-only` does not fetch tensors or encoders. |
 | Missing `env_cfg` or simulator | Complete the official workspace setup; `env_cfg/` belongs beside XPolicyLab. |

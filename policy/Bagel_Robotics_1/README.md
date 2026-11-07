@@ -26,14 +26,10 @@ PYTHON_BIN=python3.10 bash install.sh "$BAGEL_POLICY_ENV"
 
 Keep these variables in the same shell. The installer sets up the standalone runtime, XPolicyLab and PyTorch 2.11 / torchvision 0.26 CUDA 13.0 wheels; `TORCH_INDEX_URL` overrides the wheel index. Tested setup: Python 3.10.21, PyTorch 2.11.0+cu130, RTX PRO 6000 Blackwell (96 GB), 128 GiB host RAM and eight CPUs.
 
-The [checkpoint repository](https://huggingface.co/bageldotcom/Bagel-Robotics-1) is private. Obtain the dedicated repository-only read token through the agreed evaluator channel, then download and verify all assets:
+The [checkpoint repository](https://huggingface.co/bageldotcom/Bagel-Robotics-1) is public and ungated. No Hugging Face account or access token is required. Download and verify all assets:
 
 ```bash
-set +x
-read -r -s -p 'Hugging Face read token: ' HF_TOKEN
-export HF_TOKEN
 PYTHON_BIN="$BAGEL_POLICY_ENV/bin/python" bash download_checkpoint.sh
-unset HF_TOKEN
 ```
 
 Allow approximately **45.7 GB** for checkpoint and encoder assets, plus cache and installation space. Every file is hash-verified. Optional `--metadata-only` checks four small JSON files; the full download is required for inference.

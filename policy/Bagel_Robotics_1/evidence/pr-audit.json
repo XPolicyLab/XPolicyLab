@@ -16,8 +16,11 @@
   "readiness_scope": "Opening a review PR; not maintainer acceptance or verified leaderboard publication",
   "remaining_gates": [
     "maintainer agreement on proposed eval-only integration and release timeline",
-    "assigned evaluator and private credential handoff",
     "official multi-seed evaluation and leaderboard review",
-    "public artifact release for verified leaderboard publication"
-  ]
+    "scheduled technical report and training/pruning/export code release"
+  ],
+  "public_checkpoint_access": {
+    "passed": true,
+    "evidence": "public-checkpoint-access.json"
+  }
 }

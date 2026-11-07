@@ -1,0 +1,187 @@
+{
+  "checked_at_utc": "2026-11-07T14:51:23.788607+00:00",
+  "repo_id": "bageldotcom/Bagel-Robotics-1",
+  "private": false,
+  "gated": false,
+  "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+  "checkpoint_identity": "790bffc9464fa7a026aa43b217aec2033d186895cad643166daa0bcc01914d5c",
+  "authentication": "No Authorization header for API/GET probes; token environment removed, isolated empty Hugging Face home/cache, and implicit token disabled for the published metadata downloader.",
+  "metadata_downloader": {
+    "passed": true,
+    "huggingface_hub": "0.36.0 (submission-pinned version)",
+    "fully_downloaded_and_sha256_verified": [
+      "COMPLETE.json",
+      "compact_architecture.json",
+      "dataset_stats.json",
+      "validation.json"
+    ]
+  },
+  "artifact_download_checks": [
+    {
+      "repo": "bageldotcom/Bagel-Robotics-1",
+      "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+      "file": "COMPLETE.json",
+      "size": 2491,
+      "sha256": "eee062fbcb8c92a881117aa7f06b5cd039dfb9912d85571b59a20aa30837b0e1",
+      "remote_identity": "0afb4065d4e25d28c0ae3e6ca1bdae7c2cbd1ae5",
+      "anonymous_get_status": 206,
+      "bytes_read": 2491,
+      "content_range": "bytes 0-2490/2491"
+    },
+    {
+      "repo": "bageldotcom/Bagel-Robotics-1",
+      "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+      "file": "action.pt",
+      "size": 4057916577,
+      "sha256": "9b04836abe5a30972e69ee84e5f5e39c09bf53dd45865551e1d04b42ead90ec3",
+      "remote_identity": "9b04836abe5a30972e69ee84e5f5e39c09bf53dd45865551e1d04b42ead90ec3",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/4057916577"
+    },
+    {
+      "repo": "bageldotcom/Bagel-Robotics-1",
+      "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+      "file": "compact_architecture.json",
+      "size": 6563270,
+      "sha256": "a7f6696ab9a9beca785531c2402b81ccd1550745cb6e9ccaad67f658630f6b32",
+      "remote_identity": "d49d2e581a33844e824bac2396a6e08d8719a151",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/6563270"
+    },
+    {
+      "repo": "bageldotcom/Bagel-Robotics-1",
+      "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+      "file": "dataset_stats.json",
+      "size": 100256,
+      "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16",
+      "remote_identity": "53027727e6b22c1817fe861b6a91c434d8d8473d",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/100256"
+    },
+    {
+      "repo": "bageldotcom/Bagel-Robotics-1",
+      "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+      "file": "validation.json",
+      "size": 88781,
+      "sha256": "9806ad2b0b58f879351da58eede46507a79433ec9e4eb8f37f415cf58f2ef70e",
+      "remote_identity": "0b71b75d4730d4a4b9c3f856330fbf2e27fa8abc",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/88781"
+    },
+    {
+      "repo": "bageldotcom/Bagel-Robotics-1",
+      "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+      "file": "video.pt",
+      "size": 24937214042,
+      "sha256": "fb62db0b3a74a53aeab60f4b1acc8a5be47274f5c9db166684043521fe2a40bb",
+      "remote_identity": "fb62db0b3a74a53aeab60f4b1acc8a5be47274f5c9db166684043521fe2a40bb",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/24937214042"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/LICENSE.txt",
+      "size": 11357,
+      "remote_identity": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "identity_algorithm": "git_blob_sha1",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/11357"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/Wan2.1_VAE.pth",
+      "size": 507609880,
+      "remote_identity": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+      "identity_algorithm": "sha256",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/507609880"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/config.json",
+      "size": 250,
+      "remote_identity": "f5a12b285ec9c2497cafc4a4443fc6ba61b1a30b",
+      "identity_algorithm": "git_blob_sha1",
+      "anonymous_get_status": 206,
+      "bytes_read": 250,
+      "content_range": "bytes 0-249/250"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/special_tokens_map.json",
+      "size": 6623,
+      "remote_identity": "14855e7052ffbb595057dfd791d293c1c940db2c",
+      "identity_algorithm": "git_blob_sha1",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/6623"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/spiece.model",
+      "size": 4548313,
+      "remote_identity": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+      "identity_algorithm": "sha256",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/4548313"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer.json",
+      "size": 16837417,
+      "remote_identity": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+      "identity_algorithm": "sha256",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/16837417"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer_config.json",
+      "size": 61728,
+      "remote_identity": "4e1cc1cd85599ce0b47fd0a746af188fe4043ff2",
+      "identity_algorithm": "git_blob_sha1",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/61728"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth",
+      "size": 4772359047,
+      "remote_identity": "628c9998b613391f193eb67ff68da9667d75f492911e4eb3decf23460a158c38",
+      "identity_algorithm": "sha256",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/4772359047"
+    },
+    {
+      "repo": "Haodong082399/VPP2",
+      "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+      "file": "checkpoints/Wan2.1-I2V-14B-480P/models_t5_umt5-xxl-enc-bf16.pth",
+      "size": 11361920418,
+      "remote_identity": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d",
+      "identity_algorithm": "sha256",
+      "anonymous_get_status": 206,
+      "bytes_read": 4096,
+      "content_range": "bytes 0-4095/11361920418"
+    }
+  ],
+  "scope": "Anonymous GET access and pinned remote identity/size checked for six checkpoint files and nine encoder/tokenizer assets. Four checkpoint JSON files downloaded fully and SHA-256 verified with the published downloader. Large tensors were range-probed, not downloaded and rehashed in full; earlier full tensor verification remains recorded in VALIDATION.md."
+}

@@ -6,7 +6,7 @@
   "video_parameters": 12468409664,
   "repo_id": "bageldotcom/Bagel-Robotics-1",
   "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
-  "private": true,
+  "private": false,
   "files": {
     "COMPLETE.json": {
       "sha256": "eee062fbcb8c92a881117aa7f06b5cd039dfb9912d85571b59a20aa30837b0e1",
