@@ -1,0 +1,5 @@
+opencv-python-headless==4.11.0.86
+websockets==16.1.1
+h5py==3.16.0
+PyYAML==6.0.3
+msgpack==1.2.3

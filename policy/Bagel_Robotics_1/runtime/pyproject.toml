@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bagel-cp1000-inference"
+version = "0.1.0"
+description = "Isolated inference runtime for Bagel-Robotics-1 recovery checkpoint 1000"
+requires-python = ">=3.10"
+license = "MIT AND Apache-2.0"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "licenses/*.txt"]
+dependencies = [
+  "torch==2.11.0", "torchvision==0.26.0", "numpy==1.26.4",
+  "transformers==4.49.0", "huggingface-hub==0.36.0", "hydra-core==1.3.2",
+  "omegaconf==2.3.0", "einops==0.8.1", "Pillow==12.0.0", "rich==14.2.0",
+  "safetensors==0.5.3", "ftfy==6.3.1", "regex>=2024.11", "sentencepiece>=0.2"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
