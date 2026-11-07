@@ -11,6 +11,8 @@ Bagel-Robotics-1 / AdaPrune Final, checkpoint 1000. Success means full task comp
 | Open§ | 16/400 | 4.00% | 4.48 |
 | **Equal-weight five-suite average** | **635/2,100 total; not the averaging formula** | **31.58%** | **38.55** |
 
+Reviewer files for **evaluation seed 1**: [native RoboDojo summary](evaluation/seed-1/summary.md) and [detailed breakdown](evaluation/seed-1/results-breakdown.md).
+
 ## Original scenes, repairs and replacements
 
 † Memory has 299 valid original results: 173 successes, **57.86% success and 58.19/100 partial**. Original sorting-sequence episode 47 remains unscored. Its separately repaired variant is a valid failure with score zero; the headline includes that variant, giving 300 reported outcomes. The repaired variant is not an unchanged-original result.
@@ -27,7 +29,7 @@ These totals contain **2,096 original results, three replacements and one repair
 
 Precision, Open and Long Horizon retain the original receipt hashes and replacement evidence in `evidence/local-results.json`. The completed five-suite calculation is in `evidence/five-suite-results.json`.
 
-Memory and nine Generalization tasks come from the user's supplied completed task summaries. Their raw episode logs were not independently re-audited during this packaging update. Stack blocks, store laptop/headphones and sort nesting dolls use node-2 receipts verified in the preceding results review, including successful original-layout retries. No new multi-seed estimate is implied.
+All 2,100 reported outcomes have now been cross-checked against retained native result files and completion records: 1,350 from Node 2, 450 Generalization outcomes from the Nebius archive, and 300 reported Memory outcomes (299 valid originals plus the separately repaired variant). All 42 task scores match the tables below. See [summary verification](evaluation/seed-1/verification.json); this supersedes the earlier note about pending raw-record review. These results cover evaluation seed 1.
 
 These results belong to the frozen research runner. Packaged-adapter debug, smoke and matched-action validation are reported separately in `VALIDATION.md`; research scores do not substitute for those tests. This is not an official leaderboard entry.
 

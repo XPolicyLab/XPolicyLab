@@ -111,3 +111,5 @@ The server launcher applies the recorded deterministic backend settings. Direct 
 ## Notes
 
 Reported five-suite research results: **31.58% success / 38.55 mean partial out of 100**, equally weighted across suites. [EVALUATION_RESULTS.md](EVALUATION_RESULTS.md) contains suite/task tables, source details and the three replacement scenes plus one repaired Memory variant. Official three-seed evaluation is pending.
+
+Reviewer files for **evaluation seed 1**: [RoboDojo summary](evaluation/seed-1/summary.md) and [detailed suite/task breakdown](evaluation/seed-1/results-breakdown.md), covering all 42 tasks and 2,100 reported outcomes.
