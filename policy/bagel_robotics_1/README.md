@@ -2,12 +2,13 @@
 
 **Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [VPP2](https://github.com/roboterax/video-prediction-policy-2)
 
-Evaluation-only adapter for Bagel-Robotics-1 checkpoint 1000. We use VPP2 as
-the base model to evaluate our mask-based structured pruning and recovery approach.
-The video expert has 12,468,409,664 parameters, 23.95% fewer than the recorded
-16,394,878,784-parameter parent video expert. Action2B remains unchanged. The
-`runtime/` directory vendors a minimal isolated inference runtime and compact
-loader.
+Evaluation-only adapter for Bagel-Robotics-1 checkpoint 1000, combining mask-based
+structured pruning and recovery with a dataset subset focused on critically
+important segments of each task. We evaluate the approach using VPP2 as the base
+model; `runtime/` contains an adapted VPP2 inference runtime and compact loader,
+with upstream attribution retained. The video expert has 12,468,409,664 parameters,
+23.95% fewer than the recorded 16,394,878,784-parameter parent video expert,
+while Action2B remains unchanged.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](https://github.com/XPolicyLab/XPolicyLab/blob/main/README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 
@@ -64,10 +65,15 @@ files, follow [Model Assets](#model-assets) instead. Continue to
 
 ## Data Processing
 
-No conversion is needed for inference. The research recovery run used a curated
-30,000-window RoboDojo EE16 export; training reproduction is outside this initial
-adapter. `process_data.sh` is intentionally omitted under the proposed eval-only
-exception. Inputs are decoded RGB arrays from XPolicyLab's shared server.
+No conversion is needed for inference. A key component of our approach is to use
+a dataset subset containing critically important segments from each task instead
+of the complete training dataset. The research recovery run used a curated,
+task-balanced 30,000-window RoboDojo EE16 subset.
+
+Training reproduction is outside this initial adapter. `process_data.sh` is
+intentionally omitted under the proposed eval-only exception. Inputs are decoded
+RGB arrays from XPolicyLab's shared server. The segment-selection procedure and
+recovery recipe will be described in the technical report.
 
 ## Training
 
@@ -199,11 +205,16 @@ See [VALIDATION.md](VALIDATION.md) for capture/replay scope.
 
 ## Notes
 
-Mask-based structured pruning and recovery produce physically smaller,
-nonuniform FFN and cross-attention layers. The method is intended for compatible
-WAM backbones; VPP2 is the base model used for this evaluation. The technical report will
-provide the detailed algorithm and recovery recipe.
+The approach combines two key components:
 
+- **Mask-based structured pruning and recovery:** produce physically smaller,
+  nonuniform FFN and cross-attention layers.
+- **Task-focused data selection:** use a subset containing critically important
+  segments from each task for recovery, instead of the complete training dataset.
+
+The approach is intended for compatible WAM backbones; VPP2 is the base model used
+for this evaluation. The technical report will describe pruning, segment selection
+and recovery in detail.
 
 The recorded research results cover all five suites:
 
