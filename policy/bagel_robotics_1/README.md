@@ -2,7 +2,7 @@
 
 **Contributor:** Bagel Labs | **Paper:** Technical report in preparation | **arXiv:** Not yet available | **Original code:** [Bagel-Robotics-1 implementation](.)
 
-Bagel-Robotics-1 combines mask-based structured pruning, recovery training and selection of important task segments to produce an inference-friendly compact WAM. VPP2 is the base model used to validate the approach; reused inference components are bundled in `runtime/` with [source notices](THIRD_PARTY_NOTICES.md). This adapter supports RoboDojo ARX X5 end-effector inference.
+Bagel-Robotics-1 combines mask-based structured pruning, recovery training and task-critical data selection to produce a compact WAM with nonuniform FFN widths and cross-attention head counts. Its inference pipeline predicts 32 actions, executes 16 before replanning, and applies 90/10 temporal ensembling. VPP2 is the validation base; reused components in `runtime/` are credited in the [source notices](THIRD_PARTY_NOTICES.md).
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](https://github.com/XPolicyLab/XPolicyLab/blob/main/README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
 

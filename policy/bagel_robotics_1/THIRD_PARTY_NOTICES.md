@@ -1,6 +1,6 @@
 # Source and artifact notices
 
-- Base-model inference components adapted from [VPP2](https://github.com/roboterax/video-prediction-policy-2)/FastWAM retain the MIT notice in
+- Reused source components from [VPP2](https://github.com/roboterax/video-prediction-policy-2)/FastWAM retain the MIT notice in
   `LICENSE`, copyright 2026 The FastWAM Authors. See `source-provenance.json`
   for the source identities and packaging changes.
 - Wan2.1/DiffSynth-derived model components retain Apache-2.0 terms; see
