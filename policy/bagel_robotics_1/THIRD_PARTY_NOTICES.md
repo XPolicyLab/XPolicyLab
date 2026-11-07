@@ -1,10 +1,5 @@
 # Source and artifact notices
 
-Bagel-Robotics-1's method contribution is the pruning/recovery training procedure
-and effective selection of task-critical data for an inference-friendly compact
-WAM. VPP2 is the base model used to validate that approach. The source notices
-below identify reused implementation components and their licenses.
-
 - Base-model inference components adapted from [VPP2](https://github.com/roboterax/video-prediction-policy-2)/FastWAM retain the MIT notice in
   `LICENSE`, copyright 2026 The FastWAM Authors. See `source-provenance.json`
   for the source identities and packaging changes.
