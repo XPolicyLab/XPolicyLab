@@ -1,4 +1,4 @@
-policy_name: bagel_robotics_1
+policy_name: Bagel_Robotics_1
 protocol: ws
 host: localhost
 port: null

@@ -12,8 +12,8 @@ import torch
 
 POLICY = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(POLICY.parents[2]))
-from XPolicyLab.policy.bagel_robotics_1 import assets, deploy
-from XPolicyLab.policy.bagel_robotics_1.temporal_ensemble import TemporalEnsemble
+from XPolicyLab.policy.Bagel_Robotics_1 import assets, deploy
+from XPolicyLab.policy.Bagel_Robotics_1.temporal_ensemble import TemporalEnsemble
 from bagel_cp1000.models.wan21_14b.helpers.compact_channels import build
 
 
@@ -110,7 +110,7 @@ class FakePolicy:
 
 
 def make_adapter(monkeypatch):
-    module = importlib.import_module("XPolicyLab.policy.bagel_robotics_1.model")
+    module = importlib.import_module("XPolicyLab.policy.Bagel_Robotics_1.model")
     runtime = importlib.import_module("bagel_cp1000.policy")
     cfg = assets.validate_settings({"checkpoint_path": "/unused/action.pt", "dataset_stats_path": "/unused/stats.json"})
     monkeypatch.setattr(module, "prepare_model_config", lambda c, p: cfg)

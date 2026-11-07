@@ -18,7 +18,7 @@ git -C "$BAGEL_XPL_ROOT" fetch https://github.com/XPolicyLab/XPolicyLab.git refs
 git -C "$BAGEL_XPL_ROOT" checkout --detach FETCH_HEAD
 git -C "$BAGEL_XPL_ROOT" rev-parse HEAD
 
-BAGEL_POLICY_DIR="$BAGEL_XPL_ROOT/policy/bagel_robotics_1"
+BAGEL_POLICY_DIR="$BAGEL_XPL_ROOT/policy/Bagel_Robotics_1"
 BAGEL_POLICY_ENV="$BAGEL_POLICY_DIR/.venv"
 cd "$BAGEL_POLICY_DIR"
 PYTHON_BIN=python3.10 bash install.sh "$BAGEL_POLICY_ENV"

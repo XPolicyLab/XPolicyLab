@@ -41,7 +41,7 @@ example selects GPU 0. Do not overwrite a scheduler's GPU visibility assignment.
 
 ```bash
 BAGEL_XPL_ROOT=/absolute/path/to/XPolicyLab
-BAGEL_POLICY_DIR="$BAGEL_XPL_ROOT/policy/bagel_robotics_1"
+BAGEL_POLICY_DIR="$BAGEL_XPL_ROOT/policy/Bagel_Robotics_1"
 BAGEL_POLICY_ENV="$BAGEL_POLICY_DIR/.venv"
 BAGEL_SIM_ROOT=/absolute/path/to/RoboDojo
 BAGEL_SIM_ENV=your_simulator_conda_env

@@ -33,9 +33,9 @@ def main():
             parser.error("--xpl-root is required")
         root = args.xpl_root.resolve()
         sys.path[:0] = [str(root.parent), str(root)]
-        module = importlib.import_module("XPolicyLab.policy.bagel_robotics_1.model")
+        module = importlib.import_module("XPolicyLab.policy.Bagel_Robotics_1.model")
         import yaml
-        config = yaml.safe_load((root / "policy/bagel_robotics_1/deploy.yml").read_text())
+        config = yaml.safe_load((root / "policy/Bagel_Robotics_1/deploy.yml").read_text())
         config.update(seed=1, bench_name="RoboDojo", env_cfg_type="arx_x5", action_type="ee",
                       ckpt_name="cp1000", task_name=None)
     model = module.Model(config)
