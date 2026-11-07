@@ -1,4 +1,4 @@
-# Checkpoint-1000 research evaluation results
+# Bagel-Robotics-1 results
 
 Bagel-Robotics-1 / AdaPrune Final, checkpoint 1000. Success means full task completion; partial scores average credited progress over all reported outcomes, including failures. Partial values here are out of 100. Generalization combines standard and randomized episodes; other suites use their recorded standard scene selections.
 
