@@ -1,0 +1,112 @@
+{
+  "schema": "bagel-cp1000-submission-v1",
+  "display_name": "Bagel-Robotics-1",
+  "checkpoint_identity": "790bffc9464fa7a026aa43b217aec2033d186895cad643166daa0bcc01914d5c",
+  "update": 1000,
+  "video_parameters": 12468409664,
+  "repo_id": "bageldotcom/Bagel-Robotics-1",
+  "revision": "2651631c5d08819088475e8778676f5cf6d9afcf",
+  "private": true,
+  "files": {
+    "COMPLETE.json": {
+      "sha256": "eee062fbcb8c92a881117aa7f06b5cd039dfb9912d85571b59a20aa30837b0e1",
+      "size": 2491
+    },
+    "action.pt": {
+      "sha256": "9b04836abe5a30972e69ee84e5f5e39c09bf53dd45865551e1d04b42ead90ec3",
+      "size": 4057916577
+    },
+    "compact_architecture.json": {
+      "sha256": "a7f6696ab9a9beca785531c2402b81ccd1550745cb6e9ccaad67f658630f6b32",
+      "size": 6563270
+    },
+    "dataset_stats.json": {
+      "sha256": "2649d4e3ff3d6d400c9953b7c20c79541474f9c38a8a9916b9caacecd8578f16",
+      "size": 100256
+    },
+    "validation.json": {
+      "sha256": "9806ad2b0b58f879351da58eede46507a79433ec9e4eb8f37f415cf58f2ef70e",
+      "size": 88781
+    },
+    "video.pt": {
+      "sha256": "fb62db0b3a74a53aeab60f4b1acc8a5be47274f5c9db166684043521fe2a40bb",
+      "size": 24937214042
+    }
+  },
+  "wan": {
+    "repo": "Haodong082399/VPP2",
+    "revision": "04824ddb3aae11f13db50984ed7d540c3b77dd9f",
+    "files": [
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/LICENSE.txt",
+        "blobId": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+        "size": 11357
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/Wan2.1_VAE.pth",
+        "blobId": "5897fba405232a6b07a947d6188d19a8e050ccfb",
+        "size": 507609880,
+        "lfs": {
+          "sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981",
+          "size": 507609880,
+          "pointerSize": 134
+        }
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/config.json",
+        "blobId": "f5a12b285ec9c2497cafc4a4443fc6ba61b1a30b",
+        "size": 250
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/special_tokens_map.json",
+        "blobId": "14855e7052ffbb595057dfd791d293c1c940db2c",
+        "size": 6623
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/spiece.model",
+        "blobId": "2fe5f347e9f9367585589ae89e997dfbd5cf802c",
+        "size": 4548313,
+        "lfs": {
+          "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458",
+          "size": 4548313,
+          "pointerSize": 132
+        }
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer.json",
+        "blobId": "7bd4ee3cf5633e49c0e06a3aac2a621559e6222a",
+        "size": 16837417,
+        "lfs": {
+          "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b",
+          "size": 16837417,
+          "pointerSize": 133
+        }
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/google/umt5-xxl/tokenizer_config.json",
+        "blobId": "4e1cc1cd85599ce0b47fd0a746af188fe4043ff2",
+        "size": 61728
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth",
+        "blobId": "cbdd1a5bd944b2b4c47e21435106316971ac76d8",
+        "size": 4772359047,
+        "lfs": {
+          "sha256": "628c9998b613391f193eb67ff68da9667d75f492911e4eb3decf23460a158c38",
+          "size": 4772359047,
+          "pointerSize": 135
+        }
+      },
+      {
+        "rfilename": "checkpoints/Wan2.1-I2V-14B-480P/models_t5_umt5-xxl-enc-bf16.pth",
+        "blobId": "d5dad910304ab4b909a2c8a225a71840606e6de4",
+        "size": 11361920418,
+        "lfs": {
+          "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d",
+          "size": 11361920418,
+          "pointerSize": 136
+        }
+      }
+    ]
+  }
+}

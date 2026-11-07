@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "checks": {
+    "reference_vs_packaged_0": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "reference_vs_packaged_1": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "reference_vs_packaged_2": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "captured_vs_packaged_0": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "captured_vs_packaged_1": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "reference_reset_A_to_B_to_A": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "packaged_reset_A_to_B_to_A": {
+      "passed": true,
+      "events": [
+        280,
+        280
+      ],
+      "max_abs_stored_array_difference": 0.0,
+      "difference_count": 0,
+      "differences": []
+    },
+    "matching_backend": {
+      "passed": true,
+      "reference": {
+        "torch": "2.11.0+cu130",
+        "cuda": "13.0",
+        "cudnn": 91900,
+        "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "deterministic": true,
+        "warn_only": false,
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "cudnn_tf32": true,
+        "matmul_tf32": false,
+        "matmul_precision": "highest"
+      },
+      "packaged": {
+        "torch": "2.11.0+cu130",
+        "cuda": "13.0",
+        "cudnn": 91900,
+        "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "deterministic": true,
+        "warn_only": false,
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "cudnn_tf32": true,
+        "matmul_tf32": false,
+        "matmul_precision": "highest"
+      }
+    }
+  },
+  "scope": "Same observations, seed 1, hardware and backend; not a benchmark score."
+}

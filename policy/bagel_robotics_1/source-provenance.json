@@ -1,0 +1,213 @@
+{
+  "reference_protocol": "83627b59eb149de1a7550edf5997418fa89b89905de1bd90ec9dbad66726af30",
+  "xpolicylab_base": "6baccd57ff958570d0db1588370289ee36c8bb70",
+  "files": [
+    {
+      "source": "__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "checkpoint_compat.py",
+      "source_sha256": "462c5f93812483b5871633b200bc2ffecb9c201a2caf6b14f8f36dbe95fba50a",
+      "packaged_sha256": "70e67d196cb46263677ebe873c5837657d6b8f90ca40cb6845f4782f5377ba2d"
+    },
+    {
+      "source": "data.py",
+      "source_sha256": "8574e1ae3c6ca6e4b84633ee1815f2b3f2ea17c1e55f12fda0b00c5c5a6a7b53",
+      "packaged_sha256": "8729d8e1386c74a0e3bd1c800a7c883725c9d00441f19bcbe7e40c2f8ff7af84"
+    },
+    {
+      "source": "datasets/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "datasets/lerobot/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "datasets/lerobot/processors/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "datasets/lerobot/processors/base_processor.py",
+      "source_sha256": "d3327cbe398d77761df960014d41e70d349bb0fa42bca874333b9ee970222447",
+      "packaged_sha256": "df79b044f93bcc9f4e93a2575ed5a7bc191595e3916753fcc26d3dd00db892c3"
+    },
+    {
+      "source": "datasets/lerobot/processors/vpp2_processor.py",
+      "source_sha256": "43c5604cbfc315b7377316cb97c9a6f3322124404397abfd01c6c3d0090cd414",
+      "packaged_sha256": "b00acaa43c3d18323f56ec9899b2de3ee5a7df8c2289ceea283725ca62aae773"
+    },
+    {
+      "source": "datasets/lerobot/transforms/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "datasets/lerobot/transforms/action_state_merger.py",
+      "source_sha256": "39fd44f254bd7fb71b9269d75d8f9b5a5bbbe167ea438dda92d40eda1d256734",
+      "packaged_sha256": "39fd44f254bd7fb71b9269d75d8f9b5a5bbbe167ea438dda92d40eda1d256734"
+    },
+    {
+      "source": "datasets/lerobot/transforms/image.py",
+      "source_sha256": "f494d262ce29770e959bdff60b997f7a07e5f00d10ef515eee7be813d1db038f",
+      "packaged_sha256": "f494d262ce29770e959bdff60b997f7a07e5f00d10ef515eee7be813d1db038f"
+    },
+    {
+      "source": "datasets/lerobot/utils/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "datasets/lerobot/utils/normalizer.py",
+      "source_sha256": "8207d813b698a91dfdbe6910a4aa1fe0e775a2a8edf5c05b2d7a42591e9f8adb",
+      "packaged_sha256": "28cedb2f4d69257a5f4da10e406dddba78ddd2a95408a9a55d6f74be5899d8dd"
+    },
+    {
+      "source": "models/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "models/wan21_14b/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "models/wan21_14b/action_dit.py",
+      "source_sha256": "9a654edd860ce77c1308923bd338c7f14d09f68686642531d7143c16b9f6f331",
+      "packaged_sha256": "780171144ff43f9282875af6c42a16db96b1f9ff56d01742a1024f7888fbb0fb"
+    },
+    {
+      "source": "models/wan21_14b/helpers/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "models/wan21_14b/helpers/compact_channels.py",
+      "source_sha256": "6f7ad787624844970985117002ab809bd777f7474969daca121e7101381c6d0c",
+      "packaged_sha256": "6f7ad787624844970985117002ab809bd777f7474969daca121e7101381c6d0c"
+    },
+    {
+      "source": "models/wan21_14b/helpers/gradient.py",
+      "source_sha256": "594249b6eb931048e352fd3ffef9b1ac1db9e4fc74659e04216d6b823dd174f3",
+      "packaged_sha256": "594249b6eb931048e352fd3ffef9b1ac1db9e4fc74659e04216d6b823dd174f3"
+    },
+    {
+      "source": "models/wan21_14b/helpers/io.py",
+      "source_sha256": "1b68cf2f2fd674c7a59140f8632d4464044bffc2e9277ef5f9a975e7c699966a",
+      "packaged_sha256": "39cb43aafb25c9046d19921cdddc6df2bae2b3eb267f5f1c271254dd216908e5"
+    },
+    {
+      "source": "models/wan21_14b/helpers/loader.py",
+      "source_sha256": "b9180b9c9177af192e5cb92387b4a09bd0dbc08fb75a94e843b67d315c94e339",
+      "packaged_sha256": "ce632db536b479c96a7160968eb314deb4e2dd1ab1b986e68f5dd8dea0ed6468"
+    },
+    {
+      "source": "models/wan21_14b/mot.py",
+      "source_sha256": "cc14a909bfb181a441bc9d8d6de12f3c31d89f3dc3415031e34a5f8c21410019",
+      "packaged_sha256": "5f42547a8571a2758ea6d4285834d5eaafc67285c6db42d44ec3c317e8402cc2"
+    },
+    {
+      "source": "models/wan21_14b/schedulers/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "models/wan21_14b/schedulers/scheduler_continuous.py",
+      "source_sha256": "15de04574c1d8ccb794ca6560b1e501e5c83cc86104bb80f1eb3cc3b0324ffe0",
+      "packaged_sha256": "15de04574c1d8ccb794ca6560b1e501e5c83cc86104bb80f1eb3cc3b0324ffe0"
+    },
+    {
+      "source": "models/wan21_14b/vpp2.py",
+      "source_sha256": "8c419af905a8ffa93d77c827a283b7aeff744f3a461c390783eef8a333c31756",
+      "packaged_sha256": "41e8632ad7898bf3a63cf7c874179adae609583ceb1b4dadf2b4c22669865323"
+    },
+    {
+      "source": "models/wan21_14b/wan21.py",
+      "source_sha256": "01b45cc71f69a6914f7b286559317c8e8485d0b0fec93bb28ebc37c183c295f4",
+      "packaged_sha256": "d203d5ec0f6c913b052e22202eff0fe238e087040ae0de9843b7a22a5533b5f3"
+    },
+    {
+      "source": "models/wan21_14b/wan_video_clip.py",
+      "source_sha256": "f65e44c9d1b7811d2996b3fa22e6fe4c2ac5e6edf1fc2c14251cf582bf8d1f05",
+      "packaged_sha256": "f65e44c9d1b7811d2996b3fa22e6fe4c2ac5e6edf1fc2c14251cf582bf8d1f05"
+    },
+    {
+      "source": "models/wan21_14b/wan_video_dit.py",
+      "source_sha256": "0d1b5837ea923508c05394d56aaa465813e7b4f5aea3b31ceceae39b2de9b0f9",
+      "packaged_sha256": "516b8dd09d576898c8760968ada4b617f5fe6a7c3fd945787898ae326df8e9a1"
+    },
+    {
+      "source": "models/wan21_14b/wan_video_text_encoder.py",
+      "source_sha256": "902a1e46b21b5c48e166fe03defabb94b3773c6bbe836fc09b9a0d0894eb1f6e",
+      "packaged_sha256": "902a1e46b21b5c48e166fe03defabb94b3773c6bbe836fc09b9a0d0894eb1f6e"
+    },
+    {
+      "source": "models/wan21_14b/wan_video_vae.py",
+      "source_sha256": "33f7d804677b44a6f3ab334684017dcdb1e9dfb748279de76ad94a5bb71a7e51",
+      "packaged_sha256": "33f7d804677b44a6f3ab334684017dcdb1e9dfb748279de76ad94a5bb71a7e51"
+    },
+    {
+      "source": "policy.py",
+      "source_sha256": "2a7696cd73ccb99575bf901185cf578c3775945f61f6e67aeb2b4ec6bfc4e30b",
+      "packaged_sha256": "35ca975c19a1290531c0027e5cf849ceabee724ff771ed4b49dd653c125c8deb"
+    },
+    {
+      "source": "runtime.py",
+      "source_sha256": "e26885a3732f5fdac3d8381da870a1673d0c03354f02f9deee7fe779d645f8a7",
+      "packaged_sha256": "dcf2942f3b9a02590902212b3c4f24b297c485ed0be65702ee540529dd4f55c0"
+    },
+    {
+      "source": "utils/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packaged_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "utils/logging_config.py",
+      "source_sha256": "1de4abf66d9d201b49e7bff48291643b9dc5ec9b6e7918ca73e1bd18887b1c43",
+      "packaged_sha256": "dd3afea396e0ba3e619a1a66121f3c41dd0ca4174e1cf1f9f459b200f23e2690"
+    },
+    {
+      "source": "utils/pytorch_utils.py",
+      "source_sha256": "9b0ba19de9a64458b12a0fb24f0811f49d9e9fca5d8b815f5f5ecd3b7886fd63",
+      "packaged_sha256": "9b0ba19de9a64458b12a0fb24f0811f49d9e9fca5d8b815f5f5ecd3b7886fd63"
+    }
+  ],
+  "packaging_changes": [
+    "Namespace isolation: vpp2 -> bagel_cp1000",
+    "Inference factory extraction; no trainer/data-processing imports",
+    "Compact-only strict loader; no dense/legacy fallback",
+    "Pinned artifact/config validation and shared robot-dimension lookup",
+    "Full reset for one-client deployment; stop actions at episode termination",
+    "Default replan corrected to 16; sampling/history/ensemble math retained",
+    "Recorded deterministic backend controls applied at startup",
+    "Remove unreachable adapter branches for unsupported action spaces; preserve EE16 math",
+    "Restore evaluated processor, image transform and action/state merger dependencies under the isolated namespace",
+    "Recursively map serialized Hydra targets to bagel_cp1000; preserve tensor keys and all non-target configuration values"
+  ],
+  "adapter_files": [
+    {
+      "source": "simulator/XPolicyLab/policy/VPP2/model.py",
+      "source_sha256": "699acc0c459c5997db4e3155e2b1b7eb64bf750552436074a369c4eb6e9ffef9",
+      "packaged_path": "model.py",
+      "packaged_sha256": "56418464b2a88e7aea31d436ee42851dfababad97db9178abdce318b5a7e621b"
+    },
+    {
+      "source": "simulator/XPolicyLab/policy/VPP2/deploy.py",
+      "source_sha256": "ab94a8569e6168ab7cde6660890035e11b34961ff2648854a7b61d188c555b6e",
+      "packaged_path": "deploy.py",
+      "packaged_sha256": "68f337b21b1e517e1df27550e64fbc542b644528adc8f3f47fb8e44849185af6"
+    },
+    {
+      "source": "simulator/XPolicyLab/policy/VPP2/temporal_ensemble.py",
+      "source_sha256": "42be4b09c56377f4686b2e722de760fa3bafd1c6b92605ada269d94e19efc95e",
+      "packaged_path": "temporal_ensemble.py",
+      "packaged_sha256": "42be4b09c56377f4686b2e722de760fa3bafd1c6b92605ada269d94e19efc95e"
+    }
+  ]
+}

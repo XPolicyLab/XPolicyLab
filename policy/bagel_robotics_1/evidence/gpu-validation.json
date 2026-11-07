@@ -1,0 +1,168 @@
+{
+  "passed": true,
+  "date_utc": "2026-11-06",
+  "public_model_name": "Bagel-Robotics-1",
+  "checkpoint": {
+    "update": 1000,
+    "identity": "790bffc9464fa7a026aa43b217aec2033d186895cad643166daa0bcc01914d5c",
+    "revision": "2651631c5d08819088475e8778676f5cf6d9afcf"
+  },
+  "source_revisions": {
+    "simulator": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+    "xpolicylab": "6baccd57ff958570d0db1588370289ee36c8bb70"
+  },
+  "adapter_code_integrity": {
+    "passed": true,
+    "files_checked": 57,
+    "manifest_sha256": "a97b59051c7c5c1652a21c2f0e60b745114551004234f46015ab1c1fb4aa32ad"
+  },
+  "debug": {
+    "passed": true,
+    "plain": true,
+    "encoded": true,
+    "job_id": "53609"
+  },
+  "simulator": {
+    "passed": true,
+    "seed": 1,
+    "errors": [],
+    "scope": "Adapter smoke test; not a complete suite or official score."
+  },
+  "simulator_tasks": {
+    "insert_tubes": {
+      "episodes": 2,
+      "successes": 2,
+      "success_rate_percent": 100,
+      "partial_score_100": 100.0,
+      "layouts": [
+        0,
+        1
+      ],
+      "details": [
+        {
+          "layout_id": 0,
+          "success": true,
+          "score": 1.0
+        },
+        {
+          "layout_id": 1,
+          "success": true,
+          "score": 1.0
+        }
+      ],
+      "result_sha256": "52f265125beb3fa9d1c040451392dd0762a9561d1105825712fda3fc84e10243",
+      "video_files": 6
+    },
+    "store_laptop_and_headphones": {
+      "episodes": 2,
+      "successes": 1,
+      "success_rate_percent": 50,
+      "partial_score_100": 60.0,
+      "layouts": [
+        0,
+        1
+      ],
+      "details": [
+        {
+          "layout_id": 0,
+          "success": true,
+          "score": 1.0
+        },
+        {
+          "layout_id": 1,
+          "success": false,
+          "score": 0.2
+        }
+      ],
+      "result_sha256": "95e73d2f069cf0f3d9418e654206afda6a6670ec8a9b8661d232299349614f55",
+      "video_files": 6
+    }
+  },
+  "replay": {
+    "passed": true,
+    "fixtures": [
+      {
+        "task": "insert_tubes",
+        "coverage": {
+          "observations": 209,
+          "action_chunks": 14,
+          "history_mature": true,
+          "capture_limit": 209
+        },
+        "trace_sha256": "e4956cf7959ea7fa0f261d8395e6c6387b1329dcbcfe99e2e3dd200b5632217f"
+      },
+      {
+        "task": "store_laptop_and_headphones",
+        "coverage": {
+          "observations": 209,
+          "action_chunks": 14,
+          "history_mature": true,
+          "capture_limit": 209
+        },
+        "trace_sha256": "5174d8b3ac7565a38e913813c4c9d3f4a58077ac2dffd0276d1383781ca011e1"
+      }
+    ],
+    "order": [
+      "A",
+      "B",
+      "A"
+    ],
+    "observations_per_run": 209,
+    "chunks_per_run": 14,
+    "runs_per_implementation": 3,
+    "checks": 8,
+    "recorded_differences": 0,
+    "max_abs_stored_array_difference": 0.0
+  },
+  "jobs": [
+    {
+      "JobID": "53541",
+      "State": "FAILED",
+      "ExitCode": "1:0",
+      "Elapsed": "00:01:13"
+    },
+    {
+      "JobID": "53542",
+      "State": "CANCELLED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:00:00"
+    },
+    {
+      "JobID": "53609",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:02:20"
+    },
+    {
+      "JobID": "53610",
+      "State": "FAILED",
+      "ExitCode": "1:0",
+      "Elapsed": "00:01:08"
+    },
+    {
+      "JobID": "53611",
+      "State": "FAILED",
+      "ExitCode": "55:0",
+      "Elapsed": "00:01:09"
+    },
+    {
+      "JobID": "53612",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Elapsed": "00:15:45"
+    }
+  ],
+  "scope": "Technical package qualification on the recorded backend. Four smoke episodes are separate from historical suite results; this is not official leaderboard evaluation.",
+  "simulator_launch_adjustments": [
+    "Established noninteractive Kit setting",
+    "User-owned portable Kit cache via a recorded launcher-only patch",
+    "Read-path bridge to native eval_result; no result contents changed"
+  ],
+  "receipts": {
+    "simulator-result.json": "360a928cbffca156e08f461a9b5a810cc648a9c4de72121089563e21b60937c3",
+    "action-comparison.json": "6110ad701ed4c7dd9768b61add6df64ace15c7109ccafdace4ea8ab8934b23cb",
+    "gpu-validation-result.json": "46b138b64700468bdef996abd972395502cddaf2ca25eb0dccd39b710345b070",
+    "adapter-integrity-after.json": "4b463b710cd3f1724789121005167f8b22a369ddd7c151f9a5501e448fb2cbae",
+    "slurm-final.json": "766906b88c3153fb1abb641579302b9639234ccac995015bcb58ead33622344d"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "errors": [],
+  "python_files": 50,
+  "shell_scripts": 5,
+  "cpu_tests": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "pr_template_headings_exact": true,
+  "gpu_qualification": "passed",
+  "ready_for_pr": true,
+  "pr_creation_blockers": [],
+  "readiness_scope": "Opening a review PR; not maintainer acceptance or verified leaderboard publication",
+  "remaining_gates": [
+    "maintainer agreement on proposed eval-only integration and release timeline",
+    "assigned evaluator and private credential handoff",
+    "official multi-seed evaluation and leaderboard review",
+    "public artifact release for verified leaderboard publication"
+  ]
+}
