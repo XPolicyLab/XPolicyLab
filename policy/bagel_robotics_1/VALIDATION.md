@@ -1,6 +1,6 @@
 # Adapter validation
 
-Status: **Technical qualification passed: 15 CPU tests, both real-checkpoint debug transports, four valid native simulator episodes, and all eight exact replay/backend checks. The technical report and training/pruning/export code are planned for November 20, 2026; evaluator access and user review remain before submission.**
+Status: **Technical qualification passed: 15 CPU tests, both real-checkpoint debug transports, four valid native simulator episodes, and all eight exact replay/backend checks. [PR #234](https://github.com/XPolicyLab/XPolicyLab/pull/234) is open. The dedicated private read credential is verified; delivery to an assigned evaluator remains a separate handoff. The technical report and training/pruning/export code are planned for November 20, 2026. Full official benchmark verification remains pending.**
 
 | Check | Evidence and scope |
 |---|---|
@@ -21,6 +21,26 @@ Simulator validation checkout: `f57e1633ffed59761bc8e568cfe7530c4b33381c`.
 Two real recordings of 209 observations / 14 action chunks each were replayed in A/B/A order, giving 42 chunks per implementation. Reference-versus-package, original-capture-versus-replay, reset and backend checks all passed with zero recorded differences. Evidence: `evidence/gpu-validation.json` and `evidence/action-comparison.json`. Equality is established for these fixtures on PyTorch 2.11.0+cu130 and NVIDIA RTX PRO 6000 Blackwell, not every input or backend.
 
 The original Store laptop/headphones layout 1 failed with 0.2/1 partial and is retained. Debug completion is an interface check; four simulator smoke episodes do not establish full-suite performance. Historical research scores are separately documented in EVALUATION_RESULTS.md.
+
+## Reviewer workflow audit (November 7, 2026)
+
+A fresh regular-file snapshot of submitted commit
+`a08a40fb01664cfe5411a02d723f9e0af7233683` passed all 15 CPU contract tests with
+zero skips after the published metadata downloader fetched and verified the
+four pinned JSON files. This check used only the dedicated reviewer credential
+and an empty Hugging Face cache; no owner credential fallback was used.
+
+Authenticated metadata access also passed for both checkpoint tensors and all
+nine public dependency files, matching pinned sizes and the appropriate remote
+LFS SHA-256 or Git blob identity. Large tensors were not downloaded again in this
+audit. CPU checks used Python 3.12.7 / PyTorch 2.11.0+cpu with existing test
+dependencies; they do not replace the earlier fresh Python 3.10.21 / CUDA 13.0
+installation and GPU qualification. Inference code and settings are unchanged.
+
+The reviewer guide now explicitly fetches the PR source and explains private
+authentication. A complete fresh-machine simulator/assets installation, different
+GPU types, and a full five-suite packaged-adapter run have not been qualified by
+this audit.
 
 ## Reproduce the transport checks
 

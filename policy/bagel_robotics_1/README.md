@@ -19,6 +19,19 @@ workspace. `env_cfg/` belongs next to XPolicyLab, not inside the policy. Install
 RoboDojo and its simulator/assets separately using the
 [official installation guide](https://robodojo-benchmark.com/doc/usage/install-and-download/).
 
+Until this adapter is merged, fetch [PR #234](https://github.com/XPolicyLab/XPolicyLab/pull/234)
+into a dedicated reviewer checkout of XPolicyLab in that workspace. Replace the
+example path, and keep the printed commit SHA with the evaluation records:
+
+```bash
+git -C /absolute/path/to/XPolicyLab fetch https://github.com/XPolicyLab/XPolicyLab.git refs/pull/234/head
+git -C /absolute/path/to/XPolicyLab checkout --detach FETCH_HEAD
+git -C /absolute/path/to/XPolicyLab rev-parse HEAD
+```
+
+For an evaluation application that specifies a commit, check out that exact SHA
+after fetching. The upstream base commit alone does not contain this adapter.
+
 **1. Set paths and install the policy environment.** Replace the example checkout
 path below. Run the following sections in the same shell so these variables remain
 available. Use **Python 3.10**, the version used for the GPU qualification; set

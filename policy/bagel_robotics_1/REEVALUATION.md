@@ -10,7 +10,27 @@ The only policy checkpoint is `cp1000`, from
 revision `2651631c5d08819088475e8778676f5cf6d9afcf`. The downloader and loader reject
 files that do not match `artifact-manifest.json`. The VAE, image/text encoders and
 tokenizer are downloaded automatically at their separately pinned public revision.
-The checkpoint is prepared for public access, pending an organization administrator visibility change. Once public, it and the required encoder assets download without authentication.
+The checkpoint is currently private. Obtain the dedicated repository-only read
+credential through the agreed private channel and set `HF_TOKEN` securely as
+shown in the README before running the downloader. Public release is pending an
+organization administrator visibility change; anonymous checkpoint access will
+work only after that change. The required encoder assets are public.
+
+## What a reviewer can reproduce
+
+The adapter loads the pinned checkpoint and implements the recorded inference
+settings. Its completed qualification consists of both real-checkpoint debug
+transports, four native simulator episodes and eight exact comparison checks on
+two recorded observation sequences. The full five-suite research score table has
+not been rerun end to end through this packaged adapter.
+
+The commands below start a fresh official evaluation using supplied original
+layouts. They do not recreate the research run's three replacement scenes or one
+repaired Memory variant. Compare episode selection and seed coverage before
+comparing score totals; retain startup failures for committee review. The public
+comparison receipts describe the tested scope, but the original research runner
+and raw comparison fixtures are not included in this PR. They are not required to
+run a fresh evaluation with the packaged model.
 
 ## Set the local paths
 
@@ -120,7 +140,7 @@ by these commands. Official verification and acceptance remain with RoboDojo.
 
 | Symptom | Check |
 |---|---|
-| HTTP 401/403 or repository not found | Use the canonical public repository and pinned revision; retry without a stale cached credential (`HF_HUB_DISABLE_IMPLICIT_TOKEN=1`). |
+| HTTP 401/403 or repository not found | The checkpoint repository is currently private. Set the supplied repository-only read token as `HF_TOKEN` and use the canonical repository and pinned revision. Removing authentication will not fix private access. After public release, anonymous access can be checked with the token unset. |
 | Hash/size mismatch | Check the pinned revision and local file completeness; do not disable verification. |
 | Missing encoder or tokenizer | Run the full downloader; `--metadata-only` does not fetch tensors or encoders. |
 | Missing `env_cfg` or simulator | Complete the official workspace setup; `env_cfg/` belongs beside XPolicyLab. |
