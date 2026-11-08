@@ -8,7 +8,7 @@ start pose; for what the policy cannot do (picking the one object a name, a labe
 picture identifies) it writes Python programs that perceive (SAM 3 segmentation, the model's own look at the images), plan and move
 the arms through bounded skills. A reactive layer runs guards every control tick and a
 fixed shield checks every action.
-The agent is frozen in `agent.json` (identity `4b97417504695258`): the policy refuses to run
+The agent is frozen in `agent.json` (identity `c11a43695e5b46e5`): the policy refuses to run
 if the machine it lands on would resolve a different one.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).

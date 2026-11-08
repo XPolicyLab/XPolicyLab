@@ -11,7 +11,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "tests")]
 
-from harness_policy.runtime.events import Escalation  # noqa: E402
+from harness_policy.runtime.events import Escalation, Event, ExecutionTrace  # noqa: E402
 from harness_policy.runtime.kernel import restore_api  # noqa: E402
 from harness_policy.services import policy_server as session_module  # noqa: E402
 from harness_policy.geometry import DOWN, FORWARD, link6_for_tip  # noqa: E402
@@ -396,6 +396,72 @@ def pressing_session(worker):
 
 
 class PressTests(unittest.TestCase):
+    def counted_fixture(self, *, failing_move=None, down_kind="TIMEOUT"):
+        """Inject bounded event receipts, NOT simulator/evaluator results."""
+        s = pressing_session(FakeWorker(floor=.80 + .15 - .004))
+        s._counted_press = True
+        s.home = mock.Mock(side_effect=AssertionError("counted press must not home"))
+        quiet = s._quiet
+        moves = 0
+
+        def run(skill, *args, **kwargs):
+            nonlocal moves
+            if skill == s.move_eef:
+                moves += 1
+                if moves == failing_move:
+                    step = s.state["step"]
+                    return ExecutionTrace("move_eef", {}, step, step,
+                                          Event("TIMEOUT", "move_eef", {"injected": "lift failed"}, step))
+                result = quiet(skill, *args, **kwargs)
+                if "max_seconds" in kwargs:  # contact downstroke only
+                    result.event.kind = down_kind
+                return result
+            return quiet(skill, *args, **kwargs)
+
+        s._quiet = run
+        return s
+
+    def test_counted_contact_downstroke_timeout_is_complete(self):
+        s = self.counted_fixture()
+        result = s.press([-.1, -.1, .80], times=3)
+        self.assertEqual((result["ok"], result["count_complete"], result["presses"]), (True, True, 3))
+        self.assertTrue(result["button_triggered"])
+        self.assertTrue(result["arm_clear"])
+        self.assertTrue(all(c["released"] for c in result["cycles"]))
+        self.assertEqual([c["down"]["event"]["kind"] for c in result["cycles"]], ["TIMEOUT"] * 3)
+        s.home.assert_not_called()
+
+    def test_counted_last_lift_failure_does_not_erase_button_trigger(self):
+        s = self.counted_fixture(failing_move=4)  # above, contact, down, last lift
+        result = s.press([-.1, -.1, .80], times=1)
+        self.assertTrue(result["ok"], result)
+        self.assertEqual((result["count_complete"], result["button_triggered"], result["presses"]), (True, True, 1))
+        self.assertFalse(result["arm_clear"])
+        self.assertFalse(result["cycles"][0]["released"])
+        self.assertEqual(result["clearance_reason"], "final_lift_unverified")
+        self.assertEqual(result["clearance_receipt"]["event"]["kind"], "TIMEOUT")
+
+    def test_counted_intermediate_release_failure_remains_uncertain(self):
+        s = self.counted_fixture(failing_move=4)  # first repeat-lift, NOT last clearance
+        result = s.press([-.1, -.1, .80], times=3)
+        self.assertFalse(result["ok"], result)
+        self.assertFalse(result["count_complete"])
+        self.assertEqual(result["presses"], 1)
+        self.assertTrue(result["arm_clear"])  # successful final lift does not certify lost cycles
+        self.assertFalse(result["cycles"][0]["released"])
+        self.assertEqual(result["cycles"][0]["up"]["event"]["kind"], "TIMEOUT")
+
+    def test_counted_no_contact_or_unplanned_downstroke_is_not_complete(self):
+        s = pressing_session(FakeWorker())
+        s._counted_press = True
+        result = s.press([-.1, -.1, .80])
+        self.assertFalse(result["count_complete"])
+        self.assertFalse(result["button_triggered"])
+        s = self.counted_fixture(down_kind="SKILL_ERROR")
+        result = s.press([-.1, -.1, .80])
+        self.assertFalse(result["count_complete"])
+        self.assertEqual(result["presses"], 0)
+
     def test_presses_count_contacts_and_go_deeper_than_contact(self):
         worker = FakeWorker(floor=0.80 + 0.15 - 0.004)  # the button gives 4 mm below its top at 0.80
         s = pressing_session(worker)

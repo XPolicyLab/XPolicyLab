@@ -183,6 +183,13 @@ class EpisodeCore:
             return self._finish(ExecutionTrace(skill, parameters, step, step, Event(
                 ev.SKILL_ERROR, skill, {"reason": "call start(strategy, kind) first",
                                         "hint": self.strategy_hint}, step)))
+        if "complementary" in getattr(self, "skills", ()):
+            reason = self._ownership_guard(skill)
+            if reason:
+                step = self.state["step"]
+                result = self._comp_result(skill, False, reason, next_hop="failure_route")
+                return self._finish(ExecutionTrace(skill, parameters, step, step,
+                                                  Event(ev.SKILL_ERROR, skill, result, step)))
         if (self.__dict__.get("_handover_locked") and skill not in self.still_executions
                 and not self.__dict__.get("_wrapping_up")):
             step = self.state["step"]
@@ -229,13 +236,29 @@ class EpisodeCore:
             except ReactiveFault as fault:
                 event = Event(ev.REACTIVE_FAULT, fault.source, {"reason": fault.reason}, state["step"])
                 break
+            except Exception as error:
+                if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+                    self._comp_result(skill, False, "service_no_motion", motion=self.state["step"] != start,
+                                      receipt={"exception_type": type(error).__name__, "exception": str(error),
+                                               "start_tick": start, "end_tick": self.state["step"]},
+                                      next_hop="remeasure_no_motion" if self.state["step"] == start else "inspect_receipt_no_retry")
+                raise
             if target is None:
                 event = Event(ev.COMPLETED, skill, tick=state["step"])
                 break
             if isinstance(target, Event):
                 event = target
                 break
-            result = self._tick(target, cameras=cameras_at(tick) if cameras_at else None)
+            try:
+                result = self._tick(target, cameras=cameras_at(tick) if cameras_at else None)
+            except Exception as error:
+                if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+                    self._comp()["uncertain"] = True
+                    self._comp_result(skill, False, "motion_uncertain", motion="unknown",
+                                      receipt={"exception_type": type(error).__name__, "exception": str(error),
+                                               "start_tick": start, "last_observed_tick": self.state["step"]},
+                                      next_hop="inspect_receipt_no_retry")
+                raise
             shield = result["shield"]
             if not result["executed"]:
                 event = Event(ev.SHIELD_REJECTED, "shield", {"reasons": shield["reasons"]}, state["step"])

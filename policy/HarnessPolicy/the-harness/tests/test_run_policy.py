@@ -302,9 +302,9 @@ class StartTests(unittest.TestCase):
                 "Press the two red buttons the required number of times according to the number cards, then press the blue button to confirm.",
                 "Complete the equation by selecting the correct missing number or operator and placing it on the pad, then reset the robot arm.",
                 "Arrange the numbers from left to right to form the largest possible number, and place them on the pad.",
-                "Pick up the blue race toy car by 10 cm.",
             ],
             "simate": [
+                "Pick up the blue race toy car by 10 cm.",
                 "Sort the objects by category into the three baskets.",
                 "Stack the three blocks with different textures.",
                 "stack the blocks from bottom to top in the order ofblue, green, and red, then reset the robot arm.",

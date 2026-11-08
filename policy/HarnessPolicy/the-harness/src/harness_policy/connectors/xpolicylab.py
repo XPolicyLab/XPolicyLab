@@ -109,6 +109,8 @@ class Bridge:
         self.closed = False
         self._episode_of_id = None
         self._steps_at_reset = 0   # the step count of the episode host_reset just ended
+        self._ended_steps = {}     # host episode -> final count, retained across reset waves
+        self._outcome_episodes = {}  # evaluator token -> the host episode it claimed
 
     # -- the XPolicyLab side -------------------------------------------------------
 
@@ -116,7 +118,9 @@ class Bridge:
         """The client started a new episode: the session's episode ends, the observation and
         any pending action are dropped, and the shield forgets its last command."""
         with self.lock:
-            self._steps_at_reset = self.step
+            self._ended_steps[self.episode] = self.step
+            if self.obs is not None:
+                self._steps_at_reset = self.step
             self.episode += 1
             self.last_obs = self.obs if self.obs is not None else self.last_obs
             self.obs, self.pending, self.step = None, None, 0
@@ -390,14 +394,19 @@ class Bridge:
         return self._kinematics("/plan", {"arm": arm, "current": current, "pose": pose, "joints": joints, "raw": raw})
 
     def _call_claim_outcome(self, episode_id):
-        self.token = secrets.token_hex(16)
-        return {"token": self.token}
+        with self.lock:
+            self.token = secrets.token_hex(16)
+            self._outcome_episodes[self.token] = self._episode_of_id
+            return {"token": self.token}
 
     def _call_outcome(self, token):
-        # The host evaluates; a policy never learns the outcome. A reset already zeroed
-        # `step` for the next episode, so the ended episode's count is the one saved then.
+        # The host evaluates; a policy never learns the outcome. Slots removed from a
+        # batch are reset again by the next wave. A delayed driver may also read its
+        # outcome after the next driver has bound the bridge: use its token, not the
+        # most recent reset or the most recently bound episode.
         with self.lock:
-            steps = self.step if self._episode_of_id == self.episode else self._steps_at_reset
+            episode = self._outcome_episodes.get(token, self._episode_of_id)
+            steps = self.step if episode == self.episode else self._ended_steps.get(episode, self._steps_at_reset)
             closed = self.closed
         return {"success": None, "reward": None, "process_score": None, "terminated": None, "truncated": None,
                 "steps": steps, "host_scored": True, "closed": closed}

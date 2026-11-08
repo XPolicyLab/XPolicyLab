@@ -5,6 +5,349 @@ evidence for each change. A version changes the identity of every configuration,
 results name the version that produced them. Minor versions change what the agent
 does; patch versions fix it.
 
+## 1.15.0
+
+- H1 — counted confirmation is not a downstroke timeout: supplied R3 `swap_blocks`
+  evidence (`OUT wall-oss-codex-skills-55line-seed0-r3`) has official `_result`
+  success_rate=0 / score=0 on the first 20 layouts; finish buckets are approximately
+  confirm 10, facing 3, identity 1. Many `swap_confirm` receipts already had presses=1
+  and ok=True, followed by model-invented `confirmation_downstroke_timeout`/finish.
+  That string was not a code enum; the primary failure was receipt interpretation,
+  not the previously fixed `swap_plan` entry-dict API. Counted `press()` now separates
+  `button_triggered`/`count_complete` from `arm_clear`/`clearance_receipt`: established
+  contact, all requested downstrokes and all INTERMEDIATE releases certify the count,
+  even with bounded downstroke TIMEOUT. A failed FINAL lift cannot erase the count.
+  Preserve raw events, failed intermediate-release receipts and final-lift errors;
+  never overwrite a failed intermediate up-cycle with a later successful final lift.
+  `swap_confirm` commits that leg once and returns confirmed_legs plus explicit
+  `confirmation="counted_press_complete"`; per-turn reports include the frozen swap
+  legs, consumed attempts/corrections and confirmed count, without duplicating full
+  motion traces. Matching ORIGINAL successful counted receipts reject fabricated
+  count/confirmation timeout failures. Failed final clearance still blocks ALL next
+  motion until fresh evidence resolves it, without re-pressing or automatic retry.
+  A blocked next card/confirmation consumes no new press attempt while clearance
+  is uncertain; after observed resolution, only the not-yet-executed next press is allowed.
+- H2 — small facing error is a different measured action, not a replay: for a uniquely
+  tracked, released block at its frozen swap-leg destination with a newly measured
+  directed yaw error 0<abs(error)<=30deg, allow ONE explicit pick -> observe/rebind
+  held identity -> `orient_held` -> reseat -> observe -> confirm per leg. Two failed
+  placement checks do not consume this separate correction. Consume the correction
+  BEFORE motion, even when it fails; verify the same freshly rebound held identity,
+  directed yaw and frozen goal. No second correction, blind turn, false facing claim,
+  nearest-position identity substitution, WALL restart or silent retry. Occluded/
+  ambiguous identity, unknown counts, failed intermediate cap release and uncertain
+  pick/turn/release retain the complementary red lines. R3 also reported
+  `directed_orientation_unknown`, `placement_unverified`, `not held after the lift`
+  and `confirm_uncertain`; these changes do not claim to solve unobservable identity
+  or an actually failed grasp. Shared core wording is gated by complementary; no
+  default skill/config promotion, dependency change or simulator import.
+- These are behavior/prompt changes, hence minor version 1.15.0, not patch 1.14.1.
+  R3 evidence is user-supplied live diagnostics, not a new paired uplift. A fresh
+  frozen run must compare the same layouts/seeds/budget/model with the wrapped
+  learned policy and report repeated-run spread, failures in the denominator, calls
+  and cost per episode. Offline fixtures below are NOT closed-loop scores.
+- Next-run operations: Isaac GPU5/7 segfault(139) is a simulator crash, not a repaired
+  policy/driver problem. Start the next Isaac round on GPUs `1,2,3,4`; no driver or
+  CUDA changes here. The selective CLI default is corrected to `1,2,3,4` with an
+  explicit simulator-crash comment (it had drifted to `1,2,3,4,5,7` against its existing
+  regression test). Recommend a NEW frozen vendor export only, regenerating
+  agent.json/lock/identity and prompt/skill hashes together; do not hot-copy code
+  under a stale identity. Neither live `HarnessPolicyWallCodexSkills55` (no R2 suffix)
+  nor R2 was modified/exported in this change. No evaluation, paid API call, process
+  termination or git commit. Existing selective preflight pins 1.14.0 and scoreboard
+  accepts only through 1.14.0: update those version gates separately before a 1.15.0
+  launch/report; this change does not bypass them or create run authorization.
+- XPolicyLab handoff: the clean local fork at
+  `/pfs/echo_folder/weiyang/xpolicylab-harness-pr` still vendors agent 1.9.10 in
+  `policy/HarnessPolicy`; it was inspected read-only, not updated. Keep the one
+  `HarnessPolicy` adapter and regenerate its vendor/manifest/identity from repository
+  source for a future update; carry the counted receipt and measured facing tests,
+  declare WALL/complementary as optional, retain external WALL/SAM3 deploy semantics
+  and RGB/official-observation contract. Do not publish run artifacts or claim swap
+  uplift before frozen evaluation. This is handoff guidance, not a PR/push.
+- Validation in the `harness-policy` conda environment: literal discovery for
+  `test_complementary.py` 109 / OK; `test_session_skills.py` 35 / OK, including
+  `tests.test_session_skills.PressTests` 11 / OK; `test_wall_oss_selective.py` 13 / OK.
+  Regressions cover retained downstroke TIMEOUT plus complete count, failed final
+  clearance with confirmed leg/no next motion, non-consumption of a blocked next
+  confirmation, partial/unknown count no retry, preserved failed intermediate release,
+  three confirmations before completion, prompt rules, small measured facing recovery
+  after two checks, wrong/unknown held identity, large/undirected yaw, and consumed
+  failed-turn budget. Final `python -m unittest discover -s tests`: 613 tests,
+  7 skipped, only the previously documented
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes` failure
+  (`error` rather than `finished`). No library/isolation workaround. `git diff --check`
+  passes. The live no-R2 vendor's agent.json, model.py and complementary SHA256 remain
+  unchanged; the fork remains clean. No new closed-loop swap score is claimed.
+
+## 1.14.0
+
+- Floor-preservation hypothesis: remove `by 10 cm` from the shared VLA own-tools
+  gate. Native named-pickup instructions now route A/the learned policy, including
+  A/WALL with complementary enabled, rather than B-hard. Sync both learned-policy
+  and WALL prompts and method conformance; routing still uses public instruction
+  text only, never task IDs. Preserve all 1.13.1 `swap_plan` entry-dict/staging
+  compatibility and identity/orientation/empty-mat safety checks unchanged.
+- Non-hard xylophone, set-square align and planar T failure instructions now
+  explicitly request `failure_route(..., request="return_wall")` with fresh
+  empty/stable/exposed/reachable/measured evidence and no uncertain motion, BEFORE
+  exhausting local recovery or requesting terminal failure. Authorized return uses
+  the ORIGINAL instruction and BOTH arms, `from_anywhere=True`, no home/reset.
+  Known executed failed grasps retain their receipt and motion flag; unknown motion
+  or held tools do not grant return. No relaxed safety gates or automatic motion.
+  Equation/largest/number-card/basket hard semantics, memory, precision and visible
+  swap identity remain protected from WALL escape.
+- Evidence supplied from live 55line seed0: selective composite about 40 vs
+  conditional ceiling 55 (not a measured 55). `general_pickup` scored 32 vs
+  W/floor 72.7, with the old B-hard 10 cm gate, strict completion and grasp failures;
+  WALL already handles this task strongly. `play_Xylophone` about 0 vs floor 26
+  frequently ended honestly after `tool_contact_measurement_missing`, rarely
+  requesting return; `align_blocks` 0 vs floor 0 exposes set-square grasp/contact
+  gaps. `swap_blocks` 0 vs floor 18 motivated the retained 1.13.1 fix. Missing
+  press/push_T standard results followed GPU7 Isaac segfaults, not policy evidence.
+  These observations are mixed-source diagnostics, not paired uplift; repeated-run
+  spread, paired difference, calls and cost per episode remain unknown. No new
+  closed-loop result or default complementary promotion is claimed.
+- Selective preflight pins NEW 1.14.0 packages; checkout and machine launcher's
+  default GPUs are `1,2,3,4`, excluding 7. Scoreboard accepts frozen versions
+  1.13.0, 1.13.1 and 1.14.0 to read old OUT plus new R2, retaining chronological
+  latest-task replacement EVEN IF LOWER and the native failed/missing denominator.
+- R2 建议任务（保分优先）:
+  `swap_blocks,general_pickup,play_Xylophone,align_blocks,push_T,push_T_random,pack_objects_into_box,pack_objects_into_box_random,solve_equation`.
+  Defer `press_by_number` (floor 84; B unverified, rerunning risks replacing it
+  with 0), arrange/largest and language classify (hard semantics still forbid
+  WALL escape; placement/staging capability needs validation first). Both Gen
+  halves remain paired. This is a suggested subset, not the full Tier1 allowlist
+  or a command to run evaluations.
+- 不覆盖旧 vendor: live `HarnessPolicyWallCodexSkills55` and its existing outputs
+  remain untouched. The initial implementation started no export, evaluation, paid
+  API calls, process termination or git commit; R2 requires a NEW frozen vendor
+  and OUT namespace.
+- Validation in the harness-policy environment: complementary 100 tests / OK
+  (including the retained swap regressions), VLA/run_policy 21 / OK, WALL/route
+  23 / OK, selective/scoreboard 13 / OK; KFMem 8 / OK. Regression coverage includes
+  pickup A ownership, safe empty-handed tool/planar return, unknown-motion and
+  incomplete-boundary denial, preserved original instruction/both-arm enforcement,
+  all three scoreboard versions and lower new-R2 replacement of old OUT.
+  Full `python -m unittest discover -s tests`: 600 tests, 7 skipped, only the
+  previously documented `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  failure (`error` rather than `finished`). No isolation/resource workaround.
+  `git diff --check` and machine launcher `bash -n` pass. Live vendor agent.json,
+  model.py and complementary source SHA256 are unchanged. Offline tests are not
+  evaluation scores.
+- Failure-gate follow-up: add `tests/__init__.py` so the gate's literal
+  `import tests.test_complementary` resolves this checkout rather than an unrelated
+  site-packages `tests` package. Before this fix, the gate aborted with
+  `ModuleNotFoundError` before its swap/complementary assertions. The unchanged
+  gate check body now reports `GATE_PASS`: entry-dict swap regression 1 / OK and
+  complementary 100 / OK, plus version, pickup routing, prompt and external-deploy
+  assertions. Keep agent version 1.14.0; this test-import fix changes no policy.
+  Retire the existing Skills55R2 directory and re-export the same name/out with
+  `--vendor --allow-dirty`, retaining external WALL `ws://127.0.0.1:19012` and
+  SAM3 `http://127.0.0.1:8810`. Do not run the gate wrapper or create its PASS
+  authorization file; verification does not authorize evaluation. No new
+  closed-loop score, dependency change, service termination or git commit.
+
+## 1.13.1
+
+- Fix optional complementary `swap_plan` input compatibility: accept existing
+  ledger keys or bind identity_ledger-shaped entry dicts in the same call using
+  the same fresh identity, alias and directed-axis evidence checks. Binding
+  ambiguity/orientation failures retain distinct reasons; missing identity or
+  `identity_unique` not True remains `memory_identity_lost`/honest failure.
+  Accept measured staging xy sequences, position/xy dicts (first two coordinates),
+  and current locate object ids/object dicts; retain observed empty-mat, clearance,
+  >=0.08 m separation, reach and frozen three-leg checks. No nearest-position
+  relabeling, simulator imports, dependencies or default skill promotion.
+- Prompt recommends identity_ledger -> string-key swap_plan and documents direct
+  entry dicts with staging position dicts. Regression tests cover both API shapes,
+  all staging forms and fail-closed binding/measurement checks. These offline
+  contract tests do not establish new closed-loop scores.
+- Evidence: reported official 55line seed0 `swap_blocks` Success 0 / Fail 50,
+  score 0.0; 46/50 episodes finished `FAILED: memory_identity_lost` at steps=0.
+  The supplied episode-005 cell called swap_plan(entry_dict, entry_dict,
+  staging_position_dict) without identity_ledger. Previously `ledger.get(str(dict))`
+  treated the dict representation as a key and falsely reported identity loss.
+  Existing live `HarnessPolicyWallCodexSkills55` identity `772fb30f235c303a` is
+  not overwritten; any future rerun needs a new frozen vendor/result namespace.
+- Validation in the harness-policy environment: focused complementary discover
+  97 tests / OK (15 new swap regressions); related config/docs/skills/session/EEF/
+  WALL/selective-runner tests 129 / OK; full discover 593 tests, 7 skipped,
+  only the previously documented
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  failure (`error` rather than `finished`). The requested module-name invocation
+  was shadowed by site-packages/tests; discovery loads this checkout's tests.
+  No export/evaluation started. Existing selective preflight pins 1.13.0; a
+  future new 1.13.1 vendor needs its version gate updated before selective rerun,
+  not a hot edit of any live vendor.
+
+## 1.13.0
+
+- Extend optional complementary with four first-class, bounded APIs: exact restricted
+  Python arithmetic `equation_solve`, identity-preserving descending `largest_order`,
+  frozen left/middle/blue `read_cards`, and ledger-bound `place_on_pad` using existing
+  EE pick/release and one observed held-yaw segment. Reading helpers never move;
+  ambiguous/stale evidence fails closed. Pad release never commits completion:
+  fresh locate/rebind plus inside/seated/facing evidence is required. No precision
+  assemblers, simulator imports, dependencies, or default skill promotion added.
+- Prompt names these APIs and their evidence schemas. New offline tests cover
+  arithmetic grammar/OCR ambiguity, duplicate digit identity, card ordering/count
+  binding, pad reach/orientation/placement receipts and unknown-motion no-retry.
+  These are contract tests, not closed-loop uplift evidence.
+- Independent 55-line vendor and machine selective launcher/scoreboard leave live
+  1.12.0 identity `c5d8977de5701756` untouched. Composite is the official five-dimension
+  mean; non-rerun floors use public W and this machine's WALL/Codex history only.
+  Conditional Tier1 targets are not measurements or a frozen official result.
+  Evidence: 82 complementary + 10 tooling tests pass; full discover 578 tests,
+  7 skipped, only the previously documented library kernel-start failure remains.
+  Independent vendor identity `772fb30f235c303a`; read-only check passes identity,
+  fingerprint and external ports but all allowlisted GPUs/locks are busy: no run.
+
+## 1.12.1
+
+- Fix the optional WALL complementary package's premature staging failure. Transfer
+  plans prefer direct same-arm source/destination reach intersections, retain ready
+  legs when other items need staging, and return structured recoverable
+  `staging_required` / `unreachable_staging` blocked rows. A failed staging check
+  cannot turn remaining fresh, unmoved direct work into a step-zero capability finish.
+  The prompt transfers directs first, tries at most two measured central staging
+  spots for the remainder, and preserves the B-hard no-WALL-fallback/no-rewrite gate.
+- Separate KFMem task ownership from visible block-swap identity protection; generic
+  swap and number cards no longer imply KFMem memory. Swap remains B with no WALL
+  identity reset; swap T, kong/discard, cover, conveyor and imitation remain A.
+  Precision screws/tubes/charger/key/peg/tower retain A even with an own keyword.
+  Normal A policy slice timeouts always continue the same original-instruction WALL,
+  without watch_scene/home/clear_view between slices or a local retry-budget finish.
+- Distinguish missing mat/staging/contact/facing measurements from lost swap identity
+  and actual unsupported capabilities. Measured B failures can remeasure/change
+  action within the existing two-failure budget; unknown motion and irreversible
+  identity/count/confirm/spill failures remain fail-closed. No dependencies added.
+- Evidence: `wall-oss-codex-skills-seed0` language classification scored 0 (n=50).
+  `traces/classify_objects_by_language-20261108-071212-897616/episode-001/events.jsonl`
+  correctly binds baskets, rejects staging, then requests capability finish at
+  steps=0 without moving an object. The no-complement hack scored 23.67 (about 23.7,
+  n=30) using ordinary transfers: this is a complementary regression, not a WALL
+  baseline zero. Offline regression tests cover routing, partial plans, direct work,
+  continuous WALL and measured recovery; they are not new closed-loop scores.
+  Live 1.12.0 evaluation/export is left unchanged. See the experiment note and machine
+  `score-impact-after-1.12.1-fix.md` for conditional score arithmetic, not measured lift.
+
+## 1.12.0
+
+- WALL-OSS candidate only: enable the optional `complementary` capability package.
+  Native-instruction routing now gives A continuous original-instruction/both-arm
+  WALL ownership, B measured own complements or hard semantic ownership, and C a
+  single explicit fresh-RGB static-tail correction. Direct motion, policy escapes,
+  changed instructions, resets, unsupported precision/memory handovers and home
+  recovery are rejected. Default Simate behavior is not promoted or rewritten.
+- Add identity/directed-facing and category-transfer ledgers, all-item reach/staging
+  plans, measured planar translation/tangential rotation, real held-tool offset
+  contact strokes, held-yaw correction, exact per-card press/confirm receipts,
+  frozen empty-mat swap plans and once-only move confirmations. Eef complements
+  check closure/lift/release receipts and disable hidden park/retry paths. Release
+  success never commits placement; remeasurement plus explicit RGB postconditions
+  do. Press/confirm attempts are consumed before motion; uncertain counts never retry.
+- Every complement returns an event with failure reason, next hop, ownership,
+  episode/observation step, motion execution certainty and original receipts/errors.
+  Explicit once-only safe WALL fallback drops stale actions and reports REAL KFMem
+  restarts, not fabricated counters. Failed/unknown finish cannot invoke automatic
+  home. P2 fitting/stream/tracking and cooperative pen-holder manipulation without
+  a supported executor remain explicit capability failures, not new success claims.
+- The independent vendor/export and full native seed0 launch plan use Isaac/local
+  kinematics on physical 1/2/3/4/7, external WALL :19012, new result namespace,
+  nonblocking existing launch locks and read-only busy checks. No existing hack
+  process/package/results are stopped or overwritten. No dependencies added.
+- Evidence: prior trace diagnosis and public WALL/Astra references in the existing
+  recovery/hack documents; historical Simate paired table supports counted presses
+  and equation reading, not transfer of scores. New offline ownership/receipt/ledger
+  tests in `tests/test_complementary.py`, native WALL/KFMem and runner tests check
+  the mechanism. The machine design ledger targets 64.9208 (WALL reference 42.5868,
+  +22.3341); roughly 60 is a discounted development objective, not measured or paired
+  evidence. See `docs/experiments/wall-oss-skills.md` for checks and limitations.
+
+## 1.11.0
+
+- WALL-OSS ablation candidate only: hard instruction-text gates retain explicit
+  category-to-left/middle/right-basket and colour-bottle-to-colour-bowl bindings
+  on own tools for the entire episode. A/C switches, direct policy calls and
+  rewritten subtasks cannot bypass them. An episode-local latch survives a
+  later missing observation; no task IDs or hidden state enter the decision.
+  Default Simate's five gates and ordinary unnamed-destination sorting remain
+  unchanged. Hypothesis: preserving the language binding BEFORE any generic
+  policy motion leaves enough budget for measured transfers and ordered pours.
+- The WALL cell prompt now requires mapping -> locate source/destination ->
+  reach intersection -> confirmed pick -> release -> fresh placement check,
+  one transfer per cell, final empty-handed home only. Language pours use one
+  observed small motion at a time, checking the mouth and actual liquid, with
+  upright table placement between pairs. Non-language policy pours use 3-second
+  slices. Kong/screw/tower work forbids mid-task home/clear_view/reset; peg toys
+  require every visible piece seated on its correct peg, not a nearby pile.
+  No blind automatic pouring, millimetre assembly patch or dependency change.
+- New export/launch plan uses a separate policy and OUT, seed0/native on only
+  physical Isaac GPUs 1/2/3/4/7; local kinematics shares these cards and GPU5
+  stays the existing external WALL. Per-card health, occupancy and pending
+  launcher claims refuse launch; no kill, motion retry, result overwrite or
+  implicit resume. Check-only re-resolves the vendored identity/fingerprint
+  without starting services, creating results or making model calls.
+- Evidence and limitations: existing 1.9.9 trace diagnosis in
+  `docs/experiments/wall-oss-recovery.md`, actual public observation instruction
+  templates, and offline route/preflight tests (`tests/test_wall_oss.py`,
+  `tests/test_wall_oss_rerun.py`). Delivery checks and exact launch instructions
+  are recorded in `docs/experiments/wall-oss-hack.md`. This is an aggressive
+  unmeasured candidate, not a paired score improvement or default promotion.
+
+## 1.10.0
+
+- WALL-OSS ablation only: the cell note explicitly replaces episode-handover
+  guidance. Language-to-basket bindings use measured own-tool transfers from
+  the untouched pose; ordinary category sorting is unchanged. Ordered pours
+  get an early inspection and explicit pair order. Dynamic/precision policy
+  slices disable the stall heuristic and avoid mid-task home/reset. Completion
+  checks distinguish the three matching tiles plus reserve tile in a kong,
+  four occupied egg pockets plus lid, supported tower levels, and each packed
+  object's facing. A verifier error is unknown completion, never success.
+  No task-name table, new service, extra observations or default promotion.
+  These are trace-derived hypotheses, not measured score improvements.
+- Correct the incomplete 1.9.10 missing-frame fix: WALL's real server refuses
+  a new request at step >48 or a truncated dense ring, and sparse advances
+  beyond its executed prefix. After an own-tool interval, rebase memory wire
+  frame IDs to the current recorded frame, clear old keyframes, retain the
+  client RNG, and report `memory_restarts` in the execution trace. Host steps,
+  observations and action receipts remain unchanged. No fabricated history,
+  service restart or motion retry. Normal continuous 32/16 runs are unchanged.
+- Evidence: the seed-0 1.9.9 traces contain 49 temperature and 24 missing-frame
+  errors on fasten_screws, 34/23 on language sorting, and 13/6 on random packing
+  (15 completed traces at inspection). build_tower has 33 temperature errors
+  and 29 finish calls in 46 completed traces, often declaring success after a
+  failed verification. make_kong has 16 temperature errors but many full
+  policy-only failures: a verifier fix alone cannot explain recovery.
+  Episode counts in policy traces are NOT evaluator layout counts.
+- `test_kfmem.ServerProtocolTests` uses the existing WALL server's pure parser
+  (no model/GPU) to cover late starts, own-tool gaps, sparse advances, retained
+  boxes and continuation after rebasing. Native tests cover unchanged 32/16
+  motion and reported restart/no retry; outcome-binding tests remain passing.
+  Initial full discovery: 470 tests, 2 pre-existing failures, 7 skipped:
+  README generated tables omit existing dirty configs; library kernel startup
+  fails with `unshare: No space left on device`. Neither involves these fixes.
+  Final checks and score hypotheses: `docs/experiments/wall-oss-recovery.md`.
+
+## 1.9.11
+
+- XPolicyLab outcome step counts are now tied to the claimed evaluator token's
+  host episode. Removing a slot from a running batch, then resetting the next
+  wave, used to overwrite its saved count with zero. An old driver reading its
+  outcome after a new driver bound the bridge could instead get the new count.
+  Retain each ended episode's count across reset waves. This fixes diagnostics,
+  not RoboDojo's host-side scoring or motion execution; no motion is retried.
+- Evidence: `wall-oss-codex-seed0/traces/make_kong-20261107-185403-3400484/episode-001`
+  has a final policy slice starting at tick 491, samples through 597, but outcome
+  steps 0. High-scoring `cover_blocks` also has zero-step summaries. Before the
+  fix, `test_xpolicylab.OutcomeBindingTests` reproduced three failures: two
+  resets changed 600 to 0, a new binding changed the old token's 600 to 17,
+  and a genuinely zero-step next episode overwrote the old count. Tests also
+  cover close and retain genuine zero-step episodes. No live exported policy,
+  evaluator result, simulator process or model service is changed.
+
 ## 1.9.10
 
 - GPT 6.1 Sol rejects `temperature` 0. `verify` and `pick` go through

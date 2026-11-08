@@ -27,3 +27,16 @@ For pressing, ignore the general advice about small corrections. Each press
 is one firm down onto the cap, a little deeper than first contact, then one
 lift clear of it. Do not hunt in millimetre steps, and do not press extra
 times to be sure.
+
+When using complementary swap_confirm, ok=True, count_complete=True and receipt.presses=1
+means that leg's button press is confirmed. The bounded downstroke can end with TIMEOUT
+against the contacted cap; do not reinterpret it as a confirmation failure. Final arm
+clearance is separate: retain the confirmation, inspect any failed lift without retry,
+and do not move the next block until clearance is resolved. Partial/unknown counts are
+never re-pressed. After all three legs, verify the complete swap before finishing.
+
+A uniquely tracked, seated block with a fresh measured facing error of at most 30 degrees
+may get one explicit pick, observed held-identity orient_held correction, and reseating
+on the frozen leg mat before its button press. Two placement checks do not forbid this
+different corrective action. Re-observe after each motion; no silent retry, identity
+guess through occlusion, second correction, or confirmation before verified release/facing.

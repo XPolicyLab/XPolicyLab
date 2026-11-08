@@ -291,6 +291,70 @@ class BridgeTests(unittest.TestCase):
         self.assertIsNone(self.bridge.call("outcome", {"token": "x"})["success"])
 
 
+class OutcomeBindingTests(unittest.TestCase):
+    """Outcome receipts stay with their episode, even while its driver cleans up."""
+
+    def setUp(self):
+        from harness_policy.connectors.xpolicylab import Bridge
+
+        self.bridge = Bridge(EMBODIMENT, kinematics_url=None)
+        self.obs = {"state": {
+            f"{side}_{key}": value for side in ("left", "right") for key, value in (
+                ("arm_joint_state", [0.0] * 6), ("ee_joint_state", [0.0]),
+                ("ee_pose", [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0]))}}
+
+    def tearDown(self):
+        self.bridge.close()
+
+    def bind(self):
+        self.bridge.host_update_obs(self.obs)
+        observation = self.bridge.reset("make_kong", 0)
+        return self.bridge.call("claim_outcome", {"episode_id": observation.episode_id})["token"]
+
+    def steps(self, token):
+        return self.bridge.call("outcome", {"token": token})["steps"]
+
+    def test_repeated_host_reset_does_not_zero_the_finished_episode(self):
+        self.bridge.host_reset()
+        token = self.bind()
+        self.bridge.step = 600
+        self.bridge.host_reset()  # removed from the running batch
+        self.bridge.host_reset()  # next wave resets every slot again
+        self.assertEqual(self.steps(token), 600)
+
+    def test_old_token_does_not_read_the_next_episodes_steps(self):
+        self.bridge.host_reset()
+        old = self.bind()
+        self.bridge.step = 600
+        self.bridge.host_reset()
+        new = self.bind()
+        self.bridge.step = 17
+        self.assertEqual(self.steps(old), 600)
+        self.assertEqual(self.steps(new), 17)
+        self.bridge.host_reset()
+        self.assertEqual(self.steps(old), 600)
+        self.assertEqual(self.steps(new), 17)
+
+    def test_a_genuine_zero_step_episode_keeps_zero(self):
+        self.bridge.host_reset()
+        old = self.bind()
+        self.bridge.step = 600
+        self.bridge.host_reset()
+        new = self.bind()
+        self.bridge.host_reset()
+        self.assertEqual(self.steps(old), 600)
+        self.assertEqual(self.steps(new), 0)
+
+    def test_close_preserves_a_claimed_outcome(self):
+        self.bridge.host_reset()
+        token = self.bind()
+        self.bridge.step = 42
+        self.bridge.close()
+        outcome = self.bridge.call("outcome", {"token": token})
+        self.assertEqual(outcome["steps"], 42)
+        self.assertTrue(outcome["closed"])
+
+
 @unittest.skipUnless(HAS_IMAGES and shutil.which("git") and (ROOT / ".git").exists(),
                      "numpy, cv2 and a git checkout are needed")
 class ExportTests(unittest.TestCase):

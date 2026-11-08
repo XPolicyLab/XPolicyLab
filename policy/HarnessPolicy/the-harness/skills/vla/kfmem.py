@@ -104,6 +104,10 @@ class KFMemClientState:
         ):
             raise ValueError("invalid KFMem reset state")
         self.frames = {}
+        # Host steps stay unchanged in traces. Only the memory protocol's clock
+        # starts over after an unrecorded own-tool interval; never invent pixels.
+        self.frame_origin = 0
+        self.restarts = []
         self.mem_frame_ids = []
         self.mem_boxes = {}
         self.prev_sim_frame = None
@@ -125,7 +129,7 @@ class KFMemClientState:
             raise ValueError("frame image must be uint8 HWC3")
         self.frames[frame] = np.ascontiguousarray(image).copy()
 
-    def request_state(self, now):
+    def request_state(self, now, *, max_advance=16):
         """Everything the server needs to answer the request at ``now``."""
         if (
             type(now) is not int
@@ -136,34 +140,39 @@ class KFMemClientState:
         sparse = self.ring_plan is not None
         if sparse:
             # Only the frames the server reads; the model inputs are unchanged.
-            ring = needed_ring_frames(self.ring_plan, now, self.last_sel_frame)
+            ring = [f + self.frame_origin for f in needed_ring_frames(
+                self.ring_plan, now - self.frame_origin, self.last_sel_frame - self.frame_origin)]
         else:
-            ring = list(range(max(0, now - RING_FRAMES), now + 1))
-        if any(f not in self.frames for f in ring + self.mem_frame_ids):
-            # Own-tool steps between policy slices are not recorded. Continue
-            # from the frames we still have instead of failing the cell.
+            ring = list(range(max(self.frame_origin, now - RING_FRAMES), now + 1))
+        missing = any(f not in self.frames for f in ring + self.mem_frame_ids)
+        advanced = self.prev_sim_frame is not None and now - self.prev_sim_frame > max_advance
+        if missing or advanced:
+            # The server requires a full ring on the first request, frame <= 48,
+            # and later advances <= its executed prefix. A short ring at the
+            # original host step is NOT a valid restart. Rebase only wire IDs.
             if now not in self.frames:
                 raise ValueError("dense raw frames or memory frames are missing")
+            self.frame_origin = now
+            self.restarts.append({"host_step": now, "reason": "missing_frames" if missing else "advance_limit"})
             self.mem_frame_ids = []
             self.mem_boxes = {}
             self.prev_sim_frame = None
             self.ring_plan = None
-            self.last_sel_frame = self.consec_skip = self.dump_count = 0
-            start = now
-            while start - 1 >= max(0, now - RING_FRAMES) and (start - 1) in self.frames:
-                start -= 1
-            ring = list(range(start, now + 1))
+            self.last_sel_frame = now
+            self.consec_skip = self.dump_count = 0
+            ring = [now]
             sparse = False
+        origin = self.frame_origin
         state = {
             "version": 1,
-            "prev_sim_frame": self.prev_sim_frame,
-            "ring": [{"sim_frame": f, "face_view": self.frames[f]} for f in ring],
+            "prev_sim_frame": None if self.prev_sim_frame is None else self.prev_sim_frame - origin,
+            "ring": [{"sim_frame": f - origin, "face_view": self.frames[f]} for f in ring],
             "mem": [
-                {"sim_frame": f, "face_view": self.frames[f]}
+                {"sim_frame": f - origin, "face_view": self.frames[f]}
                 for f in self.mem_frame_ids
             ],
-            "mem_boxes": {str(f): list(box) for f, box in self.mem_boxes.items()},
-            "last_sel_frame": self.last_sel_frame,
+            "mem_boxes": {str(f - origin): list(box) for f, box in self.mem_boxes.items()},
+            "last_sel_frame": self.last_sel_frame - origin,
             "consec_skip": self.consec_skip,
             "dump_count": self.dump_count,
             "rng_state": self.rng_state,
@@ -177,12 +186,12 @@ class KFMemClientState:
         """Frames recorded since the last request (not sent in sparse-ring mode)."""
         if self.ring_plan is not None:
             return []
-        first = 1 if self.prev_sim_frame is None else self.prev_sim_frame + 1
+        first = self.frame_origin + 1 if self.prev_sim_frame is None else self.prev_sim_frame + 1
         span = range(first, now + 1)
         if any(frame not in self.frames for frame in span):
             return []
         return [
-            {"sim_frame": frame, "face_view": self.frames[frame]}
+            {"sim_frame": frame - self.frame_origin, "face_view": self.frames[frame]}
             for frame in span
         ]
 
@@ -192,6 +201,12 @@ class KFMemClientState:
             raise ValueError("invalid KFMem state version")
         now = state.get("prev_sim_frame")
         ids = state.get("mem_frame_ids")
+        if type(now) is not int or now < 0:
+            raise ValueError("invalid response anchor")
+        if not isinstance(ids, list) or any(type(f) is not int or f < 0 for f in ids):
+            raise ValueError("invalid causal memory frame IDs")
+        now += self.frame_origin
+        ids = [f + self.frame_origin for f in ids]
         if (
             type(now) is not int
             or now not in self.frames
@@ -214,20 +229,20 @@ class KFMemClientState:
                 not isinstance(key, str)
                 or not key.isdecimal()
                 or str(int(key)) != key
-                or int(key) not in ids
+                or int(key) + self.frame_origin not in ids
             ):
                 raise ValueError("box must reference a retained memory frame")
-            boxes[int(key)] = normalized_box(value)
+            boxes[int(key) + self.frame_origin] = normalized_box(value)
         counters = {}
         for name in ("last_sel_frame", "consec_skip", "dump_count"):
             value = state.get(name)
             if (
                 type(value) is not int
                 or value < 0
-                or (name == "last_sel_frame" and value > now)
+                or (name == "last_sel_frame" and value > now - self.frame_origin)
             ):
                 raise ValueError("invalid KFMem counter: " + name)
-            counters[name] = value
+            counters[name] = value + self.frame_origin if name == "last_sel_frame" else value
         rng = state.get("rng_state")
         if rng is not None and (not isinstance(rng, bytes) or not 0 < len(rng) <= 1 << 20):
             raise ValueError("invalid CUDA RNG state")

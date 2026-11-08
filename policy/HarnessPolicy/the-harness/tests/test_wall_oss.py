@@ -96,11 +96,19 @@ class CellSpanTests(unittest.TestCase):
         self.assertIsNone(s.__policy_to_end__())
 
     def test_a_read_still_stays_on_own_tools(self):
-        worker, policy = Worker(instruction="Pick the block up by 10 cm."), Policy()
+        worker, policy = Worker(instruction="Read the number cards."), Policy()
         s = session(worker, policy)
         s._policy_span = "cell"
         self.assertIsNone(s.start("A", "a read"))
         self.assertEqual(s._strategy["strategy"], "B")
+
+    def test_10cm_pickup_does_not_force_cell_owner_b(self):
+        worker, policy = Worker(instruction="Pick the block up by 10 cm."), Policy()
+        s = session(worker, policy)
+        s._policy_span = "cell"
+        self.assertIsNone(s.start("A", "pickup"))
+        self.assertEqual(s._strategy["strategy"], "A")
+        self.assertEqual(policy.calls, [])
 
 
 class NativeRunPolicyTests(unittest.TestCase):
@@ -158,6 +166,25 @@ class NativeRunPolicyTests(unittest.TestCase):
             s.start("A", "fixed")
         self.assertEqual(worker.actions, [])
         self.assertEqual(policy.calls, ["reset", "infer"])
+
+    def test_own_motion_gap_rebases_wire_frames_and_reports_restart_once(self):
+        worker, policy = NativeWorker(step_limit=500), KFPolicy()
+        s = native_session(worker, policy)
+        s._fixed_task_route = None
+        s._policy_span = "cell"
+        s.start("B", "bounded policy")
+        s.run_policy("wall-oss", max_seconds=0.2, stall_seconds=None)
+        before = len(worker.actions)
+        # A real own-tool interval invalidates the unused policy actions.
+        worker.step += 100
+        worker.joints[0] += 0.2
+        s.state = worker.state()
+        trace = s.run_policy("wall-oss", max_seconds=0.2, from_anywhere=True, stall_seconds=None)
+        self.assertEqual(policy.requests[-1]["sim_frame"], 0)
+        self.assertEqual(len(worker.actions) - before, trace.ticks)
+        self.assertEqual(trace.event.detail["memory_restarts"][0]["host_step"], 105)
+        self.assertEqual(policy.calls.count("reset"), 1)  # no global service reset or retry
+        self.assertGreaterEqual(trace.end_tick, 105)
 
     def test_own_route_keeps_existing_tools_and_forbids_policy_handover(self):
         worker, policy = Worker(instruction="Pick up the object."), Policy()
@@ -251,6 +278,83 @@ class NativeBridgeTests(unittest.TestCase):
 
 
 class RoutingTests(unittest.TestCase):
+    BASKET = ("Put fruit objects into the left basket, kitchen utensil objects into "
+              "the middle basket, and toy objects into the right basket, then reset the robot arm.")
+    POUR = ("Pour the liquid from the first turquoise bottle into the first brown bowl, "
+            "from the second violet bottle into the second black bowl, and from the third "
+            "red bottle into the third white bowl. Then reset the robot arm.")
+
+    def test_wall_language_gates_and_default_isolation(self):
+        positive = (self.BASKET, self.POUR,
+                    "Place metal items in the centre basket.",
+                    "Pour liquid from the green bottle into the purple bowl.")
+        for instruction in positive:
+            for text in (instruction, instruction.upper(), instruction.replace(" ", "\n")):
+                with self.subTest(instruction=text):
+                    self.assertEqual(route_instruction(text, wall_only=True), "own")
+                    self.assertEqual(route_instruction(text), "simate")
+        for instruction in ("", "classify_objects_by_language", "pour_by_language",
+                            "Sort the objects by category into baskets.",
+                            "Put fruit objects into a basket.",
+                            "Put objects into the left basket.",
+                            "Pour the liquid from the bottle into the bowl.",
+                            "Pour from the red bottle into the bowl.",
+                            "Put the red bottle in the white bowl.",
+                            "Place all stacking toy pieces onto the correct pegs."):
+            with self.subTest(instruction=instruction):
+                self.assertEqual(route_instruction(instruction, wall_only=True), "simate")
+
+    def test_wall_binding_rejects_policy_escape_before_service_or_motion(self):
+        for instruction in (self.BASKET, self.POUR):
+            worker, policy = Worker(instruction=instruction), Policy()
+            s = session(worker, policy)
+            s.policies = {"wall-oss": {"url": "ws://wall"}}
+            s._policy_clients = {"wall-oss": policy}
+            s._policy_span = "cell"
+            s._fixed_task_route = "wall-oss"  # original instruction gate takes precedence
+            with mock.patch("skills.vla.ensure") as ensure:
+                for strategy in ("A", "B", "C", "A"):
+                    self.assertIsNone(s.start(strategy, "attempt handover"))
+                    self.assertEqual(s._strategy["strategy"], "B")
+                for kwargs in ({}, {"instruction": "Sort the objects.", "reset": True},
+                               {"from_anywhere": True, "max_seconds": 1}):
+                    with self.subTest(kwargs=kwargs), self.assertRaisesRegex(ValueError, "own tools only"):
+                        s.run_policy("wall-oss", **kwargs)
+                worker.instruction = ""  # lost observation does not erase the original binding
+                self.assertIsNone(s.start("A", "try after missing instruction"))
+                with self.assertRaisesRegex(ValueError, "own tools only"):
+                    s.run_policy("wall-oss")
+                ensure.assert_not_called()
+            self.assertEqual(policy.calls, [])
+            self.assertEqual(worker.step, 0)
+
+    def test_direct_wall_call_also_checks_language_before_start(self):
+        s = session(Worker(instruction=self.POUR), Policy())
+        s.policies, s._policy_span = {"wall-oss": {"url": "ws://wall"}}, "cell"
+        with mock.patch("skills.vla.ensure") as ensure, self.assertRaisesRegex(ValueError, "own tools only"):
+            s.run_policy("wall-oss", instruction="A generic pour.")
+        ensure.assert_not_called()
+
+    def test_wall_gate_is_not_enabled_for_episode_span_or_other_policies(self):
+        for span, policies in (("episode", {"wall-oss": {}}),
+                               ("cell", {"simate": {}}),
+                               ("cell", {"wall-oss": {}, "simate": {}})):
+            s = session(Worker(instruction=self.BASKET), Policy())
+            s._policy_span, s.policies = span, policies
+            s.run_policy = mock.Mock()
+            s.start("A", "ordinary handover")
+            self.assertEqual(s._strategy["strategy"], "A")
+
+    def test_plain_classification_can_still_call_a_wall_slice(self):
+        worker, policy = NativeWorker(instruction="Sort the objects by category."), KFPolicy()
+        s = native_session(worker, policy)
+        s._fixed_task_route, s._policy_span = None, "cell"
+        s.start("B", "ordinary classification")
+        with tempfile.TemporaryDirectory() as temp, mock.patch.object(policy_server, "POLICY_LOCK_DIR", temp):
+            trace = s.run_policy("wall-oss", max_seconds=0.2, stall_seconds=None)
+        self.assertGreater(trace.ticks, 0)
+        self.assertEqual(policy.calls, ["reset", "infer"])
+
     def test_only_four_fixed_own_routes_and_random_inheritance(self):
         validate_task_routing(ROUTING, {"wall-oss": {}})
         for task in ROUTING["tasks"]:
@@ -267,10 +371,13 @@ class RoutingTests(unittest.TestCase):
             with self.subTest(routing=routing), self.assertRaises(ValueError):
                 validate_task_routing(routing, {"wall-oss": {}})
 
-    def test_default_still_uses_all_five_instruction_gates_not_task_ids(self):
+    def test_default_uses_four_semantic_instruction_gates_not_task_ids(self):
         for gate in ("number cards", "required number of times", "missing number or operator",
-                     "largest possible number", "by 10 cm"):
+                     "largest possible number"):
             self.assertEqual(route_instruction(gate.upper()), "own")
+        for wall_only in (False, True):
+            for text in ("by 10 cm", "Pick up the speckled ceramic dove by 10 cm."):
+                self.assertEqual(route_instruction(text, wall_only=wall_only), "simate")
         for task in ROUTING["tasks"]:
             self.assertEqual(route_instruction(task), "simate")
         for task in ("solve_equation", "stack_bowls"):

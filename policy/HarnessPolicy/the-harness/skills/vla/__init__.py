@@ -48,23 +48,60 @@ STRATEGIES = {"A": "hand the whole task to the learned policy and supervise it",
 # is handed to the policy.
 _OWN_TOOLS = re.compile(
     r"number cards|required number of times|missing number or operator|"
-    r"largest possible number|by 10 cm",
+    r"largest possible number",
+    re.IGNORECASE,
+)
+# WALL-only language bindings, matched on the observation's instruction, never
+# task_id. Category names are free text, not an evaluator category/task table.
+_WALL_BASKET_BINDING = re.compile(
+    r"\b(?:put|place|sort|classify)\s+(?:(?:the|all)\s+)?"
+    r"(?!(?:objects?|items?)\b)[\w-]+(?:\s+[\w-]+){0,4}\s+"
+    r"(?:objects?|items?)\s+(?:into|in)\s+(?:the\s+)?"
+    r"(?:left|middle|center|centre|right)(?:most)?\s+baskets?\b",
+    re.IGNORECASE,
+)
+_WALL_COLOUR_POUR = re.compile(
+    r"\bpour\b[\s\S]*?\bfrom\s+(?:the\s+)?"
+    r"(?:(?:first|second|third|1st|2nd|3rd)\s+)?"
+    r"(?:red|turquoise|violet|blue|green|yellow|orange|purple|pink|"
+    r"black|white|brown|cyan)\s+bottle\b[\s\S]*?\binto\s+(?:the\s+)?"
+    r"(?:(?:first|second|third|1st|2nd|3rd)\s+)?"
+    r"(?:red|turquoise|violet|blue|green|yellow|orange|purple|pink|"
+    r"black|white|brown|cyan)\s+bowl\b",
     re.IGNORECASE,
 )
 
 
-def route_instruction(instruction: str) -> str:
+def _wall_language_binding(instruction: str) -> bool:
+    return bool(instruction and (_WALL_BASKET_BINDING.search(instruction)
+                                 or _WALL_COLOUR_POUR.search(instruction)))
+
+
+def route_instruction(instruction: str, *, wall_only: bool = False) -> str:
     """`own` keeps the agent's tools for a read. `simate` hands the task to the policy.
 
     Empty text is `simate` (nothing asked for a read). The caller leaves a missing
     observation alone, so a fixture with no instruction is not rewritten.
+
+    The WALL cell ablation additionally keeps explicit category/basket and
+    colour/pour bindings on own tools. Named 10 cm pickups use the learned policy.
     """
-    if instruction and _OWN_TOOLS.search(instruction):
+    if instruction and (_OWN_TOOLS.search(instruction)
+                        or (wall_only and _wall_language_binding(instruction))):
         return "own"
     return "simate"
 
 
 class LearnedPolicies:
+    def _wall_binding_own_only(self, instruction):
+        if (getattr(self, "_policy_span", "episode") != "cell"
+                or set(self.policies) != {"wall-oss"}):
+            return False
+        if _wall_language_binding(instruction):
+            self.__dict__["_wall_language_own"] = True
+        # Episode-local latch: a later missing observation cannot reopen the gate.
+        return self.__dict__.get("_wall_language_own", False)
+
     def start(self, strategy, kind, policy=None):
         """Your first motion, once: the strategy for this task, from the learned policy's
         description (list_policies()), and the line of it the task matches (`kind`, in
@@ -79,6 +116,8 @@ class LearnedPolicies:
         B, A or C hands the task over after all (the policy's fresh run needs the start
         pose: home() first); other changes are refused. After A or C, later motions are
         refused and the policy runs on to the end of the episode."""
+        if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+            return self._complement_start(strategy, kind, policy)
         choice = str(strategy).strip().upper()
         if choice not in STRATEGIES:
             raise ValueError(f"strategy must be one of {sorted(STRATEGIES)}: "
@@ -91,7 +130,10 @@ class LearnedPolicies:
         # after B is the program handing over because its own tools failed; that one stands.
         # A cell span keeps the episode: the read gate still forces own tools, and
         # nothing else is rewritten into a handover.
-        if cell and instruction and not chosen and route_instruction(instruction) == "own":
+        if self._wall_binding_own_only(instruction):
+            choice, policy = "B", None  # also refuse a later A/C escape after own motion
+            kind = f"{kind} (WALL language binding: own tools only)"
+        elif cell and instruction and not chosen and route_instruction(instruction) == "own":
             choice = "B"
         elif fixed is not None:
             choice = "B" if fixed == "own" else "A"
@@ -183,9 +225,22 @@ class LearnedPolicies:
         after holding something steadily."""
         if name not in self.policies:
             raise ValueError(f"Unknown policy {name!r}; available: {sorted(self.policies)}")
+        complement = "complementary" in getattr(self, "skills", ()) and self._complement_enabled()
+        if complement:
+            if not self.__dict__.get("_strategy"):
+                self._complement_start("A", "direct policy call")
+            checked_arms = [arms] if isinstance(arms, str) else list(arms)
+            self._complement_policy_arguments(instruction, checked_arms, reset, region, until, from_anywhere)
+            stall_seconds = None
         fixed = getattr(self, "_fixed_task_route", None)
         if fixed == "own":
             raise ValueError("fixed ablation route uses own tools only")
+        if (getattr(self, "_policy_span", "episode") == "cell"
+                and set(self.policies) == {"wall-oss"}
+                and self._wall_binding_own_only(self._task_instruction())):
+            # Check the ORIGINAL instruction, not a run_policy subtask override.
+            # Reject before ensure/client/reset/infer or a possibly executed motion.
+            raise ValueError("WALL language binding uses own tools only")
         if fixed is not None and name != fixed:
             raise ValueError("fixed ablation route cannot change policy")
         native_ee = getattr(self, "_policy_action_mode", "joint") == "ee_passthrough"
@@ -261,7 +316,7 @@ class LearnedPolicies:
         # took over early (classify_objects 20 against Simate alone's 61.6, build_tower 30
         # against 87.4); a policy left to run with no check sorted for the whole 1100 steps
         # of classify_objects, leaving the tools nothing.
-        progress = None if fixed not in (None, "own") else self._progress_watch()
+        progress = None if complement or fixed not in (None, "own") else self._progress_watch()
         checks = progress.checks if progress is not None else None
         # Arms still from the start are waiting, not stalled (Simate watches the conveyor
         # of match_and_pick_from_conveyor before it reaches; the stall stop ended it at
@@ -302,8 +357,9 @@ class LearnedPolicies:
                 if not queue:
                     request = dict(observation)
                     request["task_id"] = observation.get("task_id") or self._kfmem.context_key
-                    request["sim_frame"] = frame
-                    request["kfmem_client_state_v1"] = self._kfmem.request_state(frame)
+                    request["kfmem_client_state_v1"] = self._kfmem.request_state(
+                        frame, max_advance=int(execute or 16))
+                    request["sim_frame"] = frame - self._kfmem.frame_origin
                     request["kfmem_history"] = self._kfmem.history(frame)
                     with policy_server_lock(config["url"]):
                         result = client.call("infer", request)
@@ -357,9 +413,16 @@ class LearnedPolicies:
         # The trace then ends with COMPLETED whose detail gives max_seconds (or stopped =
         # "stalled" or "no_progress").
         self.__dict__["_policy_ticking"] = True
+        memory_restarts = len(self._kfmem.restarts) if kfmem else 0
         try:
             trace = self._execute("run_policy", parameters, command, max_seconds, region, until,
                                   timeout_is_nominal=True)
+        except (ev.EpisodeEnded, ev.Escalation) as ended:
+            if kfmem and len(self._kfmem.restarts) > memory_restarts:
+                ended.trace.event.detail["memory_restarts"] = self._kfmem.restarts[memory_restarts:]
+            if complement:
+                self._complement_policy_feedback(ended.trace)
+            raise
         finally:
             self.__dict__["_policy_ticking"] = False
             if queue:
@@ -378,6 +441,10 @@ class LearnedPolicies:
             trace.event.detail["drops"] = drops
         if checks:
             trace.event.detail["progress_checks"] = dict(checks)
+        if kfmem and len(self._kfmem.restarts) > memory_restarts:
+            trace.event.detail["memory_restarts"] = self._kfmem.restarts[memory_restarts:]
+        if complement:
+            self._complement_policy_feedback(trace)
         return trace
 
     def __policy_to_end__(self):

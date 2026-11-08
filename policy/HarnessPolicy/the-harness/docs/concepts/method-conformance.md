@@ -30,7 +30,7 @@ applicable to the simulated benchmarks.
 | Closed-loop `pick(target)` / `place(target, arm)` by name (head camera finds, wrist camera looks closer, guarded descent, retries, intercepting a moving object) | skill `manipulation`: the `analytic-manipulation` ablation, R1's fixed skills and RoboTwin | unit tests; model-free pick/place bench in the simulator | ✓, not the default since agent 1.2.0: its pick held in 2 of 46 calls on the development comparison, the tools by object id scored 21.8 against 16.8 and 19.9 |
 | **Benchmark convention (RoboDojo):** most tasks count success only with both arms back at their start pose (`all_robot_back_to_origin`, 0.15 m / 20°) | after `finish()` or `<finish>` the driver runs `__wrap_up__()` in the kernel, which moves each arm to its start joints when the embodiment profile has `return_to_start` (RoboDojo yes, RoboTwin no); same for R0–R4 | unit test; bench episodes end with `wrap_up` events | ✓ implemented; **the paper should state it with the evaluation protocol** |
 | `run_policy` bounded and monitored; `predict_future` | Simate (the default since agent 1.3.0; G0.5 before); OpenWAM as a service, not in the agent since 1.5.0 (no 1.4 evaluation had it; `--set 'agent.services.world_models=["openwam"]'` adds it); since agent 1.4.0 the handed-over task runs uninterrupted (no model look between slices, no progress watch: stopping it early bought nothing, and measuring the scene while it ran may harm it, pour_liquid_into_cup 1 of 4 watched against 4 of 4 alone); the stall stop ends a run whose arms moved and stopped. Since 1.9.0 `post_policy_calls` is 0: after A or C the driver runs the policy on to the end of the episode and later motions in that program are refused. Since 1.9.1 a cell that hands the task over (`start(`, `run_policy(`, `__policy_to_end__`) uses the episode's remaining wall time; other cells stay at 1800 s | unit tests (`tests/test_run_policy.py`); `progress_checks` in each trace | ✓ (RoboTwin: no learned skill served) |
-| Division of labor: the program keeps what the learned skill cannot do, the learned skill whole tasks it was trained on | `start(strategy, kind)` (`skills/vla`), the rule in `prompts/robodojo/rules_learned.md`. Since 1.9.0, strategy B only when the instruction text is a read the policy cannot do: number cards or a counted press, a missing number or operator, digits arranged into the largest number, or a 10 cm lift of one named object (sorting by category into three baskets went back to the policy in 1.9.4). The runtime enforces that split on the instruction, not on a task name, and rewrites any other B to A. After A or C, later motions are refused and the policy runs to the end (`post_policy_calls` 0). Agent 1.4.2 had asked for B on a named, numbered, labelled or pictured object among still objects, and allowed 4 model calls after the policy's run | evaluation pack 0, paired with Simate alone on the same layouts (agent 1.4.1: 26.2 against 22.2, RoboDojo average); strategy and calls per episode in `summary.json` | ✓, changed: remembering stays with the learned skill (Simate keeps a memory of past frames: officially 56.0 on match_and_pick_from_conveyor, 100 on cover_blocks, 38.7 on swap_blocks; the agent's tools 0 on the first). **The paper's text should say so** |
+| Division of labor: the program keeps what the learned skill cannot do, the learned skill whole tasks it was trained on | `start(strategy, kind)` (`skills/vla`), the rule in `prompts/robodojo/rules_learned.md`. Since 1.14.0, the default instruction gates keep B only for number cards or a counted press, a missing number or operator, and digits arranged into the largest number. Named 10 cm pickup returns to A/the learned policy (reported 55line pickup 32 vs W/floor 72.7); sorting by category into three baskets returned to the policy in 1.9.4. The runtime enforces that split on the instruction, not on a task name, and rewrites any other B to A. Default episode-span A/C forbids later own motions and runs the policy to the end (`post_policy_calls` 0). The optional WALL cell/complementary configuration has separate enforced ownership: non-hard tool/planar failures request one safe original-instruction/both-arm WALL return before terminal failure; hard semantic bindings, memory, precision and identity-sensitive swaps cannot use it. Agent 1.4.2 had asked for B on a named, numbered, labelled or pictured object among still objects, and allowed 4 model calls after the policy's run | evaluation pack 0, paired with Simate alone on the same layouts (agent 1.4.1: 26.2 against 22.2, RoboDojo average); strategy and calls per episode in `summary.json`; 1.14.0 floor-preservation evidence is reported mixed-source, not paired uplift | ✓, changed: remembering stays with the learned skill (Simate keeps a memory of past frames: officially 56.0 on match_and_pick_from_conveyor, 100 on cover_blocks, 38.7 on swap_blocks; the agent's tools 0 on the first). **The paper's text should say so** |
 | `recall` read-only during evaluation | library `memory/` | unit tests | ✓ |
 | `depth_to_points` | – | – | – no depth in either benchmark's evaluation config |
 
@@ -72,6 +72,37 @@ applicable to the simulated benchmarks.
 | The evaluated agent is the submitted one | `agent.json` identity checked at start on the evaluator's machine; code fingerprint recorded | `tests/test_xpolicylab.py` | ✓ |
 
 ## One harness, any embodiment (§3.1, Tab. 2 of the CVPR draft)
+
+WALL-OSS recovery is an ablation, not the default episode-handover agent. Its
+cell-span program retains control; bounded policy slices and instruction-based
+language bindings do not expose task names or evaluator state. Version 1.11.0
+adds hard WALL-only instruction gates for category/basket and colour/pour
+bindings, including refusal of later policy escapes. The precision scripts
+remain observation-guided, not automatic millimetre assembly or blind pouring.
+These are trace-derived candidate rules without paired evidence for promotion.
+Client memory restarts rebase only protocol frames after unrecorded own-tool
+steps; simulator steps and action receipts stay original. The hypothesis,
+evidence boundaries and score sensitivity are in
+[WALL-OSS recovery](../experiments/wall-oss-recovery.md).
+The new independent export/healthy-GPU rerun plan is in
+[WALL-OSS language specialization](../experiments/wall-oss-hack.md).
+
+Version 1.12.0 adds an optional WALL-only `complementary` package, not a default
+promotion: real A/B/C motion permissions, explicit failure-next-hop events,
+fresh identity/directed-facing and transfer ledgers, planar and held-tool
+contact segments, per-card count/confirm and empty-mat swap receipts, one
+observed safe static-tail correction and once-only non-memory WALL fallback.
+Patch 1.12.1 preserves direct same-arm transfers in partial staging plans and makes
+measurement failures recoverable; normal WALL slice timeouts continue to host end.
+Visible block swaps are identity-sensitive B, not KFMem-memory, and still forbid
+WALL fallback after own motion; number-card reads remain B-hard, not A-memory.
+Image assertions are model interpretations, not ground truth; a motion receipt
+is not a score or proof of placement. Unsupported precision fitting, liquid
+stream tracking, dynamic target interception and cooperative holder manipulation
+are explicit capability gaps. Unknown/failed completion forbids home recovery,
+including automatic wrap-up. The 65-point ledger is an unmeasured design target;
+offline tests do not establish the roughly-60 run objective. Delivery evidence:
+[WALL complementary skills](../experiments/wall-oss-skills.md).
 
 | Claim | Implementation | Check | Status |
 |---|---|---|---|

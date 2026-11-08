@@ -39,6 +39,7 @@ and RoboTwin use those).
 
 import json
 import math
+import re
 import sys
 
 from harness_policy.geometry import TABLE_Z, at_border, down_with_yaw, mask_to_plane, pixel_ray, pixel_to_plane, \
@@ -136,6 +137,7 @@ class EefTools:
         if not names:
             raise ValueError('locate needs a description, e.g. "gray tape dispenser" or "red mug; white basket"')
         observation = self.get_observation(list(CAMERAS))
+        self.__dict__["_eef_measure_serial"] = self.__dict__.get("_eef_measure_serial", 0) + 1
         objects, outlines, notes = self._eef_scene_from(observation, names)
         # The names stay tracked: every turn re-measures them (turn_report).
         self.__dict__.update(_eef_names=names, _eef_measured={"step": self.state.get("step"), "outlines": outlines,
@@ -229,6 +231,7 @@ class EefTools:
             objects = self._eef_scene_objects()
         else:
             observation = self.get_observation(list(CAMERAS))
+            self.__dict__["_eef_measure_serial"] = self.__dict__.get("_eef_measure_serial", 0) + 1
             objects, outlines, notes = self._eef_scene_from(observation, names)
             self.__dict__["_eef_measured"] = {"step": self.state.get("step"), "outlines": outlines,
                                               "observation": observation}
@@ -400,6 +403,14 @@ class EefTools:
         tilted forward). lift: how far to rise (at least 0.10 m, plus half the width for an
         edge grasp). Returns {"ok", "arm", "object", "grasp", "grasp_point", "check",
         "reason"}; ok is whether the jaws hold it after the lift."""
+        if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+            instruction = self._comp()["route"]["instruction"]
+            if re.search(r"T-shaped block[\s\S]*?pad", instruction, re.I):
+                return self._comp_result("pick", False, "planar_T_no_lift", next_hop="planar_push")
+            if re.search(r"set square", instruction, re.I):
+                tool = self._eef_object(object)
+                if not re.search(r"set square", tool["name"], re.I):
+                    return self._comp_result("pick", False, "align_blocks_no_lift_use_set_square")
         arm = _arm_name(arm)
         obj = self._eef_object(object)
         if obj.get("held_by"):
@@ -440,11 +451,17 @@ class EefTools:
                 return {**result, "reason": f"the descent stopped: {trace.event.kind} {trace.event.detail}"}
             if trace.event.kind == "BLOCKED":  # contact: close where it is
                 break
-        self._eef_quiet(self.close_gripper, arm)
-        self._eef_quiet(self.hold, PICK_SETTLE_SECONDS)
+        closing = self._eef_quiet(self.close_gripper, arm)
+        if self.__dict__.get("_comp_active") and not closing.ok:
+            return {**result, "reason": "grasp closure failed", "receipt": closing.to_dict()}
+        settling = self._eef_quiet(self.hold, PICK_SETTLE_SECONDS)
+        if self.__dict__.get("_comp_active") and not settling.ok:
+            return {**result, "reason": "grasp settling failed", "receipt": settling.to_dict()}
         before = obj["position"]
-        self._eef_quiet(self.move_eef, arm, self.link6_for_tip([x, y, grasp_z + lift], orientation),
-                        speed=FREE_SPACE_SPEED)
+        lifting = self._eef_quiet(self.move_eef, arm, self.link6_for_tip([x, y, grasp_z + lift], orientation),
+                                  speed=FREE_SPACE_SPEED)
+        if self.__dict__.get("_comp_active") and not lifting.ok:
+            return {**result, "reason": "grasp lift failed", "receipt": lifting.to_dict()}
         held, check = self._eef_pick_check(obj, arm, lift)
         grips = self._eef_grips()
         if held:
@@ -662,6 +679,8 @@ class EefTools:
             trace = self._eef_travel(arm, [gx, gy, hover], orientation)
             if trace.ok:
                 break
+            if self.__dict__.get("_comp_active"):
+                return {**result, "reason": "release approach failed", "receipt": trace.to_dict()}
         if trace is None or not trace.ok:
             return {**result, "reason": f"could not get above the spot: {trace.event.kind if trace else 'no height'}"}
         lower = [release_z + SLOW_LOWER_M] + [round(release_z + d, 4) for d in (0.02, 0.01, 0.0)]
@@ -671,11 +690,19 @@ class EefTools:
             trace = self._eef_quiet(self.move_eef, arm, self.link6_for_tip([gx, gy, z], orientation))
             if trace.event.kind == "BLOCKED":  # it touched down
                 break
-        self._eef_quiet(self.open_gripper, arm)
+            if self.__dict__.get("_comp_active") and not trace.ok:
+                return {**result, "reason": "release descent failed", "receipt": trace.to_dict()}
+        opening = self._eef_quiet(self.open_gripper, arm)
+        if self.__dict__.get("_comp_active") and not opening.ok:
+            return {**result, "reason": "release opening failed", "receipt": opening.to_dict()}
         top = self._eef_tip(arm)[2]
-        self._eef_quiet(self.move_eef, arm, self.link6_for_tip([gx, gy, top + CLEAR_M], orientation))
-        self._eef_quiet(self.move_eef, arm, self.link6_for_tip([gx, gy, top + DEFAULT_LIFT_M], orientation),
+        clearing = self._eef_quiet(self.move_eef, arm, self.link6_for_tip([gx, gy, top + CLEAR_M], orientation))
+        if self.__dict__.get("_comp_active") and not clearing.ok:
+            return {**result, "reason": "release clearing failed", "receipt": clearing.to_dict()}
+        rising = self._eef_quiet(self.move_eef, arm, self.link6_for_tip([gx, gy, top + DEFAULT_LIFT_M], orientation),
                         speed=FREE_SPACE_SPEED)
+        if self.__dict__.get("_comp_active") and not rising.ok:
+            return {**result, "reason": "release retreat failed", "receipt": rising.to_dict()}
         if withdraw:
             park = PARK_XY[arm]
             self._eef_quiet(self.move_eef, arm, self.link6_for_tip([park[0], park[1], max(PARK_Z, top + DEFAULT_LIFT_M)],
@@ -750,6 +777,10 @@ class EefTools:
         jaws close, go behind it on the far side from (x, y), come down just clear of the
         table and slide in straight pieces of at most 3 cm, then lift clear. Returns {"ok",
         "arm", "object", "start", "end", "reason"}; locate it again to see where it went."""
+        if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+            instruction = self._comp()["route"]["instruction"]
+            if re.search(r"set square|T-shaped block[\s\S]*?pad", instruction, re.I):
+                return self._comp_result("push", False, "measured_planar_or_tool_contact_required")
         arm = _arm_name(arm)
         obj = self._eef_object(object)
         tx, ty = float(x), float(y)
@@ -862,11 +893,13 @@ class EefTools:
         once more by way of the parking spot when the planner refuses."""
         here = self._eef_tip(arm)
         if tip[2] - here[2] >= 0.003:
-            self._eef_quiet(self.move_eef, arm, self.link6_for_tip([here[0], here[1], tip[2]],
+            rise = self._eef_quiet(self.move_eef, arm, self.link6_for_tip([here[0], here[1], tip[2]],
                                                                    self.state[f"{arm.split('_')[0]}_ee_pose"][3:]),
                             speed=FREE_SPACE_SPEED)
+            if self.__dict__.get("_comp_active") and not rise.ok:
+                return rise
         trace = self._eef_quiet(self.move_eef, arm, self.link6_for_tip(tip, orientation), speed=FREE_SPACE_SPEED)
-        if trace.ok or trace.event.kind != "SKILL_ERROR":
+        if trace.ok or trace.event.kind != "SKILL_ERROR" or self.__dict__.get("_comp_active"):
             return trace
         park = PARK_XY[arm]
         self._eef_quiet(self.move_eef, arm, self.link6_for_tip([park[0], park[1], max(PARK_Z, tip[2])], down_with_yaw(0.0)),

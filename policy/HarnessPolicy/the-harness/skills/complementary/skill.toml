@@ -1,0 +1,8 @@
+name = "complementary"
+summary = "Measured planar/tool contact, identity/orientation and transfer ledgers, exact counted presses, one safe tail correction, and observable failure ownership routes. No blind precision fitting or pouring."
+layer = "base"
+mixin = "skills.complementary:Complementary"
+exports = ["failure_route", "ownership_status", "safe_boundary", "complete_task", "identity_ledger", "transfer_plan", "transfer_item", "placement_check", "press_card", "confirm_card", "planar_push", "tool_contact", "tail_correct", "orient_held", "swap_plan", "swap_confirm", "equation_solve", "largest_order", "place_on_pad", "read_cards"]
+requires = ["eef", "scene", "vla"]
+optional = true
+order = 135

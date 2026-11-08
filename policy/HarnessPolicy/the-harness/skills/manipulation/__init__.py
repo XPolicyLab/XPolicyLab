@@ -3,6 +3,7 @@
 import functools
 import json
 import math
+import re
 import sys
 
 from harness_policy.runtime.events import Escalation, Event
@@ -1052,7 +1053,15 @@ class Manipulation:
         pressed it again. Without `arm`, the nearer arm that reaches it. Returns {"ok",
         "arm", "presses", "contacts" (fingertip z of the first contact, then of each
         later press's lowest point), "reason"}; a descent that meets nothing, or meets the
-        table, stops the presses."""
+        table, stops the presses. Counted calls additionally separate count_complete
+        (contact plus all requested downstrokes and intervening releases) from arm_clear
+        (last lift). A bounded contact downstroke TIMEOUT is not an unexecuted press.
+        A failed final lift never erases a completed count; inspect it, do not re-press."""
+        if ("complementary" in getattr(self, "skills", ()) and self._complement_enabled() and
+                not self.__dict__.get("_counted_press") and re.search(
+                    r"number cards|required number of times|swap[\s\S]*?empty mat",
+                    self._comp()["route"]["instruction"], re.I)):
+            return self._comp_result("press", False, "counted_press_api_required", next_hop="press_card_or_swap_confirm")
         result = {"ok": False, "arm": arm, "presses": 0, "contacts": [], "reason": None}
         self._diagnostic = result
         point = self._press_point(target)
@@ -1062,6 +1071,10 @@ class Manipulation:
                 result["reason"] = "not found"
                 return result
         times = int(times)
+        counted = bool(self.__dict__.get("_counted_press"))
+        if counted:
+            result["cycles"] = []
+            result.update(count_complete=False, button_triggered=False, arm_clear=False)
         candidates = [arm] if arm else [self._nearer_arm(point)] + [a for a in ARMS if a != self._nearer_arm(point)]
         top = [point[0], point[1], point[2] + PRESS_ABOVE_M]
         above = [point[0], point[1], min(top[2], max(point[2], self.table_z + PRESS_FLAT_M) + PRESS_APPROACH_M)]
@@ -1124,21 +1137,42 @@ class Manipulation:
             down = self._quiet(self.move_eef, use, self.link6_for_tip(
                 [point[0], point[1], contact_z - float(depth)], orientation),
                 speed=PRESS_PUSH_SPEED, max_seconds=PRESS_PUSH_SECONDS)
-            if down.event.kind == "SKILL_ERROR":
+            if down.event.kind == "SKILL_ERROR" or (counted and down.event.kind not in
+                    (ev.COMPLETED, ev.BLOCKED, ev.TIMEOUT)):
                 result["reason"] = "the press could not be planned"
                 break
             if index:
                 result["contacts"].append(round(self.fingertip_of(self.state[f"{side}_ee_pose"])[2], 4))
             result["presses"] += 1
+            if counted:
+                result["button_triggered"] = True
+                result["cycles"].append({"index": index, "down": down.to_dict(), "released": False})
             if index == times - 1:
                 break  # the last press: straight up and home, no wait for the button
-            self._quiet(self.move_eef, use, self.link6_for_tip(
+            release = self._quiet(self.move_eef, use, self.link6_for_tip(
                 [point[0], point[1], contact_z + PRESS_REPEAT_LIFT_M], orientation), speed=FREE_SPACE_SPEED)
+            if counted:
+                result["cycles"][-1].update(up=release.to_dict(), released=release.ok)
+                if not release.ok:
+                    result["reason"] = "count uncertain: the cap release was not reached"
+                    break
             self._quiet(self.hold, PRESS_RELEASE_SECONDS)
+        if counted:
+            # Freeze the count BEFORE the final clearance motion. In particular, a
+            # failed intermediate release must not be overwritten by the last lift.
+            result["count_complete"] = (contact_z is not None and result["presses"] == times and
+                                        all(cycle["released"] for cycle in result["cycles"][:-1]) and
+                                        result["reason"] is None)
         leave = top if contact_z is None else top[:2] + [max(top[2], contact_z + PRESS_REPEAT_LIFT_M)]
-        self._quiet(self.move_eef, use, self.link6_for_tip(leave, orientation), speed=FREE_SPACE_SPEED)
-        self._quiet(self.home, (use,))
-        result["ok"] = result["presses"] == times
+        leaving = self._quiet(self.move_eef, use, self.link6_for_tip(leave, orientation), speed=FREE_SPACE_SPEED)
+        if counted:
+            result.update(arm_clear=leaving.ok, clearance_receipt=leaving.to_dict(),
+                          clearance_reason=None if leaving.ok else "final_lift_unverified")
+            if result["cycles"] and "up" not in result["cycles"][-1]:
+                result["cycles"][-1].update(up=leaving.to_dict(), released=leaving.ok)
+        if not counted:
+            self._quiet(self.home, (use,))
+        result["ok"] = result["count_complete"] if counted else result["presses"] == times
         return result
 
     def _close_on_the_way(self, arm):

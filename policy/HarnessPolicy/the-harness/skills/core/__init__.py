@@ -10,6 +10,12 @@ class Core:
     def finish(self, summary=""):
         """End the episode now: the program's own checks say the task is done. No
         further model call follows."""
+        if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+            state = self._comp()
+            if state["completion"] != "observed":
+                state["completion"] = "failed"
+                self._comp_result("finish", False, "completion_not_observed", next_hop="finish_honest_failure")
+                summary = "FAILED/UNKNOWN: " + str(summary)
         raise ProgramFinished(summary)
 
     def _wrap_up(self):
@@ -25,6 +31,10 @@ class Core:
         kept closed."""
         if not self.profile.get("return_to_start"):
             return []
+        if "complementary" in getattr(self, "skills", ()) and self._complement_enabled():
+            if self._comp()["completion"] != "observed":
+                self._comp_result("wrap_up", False, "forbidden_home_recovery", next_hop="finish_honest_failure")
+                return ["RECOVERY_FORBIDDEN"]
         self.__dict__["_wrapping_up"] = True  # the benchmark's convention, not a motion of the program
         kinds = []
         for arm in ("left_arm", "right_arm"):

@@ -227,6 +227,12 @@ API (already imported):
       further, lifts; the further presses go straight down to that depth and up; then the
       arm returns to its start pose. Use it for buttons and switches instead of open jaws
       or your own millimetre steps.
+<!-- if: complementary -->
+      With complementary counted APIs it does NOT home: count_complete/ok attest the
+      contact downstrokes and intervening releases; arm_clear/clearance_receipt attest
+      the final lift separately. A contact downstroke TIMEOUT does not invalidate a
+      complete count. Final clearance failure needs observation, never another press.
+<!-- end -->
   watch_scene(seconds, every=1.0, cameras=("cam_head",), track=None, until=None) ->
       {"frames": [{"t", "step", "observation"}], "departures", "trace"}   holds both arms
       still and records frames every `every` seconds; shows you a contact sheet of them

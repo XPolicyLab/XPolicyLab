@@ -6,8 +6,9 @@
   the presses; the confirm button confirms one count, so press it once after each
   card's presses and before the next card's, even when the instruction names it once
   at the end); complete an equation by the missing number or operator on a card;
-  arrange digits into the largest number; pick one named object up by 10 cm.
-  Everything else goes to the policy, also when the instruction names colours or an
+  arrange digits into the largest number.
+  Named 10 cm pickup goes to the policy. Everything else goes to the policy, also
+  when the instruction names colours or an
   order ("uncover them in the order red, green, blue", "stack blue, yellow, orange",
   "cars into the left basket"), a size, a precise fit, a picture of a target, and when
   objects are matched to each other by how they look. Objects moving past (a conveyor)

@@ -1,21 +1,21 @@
 {
  "bench": "robodojo",
  "code": {
-  "files": 186,
-  "sha256": "af73a28f03762236d0d8bd89a89b6eebcc299962d2e1d642f232ea84bdd65059"
+  "files": 188,
+  "sha256": "ad9a631c55ebe31c101f3d592e31e23efdd882dbdc860d613252955ccd3022c9"
  },
  "commit": "eb936793fa762128a134ce5d2cd3c69789783371",
  "dirty": true,
  "embodiment": "arx_x5",
- "identity": "4b97417504695258",
+ "identity": "c11a43695e5b46e5",
  "lock": {
   "agent": "wall-oss",
-  "agent_version": "1.9.10",
+  "agent_version": "1.15.0",
   "budget": {
    "max_model_calls": 100
   },
   "mode": "program",
-  "prompt_sha256": "082a74077cc0946be7c7ea086283e3e21c29fc65444ef614cf792ea6abecb83d",
+  "prompt_sha256": "c5a16622eaf4b5e7a3b9e83c79efbe727373d4a86c2397723a7bc4daf4d06fd3",
   "prompt_sources": [
    "prompts/robodojo",
    "prompts/robodojo/wall_cell.md"
@@ -83,7 +83,8 @@
     "reactive",
     "scene",
     "handlers",
-    "vla"
+    "vla",
+    "complementary"
    ],
    "skills_dropped": {
     "wam": "no world_model service"
@@ -117,7 +118,8 @@
    "reactive",
    "scene",
    "handlers",
-   "vla"
+   "vla",
+   "complementary"
   ],
   "skills_dropped": {
    "wam": "no world_model service"
@@ -170,6 +172,9 @@
     "world_models": []
    },
    "skills": {
+    "enable": [
+     "complementary"
+    ],
     "layers": {
      "handlers": true,
      "learned": true,

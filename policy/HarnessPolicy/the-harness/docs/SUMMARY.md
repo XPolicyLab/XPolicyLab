@@ -44,4 +44,7 @@
     - [Environment](reference/environment.md)
     - [Python API](reference/api/)
 - [Changelog](changelog.md)
+- [WALL-OSS recovery hypotheses](experiments/wall-oss-recovery.md)
+- [WALL-OSS language specialization and healthy-card rerun](experiments/wall-oss-hack.md)
+- [WALL-OSS complementary skills and failure routes](experiments/wall-oss-skills.md)
 - [Contributing](contributing.md)

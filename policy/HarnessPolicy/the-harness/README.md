@@ -96,6 +96,7 @@ python scripts/view_runs.py runs                               # HTML pages next
 | `ablations/r2` | R2: programs over analytic skills, with handlers |
 | `ablations/r3` | R3: R2 plus learned skills (the learned policy) |
 | `ablations/reflexes` | Reactive layer A/B: programs with the reactive layer and reflexes (intercept), no learned policy |
+| `ablations/wall-oss` | Harness Policy calling WALL-OSS 1.0 lite, with GPT 6.1 Sol writing programs |
 | `ablations/with-task-description` | with the task description of Zhang et al. (2026b) |
 <!-- /generated: agent -->
 
@@ -121,6 +122,7 @@ python scripts/view_runs.py runs                               # HTML pages next
 | reflexes | reactive | `intercept` | segmenter |
 | handlers | handlers | `on` | – |
 | vla | learned | `start`, `run_policy`, `list_policies` | policy |
+| complementary | base | `failure_route`, `ownership_status`, `safe_boundary`, `complete_task`, `identity_ledger`, `transfer_plan`, `transfer_item`, `placement_check`, `press_card`, `confirm_card`, `planar_push`, `tool_contact`, `tail_correct`, `orient_held`, `swap_plan`, `swap_confirm`, `equation_solve`, `largest_order`, `place_on_pad`, `read_cards` | – |
 | wam | learned | `predict_future`, `list_world_models` | world_model |
 | mcp | base | `mcp_tools`, `mcp_call` | mcp |
 <!-- /generated: skills -->
@@ -142,6 +144,7 @@ python scripts/view_runs.py runs                               # HTML pages next
 | qwen3-vl-8b | vlm | Qwen3-VL-8B-Instruct, self-hosted: questions about images and pointing for development runs without API spend | 18 GB |
 | sam3 | segmenter | SAM 3 instance segmentation from text or point prompts (segment_text, segment_point; inside pick and place) | 7.2 GB |
 | simate | policy | Simate-beta VLA with a memory of past frames, RoboDojo's own checkpoint, through XPolicyLab's Simate_beta adapter | 14 GB |
+| wall-oss | policy | WALL-OSS 1.0 lite, a Qwen3.5 VLA fine-tuned on RoboDojo, end-effector actions, through XPolicyLab's WallX adapter | 19 GB |
 <!-- /generated: services -->
 
 ## Documentation

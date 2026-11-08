@@ -6,6 +6,10 @@ model = "codex"
 # The pack, then the cell-span note. The program keeps the episode; WALL-OSS is one call.
 prompt = ["../../prompts/robodojo", "../../prompts/robodojo/wall_cell.md"]
 
+[skills]
+# Optional candidate complements; no promotion to default before paired evidence.
+enable = ["complementary"]
+
 [services]
 policies = ["wall-oss"]
 
@@ -15,8 +19,9 @@ max_model_calls = 100
 
 [runtime]
 policy_action_mode = "ee_passthrough"
-# The program keeps every episode. run_policy is a bounded call, not the episode owner.
-# No task-name table. The five instruction read gates still force own tools.
+# The program keeps the episode but complementary enforces real A/B/C ownership.
+# Original instruction only; no task-name table. A preserves WALL, B locks semantic
+# reads/bindings, C admits one observed safe static-tail correction.
 policy_span = "cell"
 
 # Final seed-0 reporting (not the default summarizer):
