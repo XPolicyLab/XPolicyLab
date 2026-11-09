@@ -6,4 +6,4 @@ __version__ = "0.1.0"
 # configuration (configs/default.toml). Every lock and episode manifest records it.
 # Raise the minor version for a change in what the agent does, the patch version for a
 # fix; docs/changelog.md says what changed and the evidence for it.
-AGENT_VERSION = "1.15.0"
+AGENT_VERSION = "1.21.0"

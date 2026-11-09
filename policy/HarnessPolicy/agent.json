@@ -2,20 +2,20 @@
  "bench": "robodojo",
  "code": {
   "files": 188,
-  "sha256": "ad9a631c55ebe31c101f3d592e31e23efdd882dbdc860d613252955ccd3022c9"
+  "sha256": "45abae9988b63d44b0ac403097969501523c8e0c0992ea6078eff84e5de1f8de"
  },
- "commit": "eb936793fa762128a134ce5d2cd3c69789783371",
+ "commit": "c3deacddd49ec7088143a23da9f1a287919d14ed",
  "dirty": true,
  "embodiment": "arx_x5",
- "identity": "c11a43695e5b46e5",
+ "identity": "9132beb14b257162",
  "lock": {
   "agent": "wall-oss",
-  "agent_version": "1.15.0",
+  "agent_version": "1.21.0",
   "budget": {
    "max_model_calls": 100
   },
   "mode": "program",
-  "prompt_sha256": "c5a16622eaf4b5e7a3b9e83c79efbe727373d4a86c2397723a7bc4daf4d06fd3",
+  "prompt_sha256": "1051e9fbfc8e05dcc6625813610ad8bd76149db85b6135de8db11bb6c6917f8c",
   "prompt_sources": [
    "prompts/robodojo",
    "prompts/robodojo/wall_cell.md"

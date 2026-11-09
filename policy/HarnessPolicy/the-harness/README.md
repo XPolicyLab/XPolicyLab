@@ -122,7 +122,7 @@ python scripts/view_runs.py runs                               # HTML pages next
 | reflexes | reactive | `intercept` | segmenter |
 | handlers | handlers | `on` | – |
 | vla | learned | `start`, `run_policy`, `list_policies` | policy |
-| complementary | base | `failure_route`, `ownership_status`, `safe_boundary`, `complete_task`, `identity_ledger`, `transfer_plan`, `transfer_item`, `placement_check`, `press_card`, `confirm_card`, `planar_push`, `tool_contact`, `tail_correct`, `orient_held`, `swap_plan`, `swap_confirm`, `equation_solve`, `largest_order`, `place_on_pad`, `read_cards` | – |
+| complementary | base | `failure_route`, `ownership_status`, `safe_boundary`, `complete_task`, `identity_ledger`, `transfer_plan`, `transfer_item`, `placement_check`, `press_card`, `confirm_card`, `planar_push`, `tool_contact`, `tail_correct`, `orient_held`, `swap_plan`, `swap_confirm`, `swap_facing_correct`, `equation_solve`, `largest_order`, `place_on_pad`, `read_cards` | – |
 | wam | learned | `predict_future`, `list_world_models` | world_model |
 | mcp | base | `mcp_tools`, `mcp_call` | mcp |
 <!-- /generated: skills -->

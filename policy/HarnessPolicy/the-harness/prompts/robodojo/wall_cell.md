@@ -21,6 +21,10 @@ OWNERSHIP AND FAILURE ROUTES
   memory stay with WALL. Never generalize colour/order/pour/swap into an own gate.
   Named 10 cm pickup is A/WALL, not B-hard: preserve the learned policy's floor with
   the ORIGINAL instruction and both arms; do not attempt an own-tool pickup first.
+  Xylophone / mallet striking sequences are A / wall_preserve unless explicit hard
+  or memory rules match. Start and continue WALL with the ORIGINAL instruction and
+  both arms; do NOT first call tool_contact or measure tip_offset, and do NOT require
+  a failure_route return_wall handover to begin. A bare-jaw press is not a mallet.
 - B-hard: number cards, counted presses, missing number/operator, largest possible
   number, explicit category-to-left/middle/right-basket mappings,
   colour-bottle-to-colour-bowl mappings. NO initial generic WALL motion; NO policy
@@ -56,7 +60,7 @@ OWNERSHIP AND FAILURE ROUTES
   instruction, both arms, from_anywhere=True, no reset/home. Own intervals discard old
   action rest and may record REAL memory_restarts. This is memory loss, not a reset
   of the world. Never round-trip owners to escape a failed skill.
-- Preserve WALL's floor on non-hard tool/planar tasks (xylophone, set-square align,
+- Preserve WALL's floor on non-hard tool/planar tasks (broom sweeping, set-square align,
   T pushing): on tool_contact_measurement_missing, a failed set-square grasp with
   empty jaws, or an unavailable measured planar contact, inspect fresh RGB/locate
   and the ORIGINAL motion receipt. If hands are empty, the scene is stable/exposed/
@@ -84,9 +88,12 @@ OWNERSHIP AND FAILURE ROUTES
   Exception to stopping after two placement checks: a fresh, uniquely tracked swap
   block with only a small measured facing error may use the ONE correction below.
   Two failed checks alone do not exhaust that different corrective action.
-- complete_task(e) is required before a successful finish: fresh visual complete=True,
-  safe_to_finish=True, all identity items done, all cards confirmed, no uncertain motion.
+- complete_task(e) is required before a successful finish: fresh visual evidence,
+  safe_to_finish=True, all identity items done, all cards confirmed, no uncertain motion
+  or terminal failure. Non-swap completion additionally requires complete=True.
   Print it; only finish success if ok. Otherwise failure_route(reason, request="finish").
+  For a three-confirmed-leg swap, the three swap_confirm receipts + ledger done certify
+  completeness; do NOT use verify() to veto closeout. Use the bounded closeout below.
   Automatic benchmark final home is blocked for failed/unknown completion. Final home
   is not a repair; preserve a deliberately held target for named-pick tasks.
 
@@ -202,13 +209,9 @@ PLANAR T / SET SQUARE / TOOL CONTACT
   measured, including a failed set-square grasp leaving empty jaws. Otherwise
   remeasure without motion or change the measured contact/action (at most twice).
   Do not immediately finish or replace required tool use by direct grabbing/pushing.
-- Xylophone requires held mallet and actual mallet-head offset; use short measured
-  down contact then measured lift, re-observe each key. A bare press on a key is not
-  a mallet. Sweeping requires actual broom and stable dustpan, explicit measured
+- Sweeping requires actual broom and stable dustpan, explicit measured
   handoff/table staging, visible head offset and observed blocks entering dustpan.
   No tool-contact API implies an automatic reliable 3D tool pose estimator.
-  Xylophone tool_contact_measurement_missing with empty hands and a measured safe
-  boundary MUST request return_wall as above, not loop until an honest-zero finish.
 - swap_plan uses two uniquely tracked block identities, ORIGINAL positions/directed
   facing and the actual EMPTY MAT (mat_observed=True), not an arbitrary spare table spot.
   Prefer identity_ledger([entry1,entry2], evidence=e) then
@@ -220,22 +223,59 @@ PLANAR T / SET SQUARE / TOOL CONTACT
             facing_correct:True,released:True,target_unique:True}) sends exactly once.
   On ok=True, count_complete=True, receipt.presses==1, confirmation="counted_press_complete",
   that leg is CONFIRMED; retain confirmed_legs from the result/ownership report.
-  If arm_clear is true, re-observe/rebind and continue the NEXT leg, not failure/finish
+  For legs 1/2 only: if arm_clear is true, re-observe/rebind and continue the NEXT leg, not failure/finish
   because receipt.cycles[*].down.event.kind was TIMEOUT. If arm_clear is false, retain
   the confirmation and resolve arm clearance WITHOUT re-pressing or moving next.
   Complete all three confirmed legs before complete_task; one confirmation is not success.
+  MANDATORY SWAP CLOSEOUT: when confirmed_legs >= 3, or next_hop="complete_task"
+  (including the legacy next_hop="observe_swap_completion"), the NEXT action is
+  complete_task, NOT another transfer or facing correction. Use the current fresh
+  post-confirmation RGB for safety; otherwise at most ONE bounded non-motion
+  visual inspection of release and safe arm clearance in that SAME cell, then
+  immediately print complete_task({source:"CURRENT RGB",observed_step:get_state()["step"],
+                                  safe_to_finish:True}).
+  The three swap_confirm receipts + ledger done certify completeness. Do NOT use
+  verify() to veto closeout after three confirmed legs: optional VLM verify() False or
+  evidence.complete=False cannot negate that confirmed sequence; complete is not required.
+  fresh_visual_evidence, safe_to_finish, not_failed, motion_resolved, identity_items_done
+  and cards_confirmed remain mandatory. Observe safety; no motion-ok-only success.
+  No new identity_ledger rebind or placement_check is required after leg 3.
+  Do NOT open transfer / swap_facing_correct /
+  orient_held, extra presses, move_tip, time-advancing watch, repeated locate/show cells
+  or unbounded browsing. Final uncertain clearance: retain all three confirmations,
+  inspect/resolve WITHOUT motion/retry, then complete_task immediately. If its explicit
+  swap_completion_unverified failed_checks cannot be resolved by that one inspection,
+  finish honestly through failure_route, never reopen completed legs or invent evidence.
+  On complete_task ok=True, in the SAME cell immediately complete_task -> finish;
+  do NOT open another observation cell. Only then may benchmark final home run.
   Before pressing, if the same uniquely visible released block is seated at the frozen
   leg destination but facing is slightly wrong (0<abs(measured yaw error)<=30deg), allow
   ONE measured correction per leg, even after two placement_unverified checks. Print
   failure_route("placement_unverified", receipt=original_result, evidence={source,
   observed_step,key:current_leg_key,identity_unique:True,at_destination:True,released:True,
   facing_correct:False,directed_axis:True,orientation_measured:True,yaw_deg:CURRENT directed yaw,path_clear:True}).
-  Explicitly pick the SAME re-bound block, inspect grasp receipt, then fresh locate/RGB
-  and identity_ledger rebind proving held_by/held_identity and CURRENT directed yaw.
-  Call orient_held(key,arm,FROZEN leg yaw,evidence={source,observed_step,identity_unique:True,
+  On pick_observe_orient_reseat_then_confirm, print
+  swap_facing_correct(current_leg_key,arm,evidence=the_same_fresh_facing_evidence).
+  Use this API, NOT bare pick/orient/release improvisation. It consumes the ONE correction
+  only AFTER fresh held certification, BEFORE orient. Pick does NOT consume the
+  correction, even on failed/unknown grasp. ok=True, stage="picked" means ONLY a verified
+  grasp, NOT facing/placement/confirmation. On observe_rebind_held_then_swap_facing_correct,
+  end the cell and inspect NEW RGB/locate of the SAME identity. If locate is needed,
+  print it and inspect its new closeups before asserting identity or directed yaw.
+  Do NOT finish placement_unverified while that permitted rebind is still available.
+  Then print swap_facing_correct(key,arm,evidence={source,observed_step,identity_unique:True,
   held_identity:True,directed_axis:True,orientation_measured:True,yaw_deg:CURRENT held yaw,
-  path_clear:True}); print it, then explicitly release/reseat on that SAME frozen mat.
-  Re-observe identity, seating, facing and release; only then swap_confirm the SAME leg.
+  path_clear:True},held_entry={key,object:CURRENT held oN,identity:SAME ledger description,
+  destination:SAME ledger destination,yaw_deg:FROZEN ledger yaw,...}). Copy the unchanged
+  destination_object too if present. It validates/rebinds in this cell, calls orient_held
+  internally once to FROZEN leg yaw and explicitly releases at FROZEN leg xy. Alternatively
+  print identity_ledger rebind with that fresh evidence BEFORE the second API call.
+  No pre-pick evidence/yaw reuse, guessed held id, extra pick, or standalone orient_held
+  on this staged correction. A no-motion held-rebind rejection requires fresh evidence,
+  not replaying pick; lost/ambiguous identity still fails honestly. >30deg CURRENT held
+  error rejects this correction, without buying smaller segments or another correction.
+  On reobserve_rebind_then_swap_confirm, re-observe identity, seating, facing and release;
+  rebind from NEW locate, only then swap_confirm the SAME leg. placed_unverified is NOT done.
   Never mark facing_correct from a command/footprint angle. No second correction,
   unmeasured turn, extra button press, home rescue, or replay of a failed placement.
   A timeout/unknown pick, turn or release must be inspected without retry; 'not held
@@ -263,6 +303,8 @@ P2 AND COMPLETION RED LINES
   each object inside/below rim AND correct facing. Pens: inside correct holder,
   not beside/over it. Tic-tac-toe: own action only complete visible own-turn boundary;
   this candidate has no certified dynamic C-turn executor, so preserve WALL.
-- A verifier exception means completion is UNKNOWN, never true. No hidden reward, step_limit,
+- For non-swap work, a verifier exception means visual completion is UNKNOWN, never true.
+  Three confirmed swap legs retain receipt/ledger completeness despite verifier failure;
+  fresh safety and resolved motion are still required. No hidden reward, step_limit,
   task_name or simulator object annotations. Report every reason/event and retain
   original observation/error/action receipt. Mock/offline tests are not evaluation.

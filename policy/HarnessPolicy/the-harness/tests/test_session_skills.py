@@ -80,9 +80,44 @@ class TogetherTests(unittest.TestCase):
         s._start_joints = list(worker.joints)
         worker.joints[7:10] = [-0.3, 0.1, 0.8]
         s.state = worker.state()
+        s.home = mock.Mock(wraps=s.home)
         self.assertEqual(s._wrap_up(), ["COMPLETED"] * 4)
         # The two grippers open, then one execution homes both arms together.
         self.assertEqual([event["skill"] for event in s._events], ["open_gripper", "open_gripper", "home"])
+        s.home.assert_called_once_with(("left_arm", "right_arm"), speed=3.0)
+
+    def test_wrap_up_fast_home_still_respects_joint_velocity_and_acceleration(self):
+        worker = TwoArmWorker()
+        s = with_profile(session(worker), return_to_start=True)
+        s._start_joints = list(worker.joints)
+        worker.joints[0], worker.joints[7] = 1.5, -1.5
+        s.state = worker.state()
+        s.joint_speed_limit, s.joint_acceleration_limit = 3.0, 10.0
+        start, commands = list(worker.joints), []
+        original = worker.call
+
+        def recording(name, **arguments):
+            if name == "tick":
+                commands.append(list(arguments["command"]))
+            return original(name, **arguments)
+
+        worker.call = recording
+        self.assertEqual(s._wrap_up(), ["COMPLETED"] * 4)
+        points = [start] + commands
+        deltas = [[b - a for a, b in zip(p, q)] for p, q in zip(points, points[1:])]
+        self.assertLessEqual(max(abs(d) for delta in deltas for d in delta), .108 + 1e-9)
+        changes = [abs(b - a) for p, q in zip([[0.0] * 14] + deltas, deltas)
+                   for a, b in zip(p, q)]
+        self.assertLessEqual(max(changes), .0144 + 1e-9)
+        self.assertEqual(worker.joints[:6] + worker.joints[7:13], [0.0] * 12)
+
+    def test_wrap_up_does_not_retry_a_failed_home(self):
+        worker = TwoArmWorker()
+        s = with_profile(session(worker), return_to_start=True)
+        failed = ExecutionTrace("home", {}, 0, 1, Event("SHIELD_REJECTED", "home", {}, 1))
+        s.home = mock.Mock(side_effect=Escalation(failed))
+        self.assertEqual(s._wrap_up(), ["COMPLETED"] * 2 + ["SHIELD_REJECTED"] * 2)
+        s.home.assert_called_once_with(("left_arm", "right_arm"), speed=3.0)
 
     def test_an_arm_without_a_path_is_reported_after_the_other_moved(self):
         worker = TwoArmWorker()

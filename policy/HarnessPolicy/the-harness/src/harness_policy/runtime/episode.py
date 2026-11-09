@@ -187,7 +187,8 @@ class EpisodeCore:
             reason = self._ownership_guard(skill)
             if reason:
                 step = self.state["step"]
-                result = self._comp_result(skill, False, reason, next_hop="failure_route")
+                result = (self._swap_closeout_result(skill) if reason == "swap_complete_task_required" else
+                          self._comp_result(skill, False, reason, next_hop="failure_route"))
                 return self._finish(ExecutionTrace(skill, parameters, step, step,
                                                   Event(ev.SKILL_ERROR, skill, result, step)))
         if (self.__dict__.get("_handover_locked") and skill not in self.still_executions

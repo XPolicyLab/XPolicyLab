@@ -15,6 +15,14 @@ import wall_oss_scoreboard as scoreboard
 
 
 class SelectiveTests(unittest.TestCase):
+    def test_current_agent_version_is_accepted_by_scoreboard(self):
+        from harness_policy import AGENT_VERSION
+        self.assertEqual(AGENT_VERSION, "1.21.0")
+        self.assertIn(AGENT_VERSION, scoreboard.SELECTIVE_AGENT_VERSIONS)
+        self.assertIn("1.18.0", scoreboard.SELECTIVE_AGENT_VERSIONS)  # frozen historical r7
+        self.assertIn("1.19.0", scoreboard.SELECTIVE_AGENT_VERSIONS)  # frozen historical r8b
+        self.assertIn("1.20.0", scoreboard.SELECTIVE_AGENT_VERSIONS)
+
     def test_tier1_and_optional_preservation_plan(self):
         dojo = ROOT / "third_party/RoboDojo"
         self.assertEqual(len(selective.task_plan(dojo)), 15)
@@ -54,11 +62,11 @@ class SelectiveTests(unittest.TestCase):
             args = argparse.Namespace(package=root / "package", robodojo=ROOT / "third_party/RoboDojo",
                 out=root / "out", auth=auth, lock_root=root, tasks=None, afix=False, tier2=False,
                 gpus="1,2,3,4", require_idle=False, locks_held=False)
-            agent = {"lock": {"agent_version": "1.14.0"}, "identity": "fixture", "sources": {"agent": {"skills": {"enable": ["complementary"]}}}}
+            agent = {"lock": {"agent_version": "1.21.0"}, "identity": "fixture", "sources": {"agent": {"skills": {"enable": ["complementary"]}}}}
             before = list(root.rglob("*"))
             with mock.patch.object(selective, "validate_package", return_value=agent) as validate, mock.patch.object(selective.socket, "create_connection"), mock.patch.object(selective, "gpu_problems", return_value=["GPU busy"]), mock.patch.object(selective, "process_problems", return_value=[]), mock.patch("sys.stdout", new=io.StringIO()) as output:
                 self.assertEqual(selective.preflight(args)[2], [])
-                validate.assert_called_once_with(args.package, expected_version="1.14.0")
+                validate.assert_called_once_with(args.package, expected_version="1.21.0")
                 self.assertIn("waiting for GPU", output.getvalue())
                 args.require_idle = True
                 with self.assertRaises(ValueError):
@@ -129,7 +137,7 @@ class ScoreboardTests(unittest.TestCase):
             self.result(new, "solve_equation", [0]*50)
             args = argparse.Namespace(robodojo=ROOT / "third_party/RoboDojo", public=public, machine=root,
                 hist_root=[], new_root=[new], tier2=False, line=55)
-            for version in ("1.13.0", "1.13.1", "1.14.0"):
+            for version in ("1.13.0", "1.13.1", "1.14.0", "1.15.0", "1.16.0", "1.17.0", "1.18.0", "1.19.0", "1.20.0", "1.21.0"):
                 with self.subTest(version=version):
                     self.plan(new, ["solve_equation"], version, policy="HarnessPolicyWallCodexSkills55")
                     _, rows, _, _ = scoreboard.build(args)
@@ -138,7 +146,7 @@ class ScoreboardTests(unittest.TestCase):
                     self.assertEqual(rows["solve_equation"]["status"], "MEASURED")
                     self.assertIn("NOT CERTIFIED", scoreboard.render(args))
                     self.assertEqual(rows["align_blocks"]["status"], "FLOOR")
-            for invalid in ({"version": "1.12.1"}, {"version": "1.14.1"}, {"version": None},
+            for invalid in ({"version": "1.12.1"}, {"version": "1.14.1"}, {"version": "1.18.1"}, {"version": "1.19.1"}, {"version": "1.20.1"}, {"version": "1.21.1"}, {"version": None},
                             {"seed": 1}, {"eval_num": "50"}, {"identity": ""}, {"policy": "HarnessPolicyWall"}):
                 with self.subTest(invalid=invalid):
                     self.plan(new, ["solve_equation"], **invalid)

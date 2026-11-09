@@ -10,7 +10,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 XPL_ROOT="$(cd "$HERE/../.." && pwd)"
 if [ ! -d "$HERE/the-harness" ]; then
   git clone https://github.com/EvolvingLMMs-Lab/the-harness.git "$HERE/the-harness"
-  git -C "$HERE/the-harness" checkout eb936793fa762128a134ce5d2cd3c69789783371
+  git -C "$HERE/the-harness" checkout c3deacddd49ec7088143a23da9f1a287919d14ed
 fi
 "$PY" -m pip install -e "$XPL_ROOT"
 "$PY" -m pip install --constraint "$HERE/the-harness/environment/constraints.txt" \

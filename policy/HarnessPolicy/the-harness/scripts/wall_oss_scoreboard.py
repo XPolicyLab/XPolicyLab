@@ -23,7 +23,7 @@ CENTRAL = {"push_T": 65, "arrange_largest_number": 75, "play_Xylophone": 60,
 OPTIONAL = {"sweep_blocks": 35}
 HIST_NAMES = ("wall-oss-seed0", "wall-oss-codex-seed0", "wall-oss-codex-recovery-seed0",
               "wall-oss-codex-hack-seed0", "wall-oss-codex-skills-seed0")
-SELECTIVE_AGENT_VERSIONS = {"1.13.0", "1.13.1", "1.14.0", "1.15.0"}
+SELECTIVE_AGENT_VERSIONS = {"1.13.0", "1.13.1", "1.14.0", "1.15.0", "1.16.0", "1.17.0", "1.18.0", "1.19.0", "1.20.0", "1.21.0"}
 
 
 def dimensions(robodojo):
@@ -152,7 +152,7 @@ def build(args):
         plan = json.loads(plan_path.read_text())
         policy = plan["policy"]
         if plan.get("agent_version") not in SELECTIVE_AGENT_VERSIONS or plan.get("seed") != 0 or plan.get("eval_num") != "native":
-            raise ValueError("new results need frozen 1.13.0/1.13.1/1.14.0/1.15.0 seed0/native identity")
+            raise ValueError("new results need frozen 1.13.0/1.13.1/1.14.0/1.15.0/1.16.0/1.17.0/1.18.0 seed0/native identity")
         if not policy.startswith("HarnessPolicyWallCodexSkills55") or not plan.get("identity"):
             raise ValueError("wrong/missing independent policy identity")
         planned = set(plan["tasks"])

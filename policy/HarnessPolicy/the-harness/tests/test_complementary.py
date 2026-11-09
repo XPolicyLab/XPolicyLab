@@ -11,10 +11,11 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "tests")]
 
 from harness_policy.config import load_layered
 from harness_policy.geometry import TABLE_Z
-from harness_policy.runtime.events import Escalation, Event, ExecutionTrace, ProgramFinished
+from harness_policy.runtime.events import EpisodeEnded, Escalation, Event, ExecutionTrace, ProgramFinished
 from harness_policy.runtime.prompts import assemble_prompt
 from harness_policy.runtime.skills import load_skills, namespace, resolve, skills_for_layers
-from skills.complementary import instruction_route, turn_report
+from skills.complementary import TOOLS, instruction_route, turn_report
+from skills.vla import route_instruction
 from test_eef import item
 from test_run_policy import Worker, Policy, session
 from test_session_skills import FakeWorker, pressing_session
@@ -24,6 +25,8 @@ ALIGN = "Use the set square to push the three blocks into a straight, aligned ro
 PRESS = "Press the two red buttons the required number of times according to the number cards, then press the blue button to confirm."
 BASKET = "Put car objects into the left basket, watch objects into the middle basket, and wooden toy objects into the right basket."
 SWAP = "Swap the two blocks using the empty mat, pressing the button after each move."
+XYLOPHONE = "Pick up the mallet and strike all xylophone keys from left to right."
+SWEEP = "Pick up the broom, hand it over to the right hand, then use the dustpan to sweep the blocks."
 
 
 def comp_session(instruction=T):
@@ -64,7 +67,7 @@ def measured(s, objects):
 
 class RouteTests(unittest.TestCase):
     def test_native_instructions_use_capabilities(self):
-        for text in (T, ALIGN, PRESS, BASKET, SWAP, "Play the xylophone using the mallet."):
+        for text in (T, ALIGN, PRESS, BASKET, SWAP, SWEEP):
             with self.subTest(text=text):
                 self.assertEqual(instruction_route(text)["owner"], "B")
         self.assertFalse(instruction_route(SWAP)["memory"])
@@ -102,7 +105,7 @@ class RouteTests(unittest.TestCase):
                 self.assertEqual(s._ownership_guard("eef_pick"), "policy_owner_no_own_motion")
                 self.assertEqual(s._policy_clients["wall-oss"].calls, [])
 
-    def test_generic_swap_is_not_kfmem_and_xylophone_keys_are_not_precision(self):
+    def test_generic_swap_is_not_kfmem(self):
         self.assertFalse(instruction_route("Swap the bowls.")["memory"])
         self.assertFalse(instruction_route("Exchange positions of the cups.")["memory"])
         self.assertTrue(instruction_route("Swap the two T-shaped objects.")["memory"])
@@ -112,9 +115,81 @@ class RouteTests(unittest.TestCase):
             self.assertEqual(route["owner"], "A")
             self.assertTrue(route["memory"])
             self.assertFalse(route["identity_sensitive"])
-        route = instruction_route("Play the xylophone, striking each key with the mallet.")
-        self.assertEqual(route["owner"], "B")
-        self.assertFalse(route["precision"])
+
+    def test_xylophone_and_mallet_strikes_preserve_wall(self):
+        for text in (XYLOPHONE, "Play the xylophone using the mallet.",
+                     "Play the xylophone, striking each key with the mallet.",
+                     "PLAY THE XYLOPHONE.", "Use the mallet to strike each bar.",
+                     "Strike the bars with the mallet.", "The mallet strikes each bar.",
+                     "Use the mallet,\nstriking the bars in order."):
+            with self.subTest(instruction=text):
+                route = instruction_route(text)
+                self.assertEqual((route["owner"], route["rule"]), ("A", "wall_preserve"))
+                for flag in ("hard", "memory", "identity_sensitive", "precision", "tail"):
+                    self.assertFalse(route[flag], flag)
+                self.assertIsNone(TOOLS.search(text))
+                self.assertEqual(route_instruction(text, wall_only=True), "simate")
+
+    def test_striking_does_not_open_measured_or_tail_ownership(self):
+        for suffix in (SWEEP, ALIGN, T, SWAP, "Pack objects into the box."):
+            with self.subTest(suffix=suffix):
+                route = instruction_route(XYLOPHONE + " " + suffix)
+                self.assertEqual((route["owner"], route["rule"]), ("A", "wall_preserve"))
+                self.assertFalse(route["identity_sensitive"])
+                self.assertFalse(route["tail"])
+
+    def test_striking_keeps_explicit_hard_and_memory_precedence(self):
+        for prefix in (XYLOPHONE, "Use the mallet to strike each bar."):
+            for suffix in (PRESS, BASKET, "Solve the equation.",
+                           "Arrange digits into the largest possible number.",
+                           "Pour from the blue bottle into the red bowl."):
+                with self.subTest(prefix=prefix, suffix=suffix):
+                    route = instruction_route(prefix + " " + suffix)
+                    self.assertEqual((route["owner"], route["rule"]), ("B", "semantic_read_binding"))
+                    self.assertTrue(route["hard"])
+            for suffix in ("Remember the striking sequence.", "Imitate the sequence.",
+                           "Swap the two T-shaped blocks."):
+                with self.subTest(prefix=prefix, suffix=suffix):
+                    route = instruction_route(prefix + " " + suffix)
+                    self.assertEqual((route["owner"], route["rule"]), ("A", "wall_preserve"))
+                    self.assertTrue(route["memory"])
+                    self.assertFalse(route["identity_sensitive"])
+            route = instruction_route(prefix + " Remember the sequence from the number cards.")
+            self.assertTrue(route["hard"])
+            self.assertFalse(route["memory"])
+            self.assertEqual(route["owner"], "B")
+
+    def test_broom_and_dustpan_sweeping_keep_measured_ownership(self):
+        for text in (SWEEP, "Sweep the blocks with the broom.",
+                     "Use the broom to sweep the objects.", "Sweep the objects into the dustpan."):
+            with self.subTest(instruction=text):
+                route = instruction_route(text)
+                self.assertIsNotNone(TOOLS.search(text))
+                self.assertEqual((route["owner"], route["rule"]), ("B", "measured_complement"))
+                self.assertFalse(route["hard"])
+
+    def test_xylophone_starts_wall_without_tool_measurement_or_failure_handover(self):
+        for text in (XYLOPHONE, "Use the mallet to strike each bar."):
+            with self.subTest(instruction=text):
+                s = comp_session(text)
+                with mock.patch.object(s, "tool_contact") as contact, \
+                     mock.patch.object(s, "failure_route") as failure:
+                    s.start("B", "model requested tool contact")
+                    status = s.ownership_status()["status"]
+                    self.assertEqual((status["owner"], status["phase"], status["rule"]),
+                                     ("A", "policy", "wall_preserve"))
+                    self.assertEqual(s._strategy["policy"], "wall-oss")
+                    self.assertEqual(status["wall_returns"], 0)
+                    self.assertEqual(status["transitions"], [])
+                    self.assertEqual(s._ownership_guard("eef_pick"), "policy_owner_no_own_motion")
+                    self.assertIsNone(s._ownership_guard("run_policy"))
+                    for _ in range(2):
+                        s.run_policy("wall-oss", max_seconds=.2, stall_seconds=None)
+                    contact.assert_not_called()
+                    failure.assert_not_called()
+                self.assertEqual(set(s._policy_clients["wall-oss"].instructions), {text})
+                self.assertEqual(s._comp()["failures"], {})
+                self.assertEqual(s._comp()["route"]["wall_returns"], 0)
 
     def test_precision_never_opens_motion_even_with_an_own_keyword(self):
         for text in ("Fasten the screws by 10 cm.", "Build a tower with the largest number on top.",
@@ -152,6 +227,9 @@ class RouteTests(unittest.TestCase):
         exports = namespace(s, ["complementary"])
         self.assertEqual(set(exports), set(load_skills()["complementary"].exports))
         self.assertIn("complementary", resolution.enabled)
+        self.assertIn("swap_facing_correct", exports)
+        self.assertNotIn("_orient_held", exports)
+        self.assertNotIn("_swap_motion_unknown", exports)
         wall = load_layered(ROOT / "configs/ablations/wall-oss.toml")
         self.assertIn("complementary", wall["skills"]["enable"])
 
@@ -162,6 +240,48 @@ class RouteTests(unittest.TestCase):
                      "that leg is CONFIRMED", "ONE measured correction per leg",
                      "Two failed checks alone", "NO nearest-oN relabeling", "no motion retry"):
             self.assertIn(rule, prompt)
+        task_prompt = (ROOT / "prompts/robodojo_tasks/swap_blocks.md").read_text()
+        for text in (prompt, task_prompt):
+            for rule in ("swap_facing_correct", 'stage="picked"', "CURRENT held yaw",
+                         "held_entry", "reobserve_rebind_then_swap_confirm", "BEFORE"):
+                self.assertIn(rule, text)
+            self.assertIn("does NOT consume", text)
+            self.assertIn("BEFORE orient", text)
+            self.assertNotIn("BEFORE pick", text)
+
+    def test_xylophone_prompt_preserves_wall_without_contact_gate(self):
+        text = (ROOT / "prompts/robodojo/wall_cell.md").read_text()
+        for rule in ("Xylophone / mallet striking sequences are A / wall_preserve",
+                     "unless explicit hard", "or memory rules match", "do NOT first call tool_contact",
+                     "do NOT require", "handover to begin", "Sweeping requires actual broom"):
+            self.assertIn(rule, text)
+        self.assertNotIn("Xylophone requires held mallet and actual mallet-head offset", text)
+        self.assertNotIn("Xylophone tool_contact_measurement_missing", text)
+
+    def test_three_confirmed_swap_legs_prompt_requires_bounded_closeout(self):
+        for path in ("prompts/robodojo/wall_cell.md", "prompts/robodojo_tasks/swap_blocks.md"):
+            with self.subTest(path=path):
+                text = (ROOT / path).read_text()
+                for rule in ("confirmed_legs >= 3", 'next_hop="complete_task"',
+                             'next_hop="observe_swap_completion"', "at most ONE bounded non-motion",
+                             "complete_task, NOT another transfer or facing correction",
+                             "move_tip", "unbounded browsing", "swap_completion_unverified"):
+                    self.assertIn(rule, text)
+
+    def test_swap_prompt_certifies_completeness_without_a_verifier_veto(self):
+        for path in ("prompts/robodojo/wall_cell.md", "prompts/robodojo_tasks/swap_blocks.md"):
+            with self.subTest(path=path):
+                text = (ROOT / path).read_text()
+                for rule in ("three swap_confirm receipts + ledger done", "verify() to veto closeout",
+                             "evidence.complete=False", "fresh_visual_evidence", "safe_to_finish",
+                             "not_failed", "motion_resolved", "identity_items_done", "cards_confirmed",
+                             "SAME cell", "complete_task -> finish", "do NOT open another observation cell"):
+                    self.assertIn(rule, text)
+                self.assertNotIn('"complete":True', text)
+                self.assertNotIn("complete:True", text)
+        wall = (ROOT / "prompts/robodojo/wall_cell.md").read_text()
+        self.assertIn("For non-swap work, a verifier exception", wall)
+        self.assertIn("retain receipt/ledger completeness despite verifier failure", wall)
 
 
 class ReadHelperTests(unittest.TestCase):
@@ -471,6 +591,17 @@ class OwnershipTests(unittest.TestCase):
         s._wrapping_up = True
         self.assertIsNone(s._ownership_guard("home"))
 
+    def test_non_swap_still_requires_explicit_visual_complete_true(self):
+        s = comp_session()
+        s.start("B", "push")
+        for fields in ({}, {"complete": False}, {"complete": None}, {"complete": 1}):
+            with self.subTest(fields=fields):
+                result = s.complete_task(evidence(s, safe_to_finish=True, **fields))
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["reason"], "completion_unverified")
+                self.assertEqual(s._comp()["completion"], "unknown")
+        self.assertTrue(s.complete_task(evidence(s, complete=True, safe_to_finish=True))["ok"])
+
 
 class FailureTests(unittest.TestCase):
     def test_uniform_observable_event_and_bounded_remeasure(self):
@@ -528,7 +659,7 @@ class FailureTests(unittest.TestCase):
             self.assertEqual(result["next_hop"], "wall_fallback_denied")
 
     def test_tool_planar_failures_return_wall_with_original_instruction_both_arms(self):
-        cases = (("Play the xylophone using the mallet.", "tool_contact_measurement_missing", False),
+        cases = ((SWEEP, "tool_contact_measurement_missing", False),
                  (ALIGN, "tool_contact_measurement_missing", False),
                  (ALIGN, "grasp_failed", True), (T, "planar_contact_unknown", False))
         for text, reason, moved in cases:
@@ -550,7 +681,7 @@ class FailureTests(unittest.TestCase):
                 self.assertEqual(set(s._policy_clients["wall-oss"].instructions), {text})
 
     def test_tool_return_wall_denied_for_unknown_motion_or_missing_boundary(self):
-        for text in (ALIGN, "Play the xylophone using the mallet.", T):
+        for text in (ALIGN, SWEEP, T):
             with self.subTest(instruction=text):
                 s = comp_session(text)
                 r = s.failure_route("tool_contact_measurement_missing", motion_executed="unknown",
@@ -1256,6 +1387,351 @@ class SwapTests(unittest.TestCase):
         self.assertTrue(s.swap_confirm(1, "blue", evidence=e)["ok"])
         self.assertEqual(s.press.call_count, 2)
 
+    def confirm_all_legs(self, *, final_arm_clear=True):
+        raw = {"ok": True, "presses": 1, "count_complete": True, "arm_clear": True,
+               "cycles": [{"down": {"event": {"kind": "TIMEOUT"}}, "released": True}]}
+        s, e = self.plan_and_press(raw)
+        for index in range(3):
+            if index == 2:
+                s.press.return_value = {**raw, "arm_clear": final_arm_clear}
+            result = s.swap_confirm(index, "blue", evidence=e)
+            self.assertTrue(result["ok"], result)
+        return s, result
+
+    def test_third_confirm_requires_complete_task_without_more_motion(self):
+        s, result = self.confirm_all_legs()
+        self.assertEqual(result["confirmed_legs"], 3)
+        self.assertTrue(result["count_complete"])
+        self.assertTrue(result["completion_required"])
+        self.assertEqual(result["reason"], "swap_complete_task_required")
+        self.assertEqual(result["next_hop"], "complete_task")
+        for rule in ("MUST call complete_task next", "at most ONE", "No transfer", "facing correction",
+                     "three swap_confirm receipts + ledger done", "do NOT use verify() to veto closeout",
+                     "evidence.complete=False or missing", "all safety checks still apply"):
+            self.assertIn(rule, result["message"])
+        self.assertEqual(result["receipt"], s.press.return_value)  # retain original nested TIMEOUT
+        self.assertEqual(result["event"]["detail"]["next_hop"], "complete_task")
+        report = json.loads(turn_report(s)["text"].split(": ", 1)[1])
+        self.assertEqual(report["last_event"]["next_hop"], "complete_task")
+        self.assertEqual(report["completion"], "unknown")  # not auto-success
+        completion = s.complete_task(evidence(s, complete=True, safe_to_finish=True))
+        self.assertTrue(completion["ok"], completion)
+        self.assertEqual(completion["reason"], "swap_completion_observed")
+        self.assertEqual(completion["confirmed_legs"], 3)
+        self.assertEqual(completion["next_hop"], "finish")
+        self.assertFalse(completion["completion_required"])
+        with self.assertRaises(ProgramFinished) as finished:
+            s.finish("observed swap complete")
+        self.assertNotIn("FAILED", str(finished.exception))
+        s._wrapping_up = True
+        self.assertIsNone(s._ownership_guard("home"))
+        self.assertEqual(s.press.call_count, 3)
+
+    def test_confirmed_swap_accepts_false_or_missing_complete_and_preserves_receipts(self):
+        for fields in ({}, {"complete": False}, {"complete": None}, {"complete": True}):
+            with self.subTest(fields=fields):
+                self.setUp()
+                s, _ = self.confirm_all_legs()
+                before = json.loads(json.dumps(s._comp()["swap"]))
+                ledger = json.loads(json.dumps(s._comp()["ledger"]))
+                self.assertEqual(len(before["receipts"]), 3)
+                self.assertTrue(all(item["status"] == "done" for item in ledger.values()))
+                e = evidence(s, safe_to_finish=True, **fields)
+                step = s.state["step"]
+                result = s.complete_task(e)
+                self.assertTrue(result["ok"], result)
+                self.assertEqual(result["reason"], "swap_completion_observed")
+                self.assertTrue(all(result["checks"].values()))
+                self.assertEqual(result["next_hop"], "finish")
+                self.assertEqual(result["evidence"], e)  # never overwrite False / fabricate complete
+                self.assertEqual(result["event"]["detail"]["evidence"], e)
+                self.assertEqual(s.state["step"], step)
+                self.assertEqual(s._comp()["swap"], before)
+                self.assertEqual(s._comp()["ledger"], ledger)
+                self.assertEqual(s._comp()["completion"], "observed")
+                with self.assertRaises(ProgramFinished) as finished:
+                    s.finish("three confirmations and ledger done; safety observed")
+                self.assertNotIn("FAILED", str(finished.exception))
+                self.assertEqual(s.press.call_count, 3)
+
+    def test_optional_vlm_verify_false_does_not_veto_confirmed_swap_closeout(self):
+        # r8b episode-016 regression: original NO and complete=False stay diagnostic.
+        s, _ = self.confirm_all_legs()
+        s.verifier = mock.Mock()
+        s.verifier.ask.return_value = "NO\nBlocks are occluded by the close-up grippers."
+        s.get_observation = mock.Mock(return_value=mock.Mock(images={}))
+        final_ok, answer = s.verify("The two blocks have been swapped.")
+        self.assertFalse(final_ok)
+        e = evidence(s, complete=final_ok, safe_to_finish=True, verifier_answer=answer)
+        result = s.complete_task(e)
+        self.assertTrue(result["ok"], result)
+        self.assertTrue(result["checks"]["complete"])
+        self.assertIs(result["evidence"]["complete"], False)
+        self.assertEqual(result["evidence"]["verifier_answer"], answer)
+        with self.assertRaises(ProgramFinished) as finished:
+            s.finish("confirmed swap; safety observed")
+        self.assertNotIn("FAILED", str(finished.exception))
+        self.assertEqual(s.press.call_count, 3)
+        s.verifier.ask.assert_called_once()
+
+    def test_swap_with_fewer_than_three_confirmations_cannot_complete(self):
+        s, e = self.plan_and_press({"ok": True, "presses": 1, "count_complete": True, "arm_clear": True})
+        for count in range(3):
+            self.assertEqual(s._comp()["swap"]["confirmed_legs"], count)
+            for fields in ({}, {"complete": False}, {"complete": True}):
+                with self.subTest(count=count, fields=fields):
+                    result = s.complete_task(evidence(s, safe_to_finish=True, **fields))
+                    self.assertFalse(result["ok"])
+                    self.assertEqual(result["reason"], "completion_unverified")
+                    self.assertEqual(s._comp()["completion"], "unknown")
+            self.assertTrue(s.swap_confirm(count, "blue", evidence=e)["ok"])
+        self.assertTrue(s.complete_task(evidence(s, safe_to_finish=True))["ok"])
+        self.assertEqual(s.press.call_count, 3)
+
+    def test_swap_prompt_requires_same_cell_closeout_and_home_reserve(self):
+        text = (ROOT / "prompts/robodojo_tasks/swap_blocks.md").read_text()
+        for rule in ("SAME cell", "complete_task -> finish", "do NOT open another observation cell",
+                     "reserve at least 50 host steps", "finish by step 650", "690+",
+                     "completion observed is NOT environment success", "not a guarantee"):
+            self.assertIn(rule, text)
+
+    def test_third_confirm_closeout_budget_and_same_cell_guidance(self):
+        for step, limit, remaining, urgent in ((649, 700, 51, False), (650, 700, 50, True),
+                                              (691, 700, 9, True), (701, 700, 0, True),
+                                              (40, 80, 40, True), (649, None, None, False),
+                                              (691, None, None, True)):
+            with self.subTest(step=step, limit=limit):
+                self.setUp()
+                s, e = self.plan_and_press({"ok": True, "presses": 1, "count_complete": True,
+                                           "arm_clear": True})
+                s.state.update(step=step)
+                if limit is None:
+                    s.state.pop("step_limit", None)
+                else:
+                    s.state["step_limit"] = limit
+                e["observed_step"] = step
+                for index in range(3):
+                    result = s.swap_confirm(index, "blue", evidence=e)
+                    self.assertTrue(result["ok"], result)
+                self.assertTrue(result["same_cell_closeout"])
+                self.assertEqual(result["wrap_up_reserve_steps"], 50)
+                self.assertEqual(result["remaining_steps"], remaining)
+                self.assertEqual(result["closeout_urgent"], urgent)
+                for rule in ("SAME cell", "complete_task -> finish", "do NOT open another observation cell",
+                             "finish by step 650", "690+", "never fabricate evidence"):
+                    self.assertIn(rule, result["message"])
+                self.assertEqual("URGENT:" in result["message"], urgent)
+                self.assertEqual(result["event"]["detail"]["remaining_steps"], remaining)
+                self.assertEqual(s.state["step"], step)  # guidance does not observe or advance time
+                self.assertEqual(s._comp()["completion"], "unknown")
+                self.assertEqual(s.press.call_count, 3)
+                completion = s.complete_task(evidence(s, complete=False, safe_to_finish=True))
+                self.assertTrue(completion["ok"], completion)
+                self.assertTrue(completion["same_cell_closeout"])
+                self.assertEqual(completion["remaining_steps"], remaining)
+                self.assertIn("NO new observation cell", completion["message"])
+                self.assertIn("NOT environment success", completion["message"])
+
+    def test_completion_observed_then_finish_really_homes_both_arms_with_low_budget(self):
+        # Synthetic short return, NOT replay/eval or a claim that ep040's real path fits.
+        # At step 691/700 the 3.0 rad/s return takes 8 ticks; default 2.5 takes 9
+        # and hits truncation. Run actual _wrap_up/home/_execute, not a mocked home.
+        for fast in (True, False):
+            with self.subTest(fast=fast):
+                self.setUp()
+                s, _ = self.confirm_all_legs()
+                worker = s.env
+                worker.step, worker.step_limit = 691, 700
+                worker.joints[0], worker.joints[7] = .48, -.48
+                s.state = worker.state()
+                s.plan_path = lambda arm, pose=None, joints=None: [list(joints)]
+                home = s.home
+                s.home = mock.Mock(wraps=home if fast else lambda arms, speed: home(arms))
+                completion = s.complete_task(evidence(s, complete=False, safe_to_finish=True))
+                self.assertTrue(completion["ok"])
+                self.assertEqual(completion["reason"], "swap_completion_observed")
+                with self.assertRaises(ProgramFinished) as finished:
+                    s.finish("observed swap complete")
+                self.assertNotIn("FAILED", str(finished.exception))
+                if fast:
+                    self.assertEqual(s._wrap_up(), ["COMPLETED"] * 4)
+                    self.assertEqual(worker.step, 699)
+                    self.assertFalse(s.state["ended"])
+                    self.assertEqual([e["skill"] for e in s._events[-3:]],
+                                     ["open_gripper", "open_gripper", "home"])
+                    self.assertEqual(worker.joints[:6] + worker.joints[7:13], [0.0] * 12)
+                else:
+                    with self.assertRaises(EpisodeEnded):
+                        s._wrap_up()
+                    self.assertEqual(worker.step, 700)
+                s.home.assert_called_once_with(("left_arm", "right_arm"), speed=3.0)
+                self.assertEqual(s.press.call_count, 3)  # no motion or press replay
+
+    def test_confirmed_swap_blocks_transfer_facing_press_and_time_advancing_browse(self):
+        s, _ = self.confirm_all_legs()
+        before = json.loads(json.dumps(s._comp()["swap"]))
+        ledger = json.loads(json.dumps(s._comp()["ledger"]))
+        action = mock.Mock()
+        calls = (lambda: s.transfer_item("first", "left_arm", evidence=evidence(s)),
+                 lambda: s.transfer_plan([], evidence=evidence(s)),
+                 lambda: s.swap_plan("first", "second", [0, -.35], self.swap_evidence(s)),
+                 lambda: s.swap_facing_correct("first", "left_arm", evidence(s)),
+                 lambda: s.orient_held("first", "left_arm", 0, evidence(s)),
+                 lambda: s.swap_confirm(2, "blue", evidence=evidence(s)),
+                 lambda: s._comp_motion("new_motion", ["new"], action, evidence(s)))
+        for call in calls:
+            result = call()
+            self.assertFalse(result["ok"])
+            self.assertEqual(result["reason"], "swap_complete_task_required")
+            self.assertEqual(result["next_hop"], "complete_task")
+            self.assertFalse(result["motion_executed"])
+        for skill in ("move_eef", "home", "run_policy", "hold", "watch_scene"):
+            self.assertEqual(s._ownership_guard(skill), "swap_complete_task_required")
+        # Exercise the execution guard too, not only its private decision function.
+        step = s.state["step"]
+        with self.assertRaises(Escalation) as blocked:
+            s._execute("move_eef", {}, action, 1, None, None)
+        result = blocked.exception.trace
+        self.assertFalse(result.ok)
+        self.assertEqual(result.event.detail["next_hop"], "complete_task")
+        self.assertEqual(s.state["step"], step)
+        action.assert_not_called()
+        self.assertEqual(s.press.call_count, 3)
+        self.assertEqual(s._comp()["swap"], before)
+        self.assertEqual(s._comp()["ledger"], ledger)
+        with self.assertRaisesRegex(ValueError, "swap_complete_task_required"):
+            s._complement_policy_arguments(None, ("left_arm", "right_arm"), False, None, None, False)
+        self.assertEqual(s._comp()["last"]["next_hop"], "complete_task")
+        self.assertEqual(s._policy_clients["wall-oss"].calls, [])
+        reroute = s.failure_route("confirmation_downstroke_timeout", receipt=s._comp()["last_counted_press"])
+        self.assertEqual(reroute["next_hop"], "complete_task")
+
+    def test_swap_completion_rejections_are_explicit_and_do_not_silently_downgrade(self):
+        for changes, failed_check in (({"source": ""}, "fresh_visual_evidence"),
+                                      ({"observed_step": -1}, "fresh_visual_evidence"),
+                                      ({"episode_id": "other"}, "fresh_visual_evidence"),
+                                      ({"safe_to_finish": False}, "safe_to_finish"),
+                                      ({"safe_to_finish": None}, "safe_to_finish")):
+            with self.subTest(changes=changes):
+                self.setUp()
+                s, _ = self.confirm_all_legs()
+                result = s.complete_task({**evidence(s, complete=False, safe_to_finish=True), **changes})
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["reason"], "swap_completion_unverified")
+                self.assertEqual(result["next_hop"], "complete_task")
+                self.assertEqual(result["failed_checks"], [failed_check])
+                self.assertTrue(result["checks"]["complete"])
+                self.assertEqual(result["confirmed_legs"], 3)
+                self.assertEqual(s._comp()["completion"], "unknown")
+                self.assertEqual(s.press.call_count, 3)
+        for invalid_state, failed_check in (("ledger", "identity_items_done"),
+                                            ("cards", "cards_confirmed"), ("failed", "not_failed")):
+            with self.subTest(invalid_state=invalid_state):
+                self.setUp()
+                s, _ = self.confirm_all_legs()
+                if invalid_state == "ledger":
+                    s._comp()["ledger"]["first"]["status"] = "pending"
+                elif invalid_state == "cards":
+                    s._comp()["cards"].append({"status": "pressed_unconfirmed"})
+                else:
+                    s._comp()["completion"] = "failed"
+                result = s.complete_task(evidence(s, complete=False, safe_to_finish=True))
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["reason"], "swap_completion_unverified")
+                self.assertEqual(result["next_hop"], "failure_route")
+                self.assertEqual(result["failed_checks"], [failed_check])
+                self.assertTrue(result["checks"]["complete"])
+                self.assertEqual(result["confirmed_legs"], 3)
+
+    def test_confirmed_swap_missing_evidence_or_safety_is_explicitly_rejected(self):
+        s, _ = self.confirm_all_legs()
+        for e, failed in ((None, ["fresh_visual_evidence", "safe_to_finish"]),
+                          ([], ["fresh_visual_evidence", "safe_to_finish"]),
+                          ({}, ["fresh_visual_evidence", "safe_to_finish"]),
+                          (evidence(s, complete=False), ["safe_to_finish"])):
+            with self.subTest(evidence=e):
+                result = s.complete_task(e)
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["reason"], "swap_completion_unverified")
+                self.assertEqual(result["failed_checks"], failed)
+                self.assertTrue(result["checks"]["complete"])
+                self.assertEqual(result["next_hop"], "complete_task")
+                self.assertEqual(s._comp()["completion"], "unknown")
+        self.assertEqual(s.press.call_count, 3)
+
+    def test_confirmed_swap_reports_all_six_safety_failures_without_downgrading(self):
+        s, _ = self.confirm_all_legs()
+        before = json.loads(json.dumps(s._comp()["swap"]))
+        s._comp().update(completion="failed", uncertain=True)
+        s._comp()["ledger"]["first"]["status"] = "pending"
+        s._comp()["cards"].append({"status": "pressed_unconfirmed"})
+        e = {**evidence(s, complete=False, safe_to_finish=False), "observed_step": -1}
+        result = s.complete_task(e)
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["reason"], "swap_completion_unverified")
+        self.assertEqual(result["failed_checks"], ["fresh_visual_evidence", "safe_to_finish", "not_failed",
+                                                  "motion_resolved", "identity_items_done", "cards_confirmed"])
+        self.assertEqual(result["next_hop"], "failure_route")
+        self.assertTrue(result["checks"]["complete"])
+        self.assertEqual(s._comp()["swap"], before)
+        self.assertEqual(s._comp()["completion"], "failed")
+        self.assertEqual(s.press.call_count, 3)
+
+    def test_third_confirm_uncertain_clearance_requires_inspect_then_complete_no_retry(self):
+        s, result = self.confirm_all_legs(final_arm_clear=False)
+        self.assertEqual(result["confirmed_legs"], 3)
+        self.assertEqual(result["next_hop"], "inspect_receipt_no_retry")
+        self.assertTrue(result["completion_required"])
+        self.assertIn("resolve uncertainty before complete_task", result["message"])
+        completion = s.complete_task(evidence(s, complete=False, safe_to_finish=True))
+        self.assertFalse(completion["ok"])
+        self.assertIn("motion_resolved", completion["failed_checks"])
+        self.assertEqual(completion["next_hop"], "inspect_receipt_no_retry")
+        blocked = s.swap_confirm(2, "blue", evidence=evidence(s))
+        self.assertEqual(blocked["next_hop"], "inspect_receipt_no_retry")
+        route = s.failure_route("final_lift_unverified", receipt=result["receipt"],
+                                evidence=evidence(s, resolved_motion=True))
+        self.assertEqual(route["next_hop"], "complete_task")
+        self.assertTrue(s.complete_task(evidence(s, complete=False, safe_to_finish=True))["ok"])
+        self.assertEqual(s.press.call_count, 3)
+
+    def test_confirmed_swap_cannot_finish_success_without_complete_task(self):
+        s, _ = self.confirm_all_legs()
+        with self.assertRaises(ProgramFinished) as finished:
+            s.finish("three legs done")
+        self.assertIn("FAILED/UNKNOWN", str(finished.exception))
+        self.assertEqual(s._wrap_up(), ["RECOVERY_FORBIDDEN"])
+
+    def test_unverified_final_safety_can_finish_honestly_without_reopening_legs(self):
+        s, _ = self.confirm_all_legs()
+        result = s.complete_task(evidence(s, complete=False, safe_to_finish=False))
+        self.assertEqual(result["reason"], "swap_completion_unverified")
+        self.assertEqual(result["failed_checks"], ["safe_to_finish"])
+        with self.assertRaises(ProgramFinished) as finished:
+            s.failure_route(result["reason"], receipt=result, request="finish")
+        self.assertIn("FAILED: swap_completion_unverified", str(finished.exception))
+        self.assertEqual(s._comp()["swap"]["confirmed_legs"], 3)
+        self.assertEqual(s._wrap_up(), ["RECOVERY_FORBIDDEN"])
+        self.assertEqual(s.press.call_count, 3)
+
+    def test_post_third_press_fresh_visual_needs_no_new_ledger_rebind(self):
+        s, _ = self.plan_and_press({"ok": True, "presses": 1, "count_complete": True, "arm_clear": True})
+        def press(*args, **kwargs):
+            s.state["step"] += 1
+            return {"ok": True, "presses": 1, "count_complete": True, "arm_clear": True}
+        s.press.side_effect = press
+        for index in range(3):
+            pre_press = evidence(s, identity_unique=True, at_destination=True, facing_correct=True,
+                                 released=True, target_unique=True)
+            self.assertTrue(s.swap_confirm(index, "blue", evidence=pre_press)["ok"])
+        stale = s.complete_task({**pre_press, "complete": False, "safe_to_finish": True})
+        self.assertEqual(stale["failed_checks"], ["fresh_visual_evidence"])
+        # No fresh locate/identity_ledger/placement_check required after the final press.
+        s.identity_ledger = mock.Mock()
+        self.assertTrue(s.complete_task(evidence(s, safe_to_finish=True))["ok"])
+        s.identity_ledger.assert_not_called()
+        self.assertEqual(s.press.call_count, 3)
+
     def test_unknown_or_partial_confirmation_never_represses(self):
         for raw in ({"ok": False, "presses": 0, "event": {"kind": "TIMEOUT"}},
                     {"ok": True, "presses": 1, "count_complete": False}):
@@ -1333,6 +1809,372 @@ class SwapTests(unittest.TestCase):
         self.assertFalse(s.orient_held("first", "left_arm", 0, evidence(s, identity_unique=True,
                          held_identity=True, directed_axis=True, orientation_measured=True, path_clear=True, yaw_deg=10))["ok"])
         self.assertEqual(s.move_eef.call_count, 1)
+
+    def facing_api_session(self, index=0):
+        s, _ = self.plan_and_press({"ok": True, "presses": 1, "count_complete": True})
+        for previous in range(index):
+            self.assertTrue(s.swap_confirm(previous, "blue", evidence=evidence(s, identity_unique=True,
+                            at_destination=True, facing_correct=True, released=True, target_unique=True))["ok"])
+        leg = s._comp()["swap"]["legs"][index]
+        obj = s._eef_object(s._comp()["ledger"][leg["key"]]["object"])
+        obj["position"][:2] = leg["xy"]
+        measured(s, s._eef_scene)
+        self.assertTrue(s.identity_ledger(self.entries, self.swap_evidence(s))["ok"])
+        def pick(arm, object):
+            self.assertNotIn(index, s._comp()["swap"].get("facing_corrections", []))
+            trace(s)
+            s._eef_object(object)["held_by"] = arm
+            s._eef_grip[arm] = (0, 0, .04)
+            return {"ok": True, "check": {"held": True}}
+        def release(arm, **kwargs):
+            self.assertEqual(s._comp()["swap"]["facing_recovery"]["phase"], "reseat_attempted")
+            trace(s)
+            s._eef_grip.pop(arm)
+            for source in s._eef_scene:
+                if source.get("held_by") == arm:
+                    source["held_by"] = None
+            return {"ok": True, "where": kwargs}
+        s.eef_pick = mock.Mock(side_effect=pick)
+        s.move_eef = mock.Mock(side_effect=lambda *_a, **_kw: trace(s))
+        s.eef_release = mock.Mock(side_effect=release)
+        facing = evidence(s, key=leg["key"], identity_unique=True, at_destination=True, released=True,
+                          facing_correct=False, directed_axis=True, orientation_measured=True, yaw_deg=12, path_clear=True)
+        return s, leg, facing
+
+    def held_api_evidence(self, s, leg, *, bind=False, object=None, **extra):
+        measured(s, s._eef_scene)  # NEW held observation; not the pick's held_by mutation.
+        entry = dict(next(row for row in self.entries if row["key"] == leg["key"]))
+        if object is not None:
+            entry["object"] = object
+        held = evidence(s, identity_unique=True, held_identity=True, directed_axis=True,
+                        orientation_measured=True, path_clear=True, yaw_deg=12)
+        held.update(extra)
+        if bind:
+            self.assertTrue(s.identity_ledger([entry], held)["ok"])
+        return held, entry
+
+    def test_facing_api_rebinds_and_completes_each_frozen_leg_without_confirming_by_motion(self):
+        for index in range(3):
+            with self.subTest(index=index):
+                self.setUp()
+                s, leg, facing = self.facing_api_session(index)
+                before = s._comp()["swap"]["confirmed_legs"]
+                for _ in range(3):
+                    self.assertEqual(s.failure_route("placement_unverified", request="finish", evidence=facing)
+                                     ["next_hop"], "pick_observe_orient_reseat_then_confirm")
+                picked = s.swap_facing_correct(leg["key"], "left_arm", facing)
+                self.assertTrue(picked["ok"], picked)
+                self.assertEqual(picked["stage"], "picked")
+                self.assertEqual(picked["next_hop"], "observe_rebind_held_then_swap_facing_correct")
+                self.assertFalse(picked["correction_consumed"])
+                self.assertNotIn(index, s._comp()["swap"].get("facing_corrections", []))
+                self.assertFalse(s.complete_task(evidence(s, complete=True, safe_to_finish=True))["ok"])
+                s.move_eef.assert_not_called()
+                s.eef_release.assert_not_called()
+                held, entry = self.held_api_evidence(s, leg)
+                original_orient = s._orient_held
+                def orient(*args, **kwargs):
+                    self.assertEqual(s._comp()["swap"]["facing_corrections"], [index])
+                    self.assertEqual(s._comp()["swap"]["facing_recovery"]["phase"], "orient_reserved")
+                    return original_orient(*args, **kwargs)
+                s._orient_held = mock.Mock(side_effect=orient)
+                reseated = s.swap_facing_correct(leg["key"], "left_arm", held, held_entry=entry)
+                self.assertTrue(reseated["ok"], reseated)
+                self.assertEqual(reseated["stage"], "placed_unverified")
+                self.assertEqual(reseated["next_hop"], "reobserve_rebind_then_swap_confirm")
+                self.assertTrue(reseated["correction_consumed"])
+                s.eef_pick.assert_called_once_with("left_arm", entry["object"])
+                s.move_eef.assert_called_once()
+                self.assertEqual(s._orient_held.call_args.args, (leg["key"], "left_arm", leg["yaw_deg"], held))
+                s.eef_release.assert_called_once_with("left_arm", x=leg["xy"][0], y=leg["xy"][1], withdraw=False)
+                self.assertEqual(s._comp()["swap"]["confirmed_legs"], before)
+                self.assertEqual(s._comp()["swap"]["facing_corrections"], [index])
+                self.assertFalse(s.swap_confirm(index, "blue", evidence=held)["ok"])
+                # Even fresh booleans cannot stand in for a NEW released-identity binding.
+                confirm = evidence(s, identity_unique=True, at_destination=True, facing_correct=True,
+                                   released=True, target_unique=True)
+                self.assertFalse(s.swap_confirm(index, "blue", evidence=confirm)["ok"])
+                self.assertNotIn(index, s._comp()["swap"]["attempted"])
+                self.assertEqual(s.swap_facing_correct(leg["key"], "left_arm", evidence(s))["reason"],
+                                 "swap_facing_correction_exhausted")
+                measured(s, s._eef_scene)
+                self.assertFalse(s.swap_confirm(index, "blue", evidence=confirm)["ok"])
+                s.identity_ledger([entry], self.swap_evidence(s))
+                self.assertTrue(s.swap_confirm(index, "blue", evidence=evidence(s, identity_unique=True,
+                                at_destination=True, facing_correct=True, released=True, target_unique=True))["ok"])
+                self.assertEqual(s._comp()["swap"]["confirmed_legs"], before + 1)
+                self.assertEqual(s.press.call_count, index + 1)
+                self.assertEqual(len(s._comp()["swap"]["receipts"]), index + 3)
+
+    def test_facing_api_accepts_only_explicit_same_identity_current_id_and_prebound_path(self):
+        s, leg, facing = self.facing_api_session()
+        self.assertTrue(s.swap_facing_correct("first", "left_arm", facing)["ok"])
+        s._eef_scene[0]["id"] = "o9"  # Labels change; no auto-matching by position/name.
+        held, entry = self.held_api_evidence(s, leg, object="o9", bind=True)
+        self.assertTrue(s.swap_facing_correct("first", "left_arm", held)["ok"])
+        self.assertEqual(s._comp()["ledger"]["first"]["object"], "o9")
+
+    def test_facing_api_three_corrections_and_counted_confirmations_keep_frozen_sequence(self):
+        s, _, _ = self.facing_api_session()
+        frozen = json.loads(json.dumps(s._comp()["swap"]["legs"]))
+        def pick(arm, object):
+            index = s._comp()["swap"]["confirmed_legs"]
+            self.assertEqual(s._comp()["swap"].get("facing_corrections", []), list(range(index)))
+            trace(s)
+            s._eef_object(object)["held_by"] = arm
+            s._eef_grip[arm] = (0, 0, .04)
+            return {"ok": True, "check": "held after lift"}
+        s.eef_pick.side_effect = pick
+        for index, leg in enumerate(frozen):
+            s._eef_object(s._comp()["ledger"][leg["key"]]["object"])["position"][:2] = leg["xy"]
+            measured(s, s._eef_scene)
+            s.identity_ledger(self.entries, self.swap_evidence(s))
+            facing = evidence(s, key=leg["key"], identity_unique=True, at_destination=True, released=True,
+                              facing_correct=False, directed_axis=True, orientation_measured=True, yaw_deg=30, path_clear=True)
+            self.assertTrue(s.swap_facing_correct(leg["key"], "left_arm", facing)["ok"])
+            held, entry = self.held_api_evidence(s, leg, yaw_deg=-30)
+            self.assertTrue(s.swap_facing_correct(leg["key"], "left_arm", held, held_entry=entry)["ok"])
+            self.assertEqual(s._comp()["swap"]["legs"], frozen)
+            measured(s, s._eef_scene)
+            s.identity_ledger([entry], self.swap_evidence(s))
+            confirmed = s.swap_confirm(index, "blue", evidence=evidence(s, identity_unique=True,
+                                     at_destination=True, facing_correct=True, released=True, target_unique=True))
+            self.assertTrue(confirmed["ok"], confirmed)
+            self.assertEqual(confirmed["confirmation"], "counted_press_complete")
+            self.assertEqual(confirmed["confirmed_legs"], index + 1)
+        self.assertEqual(s._comp()["swap"]["facing_corrections"], [0, 1, 2])
+        self.assertEqual(s.eef_pick.call_count, 3)
+        self.assertEqual(s.move_eef.call_count, 3)
+        self.assertEqual(s.eef_release.call_count, 3)
+        self.assertEqual(s.press.call_count, 3)
+        self.assertTrue(s.complete_task(evidence(s, complete=True, safe_to_finish=True))["ok"])
+        new_episode = self.make_session()
+        self.assertNotIn("swap", new_episode._comp())
+
+    def test_facing_api_rejects_ineligible_pre_pick_without_consuming_or_moving(self):
+        for changes in ({"yaw_deg": 31}, {"yaw_deg": -31}, {"yaw_deg": 0}, {"yaw_deg": float("nan")},
+                        {"identity_unique": False}, {"directed_axis": False}, {"at_destination": False},
+                        {"released": False}, {"facing_correct": True}, {"path_clear": False},
+                        {"observed_step": -1}, {"episode_id": "wrong"}):
+            with self.subTest(changes=changes):
+                self.setUp()
+                s, leg, facing = self.facing_api_session()
+                facing.update(changes)
+                self.assertFalse(s.swap_facing_correct("first", "left_arm", facing)["ok"])
+                self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+                s.eef_pick.assert_not_called()
+                s.move_eef.assert_not_called()
+                s.eef_release.assert_not_called()
+
+    def test_facing_api_rejects_wrong_key_held_source_owner_uncertainty_and_reach(self):
+        for case in ("wrong_key", "wrong_arm", "held", "uncertain", "terminal", "policy", "source_reach", "goal_reach"):
+            with self.subTest(case=case):
+                self.setUp()
+                s, leg, facing = self.facing_api_session()
+                key, arm = "first", "left_arm"
+                if case == "wrong_key":
+                    key = "second"
+                elif case == "wrong_arm":
+                    arm = "left"
+                elif case == "held":
+                    s._eef_scene[0]["held_by"] = arm
+                elif case == "uncertain":
+                    s._comp()["uncertain"] = True
+                elif case == "terminal":
+                    s._comp()["completion"] = "failed"
+                elif case == "policy":
+                    s._comp()["route"]["phase"] = "policy"
+                elif case == "source_reach":
+                    s._eef_scene[0]["reach"][arm] = "tilted"
+                else:
+                    s._eef_reach.return_value = {arm: "tilted"}
+                self.assertFalse(s.swap_facing_correct(key, arm, facing)["ok"])
+                s.eef_pick.assert_not_called()
+
+    def test_facing_api_failed_or_unknown_grasp_spends_no_correction_and_never_orients_or_retries(self):
+        for raw in ({"ok": False, "reason": "not held after the lift"},
+                    {"ok": True},  # A bare success without grip/held_by is not held evidence.
+                    {"ok": False, "reason": "could not get above it: TIMEOUT"},
+                    {"ok": False, "receipt": {"event": {"kind": "TIMEOUT"}}},
+                    {"ok": True, "motion_executed": "unknown"}):
+            with self.subTest(raw=raw):
+                self.setUp()
+                s, leg, facing = self.facing_api_session()
+                def fail(*args):
+                    self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+                    trace(s)
+                    return raw
+                s.eef_pick.side_effect = fail
+                result = s.swap_facing_correct("first", "left_arm", facing)
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["receipt"]["pick"], raw)
+                self.assertFalse(result["correction_consumed"])
+                self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+                if s._swap_motion_unknown(raw):
+                    self.assertEqual(result["next_hop"], "inspect_receipt_no_retry")
+                    self.assertTrue(s._comp()["uncertain"])
+                    s.failure_route("inspection", evidence=evidence(s, resolved_motion=True))
+                else:
+                    self.assertEqual(result["next_hop"], "failure_route")
+                    self.assertEqual(result["reason"], "grasp_failed" if not raw["ok"] else
+                                     "swap_held_identity_or_facing_unverified")
+                # Fresh, qualified released evidence cannot silently repeat even a
+                # known failed grasp; its attempt receipt is independent of yaw budget.
+                measured(s, s._eef_scene)
+                s.identity_ledger(self.entries, self.swap_evidence(s))
+                facing["observed_step"] = s.state["step"]
+                rejected = s.swap_facing_correct("first", "left_arm", facing)
+                self.assertEqual(rejected["reason"], "same_failed_action_no_retry")
+                self.assertEqual(s._comp()["swap"]["receipts"][-1],
+                                 {"facing_pick": 0, "receipt": result["receipt"]})
+                self.assertFalse(rejected["correction_consumed"])
+                self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+                s.eef_pick.assert_called_once()
+                s.move_eef.assert_not_called()
+                s.eef_release.assert_not_called()
+
+    def test_facing_api_failed_grasp_preserves_prior_legs_correction_budget(self):
+        for index in (1, 2):
+            with self.subTest(index=index):
+                self.setUp()
+                s, leg, facing = self.facing_api_session(index)
+                swap = s._comp()["swap"]
+                swap["facing_corrections"] = list(range(index))
+                raw = {"ok": False, "reason": "not held after the lift"}
+                s.eef_pick.side_effect = lambda *_args: (trace(s), raw)[1]
+                result = s.swap_facing_correct(leg["key"], "left_arm", facing)
+                self.assertEqual(result["reason"], "grasp_failed")
+                self.assertEqual(result["next_hop"], "failure_route")
+                self.assertFalse(result["correction_consumed"])
+                self.assertEqual(swap["facing_corrections"], list(range(index)))
+                self.assertEqual(swap["confirmed_legs"], index)
+                s.eef_pick.assert_called_once()
+                s.move_eef.assert_not_called()
+                s.eef_release.assert_not_called()
+
+    def test_facing_api_requires_new_measurement_and_same_fresh_held_binding(self):
+        for case in ("no_locate", "stale_ledger", "stale_step", "stale_episode", "held_identity", "directed_axis",
+                     "missing_yaw", "not_held", "wrong_held_arm", "wrong_entry", "changed_identity",
+                     "changed_destination", "alias", "large_held_error"):
+            with self.subTest(case=case):
+                self.setUp()
+                s, leg, facing = self.facing_api_session()
+                self.assertTrue(s.swap_facing_correct("first", "left_arm", facing)["ok"])
+                held, entry = self.held_api_evidence(s, leg)
+                supplied_entry = entry
+                if case == "no_locate":
+                    s._eef_measure_serial = s._comp()["swap"]["facing_recovery"]["pick_measure_serial"]
+                elif case == "stale_ledger":
+                    supplied_entry = None
+                elif case == "stale_step":
+                    held["observed_step"] = -1
+                elif case == "stale_episode":
+                    held["episode_id"] = "wrong"
+                elif case in {"held_identity", "directed_axis"}:
+                    held[case] = False
+                elif case == "missing_yaw":
+                    held.pop("yaw_deg")
+                elif case == "not_held":
+                    s._eef_grip.clear()
+                elif case == "wrong_held_arm":
+                    s._eef_scene[0]["held_by"] = "right_arm"
+                elif case == "wrong_entry":
+                    entry["object"] = "o2"
+                elif case == "changed_identity":
+                    entry["identity"] = "nearest block"
+                elif case == "changed_destination":
+                    entry["destination"] = "different mat"
+                elif case == "alias":
+                    s._eef_scene[0]["aliases"] = ["unresolved twin"]
+                else:
+                    held["yaw_deg"] = 31
+                original_object = s._comp()["ledger"]["first"]["object"]
+                self.assertFalse(s.swap_facing_correct("first", "left_arm", held, held_entry=supplied_entry)["ok"])
+                self.assertEqual(s._comp()["ledger"]["first"]["object"], original_object)
+                s.eef_pick.assert_called_once()
+                s.move_eef.assert_not_called()
+                s.eef_release.assert_not_called()
+                self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+
+    def test_facing_api_no_motion_rebind_rejection_can_be_resolved_without_second_pick(self):
+        s, leg, facing = self.facing_api_session()
+        self.assertTrue(s.swap_facing_correct("first", "left_arm", facing)["ok"])
+        self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+        self.assertEqual(s.swap_facing_correct("first", "left_arm", facing)["next_hop"],
+                         "observe_rebind_held_then_swap_facing_correct")
+        self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+        held, entry = self.held_api_evidence(s, leg)
+        self.assertTrue(s.swap_facing_correct("first", "left_arm", held, held_entry=entry)["ok"])
+        self.assertEqual(s._comp()["swap"]["facing_corrections"], [0])
+        s.eef_pick.assert_called_once()
+
+    def test_facing_api_pending_and_consumed_budget_cannot_escape_through_public_orient_held(self):
+        s, leg, facing = self.facing_api_session()
+        s.swap_facing_correct("first", "left_arm", facing)
+        held, entry = self.held_api_evidence(s, leg, bind=True)
+        self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+        rejected = s.orient_held("first", "left_arm", 0, held)
+        self.assertEqual(rejected["reason"], "swap_facing_staged_recovery_required")
+        self.assertEqual(rejected["next_hop"], "observe_rebind_held_then_swap_facing_correct")
+        self.assertEqual(s._comp()["swap"].get("facing_corrections", []), [])
+        s.move_eef.assert_not_called()
+        self.assertTrue(s.swap_facing_correct("first", "left_arm", held)["ok"])
+        self.assertEqual(s._comp()["swap"]["facing_corrections"], [0])
+        self.assertFalse(s.orient_held("first", "left_arm", 0, evidence(s, **{
+                         k: v for k, v in held.items() if k != "observed_step"}))["ok"])
+        s.move_eef.assert_called_once()
+
+    def test_facing_api_pick_cannot_be_confirmed_from_booleans_or_pre_pick_locate_serial(self):
+        s, leg, facing = self.facing_api_session()
+        original_pick = s.eef_pick.side_effect
+        def pick_with_internal_measure(*args):
+            result = original_pick(*args)
+            measured(s, s._eef_scene)  # Even an internal pick-check locate is not new caller evidence.
+            return result
+        s.eef_pick.side_effect = pick_with_internal_measure
+        self.assertTrue(s.swap_facing_correct("first", "left_arm", facing)["ok"])
+        held = evidence(s, identity_unique=True, held_identity=True, directed_axis=True,
+                        orientation_measured=True, path_clear=True, yaw_deg=12)
+        self.assertFalse(s.swap_facing_correct("first", "left_arm", held, held_entry=self.entries[0])["ok"])
+        self.assertFalse(s.swap_confirm(0, "blue", evidence=evidence(s, identity_unique=True,
+                         at_destination=True, facing_correct=True, released=True, target_unique=True))["ok"])
+        self.assertEqual(s._comp()["swap"]["attempted"], [])
+        s.press.assert_not_called()
+        s.move_eef.assert_not_called()
+
+    def test_facing_api_turn_or_release_failure_never_retries_even_after_resolution(self):
+        for case in ("failed_turn", "unknown_turn", "failed_release", "unknown_release", "pick_exception"):
+            with self.subTest(case=case):
+                self.setUp()
+                s, leg, facing = self.facing_api_session()
+                if case == "pick_exception":
+                    s.eef_pick.side_effect = RuntimeError("lost motion response")
+                    result = s.swap_facing_correct("first", "left_arm", facing)
+                    self.assertEqual(result["receipt"]["exception"], "lost motion response")
+                else:
+                    s.swap_facing_correct("first", "left_arm", facing)
+                    held, entry = self.held_api_evidence(s, leg)
+                    if case.endswith("turn"):
+                        s.move_eef.side_effect = lambda *_a, **_kw: trace(s, "TIMEOUT" if case == "unknown_turn" else "UNREACHABLE")
+                    else:
+                        raw = {"ok": False, "reason": "release failed"}
+                        if case == "unknown_release":
+                            raw["receipt"] = {"event": {"kind": "TIMEOUT"}}
+                        s.eef_release.side_effect = lambda *_a, **_kw: (trace(s), raw)[1]
+                    result = s.swap_facing_correct("first", "left_arm", held, held_entry=entry)
+                self.assertFalse(result["ok"])
+                self.assertEqual(s._comp()["swap"].get("facing_corrections", []),
+                                 [] if case == "pick_exception" else [0])
+                self.assertEqual(result["correction_consumed"], case != "pick_exception")
+                if case.startswith("unknown") or case == "pick_exception":
+                    self.assertEqual(result["next_hop"], "inspect_receipt_no_retry")
+                    s.failure_route("inspection", evidence=evidence(s, resolved_motion=True))
+                else:
+                    self.assertEqual(result["next_hop"], "failure_route")
+                self.assertFalse(s.swap_facing_correct("first", "left_arm", evidence(s))["ok"])
+                s.eef_pick.assert_called_once()
+                self.assertEqual(s.move_eef.call_count, 0 if case == "pick_exception" else 1)
+                self.assertEqual(s.eef_release.call_count, 1 if case.endswith("release") else 0)
 
 
 if __name__ == "__main__":

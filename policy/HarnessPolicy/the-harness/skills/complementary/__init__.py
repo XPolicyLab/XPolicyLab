@@ -21,7 +21,11 @@ from skills.vla import _OWN_TOOLS, _WALL_BASKET_BINDING, _WALL_COLOUR_POUR
 
 
 PLANAR = re.compile(r"T-shaped (?:block|object)[\s\S]*?(?:pad|align)|set square[\s\S]*?(?:align|row|push)", re.I)
-TOOLS = re.compile(r"(?:xylophone|sweep[\s\S]*?(?:broom|dustpan)|(?:broom|dustpan)[\s\S]*?sweep)", re.I)
+TOOLS = re.compile(r"(?:sweep[\s\S]*?(?:broom|dustpan)|(?:broom|dustpan)[\s\S]*?sweep)", re.I)
+# Learned precision striking, not a measured held-tool complement. Keep this
+# separate from PRECISION so explicit hard reads and memory still take precedence.
+WALL_STRIKING = re.compile(r"\bxylophone\b|\bmallet\b[\s\S]*?\bstrik(?:e|es|ing)\b|"
+                          r"\bstrik(?:e|es|ing)\b[\s\S]*?\bmallet\b", re.I)
 SWAP = re.compile(r"(?:swap|exchange)[\s\S]*?(?:positions?[\s\S]*?blocks?|blocks?[\s\S]*?(?:positions?|empty mat))", re.I)
 MEMORY = re.compile(r"(?:remember|memorize|imitate|cover[\s\S]*?blocks?|conveyor|discard|kong|"
                     r"(?:swap|exchange)[\s\S]*?T-shaped)", re.I)
@@ -29,12 +33,16 @@ PRECISION = re.compile(r"(?:screw|nut\b|fasten|tubes?|charger|keyhole|peg|stacki
                        r"(?:insert|plug)[\s\S]*?(?:slot|socket|hole|\bkey\b)|\bkey\b[\s\S]*?\block\b)", re.I)
 TAIL = re.compile(r"(?:pen holder|(?:pack|place all (?:the )?objects)[\s\S]*?box|"
                   r"laptop[\s\S]*?headphones|headphones[\s\S]*?laptop)", re.I)
+# Closeout guidance, not a motion deadline or an automatic completion gate.
+# At 25 Hz this reserves two seconds for empty grippers and the planned dual-arm return.
+SWAP_WRAP_UP_RESERVE_STEPS = 50
 
 
 def instruction_route(instruction):
     """Capability routing from native instruction ONLY (no benchmark identifiers).
 
-    Named 10 cm pickup is A/WALL, not a hard semantic read; it has no own-tool gate.
+    Named 10 cm pickup and xylophone/mallet strikes preserve A/WALL; striking
+    does not suppress explicit hard reads or memory rules or require a tool gate.
     """
     text = str(instruction or "")
     precision = bool(PRECISION.search(text))
@@ -46,9 +54,11 @@ def instruction_route(instruction):
     # Explicit remembered work (especially swapping T-shaped BLOCKS) wins over
     # the generic block-swap complement, not just the T-shaped-object wording.
     memory = not hard and bool(MEMORY.search(text))
-    identity_sensitive = not precision and not memory and bool(SWAP.search(text))
-    own = hard or (not precision and not memory and bool(PLANAR.search(text) or TOOLS.search(text) or identity_sensitive))
-    tail = not own and not memory and not precision and bool(TAIL.search(text))
+    striking = bool(WALL_STRIKING.search(text))
+    identity_sensitive = not precision and not memory and not striking and bool(SWAP.search(text))
+    own = hard or (not precision and not memory and not striking and
+                   bool(PLANAR.search(text) or TOOLS.search(text) or identity_sensitive))
+    tail = not own and not memory and not precision and not striking and bool(TAIL.search(text))
     return {"owner": "B" if own else "C" if tail else "A", "hard": hard,
             "memory": memory, "identity_sensitive": identity_sensitive, "precision": precision, "tail": tail,
             "rule": "semantic_read_binding" if hard else "measured_complement" if own else
@@ -127,6 +137,53 @@ class Complementary:
                 (not fresh or evidence["observed_step"] == self.state.get("step")) and
                 evidence.get("episode_id", self.episode_id) == self.episode_id)
 
+    def _swap_closeout_required(self):
+        return self._comp().get("swap", {}).get("confirmed_legs", 0) >= 3
+
+    def _swap_closeout_budget(self):
+        step, limit = self.state.get("step"), self.state.get("step_limit")
+        remaining = max(0, limit - step) if type(step) is int and type(limit) is int else None
+        # If the connection omits its limit, use the observed late-step warning only;
+        # never fabricate a remaining-step count or read evaluator-private state.
+        urgent = (remaining <= SWAP_WRAP_UP_RESERVE_STEPS if remaining is not None else
+                  type(step) is int and step >= 650)
+        return {"same_cell_closeout": True, "wrap_up_reserve_steps": SWAP_WRAP_UP_RESERVE_STEPS,
+                "remaining_steps": remaining, "closeout_urgent": urgent}
+
+    def _swap_closeout_guidance(self):
+        state = self._comp()
+        budget = self._swap_closeout_budget()
+        message = (
+            "All three swap legs are confirmed. MUST call complete_task next with fresh "
+            "RGB safety evidence: source, observed_step, safe_to_finish=True. "
+            "The three swap_confirm receipts + ledger done certify completeness; "
+            "do NOT use verify() to veto closeout. evidence.complete=False or missing "
+            "does not negate the confirmed sequence; all safety checks still apply. "
+            "In the SAME cell, immediately complete_task -> finish on ok=True; "
+            "do NOT open another observation cell. "
+            "Use the current post-confirmation view if sufficient; otherwise at most ONE "
+            "bounded non-motion visual inspection in this cell, then complete_task. "
+            "If fresh safety evidence cannot be verified here, finish honestly through "
+            "failure_route; never fabricate evidence or relabel pre-press RGB as current. No transfer, "
+            "facing correction, extra press, move_tip, time-advancing watch or unbounded "
+            "locate/show browsing. Reserve at least 50 host steps for wrap_up open_gripper + "
+            "home(both): finish by step 650 with a 700-step limit, earlier for a long return; "
+            "do not wait until 690+. Only after complete_task ok may finish trigger final home."
+        )
+        if budget["closeout_urgent"]:
+            message = ("URGENT: final home reserve is low (remaining_steps=" +
+                       str(budget["remaining_steps"]) + "). MUST complete_task -> finish immediately "
+                       "in the SAME cell when evidence is verified; NO new observation cell. " + message)
+        if state["uncertain"]:
+            message = ("Keep all three confirmations and the original receipt. Inspect final arm "
+                       "clearance WITHOUT motion/retry; resolve uncertainty before complete_task. " + message)
+        return {"confirmed_legs": state["swap"]["confirmed_legs"], "completion_required": True,
+                "next_hop": "inspect_receipt_no_retry" if state["uncertain"] else "complete_task",
+                "message": message, **budget}
+
+    def _swap_closeout_result(self, skill):
+        return self._comp_result(skill, False, "swap_complete_task_required", **self._swap_closeout_guidance())
+
     def _comp_result(self, skill, ok, reason=None, *, motion=False, next_hop=None, receipt=None, **extra):
         state = self._comp()
         detail = {"ok": bool(ok), "failure_reason": reason, "episode_id": self.episode_id,
@@ -179,6 +236,9 @@ class Complementary:
             return "terminal_honest_failure"
         if not route["instruction"]:
             return "native_instruction_unavailable"
+        if (self._swap_closeout_required() and
+                not (state["completion"] == "observed" and self.__dict__.get("_wrapping_up"))):
+            return "swap_complete_task_required"
         if skill == "run_policy":
             if route["owner"] == "B" or route["phase"] != "policy":
                 return "own_owner_requires_explicit_failure_handover"
@@ -203,7 +263,10 @@ class Complementary:
         route = self._comp()["route"]
         reason = self._ownership_guard("run_policy")
         if reason:
-            self._comp_result("run_policy", False, reason, next_hop="failure_route")
+            if reason == "swap_complete_task_required":
+                self._swap_closeout_result("run_policy")
+            else:
+                self._comp_result("run_policy", False, reason, next_hop="failure_route")
             raise ValueError(reason)
         if instruction is not None or set(arms) != set(ARMS) or reset or region is not None or until is not None:
             self._comp_result("run_policy", False, "wall_requires_original_instruction_both_arms_no_reset")
@@ -262,10 +325,11 @@ class Complementary:
                  reason in {"count_uncertain", "confirm_uncertain"})):
             # The caller must supply the ORIGINAL successful receipt. Do not turn
             # its nested bounded contact TIMEOUT into a new terminal count failure.
+            closeout = self._swap_closeout_guidance() if self._swap_closeout_required() else {}
             return self._comp_result("failure_route", True, "counted_press_already_complete",
                                      rejected_reason=reason, receipt=receipt, press_retry_allowed=False,
-                                     next_hop="inspect_receipt_no_retry" if state["uncertain"] else
-                                     "continue_after_counted_press")
+                                     **(closeout or {"next_hop": "inspect_receipt_no_retry" if state["uncertain"] else
+                                                    "continue_after_counted_press"}))
         count = state["failures"][reason] = state["failures"].get(reason, 0) + 1
         before = route["owner"] + "-" + route["phase"]
         if state["uncertain"] and self._evidence(evidence) and evidence.get("resolved_motion") is True:
@@ -339,22 +403,59 @@ class Complementary:
                 hop = "wall_fallback_denied"
         if route["owner"] == "C" and route["correction_count"] and request != "return_wall":
             hop = "inspect_receipt_no_retry" if uncertain else "finish_honest_failure"
+        closeout = {}
+        if (self._swap_closeout_required() and not irreversible and state["completion"] != "failed" and
+                not (reason == "swap_completion_unverified" and request == "finish")):
+            closeout = self._swap_closeout_guidance()
+            hop = closeout.pop("next_hop")
         if hop == "finish_honest_failure":
             state["completion"] = "failed"
         result = self._comp_result("failure_route", False, reason, motion=motion_executed,
                                    next_hop=hop, receipt=receipt, failure_count=count, ownership_before=before,
                                    recovery_budget_count=budget_count, recovery_budget_exhausted=budget_count > 2,
-                                   evidence=copy.deepcopy(evidence))
+                                   evidence=copy.deepcopy(evidence), **closeout)
         if request == "finish" and hop == "finish_honest_failure":
             raise ProgramFinished("FAILED: " + reason)
         return result
 
     def complete_task(self, evidence):
-        """Record completion only with fresh RGB: complete=True and safe_to_finish=True.
+        """Record completion only with fresh RGB and safe_to_finish=True.
         All identity ledger items must have observed postconditions, all cards must be
         confirmed, and no motion may be uncertain. Allows final benchmark wrap-up;
-        evidence may retain a held object for a named-pick task. No reward access."""
+        evidence may retain a held object for a named-pick task. Non-swap completion
+        also requires complete=True. A three-confirmed-leg swap certifies completeness
+        from its swap_confirm receipts + ledger done, not optional VLM verify() or
+        evidence.complete, with the SAME safety checks and no transfer/rebind/press;
+        explicit failed checks never silently downgrade its closeout. No reward access."""
         state = self._comp()
+        if self._swap_closeout_required():
+            # swap_confirm advances this count only after a complete press receipt
+            # and observed placement evidence; an optional VLM NO cannot undo it.
+            checks = {"fresh_visual_evidence": self._evidence(evidence),
+                      "complete": state["swap"]["confirmed_legs"] >= 3,
+                      "safe_to_finish": isinstance(evidence, dict) and evidence.get("safe_to_finish") is True,
+                      "not_failed": state["completion"] != "failed",
+                      "motion_resolved": not state["uncertain"],
+                      "identity_items_done": all(item["status"] == "done" for item in state["ledger"].values()),
+                      "cards_confirmed": all(card["status"] == "confirmed" for card in state["cards"])}
+            if not all(checks.values()):
+                guidance = self._swap_closeout_guidance()
+                if not checks["not_failed"] or not checks["identity_items_done"] or not checks["cards_confirmed"]:
+                    guidance.update(next_hop="failure_route", message=(
+                        "Three swap confirmations are retained, but completion safety checks failed. "
+                        "Inspect failed_checks and finish honestly if unverified; do not transfer or correct."))
+                return self._comp_result("complete_task", False, "swap_completion_unverified",
+                                         checks=checks, failed_checks=[k for k, ok in checks.items() if not ok],
+                                         evidence=copy.deepcopy(evidence), **guidance)
+            state["completion"] = "observed"
+            return self._comp_result("complete_task", True, "swap_completion_observed", next_hop="finish",
+                                     confirmed_legs=state["swap"]["confirmed_legs"], completion_required=False,
+                                     evidence=copy.deepcopy(evidence), checks=checks,
+                                     **self._swap_closeout_budget(),
+                                     message="Swap completion certified by three swap_confirm receipts + ledger done; "
+                                             "fresh safety evidence accepted, NOT environment success. In the SAME cell, "
+                                             "call finish immediately for final benchmark home; NO new observation cell. "
+                                             "Return to start must actually complete before the host step limit.")
         ready = (self._evidence(evidence) and evidence.get("complete") is True and
                  state["completion"] != "failed" and
                  evidence.get("safe_to_finish") is True and not state["uncertain"] and
@@ -369,6 +470,8 @@ class Complementary:
     def _comp_motion(self, skill, signature, action, evidence):
         state = self._comp()
         route = state["route"]
+        if self._swap_closeout_required():
+            return self._swap_closeout_result(skill)
         if not self._evidence(evidence):
             return self._comp_result(skill, False, "stale_or_missing_measurement")
         if state["uncertain"] or route["phase"] != "own" or state["completion"] == "failed":
@@ -508,6 +611,8 @@ class Complementary:
         structured blocked rows: staging failure is recoverable, not capability_missing.
         Execute ready direct work before remeasuring staging for the remainder.
         No movement in this planner."""
+        if self._swap_closeout_required():
+            return self._swap_closeout_result("transfer_plan")
         if not self._evidence(evidence):
             return self._comp_result("transfer_plan", False, "stale_or_missing_measurement")
         plan, blocked = [], []
@@ -699,6 +804,8 @@ class Complementary:
         withdrawal saves a redundant park; remeasure before next item. Doesn't mark
         done: placement_check requires fresh RGB inside/below-rim/facing evidence.
         A staging leg uses x,y and must be visually re-bound before the next leg."""
+        if self._swap_closeout_required():
+            return self._swap_closeout_result("transfer_item")
         item = self._comp()["ledger"].get(str(key))
         if not item or item["status"] == "done":
             return self._comp_result("transfer_item", False, "identity_missing_or_already_done")
@@ -890,7 +997,8 @@ class Complementary:
         """ONE bounded held-tool contact stroke. target/offset/direction are xyz in
         world frame, measured NOW. tip_offset is actual tool head/contact edge minus
         jaws, NOT an arbitrary pivot. Requires tool_held, contact_visible, offset_measured,
-        path_clear=True. Use for set-square alignment, broom or xylophone. Tool must
+        path_clear=True. Use for set-square alignment or broom; xylophone/mallet
+        striking preserves WALL ownership, not this contact gate. Tool must
         be in eef grip ledger; no guessed 3D pose, millimetre assembly or blind tilt.
         Stroke <=3cm, normalised direction, max_seconds=2; observe after every stroke."""
         if not self._evidence(evidence) or not all(evidence.get(k) is True for k in
@@ -916,12 +1024,166 @@ class Complementary:
             return self.move_eef(arm, self.link6_for_tip(end, orientation), speed=0.04, max_seconds=2)
         return self._comp_motion("tool_contact", [arm, tool, target, tip_offset, direction, distance], action, evidence)
 
+    @staticmethod
+    def _swap_motion_unknown(receipt):
+        """Fail closed on nested motion uncertainty, retaining the ORIGINAL receipt."""
+        if isinstance(receipt, dict):
+            return (receipt.get("kind") in {ev.TIMEOUT, ev.BLOCKED} or
+                    receipt.get("motion_executed") == "unknown" or
+                    bool(re.search(r"\b(?:TIMEOUT|BLOCKED|motion_uncertain)\b", str(receipt.get("reason", "")))) or
+                    any(Complementary._swap_motion_unknown(value) for value in receipt.values()))
+        if isinstance(receipt, list):
+            return any(Complementary._swap_motion_unknown(value) for value in receipt)
+        return False
+
+    def swap_facing_correct(self, key, arm, evidence=None, *, held_entry=None):
+        """ONE staged correction of the current frozen swap leg, never a retry.
+        First call: fresh _swap_facing_recovery evidence, same released ledger object,
+        empty hands and same-arm down reach; pick does NOT consume correction. Return
+        observe_rebind_held_then_swap_facing_correct, NOT placement/confirmation.
+        Next call: NEW locate/RGB after pick, orientation_measured, identity_unique,
+        held_identity, directed_axis, path_clear and CURRENT held yaw. held_entry is
+        the SAME immutable ledger identity/destination with its CURRENT locate id;
+        bind it in this cell, or identity_ledger before calling. No auto-locate,
+        nearest-id match or inheritance of pre-pick yaw. Verify held_by and grip,
+        consume correction BEFORE orient_held once to frozen yaw, then explicitly
+        reseat at frozen xy. Release ok is placed_unverified; re-observe/rebind then
+        swap_confirm the SAME leg.
+        Failed/unknown grasp consumes no correction and never orients/releases/retries.
+        Once held evidence qualifies, failed/unknown orient or release consumes it.
+        """
+        state = self._comp()
+        swap = state.get("swap")
+        if self._swap_closeout_required():
+            return self._swap_closeout_result("swap_facing_correct")
+        if not swap:
+            return self._comp_result("swap_facing_correct", False, "swap_facing_recovery_ineligible")
+        index = swap["confirmed_legs"]
+        leg = swap["legs"][index]
+        if str(key) != leg["key"] or arm not in ARMS:
+            return self._comp_result("swap_facing_correct", False, "swap_facing_key_or_arm_rejected")
+        if (state["uncertain"] or state["completion"] == "failed" or
+                state["route"]["phase"] != "own" or state["route"]["owner"] != "B" or
+                state["route"]["precision"] or self.state.get("ended")):
+            return self._comp_result("swap_facing_correct", False, "unsafe_owner_or_uncertain_motion",
+                                     next_hop="inspect_receipt_no_retry" if state["uncertain"] else "failure_route")
+        if index in swap["attempted"] or index in swap.get("facing_corrections", []):
+            return self._comp_result("swap_facing_correct", False, "swap_facing_correction_exhausted")
+        pending = swap.get("facing_recovery")
+        # The staged pick attempt and the yaw correction have separate lifetimes.
+        # Keep even a failed pick recorded; unspent yaw is NOT permission to retry it.
+        if not pending or pending["index"] != index:
+            if held_entry is not None or self._swap_facing_recovery(evidence) is None:
+                return self._comp_result("swap_facing_correct", False, "swap_facing_recovery_ineligible")
+            item = state["ledger"][leg["key"]]
+            source = self._eef_object(item["object"])
+            if (self._eef_grips() or source.get("held_by") or source.get("reach", {}).get(arm) != "down" or
+                    self._eef_reach(*leg["xy"]).get(arm) != "down" or
+                    self.__dict__.get("_eef_measured", {}).get("step") != self.state.get("step")):
+                return self._comp_result("swap_facing_correct", False, "swap_facing_reach_or_release_unverified")
+            pending = {"index": index, "key": leg["key"], "arm": arm, "phase": "pick_attempted",
+                       "pick_measure_serial": self.__dict__.get("_eef_measure_serial", 0)}
+            swap["facing_recovery"] = pending
+            def pick_action():
+                raw = self.eef_pick(arm, item["object"])
+                if self._swap_motion_unknown(raw):
+                    return {"ok": False, "reason": "motion_uncertain", "motion_executed": "unknown", "pick": raw}
+                if not raw["ok"]:
+                    return {"ok": False, "reason": "grasp_failed", "pick": raw}
+                if source.get("held_by") != arm or arm not in self._eef_grips():
+                    return {"ok": False, "reason": "swap_held_identity_or_facing_unverified", "pick": raw}
+                return {"ok": True, "pick": raw}
+            result = self._comp_motion("swap_facing_correct", ["swap_facing_pick", index, key, arm],
+                                       pick_action, evidence)
+            pending.update(phase="picked" if result["ok"] else "failed", pick_step=self.state.get("step"),
+                           pick_measure_serial=self.__dict__.get("_eef_measure_serial", 0))
+            swap["receipts"].append({"facing_pick": index, "receipt": result["receipt"]})
+            item.update(status="held_unverified" if result["ok"] else "failed", last_receipt=result["receipt"])
+            return self._comp_result("swap_facing_correct", result["ok"], result["reason"],
+                                     motion=result["motion_executed"], receipt=result["receipt"],
+                                     stage=pending["phase"], leg=copy.deepcopy(leg), correction_consumed=False,
+                                     next_hop="observe_rebind_held_then_swap_facing_correct" if result["ok"] else
+                                     "inspect_receipt_no_retry" if state["uncertain"] else "failure_route")
+
+        if pending["arm"] != arm:
+            return self._comp_result("swap_facing_correct", False, "swap_facing_key_or_arm_rejected")
+        if pending["phase"] != "picked":
+            return self._comp_result("swap_facing_correct", False, "same_failed_action_no_retry",
+                                     correction_consumed=False, next_hop="failure_route")
+        # A new observation is mandatory even if the grasp receipt said held. A
+        # new measure serial alone cannot refresh an old step/identity/yaw claim.
+        if (not self._evidence(evidence) or evidence["observed_step"] < pending["pick_step"] or
+                self.__dict__.get("_eef_measured", {}).get("step") != self.state.get("step") or
+                self.__dict__.get("_eef_measure_serial", 0) <= pending["pick_measure_serial"] or
+                not all(evidence.get(k) is True for k in
+                        ("identity_unique", "held_identity", "directed_axis", "orientation_measured", "path_clear")) or
+                not _finite([evidence.get("yaw_deg")])):
+            return self._comp_result("swap_facing_correct", False, "swap_facing_held_rebind_required",
+                                     next_hop="observe_rebind_held_then_swap_facing_correct")
+        if held_entry is not None:
+            if not isinstance(held_entry, dict) or held_entry.get("key") != leg["key"]:
+                return self._comp_result("swap_facing_correct", False, "swap_held_identity_or_facing_unverified")
+            try:
+                source = self._eef_object(held_entry["object"])
+                if source.get("held_by") != arm or arm not in self._eef_grips():
+                    return self._comp_result("swap_facing_correct", False, "swap_held_identity_or_facing_unverified",
+                                             next_hop="observe_rebind_held_then_swap_facing_correct")
+                binding = self.identity_ledger([held_entry], evidence)
+            except (KeyError, TypeError, ValueError) as error:
+                return self._comp_result("swap_facing_correct", False, "swap_held_identity_or_facing_unverified",
+                                         receipt={"exception_type": type(error).__name__, "exception": str(error)})
+            if not binding["ok"]:
+                return self._comp_result("swap_facing_correct", False, binding["reason"])
+        item = state["ledger"][leg["key"]]
+        if (item["observed_step"] != self.state.get("step") or
+                item["measure_serial"] != self.__dict__.get("_eef_measure_serial", 0) or
+                self._eef_object(item["object"]).get("held_by") != arm or arm not in self._eef_grips() or
+                any(held_arm != arm for held_arm in self._eef_grips()) or
+                self._eef_reach(*leg["xy"]).get(arm) != "down"):
+            return self._comp_result("swap_facing_correct", False, "swap_held_identity_or_facing_unverified",
+                                     next_hop="observe_rebind_held_then_swap_facing_correct")
+        if abs(_angle(leg["yaw_deg"] - evidence["yaw_deg"])) > 30:
+            return self._comp_result("swap_facing_correct", False, "orientation_requires_smaller_observed_segment",
+                                     next_hop="failure_route")  # No extra segments for a swap correction.
+        # Only freshly certified held identity/pose can spend the one yaw correction.
+        # Reserve BEFORE orient, so turn/release failures cannot buy a second one.
+        swap.setdefault("facing_corrections", []).append(index)
+        pending["phase"] = "orient_reserved"
+        def reseat_action():
+            orient = self._orient_held(key, arm, leg["yaw_deg"], evidence, correction=pending)
+            if not orient["ok"]:
+                return {"ok": False, "reason": orient["reason"], "orient": orient}
+            pending["phase"] = "reseat_attempted"  # No release retry either.
+            raw = self.eef_release(arm, x=leg["xy"][0], y=leg["xy"][1], withdraw=False)
+            if self._swap_motion_unknown(raw):
+                return {"ok": False, "reason": "motion_uncertain", "motion_executed": "unknown",
+                        "orient": orient, "release": raw}
+            return {"ok": raw["ok"], "reason": raw.get("reason"), "orient": orient, "release": raw}
+        # Both motions belong to this explicit, observed held-pose request. Do not
+        # fabricate new evidence after the yaw turn or certify placement from it.
+        result = self._comp_motion("swap_facing_correct", ["swap_facing_reseat", index, key, arm],
+                                   reseat_action, evidence)
+        pending.update(phase="placed_unverified" if result["ok"] else "failed", reseat_step=self.state.get("step"))
+        swap["receipts"].append({"facing_reseat": index, "receipt": result["receipt"]})
+        item.update(status=pending["phase"], last_receipt=result["receipt"], placement_kind="surface",
+                    staging=index == 0, last_transfer_serial=item["measure_serial"])
+        return self._comp_result("swap_facing_correct", result["ok"], result["reason"],
+                                 motion=result["motion_executed"], receipt=result["receipt"],
+                                 stage=pending["phase"], leg=copy.deepcopy(leg), correction_consumed=True,
+                                 next_hop="reobserve_rebind_then_swap_confirm" if result["ok"] else
+                                 "inspect_receipt_no_retry" if state["uncertain"] else "failure_route")
+
     def orient_held(self, key, arm, yaw_deg, evidence=None):
         """One <=30deg yaw correction of a held identity, based on directed observed
         facing. Not an insertion/tilt primitive. Requires orientation_measured/path_clear,
         updates no object truth; fresh facing confirmation required after release.
         For a swap: same freshly rebound held_identity/identity_unique/directed_axis,
         frozen current-leg yaw, and ONE correction consumed before motion (even failure)."""
+        return self._orient_held(key, arm, yaw_deg, evidence)
+
+    def _orient_held(self, key, arm, yaw_deg, evidence=None, *, correction=None):
+        if self._swap_closeout_required():
+            return self._swap_closeout_result("orient_held")
         item = self._comp()["ledger"].get(str(key))
         if not item or not self._evidence(evidence) or not all(evidence.get(k) is True for k in
                 ("orientation_measured", "path_clear")) or not _finite([yaw_deg, evidence.get("yaw_deg")]):
@@ -934,8 +1196,17 @@ class Complementary:
         swap = self._comp().get("swap")
         if swap:
             index = swap["confirmed_legs"]
-            if index >= 3 or index in swap["attempted"] or index in swap.get("facing_corrections", []):
+            reserved = (correction is not None and correction is swap.get("facing_recovery") and
+                        correction["index"] == index and correction["key"] == str(key) and
+                        correction["arm"] == arm and correction["phase"] == "orient_reserved")
+            pending = swap.get("facing_recovery")
+            if (index >= 3 or index in swap["attempted"] or
+                    (index in swap.get("facing_corrections", []) and not reserved)):
                 return self._comp_result("orient_held", False, "swap_facing_correction_exhausted")
+            if not reserved and pending and pending["index"] == index:
+                return self._comp_result("orient_held", False, "swap_facing_staged_recovery_required",
+                                         next_hop="observe_rebind_held_then_swap_facing_correct" if
+                                         pending["phase"] == "picked" else "failure_route")
             leg = swap["legs"][index]
             if (str(key) != leg["key"] or abs(_angle(yaw_deg - leg["yaw_deg"])) > 1e-6 or
                     item["observed_step"] != self.state.get("step") or
@@ -945,7 +1216,10 @@ class Complementary:
                 return self._comp_result("orient_held", False, "swap_held_identity_or_facing_unverified")
             if self._comp()["uncertain"] or self._comp()["completion"] == "failed":
                 return self._comp_result("orient_held", False, "unsafe_owner_or_uncertain_motion")
-            swap.setdefault("facing_corrections", []).append(index)  # BEFORE motion; no retry on error
+            if reserved:
+                correction["phase"] = "orient_attempted"  # Consumed before motion, cannot turn twice.
+            else:
+                swap.setdefault("facing_corrections", []).append(index)  # BEFORE motion; no retry on error
         # Rotate the CURRENT EE orientation about world z, preserving its tilt.
         from harness_policy.geometry import pose_matrix, matrix_quaternion
         import numpy as np
@@ -966,6 +1240,8 @@ class Complementary:
         first/second are ledger keys or identity_ledger entry dicts bound together
         under the same evidence rules. staging is [x,y], {position/xy:[x,y,...]},
         or a current locate object id/{object:id}; explicit coordinates take priority."""
+        if self._swap_closeout_required():
+            return self._swap_closeout_result("swap_plan")
         ledger = self._comp()["ledger"]
         if self._comp().get("swap"):
             return self._comp_result("swap_plan", True, swap=copy.deepcopy(self._comp()["swap"]))
@@ -1039,8 +1315,11 @@ class Complementary:
         at_destination, facing_correct, released=True. No retry/replan after uncertainty;
         final placement commitment is per stable identity, not moving oN labels.
         A complete contact count confirms the leg despite bounded downstroke TIMEOUT;
-        failed final clearance preserves confirmation but blocks motion until inspected."""
+        failed final clearance preserves confirmation but blocks motion until inspected.
+        Third confirmed leg MUST close out via complete_task, not further swap work."""
         swap = self._comp().get("swap")
+        if self._swap_closeout_required():
+            return self._swap_closeout_result("swap_confirm")
         if not swap or type(index) is not int or index != swap["confirmed_legs"] or index in swap["attempted"] or index >= 3:
             return self._comp_result("swap_confirm", False, "swap_order_or_already_attempted")
         if self._comp()["uncertain"]:
@@ -1051,6 +1330,18 @@ class Complementary:
         if not self._evidence(evidence) or not all(evidence.get(k) is True for k in
                 ("identity_unique", "at_destination", "facing_correct", "released", "target_unique")):
             return self._comp_result("swap_confirm", False, "swap_placement_unverified")
+        recovery = swap.get("facing_recovery")
+        if recovery and recovery["index"] == index:
+            item = self._comp()["ledger"][swap["legs"][index]["key"]]
+            if (recovery["phase"] != "placed_unverified" or
+                    item["observed_step"] != self.state.get("step") or
+                    item["observed_step"] < recovery.get("reseat_step", self.state.get("step")) or
+                    item["measure_serial"] != self.__dict__.get("_eef_measure_serial", 0) or
+                    item["measure_serial"] <= item["last_transfer_serial"] or self._eef_grips() or
+                    self._eef_object(item["object"]).get("held_by")):
+                return self._comp_result("swap_confirm", False, "swap_placement_unverified",
+                                         next_hop="reobserve_rebind_then_swap_confirm" if
+                                         recovery["phase"] == "placed_unverified" else "failure_route")
         swap["attempted"].append(index)
         result, exact = self._comp_counted_motion("swap_confirm", ["swap_confirm", index, target, arm],
                                                   target, 1, arm, evidence)
@@ -1060,12 +1351,14 @@ class Complementary:
         swap["confirmed_legs"] += 1
         if index > 0:
             self._comp()["ledger"][swap["legs"][index]["key"]].update(status="done", placement_evidence=copy.deepcopy(evidence))
-        result = self._comp_result("swap_confirm", True, receipt=result["receipt"],
+        closeout = self._swap_closeout_guidance() if self._swap_closeout_required() else {}
+        result = self._comp_result("swap_confirm", True,
+                                   "swap_complete_task_required" if closeout else None, receipt=result["receipt"],
                                    motion=result["motion_executed"], count_complete=True,
-                                   confirmation="counted_press_complete", confirmed_legs=swap["confirmed_legs"],
-                                   press_retry_allowed=False, next_hop="inspect_receipt_no_retry" if
-                                   self._comp()["uncertain"] else "rebind_next_swap_leg" if index < 2 else
-                                   "observe_swap_completion")
+                                   confirmation="counted_press_complete", press_retry_allowed=False,
+                                   **(closeout or {"confirmed_legs": swap["confirmed_legs"],
+                                                  "next_hop": "inspect_receipt_no_retry" if
+                                                  self._comp()["uncertain"] else "rebind_next_swap_leg"}))
         self._comp()["last_counted_press"] = copy.deepcopy(result)
         return result
 

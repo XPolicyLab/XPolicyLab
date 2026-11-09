@@ -6,6 +6,11 @@ from harness_policy.runtime.events import Escalation, ProgramFinished
 from harness_policy.runtime.session import Observation
 
 
+# Use home's existing retiming API; planned paths and joint/shield limits still apply.
+# Do not change the speed of program-requested home or retry an interrupted return.
+WRAP_UP_HOME_SPEED = 3.0
+
+
 class Core:
     def finish(self, summary=""):
         """End the episode now: the program's own checks say the task is done. No
@@ -22,8 +27,10 @@ class Core:
         """After the episode is finished (finish() or <finish>), for benchmarks that
         count success only with the arms back at their start pose (profile
         return_to_start, RoboDojo): open each gripper that holds nothing, then move both
-        arms back to their start joints together (home). RoboDojo scores 23 of its 42
-        tasks only with every gripper at least 0.8 open (is_all_gripper_open), so jaws
+        arms back to their start joints together (home), retimed at 3.0 rad/s within
+        the existing joint/shield limits to conserve remaining host steps. RoboDojo
+        scores 23 of its 42 tasks only with every gripper at least 0.8 open
+        (is_all_gripper_open), so jaws
         left closed on nothing (after a push, say) would lose the whole score; a gripper
         that holds something stays closed, since the lifting tasks (general_pickup,
         match_and_pick_from_conveyor) score the object still in the air (Z2 left every
@@ -46,7 +53,7 @@ class Core:
             except Escalation as escalation:
                 kinds.append(escalation.trace.event.kind)
         try:
-            traces = self.home(("left_arm", "right_arm"))
+            traces = self.home(("left_arm", "right_arm"), speed=WRAP_UP_HOME_SPEED)
         except Escalation as escalation:
             traces = getattr(escalation, "traces", None) or [escalation.trace] * 2
         return kinds + [trace.event.kind for trace in traces]

@@ -5,6 +5,352 @@ evidence for each change. A version changes the identity of every configuration,
 results name the version that produced them. Minor versions change what the agent
 does; patch versions fix it.
 
+## 1.21.0
+
+- Single hypothesis: xylophone / mallet striking should retain **A / wall_preserve**,
+  not enter B-own held-tool contact merely because the instruction says xylophone.
+  User-supplied frozen r7 `play_Xylophone` evidence reports **36/100 (36%)**.
+  Across the supplied 50 episodes, **all ultimately used WALL**, with **zero
+  successful tool_contact calls**; all first encountered
+  `tool_contact_measurement_missing`. The 18 successes and 32 failures were both
+  WALL paths, and failures commonly included
+  `own_owner_requires_explicit_failure_handover`. These existing diagnostics support
+  removing the failed contact-first ownership detour; they are NOT a new evaluation
+  or evidence of measured uplift. Swap work is deferred and unchanged here.
+- Remove xylophone from `TOOLS`. Native xylophone and mallet-strike instructions
+  preserve A/WALL without an initial `tool_contact`, measured `tip_offset` or
+  failure handover. A separate striking-preservation rule leaves explicit hard
+  semantic reads and memory precedence intact instead of treating striking as a
+  precision flag that suppresses hard reads. Broom/dustpan sweeping and set-square
+  contact remain measured B complements with their existing safety checks.
+- WALL-cell guidance and the tool-contact API description now preserve WALL for
+  xylophone, not require measured mallet contact first. The original instruction,
+  both arms and continuous WALL slices remain required; no bare-jaw substitute,
+  retry, fabricated measurement or new fallback permission. Agent version is
+  **1.21.0**; selective validates that version and scoreboard accepts it while
+  retaining historical frozen identities. Scores, floors and failed-case
+  denominators are unchanged. Offline fixtures are NOT evaluation results.
+- Offline validation in the `harness-policy` conda environment:
+  `python -m unittest tests.test_complementary tests.test_wall_oss_selective`
+  passes **159 tests**. Expanded regression checks adding
+  `tests.test_session_skills tests.test_session_motion tests.test_run_policy
+  tests.test_episode tests.test_configs tests.test_wall_oss` pass **303 tests**.
+  Coverage includes native/case-insensitive/multiline striking, hard/memory
+  precedence, retained broom/sweep B ownership and safe handovers, direct A/WALL
+  start despite a requested B strategy, consecutive original-instruction WALL
+  slices without tool contact/failure handover, prompt and version gates.
+  Full `python -m unittest discover -s tests` runs **652 tests, 7 skipped**, with
+  only the previously documented
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  failure (`error` instead of `finished`); no unrelated library/isolation fix.
+  `git diff --check` passes. No export, simulator/eval/`--run`, paid API calls,
+  dependency changes or existing artifact modifications. The commit is limited
+  to xylophone ownership; unrelated worktree edits are preserved.
+
+## 1.20.0
+
+- Single hypothesis: after three successful `swap_confirm` legs, the three
+  confirmation receipts plus `ledger done` certify swap completeness; optional
+  VLM `verify()` must not veto that committed sequence. Existing frozen
+  **1.19.0 / Skills55R7** r8b diagnostics at
+  `/pfs/echo_folder/weiyang/tmp/harness/wall-oss-codex-skills-55line-seed0-r8b-swap`
+  still report `swap_blocks` **0/50** (supplied selective+floors about **45.91**).
+  Only episode-016 reached three confirmed legs. Read-only inspection of its
+  `events.jsonl` seq 48 shows `verify()` returning `False NO` from occluded / close-up
+  gripper views at step **698**, then `complete_task` rejecting evidence with
+  `complete=False`: its ONLY failed check was `complete`; fresh visual evidence,
+  safety, terminal status, motion resolution, ledger and cards all passed.
+  Seq 49 records `FAILED: swap_completion_unverified`. These are existing trace
+  diagnostics, not a new evaluation or evidence of measured uplift.
+- In the `_swap_closeout_required()` branch (`confirmed_legs >= 3`), the `complete`
+  check now comes from confirmed swap state, not `evidence["complete"] is True`.
+  False, missing or unavailable optional visual completion no longer vetoes
+  closeout. The original evidence (including False), confirmation receipts and
+  ledger are retained unchanged. `fresh_visual_evidence`, `safe_to_finish`,
+  `not_failed`, `motion_resolved`, `identity_items_done` and `cards_confirmed`
+  remain required, with explicit `swap_completion_unverified` / `failed_checks`
+  on rejection and no silent downgrade. Fewer than three confirmations cannot
+  close out; non-swap completion still requires visual `complete=True`.
+- Swap-task text, WALL-cell guidance and third-confirmation/result messages
+  prohibit a `verify()` completeness veto after leg 3 and require **SAME cell
+  complete_task -> finish**. Any bounded non-motion inspection is for fresh
+  safety / clearance, not recertifying the sequence. No new transfer, facing
+  correction, press, observation cell, motion retry or ledger rebind; no invented
+  safety. Existing return-to-start reserve and home behavior are unchanged:
+  accepted completion is NOT environment success and home must really finish.
+- Agent version **1.20.0**; selective package validation requires 1.20.0 and
+  scoreboard accepts it while retaining 1.19.0 and older frozen identities.
+  Offline contracts cover false/missing completion, an actual verify API with
+  a mocked VLM NO, preserved receipts/evidence, all six safety failures, partial
+  confirmations, unchanged non-swap gates, same-cell closeout/home and version
+  gates. No export, simulator/eval/`--run`, paid API calls, dependency changes or
+  modifications to existing run artifacts. Fixtures are NOT evaluation results.
+- Offline validation in the `harness-policy` conda environment: related
+  `tests.test_complementary tests.test_session_skills tests.test_session_motion
+  tests.test_run_policy tests.test_wall_oss_selective tests.test_episode
+  tests.test_configs` passes **274 tests**. Full
+  `python -m unittest discover -s tests` runs **646 tests, 7 skipped**, with only
+  the already documented
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  failure (`error` instead of `finished`); no unrelated library/isolation fix.
+  `git diff --check` passes. The commit is limited to this swap closeout hypothesis.
+
+## 1.19.0
+
+- Single hypothesis: an accepted swap finish is too late for the benchmark's
+  mandatory return to start. Existing frozen 1.18.0 r7 diagnostics at
+  `/pfs/echo_folder/weiyang/tmp/harness/wall-oss-codex-skills-55line-seed0-r7`
+  still report `swap_blocks` 0/50 (r6 selective+floors about 45.54, below 55).
+  Read-only inspection of swap episode-040 confirms all three swap_confirm calls
+  accepted, then complete_task accepted with `swap_completion_observed`, and
+  finish at step 691. Its events.jsonl seq 48 is the finished cell at step 691;
+  seq 49 records the successful-looking finish summary; seq 50 records
+  `wrap_up.status="episode_ended"`. The host ends at step 700 and kernel.log has
+  no home record. The agent summary still says `status="finished"`, but that
+  is not environment success: the supplied host result is `success=False` /
+  zero score because RoboDojo also requires `return_to_start`. This is a final
+  motion-budget failure, NOT evidence that complete_task needs a looser gate.
+- Wrap-up uses home's existing `speed` parameter at **3.0 rad/s**, up from its
+  default 2.5, while keeping both arms simultaneous, their collision-planned
+  paths, retiming joint-step/velocity/acceleration limits and shield. Empty
+  grippers still open first; held objects stay held. No direct-path shortcut,
+  reduced safety tolerance, replay of interrupted home, silent retry or change
+  to program-requested home's default. This conserves ticks when speed is the
+  limiting factor, but cannot guarantee a long return in ep040's nine ticks.
+- Third-confirmation guidance and successful swap complete_task now require
+  **SAME cell complete_task -> finish**, with NO new observation cell. Guidance
+  reports remaining_steps from contract state, same_cell_closeout and a 50-step
+  wrap_up reserve; <=50 steps is urgent (observed step >=650 is a warning when
+  the connection omits its limit, with remaining_steps left unknown). Swap task
+  text asks to reserve at least 50 host steps and finish by 650 for a 700-step
+  limit, earlier for long returns, never deliberately wait until 690+. The
+  reserve is guidance, not an automatic finish/success gate or a timing guarantee.
+  Sufficient genuinely current post-confirmation evidence is still required;
+  otherwise at most one bounded non-motion inspection in the same cell, or
+  honest failure if verification is unavailable. No relabeling pre-press RGB,
+  fabricated safety, extra press/manipulation or bypass of uncertain-motion,
+  ledger/card/terminal/fresh-evidence checks. Completion acceptance explicitly
+  says it is NOT environment success; home must actually finish before truncation.
+- Agent version **1.19.0**; selective package validation expects 1.19.0 and
+  scoreboard accepts that identity while retaining 1.18.0 and older frozen
+  identities. Existing exports/results, earlier swap-leg/facing budgets, floors,
+  scoring denominators, dependency locks and unrelated worktree edits are kept.
+  Offline tests cover completion_observed -> finish -> actual dual-arm home,
+  a synthetic 691/700 short-return budget (fast home ends at 699; default home
+  hits 700), retained joint limits, no failed-home retry, threshold boundaries,
+  unknown-limit warning, same-cell prompt/result text and version/report gates.
+  These fixtures are contract checks, NOT a replay/eval result or measured uplift.
+- Offline validation in the `harness-policy` conda environment: related
+  `tests.test_complementary tests.test_session_skills tests.test_session_motion
+  tests.test_run_policy tests.test_wall_oss_selective tests.test_episode
+  tests.test_configs` passes **267 tests**. Full
+  `python -m unittest discover -s tests` runs **639 tests, 7 skipped**, with only
+  the previously documented
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  failure (`error` instead of `finished`); no library/isolation workaround.
+  `git diff --check` passes. No export, simulator/eval/`--run`, paid API call,
+  seed0-r7/smoke process termination or git commit.
+
+## 1.18.0
+
+- Single hypothesis: close out immediately after the third confirmed swap leg,
+  instead of spending the remaining host steps on observation/manipulation cells.
+  Frozen 1.17.0 / Skills55R5 r6 diagnostics at
+  `/pfs/echo_folder/weiyang/tmp/harness/wall-oss-codex-skills-55line-seed0-r6`
+  report selective+floors about 45.54 and `swap_blocks` still 0/50. Across its 50
+  swap traces, `complete_task(` was never called; maximum `confirmed_legs` reached
+  >=1 in 28 episodes, >=2 in 9, and >=3 only in episode-015. That episode's three
+  `swap_confirm` calls succeeded, but `next_hop="observe_swap_completion"` led
+  to move_tip/locate/show instead of complete_task. Read-only inspection of
+  episode-015/events.jsonl confirms the third success at step 693 (seq 51), leaving
+  only seven host steps, with no complete_task call; its summary records
+  `status="episode_ended"`, `steps=700` (host truncation). Several two-leg episodes
+  also exhausted step 700 while preparing leg 3/reobserving. The 1.17.0 facing
+  budget fix remains intact (supplied correction_consumed false:true about 35:14).
+  These are existing trace diagnostics, not a new evaluation or paired uplift.
+- Third-leg `swap_confirm` now returns `reason="swap_complete_task_required"`,
+  `next_hop="complete_task"`, `completion_required=True` and an explicit message:
+  use sufficient current post-confirmation RGB, otherwise at most ONE bounded
+  non-motion visual inspection, then call complete_task immediately. No transfer,
+  facing correction, extra press, move_tip, time-advancing watch or unbounded
+  locate/show browsing. Complementary planners/transfers/corrections/presses and
+  the execution ownership guard refuse new work after `confirmed_legs >= 3`;
+  blocked execution results preserve the complete_task hop rather than redirecting
+  into a generic failure/observation loop. Successful complete_task alone opens
+  the existing finish/final-home path; three confirmations do not auto-pass reward.
+- Align the three-confirmed-leg swap acceptance path with existing fresh RGB
+  complete/safe_to_finish, all-ledger-done, all-cards-confirmed, no-terminal-failure
+  and no-uncertain-motion checks. No redundant locate/identity rebind/placement
+  check is required after leg 3. Explicit `swap_completion_unverified` and
+  `failed_checks` retain the confirmed sequence; never silently downgrade it or
+  reopen completed legs. Unverifiable final evidence can still finish honestly.
+  Failed final clearance retains the third confirmation and original receipt,
+  routes to inspect_receipt_no_retry without motion, then immediately returns to
+  complete_task once fresh evidence resolves uncertainty. Counted downstroke
+  TIMEOUTs remain confirmed; unknown/partial counts never receive another press.
+- Update swap-task and WALL-cell closeout guidance, including the legacy
+  observe_swap_completion hop. Agent version is **1.18.0**; selective package
+  validation expects 1.18.0 and the scoreboard accepts that frozen identity while
+  retaining historical versions. Existing r6 artifacts/exports, default skill
+  enablement, earlier-leg/facing budgets, floors/targets, dependencies and library
+  isolation are unchanged. Offline fixtures are contract/safety checks, not
+  closed-loop scores; uplift still needs an independent frozen comparison.
+- Offline validation in the `harness-policy` conda environment: requested
+  `python -m unittest tests.test_complementary tests.test_wall_oss_selective`
+  passes 143 tests (129 complementary, 14 selective/scoreboard). Expanded checks
+  adding `tests.test_session_skills tests.test_episode tests.test_configs` pass
+  210 tests. Regressions cover the third-leg reason/message/hop and event/report,
+  no auto-success, refusal of new transfers/plans/facing/press/motion/watch or WALL
+  calls without advancing steps, retained original counted-TIMEOUT receipts,
+  explicit stale/cross-episode/unsafe/ledger/card/terminal completion checks,
+  fresh post-third-press completion without another ledger rebind, uncertain
+  final clearance resolving directly to closeout, honest unverified finish and
+  accepted finish permitting final home. Historical scoreboard identities and
+  the new 1.18.0 gate are covered; floors and failed-case denominators are intact.
+- Full unittest discovery via a safety wrapper: 634 tests, 8 skipped, only the
+  previously documented `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  failure (`error` instead of `finished`). To honor the user's no-live-kill
+  instruction, the wrapper skips `test_runtime.KernelTests.test_timeout_kills_the_kernel`
+  and refuses any Kernel.kill on a live process; no repository test or isolation
+  implementation was weakened. `git diff --check` passes. No frozen package
+  export, simulator/eval/`--run`, paid API call, live process kill or git commit.
+
+## 1.17.0
+
+- Single hypothesis: separate swap-facing yaw budget from its staged grasp attempt.
+  User-supplied frozen 1.16.0 / Skills55R4 diagnostics (r5) at
+  `/pfs/echo_folder/weiyang/tmp/harness/wall-oss-codex-skills-55line-seed0-r5`
+  report selective+floors about 45.58 against goal 55, `swap_blocks` 0/50,
+  82 `swap_facing_correct` calls, roughly 94
+  `observe_rebind_held_then_swap_facing_correct` hops and 48
+  `reobserve_rebind_then_swap_confirm` hops. Reasons include roughly 97
+  `grasp_failed` and 57 `not held after the lift`; finishes often cite
+  `placement_unverified`, `orientation_requires_smaller_observed_segment` or
+  `swap_held_identity_or_facing_unverified`. These supplied diagnostics motivate
+  the change; no new run or paired score improvement is claimed.
+- `swap_facing_correct` no longer appends `facing_corrections` before pick.
+  Pick returns `correction_consumed=False`, including success pending a NEW
+  held observation/rebind. Only after fresh same-identity held certification,
+  actual grip/held_by, clear path, frozen destination reach and <=30-degree
+  current yaw checks pass does it consume the leg's ONE correction, immediately
+  BEFORE orient. Failed/not-held/unknown grasp retains the original receipt and
+  explicit `grasp_failed` / held-unverified / `motion_uncertain` reason, routes
+  to `failure_route` or `inspect_receipt_no_retry`, consumes no yaw budget and
+  never orients/releases. No-motion held-evidence rejection also consumes none.
+- Keep the pick's staged attempt separately, including failure/exception: an
+  unspent correction does NOT authorize another grasp. Fresh observations or
+  uncertainty resolution cannot silently replay that attempt. Public
+  `orient_held` cannot bypass a pending staged recovery while its budget is
+  unspent: `swap_facing_staged_recovery_required` points to the staged hop,
+  without falsely reporting an exhausted yaw budget. Internal reservation
+  consumes before the yaw motion and remains
+  spent on failed/unknown turn or release. No second correction, >30-degree
+  segmentation, nearest-ID substitution, silent retry, automatic confirmation
+  or WALL restart. Synchronize only the two existing swap prompt timing claims;
+  all other skill, ownership, count/clearance, default and dependency behavior
+  is unchanged. Agent version is **1.17.0** as requested.
+- This addresses r5's pre-grasp budget burn, not grasp quality or unobservable
+  held facing. Offline regression fixtures are contract/safety evidence, NEVER
+  closed-loop results; a later independent frozen comparison must establish
+  any uplift with failures in the denominator, repeated-run spread, calls and
+  cost. No export, simulator/evaluation/`--run`, paid API call, live 55loop
+  monitor termination or git commit was performed here.
+- Offline validation in the `harness-policy` conda environment:
+  `python -m unittest tests.test_complementary` passes 121 tests. Related run
+  `tests.test_complementary tests.test_session_skills tests.test_wall_oss_selective tests.test_configs`
+  passes 188 tests. Regressions check no consumption before pick or on
+  failed/not-held/unknown grasp (including exception), original receipts and
+  explicit reasons/hops, fresh-evidence no-retry even after uncertainty
+  resolution, preservation of prior legs' budgets, no consumption on rejected
+  held rebind/yaw, consumption immediately before orient after held certification,
+  all three frozen legs, one-use successful/failed turns and releases, and no
+  public-orient bypass of pending or consumed staged recovery. Full
+  `python -m unittest discover -s tests`: 625 tests, 7 skipped, only the known
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes`
+  sandbox failure (`error` instead of `finished`). No library/sandbox workaround;
+  `git diff --check` passes. The 1.16.0 launch/report version gates and existing
+  frozen exports remain unchanged; later export/run is the user's separate step.
+
+## 1.16.0
+
+- H2 only — make the already-issued measured swap-facing recovery hop executable.
+  User-supplied frozen agent 1.15.0 / `HarnessPolicyWallCodexSkills55R3` evidence at
+  `/pfs/echo_folder/weiyang/tmp/harness/wall-oss-codex-skills-55line-seed0-r4` still has
+  official `swap_blocks` score 0/50 (target 50, floor 18), selective+floors about 46,
+  roughly 9 below 55. Episode-event summaries report about 44
+  `pick_observe_orient_reseat_then_confirm` hops, yet approximately 33
+  `swap_held_identity_or_facing_unverified`, 21 `grasp_failed`, 40
+  `directed_orientation_unknown`, 36 `placement_unverified`, and 8
+  `orientation_requires_smaller_observed_segment` failures; confirmed-leg counts
+  are approximately 0:16 / 1:18 / 2:16, with no three-leg completion. Episode-001
+  counted leg 1, then failed leg-2 seating/facing and an improvised bare pick,
+  finishing without the full pick/rebind/orient/reseat/confirm chain. These are
+  supplied diagnostics, not a new run, replay score or paired uplift.
+- Add exported `swap_facing_correct` to the existing optional complementary package
+  (only its manifest's exports list changes; synchronize the generated README API
+  table's one complementary row). First call uses
+  `_swap_facing_recovery(evidence)` and verifies the same released ledger object,
+  empty grips and same-arm measured down reach. Reserve the leg's ONE correction
+  BEFORE pick, including failed grasp/exception. Successful pick returns
+  `stage="picked"`, `observe_rebind_held_then_swap_facing_correct`, and the frozen
+  leg, NOT placement success. Caller must inspect NEW RGB/locate after that pick;
+  both current step and a newer measurement serial are required. Second call can
+  accept `held_entry` and perform the immutable same-identity ledger rebind in
+  that cell, or accept an already fresh `identity_ledger` binding. Verify actual
+  grip/held_by, explicit held_identity/identity_unique/directed_axis, current held
+  yaw and clear path; no inherited pre-pick yaw, automatic identity matching,
+  nearest-oN substitution or fabricated post-grasp evidence.
+- With qualified held evidence, the same API performs ONE internal `orient_held`
+  to frozen leg yaw (<=30 degrees, preserving tilt), then explicit release/reseat
+  at frozen leg xy. The internal one-use reservation is not exported and public
+  `orient_held` cannot bypass the consumed budget. Return `placed_unverified` and
+  `reobserve_rebind_then_swap_confirm`; for this new path `swap_confirm` requires
+  successful reseat plus a NEW released-identity measurement/rebind, not just
+  asserted booleans. Never auto-confirm, advance a leg, or certify seating/facing
+  from a motion receipt. Preserve original pick/orient/release errors and receipts.
+  Nested uncertain receipts (including legacy EEF reason-only TIMEOUT/BLOCKED)
+  stop before the next motion. Failed/not-held grasp never orients; any failed
+  motion consumes the correction, even after observed uncertainty resolution.
+  Failed motion returns `failure_route`, not a suggestion to repeat a changed grasp;
+  unknown motion returns `inspect_receipt_no_retry`. Reject a non-held supplied
+  current ID before rebinding so a rejected entry cannot change the ledger object.
+- Update WALL-cell and swap task guidance to call this API for the H2 hop and
+  continue the explicit observed held-rebind path instead of improvising bare
+  pick/orient or prematurely finishing while that safe step is available. No
+  second correction, >30-degree segmentation workaround, silent retry, extra
+  button press, WALL restart or home rescue. Identity ambiguity/occlusion, actual
+  grasp failure, unmeasurable directed facing, uncertain motion and incomplete
+  three-leg sequence remain honest failures. H1 count/clearance semantics,
+  scoreboard targets/floors, library/isolation, default skill enablement,
+  dependencies and all frozen vendors remain unchanged.
+- This changes behavior/API/prompt, hence minor agent version **1.16.0**, not patch.
+  It repairs a permitted execution path; it does NOT establish swap score 50 or
+  selective score 55. Actual grasp quality, post-pick facing observability,
+  reseating quality, model compliance and remaining budget still limit results.
+  A future independent frozen evaluation must measure the same layouts/seeds/
+  budget/model, failed cases in the denominator, repeated-run spread, calls and
+  cost, and comparison to the wrapped learned policy. No export, evaluation,
+  paid API call, simulator launch, process termination or git commit here.
+- Offline validation in the `harness-policy` conda environment: requested related
+  suites `tests.test_complementary tests.test_session_skills tests.test_wall_oss_selective`
+  pass 168 tests (120 complementary, 35 session-skills, 13 selective); docs pass
+  8 tests. New regressions cover qualified correction of each frozen leg, a single
+  episode's three corrections/count-confirmations with fresh release rebindings,
+  +/-30-degree boundaries, immutable frozen legs, explicit current-ID and in-cell
+  held-entry/prebound paths, stale step/serial/episode, alias ambiguity, wrong ID/
+  identity/destination, absent/wrong held grip, >30-degree rejection, consumed budget,
+  no public-orient bypass, no orient after failed grasp, and failed/unknown pick/
+  turn/release with no retry after resolution. A new episode retains no swap state.
+  H1 counted-contact and final-clearance tests remain unchanged and passing.
+  Full `python -m unittest discover -s tests`: 624 tests, 7 skipped, only the known
+  `test_library.LibraryTests.test_driver_loads_library_and_rejects_changes` failure
+  (`error` instead of `finished`) in this sandbox environment. No library/sandbox
+  workaround; `git diff --check` passes. Fixtures are contract/safety evidence,
+  NEVER closed-loop scores. Selective preflight
+  currently pins 1.15.0 and scoreboard accepts through 1.15.0; updating those
+  version gates is a separate prerequisite for any later 1.16.0 launch/report,
+  not permission to bypass them or hot-modify R2/R3.
+
 ## 1.15.0
 
 - H1 — counted confirmation is not a downstroke timeout: supplied R3 `swap_blocks`

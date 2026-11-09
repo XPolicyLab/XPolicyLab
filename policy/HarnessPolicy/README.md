@@ -1,6 +1,8 @@
-# HarnessPolicy
+# HarnessPolicy (Max)
 
 **Contributor:** Harness Policy team | **Paper:** Harness Policy | **arXiv:** TBD | **Original code:** https://github.com/EvolvingLMMs-Lab/the-harness
+
+HarnessPolicy is the **Max** stack (agent **1.21.0**, identity `9132beb14b257162`): WALL-OSS + Codex (gt-6.1-sol-a) + complementary skills. Includes swap closeout/home reserve, three-confirm completion that survives VLM veto, and WALL ownership for xylophone (broom/sweep remain measured B).
 
 HarnessPolicy is the Harness Policy agent: a language model (gt-6.1-sol-a) reads the learned
 policy's description and hands it whole tasks it was trained on (wall-oss), from the
@@ -8,7 +10,7 @@ start pose; for what the policy cannot do (picking the one object a name, a labe
 picture identifies) it writes Python programs that perceive (SAM 3 segmentation, the model's own look at the images), plan and move
 the arms through bounded skills. A reactive layer runs guards every control tick and a
 fixed shield checks every action.
-The agent is frozen in `agent.json` (identity `c11a43695e5b46e5`): the policy refuses to run
+The agent is frozen in `agent.json` (identity `9132beb14b257162`): the policy refuses to run
 if the machine it lands on would resolve a different one.
 
 Shared conventions — argument meanings, checkpoint naming, split-machine deployment, `EVAL_ENV_TYPE` — are documented in the [XPolicyLab README](../../README.md). Official results: [RoboDojo LeaderBoard](https://robodojo-benchmark.com/LeaderBoard).
@@ -23,7 +25,7 @@ export CODEX_BASE_URL=http://HOST:PORT/v1   # model id gt-6.1-sol-a
 # export PROXY_OPENAI_API_KEY=...   # only if that server requires a key
 ```
 
-`the-harness/` holds the-harness at the exported commit (eb936793fa76); install.sh uses it as it is.
+`the-harness/` holds the-harness at the exported commit (c3deacddd49e); install.sh uses it as it is.
 
 ## Data Processing
 

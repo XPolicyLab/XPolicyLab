@@ -487,7 +487,7 @@ class StartTests(unittest.TestCase):
     def test_the_benchmarks_wrap_up_is_not_refused(self):
         worker, policy = Worker(step_limit=400), Policy()
         s = self.strict(worker, policy)
-        s.home = lambda arms: [s._execute("home", {}, lambda state, tick: None, 1.0, None, None)] * 2
+        s.home = lambda arms, speed: [s._execute("home", {}, lambda state, tick: None, 1.0, None, None)] * 2
         worker.joints[6] = worker.joints[13] = 0.0  # jaws left closed (after a push, say)
         s.state = worker.state()
         s._gripper_commands = {"left_arm": 0.0, "right_arm": 0.0}
@@ -500,7 +500,7 @@ class StartTests(unittest.TestCase):
     def test_the_wrap_up_keeps_a_held_object(self):
         worker, policy = Worker(step_limit=400), Policy()
         s = self.strict(worker, policy)
-        s.home = lambda arms: [s._execute("home", {}, lambda state, tick: None, 1.0, None, None)] * 2
+        s.home = lambda arms, speed: [s._execute("home", {}, lambda state, tick: None, 1.0, None, None)] * 2
         worker.joints[6] = 0.5  # the left jaws closed on an object (measured opening)
         worker.joints[13] = 0.0  # the right jaws closed on nothing
         s.state = worker.state()
@@ -514,7 +514,7 @@ class StartTests(unittest.TestCase):
     def test_the_wrap_up_asks_the_vision_model_without_a_measured_opening(self):
         worker, policy = Worker(step_limit=400), Policy()
         s = self.strict(worker, policy)
-        s.home = lambda arms: [s._execute("home", {}, lambda state, tick: None, 1.0, None, None)] * 2
+        s.home = lambda arms, speed: [s._execute("home", {}, lambda state, tick: None, 1.0, None, None)] * 2
         s.profile = {**s.profile, "gripper_feedback": "commanded"}
         worker.joints[6] = worker.joints[13] = 0.0
         s.state = worker.state()

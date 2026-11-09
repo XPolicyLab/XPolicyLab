@@ -54,7 +54,7 @@ def lock_available(gpu, lock_root):
 
 def preflight(args):
     gpus = parse_gpus(args.gpus)
-    agent = validate_package(args.package, expected_version="1.15.0")
+    agent = validate_package(args.package, expected_version="1.21.0")
     require("complementary" in agent["sources"]["agent"]["skills"].get("enable", []), "Complementary required")
     tasks = task_plan(args.robodojo, tasks=args.tasks, afix=args.afix, tier2=args.tier2)
     require(not args.out.exists() and not args.out.is_symlink(), "OUT exists: never resume/overwrite")
