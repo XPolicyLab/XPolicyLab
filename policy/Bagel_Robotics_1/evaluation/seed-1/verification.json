@@ -1,0 +1,21 @@
+{
+  "revision": "f57e1633ffed59761bc8e568cfe7530c4b33381c",
+  "files": {
+    "scripts/robodojo.sh": "7008023f0fd27fc5f8f2adad30b1286a5e6cce432be981b82cf2ffa3498d6ea3",
+    "scripts/internal/summarize_result.py": "9ec361af587e1788d83d3cf8670e05b817ff252d33c33829a6337dc16ae370d2"
+  },
+  "unmodified_official_sources_verified": true,
+  "source": "https://github.com/RoboDojo-Benchmark/RoboDojo",
+  "generated_records": 2100,
+  "matching_reported_tasks": 42,
+  "sha256_of_native_summary": "a2946a8c62a7cf3d1e64d8e8655d462533e2a3937b49756bbd458ab81586cad9",
+  "native_markdown_task_cells_verified": 42,
+  "native_summary_copy_identical": true,
+  "original_selected_records": 2096,
+  "labeled_replacements": 3,
+  "separate_repaired_variants": 1,
+  "memory_original_layout47_unscored": true,
+  "nebius_retention_verified": true,
+  "clean_offline_regeneration_identical": true,
+  "all_scores_match_previously_reported": true
+}

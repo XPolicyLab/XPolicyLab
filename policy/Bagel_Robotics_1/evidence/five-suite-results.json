@@ -1,0 +1,448 @@
+{
+  "schema": "bagel-cp1000-five-suite-report-v1",
+  "checkpoint": 1000,
+  "display_name": "Bagel-Robotics-1",
+  "official_leaderboard_result": false,
+  "scope": "Research-runner reported results; not packaged-adapter validation",
+  "aggregation": "Equal-weight mean of five suites; Generalization combines standard and randomized episodes",
+  "suites": {
+    "precision": {
+      "scored": 400,
+      "successes": 126,
+      "success_rate": 0.315,
+      "mean_partial_score": 0.40425,
+      "tasks": {
+        "build_tower": {
+          "name": "Build tower",
+          "scored": 50,
+          "successes": 32,
+          "success_rate": 0.64,
+          "mean_partial_score": 0.736,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "deposit_coin": {
+          "name": "Deposit coin",
+          "scored": 50,
+          "successes": 11,
+          "success_rate": 0.22,
+          "mean_partial_score": 0.268,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "fasten_screws": {
+          "name": "Fasten screws",
+          "scored": 50,
+          "successes": 18,
+          "success_rate": 0.36,
+          "mean_partial_score": 0.6679999999999999,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "insert_key": {
+          "name": "Insert key",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0.15,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "insert_tubes": {
+          "name": "Insert tubes",
+          "scored": 50,
+          "successes": 32,
+          "success_rate": 0.64,
+          "mean_partial_score": 0.752,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "play_Xylophone": {
+          "name": "Play xylophone",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "plug_in_charger": {
+          "name": "Plug in charger",
+          "scored": 50,
+          "successes": 2,
+          "success_rate": 0.04,
+          "mean_partial_score": 0.04,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "pour_balls_into_vase": {
+          "name": "Pour balls into vase",
+          "scored": 50,
+          "successes": 31,
+          "success_rate": 0.62,
+          "mean_partial_score": 0.62,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        }
+      }
+    },
+    "memory": {
+      "scored": 300,
+      "successes": 173,
+      "success_rate": 0.5766666666666667,
+      "mean_partial_score": 0.58,
+      "tasks": {
+        "cover_blocks": {
+          "name": "Cover blocks",
+          "scored": 50,
+          "successes": 50,
+          "success_rate": 1,
+          "mean_partial_score": 1,
+          "source": "user-supplied completed task summary"
+        },
+        "imitate_sorting_sequence": {
+          "name": "Imitate sorting sequence",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0.02,
+          "source": "user-supplied completed task summary"
+        },
+        "match_and_pick_from_conveyor": {
+          "name": "Match and pick from conveyor",
+          "scored": 50,
+          "successes": 46,
+          "success_rate": 0.92,
+          "mean_partial_score": 0.92,
+          "source": "user-supplied completed task summary"
+        },
+        "press_by_number": {
+          "name": "Press by number",
+          "scored": 50,
+          "successes": 50,
+          "success_rate": 1,
+          "mean_partial_score": 1,
+          "source": "user-supplied completed task summary"
+        },
+        "swap_T": {
+          "name": "Swap T",
+          "scored": 50,
+          "successes": 11,
+          "success_rate": 0.22,
+          "mean_partial_score": 0.22,
+          "source": "user-supplied completed task summary"
+        },
+        "swap_blocks": {
+          "name": "Swap blocks",
+          "scored": 50,
+          "successes": 16,
+          "success_rate": 0.32,
+          "mean_partial_score": 0.32,
+          "source": "user-supplied completed task summary"
+        }
+      }
+    },
+    "long_horizon": {
+      "scored": 400,
+      "successes": 137,
+      "success_rate": 0.3425,
+      "mean_partial_score": 0.53,
+      "tasks": {
+        "classify_objects": {
+          "name": "Classify objects",
+          "scored": 50,
+          "successes": 16,
+          "success_rate": 0.32,
+          "mean_partial_score": 0.445,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "fill_egg_holder": {
+          "name": "Fill egg holder",
+          "scored": 50,
+          "successes": 2,
+          "success_rate": 0.04,
+          "mean_partial_score": 0.138,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "fill_pen_holder": {
+          "name": "Fill pen holder",
+          "scored": 50,
+          "successes": 11,
+          "success_rate": 0.22,
+          "mean_partial_score": 0.439,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "make_kong": {
+          "name": "Make kong",
+          "scored": 50,
+          "successes": 43,
+          "success_rate": 0.86,
+          "mean_partial_score": 0.86,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "organize_table": {
+          "name": "Organize table",
+          "scored": 50,
+          "successes": 9,
+          "success_rate": 0.18,
+          "mean_partial_score": 0.645,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "play_stacking_toy": {
+          "name": "Play stacking toy",
+          "scored": 50,
+          "successes": 6,
+          "success_rate": 0.12,
+          "mean_partial_score": 0.32,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "play_tic_tac_toe": {
+          "name": "Play tic tac toe",
+          "scored": 50,
+          "successes": 1,
+          "success_rate": 0.02,
+          "mean_partial_score": 0.405,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "put_bottles_into_dustbin": {
+          "name": "Put bottles into dustbin",
+          "scored": 50,
+          "successes": 49,
+          "success_rate": 0.98,
+          "mean_partial_score": 0.988,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        }
+      }
+    },
+    "generalization": {
+      "scored": 600,
+      "successes": 183,
+      "success_rate": 0.305,
+      "mean_partial_score": 0.36824999999999997,
+      "tasks": {
+        "arrange_largest_number": {
+          "name": "Arrange largest number",
+          "scored": 50,
+          "successes": 2,
+          "success_rate": 0.04,
+          "mean_partial_score": 0.11,
+          "source": "user-supplied completed task summary"
+        },
+        "fold_clothes": {
+          "name": "Fold clothes",
+          "scored": 50,
+          "successes": 36,
+          "success_rate": 0.72,
+          "mean_partial_score": 0.7440000000000001,
+          "source": "user-supplied completed task summary"
+        },
+        "hang_mugs": {
+          "name": "Hang mugs",
+          "scored": 50,
+          "successes": 14,
+          "success_rate": 0.28,
+          "mean_partial_score": 0.385,
+          "source": "user-supplied completed task summary"
+        },
+        "make_toast": {
+          "name": "Make toast",
+          "scored": 50,
+          "successes": 22,
+          "success_rate": 0.44,
+          "mean_partial_score": 0.525,
+          "source": "user-supplied completed task summary"
+        },
+        "pack_objects_into_box": {
+          "name": "Pack objects into box",
+          "scored": 50,
+          "successes": 6,
+          "success_rate": 0.12,
+          "mean_partial_score": 0.354,
+          "source": "user-supplied completed task summary"
+        },
+        "pour_liquid_into_cup": {
+          "name": "Pour liquid into cup",
+          "scored": 50,
+          "successes": 22,
+          "success_rate": 0.44,
+          "mean_partial_score": 0.44,
+          "source": "user-supplied completed task summary"
+        },
+        "push_T": {
+          "name": "Push T",
+          "scored": 50,
+          "successes": 1,
+          "success_rate": 0.02,
+          "mean_partial_score": 0.02,
+          "source": "user-supplied completed task summary"
+        },
+        "sort_nesting_dolls_by_size": {
+          "name": "Sort nesting dolls by size",
+          "scored": 50,
+          "successes": 10,
+          "success_rate": 0.2,
+          "mean_partial_score": 0.2,
+          "source": "node-2 receipts verified in prior results review"
+        },
+        "stack_blocks": {
+          "name": "Stack blocks",
+          "scored": 50,
+          "successes": 22,
+          "success_rate": 0.44,
+          "mean_partial_score": 0.5,
+          "source": "node-2 receipts verified in prior results review"
+        },
+        "stack_bowls": {
+          "name": "Stack bowls",
+          "scored": 50,
+          "successes": 26,
+          "success_rate": 0.52,
+          "mean_partial_score": 0.589,
+          "source": "user-supplied completed task summary"
+        },
+        "store_laptop_and_headphones": {
+          "name": "Store laptop and headphones",
+          "scored": 50,
+          "successes": 20,
+          "success_rate": 0.4,
+          "mean_partial_score": 0.512,
+          "source": "node-2 receipts verified in prior results review"
+        },
+        "sweep_blocks": {
+          "name": "Sweep blocks",
+          "scored": 50,
+          "successes": 2,
+          "success_rate": 0.04,
+          "mean_partial_score": 0.04,
+          "source": "user-supplied completed task summary"
+        }
+      }
+    },
+    "open": {
+      "scored": 400,
+      "successes": 16,
+      "success_rate": 0.04,
+      "mean_partial_score": 0.044750000000000005,
+      "tasks": {
+        "align_blocks": {
+          "name": "Align blocks",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "general_pickup": {
+          "name": "General pickup",
+          "scored": 50,
+          "successes": 12,
+          "success_rate": 0.24,
+          "mean_partial_score": 0.24,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "stack_blocks_by_language": {
+          "name": "Stack blocks by language",
+          "scored": 50,
+          "successes": 4,
+          "success_rate": 0.08,
+          "mean_partial_score": 0.092,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "solve_equation": {
+          "name": "Solve equation",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "classify_objects_by_language": {
+          "name": "Classify objects by language",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0.026000000000000002,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "pick_from_conveyor_by_image": {
+          "name": "Pick from conveyor by image",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "store_tools_in_toolbox": {
+          "name": "Store tools in toolbox",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        },
+        "pour_by_language": {
+          "name": "Pour by language",
+          "scored": 50,
+          "successes": 0,
+          "success_rate": 0,
+          "mean_partial_score": 0,
+          "source": "saved checkpoint-1000 research evidence with receipt hashes"
+        }
+      }
+    }
+  },
+  "provenance_note": "Memory and nine Generalization tasks use user-supplied summaries; raw episode records for those tasks were not independently re-audited. The other three Generalization tasks were verified against node-2 receipts in the preceding results review.",
+  "exceptions": [
+    {
+      "suite": "memory",
+      "type": "repaired_variant",
+      "original_layout": 47,
+      "original_status": "unscored",
+      "variant_success": false,
+      "variant_partial_score": 0,
+      "reported_scored": 300,
+      "original_scored": 299,
+      "original_successes": 173,
+      "original_mean_partial_score": 0.5819397993311036
+    },
+    {
+      "suite": "open",
+      "type": "replacement",
+      "task": "general_pickup",
+      "original_layouts": [
+        5
+      ],
+      "replacement_layouts": [
+        50
+      ],
+      "replacement_successes": [
+        false
+      ],
+      "replacement_partial_scores": [
+        0
+      ]
+    },
+    {
+      "suite": "long_horizon",
+      "type": "replacement",
+      "task": "fill_egg_holder",
+      "original_layouts": [
+        15,
+        20
+      ],
+      "replacement_layouts": [
+        50,
+        51
+      ],
+      "replacement_successes": [
+        false,
+        false
+      ],
+      "replacement_partial_scores": [
+        0,
+        0.25
+      ]
+    }
+  ],
+  "overall": {
+    "success_rate": 0.3158333333333333,
+    "mean_partial_score": 0.38545,
+    "reported_scored": 2100,
+    "successes": 635,
+    "original_results": 2096,
+    "replacements": 3,
+    "repaired_variants": 1
+  }
+}

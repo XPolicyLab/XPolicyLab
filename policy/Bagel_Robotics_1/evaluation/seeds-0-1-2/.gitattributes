@@ -1,0 +1,3 @@
+# Preserve the official summarizer's trailing blank line byte-for-byte.
+summary.md whitespace=-blank-at-eof
+summary-original-selection.md whitespace=-blank-at-eof
