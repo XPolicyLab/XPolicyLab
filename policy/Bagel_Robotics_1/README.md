@@ -110,6 +110,4 @@ The server launcher applies the recorded deterministic backend settings. Direct 
 
 ## Notes
 
-Three-seed local results (seeds **0, 1 and 2**): **31.59% success / 38.36 mean partial out of 100**, equally weighted across five suites. The reported selection covers 42 tasks and 6,300 outcomes, including labeled replacements and one repaired Memory variant. [EVALUATION_RESULTS.md](EVALUATION_RESULTS.md) presents the suite averages.
-
-Reviewer files: [unchanged RoboDojo summary](evaluation/seeds-0-1-2/summary.md), [per-seed suite/task breakdown](evaluation/seeds-0-1-2/results-breakdown.md), and [replacement/repair appendix](evaluation/seeds-0-1-2/replacements-and-repairs.md). [Summary regeneration and source verification](evaluation/seeds-0-1-2/README.md) include episode-level CSV data and the original-only view.
+Three-seed local results (seeds **0, 1 and 2**): **31.59% success / 38.36 mean partial out of 100**, equally weighted across five suites. The report covers 42 tasks and 6,300 outcomes, including labeled replacements and one repaired Memory variant. [Detailed results](EVALUATION_RESULTS.md) contains all suite/task scores, the official summary and the replacement appendix.
