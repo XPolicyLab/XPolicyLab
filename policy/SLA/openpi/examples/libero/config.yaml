@@ -1,0 +1,5 @@
+assets: third_party/libero_plus/libero/libero/./assets
+bddl_files: third_party/libero_plus/libero/libero/./bddl_files
+benchmark_root: third_party/libero_plus/libero/libero
+datasets: /data/user/wsong890/user68/project/openvla-consitent/d/datasets
+init_states: third_party/libero_plus/libero/libero/./init_files

@@ -1,0 +1,146 @@
+#!/bin/bash
+
+#SBATCH -p acd_u
+#SBATCH --job-name=omnisf
+#SBATCH -o /dev/null
+#SBATCH -e /dev/null
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=1024G
+
+set -euo pipefail
+
+PROJECT_ROOT=${PROJECT_ROOT:-"${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"}
+cd "$PROJECT_ROOT"
+mkdir -p slurm_logs
+
+export RUN_ENTRY=${RUN_ENTRY:-scripts/train.py}
+export CONFIG=${CONFIG:-debug}
+export EXP_NAME=${EXP_NAME:-"${CONFIG}_multinode_${SLURM_JOB_ID:-manual}"}
+export EXTRA_ARGS=${EXTRA_ARGS:-}
+export NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE:-4}
+export GPU_BIND=${GPU_BIND:-}
+export OPENPI_SHOW_TQDM=${OPENPI_SHOW_TQDM:-0}
+
+LOG_TIME=${LOG_TIME:-$(date +%Y%m%d%H%M)}
+LOG_CONFIG=${CONFIG//\//_}
+LOG_CONFIG=${LOG_CONFIG// /_}
+LOG_STEM=${LOG_STEM:-"${LOG_CONFIG}_${LOG_TIME}"}
+export SLURM_LOG_OUT="slurm_logs/${LOG_STEM}.out"
+export SLURM_LOG_ERR="slurm_logs/${LOG_STEM}.err"
+exec > "$SLURM_LOG_OUT" 2> "$SLURM_LOG_ERR"
+
+module load anaconda3 || true
+module load cuda/12.4 || true
+
+if [ ! -f "$PROJECT_ROOT/.venv/bin/activate" ]; then
+    echo "Virtualenv not found: $PROJECT_ROOT/.venv/bin/activate" >&2
+    exit 1
+fi
+source "$PROJECT_ROOT/.venv/bin/activate"
+
+export NCCL_SOCKET_IFNAME=${NCCL_SOCKET_IFNAME:-=vlan0.2135}
+export NCCL_NET_GDR_LEVEL=${NCCL_NET_GDR_LEVEL:-PHB}
+export NCCL_IB_DISABLE=0
+export NCCL_IB_HCA=${NCCL_IB_HCA:-=mlx5_0:1}
+# export NCCL_IB_GID_INDEX=${NCCL_IB_GID_INDEX:-3}
+export NCCL_IB_TC=${NCCL_IB_TC:-138}
+export NCCL_NSOCKS_PERTHREAD=${NCCL_NSOCKS_PERTHREAD:-8}
+export NCCL_SOCKET_NTHREADS=${NCCL_SOCKET_NTHREADS:-4}
+export NCCL_NVLS_ENABLE=${NCCL_NVLS_ENABLE:-0}
+export NCCL_NVLS_PLUGIN=${NCCL_NVLS_PLUGIN:-1}
+export NCCL_NVLS_LANES=${NCCL_NVLS_LANES:-2}
+export NCCL_IB_QPS_PER_CONNECTION=${NCCL_IB_QPS_PER_CONNECTION:-8}
+export NCCL_IB_SPLIT_DATA_ON_QPS=${NCCL_IB_SPLIT_DATA_ON_QPS:-1}
+export NCCL_MIN_CTAS=${NCCL_MIN_CTAS:-32}
+export NCCL_MAX_CTAS=${NCCL_MAX_CTAS:-128}
+export NCCL_IB_RETRY_CNT=${NCCL_IB_RETRY_CNT:-7}
+export NCCL_MIN_NCHANNELS=${NCCL_MIN_NCHANNELS:-64}
+export NCCL_MAX_NCHANNELS=${NCCL_MAX_NCHANNELS:-256}
+export NCCL_NCHANNELS_PER_NET_PEER=${NCCL_NCHANNELS_PER_NET_PEER:-32}
+export NCCL_BUFFSIZE=${NCCL_BUFFSIZE:-33554432}
+export NCCL_LL_BUFFSIZE=${NCCL_LL_BUFFSIZE:-33554432}
+export NCCL_P2P_NET_CHUNKSIZE=${NCCL_P2P_NET_CHUNKSIZE:-2097152}
+export NCCL_P2P_LEVEL=${NCCL_P2P_LEVEL:-nvl}
+export NCCL_ALGO=${NCCL_ALGO:-nvlstree,ring}
+export NCCL_LL_MAX_NCHANNELS=${NCCL_LL_MAX_NCHANNELS:-4}
+export NCCL_CROSS_NIC=${NCCL_CROSS_NIC:-1}
+export NCCL_IGNORE_CPU_AFFINITY=${NCCL_IGNORE_CPU_AFFINITY:-1}
+export NCCL_SHM_DISABLE=${NCCL_SHM_DISABLE:-0}
+export NCCL_COLLNET_ENABLE=${NCCL_COLLNET_ENABLE:-1}
+export NCCL_DEBUG=${NCCL_DEBUG:-WARN}
+export NCCL_TIMEOUT=${NCCL_TIMEOUT:-3600}
+export NCCL_IB_TIMEOUT=${NCCL_IB_TIMEOUT:-23}
+export NCCL_ASYNC_ERROR_HANDLING=${NCCL_ASYNC_ERROR_HANDLING:-1}
+
+export JAX_USE_PJRT_CUDA_DEVICE=${JAX_USE_PJRT_CUDA_DEVICE:-True}
+unset XLA_CLIENT_MEM_FRACTION XLA_PYTHON_CLIENT_MEM_FRACTION
+export XLA_PYTHON_CLIENT_PREALLOCATE=false
+export XLA_PYTHON_CLIENT_ALLOCATOR=platform
+export TF_CPP_MIN_LOG_LEVEL=${TF_CPP_MIN_LOG_LEVEL:-2}
+
+nodes=$(scontrol show hostnames "$SLURM_JOB_NODELIST")
+export MASTER_ADDR=${MASTER_ADDR:-"$(echo "$nodes" | head -n 1)"}
+if [ -z "${MASTER_PORT:-}" ]; then
+    export MASTER_PORT=$((10000 + SLURM_JOB_ID % 50000))
+fi
+
+if [ ! -f "$RUN_ENTRY" ]; then
+    echo "RUN_ENTRY does not exist: $RUN_ENTRY" >&2
+    exit 1
+fi
+
+echo "Job started at $(date)"
+echo "SLURM_LOG_OUT=$SLURM_LOG_OUT"
+echo "SLURM_LOG_ERR=$SLURM_LOG_ERR"
+echo "PROJECT_ROOT=$PROJECT_ROOT"
+echo "VIRTUAL_ENV=${VIRTUAL_ENV:-}"
+echo "SLURM_JOB_ID=${SLURM_JOB_ID:-}"
+echo "SLURM_JOB_NODELIST=${SLURM_JOB_NODELIST:-}"
+echo "SLURM_JOB_NUM_NODES=${SLURM_JOB_NUM_NODES:-}"
+echo "SLURM_NTASKS=${SLURM_NTASKS:-}"
+echo "MASTER_ADDR=$MASTER_ADDR"
+echo "MASTER_PORT=$MASTER_PORT"
+echo "RUN_ENTRY=$RUN_ENTRY"
+echo "CONFIG=$CONFIG"
+echo "EXP_NAME=$EXP_NAME"
+echo "EXTRA_ARGS=$EXTRA_ARGS"
+echo "GPU_BIND=$GPU_BIND"
+echo "OPENPI_SHOW_TQDM=$OPENPI_SHOW_TQDM"
+echo "XLA_PYTHON_CLIENT_ALLOCATOR=$XLA_PYTHON_CLIENT_ALLOCATOR"
+echo "XLA_PYTHON_CLIENT_PREALLOCATE=$XLA_PYTHON_CLIENT_PREALLOCATE"
+echo "NCCL_SOCKET_IFNAME=$NCCL_SOCKET_IFNAME"
+echo "NCCL_IB_DISABLE=$NCCL_IB_DISABLE"
+echo "NCCL_IB_HCA=${NCCL_IB_HCA:-<unset>}"
+echo "NCCL_IB_GID_INDEX=${NCCL_IB_GID_INDEX:-<unset>}"
+echo "NCCL_CROSS_NIC=$NCCL_CROSS_NIC"
+echo "NCCL_IB_TIMEOUT=$NCCL_IB_TIMEOUT"
+
+gpu_bind_args=()
+if [ -n "$GPU_BIND" ]; then
+    gpu_bind_args=(--gpu-bind="$GPU_BIND")
+fi
+
+srun \
+    --nodes="$SLURM_JOB_NUM_NODES" \
+    --ntasks="$SLURM_NTASKS" \
+    --ntasks-per-node="$NTASKS_PER_NODE" \
+    --distribution=block:block,NoPack \
+    --exact \
+    "${gpu_bind_args[@]}" \
+    --export=ALL \
+    bash -lc '
+        set -euo pipefail
+        export JAX_PROCESS_COUNT="$SLURM_NTASKS"
+        export JAX_PROCESS_INDEX="$SLURM_PROCID"
+        export JAX_LOCAL_PROCESS_INDEX="$SLURM_LOCALID"
+        export JAX_NODE_RANK="$SLURM_NODEID"
+
+        echo "host=$(hostname) rank=${SLURM_PROCID}/${SLURM_NTASKS} local_rank=${SLURM_LOCALID} node_rank=${SLURM_NODEID} CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-} SLURM_STEP_GPUS=${SLURM_STEP_GPUS:-} SLURM_JOB_GPUS=${SLURM_JOB_GPUS:-}"
+        echo "host=$(hostname) rank=${SLURM_PROCID}/${SLURM_NTASKS} NCCL_SOCKET_IFNAME=${NCCL_SOCKET_IFNAME} NCCL_IB_DISABLE=${NCCL_IB_DISABLE} NCCL_IB_HCA=${NCCL_IB_HCA:-<unset>} NCCL_IB_GID_INDEX=${NCCL_IB_GID_INDEX:-<unset>} NCCL_CROSS_NIC=${NCCL_CROSS_NIC}"
+        uv run --no-sync "$RUN_ENTRY" "$CONFIG" --exp-name="$EXP_NAME" $EXTRA_ARGS
+    '
+
+echo "Job ended at $(date)"
