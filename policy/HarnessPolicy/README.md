@@ -2,7 +2,7 @@
 
 **Contributor:** Harness Policy team | **Paper:** Harness Policy | **arXiv:** TBD | **Original code:** https://github.com/EvolvingLMMs-Lab/the-harness
 
-HarnessPolicy is the **Max** stack (agent **1.21.0**, identity `9132beb14b257162`): WALL-OSS + Codex (gt-6.1-sol-a) + complementary skills. Includes swap closeout/home reserve, three-confirm completion that survives VLM veto, and WALL ownership for xylophone (broom/sweep remain measured B).
+HarnessPolicy is the **Max** stack (agent **1.21.0**, identity `9132beb14b257162`, measured RoboDojo **55.08**): WALL-OSS + Codex (gt-6.1-sol-a) + complementary skills. Includes swap closeout/home reserve, three-confirm completion that survives VLM veto, and WALL ownership for xylophone (broom/sweep remain measured B).
 
 HarnessPolicy is the Harness Policy agent: a language model (gt-6.1-sol-a) reads the learned
 policy's description and hands it whole tasks it was trained on (wall-oss), from the
