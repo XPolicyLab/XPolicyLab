@@ -1,0 +1,5 @@
+data/
+assets/
+smoke/
+.pytest_cache/
+openpi/.cache/

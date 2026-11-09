@@ -1,0 +1,22 @@
+policy_name: SLA
+protocol: ws
+host: localhost
+port: null
+bench_name: null
+task_name: null
+ckpt_name: null
+env_cfg_type: null
+seed: null
+action_type: ee
+gpu_id: null
+eval_batch: false
+
+train_config_name: train_robotwin
+checkpoint_path: null
+checkpoint_step: null
+norm_stats_asset_id: null
+action_chunk_size: 50
+num_inference_steps: 10
+# RoboTwin's default ARX-X5 base pose: xyz followed by qw, qx, qy, qz.
+robot_base_pose: [0.0, -0.65, 0.0, 0.707, 0.0, 0.0, 0.707]
+request_timeout_s: 600
