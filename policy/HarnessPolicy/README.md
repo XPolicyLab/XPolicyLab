@@ -4,6 +4,17 @@
 
 HarnessPolicy is the **Max** stack (agent **1.21.0**, identity `9132beb14b257162`, measured RoboDojo **55.08**): WALL-OSS + Codex (gt-6.1-sol-a) + complementary skills. Includes swap closeout/home reserve, three-confirm completion that survives VLM veto, and WALL ownership for xylophone (broom/sweep remain measured B).
 
+Official RoboDojo score = mean of five dimension means (failed episodes stay in the denominator). Against WALL-OSS alone **46.26**, ~4.3 calls / ~$0.18 per episode:
+
+| Dimension | WALL-OSS alone | Max |
+|---|---:|---:|
+| Generalization | 46.66 | 56.64 |
+| Precision | 38.66 | 42.91 |
+| Long-Horizon | 50.28 | 50.28 |
+| Memory | 72.71 | 79.05 |
+| Open | 23.02 | 46.60 |
+| **Overall** | **46.26** | **55.08** |
+
 HarnessPolicy is the Harness Policy agent: a language model (gt-6.1-sol-a) reads the learned
 policy's description and hands it whole tasks it was trained on (wall-oss), from the
 start pose; for what the policy cannot do (picking the one object a name, a label or a
