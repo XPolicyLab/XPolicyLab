@@ -103,8 +103,6 @@ def fit_toaster_body(ctx, image, camera):
 def refine_slots(ctx, image, camera, root, yaw, variant):
     """Snap the toaster pose to the two slot openings seen on the roof.
 
-    The body-box fit (needed whenever the slot detector gives up) is good to ~1 cm but
-    its yaw can be 7 degrees off, enough for an 11.7 cm slice to jam in a 3.4 cm slot.
     Here the slots are whatever on the roof differs from the roof colour, so the search
     works for dark, bright or table-coloured openings alike.
     """
@@ -140,10 +138,6 @@ def refine_slots(ctx, image, camera, root, yaw, variant):
         return root, yaw, None
     distance = np.linalg.norm(lab - base, axis=2)
     distance[~mask] = 0.0
-    # The body fit's across-slot position is good to ~4 mm, whereas the dark region on the
-    # roof extends ~1 cm past the modelled slots on one side: a free across search settled
-    # 1-1.3 cm off and jammed slices and missed the lever lip. Search yaw and the
-    # along-slot offset only, then refine yaw at 0.5 degree steps.
     best = None
     for d_yaw in np.radians(np.arange(-12.0, 12.1, 1.5)):
         along = np.array([math.cos(yaw + d_yaw), math.sin(yaw + d_yaw)])
@@ -215,8 +209,6 @@ def measure_rgb(ctx, count):
     normal = np.array([math.cos(rack_yaw), math.sin(rack_yaw), 0.0])
     slices = []
     for index, point in enumerate(sorted(centres, key=lambda p: float(np.asarray(p)[:2] @ normal[:2]))):
-        # The detector reports the measured upper far corner shifted 48 mm in-plane and
-        # 12 mm down; the geometric slice centre is a half-slice below the top edge.
         top = np.asarray(point, float) + np.array([0.0, 0.0, 0.012])
         centre = top - np.array([0.0, 0.0, BREAD_HALF])
         slices.append(dict(name=f"bread_rgb_{index}", label=f"bread_{index}", centre=centre, normal=normal.copy(),

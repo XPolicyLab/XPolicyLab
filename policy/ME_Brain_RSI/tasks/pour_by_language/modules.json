@@ -15,13 +15,13 @@
     "file": "capabilities/motion/robot_motion_geometry.py",
     "resource": "resources/pour_by_language/coap/robot_motion_geometry.py",
     "package": false,
-    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics.py",
     "resource": "resources/pour_by_language/coap/kinematics.py",
     "package": false,
-    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f"
   },
   "coap.motion": {
     "file": "capabilities/motion/motion.py",
@@ -123,7 +123,7 @@
     "file": "capabilities/observation/report_for_imitate_sorting_sequence.py",
     "resource": "resources/pour_by_language/coap/report.py",
     "package": false,
-    "sha256": "809383609f98e50fb9ffd6c92cdb51bb1941e0e2e94ce3907ffb4dc83f8b851d"
+    "sha256": "b1064cc092893bbdc2a4917b63a18bd5509a16b1d67c401dd65f9b7504fa32d9"
   },
   "coap.audit": {
     "file": "capabilities/observation/audit.py",

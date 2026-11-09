@@ -31,14 +31,14 @@
     "file": "capabilities/control/sweep_blocks_coap_policy.py",
     "resource": "resources/sweep_blocks/coap/policy.py",
     "package": false,
-    "sha256": "3b12b3ed5c6c42c949eabbba101c7dad71a7a66d9d63133e265c0bdb8d000b13",
+    "sha256": "73123d8d929da323b147dc52a209e97b9b9d688a541ab054d5b984cb41f781ee",
     "resource_identity": true
   },
   "coap.vision": {
     "file": "capabilities/perception/sweep_blocks_coap_vision.py",
     "resource": "resources/sweep_blocks/coap/vision.py",
     "package": false,
-    "sha256": "ef03e6e071807c8710f909f484782c53563dda3412fefb0e437e45b2632ec640",
+    "sha256": "1b535ccd49abd98b1aecaeffb71121a9b00302a4d9521a1e29c2fd61116623e2",
     "resource_identity": true
   },
   "coap.wristcam": {

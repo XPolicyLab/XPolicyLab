@@ -73,7 +73,7 @@ def _physical_bow_center(ctx, camera, expected, direction, points, hole):
 
 
 def measured_bow(ctx, donor, expected, direction):
-    """Fit the known 10 mm bow radius while excluding the attached narrow blade."""
+    "Fit the key bow while excluding the attached blade."
     camera = f'cam_{donor}_wrist'
     image = np.asarray(ctx.vision[camera]['color'], np.uint8)[..., :3]
     expected = np.asarray(expected, float)

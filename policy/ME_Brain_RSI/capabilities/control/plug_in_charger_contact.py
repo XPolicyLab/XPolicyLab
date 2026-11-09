@@ -245,7 +245,6 @@ class Policy:
                 if self.detect_fail>=2:self.advance('observe_lift')
             return
         if p=='observe_lift':
-            # a finger hides an object: raise both grippers 12 cm, then look again
             done=True
             for side in ARMS:
                 goal=self.home[side].copy();goal[2]+=0.12

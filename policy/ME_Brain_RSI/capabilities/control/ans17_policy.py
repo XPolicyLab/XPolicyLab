@@ -1,9 +1,5 @@
 """ANS17: ANS16 plus angle-only repair for a digit spun on its pad, and quieter hold carry-over.
 
-The across-height pinch of the 2 once spun the released digit by ~90 deg
-(ANS9 layout 20). ANS7's repair gate rejects yaw errors above 0.80 rad, so such
-a spin was never repaired although the digit sits centred on its pad. An
-angle-only repair (centre error < 15 mm) now accepts yaw errors up to 1.75 rad.
 The ANS13 carry-over is only applied once two wrist observations exist.
 """
 import numpy as np
@@ -28,7 +24,6 @@ class Policy(ANS16):
         if found is None:return None
         error=float(np.linalg.norm(np.asarray(found['xy'])-context['target']));angle=abs(float(found['yaw']))
         if error<SPIN_REPAIR_CENTRE and .80<angle<=SPIN_REPAIR_ANGLE and found['confidence']>=.70:
-            # Spun on the pad: ANS7's 0.80 rad gate would refuse; rebuild its leg with the measured yaw.
             identity=context['digit']
             if identity in self.repaired or '_stage' in context['label'] or '_repair' in context['label']:return None
             side=context['side'];xy=np.asarray(found['xy']);goal=np.asarray(context['target'])

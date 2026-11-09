@@ -1,35 +1,4 @@
-"""tri80 r10b sorting "wide": latepersist2 plus a wider re-search for a lost body.
-
-Built on ``sorting_tri80_r09x_latepersist2`` (r09p ``late`` plan repairs + r09d ``persist2``
-object-level redo), imported unchanged.  Development census of persist2 (r09dq1/2) shows the
-redo giving up ("not found, treated as delivered") on bodies that are still on the table:
-
-* a body pushed or flung by the approach, or dropped beside the destination basket, lies
-  outside the retained object detector's reporting bounds (|x| <= .40, y >= -.36), so no
-  detection carries it (garage flung to (.46,-.41); phone at x ~ .40; camera beside basket at
-  x = -.42).  Treating it as delivered makes the next placement out of order.
-
-``wide``: when the retained re-association finds nothing, the head camera image is segmented
-once more with the retained public object contour extractor inside a wider table region
-(x in +-.70, y in [-.52, .06]); every new contour (away from bodies the retained detector
-already reported, outside the destination basket) is projected onto the table plane and
-classified with the retained fixed DINOv2 prototypes.  A body carrying the lost object's
-category label with a reasonable initial-crop cosine (or, for a loss before the basket, a high
-cosine and not at a pending object's position) is taken as the lost object.
-
-``verify`` (option): the retained grip-check re-grasp re-associates a missed body near the
-pinch by RGB identity; in the census 10/109 such relocations picked a different category
-(watch -> phone at a crowded handoff, watch -> action camera).  With ``verify`` the relocated
-body's DINOv2 category label is compared with the current object's label; on a mismatch (and a
-low initial-crop cosine), or when the relocation found nothing, the body carrying the current
-label within .25 m of the pinch is used instead (else the retained stale pinch).
-
-``rhythm`` (option): the r09p core ``dedup`` and ``rhythm`` plan repairs (requires the newer
-``sorting_tri80_r09p_core``).
-
-Only public camera images, public robot state and public kinematics are used.  No safety
-checks or aborts are added.
-"""
+"Expand the visual search when a previously observed object is lost."
 from dataclasses import dataclass
 from functools import partial
 

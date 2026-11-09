@@ -1,11 +1,6 @@
 """X40: X39 minus the lowered hexashell gap; fallback hits raised to the hexashell height.
 
-Lowering the hexashell head target from .810 to .804 m made native13 fail with
-contact plateaus on keys 4-6 while grasp, route and measured anchor were identical
-to the X38 success: the keys are cylinders, a head that touches one is pushed
-sideways and the beat leaves the key polygon. Contact is therefore to be avoided,
-not tolerated: the imported .023 gap is restored and the endpoint-checked vertical
-fallback route now also places the head at .809 m instead of .803 m. The
+The
 lowered-hover retry of X39 is kept.
 """
 from .xylophone_x39 import XylophonePolicy as X39

@@ -90,7 +90,7 @@ def solve_roll(cx, cz):
 
 
 def axis_target_rotation(source, holder, pick, original, axis):
-    """Map the physical aperture to the selected peg and maximize both scorer-frame axis margins."""
+    "Align the handle aperture and support frames for the selected peg."
     models = mug_scene.public_models()
     body = Rotation.from_euler('z', float(source['yaw'])).as_matrix()
     frame = quat_matrix(models['mugs'][str(int(source['asset_index']))]['handle_frames'][0][3:])

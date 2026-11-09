@@ -1,9 +1,6 @@
 """Planning-only bounded-domain IK used to rank peg assignments (not installed on the context).
 
-The public URDF declares +-10 rad on joints 1-5, but the simulated arm stops
-near joint4 +-1.75 and joint5 +-1.52 (PyRUA-Lean robodojo_kinematics, Apache-2.0
-measurement notes); solutions outside this range are issued but never reached,
-which displaces the tool by up to 0.2 m.  Every solve here is constrained to the
+Every solve here is constrained to the
 reachable range so planning costs and issued joint paths agree with the robot.
 """
 import math

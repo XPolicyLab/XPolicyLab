@@ -168,7 +168,6 @@ def occupied_tube_margin(kinematics, model, arm, joints, occupied):
     minimum = 1.0
     for point in occupied:
         point = np.asarray(point, dtype=float)
-        # The commanded tip is 48 mm below the hole after the 3 mm approach offset.
         for radius, bottom, top in ((.01665, .0734, .0924), (.00835, -.048, .0734)):
             sides = np.c_[normals, -np.einsum("ij,j->i", normals, np.r_[point[:2], 0])-radius]
             tube_planes = np.r_[sides, [[0, 0, 1, -point[2]-top],
@@ -284,7 +283,6 @@ def tube_cap_disk_pose(ctx, arm, expected):
         first = np.array([1.0, 0, 0])-normal*normal[0]
         first /= np.linalg.norm(first)
         second = np.cross(normal, first)
-        # The static tube asset has a 16.658 mm outer cap radius after scaling.
         points = parameters[:3] + .01665*(np.cos(angles)[:, None]*first +
                                          np.sin(angles)[:, None]*second)
         return points, normal

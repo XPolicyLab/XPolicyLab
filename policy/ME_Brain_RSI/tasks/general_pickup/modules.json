@@ -39,7 +39,7 @@
     "file": "capabilities/control/instance.py",
     "resource": "resources/general_pickup/coap/instance.py",
     "package": false,
-    "sha256": "2aa4a17c8723be1b83ed26ab33510fc1558026252c16d2b0bc8ed76ed7cc160a"
+    "sha256": "8689aa89887722fa4eb1faf7e215aa3755f4fcea5f103da36edef4c65f2febaf"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",

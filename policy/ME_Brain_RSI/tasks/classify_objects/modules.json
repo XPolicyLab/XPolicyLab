@@ -27,13 +27,13 @@
     "file": "capabilities/motion/robot_motion_geometry.py",
     "resource": "resources/classify_objects/coap/robot_motion_geometry.py",
     "package": false,
-    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics.py",
     "resource": "resources/classify_objects/coap/kinematics.py",
     "package": false,
-    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f"
   },
   "coap": {
     "file": "capabilities/control/robot.py",
@@ -69,7 +69,7 @@
     "file": "capabilities/control/classify_normal_watch_material_material.py",
     "resource": "resources/classify_objects/coap/tasks/classify_r32_normal_watch_material_material.py",
     "package": false,
-    "sha256": "49f655164a0c69c0e9f814d34a39f2bed284804d44bbc34a8cfe05bd89026e93"
+    "sha256": "7151a168fc08450fdf6d9d20ed876bf92b1a91d8eb901b91653ebd6f8007d04e"
   },
   "coap.tasks.classify_r07_n2_material_centroid": {
     "file": "capabilities/control/classify_n2_material_centroid.py",
@@ -99,13 +99,13 @@
     "file": "capabilities/planning/memory.py",
     "resource": "resources/classify_objects/coap/tasks/memory.py",
     "package": false,
-    "sha256": "652e0a63f3157bbbf19087c6d197f898e71918eed95a29b1086fc9a564169a3c"
+    "sha256": "6cb87fca653ada855a47603bb2979d9cba01638a679006476a6d5ee005fdc60b"
   },
   "coap.tasks.memory_geometry": {
     "file": "capabilities/geometry/memory_geometry.py",
     "resource": "resources/classify_objects/coap/tasks/memory_geometry.py",
     "package": false,
-    "sha256": "94933d41c2f465141798ac66ea4f92f6c4a03997e598d165b8d14bc994665467"
+    "sha256": "987b4846760ae7246150d6374f53f257c3a0293c60205a346941394b85464041"
   },
   "model": {
     "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
@@ -345,7 +345,7 @@
     "file": "capabilities/observation/report_for_classify_objects.py",
     "resource": "resources/classify_objects/coap/report.py",
     "package": false,
-    "sha256": "3c8799da685858b0c108f377ffd70a9145de17a82f29a0763d1390d20ebac434"
+    "sha256": "de66d999c81c28fa21e6dc1d89088f36c8ae69de662b76f145fc5c1c4eb2d5f5"
   },
   "coap.audit": {
     "file": "capabilities/observation/audit.py",

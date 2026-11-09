@@ -14,30 +14,21 @@ from ..executor import ZoneExecutor, _log, SAFE_TRAVEL_CLEARANCE, MIN_TCP_TABLE
 from . import containers_vision as vision
 
 FAMILIES = ("car", "shoe", "hammer", "electric_toothbrush")
-# Public box CAD: inner floor 0.186 x 0.164, side walls vertical and 3 mm thick.
 BOX_INNER_HALF_WIDTH = 0.082
 BOX_WALL_HEIGHT = 0.182
 BOX_FLOOR_HALF_LENGTH = 0.093
 INNER_MARGIN = 0.008           # pose uncertainty allowed for gripper parts descending inside
 EDGE_MARGIN = 0.003            # held object edges vs the inner wall faces
 WALL_CLEARANCE = 0.006
-FINGER_BLOCK_HALF = 0.0378     # slider block outer face beyond the pad gap/2 (24.9 + 12.9 mm)
+FINGER_BLOCK_HALF = 0.0378
 BLOCK_ABOVE_TCP = (0.055, 0.073)
 HOUSING_ABOVE_TCP = 0.061      # link6 housing starts this far above the TCP ...
-HOUSING_HALF_SPAN = 0.087      # ... and spans +-87 mm along the closing axis
+HOUSING_HALF_SPAN = 0.087
 CARRY_TILT = 0.5               # rad, tool tilted about the box long axis towards the robot
-# (carry tilt, release tilt) combinations tried in order of preference. A release tilt
-# of ~0.65 rad brings both housing ends inside the inner width so the object can be
-# set down on the pile instead of being dropped from the wall height.
 TILT_OPTIONS = ((0.5, 0.65), (0.7, 0.65), (0.5, 0.0), (0.5, 0.2), (0.7, 0.35), (0.3, 0.0), (0.5, 0.5),
                 (0.5, None), (0.7, None))
 
 
-# ---------------------------------------------------------------------------
-# Public CAD derived grasp specifications (placed frame: z=0 at the bottom)
-# ---------------------------------------------------------------------------
-# Finger pad contact face (public URDF link7/link8 meshes): from the fingertip up to
-# 15 mm above it, i.e. TCP-0.0126 .. TCP+0.0024, and 18.4 mm wide.
 PAD_TOP_ABOVE_TCP = 0.0024
 PAD_HALF_WIDTH = 0.0092
 PROFILE_DZ = 0.002
@@ -117,7 +108,7 @@ def evaluate_pinch(zs, widths, centres, tcp_height, grasp_long, long_axis, com, 
     d = abs(grasp_long - com[long_axis])
     clamped = patch >= 0.012
     if clamped:
-        hang = math.radians(8.0)   # offline probes: <= 5 deg pivot for wall-clamped pinches
+        hang = math.radians(8.0)
         stability = 4.0 * max(0.0, -h - 0.006) / 0.01
     else:
         hang = math.atan2(d + 0.004, max(h, 0.004))
@@ -168,8 +159,6 @@ def grasp_spec(model_key):
     else:
         longs = list(com[long_axis] + np.arange(-0.030, 0.0301, 0.003))
     ranked = []
-    # Cars are often confused with each other by the silhouette fit (heights differ by up to
-    # 2 cm); every car body has vertical walls below 2 cm, so pinch all of them there.
     top_height = min(extent[2], 0.021) if family == "car" else extent[2]
     for grasp_long in longs:
         zs, widths, centres = width_profile(points, long_axis, grasp_long)
@@ -246,10 +235,7 @@ def car_facing_templates():
 def car_facing_from_wrist(ctx, arm, obj):
     """Decide the car's front from the wrist camera above it: a per-model lightness profile.
 
-    The car's top-view lightness along its long axis (hood / windshield / roof / rear window
-    / trunk) is characteristic of each public car model and asymmetric front-to-back; the
-    head camera cannot resolve it (the car is 40 px long) but the wrist camera 20 cm above
-    can. Returns "keep", "flip" or None (undecided), plus the two correlations.
+    Returns "keep", "flip" or None (undecided), plus the two correlations.
     """
     camera = f"cam_{arm}_wrist"
     bins, templates = car_facing_templates()
@@ -300,9 +286,6 @@ def car_facing_from_wrist(ctx, arm, obj):
     same = float(np.corrcoef(prof, template)[0, 1])
     flipped = float(np.corrcoef(prof, template[::-1])[0, 1])
     detail = dict(same=round(same, 2), flipped=round(flipped, 2), pixels=int(mask.sum()))
-    # Flipping is irreversible in effect (a wrong flip costs the car and the time to re-plan),
-    # so it needs a strong, unambiguous match: official runs flipped two correct car_00003
-    # poses at flipped 0.5/0.54 with same ~0, while the true flips scored 0.86-0.99.
     if flipped >= 0.8 and flipped - same >= 0.4:
         return "flip", detail
     if same > flipped + 0.15 and same > 0.3:
@@ -311,12 +294,7 @@ def car_facing_from_wrist(ctx, arm, obj):
 
 
 def car_facing_check(ctx, item, bottom, yaw):
-    """Resolve the car's front/back from the detector: the windshield sits at the front.
-
-    The silhouette fit mixes up the two half-turn hypotheses in ~1 of 7 scenes; the facing
-    rule (front within 60 deg of +X) then fails. The front direction in the world is
-    rz(yaw - target_yaw) @ x (the model's target yaw faces +X).
-    """
+    "Use the windshield detection to distinguish the front and rear orientations."
     try:
         camera = item.get("camera", "cam_head")
         info, _ = vision.models()
@@ -627,8 +605,6 @@ class PackExecutor(ZoneExecutor):
             yield from grip_steps(ctx, arm, aperture, 2)
         # The planner already chose the pinch yaw whose branch allows the carry; no flipping.
         if spec["family"] == "car" and not obj.get("inspected"):
-            # Diagnostic look at the whole car from 20 cm (wrist camera) before the pinch; the
-            # evidence snapshots (every 10 steps) catch it for offline front/back studies.
             base_xy = np.array([-0.3 if arm == "left" else 0.3, -0.45])
             towards_base = base_xy - hover[:2]
             towards_base = towards_base / max(1e-6, np.linalg.norm(towards_base))
@@ -665,11 +641,6 @@ class PackExecutor(ZoneExecutor):
         yield from self.free_move(arm, hover, rotation, allow_flip=False, holding=False)
         yield from self.linear_move(arm, position, rotation, step_m=0.03)
         yield from self.settle(arm, 2)
-        # When the pads already rest on the object the measured TCP settles above the command;
-        # closing while the stiff arm presses down has made PhysX launch the object (and once
-        # the box) across the table. Back off to the contact height first. The controller
-        # itself still lags 1-4 cm two steps after a 3 cm/step descent, so only a lag that
-        # persists (and stays small enough to be a contact) counts as blocked.
         model = self.models[arm]
 
         def descent_lag():
@@ -711,16 +682,10 @@ class PackExecutor(ZoneExecutor):
     WALL_HIGH = (0.140, 0.088)
 
     def gripper_clear(self, tcp_xy, gripper_yaw, block_reach, margin=0.008, pitch=0.0):
-        """No part of the open gripper, pinching at ``tcp_xy`` with ``gripper_yaw``, overlaps a box wall.
-
-        A pitched pick leans the parts above the TCP along the pad direction (positive pitch
-        towards +x of the gripper), which is how a pinch right beside a wall keeps its wrist
-        body (7 cm wide, 8-15 cm up) off the wall.
-        """
+        "No part of the open gripper, pinching at ``tcp_xy`` with ``gripper_yaw``, overlaps a box wall."
         planner = self.planner
         frame = rz(gripper_yaw)[:2, :2]
         pad_dir, closing = frame @ np.array([1.0, 0.0]), frame @ np.array([0.0, 1.0])
-        # The rail's collision spheres overstate its reach: picks 8.5 cm from a side wall worked.
         parts = ((block_reach, 0.012, self.WALL_LOW, 0.064), (0.080, 0.012, self.WALL_LOW, 0.075), (0.036, 0.036, self.WALL_HIGH, 0.115))
         for along, across, (wall_u, wall_v), height in parts:
             lean = height * math.sin(pitch) * pad_dir
@@ -748,7 +713,6 @@ class PackExecutor(ZoneExecutor):
         if not (0.086 < abs(v0) < 0.20 and abs(u0) < 0.14 and abs(float(long_dir @ planner.u)) > 0.85):
             return None
         half_len = 0.5 * spec["length"]
-        # Pads 15 mm tall with tips 12.6 mm below the TCP: the lowest usable TCP is ~20 mm.
         contact_z = planner.table + float(np.clip(0.5 * spec["height"], 0.02, 0.035))
         best = None
         for sign in (1.0, -1.0):
@@ -865,10 +829,6 @@ class PackExecutor(ZoneExecutor):
 
         The object crosses the wall line at the robot side of the box tilted by ``theta``,
         moves across at that height while tilting to ``phi``, then descends vertically.
-        With phi >= 0.6 the housing (174 mm along the closing axis, 61 mm above the TCP)
-        fits between the walls when the TCP is offset (0.061 sin phi) towards the far
-        wall, so the object can be set down on the pile; otherwise every gripper part
-        outside the inner footprint must stay above the wall top.
         """
         planner = self.planner
         spec = grasp_spec(obj["model_key"])
@@ -1017,8 +977,6 @@ class PackExecutor(ZoneExecutor):
             yield q, None
         yield from self.settle(arm, 1)
         ctx.memory["phase"] = f"lower_{obj['kind']}"
-        # Plain planned descent: the guarded/half-step variants (qv041-qv045) brought no official
-        # gain (16/14/14/15/13 vs 17 for this version), so the qv040 behaviour is kept.
         for q in plan["descent"]:
             yield q, None
         executed = list(plan["descent"])
@@ -1086,8 +1044,6 @@ class PackExecutor(ZoneExecutor):
         debug = getattr(self, "debug_grasp", False)
         skews = (0.26, -0.26, 0.45, -0.45)
         if spec["family"] == "electric_toothbrush":
-            # Larger skews on the round handle; never near a quarter turn, where the pads
-            # would close along the 20 cm body (that pick landed on the handle and missed).
             skews = skews + (0.7, -0.7, 1.0, -1.0)
         candidates = []   # (yaw, pitch) pairs whose gripper parts clear the walls
         if blocks_clear(base_yaw):
@@ -1194,7 +1150,7 @@ class PackExecutor(ZoneExecutor):
     TRESPASS_X = 0.09
 
     def trespass(self, arm, xy):
-        """A TCP target on the other arm's half of the table (both grippers are 17 cm wide)."""
+        "Check whether the target is on the opposite arm side."
         x = float(np.asarray(xy)[0])
         return x > -self.TRESPASS_X if arm == "left" else x < self.TRESPASS_X
 
@@ -1512,11 +1468,6 @@ class PackExecutor(ZoneExecutor):
             _log(ctx, "box_refresh_rejected", shift=round(shift, 3), turn=round(turn, 3), reason="turn")
             return
         if shift > 0.12:
-            # A big jump is either a detector slip or the box really shoved across the table
-            # (a released car once lifted and shoved it; every later drop then missed). Accept it
-            # once a second look agrees, meanwhile keep the box flagged for another look. The
-            # near-square box fit can also flip by ~90 degrees when the contents hide its edges;
-            # a shove never turns it that far, so such fits are never accepted.
             previous = getattr(self, "_box_candidate", None)
             agrees = previous is not None and np.linalg.norm(previous[0][:2] - box["bottom"][:2]) < 0.03 \
                 and abs(wrap(previous[1] - box["yaw"])) < math.radians(10.0)
@@ -1608,8 +1559,6 @@ class PackExecutor(ZoneExecutor):
                     pass
             yield from grip_steps(ctx, arm, 1.0, 4)
             yield from self.settle(arm, 2)
-        # The sweep home passes the buffer band: wait while the other arm is setting an
-        # object down there (its 18 cm shoe once got knocked 6 cm off the planned spot).
         waited = 0
         while self.locks["buffer_arm"] not in (None, arm) and waited < 160:
             waited += 1
@@ -1617,8 +1566,6 @@ class PackExecutor(ZoneExecutor):
         yield from self.go_home(arm, 16)
 
     def slots_for(self, kind, shoe_side):
-        # The floor is 0.186 x 0.164 and the end walls flare outwards above ~0.10, so long
-        # objects stay centred along the box axis; the width takes the shoe beside the car.
         if kind == "shoe":
             return [(0.0, 0.02), (0.0, -0.04), (0.0, 0.04), (-0.02, 0.02), (0.02, 0.02)]
         if kind == "car":
@@ -1684,10 +1631,6 @@ class PackExecutor(ZoneExecutor):
                 continue
             shift = float(np.linalg.norm(candidate["bottom"][:2] - obj["bottom"][:2]))
             turn = abs(wrap(candidate["yaw"] - obj["yaw"]))
-            # A pick that closed on nothing means the object moved: accept any nearby detection.
-            # A shoe or car set down from a hanging pinch tumbles: official runs found them
-            # 7-27 cm and up to 120 degrees from the planned buffer pose, and every pick at
-            # the stale pose missed. Big objects are detected reliably: wide gate, no yaw gate.
             big = obj["kind"] in ("shoe", "car")
             if lost:
                 limit = 0.35 if self.nudged.get(obj["kind"]) else 0.20

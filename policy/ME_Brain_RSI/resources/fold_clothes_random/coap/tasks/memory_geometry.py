@@ -5,7 +5,6 @@ import numpy as np
 
 def triangulate_landmark(ctx, first_camera, first_pixel, second_camera, second_pixel,
                          max_gap=.007, state=None):
-    """Reject mismatched features instead of forcing a fixed tabletop height."""
     state = ctx.state if state is None else state
     rays = []
     for camera, pixel in ((first_camera, first_pixel), (second_camera, second_pixel)):

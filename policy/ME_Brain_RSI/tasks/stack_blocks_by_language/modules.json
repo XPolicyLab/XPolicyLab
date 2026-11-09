@@ -9,13 +9,13 @@
     "file": "capabilities/control/model_for_stack_blocks_by_language.py",
     "resource": "resources/stack_blocks_by_language/coap/model.py",
     "package": false,
-    "sha256": "9230dff106e434cb4dd38d25797a287012c68a611a32274c265f0ea7d73b4ef2"
+    "sha256": "db664ed44281f085425e9b1c686ff36f8c484dc6781fea60da25522682e8f31d"
   },
   "policy.stack_blocks_lang_v5.perception": {
     "file": "capabilities/perception/perception_for_stack_blocks_by_language.py",
     "resource": "resources/stack_blocks_by_language/coap/perception.py",
     "package": false,
-    "sha256": "1125518c1f4b9aff38fa8957bd388a13c89718b278fc99cda9e6bcfc514d25f6"
+    "sha256": "0936d4ebf16d6babc5bbf126324fca93282835afe20a0ad7b455d40bb63a4406"
   },
   "policy.stack_blocks_lang_v5.calibration": {
     "file": "capabilities/control/calibration.py",
@@ -33,7 +33,7 @@
     "file": "capabilities/control/policy_for_sort_nesting_dolls_by_size.py",
     "resource": "resources/stack_blocks_by_language/coap/shared/__init__.py",
     "package": true,
-    "sha256": "aa16f70a86af54190494ac1386265c926f8f0ca8775ef8a900189f5df525d2e5"
+    "sha256": "b77b6c713c7b491669473b2241d12ce434d2bae9db1fd063143521797f69d99c"
   },
   "policy.stack_blocks_lang_v5.robot_geometry": {
     "file": "capabilities/geometry/robot_geometry.py",
@@ -51,12 +51,12 @@
     "file": "capabilities/motion/x5_kinematics.py",
     "resource": "resources/stack_blocks_by_language/coap/x5_kinematics.py",
     "package": false,
-    "sha256": "11f11f235b78440ab9d6afd292a72cb07a1af702667724e772da4ce16937d229"
+    "sha256": "bc248fd605972d12c080b06c5f0078d2f3ca6e35320d1c10cfabca353233ee63"
   },
   "policy.stack_blocks_lang_v5.collision_gate": {
     "file": "capabilities/perception/collision_gate.py",
     "resource": "resources/stack_blocks_by_language/coap/collision_gate.py",
     "package": false,
-    "sha256": "d8bcb0159b6141cc28e2477444a112d598fc9387eb932edc1f5c102fab86c0b7"
+    "sha256": "2020a47511a0fc1616ad0a327d0932cfdc995a34416312306166b05232dd5fd7"
   }
 }

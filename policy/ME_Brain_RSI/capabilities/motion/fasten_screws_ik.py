@@ -34,7 +34,6 @@ class X5IK:
         self.active_indices = [self.joint_names.index(n) for n in self.active_names]
         self.tool_frame = kin['tool_frames'][0]
         self.device = DeviceCfg()
-        # Identical fixed tabletop in robot-base coordinates: 0.74 - 0.765.
         scene = {'cuboid': {'table': {'dims': [3., 3., .05],
                  'pose': [0., 0., -.05, 1., 0., 0., 0.]}}}
         ik_cfg = InverseKinematicsCfg.create(
@@ -94,8 +93,6 @@ class X5IK:
 
 
 JOINT6_LIMIT = np.pi - 0.02
-# Normal (elbow-up) configuration of the X5; the URDF copy allows +-10 rad and CuRobo happily returns the elbow-flipped
-# branch (joint3 > pi) when the normal one cannot reach - the swing into it flung nuts and left the arm with poor reach.
 NORMAL_RANGES = ((-2.6, 2.6), (-0.6, 3.4), (-0.6, 3.4), (-3.1, 3.1), (-3.1, 3.1), (-JOINT6_LIMIT, JOINT6_LIMIT))
 
 
@@ -104,11 +101,7 @@ def in_normal_range(joints):
 
 
 def wrap_to_seed(joints, seed_joints):
-    """Map each revolute solution onto its 2*pi-equivalent nearest the seed; the real wrist (joint6) stops at +-pi.
-
-    The CuRobo URDF copy carries +-10 rad placeholder limits, so raw solutions may differ from the measured joints by
-    whole turns that the simulated robot cannot follow.
-    """
+    "Map each revolute solution onto its 2*pi-equivalent nearest the seed; the real wrist (joint6) stops at +-pi."
     out = []
     for i, (q, s) in enumerate(zip(joints, seed_joints)):
         q = float(q) + 2 * np.pi * np.round((float(s) - float(q)) / (2 * np.pi))

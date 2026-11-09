@@ -374,7 +374,7 @@ def held_charger_fit(rgb,ee_pose,T_ec):
     """Refine the charger-in-gripper transform from the wrist view of the lifted body (4 DOF in the charger frame).
 
     Corrections: translation along the body length (ty) and thickness (tz), yaw about the thickness axis (pin-line
-    error) and tilt about the width axis. The body silhouette is ~60k px at 14 cm, so IoU is sharp.
+    error) and tilt about the width axis.
     """
     c2w=wristcam.camera_to_world(ee_pose)
     proj=lambda pts:wristcam.project(c2w,pts)[0]

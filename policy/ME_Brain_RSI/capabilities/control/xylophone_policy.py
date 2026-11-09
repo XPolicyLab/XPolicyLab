@@ -1,8 +1,10 @@
 """RGB-only xylophone controller: observe, grasp, bind head, ordered strokes.
 
-Independent functional-point anchoring; no hidden poses/depth/reward. Public
-sphere symmetry leaves roll unobserved. Both public beat points lie within
-10.05 mm of the head, so center targets use the middle of the vertical band.
+Independent functional-point anchoring; no hidden poses/depth/reward.
+
+Public
+sphere symmetry leaves roll unobserved.
+
 Nominal sampled IK is not a world collision guarantee.
 """
 import cv2
@@ -71,12 +73,8 @@ HANDLE_GRASP_DISTANCE_M = .05
 def handle_grasp_point(head_xy, axis):
     """Grasp the proximal exposed shaft, using only RGB head and shaft axis.
 
-    X17 videos show the 90 mm target closing around the central support and
-    lifting without the mallet. The fixed 50 mm target is outside that region
-    and outside the public 13 mm head radius. This is a generic shaft fraction,
-    not a layout lookup or a claim of collision-free grasping. Keep the .791 m
-    public-static height prior unchanged to isolate the longitudinal offset;
-    measured binding and the complete local path audits remain mandatory.
+    This is a generic shaft fraction,
+    not a layout lookup or a claim of collision-free grasping.
     """
     return np.r_[np.asarray(head_xy)+HANDLE_GRASP_DISTANCE_M*np.asarray(axis), .791]
 
@@ -898,7 +896,6 @@ class XylophonePolicy(Policy):
             if anchor is None:anchor=np.asarray(self.calibration['tool_offset_in_ee'])
             move=.003 if w.name=='xy_descend' else getattr(w,'translation_limit',.012)
             if w.name.endswith('_hit'):
-                # 25 mm final descent plus public 13 mm head radius stays slow.
                 move=tool_translation_step(current,w.pose,anchor,move,.038)
             action[f'{w.side}_ee_pose']=bounded_anchor_pose(current,w.pose,anchor,move,.10)
             action[f'{w.side}_ee_joint_state']=np.array([w.gripper])

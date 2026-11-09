@@ -1,18 +1,7 @@
-"""Scripted fasten_screws controller: RGB scene estimates in, link6 pose / joint targets and gripper commands out.
+"""Fasten matching nuts onto bolts using RGB estimates and robot state.
 
-Task physics (public assets): each hex nut must be screwed onto the bolt of the same colour. The nut (SDF
-collider, 3 mm pitch right-hand thread, crest radius 9.8 mm) cannot pass over the bolt shaft (crest 11.75 mm),
-so it is threaded: the nut rests on the bolt's top chamfer and is rotated clockwise (viewed from above) while
-following the helix down. The score needs the nut base 9 mm below the bolt top (~3 turns), both grippers
-open (>= 0.8) and finally both arms home.
-
-Wrist joint6 (axis = EE x) is limited to +-pi in the simulator; with the approach axis pointing down a
-positive joint6 increment turns the gripper clockwise seen from above. One grasp therefore yields at most one
-turn; the nut is released, the open gripper unwinds by a multiple of 60 deg (hex flats) and regrips.
-
-Geometry (public X5 CAD, link6 frame): fingertip plane at x=.1576; the wrist camera sits at (.0848, 0, .0509)
-looking along (.866, 0, -.5): with the approach axis down it looks 30 deg off vertical toward -z_ee, so an
-object d below the fingertips is image-centred when the fingertips are -look_shift(d) along z_ee from it.
+Follow the thread with repeated wrist turns. Release and regrasp the nut to
+unwind the wrist between turns.
 """
 from dataclasses import dataclass, field
 import numpy as np
@@ -22,16 +11,16 @@ from . import perception as P
 FINGERTIP = 0.1576
 ACTION_BUDGET = 1900
 BUDGET_HOME_REMAINING = 70
-OPEN = 0.78                       # 62 mm between the pads: clears the 40.7 mm nut corners by 10 mm per side
-FULL_OPEN = 1.0                   # the score needs the measured opening >= 0.9 of the range
+OPEN = 0.78
+FULL_OPEN = 1.0
 PAD_FACE_OFFSET = 0.0004
 SQUEEZE_DEPTH = 0.0022            # commanded travel past the flats (~5 N per pad at 2300 N/m)
 GRIP = ((P.NUT_FLAT_HALF - PAD_FACE_OFFSET - SQUEEZE_DEPTH) + 0.01) / 0.054   # ~0.47
 GRIP_CONTACT = ((P.NUT_FLAT_HALF - PAD_FACE_OFFSET) + 0.01) / 0.054            # pads touch the flats
-GRIP_LOOSE = ((P.NUT_FLAT_HALF + 0.0012 - PAD_FACE_OFFSET) + 0.01) / 0.054      # ~1.2 mm clearance per side: the flats still drive the nut round, it can self-centre on the thread
-GRIP_ENTRY = ((P.NUT_FLAT_HALF - PAD_FACE_OFFSET - 0.0004) + 0.01) / 0.054         # ~0.4 mm squeeze: the nut can rock onto the cap edge and follow the thread, yet is still carried
+GRIP_LOOSE = ((P.NUT_FLAT_HALF + 0.0012 - PAD_FACE_OFFSET) + 0.01) / 0.054
+GRIP_ENTRY = ((P.NUT_FLAT_HALF - PAD_FACE_OFFSET - 0.0004) + 0.01) / 0.054
 CLOSE_SETTLE_STEPS = 3
-GRASP_TIP_Z = P.NUT_MID_Z                        # pads on the flats at nut mid-height (9.5 mm above the table)
+GRASP_TIP_Z = P.NUT_MID_Z
 NUT_BASE_BELOW_TIP = P.NUT_HEIGHT / 2
 OBSERVE_TIP_Z = P.NUT_TOP_Z + 0.09
 REFINE_TIP_Z = P.NUT_TOP_Z + 0.03
@@ -39,15 +28,15 @@ PREGRASP_TIP_Z = GRASP_TIP_Z + 0.045
 LIFT_TIP_Z = 0.90
 CARRY_TIP_Z = 0.90
 SURVEY_TIP_Z = P.BOLT_TOP_Z + 0.075
-PLACE_TIP_Z = P.BOLT_TOP_Z + 0.0045 + NUT_BASE_BELOW_TIP      # nut base 4.5 mm above the bolt top
-CONTACT_FLOOR_TIP_Z = P.BOLT_TOP_Z - 0.002 + NUT_BASE_BELOW_TIP      # at most 2 mm of pad slide before the thread has to take over
-DONE_TIP_Z = P.BOLT_TOP_Z - 0.0115 + NUT_BASE_BELOW_TIP       # nut base 11.5 mm below the bolt top (score needs 9)
+PLACE_TIP_Z = P.BOLT_TOP_Z + 0.0045 + NUT_BASE_BELOW_TIP
+CONTACT_FLOOR_TIP_Z = P.BOLT_TOP_Z - 0.002 + NUT_BASE_BELOW_TIP
+DONE_TIP_Z = P.BOLT_TOP_Z - 0.0115 + NUT_BASE_BELOW_TIP
 PRESS = 0.0012                    # extra downward command while threading
 Q6_START = -np.pi + 0.22
 Q6_MAX = np.pi - 0.12
 SCREW_STEP = 0.16                 # rad per action (velocity limit 5 rad/s = 0.2 per 40 ms action)
 UNWIND_STEP = 0.2
-UNWIND_TURN = 5 * np.pi / 3       # hex flats repeat every 60 deg; unwind the largest multiple inside the wrist range
+UNWIND_TURN = 5 * np.pi / 3
 MAX_SCREW_CYCLES = 7
 RELEASE_SEATED_DEPTH = 0.0125     # open-pad seated fit (nut resting on the bolt) that ends the job
 RELEASE_SEATED_IOU = 0.85
@@ -61,16 +50,15 @@ UNENGAGED_DESCENT = 0.003         # fingertip travel below the cycle start befor
 LOST_IOU = 0.75                   # held-nut fit below this twice in a row: the pads are empty
 ENGAGED_FOLLOW = 1.0              # fraction of the pitch the fingertips follow per turn once threaded: the thread pulls the nut down, no press
 ENTRY_SCHEDULE = ((1.0, 0.0035), (-1.0, 0.0035), (1.0, 0.0050), (1.0, 0.0025))   # (side along z_ee, off-axis distance) per entry attempt
-# Entries measured in R01-R04: ~3.6 mm off-axis engaged 8/9, 6-6.5 mm engaged ~1/3 (the nut tips too far and is pushed off the cap), 0-1 mm never
 ENGAGE_TOL = 0.0025               # nut within this of the bolt axis = threaded
 MAX_ENTRY_ATTEMPTS = len(ENTRY_SCHEDULE)
-DEPTH_DONE = 0.0125               # held-fit depth to release (score needs 9 mm; seated fits of 10 mm were counted only about half the time)
+DEPTH_DONE = 0.0125               # Depth required to release a centred, threaded nut.
 SEATED_MIN_DEPTH = 0.0115         # seated-fit depth accepted as fastened
 SEATED_MAX_DEPTH = 0.024          # deeper 'fits' are the saturated search on a nut that is no longer on the bolt
 MID_CHECK_TURNS = 0.5
 DEEP_ENGAGED = 0.006              # a nut this far below the bolt top is on the shaft (possibly cocked)
-CENTRED_TOL = 0.0020              # a seated, upright nut fits within this of the bolt axis; 3-5 mm means it is cocked on the thread (not scored)
-JOINT_STEP_MAX = 0.45             # rad per action requested of any arm joint (the drive limit is 0.2); a 0.64 rad jump swung the arm and flung the nut
+CENTRED_TOL = 0.0020
+JOINT_STEP_MAX = 0.45
 STUCK_IK_FAILURES = 8             # consecutive infeasible steps in a drive phase: re-plan the yaw (the wrist was parked at a +-pi stop)
 LIFT_ACCEPT_TIP_Z = 0.85          # a stretched arm may not reach LIFT_TIP_Z at the far centre
 PUSHED_OUT = 0.0055               # nut this far off-axis at the mid-cycle look was shoved off the cap: re-enter at once
@@ -1052,7 +1040,7 @@ class ScrewsController:
             self._enter(slot, 'contact', env_idx, f'grip {slot.grip:.3f} for the entry')
 
     def _phase_contact(self, slot, robot, action, wrist_view, scene, record, env_idx):
-        """Descend 1.5 mm per action until the nut rests on the bolt (the measured fingertip stops following)."""
+        "Descend until the measured fingertip stops following the command."
         tip = self._tip(robot, slot.arm)
         yaw = yaw_of(robot[f'{slot.arm}_ee_pose'])
         target = self._carry_tip(slot, robot, max(CONTACT_FLOOR_TIP_Z, tip[2] - 0.0015))
@@ -1075,7 +1063,7 @@ class ScrewsController:
         self._enter(slot, 'screw', env_idx, note)
 
     def _phase_screw(self, slot, robot, action, wrist_view, scene, record, env_idx):
-        """Turn the wrist clockwise; the commanded fingertip height follows the 3 mm/turn helix plus a small press."""
+        "Turn the wrist clockwise and advance the fingertip along the bolt thread."
         arm = slot.arm
         tip = self._tip(robot, arm)
         measured = list(robot[f'{arm}_arm_joint_state'])
@@ -1090,7 +1078,7 @@ class ScrewsController:
             z_cmd = slot.cycle_start_tip_z - P.THREAD_PITCH * turns_total - PRESS                  # shallow but held tight (first cycle after the catch)
         else:
             z_cmd = max(slot.cycle_start_tip_z - P.THREAD_PITCH * turns_total - PRESS, slot.cycle_start_tip_z - UNENGAGED_DESCENT)
-        z_cmd = max(z_cmd, tip[2] - 0.004)          # never command more than 4 mm below the measured height (jam guard)
+        z_cmd = max(z_cmd, tip[2] - 0.004)
         yaw = yaw_of(robot[f'{arm}_ee_pose']) - delta   # clockwise = yaw decreases
         pose = tip_pose(self._carry_tip(slot, robot, z_cmd), yaw)
         joints = self._solve(arm, measured, pose)

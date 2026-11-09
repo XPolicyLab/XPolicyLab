@@ -85,16 +85,11 @@ def _grasp_yaw(item):
 
 def _pack_grasp_height(item):
     if item['kind']=='car' and item['model_key']=='car_00007':
-        # Fixed public cooked hulls expose broad, nearly vertical side
-        # panels at this lower line; the full tip clears the table by 7.44 mm.
         return .020
     return max(.016,item['height']*(.65 if item['kind']=='car' else .52))
 
 
 def _pack_contact_offset(item):
-    # The public car7 mesh-volume centroid lies at local Y=-3.15 mm.
-    # A 4 mm rearward line excludes its mirror frames and puts that centroid
-    # within both door contact patches. Other variants use their center line.
     if item['kind']=='car' and item['model_key']=='car_00007':
         return np.array([0.,-.004])
     return np.zeros(2)
@@ -114,12 +109,7 @@ def _pack_expected_contact(item,point,body_yaw):
 
 
 def _car_grip(item,grasp_height):
-    # Pinch the central side panels gently, above the sloping underbody. The
-    # public gripper has gap=0.803 mm+2*(-10 mm+54 mm*normalized_command).
     if item['model_key']=='car_00007':
-        # Public cooked car7 hulls and full finger geometry first contact
-        # at q=.02618/.02625 m at the 20 mm side-panel line. Table-supported
-        # closure adds 9 mm preload; RGB still decides attachment/stability.
         return float((.02617948-.009+.010)/.054)
     _,data=models();points=data[item['model_key']+'_points']
     narrow=int(np.argmin(np.asarray(item['size'])[:2]));long=1-narrow
@@ -394,9 +384,6 @@ def _pick(ctx,item,source,arm,yaw,duration=11,quat=None,approach=.095,lift=.12):
     ctx.memory.pop('pack_held',None)
     if (item['kind']=='car' and item['model_key']=='car_00007' and
             ctx.stage=='clear_car_before_box_move'):
-        # Stop the initial inspection lift below the background shoe's
-        # overlapping wrist projection. Its RGB-derived floor remains
-        # 60 mm above the table; all held-body/stability gates still apply.
         lift=min(lift,.060)
         if not _path_ok(ctx,arm,[(ctx.tcp(arm),ctx.state[f'{arm}_ee_pose'][3:]),
                                 (_up(source,approach),quat),(source,quat),
@@ -580,8 +567,6 @@ def _pack_clear_plan(ctx,box,item,original_xy,delta):
 
 
 def _pack_choice(ctx,item,source,target,center,floor,prefer=None):
-    # The public box's front wall is 96 mm tall. A 20 mm object-bottom
-    # margin suffices when entering from the front, avoiding its side flaps.
     minimum=max(.035,.096+.020-floor)
     clearances=sorted(set([minimum,minimum+.01,minimum+.02,.11,.12,.13,.14,.18]))
     delta=float(item['target_yaw']-item['yaw'])
@@ -641,8 +626,6 @@ def _prepare_pack_box(ctx,box):
     box=detect_box(ctx)
     if box is None:raise RuntimeError('RGB box missing after clearing its front')
     center=_center(box)
-    # Pinch the thin front wall along its normal. Keeping the TCP at 85 mm
-    # engages its upper edge without reaching the 182 mm side flaps.
     rim_offset=np.array([0.,-.084])
     rim=center.copy();rim[:2]+=_rotate(rim_offset,box['yaw']);rim[2]=ctx.table_z+.085
     desired=center.copy();desired[:2]=[0.,-.17]
@@ -760,8 +743,6 @@ def pack_objects_into_box(ctx):
                 if not _path_ok(ctx,arm,[(ctx.tcp(arm),ctx.state[f'{arm}_ee_pose'][3:]),
                                         (front,q),(entry,q),(target,q)]):
                     raise RuntimeError('RGB car body compensation has no continuous box entry path')
-            # Approach from the front so the carried object clears the 96 mm
-            # box walls without crossing the taller open side flaps.
             yield from _move(ctx,arm,front,down_quat(place_yaw),ctx.gripper_targets[arm],duration=12)
             yield from _place(ctx,arm,target,place_yaw,clearance=clearance,hover=entry,correct_held=False)
             yield from _clear_arm(ctx,arm)
@@ -791,8 +772,6 @@ def _stack_cached_plan(ctx,plan,*args,**kwargs):
     original=ctx.kinematics
     if original is None:return plan(ctx,*args,**kwargs)
     def exact(value):return np.asarray(value,dtype=float).tobytes()
-    # Include the measured reference and fixed public geometry, then discard
-    # the entire cache at the next observation. No rounded pose/state reuse.
     signature=(id(original),id(ctx.obs),ctx.steps,float(ctx.table_z),
                tuple((arm,exact(ctx.state[f'{arm}_arm_joint_state']),
                        exact(ctx.state[f'{arm}_ee_pose']),
@@ -837,16 +816,8 @@ def _stack_choice(ctx,source,target,yaw,group,hover_height,minimum_hover=None,on
 
 def _stack_choice_plan(ctx,source,target,yaw,group,hover_height,minimum_hover=None,only_arm=None,
                        allowed_yaws=None):
-    # Sources near the rear/center can be reachable at contact but outside
-    # the physical branch's reach at a 95 mm lift. Verify the whole motion
-    # from the actual arm pose and lower the initial lift before carrying
-    # toward the more reachable base, without relaxing IK precision.
     clearances=[hover_height]
     if minimum_hover is not None:
-        # A 50 mm margin above the final contact point is unnecessary when
-        # the explicit peg/held-body constraint already clears the whole
-        # object by 20 mm. Keep successful heights, then reduce only a path
-        # that cannot reach the top layers on its physical arm branch.
         clearances+= [max(.035,minimum_hover),max(.020,minimum_hover)]
     for clearance in dict.fromkeys(clearances):
         for lift in (.095,.075,.055):
@@ -1203,8 +1174,6 @@ def play_stacking_toy(ctx):
                 _log(ctx,'stack_source_view_from_memory',group=group,source_id=item['source_id'],
                      position=item['position'].tolist())
             if previous_arm is not None and previous_arm!=arm:
-                # Adjacent pegs are only 64 mm apart. Leaving the other wrist
-                # over them physically blocks the next arm's carry.
                 ctx.stage='clear_other_stack_arm'
                 yield from _move(ctx,previous_arm,ready,park_quat,1.0,duration=8)
             ctx.stage=f'pregrasp_stack_{group}_{done[group]}'
@@ -1407,7 +1376,6 @@ def organize_table(ctx):
     if keyboard is not None and frame is not None:
         center=_center(keyboard)
         size=np.asarray(keyboard['size'])
-        # Opposed two-finger contact pushes the rear edge without needing a 160 mm jaw.
         source=center.copy();source[1]-=size[1]/2+.012;source[2]=ctx.table_z+.016
         target=np.asarray(frame,float).copy();target[1]-=size[1]/2+.012;target[2]=source[2]
         dx=min(size[0]*.27,.09)

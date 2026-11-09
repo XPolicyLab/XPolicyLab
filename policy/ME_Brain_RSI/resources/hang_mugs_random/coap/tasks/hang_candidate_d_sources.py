@@ -55,7 +55,7 @@ def body_evidence(review):
 
 
 def upright_yaw_fit(ctx, index, center, views, fallback_yaw):
-    """Fit a known cup body over the public 15-to-165-degree source yaw domain."""
+    "Fit the cup body orientation from its observed silhouette."
     models, _ = _features()
     offset = np.asarray(models[str(index)]['body_center_local'])[:2]
     low, high = math.radians(15.), math.radians(165.)

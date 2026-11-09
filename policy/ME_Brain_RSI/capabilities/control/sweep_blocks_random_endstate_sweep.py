@@ -1,19 +1,7 @@
-"""End-state scripted cleaning programme for ARX X5 (sweep_blocks / sweep_blocks_random).
+"""RGB controller for collecting objects in a dustpan.
 
-The scorer checks only the final state: dustpan flat and unlifted, broom more
-than 10 cm to the +x side of the dustpan, every target inside the dustpan's
-support circle, both arms near their initial poses.  This programme reaches
-that state directly: each target is picked with a reachable arm and released
-over the dustpan tray; a target no arm can carry to the pan is staged on a
-free table patch and re-picked by the other arm; the broom is relocated last
-when its relation to the dustpan is wrong.
-
-Reach: a pure top-down gripper only covers ~0.5 m around each arm base, so
-poses are chosen by a policy-owned global IK over the public URDF, tilting the
-gripper toward its own base (up to 45 deg) when needed.  Long moves run in
-joint space to the solved configuration; short vertical moves servo in
-Cartesian space.  Inputs are current RGB (SAM3 text segmentation), the public
-camera calibration and the robot's own measured state.  No depth, no scene state.
+Choose a reachable arm for each observed object. Use a staging patch when a
+transfer between arms is needed, and move the brush after the objects are collected.
 """
 from collections import deque
 from dataclasses import dataclass, field
@@ -31,18 +19,14 @@ from .perception import mask_iou
 from .sweep_controller import tool_geometry, _jsonable, _unit
 
 TABLE_Z = .765          # Robot base and table top share this public height.
-TARGET_PLANE = .78      # Centroid height of the 2-5 cm targets for silhouette projection.
+TARGET_PLANE = .78
 PAN_PLANE = .79         # Rim height of the dustpan silhouette.
 BROOM_PLANE = .78
 FINGER = .145           # gripper_bias: fingertips sit this far along the link x axis.
-TARGET_CONTACT_Z = TABLE_Z + .010  # earbud bulbs are ~2 cm: fingertips must close below their widest part
+TARGET_CONTACT_Z = TABLE_Z + .010
 BROOM_CONTACT_Z = TABLE_Z + .013
 ABOVE = .10             # Vertical clearance for approach/lift above a contact.
-# Release height: low for near-vertical grippers (gentle drop, no bounce out of the tray), higher when the
-# gripper is tilted >= 35 deg because a 6 cm object then hangs 2-3 cm below the fingertip (S02 pushed the pan).
-DROP_Z_LEVELS = ((TABLE_Z + .05, (0., 20.)), (TABLE_Z + .07, (35.,)))   # no 45 deg pan drops (S06 s1 L21: pushed pan, s0 L24:
-                                                                          # flung object); S07's 3.6 cm releases dragged the pan
-                                                                          # (carried balls touched the tray floor) in 7 layouts
+DROP_Z_LEVELS = ((TABLE_Z + .05, (0., 20.)), (TABLE_Z + .07, (35.,)))
 BROOM_ABOVE = .26         # the broom hangs head-down from a handle grasp: carry it high enough to clear the dustpan (S07: 2 pans knocked)
 BROOM_REFINE_ACCEPT = .12 # the only broom in view may be this far from the head estimate (head sees it clipped at the image edge)
 PAN_MOVED_SHIFT = .03     # a fresh silhouette this far from the locked estimate means the pan was pushed: re-lock on it
@@ -50,60 +34,47 @@ DROP_Z = TABLE_Z + .065
 DROP_ABOVE = .06
 SUPPORT_RADIUS = .081
 SUPPORT_FROM_FRONT = .09  # Support-circle centre lies this far behind the tray's front edge.
-# Head-camera pan estimate vs 25 seed-0 layouts (S04): the silhouette axis is skewed +8.3 deg and the support centre
-# sits 0.6 cm short along / 1.1 cm off across the axis, consistently; corrected residual ~0.7 cm.
 PAN_BIAS_ALONG = .006
 PAN_BIAS_ACROSS = .011
 PAN_AXIS_BIAS_DEG = 8.3
-# Objects released at the ring points nearest the arm base (3.5 cm toward the lip) rolled over the front lip (8.7 cm
-# in front of the centre) in 7 of 25 S04 layouts; the back wall is 8 cm behind the centre and stops anything.
-REAR_OFFSETS = (.015, 0., .03)   # release points along the pan axis behind the support centre; no sideways offsets (S05: 3-4 cm
+REAR_OFFSETS = (.015, 0., .03)
                                  # across + hang shift put objects against the side wall and out of the tray in 4 layouts)
 DONE_RADIUS = SUPPORT_RADIUS - .003   # S05 re-picked objects already inside the circle (DONE_RADIUS .066) and burnt the budget
 MERGE_RADIUS = .045       # candidates for merging; they are parts of one object only if their silhouettes touch (dilated masks intersect):
-                          # distinct objects keep >= 1 cm of clear table between them, the large earbud's bulb/stem parts are contiguous
-MERGE_DILATE = 3          # pixels (~0.5 cm on the table in the head view)
-ARM_BLOCK_ERROR = .05     # an approach/descend that stalls this far from its waypoint marks the arm unusable for that target (S18 s1 L02:
-                          # the same left-arm plan stalled twice at 46 cm; the right arm + staging was never tried)
-TRAY_FRONT_LIMIT = SUPPORT_RADIUS - .02   # along the pan axis toward the lip: objects further out rest on the lip (S17 s0 L24, s1 L05;
-                                          # S19 s2 L11 a brick judged inside at r - 1 cm was outside)
-TRAY_BACK_LIMIT = SUPPORT_RADIUS + .01    # behind the centre: the back wall is at +8.1 cm; further = fell behind the wall (S17 s1 L22)
-BROOM_RELATION_MIN = .15  # scorer needs > 10 cm; the silhouette estimate has 1.8 cm std and the pan drifts (S17 s0 L03 failed at 8.4 cm true)
+MERGE_DILATE = 3
+ARM_BLOCK_ERROR = .05
+TRAY_FRONT_LIMIT = SUPPORT_RADIUS - .02
+TRAY_BACK_LIMIT = SUPPORT_RADIUS + .01
+BROOM_RELATION_MIN = .15
 ON_TRAY_MARGIN = .02      # an object whose silhouette lies inside the dustpan silhouette and within r + this of the estimated centre is on
-                          # the tray floor (estimate noise 1-2 cm): re-picking it rammed the tray wall and pushed the pan 5-16 cm (S14b s1 L2)
 HANG = .03                # a grasped object slides to the fingertips when the gripper is tilted; its centre lands HANG*sin(tilt) beyond
 HANG_MAX = .015
-ON_PAN_RADIUS = .13       # targets this close to the support centre rest on the tray floor: grasp 8 mm higher
+ON_PAN_RADIUS = .13
 SMALL_EXTENT = .035       # earbud-sized targets: refine the contact from the wrist camera before descending
-ROUND_EXTENT = .035       # paper balls (~5.5 cm): a grasp 1 cm above the table squeezes them upward and out at lift (4 losses in S05)
-ROUND_CONTACT_Z = TABLE_Z + .024   # upper bound; the grasp height follows the measured diameter (S08: a 4 cm ball slipped at 2.4 cm)
+ROUND_EXTENT = .035
+ROUND_CONTACT_Z = TABLE_Z + .024
 REFINE_HEIGHT = .16       # wrist-camera look height above a target
 BROOM_REFINE_HEIGHT = .22
 SCAN_POSES = (((.26, -.07), .24, 30.), ((.09, -.09), .25, 35.))   # right-wrist survey: right half, then left half of the spawn zone (both reachable,
-                                                                    # dip-free from home; one 27 cm pose left 2 cm earbuds at ~30 px and missed the left half)
 SCAN_TARGET_THRESHOLD = .06      # SAM3 score for 'earbud'-class prompts in the close wrist view (white earbud #2 scored below .18 in 7 of 11 misses)
 SCAN_EXTRA_PROMPTS = ('white earphone', 'wireless earbud')
-# Measured on 332 successful carries of the S08 official run (asset widths vs the stalled finger reading): reading = 8.63 * width + .018
-# (e.g. 33 mm brick .284, 40 mm brick .346, 22 mm earbud .171); the screws-task formula overestimated the opening by ~2x (S11: every
-# command stopped the fingers before the object). A full-close command kept squeezing round objects out of the flat pads (50 losses).
 APERTURE_SLOPE = 8.63
 APERTURE_OFFSET = .018
 GRIP_SQUEEZE_SMALL = .008        # metres of width below the measured object width (earbuds / small balls)
 GRIP_SQUEEZE_LARGE = .010        # bricks / large balls
 GRIP_MIN = .03
 HOLD_MARGIN = .03                # with a full close, fingers below this hold nothing (fully closed reads .00-.02)
-SMALL_CONTACT_Z = TABLE_Z + .010 # the pad bottoms sit ~8 mm below the fingertip point: +10 mm already rests on the table (S13 at +5 mm: every
-                                 # descend stopped 8 mm short, pads scraped the tray floor on re-picks and shoved the pan)
+SMALL_CONTACT_Z = TABLE_Z + .010
 ROUND_FRACTION = .42
-LIFT_SPEED = .015                # gentler first lift: a 3 cm/step start jerked marginal grasps loose
-SCAN_ZONE = ((.02, -.17), (.37, .07))   # spawn region x[.04,.35] y[-.15,.05] + 2 cm
+LIFT_SPEED = .015
+SCAN_ZONE = ((.02, -.17), (.37, .07))
 SCAN_MIN_CONFIDENCE = .10
 SCAN_MAX_NEW = 2
 SCAN_BUDGET = 720
 HEAD_ZONE = ((-.40, -.27), (.39, .12))   # S05 phantoms sat at the table edge next to the robot (x > .40, y < -.27)
-NEAR_ZONE = ((-.30, -.33), (.30, -.27))  # strip in front of the robot base: objects dropped there during staging/transfers (S19 s1 L21)
+NEAR_ZONE = ((-.30, -.33), (.30, -.27))
 BROOM_ZONE = ((-.42, -.28), (.34, .30))  # broom spawn/relocation region (a pushed broom may reach the far edge)
-BROOM_GAP = .24         # Broom grip x relative to the dustpan origin after relocation (tray front is at +.14).
+BROOM_GAP = .24
 EMPTY_APERTURE = .03    # fully closed jaws read ~.00-.02; an earbud stem gives ~.05
 BUDGET_TARGETS = 800    # Last step at which a new pick may start (an operation takes <= 120 steps, the home move ~30).
 BUDGET_BROOM = 860
@@ -113,8 +84,8 @@ TILTS = (0., 20., 35., 45.)
 STAGING_CANDIDATES = ((0., -.2), (-.05, -.2), (.05, -.2), (0., -.15), (-.05, -.25), (.05, -.25), (-.1, -.2), (.1, -.2), (-.15, -.2), (.15, -.2), (0., -.25), (-.1, -.15), (.1, -.15))
 JOINT_STEP = .17            # drive limit is .2 rad per action; carries stay slow
 CARRY_JOINT_STEP = .10   # slower swings while holding: a paper ball slipped out in S02
-SAFE_PATH_Z = TABLE_Z + .09      # carried object (hangs <= 3 cm below the fingertips) must clear the dustpan rim
-PICK_PATH_Z = SAFE_PATH_Z        # S09 let approaches swing to table+4 cm: the forearm hit the table and three approaches stalled 40 cm away
+SAFE_PATH_Z = TABLE_Z + .09
+PICK_PATH_Z = SAFE_PATH_Z
 VIA_HEIGHT = .26                 # joint-space via point above the contact when the direct joint path dips (replaces outright rejection)
 
 
@@ -197,7 +168,6 @@ class Reach:
         return (best[0] if best[2] else None), {'position_error_m': best[1][0], 'rotation_error_rad': best[1][1]}
 
     def path_min_z(self, q0, q1, arm, samples=48):
-        # 12 samples missed a 6-step dip to 2 cm below the table inside a carry swing (S08 rehearsal, right arm)
         return min(float(self.fingertip(q0 + (q1 - q0) * s, arm)[2]) for s in np.linspace(0., 1., samples))
 
 
@@ -216,7 +186,7 @@ def pan_geometry(detection, camera):
     support = support + PAN_BIAS_ALONG * axis + PAN_BIAS_ACROSS * across
     axis = _unit(rot2(np.radians(PAN_AXIS_BIAS_DEG)) @ axis)
     front = support + axis * SUPPORT_FROM_FRONT
-    origin = support - axis * .053                 # support centre sits at local y = -.053
+    origin = support - axis * .053
     return dict(support=np.r_[support, TABLE_Z], origin=np.r_[origin, TABLE_Z], axis=axis,
                 across=np.array([-axis[1], axis[0]]), front=np.r_[front, TABLE_Z],
                 grip=geo['grip'], mask=geo['mask'], front_span=geo['front_span'], width=geo['width'])
@@ -281,8 +251,6 @@ def small_targets(detections, camera, tool_masks, pan, zone=HEAD_ZONE, exclude_n
         p = geo['center']
         if np.max(extent) > .11 or np.min(extent) < .004 or det.confidence < min_confidence:
             continue
-        # Targets spawn in x[.04,.35] x y[-.15,.05] and only move by our actions (staging, pan);
-        # anything far outside is a phantom silhouette (broom head, reflection).
         in_zone = zone[0][0] < p[0] < zone[1][0] and zone[0][1] < p[1] < zone[1][1]
         if zone is HEAD_ZONE and not in_zone:
             in_zone = NEAR_ZONE[0][0] < p[0] < NEAR_ZONE[1][0] and NEAR_ZONE[0][1] < p[1] < NEAR_ZONE[1][1]
@@ -307,15 +275,11 @@ def small_targets(detections, camera, tool_masks, pan, zone=HEAD_ZONE, exclude_n
         grown = binary_dilation(det.mask, iterations=MERGE_DILATE)
         dup = [i for i, q in enumerate(points) if np.linalg.norm(p[:2] - q['center'][:2]) < MERGE_RADIUS and np.any(grown & q['mask'])]
         if dup:
-            # SAM3 returns a large earbud as bulb + stem (+ whole): the parts sit 2-4 cm off the object's centre and each got its
-            # own empty close (S15 s1 L18). Keep the largest silhouette per object.
             if all(area <= points[i]['area'] for i in dup):
                 continue
             points = [q for i, q in enumerate(points) if i not in dup]
         is_round = float(np.min(extent)) >= ROUND_EXTENT and float(np.max(extent)) / max(float(np.min(extent)), 1e-6) <= 1.5
         if is_round:
-            # The silhouette centroid of a ball sits at its centre height, not on the table plane: re-project there
-            # (the table-plane projection put ball centres ~1 cm too far from the head camera).
             try:
                 p = footprint(det.mask, camera, TABLE_Z + .5 * float(np.min(extent)))['center']
             except ValueError:
@@ -550,8 +514,6 @@ class Controller:
                 q_above, _ = self.reach.solve(arm, pose_above, [q] + list(seeds))
                 if q_above is None:
                     continue
-                # The long move interpolates joints from seeds[0]; a wrist/elbow branch change
-                # would swing the fingertip through the table (S03 saw a 0.57 m dip).
                 via = None
                 if seeds and self.reach.path_min_z(np.asarray(seeds[0], float), q_above, arm) < floor:
                     pose_via = link_pose(arm, np.asarray(contact) + [0, 0, max(VIA_HEIGHT, above + .05)], closing, min(tilt, 20.))
@@ -660,8 +622,6 @@ class Controller:
         if direct:
             _, _, arm, pick, drop, drop_point = min(direct, key=lambda d: (d[0], d[1]))
             chosen = (arm, pick, drop, drop_point, 'pan')
-        # A 45-degree direct pick is at the reach limit (S15 s0 L24: three descends stopped 3 cm short); a staging hand-over by
-        # a less stretched arm is preferred when one exists.
         if chosen is None or (chosen[1]['tilt'] >= 45. and any(p['tilt'] < 45. for p, _ in picks.values())):
             for arm, (pick, seeds) in sorted(picks.items(), key=lambda kv: kv[1][0]['tilt']):
                 if pick['tilt'] >= 45. and chosen is not None:
@@ -696,8 +656,7 @@ class Controller:
         return True
 
     def _refine_pose(self, arm, pick, height):
-        """Hover pose for a wrist-camera look: the fingertip backs off along the approach axis so the contact stays on the camera
-        axis (a tilted gripper hovering vertically above the contact looked past it: 35 deg off-axis > the 31 deg half field)."""
+        "Back off along the approach axis to keep the contact point centred in the wrist view."
         tip = np.asarray(self.reach.fingertip(pick['q'], arm))
         radial = tip[:2] - BASES[arm]
         radial = radial / max(float(np.linalg.norm(radial)), 1e-9)
@@ -880,8 +839,6 @@ class Controller:
             pe = float(np.linalg.norm(self.reach.fingertip(move.joints, move.arm) - self.reach.fingertip(q, move.arm)))
             re = float(np.max(np.abs(delta)))
             step = CARRY_JOINT_STEP if move.grip < .95 else JOINT_STEP
-            # Scale all joints together so the executed path is the straight joint-space line that path_min_z checked;
-            # per-joint clipping bent the path and dipped a carried object 2 cm below the table (S08 rehearsal).
             action[move.arm + '_arm_joint_state'] = q + delta * min(1., step / max(float(np.max(np.abs(delta))), 1e-9))
             action[move.arm + '_ee_joint_state'] = np.array([move.grip])
         else:

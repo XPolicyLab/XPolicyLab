@@ -1,12 +1,4 @@
-"""ANS11: ANS10 with antipodal grasp offsets for 2/7 and a view-clearing re-detection.
-
-The ANS9 across-height pinch of the 2 spun the released digit by 90 deg (dev5
-layout 20). Digits 2 and 7 are now pinched along the standard closing axis but
-at the top arc / top bar, where the silhouette is a 34-36 mm solid band with
-opposed side faces, instead of the slanted 14-20 mm middle stroke. A digit read
-with low confidence right in front of a parked gripper (layout 10: the 0 behind
-the right fingers was read as 6) lifts that arm 10 cm before planning.
-"""
+"ANS11: ANS10 with antipodal grasp offsets for 2/7 and a view-clearing re-detection."
 import numpy as np
 from . import ans9_policy as _ans9
 from .ans10_policy import Policy as ANS10, FREE_STEP

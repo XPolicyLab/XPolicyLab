@@ -135,7 +135,7 @@
     "file": "capabilities/control/hole_servo.py",
     "resource": "resources/insert_key/coap/hole_servo.py",
     "package": false,
-    "sha256": "85bd6a3769587aeb0bafe9102e2f02a4657a1bad984099af4c89cb0843cbd386"
+    "sha256": "67e94794cd7961ca8e7de914410bdbc1bead59d37c397341d367df2251760f29"
   },
   "insert_key.lobe_rim": {
     "file": "capabilities/control/lobe_rim.py",

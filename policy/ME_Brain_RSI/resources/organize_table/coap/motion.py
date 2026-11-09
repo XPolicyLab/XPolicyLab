@@ -178,9 +178,6 @@ def numeric_move_actions(get_state, kinematics, targets, duration, gripper_targe
         increment=min(1.0/count,increment*1.5)
 
 
-# The X5 stops on its own links where the public sphere model still reports 12-16 mm of
-# self clearance (organize_table parks and camera exits measured at the stall), so a
-# commanded posture must keep this much sphere clearance to be followed.
 SELF_CLEARANCE_FOLLOWED = .018
 _SELF_CHECKER = None
 

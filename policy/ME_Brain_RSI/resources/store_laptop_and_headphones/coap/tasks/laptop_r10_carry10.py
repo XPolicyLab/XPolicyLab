@@ -30,7 +30,7 @@ HS_SIDE = .015              # grasp offset along the band from the apex (t2), co
 HS_HANG_Z = 1.062           # release TCP height (saddle top 1.041 + band + lower jaw)
 HS_ABOVE = .035
 HS_PICK_ABOVE = ((.12,), (.20, .16, .12))  # pre-grasp heights (near; far, in preference order): t1 swept far headsets
-HS_FAR_X = .06              # t2: x=.046 regressed with the far approach (lag), t1 near approach worked
+HS_FAR_X = .06
 HS_BAND_Y = .010            # band centre this far beyond the support_cradle along stand +y (withdraw drag margin)
 HS_WITHDRAW_STEPS = 6       # fast: t1 slow withdraw dragged a deep-gripped band off the saddle
 HS_WITHDRAW = .07           # horizontal withdrawal along -fingers after release (lower jaw is under the band)
@@ -41,11 +41,11 @@ HS_TILTS = (15., 30., 45.)  # left pick tilt variants (larger tilt reaches heads
 HS_RELAY = (-.08, -.13)           # hs5: was (-.06, -.13); drop point clear of the pushed laptop
 # r05 hs5 additions (headset only)
 HS5_REV = 't2'
-HS_FULL_PX = 4500           # stand: first SAM proposal this large wins (partial masks: 7-14 cm cradle errors)
+HS_FULL_PX = 4500
 HS_MAX_PX = 12000
-HS_TOP_OFFSET = (-.001, .034)  # stand mask top rows at z 1.035 minus support_cradle (saddle top edge)
+HS_TOP_OFFSET = (-.001, .034)
 HS_PARTIAL_TOL = .04        # base-offset and top estimates disagree by more -> base rows missing, use the top
-HS_CRADLE_BOX = ((-.36, -.245), (-.02, .062))  # layout range of support_cradle + 5 mm
+HS_CRADLE_BOX = ((-.36, -.245), (-.02, .062))
 HS_ROI = (.09, .05, .95, 1.08)  # hung check box around the cradle: half x, half y, z range
 HS_DIFF_LEVEL = 35          # per-pixel max-channel change vs the step-0 head image
 HS_HUNG_FRAC = .06          # merge5 s15: hung 0.13-0.24, fallen <= 0.02 (two mis-hung on the saddle 0.13/0.21)
@@ -53,7 +53,7 @@ HS_RETRY_X = (-.45, -.03)   # retry pick window (headset centre / grasp x clear 
 HS_RETRY_Y = (-.35, .03)
 HS_RETRY_AFTER = ('pinch', 'done')  # left re-hang starts once pinch_and_store runs (left arm is free)
 HS_RETRY_LATEST = 600
-HS_DEV_FAIL = False         # dev only: shift the first near release 7 cm toward -y (forces a fall -> retry test)
+HS_DEV_FAIL = False
 
 PRIOR = dict(stand_x=0.065, laptop_front_y=-0.04, laptop_yaw=0.0, rack=(0.325, -0.10), rack_yaw=math.pi/2,
              cradle=(-0.30, 0.02), stand_yaw=math.radians(15.))
@@ -62,9 +62,9 @@ PINCH_R = 0.070
 ARC_START_DEG = 105.
 ARC_END_DEG = 9.
 LID_INSET = 0.025
-PUSH_OVERHANG = 0.060       # hold4: 0.055 -> 0.060 (keeps the lower jaw ~3 cm off the stand with the deeper inset)
-GRASP_INSET = 0.030         # hold4: 0.022 -> 0.030 (deeper pinch; s2-l52/s0-l38 slid out of the fingertips)
-GRASP_BACK = 0.028          # hold4-t3: equilibrium atan(.060/.0338)=60.6 deg (t2 63.6: held tilts 53-77, pivot ok 53-61)
+PUSH_OVERHANG = 0.060
+GRASP_INSET = 0.030
+GRASP_BACK = 0.028
 CLAMSHELL_Z = 0.858
 
 ROT_POINT = (0.26, -0.12, 1.03)
@@ -83,30 +83,24 @@ PRESS1 = 0.004
 CAGE_HOLD = 14
 # r03 cagefix additions (laptop chain only)
 RELEASE_STEPS = 5           # lid release: open in steps while raising the TCP along the lid normal
-RELEASE_HALF_GAP = 0.044    # half of the ~88 mm max jaw gap
+RELEASE_HALF_GAP = 0.044
 RELEASE_LIFT = 0.004        # extra lift of the lower finger (raises the lid tip a few mm off the keyboard)
 RELEASE_WITHDRAW = 0.10     # withdraw along -tool x (finger axis)
 YAW_DEG_PER_FRAME = 1.35    # in-hand yaw (q_pitch -> q_up) angular speed cap; min 40 frames (grip5: 1.6 dropped in yaw)
 # hold4 additions
-RELEASE_PART_GRIP = 0.34    # lid release: partial jaw opening before the withdraw.  Truth (t1): jaw target is about
-                            # 0.048*cmd-0.0063 per finger (cmd 0.2 did not open from the 3.3 mm lid pinch and the
-                            # withdraw dragged the laptop 9 cm); 0.34 -> ~10 mm, ~6.5 mm clearance per jaw
-RELEASE_PART_RISE = 0.0035  # ... while raising the TCP this much along the lid normal (bounds any lid lift to ~3.5 mm)
-RELEASE_SETTLE = 4          # frames for the jaws to reach the partial opening (opening rate ~8 mm/frame)
+RELEASE_PART_GRIP = 0.34
+RELEASE_PART_RISE = 0.0035
+RELEASE_SETTLE = 4
 PITCH_SETTLE = 6            # hold after the pitch so the in-plane swing dies out before the yaw
 MEASURE_FRAMES = 34         # rot_point -> measure pose (was 18; t2 22 dropped / over-swung the hanging laptop)
-HIGH_TILT_DEG = 55.         # CoM passes over the low corner at ~55.5 deg: above this the pivot needs more press
+HIGH_TILT_DEG = 55.
 HIGH_PRESS0 = 0.008
 HIGH_PRESS1 = 0.004
 HIGH_LEVEL_STEPS = 12
 HIGH_LEVEL_FRAMES = 4
 AFTER_PUSH_FIT_PX = 8.      # accept the after-push outline fit below this mean error
-# r07 front7 additions (lid pinch / arc / release only).  merge6 v60 truth: the commanded arc end equals lid_hold
-# but the measured TCP stays ~65 mm high because the gripper housing (link6 spheres at y=+-0.073, 0.075 behind the
-# TCP, i.e. ~82 mm below a horizontal-jaw TCP) rests on the stand top (0.844).  front7 pinches the lid's +x FRONT
-# corner and turns the fingers toward +y during the arc, so at the closed pose the housing is in front of the stand.
 FRONT7_REV = 't3'
-FRONT_R = 0.105             # pinch distance from the hinge along the lid (lid 0.124 -> 2 cm from the tip)
+FRONT_R = 0.105
 FRONT_INSET = 0.070         # pinch distance from the lid's +x side edge (palm off the rack after the push)
 FRONT_END_DZ = 0.016        # arc end: TCP this far above hinge_z (lower finger just above the base, ~0.871)
 # (label, ((theta, alpha) knots)): alpha (finger yaw in the lid plane) follows the lid angle.  Offline DP over
@@ -120,47 +114,39 @@ FRONT_VARIANTS = (
     ('e38a15', ((10., 38.), (20., 38.), (28., 25.), (34., 15.), (115., 15.))),
     ('e30a15', ((10., 30.), (18., 15.), (115., 15.))),
 )
-# t1 random s1-l26: e45a15 had min |j5| ~0.10 (wrist near-singular) and the parallel executor flipped the wrist
-# each step mid-arc (lid lost).  Take the first variant (order above) whose predicted min |j5| along the arc
-# clears FRONT_J5_MIN, else the one with the largest min |j5|.
-# t3: t2 put the a15 (alpha 15 at the open lid) variants first -> 2 more mid-arc wrist flips (std s1-l6, random
-# s1-l11) although their predicted min |j5| was >0.38; the a0 variants (alpha 0 above theta 85) never flipped
-# (t1 11/11, hold error <= 1.4 mm).  a15 only as a last resort.
 FRONT_J5_MIN = 0.25
 FRONT_ARC_STEP = 11.            # max lid-angle step between arc waypoints (deg)
-FRONT_ARC_FRAMES = 5           # t2: 6 -> 5 (t1 std s2-l1 ran out of the 800-step budget in pivot_sweep)
-FRONT_PRE = 0.09            # pre-insert pose this far back along the finger axis (approach 3 cm further, +UP)
+FRONT_ARC_FRAMES = 5
+FRONT_PRE = 0.09
 FRONT_PRE_UP = 0.0
-FRONT_OPEN_GRIP = 0.34      # release: partial opening (~10 mm per jaw) ramped in while ...
+FRONT_OPEN_GRIP = 0.34
 FRONT_OPEN_RISE = 0.008     # ... the TCP rises along the lid normal by the lower-jaw travel (lower jaw stays put)
 FRONT_OPEN_FRAMES = 6
-FRONT_WITHDRAW = 0.075      # slide the lower finger out along its own axis (exits the front edge after ~3 cm)
+FRONT_WITHDRAW = 0.075
 FRONT_WITHDRAW_FRAMES = 12
 # grip5 additions (pinch / carry only)
 APPROACH_OUT = 0.07         # outboard descent point along +edge (t1 0.09 did not help)
 REGRASP_WIDTH = 0.015       # jaw echo below this after a close = empty jaws
-PINCH_SETTLE = 4            # frames at the pinch pose before closing (t1: slide-in lag up to 3.5 cm / 1.4 cm high)
+PINCH_SETTLE = 4
 STAND_CLEAR = 0.006         # keep the pinch TCP at least this far outboard of the stand +x edge
 PULL_BELOW = 0.042          # measured overhang at the pinch below this -> pinch the overhang, pull it out, re-pinch
 PULL_TO = 0.062             # overhang at the pinch after the pull
 PULL_MAX = 0.050            # longest pull along +edge
-AFTER_PUSH_SHORT_MAX = 0.065  # accept after-push fits up to this far short (-x) of the commanded push (t1: 0.040)
+AFTER_PUSH_SHORT_MAX = 0.065
 AFTER_PUSH_BACK_MAX = 0.010  # largest accepted backward (+fwd) hinge correction of the after-push fit
 AFTER_PUSH_ROI = (0.13, 0.10, 0.095)  # after-push mask window: +-x, front side, hinge side (was .15/.11/.11)
 AFTER_PUSH_OPEN = 5         # morphological opening (px) of the bright mask: cuts bridges to white clutter / arm
 INHAND_S = (-0.06, 0.11)    # held-laptop mask centroid window (s along slot, wrt TCP); pivot4: widened
 INHAND_H = (-0.16, -0.025)  # ... and height wrt TCP
 PRIOR_TILT_DEG = 58.        # in-hand tilt prior (pivot4: median measured tilt of the merge v60 'ok' successes)
-# pivot4: the merge v60 'ok' outlines (54-63 deg) sit 0.024 lower than the swing model (low corner -0.211, high corner
-# -0.057 below the TCP vs model -0.185 / -0.032), so the old prior pressed the corner 2.4 cm into the slot floor.
 PRIOR_DH = -0.024
-INHAND_SIZE = (0.205, 0.128)  # projected outline size of a held, fully visible laptop (v60 ok mean; true 0.18 x 0.124)
+INHAND_SIZE = (0.205, 0.128)
 INHAND_LONG = (0.15, 0.27)    # plausible fitted long side (v60 implausible 0.245-0.263 outlines were held laptops)
 INHAND_SHORT = (0.085, 0.165)
 INHAND_LOW_H = (-0.28, -0.15)  # plausible lowest outline point below the TCP (partial masks stop at -0.12..-0.14)
 INHAND_BIG_LONG = 0.235     # longer outlines include finger / shadow: anchor the low corner on the lowest point
 LOW_TILT_DEG = 44.          # v60: measured tilt < 44 -> 1/17 stored with the light pivot; use the loaded pivot
-OVERSHOOT_DEG = 10.         # sweep the levelling arc past level and back (scores latch when upright in the slot)
+OVERSHOOT_DEG = 10.         # Continue past level, then return to the level pose.
 OVERSHOOT_STEPS = 2
 OVERSHOOT_FRAMES = 3
 STEP_LIMIT = 800
@@ -172,7 +158,7 @@ RETRY_LATEST = 640          # start the retry only up to this step (lift+measure
 RETRY_LIFT_FRAMES = 32      # post-pivot TCP: straight up, then across to the measure pose (16+16)
 RETRY_SETTLE = 6            # swing settle before the re-measure (same as the first measure)
 SEAT_TILT_DEG = 10.         # seat check: visible outline long edge within this of level ...
-SEAT_TOP_Z = (0.86, 0.935)  # ... and its top (hinge) edge at the seated height (0.772 + 0.124)
+SEAT_TOP_Z = (0.86, 0.935)
 HELD_GAP = 0.09             # (logged only) laptop top this close below the TCP
 HELD_GRIP = 0.02            # right gripper width reading above this => laptop still in the jaws (empty = 0.0)
 
@@ -720,13 +706,10 @@ def measure_headphone_stand(ctx):
             yaw = float(np.clip(yaw, 0., math.radians(30.)))
             base = ys > ys.min()+.75*(ys.max()-ys.min())
             centre = ctx.project((float(xs[base].mean()), float(ys[base].mean())), z=.775, camera='cam_head')
-            # hsfix: corrected to the ground-truth support_cradle (t2 dev: saddle-HSV point sat +0.0055 x,
-            # +0.023 y beyond it on 6/6 layouts, spread < 2 mm).
             cradle = np.asarray(centre)[:2]+np.asarray(HS_BASE_OFFSET)
             source = 'sam3_base_offset'
             top_c = chosen_top[:2]-np.asarray(HS_TOP_OFFSET)
             if np.linalg.norm(cradle-top_c) > HS_PARTIAL_TOL:
-                # hs5: base rows missing/foreign (merge5 s1-l7, r s0-l5/s2-l16/s2-l20: 8-14 cm off, yaw 0)
                 cradle, source, yaw = top_c, 'sam3_top', PRIOR['stand_yaw']
             saddle = hsv_saddle(ctx, mask)
             if saddle is not None:
@@ -762,7 +745,7 @@ def plane_grid(ctx, z, shape=(480, 640)):
 
 
 def hsv_saddle(ctx, sam_mask):
-    """t7 cradle detector (bright wood saddle at z 1.035, top 35% rows), optionally restricted to the SAM mask."""
+    "Detect the cradle from the bright saddle region, optionally restricted to the segmentation mask."
     image = head_image(ctx)
     plane = plane_grid(ctx, 1.035, image.shape[:2])
     hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
@@ -951,8 +934,7 @@ def headset(ctx, geo, arm):
 
 # ----------------------------------------------------------------------------- lid close (pinch-arc)
 def wrap_near(ctx, arm, joints):
-    """Shift planned joints by 2*pi multiples towards the current joints (t2 s1-l0/s2-l5: j4 planned at -5.6
-    instead of +0.65, costing ~38 approach frames).  Never moves a joint further from zero than the planner did."""
+    "Never moves a joint further from zero than the planner did."
     if joints is None:
         return None
     try:
@@ -1217,20 +1199,6 @@ def push_laptop(ctx, geo):
         q_lid = np.asarray(lid_hold['quaternion'], float)
         axes = Rotation.from_quat([q_lid[1], q_lid[2], q_lid[3], q_lid[0]]).as_matrix()
         tool_x, normal = axes[:, 0], axes[:, 1]
-        # t2: opening drove the lower finger (between lid and keyboard, over the overhang) down into the base and
-        # the +x/up retreat then hooked the laptop (tipped s0-l3, flung s2-l5).  Open in steps while raising the
-        # TCP along the lid normal by the half-gap so the lower finger stays put, lift it a few mm (lid tip only),
-        # withdraw along the finger axis, then go up.
-        # t2 s0-l11: the lid was lifted ~37 deg here (fingers open slower than the TCP rose).  Raise the TCP one
-        # step behind the jaw command so the lower finger never leads the opening.
-        # hold4 t1: validation60 random s1-l6 still lifted the lid ~30 deg during the stepped open + normal rise
-        # (the TCP rose ~32 mm while the jaws had barely opened).  Open only partially with a ~3 mm rise, let the
-        # jaws settle, slide the lower finger out along the finger axis (the lid drops as it leaves), and only then
-        # open fully and go up.  Any jaw lag can now lift the lid tip by at most the ~3 mm rise.
-        # hold4 t2: cmd 0.20 never opened the jaws (t1 dragged the pinched laptop +x during the withdraw); 0.34.
-        # front7: the pinch is on the lid's front +x corner with the fingers pointing ~+y; ramp the partial opening
-        # while the TCP rises by the lower-jaw travel (lower jaw static, upper jaw leaves the lid), then slide the
-        # lower finger out along its own axis (out over the front edge), then open fully and go up.
         try:
             ctx.memory['lid_release_pre'] = dict(measured=np.asarray(ctx.tcp('right'), float).round(4).tolist(),
                                                  commanded=np.asarray(p, float).round(4).tolist())
@@ -1419,8 +1387,6 @@ def pinch_and_store(ctx, geo):
     back = float(geo.get('grasp_back', GRASP_BACK))
     grasp = centre+R @ np.array([LAPTOP_HALF_W-GRASP_INSET, LAPTOP_DEPTH/2-back, 0.])
     grasp[2] = CLAMSHELL_Z
-    # grip5-t2: the push often stops 2-4 cm short (and yaws ~12 deg), leaving < 3 cm overhang at the pinch: keep the
-    # jaws off the stand edge; with a short measured overhang pinch it, pull the laptop out along +edge, re-pinch.
     stand_edge = float(geo.get('stand_x', PRIOR['stand_x']))+STAND_HALF_X
     overhang = float(grasp[0]+GRASP_INSET*edge[0]-stand_edge)
     grasp_nominal = grasp.copy()
@@ -1435,8 +1401,6 @@ def pinch_and_store(ctx, geo):
     rack = np.r_[np.asarray(geo['rack'], float), 0.]
     front_ds = LAPTOP_HALF_W-GRASP_INSET
     front_dz = LAPTOP_DEPTH-back
-    # measure pose: the swung laptop (~58 deg) hangs its low corner ~0.21 below the TCP, so wait where the
-    # pivot touch will happen (rack + PIVOT_SPAN along the slot) to keep the post-measure correction small.
     measure_p = rack+MEASURE_SPAN*slot+[0., 0., MEASURE_Z]
     seat_nominal = rack-front_ds*slot+[0., 0., FRONT_Z+front_dz]
     chain = [(grasp+APPROACH_OUT*edge+[0., 0., 0.07], q_flat), (grasp+APPROACH_OUT*edge, q_flat), (grasp, q_flat),
@@ -1444,8 +1408,6 @@ def pinch_and_store(ctx, geo):
              (measure_p, q_up), (seat_nominal, q_up)]
     label, poses, joints0, ok = best_branch(ctx, arm, [('store', chain)])
     joints0 = wrap_near(ctx, arm, joints0)
-    # in-hand yaw q_pitch -> q_up is a pure rotation about z (mostly a j5 sweep); t2 dropped the laptop after a
-    # 95-101 deg yaw done in 40 frames (0.12 rad/step peak).  Give large yaws proportionally more frames.
     yaw_deg = math.degrees(math.acos(float(np.clip(np.dot(-edge, slot), -1., 1.))))
     # t2 dev: drops after 78-81 deg yaws in 40-42 frames (~1.95 deg/frame), holds at 1.3-1.8 deg/frame; 114 deg in
     # 94 frames ran out of time.  Use a constant angular speed instead.
@@ -1552,10 +1514,10 @@ def rot2(angle):
 
 
 def insertion_path(ctx, geo, info, slot, q_up, seat_nominal):
-    """Corner-pivot levelling.  The side pinch lets the laptop swing ~58 deg in-plane (CoM below the jaws).
-    Put its low front corner on the slot floor at rack +- PIVOT_SPAN, then move the TCP along the arc that rotates
+    """Put its low front corner on the slot floor at rack +- PIVOT_SPAN, then move the TCP along the arc that rotates
     the laptop about that corner until the front edge is level on the slot floor (corner friction + support make
-    the laptop slip back in the jaws).  Front-edge centre ends at rack -+ (0.09 - PIVOT_SPAN)."""
+    the laptop slip back in the jaws).
+    """
     rack = np.r_[np.asarray(geo['rack'], float), 0.]
     up = np.array([0., 0., 1.])
 
@@ -1583,10 +1545,6 @@ def insertion_path(ctx, geo, info, slot, q_up, seat_nominal):
     beta = math.atan2(float(hi[1]-lo[1]), float(hi[0]-lo[0]))
     goal = 0. if sigma > 0 else math.pi
     alpha = (goal-beta+math.pi) % (2*math.pi)-math.pi
-    # above ~55 deg the CoM is past the low corner: the first part of the arc needs a loaded corner (t2 s0-l1 at
-    # 62.7 deg dragged the corner and ended ~25 deg tilted).  Pre-load it and press deeper, in finer steps.
-    # pivot4: below LOW_TILT_DEG the light pivot stored 1/17 in merge v60 (the laptop stayed tilted on the slot):
-    # use the loaded pivot there too.
     high = tilt >= HIGH_TILT_DEG or tilt < LOW_TILT_DEG
     steps = HIGH_LEVEL_STEPS if high else LEVEL_STEPS
     frames = HIGH_LEVEL_FRAMES if high else LEVEL_FRAMES
@@ -1600,8 +1558,6 @@ def insertion_path(ctx, geo, info, slot, q_up, seat_nominal):
         sweep = [alpha+(over-alpha)*j/OVERSHOOT_STEPS for j in range(1, OVERSHOOT_STEPS+1)]
         sweep += sweep[-2::-1]+[alpha]
     best = None
-    # pivot4-t2: the prior / lowest-point outline is less certain along the slot (t1 s1-l4, r s2-l10 missed the
-    # slot end): pivot on the balanced span (corner and front-centre margins equal) first.
     spans = (PIVOT_SPAN, PIVOT_SPAN-0.015, PIVOT_SPAN-0.030, PIVOT_SPAN+0.010) if source == 'measured' else \
         (PRIOR_SPAN, PIVOT_SPAN, PRIOR_SPAN-0.015, PIVOT_SPAN+0.010)
     for span in spans:
@@ -1940,8 +1896,7 @@ def hs_pixels(ctx, points):
 
 
 def hs_cradle_change(ctx, geo, ref):
-    """Fraction of the image box around the (measured) cradle, z .95-1.08, that changed since step 0: a hung
-    headset covers it, a fallen / missed one lies at table height (lower in the image)."""
+    "Measure image changes around the observed cradle to check for the headset."
     image = head_image(ctx)
     hx, hy, z0, z1 = HS_ROI
     cx, cy = (float(v) for v in geo['cradle'])
@@ -2127,8 +2082,7 @@ def store_geometry(geo):
 
 
 def seat_check(ctx, geo, slot):
-    """Post-pivot view: SAM 'laptop' outline near the rack projected into the jaw plane; tilt of the long edge of
-    its min-area rectangle (the rack hides the bottom ~4 cm) and the height of its top edge."""
+    "Fit the visible laptop outline in the jaw plane to estimate its tilt and top height."
     up = np.array([0., 0., 1.])
     normal = np.cross(up, slot)
     normal /= np.linalg.norm(normal)
@@ -2179,9 +2133,7 @@ def seat_check(ctx, geo, slot):
 
 
 def retry_insert(ctx, geo):
-    """After the first insertion (before the cage release): if the episode is still running the laptop has not
-    scored (scoring passes in-hand and stays passed), so unless the seat check sees it seated or dropped, lift it
-    back to the measure pose, re-measure in hand and run a new insertion with the new tilt."""
+    "Retry insertion when the observed laptop is still held and visibly unseated."
     rec = ctx.memory.setdefault('retry', {})
     rec['check_step'] = int(ctx.steps)
     mark(ctx, 'retry_check')
@@ -2355,22 +2307,14 @@ def run_random(ctx):
     yield from run(ctx)
 
 
-# ----------------------------------------------------------------------------- r08 lpress8: left arm holds the lid shut
-# Random lids spring open (20-40 deg) once the right jaw lets go after the push and the side pinch then misses the
-# lid.  The left pusher (free after push_slide) goes over the lid and presses its stand-supported -x front region
-# (tilt-45 radial tool, jaws closed) before the right jaws open, keeps it pressed (joint lock in ctx._tempo['lock'])
-# through the release, the after-push measure, the pinch pull (rides along) and the side pinch, and lifts off only
-# after pinch_close.  The laptop pose for the pinch comes from the measured right TCP at the lid hold when the image
-# fit (which now sees the left arm) disagrees with it.
 LPRESS8_REV = 't2'
-LPRESS_A = 0.040            # press point inside the laptop -x side edge (~8 cm inside the stand +x edge)
+LPRESS_A = 0.040
 LPRESS_B = 0.035            # ... and behind the front edge (0.089 from the hinge)
-LPRESS_TILT = 45.           # tool x 45 deg down along the left-base radial (only tilt reaching the -x front, probe)
+LPRESS_TILT = 45.
 LPRESS_TOP_Z = 0.861        # closed lid top (press6)
 LPRESS_TIP = 0.0125         # lowest finger point below the TCP at tilt 45 (garment_contact.finger_lowest_offset)
 LPRESS_HELD_DEPTH = 0.002   # fingertips this far into the lid while the right jaw still holds it at the arc end
 LPRESS_DEPTH = 0.001        # ... and below the closed lid top once the right lower finger is out (t1 .006: the
-                            # pinch closed 3.3 mm wider than front7 on the same pose -> the deep press tilted the laptop)
 LPRESS_CLEAR = 0.025        # hover above the touch pose
 LPRESS_BACK = 0.015         # lift off the -x side edge this far along -edge
 LPRESS_FRAMES = (7, 9, 6)   # lift, over, touch
@@ -2617,22 +2561,13 @@ def lpress_wrap(ctx, geo, gen):
             yield extra
 
 
-# ----------------------------------------------------------------------------- r10 carry10: store chain after the pinch
-# Held-not-stored episodes miss the V slot across it (laptop lands on the +x face, rotates in the jaws, ends 3-9 cm
-# high; TCP tracks the command within 1 mm), mostly after a poor step-0 rack fit (first in-range SAM proposal taken:
-# lpress8 s2-l18 got a 367 px fragment, yaw 97.9 vs 86.3) or an implausible in-hand fit (prior tilt used).
-# t1/t3: while the laptop is held after pinch_close / pinch_lift (rack un-occluded) fit every in-range 'wooden rack'
-# proposal, keep the lowest-error full-size fit (step-0 fit included) and rebuild slot / q_up / measure / seat poses;
-# re-measure in hand after a short hold when the fit is not 'ok'.
-# t2: when the first insertion failed with the laptop held and the regular retry is out of budget, a compressed
-# retry (fast lift, in-hand measure, time-scaled pivot) that ends by CARRY10_FAST_END.
 CARRY10_REV = 't3'
 CARRY10_RACK = True          # t1: rack re-fit inside the store chain
 CARRY10_RACK_PROPS = 3       # in-range proposals fitted per SAM call
 CARRY10_RACK_MIN_PX = 700     # plausible pinch-time fit: rack-sized mask (t1: good 1500-1780 px, err 0.77-0.97) ...
 CARRY10_RACK_MAX_PX = 2600
 CARRY10_RACK_MAX_ERR = 2.0    # ... fit error (px; foreign masks 22-34) ...
-CARRY10_RACK_MAX_MOVE = 0.02  # ... and within 2 cm / 12 deg of the step-0 fit
+CARRY10_RACK_MAX_MOVE = 0.02
 CARRY10_RACK_MAX_DYAW = 12.
 CARRY10_INHAND_TRIES = 2     # extra in-hand measures when the fit is not 'ok'
 CARRY10_INHAND_HOLD = 4      # frames before each extra in-hand measure
@@ -2683,10 +2618,6 @@ def carry10_rack_sample(ctx, tag):
 
 
 def carry10_rack_update(ctx, geo, edge):
-    """Choose the lowest-error plausible rack fit (step-0 fit included); if it moves the rack, update geo and return
-    the rebuilt store poses (slot, q_up, rack, measure_p, seat_nominal, yaw_frames), else None.  t3: a pinch-time fit
-    is plausible only with err <= CARRY10_RACK_MAX_ERR, a rack-sized mask and a bounded move from the step-0 fit
-    (t1 took a 3000-4000 px foreign mask, err 22-34, 4 cm off: r s0-l15 H)."""
     if not CARRY10_RACK:
         return None
     try:

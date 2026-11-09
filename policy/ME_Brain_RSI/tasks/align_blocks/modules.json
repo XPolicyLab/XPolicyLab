@@ -39,7 +39,7 @@
     "file": "capabilities/perception/perception_for_align_blocks.py",
     "resource": "resources/align_blocks/coap/perception.py",
     "package": false,
-    "sha256": "f88966e568cdbb9f82891cf03b2209cea6e92279d1c1b80ac4b103456d0a18bb"
+    "sha256": "bf510ddebfc12d8c66b65e13abee9432970b0f11f2a8413dee361b39404e37cc"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -57,6 +57,6 @@
     "file": "capabilities/perception/measure_for_align_blocks.py",
     "resource": "resources/align_blocks/coap/measure.py",
     "package": false,
-    "sha256": "0256c1047c0179d307b9414c822f930b0b07fca2fc95eae372d7f11e0c00e50e"
+    "sha256": "da703711ddb639c1cbfbd81d1735f0e9d226aebb1a55076b5d98589e8d2a794b"
   }
 }

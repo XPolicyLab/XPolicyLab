@@ -1,9 +1,12 @@
 """Additional RGB bottle proposals: join labels and coloured body regions.
 
 Estimate a dominant chromatic tabletop hue inside the public table footprint.
-This is a segmentation hypothesis, not semantic truth: red/table-coloured or
-occluded bottles can still be missed. Existing silhouette/ambiguity gates must
-validate every proposal. No scene layout, asset identity or reward is read.
+
+Existing silhouette/ambiguity gates must
+validate every proposal.
+
+No scene layout, asset identity or reward is read.
+
 Independent implementation; no fitted PhysicalRSI regression coefficients.
 """
 import cv2

@@ -1,21 +1,4 @@
-"""tri80-r03 toolbox candidate hamseat (extends r02 dualham; the r01/r02 modules
-are imported unchanged).
-
-Development-truth diagnosis of dualham (dev layouts >= 50, 15 episodes):
-* hammer gripped all the way down (4 eps): the -12 mm release shift leaves the
-  hammer 10 mm short along its long axis (world -Y); it rests 8 deg tilted on
-  the pocket edge with its top 12 mm above the rim (toolbox cover check fails,
-  the 5 cm slot distance passes).
-* hammer swing: it is always the handle end (local +x, world -Y) that drops.
-  With the pinch planned at local x -0.005 the realised pinch lands at
-  -0.004..-0.010; at <= -0.006 the hammer swings 30-57 deg during the carry and
-  either twists out of the pinch while being lowered (4 eps, lands on the rim)
-  or arrives tilted.  The mass centre is therefore on the handle side.
-
-Changes vs dualham: hammer pinch at local x +0.002 (estimated mass centre) and
-the release shift reduced to 3 mm.  Wrench / tape / pliers / tamp / scheduling
-are dualham frame for frame.  Public observations only; no gates or aborts.
-"""
+"Extend the toolbox program with a hammer seating motion."
 import copy
 
 import numpy as np

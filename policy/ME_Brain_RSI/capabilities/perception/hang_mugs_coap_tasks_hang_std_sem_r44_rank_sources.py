@@ -20,7 +20,7 @@ from coap.tasks.hang_candidate_h_cad import (_features, _current_views, _project
 
 def _rack_explanation(ctx, holder, view):
     """Project immutable rack parts at its current RGB registration, including its base."""
-    folder = Path(_r44_parent.__file__).parents[1]/'data'
+    folder = Path(__file__).parents[1]/'data'
     mesh = json.loads((folder/'mug_rack_vertices.json').read_text())[str(holder['asset_index'])]
     vertices = np.asarray(mesh['vertices'])
     floor = float(vertices[:,2].min())

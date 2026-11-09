@@ -27,7 +27,7 @@
     "file": "capabilities/perception/model_for_solve_equation.py",
     "resource": "resources/solve_equation/coap/equation_rgb/model.py",
     "package": false,
-    "sha256": "d42fdf34c22044e712ec820de00324516ab0600cb82dfa4c552d3f1a04bd06bc"
+    "sha256": "cfe16848942ed069ec3a80d143c546d121a0830d34e82353a705c6f38eaa5f51"
   },
   "rdj_equation.equation_rgb.vision_gate": {
     "file": "capabilities/perception/vision_gate.py",
@@ -51,7 +51,7 @@
     "file": "capabilities/perception/reader.py",
     "resource": "resources/solve_equation/coap/rgb_reader/reader.py",
     "package": false,
-    "sha256": "a5e4805d1f17e9e29eb2ddb8b52c4ba3d98dfaa019eeb77064d8f7a00d2d8744"
+    "sha256": "fef81236a9cd1f161e811ef14ad315b78bcde2427fa0b4485863bbb713ef4d3a"
   },
   "rdj_equation.rgb_reader.action_consensus": {
     "file": "capabilities/perception/action_consensus.py",
@@ -153,7 +153,7 @@
     "file": "capabilities/perception/kinematics.py",
     "resource": "resources/solve_equation/coap/equation_rgb/kinematics.py",
     "package": false,
-    "sha256": "ba8eda510bb5ff0df70bc681297b8dc4e95538f16768db355c15538ceee08d55"
+    "sha256": "4706d1bbab3603ffb2026745a5ceb62c08773e174713ebdaeeb49c3c4569c9bf"
   },
   "rdj_equation.equation_rgb.geometry": {
     "file": "capabilities/perception/geometry_for_solve_equation.py",

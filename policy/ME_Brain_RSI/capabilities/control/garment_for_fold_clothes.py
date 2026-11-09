@@ -276,7 +276,6 @@ def _acquire_edge(ctx, arm, source, quat, lift_height=.045, inward=None):
         yield from ctx.hold(4)
         ctx.stage = capture_stage + "_pinch"
     yield from ctx.grip(arm, 0.0, duration=8)
-    # A zero control cache can precede physical jaw closure by up to 18 mm.
     yield from ctx.hold(8)
     if inward is not None and not shallow_entry:
         direction = np.asarray(inward, float)[:2]
@@ -827,8 +826,6 @@ def _body_acquisition_plan(ctx, points):
             "reason": "current red garment material was not resolved",
             "measurement_step": int(ctx.steps), "retention_verified": False}
         return None
-    # Sleeve transport can move the hem beyond the original 55 mm search window.
-    # Only a present transverse material edge may replace an initial search hint.
     search_distance = min(.120, max(.055, .45*float(np.linalg.norm(right[:2]-left[:2]))))
     _snap_sewn_hem(ctx, item, (left, right), targets, search_distance=search_distance)
     if ctx.memory.get("garment_appearance") == "red":

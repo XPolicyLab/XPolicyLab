@@ -39,7 +39,7 @@
     "file": "capabilities/control/drag_policy_for_push_t_random.py",
     "resource": "resources/push_T_random/coap/drag_policy.py",
     "package": false,
-    "sha256": "f581c2b654646e43ffa5d33e32048d9861f89b581cf01219702b3d40cfc3c1a8"
+    "sha256": "678b62e2e0c738d2725e8921a9ec0c59241ea21776f45e9393d450be922105ca"
   },
   "coap.drag_screen": {
     "file": "capabilities/control/drag_screen_for_push_t_random.py",
@@ -69,7 +69,7 @@
     "file": "capabilities/control/policy_for_push_t.py",
     "resource": "resources/push_T_random/coap/policy.py",
     "package": false,
-    "sha256": "d7e7f97db914953d5a42c3fa8d716230f5ac5a89d46b4e76b27987dd3de9b647"
+    "sha256": "a7f7ce2eb6aca4e158069d53e66d27d690cd17b39ec2c44b5fbf0f8346fac32f"
   },
   "coap.perception": {
     "file": "capabilities/perception/perception_for_push_t_random.py",
@@ -81,19 +81,7 @@
     "file": "capabilities/control/t_shape.py",
     "resource": "resources/push_T_random/coap/t_shape.py",
     "package": false,
-    "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
-  },
-  "coap.mug_geometry": {
-    "file": "capabilities/geometry/mug_geometry.py",
-    "resource": "resources/push_T_random/coap/mug_geometry.py",
-    "package": false,
-    "sha256": "cfb40bc21cd91e11fbba9349a89c54da38aceaf504238bcce6b93452237e0e2d"
-  },
-  "coap.vase_geometry": {
-    "file": "capabilities/geometry/vase_geometry.py",
-    "resource": "resources/push_T_random/coap/vase_geometry.py",
-    "package": false,
-    "sha256": "98e606b8018a7905da00efc81d372ba67966d0f73e64b4a18677be2faf8c547c"
+    "sha256": "e1452e201a238c7827468f8d882705fe6478c458cbfb80031f54affe4998c140"
   },
   "adapters": {
     "namespace": true
@@ -102,18 +90,18 @@
     "file": "capabilities/perception/measure_for_push_t.py",
     "resource": "resources/push_T_random/coap/measure.py",
     "package": false,
-    "sha256": "e065fe247a0f719e16abee06e2733a5ea70f6144172e754813597bf5d2d7b6f1"
+    "sha256": "829f19591e197fdf294529c1a5264f5c4156c744e9ad3731bfcc26347092d497"
   },
   "coap.t_measure": {
     "file": "capabilities/perception/t_measure_for_push_t.py",
     "resource": "resources/push_T_random/coap/t_measure.py",
     "package": false,
-    "sha256": "cf5469d55c1ac9f30652d2bb1da0bf990caf0ab93c5b18655f06c0cf894362cc"
+    "sha256": "2612e03e5906d21aefbbc48e3669d4b9f718233fb00f82f694c6cfb9fe34f231"
   },
   "coap.t_detect": {
     "file": "capabilities/perception/t_detect_for_push_t.py",
     "resource": "resources/push_T_random/coap/t_detect.py",
     "package": false,
-    "sha256": "8fff13a157dfbb893abe041819b0c40c798ddf3538ddd72fb93d111a091bac96"
+    "sha256": "d56a42c3b21b4f9775f0b4bfcf5475e3c4188a6b5ac2388fd8d18468f22ffb93"
   }
 }

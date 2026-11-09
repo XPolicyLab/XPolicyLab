@@ -1,11 +1,5 @@
 """Random action body: axis-height seat on the executed stroke only, with a release dwell.
 
-r02 deepseat showed the seat geometry helps where the (mug, peg, arm)
-assignment stays the parent's, but its 28 mm drop let the mug body press the
-rack.  Here hang_points_plan is the parent geometry (thread 2 cm above the
-axis, 8 mm drop) and is the only one used by the plan module's chain ranking;
-hang_points_exec lowers the hole centre by 20 mm so it ends at the peg axis
-height at the support point (SEAT_OUT 0) and cannot press down on the rack.
 The arm dwells DWELL frames before the gripper opens; those frames are taken
 from the retreat stage so the 743-frame budget is unchanged.
 """

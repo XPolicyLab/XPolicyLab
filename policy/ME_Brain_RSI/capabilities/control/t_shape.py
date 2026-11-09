@@ -65,8 +65,6 @@ def fit_t_contour(contour,footprint,scale):
     if not candidates:return None
     candidates.sort(key=lambda item:-item[0])
     best=candidates[0]
-    # A competing orientation over 30 degrees away with almost the same
-    # overlap indicates ambiguous/occluded shape, not a confident direction.
     rivals=[c for c in candidates if abs(np.arctan2(np.sin(c[1]-best[1]),np.cos(c[1]-best[1])))>np.pi/6]
     margin=best[0]-max((c[0] for c in rivals),default=0.)
     return dict(iou=float(best[0]),angle=float(best[1]),pixel_xy=best[2],direction_margin=float(margin))

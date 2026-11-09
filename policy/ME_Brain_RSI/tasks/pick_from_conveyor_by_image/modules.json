@@ -33,7 +33,7 @@
     "file": "capabilities/perception/vision.py",
     "resource": "resources/pick_from_conveyor_by_image/coap/vision.py",
     "package": false,
-    "sha256": "3b71ac1bbd831eb9586a014a89b09d79dee4c2019f9f9bed3ec3d753b25a7e9d"
+    "sha256": "ee7bdc3c73596269eb3d8c26fbd0b5977401cbf7e3d1f7236b78d4bd013bf592"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -45,13 +45,13 @@
     "file": "capabilities/control/policy_for_pick_from_conveyor_by_image.py",
     "resource": "resources/pick_from_conveyor_by_image/coap/policy.py",
     "package": false,
-    "sha256": "899c78863f46b6b496c12f6b4aaaa96a66b90fa50dd72575a07bf47ce594009b"
+    "sha256": "249b7c855e9d90c9a0bde75bed4ec918c1dab64cd19119b2cb131af904ea57e4"
   },
   "coap.intercept": {
     "file": "capabilities/control/intercept.py",
     "resource": "resources/pick_from_conveyor_by_image/coap/intercept.py",
     "package": false,
-    "sha256": "56d1d271b0e24c158cf605528b145d3419cc75b1804126d64a8c755b0da93d4d"
+    "sha256": "59bbca3f7f546b9ce0a9b0ad82ebb2a7665cd4235a1ab05ba80788638ca34210"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics_for_play_xylophone.py",

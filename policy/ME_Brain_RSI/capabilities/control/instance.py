@@ -97,9 +97,6 @@ def supported_grasp(z, support, box, calibration, camera):
     elongation = float(np.sqrt(max(values[-1],1e-8)/max(values[0],1e-8)))
     yaw = float(np.arctan2(major[1],major[0])) if elongation>1.35 else 0.
     yaw=(yaw+np.pi/2)%np.pi-np.pi/2
-    # GP4 thin-object contact: retain 5 mm nominal fingertip/table clearance.
-    # GP3's 10 mm clearance can pass above thin tools. This remains an RGB /
-    # static-geometry estimate, not an object-specific depth or force reading.
     finger_extra = float(np.linalg.norm(np.asarray(calibration['contact_tip_offset_in_ee'])-
                                        np.asarray(calibration['tool_offset_in_ee'])))
     floor = calibration['table_z']+finger_extra+.005

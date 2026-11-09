@@ -4,9 +4,6 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from .geometry import quat_matrix
 
-# Outward-rounded bounds from released x5_v2 meshes and joint7/8 origins.
-# Finger boxes include the whole public prismatic travel 0..44 mm; this
-# deliberately overbounds the grasp, without assuming observed bottle rigidity.
 BOXES = (
     ((-.0001, -.0871, -.0301), (.0841, .0871, .0304)),
     ((.0715, .0003, -.0307), (.1577, .0819, .0305)),
@@ -16,12 +13,7 @@ VERTICES = np.array([p for low, high in BOXES for p in product(*zip(low, high))]
 
 
 def mouth_clearance_floor(upright, axis, mouth_in_ee, cup_height):
-    """A common mouth height clears the whole end gripper over 0..120 deg.
-
-    One-degree samples plus a 3 mm interpolation allowance exceed the maximum
-    change of the public <=0.22 m envelope over half a degree. Additional
-    20 mm clearance is nominal tolerance, not collision-free certification.
-    """
+    "Find a mouth height that clears the gripper throughout the pour."
     rotations = Rotation.from_rotvec(np.deg2rad(np.arange(121))[:, None]*axis).as_matrix() @ upright
     relative = VERTICES - mouth_in_ee
     lowest = np.einsum('aij,vj->avi', rotations, relative)[:, :, 2].min()

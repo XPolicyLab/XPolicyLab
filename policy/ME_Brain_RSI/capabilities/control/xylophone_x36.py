@@ -3,10 +3,9 @@
 Flipped grasps (head on the EE +z side) left the mallet head-up in two X35
 episodes and it was dropped or never reached the band; unflipped grasps kept
 the head down in every observed case, so the ranking now penalises flipped
-candidates before cost. The head search radius for probe observations grows
-from 18 to 60 px and the anchor may differ from the planar prior by up to the
-shaft length, so a pinch that landed away from the intended 5 cm point is
-measured instead of assumed. A relaxed point fit precedes the nominal
+candidates before cost.
+
+A relaxed point fit precedes the nominal
 fallback, and lateral hover moves are slowed to limit axial sliding of the
 frictionless shaft.
 """

@@ -1,21 +1,4 @@
-"""tri80-r07 toolbox candidate shiftup (hfreach + the pliers release change
-below; the r01/r02/r03/r04/r05 modules are imported unchanged, everything not
-listed is frame for frame identical to candidate-tri80-r05-toolbox-hfreach).
-
-Diagnosis (r06 development truth): every remaining failure traces back to the
-pliers not being seated at release.  hfreach stops the head-supported handle
-arc at 57 deg (TCP 24 mm above the box rim, ~58 mm above the seated pinch
-height), so the fingers open with the pliers still ~33 deg from flat; they stay
-propped 13-38 mm high, then the tape / hammer land on or knock them.  Slowing
-the arc or pressing after the release did not help.
-Change in this candidate:
-* as shift12 (route moved 12 mm towards the handle end) and the head support
-  point / arc raised 4 mm: r07t truth shows the hanging pliers pushed 4-8 mm
-  into the box at touchdown in the episodes where they later slip out of the
-  pinch mid-arc (12/45 reference episodes; compression ~0 when they do not).
-  (+22 frames)
-Public observations only.  No runtime gates, safety checks or aborts.
-"""
+"Plan and execute the pliers release with the other toolbox placement routines."
 import copy
 import math
 
@@ -31,12 +14,6 @@ from coap.tasks import toolbox_tri80_r05_hfreach as rr
 
 CANDIDATE = 'candidate-tri80-r07-toolbox-shiftup'
 CONFIG = rr.CONFIG
-# release_dz: TCP height at release above the seated pliers origin (hfreach:
-# box rim + 23.6 mm, i.e. ~+58 mm); arc_step_deg: angular step per 6-frame arc
-# point (hfreach: 57/6 = 9.5 deg); settle / open frames before / during the
-# release; wiggle: along-slot offsets (m) visited for wiggle_frames each before
-# the release (empty = none); shift: whole support/arc route moved along the
-# slot towards the handle end (m); raise: support/arc raised (m).
 LOWREL = {'release_dz': 0.016, 'arc_step_deg': 9.5, 'settle': 4, 'open': 12, 'wiggle': (), 'wiggle_frames': 0, 'shift': 0.012, 'raise': 0.004}
 
 

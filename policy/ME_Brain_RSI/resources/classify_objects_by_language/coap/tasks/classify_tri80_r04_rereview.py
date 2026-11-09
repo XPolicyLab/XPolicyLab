@@ -1,28 +1,4 @@
-"""tri80 r04 classify-by-language candidate (rereview).
-
-Extends the frozen tri80 r02 swift loop (v330) with the r03 retrynow empty-grasp retry;
-imports only the frozen r01 branchlock module and the shared r40/r25 modules:
-  branchlock - source approach/pick chords keep the measured IK branch (r01 Tri80Context).
-  closedset  - language confidence ranks only the instructed categories (r01 helper).
-  deadline   - the latched transition score never regresses, so picks continue until no
-               pick can still finish before the 1100-step episode end.
-  swift      - shorter settle holds and source pre-descent/approach chords.
-  quickmiss  - a lift that reads an empty gripper skips the air transport: the arm opens
-               while retreating to its own foreground park and the table is re-observed.
-  retrynow   - the re-observed missed source is retried immediately, and the active
-               category's remaining retries run before a new category is opened.
-  calib      - head-camera table localisation of cars, peppers and wooden toys is radially
-               compressed toward the camera footprint (~3-4% of the distance, i.e. 1-2 cm
-               at the table edges, where most empty grasps happen); the pinch XY is expanded
-               back about the per-family centre before the descent.
-  carhigh    - cars (most in-transport slips, with the TCP ~0.89 m crossing a basket front
-               wall) are lifted and released CAR_RAISE higher when both raised postures solve
-               within the IK tolerance; other families keep the r40 transport heights.
-  rereview   - the final table review is repeated whenever a pick was attempted since the
-               last review: post-drop refreshes are taken with the releasing arm over the
-               basket and can hide sources in front of it, so a single review could end the
-               episode with a confidently seen source never attempted.
-"""
+"Review the observed grasp before retrying an empty pickup."
 from copy import deepcopy
 
 import numpy as np
@@ -52,7 +28,7 @@ CALIBRATION = {'car': (0.039, (0.07, -0.48)), 'toy_car': (0.039, (0.07, -0.48)),
                'pepper': (0.035, (-0.04, -0.39)), 'wooden_toy': (0.032, (-0.09, -0.37))}
 CALIB_MAX_SHIFT = 0.025
 CAR_RAISE = 0.03
-RAISE_RESIDUAL = 3.5  # within the 2 mm / 0.02 rad IK tolerances
+RAISE_RESIDUAL = 3.5
 
 
 def _timing():
@@ -66,7 +42,7 @@ def _empty(category, reading):
 def _out_of_time(ctx, estimated_cost):
     if not FEATURES.get('deadline'):
         return ctx.steps + estimated_cost > LEGACY_RESERVE
-    # Any pick whose release can still land before the episode end may raise the latched score.
+    # Skip a pickup when there is insufficient time to complete its release.
     return ctx.steps + max(MIN_PICK_STEPS, 0.8 * estimated_cost) > EPISODE_STEPS
 
 

@@ -30,7 +30,6 @@ class PublicKeyPlanningGeometry:
         other = "right" if arm == "left" else "left"
         clearance = kin.public_clearance(arm, joints, self.ctx.table_z, other,
                                          self.ctx.state[other+"_arm_joint_state"])
-        # The unchanged 1 mm mesh minimum retains the original sphere limits.
         margins.update({("sphere", "table"): clearance["table"]+.003,
                         ("sphere", "self"): clearance["self"]+.0015,
                         ("sphere", "other_arm"): clearance["other_arm"]-.004})
@@ -111,10 +110,12 @@ def _slot_convex(slot, table_z):
 def audit_key_frames(ctx, frames, slot):
     """Check every generated robot pose, including obstructed-jaw hypotheses.
 
-    Trace gripper values are intent, not measured physical aperture. The 10/20 mm
-    inner-gap hypotheses use the public 0.807 mm closed pad gap and 88 mm opposed
-    finger travel. All robot solids must remain disjoint; table clearance must
-    be nonnegative. The public slot outer hull conservatively fills its aperture.
+    Trace gripper values are intent, not measured physical aperture.
+
+    All robot solids must remain disjoint; table clearance must
+    be nonnegative.
+
+    The public slot outer hull conservatively fills its aperture.
     """
     result = {"accepted": False, "minima": {"self": None, "cross": None,
                                                "table": None, "slot": None},

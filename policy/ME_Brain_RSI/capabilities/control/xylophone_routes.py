@@ -14,11 +14,7 @@ PROBE_PATTERNS=(((.08,0.,0.),(0.,.08,0.)),
                 ((-.05,0.,0.),(0.,.06,0.)))
 
 def heading_candidates(rotation,anchor,grasp,tip,table_z):
-    """Only after the original vertical/4/8-degree paths fail.
-
-    Bounded yaw alternatives keep the measured head as the functional point.
-    Each candidate needs full continuous IK and timing approval independently.
-    """
+    "Try bounded yaw alternatives after the original routes fail their planning checks."
     anchor=np.asarray(anchor,float);axis=np.asarray(grasp,float)-anchor
     n=np.linalg.norm(axis)
     if not .03<=n<=.19:return []
@@ -64,8 +60,7 @@ def reverse_tilt_candidates(rotation,anchor,grasp,tip,table_z):
 def route_rank(audit,alternative_index):
     """Prefer a margin-qualified route, then actual estimated cost.
 
-    A healthy original route is preserved. Alternatives are used only when
-    the original is rejected or has less than .30 rad of wrist margin.
+    A healthy original route is preserved.
     """
     margin=audit.get('min_joint_margin_rad')
     margin=0. if margin is None else margin

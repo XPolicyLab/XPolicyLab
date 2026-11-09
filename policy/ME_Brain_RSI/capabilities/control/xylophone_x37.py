@@ -1,11 +1,4 @@
-"""X37: X36 plus stall handling that never parks and re-plans unreachable keys.
-
-A same-key retreat waypoint stalled for 86 actions in one eval15 episode because
-it was not a movable phase; a hit that stopped after most of its descent was
-retried although something was already in contact; and the farthest key of one
-layout was out of reach for the chosen stroke orientation while the vertical
-functional route from the actual joint state could still have solved it.
-"""
+"X37: X36 plus stall handling that never parks and re-plans unreachable keys."
 import numpy as np
 from .xylophone_x36 import XylophonePolicy as X36
 from .xylophone_feedback import ExecutionWindow

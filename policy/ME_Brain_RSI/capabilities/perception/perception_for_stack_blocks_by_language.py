@@ -1,7 +1,6 @@
 """Head-RGB coloured-cube localization for stack_blocks_by_language.
 
-Colour blobs (HSV) on the bright cube faces are fitted with the projected
-silhouette of a 3.5 cm cube over centre xy and yaw. Only current RGB pixels, the
+Only current RGB pixels, the
 accepted head projection and the public cube size are used.
 """
 from __future__ import annotations

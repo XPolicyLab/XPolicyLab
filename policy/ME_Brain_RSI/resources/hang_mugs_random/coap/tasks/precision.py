@@ -1,8 +1,4 @@
-"""RGB-driven programs for insertion and mug hanging.
-
-Only observed detections, robot proprioception and fixed asset dimensions are
-used. Asset dimensions are design constants, never episode state.
-"""
+"Plan insertion and mug hanging using RGB, proprioception and public assets."
 
 import math
 import numpy as np
@@ -521,7 +517,6 @@ def insert_tubes(ctx):
             "hole": hole_position.tolist(), "quaternion": final_gripper.tolist(),
             "transport": above.tolist(), "pinch_height": pinch_height}
         ctx.stage = f"tube_rotate_{hole_index}"
-        # Rotate at the source before transport; TCP interpolation can dip 10 cm.
         rotation_point = grasp + [0, 0, 0.300]
         yield from ctx.move(arm, rotation_point, final_gripper, 0.0, 11)
         yield from ctx.move(arm, rotation_point, final_gripper, 0.0, 2)
@@ -687,7 +682,6 @@ def _red_mug_profile(ctx, mug):
     color = np.asarray(mug.get("mean_rgb", [0, 0, 0]))
     width = float(mug.get("size", [0.0])[0])
     if color[0] > 170 and color[1] > 150 and color[2] < 60 and 0.085 < width < 0.120:
-        # The yellow asset's flat outer handle wall lies at local X = 46.5 mm.
         return dict(mug, asset_index=5, size=[0.09913398105, 0.07529970170, 0.069],
                     handle_local=[0.047, 0.0, 0.0], handle_grasp=True)
     if np.max(color) <= 170 or np.ptp(color) >= 80:
@@ -1241,8 +1235,6 @@ def hang_mugs(ctx):
         # MetaControl caches clipped commands, not reliable contact aperture.
         # A thin cup wall can remain securely held with a cached opening of zero.
         _, _, _, peg_index, peg_position, peg_axis, final_gripper, seated, preinsert = route["support"]
-        # Keep the broad white cup farther from the central post while threading.
-        # This shift remains inside the public 45 mm support-point tolerance.
         seating_shift = 0.025 * peg_axis if is_red_handle else np.zeros(3)
         peg_position = peg_position + seating_shift
         seated = seated + seating_shift

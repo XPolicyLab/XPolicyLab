@@ -251,8 +251,6 @@ class XylophonePolicy(X33):
             movable=w.name.startswith(self.MOVABLE_PREFIXES)
             if not reached and movable and self.age>=18 and trend['stalled']:
                 if self.age>=SOFT_ARRIVAL_AGE and error<SOFT_ARRIVAL_POSITION and angle<SOFT_ARRIVAL_ANGLE:
-                    # Close, stationary and not a hit: the next target is reachable
-                    # from here; waiting for 3 mm would only burn the budget.
                     self._advance(w,current,'soft_arrival')
                 else:self._recover_motion(w,current,action,trend)
                 validate_action(action);return action

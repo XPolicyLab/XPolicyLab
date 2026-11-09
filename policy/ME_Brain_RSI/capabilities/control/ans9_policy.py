@@ -19,8 +19,7 @@ TILT_SHIFT=.145*np.sin(TILT)   # EE moves this much toward the robot for the sam
 class DecisiveSupervisor(DegradingSupervisor):
     """Local evidence decides. Confirmed-empty selects the checked retry/skip; confirmed-held proceeds.
 
-    ANS8 dev5 layout 10: the model vetoed three geometrically correct pre_place
-    descents as misaligned/wrong_digit and the digits were put back. The model
+    The model
     may now only veto a confirmed-empty retry with a confident held, and its
     placement opinion is recorded, not executed, while the wrist confirms the hold.
     """

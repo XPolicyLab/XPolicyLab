@@ -35,7 +35,6 @@ def fit_visible_shell(ctx,egg,arm,index,head_reference):
     associations=[]
     def candidate_score(ellipse):
         uv=np.asarray(ellipse[0],float)
-        # Fixed shell width supplies a cheap depth estimate for cross-view identity matching.
         depth=.04113849*math.sqrt(fx*fy)/min(ellipse[1])
         ray=np.array([(uv[0]-wrist.shape[1]/2)/fx,-(uv[1]-wrist.shape[0]/2)/fy,-1.])
         center=camera_origin+camera_rotation@(ray*depth)

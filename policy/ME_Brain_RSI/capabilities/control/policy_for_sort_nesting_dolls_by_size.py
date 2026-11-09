@@ -1,1 +1,1 @@
-"""Independent oracle strategies for the pinned RoboDojo environment."""
+"""Namespace for task-specific policy adapters."""

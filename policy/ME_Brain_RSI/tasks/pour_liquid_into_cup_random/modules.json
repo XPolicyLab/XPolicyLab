@@ -24,52 +24,16 @@
     "sha256": "a096d4d8cc35a6447231c03ba3cf17a39979dd6aa1b80f07a8069557d57427ab"
   },
   "adapters.COAP_ZYR.model": {
-    "file": "capabilities/control/model_for_pour_liquid_into_cup.py",
+    "file": "capabilities/control/pour_liquid_into_cup_random_model.py",
     "resource": "resources/pour_liquid_into_cup_random/coap/adapter/model.py",
     "package": false,
-    "sha256": "4881621f45205b42e9e79b9b95ad16ac4a3696be4c34a7782231ba85ce9c7068"
-  },
-  "coap.observation_audit": {
-    "file": "capabilities/observation/observation_audit.py",
-    "resource": "resources/pour_liquid_into_cup_random/coap/observation_audit.py",
-    "package": false,
-    "sha256": "1a23538876c849ad985c89adb70d2b7f5f54e57a38caa513cc6bd42f939ea04f"
+    "sha256": "9e31f9d9884b3c4c50b208afbdd506fd8b2d0134e67b216e5467c70d895267be"
   },
   "coap.policy": {
     "file": "capabilities/control/policy_for_pour_liquid_into_cup_random.py",
     "resource": "resources/pour_liquid_into_cup_random/coap/policy.py",
     "package": false,
-    "sha256": "908e06c7b5d8c145145820c60d476c2be4939d63a05994f4acf786a46203e5bb"
-  },
-  "coap.perception": {
-    "file": "capabilities/perception/perception_for_pour_liquid_into_cup_random.py",
-    "resource": "resources/pour_liquid_into_cup_random/coap/perception.py",
-    "package": false,
-    "sha256": "5408bf5f05f3f9906d3b93b73d434739a856b3492a7a574d2525a8830d8c26d7"
-  },
-  "coap.t_shape": {
-    "file": "capabilities/control/t_shape.py",
-    "resource": "resources/pour_liquid_into_cup_random/coap/t_shape.py",
-    "package": false,
-    "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
-  },
-  "coap.liquid_random_rgb": {
-    "file": "capabilities/perception/liquid_random_rgb.py",
-    "resource": "resources/pour_liquid_into_cup_random/coap/liquid_random_rgb.py",
-    "package": false,
-    "sha256": "d8135f02547aea55242eb5523cd35d2e731ba375145724444b1ac18f4b276c8f"
-  },
-  "coap.mug_geometry": {
-    "file": "capabilities/geometry/mug_geometry.py",
-    "resource": "resources/pour_liquid_into_cup_random/coap/mug_geometry.py",
-    "package": false,
-    "sha256": "cfb40bc21cd91e11fbba9349a89c54da38aceaf504238bcce6b93452237e0e2d"
-  },
-  "coap.vase_geometry": {
-    "file": "capabilities/geometry/vase_geometry.py",
-    "resource": "resources/pour_liquid_into_cup_random/coap/vase_geometry.py",
-    "package": false,
-    "sha256": "98e606b8018a7905da00efc81d372ba67966d0f73e64b4a18677be2faf8c547c"
+    "sha256": "198e4c133331500891511ed120fad398c7c36dd410c2cbb6463c05a6d3538fdb"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -81,9 +45,33 @@
     "file": "capabilities/control/liquid_safety.py",
     "resource": "resources/pour_liquid_into_cup_random/coap/liquid_safety.py",
     "package": false,
-    "sha256": "19b0c7809f3e55972939484aed0dcba910152dc0d5fee6d1c3e4dffa212ae0e8"
+    "sha256": "c6f855ecff0052404172438d28b605c659fde4768b3568de12043dd2781120f3"
   },
   "adapters": {
     "namespace": true
+  },
+  "coap.vision": {
+    "file": "capabilities/perception/pour_liquid_into_cup_random_vision.py",
+    "resource": "resources/pour_liquid_into_cup_random/coap/vision.py",
+    "package": false,
+    "sha256": "607654c370c1d9311d21bb9e92932f36765c0faf6ef422d050f4f72baf6d9b4a"
+  },
+  "coap.measure": {
+    "file": "capabilities/perception/pour_liquid_into_cup_random_measure.py",
+    "resource": "resources/pour_liquid_into_cup_random/coap/measure.py",
+    "package": false,
+    "sha256": "d7ce3bb06a77f492479a07a27b1cadb75a31311c9955b4f6b5239672ec5d751d"
+  },
+  "coap.segment": {
+    "file": "capabilities/perception/sam3_segment_client.py",
+    "resource": "resources/pour_liquid_into_cup_random/coap/segment.py",
+    "package": false,
+    "sha256": "f5599e787be042a0507f1617d6e703659bb081ea1ecbdd395490659aeb2b942e"
+  },
+  "coap.wristcam": {
+    "file": "capabilities/observation/build_tower_wristcam.py",
+    "resource": "resources/pour_liquid_into_cup_random/coap/wristcam.py",
+    "package": false,
+    "sha256": "5ed8b1dee23c2887bc735312a8e316b9fc62e9bee505ed372a7163898bbd3f5c"
   }
 }

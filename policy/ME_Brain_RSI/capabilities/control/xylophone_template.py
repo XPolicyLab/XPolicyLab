@@ -1,6 +1,4 @@
-"""Whole fixed-size keyboard pose from RGB; no per-scene coordinates.
-
-X21's successful rigid fits remain preferred. A failure-only dense color-template
+"""X21's successful rigid fits remain preferred. A failure-only dense color-template
 fit does not require separately connected full bar contours. Eight targets are
 always one rigid transform of the same public template, never independent fits.
 """

@@ -108,8 +108,7 @@ class X5Kinematics:
     def solve_continuous(self, goal, seed, max_delta=.5):
         """Solve within both physical limits and ``seed +/- max_delta``.
 
-        Returns None when the target cannot be achieved locally within 0.5mm
-        and 0.2deg. It deliberately never falls back to a distant random seed.
+        It deliberately never falls back to a distant random seed.
         ``last_info`` exposes residuals and bound contact for diagnostics.
         """
         goal = _transform(goal)

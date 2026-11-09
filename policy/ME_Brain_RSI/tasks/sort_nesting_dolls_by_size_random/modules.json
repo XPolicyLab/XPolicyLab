@@ -17,23 +17,17 @@
     "package": false,
     "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
   },
-  "coap.kinematics": {
-    "file": "capabilities/motion/sort_nesting_dolls_by_size_random_kinematics.py",
-    "resource": "resources/sort_nesting_dolls_by_size_random/coap/kinematics.py",
-    "package": false,
-    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7"
-  },
   "coap.policy": {
     "file": "capabilities/control/sort_nesting_dolls_by_size_random_policy.py",
     "resource": "resources/sort_nesting_dolls_by_size_random/coap/policy.py",
     "package": false,
-    "sha256": "696540f2af865e10a2126745fea75babc643bd28b4915594ebda5c1a1f4b431f"
+    "sha256": "5b33719388c4c1227a28af27eefb429730510ae5e9bbbc020fc8df7d9b43a721"
   },
   "coap.vision": {
     "file": "capabilities/perception/sort_nesting_dolls_by_size_random_vision.py",
     "resource": "resources/sort_nesting_dolls_by_size_random/coap/vision.py",
     "package": false,
-    "sha256": "0099796077c238929311b6f14c505e5c16d5ef02548961a8b4fd4e16d364d8a4"
+    "sha256": "a53e3ecf4c9a2db94d18748f3c7861bf4fd9ea4fbb07d4c801d42c9e84d1ce3e"
   },
   "coap.wristcam": {
     "file": "capabilities/observation/sort_nesting_dolls_by_size_random_wristcam.py",
@@ -58,5 +52,17 @@
     "resource": "resources/sort_nesting_dolls_by_size_random/coap/adapter/deploy.py",
     "package": false,
     "sha256": "2c62301410de73fed4212197402ccddcaf2f3d17e5a3f7c74ad668645f4f0eb2"
+  },
+  "coap.measure": {
+    "file": "capabilities/perception/sort_nesting_dolls_by_size_random_measure.py",
+    "resource": "resources/sort_nesting_dolls_by_size_random/coap/measure.py",
+    "package": false,
+    "sha256": "d98d3ac996d097a4ec3df40dc429a7e99ca4ebf20a863f6418d0b2209c377b7b"
+  },
+  "coap.segment": {
+    "file": "capabilities/perception/sam3_segment_client.py",
+    "resource": "resources/sort_nesting_dolls_by_size_random/coap/segment.py",
+    "package": false,
+    "sha256": "f5599e787be042a0507f1617d6e703659bb081ea1ecbdd395490659aeb2b942e"
   }
 }

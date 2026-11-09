@@ -17,12 +17,6 @@
     "package": false,
     "sha256": "0c0058ada555f9e54a94c90a307623f3681400a11e18fd9a6b1036eab2f29855"
   },
-  "coap.kinematics": {
-    "file": "capabilities/motion/build_tower_kinematics.py",
-    "resource": "resources/build_tower/coap/kinematics.py",
-    "package": false,
-    "sha256": "8ff82c820ea5e61db913e16b46cdfdee3576abb0106789b9a2da94d2b197ebf7"
-  },
   "coap.policy": {
     "file": "capabilities/control/build_tower_policy.py",
     "resource": "resources/build_tower/coap/policy.py",

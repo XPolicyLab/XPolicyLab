@@ -1,9 +1,7 @@
-"""CPP51: CPP50 with the planner candidate dict repaired (a CPP49 inline comment swallowed yaw/tilt/xy/grasp_z -> KeyError at basket_wait in every CPP49/50 episode); the basket is held 13 cm up: official is_lift compares the TARGET's centre height with its initial one, and a 12 cm figurine that stands on the belt but topples in the basket loses 3 cm of that gain (CPP46 eval15 s0 ep2: figurine inside the basket, basket 10 cm up, judged failure).
+"""Collect the image-matched target from the conveyor.
 
-CVP1-10/HXP1-8/CPP1-2 (20 versions) all pinched the 3-5 mm end wall of the moving basket and never lifted it.
-
-No evaluator state or episode identity enters this controller. Visual checks
-are conservative heuristics, not a replacement for the official predicate.
+Track the target and basket in RGB, then coordinate the two arms for collection
+and handoff.
 """
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -13,11 +11,11 @@ import cv2
 from .vision import Vision,BELT_Z,basket_colour
 from .intercept import plan_intercept,front_grasp,handle_grasp,down_pose,side_pose,grasp_face,rotation_error,left_preview_path,preview_envelope_safe
 
-LEFT_TILT=np.deg2rad(45)   # left-arm grasp/carry pitch: brings the EE ~10 cm closer to its base for belt targets at y>0
-HANDOFF_CENTER=np.array([.0,-.13])    # held basket centre during the drop (CPP22 config; CPP23 at y=-.20 failed layout 0 too)
-DROP_OFFSET=np.array([-.03,-.03])     # drop point inside the basket (half extents .118 x .175); right wrist holds the arch at +.04 so the gap is 7 cm
-DROP_TILT=np.deg2rad(60)              # CPP24: side pitch (toward +x) for carry/lower/release; TCP 12.6 cm right of the EE
-DROP_OFFSET_SIDE=np.array([-.03,-.085])  # CPP29: near side of the handle arch (arch at the hook's y, near wall ~15 cm nearer); a 16 cm object at 45 deg spans +-5.7 cm
+LEFT_TILT=np.deg2rad(45)
+HANDOFF_CENTER=np.array([.0,-.13])
+DROP_OFFSET=np.array([-.03,-.03])
+DROP_TILT=np.deg2rad(60)
+DROP_OFFSET_SIDE=np.array([-.03,-.085])
 DROP_SWING=np.deg2rad(45)             # CPP29: world-z rotation of the carry pose: the object lies diagonal, EE to the left-near of the TCP
 
 
@@ -40,7 +38,7 @@ class Policy:
         self.step=0;self.age=0;self.dwell=0;self.attempts=0;self.phase='acquire'
         self.active=None;self.holder=None;self.home=None;self.hold_pose=None;self.hold_path_pending=None;self.carry_started=None;self.last_holder_pose=None
         self.grips={side:1. for side in ARMS};self.finished=False;self.reason='initializing'
-        self.motion={};self.basket_lift=.13;self.track_ok=False;self.last_track=0   # CPP31/50: is_lift compares the target's current centre z with its initial one; tall objects topple in the basket -> 13 cm
+        self.motion={};self.basket_lift=.13;self.track_ok=False;self.last_track=0
         self.basket_seen=0;self.close_steps=0
         self.planner=planner or plan_intercept;self.plan=None;self.lift_goal=None
         self.escape_index=0
@@ -137,14 +135,8 @@ class Policy:
         along=np.array([1.,0.]) if self.plan.get('grasp')=='handle' else np.zeros(2)
         tcp_xy=HANDOFF_CENTER+along*.04
         pose=down_pose(tcp_xy,self.lift_goal[2]-self.calibration['tool_offset_in_ee'][0]*np.cos(self.plan.get('tilt',0.)),self.plan['yaw'],self.calibration,self.plan.get('tilt',0.))
-        pose[2]=self.lift_goal[2]+.02   # CPP49: ask for 2 cm more; the arm settles short of a limit pose
-        # CPP22: a 35-40 cm straight carry from a far-right intercept stalled the right arm ~9 cm short
-        # (CPP19 ep3). Retract toward the robot first, then translate along -x.
+        pose[2]=self.lift_goal[2]+.02
         mid=pose.copy();mid[0]=current[0];mid[1]=min(current[1],pose[1])
-        # CPP38: do NOT carry yet. The handoff centre hangs the basket over the left arm's grasp zone; lifting a 16 cm
-        # remote next to it kicked the basket into a 30-40 deg yaw swing (CPP31/37 ep0 head video, steps 158-170), and
-        # every drop afterwards was a coin flip. Hold the lifted basket at the intercept until the target is up and
-        # staged above the handoff point, then run the two-leg path underneath it.
         self.hold_path_pending=[mid,pose];self.hold_path=None
         self.hold_pose=current.copy();self.hold_pose[2]=self.lift_goal[2];self.hold_final=pose;self.held_center=tcp_xy.copy();self.held_bottom=BELT_Z+self.basket_lift
         self.stage_events.setdefault('basket_handoff_started',self.step)
@@ -157,9 +149,9 @@ class Policy:
         self.advance('basket_probe_lower')
 
     def visual_drop_point(self,rgb,hook_xy,rim_z):
-        """CPP30: the basket swings/yaws on the hook (CPP27/28/29 ep0: left wall at x -.046, +.0, -.01 for hooks at
-        .025/.04/.039), so the hanging-centre model is 5-8 cm off. Use the visible basket colour in the head camera:
-        the centroid of its near half (toward the robot, clear of the arch and the right fingers) is inside the rim."""
+        """Use the visible basket colour in the head camera:
+        the centroid of its near half (toward the robot, clear of the arch and the right fingers) is inside the rim.
+        """
         cam=self.vision.camera;mask=basket_colour(rgb).astype(np.uint8)
         uv=cam.project(np.array([hook_xy[0],hook_xy[1],rim_z]))
         if not np.isfinite(uv).all():return self.visual_drop
@@ -176,11 +168,7 @@ class Policy:
         near=pts[(pts[:,1]<hook_xy[1]-.03)&(np.abs(pts[:,0]-hook_xy[0])<.11)]
         if len(near)<30:return self.visual_drop
         seen=near.mean(0)
-        # CPP43: the basket hangs with its own yaw (grasped at the belt yaw, 1.4-1.7 rad in dev5, rotated by the swing). The
-        # near compartment centre is 9 cm from the arch along the basket's long axis; take that axis from the mask's PCA.
-        # CPP31: the visible centroid x can sit right of the hook (CPP30 ep0: .136, unreachable for the left arm);
-        # keep the measured y (the swing) but stay on the left arm's side of the hook.
-        clamped=np.array([np.clip(seen[0],hook_xy[0]-.07,min(hook_xy[0]-.03,.02)),np.clip(seen[1],hook_xy[1]-.105,hook_xy[1]-.075)])   # CPP41/47: TCP x<=.02 (left EE limit); y within 1.5 cm of the compartment centre
+        clamped=np.array([np.clip(seen[0],hook_xy[0]-.07,min(hook_xy[0]-.03,.02)),np.clip(seen[1],hook_xy[1]-.105,hook_xy[1]-.075)])
         # CPP32: the basket swings on the hook (CPP31 ep0 head video: near rim between rows 215 and 300, period ~40
         # steps); average the unoccluded frames over the carry so the drop sits at the swing's equilibrium.
         self.visual_drop_samples=(self.visual_drop_samples+[clamped])[-40:];self.visual_drop=np.mean(self.visual_drop_samples,axis=0)
@@ -224,9 +212,6 @@ class Policy:
             goal=np.asarray(state['path'][state['index']])
         else:
             item=self.vision.target;v=np.asarray(item.get('velocity',[0.,0.]))
-            # CPP39: standby = approach hover in the target's lane, 14 cm above the belt (clears the tallest objects),
-            # x led 12 steps and clipped to the reachable intercept band. CPP32 ep2 (far lane, y=.089): the standby
-            # behind the belt cost 36 approach steps, the target drifted to x>-.16 and the belt was out of reach.
             x=float(np.clip(np.asarray(item['xy'])[0]+12*v[0],-.44,-.22));y=float(np.clip(np.asarray(item['xy'])[1],-.10,.12))
             box=item.get('box') or [0,0,1,0];bw,bh=max(1.,box[2]-box[0]),max(1.,box[3]-box[1])
             angle=np.pi/2 if max(bw,bh)/min(bw,bh)<1.3 else (0. if bw>=bh else np.pi/2)
@@ -253,19 +238,12 @@ class Policy:
 
     def lpose(self,xy,z,angle=0.,tilt=None):
         if tilt is None:
-            # CPP18: belt lane y>.07 is outside the 45-degree envelope; pitch further to reach it.
-            # CPP41: far lane (y>.07) is at the reach boundary; 60 deg puts the EE 2.3 cm nearer the robot (45 deg stalled 7 cm high at x=-.22, CPP39 ep2)
             tilt=np.deg2rad(60) if np.asarray(xy)[1]>.07 else LEFT_TILT
         return down_pose(xy,z,angle,self.calibration,tilt)
 
     def held_basket_center(self,obs):
         """Actual centre of the basket hanging from the holder: right TCP minus the arch grasp offset."""
         pose=np.asarray(obs['state'][self.holder+'_ee_pose']);tcp=pose[:3]+quat_matrix(pose[3:])@np.array([self.calibration['tool_offset_in_ee'][0],0.,0.])
-        # CPP25: the basket hangs from the hook and swings until its centre of mass is under the
-        # grasp point, so the 4 cm handle offset does NOT survive the lift (CPP24 ep0 released at
-        # the left wall with the arm exactly on goal). Centre ~ hook TCP, minus the finger-axis
-        # y component of the pinch depth and a small residual tilt.
-        # CPP28: head-camera check at CPP27 ep0 release: basket centre = hook + (0.00, +0.02); the -.015/-.03 model was 5 cm off in y.
         xy=tcp[:2].copy()
         # CPP49: the basket floor hangs HANDLE_TOP minus the pinch depth below the hook; the holder does not always reach
         # its hold height (layout 3: EE 1.116 vs 1.168), so the rim used for the drop must follow the real hook.
@@ -338,9 +316,6 @@ class Policy:
                 if self.target_ready:
                     self.last_track=self.step;self.stage_events.setdefault('target_identity_tracked',self.step)
                     if self.vision.semantic_step==self.step and self.vision.target is not None and self.phase!='target_close':
-                        # CPP11: detector-confirmed anchor; optical flow alone latches onto our own gripper.
-                        # CPP26: vision.log['target_search'] is never cleared, so 'matched' was true on every flow-only
-                        # step and the anchor followed the drifting box (CPP25 ep3 closed 6 cm from the donut).
                         t=self.vision.target
                         # CPP14: every object rides the belt at the basket's measured velocity; the target
                         # tracker's own velocity is corrupted by the approaching gripper (ep2/4: v_y=-0.004..-0.008).
@@ -418,8 +393,6 @@ class Policy:
                     ready=self.move(action,obs,self.holder,goal,1.,1,tolerance=.015)
                     if fresh and raised and ready:self.advance('basket_wait')
                     elif self.step>=self.recovery_deadline:
-                        # CPP42: our own arm hides the basket from the head camera for 30-60 steps (CPP38 eval15 s0/s1 ep0).
-                        # While the coasting prediction is still upstream of the reach limit, keep waiting at the hover.
                         self.stop('basket_reacquisition_timeout')
                 elif self.phase=='basket_unfold':
                     goal=np.asarray(self.plan['escape'][self.escape_index])
@@ -437,7 +410,7 @@ class Policy:
                     lead=max(2.,(self.plan['hover'][2]-grasp[2])/.010)
                     future_xy=xy+v*lead
                     goal=np.asarray(self.plan['hover']).copy()
-                    nearby=np.linalg.norm(future_xy-np.asarray(self.plan['xy']))<.22   # CPP18: CPP17 ep2 waited 15 cm from the real basket
+                    nearby=np.linalg.norm(future_xy-np.asarray(self.plan['xy']))<.22
                     if fresh and nearby:
                         goal=down_pose(future_xy+self.hover_offset(z),z,yaw,self.calibration,tilt);goal[2]=self.plan['hover'][2]
                     self.move(action,obs,self.holder,goal,1.,1,tolerance=.018)
@@ -494,13 +467,9 @@ class Policy:
                 if self.age<=6:self.lift_goal[:2]+=self.lift_velocity*(7-self.age)/6
                 current=obs['state'][self.holder+'_ee_pose'];gained=current[2]-self.probe_start[2]
                 reached=self.move(action,obs,self.holder,self.lift_goal,0.,2,tolerance=.015)
-                # CPP7 ep1 hooked and raised the basket 9.3 cm but the 12 cm goal was out of reach
-                # and the stall timer gave up. >= 8.5 cm (official lift is 8 cm) is accepted.
                 self.lift_trace=getattr(self,'lift_trace',[])+[float(current[2])]
                 stalled=self.age>=30 and len(self.lift_trace)>=15 and self.lift_trace[-1]-self.lift_trace[-15]<.003
-                # CPP30: at the far-right reach edge the lift settles at 5-6 cm (CPP25 ep1, CPP29 ep3 waited 90 steps and
-                # lost the target); the official predicate lifts the TARGET, not the basket, so accept a stalled 4.5 cm.
-                if reached or (gained>=.085 and self.age>=12) or (gained>=.08 and self.age>=40) or (gained>=.05 and self.age>=90) or (stalled and gained>=.03):   # CPP42: 3 cm; the retract leg of the carry regains height
+                if reached or (gained>=.085 and self.age>=12) or (gained>=.08 and self.age>=40) or (gained>=.05 and self.age>=90) or (stalled and gained>=.03):
                     # CPP26: keep the FULL lift height as the hold target; a far-lane intercept (CPP25 ep1)
                     # stalls the lift at the reach edge and the retract leg of the carry recovers it.
                     self.lift_goal=np.asarray(current).copy();self.lift_goal[2]=self.probe_start[2]+max(self.basket_lift,gained)
@@ -524,9 +493,6 @@ class Policy:
                 if self.age>=220:self.stop('target_not_visible_or_reachable')
             elif self.phase in ('target_approach','target_descend','target_close'):
                 closing=self.phase=='target_close'
-                # CPP10: once the gripper is over the object the head camera loses it (self-occlusion).
-                # In descend/close keep the last observation extrapolated with the belt velocity for
-                # up to 30 steps instead of re-acquiring (CPP9 ep0 aborted 2 cm above the remote).
                 anchor=getattr(self,'target_anchor',None)
                 detector_fresh=self.target_ready and self.vision.semantic_step==self.step
                 occluded_ok=(anchor is not None and 0<=self.step-anchor[0]<=90 and self.vision.target is not None)
@@ -542,7 +508,6 @@ class Policy:
                         # flow tracker's xy is not used once our gripper covers the object.
                         item['xy']=(anchor[1]+anchor[2]*(self.step-anchor[0])).tolist();item['velocity']=anchor[2].tolist()
                         self.stage_events.setdefault('target_pursuit_on_prediction',self.step)
-                    # CPP19: pinch low on the object; .55*h left the pads above a 5 cm remote (CPP18 ep4 closed on air).
                     z=BELT_Z+height+.06 if self.phase=='target_approach' else BELT_Z+np.clip(.4*height,.015,.028)
                     current=obs['state'][self.active+'_ee_pose'];v=np.asarray(item['velocity'])
                     lead=2.
@@ -553,7 +518,7 @@ class Policy:
                         for _ in range(3):
                             estimate=self.lpose(np.asarray(item['xy'])+v*lead,z,angle)
                             lead=float(np.clip(np.linalg.norm(current[:3]-estimate[:3])/.010,2,28))
-                    if self.phase in ('target_descend','target_close'):lead+=1.   # CPP19: +3 put the TCP 2-3 cm ahead of the object (CPP18 ep0/3 missed)
+                    if self.phase in ('target_descend','target_close'):lead+=1.
                     xy=np.asarray(item['xy'])+v*lead
                     window=(-.62,.10) if self.active=='left' else (-.10,.62)
                     if not (window[0]<xy[0]<window[1] and -.27<xy[1]<.40):
@@ -562,8 +527,6 @@ class Policy:
                         self.advance('target_reacquire')
                     else:
                         goal=self.lpose(xy,z,angle)
-                        # CPP15: while closing, the goal rides the belt and the arm trails it by ~1 cm; a 3 cm lag
-                        # along a 16 cm object is fine (CPP14 ep0 never closed with the 1.2 cm gate).
                         aligned=np.linalg.norm(current[:3]-goal[:3])<(.03 if closing else .012) and rotation_error(current,goal)<.12
                         self.target_align_count=self.target_align_count+1 if aligned else 0
                         grip=0. if closing and self.target_align_count>=2 else 1.
@@ -582,13 +545,9 @@ class Policy:
             elif self.phase=='target_lift':
                 z=BELT_Z+self.vision.target['height']*.5+.16   # CPP13: +.24 was out of reach for the tilted left arm (CPP12 ep3/4 stalled)
                 if self.age<=6:self.source_xy+=self.target_velocity*(7-self.age)/6
-                # CPP30: a grasp at the downstream window edge (CPP29 ep4: x=.094) cannot rise there (4 cm in 450 steps);
-                # pull toward the robot while lifting, where the arm has height to spare.
                 lift_xy=self.source_xy+np.array([0.,-.08])*min(1.,max(0.,self.age-4)/25.)
                 lifted=self.move(action,obs,self.active,self.lpose(lift_xy,z,getattr(self,'target_angle',0.)),0.)
                 gain=obs['state'][self.active+'_ee_pose'][2]-self.target_close_pose[2]
-                # CPP26: at the reach edge the lift stalls early (CPP25 ep0: 8.6 cm for 500 steps); the carry
-                # toward the robot regains height, so a 5 cm clearance is enough to leave.
                 if lifted or (gain>=.10 and self.age>=25) or (gain>=.05 and self.age>=45) or (gain>=.03 and self.age>=70):self.advance('target_verify')
             elif self.phase=='target_verify':
                 if self.age==1 or self.age%3==0:
@@ -619,24 +578,11 @@ class Policy:
                 basket_arrived=self.hold_pose is not None and self.hold_path_pending is None and holder_gap<.05
                 self.holder_trace=(getattr(self,'holder_trace',[])+[np.asarray(holder_pose[:3])])[-10:]
                 holder_still=len(self.holder_trace)>=10 and np.linalg.norm(self.holder_trace[-1]-self.holder_trace[0])<.003
-                # CPP38: before the carry the hook is still at the intercept (x~.4); stage above the planned handoff centre.
                 rim=bottom+.1275;centre=self.held_basket_center(obs) if basket_arrived else getattr(self,'held_center',HANDOFF_CENTER+np.array([.04,0.]))
-                # CPP18: the basket's long axis runs along y (0.35 m). Drop at the point of its footprint
-                # nearest the left arm's comfortable band (y~-.14, x~centre-.03) instead of a fixed centre
-                # offset: CPP17 ep3/4 held the basket at y~-.20 and the fixed offset sent the left EE to y~-.33.
                 model_xy=centre+DROP_OFFSET_SIDE;model_xy[0]=min(model_xy[0],.02)
-                # CPP40: measure only once the hook has settled; the clamp is relative to the hook and the first samples
-                # (hook still 5 cm right of its goal in CPP38 ep3) dominated the cumulative mean.
                 seen=self.visual_drop_point(rgb,centre,rim) if (basket_arrived and holder_still) else self.visual_drop
                 drop_xy=seen if seen is not None else model_xy
-                z=rim-.05+grasp_off if self.phase in ('lower','release') else bottom+.2186+.03+grasp_off   # CPP46: object bottom 5 cm under the rim at release (walls centre it), above the arch top during the carry
-                # CPP27: side_pose pitches about world y. With yaw 0 the pinched object's long axis follows the
-                # pitch (60 deg from horizontal) and it slides out along the pads during the carry (CPP26 ep0/ep4,
-                # wrist video). With yaw +90 deg the long axis is the pitch axis: it stays horizontal, the closing
-                # axis tilts like it already did at the grasp. Slerp from the grasp pose peaks at 23 deg.
-                # CPP29: CPP27/28 ep0 lowered the object (along y, 16 cm) straight onto the handle arch that runs along x
-                # at the hook's y: the near-side gap arch->wall is ~14 cm, so a long object only fits diagonally, and the
-                # carry must pass ABOVE the arch top (bottom+.2186) instead of through its plane.
+                z=rim-.05+grasp_off if self.phase in ('lower','release') else bottom+.2186+.03+grasp_off
                 swing=Rotation.from_euler('z',DROP_SWING).as_matrix()@Rotation.from_euler('y',-DROP_TILT).as_matrix()@Rotation.from_euler('z',np.pi/2).as_matrix()@Rotation.from_euler('y',np.pi/2).as_matrix()
                 dp=lambda xy_,z_:tcp_to_ee([*xy_,z_],swing,self.calibration['tool_offset_in_ee'])
                 settled=basket_arrived and holder_still and len(self.visual_drop_samples)>=10
@@ -646,11 +592,8 @@ class Policy:
                 else:
                     goal=dp(drop_xy,z)
                     done=self.move(action,obs,self.active,goal,1. if self.phase in ('release','retreat') else 0.,15 if self.phase=='release' else 3)
-                    # CPP12/16: at the reach edge the arm settles a few cm short. Release as soon as the TCP
-                    # projects inside the held basket footprint (CPP15 ep0 waited 470 steps 6.4 cm from the goal
-                    # while already 3.8 cm inside the wall).
                     cur=np.asarray(obs['state'][self.active+'_ee_pose']);tcp=cur[:3]+quat_matrix(cur[3:])@np.array([self.calibration['tool_offset_in_ee'][0],0.,0.])
-                    inside=abs(tcp[0]-centre[0])<.085 and abs(tcp[1]-centre[1])<.10   # CPP27: object now lies along y (up to 16 cm) inside the .175 half extent
+                    inside=abs(tcp[0]-centre[0])<.085 and abs(tcp[1]-centre[1])<.10
                     near=(np.linalg.norm(cur[:3]-goal[:3])<.09 and self.age>=30 and inside) or (np.linalg.norm(cur[:3]-goal[:3])<.06 and self.age>=40)
                     if done or (near and self.phase in ('carry','lower')) or (self.phase=='release' and self.age>=25 and np.linalg.norm(cur[:3]-goal[:3])<.04):
                         order=['carry','lower','release','retreat','home'];self.advance(order[order.index(self.phase)+1])

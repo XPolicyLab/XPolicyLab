@@ -21,8 +21,6 @@ def landmarks(ctx, item):
     upper = .5*(points['left_shoulder']+points['right_shoulder'])
     lower = .5*(points['left_hem']+points['right_hem'])
     if upper[1] < lower[1]:
-        # The public task rotates an initially neck-forward top by at most 25 degrees.
-        # Smooth pale necklines can otherwise look straighter than the curved hem.
         for side in ('left', 'right'):
             points[side+'_shoulder'], points[side+'_hem'] = (
                 points[side+'_hem'].copy(), points[side+'_shoulder'].copy())

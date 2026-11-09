@@ -16,14 +16,11 @@ from .kinematics import JOINT_LOWER, JOINT_UPPER, local_link6_matrix
 # Z points to the wrist camera side.
 R_TOOL_DOWN = np.array([[0., 0., 1.], [0., 1., 0.], [-1., 0., 0.]])
 GRIP_OPEN = 1.0
-# Pad gap in metres for a normalized gripper reading (public URDF: 2 x 44 mm).
 GAP_PER_UNIT = 0.088
 # Finger tip extends below the TCP point; pads contact between these offsets.
 TIP_BELOW_TCP = 0.0126
 PAD_BAND = (-0.008, 0.0126)
 MAX_JOINT_STEP = 0.07
-# Soft joint ranges keeping the arm in its natural forward, elbow-up posture family.
-# (Public URDF limits are +-10 rad on joints 1-5, which admits mirrored/wrapped branches.)
 SOFT_LOWER = np.array([-2.2, -0.3, -0.3, -3.1, -2.0, -3.14])
 SOFT_UPPER = np.array([2.2, 3.3, 3.3, 1.0, 2.0, 3.14])
 

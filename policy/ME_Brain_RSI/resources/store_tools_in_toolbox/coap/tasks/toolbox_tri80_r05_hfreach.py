@@ -1,20 +1,4 @@
-"""tri80-r05 toolbox candidate hfreach (hfseat = homefix + hamseat, plus the
-changes below; r01/r02/r03/r04 modules are imported unchanged).
-
-Development-truth diagnosis (r03hs / r04hf, 15 dev episodes each):
-* wrench slip (s0-l52, s0-l54, s2-l50, s2-l53 in every version): the wrench
-  rotates ~55 deg about the pinch axis while lifted; the realised pinch lies
-  <= -16.8 mm along local x, on the taper where the shank widens towards the
-  head (mesh slices: 14.2 mm wide at x -8..-12 mm, 15.0 at -20, 16.4 at -24).
-  Pinch planned at local x -0.011 (narrow, parallel shank) instead of -0.015.
-* hammer lost during the high carry (s1-l53, s1-l54, s2-l51): the 0.19 m carry
-  height puts the pinch frame near the workspace edge and the numerical IK
-  jumps branch (joint4 -3.1 -> -4.2 rad, max step ~3.1 rad) although every
-  waypoint reports Success.  Before lifting, the carry height is now the first
-  of REACH['lifts'] whose whole planned hammer path (lift, carry, lower, retreat)
-  solves without a branch jump (homefix plan_segments); fallback: smallest step.
-Public observations only.  No runtime gates, safety checks or aborts.
-"""
+"Combine toolbox seating and return-home motions with reach-aware placement."
 import copy
 
 import numpy as np

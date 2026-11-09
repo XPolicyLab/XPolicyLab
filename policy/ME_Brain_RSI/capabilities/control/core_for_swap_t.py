@@ -156,7 +156,6 @@ class EpisodeCore:
         self.setup_stage()
 
     def contact_pose(self,p,height):
-        # Local crossbar center and closure along its 60 mm span, observed with the frozen T template.
         result=self.grasp_pose(p,self.arm,height)
         q=Rotation.from_euler('z',pi/2)*rot(result[3:])
         offset=rot(p[3:]).apply([-.03,0,0])
@@ -200,7 +199,6 @@ class EpisodeCore:
             self.log('rgb_thickness',measurement=measure)
             if not measure['ok']:self.fail('thickness_unresolved',measurement=measure);return False
             self.thickness=measure['thickness_m']
-            # The observed template's full crossbar width, plus 8 mm for preforming.
             self.preopen=PREOPEN
         if self.stage in (2,3):
             evidence=bracket(wrist,self.hue);self.log('rgb_bracket',evidence=evidence)

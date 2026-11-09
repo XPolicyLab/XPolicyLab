@@ -137,8 +137,6 @@ def _learned_pack_assignment(ctx,camera='cam_head'):
 
 def _learned_pack_fit(ctx,family,camera='cam_head',near=None,max_shift=None,model_key=None,
                       yaw_hint=None,elevation=0.,optimize_z=False,query=None,avoid=(),top=1):
-    """``avoid``: xy positions already claimed by other families (a proposal landing within
-    5 cm of one is a mis-detection); ``top``: how many detector proposals to try."""
     proposals=_learned_pack_masks(ctx,family,camera,query=query)
     if near is None:proposals=proposals[:top]
     options=[]
@@ -365,7 +363,6 @@ def fit_family(ctx, contour, family, **kwargs):
 
 @lru_cache(maxsize=1)
 def stack_peg_geometry():
-    """Fit the four shaft axes from the fixed public mesh, without episode poses."""
     _,data=models()
     points=np.asarray(data['stack_base_00000_points'],float)
     geometry=[]
@@ -522,11 +519,6 @@ def observe_stack_hole(ctx,item,arm,height,estimate,optimize_z=False):
     if item['color']=='pink':
         mask=(h<15)&(s>170)&(v>180)
     is_star=item['model_key']=='stackingblocks_00000'
-    # Bright-only purple masks remove the rounded sides, moving the fitted
-    # hole by more than the 0.33 mm bore clearance. Select the contour whose
-    # observed complete body agrees best with its public geometry.
-    # Blue's dark vertical faces are part of its physical outline. A 170
-    # floor removes them and biases the public body origin by millimeters.
     levels=([90,105,120,170] if is_star else
             [60,90,120,170] if item['color']=='blue' else [170])
     uv=project_points(ctx,[np.r_[np.asarray(estimate)[:2],height]],camera)[0]
@@ -920,7 +912,6 @@ def detect_organize(ctx):
                                      (points.min(0)+points.max(0))/2))
     if frame_candidates:
         output['frame_position']=np.r_[min(frame_candidates,key=lambda entry:entry[0])[1],ctx.table_z+.003]
-    # Cushion is an untextured 50 mm square. Read its thin visible border.
     search=region_mask(ctx,[-.205,.05,-.095,.16])>0
     cushion_options=[]
     for contour in contours((edges>0)&search,area=10,close=2):

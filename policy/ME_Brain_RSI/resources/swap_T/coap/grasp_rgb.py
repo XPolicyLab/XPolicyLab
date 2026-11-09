@@ -1,4 +1,3 @@
-"""Fixed robot geometry and calibrated RGB-only local grasp observations."""
 import json
 from pathlib import Path
 import cv2

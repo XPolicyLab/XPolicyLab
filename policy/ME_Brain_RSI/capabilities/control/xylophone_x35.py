@@ -1,12 +1,13 @@
-"""X35: X34 plus grasp planning that does not quit on one arm or on 2 mm IK noise.
-
-Sampled-IK audits use 4 mm / 0.06 rad tolerances (the public arm model is only
-approximate; execution is bounded step by step anyway). Grasp candidates are
+"""Grasp candidates are
 ranked by nominal joint travel because the simulator arm is joint-velocity
-limited. When every legacy route is rejected, X35 plans its own compact grasp
+limited.
+
+When every legacy route is rejected, X35 plans its own compact grasp
 (ranked, executed at normal speed, with audited lateral probes so the head can
 still be measured); when the preferred arm has no route at all, the other arm
-is planned from the same stationary detections. The nominal anchor fallback
+is planned from the same stationary detections.
+
+The nominal anchor fallback
 includes the observed head sag, and a hit that plateaus on contact lifts
 immediately instead of retrying at the same place.
 """
@@ -27,8 +28,6 @@ COMPACT_AUDIT_STEP=.006
 COMPACT_YAW_EXTRAS=(0.,180.,-15.,15.,165.,195.)
 EXTRA_PROBE_PATTERNS=(((.05,0.,0.),(0.,.05,0.)),((-.05,0.,0.),(0.,-.05,0.)),
                       ((.05,0.,0.),(0.,-.05,0.)),((-.05,0.,0.),(0.,.05,0.)))
-# Four consistent RGB bindings (layouts 13/28/45) all placed the held head
-# 1.1-1.7 cm below the planar grasp prior: the mallet sags toward its head.
 NOMINAL_SAG=.013
 
 
@@ -141,8 +140,7 @@ class XylophonePolicy(X34):
     def _recover_stalled_hit(self,w,current,anchor,action,evidence):
         guard=evidence.get('contact_guard',{}) if isinstance(evidence,dict) else {}
         if guard.get('qualified'):
-            # The head already rests at hit depth; repeating the same descent
-            # cannot change the official check. Lift and continue the sequence.
+            # Lift and continue when the head is already at the contact depth.
             self.recovery_events.append(dict(step=self.step,phase=w.name,action='contact_plateau_lift',
                                              evidence=evidence,task_success=False))
             self.program_notes['hit_recovery_events']=self.recovery_events

@@ -4,24 +4,41 @@ from .routing import configure
 
 
 class DecodedEnvironment:
-    def __init__(self, env, *, public_only=False):
-        self.env = env
-        self.public_only = public_only
+    """Expose only the environment operations used by deployment loops."""
 
-    def __getattr__(self, name):
-        return getattr(self.env, name)
+    __slots__ = ('__env', '__public_only')
+
+    def __init__(self, env, *, public_only=False):
+        self.__env = env
+        self.__public_only = public_only
+
+    @property
+    def num_envs(self):
+        return self.__env.num_envs
+
+    def is_episode_end(self):
+        return self.__env.is_episode_end()
+
+    def take_action(self, *args, **kwargs):
+        return self.__env.take_action(*args, **kwargs)
+
+    def take_action_batch(self, *args, **kwargs):
+        return self.__env.take_action_batch(*args, **kwargs)
+
+    def get_running_env_idx_list(self):
+        return self.__env.get_running_env_idx_list()
 
     def get_obs(self, *args, **kwargs):
         from XPolicyLab.utils.process_data import decode_obs_images
-        observation = self.env.get_obs(*args, **kwargs)
-        if self.public_only:
+        observation = self.__env.get_obs(*args, **kwargs)
+        if self.__public_only:
             observation = restrict_public_observation(observation)
         return decode_obs_images(observation)
 
     def get_obs_batch(self, *args, **kwargs):
         from XPolicyLab.utils.process_data import decode_obs_images
-        observations = self.env.get_obs_batch(*args, **kwargs)
-        if self.public_only:
+        observations = self.__env.get_obs_batch(*args, **kwargs)
+        if self.__public_only:
             observations = [restrict_public_observation(observation) for observation in observations]
         return decode_obs_images(observations)
 

@@ -1,4 +1,4 @@
-"""Recover separate fixed-size source shells from their visible RGB cores."""
+"Recover individual shell poses from their visible RGB cores."
 import math
 import cv2
 import numpy as np

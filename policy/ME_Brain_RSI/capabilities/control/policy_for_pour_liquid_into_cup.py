@@ -4,6 +4,10 @@ from scipy.spatial.transform import Rotation
 from .contracts import ARMS,restrict_observation,validate_observation,validate_action
 from .geometry import bounded_pose,bounded_anchor_pose,quat_matrix,tcp_to_ee
 from .perception import Perception
+from .bottle_entry import raise_entry
+from .rim_tracker import RimTracker
+from .rim_update_guard import RimUpdateGuard
+from .held_axis import HeldAxisTracker,align
 
 @dataclass
 class Waypoint:
@@ -23,6 +27,7 @@ class Policy:
         self.home=None;self.plan=[];self.index=self.age=self.dwell=self.step=0
         self.attempts=0;self.reason='awaiting_rgb';self.finished=False
         self.last_detections={};self.motion={};self.program_notes={};self.cup_checked=False;self.attachment_checked=False
+        self.rim_tracker=None;self.rim_initializations=0;self.rim_guard=None;self.rim_rejections=0;self.axis_tracker=None;self.held_axis=None
 
     def pose(self,xy,height,yaw,pitch):
         r=Rotation.from_euler('z',yaw).as_matrix()@Rotation.from_euler('y',pitch).as_matrix()
@@ -71,13 +76,25 @@ class Policy:
             mouth=np.r_[mouth_xy,self.calibration['table_z']+mouth_height]
             pose=tcp_to_ee(mouth-rotation@np.array([0.,0.,mouth_offset]),rotation@upright,self.calibration['tool_offset_in_ee'])
             tilt_path.append(pose);self.plan.append(Waypoint(side,pose,0.,'liquid_tilt',80 if i==len(angles)-1 else 4,mouth_in_ee.copy()))
+        entry,next_tilt,entry_check=raise_entry(self.plan[3].pose,tilt_path[0],tilt_path[1],mouth_in_ee,s,self.last_detections['target'],self.calibration['table_z'],clearance)
+        tilt_path[0][:]=entry;tilt_path[1][:]=next_tilt
         for pose in reversed(tilt_path[:-1]):self.plan.append(Waypoint(side,pose.copy(),0.,'liquid_untilt',4,mouth_in_ee.copy()))
         add(source.xy,lift,0.,'return_vessel');add(source.xy,grasp,0.,'lower_vessel',12)
         add(source.xy,grasp,1.,'release_vessel',20);add(source.xy,approach,1.,'retract')
         for arm in ARMS:self.plan.append(Waypoint(arm,self.home[arm].copy(),1.,'home',5))
         self.program_notes=dict(geometry=self.perception.last_measurements,grasp_height=grasp,grasp_pitch=pitch,
-                               drainage_angle=final_angle,clearance=clearance,tilt_mouth_heights=[float((p[:3]+quat_matrix(p[3:])@mouth_in_ee)[2]-self.calibration['table_z']) for p in tilt_path])
+                               drainage_angle=final_angle,clearance=clearance,entry_clearance=entry_check,tilt_mouth_heights=[float((p[:3]+quat_matrix(p[3:])@mouth_in_ee)[2]-self.calibration['table_z']) for p in tilt_path])
         self.reason='executing';return True
+
+    def refresh_entry(self,current):
+        selected=[w for w in self.plan[self.index:] if w.name=='liquid_tilt']
+        source=self.last_detections['source']['measured'];first=selected[0]
+        entry,next_tilt,check=raise_entry(current,first.pose,selected[1].pose,first.anchor_offset,source,self.last_detections['target'],self.calibration['table_z'],self.program_notes['clearance'])
+        first.pose[:]=entry;selected[1].pose[:]=next_tilt
+        reverse=[w for w in self.plan[self.index:] if w.name=='liquid_untilt']
+        if reverse:
+            reverse[-1].pose[:]=entry;reverse[-2].pose[:]=next_tilt
+        self.program_notes['held_entry_clearance']=check
 
     def attachment_feedback(self,obs,waypoint):
         self.attachment_checked=True
@@ -110,8 +127,72 @@ class Policy:
             if current.confidence<self.target.confidence*.8:self.program_notes['cup_feedback']='less_confident';return
             for waypoint in self.plan[self.index:]:
                 if waypoint.name in ('liquid_tilt','liquid_untilt'):waypoint.pose[:2]+=delta
+            self.last_detections['target']['xy']=current.xy.tolist()
             self.program_notes['cup_feedback']=dict(delta_xy=delta.tolist(),measurement=current.measured)
         except ValueError as e:self.program_notes['cup_feedback']=str(e)
+
+    def rim_feedback(self,obs,waypoint):
+        if not self.program_notes.get('attachment_feedback',{}).get('accepted'):
+            self.program_notes['rim_feedback']=dict(unknown='Initial stereo depth unavailable')
+            return
+        try:
+            if self.rim_tracker is None:
+                if self.rim_initializations>=3:raise ValueError('Initial rim observation unavailable')
+                self.rim_initializations+=1
+                source=self.last_detections['source'];side=waypoint.side
+                radial=np.asarray(source['xy'])-[-.3 if side=='left' else .3,-.45]
+                yaw=np.arctan2(radial[1],radial[0])
+                upright=Rotation.from_euler('z',yaw).as_matrix()@Rotation.from_euler('y',self.program_notes['grasp_pitch']).as_matrix()
+                self.rim_tracker=RimTracker(obs['vision'],obs['state'],side,waypoint.anchor_offset,source['measured']['rim_radius'],upright)
+                self.rim_guard=RimUpdateGuard(source['measured'],self.program_notes['grasp_height'],upright,np.asarray(self.calibration['tool_offset_in_ee']),self.last_detections['target'],self.calibration['table_z'])
+            old=np.asarray(waypoint.anchor_offset).copy()
+            new,info=self.rim_tracker.update(obs['vision'][f'cam_{waypoint.side}_wrist']['color'],old)
+            current=np.asarray(obs['state'][f'{waypoint.side}_ee_pose'])
+            poses=[w.pose for w in self.plan[self.index:] if w.anchor_offset is not None]
+            allowed,guard=self.rim_guard.allow(current,old,new,poses,self.calibration['max_translation_step'],min(self.calibration['max_rotation_step'],.06))
+            if not allowed:
+                self.rim_rejections+=1
+                self.program_notes['rim_feedback']=dict(accepted=False,unknown='Increment rejected by measured local geometry',guard=guard,rejections=self.rim_rejections,**info)
+                return
+            for w in self.plan[self.index:]:
+                if w.anchor_offset is not None:
+                    rotation=quat_matrix(w.pose[3:]);mouth=w.pose[:3]+rotation@w.anchor_offset
+                    w.pose[:3]=mouth-rotation@new;w.anchor_offset=new.copy()
+                elif w.name in ('return_vessel','lower_vessel','release_vessel','retract'):
+                    w.pose[:3]+=quat_matrix(w.pose[3:])@(old-new)
+            self.program_notes['rim_feedback']=dict(accepted=True,old_anchor=old.tolist(),new_anchor=new.tolist(),guard=guard,rejections=self.rim_rejections,**info)
+        except ValueError as e:self.program_notes['rim_feedback']=dict(accepted=False,unknown=str(e))
+
+    def axis_feedback(self,obs,waypoint):
+        feature=self.program_notes.get('rim_feedback',{})
+        if 'pixel' not in feature:
+            if self.axis_tracker is not None:self.axis_tracker.previous=None
+            self.program_notes['axis_feedback']=dict(accepted=False,unknown='Current rim unsupported')
+            return
+        if self.step%10:return
+        try:
+            if self.axis_tracker is None:
+                self.axis_tracker=HeldAxisTracker(self.rim_tracker,self.rim_guard.upright)
+                self.held_axis=self.axis_tracker.initial_axis.copy()
+            side=waypoint.side;anchor=np.asarray(waypoint.anchor_offset)
+            new_axis,info=self.axis_tracker.observe(obs['vision'],obs['state'],side,anchor,self.last_detections['source']['measured'],self.held_axis,self.perception,self.step)
+            correction=align(new_axis,self.held_axis)
+            selected=[w for w in self.plan[self.index:] if w.anchor_offset is not None or w.name in ('return_vessel','lower_vessel','release_vessel','retract')]
+            old_poses=[w.pose.copy() for w in selected];new_poses=[]
+            for pose in old_poses:
+                rotation=quat_matrix(pose[3:]);mouth=pose[:3]+rotation@anchor
+                revised=rotation@correction;q=Rotation.from_matrix(revised).as_quat()
+                new_poses.append(np.r_[mouth-revised@anchor,q[3],q[:3]])
+            new_upright=self.rim_guard.upright@correction
+            current=np.asarray(obs['state'][side+'_ee_pose'])
+            allowed,guard=self.rim_guard.allow_reorientation(current,anchor,old_poses,new_poses,new_upright,self.calibration['max_translation_step'],min(self.calibration['max_rotation_step'],.06))
+            if not allowed:
+                self.program_notes['axis_feedback']=dict(accepted=False,unknown='Observed-axis increment rejected by local geometry',guard=guard,**info)
+                return
+            for waypoint,pose in zip(selected,new_poses):waypoint.pose[:]=pose
+            self.held_axis=new_axis;self.rim_guard.upright=new_upright
+            self.program_notes['axis_feedback']=dict(accepted=True,new_axis=new_axis.tolist(),guard=guard,**info)
+        except ValueError as error:self.program_notes['axis_feedback']=dict(accepted=False,unknown=str(error))
 
     def act(self,raw):
         obs=restrict_observation(raw);validate_observation(obs);state=obs['state']
@@ -126,20 +207,27 @@ class Policy:
         if self.index<len(self.plan):
             waypoint=self.plan[self.index]
             if waypoint.name=='liquid_tilt' and not self.attachment_checked:self.attachment_feedback(obs,waypoint)
-            if waypoint.name=='liquid_tilt' and not self.cup_checked:self.cup_feedback(obs['vision']['cam_head']['color'])
+            if waypoint.name=='liquid_tilt' and not self.cup_checked:
+                self.cup_feedback(obs['vision']['cam_head']['color'])
+                self.refresh_entry(np.asarray(state[f'{waypoint.side}_ee_pose']))
+            if waypoint.name=='liquid_tilt':
+                self.rim_feedback(obs,waypoint)
+                self.axis_feedback(obs,waypoint)
             key=f'{waypoint.side}_ee_pose';current=action[key]
+            command_pose=waypoint.pose
             translation=self.calibration['max_translation_step'];rotation=self.calibration['max_rotation_step']
             if waypoint.name in ('liquid_tilt','liquid_untilt'):rotation=min(rotation,.06)
             if waypoint.name=='lower_vessel':translation=min(translation,.003)
-            if waypoint.anchor_offset is not None:action[key]=bounded_anchor_pose(current,waypoint.pose,waypoint.anchor_offset,translation,rotation)
-            else:action[key]=bounded_pose(current,waypoint.pose,translation,rotation)
+            if waypoint.anchor_offset is not None:action[key]=bounded_anchor_pose(current,command_pose,waypoint.anchor_offset,translation,rotation)
+            else:action[key]=bounded_pose(current,command_pose,translation,rotation)
             grip=waypoint.gripper
             if waypoint.name=='release_vessel':grip=min(1.,self.age/15.)
             action[f'{waypoint.side}_ee_joint_state']=np.array([grip]);self.age+=1
             pe=float(np.linalg.norm(current[:3]-waypoint.pose[:3]));oe=float(Rotation.from_matrix(quat_matrix(current[3:]).T@quat_matrix(waypoint.pose[3:])).magnitude())
             self.motion=dict(side=waypoint.side,current_ee=current.tolist(),goal_ee=waypoint.pose.tolist(),position_error=pe,orientation_error=oe)
             self.dwell=self.dwell+1 if pe<.009 and oe<.15 else 0
-            if self.dwell>=waypoint.dwell:self.index+=1;self.age=self.dwell=0
+            if self.dwell>=waypoint.dwell:
+                self.index+=1;self.age=self.dwell=0
             elif self.age>160:self.finished=True;self.plan=[];self.index=0;self.reason='motion_timeout'
         elif self.plan:self.finished=True;self.reason='program_complete_not_success_claim'
         validate_action(action);return action

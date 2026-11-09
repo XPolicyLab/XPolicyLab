@@ -9,13 +9,13 @@
     "file": "capabilities/control/garment_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/garment.py",
     "package": false,
-    "sha256": "6f4d8e9e049fdb1a088266ee3e0cb39ccc960a1b8d8ef45b45f8e37421579fcc"
+    "sha256": "fd1685427cac9a1472529a83d9c1721ff3af814b2303cfaa81051640f3cda940"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics.py",
     "resource": "resources/fold_clothes/coap/kinematics.py",
     "package": false,
-    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0"
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f"
   },
   "coap.motion": {
     "file": "capabilities/motion/motion.py",
@@ -27,7 +27,7 @@
     "file": "capabilities/motion/robot_motion_geometry.py",
     "resource": "resources/fold_clothes/coap/robot_motion_geometry.py",
     "package": false,
-    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7"
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c"
   },
   "coap.public_mesh": {
     "file": "capabilities/geometry/public_mesh_for_imitate_sorting_sequence.py",
@@ -81,19 +81,13 @@
     "file": "capabilities/control/long_horizon_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/long_horizon.py",
     "package": false,
-    "sha256": "515731114b6084eca4a1d4eac82ad29d296a576b4f003f7ff544e295d31c4fd1"
-  },
-  "coap.tasks.pen_source": {
-    "file": "capabilities/control/pen_source.py",
-    "resource": "resources/fold_clothes/coap/tasks/pen_source.py",
-    "package": false,
-    "sha256": "0d95758d4cc63fe4b2f0a627805641b8e806767f57a985edeb318c0f5aa10b34"
+    "sha256": "9bfa4d2f707f8ad915a625935539f9bc4af73d80d74fde9e7522dbc0da15125c"
   },
   "coap.tasks.pen_holder_visibility": {
     "file": "capabilities/control/pen_holder_visibility_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/pen_holder_visibility.py",
     "package": false,
-    "sha256": "6bf772baab436f0fc651fd9fe3b9f29d1d4d192276a4d22186abd5b9a2b8cf00"
+    "sha256": "56be8d99efdf3ac214e6e33978cdd7f359aedfc788f7a7cf63fcc2f01a481a5d"
   },
   "coap.visibility": {
     "file": "capabilities/control/visibility.py",
@@ -105,19 +99,19 @@
     "file": "capabilities/control/egg_source_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/egg_source.py",
     "package": false,
-    "sha256": "1eac3535328cddf919135c05f82991fd2c401f695174f995485c1fc773a2245e"
+    "sha256": "8609d7062c55c2122878dc9792ce2072675aa8f70468eb573f55f1f8a459db11"
   },
   "coap.tasks.egg_model_fit": {
     "file": "capabilities/control/egg_model_fit_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/egg_model_fit.py",
     "package": false,
-    "sha256": "621f6d433ee11d757b3c8dd64c9c2182a55b1535fd562d9b18c0942e6e4149fa"
+    "sha256": "58a8caa189e1b77f2fbb416ccd3649128df12999d312eef8caa3433c597f91f6"
   },
   "coap.tasks.pen_holder_support": {
     "file": "capabilities/control/pen_holder_support_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/pen_holder_support.py",
     "package": false,
-    "sha256": "37961e94ba902e209f8120e9f30ecae6cc82bc98d185e10822437126d21a5282"
+    "sha256": "f6c114267c343ad239d31bce964439200a8b62c676d746914f40ef68ad6d09e4"
   },
   "coap.debug_thresholds": {
     "file": "capabilities/control/debug_thresholds.py",
@@ -159,13 +153,13 @@
     "file": "capabilities/control/egg_single_arm_for_fold_clothes.py",
     "resource": "resources/fold_clothes/coap/tasks/egg_single_arm.py",
     "package": false,
-    "sha256": "8915a9c92d9eb9bdcf4c5f1b90840e633763067d92309c596f6b687800747dc1"
+    "sha256": "31d728518aa7ca9a1fdccf20aaacecda8fe8071441c78b5bcb5720f669674fa7"
   },
   "coap.tasks.egg_initial": {
     "file": "capabilities/control/egg_initial.py",
     "resource": "resources/fold_clothes/coap/tasks/egg_initial.py",
     "package": false,
-    "sha256": "0df7a6fdbe05a06275d3e5e30070149a0eb9fbafbb3ed767f89ef84411a05012"
+    "sha256": "9da27976020255b7fdbee452a389e3940ec0d97a32a5482a65f768159f9849c9"
   },
   "coap.tasks.egg_policy": {
     "file": "capabilities/control/egg_policy_for_fold_clothes.py",
@@ -195,7 +189,7 @@
     "file": "capabilities/control/fold_candidate_b.py",
     "resource": "resources/fold_clothes/coap/tasks/fold_candidate_b.py",
     "package": false,
-    "sha256": "70b94d2b9676023f82ae55d6eb0e94f8ba7f24455c30fe3b96053b1434cd4247"
+    "sha256": "4188de27937e3be9cf73975d11d6348680645ae86def7ca5f2752f5046c97e9b"
   },
   "coap.tasks.fold_candidate_a": {
     "file": "capabilities/control/fold_candidate_a.py",
@@ -219,13 +213,13 @@
     "file": "capabilities/planning/memory.py",
     "resource": "resources/fold_clothes/coap/tasks/memory.py",
     "package": false,
-    "sha256": "652e0a63f3157bbbf19087c6d197f898e71918eed95a29b1086fc9a564169a3c"
+    "sha256": "6cb87fca653ada855a47603bb2979d9cba01638a679006476a6d5ee005fdc60b"
   },
   "coap.tasks.memory_geometry": {
     "file": "capabilities/geometry/memory_geometry.py",
     "resource": "resources/fold_clothes/coap/tasks/memory_geometry.py",
     "package": false,
-    "sha256": "94933d41c2f465141798ac66ea4f92f6c4a03997e598d165b8d14bc994665467"
+    "sha256": "987b4846760ae7246150d6374f53f257c3a0293c60205a346941394b85464041"
   },
   "model": {
     "file": "capabilities/control/model_for_imitate_sorting_sequence.py",
@@ -327,7 +321,7 @@
     "file": "capabilities/observation/report_for_imitate_sorting_sequence.py",
     "resource": "resources/fold_clothes/coap/report.py",
     "package": false,
-    "sha256": "809383609f98e50fb9ffd6c92cdb51bb1941e0e2e94ce3907ffb4dc83f8b851d"
+    "sha256": "b1064cc092893bbdc2a4917b63a18bd5509a16b1d67c401dd65f9b7504fa32d9"
   },
   "coap.audit": {
     "file": "capabilities/observation/audit.py",

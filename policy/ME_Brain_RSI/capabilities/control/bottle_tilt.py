@@ -1,6 +1,9 @@
 """Small-tilt upright silhouette fallback, public static geometry + RGB only.
-Existing residual/ambiguity thresholds remain mandatory. This is a hypothesis,
-not object identity or grasp success. No scene IDs, depth or oracle state.
+
+Existing residual/ambiguity thresholds remain mandatory.
+
+This is a hypothesis,
+not object identity or grasp success.
 """
 import numpy as np
 from scipy.optimize import least_squares

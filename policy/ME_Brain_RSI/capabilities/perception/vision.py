@@ -8,9 +8,6 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-# Conveyor top surface. The catalog's 0.718 is 4.7 cm too low: the fixed basket mesh fits the
-# head-camera silhouette with 0.4-0.8 px error at 0.765 (table height) vs 7 px at 0.718, and
-# that error pushed every fitted basket centre ~3.5 cm in x / 3 cm in y and every grasp 4.7 cm low.
 BELT_Z=.765
 from scipy.optimize import least_squares
 from .geometry import Camera
@@ -94,10 +91,11 @@ def wrist_rim_evidence(rgb):
 def wrist_rim_alignment(rgb):
     """Visible basket/air boundary near the public X5 pinch-point projection.
 
-    Public X5 URDF camera mounts + robot_config d435 give pinch point
-    link6 [.145,0,0] -> (320,312), depth .07757m, fx=397.04 at 640x480.
-    Positive image x corresponds to NEGATIVE link6 Y. This is a bounded
+    Positive image x corresponds to NEGATIVE link6 Y.
+
+    This is a bounded
     planar alignment cue, not a 3-D contact or attachment measurement.
+
     Dark finger boundaries, tiny objects and incoherent/slanted edges reject.
     """
     if rgb is None or rgb.ndim!=3 or min(rgb.shape[:2])<64:return None
@@ -223,8 +221,6 @@ class BasketTrack:
         if dt<=0:return False
         xy=np.asarray(basket['xy'],float);box=np.asarray(basket['box'],float)
         size=box[2:]-box[:2]
-        # The physical mesh is fixed, its perspective pixel width is not.
-        # Prefer the projection at the independently predicted current pose.
         expected=basket.get('expected_box',basket.get('model_box'))
         expected_size=(np.asarray(expected)[2:]-np.asarray(expected)[:2]) if expected is not None else self.initial_size
         ratio=size/np.maximum(expected_size,1.)
@@ -317,8 +313,6 @@ def foreground_texture_scores(paper,references):
     """Compare the photographed object after removing margins on BOTH sides.
 
     CLIP can mistake tiny board photographs for unrelated elongated objects.
-    Use the released texture's color/shape, including 180-degree orientation,
-    rather than accepting a high semantic cosine alone. No scene identity.
     """
     def feature(image):
         gray=cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
@@ -478,7 +472,6 @@ class Vision:
     def observe_grasp_seed(self,rgb,basket,xy,z,step):
         """Anchor a visible local rim neighbourhood BEFORE the wrist fills up.
 
-        Fixed geometry is fitted to current head RGB; no scene pose is used.
         The seed is not refreshed by prediction, wrist colour or elapsed time.
         """
         if basket.get('prediction_age',100)>2 or basket.get('measurement_count',0)<4:return
@@ -592,10 +585,6 @@ class Vision:
             if silhouette_error<min(8.,.04*np.linalg.norm(np.asarray(box[2:])-box[:2])):
                 v=value;best=(silhouette_error/2.,v);mode='visible_hull'
         if prior is not None:
-            # An axis-aligned box does not uniquely identify orientation. Start
-            # with a fixed-yaw position fit, then allow only a small local yaw
-            # correction with a temporal penalty. Never jump to the unrelated
-            # free fit's other minimum. This prior is NOT true rotation proof.
             if mode!='visible_hull':
                 # Missing/occluded contour cannot incrementally rotate the
                 # object just to explain its changing perspective envelope.
@@ -770,7 +759,6 @@ class Vision:
         return result
 
     def begin_basket_probe(self,rgb,wrist,step):
-        """Anchor RGB basket texture before a 35mm trial lift; no scene truth."""
         self.probe_gray=cv2.cvtColor(rgb,cv2.COLOR_RGB2GRAY)
         hsv=cv2.cvtColor(rgb,cv2.COLOR_RGB2HSV);mask=np.zeros(rgb.shape[:2],np.uint8)
         x1,y1,x2,y2=np.asarray(self.basket['box'],int)
@@ -784,8 +772,7 @@ class Vision:
     def basket_probe_evidence(self,rgb,wrist,ee_delta,velocity,elapsed):
         """Two hypotheses: basket follows measured EE vs remains on moving belt.
 
-        Only current, forward/backward checked RGB texture may confirm. The
-        35mm commanded motion itself, wrist colour alone and prediction cannot.
+        Only current, forward/backward checked RGB texture may confirm.
         """
         result=dict(confirmed=False,reason='missing_or_insufficient_motion')
         if ee_delta[2]<.025 or ee_delta[2]>.055 or np.linalg.norm(ee_delta[:2])>.045:
@@ -927,7 +914,6 @@ class Vision:
         return value
 
     def basket_elevation(self,rgb):
-        """Fixed-yaw public-mesh image-size fit; belt translation is NOT lift."""
         detections=[d for d in self.backend.detect(rgb,'a shopping basket.',.18) if 'basket' in d['text']]
         if not detections:return None
         idx=associate(self.basket['box'],[d['box'] for d in detections],max_pixels=140)

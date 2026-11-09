@@ -292,11 +292,6 @@ class Reader:
     report['universal_operator_action' if slot==1 else 'universal_digit_action']=consensus
     selection_pool=[s for s in selection_pool if action_key(s,slot)==chosen];unique={chosen}
   if len(unique)!=1 and selection_pool:
-   # R11: refusing to act scored 0 in 32 of 150 official episodes. The pieces
-   # already on the mats are placed upright and fully visible, so their top
-   # template reading is reliable; prefer the solutions that keep every mat
-   # term at its top reading, then the lowest total cost. Offline on those 32
-   # episodes this picks the accepted answer 28 times (lowest cost alone: 21).
    ranked=sorted(selection_pool,key=lambda s:(fixed_term_demotions(s,slot,pieces,slots),s['cost']))
    report['ambiguity_resolution']=dict(rule='fixed_terms_top1_then_cost',classes=len(unique),
                                        ranked=[dict(labels=s['labels'],piece=s['selected_piece'],cost=s['cost'],demotions=fixed_term_demotions(s,slot,pieces,slots)) for s in ranked[:6]])

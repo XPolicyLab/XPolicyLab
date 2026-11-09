@@ -90,7 +90,6 @@ class Perception:
         return rect_of(pts)
 
     def face_rect_rectified(self, top_mask, h):
-        """Top face measured in a 1 mm/px top-down view of the plane at height h (smooth outline, square stays square)."""
         warped, to_xy = self.view.rectify(top_mask, WORKSPACE, h)
         warped = np.uint8(warped > 127) * 255
         warped = cv2.morphologyEx(warped, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
@@ -168,8 +167,6 @@ class Perception:
         return self.top_faces_at(rgb, usable, height)
 
     def top_faces_at(self, rgb, usable, height):
-        """Blocks measured in a 1 mm/px top-down view of the plane at the measured top-face height: the lit top faces
-        (local brightness threshold per pink blob) give centre, yaw and side."""
         image, to_xy = self.view.rectify(rgb, WORKSPACE, height)
         ok, _ = self.view.rectify(usable, WORKSPACE, height)
         ok = cv2.erode(np.uint8(ok > 127) * 255, np.ones((5, 5), np.uint8))

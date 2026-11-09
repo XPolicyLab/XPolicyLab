@@ -179,8 +179,9 @@ def _margin(first, second, threshold):
 def check_joint_path(kinematics,path,table_z):
     """Audit all 33 self pairs, 121 arm pairs and moving hull/table samples.
 
-    Finger hulls cover the full public 0..1 aperture interval. Joint samples
-    are at most 0.025 rad apart. This is a sampled robot-solid check, not a
+    Finger hulls cover the full public 0..1 aperture interval.
+
+    This is a sampled robot-solid check, not a
     proof of continuous clearance or clearance from unobserved scene objects.
     """
     path = np.asarray(path,float)

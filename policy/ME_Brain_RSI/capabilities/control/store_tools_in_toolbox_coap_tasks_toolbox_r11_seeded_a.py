@@ -35,12 +35,7 @@ def inclined_frame(ctx, item, arm):
     return (grasp, target, quat)
 
 def head_supported_route(ctx, item, grasp):
-    """Construct a fixed head-contact arc from public geometry and the RGB box pose.
-
-    The motion assumes gravity can swing the pinched handle about world X. The
-    metal tip receives support before the hand lowers; no fitted attachment is
-    used and no observation score interrupts execution.
-    """
+    "Construct the head-contact arc from the tool geometry and observed box pose."
     pliers, box_points, tip = public_geometry()
     box = ctx.memory['toolbox_geometry']['box']
     box_rotation, box_translation = (np.asarray(box['box_rotation']), np.asarray(box['box_translation']))
@@ -146,7 +141,6 @@ def _r02_quaternion(matrix):
     return np.roll(Rotation.from_matrix(matrix).as_quat(), 1)
 
 def _r02_route(ctx, route):
-    """Vary only the fixed high-transfer height; keep support and arc endpoints."""
     if R02_MODE != 'lower_transfer':
         return route
     route = dict(route)
@@ -183,7 +177,6 @@ def _r02_preview(ctx, arm, grasp, quat, route):
     return dict(cost=float(cost), maximum_step_rad=maximum_step, joint_travel_rad=travel, maximum_position_error_m=position, maximum_rotation_error_rad=rotation, wrist_joint_min=values[:, 3:].min(axis=0).tolist(), wrist_joint_max=values[:, 3:].max(axis=0).tolist(), leg_steps=leg_steps, physics_verified=False, route_rejection=False)
 
 def _r02_pick(ctx, item, arm, grasp, original):
-    """Select a fixed pinch frame before contact, using only geometry and proprioception."""
     record = ctx.memory.setdefault('toolbox_r02', {})
     record.update(candidate=R02_CANDIDATE, mode=R02_MODE, parent_entry=R02_PARENT_ENTRY, runtime_gates=False, motion_abort=False)
     original = np.asarray(original, float)

@@ -24,8 +24,6 @@ _PUBLIC_SPHERES = None
 # The official inference deadline is 120 s per action. Long candidate searches
 # yield a hold action once they have used this much of the current call.
 PLANNING_BUDGET_S = 45.
-# Extra height for the direct_high clock approach: the fingertips then pass
-# about 6 cm above the tallest public figurine (0.191 m) from the 0.245 m park.
 HIGH_CLOCK_CLEARANCE = .14
 # Neutral bounds of public link7/8.STL after their URDF joint origins. A union
 # over the public [-.010, .044] m finger travel conservatively covers any grip.
@@ -644,8 +642,6 @@ def _park_plan(ctx, arm, target, drawer, obstacles, start_pose=None, start_joint
     roof = max([ctx.table_z+.19]+[object_world_bounds(ctx,v)[1,2] if 'world_rotation' in v
                                 else ctx.table_z+float(v['height']) for v in obstacles])
     candidates = [[(target, down_quat())]]
-    # Move around the arm-base axis rather than crossing it at y=-.36. A
-    # straight lateral segment can force a discontinuous shoulder branch.
     for y in (-.44, -.47):
         front = current.copy(); front[1] = y
         corner = np.asarray(target).copy(); corner[1] = y
@@ -933,9 +929,6 @@ def _pick(ctx, item, point, arm, quat, hover=.055, approach_points=(),
         if margin<0:
             raise RuntimeError(f'Figurine contact reached its open support: {support}, margin={margin:.4f}')
     if item['kind'] == 'alarm':
-        # Closing at the measured endpoint would otherwise freeze an accepted
-        # free-space residual into the grasp. A 7 mm high casing contact can
-        # slip even though the commanded contact and the path are feasible.
         position_error = float(np.linalg.norm(ctx.tcp(arm)-np.asarray(point)))
         measured_quat = np.asarray(ctx.state[f'{arm}_ee_pose'][3:], float)
         rotation_error = float(2*np.arccos(np.clip(
@@ -1304,10 +1297,6 @@ def _initial_alarm_plan(ctx, source, destination, alarm_yaw, drawer, alarm_offse
                         obstacles=(), prefix_cache=None):
     """Select complete cabinet-clear approaches from the current robot state."""
     rejected = []
-    # Only approaches the simulator's Cartesian controller has actually followed
-    # are offered: in 100 official ee-mode episodes every roof_right,
-    # roof_outboard and front_low plan failed physically (18/18) while direct
-    # and side plans succeeded (52/56).
     candidates = [('direct', 60, .070, 0., math.pi/2),
                   ('direct_routed', 60, .070, 0., math.pi/2),
                   # Over a figurine standing on the straight park-to-clock line.
@@ -1657,10 +1646,6 @@ def _carry_pose_choice(ctx, arm, source, destination, item, source_yaw, place_ya
             source_root, source_rotation = object_frame(ctx, item)
         else:
             destination_root = np.asarray(destination)[:2]-_rotate(head_offset, item['yaw'])
-        # The original four cardinal jaw directions and 35-65 degree inclinations
-        # come first; diagonal directions and steeper tools are only reached
-        # when those fail (qv074: 'source' IK/self-collision rejections for
-        # figurines at the desk centre or right beside the arm base).
         yaw_choices = (source_yaw+math.pi/2, source_yaw, source_yaw+math.pi, source_yaw-math.pi/2,
                        source_yaw+math.pi/4, source_yaw-math.pi/4, source_yaw+3*math.pi/4, source_yaw-3*math.pi/4)
         degrees = (35, 45, 55, 65, 75, 85)
@@ -1903,11 +1888,6 @@ def _place_garage(ctx, target, quat, drawer, hover, item, alarm, local=False):
                       obstacles=obstacles,carried=carried)
     yield from _move(ctx, 'left', target, quat, 15, 0.)
     target, quat = yield from _align_garage(ctx, item, drawer)
-    # Native finger control already limits each action to 20% of travel.
-    # Open directly rather than spending several more actions squeezing a
-    # rounded head while the command ramps upward from fully closed. Truth
-    # diagnostics showed the retreat dragging a still-touched head by up to
-    # 26 mm: let the jaws clear fully, then leave the head slowly.
     yield from ctx.grip('left', 1., 1)
     yield from ctx.hold(8)
     yield from _move(ctx, 'left', _up(target, .025), quat, 8, 1.)
@@ -1945,9 +1925,6 @@ def _align_garage(ctx, item, drawer):
             ctx.memory['garage_base_verified'] = True
             break
         if attempt == 0 and np.linalg.norm(error) > ALIGN_CORRECTION_MAX and measured['tilt'] < .07:
-            # The lowered base lands within ~2 cm of the plan; a first reading this
-            # far off is the fit latching onto a wrong silhouette (truth: 39 mm
-            # measured against 9 mm real). Correcting on it only moves the base away.
             ctx.memory['garage_align_rejected_reading'] = dict(xy_error=error.tolist())
             ctx.memory['garage_base_verified'] = False
             break
@@ -2017,21 +1994,13 @@ def _mouse_destination(ctx, mat, item):
                   ctx.table_z+mat['height']+item['height']*.52+.001]
 
 
-# Held-figurine base corrections: readings below the minimum are within the
-# measurement noise (truth 6-9 mm) and corrections only add release drag;
-# a first reading above the maximum is a wrong fit, not a wrong placement.
 ALIGN_CORRECTION_MIN = .012
 ALIGN_CORRECTION_MAX = .032
-# Figurines are scored by root distance to the cushion root; the tightest
-# variant allows 20 mm. A measured root this close is left untouched: a
-# re-grasp and carry cost about 240 of the 1000 steps and can only lose.
 GARAGE_PLACED_ROOT_TOLERANCE = .010
 
 
-# Official per-variant root tolerances at the cushion (benchmark task definition).
 GARAGE_ROOT_TOLERANCE = {'garage_00005': .045, 'garage_00006': .025, 'garage_00007': .045,
                          'garage_00008': .020, 'garage_00011': .032}
-# Head-camera root measurements of a standing figurine are within ~5 mm of truth.
 GARAGE_VERIFY_MARGIN = .008
 # Measured re-seat from beside the cushion: park 32, grasp ~75, local place ~30,
 # alignment up to 30, release 26, home 18.
@@ -2179,8 +2148,6 @@ def _push_keyboard(ctx, keyboard, frame):
         error = target[:2]-source[:2]
         ctx.memory['keyboard_center'] = source.tolist()
         ctx.memory['keyboard_target'] = target.tolist()
-        # A centered 200 x 60 mm frame is fully covered before the larger
-        # keyboard's center reaches it exactly. Retain a conservative margin.
         half_width, half_depth = np.asarray(item['size'])[:2]*.5
         margin = max(.012, half_width-.100-.020)
         if (abs(error[0]) < margin and
@@ -2194,10 +2161,6 @@ def _push_keyboard(ctx, keyboard, frame):
         for fraction in np.linspace(.125, 1., 8):
             point = rear+(goal-rear)*fraction
             yield from ctx.move_both(point+[-.09, 0, 0], point+[.09, 0, 0], quat, quat, 0., 0., 5)
-        # The inner hand ends near full extension across the body. The fixed
-        # 95 mm lift makes the simulator's controller flip the wrist at the very
-        # top, from where no observation park is followable (qv076: 14 episodes).
-        # Rise only as far as the current branch follows, fingers still closed.
         heights = {arm: _retreat_height(ctx, arm, drawer, others) for arm in ('left', 'right')}
         _log(ctx, 'push_keyboard', keyboard_retreat=heights)
         if all(height is not None for height in heights.values()):
@@ -2700,14 +2663,11 @@ def _organize_program(ctx):
         if kind == 'garage' and destination is None:
             destination = ctx.memory['desk_targets'].get('cushion_position')
         if item is None or destination is None:
-            # The remaining items are still worth their partial credit; the clock
-            # placement below does not depend on this one.
+            # Continue with the remaining items.
             _skip_item(ctx, kind, 'Observed '+kind+' or its destination missing')
             continue
         if kind == 'garage':
-            # After its own release the figurine only moves again when the
-            # measured root misses the variant's official window by more than
-            # the head-camera noise; a fresh source is left alone within 10 mm.
+            # Use the measured root position to decide whether to reseat the figurine.
             placed_tolerance = (GARAGE_ROOT_TOLERANCE.get(item.get('model_key'), .020)-GARAGE_VERIFY_MARGIN
                                 if reseat else GARAGE_PLACED_ROOT_TOLERANCE)
             if _garage_already_placed(ctx, item, destination, placed_tolerance):
@@ -2806,9 +2766,7 @@ def _organize_program(ctx):
         if kind not in completed:
             completed.append(kind)
         if kind == 'garage' and not reseat:
-            # Truth diagnostics put the released root 5-32 mm off plan plus up to
-            # 26 mm of release drag against 20-45 mm windows. Look once more from
-            # the parked cameras and re-seat when the steps are still there.
+            # Reobserve the released figurine when enough steps remain for reseating.
             budget = _garage_reseat_budget(ctx, alarm_pending)
             ctx.memory['garage_reseat'] = dict(scheduled=budget >= 0, steps=ctx.steps, budget=budget)
             if budget >= 0:

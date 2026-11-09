@@ -103,7 +103,7 @@ def _fit_source(ctx, name, contour, robot_mask=None):
 
 
 def measure(ctx):
-    """Associate the four visible tool contours with public fixed-size models."""
+    "Associate visible tool contours with the public tool models."
     image = np.asarray(ctx.vision['cam_head']['color'], np.uint8)[..., :3]
     hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
     color = cv2.inRange(hsv, np.array([70, 25, 20]), np.array([115, 255, 240]))

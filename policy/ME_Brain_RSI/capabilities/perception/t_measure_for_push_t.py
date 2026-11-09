@@ -1,9 +1,6 @@
 """Measured T-shaped objects: nothing about the T is known in advance.
 
-A T is recognised by its shape class only (a mirror-symmetric outline with a wide crossbar and a narrow stem) and
-measured in a 1 mm/px top-down view of the plane at its own top height: area centroid, stem direction (the symmetry
-axis signed by the skew of the mass along it), the outline in its own frame, and the crossbar / stem extents read from
-that outline. The height of a block is measured from the parallax between its top face and its table-contact edge.
+The height of a block is measured from the parallax between its top face and its table-contact edge.
 """
 import cv2
 import numpy as np

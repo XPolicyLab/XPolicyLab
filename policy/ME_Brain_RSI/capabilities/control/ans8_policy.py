@@ -13,8 +13,6 @@ from .ans1_policy import Policy as ANS1
 from .contracts import ARMS
 
 REACH_BASE={'left':np.array([-.30,-.45]),'right':np.array([.30,-.45])}
-# 19/19 historical carry stalls occurred at >=0.466 m horizontal TCP distance
-# from the arm base; same-side inner pads (<=0.471 m) were always reached.
 REACH_SAFE=.460
 REACH_LIMIT=.472
 STALL_STEPS=25

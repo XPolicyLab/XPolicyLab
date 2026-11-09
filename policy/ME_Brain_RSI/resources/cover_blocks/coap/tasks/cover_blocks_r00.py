@@ -1,14 +1,4 @@
-"""cover_blocks r00 baseline.
-
-Scene geometry is fixed by the public layouts: three 25 mm cubes at
-(x, -0.13) for x in {-0.2, 0, 0.2} with a random colour permutation, three
-inverted cups (72 mm rim, 53 mm base, 72 mm tall) at (x, -0.23).  The only
-observation-dependent decision is the colour permutation, read from the head
-camera at the three projected cube positions.  Everything else is a fixed
-top-down pinch sequence: cover left -> mid -> right, then uncover red ->
-green -> blue by returning each cup to its own start pad, then home.
-Public observations only.  No runtime gates, safety checks or aborts.
-"""
+"Baseline controller for covering the target cubes."
 import itertools
 import math
 

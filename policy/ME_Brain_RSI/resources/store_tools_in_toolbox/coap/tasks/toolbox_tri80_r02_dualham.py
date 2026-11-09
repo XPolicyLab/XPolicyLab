@@ -1,29 +1,4 @@
-"""tri80-r02 toolbox candidate dualham (extends r01 plierfirst unchanged).
-
-Development-truth diagnosis of plierfirst on dev layouts (>= 50):
-* the hammer swings about the pinch axis (world X) as soon as it is lifted:
-  the near (-Y, local +X) end drops 35-60 degrees.  With the parent's 0.10 m
-  lift the dangling end hits the box wall during the carry and the hammer is
-  left on the box rim 5-10 cm short along X and 2-4 cm high (0/15 seated).
-* dev round r02 (hibal / hicarry): a 0.19 m two-stage hammer lift with the
-  pinch moved to local x = -0.005 seated the hammer twice and otherwise left
-  it inside the box footprint ~3 cm toward +Y; the same high lift ruined the
-  wrench, so the wrench / tape / pliers keep the parent primitive.
-
-Changes (selected by CONFIG):
-* high_lift + local_x: hammer only (two-stage lift, high carry, two-stage
-  lower, balanced pinch); optional target_shift for the release point.
-* parallel: both arms run concurrently (left: wrench, hammer; right: pliers,
-  tape) with a ticketed box mutex: tools enter the box in the fixed order
-  pliers, wrench, tape, hammer; the next tool is grasped while the previous
-  one is being lowered/released, and only one hand is over the box at a time.
-* tamp: after the last tool, the right hand (fingers closed) presses the
-  pliers then the tape slot positions vertically, then reopens.
-* sequential mode runs pf.place_tool verbatim for every non-hammer tool.
-
-The policy reads only the public head RGB image, proprioception and public
-meshes, exactly like the parent.  No runtime gates, safety checks or aborts.
-"""
+"Coordinate both arms for tool placement and hammer handling."
 import math
 
 import numpy as np

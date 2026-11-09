@@ -1,12 +1,8 @@
-"""Reachability-first dual-arm peg assignment ranked with the original solver plus an actuation-gap model.
+"""Rank dual-arm peg assignments with a bounded inverse-kinematics model.
 
-Baseline evidence (60 episodes): 73 of 177 release poses missed the planned seat
-by more than 2 cm because the ranking preferred axis margin over IK feasibility
-and the arm was fixed by the cup's table side.  Here every pending cup is ranked
-by a bounded-domain IK chain (grasp, lift, transfer, prehang, thread, seat) for
-both arms, feasible chains first, then the public axis margin, then cost.  The
-issued motion keeps the original solver; chain ranking uses a planning-only
-bounded solver so a plan counts as feasible only if an in-domain chain exists.
+Evaluate grasp, lift, transfer and seating waypoints before ranking by alignment
+and cost. The planning solver evaluates candidates and the original solver
+executes the selected motion.
 """
 import itertools
 

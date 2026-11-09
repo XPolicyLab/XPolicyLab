@@ -14,7 +14,7 @@ from . import wristcam
 
 TABLE_Z=float(SerialArm.public_x5('left').base[2,3])   # the arms are mounted on the table top: table plane = arm base height
 CUBE_FIT_MIN=0.6           # CAD-silhouette IoU a blob must reach to count as a cube (wood seams / shadows fit at ~0.4)
-CUBE=0.0192                # small_cube edge as released (the layout's physics size 0.035 is not applied; the cube rests 0.96 cm up)
+CUBE=0.0192
 PAN=dict(half_x=0.092,mouth_y=-0.14,back_y=0.0,wall_in=0.06,wall_h=0.042,wall_y0=-0.10,floor_h=0.003,back_h=0.048,back_half_x=0.06,back_len=0.04,
          handle_half_x=0.015,handle_y=(0.04,0.14),handle_z=(0.036,0.048),rest_z=0.0243)
 BROOM=dict(handle_r=0.011,handle_z=(-0.125,0.0),handle_y=0.027,head_x=0.0187,head_y=(-0.041,0.013),head_z=(0.0,0.125),rest_z=0.0142)
@@ -95,8 +95,6 @@ def rects_overlap(A,yaw_a,B,yaw_b):
 
 
 def object_rects(kind,xy,yaw,margin=0.,min_height=0.):
-    """Table footprint of an object as oriented rectangles [(corners, yaw)] grown by `margin`; parts lower than `min_height`
-    (e.g. the dustpan floor and its 8 mm mouth lip under descending finger tips) are left out."""
     xy=np.asarray(xy,float);R=rot2(yaw)
     def rect(cx,cy,hx,hy):return (rect_corners(xy+R@np.array([cx,cy]),yaw,hx+margin,hy+margin),yaw)
     if kind=='dustpan':
@@ -350,8 +348,6 @@ class HeadVision:
         keep=np.zeros(self.shape,bool)
         for b in blobs:keep|=labels==b['label']
         residual&=keep
-        # dustpan: the largest object blob (the scoop is the largest released asset). The scoop silhouette is nearly symmetric:
-        # the yaw sweep can stop in a local optimum ~90-120 deg off, so refit from the three rotated starts and keep the best
         pan_mask=residual.copy();f=None
         big=[b for b in blobs if b['area']>=400]
         if big:
@@ -394,8 +390,6 @@ class HeadVision:
                 out['dustpan']=f;residual=pan_mask.copy()
                 if out['broom'] is not None:residual&=~cv2.dilate(self.renderer.full('broom',out['broom']['xy'],out['broom']['yaw']),np.ones((5,5),np.uint8)).astype(bool)
                 residual&=~cv2.dilate(self.renderer.full('dustpan',f['xy'],f['yaw']),np.ones((7,7),np.uint8)).astype(bool)
-        # cubes: remaining blobs; a merged blob is split greedily by its expected single-cube area; fit residuals of the brush
-        # and dustpan silhouettes (inside their footprints grown by 2 cm) are not cubes
         near=[]
         for kind,f in (('broom',out['broom']),('dustpan',out['dustpan'])):
             if f is not None:near+=object_rects(kind,f['xy'],f['yaw'],0.02)
@@ -436,9 +430,6 @@ class HeadVision:
         residual=mask&keep
         for kind,xy,yaw in known:
             sil=self.renderer.full(kind,xy,yaw);residual&=~cv2.dilate(sil,np.ones((11,11),np.uint8)).astype(bool)
-        # fit residuals of the known objects (a brush or dustpan that settled a little off its measured pose) are not cubes:
-        # blobs whose table point lies inside the known brush footprint grown by 2 cm are dropped before they use up the cube quota
-        # (the dustpan is removed by its dilated silhouette only: a cube that missed the pan right beside it must stay visible)
         near=[r for kind,xy,yaw in known if kind=='broom' for r in object_rects(kind,xy,yaw,0.02)]
         blobs2,labels2=components(residual,min_area=40);keep=np.zeros(self.shape,bool)
         for b in blobs2:

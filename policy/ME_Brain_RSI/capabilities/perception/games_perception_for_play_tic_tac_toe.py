@@ -332,9 +332,6 @@ def perceive(im):
             support = np.count_nonzero((shadow_yellow[y0:y1, x0:x1] > 0) & (radial > 0.6 * r) & (radial < 1.1 * r))
             if support >= 20:
                 rings.append([float(u), float(v)])
-    # Hough gradients can lock onto one illuminated side of a hollow ring.
-    # Refine against its colored outer ellipse; the real probe showed a 4 px
-    # bias on the leftmost ring, enough to degrade a 50 mm pinch grasp.
     stock_mask = shadow_yellow.copy()
     stock_mask[:bottom] = 0
     stock_mask[min(im.shape[0], bottom+95):] = 0

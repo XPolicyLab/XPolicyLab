@@ -1,18 +1,4 @@
-"""Scripted deposit_coin controller: RGB scene estimates in, link6 pose and gripper targets out.
-
-Grasp: the coin stands in the holder's V slot with its upper ~12.6 mm exposed. The pads
-squeeze the coin's FACES (closing axis = coin normal) with the fingertips 4 mm above the
-holder top. The gripper joint target is rate-limited by the environment to 10.8 mm beyond
-the measured position and driven at 2300 N/m, so a fully-closed command crushes a 1.9 mm
-coin with ~25 N and PhysX ejects it; the close command therefore stops ~1.4 mm inside the
-coin surfaces (~3 N squeeze). The reported ee_joint_state is that rate-limited command, not
-a measurement, so grasps are verified by vision only.
-
-Geometry (public X5 CAD, link6 frame): fingertip plane at x=.1576; the wrist camera sits at
-(.0848, 0, .0509) looking along (.866, 0, -.5): with the approach axis down it looks 30 deg
-off vertical toward -z_ee, so an object d below the fingertips is image-centred when the
-fingertips are -look_shift(d) along z_ee from it.
-"""
+"Detect, grasp and deposit the coin using RGB and robot proprioception."
 from dataclasses import dataclass, field
 import numpy as np
 from .geometry import rotation, ee_pose_top_down, ee_pose_from_axes, fingertip_of, servo_toward, angle_between
@@ -26,20 +12,18 @@ COIN_THICKNESS = 0.0019
 PAD_FACE_OFFSET = 0.0004                               # pad inner faces sit at y = +-(offset + joint)
 SQUEEZE_DEPTH = 0.0016                                 # commanded travel past the coin surfaces (~3.7 N at 2300 N/m)
 GRIP = ((COIN_THICKNESS / 2 - PAD_FACE_OFFSET - SQUEEZE_DEPTH) + 0.01) / 0.054   # ~0.15
-# The environment lets the pads travel up to 10.8 mm per step, more than the coin is thick, so
-# the last millimetres are closed in 1 mm (0.02 aperture) increments to keep PhysX contacts alive.
-CLOSE_FAST_UNTIL = 0.26          # ~9 mm gap: pads still clear of the coin
-CLOSE_SLOW_STEP = 0.02           # 1.08 mm of joint travel per step
+CLOSE_FAST_UNTIL = 0.26
+CLOSE_SLOW_STEP = 0.02
 CLOSE_SETTLE_STEPS = 2
-GRASP_TIP_Z = P.STAND_TOP_Z + 0.004                    # pads overlap the top 8.6 mm of the coin
-COIN_CENTER_BELOW_TIP = GRASP_TIP_Z - P.COIN_CENTER_Z  # 5.7 mm
-COIN_BOTTOM_BELOW_TIP = COIN_CENTER_BELOW_TIP + P.COIN_RADIUS   # 2.0 cm
+GRASP_TIP_Z = P.STAND_TOP_Z + 0.004
+COIN_CENTER_BELOW_TIP = GRASP_TIP_Z - P.COIN_CENTER_Z
+COIN_BOTTOM_BELOW_TIP = COIN_CENTER_BELOW_TIP + P.COIN_RADIUS
 OBSERVE_TIP_Z = P.COIN_TOP_Z + 0.08
 REFINE_TIP_Z = P.COIN_TOP_Z + 0.025
 LIFT_TIP_Z = GRASP_TIP_Z + 0.12
 CARRY_TIP_Z = 0.95
 CARRY_MIN_TIP_Z = 0.89
-SLOT_OBSERVE_TIP_Z = P.SLOT_Z + 0.06            # coin bottom 4 cm above the slot: wrist fit ~1.5 mm instead of ~3 mm from 10 cm
+SLOT_OBSERVE_TIP_Z = P.SLOT_Z + 0.06
 SLOT_ALIGN_TIP_Z = P.SLOT_Z + 0.05
 INSERT_TIP_Z = P.SLOT_Z + 0.009
 RETREAT_TIP_Z = P.SLOT_Z + 0.10
@@ -72,16 +56,12 @@ PHASE_LIMITS = dict(approach=40, observe_coin=6, pregrasp=20, refine=6, descend=
                     observe_slot=8, align=24, insert=14, release=4, retreat=10, home=60)
 HEAD_PHASES = ('init', 'approach', 'observe_coin', 'pregrasp', 'refine', 'descend', 'close', 'lift', 'verify')
 HEAD_SLOT_RETRY_PHASES = ('transfer', 'handoff_move', 'handoff_approach', 'handoff_close', 'handoff_release', 'handoff_retreat')
-# Hand-to-hand handoff for coins the bank-side arm cannot reach: the source holds the coin top-down at the
-# centre line with the coin plane along world y; the receiver comes in horizontally from the robot side
-# pointing forward (its home orientation, so the later pitch to top-down is the routine approach motion),
-# pads parallel to the coin faces, 1.1 cm below the source fingertips, and squeezes the coin's near edge.
 HANDOFF_X = 0.0
 HANDOFF_Y = -0.12
 HANDOFF_TIP_Z = 0.90
 HANDOFF_PLANE = (0.0, 1.0)              # coin plane along world y: the receiver points forward (+y) like at home
 HANDOFF_PAD_DROP = 0.011                 # receiver pad centreline below the source fingertips
-HANDOFF_EDGE_OVERLAP = 0.0086            # receiver pads cover the coin's near 8.6 mm (same as the pick)
+HANDOFF_EDGE_OVERLAP = 0.0086
 HANDOFF_PREPOSE_OUT = 0.08
 HANDOFF_STEP = 0.015
 LIFT_STEP = 0.010
@@ -275,7 +255,7 @@ class CoinController:
             print('[coin_head_bank_only]', env_idx, slot.actions, dict(center=slot.slot.round(4).tolist(), axis=slot.slot_axis.round(3).tolist()), flush=True)
 
     def coin_still_on_stand(self, slot, scene):
-        """Head view: a gold blob within 1.5 cm of the original stand position means the coin was not taken."""
+        "Check whether the coin remains at its original stand position in the head view."
         if scene is None or 'coin' not in scene or slot.coin is None:
             return None
         return bool(np.linalg.norm(np.asarray(scene['coin']['center'][:2]) - slot.coin) <= 0.015)
@@ -481,7 +461,7 @@ class CoinController:
             self._enter(slot, 'refine', env_idx)
 
     def _phase_refine(self, slot, robot, action, wrist_view, scene, record, env_idx):
-        """Close-range wrist fit: the edge-on coin line fixes the lateral (closing-axis) position to ~0.3 mm."""
+        "Estimate the coin position along the gripper closing axis from its edge in the wrist view."
         target = self._pick_pose(slot, [*slot.coin, REFINE_TIP_Z])
         self._drive(slot, robot, action, target, FINE_STEP, APPROACH_ANGLE, OPEN)
         if slot.phase_actions < 1:
@@ -794,8 +774,6 @@ class CoinController:
         n = self._slot_normal(slot)
         tip = self._tip(robot, slot.arm)
         slot.relative_offset = rel['offset']
-        # the coin sits rel.offset along the normal from the slot line: carry the fingertips the other way across the
-        # slot, while the along-slot coordinate keeps following the absolute estimate (9 mm tolerance there)
         base = self._insert_tip_xy(slot)
         if abs(rel['offset']) > 0.012:
             return None

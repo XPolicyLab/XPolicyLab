@@ -264,11 +264,12 @@ class ZoneExecutor:
     def rotate_in_place(self, arm, rotation, max_step=0.06, max_excursion=0.03, wander_lift=0.0):
         """Reorient the tool at the current TCP position.
 
-        The Cartesian straight path is tried first. When its IK branch breaks, the
+        The Cartesian straight path is tried first.
+
+        When its IK branch breaks, the
         candidates are: its partial path finished in joint space, a short joint prefix
         (leaving a wrist singularity) finished on a straight path, and the plain joint
-        blend; the one whose TCP wanders least wins. A full joint blend from a hanging
-        carry pose once swung the TCP 13 cm into the toaster and pried the slice loose.
+        blend; the one whose TCP wanders least wins.
         """
         ctx = self.ctx
         model = self.models[arm]

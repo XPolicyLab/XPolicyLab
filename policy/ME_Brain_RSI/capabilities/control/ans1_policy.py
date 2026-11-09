@@ -41,8 +41,6 @@ class Policy:
             # Keep each arm on its own half except a small shared centre strip.
             if side=="left" and max(xy[0],goal[0])>.06: continue
             if side=="right" and min(xy[0],goal[0])<-.06: continue
-            # Prefer 100mm transit clearance: 150mm can push the natural
-            # elbow branch near its reach limit above the centre pads.
             for height in (.10,.15):
                 if all(self.feasible(side,p,z,a) for p,z,a in [(xy,.019,yaw+np.pi/2),(xy,height,yaw+np.pi/2),
                                                              (goal,.024,np.pi/2),(goal,height,np.pi/2)]):

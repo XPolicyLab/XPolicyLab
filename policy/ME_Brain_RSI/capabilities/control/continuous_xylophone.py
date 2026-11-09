@@ -16,7 +16,7 @@ from .xylophone_connected import ConnectedArm
 from .xylophone_feedback import ExecutionWindow
 from .xylophone_routes import JOINT_MARGIN, PROBE_PATTERNS, MotionProgress
 from .xylophone_x37 import XylophonePolicy as ContinuousReplanning
-from .xylophone_x42 import XylophonePolicy as ContinuousMotion
+from .xylophone_x41 import XylophonePolicy as ContinuousMotion
 
 
 def transform_point(frame, point):

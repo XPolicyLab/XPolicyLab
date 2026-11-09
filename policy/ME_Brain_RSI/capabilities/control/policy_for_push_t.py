@@ -95,9 +95,6 @@ class Policy:
         detections, rectified = self.perception.detect(rgb,task=self.task,state=state)
         objects = self.perception.select(self.task,detections)
         if self.task=="push_T":
-            # A 150 mm commanded push cannot justify silently switching to a
-            # red tabletop patch half a metre away when the real T is hidden.
-            # This is an RGB-only temporal association gate, not object truth.
             if "source" in objects:
                 candidate=objects["source"]
                 if self.source_memory is not None and np.linalg.norm(candidate.xy-self.source_memory.xy)>.25:
@@ -205,22 +202,13 @@ class Policy:
                 rotate_now=(distance<.018 and abs(angle_error)>=.09) or (
                     distance<.08 and abs(angle_error)>.35)
                 if rotate_now:
-                    # Push one end of the visible crossbar tangentially. The
-                    # next RGB observation measures actual rotation/drift;
-                    # this is not assumed to rotate by a specified angle.
                     stem=np.array([np.cos(source.angle),np.sin(source.angle)])
                     bar=np.array([-stem[1],stem[0]])
                     # just outside the front-outer corner of the measured crossbar
                     lever=(source.bar_half+.002)*bar+(source.bar_x[1]+.002)*stem
                     direction=np.sign(angle_error)*np.array([-lever[1],lever[0]])/np.linalg.norm(lever)
                     contact=source.xy+lever
-                    # Descend outside the crossbar before approaching its end;
-                    # a near/low descent can wedge beneath the 15 mm block.
                     start=contact-direction*.035
-                    # A fixed 10 mm cap spends most of the 600-step budget
-                    # lifting/reobserving while correcting large yaw errors.
-                    # Bound the stroke by visible error (25 mm/radian) and
-                    # 30 mm maximum, then reobserve rather than assume rotation.
                     end=contact+direction*min(.030,abs(angle_error)*.025)
                     push_name="push_rotate"
                 else:
@@ -265,9 +253,6 @@ class Policy:
                     self.add(side,xy,.055,0.,f"key_{key}_hit",3)
                     self.add(side,xy,.14,0.,f"key_{key}_lift",4)
         if self.task=="push_T":
-            # Reobserve after the vertical lift before making an expensive trip
-            # to the fixed park pose. If RGB still hides the source, the missing
-            # source branch above performs a bounded view-recovery movement.
             self.view_cleared=False
         else: self.return_home()
         self.reason="executing"
@@ -308,9 +293,6 @@ class Policy:
                 translation_step=min(translation_step,.004)
             if (self.task=='push_T' and waypoint.name=='push'
                     and self.program_notes.get('t_distance',float('inf'))<.08):
-                # The last RGB plan is near the target: avoid accelerating a
-                # small loose block with the coarse 12 mm Cartesian command.
-                # This does not assume friction or read object velocity/truth.
                 translation_step=min(translation_step,.003)
             if waypoint.name in {"button_release","confirm_release"}:
                 tip=current[:3]+quat_matrix(current[3:])@np.asarray(self.calibration["contact_tip_offset_in_ee"])
@@ -347,13 +329,6 @@ class Policy:
             if waypoint.name.startswith('drag_') and waypoint.name!='drag_aside':
                 reached=position_error<.003 and orientation_error<.05
             if self.task=='push_T' and waypoint.name in {'push','push_rotate'}:
-                # Fine strokes may be only a few millimetres long. A 9 mm
-                # waypoint tolerance can finish them before contact settles.
-                # This is robot-state endpoint precision, not task success.
-                # Loaded contact can leave a few millimetres of vertical
-                # compliance after horizontal travel is complete. Preserve
-                # planar endpoint precision, then lift and reacquire RGB;
-                # this is not an object-pose or task-success assertion.
                 reached=(np.linalg.norm(current[:2]-waypoint.pose[:2])<.002
                          and abs(current[2]-waypoint.pose[2])<.006
                          and orientation_error<.15)
@@ -385,11 +360,7 @@ class Policy:
             else:
                 self.t_contact_errors=[]
             if waypoint.name in {"button_press","confirm_press"}:
-                # A loaded finger need not reach a free-space goal inside the
-                # button. The known finger extremity and robot proprioception
-                # give a conservative contact-height milestone. This is NOT
-                # button joint feedback or a task-success signal; the official
-                # evaluator still checks the actual press/release counts.
+                # Use the measured finger height as a contact milestone.
                 tip=current[:3]+quat_matrix(current[3:])@np.asarray(
                     self.calibration["contact_tip_offset_in_ee"])
                 height=tip[2]-self.calibration["table_z"]

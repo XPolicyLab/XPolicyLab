@@ -62,10 +62,6 @@ class Kinematics:
   fit=minimize(objective,start,method='SLSQP',bounds=list(zip(lower,upper)),constraints=[{'type':'eq','fun':lambda q:root(q)[:2]-xyz[:2]},{'type':'ineq','fun':inequality}],options={'maxiter':100,'ftol':1e-9})
   xy_error=float(np.linalg.norm(root(fit.x)[:2]-xyz[:2]))
   if xy_error>.002 or min(inequality(fit.x))< -1e-5:
-   # SLSQP stops a fraction of a millimetre inside the finger-floor margin on
-   # long cross-body reaches (R10/R11: five aborts at constraint -0.00013 to
-   # -0.00024 with the glyph still held); retry from the first fit, then accept
-   # up to 1 mm inside the margin. The dense table clearance below is unchanged.
    fit=minimize(objective,fit.x,method='SLSQP',bounds=list(zip(lower,upper)),constraints=[{'type':'eq','fun':lambda q:root(q)[:2]-xyz[:2]},{'type':'ineq','fun':inequality}],options={'maxiter':200,'ftol':1e-10})
    xy_error=float(np.linalg.norm(root(fit.x)[:2]-xyz[:2]))
   if xy_error>.002 or min(inequality(fit.x))< -1e-3:

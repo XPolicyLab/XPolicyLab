@@ -119,9 +119,6 @@ class Perception:
         return fit.x[:2],float(radius if radius is not None else fit.x[2]),error
 
     def detect_ball_vessels(self,rgb):
-        # Public cup/00006 is a 72 mm yellow cylinder. All five allowed vase
-        # variants have heights 142..151.1 mm; use 148 mm as a geometry prior,
-        # fitting visible radius instead of selecting an unseen asset index.
         if rgb.shape[:2] != (self.camera.resolution[1],self.camera.resolution[0]):
             raise ValueError("Unexpected RGB resolution")
         r,g,b=rgb.astype(float).transpose(2,0,1)
@@ -179,9 +176,6 @@ class Perception:
             mask=np.uint8(mask)*self.valid
             mask=cv2.morphologyEx(mask,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
             for d in self.components(image,mask,label):
-                # Public static extents: rigid T .08 x .06 m, target .084 x
-                # .068 m. Tolerate projection/partial occlusion, reject tiny
-                # neutral gripper fragments and large arm/table components.
                 if not (.0012<d.area<.012 and .04<min(d.size)<.13 and .065<max(d.size)<.16): continue
                 hull=cv2.contourArea(cv2.convexHull(d.contour))
                 solidity=cv2.contourArea(d.contour)/max(hull,1)

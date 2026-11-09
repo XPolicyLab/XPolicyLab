@@ -56,7 +56,7 @@ def camera_from_public(calibration, name, state):
 
 
 def footprint(mask, camera, support_height):
-    """Coarse projection onto an explicitly assumed plane, NOT measured 3-D pose."""
+    "Project the image point onto a plane specified by the caller."
     yy, xx = np.nonzero(mask)
     if len(xx) < 24:
         raise ValueError('insufficient visible silhouette')

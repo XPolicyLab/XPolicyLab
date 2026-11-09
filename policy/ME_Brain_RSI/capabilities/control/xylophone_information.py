@@ -7,7 +7,6 @@ attachment, depth accuracy, collision or task-success claim is made here.
 import numpy as np
 from .xylophone_geometry import rigid_transform
 
-# Keep the old proposal available; the others stay within a 90 mm translation.
 EXTRA_OFFSETS = ((-.03,0.,.03),(-.08,0.,.03),(.08,0.,.03),
                  (0.,-.08,.03),(0.,.08,.03),(-.06,-.06,.03),
                  (-.06,.06,.03),(.06,-.06,.03),(.06,.06,.03),(0.,0.,.08))
@@ -32,13 +31,7 @@ def predicted_floor(camera, poses, anchor):
 
 
 def information_probe_candidates(camera, current, anchor, samples):
-    """Return finite proposals without mutating/adding any real evidence.
-
-    Ranking takes the worst predicted sensitivity over nominal +/-10 mm local
-    offsets. This is a bounded design sensitivity check, not measured covariance.
-    Missing old images do not become observations. Future visibility is assumed
-    only for ranking, with a 20-pixel frame margin; the actual fit stays unchanged.
-    """
+    "Rank finite probe proposals by predicted sensitivity without changing the observation set."
     current=rigid_transform(current)
     anchor=np.asarray(anchor,float)
     if anchor.shape!=(3,) or not np.isfinite(anchor).all():
@@ -56,7 +49,6 @@ def information_probe_candidates(camera, current, anchor, samples):
         delta=np.asarray(delta);length=np.linalg.norm(delta)
         target=current.copy();target[:3,3]+=delta
         predicted=[]
-        # Approximate the existing >=15 mm moving-view and >=3 mm endpoint spacing.
         distances=list(np.arange(.015,length,.015))+[length]
         for distance in distances:
             e=current.copy();e[:3,3]+=delta*(distance/length)

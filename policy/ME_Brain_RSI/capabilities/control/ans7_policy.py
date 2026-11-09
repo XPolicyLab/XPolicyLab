@@ -8,14 +8,14 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from .ans6_policy import Policy as ANS6
 from .ans4_policy import Policy as ANS4
-from .ans7_supervisor import Supervisor
+from .ans7_supervisor import OfflineSupervisor
 from .contracts import ARMS, STATE_KEYS, validate_observation
 from .geometry import bounded_pose, quat_matrix
 
 
 class Policy(ANS6):
     def __init__(self,task,calibration,supervisor=None):
-        super().__init__(task,calibration,supervisor or Supervisor())
+        super().__init__(task,calibration,supervisor or OfflineSupervisor())
         self.release_checks=[];self.reached_routes={};self.recovery_outcomes=[]
         self.steady_events=[];self.prechecked_carries=set()
 
@@ -44,8 +44,6 @@ class Policy(ANS6):
             dict(release,name='softopen_'+label,gripper=.4,dwell=5,steady=True),
             dict(release,dwell=8,steady=True),
             dict(release,pose=clear,name='clearance_'+label,dwell=2,steady=True)]
-        # Last 12mm descent uses 2mm increments; no extra lowering of the
-        # ANS4 TCP height (24mm) or supposed contact-force measurement.
 
     def _at_carry_goal(self,obs,context):
         # Observation moves may have displaced the TCP. Do not descend from a
@@ -84,7 +82,6 @@ class Policy(ANS6):
         identity=context['digit']
         if identity in self.repaired or '_stage' in context['label'] or '_repair' in context['label'] or found is None:return None
         error=float(np.linalg.norm(np.asarray(found['xy'])-context['target']));angle=abs(float(found['yaw']))
-        # A pure-angle error must not require a >=12mm centre error.
         if found['confidence']<.70 or error>.045 or angle>.80 or (error<.012 and angle<.16):return None
         side=context['side'];xy=np.asarray(found['xy']);goal=np.asarray(context['target'])
         if (side=='left' and max(xy[0],goal[0])>.06) or (side=='right' and min(xy[0],goal[0])<-.06):return None

@@ -1,9 +1,9 @@
 {
   "coap.tasks.pack_random": {
     "file": "capabilities/control/pack_random_for_pack_objects_into_box_random.py",
-    "resource": "resources/pack_objects_into_box_random/coap/tasks/pack_random.py",
+    "resource": "resources/pack_objects_into_box_random/coap/tasks/car_facing_templates.json",
     "package": false,
-    "sha256": "f795721bd08b3af49af1679c5f18f397d8ec6f5b36bea843c9a9b605ee418a05"
+    "sha256": "091bc802067b36c4090c0d6ec7a352538469dfc3a5295a22acdfabae81a12d83"
   },
   "coap.tasks": {
     "file": "capabilities/control/insert_key.py",
@@ -21,13 +21,13 @@
     "file": "capabilities/control/executor_for_pack_objects_into_box.py",
     "resource": "resources/pack_objects_into_box_random/coap/executor.py",
     "package": false,
-    "sha256": "2683f32df02aa8ff986aed763ca2a92a5809758f1fdaded7e94372843ef38d90"
+    "sha256": "a660ebccd6b2a779370681122ef66da82ef9ee8f26732ca9da32ecba9717877c"
   },
   "coap.dual": {
     "file": "capabilities/control/dual.py",
     "resource": "resources/pack_objects_into_box_random/coap/dual.py",
     "package": false,
-    "sha256": "dcf62bc21db55349dda319dabc9d4e6b848cde95ed88ecd734564a179f593d36"
+    "sha256": "f776f786654efba26ded2e378e86bc30aa39e022c8055297c81f0f02c498e480"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics_for_pack_objects_into_box.py",
@@ -51,7 +51,7 @@
     "file": "capabilities/perception/containers_vision_for_pack_objects_into_box_random.py",
     "resource": "resources/pack_objects_into_box_random/coap/tasks/containers_vision.py",
     "package": false,
-    "sha256": "dfa607e22999291e56fb11aafb0e1f173b32db9608dc8a5503da26c17397cc5b"
+    "sha256": "438808bab18af2d34fc783b43fabb23841de2a6fcb4816dbc8a6913277c53f8c"
   },
   "coap.policy": {
     "file": "capabilities/control/policy_for_pack_objects_into_box.py",
@@ -63,7 +63,7 @@
     "file": "capabilities/control/model_for_pack_objects_into_box_random.py",
     "resource": "resources/pack_objects_into_box_random/model.py",
     "package": false,
-    "sha256": "83762876b027378a86900d0ede5ab3e3b444d566824c5e1f92b1aae7d2c306ea"
+    "sha256": "e0359b2d52f69bd615c1267cba4860f8cb117dbd256f3f572579e148acd53542"
   },
   "coap.evidence": {
     "file": "capabilities/observation/evidence.py",

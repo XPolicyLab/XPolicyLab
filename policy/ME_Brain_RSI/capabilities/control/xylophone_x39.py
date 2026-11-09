@@ -1,12 +1,4 @@
-"""X39: stuck hovers are lowered before any re-plan; hexashell hits centred in the band.
-
-X37's vertical re-plan replaced a working route on native49 when the first hover
-froze 2 cm short at its reach limit, yet the same re-plan struck the last key on
-eval15 layouts 1 and 17 where the hexashell orientation ran out of reach. X39
-keeps it as the second step: a stalled key hover first retries the same key with
-the head 2 cm lower (still >= 3.6 cm above the hit height, so the lift stays
-valid), audited like every other waypoint; only then the X37/X34 recovery runs.
-"""
+"X39: stuck hovers are lowered before any re-plan; hexashell hits centred in the band."
 import numpy as np
 from . import xylophone_hexashell as hexmod
 from .xylophone_hexashell import hx
@@ -15,8 +7,6 @@ from .xylophone_feedback import ExecutionWindow
 from .geometry import pose_matrix,matrix_quat
 
 LOWERED_HOVER=.02
-# Beat band is hit_z+[.010,.036]; the imported .023 gap put the head 5 mm below
-# the top of the band, so an upward slide of the shaft missed silently.
 CENTERED_GAP=.017
 
 

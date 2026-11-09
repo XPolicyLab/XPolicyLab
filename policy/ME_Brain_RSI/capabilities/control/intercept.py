@@ -18,7 +18,7 @@ def down_pose(xy,z,yaw,calibration,tilt=0.):
 
 
 def grasp_face(basket):
-    """Select once; a nearly 45-degree fit must not switch walls mid-grasp."""
+    "Choose the basket wall once for the current grasp."
     a=basket['yaw'];normals=np.array([[1,0],[-1,0],[0,1],[0,-1]],float)
     r=np.array([[np.cos(a),-np.sin(a)],[np.sin(a),np.cos(a)]])
     return int(np.argmin((normals@r.T)[:,1]))
@@ -27,16 +27,12 @@ def grasp_face(basket):
 def front_grasp(basket,face=None):
     a=basket['yaw'];long=np.array([np.cos(a),np.sin(a)]);short=np.array([-np.sin(a),np.cos(a)])
     n,d=[(long,.175),(-long,.175),(short,.118),(-short,.118)][grasp_face(basket) if face is None else face]
-    # CPP2: pinch 3 cm deeper than CPP1 (.118): tips ~5 cm below the rim.
-    # Public mesh end-wall rim is 0.12746m above bottom; 0.21863m is
-    # the raised handle, NOT the end wall. Pinch just below the rim;
-    # public finger tips extend another 12.57mm below this TCP.
     return np.asarray(basket['xy'])+n*d,basket['bottom_z']+.088,float(np.arctan2(n[1],n[0])-np.pi/2)
 
 
 HANDLE_TOP=.21863       # raised central handle top above the basket bottom (public mesh)
 HANDLE_PINCH_DEPTH=.035  # bar sits this far toward the palm from the grasp centre: closed fingers hook under it
-HANDLE_X_OFFSET=.04      # hold the arch 4 cm toward +x: leaves the basket's left half free for the left-arm drop (arch only ~5 mm lower there)
+HANDLE_X_OFFSET=.04
 
 
 def handle_grasp(basket,tilt=0.):
@@ -44,8 +40,8 @@ def handle_grasp(basket,tilt=0.):
 
     down_pose tilts the gripper about the world x axis, so the finger axis is
     (0, sin t, -cos t) and the closing axis is tilted with it (one finger higher).
-    Placing the TCP straight below the bar top (CPP4/5) moved the bar ~4 cm along
-    that closing axis, under the upper finger. The TCP must be bar_top + d*finger_axis.
+
+    The TCP must be bar_top + d*finger_axis.
     """
     a=basket['yaw'];long=np.array([np.cos(a),np.sin(a)]);short=np.array([-np.sin(a),np.cos(a)])
     n=-long if long[1]>0 else long
@@ -148,8 +144,6 @@ def plan_intercept(basket,velocity,obs,cal,step,check=True):
                 if duration>horizon+7:continue
                 fit=arm.inverse(pose_matrix(hover),initial=q,restarts=3)
                 if fit['position_error_m']>.008 or fit['orientation_error_rad']>.08:continue
-                # CPP42: a hook far from the right shoulder cannot lift (eval15 s0 ep3: hook x=.05 stalled at 4 cm); prefer x>=.22
-                # CPP49: prefer 60 deg (lower EE for the same hook height at the handoff)
                 candidates.append((horizon+.1*duration+2*abs(tilt-np.deg2rad(60))+200*max(0.,.22-xy[0]),dict(holder=side,yaw=angle,tilt=tilt,xy=xy.tolist(),grasp_z=z,grasp='handle',
                     grasp_face=grasp_face(basket),anchor_yaw=float(basket['yaw']),
                     prepare=prepare.tolist(),raised=raised.tolist(),hover=hover.tolist(),

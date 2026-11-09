@@ -6,6 +6,8 @@ import time
 import numpy as np
 from XPolicyLab.model_template import ModelTemplate
 from XPolicyLab.utils.process_data import get_robot_action_dim_info
+
+from ...core.observation import restrict_public_observation
 from .b88r42wq.context import Context
 from .b88r42wq.evidence import plain, snapshot
 from .b88r42wq.policy import task_program
@@ -45,8 +47,7 @@ class Model(ModelTemplate):
         self.episode = Path(root) / f"episode_{time.time_ns()}" if root else None
 
     def update_obs(self, obs):
-        # The server owns decoding; deliberately forward only the legal inputs.
-        observation = {key: obs[key] for key in ("state", "vision", "instruction", "instructions") if key in obs}
+        observation = restrict_public_observation(obs)
         self.last_obs = observation
         if self.ctx is None:
             self.ctx = Context(observation, self.task, numerical_ik=self.numeric_ik)
@@ -78,9 +79,6 @@ class Model(ModelTemplate):
         except Exception as exc:
             if self.episode:
                 (self.episode / "policy_error.json").write_text(json.dumps({"error": f"{type(exc).__name__}: {exc}", "stage": self.ctx.memory.get("phase", getattr(self.ctx, "stage", "")), "index": self.index}, indent=2))
-            # Finish the actual episode so an unsuccessful policy cannot make
-            # the evaluator silently skip its seed. The official reward still
-            # decides success; the diagnostic records the execution error.
             self.failed = True
             self.program = None
             self.ctx.stage = "error_return_home"

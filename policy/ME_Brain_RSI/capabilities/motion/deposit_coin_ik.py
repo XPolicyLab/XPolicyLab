@@ -34,7 +34,6 @@ class X5IK:
         self.active_indices = [self.joint_names.index(n) for n in self.active_names]
         self.tool_frame = kin['tool_frames'][0]
         self.device = DeviceCfg()
-        # Identical fixed tabletop in robot-base coordinates: 0.74 - 0.765.
         scene = {'cuboid': {'table': {'dims': [3., 3., .05],
                  'pose': [0., 0., -.05, 1., 0., 0., 0.]}}}
         ik_cfg = InverseKinematicsCfg.create(

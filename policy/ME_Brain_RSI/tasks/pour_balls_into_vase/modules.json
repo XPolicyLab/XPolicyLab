@@ -21,13 +21,13 @@
     "file": "capabilities/control/pour_balls_into_vase_policy.py",
     "resource": "resources/pour_balls_into_vase/coap/policy.py",
     "package": false,
-    "sha256": "2d60933dc36cc439bc725cc90a031190b5e9953fdb8484f8d3ace1b3bcdd5ecb"
+    "sha256": "ccf0ed4483f2e86b61b5167b65f5a0c1b765f02422fb8a2ab3271d0d6a836207"
   },
   "coap.vision": {
     "file": "capabilities/perception/pour_balls_into_vase_vision.py",
     "resource": "resources/pour_balls_into_vase/coap/vision.py",
     "package": false,
-    "sha256": "18523c9d019eada2dd3d57254627db2378ac401a89bb962b450c0c549373b776"
+    "sha256": "38a96b9ca790e2f10a5050d7a3948f3feee69de983e4252df1563c8f570ce8f5"
   },
   "adapter": {
     "file": "capabilities/control/pour_balls_into_vase_adapter_package.py",

@@ -95,7 +95,7 @@ class Episode:
         return (points - transform[:3, 3]) @ transform[:3, :3]
 
     def block_obstacles(self, source_xy, dest_xy, size, stacked):
-        """Convex hulls (6 mm inflated) of every perceived block except the grasp target; the destination stack is named."""
+        "Build inflated collision hulls for the perceived blocks other than the grasp target."
         out = []
         for i, b in enumerate(self.scene['bowls']):
             xy = np.asarray(b['xy'])

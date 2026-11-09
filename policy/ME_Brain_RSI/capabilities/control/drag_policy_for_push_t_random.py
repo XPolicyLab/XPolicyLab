@@ -87,8 +87,6 @@ class TabletopDragPolicy(Policy):
             stage_xy=np.array([0.,float(target.xy[1])])
             stage_yaw=source.angle
         travel=stage_xy-source.xy
-        # Stay inside the 25 cm RGB association gate with a 2 cm margin,
-        # while avoiding an extra grasp cycle for a roughly 43 cm transfer.
         if np.linalg.norm(travel)>.23:
             stage_xy=source.xy+travel*.23/np.linalg.norm(travel)
             stage_yaw=source.angle
@@ -152,9 +150,7 @@ class TabletopDragPolicy(Policy):
             self.plan.append(Waypoint(side,pose,0.,'drag_'+phase,1,anchor.copy()))
         last=path[-1][1]
         self.plan.append(Waypoint(side,last.copy(),1.,'drag_release',15))
-        # Released fingers need clearance, not an unnecessarily high posture
-        # near the folded arm limit. Keep the existing 3 mm / .05 rad arrival
-        # test and release dwell; no task/scoring tolerance is changed.
+        # Lift the released fingers clear while keeping the arm away from its folded limit.
         raised=last.copy();raised[2]+=.08
         self.plan.append(Waypoint(side,raised,1.,'drag_lift',3))
         # step aside towards the arm's own side so the lifted gripper no longer covers the block in the head camera

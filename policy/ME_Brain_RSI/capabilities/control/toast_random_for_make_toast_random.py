@@ -17,14 +17,14 @@ from ..executor import ZoneExecutor, _log, SAFE_TRAVEL_CLEARANCE
 BREAD_HALF = 0.0585        # public bread slice half width/height
 BREAD_THICK = 0.0118
 TIP_BELOW_TCP = 0.0126
-PICK_EDGE_DEPTH = 0.020        # donor pads 20 mm down the slice: deeper pinch resists the gravity torque when turned flat
+PICK_EDGE_DEPTH = 0.020
 HANDOFF_Z = 1.00
 HANDOFF_Y = -0.20
 HANDOFF_X = -0.045
-RECEIVER_OPEN = 0.65   # 6.5 cm aperture: the 8.7 cm one hung the lower finger 2 cm over the toaster roof and stalled the approach (L14/L26 read 0.0 twice)
+RECEIVER_OPEN = 0.65
 DONOR_MAX_READING = 0.12       # one crust edge reads ~0.07-0.10; more means two slices or a cocked one
-RECEIVER_MAX_READING = 0.125   # pads 1.9 cm apart: anything wider is a cocked slice caught diagonally
-RECEIVER_DZ = (0.0, -0.015, 0.015)   # the cantilevered slice sags: try lower first            # receiver aperture at the handoff (+-4 cm around the slice plane)
+RECEIVER_MAX_READING = 0.125
+RECEIVER_DZ = (0.0, -0.015, 0.015)
 # Apertures of 0.22/0.30 get blocked on the slice tops (the finger collision shape is wider
 # than the pad); 0.45 pinches reliably but nudges the neighbour, so the second slice is
 # taken from the other, undisturbed end of the row.
@@ -33,7 +33,6 @@ PICK_FREE_SHIFT = 0.0
 RECEIVER_EDGE_DEPTH = 0.0585   # pads at the slice centre: the domed slice is thickest there, so
                                # hanging it does not wedge it out of the pads (edge grips slid out)
 
-# Public toaster geometry (toaster frame; root 80 mm above the table) from the asset tables.
 TOASTER_ASSETS = {
     2: dict(footprint=(-0.127079, 0.119925, -0.082755, 0.078748), roof=0.081116,
             slots=[(-0.074713, 0.058699, -0.043804, -0.009604), (-0.074713, 0.058699, 0.005596, 0.039797)],
@@ -132,8 +131,6 @@ class ToastExecutor(ZoneExecutor):
         tcp[2] = top[2] - PICK_EDGE_DEPTH
         out = n_h.copy()
         if breads:
-            # Fingers open 40 mm around a 25 mm pitch: bias the pinch away from the row so the
-            # inner finger comes down in the gap beside the neighbour instead of on its crust.
             row_centre = np.mean([b["centre"] for b in breads], axis=0)
             side = float(np.sign((bread["centre"] - row_centre) @ n_h)) or 1.0
             out = side * n_h
@@ -162,11 +159,6 @@ class ToastExecutor(ZoneExecutor):
         Along n_h the slice spans [tcp_d - PICK_EDGE_DEPTH, tcp_d - PICK_EDGE_DEPTH + 2*BREAD_HALF].
         The receiver tool points -n_h with its finger tips RECEIVER_EDGE_DEPTH inside the far edge.
         Closing axis up or down are equivalent pinches; the reachable small-roll one is used.
-
-        A pitched pick holds the upright slice rotated by the pitch about the closing axis,
-        so the offer frame is rotated back by the same angle: the slice, not the tool x
-        axis, must end up along n_h (the receiver closed on empty air 4 cm beside a slice
-        offered from a 0.5 rad pick).
         """
         donor_tcp = np.array([HANDOFF_X, HANDOFF_Y, HANDOFF_Z])
         up = np.array([0.0, 0.0, 1.0])
@@ -253,8 +245,6 @@ class ToastExecutor(ZoneExecutor):
         hover[2] += 0.04
         self.donor_pick = dict(geometry=g, rotation=rotation, hover=hover)
         ctx.memory["phase"] = "donor_pick"
-        # Shelf pitch is 25 mm: a 26 mm aperture keeps the finger pads inside the gaps
-        # beside the slice (a wider one pushed the neighbour over, then two came up).
         yield from grip_steps(ctx, arm, DONOR_OPEN, 2)
         yield from self.free_move(arm, hover, rotation, min_tcp_z=self.table + 0.11, holding=False, allow_flip=False)
         yield from self.linear_move(arm, g["tcp"], rotation, step_m=0.015)
@@ -298,9 +288,6 @@ class ToastExecutor(ZoneExecutor):
         slice_in_tool[1] = 0.0
         self.offer_slice_in_tool = unit(slice_in_tool)
         ctx.memory["phase"] = "donor_offer"
-        # Carry (slice hanging) to a turning point short of the handoff, turn flat there, then
-        # slide to the handoff point. A turn whose joint blend wanders wandered towards the
-        # toaster (6 cm away at most) and knocked the hanging slice out (L0/L35).
         turn_point = donor_tcp + np.array([-0.05, -0.05, 0.0])
         model = self.models[arm]
         if (model.solve(turn_point, rotation, ctx.joint_targets[arm]) is None
@@ -390,11 +377,6 @@ class ToastExecutor(ZoneExecutor):
             receiver_rot = self.frame(-tool_x, -up)
         self.receiver_reading = None
         n_h = tool_x
-        # Reorient well beyond the far edge first: swinging the open pads from the tool-down
-        # pose at the toaster straight into the approach point swept them through the slice
-        # and pried it out of the donor's pinch (second handoff of L5). The low horizontal
-        # staging leg is skipped when it would run over the toaster (the arm stalled on the
-        # toaster top 15 cm short of the slice in L16).
         staging = receiver_tcp + n_h * 0.16
         over_toaster = any(self.box_margin_distance(receiver_tcp[:2] + n_h[:2] * s) < 0.10 for s in (0.07, 0.11, 0.16))
         ctx.memory["phase"] = "receiver_approach"
@@ -509,10 +491,6 @@ class ToastExecutor(ZoneExecutor):
                                   box_z=approach[2] - 0.01, max_step=0.07, step_m=0.025, holding=True)
         yield from self.settle(arm, 2)
         ctx.memory["phase"] = "receiver_insert"
-        # Lower until the leading corner is 2 cm inside, then straighten while descending.
-        # Every descent is guarded: a corner catching the slot edge shows up as the measured
-        # TCP lagging above the command, and pressing on with the stiff arm has thrown the
-        # slice (and the arm) across the table.
         entry = approach.copy()
         entry[2] = self.roof + corner_drop - 0.02
         final = np.r_[centre[:2], self.roof + TIP_BELOW_TCP + 0.006]
@@ -543,12 +521,6 @@ class ToastExecutor(ZoneExecutor):
         up = final.copy()
         up[2] += 0.035
         yield from self.linear_move(arm, up, vertical, step_m=0.02, allow_partial=True)
-        # Tamp: a released slice often stays wedged at the slot entrance (top edge ~7 cm above
-        # the roof, centre too high for the rule). Push its top edge down to roof level with the
-        # closed finger tips; a slice that already dropped is simply not there. A slice released
-        # high after a blocked insert is cocked: pounding it has flung it off the table.
-        # A slice taken with the wide (off-centre) pinch goes in cocked; tamping it has
-        # flung slices off the toaster (both slices on the table in official L28).
         cocked = (getattr(self, "receiver_reading", None) or 0.0) >= RECEIVER_MAX_READING
         if status != "done" or fraction < 0.99 or cocked:
             _log(ctx, "insert_tamp", slot=slot_index, status="skipped", cocked=cocked)
@@ -563,9 +535,6 @@ class ToastExecutor(ZoneExecutor):
         tamp_xy = centre[:2]
         tamp_start = np.r_[tamp_xy, self.roof + 0.10 + TIP_BELOW_TCP]
         tamp_end = np.r_[tamp_xy, self.roof + TIP_BELOW_TCP + 0.003]
-        # Close only once the pads are clear above the slice: 3.5 cm up they still straddled a
-        # slice that had not dropped, pinched its top edge, lifted it out and let it fall
-        # (variant-4 slots in official L22/L28/L33, both slices ending on the table).
         lifted = yield from self.linear_move(arm, tamp_start, tamp_rotation, step_m=0.02, allow_partial=True)
         if lifted < 0.9:
             _log(ctx, "insert_tamp", slot=slot_index, status="skipped", lift=round(lifted, 2))
@@ -583,12 +552,7 @@ class ToastExecutor(ZoneExecutor):
         yield from self.linear_move(arm, back, tamp_rotation, step_m=0.03, allow_partial=True)
 
     def press_lever(self):
-        """Press the lever lip from outside the front wall with the closed finger tips.
-
-        The lever sits flush inside the body outline except for its front lip, so the
-        TCP goes to the lip (public ``tcp_x``) with the tool pitched 45 degrees down
-        towards the toaster; a vertical press over the lever centre lands on the body.
-        """
+        "Press the lever lip from outside the front wall with the closed finger tips."
         ctx = self.ctx
         arm = self.receiver
         top, travel, kind = lever_target(self.toaster)
@@ -604,9 +568,6 @@ class ToastExecutor(ZoneExecutor):
         yield from grip_steps(ctx, arm, 0.0, 4)
         above = np.r_[xy, top[2] + TIP_BELOW_TCP + 0.06]
         yield from self.free_move(arm, above, rotation, min_tcp_z=self.table + 0.14, holding=False, allow_flip=False)
-        # The knob top is only ~2 cm deep and the pitched pads jam against the body when the
-        # tips land a few millimetres too far in: a blocked press (measured TCP stalls while
-        # the command keeps descending) is retried with the tips shifted outwards.
         for attempt, shift in enumerate((0.005, 0.010, 0.0, 0.015)):
             xy_k = root[:2] + axis[:2] * (asset["tcp_x"] + shift)
             above_k = np.r_[xy_k, top[2] + TIP_BELOW_TCP + 0.06]

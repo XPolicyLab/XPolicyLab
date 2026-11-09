@@ -236,7 +236,6 @@ def prepare_grasp(ctx, obj, attempt=1, previous=None):
     if attempt > 1:
         yaw += math.radians(5. if hole is not None else 10.)
     width = _crossing_width(ctx, mask, local_pixels[index], closing, z, camera, shape, offset)
-    # Public X5 finger centers span 88 mm; preshape the inner finger into the hole.
     opening = float(np.clip((width+.018)/.088, .28, .75))
     signature = dict(radial=selected['radial'].tolist() if selected['radial'] is not None else None,
                      fraction=selected.get('fraction'), pixel=pixel.tolist())

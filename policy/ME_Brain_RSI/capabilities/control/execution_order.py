@@ -11,8 +11,8 @@ import numpy as np
 def template_risk(template):
     """Centroid support/concavity of the unchanged ANR4 template-origin grasp.
 
-    Raster coordinates are static mesh coordinates in metres. The 20 mm centre
-    window is only a scheduling prior; neither grasp point nor yaw is changed.
+    Raster coordinates are static mesh coordinates in metres.
+
     Empty/unknown shape gets maximum risk, not rejection of a reachable object.
     """
     mask=np.zeros((128,128),np.uint8)

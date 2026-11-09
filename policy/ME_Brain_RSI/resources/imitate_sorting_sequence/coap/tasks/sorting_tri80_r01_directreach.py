@@ -1,11 +1,4 @@
-"""tri80 r01 sorting candidate "directreach": Pick near-center right-side sources (0.06<x<=0.20) directly with the left arm when strict public IK succeeds, avoiding the table handoff.
-
-Built on the retained sorting_r13_loaded_pchip chain.  The retained formal core is
-compiled inside sorting_toy_onepixel; this module captures that final syntax tree
-through a private, run-scoped ``compile`` hook, applies its own task-local edits and
-registers the rendered source in linecache.  Only public camera images, public robot
-state and the public kinematics model are used.
-"""
+"Select direct reaches for eligible near-centre objects."
 import ast
 import builtins
 import copy

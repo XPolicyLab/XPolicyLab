@@ -9,7 +9,7 @@
     "file": "capabilities/control/conveyor.py",
     "resource": "resources/match_and_pick_from_conveyor/coap/tasks/conveyor.py",
     "package": false,
-    "sha256": "f48ca2ac75129ca93346e702ef45ff454d7c35a723f27ee1d1573df1c2e7a132"
+    "sha256": "d7426c3ead1c88ce7e784cc890534f943b7a5d94234ef7f02d2727b2ae8397c1"
   },
   "b88r42wq.tasks.conveyor_vision": {
     "file": "capabilities/perception/conveyor_vision.py",
@@ -51,7 +51,7 @@
     "file": "capabilities/control/model_for_make_kong.py",
     "resource": "resources/match_and_pick_from_conveyor/model.py",
     "package": false,
-    "sha256": "d5636bce739df89da3aaa7a07faa9b5a7f62f968368cb3455e28dd2ec1c04cc7"
+    "sha256": "ac45430187e8f52266af37f37cac6839b9a8e036e590928a047fe14025e05d5e"
   },
   "b88r42wq.evidence": {
     "file": "capabilities/observation/evidence.py",

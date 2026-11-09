@@ -1,15 +1,4 @@
-"""cover_blocks r01 variant A: vertical approach / retreat, minimal change from r00.
-
-Change: every grasp is preceded by a TRANSIT waypoint directly above the grasp
-point at TCP z=0.960 with the final pinch quaternion, then a purely vertical
-descent; carry at TCP z=0.930 (vertical lift, horizontal translate, vertical
-lower); after release ascend vertically to z=0.960 before homing.
-Rationale: r00's single home->hover `move` interpolated position and rotation
-together, dipping to TCP z~0.846 short of the middle cup while still rotating,
-so the open fingertips (12.6 mm below TCP) swept the cup top (z=0.837) and
-displaced it before the pinch.  Everything else (perception, arms, grasp_z,
-grip, release_dz, final home + hold) is unchanged.  No runtime gates or aborts.
-"""
+"Approach and leave the grasp and release points vertically."
 import numpy as np
 
 from coap.tasks.cover_blocks_r00 import (COLOURS, CUBE_Y, CUP_Y, XS, arm_for,
@@ -31,7 +20,7 @@ P = dict(
 )
 
 
-FAR_XY = (0.0, CUBE_Y)    # middle cube spot: 0.44 m from the left base; above TCP z~0.92 the IK folds the arm
+FAR_XY = (0.0, CUBE_Y)
 
 
 def heights(src_xy, dst_xy):

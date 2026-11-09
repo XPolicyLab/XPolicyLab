@@ -54,9 +54,6 @@ def _grasp_geometry(geometry):
         quats = [_tilt(60)]
         side_approach = True
     elif family == 'ice_cream':
-        # Keep the upper finger corners below the widening cup rim. The public
-        # finger/CAD sweep at 60 degrees and 45 mm intersects that rim while
-        # still fully open; this lower 45-degree pinch clears the approach.
         local[:2] = 0.
         local[2] = .025
         quats = [_tilt(45)]
@@ -112,10 +109,6 @@ def _lift_distance(geometry):
 
 def _side_approach_offsets(geometry):
     if geometry['family'] == 'ice_cream':
-        # The former 120 mm frontal offset sends the tilted wrist into the
-        # fixed public conveyor frame for near-side cups. Use the last half
-        # of that same local sweep: preserve its 35/120 vertical slope, tool
-        # rotation, cup stem contact and measured-arrival tolerances.
         return .060, .0175
     return .120, .035
 

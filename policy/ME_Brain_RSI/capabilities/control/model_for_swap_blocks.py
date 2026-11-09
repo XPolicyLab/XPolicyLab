@@ -48,24 +48,15 @@ class Episode:
         return self.cube_grasp_contact_fraction(arm,height)
     RIGHT_SLIP_ALLOWANCE=.015
     def place_lowest_z(self,arm,height=.035):
-        """Lowest gripper point at release. The right grasp lets the cube slide
-        0.5-1.7 cm down the pads during transport (50-episode official
-        diagnostics; the left never slips), so a right release at grasp height
-        presses the slipped cube into the mat and tips it when the jaws open.
-        Release above that band instead; a cube that did not slip drops <= 1.5 cm."""
+        "Return the release height for the selected arm."
         z=MAT_TOP+height*self.cube_contact_fraction(arm,height)
         return z+self.RIGHT_SLIP_ALLOWANCE if arm=='right' else z
     def transport_z(self,src_xy,dst_xy,arm='left'):
-        # The left grasp holds the cube lower; a two-mat transport then passes
-        # the middle cube's envelope by 0.5 mm. Raise the far endpoint 1 cm so
-        # the straight path clears it; the right arm cannot reach higher at mat0.
         two_mats=np.linalg.norm(np.asarray(src_xy)-np.asarray(dst_xy))>.15
         # Over mat2 the left arm is at its reach limit and cannot go higher; a
         # transport toward mat2 already starts high above mat0.
         return 1.000 if arm=='left' and two_mats and dst_xy[0]<.05 else .990
     def approach_steps(self,arm,target_xy):
-        # The physical arm lags a long fast approach (0.22 rad at the far mat);
-        # with a 3 cm clearance that lag dipped the open jaws into the cube.
         start=np.asarray(self.obs['state'][arm+'_ee_pose'][:2]);distance=float(np.linalg.norm(start-np.asarray(target_xy)))
         return int(np.clip(round(18*distance/.30),18,32))
     def transport_steps(self,src_xy,dst_xy):
@@ -190,15 +181,9 @@ class Episode:
         self.log('transfer_scene_for_planning',observed_mats=[p['mat'] for p in self.current_cubes()],scheduled_mats=list(self.occupancy),source_origin=by_mat[src].get('planning_origin','current_RGB'),observed_occupancy_asserted=False)
         self.source=by_mat[src];self.src=src;self.dst=dst;self.cube_height=.035;self.cube_center=CUBE_CENTER
         self.known_other_cubes=[dict(p) for p in found if p['mat']!=src]
-        # Official diagnostics over 50 episodes: the left grasp never let the cube
-        # slip (0.0 cm in 50/50 transports, including two-mat moves to mat2),
-        # the right grasp slipped 0.5-1.7 cm in every transport and caused all 8
-        # failures. Prefer the left arm for every move; the right is a fallback.
         preferred='left'
         preopen=float(np.clip(((.035+.008-.00080716)/2+.01)/.054,0,1))
         for arm in (preferred,'right' if preferred=='left' else 'left'):
-          # Far reaches (left arm over mat2) miss the 4 cm approach height by a few
-          # millimetres; accept a lower approach/lift clearance before changing arms.
           for clearance in ((.040,.030,.025) if arm=='left' else (.040,)):
             candidates=[]
             for quarter in ((0,1,2,3) if arm=='right' else (0,2,1,3)):

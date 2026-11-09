@@ -1,8 +1,9 @@
 """push_T perception without object models: the red block and the grey pad are found by colour, measured by shape.
 
-The block's height is measured from its own image (top face vs table-contact edge), remembered for the episode and
-used to look at its top face in a 1 mm/px top-down view; the pad lies on the table. Both are described by
-t_measure.describe_t (centroid, stem direction, own outline). Robot parts are hidden with the gripper envelopes at the
+Both are described by
+t_measure.describe_t (centroid, stem direction, own outline).
+
+Robot parts are hidden with the gripper envelopes at the
 reported end-effector poses.
 """
 import cv2
@@ -231,8 +232,6 @@ class TDetector:
         usable = self.usable(rgb, state)
         out = {}
         best = None
-        # 1. the block is a raised object of its colour: every chromatic blob whose table-contact edge fits a top face
-        #    at a height >= 4 mm is a candidate (the flat pad, even when tinted like the block, is not)
         tall = []
         for blob, family in self.source_blobs(rgb, usable):
             h = self.fit_height(rgb, blob)
@@ -248,8 +247,6 @@ class TDetector:
                 if len(self.heights) < 9:
                     self.heights.append(h)
         if best is None and self.target_mode == 'mser':
-            # the block may share the table's hue (blue block, blue-lit table): stable regions of the table-plane view that
-            # stand up from the table (wall fit >= 4 mm) and are T-shaped
             for blob in self.raised_region_blobs(rgb, usable):
                 h = self.fit_height(rgb, blob)
                 if h is None or h < .004:

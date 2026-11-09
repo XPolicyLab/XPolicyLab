@@ -1,11 +1,11 @@
 """ANR14C: two independent digit readers, pad-count verified.
 
-ANR13C eval15 (random fonts, 15 official layouts): the ANS1 reader was right on
-11/15 digit sets, the standard colour-family reader on a different subset
-(seed0 L29/L6, seed1 L19 right where ANS1 added or dropped a digit).  Each
+Each
 candidate set is accepted only when the pad detector finds exactly that many
 pads (ANS1 border fit, then the standard circle fit); the ANS1 set keeps
-priority.  Offline on those 15 first frames: ANS1 alone 6 correct, combined 9.
+priority.
+
+Offline on those 15 first frames: ANS1 alone 6 correct, combined 9.
 """
 from .number_perception import NumberPerception
 from .standard_perception import StandardNumberPerception

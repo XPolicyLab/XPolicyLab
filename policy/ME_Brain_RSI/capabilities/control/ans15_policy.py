@@ -1,11 +1,10 @@
 """ANS15: ANS14 plus a bounded model identity poll before planning.
 
-eval15 (ANS10) lost two of four failed layouts to digit identities the local
-template matcher got wrong at 0.70-0.85 confidence (8 read for 5, 8 and 5
-swapped) while the model's initial review named the right digits from the
-wrist views. The model now reports the digit at each detected position; a
+The model now reports the digit at each detected position; a
 disagreement is adopted only when the model is confident (>=0.85), the local
-match is not (<0.88) and the corrected set stays unique. Only the assignment of
+match is not (<0.88) and the corrected set stays unique.
+
+Only the assignment of
 digits to pads changes; no hold, observation or put-back path is added.
 """
 import numpy as np

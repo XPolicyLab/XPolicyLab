@@ -356,8 +356,6 @@ def carry_orientations(ctx, grasp_quat, source_yaw, source_pitch, slot, *, arm="
     direction = np.asarray(slot)[:2] - base
     side_yaw = math.atan2(max(.25*np.linalg.norm(direction), direction[1]), direction[0])
     values = []
-    # Both inclinations leave the projected shell inside the public 24.19 mm rim.
-    # At 25 degrees, the 28.8/21.08 mm ellipsoid has a 22.72 mm half-width.
     for inclination, sign in ((tilt, sign) for tilt in (25., 15.) for sign in (-1., 1.)):
         vertical = np.asarray([0., 0., sign])
         rotation_axis = np.cross(axis, vertical)
@@ -435,8 +433,6 @@ def _lid_press_goals(ctx, arm, root, root_rotation, start_angle, quat):
     _, hinge = _public_body_geometry()
     panel = _lid_press_points()[arm]
     goals = []
-    # The distal finger tip is 12.57 mm beyond TCP. A 3 mm contact bias is
-    # contained by the ordinary grasp tolerance; it is not a new success gate.
     for index, angle in enumerate(np.linspace(start_angle, math.pi/2, 3)):
         rotation = Rotation.from_rotvec([angle, 0., 0.]).as_matrix()
         surface = np.asarray(root) + root_rotation @ (hinge + rotation @ (panel-hinge))

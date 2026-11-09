@@ -1,9 +1,8 @@
 """tri80 r07b sorting candidate "rimclear": cross basket0's rim high, release at the retained pose.
 
-Built on the v332 ``sorting_tri80_r02_gripperc`` route (imported unchanged).  Dev traces show
-held bodies (garage, action camera, watch) caught on basket0's rim during the retained low
-single straight carry: the hand reaches the rim zone (TCP 2-6 cm outside to inside the rim)
-with the hanging body at rim height, about table + 0.14.  The round-4 "highcarry" fixed
+Built on the v332 ``sorting_tri80_r02_gripperc`` route (imported unchanged).
+
+The round-4 "highcarry" fixed
 these drops with a global three-segment high carry (rise, traverse, descend) but added
 11-67 frames per delivery and occasionally far more, producing step-limit timeouts.
 

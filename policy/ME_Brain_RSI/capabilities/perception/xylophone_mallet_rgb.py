@@ -1,8 +1,9 @@
 """Mallet head/shaft RGB geometry for a supplied rectification plane.
 
-Public mesh: red spherical head radius 13 mm, wooden handle diameter 7.5 mm,
-local +Y from head towards handle end at 200.6 mm. Uses red circular support
-plus TWO parallel shaft boundaries, never color alone. It observes planar
+Uses red circular support
+plus TWO parallel shaft boundaries, never color alone.
+
+It observes planar
 head position/directed axis, NOT depth, roll or a verified rigid grasp.
 """
 from .xylophone_measurement import round_heads, dense_shaft
@@ -14,10 +15,7 @@ import numpy as np
 def _refined_shaft_candidates(heads, lines, distance, gray, scale):
     """Refine fragmented Hough seeds against the complete bilateral edges.
 
-    Two-pixel endpoint uncertainty over the 40 mm minimum seed gives the
-    angular search bound. Half-pixel endpoint spacing sets the angle grid.
-    Hough segments only propose directions; the unchanged metric width,
-    center offset, 30--190 mm extent and 80% BOTH-side support decide acceptance.
+    Half-pixel endpoint spacing sets the angle grid.
     """
     candidates = []
     step = np.arctan2(.5, .19*scale)
@@ -129,8 +127,6 @@ def _original_planar_mallet(rgb, scale=600):
     if not heads:
         return None
     edges = cv2.Canny(cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY), 30, 90)
-    # Short raster fragments only propose axes; acceptance still verifies
-    # the full 30--190 mm length on BOTH handle sides below.
     lines = cv2.HoughLinesP(edges, 1, np.pi/720, threshold=15,
                            minLineLength=.04*scale, maxLineGap=.01*scale)
     distance = cv2.distanceTransform(255-edges, cv2.DIST_L2, 3)

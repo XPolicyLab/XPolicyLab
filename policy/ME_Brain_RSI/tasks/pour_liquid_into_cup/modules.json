@@ -39,13 +39,13 @@
     "file": "capabilities/control/policy_for_pour_liquid_into_cup.py",
     "resource": "resources/pour_liquid_into_cup/coap/policy.py",
     "package": false,
-    "sha256": "742dae0fb9900885a412a1dbe89c9e7b8f545cab27d9cade96f151916b6f02d4"
+    "sha256": "23255dfac2007a92af5d671728e0fcb283c325a45cf98e242bcb9bb231e640b4"
   },
   "coap.perception": {
     "file": "capabilities/perception/perception_for_pour_liquid_into_cup.py",
     "resource": "resources/pour_liquid_into_cup/coap/perception.py",
     "package": false,
-    "sha256": "d3a285b886a0dc418c60a2bcc2fc4ef6b4b1c06968b9d4465a347e71a021c27f"
+    "sha256": "4b7a42ac82b32ccd3df83c95263d7b2911e8393c3a99733ea96c50b6e4f046da"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -61,5 +61,35 @@
     "resource": "resources/pour_liquid_into_cup/coap/wristcam.py",
     "package": false,
     "sha256": "5ed8b1dee23c2887bc735312a8e316b9fc62e9bee505ed372a7163898bbd3f5c"
+  },
+  "coap.bottle_entry": {
+    "file": "capabilities/geometry/pour_liquid_bottle_entry.py",
+    "resource": "resources/pour_liquid_into_cup/coap/bottle_entry.py",
+    "package": false,
+    "sha256": "931a62f4fc5baae71f99a1e4a7e5ae9ba7a97138dcb309b8c26987bcd24971eb"
+  },
+  "coap.rim_tracker": {
+    "file": "capabilities/perception/pour_liquid_rim_tracker.py",
+    "resource": "resources/pour_liquid_into_cup/coap/rim_tracker.py",
+    "sha256": "21ad53b982f8a080f48dc0f71267392b085c024de217ba0b3b2aadf316fcfb14",
+    "package": false
+  },
+  "coap.tool_surface": {
+    "file": "capabilities/geometry/pour_liquid_tool_surface.py",
+    "resource": "resources/pour_liquid_into_cup/coap/tool_surface.py",
+    "sha256": "3d6309ff0075f4b8323c51661a08aa2653b3880dd1236a193b6d29b2df849fc1",
+    "package": false
+  },
+  "coap.rim_update_guard": {
+    "file": "capabilities/geometry/pour_liquid_rim_update_guard.py",
+    "resource": "resources/pour_liquid_into_cup/coap/rim_update_guard.py",
+    "sha256": "b84145570cdd3d9f82fb844fb9d0fdd7ace4b80ee48887203d5ddad30d0da3e0",
+    "package": false
+  },
+  "coap.held_axis": {
+    "file": "capabilities/perception/pour_liquid_held_axis.py",
+    "resource": "resources/pour_liquid_into_cup/coap/held_axis.py",
+    "package": false,
+    "sha256": "a69892a1dd68471afef159ceee6d1f6ec74158cc5baf548be9615a434a73fa1e"
   }
 }

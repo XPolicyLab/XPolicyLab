@@ -59,13 +59,13 @@
     "resource": "resources/plug_in_charger/coap/vision.py",
     "package": false,
     "resource_identity": false,
-    "sha256": "e1f2fd52b26709b94e37286139ad258090235317525618e35509b030d729b52f"
+    "sha256": "3e96128839b2f7c614bbb704324054a945fa3d1204a9e91a73467c5176ef239a"
   },
   "coap.observed_contact": {
     "file": "capabilities/control/plug_in_charger_contact.py",
     "resource": "resources/plug_in_charger/coap/policy.py",
     "package": false,
     "resource_identity": false,
-    "sha256": "a581b4156b1971dd85bd56bf752e511db263f71d9f55095d2941883621c64f14"
+    "sha256": "0e2d6eeb7b869dad46f5ad8dbb417e9b071d5c563fbfc425bcd59701bdace462"
   }
 }

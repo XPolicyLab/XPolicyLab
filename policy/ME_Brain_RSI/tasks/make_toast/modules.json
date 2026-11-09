@@ -3,19 +3,19 @@
     "file": "capabilities/control/toast_random.py",
     "resource": "resources/make_toast/coap/tasks/toast_random.py",
     "package": false,
-    "sha256": "8f2b2c35647deffb59151d24b6f09d85753a8e6c6a3bde28c6167180b6b2466d"
+    "sha256": "4fe372778d1ccc08d2d9e75954d19df27ea846f2125aeac9d2fea6faa4980f52"
   },
   "coap.tasks.toast_vision": {
     "file": "capabilities/perception/toast_vision.py",
     "resource": "resources/make_toast/coap/tasks/toast_vision.py",
     "package": false,
-    "sha256": "dd0f8f34657e814f10f7296946a8ad89b7cc517f1e329ef9065dde4628b30000"
+    "sha256": "b14c297f7610762fa08ecadd5f3433d9eea7c51f896c268cc6a515b26148be69"
   },
   "coap.tasks.containers_vision": {
     "file": "capabilities/perception/containers_vision_for_pack_objects_into_box.py",
     "resource": "resources/make_toast/coap/tasks/containers_vision.py",
     "package": false,
-    "sha256": "a05d11626485e0091b728d3d95cf0b7fc8c673483158575dcd747227c8eb6c3e"
+    "sha256": "e04949d14ae4f5a2338fa1d911e47229df964f8234320d755b4572c2ce32db7c"
   },
   "coap.tasks": {
     "file": "capabilities/control/insert_key.py",
@@ -33,19 +33,19 @@
     "file": "capabilities/perception/toast_conveyor_vision.py",
     "resource": "resources/make_toast/coap/tasks/toast_conveyor_vision.py",
     "package": false,
-    "sha256": "8bf4b1ceb1e8223cc15c015ad7eca68097c02f6b2fb278ef06e06cc2537a3d8e"
+    "sha256": "27c517f58f08a536e6caa46750c614b7918c0a8ed2238c9275ccae1f233ef5fa"
   },
   "coap.executor": {
     "file": "capabilities/control/executor_for_pack_objects_into_box.py",
     "resource": "resources/make_toast/coap/executor.py",
     "package": false,
-    "sha256": "2683f32df02aa8ff986aed763ca2a92a5809758f1fdaded7e94372843ef38d90"
+    "sha256": "a660ebccd6b2a779370681122ef66da82ef9ee8f26732ca9da32ecba9717877c"
   },
   "coap.dual": {
     "file": "capabilities/control/dual.py",
     "resource": "resources/make_toast/coap/dual.py",
     "package": false,
-    "sha256": "dcf62bc21db55349dda319dabc9d4e6b848cde95ed88ecd734564a179f593d36"
+    "sha256": "f776f786654efba26ded2e378e86bc30aa39e022c8055297c81f0f02c498e480"
   },
   "coap.kinematics": {
     "file": "capabilities/motion/kinematics_for_pack_objects_into_box.py",
@@ -75,7 +75,7 @@
     "file": "capabilities/control/model_for_pack_objects_into_box.py",
     "resource": "resources/make_toast/model.py",
     "package": false,
-    "sha256": "5c5c0c00888a2ff7da64d78e0f1eb9e612d62efeed97fa5c0bb4e2f630b9c13a"
+    "sha256": "72c5ed1e176d6034b0ada3e7cf3184b4b893f9c0d68a31d8516dae84f138e476"
   },
   "coap.evidence": {
     "file": "capabilities/observation/evidence.py",

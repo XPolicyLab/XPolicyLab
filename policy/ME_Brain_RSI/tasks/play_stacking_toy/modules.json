@@ -9,7 +9,7 @@
     "file": "capabilities/control/containers.py",
     "resource": "resources/play_stacking_toy/coap/tasks/containers.py",
     "package": false,
-    "sha256": "62371d67f338f794fd097f1ae9001249cff651b6233ea658ecdf1224158fbf0c"
+    "sha256": "3e6e655a7e108cdaff5ef8366f1ae66be7e200a15a1fb59ad0aff9ece37c86e7"
   },
   "b88r42wq.motion": {
     "file": "capabilities/motion/motion_for_make_kong.py",
@@ -33,19 +33,19 @@
     "file": "capabilities/control/organize.py",
     "resource": "resources/play_stacking_toy/coap/tasks/organize.py",
     "package": false,
-    "sha256": "549aab11e9990a6b458e4eaa185fdd567149f342f4bf4667a494ce91738a5c74"
+    "sha256": "6b1072110c5a3d6b8dc1d31a2848d59d4bcc7eba33fa2f830e1547f009a4456e"
   },
   "b88r42wq.tasks.organize_vision": {
     "file": "capabilities/perception/organize_vision.py",
     "resource": "resources/play_stacking_toy/coap/tasks/organize_vision.py",
     "package": false,
-    "sha256": "208339b1216fd093403e0864df4bd143269e8358c45a3ebb0341d28ab99e7940"
+    "sha256": "b6550a0cc18b30dc1a8afebc15b1b1f5c3965efa7de229dc8ca1a6e6207947c0"
   },
   "b88r42wq.tasks.containers_vision": {
     "file": "capabilities/perception/containers_vision.py",
     "resource": "resources/play_stacking_toy/coap/tasks/containers_vision.py",
     "package": false,
-    "sha256": "e60c4eafb69ff0861dacd56927c373f912be2ed00d1218877ad1dd7738f32513"
+    "sha256": "ccbb0ad565371a8070df870e49f6b8a28df02dd44827feb2b2a3e2f21127e92f"
   },
   "b88r42wq.tasks": {
     "file": "capabilities/control/insert_key.py",
@@ -63,7 +63,7 @@
     "file": "capabilities/control/model_for_make_kong.py",
     "resource": "resources/play_stacking_toy/model.py",
     "package": false,
-    "sha256": "d5636bce739df89da3aaa7a07faa9b5a7f62f968368cb3455e28dd2ec1c04cc7"
+    "sha256": "ac45430187e8f52266af37f37cac6839b9a8e036e590928a047fe14025e05d5e"
   },
   "b88r42wq.evidence": {
     "file": "capabilities/observation/evidence.py",

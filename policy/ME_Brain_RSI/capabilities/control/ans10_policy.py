@@ -1,9 +1,10 @@
 """ANS10: ANS9 with a leaner step budget per transfer leg.
 
-ANS9 dev5 layout 5 ran out of the 1050 steps after four of five digits with
-three staging hand-offs (~140 steps per leg). Free motion without a held digit
+Free motion without a held digit
 moves faster, the descent/lowering use coarse steps until the final precision
-band, and the steady release dwells are shortened. Grasp, carry and release
+band, and the steady release dwells are shortened.
+
+Grasp, carry and release
 geometry are unchanged.
 """
 import numpy as np
@@ -11,7 +12,7 @@ from .ans9_policy import Policy as ANS9
 from .geometry import bounded_pose
 
 FREE_STEP=.024                     # approach/retreat/home without a held digit
-PRE_DESCENT_CLEARANCE=.026         # coarse descent stops 26 mm above the grasp height
+PRE_DESCENT_CLEARANCE=.026
 FREE_PREFIXES=('approach_','retreat_','home_','putback_retreat_','putback_home_','empty_home_','unreachable_home_')
 
 

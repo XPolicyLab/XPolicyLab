@@ -1,9 +1,6 @@
 """RGB perception for fasten_screws: head-camera scene (nuts + bolts by colour) and wrist-camera model fits.
 
 Objects (public assets): five colour indices shared by nut and bolt (0 yellow, 1 red, 2 blue, 3 gray, 4 purple).
-Hex nut 35.3 mm across flats (flats normal to world x, yaw fixed by the layouts), 40.7 mm across corners,
-19.1 mm tall, origin 8.6 mm above its base. Bolt: hex head (36 x 41.5 mm, 15 mm tall) plus a 3 mm pitch
-right-hand threaded shaft (crest radius 11.75 mm) up to 52.5 mm above the table, 2 mm top chamfer (r 10.3 mm).
 """
 import cv2
 import numpy as np
@@ -104,7 +101,7 @@ def table_region_mask(shape, K, T, z=0.78):
 
 # ---------------------------------------------------------------- object models (world points for silhouettes)
 def hex_corners(center_xy, corner_r, yaw=0.0):
-    angles = yaw + np.radians(30) + np.arange(6) * np.pi / 3   # flats normal to x when yaw = 0: corners at +-30, 90, ...
+    angles = yaw + np.radians(30) + np.arange(6) * np.pi / 3
     return np.column_stack((center_xy[0] + corner_r * np.cos(angles), center_xy[1] + corner_r * np.sin(angles)))
 
 
@@ -339,8 +336,7 @@ def held_nut_offset(rgb, K, T, name, tip_xyz, z_axis, yaw=0.0, ignore=None, z_se
 
     The gripper holds the nut by two flats at mid-height, so nominally the prism base sits NUT_HEIGHT/2 below the fingertip
     plane; while threading the pads may slide down the flats, so the base height is searched over z_search (slip = best
-    base minus nominal). (A hole-centroid estimate is biased ~7 mm along z_ee by the oblique view through the bore.)
-    Returns dict(offset=[dx, dy], along_z_ee, slip, iou, area) or None.
+    base minus nominal).
     """
     nominal = tip_xyz[2] - NUT_HEIGHT / 2
     region = model_region('nut', tip_xyz[:2], K, T, rgb.shape, nominal, yaw)

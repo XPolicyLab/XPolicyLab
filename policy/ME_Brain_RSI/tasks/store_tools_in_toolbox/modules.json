@@ -24,7 +24,7 @@
     "file": "capabilities/motion/kinematics.py",
     "resource": "resources/store_tools_in_toolbox/coap/kinematics.py",
     "package": false,
-    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0",
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f",
     "resource_identity": true
   },
   "coap.manipulation": {
@@ -73,7 +73,7 @@
     "file": "capabilities/motion/robot_motion_geometry.py",
     "resource": "resources/store_tools_in_toolbox/coap/robot_motion_geometry.py",
     "package": false,
-    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7",
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c",
     "resource_identity": true
   },
   "coap.tasks": {
@@ -101,7 +101,7 @@
     "file": "capabilities/control/egg_initial.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/egg_initial.py",
     "package": false,
-    "sha256": "0df7a6fdbe05a06275d3e5e30070149a0eb9fbafbb3ed767f89ef84411a05012",
+    "sha256": "9da27976020255b7fdbee452a389e3940ec0d97a32a5482a65f768159f9849c9",
     "resource_identity": true
   },
   "coap.tasks.egg_lid": {
@@ -115,7 +115,7 @@
     "file": "capabilities/control/egg_model_fit_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/egg_model_fit.py",
     "package": false,
-    "sha256": "621f6d433ee11d757b3c8dd64c9c2182a55b1535fd562d9b18c0942e6e4149fa",
+    "sha256": "58a8caa189e1b77f2fbb416ccd3649128df12999d312eef8caa3433c597f91f6",
     "resource_identity": true
   },
   "coap.tasks.egg_motion": {
@@ -136,14 +136,14 @@
     "file": "capabilities/control/egg_single_arm_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/egg_single_arm.py",
     "package": false,
-    "sha256": "8915a9c92d9eb9bdcf4c5f1b90840e633763067d92309c596f6b687800747dc1",
+    "sha256": "31d728518aa7ca9a1fdccf20aaacecda8fe8071441c78b5bcb5720f669674fa7",
     "resource_identity": true
   },
   "coap.tasks.egg_source": {
     "file": "capabilities/control/egg_source_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/egg_source.py",
     "package": false,
-    "sha256": "1eac3535328cddf919135c05f82991fd2c401f695174f995485c1fc773a2245e",
+    "sha256": "8609d7062c55c2122878dc9792ce2072675aa8f70468eb573f55f1f8a459db11",
     "resource_identity": true
   },
   "coap.tasks.finite_ik": {
@@ -157,7 +157,7 @@
     "file": "capabilities/control/garment_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/garment.py",
     "package": false,
-    "sha256": "6f4d8e9e049fdb1a088266ee3e0cb39ccc960a1b8d8ef45b45f8e37421579fcc",
+    "sha256": "fd1685427cac9a1472529a83d9c1721ff3af814b2303cfaa81051640f3cda940",
     "resource_identity": true
   },
   "coap.tasks.garment_contact": {
@@ -192,7 +192,7 @@
     "file": "capabilities/motion/key_collision.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/key_collision.py",
     "package": false,
-    "sha256": "2f439730aa7f9d986197de28e53cdb0ff239b93d556df284c10381f26c0b9451",
+    "sha256": "87bc7f049e00423e56771557dc40b06b02a38ac21e1d88001c83e84398b31aa9",
     "resource_identity": true
   },
   "coap.tasks.key_handoff": {
@@ -206,21 +206,21 @@
     "file": "capabilities/control/key_visual.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/key_visual.py",
     "package": false,
-    "sha256": "fb3bd937bed25f29f532da7239aa50f3f093d53f81407a9638b8e46006b5f262",
+    "sha256": "6ea8230c10fd45e7f54a23b9a4fb9a17e82395b7e0748f58677f54724b0366f5",
     "resource_identity": true
   },
   "coap.tasks.long_horizon": {
     "file": "capabilities/control/long_horizon_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/long_horizon.py",
     "package": false,
-    "sha256": "515731114b6084eca4a1d4eac82ad29d296a576b4f003f7ff544e295d31c4fd1",
+    "sha256": "9bfa4d2f707f8ad915a625935539f9bc4af73d80d74fde9e7522dbc0da15125c",
     "resource_identity": true
   },
   "coap.tasks.memory": {
     "file": "capabilities/planning/memory.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/memory.py",
     "package": false,
-    "sha256": "652e0a63f3157bbbf19087c6d197f898e71918eed95a29b1086fc9a564169a3c",
+    "sha256": "6cb87fca653ada855a47603bb2979d9cba01638a679006476a6d5ee005fdc60b",
     "resource_identity": true
   },
   "coap.tasks.memory_approach": {
@@ -234,7 +234,7 @@
     "file": "capabilities/geometry/memory_geometry.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/memory_geometry.py",
     "package": false,
-    "sha256": "94933d41c2f465141798ac66ea4f92f6c4a03997e598d165b8d14bc994665467",
+    "sha256": "987b4846760ae7246150d6374f53f257c3a0293c60205a346941394b85464041",
     "resource_identity": true
   },
   "coap.tasks.memory_identity": {
@@ -339,7 +339,7 @@
     "file": "capabilities/motion/mug_motion.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/mug_motion.py",
     "package": false,
-    "sha256": "04f2f453fca455fc0a29dc4781e041a092736549d70c193f9f7b9107819f1a6c",
+    "sha256": "824ba61851d515a437a6b5ad755514ee28023d1d9b7e37291c5a8d466645e499",
     "resource_identity": true
   },
   "coap.tasks.mug_observation": {
@@ -388,35 +388,28 @@
     "file": "capabilities/control/pen_holder_support_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/pen_holder_support.py",
     "package": false,
-    "sha256": "37961e94ba902e209f8120e9f30ecae6cc82bc98d185e10822437126d21a5282",
+    "sha256": "f6c114267c343ad239d31bce964439200a8b62c676d746914f40ef68ad6d09e4",
     "resource_identity": true
   },
   "coap.tasks.pen_holder_visibility": {
     "file": "capabilities/control/pen_holder_visibility_for_fold_clothes.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/pen_holder_visibility.py",
     "package": false,
-    "sha256": "6bf772baab436f0fc651fd9fe3b9f29d1d4d192276a4d22186abd5b9a2b8cf00",
-    "resource_identity": true
-  },
-  "coap.tasks.pen_source": {
-    "file": "capabilities/control/pen_source.py",
-    "resource": "resources/store_tools_in_toolbox/coap/tasks/pen_source.py",
-    "package": false,
-    "sha256": "0d95758d4cc63fe4b2f0a627805641b8e806767f57a985edeb318c0f5aa10b34",
+    "sha256": "56be8d99efdf3ac214e6e33978cdd7f359aedfc788f7a7cf63fcc2f01a481a5d",
     "resource_identity": true
   },
   "coap.tasks.precision": {
     "file": "capabilities/control/imitate_sorting_sequence_coap_tasks_precision.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/precision.py",
     "package": false,
-    "sha256": "57cef6e60af9ff6e10d2dd88f80dcbbf7de541eaf9cd2daa351abc57317c24a6",
+    "sha256": "69a607606d439468cbf37909e5392093ffc81c5111f323d7e23add0f89849f1f",
     "resource_identity": true
   },
   "coap.tasks.precision_geometry": {
     "file": "capabilities/geometry/precision_geometry.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/precision_geometry.py",
     "package": false,
-    "sha256": "51aa4ad94385f5f971b89902ec858f55fd52e05ca86c1e88a96a57711048d172",
+    "sha256": "e65b1a875032d7b8ef94a3c50e83510de07195f8fd282363e98a51e05e9e35f8",
     "resource_identity": true
   },
   "coap.tasks.precision_planning": {
@@ -451,56 +444,56 @@
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_r11_seeded_a.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_r11_seeded_a.py",
     "package": false,
-    "sha256": "7200a313286846f8d7d4af665dc173b7064dee3de5765647c2a634b30ca422c9",
+    "sha256": "81c13cc3c2d2fbe57c313e28d74e6f8455e36a163ec616a32742c1c0275bf863",
     "resource_identity": true
   },
   "coap.tasks.toolbox_support": {
     "file": "capabilities/control/toolbox_support.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_support.py",
     "package": false,
-    "sha256": "18a8a41687fe3736fcddadd5dae32d9793d9734dc38934893c4c8f76d6046e2c",
+    "sha256": "51270278f044ed7f6b90a1db5b3fe1a927a4e87cec8cab7a288a3e3acfa45dca",
     "resource_identity": true
   },
   "coap.tasks.toolbox_tri80_r01_plierfirst": {
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_tri80_r01_plierfirst.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_tri80_r01_plierfirst.py",
     "package": false,
-    "sha256": "5ede2cdb66c04a054670aa45c6fe184e5221debb9e6b4a2680442b801bfebb40",
+    "sha256": "639d0c4c76268c84a95e658e1ffb44f9080baea26aac4943506a267cb6eac823",
     "resource_identity": true
   },
   "coap.tasks.toolbox_tri80_r02_dualham": {
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_tri80_r02_dualham.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_tri80_r02_dualham.py",
     "package": false,
-    "sha256": "0d6a5755cfd4aaa761a46df78983a9d4c02672e7fa76b27d7195e86259ed6b82",
+    "sha256": "00fd8a72d23ca58d3d65877c11e0671d471cb0333b44c829173dc26fa5944377",
     "resource_identity": true
   },
   "coap.tasks.toolbox_tri80_r03_hamseat": {
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_tri80_r03_hamseat.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_tri80_r03_hamseat.py",
     "package": false,
-    "sha256": "70e8e08dfd6be9b1b681fe3a0ee60558d366042cd40033796286991760e92d63",
+    "sha256": "6b7317dda0f38dc2bfdc9221c1cd13722e167d9c500cab1747c5c6502d354049",
     "resource_identity": true
   },
   "coap.tasks.toolbox_tri80_r04_homefix": {
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_tri80_r04_homefix.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_tri80_r04_homefix.py",
     "package": false,
-    "sha256": "160afc7af530382433ff7163045ba4918c4f654ff6e17c9c687c66dd2ea8c8ed",
+    "sha256": "6cbf9a6f846ca2dd6e4b35c21b9c92240dc558d1587241ae5dd5089d9ff345ce",
     "resource_identity": true
   },
   "coap.tasks.toolbox_tri80_r05_hfreach": {
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_tri80_r05_hfreach.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_tri80_r05_hfreach.py",
     "package": false,
-    "sha256": "81072240fe131e5eb91c117e4cd424dbf394f4894afe65b2373beb4967dfea0c",
+    "sha256": "9ca7d8d3ea1c926bbb15102343abd4a9b10cea521488682e59292909ecfa4ca4",
     "resource_identity": true
   },
   "coap.tasks.toolbox_tri80_r07_shiftup": {
     "file": "capabilities/control/store_tools_in_toolbox_coap_tasks_toolbox_tri80_r07_shiftup.py",
     "resource": "resources/store_tools_in_toolbox/coap/tasks/toolbox_tri80_r07_shiftup.py",
     "package": false,
-    "sha256": "8ca23cefa3a2d78d1b57a426111f7581473c93bf99473f1e21be027b7bf5472e",
+    "sha256": "9fd23734bd4758c7fc84f4a8bdf385f8373cd7544394728a06dd3ab96eecb0f8",
     "resource_identity": true
   },
   "coap.visibility": {

@@ -1,29 +1,4 @@
-"""tri80 r07b sorting candidate "noabort": never end the episode on a visual count mismatch.
-
-Built on the v332 ``sorting_tri80_r02_gripperc`` chain (round-1 ``directreach`` core plus
-round-2 ``gripcheck``; both imported unchanged).  Dev traces show that the v332 count
-recovery is what ends these episodes: the retained visibility move (0.16 m) followed by the
-round-1 recount offsets takes both learner arms about 0.40 m from their start pose while the
-demonstrator is still active, which the task ends as a failure (step ~71).  The underlying
-miss is perceptual: sources at the right table edge (x 0.39-0.40) project just beyond the
-retained 0.40 m detection bound, and a demonstration body can be hidden under the
-demonstrator's gripper at step 0 (it is the first one picked).
-
-This module replaces only the count-recovery block of the retained core:
-
-* re-measure the same step-0 frame with the object x bound widened to 0.47 m, accepting only
-  extra bodies on the right edge (x >= 0.385) that do not duplicate a measured body;
-* only if sources are still missing, use the retained visibility move and at most one small
-  extra offset (total hand displacement about 0.24 m), uniting sources by position;
-  demonstrations are replaced only by a complete later measurement (retained rule);
-* never raise: a source without a visible demonstration counterpart is paired with a
-  synthetic demonstration (its own view).  Its departure cannot be observed, so after the
-  demonstration it is ordered into the most stretched slot of the observed demonstrator
-  rhythm (before the first onset, a doubled interval, or before the demonstrator's return);
-  a demonstration without a visible source ends the replay queue just before it.
-
-Episodes with a complete first measurement execute exactly the v332 program.
-"""
+"Retry scene measurement when the visible object count is incomplete."
 import ast
 import builtins
 import copy

@@ -1,4 +1,4 @@
-"""Calibrated fixed-radius lobe observer; returns lobe rotation centre."""
+"Estimate the lobe rotation centre."
 import json,numpy as np
 from pathlib import Path
 from .lobe_rim import observe

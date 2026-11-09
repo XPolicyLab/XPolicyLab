@@ -1,18 +1,9 @@
-"""RGB script policy for sweep_blocks. RGB (head camera) and proprioception only; EE pose actions; 1000 steps.
+"""RGB controller for cleaning cubes into a dustpan.
 
-Task: put the small cubes into the dustpan with the brush and the dustpan left on the table. Every target below is computed
-from this episode's head-camera perception (dustpan / brush / cube poses fitted with the public CAD silhouettes), the public
-CAD part boxes, and the robot's own kinematics / reach model; no scorer geometry and no fixed world spots.
-Flow: clear the head view -> head camera fits the dustpan (position + yaw), the brush (position + head direction) and the
-cubes -> the dustpan target pose: left where it is when the right arm can release over its floor and its mouth faces the
-cube side served by the brush hand (the right arm), else the reachable pose nearest to the perceived cube cluster with the
-mouth facing the cubes -> the brush (the left arm pinches it) is laid down where a sweep into that mouth ends: in front of
-the mouth on the cube side, clear of the pan, the cubes and the table edge -> the right arm picks every cube top-down and
-releases it over the pan's walled floor (points derived from the pan CAD, the cube size and the open finger footprint),
-re-detecting the remaining cubes from the head camera after every drop -> both arms home.
-Every leg (approach, in-place turn, carry) is checked against the wrist-roll model joint6 = base yaw - closing heading
-(validated on the released arm's IK, 1 deg median error): headings are stepped along the direction that keeps joint6 inside
-its +-180 deg limit, because the IK jumps to a wild branch when the required roll crosses it. No model, no API or network call.
+Fit the dustpan, brush and cubes from the head camera using public asset silhouettes.
+Select a reachable dustpan pose, place the brush clear of the opening and plan
+cube releases over the tray floor. Reobserve the remaining cubes after each
+release, then return both arms to their initial poses.
 """
 import json
 from pathlib import Path
@@ -27,19 +18,16 @@ ARMS=('left','right')
 TCP=np.array([0.145,0.,0.])
 STEP_LIMIT=1000
 CLEAR_TCP={'left':np.array([-0.50,-0.40,TABLE_Z+0.22]),'right':np.array([0.50,-0.40,TABLE_Z+0.22])}
-REST_TCP={'left':np.array([-0.50,-0.22,TABLE_Z+0.20]),'right':np.array([0.55,-0.25,TABLE_Z+0.22])}   # idle / viewing poses: straight paths to them stay >0.17 m from the own shoulder axis (the base would otherwise swing)
+REST_TCP={'left':np.array([-0.50,-0.22,TABLE_Z+0.20]),'right':np.array([0.55,-0.25,TABLE_Z+0.22])}
 REST_ALPHA={'left':np.pi/2,'right':-np.pi/2}        # closing along y with the wrist near its roll centre on both sides
 SHOULDER={'left':np.array([-0.30,-0.43]),'right':np.array([0.30,-0.43])}
 # reach of top-down poses measured on the released arm's IK (configs/reach.json):
 # farthest solvable TCP distance from the shoulder per height, lean angle and lean direction relative to the shoulder
 REACH=json.loads((Path(__file__).resolve().parents[1]/'configs/reach.json').read_text())
 REACH_Z=[float(z) for z in REACH['meta']['z']];REACH_P=[float(p) for p in REACH['meta']['pitch_deg']];REACH_B=[float(b) for b in REACH['meta']['lean_bins_deg']]
-REACH_MARGIN=0.008                     # the table holds 5 cm-grid successes (true boundary farther); small safety margin
+REACH_MARGIN=0.008
 PITCHES=(0.,np.deg2rad(12.),np.deg2rad(24.),np.deg2rad(36.))
 J6_MAX=np.deg2rad(150.)                # continuous joint6 budget along a leg (hard limit +-180 deg; carries stalled at 156)
-# elbow model (public X5 URDF): the wrist pitch axis (link4) lies WRIST_BACK behind the TCP along the approach axis for any wrist roll;
-# the joint-2 pivot sits PIVOT_R ahead of the joint-1 axis at PIVOT_Z; the arm is straight at 0.515 m wrist-pivot distance and the
-# IK then falls onto the elbow-down branch (joint 4 pinned at its limit) from which it never returns -> every commanded pose stays inside
 WRIST_BACK=0.2417
 ARM_BASE={'left':np.array([-0.30,-0.45]),'right':np.array([0.30,-0.45])}
 PIVOT_R=0.02;PIVOT_Z=TABLE_Z+0.1005
@@ -49,9 +37,9 @@ PRE_OPEN=1.0
 PAD_BELOW_TCP=0.013
 PAN_PINCH=(0.075,-0.05)                # asset-frame pinch point on a side wall (x sign = wall), at the pan's centre of mass
 PAN_PINCH_YS=(-0.05,-0.03,-0.075,-0.095)   # alternative pinch points along the wall (the nearest to the shoulder keeps the arm bent; -0.095 = the wall's mouth end)
-PAN_GRASP_Z=TABLE_Z+0.028              # pads 1.5-7.5 cm above the table around the 4.2 cm wall
+PAN_GRASP_Z=TABLE_Z+0.028
 PAN_LIFT=0.11
-BROOM_HEAD_Z=TABLE_Z+0.024             # pads 1.1-9.7 cm up around the 3.7 cm tall head
+BROOM_HEAD_Z=TABLE_Z+0.024
 BROOM_HANDLE_Z=TABLE_Z+0.020
 BROOM_LIFT=0.12
 HANDLE_TIP=np.deg2rad(35.)             # a handle-pinched brush tips this much about the pinch axis (cylinder in PhysX)
@@ -63,17 +51,17 @@ BROOM_GRASPS=(('head',(BROOM['head_z'][1]/2,(BROOM['head_y'][0]+BROOM['head_y'][
 DRAG_RADII=(0.33,0.25)                 # a brush that is out of reach or in the way is first dragged by its handle to a point this far from the shoulder
 DRAG_ANGLES=(90.,80.,100.,70.,110.,60.,120.,50.,130.,40.,140.,30.,150.)   # directions (deg, from the shoulder, 90 = straight ahead) of the drag destinations
 PUSH_CLEARANCE=0.01                    # pad face to brush edge before a push
-HANDLE_CARRY=0.17                      # a handle-pinched brush tips ~35 deg about the pinch: carry high so the head clears the dustpan
+HANDLE_CARRY=0.17
 GRIP_MIN={'pan':0.0008,'head':0.45,'handle':0.07,'cube':0.05}
 LIFT_YELLOW_RATIO=0.55                 # wrist-image yellow fraction after the lift relative to the closed frame: a held object keeps its apparent size
 LIFT_YELLOW_MIN=0.03
-BROOM_CARRY_FLOOR=TABLE_Z+0.085        # lowest head-pinch carry: the level brush bottom then clears the 4.8 cm dustpan parts
-PAN_CARRY_FLOOR=TABLE_Z+0.075          # pan bottom 4.7 cm up, over the 3.7 cm brush head
-CUBE_CARRY_MIN=0.07                    # lowest cube carry height: pad tips 5.7 cm up, over the 4.8 cm dustpan back
+BROOM_CARRY_FLOOR=TABLE_Z+0.085
+PAN_CARRY_FLOOR=TABLE_Z+0.075
+CUBE_CARRY_MIN=0.07
 PAD_HALF_WIDTH=0.03                    # pad half width across the approach axis (the corner that dips when leaning)
 CUBE_GRASP_Z=TABLE_Z+0.017
 CUBE_LIFT=0.08
-CUBE_PRE_OPEN=0.75                     # 5.9 cm gap: +-2 cm of pinch tolerance on the 1.9 cm cube, a short finger footprint
+CUBE_PRE_OPEN=0.75
 CUBE_RELEASE_OPEN=0.65
 DROP_TCP_DZ=0.045
 HOVER_DZ=0.12
@@ -83,8 +71,8 @@ FINGER_PAD=0.037                       # finger thickness along the closing axis
 FINGER_WIDTH=0.06                      # pad width across (along the free axis)
 PAN_YAW_STEPS=np.deg2rad((0.,15.,-15.))  # dustpan target headings around the mouth-towards-the-cubes direction
 MOUTH_CONE=np.deg2rad(30.)             # the mouth faces the brush hand's (right arm's) side: within this of the shoulder-to-shoulder axis
-BRUSH_GAP=0.03                         # brush footprint to dustpan footprint at the sweep-end pose (the pan is set down within ~3 cm of its plan)
-CUBE_GAP=0.03                          # brush footprint to cube footprints (the head-camera cube filter drops blobs within 2 cm of the brush)
+BRUSH_GAP=0.03
+CUBE_GAP=0.03
 
 
 def pose_from(R,p):return np.r_[np.asarray(p,float),matrix_quat(R)]
@@ -132,7 +120,7 @@ def reach_limit(z_tcp,side,pitch,rel):
 
 
 def wrist_dist(xy,z_tcp,side,alpha,pitch):
-    """Distance between the wrist pitch axis and the shoulder pivot for a top-down / leaning pose (0.515 = straight arm)."""
+    "Compute the wrist-to-shoulder distance for the requested pose family."
     th=float(pitch);w=np.r_[np.asarray(xy,float)+WRIST_BACK*np.sin(th)*lean_dir(alpha),z_tcp+WRIST_BACK*np.cos(th)]
     d=w[:2]-ARM_BASE[side];n=float(np.linalg.norm(d));piv=np.r_[ARM_BASE[side]+PIVOT_R*d/max(n,1e-9),PIVOT_Z]
     return float(np.linalg.norm(w-piv))
@@ -191,7 +179,7 @@ def inner_point(xy,side,z_tcp,alpha=0.):
 
 
 def grasp_z_for(gz,pitch):
-    """TCP height for a pinch at nominal height gz: raised when leaning so the lowest pad corner stays 3 mm over the table."""
+    "Adjust the pinch height for the clearance of a tilted pad above the table."
     return float(max(gz,TABLE_Z+0.003+PAD_BELOW_TCP*np.cos(pitch)+PAD_HALF_WIDTH*np.sin(pitch)))
 
 
@@ -341,7 +329,7 @@ class Policy:
         return float(np.mean((hsv[...,0]>=18)&(hsv[...,0]<=40)&(hsv[...,1]>=70)&(hsv[...,2]>=90)))
 
     def wrist_refine(self,t,obs,side,g,a):
-        """Centre a brush pinch across the pads from the wrist image at the hover: the head fit is 1-2 cm off, the handle is 2.2 cm wide."""
+        "Centre the brush between the pads from the wrist image."
         img=obs['vision'].get(f'cam_{side}_wrist',{}).get('color')
         if img is None:return
         u=np.array([np.cos(t['yaw']),np.sin(t['yaw'])]);across=np.array([np.cos(a),np.sin(a)]);head=t.get('grasp_kind')=='head'
@@ -363,7 +351,7 @@ class Policy:
         return True
 
     def elbow_over(self,obs,side):
-        """True when the arm sits on the elbow-down IK branch (joint 3 past 180 deg or joint 4 at its limit)."""
+        "Detect the elbow-down inverse-kinematics branch."
         q=obs['state'].get(side+'_arm_joint_state')
         if q is None or len(q)<6:return False
         return np.degrees(wrap(float(q[2])))<-10. or np.degrees(float(q[3]))<-120.
@@ -473,8 +461,7 @@ class Policy:
         return min(options,key=lambda q:q['cost']) if options else None
 
     def plan_push(self,b,pan_rects,j6_start,start=None,keep_clear=(),pan_full=None):
-        """Brush out of reach for any pinch: push its far side with the closed fingers towards the robot by 15 cm (then re-plan).
-        The push point is at the centre of mass (translation) or at the handle (the brush swings its handle towards the robot)."""
+        "The push point is at the centre of mass (translation) or at the handle (the brush swings its handle towards the robot)."
         bxy=np.asarray(b['xy'],float);byaw=float(b['yaw']);u=np.array([np.cos(byaw),np.sin(byaw)]);options=[]
         clear_xy,start_a=start if start is not None else (CLEAR_TCP['left'][:2],REST_ALPHA['left'])
         gz=TABLE_Z+0.028;v=np.array([u[1],-u[0]])
@@ -554,7 +541,7 @@ class Policy:
             for a_mod in (byaw+np.pi/2,byaw-np.pi/2):
                 if not clear_of(finger_rect(g,a_mod,gap=gap_of(pre_open),margin=0. if relaxed else 0.004),a_mod,pan_rects):continue
                 if gname=='handle' and list(local)==self.avoid_local:continue
-                pitch=pick_pitch(g,gz,'left',a_mod,gz+(0.03 if gname=='handle' else 0.04),max_pitch=np.deg2rad(12.) if (gname=='head' and not relaxed) else np.deg2rad(24.))   # a 36 deg lean never held the handle
+                pitch=pick_pitch(g,gz,'left',a_mod,gz+(0.03 if gname=='handle' else 0.04),max_pitch=np.deg2rad(12.) if (gname=='head' and not relaxed) else np.deg2rad(24.))
                 if pitch is None:continue
                 for di,(origin_f,yaw_f,dcost) in enumerate(dests):
                     origin_f=np.asarray(origin_f,float);tcp_f=origin_f+broom_point(np.zeros(2),yaw_f,local)
@@ -577,7 +564,7 @@ class Policy:
         return min(options,key=lambda q:q['cost']) if options else None
 
     def drops_reachable(self,origin,yaw):
-        """The right arm can release over enough of the pan's floor points (with ~3 cm placement error pushing them outwards)."""
+        "Check whether the right arm can release over the tray with placement clearance."
         drops=[np.asarray(origin,float)+rot2(yaw)@np.array(dp) for dp in DROPS]
         return sum(any(drop_pitch(dp,yaw+da,0.03) is not None for da in (np.pi/2,-np.pi/2)) for dp in drops)>=int(np.ceil(0.6*len(drops)))
 
@@ -672,7 +659,6 @@ class Policy:
     def plan_broom_after(self,pp,rest,j6_rest):
         """Brush plan from the rest pose once the dustpan is staged at `pp`: head pinch, else drag, push or a high handle carry."""
         staged=self.tall_pan_rects(pp['origin_f'],pp['yaw_f']);full=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.015);b=self.det['broom']
-        # a drag ends beside the dustpan as it will land (~3 cm / ~10 deg off its plan): keep that much more room around it
         wide=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.035,min_height=0.02);wide_full=object_rects('dustpan',pp['origin_f'],pp['yaw_f'],0.035)
         dests=self.broom_dests(pp['origin_f'],pp['yaw_f'])
         if not dests:return None
@@ -762,7 +748,7 @@ class Policy:
         the current pose, on to the drop heading during the carry and back feasible, fingers clear of the dustpan and brush."""
         drop_xy=self.drop_xy(self.placed);best=None
         for k in range(4):
-            a_mod=yaw+k*np.pi/2;pitch=pick_pitch(xy,CUBE_GRASP_Z,'right',a_mod,CUBE_GRASP_Z+0.05,max_pitch=np.deg2rad(24.))   # a 36 deg pinch dropped the cube when levelling
+            a_mod=yaw+k*np.pi/2;pitch=pick_pitch(xy,CUBE_GRASP_Z,'right',a_mod,CUBE_GRASP_Z+0.05,max_pitch=np.deg2rad(24.))
             if pitch is None:continue
             lean_ok=float(lean_dir(a_mod)@(SHOULDER['right']-np.asarray(xy)))>=0.
             ok0,a_pick,j6_pick,w0=leg(j6_start,from_xy,from_a,xy,a_mod,'right')
@@ -1023,11 +1009,9 @@ class Policy:
             if (abs(h-a_f)<1e-6 and self.motion[side]['ang']<0.06) or self.tage>60:self.note_joints(obs,side,f'{t["kind"]}_turned',g,a_f);self.tadvance('carry')
             return
         if p=='carry':
-            # carried as high as the elbow allows at the current position (down to the planned height only near a far destination)
-            # and levelled as soon as the elbow allows it: a leaning head pinch dips the handle end by 4 cm, the staged dustpan is 4.8 cm tall
             cur=self.cur_tcp(obs,side);drag=bool(t.get('drag'))
             z_here=carry_z if drag else float(np.clip(max_tcp_z(cur[:2],side,pitch,a_carry)-0.01,carry_z,t.get('carry_hi',carry_z)))
-            z_here=carry_z+(z_here-carry_z)*float(np.clip(np.linalg.norm(g_f-cur[:2])/0.10,0.,1.))   # down to the planned height over the last 10 cm
+            z_here=carry_z+(z_here-carry_z)*float(np.clip(np.linalg.norm(g_f-cur[:2])/0.10,0.,1.))
             pc=pitch if (drag or not elbow_ok(cur[:2],z_here,side,a_carry,0.)) else 0.
             if not t.get('climbed'):
                 if self.climb(action,obs,side,z_here,a_carry,pc) or self.tage>40:t['climbed']=True;self.tage=0
@@ -1058,7 +1042,6 @@ class Policy:
             if (abs(h-a_f)<1e-6 and self.motion[side]['ang']<0.06) or self.tage>60:self.note_joints(obs,side,f'{t["kind"]}_turned',g_f,a_f);self.tadvance('lower')
             return
         if p=='lower':
-            # the object may touch down early (a head pinch slips down the pads by ~2 cm during the carry): release once the descent stalls
             goal=grasp_pose(g_f,gz+0.002,a_f,0.);z=float(self.cur_tcp(obs,side)[2])
             t['stall']=t.get('stall',0)+1 if abs(z-t.get('last_z',9.))<0.001 else 0;t['last_z']=z
             if self.smove(action,obs,side,goal,0.,vmax=.012,tol=.004,rot_tol=.04) or (t['stall']>=4 and self.tage>=6) or self.tage>50:self.tadvance('release')

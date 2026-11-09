@@ -24,7 +24,7 @@
     "file": "capabilities/motion/kinematics.py",
     "resource": "resources/classify_objects_by_language/coap/kinematics.py",
     "package": false,
-    "sha256": "26c04e1169c0c2f7202b22f40e636eb6c7458d9e1e4b7c52725a3fa99ed80eb0",
+    "sha256": "442c04e65419032e154c228ffabc0f578e5539b4964ea193b8c026a8dcc76d3f",
     "resource_identity": true
   },
   "coap.manipulation": {
@@ -73,7 +73,7 @@
     "file": "capabilities/motion/robot_motion_geometry.py",
     "resource": "resources/classify_objects_by_language/coap/robot_motion_geometry.py",
     "package": false,
-    "sha256": "21b7346509347e47b8ba9dcca3e786b3e3cbd3041aca4fd0ad1f4f852c0e77f7",
+    "sha256": "d9fabbcc8bef9eff8a66108122eb61361e8dc104a44edf1f45353a50ba831d4c",
     "resource_identity": true
   },
   "coap.tasks": {
@@ -157,7 +157,7 @@
     "file": "capabilities/control/classify_normal_watch_material_material.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/classify_r08_d_material.py",
     "package": false,
-    "sha256": "49f655164a0c69c0e9f814d34a39f2bed284804d44bbc34a8cfe05bd89026e93",
+    "sha256": "7151a168fc08450fdf6d9d20ed876bf92b1a91d8eb901b91653ebd6f8007d04e",
     "resource_identity": true
   },
   "coap.tasks.classify_r08_h_height": {
@@ -248,7 +248,7 @@
     "file": "capabilities/control/classify_local_chocolate_axis.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/classify_r31_local_chocolate_axis.py",
     "package": false,
-    "sha256": "72b8766f66d0e9e5e76150b7df9fb437155dbd118dc95706e34105d72239e1e4",
+    "sha256": "2621b6180c93a04eb10613ac6facb17bee2a1479ef9d34e8f18cae56bb4b83b4",
     "resource_identity": true
   },
   "coap.tasks.classify_r32_language_source_material_hexa": {
@@ -269,7 +269,7 @@
     "file": "capabilities/control/classify_normal_watch_material_material.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/classify_r32_normal_watch_material_material.py",
     "package": false,
-    "sha256": "49f655164a0c69c0e9f814d34a39f2bed284804d44bbc34a8cfe05bd89026e93",
+    "sha256": "7151a168fc08450fdf6d9d20ed876bf92b1a91d8eb901b91653ebd6f8007d04e",
     "resource_identity": true
   },
   "coap.tasks.classify_r36_language_global_assignment_assignment": {
@@ -311,14 +311,14 @@
     "file": "capabilities/control/classify_objects_by_language_coap_tasks_classify_tri80_r04_rereview.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/classify_tri80_r04_rereview.py",
     "package": false,
-    "sha256": "3f71e80ff5b2c57c7b3f72e062df59fd16ed40fe0a5c431ffca4c4d76020e5df",
+    "sha256": "84d79880f7157f97696ca48427e19efda42983da9d1f8bb9214ee9ddd977933f",
     "resource_identity": true
   },
   "coap.tasks.classify_tri80_r05_lowdrop": {
     "file": "capabilities/control/classify_objects_by_language_coap_tasks_classify_tri80_r05_lowdrop.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/classify_tri80_r05_lowdrop.py",
     "package": false,
-    "sha256": "85d60a8ffe20a294ce5dc5f43c44709de5e57a5a6e7ebc23fd806c533e37f71b",
+    "sha256": "c1b8e3a008710924c6adfe788ca96d59033f843bf6cd2bbc034e782a114d5a3e",
     "resource_identity": true
   },
   "coap.tasks.finite_ik": {
@@ -339,7 +339,7 @@
     "file": "capabilities/planning/memory.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/memory.py",
     "package": false,
-    "sha256": "652e0a63f3157bbbf19087c6d197f898e71918eed95a29b1086fc9a564169a3c",
+    "sha256": "6cb87fca653ada855a47603bb2979d9cba01638a679006476a6d5ee005fdc60b",
     "resource_identity": true
   },
   "coap.tasks.memory_approach": {
@@ -353,7 +353,7 @@
     "file": "capabilities/geometry/memory_geometry.py",
     "resource": "resources/classify_objects_by_language/coap/tasks/memory_geometry.py",
     "package": false,
-    "sha256": "94933d41c2f465141798ac66ea4f92f6c4a03997e598d165b8d14bc994665467",
+    "sha256": "987b4846760ae7246150d6374f53f257c3a0293c60205a346941394b85464041",
     "resource_identity": true
   },
   "coap.tasks.memory_identity": {

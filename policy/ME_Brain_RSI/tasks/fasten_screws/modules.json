@@ -15,7 +15,7 @@
     "file": "capabilities/control/fasten_screws_controller.py",
     "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/controller.py",
     "package": false,
-    "sha256": "627a4af4c834317dbe20775683ac82e560868ec6712d85db51bf750d3541078c"
+    "sha256": "33c0632f13b4029325baed44fbbf3a2989c0f2349169bddf32c308b58e3caa1c"
   },
   "rdj_v1_fasten_screws.geometry": {
     "file": "capabilities/geometry/fasten_screws_geometry.py",
@@ -27,7 +27,7 @@
     "file": "capabilities/motion/fasten_screws_ik.py",
     "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/ik.py",
     "package": false,
-    "sha256": "a90df5f9bf71cbb175a9d05b3aa8c49f37bf70dffd758db29502e52a3b20a333"
+    "sha256": "891f90a4435e4a4e579a2e0ac18fd5f6635cbbce80581ba6331a4d230aabd2cb"
   },
   "rdj_v1_fasten_screws.joint_action": {
     "file": "capabilities/motion/fasten_screws_joint_action.py",
@@ -45,7 +45,7 @@
     "file": "capabilities/perception/fasten_screws_perception.py",
     "resource": "resources/fasten_screws/coap/vendor/code-skills/implementations/rdj_v1_fasten_screws/770a6c1b7de4b67b/rdj_v1_fasten_screws/perception.py",
     "package": false,
-    "sha256": "7cc5575891e09210eca7eb8cedbf5d3c5ea3c615786d636ff43c91baf9c8b5e5"
+    "sha256": "836506b9b5cb31b466b607940adfc3e19c818d32680b0aa6d6b5c10306ea2abf"
   },
   "rdj_v1_fasten_screws.robot_occlusion": {
     "file": "capabilities/perception/fasten_screws_robot_occlusion.py",

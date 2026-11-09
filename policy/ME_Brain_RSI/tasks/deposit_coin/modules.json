@@ -15,7 +15,7 @@
     "file": "capabilities/control/deposit_coin_controller.py",
     "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/controller.py",
     "package": false,
-    "sha256": "4783a61d24024a76afd94349e4261eeeda556b1465071c4f8e48b7682fd1dc00"
+    "sha256": "2f249853e6f0f34dc33d07d92efc0be2f6dbeff4709c6adf1d13acc434060261"
   },
   "rdj_v1_deposit_coin.geometry": {
     "file": "capabilities/geometry/deposit_coin_geometry.py",
@@ -27,7 +27,7 @@
     "file": "capabilities/motion/deposit_coin_ik.py",
     "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/ik.py",
     "package": false,
-    "sha256": "f707bd349c5d849e21f2370de0d364f9a751ba245bbbf9c366b4ff20dd97bd96"
+    "sha256": "3a9d3c5b5996702b7999a7c2aa834db46e414c12623f039b12ce4a0a4636af6d"
   },
   "rdj_v1_deposit_coin.joint_action": {
     "file": "capabilities/motion/deposit_coin_joint_action.py",
@@ -45,7 +45,7 @@
     "file": "capabilities/perception/deposit_coin_perception.py",
     "resource": "resources/deposit_coin/coap/vendor/code-skills/implementations/rdj_v1_deposit_coin/12fa351b9c54f64f/rdj_v1_deposit_coin/perception.py",
     "package": false,
-    "sha256": "da6a7c9b9eb0583718cdc9174586d2a883475fd6018999992f039a453b5b6a03"
+    "sha256": "3be073ff4d0b7a3a6fc978ce4b6a19a7f03b76d74c0db82343c579c5200b1766"
   },
   "rdj_v1_deposit_coin.robot_occlusion": {
     "file": "capabilities/perception/deposit_coin_robot_occlusion.py",

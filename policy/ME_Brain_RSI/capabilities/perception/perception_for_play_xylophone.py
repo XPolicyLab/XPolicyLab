@@ -101,14 +101,8 @@ class Perception:
             return self.detect_liquid_rims(rgb),rgb.copy()
         if task == "push_T":
             self.bounds=[*self.bounds[:2],min(self.bounds[2],-.45),self.bounds[3]]
-            # The visible rigid T face is 15 mm above the table; the printed
-            # target pad is 0.1 mm high. Use their public static thicknesses,
-            # not a layout pose or measured simulator depth.
             source_image=self.rectified(rgb,self.z+.015)
             sources=self.detect_t(source_image,labels={"t_source"})
-            # A flat top-plane template mistakes visible red side faces for
-            # an expanded top. Refine against the public 15 mm extruded mesh
-            # projected into the original RGB; no fitted world-space offset.
             from .t_projection import refine_source
             for detection in sources:
                 fit=refine_source(rgb,self.camera,T_FOOTPRINTS['t_source'],
@@ -241,7 +235,6 @@ class Perception:
         mask=np.uint8((values.min(2)>105)&(np.ptp(values,axis=2)<40))*255
         contours,_=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
         found=[]
-        # Public wuliangye/00000 height .2181 m; mug/15,16 height .0762 m.
         for height,low,high,label in ((.2181,.017,.033,"liquid_bottle"),
                                       (.0762,.047,.070,"liquid_cup")):
             for contour in contours:
@@ -303,8 +296,7 @@ class Perception:
     def detect_goblet_rims(self,rgb):
         """Concentric bright outer/inner rim evidence, not a hidden asset ID.
 
-        Public goblet/00006 mesh: height 100.3 mm, upper rim diameter
-        70.51 mm. Require both nested round contours; a bright disk or
+        Require both nested round contours; a bright disk or
         bottle reflection alone is not evidence for this cup type.
         """
         values=rgb.astype(float)
@@ -386,9 +378,6 @@ class Perception:
             mask=np.uint8(mask)*self.valid
             mask=cv2.morphologyEx(mask,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
             for d in self.components(image,mask,label):
-                # Public static extents: rigid T .08 x .06 m, target .084 x
-                # .068 m. Tolerate projection/partial occlusion, reject tiny
-                # neutral gripper fragments and large arm/table components.
                 if not (.0012<d.area<.012 and .04<min(d.size)<.13 and .065<max(d.size)<.16): continue
                 hull=cv2.contourArea(cv2.convexHull(d.contour))
                 solidity=cv2.contourArea(d.contour)/max(hull,1)

@@ -7,7 +7,7 @@ import numpy as np
 
 
 def _body_candidates(mask, pixels, world, distance, category, *, parent_body):
-    """Keep parent candidates and fit their axes to material within 30 mm."""
+    "Refine the candidate axes from the nearby material mask."
     candidates = parent_body(mask, pixels, world, distance, category)
     if category != 'chocolate_bar':
         return candidates

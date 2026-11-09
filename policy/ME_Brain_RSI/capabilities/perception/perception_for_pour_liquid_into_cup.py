@@ -198,3 +198,23 @@ class Perception:
         points=np.array([o0+depths[0]*r0,o1+depths[1]*r1]);point=points.mean(0);skew=float(np.linalg.norm(points[0]-points[1]))
         if min(depths)<=0 or condition>100 or skew>.003 or np.linalg.norm(point-nominal)>max_correction:raise ValueError('Uncertain stereo attachment')
         return point,dict(head=head_info,wrist=wrist_info,condition=condition,ray_skew_m=skew,nominal=np.asarray(nominal).tolist(),measured=point.tolist(),delta=(point-nominal).tolist())
+
+
+    def visible_stream(self,vision,state,side,anchor,radius):
+        from . import wristcam
+        pose=np.asarray(state[f'{side}_ee_pose'])
+        camera=Camera(dict(K=wristcam.K,camera_to_world_opengl=wristcam.camera_to_world(pose),resolution=wristcam.RESOLUTION))
+        from .geometry import quat_matrix
+        point=pose[:3]+quat_matrix(pose[3:])@np.asarray(anchor)
+        center=camera.project([point])[0]
+        local=np.linalg.inv(camera.c2w)@np.r_[point,1.]
+        if -local[2]<=0:raise ValueError('Opening behind wrist camera')
+        rp=float(camera.k[0,0]*radius/(-local[2]))
+        if not np.isfinite(center).all() or rp<3:raise ValueError('Opening projection uncertain')
+        rgb=np.asarray(vision[f'cam_{side}_wrist']['color'])
+        yy,xx=np.indices(rgb.shape[:2]);disk=(xx-center[0])**2+(yy-center[1])**2<=(1.6*rp)**2
+        if center[0]-rp<0 or center[0]+rp>=rgb.shape[1] or center[1]-rp<0 or center[1]+rp>=rgb.shape[0]:raise ValueError('Opening outside wrist view')
+        c=rgb.astype(np.int16)
+        cyan=(c[:,:,2]>c[:,:,0]+25)&(c[:,:,1]>c[:,:,0]+25)&(c[:,:,1]>90)&(c[:,:,2]>90)
+        count=int(np.count_nonzero(cyan&disk));threshold=max(20.,.02*np.pi*rp*rp)
+        return count>=threshold,dict(visible_cyan_pixels=count,pixel_threshold=threshold,projected_radius_px=rp,opening_pixel=center.tolist(),measurement='RGB appearance near opening; not liquid volume or impact location')

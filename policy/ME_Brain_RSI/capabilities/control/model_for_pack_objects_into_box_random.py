@@ -97,9 +97,6 @@ class Model(ModelTemplate):
                     except OSError:
                         pass
                 (self.episode / "policy_error.json").write_text(json.dumps({"error": f"{type(exc).__name__}: {exc}", "stage": self.ctx.memory.get("phase", getattr(self.ctx, "stage", "")), "index": self.index}, indent=2))
-            # Finish the actual episode so an unsuccessful policy cannot make
-            # the evaluator silently skip its seed. The official reward still
-            # decides success; the diagnostic records the execution error.
             self.failed = True
             self.program = None
             self.ctx.stage = "error_return_home"

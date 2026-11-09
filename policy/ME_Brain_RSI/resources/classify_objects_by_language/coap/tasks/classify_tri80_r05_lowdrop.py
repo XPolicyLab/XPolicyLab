@@ -1,21 +1,4 @@
-"""tri80 r05 classify-by-language candidate (lowdrop).
-
-Keeps the frozen tri80 r04 rereview loop (v332) and its helpers unchanged and only alters
-the loaded transport and release of each pick:
-  lowdrop - most remaining losses are objects that land in the correct basket and are
-            ejected a few steps later (landing impact of a ~10 cm free fall, or the fingers
-            still hanging just above them). After reaching the r40 release posture the
-            loaded TCP descends vertically until the held object's lower end is just above
-            the basket rim (IK-checked at the measured joints, shallower fallbacks), so the
-            free fall is shorter and slower.
-  clear   - after opening, the empty fingers retreat vertically back to the original
-            release height before the next chord starts, so they do not sweep through the
-            settling object.
-  sidecar - a car bound for a side basket is carried by that basket's arm when its pick,
-            lift and release postures solve within the IK tolerances; the cross-body
-            straight-line transport passes over the middle basket's front wall at low height
-            with a steep (up to 70 deg) release tilt, where the remaining car slips happen.
-"""
+"Adjust the transport and release for the classified object."
 from copy import deepcopy
 
 import numpy as np
@@ -38,7 +21,7 @@ LOW_FRACTIONS = (1.0, 0.6)
 LOW_DURATION = 5
 CLEAR_DURATION = 4
 HANG_RANGE = (0.015, 0.045)
-SIDE_RESIDUAL = 6.0  # pick + lift + release residuals, each within the 2 mm / 0.02 rad tolerance
+SIDE_RESIDUAL = 6.0
 
 
 def _side_route(ctx, obj, basket, ordinal, heavy):

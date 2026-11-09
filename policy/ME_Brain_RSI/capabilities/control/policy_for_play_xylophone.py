@@ -83,8 +83,9 @@ class Policy:
     def pour_ball_cup(self, side, source, target):
         """Reach forward with a pre-tilted cup, using only RGB and static geometry.
 
-        The 72 mm cup rim is 32 mm above its 40 mm grasp. Rotate towards
+        Rotate towards
         the robot (-Y) so the wrist remains behind the mouth, not above it.
+
         Cup-to-gripper rigidity is a planning assumption, not sensed success.
         """
         grasp_parameters=self.ball_grasp_parameters(side,source.xy)
@@ -101,14 +102,9 @@ class Policy:
             rotation=Rotation.from_euler("x",degrees,degrees=True).as_matrix()
             mouth=np.r_[xy,self.calibration["table_z"]+height]
             return tcp_to_ee(mouth-rotation@np.array([0.,0.,.032]),rotation@upright,offset)
-        # At 45 degrees the lowest cup envelope is .24-.072*cos(45)
-        # -.036*sin(45) = .164 m, above the public maximum vase height.
         for angle in (30.,45.):
             self.plan.append(Waypoint(side,mouth_pose(source.xy,.24,angle),0.,"cup_pretilt",4))
         self.plan.append(Waypoint(side,mouth_pose(target.xy,.24,45.),0.,"pour_align",4))
-        # Retain the lower-drop candidate: a uniformly higher 260 mm pour
-        # regressed ordinary development trials despite static wrist clearance.
-        # Remaining wrist/vase interactions require a different tilt path.
         for angle,height in ((60.,.23),(80.,.23),(100.,.22)):
             self.plan.append(Waypoint(side,mouth_pose(target.xy,height,angle),0.,"tilt",60 if angle==100 else 4))
         self.plan.append(Waypoint(side,mouth_pose(target.xy,.24,45.),0.,"untilt",4))
@@ -133,9 +129,6 @@ class Policy:
         detections, rectified = self.perception.detect(rgb,task=self.task)
         objects = self.perception.select(self.task,detections)
         if self.task=="push_T":
-            # A 150 mm commanded push cannot justify silently switching to a
-            # red tabletop patch half a metre away when the real T is hidden.
-            # This is an RGB-only temporal association gate, not object truth.
             if "source" in objects:
                 candidate=objects["source"]
                 if self.source_memory is not None and np.linalg.norm(candidate.xy-self.source_memory.xy)>.25:
@@ -227,8 +220,6 @@ class Policy:
             if bottle.grasp_height is None or not np.isfinite(bottle.grasp_height) or not .02<bottle.grasp_height<.16:
                 self.reason='bottle_grasp_height_uncertain'
                 return False
-            # Height comes from the public-shape hypothesis fitted to RGB;
-            # do not use the old 6 cm universal point for upright bottles.
             self.grasp(side,bottle,bottle.grasp_height)
             self.add(side,objects["target"].xy,.23,0.,"carry")
             self.add(side,objects["target"].xy,.23,1.,"release",15)
@@ -255,21 +246,12 @@ class Policy:
                 rotate_now=(distance<.018 and abs(angle_error)>=.09) or (
                     distance<.08 and abs(angle_error)>.35)
                 if rotate_now:
-                    # Push one end of the visible crossbar tangentially. The
-                    # next RGB observation measures actual rotation/drift;
-                    # this is not assumed to rotate by a specified angle.
                     stem=np.array([np.cos(source.angle),np.sin(source.angle)])
                     bar=np.array([-stem[1],stem[0]])
                     lever=.032*bar-.018*stem
                     direction=np.sign(angle_error)*np.array([-lever[1],lever[0]])/np.linalg.norm(lever)
                     contact=source.xy+lever
-                    # Descend outside the crossbar before approaching its end;
-                    # a near/low descent can wedge beneath the 15 mm block.
                     start=contact-direction*.035
-                    # A fixed 10 mm cap spends most of the 600-step budget
-                    # lifting/reobserving while correcting large yaw errors.
-                    # Bound the stroke by visible error (25 mm/radian) and
-                    # 30 mm maximum, then reobserve rather than assume rotation.
                     end=contact+direction*min(.030,abs(angle_error)*.025)
                     push_name="push_rotate"
                 else:
@@ -308,16 +290,10 @@ class Policy:
                 self.add(side,target.xy,.035,1.,"release",10,angle=target.angle-source.angle)
                 self.add(side,target.xy,.18,1.,"retract",angle=target.angle-source.angle)
             elif self.task == "pour_liquid_into_cup":
-                # Grasp the narrow neck, not the 82 mm body. The only bottle
-                # type in the released task is 218.1 mm high; xy comes from RGB.
                 root=np.array([-.3 if side=="left" else .3,-.45])
                 radial=source.xy-root
                 yaw=float(np.arctan2(radial[1],radial[0]))
-                # A near-horizontal neck grasp leaves room for link4/link6
-                # during the later 90..110 degree bottle rotation.
                 pitch=np.pi/12
-                # Upper-neck 200 mm candidate worsened isolated fluid retention
-                # and did not improve ordinary success; preserve 180 mm grasp.
                 grasp_height=.18
                 mouth_offset=.2181-grasp_height
                 for height,grip,name,dwell in ((.26,1.,"approach",3),
@@ -363,10 +339,6 @@ class Policy:
                 # Cup type/height is inferred from visible rim evidence using
                 # public static geometry. Preserve the original mug clearance.
                 cup_height_delta=max(0.,float(target.size[1])-.0762)
-                # During the approach, the whole upright bottle must clear
-                # the cup, not only its mouth. Static bottle height .2181 m
-                # and body radius .042 m give >10 mm nominal clearance for
-                # the interpolated 0..90 degree path above the mug rim.
                 for angle,back,mouth_height in ((0.,.10,.330),
                                                  (30.,0.,.330),(60.,0.,.245),
                                                  (90.,0.,.130),(110.,0.,.115),
@@ -446,9 +418,6 @@ class Policy:
                     self.add(side,xy,.055,0.,f"key_{key}_hit",3)
                     self.add(side,xy,.14,0.,f"key_{key}_lift",4)
         if self.task=="push_T":
-            # Reobserve after the vertical lift before making an expensive trip
-            # to the fixed park pose. If RGB still hides the source, the missing
-            # source branch above performs a bounded view-recovery movement.
             self.view_cleared=False
         else: self.return_home()
         self.reason="executing"
@@ -489,9 +458,6 @@ class Policy:
                 translation_step=min(translation_step,.004)
             if (self.task=='push_T' and waypoint.name=='push'
                     and self.program_notes.get('t_distance',float('inf'))<.08):
-                # The last RGB plan is near the target: avoid accelerating a
-                # small loose block with the coarse 12 mm Cartesian command.
-                # This does not assume friction or read object velocity/truth.
                 translation_step=min(translation_step,.003)
             if waypoint.name in {"button_release","confirm_release"}:
                 tip=current[:3]+quat_matrix(current[3:])@np.asarray(self.calibration["contact_tip_offset_in_ee"])
@@ -533,13 +499,6 @@ class Policy:
             if waypoint.name.startswith('drag_'):
                 reached=position_error<.003 and orientation_error<.05
             if self.task=='push_T' and waypoint.name in {'push','push_rotate'}:
-                # Fine strokes may be only a few millimetres long. A 9 mm
-                # waypoint tolerance can finish them before contact settles.
-                # This is robot-state endpoint precision, not task success.
-                # Loaded contact can leave a few millimetres of vertical
-                # compliance after horizontal travel is complete. Preserve
-                # planar endpoint precision, then lift and reacquire RGB;
-                # this is not an object-pose or task-success assertion.
                 reached=(np.linalg.norm(current[:2]-waypoint.pose[:2])<.002
                          and abs(current[2]-waypoint.pose[2])<.006
                          and orientation_error<.15)
@@ -571,11 +530,7 @@ class Policy:
             else:
                 self.t_contact_errors=[]
             if waypoint.name in {"button_press","confirm_press"}:
-                # A loaded finger need not reach a free-space goal inside the
-                # button. The known finger extremity and robot proprioception
-                # give a conservative contact-height milestone. This is NOT
-                # button joint feedback or a task-success signal; the official
-                # evaluator still checks the actual press/release counts.
+                # Use the measured finger height as a contact milestone.
                 tip=current[:3]+quat_matrix(current[3:])@np.asarray(
                     self.calibration["contact_tip_offset_in_ee"])
                 height=tip[2]-self.calibration["table_z"]

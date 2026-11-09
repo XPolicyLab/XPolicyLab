@@ -15,8 +15,6 @@ COIN_CENTER_Z = 0.7804
 COIN_RADIUS = 0.01425
 COIN_TOP_Z = COIN_CENTER_Z + COIN_RADIUS
 SLOT_LENGTH = 0.047
-# Head rays to the gold blob centroid land on the visible upper rim; this height
-# gave a 2.5 mm median error against the public layouts.
 HEAD_COIN_RAY_Z = COIN_CENTER_Z + 0.007
 WRIST_COIN_RAY_Z = (STAND_TOP_Z + COIN_TOP_Z) / 2.0
 PIG_BODY_Z = BANK_BASE_Z + 0.06
@@ -79,7 +77,6 @@ def _world_fit(labels, label, z, K, T):
 
 
 def table_rows(K, T, shape):
-    """Image rows covering the object band y in [-.27, -.02] of the table."""
     corners = [[x, y, 0.79] for x in (-0.5, 0.5) for y in (-0.27, -0.02)]
     uv = world_to_pixels(corners, K, T)
     v = uv[np.isfinite(uv).all(1), 1]
@@ -137,13 +134,10 @@ def head_scene(rgb, K, T, robot_mask=None):
         pig_region = cv2.dilate(filled, np.ones((5, 5), np.uint8))
         center, axis, length, width = _world_fit(labels, pig['label'], PIG_BODY_Z, K, T)
         out['bank'] = dict(center=center.tolist(), axis=axis.tolist(), length=length, area=pig['area'], pixel=pig['centroid'])
-        # The slot is the dark bar on the pig's back: above the blob centroid, ~3.3 cm long
-        # and ~3 mm wide in the head view (shadows and eyes are wider or lower).
         dark = dark_mask(h) & pig_region & valid
         lab2, comps2 = _components(dark, 6)
         upper = [c for c in comps2 if c['centroid'][1] <= pig['centroid'][1] + 4]
         slot = _bar(lab2, upper, SLOT_Z, K, T, (.022, .045), .0045, 4.0)
-        # Layouts yaw the bank at most 15 deg about a spine along world x.
         if slot is not None and abs(slot['axis'][0]) >= np.cos(np.radians(40)):
             out['slot'] = slot
     gold = gold_mask(h) & gold_valid
@@ -359,8 +353,6 @@ def coin_slot_offset(rgb, K, T, slot_center, slot_axis, coin_center, exclude=Non
         xs, ys = xs[clear], ys[clear]
     slot_pts = pixels_to_world(np.column_stack((xs, ys)), SLOT_Z, K, T)[:, :2]
     slot_pts = slot_pts[np.isfinite(slot_pts).all(1)]
-    # cast the coin pixels at the coin's own height (its visible part hangs 0-2 cm below the fingertips); casting them at
-    # the deeper slot plane would scale the lateral gap by the depth ratio
     coin_pts = pixels_to_world(np.column_stack((gxs, gys)), float(coin_center[2]), K, T)[:, :2]
     coin_pts = coin_pts[np.isfinite(coin_pts).all(1)]
     if len(coin_pts) < 20 or len(slot_pts) < 20:

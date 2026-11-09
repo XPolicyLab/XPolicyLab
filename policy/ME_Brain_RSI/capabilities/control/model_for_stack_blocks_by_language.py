@@ -51,7 +51,7 @@ def lean_direction(arm, xy):
     return d / max(1e-6, np.linalg.norm(d))
 
 
-LEAN_PLACE_SHIFT = .005  # measured: beta=.35 placements land ~5-8 mm along the lean direction
+LEAN_PLACE_SHIFT = .005
 
 
 def lean_place_xy(dest_xy, arm, beta):
@@ -105,7 +105,7 @@ class Episode:
         return (points - transform[:3, 3]) @ transform[:3, :3]
 
     def block_obstacles(self, source_xy, dest_xy, size, stacked):
-        """Convex hulls (6 mm inflated) of every perceived block except the grasp target; the destination stack is named."""
+        "Build inflated collision hulls for the perceived blocks other than the grasp target."
         out = []
         for i, b in enumerate(self.scene['bowls']):
             xy = np.asarray(b['xy'])

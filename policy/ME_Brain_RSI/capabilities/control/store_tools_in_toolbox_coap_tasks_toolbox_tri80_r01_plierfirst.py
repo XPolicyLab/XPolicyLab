@@ -1,16 +1,4 @@
-"""tri80-r01 toolbox candidate plierfirst.
-
-Development-truth diagnosis of the r11 parent (layouts >= 50): the tape measure
-and wrench are seated to within a few millimetres whenever they are carried,
-the hammer is never lifted (the head-wing pinch closes on air), the pliers are
-released 20-30 degrees tilted on a cavity rib (about 3 cm high, failing the
-toolbox cover check), and far wrenches slip during the fixed 30-frame carry.
-Every tool's resting orientation already equals its slot orientation, so a
-balanced pinch followed by a pure translation is sufficient for placement.
-
-The policy only reads the public head RGB image, proprioception and public
-meshes (exactly as the parent's measure()).  No runtime gates or aborts.
-"""
+"Toolbox placement sequence that handles the pliers first."
 import math
 
 import cv2

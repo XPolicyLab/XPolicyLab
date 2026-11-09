@@ -33,13 +33,13 @@
     "file": "capabilities/control/policy_for_press_by_number.py",
     "resource": "resources/press_by_number/coap/policy.py",
     "package": false,
-    "sha256": "d978e4cb555fd299db3289a61af269442a97e37a67f767be368690687dc80006"
+    "sha256": "eb9d95693943cc1f2502110414c60e37b3d018f60ef3dc820a3d45112aec790b"
   },
   "b88r42wq.perception": {
     "file": "capabilities/perception/perception_for_press_by_number.py",
     "resource": "resources/press_by_number/coap/perception.py",
     "package": false,
-    "sha256": "d09881edd87ad3245f7e91d0d4c4c8b2b3d5b498e48d06341a05032d781b0e93"
+    "sha256": "9e51f89c60d964a9316e82feaf26a581ffaa50dce9138d17f66fdd655e6e57ce"
   },
   "b88r42wq.geometry": {
     "file": "capabilities/geometry/geometry_for_press_by_number.py",

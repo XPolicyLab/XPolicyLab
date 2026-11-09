@@ -1,7 +1,6 @@
 """Head-RGB block localization: SAM3 text masks + projected axis-aligned cube silhouette fit.
 
-Inputs are current RGB pixels, the accepted head projection and the public block
-sizes (3.0 / 3.5 / 4.0 cm, axis aligned in this task). No simulator object state.
+No simulator object state.
 """
 from __future__ import annotations
 import numpy as np

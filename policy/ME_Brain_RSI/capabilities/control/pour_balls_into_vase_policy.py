@@ -1,13 +1,4 @@
-"""PBP12: pure-code pour_balls_into_vase. RGB (head camera) and proprioception only; EE pose actions; 600-step episodes.
-
-Flow: clear the head view -> head camera finds the yellow cup and the vase (five known vase shapes, silhouette fits) ->
-choose the pouring arm (the vase's side) and, when that arm cannot reach the cup top-down, a staging spot the other arm
-carries the cup to -> top-down pinch of the cup near its centre of mass with the pads closing along world x -> lift, tilt
-the cup 70 deg about the closing axis towards the robot (the balls stay in below ~80 deg), carry it tilted over the far
-side of the vase, then pour by tilting slowly while the lowest rim point (the lip) is held 1.5 cm above the vase rim just
-beyond the opening centre -> untilt to the travel tilt, carry the cup to a free spot on the robot side of the vase, stand it
-upright, set it down, release -> both arms home.
-"""
+"PBP12: pure-code pour_balls_into_vase. RGB (head camera) and proprioception only; EE pose actions; 600-step episodes."
 import numpy as np
 from scipy.spatial.transform import Rotation
 from .geometry import quat_matrix,matrix_quat,bounded_pose
@@ -20,43 +11,38 @@ STEP_LIMIT=600
 CLEAR_TCP={'left':np.array([-0.44,-0.40,TABLE_Z+0.19]),'right':np.array([0.44,-0.40,TABLE_Z+0.19])}
 REST_TCP={'left':np.array([-0.42,-0.36,TABLE_Z+0.19]),'right':np.array([0.42,-0.36,TABLE_Z+0.19])}
 SHOULDER={'left':np.array([-0.30,-0.43]),'right':np.array([0.30,-0.43])};SHOULDER_Z=0.865
-# Reach model calibrated against the simulator's IK (curobo, table + self collision) on a 5 cm pose grid (reports/ik_probe-20261102):
-# top-down poses (pitch 0-36 deg): link6 inside a sphere centred above the shoulder at z TOP_ZC, radius 0.50 (zero false positives);
-# tilted poses towards the shoulder: TILT_REACH below; horizontal radial poses: solvable for TCP 0.30-0.60 m from the shoulder axis.
 TOP_ZC=0.80;R_TOP=0.48
 PITCHES=(0.,np.deg2rad(12.),np.deg2rad(24.),np.deg2rad(36.))
-DONOR_PITCH_MAX=np.deg2rad(24.)   # a 36 deg pitched grasp lets the cup sag to ~53 deg in the pads during the staging carry
-TOPDOWN_STAGE_MAX=0.42            # pitched top-down staging grasps beyond this cup distance from the shoulder stalled on the way in (0.45-0.49 m); the radial grasp reaches 0.60
+DONOR_PITCH_MAX=np.deg2rad(24.)
+TOPDOWN_STAGE_MAX=0.42
 PARK_DZ=0.10
 CUP=geometry('cup')
 CUP_H=CUP['height'];CUP_R_RIM=CUP['rim_outer_radius'];CUP_R_BOTTOM=CUP['profile'][0][1]
-GRASP_H=0.023            # pinch height above the cup bottom: at the combined centre of mass of cup + balls (a higher pinch lets the cup lag the commanded tilt by 15 deg)
-GRASP_H_SIDE=0.045       # pinch height of the horizontal (radial) grasp: the 6 cm pads cover the rim, the cup hangs upright
-SIDE_DIP=np.deg2rad(10.) # horizontal grasp approach: 10 deg below horizontal, radially away from the shoulder
+GRASP_H=0.023
+GRASP_H_SIDE=0.045
+SIDE_DIP=np.deg2rad(10.)
 SIDE_HOVER=0.06          # hover height of the horizontal grasp above the pinch (the hand is at the reach limit for far cups)
-PRE_OPEN=1.0             # pads fully open: 8.8 cm around the 7.2 cm rim
+PRE_OPEN=1.0
 PLACE_GAP=0.004
 HOVER_DZ=0.20
 LIFT_DZ=0.09             # TCP rise after the grasp before any tilt
 LIP_CLEAR=0.010          # lip above the vase rim while pouring
-LIP_AHEAD=0.015          # lip beyond the vase axis along the pour direction: the balls leave the lip at ~0.3 m/s towards the shoulder and travel ~1.5 cm during the 1 cm drop (hooked runs), so this centres them on the axis
+LIP_AHEAD=0.015
 PASS_CLEAR=0.022         # lowest cup/finger point above the vase rim while the tilted cup travels over the vase
-TRAVEL_TILT=np.deg2rad(40.) # default carry tilt: balls leave the cup at 91-98 deg (27 hooked pours), but the convex-decomposition cavity has ledges a ball can roll out along at ~56 deg
-CARRY_TILTS=(40.,50.,60.,70.)   # steeper carries only for vases out of reach at 40 deg (link6 moves 0.145*sin(tilt) towards the shoulder)
-# TCP reach (distance from the shoulder axis) of tilted-towards-the-shoulder poses, from the simulator IK probe
-# (reports/ik_probe2-20261102: sharp boundary, no failures inside beyond 0.30 m), per tilt at 0.16/0.20/0.24 m above the table
+TRAVEL_TILT=np.deg2rad(40.)
+CARRY_TILTS=(40.,50.,60.,70.)
 TILT_REACH={40.:(0.62,0.60,0.56),50.:(0.66,0.64,0.62),60.:(0.70,0.68,0.66),70.:(0.74,0.72,0.70),80.:(0.75,0.74,0.73)}
 REACH_MARGIN=0.02
 POUR_START=np.deg2rad(80.)
-POUR_END=np.deg2rad(108.)   # the cup reaches ~8 deg less than commanded
+POUR_END=np.deg2rad(108.)
 POUR_RATE=np.deg2rad(1.5)
 TILT_RATE=np.deg2rad(4.0)
 POUR_DWELL=20
-ACCEL=0.0015             # m/step^2 speed ramp of the arm holding the cup (an abrupt 2 cm/step start threw balls out)
+ACCEL=0.0015
 STAGING={'left':np.array([-0.08,-0.30]),'right':np.array([0.08,-0.30])}
 RADIAL_SPOT_R=(0.36,0.33,0.40,0.30)   # put-down radius along the grasp ray for horizontally grasped cups (radial poses solve from ~0.30 out)
-RIM_CLEAR_TCP=0.105      # TCP height above the table at which the open finger tips clear the cup rim (7.2 cm) by 2 cm
-STANDUP_R=(0.37,0.38,0.39,0.36)   # stand-up spot distances from the shoulder: link6 of the tilted hand >= 0.23 m out, flat reach kept
+RIM_CLEAR_TCP=0.105
+STANDUP_R=(0.37,0.38,0.39,0.36)
 # gripper boxes in the link6 frame (public URDF/STL extents): housing and the two fingers at the grasp opening
 HAND_BOXES=[((0.,0.084),(-0.087,0.087),(-0.03,0.03))]
 FINGER_BOX=((0.072,0.158),(-0.0185,0.0185),(-0.03,0.03))   # per finger, centred on its carriage; carriages sit at +-(cup radius + 0.0185)
@@ -66,7 +52,7 @@ def pose_from(R,p):return np.r_[np.asarray(p,float),matrix_quat(R)]
 
 
 def vertical_rotation(phi):
-    """EE X (approach) straight down; closing axis Y_ee = (-sin phi, cos phi, 0); phi=90 deg closes along world x (joint6 ~ 0)."""
+    "Point the approach axis down with closing axis Y_ee = (-sin phi, cos phi, 0)."
     return Rotation.from_euler('z',phi).as_matrix()@Rotation.from_euler('y',np.pi/2).as_matrix()
 
 
@@ -154,7 +140,6 @@ def pour_geometry(vase_xy,kind,side,psi,tilt=TRAVEL_TILT):
     lipz=rim+LIP_CLEAR
     for th in (POUR_START,0.5*(POUR_START+POUR_END),POUR_END):
         lo=lip_offset(th,alpha);lipz=max(lipz,required_pz(held_points(th,psi,alpha),kind,vase_xy,lip_xy-lo[:2],0.012)+lo[2])
-    # lip height per tilt from the carry tilt to the pour start: descends monotonically, every held point 1.2 cm over the vase
     thetas=np.linspace(tilt,POUR_START,9);table=[]
     for th in thetas:
         lo=lip_offset(th,alpha);table.append(max(lipz,required_pz(held_points(th,psi,alpha),kind,vase_xy,lip_xy-lo[:2],0.012)+lo[2]))
@@ -245,8 +230,6 @@ class Policy:
     # ---------------- planning ----------------
     def make_plan(self):
         cup=np.asarray(self.det['cup']['xy'],float);vase=np.asarray(self.det['vase']['xy'],float);kind=self.det['vase']['kind']
-        # pouring arm: flat grasp only (a pitched grasp ends the pour at an EE tilt beyond ~115 deg, where the IK flips);
-        # the arm whose travel and pour poses are within the planning reach, otherwise the least over-reaching one
         options=[]
         for side in ARMS:
             for tilt in CARRY_TILTS:
@@ -260,8 +243,6 @@ class Policy:
         tasks=[];direct=flat_ok(side,cup);staged=None
         if direct:tasks.append(dict(kind='grasp',side=side,xy=cup.tolist(),pitch=0.,alpha=alpha))
         else:
-            # stage the cup at the pouring arm's staging spot: top-down (pitched up to 36 deg) by whichever arm reaches it,
-            # else a horizontal radial grasp (link6 behind the cup, 14 cm of extra reach) by the arm with the shorter reach
             st=STAGING[side];donor=None
             for s in (self.other(side),side):
                 dp=pick_pitch(cup,hp_top,s,0.)
@@ -468,7 +449,6 @@ class Policy:
                 if self.move(action,obs,side,goal,PRE_OPEN,translation=.025,rotation=.2,tol=.012) or self.tage>40:self.tadvance('turn')
                 return
             if p=='turn':
-                # turn to the radial orientation where it is solvable (0.33 m out), then extend along the radial line
                 goal=radial_pose(np.r_[t['approach_xy'],t['grasp_z']+SIDE_HOVER],beta)
                 if self.move(action,obs,side,goal,PRE_OPEN,translation=.02,rotation=.2,tol=.012,rot_tol=.05) or self.tage>30:self.tadvance('hover')
                 return
@@ -581,7 +561,6 @@ class Policy:
                     self.frames_to_save.append((f"prepour{self.ti}",(f'cam_{side}_wrist','cam_head')));self.tadvance('pour')
                 return
             if p=='pour':
-                # the lip descends to the pouring height before the balls start to leave (~80 deg), then stays put
                 if self.theta<POUR_START:self.theta=min(POUR_START,self.theta+TILT_RATE*0.5)
                 elif self.theta<POUR_END:self.theta=min(POUR_END,self.theta+POUR_RATE)
                 lip=np.r_[lip_pour[:2],np.interp(self.theta,*t['lip_table'])]

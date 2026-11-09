@@ -34,7 +34,8 @@ def attachment_consensus(world_ees, rgb_mallets, translation_tolerance=.008,
     """Two or more moved observations must agree on a rigid attachment.
 
     Return unknown for absent/insufficient evidence, inconsistent for disagreement,
-    consistent for a geometrical hypothesis. None of these is official success.
+    consistent for a geometrical hypothesis.
+
     Thresholds are explicit initial engineering bounds, not fitted to outcomes.
     """
     if len(world_ees) != len(rgb_mallets):

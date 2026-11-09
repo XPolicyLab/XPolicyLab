@@ -1,12 +1,4 @@
-"""ANS16: ANS15 with the digit-2 grasp chosen by reach (top arc, else across-height pinch) and fewer pointless repairs.
-
-Observed digit-2 grasps: middle-stroke notch 0/3 held through the carry,
-bottom bar 1/2 (ANS12 held, ANS14 dropped mid-carry), across-height pinch 3/4
-(one 90 deg spin at release). The top-arc pinch keeps the heavy arc at the
-fingers but needs 13 mm more reach, so it is used when the TCP stays within
-REACH_SAFE and the across-height pinch otherwise. The 7 rotates 24-30 deg in
-any centre grasp; repairing below 37 deg only re-rolls its position.
-"""
+"ANS16: ANS15 with the digit-2 grasp chosen by reach (top arc, else across-height pinch) and fewer pointless repairs."
 import numpy as np
 from . import ans9_policy as _ans9
 from .ans8_policy import REACH_SAFE

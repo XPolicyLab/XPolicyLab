@@ -89,7 +89,7 @@ def complete_shell_contour(image, pixel, *, candidate_score=None):
 
 
 def measure_source(ctx,egg,arm,index,*,head_reference=None):
-    """Complete a fixed-size public shell from its initial and current RGB views."""
+    "Complete the shell fit using its initial and current RGB views."
     from coap.tasks.egg_model_fit import fit_visible_shell
     if head_reference is None:
         if 'cam_head' not in ctx.vision:

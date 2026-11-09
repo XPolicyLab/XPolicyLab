@@ -1,14 +1,4 @@
-"""X38: X37 with online re-binding during the stroke sequence; hover speed restored.
-
-The frictionless shaft slides in the pinch during lateral moves, so a binding
-measured right after the lift drifts by the time of later keys (eval15 layouts
-17 and 28 stalled from key 3 on). Every reached key hover/lift records the head
-pixel in the head camera; when at least three recent observations fit a
-consistent anchor that differs from the current one by 6-30 mm, the anchor and
-the remaining waypoints are updated (at most twice per episode). The 9 mm hover
-limit of X36 is dropped: on seed0 layout1 it was the only difference from a
-successful X35 episode.
-"""
+"X38: X37 with online re-binding during the stroke sequence; hover speed restored."
 import numpy as np
 from .xylophone_x37 import XylophonePolicy as X37
 from .xylophone_x35 import XylophonePolicy as X35

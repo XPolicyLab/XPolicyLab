@@ -1,8 +1,6 @@
 """Model-free metric measurement from a calibrated camera and the table plane.
 
-Nothing here knows any object: sizes, heights and footprints are measured from the image. The only inputs are the
-camera model (intrinsics + pose, a platform constant), the table surface height (a platform constant) and, for the
-robot mask, the end-effector poses reported in the robot state.
+Nothing here knows any object: sizes, heights and footprints are measured from the image.
 """
 import cv2
 import numpy as np

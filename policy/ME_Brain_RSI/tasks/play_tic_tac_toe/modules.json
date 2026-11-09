@@ -15,7 +15,7 @@
     "file": "capabilities/perception/games_perception_for_play_tic_tac_toe.py",
     "resource": "resources/play_tic_tac_toe/coap/tasks/games_perception.py",
     "package": false,
-    "sha256": "dc08178907e80aac18b78801139a2a708ed55650e909112fb917e411d5845d1d"
+    "sha256": "4369bec6ca24d776070594f277bb4e678f152ed2a5aed50123114dafbfcbb80a"
   },
   "b88r42wq.tasks": {
     "file": "capabilities/control/insert_key.py",
@@ -33,7 +33,7 @@
     "file": "capabilities/control/model_for_make_kong.py",
     "resource": "resources/play_tic_tac_toe/model.py",
     "package": false,
-    "sha256": "d5636bce739df89da3aaa7a07faa9b5a7f62f968368cb3455e28dd2ec1c04cc7"
+    "sha256": "ac45430187e8f52266af37f37cac6839b9a8e036e590928a047fe14025e05d5e"
   },
   "b88r42wq.evidence": {
     "file": "capabilities/observation/evidence.py",

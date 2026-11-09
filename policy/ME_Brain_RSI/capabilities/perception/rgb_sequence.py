@@ -1,8 +1,6 @@
 """RGB-only calibrated geometry and bounded, ordered feature-point motion.
 
 All positions are supplied by the caller or reconstructed from current cameras.
-The 23 mm endpoint gap, 40 mm rise and 35 mm TCP clearance are motion
-design values, not scene sizes or a collision certificate.
 """
 import json
 import cv2
@@ -244,8 +242,6 @@ def robust_cone(rays, k, seed):
         basis = np.linalg.svd(radial, full_matrices=False)[2][:2]
         angles = np.sort(np.arctan2(radial@basis[1], radial@basis[0]))
         max_gap = float(np.max(np.diff(np.r_[angles, angles[0]+2*np.pi])))
-        # At least 270 degrees of supported boundary; reject half-discs and
-        # straight edges that happen to admit a large-radius circular fit.
         if max_gap > np.pi/2:
             continue
         residual = float(np.sqrt(np.mean((theta[keep]-alpha)**2))*focal)
@@ -429,8 +425,6 @@ def temporal_sphere(arm, camera, fit, transform, radius):
             continue
         try:
             offset, measured, gap = stereo_sphere(old_fit, fit, old_transform, local_camera)
-            # A held feature must remain close to the TCP. This is a workspace
-            # design bound, not an assumed object dimension.
             if np.linalg.norm(offset) > .30 or abs(measured/radius-1) > .10:
                 continue
             # Bound sensitivity to a one-pixel centre-ray error in either view.
@@ -671,7 +665,6 @@ def sphere_grasp(api, args, result):
 def adjacent_span(span, centre, radius):
     """Select only observed support, leaving a visible remote round feature.
 
-    Distance bounds are grasp design limits, not assumed scene dimensions.
     The extrapolated ridge must intersect the measured spherical envelope.
     """
     span = points(span)
@@ -689,8 +682,6 @@ def adjacent_span(span, centre, radius):
     if radial > radius+.004 or distance[0]*distance[1] <= 0:
         raise ValueError('exposed ridge does not extend toward the spherical envelope')
     sign = np.sign(distance.mean())
-    # At least 15 mm between the spherical boundary and the selected span;
-    # 40..80 mm remote reach keeps fingers away without a long lever arm.
     lower = max(.040, radius+.015, float(np.min(np.abs(distance))))
     upper = min(.080, float(np.max(np.abs(distance))))
     if upper-lower < .015:
@@ -815,11 +806,8 @@ def orientation_candidates(rotation, offset, gap=.023, tcp_clearance=.035):
             r = cv2.Rodrigues(axis*np.deg2rad(tilt))[0] @ r
             yield r, dict(yaw_deg=yaw, tilt_deg=tilt)
 
-    # An upward feature can require more than 30 degrees just to become level.
-    # Derive the fallback tilt from its measured vector and clearance margin;
-    # also vary tool roll, which changes the IK family without changing grip.
     length = float(np.linalg.norm(offset))
-    desired_z = gap-tcp_clearance-.002  # 2 mm slack above the clearance gate
+    desired_z = gap-tcp_clearance-.002
     if length < abs(desired_z):
         return
     desired_elevation = np.arcsin(desired_z/length)
@@ -846,11 +834,6 @@ def series(api, args, result):
     offset = array(args['offset'], (3,))
     if np.linalg.norm(offset) > .35:
         raise ValueError('offset too large')
-    # Leave margin for RGB calibration, rigid-offset and tracking errors.
-    # A boundary endpoint is brittle even when the planner reaches it exactly.
-    # Centre the nominal endpoint in the stated 10..36 mm interval. The
-    # previous 18 mm lower bound left only 8 mm for combined surface, feature
-    # and tracking errors; 22..26 mm leaves at least 10 mm on either side.
     gap = bounded(args, 'gap', .023, .022, .026)
     rise = bounded(args, 'rise', .04, .035, .10)
     minimum_clearance = bounded(args, 'tcp_clearance', .035, .020, .060)
@@ -888,11 +871,6 @@ def series(api, args, result):
     chosen = None
     result['minimum_tcp_clearance_m'] = minimum_clearance
     for r, angles in orientation_candidates(rotation, offset, gap, minimum_clearance):
-        # IK does not check contact. A TCP only 5--10 mm above the surface
-        # permits the fingers to interfere even though the remote point fits.
-        # This conservative stand-off is a design margin, not measured finger
-        # geometry. Tilting the remote feature downward raises the TCP without
-        # changing any feature endpoint or shrinking the inter-endpoint rise.
         tcp_clearance = gap-float((r @ offset)[2])
         if tcp_clearance < minimum_clearance:
             continue

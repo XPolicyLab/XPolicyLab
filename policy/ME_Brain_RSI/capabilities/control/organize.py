@@ -565,8 +565,6 @@ def _park_plan(ctx, arm, target, drawer, obstacles, start_pose=None, start_joint
     roof = max([ctx.table_z+.19]+[object_world_bounds(ctx,v)[1,2] if 'world_rotation' in v
                                 else ctx.table_z+float(v['height']) for v in obstacles])
     candidates = [[(target, down_quat())]]
-    # Move around the arm-base axis rather than crossing it at y=-.36. A
-    # straight lateral segment can force a discontinuous shoulder branch.
     for y in (-.44, -.47):
         front = current.copy(); front[1] = y
         corner = np.asarray(target).copy(); corner[1] = y
@@ -854,9 +852,6 @@ def _pick(ctx, item, point, arm, quat, hover=.055, approach_points=(),
         if margin<0:
             raise RuntimeError(f'Figurine contact reached its open support: {support}, margin={margin:.4f}')
     if item['kind'] == 'alarm':
-        # Closing at the measured endpoint would otherwise freeze an accepted
-        # free-space residual into the grasp. A 7 mm high casing contact can
-        # slip even though the commanded contact and the path are feasible.
         position_error = float(np.linalg.norm(ctx.tcp(arm)-np.asarray(point)))
         measured_quat = np.asarray(ctx.state[f'{arm}_ee_pose'][3:], float)
         rotation_error = float(2*np.arccos(np.clip(
@@ -1885,8 +1880,6 @@ def _push_keyboard(ctx, keyboard, frame):
         error = target[:2]-source[:2]
         ctx.memory['keyboard_center'] = source.tolist()
         ctx.memory['keyboard_target'] = target.tolist()
-        # A centered 200 x 60 mm frame is fully covered before the larger
-        # keyboard's center reaches it exactly. Retain a conservative margin.
         half_width, half_depth = np.asarray(item['size'])[:2]*.5
         if (abs(error[0]) < max(.012, half_width-.100-.020) and
                 abs(error[1]) < max(.012, half_depth-.030-.012) and abs(item['yaw']) < .18):

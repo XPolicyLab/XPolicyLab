@@ -1,12 +1,4 @@
-"""X41: X40 plus a vertical correction learned from the first contact plateau.
-
-A hit that plateaus after most of its descent means the real head is lower than
-the model by at least the remaining modelled distance. Because touching the
-cylindrical keys pushes the head sideways, the remaining hover/hit/lift targets
-are raised by that distance plus a 4 mm margin (cumulative cap 25 mm), so later
-keys are struck from inside the beat band without contact. The X37 contact lift
-still ends the current key.
-"""
+"Adjust remaining stroke targets after detecting a contact plateau."
 import numpy as np
 from .xylophone_x40 import XylophonePolicy as X40
 

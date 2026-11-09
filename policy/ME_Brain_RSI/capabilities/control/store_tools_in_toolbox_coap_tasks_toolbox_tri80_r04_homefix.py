@@ -1,34 +1,4 @@
-"""tri80-r04 toolbox candidate homefix (extends r02 dualham; the r01 / r02
-modules are imported unchanged).
-
-Development-truth diagnosis of dualham (r03dhref, 15 dev episodes): in 5
-episodes one arm ends 0.29-0.35 m from its start pose, which blocks the 100
-tier (run_reward needs all_robot_back_to_origin: |dpos| <= 0.15 m per axis and
-<= 20 deg, in the same step as every tool aligned and covered).
-* 4/5 (right arm): the closed-finger tamp of the tape slot uses a vertical
-  (90 deg) fingertip frame that is outside the right arm's workspace for those
-  box poses.  The first Cartesian waypoint flips the numerical IK to a far
-  branch (joint1 0.47 -> 3.6 rad, joint5 -> -pi) and the remaining waypoints
-  fail, so the arm swings wildly; afterwards joint1 sits near 4.6 rad.
-* 1/5 (left arm): lowering the hammer drives joint3 past pi (4.06 rad).
-* In both cases home() targets nearest_periodic(initial, current), i.e. the 2pi
-  equivalent of the start joints (6.28 rad) instead of unwinding to 0; the arm
-  drives into itself / the table edge and stays stuck 0.3 m off its start pose.
-
-Changes vs dualham (everything else frame for frame):
-* every per-arm home and the final home target the exact start joints recorded
-  from the first public observation (ctx.initial_state), without 2pi wrapping,
-  so accumulated turns are unwound the way they were produced; the final home
-  is a full joint home of both arms followed by a hold.
-* tamp: the fingertip tilt per tamped tool is the first of TAMP_TILTS whose
-  planned Cartesian IK path (approach, press, rise) solves at every waypoint
-  without a branch jump; otherwise the placement tilt (65 deg) is used.
-* both arms hold at the start pose with open hands for a few frames after the
-  last tool is released, before the tamp starts (the 100 tier is latched).
-
-Public observations only (head RGB, proprioception, public meshes), exactly as
-the parent.  No runtime gates, safety checks or aborts.
-"""
+"Return each arm to the joint configuration measured in the first observation."
 import copy
 
 import numpy as np

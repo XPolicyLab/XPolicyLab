@@ -24,7 +24,7 @@
     "file": "capabilities/control/sweep_blocks_random_endstate_sweep.py",
     "resource": "resources/sweep_blocks_random/random3_rgb/endstate_sweep.py",
     "package": false,
-    "sha256": "27e51a519c08386f5f80f16916294399fda93c2d457d8f7f2c0ea9fbe3225937",
+    "sha256": "15eaf197339af0be5e30996bacbbda1536a3a75f9ff75f7d47c46618e7da49df",
     "resource_identity": true
   },
   "random3_rgb.observation": {
@@ -52,7 +52,7 @@
     "file": "capabilities/geometry/sweep_blocks_random_geometry.py",
     "resource": "resources/sweep_blocks_random/random3_rgb/geometry.py",
     "package": false,
-    "sha256": "a066b5839dc2d0d0e0dce6655a02aec3ad9d2079b92411443747852551aa69a8",
+    "sha256": "b81a3ac143fbbfe2cc0712693756dfe962666ca1b14b56124bede6321462dedc",
     "resource_identity": true
   },
   "random3_rgb.joint_control": {

@@ -1,9 +1,6 @@
 """ANS13: ANS12 plus possession carry-over when the wrist view is unresolved at pre_place.
 
-eval15 seed0 layout 4: over the pale leftmost pad the wrist finger detector
-returned fingers_not_resolved, the local status fell to unknown although the
-digit had been confirmed held after lift and the model still saw it held, and
-the bounded observation ended in a put-back onto the staging spot. A hold
+A hold
 confirmed at post_lift now carries over to pre_place while no observation shows
 an open, empty gripper; a confident model 'dropped/empty' still overrides it.
 """

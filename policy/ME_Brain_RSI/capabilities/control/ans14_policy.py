@@ -1,13 +1,5 @@
 """ANS14: ANS13 plus centred-blob grasp evidence, lenient repair thresholds and a one-shot
 identity re-check with both arms lifted when the model disputes the initial reading.
-
-ANS12 dev5 layout 0: the 2 pinched at its bottom bar was visibly held (model
-0.9+) but the wrist heuristic's contact test wants the blob to extend below the
-fingertips, so the local status stayed unknown and the digit was put back.
-eval15 seed1 layout 10: 8 and 5, each partly behind a parked gripper, were
-swapped by the detector; the initial model review said so from the wrist views.
-Repairs for 9-29 deg rotations or 12-15 mm offsets cost ~130 steps and made the
-7 worse while the official tolerance is 45 deg / 20 mm.
 """
 import numpy as np
 from .ans13_policy import Policy as ANS13, CarryOverSupervisor
@@ -17,8 +9,8 @@ from .ans11_policy import VIEW_CLEAR_LIFT, VIEW_CLEAR_STEPS
 from .contracts import ARMS
 from .geometry import bounded_pose
 
-REPAIR_ANGLE=.50          # rad; official check is 45 deg
-REPAIR_CENTRE=.015        # m; official check is 20 mm
+REPAIR_ANGLE=.50          # Radians.
+REPAIR_CENTRE=.015        # Metres.
 BLOB_AREA=.03
 BLOB_CENTRE_TOLERANCE=.12
 
@@ -53,7 +45,6 @@ class Policy(ANS13):
                     if self.grasp_checks:self.grasp_checks[-1].update(coarse_stable_contact=True,coarse_source='centred_blob')
         return result
 
-    # (2) repair only beyond what the official tolerance would already forgive generously
     def _repair_plan(self,obs,context,found):
         if found is None:return None
         error=float(np.linalg.norm(np.asarray(found['xy'])-context['target']));angle=abs(float(found['yaw']))

@@ -162,9 +162,6 @@ class Policy:
                     self.return_home()
                     return True
                 if distance<.12 and abs(angle_error)>.14:
-                    # Push one end of the visible crossbar tangentially. The
-                    # next RGB observation measures actual rotation/drift;
-                    # this is not assumed to rotate by a specified angle.
                     stem=np.array([np.cos(source.angle),np.sin(source.angle)])
                     bar=np.array([-stem[1],stem[0]])
                     lever=.032*bar-.018*stem
@@ -199,8 +196,6 @@ class Policy:
                 grasp_height=.045 if self.task=="pour_balls_into_vase" else .065
                 tilt_angle=(-1.6 if side=="left" else 1.6) if self.task=="pour_balls_into_vase" else 1.6
                 self.grasp(side,source,grasp_height)
-                # Cup rim offset relative to the grasp centre, from its 72 mm
-                # static height; after rotation about Y it shifts along X.
                 pour_x=-(.072-grasp_height)*np.sin(tilt_angle) if self.task=="pour_balls_into_vase" else -.055
                 self.add(side,target.xy+np.array([pour_x,0]),
                          .22 if self.task=="pour_balls_into_vase" else .20,0.,"pour_align")
@@ -224,9 +219,6 @@ class Policy:
                     self.add(side,xy,.055,0.,f"key_{key}_hit",3)
                     self.add(side,xy,.14,0.,f"key_{key}_lift",4)
         if self.task=="push_T":
-            # Reobserve after the vertical lift before making an expensive trip
-            # to the fixed park pose. If RGB still hides the source, the missing
-            # source branch above performs a bounded view-recovery movement.
             self.view_cleared=False
         else: self.return_home()
         self.reason="executing"
@@ -274,11 +266,7 @@ class Policy:
                          "orientation_error":float(orientation_error)}
             reached=position_error<.009 and orientation_error<.15
             if waypoint.name in {"button_press","confirm_press"}:
-                # A loaded finger need not reach a free-space goal inside the
-                # button. The known finger extremity and robot proprioception
-                # give a conservative contact-height milestone. This is NOT
-                # button joint feedback or a task-success signal; the official
-                # evaluator still checks the actual press/release counts.
+                # Use the measured finger height as a contact milestone.
                 tip=current[:3]+quat_matrix(current[3:])@np.asarray(
                     self.calibration["contact_tip_offset_in_ee"])
                 height=tip[2]-self.calibration["table_z"]

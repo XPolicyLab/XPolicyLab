@@ -16,16 +16,9 @@ KEYS = ('left_arm_joint_state', 'right_arm_joint_state', 'left_ee_joint_state', 
 BASE = {'right': np.array([0.3814, -0.6197, 0.3785, 0.572]), 'left': np.array([0.613, -0.3593, 0.6163, 0.3392])}
 REL = {'right': np.array([0.0, -0.7071068, 0.0, 0.7071068]), 'left': np.array([0.7071068, 0.0, 0.7071068, 0.0])}
 
-# A closed gripper reads below this when nothing is between the pads (R10
-# official run: 0.000 in the two empty grasps; 0.10-0.53 for every held glyph,
-# the thin '1' being the lowest). Used only to tell an empty grasp from a
-# tracker false negative, never to decide what was grasped.
+# Use gripper opening to distinguish an empty grasp from a held glyph.
 EMPTY_GRASP_APERTURE = 0.03
 
-# Whole-glyph antipodal grasp planning on the reader's public 1 mm/pixel top view.
-# The X5 finger pad face is 18 mm across the jaw (robot_geometry link7/link8);
-# a fully open gripper (aperture 1.0) places each pad about 54 mm from the jaw
-# centre (operator discs of ~62 mm read 0.53, the 20 mm stem of '1' reads 0.10).
 PAD_WIDTH_MM = 18.
 GRASP_LANE_MM = 2.
 GRASP_MIN_APERTURE_MM = 15.
@@ -76,15 +69,11 @@ def band_contacts(along, across, shift, pad=PAD_WIDTH_MM):
 
 
 def plan_glyph_grasp(mask, others=()):
-    """Choose the jaw direction and grasp line whose two pad contacts sit on
-    opposing, flat silhouette walls (pixel coordinates, 1 mm/pixel, y down).
-
-    Bounding-box grasps through the glyph centre pinch the slanted diagonal of
+    """Bounding-box grasps through the glyph centre pinch the slanted diagonal of
     '2' and '7' (R10+R11: 2 of 22 such grasps survived transport) while every
-    glyph with parallel walls at the centre line was carried. The score is the
-    worst wall spread over a +-6 mm placement error, plus the torque arm from
-    the centroid and a penalty for fingers that would descend onto or sweep a
-    neighbouring piece. Returns None when no line meets the aperture limits.
+    glyph with parallel walls at the centre line was carried.
+
+    Returns None when no line meets the aperture limits.
     """
     ys, xs = np.nonzero(np.asarray(mask) > 0)
     if len(xs) < 40:
@@ -121,12 +110,7 @@ def glyph_yaw_deg(object_rotation):
 
 
 def choose_arm(source, destination):
-    """Pick-side arm unless the place lies beyond its reach and the other arm spans both.
-
-    R10/R11: every left-arm carry to the x=+0.25 mat ended in root_constrained_ik
-    at xy=0.038 (seed0 L21, seed1 L31); the pick side is kept everywhere else,
-    where it carried 20 of 21 operator discs across the centre.
-    """
+    "Pick-side arm unless the place lies beyond its reach and the other arm spans both."
     def reach(arm):
         return max(abs(source[0] - ARM_BASE_X[arm]), abs(destination[0] - ARM_BASE_X[arm]))
     pick_side = 'left' if source[0] < 0 else 'right'
@@ -137,12 +121,6 @@ def choose_arm(source, destination):
 def transport_reference(closed_pose, current_pose, object_rotation):
     """Attitude at close, yawed to where the wrist is now plus one clamped
     correction step while the glyph reads beyond the deadband.
-
-    Tilt stays anchored to the acquired grasp and the yaw command never runs
-    ahead of the wrist, so a stale rotation estimate cannot drive the wrist
-    round (R11 seed0 L6 turned a '7' through 190 degrees by re-applying one
-    47 degree reading to the current pose every segment).
-    Returns (reference_quaternion, yaw_step_deg).
     """
     achieved = float((rot(current_pose[3:]) * rot(closed_pose[3:]).inv()).as_euler('zyx', degrees=True)[0])
     step = 0.
@@ -231,19 +209,10 @@ class EpisodeModel:
         return np.asarray(pose[:3]) + rot(pose[3:]).apply(self.offset)
 
     def plausible_offset(self, measured):
-        """Grasp offsets further than the pad face from the geometric one are
-        tracker artefacts: R11 seed2 L7 released a '0' from 3 cm up and it
-        rolled off the mat after the offset drifted to z=-0.031 at 7 features."""
         return self.grasp_offset is None or float(np.linalg.norm(np.asarray(measured) - self.grasp_offset)) <= OFFSET_DEVIATION_LIMIT
 
     def go_blind(self, reason):
-        """Carry on from proprioception when the wrist tracker gives up on a held glyph.
-
-        In the R10 official run 32 episodes aborted on rgb_lift_not_confirmed,
-        wrist_tracking_lost or same_instance_wrist_relation_lost while the
-        gripper aperture matched a held glyph (26 of them exactly the aperture
-        of the successful grasps of the same digit); the aborts scored 0.
-        """
+        "Continue from proprioception when the gripper still holds the glyph and wrist tracking is lost."
         if self.aperture() <= EMPTY_GRASP_APERTURE:
             raise ValueError(f'{reason}:empty_grasp:{self.aperture():.3f}')
         if self.grasp_offset is not None and not self.plausible_offset(self.offset):
@@ -497,15 +466,11 @@ class EpisodeModel:
                 self.log('terminal_root_correction', estimated_root=self.estimated_root, destination=self.destination, error_m=error, uncertainty_m=self.uncertainty, correction_number=self.release_corrections)
             else:
                 if error + self.uncertainty > 0.018 or not aligned:
-                    # Refusing scored 0 in every R10/R11 case; the estimate carries the
-                    # uncertainty, so releasing is the only move with a chance.
                     self.log('release_gate_override', error_m=error, uncertainty_m=self.uncertainty, aligned=bool(aligned), glyph_yaw_deg=glyph_yaw_deg(axes))
                 self.tracker = None
                 self.enter('release', self.joint(), 1.0, 6)
                 return
         self.current_root_target = self.skill_choice.pop(0)
-        # Keep 3 mm tracking/settling margin above the public table.
-        # The original 0.1 mm planning margin was lost under actual joint load.
         floor = max(0.768, self.transit_floor) if self.transit_height is not None and self.current_root_target[2] >= self.transit_height - 1e-06 else 0.768
         reference, yaw_step = transport_reference(self.closed_pose, self.pose(), None if self.is_operator else self.object_rotation)
         self.log('transport_orientation_reference', reference=reference, acquired_reference=self.closed_pose[3:], object_rotation=self.object_rotation, yaw_step_deg=yaw_step, glyph_yaw_deg=None if self.object_rotation is None else glyph_yaw_deg(self.object_rotation))

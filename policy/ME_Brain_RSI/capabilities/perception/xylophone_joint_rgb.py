@@ -1,8 +1,11 @@
 """Joint original-RGB red-head/wood-shaft detector.
 
-Public sphere (13 mm) and shaft (7.5 mm x 200.6 mm) only. No task IDs,
-layouts, reward, depth, or simulator state. XY is conditioned on the caller's
+No task IDs,
+layouts, reward, depth, or simulator state.
+
+XY is conditioned on the caller's
 unchanged resting-plane prior: this is NOT measured depth or grasp success.
+
 Head shape is scored with the shaft, not gated by rectified circularity.
 """
 import cv2

@@ -1,11 +1,4 @@
-"""X29 held-head geometry from allowed RGB and observed link6 poses only.
-
-The public 13mm sphere provides scale in the attached wrist camera. A clipped
-image edge is NEVER a silhouette edge. Robust contour proposals must have broad
-curved support and agree across color thresholds. All accepted temporal frames
-and all available head-camera centers participate in confirmation; no best-frame
-subset, nominal-anchor substitution, depth, episode camera matrices or rewards.
-"""
+"Estimate the held mallet head using RGB and observed link poses."
 import cv2
 import numpy as np
 from scipy.optimize import least_squares
@@ -18,7 +11,7 @@ CV_TO_GL=np.diag([1.,-1.,-1.])
 
 
 def wrist_mount():
-    """Public X5A.urdf fixed joints + robot_config camera (intrinsic XYZ)."""
+    "Load wrist camera transforms and intrinsics from the robot description."
     def t(xyz,rpy,order='xyz',degrees=False):
         out=np.eye(4);out[:3,3]=xyz
         out[:3,:3]=Rotation.from_euler(order,rpy,degrees=degrees).as_matrix()

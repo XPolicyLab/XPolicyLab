@@ -154,7 +154,6 @@ class X5Kinematics:
         high=np.maximum(links[:,None],links[None,:])
         eligible=np.triu(np.ones((len(links),len(links)),bool),1)&(low!=high)
         eligible&=~np.isin(low*7+high,[first*7+second for first,second in COLLISION_IGNORE])
-        # The official public self-collision sphere buffer is -1 cm per link.
         gaps=np.linalg.norm(centers[:,None,:]-centers[None,:,:],axis=2)-radii[:,None]-radii[None,:]+.020
         self_clearance=float(np.min(gaps[eligible]))
         other_clearance=float("inf")

@@ -53,7 +53,6 @@ def head_table_roi(shape):
     return polygon_mask(active_cameras().head_project(points),shape)
 
 def fit_cube(mask,projector,center_z=CUBE_CENTER,initial=None):
-    """Solid 35-mm cube silhouette, yaw modulo 90 degrees; not a color centroid."""
     yy,xx=np.where(mask)
     if len(xx)<18:return None
     if initial is None:
@@ -82,7 +81,6 @@ def fit_cube(mask,projector,center_z=CUBE_CENTER,initial=None):
     return dict(xy=best.x[:2].tolist(),yaw=float(best.x[2]),z=float(center_z),iou=iou,edge_rmse_px=rmse,pixels=int(mask.sum()),ok=bool(iou>.65 and rmse<2.8),mask=mask)
 
 def detect_mats(rgb):
-    """Rectify current head RGB and find three 80-mm public circular mat rims."""
     # Absolute limits only bound a visible table search. No center is supplied.
     scale=1000.;x=np.arange(-.4,.4001,.001);y=np.arange(-.5,.1501,.001)
     xx,yy=np.meshgrid(x,y);xyz=np.column_stack([xx.ravel(),yy.ravel(),np.full(xx.size,MAT_TOP)])
@@ -109,8 +107,6 @@ def detect_mats(rgb):
     candidates=[]
     for rows in combinations(proposals,3):
         rows=sorted(rows,key=lambda p:p['xy'][0]);p=np.asarray([r['xy'] for r in rows]);gaps=np.diff(p[:,0])
-        # Public spacing is only a shape/layout pattern prior; each center still
-        # requires its own current RGB rim support, never a fixed world target.
         if np.ptp(p[:,1])>.018 or np.any(abs(gaps-.115)>.02):continue
         score=sum(r['edge_cost'] for r in rows)+1e4*np.ptp(p[:,1])**2+1e4*np.sum((gaps-.115)**2)
         candidates.append((score,rows))

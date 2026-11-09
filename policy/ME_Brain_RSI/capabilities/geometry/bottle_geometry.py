@@ -19,11 +19,11 @@ def load_bottle_models():
 def public_bin_prior():
     """Static task geometry, explicitly NOT an RGB observation.
 
-    Public task/RoboDojo/config/put_bottles_into_dustbin.yml fixes the bin
-    at (-.63,-.1,.35) relative to Ground, identity quaternion. Ground top
-    .05 plus public mesh rim .325 gives z=.725. No Eval_Layout is read.
+    No Eval_Layout is read.
+
     Two inboard rim edges are hidden by the .765 tabletop, so requiring
     those edges in head RGB is not a valid visual confirmation gate.
+
     This prior is specific to the public fixed-bin task, not movable bins.
     """
     return dict(xy=np.array([-.63,-.1]),height=.725,

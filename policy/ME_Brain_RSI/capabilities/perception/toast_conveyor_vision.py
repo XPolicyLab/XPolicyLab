@@ -23,11 +23,6 @@ def _learned_toast_mask(ctx,label,camera):
     from .containers_vision import _learned_pack_masks
     proposals=_learned_pack_masks(ctx,label,camera)
     if label=='toaster':
-        # The detector's top box is sometimes another appliance-like object; the public task
-        # randomises the toaster inside x [0.04, 0.35], y [-0.12, -0.03]: take the first
-        # proposal whose mask centroid projects into that band (with slack), trying other
-        # prompts when the plain one only found clutter or nothing at all (a toaster beside
-        # the parked right gripper got no 'toaster' box, but a 'white toaster' one).
         rgb=_toast_rgb(ctx,camera)
         def in_range(proposal):
             ys,xs=np.nonzero(proposal['best_mask'])
@@ -279,8 +274,6 @@ def measure_toast_lever(ctx, scene, reference=None):
                                                     camera, ctx.state, image.shape))
 
 
-# Public bread/00000 mesh's planar convex profile (metres), simplified with a
-# 0.6 mm tolerance. Its 11.8 mm thickness comes from the public aligned box.
 _BREAD_PROFILE = np.asarray([
     [-.057061, .048389], [-.058369, .043446], [-.051044, -.049677],
     [-.050195, -.053266], [-.047891, -.056785], [-.042111, -.058227],
@@ -312,8 +305,6 @@ def centre_source_grasp(ctx, contact, arm="left", shelf_end=False, prefer_rack_e
         return None
     hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
     if shelf_end:
-        # A single keypad rectangle can mimic a pinch edge. Require the
-        # observed parallel slice planes to agree with public 25mm seats.
         expected_width=abs(gradient)*.0118
         count=int(ctx.memory.get('toast_direct_rack_count',4));count=min(4,max(3,count))
         groups=[]
@@ -401,8 +392,6 @@ def centre_source_grasp(ctx, contact, arm="left", shelf_end=False, prefer_rack_e
         _, correction, centre, run = max(choices, key=lambda choice: choice[1] * direction)
     else:
         _, correction, centre, run = min(choices)
-    # The next image closes the residual; a single uncertain strip cannot
-    # move the hand by more than 6 mm into the neighbouring slice's plane.
     correction = float(np.clip(correction, -.006, .006))
     return dict(contact=np.asarray(contact, float) + frame[:, 1] * correction,
                 correction=correction, pixel=pixel, centre=centre, run=run)
@@ -1588,13 +1577,7 @@ def _wrist_bread_peaks(ctx, camera, count=4):
 
 
 def _random_toaster_slots(ctx,image,camera):
-    """Fit observed openings at the publicly configured articulation height.
-
-    make_toast_random.yml fixes root Z at80mm relative to Table for both
-    variants. Their different visual mesh floors do not set this fixed-root
-    articulation height. XY, yaw and variant still come from current RGB.
-    This constant is public task geometry, never an episode pose lookup.
-    """
+    "Fit the observed toaster openings at the articulation plane."
     roof=ctx.table_z+.16
     roi=world_roi(ctx,image.shape,(-.01,.48,-.30,.18),roof,camera)
     hsv=cv2.cvtColor(image,cv2.COLOR_RGB2HSV)
@@ -1737,8 +1720,6 @@ def _uniform_polygon(vertices, count=128):
 def _toast_merged_slots(ctx, image, camera):
     """Recognise toaster1's single rim and its lower white central divider.
 
-    Its public mesh has a 120.8 by 94.4 mm outer aperture. The divider is
-    11.3 mm below the rim, so both dark slots can form one image component.
     A rim fit alone is insufficient: the visible divider, both dark halves,
     and the silver roof must agree with this same observed rigid transform.
     """
@@ -1879,9 +1860,10 @@ def _fit_toaster_outline(ctx, image, camera, root, yaw):
 def _rack_apparent_length_limit(ctx, item, camera, image_shape, count):
     """Project a public bread/rack sphere onto the measuring plane.
 
-    Each slice has a 74.8 mm asset radius, and rack seats are 25 mm apart.
     A horizontal projection of upright geometry is larger than its physical
-    footprint. The oblique-view bound accounts for that without fitting an
+    footprint.
+
+    The oblique-view bound accounts for that without fitting an
     upper limit to one episode's contour length.
     """
     radius = .0748 + .025 * (max(1, int(count)) - 1) / 2
@@ -1916,7 +1898,7 @@ def bread_candidates(ctx, camera=None, count=4):
             if not 20<cv2.contourArea(contour)<image.shape[0]*image.shape[1]*.10:continue
             item=contour_record(ctx,image,contour,ctx.table_z+.101,camera)
             if item is None or not .035<item['length']<_rack_apparent_length_limit(ctx,item,camera,image.shape,count):continue
-            if item['position'][0]>.05 or not -.31<item['position'][1]<.16:continue  # shelf x range [-0.35, 0] plus slack
+            if item['position'][0]>.05 or not -.31<item['position'][1]<.16:continue
             found.append(item)
         # A detector may correctly segment only one slice. Never infer four
         # seats from that partial envelope; require the visible public row.
@@ -2061,8 +2043,6 @@ def measure_breads(ctx, count=4):
         centers = [item["position"].copy() for item in candidates]
         confidence = .7
     else:
-        # A slice can hide the other three faces. The observed stack envelope
-        # anchors a public rack model; its four 25 mm spacings are asset geometry.
         points = np.concatenate([item["world_contour"][:, :2] for item in breads])
         rect = cv2.minAreaRect(points.astype(np.float32))
         corners = cv2.boxPoints(rect)
@@ -2313,8 +2293,6 @@ class ConveyorTracker:
             measured = measure_reference_stereo(ctx, first)
             if measured is not None:
                 self.reference_z = float(measured[2])
-                # The public jaw gripping face is centred 5 mm in front of
-                # Context's TCP, so place the TCP slightly above the body centre.
                 self.contact_z = max(.781, self.reference_z + .012)
                 for track in self.tracks.values():
                     track["position"] = ctx.perception.project(track["pixel"], self.reference_z,

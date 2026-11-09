@@ -1,9 +1,10 @@
 """Robot-only upstream clearance gates with NumPy URDF FK and convex GJK.
 
 The distance returned by convex_distance is a certified separating-plane lower
-bound (or zero on ambiguity), not an optimistic clearance estimate. Cameras
-keep the upstream conservative AABB rule. The source's 2 mm threshold and
-sample density live unchanged in skill_choices.py.
+bound (or zero on ambiguity), not an optimistic clearance estimate.
+
+Cameras
+keep the upstream conservative AABB rule.
 """
 from pathlib import Path
 from functools import lru_cache

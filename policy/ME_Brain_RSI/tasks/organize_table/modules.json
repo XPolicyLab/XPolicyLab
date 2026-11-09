@@ -31,7 +31,7 @@
     "file": "capabilities/motion/organize_table_coap_motion.py",
     "resource": "resources/organize_table/coap/motion.py",
     "package": false,
-    "sha256": "1477d1fefb6c4cb61952e138f7e948973502ce37ce3d6ff619b6d13af56a4647",
+    "sha256": "02ee891557e4f2fd5c4f43ed1d5fca99b30aae4b9666d2ab401ad6e0b31635c5",
     "resource_identity": true
   },
   "coap.perception": {
@@ -59,28 +59,28 @@
     "file": "capabilities/control/organize_table_coap_tasks_organize.py",
     "resource": "resources/organize_table/coap/tasks/organize.py",
     "package": false,
-    "sha256": "b3c7f872571d79b5fb2e0f66d84257fa2893245bd481745802bd120938104076",
+    "sha256": "1a10d6565f998f4434483df74d05a1ee32d7df5e22e9ab4146683567d42daf5e",
     "resource_identity": true
   },
   "coap.tasks.organize_vision": {
     "file": "capabilities/perception/organize_table_coap_tasks_organize_vision.py",
     "resource": "resources/organize_table/coap/tasks/organize_vision.py",
     "package": false,
-    "sha256": "ebf03277a47fb147c354a60e638913c173b069dc7bb8765d3b3b616daf53364b",
+    "sha256": "3bbfd4feff2a6de22bdd5f8b6cb87c610402637ea8b28b2f4ee82146b7c62b8d",
     "resource_identity": true
   },
   "coap.tasks.containers_vision": {
     "file": "capabilities/perception/containers_vision_for_pack_objects_into_box.py",
     "resource": "resources/organize_table/coap/tasks/containers_vision.py",
     "package": false,
-    "sha256": "a05d11626485e0091b728d3d95cf0b7fc8c673483158575dcd747227c8eb6c3e",
+    "sha256": "e04949d14ae4f5a2338fa1d911e47229df964f8234320d755b4572c2ce32db7c",
     "resource_identity": true
   },
   "model": {
     "file": "capabilities/control/organize_table_model.py",
     "resource": "resources/organize_table/model.py",
     "package": false,
-    "sha256": "1123510602464c2ea21fbb5928095dc91a0169b88fc6648bb701db84f86e8552",
+    "sha256": "091aeb7c0ad168f26bb8dcdfa023689012162014f816b15a3a777b2aa3ebb6d3",
     "resource_identity": true
   },
   "deploy": {

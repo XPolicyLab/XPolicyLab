@@ -586,8 +586,6 @@ def neutral_watch_case(ctx, arm, anchor):
             return False
         geometry = _neutral_case_geometry(ctx, camera, solid, pixel, anchor, refined)
         if geometry is None and refined:
-            # A complete same-wrist band avoids the head Hough center's perspective bias.
-            # The thick seed and unchanged 25 degree short-axis agreement remain required.
             loop = _neutral_wrist_loop(ctx, camera, pixel, anchor)
             if loop is not None:
                 geometry = _neutral_case_geometry(ctx, camera, solid, pixel,
@@ -792,7 +790,6 @@ def locate_watch(ctx, arm, anchor, quat, green=False, neutral=False):
             ctx.watch_loop_plane = first_loop.copy()
             return first
         if green and np.linalg.norm(ctx.watch_face_plane[:2]-first_plane[:2])>.010:
-            # A 25 mm viewpoint shift cannot move the stationary case by a centimetre on its plane.
             ctx.watch_face_triangulated = first_triangulated
             ctx.watch_loop_plane = first_loop.copy()
             return first
@@ -1259,10 +1256,8 @@ def run(ctx):
                                            camera=obj.get('primary_camera',obj.get('camera','cam_head')))
             pinch_height = .029
         elif compact_pale_car(pairs[demo_id]) and not solid_toy:
-            # The public pale vehicle is 32 mm tall; its side grasp lies below the roof.
             pinch_height = .021
         elif compact_gold_vehicle(obj):
-            # The public metal vehicle is 41 mm tall; grasp its solid lower sides.
             pinch_height = .021
         elif solid_toy:
             # Use the existing solid toy grasp height when a gray face verifies the same body family.

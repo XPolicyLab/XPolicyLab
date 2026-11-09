@@ -1,24 +1,4 @@
-"""tri80 r11p sorting candidate "trim": shorten fixed pauses of the per-object program.
-
-Built on the live v337 route (``sorting_tri80_r09d_guided``; its rendered core is re-rendered by
-``sorting_tri80_r11p_base``).  Only fixed ``ctx.hold`` pauses of the retained per-object program
-are shortened; every motion, grasp, measurement and route decision is unchanged:
-
-* the 3-frame pause after each basket release is removed (the 8-frame release has opened the
-  fingers and the body has dropped; the next empty approach starts from above the basket);
-* the 3-frame pause after the table-handoff release becomes 1 frame (the next motion is the
-  vertical 7 cm retreat with open fingers);
-* the 3-frame pause before the released body is re-measured on the table becomes 1 frame (the
-  right arm has already retreated for 8-15 frames since the release);
-* the 3-frame pause before the camera-landmark look becomes 1 frame;
-* the 2-frame pause between the contact move and the grip close becomes 1 frame (source and
-  receiver grasps; the guided re-grasp feedback is unchanged).
-
-In the r09dg1/r09dg2 census these pauses cost ~6 frames per object and ~4 more per table
-transfer (~35-40 frames per episode); 8 of the 11 timeouts ended with 4 of 5 objects placed.
-Only public camera images, public robot state and public kinematics are used.  No safety checks
-or aborts are added.
-"""
+"Shorten redundant pauses in the per-object sequence."
 import ast
 
 from coap.tasks import sorting_tri80_r11p_base as base

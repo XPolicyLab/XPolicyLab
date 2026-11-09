@@ -28,9 +28,8 @@ def grip_for_gap(gap):
 
 def grasp_radius(kind, beta=BETA_DEFAULT):
     """Finger-tip midpoint radius: the wall's mid-thickness at the grasp depth, so both
-    tilted pads meet the wall together (no inward push that could tip the bowl). The
-    45-degree closing axis still puts the outer contact below the inner one, which
-    blocks drooping about the tangent axis."""
+    tilted pads meet the wall together (no inward push that could tip the bowl).
+    """
     p = PROFILES[kind]
     h = p['H'] - DEPTH
     return (profile_radius(kind, h) + profile_radius(kind, h, inner=True)) / 2
@@ -99,10 +98,9 @@ class Episode:
         return (points - transform[:3, 3]) @ transform[:3, :3]
 
     def bowl_obstacles(self, source_xy, dest_xy, kind, stacked):
-        """Convex hulls (1 cm inflated) of every perceived bowl except the one being grasped.
-
-        The destination is named so the gate can ignore it while the carried bowl nests.
-        Positions come from the latest head-RGB reviews only."""
+        """The destination is named so the gate can ignore it while the carried bowl nests.
+        Positions come from the latest head-RGB reviews only.
+        """
         from .perception import silhouette_points
         p = PROFILES[kind]; out = []
         for i, b in enumerate(self.scene['bowls']):
@@ -368,7 +366,6 @@ class Episode:
         return [s[2] for s in spots if s[0] < .15][:3]
 
     def lower_tip_z(self, kind, stacked):
-        """Release height: nested rim + margin; when stacking, the outer finger tip stays 5 mm above the stack rim."""
         p = PROFILES[kind]
         nested_rim = TABLE + p['H'] + (stacked + 1) * p['nest']
         margin = .012 if stacked < 0 else max(.012, DEPTH - p['nest'] + .005)

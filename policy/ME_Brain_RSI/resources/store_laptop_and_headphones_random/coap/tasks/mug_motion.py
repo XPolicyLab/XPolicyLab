@@ -190,7 +190,6 @@ def plan_mug_route(ctx, arm, center, yaw, grasp_local, handle_local,
                     return {'quaternion':quaternion,'support':support,'staging':staging,
                             'preflight':measured,'attempts':attempts,
                             'nominal_segments':segments, 'route_kind':'staged_rotation'}
-            # Simultaneous translation and rotation can avoid an impossible fixed staging pose.
             segments = nominal_mug_segments(arm,grasp,quaternion,support,staging_points[-1],lift,
                                             index,red_handle,direct_transfer=True)
             measured = preflight_segments(ctx,segments)

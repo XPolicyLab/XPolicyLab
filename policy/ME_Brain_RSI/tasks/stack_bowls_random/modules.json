@@ -423,13 +423,13 @@
     "file": "capabilities/control/policy_for_sort_nesting_dolls_by_size.py",
     "resource": "resources/stack_bowls_random/coap/shared/__init__.py",
     "package": true,
-    "sha256": "aa16f70a86af54190494ac1386265c926f8f0ca8775ef8a900189f5df525d2e5"
+    "sha256": "b77b6c713c7b491669473b2241d12ce434d2bae9db1fd063143521797f69d99c"
   },
   "policy.stack_bowls_rgb_v7.model": {
     "file": "capabilities/perception/model_for_stack_bowls_random.py",
     "resource": "resources/stack_bowls_random/coap/model.py",
     "package": false,
-    "sha256": "95692297575dcf2bdd89518ff566f9f028865b5bf6a5e120d1d9f8becbacb7dc"
+    "sha256": "e7763af8c3d48d79758578d341919335bd3620bcd0a2cfb4b40ab34c596b345b"
   },
   "policy.stack_bowls_rgb_v7.calibration": {
     "file": "capabilities/control/calibration.py",
@@ -459,13 +459,13 @@
     "file": "capabilities/motion/x5_kinematics.py",
     "resource": "resources/stack_bowls_random/coap/x5_kinematics.py",
     "package": false,
-    "sha256": "11f11f235b78440ab9d6afd292a72cb07a1af702667724e772da4ce16937d229"
+    "sha256": "bc248fd605972d12c080b06c5f0078d2f3ca6e35320d1c10cfabca353233ee63"
   },
   "policy.stack_bowls_rgb_v7.collision_gate": {
     "file": "capabilities/perception/collision_gate.py",
     "resource": "resources/stack_bowls_random/coap/collision_gate.py",
     "package": false,
-    "sha256": "d8bcb0159b6141cc28e2477444a112d598fc9387eb932edc1f5c102fab86c0b7"
+    "sha256": "2020a47511a0fc1616ad0a327d0932cfdc995a34416312306166b05232dd5fd7"
   },
   "sam3.perflib.triton": {
     "namespace": true

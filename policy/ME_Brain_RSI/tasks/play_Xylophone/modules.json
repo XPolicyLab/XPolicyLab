@@ -42,29 +42,23 @@
     "package": false,
     "sha256": "ce7a024c5f837d4d610589b9497f49d694833366a43437a108128ac02e1ccf39"
   },
-  "coap.xylophone_x42": {
-    "file": "capabilities/control/xylophone_x42.py",
-    "resource": "resources/play_Xylophone/coap/xylophone_x42.py",
-    "package": false,
-    "sha256": "059167cb09eb648ecfcb390c92e97e2aca4a9cf0ea6df9e782ee2015706d1214"
-  },
   "coap.xylophone_x41": {
     "file": "capabilities/control/xylophone_x41.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x41.py",
     "package": false,
-    "sha256": "11f598506886fa8a4b31651916bad5c47dfb02836b86ab6800eacde7593d56f8"
+    "sha256": "b63394475339c77d45a0fee4952147682076150cebda3929e72bf84673484bdf"
   },
   "coap.xylophone_x40": {
     "file": "capabilities/control/xylophone_x40.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x40.py",
     "package": false,
-    "sha256": "229f4e58c82113f1f847c5d152220d1516d9a9a0e843de66e5db78dc69590f1d"
+    "sha256": "d73cddd2adda27dbabac08b53f83b91242825a473eae3627b30a7f44a563b132"
   },
   "coap.xylophone_x38": {
     "file": "capabilities/control/xylophone_x38.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x38.py",
     "package": false,
-    "sha256": "2b57ab6e5645271c09db2321f58128ed7ca6bd62ade1c03b4d9340de5976cc3e"
+    "sha256": "6dcfea9b2100455eb8d94a65fadc8dcaa39e90c629f3952fc6e6e8b3bed9acce"
   },
   "coap.geometry": {
     "file": "capabilities/geometry/geometry_for_push_t.py",
@@ -82,7 +76,7 @@
     "file": "capabilities/geometry/xylophone_geometry.py",
     "resource": "resources/play_Xylophone/coap/xylophone_geometry.py",
     "package": false,
-    "sha256": "2d73a15066c22dc61150d8e16d331ec70e5a2a26174d6db40ef13e6b1f2e091c"
+    "sha256": "9e85d633c5d5511ebcb5f232a0a43a63a81f77c924affdc4d6c95c0b083c34fd"
   },
   "coap.xylophone_keys": {
     "file": "capabilities/control/xylophone_keys.py",
@@ -94,7 +88,7 @@
     "file": "capabilities/control/xylophone_policy.py",
     "resource": "resources/play_Xylophone/coap/xylophone_policy.py",
     "package": false,
-    "sha256": "a2f0b2c5fb9b79b1bcf2b7d3ebb44f79ecd6ef728df95d1cc1d26d1f88093f8c"
+    "sha256": "ed1843e54078d62a9e18b9446ba24dc6c18eeff40f84c6dc659bcbda2e1b8ece"
   },
   "coap.xylophone_recovery": {
     "file": "capabilities/control/xylophone_recovery.py",
@@ -106,7 +100,7 @@
     "file": "capabilities/control/xylophone_lift.py",
     "resource": "resources/play_Xylophone/coap/xylophone_lift.py",
     "package": false,
-    "sha256": "2f15e8d949658727ee966adb79648fb8def2b0976ff8512d0da4084b707c1c72"
+    "sha256": "42d6ca39c118a299ad39c51feb64848d72a15c631078535fbe2b3abf32a0d8ba"
   },
   "coap.xylophone_path": {
     "file": "capabilities/control/xylophone_path.py",
@@ -118,13 +112,13 @@
     "file": "capabilities/control/xylophone_routes.py",
     "resource": "resources/play_Xylophone/coap/xylophone_routes.py",
     "package": false,
-    "sha256": "6a9c3dfee50096a5fa1a79116fa211f9c8e7387beb4c7d92ac7015cb619b056f"
+    "sha256": "b715513e499e3d819ae17838c11613a5c8c505ae3dadfd9dd74f6bc0ac5eb077"
   },
   "coap.xylophone_tilt": {
     "file": "capabilities/control/xylophone_tilt.py",
     "resource": "resources/play_Xylophone/coap/xylophone_tilt.py",
     "package": false,
-    "sha256": "7f4b859636b87871e57c11c139a7a58e95fc21b0a4b991568f5ba07bf6f359d0"
+    "sha256": "ed8247d806bc831f90f245e0b8fecfab8aeabaac438d36d9cd27896aa0c5bbc6"
   },
   "coap.xylophone_validation": {
     "file": "capabilities/control/xylophone_validation.py",
@@ -148,7 +142,7 @@
     "file": "capabilities/control/xylophone_information.py",
     "resource": "resources/play_Xylophone/coap/xylophone_information.py",
     "package": false,
-    "sha256": "84172be0ef71afc4c400ad37f41a5268160c06540bf27bcbce51fc3677213535"
+    "sha256": "0e5172c68f8ff88dcb2f4cd2ac231f7402dcbc35e14f044cc9a9a2a39de540fb"
   },
   "coap.xylophone_observer": {
     "file": "capabilities/perception/xylophone_observer.py",
@@ -160,31 +154,31 @@
     "file": "capabilities/control/xylophone_measurement.py",
     "resource": "resources/play_Xylophone/coap/xylophone_measurement.py",
     "package": false,
-    "sha256": "59fd49bfa1b43360b437921f658a8fe0594003db9410539d09762a114f77c697"
+    "sha256": "dcdc82a2ba4508f2564ccd524e19ac7847ce5f30157e685f6325a7f5f25ef36e"
   },
   "coap.xylophone_multiview": {
     "file": "capabilities/control/xylophone_multiview.py",
     "resource": "resources/play_Xylophone/coap/xylophone_multiview.py",
     "package": false,
-    "sha256": "8811c481fbfbe0987b0b3b35301ba71081130f880107d397a0c3a780c754c7f4"
+    "sha256": "7a4c7ecd165f263f1cd3240bdc3aad41807b67da747f6af99146eef4d38775bc"
   },
   "coap.xylophone_joint_rgb": {
     "file": "capabilities/perception/xylophone_joint_rgb.py",
     "resource": "resources/play_Xylophone/coap/xylophone_joint_rgb.py",
     "package": false,
-    "sha256": "7f37f844263c807f9e160febed8a1fbe32124965ca7dd91cf0c2ce4f847d5b57"
+    "sha256": "1d30412edf23c5f2e67adaa1c1e7e27525bca3079328bd29c8a2cce21d72f613"
   },
   "coap.xylophone_mallet_rgb": {
     "file": "capabilities/perception/xylophone_mallet_rgb.py",
     "resource": "resources/play_Xylophone/coap/xylophone_mallet_rgb.py",
     "package": false,
-    "sha256": "cfb00eb5abb415e976cd2ae8a4ea2a2cdb0690116d0f7587676d6c385e4f7686"
+    "sha256": "c64ad6384380bf0837800027b1c3439ef9b01a97a7b34ab40539b4d9e2d83b76"
   },
   "coap.xylophone_template": {
     "file": "capabilities/control/xylophone_template.py",
     "resource": "resources/play_Xylophone/coap/xylophone_template.py",
     "package": false,
-    "sha256": "9ea42af92dd9859f0ef62d4912ee9c99ba0d24d95cc3b740978f7601e3227465"
+    "sha256": "4a54bc3b5a62add845c7c4c27614dfb864672cbbd84c1ed579be49cb30a48d3f"
   },
   "coap.xylophone_rgb": {
     "file": "capabilities/perception/xylophone_rgb.py",
@@ -202,19 +196,19 @@
     "file": "capabilities/control/policy_for_play_xylophone.py",
     "resource": "resources/play_Xylophone/coap/policy.py",
     "package": false,
-    "sha256": "cd4821ec1770cfe58fdeea6faccf47de89cd177da48914d73174b729e3f06c7d"
+    "sha256": "1f92ff3fe6f6aa7ca7022f3f040422876a915641af5a00d83020765863eb032c"
   },
   "coap.perception": {
     "file": "capabilities/perception/perception_for_play_xylophone.py",
     "resource": "resources/play_Xylophone/coap/perception.py",
     "package": false,
-    "sha256": "12e22bef36e84b578727f6eb74433ec820475d9e82d5e1cedb4c38d97031ef5f"
+    "sha256": "c0ea48c505c56d525c70b6efbcc7a467cf6e769152bcb47b189d9cf1b2b638f6"
   },
   "coap.t_shape": {
     "file": "capabilities/control/t_shape.py",
     "resource": "resources/play_Xylophone/coap/t_shape.py",
     "package": false,
-    "sha256": "c6dbf0ea5d2c1f06f32f7dbd49b3b0fa0dbd95f863eaced468b908af9b71d073"
+    "sha256": "e1452e201a238c7827468f8d882705fe6478c458cbfb80031f54affe4998c140"
   },
   "coap.liquid_exposure": {
     "file": "capabilities/control/liquid_exposure.py",
@@ -238,19 +232,19 @@
     "file": "capabilities/geometry/bottle_geometry.py",
     "resource": "resources/play_Xylophone/coap/bottle_geometry.py",
     "package": false,
-    "sha256": "0ce68fa0af9c53b03b5477d2cd42417288c2414b50d4d975310b9840d20236b0"
+    "sha256": "263d17a46ff9f3822e3fa21f2206978d564941e6eb13d802d2e0cdc800e2d059"
   },
   "coap.bottle_tilt": {
     "file": "capabilities/control/bottle_tilt.py",
     "resource": "resources/play_Xylophone/coap/bottle_tilt.py",
     "package": false,
-    "sha256": "4e215a26ff277246e86c3d7e062039316815e6dec9c446a85b36d003504b9e96"
+    "sha256": "356ada1b58a1b4e179b13afc4848fad79377541b7cd53aae4292f7a145190e07"
   },
   "coap.bottle_color": {
     "file": "capabilities/control/bottle_color.py",
     "resource": "resources/play_Xylophone/coap/bottle_color.py",
     "package": false,
-    "sha256": "4514b27ebb084bf7bf1a5b55e1317fad2f1732082931f8f99f5d5fd686392434"
+    "sha256": "8b3d917f8ffdaa4417593937443b60ebf98c16d74391bb578f5cf36ef93aa215"
   },
   "coap.mug_geometry": {
     "file": "capabilities/geometry/mug_geometry.py",
@@ -268,7 +262,7 @@
     "file": "capabilities/control/xylophone_x35.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x35.py",
     "package": false,
-    "sha256": "99900ac5e34cc8660d617f95da6f8a44b56eed04e928096c485e693b6c1029e5"
+    "sha256": "80362b08f4babdd14551d88b3e9ff1f072607c98786ccbaba4876664bd70d564"
   },
   "coap.xylophone_feedback": {
     "file": "capabilities/control/xylophone_feedback.py",
@@ -286,13 +280,13 @@
     "file": "capabilities/perception/rgb_sequence.py",
     "resource": "resources/play_Xylophone/coap/vendor/hexashell/rgb_sequence.py",
     "package": false,
-    "sha256": "38be5298b0ea94398dbf46f275e7e7b36fc2e0dc12bb289a3a36e7a273ed620d"
+    "sha256": "0fc1bdfc3fa4f4465a80de056512218e02fd2e82107b3e39f008484a57902c56"
   },
   "coap.xylophone_x34": {
     "file": "capabilities/control/xylophone_x34.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x34.py",
     "package": false,
-    "sha256": "730487a5c081165aeb266b249a1317169138b3999e324a08d3969015714505af"
+    "sha256": "0a3908ffbc8670567e5560123fab963ae817ad0f4092d5709b807eadcd29cf3a"
   },
   "coap.xylophone_astra33": {
     "file": "capabilities/control/xylophone_astra33.py",
@@ -328,121 +322,19 @@
     "file": "capabilities/control/xylophone_x37.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x37.py",
     "package": false,
-    "sha256": "44402a75e8b0c32329029fffe71668bc3ca33ec90a1461f70a856622596e06b8"
+    "sha256": "ca6daf57cf5e0a1a411167244d5db291bdf32a5db0074ba287dd0cfe4c7ced8d"
   },
   "coap.xylophone_x36": {
     "file": "capabilities/control/xylophone_x36.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x36.py",
     "package": false,
-    "sha256": "44a59d7ee257085844cbb0f50cb7ca4af60e690fdb156b377325317c2c9ee7d8"
+    "sha256": "69cb490491aab9b192f7aaef6d46be607038b95ed61f4412c0487705a6a90ea0"
   },
   "coap.xylophone_x39": {
     "file": "capabilities/control/xylophone_x39.py",
     "resource": "resources/play_Xylophone/coap/xylophone_x39.py",
     "package": false,
-    "sha256": "cf91eb8e5e4d47b0b5a7aa18a7b47f286939327c8583b1d37e412e35e99647a0"
-  },
-  "coap.bottle_policy": {
-    "file": "capabilities/control/bottle_policy.py",
-    "resource": "resources/play_Xylophone/coap/bottle_policy.py",
-    "package": false,
-    "sha256": "1e80d3d2d3feb71e7b3f3fdff072aafa5472677fd2a11c0c9a54dd7f67e51974"
-  },
-  "coap.bottle_revision23": {
-    "file": "capabilities/perception/bottle_revision23.py",
-    "resource": "resources/play_Xylophone/coap/bottle_revision23.py",
-    "package": false,
-    "sha256": "c0d1edf03d4d17f93085d0178e020ccd05102746743c030918bb2ddcea5058c9"
-  },
-  "coap.bottle_revision18": {
-    "file": "capabilities/perception/bottle_revision18.py",
-    "resource": "resources/play_Xylophone/coap/bottle_revision18.py",
-    "package": false,
-    "sha256": "eac65d3b7576114d1298d063f3fa0c9258484d820d29981dbb0b974300ba2748"
-  },
-  "coap.bottle_revision19": {
-    "file": "capabilities/perception/bottle_revision19.py",
-    "resource": "resources/play_Xylophone/coap/bottle_revision19.py",
-    "package": false,
-    "sha256": "4b1e56dabf80e5d24dbf98f497bb2233f18f0246f98ec1dcdd55a50ba9b342fa"
-  },
-  "coap.bottle_revision17": {
-    "file": "capabilities/perception/bottle_revision17.py",
-    "resource": "resources/play_Xylophone/coap/bottle_revision17.py",
-    "package": false,
-    "sha256": "a85fdfb3c0f46b3d97a94df9bb45afc79160bdef44360c2621237f9e5f37f31e"
-  },
-  "coap.bottle_lying": {
-    "file": "capabilities/control/bottle_lying.py",
-    "resource": "resources/play_Xylophone/coap/bottle_lying.py",
-    "package": false,
-    "sha256": "6aefea212692f98730cf0151b2b26a6c0d92b97b95cd21a1ea1e8a7d9d33e2cb"
-  },
-  "coap.bottle_handoff": {
-    "file": "capabilities/control/bottle_handoff.py",
-    "resource": "resources/play_Xylophone/coap/bottle_handoff.py",
-    "package": false,
-    "sha256": "55a76026e39e36fbff42689b433d75965e17f6948471d343ba61961db88f4c3a"
-  },
-  "coap.bottle_attachment": {
-    "file": "capabilities/control/bottle_attachment.py",
-    "resource": "resources/play_Xylophone/coap/bottle_attachment.py",
-    "package": false,
-    "sha256": "1c3c0414a10d61bc87dc71af781c819ec249681bb5936cdd20dd548596bb744d"
-  },
-  "coap.bottle_execution": {
-    "file": "capabilities/control/bottle_execution.py",
-    "resource": "resources/play_Xylophone/coap/bottle_execution.py",
-    "package": false,
-    "sha256": "a3dccd32f1e1ace48abcd6613117e9dff54e7492ba12aad46c5ac8af383473ba"
-  },
-  "coap.bottle_revision20": {
-    "file": "capabilities/perception/bottle_revision20.py",
-    "resource": "resources/play_Xylophone/coap/bottle_revision20.py",
-    "package": false,
-    "sha256": "747e3f2cf0281d346e58416f9fcc5a7f14ca835e4c6da2c062664c13f7055518"
-  },
-  "coap.bottle_pregrasp": {
-    "file": "capabilities/control/bottle_pregrasp.py",
-    "resource": "resources/play_Xylophone/coap/bottle_pregrasp.py",
-    "package": false,
-    "sha256": "0b480f930f9501241da4c8e8ae1298027e16ba8e563bdc9eaa3f8181aab70227"
-  },
-  "coap.bottle_grasp": {
-    "file": "capabilities/control/bottle_grasp.py",
-    "resource": "resources/play_Xylophone/coap/bottle_grasp.py",
-    "package": false,
-    "sha256": "6080ec18f85297fae62b770691abe1db5d00f70fde6478d0785863b224ef3d69"
-  },
-  "coap.bottle_revision21": {
-    "file": "capabilities/perception/bottle_revision21.py",
-    "resource": "resources/play_Xylophone/coap/bottle_revision21.py",
-    "package": false,
-    "sha256": "e5dcd45a6aa35da55f0aec049e4b4459496b92879b42ed89abe0588635d8935b"
-  },
-  "coap.bottle_transport": {
-    "file": "capabilities/observation/bottle_transport.py",
-    "resource": "resources/play_Xylophone/coap/bottle_transport.py",
-    "package": false,
-    "sha256": "f3553891c3cfa187ae4a378ff683a7520b7a7fb6e5ec3f3a9f250cd301422707"
-  },
-  "coap.drag_policy": {
-    "file": "capabilities/control/drag_policy_for_play_xylophone.py",
-    "resource": "resources/play_Xylophone/coap/drag_policy.py",
-    "package": false,
-    "sha256": "2b12aee6a60ad9eb3898cd7d7df80865242c44ba657a6452ac3fd38bd035fb30"
-  },
-  "coap.drag_screen": {
-    "file": "capabilities/control/drag_screen.py",
-    "resource": "resources/play_Xylophone/coap/drag_screen.py",
-    "package": false,
-    "sha256": "c0f2eb87b6f657b867a2008e40a2291684d914cf4a63b657b2c0b95b674da768"
-  },
-  "coap.planar_drag": {
-    "file": "capabilities/planning/planar_drag_for_play_xylophone.py",
-    "resource": "resources/play_Xylophone/coap/planar_drag.py",
-    "package": false,
-    "sha256": "5950d4b68e14f1164360d6c862130d6cadb367190a69cfdd80a67d6968fd6400"
+    "sha256": "01865167be04a879842d4cf6d8b02d1b86407d9be65e9e639f1b765a4f31e661"
   },
   "adapters": {
     "namespace": true
@@ -458,7 +350,7 @@
     "resource": "capabilities/control/continuous_xylophone.py",
     "package": false,
     "resource_identity": false,
-    "sha256": "147e2f44bdc875806c1aefc13b7c8e708772e35b266afc42517809ecaff7df86"
+    "sha256": "288297a11916f5a2e7a9d0d272eb574dacecf735abd33f04b9ed9526a90bbfe2"
   },
   "coap.observed_xylophone_vision": {
     "file": "capabilities/perception/observed_xylophone_vision.py",

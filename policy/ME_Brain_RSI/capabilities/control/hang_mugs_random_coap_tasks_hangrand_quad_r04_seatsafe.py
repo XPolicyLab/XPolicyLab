@@ -2,10 +2,6 @@
 
 Identical to hangrand_quad_r01_livehook (live SAM3 re-association, reachability
 assignment, rack registration, held-pose update, durations, 743-frame budget).
-The plan module ranks (mug, peg, arm) chains with the parent's stroke geometry
-(hang_points_plan), so the assignment equals the parent's; the issued stroke
-uses hang_points_exec (hole centre at the support point at axis height, i.e.
-20 mm below the thread) and dwells 3 frames before opening, taken from retreat.
 """
 from types import FunctionType
 

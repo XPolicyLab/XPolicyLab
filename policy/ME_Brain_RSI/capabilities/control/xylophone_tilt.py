@@ -30,8 +30,6 @@ def bounded_tilt_candidates(rotation, anchor, grasp_offset, tip_offset,
     # Try less tilt first; neither may bypass complete sampled local IK/budget.
     for degrees in (4.,8.):
         tilted=np.asarray(rotation)@Rotation.from_euler('y',degrees,degrees=True).as_matrix()
-        # Public shaft: 200.6 mm from head, radius 3.75 mm. Conservatively
-        # subtract full radius even though its vertical projection is smaller.
         end_z=head_z+.2006*(tilted@axis)[2]
         shaft_low=min(head_z,end_z)-.00375
         tip_z=head_z+(tilted@(tip-anchor))[2]

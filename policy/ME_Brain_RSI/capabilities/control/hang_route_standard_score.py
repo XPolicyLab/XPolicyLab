@@ -9,11 +9,6 @@ from coap.motion import ARMS, interpolate_pose, link_to_tcp, quat_matrix
 from coap.tasks.hang_candidate_motion import cartesian_joint_path, fixed_duration_samples
 
 
-# Mid-route carry point, derived from the planned hook of the perceived rack: the point a fixed
-# fraction of the way from the carrying arm's (robot-intrinsic) base to that hook, pushed outward
-# (away from the robot midline) perpendicular to the base-to-hook line, at the mean public-CAD hook
-# height of the fitted rack.  Fraction and offset reproduce the former carry point for the racks
-# perceived in the development episodes (rms 4.7 cm over 87 planned hooks).
 STAGE_FRACTION = .35
 STAGE_OUTWARD = .08
 

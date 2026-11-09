@@ -1,35 +1,4 @@
-"""tri80 r08d sorting candidate "unique": five real bodies per workspace, each category once.
-
-Built on the r07m ``softcombo`` route (imported unchanged).  Dev traces show the initial
-measurement sometimes returns the wrong set of bodies on a side, and the retained rules (fixed
-y boundary, the complete-ten five/five split, the top-five confidence truncation) then pair
-and replay the wrong objects from the start:
-
-* the demonstration phone, whose visual centre lies about 6 cm from its body origin, projects
-  just across the fixed y = 0.015 boundary and is measured as a second source phone;
-* a split blob (two halves of one body) or a fixed-box fusion detection off any body adds a
-  sixth source, or a second label of one category on a side with five;
-* the five/five split moves a real source (the one nearest the boundary) to the
-  demonstration side when a spurious sixth source is present.
-
-Both sides of every measurement are encoded with the retained fixed DINOv2 encoder and
-labelled with the retained fixed nearest-prototype classifier of the five task categories
-(``classify_joint``).  Each category appears exactly once per side, so before the retained
-count completion and again in place of the top-five truncation:
-
-1. side repair: a category measured twice on one side and absent on the other moves its
-   member nearest the boundary (within ``BAND``) to the other side, if that side is
-   incomplete or has a duplicated label;
-2. selection: a side with more than five bodies keeps the five that maximize cross-side
-   cosine pairing quality plus category uniqueness and prototype support (near-duplicates
-   closer than ``SAME_BODY`` are never both kept); before the count completion, a side of
-   five with one category twice at fragment distance (< ``FRAGMENT``) drops the weaker half,
-   so the retained same-frame wide re-measure looks for the missing body.
-
-Sides that already hold five distinct labels are left unchanged, so complete clean
-measurements execute exactly the softcombo program.  Only public camera images and the
-retained public detector outputs are used; no safety checks or aborts are added.
-"""
+"Associate distinct visible bodies with their categories before planning transfers."
 import ast
 import builtins
 import hashlib

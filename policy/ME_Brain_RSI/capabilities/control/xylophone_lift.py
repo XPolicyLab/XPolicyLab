@@ -8,8 +8,6 @@ import numpy as np
 from .geometry import pose_matrix
 from .xylophone_geometry import BEAT_POINTS
 
-# Same nominal hit frame as X06's .803 head height / .023 above-hit offset.
-# Public static placement prior, not this scene's measured object height.
 NOMINAL_HIT_FRAME_Z = .780
 PUBLIC_BEAT_UPPER = .036
 PUBLIC_REQUIRED_LIFT = .025
@@ -23,8 +21,6 @@ def lift_head_height(hit_frame_z=NOMINAL_HIT_FRAME_Z):
     if not np.isfinite(hit_frame_z):
         raise ValueError("Finite public hit-plane prior required")
     beat_radius = float(np.max(np.linalg.norm(BEAT_POINTS, axis=1)))
-    # At the first acceptable beat, object origin can be as high as
-    # hit_z + upper - rotated_beat_z. -rotated_beat_z <= beat_radius.
     return float(hit_frame_z + PUBLIC_BEAT_UPPER + beat_radius
                  + PUBLIC_REQUIRED_LIFT + LIFT_MARGIN)
 

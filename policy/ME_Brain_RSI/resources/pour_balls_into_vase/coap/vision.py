@@ -13,7 +13,7 @@ from .geometry import Camera,quat_matrix
 
 TABLE_Z=0.765
 WORKSPACE=dict(x=(-0.55,0.55),y=(-0.36,0.12))          # table footprint the policy may act on
-IMAGE_REGION=dict(x=(-0.58,0.58),y=(-0.38,0.30))        # object pixels (tops of 15 cm vases project onto farther table points)
+IMAGE_REGION=dict(x=(-0.58,0.58),y=(-0.38,0.30))
 GEOMETRY=json.loads((Path(__file__).resolve().parents[1]/'configs/vessel_geometry.json').read_text())
 VASES=('vase0','vase1','vase2','vase3','vase4')
 

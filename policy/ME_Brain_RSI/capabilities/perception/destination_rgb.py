@@ -11,12 +11,7 @@ from .perception import cube_material_candidates,fit_cube,head_source_crosscheck
 
 
 def public_destination_region(cube_height=.035):
-    """RGB support hypothesis against unchanged public30mm root-distance rule.
-
-    Public cube mesh is centered at its root and mat mesh spans +/-2.5mm.
-    Thus a supported cube's root is cube_half_height + mat_half_thickness
-    above the mat root. This is geometry conditional on RGB support, not truth.
-    """
+    "Compute the lateral region compatible with a cube resting on the observed mat."
     root_height_difference=.0025+float(cube_height)/2
     return dict(official_root_distance_m=.03,public_mat_half_thickness_m=.0025,
                 supported_root_height_difference_m=root_height_difference,
@@ -78,8 +73,7 @@ def destination_ready(rgb,head,own,arm,source,destination,cube_height):
         error=float(np.linalg.norm(np.asarray(fit['xy'])-destination))
         row=dict(material=record,complete_outline_fit=complete,support_height_fit={k:v for k,v in fit.items() if k!='mask'},target_xy_error_m=error,target_xy_limit_m=public_destination_region(cube_height)['supported_xy_radius_m'],public_target_region=public_destination_region(cube_height))
         result['candidates'].append(row)
-        # A support-compatible cube inside the public target region can open
-        # and return home; no extra18mm proxy or held assumption is required.
+        # Allow release when the cube fits the support surface and lies within the target region.
         if fit['ok'] and error<row['target_xy_limit_m']:
             return dict(result,status='at_destination_release_ready',reason='current_cube_support_height_shape_at_observed_destination',evidence=row,mask=mask,xy=fit['xy'],yaw=fit['yaw'],z=center_z,height=cube_height)
     return dict(result,reason='destination_support_shape_or_target_unresolved')

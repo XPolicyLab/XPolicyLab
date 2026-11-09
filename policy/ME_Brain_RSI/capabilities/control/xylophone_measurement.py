@@ -85,12 +85,7 @@ def saturation_core_heads(rgb, radius_bounds=(3.,12.)):
 
 
 def dense_shaft(rgb, heads, scale=600):
-    """Direction proposal without requiring a lucky Hough segment.
-
-    All 30--190 mm samples must be in frame. Each side needs >=80% edge
-    support and the center >=80% brighter than BOTH outside strips.
-    Width is still 4--12 mm; ambiguity across heads/directions is rejected.
-    """
+    "Propose a shaft direction from image edge support."
     gray=cv2.cvtColor(rgb,cv2.COLOR_RGB2GRAY)
     distance=cv2.distanceTransform(255-cv2.Canny(gray,30,90),cv2.DIST_L2,3)
     angles=np.arange(0,2*np.pi,np.arctan2(.25,.19*scale))

@@ -1,4 +1,3 @@
-"""Aggregate authoritative episodes and distinguish diagnostics from evaluation."""
 import argparse
 import hashlib
 import json
