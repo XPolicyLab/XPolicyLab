@@ -1,0 +1,216 @@
+{
+ "bench": "robodojo",
+ "code": {
+  "files": 188,
+  "sha256": "45abae9988b63d44b0ac403097969501523c8e0c0992ea6078eff84e5de1f8de"
+ },
+ "commit": "c3deacddd49ec7088143a23da9f1a287919d14ed",
+ "dirty": true,
+ "embodiment": "arx_x5",
+ "identity": "9132beb14b257162",
+ "lock": {
+  "agent": "wall-oss",
+  "agent_version": "1.21.0",
+  "budget": {
+   "max_model_calls": 100
+  },
+  "mode": "program",
+  "prompt_sha256": "1051e9fbfc8e05dcc6625813610ad8bd76149db85b6135de8db11bb6c6917f8c",
+  "prompt_sources": [
+   "prompts/robodojo",
+   "prompts/robodojo/wall_cell.md"
+  ],
+  "roles": {
+   "main": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 8192,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "timeout_seconds": 300
+   },
+   "verifier": {
+    "temperature": 1
+   },
+   "vlm": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 2048,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "temperature": 1,
+    "timeout_seconds": 300
+   }
+  },
+  "runtime": {
+   "cameras": [
+    "cam_head",
+    "cam_left_wrist",
+    "cam_right_wrist"
+   ],
+   "cell_timeout_seconds": 1800,
+   "contract": "xpolicylab",
+   "default_max_seconds": 30.0,
+   "isolation": "auto",
+   "layers": {
+    "handlers": true,
+    "learned": true,
+    "reactive": true
+   },
+   "policy_action_mode": "ee_passthrough",
+   "policy_progress_seconds": 0.0,
+   "policy_span": "cell",
+   "post_policy_calls": 0,
+   "reactive_budget_ms": 20.0,
+   "skills": [
+    "core",
+    "geometry",
+    "kinematics",
+    "pointing",
+    "vlm",
+    "segmentation",
+    "grasping",
+    "memory",
+    "verify",
+    "motion",
+    "eef",
+    "reactive",
+    "scene",
+    "handlers",
+    "vla",
+    "complementary"
+   ],
+   "skills_dropped": {
+    "wam": "no world_model service"
+   },
+   "strategy_first": true,
+   "verifier": true
+  },
+  "schema": 2,
+  "service_manifests": {
+   "sam3": "d9ce7f9939e593b8f7dc863b1957aadbb96cae42f1055698537d0504290e0075",
+   "wall-oss": "05e58926b300e5587cc067621c0476562b80686ab58b18953baaaf30939da990"
+  },
+  "services": {
+   "policies": [
+    "wall-oss"
+   ],
+   "segmenter": "sam3"
+  },
+  "skills": [
+   "core",
+   "geometry",
+   "kinematics",
+   "pointing",
+   "vlm",
+   "segmentation",
+   "grasping",
+   "memory",
+   "verify",
+   "motion",
+   "eef",
+   "reactive",
+   "scene",
+   "handlers",
+   "vla",
+   "complementary"
+  ],
+  "skills_dropped": {
+   "wam": "no world_model service"
+  }
+ },
+ "name": "wall-oss",
+ "services": [
+  "kinematics",
+  "sam3",
+  "wall-oss"
+ ],
+ "sources": {
+  "agent": {
+   "budget": {
+    "max_model_calls": 100
+   },
+   "description": "Harness Policy calling WALL-OSS 1.0 lite, with GPT 6.1 Sol writing programs",
+   "prompt": [
+    "@HARNESS@/prompts/robodojo",
+    "@HARNESS@/prompts/robodojo/wall_cell.md"
+   ],
+   "roles": [
+    "main",
+    "vlm",
+    "verifier"
+   ],
+   "runtime": {
+    "cameras": [
+     "cam_head",
+     "cam_left_wrist",
+     "cam_right_wrist"
+    ],
+    "cell_timeout_seconds": 1800,
+    "contract": "xpolicylab",
+    "default_max_seconds": 30.0,
+    "isolation": "auto",
+    "policy_action_mode": "ee_passthrough",
+    "policy_progress_seconds": 0.0,
+    "policy_span": "cell",
+    "post_policy_calls": 0,
+    "reactive_budget_ms": 20.0,
+    "strategy_first": true,
+    "verifier": true
+   },
+   "services": {
+    "policies": [
+     "wall-oss"
+    ],
+    "segmenter": "sam3",
+    "world_models": []
+   },
+   "skills": {
+    "enable": [
+     "complementary"
+    ],
+    "layers": {
+     "handlers": true,
+     "learned": true,
+     "reactive": true
+    }
+   }
+  },
+  "model": {
+   "description": "GPT 6.1 Sol writes programs and answers questions about images",
+   "main": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 8192,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "timeout_seconds": 300
+   },
+   "verifier": {
+    "temperature": 1
+   },
+   "vlm": {
+    "api_key_env": "PROXY_OPENAI_API_KEY",
+    "backend": "openai_chat",
+    "base_url": "http://127.0.0.1:18087/v1",
+    "base_url_env": "CODEX_BASE_URL",
+    "max_output_tokens": 2048,
+    "model": "gt-6.1-sol-a",
+    "retries": 2,
+    "retry_seconds": 300,
+    "temperature": 1,
+    "timeout_seconds": 300
+   }
+  },
+  "runtime_overrides": {}
+ }
+}

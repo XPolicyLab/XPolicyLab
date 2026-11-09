@@ -1,0 +1,8 @@
+name = "scene"
+summary = "Watching the scene (watch_scene), clearing the head camera's view (clear_view) and pressing buttons (press), whichever pick and place tools are on."
+layer = "base"
+mixin = "skills.scene:SceneTools"
+exports = ["watch_scene", "clear_view", "press"]
+needs_any = ["pointer", "vlm"]
+requires = ["pointing"]
+order = 110

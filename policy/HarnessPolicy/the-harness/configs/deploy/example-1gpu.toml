@@ -1,0 +1,26 @@
+# A machine with one 24 GB GPU. The simulator (6-9 GB) leaves room for one model at a
+# time: SAM 3 (7.2 GB) and Simate (14 GB) are on demand in one swap group, so the broker
+# loads the one a skill calls and swaps when the other is needed. The simulator waits
+# while a model loads, so this costs wall time, not episode steps, and the identity is
+# that of a machine where both stay resident. One thing differs: Simate keeps a memory of
+# past frames, and swapped out it starts that memory afresh, so a policy run after a SAM 3
+# call in the same episode does not see the frames before it (docs/tutorials/small-machine.md).
+# Copy to configs/deploy/<your machine>.toml and set the paths.
+weights = "~/harness-weights"
+state = "~/.cache/harness-policy/services"
+gpus = [0]
+gpu_memory_gb = 24
+
+[sim]
+gpus = [0]
+workers_per_gpu = 1
+
+[services.sam3]
+gpu = 0
+mode = "on_demand"
+swap = "models"
+
+[services.simate]
+gpu = 0
+mode = "on_demand"
+swap = "models"

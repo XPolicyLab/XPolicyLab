@@ -1,0 +1,7 @@
+name = "vlm"
+summary = "Questions about images to a vision-language model."
+layer = "base"
+mixin = "skills.vlm:VisionQuestions"
+exports = ["query_vlm"]
+needs = ["vlm"]
+order = 40

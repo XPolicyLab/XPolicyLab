@@ -1,0 +1,59 @@
+# Two AgileX PiPER arms with parallel grippers (RoboDojo-Real's Piper platform): what a
+# policy may know about the robot without asking a simulator. The kinematic facts come
+# from AgileX's PiPER description URDF (RoboTwin 2.0 assets,
+# embodiments/piper/urdf/piper_description.urdf): six revolute
+# joints per arm and two prismatic fingers of 0-0.04 m.
+#
+# NOT CALIBRATED: the arm mounts, the table height, the workspace and the cameras below
+# belong to a rig, and must be measured on it (docs/how-to/real-robot.md) before
+# `calibrated = true`. Export refuses an uncalibrated embodiment.
+name = "piper"
+robot = "AgileX PiPER, two arms with parallel grippers (RoboDojo-Real)"
+robot_model = "piper"
+calibrated = false
+control_hz = 25.0
+cameras = ["cam_head", "cam_left_wrist", "cam_right_wrist"]
+image_size = [640.0, 480.0]
+# Joint commands: per arm 6 joints (URDF limits), then the gripper (0 closed .. 1 open).
+# joint3 stops at 0 as in piper_description.urdf (RoboTwin's simplified piper.urdf lets
+# it reach +2.697, past the real arm's stop); these are the shield's joint bounds.
+action_low = [-2.618, 0.0, -2.697, -1.832, -1.22, -3.14, 0.0, -2.618, 0.0, -2.697, -1.832, -1.22, -3.14, 0.0]
+action_high = [2.618, 3.14, 0.0, 1.832, 1.22, 3.14, 1.0, 2.618, 3.14, 0.0, 1.832, 1.22, 3.14, 1.0]
+# The fingers sit 0.135 m from link6 along link6's z axis (URDF joint7/joint8). The
+# analytic skills' geometry assumes the ARX X5's tool along link6's x axis: until it
+# reads tool_axis_link6, the PiPER runs learned policies and joint-space programs.
+tip_offset_m = 0.135
+tool_axis_link6 = [0.0, 0.0, 1.0]
+gripper_open_width_m = 0.08
+return_to_start = true
+planner_limits = { joint_velocity = 3.0, joint_acceleration = 10.0 }
+planner_world = "not modeled: give the rig's planner configuration before using the kinematics service"
+# The kinematics service (fk, ik, plan_path; services/kinematics.toml) is the ARX X5's.
+# Export refuses this profile until it names a kinematics service of its own:
+# kinematics_service = "<a services/<name>.toml of kind kinematics serving this profile>"
+
+[groups.left_arm]
+joints = [0, 1, 2, 3, 4, 5]
+gripper = 6
+
+[groups.right_arm]
+joints = [7, 8, 9, 10, 11, 12]
+gripper = 13
+
+# Mount poses [x, y, z, qw, qx, qy, qz] in the env frame: MEASURE ON THE RIG. These are
+# the ARX X5 layout's, as a starting point only.
+[arm_bases]
+left_arm = [-0.3, -0.45, 0.75, 0.707, 0.0, 0.0, 0.707]
+right_arm = [0.3, -0.45, 0.75, 0.707, 0.0, 0.0, 0.707]
+
+# Commands that are bugs: the jumps as for the ARX X5; the workspace is the rig's.
+[shield]
+max_joint_jump_rad = 0.3
+max_cartesian_jump_m = 0.25
+workspace = { x = [-0.9, 0.9], y = [-1.1, 0.3], z = [0.70, 1.40] }
+
+# XPolicyLab's protocol for this robot (joint actions, both arms).
+[xpolicylab]
+env_cfg_type = "piper"
+action_type = "joint"
+action_dim = 14

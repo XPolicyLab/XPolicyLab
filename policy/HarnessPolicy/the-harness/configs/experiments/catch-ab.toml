@@ -1,0 +1,15 @@
+# The reactive layer A/B (paper Tab. reactive (b)): one scripted program, no model calls,
+# catches an object moving past on the conveyor of match_and_pick_from_conveyor, on
+# official layouts 0-19 of pack 0. Both arms wait until an object comes within the left
+# arm's straight-down reach, then differ only in how they close on it:
+#   intercept: the reactive layer follows the object every control tick (skills/reflexes)
+#     harness run configs/experiments/catch-ab.toml --agent configs/ablations/reflexes.toml \
+#         --script configs/scripts/catch_intercept.json --output runs/catch/intercept
+#   reach: the same approach (8 cm above, then down, close, lift) to where it was seen
+#     harness run configs/experiments/catch-ab.toml --agent configs/ablations/reflexes.toml \
+#         --script configs/scripts/catch_reach.json --output runs/catch/reach
+# A catch is the jaws still holding one second after the lift (stdout "CATCH True").
+description = "reactive layer A/B: a scripted catch on the conveyor, official layouts 0-19 of pack 0"
+include = ["eval.toml"]
+tasks = ["match_and_pick_from_conveyor"]
+seeds = "0-19"

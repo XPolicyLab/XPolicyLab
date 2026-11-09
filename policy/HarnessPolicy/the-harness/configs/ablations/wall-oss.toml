@@ -1,0 +1,30 @@
+# Ablation only: WALL-OSS native EE actions; GPT 6.1 Sol uses the existing skills.
+# Default stays Simate + DeepSeek with instruction-text routing.
+description = "Harness Policy calling WALL-OSS 1.0 lite, with GPT 6.1 Sol writing programs"
+include = ["../default.toml"]
+model = "codex"
+# The pack, then the cell-span note. The program keeps the episode; WALL-OSS is one call.
+prompt = ["../../prompts/robodojo", "../../prompts/robodojo/wall_cell.md"]
+
+[skills]
+# Optional candidate complements; no promotion to default before paired evidence.
+enable = ["complementary"]
+
+[services]
+policies = ["wall-oss"]
+
+[budget]
+# One model call can hold several motions. 100 matches a cell budget for a full episode.
+max_model_calls = 100
+
+[runtime]
+policy_action_mode = "ee_passthrough"
+# The program keeps the episode but complementary enforces real A/B/C ownership.
+# Original instruction only; no task-name table. A preserves WALL, B locks semantic
+# reads/bindings, C admits one observed safe static-tail correction.
+policy_span = "cell"
+
+# Final seed-0 reporting (not the default summarizer):
+# python -m benches.robodojo.wall_oss_report --harness-summary <summary.json>
+#   --base-root <eval_result/RoboDojo> --base-ckpt <official-WallX-checkpoint>
+# Incomplete/error tasks fall back wholesale to WallX at seed 0; never take max.

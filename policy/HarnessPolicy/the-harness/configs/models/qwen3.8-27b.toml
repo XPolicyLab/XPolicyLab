@@ -1,0 +1,34 @@
+# Default model: the deployed Qwen3.8-27B writes the programs and reads the images.
+# The server URL is QWEN_BASE_URL (http://host:port/v1), never written here, so the
+# evaluators point this agent at their own API. QWEN_API_KEY only if that server
+# asks for one; ours does not. The server thinks unless told not to, and a short
+# reply then comes back with an empty body. The model id on the server is qwen3.8-27b.
+description = "Qwen3.8-27B writes programs and answers questions about images; the server URL is QWEN_BASE_URL"
+
+[main]
+backend = "openai_chat"
+base_url_env = "QWEN_BASE_URL"
+model = "qwen3.8-27b"
+api_key_env = "QWEN_API_KEY"
+# Temperature 0 makes a model this size repeat itself. The 32B file uses 0.6 for that.
+max_output_tokens = 2048
+temperature = 0.6
+stream = false
+timeout_seconds = 300
+retries = 2
+retry_seconds = 300
+extra_body = { chat_template_kwargs = { enable_thinking = false } }
+
+# Same server for questions about images inside programs. Short answers, so no sampling.
+[vlm]
+backend = "openai_chat"
+base_url_env = "QWEN_BASE_URL"
+model = "qwen3.8-27b"
+api_key_env = "QWEN_API_KEY"
+max_output_tokens = 1024
+temperature = 0.0
+stream = false
+timeout_seconds = 300
+retries = 2
+retry_seconds = 300
+extra_body = { chat_template_kwargs = { enable_thinking = false } }

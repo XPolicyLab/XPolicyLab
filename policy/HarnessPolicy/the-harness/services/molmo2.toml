@@ -1,0 +1,16 @@
+kind = "pointer"
+summary = "Molmo2-8B open-vocabulary pointing (point_to, localize, localize_3d), int8 with the vision tower in bf16"
+protocol = "openai_chat"
+command = ["{python}", "-u", "services/servers/serve_vlm.py", "--model", "{weights}/molmo2-8b", "--name", "Molmo2-8B",
+           "--trust-remote-code", "--quantize", "8bit", "--keep-modules", "vision_backbone,lm_head",
+           "--max-new-tokens", "512", "--port", "{port}"]
+port = 8830
+# Measured on a 3090: 12.7 GB.
+vram_gb = 12.7
+load_seconds = 180
+client = { backend = "openai_chat", base_url = "{url}/v1", model = "Molmo2-8B", point_format = "molmo", timeout_seconds = 300 }
+needs_files = ["{weights}/molmo2-8b/config.json"]
+
+[[weights]]
+dir = "molmo2-8b"
+modelscope_model = "allenai/Molmo2-8B"

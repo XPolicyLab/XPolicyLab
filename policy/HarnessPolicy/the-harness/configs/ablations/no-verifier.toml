@@ -1,0 +1,6 @@
+# Ablation (Tab. 5): the agent without the success verifier (verify() returns None).
+description = "without the verifier"
+include = ["../default.toml"]
+
+[runtime]
+verifier = false

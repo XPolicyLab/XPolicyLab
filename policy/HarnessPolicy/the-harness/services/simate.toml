@@ -1,0 +1,49 @@
+kind = "policy"
+summary = "Simate-beta VLA with a memory of past frames, RoboDojo's own checkpoint, through XPolicyLab's Simate_beta adapter"
+protocol = "xpolicylab"
+port = 19008
+vram_gb = 14.0
+load_seconds = 180
+needs_files = ["{weights}/simate/model.safetensors", "{xpolicylab}/policy/Simate_beta"]
+notes = """Runs in the project environment (its dependencies are a subset of it, plus sentencepiece). The description (what \
+the model is told) names kinds of manipulation, never tasks: it generalises Simate's own scores run alone \
+through run_policy on development layouts (configs/experiments/policy-alone-dev.toml, 2 layouts of each task; \
+scripts/policy_card.py sorts them), 2026-10-13: 3 reliable, 16 partial, 19 unreliable. Not measured: \
+cover_blocks, swap_blocks and play_tic_tac_toe (every arrangement is an evaluation layout, so none is left for \
+development) and imitate_sorting_sequence (RoboDojo marks both layouts unstable mid-episode). Since agent 1.4.0 \
+the kinds no longer decide strategy B: the program keeps what the policy cannot do (reading; \
+prompts/robodojo/rules_learned.md) and hands over every other task, the kinds choosing A (usually finishes) or C \
+(the rest). Remembering is the policy's own: officially it scores 56.0 on match_and_pick_from_conveyor, 100 on \
+cover_blocks and 38.7 on swap_blocks, the agent's tools 0 on the first."""
+
+# A policy with memory keeps it per evaluation id; run_policy scopes it to the episode.
+[client]
+url = "{url}"
+scoped = true
+description = """A visuomotor policy with a memory of past camera frames, trained on whole RoboDojo tasks: each demonstration \
+starts at the start pose and finishes the task, labelled with the task's own instruction; it moves both arms \
+(joint actions) with skilled contact. It does best in exactly that setting: from the untouched start pose, with \
+the task's own instruction, left to run. It cannot pick one object out of several by reading what identifies it: a name, a \
+number or label written on it, or a picture shown as the target. Every other task it \
+was trained on is its own, with the conditions the task sets, including what its memory of past frames gives it: \
+an object seen, covered or swapped earlier in the episode. Usually finishes by itself: pouring a liquid from one \
+container into another; putting a few separate objects into a bin, case or box; covering objects. Often does \
+part and leaves the rest: packing several objects into a box; stacking blocks in a pile or tower; building a \
+shape from blocks or parts; pouring small loose objects into a container; putting an item into an appliance; \
+tidying or sorting objects into groups or places; filling a holder or tray with several items; hanging items on \
+a hook or rack; nesting bowls or cups; inserting tubes or a coin where the opening is generous; folding cloth; \
+picking objects off a moving conveyor, also the one matching an object seen earlier; swapping objects. Seldom \
+finishes (but has learned the motion): pushing or sweeping objects to an exact pose; small precise insertions (a \
+key, plug or screw); ordering by size; stacking a toy in its order; repeating an order shown earlier. Signs it \
+has stopped helping: the arms stop moving while objects are not where the task needs them; the same reach is \
+repeated; an object is knocked over or off the table."""
+
+[xpolicylab]
+policy = "Simate_beta"
+ckpt_name = "{weights}/simate"
+action_type = "joint"
+
+[[weights]]
+dir = "simate"
+modelscope_dataset = "RoboDojo-Benchmark/RoboDojo"
+root = "ckpt/RoboDojo/Simate-beta/RoboDojo-sim-arx_x5-joint-0"

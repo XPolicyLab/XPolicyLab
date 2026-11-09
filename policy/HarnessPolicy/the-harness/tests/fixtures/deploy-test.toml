@@ -1,0 +1,27 @@
+# A deploy for tests: every service runs on its default port (nothing is started).
+weights = "/nonexistent/weights"
+state = "/nonexistent/state"
+gpus = [0, 1, 2, 3, 4, 5, 6, 7]
+gpu_memory_gb = 80
+
+[sim]
+gpus = [7]
+workers_per_gpu = 2
+
+[services.sam3]
+gpu = 0
+
+[services.molmo2]
+gpu = 0
+
+[services.g05]
+gpu = 1
+
+[services.openwam]
+gpu = 2
+
+[services.simate]
+gpu = 4
+
+[services.qwen3-vl-32b]
+gpu = 3

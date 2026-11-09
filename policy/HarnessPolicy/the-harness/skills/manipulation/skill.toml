@@ -1,0 +1,11 @@
+name = "manipulation"
+summary = "Pick and place by name over the analytic skills (pointing, plan_grasp), and a straight-line push; an ablation of the default tools by object id (skills/eef)."
+layer = "base"
+mixin = "skills.manipulation:Manipulation"
+exports = ["pick", "place", "push"]
+needs = ["segmenter"]
+needs_any = ["pointer", "vlm"]
+requires = ["pointing", "segmentation"]
+conflicts = ["eef"]
+optional = true
+order = 100

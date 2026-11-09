@@ -1,0 +1,9 @@
+kind = "mcp"
+summary = "An example MCP tool server (unit conversion) for the mcp skill"
+protocol = "mcp"
+command = ["{python}", "-u", "services/servers/serve_mcp_example.py", "--port", "{port}"]
+port = 8860
+vram_gb = 0.0
+load_seconds = 5
+client = { url = "{url}/mcp", description = "unit conversion between lengths, masses and angles" }
+notes = "Any MCP server with the streamable HTTP transport is added the same way: its command (or an existing URL in the deploy) and kind = mcp; an agent names it in [services] mcp = [...] and enables the mcp skill."

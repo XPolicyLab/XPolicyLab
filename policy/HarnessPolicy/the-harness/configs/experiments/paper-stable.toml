@@ -1,0 +1,21 @@
+# The paper's comparison subset (Sec. Experiments: any model, any policy, the ladder): 8
+# tasks on official evaluation layouts 0-3 of pack 0, with the agent as it was submitted
+# to the leaderboard (no pointer, no world model). The tasks were chosen from the full
+# local evaluation of agent 1.6.3 (pack 0, 25-50 layouts each) so that a comparison can
+# show a difference: a base success rate between 15 and 75 %, the same outcome when a
+# layout is run again, and both kinds of task: three the agent does with its own tools
+# (general_pickup, solve_equation, arrange_largest_number) and five it hands to the
+# learned policy. One run per configuration:
+#   harness run configs/experiments/paper-stable.toml --output runs/paper-stable/base
+#   ... --model grok-low | --model qwen3.5-397b              (language models)
+#   ... --set 'agent.services.policies=["g05"]'              (learned policies)
+#   ... --agent configs/ablations/r1.toml | r2.toml           (the ladder)
+description = "the paper's comparison subset: 8 tasks x official layouts 0-3 of pack 0, the submitted configuration"
+include = ["eval.toml"]
+tasks = ["general_pickup", "solve_equation", "arrange_largest_number", "match_and_pick_from_conveyor",
+         "pour_balls_into_vase", "pour_liquid_into_cup", "sort_nesting_dolls_by_size", "organize_table"]
+seeds = "0-3"
+
+[overrides.agent]
+roles = ["main", "vlm", "verifier"]
+services = { world_models = [] }
